@@ -53,6 +53,7 @@ enum daGrock_c_AssetId { ASSET_CV_GORO_ROCK_BMD = 0x05d4 };
 #include "math/MtxStack.h"
 #include "cstd.h"
 #include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 /* Kind in param1's low nibble. */
 enum {
@@ -97,10 +98,7 @@ extern void func_02012694(unsigned int id, void *pos);
 extern void func_0200f760(void *self, void *cyl);
 }
 
-struct LevelRng;
-
 extern s16 data_02082214[];
-extern LevelRng data_0209e650;
 extern GrockModelFilePtr data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
@@ -344,7 +342,7 @@ int daGrock_c::Behavior() {
                 *spawned = (u8)(*spawned + 1);
                 *(u16 *)&mStateTimer = 0;
                 *(AngleWords *)&rot = *(AngleWords *)&mPrevAngleX;
-                rnd = (u32)RandomIntInternal((int *)&data_0209e650);
+                rnd = (u32)RandomIntInternal(&data_0209e650.value);
                 rot.y = rot.y + (rnd >> 16) % 0xc00;
                 if (mType == kGrockStarSpawner && mSpawnCount >= 5 && mStarRockOut == 0) {
                     daGrock_c *child;

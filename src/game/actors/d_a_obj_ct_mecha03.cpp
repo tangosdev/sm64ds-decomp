@@ -53,6 +53,7 @@ enum daObjCtMecha03_c_AssetId {
 #include "Sound.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 struct CLPS_Block;
 
@@ -73,7 +74,6 @@ struct Mecha03ClsnFilePtr : SharedFilePtr {
 };
 
 extern u8 data_0209f2c0;
-extern int data_0209e650;
 extern s16 data_ov065_0211c0b0[];
 extern Mecha03ModelFilePtr data_ov065_0211d88c;
 extern Mecha03ClsnFilePtr data_ov065_0211d894;
@@ -146,7 +146,7 @@ int daObjCtMecha03_c::Behavior() {
                 }
             }
             if (data_0209f2c0 == 2 && mSwingSpeed == 0) {
-                int roll = RandomIntInternal(&data_0209e650);
+                int roll = RandomIntInternal(&data_0209e650.value);
                 if ((unsigned)roll % 3 != 0)
                     mSwingAccel = 0xd;
                 else

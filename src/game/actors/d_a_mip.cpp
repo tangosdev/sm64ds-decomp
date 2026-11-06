@@ -938,7 +938,6 @@ int daMip_c::StateIdleMain()
        ROM emits no scope-exit cleanup here, so the genuine destructor must
        not instantiate (its vague-linkage D1 lived in this TU only for
        these two locals). */
-    extern LevelRng data_0209e650;
     extern MipStatePair data_ov085_0213066c;
     extern DaMipAnimationFilePtr gMipRunAnimationFile;
     extern DaMipAnimationFilePtr data_ov085_021305b0;
@@ -986,7 +985,7 @@ int daMip_c::StateIdleMain()
         }
     }
 
-    u32 r = (u32)RandomIntInternal((int *)&data_0209e650) >> 8;
+    u32 r = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
     if (mRabbitId == 1) {
         if (Vec3_HorzDist(&mPos, &pp) < 0x4b0000) {
             mTargetAngY = Vec3_HorzAngle(&mPos, &pp) + 0x8000;
@@ -1451,7 +1450,6 @@ int daMip_c::InitResources()
     extern s32 data_ov085_021305ac;
     extern int data_0209caa0[];
     extern s8 gCurrentSublevel;
-    extern LevelRng data_0209e650;
 
     void* player;
     void* closest;
@@ -1543,7 +1541,7 @@ int daMip_c::InitResources()
             if (gCurrentSublevel == 0x32)
                 v = 1;
             if (func_02013890(mRabbitId, v) != 0 && data_ov085_021305ac < 8) {
-                u32 rnd = (u32)RandomIntInternal((int *)&data_0209e650) >> 8;
+                u32 rnd = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
                 if (NumStars() >= 0x51) {
                     if ((s32)((daPly_c *)closest)->param1 == 3) {
                         if ((rnd & 0xf) == 0)

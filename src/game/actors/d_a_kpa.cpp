@@ -136,6 +136,7 @@ enum daKpa_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* -------------------------------------------------------------------------- */
 /* Names for the numbers this file uses. The values are the ROM's; the names are
@@ -323,7 +324,6 @@ extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
 extern int Vec3_HorzLen(const Vector3* v);
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650;
 extern KpaAnimationFileHandle data_ov060_0211abe0;
 extern int func_0200fa04(void *c, void *v, int a);
 extern KpaAnimationFileHandle data_ov060_0211acd8;
@@ -718,7 +718,7 @@ mCapActorAlive once no cap actor exists any more. Always returns 1. */
  */
 int daKpa_c::Behavior()
 {
-    RandomIntInternal(&data_0209e650);
+    RandomIntInternal(&data_0209e650.value);
     mTargetPlayer = ClosestPlayer();
     if (mTargetPlayer != 0) {
         mAngleToTarget = Vec3_HorzAngle(&mPos, &mTargetPlayer->mPos);
@@ -1334,7 +1334,7 @@ void daKpa_c::func_ov060_02115314(){
     } else {
         this->mPickToggle = 0;
         if (this->mSkipIdleRoll == 0) {
-            unsigned int v = (unsigned int)RandomIntInternal(&data_0209e650) >> 0x10;
+            unsigned int v = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
             if (v % 10 == 0)
                 this->mState = BOWSER_STATE_PLAY_ANIM_0F;
             else
@@ -1371,7 +1371,7 @@ void daKpa_c::func_ov060_021151d4(){
         goto turn;
 
     if (this->DistToCPlayer() < 0x514000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 10;
+        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
         if (m < this->mVanishChance) {
             this->mState = BOWSER_STATE_VANISH_DASH;
             if (this->mVanishChance > 3)
@@ -1387,7 +1387,7 @@ void daKpa_c::func_ov060_021151d4(){
 
     this->mState = BOWSER_STATE_CHARGE;
     if (this->mDistToCenter > 0x1f4000 && this->mDistToCenter < 0x5dc000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 10;
+        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
         if (m < 5)
             this->mState = BOWSER_STATE_JUMP;
     }
@@ -1420,16 +1420,16 @@ void daKpa_c::func_ov060_021150d0(){
     dActor_c *a = this;
     if (this->mCondFlags & BOWSER_COND_FACING_TARGET) {
         if (a->DistToCPlayer() < 0x3e8000) {
-            if (((unsigned)RandomIntInternal(&data_0209e650) >> 0x10) % 10 < 4) {
+            if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10 < 4) {
                 this->mState = BOWSER_STATE_FIREBALLS;
-            } else if (((unsigned)RandomIntInternal(&data_0209e650) >> 0x10) % 10 < 8) {
+            } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10 < 8) {
                 this->mState = BOWSER_STATE_FIRE_BREATH;
             } else {
                 this->mState = BOWSER_STATE_ANIM_CHAIN;
             }
             this->mFireTimer = 0;
             this->mAnimSpeed = 0x1000;
-        } else if (((unsigned)RandomIntInternal(&data_0209e650) >> 0x10) % 10 < 5) {
+        } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10 < 5) {
             this->mState = BOWSER_STATE_JUMP;
         } else {
             this->mState = BOWSER_STATE_CHARGE;
@@ -1764,14 +1764,14 @@ void daKpa_c::func_ov060_02114858(){
             }
             if ((r4 >= 0xf) && (r4 < 0x14))
             {
-                s32 rnd = RandomIntInternal(&data_0209e650);
+                s32 rnd = RandomIntInternal(&data_0209e650.value);
                 u32 hi = ((u32) rnd) >> 16;
                 u32 m = hi % 10u;
                 dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 0x11, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
             }
             else
             {
-                s32 rnd = RandomIntInternal(&data_0209e650);
+                s32 rnd = RandomIntInternal(&data_0209e650.value);
                 u32 hi = ((u32) rnd) >> 16;
                 u32 m = hi % 10u;
                 dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 1, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
@@ -2072,7 +2072,7 @@ void daKpa_c::func_ov060_021140c0(){
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
-            s32 rnd = RandomIntInternal(&data_0209e650);
+            s32 rnd = RandomIntInternal(&data_0209e650.value);
             u32 hi = ((u32)rnd) >> 16;
             u32 m = hi % 10u;
             this->mFireballShots = (char)((m % 3u) + 1);

@@ -62,6 +62,7 @@ enum daPopoi_c_AssetId {
 #include "decl_common.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Static-init ownership (was the handwritten __sinit_ov077_021275fc shard).
  * The file-scope objects at the end of this file construct the four
@@ -112,7 +113,6 @@ extern PopoiPMF data_ov077_02127cd8[2];
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
-extern int data_0209e650[];             /* RandomIntInternal state */
 extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
@@ -347,8 +347,10 @@ int daPopoi_c::func_ov077_02126d5c(daPopoi_StateRecord *next)
  * speed and plays file 0x40f's animation (data_ov077_02127c90), and starts walking
  * at 8 units/frame (0x8000). Always returns 1. */
 int daPopoi_c::func_ov077_02126cd4(){
-    mTargetAngleY = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0xf) << 0xc);
-    mStateTimer = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0xaa);
+    mTargetAngleY =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
+    mStateTimer =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0xaa);
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x8000;
     unk_41c = 0;
@@ -487,7 +489,8 @@ int daPopoi_c::func_ov077_021269a8() {
  * mAnmModel.speed is overwritten by SetAnim's speed argument 0x1000, so the
  * animation ends up at speed 1.0. Returns 1. */
 int daPopoi_c::func_ov077_02126930(){
-    mStateTimer = (short)(((unsigned int)RandomIntInternal(data_0209e650) >> 8 & 0x3f) + 0xaa);
+    mStateTimer =
+        (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 0xaa);
     mHorzSpeed = 0x6000;
     mTurnRate = 0;
     unk_41c = 0;

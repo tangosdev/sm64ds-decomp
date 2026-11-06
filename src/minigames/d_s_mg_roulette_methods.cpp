@@ -50,6 +50,7 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* Local views of the records the helpers walk. */
 
@@ -216,7 +217,6 @@ extern short sRouletteSlowStops[];
 extern short data_ov006_0212ed34[];
 extern struct Pair pmf_RouletteBoard_StateSlow;
 extern struct Pair2W pmf_RouletteBoard_StateSpin;
-extern int data_0209e650[];
 extern int sRouletteTileBounds[];
 extern int sRouletteRowEdgesY[];
 extern short data_ov006_0212edb8[];
@@ -1242,7 +1242,7 @@ void RouletteBoard_StartSpin(char *slider) {
     board->mBoardAngle = 0;
     board->mAngleStep = 0x400;
     board->mBoardSpin = -0x200;
-    rand = (unsigned)RandomIntInternal(data_0209e650);
+    rand = (unsigned)RandomIntInternal(&data_0209e650.value);
     board->mSpinSpeed = ((rand & 0x7fffffff) >> 0x13) + 0x2000;
     board->mBraking = 0;
     RouletteBoard_SetStateSpin(board);

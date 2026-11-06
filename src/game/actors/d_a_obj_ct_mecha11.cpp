@@ -41,6 +41,7 @@ enum daObjCtMecha11_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
@@ -66,7 +67,6 @@ extern short data_02082214[];
 extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
 extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;
 extern unsigned char data_0209f2c0[];
-extern int data_0209e650[];
 extern short data_ov035_02112b80[];
 extern CLPS_Block data_ov035_02112238;
 
@@ -127,7 +127,7 @@ int daObjCtMecha11_c::Behavior() {
     mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
         if (DecIfAbove0_Short((unsigned short *)&mRandTimer) == 0) {
-            int r = (unsigned short)((unsigned)RandomIntInternal(data_0209e650) >> 16);
+            int r = (unsigned short)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
             if ((unsigned)r >= 0x7fff)
                 mRandDirection = 1;
             else

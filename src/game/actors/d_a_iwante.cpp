@@ -95,6 +95,7 @@ enum Eyerok_AssetId {
 #include "Particle__System.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -333,7 +334,6 @@ extern CLPS_Block data_ov025_02112cc8;
 extern CLPS_Block data_ov025_02112d48;
 
 /* ---- arm9 data ---- */
-extern int data_0209e650;
 extern void *data_0209f318;
 extern int data_020a0e68[];
 
@@ -552,7 +552,7 @@ void daIwante_c::func_ov066_02116390() {
         else
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000,
                                      0);
-        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf) * 2 + 0x32;
+        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) * 2 + 0x32;
     } else {
         if (mPartIdx == PART_HAND_2)
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000,
@@ -1865,7 +1865,7 @@ int daIwante_c::func_ov066_021189a0() {
  * (data_ov066_0211b03c). */
 int daIwante_c::func_ov066_021189c0() {
     if (func_ov066_021168b0() == 0) return 1;
-    if ((((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1f) & 1) == 0)
+    if ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x1f) & 1) == 0)
         data_ov066_0211ae0c = PART_HAND_2;
     else
         data_ov066_0211ae0c = PART_HAND_1;
@@ -2049,7 +2049,7 @@ int daIwante_c::func_ov066_02118e04() {
     if (p == 0 || mTimer2 != 0)
         return 1;
 
-    coinFlip = ((unsigned int)RandomIntInternal(&data_0209e650) >> 31) & 1;
+    coinFlip = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 31) & 1;
 
     data_ov066_0211ae08 = 0;
     data_ov066_0211ae0c = 0;
@@ -2404,7 +2404,7 @@ int daIwante_c::Behavior() {
 
     if (mDustCounter != 0) {
         if ((mDustCounter & 1) == 0) {
-            int rnd = RandomIntInternal(&data_0209e650);
+            int rnd = RandomIntInternal(&data_0209e650.value);
             int idx = mDustCounter >> 1;
             VecFx32 vin;
             VecFx32 vout;

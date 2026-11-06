@@ -42,6 +42,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -176,7 +177,6 @@ extern void func_02012694(unsigned int a, void *p);
 extern void func_02011cfc(void);
 }
 extern "C" {
-extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
@@ -551,7 +551,7 @@ int daBombking_c::func_ov078_021240a0() {
             return 1;
         }
         if (Vec3_Dist((const Vector3 *)&mArenaPosX, (const Vector3 *)&mPosX) < 0x258000) {
-            short d = (((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 0xf) << 12;
+            short d = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 12;
             if (d < -0x4000)
                 d = -0x4000;
             else if (d > 0x4000)
@@ -1718,7 +1718,7 @@ int daBombking_c::InitResources()
         mSpawnedThrown[i] = (unsigned char)z;
     }
     }
-    mPhase = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
+    mPhase = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x1e) & 1;
     mPhase = mPhase + 1;
     mInitAngleY = mAngleY;
     KingBobOmb_SetState(&data_ov078_0212710c);

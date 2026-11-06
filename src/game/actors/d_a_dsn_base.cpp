@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* Actor IDs this TU compares. No header vocabulary exists (cleaned callers
  * pass raw hex), so they live here, cited to the ROM's own debug table. */
@@ -106,7 +107,6 @@ extern int Vec3_Dist(const Vector3 *, const Vector3 *);
 extern void func_020393d4(int *collider, int callback);
 }
 
-extern int data_0209e650[];
 
 // @symbol _ZN11daDsnBase_cD0Ev
 // @symbol _ZN11daDsnBase_cD1Ev
@@ -178,7 +178,7 @@ void daDsnBase_c::StateRest() {
     if (DecIfAbove0_Byte(&self->timer) != 0)
         return;
     self->state = 4;
-    unsigned int roll = RandomIntInternal(data_0209e650);
+    unsigned int roll = RandomIntInternal(&data_0209e650.value);
     unsigned int rollHigh = roll >> 16;
     self->timer = (char)(rollHigh % 10 + 0x14);
 }
@@ -238,7 +238,8 @@ void daDsnBase_c::StateRise() {
         return;
     self->posY = self->riseY;
     self->state = 1;
-    self->timer = (u8)(((unsigned int)RandomIntInternal(data_0209e650) >> 0x10) % 0x1e + 0xa);
+    self->timer =
+        (u8)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 0x1e + 0xa);
 }
 
 /* The per-frame shadow refresh both Behaviors run after the state step.

@@ -34,10 +34,10 @@ enum daDonketu_c_AssetId {
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "LevelRng.h"
 
 /* The arm9 RNG step has no shared header; data_0209e650 is its state. */
 extern "C" int RandomIntInternal(int *seed);
-extern int data_0209e650;
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the model,
@@ -85,7 +85,7 @@ int daDonketu_c::Behavior() {
             pos.x = x;
             pos.y = sum;
             pos.z = z;
-            int roll = RandomIntInternal(&data_0209e650);
+            int roll = RandomIntInternal(&data_0209e650.value);
             int yrot = mPrevAngleY + 0x8000 + (int)(((u32)roll >> 8) & 0x3ff);
             Vector3_16 rot;
             rot.x = 0;
@@ -125,7 +125,7 @@ void daDonketu_c::UpdateDeathState() {
     pos.x = px;
     pos.y = py;
     pos.z = pz;
-    int roll = RandomIntInternal(&data_0209e650);
+    int roll = RandomIntInternal(&data_0209e650.value);
     Vector3_16 rot;
     s16 ang = (s16)(mPrevAngleY + 0x8000 + (((u32)roll >> 8) & 0x3ff));
     rot.x = 0;

@@ -99,6 +99,7 @@ enum daKuriKing_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -132,7 +133,6 @@ extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 extern "C" void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 extern "C" char* data_0209f318;
 extern "C" int RandomIntInternal(int *seed);
-extern "C" int data_0209e650;
 extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern "C" s16 data_02082214[];
@@ -306,7 +306,7 @@ void daKuriKing_c::func_ov074_0211f244()
         if (a != this) {
             daKuriKing_c *t = a;
             t->mVertAccel = -0xa000;
-            int rv = (unsigned int)RandomIntInternal(&data_0209e650) >> 8;
+            int rv = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
             t->mTimer = 0x30;
             t->mHorzSpeed = ((rv & 0xf) << 0xc) + 0x16000;
             t->mSpeedX = 0;
