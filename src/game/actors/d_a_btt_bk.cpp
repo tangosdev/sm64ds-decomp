@@ -38,7 +38,6 @@ typedef void (daBttBk_c::*PMF)();
 
 /* arm9 C helpers. local extern: no shared header declares these. */
 extern "C" {
-void *func_02010304(void *a, void *b);
 int *Vec3_LslInPlace(Vector3 *v, int sh);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
@@ -83,7 +82,7 @@ s32 daBttBk_c::OnYoshiTryEat() {
 void daBttBk_c::HandleCollision() {
     if (mdCcAc_c.otherOwner == 0)
         return;
-    void *p = func_02010304(this, &mdCcAc_c);
+    void *p = func_02010304(&mdCcAc_c);
     if (p != 0) {
         mCarrier = (dActor_c *)p;
         SetState(1);

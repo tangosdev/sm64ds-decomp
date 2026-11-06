@@ -13417,11 +13417,6 @@
         "return:void"
       ]
     },
-    "func_0200fccc": {
-      "src/game/actors/d_a_obj_power_up_item.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "func_02011d14": {
       "src/game/actors/d_a_trs.cpp": [
         "return:unsigned short"
@@ -15782,11 +15777,6 @@
       "src/runtime/actor/ActorDerived.cpp": [
         "param:#1 unsigned int",
         "return:fBase_c *"
-      ]
-    },
-    "func_0204335c": {
-      "src/unnamed/arm9/0204/func_020433b8.c": [
-        "return:void"
       ]
     },
     "func_02043f4c": {

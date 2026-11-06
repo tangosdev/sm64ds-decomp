@@ -102,7 +102,6 @@ void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c_);
 int RandomIntInternal(int *p);
 void func_ov063_0211cae8(void *found, int mask);
 void func_0203568c(int *p, int v);
-void func_0200f760(void *a, void *b);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
                          Vector3_16 *first, Vector3_16 *second);
@@ -733,7 +732,7 @@ int daBook_c::Render()
 // @symbol _ZN8daBook_c8BehaviorEv
 int daBook_c::Behavior()
 {
-    func_0200f760(this, &mdCcAcPos_c);
+    func_0200f760(&mdCcAcPos_c);
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         /* Yoshi released the book (mEatenByYoshi, mSpitOutTimer == 5): save the
          * state, give it 0x8000 forward speed and let STATE_YOSHI_SKID bring

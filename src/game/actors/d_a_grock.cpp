@@ -89,13 +89,10 @@ struct AngleWords {
     u16 w[3];
 };
 
-/* arm9 C helpers with no shared header. func_02012694 has the same body as
- * Sound::PlayBank3 (0x02012664); the ROM calls this copy. func_0200f760
- * clears the cylinder flags bit 2, then sets it when the closest player is
- * vanish Luigi (MakeVanishLuigiWork is the other copy). */
+/* arm9 C helper with no shared header. func_02012694 has the same body as
+ * Sound::PlayBank3 (0x02012664); the ROM calls this copy. */
 extern "C" {
 extern void func_02012694(unsigned int id, void *pos);
-extern void func_0200f760(void *self, void *cyl);
 }
 
 extern s16 data_02082214[];
@@ -282,7 +279,7 @@ int daGrock_c::Render() {
 // @symbol _ZN9daGrock_c8BehaviorEv
 int daGrock_c::Behavior() {
     if (mType >= kGrockRolling) {
-        func_0200f760(this, &mdCcAcPos_c);
+        func_0200f760(&mdCcAcPos_c);
         HandleCylinderHit();
         if (mDeathState == 8)
             return 1;
