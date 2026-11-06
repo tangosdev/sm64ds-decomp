@@ -3291,7 +3291,7 @@ int daPly_c::func_ov002_020c1ad8(int ang) {
     }
     if (this->func_ov002_020c19d0(0x50, 0x32) == 0) return 0;
 
-    a = (int)((long long)(a + 0x8000));
+    a = (int)(a + 0x8000);
     d = AngleDiff(this->mDesiredAngleY, (s16)a);
     if (d < 0x4000) {
         if (d < 0x1555) {
@@ -4907,7 +4907,7 @@ int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos,
 finish:
     mStateWork = 0;
     mStateArg = d & 3;
-    *(u8 *)((long long)(&mStateArg)) |= (e & 3) << 2;
+    *(u8 *)(&mStateArg) |= (e & 3) << 2;
 
     /* First entry constructs it: guard, three stores, ~Vector3() registration. */
     static Vector3 sTalkOff(0, 0x64000, 0x64000);
@@ -20596,10 +20596,10 @@ void daPly_c::func_ov002_020e1c20() {
                                                 (const Vector3 *)(&mCamSpacePosX), 0);
             mHorzSpeed = FX_MUL(mHorzSpeed, 0xf00);
             if ((mVertSpeed) < 0) {
-                int *p = (int *)((long long)(&mVertSpeed));
+                int *p = (int *)(&mVertSpeed);
                 *p = *p + 0xc00;
             } else {
-                int *p = (int *)((long long)(&mVertSpeed));
+                int *p = (int *)(&mVertSpeed);
                 *p = *p + 0x1000;
             }
             if ((mVertSpeed) < 0x11000) {

@@ -801,7 +801,7 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
     }
 
     {
-        int *ppos_src = (int *)(int)(&goomba->mClosestPlayer->mPosX);
+        int *ppos_src = (int *)(&goomba->mClosestPlayer->mPosX);
         ppos.x = ppos_src[0];
         ppos.y = ppos_src[1];
         ppos.z = ppos_src[2];

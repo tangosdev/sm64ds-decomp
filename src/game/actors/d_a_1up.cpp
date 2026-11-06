@@ -323,10 +323,12 @@ void da1up_c::func_ov002_020af0c0() {
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
-        /* The player's position is read through an int* laundered via
-           (void*)(int); reading p->mPosX/Y/Z directly here changes the bytes
-           (tried: it did not byte-match), so the launder stays. */
-        int* s = (int*)((void*)(int)&p->mPosX);
+        /* The player's position is read through an int * over a (void *) of
+           &p->mPosX; reading p->mPosX/Y/Z directly here changes the bytes
+           (tried: it did not byte-match), so that spelling stays. The (int)
+           round-trip that used to sit between the two casts did nothing and
+           is gone (#821). */
+        int *s = (int *)(void *)&p->mPosX;
         ppos.x = s[0];
         ppos.y = s[1];
         ppos.z = s[2];

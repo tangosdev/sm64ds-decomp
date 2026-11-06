@@ -416,7 +416,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         cur.x = ax; cur.y = ay; cur.z = az;
         thisx->mLinkPos[0].x = ax;
         ay = cur.y;
-        p6a0 = (int *)(int)&thisx->mChainTimer;
+        p6a0 = (int *)&thisx->mChainTimer;
         thisx->mLinkPos[0].y = ay;
         {
             int cz = cur.z;
