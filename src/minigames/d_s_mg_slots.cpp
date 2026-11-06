@@ -648,7 +648,7 @@ s32 dScMgSlot3_c::Render() {
     char *c = (char *)this;
     int i;
 
-    Camera_InitSlotsView((char *)pad_4660);
+    Camera_InitSlotsView((char *)&mCamera);
     Mascot_Draw((char *)&mMascot);
 
     if (mReelDrawY > 0) {
@@ -881,7 +881,7 @@ s32 dScMgSlot3_c::InitResources() {
     G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     Mascot_Load((char *)&mMascot);
-    Camera_InitSlotsView((char *)pad_4660);
+    Camera_InitSlotsView((char *)&mCamera);
 
     mReelDifficulty = (int)mLevel;
 
