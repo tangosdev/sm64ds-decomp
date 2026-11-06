@@ -7,7 +7,6 @@
 extern "C" {
 
 extern char data_02099e6c[]; /* "rom" */
-extern int data_020a1fc0;
 extern char data_020a2400[];
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
@@ -34,7 +33,7 @@ void func_02042254(void) {
     int b = 2;
     int c = 3;
     int d = 1;
-    FileShareWork *work = (FileShareWork *)&data_020a1fc0;
+    FileShareWork *work = &data_020a1fc0;
     char *base = data_020a2400;
 
     while (1) {

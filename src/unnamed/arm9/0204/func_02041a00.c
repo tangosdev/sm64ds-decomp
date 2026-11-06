@@ -2,7 +2,6 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/fs_views.h"
 extern char data_020a2400[];
-extern char data_020a1fc0[];
 extern void func_02041224(char *thiz, int n);
 extern int func_020656d4(u16 arg0, const void *arg1, s32 arg2, u32 arg3);
 extern void func_02042160(void);
@@ -31,12 +30,12 @@ void func_02041a00(FSFile *file) {
     int len;
     int pos;
     func_02041224(data_020a2400, file->arg.readfile.len);
-    FILE_SHARE_WORK->mReadRequest = (int)file;
+    data_020a1fc0.mReadRequest = (int)file;
     len = file->arg.readfile.len;
     pos = file->prop.file.pos;
     m.kind = 0;
     m.length = len;
-    packetSize = FILE_SHARE_WORK->mParentPacketSize;
+    packetSize = data_020a1fc0.mParentPacketSize;
     m.offset = pos;
     m.packetSizeHigh = (packetSize >> 8) & 0xff;
     m.packetSizeLow = (u8)packetSize;

@@ -176,7 +176,11 @@ typedef struct FileShareWork {
     int mChildPacketSize;  /* 0x2c -- child MP send size, likewise */
     unsigned short mPort;  /* 0x30 -- port; WM_SetPortCallback registers the port
                               callback on it, func_02041930 sends on it */
-    unsigned char pad_032[0x40e];
+    unsigned char pad_032[0xe];
+    /* 0x40 -- the MP send buffer, 32-byte aligned (0x020a2000): func_02041930
+     * builds the next packet in it (WBT's parent or child send hook) and hands
+     * it to WM_SetMPDataToPort. Its extent is the gap up to mArea. */
+    unsigned char mSendBuf[0x400];
     unsigned char mArea[sizeof(FileShareParentArea)]; /* 0x440 -- FileShareParentArea
                                                          or FileShareChildArea, by
                                                          mIsParent */
@@ -190,7 +194,14 @@ typedef char FileShareChildArea_size_must_be_0xc7c[sizeof(FileShareChildArea) ==
 typedef char FileShareMsg_size_must_be_0xc[sizeof(FileShareMsg) == 0xc ? 1 : -1];
 typedef char FileShareWork_size_must_be_0x2b70[sizeof(FileShareWork) == 0x2b70 ? 1 : -1];
 
-/* The work block through its view; each consumer declares data_020a1fc0. */
-#define FILE_SHARE_WORK ((FileShareWork *)data_020a1fc0)
+/* The work block itself, in .bss: it ends at 0x020a4b30, below the next
+ * symbol (0x020a4b40). data_020a2400 is its mArea under a symbol of its own. */
+extern FileShareWork data_020a1fc0;
+
+/* The block through a pointer cast. Read as data_020a1fc0.mArea, mArea's
+ * address folds into a literal of its own (data_020a1fc0+0x440);
+ * func_020417d0 and func_02041e14 add 0x440 to the block's address instead,
+ * which this spelling keeps. */
+#define FILE_SHARE_WORK ((FileShareWork *)&data_020a1fc0)
 
 #endif

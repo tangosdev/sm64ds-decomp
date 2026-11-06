@@ -31,7 +31,6 @@ extern void func_02040f30(void *arg);
 
 extern int data_020a0f84;
 extern int data_020a0f88;
-extern FileShareWork data_020a1fc0;
 extern char data_02082158[];
 }
 
