@@ -146,7 +146,7 @@ int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int id, const Vector3 *pos);
 /* dBgW callback setter. Its C definition takes int *; the call casts
    &mMeshCollider. */
-void func_020393d4(int *collider, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
                                             int scale, s16 angY, CLPS_Block *clps);
@@ -528,7 +528,7 @@ int daObjRotateUpdownLift_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)kcl, *(&mClsnMat), 0x199, mAngleY,
                               *(data_ov091_02134c38[variant].clps));
-    func_020393d4((int *)&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     {
         int py;

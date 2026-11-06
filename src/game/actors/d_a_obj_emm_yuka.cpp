@@ -51,7 +51,7 @@ struct EmmYukaCollisionFilePtr : SharedFilePtr {
 
 extern "C" {
 extern EmmYukaFiles data_ov052_021125a0;
-void func_020393d4(int *bg, int cb);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
                                   s16 angleY, CLPS_Block *clps);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -163,7 +163,7 @@ int daObjEmmYuka_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021125a0.collision),
                               *(&mClsnMat), 0x199, mAngleY, *(data_ov052_021125a0.clps));
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;
     mHorzSpeed = 0xa000;

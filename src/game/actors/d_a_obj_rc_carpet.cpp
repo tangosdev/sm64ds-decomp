@@ -69,7 +69,7 @@ FlyingCarpetResources data_ov036_02113f58 = {&gRcCarpetModelFile, &gRcCarpetColl
                                              &data_ov036_02112b28};
 
 extern "C" {
-void func_020393d4(dBgW *collider, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjRcCarpet_c_classInit
@@ -99,7 +99,7 @@ int daObjRcCarpet_c::InitResources() {
     UpdateClsnPosAndRot();
     KCL_File *collisionFile = (KCL_File *)dBgW_Kc::LoadFile(*data_ov036_02113f58.collision);
     mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngleY, *data_ov036_02113f58.clps);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
     BaseInitResources();

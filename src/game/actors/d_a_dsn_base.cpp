@@ -104,7 +104,7 @@ extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *);
 extern int RandomIntInternal(int *);
 extern int Vec3_Dist(const Vector3 *, const Vector3 *);
-extern void func_020393d4(int *collider, int callback);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 
@@ -337,7 +337,7 @@ s32 daDsnBase_c::Init() {
     clps = files->clps;
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(clps));
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
 
     texAnim = ((DsnBaseFileTable *)mFileTable)->texAnim;

@@ -139,7 +139,7 @@ int dBgW::DetectClsn(dBgCh_SphCrr &sphere) {
 // @symbol _ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_
 void dBgW::BeforeClsn(dBgPi &res, dActor_c *actor, Vector3 &pos, Vector3_16 *motionAng,
                       Vector3_16 *ang) {
-    beforeClsnCallback(this, actor, &res, &pos, motionAng, ang);
+    beforeClsnCallback(*this, actor, res, pos, motionAng, ang);
 }
 
 // @symbol _ZN4dBgW12TransformPosERK7Vector3RS0_
@@ -182,9 +182,8 @@ int dBgW::IsEnabled() {
 // @symbol func_020393d4
 
 /* Sets beforeClsnCallback (+0x18). */
-extern "C" void func_020393d4(int *collider, int callbackAddress) {
-    reinterpret_cast<dBgW *>(collider)->beforeClsnCallback =
-        reinterpret_cast<BeforeClsnCallback>(callbackAddress);
+extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback) {
+    collider->beforeClsnCallback = callback;
 }
 
 // @symbol _ZNK4dBgW21GetBeforeClsnCallbackEv

@@ -53,7 +53,7 @@ int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
 
-void func_020393d4(int *p, int v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(int *p, int v);
 
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
@@ -256,7 +256,7 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     ((dBgW_KcMbg *)(&self->mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), *(&self->mClsnMat),
                               0x1000, self->mAngleY, *(arg->clps));
-    func_020393d4((int *)&self->mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+    func_020393d4(&self->mMeshCollider, &dBgW::UpdatePosWithVelocity);
     func_020393c4((int *)&self->mMeshCollider, (int)&daObjMaruta_c::BeforeClsnCallback);
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
