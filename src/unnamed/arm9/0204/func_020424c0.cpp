@@ -36,6 +36,9 @@ typedef struct {
     int size;
 } RomRegion;
 
+/* local extern: the header's FileShareWork (arm9_a1fc0_file_share.h) types
+ * mAllocFunc, mAllocArg and mTable as int, so through it this function would
+ * cast the allocator, its argument and the result back. Same layout. */
 extern WorkInfo data_020a1fc0;
 extern char data_02099e6c[]; /* "rom" */
 
