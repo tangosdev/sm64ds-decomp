@@ -53,6 +53,7 @@ struct FileSaveData {
        keep it in step with the per-controller record. */
     u8 controllerMode;
 };
+typedef char FileSaveData_size_must_be_0x44[sizeof(FileSaveData) == 0x44 ? 1 : -1];
 
 /* Named bits of FileSaveData::flags2 (the live word is 0x0209caa8). */
 enum FileSaveFlags2 {
@@ -81,6 +82,7 @@ struct MinigameSaveData {
     u8 seenHi;  /* 0x0c (block 0x50) -- the same for minigames 0x1c.. */
     u8 pad_00d[0x2e4 - 0xd];
 };
+typedef char MinigameSaveData_size_must_be_0x2e4[sizeof(MinigameSaveData) == 0x2e4 ? 1 : -1];
 
 /* The live save block at 0x0209caa0: the current file, the minigame block and
    the active-file byte; func_02013e64 clears all 0x32c bytes. */
