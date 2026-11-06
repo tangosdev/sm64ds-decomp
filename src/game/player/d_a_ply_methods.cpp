@@ -4284,7 +4284,8 @@ int daPly_c::St_EndingFly_Main() {
         JumboStarCutsceneFalling();
         break;
     case 1:
-        if (JumboStarCutsceneTakingOff() == 0) break;
+        if (JumboStarCutsceneTakingOff() == 0)
+            break;
     case 2:
         JumboStarCutsceneFlying();
         break;
