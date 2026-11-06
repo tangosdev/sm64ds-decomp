@@ -78,7 +78,7 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void  Matrix4x3_FromRotationY(void *m, s16 angle);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s16 rx, s16 ry, s16 rz);
+void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
 void  Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 void  Vec3_Asr(void *dst, void *src, int n);
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);

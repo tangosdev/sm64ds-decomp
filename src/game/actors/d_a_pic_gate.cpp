@@ -152,9 +152,9 @@ void daPicGate_c::func_ov080_0212555c()
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
         -(((unsigned char)(param1 & 0xf) + 1) * 0x64000) / 2 >> 3, 0, 0);
-    *(Matrix4x3 *)mMtx = data_020a0e68;
+    mMtx = data_020a0e68;
     InvMat4x3((int *)&data_020a0e68, (int *)&data_020a0e68);
-    *(Matrix4x3 *)mInvMtx = data_020a0e68;
+    mInvMtx = data_020a0e68;
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125630Ei
@@ -216,7 +216,7 @@ void daPicGate_c::func_ov080_021256f8()
 
     Vec3_Asr((Vector3 *)&a, (Vector3 *)&r5->mPrevPosX, 3);
     Vec3_Asr((Vector3 *)&b, (Vector3 *)&r5->mPosX, 3);
-    data_020a0e68 = *(Matrix4x3 *)mInvMtx;
+    data_020a0e68 = mInvMtx;
     MulVec3Mat4x3((Vector3 *)&a, &data_020a0e68, (Vector3 *)&oa);
     MulVec3Mat4x3((Vector3 *)&b, &data_020a0e68, (Vector3 *)&ob);
 
@@ -484,14 +484,14 @@ void daPicGate_c::func_ov080_02125f00()
  * one VTX_16 pair at >>8. */
 void daPicGate_c::func_ov080_02125fd0()
 {
-    int tmp[13];
+    Matrix4x3 tmp;
     int i;
     Vertex *p;
 
     G3_MTX_PUSH = 0;
-    MulMat4x3Mat4x3(mMtx, (const int *)&data_0209b3ec, tmp);
+    MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = 2;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;
     func_ov080_02125460();
@@ -584,15 +584,15 @@ extern int data_ov080_0212771c[];
  * the same plain way. The texture binds with normal-based texture
  * coordinates (GX_TEXGEN_NORMAL) and no repeat or flip. */
 void daPicGate_c::func_ov080_021261f4() {
-    int tmp[12];
+    Matrix4x3 tmp;
     int i, j, n;
 
-    MulMat4x3Mat4x3(mMtx, data_0209b3ec.m, tmp);
+    MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_PUSH = 0;
     func_02055998(data_ov080_0212771c);
-    func_02055388(tmp);
+    func_02055388(&tmp);
     G3_MTX_MODE = kMtxPosVec;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     G3_TEXCOORD = 0x04000400;
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;

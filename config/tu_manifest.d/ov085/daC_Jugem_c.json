@@ -486,29 +486,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1081",
+      "from": "@1145",
       "to": "@1063",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1082",
+      "from": "@1146",
       "to": "@1064",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1083",
+      "from": "@1147",
       "to": "@1065",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1084",
+      "from": "@1148",
       "to": "@1066",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1085",
+      "from": "@1149",
       "to": "@1067",
-      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
+      "evidence": "Compiler-local destructor-registration symbol, as emitted by the current production object. The five .bss nodes in __sinit relocation order are three SharedFilePtr-derived registrations followed by the two JugemVec3 registrations; destination identities retain the existing configured ROM rows and are checked by full TU link and byte comparison. | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "symbol_binding_rewrites": [

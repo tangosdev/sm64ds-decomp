@@ -55,6 +55,7 @@ enum daC_Jugem_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 /* File-scope objects at the end of this file construct the three resource
  * handles (model file 0x2d7, animation file 0x2d8, texture-sequence file
@@ -109,10 +110,6 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int   LenVec3(const void *v);
 int   AngleDiff(int a, int b);
-void  Matrix4x3_FromRotationY(void *m, int angY);
-void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
 void  MulVec3Mat4x3(const void *v, const void *m, void *out);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,
@@ -137,7 +134,6 @@ extern u8             data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
 extern s8 gCurrentSublevel;
 extern short          data_02082214[];      /* the sine lookup table */
-extern Matrix4x3      data_020a0e68;        /* scratch matrix */
 
 extern JugemModelFile  data_ov085_0213074c;  /* model file */
 extern JugemAnimationFilePtr  data_ov085_02130744;  /* animation file */

@@ -103,7 +103,7 @@ int  Jump3D_InitPool(char *base, int count);
 void Jump3D_EnableInput(void);
 int  RandomIntInternal(int *seed);
 
-extern int  data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 extern int  data_0209e650;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;

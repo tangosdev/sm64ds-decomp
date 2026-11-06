@@ -47,6 +47,7 @@ enum d_a_obj_clock_huriko_AssetId { ASSET_C2_HURIKO_BMD = 0x05b3 };
 #include "daObjClockHuriko_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "math/MtxStack.h"
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4. The manifest aliases those undefined members onto the ROM
@@ -56,9 +57,6 @@ struct ClockHurikoModelFilePtr : SharedFilePtr {
     ~ClockHurikoModelFilePtr();
 };
 
-extern "C" {
-extern void Matrix4x3_FromRotationZXYExt(void *, int, int, int);
-}
 
 extern signed char data_02092110[];
 extern ClockHurikoModelFilePtr data_ov013_02112280;

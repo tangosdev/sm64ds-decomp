@@ -24,9 +24,9 @@ extern void func_02055388(void *m); /* multiply by the 4x3 matrix */
 void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
-    int out[12];
-    int rot[12];
-    int scl[12];
+    Matrix4x3 out;
+    Matrix4x3 rot;
+    Matrix4x3 scl;
     u32 id;
     u32 v;
 
@@ -52,24 +52,24 @@ void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
         int idx = ptcl->angle >> 4;
         data_02099fbc[data->polygonRotAxis](data_02082214[idx * 2], data_02082214[idx * 2 + 1],
-                                            rot);
+                                            &rot);
     }
 
     {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
         int sy = FX_MUL(ptcl->scale, ptcl->animScale);
         int sx = FX_MUL(sy, data->aspectRatio);
-        func_020527e8(scl, sx, sy, sy);
+        func_020527e8(scl.m, sx, sy, sy);
     }
 
-    MulMat4x3Mat4x3(scl, rot, out);
+    MulMat4x3Mat4x3(&scl, &rot, &out);
 
-    out[9] = ptcl->offset.x + ptcl->basePosition.x;
-    out[10] = ptcl->offset.y + ptcl->basePosition.y;
-    out[11] = ptcl->offset.z + ptcl->basePosition.z;
+    out.m[9] = ptcl->offset.x + ptcl->basePosition.x;
+    out.m[10] = ptcl->offset.y + ptcl->basePosition.y;
+    out.m[11] = ptcl->offset.z + ptcl->basePosition.z;
 
     func_020553a4(mgr->mDrawMatrix);
-    func_02055388(out);
+    func_02055388(&out);
 
     reg_G3_COLOR = ptcl->color;
     {

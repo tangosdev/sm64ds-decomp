@@ -35,7 +35,8 @@
  * - func_02044534 takes include/private/mtx43.h's Mtx43 and walks its r[]
  *   rows. The Matrix4x3 this file sees through dExtModel_c.h is math/Matrix.h's
  *   rotation-plus-translation pair, with no per-axis rows, so Render's call and
- *   the three MulMat4x3Mat4x3 sites carry reinterpret casts that emit no code.
+ *   the MulMat4x3Mat4x3 sites that pass an Mtx43 or a bone builder's int[12]
+ *   carry reinterpret casts that emit no code.
  *   Vec3 stays local: it is the light direction, not a matrix row.
  * - func_02044b30's buf[] is block-copied from data_02099f94 (the ROM's
  *   +0x284 load relocates against the table, so an init-list's anonymous
@@ -234,10 +235,7 @@ void func_02045074(ModelComponents *components, struct Node *n) {
         func_02048234(m, bone->scaleX, bone->scaleY, bone->scaleZ, bone->rotX, bone->rotY,
                       bone->rotZ, bone->transX, bone->transY, bone->transZ);
     }
-    {
-        int t = (int)components->transforms;
-        MulMat4x3Mat4x3(&m[0], (const int *)((a + n->f8) * 0x30 + t), (int *)(a * 0x30 + t));
-    }
+    MulMat4x3Mat4x3((Matrix4x3 *)m, &components->transforms[a + n->f8], &components->transforms[a]);
     if (n->fa != 0)
         func_02045074(components, (struct Node *)((char *)n + n->fa * 0x40));
     if (n->fc != 0)
@@ -271,7 +269,8 @@ void func_02044f74(void *g, struct Node *n)
     {
         int *base = *(int **)((char *)g + 0x34);
         int t = base[3];
-        MulMat4x3Mat4x3(&m[0], (const int *)((a + n->f8) * 0x30 + t), (int *)((s16)a * 0x30 + t));
+        MulMat4x3Mat4x3((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
+                        (Matrix4x3 *)((s16)a * 0x30 + t));
     }
     if (n->fa != 0) func_02044f74(g, (struct Node *)((char *)n + n->fa * 0x40));
     if (n->fc != 0) func_02044f74(g, (struct Node *)((char *)n + n->fc * 0x40));
@@ -597,8 +596,10 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
                 off = ix * 0x30;
                 if (mtx) {
                     func_020527e8(&mw, dir->x, dir->y, dir->z);
-                    MulMat4x3Mat4x3((const int *)&mw, (const int *)mtx, (int *)&mw);
-                    MulMat4x3Mat4x3((const int *)mp, (const int *)&mw, (int *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)&mw, (const Matrix4x3 *)mtx,
+                                    (Matrix4x3 *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)mp, (const Matrix4x3 *)&mw,
+                                    (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
                 m.r[2].y = m.r[2].x = z14;
@@ -607,8 +608,8 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
                 m.r[3].y = mp->r[3].y;
                 m.r[3].z = mp->r[3].z;
                 if (mtx) {
-                    MulMat4x3Mat4x3((const int *)((*(char **)(self + 0xc)) + off), (const int *)mtx,
-                                    (int *)&mw);
+                    MulMat4x3Mat4x3((const Matrix4x3 *)((*(char **)(self + 0xc)) + off),
+                                    (const Matrix4x3 *)mtx, (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
                 if (mp->r[1].x * mp->r[1].x + mp->r[1].y * mp->r[1].y > 0x4000) {

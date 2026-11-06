@@ -1,40 +1,56 @@
-#include "private/mtx43.h"
+#include "common.h"
 
 typedef long long s64;
 
-void MulMat4x3Mat4x3(const int *A, const int *B, int *dst)
-{
-    int tmp[12];
+void MulMat4x3Mat4x3(const Matrix4x3 *A, const Matrix4x3 *B, Matrix4x3 *dst) {
+    Matrix4x3 tmp;
     int a0, a1, a2;
     int b0, b1, b2;
-    int *d = dst;
+    Matrix4x3 *d = dst;
 
-    if (dst == B) d = tmp;
+    if (dst == B)
+        d = &tmp;
 
-    a0 = A[0]; a1 = A[1]; a2 = A[2];
-    d[0] = (int)(((s64)a0 * B[0] + (s64)a1 * B[3] + (s64)a2 * B[6]) >> 12);
-    d[1] = (int)(((s64)a0 * B[1] + (s64)a1 * B[4] + (s64)a2 * B[7]) >> 12);
-    b0 = B[2]; b1 = B[5]; b2 = B[8];
-    d[2] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
+    a0 = A->m[0];
+    a1 = A->m[1];
+    a2 = A->m[2];
+    d->m[0] = (int)(((s64)a0 * B->m[0] + (s64)a1 * B->m[3] + (s64)a2 * B->m[6]) >> 12);
+    d->m[1] = (int)(((s64)a0 * B->m[1] + (s64)a1 * B->m[4] + (s64)a2 * B->m[7]) >> 12);
+    b0 = B->m[2];
+    b1 = B->m[5];
+    b2 = B->m[8];
+    d->m[2] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
 
-    a0 = A[3]; a1 = A[4]; a2 = A[5];
-    d[5] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
-    d[4] = (int)(((s64)a0 * B[1] + (s64)a1 * B[4] + (s64)a2 * B[7]) >> 12);
-    b0 = B[0]; b1 = B[3]; b2 = B[6];
-    d[3] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
+    a0 = A->m[3];
+    a1 = A->m[4];
+    a2 = A->m[5];
+    d->m[5] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
+    d->m[4] = (int)(((s64)a0 * B->m[1] + (s64)a1 * B->m[4] + (s64)a2 * B->m[7]) >> 12);
+    b0 = B->m[0];
+    b1 = B->m[3];
+    b2 = B->m[6];
+    d->m[3] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
 
-    a0 = A[6]; a1 = A[7]; a2 = A[8];
-    d[6] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
-    d[7] = (int)(((s64)a0 * B[1] + (s64)a1 * B[4] + (s64)a2 * B[7]) >> 12);
-    b0 = B[2]; b1 = B[5]; b2 = B[8];
-    d[8] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
+    a0 = A->m[6];
+    a1 = A->m[7];
+    a2 = A->m[8];
+    d->m[6] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
+    d->m[7] = (int)(((s64)a0 * B->m[1] + (s64)a1 * B->m[4] + (s64)a2 * B->m[7]) >> 12);
+    b0 = B->m[2];
+    b1 = B->m[5];
+    b2 = B->m[8];
+    d->m[8] = (int)(((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12);
 
-    a0 = A[9]; a1 = A[10]; a2 = A[11];
-    d[11] = (int)((s64)B[11] + (((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12));
-    d[10] = (int)((s64)B[10] + (((s64)a0 * B[1] + (s64)a1 * B[4] + (s64)a2 * B[7]) >> 12));
-    d[9] = (int)((s64)B[9] + (((s64)a0 * B[0] + (s64)a1 * B[3] + (s64)a2 * B[6]) >> 12));
+    a0 = A->m[9];
+    a1 = A->m[10];
+    a2 = A->m[11];
+    d->m[11] = (int)((s64)B->m[11] + (((s64)a0 * b0 + (s64)a1 * b1 + (s64)a2 * b2) >> 12));
+    d->m[10] =
+        (int)((s64)B->m[10] + (((s64)a0 * B->m[1] + (s64)a1 * B->m[4] + (s64)a2 * B->m[7]) >> 12));
+    d->m[9] =
+        (int)((s64)B->m[9] + (((s64)a0 * B->m[0] + (s64)a1 * B->m[3] + (s64)a2 * B->m[6]) >> 12));
 
-    if (d == tmp) {
-        *(Mtx43 *)dst = *(Mtx43 *)tmp;
+    if (d == &tmp) {
+        *dst = tmp;
     }
 }

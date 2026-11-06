@@ -18,8 +18,7 @@
  * The routines are C: their definitions are .c files, so the prototypes
  * read as C too, and a .c file can include this header for them. Matrices
  * pass as Matrix4x3 *. Angles pass as int to the "set" forms and as short to
- * the "apply" forms, as each definition takes them. MulMat4x3Mat4x3 still
- * takes const int * because its definition indexes the twelve words directly.
+ * the "apply" forms, as each definition takes them.
  *
  * Each named parameter below takes a compiler @NNN number in every file that
  * includes this header, so naming an unnamed one renumbers those files.
@@ -38,7 +37,10 @@ void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
 void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *, short);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void MulMat4x3Mat4x3(const int *a, const int *b, int *out);
+void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *, int, int, int);
+void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
+void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
+void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 
 extern Matrix4x3 data_020a0e68;
 
@@ -54,7 +56,7 @@ struct MtxStack {
     }
     /* now = m * now */
     static void concat(const Matrix4x3 &m) {
-        MulMat4x3Mat4x3((const int *)&m, (const int *)&data_020a0e68, (int *)&data_020a0e68);
+        MulMat4x3Mat4x3(&m, &data_020a0e68, &data_020a0e68);
     }
     static void transS(int x, int y, int z) {
         Matrix4x3_FromTranslation(&data_020a0e68, x, y, z);

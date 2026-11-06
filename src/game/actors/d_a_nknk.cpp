@@ -65,6 +65,7 @@ enum d_a_nknk_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the two models,
@@ -111,9 +112,6 @@ extern SharedFilePtr* data_ov062_0211cee0[2];
 typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
 
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *m, short angY);
-extern struct Matrix4x3 data_020a0e68; /* MATRIX_SCRATCH_PAPER */
 inline struct Matrix4x3 *inline_fn()
 {
   return &data_020a0e68;

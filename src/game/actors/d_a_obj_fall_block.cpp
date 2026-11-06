@@ -47,12 +47,12 @@
 enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 
 #include "ResourceDescriptor.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
-void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 int DecIfAbove0_Byte(u8 *p);
 int DecIfAbove0_Short(u16 *p);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);

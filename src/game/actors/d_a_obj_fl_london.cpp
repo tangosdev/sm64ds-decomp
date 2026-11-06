@@ -31,6 +31,7 @@
 #include "dBgW.h"
 #include "dBgW_Kc.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 struct CLPS_Block;
 
@@ -56,7 +57,6 @@ extern CLPS_Block data_ov064_0211bb2c;
 /* local extern: the arm9 rotation builder and the dBgW callback store,
  * with no shared header yet. */
 extern "C" {
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 void func_020393d4(void *p, void *v);
 }
 

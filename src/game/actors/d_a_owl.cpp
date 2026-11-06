@@ -74,6 +74,7 @@ enum daOwl_c_AssetId {
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 /* Resource handles the static initializer constructs. The wrapper spellings
  * are reconstructed; the constructor and destructor addresses, the file IDs
@@ -156,7 +157,6 @@ extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 extern short data_02082214[];
 extern int data_0209e650[];
-extern Matrix4x3 data_020a0e68;
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
@@ -168,15 +168,10 @@ int Vec3_Dist(const void *a, const void *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
 unsigned int RandomIntInternal(void *seed);
-void Matrix4x3_FromRotationY(void *m, int angle);
 void MulVec3Mat4x3(void *dst, void *mat, void *src);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(OwlVec *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
-void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
 int IsStarCollectedInCurLevel(int);
 unsigned short DecIfAbove0_Short(void *);
 }
@@ -543,8 +538,7 @@ void daOwl_c::func_ov094_021361d8()
         mAngleX, mAngleY, mAngleZ);
     mAnmModel.ApplyOpacity(mOpacity, 1);
     mAnmModel.mat4x3 = data_020a0e68;
-    MulMat4x3Mat4x3((const int *)&mAnmModel.data.transforms[1], (const int *)&mAnmModel.mat4x3,
-                    out.m);
+    MulMat4x3Mat4x3(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0x38000) >> 3,

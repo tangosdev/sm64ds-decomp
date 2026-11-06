@@ -45,10 +45,10 @@
 #include "math/CalcLib.h"
 
 #include "ResourceDescriptor.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 void func_02012694(unsigned int a, void *b);
-void Matrix4x3_FromRotationXYZExt(void *mtx, int x, int y, int z);
 int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);

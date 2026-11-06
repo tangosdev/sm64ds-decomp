@@ -39,12 +39,12 @@
 #include "Particle__System.h"
 #include "dBgCh_Gnd.h"
 #include "daPly_c.h"
+#include "math/MtxStack.h"
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void Matrix4x3_FromRotationXYZExt(Matrix4x3 *matrix, s16 x, s16 y, s16 z);
 short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 }
 extern short data_02082214[];

@@ -184,7 +184,7 @@ extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
 extern unsigned char data_0209f2d8[];
 extern short data_02082214[];
-extern char data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 }
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -405,8 +405,8 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
     out.x = 0; out.y = 0; out.z = 0;
 
-    Matrix4x3_FromRotationXYZExt(data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
-    MulVec3Mat4x3(&in, data_020a0e68, &out);
+    Matrix4x3_FromRotationXYZExt(&data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
+    MulVec3Mat4x3(&in, &data_020a0e68, &out);
     Vec3_Add((Vector3 *)&added, (const Vector3 *)&thisx->mPosX, (const Vector3 *)&out);
 
     {
@@ -447,9 +447,9 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         ang = cstd::atan2(delta.x, delta.z);
         hlen = Vec3_HorzLen(&delta);
         angz = (s16)(-cstd::atan2(delta.y, hlen));
-        Matrix4x3_FromRotationY(data_020a0e68, ang);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, angz);
-        MulVec3Mat4x3(&in, data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&data_020a0e68, ang);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);
+        MulVec3Mat4x3(&in, &data_020a0e68, &out);
         vel->x = pos->x; vel->y = pos->y; vel->z = pos->z;
         Vec3_Add((Vector3 *)&v48, (const Vector3 *)src, (const Vector3 *)&out);
         pos->x = v48.x; pos->y = v48.y; pos->z = v48.z;

@@ -90,6 +90,7 @@
 #include "daObjNumber_c.h"
 #include "daCoin_c.h"
 #include "daFPknBall_c.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -1017,13 +1018,8 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
  * 0x02010180  size 0x130 */
 extern "C" {
 void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
-void Matrix4x3_FromTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
 void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-extern Matrix4x3 data_020a0e68;
 }
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;

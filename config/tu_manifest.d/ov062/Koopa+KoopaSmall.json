@@ -1516,59 +1516,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1270",
+      "from": "@1342",
       "to": "@1292",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 26, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1264 to @1271 after adding the mHomePos Vector3 view. The existing target @1292 is unchanged. Re-keyed from @1271 to @1270 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 26, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1264 to @1271 after adding the mHomePos Vector3 view. The existing target @1292 is unchanged. Re-keyed from @1271 to @1270 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1263",
+      "from": "@1335",
       "to": "@1285",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 34, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1257 to @1264 after adding the mHomePos Vector3 view. The existing target @1285 is unchanged. Re-keyed from @1264 to @1263 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 34, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1257 to @1264 after adding the mHomePos Vector3 view. The existing target @1285 is unchanged. Re-keyed from @1264 to @1263 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1265",
+      "from": "@1337",
       "to": "@1287",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 30, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1259 to @1266 after adding the mHomePos Vector3 view. The existing target @1287 is unchanged. Re-keyed from @1266 to @1265 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 30, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1259 to @1266 after adding the mHomePos Vector3 view. The existing target @1287 is unchanged. Re-keyed from @1266 to @1265 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1266",
+      "from": "@1338",
       "to": "@1288",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 33, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1260 to @1267 after adding the mHomePos Vector3 view. The existing target @1288 is unchanged. Re-keyed from @1267 to @1266 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 33, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1260 to @1267 after adding the mHomePos Vector3 view. The existing target @1288 is unchanged. Re-keyed from @1267 to @1266 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1264",
+      "from": "@1336",
       "to": "@1286",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 27, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1258 to @1265 after adding the mHomePos Vector3 view. The existing target @1286 is unchanged. Re-keyed from @1265 to @1264 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 27, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1258 to @1265 after adding the mHomePos Vector3 view. The existing target @1286 is unchanged. Re-keyed from @1265 to @1264 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1267",
+      "from": "@1339",
       "to": "@1289",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 35, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1261 to @1268 after adding the mHomePos Vector3 view. The existing target @1289 is unchanged. Re-keyed from @1268 to @1267 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 35, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1261 to @1268 after adding the mHomePos Vector3 view. The existing target @1289 is unchanged. Re-keyed from @1268 to @1267 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1268",
+      "from": "@1340",
       "to": "@1290",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 38, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1262 to @1269 after adding the mHomePos Vector3 view. The existing target @1290 is unchanged. Re-keyed from @1269 to @1268 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 38, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1262 to @1269 after adding the mHomePos Vector3 view. The existing target @1290 is unchanged. Re-keyed from @1269 to @1268 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1262",
+      "from": "@1334",
       "to": "@1284",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 23, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1256 to @1263 after adding the mHomePos Vector3 view. The existing target @1284 is unchanged. Re-keyed from @1263 to @1262 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 23, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1256 to @1263 after adding the mHomePos Vector3 view. The existing target @1284 is unchanged. Re-keyed from @1263 to @1262 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1260",
+      "from": "@1332",
       "to": "@1282",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 40, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1254 to @1261 after adding the mHomePos Vector3 view. The existing target @1282 is unchanged. Re-keyed from @1261 to @1260 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 40, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1254 to @1261 after adding the mHomePos Vector3 view. The existing target @1282 is unchanged. Re-keyed from @1261 to @1260 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1261",
+      "from": "@1333",
       "to": "@1283",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 39, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1255 to @1262 after adding the mHomePos Vector3 view. The existing target @1283 is unchanged. Re-keyed from @1262 to @1261 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 39, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1255 to @1262 after adding the mHomePos Vector3 view. The existing target @1283 is unchanged. Re-keyed from @1262 to @1261 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1269",
+      "from": "@1341",
       "to": "@1291",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 22, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1263 to @1270 after adding the mHomePos Vector3 view. The existing target @1291 is unchanged. Re-keyed from @1270 to @1269 when the local M12w copy struct was retired (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 22, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1263 to @1270 after adding the mHomePos Vector3 view. The existing target @1291 is unchanged. Re-keyed from @1270 to @1269 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ]
 }

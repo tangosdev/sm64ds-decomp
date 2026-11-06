@@ -50,6 +50,7 @@ enum daObjEwbIce_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "math/MtxStack.h"
 
 struct CLPS_Block;
 
@@ -139,7 +140,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: d_bg_w.cpp defines these; no header declares them. */
 void func_020393d4(void *mesh, void *callback);
 void func_020393c4(void *mesh, void *callback);
-void Matrix4x3_FromRotationXYZExt(Matrix4x3 *mat, int x, int y, int z);
 }
 
 extern s16 data_02082214[];

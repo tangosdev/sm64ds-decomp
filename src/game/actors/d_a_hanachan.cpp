@@ -105,7 +105,7 @@ extern int Vec3_HorzDist(void *a, void *b);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern int data_ov034_02114488[];
-extern char data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 // local extern: no shared header declares Vec3_Add.
@@ -713,8 +713,8 @@ void daHanachan_c::StateDemoWaitInit()
             out.y = zero;
             out.z = zero;
             in.z = zval;
-            Matrix4x3_FromRotationY(data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
-            MulVec3Mat4x3(&in, data_020a0e68, &out);
+            Matrix4x3_FromRotationY(&data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
+            MulVec3Mat4x3(&in, &data_020a0e68, &out);
             prev = seg - 1;
             Vec3_Add(&sum, &mSegmentPos[prev], &out);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
@@ -1059,12 +1059,12 @@ int daHanachan_c::Behavior()
         camA.x = 0; camA.y = 0x80000; camA.z = 0;
         camB.x = 0; camB.y = 0x80000; camB.z = 0x1f4000;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        Matrix4x3_FromRotationY(data_020a0e68, mSegmentRot[0].y);
-        MulVec3Mat4x3(&camA, data_020a0e68, &scratch);
+        Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
+        MulVec3Mat4x3(&camA, &data_020a0e68, &scratch);
         Vec3_Add(&t0, &mPos, &scratch);
         camA = t0;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        MulVec3Mat4x3(&camB, data_020a0e68, &scratch);
+        MulVec3Mat4x3(&camB, &data_020a0e68, &scratch);
         Vec3_Add(&t1, &mPos, &scratch);
         camB = t1;
         func_020092c4(cam, &cam->lookAt, &camA);
@@ -1163,8 +1163,8 @@ int daHanachan_c::InitResources()
             vb[0] = zeroC;
             vb[1] = zeroC;
             vb[2] = zeroC;
-            Matrix4x3_FromRotationY(data_020a0e68, mSegmentRot[0].y);
-            MulVec3Mat4x3(va, data_020a0e68, vb);
+            Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
+            MulVec3Mat4x3(va, &data_020a0e68, vb);
             prev = i - 1;
             Vec3_Add((Vector3 *)out, &mSegmentPos[prev], (const Vector3 *)vb);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = out[0];

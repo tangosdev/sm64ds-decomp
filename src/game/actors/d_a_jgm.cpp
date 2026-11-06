@@ -73,6 +73,7 @@ enum d_a_jgm_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 /* Local three-word ABI value. Vector3 has a genuine non-trivial destructor;
  * these stack values are plain fixed-point words and must not instantiate its
@@ -146,19 +147,12 @@ extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
 extern s16 data_02082214[];
-extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
 

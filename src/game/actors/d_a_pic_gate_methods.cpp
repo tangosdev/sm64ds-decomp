@@ -68,6 +68,7 @@ enum daPicGate_c_AssetId {
 #include "SharedFilePtr.h"
 #include "common.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 /* Geometry command ports. Plain stores, not volatile: a volatile port
  * reloads where the cartridge keeps the value in a register. */
@@ -106,7 +107,6 @@ enum {
 extern "C" {
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
 extern int data_0209caa0[];
-extern void MulMat4x3Mat4x3(const int *a, const int *b, int *out);
 extern Matrix4x3 data_0209b3ec;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 data_ov080_02127714[];
@@ -233,7 +233,7 @@ void daPicGate_c::func_ov080_021265ec()
 /* State 0 render. A dead wave draws the flat quad; otherwise a strip per column. */
 void daPicGate_c::func_ov080_0212677c()
 {
-    int tmp[12];
+    Matrix4x3 tmp;
     int i, j, n;
     int z = 0;
 
@@ -243,11 +243,11 @@ void daPicGate_c::func_ov080_0212677c()
     }
 
     G3_MTX_PUSH = z;
-    MulMat4x3Mat4x3(this->mMtx, data_0209b3ec.m, tmp);
+    MulMat4x3Mat4x3(&this->mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = kMtxPosVec;
-    LoadMtx43(tmp);
+    LoadMtx43(&tmp);
     G3_MTX_MODE = kMtxPos;
-    LoadMtx43(tmp);
+    LoadMtx43(&tmp);
 
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;

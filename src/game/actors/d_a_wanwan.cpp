@@ -92,7 +92,6 @@ int Vec3_HorzLen(void *v);
 int LenVec3(Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 int AngleDiff(int a, int b);
 int ApproachAngle(short *angles, int target, int a, int b, int c);
 unsigned short DecIfAbove0_Short(unsigned short *p);

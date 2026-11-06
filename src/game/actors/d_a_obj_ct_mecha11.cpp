@@ -55,7 +55,6 @@ struct Mecha11ClsnFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 /* local extern: these matching CalcLib signatures keep their names to avoid
  * renumbering this TU's compiler-generated static-initializer aliases. */
 extern unsigned short DecIfAbove0_Short(unsigned short *p);

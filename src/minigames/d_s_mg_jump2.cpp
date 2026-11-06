@@ -86,7 +86,7 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int GetGameLanguage(void);
 void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-extern int data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 void Jump2Popup_UpdateAll(void);
 extern void *Jump3D_AllIdle(void *);
 extern void *Heyho_AllIdle(void *);

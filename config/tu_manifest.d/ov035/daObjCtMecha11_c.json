@@ -519,14 +519,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@592",
+      "from": "@588",
       "to": "@533",
-      "evidence": "mwcc numbers this node @528 per TU and the fleet already defines a global @528 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "mwcc numbers this node @528 per TU and the fleet already defines a global @528 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@593",
+      "from": "@589",
       "to": "@535",
-      "evidence": "mwcc numbers this node @529 per TU and the fleet already defines a global @529 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "mwcc numbers this node @529 per TU and the fleet already defines a global @529 in ov080, so the merged link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "relocations": [

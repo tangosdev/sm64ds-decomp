@@ -1,5 +1,6 @@
 //cpp
 #include "common.h"
+#include "math/MtxStack.h"
 
 extern "C" {
 // @symbol func_ov007_020c39f8
@@ -8,7 +9,6 @@ extern short data_02082214[];
 extern void func_0205283c(struct Matrix4x3 *out, short a, short b);
 extern void func_02052820(struct Matrix4x3 *out, short a, short b);
 extern void func_02052800(struct Matrix4x3 *out, short a, short b);
-extern void MulMat4x3Mat4x3(struct Matrix4x3 *dst, struct Matrix4x3 *a, struct Matrix4x3 *b);
 
 void func_ov007_020c39f8(struct Matrix4x3 *mat, int rx, int ry, int rz) {
     struct Matrix4x3 t;
