@@ -51,6 +51,7 @@ enum dScMgRoulette_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "G2.h"
 
 /* Local views of the records the helpers walk. */
 
@@ -135,12 +136,6 @@ namespace cstd {
 int fdiv(int a, int b);
 }
 
-namespace G2S {
-int GetBG2CharPtr();
-int GetBG2ScrPtr();
-int GetBG0ScrPtr();
-}
-
 namespace GX {
 void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 }
@@ -180,7 +175,7 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int Sound_PlayIfNotActive(int a, int b, int c, int d);
 int RandomIntInternal(int *seed);
 void *LoadFile(int id);
-void DecompressLZ16(void *src, int dst);
+void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
 void Camera_UpdateMatrices(char *cam);
@@ -293,8 +288,8 @@ s32 dScMgRoulette_c::InitResources() {
 
     f6 = LoadFile(ASSET_D_2D_MG_ROULETTE_NCG_BIN);
     f5 = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
-    DecompressLZ16(f6, 0x6400000);
-    DecompressLZ16(f6, 0x6600000);
+    DecompressLZ16(f6, (void *)0x6400000);
+    DecompressLZ16(f6, (void *)0x6600000);
     GX::LoadOBJPltt(f5, 0, 0x100);
     GXS::LoadOBJPltt(f5, 0, 0x100);
     Deallocate(f6);

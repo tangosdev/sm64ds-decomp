@@ -68,6 +68,7 @@ enum dScMgPanel_c_AssetId {
 #include "SpawnInfo.h"
 
 #include "Sound.h"
+#include "OamAttr.h"
 
 namespace G2 {
 char *GetBG2ScrPtr();
@@ -95,7 +96,7 @@ void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);
 void FreeGfxSlotsById(int arg);
 struct Matrix2x2;
-void DrawOamSprite(void *attr, int x, int y, Matrix2x2 *mtx);
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void Hud_RenderSprite(void *a, int b, int c, int d, int e);
 void Mg_SubmitScore(int a);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
@@ -1032,7 +1033,7 @@ typedef struct PanelDrawView {
 }
 void dScMgPanel_c::DrawPanels() {
     PanelDrawView *scene = (PanelDrawView *)this;
-    extern void *sPanelSprites[];
+    extern OamAttr *sPanelSprites[];
     extern u8 sPanelFlipFrameSprites[];
     int x;
     int y;
@@ -2114,12 +2115,12 @@ extern "C" dScMgPanel_c *dScMgPanel_c_classInit() {
 
 /* The state tables, in the order the static initializer fills them. Each
    entry's {function, 0} record is a compiler temporary in .data. The two
-   sprite-handle triples are copied whole from data_ov006_02136cf0 and
+   sprite triples (OamAttr lists) are copied whole from data_ov006_02136cf0 and
    data_ov006_02136d1c. */
-extern "C" void *data_ov006_02136cf0[3];
-extern "C" void *data_ov006_02136d1c[3];
+extern "C" OamAttr *data_ov006_02136cf0[3];
+extern "C" OamAttr *data_ov006_02136d1c[3];
 
-void *sPanelSprites[6] = {
+OamAttr *sPanelSprites[6] = {
     data_ov006_02136cf0[0], data_ov006_02136cf0[1], data_ov006_02136cf0[2],
     data_ov006_02136d1c[0], data_ov006_02136d1c[1], data_ov006_02136d1c[2],
 };

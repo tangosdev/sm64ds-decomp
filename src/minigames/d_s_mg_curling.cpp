@@ -86,7 +86,7 @@ struct B4 {
 extern "C" {
 
 extern int Mg_GetSubmittedScore(void);
-extern void Mg_RenderSubSpriteMtx(int a, int b, int c, int d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
 extern void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
@@ -121,7 +121,7 @@ extern unsigned char sCurlingBitBStates[];
 extern u8 sCurlingScoreDelays[];
 extern int sCurlingBitKinds[];
 extern int sCurlingStonesLeftX[];
-extern int sCurlingBitSprites[];
+extern OamAttr *sCurlingBitSprites[];
 extern int sCurlingStoneLeftSprite;
 extern int sCurlingStoneLeftShadowSprite;
 extern int sCurlingAimMarkerSprites[];
@@ -195,7 +195,7 @@ void dScMgCurling_c::Bit_DrawAll() {
             int x = mBit[i].x >> 0xc;
             int y = mBit[i].y >> 0xc;
             Mg_RenderSubSpriteMtx(sCurlingBitSprites[mBit[i].texA], x, y, 0);
-            DrawOamSprite((OamAttr *)sCurlingBitSprites[mBit[i].texB], x, y, 0);
+            DrawOamSprite(sCurlingBitSprites[mBit[i].texB], x, y, 0);
         }
     }
 }

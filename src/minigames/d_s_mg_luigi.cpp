@@ -74,7 +74,7 @@ extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
 struct Matrix2x2;
-extern void DrawOamSprite(int attr, int x, int y, Matrix2x2 *mtx);
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, int g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
@@ -312,7 +312,7 @@ void dScMgLuigi_c::StartIris() {
 
 // @symbol _ZN12dScMgLuigi_c10DrawRewardEv
 void dScMgLuigi_c::DrawReward() {
-    extern void *sLuigiTextSpritesByLanguage[];
+    extern OamAttr **sLuigiTextSpritesByLanguage[];
     extern char sMgDigitSprites[];
     if (mReward.shown == 0)
         return;
@@ -327,7 +327,7 @@ void dScMgLuigi_c::DrawReward() {
     if (y >= 0xb8)
         y = 0xb8;
     s32 language = GetGameLanguage();
-    Mg_RenderSubSpriteMtx(((void **)sLuigiTextSpritesByLanguage[language])[13], x - 8, y, 0);
+    Mg_RenderSubSpriteMtx(sLuigiTextSpritesByLanguage[language][13], x - 8, y, 0);
     Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[25], x + 8, y, 0);
 }
 
@@ -685,7 +685,7 @@ void dScMgLuigi_c::ResetCurtains() {
 
 // @symbol _ZN12dScMgLuigi_c9DrawTimerEv
 void dScMgLuigi_c::DrawTimer() {
-    extern int *sLuigiTextSpritesByLanguage[];
+    extern OamAttr **sLuigiTextSpritesByLanguage[];
     int language;
     if (mState < STATE_PLAY)
         return;
@@ -738,7 +738,7 @@ void dScMgLuigi_c::DrawPictures() {
 
 // @symbol _ZN12dScMgLuigi_c13DrawPenaltiesEv
 void dScMgLuigi_c::DrawPenalties() {
-    extern void *sLuigiTextSpritesByLanguage[];
+    extern OamAttr **sLuigiTextSpritesByLanguage[];
     extern char sMgDigitSprites[];
     int penaltyIndex;
     for (penaltyIndex = 0; penaltyIndex < 0x10; penaltyIndex++) {
@@ -755,8 +755,7 @@ void dScMgLuigi_c::DrawPenalties() {
             if (y >= 0xb8)
                 y = 0xb8;
             language = GetGameLanguage();
-            Mg_RenderSubSpriteMtx(((void **)sLuigiTextSpritesByLanguage[language])[14], x - 0x10, y,
-                                  0);
+            Mg_RenderSubSpriteMtx(sLuigiTextSpritesByLanguage[language][14], x - 0x10, y, 0);
             Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[41], x, y, 0);
             Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[40], x + 0x10, y, 0);
         }
