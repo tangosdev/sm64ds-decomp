@@ -41,7 +41,7 @@ struct ClockModelFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-int IsAreaShowing(int areaId);
+u8 IsAreaShowing(int areaId);
 }
 
 extern s8 data_02092110; /* current level id; hands advance while it is not positive */

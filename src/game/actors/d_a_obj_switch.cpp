@@ -59,7 +59,7 @@ struct SwitchClsnFileHandle : SharedFilePtr {
 };
 
 extern "C" {
-extern int gNextActorUpdateMask;
+extern u32 gNextActorUpdateMask;
 extern signed char gCurrentSublevel;
 extern SharedFilePtr data_ov002_0211092c;
 extern daObjSwitch_c::Resources data_ov002_021098e8[];

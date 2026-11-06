@@ -73,7 +73,7 @@ struct WcMizuCollisionFilePtr : SharedFilePtr {
     ~WcMizuCollisionFilePtr();
 };
 
-extern "C" int IsAreaShowing(int idx);
+extern "C" u8 IsAreaShowing(int idx);
 
 extern WcMizuModelFilePtr daObjWc_Obj07_c_ModelFile;
 extern WcMizuCollisionFilePtr daObjWc_Obj07_c_ClsnFile;

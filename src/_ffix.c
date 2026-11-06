@@ -18,7 +18,7 @@
 // (`stmdb sp!, {r0, r1, r3, ip, lr}`), a register set no compiler prologue saves.
 
 extern unsigned int *func_0207322c(void);
-extern float func_0206ddcc(void);
+extern float func_0206ddcc(float a, int op);
 
 asm int _ffix(int bits)
 {
