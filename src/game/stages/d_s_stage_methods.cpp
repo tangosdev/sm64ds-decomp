@@ -3218,13 +3218,9 @@ extern "C" void GiveVsStars(int idx, int delta) {
 /* dScStage_c::IsPauseDisabled() at 0x0202c8f8. Static: reads only globals, and no
  * caller sets up an object. */
 
-extern "C" {
-extern int func_ov002_020bd8ac(unsigned char *p);
-}
-
 int dScStage_c::IsPauseDisabled() {
-    unsigned char *p = *(unsigned char **)data_0209f394;
-    if (p != 0 && func_ov002_020bd8ac(p) == 0)
+    daPly_c *p = data_0209f394[0];
+    if (p != 0 && p->func_ov002_020bd8ac() == 0)
         return 1;
     return 0;
 }
