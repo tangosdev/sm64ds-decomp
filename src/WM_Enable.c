@@ -5,9 +5,8 @@
  * (WM_Init carved all three out of the system buffer).
  * WM_ERRCODE_OPERATING (2) once it is queued. */
 #include "private/wm_views.h"
-extern void WM_SetCallbackTable(int i, int val);
 
-int WM_Enable(int callback) {
+int WM_Enable(void *callback) {
     int result;
     WMArm9Buf *sys;
 

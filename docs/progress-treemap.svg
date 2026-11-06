@@ -761,11 +761,11 @@ matched: yes</title></rect><rect x="51.30" y="104.89" width="130.14" height="7.3
 module: arm9
 addr: 0x0200e8d4
 size: 1428 bytes
-matched: yes</title></rect><rect x="181.44" y="104.89" width="3.28" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>IsStarCameraScript3Running
+matched: yes</title></rect><rect x="181.44" y="104.89" width="3.28" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>IsDanceRotateCutsceneRunning
 module: arm9
 addr: 0x0200ee68
 size: 36 bytes
-matched: yes</title></rect><rect x="184.72" y="104.89" width="5.47" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>RunStarCameraScript
+matched: yes</title></rect><rect x="184.72" y="104.89" width="5.47" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>StartDanceCutscene
 module: arm9
 addr: 0x0200ee8c
 size: 60 bytes

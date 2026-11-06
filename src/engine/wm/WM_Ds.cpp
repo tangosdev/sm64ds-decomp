@@ -51,7 +51,7 @@ typedef struct WMPortSendCallback {
     u16 seqNo; /* 0x1c */
 } WMPortSendCallback;
 
-extern int WM_SetPortCallback(int port, int callback, int arg);
+extern int WM_SetPortCallback(int port, void *callback, void *arg);
 typedef void (*WMCallbackFunc)(void *arg);
 
 /* sendData stays an int, as WM_SetMPDataToPort.c defines it. */
@@ -153,7 +153,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
         for (i = 0; i < 4; i++)
             dsInfo->ds[i].aidHeader = (u16)(dsInfo->aidBitmap & (childMask | 1));
 
-        WM_SetPortCallback(port, (int)WmDataSharingReceiveCallback_Parent, (int)dsInfo);
+        WM_SetPortCallback(port, (void *)WmDataSharingReceiveCallback_Parent, dsInfo);
 
         cur = dsInfo->ds;
         for (n = 0; n < ((dsInfo->doubleMode == 1) ? 2 : 1); n++) {
@@ -175,7 +175,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
         }
     } else {
         dsInfo->sendIndex = 3;
-        WM_SetPortCallback(port, (int)WmDataSharingReceiveCallback_Child, (int)dsInfo);
+        WM_SetPortCallback(port, (void *)WmDataSharingReceiveCallback_Child, dsInfo);
     }
 
     return 0;

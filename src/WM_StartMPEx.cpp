@@ -16,10 +16,9 @@ extern "C" {
  * in halfwords. */
 extern int WM_GetMPReceiveBufferSize(void);
 extern int WM_GetMPSendBufferSize(void);
-extern void WM_SetCallbackTable(int i, int val);
 
-int WM_StartMPEx(int arg0, int arg1, u16 arg2, int arg3, u16 arg4, u16 arg5, u16 arg6, int arg7,
-                 int arg8, int arg9, int arg10) {
+int WM_StartMPEx(void *callback, int arg1, u16 arg2, int arg3, u16 arg4, u16 arg5, u16 arg6,
+                 int arg7, int arg8, int arg9, int arg10) {
     WMArm9Buf *base;
     int r;
 
@@ -38,7 +37,7 @@ int WM_StartMPEx(int arg0, int arg1, u16 arg2, int arg3, u16 arg4, u16 arg5, u16
         return 6;
     if (arg4 & 0x1f)
         return 6;
-    WM_SetCallbackTable(0xe, arg0);
+    WM_SetCallbackTable(0xe, callback);
     /* sendBufSize goes out as a u32 word, the way the SDK casts each request
        word; passed bare, the variadic promotion reuses its register and the
        argument stores come out in another order. */

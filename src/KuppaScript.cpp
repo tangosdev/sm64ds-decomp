@@ -93,8 +93,8 @@ s16 ReadUnalignedShort(u8 *p);
 u16 ReadUnalignedUshort(u8 *p);
 void EndKuppaScript();
 void ProcessKuppaScript();
-int IsStarCameraScript3Running();
-void RunStarCameraScript(s32 setting);
+int IsDanceRotateCutsceneRunning();
+void StartDanceCutscene(s32 setting);
 void StartEndingCutscene();
 void StartIntroCutscene();
 int RunKuppaScript(u8 *script);
@@ -516,7 +516,7 @@ u8 sCutsceneKeyDance[] = {
     KS_CAMERA,  KS_S16(30),   KS_S16(30), 0x18,       0x80,      0x01,       0x30,       0x00,
     0x00,       0x80,         0};
 /* The star-dance scripts by camera setting, like the N64's
- * sDanceCutsceneTable. RunStarCameraScript indexes it with the setting, or
+ * sDanceCutsceneTable. StartDanceCutscene indexes it with the setting, or
  * with the star's own setting when that is negative. Settings 2 and 4 share
  * the default dance. */
 u8 *sDanceCutsceneTable[6] = {sCutsceneDanceCloseup, sCutsceneDanceFlyAway, sCutsceneDanceDefault,
@@ -4755,13 +4755,15 @@ void ProcessKuppaScript() {
         gKuppaScriptFrame--;
 }
 
-int IsStarCameraScript3Running() {
+/* daPly_c::St_NoControl_Main stops turning the player to face the camera
+ * while the rotate dance runs. */
+int IsDanceRotateCutsceneRunning() {
     return gRunningKuppaScript == sCutsceneDanceRotate;
 }
 
 /* A negative setting means "the collected star's own": GetStarCameraSetting
  * reads it from the level's per-star nibbles. */
-void RunStarCameraScript(s32 setting) {
+void StartDanceCutscene(s32 setting) {
     if (setting < 0)
         setting = GetStarCameraSetting(data_0209f224);
     RunKuppaScript(sDanceCutsceneTable[setting]);
