@@ -13445,7 +13445,7 @@ matched: yes</title></rect><rect x="455.00" y="116.63" width="3.21" height="8.29
 module: ov002
 addr: 0x020b5f9c
 size: 40 bytes
-matched: yes</title></rect><rect x="458.21" y="116.63" width="1.61" height="8.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjFloatBoard_c15StoodOnCallbackEPvPS_P8dActor_c
+matched: yes</title></rect><rect x="458.21" y="116.63" width="1.61" height="8.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjFloatBoard_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov002
 addr: 0x020b5fc4
 size: 20 bytes
@@ -30965,7 +30965,7 @@ matched: yes</title></rect><rect x="1099.18" y="134.22" width="2.77" height="1.5
 module: ov018
 addr: 0x021117e8
 size: 28 bytes
-matched: yes</title></rect><rect x="1099.18" y="135.74" width="2.77" height="1.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjSm_Lift_c18BeforeClsnCallbackEPvPS_P8dActor_c
+matched: yes</title></rect><rect x="1099.18" y="135.74" width="2.77" height="1.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14daObjSm_Lift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov018
 addr: 0x02111804
 size: 20 bytes
@@ -31497,7 +31497,7 @@ matched: yes</title></rect><rect x="1519.39" y="134.22" width="2.81" height="1.3
 module: ov021
 addr: 0x02111ec4
 size: 24 bytes
-matched: yes</title></rect><rect x="1519.39" y="135.52" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform3CallbackEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1519.39" y="135.52" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform3CallbackEP4dBgWP8dActor_cS3_
 module: ov021
 addr: 0x02111edc
 size: 64 bytes
@@ -31505,7 +31505,7 @@ matched: yes</title></rect><rect x="1519.39" y="139.00" width="2.81" height="1.3
 module: ov021
 addr: 0x02111f1c
 size: 24 bytes
-matched: yes</title></rect><rect x="1519.39" y="140.30" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1519.39" y="140.30" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWP8dActor_cS3_
 module: ov021
 addr: 0x02111f34
 size: 64 bytes
@@ -31513,7 +31513,7 @@ matched: yes</title></rect><rect x="1522.20" y="134.22" width="2.81" height="1.3
 module: ov021
 addr: 0x02111f74
 size: 24 bytes
-matched: yes</title></rect><rect x="1522.20" y="135.52" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1522.20" y="135.52" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWP8dActor_cS3_
 module: ov021
 addr: 0x02111f8c
 size: 64 bytes
@@ -31521,7 +31521,7 @@ matched: yes</title></rect><rect x="1522.20" y="139.00" width="2.81" height="1.3
 module: ov021
 addr: 0x02111fcc
 size: 24 bytes
-matched: yes</title></rect><rect x="1522.20" y="140.30" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1522.20" y="140.30" width="2.81" height="3.48" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWP8dActor_cS3_
 module: ov021
 addr: 0x02111fe4
 size: 64 bytes
@@ -31529,7 +31529,7 @@ matched: yes</title></rect><rect x="1525.01" y="134.22" width="4.15" height="9.5
 module: ov021
 addr: 0x02112024
 size: 260 bytes
-matched: yes</title></rect><rect x="1529.16" y="134.22" width="4.21" height="2.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1529.16" y="134.22" width="4.21" height="2.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWP8dActor_cS3_
 module: ov021
 addr: 0x02112128
 size: 64 bytes
@@ -31709,7 +31709,7 @@ matched: yes</title></rect><rect x="1084.74" y="175.78" width="2.31" height="2.8
 module: ov022
 addr: 0x0211191c
 size: 32 bytes
-matched: yes</title></rect><rect x="1084.74" y="178.67" width="2.31" height="1.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjFl_Block_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1084.74" y="178.67" width="2.31" height="1.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15daObjFl_Block_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov022
 addr: 0x0211193c
 size: 20 bytes
@@ -34069,7 +34069,7 @@ matched: yes</title></rect><rect x="1310.48" y="267.46" width="4.91" height="2.7
 module: ov045
 addr: 0x021114a8
 size: 32 bytes
-matched: yes</title></rect><rect x="1315.39" y="251.44" width="3.21" height="2.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daObjKm2_Agaru_c15StoodOnCallbackEPvPS_P8dActor_c
+matched: yes</title></rect><rect x="1315.39" y="251.44" width="3.21" height="2.60" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daObjKm2_Agaru_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov045
 addr: 0x021114c8
 size: 20 bytes
@@ -36097,7 +36097,7 @@ matched: yes</title></rect><rect x="1593.38" y="344.20" width="1.62" height="8.8
 module: ov063
 addr: 0x0211d270
 size: 28 bytes
-matched: yes</title></rect><rect x="1542.33" y="353.04" width="4.79" height="2.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1542.33" y="353.04" width="4.79" height="2.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWP8dActor_cS3_
 module: ov063
 addr: 0x0211d28c
 size: 20 bytes
@@ -41153,7 +41153,7 @@ matched: yes</title></rect><rect x="1242.38" y="708.30" width="4.07" height="21.
 module: ov080
 addr: 0x0212758c
 size: 204 bytes
-matched: yes</title></rect><rect x="1242.38" y="730.01" width="4.07" height="2.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjMaruta_c18BeforeClsnCallbackEPvS0_S0_
+matched: yes</title></rect><rect x="1242.38" y="730.01" width="4.07" height="2.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjMaruta_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov080
 addr: 0x02127658
 size: 20 bytes
@@ -44117,7 +44117,7 @@ matched: yes</title></rect><rect x="1536.67" y="795.77" width="2.86" height="1.8
 module: ov098
 addr: 0x0213a8e0
 size: 12 bytes
-matched: yes</title></rect><rect x="1536.67" y="797.65" width="2.86" height="3.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
+matched: yes</title></rect><rect x="1536.67" y="797.65" width="2.86" height="3.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov098
 addr: 0x0213a8ec
 size: 20 bytes
