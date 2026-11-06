@@ -76,10 +76,10 @@ extern u8 data_0209f2d8;
    (sTitleLevelEntries' 54 rodata relocations move with it). */
 extern u16 data_0209f5e8[];
 #define SCENE_FADE_COLOR data_0209f5e8[6]
-extern int data_020a0d90[];
+extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
 extern int data_0208ee44;
-extern u8 data_0209ee90[];
+extern char data_0209ee90[];
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
@@ -239,8 +239,8 @@ s32 dScTitle_c::InitResources() {
     data_0208ee44 = 2;
     func_ov003_020ad6ec(this);
     *(volatile u32 *)0x4000010 = 0;
-    *(u8 *)(data_0209ee90 + 0x340) = 0;
-    *(u8 *)(data_0209ee90 + 0x341) = 0;
+    data_0209ee90[0x340] = 0;
+    data_0209ee90[0x341] = 0;
     Sound::LoadInitialGroup(2);
     Sound::LoadAndSetMusic_Layer1(0x38);
     return 1;

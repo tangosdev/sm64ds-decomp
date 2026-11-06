@@ -7,8 +7,7 @@ extern void func_020147bc(unsigned short *p, int c);
 
 #pragma opt_common_subs off
 
-void nds_printt(unsigned short *dest, char *str, int value)
-{
+void nds_printt(unsigned short *dest, const char *str, int value) {
     int len = cstd::strlen(str);
     char c;
     unsigned short *p = dest + len;

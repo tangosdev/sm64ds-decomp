@@ -6,9 +6,9 @@ extern int func_02065a74(void);
 extern struct WBTBlockInfoList *func_02065a94(int key);
 extern int func_0206491c(unsigned int key, int val);
 extern char *func_02064888(unsigned int id, int idx);
-extern int func_02064d6c(int dest, int a, int b, int c, int d, const void *p, int n);
+extern int func_02064d6c(int dest, int a, u8 b, int c, int d, const void *p, int n);
 extern int func_02065bc0(void);
-extern void func_02064554(void *base, int a, int b, int c);
+extern void func_02064554(void *base, int a, int b, s16 c);
 
 /* NitroSDK WBT: answer a peer's completed GET_BLOCK request (peer command 4)
  * with one packet of the block. A COMMON block's packet comes straight from
