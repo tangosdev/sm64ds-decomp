@@ -40,8 +40,7 @@ struct AgaruCollisionFilePtr : SharedFilePtr {
 extern AgaruCollisionFilePtr data_ov045_02113180; /* the KCL */
 extern AgaruModelFilePtr data_ov045_02113188;     /* the BMD */
 CLPS_Block data_ov045_021125d0 = {
-    0x53504c43, 0x00020008, 0x00000fc0, 0x000000ff,
-    0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
+    0x53504c43, 0x00020008, 0x00000fc0, 0x000000ff, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
 };
 
 /* local extern: no shared header declares these. */

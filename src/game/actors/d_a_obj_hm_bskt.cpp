@@ -57,7 +57,10 @@ struct HmBsktCollisionFilePtr : SharedFilePtr {
 extern HmBsktCollisionFilePtr data_ov030_02115c80; /* the KCL */
 extern HmBsktModelFilePtr data_ov030_02115c88;     /* the BMD */
 CLPS_Block data_ov030_02114ee4 = {
-    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
+    0x53504c43,
+    0x00010008,
+    0x01000fc0,
+    0x000000ff,
     {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 

@@ -120,5 +120,7 @@ MarutaModelFilePtr gHmMarutaModelFile(ASSET_HM_MARUTA_BMD);
 MarutaClsnFileHandle gHmMarutaCollisionFile(ASSET_HM_MARUTA_KCL);
 
 ResourceDescriptor data_ov030_02115a04 = {
-    &gHmMarutaModelFile, &gHmMarutaCollisionFile, &data_ov030_02114f24,
+    &gHmMarutaModelFile,
+    &gHmMarutaCollisionFile,
+    &data_ov030_02114f24,
 };

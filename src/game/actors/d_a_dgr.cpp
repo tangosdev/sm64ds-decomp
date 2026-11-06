@@ -88,8 +88,7 @@ struct CLPS_Block {
    cartridge also labels the last of them 0x02112c44 -- it is this block's
    eighth word, not a separate object. */
 CLPS_Block data_ov025_02112c28 = {
-    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
-    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
 
 /* local extern: arm9 C helpers with no shared header yet. */

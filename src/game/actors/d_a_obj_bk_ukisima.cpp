@@ -65,5 +65,7 @@ UkisimaModelFilePtr gBkUkisimaModelFile(ASSET_BK_UKISIMA_BMD);
 UkisimaClsnFileHandle gBkUkisimaCollisionFile(ASSET_BK_UKISIMA_KCL);
 
 ResourceDescriptor data_ov015_021147a4 = {
-    &gBkUkisimaModelFile, &gBkUkisimaCollisionFile, &data_ov015_02113614,
+    &gBkUkisimaModelFile,
+    &gBkUkisimaCollisionFile,
+    &data_ov015_02113614,
 };

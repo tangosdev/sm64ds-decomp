@@ -71,5 +71,7 @@ RcKaitendaiModelFile gRcKaitenModelFile(ASSET_RC_KAITEN_BMD);
 RcKaitendaiCollisionFilePtr gRcKaitenCollisionFile(ASSET_RC_KAITEN_KCL);
 
 ResourceDescriptor data_ov036_02113b2c = {
-    &gRcKaitenModelFile, &gRcKaitenCollisionFile, &data_ov036_02112bc8,
+    &gRcKaitenModelFile,
+    &gRcKaitenCollisionFile,
+    &data_ov036_02112bc8,
 };
