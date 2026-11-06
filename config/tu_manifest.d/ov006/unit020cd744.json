@@ -1238,6 +1238,14 @@
     {
       "from": "__arraydtor$2197",
       "to": "__arraydtor$2192",
+      "owned_function": {
+        "module": "ov006",
+        "address": "0x020d0fe4",
+        "size": "0x00000024",
+        "function_ordinal": 56,
+        "raw_type": "STT_FUNC",
+        "raw_binding": "STB_LOCAL"
+      },
       "evidence": "the sTrmpLines array destructor thunk; after the TrmpLine_PointDistance and TrmpLine_ComputeNormals POD vector twins were retired for Vector3, the candidate ELF emits it as __arraydtor$2197. It is renamed onto the configured __arraydtor$2192 at 0x020d0fe4, paired by address; bytes and relocations are otherwise identical (#4570)."
     }
   ],
