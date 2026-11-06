@@ -5,9 +5,6 @@
 
 extern "C" {
 
-extern int *WM_GetSystemWork(void);
-extern int WM_CheckStateEx(int a, int b, int c);
-
 /* NitroSDK WM_GetMPSendBufferSize(): 0 unless the system is a parent or a
  * child (states 7, 8) that has not started MP yet; otherwise mp_maxSendSize
  * rounded up to 32 bytes. WMArm9Buf / WMStatus are in
@@ -16,7 +13,7 @@ u32 WM_GetMPSendBufferSize(void) {
     WMArm9Buf *r4;
     WMStatus *p;
 
-    r4 = (WMArm9Buf *)WM_GetSystemWork();
+    r4 = WM_GetSystemWork();
     if (WM_CheckStateEx(2, 7, 8) != 0)
         return 0;
 

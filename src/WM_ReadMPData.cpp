@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
-extern int WM_GetSystemWork(void);
 extern int WMi_CheckInitialized(void);
 
 /* NitroSDK wm_sync.c WM_ReadMPData(header, aid), by body against pret's
@@ -12,17 +12,17 @@ extern int WMi_CheckInitialized(void);
  * connected), found by walking the header's count blocks of length bytes from
  * +0xa; 0 when there is none. */
 char *WM_ReadMPData(char *a, unsigned int idx) {
-    int h;
+    WMArm9Buf *sys;
     int n;
     char* local[16];
     int i;
-    h = WM_GetSystemWork();
+    sys = WM_GetSystemWork();
     if (WMi_CheckInitialized() != 0)
         return 0;
     if (idx < 1 || idx > 0xf)
         return 0;
-    CP15::InvalidateDataCache((u32) * (char **)(h + 4) + 0x17e, 2);
-    if ((*(u16*)(*(char**)(h + 4) + 0x100 + 0x7e) & (1u << idx)) == 0) return 0;
+    CP15::InvalidateDataCache((u32)&sys->status->child_bitmap, 2);
+    if ((sys->status->child_bitmap & (1u << idx)) == 0) return 0;
     n = *(u16*)(a + 4);
     if (n == 0) return 0;
     local[0] = a + 0xa;
