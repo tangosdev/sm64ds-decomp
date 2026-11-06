@@ -37,7 +37,7 @@ extern int data_02092768[4];
 /* local extern: arm9 matrix, quaternion and dBgW helpers with no shared
  * header that agrees with these spellings. */
 extern "C" {
-int InvMat4x3(Matrix4x3 *d, Matrix4x3 *s);
+int InvMat4x3(const Matrix4x3 *s, Matrix4x3 *d);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Quaternion_FromVector3(int *q, Vector3 *from, Vector3 *to);
 void Quaternion_Normalize(int *q);

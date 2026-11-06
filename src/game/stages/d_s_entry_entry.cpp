@@ -29,7 +29,7 @@ extern "C" {
 /* local extern: no header declares these arm9 vector and matrix helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-int InvMat4x3(Matrix4x3 *, Matrix4x3 *);
+int InvMat4x3(const Matrix4x3 *, Matrix4x3 *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
 void NormalizeVec3(const Vector3 *, Vector3 *);
