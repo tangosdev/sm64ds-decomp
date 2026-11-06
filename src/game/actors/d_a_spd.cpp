@@ -29,6 +29,7 @@ enum Scuttlebug_AssetId {
 };
 
 #include "common.h"
+#include "ParticleIds.h"
 #include "daSpd_c.h"
 #include "dBgCh_Gnd.h"
 #include "daPly_c.h"
@@ -340,7 +341,7 @@ int daSpd_c::func_ov071_02120028() {
         y += 0x28000;
         v.z = z;
         *(volatile int *)&v.y = y;
-        Particle::System::NewSimple(0xb2, x, y, z);
+        Particle::System::NewSimple(kPtclLandingDust, x, y, z);
         mVertSpeed = mVertSpeed * -0x28 / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;

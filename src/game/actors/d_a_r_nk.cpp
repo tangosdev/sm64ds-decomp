@@ -32,6 +32,7 @@ enum daRNk_c_AssetId {
 
 #include "daRNk_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daRFlag_c.h"
 #include "daIbl_c.h"
 #include "daPly_c.h"
@@ -79,8 +80,7 @@ enum {
     kSfxTurnToTalk = 0xec,      /* Koopa has finished turning to face the player */
     kSfx4D = 0x4d,              /* played at the race start (two positional calls) and, in 2D, when the post-race talk begins; the sound itself is unidentified */
     kMusicRace = 0x41,          /* loaded on layer 2 when the race starts, stopped when it ends */
-    kPtclFootstepDust = 0xf9,   /* puff beside a foot */
-    kPtclLandingDust = 0xb2     /* puff where he lands from a jump (dActor_c::HugeLandingDustAt's id too) */
+    kPtclFootstepDust = 0xf9    /* puff beside a foot */
 };
 
 /* Distances, in fix12 units (0x1000 = 1.0; the numbers here are the whole-unit

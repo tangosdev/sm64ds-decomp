@@ -41,6 +41,7 @@
  *   overloading, so those four cast.
  */
 #include "decl_common.h"
+#include "ParticleIds.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "daTgz_c.h"
@@ -469,7 +470,7 @@ int daTgz_c::func_ov077_02125550() {
             ((int *)&vec)[0] = x;
             ((int *)&vec)[1] = y;
             ((int *)&vec)[2] = z;
-            Particle::System::NewSimple(0xb2, vec.x, vec.y, vec.z);
+            Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         } else {
             mVertSpeed = 0;
@@ -726,7 +727,7 @@ int daTgz_c::func_ov077_02125bb4() {
             ((int *)&vec)[0] = x;
             ((int *)&vec)[1] = y;
             ((int *)&vec)[2] = z;
-            Particle::System::NewSimple(0xb2, vec.x, vec.y, vec.z);
+            Particle::System::NewSimple(kPtclLandingDust, vec.x, vec.y, vec.z);
             func_0201267c(0x109, &mCamSpacePos);
         }
     }
