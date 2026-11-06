@@ -516,15 +516,15 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
  * received data set, or 0 for a null dsInfo or receiveData or when the set
  * holds nothing from aid (its receivedBitmap bit is clear). */
 // @symbol WM_GetSharedDataAddress
-unsigned WM_GetSharedDataAddress(char *dsInfo, WMDataSet *receiveData, int aid) {
+u16 *WM_GetSharedDataAddress(char *dsInfo, WMDataSet *receiveData, int aid) {
     if (dsInfo == 0)
         return 0;
     if (receiveData == 0)
         return 0;
     if ((receiveData->receivedBitmap & (1u << aid)) == 0)
         return 0;
-    return (unsigned)WmGetSharedDataAddress((WMDataSharingInfo *)dsInfo, receiveData->aidHeader,
-                                            receiveData->data, aid);
+    return WmGetSharedDataAddress((WMDataSharingInfo *)dsInfo, receiveData->aidHeader,
+                                  receiveData->data, aid);
 }
 
 /* Member aid's slot in a set: receiveBuf, past dataLength bytes for each

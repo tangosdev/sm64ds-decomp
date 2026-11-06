@@ -1454,7 +1454,7 @@ extern int sTrmpItemHitsOff;
 extern char *sTrmp2Marios;
 
 // @symbol Trmp2Mario_ResetAll
-void Trmp2Mario_ResetAll(void) {
+void Trmp2Mario_ResetAll(u32) {
     int i;
     int off;
     Trmp2Mario_SetTuning(0x1000);

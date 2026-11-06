@@ -29,7 +29,7 @@ extern WMArm9Buf *data_020a89ac;
 extern void *data_020a89b0; /* the free FIFO-buffer message queue */
 extern int data_020a89c4;
 extern char data_020a8a40[];
-extern void WmReceiveFifo(void);
+extern void WmReceiveFifo(int tag, u16 *msg, int err);
 
 int WM_Init(void *buf, int ch) {
     if (data_020a89a8 != 0)
