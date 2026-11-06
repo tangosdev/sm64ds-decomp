@@ -98,8 +98,9 @@ enum {
    0x9c, 0x9e, 0xa4 and 0x9f are kPtclFlame, kPtclFlameSmall, kPtclFlameBlue and
    kPtclFlameOutPuff (ParticleIds.h); 0x9f is a one-shot NewSimple. */
 enum {
-    PARTICLE_SCALED_9A = 0x9a,     /* variants 1 and 5; the one id that also gets the extra +0x44 / +0x4c sizing */
-    PARTICLE_VARIANT_4 = 0xa6      /* variant 4 */
+    /* variants 1 and 5; the one id that also gets the extra +0x44 / +0x4c sizing */
+    PARTICLE_SCALED_9A = 0x9a,
+    PARTICLE_VARIANT_4 = 0xa6 /* variant 4 */
 };
 
 /* Sound id variant 0 plays through its mSoundHandle; named by use site, not decoded. */
@@ -500,8 +501,8 @@ void daKpaFire_c::func_ov060_02116f90() {
 
     if (this->mLanded == 0) {
         this->mParticleHandle =
-            Particle::System::NewUnkCallback818(this->mParticleHandle, kPtclFlameSmall,
-                                                this->mPosX, this->mPosY + 0x37000, this->mPosZ, 0);
+            Particle::System::NewUnkCallback818(this->mParticleHandle, kPtclFlameSmall, this->mPosX,
+                                                this->mPosY + 0x37000, this->mPosZ, 0);
         this->mdCcAc_c.flags |= 1;
         func_ov060_0211712c();
         if (this->mWithMeshClsn.IsOnGround()) {
