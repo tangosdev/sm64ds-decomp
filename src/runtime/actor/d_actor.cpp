@@ -70,6 +70,7 @@
  * came later, for the classes SpawnFireball, SpawnNumber and
  * GivePlayerCoins spawn. */
 #include "types.h"
+#include "ParticleIds.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "dActor_c.h"
@@ -1354,9 +1355,9 @@ void dActor_c::TriplePoofDust()
  * 0x0200fd74  size 0x54 */
 void dActor_c::TriplePoofDustAt(const Vector3 &pos)
 {
-    Particle::System::NewSimple(0x124, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x125, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x126, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofB, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofC, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1415,7 +1416,7 @@ extern "C" int func_0200fc44(int actor, Vector3 *pos, int doRaycast) {
             pos->y = rc.clsnY;
     }
     pos->y += 0x19000;
-    return Particle::System::NewSimple(0xb3, pos->x, pos->y, pos->z);
+    return Particle::System::NewSimple(kPtclGroundPuff, pos->x, pos->y, pos->z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1446,7 +1447,7 @@ void dActor_c::HugeLandingDustAt(Vector3 &pos, bool doRaycast) {
             pos.y = rc.clsnY;
     }
     pos.y += 0x28000;
-    Particle::System::NewSimple(0xb2, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclLandingDust, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */

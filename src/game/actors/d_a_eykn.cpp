@@ -55,6 +55,7 @@
 #pragma defer_codegen off
 
 #include "daEykn_c.h"
+#include "ParticleIds.h"
 #include "common.h"
 #include "types.h"
 #include "SpawnInfo.h"
@@ -460,9 +461,9 @@ int daEykn_c::St_Die_Main()
             if (isBig != 0) {
                 unsigned char star = (unsigned char)(param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
-                Particle::System::NewSimple(0x124, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(0x125, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(0x126, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofA, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofB, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofC, mPosX, mPosY, mPosZ);
             }
         }
         func_0201267c(0xc4, &mCamSpacePos);

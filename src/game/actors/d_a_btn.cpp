@@ -65,6 +65,7 @@ enum d_a_btn_AssetId {
 };
 
 #include "daBtn_c.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
@@ -838,7 +839,7 @@ void daBtn_c::func_ov079_02125504()
             v[0].x = px + sn * 0xaa;
             v[0].z = pz + cs * 0xaa;
         }
-        Particle::System::NewSimple(0xb2, v[0].x, v[0].y, v[0].z);
+        Particle::System::NewSimple(kPtclLandingDust, v[0].x, v[0].y, v[0].z);
     } else {
         mStepPlayed = 0;
     }

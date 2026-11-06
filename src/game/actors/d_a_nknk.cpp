@@ -44,6 +44,7 @@ enum d_a_nknk_AssetId {
 };
 
 #include "Koopa.h"
+#include "ParticleIds.h"
 #include "common.h"
 #include "types.h"
 #include "dActor_c.h"
@@ -1122,12 +1123,12 @@ void daNknk_c::func_ov062_021175c0()
             pos.y = pos.y + 0xa000;
         }
 
-        spawned =
-            Particle::System::New(0, 0xb2, pos.x, pos.y, zArg, (const Vector3_16f *)((void *)0),
-                                  (Particle::Callback *)((void *)0));
+        spawned = Particle::System::New(0, kPtclLandingDust, pos.x, pos.y, zArg,
+                                        (const Vector3_16f *)((void *)0),
+                                        (Particle::Callback *)((void *)0));
     }
 
-    Particle::SetSelfDestructFlag(0xb2);
+    Particle::SetSelfDestructFlag(kPtclLandingDust);
 
     mLandingDustTimer = 0xa;
     if (spawned == 0) return;

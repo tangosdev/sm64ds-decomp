@@ -55,6 +55,7 @@
 #pragma defer_codegen off
 
 #include "types.h"
+#include "ParticleIds.h"
 #include "common.h"
 #include "daPly_c.h"
 #include "EndingFlyPoint.h"
@@ -15618,7 +15619,7 @@ extern "C" int func_ov002_020d869c(char *c)
                 p.x = x;
                 p.y = y;
                 p.z = z;
-                Particle::System::NewSimple(0xb2, p.x, p.y, p.z);
+                Particle::System::NewSimple(kPtclLandingDust, p.x, p.y, p.z);
                 Sound::PlayBank0(0x12, pl->mCamSpacePos);
                 Sound::PlayCharVoice(pl->mCharacter, 0x19, pl->mCamSpacePos);
             }
