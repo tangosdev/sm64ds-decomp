@@ -108,7 +108,7 @@ struct daObjTatefuda_c : dBgActor_c {
     u8  mHidden;                     /* 0x590 */
     u8  mRespawnDelay;               /* 0x591 */
     u8  pad_592[0x2];
-    /* Last value of the flag word data_0209f284 the talk routine saw; it
+    /* Last value of the flag word gShowTouchScreenArrows the talk routine saw; it
        plays sound 0x24 when the flag differs from this and is non-zero. */
     u8  mFlagSeen;               /* 0x594 */
     u8  pad_595[0x3];

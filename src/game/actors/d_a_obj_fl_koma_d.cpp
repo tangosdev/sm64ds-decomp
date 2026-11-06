@@ -32,18 +32,9 @@ enum daObjFl_Koma_D_c_AssetId { ASSET_FL_KOMA_D_BMD = 0x05f5, ASSET_FL_KOMA_D_KC
 #include "daObjFl_Koma_D_c.h"
 #include "SharedFilePtr.h"
 
+#include "ResourceDescriptor.h"
+
 /* This descriptor matches the shared helpers in d_a_obj_kaitendai.cpp. */
-
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
-
 extern ResourceDescriptor data_ov022_02113da4;
 
 // @symbol _ZN16daObjFl_Koma_D_cD1Ev
@@ -91,17 +82,3 @@ struct KomaDCollisionFilePtr : SharedFilePtr {
  * destructors; the registration nodes are compiler temporaries. */
 KomaDModelFilePtr gFlKomaDModelFile(ASSET_FL_KOMA_D_BMD);
 KomaDCollisionFilePtr gFlKomaDCollisionFile(ASSET_FL_KOMA_D_KCL);
-
-#ifdef _MSC_VER
-/* Host flat names. Not compiled into the cartridge object. */
-extern "C" daObjFl_Koma_D_c *_ZN16daObjFl_Koma_D_cD0Ev(daObjFl_Koma_D_c *thiz) {
-    thiz->daObjFl_Koma_D_c::~daObjFl_Koma_D_c();
-    daObjFl_Koma_D_c::operator delete(thiz);
-    return thiz;
-}
-
-extern "C" daObjFl_Koma_D_c *_ZN19RotatingPlatformLllD0Ev(daObjFl_Koma_D_c *thiz) {
-    delete thiz;
-    return thiz;
-}
-#endif

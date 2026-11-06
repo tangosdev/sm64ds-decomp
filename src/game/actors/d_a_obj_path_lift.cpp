@@ -19,7 +19,7 @@
  *   no ROM home and are deadstripped in the manifest.
  * UpdateModelMatrix and UpdateShadow are coined names; the ROM records none.
  *
- * What stays: data_0209f2f8 == 13 is a level-ID check (the current
+ * What stays: gCurrentSublevel == 13 is a level-ID check (the current
  *   level); data_0209f2d8 == 1 is the mode-1 check used tree-wide.
  */
 
@@ -33,14 +33,13 @@
 
 extern CLPS_Block data_ov002_0210d7d4;
 extern short data_02082214[];
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f2d8;
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern void Matrix4x3_FromRotationXYZExt(Matrix4x3 *dst, int a, int b, int c2);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void func_020393d4(dBgW_KcMbg *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern SharedFilePtr data_ov002_0210d9f0;
@@ -78,7 +77,7 @@ int daObjPathLift_c::InitResources() {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000,
                           mAngleY, data_ov002_0210d7d4);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
     BaseInitResources();
@@ -170,7 +169,7 @@ void daObjPathLift_c::UpdateShadow() {
     int cosVal;
     int t;
 
-    if (data_0209f2f8 == 13)
+    if (gCurrentSublevel == 13)
         return;
     if (mGroundY > mPosY)
         return;
@@ -187,7 +186,7 @@ void daObjPathLift_c::UpdateShadow() {
     if (scaleZ < 0)
         scaleZ = -scaleZ;
 
-    Matrix4x3_FromRotationY(mShadowMat, mAngleY);
+    Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngleY);
     mShadowMat[9] = mPosX >> 3;
     mShadowMat[10] = (mPosY - yOff) >> 3;
     mShadowMat[11] = mPosZ >> 3;

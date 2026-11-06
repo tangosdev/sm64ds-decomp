@@ -46,6 +46,7 @@
  */
 
 #include "dScMiniGm_c.h"
+#include "nitro/hw/registers.h"
 #include "MgMenuRow.h"
 #include "dWipe_c.h"
 #include "dFdBrightness_c.h"
@@ -59,6 +60,7 @@
 #include "CP15.h"
 #include "G3X.h"
 #include "dScene_c.h"
+#include "LevelRng.h"
 
 struct MinigameSaveData;
 struct OamAttr;
@@ -83,11 +85,10 @@ extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
 extern u32 data_0209caa0[];
-extern u8 data_0209d454;
-extern u8 data_0209d45c;
-extern short data_0209d474[];
-extern short data_0209d494[];
-extern int data_0209e650;
+extern u8 gSubScreenLayers;
+extern u8 gMainScreenLayers;
+extern short gSubBg3HOffset[];
+extern short gSubBg0HOffset[];
 extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
@@ -141,7 +142,7 @@ void func_02013598(int x);
 int  func_020135d0(int r0);
 int  func_02013638(int n);
 int  RandomIntInternal(int *seed);
-extern char *LoadFile(int id);
+extern void *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 
@@ -168,7 +169,7 @@ s32 dScMiniGm_c::InitResources()
     volatile u16 sp0;
     volatile u16 sp2;
     char *dst;
-    char *f;
+    void *f;
 
     LoadTextNarcs();
     LoadArchive(0);
@@ -229,8 +230,9 @@ s32 dScMiniGm_c::InitResources()
     GX::SetBankForOBJ(0x10);
     GX::SetBankForTexPltt(0x20);
 
-    data_0209d45c &= ~0x1f;
-    data_0209d454 &= ~0x1f;
+    gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
+                           DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
+    gSubScreenLayers &= ~0x1f;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
     GX::SetGraphicsMode(1, 0, 1);
@@ -260,12 +262,12 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0x58);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GX::LoadBGPltt((const void *)f, 0, 0x200);
-    Deallocate((void *)f);
+    GX::LoadBGPltt(f, 0, 0x200);
+    Deallocate(f);
 
     f = LoadFile(0x59);
     DecompressLZ16(f, G2::GetBG2ScrPtr());
-    Deallocate((void *)f);
+    Deallocate(f);
 
     if (GetOwnerLanguage() == 5) {
         f = LoadFile(0xda);
@@ -279,12 +281,12 @@ s32 dScMiniGm_c::InitResources()
         f = LoadFile(0xd8);
     }
     DecompressLZ16(f, (void *)0x6400000);
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(0xd9);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GX::LoadOBJPltt((const void *)f, 0, 0x100);
-    Deallocate((void *)f);
+    GX::LoadOBJPltt(f, 0, 0x100);
+    Deallocate(f);
 
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x404;
@@ -300,12 +302,12 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0x53);
     DecompressLZ16(f, G2S::GetBG2CharPtr());
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(0x5a);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GXS::LoadBGPltt((const void *)f, 0, 0x200);
-    Deallocate((void *)f);
+    GXS::LoadBGPltt(f, 0, 0x200);
+    Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x6010;
@@ -334,12 +336,12 @@ s32 dScMiniGm_c::InitResources()
         f = LoadFile(0xd8);
     }
     DecompressLZ16(f, (void *)0x6600000);
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(0xd9);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GXS::LoadOBJPltt((const void *)f, 0, 0x100);
-    Deallocate((void *)f);
+    GXS::LoadOBJPltt(f, 0, 0x100);
+    Deallocate(f);
 
     mPageFlipped = 0;
     mArrowBobPhase = 0;
@@ -356,7 +358,7 @@ s32 dScMiniGm_c::InitResources()
     mExiting = 0;
 
     if (gMgSaveDirty == 1) {
-        data_0209f1d8 = 1;
+        gSoftResetDisabled = 1;
     }
     data_0208ee44 = 1;
     if (data_0209b2fc != 0) {
@@ -364,13 +366,13 @@ s32 dScMiniGm_c::InitResources()
     }
 
     data_0209b2fc = 0;
-    data_0209d45c |= 0x11;
-    data_0209d454 |= 0x11;
-    data_0209d45c &= ~2;
-    data_0209d454 &= ~2;
-    data_0209d45c |= 4;
-    data_0209d45c &= ~8;
-    data_0209d454 |= 0xc;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers |= 0x11;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
+    gSubScreenLayers &= ~2;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+    gSubScreenLayers |= 0xc;
     Sound::LoadAndSetMusic_Layer1(5);
     return 1;
 }
@@ -396,7 +398,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
     volatile u16 valA; /* pin MultiStore16 src */
     volatile u16 valB; /* pin MultiStore16 src */
     struct Off9 tbl;
-    char *f;
+    void *f;
     int fill;
     int nbytes;
     int t;
@@ -524,10 +526,10 @@ void MiniGm_LoadGroupIcons(void *selfv)
 extern "C" {
 void MiniGm_LoadIconPalette(char *self, int index)
 {
-    char *file = LoadFile(sMiniGmIconPalettes[index]);
+    void *file = LoadFile(sMiniGmIconPalettes[index]);
     CP15::FlushAndInvalidateDataCache((u32)file, 0x200);
     u32 slot = ((dScMiniGm_c *)self)->mGfxSlots[index / 4];
-    GXS::LoadBGPltt(file + 0x20, slot << 5, 0x20);
+    GXS::LoadBGPltt((u16 *)file + 16, slot << 5, 0x20);
     Deallocate(file);
 }
 }
@@ -552,8 +554,8 @@ s32 dScMiniGm_c::Behavior()
         MiniGm_SaveIfDirty((char *)this);
         return 1;
     }
-    RandomIntInternal(&data_0209d4b8);
-    RandomIntInternal(&data_0209e650);
+    RandomIntInternal(&data_0209d4b8.value);
+    RandomIntInternal(&data_0209e650.value);
 
     if (mPrevPageTimer > 0) {
         mPrevPageTimer -= 1;
@@ -1090,8 +1092,8 @@ void MiniGm_UpdatePageScroll(char *self) {
             }
         }
     }
-    data_0209d494[0] = (short)scene->mSubBgScrollX;
-    data_0209d474[0] = (short)scene->mSubBgScrollX;
+    gSubBg0HOffset[0] = (short)scene->mSubBgScrollX;
+    gSubBg3HOffset[0] = (short)scene->mSubBgScrollX;
 }
 }
 
@@ -1180,7 +1182,7 @@ extern "C" void MiniGm_SaveIfDirty(char *self)
         return;
     SaveData::SaveMinigames(&data_0209cae4);
     gMgSaveDirty = 0;
-    data_0209f1d8 = 0;
+    gSoftResetDisabled = 0;
 }
 
 

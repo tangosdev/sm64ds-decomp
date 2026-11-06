@@ -16,15 +16,17 @@
  *   class, and the bodies only touch this object's fields.
  * - data_020a0e58 is PadData[], so the 4-byte record stride is in the
  *   type. A flat u16[i*2] form costs func_ov003_020ae358 seventeen words.
- * - The bytes after the dExtSimpleModel_c pair stay offset macros. The header
- *   still holds that tail as opaque storage.
+ * - InitResources keeps one offset spelling: bitsPtr, its second view of
+ *   mPlateMask, is built as `(u8 *)this` plus 0x131 in two steps.
+ *   `bitsPtr = &mPlateMask` moves the add past the spills and swaps
+ *   r5/r6 (10 words).
  *
  * dScStarSel_c, the star-select screen. ov003 .text
  * 0x020addfc..0x020b0580. Base is dScene_c.
  */
 #pragma defer_codegen off
-#pragma opt_strength_reduction off
 #include "common.h"
+#include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
 #include "dScStarSel_c.h"
 #include "decl_common.h"
@@ -39,62 +41,10 @@
 #include "G2.h"
 #include "GX.h"
 #include "private/controller_input.h"
+#include "math/MtxStack.h"
 
-/* Raw this-relative accessors, and the cosine table lookup used by Render. */
-#define FB(p, o) (*(u8 *)((u8 *)(p) + (o)))
-#define FH(p, o) (*(s16 *)((u8 *)(p) + (o)))
-#define FW(p, o) (*(s32 *)((u8 *)(p) + (o)))
-#define FU(p, o) (*(u16 *)((u8 *)(p) + (o)))
+/* The cosine table lookup used by Render. */
 #define COS(a) data_02082214[((u16)(a) >> 4) * 2 + 1]
-
-/* Named views onto the storage between the dExtSimpleModel_c pair and the end of the
- * object. Fixed-point values are 20.12 (0x1000 = 1.0), as the OAM::Render
- * scale arguments and the 0x1000 steps below show. */
-#define SCALE_X(p)        FW(p, 0x50)   /* scale of the panel sprite at (0x80, PANEL_Y) */
-#define SCALE_Y(p)        FW(p, 0x54)
-#define ICON_SCALE_X(p)   FW(p, 0x58)   /* scale of the icon under CHAR_CURSOR */
-#define ICON_SCALE_Y(p)   FW(p, 0x5c)
-#define IDLE_ICON_SCALE(p) FW(p, 0x60)  /* scale of the other character icons */
-/* D-pad auto-repeat on the star plates: Behavior reloads it with 0x10 on a
-   press and 8 while held, and counts it down every frame. */
-#define PLATE_REPEAT_TIMER(p) FU(p, 0x104)
-#define REPEAT_TIMER(p)   (*(u16 *)((u8 *)(p) + 0x106))   /* D-pad auto-repeat */
-/* The bottom sprite's bounce in Behavior: BOUNCE_DELAY frames (0x78) pass,
-   then BOUNCE_VELOCITY is launched at BOUNCE_LAUNCH (first -0x400) and
-   steps BOTTOM_Y_OFFSET until it lands; each phase-3 landing raises BOUNCE_LAUNCH
-   by 0x80 until it reaches -0x180 and the delay restarts. BOUNCE_PHASE is
-   1 for the arc above the rest line, 2 or 3 for the rebound below it. */
-#define BOUNCE_DELAY(p)    FU(p, 0x108)
-#define BOUNCE_VELOCITY(p) FH(p, 0x10c)
-#define BOUNCE_LAUNCH(p)   FH(p, 0x10e)
-#define BOUNCE_PHASE(p)    FB(p, 0x136)
-#define BOTTOM_Y_OFFSET(p) FH(p, 0x10a) /* 8.8 offset of the bottom sprite's y */
-#define SPIN_ANGLE(p)     FH(p, 0x110)
-#define PULSE_ANGLE(p)    FH(p, 0x112)
-#define PLATE_COUNT(p)    FB(p, 0x114)  /* star plates drawn by Render */
-#define SELECTED_PLATE(p) FB(p, 0x115)
-#define LIFE_ICON(p)      FB(p, 0x116)  /* index into OAM::LIFE_ICONS */
-/* Frames the picked character's icon is drawn pressed (Render's pressY). */
-#define PICK_PRESS_TIMER(p) FB(p, 0x118)
-/* Set to 0x10 when a choice is made; Behavior counts it down and fades the
-   scene out at zero. */
-#define EXIT_DELAY(p)     FB(p, 0x119)
-#define PLATE_X(p, i)     FB((u8 *)(p) + (i), 0x11a)
-#define DIGIT(p, i)       (*(s8 *)((u8 *)(p) + (i) + 0x121))  /* 3 digits, -1 = blank */
-#define CHAR_X(p, i)      FB((u8 *)(p) + (i), 0x124)          /* per character */
-#define CHAR_Y(p, i)      FB((u8 *)(p) + (i), 0x128)
-#define PANEL_Y(p)        FB(p, 0x12b)
-#define CHAR_SPRITE(p, i) FB((u8 *)(p) + (i), 0x12c)
-#define STRIP_MODE(p)     FB(p, 0x130)  /* strip slots + 1; 4 = fixed order from sStarSelectCharacterOrder */
-#define PLATE_MASK(p)     FB(p, 0x131)  /* bit i: extra sprite behind plate i */
-#define PICKED_CHAR(p)    FB(p, 0x132)
-#define CURSOR_MODE(p)    FB(p, 0x133)  /* 0 plates, 1 character strip, else fixed */
-#define CHAR_CURSOR(p)    FB(p, 0x134)  /* slot within the character strip */
-#define CURSOR_ON(p)      FB(p, 0x135)
-#define ANIM_MODE(p)      FB(p, 0x139)  /* 1 or 2 selects the animation below */
-#define ANIM_FLIP(p)      FB(p, 0x13a)
-/* Step of the panel's ANIM_MODE 1 grow, shrink, wait and spin sequence. */
-#define PANEL_ANIM_STEP(p) FB(p, 0x137)
 
 extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
@@ -114,16 +64,13 @@ extern int data_0208ee44;
 extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
-void Matrix4x3_FromTranslation(Matrix4x3 *, s32, s32, s32);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, s16);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
 extern s8 data_02092110;
 extern s16 data_02082214[];
 extern s32 data_020a0db0;
 extern u8 data_0209caa0[0x50];
-extern Matrix4x3 data_020a0e68;
 extern u8 data_02092128;
-extern signed char data_0209f2f4[];
+extern signed char gNumLives[];
 extern u8 data_ov001_020ab938;
 extern u8 data_ov001_020ab940;
 extern void *data_ov001_020abb18[];
@@ -162,7 +109,7 @@ dScStarSel_c::~dScStarSel_c() {}
 // ROM 0x020adec0, size 0x90. The inverse of func_ov003_020adf50: maps a
 // character index to its strip slot, or 0 when it has none.
 int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
-    unsigned char mode = STRIP_MODE(this);
+    unsigned char mode = mStripMode;
     if (mode == 4) {
         unsigned char *p = sStarSelectCharacterOrder;
         int i;
@@ -188,20 +135,20 @@ int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
 }
 
 // @symbol _ZN12dScStarSel_c19func_ov003_020adf50Ev
-// ROM 0x020adf50, size 0x78. Maps the strip slot CHAR_CURSOR to a character
-// index: through sStarSelectCharacterOrder when STRIP_MODE is 4, otherwise the
-// CHAR_CURSOR-th unlocked character when STRIP_MODE is 2 or more; else 0.
+// ROM 0x020adf50, size 0x78. Maps the strip slot mCharCursor to a character
+// index: through sStarSelectCharacterOrder when mStripMode is 4, otherwise the
+// mCharCursor-th unlocked character when mStripMode is 2 or more; else 0.
 int dScStarSel_c::func_ov003_020adf50() {
-    unsigned char mode = STRIP_MODE(this);
+    unsigned char mode = mStripMode;
     if (mode == 4) {
-        return sStarSelectCharacterOrder[CHAR_CURSOR(this)];
+        return sStarSelectCharacterOrder[mCharCursor];
     }
     if (mode >= 2) {
         int slot = 0;
         int chr = 0;
         for (; chr < 3; chr++) {
             if (SaveData::IsCharacterUnlocked((unsigned int)chr) != 0) {
-                if (slot == CHAR_CURSOR(this)) {
+                if (slot == mCharCursor) {
                     return chr;
                 }
                 slot++;
@@ -222,7 +169,7 @@ void dScStarSel_c::func_ov003_020adfc8() {
     func_ov003_020ae1a4(coin);
     int i;
     for (i = 2; i >= 0; i--) {
-        signed char d = DIGIT(this, i);
+        signed char d = mDigits[i];
         if (d >= 0) {
             OAM::Render(0, OAM::NUMBERS[d], x, 0x4c, 8, -1, 0);
             x -= 9;
@@ -249,7 +196,7 @@ void dScStarSel_c::func_ov003_020ae0b0() {
     {
         int i = 2;
         do {
-            signed char d = DIGIT(this, i);
+            signed char d = mDigits[i];
             if (d >= 0) {
                 OAM::Render(0, OAM::NUMBERS[d], x, y, 8, -1, 0);
                 x -= 9;
@@ -263,7 +210,7 @@ void dScStarSel_c::func_ov003_020ae0b0() {
 
 // @symbol _ZN12dScStarSel_c19func_ov003_020ae1a4Ei
 // ROM 0x020ae1a4, size 0x94. Splits value into three decimal digits in
-// DIGIT(this, 0..2), dividing by sStarSelectDecimalDivisors[i] in turn; leading
+// mDigits[0..2], dividing by sStarSelectDecimalDivisors[i] in turn; leading
 // zeros are stored as -1 (blank) except the last digit.
 void dScStarSel_c::func_ov003_020ae1a4(int value) {
     int found = 0;
@@ -274,10 +221,10 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
         unsigned short place = sStarSelectDecimalDivisors[i];
         int digit = value / place;
         if (digit == 0 && found == 0 && i != 2) {
-            DIGIT(this, i) = (char)blank;
+            mDigits[i] = (char)blank;
         } else {
             found = one;
-            DIGIT(this, i) = (char)digit;
+            mDigits[i] = (char)digit;
         }
         value = (unsigned short)(value % place);
     }
@@ -285,7 +232,7 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
 
 // @symbol _ZN12dScStarSel_c19func_ov003_020ae238Ev
 // ROM 0x020ae238, size 0x120. Draws the life counter: the LIFE_ICONS entry for
-// LIFE_ICON, the TIMES sprite, and the three digits of data_0209f2f4[0].
+// mLifeIcon, the TIMES sprite, and the three digits of gNumLives[0].
 void dScStarSel_c::func_ov003_020ae238() {
     int x;
     int y;
@@ -296,14 +243,14 @@ void dScStarSel_c::func_ov003_020ae238() {
         x = 0x10;
         y = 0xac;
     }
-    OAM::Render(0, OAM::LIFE_ICONS[LIFE_ICON(this)], x, y + 8, -1, -1, 0x1000, 0x1000, 0, -1);
+    OAM::Render(0, OAM::LIFE_ICONS[mLifeIcon], x, y + 8, -1, -1, 0x1000, 0x1000, 0, -1);
     OAM::Render(0, &OAM::TIMES, x + 0x10, y + 8, -1, -1, 0);
-    func_ov003_020ae1a4((unsigned short)data_0209f2f4[0]);
+    func_ov003_020ae1a4((unsigned short)gNumLives[0]);
     {
         int i = 0;
         x += 0x18;
         do {
-            signed char d = DIGIT(this, i);
+            signed char d = mDigits[i];
             if (d >= 0) {
                 OAM::Render(0, OAM::NUMBERS[d], x, y, 8, -1, 0);
                 x += 9;
@@ -319,19 +266,19 @@ void dScStarSel_c::func_ov003_020ae238() {
 //
 // gActivePlayerSlot selects the active record in the 4-byte-stride tables at
 // gTouchHeld..gTouchY. If byte 0 of that record is set and byte 1 (gTouchEdge)
-// is set, its bytes 2 and 3 are tested against a box around (0x80, PANEL_Y); a
-// hit sets CURSOR_MODE 2, PICKED_CHAR 3, ANIM_MODE 1, seeds the timers at
-// c+0x118/0x119 and plays sound data_0209caa0[0x41] + 0x3c.
+// is set, its bytes 2 and 3 are tested against a box around the face at
+// (0x80, mFaceY); a hit sets mCursorTarget 2, mPickedChar 3, mAnimMode 1, seeds
+// mPickPressTimer and mExitDelay and plays sound data_0209caa0[0x41] + 0x3c.
 //
-// Failing that (and only with STRIP_MODE above 1 and data_0209caa0[0x41] == 3),
+// Failing that (and only with mStripMode above 1 and data_0209caa0[0x41] == 3),
 // the three characters are scanned in order: for each unlocked i, bytes 2 and 3
-// of the same record are tested against CHAR_X/CHAR_Y, and a hit sets
-// CURSOR_MODE 1, CHAR_CURSOR to its strip slot, and PICKED_CHAR, data_02092128
-// and data_02092114 to the character, ANIM_MODE 2, and plays the same sound.
+// of the same record are tested against mCharX/mCharY, and a hit sets
+// mCursorTarget 1, mCharCursor to its strip slot, and mPickedChar, data_02092128
+// and data_02092114 to the character, mAnimMode 2, and plays the same sound.
 //
 // With no record active, the d-pad bits of data_020a0e58[0].held move the
-// selection: REPEAT_TIMER counts down, and while it is zero a held left/right
-// steps CHAR_CURSOR within [0, STRIP_MODE - 2] and reloads the timer with 0x10
+// selection: mCharRepeatTimer counts down, and while it is zero a held left/right
+// steps mCharCursor within [0, mStripMode - 2] and reloads the timer with 0x10
 // or 8 depending on the active player's pressed word.
 //
 // Codegen note: the stride belongs in the TYPE, and the INDEX is what gets named.
@@ -352,16 +299,16 @@ void dScStarSel_c::func_ov003_020ae358() {
     }
     if (valid != 0) {
         if ((((unsigned char)(gTouchX[idx][0] - 0x58)) < 0x50) &&
-            (((unsigned char)((gTouchY[idx][0] - PANEL_Y(this)) + 0x28)) < 0x50)) {
-            CURSOR_MODE(this) = 2;
-            PICKED_CHAR(this) = 3;
-            PICK_PRESS_TIMER(this) = (unsigned char)(data_0208ee44 * 6);
-            ANIM_MODE(this) = 1;
-            EXIT_DELAY(this) = 0x10;
+            (((unsigned char)((gTouchY[idx][0] - mFaceY) + 0x28)) < 0x50)) {
+            mCursorTarget = 2;
+            mPickedChar = 3;
+            mPickPressTimer = (unsigned char)(data_0208ee44 * 6);
+            mAnimMode = 1;
+            mExitDelay = 0x10;
             func_02012790(data_0209caa0[0x41] + 0x3c);
             return;
         }
-        if (STRIP_MODE(this) <= 1) {
+        if (mStripMode <= 1) {
             return;
         }
         if (data_0209caa0[0x41] != 3) {
@@ -370,17 +317,17 @@ void dScStarSel_c::func_ov003_020ae358() {
         for (i = 0; i < 3; i++) {
             if (SaveData::IsCharacterUnlocked(i) != 0) {
                 int ri = gActivePlayerSlot;
-                if (((unsigned short)((gTouchHeld[gActivePlayerSlot][2] - CHAR_X(this, i)) +
-                                      0x18)) < 0x30) {
-                    if (((unsigned short)((gTouchHeld[ri][3] - CHAR_Y(this, i)) + 0x18)) < 0x2b) {
-                        CURSOR_MODE(this) = 1;
-                        CHAR_CURSOR(this) = (unsigned char)func_ov003_020adec0(i);
+                if (((unsigned short)((gTouchHeld[gActivePlayerSlot][2] - mCharX[i]) + 0x18)) <
+                    0x30) {
+                    if (((unsigned short)((gTouchHeld[ri][3] - mCharY[i]) + 0x18)) < 0x2b) {
+                        mCursorTarget = 1;
+                        mCharCursor = (unsigned char)func_ov003_020adec0(i);
                         data_02092128 = (unsigned char)i;
                         data_02092114 = (unsigned char)i;
-                        PICKED_CHAR(this) = (unsigned char)i;
-                        PICK_PRESS_TIMER(this) = (unsigned char)(data_0208ee44 * 3);
-                        ANIM_MODE(this) = 2;
-                        EXIT_DELAY(this) = 0x10;
+                        mPickedChar = (unsigned char)i;
+                        mPickPressTimer = (unsigned char)(data_0208ee44 * 3);
+                        mAnimMode = 2;
+                        mExitDelay = 0x10;
                         func_02012790(data_0209caa0[0x41] + 0x3c);
                         return;
                     }
@@ -393,47 +340,47 @@ void dScStarSel_c::func_ov003_020ae358() {
     if (data_0209caa0[0x42] == 0) {
         unsigned short ctrl = data_020a0e58[0].held;
         if ((ctrl & 0x30) != 0) {
-            unsigned short timer = REPEAT_TIMER(this);
+            unsigned short timer = mCharRepeatTimer;
             unsigned char next;
             if (timer != 0) {
-                REPEAT_TIMER(this) -= 1;
+                mCharRepeatTimer -= 1;
                 return;
             }
-            if (CURSOR_ON(this) == 0) {
+            if (mCursorShown == 0) {
                 return;
             }
-            if (CURSOR_MODE(this) != 1) {
+            if (mCursorTarget != 1) {
                 return;
             }
-            if (STRIP_MODE(this) < 3) {
+            if (mStripMode < 3) {
                 return;
             }
-            next = CHAR_CURSOR(this);
+            next = mCharCursor;
             if (ctrl & 0x20) {
                 if (((data_020a0e58[0].pressed & 0x20) != 0) || (timer == 0)) {
-                    REPEAT_TIMER(this) = (data_020a0e58[idx].pressed & 0x20) ? (0x10) : (8);
-                    if (CHAR_CURSOR(this) != 0) {
+                    mCharRepeatTimer = (data_020a0e58[idx].pressed & 0x20) ? (0x10) : (8);
+                    if (mCharCursor != 0) {
                         next = next - 1;
                     }
                 }
             } else if (ctrl & 0x10) {
                 if (((data_020a0e58[0].pressed & 0x10) != 0) || (timer == 0)) {
-                    REPEAT_TIMER(this) = (data_020a0e58[idx].pressed & 0x10) ? (0x10) : (8);
-                    if (CHAR_CURSOR(this) != (STRIP_MODE(this) - 2)) {
+                    mCharRepeatTimer = (data_020a0e58[idx].pressed & 0x10) ? (0x10) : (8);
+                    if (mCharCursor != (mStripMode - 2)) {
                         next = next + 1;
                     }
                 }
             }
-            if (next == CHAR_CURSOR(this)) {
+            if (next == mCharCursor) {
                 return;
             }
-            CHAR_CURSOR(this) = next;
+            mCharCursor = next;
             func_02012790(0x12e);
             return;
         }
     }
 
-    REPEAT_TIMER(this) = 0;
+    mCharRepeatTimer = 0;
 }
 
 // @symbol _ZN12dScStarSel_c16OnPendingDestroyEv
@@ -487,10 +434,10 @@ s32 dScStarSel_c::Render() {
         CopyToViewMat(&mtx);
 
         /* The plates are 0x18000 apart, centred on x = 0, and sit at y = 0x28000. */
-        x = -(((s32)PLATE_COUNT(this) - 1) * 0x18000 / 2);
-        for (i = 1; i <= PLATE_COUNT(this); i++) {
+        x = -(((s32)mPlateCount - 1) * 0x18000 / 2);
+        for (i = 1; i <= mPlateCount; i++) {
             Matrix4x3_FromTranslation(&data_020a0e68, x, 0x28000, 0);
-            if (i - 1 == SELECTED_PLATE(this)) {
+            if (i - 1 == mSelectedPlate) {
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (s16)(data_020a0db0 * 0x300));
                 Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, 0x1400, 0x1400, 0x1400);
             }
@@ -501,71 +448,69 @@ s32 dScStarSel_c::Render() {
             x += 0x18000;
         }
 
-        for (i = 0; i < PLATE_COUNT(this); i++) {
-            if ((PLATE_MASK(this) >> i) & 1) {
-                if (i == SELECTED_PLATE(this)) {
-                    OAM::RenderSub((OamAttr *)&data_ov001_020ab938, PLATE_X(this, i), 0x18);
+        for (i = 0; i < mPlateCount; i++) {
+            if ((mPlateMask >> i) & 1) {
+                if (i == mSelectedPlate) {
+                    OAM::RenderSub((OamAttr *)&data_ov001_020ab938, mPlateX[i], 0x18);
                 } else {
-                    OAM::RenderSub((OamAttr *)&data_ov001_020ab940, PLATE_X(this, i), 0x18);
+                    OAM::RenderSub((OamAttr *)&data_ov001_020ab940, mPlateX[i], 0x18);
                 }
             }
-            OAM::Render(0, (OamAttr *)data_ov001_020abb18[i], PLATE_X(this, i), 8, -1, -1, 0);
+            OAM::Render(0, (OamAttr *)data_ov001_020abb18[i], mPlateX[i], 8, -1, -1, 0);
         }
 
-        if (CURSOR_ON(this) != 0) {
-            if (CURSOR_MODE(this) == 0) {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abd78, PLATE_X(this, SELECTED_PLATE(this)),
-                               6);
-            } else if (CURSOR_MODE(this) == 1) {
+        if (mCursorShown != 0) {
+            if (mCursorTarget == 0) {
+                OAM::RenderSub((OamAttr *)&data_ov001_020abd78, mPlateX[mSelectedPlate], 6);
+            } else if (mCursorTarget == 1) {
                 int slot = func_ov003_020adf50();
-                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, CHAR_X(this, slot) - 0x24,
-                               CHAR_Y(this, slot) - 8);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, mCharX[slot] - 0x24,
+                               mCharY[slot] - 8);
             } else {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, 0x50, PANEL_Y(this) + 8);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, 0x50, mFaceY + 8);
             }
         }
 
-        if (ANIM_MODE(this) != 0) {
-            if (ANIM_MODE(this) == 1) {
-                switch (PANEL_ANIM_STEP(this)) {
+        if (mAnimMode != 0) {
+            if (mAnimMode == 1) {
+                switch (mFaceAnimStep) {
                 case 0:
-                    SCALE_X(this) += 0x400;
-                    if (SCALE_X(this) >= 0x1800) {
-                        SCALE_X(this) = 0x1800;
-                        PANEL_ANIM_STEP(this) = 1;
+                    mFaceScaleX += 0x400;
+                    if (mFaceScaleX >= 0x1800) {
+                        mFaceScaleX = 0x1800;
+                        mFaceAnimStep = 1;
                     }
                     break;
                 case 1:
-                    SCALE_X(this) -= 0x400;
-                    if (SCALE_X(this) <= 0x1000) {
-                        SCALE_X(this) = 0x1000;
-                        PANEL_ANIM_STEP(this) = 2;
+                    mFaceScaleX -= 0x400;
+                    if (mFaceScaleX <= 0x1000) {
+                        mFaceScaleX = 0x1000;
+                        mFaceAnimStep = 2;
                     }
                     break;
                 case 2:
-                    SCALE_X(this) -= 0x80;
-                    if (EXIT_DELAY(this) == 0) {
-                        PANEL_ANIM_STEP(this) = 3;
+                    mFaceScaleX -= 0x80;
+                    if (mExitDelay == 0) {
+                        mFaceAnimStep = 3;
                     }
                     break;
                 case 3:
-                    SCALE_X(this) += 0x100;
-                    SPIN_ANGLE(this) += 0x1000;
+                    mFaceScaleX += 0x100;
+                    mFaceAngle += 0x1000;
                     break;
                 }
-                SCALE_Y(this) = SCALE_X(this);
-            } else if (ANIM_MODE(this) == 2) {
-                ICON_SCALE_X(this) =
-                    (0x1000 - COS((s16)(PULSE_ANGLE(this) - 0x4000))) * 10 + 0x1000;
-                ICON_SCALE_Y(this) = 0x1000;
-                PULSE_ANGLE(this) = (PULSE_ANGLE(this) + 0x1000) & 0x7fff;
-                if (PULSE_ANGLE(this) == 0x4000) {
-                    ANIM_FLIP(this) ^= 1;
+                mFaceScaleY = mFaceScaleX;
+            } else if (mAnimMode == 2) {
+                mIconScaleX = (0x1000 - COS((s16)(mPulseAngle - 0x4000))) * 10 + 0x1000;
+                mIconScaleY = 0x1000;
+                mPulseAngle = (mPulseAngle + 0x1000) & 0x7fff;
+                if (mPulseAngle == 0x4000) {
+                    mAnimFlip ^= 1;
                 }
-                if (IDLE_ICON_SCALE(this) != 0) {
-                    IDLE_ICON_SCALE(this) += 0x1000;
-                    if (IDLE_ICON_SCALE(this) >= 0x10000) {
-                        IDLE_ICON_SCALE(this) = 0;
+                if (mIdleIconScale != 0) {
+                    mIdleIconScale += 0x1000;
+                    if (mIdleIconScale >= 0x10000) {
+                        mIdleIconScale = 0;
                     }
                 }
             }
@@ -573,68 +518,64 @@ s32 dScStarSel_c::Render() {
 
         switch (data_0209caa0[0x41]) {
         case 0:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb34, 0x80, PANEL_Y(this), -1, -1,
-                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb34, 0x80, mFaceY, -1, -1, mFaceScaleX,
+                        mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 1:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb54, 0x80, PANEL_Y(this), -1, -1,
-                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb54, 0x80, mFaceY, -1, -1, mFaceScaleX,
+                        mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 2:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb74, 0x80, PANEL_Y(this), -1, -1,
-                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb74, 0x80, mFaceY, -1, -1, mFaceScaleX,
+                        mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 3:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb94, 0x80, PANEL_Y(this), -1, -1,
-                        SCALE_X(this), SCALE_Y(this), (u16)SPIN_ANGLE(this), -1);
+            OAM::Render(1, (OamAttr *)&data_ov001_020abb94, 0x80, mFaceY, -1, -1, mFaceScaleX,
+                        mFaceScaleY, (u16)mFaceAngle, -1);
             for (i = 0; i < 3; i++) {
                 pressY = 0;
-                if (PICKED_CHAR(this) == i && PICK_PRESS_TIMER(this) != 0) {
+                if (mPickedChar == i && mPickPressTimer != 0) {
                     pressY = 3;
                 }
                 if (SaveData::IsCharacterUnlocked(i) != 0) {
-                    if (ANIM_MODE(this) == 2) {
+                    if (mAnimMode == 2) {
                         if (i == func_ov003_020adf50()) {
-                            if (ANIM_FLIP(this) == 0) {
-                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3],
-                                            CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
-                                            ICON_SCALE_X(this), ICON_SCALE_Y(this), 0, -1);
-                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[CHAR_SPRITE(this, i)],
-                                            CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
-                                            ICON_SCALE_X(this), ICON_SCALE_Y(this), 0, -1);
+                            if (mAnimFlip == 0) {
+                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3], mCharX[i],
+                                            mCharY[i], -1, -1, mIconScaleX, mIconScaleY, 0, -1);
+                                OAM::Render(1, (OamAttr *)data_ov001_020abcb4[mCharSprite[i]],
+                                            mCharX[i], mCharY[i], -1, -1, mIconScaleX, mIconScaleY,
+                                            0, -1);
                             } else {
-                                OAM::Render(1,
-                                            (OamAttr *)data_ov001_020abcb4[CHAR_SPRITE(
-                                                this, i ^ ((i != 0) ? 3 : 0))],
-                                            CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
-                                            ICON_SCALE_X(this), ICON_SCALE_Y(this), 0, -1);
+                                OAM::Render(
+                                    1,
+                                    (OamAttr *)
+                                        data_ov001_020abcb4[mCharSprite[i ^ ((i != 0) ? 3 : 0)]],
+                                    mCharX[i], mCharY[i], -1, -1, mIconScaleX, mIconScaleY, 0, -1);
                             }
-                        } else if (IDLE_ICON_SCALE(this) != 0) {
-                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3], CHAR_X(this, i),
-                                        CHAR_Y(this, i), -1, -1, IDLE_ICON_SCALE(this),
-                                        IDLE_ICON_SCALE(this), 0, -1);
-                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[CHAR_SPRITE(this, i)],
-                                        CHAR_X(this, i), CHAR_Y(this, i), -1, -1,
-                                        IDLE_ICON_SCALE(this), IDLE_ICON_SCALE(this), 0, -1);
+                        } else if (mIdleIconScale != 0) {
+                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3], mCharX[i],
+                                        mCharY[i], -1, -1, mIdleIconScale, mIdleIconScale, 0, -1);
+                            OAM::Render(1, (OamAttr *)data_ov001_020abcb4[mCharSprite[i]],
+                                        mCharX[i], mCharY[i], -1, -1, mIdleIconScale,
+                                        mIdleIconScale, 0, -1);
                         }
                     } else {
-                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[i + 3], CHAR_X(this, i),
-                                       pressY + CHAR_Y(this, i));
-                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[CHAR_SPRITE(this, i)],
-                                       CHAR_X(this, i), pressY + CHAR_Y(this, i));
+                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[i + 3], mCharX[i],
+                                       pressY + mCharY[i]);
+                        OAM::RenderSub((OamAttr *)data_ov001_020abcb4[mCharSprite[i]], mCharX[i],
+                                       pressY + mCharY[i]);
                     }
                 }
             }
             break;
         }
 
-        if (STRIP_MODE(this) <= 1 || data_0209caa0[0x41] != 3) {
+        if (mStripMode <= 1 || data_0209caa0[0x41] != 3) {
             if (SublevelToLevel(data_02092110) <= 0xe) {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abbb4, 0x80,
-                               (BOTTOM_Y_OFFSET(this) >> 8) + 0xa0);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abbb4, 0x80, (mPromptYOffset >> 8) + 0xa0);
             } else {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abbf4, 0x80,
-                               (BOTTOM_Y_OFFSET(this) >> 8) + 0xa0);
+                OAM::RenderSub((OamAttr *)&data_ov001_020abbf4, 0x80, (mPromptYOffset >> 8) + 0xa0);
             }
         }
     }
@@ -652,7 +593,7 @@ s32 dScStarSel_c::Render() {
 // CSEs idx * 4 instead of refolding it for the edge read.
 //
 // Two scratch locals are shared between the character-pick branch and the stylus
-// branch: `val` carries the cursor mode (c+0x133) in the first and the stylus-held
+// branch: `val` carries mCursorTarget in the first and the stylus-held
 // flag in the second, `num` the picked character and then the plate count. The
 // register allocator orders webs by where their variable is first assigned, so the
 // sharing is what puts the plate count in r0 and the slot index in r2 at the loop;
@@ -680,68 +621,68 @@ s32 dScStarSel_c::Behavior() {
     unsigned char idx;
 
     if (data_0209f5bc->IsAtStart() != 0) {
-        DecIfAbove0_Byte(&FB(this, 0x117));
-        DecIfAbove0_Byte(&PICK_PRESS_TIMER(this));
-        if (EXIT_DELAY(this) != 0 ||
+        DecIfAbove0_Byte(&mPlatePressTimer);
+        DecIfAbove0_Byte(&mPickPressTimer);
+        if (mExitDelay != 0 ||
             (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
-            if (EXIT_DELAY(this) != 0) {
-                EXIT_DELAY(this) -= data_0208ee44;
+            if (mExitDelay != 0) {
+                mExitDelay -= data_0208ee44;
             }
-            if (EXIT_DELAY(this) == 0 ||
+            if (mExitDelay == 0 ||
                 (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
                 StartSceneFade(3, 0, 0);
                 data_0209f5e8.color = 0x7fff;
                 if (SublevelToLevel(data_02092110) <= 0xe) {
-                    data_0209f1f0 = SELECTED_PLATE(this) + 1;
+                    data_0209f1f0 = mSelectedPlate + 1;
                 } else {
                     data_0209f1f0 = 1;
                 }
             }
-        } else if (CURSOR_ON(this) != 0 && IsButtonInputValid() != 0) {
-            val = CURSOR_MODE(this);
-            if (val == 0 && STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
-                CURSOR_MODE(this) = 2;
+        } else if (mCursorShown != 0 && IsButtonInputValid() != 0) {
+            val = mCursorTarget;
+            if (val == 0 && mStripMode > 1 && data_0209caa0[0x41] == 3) {
+                mCursorTarget = 2;
                 func_02012790(0x12e);
-            } else if (ANIM_MODE(this) == 0) {
+            } else if (mAnimMode == 0) {
                 if (val == 1) {
                     num = func_ov003_020adf50();
                     data_02092128 = num;
                     data_02092114 = num;
-                    PICKED_CHAR(this) = num;
-                    PICK_PRESS_TIMER(this) = data_0208ee44 * 3;
-                    ANIM_MODE(this) = 2;
+                    mPickedChar = num;
+                    mPickPressTimer = data_0208ee44 * 3;
+                    mAnimMode = 2;
                 } else {
-                    CURSOR_MODE(this) = 2;
-                    PICKED_CHAR(this) = 3;
-                    PICK_PRESS_TIMER(this) = data_0208ee44 * 6;
-                    ANIM_MODE(this) = 1;
+                    mCursorTarget = 2;
+                    mPickedChar = 3;
+                    mPickPressTimer = data_0208ee44 * 6;
+                    mAnimMode = 1;
                 }
-                EXIT_DELAY(this) = 0x10;
+                mExitDelay = 0x10;
                 func_02012790(data_0209caa0[0x41] + 0x3c);
             }
         } else if (SublevelToLevel(data_02092110) <= 0xe) {
             idx = gActivePlayerSlot;
-            cur = SELECTED_PLATE(this);
+            cur = mSelectedPlate;
             found = 0;
             val = gTouchHeld[idx][0];
             if (val != 0) {
-                num = PLATE_COUNT(this);
+                num = mPlateCount;
                 i = 0;
                 if (num > 0) {
                     rec = gTouchHeld[idx];
                     tx = rec[2];
                     do {
-                        if ((u8)(tx - PLATE_X(this, i) + 8) < 0x10 && gTouchHeld[idx][3] < 0x28 &&
-                            ((PLATE_MASK(this) >> i) & 1)) {
+                        if ((u8)(tx - mPlateX[i] + 8) < 0x10 && gTouchHeld[idx][3] < 0x28 &&
+                            ((mPlateMask >> i) & 1)) {
                             hit = (val != 0 && gTouchEdge[idx][0] != 0);
                             if (hit != 0 || cur != i) {
-                                FB(this, 0x117) = data_0208ee44 * 3;
+                                mPlatePressTimer = data_0208ee44 * 3;
                             }
                             if (cur != i) {
                                 cur = i;
                                 func_02012790(0x12e);
                             }
-                            CURSOR_MODE(this) = 0;
+                            mCursorTarget = 0;
                             found = 1;
                             break;
                         }
@@ -749,14 +690,13 @@ s32 dScStarSel_c::Behavior() {
                     } while (i < num);
                 }
             }
-            if (found == 0 && CURSOR_ON(this) == 2 && CURSOR_MODE(this) == 0 &&
-                data_0209caa0[0x42] == 0) {
+            if (found == 0 && mCursorShown == 2 && mCursorTarget == 0 && data_0209caa0[0x42] == 0) {
                 if (data_020a0e58[0].held & 0x20) {
                     pressed = data_020a0e58[0].pressed & 0x20;
-                    if (pressed != 0 || PLATE_REPEAT_TIMER(this) == 0) {
-                        PLATE_REPEAT_TIMER(this) = pressed ? 0x10 : 8;
+                    if (pressed != 0 || mPlateRepeatTimer == 0) {
+                        mPlateRepeatTimer = pressed ? 0x10 : 8;
                         if (cur != 0) {
-                            u8 mask = PLATE_MASK(this);
+                            u8 mask = mPlateMask;
                             cur--;
                             while (!((mask >> cur) & 1)) {
                                 cur--;
@@ -766,10 +706,10 @@ s32 dScStarSel_c::Behavior() {
                     }
                 } else if (data_020a0e58[0].held & 0x10) {
                     pressed = data_020a0e58[0].pressed & 0x10;
-                    if (pressed != 0 || PLATE_REPEAT_TIMER(this) == 0) {
-                        PLATE_REPEAT_TIMER(this) = pressed ? 0x10 : 8;
-                        if (cur < PLATE_COUNT(this) - 1) {
-                            u8 mask = PLATE_MASK(this);
+                    if (pressed != 0 || mPlateRepeatTimer == 0) {
+                        mPlateRepeatTimer = pressed ? 0x10 : 8;
+                        if (cur < mPlateCount - 1) {
+                            u8 mask = mPlateMask;
                             cur++;
                             while (!((mask >> cur) & 1)) {
                                 cur++;
@@ -779,74 +719,74 @@ s32 dScStarSel_c::Behavior() {
                     }
                 }
             }
-            if (SELECTED_PLATE(this) != cur) {
-                SELECTED_PLATE(this) = cur;
+            if (mSelectedPlate != cur) {
+                mSelectedPlate = cur;
                 Message::DisplayStarNameForStarSelect((s16)cur);
-                FB(this, 0x117) = data_0208ee44 * 3;
+                mPlatePressTimer = data_0208ee44 * 3;
             }
-            if (ANIM_MODE(this) == 0) {
+            if (mAnimMode == 0) {
                 func_ov003_020ae358();
             }
         }
 
         if (SublevelToLevel(data_02092110) <= 0xe) {
-            if (CURSOR_ON(this) == 0) {
+            if (mCursorShown == 0) {
                 if (IsButtonInputValid() != 0 ||
                     (data_0209caa0[0x42] == 0 &&
                      (data_020a0e58[gActivePlayerSlot].pressed & 0xf0))) {
                     func_02012790(0x12e);
                     if (data_0209caa0[0x42] == 0 && (data_020a0e58[0].pressed & 0x30)) {
-                        CURSOR_ON(this) = 1;
+                        mCursorShown = 1;
                     } else {
-                        CURSOR_ON(this) = 2;
+                        mCursorShown = 2;
                     }
                     if (SublevelToLevel(data_02092110) <= 0xe) {
-                        CURSOR_MODE(this) = 0;
-                    } else if (STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
-                        CURSOR_MODE(this) = 1;
-                        if (STRIP_MODE(this) != 4) {
-                            CHAR_CURSOR(this) = 0;
+                        mCursorTarget = 0;
+                    } else if (mStripMode > 1 && data_0209caa0[0x41] == 3) {
+                        mCursorTarget = 1;
+                        if (mStripMode != 4) {
+                            mCharCursor = 0;
                         } else {
-                            CHAR_CURSOR(this) = 1;
+                            mCharCursor = 1;
                         }
                     } else {
-                        CURSOR_MODE(this) = 2;
+                        mCursorTarget = 2;
                     }
                 }
-            } else if (CURSOR_ON(this) == 1) {
+            } else if (mCursorShown == 1) {
                 if (data_020a0e58[0].pressed != 0) {
-                    CURSOR_ON(this) = 2;
+                    mCursorShown = 2;
                 }
             } else if (data_0209caa0[0x42] == 0 && (data_020a0e58[0].held & 0xc0)) {
                 u16 keys = data_020a0e58[0].pressed;
                 if (keys & 0x40) {
-                    if (CURSOR_MODE(this) != 0) {
-                        CURSOR_MODE(this) -= 1;
-                        if (CURSOR_MODE(this) == 1) {
-                            if (STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
-                                if (STRIP_MODE(this) != 4) {
-                                    CHAR_CURSOR(this) = 0;
+                    if (mCursorTarget != 0) {
+                        mCursorTarget -= 1;
+                        if (mCursorTarget == 1) {
+                            if (mStripMode > 1 && data_0209caa0[0x41] == 3) {
+                                if (mStripMode != 4) {
+                                    mCharCursor = 0;
                                 } else {
-                                    CHAR_CURSOR(this) = 1;
+                                    mCharCursor = 1;
                                 }
                             } else {
-                                CURSOR_MODE(this) = 0;
+                                mCursorTarget = 0;
                             }
                         }
                         func_02012790(0x12e);
                     }
                 } else if (keys & 0x80) {
-                    if (CURSOR_MODE(this) != 2) {
-                        CURSOR_MODE(this) += 1;
-                        if (CURSOR_MODE(this) == 1) {
-                            if (STRIP_MODE(this) > 1 && data_0209caa0[0x41] == 3) {
-                                if (STRIP_MODE(this) != 4) {
-                                    CHAR_CURSOR(this) = 0;
+                    if (mCursorTarget != 2) {
+                        mCursorTarget += 1;
+                        if (mCursorTarget == 1) {
+                            if (mStripMode > 1 && data_0209caa0[0x41] == 3) {
+                                if (mStripMode != 4) {
+                                    mCharCursor = 0;
                                 } else {
-                                    CHAR_CURSOR(this) = 1;
+                                    mCharCursor = 1;
                                 }
                             } else {
-                                CURSOR_MODE(this) = 2;
+                                mCursorTarget = 2;
                             }
                         }
                         func_02012790(0x12e);
@@ -854,45 +794,45 @@ s32 dScStarSel_c::Behavior() {
                 }
             }
 
-            if (STRIP_MODE(this) <= 1 || data_0209caa0[0x41] != 3) {
-                if (BOUNCE_DELAY(this) != 0) {
-                    BOUNCE_DELAY(this) -= 1;
-                    if (BOUNCE_DELAY(this) == 0) {
-                        BOTTOM_Y_OFFSET(this) = 0;
-                        BOUNCE_LAUNCH(this) = -0x400;
-                        BOUNCE_VELOCITY(this) = BOUNCE_LAUNCH(this);
-                        BOUNCE_PHASE(this) = 1;
+            if (mStripMode <= 1 || data_0209caa0[0x41] != 3) {
+                if (mBounceDelay != 0) {
+                    mBounceDelay -= 1;
+                    if (mBounceDelay == 0) {
+                        mPromptYOffset = 0;
+                        mBounceLaunch = -0x400;
+                        mBounceVelocity = mBounceLaunch;
+                        mBouncePhase = 1;
                     }
                 } else {
-                    if (!(BOUNCE_PHASE(this) & 2)) {
-                        BOUNCE_VELOCITY(this) += 0x100;
-                        if (BOUNCE_VELOCITY(this) >= 0) {
-                            BOUNCE_PHASE(this) = 1;
+                    if (!(mBouncePhase & 2)) {
+                        mBounceVelocity += 0x100;
+                        if (mBounceVelocity >= 0) {
+                            mBouncePhase = 1;
                         }
                     } else {
-                        BOUNCE_VELOCITY(this) -= 0x100;
-                        if (BOUNCE_VELOCITY(this) >= 0) {
-                            BOUNCE_PHASE(this) = 3;
+                        mBounceVelocity -= 0x100;
+                        if (mBounceVelocity >= 0) {
+                            mBouncePhase = 3;
                         }
                     }
-                    BOTTOM_Y_OFFSET(this) += BOUNCE_VELOCITY(this);
-                    if (BOUNCE_PHASE(this) == 1 && BOTTOM_Y_OFFSET(this) >= 0) {
-                        BOUNCE_PHASE(this) = 2;
-                    } else if (BOUNCE_PHASE(this) == 3 && BOTTOM_Y_OFFSET(this) <= 0) {
-                        BOUNCE_LAUNCH(this) += 0x80;
-                        if (BOUNCE_LAUNCH(this) >= -0x180) {
-                            BOUNCE_DELAY(this) = 0x78;
-                            BOTTOM_Y_OFFSET(this) = 0;
+                    mPromptYOffset += mBounceVelocity;
+                    if (mBouncePhase == 1 && mPromptYOffset >= 0) {
+                        mBouncePhase = 2;
+                    } else if (mBouncePhase == 3 && mPromptYOffset <= 0) {
+                        mBounceLaunch += 0x80;
+                        if (mBounceLaunch >= -0x180) {
+                            mBounceDelay = 0x78;
+                            mPromptYOffset = 0;
                         } else {
-                            BOUNCE_VELOCITY(this) = BOUNCE_LAUNCH(this);
-                            BOUNCE_PHASE(this) = 1;
+                            mBounceVelocity = mBounceLaunch;
+                            mBouncePhase = 1;
                         }
                     }
                 }
             }
         }
     }
-    DecIfAbove0_Short(&PLATE_REPEAT_TIMER(this));
+    DecIfAbove0_Short(&mPlateRepeatTimer);
     return 1;
 }
 
@@ -946,17 +886,15 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
  *
  * Loads the star-select screen: sound group, VRAM banks, the two dExtSimpleModel_c members
  * (models[0]/models[1]), the per-language BG/OBJ graphics, the per-character
- * palette set, then derives the star row (PLATE_MASK, SELECTED_PLATE,
- * PLATE_COUNT, PLATE_X) and the character row (CHAR_X/CHAR_Y/CHAR_SPRITE,
- * STRIP_MODE). Those fields fall inside dScStarSel_c::unk_104, which the header
- * still holds as opaque storage, so they are reached through the views above.
+ * palette set, then derives the star row (mPlateMask, mSelectedPlate,
+ * mPlateCount, mPlateX) and the character row (mCharX/mCharY/mCharSprite,
+ * mStripMode).
  *
  * The star x positions are a u8 running value: the row is centred, so it starts
  * at 0x80 (odd count) or 0x92 (even count) minus half the count times the 0x23
  * pitch, and each star adds one pitch. Written as one u8 with if/else constant
  * arms, which is what keeps the value in the register the ternary lands in (r3)
  * and lets the loop's +0x23 temp take a fresh r1. */
-#pragma push
 
 extern "C" {
 void Enable3dEngines(void);
@@ -964,8 +902,8 @@ void *LoadFile(int);
 void DecompressLZ16(void *, void *);
 int IsStarCollected(int, int);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 }
 
 #define REG16(a) (*(vu16 *)(a))
@@ -1031,7 +969,7 @@ s32 dScStarSel_c::InitResources() {
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);
     REG16(0x4000008) = (REG16(0x4000008) & ~3) | 2;
-    data_0209d45c = 0x19;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     REG16(0x400000E) &= ~3;
     REG16(0x400000E) = (REG16(0x400000E) & 0x43) | 0x1700;
     REG16(0x400000E) &= ~0x40;
@@ -1051,8 +989,8 @@ s32 dScStarSel_c::InitResources() {
         DecompressLZ16(file, G2::GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, 0);
-        data_0209d45c |= 4;
-        data_0209d45c &= ~1;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     } else {
         REG16(0x400000C) = (REG16(0x400000C) & ~3) | 1;
         REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
@@ -1077,7 +1015,7 @@ s32 dScStarSel_c::InitResources() {
         DecompressLZ16(file, G2::GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, -4);
-        data_0209d45c |= 4;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
         GXS::LoadBGPltt(&data_ov003_020b1698, 0, 2);
     }
     if (GetOwnerLanguage() == 5) {
@@ -1201,22 +1139,23 @@ s32 dScStarSel_c::InitResources() {
         if (IsStarCollected(level, 0) != 0) {
             totalStars = (u32)(u8)(totalStars - 1);
         }
-        SELECTED_PLATE(this) = 0xFF;
-        PLATE_MASK(this) = 0;
+        mSelectedPlate = 0xFF;
+        mPlateMask = 0;
         loopI = 1;
         if ((u32)accB < totalStars) {
             sp8 = 1;
             spC = 1;
             varOne = 1;
+            /* &mPlateMask, built in two steps (see the leftovers note). */
             bitsPtr = (u8 *)this;
             bitsPtr += 0x131;
             do {
                 if (IsStarCollected(level, loopI) != 0) {
-                    PLATE_MASK(this) |= (u8)(varOne << bitPos);
+                    mPlateMask |= (u8)(varOne << bitPos);
                     accB += 1;
                 } else {
-                    if (SELECTED_PLATE(this) == 0xFF) {
-                        SELECTED_PLATE(this) = bitPos;
+                    if (mSelectedPlate == 0xFF) {
+                        mSelectedPlate = bitPos;
                         *bitsPtr |= (u8)(sp8 << bitPos);
                     }
                     anyUnfilled = spC;
@@ -1225,25 +1164,25 @@ s32 dScStarSel_c::InitResources() {
                 loopI += 1;
             } while ((u32)accB < totalStars);
         }
-        PLATE_COUNT(this) = bitPos;
+        mPlateCount = bitPos;
         if ((anyUnfilled == 0) && (totalStars != 7)) {
-            PLATE_COUNT(this) += 1;
-            if (SELECTED_PLATE(this) == 0xFF) {
-                SELECTED_PLATE(this) = bitPos;
-                PLATE_MASK(this) |= (u8)(1 << bitPos);
+            mPlateCount += 1;
+            if (mSelectedPlate == 0xFF) {
+                mSelectedPlate = bitPos;
+                mPlateMask |= (u8)(1 << bitPos);
             }
         }
-        if (SELECTED_PLATE(this) == 0xFF) {
-            SELECTED_PLATE(this) = 0;
+        if (mSelectedPlate == 0xFF) {
+            mSelectedPlate = 0;
         }
-        tmpU8 = PLATE_COUNT(this);
+        tmpU8 = mPlateCount;
         if (tmpU8 & 1)
             colorVal = 0x80;
         else
             colorVal = 0x92;
         colorVal -= ((s32)tmpU8 >> 1) * 0x23;
-        for (idx2 = 0; idx2 < (s32)PLATE_COUNT(this); idx2++) {
-            PLATE_X(this, idx2) = colorVal;
+        for (idx2 = 0; idx2 < (s32)mPlateCount; idx2++) {
+            mPlateX[idx2] = colorVal;
             colorVal += 0x23;
         }
     }
@@ -1251,31 +1190,31 @@ s32 dScStarSel_c::InitResources() {
     if (SublevelToLevel(data_02092110) <= 0x14) {
         Message::DisplayCourseNameForStarSelect((u32)(s16)SublevelToLevel(data_02092110));
         if (SublevelToLevel(data_02092110) <= 0xE) {
-            Message::DisplayStarNameForStarSelect(SELECTED_PLATE(this));
+            Message::DisplayStarNameForStarSelect(mSelectedPlate);
         }
         SetBg3Offset(0, -4);
     } else {
-        data_0209d45c &= ~8;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
     }
 
     charIdx = 0;
-    STRIP_MODE(this) = 0;
+    mStripMode = 0;
     do {
         if (SaveData::IsCharacterUnlocked(charIdx) != 0) {
-            STRIP_MODE(this)++;
+            mStripMode++;
         }
         charIdx += 1;
     } while (charIdx < 4);
 
     if (SublevelToLevel(data_02092110) <= 0xE) {
-        if ((STRIP_MODE(this) != 1) && (data_0209caa0[0x41] == 3)) {
-            PANEL_Y(this) = 0x88;
-            BOUNCE_DELAY(this) = 0;
+        if ((mStripMode != 1) && (data_0209caa0[0x41] == 3)) {
+            mFaceY = 0x88;
+            mBounceDelay = 0;
         } else {
-            PANEL_Y(this) = 0x60;
-            BOUNCE_DELAY(this) = 0;
+            mFaceY = 0x60;
+            mBounceDelay = 0;
         }
-        charCount = STRIP_MODE(this);
+        charCount = mStripMode;
         charCountM1 = charCount - 1;
         tabR5 = data_ov003_020b16a8[charCountM1];
         tabSL = data_ov003_020b16a0[charCountM1];
@@ -1288,9 +1227,9 @@ s32 dScStarSel_c::InitResources() {
                 tablePtr = &data_ov003_020b16c8[idx8];
                 do {
                     if (SaveData::IsCharacterUnlocked(varR6) != 0) {
-                        CHAR_X(this, varR6) = tabR5;
-                        CHAR_Y(this, varR6) = tabSL;
-                        CHAR_SPRITE(this, varR6) = tabSB;
+                        mCharX[varR6] = tabR5;
+                        mCharY[varR6] = tabSL;
+                        mCharSprite[varR6] = tabSB;
                         varFp += 1;
                         tabR5 = (u8)(tabR5 + data_ov003_020b16e4[idx8]);
                         tabSL = (u8)(tabSL + *tablePtr);
@@ -1299,31 +1238,30 @@ s32 dScStarSel_c::InitResources() {
                         idx8 += 1;
                     }
                     varR6 += 1;
-                } while (varFp < (s32)(STRIP_MODE(this) - 1));
+                } while (varFp < (s32)(mStripMode - 1));
             }
         }
     }
 
-    PICKED_CHAR(this) = 0xFF;
-    CURSOR_ON(this) = 0;
-    CURSOR_MODE(this) = 0;
-    SCALE_X(this) = 0x1000;
-    SCALE_Y(this) = 0x1000;
-    IDLE_ICON_SCALE(this) = 0x1000;
-    SPIN_ANGLE(this) = 0;
-    ANIM_MODE(this) = 0;
-    PANEL_ANIM_STEP(this) = 0;
-    SPIN_ANGLE(this) = 0;
-    BOUNCE_DELAY(this) = 0x78;
-    ANIM_FLIP(this) = 0;
-    data_0209d454 = 0x10;
-    REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (data_0209d45c << 8);
+    mPickedChar = 0xFF;
+    mCursorShown = 0;
+    mCursorTarget = 0;
+    mFaceScaleX = 0x1000;
+    mFaceScaleY = 0x1000;
+    mIdleIconScale = 0x1000;
+    mFaceAngle = 0;
+    mAnimMode = 0;
+    mFaceAnimStep = 0;
+    mFaceAngle = 0;
+    mBounceDelay = 0x78;
+    mAnimFlip = 0;
+    gSubScreenLayers = 0x10;
+    REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (gMainScreenLayers << 8);
     REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
-    LIFE_ICON(this) = data_0209caa0[0x41];
+    mLifeIcon = data_0209caa0[0x41];
     data_0208ee44 = 1;
     return 1;
 }
-#pragma pop
 
 // @symbol dScStarSel_c_classInit
 /* Reconstructed source-style name: SM64DS proves dScStarSel_c through RTTI,

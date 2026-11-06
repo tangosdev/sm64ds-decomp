@@ -102,7 +102,7 @@
   "notes": [
     "Text only: the bss block 0x02103434..0x02103458 and the \"Effect\" string stay ROM-owned and are reached by extern, as the one-function sources did.",
     "Folded from 11 one-function sources. Their extern declarations disagreed on type for data_ov007_02103448 and data_ov007_0210344c and for the func_0204a0dc / func_0204a028 parameters; the unit picks one type each and the bodies cast to match.",
-    "#pragma opt_common_subs off is file-scope: func_ov007_020b78d0 needs it and a push/pop around that one function does not take effect (mwccarm generates code for the whole unit at the end). The other ten functions match with it on."
+    "No optimizer pragma: func_ov007_020b78d0, once written as the plain bump allocator, matches under the default options with the other ten functions (#821)."
   ],
   "verification": {
     "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",

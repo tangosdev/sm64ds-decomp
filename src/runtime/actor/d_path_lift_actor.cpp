@@ -18,9 +18,9 @@
  * is its ROM location.
  *
  * Known limits:
- * - The vector helpers (Vec3_Sub, LenVec3, SubVec3, Vec3_MulScalar) are
- *   declared with void * parameters: their definitions take a file-local
- *   struct, so no shared spelling agrees with them yet.
+ * - LenVec3 remains declared with void * parameters because no shared header
+ *   records its signature. The other vector helpers use the shared Vector3
+ *   spelling.
  * - data_ov002_0210d9f0 is a SharedFilePtr, read here through a local
  *   PathStuff struct: including SharedFilePtr.h renumbers the @NNN labels.
  * - IsUnk42cSet keeps its symbol-bound name; the field it reads is
@@ -40,6 +40,7 @@
 #include "common.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -51,11 +52,7 @@ struct PathLiftState {
 
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
-   per-frame local in RenderPathModels goes through this. */
-struct RawVector3 {
-    int x, y, z;
-};
-
+   per-frame local in RenderPathModels is a VecFx32. */
 /* The shared lift model file, in SharedFilePtr's layout. This TU does not
    include SharedFilePtr.h: the header's declarations take one compiler
    label number, and every @NNN of the state table would move up by one. */
@@ -67,8 +64,7 @@ struct PathStuff {
 };
 extern PathStuff data_ov002_0210d9f0;
 
-/* ROM symbols with no header of their own. The vector helpers whose
-   definitions take a file-local struct stay void *. */
+/* ROM symbols with no header of their own. */
 extern "C" {
 extern s16 data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 extern u16 DecIfAbove0_Short(u16 *p);
@@ -79,15 +75,17 @@ extern int LenVec3(void *v);
 extern short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-extern void SubVec3(void *a, void *b, void *out);
+/* local extern: CalcLib agrees on the type, but including it renumbers the
+   compiler-local sinit aliases and changes their relocation targets. */
+extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
-void func_020393c4(int *collider, int callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
-void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider);
+void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 }
 
 extern PathLiftState data_ov002_0210af2c[];
@@ -112,18 +110,7 @@ static inline int IsActorID(const dActor_c *actor, int id) {
  * the cartridge's D0-then-D1 order, which no deferred form reaches without a
  * D2 the image does not contain. */
 
-#ifdef _MSC_VER
-/* MSVC needs this flat D0 entry. Call the actual class-body destructor
- * qualified so dispatch is direct, then use the class-specific deallocator.
- * The inline body includes member/base teardown; no separate flat D1 provider
- * is supplied by this branch. The mwccarm definition below is unchanged. */
-extern "C" dPathLiftActor_c *_ZN16dPathLiftActor_cD0Ev(dPathLiftActor_c *thiz)
-{
-    thiz->dPathLiftActor_c::~dPathLiftActor_c();          /* direct member/base teardown */
-    dPathLiftActor_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
 void dPathLiftActor_c_EmitDeletingDestructor(dPathLiftActor_c *p)
 {
@@ -377,7 +364,7 @@ void dPathLiftActor_c::BaseInitResources()
     mInitialAngle.x = mAngleX;
     mInitialAngle.y = mAngleY;
     mInitialAngle.z = mAngleZ;
-    func_020393c4((int *)&mMeshCollider, (int)&func_ov002_020eff90);
+    func_020393c4(&mMeshCollider, &func_ov002_020eff90);
 }
 
 // 0x020efbdc (0x98)
@@ -408,7 +395,7 @@ void dPathLiftActor_c::RenderPathModels()
     int i = 0;
     dExtSimpleModel_c *model = mModels;
     do {
-        RawVector3 local = *(RawVector3 *)&data_ov002_0210af00;
+        VecFx32 local = *(VecFx32 *)&data_ov002_0210af00;
         model->Render((Vector3 *)&local);
         i++;
         model++;
@@ -535,8 +522,8 @@ void dPathLiftActor_c::AfterClsn(int)
 // @symbol func_ov002_020eff90
 /* The mesh collider's stoodOnCallback: the actor that landed on the lift
    arrives as AfterClsn's word argument. */
-extern "C" void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider) {
-    lift->AfterClsn(rider);
+extern "C" void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
+    static_cast<dPathLiftActor_c *>(lift)->AfterClsn((int)rider);
 }
 
 /* The path-follow scale applied to the path models. Spelled as three s32s:

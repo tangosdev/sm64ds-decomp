@@ -33,7 +33,7 @@
  *   gEyknDeathAnimationFilePtr and gEyknTextureSequenceFiles hold the
  *   readonly resource pointers. data_ov002_0210da38 is ov002's shared
  *   sleep-bubble model.
- * - data_0209f2f8 is the current sublevel. 0x2e maps through
+ * - gCurrentSublevel is the current sublevel. 0x2e maps through
  *   SUBLEVEL_LEVEL_TABLE to course 19, which is not BBH's entrance
  *   (that is sublevel 0xc). On 0x2e the kill is entered in the death
  *   table; otherwise the eye is only marked for destruction.
@@ -55,6 +55,7 @@
 #pragma defer_codegen off
 
 #include "daEykn_c.h"
+#include "ParticleIds.h"
 #include "common.h"
 #include "types.h"
 #include "SpawnInfo.h"
@@ -65,12 +66,11 @@
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
 
-/* Twelve plain words: assigning a Matrix4x3 copies it member by member,
-   0x1c bytes longer than the cartridge's block copy. */
-struct MatrixWords {
-    s32 m[12];
-};
+/* The shadow matrix is reset through Mtx43: assigning a Matrix4x3 copies it
+   member by member, 0x1c bytes longer than the cartridge's block copy. */
 
 /* Inferred local resource-family ABI views; these type names are not ROM
  * names. The manifest binds each constructor/destructor to its existing
@@ -112,9 +112,6 @@ u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void LoadBlueCoinModel(void *actor);
-void UnloadBlueCoinModel(void *actor);
 void func_0200f760(void *actor, void *clsn);
 
 /* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
@@ -127,7 +124,7 @@ void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s16 data_02082214[];
-extern s8 data_0209f2f8; /* current sublevel id */
+extern s8 gCurrentSublevel; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern SharedFilePtr data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
 extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSequenceFile,
@@ -464,13 +461,13 @@ int daEykn_c::St_Die_Main()
             if (isBig != 0) {
                 unsigned char star = (unsigned char)(param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
-                Particle::System::NewSimple(0x124, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(0x125, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(0x126, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofA, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofB, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofC, mPosX, mPosY, mPosZ);
             }
         }
         func_0201267c(0xc4, &mCamSpacePos);
-        if (data_0209f2f8 == 0x2e) {
+        if (gCurrentSublevel == 0x2e) {
             KillAndTrackInDeathTable();
         } else {
             MarkForDestruction();
@@ -711,7 +708,7 @@ void daEykn_c::SetState(int state)
 // @symbol _ZN8daEykn_c16CleanupResourcesEv
 s32 daEykn_c::CleanupResources()
 {
-    UnloadBlueCoinModel(this);
+    UnloadBlueCoinModel();
     data_ov002_0210da38.Release();
     gEyknModelFile.Release();
     for (s32 i = 0; i < 2; ++i) {
@@ -753,12 +750,10 @@ int daEykn_c::Behavior()
 }
 
 // @symbol _ZN8daEykn_c13InitResourcesEv
-/* LoadBlueCoinModel ignores its argument, but every caller passes the actor
- * in r0; declared (void) the entry block's argument setup comes out rotated. */
 s32 daEykn_c::InitResources()
 {
     BMD_File *bmd;
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
 
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
     bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gEyknModelFile);
@@ -822,7 +817,7 @@ s32 daEykn_c::InitResources()
     mTarget = 0;
     mCircleTimer = kCircleFrames;
 
-    *(MatrixWords *)mShadowMat = *(MatrixWords *)&IDENTITY_MATRIX4X3;
+    *(Mtx43 *)mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ray;
     ray.SetObjAndPos(mPos, this);

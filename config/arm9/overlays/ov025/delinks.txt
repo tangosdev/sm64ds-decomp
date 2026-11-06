@@ -10,6 +10,7 @@ src/game/actors/d_a_dgr.cpp:
     .init start:0x02112970 end:0x021129dc
     .ctor start:0x02112b18 end:0x02112b1c
     .bss start:0x02113a60 end:0x02113a88
+    .data start:0x02112c28 end:0x02112c48
 
 src/game/actors/d_a_dkk.cpp:
     complete

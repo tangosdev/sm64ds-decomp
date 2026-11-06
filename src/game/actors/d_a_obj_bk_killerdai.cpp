@@ -30,7 +30,7 @@
  *   spawn-height add.
  * - Actor 0xde is the bill, daKlr_c (g_profile_KILLER's id half reads
  *   0xde); Behavior hands it this launcher through daKlr_c::mLauncher.
- * - data_0209f2f8 (level id), data_0209caa0 (per-level flags) and
+ * - gCurrentSublevel (level id), data_0209caa0 (per-level flags) and
  *   data_0209f220 (star flag) keep linker names; IsStarCollectedInCurLevel
  *   is a shared coined helper, naming belongs at its definition.
  * - Vec3_HorzDist / Vec3_HorzAngle stay local externs: their header copies
@@ -77,7 +77,7 @@ BkKillerdaiCollisionFile gBkKillerDaiCollisionFile(ASSET_BK_KILLER_DAI_KCL);
 /* Launcher model, mesh, and CLPS block: three pointers. */
 extern void *data_ov079_02127f64[];
 
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern int data_0209caa0[];
 extern u8 data_0209f220;
 
@@ -184,7 +184,7 @@ s32 daObjBkKillerdai_c::InitResources() {
 
     mSpawnedUniqueID = 0;
 
-    course = data_0209f2f8;
+    course = gCurrentSublevel;
     if (course == 0x12) {
         if (data_0209caa0[1] & 0x204)
             return 0;

@@ -44,6 +44,7 @@ enum d_a_nknk_AssetId {
 };
 
 #include "Koopa.h"
+#include "ParticleIds.h"
 #include "common.h"
 #include "types.h"
 #include "dActor_c.h"
@@ -63,6 +64,10 @@ enum d_a_nknk_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the two models,
@@ -81,11 +86,6 @@ struct NknkAnimationFileHandle : SharedFilePtr {
     ~NknkAnimationFileHandle();
 };
 
-/* shadow typedef 'Vec3' */
-typedef struct { s32 x, y, z; } Vec3;
-
-struct V3 { int x, y, z; };
-
 extern "C" {
 extern int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
                            void *callback);
@@ -94,13 +94,11 @@ extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
 /* The called scalar definition takes u16 startFrame. The unused dExtAnmModel_c
  * member declaration takes Fix12<int>/u32; its measured form grew this helper. */
-extern int Vec3_Dist(void* a, void* b);
 /* Reconstructed receiver/attacker/nullable collision interface; the original
  * source prototype is not uniquely recoverable from the register traffic. */
 extern void func_ov002_020aea30(void* self, void* attacker, dBgCh_Actr* collision);
-extern "C" void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
+extern void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
@@ -108,15 +106,8 @@ extern SharedFilePtr* data_ov062_0211cee0[2];
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, dActor_c *a, int r, int h, Vector3_16 *p, int q);
-extern void LoadBlueCoinModel(void* c);
-extern void UnloadBlueCoinModel(void *c);
 
-/* local extern: math/CalcLib.h's spelling cannot be used here -- this TU's
-   Vec3_Dist(void *, void *) would contradict that header's declaration of it. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *m, short angY);
-extern struct Matrix4x3 data_020a0e68; /* MATRIX_SCRATCH_PAPER */
 inline struct Matrix4x3 *inline_fn()
 {
   return &data_020a0e68;
@@ -237,7 +228,7 @@ int daNknk_c::InitResources()
     mWithMeshClsn.StartDetectingWater();
 
     mCoinType = 3;
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
 
     return 1;
 }
@@ -354,7 +345,7 @@ int daNknk_c::Behavior()
 // @symbol _ZN8daNknk_c6RenderEv
 int daNknk_c::Render()
 {
-    volatile struct V3 saved;
+    volatile VecFx32 saved;
     int b = (mFlags & 0x40000) != 0;
     if (b)
         return 1;
@@ -400,7 +391,7 @@ int daNknk_c::CleanupResources()
   {
     data_ov062_0211cee8[i]->Release();
   }
-  UnloadBlueCoinModel(this);
+  UnloadBlueCoinModel();
   return 1;
 }
 
@@ -426,11 +417,11 @@ void daNknk_c::func_ov062_02118de8()
         mState = 5;
     else
         mState = 2;
-    if (((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x8000) {
-        int r = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+    if (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000) {
+        int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
         mTargetAngle = (s16)(mPrevAngleY - r);
     } else {
-        int r = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+        int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
         mTargetAngle = (s16)(mPrevAngleY + r);
     }
     func_ov062_02118058();
@@ -558,7 +549,7 @@ void daNknk_c::func_ov062_02118718()
 
         other = func_ov062_02117b9c();
         if (other) {
-            dist = Vec3_Dist(&mPosX, &other->mPosX);
+            dist = Vec3_Dist(&mPos, &other->mPos);
             mTargetAngle = Vec3_HorzAngle(&mPos, &other->mPos);
         } else {
             mTurning =
@@ -569,10 +560,12 @@ void daNknk_c::func_ov062_02118718()
                     *turn = (u16)(*turn - 1);
                 } else {
                     /* (int)& forces the pool add. mTargetAngle -= folds to mAnmModel+0xc2. */
-                    if (((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x8000)
-                        *(s16 *)((int)&mTargetAngle) -= ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                    if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000)
+                        *(s16 *)((int)&mTargetAngle) -=
+                            ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     else
-                        *(s16 *)((int)&mTargetAngle) += ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                        *(s16 *)((int)&mTargetAngle) +=
+                            ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     mTurnTimer = 0x14;
                 }
             }
@@ -674,7 +667,7 @@ void daNknk_c::func_ov062_021183e0()
             mTargetAngle = mAimAngle;
         other = func_ov062_02117b9c();
         if (other) {
-            dist = Vec3_Dist(&mPosX, &other->mPosX);
+            dist = Vec3_Dist(&mPos, &other->mPos);
             if (dist < 0xc8000)
                 mTargetAngle = Vec3_HorzAngle(&mPos, &other->mPos);
         }
@@ -710,12 +703,8 @@ void daNknk_c::func_ov062_02118334()
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         angleY = &mAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(inline_fn(), *angleY);
-        {
-            struct M12w {
-                int w[12];
-            }; /* array-wrapper copy: keeps C's block copy under -lang c++ */
-            *(M12w *)&mAnmModel.mat4x3 = *(M12w *)&data_020a0e68;
-        }
+        /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
+        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         {
             int b = (int)((mFlags & 0x40000) != 0);
             if (b != 0) {
@@ -731,8 +720,8 @@ void daNknk_c::func_ov062_02118258(int lim)
 {
     mClosestPlayer = ClosestPlayer();
 
-    if (mClosestPlayer == 0 || Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > lim) {
-        mAimAngle = Vec3_HorzAngle(&mPos, (Vector3 *)&mHomePosX);
+    if (mClosestPlayer == 0 || Vec3_Dist(&mPos, &mHomePos) > lim) {
+        mAimAngle = Vec3_HorzAngle(&mPos, &mHomePos);
         mPlayerDist = 0x61a8000;
     } else {
         Vector3 v;
@@ -740,7 +729,7 @@ void daNknk_c::func_ov062_02118258(int lim)
         v.x = src[0];
         v.y = src[1];
         v.z = src[2];
-        if (Vec3_Dist((Vector3*)&mHomePosX, &v) > lim) {
+        if (Vec3_Dist(&mHomePos, &v) > lim) {
             mPlayerDist = 0x4e20000;
             return;
         }
@@ -762,8 +751,7 @@ void daNknk_c::func_ov062_021181a0() {
         u16 *p = &mWalkState;
         *p = (u16)(*p + 1);
     }
-    mTimer =
-        (u16)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 70 + 30);
+    mTimer = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 70 + 30);
     func_ov062_02117994(1);
 }
 
@@ -797,7 +785,7 @@ void daNknk_c::func_ov062_02118058() {
     daPly_c *o = mClosestPlayer;
     int d = mPlayerDist;
     if (o != 0)
-        d = Vec3_Dist(&mPosX, &o->mPosX);
+        d = Vec3_Dist(&mPos, &o->mPos);
     if (d >= 0x12c000)
         return;
     int s = GetSubtraction(mAimAngle, mPrevAngleY);
@@ -889,7 +877,10 @@ void daNknk_c::func_ov062_02117c98()
         }
     } else {
         daPly_c *player = (daPly_c *)found;
-        struct { Vec3 sv; Vec3 hv; } L;
+        struct {
+            VecFx32 sv;
+            VecFx32 hv;
+        } L;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
         if (isPlayer == 0)
@@ -1000,7 +991,7 @@ int daNknk_c::func_ov062_02117b60()
 {
     daPly_c *target = mClosestPlayer;
     if (!target) return 0x61a8000;
-    return Vec3_Dist(&mPosX, &target->mPosX);
+    return Vec3_Dist(&mPos, &target->mPos);
 }
 
 // @symbol _ZN8daNknk_c19func_ov062_02117b48Ev
@@ -1133,12 +1124,12 @@ void daNknk_c::func_ov062_021175c0()
             pos.y = pos.y + 0xa000;
         }
 
-        spawned =
-            Particle::System::New(0, 0xb2, pos.x, pos.y, zArg, (const Vector3_16f *)((void *)0),
-                                  (Particle::Callback *)((void *)0));
+        spawned = Particle::System::New(0, kPtclLandingDust, pos.x, pos.y, zArg,
+                                        (const Vector3_16f *)((void *)0),
+                                        (Particle::Callback *)((void *)0));
     }
 
-    Particle::SetSelfDestructFlag(0xb2);
+    Particle::SetSelfDestructFlag(kPtclLandingDust);
 
     mLandingDustTimer = 0xa;
     if (spawned == 0) return;

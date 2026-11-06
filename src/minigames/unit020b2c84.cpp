@@ -25,8 +25,8 @@
  * file's .data claim covers. Everything else it touches is reached by extern.
  *
  * Emission order. `#pragma defer_codegen off` is load-bearing here: with codegen
- * deferred the opt_* pragmas around Mg_LoadBannerFiles, Banner_DrawSqueeze,
- * Banner_DrawZoomA and Banner_DrawZoomB do not bind to the one function
+ * deferred the opt_* pragmas around Banner_DrawSqueeze, Banner_DrawZoomA
+ * and Banner_DrawZoomB do not bind to the one function
  * they bracket. Source is therefore ROM-ascending.
  *
  * The bodies were matched as one-function C or C++ sources and keep that
@@ -35,7 +35,7 @@
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
- * gets __arraydtor$974 (and @975); symbols.txt names the thunk
+ * gets __arraydtor$1099 (and @1100); symbols.txt names the thunk
  * __arraydtor$954, and the manifest renames both onto their configured
  * names, so an edit here that moves the count re-keys those two rows. The
  * two function-local Vector2 statics (Banner_StartWaveBurst,
@@ -103,6 +103,10 @@
 #include "Vector2.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "nitro/gx/gxcommon.h"
+#include "MWCPlusLib.h"
+#include "dScMgBase_c.h"
+#include "LevelRng.h"
 
 struct M { int _00, _01, _10, _11; };
 struct Pair { int a, b; };
@@ -111,23 +115,7 @@ struct PairW { int w0, w1; };
 struct S3 { int v[3]; };
 struct Entry { int id; int ptr; };
 struct EntryTable { Entry e[29]; };
-
-/* The minigame scene at gMgScene, seen through the one virtual
-   used here. Slot 26 is dScMgBase_c.h's GetDisplayMode; its scene
-   bodies return 0 (dScMgBase_c), 1 (dScMgSingle3DBase_c) or 2
-   (dScMgD3DBase_c), and this file only compares the result with 2. The
-   view keeps the name Obj, the spelling config/decl-agreement-baseline.json
-   records for this extern. */
-struct Obj {
-    virtual int v00(); virtual int v01(); virtual int v02(); virtual int v03();
-    virtual int v04(); virtual int v05(); virtual int v06(); virtual int v07();
-    virtual int v08(); virtual int v09(); virtual int v10(); virtual int v11();
-    virtual int v12(); virtual int v13(); virtual int v14(); virtual int v15();
-    virtual int v16(); virtual int v17(); virtual int v18(); virtual int v19();
-    virtual int v20(); virtual int v21(); virtual int v22(); virtual int v23();
-    virtual int v24(); virtual int v25();
-    virtual int GetDisplayMode();  /* slot 26 */
-};
+struct OamAttr;
 
 /* One of the three 0x134-byte records at gMgBanners: a graphic
    loaded from the file table and drawn as a list of OAM records. The class
@@ -152,7 +140,9 @@ struct MgBanner {
     s16 mGfxSlot;        /* 0x30 0..2, see sMgBannerGfxSlotUsed */
     s16 mArrived;        /* 0x32 set when mX reaches mTargetX
                             (Banner_UpdateSlideFromRight, Banner_UpdateSlideFromLeft) */
-    u8 mOam[0x100];      /* 0x34 8-byte OAM records; 0xffff at +6 ends the list */
+    u8 mOam[0x100];      /* 0x34 GXOamAttr records; the one whose attr3 is 0xffff is the
+                            last drawn. The squeeze and zoom draws read x, the 9-bit
+                            screen position, and fold values above 0x100 negative. */
     MgBanner();
     ~MgBanner() {}
 };
@@ -164,7 +154,7 @@ int fdiv(s32 a, s32 b);
 extern "C" {
 void Deallocate(void *ptr);
 int GetGameLanguage(void);
-int LoadFile(int handle);
+void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(int a, void *b, int c, int d);
 int func_02053200(int x);
@@ -174,9 +164,9 @@ int RandomIntInternal(int *seed);
 void Mg_SpawnFx(int c, short a1, int *a2, int *r3, int *sp0);
 /* local extern: only sibling minigame scene headers declare it, and its
    named parameters hold the @NNN count noted above. */
-void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, void (*dtor)(void *));
+void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, dtor_t dtor);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
-void Mg_RenderSpriteOn(int a, int b, int c, int d, int e);
+void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
 void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 void Banner_DrawPlain(MgBanner *e);
@@ -185,12 +175,10 @@ void Banner_StartWaveBurst(MgBanner *e);
 }
 
 extern s16 data_02082214[];
-extern int data_0209e650;
-extern Obj *gMgScene;  /* local extern: through the Obj view above, the spelling the decl-agreement baseline records */
 extern S3 data_ov004_020bc27c;
 extern int sMgMsgGiveUpSprites;
 static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};
-extern int data_ov006_021346bc;
+extern OamAttr *data_ov006_021346bc;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
 extern Pair pmf_Banner_UpdateWave;
@@ -211,7 +199,7 @@ enum MgBannerCharOffset {
 extern PairW sBannerUpdateTable[];
 extern PairW sBannerSetupTable[];
 extern PairW sBannerDrawTable[];
-extern int sMgBannerFiles[];
+extern void *sMgBannerFiles[];
 extern int sMgBannerSprites[];
 
 extern int sMgMsgRetryNcgByLanguage[];
@@ -275,13 +263,12 @@ extern int sMgMsgFiveCardSpritesByLanguage[];
 extern "C" void Mg_FreeBannerFiles(void) {
     int i;
     for (i = 0; i < 0x1d; i++) {
-        Deallocate((void *)sMgBannerFiles[i]);
+        Deallocate(sMgBannerFiles[i]);
         sMgBannerFiles[i] = 0;
     }
 }
 
 // @symbol Mg_LoadBannerFiles
-#pragma opt_strength_reduction off
 extern "C" void Mg_LoadBannerFiles(void)
 {
     int i;
@@ -355,16 +342,10 @@ extern "C" void Mg_LoadBannerFiles(void)
     entries.e[28].ptr = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
 
     for (i = 0; i < 29; i++) {
-        int t;
-        t = LoadFile(entries.e[i].id);
-        ((volatile int *)sMgBannerFiles)[i] = t;
-        t = (int)&entries.e[i];
-        t = *(volatile int *)(t + 4);
-        t = *(int *)t;
-        sMgBannerSprites[i] = t;
+        sMgBannerFiles[i] = LoadFile(entries.e[i].id);
+        sMgBannerSprites[i] = *(int *)entries.e[i].ptr;
     }
 }
-#pragma opt_strength_reduction on
 
 // @symbol Banner_Free
 extern "C" void Banner_Free(MgBanner *e) {
@@ -409,25 +390,25 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     case 14: case 16: case 17: case 18: case 19: case 20: case 21:
         if (sMgBannerGfxSlotUsed[0] != 0)
             return;
-        DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT0_CHARS));
+        DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT0_CHARS));
         if (b != 0)
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT0_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT0_CHARS));
         e->mGfxSlot = 0;
         sMgBannerGfxSlotUsed[0] = 1;
         break;
     default:
         if (sMgBannerGfxSlotUsed[1] == 0) {
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT1_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT1_CHARS));
             if (b != 0)
-                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT1_CHARS));
+                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT1_CHARS));
             e->mGfxSlot = 1;
             sMgBannerGfxSlotUsed[1] = 1;
             break;
         }
         if (sMgBannerGfxSlotUsed[2] == 0) {
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT2_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT2_CHARS));
             if (b != 0)
-                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT2_CHARS));
+                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT2_CHARS));
             e->mGfxSlot = 2;
             sMgBannerGfxSlotUsed[2] = 1;
             break;
@@ -535,7 +516,7 @@ extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     x = x - (w >> 1);
     left = w >> 1;
     left = originX - left;
-    Mg_RenderSpriteOn((int)e->mOam, left, e->mY, e->mScreen, e->mPriority);
+    Mg_RenderSpriteOn((OamAttr *)e->mOam, left, e->mY, e->mScreen, e->mPriority);
     drawY = e->mY;
     Mg_DrawBigNumber(x, drawY, n, e->mScreen, e->mPriority, 2, 0);
 }
@@ -684,7 +665,7 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
         func_0203d388(boxC, 0x800);
         func_0203d704(outB, boxB, boxA);
 
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&data_0209e650.value);
         r &= 0x7fffffff;
         ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
         ang = ang + 0x5a;
@@ -695,16 +676,14 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
 }
 
 // @symbol Banner_DrawSqueeze
-#pragma opt_propagation off
 extern "C" void Banner_DrawSqueeze(MgBanner *e) {
-    int m, fd, t, v;
+    int m, t, v;
     unsigned short term;
     if (e->mTimer == 0) return;
     m = FX_MUL(e->mTimer, 0xcc);
     {
-        u8* el = e->mOam;
-        fd = cstd::fdiv(m, 0x1000);
-        t = FX_MUL(fd, 0x1000);
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
+        t = FX_MUL(cstd::fdiv(m, 0x1000), 0x1000);
         v = func_02053200(m);
         {
             M buf = {0};
@@ -712,21 +691,17 @@ extern "C" void Banner_DrawSqueeze(MgBanner *e) {
             buf._11 = v;
             t = 0x1000 - t;
             do {
-                s16 f = (s16)(((unsigned int)(*(int*)el << 7)) >> 23);
-                int off;
-                if (f > 0x100) f -= 0x200;
-                off = f * t;
-                Mg_RenderSpriteOnMtx(el,
-                    e->mX - ((off << 4) >> 16),
-                    e->mY, e->mScreen,
-                    e->mPriority, &buf);
-                term = *(unsigned short*)(el + 6);
-                el += 8;
+                s16 x = oam->x;
+                if (x > 0x100)
+                    x -= 0x200;
+                x = x * t >> 12;
+                Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &buf);
+                term = oam->attr3;
+                oam++;
             } while (term != 0xffff);
         }
     }
 }
-#pragma opt_propagation on
 
 // @symbol Banner_UpdateFall
 extern "C" void Banner_UpdateFall(MgBanner *e) {
@@ -920,7 +895,7 @@ extern "C" void Banner_Press(MgBanner *e) {
 
 // @symbol Banner_DrawPlain
 extern "C" void Banner_DrawPlain(MgBanner *e) {
-    Mg_RenderSpriteOn((int)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
+    Mg_RenderSpriteOn((OamAttr *)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
     if (e->mFileIndex != 0 && e->mFileIndex != 1 && e->mFileIndex != 2)
         return;
     Mg_RenderSpriteOn(data_ov006_021346bc, e->mX, e->mY, e->mScreen, e->mPriority);
@@ -933,13 +908,12 @@ extern "C" void Banner_SetupZoom(MgBanner *e) {
 }
 
 // @symbol Banner_DrawZoomA
-#pragma opt_propagation off
 extern "C" void Banner_DrawZoomA(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
     {
-        u8* el = e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -962,16 +936,13 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
                 m._11 = d;
                 scale = 0x1000 - scale;
                 do {
-                    s16 f = (s16)(((unsigned int)(*(int*)el << 7)) >> 23);
-                    int off;
-                    if (f > 0x100) f -= 0x200;
-                    off = f * scale;
-                    Mg_RenderSpriteOnMtx(el,
-                                        e->mX - ((off << 4) >> 16),
-                                        e->mY, e->mScreen,
-                                        e->mPriority, &m);
-                    flag = *(u16*)(el + 6);
-                    el += 8;
+                    s16 x = oam->x;
+                    if (x > 0x100)
+                        x -= 0x200;
+                    x = x * scale >> 12;
+                    Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &m);
+                    flag = oam->attr3;
+                    oam++;
                 } while (flag != 0xffff);
             }
         } else {
@@ -989,26 +960,23 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
                     M m2 = {0};
                     m2._00 = r;
                     m2._11 = r;
-                    Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m2);
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 }
                 i += 0x1000;
-                flag = *(u16*)(el + 6);
-                el += 8;
+                flag = oam->attr3;
+                oam++;
             } while (flag != 0xffff);
         }
     }
 }
-#pragma opt_propagation on
 
 // @symbol Banner_DrawZoomB
-#pragma opt_propagation off
 extern "C" void Banner_DrawZoomB(MgBanner *e) {
     u16 flag;
     int val = e->mTimer;
     if (val == 0) return;
     {
-        u8* el = e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
         if (val < 0x1e000) {
             int d;
             int scale;
@@ -1031,16 +999,13 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
                 m._11 = d;
                 scale = 0x1000 - scale;
                 do {
-                    s16 f = (s16)(((unsigned int)(*(int*)el << 7)) >> 23);
-                    int off;
-                    if (f > 0x100) f -= 0x200;
-                    off = f * scale;
-                    Mg_RenderSpriteOnMtx(el,
-                                        e->mX - ((off << 4) >> 16),
-                                        e->mY, e->mScreen,
-                                        e->mPriority, &m);
-                    flag = *(u16*)(el + 6);
-                    el += 8;
+                    s16 x = oam->x;
+                    if (x > 0x100)
+                        x -= 0x200;
+                    x = x * scale >> 12;
+                    Mg_RenderSpriteOnMtx(oam, e->mX - x, e->mY, e->mScreen, e->mPriority, &m);
+                    flag = oam->attr3;
+                    oam++;
                 } while (flag != 0xffff);
             }
         } else {
@@ -1058,17 +1023,15 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
                     M m2 = {0};
                     m2._00 = r;
                     m2._11 = r;
-                    Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m2);
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 }
                 i += 0x1000;
-                flag = *(u16*)(el + 6);
-                el += 8;
+                flag = oam->attr3;
+                oam++;
             } while (flag != 0xffff);
         }
     }
 }
-#pragma opt_propagation on
 
 // @symbol Banner_UpdateZoom
 extern "C" void Banner_UpdateZoom(MgBanner *e) {
@@ -1114,7 +1077,7 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
         func_0203d388(boxC, 0x800);
         func_0203d704(outB, boxB, boxA);
 
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&data_0209e650.value);
         r &= 0x7fffffff;
         ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
         ang = ang + 0x5a;
@@ -1239,5 +1202,5 @@ PairW sBannerDrawTable[13] = {
     pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA,
     pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, data_02086b58, pmf_Banner_DrawLevelNumber
 };
-int sMgBannerFiles[29];
+void *sMgBannerFiles[29];
 }

@@ -47,7 +47,7 @@
  * - GetCapState is the dCapEnemy_c.h member.
  * - What dCcAc_c bits 0x4 and 0x20000 mean, the king's mState 4 that
  *   mFreeRoamTimer watches, sounds 0xd0 / 0xe0 / 0xd6 / 0x110 / 0x111 / 0x118 /
- *   0x13a / 0x13b, mFlags bits 0x8 and 0x10000000, and data_0209f2f8
+ *   0x13a / 0x13b, mFlags bits 0x8 and 0x10000000, and gCurrentSublevel
  *   values 6 and 0x1b are not named here.
  *   Nothing in this TU enters STATE_PAUSE except through the table.
  */
@@ -81,6 +81,7 @@ enum daKrb_c_AssetId {
 #include "daKuriKing_c.h"
 #include "daStarBase_c.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 
 /* daStar_c::mMarkerID (daStar_c.h, 0x434), seen through a local view:
    including daStar_c.h renumbers this TU's @NNN labels. */
@@ -209,28 +210,17 @@ extern u8 *data_0209f344;
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
-extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
-extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
-
 extern u8 data_ov084_02130204[];
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern short data_02082214[];
 extern char data_ov084_0213089c;
-extern int RandomIntInternal(int *seed);
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
 extern int data_0209e650;
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
-extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
-extern int Vec3_HorzLen(const Vector3 *v);
-extern int Vec3_HorzDist(void *a, void *b);
-extern unsigned char DecIfAbove0_Byte(void *p);
-extern unsigned short DecIfAbove0_Short(void *p);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
-extern void UnloadBlueCoinModel(void* p);
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
-void LoadBlueCoinModel(void* c);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i cc, void *d, Fix12i e);
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
@@ -1490,8 +1480,8 @@ void daKrb_c::func_ov084_0212af74() {
     if (ApproachAngle(&goomba->mPrevAngleY, goomba->mInitAngleY, 4, 0x1000, 0x400) == 0 &&
         goomba->mWithMeshClsn.IsOnGround() != 0)
     {
-        Vec3_HorzDist(&goomba->mPosX, &goomba->mHomePos);
-        dist = Vec3_HorzDist(&goomba->mPosX, &targetPos);
+        Vec3_HorzDist(&goomba->mPos, &goomba->mHomePos);
+        dist = Vec3_HorzDist(&goomba->mPos, &targetPos);
 
         if ((king->mState == 4 && king->mWalkSpeed == 0) ||
             DecIfAbove0_Byte(&goomba->mFreeRoamTimer) != 0 || dist > 0x3e8000) {
@@ -1517,7 +1507,8 @@ void daKrb_c::func_ov084_0212af74() {
                     goomba->LandingDust(1);
                 }
             } else {
-                if (DecIfAbove0_Short(&goomba->mWanderRerollTimer) == 0) {
+                if (DecIfAbove0_Short(
+                        reinterpret_cast<unsigned short *>(&goomba->mWanderRerollTimer)) == 0) {
                     rnd = RandomIntInternal(&data_0209e650);
                     goomba->mWanderRerollTimer = (s16)((rnd >> 0x1b) + 0x1e);
                     goomba->mInitAngleY = (s16)(rnd >> 0x10);
@@ -1529,11 +1520,11 @@ void daKrb_c::func_ov084_0212af74() {
             }
         } else {
             goomba->mInitAngleY = Vec3_HorzAngle(&goomba->mPos, &targetPos);
-            if (Vec3_HorzDist(&goomba->mPosX, &targetPos) < 0x32000) {
+            if (Vec3_HorzDist(&goomba->mPos, &targetPos) < 0x32000) {
                 goomba->mTargetHorzSpeed = king->mGoombaTargetSpeed >> 2;
-            } else if (Vec3_HorzDist(&goomba->mPosX, &targetPos) < 0x64000) {
+            } else if (Vec3_HorzDist(&goomba->mPos, &targetPos) < 0x64000) {
                 goomba->mTargetHorzSpeed = king->mGoombaTargetSpeed >> 1;
-            } else if (Vec3_HorzDist(&goomba->mPosX, &targetPos) < 0x96000) {
+            } else if (Vec3_HorzDist(&goomba->mPos, &targetPos) < 0x96000) {
                 goomba->mTargetHorzSpeed = king->mGoombaTargetSpeed;
             } else {
                 s32 idx = goomba->mGoombaType;
@@ -1643,7 +1634,7 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
 int daKrb_c::CleanupResources() {
     int i;
     if (mGoombaType == GOOMBA_LARGE)
-        UnloadBlueCoinModel(this);
+        UnloadBlueCoinModel();
     data_ov084_02130cf8.Release();
     for (i = 0; i < 7; ++i)
         sKuriboAnimationFiles[i]->Release();
@@ -1718,7 +1709,7 @@ int daKrb_c::Render()
  * is zeroed when the state changes. Then the hit reaction
  * (func_ov084_02129ed4), UpdatePos, the ledge check (a step that would carry
  * it off a ledge is undone by restoring mSafePos), UpdateWMClsn (mode 0 for
- * KURIBO_S; mode 2 for the others, or 3 when data_0209f2f8 is 6 or 0x1b, its
+ * KURIBO_S; mode 2 for the others, or 3 when gCurrentSublevel is 6 or 0x1b, its
  * target speed is the walk speed and mDeathState is not DEATH_HIT_20000), the ground
  * check, the cylinder, model placement and the water check. In STATE_WALK
  * (unless mFlags bit 3, "off screen" in dActor_c.h, is set) a Goomba that has stayed within 10.0 units of
@@ -1828,7 +1819,7 @@ int daKrb_c::Behavior()
         int lvl = mGoombaType;
         if (lvl == GOOMBA_SMALL) {
             UpdateWMClsn(mWithMeshClsn, 0);
-        } else if (data_0209f2f8 == 6 || data_0209f2f8 == 0x1b) {
+        } else if (gCurrentSublevel == 6 || gCurrentSublevel == 0x1b) {
             if (mTargetHorzSpeed == data_ov084_02130228[lvl] && mDeathState != DEATH_HIT_20000)
                 UpdateWMClsn(mWithMeshClsn, 3);
             else
@@ -1957,7 +1948,7 @@ int daKrb_c::InitResources() {
                 }
             } else {
                 mGoombaType = GOOMBA_LARGE;
-                LoadBlueCoinModel(c);
+                LoadBlueCoinModel();
             }
         }
     }

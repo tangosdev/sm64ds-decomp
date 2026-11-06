@@ -2,18 +2,18 @@
 /* Move a point toward another, in 3D and on the horizontal plane.
  *
  * leftovers:
- * - Vec3, Vector3 and Vec3_Fix12 are the same three ints. Vec3_Sub,
- *   LenVec3 and SubVec3 take Vec3; Vec3_HorzLen and Vec3_Equal take
- *   Vector3; Vec3_MulScalar takes Vec3_Fix12. One struct makes those
- *   calls disagree with the declarations they already have.
- * - Vector3 stays a local POD twin rather than include/types.h's: that one
- *   declares a ctor and dtor under C++, which turns `dst = target` below from
- *   a block move into memberwise stores and loses the match.
+ * - Vec3 and Vector3 are the same three ints. LenVec3, Vec3_Sub, SubVec3,
+ *   Vec3_HorzLen, Vec3_Equal and Vec3_MulScalar take Vector3; the local POD
+ *   Vector3 keeps those calls on their declared interface without adding
+ *   types.h Vector3 lifetimes. Vec3_ApproachHorz's own parameters are
+ *   still the Vec3 view, hence its casts on out and a.
  */
 #include "math/Approach.h"
 
 struct Vec3 { int x, y, z; };
+/* Not types.h's: its inline ~Vector3 adds a _ZN7Vector3D1Ev copy and renumbers @60/@61 (measured). */
 struct Vector3 { int x, y, z; };
+/* Unused, but deleting it renumbers the @60/@61 destructor-registration nodes (measured). */
 typedef struct { int x, y, z; } Vec3_Fix12;
 
 namespace cstd {
@@ -21,10 +21,10 @@ int fdiv(int, int);
 }
 
 extern "C" {
-extern void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);
+extern void Vec3_Sub(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);
 extern int Vec3_HorzLen(const struct Vector3* v);
-extern int LenVec3(struct Vec3* v);
-extern void Vec3_MulScalar(Vec3_Fix12* out, const Vec3_Fix12* in, int scale);
+extern int LenVec3(const struct Vector3 *v);
+extern void Vec3_MulScalar(struct Vector3 *out, const struct Vector3 *in, int scale);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int Vec3_Equal(const struct Vector3 *a, const struct Vector3 *b);
 }
@@ -34,14 +34,14 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
     struct Vector3 diff;
     struct Vector3 scaled;
     if (step != 0) {
-        Vec3_Sub((struct Vec3*)&diff, (struct Vec3*)&dst, (struct Vec3*)&target);
-        int len = LenVec3((struct Vec3*)&diff);
+        Vec3_Sub(&diff, &dst, &target);
+        int len = LenVec3(&diff);
         if (len == 0 || len <= step) {
             dst = target;
             return 1;
         }
-        Vec3_MulScalar((Vec3_Fix12 *)&scaled, (const Vec3_Fix12 *)&diff, cstd::fdiv(step, len));
-        SubVec3((Vector3 *)&dst, (Vector3 *)&scaled, (Vector3 *)&dst);
+        Vec3_MulScalar(&scaled, &diff, cstd::fdiv(step, len));
+        SubVec3(&dst, &scaled, &dst);
     } else if (Vec3_Equal(&dst, &target)) {
         return 1;
     }
@@ -50,12 +50,12 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
 
 // @symbol Vec3_ApproachHorz
 extern "C" int Vec3_ApproachHorz(struct Vec3 *out, struct Vec3 *a, int maxStep) {
-    struct Vec3 diff;
-    struct Vec3 scaled;
+    struct Vector3 diff;
+    struct Vector3 scaled;
     int len;
-    Vec3_Sub(&diff, out, a);
+    Vec3_Sub(&diff, (const struct Vector3 *)out, (const struct Vector3 *)a);
     diff.y = 0;
-    len = Vec3_HorzLen((const struct Vector3*)&diff);
+    len = Vec3_HorzLen(&diff);
     if (maxStep != 0) {
         if (len == 0 || len <= maxStep) {
             out->x = a->x;
@@ -64,8 +64,8 @@ extern "C" int Vec3_ApproachHorz(struct Vec3 *out, struct Vec3 *a, int maxStep) 
         }
         {
             int s = cstd::fdiv(maxStep, len);
-            Vec3_MulScalar((Vec3_Fix12*)&scaled, (const Vec3_Fix12*)&diff, s);
-            SubVec3((Vector3 *)out, (Vector3 *)&scaled, (Vector3 *)out);
+            Vec3_MulScalar(&scaled, &diff, s);
+            SubVec3((Vector3 *)out, &scaled, (Vector3 *)out);
         }
     } else {
         if (len == 0) return 1;

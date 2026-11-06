@@ -190,7 +190,10 @@ instrument: it can rotate the whole function; prefer `opt_foldconstants off` or 
 source shape, and remove it when a draft inherited one), `opt_dead_assignments off` (probe),
 `optimize_for_size on` (cracks early-exit epilogue duplication). A pragma crutch can *rotate*
 colouring, so try removing it and respelling naturally. A matched twin with the pragma removed
-is the cheapest oracle. Log: 6e, 6f, 6r, 6z, 6aa, 6ab, 6cf, 6cj, 6ch, 6ci, 6dh.
+is the cheapest oracle. Before calling a pragma a wall, check the SDK inline's parameter
+TYPES: NitroSDK's all-enum `G3_TexImageParam` retired five `opt_propagation off` where any
+single enum, or casts at the call, did not. Log: 6e, 6f, 6r, 6z, 6aa, 6ab, 6cf, 6cj, 6ch,
+6ci, 6dh, 6di.
 
 ## 5. Compiler-build deltas (stop grinding, change the build)
 
@@ -387,3 +390,4 @@ Every id is the leading token of a `##` heading in [the log](archive/mwccarm-cod
 | 6df | A hand-written `__register_global_object` call is a static `Vector3... | 6.3 |
 | 6dg | arm9 static initializers folded into their owners (2026-10-27) | 6.3 |
 | 6dh | Two per-function pragmas retired: a folded-away null guard replaces... | 4.4 |
+| 6di | The TEXIMAGE_PARAM pragmas were the helper's parameter types: Nitr... | 4.4 |

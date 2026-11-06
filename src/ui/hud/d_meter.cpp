@@ -49,11 +49,11 @@
  * - The OAM::Render overloads that take Fix12<int> by value keep their mangled
  *   spellings: the natural static member call homes the Fix12 arguments
  *   differently under mwccarm (the Fix12 wall) and rewrites every call site.
- * - data_ov002_0211117c[0]'s self-decrement in UpdateHealthMeter keeps the
+ * - gMeterShownHealth[0]'s self-decrement in UpdateHealthMeter keeps the
  *   volatile self-read -- the ROM reloads the byte rather than reusing the
  *   value still live from the comparison above it.
  * - InitResources keeps two launders: the volatile pun on mVsTimer in the
- *   data_0209f2f8 == 0x2B branch (a plain member store emits different code)
+ *   gCurrentSublevel == 0x2B branch (a plain member store emits different code)
  *   and the `idx ? table : table` conditional over a (void* volatile*) cast of
  *   data_0209f394 (folding it changes where the player-health read lands).
  * - data_0209f2d8 is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
@@ -83,6 +83,7 @@ enum dMeter_c_AssetId {
 #include "dCamera_c.h"
 #include "dScStage_c.h"
 #include "PlayerInput.h"
+#include "SaveData.h"
 #include "private/controller_input.h"
 #include "Sound.h"
 #include "Event.h"
@@ -96,41 +97,44 @@ struct OamAttr;
 struct Matrix2x2;
 
 extern "C" {
-extern unsigned char data_ov002_02111184;
-extern Timer data_0209d4c8;
+/* RenderTimeTimer draws gRaceTimer only while this is set. The writers
+   start that timer with it: daPly_c on surface type 15 and the Koopa the
+   Quick race (daRNk_c). InitResources clears it. */
+extern unsigned char gShowRaceTimer;
+extern Timer gRaceTimer;
 extern struct OamAttr data_ov002_0210ce80;
 extern struct OamAttr data_ov002_0210c6c0;
 extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
                                 int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
 extern unsigned char data_0209f250;
-extern unsigned char data_ov002_02111178;
-extern signed char data_0209f2f4;
+extern unsigned char gMeterCounterSlideState;
+extern signed char gNumLives;
 struct OamAttr;
 extern void *data_0209f394[];
-extern u8 data_ov002_02111180;
+extern u8 gZoomButtonActiveTimer;
 extern void *data_0209f318;
 extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
-extern u32 data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern u8 data_0209d660;
-extern signed char data_0209f310[];
+extern signed char gNumStageStars[];
 /* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
 * so can never be the module this reaches. */
 extern int data_ov001_020abac8[];
 extern unsigned char data_0209f2d8;
-extern unsigned char data_0209f2fc;
-extern unsigned char data_0209f2ac;
-extern unsigned char data_0209f2d4;
+extern unsigned char gPrevReturnState;
+extern unsigned char gNewStarCollected;
+extern unsigned char gLevelClearStep;
 extern int data_020a0db0;
 extern unsigned char NumStars(void);
-extern signed char data_0209f30c[];
+extern signed char gNumRedCoins[];
 extern struct OamAttr data_ov002_0210c6b8;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
-extern unsigned char data_0209f2c4;
+extern unsigned char gGamePaused;
 extern unsigned char data_0209f20c;
-extern unsigned char data_0209f294;
+extern unsigned char gVsExitScreenActive;
 extern unsigned char data_0209f204;
 extern struct OamAttr data_ov002_0210d290;
 extern struct OamAttr data_ov002_0210d2c0;
@@ -145,8 +149,8 @@ extern int GetOwnerLanguage(void);
 
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
-extern unsigned char data_0209d454;
-extern unsigned char data_ov002_0211117c[];
+extern unsigned char gSubScreenLayers;
+extern unsigned char gMeterShownHealth[];
 extern struct OamAttr *data_ov002_0210c254[];
 extern struct OamAttr *data_ov002_0210c278[];
 extern struct OamAttr *data_ov002_0210c230[];
@@ -154,10 +158,10 @@ extern struct OamAttr data_ov002_0210d5d0;
 extern struct OamAttr data_ov002_0210d4f0;
 extern struct OamAttr data_ov002_0210c690;
 extern int data_0209caa0[];
-extern unsigned char data_0209f284;
+extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *data_0209f5bc;
 void *LoadFile(int handle);
-void DecompressLZ16(void *handle, int addr);
+void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *handle);
 void func_0203da4c(void);
 }
@@ -169,11 +173,11 @@ static inline int IsVsMode(void) {
 }
 
 /* 0 on the off frames of the blink after a new star is collected
-   (data_0209f2ac is NEW_STAR_COLLECTED, data_020a0db0 is FRAME_TIMER).
+   (data_020a0db0 is FRAME_TIMER).
    Flattening the nested ifs into one && chain changes the ROM's code. */
 static inline int StarCountVisible(void) {
-    if (data_0209f2ac != 0) {
-        if (data_0209f2d4 == 3 && (data_020a0db0 & 0x18) == 0)
+    if (gNewStarCollected != 0) {
+        if (gLevelClearStep == 3 && (data_020a0db0 & 0x18) == 0)
             return 0;
         return 1;
     }
@@ -201,47 +205,47 @@ int dMeter_c::InitResources() {
         void *h;
         if (GetOwnerLanguage() == 5) {
             h = LoadFile(0xB003);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xB007);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 4) {
             h = LoadFile(0xAC03);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xAC07);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 3) {
             h = LoadFile(0xA803);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xA807);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 2) {
             h = LoadFile(0xA403);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xA407);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else {
             h = LoadFile(0xA003);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xA007);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         }
         h = LoadFile(0x8000);
-        DecompressLZ16(h, (int)(objVramSub + 0x2000));
+        DecompressLZ16(h, objVramSub + 0x2000);
         Deallocate(h);
         h = LoadFile(0x8002);
         GX::LoadOBJPltt(h, 0, 0x120);
@@ -265,8 +269,8 @@ int dMeter_c::InitResources() {
             h = LoadFile(ASSET_D_2D_CMN_ICON_F_NCG_BIN);
         else
             h = LoadFile(ASSET_D_2D_CMN_ICON_E_NCG_BIN);
-        DecompressLZ16(h, 0x6400000);
-        DecompressLZ16(h, 0x6600000);
+        DecompressLZ16(h, objVramMain);
+        DecompressLZ16(h, objVramSub);
         Deallocate(h);
         if (GetOwnerLanguage() == 5)
             h = LoadFile(0xB00E);
@@ -278,10 +282,10 @@ int dMeter_c::InitResources() {
             h = LoadFile(0xA40E);
         else
             h = LoadFile(0xA00E);
-        DecompressLZ16(h, (int)(objVramMain + 0x2000));
+        DecompressLZ16(h, objVramMain + 0x2000);
         Deallocate(h);
         h = LoadFile(ASSET_D_2D_BTM_ICON_NCG_BIN);
-        DecompressLZ16(h, (int)(objVramSub + 0x2000));
+        DecompressLZ16(h, objVramSub + 0x2000);
         Deallocate(h);
         if (GetOwnerLanguage() == 5)
             h = LoadFile(0xB00A);
@@ -308,9 +312,9 @@ int dMeter_c::InitResources() {
     unk64 = 0xB4;
     mVsTimerY = 0xA;
     if (IsVsMode()) {
-        if (data_0209f2f8 == 0x33)
+        if (gCurrentSublevel == 0x33)
             mVsTimer = 0x1E;
-        else if (data_0209f2f8 == 0x2B)
+        else if (gCurrentSublevel == 0x2B)
             *(volatile u16 *)&mVsTimer = 0x1E;
         else
             mVsTimer = 0x1E;
@@ -319,14 +323,14 @@ int dMeter_c::InitResources() {
     }
 
     data_ov002_02111188 = 0xB4;
-    data_ov002_02111184 = 0;
+    gShowRaceTimer = 0;
     {
         u8 idx = *(volatile u8 *)&data_0209f250;
-        data_ov002_0211117c[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
-                                                   : (void *volatile *)data_0209f394)[idx]))
-                                     ->GetHealth();
+        gMeterShownHealth[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
+                                                 : (void *volatile *)data_0209f394)[idx]))
+                                   ->GetHealth();
     }
-    if (data_ov002_0211117c[0] == 8) {
+    if (gMeterShownHealth[0] == 8) {
         mHealthMeterY = -0x18;
         unk72 = 0;
         mHealthMeterState = 0;
@@ -348,27 +352,27 @@ int dMeter_c::InitResources() {
     }
 
     if (IsVsMode()) {
-        data_ov002_02111178 = 0;
+        gMeterCounterSlideState = 0;
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
-    } else if (!(data_0209caa0[2] & 0x80)) {
-        data_ov002_02111178 = 6;
+    } else if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+        gMeterCounterSlideState = 6;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
         mStarCountSlideIn = 1;
-    } else if (data_0209f2fc == 2) {
-        data_ov002_02111178 = 1;
+    } else if (gPrevReturnState == 2) {
+        gMeterCounterSlideState = 1;
         mLifeCountX = -0x3A;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
-    } else if (data_0209f2fc == 1) {
-        data_ov002_02111178 = 2;
+    } else if (gPrevReturnState == 1) {
+        gMeterCounterSlideState = 2;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
         mStarCountSlideIn = 0;
     } else {
-        data_ov002_02111178 = 0;
+        gMeterCounterSlideState = 0;
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
@@ -385,7 +389,7 @@ int dMeter_c::Behavior() {
 
     /* vs is computed only once the first test passes and is reused below. */
     if (data_0209f5bc->IsAtStart() == 0 ||
-        ((vs = IsVsMode()) == 0 && (data_0209caa0[2] & 0x80) == 0))
+        ((vs = IsVsMode()) == 0 && (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {
         UpdateVsTimer();
@@ -403,9 +407,9 @@ int dMeter_c::Behavior() {
         else
             n = 9;
 
-        switch (data_ov002_02111178) {
+        switch (gMeterCounterSlideState) {
         case 2:
-            data_ov002_02111178 = 3;
+            gMeterCounterSlideState = 3;
             break;
         case 3:
             if (mLifeCountX >= 0x10) {
@@ -414,7 +418,7 @@ int dMeter_c::Behavior() {
             } else {
                 mLifeCountX += 4;
             }
-            if (data_0209f2fc == 1) {
+            if (gPrevReturnState == 1) {
                 if (mStarCountX <= 0xf0) {
                     mStarCountX = 0xf0;
                     flags |= 2;
@@ -425,7 +429,7 @@ int dMeter_c::Behavior() {
                 flags |= 2;
             }
             if (flags == 3)
-                data_ov002_02111178 = 4;
+                gMeterCounterSlideState = 4;
             break;
         case 5:
             if (mHealthMeterHoldTimer == 0) {
@@ -434,7 +438,7 @@ int dMeter_c::Behavior() {
                 } else {
                     mLifeCountX -= 4;
                 }
-                if (data_0209f2fc == 1) {
+                if (gPrevReturnState == 1) {
                     if (mStarCountX <= n + 0x120) {
                         mStarCountX += 4;
                     } else {
@@ -444,7 +448,7 @@ int dMeter_c::Behavior() {
                     flags |= 2;
                 }
                 if (flags == 3)
-                    data_ov002_02111178 = 6;
+                    gMeterCounterSlideState = 6;
             }
             break;
         case 6:
@@ -454,7 +458,7 @@ int dMeter_c::Behavior() {
             } else {
                 mLifeCountX += 4;
             }
-            if (data_0209f2fc == 1 || mStarCountSlideIn != 0) {
+            if (gPrevReturnState == 1 || mStarCountSlideIn != 0) {
                 if (mStarCountX <= 0xf0) {
                     mStarCountX = 0xf0;
                     flags |= 2;
@@ -465,7 +469,7 @@ int dMeter_c::Behavior() {
                 flags |= 2;
             }
             if (flags == 3) {
-                data_ov002_02111178 = 0;
+                gMeterCounterSlideState = 0;
                 mStarCountSlideIn = 0;
             }
             break;
@@ -479,7 +483,7 @@ int dMeter_c::Behavior() {
 int dMeter_c::Render() {
     if (IsVsMode()) {
         if (data_0209fc9c == 0) {
-            if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) == 0) {
+            if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) == 0) {
                 RenderVsTimer();
                 RenderStarCount();
                 RenderCoinCount();
@@ -490,17 +494,17 @@ int dMeter_c::Render() {
                 }
             }
         }
-    } else if ((data_0209caa0[2] & 0x80) != 0) {
+    } else if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) != 0) {
         unsigned char v = data_0209f20c;
-        if (((data_0209f2c4 | v | data_0209f294) & 0xff) == 0) {
+        if (((gGamePaused | v | gVsExitScreenActive) & 0xff) == 0) {
             RenderHealthMeter();
-            if (Event::GetBit(0x1d) == 0) {
+            if (Event::GetBit(EVENT_COLLECTING_STAR) == 0) {
                 RenderCoinCount();
                 RenderRedCoins();
                 RenderSilverStars();
                 RenderTimeTimer();
             }
-            if (data_0209f284 != 0) {
+            if (gShowTouchScreenArrows != 0) {
                 dScStage_c::RenderBouncingArrows();
             }
         } else {
@@ -510,7 +514,8 @@ int dMeter_c::Render() {
             }
         }
         unsigned char v2 = data_0209f20c;
-        if (((data_0209f2c4 | v2 | data_0209f294) & 0xff) == 0 || (v2 != 0 && data_0209f2d4 < 3)) {
+        if (((gGamePaused | v2 | gVsExitScreenActive) & 0xff) == 0 ||
+            (v2 != 0 && gLevelClearStep < 3)) {
             RenderStarCount();
             RenderCameraButtons();
             RenderLifeCount();
@@ -544,14 +549,14 @@ s32 dMeter_c::CleanupResources() {
 void dMeter_c::UpdateHealthMeter() {
     int chr = data_0209f250;
     daPly_c *player = (daPly_c *)data_0209f394[chr];
-    unsigned int health = (data_02092144[chr] >> 8) & 0xff;
-    if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) != 0)
+    unsigned int health = (gPlayerHealth[chr] >> 8) & 0xff;
+    if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) != 0)
         return;
     if (mHealthMeterHoldTimer != 0)
         mHealthMeterHoldTimer -= data_0208ee44;
     if (mHealthTickTimer != 0)
         mHealthTickTimer -= data_0208ee44;
-    if (Event::GetBit(0x1d)) {
+    if (Event::GetBit(EVENT_COLLECTING_STAR)) {
         unsigned char s = mHealthMeterState;
         if (s != 0) {
             if (s < 5)
@@ -565,10 +570,10 @@ void dMeter_c::UpdateHealthMeter() {
             mHealthMeterState = 1;
             return;
         }
-        if (data_ov002_0211117c[0] <= health)
+        if (gMeterShownHealth[0] <= health)
             return;
         mHealthMeterY = 0x39;
-        data_ov002_0211117c[0] = *(volatile unsigned char *)&data_ov002_0211117c - 1;
+        gMeterShownHealth[0] = *(volatile unsigned char *)&gMeterShownHealth - 1;
         mHealthTickTimer = 0x1e;
         mHealthMeterHoldTimer = 0x5a;
         mHealthMeterState = 1;
@@ -584,22 +589,22 @@ void dMeter_c::UpdateHealthMeter() {
         if (mHealthTickTimer != 0)
             return;
         {
-            unsigned char cur = data_ov002_0211117c[0];
+            unsigned char cur = gMeterShownHealth[0];
             if (cur < health) {
                 if ((int)(health - cur) > 1) {
-                    data_ov002_0211117c[0] = cur + 1;
+                    gMeterShownHealth[0] = cur + 1;
                     func_02012790(0xd);
                     mHealthTickTimer = 0x10;
                     return;
                 }
-                data_ov002_0211117c[0] = health;
+                gMeterShownHealth[0] = health;
                 func_02012790(0xd);
                 if (player->mIsUnderwater != 0)
                     return;
                 if (health != 8)
                     return;
-                if (data_ov002_02111178 == 1) {
-                    data_ov002_02111178 = 3;
+                if (gMeterCounterSlideState == 1) {
+                    gMeterCounterSlideState = 3;
                     mHealthMeterState = 2;
                 } else {
                     mHealthMeterHoldTimer = 0x3c;
@@ -608,7 +613,7 @@ void dMeter_c::UpdateHealthMeter() {
                 return;
             }
             if (cur > health) {
-                data_ov002_0211117c[0] = cur - 1;
+                gMeterShownHealth[0] = cur - 1;
                 mHealthTickTimer = 0x1e;
                 return;
             }
@@ -618,8 +623,8 @@ void dMeter_c::UpdateHealthMeter() {
                 return;
             if (player->IsInAir())
                 return;
-            if (data_ov002_02111178 == 1) {
-                data_ov002_02111178 = 3;
+            if (gMeterCounterSlideState == 1) {
+                gMeterCounterSlideState = 3;
                 mHealthMeterState = 2;
             } else {
                 mHealthMeterHoldTimer = 0x3c;
@@ -628,7 +633,7 @@ void dMeter_c::UpdateHealthMeter() {
         }
         return;
     case 2:
-        if (data_ov002_02111178 == 4) {
+        if (gMeterCounterSlideState == 4) {
             mHealthMeterHoldTimer = 0x3c;
             mHealthMeterState = 3;
         }
@@ -638,7 +643,7 @@ void dMeter_c::UpdateHealthMeter() {
             return;
         GiveLives(-1);
         func_02012790(0x40);
-        data_ov002_02111178 = 5;
+        gMeterCounterSlideState = 5;
         mHealthMeterHoldTimer = 0x3c;
         mHealthMeterState = 4;
         return;
@@ -656,7 +661,7 @@ void dMeter_c::UpdateHealthMeter() {
             mHealthMeterState = 6;
         return;
     case 6:
-        if (Event::GetBit(0x1d) == 0)
+        if (Event::GetBit(EVENT_COLLECTING_STAR) == 0)
             mHealthMeterState = 1;
         return;
     }
@@ -669,20 +674,20 @@ void dMeter_c::RenderHealthMeter() {
         return;
 
     if (GetOwnerLanguage() == 5) {
-        OAM::Render(0, data_ov002_0210c254[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, data_ov002_0210c254[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
         OAM::Render(0, &data_ov002_0210d5d0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-        OAM::Render(0, data_ov002_0210c278[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, data_ov002_0210c278[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
         OAM::Render(0, &data_ov002_0210d4f0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else {
-        OAM::Render(0, data_ov002_0210c230[data_ov002_0211117c[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, data_ov002_0210c230[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
         OAM::Render(0, &data_ov002_0210c690, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
-    GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[data_ov002_0211117c[0]]], 0x60, 0x20);
+    GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
 }
 
 /* ROM ordinal 11 -- dMeter_c::UpdateVsTimer(), 0x020fce9c, size 0x150 */
@@ -692,7 +697,7 @@ void dMeter_c::UpdateVsTimer() {
 
     if (data_0209f2bc != 0)
         return;
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) != 0)
+    if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) != 0)
         return;
 
     if (data_ov002_02111188 != 0)
@@ -711,7 +716,7 @@ void dMeter_c::UpdateVsTimer() {
             data_0209f204 = 1;
             data_ov002_02111188 = 0x3c;
             func_02012790(0x29);
-            data_0209d454 &= ~4;
+            gSubScreenLayers &= ~4;
         }
     }
 
@@ -742,13 +747,13 @@ void dMeter_c::UpdateVsTimer() {
  *   0..3    not a digit at all: data_ov002_0210ca0c[3 - ones], a separate
  *           countdown artwork set, indexed backwards
  *
- * Only the caption is drawn when any of data_0209f2c4 / f20c / f294 is set;
+ * Only the caption is drawn when any of gGamePaused / f20c / f294 is set;
  * they are OR-ed and tested as a single byte.
  */
 void dMeter_c::RenderVsTimer() {
     int t = mVsTimer;
 
-    if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) == 0) {
+    if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) == 0) {
         if (GetOwnerLanguage() == 5) {
             OAM::Render(0, &data_ov002_0210d290, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
@@ -796,7 +801,7 @@ void dMeter_c::RenderVsTimer() {
 void dMeter_c::RenderCoinCount() {
     if (IsVsMode()) {
         int sb = 0xf0;
-        CalculateDigits(data_0209f358[data_0209f250]);
+        CalculateDigits(gNumCoins[data_0209f250]);
         for (int i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -807,11 +812,11 @@ void dMeter_c::RenderCoinCount() {
         OAM::Render(true, &OAM::TIMES, sb, 0xa, -1, 1, 0);
         OAM::Render(true, &OAM::COIN, sb - 0x10, 2, -1, 1, 0);
     } else {
-        if (SublevelToLevel(data_0209f2f8) == 0x1d)
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d)
             return;
         int i;
         int sb = 0xf0;
-        CalculateDigits(data_0209f358[data_0209f250]);
+        CalculateDigits(gNumCoins[data_0209f250]);
         for (i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -826,8 +831,8 @@ void dMeter_c::RenderCoinCount() {
 
 /* ROM ordinal 8 -- dMeter_c::RenderRedCoins(), 0x020fc77c, size 0xa0 */
 // @symbol _ZN8dMeter_c14RenderRedCoinsEv
-/* Draws one sprite per red coin still to collect, stepping 0xb across from
- * x=0x10. Both the count (data_0209f30c) and the row selector (data_0209f310)
+/* Draws one sprite per red coin collected so far, stepping 0xb across from
+ * x=0x10. Both the count (gNumRedCoins) and the row selector (gNumStageStars)
  * are indexed by the same data_0209f250.
  *
  * That row selector is the interesting bit: it is the SAME byte
@@ -836,16 +841,16 @@ void dMeter_c::RenderCoinCount() {
  * One byte serving as both a count and an occupancy flag for a shared row.
  *
  * The count is read through an explicit unsigned char cast off a signed char
- * array -- kept as the ROM spells it, since the same array is read signed by
- * RenderSilverStars.
+ * array -- kept as the ROM spells it. RenderSilverStars does not read this
+ * array; it reads gNumStageStars.
  *
  * TOUCHES NO FIELD; the ROM body takes no `this` and now ignores the one it is
  * passed. Byte-free.
  */
 void dMeter_c::RenderRedCoins() {
     int idx = data_0209f250;
-    int flag = data_0209f310[idx];
-    int count = (unsigned char)data_0209f30c[idx];
+    int flag = gNumStageStars[idx];
+    int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
     for (int i = 0; i < count; i++) {
         OAM::Render(false, &data_ov002_0210c6b8, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
@@ -861,10 +866,11 @@ void dMeter_c::RenderRedCoins() {
  * Three paths, and what differs between them is only WHICH count is shown and
  * on WHICH screen:
  *
- *   data_0209f2d8 == 1   a per-slot count out of data_0209f310, main screen
- *   the middle path      NumStars(), main screen, but only during a specific
- *                        cutscene window (data_ov002_02111178) and suppressed
- *                        entirely by the data_0209f2ac / data_0209f2d4 test
+ *   data_0209f2d8 == 1   a per-slot count out of gNumStageStars, main screen
+ *   the middle path      NumStars(), main screen, but only while
+ *                        gMeterCounterSlideState has the counter sliding onto,
+ *                        resting on or sliding off the main screen, and suppressed
+ *                        entirely by the gNewStarCollected / gLevelClearStep test
  *   otherwise            NumStars(), SUB screen -- the leading argument to
  *                        OAM::Render flips 0 -> 1
  *
@@ -880,7 +886,7 @@ void dMeter_c::RenderStarCount() {
     int i;
 
     if (IsVsMode()) {
-        CalculateDigits((unsigned short)data_0209f310[data_0209f250]);
+        CalculateDigits((unsigned short)gNumStageStars[data_0209f250]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
                 OAM::Render(false, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
@@ -895,9 +901,9 @@ void dMeter_c::RenderStarCount() {
     CalculateDigits(NumStars());
 
     {
-        unsigned char mode = data_0209f2fc;
-        if ((mode != 2 && data_ov002_02111178 == 4) ||
-            (mode == 1 && data_ov002_02111178 >= 3 && data_ov002_02111178 < 6)) {
+        unsigned char mode = gPrevReturnState;
+        if ((mode != 2 && gMeterCounterSlideState == 4) ||
+            (mode == 1 && gMeterCounterSlideState >= 3 && gMeterCounterSlideState < 6)) {
             if (!StarCountVisible()) {
                 return;
             }
@@ -926,7 +932,7 @@ void dMeter_c::RenderStarCount() {
 /* ROM ordinal 6 -- dMeter_c::RenderSilverStars(), 0x020fc3c4, size 0x94 */
 // @symbol _ZN8dMeter_c17RenderSilverStarsEv
 /* Draws one sprite per silver star collected, in a row starting at x=0x10 and
- * stepping 0x11 across at y=0xa. The count comes from data_0209f310 indexed by
+ * stepping 0x11 across at y=0xa. The count comes from gNumStageStars indexed by
  * data_0209f250 -- the same byte dMeter_c::RenderRedCoins reads, where a non-zero
  * value instead pushes the red-coin row from y=0xa down to y=0x1c. So this row
  * and that one share a slot, and the red coins move when silver stars occupy it.
@@ -938,7 +944,7 @@ void dMeter_c::RenderStarCount() {
  */
 void dMeter_c::RenderSilverStars() {
     int sl = 0;
-    unsigned short n = (unsigned short)(short)data_0209f310[data_0209f250];
+    unsigned short n = (unsigned short)(short)gNumStageStars[data_0209f250];
     int sb;
     if (sl < n) {
         sb = 0x10;
@@ -958,12 +964,12 @@ void dMeter_c::RenderCameraButtons() {
     int idx = gActivePlayerSlot;
     u8 mode = data_0209f498[idx].mode;
     dCamera_c *cam = (dCamera_c *)data_0209f318;
-    u8 t = data_ov002_02111180;
+    u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)
-        data_ov002_02111180 = t - data_0208ee44;
+        gZoomButtonActiveTimer = t - data_0208ee44;
 
-    if (data_0209b454 & 0x40000000)
+    if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         return;
 
     if (cam->mFlags & 0x1000) {
@@ -1003,14 +1009,14 @@ void dMeter_c::RenderCameraButtons() {
 
     int y = (mode == 1) ? 0xa5 : 0x85;
     if (mode == 1) {
-        if (data_ov002_02111180 != 0) {
+        if (gZoomButtonActiveTimer != 0) {
             OAM::RenderSub(&OAM::CAM_ZOOM_BUTTON_PRESSED, 0xe7, y, -1, 1);
             return;
         }
         OAM::RenderSub(&OAM::CAM_ZOOM_BUTTON, 0xe7, y, -1, 1);
         return;
     }
-    if (data_ov002_02111180 != 0) {
+    if (gZoomButtonActiveTimer != 0) {
         OAM::RenderSub(&OAM::S_CAM_ZOOM_BUTTON_PRESSED, 0xe7, y, -1, 1);
         return;
     }
@@ -1022,13 +1028,13 @@ void dMeter_c::RenderCameraButtons() {
 void dMeter_c::RenderLifeCount() {
     unsigned char idx = data_0209f250;
     daPly_c *player = (daPly_c *)data_0209f394[idx];
-    unsigned char state = data_ov002_02111178;
+    unsigned char state = gMeterCounterSlideState;
 
     if (state >= 3 && state < 6) {
         OAM::Render(0, OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1, 0x1000, 0x1000,
                     0, -1);
         OAM::Render(false, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
-        CalculateDigits((unsigned short)data_0209f2f4);
+        CalculateDigits((unsigned short)gNumLives);
         int x = mLifeCountX + 0x18;
         for (int i = 0; i < 3; i++) {
             signed char d = mDigits[i];
@@ -1040,7 +1046,7 @@ void dMeter_c::RenderLifeCount() {
     } else {
         OAM::RenderSub(OAM::LIFE_ICONS[player->mCharacter], mLifeCountX, 0xa, -1, 1);
         OAM::Render(true, &OAM::TIMES, mLifeCountX + 0x10, 0xa, -1, 1, 0);
-        CalculateDigits((unsigned short)data_0209f2f4);
+        CalculateDigits((unsigned short)gNumLives);
         int i;
         int x = mLifeCountX + 0x18;
         for (i = 0; i < 3; i++) {
@@ -1089,10 +1095,10 @@ void dMeter_c::RenderTimeTimer() {
     unsigned long long sec;
     unsigned long long centi;
 
-    if (data_ov002_02111184 == 0)
+    if (gShowRaceTimer == 0)
         return;
 
-    t = data_0209d4c8.GetTime() << 6;
+    t = gRaceTimer.GetTime() << 6;
     sec = t / 33514000;
     centi = t / 33514 % 1000 / 10;
     min = sec / 60;

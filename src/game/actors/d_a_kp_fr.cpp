@@ -14,7 +14,7 @@
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *   mwcc emits one .text section per ordinary definition in reverse source
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
- *   M48, the array wrapper for the IDENTITY_MATRIX4X3 copy: the nested
+ *   Mtx43, the flat type for the IDENTITY_MATRIX4X3 copy: the nested
  *   math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes it.
  *   Fix12i[3] locals instead of Vector3, which declares its own
  *   destructor.
@@ -35,6 +35,7 @@
 #include "daPly_c.h"
 #include "SurfaceInfo.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
@@ -64,9 +65,7 @@ extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 // @symbol _ZN8daKpFr_c13InitResourcesEv
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
-/* Array-only wrapper preserves retail's ldm/stm matrix copy in C++ mode.
- * Nested math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes otherwise. */
-struct M48 { int w[12]; };
+#include "private/mtx43.h"
 extern "C" {
 extern int IDENTITY_MATRIX4X3[];
 }
@@ -83,7 +82,7 @@ int daKpFr_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov070_02122044(0);
-    *(struct M48*)&mMatrix = *(struct M48*)IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mMatrix = *(Mtx43 *)IDENTITY_MATRIX4X3;
     return 1;
 }
 
@@ -162,7 +161,6 @@ int daKpFr_c::func_ov070_02121fb0()
 
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern short Vec3_HorzAngle(void* v0, void* v1);
 }
 // @symbol _ZN8daKpFr_c19func_ov070_02121f18Ev
 int daKpFr_c::func_ov070_02121f18() {
@@ -171,7 +169,7 @@ int daKpFr_c::func_ov070_02121f18() {
         func_ov070_02121c8c();
     player = ClosestNonVanishPlayer();
     if (player) {
-        short angleToPlayer = Vec3_HorzAngle(&mPosX, &player->mPosX);
+        short angleToPlayer = Vec3_HorzAngle(&mPos, &player->mPos);
         ApproachLinear(mAngleY, angleToPlayer, 0x180);
         mPrevAngleY = mAngleY;
     }
@@ -204,10 +202,8 @@ int daKpFr_c::func_ov070_02121eb0() {
     return 1;
 }
 
-extern "C" {
 /* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
    class args. */
-}
 // @symbol _ZN8daKpFr_c19func_ov070_02121e14Ev
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;

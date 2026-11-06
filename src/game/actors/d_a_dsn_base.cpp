@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* Actor IDs this TU compares. No header vocabulary exists (cleaned callers
  * pass raw hex), so they live here, cited to the ROM's own debug table. */
@@ -101,12 +102,11 @@ struct DsnCycle {
  * (beforeClsnCallback), spelled as src/engine/collision/d_bg_w.cpp has it. */
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *);
-extern int RandomIntInternal(void *);
+extern int RandomIntInternal(int *);
 extern int Vec3_Dist(const Vector3 *, const Vector3 *);
-extern void func_020393d4(int *collider, int callback);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-extern int data_0209e650[];
 
 // @symbol _ZN11daDsnBase_cD0Ev
 // @symbol _ZN11daDsnBase_cD1Ev
@@ -178,7 +178,7 @@ void daDsnBase_c::StateRest() {
     if (DecIfAbove0_Byte(&self->timer) != 0)
         return;
     self->state = 4;
-    unsigned int roll = RandomIntInternal(data_0209e650);
+    unsigned int roll = RandomIntInternal(&data_0209e650.value);
     unsigned int rollHigh = roll >> 16;
     self->timer = (char)(rollHigh % 10 + 0x14);
 }
@@ -238,7 +238,8 @@ void daDsnBase_c::StateRise() {
         return;
     self->posY = self->riseY;
     self->state = 1;
-    self->timer = (u8)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 0x1e + 0xa);
+    self->timer =
+        (u8)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 0x1e + 0xa);
 }
 
 /* The per-frame shadow refresh both Behaviors run after the state step.
@@ -336,7 +337,7 @@ s32 daDsnBase_c::Init() {
     clps = files->clps;
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(clps));
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
 
     texAnim = ((DsnBaseFileTable *)mFileTable)->texAnim;

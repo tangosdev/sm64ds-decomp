@@ -31,22 +31,20 @@
 // - LoadTextureTransformers spells `new` as an explicit operator new call
 //   plus a null-guarded constructor call, a form from before the allocator
 //   was named _Znwm, when a new-expression could not link; the fader array passes dFdWipe_c's constructor and destructor by address.
-// - CheckCameraInput keeps `#pragma opt_strength_reduction off` and a local
-//   CamInput overlay of the camera input array; PS_Update and Behavior keep
+// - CheckCameraInput keeps `#pragma opt_strength_reduction off`; PS_Update and Behavior keep
 //   `#pragma opt_common_subs off` (switched back on after each), the
-//   stale-tmpv levers in PS_Update's case 0xa and the
-//   address-rematerialization pokes in its case-1 star scroll, and its
+//   stale-tmpv levers in PS_Update's case 0xa and the `aa` staging in its
+//   case-1 star scroll, and its
 //   sp0..sp10/var_r0/var_sl/var_fp locals stay unrenamed until each slot's
-//   role is recovered. The touch and controller globals
-//   (gTouchHeld..gTouchY, gActivePlayerSlot, data_0209f498) have no header;
+//   role is recovered. The touch globals (gTouchHeld..gTouchY,
+//   gActivePlayerSlot) have no header;
 //   data_ov001_ and data_ov002_ handles keep linker names.
-// - func_0202a850 keeps `#pragma opt_dead_assignments off` around its pair of
-//   stores the ROM writes twice.
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a };
 
 #include "types.h"
 #include "G2.h"
+#include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "dScStage_c.h"
@@ -84,6 +82,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "math/CalcLib.h"
 #include "dGraph_c.h"
 #include "dClipper.h"
+#include "LevelRng.h"
 
 struct OamAttr;
 
@@ -93,38 +92,6 @@ struct OamAttr;
    register it; the callback has none. */
 dScStage_c::graphCallback_c data_0209f3c4;
 dClipper data_0209f43c;
-
-/* TU-local overlay of the per-controller input records at data_0209f498,
- * 0x18 apart. CheckInput fills them from the pad and the touch screen each
- * frame; ResetInput clears them; the pause screen polls the mode byte at
- * +0x16 (SetControllerMode's data_0209f4ae). */
-struct CamInput {
-    s16 dx;      /* 0x00 */
-    s16 dy;      /* 0x02 */
-    u16 held;    /* 0x04 */
-    u16 pressed; /* 0x06 */
-    s16 mag;     /* 0x08 */
-    s16 nx;      /* 0x0a */
-    s16 ny;      /* 0x0c */
-    s16 ang;     /* 0x0e */
-    u8 tx;       /* 0x10 */
-    u8 ty;       /* 0x11 */
-    u8 delay;    /* 0x12 */
-    u8 cnt;      /* 0x13 */
-    u8 touching; /* 0x14 */
-    u8 pad15;    /* 0x15 */
-    u8 mode;     /* 0x16 */
-    u8 pad17;    /* 0x17 */
-};
-
-/* TU-local overlay of the touch records the ROM keeps at gTouchHeld:
-   held/edge are the gTouchHeld/gTouchEdge lanes, x/y the gTouchX/gTouchY lanes. */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
 
 extern "C" {
 int IsButtonInputValid(void);
@@ -142,7 +109,7 @@ void SetSubBg1Offset(int x, int y);
 int func_02029408(void);
 void *LoadFile(int handle);
 void SetControllerMode(unsigned char m);
-unsigned int LoadCompressedFileAt(unsigned short id, void *dst);
+unsigned int LoadCompressedFileAt(int id, void *dst);
 int GetSoundMode(void);
 void SetSoundMode(int m);
 void TurnBacklightOn(void);
@@ -158,10 +125,18 @@ int __aeabi_idiv(int a, int b);
 extern int data_0208ee44;
 extern u8 data_0208ee3c;
 extern u8 data_0208ee40;
-extern s8 data_02092124;
-extern s16 data_02092144[];
-extern unsigned int data_0209b454;
-extern unsigned int data_0209b464;
+extern s8 gLastCourseSublevel;
+extern s16 gPlayerHealth[];
+/* The actor update mask for the next frame. While it is non-zero, only actors
+   whose mFlags share a bit with it run their behaviour (dActor_c::
+   BeforeBehavior tests gActorUpdateMask, which Behavior copies from this word
+   at the top of every frame; writers that need it at once copy it themselves).
+   Cutscenes set their own bit, and pausing is refused while any bit is set.
+   ACTOR_UPDATE_MASK_STAGE_ENDING (dActor_c.h) is set with the fade out of
+   every exit: VE_Init, LC_Update's exit choice, and the pause screen's exit
+   and save-and-quit paths. */
+extern unsigned int gNextActorUpdateMask;
+extern unsigned int gActorUpdateMask;
 extern u8 data_020755b8[];
 extern volatile int data_02075610[];
 extern u16 data_020755cc[];
@@ -169,59 +144,21 @@ extern u16 data_020755c0[];
 extern u16 data_020755c4[];
 extern s16 data_020756d0[];
 extern u8 data_0209d660;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
-extern Timer data_0209d4c8;
+/* The main engine's enabled layers, the same byte for DISPCNT bits 8..12:
+   func_02019144 commits it every VBlank. BG0 is the 3D scene, BG3 the message
+   text and OBJ the top-screen sprites. */
+extern u8 gMainScreenLayers;
+/* The sub engine's enabled layers, DISPCNT_SUB bits 8..12 shifted down to bit
+   0 (DISPLAY_LAYER_*, nitro/hw/registers.h); every writer copies it in with
+   `<< 8`. On the stage, BG3 is the map picture and OBJ every bottom-screen
+   sprite. */
+extern u8 gSubScreenLayers;
+extern Timer gRaceTimer;
 extern int data_0209fc68;
-extern u8 data_0209f1ec;
-extern u8 data_0209f1fc;
-extern u8 data_0209f210;
-extern u8 data_0209f218;
-extern u8 data_0209f20c;
-extern u8 data_0209f21c;
-extern u8 data_0209f22c;
-extern u8 data_0209f234;
-extern u8 data_0209f238;
-extern u8 data_0209f23c;
-extern u8 data_0209f240;
-extern u8 data_0209f244;
-extern u8 data_0209f248;
-extern u8 data_0209f250;
-extern u8 data_0209f260;
-extern u8 data_0209f280;
-extern u8 data_0209f284;
-extern u8 data_0209f290;
-extern u8 data_0209f294;
-extern u8 data_0209f29c;
-extern u8 data_0209f2a0[];
-extern u8 data_0209f2a4;
-extern u8 data_0209f2a8;
-extern u8 data_0209f2ac;
-extern u8 data_0209f2b0;
-extern u8 data_0209f2b4;
-extern u8 data_0209f2b8;
-extern u8 data_0209f2c4;
-extern u8 data_0209f2c8;
-extern u8 data_0209f2cc;
-extern u8 data_0209f2d4;
-extern u8 data_0209f2d8;
-extern u8 data_0209f2dc;
-extern u8 data_0209f2e0;
-extern u8 data_0209f2e4;
-extern u8 data_0209f2ec;
-extern u8 data_0209f2f0;
-extern s8 data_0209f2f8;
-extern u16 data_0209f300;
-extern u16 data_0209f360[];
-extern u16 data_0209f368[];
-extern u8 data_0209f350[];
-extern void *data_0209f318;
-extern unsigned char data_0209f498[];
-extern u8 data_0209f4ae[];
 extern int data_020a0db0;
 extern u8 data_ov002_02111150;
-extern u8 data_ov002_02111178;
-extern u8 data_ov002_02111180;
+extern u8 gMeterCounterSlideState;
+extern u8 gZoomButtonActiveTimer;
 extern int data_ov002_0210cea8;
 extern int data_ov002_0210cee8;
 extern int data_ov002_0210cf28;
@@ -255,10 +192,6 @@ struct LevelReturnEntry {
 };
 struct OvTbl {
     unsigned int t[7];
-};
-struct PadData {
-    u16 held;
-    u16 pressed;
 };
 /* The object at data_0209f5bc; only its slot-5 and slot-7 queries are called
    from this file. */
@@ -326,56 +259,214 @@ extern s32 data_0209cef0;
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *data_0209d4a8;
-extern s32 data_0209e650;
-extern u8 data_0209f1f4;
-extern u8 data_0209f1f8;
-extern u8 data_0209f200;
-extern u8 data_0209f204;
-extern u8 data_0209f208;
-extern u8 data_0209f214;
-extern u8 data_0209f220;
-extern u8 data_0209f228[];
-extern u8 data_0209f230;
-extern u8 data_0209f24c;
-extern u8 data_0209f25c;
-extern u8 data_0209f264;
-extern u8 data_0209f268;
-extern u8 data_0209f26c;
-extern u8 data_0209f270;
-extern u8 data_0209f274;
-extern u8 data_0209f278;
-extern u8 data_0209f27c;
-extern u8 data_0209f298;
-extern u8 data_0209f2bc;
-extern u8 data_0209f2d0;
-extern s8 data_0209f2f4;
-extern u8 data_0209f2fc;
-extern u16 data_0209f304;
-extern u16 data_0209f308;
-extern s8 data_0209f30c[];
+/* The stage's .bss, 0x0209f1ec..0x0209f5b8: the pause, VS-exit and
+   level-clear screens' state, the level and player globals the free
+   functions keep, and the per-level tables. mwcc sorts a TU's objects by
+   size, so the run ascends from bytes to the death table. The graph callback
+   and dClipper (defined above) and the compiler's destructor-registration
+   node for dClipper sit between the tables. */
+/* The pause page to show next: PS_Update moves it into sPauseState at the
+   top of each frame. */
+static u8 sNextPauseState;
+u8 data_0209f1f0;
+static u8 data_0209f1f4;
+u8 data_0209f1f8;
+static u8 data_0209f1fc;
+u8 data_0209f200;
+u8 data_0209f204;
+u8 data_0209f208;
+u8 data_0209f20c;
+/* Counts down from 3 frames after a pause arrow is touched; PS_Update clears
+   sPressedPauseArrow when it reaches 0. */
+static u8 sPauseArrowPressTimer;
+static u8 data_0209f214;
+/* Set when the pause was opened with SELECT rather than START. */
+static u8 sPausedWithSelect;
+u8 data_0209f21c;
+u8 data_0209f220;
+u8 data_0209f224;
+u8 gCollectedStarId;
+static u8 sMenuWaitTimer;
+static u8 data_0209f230;
+static u8 data_0209f234;
+/* The pause arrow drawn pressed in, 0 for none. On the course page 1 is the
+   left arrow and 2 the right (PS_Render moves that arrow two pixels out); the
+   sound-options page sets 2 for its left arrow and 1 for its right. */
+static u8 sPressedPauseArrow;
+/* Another options-page countdown: PS_Update repaints the page when it
+   reaches 0, like sSoundBoxFlashTimer and sBacklightFlashTimer. Nothing in the
+   ROM sets it non-zero (its only other access is PS_Init's clear), and the
+   runtime pass did not confirm a role, so it keeps its placeholder name. */
+static u8 data_0209f23c;
+static u8 data_0209f240;
+/* Frames until the selected big button's highlight is redrawn. Touching or
+   confirming the button that is already selected sets it to 4 frames, and
+   UpdateMenuButtons, PS_UpdateOkAndBackButtons and PS_UpdateSaveMenu draw the
+   highlight palette only once it is 0, so the press blinks. Each update loop
+   repaints the buttons when it reaches 0. */
+static u8 sMenuHighlightDelay;
+/* The pause page shown, the switch PS_Update runs. */
+static u8 sPauseState;
+static u8 data_0209f24c;
+u8 data_0209f250;
+u8 data_0209f254;
+static u8 data_0209f258;
+static u8 data_0209f25c;
+static u8 sLevelClearCoinCount;
+u8 data_0209f264;
+static u8 data_0209f268;
+static u8 sReturnState;
+static u8 data_0209f270;
+u8 data_0209f274;
+static u8 data_0209f278;
+static u8 data_0209f27c;
+static u8 data_0209f280;
+/* Non-zero while a talk or event is pointing the player at the Touch Screen:
+   dMeter_c::Render then calls RenderBouncingArrows, which draws the three
+   down-arrows along the foot of the top screen. Every writer that sets it
+   also plays sound 0x24 -- the intro Lakitu partway through message 0x182,
+   the 0x74a sign, the red Bob-omb buddy, a cap icon flashing on the map, the
+   end of a teleport -- and clears it once that is over. InitResources clears
+   it on stage load. */
+u8 gShowTouchScreenArrows;
+u8 gShowRedCoinMarkers;
+u8 data_0209f28c;
+static u8 data_0209f290;
+/* Non-zero from VE_Init (the VS time-up exit screen: exit text, both screens
+   dimmed) until the next InitResources; data_0209f290 is that screen's step.
+   Every "is play suspended" test ORs it with gGamePaused (pause) and
+   data_0209f20c, so while it is set the HUD, camera, actor behaviour and
+   button input all stand still. */
+u8 gVsExitScreenActive;
+static u8 data_0209f298;
+/* Which of the two buttons along the foot of the controls and options pages
+   is selected while sSelectedMenuButton is on that row: 0 the left (OK) and 1
+   the right (Back). PS_UpdateOkAndBackButtons highlights button i when this is
+   i; choosing 1 returns to the previous pause page. It is a selection, not a
+   "pressed" flag. */
+static u8 sBackButtonSelected;
+static u8 data_0209f2a0;
+static u8 data_0209f2a4;
+static u8 sLevelClearPaletteTimer;
+u8 gNewStarCollected;
+static u8 sLevelClearNewRecord;
+/* How many big buttons the current menu has (2 to 4); UpdateMenuButtons
+   repaints that many from sMenuButtonTileOffsets. On the controls page a
+   sSelectedMenuButton equal to it means the bottom OK/Back row. */
+static u8 sNumMenuButtons;
+static u8 data_0209f2b8;
+u8 data_0209f2bc;
+u8 data_0209f2c0;
+/* Non-zero while the pause screen is up. dActor_c::BeforeBehavior, the
+   camera, the meter and the map stand still while it is set. */
+u8 gGamePaused;
+/* The course the pause screen shows stars and the coin record for, stepped by
+   the course arrows. 0xf is the castle: the total star count, with no
+   star/coin line. */
+static u8 sPauseDisplayedCourse;
+/* Set to 4 frames when a backlight button is touched without changing the
+   backlight, or when the toggle flips it. PS_UpdateOptionsMenu draws the
+   selected backlight button with the highlight palette (0x6000) only while it
+   is 0, so the press blinks; PS_Update repaints the page when it reaches 0. */
+static u8 sBacklightFlashTimer;
+static u8 data_0209f2d0;
+u8 gLevelClearStep;
+u8 data_0209f2d8;
+/* The controller mode chosen on the controls page (0..2), seeded from the
+   player's record, saved through SetControllerMode, and the index of the
+   callout-text sprite PS_Render draws. */
+static u8 sSelectedControllerMode;
+/* The selected big button of the pause, VS-exit and course-clear menus (the
+   cursor row on the controls page). The menus read it when the selection is
+   confirmed. */
+static u8 sSelectedMenuButton;
+/* Set to 8 when an arrow steps the sound mode. While it is non-zero
+   PS_UpdateOptionsMenu draws the SOUND box with palette 0x5000 instead of the
+   highlight 0x6000, and PS_Update repaints the page when it reaches 0. */
+static u8 sSoundBoxFlashTimer;
+u8 data_0209f2e8;
+/* The backlight button drawn selected on the options page: 0 the left (on)
+   and 1 the right (off). Seeded from data_0208ee3c ^ 1 when the page opens;
+   touching a button sets it, and the toggle flips it. The buttons show it only
+   when PS_UpdateOptionsMenu repaints the page. */
+static u8 sSelectedBacklightButton;
+/* Set when no course 0..14 has a star yet: the pause screen then shows only
+   the castle total (sPauseDisplayedCourse 0xf) and neither draws nor reads
+   the course arrows. */
+static u8 sCourseArrowsHidden;
+/* The lives count: SetPlayerGlobals starts it at 4, GiveLives clamps it to
+   0..100, KillPlayer and HitDeathPlane go to game over at 0, and
+   dMeter_c::RenderLifeCount draws it. */
+s8 gNumLives;
+s8 gCurrentSublevel;
+u8 gPrevReturnState;
+/* Frames the pause screen ignores input for: PS_Init and PS_Cleanup set it
+   to 0xf and Behavior counts it down; the pages return while it is
+   non-zero, and the pause cannot be opened again until it is 0. */
+static u16 sPauseInputLockout;
+static u16 data_0209f304;
+static u16 data_0209f308;
+s8 gNumRedCoins[4];
+/* gNumRedCoins + 1 and gNumStageStars + 1: NumRedCoins and NumVsStarsObtained
+   load each sum's second element through its own literal. */
 extern s8 data_0209f30d;
-extern s8 data_0209f310[];
+/* Stars collected in this stage, one count per player: the silver stars of a
+   course (shown as that many star icons on the HUD; the next silver star's
+   sound is 0x19 + it) and each player's stars in a VS match. */
+s8 gNumStageStars[4];
 extern s8 data_0209f311;
-extern int *data_0209f328;
-extern s32 data_0209f32c;
-extern void *data_0209f330;
-extern s32 data_0209f338;
-extern char *data_0209f340;
-extern s32 data_0209f344;
-extern short *data_0209f348;
-extern void *data_0209f354;
-extern unsigned char data_0209f370[];
-extern unsigned char data_0209f37c[];
-/* These fill the .bss between the dClipper registration node (0x0209f388),
-   the graph callback (0x0209f3c4, 0x24 bytes) and dClipper (0x0209f43c).
-   data_0209f3e8 runs through 0x0209f43c so data_0209f40c and STAR_MARKERS
-   stay interior labels, not a second object at the same address. */
+static int data_0209f314;
+void *data_0209f318;
+static char *data_0209f31c;
+static int data_0209f320;
+static void *data_0209f324;
+static int *data_0209f328;
+s32 data_0209f32c;
+static void *data_0209f330;
+u16 *data_0209f334;
+void *data_0209f338;
+void *data_0209f33c;
+static char *data_0209f340;
+u8 *data_0209f344;
+static short *data_0209f348;
+static s32 sEventFlags;
+u8 data_0209f350[4];
+static void *data_0209f354;
+short gNumCoins[4];
+/* Each big button's offset, in screen entries, into the sub engine's BG1
+   map; the menu that opens sets them with sNumMenuButtons. */
+static u16 sMenuButtonTileOffsets[4];
+static u16 data_0209f368[4];
+/* Per cap slot (data_0209f3e8, nine of them): the character whose cap it is,
+   0 Mario, 1 Luigi, 2 Wario. func_0202a8e0 stores its caller's byte when it
+   claims the slot, and dMap_c::Render picks the map icon by it. */
+u8 gMapCapIconCharacters[9];
+/* Per STAR_MARKERS slot: the marker type SetStarMarker stores. dMap_c::Render
+   draws types 0..3 from OAM::MM_STAR_MARKERS (type 3 does not blink); type 4
+   draws no star marker, only a red-coin icon while gShowRedCoinMarkers is
+   set. */
+u8 gStarMarkerTypes[12];
 void *data_0209f394[4];
 void *data_0209f3a4[8];
+/* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
-int data_0209f3e8[21];
-extern int data_0209f40c[];
-extern u32 data_0209f4f8[][16];
+/* The cap slots: the actor whose cap each of the nine holds, 0 when free.
+   func_0202a8e0 claims one, dCapIcon_c::Unlink frees it. */
+int data_0209f3e8[9];
+/* The map's star markers, twelve slots: SetStarMarker stores the actor and
+   gStarMarkerTypes its type; InitResources clears them. */
+dActor_c *STAR_MARKERS[12];
+/* The per-player input records. CheckInput fills them from the pad and the
+   touch screen each frame and ResetInput clears them; the player, camera,
+   meter and map read them. */
+ControllerInput data_0209f498[4];
+/* The mode byte of record 0 (+0x16); SetControllerMode, InitControllerMode
+   and PS_Update index it by player * 0x18. */
+extern u8 data_0209f4ae[];
+/* The actor death table: a 16-word bit row per level part, indexed by an
+   actor's deathTableID. InitResources clears it only when the course
+   changes, so it survives a reload of the same course. */
+static u32 sActorDeathTable[3][16];
 extern dFdBrightness_c *data_0209f5bc;
 extern dFdColor_c data_0209f5e8;
 extern int gRunningKuppaScript;
@@ -403,7 +494,6 @@ extern u16 data_ov002_02111188;
 /* The free functions this file defines, declared ahead of their first use
    (the ones decl_common.h and the block above already declare are not
    repeated). */
-struct Obj;
 struct ObjTeleport;
 extern "C" {
 int func_02029600(int x);
@@ -443,7 +533,7 @@ int StartWithFarCamera(void);
 unsigned char GetStarCameraSetting(int idx);
 int GetMinimapScale(int idx);
 void func_0202af80(int a, int b);
-int GetMinimapID(struct Obj *obj, int arg);
+int GetMinimapID(dActor_c *actor, int arg);
 void func_0202b044(int a, int b);
 void func_0202b060(int a, int b);
 struct ObjTeleport *GetTeleportDestObj(int i);
@@ -503,18 +593,18 @@ dScStage_c::~dScStage_c() {}
 
 // @symbol _ZN10dScStage_c9VE_UpdateEv
 void dScStage_c::VE_Update() {
-    u8 t = data_0209f244;
+    u8 t = sMenuHighlightDelay;
     u8 t2;
     u8 s;
     if (t != 0) {
-        data_0209f244 = t - data_0208ee44;
-        if (data_0209f244 == 0) {
+        sMenuHighlightDelay = t - data_0208ee44;
+        if (sMenuHighlightDelay == 0) {
             dScStage_c::UpdateMenuButtons(0);
         }
     }
-    t2 = data_0209f22c;
+    t2 = sMenuWaitTimer;
     if (t2 != 0) {
-        data_0209f22c = t2 - data_0208ee44;
+        sMenuWaitTimer = t2 - data_0208ee44;
         return;
     }
     s = data_0209f290;
@@ -539,11 +629,11 @@ void dScStage_c::VE_Update() {
         off2 = idx2 * 4;
         if (((u8)(a - 8) < 0xf0 && (u8)(gTouchY[off2] - 0x38) < 0x20) ||
             IsButtonInputValid() != 0) {
-            if (data_0209f2e0 == 0) {
-                data_0209f244 = data_0208ee44 << 2;
+            if (sSelectedMenuButton == 0) {
+                sMenuHighlightDelay = data_0208ee44 << 2;
             }
-            data_0209f2e0 = 0;
-            data_0209f22c = data_0208ee44 << 3;
+            sSelectedMenuButton = 0;
+            sMenuWaitTimer = data_0208ee44 << 3;
             dScStage_c::UpdateMenuButtons(0);
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
@@ -558,12 +648,12 @@ void dScStage_c::VE_Update() {
                 return;
             if ((u8)(gTouchY[off3] - 0x68) >= 0x20)
                 return;
-            if (data_0209f2e0 == 1) {
-                data_0209f244 = data_0208ee44 << 2;
+            if (sSelectedMenuButton == 1) {
+                sMenuHighlightDelay = data_0208ee44 << 2;
             }
-            data_0209f2e0 = 1;
+            sSelectedMenuButton = 1;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
+            sMenuWaitTimer = data_0208ee44 << 3;
             data_0209f290 = 1;
             data_ov002_02111150 = 1;
             func_02012790(0x9b);
@@ -573,14 +663,14 @@ void dScStage_c::VE_Update() {
         }
     }
     case 1: {
-        if (data_0209f2e0 == 0) {
+        if (sSelectedMenuButton == 0) {
             dScene_c::StartSceneFade(6, 1, 0);
         } else {
             dScene_c::StartSceneFade(1, 0, 0);
         }
         data_0209f290 = 2;
-        data_0209d45c &= ~4;
-        data_0209d454 &= ~3;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
+        gSubScreenLayers &= ~3;
         *(u16 *)0x04000050 = 0;
         *(u16 *)0x04001050 = 0;
         break;
@@ -592,24 +682,24 @@ void dScStage_c::VE_Init() {
     unsigned int a;
     unsigned int b;
 
-    a = data_0209d45c ^ 0x10;
-    b = data_0209d454 ^ 0x10;
+    a = gMainScreenLayers ^ DISPLAY_LAYER_OBJ;
+    b = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
     *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x1100;
     *(volatile unsigned short *)0x400000c = (*(volatile unsigned short *)0x400000c & 0x43) | 0x1010;
     Message::DisplayVsExitText(0x1f);
-    data_0209f360[0] = 0xe0;
-    data_0209f360[1] = 0x1a0;
-    data_0209f2b4 = 2;
-    data_0209f2e0 = 0;
+    sMenuButtonTileOffsets[0] = 0xe0;
+    sMenuButtonTileOffsets[1] = 0x1a0;
+    sNumMenuButtons = 2;
+    sSelectedMenuButton = 0;
     dScStage_c::UpdateMenuButtons(true);
     SetBg2Offset(0, 0);
     SetSubBg0Offset(0, 0);
     SetSubBg1Offset(0, 0);
-    data_0209d45c |= 4;
-    data_0209d454 |= 3;
-    data_0209b454 |= 0x40000000;
-    data_0209b464 = data_0209b454;
-    data_0209f294 = 1;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
+    gSubScreenLayers |= 3;
+    gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
+    gActorUpdateMask = gNextActorUpdateMask;
+    gVsExitScreenActive = 1;
     data_0209f290 = 0;
     G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, a | 0x20, -7);
     G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, b | 0x20, -7);
@@ -623,9 +713,9 @@ void dScStage_c::RenderBouncingArrows() {
     } else {
         r4 = (data_020a0db0 & 8) ? 0xae : 0xb0;
     }
-    A = data_0209f2c4;
-    if ((A == 0 && data_0209f284 != 0 && (int)(data_0209f2d8 == 1) == 0) ||
-        (A != 0 && (unsigned char)(data_0209f248 + 0xf7) <= 2u)) {
+    A = gGamePaused;
+    if ((A == 0 && gShowTouchScreenArrows != 0 && (int)(data_0209f2d8 == 1) == 0) ||
+        (A != 0 && (unsigned char)(sPauseState + 0xf7) <= 2u)) {
         OAM::Render(0, &OAM::BOUNCING_ARROW, 0x40, r4, -1, -1, 0x1000, 0x1000, 0, -1);
         OAM::Render(0, &OAM::BOUNCING_ARROW, 0x80, r4, -1, -1, 0x1000, 0x1000, 0, -1);
         OAM::Render(0, &OAM::BOUNCING_ARROW, 0xc0, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -636,21 +726,22 @@ void dScStage_c::RenderBouncingArrows() {
 }
 // @symbol _ZN10dScStage_c9LC_RenderEv
 void dScStage_c::LC_Render() {
-    data_0209f2a8 = data_0209f2a8 + data_0208ee44;
-    if (data_0209f2a8 >= 0xc)
-        data_0209f2a8 = 0;
+    sLevelClearPaletteTimer = sLevelClearPaletteTimer + data_0208ee44;
+    if (sLevelClearPaletteTimer >= 0xc)
+        sLevelClearPaletteTimer = 0;
 
     if (data_0209f20c == 0)
         return;
 
     {
         void *p = LoadFile(ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN);
-        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)data_0209f2a8 >> 2) << 5)), 0x1c0,
-                        0x10);
+        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)sLevelClearPaletteTimer >> 2) << 5)),
+                        0x1c0, 0x10);
         Deallocate(p);
     }
 
-    if (SublevelToLevel(data_02092124) >= 0xf && SublevelToLevel(data_02092124) < 0x15) {
+    if (SublevelToLevel(gLastCourseSublevel) >= 0xf &&
+        SublevelToLevel(gLastCourseSublevel) < 0x15) {
         if (GetOwnerLanguage() == 5)
             OAM::Render(0, (OamAttr *)&data_ov002_0210cea8, 0x80, 0x38, -1, -1, 0x1000, 0x1000, 0,
                         -1);
@@ -668,8 +759,8 @@ void dScStage_c::LC_Render() {
                         -1);
     }
 
-    if (data_0209f2b0 != 0) {
-        if (data_0209f20c != 0 && SublevelToLevel(data_02092124) >= 0xf) {
+    if (sLevelClearNewRecord != 0) {
+        if (data_0209f20c != 0 && SublevelToLevel(gLastCourseSublevel) >= 0xf) {
             if (GetOwnerLanguage() == 5)
                 OAM::Render(0, (OamAttr *)&data_ov002_0210ce90, 0x80, 0x70, -1, -1, 0x1000, 0x1000,
                             0, -1);
@@ -704,65 +795,65 @@ void dScStage_c::LC_Render() {
         }
     }
 
-    if (data_0209f2d4 == 3)
+    if (gLevelClearStep == 3)
         RenderBouncingArrows();
 }
 // @symbol _ZN10dScStage_c9LC_UpdateEv
 void dScStage_c::LC_Update() {
-    if (data_0209f244 != 0) {
-        data_0209f244 = data_0209f244 - data_0208ee44;
-        if (data_0209f244 == 0)
+    if (sMenuHighlightDelay != 0) {
+        sMenuHighlightDelay = sMenuHighlightDelay - data_0208ee44;
+        if (sMenuHighlightDelay == 0)
             dScStage_c::UpdateMenuButtons(0);
     }
-    if (data_0209f22c != 0) {
-        data_0209f22c = data_0209f22c - data_0208ee44;
+    if (sMenuWaitTimer != 0) {
+        sMenuWaitTimer = sMenuWaitTimer - data_0208ee44;
         return;
     }
 
-    switch (data_0209f2d4) {
+    switch (gLevelClearStep) {
     case 0:
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
-        Message::DisplayLevelClearText(0x27a, SublevelToLevel(data_02092124));
-        data_0209f360[0] = 0xa0;
-        data_0209f360[1] = 0x140;
-        data_0209f360[2] = 0x1e0;
-        data_0209f2b4 = 3;
-        data_0209f2b0 = 0;
-        data_0209f2e0 = 0;
+        Message::DisplayLevelClearText(0x27a, SublevelToLevel(gLastCourseSublevel));
+        sMenuButtonTileOffsets[0] = 0xa0;
+        sMenuButtonTileOffsets[1] = 0x140;
+        sMenuButtonTileOffsets[2] = 0x1e0;
+        sNumMenuButtons = 3;
+        sLevelClearNewRecord = 0;
+        sSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 8;
-        data_0209f260 = 0;
-        data_0209f2d4 = 1;
+        gMainScreenLayers |= DISPLAY_LAYER_BG3;
+        sLevelClearCoinCount = 0;
+        gLevelClearStep = 1;
         data_0209f280 = 0;
-        if (data_0209f358[0] != 0)
+        if (gNumCoins[0] != 0)
             return;
-        if (data_0209f2ac != 0) {
+        if (gNewStarCollected != 0) {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
-        data_0209f22c = 0x1e;
+        sMenuWaitTimer = 0x1e;
         return;
     case 1: {
-        int level = SublevelToLevel(data_02092124);
-        if (data_0209f358[0] > data_0209f260) {
-            data_0209f260 += 1;
-            if (data_0209f260 % 50 == 0) {
+        int level = SublevelToLevel(gLastCourseSublevel);
+        if (gNumCoins[0] > sLevelClearCoinCount) {
+            sLevelClearCoinCount += 1;
+            if (sLevelClearCoinCount % 50 == 0) {
                 GiveLives(1);
                 Sound::PlayBank3_2D(0x6e);
             }
-            if (data_0209f358[0] == data_0209f260) {
-                if (data_0209f2ac != 0) {
+            if (gNumCoins[0] == sLevelClearCoinCount) {
+                if (gNewStarCollected != 0) {
                     Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
                     data_0209f280 = 1;
                 }
-                data_0209f22c = 0x1e;
+                sMenuWaitTimer = 0x1e;
                 if (level < 0xf) {
-                    u8 coins = data_0209f260;
+                    u8 coins = sLevelClearCoinCount;
                     if (SaveData::GetCoinRecord(level) >= coins)
                         return;
                     SaveData::SetCoinRecordIfHigher(level, coins);
-                    data_0209f2b0 = 1;
+                    sLevelClearNewRecord = 1;
                     func_02012790(0x22);
                     return;
                 }
@@ -778,34 +869,34 @@ void dScStage_c::LC_Update() {
             func_02012790(0x15);
             return;
         }
-        if (data_0209f260 == 0 && level >= 0xf && level < 0x15) {
+        if (sLevelClearCoinCount == 0 && level >= 0xf && level < 0x15) {
             Sound::PlaySub(0x23, 0x14, 0x7f, 0x15666, 0);
             data_0209f280 = 1;
         }
-        data_0209f22c = 0x3c;
-        data_0209f358[0] = 0;
-        data_0209f2d4 = 2;
+        sMenuWaitTimer = 0x3c;
+        gNumCoins[0] = 0;
+        gLevelClearStep = 2;
         return;
     }
     case 2: {
         int t6;
         int t5;
-        if (SublevelToLevel(data_0209f2f8) == 0x1d) {
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1210;
         } else {
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
         }
-        data_0209f358[0] = 0;
-        t6 = data_0209d45c ^ 0x18;
-        t5 = data_0209d454 ^ 0x10;
+        gNumCoins[0] = 0;
+        t6 = gMainScreenLayers ^ (DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
+        t5 = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
         SetBg2Offset(0, 0);
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209d45c |= 4;
-        data_0209d454 |= 3;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
+        gSubScreenLayers |= 3;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, t6 | 0x20, -7);
         G2x::SetBlendBrightness((volatile u16 *)0x4001050, t5 | 0x20, -7);
-        data_0209f2d4 = 3;
+        gLevelClearStep = 3;
         return;
     }
     case 3: {
@@ -824,14 +915,14 @@ void dScStage_c::LC_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x28) < 0x20) ||
-                (data_0209f2e0 == 0 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 0)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 0;
+                (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 0)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                sMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x57);
-                data_0209f2d4 = 4;
+                gLevelClearStep = 4;
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
                 return;
@@ -840,14 +931,14 @@ void dScStage_c::LC_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x50) < 0x20) ||
-                (data_0209f2e0 == 1 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 1)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 1;
+                (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 1)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
+                sMenuWaitTimer = data_0208ee44 << 3;
                 func_02012790(0x58);
-                data_0209f2d4 = 4;
+                gLevelClearStep = 4;
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
                 return;
@@ -856,15 +947,15 @@ void dScStage_c::LC_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x78) < 0x20) &&
-                (data_0209f2e0 != 2 || IsButtonInputValid() == 0))
+                (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
-            if (data_0209f2e0 == 2)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 2;
+            if (sSelectedMenuButton == 2)
+                sMenuHighlightDelay = data_0208ee44 << 2;
+            sSelectedMenuButton = 2;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
+            sMenuWaitTimer = data_0208ee44 << 3;
             func_02012790(0x59);
-            data_0209f2d4 = 6;
+            gLevelClearStep = 6;
             if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                 return;
             return;
@@ -872,8 +963,8 @@ void dScStage_c::LC_Update() {
     }
     case 4:
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
-        data_0209f2d4 = 5;
-        data_0209d45c &= ~4;
+        gLevelClearStep = 5;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         Message::DisplaySaveStatusText(0x295);
         data_0209f2b8 = 0x78;
         return;
@@ -887,31 +978,31 @@ void dScStage_c::LC_Update() {
         }
         data_0209f2b8 = data_0209f2b8 - data_0208ee44;
         if (data_0209f2b8 == 0)
-            data_0209f2d4 = 6;
+            gLevelClearStep = 6;
         return;
     case 6:
         if (data_0209f280 != 0) {
             Sound::PlaySub(0x23, 0x7f, 0, 0x15666, 0);
             data_0209f280 = 0;
         }
-        data_0209d45c &= ~0xc;
-        data_0209d454 &= ~3;
+        gMainScreenLayers &= ~(DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
+        gSubScreenLayers &= ~3;
         REG16(0x4000050) = 0;
-        if (data_0209f2e0 != 1) {
-            data_ov002_02111178 = 5;
+        if (sSelectedMenuButton != 1) {
+            gMeterCounterSlideState = 5;
         } else {
             dScene_c::StartSceneFade(1, 0, 0);
-            data_ov002_02111178 = 0;
+            gMeterCounterSlideState = 0;
             Sound::StopLoadedMusic_Layer1(0xa);
             {
-                int t = data_0209b454 | 0x40000000;
-                data_0209b454 = t;
-                data_0209b464 = t;
+                int t = gNextActorUpdateMask | ACTOR_UPDATE_MASK_STAGE_ENDING;
+                gNextActorUpdateMask = t;
+                gActorUpdateMask = t;
             }
         }
-        data_0209f2e0 = 0;
-        data_0209f2d4 = 0;
-        data_0209f2b0 = 0;
+        sSelectedMenuButton = 0;
+        gLevelClearStep = 0;
+        sLevelClearNewRecord = 0;
         data_0209f20c = 0;
         return;
     default:
@@ -919,10 +1010,11 @@ void dScStage_c::LC_Update() {
     }
 }
 // @symbol _ZN10dScStage_c16CheckCameraInputEv
+// kept: the ROM reads data_0209f498[i] by mla beside the cam cursor; strength reduction merges them (0x450)
 #pragma opt_strength_reduction off
 void dScStage_c::CheckCameraInput() {
-    CamInput *cam = (CamInput *)data_0209f498;
-    if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0 && data_0209d660 == 0) {
+    ControllerInput *cam = data_0209f498;
+    if ((u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 && data_0209d660 == 0) {
         int i = 0;
         int n1 = data_0209f21c;
         if (n1 > 0) {
@@ -933,7 +1025,7 @@ void dScStage_c::CheckCameraInput() {
                 if (((TouchInfo *)gTouchHeld)[i].held != 0) {
                     if (((dCamera_c *)data_0209f318)->mFlags & 0x1000) {
                         // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
-                        u8 state = ((CamInput *)data_0209f498)[i].mode;
+                        u8 state = data_0209f498[i].mode;
                         if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 &&
                                              ((TouchInfo *)gTouchHeld)[i].y >= 0x8a) ||
                                             (((TouchInfo *)gTouchHeld)[i].x >= 0xa7 &&
@@ -981,7 +1073,7 @@ void dScStage_c::CheckCameraInput() {
                     data_0209f368[i] = 0;
                 }
                 {
-                    u8 state2 = ((CamInput *)data_0209f498)[i].mode;
+                    u8 state2 = data_0209f498[i].mode;
                     if (state2 != 0) {
                         if (((((TouchInfo *)gTouchHeld)[i].held &&
                               ((TouchInfo *)gTouchHeld)[i].edge)
@@ -992,7 +1084,7 @@ void dScStage_c::CheckCameraInput() {
                              (state2 == 2 && ((TouchInfo *)gTouchHeld)[i].x >= 0xd7 &&
                               ((TouchInfo *)gTouchHeld)[i].y >= 0x73 &&
                               ((TouchInfo *)gTouchHeld)[i].y < 0x97))) {
-                            data_ov002_02111180 = 0x10;
+                            gZoomButtonActiveTimer = 0x10;
                             cam->pressed |= 0x8000;
                             *st = 2;
                             cam->touching = 0;
@@ -1054,18 +1146,18 @@ void dScStage_c::RenderNumber(unsigned char num, int x, int y, bool b, int p5) {
 }
 // @symbol _ZN10dScStage_c9PS_RenderEv
 void dScStage_c::PS_Render() {
-    if (func_02029408() != 0 && data_02092144[data_0209f250] != 0 && data_0209f248 != 0xb &&
-        data_0209f248 != 0xe && data_0209f248 != 0xf &&
-        ((unsigned int)data_0209f248 < 7U || (unsigned int)data_0209f248 > 8U)) {
+    if (func_02029408() != 0 && gPlayerHealth[data_0209f250] != 0 && sPauseState != 0xb &&
+        sPauseState != 0xe && sPauseState != 0xf &&
+        ((unsigned int)sPauseState < 7U || (unsigned int)sPauseState > 8U)) {
         dScStage_c::RenderBouncingArrows();
     }
 
     int r0v = (data_0209f2d8 == 1);
     if (r0v != 0 && data_0209fc68 == 0) {
         OAM::Render(0, &OAM::VS_PAUSE, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
-    } else if (data_0209f248 == 1 ||
-               (SublevelToLevel(data_0209f2f8) == 0x1d &&
-                ((unsigned int)data_0209f248 < 7U || (unsigned int)data_0209f248 > 8U))) {
+    } else if (sPauseState == 1 ||
+               (SublevelToLevel(gCurrentSublevel) == 0x1d &&
+                ((unsigned int)sPauseState < 7U || (unsigned int)sPauseState > 8U))) {
         int var_sl;
         unsigned char var_sb;
         unsigned char var_r8;
@@ -1073,12 +1165,12 @@ void dScStage_c::PS_Render() {
         int sp18;
         var_r7 = 0;
         sp18 = 0;
-        var_r8 = CountStarsCollectedInLevelToDisplay(data_0209f2c8);
-        if (IsStarCollected(data_0209f2c8, 0) != 0) {
+        var_r8 = CountStarsCollectedInLevelToDisplay(sPauseDisplayedCourse);
+        if (IsStarCollected(sPauseDisplayedCourse, 0) != 0) {
             var_r8 -= 1;
         }
-        if (data_0209f248 == 1 && data_0209f2f0 == 0) {
-            if (data_0209f238 == 1) {
+        if (sPauseState == 1 && sCourseArrowsHidden == 0) {
+            if (sPressedPauseArrow == 1) {
                 OAM::Render(0, &OAM::ARROW_POINTING_LEFT, 0x12, 0x60, -1, -1, 0x1000, 0x1000, 0,
                             -1);
                 OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 0x12, 0x10);
@@ -1087,7 +1179,7 @@ void dScStage_c::PS_Render() {
                             -1);
                 OAM::RenderSub(&OAM::ARROW_POINTING_LEFT, 0x14, 0x10);
             }
-            if (data_0209f238 == 2) {
+            if (sPressedPauseArrow == 2) {
                 OAM::Render(0, &OAM::ARROW_POINTING_RIGHT, 0xee, 0x60, -1, -1, 0x1000, 0x1000, 0,
                             -1);
                 OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 0xee, 0x10);
@@ -1097,12 +1189,12 @@ void dScStage_c::PS_Render() {
                 OAM::RenderSub(&OAM::ARROW_POINTING_RIGHT, 0xec, 0x10);
             }
         }
-        if (data_0209f2c8 != 0xf) {
+        if (sPauseDisplayedCourse != 0xf) {
             var_sb = 0x50;
             var_sl = 1;
             if (var_r8 != 0) {
                 do {
-                    if (IsStarCollected(data_0209f2c8, var_sl) != 0) {
+                    if (IsStarCollected(sPauseDisplayedCourse, var_sl) != 0) {
                         OAM::Render(false, &OAM::MM_SMALL_STAR, var_sb, 0x60, -1, -1, 0);
                         var_r7 = (var_r7 + 1) & 0xff;
                     } else {
@@ -1116,11 +1208,11 @@ void dScStage_c::PS_Render() {
             if (sp18 == 0 && var_r8 != 7) {
                 OAM::Render(false, &OAM::SMALL_STAR_EMPTY, var_sb, 0x60, -1, -1, 0);
             }
-            unsigned char r5v = SaveData::GetCoinRecord(data_0209f2c8);
+            unsigned char r5v = SaveData::GetCoinRecord(sPauseDisplayedCourse);
             OAM::Render(false, &OAM::COIN, 0x70, 0x70, -1, -1, 0);
             OAM::Render(false, &OAM::TIMES, 0x80, 0x78, -1, -1, 0);
             RenderNumber(r5v, 0x88, 0x70, 1, 8);
-            if (IsStarCollected(data_0209f2c8, 0) != 0) {
+            if (IsStarCollected(sPauseDisplayedCourse, 0) != 0) {
                 OAM::Render(false, &OAM::MM_SMALL_STAR, 0xb0, 0x78, -1, -1, 0);
             }
         } else {
@@ -1128,64 +1220,66 @@ void dScStage_c::PS_Render() {
             OAM::Render(false, &OAM::TIMES, 0x80, 0x60, -1, -1, 0);
             RenderNumber(CountStarsCollectedInLevelToDisplay(0x1d), 0x88, 0x58, 1, 8);
         }
-    } else if (data_0209d45c & 8) {
-        if ((unsigned int)data_0209f2c8 < 0xfU) {
-            unsigned char r4v = CountStarsCollectedInLevelToDisplay(data_0209f2c8);
+    } else if (gMainScreenLayers & DISPLAY_LAYER_BG3) {
+        if ((unsigned int)sPauseDisplayedCourse < 0xfU) {
+            unsigned char r4v = CountStarsCollectedInLevelToDisplay(sPauseDisplayedCourse);
             OAM::Render(false, &OAM::MM_SMALL_STAR, 0x58, 0x8c, -1, -1, 0);
             OAM::Render(false, &OAM::TIMES, 0x68, 0x8c, -1, -1, 0);
             RenderNumber(r4v, 0x70, 0x84, 1, 1);
-            unsigned char r4v2 = SaveData::GetCoinRecord(data_0209f2c8);
+            unsigned char r4v2 = SaveData::GetCoinRecord(sPauseDisplayedCourse);
             OAM::Render(false, &OAM::COIN, 0x88, 0x84, -1, -1, 0);
             OAM::Render(false, &OAM::TIMES, 0x98, 0x8c, -1, -1, 0);
             RenderNumber(r4v2, 0xa0, 0x84, 1, 1);
         }
-        if (data_0209f248 == 0xb) {
+        if (sPauseState == 0xb) {
             OAM::RenderSub(&OAM::PAUSE, 0x80, 0x60);
         }
     }
 
-    unsigned char f248b = data_0209f248;
+    unsigned char f248b = sPauseState;
     if ((unsigned char)(f248b + 0xf9) <= 1) {
-        if (data_0209f2e0 == 3) {
-            if (data_0209f29c == 0) {
+        if (sSelectedMenuButton == 3) {
+            if (sBackButtonSelected == 0) {
                 if (GetOwnerLanguage() == 5) {
-                    OAM::Render(true, &OAM::TINY_STAR, 0x46, ((data_0209f2e0 * 5) + 6) * 8, -1, -1,
-                                0);
+                    OAM::Render(true, &OAM::TINY_STAR, 0x46, ((sSelectedMenuButton * 5) + 6) * 8,
+                                -1, -1, 0);
                 } else if (GetOwnerLanguage() == 3) {
-                    OAM::Render(true, &OAM::TINY_STAR, 0x4e, ((data_0209f2e0 * 5) + 6) * 8, -1, -1,
-                                0);
+                    OAM::Render(true, &OAM::TINY_STAR, 0x4e, ((sSelectedMenuButton * 5) + 6) * 8,
+                                -1, -1, 0);
                 } else {
-                    OAM::Render(true, &OAM::TINY_STAR, 0x56, ((data_0209f2e0 * 5) + 6) * 8, -1, -1,
-                                0);
+                    OAM::Render(true, &OAM::TINY_STAR, 0x56, ((sSelectedMenuButton * 5) + 6) * 8,
+                                -1, -1, 0);
                 }
             } else {
-                OAM::Render(true, &OAM::TINY_STAR, 0xce, ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
+                OAM::Render(true, &OAM::TINY_STAR, 0xce, ((sSelectedMenuButton * 5) + 6) * 8, -1,
+                            -1, 0);
             }
         } else {
-            OAM::Render(true, &OAM::TINY_STAR, 0x26, ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
+            OAM::Render(true, &OAM::TINY_STAR, 0x26, ((sSelectedMenuButton * 5) + 6) * 8, -1, -1,
+                        0);
         }
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, (OamAttr *)data_ov001_020abd98[data_0209f2dc], 0x80, 0x60, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020abd98[sSelectedControllerMode], 0x80, 0x60, -1,
+                        -1, 0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac218[data_0209f2dc], 0x80, 0x60, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac218[sSelectedControllerMode], 0x80, 0x60, -1,
+                        -1, 0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[data_0209f2dc], 0x80, 0x60, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020ac64c[sSelectedControllerMode], 0x80, 0x60, -1,
+                        -1, 0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, (OamAttr *)data_ov001_020acb68[data_0209f2dc], 0x80, 0x60, -1, -1,
-                        0x1000, 0x1000, 0, -1);
+            OAM::Render(0, (OamAttr *)data_ov001_020acb68[sSelectedControllerMode], 0x80, 0x60, -1,
+                        -1, 0x1000, 0x1000, 0, -1);
             return;
         }
-        OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000,
-                    0x1000, 0, -1);
+        OAM::Render(0, OAM::CONTROLLER_MODE_TEXTS[sSelectedControllerMode], 0x80, 0x60, -1, -1,
+                    0x1000, 0x1000, 0, -1);
         return;
     }
 
@@ -1193,8 +1287,8 @@ void dScStage_c::PS_Render() {
         return;
     }
 
-    if (data_0209f2e0 == 2) {
-        if (data_0209f29c == 0) {
+    if (sSelectedMenuButton == 2) {
+        if (sBackButtonSelected == 0) {
             if (GetOwnerLanguage() == 5) {
                 OAM::Render(true, &OAM::TINY_STAR, 0x46, 0xa8, -1, -1, 0);
             } else if (GetOwnerLanguage() == 3) {
@@ -1206,16 +1300,16 @@ void dScStage_c::PS_Render() {
             OAM::Render(true, &OAM::TINY_STAR, 0xce, 0xa8, -1, -1, 0);
         }
     } else {
-        OAM::Render(true, &OAM::TINY_STAR, 0xe, ((data_0209f2e0 * 6) + 7) * 8, -1, -1, 0);
+        OAM::Render(true, &OAM::TINY_STAR, 0xe, ((sSelectedMenuButton * 6) + 7) * 8, -1, -1, 0);
     }
 
-    if (data_0209f238 == 2) {
+    if (sPressedPauseArrow == 2) {
         OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 0x62, 0x38, -1, -1, 0);
     } else {
         OAM::Render(true, &OAM::SMALL_ARROW_POINTING_LEFT, 0x64, 0x38, -1, -1, 0);
     }
 
-    if (data_0209f238 == 1) {
+    if (sPressedPauseArrow == 1) {
         OAM::Render(true, &OAM::SMALL_ARROW_POINTING_RIGHT, 0xf6, 0x38, -1, -1, 0);
         return;
     }
@@ -1258,7 +1352,8 @@ void dScStage_c::PS_UpdateOkAndBackButtons(bool b) {
             sl = data_0x1000;
         } else {
             int v;
-            if (data_0209f2b4 == data_0209f2e0 && data_0209f29c == i && data_0209f244 == 0)
+            if (sNumMenuButtons == sSelectedMenuButton && sBackButtonSelected == i &&
+                sMenuHighlightDelay == 0)
                 v = data_0x2000;
             else
                 v = data_0x1000;
@@ -1287,7 +1382,7 @@ void dScStage_c::PS_UpdateSaveMenu(bool b) {
             v = 0x1000;
         } else {
             unsigned int t;
-            if (data_0209f2e0 == i && data_0209f244 == 0)
+            if (sSelectedMenuButton == i && sMenuHighlightDelay == 0)
                 t = 0x2000;
             else
                 t = 0x1000;
@@ -1312,7 +1407,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     u16 *scr;
     u16 v;
 
-    sel = (data_0209f2e4 != 0) ? 0x5000 : 0x6000;
+    sel = (sSoundBoxFlashTimer != 0) ? 0x5000 : 0x6000;
     scr = (u16 *)G2S::GetBG1ScrPtr() + 0xae;
     for (j = 0; j < 0xf; j++) {
         scr[0] = (scr[0] & 0x3ff) | sel;
@@ -1324,7 +1419,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
 
     for (j = 0; j < 2; j++) {
         scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c0[j];
-        v = (data_0209f2e0 == j) ? 0x4000 : 0x3000;
+        v = (sSelectedMenuButton == j) ? 0x4000 : 0x3000;
         counter = 0;
         for (; counter < 0xa; counter++) {
             scr[0] = (scr[0] & 0x3ff) | v;
@@ -1335,7 +1430,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
 
     for (i = 0; i < 2; i++) {
         scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c4[i];
-        v = (data_0209f2ec == i && data_0209f2cc == 0) ? 0x6000 : 0x5000;
+        v = (sSelectedBacklightButton == i && sBacklightFlashTimer == 0) ? 0x6000 : 0x5000;
         counter = 0;
         for (; counter < 7; counter++) {
             scr[0] = (scr[0] & 0x3ff) | v;
@@ -1349,13 +1444,13 @@ void dScStage_c::PS_UpdateOptionsMenu() {
 // @symbol _ZN10dScStage_c17UpdateMenuButtonsEb
 void dScStage_c::UpdateMenuButtons(bool b) {
     int i;
-    for (i = 0; i < data_0209f2b4; i++) {
+    for (i = 0; i < sNumMenuButtons; i++) {
         unsigned int v;
         int j;
         u16 *p;
-        p = (u16 *)G2S::GetBG1ScrPtr() + data_0209f360[i];
+        p = (u16 *)G2S::GetBG1ScrPtr() + sMenuButtonTileOffsets[i];
         if (b == 0) {
-            if (data_0209f2e0 == i && data_0209f244 == 0) {
+            if (sSelectedMenuButton == i && sMenuHighlightDelay == 0) {
                 v = 0x2000;
             } else {
                 v = 0x1000;
@@ -1364,8 +1459,8 @@ void dScStage_c::UpdateMenuButtons(bool b) {
         } else {
             v = 0x1000;
         }
-        if (data_0209f2c4 != 0) {
-            u8 t = (u8)(data_0209f248 + 0xf9);
+        if (gGamePaused != 0) {
+            u8 t = (u8)(sPauseState + 0xf9);
             if (t <= 1) {
                 v = (u16)(v + 0x4000);
             }
@@ -1383,21 +1478,21 @@ void dScStage_c::UpdateMenuButtons(bool b) {
 /* Static, like the rest of the PS_ group: restarts the timer, unpauses or
  * stops the music and clears the blend registers, all through globals. */
 void dScStage_c::PS_Cleanup() {
-    if (data_0209f2a0[0]) {
-        data_0209d4c8.StartTimer();
-        data_0209f2a0[0] = 0;
+    if (data_0209f2a0) {
+        gRaceTimer.StartTimer();
+        data_0209f2a0 = 0;
     }
-    data_0209d45c &= ~0xe;
-    data_0209d454 &= ~3;
+    gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
+    gSubScreenLayers &= ~3;
     if (data_0209f280 == 0)
         Sound::UnpauseMusic();
     else
         Sound::StopLoadedMusic_Layer1(0x3c);
-    data_0209f300 = 0xf;
+    sPauseInputLockout = 0xf;
     *(short *)0x4000050 = 0;
     *(short *)0x4001050 = 0;
     data_0209f280 = 0;
-    data_0209f2c4 = 0;
+    gGamePaused = 0;
 }
 // Pen-down edge on a held touch. An int-returning inline because the ROM
 // materializes this 0/1 before testing it (the controller-mode rows, case 8).
@@ -1406,7 +1501,7 @@ static inline int IsTouchPressed(u8 held, u8 slot) {
 }
 // @symbol _ZN10dScStage_c9PS_UpdateEv
 /* Pause-screen update. Four spellings below are load-bearing for the
- * emitted code: case 3's first row stores data_0209f2c4 (not data_0209f1ec);
+ * emitted code: case 3's first row stores gGamePaused (not sNextPauseState);
  * the backlight-on guard reuses the stale tmpv left by the sound-mode
  * hit-test chain (tmpv = tx - 0x6e, assigned inside that chain's condition,
  * as are ty2 and t6: with opt_common_subs off, hoisting them reorders the
@@ -1414,10 +1509,11 @@ static inline int IsTouchPressed(u8 held, u8 slot) {
  * indexes with a fresh gActivePlayerSlot load; and the f238 store sits in the unconditional scope
  * after the displayed-level normalization so the case-1 literal loads keep
  * ROM order. */
+// kept: with CSE on the function builds 0x3094, 0x18 bytes short of the ROM
 #pragma opt_common_subs off
 void dScStage_c::PS_Update() {
-    register u8 var_sl;
-    register u8 var_fp;
+    u8 var_sl;
+    u8 var_fp;
     s32 sp0;
     s32 sp4;
     s32 sp8;
@@ -1425,20 +1521,20 @@ void dScStage_c::PS_Update() {
     s32 sp10;
     s32 var_r0;
 
-    if (data_0209f210 != 0) {
-        data_0209f210 = data_0209f210 - data_0208ee44;
-        if (data_0209f210 == 0)
-            data_0209f238 = 0;
+    if (sPauseArrowPressTimer != 0) {
+        sPauseArrowPressTimer = sPauseArrowPressTimer - data_0208ee44;
+        if (sPauseArrowPressTimer == 0)
+            sPressedPauseArrow = 0;
     }
-    if (data_0209f2e4 != 0) {
-        data_0209f2e4 = data_0209f2e4 - data_0208ee44;
-        if (data_0209f2e4 == 0)
+    if (sSoundBoxFlashTimer != 0) {
+        sSoundBoxFlashTimer = sSoundBoxFlashTimer - data_0208ee44;
+        if (sSoundBoxFlashTimer == 0)
             dScStage_c::PS_UpdateOptionsMenu();
     }
-    if (data_0209f244 != 0) {
-        data_0209f244 = data_0209f244 - data_0208ee44;
-        if (data_0209f244 == 0) {
-            u8 st = data_0209f248;
+    if (sMenuHighlightDelay != 0) {
+        sMenuHighlightDelay = sMenuHighlightDelay - data_0208ee44;
+        if (sMenuHighlightDelay == 0) {
+            u8 st = sPauseState;
             if (st == 8 || st == 0xa) {
                 if (data_0209f240 != 0) {
                     data_0209f240 = 0;
@@ -1453,9 +1549,9 @@ void dScStage_c::PS_Update() {
             }
         }
     }
-    if (data_0209f2cc != 0) {
-        data_0209f2cc = data_0209f2cc - data_0208ee44;
-        if (data_0209f2cc == 0)
+    if (sBacklightFlashTimer != 0) {
+        sBacklightFlashTimer = sBacklightFlashTimer - data_0208ee44;
+        if (sBacklightFlashTimer == 0)
             dScStage_c::PS_UpdateOptionsMenu();
     }
     if (data_0209f23c != 0) {
@@ -1463,19 +1559,19 @@ void dScStage_c::PS_Update() {
         if (data_0209f23c == 0)
             dScStage_c::PS_UpdateOptionsMenu();
     }
-    if (data_0209f22c != 0) {
-        data_0209f22c = data_0209f22c - data_0208ee44;
+    if (sMenuWaitTimer != 0) {
+        sMenuWaitTimer = sMenuWaitTimer - data_0208ee44;
         return;
     }
 
     {
-        u8 nxt = data_0209f1ec;
-        u8 cur = data_0209f248;
+        u8 nxt = sNextPauseState;
+        u8 cur = sPauseState;
         if (cur != nxt)
-            data_0209f248 = nxt;
+            sPauseState = nxt;
     }
 
-    switch (data_0209f248) {
+    switch (sPauseState) {
     case 0: {
         u8 i;
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
@@ -1488,23 +1584,23 @@ void dScStage_c::PS_Update() {
             i = (u8)(i + 1);
         } while (i < 0xf);
         if (i == 0xf) {
-            data_0209f2c8 = i;
-            data_0209f2f0 = 1;
+            sPauseDisplayedCourse = i;
+            sCourseArrowsHidden = 1;
         } else {
-            if (SublevelToLevel(data_02092124) >= 0xf) {
-                data_0209f2c8 = 0xf;
+            if (SublevelToLevel(gLastCourseSublevel) >= 0xf) {
+                sPauseDisplayedCourse = 0xf;
             } else {
-                data_0209f2c8 = SublevelToLevel(data_02092124);
+                sPauseDisplayedCourse = SublevelToLevel(gLastCourseSublevel);
             }
-            data_0209f2f0 = 0;
+            sCourseArrowsHidden = 0;
         }
-        Message::Display(data_020756d0[data_0209f2c8]);
-        data_0209f360[0] = 0x80;
-        data_0209f360[1] = 0x120;
-        data_0209f360[2] = 0x1c0;
-        data_0209f360[3] = 0x260;
-        data_0209f2b4 = 4;
-        data_0209f2e0 = 0;
+        Message::Display(data_020756d0[sPauseDisplayedCourse]);
+        sMenuButtonTileOffsets[0] = 0x80;
+        sMenuButtonTileOffsets[1] = 0x120;
+        sMenuButtonTileOffsets[2] = 0x1c0;
+        sMenuButtonTileOffsets[3] = 0x260;
+        sNumMenuButtons = 4;
+        sSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
@@ -1513,13 +1609,13 @@ void dScStage_c::PS_Update() {
         SetBg3Offset(0, 0);
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209d45c |= 0xe;
-        data_0209d454 |= 3;
-        data_0209f1ec = 1;
+        gMainScreenLayers |= DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
+        gSubScreenLayers |= 3;
+        sNextPauseState = 1;
         return;
     }
     case 1: {
-        if (data_0209f300 != 0)
+        if (sPauseInputLockout != 0)
             return;
         {
             int touched = 0;
@@ -1536,13 +1632,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x20) < 0x20) ||
-                (data_0209f2e0 == 0 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 0)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 0;
-                data_0209f22c = data_0208ee44 << 3;
+                (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 0)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 0;
+                sMenuWaitTimer = data_0208ee44 << 3;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f2c4 = 2;
+                gGamePaused = 2;
                 func_02012790(3);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0xb0)
                     return;
@@ -1552,13 +1648,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x48) < 0x20) ||
-                (data_0209f2e0 == 1 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 1)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 1;
+                (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 1)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f1ec = 7;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                sNextPauseState = 7;
                 func_02012790(0x53);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -1568,13 +1664,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x70) < 0x20) ||
-                (data_0209f2e0 == 2 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 2)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 2;
+                (sSelectedMenuButton == 2 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 2)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 2;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f1ec = 9;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                sNextPauseState = 9;
                 func_02012790(0x54);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -1584,28 +1680,25 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x98) < 0x20) ||
-                (data_0209f2e0 == 3 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 3)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 3;
-                data_0209f22c = data_0208ee44 << 3;
+                (sSelectedMenuButton == 3 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 3)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 3;
+                sMenuWaitTimer = data_0208ee44 << 3;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f1ec = 0xc;
+                sNextPauseState = 0xc;
                 func_02012790(0x55);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0xb0)
                     return;
                 return;
             }
         }
-        if (data_0209f2f0 != 0)
+        if (sCourseArrowsHidden != 0)
             return;
         {
-            register u8 *de8_sb;
+            u8 *de8_sb;
             var_sl = 0;
             var_fp = var_sl;
-            (void)(u32)&data_0209f238;
-            (void)(u32)&gTouchHeld;
-            (void)(u32)&data_0209f2c8;
             sp4 = var_sl;
             sp8 = var_sl;
             sp0 = var_sl;
@@ -1616,33 +1709,29 @@ void dScStage_c::PS_Update() {
                 u8 sl2;
                 u8 a;
                 u8 vx;
+                var_r0 = sp0;
+                sl2 = gActivePlayerSlot;
                 {
-                    volatile u8 *pSlot = &gActivePlayerSlot;
-                    volatile s32 *psp = &sp0;
-                    var_r0 = *psp;
-                    sl2 = *pSlot;
-                    {
-                        register u8 aa = gTouchHeld[sl2 * 4];
-                        a = aa;
-                    }
-                    de_off = sl2 * 4;
+                    u8 aa = gTouchHeld[sl2 * 4];
+                    a = aa;
                 }
+                de_off = sl2 * 4;
                 if ((a != 0) && (TOUCHP(de_off)->edge != 0)) {
                     var_r0 = 1;
                 }
                 if ((var_r0 != 0) && ((u32)(vx = TOUCHP(sl2 * 4)->x) < 0x38U) &&
                     ((u32)TOUCHP(sl2 * 4)->y < 0x20U)) {
                     u8 t;
-                    data_0209f2c8 = (u8)(data_0209f2c8 - 1);
+                    sPauseDisplayedCourse = (u8)(sPauseDisplayedCourse - 1);
                     var_fp = 1;
-                    t = data_0209f2c8;
+                    t = sPauseDisplayedCourse;
                     if (t == 0xFF)
-                        data_0209f2c8 = 0xF;
+                        sPauseDisplayedCourse = 0xF;
                     {
-                        u8 *p0 = &data_0209f210;
-                        u8 *p1 = &data_0209f210;
+                        u8 *p0 = &sPauseArrowPressTimer;
+                        u8 *p1 = &sPauseArrowPressTimer;
                         u8 *p = ((u8)(vx & 0xff) < 0x38) ? p0 : p1;
-                        data_0209f238 = 1;
+                        sPressedPauseArrow = 1;
                         *p = (u8)(data_0208ee44 * 3);
                     }
                 } else {
@@ -1655,22 +1744,22 @@ void dScStage_c::PS_Update() {
                     if (var_r0_2 != 0) {
                         if (((u32)(u8)(TOUCHP(sl2 * 4)->x - 0xC8) < 0x38U) &&
                             ((u32)TOUCHP(sl2 * 4)->y < 0x20U)) {
-                            data_0209f2c8 = (u8)(data_0209f2c8 + 1);
-                            data_0209f238 = 2;
+                            sPauseDisplayedCourse = (u8)(sPauseDisplayedCourse + 1);
+                            sPressedPauseArrow = 2;
                             var_fp = 1;
-                            if (data_0209f2c8 == 0x10) {
-                                data_0209f2c8 = (u8)sp8;
+                            if (sPauseDisplayedCourse == 0x10) {
+                                sPauseDisplayedCourse = (u8)sp8;
                             }
-                            data_0209f210 = (u8)(data_0208ee44 * 3);
+                            sPauseArrowPressTimer = (u8)(data_0208ee44 * 3);
                         }
                     }
                 }
-                if ((data_0209f2c8 == 0xF) ||
-                    (CountStarsCollectedInLevelToDisplay(data_0209f2c8) != 0)) {
+                if ((sPauseDisplayedCourse == 0xF) ||
+                    (CountStarsCollectedInLevelToDisplay(sPauseDisplayedCourse) != 0)) {
                     var_sl = 1;
-                    if (data_0209f238 == 1) {
+                    if (sPressedPauseArrow == 1) {
                         func_02012790(spC);
-                    } else if (data_0209f238 == 2) {
+                    } else if (sPressedPauseArrow == 2) {
                         func_02012790(sp10);
                     }
                 }
@@ -1678,37 +1767,37 @@ void dScStage_c::PS_Update() {
         }
         if (var_fp == 0)
             return;
-        Message::DisplayText(data_020756d0[data_0209f2c8]);
+        Message::DisplayText(data_020756d0[sPauseDisplayedCourse]);
         return;
     }
     case 2: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
         REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
-        data_0209f1ec = 3;
-        data_0209f2c8 = SublevelToLevel(data_0209f2f8);
-        Message::DisplayPauseText(0x277, data_0209f2c8);
-        data_0209f360[0] = 0x60;
-        data_0209f360[1] = 0x100;
-        data_0209f360[2] = 0x1a0;
-        data_0209f360[3] = 0x240;
-        data_0209f2b4 = 4;
-        data_0209f2e0 = 0;
+        sNextPauseState = 3;
+        sPauseDisplayedCourse = SublevelToLevel(gCurrentSublevel);
+        Message::DisplayPauseText(0x277, sPauseDisplayedCourse);
+        sMenuButtonTileOffsets[0] = 0x60;
+        sMenuButtonTileOffsets[1] = 0x100;
+        sMenuButtonTileOffsets[2] = 0x1a0;
+        sMenuButtonTileOffsets[3] = 0x240;
+        sNumMenuButtons = 4;
+        sSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 8;
-        if (func_02029408() != 0 && data_02092144[data_0209f250] != 0) {
+        gMainScreenLayers |= DISPLAY_LAYER_BG3;
+        if (func_02029408() != 0 && gPlayerHealth[data_0209f250] != 0) {
             SetBg2Offset(0, 0);
             SetSubBg0Offset(0, 0);
             SetSubBg1Offset(0, 0);
-            data_0209d45c |= 4;
-            data_0209d454 |= 3;
+            gMainScreenLayers |= DISPLAY_LAYER_BG2;
+            gSubScreenLayers |= 3;
             return;
         }
-        data_0209f1ec = 0xb;
+        sNextPauseState = 0xb;
         return;
     }
     case 3: {
-        if (data_0209f300 != 0)
+        if (sPauseInputLockout != 0)
             return;
         {
             int touched = 0;
@@ -1725,13 +1814,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x18) < 0x20) ||
-                (data_0209f2e0 == 0 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 0)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 0;
+                (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 0)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f2c4 = 2;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                gGamePaused = 2;
                 func_02012790(3);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -1741,13 +1830,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x40) < 0x20) ||
-                (data_0209f2e0 == 1 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 1)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 1;
+                (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 1)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f1ec = 7;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                sNextPauseState = 7;
                 func_02012790(0x53);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -1757,13 +1846,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x68) < 0x20) ||
-                (data_0209f2e0 == 2 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 2)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 2;
+                (sSelectedMenuButton == 2 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 2)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 2;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f1ec = 9;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                sNextPauseState = 9;
                 func_02012790(0x54);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -1773,14 +1862,14 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x90) < 0x20) &&
-                (data_0209f2e0 != 3 || IsButtonInputValid() == 0))
+                (sSelectedMenuButton != 3 || IsButtonInputValid() == 0))
                 return;
-            if (data_0209f2e0 == 3)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 3;
+            if (sSelectedMenuButton == 3)
+                sMenuHighlightDelay = data_0208ee44 << 2;
+            sSelectedMenuButton = 3;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 0x13;
+            sMenuWaitTimer = data_0208ee44 << 3;
+            sNextPauseState = 0x13;
             func_02012790(0x56);
             return;
         }
@@ -1788,29 +1877,29 @@ void dScStage_c::PS_Update() {
     case 4: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
         REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
-        data_0209f1ec = 5;
+        sNextPauseState = 5;
         Message::DisplayPauseTextVS(0);
-        data_0209f360[0] = 0xa0;
-        data_0209f360[1] = 0x140;
-        data_0209f360[2] = 0x1e0;
-        data_0209f2b4 = 3;
-        data_0209f2e0 = 0;
+        sMenuButtonTileOffsets[0] = 0xa0;
+        sMenuButtonTileOffsets[1] = 0x140;
+        sMenuButtonTileOffsets[2] = 0x1e0;
+        sNumMenuButtons = 3;
+        sSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         if (func_02029408() == 0) {
-            data_0209f1ec = 0xb;
+            sNextPauseState = 0xb;
             return;
         }
         SetBg2Offset(0, 0);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 4;
-        data_0209d45c &= ~8;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209d454 |= 3;
+        gSubScreenLayers |= 3;
         return;
     }
     case 5: {
-        if (data_0209f300 != 0)
+        if (sPauseInputLockout != 0)
             return;
         {
             int touched = 0;
@@ -1827,13 +1916,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x28) < 0x20) ||
-                (data_0209f2e0 == 0 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 0)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 0;
+                (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 0)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f2c4 = 2;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                gGamePaused = 2;
                 func_02012790(3);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -1843,13 +1932,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x50) < 0x20) ||
-                (data_0209f2e0 == 1 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 1)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 1;
+                (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 1)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f1ec = 0x13;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                sNextPauseState = 0x13;
                 data_ov002_02111150 = 1;
                 func_02012790(0x56);
                 return;
@@ -1858,14 +1947,14 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x78) < 0x20) &&
-                (data_0209f2e0 != 2 || IsButtonInputValid() == 0))
+                (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
-            if (data_0209f2e0 == 2)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 2;
+            if (sSelectedMenuButton == 2)
+                sMenuHighlightDelay = data_0208ee44 << 2;
+            sSelectedMenuButton = 2;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 6;
+            sMenuWaitTimer = data_0208ee44 << 3;
+            sNextPauseState = 6;
             data_ov002_02111150 = 1;
             func_02012790(0x55);
             return;
@@ -1873,15 +1962,15 @@ void dScStage_c::PS_Update() {
     }
     case 6: {
         dScene_c::StartSceneFade(1, 0, 0);
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
+        gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
+        gActorUpdateMask = gNextActorUpdateMask;
         data_0209f280 = 1;
         dScStage_c::PS_Cleanup();
         return;
     }
     case 7: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xf00;
-        if (data_0209f218 != 0) {
+        if (sPausedWithSelect != 0) {
             if (GetOwnerLanguage() == 5) {
                 LoadCompressedFileAt(0xb001, G2S::GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 4) {
@@ -1906,31 +1995,32 @@ void dScStage_c::PS_Update() {
                 LoadCompressedFileAt(0xa009, G2S::GetBG1ScrPtr());
             }
         }
-        data_0209f360[0] = 0x80;
-        data_0209f360[1] = 0x120;
-        data_0209f360[2] = 0x1c0;
-        data_0209f2b4 = 3;
-        data_0209f1ec = 8;
+        sMenuButtonTileOffsets[0] = 0x80;
+        sMenuButtonTileOffsets[1] = 0x120;
+        sMenuButtonTileOffsets[2] = 0x1c0;
+        sNumMenuButtons = 3;
+        sNextPauseState = 8;
         {
             u8 cur = data_0209f4ae[gActivePlayerSlot * 0x18];
-            data_0209f2dc = cur;
-            data_0209f2e0 = cur;
+            sSelectedControllerMode = cur;
+            sSelectedMenuButton = cur;
         }
         dScStage_c::UpdateMenuButtons(0);
         Message::DisplayControllerModeText(0x280);
-        REG16(0x400000c) = (((data_0209f2dc + 0xd) << 8) | (REG16(0x400000c) & 0x43)) | 0x10;
+        REG16(0x400000c) =
+            (((sSelectedControllerMode + 0xd) << 8) | (REG16(0x400000c) & 0x43)) | 0x10;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
         REG32(0x4001010) = 0;
         REG32(0x4001014) = 0;
-        data_0209f29c = 0;
+        sBackButtonSelected = 0;
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
         SetBg2Offset(0, 0);
-        data_0209d45c &= ~2;
-        data_0209d45c |= 4;
-        data_0209d45c &= ~8;
-        data_0209d454 |= 3;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
+        gMainScreenLayers |= DISPLAY_LAYER_BG2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+        gSubScreenLayers |= 3;
         return;
     }
     case 8: {
@@ -1940,7 +2030,7 @@ void dScStage_c::PS_Update() {
         u8 relx;
         u8 firstw;
         int idxa;
-        if (data_0209f300 != 0)
+        if (sPauseInputLockout != 0)
             return;
         if (gTouchHeld[gActivePlayerSlot * 4] == 0) {
             if (IsButtonInputValid() == 0)
@@ -1978,22 +2068,22 @@ void dScStage_c::PS_Update() {
             }
             data_0209f2a4 = 1;
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xd10;
-            data_0209f244 = data_0208ee44 << 2;
+            sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
-                if (a == 0 || (IsTouchPressed(a, slot) && data_0209f2dc == 0)) {
-                    data_0209f2dc = 0;
+                if (a == 0 || (IsTouchPressed(a, slot) && sSelectedControllerMode == 0)) {
+                    sSelectedControllerMode = 0;
                     SetControllerMode(0);
-                    data_0209f22c = data_0208ee44 << 3;
+                    sMenuWaitTimer = data_0208ee44 << 3;
                     func_02012790(0x116);
-                    data_0209f2c4 = 2;
+                    gGamePaused = 2;
                 } else {
-                    data_0209f2dc = 0;
+                    sSelectedControllerMode = 0;
                     data_0209f240 = 0;
                     dScStage_c::PS_UpdateOkAndBackButtons(0);
                     func_02012790(0x5b);
                 }
-                data_0209f2e0 = 0;
+                sSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
                 return;
             }
@@ -2011,22 +2101,22 @@ void dScStage_c::PS_Update() {
             }
             data_0209f2a4 = 2;
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xe10;
-            data_0209f244 = data_0208ee44 << 2;
+            sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
-                if (a == 0 || (IsTouchPressed(a, slot) && data_0209f2dc == 1)) {
-                    data_0209f2dc = 1;
+                if (a == 0 || (IsTouchPressed(a, slot) && sSelectedControllerMode == 1)) {
+                    sSelectedControllerMode = 1;
                     SetControllerMode(1);
-                    data_0209f22c = data_0208ee44 << 3;
+                    sMenuWaitTimer = data_0208ee44 << 3;
                     func_02012790(0x116);
-                    data_0209f2c4 = 2;
+                    gGamePaused = 2;
                 } else {
-                    data_0209f2dc = 1;
+                    sSelectedControllerMode = 1;
                     data_0209f240 = 0;
                     dScStage_c::PS_UpdateOkAndBackButtons(0);
                     func_02012790(0x5b);
                 }
-                data_0209f2e0 = 1;
+                sSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
                 return;
             }
@@ -2044,22 +2134,22 @@ void dScStage_c::PS_Update() {
             }
             data_0209f2a4 = 3;
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xf10;
-            data_0209f244 = data_0208ee44 << 2;
+            sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
-                if (a == 0 || (IsTouchPressed(a, slot) && data_0209f2dc == 2)) {
-                    data_0209f2dc = 2;
+                if (a == 0 || (IsTouchPressed(a, slot) && sSelectedControllerMode == 2)) {
+                    sSelectedControllerMode = 2;
                     SetControllerMode(2);
-                    data_0209f22c = data_0208ee44 << 3;
+                    sMenuWaitTimer = data_0208ee44 << 3;
                     func_02012790(0x116);
-                    data_0209f2c4 = 2;
+                    gGamePaused = 2;
                 } else {
-                    data_0209f2dc = 2;
+                    sSelectedControllerMode = 2;
                     data_0209f240 = 0;
                     dScStage_c::PS_UpdateOkAndBackButtons(0);
                     func_02012790(0x5b);
                 }
-                data_0209f2e0 = 2;
+                sSelectedMenuButton = 2;
                 dScStage_c::UpdateMenuButtons(0);
                 return;
             }
@@ -2071,35 +2161,35 @@ void dScStage_c::PS_Update() {
                     t = 1;
             }
             if ((t != 0 && relx < firstw && (u8)(ty - 0x98) < 0x20) ||
-                (data_0209f218 == 0 && IsTouchPressed(a0, slot) && (u8)(tx - 0xd8) < 0x20 &&
+                (sPausedWithSelect == 0 && IsTouchPressed(a0, slot) && (u8)(tx - 0xd8) < 0x20 &&
                  (u8)(ty - 0x98) < 0x20) ||
                 IsButtonInputValid() != 0) {
                 if (relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20 &&
                     IsButtonInputValid() != 0) {
-                    data_0209f29c = 0;
+                    sBackButtonSelected = 0;
                 } else {
                     u8 slot2 = gActivePlayerSlot;
                     if ((u8)(gTouchX[slot2 * 4] - 0xd8) < 0x20 &&
                         (u8)(gTouchY[slot2 * 4] - 0x98) < 0x20) {
-                        data_0209f29c = 1;
+                        sBackButtonSelected = 1;
                     }
                 }
-                data_0209f2e0 = 3;
-                SetControllerMode(data_0209f2dc);
+                sSelectedMenuButton = 3;
+                SetControllerMode(sSelectedControllerMode);
                 data_0209f240 = 1;
-                data_0209f244 = data_0208ee44 << 2;
+                sMenuHighlightDelay = data_0208ee44 << 2;
                 dScStage_c::PS_UpdateOkAndBackButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                if (data_0209f29c == 0) {
-                    data_0209f2c4 = 2;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                if (sBackButtonSelected == 0) {
+                    gGamePaused = 2;
                     func_02012790(0x116);
                     return;
                 }
                 func_02012790(0x5c);
-                if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-                    data_0209f1ec = 0;
+                if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
+                    sNextPauseState = 0;
                 } else {
-                    data_0209f1ec = 2;
+                    sNextPauseState = 2;
                 }
                 return;
             }
@@ -2109,22 +2199,22 @@ void dScStage_c::PS_Update() {
     }
     case 9: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0x1000;
-        data_0209f1ec = 0xa;
+        sNextPauseState = 0xa;
         data_0209f234 = GetSoundMode();
-        data_0209f2ec = data_0208ee3c ^ 1;
+        sSelectedBacklightButton = data_0208ee3c ^ 1;
         data_0209f1fc = data_0208ee40;
-        data_0209f238 = 0;
+        sPressedPauseArrow = 0;
         Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
-        data_0209f2b4 = 2;
-        data_0209f2e0 = 0;
+        sNumMenuButtons = 2;
+        sSelectedMenuButton = 0;
         dScStage_c::PS_UpdateOptionsMenu();
-        data_0209f29c = 0;
+        sBackButtonSelected = 0;
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
-        if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-            data_0209d45c &= ~2;
+        if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
+            gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
         } else {
-            data_0209d45c &= ~4;
+            gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         }
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
@@ -2176,11 +2266,11 @@ void dScStage_c::PS_Update() {
                 data_0209f234 = data_0209f234 - 1;
                 if (data_0209f234 == 0xff)
                     data_0209f234 = 2;
-                data_0209f238 = 2;
-                data_0209f210 = data_0208ee44 * 3;
-                data_0209f2e0 = 0;
+                sPressedPauseArrow = 2;
+                sPauseArrowPressTimer = data_0208ee44 * 3;
+                sSelectedMenuButton = 0;
                 Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
-                data_0209f2e4 = 8;
+                sSoundBoxFlashTimer = 8;
                 dScStage_c::PS_UpdateOptionsMenu();
                 SetSoundMode(data_0209f234);
                 func_02012790(0x64);
@@ -2213,12 +2303,12 @@ void dScStage_c::PS_Update() {
                 data_0209f234 = data_0209f234 + 1;
                 if (data_0209f234 == 3)
                     data_0209f234 = 0;
-                data_0209f238 = 1;
-                data_0209f210 = data_0208ee44 * 3;
-                data_0209f2e0 = 0;
+                sPressedPauseArrow = 1;
+                sPauseArrowPressTimer = data_0208ee44 * 3;
+                sSelectedMenuButton = 0;
                 SetSoundMode(data_0209f234);
                 func_02012790(0x64);
-                data_0209f2e4 = 8;
+                sSoundBoxFlashTimer = 8;
                 dScStage_c::PS_UpdateOptionsMenu();
                 Message::DisplayOptionsMenuText(data_0209f234 + 0x284);
                 {
@@ -2256,15 +2346,15 @@ void dScStage_c::PS_Update() {
                             return;
                     }
                     data_0209f2a4 = 3;
-                    if (data_0209f2ec != 0) {
+                    if (sSelectedBacklightButton != 0) {
                         func_02012790(0x66);
                         TurnBacklightOn();
                     } else {
-                        data_0209f2cc = data_0208ee44 << 2;
+                        sBacklightFlashTimer = data_0208ee44 << 2;
                         func_02012790(0x67);
                     }
-                    data_0209f2ec = 0;
-                    data_0209f2e0 = 1;
+                    sSelectedBacklightButton = 0;
+                    sSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
                     if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x70) < 0x38)
                         return;
@@ -2290,15 +2380,15 @@ void dScStage_c::PS_Update() {
                             return;
                     }
                     data_0209f2a4 = 4;
-                    if (data_0209f2ec == 0) {
+                    if (sSelectedBacklightButton == 0) {
                         func_02012790(0x66);
                         TurnBacklightOff();
                     } else {
-                        data_0209f2cc = data_0208ee44 << 2;
+                        sBacklightFlashTimer = data_0208ee44 << 2;
                         func_02012790(0x67);
                     }
-                    data_0209f2ec = 1;
-                    data_0209f2e0 = 1;
+                    sSelectedBacklightButton = 1;
+                    sSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateOptionsMenu();
                     if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0xb0) < 0x38)
                         return;
@@ -2324,17 +2414,17 @@ void dScStage_c::PS_Update() {
                             return;
                     }
                     data_0209f2a4 = 5;
-                    if (data_0209f2e0 != 1) {
-                        data_0209f2e0 = 1;
+                    if (sSelectedMenuButton != 1) {
+                        sSelectedMenuButton = 1;
                         dScStage_c::PS_UpdateOptionsMenu();
                     }
-                    data_0209f2ec = data_0209f2ec ^ 1;
-                    if (data_0209f2ec == 0) {
+                    sSelectedBacklightButton = sSelectedBacklightButton ^ 1;
+                    if (sSelectedBacklightButton == 0) {
                         TurnBacklightOn();
                     } else {
                         TurnBacklightOff();
                     }
-                    data_0209f2cc = data_0208ee44 << 2;
+                    sBacklightFlashTimer = data_0208ee44 << 2;
                     dScStage_c::PS_UpdateOptionsMenu();
                     func_02012790(0x66);
                     return;
@@ -2354,36 +2444,36 @@ void dScStage_c::PS_Update() {
                 }
                 if ((relx < firstw && (u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) ||
                     IsButtonInputValid() != 0) {
-                    data_0209f29c = 0;
+                    sBackButtonSelected = 0;
                 } else {
                     u8 s4 = gActivePlayerSlot;
                     if ((u8)(gTouchX[s4 * 4] - 0xd8) < 0x20 &&
                         (u8)(gTouchY[s4 * 4] - 0x98) < 0x20) {
-                        data_0209f29c = 1;
+                        sBackButtonSelected = 1;
                     }
                 }
-                data_0209f2e0 = 2;
-                data_0209f22c = data_0208ee44 << 3;
+                sSelectedMenuButton = 2;
+                sMenuWaitTimer = data_0208ee44 << 3;
                 dScStage_c::PS_UpdateOptionsMenu();
                 data_0209f240 = 1;
-                data_0209f244 = data_0208ee44 << 2;
+                sMenuHighlightDelay = data_0208ee44 << 2;
                 dScStage_c::PS_UpdateOkAndBackButtons(0);
-                if (data_0209f29c == 0) {
+                if (sBackButtonSelected == 0) {
                     SetSoundMode(data_0209f234);
                     if (data_0209f1fc != 0) {
                         data_0208ee40 = 1;
                     } else {
                         data_0208ee40 = 0;
                     }
-                    data_0209f2c4 = 2;
+                    gGamePaused = 2;
                     func_02012790(0x116);
                     return;
                 }
                 func_02012790(0x5d);
-                if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-                    data_0209f1ec = 0;
+                if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
+                    sNextPauseState = 0;
                 } else {
-                    data_0209f1ec = 2;
+                    sNextPauseState = 2;
                 }
                 return;
             }
@@ -2392,23 +2482,23 @@ void dScStage_c::PS_Update() {
     case 0xb: {
         if (IsButtonInputValid() == 0)
             return;
-        data_0209f244 = data_0208ee44 << 2;
-        data_0209f2c4 = 2;
+        sMenuHighlightDelay = data_0208ee44 << 2;
+        gGamePaused = 2;
         func_02012790(3);
         return;
     }
     case 0xc: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
         Message::DisplaySaveMenuText(0x290);
-        data_0209f360[0] = 0xa0;
-        data_0209f360[1] = 0x140;
-        data_0209f360[2] = 0x1e0;
-        data_0209f2b4 = 3;
-        data_0209f2e0 = 0;
+        sMenuButtonTileOffsets[0] = 0xa0;
+        sMenuButtonTileOffsets[1] = 0x140;
+        sMenuButtonTileOffsets[2] = 0x1e0;
+        sNumMenuButtons = 3;
+        sSelectedMenuButton = 0;
         dScStage_c::UpdateMenuButtons(1);
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209f1ec = 0xd;
+        sNextPauseState = 0xd;
         return;
     }
     case 0xd: {
@@ -2427,13 +2517,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x28) < 0x20) ||
-                (data_0209f2e0 == 0 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 0)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 0;
+                (sSelectedMenuButton == 0 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 0)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 0;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f2c4 = 2;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                gGamePaused = 2;
                 func_02012790(3);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -2443,13 +2533,13 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x50) < 0x20) ||
-                (data_0209f2e0 == 1 && IsButtonInputValid() != 0)) {
-                if (data_0209f2e0 == 1)
-                    data_0209f244 = data_0208ee44 << 2;
-                data_0209f2e0 = 1;
+                (sSelectedMenuButton == 1 && IsButtonInputValid() != 0)) {
+                if (sSelectedMenuButton == 1)
+                    sMenuHighlightDelay = data_0208ee44 << 2;
+                sSelectedMenuButton = 1;
                 dScStage_c::UpdateMenuButtons(0);
-                data_0209f22c = data_0208ee44 << 3;
-                data_0209f1ec = 0xe;
+                sMenuWaitTimer = data_0208ee44 << 3;
+                sNextPauseState = 0xe;
                 func_02012790(0x5e);
                 if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                     return;
@@ -2459,14 +2549,14 @@ void dScStage_c::PS_Update() {
         {
             u8 slot = gActivePlayerSlot;
             if (!((u8)(gTouchX[slot * 4] - 8) < 0xf0 && (u8)(gTouchY[slot * 4] - 0x78) < 0x20) &&
-                (data_0209f2e0 != 2 || IsButtonInputValid() == 0))
+                (sSelectedMenuButton != 2 || IsButtonInputValid() == 0))
                 return;
-            if (data_0209f2e0 == 2)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 2;
+            if (sSelectedMenuButton == 2)
+                sMenuHighlightDelay = data_0208ee44 << 2;
+            sSelectedMenuButton = 2;
             dScStage_c::UpdateMenuButtons(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 0x10;
+            sMenuWaitTimer = data_0208ee44 << 3;
+            sNextPauseState = 0x10;
             func_02012790(0x5f);
             if ((u8)(gTouchX[gActivePlayerSlot * 4] - 8) < 0xf0)
                 return;
@@ -2475,9 +2565,9 @@ void dScStage_c::PS_Update() {
     }
     case 0xe: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
-        data_0209f1ec = 0xf;
+        sNextPauseState = 0xf;
         Message::DisplaySaveStatusText(0x295);
-        data_0209d45c &= ~2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
         data_0209f2b8 = 0x78;
         return;
     }
@@ -2491,23 +2581,23 @@ void dScStage_c::PS_Update() {
         data_0209f2b8 = data_0209f2b8 - data_0208ee44;
         if (data_0209f2b8 != 0)
             return;
-        if (data_0209f2e0 != 1) {
-            data_0209f2c4 = 2;
+        if (sSelectedMenuButton != 1) {
+            gGamePaused = 2;
             return;
         }
         dScene_c::StartSceneFade(1, 0, 0);
         data_0209f280 = 1;
         dScStage_c::PS_Cleanup();
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
+        gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
+        gActorUpdateMask = gNextActorUpdateMask;
         Sound::StopLoadedMusic_Layer1(0xa);
         return;
     }
     case 0x10: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0x1100;
-        data_0209f1ec = 0x11;
+        sNextPauseState = 0x11;
         Message::DisplayDontSaveText(0x297);
-        data_0209f2e0 = 1;
+        sSelectedMenuButton = 1;
         dScStage_c::PS_UpdateSaveMenu(1);
         return;
     }
@@ -2525,8 +2615,8 @@ void dScStage_c::PS_Update() {
             }
         }
         {
-            register u8 slot;
-            register u8 tx;
+            u8 slot;
+            u8 tx;
             int rel;
             int rely;
             slot = gActivePlayerSlot;
@@ -2535,16 +2625,16 @@ void dScStage_c::PS_Update() {
             if ((u8)rel < 0x50) {
                 rely = gTouchY[slot * 4] - 0x98;
                 if ((u8)rely < 0x20) {
-                    if (data_0209f2e0 == 0)
-                        data_0209f244 = data_0208ee44 << 2;
+                    if (sSelectedMenuButton == 0)
+                        sMenuHighlightDelay = data_0208ee44 << 2;
                     if ((u8)rel < 0x50 && (u8)rely < 0x20) {
-                        data_0209f22c = data_0208ee44 << 3;
-                        data_0209f1ec = 0x12;
+                        sMenuWaitTimer = data_0208ee44 << 3;
+                        sNextPauseState = 0x12;
                         func_02012790(0x60);
                     } else {
                         func_02012790(0x51);
                     }
-                    data_0209f2e0 = 0;
+                    sSelectedMenuButton = 0;
                     dScStage_c::PS_UpdateSaveMenu(0);
                     return;
                 }
@@ -2557,16 +2647,16 @@ void dScStage_c::PS_Update() {
                     rely = gTouchY[slot * 4] - 0x98;
                     if ((u8)rely >= 0x20)
                         return;
-                    if (data_0209f2e0 == 1)
-                        data_0209f244 = data_0208ee44 << 2;
+                    if (sSelectedMenuButton == 1)
+                        sMenuHighlightDelay = data_0208ee44 << 2;
                     if ((u8)rel < 0x50 && (u8)rely < 0x20) {
-                        data_0209f22c = data_0208ee44 << 3;
-                        data_0209f1ec = 0x12;
+                        sMenuWaitTimer = data_0208ee44 << 3;
+                        sNextPauseState = 0x12;
                         func_02012790(3);
                     } else {
                         func_02012790(0x52);
                     }
-                    data_0209f2e0 = 1;
+                    sSelectedMenuButton = 1;
                     dScStage_c::PS_UpdateSaveMenu(0);
                     return;
                 }
@@ -2574,15 +2664,15 @@ void dScStage_c::PS_Update() {
         }
     }
     case 0x12: {
-        if (data_0209f2e0 != 0) {
-            data_0209f2c4 = 2;
+        if (sSelectedMenuButton != 0) {
+            gGamePaused = 2;
             return;
         }
         dScene_c::StartSceneFade(1, 0, 0);
         data_0209f280 = 1;
         dScStage_c::PS_Cleanup();
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
+        gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
+        gActorUpdateMask = gNextActorUpdateMask;
         return;
     }
     case 0x13: {
@@ -2591,15 +2681,15 @@ void dScStage_c::PS_Update() {
             dScene_c::StartSceneFade(6, 1, 0);
             data_0209f280 = 1;
             dScStage_c::PS_Cleanup();
-            data_0209b454 |= 0x40000000;
-            data_0209b464 = data_0209b454;
+            gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
+            gActorUpdateMask = gNextActorUpdateMask;
             return;
         }
         LoadLevelNoReturn(2, 0, -1, 0);
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
+        gNextActorUpdateMask |= ACTOR_UPDATE_MASK_STAGE_ENDING;
+        gActorUpdateMask = gNextActorUpdateMask;
         data_0209f280 = 1;
-        data_0209f2c4 = 2;
+        gGamePaused = 2;
         return;
     }
     default:
@@ -2630,48 +2720,48 @@ void dScStage_c::PS_Init() {
     int mainBlendTargets;
     int subBlendTargets;
 
-    subLayers = data_0209d454;
+    subLayers = gSubScreenLayers;
     if (subLayers & 4) {
-        data_0209d454 = subLayers & ~4;
-        subLayers = data_0209d454;
+        gSubScreenLayers = subLayers & ~4;
+        subLayers = gSubScreenLayers;
         *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0x1f00) | (subLayers << 8);
     }
 
-    specialPauseState = data_0209f218;
-    mainLayers = data_0209d45c;
+    specialPauseState = sPausedWithSelect;
+    mainLayers = gMainScreenLayers;
     isVsMode = 0;
 
-    data_0209f248 = 0;
-    data_0209f2e0 = 0;
-    data_0209f2c8 = 0;
+    sPauseState = 0;
+    sSelectedMenuButton = 0;
+    sPauseDisplayedCourse = 0;
     data_0209f230 = 0;
-    data_0209f2f0 = 0;
-    data_0209f210 = 0;
-    data_0209f22c = 0;
+    sCourseArrowsHidden = 0;
+    sPauseArrowPressTimer = 0;
+    sMenuWaitTimer = 0;
     data_0209f240 = 0;
-    data_0209f238 = 0;
-    data_0209f2cc = 0;
-    data_0209f300 = 0xf;
+    sPressedPauseArrow = 0;
+    sBacklightFlashTimer = 0;
+    sPauseInputLockout = 0xf;
     data_0209f23c = 0;
-    data_0209f244 = 0;
-    data_0209f29c = 0;
+    sMenuHighlightDelay = 0;
+    sBackButtonSelected = 0;
     data_0209f280 = 0;
 
     mainBlendTargets = mainLayers ^ 0x10;
-    subBlendTargets = subLayers ^ 0x10;
+    subBlendTargets = subLayers ^ DISPLAY_LAYER_OBJ;
 
     if (specialPauseState != 0) {
-        data_0209f1ec = 7;
+        sNextPauseState = 7;
     } else {
         if (data_0209f2d8 == 1)
             isVsMode = 1;
         if (isVsMode != 0 && data_0209fc68 == 0) {
-            data_0209f1ec = 4;
+            sNextPauseState = 4;
         } else {
-            if (SublevelToLevel(data_0209f2f8) == 0x1d)
-                data_0209f1ec = 0;
+            if (SublevelToLevel(gCurrentSublevel) == 0x1d)
+                sNextPauseState = 0;
             else
-                data_0209f1ec = 2;
+                sNextPauseState = 2;
         }
     }
 
@@ -2686,7 +2776,7 @@ int func_02029600(int x) {
     int b = (int)(data_0209f2d8 == 2);
     if (b == 0) {
         unsigned char saved = *(u8 *)&data_ov002_02111148;
-        int r = GetMinimapID((Obj *)x, -1);
+        int r = GetMinimapID((dActor_c *)x, -1);
         if (r == saved)
             return 1;
     }
@@ -2700,8 +2790,8 @@ int IsButtonInputValid(void) {
     int mode;
     int val;
 
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) == 0 && data_0209f204 == 0 &&
-        data_0209f294 == 0) {
+    if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) == 0 && data_0209f204 == 0 &&
+        gVsExitScreenActive == 0) {
         mode = data_0209caa0[0x42];
         if (mode == 0) {
             val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
@@ -2874,7 +2964,7 @@ extern "C" void EnterBigBoosHaunt(void) {
 /* Kill the player: if lives remain, go to the next level with reason 2,
    otherwise trigger a game-over scene fade. Then play the death sound. */
 extern "C" void KillPlayer(void) {
-    if (data_0209f2f4 != 0)
+    if (gNumLives != 0)
         SetNextLevel(2);
     else
         dScene_c::StartSceneFade(8, 0, 0);
@@ -2886,7 +2976,7 @@ extern "C" void KillPlayer(void) {
 /* The player hit a death plane: either restart (SetNextLevel) or trigger a
    scene fade, then always exit with StartExitFaderWipe. */
 extern "C" void HitDeathPlane(int arg) {
-    if (data_0209f2f4 != 0 || arg == 0)
+    if (gNumLives != 0 || arg == 0)
         SetNextLevel(arg);
     else
         dScene_c::StartSceneFade(8, 0, 0);
@@ -2903,7 +2993,7 @@ extern "C" void ExitLevel(void) {
 
 // @symbol SetNextLevel
 extern "C" void SetNextLevel(int arg) {
-    int v = data_0209f2f8;
+    int v = gCurrentSublevel;
     unsigned int i;
     struct LevelReturnEntry *p;
 
@@ -2935,7 +3025,7 @@ extern "C" void SetNextLevel(int arg) {
     data_0209211c = -1;
     data_0209f1f0 = data_0209f220;
     SetNextStar();
-    data_0209f26c = arg;
+    sReturnState = arg;
 }
 
 // @symbol SetNextStar
@@ -2962,8 +3052,8 @@ extern "C" void SetNextStar(void) {
 extern "C" void DeathTable_ClearBit(s32 id) {
     if (id < 0)
         return;
-    s32 level = GetLevelPart((s32)data_0209f2f8);
-    u32 *table = data_0209f4f8[level];
+    s32 level = GetLevelPart((s32)gCurrentSublevel);
+    u32 *table = sActorDeathTable[level];
     u32 bitMask = ~(1u << (id & 0x1f));
     s32 word = id >> 5;
     table[word] = table[word] & bitMask;
@@ -2973,8 +3063,8 @@ extern "C" void DeathTable_ClearBit(s32 id) {
 extern "C" void DeathTable_SetBit(s32 id) {
     if (id < 0)
         return;
-    s32 level = GetLevelPart((s32)data_0209f2f8);
-    u32 *table = data_0209f4f8[level];
+    s32 level = GetLevelPart((s32)gCurrentSublevel);
+    u32 *table = sActorDeathTable[level];
     s32 word = id >> 5;
     u32 val = table[word];
     u32 bitMask = 1u << (id & 0x1f);
@@ -2985,8 +3075,8 @@ extern "C" void DeathTable_SetBit(s32 id) {
 extern "C" u32 DeathTable_GetBit(s32 id) {
     if (id < 0)
         return 0;
-    s32 level = GetLevelPart((s32)data_0209f2f8);
-    u32 *table = data_0209f4f8[level];
+    s32 level = GetLevelPart((s32)gCurrentSublevel);
+    u32 *table = sActorDeathTable[level];
     s32 word = id >> 5;
     s32 bit = id & 0x1f;
     u32 bitMask = 1u << bit;
@@ -2995,21 +3085,21 @@ extern "C" u32 DeathTable_GetBit(s32 id) {
 
 // @symbol _ZN5Event8ClearBitEj
 /* The event-flag bitfield accessors: Clear/Set/Get over the one-word event
-   table data_0209f34c. */
+   table sEventFlags. */
 namespace Event {
 
 s32 ClearBit(u32 bit) {
-    return data_0209f34c &= ~(1 << bit);
+    return sEventFlags &= ~(1 << bit);
 }
 
 // @symbol _ZN5Event6SetBitEj
 void SetBit(u32 bit) {
-    data_0209f34c |= 1 << bit;
+    sEventFlags |= 1 << bit;
 }
 
 // @symbol _ZN5Event6GetBitEj
 s32 GetBit(u32 bit) {
-    return data_0209f34c & (1 << bit);
+    return sEventFlags & (1 << bit);
 }
 
 }
@@ -3106,7 +3196,7 @@ void dScStage_c::RenderVsModeCountdown() {
 // @symbol NumVsStarsObtained
 extern "C" s32 NumVsStarsObtained(void) {
     int i = 1;
-    signed char sum = data_0209f310[0];
+    signed char sum = gNumStageStars[0];
     signed char *p;
     if (i >= (int)data_0209f21c)
         return sum;
@@ -3121,7 +3211,7 @@ extern "C" s32 NumVsStarsObtained(void) {
 
 // @symbol GiveVsStars
 extern "C" void GiveVsStars(int idx, int delta) {
-    data_0209f310[idx] += delta;
+    gNumStageStars[idx] += delta;
 }
 
 // @symbol _ZN10dScStage_c15IsPauseDisabledEv
@@ -3162,34 +3252,34 @@ extern "C" int AddSpikeBomb(void *p) {
 
 // @symbol SetStarMarker
 extern "C" void SetStarMarker(int i, int v1, int v2) {
-    data_0209f40c[i] = v1;
-    data_0209f37c[i] = v2;
+    STAR_MARKERS[i] = (dActor_c *)v1;
+    gStarMarkerTypes[i] = v2;
 }
 
 // @symbol OpenCannonInCurLevel
 extern "C" void OpenCannonInCurLevel(void) {
-    OpenCannonInLevel(data_0209f2f8);
+    OpenCannonInLevel(gCurrentSublevel);
 }
 
 // @symbol IsCannonOpenInCurLevel
 extern "C" int IsCannonOpenInCurLevel(void) {
-    return IsCannonOpenInLevel(data_0209f2f8);
+    return IsCannonOpenInLevel(gCurrentSublevel);
 }
 
 // @symbol CollectStarInCurLevel
 extern "C" void CollectStarInCurLevel(s32 starID) {
-    CollectStarInLevel(data_0209f2f8, starID);
+    CollectStarInLevel(gCurrentSublevel, starID);
 }
 
 // @symbol IsStarCollectedInCurLevel
 extern "C" s32 IsStarCollectedInCurLevel(s32 starID) {
-    return IsStarCollectedInLevel(data_0209f2f8, starID);
+    return IsStarCollectedInLevel(gCurrentSublevel, starID);
 }
 
 // @symbol NumRedCoins
 extern "C" signed char NumRedCoins(void) {
     int i = 1;
-    signed char sum = data_0209f30c[0];
+    signed char sum = gNumRedCoins[0];
     signed char *p;
     if (i >= (int)data_0209f21c)
         return sum;
@@ -3204,9 +3294,9 @@ extern "C" signed char NumRedCoins(void) {
 
 // @symbol GiveRedCoins
 extern "C" int GiveRedCoins(int i, int amt) {
-    signed char *p = &data_0209f30c[i];
-    data_0209f30c[i] = (signed char)(data_0209f30c[i] + amt);
-    int v = data_0209f30c[i];
+    signed char *p = &gNumRedCoins[i];
+    gNumRedCoins[i] = (signed char)(gNumRedCoins[i] + amt);
+    int v = gNumRedCoins[i];
     if (v > 0x63) {
         v = 0x63;
         *p = (signed char)v;
@@ -3224,7 +3314,7 @@ extern "C" int GiveRedCoins(int i, int amt) {
 extern "C" short NumCoins(void) {
     int i = 1;
     int n = data_0209f21c;
-    short *p = data_0209f358;
+    short *p = gNumCoins;
     short sum = p[0];
     if (n <= 1)
         return sum;
@@ -3237,7 +3327,7 @@ extern "C" short NumCoins(void) {
 
 // @symbol GiveCoins
 extern "C" void GiveCoins(int idx, int amount) {
-    short *p = data_0209f358;
+    short *p = gNumCoins;
     short cur = p[idx];
     short v = cur + amount;
     p[idx] = v;
@@ -3254,29 +3344,27 @@ extern "C" void GiveCoins(int idx, int amount) {
 /* Returns the clamped health, which daPly_c::GiveHealth hands straight back. */
 extern "C" int GiveHealth(int idx, int amt) {
     int v;
-    data_02092144[idx] += amt;
-    v = data_02092144[idx];
+    gPlayerHealth[idx] += amt;
+    v = gPlayerHealth[idx];
     if (v > 0x880) {
         v = 0x880;
-        data_02092144[idx] = v;
+        gPlayerHealth[idx] = v;
         return v;
     }
     if (v < 0) {
         v = 0;
-        data_02092144[idx] = v;
+        gPlayerHealth[idx] = v;
     }
     return v;
 }
 
 // @symbol func_0202a850
-#pragma opt_dead_assignments off
 extern "C" void func_0202a850(int a, int b) {
     data_02092138 = a;
     data_0209212c = b;
-    data_02092138 = a - 0x64000;
-    data_0209212c = b + 0x64000;
+    data_02092138 -= 0x64000;
+    data_0209212c += 0x64000;
 }
-#pragma opt_dead_assignments reset
 
 // @symbol InitControllerMode
 /* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
@@ -3300,7 +3388,7 @@ extern "C" int func_0202a8e0(int a, unsigned char b) {
     for (i = 0; i < 9; i++) {
         if (data_0209f3e8[i] == 0) {
             data_0209f3e8[i] = a;
-            data_0209f370[i] = b;
+            gMapCapIconCharacters[i] = b;
             return i;
         }
     }
@@ -3333,9 +3421,9 @@ extern "C" int func_0202a980(void) {
 }
 
 // @symbol _Z23LoadMinimapChangeObjectiia
-/* data_0209f314 points at mTexAnimSlots (InitResources stores it). Each
-   0xc-byte slot doubles as the per-area record: HideArea/ShowArea toggle its
-   mActive byte, and mBlockList heads a sorted list of these minimap-change
+/* data_0209f314 points at mAreas (InitResources stores it). In each
+   0xc-byte area record, HideArea/ShowArea toggle mShowing, and
+   mBlockList heads a sorted list of these minimap-change
    records, threshold at +0, next at +0xc (the link CleanupResources walks
    when it frees them). GetMinimapID walks next from the head and answers
    minimapId for the first record whose height an actor is above. */
@@ -3351,7 +3439,7 @@ struct MinimapChangeNode {
 
 void LoadMinimapChangeObject(int idx, Fix12i val, s8 h) {
     struct MinimapChangeNode *nn = (MinimapChangeNode *)::operator new(sizeof(MinimapChangeNode));
-    StageTexAnimSlot *e = &((StageTexAnimSlot *)data_0209f314)[idx];
+    StageArea *e = &((StageArea *)data_0209f314)[idx];
     struct MinimapChangeNode *cur = (MinimapChangeNode *)e->mBlockList;
     struct MinimapChangeNode *prev = cur;
     if (cur != 0) {
@@ -3384,17 +3472,17 @@ void LoadMinimapChangeObject(int idx, Fix12i val, s8 h) {
 
 // @symbol HideArea
 extern "C" void HideArea(int idx) {
-    ((StageTexAnimSlot *)data_0209f314)[idx].mActive = 0;
+    ((StageArea *)data_0209f314)[idx].mShowing = 0;
 }
 
 // @symbol ShowArea
 extern "C" void ShowArea(int idx) {
-    ((StageTexAnimSlot *)data_0209f314)[idx].mActive = 1;
+    ((StageArea *)data_0209f314)[idx].mShowing = 1;
 }
 
 // @symbol IsAreaShowing
 extern "C" unsigned char IsAreaShowing(int idx) {
-    return ((StageTexAnimSlot *)data_0209f314)[idx].mActive;
+    return ((StageArea *)data_0209f314)[idx].mShowing;
 }
 
 // @symbol ChangeArea
@@ -3407,12 +3495,12 @@ extern "C" void ChangeArea(int areaID) {
 
 // @symbol GiveLives
 extern "C" void GiveLives(int delta) {
-    int v = data_0209f2f4 + delta;
+    int v = gNumLives + delta;
     if (v < 0)
         v = 0;
     else if (v > 0x64)
         v = 0x64;
-    data_0209f2f4 = (signed char)v;
+    gNumLives = (signed char)v;
 }
 
 // @symbol LoadLevel
@@ -3435,9 +3523,9 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
     else
         data_0209f1f0 = (u8)starID;
     SetNextStar();
-    data_0209f26c = arg3;
+    sReturnState = arg3;
     if (returnState >= 0) {
-        data_0209211c = data_0209f2f8;
+        data_0209211c = gCurrentSublevel;
         data_0209f200 = (u8)returnState;
         chk = data_02092118;
         if (chk < 0)
@@ -3452,7 +3540,7 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
         data_0209f268 = data_0209f24c;
         data_0209f1f0 = data_0209f270;
     } else {
-        cur = SublevelToLevel(data_0209f2f8);
+        cur = SublevelToLevel(gCurrentSublevel);
         if (data_0209211c >= 0 && (cur == 6 || cur == 7 || cur == 0xb)) {
             data_02092118 = data_02092110;
             data_0209f24c = data_0209f268;
@@ -3473,11 +3561,11 @@ extern "C" void LoadLevelNoReturn(int levelID, u32 arg1, u32 arg2, u32 arg3) {
 // @symbol SetPlayerGlobals
 /* Initialise the player globals: lives, health, controller mode. */
 extern "C" void SetPlayerGlobals(void) {
-    data_0209f2f4 = 4;
+    gNumLives = 4;
     s32 i = 0;
     do {
         u8 mode = data_0209caa0[0x42];
-        data_02092144[i] = 0x880;
+        gPlayerHealth[i] = 0x880;
         InitControllerMode(i, mode);
         i++;
     } while (i < 4);
@@ -3492,7 +3580,7 @@ extern "C" void SetPlayerGlobals(void) {
 extern "C" void ExitMinigameMenu(void) {
     if (data_0209f298) {
         LoadLevelNoReturn(0x32, 4, 1, 0);
-        data_0209f2f8 = 6;
+        gCurrentSublevel = 6;
         dScene_c::StartSceneFade(3, 0, 0x7fff);
     } else {
         dScene_c::StartSceneFade(1, 0, 0);
@@ -3533,8 +3621,8 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
     SetPlayerGlobals();
     data_02092128[0] = data_0209caa0[0x41];
     SetNumPlayers(1);
-    data_02092124 = 6;
-    data_0209f228[0] = 0;
+    gLastCourseSublevel = 6;
+    gCollectedStarId = 0;
     dScene_c::StartSceneFade(3, 0, 0x7fff);
 }
 
@@ -3565,17 +3653,10 @@ extern "C" void func_0202af80(int a, int b) {
 }
 
 // @symbol GetMinimapID
-/* The actor GetMinimapID places, with dActor_c's names: its height at
-   +0x60, its area at +0xcc. */
-struct Obj {
-    char pad0[0x60];
-    int mPosY; /* 0x60 */
-    char pad64[0xcc - 0x64];
-    s8 mAreaId; /* 0xcc */
-};
-
-extern "C" int GetMinimapID(struct Obj *obj, int arg) {
-    int idx = obj->mAreaId;
+/* The minimap for an actor: its area's height bands, read at the actor's
+   height, or the level's own map when the area has none. */
+extern "C" int GetMinimapID(dActor_c *actor, int arg) {
+    int idx = actor->mAreaId;
     char *g;
     int val;
     struct MinimapChangeNode *node;
@@ -3583,9 +3664,9 @@ extern "C" int GetMinimapID(struct Obj *obj, int arg) {
         idx = data_02092120;
     g = (char *)data_0209f314;
     if (g != 0) {
-        node = (MinimapChangeNode *)((StageTexAnimSlot *)g)[idx].mBlockList;
+        node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
         if (node != 0) {
-            val = obj->mPosY;
+            val = actor->mPosY;
             while (node != 0) {
                 int d = val - node->height;
                 if (d > 0) {
@@ -3691,11 +3772,11 @@ struct LocalModelComponents {
 void dScStage_c::RenderModelTransparent() {
     ModelComponents *components = &mModel.data;
     BMD_Bone *bone = components->modelFile->bones;
-    StageTexAnimSlot *slot = mTexAnimSlots;
-    int slotIndex;
-    for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count;
-         slotIndex++, slot++, bone++) {
-        if (slot->mActive != 0) {
+    StageArea *area = mAreas;
+    int areaIndex;
+    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count;
+         areaIndex++, area++, bone++) {
+        if (area->mShowing != 0) {
             u8 *materialIds = bone->materialIds;
             u16 materialIndex;
             for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
@@ -3716,14 +3797,14 @@ void dScStage_c::RenderModelTransparent() {
 void dScStage_c::RenderModel() {
     ModelComponents *components = &mModel.data;
     BMD_Bone *bone = components->modelFile->bones;
-    StageTexAnimSlot *slot = mTexAnimSlots;
-    int slotIndex;
+    StageArea *area = mAreas;
+    int areaIndex;
 
-    for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++) {
-        u8 active = slot->mActive;
+    for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++) {
+        u8 showing = area->mShowing;
         u8 *materialIds = bone->materialIds;
 
-        if (active != 0) {
+        if (showing != 0) {
             u16 materialIndex;
             for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
                 u8 materialId = *materialIds;
@@ -3738,8 +3819,8 @@ void dScStage_c::RenderModel() {
                     *flags |= 0x80000000;
                 }
             }
-            if (slot->mTransformer != 0)
-                slot->mTransformer->Update(mModel.data);
+            if (area->mTransformer != 0)
+                area->mTransformer->Update(mModel.data);
         } else {
             u16 materialIndex;
             for (materialIndex = 0; materialIndex < bone->numMaterials; materialIndex++) {
@@ -3750,7 +3831,7 @@ void dScStage_c::RenderModel() {
             }
         }
 
-        slot++;
+        area++;
         bone++;
     }
 
@@ -3833,17 +3914,17 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
 // @symbol _ZN10dScStage_c23LoadTextureTransformersEv
 void dScStage_c::LoadTextureTransformers() {
     struct LevelTexAnim *entry = ((LevelInfo *)data_0209f340)->entries;
-    StageTexAnimSlot *slot = mTexAnimSlots;
+    StageArea *area = mAreas;
     BMD_File *modelFile = mModel.data.modelFile;
-    int slotIndex;
-    for (slotIndex = 0; slotIndex < (int)((LevelInfo *)data_0209f340)->count; slotIndex++) {
+    int areaIndex;
+    for (areaIndex = 0; areaIndex < (int)((LevelInfo *)data_0209f340)->count; areaIndex++) {
         if (entry->bta) {
             dExtAnmTexSRT_c::Prepare(*modelFile, *(BTA_File *)entry->bta);
-            slot->mTransformer = new dExtAnmTexSRT_c;
-            slot->mTransformer->SetFile(*(BTA_File *)entry->bta, 0, 0x1000, 0);
+            area->mTransformer = new dExtAnmTexSRT_c;
+            area->mTransformer->SetFile(*(BTA_File *)entry->bta, 0, 0x1000, 0);
         }
         entry++;
-        slot++;
+        area++;
     }
 }
 
@@ -3876,7 +3957,7 @@ void dScStage_c::LoadModel() {
 
 void dScStage_c::RenderFog() {
     Fog *fog = 0;
-    if (data_0209f2f8 == 5)
+    if (gCurrentSublevel == 5)
         fog = daMugenBGM_c::GetActiveFog();
     if (fog == 0) {
         dCamera_c *camera = (dCamera_c *)data_0209f318;
@@ -3963,12 +4044,12 @@ void func_0203db3c(int i, int v);
 }
 
 int dScStage_c::Render() {
-    if (((data_0209f294 | (data_0209f2c4 | data_0209f20c)) & 0xff) == 0) {
-        StageTexAnimSlot *slot = mTexAnimSlots;
-        int slotIndex;
-        for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++, slot++) {
-            if (slot->mActive != 0 && slot->mTransformer != 0)
-                slot->mTransformer->Advance();
+    if (((gVsExitScreenActive | (gGamePaused | data_0209f20c)) & 0xff) == 0) {
+        StageArea *area = mAreas;
+        int areaIndex;
+        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+            if (area->mShowing != 0 && area->mTransformer != 0)
+                area->mTransformer->Advance();
         }
         mSysTracker.Update();
     }
@@ -3991,10 +4072,10 @@ int dScStage_c::Render() {
     {
         int isVsMode = (data_0209f2d8 == 1);
         if (isVsMode) {
-            if (data_0209fc9c == 0 && data_0209f2c4 == 0) {
+            if (data_0209fc9c == 0 && gGamePaused == 0) {
                 RenderVsModeCountdown();
                 RenderVsModeNewStar();
-                if (data_0209f294 != 0 && data_0209f290 != 2)
+                if (gVsExitScreenActive != 0 && data_0209f290 != 2)
                     RenderBouncingArrows();
             }
             func_0203083c();
@@ -4019,15 +4100,15 @@ int dScStage_c::Render() {
         func_0203db3c(0x10, positionXor);
         func_0203db3c(0x10, playerFlagBits);
     }
-    if (data_0209f2c4 != 0) {
+    if (gGamePaused != 0) {
         PS_Render();
-    } else if (data_0209f20c != 0 && data_0209f2d4 != 0) {
-        int coinCounterY = (SublevelToLevel(data_02092124) < 0xf) ? 0x80 : 0x70;
-        if (data_0209f2b0 != 0)
+    } else if (data_0209f20c != 0 && gLevelClearStep != 0) {
+        int coinCounterY = (SublevelToLevel(gLastCourseSublevel) < 0xf) ? 0x80 : 0x70;
+        if (sLevelClearNewRecord != 0)
             coinCounterY += 0x10;
         OAM::Render(0, &OAM::COIN, 0x68, coinCounterY, -1, -1, 0);
         OAM::Render(0, &OAM::TIMES, 0x78, coinCounterY + 8, -1, -1, 0);
-        RenderNumber(data_0209f260, 0x80, coinCounterY, 1, 8);
+        RenderNumber(sLevelClearCoinCount, 0x80, coinCounterY, 1, 8);
     }
     LC_Render();
     return 1;
@@ -4048,15 +4129,16 @@ static inline u32 MaskOff(u32 x, u32 m) {
     return x & ~m;
 }
 
+// kept: the ROM reloads data_0209f304 after testing it; with CSE on the function is 0x6e8
 #pragma opt_common_subs off
 
 int dScStage_c::Behavior() {
-    data_0209b464 = data_0209b454;
+    gActorUpdateMask = gNextActorUpdateMask;
     CheckCameraInput();
     CheckInput();
-    if (data_0209f300 != 0)
-        data_0209f300 -= 1;
-    if (data_0209f2c4 == 2 && data_0209f22c == 0)
+    if (sPauseInputLockout != 0)
+        sPauseInputLockout -= 1;
+    if (gGamePaused == 2 && sMenuWaitTimer == 0)
         PS_Cleanup();
     ProcessKuppaScript();
     if (data_0209f5bc->IsAtStart() == 0) {
@@ -4102,7 +4184,7 @@ int dScStage_c::Behavior() {
                 if (cnt >= data_0209fc50) {
                     if (data_0209f304 == 0x28 && data_0209f2bc == 3)
                         func_02012790(0x2b);
-                    if (data_0209f2c4 == 0) {
+                    if (gGamePaused == 0) {
                         if (data_0209f304 != 0 || data_0209f2bc != 0) {
                             data_0209f304 = data_0209f304 - data_0208ee44;
                             if (data_0209f304 == 0 && data_0209f2bc != 0) {
@@ -4122,7 +4204,7 @@ int dScStage_c::Behavior() {
             if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
                 if (data_0209fc68 == 0) {
                     if (data_02092110 < 0 && data_0209d4b0 == 0) {
-                        if (data_0209f294 == 0 && data_0209f290 == 0)
+                        if (gVsExitScreenActive == 0 && data_0209f290 == 0)
                             VE_Init();
                         else
                             VE_Update();
@@ -4138,7 +4220,7 @@ int dScStage_c::Behavior() {
     }
     if (data_02092110 >= 0) {
         int lvl = SublevelToLevel(data_02092110);
-        int lvl2 = SublevelToLevel(data_0209f2f8);
+        int lvl2 = SublevelToLevel(gCurrentSublevel);
         int bb = (data_0209f2d8 == 2);
         if (bb == 0 && lvl <= 0xe && lvl != lvl2 && data_02092118 < 0 &&
             (data_02092110 != 0xc || data_0209f268 != 4)) {
@@ -4146,8 +4228,9 @@ int dScStage_c::Behavior() {
         } else {
             dScene_c::SetSceneToSpawn(3, 0);
         }
-        if ((IsLevelInsideCastle(data_0209f2f8) == 0 || IsLevelInsideCastle(data_02092110) == 0) &&
-            (IsLevelTinyHugeIslandOutside(data_0209f2f8) == 0 ||
+        if ((IsLevelInsideCastle(gCurrentSublevel) == 0 ||
+             IsLevelInsideCastle(data_02092110) == 0) &&
+            (IsLevelTinyHugeIslandOutside(gCurrentSublevel) == 0 ||
              IsLevelTinyHugeIslandOutside(data_02092110) == 0)) {
             int bb2 = (data_0209f2d8 == 2);
             if (bb2 == 0)
@@ -4155,7 +4238,7 @@ int dScStage_c::Behavior() {
         }
     } else if (data_0209f20c != 0) {
         LC_Update();
-    } else if (data_0209f2c4 != 0) {
+    } else if (gGamePaused != 0) {
         PS_Update();
     } else {
         u32 pi = gActivePlayerSlot;
@@ -4163,31 +4246,32 @@ int dScStage_c::Behavior() {
         if ((((h1 & 0x200) == 0 && (h1 & 0x100) == 0) ||
              (*(u16 *)((char *)data_020a0e5a + pi * 4) & 8) == 0) &&
             data_0209d660 == 0 && data_0209d4b0 == 0 && CanPause() != 0 && IsPauseDisabled() == 0 &&
-            (u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0 &&
-            MaskOff(data_0209b454, 0) == 0) {
+            (u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 &&
+            MaskOff(gNextActorUpdateMask, 0) == 0) {
             u8 st = data_0209f2d8;
             int b1 = (st == 1);
-            if ((b1 && data_0209fc68 == 0) || (((FileSaveData *)data_0209caa0)->flags2 & 0x80)) {
+            if ((b1 && data_0209fc68 == 0) ||
+                (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 int b2 = (st == 2);
                 if (b2 == 0) {
                     int b3 = (gRunningKuppaScript != 0);
                     if (b3 == 0) {
-                        if (data_0209f300 == 0) {
+                        if (sPauseInputLockout == 0) {
                             u32 pj = gActivePlayerSlot;
                             u16 h2 = *(u16 *)((char *)data_020a0e5a + pj * 4);
                             int t8 = h2 & 8;
                             if ((t8 != 0 && (*(u16 *)((char *)data_020a0e58 + pj * 4) & 4) == 0) ||
                                 (b1 == 0 && t8 == 0 && (h2 & 4) != 0)) {
-                                data_0209f2c4 = 1;
+                                gGamePaused = 1;
                                 func_02012790(2);
-                                if (data_0209d4c8.mIsRunning != 0) {
-                                    data_0209d4c8.StopTimer();
-                                    data_0209f2a0[0] = 1;
+                                if (gRaceTimer.mIsRunning != 0) {
+                                    gRaceTimer.StopTimer();
+                                    data_0209f2a0 = 1;
                                 }
                                 if (*(u16 *)((char *)data_020a0e58 + gActivePlayerSlot * 4) & 4)
-                                    data_0209f218 = 1;
+                                    sPausedWithSelect = 1;
                                 else
-                                    data_0209f218 = 0;
+                                    sPausedWithSelect = 0;
                                 PS_Init();
                                 PS_Update();
                             }
@@ -4197,8 +4281,8 @@ int dScStage_c::Behavior() {
             }
         }
     }
-    if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0) {
-        if ((data_0209b454 & ~0x20000000) == 0)
+    if ((u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0) {
+        if ((gNextActorUpdateMask & ~0x20000000) == 0)
             dExtShadowModel_c::CleanAll();
     }
     return 1;
@@ -4219,10 +4303,11 @@ void dScStage_c::CheckInput() {
     int isVsMode = (mode == 1);
     if (isVsMode == false) {
         int modeIsTwo = (mode == 2);
-        if (modeIsTwo != false || !(((FileSaveData *)data_0209caa0)->flags2 & 0x80) ||
+        if (modeIsTwo != false ||
+            !(((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) ||
             (data_0209d660 == 0 && (int)(gRunningKuppaScript != 0) != false)) {
             {
-                CamInput *control = (CamInput *)data_0209f498;
+                ControllerInput *control = data_0209f498;
                 int playerIndex;
                 for (playerIndex = 0; playerIndex < 4; playerIndex++) {
                     control->touching = 0;
@@ -4240,7 +4325,7 @@ void dScStage_c::CheckInput() {
             return;
         }
     }
-    CamInput *control = (CamInput *)data_0209f498;
+    ControllerInput *control = data_0209f498;
     int playerIndex = 0;
     int playerCount = data_0209f21c;
     int touchX;
@@ -4407,7 +4492,7 @@ void Fog::Init(unsigned short color, Fix12i nearv, Fix12i farv) {
 
 // @symbol SetTouchScreenDelay
 extern "C" void SetTouchScreenDelay(void) {
-    CamInput *p = (CamInput *)data_0209f498;
+    ControllerInput *p = data_0209f498;
     int i;
     for (i = 0; i < data_0209f21c; i++) {
         p->delay = 5;
@@ -4419,7 +4504,7 @@ extern "C" void SetTouchScreenDelay(void) {
 extern "C" u8 GetControllerMode(int a0);
 
 extern "C" void ResetInput(void) {
-    CamInput *p = (CamInput *)data_0209f498;
+    ControllerInput *p = data_0209f498;
     int i;
     for (i = 0; i < data_0209f21c; i++) {
         u8 mode;
@@ -4443,10 +4528,6 @@ extern "C" void ResetInput(void) {
 extern "C" {
 void EndKuppaScript(void);
 void UnloadArchive(int);
-// local extern: the fader array's destructor is passed by address to
-// __cxa_vec_delete here and to __cxa_vec_new in InitResources, which member
-// syntax cannot express.
-void _ZN9dFdWipe_cD1Ev(void *thiz);
 }
 
 /* Destroy through vtable slot 1 (D0). */
@@ -4476,14 +4557,14 @@ int dScStage_c::CleanupResources() {
     }
 
     {
-        StageTexAnimSlot *slot = mTexAnimSlots;
-        int slotIndex;
-        for (slotIndex = 0; slotIndex < ((LevelInfo *)data_0209f340)->count; slotIndex++, slot++) {
-            dExtAnmTexSRT_c *transformer = slot->mTransformer;
+        StageArea *area = mAreas;
+        int areaIndex;
+        for (areaIndex = 0; areaIndex < ((LevelInfo *)data_0209f340)->count; areaIndex++, area++) {
+            dExtAnmTexSRT_c *transformer = area->mTransformer;
             if (transformer)
                 delete transformer;
             {
-                MinimapChangeNode *block = (MinimapChangeNode *)slot->mBlockList;
+                MinimapChangeNode *block = (MinimapChangeNode *)area->mBlockList;
                 while (block) {
                     MinimapChangeNode *next = block->next;
                     Memory::operator_delete2(block);
@@ -4497,14 +4578,14 @@ int dScStage_c::CleanupResources() {
     data_0209f314 = 0;
     dScene_c::SetAndStopColorFader();
     data_0209d4b0 = 0;
-    __cxa_vec_delete(data_0209f324, 0x60, 8, _ZN9dFdWipe_cD1Ev);
+    delete[] (dFdWipe_c *)data_0209f324;
     data_0209f324 = 0;
     CleanCommonModelDataArr();
     mMeshCollider.Disable();
     dScStage_c::ResetMeshColliders();
     Deallocate(func_01ffb0c8(&mMeshCollider));
-    UnloadLevelOverlays(data_0209f2f8);
-    if (data_0209f2f8 == 1)
+    UnloadLevelOverlays(gCurrentSublevel);
+    if (gCurrentSublevel == 1)
         UnloadArchive(7);
 
     {
@@ -4513,16 +4594,16 @@ int dScStage_c::CleanupResources() {
             data_0209f394[playerIndex] = 0;
     }
     data_0209f318 = 0;
-    data_0209f2c4 = 0;
+    gGamePaused = 0;
     Message::ResetAllGlobals();
 
     {
         u8 mode = data_0209f2d8;
         int resetSequenceCounts = 0;
-        data_0209f2e0 = 0;
-        data_0209f2d4 = 0;
-        data_0209f244 = 0;
-        data_0209f2b0 = 0;
+        sSelectedMenuButton = 0;
+        gLevelClearStep = 0;
+        sMenuHighlightDelay = 0;
+        sLevelClearNewRecord = 0;
         data_0209f20c = 0;
         if (mode == 1)
             resetSequenceCounts = 1;
@@ -4555,7 +4636,7 @@ int dScStage_c::CleanupResources() {
 // restored it overshoots, so the plain spelling is the matching one.
 //   (2-arg, plain) = MATCH   (2-arg, widened) = 1   (1-arg, plain) = 0xa80   (1-arg, widened) = 3
 //
-// The two pairs of stores below (f284/f294 and f2d4/f20c) are in ROM statement order.
+// The two pairs of stores below (f284/f294 and gLevelClearStep/data_0209f20c) are in ROM statement order.
 // Swapping either pair is byte-identical -- the literal-pool words are relocations and
 // therefore wildcards to the byte gate -- but sends each address to the wrong pool slot.
 // match.py --strict-relocs is what distinguishes them; keep this order.
@@ -4580,11 +4661,7 @@ int func_0203da9c(void);
 int func_0203da3c(void);
 u32 func_0203dad4(void);
 void func_0203b9b4(int *p, int v);
-void *__cxa_vec_new(unsigned int a, unsigned int b, unsigned int c, void *ctor, void *dtor);
 void func_ov001_020ab2e4(void);
-// local extern: the fader array's constructor is passed by address to
-// __cxa_vec_new, which member syntax cannot express.
-void *_ZN9dFdWipe_cC1Ev(void *thiz);
 }
 
 int dScStage_c::InitResources() {
@@ -4603,10 +4680,10 @@ int dScStage_c::InitResources() {
         data_0209f21c = data_0208a0e0;
         data_0209f250 = (u8)func_0203da9c();
         ResetInput();
-        data_0209f2c4 = 0;
+        gGamePaused = 0;
 
         int nextLevel = SublevelToLevel(data_02092110);
-        int previousLevel = SublevelToLevel(data_0209f2f8);
+        int previousLevel = SublevelToLevel(gCurrentSublevel);
         u32 sublevelBit = ((u8)data_02092110 + 0xDC) & 0xFF;
         int specialSublevel = 0;
         if (sublevelBit <= 0xD) {
@@ -4616,14 +4693,14 @@ int dScStage_c::InitResources() {
         mode = data_0209f2d8;
         int vsModeReset = (mode == 1) ? 1 : 0;
 
-        if (vsModeReset || data_0209f26c == 2 || specialSublevel || nextLevel == 0x1D ||
+        if (vsModeReset || sReturnState == 2 || specialSublevel || nextLevel == 0x1D ||
             nextLevel != previousLevel) {
             int row = 0;
-            data_0209f34c = 0;
+            sEventFlags = 0;
             do {
                 int column = 0;
                 do {
-                    data_0209f4f8[row][column] = 0;
+                    sActorDeathTable[row][column] = 0;
                     column += 1;
                 } while (column < 0x10);
                 row += 1;
@@ -4632,13 +4709,13 @@ int dScStage_c::InitResources() {
             if ((s32)data_0209f21c > 0) {
                 int count = data_0209f21c;
                 int idx = 0;
-                u8 *p1 = (u8 *)data_0209f30c;
-                u8 *vsStars = (u8 *)data_0209f310;
+                u8 *p1 = (u8 *)gNumRedCoins;
+                u8 *vsStars = (u8 *)gNumStageStars;
                 int vsModeCounters = (mode == 1) ? 1 : 0;
-                u8 loadMode = data_0209f26c;
+                u8 loadMode = sReturnState;
                 do {
                     if (vsModeCounters || (specialSublevel == 0 && loadMode != 1)) {
-                        data_0209f358[idx] = 0;
+                        gNumCoins[idx] = 0;
                     }
                     *p1 = 0;
                     *vsStars = 0;
@@ -4649,30 +4726,30 @@ int dScStage_c::InitResources() {
             }
         }
 
-        data_0209f2fc = data_0209f26c;
-        if (data_0209f2fc == 1) {
-            data_02092124 = data_0209f2f8;
+        gPrevReturnState = sReturnState;
+        if (gPrevReturnState == 1) {
+            gLastCourseSublevel = gCurrentSublevel;
             data_02092118 = -1;
         }
 
-        s8 previousSublevel = data_0209f2f8;
-        data_0209f2f8 = data_02092110;
+        s8 previousSublevel = gCurrentSublevel;
+        gCurrentSublevel = data_02092110;
         data_0209f264 = data_0209f268;
         data_0209f220 = data_0209f1f0;
         data_02092120 = -1;
-        data_0209f314 = (int)scene->mTexAnimSlots;
+        data_0209f314 = (int)scene->mAreas;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
-        SublevelToLevel(data_0209f2f8);
+        SublevelToLevel(gCurrentSublevel);
 
         s32 levelArchive = 0xBF;
-        if (data_0209f2f8 == 0x33)
+        if (gCurrentSublevel == 0x33)
             levelArchive = 2;
-        else if (data_0209f2f8 == 0x2B)
+        else if (gCurrentSublevel == 0x2B)
             levelArchive = 3;
-        else if (data_0209f2f8 == 0x1D)
+        else if (gCurrentSublevel == 0x1D)
             levelArchive = 4;
-        else if (data_0209f2f8 == 0x2A)
+        else if (gCurrentSublevel == 0x2A)
             levelArchive = 5;
 
         u32 archiveToUnload = 2;
@@ -4685,8 +4762,8 @@ int dScStage_c::InitResources() {
 
         LoadTextNarcs();
         LoadArchive(0);
-        if (data_0209f2f8 == 1) {
-            mHeap::Heap_t *previousHeap = ((mHeap::Heap_t *)data_020a0eac)->SetDefault();
+        if (gCurrentSublevel == 1) {
+            mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
             LoadArchive(7);
             previousHeap->SetDefault();
         }
@@ -4715,10 +4792,10 @@ int dScStage_c::InitResources() {
         *bg1Control = *bg1Control & ~3;
         *bg1Control = (*bg1Control & 0x43) | 0x1F1C;
         *bg1Control = *bg1Control & ~0x40;
-        data_0209d454 = 0x18;
+        gSubScreenLayers = 0x18;
         data_0209f204 = 0;
         data_0209d4a8 = (dGraph_c::callback_c *)&data_0209f3c4;
-        data_0209b454 = 0;
+        gNextActorUpdateMask = 0;
         func_02039218();
         ResetKuppaScript();
 
@@ -4735,7 +4812,7 @@ int dScStage_c::InitResources() {
         {
             int i;
             for (i = 0; i < 0xC; i++) {
-                data_0209f40c[i] = 0;
+                STAR_MARKERS[i] = 0;
             }
         }
         {
@@ -4759,11 +4836,12 @@ int dScStage_c::InitResources() {
         data_0209f25c = 0;
         data_0209f338 = 0;
         data_02092134 = 0x44444444;
-        LoadLevelOverlays(data_0209f2f8);
+        LoadLevelOverlays(gCurrentSublevel);
 
         int skipSoundGroup = (data_0209f2d8 == 2) ? 1 : 0;
         if (skipSoundGroup == 0) {
-            s8 sublevel = *(s8 *)(unsigned)(((unsigned long long)(unsigned)&data_0209f2f8) & ~0ULL);
+            s8 sublevel =
+                *(s8 *)(unsigned)(((unsigned long long)(unsigned)&gCurrentSublevel) & ~0ULL);
             int soundGroup = 0;
             u8 bank = 0x36;
             if (data_0209f220 == 2) {
@@ -4785,7 +4863,7 @@ int dScStage_c::InitResources() {
         }
 
         *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 2;
-        LoadGraphics2D(data_0209f2d8 == 1, data_0209f2f8);
+        LoadGraphics2D(data_0209f2d8 == 1, gCurrentSublevel);
 
         {
             u32 i;
@@ -4798,14 +4876,13 @@ int dScStage_c::InitResources() {
         u16 *faderFileIds;
         if (vsModeFaders && levelArchive != 0xBF) {
             faderFileIds = data_02075600;
-        } else if (data_0209f2f8 == 5) {
+        } else if (gCurrentSublevel == 5) {
             faderFileIds = data_020755f0;
         } else {
             faderFileIds = data_020755e0;
         }
 
-        data_0209f324 =
-            __cxa_vec_new(7, 0x60, 8, (void *)&_ZN9dFdWipe_cC1Ev, (void *)&_ZN9dFdWipe_cD1Ev);
+        data_0209f324 = new dFdWipe_c[7];
         int faderIndex = 0;
         int faderOffset = 0;
         do {
@@ -4815,7 +4892,7 @@ int dScStage_c::InitResources() {
             faderOffset += 0x60;
         } while (faderIndex < 7);
 
-        data_0209f340 = (char *)data_02092208[data_0209f2f8];
+        data_0209f340 = (char *)data_02092208[gCurrentSublevel];
         scene->LoadModel();
         data_0208ee44 = 2;
         dScStage_c::LoadClsnAndObjects(*(LVL_Overlay *)data_0209f340, data_0209f264,
@@ -4825,12 +4902,13 @@ int dScStage_c::InitResources() {
         if (vsModeMusic == 0) {
             int skipMusicSetup = (gRunningKuppaScript != 0) ? 1 : 0;
             if (skipMusicSetup == 0) {
-                if (!IsLevelInsideCastle(data_0209f2f8) || !IsLevelInsideCastle(previousSublevel)) {
-                    if (!IsLevelTinyHugeIslandOutside(data_0209f2f8) ||
+                if (!IsLevelInsideCastle(gCurrentSublevel) ||
+                    !IsLevelInsideCastle(previousSublevel)) {
+                    if (!IsLevelTinyHugeIslandOutside(gCurrentSublevel) ||
                         !IsLevelTinyHugeIslandOutside(previousSublevel)) {
-                        if (data_0209f2f8 != 2 ||
+                        if (gCurrentSublevel != 2 ||
                             (((FileSaveData *)data_0209caa0)->flags2 & 0x200)) {
-                            Sound::LoadAndSetMusic_Layer1(data_0207576a[data_0209f2f8 * 3]);
+                            Sound::LoadAndSetMusic_Layer1(data_0207576a[gCurrentSublevel * 3]);
                             u8 localPlayer = data_0209f250;
                             if (((u8 *)data_0209f394[localPlayer])[0x6ff] != 0) {
                                 Sound::SetMusic(localPlayer, 0x33);
@@ -4851,21 +4929,21 @@ int dScStage_c::InitResources() {
         data_0209cef0 = 1;
         scene->mSysTracker.Initialise();
 
-        u8 f2fc = data_0209f2fc;
-        data_0209f294 = 0;
+        u8 f2fc = gPrevReturnState;
+        gVsExitScreenActive = 0;
         data_0209f290 = 0;
-        data_0209f284 = 0;
-        data_0209f300 = 0;
+        gShowTouchScreenArrows = 0;
+        sPauseInputLockout = 0;
         if (f2fc != 1) {
             data_0209f20c = 0;
-            data_0209f2d4 = 0;
+            gLevelClearStep = 0;
         }
-        data_0209d45c = 0x11;
+        gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
         *p0 = (*p0 & ~0x1F00) | 0x1100;
         int skipSubDisplayLayers = (data_0209f2d8 == 2) ? 1 : 0;
         if (skipSubDisplayLayers == 0) {
-            *p1 = (*p1 & ~0x1F00) | (data_0209d454 << 8);
+            *p1 = (*p1 & ~0x1F00) | (gSubScreenLayers << 8);
         }
         dCc_c::listHead = 0;
         dExtShadowModel_c::CleanAll();
@@ -4882,10 +4960,10 @@ int dScStage_c::InitResources() {
     }
 
     data_02092778 = 0;
-    func_0203b9b4(&data_0209e650, func_0203dad4());
+    func_0203b9b4(&data_0209e650.value, func_0203dad4());
     data_0209f208 = 0;
     u32 idx = func_0203dad4() % 6;
-    data_0209f344 = (s32)&VS_STAR_SPAWN_ORDERS[idx];
+    data_0209f344 = (u8 *)VS_STAR_SPAWN_ORDERS[idx];
 
     return 1;
 }
@@ -4908,7 +4986,7 @@ extern "C" {
 void SetBg0Offset(int a, int b);
 void LoadFont(u8 arg);
 int GetOwnerLanguage(void);
-u32 LoadCompressedFileAt(u16 fileID, void *target);
+u32 LoadCompressedFileAt(int fileID, void *target);
 int LoadFileAt(int handle, int dest);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);
@@ -4960,7 +5038,8 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadFont3D();
     }
 
-    if ((int)(data_0209f2d8 == 0) != 0 && (((FileSaveData *)data_0209caa0)->flags2 & 0x80) == 0 &&
+    if ((int)(data_0209f2d8 == 0) != 0 &&
+        (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0) {
         BG0CNT_SUB &= ~3;
         BG0CNT_SUB &= ~0x40;
@@ -4983,7 +5062,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
             volatile u16 fillTile = 0x10d0;
             MultiStore16(fillTile, clearScreenMap, 0x800);
         }
-        data_0209d454 = 0x17;
+        gSubScreenLayers = 0x17;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
         SetSubBg2Offset(0, 0);

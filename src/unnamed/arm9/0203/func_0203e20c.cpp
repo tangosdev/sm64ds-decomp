@@ -43,7 +43,7 @@ extern int func_02068ae8(int param0);
 extern int func_02067e70(void *obj);
 extern int func_02067bfc(int a, void *b, unsigned int c);
 extern int func_02067928(void *a, void *b);
-extern void func_0205a588(void *dst, int val, unsigned int size);
+extern void func_0205a588(void *dst, unsigned char val, unsigned int size);
 extern int WM_ReadStatus(int *arg);
 extern void *MB_CommGetChildUser(u16 idx);
 extern int MB_CommGetParentState(u16 a);

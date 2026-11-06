@@ -11,13 +11,13 @@ extern void func_02019dfc(void);
 extern void func_02011dc0(void);
 extern void func_02019ed0(void);
 extern void func_02011db4(void);
-extern unsigned char data_0209f1d8;
+extern unsigned char gSoftResetDisabled;
 extern int data_0209fc68;
 extern int data_0208ee44;
 extern unsigned char data_0208ee48;
 extern unsigned char data_0209d4ec;
-extern unsigned char data_0209b480;
-extern unsigned char data_0209b474;
+extern unsigned char gSoundInitialized;
+extern unsigned char gSoundMuted;
 extern short data_0209d504;
 extern unsigned char data_0209d4f4;
 extern void func_0201a4d0(void);
@@ -31,7 +31,7 @@ extern int data_0209d514;
 extern u8 data_0209f2d8;
 
 static inline int IsSkipRequested(void) {
-    return (func_0203da3c() != 0 || data_0209f1d8 != 0) ? 1 : 0;
+    return (func_0203da3c() != 0 || gSoftResetDisabled != 0) ? 1 : 0;
 }
 
 void func_02019ac4(void) {
@@ -52,8 +52,8 @@ void func_02019ac4(void) {
         data_0208ee48 = 0;
     if (data_0209d4ec == 0) {
         if (closed != 0) {
-            if (data_0209b480 != 0) {
-                data_0209b474 = 1;
+            if (gSoundInitialized != 0) {
+                gSoundMuted = 1;
                 func_02019e60();
                 data_0209d4ec = 1;
             }
@@ -144,7 +144,7 @@ void func_02019ac4(void) {
         short tv = data_0209d504;
         if (tv <= 0) {
             data_0209d4ec = 0;
-            data_0209b474 = 0;
+            gSoundMuted = 0;
         } else {
             data_0209d504 = tv - delta;
         }
@@ -184,7 +184,7 @@ void func_020199a4(void) {
         func_0201a4bc();
         data_0209d4f0 = 0;
         data_0209d514 = 0;
-        if (data_0209b480 != 0)
+        if (gSoundInitialized != 0)
             func_020132d8();
     }
 }

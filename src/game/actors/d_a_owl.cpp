@@ -74,6 +74,8 @@ enum daOwl_c_AssetId {
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* Resource handles the static initializer constructs. The wrapper spellings
  * are reconstructed; the constructor and destructor addresses, the file IDs
@@ -115,11 +117,6 @@ extern OwlState data_ov094_02136b70;
  * spelling. math/Matrix.h (via daOwl_c.h -> dExtAnmModel_c.h) stands down. */
 typedef char Matrix4x3_size_must_be_0x30[sizeof(Matrix4x3) == 0x30 ? 1 : -1];
 
-struct OwlVec {
-    int x, y, z;
-};
-typedef char OwlVec_size_must_be_0x0c[sizeof(OwlVec) == 0x0c ? 1 : -1];
-
 struct V6 {
     int v[6];
 };
@@ -152,30 +149,24 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 }
 
 extern "C" {
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 extern short data_02082214[];
-extern int data_0209e650[];
-extern Matrix4x3 data_020a0e68;
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
 int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
-int ApproachAngle(short *p, int target, int a, int b, int c);
+int ApproachAngle(short *p, short target, int a, int b, int c);
 int Vec3_Dist(const void *a, const void *b);
-short Vec3_HorzAngle(const void *a, const void *b);
-short Vec3_VertAngle(const void *a, const void *b);
+// local extern: CalcLib.h conflicts with the retained opaque Vec3_Dist prototype.
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 unsigned int RandomIntInternal(void *seed);
-void Matrix4x3_FromRotationY(void *m, int angle);
 void MulVec3Mat4x3(void *dst, void *mat, void *src);
-void Vec3_Sub(OwlVec *out, OwlVec *a, OwlVec *b);
-int LenVec3(OwlVec *v);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+int LenVec3(VecFx32 *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
-void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
 int IsStarCollectedInCurLevel(int);
 unsigned short DecIfAbove0_Short(void *);
 }
@@ -205,7 +196,7 @@ daOwl_c::~daOwl_c()
 void daOwl_c::func_ov094_021357a4()
 {
     int st[3];
-    OwlVec tmp;
+    VecFx32 tmp;
     tmp.x = data_ov094_02136a1c[0];
     tmp.y = data_ov094_02136a1c[1];
     tmp.z = data_ov094_02136a1c[2];
@@ -222,7 +213,7 @@ void daOwl_c::func_ov094_021357a4()
     st[1] = 0;
     st[2] = 0;
     st[1] = 0x1838000;
-    if (data_0209f2f8 == 0x16)
+    if (gCurrentSublevel == 0x16)
         st[1] = 0x1194000;
     mSpeedX = 0;
     mVertSpeed = 0;
@@ -384,10 +375,10 @@ int daOwl_c::func_ov094_02135c28()
 
     if (Vec3_Dist(&mPosX, &mAnchorX) > 0x190000) {
         mStateTimer = 0x32;
-        mWanderAngleY = Vec3_HorzAngle(&mPosX, &mAnchorX);
+        mWanderAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
     } else if (OWL_TIMER(this) == 0) {
-        mWanderAngleY = (s16)(((u32)RandomIntInternal(data_0209e650) >> 8) << 12);
-        mStateTimer = (s16)((((u32)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x32);
+        mWanderAngleY = (s16)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
+        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
     }
 
     ApproachAngle(&mPrevAngleY, mWanderAngleY, 0xa, 0x200, 0x100);
@@ -419,8 +410,8 @@ int daOwl_c::func_ov094_02135c28()
 int daOwl_c::func_ov094_02135e64()
 {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
-    mWanderAngleY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
-    mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x32);
+    mWanderAngleY = (short)((RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = (short)(((RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
     mAnimSpeed = 0x1000;
     return 1;
 }
@@ -435,18 +426,18 @@ int daOwl_c::func_ov094_02135ee0()
         func_ov094_02136188(OWL_STATE_HOVER);
         return 1;
     }
-    OwlVec v = *(OwlVec *)&mTalkTarget->mPosX;
+    VecFx32 v = *(VecFx32 *)&mTalkTarget->mPosX;
     Vector3 w;
     w.x = v.x;
     w.y = v.y;
     w.z = v.z;
-    ApproachAngle(&mPrevAngleY, Vec3_HorzAngle(&mPosX, &w), 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngleY, Vec3_HorzAngle(&mPos, &w), 0xa, 0x200, 0x100);
     Vector3 u;
     v.y += 0xc8000;
     u.x = v.x - 0;
     u.y = v.y;
     u.z = v.z;
-    ApproachAngle(&mPrevAngleX, Vec3_VertAngle(&mPosX, &u), 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngleX, Vec3_VertAngle(&mPos, &u), 0xa, 0x200, 0x100);
     if (mTalkTarget->GetTalkState() < 0) {
         mTalkState = TALK_DONE;
         func_ov094_02136188(OWL_STATE_HOVER);
@@ -475,16 +466,16 @@ int daOwl_c::func_ov094_02136024()
 {
     daPly_c *p = ClosestPlayer();
     if (p != 0 && p->mClimbClsn != 0) {
-        OwlVec *playerPos = (OwlVec *)&p->mPosX;
-        OwlVec pp;
-        OwlVec d;
-        OwlVec *selfpos = (OwlVec *)&mPosX;
+        VecFx32 *playerPos = (VecFx32 *)&p->mPosX;
+        VecFx32 pp;
+        VecFx32 d;
+        VecFx32 *selfpos = (VecFx32 *)&mPosX;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
-        Vec3_Sub(&d, selfpos, &pp);
+        Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
         if (LenVec3(&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;
@@ -493,7 +484,7 @@ int daOwl_c::func_ov094_02136024()
             d.y = 0;
             d.z = 0x320000;
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MulVec3Mat4x3(&d, &data_020a0e68, (OwlVec *)&mAnchorX);
+            MulVec3Mat4x3(&d, &data_020a0e68, (VecFx32 *)&mAnchorX);
             {
                 int *px = &mAnchorX;
                 int *py = &mAnchorY;
@@ -502,7 +493,7 @@ int daOwl_c::func_ov094_02136024()
                 *py = *py + mPosY;
                 *pz = *pz + mPosZ;
             }
-            mPrevAngleY = Vec3_HorzAngle((OwlVec *)&mPosX, (OwlVec *)&mAnchorX);
+            mPrevAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
             mAngleY = mPrevAngleY;
             func_ov094_02136188(OWL_STATE_HOVER);
         }
@@ -535,15 +526,14 @@ int daOwl_c::func_ov094_02136188(State *state)
 void daOwl_c::func_ov094_021361d8()
 {
     Matrix4x3 out;
-    OwlVec v;
+    VecFx32 v;
     Vec3_Asr((Vector3 *)&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         mAngleX, mAngleY, mAngleZ);
     mAnmModel.ApplyOpacity(mOpacity, 1);
     mAnmModel.mat4x3 = data_020a0e68;
-    MulMat4x3Mat4x3((const int *)&mAnmModel.data.transforms[1], (const int *)&mAnmModel.mat4x3,
-                    out.m);
+    MulMat4x3Mat4x3(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0x38000) >> 3,
@@ -558,7 +548,7 @@ void daOwl_c::func_ov094_021361d8()
  * model matrix. */
 void daOwl_c::func_ov094_021362e0()
 {
-    OwlVec v;
+    VecFx32 v;
     daPly_c *m;
     int z = 0;
     if (mRider == 0)
@@ -687,7 +677,7 @@ int daOwl_c::InitResources()
     mWithMeshClsn.Init(this, 0x50000, 0x64000, (Vector3_16 *)0, 0);
     func_ov094_02136188(OWL_STATE_DORMANT);
 
-    if (data_0209f2f8 == 7) {
+    if (gCurrentSublevel == 7) {
         if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
             MarkForDestruction();
             return 0;

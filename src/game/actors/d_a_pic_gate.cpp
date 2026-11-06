@@ -49,6 +49,8 @@
 #include "SharedFilePtr.h"
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/g3imm.h"
+#include "math/MtxStack.h"
 
 #pragma defer_codegen off
 
@@ -68,18 +70,13 @@
 
 /* The material block's ports keep the volatile spelling LoadMaterial was
  * matched under; see notes/mwccarm-codegen.md 6ba/6bb. */
-#define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
-#define reg_G3_TEXPLTT_BASE   (*(volatile u32 *)0x040004ac)
 #define reg_G3_DIF_AMB        (*(volatile u32 *)0x040004c0)
 #define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
 
-/* A plain {x, y, z} for stack locals: types.h Vector3 declares an empty
-   destructor under C++, and a stack object would emit ~Vector3. */
-struct Vec3 { int x, y, z; };
-/* CrossVec3's own file spells the same triple Vec3_Fix12; the declaration
- * has to carry its definition's name to agree. */
-typedef struct { int x, y, z; } Vec3_Fix12;
+/* Stack vectors are NitroSDK VecFx32: types.h Vector3 declares an empty
+   destructor under C++, and a stack object would emit ~Vector3. CrossVec3 and
+   NormalizeVec3 take Vector3 views, so calls cast this POD storage explicitly. */
 
 namespace cstd {
 Fix12i fdiv(s32, s32);
@@ -87,16 +84,12 @@ Fix12i fdiv(s32, s32);
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void  Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void  Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-int   InvMat4x3(int *src, int *dst);
+int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void  CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
-void  NormalizeVec3(int *v, int *out);
+void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
+void NormalizeVec3(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void  MulMat4x3Mat4x3(const int *m1, const int *m0, int *mF);
 void  func_020553a4(void *m);
 void  func_02012694(u32 id, void *pos);
 int   __aeabi_idiv(int a, int b);
@@ -105,25 +98,12 @@ u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
 }
 
-extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b3ec;
 extern short data_02082214[];
 extern char data_ov080_021277a8[];
 extern SharedFilePtr *data_ov080_0212775c[];
 extern unsigned char data_ov080_02128688[];
 extern unsigned char data_ov080_0212869c[];
-
-static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 texGen, u32 sizeS, u32 sizeT,
-                                    u32 repeat, u32 flip, u32 pltt0)
-{
-    reg_G3_TEXIMAGE_PARAM = (u32)((addr >> 3) | (texFmt << 26) | (texGen << 30)
-        | (sizeS << 20) | (sizeT << 23) | (repeat << 16) | (flip << 18) | (pltt0 << 29));
-}
-
-static inline void G3_TexPlttBase(u32 addr, u32 texFmt)
-{
-    reg_G3_TEXPLTT_BASE = addr >> (4 - (texFmt == 2 ? 1 : 0));
-}
 
 // @symbol _ZN11daPicGate_cD1Ev
 // @symbol _ZN11daPicGate_cD0Ev
@@ -134,7 +114,6 @@ daPicGate_c::~daPicGate_c()
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125460Ev
-#pragma opt_propagation off
 void daPicGate_c::func_ov080_02125460()
 {
     Ov080Mat *mat = (Ov080Mat *)mTexRecord;
@@ -146,31 +125,32 @@ void daPicGate_c::func_ov080_02125460()
     reg_G3_SPE_EMI = ((Ov080Mat *)mTexRecord)->speEmi;
     {
         Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
-        G3_TexImageParam(m2->texAddr, (m2->param >> 0x1a) & 7, 0, (m2->param >> 0x14) & 7,
-                         (m2->param >> 0x17) & 7, 0, 0, (m2->param >> 0x1d) & 1);
+        G3_TexImageParam((GXTexFmt)((m2->param >> 0x1a) & 7), GX_TEXGEN_NONE,
+                         (GXTexSizeS)((m2->param >> 0x14) & 7),
+                         (GXTexSizeT)((m2->param >> 0x17) & 7), GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
+                         (GXTexPlttColor0)((m2->param >> 0x1d) & 1), m2->texAddr);
     }
     {
         Ov080Mat *m3 = (Ov080Mat *)mTexRecord;
-        G3_TexPlttBase(m3->pltAddr, (m3->param >> 0x1a) & 7);
+        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 0x1a) & 7));
     }
     reg_G3_POLYGON_ATTR = 0x11f0088;
 }
-#pragma opt_propagation on
 
 // @symbol _ZN11daPicGate_c19func_ov080_0212555cEv
 /* mMtx = translate(pos) * rotate(mAngle) * translate(-width/2): the gate's
  * mesh sits centred on its position, and mInvMtx maps back into it. */
 void daPicGate_c::func_ov080_0212555c()
 {
-    Vec3 v;
+    VecFx32 v;
     Vec3_Asr((Vector3 *)&v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
         -(((unsigned char)(param1 & 0xf) + 1) * 0x64000) / 2 >> 3, 0, 0);
-    *(Matrix4x3 *)mMtx = data_020a0e68;
-    InvMat4x3((int *)&data_020a0e68, (int *)&data_020a0e68);
-    *(Matrix4x3 *)mInvMtx = data_020a0e68;
+    mMtx = data_020a0e68;
+    InvMat4x3(&data_020a0e68, &data_020a0e68);
+    mInvMtx = data_020a0e68;
 }
 
 // @symbol _ZN11daPicGate_c19func_ov080_02125630Ei
@@ -216,10 +196,10 @@ u8 *daPicGate_c::func_ov080_02125630(s32 i)
  * beyond the far edge starts one from the other side and clicks. */
 void daPicGate_c::func_ov080_021256f8()
 {
-    Vec3 a;
-    Vec3 b;
-    Vec3 ob;
-    Vec3 oa;
+    VecFx32 a;
+    VecFx32 b;
+    VecFx32 ob;
+    VecFx32 oa;
     daPly_c *r5;
     int x, y;
     int lim;
@@ -232,7 +212,7 @@ void daPicGate_c::func_ov080_021256f8()
 
     Vec3_Asr((Vector3 *)&a, (Vector3 *)&r5->mPrevPosX, 3);
     Vec3_Asr((Vector3 *)&b, (Vector3 *)&r5->mPosX, 3);
-    data_020a0e68 = *(Matrix4x3 *)mInvMtx;
+    data_020a0e68 = mInvMtx;
     MulVec3Mat4x3((Vector3 *)&a, &data_020a0e68, (Vector3 *)&oa);
     MulVec3Mat4x3((Vector3 *)&b, &data_020a0e68, (Vector3 *)&ob);
 
@@ -291,9 +271,9 @@ void daPicGate_c::func_ov080_021256f8()
  * normalized and packed 10 bits per axis into Vertex::normal. */
 void daPicGate_c::func_ov080_02125940()
 {
-    Vec3 ej;
-    Vec3 ei;
-    Vec3 n;
+    VecFx32 ej;
+    VecFx32 ei;
+    VecFx32 n;
     Vertex *p;
     int i;
     int j;
@@ -323,9 +303,9 @@ void daPicGate_c::func_ov080_02125940()
             else
                 SubVec3((Vector3 *)(p - mRows), (Vector3 *)(p + mRows), (Vector3 *)&ei);
 
-            CrossVec3((const Vec3_Fix12 *)&ej, (const Vec3_Fix12 *)&ei, (Vec3_Fix12 *)&n);
+            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
-            NormalizeVec3((int *)&n, (int *)&n);
+            NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p += 1;
         }
@@ -423,7 +403,7 @@ extern "C" void func_ov080_02125d64(char *c)
 
     for (i = 0; i < ((daPicGate_c *)c)->mNumCells; i++) {
         struct Elem *e = (struct Elem *)((char *)((daPicGate_c *)c)->mCells + i * 0x18);
-        Vec3 tmp = *(struct Vec3 *)&e->pos;
+        VecFx32 tmp = *(VecFx32 *)&e->pos;
         tmp.z = 0;
         e->dist =
             Vec3_Dist((struct Vector3 *)((daPicGate_c *)c)->mWaveOrigin, (struct Vector3 *)&tmp);
@@ -500,14 +480,14 @@ void daPicGate_c::func_ov080_02125f00()
  * one VTX_16 pair at >>8. */
 void daPicGate_c::func_ov080_02125fd0()
 {
-    int tmp[13];
+    Matrix4x3 tmp;
     int i;
     Vertex *p;
 
     G3_MTX_PUSH = 0;
-    MulMat4x3Mat4x3(mMtx, (const int *)&data_0209b3ec, tmp);
+    MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = 2;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;
     func_ov080_02125460();
@@ -574,8 +554,6 @@ void daPicGate_c::func_ov080_02126124()
 }
 
 #define G3_POLYGON_ATTR    (*(int *)0x040004a4)
-#define G3_TEXIMAGE_PARAM  (*(int *)0x040004a8)
-#define G3_TEXPLTT_BASE    (*(int *)0x040004ac)
 #define G3_DIF_AMB         (*(int *)0x040004c0)
 #define G3_SPE_EMI         (*(int *)0x040004c4)
 enum { kMtxPosVec = 2, kMtxPos = 1, kScale = 0x20000, kTriStrip = 2 };
@@ -597,26 +575,20 @@ extern int data_ov080_0212771c[];
     G3_VTX_16 = vx | ((u16)s1 << 16); \
     G3_VTX_16 = (u16)s2
 
-static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 sizeS, u32 sizeT, u32 pltt0) {
-    G3_TEXIMAGE_PARAM =
-        (addr >> 3) | (texFmt << 26) | 0x80000000 | (sizeS << 20) | (sizeT << 23) | (pltt0 << 29);
-}
-
 // @symbol _ZN11daPicGate_c19func_ov080_021261f4Ev
 /* DrawWave. The ports this one needs beyond the file's set are spelled
- * the same plain way, and its texture-parameter helper takes the five
- * fields it varies. */
-#pragma opt_propagation off
+ * the same plain way. The texture binds with normal-based texture
+ * coordinates (GX_TEXGEN_NORMAL) and no repeat or flip. */
 void daPicGate_c::func_ov080_021261f4() {
-    int tmp[12];
+    Matrix4x3 tmp;
     int i, j, n;
 
-    MulMat4x3Mat4x3(mMtx, data_0209b3ec.m, tmp);
+    MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_PUSH = 0;
     func_02055998(data_ov080_0212771c);
-    func_02055388(tmp);
+    func_02055388(&tmp);
     G3_MTX_MODE = kMtxPosVec;
-    func_020553a4(tmp);
+    func_020553a4(&tmp);
     G3_TEXCOORD = 0x04000400;
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;
@@ -627,12 +599,14 @@ void daPicGate_c::func_ov080_021261f4() {
     G3_SPE_EMI = ((struct Ov080Mat *)mTexRecord)->speEmi;
     {
         Ov080Mat *m2 = (Ov080Mat *)mTexRecord;
-        G3_TexImageParam(m2->texAddr, (m2->param >> 26) & 7, (m2->param >> 20) & 7,
-                         (m2->param >> 23) & 7, (m2->param >> 29) & 1);
+        G3_TexImageParam((GXTexFmt)((m2->param >> 26) & 7), GX_TEXGEN_NORMAL,
+                         (GXTexSizeS)((m2->param >> 20) & 7), (GXTexSizeT)((m2->param >> 23) & 7),
+                         GX_TEXREPEAT_NONE, GX_TEXFLIP_NONE,
+                         (GXTexPlttColor0)((m2->param >> 29) & 1), m2->texAddr);
     }
     {
         struct Ov080Mat *m3 = (struct Ov080Mat *)mTexRecord;
-        G3_TEXPLTT_BASE = m3->pltAddr >> (4 - (((m3->param >> 0x1a) & 7) == 2 ? 1 : 0));
+        G3_TexPlttBase(m3->pltAddr, (GXTexFmt)((m3->param >> 0x1a) & 7));
     }
     G3_POLYGON_ATTR = 0x01000088 | ((((u8)((param1 >> 8) & 0x1f)) == 7) ? 0x14 : 0x1f) << 16;
     G3_MTX_SCALE = 0x10000;
@@ -667,5 +641,3 @@ void daPicGate_c::func_ov080_021261f4() {
     }
     G3_MTX_POP = 1;
 }
-
-#pragma opt_propagation on

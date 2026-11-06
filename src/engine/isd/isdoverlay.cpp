@@ -57,6 +57,11 @@
 #define EB(t, n) ((struct OverlayTable *)((char *)(t) + ((n) << 4)))
 #define LM2(x) ((int*)(long long)(unsigned)(x))
 
+namespace IRQ {
+void SetFIQState(bool);
+void SetIRQState(bool);
+}
+
 extern "C" {
 
 struct OverlayInfo {
@@ -114,11 +119,6 @@ extern const char data_02086a30;
 
 extern int func_0206da18(void); /* IRQ::SetIRQState(false) entry */
 extern int func_0206d9cc(void); /* IRQ::SetFIQState(false) entry */
-/* local extern: IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry
- * labels inside func_0206d9cc and func_0206da18. func_0206d868 hands them the
- * saved word unnormalised; a bool parameter adds the `!= 0` the ROM lacks. */
-extern void _ZN3IRQ11SetFIQStateEb(int state);
-extern void _ZN3IRQ11SetIRQStateEb(int state);
 extern u32 func_0206dab4(u32 value, void *lock);
 
 void func_0206d940(struct OverlayTable *pInfo, u32 nIndex);
@@ -168,8 +168,9 @@ void func_0206d890(SavedIntState *state) {
 /* Put back what func_0206d890 saved. */
 void func_0206d868(const SavedIntState *s) {
     CP15::MPUDataRegion7(s->mpuRegion7);
-    _ZN3IRQ11SetFIQStateEb(s->fiqState);
-    _ZN3IRQ11SetIRQStateEb(s->irqState);
+    /* The saved word is 0 or the previous return, not a normalised bool. */
+    ((void (*)(int))IRQ::SetFIQState)(s->fiqState);
+    ((void (*)(int))IRQ::SetIRQState)(s->irqState);
 }
 
 // @symbol func_0206d32c

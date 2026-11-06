@@ -18,8 +18,6 @@
  * none): yaw rotation plus position >> 3.
  *
  * What stays: g_profile_OBJ_KUMO lives outside this TU (S14).
- * What stays: `#pragma opt_propagation off` is file-global last-wins;
- *   Behavior size-DIFFs without it.
  * What stays: inline destructor (out-of-line emits D0 before D1).
  * What stays: data_ov039_021118e0 is this TU's own load-count int, kept as a
  *   plain definition below; gOV039ObjKumoModelFile is the model handle the
@@ -52,13 +50,6 @@ struct KumoModelFilePtr : SharedFilePtr {
 extern KumoModelFilePtr gOV039ObjKumoModelFile;
 extern int data_ov039_021118e0;
 
-/* FILE-GLOBAL BY MEASUREMENT. `opt_propagation` is not positional in mwccarm
-   2004/b56 -- it is file-global last-wins -- so the legacy Behavior source's
-   `#pragma opt_propagation off` has to sit at the top of the merged TU. All
-   members were re-verified with it here: without it Behavior DIFFs by 999
-   words. */
-#pragma opt_propagation off
-
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjKumo_c_classInit
@@ -88,7 +79,7 @@ int daObjKumo_c::InitResources() {
 int daObjKumo_c::Behavior() {
     int d = Vec3_Dist(&mCamSpacePos, &mPos);
     int rank = 1;
-    int base = 2;
+    int polyID = 2;
     dActor_c *actor = FindWithActorID(0x13a, 0);
     while (actor) {
         if (actor != this) {
@@ -98,7 +89,8 @@ int daObjKumo_c::Behavior() {
         }
         actor = FindWithActorID(0x13a, actor);
     }
-    mModel.SetPolygonID((base + rank) & 0xff);
+    polyID += rank;
+    mModel.SetPolygonID(polyID & 0xff);
     return 1;
 }
 

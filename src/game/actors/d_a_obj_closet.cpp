@@ -28,8 +28,9 @@
  *   0x3c4 against 0x3e0; the Y store reloads that stack slot.
  * - Behavior: the front point reloads mAngleY as a volatile unsigned
  *   halfword, twice. (u16)mAngleY is 0x3ec against 0x3e0.
- * - Behavior: the positions are Vec3Raw, not Vector3. Vector3's
- *   destructor makes the function 0x3f0 against 0x3e0.
+ * - Behavior: keep the position locals as VecFx32; constructing Vector3
+ *   locals makes the function 0x3f0 against 0x3e0. Cast only at the
+ *   Vec3_HorzAngle call boundary to match CalcLib.h.
  * - Behavior: the jingles call func_02012790 (Sound.h), the ROM's wrapper
  *   for Sound::Play2D(2, id). Calling Play2D directly is 0x3e8 and
  *   relocates to _ZN5Sound6Play2DEjj, not 0x02012790.
@@ -40,14 +41,13 @@
 #include "Message.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "nitro/fx/fx.h"
 
 /* include/types.h's Vector3 declares a destructor. Under that type the
    five locals below grow the frame by 0x10. The ROM copies are a plain
-   12-byte triple, so this TU keeps a POD. */
-struct Vec3Raw {
-    int x, y, z;
-};
-
+   12-byte triple, so the locals are VecFx32 and cast only at typed helper
+   calls. */
 enum {
     kPlayerActor = 0xbf,
     kCylinderCount = 5,
@@ -70,7 +70,6 @@ enum {
 };
 
 extern "C" {
-short Vec3_HorzAngle(const struct Vec3Raw *a, const struct Vec3Raw *b);
 int AngleDiff(int a, int b);
 /* 1: return to the rec room when the menu closes. */
 void StartMinigameMenu(unsigned char returnToRecRoom);
@@ -98,9 +97,9 @@ s32 daObjCloset_c::CleanupResources() {
 
 // @symbol _ZN13daObjCloset_c8BehaviorEv
 s32 daObjCloset_c::Behavior() {
-    volatile Vec3Raw selfPos, frontPos, playerPos;
-    Vec3Raw actorPos;
-    volatile Vec3Raw colliderPos;
+    volatile VecFx32 selfPos, frontPos, playerPos;
+    VecFx32 actorPos;
+    volatile VecFx32 colliderPos;
     daPly_c *target = mTalkingPlayer;
 
     if (target) {
@@ -121,7 +120,7 @@ s32 daObjCloset_c::Behavior() {
                    kFxRound) >>
                   12);
         {
-            struct Vec3Raw *tp = (struct Vec3Raw *)&target->mPosX;
+            VecFx32 *tp = (VecFx32 *)&target->mPosX;
             playerPos.x = tp->x;
             playerPos.y = tp->y;
             playerPos.z = tp->z;
@@ -184,13 +183,13 @@ s32 daObjCloset_c::Behavior() {
             int isMatch = (actor->actorID == kPlayerActor);
             if (isMatch == 0)
                 continue;
-            struct Vec3Raw *ap = (struct Vec3Raw *)&actor->mPosX;
+            VecFx32 *ap = (VecFx32 *)&actor->mPosX;
             short angleToActor;
             int diff;
             actorPos.x = ap->x;
             actorPos.y = ap->y;
             actorPos.z = ap->z;
-            angleToActor = Vec3_HorzAngle((struct Vec3Raw *)&mPosX, &actorPos);
+            angleToActor = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&actorPos);
             diff = AngleDiff(angleToActor, mAngleY);
             if (diff < kQuarterTurn) {
                 if (((daPly_c *)actor)->StartTalk(*this, 0) != 0) {

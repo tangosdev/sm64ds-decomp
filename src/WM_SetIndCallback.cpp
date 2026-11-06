@@ -9,7 +9,6 @@
 extern "C" {
 
 extern int WMi_CheckInitialized(void);
-extern void *WM_GetSystemWork(void);
 
 int WM_SetIndCallback(int callback) {
     int enabled = IRQ::Disable();
@@ -18,7 +17,7 @@ int WM_SetIndCallback(int callback) {
         IRQ::Restore(enabled);
         return result;
     }
-    ((WMArm9Buf *)WM_GetSystemWork())->indCallback = (void *)callback;
+    WM_GetSystemWork()->indCallback = (void *)callback;
     IRQ::Restore(enabled);
     return 0;
 }

@@ -56,19 +56,8 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
  * function. */
 #include "common.h"
 #include "dExtSimpleModel_c.h"
-
-extern "C" {
-/* local extern: CalcLib.h / MtxStack.h spell these, and MtxStack.h spells
- * data_020a0e68 as Matrix4x3. That structured type scalarizes the copy below. */
-extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh); /* local extern: flat matrix copy */
-extern void Matrix4x3_FromTranslation(void *m, int x, int y,
-                                      int z); /* local extern: flat matrix copy */
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y,
-                                                int z); /* local extern: flat matrix copy */
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y,
-                                                   int z); /* local extern: flat matrix copy */
-extern char data_020a0e68;                                 /* local extern: flat matrix copy */
-}
+#include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 // @symbol func_ov002_020ad660
 extern "C" int func_ov002_020ad660(void *enemy, void *clsnArg, void *modelArg, int flags) {
@@ -103,7 +92,7 @@ extern "C" int func_ov002_020ad660(void *enemy, void *clsnArg, void *modelArg, i
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, c->OnAimedAtWithEgg() >> 3, 0);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-c->OnAimedAtWithEgg()) >> 3, 0);
-        model->mat4x3 = *(Matrix4x3 *)&data_020a0e68;
+        model->mat4x3 = data_020a0e68;
     }
     return 1;
 }

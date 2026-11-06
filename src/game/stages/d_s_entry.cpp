@@ -397,7 +397,7 @@ extern "C" void func_ov075_02116128(int unused, int slot, int dim) {
  *
  * Each row emits three things through OAM::Render: the player icon at y = 0x98, the
  * character-index sprite at x + 0x1c, and a three-digit score at y = 0xb0. The score is
- * the shared base at data_0209ee90+0x1d4 plus this player's delta from data_0209f358,
+ * the shared base at data_0209ee90+0x1d4 plus this player's delta from gNumCoins,
  * split by / 100, / 10 and % 10. Leading zeros are suppressed and the pen advances by 8
  * for a drawn digit and 4 for a skipped one, so the number stays centred. Where a call
  * returns an OAM attribute block, the low ten bits of the second word are the tile
@@ -420,8 +420,8 @@ extern u8 data_ov075_0211c6e8[];
 extern OamAttr data_ov075_0211c7c0[];
 extern char data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211c870[];
-extern s8 data_0209f310[];
-extern s16 data_0209f358[];
+extern s8 gNumStageStars[];
+extern s16 gNumCoins[];
 extern char data_0209ee90[];
 }
 
@@ -474,7 +474,7 @@ extern "C" void func_ov075_0211621c(char *c) {
                     int *q = p + 1;
                     int val = *q;
                     *q = (val & (~0x3ff)) |
-                         ((data_0209f310[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
+                         ((gNumStageStars[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
                 }
                 OAM::Render(zB, data_ov075_0211c870, xbase + i * stride, yNum, minus1, minus1,
                             scale, scale, zB, minus1);
@@ -482,7 +482,7 @@ extern "C" void func_ov075_0211621c(char *c) {
                     int n;
                     int dx = off14;
                     int rem;
-                    n = (*((int *)(data_0209ee90 + 0x1d4))) + data_0209f358[pid];
+                    n = (*((int *)(data_0209ee90 + 0x1d4))) + gNumCoins[pid];
                     hundreds = n / 100;
                     rem = n % 100;
                     tens = rem / 10;

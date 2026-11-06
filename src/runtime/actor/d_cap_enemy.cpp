@@ -46,7 +46,7 @@ extern "C" dCapEnemy_c *_ZN11dCapEnemy_cD0Ev(dCapEnemy_c *self)
     self->mCapIcon.dCapIcon_c::~dCapIcon_c();
     self->mModel.dExtSimpleModel_c::~dExtSimpleModel_c();
     _ZN12dEnemyBase_cD2Ev(self);
-    Memory::Deallocate(self, (Heap *)data_020a0eac);
+    Memory::Deallocate(self, data_020a0eac);
     return self;
 }
 

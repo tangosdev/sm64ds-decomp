@@ -39,12 +39,12 @@ int fdiv(int a, int b);
 extern "C" {
 extern SharedFilePtr *data_ov056_02113314[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void hold_d_a_obj_ewm_ice_block(dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale,
                                        short angle, void *clps);
-extern void func_020393d4(void *p, void *cb);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 #pragma defer_codegen off
@@ -157,7 +157,7 @@ int daObjEwmIceBlock_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*data_ov056_02113314[1])),
                               *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov056_02113314[2]));
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;
     mHorzSpeed = 0xa000;

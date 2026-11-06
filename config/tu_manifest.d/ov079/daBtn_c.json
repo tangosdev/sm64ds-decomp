@@ -1975,84 +1975,84 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@738",
-      "to": "@686",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@739",
-      "to": "@687",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
       "from": "@740",
-      "to": "@688",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@686",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@741",
-      "to": "@689",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@687",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@742",
-      "to": "@640",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@688",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@743",
-      "to": "@691",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@689",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@744",
-      "to": "@641",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@640",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@745",
-      "to": "@693",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@691",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@746",
-      "to": "@694",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@641",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@747",
-      "to": "@695",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@693",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@748",
-      "to": "@642",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@694",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@749",
-      "to": "@697",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@695",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@750",
-      "to": "@698",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@642",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@751",
-      "to": "@699",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@697",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@752",
-      "to": "@643",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@698",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
       "from": "@753",
+      "to": "@699",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
+    },
+    {
+      "from": "@754",
+      "to": "@643",
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
+    },
+    {
+      "from": "@755",
       "to": "@644",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     }
   ]
 }

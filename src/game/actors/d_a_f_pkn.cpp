@@ -37,12 +37,9 @@
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 #pragma defer_codegen off
-
-/* The tag SubVec3.c defines its parameters by. Vec3_Asr.c takes Vector3
-   now, so the extern below uses that. */
-struct Vec3 { int x, y, z; };
 
 /* UpdateClsnOffset's stack locals: three bone-angle sums, then the
    position shifted down by 3. */
@@ -111,14 +108,9 @@ void func_02012694(u32 id, const Vector3 *pos);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, void *self, int v);
-void Matrix4x3_FromRotationY(void *m, int angle);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void MulMat4x3Mat4x3(const int *a, const int *b, int *d);
 int *Vec3_LslInPlace(void *v, int sh);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void LoadBlueCoinModel(void *c);
-void UnloadBlueCoinModel(void *);
 
 /* Called by their mangled names: each carries a Fix12<int> by value and
    the member spelling DIFFs. */
@@ -135,7 +127,6 @@ extern SharedFilePtr data_ov084_02130e24;   /* death animation */
 extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
 extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
 extern u8 data_ov084_02130294[];            /* UpdateClsnOffset's five bone indices */
-extern s32 data_020a0e68[];                 /* the shared scratch matrix */
 extern s16 data_02082214[];                 /* the sin and cos table, two shorts a step */
 }
 
@@ -240,16 +231,11 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.z = 0;
 
     Vec3_Asr((Vector3 *)locals.tmp, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(
-        data_020a0e68,
-        locals.tmp[0],
-        locals.tmp[1],
-        locals.tmp[2]
-    );
-    MulMat4x3Mat4x3(mAnmModel.data.transforms[6].m, data_020a0e68, data_020a0e68);
-    mClsnOffset.x = ((Matrix4x3 *)data_020a0e68)->m[9];
-    mClsnOffset.y = ((Matrix4x3 *)data_020a0e68)->m[10];
-    mClsnOffset.z = ((Matrix4x3 *)data_020a0e68)->m[11];
+    Matrix4x3_FromTranslation(&data_020a0e68, locals.tmp[0], locals.tmp[1], locals.tmp[2]);
+    MulMat4x3Mat4x3(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+    mClsnOffset.x = data_020a0e68.m[9];
+    mClsnOffset.y = data_020a0e68.m[10];
+    mClsnOffset.z = data_020a0e68.m[11];
     Vec3_LslInPlace(&mClsnOffset, 3);
     SubVec3((Vector3 *)&mClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mClsnOffset);
 
@@ -669,7 +655,7 @@ int daFPkn_c::CleanupResources()
     for (int i = 0; i < 6; i++)
         data_ov084_021302f4[i]->Release();
     data_ov002_0210da38.Release();
-    UnloadBlueCoinModel(this);
+    UnloadBlueCoinModel();
     return 1;
 }
 
@@ -756,7 +742,7 @@ int daFPkn_c::InitResources()
         dExtFrameCtrl_c::LoadFile(*data_ov084_021302f4[i]);
 
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
-    LoadBlueCoinModel(this);
+    LoadBlueCoinModel();
 
     /* A real SetAnim call with a Fix12<int> speed DIFFs; see the file header. */
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130df4.filePtr, 0x40000000, 0x1000, 0);

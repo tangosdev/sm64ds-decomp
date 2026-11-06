@@ -42,7 +42,9 @@ enum daBakubaku_c_AssetId {
 #include "SpawnInfo.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
+#include "LevelRng.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 /* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
 enum {
@@ -70,11 +72,9 @@ struct BakubakuAnimationFileHandle : SharedFilePtr {
     ~BakubakuAnimationFileHandle();
 };
 
-/* BakuVec3 is three plain words: the retail initializer registers no
- * destructor for the cylinder offsets, so they were never Vector3 globals
- * (Vector3 carries a declared ~Vector3, which would register at exit). */
-struct BakuVec3 { s32 x, y, z; };
-
+/* The cylinder offsets are VecFx32: the retail initializer registers no
+ * destructor for them, so they were never Vector3 globals (Vector3 carries
+ * a declared ~Vector3, which would register at exit). */
 extern "C" {
 extern BakubakuModelFilePtr gBakubakuModelFile;    /* model 0x295 */
 extern BakubakuAnimationFileHandle data_ov032_02113a50; /* swim anim 0x297 */
@@ -86,11 +86,9 @@ extern daBakubaku_c::State data_ov032_02113a7c; /* surface */
 extern daBakubaku_c::State data_ov032_02113abc; /* dive */
 extern s32 data_0209f32c;
 extern Matrix4x3 data_020a0e68;
-extern int data_0209e650[];
 
-extern BakuVec3 data_ov032_021137cc; /* body cylinder */
-extern BakuVec3 data_ov032_021137d8; /* head cylinder */
-
+extern VecFx32 data_ov032_021137cc; /* body cylinder */
+extern VecFx32 data_ov032_021137d8; /* head cylinder */
 
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
@@ -102,7 +100,7 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, s16 angY);
+void Matrix4x3_FromRotationY(void *m, int angY);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 
@@ -288,9 +286,9 @@ int daBakubaku_c::func_ov032_02111ff4(void *pv)
 // @symbol _ZN12daBakubaku_c19func_ov032_02111f9cEv
 int daBakubaku_c::func_ov032_02111f9c()
 {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     mAngTarget = ((r >> 8) & 0xf) << 0xc;
-    r = RandomIntInternal(data_0209e650);
+    r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = ((r >> 8) & 0x3f) + 0x32;
     mAnmModel.speed = 0x1000;
     return 1;
@@ -330,7 +328,7 @@ int daBakubaku_c::func_ov032_02111e24()
         return 1;
     }
     if (*(unsigned short *)&mStateTimer == 0) {
-        unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
+        unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
         if (((r >> 8) & 3) == 0) {
             func_ov032_02111ff4(&data_ov032_02113a9c);
         } else {
@@ -344,7 +342,7 @@ int daBakubaku_c::func_ov032_02111e24()
 // @symbol _ZN12daBakubaku_c19func_ov032_02111dd8Ev
 int daBakubaku_c::func_ov032_02111dd8()
 {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = ((r >> 8) & 0x1f) + 0x14;
     mAnmModel.speed = 0x1000;
     mSpeedX = 0;
@@ -390,7 +388,7 @@ int daBakubaku_c::func_ov032_02111b9c()
     }
 
     mAngTarget = Vec3_HorzAngle(&mPos, (Vector3 *)&mTargetPosX);
-    unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
+    unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
     int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
     ApproachLinear(mPrevAngleY, mAngTarget, 0x200);
     if (Vec3_HorzDist(&mPos, (Vector3 *)&mTargetPosX) < 0x258000) {
@@ -729,5 +727,5 @@ daBakubaku_c::State data_ov032_02113abc = {
 daBakubaku_c::State data_ov032_02113a7c = {
     &daBakubaku_c::func_ov032_02111814, &daBakubaku_c::func_ov032_02111620
 };
-BakuVec3 data_ov032_021137cc = { 0, -0x28000, 0x58000 };   /* body cylinder */
-BakuVec3 data_ov032_021137d8 = { 0, -0x30000, -0x20000 };  /* head cylinder */
+VecFx32 data_ov032_021137cc = {0, -0x28000, 0x58000};  /* body cylinder */
+VecFx32 data_ov032_021137d8 = {0, -0x30000, -0x20000}; /* head cylinder */

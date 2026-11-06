@@ -2,13 +2,12 @@
 #include "types.h"
 #include "WmWork.h"
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
-extern int WM_CheckStateEx(int a, int b);
 extern int WmCheckParentParameter(void *o);
 extern void WM_SetCallbackTable(int i, int val);
-extern int WM_SendCommand(int a, int b, void *c);
 
 /* NitroSDK WM_SetParentParameter(callback, pparaBuf): refuse user game info
  * without a buffer and MP sizes that, with the key-sharing overhead, pass

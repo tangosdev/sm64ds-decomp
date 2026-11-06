@@ -83,7 +83,7 @@ _ZN13daObjMaruta_c6RenderEv kind:function(arm,size=0x28) addr:0x02127124
 func_ov080_0212714c kind:function(arm,size=0x360) addr:0x0212714c
 func_ov080_021274ac kind:function(arm,size=0xe0) addr:0x021274ac
 _ZN13daObjMaruta_c19HandlePlayerContactEP8dActor_c kind:function(arm,size=0xcc) addr:0x0212758c
-_ZN13daObjMaruta_c18BeforeClsnCallbackEPvS0_S0_ kind:function(arm,size=0x14) addr:0x02127658
+_ZN13daObjMaruta_c15StoodOnCallbackEP4dBgWP8dActor_cS3_ kind:function(arm,size=0x14) addr:0x02127658
 data_ov080_0212766c kind:data(any) addr:0x0212766c
 data_ov080_0212767c kind:data(any) addr:0x0212767c
 data_ov080_021276c4 kind:data(any) addr:0x021276c4

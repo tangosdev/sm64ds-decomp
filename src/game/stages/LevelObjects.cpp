@@ -44,7 +44,7 @@ extern u8 data_0209f220;
 extern u8 data_0209f250;
 extern u8 data_0209f2d8;
 extern void *data_0209f318;
-extern int data_0209f338[];
+extern void *data_0209f338;
 extern void *data_0209f394[];
 extern u8 data_0209fc5c[];
 extern int data_02092134;
@@ -66,7 +66,7 @@ void StartEntranceFaderWipe(int index);
 /* dScStage_c::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
 struct CLPS_Block;
-KCL_File *LoadFile(int handle);
+void *LoadFile(int handle);
 
 /* LoadObjects dispatches through this table. Its entries are the
  * category loaders. This text-only TU does not define it. */
@@ -116,7 +116,7 @@ static inline int IsGameMode(int mode) {
 
 /* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
 static inline int IntroAllowed() {
-    return IsGameMode(0) && (sCurrentFile.flags2 & 0x80) == 0;
+    return IsGameMode(0) && (sCurrentFile.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
 }
 
 /* Spawn simple actors, or hand a minimap-change sentinel to
@@ -383,7 +383,7 @@ void LoadMinimapScaleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
  * that keeps the table around, which also explains why it reads no count. */
 // @symbol _Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEaj
 void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_0209f338[0] = (int)table.entries;
+    data_0209f338 = table.entries;
 }
 
 /* Take the first word of the star-camera table and publish it. Reads no count,
@@ -435,7 +435,7 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
     PathPtr::SetPathTable(0, 0);
 
     if (overlay->kclFileId != 0) {
-        collisionFile = LoadFile(overlay->kclFileId);
+        collisionFile = static_cast<KCL_File *>(LoadFile(overlay->kclFileId));
         dBgW_Kc::UpdateFileOffsets(*collisionFile);
         ((dBgW_Kc *)meshCollider)->SetFile(collisionFile, *overlay->clps);
         func_0202a850(((dBgW_Kc *)meshCollider)->GetOctreeOriginY(),

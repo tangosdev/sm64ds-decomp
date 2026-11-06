@@ -69,7 +69,7 @@ extern "C" {
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-void func_020393d4(void *p, void *v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(void *p, void *v);
 }
 
@@ -276,7 +276,7 @@ s32 daObjFl_Amilift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
 
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
 
     mPathPtr.FromID(param1 & 0xf);

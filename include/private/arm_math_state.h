@@ -14,6 +14,17 @@ typedef struct ARMMathState {
     u16 sqrt_mode; /* 0x1a -- 0x040002b0 (low bit) */
 } ARMMathState;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void ARMMathSaveState(ARMMathState *state);
+void ARMMathLoadState(const ARMMathState *state);
+
+#ifdef __cplusplus
+}
+#endif
+
 #ifndef SM64DS_PLATFORM_PC
 typedef char ARMMathState_size_must_be_0x1c[sizeof(ARMMathState) == 0x1c ? 1 : -1];
 #endif

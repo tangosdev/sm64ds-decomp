@@ -21,7 +21,7 @@
 // names `__cxa_vec_ctor`, and two objects in this tree import it, so 0x020733a8 is
 // now `__cxa_vec_ctor` with a source file of its own.
 
-typedef void (*dtor_t)(void *);
+#include "MWCPlusLib.h"
 
 namespace std {
 void terminate();

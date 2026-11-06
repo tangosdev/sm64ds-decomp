@@ -110,6 +110,10 @@ class Images:
         ay = open(os.path.join(self.dir, 'arm9', 'arm9.yaml')).read()
         self.mods['arm9'] = (int(re.search(r'^base_address:\s*(\d+)', ay, re.M).group(1)),
                              os.path.join(self.dir, 'arm9', 'arm9.bin'))
+        iy = os.path.join(self.dir, 'arm9', 'itcm.yaml')
+        if os.path.exists(iy):          # ITCM code (0x01ff8000), copied there at boot
+            self.mods['itcm'] = (int(re.search(r'^base_address:\s*(\d+)', open(iy).read(), re.M).group(1)),
+                                 os.path.join(self.dir, 'arm9', 'itcm.bin'))
         oy = open(os.path.join(self.dir, 'arm9_overlays', 'overlays.yaml')).read()
         for m in re.finditer(r'-\s*id:\s*(\d+)\s*\n\s*base_address:\s*(\d+)', oy):
             n = int(m.group(1))
@@ -130,10 +134,21 @@ class Images:
             raise ValueError('%08x is outside %s' % (addr, mod))
         return d[off:off + n]
 
+    def marker_addr(self):
+        """Address of MARKER_TEXT in the arm9 image (4-aligned), or None."""
+        d = self.data('arm9')
+        k = d.find(MARKER_TEXT)
+        while k >= 0 and k % 4:
+            k = d.find(MARKER_TEXT, k + 1)
+        return None if k < 0 else self.mods['arm9'][0] + k
+
     def default_module(self, addr):
-        base = self.mods['arm9'][0]
-        if base <= addr < base + len(self.data('arm9')):
-            return 'arm9'
+        """'arm9' or 'itcm' when addr lies in that image, else None (overlays are ambiguous)."""
+        for mod in ('arm9', 'itcm'):
+            if mod in self.mods:
+                base = self.mods[mod][0]
+                if base <= addr < base + len(self.data(mod)):
+                    return mod
         return None
 
 
@@ -172,6 +187,14 @@ def savestate_ram(path, images=None):
 VERIFY_WINDOWS = ([(OVERLAY_TABLE, 0x48), (OVERLAY_TABLE + 0x48, 0x48), (0x0209caa0, 0x80), (0x0209f2c0, 0x80)]
                   + [(0x02090000 + k * 0x1000, 0x20) for k in range(0x12)]
                   + [(0x02100000 + k * 0x8000, 0x20) for k in range(0x58)])
+
+# The load marker: a RAM word that nothing writes and nothing reads while the game
+# runs, so a sentinel poked there survives until a savestate load overwrites it.
+# It is the start of the arm9 .rodata format string "ASSERTION FAILED  FILE=[%s]
+# LINE=[%d] ...", printed only when an assertion fails. It is found by content in
+# the arm9 image (Images.marker_addr), so another build of the ROM still works.
+MARKER_TEXT = b'ASSERTION FAILED'
+MARKER_XOR = 0xA5A55A5A
 
 
 # ---------------------------------------------------------------- expressions
@@ -284,7 +307,7 @@ def evaluate(expr, env, read):
 # --------------------------------------------------------------------- session
 class Bp:
     def __init__(self, addr, role, name='', module=None, dump=(), ret=False, max_hits=0, when=None,
-                 obj=None, thumb=False):
+                 obj=None, thumb=False, this=False):
         self.addr = addr & ~1
         self.thumb = bool(thumb or (addr & 1))
         self.role = role            # frame | trigger | probe
@@ -296,6 +319,7 @@ class Bp:
         self.max_hits = max_hits
         self.when = when            # expression; trigger/probe only fires when nonzero
         self.obj = obj              # expression for `obj` at the hit
+        self.this = bool(this)      # resolve r0 as `this` (vptr -> class, actor id) at each hit
         self.armed = False          # set in the stub right now
         self.want = False           # asked to be armed (armed unless suspended)
         self.suspended = False      # wanted, but held out: its overlay is not loaded
@@ -647,6 +671,22 @@ class Session:
     def ev(self, expr, env):
         return evaluate(expr, env, lambda a, n: self.read_int(a, n))
 
+    def this_info(self, obj):
+        """r0 (or any address) as an object: its vptr resolved to a _ZTV symbol in arm9
+        or a loaded overlay, the RTTI base chain, and for a dActor_c its actor id."""
+        import symtab
+        if self.loaded is None:
+            try:
+                self.refresh_overlays()
+            except (RuntimeError, ValueError):
+                pass
+        mods = ['arm9'] + ['ov%03d' % i for i in sorted(self.loaded or ())]
+        cache = self.__dict__.setdefault('_vptr_cache', {})
+        try:
+            return symtab.resolve_object(self.read, obj & 0xffffffff, mods, symtab.table(), cache)
+        except Exception as e:
+            return {'obj': '%08x' % (obj & 0xffffffff), 'error': str(e)}
+
     def _dump(self, bp, env):
         out = {}
         for label, expr, size in bp.dump:
@@ -722,6 +762,8 @@ class Session:
                    'r3': '%08x' % regs['r3'], 'sp': '%08x' % regs['sp']}
             if 'obj' in info:
                 rec['obj'] = info['obj']
+            if bp.this:
+                rec['this'] = self.this_info(regs['r0'])
             rec.update(self._dump(bp, env))
             self.event(rec)
             if bp.ret:
@@ -738,8 +780,10 @@ class Session:
             return 'go', None
         # trigger
         info['dump'] = self._dump(bp, env)
+        if bp.this:
+            info['this'] = self.this_info(regs['r0'])
         self.event({'ev': 'trigger', 'name': bp.name, 'pc': info['pc'], 'obj': info.get('obj'),
-                    'lr': '%08x' % regs['lr'], 'dump': info['dump']})
+                    'lr': '%08x' % regs['lr'], 'dump': info['dump'], 'this': info.get('this')})
         if bp.max_hits and bp.hits >= bp.max_hits:
             bp.want = False
             self._apply(bp)
@@ -835,6 +879,7 @@ class Daemon:
         self.quit = False
         self.kill_emu = False
         self.clean = False
+        self.emu_exited = None      # melonDS's exit code, if it exited while served
 
     # ---- ops: everything a client can ask for. Values are JSON-friendly.
     def op_status(self):
@@ -857,6 +902,19 @@ class Daemon:
         self.s.event({'ev': 'write', 'addr': '%08x' % a, 'before': before, 'after': after})
         return {'before': before, 'after': after}
 
+    def op_write_many(self, writes):
+        """[[addr, hex], ...] written in order, no read-back and no event (per-frame
+        input injection)."""
+        for a, h in writes:
+            self.s.write(parse_int(a), bytes.fromhex(h))
+        return len(writes)
+
+    def op_this(self, obj='r0', env=None):
+        """Resolve an object pointer (an expression: default r0 at the current halt)
+        to its class: vptr -> _ZTV symbol, RTTI chain, dActor_c actor id."""
+        e = self._env(env)
+        return self.s.this_info(self.s.ev(obj, e) & 0xffffffff)
+
     def op_eval(self, expr, env=None):
         regs = {} if self.s.running else self.s.regs()
         e = self.s.env(regs, {k: parse_int(v) for k, v in (env or {}).items()})
@@ -872,9 +930,10 @@ class Daemon:
         return bp.desc()
 
     def op_add_bp(self, addr, role='trigger', name='', module=None, dump=(), ret=False, max_hits=0,
-                  when=None, obj=None, arm=True):
+                  when=None, obj=None, arm=True, this=False):
+        """this: at each hit, resolve r0 as `this` (see op_this) into the event."""
         bp = Bp(parse_int(addr), role, name=name, module=module, dump=dump, ret=ret,
-                max_hits=parse_int(max_hits), when=when, obj=obj)
+                max_hits=parse_int(max_hits), when=when, obj=obj, this=this)
         return self.s.add_bp(bp, arm=arm).desc()
 
     def op_arm(self, addr, on=True):
@@ -1013,23 +1072,120 @@ class Daemon:
         self.s.event({'ev': 'poke', 'addr': '%08x' % a, 'op': op, 'mask': mask, 'old': old, 'new': back})
         return {'addr': '%08x' % a, 'old': old, 'new': back, 'size': size}
 
-    def op_shot(self, path=None, which='top', settle_ms=250, stable_tries=6):
+    def op_shot(self, path=None, which='top', settle_ms=250, stable_tries=6, require_framed=None, env=None,
+                margin=8, dy=0):
         """Capture the DS screen(s). Waits settle_ms, then re-captures until two
-        consecutive grabs agree (the halted frame has been repainted)."""
+        consecutive grabs agree (the halted frame has been repainted).
+
+        require_framed (opt-in guard): an expression, or a list of them, for the
+        address of a Fix12 world position, as for op_project (e.g. "[obj+4]+0x5c"
+        with env {"obj": ...}). If any of them projects off the top screen (with
+        `margin` px of slack; `dy` lifts the point), nothing is captured and
+        NotFramed is raised, so a capture loop cannot waste shots on a subject
+        that is not in view."""
+        framing = None
+        if require_framed:
+            pts = require_framed if isinstance(require_framed, list) else [require_framed]
+            framing = []
+            for p in pts:
+                r = self.op_project(pos=p, env=env, margin=margin, dy=dy)
+                framing.append({'pos': p, 'sx': r.get('sx'), 'sy': r.get('sy'), 'depth': r.get('depth'),
+                                'on_screen': r.get('on_screen'), 'why': r.get('why')})
+            bad = [f for f in framing if not f['on_screen']]
+            if bad:
+                self.s.event({'ev': 'shot_refused', 'path': path, 'framing': framing})
+                raise NotFramed('capture refused, target not framed: %s' % json.dumps(bad))
+        prev, stable, retries = self._grab(which, settle_ms, stable_tries)
+        if path:
+            prev.save_png(path)
+        out = {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
+        if retries:
+            out['capture_retries'] = retries
+        if framing is not None:
+            out['framing'] = framing
+        return out
+
+    def _grab(self, which, settle_ms, stable_tries):
+        """(Frame, stable, capture retries): the window, re-captured until two grabs agree."""
         import emuwin
+        log = self.s.event
         time.sleep(float(settle_ms) / 1000.0)
-        prev = emuwin.capture_screens(self.window(), which)
+        prev = emuwin.capture_screens(self.window(), which, log=log)
+        retries = getattr(prev, 'retries', 0)
         stable = False
         for _ in range(int(stable_tries)):
             time.sleep(0.08)
-            cur = emuwin.capture_screens(self.window(), which)
+            cur = emuwin.capture_screens(self.window(), which, log=log)
+            retries += getattr(cur, 'retries', 0)
             if cur.diff_fraction(prev, tol=4) == 0.0:
                 stable = True
                 break
             prev = cur
+        return prev, stable, retries
+
+    def op_backend(self):
+        return {'backend': 'gdb', 'stub_port': self.s.port}
+
+    def _read_ranges(self, ranges):
+        """[(addr, size)] -> [bytes]. The stub reads them one after another (0x80 per packet)."""
+        return [self.s.read(a, n) for a, n in ranges]
+
+    def _ranges_meta(self):
+        return {'atomic': not self.s.running}
+
+    def op_ram_snapshot(self, ranges, path=None, env=None, data=False):
+        """Read several RAM ranges in one call, for RAM-diff screening.
+
+        ranges: [[addr, size], ...] or [{name, addr, size}, ...]; addr may be an
+        expression ("[0x0209f394]", "obj+0x5c", with env). The control-socket
+        backend reads them all at one emulated instant; the stub backend reads them
+        in turn (consistent only while the target is halted).
+        path: write the bytes, concatenated, to path and the index to path + '.json'.
+        data: also return each range's bytes (hex) in the reply."""
+        import hashlib
+        e = self._env(env)
+        rs = []
+        for k, r in enumerate(ranges):
+            if isinstance(r, dict):
+                name, a, n = r.get('name'), r['addr'], r['size']
+            else:
+                a, n = r[0], r[1]
+                name = r[2] if len(r) > 2 else None
+            addr = self.s.ev(a, e) & 0xffffffff if isinstance(a, str) else parse_int(a)
+            rs.append({'name': name or '%08x' % addr, 'addr': '%08x' % addr, 'size': parse_int(n)})
+        blobs = self._read_ranges([(int(r['addr'], 16), r['size']) for r in rs])
+        off = 0
+        for r, b in zip(rs, blobs):
+            r.update(offset=off, sha256=hashlib.sha256(b).hexdigest())
+            off += len(b)
+            if data:
+                r['hex'] = b.hex()
+        out = {'frames': self.s.frames, 'halted': not self.s.running, 'total': off, 'ranges': rs,
+               'backend': self.op_backend()['backend'], 't': round(time.time(), 3)}
+        out.update(self._ranges_meta())
         if path:
-            prev.save_png(path)
-        return {'w': prev.w, 'h': prev.h, 'path': path, 'stable': stable}
+            path = os.path.abspath(path)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, 'wb') as f:
+                for b in blobs:
+                    f.write(b)
+            with open(path + '.json', 'w', encoding='utf-8') as f:
+                json.dump(dict(out, ranges=[{k: v for k, v in r.items() if k != 'hex'} for r in rs], bin=path),
+                          f, indent=1)
+            out['path'] = path
+        self.s.event({'ev': 'ram_snapshot', 'ranges': len(rs), 'total': off, 'path': out.get('path')})
+        return out
+
+    def op_input(self, buttons=None, touch=None, frames=2):
+        """Hold buttons and/or touch [x, y] for `frames` emulated frames. The stub
+        backend can only post keys for the equivalent wall time while running."""
+        import emuwin
+        ms = int(round(parse_int(frames) * 1000.0 / 60.0))
+        if touch:
+            emuwin.touch(self.window(), int(touch[0]), int(touch[1]), ms)
+        if buttons:
+            self.op_press(buttons, ms)
+        return {'exact': False, 'ms': ms}
 
     def op_press(self, buttons, ms=100):
         import emuwin
@@ -1060,7 +1216,7 @@ class Daemon:
 
     def _load_slot(self, slot, settle):
         import emuwin
-        out = emuwin.load_state_slot(self.pid, int(slot))
+        out = emuwin.load_state_slot(self.pid, int(slot), log=self.s.event)
         time.sleep(float(settle))
         self.s.event({'ev': 'load_state', 'slot': int(slot)})
         return out
@@ -1089,18 +1245,31 @@ class Daemon:
     def _verify_windows(self):
         return [self.s.read(a, n) for a, n in VERIFY_WINDOWS]
 
-    def op_load_state_file(self, path, slot=8, settle=1.0, verify=True, tries=2):
+    def op_load_state_file(self, path, slot=8, settle=1.0, verify=True, tries=2, marker=True, dry_run=False):
         """Load any savestate file: copy it over slot file game.ml<slot> and load
         that slot. serve creates every slot file before melonDS loads the ROM,
         because melonDS enables a Load state slot only if its file existed then.
 
-        verify: read VERIFY_WINDOWS before and after, and compare with the RAM
-        image inside the file. 'loaded' = after matches the file in more windows
-        than it matches before; 'indistinguishable' = before already matched the
-        file in every window that did not change to a third value meanwhile (the
-        load cannot be told from no load, e.g. reloading the state already
-        running); 'not_loaded' = some window kept a pre-load value the file does
-        not have."""
+        verify, marker check (gives the verdict): before the load, a sentinel
+        that differs from the file's value is written into the marker word
+        (MARKER_TEXT: nothing writes or reads it while the game runs). If the
+        word then holds the file's value, the load overwrote it: 'loaded'. If it
+        still holds the sentinel: 'not_loaded', and the game's own value is
+        written back. `marker` in the result holds the address and the values.
+
+        verify, RAM windows (kept for compatibility: window_verdict, differ,
+        match_file, match_before, match_file_all): read VERIFY_WINDOWS before and
+        after, and compare with the RAM image inside the file. 'loaded' = after
+        matches the file in more windows than it matches before;
+        'indistinguishable' = before already matched the file in every window
+        that did not change to a third value meanwhile; 'not_loaded' = some
+        window kept a pre-load value the file does not have. Nearby states share
+        most of these windows, so this can say 'indistinguishable' after a real
+        load. It decides the verdict only when the marker cannot (marker=False,
+        or no marker word in this ROM): see verdict_by.
+
+        dry_run: everything but the menu click (a self-test of the check: the
+        verdict must come back 'not_loaded' and the marker word be put back)."""
         import shutil
         path = os.path.abspath(path)
         dst = self.slot_path(slot)
@@ -1108,18 +1277,68 @@ class Daemon:
             shutil.copyfile(path, dst)
         file_ram = savestate_ram(path, self.s.images) if verify else None
         res = {'slot': int(slot), 'path': path}
+        if dry_run:
+            res['dry_run'] = True
         # the reads too run with nothing armed: fewer requests that can cross a stop
-        self._menu_unarmed(lambda: self._load_verified(res, file_ram, slot, settle, verify, tries))
+        self._menu_unarmed(lambda: self._load_verified(res, file_ram, slot, settle, verify, tries, marker,
+                                                       dry_run))
         self.s.event(dict(res, ev='load_state_file'))
         return res
 
-    def _load_verified(self, res, file_ram, slot, settle, verify, tries):
+    def _marker_poke(self, file_ram):
+        """Write a sentinel into the marker word. Returns the marker record, or None
+        when this ROM has no marker word."""
+        a = self.s.images.marker_addr()
+        if a is None:
+            return None
+        fv = int.from_bytes(file_ram(a, 4), 'little')
+        live = self.s.read_int(a, 4)
+        sentinel = fv ^ MARKER_XOR
+        if sentinel == live:
+            sentinel = fv ^ (MARKER_XOR >> 1)
+        self.s.write(a, sentinel.to_bytes(4, 'little'))
+        back = self.s.read_int(a, 4)
+        m = {'addr': '%08x' % a, 'file': '%08x' % fv, 'live_before': '%08x' % live, 'sentinel': '%08x' % sentinel}
+        if back != sentinel:
+            self.s.write(a, live.to_bytes(4, 'little'))
+            m.update(verdict='unusable', why='the sentinel did not stick (read back %08x)' % back)
+        return m
+
+    def _marker_check(self, m):
+        a = int(m['addr'], 16)
+        got = self.s.read_int(a, 4)
+        m['after'] = '%08x' % got
+        if got == int(m['file'], 16):
+            m['verdict'] = 'loaded'
+        elif got == int(m['sentinel'], 16):
+            m['verdict'] = 'not_loaded'
+            self.s.write(a, int(m['live_before'], 16).to_bytes(4, 'little'))   # the game's value back
+            m['put_back'] = True
+        else:
+            m.update(verdict='unknown', why='the word holds neither the file value nor the sentinel')
+        return m['verdict']
+
+    def _load_verified(self, res, file_ram, slot, settle, verify, tries, marker=True, dry_run=False):
         for attempt in range(int(tries)):
             pre = self._verify_windows() if verify else None
-            res['menu'] = self._load_slot(slot, settle)
+            mk = self._marker_poke(file_ram) if verify and marker else None
+            try:
+                if dry_run:
+                    time.sleep(float(settle))
+                    res['menu'] = 'dry run: no menu click'
+                else:
+                    res['menu'] = self._load_slot(slot, settle)
+            except Exception:
+                if mk is not None and 'verdict' not in mk:
+                    self._marker_check(mk)      # writes the game's value back if nothing loaded
+                raise
             if not verify:
                 res['verdict'] = 'unchecked'
                 break
+            if mk is not None:
+                if 'verdict' not in mk:
+                    self._marker_check(mk)
+                res['marker'] = mk
             post = self._verify_windows()
             want = [file_ram(a, n) for a, n in VERIFY_WINDOWS]
             differ = [i for i in range(len(want)) if pre[i] != want[i]]
@@ -1128,18 +1347,25 @@ class Daemon:
             res.update(attempt=attempt + 1, windows=len(want), differ=len(differ), match_file=k_file,
                        match_before=k_pre, match_file_all=sum(post[i] == want[i] for i in range(len(want))))
             if k_file > k_pre:
-                res['verdict'] = 'loaded'
-                break
-            if k_pre == 0:
+                wv = 'loaded'
+            elif k_pre == 0:
                 # before already matched the file wherever it was stable: every window that
                 # differed changed to neither value (a timer, say)
-                res['verdict'] = 'indistinguishable'
+                wv = 'indistinguishable'
+            else:
+                wv = 'not_loaded'
+            res['window_verdict'] = wv
+            mv = mk.get('verdict') if mk is not None else None
+            if mv in ('loaded', 'not_loaded'):
+                res.update(verdict=mv, verdict_by='marker')
+            else:
+                res.update(verdict=wv, verdict_by='windows')
+            if res['verdict'] != 'not_loaded':
                 break
-            res['verdict'] = 'not_loaded'
 
     def op_save_state(self, slot=1):
         import emuwin
-        return self._menu_unarmed(lambda: emuwin.save_state_slot(self.pid, int(slot)))
+        return self._menu_unarmed(lambda: emuwin.save_state_slot(self.pid, int(slot), log=self.s.event))
 
     def op_save_state_file(self, path, slot=8, timeout=30):
         """Save to slot <slot> through the File menu, wait until melonDS has written
@@ -1215,11 +1441,18 @@ class Daemon:
         except Exception as e:
             return {'id': req.get('id'), 'ok': False, 'error': '%s: %s' % (type(e).__name__, e)}
 
+    def listen(self):
+        """Bind the RPC port (serve() does it if this was not called first)."""
+        if getattr(self, '_ls', None) is None:
+            ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            ls.bind(('127.0.0.1', self.rpc_port))
+            ls.listen(4)
+            self._ls = ls
+        return self._ls
+
     def serve(self, keepalive=2.0):
-        ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        ls.bind(('127.0.0.1', self.rpc_port))
-        ls.listen(4)
+        ls = self.listen()
         clients = {}
         last_ka = time.time()
         while not self.quit:
@@ -1251,6 +1484,15 @@ class Daemon:
                         sock.sendall((json.dumps(resp) + '\n').encode())
                     except OSError:
                         pass
+            if self.proc is not None and self.proc.poll() is not None:
+                # the melonDS this daemon launched is gone (closed, or crashed: a savestate
+                # with another melonDS major version did that): nothing is left to serve, so
+                # stop, and `serve` puts the user's melonDS.toml back
+                self.s.dead = self.s.dead or 'melonDS exited (%s)' % self.proc.returncode
+                self.s.event({'ev': 'emu_exited', 'returncode': self.proc.returncode})
+                self.emu_exited = self.proc.returncode
+                self.quit = True
+                continue
             if self.s.dead:
                 continue
             try:
@@ -1260,9 +1502,6 @@ class Daemon:
                     last_ka = time.time()
             except StubDropped:
                 pass
-            if self.proc is not None and self.proc.poll() is not None and not self.s.dead:
-                self.s.dead = 'melonDS exited (%s)' % self.proc.returncode
-                self.s.event({'ev': 'emu_exited'})
         # teardown: clear breakpoints, detach (D) so the stub stays usable
         if not self.s.dead:
             try:
@@ -1284,6 +1523,10 @@ class Daemon:
 
 class RemoteError(RuntimeError):
     pass
+
+
+class NotFramed(RuntimeError):
+    """op_shot(require_framed=...) refused: the target projects off the top screen."""
 
 
 class Client:

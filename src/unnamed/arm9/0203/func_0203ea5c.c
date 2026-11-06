@@ -19,8 +19,8 @@ typedef struct {
 } Rec;
 
 extern void func_020408b0(s32 a);
-extern void CpuCopy8(void *dst, void *src, s32 len);
-extern void func_0205a588(void *dst, s32 val, s32 len);
+extern void CpuCopy8(const void *src, void *dst, u32 size);
+extern void func_0205a588(void *dst, u8 val, u32 len);
 extern s32 func_02040714(void);
 extern void func_02040820(void);
 extern void func_02040790(void);

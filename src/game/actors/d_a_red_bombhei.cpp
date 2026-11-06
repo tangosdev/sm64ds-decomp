@@ -42,13 +42,13 @@
 #include "cstd.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "private/mtx43.h"
 
 struct BCA_File;
 
-/* A flat view of Matrix4x3 for the one whole-matrix copy below. The
-   translation-vector spelling in math/Matrix.h lowers the same assignment to
-   two ldm/stm pairs plus three word copies; the cartridge has three pairs. */
-struct RedBombheiMtx { s32 m[12]; };
+/* The one whole-matrix copy below goes through Mtx43. The translation-vector
+   spelling in math/Matrix.h lowers the same assignment to two ldm/stm pairs
+   plus three word copies; the cartridge has three pairs. */
 
 enum {
     kPlayerActorID        = 0xbf,
@@ -114,10 +114,10 @@ extern "C" {
 
 /* -- globals -- */
 extern dCamera_c *data_0209f318;           /* the camera */
-extern s8  data_0209f2f8;               /* current level */
+extern s8 gCurrentSublevel;                /* current level */
 extern u8  data_0209f220;
-extern u8  data_0209f284;
-extern u8  data_0209f288;
+extern u8 gShowTouchScreenArrows;
+extern u8 gShowRedCoinMarkers;
 extern int data_0209caa0[];             /* save data; word 2 holds the progress flags */
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
@@ -206,7 +206,7 @@ s32 daRedBombhei_c::InitResources()
             return 0;
     }
 
-    if (func_ov084_0212cac0() != 0 && data_0209f2f8 == 8 &&
+    if (func_ov084_0212cac0() != 0 && gCurrentSublevel == 8 &&
         (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0))
         return 0;
     return 1;
@@ -261,7 +261,7 @@ void daRedBombhei_c::func_ov084_0212ce50()
     this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
     this->mAnmModel.mat4x3.t.y = (this->mPosY + 0x4000) >> 3;
     this->mAnmModel.mat4x3.t.z = this->mPosZ >> 3;
-    *(RedBombheiMtx *)&this->mShadowMat = *(RedBombheiMtx *)&IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&this->mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     this->mShadowMat.t.x = this->mPosX >> 3;
     this->mShadowMat.t.y = (this->mPosY - 0x8000) >> 3;
     this->mShadowMat.t.z = this->mPosZ >> 3;
@@ -554,15 +554,15 @@ void daRedBombhei_c::func_ov084_0212c508()
                     msg = 0x15f;
                 }
                 func_ov084_0212c9f0(msg, 0);
-                data_0209f288 = 1;
+                gShowRedCoinMarkers = 1;
             } else if (func_ov084_0212cac0() != 0 && IsCannonOpenInCurLevel() != 0) {
                 if (this->mCannonOpened == 0) {
-                    if (data_0209f2f8 == 6)
+                    if (gCurrentSublevel == 6)
                         msg = 0x8f;
                     else
                         msg = 0x14a;
                 } else {
-                    if (data_0209f2f8 == 6)
+                    if (gCurrentSublevel == 6)
                         msg = 0x90;
                     else
                         msg = 0x14b;
@@ -588,7 +588,7 @@ void daRedBombhei_c::func_ov084_0212c508()
 
     if (data_0209d6bc == 9) {
         if (func_ov084_0212caa8() != 0)
-            data_0209f288 = 0;
+            gShowRedCoinMarkers = 0;
     }
 
     {
@@ -604,29 +604,29 @@ void daRedBombhei_c::func_ov084_0212c508()
     shownMsg = data_0209d6d4;
     if (shownMsg == 0x15c || shownMsg == 0x15e || func_ov084_0212ca60() != 0) {
         if (this->mMsgPage == 0)
-            data_0209f284 = 1;
+            gShowTouchScreenArrows = 1;
         else
-            data_0209f284 = 0;
+            gShowTouchScreenArrows = 0;
     }
 
     if (shownMsg == 0x15b || shownMsg == 0x15d) {
         if (this->mMsgPage == 1)
-            data_0209f284 = 1;
+            gShowTouchScreenArrows = 1;
         else
-            data_0209f284 = 0;
+            gShowTouchScreenArrows = 0;
     }
 
     if (shownMsg == 0x8a) {
         if (this->mMsgPage == 1)
-            data_0209f284 = 1;
+            gShowTouchScreenArrows = 1;
         if (data_0209d6bc == 9)
-            data_0209f284 = 0;
+            gShowTouchScreenArrows = 0;
     }
 
-    if (this->mMsgHint != data_0209f284 && data_0209f284 != 0)
+    if (this->mMsgHint != gShowTouchScreenArrows && gShowTouchScreenArrows != 0)
         func_02012790(0x24);
 
-    this->mMsgHint = data_0209f284;
+    this->mMsgHint = gShowTouchScreenArrows;
     this->mPrevMsgPageState = data_0209d6bc;
 }
 
@@ -670,7 +670,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
             int msg;
             if (ApproachLinear(this->mAngleY, angle, 0x800) == 0)
                 return;
-            msg = data_0209f2f8 == 6 ? 0x8f : 0x14a;
+            msg = gCurrentSublevel == 6 ? 0x8f : 0x14a;
             if (this->mShutterID != 0)
                 func_ov084_0212c9f0(msg, 1);
             else
@@ -732,7 +732,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
         if (talkState == 1)
             return;
         if (talkState == 2) {
-            int msg = data_0209f2f8 == 6 ? 0x90 : 0x14b;
+            int msg = gCurrentSublevel == 6 ? 0x90 : 0x14b;
             func_ov084_0212c9f0(msg, 0);
             return;
         }

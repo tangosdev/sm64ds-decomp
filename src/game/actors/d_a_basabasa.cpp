@@ -30,6 +30,7 @@ enum daBasabasa_c_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* EnterDrop's unused stack temporary. The three-int constructor is what
  * schedules the stores; a plain Vector3 assignment does not. */
@@ -62,7 +63,6 @@ void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, void *out);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
 
-extern int data_0209e650; /* RandomIntInternal's seed */
 
 extern BasabasaAnimationFileHandle data_ov065_0211d690; /* flying animation */
 extern BasabasaModelFilePtr data_ov065_0211d698;        /* flying model */
@@ -223,9 +223,9 @@ int daBasabasa_c::ExecuteReturn() {
 // @symbol _ZN12daBasabasa_c11EnterReturnEv
 int daBasabasa_c::EnterReturn() {
     unsigned int r;
-    r = RandomIntInternal(&data_0209e650);
+    r = RandomIntInternal(&data_0209e650.value);
     mTargetAngleY = ((r >> 8) & 0xf) << 0xc;
-    r = RandomIntInternal(&data_0209e650);
+    r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = ((r >> 8) & 0x1f) + 0x32;
     func_02012694(0xf9, &mCamSpacePos);
     mAnmModel1.speed = 0x1000;
@@ -261,7 +261,7 @@ int daBasabasa_c::EnterChase() {
     mStateTimer = 0x64;
     mAnmModel1.speed = 0x2000;
     mAnmModel1.SetAnim((BCA_File *)data_ov065_0211d690.filePtr, 0, 0x1000, 0);
-    mTargetAngleY = (((u32)RandomIntInternal(&data_0209e650) >> 8) & 0xf) << 0xc;
+    mTargetAngleY = (((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc;
     return 1;
 }
 

@@ -14,12 +14,14 @@
 
 
 #include "dScMgMCarlo2_c.h"
+#include "nitro/hw/registers.h"
 #include "dScMgCard_c.h"
 #include "types.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -49,17 +51,16 @@ extern Carlo2SpriteWords sMCarlo2CardSprites;
 extern unsigned short sMCarlo2CardFrameSprites[];
 extern int sMCarlo2StartFaceCounts[]; /* the starting weights                     */
 extern int sMCarlo2BoardRows[][10];   /* per-difficulty weight top-ups          */
-extern int data_0209e650[];
 extern int data_020a0db0;
-extern unsigned char data_0209d454;
-extern unsigned char data_0209d45c;
+extern unsigned char gSubScreenLayers;
+extern unsigned char gMainScreenLayers;
 
 int  RandomIntInternal(void* seed);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 int  GetGameLanguage(void);
-int  LoadFile(int handle);
-void DecompressLZ16(int src, int dst);
+void *LoadFile(int handle);
+void DecompressLZ16(void *src, void *dst);
 void Vec2_Sub(int* out, int* a, int* b);
 int  func_0203d5dc(void* a, void* b);
 void Mg_CommitRecords(void* t);
@@ -100,20 +101,20 @@ s32 dScMgMCarlo2_c::InitResources()
 {
     char *raw = (char *)this;
     int lang;
-    int tiles, palette;
+    void *tiles, *palette;
     Mg_SetTopScreenYOffset(0x20);
     LoadCard2SubBg3(raw);
     lang = GetGameLanguage();
     tiles = LoadFile(sMCarlo2CardNcgByLanguage[lang]);
     palette = LoadFile(0xbb);
-    DecompressLZ16(tiles, 0x6400000);
-    DecompressLZ16(tiles, 0x6600000);
-    GX::LoadOBJPltt((void *)palette, 0, 0x100);
-    GXS::LoadOBJPltt((void *)palette, 0, 0x100);
-    Deallocate((void *)tiles);
-    Deallocate((void *)palette);
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x18;
+    DecompressLZ16(tiles, (void *)0x6400000);
+    DecompressLZ16(tiles, (void *)0x6600000);
+    GX::LoadOBJPltt(palette, 0, 0x100);
+    GXS::LoadOBJPltt(palette, 0, 0x100);
+    Deallocate(tiles);
+    Deallocate(palette);
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x18;
     *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     Camera_InitDealerView((void *)pad_4660);
@@ -633,7 +634,7 @@ int dScMgMCarlo2_c::DrawCardValue(){
     int roll;
     for (i = 0; i < 0xa; i++)
         total += sMCarlo2FaceCounts[i];
-    roll = (int)(((unsigned int)RandomIntInternal(data_0209e650) & 0x7fffffff) >> 0x13);
+    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
     for(i=0;i<0xa;i++){
         total -= sMCarlo2FaceCounts[i];

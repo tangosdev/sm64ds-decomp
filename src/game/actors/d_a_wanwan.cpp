@@ -27,6 +27,7 @@
 #include "dExtFrameCtrl_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 enum {
     kYoshiEggId = 9,
@@ -65,7 +66,6 @@ extern WanwanModelFilePtr data_ov014_02114978;
 extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
-extern Matrix4x3 data_020a0e68;   /* MATRIX_SCRATCH_PAPER */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
 extern void *data_0209f318; /* CAMERA */
@@ -82,19 +82,18 @@ void func_ov102_0214ae1c(void *bomb);
 short atan2_hold_d_a_wanwan_1(int y, int x);
 
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void Vec3_Add(void *out, void *a, void *b);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-void AddVec3(void *a, void *b, void *c);
+/* local extern: CalcLib's declaration is unnamed; retain these names so this
+ * TU's compiler-numbered aliases remain stable. */
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int Vec3_HorzLen(void *v);
-int LenVec3(Vector3 *v);
+int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, int ang);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 int AngleDiff(int a, int b);
-int ApproachAngle(short *angles, int target, int a, int b, int c);
+int ApproachAngle(short *angles, short target, int a, int b, int c);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 }
@@ -359,7 +358,7 @@ void func_ov014_0211250c(daWanwan_c *c) {
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
     MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, &c->mPosX, &rotated);
+    Vec3_Add(&tmp, (const Vector3 *)&c->mPosX, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
     saved.z = tmp.z;
@@ -507,7 +506,7 @@ void func_ov014_021122dc(daWanwan_c *c) {
     Vector3 diff;
     Vector3 scaled;
 
-    Vec3_Sub(&diff, &c->mPosX, &c->mLinkPos[0]);
+    Vec3_Sub(&diff, (const Vector3 *)&c->mPosX, &c->mLinkPos[0]);
     p = &c->mLinkPos[0];
     i = 0;
     do {
@@ -592,7 +591,7 @@ void func_ov014_02111fe0(daWanwan_c *c) {
     Vector3 out;
     int len;
     int lim;
-    Vec3_Sub(&v, &c->mPos, (Vector3 *)&c->mSpawnPosX);
+    Vec3_Sub(&v, &c->mPos, (const Vector3 *)&c->mSpawnPosX);
     len = LenVec3(&v);
     lim = c->mChainExtension * 7 + kRestLift;
     if (len <= lim)

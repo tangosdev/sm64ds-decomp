@@ -117,44 +117,94 @@ extern int func_02011654(char *table, char *n);
 extern int Player_PlaySoundEffect(int arg0, int arg1, int arg2);
 extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 
-/* Module state -- all .bss, referenced here, defined by the link. */
-extern signed char data_0208e420;
-extern signed char data_0208e424;
-extern signed char data_0208e428;
-extern signed char data_0208e42c;
-extern int data_0208e430;
-extern int data_0208e434;
-extern int data_0208e438;
-extern int data_0208e43c;
-extern int data_0208e440;
-extern int data_0208e444;
-extern signed char data_0209b470;
-extern unsigned char data_0209b474;
-extern unsigned char data_0209b478;
-extern unsigned char data_0209b47c;
-extern unsigned char data_0209b480;
-extern int data_0209b484;
-extern int data_0209b488;
-extern int data_0209b48c;
-extern int data_0209b490;
-extern int data_0209b494;
-extern int data_0209b498;
-extern int data_0209b49c;
-extern int data_0209b4a0[];
-extern int data_0209b4a4[];
-extern int data_0209b4a8;
-extern int data_0209b4ac;
-extern int data_0209b4b0[];
-extern char data_0209b4b4[];
+/* Module state. Volumes are 0..0x7f; the current ones are 20.12 fixed point
+   and ramp toward their targets by one shared step (func_02012d64,
+   func_020132d8). The "sub" channel is the second sequence Sound::PlaySub
+   starts on its own handle, ducking the music while it plays. */
+
+/* While no volumes are saved, -1. Sound::PauseMusic and func_02012e78 save
+   both targets here and duck them to 0x40; Sound::UnpauseMusic and
+   func_02012e1c put them back. */
+static signed char sSavedMusicVolume = -1;
+static signed char sSavedSubVolume = -1;
+
+/* The bank Sound::LoadGroupAndSetBank last set; Player_PlaySoundEffect
+   starts a type-3 sequence with it. */
+static signed char sCurrentBank = -1;
+
+static signed char sMusicVolumeTarget = 0x7f;
+
+/* The sequence Sound::PlaySub started on sSubHandle, -1 when none. The player
+   and daSoundObj_c read it. */
+int gSubSoundID = -1;
+
+/* While not -1, func_02013078 uses it as sublevel 8's track mode;
+   daMugenBGM_c sets it. */
+int gMusicTrackModeOverride = -1;
+
+/* The track mode func_02013078 last picked for the music handle (the mode
+   func_0204921c and func_020494cc take). */
+static int sMusicTrackMode = -1;
+
+/* The music each layer's LoadAndSetMusic asked for, -1 when none. */
+static int sLayer1Music = -1;
+static int sLayer2Music = -1;
+static int sLayer3Music = -1;
+
+static signed char sSubVolumeTarget;
+
+/* Raised and dropped again by the lid-close handler func_02019ac4. While it
+   is set, func_02013524 moves every volume to 0 at once. */
+unsigned char gSoundMuted;
+
+/* The voice group func_02011f7c loaded, 0 when none. */
+static unsigned char sPlayerVoiceGroup;
+
+/* The group Sound::LoadGroupAndSetBank loaded. */
+static unsigned char sLoadedGroup;
+
+/* Set once func_020133bc has brought sound up. */
+unsigned char gSoundInitialized;
+
+static int data_0209b484;
+static int data_0209b488;
+static int data_0209b48c;
+int gMusicVolume;
+static int sVolumeRampStep;
+
+/* The sound heap func_020133bc carves out of a 0x100000-byte block. */
+static int sSndHeap;
+
+int gSubVolume;
+
+/* Sequence handles, each one word. */
+static int sMusicHandle[1];
+static int data_0209b4a4[1];
+
+static int data_0209b4a8;
+
+/* The music now playing on sMusicHandle; daSetSE_c reads it. */
+int gCurrentMusicID;
+
+static int sSubHandle[1];
+
+/* The sound archive func_020133bc opens. */
+static char sSndArc[0x88];
+
 extern int data_0209baa0;
+/* "/data/sound_data.sdat", the archive path func_020133bc opens. Most likely
+   a string literal in the original: mwcc emits literals after a TU's
+   size-sorted named objects, which is where retail has it (after
+   sPlayerSeqLimits). It stays extern because it ends 2 bytes short of the
+   next 4-aligned object, and that tail fill cannot be claimed yet. */
+extern char data_0208e498[];
 extern char data_0209d574[];
 extern unsigned char data_0209f250;
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern void *data_0209f394[];
 extern signed char data_02092120;
 extern unsigned char data_02075250[];
 extern unsigned char data_02075258[];
-extern char data_0208e498[];
 
 }
 
@@ -163,7 +213,11 @@ typedef struct {
     int maxSeq;
 } SoundPlayerDefault;
 
-extern "C" SoundPlayerDefault data_0208e448[10]; /* 0x0208e448 */
+/* What func_02011c8c restores and DisableSoundPlayersForCredits zeroes:
+   each sound player's playable sequence count. */
+static SoundPlayerDefault sPlayerSeqLimits[10] = {
+    {9, 6}, {10, 3}, {15, 1}, {17, 5}, {18, 1}, {19, 1}, {28, 1}, {13, 3}, {2, 2}, {3, 1},
+};
 
 /* The sound-object registry: a counter/cursor header, a fixed 0x40-entry pool
  * of 0x14-byte nodes at +0x8, and 16 hash-bucket heads at +0x508 chaining the
@@ -202,19 +256,19 @@ namespace Sound {
 // @symbol _ZN5Sound22LoadAndSetMusic_Layer1Ei
 void LoadAndSetMusic_Layer1(int j)
 {
-    data_0208e438 = -1;
-    data_0208e434 = -1;
+    sMusicTrackMode = -1;
+    gMusicTrackModeOverride = -1;
     data_0209b48c = 0;
     if (j < 0) {
-        func_0204fa2c(data_0209b4a0, 0);
+        func_0204fa2c(sMusicHandle, 0);
     } else {
-        if (!(data_0208e430 >= 0 && data_0209b4ac >= 0 && data_0208e43c == j))
-            func_02011dcc(data_0209b4a0, j);
-        func_02013524((int)data_0209b4a0, 0x7f, 0);
-        func_0204fa2c(data_0209b4b0, 0);
+        if (!(gSubSoundID >= 0 && gCurrentMusicID >= 0 && sLayer1Music == j))
+            func_02011dcc(sMusicHandle, j);
+        func_02013524((int)sMusicHandle, 0x7f, 0);
+        func_0204fa2c(sSubHandle, 0);
     }
-    data_0209b4ac = j;
-    data_0208e43c = j;
+    gCurrentMusicID = j;
+    sLayer1Music = j;
     func_02011b7c();
 }
 
@@ -231,10 +285,10 @@ extern "C" int func_02013078(void)
     if (obj == 0)
         return -1;
     flag = (*(unsigned char *)(obj + 0x706) != 0);
-    state = data_0209f2f8;
+    state = gCurrentSublevel;
     result = -1;
     if (state == 8) {
-        result = data_0208e434;
+        result = gMusicTrackModeOverride;
         if (result < 0) {
             if (flag)
                 result = 0;
@@ -257,8 +311,8 @@ extern "C" int func_02013078(void)
     } else if (state == 0x15) {
         result = (*(int *)(obj + 0x60) < 0) ? 5 : 6;
     }
-    if (result >= 0 && result != data_0208e438) {
-        data_0208e438 = result;
+    if (result >= 0 && result != sMusicTrackMode) {
+        sMusicTrackMode = result;
         return result;
     }
     return -1;
@@ -269,21 +323,21 @@ namespace Sound {
 // @symbol _ZN5Sound22StopLoadedMusic_Layer1Ej
 void StopLoadedMusic_Layer1(unsigned int arg)
 {
-    data_0209b4ac = ~0u;
-    func_0204fa2c(data_0209b4a0, arg);
+    gCurrentMusicID = ~0u;
+    func_0204fa2c(sMusicHandle, arg);
 }
 
 // @symbol _ZN5Sound10PauseMusicEv
 void PauseMusic(void)
 {
-    int state = data_0209f2f8;
+    int state = gCurrentSublevel;
     if (state == 2 || state == 5 || state == 4 || state == 0x32) {
-        if (data_0208e420 < 0) {
-            data_0208e420 = data_0208e42c;
-            data_0208e424 = data_0209b470;
-            data_0208e42c = 0x40;
-            data_0209b470 = 0x40;
-            data_0209b494 = 0xc999;
+        if (sSavedMusicVolume < 0) {
+            sSavedMusicVolume = sMusicVolumeTarget;
+            sSavedSubVolume = sSubVolumeTarget;
+            sMusicVolumeTarget = 0x40;
+            sSubVolumeTarget = 0x40;
+            sVolumeRampStep = 0xc999;
         }
     } else {
         func_0204f958(0, 1);
@@ -296,14 +350,14 @@ void PauseMusic(void)
 // @symbol _ZN5Sound12UnpauseMusicEv
 void UnpauseMusic(void)
 {
-    signed char s = data_0209f2f8;
+    signed char s = gCurrentSublevel;
     if (s == 2 || s == 5 || s == 4 || s == 0x32) {
-        signed char saved = data_0208e420;
+        signed char saved = sSavedMusicVolume;
         if (saved < 0) return;
-        data_0208e42c = saved;
-        signed char saved2 = data_0208e424;
-        data_0209b470 = saved2;
-        data_0208e420 = -1;
+        sMusicVolumeTarget = saved;
+        signed char saved2 = sSavedSubVolume;
+        sSubVolumeTarget = saved2;
+        sSavedMusicVolume = -1;
         return;
     }
     func_0204f958(0, 0);
@@ -315,22 +369,23 @@ void UnpauseMusic(void)
 // @symbol func_02012e78
 extern "C" void func_02012e78(void)
 {
-    if (data_0208e420 >= 0) return;
-    data_0208e420 = data_0208e42c;
-    data_0208e424 = data_0209b470;
-    data_0208e42c = 0x40;
-    data_0209b470 = 0x40;
-    data_0209b494 = 0xc999;
+    if (sSavedMusicVolume >= 0)
+        return;
+    sSavedMusicVolume = sMusicVolumeTarget;
+    sSavedSubVolume = sSubVolumeTarget;
+    sMusicVolumeTarget = 0x40;
+    sSubVolumeTarget = 0x40;
+    sVolumeRampStep = 0xc999;
 }
 
 // @symbol func_02012e1c
 extern "C" void func_02012e1c(void)
 {
-    signed char v = data_0208e420;
+    signed char v = sSavedMusicVolume;
     if (v < 0) return;
-    data_0208e42c = v;
-    data_0209b470 = data_0208e424;
-    data_0208e420 = -1;
+    sMusicVolumeTarget = v;
+    sSubVolumeTarget = sSavedSubVolume;
+    sSavedMusicVolume = -1;
 }
 
 // @symbol func_02012dd0
@@ -352,20 +407,16 @@ extern "C" void func_02012dbc(int a)
 // @symbol func_02012d64
 extern "C" void func_02012d64(void)
 {
-    ApproachLinear(data_0209b490,
-                   (s32)data_0208e42c << 12,
-                   data_0209b494);
-    func_02013524((int)data_0209b4a0,
-                  data_0209b490 >> 12,
-                  0);
+    ApproachLinear(gMusicVolume, (s32)sMusicVolumeTarget << 12, sVolumeRampStep);
+    func_02013524((int)sMusicHandle, gMusicVolume >> 12, 0);
 }
 
 // @symbol _ZN5Sound17ChangeMusicVolumeEji
 namespace Sound {
 int ChangeMusicVolume(unsigned int a, int b) {
-    data_0208e42c = a;
-    data_0209b494 = b;
-    return data_0209b490 == (data_0208e42c << 12);
+    sMusicVolumeTarget = a;
+    sVolumeRampStep = b;
+    return gMusicVolume == (sMusicVolumeTarget << 12);
 }
 }
 
@@ -376,30 +427,30 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
     if (c == 0) {
         /* e is bool. A plain test compiles to ldrb; retail loads the whole word. */
         if (!*(int *)&e) {
-            x = data_0208e430;
+            x = gSubSoundID;
             if ((x >= 0 && x != (int)a) ||
-                (data_0209b49c == 0 && data_0208e42c == (int)b && data_0209b490 == (int)(b << 12)))
+                (gSubVolume == 0 && sMusicVolumeTarget == (int)b && gMusicVolume == (int)(b << 12)))
                 return true;
         }
     } else {
-        x = data_0208e430;
+        x = gSubSoundID;
         if (x < 0 || *(int *)&e) { /* same full-word load as above */
             if (x != (int)a) {
-                data_0208e430 = a;
+                gSubSoundID = a;
                 if (a != 0x35 && a != 0x36) {
                     if (a != 0x2e)
-                        data_0209b49c = c & 0xff;
+                        gSubVolume = c & 0xff;
                 }
-                func_02011dcc(data_0209b4b0, a);
+                func_02011dcc(sSubHandle, a);
             }
         } else if (x != (int)a) {
             return false;
         }
     }
-    data_0208e42c = (signed char)b;
-    data_0209b470 = (signed char)c;
-    data_0209b494 = d;
-    return data_0209b490 == (int)(b << 12) && data_0209b49c == (int)(c << 12);
+    sMusicVolumeTarget = (signed char)b;
+    sSubVolumeTarget = (signed char)c;
+    sVolumeRampStep = d;
+    return gMusicVolume == (int)(b << 12) && gSubVolume == (int)(c << 12);
 }
 }
 
@@ -408,40 +459,45 @@ namespace Sound {
 // @symbol _ZN5Sound22LoadAndSetMusic_Layer3Ej
 void LoadAndSetMusic_Layer3(unsigned int musicId)
 {
-    data_0208e444 = musicId;
-    func_02011dcc(data_0209b4a0, musicId);
+    sLayer3Music = musicId;
+    func_02011dcc(sMusicHandle, musicId);
 }
 
 // @symbol _ZN5Sound22StopLoadedMusic_Layer3Ev
 void StopLoadedMusic_Layer3(void)
 {
-    int a = data_0209b4ac;
+    int a = gCurrentMusicID;
     if (a < 0) {
-        if (data_0208e444 < 0) return;
+        if (sLayer3Music < 0)
+            return;
     }
-    data_0208e444 = -1;
-    int b = data_0208e43c;
+    sLayer3Music = -1;
+    int b = sLayer1Music;
     if (a == b) {
-        int e440 = data_0208e440;
-        if (e440 >= 0) { func_02011dcc(data_0209b4a0, e440); return; }
+        int e440 = sLayer2Music;
+        if (e440 >= 0) {
+            func_02011dcc(sMusicHandle, e440);
+            return;
+        }
     }
     if (a < 0 || b < 0)
-        func_0204fa2c(data_0209b4a0, 0);
+        func_0204fa2c(sMusicHandle, 0);
     else
-        func_02011dcc(data_0209b4a0, a);
+        func_02011dcc(sMusicHandle, a);
 }
 
 // @symbol _ZN5Sound8SetMusicEjj
 void SetMusic(unsigned int j1, unsigned int j2)
 {
     if (j1 != data_0209f250) return;
-    if (data_0209b4ac < 0) {
-        if (data_0208e43c >= 0) return;
+    if (gCurrentMusicID < 0) {
+        if (sLayer1Music >= 0)
+            return;
     }
-    int e = data_0208e444;
-    data_0209b4ac = j2;
+    int e = sLayer3Music;
+    gCurrentMusicID = j2;
     if (e >= 0) return;
-    func_02011dcc(data_0209b4a0, j2);
+    func_02011dcc(sMusicHandle, j2);
 }
 
 /* ONE parameter, although this symbol used to be spelled with two (`...Ejj`).
@@ -452,39 +508,50 @@ void SetMusic(unsigned int j1, unsigned int j2)
    argument. The symbol is now ...Ej and include/Sound.h declares it. */
 // @symbol _ZN5Sound8EndMusicEj
 void EndMusic(unsigned int playerNo) {
-    if (data_0209b4ac < 0) return;
+    if (gCurrentMusicID < 0)
+        return;
     if (playerNo != data_0209f250)
         return;
-    int e43c = data_0208e43c;
-    int e444 = data_0208e444;
-    data_0209b4ac = e43c;
+    int e43c = sLayer1Music;
+    int e444 = sLayer3Music;
+    gCurrentMusicID = e43c;
     if (e444 >= 0) return;
-    int e440 = data_0208e440;
-    if (e440 >= 0) { func_02011dcc(data_0209b4a0, e440); return; }
-    if (e43c >= 0) { func_02011dcc(data_0209b4a0, e43c); return; }
-    func_0204fa2c(data_0209b4a0, 0);
+    int e440 = sLayer2Music;
+    if (e440 >= 0) {
+        func_02011dcc(sMusicHandle, e440);
+        return;
+    }
+    if (e43c >= 0) {
+        func_02011dcc(sMusicHandle, e43c);
+        return;
+    }
+    func_0204fa2c(sMusicHandle, 0);
 }
 
 // @symbol _ZN5Sound22LoadAndSetMusic_Layer2Ej
 void LoadAndSetMusic_Layer2(unsigned int j)
 {
-    int a = data_0209b4ac;
-    int b = data_0208e43c;
-    data_0208e440 = j;
+    int a = gCurrentMusicID;
+    int b = sLayer1Music;
+    sLayer2Music = j;
     if (a != b) return;
-    func_02011dcc(data_0209b4a0, j);
+    func_02011dcc(sMusicHandle, j);
 }
 
 // @symbol _ZN5Sound22StopLoadedMusic_Layer2Ev
 void StopLoadedMusic_Layer2(void)
 {
-    int a = data_0209b4ac;
+    int a = gCurrentMusicID;
     if (a < 0) {
-        if (data_0208e440 < 0) return;
+        if (sLayer2Music < 0)
+            return;
     }
-    data_0208e440 = -1;
-    if (a < 0) { func_0204fa2c(data_0209b4a0, 0); return; }
-    func_02011dcc(data_0209b4a0, a);
+    sLayer2Music = -1;
+    if (a < 0) {
+        func_0204fa2c(sMusicHandle, 0);
+        return;
+    }
+    func_02011dcc(sMusicHandle, a);
 }
 
 }
@@ -768,22 +835,22 @@ void LoadGroupAndSetBank(int a, int b)
 {
     if (func_0203d974() != 0) {
         if (a != 0x2f) return;
-        func_0203d7d4(func_020134d8((void *)a, (void *)data_0209b498));
-        data_0208e428 = b;
-        data_0209b47c = a;
+        func_0203d7d4(func_020134d8((void *)a, (void *)sSndHeap));
+        sCurrentBank = b;
+        sLoadedGroup = a;
         return;
     }
     if (a == 0) {
-        func_020134d8((void *)a, (void *)data_0209b498);
-        data_0209b4a8 = func_0205117c(data_0209b498);
-    } else if (data_0209b47c != a) {
-        ((HeapOwner *)data_0209b498)->func_020510a4(data_0209b4a8);
-        func_020134d8((void *)a, (void *)data_0209b498);
-        data_0209b484 = func_0205117c(data_0209b498);
+        func_020134d8((void *)a, (void *)sSndHeap);
+        data_0209b4a8 = func_0205117c(sSndHeap);
+    } else if (sLoadedGroup != a) {
+        ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b4a8);
+        func_020134d8((void *)a, (void *)sSndHeap);
+        data_0209b484 = func_0205117c(sSndHeap);
     }
-    data_0208e428 = b;
-    data_0209b47c = a;
-    data_0209b478 = 0;
+    sCurrentBank = b;
+    sLoadedGroup = a;
+    sPlayerVoiceGroup = 0;
 }
 
 // @symbol _ZN5Sound16LoadInitialGroupEi
@@ -795,7 +862,7 @@ void LoadInitialGroup(int group)
 // @symbol _ZN5Sound21UnsetPlayerVoiceGroupEv
 void UnsetPlayerVoiceGroup(void)
 {
-    data_0209b478 = 0;
+    sPlayerVoiceGroup = 0;
 }
 
 }
@@ -804,11 +871,11 @@ void UnsetPlayerVoiceGroup(void)
 extern "C" void func_02011f7c(void *self)
 {
     if (!func_0203d974()) {
-        ((HeapOwner *)data_0209b498)->func_020510a4(data_0209b484);
-        func_020134d8(self, (void *)data_0209b498);
-        data_0209b488 = func_0205117c(data_0209b498);
+        ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b484);
+        func_020134d8(self, (void *)sSndHeap);
+        data_0209b488 = func_0205117c(sSndHeap);
     }
-    data_0209b478 = (unsigned char)(int)self;
+    sPlayerVoiceGroup = (unsigned char)(int)self;
 }
 
 namespace Sound {
@@ -817,9 +884,9 @@ namespace Sound {
 void ResetPlayerVoiceGroup(void)
 {
     if (func_0203d974() == 0) {
-        ((HeapOwner *)data_0209b498)->func_020510a4(data_0209b484);
+        ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b484);
     }
-    data_0209b478 = 0;
+    sPlayerVoiceGroup = 0;
 }
 
 }
@@ -829,14 +896,14 @@ extern "C" int func_02011ee4(void *c)
 {
     int x = func_0203d974();
     if (x != 0) return x;
-    ((HeapOwner *)data_0209b498)->func_020510a4(data_0209b488);
-    return func_020134d8(c, (void *)data_0209b498);
+    ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b488);
+    return func_020134d8(c, (void *)sSndHeap);
 }
 
 // @symbol func_02011e94
 extern "C" void *func_02011e94(int *out) {
-    int r = func_02051074(data_0209b498);
-    void *block = (void *)func_020511d4(data_0209b498, r, 0, 0, 0);
+    int r = func_02051074(sSndHeap);
+    void *block = (void *)func_020511d4(sSndHeap, r, 0, 0, 0);
     if (out != 0)
         *out = r;
     return block;
@@ -845,21 +912,22 @@ extern "C" void *func_02011e94(int *out) {
 // @symbol Player_PlaySoundEffect
 extern "C" int Player_PlaySoundEffect(int arg0, int arg1, int arg2)
 {
-    if (data_0209b480 == 0) return 1;
+    if (gSoundInitialized == 0)
+        return 1;
     if (arg1 != 3)
         return func_02051f1c((void *)arg0, arg1, arg2);
-    return func_02051e60(arg0, -1, data_0208e428, -1, arg1, arg2);
+    return func_02051e60(arg0, -1, sCurrentBank, -1, arg1, arg2);
 }
 
 // @symbol func_02011dcc
 extern "C" int func_02011dcc(int *g, int x)
 {
     int r4 = func_02051fb4(g, x);
-    if (r4 != 0 && g == data_0209b4a0) {
+    if (r4 != 0 && g == sMusicHandle) {
         func_02049764();
         func_02013078();
-        if (data_0208e438 >= 0) {
-            func_0204921c(g, data_0208e438);
+        if (sMusicTrackMode >= 0) {
+            func_0204921c(g, sMusicTrackMode);
         }
     }
     return r4;
@@ -880,7 +948,8 @@ extern "C" void func_02011db4(void)
 // @symbol func_02011d5c
 extern "C" void func_02011d5c(int self)
 {
-    if (data_0209b480 == 0) return;
+    if (gSoundInitialized == 0)
+        return;
     switch (self) {
     case 1: func_02048e94(); break;
     case 2: func_02048e74(); break;
@@ -944,7 +1013,7 @@ extern "C" void DisableSoundPlayersForCredits(void)
     s32 zero;
     zero = 0;
     for (i = 0; i < 10; i++)
-        Sound::Player::SetPlayableSeqCount(data_0208e448[i].playerID, zero);
+        Sound::Player::SetPlayableSeqCount(sPlayerSeqLimits[i].playerID, zero);
 }
 
 // @symbol func_02011c8c
@@ -952,7 +1021,8 @@ extern "C" void func_02011c8c(void)
 {
     u32 i;
     for (i = 0; i < 10; i++)
-        Sound::Player::SetPlayableSeqCount(data_0208e448[i].playerID, data_0208e448[i].maxSeq);
+        Sound::Player::SetPlayableSeqCount(sPlayerSeqLimits[i].playerID,
+                                           sPlayerSeqLimits[i].maxSeq);
 }
 
 // @symbol func_02011c54
@@ -977,19 +1047,19 @@ extern "C" void func_02011c24(void)
 // @symbol func_02011b7c
 extern "C" void func_02011b7c(void)
 {
-    int v = data_0208e430;
-    data_0209b490 = 0x7f000;
-    data_0208e42c = 0x7f;
-    data_0209b494 = 0x7f000;
+    int v = gSubSoundID;
+    gMusicVolume = 0x7f000;
+    sMusicVolumeTarget = 0x7f;
+    sVolumeRampStep = 0x7f000;
     if (v >= 0) {
-        data_0208e430 = -1;
-        func_0204fa2c(data_0209b4b0, 0);
+        gSubSoundID = -1;
+        func_0204fa2c(sSubHandle, 0);
     }
-    data_0208e444 = -1;
-    data_0208e440 = -1;
-    data_0209b49c = 0;
-    data_0209b470 = 0;
-    data_0208e420 = -1;
+    sLayer3Music = -1;
+    sLayer2Music = -1;
+    gSubVolume = 0;
+    sSubVolumeTarget = 0;
+    sSavedMusicVolume = -1;
 }
 
 // @symbol func_02011b38
@@ -1199,21 +1269,22 @@ extern "C" int func_02011654(char *table, char *n)
 // @symbol func_020132d8
 extern "C" void func_020132d8(void)
 {
-    if (data_0209b480 == 0) return;
+    if (gSoundInitialized == 0)
+        return;
     func_02012d64();
-    if (data_0208e430 >= 0) {
-        ApproachLinear(data_0209b49c, data_0209b470 << 0xc, data_0209b494);
-        func_02013524((int)data_0209b4b0, data_0209b49c >> 0xc, 0);
-        if (data_0209b49c == 0) {
-            data_0208e430 = -1;
-            func_0204fa2c(data_0209b4b0, 0);
+    if (gSubSoundID >= 0) {
+        ApproachLinear(gSubVolume, sSubVolumeTarget << 0xc, sVolumeRampStep);
+        func_02013524((int)sSubHandle, gSubVolume >> 0xc, 0);
+        if (gSubVolume == 0) {
+            gSubSoundID = -1;
+            func_0204fa2c(sSubHandle, 0);
         }
     }
     int s = func_02013078();
     if (s >= 0) {
-        func_020494cc(&data_0209b4a0, s);
+        func_020494cc(&sMusicHandle, s);
     }
-    func_020490b0(&data_0209b4a0);
+    func_020490b0(&sMusicHandle);
     func_0204f03c();
     func_020119c8(&data_0209b53c);
 }
@@ -1224,25 +1295,25 @@ extern "C" void func_020133bc(void)
 {
     char *anim;
     func_0204f070();
-    data_0209b498 = (int)func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
+    sSndHeap = (int)func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
     func_0201a9fc(data_0209d574);
-    func_02050f34(&data_0209b4b4, (int)anim, data_0209b498, 0);
+    func_02050f34(&sSndArc, (int)anim, sSndHeap, 0);
     func_0201a9fc(data_0209d574);
-    func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
+    func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
         func_0201a9fc(data_0209d574);
-        func_020134d8((void *)1, (void *)data_0209b498);
+        func_020134d8((void *)1, (void *)sSndHeap);
         func_0201a9fc(data_0209d574);
     }
-    func_0204f94c(&data_0209b4a0);
-    func_0204f94c(&data_0209b4b0);
+    func_0204f94c(&sMusicHandle);
+    func_0204f94c(&sSubHandle);
     func_0204f94c(&data_0209b4a4);
     func_02011a28((char *)&data_0209b53c);
-    func_02048f34(&data_0209b4b4);
+    func_02048f34(&sSndArc);
     func_020506fc(2);
     func_02049cd8(&data_0209baa0, 0x1000, 0);
-    data_0209b480 = 1;
+    gSoundInitialized = 1;
 }
 /* opt_propagation is file-global last-wins under deferred codegen in mwccarm
  * 2004/b56, and the deferred queue's codegen binds when the next function
@@ -1255,7 +1326,7 @@ extern "C" void func_020133bc(void)
 // @symbol func_02013524
 extern "C" void func_02013524(int a, int b, int c)
 {
-    if (data_0209b474 != 0) {
+    if (gSoundMuted != 0) {
         c = b = 0;
     }
     NNS_SndPlayerMoveVolume(a, b, c);

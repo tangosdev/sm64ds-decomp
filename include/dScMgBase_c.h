@@ -29,7 +29,7 @@ struct dScMgBase_c : dScene_c {
        itself or its immediate base, so descendants cannot reach dScene_c's.
        Removing this breaks D0 for all 32 of them. */
     void operator delete(void *ptr) {
-        Memory::Deallocate(ptr, (Heap *)data_020a0eac);
+        Memory::Deallocate(ptr, data_020a0eac);
     }
 
     /* --- overrides of dScene_c's own virtuals, same signature, in _ZTV order.
@@ -608,7 +608,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            `& ~3`) leave the register holding exactly X: priority 0, no mosaic,
            and the class's own base-block bits -- 0x10 here, 0x800 in
            dScMgD3DBase_c, 4 in both dScMgAmida_c and dScMgSmartball_c.  Then
-           SetSubBg1Offset(0, 0) resets the layer's scroll, `data_0209d454 &= ~2`
+           SetSubBg1Offset(0, 0) resets the layer's scroll, `gSubScreenLayers &= ~2`
            clears BG1's bit in the sub BG-enable shadow that slot 30 restores
            the sub DISPCNT from, and two LoadCompressedFileAt calls install a
            language-indexed character file at G2S::GetBG1CharPtr() and the
@@ -651,7 +651,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            the same body against the other engine: three read-modify-writes on
            the MAIN BG1CNT at 0x0400000a (`& ~3`, `(& 0x43) | 0x1000`, `& ~0x40`)
            leave it holding exactly 0x1000, SetBg1Offset(0, 0) resets the
-           layer's scroll, `data_0209d45c &= ~2` clears BG1's bit in the MAIN
+           layer's scroll, `gMainScreenLayers &= ~2` clears BG1's bit in the MAIN
            BG-enable shadow that slot 30 restores the main DISPCNT from, and two
            LoadCompressedFileAt calls install a language-indexed character file
            and the shared screen map -- file 0x67 here, 0x5b there.  Slot 31
@@ -733,7 +733,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
          WHAT IT DOES.  This is the engine bring-up, and it runs BEFORE anything
            else the family does.  Both engines get a graphics mode, VRAM banks
            are assigned, both BG-enable shadows are initialised to 0x10 --
-           data_0209d45c for main and data_0209d454 for sub, the same pair slot
+           gMainScreenLayers for main and gSubScreenLayers for sub, the same pair slot
            30 restores the DISPCNTs from and slots 31 and 32 clear BG1 out of --
            a language-indexed compressed character file is decompressed into BG
            character VRAM, OBJ palette file 0xc3 is loaded into both engines, and
@@ -925,9 +925,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     s32 mMusicTrack;            /* 0x0c8 */
     dMgState_c mStateController; /* 0x0cc -- minigame UI state controller */
     dMgPsOpt_c mTouchOptions; /* 0x0f4 -- eight polymorphic touch icons */
-    u32 mSavedMainBgBits;   /* 0x21c -- SaveScreenForMenu saves data_0209d45c
+    u32 mSavedMainBgBits;     /* 0x21c -- SaveScreenForMenu saves gMainScreenLayers
                                 here and RestoreScreenFromMenu restores it */
-    u32 mSavedSubBgBits;    /* 0x220 -- the same pair for data_0209d454 */
+    u32 mSavedSubBgBits;      /* 0x220 -- the same pair for gSubScreenLayers */
     u32 mSavedScreenSwap;   /* 0x224 -- bit 15 of POWCNT1 (0x4000304), saved and
                                 restored by the same two functions */
     u8  pad_228[0x4400];

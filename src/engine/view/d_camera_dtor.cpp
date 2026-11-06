@@ -43,17 +43,9 @@ extern int AngleDiff(int a, int b);
 }
 
 #ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name. MSVC folds the Itanium variants
- * into the one ~dCamera_c() it emits, so the deleting destructor is spelled
- * out here: the D1 body, called qualified, then the class-specific delete.
- * Nothing in this arm reaches mwccarm. */
+/* Host definition of the one destructor MSVC emits. The flat D0 name is
+ * port/hal/host_d0.cpp. Nothing in this arm reaches mwccarm. */
 dCamera_c::~dCamera_c() {}
-
-extern "C" dCamera_c *_ZN9dCamera_cD0Ev(dCamera_c *thiz) {
-    thiz->dCamera_c::~dCamera_c();
-    dCamera_c::operator delete(thiz);
-    return thiz;
-}
 #else
 #pragma defer_codegen off
 

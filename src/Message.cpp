@@ -32,6 +32,7 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "nitro/hw/registers.h"
 #include "Message.h"
 #include "G2x.h"
 #include "SaveData.h"
@@ -54,12 +55,21 @@ u32 GetBG1ScrPtr(void);
 }
 
 extern "C" {
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
-extern u8 data_0209d64c;
-extern u8 data_0209d650;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
+/* The message box rectangle, set when a box opens (Message.cpp's layout code):
+   gMsgBoxLeft/gMsgBoxTop are its final left and top edges and
+   gMsgBoxCenterX/gMsgBoxCenterY its centre. The window registers (WIN0H/WIN0V)
+   are written as (edge << 8) | (2 * centre - edge + 1), so the right and bottom
+   edges mirror the left and top. gMsgBoxWinLeft/gMsgBoxWinTop are the edges
+   the window is drawn with right now: they start at the centre and the
+   opening animation walks them out to gMsgBoxLeft/gMsgBoxTop. At runtime the
+   next-page arrow sits at (2 * centre x - 6 - left, 2 * centre y + 2 - top),
+   by the box's bottom-right corner. */
+extern u8 gMsgBoxWinTop;
+extern u8 gMsgBoxLeft;
 extern u8 data_0209d654;
-extern u8 data_0209d658;
+extern u8 gMsgBoxWinLeft;
 extern u8 data_0209d65c;
 extern u8 data_0209d660;
 extern u8 data_0209d664;
@@ -71,7 +81,7 @@ extern u8 data_0209d678;
 extern u8 data_0209d67c;
 extern u8 data_0209d680;
 extern u8 data_0209d684;
-extern u8 data_0209d68c;
+extern u8 gMsgChoiceIndex;
 extern u8 data_0209d690;
 extern u8 data_0209d694;
 extern u8 data_0209d698;
@@ -84,10 +94,15 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
-extern u8 data_0209d6c4;
-extern u8 data_0209d6c8;
-extern u8 data_0209d6cc;
-extern u8 data_0209d6d0;
+/* The message box's style: the text colour mask (data_0208eecc[it]), which
+   next-page arrow sprite is drawn, and the closing sound (0x21 or 5). The
+   Display* entry points set it: 1 for a sign (black arrow), 0 for a character
+   talking (white arrow). Under melonDS, flipping it on an open sign box turns
+   the arrow white, and on a Toad's box turns it black. */
+extern u8 gMsgBoxStyle;
+extern u8 gMsgBoxCenterY;
+extern u8 gMsgBoxTop;
+extern u8 gMsgBoxCenterX;
 extern s16 data_0209d6d4;
 extern u16 data_0209d6e0;
 extern MessageEntry *data_0209d708;
@@ -104,12 +119,12 @@ extern u8 data_0208ee74[];
 extern u8 data_0208f074[];
 extern u8 data_0209f20c;
 extern u8 data_0209f220;
-extern u8 data_0209f228;
+extern u8 gCollectedStarId;
 extern u8 data_0209f2d8;
 extern int data_0209caa0[3];
 extern s32 gRunningKuppaScript;
 extern s8 data_02092110;
-extern u32 data_0209b454;
+extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
 
 extern void MultiStore_Int(int val, int *dst, int len);
@@ -308,7 +323,6 @@ void Message::DisplayOptionsMenuText(s16 n) {
 
 // @symbol LoadControllerModeText
 #pragma push
-#pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern "C" void LoadControllerModeText(int param0)
 {
@@ -335,7 +349,7 @@ extern "C" void LoadControllerModeText(int param0)
         int v2 = m + 0x280;
         do {
             scr[i] = (short)(i + 0x280);
-            *(short*)((char*)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v2++;
             i++;
         } while (i < m);
@@ -357,7 +371,7 @@ extern "C" void LoadControllerModeText(int param0)
         int v2 = d - mm + 0x280;
         do {
             scr[i] = (short)v1;
-            *(short*)((char*)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v1++;
             v2++;
             i++;
@@ -380,7 +394,7 @@ extern "C" void LoadControllerModeText(int param0)
         int v2 = d - mm + 0x280;
         do {
             scr[i] = (short)v1;
-            *(short*)((char*)&scr[i] + 0x40) = (short)v2;
+            (scr + i)[0x20] = (short)v2;
             v1++;
             v2++;
             i++;
@@ -418,8 +432,6 @@ void Message::DisplayControllerModeText(unsigned short n)
 }
 
 // @symbol func_0201d418
-#pragma push
-#pragma opt_strength_reduction off
 extern "C" void func_0201d418(int p0, int p1) {
     volatile int li;
     int i;
@@ -440,17 +452,9 @@ extern "C" void func_0201d418(int p0, int p1) {
         }
         {
             short *scr = (short *)(G2S::GetBG0ScrPtr() + p0 * 2);
-            i = 0;
-            if (n > 0) {
-                int v1 = (data_0209d6a8 << 1) + 0x200;
-                int v2 = n + v1;
-                do {
-                    scr[i] = v1;
-                    *(short*)((char*)&scr[i] + 0x40) = v2;
-                    v1++;
-                    v2++;
-                    i++;
-                } while (i < n);
+            for (i = 0; i < n; i++) {
+                scr[i] = (data_0209d6a8 << 1) + 0x200 + i;
+                (scr + i)[0x20] = n + ((data_0209d6a8 << 1) + 0x200) + i;
             }
         }
         Message::LayoutLine();
@@ -461,7 +465,6 @@ extern "C" void func_0201d418(int p0, int p1) {
     } while (data_0209d6bc != 8);
     data_0209d6bc = 0;
 }
-#pragma pop
 
 // @symbol Message_DrawLineBG2
 /* Lays out the current message line into the main BG2 tiles at
@@ -536,8 +539,6 @@ extern "C" void Message_DrawCenteredLine(int a, int b)
 }
 
 // @symbol func_0201d850
-#pragma push
-#pragma opt_strength_reduction off
 extern "C" void func_0201d850(u32 arg0)
 {
     u16 var_r5;
@@ -592,7 +593,7 @@ extern "C" void func_0201d850(u32 arg0)
         p = (u16 *)G2::GetBG3ScrPtr() + (var_r4 + ((0x20 - n) >> 1));
         for (i = 0; i < n; i++) {
             p[i] = (u16)(var_r5 + i);
-            *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + (var_r5 + i));
+            (p + i)[0x20] = (u16)(n + (var_r5 + i));
         }
         var_r4 += 0x40;
         var_r5 += (u16)(n * 2);
@@ -635,7 +636,7 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
@@ -671,7 +672,7 @@ L_r4_else:
         if (arg0 < 0xf) {
             if (data_0209f20c != 0) {
                 s32 off = arg0 * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f228];
+                data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
             } else {
                 s32 off = arg0 * 7 + 0x1b3;
                 data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f220];
@@ -696,7 +697,7 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
@@ -733,7 +734,7 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
@@ -769,14 +770,13 @@ L_r4_else:
             tile = var_r5;
             do {
                 p[i] = (u16)tile;
-                *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + tile);
+                (p + i)[0x20] = (u16)(n + tile);
                 tile++;
                 i++;
             } while (i < n);
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN7Message16DisplayPauseTextEth
 void Message::DisplayPauseText(unsigned short n, unsigned char b)
@@ -882,7 +882,7 @@ void Message::DisplayText(int t) {
 
     base = data_0209d6fc;
     idx = data_0209d6d4;
-    data_0209d6c4 = 1;
+    gMsgBoxStyle = 1;
     data_0209d6c0 = 0;
     data_0209d668 = 0;
     data_0209d6a8 = 0;
@@ -942,7 +942,7 @@ void Message::Display(unsigned int msg)
     MultiStore16(ls, (char*)s, 0x800);
     DisplayText(msg);
     data_0209d6d4 = 0x276;
-    data_0209d6c4 = 0;
+    gMsgBoxStyle = 0;
     data_0209d668 = 1;
     data_0209d6a8 = 0;
     p = G2S::GetBG0CharPtr() + 0x4000;
@@ -975,7 +975,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
 
     idx = data_0209d6d4;
     data_0209d6c0 = 2;
-    data_0209d6c4 = 1;
+    gMsgBoxStyle = 1;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
     data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
@@ -1037,10 +1037,10 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     }
 
     if (data_0209d6d4 >= 0x1a5) {
-        data_0209d6c4 = 0;
+        gMsgBoxStyle = 0;
         q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x400);
     } else {
-        data_0209d6c4 = 1;
+        gMsgBoxStyle = 1;
         q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x4c0);
     }
     div = 0;
@@ -1096,10 +1096,10 @@ extern "C" void func_0201eaac(void)
     data_0209d69c = 0;
     data_0209d694 = 0;
     data_0209d6bc = 1;
-    data_0209d68c = 0;
+    gMsgChoiceIndex = 0;
     data_0209d684 = 0;
     data_0209d6b8 = 0;
-    data_0209d6c4 = 0;
+    gMsgBoxStyle = 0;
     data_0209d668 = 0;
     data_0209d654 = 0;
     data_0209d67c = 0;
@@ -1139,9 +1139,9 @@ void Message::DisplaySaving(unsigned short n)
     data_0209d67c = 0x3c;
     data_0209d660 = (u8)one;
     data_0209d654 = (u8)one;
-    data_0209d658 = (u8)v7f;
-    data_0209d64c = (u8)v87;
-    data_0209d6c4 = 0;
+    gMsgBoxWinLeft = (u8)v7f;
+    gMsgBoxWinTop = (u8)v87;
+    gMsgBoxStyle = 0;
     func_02012790(4);
 
     idx = data_0209d6d4;
@@ -1154,13 +1154,13 @@ void Message::DisplaySaving(unsigned short n)
     w = entry->width;
     w = w >> 3;
     data_0209d6a8 = (u8)((int)(w * 9 + 7) / 8);
-    data_0209d650 = (u8)(((0x20 - ((int)data_0209d6a8 + 2)) / 2) << 3);
-    data_0209d6d0 = (u8)v7f;
+    gMsgBoxLeft = (u8)(((0x20 - ((int)data_0209d6a8 + 2)) / 2) << 3);
+    gMsgBoxCenterX = (u8)v7f;
     v43 = 0x43;
-    data_0209d6c8 = (u8)v43;
-    data_0209d6cc = (u8)(0x44 - (int)(((((int)entry->lineCount << 1) + 1) << 3) / 2));
-    data_0209d658 = (u8)v7f;
-    data_0209d64c = (u8)v43;
+    gMsgBoxCenterY = (u8)v43;
+    gMsgBoxTop = (u8)(0x44 - (int)(((((int)entry->lineCount << 1) + 1) << 3) / 2));
+    gMsgBoxWinLeft = (u8)v7f;
+    gMsgBoxWinTop = (u8)v43;
     data_0209d680 = 0;
     data_0209d65c = 0;
 
@@ -1173,7 +1173,7 @@ void Message::DisplaySaving(unsigned short n)
     MultiStore16(ls, (char*)s, 0x800);
 
     scr = (u8 *)((char *)G2::GetBG3ScrPtr() + 0x42);
-    SetBg3Offset(-(int)data_0209d650, 4 - (int)data_0209d6cc);
+    SetBg3Offset(-(int)gMsgBoxLeft, 4 - (int)gMsgBoxTop);
 
     cols = data_0209d6a8;
     i = 0;
@@ -1192,36 +1192,36 @@ void Message::DisplaySaving(unsigned short n)
         Message::Update();
 
     {
-        int b = data_0209d45c | 0x20;
-        data_0209b454 |= 0x80000000u;
+        int b = gMainScreenLayers | 0x20;
+        gNextActorUpdateMask |= 0x80000000u;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, b, -8);
     }
 
     {
         volatile u16 *win0h = (volatile u16 *)0x4000048;
         volatile u16 *win0v = (volatile u16 *)0x400004a;
-        u8 d = data_0209d45c;
+        u8 d = gMainScreenLayers;
         *win0h = (u16)((*win0h & ~0x3f) | (d | 8) | 0x20);
         *win0v = (u16)((*win0v & ~0x3f) | 0x17);
     }
 
-    *(volatile u16 *)0x4000040 =
-        (u16)(((data_0209d658 << 8) & 0xff00) |
-              ((data_0209d6d0 * 2 - data_0209d658 + 1) & 0xff));
+    *(volatile u16 *)0x4000040 = (u16)(((gMsgBoxWinLeft << 8) & 0xff00) |
+                                       ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff));
     *(volatile u16 *)0x4000044 =
-        (u16)(((data_0209d64c << 8) & 0xff00) |
-              ((data_0209d6c8 * 2 - data_0209d64c + 1) & 0xff));
+        (u16)(((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff));
 
     {
         volatile unsigned int *disp = (volatile unsigned int *)0x4000000;
         *disp = (*disp & ~0xe000u) | 0x2000u;
-        data_0209d45c |= 8;
-        *disp = (*disp & ~0x1f00u) | ((unsigned int)data_0209d45c << 8);
+        gMainScreenLayers |= DISPLAY_LAYER_BG3;
+        *disp = (*disp & ~0x1f00u) | ((unsigned int)gMainScreenLayers << 8);
     }
 }
 
 // @symbol func_0201ef38
-extern "C" void func_0201ef38(void) { data_0209d45c &= ~8; }
+extern "C" void func_0201ef38(void) {
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
+}
 
 // @symbol func_0201ef50
 extern "C" void func_0201ef50(int arg)
@@ -1236,7 +1236,7 @@ extern "C" void func_0201ef50(int arg)
     int cp;
     func_0201eaac();
     data_0209d660 = 0;
-    data_0209d6c4 = 0;
+    gMsgBoxStyle = 0;
     data_0209d690 = 1;
     cp = G2S::GetBG0CharPtr();
     li = 0;
@@ -1298,10 +1298,10 @@ extern "C" void func_0201f138(void)
     func_0201eaac();
 
     idx = data_0209d6d4;
-    data_0209d658 = 0x7f;
-    data_0209d64c = 0x87;
+    gMsgBoxWinLeft = 0x7f;
+    gMsgBoxWinTop = 0x87;
     data_0209d660 = 0;
-    data_0209d6c4 = 1;
+    gMsgBoxStyle = 1;
     data_0209d6f0 = (u8*)((char*)data_0209d708 + idx * 8);
     data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
                     ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
@@ -1335,7 +1335,7 @@ extern "C" void func_0201f138(void)
         Message::Update();
     }
     SetBg3Offset(-0x11, -0x3c);
-    data_0209d45c |= 8;
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
 }
 
 // @symbol func_0201f32c
@@ -1366,14 +1366,14 @@ extern "C" void func_0201f32c(int arg0)
     func_0201eaac();
 
     data_0209d660 = 1;
-    data_0209d658 = 0x7f;
-    data_0209d64c = 0x87;
+    gMsgBoxWinLeft = 0x7f;
+    gMsgBoxWinTop = 0x87;
     if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
-        data_0209d6c4 = 1;
+        gMsgBoxStyle = 1;
         func_02012790(0x20);
     } else {
         u32 b0;
-        data_0209d6c4 = 0;
+        gMsgBoxStyle = 0;
         b0 = (data_0209f2d8 == 2);
         if (b0 == 0) {
             func_02012790(4);
@@ -1392,34 +1392,34 @@ extern "C" void func_0201f32c(int arg0)
     f2d8_val = data_0209f2d8;
     {
         u32 b1 = (f2d8_val == 0);
-        if (b1 != 0 && !(data_0209caa0[2] & 0x80)) {
+        if (b1 != 0 && !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
             u32 b2 = (gRunningKuppaScript != 0);
             if (b2 == 0) {
-                data_0209d650 = 0x10;
-                data_0209d6cc = 0x64;
-                data_0209d6d0 = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
-                data_0209d6c8 = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
-                data_0209d658 = data_0209d6d0;
-                data_0209d64c = data_0209d6c8;
+                gMsgBoxLeft = 0x10;
+                gMsgBoxTop = 0x64;
+                gMsgBoxCenterX = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
+                gMsgBoxCenterY = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
+                gMsgBoxWinLeft = gMsgBoxCenterX;
+                gMsgBoxWinTop = gMsgBoxCenterY;
                 goto branchDone;
             }
         }
         {
             u32 b3 = (f2d8_val == 2);
             if (b3 != 0) {
-                data_0209d650 = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
-                data_0209d6d0 = 0x7f;
-                data_0209d6cc = 0xa0;
-                data_0209d6c8 = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
-                data_0209d658 = 0x7f;
-                data_0209d64c = data_0209d6c8;
+                gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+                gMsgBoxCenterX = 0x7f;
+                gMsgBoxTop = 0xa0;
+                gMsgBoxCenterY = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
+                gMsgBoxWinLeft = 0x7f;
+                gMsgBoxWinTop = gMsgBoxCenterY;
             } else {
-                data_0209d650 = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
-                data_0209d6d0 = 0x7f;
-                data_0209d6c8 = 0x63;
-                data_0209d6cc = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
-                data_0209d658 = 0x7f;
-                data_0209d64c = 0x63;
+                gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+                gMsgBoxCenterX = 0x7f;
+                gMsgBoxCenterY = 0x63;
+                gMsgBoxTop = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
+                gMsgBoxWinLeft = 0x7f;
+                gMsgBoxWinTop = 0x63;
                 if (func_0201fb4c() != 0) {
                     Sound::ChangeMusicVolume(0x40, 0xc999);
                 }
@@ -1457,7 +1457,7 @@ extern "C" void func_0201f32c(int arg0)
             MultiStore16(sp2, (char *)pb, 0x800);
         }
         var_r8 = (char *)G2S::GetBG1ScrPtr() + 0x42;
-        SetSubBg1Offset(4 - data_0209d650, 4 - data_0209d6cc);
+        SetSubBg1Offset(4 - gMsgBoxLeft, 4 - gMsgBoxTop);
         var_r7 = 0x2200;
     } else {
         {
@@ -1474,9 +1474,9 @@ extern "C" void func_0201f32c(int arg0)
         {
             u32 b4 = (data_0209f2d8 == 2);
             if (b4 != 0) {
-                SetBg3Offset(0 - data_0209d650, 8 - data_0209d6cc);
+                SetBg3Offset(0 - gMsgBoxLeft, 8 - gMsgBoxTop);
             } else {
-                SetBg3Offset(0 - data_0209d650, 4 - data_0209d6cc);
+                SetBg3Offset(0 - gMsgBoxLeft, 4 - gMsgBoxTop);
             }
         }
         var_r7 = 0x200;
@@ -1509,35 +1509,44 @@ extern "C" void func_0201f32c(int arg0)
 
     disp2 = data_0209d698;
     if (disp2 == 2) {
-        data_0209d45c |= 2;
-        *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0x1f00) | (data_0209d45c << 8);
+        gMainScreenLayers |= DISPLAY_LAYER_BG1;
+        *(volatile s32 *)0x04000000 =
+            (*(volatile s32 *)0x04000000 & ~0x1f00) | (gMainScreenLayers << 8);
         return;
     }
     if (disp2 == 1) {
-        G2x::SetBlendBrightness((volatile u16 *)0x04001050, data_0209d454 | 0x20, -7);
-        *(volatile u16 *)0x04001048 = (*(volatile u16 *)0x04001048 & ~0x3f) | (data_0209d454 | 2) | 0x20;
+        G2x::SetBlendBrightness((volatile u16 *)0x04001050, gSubScreenLayers | 0x20, -7);
+        *(volatile u16 *)0x04001048 =
+            (*(volatile u16 *)0x04001048 & ~0x3f) | (gSubScreenLayers | 2) | 0x20;
         *(volatile u16 *)0x0400104a = (*(volatile u16 *)0x0400104a & ~0x3f) | 0x1d;
-        *(volatile s16 *)0x04001040 = ((data_0209d658 << 8) & 0xff00) | (u8)(((data_0209d6d0 * 2) - data_0209d658) + 1);
-        *(volatile u16 *)0x04001044 = ((data_0209d64c << 8) & 0xff00) | (u8)(((data_0209d6c8 * 2) - data_0209d64c) + 1);
+        *(volatile s16 *)0x04001040 =
+            ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
+        *(volatile u16 *)0x04001044 =
+            ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
         *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0xe000) | 0x2000;
-        data_0209d454 |= 2;
-        *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0x1f00) | (data_0209d454 << 8);
+        gSubScreenLayers |= 2;
+        *(volatile s32 *)0x04001000 =
+            (*(volatile s32 *)0x04001000 & ~0x1f00) | (gSubScreenLayers << 8);
         return;
     }
 
     if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
-        G2x::SetBlendBrightness((volatile u16 *)0x04000050, data_0209d45c & ~0x38, 7);
+        G2x::SetBlendBrightness((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, 7);
     } else {
-        G2x::SetBlendBrightness((volatile u16 *)0x04000050, data_0209d45c & ~0x38, -8);
+        G2x::SetBlendBrightness((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, -8);
     }
-    *(volatile u16 *)0x04000048 = (*(volatile u16 *)0x04000048 & ~0x3f) | (data_0209d45c | 8) | 0x20;
+    *(volatile u16 *)0x04000048 =
+        (*(volatile u16 *)0x04000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
     *(volatile u16 *)0x0400004a = (*(volatile u16 *)0x0400004a & ~0x3f) | 0x17;
-    *(volatile s16 *)0x04000040 = ((data_0209d658 << 8) & 0xff00) | (u8)(((data_0209d6d0 * 2) - data_0209d658) + 1);
-    *(volatile s16 *)0x04000044 = ((data_0209d64c << 8) & 0xff00) | (u8)(((data_0209d6c8 * 2) - data_0209d64c) + 1);
+    *(volatile s16 *)0x04000040 =
+        ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
+    *(volatile s16 *)0x04000044 =
+        ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
     data_0209d6bc = 0;
     *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0xe000) | 0x2000;
-    data_0209d45c |= 8;
-    *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0x1f00) | (data_0209d45c << 8);
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
+    *(volatile s32 *)0x04000000 =
+        (*(volatile s32 *)0x04000000 & ~0x1f00) | (gMainScreenLayers << 8);
 }
 
 /* Course ids that must not open the talk window. data_0209d664 is the byte

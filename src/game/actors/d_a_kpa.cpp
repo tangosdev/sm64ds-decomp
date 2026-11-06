@@ -136,6 +136,7 @@ enum daKpa_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* -------------------------------------------------------------------------- */
 /* Names for the numbers this file uses. The values are the ROM's; the names are
@@ -287,47 +288,6 @@ struct KpaTexSequenceFilePtr : SharedFilePtr {
 typedef void (daKpaTail_c::*KpaTailState)();
 extern KpaTailState data_ov060_0211ae9c[];
 
-/* Plain three-int vector: the Vec3_Asr bridge and locals in func_ov060_0211577c,
- * and the floor-probe start point in func_ov060_02113740. */
-typedef struct Vec3 { int x, y, z; } Vec3;
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_021132a4, NOT applied:
-typedef struct { int x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_021135fc, NOT applied:
-typedef struct Vector3 { int x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_02113a94, NOT applied:
-typedef struct Vector3 { int x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov060_021140c0, NOT applied:
-typedef signed short s16;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_021140c0, NOT applied:
-typedef struct { s32 x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's32', from the legacy file for func_ov060_02114858, NOT applied:
-typedef int s32;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_02114858, NOT applied:
-typedef struct
-{
-  int x;
-  int y;
-  int z;
-} Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'dBgCh_Gnd', from the legacy file for func_ov060_0211577c, NOT applied:
-typedef struct dBgCh_Gnd { char filler[0x44]; int clsnY; char rest[0x8]; } dBgCh_Gnd;
-*/
-
 /* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for _ZN7daKpa_c6RenderEv, NOT applied:
 struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(void*); };
 */
@@ -364,7 +324,6 @@ extern KpaAnimationFileHandle data_ov060_0211ac88;
 extern KpaAnimationFileHandle data_ov060_0211ac60;
 extern int Vec3_HorzLen(const Vector3* v);
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650;
 extern KpaAnimationFileHandle data_ov060_0211abe0;
 extern int func_0200fa04(void *c, void *v, int a);
 extern KpaAnimationFileHandle data_ov060_0211acd8;
@@ -374,8 +333,7 @@ extern KpaAnimationFileHandle data_ov060_0211ac68;
 extern KpaAnimationFileHandle data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
 extern s16 func_02010844(void *unused, void *v, s16 angle);
-/* local extern: the Vector3 spelling math/CalcLib.h declares. The locals
-   stay the POD Vec3 above, so the calls cast. */
+/* local extern: the Vector3 spelling math/CalcLib.h declares. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
@@ -385,7 +343,7 @@ extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 void d_a_kpaEarthquakeHold(void *self, struct Vector3 *v, int f);
-extern "C" void func_02011cfc(void);
+extern void func_02011cfc(void);
 /* One declaration per resource handle, typed from how InitResources and
  * CleanupResources use it:
  *
@@ -533,22 +491,7 @@ extern void func_02011d50(void *a);
 /*
 Bowser's destructors. The body is empty: the member and base teardown and the
 D1/D0 pair are compiler-generated. */
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~daKpa_c() it emits,
- * so compiling the definition below as well would define that symbol
- * twice. This arm spells out, in terms of it, what the deleting destructor
- * does: the D1 body, called qualified so it is a direct call even where a
- * header declares the destructor virtual, then the class-specific
- * operator delete. Nothing here reaches mwccarm: it builds the #else arm
- * and emits the ROM bytes it always emitted. */
-extern "C" daKpa_c *_ZN7daKpa_cD0Ev(daKpa_c *thiz)
-{
-    thiz->daKpa_c::~daKpa_c();        /* the D1 body, through the one host symbol */
-    daKpa_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 daKpa_c::~daKpa_c()
 {
 }
@@ -558,15 +501,7 @@ daKpa_c::~daKpa_c()
 // @symbol _ZN11daKpaTail_cD0Ev
 /*
 The tail's destructors. The body is empty, as for Bowser's. */
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name; see the note on _ZN7daKpa_cD0Ev. */
-extern "C" daKpaTail_c *_ZN11daKpaTail_cD0Ev(daKpaTail_c *thiz)
-{
-    thiz->daKpaTail_c::~daKpaTail_c();    /* the D1 body, through the one host symbol */
-    daKpaTail_c::operator delete(thiz);  /* the class-specific delete D0 ends with */
-    return thiz;
-}
-#else
+#ifndef _MSC_VER
 daKpaTail_c::~daKpaTail_c()
 {
 }
@@ -783,7 +718,7 @@ mCapActorAlive once no cap actor exists any more. Always returns 1. */
  */
 int daKpa_c::Behavior()
 {
-    RandomIntInternal(&data_0209e650);
+    RandomIntInternal(&data_0209e650.value);
     mTargetPlayer = ClosestPlayer();
     if (mTargetPlayer != 0) {
         mAngleToTarget = Vec3_HorzAngle(&mPos, &mTargetPlayer->mPos);
@@ -1116,9 +1051,9 @@ none), build the shadow matrix there and call DropShadowRadHeight with radius
 void daKpa_c::func_ov060_0211577c(){
     char pad[8];
     Matrix4x3 saved;
-    Vec3 pos;
-    Vec3 v;
-    Vec3 v2;
+    Vector3 pos;
+    Vector3 v;
+    Vector3 v2;
     int zero;
 
     if (this->mWithMeshClsn.IsOnGround() == 0)
@@ -1128,7 +1063,7 @@ void daKpa_c::func_ov060_0211577c(){
     this->mAngleX = func_02010844(this, &this->mGroundNormalX, this->mAngleY);
     this->mAngleZ = func_02010844(this, &this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
 skip_angles:
-    Vec3_Asr((Vector3 *)&v, (Vector3 *)&this->mPosX, 3);
+    Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
@@ -1164,12 +1099,12 @@ skip_angles:
         pos.y = this->mPosY;
         pos.z = this->mPosZ;
         pos.y = pos.y + 0x32000;
-        rc.SetObjAndPos(*(Vector3 *)&pos, 0);
+        rc.SetObjAndPos(pos, 0);
         if (rc.DetectClsn())
             pos.y = rc.clsnY;
         else
             pos.y = this->mPosY;
-        Vec3_Asr((Vector3 *)&v2, (Vector3 *)&pos, 3);
+        Vec3_Asr(&v2, &pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
         *(Matrix4x3 *)(&this->mShadowMtx) = data_020a0e68;
         DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)&this->mShadowMtx, 0x140000, 0x64000,
@@ -1399,7 +1334,7 @@ void daKpa_c::func_ov060_02115314(){
     } else {
         this->mPickToggle = 0;
         if (this->mSkipIdleRoll == 0) {
-            unsigned int v = (unsigned int)RandomIntInternal(&data_0209e650) >> 0x10;
+            unsigned int v = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
             if (v % 10 == 0)
                 this->mState = BOWSER_STATE_PLAY_ANIM_0F;
             else
@@ -1436,7 +1371,7 @@ void daKpa_c::func_ov060_021151d4(){
         goto turn;
 
     if (this->DistToCPlayer() < 0x514000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 10;
+        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
         if (m < this->mVanishChance) {
             this->mState = BOWSER_STATE_VANISH_DASH;
             if (this->mVanishChance > 3)
@@ -1452,7 +1387,7 @@ void daKpa_c::func_ov060_021151d4(){
 
     this->mState = BOWSER_STATE_CHARGE;
     if (this->mDistToCenter > 0x1f4000 && this->mDistToCenter < 0x5dc000) {
-        m = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 10;
+        m = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10;
         if (m < 5)
             this->mState = BOWSER_STATE_JUMP;
     }
@@ -1485,16 +1420,16 @@ void daKpa_c::func_ov060_021150d0(){
     dActor_c *a = this;
     if (this->mCondFlags & BOWSER_COND_FACING_TARGET) {
         if (a->DistToCPlayer() < 0x3e8000) {
-            if (((unsigned)RandomIntInternal(&data_0209e650) >> 0x10) % 10 < 4) {
+            if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10 < 4) {
                 this->mState = BOWSER_STATE_FIREBALLS;
-            } else if (((unsigned)RandomIntInternal(&data_0209e650) >> 0x10) % 10 < 8) {
+            } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10 < 8) {
                 this->mState = BOWSER_STATE_FIRE_BREATH;
             } else {
                 this->mState = BOWSER_STATE_ANIM_CHAIN;
             }
             this->mFireTimer = 0;
             this->mAnimSpeed = 0x1000;
-        } else if (((unsigned)RandomIntInternal(&data_0209e650) >> 0x10) % 10 < 5) {
+        } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10 < 5) {
             this->mState = BOWSER_STATE_JUMP;
         } else {
             this->mState = BOWSER_STATE_CHARGE;
@@ -1829,14 +1764,14 @@ void daKpa_c::func_ov060_02114858(){
             }
             if ((r4 >= 0xf) && (r4 < 0x14))
             {
-                s32 rnd = RandomIntInternal(&data_0209e650);
+                s32 rnd = RandomIntInternal(&data_0209e650.value);
                 u32 hi = ((u32) rnd) >> 16;
                 u32 m = hi % 10u;
                 dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 0x11, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
             }
             else
             {
-                s32 rnd = RandomIntInternal(&data_0209e650);
+                s32 rnd = RandomIntInternal(&data_0209e650.value);
                 u32 hi = ((u32) rnd) >> 16;
                 u32 m = hi % 10u;
                 dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 1, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
@@ -2137,7 +2072,7 @@ void daKpa_c::func_ov060_021140c0(){
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
-            s32 rnd = RandomIntInternal(&data_0209e650);
+            s32 rnd = RandomIntInternal(&data_0209e650.value);
             u32 hi = ((u32)rnd) >> 16;
             u32 m = hi % 10u;
             this->mFireballShots = (char)((m % 3u) + 1);
@@ -2483,7 +2418,7 @@ when it did, and send variant 1 into BOWSER_STATE_ARENA_TILT (recording the
 KOOPA2BG actor); func_ov060_02115018 runs every frame of the step. Step 3: at the
 last frame, BOWSER_STATE_IDLE, BOWSER_COND_RECOVERING cleared, gravity -0x2000. */
 void daKpa_c::func_ov060_02113740(){
-    Vec3 pos;
+    Vector3 pos;
     int hit;
     int ground;
 
@@ -2499,7 +2434,7 @@ void daKpa_c::func_ov060_02113740(){
             pos.y = py;
             pos.z = pz;
         }
-        rc.SetObjAndPos(*(Vector3 *)&pos, (dActor_c *)this);
+        rc.SetObjAndPos(pos, (dActor_c *)this);
         if (rc.DetectClsn()) {
             ground = rc.clsnY;
             /* GetClsnID reads the hit record, dBgCh_Gnd's dBgPi base at +0x10. */

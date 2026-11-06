@@ -8,10 +8,9 @@
  * defer_codegen off. daHanachan_c_classInit closes ov034's .text.
  */
 /* leftovers:
- * - StateDemoWaitInit, UpdateSegments, UpdateSegmentModels and
- *   InitResources walk segment rows through char* bases. Indexing
- *   mSegmentPos[seg] / &mAnmModels[i].mat4x3 changes those sizes, and
- *   UpdateSegments' NormalizeVec3IfNonZero relocation moves with them.
+ * - StateDemoWaitInit, UpdateSegmentModels and InitResources walk
+ *   segment rows through char* bases. Indexing mSegmentPos[seg] /
+ *   &mAnmModels[i].mat4x3 changes those sizes.
  * - func_ov002_020c51d0 is ov002's. daPly_c::Hurt and daPly_c::Bounce
  *   stay mangled (Fix12<int> by value).
  */
@@ -70,6 +69,7 @@ enum daHanachan_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* The file-scope resource handles. The model five use the plain SharedFilePtr
  * pair (func_02017acc / func_02017ab4), the animation twenty-five use
@@ -92,26 +92,26 @@ extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
 extern void **data_ov034_02113888[];
-extern int DecIfAbove0_Byte(void*);
+extern u8 DecIfAbove0_Byte(u8 *);
 extern void **data_ov034_0211389c[];
 extern void **data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
-extern short Vec3_HorzAngle(const void* a, const void* b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
-extern void Vec3_Sub(void *out, void *a, void *b);
+extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(void *v);
 extern int Vec3_HorzDist(void *a, void *b);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern int data_ov034_02114488[];
-extern char data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
-extern void Vec3_Add(void *out, void *a, void *b);
-extern int NormalizeVec3IfNonZero(void *v);
-extern void Vec3_MulScalarInPlace(void *v, int s);
+// local extern: no shared header declares Vec3_Add.
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
 extern void **data_ov034_02113874[];
@@ -369,7 +369,7 @@ void daHanachan_c::StateDamageMain()
     ((dCamera_c *)data_0209f318)->SetFlag_3();
     mDriveCamera = 1;
 
-    ApproachLinear(mPlayer->mAngleY, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPosX), 0x100);
+    ApproachLinear(mPlayer->mAngleY, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPos), 0x100);
 
     func_ov002_020c51d0(talk, &st);
 
@@ -414,7 +414,7 @@ void daHanachan_c::StateMoveMain()
     int rnd;
     int v[3];
 
-    Vec3_Sub(v, &mPosX, &mHomePos);
+    Vec3_Sub((Vector3 *)v, (const Vector3 *)&mPosX, (const Vector3 *)&mHomePos);
     len = LenVec3(v);
 
     if (mDefeated != 0 && mFalling == 0) {
@@ -428,7 +428,7 @@ void daHanachan_c::StateMoveMain()
     }
 
     if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-        rnd = RandomIntInternal(&data_0209e650);
+        rnd = RandomIntInternal(&data_0209e650.value);
         {
             unsigned char health = mHealth;
             unsigned int bits;
@@ -445,8 +445,8 @@ void daHanachan_c::StateMoveMain()
     }
 
     if (mWithMeshClsn.IsOnWall() != 0 || len > 0x5dc000) {
-        rnd = RandomIntInternal(&data_0209e650);
-        mTargetAngleY = Vec3_HorzAngle(&mPosX, &mHomePos);
+        rnd = RandomIntInternal(&data_0209e650.value);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         mStateTimer = (unsigned char)((unsigned int)(rnd + 0x1e) >> 0x1b);
         mStateTimer = (unsigned char)(mStateTimer - (4 - mHealth) * 0x1e);
         if (mStateTimer >= 0x40)
@@ -646,7 +646,7 @@ void daHanachan_c::StateDemoWaitMain()
     int len;
     daPly_c *player;
 
-    Vec3_Sub(&v, &mPosX, &mHomePos);
+    Vec3_Sub(&v, (const Vector3 *)&mPosX, (const Vector3 *)&mHomePos);
     len = LenVec3(&v);
     player = ClosestPlayer();
     if (player->mPosY > mPosY + 0x12c000) {
@@ -655,7 +655,7 @@ void daHanachan_c::StateDemoWaitMain()
     }
 
     if (DecIfAbove0_Byte(&mStateTimer) == 0) {
-        int r = (unsigned)RandomIntInternal(&data_0209e650) >> 0x1b;
+        int r = (unsigned)RandomIntInternal(&data_0209e650.value) >> 0x1b;
         if (r & 1) {
             mTargetAngleY = (short)((r & 0xf) << 0xc);
         } else {
@@ -665,7 +665,7 @@ void daHanachan_c::StateDemoWaitMain()
     }
 
     if (mWithMeshClsn.IsOnWall() || len > 0x5dc000) {
-        mTargetAngleY = Vec3_HorzAngle(&mPosX, &mHomePos);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         mStateTimer = data_ov034_0211433c[mHealth];
     }
     ApproachLinear(mHorzSpeed, data_ov034_02114488[0], 0x1000);
@@ -713,8 +713,8 @@ void daHanachan_c::StateDemoWaitInit()
             out.y = zero;
             out.z = zero;
             in.z = zval;
-            Matrix4x3_FromRotationY(data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
-            MulVec3Mat4x3(&in, data_020a0e68, &out);
+            Matrix4x3_FromRotationY(&data_020a0e68, (short)(mSegmentRot[0].y + 0x200));
+            MulVec3Mat4x3(&in, &data_020a0e68, &out);
             prev = seg - 1;
             Vec3_Add(&sum, &mSegmentPos[prev], &out);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
@@ -753,7 +753,6 @@ int daHanachan_c::IsStompedBy(dCcAcPos_c *cyl, dActor_c *actor)
     return 0;
 }
 
-#pragma opt_strength_reduction off
 /* Players stomping a segment bounce off it; the head also hurts on contact. The second cylinder set only hurts. */
 // @symbol _ZN12daHanachan_c16HandlePlayerHitsEv
 void daHanachan_c::HandlePlayerHits()
@@ -829,74 +828,41 @@ void daHanachan_c::HandlePlayerHits()
     }
 }
 
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
 /* Pulls each segment to its spacing behind the one ahead, sets it on the ground and moves its cylinders. */
 // @symbol _ZN12daHanachan_c14UpdateSegmentsEv
 void daHanachan_c::UpdateSegments()
 {
-    /* Strength reduction and CSE are off. rotRow starts at this+6 and posRow
-       at this+0xc, then each steps by one element, so member [0] on that
-       pointer is segment `seg` (the loop starts at 1). An index, or
-       &mSegmentPos[seg - 1] for the segment behind, changes the size. */
-    char *self = (char *)this;
-    int seg;
-    Vector3 *cur;
-    char *rotRow;
-    char *posRow;
     Vector3 diff;
     Vector3 castPos;
     Vector3 sum;
 
-    cur = &mSegmentPos[0];
-    cur = cur + 1;
-    rotRow = self + 6;
-    posRow = self + 0xc;
-    seg = 1;
-
-    for (; seg < 5; seg++, cur++, rotRow += 6, posRow += 0xc) {
-        int off = (seg - 1) * 0xc;
-        Vec3_Sub(&diff, cur, (char *)&mSegmentPos[0] + off);
+    for (int seg = 1; seg < 5; seg++) {
+        Vector3 *cur = &mSegmentPos[seg];
+        Vec3_Sub(&diff, cur, &mSegmentPos[seg - 1]);
         if (NormalizeVec3IfNonZero(&diff) != 0) {
             Vec3_MulScalarInPlace(&diff, mSegmentSpacing[seg]);
         }
-        {
-            char *prev = (char *)&mSegmentPos[0] + off;
-            short ang = Vec3_HorzAngle(cur, prev);
-            ((daHanachan_c *)rotRow)->mSegmentRot[0].y = ang;
-            Vec3_Add(&sum, prev, &diff);
-        }
+        Vector3 *prev = &mSegmentPos[seg - 1];
+        mSegmentRot[seg].y = Vec3_HorzAngle(cur, prev);
+        Vec3_Add(&sum, prev, &diff);
 
-        ((daHanachan_c *)posRow)->mSegmentPos[0].x = sum.x;
-        ((daHanachan_c *)posRow)->mSegmentPos[0].y = sum.y;
-        ((daHanachan_c *)posRow)->mSegmentPos[0].z = sum.z;
-        mdCc_cs1[seg].pos.x = ((daHanachan_c *)posRow)->mSegmentPos[0].x;
-        mdCc_cs1[seg].pos.y = ((daHanachan_c *)posRow)->mSegmentPos[0].y;
-        mdCc_cs1[seg].pos.z = ((daHanachan_c *)posRow)->mSegmentPos[0].z;
-        mdCc_cs2[seg].pos.x = ((daHanachan_c *)posRow)->mSegmentPos[0].x;
-        mdCc_cs2[seg].pos.y = ((daHanachan_c *)posRow)->mSegmentPos[0].y;
-        mdCc_cs2[seg].pos.z = ((daHanachan_c *)posRow)->mSegmentPos[0].z;
+        mSegmentPos[seg] = sum;
+        mdCc_cs1[seg].pos = mSegmentPos[seg];
+        mdCc_cs2[seg].pos = mSegmentPos[seg];
 
         if (mFalling == 0) {
-            int py;
             dBgCh_Gnd ray;
-            castPos.x = ((daHanachan_c *)posRow)->mSegmentPos[0].x;
-            py = ((daHanachan_c *)posRow)->mSegmentPos[0].y;
-            castPos.y = py;
-            castPos.z = ((daHanachan_c *)posRow)->mSegmentPos[0].z;
-            castPos.y = py + 0x3c000;
+            castPos = mSegmentPos[seg];
+            castPos.y += 0x3c000;
             ray.SetObjAndPos(castPos, 0);
             if (ray.DetectClsn() != 0) {
-                int clY = ray.clsnY;
-                if (((daHanachan_c *)posRow)->mSegmentPos[0].y <= clY)
-                    ((daHanachan_c *)posRow)->mSegmentPos[0].y = clY;
+                if (mSegmentPos[seg].y <= ray.clsnY)
+                    mSegmentPos[seg].y = ray.clsnY;
             }
         }
     }
 }
 
-#pragma opt_common_subs on
-#pragma opt_strength_reduction on
 /* Copies each segment's rotation and position into its model matrix. */
 // @symbol _ZN12daHanachan_c19UpdateSegmentModelsEv
 void daHanachan_c::UpdateSegmentModels()
@@ -1093,13 +1059,13 @@ int daHanachan_c::Behavior()
         camA.x = 0; camA.y = 0x80000; camA.z = 0;
         camB.x = 0; camB.y = 0x80000; camB.z = 0x1f4000;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        Matrix4x3_FromRotationY(data_020a0e68, mSegmentRot[0].y);
-        MulVec3Mat4x3(&camA, data_020a0e68, &scratch);
-        Vec3_Add(&t0, &mPosX, &scratch);
+        Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
+        MulVec3Mat4x3(&camA, &data_020a0e68, &scratch);
+        Vec3_Add(&t0, &mPos, &scratch);
         camA = t0;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;
-        MulVec3Mat4x3(&camB, data_020a0e68, &scratch);
-        Vec3_Add(&t1, &mPosX, &scratch);
+        MulVec3Mat4x3(&camB, &data_020a0e68, &scratch);
+        Vec3_Add(&t1, &mPos, &scratch);
         camB = t1;
         func_020092c4(cam, &cam->lookAt, &camA);
         func_020092c4(cam, &cam->pos, &camB);
@@ -1197,10 +1163,10 @@ int daHanachan_c::InitResources()
             vb[0] = zeroC;
             vb[1] = zeroC;
             vb[2] = zeroC;
-            Matrix4x3_FromRotationY(data_020a0e68, mSegmentRot[0].y);
-            MulVec3Mat4x3(va, data_020a0e68, vb);
+            Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
+            MulVec3Mat4x3(va, &data_020a0e68, vb);
             prev = i - 1;
-            Vec3_Add(out, &mSegmentPos[prev], vb);
+            Vec3_Add((Vector3 *)out, &mSegmentPos[prev], (const Vector3 *)vb);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = out[0];
             ((daHanachan_c *)posRow)->mSegmentPos[0].y = out[1];
             ((daHanachan_c *)posRow)->mSegmentPos[0].z = out[2];

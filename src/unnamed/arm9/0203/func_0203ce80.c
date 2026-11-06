@@ -2,7 +2,7 @@
 /* recovered: shared common types */
 #include "common.h"
 
-extern void CrossVec3(Vector3 *a, Vector3 *b, Vector3 *result);
+extern void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *result);
 extern void NormalizeVec3(const struct Vector3 *src, struct Vector3 *dst);
 
 void func_0203cf00(Vector3 *out, Vector3 *a, Vector3 *b) {

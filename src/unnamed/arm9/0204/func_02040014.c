@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/wm_views.h"
 extern int data_020a0f5c;
 extern u16 data_020a0f24;
 extern u8 data_020a0f9d[4];
@@ -7,21 +8,9 @@ extern u16 data_020a0fa0[][3];
 
 extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
-extern void CpuCopy8(void *dst, void *src, int n);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02042748(u16 *a, u16 *b);
 extern int WM_Disconnect(int self, unsigned int idx);
-
-/* Leading fields of NitroSDK WMStartParentCallback, with the names
- * MB_Parent.cpp gives them. */
-typedef struct WmStartParentCallback {
-    u16 apiid;        /* 0x00 */
-    u16 errcode;      /* 0x02 */
-    u16 wlCmdID;      /* 0x04 */
-    u16 wlResult;     /* 0x06 */
-    u16 state;        /* 0x08 -- 0 PARENT_START, 2 BEACON_SENT, 7 CONNECTED, 9 DISCONNECTED */
-    u8 macAddress[6]; /* 0x0a -- the child's */
-    u16 aid;          /* 0x10 */
-} WmStartParentCallback;
 
 /* The parent's WM_StartParent callback. A connecting child stays only when
  * its MAC address equals one of the three entries of data_020a0fbe whose

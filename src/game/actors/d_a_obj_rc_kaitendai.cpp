@@ -23,14 +23,7 @@ enum d_a_obj_rc_kaitendai_AssetId { ASSET_RC_KAITEN_BMD = 0x06a7, ASSET_RC_KAITE
 #include "daObjRc_Kaitendai_c.h"
 #include "SharedFilePtr.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x6a7, collision file 0x6a8). mwcc emits
@@ -49,8 +42,9 @@ struct RcKaitendaiCollisionFilePtr : SharedFilePtr {
     ~RcKaitendaiCollisionFilePtr();
 };
 
-extern ResourceDescriptor data_ov036_02113b2c;
 extern s16 data_ov036_02113b18;
+extern ResourceDescriptor data_ov036_02113b2c;
+extern struct CLPS_Block data_ov036_02112bc8;
 extern s16 data_ov036_02113b1c;
 
 // @symbol daObjRc_Kaitendai_c_classInit
@@ -75,3 +69,9 @@ s32 daObjRc_Kaitendai_c::CleanupResources() {
  * Definition order is the retail initializer's construction order. */
 RcKaitendaiModelFile gRcKaitenModelFile(ASSET_RC_KAITEN_BMD);
 RcKaitendaiCollisionFilePtr gRcKaitenCollisionFile(ASSET_RC_KAITEN_KCL);
+
+ResourceDescriptor data_ov036_02113b2c = {
+    &gRcKaitenModelFile,
+    &gRcKaitenCollisionFile,
+    &data_ov036_02112bc8,
+};

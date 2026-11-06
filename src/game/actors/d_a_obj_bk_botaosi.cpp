@@ -37,10 +37,9 @@
  *   does for its pair.
  * - data_ov015_02113574 is the CLPS block in overlay .data that
  *   this TU does not own; data_02082214 is arm9's sin/cos table,
- *   data_020a0e68 arm9's scratch matrix, and data_0209f220 / data_0209f2f8
- *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel,
- *   Matrix4x3_FromRotationXYZExt, MulVec3Mat4x3 and Vec3_Add have no shared
- *   header, so they keep a local extern "C" block.
+ *   data_020a0e68 arm9's scratch matrix, and data_0209f220 / gCurrentSublevel
+ *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel, MulVec3Mat4x3
+ *   and Vec3_Add have no shared header, so they keep a local extern "C" block.
  * - g_profile_BK_BOTAOSI lives outside this TU.
  */
 
@@ -75,14 +74,13 @@ extern BkBotaosiCollisionFilePtr data_ov015_02114974; /* collision KCL */
 extern BkBotaosiModelFilePtr data_ov015_0211497c;     /* plank BMD */
 extern CLPS_Block data_ov015_02113574;
 extern s16 data_02082214[]; /* arm9 sin/cos table */
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern u8 data_0209f220;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 int AngleDiff(int a, int b);
 int IsStarCollectedInCurLevel(int starID);
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
@@ -362,7 +360,7 @@ int daObjBk_Botaosi_c::InitResources() {
     mOriginalPosY = mPosY;
     mKnockDir = (s8)one;
 
-    if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(one) == 0) &&
+    if (gCurrentSublevel == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(one) == 0) &&
         mPosY >= 0xdac000) {
         return 0;
     }

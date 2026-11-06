@@ -16,32 +16,33 @@ struct UnkObj {
 };
 
 extern UnkObj *data_0209d4a8;
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
-extern short data_0209d468;
-extern short data_0209d46c;
-extern short data_0209d4a4;
-extern short data_0209d4a0;
-extern short data_0209d49c;
-extern short data_0209d478;
-extern short data_0209d48c;
-extern short data_0209d490;
-extern short data_0209d494;
-extern short data_0209d498;
-extern short data_0209d484;
-extern short data_0209d480;
-extern short data_0209d47c;
-extern short data_0209d470;
-extern short data_0209d474;
-extern short data_0209d488;
+extern unsigned char gMainScreenLayers;
+extern unsigned char gSubScreenLayers;
+extern short gBg0HOffset;
+extern short gBg0VOffset;
+extern short gBg1HOffset;
+extern short gBg1VOffset;
+extern short gBg2HOffset;
+extern short gBg2VOffset;
+extern short gBg3HOffset;
+extern short gBg3VOffset;
+extern short gSubBg0HOffset;
+extern short gSubBg0VOffset;
+extern short gSubBg1HOffset;
+extern short gSubBg1VOffset;
+extern short gSubBg2HOffset;
+extern short gSubBg2VOffset;
+extern short gSubBg3HOffset;
+extern short gSubBg3VOffset;
 
 void func_02055454(int v);
 
 /* The VBlank IRQ's display commit (IRQ2.cpp). The scene's GraphCallback2
    (data_0209d4a8) can skip it by returning 0. Otherwise flush and load
-   OAM, put the layer enables (DISPCNT bits 8-12) from data_0209d45c on
-   the main screen and data_0209d454 on the sub screen, and write both
-   screens' BG scroll registers from their shadow words. With BG0 in 3D
+   OAM, put the layer enables (DISPCNT bits 8-12) from gMainScreenLayers on
+   the main screen and gSubScreenLayers on the sub screen, and write both
+   screens' BG scroll registers from their shadow words (each H/V pair is
+   set by its SetBgNOffset or SetSubBgNOffset). With BG0 in 3D
    mode (DISPCNT bit 3) its horizontal offset goes through
    G3X_SetHOffset (func_02055454) instead. */
 void func_02019144(void)
@@ -53,20 +54,20 @@ void func_02019144(void)
     }
     OAM::Flush();
     OAM::Load();
-    *(vu32 *)0x4000000 = (*(vu32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
-    *(vu32 *)0x4001000 = (*(vu32 *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+    *(vu32 *)0x4000000 = (*(vu32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
+    *(vu32 *)0x4001000 = (*(vu32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
     if (!(*(vu32 *)0x4000000 & 8)) {
-        *(vu32 *)0x4000010 = (data_0209d468 & 0x1ff) | (0x1ff0000 & (data_0209d46c << 16));
+        *(vu32 *)0x4000010 = (gBg0HOffset & 0x1ff) | (0x1ff0000 & (gBg0VOffset << 16));
     } else {
-        func_02055454(data_0209d468);
+        func_02055454(gBg0HOffset);
     }
-    *(vu32 *)0x4000014 = (data_0209d4a4 & 0x1ff) | (0x1ff0000 & (data_0209d4a0 << 16));
-    *(vu32 *)0x4000018 = (data_0209d49c & 0x1ff) | (0x1ff0000 & (data_0209d478 << 16));
-    *(vu32 *)0x400001c = (data_0209d48c & 0x1ff) | (0x1ff0000 & (data_0209d490 << 16));
+    *(vu32 *)0x4000014 = (gBg1HOffset & 0x1ff) | (0x1ff0000 & (gBg1VOffset << 16));
+    *(vu32 *)0x4000018 = (gBg2HOffset & 0x1ff) | (0x1ff0000 & (gBg2VOffset << 16));
+    *(vu32 *)0x400001c = (gBg3HOffset & 0x1ff) | (0x1ff0000 & (gBg3VOffset << 16));
     *(vu32 *)0x4001000;
-    *(vu32 *)0x4001010 = (data_0209d494 & 0x1ff) | (0x1ff0000 & (data_0209d498 << 16));
-    *(vu32 *)0x4001014 = (data_0209d484 & 0x1ff) | (0x1ff0000 & (data_0209d480 << 16));
-    *(vu32 *)0x4001018 = (data_0209d47c & 0x1ff) | (0x1ff0000 & (data_0209d470 << 16));
-    *(vu32 *)0x400101c = (data_0209d474 & 0x1ff) | (0x1ff0000 & (data_0209d488 << 16));
+    *(vu32 *)0x4001010 = (gSubBg0HOffset & 0x1ff) | (0x1ff0000 & (gSubBg0VOffset << 16));
+    *(vu32 *)0x4001014 = (gSubBg1HOffset & 0x1ff) | (0x1ff0000 & (gSubBg1VOffset << 16));
+    *(vu32 *)0x4001018 = (gSubBg2HOffset & 0x1ff) | (0x1ff0000 & (gSubBg2VOffset << 16));
+    *(vu32 *)0x400101c = (gSubBg3HOffset & 0x1ff) | (0x1ff0000 & (gSubBg3VOffset << 16));
 }
 }

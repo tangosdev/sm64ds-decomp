@@ -84,7 +84,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN17daObjFloatBoard_c15StoodOnCallbackEPvPS_P8dActor_c",
+      "symbol": "_ZN17daObjFloatBoard_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x020b5fc4",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020b5fc4.c",

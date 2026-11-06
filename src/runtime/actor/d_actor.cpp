@@ -70,11 +70,13 @@
  * came later, for the classes SpawnFireball, SpawnNumber and
  * GivePlayerCoins spawn. */
 #include "types.h"
+#include "ParticleIds.h"
 #include "SpawnInfo.h"
 #include "decl_common.h"
 #include "dActor_c.h"
 #include "daPly_c.h"
 #include "common.h"
+#include "math/CalcLib.h"
 #include "dCc_c.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
@@ -89,6 +91,7 @@
 #include "daObjNumber_c.h"
 #include "daCoin_c.h"
 #include "daFPknBall_c.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -108,19 +111,6 @@ extern void *data_020a4bb8;
 extern unsigned char data_0209f2d8;
 /* Defined below as extern "C". Fix12-by-value, so it is not a method. */
 }
-
-#ifdef _MSC_VER
-/* The host has one ~dActor_c(). These are the ROM's flat D2 and D0 names. */
-extern "C" dActor_c *_ZN8dActor_cD2Ev(dActor_c *thiz) {
-    thiz->dActor_c::~dActor_c();
-    return thiz;
-}
-extern "C" dActor_c *_ZN8dActor_cD0Ev(dActor_c *thiz) {
-    thiz->dActor_c::~dActor_c();
-    dActor_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 /* The global actor list every dActor_c links its mActorListNode into: the
    first and last nodes. Its inline constructor empties it, so mwcc emits
@@ -263,10 +253,13 @@ extern int data_0209fc68; /* nonzero forces the actor to think anyway */
 extern Matrix4x3 data_0209b3ec; /* world -> camera */
 extern dClipper data_0209f43c;  /* the dClipper instance */
 extern u8 data_0209f274; /* doubles the far-away threshold when set */
-extern u8 data_0209f2c4;
+extern u8 gGamePaused;
 extern u8 data_0209f20c;
-extern u8 data_0209f294;
-extern u32 data_0209b464; /* flag mask that forces thinking; 0 means "any" */
+extern u8 gVsExitScreenActive;
+/* This frame's actor update mask, copied from gNextActorUpdateMask by
+   dScStage_c::Behavior: while non-zero, only actors whose mFlags share a bit
+   with it behave. */
+extern u32 gActorUpdateMask;
 }
 int dActor_c::BeforeBehavior()
 {
@@ -311,8 +304,8 @@ int dActor_c::BeforeBehavior()
         }
     }
 
-    if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) != 0 ||
-        (((mFlags & 9) == 9 || (data_0209b464 != 0 && (mFlags & data_0209b464) == 0)) &&
+    if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) != 0 ||
+        (((mFlags & 9) == 9 || (gActorUpdateMask != 0 && (mFlags & gActorUpdateMask) == 0)) &&
          data_0209fc68 == 0))
         return 0;
 
@@ -582,7 +575,6 @@ void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, 
 /* ROM ordinal 70 -- dActor_c::ClosestPlayer()
  * 0x02010ad8  size 0xc4 */
 extern "C" {
-extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern int data_0208e380;           /* distance to the cached closest player */
 extern int data_0208e37c;           /* distance to the cached farthest player */
 extern unsigned char data_0209f21c; /* number of players */
@@ -654,9 +646,6 @@ s32 dActor_c::DistToCPlayer()
 // @symbol _ZN8dActor_c18HorzAngleToCPlayerEv
 /* ROM ordinal 67 -- dActor_c::HorzAngleToCPlayer()
  * 0x020109b8  size 0x2c */
-extern "C" {
-s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-}
 s16 dActor_c::HorzAngleToCPlayer()
 {
     ClosestPlayer();
@@ -730,7 +719,6 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
  * 0x02010844  size 0x80 */
 extern "C" {
 extern s16 atan2_hold_d_actor_1(Fix12i y, Fix12i x);
-extern s32 Vec3_HorzLen(Vector3 *v);
 }
 /* atan2 of v's horizontal length, projected onto heading `angle`, against
    v->y. The leading actor argument is unused. */
@@ -1031,13 +1019,8 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
  * 0x02010180  size 0x130 */
 extern "C" {
 void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
-void Matrix4x3_FromTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
 void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-extern Matrix4x3 data_020a0e68;
 }
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     Vector3 t;
@@ -1222,7 +1205,7 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
  * 0x0200ff94  size 0xb0 */
 extern "C" {
 extern u8 data_0209f220[]; /* the star index this mission was entered for */
-extern s8 data_0209f2f8[]; /* the current sublevel id */
+extern s8 gCurrentSublevel[];      /* the current sublevel id */
 extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
 void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
 int IsStarCollectedInCurLevel(s32 starIdx);
@@ -1233,7 +1216,7 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 
     if (markerType == 2) {
         if (starIdx != data_0209f220[0]) {
-            if (SublevelToLevel(data_0209f2f8[0]) <= 0xe)
+            if (SublevelToLevel(gCurrentSublevel[0]) <= 0xe)
                 return -1;
         }
         if (IsStarCollectedInCurLevel(starIdx))
@@ -1290,7 +1273,7 @@ extern int data_02075244[];           /* the water height for each level */
 s32 dActor_c::GetWaterHeightWDW()
 {
     s32 height = mPosY;
-    if (data_0209f2f8[0] == 0x15 && mAreaId == 0) {
+    if (gCurrentSublevel[0] == 0x15 && mAreaId == 0) {
         unsigned int level = data_0209f2c0[0];
         if (level >= 3)
             level = 2;
@@ -1300,25 +1283,23 @@ s32 dActor_c::GetWaterHeightWDW()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol LoadBlueCoinModel
-/* ROM ordinal 27 -- LoadBlueCoinModel
+// @symbol _ZN8dActor_c17LoadBlueCoinModelEv
+/* ROM ordinal 27 -- dActor_c::LoadBlueCoinModel()
  * 0x0200fe9c  size 0x2c */
 extern "C" {
 extern SharedFilePtr data_ov002_0210da00; /* 0x0210da00 */
 extern SharedFilePtr data_ov002_0210d9c8; /* 0x0210d9c8 */
 }
-extern "C" void LoadBlueCoinModel(void)
-{
+void dActor_c::LoadBlueCoinModel() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da00);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c8);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol UnloadBlueCoinModel
-/* ROM ordinal 26 -- UnloadBlueCoinModel
+// @symbol _ZN8dActor_c19UnloadBlueCoinModelEv
+/* ROM ordinal 26 -- dActor_c::UnloadBlueCoinModel()
  * 0x0200fe70  size 0x2c */
-extern "C" void UnloadBlueCoinModel(void)
-{
+void dActor_c::UnloadBlueCoinModel() {
     data_ov002_0210da00.Release();
     data_ov002_0210d9c8.Release();
 }
@@ -1374,9 +1355,9 @@ void dActor_c::TriplePoofDust()
  * 0x0200fd74  size 0x54 */
 void dActor_c::TriplePoofDustAt(const Vector3 &pos)
 {
-    Particle::System::NewSimple(0x124, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x125, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x126, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofB, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclTriplePoofC, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1435,7 +1416,7 @@ extern "C" int func_0200fc44(int actor, Vector3 *pos, int doRaycast) {
             pos->y = rc.clsnY;
     }
     pos->y += 0x19000;
-    return Particle::System::NewSimple(0xb3, pos->x, pos->y, pos->z);
+    return Particle::System::NewSimple(kPtclGroundPuff, pos->x, pos->y, pos->z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1466,7 +1447,7 @@ void dActor_c::HugeLandingDustAt(Vector3 &pos, bool doRaycast) {
             pos.y = rc.clsnY;
     }
     pos.y += 0x28000;
-    Particle::System::NewSimple(0xb2, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclLandingDust, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */

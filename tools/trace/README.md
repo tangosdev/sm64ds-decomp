@@ -12,6 +12,13 @@ Status: **Phase 0 spike** (attach + breakpoint + canary + register/mem dump).
   used to resolve a captured `lr` to a caller name.
 - `gdb_harness.py` — the Phase-0 spike runner. Breaks at always-resident arm9
   functions and validates the pipeline against ground truth.
+- `scenerun.py`, `ramdiff.py`, `scenecov.py`, `thissweep.py`, `symtab.py`: research
+  runs through the `ask.py serve` daemon (RAM diff, per-scene coverage, `this`
+  class sweep). See "Research runs" below.
+- `r0use.py`: static check, from the extracted module bytes, of whether a function
+  reads r0 before it writes it (the `method` category in thissweep needs it).
+- `blindround.py`: a pre-registered blind A/B round over several specs, from
+  design to score, with its gates. See "Blind rounds" below.
 - `mg/` — the minigame play kit: a watcher for the shared minigame functions,
   plus input and capture scripts for melonDS (`mg/README.md`).
 
@@ -151,13 +158,14 @@ draws the cap on a Goomba's head.
 Files: `ask.py` (CLI), `emusession.py` (one long-lived stub session plus a
 local RPC daemon), `emuwin.py` (launch, window capture, focus-free input,
 config swap), `uia_menu.ps1` (menu clicks by UI Automation), `specs/*.json`.
+`ctlclient.py` and `ctlsession.py` are the control-socket backend (below).
 Python 3.11 standard library only; tkinter is needed for human mode only.
 
 ### A human session
 
 ```sh
 # 0. close every melonDS window. The tool refuses to start if one is open.
-# 1. launch melonDS, load the savestate, hold the stub (leave this running)
+# 1. launch melonDS, load the savestate (checked like load-state), hold the stub (leave this running)
 python tools/trace/ask.py serve --state C:/path/to/S3.ml --workdir C:/somewhere/outside/repo/emu
 # 2. in another shell: run the spec. A topmost popup asks each question.
 python tools/trace/ask.py run tools/trace/specs/capicon_bit1.json --mode human --out C:/somewhere/outside/repo/runs/r1
@@ -172,20 +180,158 @@ a Windows Firewall prompt (the stub listens on a socket). Approve it once. The
 prompt is per executable path, so the tool always runs the installed exe and
 never copies it. During `run`, leave the melonDS window alone: input is posted
 to the window, so the window does not need focus. The popup shows only
-"A: before / B: after", the question, the choices, and a confidence row. It
-never shows the condition name, whether the pause was real, or any RAM values.
+"Question N of M" with a progress line, "A: before / B: after", the question,
+the choices, and a confidence row. It never shows the condition name, whether
+the pause was real, how many pauses are real or sham, or any RAM values.
+
+Progress counts only questions that are actually asked. The first popup
+shows the plan, e.g. "12 questions, about 5 minutes" (a rough first guess).
+Later popups show "about K minutes left", measured from the questions so far.
+M is the number asked so far plus the plan entries still to come. When
+`frame_check` skips an off-screen event and requeues it, M stays the same.
+When an event is dropped for good (no trigger, object not found, requeue
+budget spent, an error), M goes down. The progress line then adds "R
+retaken (target off screen), D dropped". The skip rule is the same for real
+and sham events, so these counts do not unblind anything. Every per-event
+stdout line, in every mode, carries the same counts: `asked`, `of`,
+`retaken`, `dropped`, `progress` ("5 of 12 asked") and `eta`. The start line
+carries `plan`.
 
 Agent mode (`--mode agent`) writes the same `pairs/Qxx.png` images and an
 `answers.json` template. Fill in `answer` and `confidence` for each id, then run
 `score`. Do not open `key/` before scoring. `--mode none` only records data.
 `--answer-after MS` auto-answers the popup and screenshots it (`popup_Qxx.png`)
-as a smoke test. Those answers are tagged `"auto": true`, and `score` excludes
-them.
+as a smoke test. It also reads the progress label back from the widget, into
+the stdout line and the key log as `popup_label`. Those answers are tagged
+`"auto": true`, and `score` excludes them.
 
 Run directory layout: `pairs/` (blind images), `answers.json`, `key/key.json`
 (condition, real/sham, expected answer, located object, pokes with old/new
 values, pause trigger/pc/lr, before/after RAM snapshots, framing), `key/log.jsonl`
 (every daemon event), `key/events.jsonl`, and `key/` raw shots.
+
+### Control-socket backend (`--backend ctl`)
+
+`serve` drives one of two emulators. The daemon ops, the spec format, the
+blinding, `score` and the pair layout are the same with both.
+
+| | `gdb` (stock melonDS) | `ctl` (melonDS AI-controller fork) |
+|---|---|---|
+| connection | GDB stub, port 3333 | JSON lines on 127.0.0.1:45987, with a token |
+| config | `melonDS.toml` swapped next to the installed exe | the fork's own config dir (`<workdir>/ctl-config`); no toml touched |
+| savestates | File menu (UI Automation), copied over a slot file | `load_state` / `save_state` by path |
+| shots | window capture, re-grabbed until stable | the framebuffer, exact; upscaled by `--scale` (2), nearest neighbour |
+| input | posted keys for ms of wall time (the game must run) | `press` / `touch` / `input` hold N emulated frames |
+| breakpoints | stub Z0, overlay canary checked in Python | in-process; the canary is a native condition |
+| frames | free run at 60 fps, frame breakpoint counted | synchronous unthrottled `step`, frame breakpoint counted |
+
+Selection: `serve --backend ctl|gdb|auto`, or the env var `ASK_BACKEND`. `auto`
+(the default) picks `ctl` when the fork answers `ping` on the control port
+(`--ctl-port`, env `MELONDS_CONTROL_PORT`; token `--ctl-token`, env
+`MELONDS_CONTROL_TOKEN`), else `gdb`. With `--backend ctl` and nothing
+answering, `serve` launches the fork through its `tools/start_control.ps1`
+(found by `--fork`, env `MELONDS_AI_ROOT`, or `C:\tmp\melonds-ai-controller`),
+headless, with a ROM copy in `--workdir` (default `%TEMP%\sm64ds-ask-emu-ctl`).
+It refuses while any other melonDS runs (`--wait-other` waits up to 20 min).
+`stop --kill` quits the fork through its socket. The fork is a local build of
+melonDS 1.1 and is not published; its `CONTROL_API.md` lists every command.
+
+Things that differ in use:
+
+- Timeouts (`step`, `wait_trigger`) count emulated time: `timeout` seconds is
+  `timeout * 60` frames, run as fast as the emulator goes. Between ops the game
+  free runs at 60 fps, as with the stub.
+- SM64DS reads the pad at 30 Hz, on alternate frames. `input frames=1` can fall
+  between two polls; hold 2 or more. Held input starts with the next frame; a
+  frame halted at a breakpoint counts as the first.
+- `ctl fork cmd=coverage_start args='{...}'` passes one raw command to the fork
+  (coverage, `overlays`, `research_snapshot`); the session re-reads the run
+  state afterwards.
+
+### RAM snapshots (`ram-snapshot`, `ram-diff`)
+
+```sh
+python tools/trace/ask.py ram-snapshot C:/somewhere/a.bin                  # default ranges
+python tools/trace/ask.py ram-snapshot C:/somewhere/b.bin --range 0x02086bc0:0x23860:arm9 --range "[0x0209f394]:0x800:player"
+python tools/trace/ask.py ram-diff C:/somewhere/a.bin.json C:/somewhere/b.bin.json
+```
+
+`ram_snapshot` (op and command) takes several ranges in one call. Addresses
+may be expressions (with `--obj`). It writes the bytes, concatenated, to `OUT`
+and an index to `OUT.json`: name, address, size, offset and sha256 per range,
+plus the frame counters. The ctl backend reads every range at one emulated
+instant (`read_ranges`, up to 16 MiB in all). The stub backend reads them in
+turn, which is consistent only while the target is halted; `atomic` in the
+result says which. The default ranges are a RAM-diff screen's: arm9 .data and
+.bss, ov002 .data and .bss, and 0x800 bytes of the player actor. `ram-diff`
+lists the byte runs that differ between two snapshots of the same ranges.
+
+### Research runs: `ramdiff.py`, `scenecov.py`, `thissweep.py`
+
+Three scripts that drive a running `ask.py serve` daemon (coverage and the
+sweep need `--backend ctl`). They share `scenerun.py`, which loads a state,
+aligns on a hooked PC and condition (default: CheckInput 0x0202c2ac when
+`FRAME_TIMER == file timer + 300`, so every run starts on the same game frame),
+then steps hooked frames with the pad and touch records forced on every frame
+(neutral when idle; a press is held at least 2 frames). Script ops can also
+bind a name to the nearest actor of an id and write memory, e.g. move a coin
+onto the player. `symtab.py` holds the shared lookups: symbols by address
+from `config/arm9/**/symbols.txt`, readers and writers from `relocs.txt`, and
+vptr to `_ZTV` symbol, class and RTTI chain.
+
+```sh
+python tools/trace/ramdiff.py run PLAN.json --out DIR      # idle x2 + each event x2, all from fresh loads
+python tools/trace/ramdiff.py analyze DIR                  # candidates.tsv, summary.json, summary.md
+python tools/trace/scenecov.py run SCENES.json --out DIR   # coverage.tsv: function x scene call counts
+python tools/trace/thissweep.py run --coverage DIR/coverage.tsv --state B1.ml --out OUT --script walk.json
+```
+
+- **ramdiff** snapshots arm9 .data/.bss, every resident overlay's
+  .data/.bss and the player at the plan's frame offsets. Idle runs classify each
+  byte as constant, deterministic-changing or noisy. Event bytes are diffed
+  against idle at the same offset and reported per symbol: named rows are kept
+  and marked, and each row carries `repeats_agree` and its readers and writers.
+- **scenecov** counts calls to every arm9, itcm and resident-overlay function
+  start over a scene. Each hit's first instruction word is checked against the
+  module's image, so another overlay's code at the same address is not counted.
+- **thissweep** puts log-action breakpoints, which never halt, on N unnamed
+  functions. By default (`--sample reservoir`) the fork keeps a uniform sample of
+  each function's hits over the whole run, with r0-r3, sp, lr and bytes at r0-r3;
+  `--sample distinct` logs each distinct `u32[r0]` once instead. Each r0 word is
+  resolved to a vtable, a class, an RTTI chain and an actor id. Each function gets
+  a verdict (`one_class`, `several_classes` with the common base, `mixed`,
+  `not_object`) and a category: `method` needs `one_class` and `r0_used` (r0use.py),
+  so a function that overwrites r0 first is flagged, not claimed. `summary.md` is
+  generated from sweep.json and sweep.tsv, with the coverage gaps (candidates
+  never swept, swept but never sampled). scenecov's summary.md likewise comes from
+  its summary.json and lists every unnamed function in a watched module that ran
+  in no scene. `emusession`'s `this` op and the `this=True` option on
+  `add_bp` resolve `this` the same way for a single breakpoint hit.
+- **Modules for `add_bp`**: `arm9`, `itcm` (0x01ff8000, from
+  `extracted/dsd/arm9/itcm.bin`) or `ovNNN`. With `module` left out, an address
+  inside the arm9 or ITCM image takes that module. An overlay address needs its
+  `ovNNN`, because several overlays share one address range.
+
+Their outputs come from the ROM at run time. Keep them outside the repository.
+
+### Blind rounds: `blindround.py`
+
+```sh
+python tools/trace/blindround.py spec ROUND       # ROUND/design.json -> specs (scrambled c-names), predictions, JUDGE.md
+python tools/trace/blindround.py dryrun ROUND     # answer from the predictions; flag choices that can't separate conditions
+python tools/trace/blindround.py pilot ROUND      # guards, pokes landed, hook hit: pass/fail only, no images or values
+python tools/trace/blindround.py register ROUND   # REGISTERED.sha256
+python tools/trace/blindround.py run ROUND        # refuses unless the registration matches; ends with selfcheck
+python tools/trace/blindround.py score ROUND      # refuses until every judge/<spec>/my_judgments.json exists
+```
+
+The judge gets `ROUND/judge/` only (JUDGE.md, answers.json and pairs per spec);
+the key and the scores sit beside it, outside. Each event's settle offset is
+unique within its spec, judge PNGs carry only critical chunks, and `selfcheck`
+fails on a stray file, a path, an address, a c-name, a label, a planner word or
+two identical images. A respec deletes the registration. ROUND holds savestate
+paths and screenshots, so it lives outside the repository. The module docstring
+has the design.json format.
 
 ### Savestates, framing, overlays
 
@@ -193,18 +339,37 @@ values, pause trigger/pc/lr, before/after RAM snapshots, framing), `key/log.json
 python tools/trace/ask.py load-state C:/path/to/any.ml     # load any .ml file, verified
 python tools/trace/ask.py save-state C:/path/to/out.ml     # save the running game to a file
 python tools/trace/ask.py where "[0x0209f394]+0x5c" --mark C:/tmp/where.png   # is it framed?
+python tools/trace/ask.py shot C:/tmp/s.png --require-framed "[0x0209f394]+0x5c"  # capture only if framed
 python tools/trace/ask.py overlays                         # loaded overlays, suspended probes
 ```
 
 - **Any savestate file loads.** melonDS enables a File > Load state slot only
   if `game.mlN` existed when the ROM was loaded. `serve` therefore creates
   zero-byte `game.ml1`..`game.ml8` before it starts melonDS, so every slot is
-  enabled. `load-state FILE` (spec key `load_state_file`) copies FILE over slot
-  8 and loads that slot. It then compares RAM windows before and after with
-  the RAM image inside the file (`MELN`/`NDSG`, main RAM at file offset 0x24).
-  The verdict is `loaded`, `indistinguishable` (the game already matched the
-  file, e.g. that state was running) or `not_loaded`, and `run` stops on
-  `not_loaded`. A plain `load_state slot=N` refuses an empty slot file instead
+  enabled. `load-state FILE` (spec key `load_state_file`, and `serve --state`,
+  which takes the same path) copies FILE over slot 8 and loads that slot.
+- **The load verdict is a marker check.** Before the click, a sentinel is
+  written into a RAM word that nothing writes or reads while the game runs:
+  the start of the arm9 `.rodata` string "ASSERTION FAILED  FILE=[%s] ...",
+  at 0x020868a0, found by content. The sentinel is chosen to differ from the
+  value the state file holds there. If the word holds the file's value
+  afterwards, the load overwrote it: `verdict: loaded`. If the sentinel is
+  still there: `not_loaded`, and the game's value is written back. `run` and
+  `serve --state` stop on `not_loaded`. `marker` in the result has the address
+  and the values, and `verdict_by` says `marker`. The older RAM-window
+  comparison still runs, and its fields are kept: `window_verdict`,
+  `windows`, `differ`, `match_file`, `match_before`, `match_file_all`. It
+  compares windows before and after with the RAM image inside the file
+  (`MELN`/`NDSG`, main RAM at file offset 0x24). Nearby states share most of
+  those windows, so it can say `indistinguishable` after a real load. A dry
+  run (no click at all) also gave `indistinguishable`. It decides the verdict
+  only when the marker cannot (`--no-marker`, or a ROM without the string).
+  `load-state --dry-run` does everything but the click, as a self-test: the
+  verdict must be `not_loaded`.
+- **A savestate from another melonDS major version crashed melonDS 1.1**
+  (header `MELN`, u16 major at +4; 13 for 1.1). It did not refuse the file.
+  `serve` notices that its melonDS has exited, stops, and restores the config.
+- A plain `load_state slot=N` refuses an empty slot file instead
   of clicking a disabled menu item. `save-state FILE` saves through slot 8,
   waits until melonDS has finished writing it, and copies it out. Every
   breakpoint is disarmed while a menu action runs and re-armed afterwards:
@@ -232,6 +397,16 @@ python tools/trace/ask.py overlays                         # loaded overlays, su
   it projects one point, so it does not know the actor's size and does not
   test occlusion. It uses the last frame the game rendered. `dy` lifts the
   point (for example to a head) and `margin` asks for slack in pixels.
+- **Framing guard for your own capture loops.** `where` and `project` only
+  report framing. A loop that does not read the answer keeps capturing an
+  off-screen subject. In `run`, `frame_check` skips those events. Anywhere
+  else, opt in to the guard. `ask.py shot FILE --require-framed POS [--obj X]
+  [--margin 8] [--dy N]` (repeat `--require-framed` for several points)
+  refuses to capture when any point projects off the top screen. It writes no
+  file, prints `{"refused": true, ...}` and exits 3. The RPC form is
+  `c.shot(path=..., require_framed="[obj+4]+0x5c", env={"obj": o}, margin=8)`.
+  It raises `RemoteError("NotFramed: ...")` with the projection, and logs a
+  `shot_refused` event. On success the result carries `framing`.
 
 ### Spec format (JSON)
 
@@ -278,14 +453,26 @@ from the game's own state.
 - **Capture lag.** The DS 3D image lags the CPU by about one frame. A capture
   taken right after a poke can show the old state. `after_frames` defaults to
   4 (use at least 2). `shot` waits `settle_ms`, then re-captures until two
-  grabs match, because the halted window repaints late.
+  grabs match, because the halted window repaints late. A visible window has
+  once reported "no client area", and a rerun was fine. A capture is
+  therefore retried up to 5 times, 0.25 s apart, with a `capture_retry` event
+  for each retry. A minimised window fails at once.
 - **Savestates** load through the File > Load state menu (UI Automation via
-  `uia_menu.ps1`) while the target runs. **Buttons and touch** are posted
+  `uia_menu.ps1`) while the target runs. A first attempt has failed with
+  "missing: Load state", and an immediate retry worked. A path step that
+  finds no item clicked nothing, so the whole path is retried: up to 3
+  attempts, 0.8 s apart, with a `menu_retry` event on stderr and in the log
+  each time. Any other failure, or a timeout, is not retried, because the
+  click may already have landed. **Buttons and touch** are posted
   window messages, so no focus is stolen and no global hotkeys fire.
 - **Config.** melonDS reads `melonDS.toml` from next to the exe (portable mode).
   `serve` backs up your toml (and its sha256) into `--workdir`, writes one
   with GDB on (ARM9 port 3333) and JIT off, and puts yours back after melonDS
-  exits. It deletes the backup only when the hashes match. After a crash, run
-  `ask.py restore-config --workdir <dir>`.
+  exits. It deletes the backup only when the hashes match. Any `serve`
+  failure after the swap kills the melonDS it started and restores the
+  toml. That covers launch, attach, a `--state` that does not load, a busy
+  RPC port (bound before the load) and Ctrl+C. If melonDS exits while being
+  served, the daemon stops too and restores the toml. After a hard kill of
+  `serve` itself, run `ask.py restore-config --workdir <dir>`.
 - Keep run outputs and the work directory outside the repo. The ROM is copied
   into the workdir as `game.nds`, and `stop --clean` deletes that copy.

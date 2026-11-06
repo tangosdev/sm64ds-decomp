@@ -38,7 +38,10 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "cstd.h"
 #include "Particle__System.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
+/* Only ApproachStateValue needs this: without it the two (short)accel casts
+ * share one sign-extend and both smulbb become muls (21 of 44 words differ). */
 #pragma opt_common_subs off
 
 /* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
@@ -53,10 +56,6 @@ struct ChairModelFilePtr : SharedFilePtr {
  * constructor does not enter .text. Init loads it, Cleanup releases it. */
 extern ChairModelFilePtr data_ov020_02114af0;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-
-typedef struct {
-    s32 x, y, z;
-} Vec3;
 
 /* Actor IDs from the ROM's actor table. */
 enum ChairActorId {
@@ -75,15 +74,14 @@ enum ChairSfxId {
  * table: one s16 sin, s16 cos pair per 16 angle units. */
 #define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
-/* local extern: arm9 C helpers with no shared header yet. Vec3_Sub still
-   takes this file's Vec3, as its definition takes a plain triple; AddVec3
-   takes Vector3 now (math/CalcLib.h declares it). */
+/* local extern: arm9 C helpers with no shared header yet. Vec3_Sub takes the
+   shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. AddVec3
+   also takes Vector3 (math/CalcLib.h declares it). */
 extern "C" {
 void func_0200f760(void *self, void *cyl);
-void Vec3_Sub(Vec3 *res, Vec3 *v0, Vec3 *v1);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
-void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
 }
 
 extern s16 data_02082214[];
@@ -304,9 +302,9 @@ void daChair_c::State2() {
             mActionTimer--;
             if (mActionTimer == 0) {
                 dActor_c *player;
-                Vec3 *pp;
-                Vec3 playerPos;
-                Vec3 diff;
+                VecFx32 *pp;
+                VecFx32 playerPos;
+                VecFx32 diff;
                 s32 reach;
                 func_0201267c(kSfxHop, &mCamSpacePos);
                 player = ClosestPlayer();
@@ -314,11 +312,11 @@ void daChair_c::State2() {
                     return;
                 /* Copied through a plain vector. Copying player->mPosX
                  * field by field changes the code size. */
-                pp = (Vec3 *)&player->mPosX;
+                pp = (VecFx32 *)&player->mPosX;
                 playerPos.x = pp->x;
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
-                Vec3_Sub(&diff, &playerPos, (Vec3 *)&mPosX);
+                Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&playerPos, (const Vector3 *)&mPosX);
                 mPrevAngleY = cstd::atan2(diff.x, diff.z);
                 mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
                 /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
@@ -336,7 +334,7 @@ void daChair_c::State2() {
                 Break();
             } else if (mWithMeshClsn.IsOnWall() != 0) {
                 dBgPi *wall = mWithMeshClsn.GetWallResult();
-                Vec3 normal;
+                VecFx32 normal;
                 wall->surface.CopyNormalTo((Vector3 &)normal);
                 if (GetSubtraction(mPrevAngleY, cstd::atan2(normal.x, normal.z)) > 0x4000)
                     Break();
@@ -363,7 +361,7 @@ void daChair_c::State2() {
         if (isPlayer != 0)
             return;
         {
-            Vec3 pos;
+            VecFx32 pos;
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;

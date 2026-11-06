@@ -6,18 +6,28 @@ before/after screens and asks "what changed?" without saying whether anything
 was written. Sham pauses (no write, a write of the same value, an unused bit)
 are mixed in at random. The key lives in a separate file; `score` unblinds.
 
-  serve   launch the installed melonDS (swapped config: GDB stub on, JIT off), load a
-          savestate, and hold the ONE stub connection for every later command
+  serve   start the emulator, load a savestate, and hold the ONE connection to it for
+          every later command. Two backends (--backend, or env ASK_BACKEND):
+            ctl  the melonDS AI-controller fork's control socket: savestates by path,
+                 framebuffer shots, exact-frame input, in-process breakpoints
+            gdb  the installed melonDS (swapped config: GDB stub on, JIT off), window
+                 captures, posted keys, File-menu savestates
+          auto (default): ctl if the fork answers ping, else gdb
   run     run an experiment spec (JSON): --mode human | agent | none
   score   unblind a finished run and tally the answers
   probe   arm a spec's probes (log-and-continue breakpoints) for N seconds
   load-state / save-state   load any .ml file (verified against its RAM) / save one out
   where   project an actor position onto the top screen (is it framed?)
+  shot    capture the screen to a PNG; --require-framed POS refuses when POS is off screen
   overlays  the game's loaded-overlay table and the probes suspended for it
+  ram-snapshot / ram-diff   read RAM ranges in one call (to .bin + .json) / compare two
   ctl     one daemon op, e.g. `ctl step n=3`, `ctl read addr=0x020ad634 n=12`
   stop    detach cleanly (and --kill melonDS, --clean its work directory)
 
 See README.md ("ask.py: pause and ask") for the spec format and a walkthrough.
+Research runs through the same daemon: ramdiff.py (RAM diff of input events
+against idle), scenecov.py (function coverage per scene) and thissweep.py (the
+class of `this` at unnamed functions); README.md, "Research runs".
 """
 import argparse
 import json
@@ -33,11 +43,26 @@ sys.path.insert(0, HERE)
 import emusession as es  # noqa: E402
 
 DEFAULT_WORKDIR = os.path.join(tempfile.gettempdir(), 'sm64ds-ask-emu')
+CTL_WORKDIR = DEFAULT_WORKDIR + '-ctl'     # never the gdb one: that holds melonDS.toml.user-backup
+
+
+def pick_backend(a):
+    """--backend, else env ASK_BACKEND, else auto: ctl when the fork answers ping."""
+    import ctlclient as cc
+    b = (getattr(a, 'backend', None) or os.environ.get('ASK_BACKEND') or 'auto').lower()
+    if b not in ('auto', 'ctl', 'gdb'):
+        sys.exit('unknown backend %r (auto | ctl | gdb)' % b)
+    if b == 'auto':
+        b = 'ctl' if cc.ping(getattr(a, 'ctl_port', None), getattr(a, 'ctl_token', None)) else 'gdb'
+    return b
 
 
 # ----------------------------------------------------------------------- serve
 def cmd_serve(a):
+    if pick_backend(a) == 'ctl':
+        return cmd_serve_ctl(a)
     import emuwin
+    a.workdir = a.workdir or DEFAULT_WORKDIR
     images = es.Images(a.extracted)
     os.makedirs(a.logdir, exist_ok=True)
     proc = None
@@ -53,45 +78,127 @@ def cmd_serve(a):
             sys.exit('a melonDS window is already open: close it, or use --attach')
         rom = a.rom or es.find_input('sm64.nds')
         exe = a.melonds or emuwin.find_melonds()
-        emuwin.prepare_workdir(a.workdir, rom, state=a.state, slot=1, melonds=exe, port=a.port, sav=a.sav)
-        try:
-            proc, hwnd = emuwin.launch(a.workdir, exe)
-        except Exception:
-            print(json.dumps({'config_restored': emuwin.restore_config(a.workdir)}), flush=True)
-            raise
-        pid = proc.pid
-        time.sleep(a.boot_wait)
-        emuwin.fit_window(hwnd, a.scale)
-        if a.state:
-            emuwin.load_state_slot(pid, 1)
-            time.sleep(1.5)
-    s = es.Session(images, port=a.port, log_path=os.path.join(a.logdir, 'session.jsonl'))
-    stop = s.connect(timeout=90)
-    s.cont()
-    d = es.Daemon(s, a.rpc, proc=proc, hwnd=hwnd, pid=pid, workdir=a.slot_dir if a.attach else a.workdir)
-    print(json.dumps({'ready': True, 'pid': pid, 'rpc': a.rpc, 'stub': a.port, 'attach_stop': stop,
-                      'workdir': None if a.attach else a.workdir}), flush=True)
+    # From the config swap on, ANY failure (launch, attach, the savestate load, the
+    # RPC port, Ctrl+C) kills the melonDS this serve started and puts the user's
+    # melonDS.toml back. Only a clean `stop` without --kill leaves melonDS running.
+    d = None
+    failed = True
     try:
+        if not a.attach:
+            emuwin.prepare_workdir(a.workdir, rom, state=a.state, slot=1, melonds=exe, port=a.port, sav=a.sav)
+            proc, hwnd = emuwin.launch(a.workdir, exe)
+            pid = proc.pid
+            time.sleep(a.boot_wait)
+            emuwin.fit_window(hwnd, a.scale)
+        s = es.Session(images, port=a.port, log_path=os.path.join(a.logdir, 'session.jsonl'))
+        stop = s.connect(timeout=90)
+        s.cont()
+        d = es.Daemon(s, a.rpc, proc=proc, hwnd=hwnd, pid=pid, workdir=a.slot_dir if a.attach else a.workdir)
+        d.listen()        # a busy RPC port fails here, before the load; early clients queue until serve()
+        loaded = None
+        if a.state:
+            # the same path as `load-state`: copied over slot 8, loaded with the stub
+            # attached and the game running, checked with the RAM marker
+            loaded = d.op_load_state_file(path=os.path.abspath(a.state), slot=8, settle=1.0)
+            print(json.dumps({'load_state': loaded}), flush=True)
+            if loaded.get('verdict') == 'not_loaded':
+                raise RuntimeError('serve --state: the savestate did not load (%s)' % a.state)
+        print(json.dumps({'ready': True, 'pid': pid, 'rpc': a.rpc, 'stub': a.port, 'attach_stop': stop,
+                          'workdir': None if a.attach else a.workdir,
+                          'state_verdict': loaded.get('verdict') if loaded else None}), flush=True)
         d.serve()
+        failed = False
+        if d.emu_exited is not None:
+            print(json.dumps({'emu_exited': d.emu_exited}), flush=True)
     finally:
+        if failed:
+            print(json.dumps({'serve_failed': True, 'killing_emu': proc is not None}), flush=True)
+            if d is not None:
+                try:
+                    d.s.cli.detach()
+                    d.s.cli.close()
+                except Exception:
+                    pass
         if proc is not None:
-            if d.kill_emu:
+            kill = failed or (d is not None and d.kill_emu)
+            if kill:
                 emuwin.kill(proc.pid)
             try:
-                proc.wait(None if not d.kill_emu else 15)   # melonDS rewrites its toml on exit
+                proc.wait(15 if kill else None)   # melonDS rewrites its toml on exit
             except Exception:
                 pass
             time.sleep(0.5)
+        if not a.attach:
             rc = emuwin.restore_config(a.workdir)
             print(json.dumps({'config_restored': rc}), flush=True)
-            if d.clean and (rc is None or rc[1] == rc[2]):   # never delete an unrestored backup
-                import shutil
+            if d is not None and d.clean and not failed and (rc is None or rc[1] == rc[2]):
+                import shutil                     # never delete an unrestored backup
                 for _ in range(10):
                     try:
                         shutil.rmtree(a.workdir)
                         break
                     except OSError:
                         time.sleep(0.5)
+    print(json.dumps({'stopped': True}), flush=True)
+
+
+def cmd_serve_ctl(a):
+    """serve on the fork's control socket: attach if it answers ping, else launch it
+    (refused while any other melonDS runs). No melonDS.toml is touched: the fork
+    keeps its config in <workdir>/ctl-config."""
+    import ctlclient as cc
+    import ctlsession as cs
+    images = es.Images(a.extracted)
+    os.makedirs(a.logdir, exist_ok=True)
+    port = a.ctl_port or cc.default_port()
+    token = a.ctl_token or cc.default_token()
+    workdir = os.path.abspath(a.workdir or CTL_WORKDIR)
+    proc = None
+    launched = False
+    d = None
+    failed = True
+    try:
+        if cc.ping(port, token):
+            pid = None
+        else:
+            if a.attach:
+                sys.exit('--attach: nothing answers ping on control port %d' % port)
+            rom = a.rom or es.find_input('sm64.nds')
+            pid = cs.launch_fork(workdir, rom, port, token, sav=a.sav, window=a.window, fork=a.fork,
+                                 wait_other=a.wait_other)
+            launched = True
+        if pid:
+            proc = cs._PidProc(pid)
+        s = cs.CtlSession(images, port=port, token=token, log_path=os.path.join(a.logdir, 'session.jsonl'))
+        stop = s.connect(timeout=30)
+        s.cont()
+        d = cs.CtlDaemon(s, a.rpc, proc=proc, workdir=workdir, scale=a.scale)
+        d.listen()
+        loaded = None
+        if a.state:
+            loaded = d.op_load_state_file(path=os.path.abspath(a.state), settle=1.0)
+            print(json.dumps({'load_state': loaded}), flush=True)
+            if loaded.get('verdict') == 'not_loaded':
+                raise RuntimeError('serve --state: the savestate did not load (%s)' % a.state)
+        print(json.dumps({'ready': True, 'backend': 'ctl', 'pid': pid, 'rpc': a.rpc, 'control_port': port,
+                          'attach_stop': stop, 'launched': launched, 'workdir': workdir,
+                          'state_verdict': loaded.get('verdict') if loaded else None}), flush=True)
+        d.serve()
+        failed = False
+        if d.emu_exited is not None:
+            print(json.dumps({'emu_exited': d.emu_exited}), flush=True)
+    finally:
+        if failed:
+            print(json.dumps({'serve_failed': True, 'quitting_emu': launched}), flush=True)
+            if d is not None:
+                d.s.cli.detach()
+                d.s.cli.close()
+        if (launched and failed) or (d is not None and d.ctl_quit):
+            print(json.dumps({'emu_quit': cs.quit_fork(port, token, proc)}), flush=True)
+        if d is not None and d.clean and launched and not failed:
+            import shutil
+            if not os.path.exists(os.path.join(workdir, 'melonDS.toml.user-backup')):
+                shutil.rmtree(workdir, ignore_errors=True)
     print(json.dumps({'stopped': True}), flush=True)
 
 
@@ -109,6 +216,8 @@ def spawn_serve(a):
         args += ['--state', a.state]
     if a.workdir:
         args += ['--workdir', a.workdir]
+    if getattr(a, 'backend', None):
+        args += ['--backend', a.backend]
     log = open(os.path.join(a.out, 'serve.log'), 'a')
     subprocess.Popen(args, stdout=log, stderr=subprocess.STDOUT, creationflags=0x00000008 | 0x00000200)
     t0 = time.time()
@@ -174,13 +283,87 @@ def check_residency(c, spec):
     return out
 
 
-def ask_popup(qid, pair_png, question, choices, confidences, answer_after=None, shot_path=None):
-    """Topmost Tk window: the pair, the question, choice + confidence. Shows only
-    the question id; whether the pause was real or a sham is never shown."""
+def fmt_minutes(sec):
+    m = sec / 60.0
+    return 'under a minute' if m < 1 else 'about %d minute%s' % (round(m), '' if round(m) == 1 else 's')
+
+
+def estimate_seconds(spec, human):
+    """A first guess at one question's wall time, before any has been measured:
+    the frames it steps (stepping by breakpoint runs at roughly half speed), two
+    captures, the RPC round trips, and for a person about 20 s to answer."""
+    lo, hi = spec.get('pause', {}).get('countdown', [10, 40])
+    af = int(spec.get('after_frames', 4))
+    frames = (int(lo) + int(hi)) / 2.0 + 2 * af + 1
+    settle = spec.get('capture', {}).get('settle_ms', 250) / 1000.0
+    return 4.0 + frames / 30.0 + 2 * (settle + 0.5) + (20.0 if human else 0.0)
+
+
+class Progress:
+    """How far a run is, in questions actually asked. Counts only: no condition
+    names, no real/sham split, nothing a pair could be unblinded with.
+
+    total = asked so far + plan entries not yet consumed. A skipped event that is
+    requeued leaves total as it was (one entry out, one in); a skipped event that
+    is not requeued (no trigger, object not found, requeue budget spent, error)
+    lowers it. So total never counts a pair that will not be asked."""
+
+    def __init__(self, plan_len, est_per_q):
+        self.t0 = time.time()
+        self.asked = 0
+        self.retaken = 0       # skipped and requeued (target off screen)
+        self.dropped = 0       # skipped for good
+        self.first_total = plan_len
+        self.est = est_per_q
+
+    def total(self, plan, i, current_pending=True):
+        """i = index of the plan entry being worked on (already taken from the plan)."""
+        return self.asked + len(plan) - i - (0 if current_pending else 1)
+
+    def per_q(self):
+        return (time.time() - self.t0) / self.asked if self.asked else self.est
+
+    def plan_line(self):
+        return '%d questions, %s' % (self.first_total, fmt_minutes(self.first_total * self.est))
+
+    def label(self, plan, i):
+        """The popup's progress text for the question about to be asked."""
+        n, m = self.asked + 1, self.total(plan, i)
+        line2 = self.plan_line() if n == 1 else '%s left' % fmt_minutes(self.per_q() * (m - n + 1))
+        if self.retaken or self.dropped:
+            notes = []
+            if self.retaken:
+                notes.append('%d retaken (target off screen)' % self.retaken)
+            if self.dropped:
+                notes.append('%d dropped' % self.dropped)
+            line2 += ' - ' + ', '.join(notes)
+        return 'Question %d of %d' % (n, m), line2
+
+    def status(self, plan, i):
+        """For stdout after event i has been handled."""
+        m = self.total(plan, i, current_pending=False)
+        return {'asked': self.asked, 'of': m, 'retaken': self.retaken, 'dropped': self.dropped,
+                'progress': '%d of %d asked' % (self.asked, m),
+                'eta': fmt_minutes(self.per_q() * (m - self.asked)) if m > self.asked else 'done'}
+
+
+def ask_popup(qid, pair_png, question, choices, confidences, answer_after=None, shot_path=None, progress=None):
+    """Topmost Tk window: the pair, the question, choice + confidence. Shows the
+    question id and progress counts (`progress` = (title line, detail line));
+    whether the pause was real or a sham is never shown."""
     import tkinter as tk
     root = tk.Tk()
     root.title('ask.py  %s' % qid)
     root.attributes('-topmost', True)
+    labels = []
+    if progress:
+        top = tk.Frame(root)
+        top.pack(fill='x', pady=(4, 0))
+        labels.append(tk.Label(top, text=progress[0], font=('Segoe UI', 13, 'bold')))
+        labels[-1].pack()
+        if len(progress) > 1 and progress[1]:
+            labels.append(tk.Label(top, text=progress[1], font=('Segoe UI', 9)))
+            labels[-1].pack()
     img = tk.PhotoImage(file=pair_png)
     hdr = tk.Frame(root)
     hdr.pack(fill='x')
@@ -221,6 +404,7 @@ def ask_popup(qid, pair_png, question, choices, confidences, answer_after=None, 
                 h = emuwin.user32.GetAncestor(root.winfo_id(), 2)
                 emuwin.capture_client(h).save_png(shot_path)
             result['auto'] = True
+            result['label'] = [lb.cget('text') for lb in labels]   # read back from the widgets
             submit()
         root.after(int(answer_after), auto)
     root.mainloop()
@@ -283,8 +467,16 @@ def cmd_run(a):
     fc = spec.get('frame_check')
     on_fail = (fc or {}).get('on_fail', 'skip')
     requeue = int((fc or {}).get('requeue', len(plan)))   # off-screen skips are re-run at the end
-    print(json.dumps({'run': out, 'events': len(plan), 'mode': a.mode}), flush=True)
+    prog = Progress(len(plan), estimate_seconds(spec, a.mode == 'human'))
+    print(json.dumps({'run': out, 'events': len(plan), 'mode': a.mode, 'plan': prog.plan_line()}), flush=True)
     i = -1
+
+    def report(d, drop=False, retake=False):
+        # every per-event stdout line carries the progress counts (all modes)
+        prog.dropped += bool(drop)
+        prog.retaken += bool(retake)
+        d.update(prog.status(plan, i))
+        print(json.dumps(d), flush=True)
     while i + 1 < len(plan):
         i += 1
         cname = plan[i]
@@ -309,7 +501,7 @@ def cmd_run(a):
                 if hit is None:
                     rec['status'] = 'no_trigger'
                     logf.write(json.dumps(rec) + '\n')
-                    print(json.dumps({'id': qid, 'status': 'skipped'}), flush=True)
+                    report({'id': qid, 'status': 'skipped'}, drop=True)
                     continue
                 rec['pause'] = {'trigger': hit.get('name'), 'pc': hit.get('pc'), 'lr': hit['regs']['lr']}
                 obj = int(hit['obj'], 16) if hit.get('obj') else None
@@ -327,7 +519,7 @@ def cmd_run(a):
                 rec['status'] = 'object_not_found'
                 logf.write(json.dumps(rec) + '\n')
                 c.go()
-                print(json.dumps({'id': qid, 'status': 'skipped'}), flush=True)
+                report({'id': qid, 'status': 'skipped'}, drop=True)
                 continue
             if fc and (obj is not None or not spec.get('locate')):
                 # framing check before anything is written: same for real and sham events
@@ -346,8 +538,8 @@ def cmd_run(a):
                     if rq:
                         requeue -= 1
                         plan.append(cname)
-                    print(json.dumps({'id': qid, 'status': 'skipped', 'why': 'target off screen',
-                                      'requeued': rq}), flush=True)
+                    report({'id': qid, 'status': 'skipped', 'why': 'target off screen', 'requeued': rq},
+                           drop=not rq, retake=rq)
                     continue
 
             def do_pokes(lst):
@@ -379,10 +571,12 @@ def cmd_run(a):
                 rec['status'] = 'off_screen_after'
                 logf.write(json.dumps(rec) + '\n')
                 c.go()
-                if requeue > 0:
+                rq = requeue > 0
+                if rq:
                     requeue -= 1
                     plan.append(cname)
-                print(json.dumps({'id': qid, 'status': 'skipped', 'why': 'target off screen in B'}), flush=True)
+                report({'id': qid, 'status': 'skipped', 'why': 'target off screen in B', 'requeued': rq},
+                       drop=not rq, retake=rq)
                 continue
             rec['expected'] = expected_answer(cond, rec['before'])
             pair = os.path.join(pairs, qid + '.png')
@@ -392,23 +586,32 @@ def cmd_run(a):
             key['events'][qid] = {k: rec[k] for k in ('condition', 'real', 'expected', 'obj', 'prepare', 'pokes',
                                                       'pause', 'before', 'after', 'framing_before',
                                                       'framing_after') if k in rec}
+            shown = prog.label(plan, i)
+            rec['progress_shown'] = list(shown)
             if a.mode == 'human':
                 ans = ask_popup(qid, pair, q['text'], choices, confidences, a.answer_after,
-                                os.path.join(out, 'popup_%s.png' % qid) if a.answer_after is not None else None)
+                                os.path.join(out, 'popup_%s.png' % qid) if a.answer_after is not None else None,
+                                progress=shown)
+                if 'label' in ans:      # --answer-after: the label text as the popup rendered it
+                    rec['popup_label'] = ans.pop('label')
                 answers['answers'][qid] = ans
             elif a.mode == 'agent':
                 answers['answers'][qid] = {'answer': None, 'confidence': None}
             if not framed:      # on_fail == 'flag': kept, but marked (the same for real and sham events)
                 answers['answers'].setdefault(qid, {})['framing_warning'] = "target projected off screen"
+            prog.asked += 1
             logf.write(json.dumps(rec) + '\n')
             logf.flush()
             c.go()
-            print(json.dumps({'id': qid, 'status': 'ok'}), flush=True)
+            line = {'id': qid, 'status': 'ok', 'shown': shown[0]}
+            if 'popup_label' in rec:
+                line['popup_label'] = rec['popup_label']
+            report(line)
         except es.RemoteError as e:
             rec['status'] = 'error'
             rec['error'] = str(e)
             logf.write(json.dumps(rec) + '\n')
-            print(json.dumps({'id': qid, 'status': 'error', 'error': str(e)}), flush=True)
+            report({'id': qid, 'status': 'error', 'error': str(e)}, drop=True)
             if 'stub_dropped' in str(e):
                 break
             try:
@@ -546,7 +749,8 @@ def cmd_probe(a):
 # ---------------------------------------------------- savestates, framing, overlays
 def cmd_load_state(a):
     c = es.Client(a.rpc)
-    r = c.load_state_file(path=os.path.abspath(a.file), slot=a.slot, settle=a.settle, verify=not a.no_verify)
+    r = c.load_state_file(path=os.path.abspath(a.file), slot=a.slot, settle=a.settle, verify=not a.no_verify,
+                          marker=not a.no_marker, dry_run=a.dry_run)
     print(json.dumps(r, indent=1))
     if r.get('verdict') == 'not_loaded':
         sys.exit(1)
@@ -579,6 +783,84 @@ def cmd_where(a):
             emuwin.Frame(f.w, f.h, px).save_png(a.mark)
         r['mark'] = shot
     print(json.dumps(r, indent=1))
+
+
+def cmd_shot(a):
+    """Capture the DS screen(s) to a PNG. With --require-framed, refuse (exit 3,
+    nothing written) when that position projects off the top screen."""
+    c = es.Client(a.rpc)
+    kw = dict(path=os.path.abspath(a.file), which=a.which, settle_ms=a.settle_ms)
+    if a.require_framed:
+        kw.update(require_framed=a.require_framed if len(a.require_framed) > 1 else a.require_framed[0],
+                  env={'obj': a.obj} if a.obj else None, margin=a.margin, dy=a.dy)
+    try:
+        r = c.shot(**kw)
+    except es.RemoteError as e:
+        if 'NotFramed' in str(e):
+            print(json.dumps({'refused': True, 'error': str(e)}, indent=1))
+            sys.exit(3)
+        raise
+    print(json.dumps(r, indent=1))
+
+
+def _parse_range(s):
+    """ADDR:SIZE[:NAME]; ADDR may be an expression such as [0x0209f394]."""
+    parts = s.split(':')
+    r = {'addr': parts[0], 'size': es.parse_int(parts[1])}
+    if len(parts) > 2:
+        r['name'] = parts[2]
+    return r
+
+
+# Default regions for a RAM-diff screen: arm9 .data + .bss, ov002 .data + .bss, and
+# the player actor (0x800 bytes at the player pointer).
+RAMDIFF_REGIONS = [{'name': 'arm9_data_bss', 'addr': '0x02086bc0', 'size': 0x020aa420 - 0x02086bc0},
+                   {'name': 'ov002_data_bss', 'addr': '0x02108140', 'size': 0x021111a0 - 0x02108140},
+                   {'name': 'player', 'addr': '[0x0209f394]', 'size': 0x800}]
+
+
+def cmd_ram_snapshot(a):
+    """Read every range in one daemon call (the ctl backend reads them at one
+    emulated instant) and write OUT (.bin, the ranges concatenated) + OUT.json."""
+    ranges = [_parse_range(r) for r in a.range] if a.range else RAMDIFF_REGIONS
+    env = {'obj': a.obj} if a.obj else None
+    r = es.Client(a.rpc).ram_snapshot(ranges=ranges, path=os.path.abspath(a.out), env=env)
+    print(json.dumps(r, indent=1))
+
+
+def cmd_ram_diff(a):
+    """Byte runs that differ between two ram-snapshot files (same ranges).
+    Differing bytes at most --gap apart form one run."""
+    def load(p):
+        with open(p, encoding='utf-8') as f:
+            meta = json.load(f)
+        with open(meta['bin'], 'rb') as f:
+            return meta, f.read()
+    ma, da = load(a.a)
+    mb, db = load(a.b)
+    out = []
+    for ra, rb in zip(ma['ranges'], mb['ranges']):
+        if (ra['addr'], ra['size']) != (rb['addr'], rb['size']):
+            out.append({'range': ra['name'], 'error': 'ranges differ: %s+%x vs %s+%x' % (
+                ra['addr'], ra['size'], rb['addr'], rb['size'])})
+            continue
+        if ra['sha256'] == rb['sha256']:
+            continue
+        x = da[ra['offset']:ra['offset'] + ra['size']]
+        y = db[rb['offset']:rb['offset'] + rb['size']]
+        base = int(ra['addr'], 16)
+        diff = [i for i in range(len(x)) if x[i] != y[i]]
+        k = 0
+        while k < len(diff):
+            i = j = diff[k]
+            while k + 1 < len(diff) and diff[k + 1] - j <= a.gap:
+                k += 1
+                j = diff[k]
+            out.append({'range': ra['name'], 'addr': '%08x' % (base + i), 'off': i, 'n': j + 1 - i,
+                        'a': x[i:j + 1].hex(), 'b': y[i:j + 1].hex()})
+            k += 1
+    print(json.dumps({'a': a.a, 'b': a.b, 'nds_frames': [ma.get('nds_frame'), mb.get('nds_frame')],
+                      'runs': len(out), 'diffs': out[:a.limit]}, indent=1))
 
 
 def cmd_overlays(a):
@@ -615,16 +897,27 @@ def main():
     sub = ap.add_subparsers(dest='cmd', required=True)
 
     s = sub.add_parser('serve', help='launch/attach melonDS and hold the stub connection')
-    s.add_argument('--state', help='melonDS savestate file to load (copied into the work dir as slot 1)')
+    s.add_argument('--state', help='melonDS savestate file to load, as `load-state` does (through slot 8, '
+                                   'checked with the RAM marker); also copied into the work dir as slot 1')
     s.add_argument('--rom', help='ROM (default: sm64.nds of this or the main checkout)')
     s.add_argument('--sav', help='optional .sav to copy next to the ROM copy')
-    s.add_argument('--workdir', default=DEFAULT_WORKDIR, help='private melonDS copy (outside the repo)')
+    s.add_argument('--backend', choices=['auto', 'ctl', 'gdb'],
+                   help='ctl: the AI-controller fork; gdb: installed melonDS + stub; auto (default, or env '
+                        'ASK_BACKEND): ctl if the fork answers ping')
+    s.add_argument('--workdir', help='private emulator copy, outside the repo (default %s; ctl: %s)'
+                                     % (DEFAULT_WORKDIR, CTL_WORKDIR))
+    s.add_argument('--ctl-port', type=int, help='fork control port (default env MELONDS_CONTROL_PORT or 45987)')
+    s.add_argument('--ctl-token', help='fork control token (default env MELONDS_CONTROL_TOKEN)')
+    s.add_argument('--fork', help='fork checkout (default env MELONDS_AI_ROOT, else C:/tmp/melonds-ai-controller)')
+    s.add_argument('--window', action='store_true', help='ctl: show a never-focused window (default headless)')
+    s.add_argument('--wait-other', action='store_true',
+                   help='ctl: if another melonDS runs, wait for it to exit (polls 30 s, up to 20 min)')
     s.add_argument('--melonds', help='melonDS.exe to run (default: found on PATH / winget install)')
     s.add_argument('--port', type=int, default=3333, help='ARM9 GDB stub port')
     s.add_argument('--attach', action='store_true', help='attach to an already running melonDS instead')
     s.add_argument('--extracted', help='extracted/dsd (default: this or the main checkout)')
     s.add_argument('--logdir', default=os.path.join(DEFAULT_WORKDIR, 'logs'))
-    s.add_argument('--scale', type=int, default=2, help='window scale for captures')
+    s.add_argument('--scale', type=int, default=2, help='window scale for captures (ctl: framebuffer upscale)')
     s.add_argument('--boot-wait', type=float, default=3.0)
     s.add_argument('--slot-dir', help="with --attach: the folder holding the ROM and its .mlN slot files")
     s.set_defaults(fn=cmd_serve)
@@ -637,6 +930,7 @@ def main():
     r.add_argument('--launch', action='store_true', help='start `serve` if no daemon is up')
     r.add_argument('--state', help='with --launch: savestate to load')
     r.add_argument('--workdir', help='with --launch: melonDS work dir')
+    r.add_argument('--backend', choices=['auto', 'ctl', 'gdb'], help='with --launch: serve backend')
     r.add_argument('--no-reload', action='store_true', help="skip the spec's load_state_slot")
     r.add_argument('--answer-after', type=int, help='human mode smoke test: auto-answer after N ms')
     r.set_defaults(fn=cmd_run)
@@ -658,6 +952,10 @@ def main():
     ls.add_argument('--slot', type=int, default=8, help='slot file to copy over and load (default 8)')
     ls.add_argument('--settle', type=float, default=1.0)
     ls.add_argument('--no-verify', action='store_true')
+    ls.add_argument('--no-marker', action='store_true',
+                    help='judge the load by the RAM windows only (verdict can be "indistinguishable")')
+    ls.add_argument('--dry-run', action='store_true',
+                    help='self-test: do everything but click the menu; the verdict must be not_loaded')
     ls.set_defaults(fn=cmd_load_state)
 
     ss = sub.add_parser('save-state', help='save a state through a slot and copy it to FILE')
@@ -672,6 +970,33 @@ def main():
     w.add_argument('--margin', type=float, default=0)
     w.add_argument('--mark', help='save the top screen here with a magenta cross at the projection')
     w.set_defaults(fn=cmd_where)
+
+    sh = sub.add_parser('shot', help='capture the DS screen(s) to a PNG (optionally only if a target is framed)')
+    sh.add_argument('file')
+    sh.add_argument('--which', choices=['top', 'bottom', 'both'], default='top')
+    sh.add_argument('--settle-ms', type=int, default=250)
+    sh.add_argument('--require-framed', action='append', metavar='POS',
+                    help='expression for the address of a Fix12 position, e.g. "[obj+4]+0x5c"; refuse to '
+                         'capture (exit 3) if it projects off the top screen. Repeat for several points.')
+    sh.add_argument('--obj', help='value for `obj` in --require-framed')
+    sh.add_argument('--margin', type=float, default=8, help='--require-framed slack in pixels (default 8)')
+    sh.add_argument('--dy', default='0', help='--require-framed: Fix12 added to y')
+    sh.set_defaults(fn=cmd_shot)
+
+    rs = sub.add_parser('ram-snapshot', help='read RAM ranges in one call to OUT (.bin) + OUT.json')
+    rs.add_argument('out')
+    rs.add_argument('--range', action='append', metavar='ADDR:SIZE[:NAME]',
+                    help='repeatable; ADDR may be an expression ("[0x0209f394]", "obj+0x5c"). Default: '
+                         'arm9 and ov002 .data/.bss and the player actor')
+    rs.add_argument('--obj', help='value for `obj` in the range expressions')
+    rs.set_defaults(fn=cmd_ram_snapshot)
+
+    rdf = sub.add_parser('ram-diff', help='differing byte runs between two ram-snapshot files')
+    rdf.add_argument('a', help='first OUT.json')
+    rdf.add_argument('b', help='second OUT.json')
+    rdf.add_argument('--limit', type=int, default=500, help='runs to print (default 500)')
+    rdf.add_argument('--gap', type=int, default=3, help='merge differing bytes at most GAP apart into one run (default 3)')
+    rdf.set_defaults(fn=cmd_ram_diff)
 
     o = sub.add_parser('overlays', help='loaded-overlay table and suspended probes')
     o.set_defaults(fn=cmd_overlays)

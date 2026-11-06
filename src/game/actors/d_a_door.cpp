@@ -109,18 +109,13 @@ enum daDoor_c_AssetId {
 #include "dExtFrameCtrl_c.h"
 #include "dActor_c.h"
 #include "Sound.h"
+#include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
-/* Three plain words. A stack Vector3 would run its destructor; these temps do not. */
-struct Vec3i {
-    s32 x, y, z;
-};
-
-/* The door's matrix, as twelve words: a copy through the C++ Matrix4x3 is
-   the struct-copy DIFF of notes/cpp-class-form.md. */
-struct M48 {
-    int w[12];
-};
-
+/* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
+/* The door's matrix copies go through the flat Mtx43: a copy through the
+   C++ Matrix4x3 is the struct-copy DIFF of notes/cpp-class-form.md (.text
+   grows by 0x3c bytes). */
 /* One entry of data_ov100_02148204, indexed by param1 (the variant). */
 struct DoorEntry {
     SharedFilePtr *file;    /* 0x0: the door model */
@@ -205,11 +200,11 @@ extern "C" {
    does (Sound.h); func_02012694(id, pos) plays it at a position. */
 unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, void *b);
-unsigned char DecIfAbove0_Byte(void *p);
+unsigned char DecIfAbove0_Byte(unsigned char *p);
 int DecIfAbove0_Short(void *p);
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(void *res, void *translation, short angY, void *v);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
@@ -262,11 +257,13 @@ extern char *data_0209f394[];
 extern unsigned char data_0209f2d8;
 /* The next-level id (signed byte). */
 extern char data_02092110;
-/* Music volume and message-sound volume, both in Fix12 (0x7f000 = 127.0). */
-extern int data_0209b490[];
-extern int data_0209b49c[];
+/* The music and sub-channel volumes, both in Fix12 (0x7f000 = 127.0). */
+extern int gMusicVolume;
+extern int gSubVolume;
 extern int data_020a0ebc;
-extern M48 data_020a0e68;
+/* local extern: including math/MtxStack.h instead renumbers every @NNN and
+   $NNN in this TU (+72, measured). */
+extern Matrix4x3 data_020a0e68;
 extern int data_ov002_0211094c;
 extern int data_ov089_02132c50;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
@@ -338,19 +335,6 @@ daDoor_StateRecord data_ov100_021488a4 = {data_02086b58, data_ov100_02148114};
  * delete. All of it follows from `struct daDoor_c : dActor_c` and the member
  * types in the header. */
 daDoor_c::~daDoor_c() {}
-
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name, and MSVC never emits it: it folds
- * the Itanium destructor variants into the one ~daDoor_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. Nothing here reaches mwccarm. */
-extern "C" daDoor_c *_ZN8daDoor_cD0Ev(daDoor_c *thiz) {
-    thiz->daDoor_c::~daDoor_c();
-    daDoor_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov100_02144468, 0x02144468, size 0x80 */
@@ -597,7 +581,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
    func_ov089_0213115c. A nonzero mKeyModelIdx sets the
    data_ov100_02148704 latch. Was a C source. */
 int daDoor_c::func_ov100_02144a38(daPly_c *p) {
-    Vec3i pos;
+    VecFx32 pos;
     DoorEntry *e;
 
     p->OpenBigDoor();
@@ -782,15 +766,15 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
 /* ROM ordinal 16 -- func_ov100_02144f84, 0x02144f84, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov100_02144f84
-/* 1 when the shared countdown is zero, the music volume data_0209b490 is at
-   0x7f000 (127.0 as Fix12) and the message-sound volume data_0209b49c is
+/* 1 when the shared countdown is zero, the music volume gMusicVolume is at
+   0x7f000 (127.0 as Fix12) and the sub-channel volume gSubVolume is
    zero. Was a C source. */
 extern "C" int func_ov100_02144f84(void) {
     if (*data_ov100_02148708 != 0)
         goto fail;
-    if (*data_0209b490 != 0x7f000)
+    if (gMusicVolume != 0x7f000)
         goto fail;
-    if (*data_0209b49c == 0)
+    if (gSubVolume == 0)
         return 1;
 fail:
     return 0;
@@ -963,9 +947,9 @@ fail:
    mScaleX/Y/Z, which a door does not use as a scale; returns the player
    (data_0209f394[data_0209f250], the current one). Was a C source. */
 daPly_c *daDoor_c::func_ov100_02145370() {
-    Vec3i v;
+    VecFx32 v;
     daPly_c *r5 = (daPly_c *)data_0209f394[data_0209f250];
-    Vec3_Sub(&v, &r5->mPosX, &mPosX);
+    Vec3_Sub((Vector3 *)&v, (const Vector3 *)&r5->mPosX, (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(&mScaleX, &data_020a0ebc, (short)(-mAngleY), &v);
     return r5;
 }
@@ -1099,7 +1083,7 @@ s32 daDoor_c::InitResources() {
     DoorEntry *e;
     void *f;
     void *an;
-    Vec3i tmp;
+    VecFx32 tmp;
     int r4;
     int v;
     int b;
@@ -1155,13 +1139,13 @@ s32 daDoor_c::InitResources() {
     Vec3_Asr(&tmp, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(M48 *)&mModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (e->keyFile != 0) {
         mKeyModel = new dExtSimpleModel_c;
         f = dExtSimpleModel_c::LoadFile(*e->keyFile);
         mKeyModel->SetFile((BMD_File *)f, 1, -1);
-        *(M48 *)&mKeyModel->mat4x3 = data_020a0e68;
+        *(Mtx43 *)&mKeyModel->mat4x3 = *(Mtx43 *)&data_020a0e68;
     }
 
     {

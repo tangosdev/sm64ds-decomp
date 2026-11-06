@@ -3,9 +3,9 @@
  */
 
 #include "common.h"
+#include "math/MtxStack.h"
 
 extern void func_020527e8(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z) __attribute__((long_call, target("thumb")));
-extern void MulMat4x3Mat4x3(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0, struct Matrix4x3 *mF);
 
 void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z)
 {

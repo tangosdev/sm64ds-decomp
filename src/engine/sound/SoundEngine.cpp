@@ -16,6 +16,7 @@
  *   sequencer member is not what these bodies share.
  */
 #include "types.h"
+#include "private/fs_views.h"
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
 #include "NestedHeapIterator.h"
@@ -25,6 +26,7 @@
 #include "cstd.h"
 #include "CP15.h"
 #include "nnsys/snd/player.h"
+#include "nitro/snd/alarm.h"
 
 namespace IRQ {
     /* Defined at 0x02059d1c/0x02059d30 (the IRQ TU); namespace-scope externs
@@ -247,13 +249,7 @@ struct E1 : NNSSndSeqPlayer {
     int func_0204f600(int, int, int);
     void func_0204f5a0(int);
 };
-/* NitroSDK FSArchive (0x50 bytes, laid out in src/engine/fs/FS_Archive.cpp);
-   this file only passes its address on. */
-typedef struct FSArchive {
-    char opaque[0x50];
-} FSArchive;
-typedef int (*FS_ARCHIVE_READ_FUNC)(FSArchive *p_arc, void *dst, u32 pos, u32 size);
-typedef int (*FS_ARCHIVE_WRITE_FUNC)(FSArchive *p_arc, const void *src, u32 pos, u32 size);
+/* The sound archive embeds the shared NitroSDK FSArchive before its NARC view. */
 struct S82 {
     /* 0x00 */ FSArchive arc;
     /* 0x50 */ char *narc;         /* the file func_0204ef9c checked for 'NARC' */
@@ -372,8 +368,7 @@ extern void SND_SetChannelVolume(u32 chnBitMask, s32 volume, s32 chnDataShift);
 extern void SND_UnlockChannel(u32 chnBitMask, u32 flags);
 extern void SND_LockChannel(u32 chnBitMask, u32 flags);
 extern void SND_SetTrackMute(s32 player, u32 trackBitMask, int flag);
-extern void SND_SetupAlarm(s32 alarm, u32 tick, u32 period, void (*cb)(void *userData),
-                           void *userData);
+extern void SND_SetupAlarm(s32 alarm, u32 tick, u32 period, SNDAlarmCallback cb, void *userData);
 extern void SND_SetupCapture(s32 capture, s32 format, void *bufferPtr, u32 length, int loopFlag,
                              s32 in, s32 out);
 extern void SND_StopTimer(u32 chnBitMask, u32 capBitMask, u32 alarmBitMask, u32 flags);
@@ -437,7 +432,6 @@ extern void func_0204f460(NestedHeapIterator* self, HeapAllocator_204f460* node)
 extern void func_0204f4bc(struct E1 *obj);
 extern void* func_0204f504(int index, void* unk);
 extern void func_0204f558(struct E1 *self, int val);
-extern void _ZN2E113func_0204f5a0Ei(struct E1 *, int); /* local extern: PMF -> int */
 extern void func_0204f630(void);
 extern void *func_0204f63c(void **p, int idx, int r7);
 extern void func_0204f6f8(NNSSndHandle *handle, short a, short b);
@@ -2017,7 +2011,8 @@ extern "C" int func_0204fa3c(int owner, void *b, u32 c)
 // @symbol func_0204fa2c
 extern "C" int func_0204fa2c(int *p, int fade)
 {
-    return ((int (*)(u8 *thiz, int fade))_ZN2E113func_0204f5a0Ei)((u8 *)*p, fade);
+    /* void method, so there is no return: the call is a tail call and r0 is the callee's. */
+    ((struct E1 *)*p)->func_0204f5a0(fade);
 }
 
 // @symbol func_0204f9c4

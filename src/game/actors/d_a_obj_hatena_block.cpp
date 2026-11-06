@@ -139,6 +139,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "daShl_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -185,9 +186,8 @@ enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
 
 extern "C" {
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int data_0209f32c;
-extern int data_0209e650;
 extern unsigned char data_0209f2d8;
 extern char data_0209f318[];
 extern char data_020a0edc[];
@@ -510,7 +510,7 @@ int daObjHatenaBlock_c::Behavior()
             goto end;
         }
     }
-    if (data_0209f2f8 == 0x1c) {   /* LEVEL_ID 0x1c */
+    if (gCurrentSublevel == 0x1c) { /* LEVEL_ID 0x1c */
         if (IsClsnInRange(0x460000, 0x46000) != 0) {
             func_ov102_02149e38();
         }
@@ -871,7 +871,7 @@ void daObjHatenaBlock_c::func_ov102_021498e0()
         break;
     }
     case 0:     /* HATENA_BLOCK */
-        if (SaveData::HasPlayerLostCap() == 0 || data_0209f2f8 == 0x1f) {
+        if (SaveData::HasPlayerLostCap() == 0 || gCurrentSublevel == 0x1f) {
             PMF (*tbl)[4] = data_ov102_0214e8c0;
             u8 content = mContentType;
             if (ch >= 4) ch = 0;
@@ -1037,7 +1037,7 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
     f.vel[0] = 0;
     f.vel[1] = 0x11000;
     f.vel[2] = 0;
-    rnd = RandomIntInternal(&data_0209e650);
+    rnd = RandomIntInternal(&data_0209e650.value);
     {
         int vsum = rnd + (g->mAngleY + 0x8000);
         o->mPrevAngleX = 0;
@@ -1172,10 +1172,10 @@ void daObjHatenaBlock_c::func_ov102_02149100(Vector3 *pos, int n, unsigned int s
         a = dActor_c::Spawn(ACTOR_COIN, 2, *pos, 0, mAreaId, -1);
         if (a != 0) {
             do {
-                rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+                rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
                 dir = (int)((rnd >> 0x10) << 0x1b) >> 0x10;
             } while (dir == prevDir);
-            rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+            rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
             a->mPrevAngleX = 0;
             q = rnd >> 0x10;
             speed = (speed * (q % 50 + 100)) / 100;
@@ -1193,15 +1193,15 @@ void daObjHatenaBlock_c::func_ov102_02149100(Vector3 *pos, int n, unsigned int s
    mHomePosY - 0x32000 (50 units) is at or below data_0209f32c
    (WATER_HEIGHT in symbols/verified.tsv); in any other level except 0x21 (0
    there) when the closest player's mIsUnderwater is non-zero; otherwise 0.
-   The levels are LEVEL_ID values (data_0209f2f8); 0x15 is Wet-Dry World per
+   The levels are LEVEL_ID values (gCurrentSublevel); 0x15 is Wet-Dry World per
    dActor_c::GetWaterHeightWDW, the tree does not name 0x21. */
 int daObjHatenaBlock_c::func_ov102_02149078()
 {
-    if (data_0209f2f8 == 0x15) {
+    if (gCurrentSublevel == 0x15) {
         if ((int)(mHomePosY - 0x32000) <= data_0209f32c)
             return 1;
     } else {
-        if (data_0209f2f8 == 0x21)
+        if (gCurrentSublevel == 0x21)
             return 0;
         if (ClosestPlayer()->mIsUnderwater)
             return 1;

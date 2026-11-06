@@ -31,6 +31,7 @@
 #include "IRQ.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
@@ -122,25 +123,10 @@ typedef struct WMMpRecvData {
     u16 cdata[1];   /* 0x0a -- the child's packet */
 } WMMpRecvData;
 
-/* Leading fields of NitroSDK WMStartParentCallback, the argument the WM
- * parent callback (func_02069994) passes for CONNECTED (code 0),
- * DISCONNECTED (code 1) and BEACON_SENT (code 0x1c). Codes 0xff (a failed
- * WM call, from MBi_CheckWmErrcode: {apiid, errcode}) and 0x100 (any other WM
- * result) read only the WMCallback header the SDK callbacks all share. */
-typedef struct WmStartParentCallback {
-    u16 apiid;        /* 0x00 */
-    u16 errcode;      /* 0x02 */
-    u16 wlCmdID;      /* 0x04 */
-    u16 wlResult;     /* 0x06 */
-    u16 state;        /* 0x08 */
-    u8 macAddress[6]; /* 0x0a */
-    u16 aid;          /* 0x10 */
-} WmStartParentCallback;
-
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void CpuCopy8(const void *src, void *dst, u32 size);
-extern void func_0205a588(void *dst, int val, u32 size);
+extern void func_0205a588(void *dst, u8 val, u32 size);
 extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *func_02065c2c(u8 *src, u8 *dst);
 extern u8 *func_02065d5c(MBCommParentBlockHeader *hdr, u8 *buf);
@@ -424,7 +410,7 @@ void MBi_CommParentCallback(int type, char *arg) {
     }
     {
         volatile int sp0 = 0;
-        MultiStore32Bytes(sp0, (int *)data_020a9db8, 0x73e0);
+        MultiStore32Bytes(sp0, data_020a9db8, 0x73e0);
     }
     data_020a9db8 = 0;
 }

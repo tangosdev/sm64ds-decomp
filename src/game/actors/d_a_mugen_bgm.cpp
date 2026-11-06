@@ -2,7 +2,7 @@
 /**
  * Endless BGM / fog controller (registry profile MUGEN_BGM).
  *
- * param1 == 1 steers data_0208e434 from the rotated offset; otherwise it
+ * param1 == 1 steers gMusicTrackModeOverride from the rotated offset; otherwise it
  * drives Fog depth/color from the rotated offset, star count and
  * data_0209caa0[0x41], then keeps Sound sub 0x2e playing while
  * func_ov100_02144f84 gates mHorzSpeed.
@@ -40,9 +40,11 @@ extern char *data_0209f318;
 
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
-void Vec3_Sub(int *out, int *a, int *b);
-void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
-u32 NumStars(void);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+/* void *: Behavior's diff/rotated scratch stays POD int[3]; a Vector3 local
+   would emit ~Vector3, which this object does not have. */
+void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
+u8 NumStars(void);
 int func_ov100_02144f84(void);
 }
 /* -------------------------------------------------------------------------- */
@@ -87,7 +89,8 @@ int daMugenBGM_c::Behavior() {
     int diff[3];
     int rotated[3];
 
-    Vec3_Sub(diff, (int *)(data_0209f394[data_0209f250] + 0x5c), (int *)&mPosX);
+    Vec3_Sub((Vector3 *)diff, (const Vector3 *)(data_0209f394[data_0209f250] + 0x5c),
+             (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(rotated, data_020a0ebc, mAngleY, diff);
 
     if (param1 == 1) {
@@ -99,7 +102,7 @@ int daMugenBGM_c::Behavior() {
         if (x < 0x320000) {
             int y = rotated[1];
             if (y > -0x12c000 && y < 0x5dc000 && az > 0x32000 && az < 0xc8000)
-                data_0208e434 = (z < 0) ? 2 : -1;
+                gMusicTrackModeOverride = (z < 0) ? 2 : -1;
         }
         return 1;
     }

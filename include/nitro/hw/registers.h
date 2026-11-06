@@ -24,6 +24,16 @@
 #define DISPLAY_CONTROL_BG_EXT_PALETTE  (1u << 30)
 #define DISPLAY_CONTROL_OBJ_EXT_PALETTE (1u << 31)
 
+/* DISPCNT bits 8-12 enable BG0-BG3 and OBJ. The game keeps each engine's
+   enabled set shifted down to bit 0 (gMainScreenLayers for engine A,
+   gSubScreenLayers for engine B) and copies it in with `<< 8`, so these are
+   the bits of that byte. */
+#define DISPLAY_LAYER_BG0 (1u << 0)
+#define DISPLAY_LAYER_BG1 (1u << 1)
+#define DISPLAY_LAYER_BG2 (1u << 2)
+#define DISPLAY_LAYER_BG3 (1u << 3)
+#define DISPLAY_LAYER_OBJ (1u << 4)
+
 /* BG control: engine A's BG0CNT..BG3CNT are 0x04000008..0x0400000e, engine B's
    0x04001008..0x0400100e. Bits 0-1 are the priority and bit 6 the mosaic enable. */
 #define REG_BG1CNT    (*(volatile u16 *)0x0400000a)

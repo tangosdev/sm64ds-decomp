@@ -3,9 +3,9 @@
  * - func_02013c84 stays `extern "C"` under its cartridge name: callers in
  *   other TUs link it unmangled, and its body forwards to the member SaveFile.
  * - func_02013e64 likewise: the save-block wipe is a free function, kept C.
- * - func_0205a588 (SDK byte-fill) and CpuCopy8 (SDK unaligned copy) are asm
- *   primitives declared `void(void)` at their definitions; the parameterised
- *   local externs below are how callers spell them, as in every shard.
+ * - func_0205a588 (MI_CpuFill8) and CpuCopy8 (MI_CpuCopy8) are assembly
+ *   primitives. Their local declarations below use the signatures at their
+ *   definitions in src/engine/mi/MI_Memory.c.
  */
 /* arm9/SaveData -- the save-file manager: coin and star records, cannons,
  * character intros, cap-loss flags, file slots and the minigame block,
@@ -70,10 +70,10 @@ extern u8 data_0209f2d8[];            /* gate byte read by CanPlayerHaveCap */
 extern u8 data_0209cad2[];            /* coin records; local extern: no field on the byte array */
 extern unsigned char data_0209cab4[]; /* star bits per course */
 extern unsigned char data_0209f224;   /* last collected star id */
-extern void func_0205a588(void *dest, int value, int size);
-extern void CpuCopy8(void *dst, void *src, u32 count);
+extern void func_0205a588(void *dest, u8 value, u32 size);
+extern void CpuCopy8(const void *src, void *dst, u32 count);
 extern void func_020139b8(void);      /* forward: called by func_02013a88 above its definition */
-extern "C" void func_0201361c(int n); /* forward: defined at the end of this file */
+extern void func_0201361c(int n);     /* forward: defined at the end of this file */
 /* local extern: src/SublevelToLevel.cpp is int(int), but these four callers match only as s8.
  * An int declaration widens each of them by 8 bytes. */
 extern s8 SublevelToLevel(s8 levelID);
@@ -133,13 +133,13 @@ int SaveData::EraseSaveFile(u32 fileID, char *saveArea) {
 }
 
 // @symbol func_02013c84
-extern "C" int func_02013c84(u8 charID, FileSaveData *dest, s32 fileIndex, FileSaveData *src) {
-    CpuCopy8(dest, src, 0x44);
+extern "C" int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
+    CpuCopy8(src, dest, 0x44);
     if (fileIndex < 0) {
         data_0209caa0.activeFile = charID;
         return 1;
     }
-    return SaveData::SaveFile(fileIndex, src);
+    return SaveData::SaveFile(fileIndex, dest);
 }
 
 // @symbol _ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData

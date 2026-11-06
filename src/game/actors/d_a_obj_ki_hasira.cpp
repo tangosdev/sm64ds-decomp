@@ -58,6 +58,7 @@ enum daObjKi_Hasira_c_AssetId { ASSET_KI_HASIRA_BMD = 0x063d, ASSET_KI_HASIRA_KC
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "math/MtxStack.h"
 
 typedef long long s64;
 
@@ -84,7 +85,6 @@ extern char data_ov016_02113cac[];
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 /* The camera-shake request and the camera it goes to (arm9). */
 void func_0200d8c8(dCamera_c *cam, const Vector3 *pos, int strength);
 extern void *data_0209f318;

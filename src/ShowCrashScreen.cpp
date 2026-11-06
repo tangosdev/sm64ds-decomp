@@ -16,7 +16,7 @@ extern void nds_printt(void *dst, const char *fmt, s32 v);
 extern void nds_print(void *dst, const void *str);
 extern void nds_printf(void *dst, const char *fmt, ...);
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern u8 data_0209f264;
 extern u8 data_0209f220;
 extern signed char data_02092120;
@@ -31,7 +31,7 @@ extern int data_0209cde0;
 extern int data_0209cdd8;
 extern void *data_0209cdd4;
 extern mHeap::Heap_t *data_020a0e9c;
-extern void *data_020a0eac;
+extern mHeap::Heap_t *data_020a0eac;
 extern u8 data_0209cdd0;
 
 extern char data_0208e538[], data_0208e548[], data_0208e54c[], data_0208e55c[];
@@ -53,7 +53,7 @@ void ShowCrashScreen(void)
     nds_printt(scr + 0x5e8, data_0208e538, (u32)func_020427c4());
     nds_print(scr, data_0208e548);
     nds_print(scr + 6, data_020a0d90);
-    cc = data_0209f2f8;
+    cc = gCurrentSublevel;
     nds_printf(scr + 0x40, data_0208e54c, cc, GetStageDebugName());
     nds_printf(scr + 0x80, data_0208e55c, data_0209f264);
     nds_printf(scr + 0xc0, data_0208e56c, data_0209f220);
@@ -109,8 +109,8 @@ void ShowCrashScreen(void)
         nds_print(scr + 0x500, data_0208e624);
     }
 
-    if (((mHeap::Heap_t *)data_020a0eac)->Intact()) {
-        int mx = ((mHeap::Heap_t *)data_020a0eac)->MaxAllocationUnitSize();
+    if (data_020a0eac->Intact()) {
+        int mx = data_020a0eac->MaxAllocationUnitSize();
         nds_printf(scr + 0x540, data_0208e634,
                    ((int)((mHeap::Heap_t *)data_020a0eac)->heapSize - mx) / 1024, mx / 1024);
     } else {

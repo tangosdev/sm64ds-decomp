@@ -4,9 +4,6 @@
 
 extern "C" {
 
-extern int WM_GetSystemWork(void);
-extern int WM_CheckStateEx(int count, ...);
-
 /* NitroSDK WM_GetMPReceiveBufferSize(): 0 unless the system is a parent or a
  * child (states 7, 8) that has not started MP yet (mp_flag); otherwise the
  * receive-buffer size for the per-packet receive size mp_maxRecvSize: as a
@@ -16,7 +13,7 @@ extern int WM_CheckStateEx(int count, ...);
  * function reads are spelled out. pparam is WMParentParam in this ROM's
  * layout (maxEntry at +0x0e, see include/WmWork.h's WmParentParam). */
 int WM_GetMPReceiveBufferSize(void) {
-    WMArm9Buf *h = (WMArm9Buf *)WM_GetSystemWork();
+    WMArm9Buf *h = WM_GetSystemWork();
     WMStatus *p;
     int flag;
     int v;

@@ -48,6 +48,7 @@ enum daMoray_c_AssetId {
 #include "dExtSimpleModel_c.h"
 #include "daPly_c.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 #pragma defer_codegen off
 
@@ -85,12 +86,10 @@ extern daMoray_c::State data_ov016_02114dac;
 extern daMoray_c::State data_ov016_02114dbc;
 
 /* The zero cylinder offset has three signed components and no registered
- * lifetime work in the retail initializer. Keep its storage plain; copy the
- * components into the collision API's Vector3 locals below. */
-struct MorayCylinderOffset { s32 x, y, z; };
-
+ * lifetime work in the retail initializer: a VecFx32, not a Vector3. Its
+ * components are copied into the collision API's Vector3 locals below. */
 extern "C" {
-extern MorayCylinderOffset data_ov016_02114d4c;         /* cylinder offset, bss */
+extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
 extern unsigned char data_0209f220; /* entrance filter */
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
@@ -104,7 +103,7 @@ u16 DecIfAbove0_Short(u16 *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 /* UpdateBones(model.data, model.file, frame). Inlining that grows Render
    0x8c -> 0x9c. */
-void func_020167a4(dExtBlendAnmModel_c *model);
+void func_020167a4(dExtAnmModel_c *model);
 /* Blend the posed bones by blendWeight. No named method. */
 void func_0204531c(ModelComponents *data, s32 weight);
 
@@ -113,7 +112,7 @@ short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void SubVec3(void *a, void *b, void *out);
+void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 int LenVec3(void *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
@@ -656,7 +655,6 @@ void daMoray_c::OnPendingDestroy()
 {
 }
 
-#pragma push
 // @symbol _ZN9daMoray_c6RenderEv
 s32 daMoray_c::Render()
 {
@@ -678,7 +676,6 @@ s32 daMoray_c::Render()
     mBlendAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN9daMoray_c8BehaviorEv
 s32 daMoray_c::Behavior()
@@ -874,4 +871,4 @@ daMoray_c::State data_ov016_02114dbc = { &daMoray_c::func_ov016_02111718,
 daMoray_c::State data_ov016_02114d7c = { &daMoray_c::BookSwitch_Spawn,
                                        &daMoray_c::func_ov016_02111534 };
 
-MorayCylinderOffset data_ov016_02114d4c;
+VecFx32 data_ov016_02114d4c;

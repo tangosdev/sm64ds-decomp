@@ -15,8 +15,7 @@
  * func_ov070_0211f48c, and the Vector3 write through ((int *)&v)[i] in
  * func_ov070_0211f368, stay as written. The mPrevAngle triple keeps
  * the base-class names.
- * FlyGuy_ChangeState keeps its C-ABI name. ApproachAngleInt is the
- * int-target overload. V3w and V3h keep the ldm/stm copy in
+ * FlyGuy_ChangeState keeps its C-ABI name. V3w and V3h keep the ldm/stm copy in
  * func_ov070_0211f6e0 and func_ov070_0211f48c. The six state records and
  * the file handles keep address names; this file's static initializer
  * fills them. daPropeller_Heyho_Fire_c is a separate TU.
@@ -37,6 +36,7 @@ enum d_a_propeller_heyho_AssetId {
 #include "Particle__System.h"
 #include "SpawnInfo.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* The cartridge preserves this descriptor's C-ABI symbol but not its source
  * spelling.  Keep that evidence-bounded alias; all seven scalar words and
@@ -65,32 +65,34 @@ struct V3h { short h[3]; };
 /* Named constants.  Fix12 values are written as the raw word (0x1000 = 1.0)
  * with the unit value in the comment; frame counts are game-logic frames (the frame rate is not established here). */
 enum {
-    kLevel0x16 = 0x16,            /* LEVEL_ID (data_0209f2f8, declared as a byte here) value at which this
+    kLevel0x16 = 0x16, /* LEVEL_ID (gCurrentSublevel, declared as a byte here) value at which this
                                      code skips re-anchoring the home position and the +300.0 home lift,
                                      and uses the alternate dive aim height / arrival distance */
-    kPlayerActorId = 191,         /* PLAYER in symbols/actor_debug_names.tsv */
+    kPlayerActorId = 191, /* PLAYER in symbols/actor_debug_names.tsv */
 
-    kHomeLiftEscape   = 0xc8000,  /* 200.0 units added to the home Y when the chase loses the player or the dive finds the player underwater */
-    kHomeLiftRecover  = 0x12c000, /* 300.0 units added to the home Y when the settle, or a dive that hurt the player, finishes */
-    kAimAbovePlayer   = 0xc8000,  /* 200.0 units: the chase aim point is this far above the player */
-    kAttackCooldown   = 0x5a,     /* 90 frames: mCooldown reload when an attack/fire/settle ends */
+    kHomeLiftEscape =
+        0xc8000, /* 200.0 units added to the home Y when the chase loses the player or the dive finds the player underwater */
+    kHomeLiftRecover =
+        0x12c000, /* 300.0 units added to the home Y when the settle, or a dive that hurt the player, finishes */
+    kAimAbovePlayer = 0xc8000, /* 200.0 units: the chase aim point is this far above the player */
+    kAttackCooldown = 0x5a,    /* 90 frames: mCooldown reload when an attack/fire/settle ends */
 
-    kWanderTurnBackDist = 0x1f4000, /* 500.0 units from home: wander turns back toward home */
-    kHomeLeashDist      = 0x5dc000, /* 1500.0 units from home: the leash for wander/chase/dive */
-    kChaseTriggerDist   = 0x3e8000, /* 1000.0 units: a player closer than this starts the chase */
-    kArriveDist         = 0x258000, /* 600.0 units: chase "arrived" distance to the aim point */
+    kWanderTurnBackDist = 0x1f4000,  /* 500.0 units from home: wander turns back toward home */
+    kHomeLeashDist = 0x5dc000,       /* 1500.0 units from home: the leash for wander/chase/dive */
+    kChaseTriggerDist = 0x3e8000,    /* 1000.0 units: a player closer than this starts the chase */
+    kArriveDist = 0x258000,          /* 600.0 units: chase "arrived" distance to the aim point */
     kArriveDistLevel0x16 = 0x384000, /* 900.0 units: the same distance when LEVEL_ID == 0x16 */
 
-    kFireFrame = 0xd,             /* animation frame 13 of the spit animation: the fireball leaves here */
-    kSndFireSpit = 0x105,         /* sound id; daKrpa_c plays the same id for its spit */
-    kSndMegaKill = 0x1d,          /* sound id played with IncMegaKillCount */
+    kFireFrame = 0xd,     /* animation frame 13 of the spit animation: the fireball leaves here */
+    kSndFireSpit = 0x105, /* sound id; daKrpa_c plays the same id for its spit */
+    kSndMegaKill = 0x1d,  /* sound id played with IncMegaKillCount */
 
     /* dCc_c hitFlags bits, read with the table in include/dCc_c.h (only 0x2000 egg and
        0x4000 explosion are proven there; the rest are its plausible reading) */
-    kHitMegaChar   = 0x10,
-    kHitSpinPound  = 0x20,
-    kHitFire       = 0x40000,
-    kHitAttackMask = 0x67c0       /* 0x40 punch | 0x80 kick | 0x100 breakdance | 0x200 slide kick
+    kHitMegaChar = 0x10,
+    kHitSpinPound = 0x20,
+    kHitFire = 0x40000,
+    kHitAttackMask = 0x67c0 /* 0x40 punch | 0x80 kick | 0x100 breakdance | 0x200 slide kick
                                      | 0x400 (player's) dive | 0x2000 egg | 0x4000 explosion */
 };
 
@@ -363,6 +365,7 @@ int daPropeller_Heyho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_02120070
 #include "common.h"
+#include "private/mtx43.h"
 
 extern "C" {
 
@@ -371,7 +374,8 @@ extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern int data_020a0e68[];
 
-typedef struct { int w[12]; } M48;
+/* The matrix copies go through the flat Mtx43: assigning Matrix4x3 grows
+   .text by 0x34 bytes. */
 
 /* Refreshes the draw matrices: the model matrix from position >> 3 (Vec3_Asr by 3)
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
@@ -383,9 +387,9 @@ void func_ov070_02120070(daPropeller_Heyho_c* c)
     Vec3_Asr(&v, &c->mPosX, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    *(M48 *)&c->mAnmModel.mat4x3 = *(M48 *)data_020a0e68;
+    *(Mtx43 *)&c->mAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
     Matrix4x3_FromTranslation(data_020a0e68, c->mPosX >> 3, (c->mPosY - 0xa000) >> 3, c->mPosZ >> 3);
-    *(M48*)c->mShadowMatrix = *(M48*)data_020a0e68;
+    *(Mtx43 *)c->mShadowMatrix = *(Mtx43 *)data_020a0e68;
     c->DropShadowRadHeight(c->mShadowModel, *(Matrix4x3 *)c->mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 }
@@ -406,14 +410,17 @@ extern "C" int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::S
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov070_0211ffa8
 extern "C" {
-extern unsigned int RandomIntInternal(void* s);
-extern int data_0209e650[];
+/* local extern: retain the named parameter from CalcLib's shared signature
+ * to keep this TU's compiler-numbered aliases stable. */
+extern int RandomIntInternal(int *seed);
 /* Wander init: heading = a random multiple of 0x1000 (one of 16 directions,
  * 22.5 degrees apart), timer = 50 + random 0..31 frames, plays the file-02123520
  * animation at speed 1.0. */
 int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
-    c->mTargetAngY = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0xf) << 0xc);
-    c->mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
+    c->mTargetAngY =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
+    c->mStateTimer =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
     c->mAnmModel.SetAnim((BCA_File *)data_ov070_02123520.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -424,8 +431,9 @@ int func_ov070_0211ffa8(daPropeller_Heyho_c* c){
 extern "C" {
 typedef short s16;
 
-extern int Vec3_Dist(void *a, void *b);
-extern short Vec3_HorzAngle(void *a, void *b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -453,17 +461,18 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     daPly_c *p;
 
     in[0] = 0; in[1] = 0; in[2] = 0;
-    out[0] = 0; out[1] = 0; out[2] = 0;
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
 
-    if (Vec3_Dist(&c->mPosX, &c->mHomePosX) > kWanderTurnBackDist ||
-        c->mWithMeshClsn.IsOnWall()) {
-        c->mTargetAngY = Vec3_HorzAngle(&c->mPosX, &c->mHomePosX);
+    if (Vec3_Dist(&c->mPos, &c->mHomePos) > kWanderTurnBackDist || c->mWithMeshClsn.IsOnWall()) {
+        c->mTargetAngY = Vec3_HorzAngle(&c->mPos, &c->mHomePos);
         if ((u16)c->mStateTimer < 0x14)
             c->mStateTimer = 0x14;
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 0xa, 0x200, 0x100);
 
-    ApproachLinear(c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &c->mHomePosX), 0x100);
+    ApproachLinear(c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &c->mHomePos), 0x100);
 
     ApproachAngle(&c->mPrevAngleZ,
                   (c->mPrevAngleY - c->mTargetAngY) / 2,
@@ -484,14 +493,14 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     }
     if (c->mCooldown != 0)
         return 1;
-    if (Vec3_Dist(&c->mPosX, &c->mHomePosX) < kHomeLeashDist) {
+    if (Vec3_Dist(&c->mPos, &c->mHomePos) < kHomeLeashDist) {
         p = c->ClosestNonVanishPlayer();
         if (p) {
             int *pos = (int *)&p->mPosX; /* int view is load-bearing: plain p->mPosX reads change this function's size */
             t.x = pos[0];
             t.y = pos[1];
             t.z = pos[2];
-            if (Vec3_Dist(&c->mPosX, &t) < kChaseTriggerDist)
+            if (Vec3_Dist(&c->mPos, &t) < kChaseTriggerDist)
                 FlyGuy_ChangeState(c, &data_ov070_021235ac);
         }
     }
@@ -514,21 +523,21 @@ int func_ov070_0211fd60(daPropeller_Heyho_c *p) {
 // @symbol func_ov070_0211fae4
 extern "C" {
 
-extern short Vec3_HorzAngle(void *v0, void *v1);
+// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
+extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(void *v1, void *v0);
-extern int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *a, void *m, void *out);
-extern int Vec3_Dist(void *a, void *b);
-extern unsigned int RandomIntInternal(void *seed);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+/* local extern: see the named CalcLib-signature exception above. */
+extern int RandomIntInternal(int *seed);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern int data_020a0e68[];
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
-extern int data_0209e650[];
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_0212358c;
 
@@ -551,7 +560,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
 
     player = c->ClosestNonVanishPlayer();
     if (player == 0) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             c->mHomePosX = c->mPosX;
             c->mHomePosY = c->mPosY;
             c->mHomePosZ = c->mPosZ;
@@ -582,7 +591,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vc.y = vb.y;
     vc.z = vb.z;
 
-    c->mTargetAngY = Vec3_HorzAngle(&c->mPosX, &vc);
+    c->mTargetAngY = Vec3_HorzAngle(&c->mPos, &vc);
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 1, 0x500, 0x500);
 
     vd.x = vb.x;
@@ -599,26 +608,27 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, c->mPrevAngleX);
     MulVec3Mat4x3(&vin, data_020a0e68, &c->mSpeedX);
 
-    if (Vec3_Dist(&c->mPosX, &c->mHomePosX) > kHomeLeashDist) {
+    if (Vec3_Dist(&c->mPos, &c->mHomePos) > kHomeLeashDist) {
         FlyGuy_ChangeState(c, &data_ov070_0212359c);
         return 1;
     }
 
     {
-    int dist = Vec3_Dist(&c->mPosX, &vb);
-    int thresh = kArriveDist;
-    if (data_0209f2f8 == kLevel0x16) thresh = kArriveDistLevel0x16;
-    if (dist < thresh) {
-        c->mSpeedX = 0;
-        c->mVertSpeed = 0;
-        c->mSpeedZ = 0;
-        if (c->mCanSpitFire == 0 ||
-            (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 1) == 0) {
-            FlyGuy_ChangeState(c, &data_ov070_021235cc);
-        } else {
-            FlyGuy_ChangeState(c, &data_ov070_0212358c);
+        int dist = Vec3_Dist(&c->mPos, &vb);
+        int thresh = kArriveDist;
+        if (gCurrentSublevel == kLevel0x16)
+            thresh = kArriveDistLevel0x16;
+        if (dist < thresh) {
+            c->mSpeedX = 0;
+            c->mVertSpeed = 0;
+            c->mSpeedZ = 0;
+            if (c->mCanSpitFire == 0 ||
+                (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 1) == 0) {
+                FlyGuy_ChangeState(c, &data_ov070_021235cc);
+            } else {
+                FlyGuy_ChangeState(c, &data_ov070_0212358c);
+            }
         }
-    }
     }
 
     return 1;
@@ -641,15 +651,6 @@ int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
 }
 }
 
-/* ApproachAngle, int-target view (byte-load-bearing: the target is not
- * narrowed to short). The file-scope C declarations take a short target. A
- * block-scope extern inside a member function gets C++ linkage and names a
- * symbol nothing defines, so the view is a C-linkage redeclaration in its own
- * namespace, used by func_ov070_0211f6e0 and func_ov070_0211f48c. */
-namespace ApproachAngleInt {
-extern "C" int ApproachAngle(s16 *angle, int target, int step, int maxDelta, int minDelta);
-}
-
 /* -------------------------------------------------------------------------- */
 extern "C" {
 typedef int s32;
@@ -661,16 +662,15 @@ typedef signed char s8;
 
 
 /* (data_ov070_02123510: SharedFilePtr view declared earlier in this TU) */
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern s32 data_0209f32c;
 extern int data_020a0e68[];
 
-/* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern short Vec3_VertAngle(void* v1, void* v0);
-extern int Vec3_Dist(void* a, void* b);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern u16 DecIfAbove0_Short(u16* p);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, s16 angX);
@@ -704,8 +704,8 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     s16 half;
     s32 z;
 
-    ApproachAngleInt::ApproachAngle(&mPrevAngleY, mTargetAngY, 0x100, 0x1000, 0x1000);
-    ApproachAngleInt::ApproachAngle(&mPrevAngleZ, 0, 0x100, 0x1000, 0x1000);
+    ApproachAngle(&mPrevAngleY, mTargetAngY, 0x100, 0x1000, 0x1000);
+    ApproachAngle(&mPrevAngleZ, 0, 0x100, 0x1000, 0x1000);
 
     if (mAnmModel.dExtFrameCtrl_c::Finished()) {
         if (mStateStep == 0) {
@@ -713,7 +713,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
             mStateStep = 1;
         }
         if (mHitDuringAttack == 1) {
-            if (data_0209f2f8 != kLevel0x16)
+            if (gCurrentSublevel != kLevel0x16)
                 mHomePosY += kHomeLiftRecover;
             mStateStep = 0;
             mCooldown = kAttackCooldown;
@@ -723,7 +723,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     }
 
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnWall()) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
             mHomePosZ = mPosZ;
@@ -735,7 +735,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
     player = ClosestNonVanishPlayer();
     if (player == 0) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
             mHomePosZ = mPosZ;
@@ -746,7 +746,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     }
 
     if (player->mIsUnderwater != 0 && data_0209f32c > mPosY) {
-        if (data_0209f2f8 != kLevel0x16) {
+        if (gCurrentSublevel != kLevel0x16) {
             mHomePosX = mPosX;
             mHomePosY = mPosY;
             mHomePosZ = mPosZ;
@@ -768,7 +768,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     v.y = z;
     v.z = z;
     tmp.y = player->mGroundY;
-    if (data_0209f2f8 == kLevel0x16)
+    if (gCurrentSublevel == kLevel0x16)
         tmp.y += 0x32000;
     else
         tmp.y += 0x47000;
@@ -781,18 +781,18 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         aim.z = tz;
     }
     vAngle = Vec3_VertAngle(&mPosX, &aim);
-    ApproachAngleInt::ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
     if (mPosY <= tmp.y + 0x5000 ||
         mPosY <= player->mPosY + 0x5000 ||
-        Vec3_Dist(&mPosX, &mHomePosX) > kHomeLeashDist) {
+        Vec3_Dist(&mPos, &mHomePos) > kHomeLeashDist) {
         DecIfAbove0_Short((u16*)&mStateTimer);
         v.z = 0x9000;
     }
 
     half = (mPrevAngleY - mTargetAngY) / 2;
-    ApproachAngleInt::ApproachAngle(&mPrevAngleZ, half, 0xa, 0x100, 0x50);
+    ApproachAngle(&mPrevAngleZ, half, 0xa, 0x100, 0x50);
 
     Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mPrevAngleX);
@@ -817,7 +817,7 @@ int func_ov070_0211f694(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 }
@@ -829,7 +829,7 @@ extern daPropeller_Heyho_c::State data_ov070_0212359c;
 int daPropeller_Heyho_c::func_ov070_0211f62c()
 {
     if (mAnmModel.dExtFrameCtrl_c::Finished() != 0) {
-        if (data_0209f2f8 != kLevel0x16)
+        if (gCurrentSublevel != kLevel0x16)
             mHomePosY += kHomeLiftRecover;
         mStateStep = 0;
         mCooldown = kAttackCooldown;
@@ -856,8 +856,8 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 
 /* -------------------------------------------------------------------------- */
 extern "C" {
-short Vec3_HorzAngle(void* a, void* b);
-/* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
+// local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(void* a, void* b);
 void func_02012694(unsigned int a, void *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
@@ -889,9 +889,9 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             tmp.x = posbuf.x;
             tmp.y = posbuf.y;
             tmp.z = posbuf.z;
-            mTargetAngY = Vec3_HorzAngle(&mPosX, &tmp);
+            mTargetAngY = Vec3_HorzAngle(&mPos, &tmp);
         }
-        ApproachAngleInt::ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x400, 0x200);
+        ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x400, 0x200);
     }
 
     if (mAnmModel.dExtFrameCtrl_c::WillHitFrame(kFireFrame) != 0) {
@@ -941,7 +941,6 @@ extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c,
                                                void *f, void *g);
 extern "C" u32 d_a_propeller_heyhoNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
                                                         const Vector3_16f *f);
-extern "C" int ApproachAngle(short *v, short a, int b, int c, int d);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
  * mega-character hit leaves it unchanged) it refreshes the effects 0x13a and

@@ -61,6 +61,8 @@ enum daPopoi_c_AssetId {
 #include "Sound.h"
 #include "decl_common.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Static-init ownership (was the handwritten __sinit_ov077_021275fc shard).
  * The file-scope objects at the end of this file construct the four
@@ -110,20 +112,21 @@ extern PopoiPMF data_ov077_02127cd8[2];
  * the Fix12-by-value signatures the real headers cannot express. */
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
-extern signed char data_0209f2f8;       /* LEVEL_ID */
-extern int data_0209e650[];             /* RandomIntInternal state */
-extern char data_020a0e68[];            /* scratch Matrix4x3 */
+extern signed char gCurrentSublevel;    /* LEVEL_ID */
+extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
-unsigned short DecIfAbove0_Short(unsigned short *p);
-extern unsigned int RandomIntInternal(void *s);
-extern int Vec3_Dist(void *a, void *b);
-extern short Vec3_HorzAngle(void *a, void *b);
+/* Named local declarations preserve this TU's compiler-numbered @NNN symbols;
+   each signature matches math/CalcLib.h. */
+unsigned short DecIfAbove0_Short(unsigned short *p);      /* local extern: preserve @NNN names */
+int RandomIntInternal(int *s);                            /* local extern: preserve @NNN names */
+int Vec3_Dist(const Vector3 *a, const Vector3 *b);        /* local extern: preserve @NNN names */
+short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); /* local extern: preserve @NNN names */
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(int a, void *b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 }
 
@@ -344,8 +347,10 @@ int daPopoi_c::func_ov077_02126d5c(daPopoi_StateRecord *next)
  * speed and plays file 0x40f's animation (data_ov077_02127c90), and starts walking
  * at 8 units/frame (0x8000). Always returns 1. */
 int daPopoi_c::func_ov077_02126cd4(){
-    mTargetAngleY = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0xf) << 0xc);
-    mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0xaa);
+    mTargetAngleY =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
+    mStateTimer =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0xaa);
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x8000;
     unk_41c = 0;
@@ -380,7 +385,8 @@ int daPopoi_c::func_ov077_02126ad0()
     daPly_c *player;
     struct Vector3 pp;
 
-    dist = Vec3_Dist(&mPosX, &mHomePosX);
+    dist = Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
+                     reinterpret_cast<const Vector3 *>(&mHomePosX));
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
     if (func_ov077_02126300() != 0) {
@@ -395,7 +401,8 @@ int daPopoi_c::func_ov077_02126ad0()
     }
 
     if (dist > 0x1f4000) {
-        mTargetAngleY = Vec3_HorzAngle(&mPosX, &mHomePosX);
+        mTargetAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
+                                       reinterpret_cast<const Vector3 *>(&mHomePosX));
         if (*(unsigned short*)&mStateTimer < 0x14)
             *(unsigned short*)&mStateTimer = 0x14;
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
@@ -419,10 +426,8 @@ int daPopoi_c::func_ov077_02126ad0()
         pp.x = src->x;
         pp.y = src->y;
         pp.z = src->z;
-        if (Vec3_Dist(&mHomePosX, &pp) < 0x3e8000
-            && player->mIsMetal == 0
-            && player->mIsMega == 0
-            && player->GetHurtState() < 0) {
+        if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX), &pp) < 0x3e8000 &&
+            player->mIsMetal == 0 && player->mIsMega == 0 && player->GetHurtState() < 0) {
             func_ov077_02126d5c((daPopoi_StateRecord *)data_ov077_02127d08);   /* Chase */
             return 1;
         }
@@ -484,7 +489,8 @@ int daPopoi_c::func_ov077_021269a8() {
  * mAnmModel.speed is overwritten by SetAnim's speed argument 0x1000, so the
  * animation ends up at speed 1.0. Returns 1. */
 int daPopoi_c::func_ov077_02126930(){
-    mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0xaa);
+    mStateTimer =
+        (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 0xaa);
     mHorzSpeed = 0x6000;
     mTurnRate = 0;
     unk_41c = 0;
@@ -516,7 +522,8 @@ int daPopoi_c::func_ov077_0212679c()
     daPly_c *p;
     unsigned short spd;
 
-    dist = Vec3_Dist((void *)&mPosX, (void *)&mHomePosX);
+    dist = Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
+                     reinterpret_cast<const Vector3 *>(&mHomePosX));
 
     if (func_ov077_02126300() != 0) {
         func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127d18);   /* TurnAway */
@@ -535,7 +542,7 @@ int daPopoi_c::func_ov077_0212679c()
         pv.x = pp->x;
         pv.y = pp->y;
         pv.z = pp->z;
-        mTargetAngleY = Vec3_HorzAngle((void *)&mPosX, &pv);
+        mTargetAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX), &pv);
     }
 
     ApproachLinear(mPrevAngleY, mTargetAngleY, mTurnRate);
@@ -658,7 +665,7 @@ void daPopoi_c::func_ov077_02126528()
  * down 0x3000 (67.5 degrees). "Ahead" is the +Z direction rotated by mAngleY.
  * Blocked means "the level ray hit something, OR the pitched ray found no ground".
  *
- * Guarded by data_0209f2f8 (LEVEL_ID) == 0x2a (42), so the probe only casts in
+ * Guarded by gCurrentSublevel (LEVEL_ID) == 0x2a (42), so the probe only casts in
  * that level; in every other level it returns 0 without casting anything.
  *
  * NOTE on the two `end.x = sx; end.x = sx + ox;` pairs below: the dead first
@@ -669,7 +676,7 @@ int daPopoi_c::func_ov077_02126300()
 {
     int y;
 
-    if (data_0209f2f8 == 0x2a) {
+    if (gCurrentSublevel == 0x2a) {
         dBgCh_Lin ray1;
         dBgCh_Lin ray2;
         Vector3 start;
@@ -696,8 +703,8 @@ int daPopoi_c::func_ov077_02126300()
         start.z = mPosZ;
         start.y = y + 0x28000;
         dir.z = 0xc8000;
-        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&dir, data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;
@@ -724,9 +731,9 @@ int daPopoi_c::func_ov077_02126300()
         dir.x = 0;
         dir.y = 0;
         dir.z = 0x2c000;
-        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, 0x3000);
-        MulVec3Mat4x3(&dir, data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x3000);
+        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;

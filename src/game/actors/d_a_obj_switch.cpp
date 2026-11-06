@@ -17,8 +17,6 @@
 //   - ChangeMusicVolume / IsClsnInRange / KcMbg::SetFile stay computed-spelling
 //     externs: the member form changes codegen under 2004/b56 (Fix12<int> by
 //     value, wall 6az -- noted at use).
-//   - func_020393c4 stores a callback address as a 32-bit word at +0x1c; a
-//     typed callback signature has no byte proof, so the int* decl stays.
 //   - The collision callback func_ov002_020baa98 and its touch helper
 //     func_ov002_020baa2c keep their address names and stay free extern "C"
 //     functions.
@@ -61,31 +59,31 @@ struct SwitchClsnFileHandle : SharedFilePtr {
 };
 
 extern "C" {
-    extern int data_0209b454;
-    extern signed char data_0209f2f8;
-    extern SharedFilePtr data_ov002_0211092c;
-    extern daObjSwitch_c::Resources data_ov002_021098e8[];
-    extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
-    extern SwitchModelFilePtr data_ov002_0210dfd4;
-    extern SwitchClsnFileHandle data_ov002_0210dfc4;
-    extern SwitchModelFilePtr data_ov002_0210dfcc;
-    extern SwitchClsnFileHandle data_ov002_0210dfbc;
-    // Names stay on this unused prototype so this file's @NNN numbers do not move.
-    int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
-    // local extern: the actual free definition accepts a scalar scale. The
-    // genuine member call changes InitResources under 2004/b56; see the
-    // committed experiment.
-    extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
-                                    s16 angle, void *clps);
-    // The existing setter stores a callback address as a 32-bit word at +0x1c.
-    void func_020393c4(int *self, int callback);
-    void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other);
-    int func_02012310(int handle, int sound, int arg);
-    unsigned char IsAreaShowing(int area);
-    unsigned char DecIfAbove0_Byte(unsigned char *value);
-    void LoadSilverStarAndNumber();
-    void UnloadSilverStarAndNumber();
-    int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern u32 gNextActorUpdateMask;
+extern signed char gCurrentSublevel;
+extern SharedFilePtr data_ov002_0211092c;
+extern daObjSwitch_c::Resources data_ov002_021098e8[];
+extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
+extern SwitchModelFilePtr data_ov002_0210dfd4;
+extern SwitchClsnFileHandle data_ov002_0210dfc4;
+extern SwitchModelFilePtr data_ov002_0210dfcc;
+extern SwitchClsnFileHandle data_ov002_0210dfbc;
+// Names stay on this unused prototype so this file's @NNN numbers do not move.
+int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
+// local extern: the actual free definition accepts a scalar scale. The
+// genuine member call changes InitResources under 2004/b56; see the
+// committed experiment.
+extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
+                                s16 angle, void *clps);
+// The setter stores the collider's stood-on callback at +0x1c.
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other);
+int func_02012310(int handle, int sound, int arg);
+unsigned char IsAreaShowing(int area);
+unsigned char DecIfAbove0_Byte(unsigned char *value);
+void LoadSilverStarAndNumber();
+void UnloadSilverStarAndNumber();
+int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
 
 // @symbol daObjSwitch_c_classInit_HANSWITCH
@@ -118,9 +116,8 @@ extern "C" daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
 #pragma push
 #pragma long_calls on
 // @symbol func_ov002_020baa98
-extern "C" void func_ov002_020baa98(void *collider, daObjSwitch_c *self, dActor_c *other)
-{
-    func_ov002_020baa2c(self, other);
+extern "C" void func_ov002_020baa98(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    func_ov002_020baa2c(static_cast<daObjSwitch_c *>(owner), other);
 }
 #pragma pop
 
@@ -191,8 +188,7 @@ int daObjSwitch_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)(f), *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov002_021098e8[idx].clps));
 
-    func_020393c4(reinterpret_cast<int *>(&mMeshCollider),
-                  reinterpret_cast<int>(&func_ov002_020baa98));
+    func_020393c4(&mMeshCollider, &func_ov002_020baa98);
 
     {
         u16 h = mTimeLimit;
@@ -254,7 +250,7 @@ int daObjSwitch_c::Behavior()
         }
     }
 
-    if ((data_0209b454 & 0x4000000) == 0) {
+    if ((gNextActorUpdateMask & 0x4000000) == 0) {
         mTimer++;
     }
     func_ov002_020ba520();
@@ -268,7 +264,7 @@ int daObjSwitch_c::Behavior()
             v = mMusicVolume;
             if (v != 0x40) {
                 if (v == 0x7f) {
-                    if ((data_0209b454 & 0x4000000) == 0) {
+                    if ((gNextActorUpdateMask & 0x4000000) == 0) {
                         mMusicFadeDone = Sound::ChangeMusicVolume(v, 0x64cc);
                     }
                 }
@@ -379,7 +375,7 @@ void daObjSwitch_c::func_ov002_020ba2d0()
             mAreaId = -1;
         }
     } else {
-        if (data_0209f2f8 == 0xd && mPosX == -0x140000) {
+        if (gCurrentSublevel == 0xd && mPosX == -0x140000) {
             SpawnSoundObj(0);
         }
         Event::SetBit(mEventBit);
@@ -408,7 +404,7 @@ void daObjSwitch_c::func_ov002_020ba1ac()
         }
     }
     diff = mTimeLimit - mTimer;
-    if (!(data_0209b454 & 0x4000000)) {
+    if (!(gNextActorUpdateMask & 0x4000000)) {
         if (diff == 0x2d) {
             mTickSoundHandle = 0;
         } else if (diff < 0x2d) {

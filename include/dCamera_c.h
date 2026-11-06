@@ -7,6 +7,9 @@
 
 struct dActor_c;
 struct CamMode;
+struct CamViewObj;
+struct dBgCh;
+struct CutsceneSpline;
 
 struct dCamera_c : dView_c {
     /* Nested, and only ever needed as a pointer -- dCamera_c::ChangeState is
@@ -114,11 +117,11 @@ struct dCamera_c : dView_c {
     void *mViewObj; /* 0x144 */
     /* Owned; CleanupResources deletes it. */
     void* mFixedViewPos;            /* 0x148 */
-    /* The paths func_02009414 walks with func_02008b4c: lookAt along
+    /* The paths func_02009414 walks with MovePointAlongSpline: lookAt along
        mLookAtPath, pos along mPosPath. The func_020082a0 script op sets
        both. */
-    void *mLookAtPath; /* 0x14c */
-    void *mPosPath;    /* 0x150 */
+    CutsceneSpline *mLookAtPath; /* 0x14c */
+    CutsceneSpline *mPosPath;    /* 0x150 */
     /* Flag word. Bit 0 is under-water (dCamera_c::IsUnderwater returns it
        masked, not normalised); 0x10 vetoes a state change; 0x4000 records
        that the pre-talk save has been taken. */
@@ -136,7 +139,7 @@ struct dCamera_c : dView_c {
     /* Behavior eases it toward 0x1000 while flag 0x2000 is set and toward 0
        otherwise; Render blends the field of view toward 0xaaa by it. */
     s32 mFovBlend; /* 0x168 */
-    /* Progress within the current path segment (func_02008b4c);
+    /* Progress within the current path segment (MovePointAlongSpline);
        func_020094a8 clears it with mPathIndex. */
     s32 mPathProgress; /* 0x16c */
     /* Set (func_02008008) and eased (func_02007fcc) by script ops. The
@@ -195,7 +198,7 @@ struct dCamera_c : dView_c {
        state 0x14 when it runs out; func_0200bb28 reuses it as the repeat
        delay (0x14) between turn-button steps. */
     u16 mStateTimer; /* 0x196 */
-    /* The path segment func_02008b4c is in; func_020094a8 clears it. */
+    /* The path segment MovePointAlongSpline is in; func_020094a8 clears it. */
     s16 mPathIndex; /* 0x198 */
     /* The yaw func_020070e8 orbits pos toward: func_02007758 always passes
        it, and func_02007a8c passes it when the script's yaw is -1. Seeded from
@@ -223,7 +226,7 @@ struct dCamera_c : dView_c {
     /* The path node func_0200b0fc is past: cleared while mFlags bit 4 is set,
        then stepped as lookAt nears the next or previous node. */
     u8 mPathNode; /* 0x1a7 */
-    dCamera_c();
+    dCamera_c() {}
     virtual ~dCamera_c();
 
     /* fBase_c virtual overrides, in their inherited slots. */
@@ -264,6 +267,38 @@ struct dCamera_c : dView_c {
     void func_0200d3f8(unsigned char, void *);
     void func_0200d148(unsigned char);
     void func_0200d10c(unsigned char);
+    /* Follow, placement and state helpers. Their names are not recovered, so
+       each keeps its address. */
+    void func_0200897c(dBgCh &);
+    void func_020089d8();
+    void func_020089f8();
+    int func_02008cb4();
+    int func_02009138(int);
+    int func_020091f8(Vector3 *, int, int);
+    void func_0200928c();
+    unsigned int func_020093d4(int);
+    unsigned int func_020093f4(int);
+    int func_020098e0();
+    int func_02009a8c();
+    int func_02009d30();
+    int func_02009e50();
+    s32 func_02009e70();
+    int func_0200af0c();
+    void func_0200af20(Vector3 *, Vector3 *, short *);
+    void func_0200b798(CamViewObj *, int);
+    void func_0200b990(CamViewObj *, int);
+    int func_0200bec4(int *, int, char *, int);
+    int func_0200c394(int, void *, void *, void **, int *);
+    int func_0200c66c(void *, int *, int *, int *);
+    void func_0200c9e0(s32 *, s32 *);
+    int func_0200ca50();
+    int func_0200cae4();
+    void func_0200cb58(int);
+    void func_0200cbe0();
+    void func_0200cce4();
+    void func_0200cf40();
+    void func_0200d89c();
+    void func_0200d954(short);
 };
 
 #ifndef SM64DS_PLATFORM_PC

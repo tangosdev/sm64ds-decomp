@@ -14,7 +14,7 @@
 #include "cstd.h"
 
 extern "C" {
-void NormalizeVec3(Vector3 *v, Vector3 *out);
+void NormalizeVec3(const Vector3 *v, Vector3 *out);
 void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
 }

@@ -1,5 +1,6 @@
 //cpp
 #include "dFdBrightness_c.h"
+#include "nitro/hw/registers.h"
 #include "math/Approach.h"
 /* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
  * (up to three at once) and bounce Mario to the lit door. Three misses
@@ -37,6 +38,8 @@ enum d_s_mg_trampoline_AssetId {
 #include "Sound.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "LevelRng.h"
+#include "decl_common.h"
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -80,12 +83,14 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-/* Eight-byte state descriptors. A namespace-scope pointer-to-member is not
-   static data on this class: the named object moves to .bss, __sinit grows
-   by 0xb4, a .ctor word appears, and the RELA lands on an anonymous temp.
-   StateDone is empty, so it is static and its address is an ordinary
-   function pointer (same mangling). The other four read members and stay
-   a raw (code, 0) pair. */
+/* Eight-byte state descriptors. A pointer-to-member initializer
+   (`TrampState pmf = &dScMgTrampoline_c::StateIntro` and the same for
+   StatePlay, StateResults, StateWaitExit) was measured on this TU: the four
+   symbols move from .data to .bss (0x20), __sinit_d_s_mg_trampoline.cpp
+   is emitted at size 0x94 with a .ctor word, and the (code, 0) words survive only as
+   anonymous .data temps that __sinit copies. .text stayed 0x1e10. The ROM
+   keeps these four in .data, so the mangled externs stay. StateDone is
+   empty, so it is static and its address is an ordinary function pointer. */
 struct P2 {
     int a, b;
 };
@@ -154,11 +159,13 @@ int TrmpLine_Create(Vec2s *a, Vec2s *b);
 
 void SetBg2Offset(int a, int b);
 int Mg_GetTopScreenYOffset(void);
-extern "C" unsigned char data_0209d45c;
-extern "C" void Mg_CommitRecords(void *scene);
+extern unsigned char gMainScreenLayers;
+extern void Mg_CommitRecords(void *scene);
 int GetGameLanguage(void);
-void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+struct OamAttr;
+struct Matrix2x2;
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern short sTrmpGoalRow;
@@ -171,20 +178,19 @@ extern int sTrmpComboCount;
 extern int sTrmp3DLives;
 extern int sTrmpMariosInPlay;
 extern int sTrmpAnyOnLedge;
-extern int data_0209e650;
 extern void TrmpLine_UpdateAll(void);
 extern int Trmp3DMario_IsOffstage(int *r0);
 extern void Trmp3DMario_EnterWalkIn(char *c);
 extern int RandomIntInternal(int *seed);
-extern "C" void Trmp3DMario_SetSpawnHeight(int n);
-extern "C" void Trmp3DMario_SetTuning(int a);
+extern void Trmp3DMario_SetSpawnHeight(int n);
+extern void Trmp3DMario_SetTuning(int a);
 void TrmpLine_CreateStartLineT1(void);
 extern s16 sTrmpIntroFromX;
 extern s16 sTrmpStartTouchX;
 extern s16 sTrmpStartTouchY;
 extern void Camera_UpdateMatrices(void *cam);
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, void *dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *ptr);
 extern int sTrmpNcgByLanguage[];
 extern void InitialiseVramGlobals(void);
@@ -201,8 +207,6 @@ extern void func_02012718(int, int);
 extern void TrmpFx_UpdateAll(void);
 extern void Mg_SubmitScore(int);
 extern void TrmpFx_DrawAll(void);
-extern int *sTrmpTextSpritesByLanguage[];
-extern int sTrmpLifeIconSprite;
 extern void Mg_DrawTopRightCounter(int, int);
 extern void *sTrmpDoorSignSprites[];
 extern void *sTrmpArrowSprite;
@@ -211,22 +215,23 @@ extern void TrmpLine_DrawAll(void);
 
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
 /* The four non-static state methods. A pointer to member does not convert
-   to the int word a descriptor holds. StateDone is static, so the
-   descriptor below names it directly. */
-extern "C" void _ZN17dScMgTrampoline_c13StateWaitExitEv(void); /* local extern: PMF -> int */
-extern "C" void _ZN17dScMgTrampoline_c12StateResultsEv(void);  /* local extern: PMF -> int */
-extern "C" void _ZN17dScMgTrampoline_c9StatePlayEv(void);      /* local extern: PMF -> int */
-extern "C" void _ZN17dScMgTrampoline_c10StateIntroEv(void);    /* local extern: PMF -> int */
+   to the int word a descriptor holds, and a pointer-to-member initializer
+   is not static .data (see the note above the P2 definition). StateDone is
+   static, so the descriptor below names it directly. */
+extern void _ZN17dScMgTrampoline_c13StateWaitExitEv(void); /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c12StateResultsEv(void);  /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c9StatePlayEv(void);      /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c10StateIntroEv(void);    /* local extern: PMF -> int */
 extern int sTrmpPuffEnglish[];
 extern int sTrmpPuffSpanish[];
 extern int sTrmpPuffFrench[];
 extern int sTrmpPuffGerman[];
 extern int sTrmpPuffItalian[];
-extern int sMgTextSpritesEnglish[];
-extern int sMgTextSpritesSpanish[];
-extern int sMgTextSpritesFrench[];
-extern int sMgTextSpritesGerman[];
-extern int sMgTextSpritesItalian[];
+extern OamAttr *sMgTextSpritesEnglish[];
+extern OamAttr *sMgTextSpritesSpanish[];
+extern OamAttr *sMgTextSpritesFrench[];
+extern OamAttr *sMgTextSpritesGerman[];
+extern OamAttr *sMgTextSpritesItalian[];
 
 /* Data owned by the same original TU. */
 P2 pmf_dScMgTrampoline_c_StateWaitExit = {(int)_ZN17dScMgTrampoline_c13StateWaitExitEv, 0};
@@ -240,9 +245,9 @@ BaseSpawnInfo<dScMgTrampoline_c> g_profile_MG_TRAMPOLINE = {
 P2 pmf_dScMgTrampoline_c_StatePlay = {(int)_ZN17dScMgTrampoline_c9StatePlayEv, 0};
 P2 pmf_dScMgTrampoline_c_StateResults = {(int)_ZN17dScMgTrampoline_c12StateResultsEv, 0};
 int sTrmpNcgByLanguage[] = {0x107, 0x109, 0x104, 0x105, 0x106};
-int *sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesSpanish,
-                                     sMgTextSpritesFrench, sMgTextSpritesGerman,
-                                     sMgTextSpritesItalian};
+OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesSpanish,
+                                          sMgTextSpritesFrench, sMgTextSpritesGerman,
+                                          sMgTextSpritesItalian};
 int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                               (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpFxList, from the legacy file for TrmpFx_Link, NOT applied: extern void *sTrmpFxList; */
@@ -275,7 +280,7 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchY, from the legacy file for func_ov006_02121f04, NOT applied: extern short sTrmpStartTouchY; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN17dScMgTrampoline_c11CanEndStateEi, NOT applied: extern int GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd4fdivEii, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern s32 _ZN4cstd4fdivEii(s32 a, s32 b); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209d45c, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern u8 data_0209d45c; */
+/* TUBUILD CONFLICT -- alternate declaration of gMainScreenLayers, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern u8 gMainScreenLayers; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_0212231c, NOT applied: extern s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_0212231c, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_0212231c, NOT applied: extern void MultiStore16(u16 val, char *dst, int nbytes); */
@@ -295,14 +300,14 @@ extern "C" dScMgTrampoline_c *dScMgTrampoline_c_classInit(void) {
 
 // @symbol _ZN17dScMgTrampoline_c11InitDisplayEv
 void dScMgTrampoline_c::InitDisplay() {
-    int r8, r7, r6, r5, r4;
+    void *bgChar, *bgScr, *bgPltt, *objChar, *objPltt;
     volatile u16 sp0;
 
-    r8 = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NCG_BIN);
-    r7 = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NSC_BIN);
-    r6 = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NCL_BIN);
-    r5 = LoadFile(sTrmpNcgByLanguage[GetGameLanguage()]);
-    r4 = LoadFile(ASSET_D_2D_MG_TRAMPOLINE_NCL_BIN);
+    bgChar = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NCG_BIN);
+    bgScr = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NSC_BIN);
+    bgPltt = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NCL_BIN);
+    objChar = LoadFile(sTrmpNcgByLanguage[GetGameLanguage()]);
+    objPltt = LoadFile(ASSET_D_2D_MG_TRAMPOLINE_NCL_BIN);
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9110;
@@ -313,22 +318,22 @@ void dScMgTrampoline_c::InitDisplay() {
         sp0 = 0;
         MultiStore16(sp0, dst, 0x4000);
     }
-    DecompressLZ16(r8, (void *)((char *)G2::GetBG2CharPtr() + 0x4000));
-    DecompressLZ16(r7, (void *)G2::GetBG2ScrPtr());
-    GX::LoadBGPltt((const void *)r6, 0x1a0, 0x60);
+    DecompressLZ16(bgChar, (void *)((char *)G2::GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(bgScr, (void *)G2::GetBG2ScrPtr());
+    GX::LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1318;
     *(volatile u16 *)0x400000e &= ~0x40;
 
-    DecompressLZ16(r5, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)r4, 0, 0x60);
+    DecompressLZ16(objChar, (void *)0x6400000);
+    GX::LoadOBJPltt(objPltt, 0, 0x60);
 
-    Deallocate((void *)r8);
-    Deallocate((void *)r7);
-    Deallocate((void *)r6);
-    Deallocate((void *)r5);
-    Deallocate((void *)r4);
+    Deallocate(bgChar);
+    Deallocate(bgScr);
+    Deallocate(bgPltt);
+    Deallocate(objChar);
+    Deallocate(objPltt);
 
     InitBrush(3);
 }
@@ -343,7 +348,8 @@ s32 dScMgTrampoline_c::InitResources() {
     this->mScrollY = 0x20;
     this->mScrollTargetY = this->mScrollY;
     InitDisplay();
-    data_0209d45c = 0x1d;
+    gMainScreenLayers =
+        DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
@@ -415,7 +421,8 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     self->mInputEnabled = 0;
     self->mRoundOver = 0;
     self->mDoorSwitchTimer =
-        (((int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) * 0x2d0) >>
+        (((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
+          0x2d0) >>
          12) +
         0x2d0;
     self->mDoorBlinkTimer = 0;
@@ -494,7 +501,8 @@ void dScMgTrampoline_c::StateIntro() {
         mTouchY = sTrmpStartTouchY;
 
         mTouchY +=
-            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) - 0x800)
+            ((((int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >> 19) -
+               0x800)
               << 2) >>
              12);
 
@@ -594,7 +602,8 @@ void dScMgTrampoline_c::StatePlay() {
             }
             Sound::PlayBank2_2D(0x1b6);
             {
-                unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff;
+                unsigned int rnd =
+                    (unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
                 int prod = (rnd >> 19) * 0x2d0;
                 mDoorSwitchTimer = (s16)((prod >> 12) + 0x2d0);
                 mDoorBlinkTimer = 0;
@@ -763,8 +772,7 @@ s32 dScMgTrampoline_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)sTrmpTextSpritesByLanguage[idx][1], (void *)a1v, 0xc,
-                              (void *)0);
+                DrawOamSprite(sTrmpTextSpritesByLanguage[idx][1], a1v, 0xc, 0);
             } else {
                 RenderOamMainScreen(sTrmpLifeIconSprite, a1v, 0xc, -1, -1);
             }
@@ -815,11 +823,11 @@ int dScMgTrampoline_c::OnGraphCallback2() {
         return 0;
     if (mMenuOpen == 0) {
         if (mDrawSubScreen == 0) {
-            data_0209d45c &= ~8;
+            gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + mScrollOffsetY);
             *(volatile int *)0x4000018 = (mScrollY + mScrollOffsetY) << 16 & 0x1ff0000;
         } else {
-            data_0209d45c |= 8;
+            gMainScreenLayers |= DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset());
             *(volatile int *)0x4000018 =
                 (mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset()) << 16 & 0x1ff0000;

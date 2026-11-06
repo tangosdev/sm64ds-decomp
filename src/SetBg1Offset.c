@@ -1,2 +1,6 @@
-extern short data_0209d4a4[]; extern short data_0209d4a0[];
-void SetBg1Offset(int a, int b) { data_0209d4a4[0] = a; data_0209d4a0[0] = b; }
+extern short gBg1HOffset[];
+extern short gBg1VOffset[];
+void SetBg1Offset(int a, int b) {
+    gBg1HOffset[0] = a;
+    gBg1VOffset[0] = b;
+}

@@ -40,23 +40,9 @@
 #include "types.h"
 #include "GX.h"
 #include "Ov007Texture.h"
-
-/* File-wide: func_ov007_020c1448 needs it (mwccarm defers codegen, so an
- * optimization pragma covers the whole unit), and every other function
- * here matches under it. */
-#pragma opt_propagation off
+#include "nitro/gx/g3imm.h"
 
 extern "C" {
-
-#define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
-#define reg_G3_TEXPLTT_BASE (*(volatile u32 *)0x040004ac)
-
-/* NitroSDK's G3_TexImageParam. */
-static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 texGen, u32 sizeS, u32 sizeT,
-                                    u32 repeat, u32 flip, u32 pltt0) {
-    reg_G3_TEXIMAGE_PARAM = (u32)((addr >> 3) | (texFmt << 26) | (texGen << 30) | (sizeS << 20) |
-                                  (sizeT << 23) | (repeat << 16) | (flip << 18) | (pltt0 << 29));
-}
 
 extern u32 data_ov007_02104bdc; /* next free texture slot */
 extern u32 data_ov007_02104be0; /* end of the palette region */
@@ -298,8 +284,9 @@ void func_ov007_020c14b8(Ov007Texture *t) {
  * and colour-0 bits. No record selects no texture. */
 void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0) {
     if (self != 0) {
-        G3_TexImageParam(self->texAddr, self->fmt, texGen, self->sizeS, self->sizeT, repeat, flip,
-                         color0);
+        G3_TexImageParam((GXTexFmt)self->fmt, (GXTexGen)texGen, (GXTexSizeS)self->sizeS,
+                         (GXTexSizeT)self->sizeT, (GXTexRepeat)repeat, (GXTexFlip)flip,
+                         (GXTexPlttColor0)color0, self->texAddr);
     } else {
         reg_G3_TEXIMAGE_PARAM = 0x40000000;
     }
@@ -311,8 +298,7 @@ void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u
  * otherwise. No record writes 0. */
 void func_ov007_020c1404(Ov007Texture *tex) {
     if (tex) {
-        int t = (tex->fmt == 2) ? 1 : 0;
-        reg_G3_TEXPLTT_BASE = tex->plttAddr >> (4 - t);
+        G3_TexPlttBase(tex->plttAddr, (GXTexFmt)tex->fmt);
     } else {
         reg_G3_TEXPLTT_BASE = 0;
     }

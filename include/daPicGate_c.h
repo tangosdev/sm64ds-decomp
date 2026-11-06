@@ -2,6 +2,7 @@
 #define DAPICGATE_C_H
 
 #include "types.h"
+#include "common.h"
 #include "dActor_c.h"
 
 /* TWO WITNESSES, and they close on each other:
@@ -55,8 +56,8 @@ struct daPicGate_c : dActor_c {
     };
 
     u8 pad_0d0[4];               /* 0x0d0 -- untouched */
-    s32 mMtx[12];                /* 0x0d4 -- model-to-world, Matrix4x3 */
-    s32 mInvMtx[12];             /* 0x104 -- its inverse */
+    Matrix4x3 mMtx;              /* 0x0d4 -- model-to-world */
+    Matrix4x3 mInvMtx;           /* 0x104 -- its inverse */
     s32 mWaveOrigin[3];          /* 0x134 -- x, y, 0 in cell space: BeginWave sets it,
                                     func_ov080_02125d64 measures each cell's dist from it */
     Vertex mCorners[4];          /* 0x140 */

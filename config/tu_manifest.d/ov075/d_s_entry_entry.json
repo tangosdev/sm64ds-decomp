@@ -181,21 +181,21 @@
       "address": "0x0211d34c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF descriptor for EntryMesh::UpdateRipple. mwcc emits @709, which ov060 already defines, so the configured name is @849."
+      "evidence": "compiler PMF descriptor for EntryMesh::UpdateRipple. mwcc emitted @718, which ov060 already defines, so the configured name is @849. Re-keyed from @718 to @729 when the opt pragma was removed (#821)."
     },
     {
       "symbol": "@984",
       "address": "0x0211d354",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF descriptor for EntryMesh::InitGrid. mwcc emits @707, which ov060 already defines, so the configured name is @984."
+      "evidence": "compiler PMF descriptor for EntryMesh::InitGrid. mwcc emitted @716, which ov060 already defines, so the configured name is @984. Re-keyed from @716 to @727 when the opt pragma was removed (#821)."
     },
     {
       "symbol": "@851",
       "address": "0x0211d35c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF descriptor for EntryMesh::DrawGrid. mwcc emits @711, which ov060 already defines, so the configured name is @851."
+      "evidence": "compiler PMF descriptor for EntryMesh::DrawGrid. mwcc emitted @720, which ov060 already defines, so the configured name is @851. Re-keyed from @720 to @731 when the opt pragma was removed (#821)."
     }
   ],
   "bss": [
@@ -211,7 +211,7 @@
       "address": "0x0211d988",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "destructor-registration node. mwcc emits @705, which ov060 already defines, so the configured name is @962."
+      "evidence": "destructor-registration node. mwcc emitted @714, which ov060 already defines, so the configured name is @962. Re-keyed from @714 to @725 when the opt pragma was removed (#821)."
     },
     {
       "symbol": "EntryMeshHandlers",
@@ -239,7 +239,18 @@
       "evidence": "constructor-table word relocates to __sinit_d_s_entry_entry.cpp."
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN8dScene_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper from return new dScEntry_c. No configured ROM symbol and no inbound relocation. Same deadstrip as dScDSMT_c."
+    },
+    {
+      "symbol": "_ZN7dBase_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper from return new dScEntry_c. No configured ROM symbol and no inbound relocation. Same deadstrip as dScDSMT_c."
+    }
+  ],
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16EntryMeshTextureC1Ej",
@@ -258,24 +269,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@705",
+      "from": "@725",
       "to": "@962",
-      "evidence": "registration node. @705 is already ov060's bss temp; @962 is unused and the same length."
+      "evidence": "registration node. @714 is already ov060's bss temp; @962 is unused and the same length. Re-keyed from @714 to @725 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between."
     },
     {
-      "from": "@707",
+      "from": "@727",
       "to": "@984",
-      "evidence": "InitGrid PMF descriptor. @707 is already ov060's data temp; @984 is unused and the same length."
+      "evidence": "InitGrid PMF descriptor. @716 is already ov060's data temp; @984 is unused and the same length. Re-keyed from @716 to @727 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between."
     },
     {
-      "from": "@709",
+      "from": "@729",
       "to": "@849",
-      "evidence": "UpdateRipple PMF descriptor. @709 is already ov060's data temp; @849 is unused and the same length."
+      "evidence": "UpdateRipple PMF descriptor. @718 is already ov060's data temp; @849 is unused and the same length. Re-keyed from @718 to @729 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between."
     },
     {
-      "from": "@711",
+      "from": "@731",
       "to": "@851",
-      "evidence": "DrawGrid PMF descriptor. @711 is already ov060's data temp; @851 is unused and the same length."
+      "evidence": "DrawGrid PMF descriptor. @720 is already ov060's data temp; @851 is unused and the same length. Re-keyed from @720 to @731 when the opt pragma was removed (#821): the nitro/gx/g3imm.h enums and inlines take the compiler numbers in between."
     }
   ],
   "symbol_binding_rewrites": [

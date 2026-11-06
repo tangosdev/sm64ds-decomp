@@ -58,13 +58,17 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     State                       *mCurrentState;         /* 0x3bc */
     /* InitResources copies mPosX/Y/Z here. Wander/chase compare Vec3_Dist
        against this triple; several states rewrite it from the live position
-       and add a Y lift (0xc8000 / 0x12c000). 0211fd98 only reads it;
-       0211f62c writes `+= 0x12c000`.
+       and add a Y lift (0xc8000 / 0x12c000). Keep both component names and
+       the Vector3 view over the same 0x3c0-0x3cc storage. 0211fd98 only reads
+       it; 0211f62c writes `+= 0x12c000`.
        [InitResources / func_ov070_0211f62c / func_ov070_0211fae4 /
         func_ov070_0211f6e0, in src/game/actors/d_a_propeller_heyho.cpp] */
-    s32                          mHomePosX;             /* 0x3c0 */
-    s32                          mHomePosY;             /* 0x3c4 */
-    s32                          mHomePosZ;             /* 0x3c8 */
+    union {
+        struct {
+            s32 mHomePosX, mHomePosY, mHomePosZ;
+        };
+        Vector3 mHomePos; /* 0x3c0 */
+    };
     /* Attack cooldown, in frames. Behavior ticks it with DecIfAbove0_Short;
        wander skips its chase trigger while it is non-zero; fire/dive/settle exits store
        0x5a (90 frames).
@@ -130,7 +134,6 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
  * out-of-line virtual, so this TU emits the vtable. The factory is
  * `return new daPropeller_Heyho_c()`, which calls the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
-extern int _ZTV19daPropeller_Heyho_c[];
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

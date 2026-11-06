@@ -40,6 +40,8 @@ enum daObjCtMecha11_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
@@ -54,17 +56,17 @@ struct Mecha11ClsnFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-extern int DecIfAbove0_Short(char *p);
-extern int RandomIntInternal(char *p);
-extern void func_020393d4(void *p, void *v);
+/* local extern: these matching CalcLib signatures keep their names to avoid
+ * renumbering this TU's compiler-generated static-initializer aliases. */
+extern unsigned short DecIfAbove0_Short(unsigned short *p);
+extern int RandomIntInternal(int *p);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern short data_02082214[];
 extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
 extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;
 extern unsigned char data_0209f2c0[];
-extern int data_0209e650[];
 extern short data_ov035_02112b80[];
 extern CLPS_Block data_ov035_02112238;
 
@@ -124,8 +126,8 @@ int daObjCtMecha11_c::Behavior() {
     unsigned char idx = data_0209f2c0[0];
     mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
-        if (DecIfAbove0_Short((char *)&mRandTimer) == 0) {
-            int r = (unsigned short)((unsigned)RandomIntInternal((char *)data_0209e650) >> 16);
+        if (DecIfAbove0_Short((unsigned short *)&mRandTimer) == 0) {
+            int r = (unsigned short)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
             if ((unsigned)r >= 0x7fff)
                 mRandDirection = 1;
             else
@@ -164,7 +166,7 @@ int daObjCtMecha11_c::InitResources() {
     KCL_File *kf = (KCL_File *)dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;
     v.x = mPosX;

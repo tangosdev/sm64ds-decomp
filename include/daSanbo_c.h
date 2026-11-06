@@ -127,7 +127,6 @@ struct daSanbo_c : dActor_c {
 /* Inline destructor is the key function, so this TU emits the vtable. Both
  * factories are `return new daSanbo_c()`, which calls the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
-extern int _ZTV9daSanbo_c[];
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

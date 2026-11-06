@@ -1,10 +1,5 @@
 #include "types.h"
-
-/* NitroSDK's MtxFx43: a 4x3 fixed-point matrix, row by row. Not
- * include/private/mtx43.h's Mtx43, which is the same 12 words unrowed. */
-typedef struct MtxFx43 {
-    int m[4][3];
-} MtxFx43;
+#include "nitro/fx/fx.h"
 
 /* Build a rotation about Y from its sine and cosine. The particle draws pick
  * it or func_0204c0e8 out of data_02099fbc by the definition's polygon

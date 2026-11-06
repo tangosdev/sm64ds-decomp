@@ -53,7 +53,7 @@
 #include "SaveData.h"
 #include "daPly_c.h"
 #include "daObjMarioCap_c.h"
-#include "dCamera_c.h"
+#include "private/mky_dcamera.h"
 #include "SurfaceInfo.h"
 #include "dBgCh_Lin.h"
 #include "dBgPi.h"

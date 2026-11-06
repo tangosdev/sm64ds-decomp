@@ -4,10 +4,8 @@
  * (actor 0x114) in State6. Behavior dispatches State0..State7 through
  * data_ov100_02148628, a pointer-to-member table.
  *
- * `#pragma defer_codegen off` is load-bearing. It makes the
- * `#pragma opt_common_subs` bracket around State2 bind (without the pair
- * State2 is 8 bytes short of 0x244) and it emits .text in source order, so
- * this file is ROM-ascending: D1, D0, State7..State0, CleanupResources,
+ * `#pragma defer_codegen off` is load-bearing: it emits .text in source
+ * order, so this file is ROM-ascending: D1, D0, State7..State0, CleanupResources,
  * OnPendingDestroy, Render, Behavior, InitResources, classInit
  * (0x02140d80..0x02141f04). Do not reorder the functions without the pragma.
  *
@@ -38,7 +36,7 @@
  * - Behavior DropShadowRadHeight: method form is 0x24c vs 0x22c (+0x20,
  *   both calls). Fix12<int> by value.
  * - Behavior scratch matrix: Matrix4x3 assignment is 0x264 vs 0x22c.
- *   Flat Mtx copy is the ROM ldm/stm; the real type's translation is a
+ *   The flat Mtx43 copy is the ROM ldm/stm; the real type's translation is a
  *   Vector3 and runs ~Vector3.
  * - State0: building the angle triple before reading param1 differs by
  *   10 words.
@@ -60,18 +58,17 @@ enum daBtfly_c_AssetId {
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
+#include "LevelRng.h"
 
-/* Makes the per-member `#pragma opt_common_subs` bracket around State2 bind.
- * Without it mwccarm defers codegen and the last file-global state wins. */
+/* Lays .text down in source order (see the note at the top). */
 #pragma defer_codegen off
 
-/* Flat 12-word copy. Assigning Matrix4x3 would run ~Vector3 on its translation. */
-struct Mtx { int w[12]; };
+/* The model-matrix copies go through Mtx43, a flat 12-word copy. Assigning
+ * Matrix4x3 would run ~Vector3 on its translation. */
 
-/* No destructor. dCcAcPos_c::Init's offset argument is passed as a pointer;
- * a stack Vector3 here would emit ~Vector3. */
-struct Vec3 { s32 x, y, z; };
-
+/* InitResources' collider offset is a VecFx32. dCcAcPos_c::Init's offset
+ * argument is passed as a pointer; a stack Vector3 here would emit ~Vector3. */
 typedef void (daBtfly_c::*ButterflyState)();
 
 /* File-scope objects at the end of this file construct the two resource
@@ -93,14 +90,14 @@ struct BtflyAnimationFilePtr : SharedFilePtr {
 
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
-s16 Vec3_HorzAngle(const void *a, const void *b);
-void Vec3_Sub(Vector3 *out, void *a, void *b);
-int Vec3_HorzLen(Vector3 *v);
+// local extern: CalcLib.h also conflicts with this TU's retained Vec3_Asr and Vec3_HorzLen prototypes.
+s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
+int Vec3_HorzLen(const Vector3 *v);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern s16 data_02082214[]; /* sin/cos; index (u16 angle >> 4) * 2 */
 extern Matrix4x3 data_020a0e68; /* scratch matrix */
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
@@ -249,12 +246,14 @@ void daBtfly_c::State5()
     if (mStateTimer >= 0x3c)
         hAngle = mWanderAngle;
     else
-        hAngle = Vec3_HorzAngle(&mPosX, &mHomePosX);
+        hAngle = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
 
     {
         s16 target;
-        if (mPosY < mHomePosY +
-                (int)(((unsigned)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) * 0x32 + 0x32000))
+        if (mPosY <
+            mHomePosY +
+                (int)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) * 0x32 +
+                      0x32000))
             target = -0x2000;
         else
             target = 0x2000;
@@ -262,7 +261,7 @@ void daBtfly_c::State5()
     }
 
     ApproachLinear(mPrevAngleY, hAngle,
-        (s16)((((unsigned)RandomIntInternal(&data_0209e650) >> 16) % 800) + 0x190));
+        (s16)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) % 800) + 0x190));
 }
 
 // @symbol _ZN9daBtfly_c6State4Ev
@@ -275,7 +274,7 @@ void daBtfly_c::State4()
         if (DistToCPlayer() >= 0xc8000)
             return;
         {
-            int sb = (int)((unsigned int)RandomIntInternal(&data_0209e650) % 3);
+            int sb = (int)((unsigned int)RandomIntInternal(&data_0209e650.value) % 3);
             int sel;
             int i;
             int mask = typ & 0x30;
@@ -292,7 +291,9 @@ void daBtfly_c::State4()
                     sel = two;
                 else
                     sel = three;
-                rot.w[1] = (s16)((s16)rot.w[1] + (s16)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10));
+                rot.w[1] =
+                    (s16)((s16)rot.w[1] +
+                          (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10));
                 dActor_c::Spawn(0x150, mask | (sel << 6), mPos, (Vector3_16 *)&rot, mAreaId, -1);
             }
             if (sb == 0)
@@ -304,9 +305,13 @@ void daBtfly_c::State4()
         }
     }
 
-    mWanderAngle = (s16)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10);
-    mPrevAngleY = (s16)(mWanderAngle + (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0x3fff));
-    mHorzSpeed = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0xfff) * 0xf + 0xf000;
+    mWanderAngle = (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
+    mPrevAngleY =
+        (s16)(mWanderAngle +
+              (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) & 0x3fff));
+    mHorzSpeed =
+        (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) & 0xfff) * 0xf +
+        0xf000;
     mStateTimer = 0;
     mState = 5;
 }
@@ -314,7 +319,7 @@ void daBtfly_c::State4()
 // @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
-    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &mHomePosX), 0x800);
+    ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX), 0x800);
     ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, (Vector3 *)&mHomePosX), 0x50);
     UpdatePos(0);
 
@@ -354,14 +359,8 @@ void daBtfly_c::State2()
     player = ClosestPlayer();
     if (player != 0) {
         int *pp;
-        int k = 0x5000;
-        int py;
-        int t;
-        int five = 5;
-        Vec3_Sub(&d, &mPosX, &player->mPosX);
-        v.x = d.x;
-        v.y = d.y;
-        v.z = d.z;
+        Vec3_Sub(&d, &mPos, &player->mPos);
+        v = d;
         if (Vec3_HorzLen(&v) > 0x4b0000)
             mState = 3;
 
@@ -373,33 +372,25 @@ void daBtfly_c::State2()
         v.x = pp[0];
         v.y = pp[1];
         v.z = pp[2];
-        t = mStateTimer * k;
-        v.x = v.x + t / 4;
-        t = mStateTimer * k;
-        v.z = v.z + t / 4;
-        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPosX, &v), 0x300);
+        v.x += mStateTimer * 0x5000 / 4;
+        v.z += mStateTimer * 0x5000 / 4;
+        ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, &v), 0x300);
 
         pp = &player->mPosX;
         v.x = pp[0];
-        py = pp[1];
-        v.y = py;
+        v.y = pp[1];
         v.z = pp[2];
-        v.y = py + ((mStateTimer * five + 0x100) << 12) / 4;
+        v.y += ((mStateTimer * 5 + 0x100) << 12) / 4;
         ApproachLinear(mPrevAngleX, Vec3_VertAngle(&mPos, &v), 0x500);
 
         UpdatePos(0);
 
-        {
-            int *p = &mPosY;
-            *p = *p - (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
-                       (short)data_02082214
-                               [((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 + 1] *
-                           (short)20 / 4);
-            int *cnt = &mStateTimer;
-            *cnt = *cnt + 1;
-            if (mStateTimer > 100)
-                mStateTimer = 0;
-        }
+        mPosY -= (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
+                  data_02082214[((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 + 1] *
+                      20 / 4);
+        mStateTimer++;
+        if (mStateTimer > 100)
+            mStateTimer = 0;
         return;
     }
     mPosX = mPrevPosX;
@@ -415,7 +406,7 @@ void daBtfly_c::State1()
         return;
     mState = 2;
     daPly_c *p = ClosestPlayer();
-    mPrevAngleY = Vec3_HorzAngle(&mPosX, &p->mPosX);
+    mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos);
 }
 
 // @symbol _ZN9daBtfly_c6State0Ev
@@ -432,13 +423,13 @@ void daBtfly_c::State0()
         do {
             Vector3 pos;
             int r;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosX;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.y = mPosY + ((int)((unsigned int)r % 40) << 13);
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosZ;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
             dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
             i++;
@@ -509,11 +500,11 @@ int daBtfly_c::Behavior()
         mAngleY = mPrevAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
         if (mUseAnimModel != 0) {
-            *(Mtx *)&mAnmModel.mat4x3 = *(Mtx *)&data_020a0e68;
+            *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
             DropShadowRadHeight(mShadowModel1, mAnmModel.mat4x3, 0x14000, 0x12c000, 0xf);
             mAnmModel.Advance();
         } else {
-            *(Mtx *)&mModel.mat4x3 = *(Mtx *)&data_020a0e68;
+            *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
             DropShadowRadHeight(mShadowModel2, mModel.mat4x3, 0x64000, 0x12c000, 0xf);
         }
     }
@@ -540,7 +531,7 @@ int daBtfly_c::InitResources()
 
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
 
-    Vec3 v;
+    VecFx32 v;
     v.x = 0;
     v.y = -0x32000;
     v.z = 0;
@@ -550,7 +541,7 @@ int daBtfly_c::InitResources()
     if (sub != 0x10 && sub != 0x20) {
         mKind = 0;
         mHorzSpeed = 0x7800;
-        mStateTimer = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 100;
+        mStateTimer = ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 100;
         if ((u32)(u8)(param1 & 0xf) > 1)
             mState = 0;
         else
@@ -563,7 +554,7 @@ int daBtfly_c::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
 
-    int r = RandomIntInternal(&data_0209e650);
+    int r = RandomIntInternal(&data_0209e650.value);
     int fc = mAnmModel.GetFrameCount();
     u32 rem = (u32)r % (u32)fc;
     mAnmModel.currFrame = (rem << 16) >> 4;

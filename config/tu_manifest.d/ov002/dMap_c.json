@@ -451,7 +451,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@515",
+      "from": "@547",
       "to": "@528",
       "evidence": "compiler temp: mwcc numbers sMapScreenCenter's registration node @511, which ov091 already defines; this row maps it to the unused same-length @528. No bytes or relocations change."
     }

@@ -766,74 +766,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@958",
+      "from": "@1022",
       "to": "@118",
-      "evidence": "mwcc emits this compiler temp as @901; batch renumber to unused same-length name, batch-2 ov065 folds on main already promote these names globally 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .data index 15, offset 0x0, size 0x8, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @951. The existing target @118 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @951 to @950 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@960",
+      "from": "@1024",
       "to": "@920",
-      "evidence": "mwcc numbers this PMF record @903 per TU and ov094 already defines a global @903, so the scratch link would multiply-define it 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .data index 13, offset 0x0, size 0x8, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @953. The existing target @920 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @953 to @952 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@964",
+      "from": "@1028",
       "to": "@119",
-      "evidence": "mwcc emits this compiler temp as @907; batch renumber to unused same-length name, batch-2 ov065 folds on main already promote these names globally 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .data index 19, offset 0x0, size 0x8, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @957. The existing target @119 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @957 to @956 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@965",
+      "from": "@1029",
       "to": "@120",
-      "evidence": "mwcc emits this compiler temp as @908; batch renumber to unused same-length name, batch-2 ov065 folds on main already promote these names globally 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 36, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @958. The existing target @120 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @958 to @957 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@966",
+      "from": "@1030",
       "to": "@121",
-      "evidence": "mwcc emits this compiler temp as @909; batch renumber to unused same-length name, batch-2 ov065 folds on main already promote these names globally 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 38, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @959. The existing target @121 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @959 to @958 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@968",
+      "from": "@1032",
       "to": "@122",
-      "evidence": "mwcc emits this compiler temp as @911; batch renumber to unused same-length name, batch-2 ov065 folds on main already promote these names globally 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 42, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @961. The existing target @122 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @961 to @960 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@970",
+      "from": "@1034",
       "to": "@123",
-      "evidence": "mwcc emits this compiler temp as @913; batch renumber to unused same-length name, batch-2 ov065 folds on main already promote these names globally 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 46, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @963. The existing target @123 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @963 to @962 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@972",
+      "from": "@1036",
       "to": "@124",
-      "evidence": "mwcc emits this compiler temp as @915; batch renumber to unused same-length name, batch-2 ov065 folds on main already promote these names globally 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 37, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @965. The existing target @124 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @965 to @964 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@956",
+      "from": "@1020",
       "to": "@899",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @913 now; licensed under the existing pin @899 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .data index 17, offset 0x0, size 0x8, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @949. The existing target @899 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @949 to @948 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@962",
+      "from": "@1026",
       "to": "@905",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @919 now; licensed under the existing pin @905 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .data index 24, offset 0x0, size 0x8, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @955. The existing target @905 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @955 to @954 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@954",
+      "from": "@1018",
       "to": "@897",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @911 now; licensed under the existing pin @897 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .data index 8, offset 0x0, size 0x8, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @947. The existing target @897 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @947 to @946 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@971",
+      "from": "@1035",
       "to": "@914",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @928 now; licensed under the existing pin @914 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 31, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @964. The existing target @914 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @964 to @963 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@967",
+      "from": "@1031",
       "to": "@910",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @924 now; licensed under the existing pin @910 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 39, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @960. The existing target @910 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @960 to @959 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@969",
+      "from": "@1033",
       "to": "@912",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @926 now; licensed under the existing pin @912 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Untouched origin/main and candidate objects identify the same compiler-local storage in section .bss index 43, offset 0x0, size 0xc, binding STB_LOCAL; after retiring the three local CalcLib declarations its compiler name is @962. The existing target @912 is unchanged; verify its linked destination with the full ROM build. Re-keyed from @962 to @961 when the local M43w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "undefined_symbol_aliases": [

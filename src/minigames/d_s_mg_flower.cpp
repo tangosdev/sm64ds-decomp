@@ -24,15 +24,15 @@
  * comment leftovers:
  *  - The FlowerFace_* helpers are free functions over a char* record in
  *    src/minigames/unit020bfec0.cpp, so mFace is passed by address.
- *  - DealPetals' layout and shuffle loops reach the petal fields through
- *    c + i * 0x20 cast back to the scene, ((dScMgFlower_c *)p)->mPetals[0]:
- *    indexing mPetals[i] there changes the code (see its doc comment).
- *  - Behavior keeps one launder, LB, on the dragged petal's y.
+ *  - Behavior keeps one launder: the touch sample's `touchY ? touchX : touchX`,
+ *    which loads both bytes before the first cursor store.
  */
 
 #include "dScMgFlower_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "G2x.h"
 #include "PlayerInput.h"
@@ -41,23 +41,16 @@
 #include "GX.h"
 
 #pragma defer_codegen off
-#pragma opt_strength_reduction off
 
 /* The first two OAM attribute words, copied whole from the petal template. */
 struct SpriteAttr {
     int a, b;
 };
 
-/* Address launder: forces an address through an integer so mwccarm
- * rebuilds it at its use instead of sharing one register; removing it
- * changes the code. */
-#define LB(p) ((int)((int)(p)))
-
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
-extern int data_0209d4b8;
 extern s16 data_02082214[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
@@ -66,12 +59,6 @@ typedef struct V2 {
     int x;
     int y;
 } V2;
-/* Position-only view retaining the petal stride from a +0x04 base. */
-typedef struct Cell {
-    int x;
-    int y;
-    char pad[0x18];
-} Cell;
 void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 int Vec2_Len(V2 *p);
 void FreeGfxSlotsById(int a);
@@ -79,8 +66,8 @@ void *Ov004_LoadFileByPath(void *arg);
 void DecompressLZ16(int src, void *dst);
 void Ov004_Deallocate(void *ptr);
 extern int data_0208ee44;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 }
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
@@ -135,22 +122,13 @@ void dScMgFlower_c::UpdatePetals() {
  * chance of 20-21, otherwise 8-15). The petals are laid out on a circle
  * (angle = base + i * full turn / count, a (0, 3.0) offset rotated by that
  * angle and moved to (8.0, 6.0)), shuffled by swapping angle and position
- * with random partners, and the round state is reset.
- *
- * The layout and shuffle loops step a petal pointer, c + i * 0x20, and
- * cast it back to the scene: &mPetals[i].angle makes the function 0xc
- * bytes longer, mPetals[i].y 4 bytes longer, and &mPetals[i].x and the
- * indexed swap reorder registers. pAngle and pX must stay block locals with
- * pX declared after the angle store, and the swap temp must be a Vec2 (its
- * empty destructor keeps its stack slot). */
+ * with random partners, and the round state is reset. The rotation takes
+ * the angle signed; the swap moves it as the stored u16. */
 void dScMgFlower_c::DealPetals() {
     dScMgFlower_c *self = this;
-    char *c = (char *)self;
     unsigned int roll;
     int shuffleIndex;
     int petalIndex;
-    int angle;
-    int *pPos;
     int clearIndex;
     int baseAngle;
 
@@ -172,68 +150,47 @@ void dScMgFlower_c::DealPetals() {
         self->mPetals[clearIndex].fallSpeed = 0;
     }
     if (self->mHoldTimer == 0x14) {
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         self->mPetalsLeft = ((roll * 2) >> 15) + 1;
     } else {
-        int raw = RandomIntInternal(&data_0209d4b8);
+        int raw = RandomIntInternal(&data_0209d4b8.value);
         roll = ((unsigned int)raw >> 16) & 0x7fff;
         if (((roll * 10) >> 15) == 0) {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             self->mPetalsLeft = ((roll * 2) >> 15) + 0x14;
         } else {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             self->mPetalsLeft = ((roll * 8) >> 15) + 8;
         }
     }
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     baseAngle = (roll * 0x10000) >> 15;
-    petalIndex = 0;
-    if (self->mPetalsLeft > 0) {
-        pPos = &self->mPetals[0].x;
-        angle = 0;
-        do {
-            s16 *pAngle = &((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].angle;
-            *pAngle = baseAngle + angle / self->mPetalsLeft;
-            {
-                s32 *pX = &((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].x;
-                *pX = 0;
-                ((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].y = 0x30000;
-                func_0203d388(pPos, *pAngle);
-                *pX += 0x80000;
-                ((dScMgFlower_c *)(c + petalIndex * 0x20))->mPetals[0].y += 0x60000;
-            }
-            self->mPetals[petalIndex].active = 1;
-            petalIndex++;
-            angle += 0x10000;
-            pPos += 8;
-        } while (petalIndex < self->mPetalsLeft);
+    for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
+        self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
+        self->mPetals[petalIndex].x = 0;
+        self->mPetals[petalIndex].y = 0x30000;
+        func_0203d388(&self->mPetals[petalIndex].x, (s16)self->mPetals[petalIndex].angle);
+        self->mPetals[petalIndex].x += 0x80000;
+        self->mPetals[petalIndex].y += 0x60000;
+        self->mPetals[petalIndex].active = 1;
     }
-    shuffleIndex = 0;
-    if (self->mPetalsLeft > 0) {
-        do {
-            int swapIndex;
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
-            swapIndex = (self->mPetalsLeft * roll) >> 15;
-            if (swapIndex != shuffleIndex) {
-                char *shuffleBase = c + shuffleIndex * 0x20;
-                char *swapBase = c + swapIndex * 0x20;
-                u16 savedAngle;
-                dScMgFlower_c::Vec2 savedPosition;
-                savedAngle = *(u16 *)&((dScMgFlower_c *)shuffleBase)->mPetals[0].angle;
-                *(u16 *)&((dScMgFlower_c *)shuffleBase)->mPetals[0].angle =
-                    *(u16 *)&((dScMgFlower_c *)swapBase)->mPetals[0].angle;
-                *(u16 *)&((dScMgFlower_c *)swapBase)->mPetals[0].angle = savedAngle;
-                savedPosition.x = ((dScMgFlower_c *)shuffleBase)->mPetals[0].x;
-                savedPosition.y = ((dScMgFlower_c *)shuffleBase)->mPetals[0].y;
-                ((dScMgFlower_c *)shuffleBase)->mPetals[0].x =
-                    ((dScMgFlower_c *)swapBase)->mPetals[0].x;
-                ((dScMgFlower_c *)shuffleBase)->mPetals[0].y =
-                    ((dScMgFlower_c *)swapBase)->mPetals[0].y;
-                ((dScMgFlower_c *)swapBase)->mPetals[0].x = savedPosition.x;
-                ((dScMgFlower_c *)swapBase)->mPetals[0].y = savedPosition.y;
-            }
-            shuffleIndex++;
-        } while (shuffleIndex < self->mPetalsLeft);
+    for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
+        int swapIndex;
+        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
+        swapIndex = (self->mPetalsLeft * roll) >> 15;
+        if (swapIndex != shuffleIndex) {
+            u16 savedAngle;
+            dScMgFlower_c::Vec2 savedPosition;
+            savedAngle = self->mPetals[shuffleIndex].angle;
+            self->mPetals[shuffleIndex].angle = self->mPetals[swapIndex].angle;
+            self->mPetals[swapIndex].angle = savedAngle;
+            savedPosition.x = self->mPetals[shuffleIndex].x;
+            savedPosition.y = self->mPetals[shuffleIndex].y;
+            self->mPetals[shuffleIndex].x = self->mPetals[swapIndex].x;
+            self->mPetals[shuffleIndex].y = self->mPetals[swapIndex].y;
+            self->mPetals[swapIndex].x = savedPosition.x;
+            self->mPetals[swapIndex].y = savedPosition.y;
+        }
     }
     self->mHeldPetal = -1;
     self->mPetalToggle = 0;
@@ -290,7 +247,7 @@ s32 dScMgFlower_c::Render() {
             if (mHeldPetal == i)
                 palette = 0;
             Mg_RenderSubSpriteScaled(&attr, mPetals[i].x >> 12, mPetals[i].y >> 12, -1, palette,
-                                     0x1000, (u16)(s16)((u16)mPetals[i].angle + 0x8000));
+                                     0x1000, (s16)(mPetals[i].angle + 0x8000));
         }
     }
 
@@ -302,11 +259,10 @@ s32 dScMgFlower_c::Render() {
 // @symbol _ZN13dScMgFlower_c8BehaviorEv
 /* Slot 6, the whole minigame: pick up a petal within the stylus radius, drag it,
  * drop it, flip "loves me" and "loves me not", and run the end-of-round
- * results. LB is a launder, not a cast (see above), and the pragma
- * around this function is required. */
+ * results. */
+/* Kept: the ROM re-reads gTouchHeld[playerSlot * 4] before the grab test; CSE reuses the first read. */
 #pragma opt_common_subs off
 s32 dScMgFlower_c::Behavior() {
-    struct dScMgFlower_c *self = this;
     int releaseIndex;
     int playerSlot;
     int newlyCounted;
@@ -314,44 +270,44 @@ s32 dScMgFlower_c::Behavior() {
     V2 toCursor2;
     V2 drag;
 
-    if (self->mPromptBlinkCount == 0) {
-        self->mPromptEnabled = 1;
-        self->mPromptBlinkCount = 1;
-        self->mPromptBlinkTimer = 0;
+    if (mPromptBlinkCount == 0) {
+        mPromptEnabled = 1;
+        mPromptBlinkCount = 1;
+        mPromptBlinkTimer = 0;
     }
-    if (self->mHintTimer > 0) {
-        if (self->mHeldPetal == -1) {
-            self->mHintTimer -= 1;
-            if (self->mHintTimer <= 0) {
-                if (self->mPetalsLeft >= 1)
-                    self->mFaceSprite = 2;
+    if (mHintTimer > 0) {
+        if (mHeldPetal == -1) {
+            mHintTimer -= 1;
+            if (mHintTimer <= 0) {
+                if (mPetalsLeft >= 1)
+                    mFaceSprite = 2;
             }
         } else {
-            self->mHintTimer = 0x3c;
+            mHintTimer = 0x3c;
         }
     }
-    switch (self->mState) {
+    switch (mState) {
     case 0:
-        self->mPrevCursorX = self->mCursorX;
-        self->mPrevCursorY = self->mCursorY;
+        mPrevCursorX = mCursorX;
+        mPrevCursorY = mCursorY;
         playerSlot = gActivePlayerSlot;
         if (gTouchHeld[playerSlot * 4] != 0) {
             int touchY = gTouchY[playerSlot * 4];
             int touchX = gTouchX[playerSlot * 4];
-            self->mCursorX = (touchY ? touchX : touchX) << 12;
-            self->mCursorY = touchY << 12;
+            mCursorX = (touchY ? touchX : touchX) << 12;
+            mCursorY = touchY << 12;
         }
-        if (self->mHoldTimer > 0x14) {
-            if (self->mPetalsLeft > 0) {
-                for (releaseIndex = 0; releaseIndex < self->mPetalsLeft; releaseIndex++) {
-                    self->mPetals[releaseIndex].released = 1;
-                    self->mPetals[releaseIndex].counted = 1;
+        if (mHoldTimer > 0x14) {
+            if (mPetalsLeft > 0) {
+                for (releaseIndex = 0; releaseIndex < mPetalsLeft; releaseIndex++) {
+                    mPetals[releaseIndex].released = 1;
+                    mPetals[releaseIndex].counted = 1;
                 }
-                self->mPetalsLeft = 0;
+                mPetalsLeft = 0;
                 Sound::PlayBank2_2D(0x10d);
                 FreeGfxSlotsById(0x1d);
             }
-        } else if (self->mHeldPetal < 0) {
+        } else if (mHeldPetal < 0) {
             int touchPressed;
             if (gTouchHeld[playerSlot * 4] != 0 && gTouchEdge[playerSlot * 4] != 0)
                 touchPressed = 1;
@@ -360,140 +316,131 @@ s32 dScMgFlower_c::Behavior() {
             /* Prefer attached petals; then allow re-grabbing a falling petal. */
             if (touchPressed != 0) {
                 int attachedIndex;
-                V2 *petalPos = (V2 *)&self->mPetals[0].x;
                 for (attachedIndex = 0; attachedIndex < 0x16; attachedIndex++) {
-                    if (self->mPetals[attachedIndex].active != 0 &&
-                        self->mPetals[attachedIndex].held != 1 &&
-                        self->mPetals[attachedIndex].released != 1) {
+                    if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
+                        mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
-                        Vec2_Sub(&toCursor, petalPos, (V2 *)&self->mCursorX);
+                        Vec2_Sub(&toCursor, (V2 *)&mPetals[attachedIndex].x, (V2 *)&mCursorX);
                         withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
-                            self->mPetals[attachedIndex].held = 1;
-                            self->mPetals[attachedIndex].driftX = 0;
-                            self->mPetals[attachedIndex].fallSpeed = 0;
-                            self->mHeldPetal = attachedIndex;
-                            self->mPetals[attachedIndex].touchStartX = self->mCursorX;
-                            self->mPetals[attachedIndex].touchStartY = self->mCursorY;
+                            mPetals[attachedIndex].held = 1;
+                            mPetals[attachedIndex].driftX = 0;
+                            mPetals[attachedIndex].fallSpeed = 0;
+                            mHeldPetal = attachedIndex;
+                            mPetals[attachedIndex].touchStartX = mCursorX;
+                            mPetals[attachedIndex].touchStartY = mCursorY;
                             FreeGfxSlotsById(0x1d);
-                            self->mFaceSprite = 2;
+                            mFaceSprite = 2;
                             break;
                         }
                     }
-                    petalPos = (V2 *)((char *)petalPos + sizeof(dScMgFlower_c::Petal));
                 }
-                if (self->mHeldPetal < 0) {
+                if (mHeldPetal < 0) {
                     int freeIndex;
-                    V2 *petalPos2 = (V2 *)&self->mPetals[0].x;
                     for (freeIndex = 0; freeIndex < 0x16; freeIndex++) {
-                        if (self->mPetals[freeIndex].active != 0 &&
-                            self->mPetals[freeIndex].held != 1) {
+                        if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
-                            Vec2_Sub(&toCursor2, petalPos2, (V2 *)&self->mCursorX);
+                            Vec2_Sub(&toCursor2, (V2 *)&mPetals[freeIndex].x, (V2 *)&mCursorX);
                             withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
                             if (withinGrabRadius2 != 0) {
-                                self->mPetals[freeIndex].held = 1;
-                                self->mPetals[freeIndex].driftX = 0;
-                                self->mPetals[freeIndex].fallSpeed = 0;
-                                self->mHeldPetal = freeIndex;
-                                self->mPetals[freeIndex].touchStartX = self->mCursorX;
-                                self->mPetals[freeIndex].touchStartY = self->mCursorY;
+                                mPetals[freeIndex].held = 1;
+                                mPetals[freeIndex].driftX = 0;
+                                mPetals[freeIndex].fallSpeed = 0;
+                                mHeldPetal = freeIndex;
+                                mPetals[freeIndex].touchStartX = mCursorX;
+                                mPetals[freeIndex].touchStartY = mCursorY;
                                 break;
                             }
                         }
-                        petalPos2 = (V2 *)((char *)petalPos2 + sizeof(dScMgFlower_c::Petal));
                     }
                 }
             }
         } else {
             newlyCounted = 0;
             if (gTouchHeld[playerSlot * 4] != 0) {
-                Cell *positions;
-                int heldIndex;
-                Vec2_Sub(&drag, (V2 *)&self->mCursorX, (V2 *)&self->mPrevCursorX);
-                positions = (Cell *)&self->mPetals[0].x;
-                heldIndex = self->mHeldPetal;
-                positions[heldIndex].x += drag.x;
-                *(int *)LB(&positions[heldIndex].y) += drag.y;
+                Vec2_Sub(&drag, (V2 *)&mCursorX, (V2 *)&mPrevCursorX);
+                V2 *pos = (V2 *)&mPetals[mHeldPetal].x;
+                pos->x += drag.x;
+                pos->y += drag.y;
             } else {
-                if (self->mPetals[self->mHeldPetal].released == 0) {
-                    self->mPetals[self->mHeldPetal].released = 1;
-                    if (self->mPetals[self->mHeldPetal].counted == 0) {
+                if (mPetals[mHeldPetal].released == 0) {
+                    mPetals[mHeldPetal].released = 1;
+                    if (mPetals[mHeldPetal].counted == 0) {
                         newlyCounted = 1;
-                        self->mPetals[self->mHeldPetal].counted = 1;
-                        FlowerFace_PlayPetalPulled((char *)&self->mFace);
+                        mPetals[mHeldPetal].counted = 1;
+                        FlowerFace_PlayPetalPulled((char *)&mFace);
                     }
                 }
-                self->mPetals[self->mHeldPetal].held = 0;
-                self->mHeldPetal = -1;
+                mPetals[mHeldPetal].held = 0;
+                mHeldPetal = -1;
             }
             if (newlyCounted != 0) {
-                self->mPetalsLeft -= 1;
-                if (self->mPetalToggle == 1) {
-                    self->mPetalToggle = 0;
-                    if (self->mPetalsLeft >= 1) {
+                mPetalsLeft -= 1;
+                if (mPetalToggle == 1) {
+                    mPetalToggle = 0;
+                    if (mPetalsLeft >= 1) {
                         FreeGfxSlotsById(0x1d);
                         Mg_ShowBanner(0x13, 0x80, 0x18, 0, -1, 0xd);
-                        self->mFaceSprite = 3;
+                        mFaceSprite = 3;
                         Sound::PlayBank2_2D(0x104);
                     }
                 } else {
-                    self->mPetalToggle = 1;
-                    if (self->mPetalsLeft >= 1) {
+                    mPetalToggle = 1;
+                    if (mPetalsLeft >= 1) {
                         FreeGfxSlotsById(0x1d);
                         Mg_ShowBanner(0x10, 0x80, 0x18, 0, -1, 0xd);
-                        self->mFaceSprite = 1;
+                        mFaceSprite = 1;
                         Sound::PlayBank2_2D(0x103);
                     }
                 }
-                self->mHintTimer = 0x3c;
+                mHintTimer = 0x3c;
             }
         }
-        if (self->mPetalsLeft <= 0 && self->mPetalsSettled == 1) {
-            if (self->mResultTimer > 0) {
-                self->mResultTimer -= 1;
-                if (self->mResultTimer <= 0) {
-                    self->mState = 1;
+        if (mPetalsLeft <= 0 && mPetalsSettled == 1) {
+            if (mResultTimer > 0) {
+                mResultTimer -= 1;
+                if (mResultTimer <= 0) {
+                    mState = 1;
                     Mg_SetSharedState(MG_STATE_RETRY_PROMPT_WIDE);
                 }
-                if (FlowerFace_IsIdle((char *)&self->mFace) != 0) {
-                    if (self->mPetalToggle == 1)
-                        FlowerFace_PlayLike((char *)&self->mFace);
+                if (FlowerFace_IsIdle((char *)&mFace) != 0) {
+                    if (mPetalToggle == 1)
+                        FlowerFace_PlayLike((char *)&mFace);
                     else
-                        FlowerFace_PlayHate((char *)&self->mFace);
+                        FlowerFace_PlayHate((char *)&mFace);
                 }
             } else {
                 FreeGfxSlotsById(0x1d);
-                if (self->mHoldTimer > 0x14) {
-                    if (self->mPetalsSettled == 1) {
+                if (mHoldTimer > 0x14) {
+                    if (mPetalsSettled == 1) {
                         Sound::PlayBank2_2D(0x106);
-                        self->mFaceSprite = 4;
-                        self->mResultTimer = 0x3c;
+                        mFaceSprite = 4;
+                        mResultTimer = 0x3c;
                     }
                 } else {
-                    if (self->mPetalToggle == 1) {
-                        self->mFaceSprite = 0;
-                        self->mWinStreak += 1;
-                        self->mLoseStreak = 0;
-                        if (self->mWinStreak >= 3) {
+                    if (mPetalToggle == 1) {
+                        mFaceSprite = 0;
+                        mWinStreak += 1;
+                        mLoseStreak = 0;
+                        if (mWinStreak >= 3) {
                             Mg_ShowBanner(0x12, 0x80, 0x18, 0, -1, 0xd);
                             Sound::PlayBank2_2D(0x107);
-                            self->mScore += 3;
-                            if (self->mScore > 0x270f)
-                                self->mScore = 0x270f;
+                            mScore += 3;
+                            if (mScore > 0x270f)
+                                mScore = 0x270f;
                         } else {
                             Mg_ShowBanner(0x10, 0x80, 0x18, 0, -1, 0xd);
                             Sound::PlayBank2_2D(0x108);
-                            self->mScore += 1;
-                            if (self->mScore > 0x270f)
-                                self->mScore = 0x270f;
+                            mScore += 1;
+                            if (mScore > 0x270f)
+                                mScore = 0x270f;
                         }
                     } else {
-                        self->mFaceSprite = 4;
-                        self->mLoseStreak += 1;
-                        self->mWinStreak = 0;
-                        if (self->mLoseStreak >= 3) {
+                        mFaceSprite = 4;
+                        mLoseStreak += 1;
+                        mWinStreak = 0;
+                        if (mLoseStreak >= 3) {
                             Mg_ShowBanner(0x11, 0x80, 0x18, 0, -1, 0xd);
                             Sound::PlayBank2_2D(0x105);
                         } else {
@@ -501,26 +448,26 @@ s32 dScMgFlower_c::Behavior() {
                             Sound::PlayBank2_2D(0x106);
                         }
                     }
-                    self->mResultTimer = 0x3c;
+                    mResultTimer = 0x3c;
                 }
             }
         }
         UpdatePetals();
         break;
     case 1:
-        if (FlowerFace_IsIdle((char *)&self->mFace) != 0) {
-            if (self->mPetalToggle == 1)
-                FlowerFace_PlayLike((char *)&self->mFace);
+        if (FlowerFace_IsIdle((char *)&mFace) != 0) {
+            if (mPetalToggle == 1)
+                FlowerFace_PlayLike((char *)&mFace);
             else
-                FlowerFace_PlayHate((char *)&self->mFace);
+                FlowerFace_PlayHate((char *)&mFace);
         }
-        self->mPromptEnabled = 0;
+        mPromptEnabled = 0;
         UpdatePetals();
         break;
     default:
         break;
     }
-    FlowerFace_Update((char *)&self->mFace);
+    FlowerFace_Update((char *)&mFace);
     return 1;
 }
 #pragma opt_common_subs on
@@ -582,8 +529,8 @@ s32 dScMgFlower_c::InitResources() {
     *(volatile u16 *)0x4000050 = 0;
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
 
-    data_0209d45c |= 4;
-    data_0209d454 |= 0xc;
+    gMainScreenLayers |= DISPLAY_LAYER_BG2;
+    gSubScreenLayers |= 0xc;
 
     fileData = (int)Ov004_LoadFileByPath(&sFlowerNcgPath);
     DecompressLZ16(fileData, (void *)0x6400000);
@@ -606,7 +553,7 @@ s32 dScMgFlower_c::InitResources() {
     mHoldTimer = 0;
     DealPetals();
 
-    data_0209d45c |= 1;
+    gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
     FlowerFace_Load((char *)&mFace);
     Camera_InitFlowerView(pad_4660);

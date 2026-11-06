@@ -49,15 +49,9 @@ struct Matrix4x3;
 struct dExtShadowModel_c;
 #include "math/Fix12.h"
 
-/* The actor heap and its deallocator, for the inline operator delete at the end of
-   the class. data_020a0eac is the heap every actor is allocated from.
-
-   SPELT EXACTLY AS include/decl_common.h SPELLS IT. The honest second parameter is
-   Heap*, but two incompatible extern "C" declarations of one name in a single TU
-   are rejected as "illegal function overloading" -- that cost 105 files their
-   eligibility when it was tried. Fix it in decl_common.h or not at all. */
-extern "C" void _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(void *, void *);
-extern "C" void *data_020a0eac;
+/* data_020a0eac is the heap every actor is allocated from. operator delete
+   passes it to Memory::Deallocate, declared in Memory.h via fBase_c.h. */
+extern "C" mHeap::Heap_t *data_020a0eac;
 
 struct dActor_c : dBase_c {
     /* The global actor list (data_0209b468) threads through every actor: the
@@ -312,6 +306,12 @@ struct dActor_c : dBase_c {
     /* Returns the spawned daSoundObj_c: r0 is Spawn's result at the return,
        and daStar_c and daPly_c keep or test it. */
     dActor_c *SpawnSoundObj(u32 soundObjParam);
+    /* Load and release the blue coin's two shared files, for any actor that
+       can drop one. Neither touches `this`, but every caller still sets it up
+       in r0 (daEykn_c::InitResources misses without it), so these are
+       members, not free functions. */
+    void UnloadBlueCoinModel();
+    void LoadBlueCoinModel();
     s32  GetWaterHeightWDW();
     bool DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos);
 
@@ -371,7 +371,9 @@ struct dActor_c : dBase_c {
        and inlines it only when it is found in the class itself or its IMMEDIATE
        base. Without this every dActor_c-derived D0 calls the global _ZdlPv,
        which exists nowhere in this image, and comes out short. */
-    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvPN5mHeap6Heap_tE(ptr, data_020a0eac); }
+    void operator delete(void *ptr) {
+        Memory::Deallocate(ptr, data_020a0eac);
+    }
 };
 
 #else
@@ -466,5 +468,16 @@ struct dActor_c {
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dActor_c_size_must_be_0xd0[sizeof(struct dActor_c) == 0xd0 ? 1 : -1];
 #endif
+
+/* A bit of the actor update mask (gNextActorUpdateMask, copied each frame to
+   gActorUpdateMask): while the mask is non-zero, BeforeBehavior runs only the
+   actors whose mFlags share a bit with it. dScStage_c sets this one with the
+   fade out of every exit -- the VS exit screen, the course-clear exit, the pause
+   screen's exit and save-and-quit -- so play stops while the screen fades.
+   dCamera_c::Behavior also skips its FOV and shake update, dMap_c::Behavior
+   its touch handling, and dMeter_c the camera buttons (setting it at runtime
+   hid the camera arrow buttons). A plain macro, so that no new header name
+   joins the @NNN numbering. */
+#define ACTOR_UPDATE_MASK_STAGE_ENDING 0x40000000
 
 #endif

@@ -10,7 +10,7 @@
     "contiguous linker run: 0x02019584..0x02019664, 5 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all five marked `complete`).",
     "TOP EDGE: GetSoundMode (0x02019574..0x02019584) ends exactly where the run begins -- it is the tail of the Sound TU (SetSoundMode/GetSoundMode), not a Timer member. BOTTOM EDGE: TurnBacklightOff (0x02019664..0x02019698) opens the power-management/system run.",
     "CLASS COMPLETE: _ZN5Timer* names the whole class -- the cartridge has exactly these four methods plus func_0201964c, the C1 constructor (calls ResetTimer, returns this; its only caller is __sinit_Timer.cpp on the singleton Timer). No RTTI/vtable for Timer (a plain struct, sizeof 0xc per the sizeof assert history on include/Timer.hpp). Every Timer:: symbol in config/arm9/symbols.txt is inside the run.",
-    "static initializer: __sinit_02074dc4 (.init 0x02074dc4..0x02074e0c, .ctor word 0x02086b78) seeds data_0209d4b8 to 1, registers func_0201973c on node data_0209d4bc, then calls func_0201964c on data_0209d4c8. arm9 .init and .ctor follow .text TU order: Sound.cpp's .ctor ends at 0x02086b70, and the two empty sinits at 0x02086b70 and 0x02086b74 sit between that TU and this one. The .bss run 0x0209d4b8..0x0209d4d4 is the seed, its node and the Timer, and data_0209d4d4 follows it."
+    "static initializer: __sinit_02074dc4 (.init 0x02074dc4..0x02074e0c, .ctor word 0x02086b78) seeds data_0209d4b8 to 1, registers func_0201973c on node data_0209d4bc, then calls func_0201964c on gRaceTimer. arm9 .init and .ctor follow .text TU order: Sound.cpp's .ctor ends at 0x02086b70, and the two empty sinits at 0x02086b70 and 0x02086b74 sit between that TU and this one. The .bss run 0x0209d4b8..0x0209d4d4 is the seed, its node and the Timer, and data_0209d4d4 follows it."
   ],
   "sections": [
     {
@@ -77,18 +77,18 @@
       "symbol": "data_0209d4b8",
       "address": "0x0209d4b8",
       "size": "0x4",
-      "evidence": "the shared random seed (one s32). Retail __sinit_02074dc4 calls func_0203b9b4 on it with 1, then registers func_0201973c. Readers pass it to RandomIntInternal. data_0209d4bc, the registration node, follows it.",
+      "evidence": "the minigames' random state, a LevelRng (one s32, the same class as data_0209e650). Retail __sinit_02074dc4 calls func_0203b9b4 on it with 1, then registers func_0201973c. Readers pass &data_0209d4b8.value to RandomIntInternal. data_0209d4bc, the registration node, follows it.",
       "binding": "STB_GLOBAL"
     },
     {
       "symbol": "data_0209d4bc",
       "address": "0x0209d4bc",
       "size": "0xc",
-      "evidence": "compiler-generated destructor-registration node for data_0209d4b8 (mwcc emits it as @40); retail __sinit_02074dc4 passes it as the third __register_global_object argument",
+      "evidence": "compiler-generated destructor-registration node for data_0209d4b8 (mwcc emits it as @34); retail __sinit_02074dc4 passes it as the third __register_global_object argument",
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209d4c8",
+      "symbol": "gRaceTimer",
       "address": "0x0209d4c8",
       "size": "0xc",
       "evidence": "the namespace-scope Timer (sizeof 0xc). Retail __sinit_02074dc4 calls func_0201964c on it and registers no destructor. The stage, the HUD and the player already declare it as Timer. data_0209d4d4 follows it.",
@@ -97,25 +97,17 @@
   ],
   "compiler_only_output": [
     {
-      "symbol": "_ZN7RngSeedD1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_symbol": "func_0201973c",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201973c",
-      "reason": "RngSeed's inline empty destructor is the registration callback retail stores for data_0209d4b8. mwcc emits it as vague STB_LOPROC bx lr, the same four bytes as func_0201973c (arm9:0x0201973c, still defined in func_020196cc.c). That function is not defined in this object, so the duplicate is discarded and the initializer's reference becomes the import."
-    },
-    {
       "symbol": "sTimerInit",
       "disposition": "deadstrip",
-      "reason": "File-local one-byte object whose only job is to call func_0201964c(&data_0209d4c8) after the seed's destructor registration. Timer has no constructor, so the call cannot be Timer::Timer() without renaming func_0201964c. The constructor body does not touch this, the initializer does not reference the object, and the cartridge has no symbol for it."
+      "reason": "File-local one-byte object whose only job is to call func_0201964c(&gRaceTimer) after the seed's destructor registration. Timer has no constructor, so the call cannot be Timer::Timer() without renaming func_0201964c. The constructor body does not touch this, the initializer does not reference the object, and the cartridge has no symbol for it."
     }
   ],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
     "Timer is a leaf utility struct (s64 mTime at 0x0, u8 mIsRunning at 0x8): no vtable, no RTTI. Its C1 ctor func_0201964c stays an extern \"C\" helper under its address name; Timer::Timer() would rename it.",
-    "OS_GetTick (the IRQ-guarded 64-bit tick reader, REG_TM0CNT_L + data_020a6438) is declared locally. decl_common.h also declares it, but that header's `extern int data_0209d4b8` cannot be included into the TU that defines the object. It is its own TU, not a Timer member.",
+    "OS_GetTick (the IRQ-guarded 64-bit tick reader, REG_TM0CNT_L + data_020a6438) is declared locally. decl_common.h also declares it, but that header is a generated catch-all, not an interface, so this TU does not include it. It is its own TU, not a Timer member.",
     "#pragma defer_codegen off makes mwccarm emit .text in source order; the ROM's order is ascending (GetTime, StopTimer, StartTimer, ResetTimer, func_0201964c) and so is the file's.",
-    "Static initializer folded: data_0209d4b8 (RngSeed, one s32 seeded to 1) and data_0209d4c8 (the Timer) are defined in this TU. mwcc emits __sinit_Timer.cpp: func_0203b9b4, __register_global_object of the vague destructor, then func_0201964c. The handwritten src/unnamed/arm9/0207/__sinit_02074dc4.c is retired. The node is renamed from @40 (already ov081's) to data_0209d4bc. The vague destructor is a canonical duplicate of func_0201973c, which stays where it is. sTimerInit is the sequencing object and is deadstripped.",
+    "Static initializer folded: data_0209d4b8 (a LevelRng, one s32 seeded to 1, the same class as func_0201fec8.cpp's data_0209e650) and gRaceTimer (the Timer) are defined in this TU. mwcc emits __sinit_Timer.cpp: func_0203b9b4 (LevelRng's inline constructor, defined here as func_0201fec8.cpp defines it), __register_global_object of ~LevelRng, then func_0201964c. The handwritten src/unnamed/arm9/0207/__sinit_02074dc4.c is retired. The node is renamed from its compiler number (now @34; @40 is already ov081's) to data_0209d4bc. ~LevelRng is declared, not defined, so it is not emitted; it aliases func_0201973c, which stays in func_020196cc.c (the class was the file-local RngSeed, whose vague inline destructor was a canonical duplicate of func_0201973c). sTimerInit is the sequencing object and is deadstripped.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
   ],
   "verification": {
@@ -252,7 +244,7 @@
       "address": "0x02074dc4",
       "size": "0x48",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer for data_0209d4b8 and data_0209d4c8 is raw-byte-identical to retail __sinit_02074dc4 (0x48: seed store via func_0203b9b4, one registration, func_0201964c, four pool words)"
+      "evidence": "compiler-generated static initializer for data_0209d4b8 and gRaceTimer is raw-byte-identical to retail __sinit_02074dc4 (0x48: seed store via func_0203b9b4, one registration, func_0201964c, four pool words)"
     }
   ],
   "ctor": [
@@ -264,7 +256,15 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "undefined_symbol_aliases": [],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN8LevelRngD1Ev",
+      "canonical_symbol": "func_0201973c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0201973c",
+      "evidence": "LevelRng's destructor is declared in include/LevelRng.h and not emitted here. Retail stores func_0201973c, the empty destructor already defined in func_020196cc.c, the same one func_0201fec8.cpp's data_0209e650 registers."
+    }
+  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_Timer.cpp",
@@ -287,9 +287,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@40",
+      "from": "@34",
       "to": "data_0209d4bc",
-      "evidence": "compiler temp: the destructor-registration node for data_0209d4b8. mwcc numbers it @40, which ov081 already defines, so it keeps its configured address name"
+      "evidence": "compiler temp: the destructor-registration node for data_0209d4b8 (0x0209d4bc). mwcc numbered it @40, which ov081 already defines, so it keeps its configured address name. Re-keyed from @40 to @34 when the file-local RngSeed struct (its inline constructor and destructor) was retired for include/LevelRng.h, which shifted this local number (#4570)."
     }
   ],
   "relocations": [
@@ -358,7 +358,7 @@
       "source": "0x02074e08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209d4c8",
+      "symbol": "gRaceTimer",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209d4c8"

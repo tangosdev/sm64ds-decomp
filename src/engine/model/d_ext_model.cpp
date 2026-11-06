@@ -39,6 +39,7 @@
    twelve words under it, where the structured Matrix3x3 + Vector3 spelling
    scalarizes and lands +0x1c bytes long. */
 #include "common.h"
+#include "math/MtxStack.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
 #include "dExtBlendAnmModel_c.h"
@@ -57,9 +58,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
-extern Matrix4x3 data_020a0e68; /* local extern: dExtShadowModel_c's shared render matrix scratch */
-/* local extern: no header declares it */
-void MulMat4x3Mat4x3(const Matrix4x3 *m1, const Matrix4x3 *m0, Matrix4x3 *mF);
 /* local extern: no header declares it; data.transforms-bone walk in Virtual10 */
 void func_02045074(ModelComponents *data, BMD_Bone *bones);
 /* local extern: no header declares it; sizes the transforms buffer from the file */
@@ -81,9 +79,9 @@ void func_0203cbc0(void *ptr);
    defines this veneer for the host). */
 void *func_0203cc0c(u32 size);
 #endif
-/* local extern: LoadFile.c defines int(int). This is the spelling
-   LoadAndSetFile's shard matched (banked return and parameter rows). */
-void *LoadFile(u16 ov0ID);
+/* local extern: LoadFile.c defines int(int); the file comes back as a
+   pointer here (banked return row). */
+void *LoadFile(int ov0ID);
 /* local extern: func_020469e0.c defines int(int *). The caller's shard
    matched this spelling (banked rows). */
 int func_020469e0(void *ptr);
@@ -175,21 +173,6 @@ struct CommonModelData {
     ModelComponents *components; /* 0x04 */
     void *buffer;                /* 0x08 */
 };
-
-#ifdef _MSC_VER
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAME, AND MSVC NEVER EMITS IT. MSVC
- * folds the Itanium destructor variants into the one ~dExtFrameCtrl_c() it
- * emits, so this arm spells out, in terms of the destructor defined
- * below, what the deleting destructor does: the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. It sits ahead of the class's definitions so no ROM symbol's
- * region claims it. Nothing here reaches mwccarm. */
-extern "C" dExtFrameCtrl_c *_ZN15dExtFrameCtrl_cD0Ev(dExtFrameCtrl_c *thiz) {
-    thiz->dExtFrameCtrl_c::~dExtFrameCtrl_c();
-    dExtFrameCtrl_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 /* ---------------------------------------------------------------------------
    dExtModel_c and dExtSimpleModel_c, 0x020169d8..0x02017168: the
@@ -364,13 +347,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
 
 // @symbol _ZN17dExtSimpleModel_c9Virtual10ER9Matrix4x3
 void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
-    /* The copy is one flat 12-word ldm/stm run in the ROM. CW copies the
-       nested Matrix4x3 (Matrix3x3 + Vector3) memberwise, which is bigger,
-       so it goes through a flat 12-word view instead. */
-    struct Mtx12w {
-        Fix12i m[12];
-    };
-    *(Mtx12w *)data.transforms = *(const Mtx12w *)&mat;
+    *data.transforms = mat;
     func_02045074(&data, data.modelFile->bones);
 }
 

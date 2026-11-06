@@ -61,8 +61,8 @@ int func_02039794(int x);                       /* slope-band classify */
 void func_020381cc(void *block, int idx, void **out);
 void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
-/* local extern: the ROM reads s16 normals through an s32* view. */
-s32 DotVec3(const s32 *a, const Vector3 *b);
+/* local extern: no shared header declares it; match src/DotVec3.c. */
+Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 
@@ -211,7 +211,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
                 continue;                                                          \
             dh = (d) >> 4;                                                         \
             fh = faceDot >> 4;                                                     \
-            axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&upAxis);         \
+            axisDot = DotVec3(&sn, (const Vector3 *)&upAxis);                       \
             SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);               \
             hypv = SQRT_RESULT;                                                    \
             if (IsNearZeroDivisor(hypv))                                               \
@@ -684,7 +684,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             nrm[0] = fn[0] << 2;
                             nrm[1] = fn[1] << 2;
                             nrm[2] = fn[2] << 2;
-                            if (DotVec3(nrm, (const Vector3 *)&depthDir) > depthDirMinDot) {
+                            if (DotVec3((const Vector3 *)nrm, (const Vector3 *)&depthDir) >
+                                depthDirMinDot) {
                                 if (faceDot < -f->prismThickness)
                                     continue;
                             } else {

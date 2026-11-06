@@ -119,7 +119,30 @@ def load(root=None):
     return data
 
 
+def _content_key(obj):
+    """What a manifest file MEANS, independent of whitespace and key order.
+
+    sort_keys=True, rather than a plain `==` on the parsed objects: Python's `==`
+    calls `true` equal to `1` and `1` equal to `1.0`, and those are different JSON."""
+    return json.dumps(obj, sort_keys=True, ensure_ascii=False)
+
+
 def _dump(path, obj):
+    """Write `obj` to `path` in canonical form -- unless the file already says exactly
+    that, in which case it is left alone, bytes and mtime included.
+
+    `save` is a whole-tree writer: every tubuild verify/linkcheck saves all ~500 entry
+    files to record one entry's result. Rewriting the untouched ones is harmless only
+    while every file on disk is byte-identical to the canonical dump. One hand-edited
+    file that was not (ov006/unit020bfec0.json carried a `]\\n,` after #4570) made
+    every agent's every run show a diff on a TU it never touched, which each of them
+    then had to `git checkout --` by hand. A file is rewritten when its content
+    changes, so a real update still lands in canonical form."""
+    try:
+        if _content_key(json.loads(path.read_text(encoding="utf-8"))) == _content_key(obj):
+            return
+    except (OSError, ValueError):
+        pass  # missing or unreadable: write it
     path.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n",
                     encoding="utf-8", newline="\n")
 

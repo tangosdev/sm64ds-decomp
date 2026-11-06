@@ -1,16 +1,7 @@
 #include "private/rom_header_view.h"
+#include "private/arm9_a9db8_mb_parent.h"
 
 extern void Crash(void);
-
-/* NitroSDK MbSegmentInfo: one row of a download file's segment table (same
- * names as func_02067604's and func_020678a4's views). */
-typedef struct MbSegmentInfo {
-    unsigned recv_addr;  /* 0x00 -- where the child receives it */
-    unsigned load_addr;  /* 0x04 -- where it finally runs */
-    unsigned size;       /* 0x08 */
-    unsigned target : 1; /* 0x0c -- set for the ARM7 segment */
-    unsigned rsv : 31;
-} MbSegmentInfo;
 
 /* NitroSDK MBi_SetSegmentInfo(mrh, seg_type, seg_info, child_recv_buff_addr):
  * fill one segment row for func_020678a4 (MBi_MakeDownloadFileInfo). Segment

@@ -99,6 +99,7 @@ enum daKuriKing_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -128,11 +129,10 @@ union KuriKingFreeState {
     KuriKingStateFn pmf;
 };
 
-extern "C" void Matrix4x3_FromRotationY(void* m, short ang);
+extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 extern "C" void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 extern "C" char* data_0209f318;
 extern "C" int RandomIntInternal(int *seed);
-extern "C" int data_0209e650;
 extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern "C" s16 data_02082214[];
@@ -149,7 +149,7 @@ void ChangeMusicVolume(u32 a, int f);
 }
 extern "C" int func_01ffa344(int f);
 extern "C" unsigned short data_ov074_02122e04[];
-extern "C" int ApproachAngle(void*,int,int,int,int);
+extern "C" int ApproachAngle(short *, short, int, int, int);
 extern "C" void func_ov084_021296b0(void* a, void* b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
@@ -306,7 +306,7 @@ void daKuriKing_c::func_ov074_0211f244()
         if (a != this) {
             daKuriKing_c *t = a;
             t->mVertAccel = -0xa000;
-            int rv = (unsigned int)RandomIntInternal(&data_0209e650) >> 8;
+            int rv = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
             t->mTimer = 0x30;
             t->mHorzSpeed = ((rv & 0xf) << 0xc) + 0x16000;
             t->mSpeedX = 0;
@@ -1465,7 +1465,7 @@ int daKuriKing_c::func_ov074_021216f4()
         this->mPosX = FX_MUL(data_02082214[(((u16)this->mWalkAngle) >> 4) * 2], 0x546000);
         this->mPosZ = FX_MUL(data_02082214[(((u16)this->mWalkAngle) >> 4) * 2 + 1], 0x546000);
     }
-    ApproachAngle(&this->mAngleY, (short)((this->mDirection * 0x4500) + this->mWalkAngle), 0xa, 0x800, 0x10);
+    ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
 
 // @symbol _ZN12daKuriKing_c19func_ov074_02121800Ev

@@ -23,7 +23,7 @@ extern "C" {
 /* Shared math workers.
    local extern: no header in include/ declares them. */
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-void NormalizeVec3(Vector3 *src, Vector3 *dst);
+void NormalizeVec3(const Vector3 *src, Vector3 *dst);
 int func_02053200(int v);
 /* local extern: dBgW_KcMbg's direction rotate, a free function of
    d_bg_w_kc_mbg.cpp that no header declares. */
@@ -136,12 +136,9 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 localCentre;
     /* The local query's push-out bounds, and the same bounds scaled back out.
        Plain words: Vector3 declares a destructor. */
-    struct BoxCorner {
-        s32 x, y, z;
-    };
     struct {
-        BoxCorner localMin, localMax;
-        BoxCorner scaledMin, scaledMax;
+        VecFx32 localMin, localMax;
+        VecFx32 scaledMin, scaledMax;
     } bounds;
     int inverseScale;
     int localRadius;

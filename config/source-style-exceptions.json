@@ -70,7 +70,7 @@
       "rule": "handspelled-member",
       "match": "_ZN10dScStage_c14LoadGraphics2DEbi",
       "count": 2,
-      "reason": "InitResources passes a raw int as the bool parameter; through the header's `bool e3d` InitResources stops matching (measured: dScStage_c::LoadGraphics2D(v0_6, data_0209f2f8) DIFFs), so the call keeps the mangled spelling (the member definition itself is a real dScStage_c::LoadGraphics2D).",
+      "reason": "InitResources passes a raw int as the bool parameter; through the header's `bool e3d` InitResources stops matching (measured: dScStage_c::LoadGraphics2D(v0_6, gCurrentSublevel) DIFFs), so the call keeps the mangled spelling (the member definition itself is a real dScStage_c::LoadGraphics2D).",
       "evidence": "include/dScStage_c.h:107; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
     },
     {
@@ -131,50 +131,10 @@
     },
     {
       "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN10dScEntry_c6icon_cC1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN10dScEntry_c6icon_cD1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN12OamAnimationC1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN12OamAnimationD1Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7fBase_cC2Ev",
-      "count": 2,
-      "reason": "dScEntry_c_classInit_RESULT is the RESULT profile factory, moved verbatim from the retired src/game/stages/d_s_entry_result.cpp, which spells these names on main. icon_c's and OamAnimation's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScEntry_c` expression. Follow-up: rewrite the factory as `new dScEntry_c` once dScEntry_c's constructor is reconstructed, which retires all six.",
-      "evidence": "src/game/stages/d_s_entry_result.cpp on main (2 occurrences of each of these six names); ROM ov075 0x0211a740 size 0xf4; ov075/d_s_entry_methods 9/9 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry_methods.cpp",
       "rule": "unknown-field",
       "match": "unk_287",
       "count": 1,
-      "reason": "dScEntry_c::InitResources clears byte 0x287, moved verbatim from the retired src/_ZN10dScEntry_c13InitResourcesEv.cpp (`self->unk_287 = 0` on main). include/dScEntry_c.h names the field unk_287. Its other users are in the same unit (UpdateRematchSync and EnterRematchPrompt store 0 and 0xe; func_ov075_02119dc4 clears it as a bit mask out of data_0209d45c), and data_0209d45c's role is itself unproven, so no name is invented. Follow-up: rename the header field when those helpers fold into this class and data_0209d45c is identified.",
+      "reason": "dScEntry_c::InitResources clears byte 0x287, moved verbatim from the retired src/_ZN10dScEntry_c13InitResourcesEv.cpp (`self->unk_287 = 0` on main). include/dScEntry_c.h names the field unk_287. Its other users are in the same unit (UpdateRematchSync and EnterRematchPrompt store 0 and 0xe; func_ov075_02119dc4 clears it as a bit mask out of gMainScreenLayers), and gMainScreenLayers's role is itself unproven, so no name is invented. Follow-up: rename the header field when those helpers fold into this class and gMainScreenLayers is identified.",
       "evidence": "src/_ZN10dScEntry_c13InitResourcesEv.cpp on main line 95; include/dScEntry_c.h line 33 (`u8 unk_287; /* 0x287 */`); ROM ov075 dScEntry_c::InitResources TEXT-VERIFIED in ov075/d_s_entry_methods"
     },
     {
@@ -952,6 +912,14 @@
       "count": 1,
       "reason": "func_ov002_020e444c is still a char *c offset-view function, and daPly_c declares no member at 0x5bc (the drop-shadow matrix). The member call needs a Matrix4x3 &, so the view is cast at the call; the offset was already spelled `c + 0x5bc` on main. Follow-up: name the Matrix4x3 at daPly_c+0x5bc in the layout pass, then this becomes `player->DropShadowRadHeight(player->mShadowModel, player->m<name>, ...)`.",
       "evidence": "origin/main:src/game/player/d_a_ply_methods.cpp passes `c + 0x5bc` to the mangled extern; batch 5 member call"
+    },
+    {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)b+0xd0",
+      "count": 1,
+      "reason": "daPly_c::func_ov002_020d7030 takes the object Yoshi swallows. Its callers pass that object as void *, so the member takes void *; the free function had taken char * and wrote `b + 0xd0`. 0xd0 is the first word past dActor_c (sizeof 0xd0), a field of the derived class that points back at the eater (St_DeadPit_Init clears the same word through mObjInMouth). No shared type declares it. Follow-up: name the field once the swallowable classes share a base or an interface.",
+      "evidence": "origin/main:src/game/player/d_a_ply_methods.cpp spelled `*(void **)(b + 0xd0) = a;` with `char *b`; tubuild verify ov002/daPly_c 624/624 MATCH with the cast"
     },
     {
       "path": "src/game/actors/d_a_kinopio.cpp",

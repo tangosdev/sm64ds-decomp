@@ -4,11 +4,12 @@
  * whose second word points at the status block ARM7 shares (its first
  * halfword the WM state). */
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
 extern unsigned short data_020a89a8;
-extern unsigned int *data_020a89ac;
+extern WMArm9Buf *data_020a89ac;
 
 /* WMi_CheckInitialized: WM_ERRCODE_ILLEGAL_STATE (3) before WM_Init, else
  * WM_ERRCODE_SUCCESS. */
@@ -22,7 +23,7 @@ int WMi_CheckIdle(void) {
     int result = WMi_CheckInitialized();
     if (result != 0)
         return result;
-    CP15::InvalidateDataCache(data_020a89ac[1], 2);
-    return *(unsigned short *)data_020a89ac[1] <= 1 ? 3 : 0;
+    CP15::InvalidateDataCache((unsigned int)data_020a89ac->status, 2);
+    return data_020a89ac->status->state <= 1 ? 3 : 0;
 }
 }

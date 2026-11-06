@@ -16,12 +16,14 @@
 enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 
 #include "dScMgMCarlo_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "dScMgCard_c.h"
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* Coined from the card transitions in DealIn and Update. The byte-sized
  * mState field retains its existing layout. */
@@ -49,7 +51,6 @@ extern short sMCarloBoardDelay;
 extern int sMCarloCardTotal;
 extern int sMCarloDealProgress;
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern int sMCarloCardsMoving;
 extern int sMCarloCols;
 extern int sMCarloRows;
@@ -64,7 +65,6 @@ extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d630(int *p, int m);
 extern int sMgCoinsBetPlaced;
 extern int func_0203d5dc(void *a, void *b);
-extern int sMCarloHudSprite;
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Camera_InitDealerView(void *p);
@@ -82,11 +82,11 @@ void MgCoins_StartPayout(char *p);
 extern unsigned short gMgCoinsStatus;
 extern void LoadCard2SubBg3(void *c);
 extern int GetGameLanguage(void);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern int Dealer_Load(char *p);
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char gMainScreenLayers;
+extern unsigned char gSubScreenLayers;
 }
 
 // @symbol _ZN18dMgMCarloCardObj_cC1Ev
@@ -110,15 +110,15 @@ s32 dScMgMCarlo_c::InitResources() {
 
     Mg_SetTopScreenYOffset(0x20);
     LoadCard2SubBg3(this);
-    tileData = (void *)LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
-    paletteData = (void *)LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
+    tileData = LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
+    paletteData = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(tileData, (void *)0x6600000);
     GXS::LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(tileData);
     Deallocate(paletteData);
 
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x18;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gSubScreenLayers = 0x18;
     *(unsigned short *)0x4000008 = (*(unsigned short *)0x4000008 & ~3) | 1;
     *(unsigned short *)0x400100a = *(unsigned short *)0x400100a & ~3;
     Camera_InitDealerView(pad_4660);
@@ -388,7 +388,7 @@ void dScMgMCarlo_c::RenderHud(void) {
     if (deck == 0)
         return;
     Mg_DrawNumber(0xe8, 0x28, deck, -1, -1, 0, 0);
-    Hud_RenderSprite((void *)sMCarloHudSprite, 0xe8, 0x18, -1, -1);
+    Hud_RenderSprite(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c4InitEi
@@ -802,7 +802,7 @@ int dScMgMCarlo_c::DrawCardValue(void) {
     int roll;
     for (face = 0; face < 8; face++)
         total += sMCarloFaceCounts[face];
-    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
     for (face = 0; face < 8; face++) {
         total -= sMCarloFaceCounts[face];

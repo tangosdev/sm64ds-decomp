@@ -27,7 +27,7 @@
  *   this class's old coined name -- so this TU keeps the address-true
  *   spelling.
  * - data_ov015_02113594 is the CLPS block this TU does not own;
- *   data_02082214 is arm9's sin/cos table; data_0209f220 / data_0209f2f8
+ *   data_02082214 is arm9's sin/cos table; data_0209f220 / gCurrentSublevel
  *   are arm9 scene state; g_profile_BK_LIFT01 lives outside this TU.
  * - Behavior kind 1 writes the half-turn through s16 *p = &mPrevAngleY
  *   and a u8 temporary for 0x87: a direct member add if-converts
@@ -76,16 +76,16 @@ extern BkLiftCollisionFilePtr data_ov015_02114a5c; /* collision KCL */
 extern BkLiftModelFilePtr data_ov015_02114a64;     /* step BMD */
 extern CLPS_Block data_ov015_02113594;
 extern s16 data_02082214[]; /* arm9 sin/cos table */
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 extern u8 data_0209f220;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-int DecIfAbove0_Byte(u8 *p);
+u8 DecIfAbove0_Byte(u8 *p);
 int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void func_020393c4(dBgW *collider, void *callback);
-void func_020393d4(dBgW *collider, void *callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjBk_Lift_c_classInit
@@ -104,8 +104,8 @@ extern "C" daObjBk_Lift_c *daObjBk_Lift_c_classInit() {
    collider and forwards (lift, rider) into OnStoodOn. long_calls is the
    ROM's pooled absolute tail-call. */
 #pragma long_calls on
-int daObjBk_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *rider) {
-    return ((daObjBk_Lift_c *)lift)->OnStoodOn(rider);
+void daObjBk_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *rider) {
+    static_cast<daObjBk_Lift_c *>(lift)->OnStoodOn(rider);
 }
 #pragma long_calls off
 
@@ -128,8 +128,8 @@ int daObjBk_Lift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), *(&mClsnMat),
                               0x199, mAngleY, *(&data_ov015_02113594));
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     Vector3 probePos;
     probePos.x = mPosX;
@@ -165,7 +165,7 @@ int daObjBk_Lift_c::InitResources() {
         mVertSpeed = 0xa000;
     }
 
-    if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) &&
+    if (gCurrentSublevel == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) &&
         mPosY >= 0xdac000)
         return 0;
 

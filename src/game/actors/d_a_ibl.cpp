@@ -22,7 +22,9 @@
  *   into a real Vector3. The inherited position fields remain separate scalars.
  * - Spawn still borrows this actor's flat position and angle fields through
  *   the existing reference interface; those base fields are not vector objects.
- * - data_0209f2f8 is the level id (a signed byte). The tests 6, 0x16,
+ *   CalcLib vector helpers receive temporary Vector3 pointer views over the
+ *   contiguous scalar triples at call boundaries; the actor fields stay scalars.
+ * - gCurrentSublevel is the level id (a signed byte). The tests 6, 0x16,
  *   0x18 and 0x19 have no level names here, and neither do the distances,
  *   speeds and kill heights chosen from them.
  * - func_020383f0 and func_02038414 are the two probes picked by that
@@ -47,7 +49,9 @@
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
 enum {
@@ -78,9 +82,8 @@ enum {
 /* Particle played at the ball's position where it breaks up. */
 enum { daIbl_PTCL_BREAK = 0xf };
 
-/* The model and shadow matrices, as twelve words: a copy through the C++
-   Matrix4x3 DIFFs. */
-struct M48 { int w[12]; };
+/* The model and shadow matrix copies go through the flat Mtx43: assigning
+   the C++ Matrix4x3 grows .text by 0x34 bytes. */
 
 /* Behavior's handler table, gIblKindHandlers: one pointer-to-member
    per kind, as the two words mwcc lays one out in (function or vtable
@@ -104,14 +107,11 @@ void d_a_iblPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 void func_02038414(void *p);
 int atan2_hold_d_a_ibl_1(int y, int x);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
-int Vec3_HorzLen(void *v);
-int Vec3_HorzDist(const void *a, const void *b);
-int Vec3_Equal(void *a, void *b);
 
 extern int IDENTITY_MATRIX4X3[];
 }
 
-extern signed char data_0209f2f8;
+extern signed char gCurrentSublevel;
 extern int data_02092138;
 extern s16 data_02082214[];
 
@@ -142,20 +142,6 @@ IblKindHandler gIblKindHandlers[5] = {
 daIbl_c::~daIbl_c()
 {
 }
-
-#ifdef _MSC_VER
-/* The host needs the ROM's flat D0 name, and MSVC never emits it: it folds
- * the Itanium destructor variants into the one ~daIbl_c() above. This arm
- * spells out what the deleting destructor does -- the D1 body, called
- * qualified so it is a direct call, then the class-specific operator
- * delete. Nothing here reaches mwccarm. */
-extern "C" daIbl_c *_ZN7daIbl_cD0Ev(daIbl_c *thiz)
-{
-    thiz->daIbl_c::~daIbl_c();
-    daIbl_c::operator delete(thiz);
-    return thiz;
-}
-#endif
 
 // @symbol _ZN7daIbl_c16OnAimedAtWithEggEv
 /* Returns 0x82000 (130 units). func_ov100_02141fb0 adds it to the ball's Y
@@ -239,7 +225,8 @@ void daIbl_c::func_ov100_02141fb0()
 void daIbl_c::func_ov100_02142130()
 {
     mHitWall = 0;
-    if (data_0209f2f8 == 0x19) func_020383f0(&mWithMeshClsn);
+    if (gCurrentSublevel == 0x19)
+        func_020383f0(&mWithMeshClsn);
     else func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnWall() != 0) {
         ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))
@@ -271,11 +258,11 @@ void daIbl_c::func_ov100_02142130()
    being 1.0. */
 void daIbl_c::func_ov100_02142264()
 {
-    *(M48 *)&mModel.mat4x3 = *(M48 *)IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)IDENTITY_MATRIX4X3;
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    *(M48 *)mShadowMtx = *(M48 *)&mModel.mat4x3;
+    *(Mtx43 *)mShadowMtx = *(Mtx43 *)&mModel.mat4x3;
     int k = 0x32;
     mShadowMtx[10] = (mDrawScale.x * k + mPosY) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)
@@ -475,7 +462,7 @@ void daIbl_c::func_ov100_021424c0() {
             } else {
                 mSpeedX += mFloorNormalX;
                 mSpeedZ += mFloorNormalZ;
-                mHorzSpeed = Vec3_HorzLen(&mSpeedX);
+                mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
             }
         }
     }
@@ -536,7 +523,7 @@ ground:
 
         *pa4 = *pa4 + mFloorNormalX * 3;
         *pac = *pac + mFloorNormalZ * 3;
-        mHorzSpeed = Vec3_HorzLen(pa4);
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
 
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
@@ -614,7 +601,7 @@ void daIbl_c::func_ov100_02142918()
             int *pac = &mSpeedZ;
             *pa4 = *pa4 - mWallNormalX * 3;
             *pac = *pac - mWallNormalZ * 3;
-            mHorzSpeed = Vec3_HorzLen(pa4);
+            mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
         }
         goto Lend;
     }
@@ -627,7 +614,7 @@ void daIbl_c::func_ov100_02142918()
         int *pac = &mSpeedZ;
         *pa4 = *pa4 + mFloorNormalX * 3;
         *pac = *pac + mFloorNormalZ * 3;
-        mHorzSpeed = Vec3_HorzLen(pa4);
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
     }
     if (mFloorNormalY == 0x1000 && mHorzSpeed > 0x1c000) {
         mHorzSpeed = 0x1c000;
@@ -683,7 +670,10 @@ void daIbl_c::func_ov100_02142b90()
         return;
     }
 
-    if (data_0209f2f8 == 6) r1 = 3; else r1 = 6;
+    if (gCurrentSublevel == 6)
+        r1 = 3;
+    else
+        r1 = 6;
     if (mLiveBalls >= (u32)r1) return;
 
     pl = ClosestPlayer();
@@ -705,12 +695,12 @@ void daIbl_c::func_ov100_02142b90()
     }
 
     {
-        int d = Vec3_HorzDist(&mPosX, &pos);
+        int d = Vec3_HorzDist((const Vector3 *)&mPosX, &pos);
         if (d < mMinSpawnDist) return;
         if (d > mMaxSpawnDist) return;
     }
 
-    if (data_0209f2f8 == 0x16) {
+    if (gCurrentSublevel == 0x16) {
         if (pos.y < (int)0xff63c000) return;
         mStateTimer = 0x3f;
     } else {
@@ -781,7 +771,7 @@ int daIbl_c::Behavior()
 /* Loads the model and shadow, sets gravity (-4 units/frame^2, mVertAccel
    -0x4000) and terminal velocity (-70 units/frame, -0x46000), picks the kind
    from param1's low nibble and sets up that kind. Distances and speeds below
-   are in units (0x1000 = 1). The sublevel tests read data_0209f2f8 (a signed
+   are in units (0x1000 = 1). The sublevel tests read gCurrentSublevel (a signed
    byte): 6, 0x16, 0x18 and 0x19 are the sublevels this class has special
    numbers for. */
 int daIbl_c::InitResources()
@@ -816,14 +806,14 @@ int daIbl_c::InitResources()
         mPrevNodePosY = mPosY;
         mPrevNodePosZ = mPosZ;
         mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
-        if (Vec3_Equal(&mPosX, &mNextNodePosX)) {
+        if (Vec3_Equal((const Vector3 *)&mPosX, (const Vector3 *)&mNextNodePosX)) {
             mPathNodeIndex += 1;
             mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
         }
         func_ov100_0214233c();
         mPrevAngleY = mHeadingToNode;
         mKillY = *(int *)&data_02092138;
-        d = *(signed char *)&data_0209f2f8;
+        d = *(signed char *)&gCurrentSublevel;
         /* Sublevel 0x19 is the half-size ball: speed 10 units/frame, scale
            0.5 (0x800), collider radius and height 30 units. */
         if (d == 0x19) {
@@ -842,7 +832,7 @@ int daIbl_c::InitResources()
             mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
             /* Full size: scale 1.0, collider radius and height 100 units.
                Speed per frame: 25 units in sublevel 0x18, 20 in 6, else 10. */
-            d = *(volatile signed char *)&data_0209f2f8;
+            d = *(volatile signed char *)&gCurrentSublevel;
             if (d == 0x18) {
                 mHorzSpeed = 0x19000;
                 mKillY = 0xfec78000;       /* -5000 units */
@@ -878,7 +868,7 @@ int daIbl_c::InitResources()
        0x19: 512 to 6000. Otherwise the minimum is 1024 and the maximum 7000 in
        sublevels 0x18 and 0x16, 4600 in 6, 6500 elsewhere. */
     if (kind == daIbl_KIND_SPAWNER) {
-        d = *(signed char *)&data_0209f2f8;
+        d = *(signed char *)&gCurrentSublevel;
         if (d == 0x19) {
             mMinSpawnDist = 0x200000;
             mMaxSpawnDist = 0x1770000;

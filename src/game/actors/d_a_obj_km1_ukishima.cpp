@@ -60,7 +60,7 @@ extern CLPS_Block data_ov043_02111c00;              /* the CLPS block SetFile is
  * no shared header; every caller declares them locally. */
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void func_020393d4(dBgW *bgw, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -91,7 +91,7 @@ s32 daObjKm1_Ukishima_c::InitResources() {
 
     /* The mesh moves with the actor's velocity rather than its transform --
        the island slides, it does not carry a rotating platform's matrix. */
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
 
     mPrevAngleY = mAngleY;
     mHorzSpeed = 0xa000;

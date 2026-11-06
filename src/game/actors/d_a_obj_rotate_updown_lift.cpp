@@ -5,7 +5,7 @@
  * class. param1's low nibble is the node the lift starts on. A 10-node
  * path in data_ov091_02134cdc (one 0x78-byte path per variant, each node
  * a 12-byte point) is rotated by mAngleY and added to the spawn position.
- * Variant 0 is the default path, variant 1 when data_0209f2f8 (the level
+ * Variant 0 is the default path, variant 1 when gCurrentSublevel (the level
  * id) is 7, variant 2 when the actor is HS_UPDOWN_LIFT. The step along
  * the path is data_ov091_021344e8[variant] (0x5000 for all three).
  *
@@ -57,16 +57,14 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "decl_Platform.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "math/MtxStack.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
    POD, and the copies below are three-word ldm/stm with no cleanup. */
-struct PodVec3 {
-    s32 x, y, z;
-};
 
 /* Ten nodes, 0x78 bytes. Three of these sit at data_ov091_02134cdc. */
 struct UpdownPath {
-    PodVec3 node[10];
+    VecFx32 node[10];
 };
 
 /* Node 5's Y, one word per path, stride 0x78. The symbol is 0x40 bytes
@@ -119,27 +117,28 @@ struct RotateUpdownLiftCollisionFilePtr : SharedFilePtr {
 extern UpdownPath data_ov091_02134cdc[3];
 extern UpdownTopY data_ov091_02134d1c[3];
 extern s32 data_ov091_021344e8[];
-extern VariantWords data_ov091_02134bac;
+/* Per-variant word triples InitResources copies onto the stack. The
+   0x02134bd0 triple sits after _ZTI, so it stays in the ROM gap: one
+   .data claim cannot cover both triples and leave that RTTI out. */
+VariantWords data_ov091_02134ba0 = {{0x200000, 0x200000, 0x500000}};
+VariantWords data_ov091_02134bac = {{0x3c000, 0x3c000, 0x78000}};
+VariantWords data_ov091_02134bb8 = {{0x32000, 0x32000, 0x78000}};
 extern VariantWords data_ov091_02134bd0;
-extern VariantWords data_ov091_02134bb8;
-extern VariantWords data_ov091_02134ba0;
 extern UpdownFileSlot data_ov091_02134c30[];
 extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
-extern Matrix4x3 data_020a0e68;
 extern s16 data_02082214[];
-extern s8 data_0209f2f8;
+extern s8 gCurrentSublevel;
 
 namespace cstd {
 int fdiv(int numerator, int denominator);
 }
 
 extern "C" {
-void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 ang);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void MulVec3Mat4x3(void *src, void *m, void *dst);
-void Vec3_Add(void *out, void *a, void *b);
-void Vec3_Sub(void *out, void *a, void *b);
+void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 void SubVec3(void *a, void *b, void *c);
 int LenVec3(void *v);
@@ -147,7 +146,7 @@ int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int id, const Vector3 *pos);
 /* dBgW callback setter. Its C definition takes int *; the call casts
    &mMeshCollider. */
-void func_020393d4(int *collider, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
                                             int scale, s16 angY, CLPS_Block *clps);
@@ -160,21 +159,12 @@ daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()
 {
 }
 
-#ifdef _MSC_VER
-extern "C" daObjRotateUpdownLift_c *_ZN23daObjRotateUpdownLift_cD0Ev(daObjRotateUpdownLift_c *thiz)
-{
-    thiz->daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c();
-    daObjRotateUpdownLift_c::operator delete(thiz);
-    return thiz;
-}
-#endif
-
 // 0x02130fac (0xc4)
 // @symbol func_ov091_02130fac
 /* Put a killed lift back on its spawn node. The watcher calls this. */
 void daObjRotateUpdownLift_c::func_ov091_02130fac()
 {
-    PodVec3 tmp[2];
+    VecFx32 tmp[2];
 
     mIsDead = 0;
     mAngleX = mSpawnAngleX;
@@ -187,7 +177,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
                   &data_020a0e68, &tmp[0]);
-    Vec3_Add(&tmp[1], &mBasePosX, &tmp[0]);
+    Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
     mPosY = tmp[1].y;
     mPosZ = tmp[1].z;
@@ -413,8 +403,8 @@ int daObjRotateUpdownLift_c::Behavior()
                   &data_020a0e68, &cur);
     MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[prevIndex],
                   &data_020a0e68, &prev);
-    Vec3_Add(&target, &mBasePosX, &cur);
-    Vec3_Sub(&remain, &mPosX, &target);
+    Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
+    Vec3_Sub(&remain, (const Vector3 *)&mPosX, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
     dist = LenVec3(&remain);
@@ -422,7 +412,7 @@ int daObjRotateUpdownLift_c::Behavior()
     mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
-        Vec3_Add(&snapped, &mBasePosX, &cur);
+        Vec3_Add(&snapped, (const Vector3 *)&mBasePosX, &cur);
         mPosX = snapped.x;
         mPosY = snapped.y;
         mPosZ = snapped.z;
@@ -500,14 +490,15 @@ int daObjRotateUpdownLift_c::InitResources()
         int isHs = (actorID == 0x1e);
         if (isHs)
             mVariant = 2;
-        else if (data_0209f2f8 == 7)
+        else if (gCurrentSublevel == 7)
             mVariant = 1;
     }
 
     mWaypointIndex = (u8)(param1 & 0xf);
 
     if (mWaypointIndex == 2) {
-        Vec3_Add(&spawnAt, &mBasePosX, &data_ov091_02134cdc[mVariant].node[0]);
+        Vec3_Add(&spawnAt, (const Vector3 *)&mBasePosX,
+                 (const Vector3 *)&data_ov091_02134cdc[mVariant].node[0]);
         spawnAt.y += data_ov091_02134d1c[mVariant].y;
         Spawn(0x1d, 0xffff, spawnAt, 0, mAreaId, -1);
     }
@@ -520,7 +511,7 @@ int daObjRotateUpdownLift_c::InitResources()
         node = mWaypointIndex;
         MulVec3Mat4x3(tbl + i * stride + node * 0xc, &data_020a0e68, &rotated);
     }
-    Vec3_Add(&placed, &mBasePosX, &rotated);
+    Vec3_Add(&placed, (const Vector3 *)&mBasePosX, &rotated);
     mPosX = placed.x;
     mPosY = placed.y;
     mPosZ = placed.z;
@@ -537,7 +528,7 @@ int daObjRotateUpdownLift_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)kcl, *(&mClsnMat), 0x199, mAngleY,
                               *(data_ov091_02134c38[variant].clps));
-    func_020393d4((int *)&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     {
         int py;

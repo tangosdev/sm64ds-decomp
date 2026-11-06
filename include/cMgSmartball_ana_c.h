@@ -45,6 +45,7 @@ struct cMgSmartball_ana_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
+    ~cMgSmartball_ana_c() {}
 
     /* Recovered helpers: HasBall reads the base's mTriggered (a ball has fallen
        in); Swallow is the drop itself -- arms mRespawnTimer, raises mTriggered,

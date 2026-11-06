@@ -49,10 +49,12 @@ enum dScMgSlots_AssetId {
 };
 
 #include "dScMgSlot1_c.h"
+#include "nitro/hw/registers.h"
 #include "G2.h"
 #include "dScMgSlot3_c.h"
 #include "Sound.h"
 #include "OAM.h"
+#include "OamAttr.h"
 #include "dScMgBase_c.h"
 #include "decl_common.h"
 #include "types.h"
@@ -61,6 +63,7 @@ enum dScMgSlots_AssetId {
 #include "G2x.h"
 #include "CP15.h"
 #include "GX.h"
+#include "LevelRng.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -92,7 +95,7 @@ int GetGameLanguage(void);
 void *func_02054ea8(void);
 // Retained caller ABI: narrowing to the definition's u16 adds a mask in InitMainScreenBg.
 unsigned int LoadCompressedFileAt(int fileID, void *target);
-extern unsigned char data_0209d45c;
+extern unsigned char gMainScreenLayers;
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 void Mg_AddCredits(void *c, int delta);
 void Mg_SubCredits(void *c, int val);
@@ -101,7 +104,6 @@ extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
 extern int Sound_PlayIfNotActive(int, int, int, int);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
@@ -119,12 +121,12 @@ extern SlotState pmf_Slot3_StatePayout_2;
 extern SlotState pmf_Slot3_StateWait;
 extern SlotState pmf_Slot3_StateGameOver;
 extern SlotState pmf_Slot3_StateDone;
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 
-extern u8 data_0209d454;
+extern u8 gSubScreenLayers;
 extern int data_0208ee44;
-extern void RenderOamMainScreen(void *, int, int, int, int);
-extern void *sSlotsSlotBlinkSprites;
+extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
+extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(void *c);
 extern void func_ov001_020ab3f0(void *c);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
@@ -228,7 +230,7 @@ void dScMgSlot3_c::InitMainScreenBg() {
 
     SetBg1Offset(0, 0);
 
-    data_0209d45c &= ~2;
+    gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
 
     idx = GetGameLanguage();
     LoadCompressedFileAt(sSlotPauseBgNcgByLanguage[idx], func_02054ea8());
@@ -401,29 +403,17 @@ void Slot3_StateJudge(char *c) {
 }
 }
 
-// Bracketed, not file-global: with #pragma defer_codegen off these bind to
-// the functions between them. Measured -- this member DIFFs without them and
-// the members outside them DIFF with them applied file-wide.
-#pragma opt_strength_reduction off
 // @symbol Slot3_StateSpin
 extern "C" { /* .c-derived member: C linkage for the whole block */
-/* Indexed address construction is byte-sensitive: direct member indexing
- * (scene->mReelStopped[reelIndex]) adds 4 bytes, so the per-reel arrays are
- * reached through the scene pointer stepped by the reel index, and the scroll
- * pointer is formed in two steps (measured: one step also adds 4 bytes).
- * Scalar fields are native. */
 void Slot3_StateSpin(char *c) {
     dScMgSlot3_c *scene = (dScMgSlot3_c *)c;
     u8 playerSlot;
     int touchPressed;
     int touchOffset;
     int reelIndex;
-    int one;
-    int *speedTable;
     playerSlot = gActivePlayerSlot;
     touchPressed = 0;
     touchOffset = playerSlot * 4;
-    one = 1;
     if (gTouchHeld[playerSlot * 4]) {
         if (gTouchEdge[touchOffset]) {
             touchPressed = 1;
@@ -432,46 +422,42 @@ void Slot3_StateSpin(char *c) {
     if (touchPressed != 0) {
         unsigned int touchY = gTouchY[playerSlot * 4];
         if (touchY >= 0x40 && touchY < 0x58) {
-            if (scene->mReelSpinning[0] == one)
+            if (scene->mReelSpinning[0] == 1)
                 scene->mReelSpinning[0] = 0;
         } else if (touchY >= 0x58 && touchY < 0x70) {
             if (scene->mReelSpinning[1] == 1)
                 scene->mReelSpinning[1] = 0;
         } else if (touchY >= 0x70 && touchY < 0x88) {
-            if (scene->mReelSpinning[2] == one)
+            if (scene->mReelSpinning[2] == 1)
                 scene->mReelSpinning[2] = 0;
         }
     }
-    reelIndex = 0;
-    for (; reelIndex < 3; reelIndex++) {
-        if (((dScMgSlot3_c *)(c + reelIndex))->mReelStopped[0] == 0) {
-            int *scroll = (int *)(c + reelIndex * 4);
-            int oldScroll;
+    for (reelIndex = 0; reelIndex < 3; reelIndex++) {
+        if (scene->mReelStopped[reelIndex] == 0) {
             int oldSymbol;
             int newSymbol;
-            speedTable = data_ov006_0213e948;
-            scroll = &((dScMgSlot3_c *)scroll)->mReelPos[0];
-            oldScroll = *scroll;
-            oldSymbol = (oldScroll >> 12) / 0x50;
-            if (((dScMgSlot3_c *)(c + reelIndex))->mReelReverse[0] == 1) {
-                *scroll = oldScroll - speedTable[scene->mStoppedReelCount * 3 + reelIndex];
-                if (*scroll < 0)
-                    *scroll += scene->mReelPeriod;
+            oldSymbol = (scene->mReelPos[reelIndex] >> 12) / 0x50;
+            if (scene->mReelReverse[reelIndex] == 1) {
+                scene->mReelPos[reelIndex] -=
+                    data_ov006_0213e948[scene->mStoppedReelCount * 3 + reelIndex];
+                if (scene->mReelPos[reelIndex] < 0)
+                    scene->mReelPos[reelIndex] += scene->mReelPeriod;
             } else {
-                *scroll = oldScroll + speedTable[scene->mStoppedReelCount * 3 + reelIndex];
-                if (*scroll >= scene->mReelPeriod)
-                    *scroll -= scene->mReelPeriod;
+                scene->mReelPos[reelIndex] +=
+                    data_ov006_0213e948[scene->mStoppedReelCount * 3 + reelIndex];
+                if (scene->mReelPos[reelIndex] >= scene->mReelPeriod)
+                    scene->mReelPos[reelIndex] -= scene->mReelPeriod;
             }
-            if (((dScMgSlot3_c *)(c + reelIndex))->mReelSpinning[0] == 0) {
-                newSymbol = (*scroll >> 12) / 0x50;
+            if (scene->mReelSpinning[reelIndex] == 0) {
+                newSymbol = (scene->mReelPos[reelIndex] >> 12) / 0x50;
                 if (newSymbol != oldSymbol) {
-                    if (((dScMgSlot3_c *)(c + reelIndex))->mReelReverse[0] == one)
-                        *scroll = (oldSymbol * 0x50) << 12;
+                    if (scene->mReelReverse[reelIndex] == 1)
+                        scene->mReelPos[reelIndex] = (oldSymbol * 0x50) << 12;
                     else
-                        *scroll = (newSymbol * 0x50) << 12;
+                        scene->mReelPos[reelIndex] = (newSymbol * 0x50) << 12;
                     Slot3_ReelDigits(c, reelIndex);
-                    ((dScMgSlot3_c *)(c + reelIndex))->mReelStopped[0] = 1;
-                    scene->mStoppedReelCount += one;
+                    scene->mReelStopped[reelIndex] = 1;
+                    scene->mStoppedReelCount++;
                     scene->mFrameCounter = 0;
                     Sound::PlayBank2_2D(0x1a9);
                 }
@@ -485,8 +471,6 @@ void Slot3_StateSpin(char *c) {
     }
 }
 }
-
-#pragma opt_strength_reduction on
 
 // @symbol Slot3_StateIntro
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -581,7 +565,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             mReelReverse[2] = 1;
         } else {
             for (i = 0; i < 3; i++) {
-                if ((u8)(((u32)RandomIntInternal(&data_0209e650) >> 16) & 1)) {
+                if ((u8)(((u32)RandomIntInternal(&data_0209e650.value) >> 16) & 1)) {
                     mReelReverse[i] = 1;
                 } else {
                     mReelReverse[i] = 0;
@@ -589,7 +573,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             }
         }
 
-        mNextWinSymbol = ((u32)RandomIntInternal(&data_0209e650) >> 16) % mStripLength;
+        mNextWinSymbol = ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % mStripLength;
         if (mode != 4) {
             mReelDrawY = 0;
             mWinSymbol = mNextWinSymbol;
@@ -641,6 +625,7 @@ void dScMgSlot3_c::StartRound(int mode) {
 // Bracketed, not file-global: with #pragma defer_codegen off these bind to
 // the functions between them. Measured -- this member DIFFs without them and
 // the members outside them DIFF with them applied file-wide.
+// Kept: pragma-free member spellings match except the mReelPos[i] load, which needs it.
 #pragma opt_strength_reduction off
 // @symbol _ZN12dScMgSlot3_c6RenderEv
 /* dScMgSlot3_c::Render -- vtable slot 9.
@@ -656,34 +641,34 @@ void dScMgSlot3_c::StartRound(int mode) {
  * The pragma is load-bearing, not tidying; the `(int)` launder on the two indexed
  * reads of mReelPos (0x4fe4) and mReelWinPos (0x4ff4) is there for the same
  * reason, and those two stay raw: every member spelling of them DIFFs
- * (measured). Only the receiver changed:
- * `self` is `this` now instead of a char* parameter cast back to the class. */
+ * (measured). So do the row walks through `p` and the y counters in the two
+ * reel passes and the mResultSymbols reads in the marker scan; mReelStopped[i]
+ * and the plain members take their real spellings. */
 s32 dScMgSlot3_c::Render() {
     char *c = (char *)this;
-    struct dScMgSlot3_c *self = this;
-    int i, j;
+    int i;
 
-    Camera_InitSlotsView((char *)self->pad_4660);
-    Mascot_Draw((char *)&self->mMascot);
+    Camera_InitSlotsView((char *)pad_4660);
+    Mascot_Draw((char *)&mMascot);
 
-    if (self->mReelDrawY > 0) {
+    if (mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[self->mWinSymbol * 3 + i], 0x80,
-                        self->mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80,
+                        mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
         }
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[self->mNextWinSymbol * 3 + i], 0x80,
-                        self->mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mNextWinSymbol * 3 + i], 0x80,
+                        mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
         }
     } else {
         for (i = 0; i < 3; i++) {
-            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[self->mWinSymbol * 3 + i], 0x80, 0x60, -1,
-                        2, 0x1000, 0x1000, 0, 1);
+            OAM::Render(0, (OamAttr *)sSlot3FaceSprites[mWinSymbol * 3 + i], 0x80, 0x60, -1, 2,
+                        0x1000, 0x1000, 0, 1);
         }
     }
 
-    if (self->mState != 7) {
-        if (self->mState == 6) {
+    if (mState != 7) {
+        if (mState == 6) {
             int i2, j2;
             char *p = c;
             for (i2 = 0; i2 < 3; i2++) {
@@ -711,7 +696,7 @@ s32 dScMgSlot3_c::Render() {
                     Hud_RenderSprite(
                         sSlot3FaceSprites[((dScMgSlot3_c *)(p + row))->mReelStrip[0][0] * 3 + i2],
                         y - rem, 0x60, -1, -1);
-                    row = (row + 1) % self->mStripLength;
+                    row = (row + 1) % mStripLength;
                     y += 0x50;
                 }
                 p += 5;
@@ -719,18 +704,18 @@ s32 dScMgSlot3_c::Render() {
         }
     }
 
-    if (self->mStoppedReelCount < 3 && (self->mFrameCounter & 0x20)) {
+    if (mStoppedReelCount < 3 && (mFrameCounter & 0x20)) {
         int slot = 3;
         int ok = 1;
         int i3, j3;
         char *p = c;
         for (i3 = 0; i3 < 3; i3++) {
-            if (((dScMgSlot3_c *)(c + i3))->mReelStopped[0] != 0) {
+            if (mReelStopped[i3] != 0) {
                 if (slot < 3) {
-                    if (self->mWinSymbol != ((dScMgSlot3_c *)(p + slot))->mResultSymbols[0][0])
+                    if (mWinSymbol != ((dScMgSlot3_c *)(p + slot))->mResultSymbols[0][0])
                         ok = 0;
                 } else {
-                    u8 t = self->mWinSymbol;
+                    u8 t = mWinSymbol;
                     for (j3 = 0; j3 < 3; j3++) {
                         if (t == ((dScMgSlot3_c *)(p + j3))->mResultSymbols[0][0]) {
                             slot = j3;
@@ -750,13 +735,13 @@ s32 dScMgSlot3_c::Render() {
             int i4;
             int y = 0x4c;
             for (i4 = 0; i4 < 3; i4++) {
-                if (((dScMgSlot3_c *)(c + i4))->mReelStopped[0] != 0) {
+                if (mReelStopped[i4] != 0) {
                     Hud_RenderSprite(&data_ov006_0213e5dc, slot * 0x50 + 0x30, y, -1, -1);
                     count++;
                 }
                 y += 0x18;
             }
-            if ((self->mFrameCounter & 0x3f) == 0x20) {
+            if ((mFrameCounter & 0x3f) == 0x20) {
                 Sound::PlayBank2_2D(count > 1 ? 0x1ac : 0x1ab);
             }
         }
@@ -765,24 +750,24 @@ s32 dScMgSlot3_c::Render() {
     Mg_DrawCredits(c, 0xc, 0xc, 0);
     Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
 
-    if (self->mState == 3 && self->mWinColumn >= 0) {
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2],
-                              self->mWinColumn * 0x50 + 0x20, 0x28, 0);
-        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][13],
-                              self->mWinColumn * 0x50 + 0x30, 0x28, 0);
-        if (self->mWinColumn == 1) {
-            Mg_DrawBigNumber(self->mWinColumn * 0x50 + 0x40, 0x28, 6, 0, 0, 0, 0x14);
+    if (mState == 3 && mWinColumn >= 0) {
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], mWinColumn * 0x50 + 0x20,
+                              0x28, 0);
+        Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][13], mWinColumn * 0x50 + 0x30,
+                              0x28, 0);
+        if (mWinColumn == 1) {
+            Mg_DrawBigNumber(mWinColumn * 0x50 + 0x40, 0x28, 6, 0, 0, 0, 0x14);
         } else {
-            Mg_DrawBigNumber(self->mWinColumn * 0x50 + 0x40, 0x28, 3, 0, 0, 0, 0x14);
+            Mg_DrawBigNumber(mWinColumn * 0x50 + 0x40, 0x28, 3, 0, 0, 0, 0x14);
         }
-    } else if (self->mState == 4 && self->mWinColumn < 0) {
+    } else if (mState == 4 && mWinColumn < 0) {
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][2], 0x70, 0x28, 0);
         Mg_RenderSubSpriteMtx(sSlotLangSprites[GetGameLanguage()][14], 0x80, 0x28, 0);
         Mg_DrawBigNumber(0x90, 0x28, 3, 0, 0, 0, 0x28);
     }
 
-    Mg_RenderMainSpriteScaled(sSlotLamp1Sprite, 0x18, 0x30, -1, 0, 0x1000, self->mLamp1Angle);
-    Mg_RenderMainSpriteScaled(sSlotLamp2Sprite, 0x40, 0x10, -1, 0, 0x1000, self->mLamp2Angle);
+    Mg_RenderMainSpriteScaled(sSlotLamp1Sprite, 0x18, 0x30, -1, 0, 0x1000, mLamp1Angle);
+    Mg_RenderMainSpriteScaled(sSlotLamp2Sprite, 0x40, 0x10, -1, 0, 0x1000, mLamp2Angle);
 
     return 1;
 }
@@ -798,7 +783,7 @@ s32 dScMgSlot3_c::Render() {
  *
  * Steps the reel state machine through the pointer-to-member table at
  * sSlot3StateTable, ticks the frame counter at 0x503f, spins the two reel
- * offsets while state 1 is running, and flips the blend bit in data_0209d45c off a
+ * offsets while state 1 is running, and flips the blend bit in gMainScreenLayers off a
  * coin toss so the machine's lights flicker.
  *
  * The state table uses this class's pointer-to-member type.
@@ -828,11 +813,11 @@ s32 dScMgSlot3_c::Behavior() {
         }
     }
 
-    t = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 1;
+    t = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
     if (t)
-        data_0209d45c |= 2;
+        gMainScreenLayers |= DISPLAY_LAYER_BG1;
     else
-        data_0209d45c &= ~2;
+        gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
 
     return 1;
 }
@@ -857,24 +842,25 @@ s32 dScMgSlot3_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, (void *)func_02054d88());
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NCL_BIN);
-        GX::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        GXS::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NCL_BIN);
+        GX::LoadBGPltt(h, 0x60, 0x1a0);
+        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        Deallocate(h);
     }
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE02_NSC_BIN, G2::GetBG1ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NUKI_NSC_BIN, G2::GetBG2ScrPtr());
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NSC_BIN);
-        func_02056314((void *)h, 0, 0x800);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NSC_BIN);
+        func_02056314(h, 0, 0x800);
+        Deallocate(h);
     }
 
     LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6400000);
 
-    data_0209d45c = 0x1f;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
+                        DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 3;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
     *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
@@ -884,14 +870,14 @@ s32 dScMgSlot3_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6600000);
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
+        void *h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)h, 0xe0);
-        GX::LoadOBJPltt((const void *)h, 0, 0xe0);
-        GXS::LoadOBJPltt((const void *)h, 0, 0xe0);
-        Deallocate((void *)h);
+        GX::LoadOBJPltt(h, 0, 0xe0);
+        GXS::LoadOBJPltt(h, 0, 0xe0);
+        Deallocate(h);
     }
 
-    data_0209d454 = 0x14;
+    gSubScreenLayers = 0x14;
     G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     Mascot_Load((char *)&mMascot);
@@ -905,7 +891,7 @@ s32 dScMgSlot3_c::InitResources() {
     mReelDrawY = 0;
 
     for (int i = 0; i < 3; i++) {
-        int rnd = RandomIntInternal(&data_0209e650);
+        int rnd = RandomIntInternal(&data_0209e650.value);
         u32 divisor = mStripLength;
         u32 val = ((u32)rnd >> 16) % divisor;
         mReelPos[i] = val * 0x50000;
@@ -948,7 +934,7 @@ void SlotLamp_Start(void *raw) {
     SlotLamp *lamp = (SlotLamp *)raw;
     lamp->mTimer = 0x48;
     lamp->mOn = 1;
-    data_0209d454 |= 2;
+    gSubScreenLayers |= 2;
 }
 }
 
@@ -963,14 +949,14 @@ void SlotLamp_Tick(void *o_) {
         return;
     lamp->mOn ^= 1;
     if (lamp->mOn != 0)
-        data_0209d454 |= 2;
+        gSubScreenLayers |= 2;
     else
-        data_0209d454 &= ~2;
+        gSubScreenLayers &= ~2;
 }
 }
 
 // @symbol SlotLamp_Clear
-/* mPayoutLamp (0x469c, a SlotLamp) blinks bit 1 of data_0209d454 the same
+/* mPayoutLamp (0x469c, a SlotLamp) blinks bit 1 of gSubScreenLayers the same
  * way: a timer and an on flag. This clears it, 0210c180 starts it and
  * 0210c1a8 ticks it. */
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -997,7 +983,7 @@ void SlotBlink_Draw(unsigned char *raw) {
     SlotBlink *sprite = (SlotBlink *)raw;
     if (sprite->mVisible == 0)
         return;
-    RenderOamMainScreen(&sSlotsSlotBlinkSprites, sprite->mX, sprite->mY, -1, -1);
+    RenderOamMainScreen(sSlotsSlotBlinkSprites, sprite->mX, sprite->mY, -1, -1);
 }
 }
 
@@ -1504,14 +1490,14 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NCG_BIN, (void *)func_02054d88());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2::GetBG2CharPtr() + 0x7800);
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_UP_NCL_BIN);
-        GX::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_UP_NCL_BIN);
+        GX::LoadBGPltt(h, 0x60, 0x1a0);
+        Deallocate(h);
     }
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_SCORE_UP_NSC_BIN, G2::GetBG2ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NSC_BIN, G2::GetBG3ScrPtr());
 
-    data_0209d45c = 0x1c;
+    gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x1410;
@@ -1532,9 +1518,9 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN,
                          (char *)G2S::GetBG0CharPtr() + 0x7800);
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_DOWN_NCL_BIN);
-        GXS::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_DOWN_NCL_BIN);
+        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        Deallocate(h);
     }
     LoadCompressedFileAt(ASSET_D_2D_GRADE_NSC_BIN, G2S::GetBG0ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_BADWIZER_NSC_BIN, (char *)G2S::GetBG1ScrPtr() + 0x800);
@@ -1550,13 +1536,13 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);
-        GX::LoadOBJPltt((const void *)h, 0, 0x40);
-        GXS::LoadOBJPltt((const void *)h, 0, 0x40);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);
+        GX::LoadOBJPltt(h, 0, 0x40);
+        GXS::LoadOBJPltt(h, 0, 0x40);
+        Deallocate(h);
     }
 
-    data_0209d454 = 0x1d;
+    gSubScreenLayers = 0x1d;
     *(volatile u16 *)0x4000050 = 0;
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
 

@@ -611,7 +611,7 @@ struct daPly_c : dActor_c {
        everything that reacts to it (slide type, floor snap, wall push,
        ground sounds, the lava and water-run checks) while this is set.
        Talk, DeadPit, Squish, Grabbed and the scripted sequences
-       (func_ov002_020c3bdc, func_ov002_020c9ac0 and its siblings) set it;
+       (JumboStarCutsceneFalling, func_ov002_020c9ac0 and its siblings) set it;
        ChangeState and St_Respawn_Init clear it. */
     u8 mSkipGroundUpdate; /* 0x716 */
     /* func_ov002_020e444c skips DropShadowRadHeight while it is set. The
@@ -680,17 +680,15 @@ struct daPly_c : dActor_c {
        scripts is left; func_ov002_020bcdf0 keeps it on mPos and the
        player's angles. */
     dActor_c *mCapActor; /* 0x72c */
-    /* A flight along the control points data_ov002_0210a8b8 ({speed, x, y,
-       z} rows), a uniform cubic B-spline: func_ov002_020c3148 resets it,
-       ComputeSplineWeights weights four rows from mSplinePoint by the basis
-       at mSplineT (fx12), using mSplineSpan 1..5 to pick the clamped-end
-       variants, and func_ov002_020c2fec advances mSplineT by the row's
-       speed / 1000, moving to the next point at 0x1000. Driven by
-       func_ov002_020c38a0 (anim 0xc1). */
-    u8 mSplinePoint; /* 0x730 */
+    /* Super Mario 64's spline animation state (anim_spline_init/poll),
+       held per player: the jumbo star flight flies the player along
+       gJumboStarKeyframes. mSplineKeyframe is the first of the four rows
+       SplineGetWeights blends, mSplineKeyframeFraction the fx12 progress
+       through the span, and mSplineState one of the CURVE_* states. */
+    u8 mSplineKeyframe; /* 0x730 */
     u8 pad_731[0x3];
-    s32 mSplineT;             /* 0x734 */
-    s32 mSplineSpan;          /* 0x738 */
+    s32 mSplineKeyframeFraction; /* 0x734 */
+    s32 mSplineState;            /* 0x738 */
     u16 mCapFlags;            /* 0x73c */
     /* Ticks left in the current mCapFlags phase. The cap-change update loads
        it from a per-phase table, counts it down every frame, and advances
@@ -709,7 +707,7 @@ struct daPly_c : dActor_c {
        mStateTarget and mStateAnchor and steps to the even value, which then
        moves mPos by the bone's per-frame delta rotated by mAngleY and zeroes
        the bone. Armed by scripted animations (event case 14 in
-       func_ov002_020bd06c, func_ov002_020c3bdc, func_ov002_020c9ac0,
+       func_ov002_020bd06c, JumboStarCutsceneFalling, func_ov002_020c9ac0,
        func_ov002_020c9c4c) and cleared when they end. */
     u8 mRootMotionMode; /* 0x743 */
     /* A point the current state works with, written per state rather than
@@ -1097,7 +1095,7 @@ struct daPly_c : dActor_c {
     /* Non-virtual helpers that were free functions taking the player as `self`.
        Coined names; parameters stay unnamed because a named parameter in a
        class-scope declaration renumbers @NNN in every consumer TU. */
-    void ComputeSplineWeights(Fix12i *); /* func_ov002_020c3160 */
+    void SplineGetWeights(Fix12i *);     /* func_ov002_020c3160 */
     void ClearClimbCollider();           /* func_ov002_020caf68 */
     void LeaveShellRide();               /* func_ov002_020cc1f4 */
     void StartAnim0xAB();                /* func_ov002_020cd2c4 */
@@ -1165,13 +1163,13 @@ struct daPly_c : dActor_c {
     void func_ov002_020c2db8();
     void func_ov002_020c2e78();
     void func_ov002_020c2f64();
-    int func_ov002_020c2fec(int *);
-    void func_ov002_020c3148();
+    int AnimSplinePoll(int *);
+    void AnimSplineInit();
     void func_ov002_020c37a4(char *);
-    void func_ov002_020c38a0();
-    int func_ov002_020c3a48();
-    void func_ov002_020c3bdc();
-    void func_ov002_020c3cf0();
+    void JumboStarCutsceneFlying();
+    int JumboStarCutsceneTakingOff();
+    void JumboStarCutsceneFalling();
+    void AdvanceCutsceneStep();
     int func_ov002_020c3ea0();
     int func_ov002_020c4188();
     void func_ov002_020c43c4(unsigned int);
@@ -1238,6 +1236,99 @@ struct daPly_c : dActor_c {
     void func_ov002_020de428();
     int func_ov002_020df7ac();
     int func_ov002_020df840(void *, Vector3 *);
+
+    /* Helpers that were free functions taking the player as their first
+       argument. A melonDS `this` sweep saw only the player in r0, and each
+       body uses r0 as the player. Names not recovered; each keeps its
+       address. Parameters unnamed (see the Kuppa note above). */
+    void func_ov002_020be008();
+    int func_ov002_020bf27c(int);
+    int func_ov002_020bf56c(int);
+    int func_ov002_020c179c(int);
+    void func_ov002_020c18b0(int);
+    void func_ov002_020ca940();
+    void func_ov002_020cabe0();
+    void func_ov002_020cd218(int, int *, int *);
+    void func_ov002_020cd364();
+    void func_ov002_020cd448();
+    void func_ov002_020cd550();
+    void func_ov002_020cd71c();
+    int func_ov002_020ce324();
+    int func_ov002_020ce5f8();
+    void func_ov002_020ce798();
+    void func_ov002_020ce8bc(int);
+    void func_ov002_020ce9c8();
+    int func_ov002_020ceaf4();
+    int func_ov002_020ceb54();
+    void func_ov002_020ceb7c();
+    int func_ov002_020cec2c();
+    Fix12i func_ov002_020cedb0(Fix12i);
+    int func_ov002_020cef84();
+    int func_ov002_020cfaf0();
+    int func_ov002_020cfbdc();
+    int func_ov002_020cfd84(void *, void *);
+    int func_ov002_020cfea4();
+    int func_ov002_020d0178(int, int);
+    int func_ov002_020d0580();
+    int func_ov002_020d06c0();
+    void func_ov002_020d0948();
+    int func_ov002_020d225c();
+    int func_ov002_020d22ec(int);
+    int func_ov002_020d2da0();
+    int func_ov002_020d2fdc();
+    int func_ov002_020d36d8(int);
+    int func_ov002_020d3b9c();
+    void func_ov002_020d413c(int);
+    void func_ov002_020d4540();
+    void func_ov002_020d454c();
+    void func_ov002_020d45c0();
+    int func_ov002_020d4d88(int, int);
+    int func_ov002_020d5c6c();
+    int func_ov002_020d6334(int);
+    void func_ov002_020d6368();
+    int func_ov002_020d6790();
+    int func_ov002_020d7030(void *);
+    void func_ov002_020d71ec(int);
+    void func_ov002_020d80d0();
+    void func_ov002_020d8158();
+    int func_ov002_020d82f0();
+    int func_ov002_020d869c();
+    void func_ov002_020d91b8(int);
+    int func_ov002_020d91e0(int, int);
+    void func_ov002_020d9a4c();
+    void func_ov002_020d9aac();
+    void func_ov002_020db8bc(unsigned char);
+    void func_ov002_020dba0c();
+    void func_ov002_020dbf4c();
+    void func_ov002_020dc020();
+    void func_ov002_020dc174(const Vector3 *, Fix12i, Fix12i, u32, u32);
+    int func_ov002_020dd2f4();
+    int func_ov002_020dd824();
+    int func_ov002_020dde74();
+    void func_ov002_020e032c();
+    void func_ov002_020e04a4();
+    int func_ov002_020e0a64();
+    int func_ov002_020e0ccc(void *);
+    void func_ov002_020e1c20();
+    void func_ov002_020e25f0(int);
+    int func_ov002_020e2664();
+    void func_ov002_020e28d4(int, int);
+    void func_ov002_020e2ad0();
+    int func_ov002_020e2b6c();
+    int func_ov002_020e2be4();
+    int func_ov002_020e2c84();
+    void func_ov002_020e301c();
+    int func_ov002_020e3078(void *);
+    int func_ov002_020e3f90();
+    void func_ov002_020e444c();
+    void func_ov002_020e4768();
+    int func_ov002_020e4990();
+    void func_ov002_020e4bb8();
+    void func_ov002_020e5948();
+    void func_ov002_020e6350();
+    void func_ov002_020e63a4();
+    void func_ov002_020e640c();
+    void func_ov002_020e6780();
 };
 
 /* Hold both claims with the compiler rather than a comment. State's 0x18 is

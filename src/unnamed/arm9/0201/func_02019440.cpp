@@ -13,7 +13,7 @@ extern int data_0209d4b0;
 extern void func_0203bd24(void);
 extern int func_02053be0(int enable);
 extern void func_02054430(int a);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void func_0200f4f4(void);
 extern void func_0200f46c(void);
 

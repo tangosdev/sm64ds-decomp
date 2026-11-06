@@ -58,8 +58,10 @@
 #include "daPly_c.h"
 #include "dBgPi.h"
 #include "Sound.h"
+#include "Particle__System.h"
 #include "dClipper.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 /* Real C++ names. Declared here, not via decl_common.h: that header's
  * other spellings of these symbols collide with this TU. */
@@ -78,14 +80,10 @@ int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
-void  Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void  func_0203568c(int *clsn, int radius);
 void  func_02035684(int *clsn, int height);
 
 
-}
-namespace Particle {
-void RunningSlidingDustAt(int x, int y, int z);
 }
 extern "C" {
 

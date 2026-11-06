@@ -37,7 +37,7 @@
  * Leftover: g_profile_SOUND_OBJ is ov002 gap data outside this TU
  *   (S14), as is the sound table. The callback table is this file's.
  * Leftover: the data_* externs keep their linker spellings.
- *   data_0208e430 is the current sub-sound ID, owned by
+ *   gSubSoundID is the current sub-sound ID, owned by
  *   Sound::PlaySub (no verified name); MUSIC_VOLUME_LSL_12 and
  *   MESSAGE_SOUND_VOLUME_LSL_12 are in symbols/verified.tsv and
  *   renaming is symbols.txt.
@@ -70,9 +70,9 @@ bool PlaySub(u32, u32, u32, int, bool);
 
 extern "C" {
 extern SoundObjRow data_ov002_0210c080[]; /* 7 rows; row 7 is the _ZTV12daSoundObj_c header */
-extern int data_0208e430;                 /* current sub-sound ID, owned by Sound::PlaySub */
-extern int data_0209b490;                 /* MUSIC_VOLUME_LSL_12 */
-extern int data_0209b49c;                 /* MESSAGE_SOUND_VOLUME_LSL_12 */
+extern int gSubSoundID;                   /* current sub-sound ID, owned by Sound::PlaySub */
+extern int gMusicVolume;                  /* MUSIC_VOLUME_LSL_12 */
+extern int gSubVolume;                    /* MESSAGE_SOUND_VOLUME_LSL_12 */
 extern int func_0200f7f0(dActor_c *actor, u16 *counter);
 int func_ov002_020f9468(daSoundObj_c *self, u16 *counter);
 int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter);
@@ -114,7 +114,8 @@ extern "C" daSoundObj_c *daSoundObj_c_classInit()
 // @symbol _ZN12daSoundObj_c13InitResourcesEv
 /* opt_loop_invariants is file-global last-wins: this off covers the
    FindWithActorID loop below (dropping it un-matches InitResources),
-   and no other member has a loop. */
+   and no other member has a loop. Without it the loop's constant
+   arguments are hoisted: 0x15c, not 0x14c. */
 #pragma opt_loop_invariants off
 int daSoundObj_c::InitResources()
 {
@@ -130,7 +131,7 @@ int daSoundObj_c::InitResources()
     mLoop = data_ov002_0210c080[param1].loop;
 
     actor = 0;
-    current = data_0208e430;
+    current = gSubSoundID;
 
     /* 0x21 is tested twice, first and last: both compares are in the ROM,
        and dropping the duplicate un-matches InitResources. */
@@ -158,15 +159,14 @@ int daSoundObj_c::Behavior()
 {
     SoundObjectCallbackOwner *owner = (SoundObjectCallbackOwner *)this;
     int done = (owner->*data_ov002_0211110c[param1])(&mCounter);
-    if (done != 0 || mSoundID != data_0208e430
-        || (mCounter > 0xa && data_0209b49c <= 0x7f)) {
+    if (done != 0 || mSoundID != gSubSoundID || (mCounter > 0xa && gSubVolume <= 0x7f)) {
         MarkForDestruction();
-        if (data_0208e430 != 0x22) {
-            Sound::PlaySub(data_0208e430, 0x7f, 0, 0x7f000, 0);
+        if (gSubSoundID != 0x22) {
+            Sound::PlaySub(gSubSoundID, 0x7f, 0, 0x7f000, 0);
         }
     }
     if (param1 != 6) {
-        if (data_0209b490 < mVolume)
+        if (gMusicVolume < mVolume)
             mCounter = mCounterLimit;
     }
     return 1;

@@ -44,20 +44,15 @@ typedef void (*F1)(int);
  * is its ACTIVECATCHBLOCK (hand a live catch object's destructor on to a
  * rethrow at the same location, else destroy it), and func_02071ccc fills the
  * CatchInfo the same way that runtime's catch setup does ('*' pointer types
- * get a copied pointer). Names follow those roles. */
-typedef struct ActionIterator {
-    int mFuncStart;              /* 0x00 -- func_02072dac: start of the covered range */
-    unsigned char *mActionTable; /* 0x04 -- null when no table covers the PC */
-    unsigned char *mAction;      /* 0x08 -- next action byte; null at end of list */
-} ActionIterator;
-
+ * get a copied pointer). Names follow those roles. ActionIterator is shared
+ * (private/throw_context.h). */
 typedef struct CatchInfo {
     int mLocation; /* 0x00 -- func_02071ccc: ThrowContext.mLocation */
     int mTypeInfo; /* 0x04 -- func_02071ccc: ThrowContext.mThrowType */
     int mDtor;     /* 0x08 -- func_02071ccc: ThrowContext.mDtor */
 } CatchInfo;
 
-extern int func_02071910(char *c, char *s);
+extern void *func_02071910(char *c, void *s);
 extern void func_02072dac(int a, char *s);
 extern void func_02071864(char *c, char *s);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
@@ -73,7 +68,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
     for (;;) {
         p = s->mAction;
         if (p == 0) {
-            func_02072dac(func_02071910((char *)c, (char *)s), (char *)s);
+            func_02072dac((int)func_02071910((char *)c, (void *)s), (char *)s);
             if (s->mActionTable == 0)
                 std::terminate();
             func_02071864((char *)c, (char *)s);

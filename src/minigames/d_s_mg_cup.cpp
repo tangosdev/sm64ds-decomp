@@ -26,6 +26,7 @@ enum dScMgCup_c_AssetId {
 };
 
 #include "dScMgCup_c.h"
+#include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
 #include "OamAttr.h"
@@ -77,6 +78,7 @@ void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 
 struct OamAttr;
 #include "OAM.h"
+#include "LevelRng.h"
 
 extern "C" {
 extern void CupFx_Move(char *p, int a, int b);
@@ -94,7 +96,6 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
 extern int func_02053200(int x);
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
-extern int data_0209e650;
 extern RoundRow sCupRoundTable[];
 extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
@@ -126,8 +127,8 @@ void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern char data_ov006_02139df4[];
 extern PMF sCupStateTable[];
 extern AnimStep *sCupAnimTable[];
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 gMainScreenLayers;
+extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void Camera_InitPresenterView(char *);
 extern int Presenter_Load(char *);
@@ -373,7 +374,7 @@ epilogue: {
 
 extern "C" void Cup_PickShuffleSpeed(char *raw) {
     dScMgCup_c *self = (dScMgCup_c *)raw;
-    u32 rnd = (u32)RandomIntInternal(&data_0209e650);
+    u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
     u32 bits = rnd >> 0x10;
     int speedIndex;
     int swapPair;
@@ -412,7 +413,7 @@ extern "C" void Cup_PickShuffleSpeed(char *raw) {
             goto set0;
         }
         {
-            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650);
+            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650.value);
             if (((fakeOutRoll >> 0x10) & 7) != 0) {
                 goto set0;
             }
@@ -452,7 +453,6 @@ void dScMgCup_c::StateFinish() {
 }
 
 // @symbol _ZN10dScMgCup_c11StateResultEv
-#pragma push
 void dScMgCup_c::StateResult() {
     int score;
     int i;
@@ -486,11 +486,8 @@ void dScMgCup_c::StateResult() {
     mState = 6;
     mPromptEnabled = 0;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c11StateSelectEv
-#pragma push
-#pragma opt_common_subs off
 void dScMgCup_c::StateSelect() {
     char *raw = (char *)this;
     int touchPressed = 0;
@@ -504,11 +501,8 @@ void dScMgCup_c::StateSelect() {
     if (touchPressed == 0)
         return;
 
-    {
-        unsigned char *touch = &gTouchHeld[playerSlot * 4];
-        touchX = touch[2];
-        touchY = touch[3];
-    }
+    touchX = ((TouchInfo *)gTouchHeld)[playerSlot].x;
+    touchY = ((TouchInfo *)gTouchHeld)[playerSlot].y;
 
     for (cup = 0; cup < 3; cup++) {
         int dx = touchX - (mCup[cup].x >> 12);
@@ -542,7 +536,6 @@ void dScMgCup_c::StateSelect() {
         return;
     }
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c17StateWaitForInputEv
 void dScMgCup_c::StateWaitForInput() {
@@ -554,8 +547,6 @@ void dScMgCup_c::StateWaitForInput() {
 }
 
 // @symbol _ZN10dScMgCup_c12StateShuffleEv
-#pragma push
-#pragma opt_common_subs off
 void dScMgCup_c::StateShuffle() {
     char *raw = (char *)this;
     int oldX, oldY;
@@ -634,7 +625,7 @@ void dScMgCup_c::StateShuffle() {
                 mTimer = 0x1e;
                 mState = 3;
             } else {
-                u32 delayRoll = RandomIntInternal(&data_0209e650);
+                u32 delayRoll = RandomIntInternal(&data_0209e650.value);
                 mTimer = (delayRoll >> 8) % 0x18 + 1;
                 mState = 1;
             }
@@ -707,7 +698,6 @@ void dScMgCup_c::StateShuffle() {
 
     mTimer += 1;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c19StatePrepareShuffleEv
 void dScMgCup_c::StatePrepareShuffle() {
@@ -747,7 +737,7 @@ void dScMgCup_c::StateSetup() {
     if (score < 0xa) {
         mRoundRow = (unsigned char)score;
     } else {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
         randomUpper = rnd >> 16;
         roundRow = (randomUpper % 5) + 5;
         mRoundRow = (unsigned char)roundRow;
@@ -756,7 +746,7 @@ void dScMgCup_c::StateSetup() {
     mSwapsRemaining = ((unsigned char *)sCupRoundTable)[mRoundRow * 2];
 
     if (score > 3) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
         if (rnd & 1) {
             mTargetContent = 1;
         } else {
@@ -774,7 +764,7 @@ void dScMgCup_c::StateSetup() {
     mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
 
-    rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+    rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
     fakeOutSwap = (rnd % 10) + 1;
     mFakeOutAt = (unsigned char)fakeOutSwap;
 
@@ -791,8 +781,6 @@ void dScMgCup_c::OnNewRecord() {
     Presenter_PlayCheer(&mModel);
 }
 
-#pragma push
-#pragma opt_common_subs off
 void dScMgCup_c::StartRound(int msg) {
     int i;
 
@@ -844,7 +832,6 @@ void dScMgCup_c::StartRound(int msg) {
     }
     Mg_ShowBanner(0xd, 0x80, 0xa0, 1, -1, 0xd);
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c6RenderEv
 /* Slot 9: submits cups in descending screen-y order. The animation frame
@@ -895,7 +882,6 @@ s32 dScMgCup_c::Render() {
 // @symbol _ZN10dScMgCup_c8BehaviorEv
 /* Slot 6: runs the current state, then advances each cup's animation
    according to the duration stored in its current frame. */
-#pragma push
 s32 dScMgCup_c::Behavior() {
     char *raw = (char *)this;
     int cupIndex;
@@ -916,7 +902,6 @@ s32 dScMgCup_c::Behavior() {
     Presenter_Update((char *)&mModel);
     return 1;
 }
-#pragma pop
 
 // @symbol _ZN10dScMgCup_c13InitResourcesEv
 /* Slot 0: sets up the sub-screen backgrounds, loads the board graphics,
@@ -924,7 +909,7 @@ s32 dScMgCup_c::Behavior() {
 s32 dScMgCup_c::InitResources() {
     void *file;
 
-    data_0209d45c = 0x11;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     Camera_InitPresenterView((char *)pad_4660);
     if (Presenter_Load((char *)&mModel) == 0)
         return 0;
@@ -937,7 +922,7 @@ s32 dScMgCup_c::InitResources() {
         SetSubBg0Offset(0, 0);
     }
 
-    data_0209d454 |= 1;
+    gSubScreenLayers |= 1;
     {
         volatile u16 *bg = (volatile u16 *)0x0400100c;
         *bg = (*bg & 0x43) | 0x414;
@@ -946,7 +931,7 @@ s32 dScMgCup_c::InitResources() {
         SetSubBg2Offset(0, 0);
     }
 
-    data_0209d454 |= 4;
+    gSubScreenLayers |= 4;
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN, G2S::GetBG2CharPtr() + 0x4000);
     file = LoadFile(ASSET_D_2D_MG_BG_CUP_NCL_BIN);
