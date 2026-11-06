@@ -31707,7 +31707,7 @@
     },
     "ov021:0x02111edc": {
       "author": "tangosdev",
-      "name": "_ZN17daObjCvNewsLift_c17Platform3CallbackEP4dBgWPS_P8dActor_c"
+      "name": "_ZN17daObjCvNewsLift_c17Platform3CallbackEP4dBgWP8dActor_cS3_"
     },
     "ov021:0x02111f1c": {
       "author": "tangosdev",
@@ -31715,7 +31715,7 @@
     },
     "ov021:0x02111f34": {
       "author": "tangosdev",
-      "name": "_ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWPS_P8dActor_c"
+      "name": "_ZN17daObjCvNewsLift_c17Platform2CallbackEP4dBgWP8dActor_cS3_"
     },
     "ov021:0x02111f74": {
       "author": "tangosdev",
@@ -31723,7 +31723,7 @@
     },
     "ov021:0x02111f8c": {
       "author": "tangosdev",
-      "name": "_ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWPS_P8dActor_c"
+      "name": "_ZN17daObjCvNewsLift_c17Platform1CallbackEP4dBgWP8dActor_cS3_"
     },
     "ov021:0x02111fcc": {
       "author": "tangosdev",
@@ -31731,7 +31731,7 @@
     },
     "ov021:0x02111fe4": {
       "author": "tangosdev",
-      "name": "_ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWPS_P8dActor_c"
+      "name": "_ZN17daObjCvNewsLift_c17Platform0CallbackEP4dBgWP8dActor_cS3_"
     },
     "ov021:0x02112024": {
       "author": "tangosdev",
@@ -31739,7 +31739,7 @@
     },
     "ov021:0x02112128": {
       "author": "tangosdev",
-      "name": "_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWPS_P8dActor_c"
+      "name": "_ZN17daObjCvNewsLift_c16MainMeshCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov021:0x02112168": {
       "author": "tangosdev",
