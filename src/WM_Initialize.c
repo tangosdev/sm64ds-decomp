@@ -5,9 +5,8 @@
  * WM_ERRCODE_OPERATING (2) once it is queued. */
 extern int WM_Init(int a, int b);
 #include "private/wm_views.h"
-extern void WM_SetCallbackTable(int i, int val);
 
-int WM_Initialize(int wmSysBuf, int callback, int dmaNo) {
+int WM_Initialize(int wmSysBuf, void *callback, int dmaNo) {
     WMArm9Buf *sys;
     int result;
 
