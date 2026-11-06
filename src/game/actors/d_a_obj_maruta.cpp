@@ -20,7 +20,7 @@
  *   InitResources, Behavior and CleanupResources into them, so naming them
  *   means converting both leaves in the same change.
  * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW+0x18 / +0x1c.
- *   This TU stores dBgW::UpdatePosWithVelocity and BeforeClsnCallback there;
+ *   This TU stores dBgW::UpdatePosWithVelocity and StoodOnCallback there;
  *   dBgW.h has no setter.
  * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub, LenVec3 and AngleDiff are arm9 C helpers no header declares yet.
@@ -53,8 +53,8 @@ int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
 
-void func_020393d4(int *p, int v);
-void func_020393c4(int *p, int v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
@@ -256,8 +256,8 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     ((dBgW_KcMbg *)(&self->mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), *(&self->mClsnMat),
                               0x1000, self->mAngleY, *(arg->clps));
-    func_020393d4((int *)&self->mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
-    func_020393c4((int *)&self->mMeshCollider, (int)&daObjMaruta_c::BeforeClsnCallback);
+    func_020393d4(&self->mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    func_020393c4(&self->mMeshCollider, &daObjMaruta_c::StoodOnCallback);
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
     self->mRestPosZ = self->mPosZ;
@@ -310,13 +310,13 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- 0x02127658, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjMaruta_c18BeforeClsnCallbackEPvS0_S0_
+// @symbol _ZN13daObjMaruta_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* Arg-shifting tail-call veneer, handed to the dBgW at mMeshCollider by
    func_ov080_021274ac above. Drops the first argument and forwards the next
    two; long_calls emits the pooled `ldr ip,[pc,#8]; bx ip` absolute
    tail-call. Bracketed closed immediately: long_calls is positional. */
 #pragma long_calls on
-void daObjMaruta_c::BeforeClsnCallback(void *a, void *b, void *c) {
-    ((daObjMaruta_c *)b)->HandlePlayerContact((dActor_c *)c);
+void daObjMaruta_c::StoodOnCallback(dBgW *collider, dActor_c *log, dActor_c *other) {
+    static_cast<daObjMaruta_c *>(log)->HandlePlayerContact(other);
 }
 #pragma long_calls off

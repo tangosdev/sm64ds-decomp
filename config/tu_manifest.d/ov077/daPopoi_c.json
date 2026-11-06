@@ -1366,54 +1366,54 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@807",
+      "from": "@806",
       "to": "@738",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
+    },
+    {
+      "from": "@807",
+      "to": "@803",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
       "from": "@808",
-      "to": "@803",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "to": "@804",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
       "from": "@809",
-      "to": "@804",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
-    },
-    {
-      "from": "@810",
       "to": "@805",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
-      "from": "@812",
+      "from": "@811",
       "to": "@807",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
-      "from": "@814",
+      "from": "@813",
       "to": "@809",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
-      "from": "@816",
+      "from": "@815",
       "to": "@811",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
-      "from": "@818",
+      "from": "@817",
       "to": "@813",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
-      "from": "@820",
+      "from": "@819",
       "to": "@815",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
-      "from": "@822",
+      "from": "@821",
       "to": "@194",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
       "from": "@518",
@@ -1426,14 +1426,14 @@
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "@824",
+      "from": "@823",
       "to": "@195",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     },
     {
-      "from": "@826",
+      "from": "@825",
       "to": "@196",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by whole-object identity after the decl-agreement pass retyped the local func_02012694 declaration from three named parameters to the definition's two: every raw @N from @807 up moves to @N-1 (@518 and @520 precede it and stay) and the object is byte-identical once renamed back"
     }
   ]
 }

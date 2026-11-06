@@ -364,7 +364,7 @@ static inline void SetPalette(u16 *entry, u16 pal) {
     *entry = (*entry & 0xfff) | (u16)(pal << 12);
 }
 
-extern "C" void func_ov075_02116128(int unused, int slot, int dim) {
+extern "C" void func_ov075_02116128(dScEntry_c *scene, int slot, int dim) {
     int players = data_0209fc50;
     u16 *map = (u16 *)G2::GetBG1ScrPtr();
     u16 pal = func_02030958(slot) + 10;
@@ -420,7 +420,7 @@ extern u8 data_ov075_0211c6e8[];
 extern OamAttr data_ov075_0211c7c0[];
 extern char data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211c870[];
-extern s8 data_0209f310[];
+extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern char data_0209ee90[];
 }
@@ -429,7 +429,7 @@ static inline int EntryPlayerIndex(int arg0) {
     return func_02030958(arg0);
 }
 
-extern "C" void func_ov075_0211621c(char *c) {
+extern "C" void func_ov075_0211621c(dScEntry_c *scene) {
     int count = data_0209fc50;
     int stride;
     int tens;
@@ -437,7 +437,7 @@ extern "C" void func_ov075_0211621c(char *c) {
     int i = 0;
     int d = 4 - count;
     int xbase;
-    (void)c;
+    (void)scene;
     xbase = data_ov075_0211c6e8[d];
     stride = (d * 16) + 0x38;
     {
@@ -474,7 +474,7 @@ extern "C" void func_ov075_0211621c(char *c) {
                     int *q = p + 1;
                     int val = *q;
                     *q = (val & (~0x3ff)) |
-                         ((data_0209f310[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
+                         ((gNumStageStars[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
                 }
                 OAM::Render(zB, data_ov075_0211c870, xbase + i * stride, yNum, minus1, minus1,
                             scale, scale, zB, minus1);

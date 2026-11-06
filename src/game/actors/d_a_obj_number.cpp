@@ -41,7 +41,7 @@ extern SharedFilePtr data_ov002_0210da28;
 extern SharedFilePtr data_ov002_0210d9e8;
 extern SharedFilePtr data_ov002_0210d9a8;
 
-extern int gNextActorUpdateMask;
+extern u32 gNextActorUpdateMask;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

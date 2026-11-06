@@ -94,7 +94,7 @@ struct CLPS_Block;
 extern "C" {
 /* ---- this TU ---- */
 void func_ov079_02123d4c(int *out, daBtn_c *self);
-void func_ov079_0212522c(void *a, void *b, void *c);
+void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
@@ -118,12 +118,12 @@ void func_01ffb098(void *collider);
 void func_01ffb0a4(void *collider);
 void func_01ffb0b0(void *collider);
 void func_01ffb0bc(void *);
-int func_0200fa04(void *c, void *v, int b);
+void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
-void func_020393c4(void *p, int v);
-void func_020393d4(void *p, void *v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 int func_ov002_020dd8b8(void *c);
 
 /* Parameter names keep this TU's @NNN. */
@@ -138,7 +138,7 @@ extern u8 data_0209d660;
 extern u8 data_0209f21c;
 extern u8 data_0209f220;
 extern signed char gCurrentSublevel;
-extern int data_0209f318;
+extern dCamera_c *data_0209f318;
 extern daPly_c *data_0209f394[];
 /* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
    hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */
@@ -323,7 +323,7 @@ int daBtn_c::InitResources()
     }
 
     func_01ffb0bc(&mMovingMeshCollider);
-    func_020393d4(&mMovingMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
 
     {
         s32 sp[3];
@@ -414,7 +414,7 @@ int daBtn_c::Behavior()
             /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA).
                While the player is within 0x1770000 the king asks the camera
                to frame him each frame, as daBombking_c::Behavior does. */
-            ((dCamera_c *)data_0209f318)->mFramedActor = this;
+            data_0209f318->mFramedActor = this;
         }
     }
 
@@ -920,7 +920,7 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPosZ;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    func_020393c4(&mMovingMeshCollider, (int)func_ov079_0212522c);
+    func_020393c4(&mMovingMeshCollider, func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c((int *)&a, this);
         func_0200fa04(this, &a, 0);
@@ -936,9 +936,8 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-extern "C" void func_ov079_0212522c(void *a, void *b, void *c)
-{
-    ((daBtn_c *)b)->func_ov079_02125058((dActor_c *)c);
+extern "C" void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off
 

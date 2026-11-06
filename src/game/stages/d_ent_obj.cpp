@@ -46,6 +46,7 @@
 #include "math/Approach.h"
 #include "BMD_File.h"
 #include "private/mtx43.h"
+#include "LevelRng.h"
 
 struct BTP_File;
 
@@ -110,7 +111,6 @@ long long __aeabi_uidiv(unsigned int n, unsigned int d);
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
-extern int data_0209e650;
 extern short data_02082214[]; /* sine/cosine table, interleaved */
 extern short data_02082614[];
 extern u8 data_0209fc5c[];
@@ -314,7 +314,8 @@ void UnknownVsPlayer::func_ov075_021143e4() {
     BTP_File *textureFile;
     if (data_ov075_0211d380 < 0) {
         data_ov075_0211d380 =
-            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 6];
+            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) %
+                                6];
     }
     if (data_0209b2f0[mPlayerNo] != 0) {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ac.filePtr, 0, 0, 0x1000, 0);
@@ -330,7 +331,7 @@ void UnknownVsPlayer::func_ov075_021143e4() {
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov075_0211d3c4.filePtr, *textureFile);
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
     {
-        unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650);
+        unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         long long divisionResult = __aeabi_uidiv(randomValue >> 0x10, frameCount);
         mTextureSequence.currFrame = ((unsigned)((int)(divisionResult >> 32) << 0x10)) >> 4;
@@ -458,7 +459,7 @@ int UnknownVsPlayer::func_ov075_021148f0() {
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114904Ei
 void UnknownVsPlayer::func_ov075_02114904(int exitX) {
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d384.filePtr, 8, 0x40000000, 0x1000, 0);
-    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) + 0x1e) & 0xf;
+    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) + 0x1e) & 0xf;
     mExitPos.x = exitX;
     mExitPos.y = 0;
     mExitPos.z = -0x3e8000;
@@ -638,7 +639,7 @@ int UnknownVsPlayer::func_ov075_02114ddc(unsigned char kind, unsigned char playe
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
 
     {
-        unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650);
+        unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         mTextureSequence.currFrame = (((randomValue >> 0x10) % (unsigned)frameCount) << 0x10) >> 4;
     }

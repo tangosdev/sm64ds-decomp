@@ -11,8 +11,8 @@
  * deslop leftovers:
  *  - The 25 state handlers/helpers keep func_ov071_* address names as member
  *    names; no original names are recovered. SetState was Scuttlebug_SetState.
- *  - Vec3 and Mtx43 stay plain words: spelling them as Vector3/Matrix4x3
- *    drags ~Vector3's vague-linkage D1 into functions that never had it.
+ *  - Mtx43 stays plain words rather than Matrix4x3. The position
+ *    temporaries are Vector3 (measured: same object as the old POD twin).
  *  - The extern "C" preamble is hand-spelt: Fix12<int>/Vector3 parameters
  *    are written as plain words where the true types break the register
  *    convention, and the spelled mangled calls stay where the member
@@ -45,11 +45,6 @@ enum Scuttlebug_AssetId {
 /* ------------------------------------------------------------------------
  * Local value shapes carried from the legacy one-function files.
  * ------------------------------------------------------------------------ */
-
-/* Three plain fixed-point words.  Vector3 has a user-declared destructor, so
- * spelling these as Vector3 would drag its vague-linkage D1 into functions
- * that never had it. */
-typedef struct { int x, y, z; } Vec3;
 
 /* Flat 0x30-byte matrix block, as func_ov071_0211f524 and the scratch matrix
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
@@ -331,7 +326,7 @@ int daSpd_c::func_ov071_02120028() {
     UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        Vec3 v;
+        Vector3 v;
         int x, y, z;
         x = *(volatile int *)&mPosX;
         v.x = x;
@@ -695,11 +690,11 @@ void daSpd_c::func_ov071_0211f524() {
 
 // @symbol _ZN7daSpd_c19func_ov071_0211f498Ev
 void daSpd_c::func_ov071_0211f498() {
-    Vec3 v;
+    Vector3 v;
     v.x = mPosX;
     v.y = mPosY;
     v.z = mPosZ;
-    SpawnCoins(*(const Vector3 *)&v, mCoinCount, 0xf000, 0);
+    SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
     func_02012694(0xc4, &mCamSpacePosX);
     if (param1) {

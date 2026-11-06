@@ -79,9 +79,9 @@ void func_0203cbc0(void *ptr);
    defines this veneer for the host). */
 void *func_0203cc0c(u32 size);
 #endif
-/* local extern: LoadFile.c defines int(int). This is the spelling
-   LoadAndSetFile's shard matched (banked return and parameter rows). */
-void *LoadFile(u16 ov0ID);
+/* local extern: LoadFile.c defines int(int); the file comes back as a
+   pointer here (banked return row). */
+void *LoadFile(int ov0ID);
 /* local extern: func_020469e0.c defines int(int *). The caller's shard
    matched this spelling (banked rows). */
 int func_020469e0(void *ptr);
@@ -107,14 +107,14 @@ extern int data_0208e738;
 void func_02046234(ModelComponents *data, int mode);
 void func_02046008(ModelComponents *data, int id);
 void func_020461b4(ModelComponents *data, u32 a);
-/* local extern: the +8 adjustors the low veneers forward to. The one-param
-   spellings are deliberate under-declarations -- the thunks forward r1/r2
-   untouched, which C cannot express (banked arity rows). */
+/* local extern: the +8 adjustors the low veneers forward to; Model4.cpp
+   defines them and no header declares them. Each veneer passes its own
+   arguments straight through in r1/r2. */
 void func_02045ec4(void *self, unsigned int value, int index);
-void func_02045e70(char *p);
-void func_02045ef8(char *p);
-void func_02045f80(char *p);
-void func_0204605c(char *p);
+void func_02045e70(char *p, unsigned int color);
+void func_02045ef8(char *p, unsigned int color);
+void func_02045f80(char *p, unsigned int color);
+void func_0204605c(char *p, int id, int index);
 /* defined below; LoadAndSetFile calls it */
 int func_02016ff4(dExtModel_c *self, BMD_File *file, int c, int d);
 u32 func_02017060(void *ptr);
@@ -388,8 +388,8 @@ void dExtSimpleModel_c::SetPolygonID(int id) {
 }
 
 // @symbol func_02016aac
-extern "C" void func_02016aac(char *self) {
-    func_0204605c(self + 8);
+extern "C" void func_02016aac(char *self, int id, int index) {
+    func_0204605c(self + 8, id, index);
 }
 
 // @symbol _ZN11dExtModel_c12ApplyOpacityEjj
@@ -419,18 +419,18 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
 }
 
 // @symbol func_02016a14
-extern "C" void func_02016a14(char *self) {
-    func_02045f80(self + 8);
+extern "C" void func_02016a14(char *self, int color) {
+    func_02045f80(self + 8, color);
 }
 
 // @symbol func_02016a04
-extern "C" void func_02016a04(char *self) {
-    func_02045ef8(self + 8);
+extern "C" void func_02016a04(char *self, int color) {
+    func_02045ef8(self + 8, color);
 }
 
 // @symbol func_020169f4
-extern "C" void func_020169f4(char *self) {
-    func_02045e70(self + 8);
+extern "C" void func_020169f4(char *self, int color) {
+    func_02045e70(self + 8, color);
 }
 
 // @symbol func_020169d8

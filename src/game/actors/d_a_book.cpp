@@ -44,6 +44,7 @@
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -77,10 +78,6 @@ enum {
 /* How fast a launched book travels: 50 units a frame. */
 enum { kFlightSpeed = 0x32000 };
 
-/* A destructor-free xyz view; func_ov020_021115ac's copy through a Vector3
- * local does not match. */
-typedef struct { int x, y, z; } Vec3;
-
 /* dEnemyBase_c declares mStateTimer as an s16, but every use here reads it as
  * an unsigned halfword (ldrh); a signed read is ldrsh and misses by a word.
  * Member-context pun, valid inside the daBook_c methods only. */
@@ -111,7 +108,6 @@ typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int heig
                          Vector3_16 *first, Vector3_16 *second);
 }
 
-extern int data_0209e650[];     /* the random number generator's state */
 extern s16 data_02082214[];     /* sin/cos table, see SINCOS_INDEX */
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
@@ -185,7 +181,7 @@ void daBook_c::func_ov020_021112b0()
  * at the touching player's depth and turned a quarter turn to cross it. */
 void daBook_c::func_ov020_02111340()
 {
-    int bit = ((unsigned int)RandomIntInternal(data_0209e650) >> 16) & 1;
+    int bit = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
     if (mTouchedPlayer == 0)
         return;
     {
@@ -301,9 +297,10 @@ int daBook_c::func_ov020_021115ac()
         return HIT_ATTACKED;
 
     if (BumpedUnderneathByPlayer(*found) != 0) {
-        /* the bump also cancels the player's vertical speed */
-        Vec3 *p = (Vec3 *)&found->mSpeedX;
-        Vec3 v;
+        /* the bump also cancels the player's vertical speed. A VecFx32, not a
+           Vector3: the copy through a Vector3 local does not match. */
+        VecFx32 *p = (VecFx32 *)&found->mSpeedX;
+        VecFx32 v;
         v.z = p->z;
         v.x = p->x;
         v.y = 0;

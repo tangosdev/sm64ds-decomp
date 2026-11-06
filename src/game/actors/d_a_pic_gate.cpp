@@ -74,13 +74,9 @@
 #define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
 
-/* A plain {x, y, z} for stack locals: types.h Vector3 declares an empty
-   destructor under C++, and a stack object would emit ~Vector3. NormalizeVec3
-   takes a Vector3 view, so calls cast this POD storage explicitly. */
-struct Vec3 { int x, y, z; };
-/* CrossVec3's own file spells the same triple Vec3_Fix12; the declaration
- * has to carry its definition's name to agree. */
-typedef struct { int x, y, z; } Vec3_Fix12;
+/* Stack vectors are NitroSDK VecFx32: types.h Vector3 declares an empty
+   destructor under C++, and a stack object would emit ~Vector3. CrossVec3 and
+   NormalizeVec3 take Vector3 views, so calls cast this POD storage explicitly. */
 
 namespace cstd {
 Fix12i fdiv(s32, s32);
@@ -88,10 +84,10 @@ Fix12i fdiv(s32, s32);
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-int   InvMat4x3(int *src, int *dst);
+int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void  CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
+void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 void NormalizeVec3(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void  func_020553a4(void *m);
@@ -146,14 +142,14 @@ void daPicGate_c::func_ov080_02125460()
  * mesh sits centred on its position, and mInvMtx maps back into it. */
 void daPicGate_c::func_ov080_0212555c()
 {
-    Vec3 v;
+    VecFx32 v;
     Vec3_Asr((Vector3 *)&v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
         -(((unsigned char)(param1 & 0xf) + 1) * 0x64000) / 2 >> 3, 0, 0);
     mMtx = data_020a0e68;
-    InvMat4x3((int *)&data_020a0e68, (int *)&data_020a0e68);
+    InvMat4x3(&data_020a0e68, &data_020a0e68);
     mInvMtx = data_020a0e68;
 }
 
@@ -200,10 +196,10 @@ u8 *daPicGate_c::func_ov080_02125630(s32 i)
  * beyond the far edge starts one from the other side and clicks. */
 void daPicGate_c::func_ov080_021256f8()
 {
-    Vec3 a;
-    Vec3 b;
-    Vec3 ob;
-    Vec3 oa;
+    VecFx32 a;
+    VecFx32 b;
+    VecFx32 ob;
+    VecFx32 oa;
     daPly_c *r5;
     int x, y;
     int lim;
@@ -275,9 +271,9 @@ void daPicGate_c::func_ov080_021256f8()
  * normalized and packed 10 bits per axis into Vertex::normal. */
 void daPicGate_c::func_ov080_02125940()
 {
-    Vec3 ej;
-    Vec3 ei;
-    Vec3 n;
+    VecFx32 ej;
+    VecFx32 ei;
+    VecFx32 n;
     Vertex *p;
     int i;
     int j;
@@ -307,7 +303,7 @@ void daPicGate_c::func_ov080_02125940()
             else
                 SubVec3((Vector3 *)(p - mRows), (Vector3 *)(p + mRows), (Vector3 *)&ei);
 
-            CrossVec3((const Vec3_Fix12 *)&ej, (const Vec3_Fix12 *)&ei, (Vec3_Fix12 *)&n);
+            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
             NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
@@ -407,7 +403,7 @@ extern "C" void func_ov080_02125d64(char *c)
 
     for (i = 0; i < ((daPicGate_c *)c)->mNumCells; i++) {
         struct Elem *e = (struct Elem *)((char *)((daPicGate_c *)c)->mCells + i * 0x18);
-        Vec3 tmp = *(struct Vec3 *)&e->pos;
+        VecFx32 tmp = *(VecFx32 *)&e->pos;
         tmp.z = 0;
         e->dist =
             Vec3_Dist((struct Vector3 *)((daPicGate_c *)c)->mWaveOrigin, (struct Vector3 *)&tmp);

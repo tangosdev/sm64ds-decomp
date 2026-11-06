@@ -1,14 +1,11 @@
 #include "Ov007Sprite.h"
-struct Vec3s {
-    short x;
-    short y;
-    short z;
-};
+#include "common.h"
+
 /* Draws the sprite, then, when drawFlags & 4, a second black pass scaled
  * by shadowScaleX/Y and shifted by shadowOffset, its alpha lowered by
  * shadowAlphaDrop (medium-confidence "shadow", as Ov007Sprite.h says). */
 void func_ov007_020c421c(Ov007Sprite *s) {
-    struct Vec3s v;
+    Vector3_16 v;
     int shadowAlpha;
     int scaleY;
     int scaleX;

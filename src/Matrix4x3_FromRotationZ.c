@@ -1,6 +1,6 @@
 #include "common.h"
 
-extern void func_0205283c(void* m, int s, int c);
+extern void func_0205283c(Matrix4x3 *m, int s, int c);
 extern short data_02082214[];
 
 void Matrix4x3_FromRotationZ(Matrix4x3 *m, int angle) {

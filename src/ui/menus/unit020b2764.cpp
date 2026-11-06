@@ -74,7 +74,7 @@ extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], load
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
 extern void func_02044efc(void *bmd);
-extern void func_02045ef8(void *model, void *value);
+extern void func_02045ef8(void *model, unsigned int value);
 extern void func_02046234(void *model, void *value);
 extern void func_ov007_020b3edc(int idx);
 extern void *func_ov007_020b3f20(int idx);
@@ -120,7 +120,7 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     func_ov007_020bc6b4(model, data_ov007_02103348, 3);
     func_ov007_020bc5fc(model, data_ov007_02103354, 3);
     func_ov007_020bc658(model, data_ov007_020d7ee8[set], 3);
-    func_02045ef8(model->model, (void *)0x3def);
+    func_02045ef8(model->model, 0x3def);
     func_02046234(model->model, (void *)2);
     func_ov007_020bbf98(model, 3);
     return model;

@@ -68,7 +68,7 @@ extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
-extern void *data_0209f318; /* CAMERA */
+extern dCamera_c *data_0209f318; /* CAMERA */
 
 void func_ov014_02111fb8(daWanwan_c *c);
 void func_ov014_02112114(daWanwan_c *c);
@@ -89,11 +89,11 @@ void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
  * TU's compiler-numbered aliases remain stable. */
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int Vec3_HorzLen(void *v);
-int LenVec3(Vector3 *v);
+int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
 int AngleDiff(int a, int b);
-int ApproachAngle(short *angles, int target, int a, int b, int c);
+int ApproachAngle(short *angles, short target, int a, int b, int c);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 }
@@ -101,10 +101,6 @@ int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 namespace cstd {
 s16 atan2(s32, s32);
 int fdiv(int a, int b);
-}
-
-namespace call3_267c {
-extern "C" void func_0201267c(int id, void *pos, int unused);
 }
 
 #define SetChompAnim(self, bca) \
@@ -761,7 +757,7 @@ extern "C" void func_ov014_02111b70(daWanwan_c *c) {
     int v;
 
     c->mVertAccel = 0;
-    call3_267c::func_0201267c(0x3a, &c->mCamSpacePosX, 0);
+    func_0201267c(0x3a, &c->mCamSpacePos);
     SetChompAnim(c, data_ov014_02114970);
     player = c->ClosestPlayer();
 
@@ -847,7 +843,7 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self) {
         partnerPos.z = src[2];
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
-    camera = (dCamera_c *)data_0209f318;
+    camera = data_0209f318;
     angleToPlayer = self->HorzAngleToCPlayer();
     angleToAnchor = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mSpawnPosX);
     /* Steps 0-6 make the chomp the camera's mFocusActor. */

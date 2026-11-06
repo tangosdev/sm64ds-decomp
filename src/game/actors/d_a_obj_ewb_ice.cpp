@@ -138,7 +138,7 @@ extern "C" {
 void func_02012694(unsigned int id, const Vector3 *pos);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: d_bg_w.cpp defines these; no header declares them. */
-void func_020393d4(void *mesh, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(void *mesh, void *callback);
 }
 
@@ -392,7 +392,7 @@ int daObjEwbIce_c::InitResources() {
                 (KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
                 *(CLPS_Block *)(((EwbIceClpsSlot *)data_ov073_021231c4)[variant].clps));
     }
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
     mMeshCollider.Enable(this);
 

@@ -19,7 +19,7 @@
  *    flags word have no member names; the measured ldrb/launder forms stay.
  *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
  *    pointers.
- *  - UpdateCapPos keeps the CapVec POD shadow: Vector3's empty destructor
+ *  - UpdateCapPos keeps a POD VecFx32 local: Vector3's empty destructor
  *    changes the frame. Its matrix copy goes through Mtx43; a plain
  *    Matrix4x3 assignment is memberwise and 0x1c bytes longer.
  */
@@ -27,6 +27,7 @@
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "decl_Enemy.h"
+#include "nitro/fx/fx.h"
 /* _ZTV11dCapEnemy_c is already declared here. A local extern would be a new
  * extern-vtable site; the ov002 half includes this header for the same store. */
 #include "decl_common.h"
@@ -38,13 +39,12 @@ extern SharedFilePtr *data_ov002_020ff028[];
 
 extern unsigned char data_0209f2d8;
 extern unsigned char data_0208a0e0;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* UpdateCapPos's stack temps are POD: Vector3's empty destructor changes
    this function's frame. */
-struct CapVec { int x, y, z; };
 extern void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 }
 
@@ -132,7 +132,7 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     }
     if (mCapId >= 6) return;
 
-    CapVec sum, asr;
+    VecFx32 sum, asr;
     Vec3_Add((Vector3 *)&sum, &mPos, &pos);
     Vec3_Asr((Vector3 *)&asr, (Vector3 *)&sum, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
@@ -156,7 +156,7 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
     if ((mCapId & 7) < 6) {
         func_02005ed8();
         if (mCapId < 6u) {
-            CapVec out;
+            VecFx32 out;
             Vec3_Add((Vector3 *)&out, &mPos, v);
             ret = dActor_c::Spawn(0x10d, 0x1012 | (mCapId << 8), *(const Vector3 *)&out, &mAngle,
                                   mAreaId, -1);
@@ -176,7 +176,7 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
 int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
 {
     const Vector3 *v = &v_;
-    CapVec local;
+    VecFx32 local;
     unsigned char *p;
     local.x = v->x;
     local.y = v->y;
@@ -280,7 +280,7 @@ int dCapEnemy_c::func_02005e28()
     if (b != 0) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {
-            daPly_c *p = (daPly_c *)data_0209f394[i];
+            daPly_c *p = data_0209f394[i];
             if (p != 0) {
                 if (p->param1 == mCapId) return 1;
             }

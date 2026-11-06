@@ -48,6 +48,7 @@
 #include "math/CalcLib.h"
 #include "cstd.h"
 #include "private/mtx43.h"
+#include "LevelRng.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -81,7 +82,6 @@ extern SBirdModelFilePtr data_ov009_02113c20;
 extern SBirdAnimationFilePtr data_ov009_02113c28;
 extern SBirdStateTable data_ov009_02113c48;
 extern s16 data_02082214[];
-extern int data_0209e650;
 
 /* local extern: no shared header declares these helpers; Vec3_Sub uses the
    shared Vector3 type, while some callers pass raw position-field addresses. */
@@ -93,7 +93,7 @@ extern s32 LenVec3(void *v);
 
 /* The flock's random draws are unsigned: a signed % or >> changes codegen. */
 static inline u32 Random() {
-    return RandomIntInternal(&data_0209e650);
+    return RandomIntInternal(&data_0209e650.value);
 }
 
 /* Empty body: mShadowModel then mAnmModel teardown, the vptr store and

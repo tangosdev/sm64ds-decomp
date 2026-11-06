@@ -54,6 +54,7 @@ enum dScMgSlots_AssetId {
 #include "dScMgSlot3_c.h"
 #include "Sound.h"
 #include "OAM.h"
+#include "OamAttr.h"
 #include "dScMgBase_c.h"
 #include "decl_common.h"
 #include "types.h"
@@ -62,6 +63,7 @@ enum dScMgSlots_AssetId {
 #include "G2x.h"
 #include "CP15.h"
 #include "GX.h"
+#include "LevelRng.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -102,7 +104,6 @@ extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
 extern int Sound_PlayIfNotActive(int, int, int, int);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
@@ -120,12 +121,12 @@ extern SlotState pmf_Slot3_StatePayout_2;
 extern SlotState pmf_Slot3_StateWait;
 extern SlotState pmf_Slot3_StateGameOver;
 extern SlotState pmf_Slot3_StateDone;
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 
 extern u8 gSubScreenLayers;
 extern int data_0208ee44;
-extern void RenderOamMainScreen(void *, int, int, int, int);
-extern void *sSlotsSlotBlinkSprites;
+extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
+extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(void *c);
 extern void func_ov001_020ab3f0(void *c);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
@@ -564,7 +565,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             mReelReverse[2] = 1;
         } else {
             for (i = 0; i < 3; i++) {
-                if ((u8)(((u32)RandomIntInternal(&data_0209e650) >> 16) & 1)) {
+                if ((u8)(((u32)RandomIntInternal(&data_0209e650.value) >> 16) & 1)) {
                     mReelReverse[i] = 1;
                 } else {
                     mReelReverse[i] = 0;
@@ -572,7 +573,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             }
         }
 
-        mNextWinSymbol = ((u32)RandomIntInternal(&data_0209e650) >> 16) % mStripLength;
+        mNextWinSymbol = ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % mStripLength;
         if (mode != 4) {
             mReelDrawY = 0;
             mWinSymbol = mNextWinSymbol;
@@ -812,7 +813,7 @@ s32 dScMgSlot3_c::Behavior() {
         }
     }
 
-    t = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 1;
+    t = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
     if (t)
         gMainScreenLayers |= DISPLAY_LAYER_BG1;
     else
@@ -841,19 +842,19 @@ s32 dScMgSlot3_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, (void *)func_02054d88());
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NCL_BIN);
-        GX::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        GXS::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NCL_BIN);
+        GX::LoadBGPltt(h, 0x60, 0x1a0);
+        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        Deallocate(h);
     }
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE02_NSC_BIN, G2::GetBG1ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NUKI_NSC_BIN, G2::GetBG2ScrPtr());
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NSC_BIN);
-        func_02056314((void *)h, 0, 0x800);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NSC_BIN);
+        func_02056314(h, 0, 0x800);
+        Deallocate(h);
     }
 
     LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6400000);
@@ -869,11 +870,11 @@ s32 dScMgSlot3_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6600000);
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
+        void *h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)h, 0xe0);
-        GX::LoadOBJPltt((const void *)h, 0, 0xe0);
-        GXS::LoadOBJPltt((const void *)h, 0, 0xe0);
-        Deallocate((void *)h);
+        GX::LoadOBJPltt(h, 0, 0xe0);
+        GXS::LoadOBJPltt(h, 0, 0xe0);
+        Deallocate(h);
     }
 
     gSubScreenLayers = 0x14;
@@ -890,7 +891,7 @@ s32 dScMgSlot3_c::InitResources() {
     mReelDrawY = 0;
 
     for (int i = 0; i < 3; i++) {
-        int rnd = RandomIntInternal(&data_0209e650);
+        int rnd = RandomIntInternal(&data_0209e650.value);
         u32 divisor = mStripLength;
         u32 val = ((u32)rnd >> 16) % divisor;
         mReelPos[i] = val * 0x50000;
@@ -982,7 +983,7 @@ void SlotBlink_Draw(unsigned char *raw) {
     SlotBlink *sprite = (SlotBlink *)raw;
     if (sprite->mVisible == 0)
         return;
-    RenderOamMainScreen(&sSlotsSlotBlinkSprites, sprite->mX, sprite->mY, -1, -1);
+    RenderOamMainScreen(sSlotsSlotBlinkSprites, sprite->mX, sprite->mY, -1, -1);
 }
 }
 
@@ -1489,9 +1490,9 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NCG_BIN, (void *)func_02054d88());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2::GetBG2CharPtr() + 0x7800);
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_UP_NCL_BIN);
-        GX::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_UP_NCL_BIN);
+        GX::LoadBGPltt(h, 0x60, 0x1a0);
+        Deallocate(h);
     }
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_SCORE_UP_NSC_BIN, G2::GetBG2ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NSC_BIN, G2::GetBG3ScrPtr());
@@ -1517,9 +1518,9 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN,
                          (char *)G2S::GetBG0CharPtr() + 0x7800);
     {
-        int h = LoadFile(ASSET_D_2D_MG_BG_SLOT_DOWN_NCL_BIN);
-        GXS::LoadBGPltt((const void *)h, 0x60, 0x1a0);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_DOWN_NCL_BIN);
+        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        Deallocate(h);
     }
     LoadCompressedFileAt(ASSET_D_2D_GRADE_NSC_BIN, G2S::GetBG0ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_BADWIZER_NSC_BIN, (char *)G2S::GetBG1ScrPtr() + 0x800);
@@ -1535,10 +1536,10 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
 
     {
-        int h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);
-        GX::LoadOBJPltt((const void *)h, 0, 0x40);
-        GXS::LoadOBJPltt((const void *)h, 0, 0x40);
-        Deallocate((void *)h);
+        void *h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);
+        GX::LoadOBJPltt(h, 0, 0x40);
+        GXS::LoadOBJPltt(h, 0, 0x40);
+        Deallocate(h);
     }
 
     gSubScreenLayers = 0x1d;

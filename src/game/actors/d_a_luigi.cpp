@@ -44,13 +44,14 @@
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
 /* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
    is a different sequence (.text grows by 0xa0 bytes). */
 /* InitResources' local is a VecFx32. Vector3's declared destructor (see
    include/types.h) costs this TU a numbered .data local if an object of it
    is declared here, so the local stays POD and casts at the call. */
-#define CurrentPlayer() ((daPly_c *)data_0209f394[data_0209f250])
+#define CurrentPlayer() data_0209f394[data_0209f250]
 
 /* Material bits func_02016acc clears and func_02016b24 sets. The reflected
  * player render applies the same pair around its draw. */
@@ -62,7 +63,7 @@
 #define kHideBit 0x20000
 #define kReqReset 1
 #define kReqFade 2
-/* data_0209caa0[1] is SaveData::flags1. Bit 0x10 is unnamed there. */
+/* Bit 0x10 of FileSaveData::flags1 is unnamed. */
 #define kSysHold 0x10
 #define kShadowOpacity 0xf
 #define kAppearSound 0x179
@@ -90,9 +91,9 @@ extern SharedFilePtr data_ov002_0210e8d0;
 extern SharedFilePtr data_ov002_0210ebd8;
 
 extern unsigned char data_0209f250;
-extern void *data_0209f394[];
-extern int data_0209caa0[];
-extern void *data_0209f318;
+extern daPly_c *data_0209f394[];
+extern SaveBlock data_0209caa0;
+extern dCamera_c *data_0209f318;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
 extern "C" {
@@ -170,7 +171,7 @@ int daLuigi_c::Behavior() {
         data_ov055_02111b6c = 0;
         data_ov055_02111a90 = kFadeFull;
         data_ov055_02111b60 = 0;
-    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0[1] & kSysHold)) {
+    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0.file.flags1 & kSysHold)) {
         ApproachLinear(data_ov055_02111b6c, kFadeFull, kFadeStep);
         data_ov055_02111b64 = (data_ov055_02111b64 & ~kHideBit) + (kFadeFull - data_ov055_02111b6c);
     }
@@ -181,7 +182,7 @@ int daLuigi_c::Behavior() {
     func_ov002_020e4374((char *)player, &depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
-    ((dCamera_c *)data_0209f318)->mFramedActor = this;
+    data_0209f318->mFramedActor = this;
     return 1;
 }
 

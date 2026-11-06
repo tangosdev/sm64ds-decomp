@@ -186,7 +186,7 @@ extern struct OamAttr data_ov075_0211cba4[];
  * rematch and results steps, in ROM order ahead of the course-select
  * steps. */
 extern "C" {
-extern s8 data_0209f310[];
+extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern u8 data_0209b2f0[];
 extern u8 data_0209b2ec[];
@@ -224,8 +224,8 @@ extern int OVERLAY_102_ID;
 
 int GetLanguageIndex(void);
 void SetBg1Offset(int a, int b);
-void func_ov075_02116128(char *c, int i, int z);
-void func_ov075_0211621c(char *c);
+void func_ov075_02116128(dScEntry_c *scene, int slot, int dim);
+void func_ov075_0211621c(dScEntry_c *scene);
 void func_02033390(int a);
 void func_02032f9c(int a);
 int func_02030958(int val);
@@ -293,12 +293,12 @@ void dScEntry_c::TallyRoundWinners() {
         pc = pc + 1;
     } while (i < 4);
 
-    if (data_0209f310[0] != 0 || data_0209f310[1] != 0 || data_0209f310[2] != 0 ||
-        data_0209f310[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
+    if (gNumStageStars[0] != 0 || gNumStageStars[1] != 0 || gNumStageStars[2] != 0 ||
+        gNumStageStars[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
         gNumCoins[3] != 0) {
         max = 0;
         i = max;
-        pc = (u8 *)data_0209f310;
+        pc = (u8 *)gNumStageStars;
         do {
             t = (s8)*pc;
             i = i + 1;
@@ -309,7 +309,7 @@ void dScEntry_c::TallyRoundWinners() {
         } while (i < 4);
 
         n = 0;
-        pb = (u8 *)data_0209f310;
+        pb = (u8 *)gNumStageStars;
         pc = data_0209b2f0;
         i = n;
         do {
@@ -436,7 +436,7 @@ s32 dScEntry_c::InitResultResources() {
     if (n > 0) {
         z = i;
         do {
-            func_ov075_02116128((char *)this, i, z);
+            func_ov075_02116128(this, i, z);
             i = i + 1;
         } while (i < n);
     }
@@ -1155,7 +1155,7 @@ void dScEntry_c::RenderWinCounts() {
         int j = 0;
         do {
             if (data_0209b2f0[func_02030958(j)] != 0)
-                func_ov075_02116128((char *)this, j, mStepWork[1]);
+                func_ov075_02116128(this, j, mStepWork[1]);
             j++;
         } while (j < count);
     }
@@ -1221,7 +1221,7 @@ void dScEntry_c::EnterRematchPrompt() {
 void dScEntry_c::RenderResults() {
     int id = func_0203da9c();
     OAM::Render(false, &data_ov075_0211cb84, 0x80, 0x20, -1, -1, 0x1000, 0x1000, 0, -1);
-    func_ov075_0211621c((char *)this);
+    func_ov075_0211621c(this);
 
     u8 *p = data_0209b2f0 + id;
     OamAttr *sb;

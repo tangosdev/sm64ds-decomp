@@ -75,14 +75,9 @@ enum d_a_jgm_AssetId {
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 
-/* Local three-word ABI value. Vector3 has a genuine non-trivial destructor;
- * these stack values are plain fixed-point words and must not instantiate its
- * otherwise unrelated vague-linkage D1 in this class TU. */
-struct DaJgmVector3Words { Fix12i x, y, z; };
-
-typedef char DaJgmVector3Words_size_must_be_0xc[
-    sizeof(DaJgmVector3Words) == 0xc ? 1 : -1];
-
+/* Vector stack values are NitroSDK VecFx32. Vector3 has a genuine non-trivial
+ * destructor and must not instantiate its otherwise unrelated vague-linkage D1
+ * in this class TU. */
 
 /* File-scope objects at the end of this file construct the seven resource
  * handles (model files 0x34c/0x429/0x42a, animation files 0x34f/0x34d,
@@ -334,7 +329,7 @@ s32 daJgm_c::UpdateHoverState()
     HandlePlayerCollision();
     {
         const JgmVector3 &offset = data_ov077_02127b88;
-        DaJgmVector3Words pos;
+        VecFx32 pos;
         pos.y = offset.y + mBobOffsetY;
         pos.x = offset.x;
         pos.z = offset.z;
@@ -378,7 +373,7 @@ s32 daJgm_c::UpdateThrowState()
     HandlePlayerCollision();
     {
         const JgmVector3 &offset = data_ov077_02127b88;
-        DaJgmVector3Words pos;
+        VecFx32 pos;
         pos.y = offset.y + mBobOffsetY;
         pos.x = offset.x;
         pos.z = offset.z;
@@ -575,8 +570,8 @@ void daJgm_c::UpdateModels()
 // @symbol _ZN7daJgm_c18UpdateWallAndWaterER10dBgCh_Actr
 void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
 {
-    DaJgmVector3Words nrm;
-    DaJgmVector3Words pos;
+    VecFx32 nrm;
+    VecFx32 pos;
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&collision);
     if (collision.IsOnWall() != 0) {
@@ -661,7 +656,7 @@ void daJgm_c::HandlePlayerCollision()
         return;
 
     {
-        DaJgmVector3Words v;
+        VecFx32 v;
         v.x = mPosX;
         v.y = mPosY;
         v.z = mPosZ;
@@ -672,7 +667,7 @@ void daJgm_c::HandlePlayerCollision()
 // @symbol _ZN7daJgm_c15DieAndDropCoinsEv
 void daJgm_c::DieAndDropCoins()
 {
-    DaJgmVector3Words t;
+    VecFx32 t;
     t.x = mPosX;
     t.y = mPosY;
     t.z = mPosZ;

@@ -94,7 +94,7 @@ u32 data_ov036_02112b84 = 0xffffffff;
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_020393d4(dBgW *bgw, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -125,7 +125,7 @@ int daObjRcBuranko_c::InitResources() {
 
     /* A rider is carried by the collider's whole transform, not by a position
        and a pair of angles: the platform tilts underfoot as it swings. */
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
 
     return 1;
 }

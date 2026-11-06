@@ -57,7 +57,7 @@ extern CLPS_Block data_ov064_0211bb2c;
 /* local extern: the arm9 rotation builder and the dBgW callback store,
  * with no shared header yet. */
 extern "C" {
-void func_020393d4(void *p, void *v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjFl_London_c_classInit
@@ -87,7 +87,7 @@ s32 daObjFl_London_c::InitResources() {
     UpdateClsnPosAndRot();
     void *k = dBgW_Kc::LoadFile(data_ov022_02114578);
     mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x1000, mAngleY, data_ov064_0211bb2c);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mFlag = 0;
     mCooldown = 0xf;
     return 1;

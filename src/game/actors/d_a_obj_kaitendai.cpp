@@ -26,7 +26,7 @@
 #include "ResourceDescriptor.h"
 
 /* local extern: no shared header declares it. */
-extern "C" void func_020393d4(dBgW_KcMbg *clsn, void *fn);
+extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 // @symbol _ZN16daObjKaitendai_cD0Ev
 // @symbol _ZN16daObjKaitendai_cD1Ev
@@ -98,7 +98,7 @@ int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angl
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199,
                           mAngleY, *descriptor->clps);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mPrevAngleZ = angle;
     y = mAngleZ;
     if (y != 0) {

@@ -83,7 +83,7 @@ struct daTrsTrap_c : dActor_c {
     /* Mesh-collision rider hook, defined in d_a_trs_trap_classinits.cpp.
        InitResources stores OnMeshClsnTouch as mMovingMeshCollider's
        callback word; it forwards the colliding actor to LatchStandingActor. */
-    static void OnMeshClsnTouch(dBgW *, daTrsTrap_c *, dActor_c *);
+    static void OnMeshClsnTouch(dBgW *, dActor_c *, dActor_c *);
     void LatchStandingActor(dActor_c *);
 };
 

@@ -42,6 +42,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -52,13 +53,11 @@ s16 atan2(s32, s32);
  * generated preamble redefined all of them. The shapes below are surviving
  * views from the legacy shards, not evidence of original local classes. */
 
-struct Vec3 { int x, y, z; };
-
 /* Whole-struct 3-word copies go through an array member: mwccarm block-moves
  * (ldm/stm) a POD struct copy under -lang c99 but scalarises the same copy
  * under -lang c++, and an array member forces the block move back. Two sites
  * still need it; the snapshots in func_ov078_021240a0 and func_ov078_02125448
- * initialize the POD Vec3 directly instead. */
+ * initialize the POD VecFx32 directly instead. */
 struct M3 { int w[3]; };
 struct BCA_File;
 typedef daBombking_c::StateFunction PMF;
@@ -121,7 +120,7 @@ Vector3 data_ov078_0212711c[2] = {
 /* Offset of both collision spheres from the king's position, read
  * field by field in InitResources and Behavior. Initialized data, not
  * built by the initializer. */
-Vec3 data_ov078_02126e00 = {0, 0x3c000, 0};
+VecFx32 data_ov078_02126e00 = {0, 0x3c000, 0};
 
 /* State records: {enter, tick}. KingBobOmb_SetState runs the first and
  * Behavior the second. The handlers keep their address names, so the
@@ -166,8 +165,8 @@ PMF data_ov078_0212705c[2] = {&daBombking_c::func_ov078_02123a3c,
 extern "C" {
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
-extern unsigned char data_0209f220[];
-extern void *data_0209f318;
+extern unsigned char data_0209f220;
+extern dCamera_c *data_0209f318;
 /* local extern: math/MtxStack.h's spellings of the matrix calls below
    clash with these (illegal function overloading). */
 extern Matrix4x3 data_020a0e68;
@@ -178,12 +177,11 @@ extern void func_02012694(unsigned int a, void *p);
 extern void func_02011cfc(void);
 }
 extern "C" {
-extern int data_0209e650;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void func_0200fa8c(void *c, int a);
 extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
@@ -238,10 +236,10 @@ void daBombking_c::func_ov078_02123864() {
 
 int daBombking_c::func_ov078_021238ac()
 {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
-    struct Vec3 v;
-    struct Vec3 t;
-    struct Vec3 u;
+    dCamera_c *cam = data_0209f318;
+    VecFx32 v;
+    VecFx32 t;
+    VecFx32 u;
 
     if (this->mTalkingPlayer->GetTalkState() != -1) {
         cam->SetFlag_3();
@@ -306,7 +304,7 @@ int daBombking_c::func_ov078_02123aa0()
     if (func_ov078_02123804() == 1) return 1;
     daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
-        struct Vec3 v = *(struct Vec3 *)&p->mPosX;
+        VecFx32 v = *(VecFx32 *)&p->mPosX;
         if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) < 0x640000) {
             if (this->mArenaPosY - 0x64000 < v.y) {
                 KingBobOmb_SetState(data_ov078_0212703c);
@@ -405,7 +403,7 @@ int daBombking_c::func_ov078_02123d3c()
     v.y = this->mArenaPosY;
     v.z = this->mArenaPosZ;
 
-    if (data_0209f220[0] != 1) {
+    if (data_0209f220 != 1) {
         v.x = this->mPosX;
         v.y = this->mPosY;
         v.z = this->mPosZ;
@@ -526,7 +524,7 @@ int daBombking_c::func_ov078_021240a0() {
                 daPly_c *pl = mTalkingPlayer;
                 if (pl->StartTalk(*this, 1) != 0) {
                     msg = 0;
-                    if (data_0209f220[0] == 1) {
+                    if (data_0209f220 == 1) {
                         msg += (short)(pl->param1 + 0x9a);
                     } else {
                         msg = 0x95;
@@ -553,7 +551,7 @@ int daBombking_c::func_ov078_021240a0() {
             return 1;
         }
         if (Vec3_Dist((const Vector3 *)&mArenaPosX, (const Vector3 *)&mPosX) < 0x258000) {
-            short d = (((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 0xf) << 12;
+            short d = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 12;
             if (d < -0x4000)
                 d = -0x4000;
             else if (d > 0x4000)
@@ -573,7 +571,7 @@ int daBombking_c::func_ov078_021240a0() {
                 if (a != 0) {
                     int b = (int)(a->actorID == 0xbf);
                     if (b != 0) {
-                        Vec3 v = *(const Vec3 *)&a->mPosX;
+                        VecFx32 v = *(const VecFx32 *)&a->mPosX;
                         if (mPosY > v.y)
                             a->Unk_020c6a10(1);
                     }
@@ -652,7 +650,7 @@ int daBombking_c::func_ov078_02124520()
     int *pp;
     s16 ang;
 
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         func_ov078_02125c24(0x7d0000);
         func_02012694(0x12c, &this->mCamSpacePosX);
@@ -731,11 +729,11 @@ int daBombking_c::func_ov078_021247bc()
 {
     short horz;
     short vert;
-    Vec3 vA;
-    Vec3 vB;
-    Vec3 vC;
-    Vec3 D;
-    Vec3 E;
+    VecFx32 vA;
+    VecFx32 vB;
+    VecFx32 vC;
+    VecFx32 D;
+    VecFx32 E;
 
     if (this->mActionStep != 2) {
         horz = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
@@ -816,7 +814,7 @@ int daBombking_c::func_ov078_021247bc()
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
                 if (pl2->ShowMessage(*(fBase_c *)this, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
-                    ((dCamera_c *)data_0209f318)->SetFlag_3();
+                    data_0209f318->SetFlag_3();
                     func_02012694(0x12a, &this->mCamSpacePosX);
                     KingBobOmb_SetState(&data_ov078_021270dc);
                 }
@@ -922,7 +920,7 @@ int daBombking_c::func_ov078_02124cf4()
 
     short msg = 0;
     Sound::ChangeMusicVolume(0x14, 0x15666);
-    if (data_0209f220[0] == 1) {
+    if (data_0209f220 == 1) {
         msg += (short)(other->param1 + 0x9a);
     } else {
         msg = 0x95;
@@ -978,7 +976,7 @@ int daBombking_c::func_ov078_02124f28()
             return 1;
         }
         {
-            struct Vec3 copy = *(struct Vec3 *)&obj->mPosX;
+            VecFx32 copy = *(VecFx32 *)&obj->mPosX;
             if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&copy) > 0x640000)
                 goto drop;
             if (this->mArenaPosY - 0xa000 <= copy.y)
@@ -1175,7 +1173,7 @@ int daBombking_c::func_ov078_02125448()
 
     p = this->ClosestPlayer();
     if (p != 0) {
-        Vec3 v = *(const Vec3 *)&p->mPosX;
+        VecFx32 v = *(const VecFx32 *)&p->mPosX;
         if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) > 0x640000 ||
             (this->mArenaPosY - 0xa000) > v.y) {
             this->mHorzSpeed = 0;
@@ -1217,7 +1215,7 @@ int daBombking_c::func_ov078_02125448()
         }
 
         if (this->mThrowCooldown == 0) {
-            if (data_0209f220[0] == 1) {
+            if (data_0209f220 == 1) {
                 if (this->DistToCPlayer() < 0x3e8000) {
                     if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x2800) {
                         index = 0;
@@ -1398,7 +1396,7 @@ int daBombking_c::func_ov078_021259ec()
 
                 if (this->mTalkingPlayer->StartTalk(*(fBase_c *)this, 1)) {
                     Message::PrepareTalk();
-                    b = (data_0209f220[0] != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
+                    b = (data_0209f220 != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
                     if (player->ShowMessage(*(fBase_c *)this, b, (Vector3 *)(&v), 0, 0)) {
                         func_02012694(0x12a, &this->mCamSpacePosX);
                         this->mIntroTalked = 1;
@@ -1592,7 +1590,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 int daBombking_c::Behavior()
 {
     if (DistToCPlayer() < 0x1770000) {
-        ((dCamera_c *)data_0209f318)->mFramedActor = this;
+        data_0209f318->mFramedActor = this;
     }
 
     if (mState[1] != 0) {
@@ -1720,7 +1718,7 @@ int daBombking_c::InitResources()
         mSpawnedThrown[i] = (unsigned char)z;
     }
     }
-    mPhase = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
+    mPhase = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x1e) & 1;
     mPhase = mPhase + 1;
     mInitAngleY = mAngleY;
     KingBobOmb_SetState(&data_ov078_0212710c);

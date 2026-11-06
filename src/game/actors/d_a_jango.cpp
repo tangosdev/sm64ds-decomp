@@ -63,6 +63,7 @@ enum daJango_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 /* decl_common.h deliberately NOT included; AngleDiff is declared locally. */
 extern "C" int AngleDiff(int a, int b);
 #include "PathPtr.h"
@@ -177,13 +178,12 @@ extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
-extern int data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern int data_0209e650;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
@@ -194,7 +194,7 @@ typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void 
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
-extern void *data_0209f394;
+extern daPly_c *data_0209f394[];
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211b800, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for func_ov062_0211b8d8, NOT applied: extern void* data_ov062_0211e17c; */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211b8d8, NOT applied: extern "C" int func_ov062_0211c658(unsigned char* c, void* p); */
@@ -214,7 +214,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of _ZNK7PathPtr7GetNodeER7Vector3j, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, Vector3 *v, unsigned int i); */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bd10, NOT applied: extern s8 gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c218, NOT applied: extern int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c218, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int ApproachAngle(void *p, int target, int a, int b, int c); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int RandomIntInternal(int *seed); */
@@ -222,7 +221,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void MulVec3Mat4x3(Vector3 *in, void *m, void *out); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s8 gCurrentSublevel; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX); */
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c594, NOT applied: extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out); */
@@ -383,7 +381,7 @@ int daJango_c::InitResources()
         mPosZ = mPathNodePosZ;
         func_ov062_0211c658(JANGO_STATE_FLY_PATH);
     } else {
-        pl = (daPly_c *)data_0209f394;
+        pl = data_0209f394[0];
         /* No star: if the player has already lost the cap (and param1 is not 3),
            start out holding a cap object, spawned with the player's mCharacter
            shifted left 8. (func_ov062_0211b51c builds the same shape from
@@ -568,9 +566,9 @@ void daJango_c::func_ov062_0211c6a8()
     dActor_c* actor;
 
     Vec3_Asr(&v, &mPos, 3);
-    Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     if (mHeldActorID != 0)
     {
@@ -581,31 +579,31 @@ void daJango_c::func_ov062_0211c6a8()
             mHeldPosY = 0;
             mHeldPosZ = 0;
             MulMat4x3Mat4x3(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
-            mHeldPosX = data_020a0e68[9];
-            mHeldPosY = data_020a0e68[10];
-            mHeldPosZ = data_020a0e68[11];
+            mHeldPosX = data_020a0e68.t.x;
+            mHeldPosY = data_020a0e68.t.y;
+            mHeldPosZ = data_020a0e68.t.z;
             mHeldPosX <<= 3;
             mHeldPosY <<= 3;
             mHeldPosZ <<= 3;
             if (mCarriedItem == CARRIES_STAR)
             {
                 /* Offset (-13.0, 3.0, -4.0), rotation X/Y/Z = 0, -180, -95.6 degrees. */
-                Matrix4x3_FromTranslation(data_020a0e68, -0xd000, 0x3000, -0x4000);
-                Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, 0, -0x8000, -0x4400);
+                Matrix4x3_FromTranslation(&data_020a0e68, -0xd000, 0x3000, -0x4000);
+                Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, -0x8000, -0x4400);
             }
             else
             {
                 /* Offset (-7.0, 1.5, 0.0), rotation X/Y/Z = -67.5, -180, -90 degrees. */
-                Matrix4x3_FromTranslation(data_020a0e68, -0x7000, 0x1800, 0);
-                Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, -0x3000, -0x8000, -0x4000);
+                Matrix4x3_FromTranslation(&data_020a0e68, -0x7000, 0x1800, 0);
+                Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x3000, -0x8000, -0x4000);
             }
-            MulMat4x3Mat4x3(data_020a0e68, &mHeldMat, &mHeldMat);
+            MulMat4x3Mat4x3(&data_020a0e68, &mHeldMat, &mHeldMat);
             actor->mCarryMatrix = (Matrix4x3 *)&mHeldMat;
         }
     }
 
-    Matrix4x3_FromTranslation(data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
-    *(Mtx43 *)&mShadowMat = *(Mtx43 *)data_020a0e68;
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
+    *(Mtx43 *)&mShadowMat = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x40000, 0x258000, 0xf);
 }
 
@@ -692,7 +690,7 @@ int daJango_c::func_ov062_0211c2f4() {
             if (mPathNodeIndex >= 4)
                 mPathNodeIndex = 0;
         } else if (func_ov062_0211b3ac() == 0) {
-            u32 r = (u32)RandomIntInternal(&data_0209e650) >> 8 & 3;
+            u32 r = (u32)RandomIntInternal(&data_0209e650.value) >> 8 & 3;
             if (mPathNodeIndex != r) {
                 mPathNodeIndex = r;
             } else {
@@ -712,7 +710,7 @@ int daJango_c::func_ov062_0211c2f4() {
         zero[1] = 0;
         zero[2] = 0x14000;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3((Vector3 *)zero, data_020a0e68, (Vector3 *)&mSpeedX);
+        MulVec3Mat4x3((Vector3 *)zero, &data_020a0e68, (Vector3 *)&mSpeedX);
         func_ov062_0211c658(JANGO_STATE_CIRCLE);
         return 1;
     }
@@ -746,7 +744,7 @@ int daJango_c::func_ov062_0211c218()
 {
     mTargetAngleY = mAngleY;
     mStateParam = 0;
-    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 3) * 0x64 + 0x12c;
+    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 0x64 + 0x12c;
     if (mHitPlayer == 1) {
         mStateTimer = 0;
         mHitPlayer = 0;
@@ -939,14 +937,13 @@ int daJango_c::func_ov062_0211bc54()
     if (gCurrentSublevel == 0x10) {
         mStateTimer = 0x32;
     } else {
-        mStateTimer =
-            (((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 0xf) + 0x14;
+        mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 0x14;
     }
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
     func_02012694(SND_AT_SWOOP_ENTER, &mCamSpacePosX);
-    mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 3) << 8) + 0x300;
+    mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
     return 1;
 }
@@ -1011,9 +1008,9 @@ int func_ov062_0211ba84(char *c)
         ApproachLinear(actor.mPrevAngleX, pitch, (s16)(actor.mStateParam + 0x500));
     }
     v.z = 0x1e000;
-    Matrix4x3_FromRotationY(data_020a0e68, actor.mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, actor.mAngleX);
-    MulVec3Mat4x3(&v, data_020a0e68, (Vector3 *)&actor.mSpeedX);
+    Matrix4x3_FromRotationY(&data_020a0e68, actor.mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, actor.mAngleX);
+    MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&actor.mSpeedX);
     actor.func_ov062_0211b51c();
     /* Retail reads the timer as unsigned here; the inherited field is s16. */
     if ((u16)actor.mStateTimer == 0 || actor.mWithMeshClsn.IsOnWall() != 0) {
@@ -1343,9 +1340,9 @@ void daJango_c::func_ov062_0211b2fc(){
     }
     v[0].z = 0x28000;
   }
-  Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-  Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mAngleX);
-  MulVec3Mat4x3(&v[0], data_020a0e68, (Vector3 *)&mSpeedX);
+  Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+  Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
+  MulVec3Mat4x3(&v[0], &data_020a0e68, (Vector3 *)&mSpeedX);
 }
 
 // @symbol _ZN9daJango_cD0Ev

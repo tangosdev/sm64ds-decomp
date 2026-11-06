@@ -4,7 +4,7 @@
 extern "C" {
 extern void func_02054430(int x);
 extern void MultiStore_Int(int val, int *dst, int len);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 
 void func_ov007_020bd960(void) {
     volatile int a;

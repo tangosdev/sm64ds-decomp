@@ -6,9 +6,9 @@ extern "C" {
 // @symbol func_ov007_020c39f8
 /* recovered: shared common types */
 extern short data_02082214[];
-extern void func_0205283c(struct Matrix4x3 *out, short a, short b);
-extern void func_02052820(struct Matrix4x3 *out, short a, short b);
-extern void func_02052800(struct Matrix4x3 *out, short a, short b);
+extern void func_0205283c(struct Matrix4x3 *out, int s, int c);
+extern void func_02052820(struct Matrix4x3 *out, int s, int c);
+extern void func_02052800(struct Matrix4x3 *out, int s, int c);
 
 void func_ov007_020c39f8(struct Matrix4x3 *mat, int rx, int ry, int rz) {
     struct Matrix4x3 t;

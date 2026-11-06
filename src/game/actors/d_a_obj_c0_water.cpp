@@ -23,7 +23,7 @@
  * - data_ov012_02111c24 / 02111c90 BTA / CLPS handles; this TU consumes
  *   them, overlay .data owns them. The 021124c8 / 021124d0 KCL / BMD
  *   handles are defined at the end of this file.
- * - data_0209caa0[2] & 0x80000 is the same group flag
+ * - data_0209caa0.file.flags2 & 0x80000 is the same group flag
  *   daObjC0_Switch_c::OnGroundPounded writes; this water drains when it is
  *   set. data_0209f32c is the arm9 water-height word this TU publishes.
  * - no daPly_c.h.
@@ -36,6 +36,7 @@
 #include "SharedFilePtr.h"
 #include "dMap_c.h"
 #include "Sound.h"
+#include "SaveBlock.h"
 
 struct BMD_File;
 struct BTA_File;
@@ -60,7 +61,7 @@ extern C0WaterModelFilePtr data_ov012_021124d0;
 extern C0WaterCollisionFilePtr data_ov012_021124c8;
 extern BTA_File data_ov012_02111c24;
 extern CLPS_Block data_ov012_02111c90;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
 // @symbol daObjC0Water_c_classInit
@@ -90,7 +91,7 @@ int daObjC0Water_c::InitResources() {
                           data_ov012_02111c90);
     mMeshCollider.Enable(this);
     mLoweredY = mPosY - 0x4b0000;
-    if (data_0209caa0[2] & 0x80000) {
+    if (data_0209caa0.file.flags2 & 0x80000) {
         mPosY = mLoweredY;
     }
     return 1;
@@ -102,7 +103,7 @@ int daObjC0Water_c::Behavior() {
         Sound::PlaySecretSound(this, &mSoundTimer);
     if (mPosY <= mLoweredY) {
         mPosY = mLoweredY;
-    } else if (data_0209caa0[2] & 0x80000) {
+    } else if (data_0209caa0.file.flags2 & 0x80000) {
         mSoundID = Sound::PlayLong(mSoundID, 3, 0x96, mCamSpacePos, 0);
         mPosY -= 0x5000;
         mWasJustDrained = 1;

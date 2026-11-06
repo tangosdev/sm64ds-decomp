@@ -35,7 +35,7 @@
       "legacy_source": "src/unnamed/ov063/func_ov063_0211d28c.c",
       "ordinal": 1,
       "size": "0x00000014",
-      "symbol": "_ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWPS_P8dActor_c"
+      "symbol": "_ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWP8dActor_cS3_"
     },
     {
       "address": "0x0211d2a0",

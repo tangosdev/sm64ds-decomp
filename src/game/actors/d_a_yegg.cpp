@@ -93,15 +93,17 @@
 #include "daBtn_c.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "LevelRng.h"
 
 struct dBgPi;
 
 /* Three plain words: the stack vectors the C helpers build, which carry
    none of Vector3's empty destructor. */
-struct Vec3i { s32 x, y, z; };
-struct Vec3_16f { s16 x, y, z; };
 
-struct Spawn { struct Vec3_16f rot; struct Vec3i pos; };
+struct Spawn {
+    Vector3_16 rot;
+    VecFx32 pos;
+};
 
 /* Actor registry IDs this file tests or spawns (symbols/actor_debug_names.tsv). */
 enum {
@@ -141,7 +143,6 @@ extern SharedFilePtr data_ov002_0210e6b0;
 extern SharedFilePtr data_ov002_0210eb78;
 extern s16 data_ov002_021000a8[];
 extern s16 data_02082214[];
-extern int data_0209e650;
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. The copies go through the flat Mtx43: assigning this
    TU's nested Matrix4x3 grows the object by 0x30 bytes. */
@@ -165,20 +166,20 @@ extern int RandomIntInternal(int *seed);
    destinations (measured). */
 extern int func_ov002_020d5f98(void *c, unsigned char *a, unsigned char *b);
 extern int func_ov002_020d6048(void *c);
-extern s32 d_a_yeggNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, struct Vec3_16f *rot, void *cb);
+extern s32 d_a_yeggNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, Vector3_16 *rot, void *cb);
 extern void d_a_yeggRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void d_a_yeggPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_0203568c(void *p, int v);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, int step);
-extern int ApproachAngle(void *cur, short target, int divisor, int band, int maxStep);
+extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
 extern short func_02010844(void *unused, void *v, short angle);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -369,9 +370,11 @@ void daYegg_c::func_ov002_020ec80c(void* b, int count, int sl, short arg5)
             coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *(const Vector3 *)b, 0, mAreaId, -1);
             if (coin != 0) {
                 do {
-                    rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 16) << 27) >> 16;
+                    rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16)
+                               << 27) >>
+                         16;
                 } while (rv == prev);
-                r = (unsigned int)RandomIntInternal(&data_0209e650);
+                r = (unsigned int)RandomIntInternal(&data_0209e650.value);
                 r = r >> 16;
                 coin->mPrevAngleX = zero;
                 sl = sl * ((r % 50) + 100) / 100;
@@ -493,7 +496,7 @@ void daYegg_c::func_ov002_020ecb0c()
     s16 rx;
     s16 rz;
     u16 ang;
-    struct Vec3_16f *pr;
+    Vector3_16 *pr;
     s32 pz;
     s32 px;
 
@@ -1074,7 +1077,7 @@ void daYegg_c::func_ov002_020ed998()
 {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && *(int *)&mPlayer) {
-        volatile struct Vec3i v;
+        volatile VecFx32 v;
         int t9, t10, t11;
         v.x = 0;
         v.y = 0;

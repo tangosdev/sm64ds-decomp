@@ -1,9 +1,8 @@
 #include "nitro/fx/fx.h"
-typedef long long s64;
+#include "types.h"
 
-void Vec3_MulScalarInPlace(int *v, int s)
-{
-    v[0] = FX_MUL(v[0], s);
-    v[1] = FX_MUL(v[1], s);
-    v[2] = FX_MUL(v[2], s);
+void Vec3_MulScalarInPlace(Vector3 *v, int s) {
+    v->x = FX_MUL(v->x, s);
+    v->y = FX_MUL(v->y, s);
+    v->z = FX_MUL(v->z, s);
 }

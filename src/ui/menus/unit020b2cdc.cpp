@@ -774,7 +774,7 @@ void func_ov007_020b2cf0(void) {
 
 // @symbol func_ov007_020b2cdc
 /* The cursor's state machine. */
-int func_ov007_020b2cdc(void) {
-    return (int)data_ov007_02103360->state;
+Ov007MenuState *func_ov007_020b2cdc(void) {
+    return data_ov007_02103360->state;
 }
 }

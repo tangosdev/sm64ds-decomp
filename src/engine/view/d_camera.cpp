@@ -31,6 +31,7 @@
  *   data_0209f49c..data_0209f4ae symbols with (char *) stride arithmetic.
  */
 #include "dCamera_c.h"
+#include "CutsceneSpline.h"
 #include "daPly_c.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Gnd.h"
@@ -48,8 +49,6 @@
 #include "OAM.h"
 #include "G2x.h"
 #include "G3i.h"
-
-typedef struct { int x, y, z; } Vec3;	/* POD triple for the C bodies */
 
 /* Defined at the bottom of this file; every use here only takes the address. */
 extern dCamera_c::State data_0209b008;
@@ -104,7 +103,7 @@ extern u8 gVsExitScreenActive;
 extern u8 gGamePaused;
 extern s8 gCurrentSublevel;
 extern s32 data_0209f32c;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern dClipper data_0209f43c;
 extern s32 gRunningKuppaScript;
 extern Matrix4x3 data_020a0e68;
@@ -120,7 +119,7 @@ extern int StartWithFarCamera();
 extern void *GetViewObj(int idx);
 
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
-extern s16 Vec3_VertAngle(const void *v1, const void *v0);
+extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
 extern int LenVec3(void *v);
@@ -132,7 +131,7 @@ extern void Vec3_MulScalar(void *out, const void *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
-extern void MulVec3Mat4x3(void *dst, const void *src, void *out);
+extern void MulVec3Mat4x3(void *dst, Matrix4x3 *src, void *out);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* local extern: including math/MtxStack.h renumbers this TU's function-local
    statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt
@@ -241,7 +240,7 @@ int dCamera_c::InitResources()
         }
     }
     this->mFovBlend = 0;
-    this->mTargetPlayer = (dActor_c *)data_0209f394[data_0209f250];
+    this->mTargetPlayer = data_0209f394[data_0209f250];
     ChangeArea(this->mTargetPlayer->mAreaId);
     this->mFramedActor = 0;
     this->mFocusActor = 0;
@@ -917,13 +916,13 @@ void dCamera_c::func_0200cf40() {
 
 // @symbol _ZN9dCamera_c13func_0200cce4Ev
 void dCamera_c::func_0200cce4() {
-    Vec3 vec;
-    Vec3 tmp1;
-    Vec3 tmp2;
+    VecFx32 vec;
+    VecFx32 tmp1;
+    VecFx32 tmp2;
     u32 d;
 
     if (mTargetPlayer != 0) {
-        Vec3 *p = (Vec3 *)&mTargetPlayer->mPos;
+        VecFx32 *p = (VecFx32 *)&mTargetPlayer->mPos;
         mTargetPos.x = p->x;
         mTargetPos.y = p->y;
         mTargetPos.z = p->z;
@@ -935,7 +934,7 @@ void dCamera_c::func_0200cce4() {
             tmp1.y = data_02086f2c.y;
             data_02086f2c.z = d1;
         }
-        Vec3_RotateYAndTranslate((Vec3 *)&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &tmp1);
+        Vec3_RotateYAndTranslate((VecFx32 *)&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &tmp1);
 
         d = func_020093d4(mMode->lookAtHeight);
         lookAt.y += d;
@@ -947,7 +946,8 @@ void dCamera_c::func_0200cce4() {
             tmp2.x = data_02086f20.x;
             tmp2.y = data_02086f20.y;
         }
-        Vec3_RotateYAndTranslate((Vec3 *)&pos, (Vec3 *)&lookAt, mTargetPlayer->mAngleY, &tmp2);
+        Vec3_RotateYAndTranslate((VecFx32 *)&pos, (VecFx32 *)&lookAt, mTargetPlayer->mAngleY,
+                                 &tmp2);
 
         dBgCh_Lin line;
         func_0200897c(line);
@@ -1149,10 +1149,10 @@ void dCamera_c::func_0200c9e0(s32 *r1, s32 *r2) {
 
 // @symbol _ZN9dCamera_c13func_0200c66cEPvPiS1_S1_
 int dCamera_c::func_0200c66c(void *pos_, int *out2_, int *out1_, int *arg5_) {
-    Vec3 *pos = (Vec3 *)pos_;
+    VecFx32 *pos = (VecFx32 *)pos_;
     void **out2 = (void **)out2_;
     void **out1 = (void **)out1_;
-    Vec3 tmp;
+    VecFx32 tmp;
     int hval;
     int col1;
     int col2;
@@ -1273,7 +1273,7 @@ extern "C" {
 int dCamera_c::func_0200c394(int a1, void *a2_, void *a3, void **a5, int *a6) {
     unsigned char *a2 = (unsigned char *)a2_;
     CamMode *p = mMode;
-    Vec3 local, local2;
+    VecFx32 local, local2;
     signed char g;
     int flags = p->flags;
     int v;
@@ -1300,7 +1300,7 @@ body:
                     mLookTargetPos.y = q->y;
                     mLookTargetPos.z = q->z;
                 } else {
-                    Vec3 t;
+                    VecFx32 t;
                     sx = *(short *)(a2 + 2);
                     sz = *(short *)(a2 + 6);
                     sy = *(short *)(a2 + 4);
@@ -1334,8 +1334,8 @@ body:
                     mLookTargetPos.z = local2.z;
                     mFocusDist = 0xc0000;
                 } else {
-                    AddVec3((Vec3 *)&mLookTargetPos, a3, (Vec3 *)&mLookTargetPos);
-                    Vec3_AsrInPlace((Vec3 *)&mLookTargetPos, 1);
+                    AddVec3((VecFx32 *)&mLookTargetPos, a3, (VecFx32 *)&mLookTargetPos);
+                    Vec3_AsrInPlace((VecFx32 *)&mLookTargetPos, 1);
                 }
                 *a5 = &data_02087274;
                 return v;
@@ -1362,12 +1362,12 @@ body:
 }
 int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     int r5 = arg4;
-    Vec3 sp8;
-    Vec3 sp14;
-    Vec3 sp20;
-    Vec3 sp2C;
-    Vec3 sp38;
-    Vec3 sp44;
+    VecFx32 sp8;
+    VecFx32 sp14;
+    VecFx32 sp20;
+    VecFx32 sp2C;
+    VecFx32 sp38;
+    VecFx32 sp44;
     int r4;
     int t;
     int sl;
@@ -1429,7 +1429,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     }
     sp8.y += func_020093d4(t);
     sl = Vec3_HorzLen(&sp8);
-    Vec3 sp68;
+    VecFx32 sp68;
     Vec3_MulScalar(&sp68, &mLookTargetPos, mFocusBlend);
     AddVec3(&sp8, &sp68, &sp8);
     if (mFlags & 4) {
@@ -1512,7 +1512,7 @@ extern "C" dActor_c *FindDemoActor(u32 param1);
 
 extern "C" {
 /* local extern: math/CalcLib.h spells the Vec3 helpers with const Vector3 *,
-   which this file's POD Vec3 callers cannot pass; only these two are taken
+   which this file's VecFx32 callers cannot pass; only these two are taken
    from it. */
 extern s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -3014,20 +3014,20 @@ int func_020094a8(dCamera_c *cam) {
 }
 
 // @symbol func_02009414
-/* Walk pos along mPosPath and lookAt along mLookAtPath (func_02008b4c,
+/* Walk pos along mPosPath and lookAt along mLookAtPath (MovePointAlongSpline,
    sharing one segment index and progress), then re-aim. Returns 0 once
    either path has run out. */
 int func_02009414(dCamera_c *cam) {
     int r4 = 1;
-    void *tbl1 = cam->mPosPath;
+    CutsceneSpline *tbl1 = cam->mPosPath;
 
     if (tbl1 != 0) {
-        r4 = func_02008b4c(&cam->pos, &cam->mPathIndex, &cam->mPathProgress, tbl1);
+        r4 = MovePointAlongSpline(&cam->pos, &cam->mPathIndex, &cam->mPathProgress, tbl1);
     }
 
-    void *tbl2 = cam->mLookAtPath;
+    CutsceneSpline *tbl2 = cam->mLookAtPath;
     if (tbl2 != 0) {
-        if (func_02008b4c(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, tbl2) == 0) {
+        if (MovePointAlongSpline(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, tbl2) == 0) {
             r4 = 0;
         }
     }
@@ -3283,34 +3283,16 @@ int dCamera_c::func_02008cb4() {
     return 1;
 }
 
-/* A path point: a negative flag ends the path; amt (whole units) feeds the
-   fixed-point reciprocal that scales progress through the segment. */
-typedef struct {
-    signed char flag;
-    unsigned char amt;
-    short x, y, z;
-} CamPathPoint;
-
-/* The path table the script ops hand in (camera and demo paths): a point
-   count, then the point array. */
-typedef struct {
-    unsigned char numPoints; /* 0x00 */
-    unsigned char pad_01[3];
-    CamPathPoint *points; /* 0x04 */
-} CamPathTable;
-
-// @symbol func_02008b4c
-/* Move out along a path: a spline through the four points from
-   *segIndex, at *segProgress, which advances by the points' rates and
-   carries into the next segment. Returns 1 once the path has run out. */
-int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
-    short *p1 = (short *)segIndex;
-    int *p2 = (int *)segProgress;
+// @symbol MovePointAlongSpline
+/* SM64's move_point_along_spline, in fixed point (CutsceneSpline.h). */
+int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpline *spline) {
+    short *p1 = segment;
+    int *p2 = progress;
     int idx;
-    CamPathPoint *elem;
-    CamPathTable *path = (CamPathTable *)table;
+    CutsceneSplinePoint *elem;
+    CutsceneSpline *path = spline;
     int i;
-    Vec3 v[4];
+    VecFx32 v[4];
     int lo, hi;
     int m;
 
@@ -3321,7 +3303,7 @@ int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
 
     elem = path->points + idx;
 
-    if (elem[0].flag < 0 || elem[1].flag < 0 || elem[2].flag < 0) {
+    if (elem[0].index < 0 || elem[1].index < 0 || elem[2].index < 0) {
         return 1;
     }
 
@@ -3334,16 +3316,16 @@ int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
         v[i].z = z;
     }
 
-    func_ov002_020effb8((Vector3 *)out, *p2, (Vector3 *)&v[0], (Vector3 *)&v[1], (Vector3 *)&v[2],
+    func_ov002_020effb8(pos, *p2, (Vector3 *)&v[0], (Vector3 *)&v[1], (Vector3 *)&v[2],
                         (Vector3 *)&v[3]);
 
     lo = 0;
     hi = 0;
-    if (elem[1].amt != 0) {
-        lo = func_02053200(elem[1].amt << 12);
+    if (elem[1].speed != 0) {
+        lo = func_02053200(elem[1].speed << 12);
     }
-    if (elem[2].amt != 0) {
-        hi = func_02053200(elem[2].amt << 12);
+    if (elem[2].speed != 0) {
+        hi = func_02053200(elem[2].speed << 12);
     }
 
     {
@@ -3546,8 +3528,8 @@ int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
 int func_020082a0(dCamera_c *cam, u8 *src, int id) {
     if (id == gKuppaScriptFrame) {
         func_020094a8(cam);
-        cam->mLookAtPath = (void *)ReadUnalignedInt(src);
-        cam->mPosPath = (void *)ReadUnalignedInt(src + 4);
+        cam->mLookAtPath = (CutsceneSpline *)ReadUnalignedInt(src);
+        cam->mPosPath = (CutsceneSpline *)ReadUnalignedInt(src + 4);
     }
     func_02009414(cam);
     return 1;

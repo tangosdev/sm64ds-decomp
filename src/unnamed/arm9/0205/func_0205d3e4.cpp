@@ -11,16 +11,19 @@ extern "C" {
 extern int FSi_SendCommand(FSFile *self, int a);
 extern void OS_SleepThread(unsigned short *self);
 extern int FSi_ExecuteSyncCommand(FSFile *);
-extern int func_0205d688(void *, int, int, int);
+extern int func_0205d688(FSFile *p_file, void *dst, int len, int async);
 
-void func_0205d4a0(FSFile *self, int a, int b) {
-    if (self->command != 5) {
-        ((unsigned short *)&self->arg.readfile.len)[0] = 0;
-        ((unsigned short *)&self->arg.readfile.len)[1] = 0;
+/* NitroSDK FS_GetPathName: store buf and len in arg.getpath, restarting the
+   measure unless the last command was already FS_COMMAND_GETPATH (5), and
+   send it. */
+int func_0205d4a0(FSFile *p_file, char *buf, u32 len) {
+    if (p_file->command != 5) {
+        p_file->arg.getpath.total_len = 0;
+        p_file->arg.getpath.dir_id = 0;
     }
-    self->arg.readfile.dst = (void *)a;
-    self->arg.readfile.len_org = b;
-    FSi_SendCommand(self, 5);
+    p_file->arg.getpath.buf = (unsigned char *)buf;
+    p_file->arg.getpath.buf_len = len;
+    return FSi_SendCommand(p_file, 5);
 }
 
 int func_0205d3f4(FSFile *t) {
@@ -44,7 +47,7 @@ int func_0205d3f4(FSFile *t) {
     return t->error == 0;
 }
 
-void func_0205d3e4(void *a, int b, int c) {
-    func_0205d688(a, b, c, 1);
+void func_0205d3e4(FSFile *p_file, void *dst, int len) {
+    func_0205d688(p_file, dst, len, 1);
 }
 }

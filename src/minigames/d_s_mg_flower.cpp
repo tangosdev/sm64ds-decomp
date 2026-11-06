@@ -32,6 +32,7 @@
 #include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "G2x.h"
 #include "PlayerInput.h"
@@ -50,7 +51,6 @@ extern "C" {
 extern int RandomIntInternal(int *seed);
 extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
-extern int data_0209d4b8;
 extern s16 data_02082214[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
@@ -150,20 +150,20 @@ void dScMgFlower_c::DealPetals() {
         self->mPetals[clearIndex].fallSpeed = 0;
     }
     if (self->mHoldTimer == 0x14) {
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         self->mPetalsLeft = ((roll * 2) >> 15) + 1;
     } else {
-        int raw = RandomIntInternal(&data_0209d4b8);
+        int raw = RandomIntInternal(&data_0209d4b8.value);
         roll = ((unsigned int)raw >> 16) & 0x7fff;
         if (((roll * 10) >> 15) == 0) {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             self->mPetalsLeft = ((roll * 2) >> 15) + 0x14;
         } else {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             self->mPetalsLeft = ((roll * 8) >> 15) + 8;
         }
     }
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     baseAngle = (roll * 0x10000) >> 15;
     for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
         self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
@@ -176,7 +176,7 @@ void dScMgFlower_c::DealPetals() {
     }
     for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
         int swapIndex;
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         swapIndex = (self->mPetalsLeft * roll) >> 15;
         if (swapIndex != shuffleIndex) {
             u16 savedAngle;

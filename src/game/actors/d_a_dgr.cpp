@@ -42,11 +42,6 @@ enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* POD position. Vector3's destructor is not in Behavior's bytes. */
-typedef struct {
-    s32 x, y, z;
-} Vec3;
-
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
@@ -95,7 +90,7 @@ CLPS_Block data_ov025_02112c28 = {
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 void func_02012694(unsigned int, const Vector3 *);
-void func_020393d4(int *collider, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daDgr_c_classInit
@@ -116,7 +111,7 @@ s32 daDgr_c::InitResources() {
         ((dBgW_KcMbg *)(&mMeshCollider))
             ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mAngleY = 0;
     mBasePosY = mPosY;
     mAngleXSpeed = 0;

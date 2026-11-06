@@ -33,7 +33,7 @@
 // The argument registers are pushed across the call as they are in every other routine in
 // this block, which is the tell that these are one hand-written assembly file.
 
-extern int func_0207322c(void);
+extern unsigned int *func_0207322c(void);
 
 asm float _ffltu(unsigned int value)
 {

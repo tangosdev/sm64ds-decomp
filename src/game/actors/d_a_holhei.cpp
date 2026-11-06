@@ -39,6 +39,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "SpawnInfo.h"
+#include "LevelRng.h"
 
 /* A state record: daHolhei_c_ChangeState stores its address in mState
    and calls a non-null enter; past the UpdateKillByInvincibleChar check,
@@ -55,19 +56,19 @@ extern short func_02010844(void* unused, Vector3* v, short angle);
 extern void func_02012694(unsigned int a, void *p);
 extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_ov002_020db54c(int p, int a, int b, int s);
+extern void func_ov002_020db54c(void *self, int a, int b, short c);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int data_02092138;
-extern void* data_0209f318;
+struct dCamera_c;
+extern dCamera_c *data_0209f318;
 int ApproachAngle(short *angle, short target, int a, int b,
                   int c); /* local extern: named parameters preserve @NNN */
-extern int data_0209e650[];
 short Vec3_HorzAngle(const Vector3 *v0,
                      const Vector3 *v1); /* local extern: named parameters preserve @NNN */
 int Vec3_Dist(const Vector3 *a,
               const Vector3 *b); /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, s16 angY);
+extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, int angY);
 extern void MulMat4x3Mat4x3(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0, struct Matrix4x3 *mF);
 extern int Math_Function_0203b14c(void*, int, int, int, int);
 unsigned short
@@ -397,8 +398,9 @@ int daHolhei_c::func_ov062_02116bf8() {
 /* Pick a random facing and a random time on the walk animation. */
 // @symbol _ZN10daHolhei_c19func_ov062_02116b80Ev
 int daHolhei_c::func_ov062_02116b80() {
-    mTargetAngY = (short)(((unsigned int)RandomIntInternal(data_0209e650) >> 8) << 0xc);
-    mStateTimer = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x64);
+    mTargetAngY = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x64);
     mModel.speed = 0x1000;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
     return 1;
@@ -675,8 +677,9 @@ int daHolhei_c::func_ov062_0211632c() {
 // @symbol _ZN10daHolhei_c19func_ov062_021162b8Ev
 int daHolhei_c::func_ov062_021162b8() {
     mModel.SetAnim((BCA_File *)(gHoruheiLiftLoopAnimationFile.filePtr), 0, 0x1000, 0);
-    mStateTimer = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x14);
-    mTargetAngY = (short)(((unsigned int)RandomIntInternal(data_0209e650) >> 8) << 0xc);
+    mStateTimer =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x14);
+    mTargetAngY = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
     return 1;
 }
 
@@ -700,7 +703,7 @@ int daHolhei_c::func_ov062_02116238() {
 // @symbol _ZN10daHolhei_c19func_ov062_021161a8Ev
 int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
-        func_ov002_020db54c((int)mHeld, 0x28000, 0x50000, mAngleY);
+        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
         mHeld = 0;
         func_02012694(0x126, &mCamSpacePosX);
     }

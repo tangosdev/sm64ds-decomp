@@ -2,7 +2,7 @@
 #include "Ov007Work.h"
 #include "Ov007Item.h"
 extern void func_ov007_020b1390(int x);
-extern char* func_ov007_020b2cdc(void);
+extern Ov007MenuState *func_ov007_020b2cdc(void);
 
 void func_ov007_020b1224(void)
 {
@@ -20,10 +20,10 @@ void func_ov007_020b1224(void)
         /* func_ov007_020b2cdc returns the menu cursor's state
          * (func_ov007_020b2e64's Ov007Cursor::state) */
         if ((unsigned int)(val - 0xa) <= 1) {
-            Ov007MenuState *p = (Ov007MenuState *)func_ov007_020b2cdc();
+            Ov007MenuState *p = func_ov007_020b2cdc();
             p->requestedState = 9;
         } else {
-            Ov007MenuState *p = (Ov007MenuState *)func_ov007_020b2cdc();
+            Ov007MenuState *p = func_ov007_020b2cdc();
             p->requestedState = (short)val;
         }
     }

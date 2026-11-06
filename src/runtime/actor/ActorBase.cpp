@@ -55,7 +55,7 @@ extern int  data_020a4b78[];
 extern int  data_020a4b88[];
 extern int  data_020a4b98[];
 extern int  data_020a4ba8[];
-extern int  data_02099f24[];
+extern int data_02099f24;
 extern u32  data_02099e70;
 extern u32  data_020a4b60;
 extern u16  data_020a4b54;
@@ -82,7 +82,7 @@ extern void *func_02043810(void *p);
 }
 
 /* aliveState is 0 before the actor joins the lists, 1 while it is alive
- * in them and 2 once it is dying; data_02099f24[0] is a global mode word.
+ * in them and 2 once it is dying; data_02099f24 is the frame loop's phase word.
  * These int-returning predicates are what make the ROM materialize 0/1
  * before testing it. */
 static inline int IsPendingState(u32 state) {
@@ -280,7 +280,7 @@ void fBase_c::AfterInitResources(u32 vfSuccess)
     if (vfSuccess != 2)
         return;
     func_0203b27c(data_020a4b88, &manager.behaviorNode);
-    if (GlobalModeIs(data_02099f24, 3)) {
+    if (GlobalModeIs(&data_02099f24, 3)) {
         unk_010 = 1;
         return;
     }
@@ -654,7 +654,7 @@ void func_020433b8(char* self)
     if (actor->unk_010 != 0) return;
     if (!IsPendingState(actor->aliveState))
         return;
-    if (GlobalModeIs(data_02099f24, 2)) {
+    if (GlobalModeIs(&data_02099f24, 2)) {
         actor->unk_011 = 1;
         return;
     }

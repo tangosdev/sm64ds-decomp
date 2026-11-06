@@ -20,6 +20,7 @@ enum d_a_obj_mc_metalnet_AssetId { ASSET_MC_METALNET_BMD = 0x0691, ASSET_MC_META
 
 #include "daObjMc_Metalnet_c.h"
 #include "SharedFilePtr.h"
+#include "SaveBlock.h"
 
 struct McMetalnetModelFilePtr : SharedFilePtr {
     McMetalnetModelFilePtr(u32 fileID);
@@ -40,7 +41,7 @@ extern CLPS_Block data_ov009_02112bf8;
 extern unsigned char data_0209f2d8;
 /* The one global SaveData instance (include/SaveData.h). Indexed as int[] here,
    the way d_a_set_se.cpp does it; [2] is the 0x008 unlock word. */
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 
 extern "C" {
 unsigned char NumStars(void);
@@ -84,7 +85,7 @@ s32 daObjMc_Metalnet_c::InitResources() {
     mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112bf8);
 
     if ((param1 & 0xff) == 0xff) {
-        if (!IsVsMode() && (data_0209caa0[2] & 0x80000) != 0)
+        if (!IsVsMode() && (data_0209caa0.file.flags2 & 0x80000) != 0)
             return 0;
     } else {
         if (!IsVsMode() && NumStars() >= 0x96)

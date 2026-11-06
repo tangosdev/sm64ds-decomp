@@ -2,7 +2,7 @@
 #include "Ov007Model.h"
 
 extern void *func_ov007_020c92ac(void);
-extern void func_02046d50(void *modelFile, void *file);
+extern void func_02046d50(struct BMD_File *model, struct BTP_File *file);
 
 /* Binds the model's texture-sequence animations: n BTP files, a fresh
  * func_ov007_020c92ac player, and each nonzero file prepared against the

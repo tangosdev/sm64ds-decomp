@@ -17,7 +17,7 @@ struct WMStartMPCallback;
 extern void func_0203fdac(struct WMStartMPCallback *cb);
 
 extern int WM_StartMPEx(void *fn, int a, unsigned short b, int c, unsigned short s0,
-                        unsigned short s1, int z0, int z1, int z2, int z3, int one);
+                        unsigned short s1, unsigned short z0, int z1, int z2, int z3, int one);
 
 /* WM_StartMPEx's mpFreq (the sixth argument) is 1 unless the parent
  * parameters ask for continuous MP (CS_Flag). */

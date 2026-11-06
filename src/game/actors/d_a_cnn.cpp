@@ -61,6 +61,7 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 typedef void (daCnn_c::*State)();
 
@@ -73,7 +74,6 @@ extern SharedFilePtr data_ov002_0210da38;
 extern u16 data_ov098_0213c63c[3];
 /* The sine and cosine table. */
 extern s16 data_02082214[];
-extern int data_0209e650;
 
 /* local extern: arm9/ov002/ov102 C helpers with no shared header yet. The
    two daPly_c helpers are defined in d_a_ply_methods.cpp, the Bob-omb one in
@@ -209,11 +209,12 @@ int daCnn_c::CleanupResources() {
 void daCnn_c::PickNextAim() {
     int angleY;
     mTargetPitch =
-        (short)(((unsigned int)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) + 0x1000);
+        (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) + 0x1000);
     angleY = mAngleY;
     do {
-        mTargetAngleY = (short)(mHomeAngleY + 0xe000 +
-                                ((unsigned int)RandomIntInternal(&data_0209e650) >> 16 & 0x3fff));
+        mTargetAngleY =
+            (short)(mHomeAngleY + 0xe000 +
+                    ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16 & 0x3fff));
     } while (AngleDiff(angleY, mTargetAngleY) < 0x800);
 }
 

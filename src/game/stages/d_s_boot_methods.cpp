@@ -45,7 +45,7 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern dFdColor_c data_0209f5e8;
 
-u32 LoadCompressedFileAt(u16 fileID, void *target);
+u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int handle);
 
 void DecompressLZ16(const void *src, void *dst);

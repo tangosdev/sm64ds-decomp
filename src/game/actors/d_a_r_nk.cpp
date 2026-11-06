@@ -76,11 +76,13 @@ enum { kAltLevelID = 0x18 };    /* LEVEL_ID with its own offer/result message ID
 
 /* Ids by when they play. */
 enum {
-    kSfxFootstep = 0xe4,        /* a foot comes down in the run cycle */
-    kSfxTurnToTalk = 0xec,      /* Koopa has finished turning to face the player */
-    kSfx4D = 0x4d,              /* played at the race start (two positional calls) and, in 2D, when the post-race talk begins; the sound itself is unidentified */
-    kMusicRace = 0x41,          /* loaded on layer 2 when the race starts, stopped when it ends */
-    kPtclFootstepDust = 0xf9    /* puff beside a foot */
+    kSfxFootstep = 0xe4,   /* a foot comes down in the run cycle */
+    kSfxTurnToTalk = 0xec, /* Koopa has finished turning to face the player */
+    /* Played at the race start (two positional calls) and, in 2D, when the
+     * post-race talk begins; the sound itself is unidentified. */
+    kSfx4D = 0x4d,
+    kMusicRace = 0x41,       /* loaded on layer 2 when the race starts, stopped when it ends */
+    kPtclFootstepDust = 0xf9 /* puff beside a foot */
 };
 
 /* Distances, in fix12 units (0x1000 = 1.0; the numbers here are the whole-unit

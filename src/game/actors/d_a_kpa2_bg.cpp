@@ -54,7 +54,7 @@ extern CLPS_Block data_ov046_021115bc;
 extern "C" {
 int Sound_PlayIfNotActive(int handle, int a, int b, int c);
 void Vec3_Asr(void *dst, void *src, int shift);
-void func_020393d4(void *, void *);
+void func_020393d4(dBgW *, BeforeClsnCallback);
 }
 
 // @symbol _ZN10daKpa2Bg_cD1Ev
@@ -136,7 +136,7 @@ int daKpa2Bg_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)((KCL_File *)dBgW_Kc::LoadFile(daKpa2Bg_c_ClsnFile)),
                               *(const Matrix4x3 *)(&mClsnMat), 0x1000, mAngleY,
                               *(CLPS_Block *)(&data_ov046_021115bc));
-    func_020393d4(&mMovingMeshCollider2, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMovingMeshCollider2, &dBgW::UpdatePosAndAngs);
     mMovingMeshCollider2.Enable(this);
     mAngleXSpeed = 0;
     mAngleYSpeed = 0;

@@ -37,6 +37,7 @@ struct C { char pad[0x5004]; PMF m; };
 
 /* Whole-matrix copies go through this so they stay one block move. */
 #include "private/mtx43.h"
+#include "LevelRng.h"
 struct V3 { int w[3]; };
 
 /* Vtable shim for InitResources' last call, a virtual dispatch through slot
@@ -81,12 +82,14 @@ extern "C" {
 void Mg_CommitRecords(void);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
 int  GetGameLanguage(void);
-void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+struct OamAttr;
+struct Matrix2x2;
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void FreeGfxSlotsById(int arg);
-int  LoadFile(int handle);
+void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Camera_UpdateMatrices(void *cam);
 
@@ -104,7 +107,6 @@ void Jump3D_EnableInput(void);
 int  RandomIntInternal(int *seed);
 
 extern Matrix4x3 data_020a0e68;
-extern int  data_0209e650;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;
 extern s16  data_02082614;
@@ -169,7 +171,9 @@ void dScMgJump_c::StartRound(int arg)
         idx = mLevel;
     } else {
         do {
-            idx = (int)((u32)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) * 0xa >> 0xc;
+            idx =
+                (int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) * 0xa >>
+                0xc;
         } while (idx == (u32)sJumpLastPick);
         sJumpLastPick = idx;
     }
@@ -216,7 +220,7 @@ int dScMgJump_c::CanEndState(int sel)
 s32 dScMgJump_c::InitResources()
 {
     s32 idx;
-    int buf1, buf2;
+    void *buf1, *buf2;
     s32 fov;
     void *modelFile;
     int r;
@@ -224,10 +228,10 @@ s32 dScMgJump_c::InitResources()
     idx = GetGameLanguage();
     buf1 = LoadFile(sJumpNcgByLanguage[idx]);
     buf2 = LoadFile(0xd1);
-    DecompressLZ16((void *)buf1, (void *)0x6400000);
-    GX::LoadOBJPltt((void *)buf2, 0, 0x80);
-    Deallocate((void *)buf1);
-    Deallocate((void *)buf2);
+    DecompressLZ16(buf1, (void *)0x6400000);
+    GX::LoadOBJPltt(buf2, 0, 0x80);
+    Deallocate(buf1);
+    Deallocate(buf2);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
@@ -451,8 +455,7 @@ s32 dScMgJump_c::Render()
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)sJumpTextSpritesByLanguage[idx][1], (void *)y, 0xc,
-                              (void *)0);
+                DrawOamSprite(sJumpTextSpritesByLanguage[idx][1], y, 0xc, 0);
             } else {
                 RenderOamMainScreen(sJumpLifeIconSprite, y, 0xc, -1, -1);
             }

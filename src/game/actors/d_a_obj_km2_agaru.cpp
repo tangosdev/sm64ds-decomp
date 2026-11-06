@@ -45,8 +45,8 @@ CLPS_Block data_ov045_021125d0 = {
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void func_020393d4(int *collider, int callback);
-void func_020393c4(int *collider, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 enum {
@@ -61,10 +61,10 @@ extern "C" daObjKm2_Agaru_c *daObjKm2_Agaru_c_classInit() {
     return new daObjKm2_Agaru_c();
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c15StoodOnCallbackEPvPS_P8dActor_c
+// @symbol _ZN16daObjKm2_Agaru_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* The collider's second callback word: drop the collider, forward the pair. */
-void daObjKm2_Agaru_c::StoodOnCallback(void *collider, daObjKm2_Agaru_c *self, dActor_c *other) {
-    self->OnStoodOn(other);
+void daObjKm2_Agaru_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *other) {
+    static_cast<daObjKm2_Agaru_c *>(self)->OnStoodOn(other);
 }
 
 // @symbol _ZN16daObjKm2_Agaru_c9OnStoodOnEP8dActor_c
@@ -82,8 +82,8 @@ s32 daObjKm2_Agaru_c::InitResources() {
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov045_02113180);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov045_021125d0);
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     mWaitTimer = 0;
     mState = 0;

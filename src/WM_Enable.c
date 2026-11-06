@@ -4,21 +4,18 @@
  * in: its own work area, the shared status and the ARM7-to-ARM9 FIFO
  * (WM_Init carved all three out of the system buffer).
  * WM_ERRCODE_OPERATING (2) once it is queued. */
-extern int WM_CheckStateEx(int paramNum, ...);
-extern void WM_SetCallbackTable(int i, int val);
-extern int *WM_GetSystemWork(void);
-extern int WM_SendCommand(short id, unsigned short paramNum, ...);
+#include "private/wm_views.h"
 
-int WM_Enable(int callback) {
+int WM_Enable(void *callback) {
     int result;
-    int *sys;
+    WMArm9Buf *sys;
 
     result = WM_CheckStateEx(1, 0);
     if (result != 0)
         return result;
     WM_SetCallbackTable(3, callback);
     sys = WM_GetSystemWork();
-    result = WM_SendCommand(3, 3, sys[0], sys[1], sys[4]);
+    result = WM_SendCommand(3, 3, sys->WM7, sys->status, sys->fifo7to9);
     if (result != 0)
         return result;
     return 2;

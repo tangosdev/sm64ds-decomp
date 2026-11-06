@@ -113,9 +113,8 @@ enum {
     daWanwan2_SND_COIN_SPAWN  = 0x3a    /* Behavior's COIN spawn (played whether or not Spawn returned an actor) */
 };
 
-/* Three plain words retained for the daPly_c::Hurt ABI bridge and chain-link
-   arithmetic below; the collision offset uses the real Vector3 interface. */
-struct Vec3i { s32 x, y, z; };
+/* The daPly_c::Hurt ABI bridge and chain-link arithmetic below use NitroSDK
+   VecFx32; the collision offset uses the real Vector3 interface. */
 
 /* func_ov100_02143b68 copies its identity matrix through the flat Mtx43: a
    copy through the C++ Matrix4x3 splits into two block moves here. */
@@ -169,7 +168,7 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(void *out, const void *in, int scale);
 int Vec3_HorzLen(void *v);
-int LenVec3(Vector3 *v);
+int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(short *cur, short target, int step, int a, int b);
 int atan2_hold_d_a_wanwan2_1(int y, int x);
@@ -182,7 +181,7 @@ extern ChompState data_ov100_021486f4;
 /* The ROM PMF constants the state record copies from (unlicensed .data). */
 extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
-extern unsigned char data_0209f2d8[];
+extern unsigned char data_0209f2d8;
 extern short data_02082214[];
 extern Matrix4x3 data_020a0e68;
 }
@@ -297,7 +296,7 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
     if (other->mIsVanish != 0)
         return;
     {
-        Vec3i pos;
+        VecFx32 pos;
         pos.x = self->mPosX;
         pos.y = self->mPosY;
         pos.z = self->mPosZ;
@@ -309,7 +308,7 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
 // @symbol func_ov100_021435e8
 /* The actor kept at the chain's last link (mLinkPos[5]). While
    mChainEndActorID is 0 it is spawned (once Spawn succeeds): SILVER_STAR (0xb3) normally, or
-   when data_0209f2d8[0] is 1 a STAR (0xb2, param mSpawnParam | 0x30) plus a
+   when data_0209f2d8 is 1 a STAR (0xb2, param mSpawnParam | 0x30) plus a
    STARBASE (0xb4) whose ID is not kept. Its uniqueID goes into
    mChainEndActorID, and afterwards the actor is pinned to the link every
    frame until it is gone or its +0x440 word (daStar_c's unk_440) reads 5;
@@ -319,7 +318,7 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
 {
     if (c->mChainEndDone != 0) return;
 
-    int flag = (data_0209f2d8[0] == 1);
+    int flag = (data_0209f2d8 == 1);
     if (!flag) {
         if (c->mChainEndActorID == 0) {
             dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0,
@@ -391,15 +390,15 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
    carries. */
 extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 {
-    Vec3i in, out, cur, delta, added, v48, v54, v60;
-    Vec3i *pos, *vel, *src;
+    VecFx32 in, out, cur, delta, added, v48, v54, v60;
+    VecFx32 *pos, *vel, *src;
     int *heights;
     int loop;
     int angOff;
     int idx, val, ang, hlen, angz;
 
-    pos = (Vec3i *)thisx->mLinkPos;
-    vel = (Vec3i *)thisx->mLinkVel;
+    pos = (VecFx32 *)thisx->mLinkPos;
+    vel = (VecFx32 *)thisx->mLinkVel;
     heights = thisx->mLinkMinY;
 
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
@@ -435,8 +434,10 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
     }
 
     for (; loop < 6; ) {
-        if (loop != 0) src = (Vec3i *)((char *)pos - 0xc);
-        else src = &cur;
+        if (loop != 0)
+            src = (VecFx32 *)((char *)pos - 0xc);
+        else
+            src = &cur;
         delta.x = vel->x + (pos->x - src->x);
         delta.z = vel->z + (pos->z - src->z);
         idx = ((unsigned short)(short)(angOff + (thisx->mChainTimer << 12))) >> 4;
@@ -459,8 +460,8 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         *heights = thisx->mPosY - 0xc8000;     /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
         angOff += 0x2000;
-        vel = (Vec3i *)((char *)vel + 0xc);
-        pos = (Vec3i *)((char *)pos + 0xc);
+        vel = (VecFx32 *)((char *)vel + 0xc);
+        pos = (VecFx32 *)((char *)pos + 0xc);
         loop++;
         heights = heights + 1;
     }
@@ -593,7 +594,7 @@ int daWanwan2_c::Render()
    at 23 units/frame (0x17000), and when the floor probe hits plays
    SND_FLOOR_HIT (unless unk_6a8 is nonzero), sets its vertical speed to 20
    units/frame (0x14000) and kicks up landing dust. Every 200 frames
-   (mCoinTimer) in game mode 1 (data_0209f2d8[0] is 1) it spawns a COIN at its
+   (mCoinTimer) in game mode 1 (data_0209f2d8 is 1) it spawns a COIN at its
    position, its mPrevAngleY set to 0x10000 / mPathNodeIndex (truncated to 16
    bits; this divides by zero if the index has wrapped to 0), its mVertSpeed to
    4 units/frame and its mSpeedX and mSpeedZ to 0, playing SND_COIN_SPAWN
@@ -643,7 +644,7 @@ int daWanwan2_c::Behavior()
         HugeLandingDust(true);
     }
 
-    int flag = (data_0209f2d8[0] == 1);
+    int flag = (data_0209f2d8 == 1);
     if (flag != 0 && mCoinTimer == 0) {
         int q16 = __aeabi_idiv(0x10000, mPathNodeIndex);
         short spd = (short)q16;

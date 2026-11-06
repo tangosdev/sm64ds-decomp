@@ -2,7 +2,7 @@
 #include "Ov007Model.h"
 
 extern void func_ov007_020bc374(Ov007Model *m, int i, int startFrame, int fadeFrames);
-extern void func_ov007_020bc3dc(Ov007Model *m, int i, int startFrame, int d);
+extern void func_ov007_020bc3dc(Ov007Model *m, int i, int startFrame);
 extern void func_ov007_020bc2e4(Ov007Model *m, int i, int startFrame);
 extern void func_ov007_020bc32c(Ov007Model *m, int i, int startFrame);
 extern void func_ov007_020be980(struct Ov007Figure *fig, int anim, int a2);
@@ -18,7 +18,7 @@ void func_ov007_020b2614(int anim, int startFrame, int fadeFrames) {
     if (fadeFrames > 0) {
         func_ov007_020bc374(WORK->model, anim, startFrame, fadeFrames);
     } else {
-        func_ov007_020bc3dc(WORK->model, anim, startFrame, fadeFrames);
+        func_ov007_020bc3dc(WORK->model, anim, startFrame);
         WORK->model->visible = 1;
         WORK->model->animTick = 1;
     }

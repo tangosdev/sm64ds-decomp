@@ -31,10 +31,10 @@ extern void *func_0204068c(u16 a);
 extern s32 func_0204271c(void *o);
 extern s32 func_02042748(void *a, void *b);
 extern s32 func_02040a84(void);
-extern void func_02040a5c(void);
+extern void func_02040a5c(u32 val);
 extern s32 func_0203fd64(void);
 extern void func_02042778(void);
-extern void *func_0203f604(void);
+extern void *func_0203f604(int unused, unsigned int size, void *ptr);
 extern void func_0203f644(void);
 
 extern u8 data_02099e1c;
@@ -364,8 +364,7 @@ void func_0203ea5c(void) {
                                     if ((var_r3 != 0) && !(data_020a1154[0].flags & 0x2000) &&
                                         !(data_020a1040.flags & 0x2000)) {
                                         if ((u32)data_02099e18 > 2U) {
-                                            func_02040a84();
-                                            func_02040a5c();
+                                            func_02040a5c(func_02040a84());
                                         }
                                         data_020a0f2c = 0;
                                         do {
