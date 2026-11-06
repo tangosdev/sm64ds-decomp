@@ -287,43 +287,6 @@ struct KpaTexSequenceFilePtr : SharedFilePtr {
 typedef void (daKpaTail_c::*KpaTailState)();
 extern KpaTailState data_ov060_0211ae9c[];
 
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_021132a4, NOT applied:
-typedef struct { int x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_021135fc, NOT applied:
-typedef struct Vector3 { int x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_02113a94, NOT applied:
-typedef struct Vector3 { int x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov060_021140c0, NOT applied:
-typedef signed short s16;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_021140c0, NOT applied:
-typedef struct { s32 x, y, z; } Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's32', from the legacy file for func_ov060_02114858, NOT applied:
-typedef int s32;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov060_02114858, NOT applied:
-typedef struct
-{
-  int x;
-  int y;
-  int z;
-} Vector3;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'dBgCh_Gnd', from the legacy file for func_ov060_0211577c, NOT applied:
-typedef struct dBgCh_Gnd { char filler[0x44]; int clsnY; char rest[0x8]; } dBgCh_Gnd;
-*/
-
 /* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for _ZN7daKpa_c6RenderEv, NOT applied:
 struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(void*); };
 */
@@ -1100,7 +1063,7 @@ void daKpa_c::func_ov060_0211577c(){
     this->mAngleX = func_02010844(this, &this->mGroundNormalX, this->mAngleY);
     this->mAngleZ = func_02010844(this, &this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
 skip_angles:
-    Vec3_Asr(&v, (Vector3 *)&this->mPosX, 3);
+    Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);

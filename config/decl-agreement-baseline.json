@@ -1335,7 +1335,7 @@
         "param:#1 Vec3 *"
       ],
       "src/minigames/d_mg_jump3d_mario.cpp": [
-        "param:#1 Jump3DVec *"
+        "param:#1 VecFx32 *"
       ]
     },
     "NumStars": {
