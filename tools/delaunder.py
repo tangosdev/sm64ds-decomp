@@ -48,6 +48,43 @@ previously accepted text, because removals interact. Per-file, per-site, in orde
 Only ENROLLED files are considered. A file the ROM build does not compile has no
 byte gate behind it, so "it still verifies" would prove nothing there.
 
+WHAT THE GATE COVERS, AND WHAT IT STILL DOES NOT
+------------------------------------------------
+Until 2026-11-06 this tool byte-checked ONE function per file -- module_index() kept the
+last enrolled row per path -- which is unsafe on exactly the consolidated translation
+units most of src/ now consists of. One --apply run over src/engine changed seven files
+and tools/prepush_linkcheck.py called all seven NO-REPRO; on d_a_ply_methods.cpp the tool
+accepted 21 of 22 sites where the truth is 4. Three things were wrong, and all three are
+fixed here:
+
+  * every enrolled symbol of the file is gated now, not one (GATED_SECTIONS, so
+    __sinit_<file> is included);
+  * the candidate is written into a private directory under its ORIGINAL BASENAME,
+    because mwccarm derives symbol names from the file name (__sinit_<file>, and the
+    numbered local-class symbols like Bundle$902d_a_mky_cpp) -- compiled as cand_7.cpp a
+    candidate cannot match them, and the old shared cand_<N> namespace also let two
+    concurrent sweeps overwrite each other;
+  * a byte-identical removal that shifts the per-TU @NNN local numbering is declined,
+    via the __sinit fingerprint, because landing it needs defined_symbol_renames re-keyed.
+
+Still NOT seen by this tool, measured the same day and left for a human:
+
+  * MASK needs an enclosing parenthesis group, so `*cur = ip & 0xFFFFFFFFFFFFFFFF;`,
+    `& ~0ULL`, and a mask hidden behind a macro are all invisible.
+  * ROUNDTRIP removes a pair's two casts together. Dropping ONLY the outer widening cast
+    is byte-free at many sites the tool calls load-bearing -- but byte-freeness is not
+    sufficient there: where the outer cast carries the arithmetic (isdoverlay, G3i, cstd)
+    dropping it silently wraps in 32 bits. A rule for this needs to be restricted to
+    address round-trips inside a pointer cast.
+  * `(T *)(int)p` -- a pointer round-tripped through int -- matches no rule: ROUNDTRIP and
+    WIDEN want a 64-bit outer cast and CVCAST's scalar pattern has no star in it. It was
+    97% free where it was swept by hand.
+  * the reverse-order `(int)((long long)x)` shape has no rule either.
+
+tools/prepush_linkcheck.py remains the authority after a sweep: it compares at the delink
+extent, which this tool cannot do, and that is the difference on func_0206a928, where
+config/arm9/symbols.txt records 0x1360 while the function's literal pool runs to 0x1364.
+
 Edits are textual deletions of whole tokens, with the enclosing parenthesis group
 rebalanced, so they cannot change the parse of surrounding code. Comment and string
 regions are masked out before sites are located: the idiom appears in prose too, and
@@ -63,10 +100,12 @@ langmode metric is a regex over source text, the reason the metric would not mov
 import argparse
 import concurrent.futures
 import json
+import os
 import pathlib
 import re
+import shutil
 import sys
-import threading
+import tempfile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
@@ -123,6 +162,15 @@ VOLATILE_DECL_RE = re.compile(
     r"\b(?:const\s+)?volatile\s+([A-Za-z_]\w*)\s*\*\s*(?:volatile\s*)?([A-Za-z_]\w*)\s*[;,)=]")
 
 KINDS = ("MASK", "ROUNDTRIP", "WIDEN", "CVCAST", "CVSTRIP", "PARENS")
+
+# Which sections module_index() gates on. `.init` is here for `__sinit_<file>`, and it
+# is not an afterthought: a removal can be byte-identical and still shift mwccarm's
+# per-TU `@NNN` local numbering, and then `__sinit` relocates against names
+# `config/tu_manifest.d/**` no longer maps. That is reported WRONG, not NO-REPRO, and
+# while this tool gated `.text` alone it could not see it at all -- four of the twelve
+# blocking verdicts one sweep produced were exactly this. enroll.candidates() files
+# those rows as `.init` (305 of them), which is why `sec != ".text"` dropped them.
+GATED_SECTIONS = (".text", ".init")
 
 # The kinds langmode_audit counts as codegen hacks. PARENS is a cosmetic tidy, not a
 # hack, and is excluded there; keeping the list here means the audit and the sweep
@@ -369,21 +417,37 @@ def enrolled_paths():
 
 
 def module_index():
-    """src-relative path -> (symbol, addr, size, module label), enrolled functions only."""
+    """src-relative path -> [(symbol, addr, size, module label), ...], enrolled only.
+
+    EVERY enrolled `.text` symbol the file owns, not one of them. This used to keep a
+    single row per path (`idx[rel] = ...` in a loop, so the last row won) and that
+    made the tool unsafe on exactly the files most of `src/` now consists of: a
+    consolidated translation unit was byte-checked on ONE of its functions, and a
+    removal anywhere else in the file was "verified" by comparing a function the edit
+    cannot affect.
+
+    Measured on three slices before the fix: a sweep of `src/engine` changed seven
+    files and all seven came back NO-REPRO from `tools/prepush_linkcheck.py`; on
+    `d_a_ply_methods.cpp` the tool accepted 21 of 22 sites where the true answer is 4;
+    and the symbol it happened to pick was often a one-line `*_classInit` factory
+    containing no launder site at all, or a symbol defined in a DIFFERENT translation
+    unit, which made the whole file skip with "baseline does not verify".
+
+    The section filter is GATED_SECTIONS, not `.text`, so a file's `__sinit_<file>` is
+    gated too -- see the note on that constant for why that one matters on its own.
+    """
     live = enrolled_paths()
     idx = {}
     rows = enroll.candidates()
     rows = rows[0] if isinstance(rows, tuple) else rows
     for d, sym, rel, addr, size, sec in rows:
         rel = rel.replace("\\", "/")
-        if sec != ".text" or rel not in live:
+        if sec not in GATED_SECTIONS or rel not in live:
             continue
-        idx[rel] = (sym, addr, size, RC.module_label(d, CONFIG))
+        idx.setdefault(rel, []).append((sym, addr, size, RC.module_label(d, CONFIG)))
+    for rel in idx:
+        idx[rel].sort(key=lambda r: r[1])
     return idx
-
-
-_TMP_LOCK = threading.Lock()
-_TMP_N = [0]
 
 
 def read_source(p):
@@ -400,25 +464,56 @@ def write_source(p, text):
     p.write_bytes(text.encode("utf-8"))
 
 
-def _tmp_path(ext):
-    with _TMP_LOCK:
-        _TMP_N[0] += 1
-        n = _TMP_N[0]
-    d = REPO / "build" / "delaunder"
-    d.mkdir(parents=True, exist_ok=True)
-    return d / f"cand_{n}{ext}"
+def _tmp_copy(path, text):
+    """Write `text` as a candidate that compiles to the SAME symbols as `path`.
+
+    Two reasons it is a private directory holding the ORIGINAL BASENAME rather than a
+    numbered `cand_N` file:
+
+      * mwccarm derives symbol names from the source file name. `__sinit_<file>` is the
+        obvious one, and so are the compiler-numbered local-class symbols like
+        `Bundle$902d_a_mky_cpp` (with their mangled length prefix). Compiled as
+        `cand_7.cpp` the candidate emits `__sinit_cand_7.cpp`, so the real symbol is
+        absent from the object and no gate on it can ever pass.
+      * the old name came from a per-PROCESS counter, so two sweeps running at once
+        overwrote each other's candidates: `mwccarm.exe: Specified file 'cand_32.cpp'
+        not found`, files reported as "does not compile", and free sites reported
+        load-bearing. Never a false ACCEPT, but measurably lost sites.
+    """
+    root = REPO / "build" / "delaunder"
+    root.mkdir(parents=True, exist_ok=True)
+    d = pathlib.Path(tempfile.mkdtemp(dir=str(root)))
+    cand = d / path.name
+    write_source(cand, text)
+    return d, cand
 
 
-def verify_text(text, ext, sym, addr, size, label, version, strict):
-    p = _tmp_path(ext)
-    write_source(p, text)
+def split_targets(targets):
+    """(destination-checked, fingerprinted). `__sinit_<file>` goes in the second.
+
+    Its relocations name compiler-numbered locals (`@1633`) that only
+    `config/tu_manifest.d/**` maps, so a destination check against
+    `config/**/relocs.txt` reports eleven wrong destinations on an UNMODIFIED file. The
+    sweep compares the candidate's destinations with the original's instead.
+    """
+    fp = [x for x in targets if x[0].startswith("__sinit")]
+    return [x for x in targets if not x[0].startswith("__sinit")], fp
+
+
+def verify_text(text, path, targets, fp_targets, version, strict):
+    """Does this candidate text reproduce EVERY function the file owns?
+
+    `targets` is module_index()'s list for the file. One compile, N comparisons, via
+    build_pin.verify_many -- asking verify() per symbol would recompile the file once
+    per function, and on a 600-function TU that is the entire cost. Returns
+    `(ok, detail, fingerprint)`; see build_pin.verify_many for the fingerprint.
+    """
+    d, cand = _tmp_copy(path, text)
     try:
-        return BP.verify(p, sym, addr, size, label, strict=strict, version=version)
+        return BP.verify_many(cand, targets, strict=strict, version=version,
+                              fp_targets=fp_targets)
     finally:
-        try:
-            p.unlink()
-        except OSError:
-            pass
+        shutil.rmtree(d, ignore_errors=True)
 
 
 def greedy(cur, kinds, verify, rec):
@@ -443,11 +538,12 @@ def greedy(cur, kinds, verify, rec):
             i += 1
 
 
-def sweep_file(rel, meta, kinds, strict, tidy=True):
-    """Greedy per-site removal. Returns a record; never raises."""
-    sym, addr, size, label = meta
+def sweep_file(rel, targets, kinds, strict, tidy=True):
+    """Greedy per-site removal, gated on every function the file owns. Never raises."""
+    sym, addr, size, label = targets[0]
     path = REPO / rel
-    rec = {"file": rel, "symbol": sym, "module": label, "accepted": 0, "rejected": 0,
+    rec = {"file": rel, "symbol": sym, "symbols": len(targets), "module": label,
+           "accepted": 0, "rejected": 0,
            "tidied": 0, "by_kind": {k: 0 for k in kinds},
            "rejected_kinds": {k: 0 for k in kinds},
            "status": "", "text": None, "stale_prose": False}
@@ -467,14 +563,25 @@ def sweep_file(rel, meta, kinds, strict, tidy=True):
         rec["status"] = f"no pin: {why}"
         return rec
 
-    ok, detail = verify_text(base, path.suffix, sym, addr, size, label, version, strict)
+    gated, fp_targets = split_targets(targets)
+    ok, detail, fp0 = verify_text(base, path, gated, fp_targets, version, strict)
     if not ok:
         rec["status"] = f"baseline does not verify: {detail}"
         return rec
     rec["pin"] = version
 
     def ok_(text):
-        return verify_text(text, path.suffix, sym, addr, size, label, version, strict)[0]
+        """Byte-and-destination clean on every function AND no @NNN renumbering.
+
+        The second half is why fp0 is captured above. A removal can reproduce every
+        byte and still move mwccarm's per-TU local numbering, which leaves
+        `__sinit_<file>` relocating against names the manifest no longer maps: the real
+        link gate calls that WRONG, and a byte-only gate cannot see it at all. Landing
+        such a site means re-keying `defined_symbol_renames`, so it is not free and the
+        sweep declines it.
+        """
+        ok_t, _, fp = verify_text(text, path, gated, fp_targets, version, strict)
+        return ok_t and fp == fp0
 
     cur = greedy(base, kinds, ok_, rec)
 
@@ -521,7 +628,7 @@ def main():
 
     idx = module_index()
     targets = []
-    for rel, meta in sorted(idx.items()):
+    for rel, syms in sorted(idx.items()):
         p = REPO / rel
         if args.filter and args.filter not in rel:
             continue
@@ -532,19 +639,22 @@ def main():
         except OSError:
             continue
         if find_sites(t, kinds):
-            targets.append((rel, meta))
+            targets.append((rel, syms))
     if args.limit:
         targets = targets[:args.limit]
 
+    gated = sum(len(s) for _, s in targets)
     print(f"delaunder: {len(targets)} enrolled file(s) carry {'/'.join(kinds)} sites, "
           f"-j{args.jobs}, {'DRY RUN' if args.dry_run else 'APPLY'}")
+    print(f"           every removal is gated on all {gated} enrolled "
+          f"symbol(s) of its file")
 
     strict = (RA, RA.build_name_index(), RA.build_config_relocs(), RL.load_all_syms())
 
     recs = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-        futs = {ex.submit(sweep_file, rel, meta, kinds, strict, not args.no_tidy): rel
-                for rel, meta in targets}
+        futs = {ex.submit(sweep_file, rel, syms, kinds, strict, not args.no_tidy): rel
+                for rel, syms in targets}
         for n, f in enumerate(concurrent.futures.as_completed(futs), 1):
             rec = f.result()
             recs.append(rec)
