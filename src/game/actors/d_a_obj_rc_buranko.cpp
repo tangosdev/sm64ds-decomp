@@ -73,11 +73,24 @@ typedef char RcBurankoModelFilePtr_size_must_be_8[sizeof(RcBurankoModelFilePtr) 
 typedef char RcBurankoClsnFilePtr_size_must_be_8[sizeof(RcBurankoClsnFilePtr) == 8 ? 1 : -1];
 
 struct KCL_File;
-struct CLPS_Block;
+/* CLPS.h keeps the block opaque: header with the entry stride at +4, then
+   two entries. The all-ones word after them is its own symbol. */
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 w2;
+    u32 w3;
+    u32 rest;
+};
 
 extern RcBurankoClsnFilePtr data_ov036_02114020;  /* the collision KCL  */
 extern RcBurankoModelFilePtr data_ov036_02114028; /* the platform's BMD */
-extern CLPS_Block data_ov036_02112b68;
+CLPS_Block data_ov036_02112b68 = {
+    0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01002fc0, 0x000000ff, 0xffffffff,
+};
+u32 data_ov036_02112b84 = 0xffffffff;
 
 /* local extern: no shared header declares these. */
 extern "C" {

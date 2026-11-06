@@ -38,7 +38,9 @@ enum daObjSm_Lift_c_AssetId { ASSET_SM_LIFT_BMD = 0x06b3, ASSET_SM_LIFT_KCL = 0x
 #include "Sound.h"
 
 extern s16 data_02082214[];
-extern int data_ov018_02112f48[];
+/* Two CLPS blocks the lift hands to its colliders, back to back. */
+int data_ov018_02112f48[4] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff};
+int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int n);

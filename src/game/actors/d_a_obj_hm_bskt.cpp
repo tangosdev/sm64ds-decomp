@@ -32,7 +32,15 @@ enum d_a_obj_hm_bskt_AssetId { ASSET_HM_BASKET_BMD = 0x0618, ASSET_HM_BASKET_KCL
 #include "Particle__System.h"
 
 struct KCL_File;
-struct CLPS_Block;
+/* CLPS.h keeps the block opaque: an 8-byte header with the entry stride
+   at +4, then the entries. This TU hands a two-entry block to SetFile. */
+struct CLPS_Block {
+    u32 tag;
+    u32 hdr;
+    u32 w0;
+    u32 w1;
+    u32 rest[4];
+};
 
 /* The cartridge's ctor/dtor imports are the functions the wrappers' aliases
  * name. */
@@ -48,7 +56,13 @@ struct HmBsktCollisionFilePtr : SharedFilePtr {
 
 extern HmBsktCollisionFilePtr data_ov030_02115c80; /* the KCL */
 extern HmBsktModelFilePtr data_ov030_02115c88;     /* the BMD */
-extern CLPS_Block data_ov030_02114ee4;
+CLPS_Block data_ov030_02114ee4 = {
+    0x53504c43,
+    0x00010008,
+    0x01000fc0,
+    0x000000ff,
+    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
 
 // @symbol daObjHmBskt_c_classInit
 extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit() {

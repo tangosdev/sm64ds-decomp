@@ -10,6 +10,7 @@ src/game/actors/d_a_obj_km2_agaru.cpp:
     .init start:0x021121a8 end:0x02112214
     .ctor start:0x0211242c end:0x02112430
     .bss start:0x02113180 end:0x021131a8
+    .data start:0x021125d0 end:0x021125f0
 
 src/game/actors/d_a_obj_km2_ami_bou.cpp:
     complete
