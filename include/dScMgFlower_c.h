@@ -153,7 +153,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
         s32 fallSpeed;   /* 0x10 */
         s32 touchStartX; /* 0x14, cursor position when picked up */
         s32 touchStartY; /* 0x18 */
-        s16 angle;       /* 0x1c */
+        u16 angle;       /* 0x1c */
         u8 pad_1e[2];
     };
     Petal mPetals[22];  /* 0x4f38, 0x20-byte records */

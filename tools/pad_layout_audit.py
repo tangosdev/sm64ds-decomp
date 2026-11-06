@@ -43,6 +43,8 @@ How a file is read:
   * A shadow is matched by qualified name only. Most are copies of the header class
     (`Particle::System`, `Matrix4x3`); a generic name (`Obj`) can also be an unrelated
     class that happens to share it, which is still two definitions of one name.
+    An out-of-line nested class (`struct dCamera_c::State {`) is named by its full
+    qualified name, so it shadows only a header definition of that same name.
 
 Static analysis only: no compiler, no ROM.
 
@@ -67,7 +69,11 @@ import msvc_arms  # noqa: E402
 
 VENDOR = "include/nitro/"
 
-STRUCT_HEAD = re.compile(r"\b(struct|class|union)\s*(\w+)?\s*(?::[^{;]*)?\s*$")
+# The name may be qualified: `struct dCamera_c::State {` defines the nested class
+# State out of line, so its name is `dCamera_c::State`, not `dCamera_c` with a base
+# clause `::State`. A base clause opens with a single `:`, never `::`.
+STRUCT_HEAD = re.compile(
+    r"\b(struct|class|union)\s*(\w+(?:\s*::\s*\w+)*)?\s*(?::(?!:)[^{;]*)?\s*$")
 ENUM_HEAD = re.compile(r"\benum\b")
 # blank() keeps a literal's quotes, so `extern "C"` reads as `extern " "`.
 LINKAGE_HEAD = re.compile(r'(?:\bextern\s*"\s*"|\bnamespace(?:\s+(\w+))?)\s*$')
@@ -148,7 +154,8 @@ def parse(path, text):
                 file_scope = all(fr["kind"] in ("top", "linkage") for fr in frames)
                 start = f["start"] if f["start"] is not None else i
                 frames.append({"kind": "struct", "head": [], "start": None,
-                               "name": m.group(2), "keyword": m.group(1),
+                               "name": m.group(2) and re.sub(r"\s+", "", m.group(2)),
+                               "keyword": m.group(1),
                                "typedef": bool(TYPEDEF_HEAD.search(head)),
                                "scope": [fr["ns"] for fr in frames if fr.get("ns")],
                                "file_scope": file_scope,

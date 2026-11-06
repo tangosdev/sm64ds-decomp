@@ -16,15 +16,7 @@
  *
  * deslop leftovers:
  * - func_ov003_020b060c and func_ov003_020b0730 are non-virtual methods.
- *   The address stays the method name. 060c keeps the GO_OFF pointer
- *   arithmetic; member indexing does not match.
- * - `#pragma opt_strength_reduction off` is file-global last-wins;
- *   func_ov003_020b060c needs it (glyph-loop induction) and the other nine
- *   members verify with it set, so it costs nothing. No narrower form.
- *   Both halves are pinned under notes/experiments/ --
- *   gameover-2711-strength-reduction-off.md (dropping it breaks 060c) and
- *   gameover-2711-strength-pragma-bracket.md (bracketing it around the one
- *   member is byte-identical to dropping it).
+ *   The address stays the method name.
  * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
  *   Fix12<int> overloads (codegen wall, pinned in
  *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S::GetBG1ScrPtr
@@ -63,17 +55,6 @@ enum dScGameOver_c_AssetId {
 #include "PlayerInput.h"
 #include "dFdBrightness_c.h"
 #include "Sound.h"
-
-/* File scope is the only place this pragma works. 0x020b060c needs
- * `#pragma opt_strength_reduction off`: it walks the eight glyphs with an
- * `i << 1` index into s16 arrays plus a second `ip` induction variable,
- * which is exactly the shape mwcc strength-reduces into an extra register
- * when the pragma is absent. The pragma IS file-global last-wins in mwccarm
- * 2004/b56 -- bracketing it around the one member does nothing, because the
- * trailing `on` wins for the whole file -- so there is no narrower place to
- * put it. The blast radius was measured rather than assumed: with it set
- * here, all 10 members verify, so it costs the other nine nothing. */
-#pragma opt_strength_reduction off
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
@@ -438,12 +419,6 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
 }
 
 /* [2] 0x020b060c -- the glyph drop-in step, one frame per call. */
-/* offsetof without <stddef.h>: the tree includes no system headers, and
- * func_ov003_020b060c is the one member that needs field offsets as
- * constants. dScGameOver_c's layout is pinned by the header's sizeof
- * assert, so these cannot drift silently. */
-#define GO_OFF(m) ((int)&((dScGameOver_c *)0)->m)
-
 /* The glyph drop-in animation step, one frame per call, driven off
  * mIntroPhase: phase 0 walks the eight glyphs, counting each one's
  * mGlyphDelay down and then sliding its mGlyphX toward the target in
@@ -451,25 +426,7 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
  * the right -- and flips to phase 1 when the last one lands; phase 1 waits
  * out one more mGlyphDelay tick, then reaches phase 2, which is what unblocks
  * Behavior's cursor FSM and Render's bouncing arrows, and enables the two
- * BG layers the prompt lives on.
- *
- * The `e` loop skeleton is load-bearing, not leftover. MEASURED and pinned
- * in notes/experiments/gameover-2711-glyph-loop-skeleton.md: spelling the
- * loop with member indexing (o->mGlyphX[i] / o->mGlyphDelay[i]) reschedules
- * the whole member (69 words differ), and a surgical variant that changes
- * only the addressing still breaks it (size 0x124 vs 0x128). An earlier
- * in-place "costs 3 words" figure is NOT reproduced by either pinned
- * spelling: the constraint holds, that number does not. The reading -- and
- * it is a reading, not a second measurement -- is that the ROM computes
- * e = base + (i << 1) once per iteration and reaches both rows as small
- * constant offsets off e, while the member-index form makes mwccarm compute
- * two separate base+i*2 addresses. GO_OFF names those offsets after their
- * fields without changing the tree the compiler sees. The `short *q`
- * re-reads, the (long long)(int) launders on the decrement, and case 1's
- * `(char *)o + GO_OFF` spelling (the member-index form perturbs the tail:
- * 999 words differ, size 0x124 vs 0x11c, pinned in
- * notes/experiments/gameover-2711-case1-gooff-spelling.md) are the ROM's own
- * shape too. */
+ * BG layers the prompt lives on. */
 // @symbol _ZN13dScGameOver_c19func_ov003_020b060cEv
 void dScGameOver_c::func_ov003_020b060c() {
     unsigned char s = this->mIntroPhase;
@@ -480,42 +437,36 @@ void dScGameOver_c::func_ov003_020b060c() {
         i = 0;
         ip = 0xa;
         do {
-            char *e = (char *)this + (i << 1);
-            if (*(unsigned short *)(e + GO_OFF(mGlyphDelay)) != 0) {
-                *(unsigned short *)((long long)(int)(e + GO_OFF(mGlyphDelay))) =
-                    (unsigned short)(*(unsigned short *)((long long)(int)(e +
-                                                                          GO_OFF(mGlyphDelay))) -
-                                     1);
+            if (mGlyphDelay[i] != 0) {
+                mGlyphDelay[i]--;
             } else {
                 short tgt = sGameOverGlyphTargetX[i];
-                if (*(short *)(e + GO_OFF(mGlyphX)) != tgt) {
+                short x = mGlyphX[i];
+                if (x != tgt) {
                     if (i < 4) {
-                        short *q = (short *)(e + GO_OFF(mGlyphX));
-                        *q = (short)(*q + 0xc);
-                        if (*(short *)(e + GO_OFF(mGlyphX)) >= tgt) {
-                            *(short *)(e + GO_OFF(mGlyphX)) = tgt;
-                            *(unsigned short *)(e + GO_OFF(mGlyphDelay)) = (unsigned short)ip;
+                        mGlyphX[i] += 0xc;
+                        if (mGlyphX[i] >= tgt) {
+                            mGlyphX[i] = tgt;
+                            mGlyphDelay[i] = ip;
                         }
                     } else {
-                        short *q = (short *)(e + GO_OFF(mGlyphX));
-                        *q = (short)(*q - 0xc);
-                        if (*(short *)(e + GO_OFF(mGlyphX)) <= tgt) {
-                            *(short *)(e + GO_OFF(mGlyphX)) = tgt;
-                            *(unsigned short *)(e + GO_OFF(mGlyphDelay)) = (unsigned short)ip;
-                            this->mIntroPhase = 1;
+                        mGlyphX[i] -= 0xc;
+                        if (mGlyphX[i] <= tgt) {
+                            mGlyphX[i] = tgt;
+                            mGlyphDelay[i] = ip;
+                            mIntroPhase = 1;
                         }
                     }
                 }
             }
-            i = i + 1;
-            ip = ip + 4;
+            i++;
+            ip += 4;
         } while (i < 8);
         break;
 
     case 1:
-        if (*(unsigned short *)((char *)this + GO_OFF(mGlyphDelay)) != 0) {
-            unsigned short *p = (unsigned short *)((char *)this + GO_OFF(mGlyphDelay));
-            *p = (unsigned short)(*p - 1);
+        if (mGlyphDelay[0] != 0) {
+            mGlyphDelay[0]--;
             return;
         }
         this->mIntroPhase = 2;

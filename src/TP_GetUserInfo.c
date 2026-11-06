@@ -3,10 +3,9 @@
  * 0x027ffc80 + 0x58; 0 when all four raw coordinates are zero, else
  * whether TP_CalcCalibrateParam accepts them. */
 #include "private/nvram_config.h"
+#include "nitro/spi/tp.h"
 
-extern unsigned int TP_CalcCalibrateParam(int calibrate, int rawX1, int rawY1, int dx1, int dy1,
-                                          int rawX2, int rawY2, int dx2, int dy2);
-int TP_GetUserInfo(int calibrate) {
+int TP_GetUserInfo(TPCalibrateParam *calibrate) {
     NVRAMConfigData *p = (NVRAMConfigData *)0x027ffc80;
     unsigned short rawX1, rawY1, rawX2, rawY2;
     unsigned char dx1, dy1, dx2, dy2;

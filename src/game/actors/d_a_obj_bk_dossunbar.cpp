@@ -46,14 +46,7 @@ struct DossunbarCollisionFile : SharedFilePtr {
     ~DossunbarCollisionFile();
 };
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 typedef void (daObjBk_Dossunbar_c::*PMF)();
 struct StateEntry {
@@ -102,7 +95,7 @@ void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 int Math_Function_0203b14c(int *p, int target, int scale, int max, int extra);
 void func_01ffb0a4(dBgW_Kc *self);
 void func_01ffb07c(dBgW_Kc *self, const Vector3 *v);
-void func_020393d4(dBgW *self, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S
@@ -136,7 +129,7 @@ s32 daObjBk_Dossunbar_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)((int)kclFile), *(const Matrix4x3 *)(&mClsnMat), 0x1000,
                               mAngleY,
                               *(CLPS_Block *)(*(void **)((char *)&data_ov015_0211453c + j)));
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
 
     int tmp[3];
     tmp[0] = 0x1000;

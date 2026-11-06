@@ -7,9 +7,7 @@
 
 extern "C" {
 
-enum IPCStatus { IPC_SUCCESS = 0, IPC_ERROR = -1, IPC_FIFO_FULL = -2 };
-
-extern enum IPCStatus PXI_SendWordByFifo(u32 arg0, u32 arg1, u32 arg2);
+extern int PXI_SendWordByFifo(u32 arg0, u32 arg1, u32 arg2);
 extern int func_02040714(void);
 extern void func_02040724(void);
 extern void func_0201a4d0(void);

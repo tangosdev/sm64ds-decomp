@@ -45,6 +45,7 @@
 #include "decl_common.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* Behavior calls the main PMF, which sits 8 bytes into the state record. */
 typedef void (dEnemyBase_c::*PukuMainPMF)();
@@ -88,7 +89,6 @@ extern PukuStateRow data_ov090_02134594;
 extern PukuStateRow data_ov090_02134584;
 
 extern Vector3 data_ov090_021342d8;
-extern int data_0209e650[];
 
 /* local extern: the spelling math/CalcLib.h declares, repeated here because
    dropping the declaration renumbers this TU's @NNN locals. */
@@ -205,9 +205,9 @@ int daPukupuku_c::SetState(PukuStatePMF *p) {
 // @symbol _ZN12daPukupuku_c13InitStateSwimEv
 /* Swim enter: a random heading (one of sixteen), 50..113 frames, speed 5.0. */
 int daPukupuku_c::InitStateSwim() {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     mTargetAngleY = ((r >> 8) & 0xf) << 0xc;
-    r = RandomIntInternal(data_0209e650);
+    r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = (s16)(((r >> 8) & 0x3f) + 0x32);
     mHorzSpeed = 0x5000;
     return 1;
@@ -230,7 +230,7 @@ int daPukupuku_c::StateSwim() {
 // @symbol _ZN12daPukupuku_c14InitStatePauseEv
 /* Pause enter: stop for 50..113 frames. */
 int daPukupuku_c::InitStatePause() {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = (s16)(((r >> 8) & 0x3f) + 0x32);
     mHorzSpeed = 0;
     return 1;

@@ -54,6 +54,7 @@ enum daChoropu_c_AssetId {
 #include "daPly_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -100,7 +101,6 @@ void func_02012694(unsigned int a, void *p);
 void  func_ov080_02124418(daChoro_Rock_c *t);
 }
 
-extern int data_0209e650;
 extern s16 data_02082214[];
 extern int data_ov080_0212767c[];
 extern SharedFilePtr data_ov002_0210d9d8;
@@ -330,7 +330,7 @@ void daChoropu_c::func_ov080_02123c24()
     mEmergeSystemID = 0;
 
     if (mGroupMode == daChoropu_GROUP_RANDOM) {
-        unsigned int rv = (unsigned int)RandomIntInternal(&data_0209e650) >> 8;
+        unsigned int rv = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
         unsigned int rem = (rv % 3) & 0xff;
         if (rem == 0) {
             mState = daChoropu_ST_THROW_ROCK;
@@ -611,7 +611,7 @@ void *daChoropu_c::func_ov080_02124360()
         return (void *)(unsigned int)n;
     mHasTurn = 0;
     for (;;) {
-        unsigned int r = ((unsigned int)RandomIntInternal(&data_0209e650)) >> 8;
+        unsigned int r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 8;
         unsigned int cnt = mNumPartners;
         unsigned int idx = r % cnt;
         unsigned int id = mPartnerIDs[idx];
@@ -750,7 +750,7 @@ s32 daChoro_Rock_c::Behavior()
             int r;
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             s->mPrevAngleX = 0;
             s->mPrevAngleY = (short)((unsigned int)r >> 8);
             s->mPrevAngleZ = 0;
@@ -760,7 +760,7 @@ s32 daChoro_Rock_c::Behavior()
             s->mSpeedZ = 0;
 
             s = dActor_c::Spawn(daChoro_Rock_ACTOR_ID, 1, mPos, 0, mAreaId, -1);
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             s->mPrevAngleX = 0;
             s->mPrevAngleY = (short)((unsigned int)r >> 8);
             s->mPrevAngleZ = 0;

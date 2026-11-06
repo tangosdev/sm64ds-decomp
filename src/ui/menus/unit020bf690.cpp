@@ -62,7 +62,7 @@ extern Ov007Fade *data_ov007_02104bd8;
 extern const short data_02082214[];
 
 extern void InitialiseVramGlobals(void);
-extern int InvMat4x3(int *src, int *dst);
+extern int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 extern void func_ov007_020b3edc(int size);
 extern void *func_ov007_020b3f20(int idx);
@@ -135,7 +135,7 @@ void func_ov007_020bfbdc(void *self) {
     vec.y = 0;
     vec.x = 0;
     vec.z = -0x1064;
-    InvMat4x3((int *)&cam->viewMatrix, (int *)&mat);
+    InvMat4x3(&cam->viewMatrix, &mat);
     MulVec3Mat4x3(&vec, &mat, &model->pos);
 }
 

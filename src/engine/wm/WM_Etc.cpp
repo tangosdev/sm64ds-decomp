@@ -7,15 +7,13 @@
  * not five. */
 #include "types.h"
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
 extern int data_020a9440[]; /* the game-info buffer ARM7 reads (pret's UNK_021D68C0) */
-extern int *WM_GetSystemWork(void);
 extern int WMi_CheckIdle(void);
-extern int WM_CheckStateEx(int paramNum, ...);
 extern void WM_SetCallbackTable(int i, int val);
-extern int WM_SendCommand(short id, unsigned short paramNum, ...);
 extern void MultiCopy_Int(int *src, int *dst, int len);
 
 /* NitroSDK WM_SetGameInfo: refuse unless WM is PARENT (7) or MP_PARENT (9),
@@ -78,7 +76,7 @@ int WM_SetLifeTime(int callback, int b, int c, int d) {
 // @symbol WM_MeasureChannel
 int WM_MeasureChannel(int callback, int ccaMode, int edThreshold, int channel,
                       unsigned short measureTime) {
-    int *sys;
+    WMArm9Buf *sys;
     short *request;
     int result;
 
@@ -87,7 +85,7 @@ int WM_MeasureChannel(int callback, int ccaMode, int edThreshold, int channel,
     if (result != 0)
         return result;
     WM_SetCallbackTable(0x1e, callback);
-    request = (short *)sys[3];
+    request = (short *)sys->fifo9to7;
     request[0] = 0x1e;
     request[1] = ccaMode;
     request[2] = edThreshold;

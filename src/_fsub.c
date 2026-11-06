@@ -24,9 +24,9 @@
 // through func_0206ddcc or func_0206dd30 with a packed exception code, the same helpers
 // func_01ff9378 uses, confirming this is one hand-written runtime block, not compiled C.
 
-extern int func_0207322c(void);
-extern float func_0206ddcc(void);
-extern float func_0206dd30(void);
+extern unsigned int *func_0207322c(void);
+extern float func_0206ddcc(float a, int op);
+extern float func_0206dd30(float a, float b, int op);
 extern void _fadd_core(void);
 
 asm float _fsub(float a, float b)

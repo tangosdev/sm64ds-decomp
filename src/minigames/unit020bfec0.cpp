@@ -41,6 +41,8 @@
 #include "G2.h"
 #include "math/Approach.h"
 #include "dScMgBase_c.h"
+#include "MWCPlusLib.h"
+#include "LevelRng.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -65,7 +67,7 @@ void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
 void Matrix4x3_FromQuaternion(void *, void *);
 void MulVec3Mat3x3(void *, void *, void *);
 void MulMat4x3Mat4x3(void *, void *, void *);
-void __cxa_vec_cleanup(void *, unsigned int, unsigned int, void (*)(void *));
+void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
 void func_020169d8(void *, int, unsigned int);
 void func_0203cebc(void *, void *, void *, void *);
 /* local extern: CalcLib conflicts with this TU's void* Vec3_HorzAngle
@@ -75,7 +77,7 @@ int DotVec3(const Vector3 *, const Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationX(void *, short);
 void Matrix4x3_ApplyInPlaceToRotationY(void *, short);
 void Matrix4x3_FromTranslation(void *, int, int, int);
-int NormalizeVec3IfNonZero(void *);
+int NormalizeVec3IfNonZero(Vector3 *);
 void Quaternion_FromVector3(void *, void *, void *);
 void Quaternion_Normalize(void *);
 void Quaternion_SLerp(void *, void *, int, void *);
@@ -87,14 +89,14 @@ void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 short Vec3_HorzAngle(const void *, const void *);
 // local extern: no shared header declares Vec3_VertAngle.
 short Vec3_VertAngle(const Vector3 *, const Vector3 *);
-void Vec3_MulScalar(void *, void *, int);
-void Vec3_MulScalarInPlace(int *, int);
+void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
+void Vec3_MulScalarInPlace(Vector3 *, int);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 int SharedFilePtr_Destruct_Anim(void *);
 int SharedFilePtr_Destruct_TexSeq(void *);
 
-void __cxa_vec_ctor(void *, unsigned int, unsigned int, void (*)(void *), void (*)(void *));
+void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
 unsigned int func_02012174(unsigned int, unsigned int);
 void func_02016a04(void *, int);
 void func_02016a14(void *, int);
@@ -418,14 +420,10 @@ extern "C" {
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -466,21 +464,17 @@ void FlowerFace_StateIdle(void) {}
 
 namespace s020c3990 {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
 struct S8 {
     int w[2];
 };
 
-extern int data_0209e650;
 extern int pmf_FlowerFace_StatePick[2];
 
 void FlowerFace_PlayPetalPulled(char *c) {
     int i;
     char *p;
     struct {
-        Vec3 pos, vel, pos2, vel2;
+        VecFx32 pos, vel, pos2, vel2;
     } b;
 
     FLOWERFACE(c)->mModel.SetAnim((BCA_File *)FLOWERFACE(c)->mPickAnim.filePtr, 0x40000000, 0x800,
@@ -501,11 +495,17 @@ void FlowerFace_PlayPetalPulled(char *c) {
             b.vel.y = 0xa00;
             b.vel.z = 0xa00;
             b.vel.x +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.vel.y +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.vel.z +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.pos2.x = b.pos.x;
             b.pos2.y = b.pos.y;
             b.pos2.z = b.pos.z;
@@ -583,7 +583,6 @@ void FallingPetal_SetModel(char *t, int a1) {
 
 namespace s020c3754 {
 extern "C" {
-extern int data_0209e650;
 extern int data_02092768[4];
 
 void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
@@ -604,7 +603,7 @@ void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
     r6[9] = sAxis.x;
     r6[10] = sAxis.y;
     r6[11] = sAxis.z;
-    func_0203cd80(&PETAL(r6)->mAxis, (short)RandomIntInternal(&data_0209e650));
+    func_0203cd80(&PETAL(r6)->mAxis, (short)RandomIntInternal(&data_0209e650.value));
     r6[12] = data_02092768[0];
     r6[13] = data_02092768[1];
     r6[14] = data_02092768[2];
@@ -617,9 +616,6 @@ void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
 
 namespace s020c35e8 {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
 struct Quat {
     int w[4];
 };
@@ -628,10 +624,10 @@ extern Quat data_02092768;
 extern int data_02082214[];
 
 void FallingPetal_Update(char *self) {
-    Vec3 v0;
-    Vec3 v1;
-    Vec3 v2;
-    Vec3 v3;
+    Vector3 v0;
+    Vector3 v1;
+    Vector3 v2;
+    Vector3 v3;
     Quat q0;
     Quat q1;
     int idx;
@@ -650,12 +646,12 @@ void FallingPetal_Update(char *self) {
     v0.x = val;
     v0.y = 0;
     v0.z = val;
-    Vec3_MulScalarInPlace((int *)&v0, 0x400);
-    Vec3_Add((Vector3 *)&v1, &PETAL(self)->mVel, (const Vector3 *)&v0);
-    dot = DotVec3(&PETAL(self)->mAxis, (const Vector3 *)&v1);
+    Vec3_MulScalarInPlace(&v0, 0x400);
+    Vec3_Add(&v1, &PETAL(self)->mVel, &v0);
+    dot = DotVec3(&PETAL(self)->mAxis, &v1);
     Vec3_MulScalar(&v2, &PETAL(self)->mAxis, dot);
-    Vec3_MulScalarInPlace((int *)&v2, 0x300);
-    SubVec3(&PETAL(self)->mVel, (Vector3 *)&v2, &PETAL(self)->mVel);
+    Vec3_MulScalarInPlace(&v2, 0x300);
+    SubVec3(&PETAL(self)->mVel, &v2, &PETAL(self)->mVel);
     v3.x = v1.x;
     v3.y = v1.y;
     v3.z = v1.z;
@@ -1228,14 +1224,10 @@ extern "C" {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -1389,14 +1381,10 @@ extern "C" {
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -2078,14 +2066,10 @@ extern "C" {
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     struct Vector3 target;          /* 0xa0 */
     struct Vector3 eye;             /* 0xac */
@@ -2160,9 +2144,6 @@ extern "C" void MascotWalker_Load(MascotWalker *walker) {
 
 namespace s020c07e8 {
 typedef int s16;
-struct Vector3 {
-    int x, y, z;
-};
 
 struct C;
 typedef void (C::*PMF)();
@@ -2318,10 +2299,6 @@ extern "C" {
 typedef short s16;
 typedef long long s64;
 
-typedef struct {
-    int x, y, z;
-} Vector3;
-
 void MascotWalker_StateWalk(char *c) {
     char *path;
     char *arr;
@@ -2365,8 +2342,7 @@ void MascotWalker_StateWalk(char *c) {
             path = (char *)WALKER(c)->mPath;
             idx = WALKER(c)->mPathPoint * 0xc;
             arr = *(char **)(path + 4);
-            Vec3_Sub((::Vector3 *)&dir, (const ::Vector3 *)&WALKER(c)->mPos,
-                     (const ::Vector3 *)(arr + idx));
+            Vec3_Sub(&dir, &WALKER(c)->mPos, (const Vector3 *)(arr + idx));
 
             WALKER(c)->mDir.x = dir.x;
             WALKER(c)->mDir.y = dir.y;
@@ -2385,7 +2361,7 @@ void MascotWalker_StateWalk(char *c) {
             next.y = *(int *)(arr + idx + 4);
             next.z = *(int *)(arr + idx + 8);
 
-            WALKER(c)->mTargetAngle = Vec3_HorzAngle((const Vector3 *)&WALKER(c)->mPos, &next);
+            WALKER(c)->mTargetAngle = Vec3_HorzAngle(&WALKER(c)->mPos, &next);
             return;
         }
 
@@ -2426,9 +2402,6 @@ struct P2 {
 };
 
 extern "C" {
-extern int data_0209e650;
-}
-extern "C" {
 extern P2 pmf_MascotWalker_StateWalk_3;
 }
 
@@ -2436,7 +2409,7 @@ extern "C" void MascotWalker_StatePause(char *c) {
     if (ApproachLinear2(WALKER(c)->mStateTimer, 0, 1) == 0)
         return;
     WALKER(c)->mModel.SetAnim(*(BCA_File *)WALKER(c)->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    int r = RandomIntInternal(&data_0209e650);
+    int r = RandomIntInternal(&data_0209e650.value);
     int idx = (int)((unsigned int)(r & 0x7fffffff) >> 0x13);
     WALKER(c)->mStateTimer = (short)(((idx * 0x258) >> 12) + 0x258);
     WALKER(c)->mPaused = 0;
@@ -2453,14 +2426,10 @@ extern "C" {
  */
 typedef int s32;
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
 struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
+    Matrix4x3 viewMat;              /* 0x00 */
     char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
+    Matrix4x3 projMat;              /* 0x60 */
     char pad90[0x10];               /* 0x90 */
     /* Camera_UpdateMatrices hands 0xac to G3i::LookAt_ as the camera
      * position and 0xa0 as the point it looks at. The flower, slots and
@@ -2499,11 +2468,11 @@ void Camera_UpdateMatrices(struct dCamera_c *self) {
 
     idx = (self->angle >> 4) * 2;
     G3i::PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], 0x1555, 0x1000, 0x1388000,
-                       0x1000, 1, (Matrix4x3 *)&self->projMat);
+                       0x1000, 1, &self->projMat);
 
-    G3i::LookAt_(&self->eye, &up, &self->target, true, (Matrix4x3 *)&self->viewMat);
+    G3i::LookAt_(&self->eye, &up, &self->target, true, &self->viewMat);
 
-    CopyToViewMat((const Matrix4x3 *)&self->viewMat);
+    CopyToViewMat(&self->viewMat);
 
     data_0209f43c.Func_020156DC(0x1555, self->angle, 0x1000, 0x1388000);
 }

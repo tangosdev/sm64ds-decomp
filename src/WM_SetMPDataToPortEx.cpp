@@ -11,10 +11,6 @@
 
 extern "C" {
 
-extern int *WM_GetSystemWork(void);
-extern int WM_CheckStateEx(int count, ...);
-extern int WM_SendCommand(int a, int b, int c, int d, int e, int f, int g, int h, int i);
-
 /* WM_GetSystemWork's WMArm9Buf and its WMStatus (include/private/wm_views.h), the fields read here.
  * child_bitmap follows WM_GetLinkLevel and include/WmWork.h; mp_maxSendSize
  * is the SDK field just before WM_GetMPReceiveBufferSize's mp_maxRecvSize (0x190), and
@@ -30,7 +26,7 @@ int WM_SetMPDataToPortEx(int p0, int p1, int p2, int p3, unsigned short p4, unsi
     int flag;
 
     x = 1;
-    handle = (WMArm9Buf *)WM_GetSystemWork();
+    handle = WM_GetSystemWork();
     ret = WM_CheckStateEx(2, 9, 0xa);
     if (ret != 0)
         return ret;

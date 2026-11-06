@@ -19,7 +19,7 @@ extern void FS_Init(int x);
 extern void FS_InitFile(void *s);
 extern void func_020652fc(int a, int b, void (*c)(char *));
 extern void func_020424c0(void);
-extern void func_0205a588(void *p, int v, int n);
+extern void func_0205a588(void *p, u8 v, u32 n);
 extern int func_020658c0(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02042200(void);
 extern void func_02041224(char *thiz, int n);

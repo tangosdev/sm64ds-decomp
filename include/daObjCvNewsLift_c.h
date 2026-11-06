@@ -51,11 +51,11 @@ struct daObjCvNewsLift_c : dBgActor_c {
     void OnMainMeshRide(dActor_c *player);
 
     /* Collision callbacks, stored in each collider by func_020393c4. */
-    static void Platform3Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
-    static void Platform2Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
-    static void Platform1Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
-    static void Platform0Callback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
-    static void MainMeshCallback(dBgW *clsn, daObjCvNewsLift_c *self, dActor_c *other);
+    static void Platform3Callback(dBgW *clsn, dActor_c *owner, dActor_c *other);
+    static void Platform2Callback(dBgW *clsn, dActor_c *owner, dActor_c *other);
+    static void Platform1Callback(dBgW *clsn, dActor_c *owner, dActor_c *other);
+    static void Platform0Callback(dBgW *clsn, dActor_c *owner, dActor_c *other);
+    static void MainMeshCallback(dBgW *clsn, dActor_c *owner, dActor_c *other);
 };
 
 #ifndef SM64DS_PLATFORM_PC

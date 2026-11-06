@@ -63,6 +63,7 @@ enum daJango_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 /* decl_common.h deliberately NOT included; AngleDiff is declared locally. */
 extern "C" int AngleDiff(int a, int b);
 #include "PathPtr.h"
@@ -74,6 +75,7 @@ extern "C" int AngleDiff(int a, int b);
 #include "dExtFrameCtrl_c.h"
 #include "daObjMarioCap_c.h"
 #include "Sound.h"
+#include "private/mtx43.h"
 
 /* Static-init ownership (was the handwritten __sinit_ov062_0211d6fc shard).
  * The file-scope objects at the end of this file construct the four
@@ -140,9 +142,8 @@ enum Bool { FALSE, TRUE };
 /* shadow struct 'BCA_File' */
 struct BCA_File;
 
-
-/* shadow typedef 'M48' */
-typedef struct { int w[12]; } M48;
+/* The matrix copies go through Mtx43: assigning this TU's nested
+   Matrix4x3 instead grows .text by 0x38 bytes. */
 
 /* Array-backed position snapshot: mwccarm 2004/b56 copies these three
    words with the retail ldm/stm sequence in C++. A three-scalar-member
@@ -181,9 +182,8 @@ extern int data_020a0e68[];
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern int data_0209e650;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
@@ -214,7 +214,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of _ZNK7PathPtr7GetNodeER7Vector3j, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, Vector3 *v, unsigned int i); */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bd10, NOT applied: extern s8 gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c218, NOT applied: extern int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c218, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int ApproachAngle(void *p, int target, int a, int b, int c); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int RandomIntInternal(int *seed); */
@@ -222,7 +221,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void MulVec3Mat4x3(Vector3 *in, void *m, void *out); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s8 gCurrentSublevel; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX); */
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c594, NOT applied: extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out); */
@@ -570,7 +568,7 @@ void daJango_c::func_ov062_0211c6a8()
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mBlendAnmModel.mat4x3 = *(M48 *)data_020a0e68;
+    *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
 
     if (mHeldActorID != 0)
     {
@@ -605,7 +603,7 @@ void daJango_c::func_ov062_0211c6a8()
     }
 
     Matrix4x3_FromTranslation(data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
-    *(M48*)&mShadowMat = *(M48*)data_020a0e68;
+    *(Mtx43 *)&mShadowMat = *(Mtx43 *)data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x40000, 0x258000, 0xf);
 }
 
@@ -692,7 +690,7 @@ int daJango_c::func_ov062_0211c2f4() {
             if (mPathNodeIndex >= 4)
                 mPathNodeIndex = 0;
         } else if (func_ov062_0211b3ac() == 0) {
-            u32 r = (u32)RandomIntInternal(&data_0209e650) >> 8 & 3;
+            u32 r = (u32)RandomIntInternal(&data_0209e650.value) >> 8 & 3;
             if (mPathNodeIndex != r) {
                 mPathNodeIndex = r;
             } else {
@@ -746,7 +744,7 @@ int daJango_c::func_ov062_0211c218()
 {
     mTargetAngleY = mAngleY;
     mStateParam = 0;
-    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 3) * 0x64 + 0x12c;
+    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 0x64 + 0x12c;
     if (mHitPlayer == 1) {
         mStateTimer = 0;
         mHitPlayer = 0;
@@ -939,14 +937,13 @@ int daJango_c::func_ov062_0211bc54()
     if (gCurrentSublevel == 0x10) {
         mStateTimer = 0x32;
     } else {
-        mStateTimer =
-            (((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 0xf) + 0x14;
+        mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 0x14;
     }
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
     func_02012694(SND_AT_SWOOP_ENTER, &mCamSpacePosX);
-    mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 3) << 8) + 0x300;
+    mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
     return 1;
 }

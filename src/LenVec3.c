@@ -1,6 +1,6 @@
-struct Vec3 { int x, y, z; };
-int LenVec3(struct Vec3 *v)
-{
+#include "types.h"
+
+int LenVec3(const Vector3 *v) {
     unsigned long long sq = (unsigned long long)((long long)v->x * v->x);
     sq += (unsigned long long)((long long)v->y * v->y);
     sq += (unsigned long long)((long long)v->z * v->z);

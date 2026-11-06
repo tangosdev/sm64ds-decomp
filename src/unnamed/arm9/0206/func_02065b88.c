@@ -1,6 +1,7 @@
-extern unsigned char data_020a9570[];
+#include "private/arm9_wbt.h"
 
-void *func_02065b88(void)
-{
-    return data_020a9570;
+extern WBTCommand data_020a9570;
+
+WBTCommand *func_02065b88(void) {
+    return &data_020a9570;
 }

@@ -59,9 +59,9 @@ extern "C" daTrsTrap_c *daTrsTrap_c_classInit_TERESAPIT(void)
     return new daTrsTrap_c();
 }
 
-// @symbol _ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWPS_P8dActor_c
-void daTrsTrap_c::OnMeshClsnTouch(dBgW *clsn, daTrsTrap_c *self, dActor_c *actor) {
-    self->LatchStandingActor(actor);
+// @symbol _ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWP8dActor_cS3_
+void daTrsTrap_c::OnMeshClsnTouch(dBgW *clsn, dActor_c *self, dActor_c *actor) {
+    static_cast<daTrsTrap_c *>(self)->LatchStandingActor(actor);
 }
 
 // @symbol _ZN11daTrsTrap_c18LatchStandingActorEP8dActor_c

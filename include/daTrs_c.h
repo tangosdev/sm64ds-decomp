@@ -200,7 +200,7 @@ struct daTrs_c : dCapEnemy_c {
     s16 mHomeAngleY;           /* 0x572 */
     s16 mHomeAngleZ;           /* 0x574 */
     u8  pad_576[0x6];
-    /* MUSIC_VOLUME_LSL_12 (data_0209b490[0]) as read when variant 0xd
+    /* MUSIC_VOLUME_LSL_12 (gMusicVolume) as read when variant 0xd
        appears (02119074); 021189f4 hands it >> 0xc to Sound::PlaySub. */
     s32 mSavedMusicVolume;     /* 0x57c */
     s32 mDistToPlayer;         /* 0x580 -- Vec3_HorzDist each Behavior */

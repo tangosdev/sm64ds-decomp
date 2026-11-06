@@ -39,14 +39,7 @@ struct Km2FallClsnFileHandle : SharedFilePtr {
 typedef char Km2FallModelFilePtr_size_must_be_8[sizeof(Km2FallModelFilePtr) == 8 ? 1 : -1];
 typedef char Km2FallClsnFileHandle_size_must_be_8[sizeof(Km2FallClsnFileHandle) == 8 ? 1 : -1];
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern ResourceDescriptor data_ov045_021130ac;
 

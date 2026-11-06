@@ -50,13 +50,10 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
+#include "G2.h"
 
 /* Local views of the records the helpers walk. */
-
-/* Three consecutive Fix12 words, written a component at a time. */
-struct Vec3 {
-    int x, y, z;
-};
 
 /* One row of the 12-entry angle table at sRouletteSlowStops, copied whole. */
 typedef struct {
@@ -139,12 +136,6 @@ namespace cstd {
 int fdiv(int a, int b);
 }
 
-namespace G2S {
-int GetBG2CharPtr();
-int GetBG2ScrPtr();
-int GetBG0ScrPtr();
-}
-
 namespace GX {
 void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 }
@@ -184,7 +175,7 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int Sound_PlayIfNotActive(int a, int b, int c, int d);
 int RandomIntInternal(int *seed);
 void *LoadFile(int id);
-void DecompressLZ16(void *src, int dst);
+void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
 void Camera_UpdateMatrices(char *cam);
@@ -194,7 +185,7 @@ void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
 void Mg_DrawCredits(char *, int, int, int);
-void Mg_DrawNumberRotated(int, int, int, int, int, int, int);
+void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 void MgCoins_StartPayout(void);
 void MgCoins_Update(void);
 void MgCoins_Reset(void);
@@ -221,7 +212,6 @@ extern short sRouletteSlowStops[];
 extern short data_ov006_0212ed34[];
 extern struct Pair pmf_RouletteBoard_StateSlow;
 extern struct Pair2W pmf_RouletteBoard_StateSpin;
-extern int data_0209e650[];
 extern int sRouletteTileBounds[];
 extern int sRouletteRowEdgesY[];
 extern short data_ov006_0212edb8[];
@@ -298,8 +288,8 @@ s32 dScMgRoulette_c::InitResources() {
 
     f6 = LoadFile(ASSET_D_2D_MG_ROULETTE_NCG_BIN);
     f5 = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
-    DecompressLZ16(f6, 0x6400000);
-    DecompressLZ16(f6, 0x6600000);
+    DecompressLZ16(f6, (void *)0x6400000);
+    DecompressLZ16(f6, (void *)0x6600000);
     GX::LoadOBJPltt(f5, 0, 0x100);
     GXS::LoadOBJPltt(f5, 0, 0x100);
     Deallocate(f6);
@@ -1247,7 +1237,7 @@ void RouletteBoard_StartSpin(char *slider) {
     board->mBoardAngle = 0;
     board->mAngleStep = 0x400;
     board->mBoardSpin = -0x200;
-    rand = (unsigned)RandomIntInternal(data_0209e650);
+    rand = (unsigned)RandomIntInternal(&data_0209e650.value);
     board->mSpinSpeed = ((rand & 0x7fffffff) >> 0x13) + 0x2000;
     board->mBraking = 0;
     RouletteBoard_SetStateSpin(board);
@@ -1305,7 +1295,7 @@ void RouletteBoard_StateSpin(RouletteBoard *board) {
     s16 val0 = data_02082214[idx * 2];
 
     int x, y, z;
-    struct Vec3 t;
+    VecFx32 t;
     x = FX_MUL(dist, val1);
     y = FX_MUL(dist, 0x400) + 0x780;
     z = FX_MUL(dist, val0);
@@ -1341,7 +1331,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     int angidx, idx2;
     short t0, t1;
     int x, y, z;
-    Vec3 t;
+    VecFx32 t;
 
     spinAbs = board->mSpinSpeed - 0x140;
     if (spinAbs < 0)

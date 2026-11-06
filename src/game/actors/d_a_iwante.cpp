@@ -26,11 +26,6 @@
  * byte globals declared below the includes.
  *
  * deslop leftovers:
- *  - Raw offsets remain in the dust-slot walks: Behavior's particle loop and
- *    clear loop step a char pointer from this and read +0x4dc..0x4e4 (mDustPos),
- *    and InitResources clears the same slots the same way. A Vector3 pointer
- *    over mDustPos measures longer in each of the three loops (see the
- *    comments there), so they keep the walking-pointer shape.
  *  - Names inferred from behaviour only, not from a symbol or RTTI: mHitPoints,
  *    mTargetPos*, mHorzAccelStep, mTexTimer/mTexPhase, mDustCounter; patterns
  *    4..9 are numbered, not named; the SE_* ids are named by the situation
@@ -46,17 +41,15 @@
  *    resource handles and 19 state descriptors are now typed objects defined
  *    at the bottom of this file; the 38 pointer-to-member records they copy
  *    from keep their data_ov066 names.
- *  - EVec3 and M48 are plain word structs standing in for Vector3 and
- *    Matrix4x3. Vec4 is an unused stack object with a destructor.
+ *  - Position temporaries are the POD VecFx32, not Vector3, and the matrix
+ *    copies go through the flat Mtx43: assigning Matrix4x3 grows .text by
+ *    0x54 bytes. Vec4 is an unused stack object with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
  *  - Sound::ChangeMusicVolume keeps its mangled decl (Fix12<int> by value, S13 wall); the Layer3 pair keeps file-local mangled decls because Sound.h declares only Layer1/Layer2 (this file excludes decl_common.h).
  */
 
-/* Turns off deferred codegen, which does two things at once here: it makes
- * the bracketed opt_common_subs / opt_strength_reduction pair around
- * _ZN10daIwante_c8BehaviorEv bind to that member alone instead of leaking
- * file-wide, and it flips .text emission from reverse-source to source
- * order -- which is why this file is written ROM-ascending. */
+/* Turns off deferred codegen, which flips .text emission from reverse-source
+ * to source order -- which is why this file is written ROM-ascending. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum Eyerok_AssetId {
     ASSET_IWANTE_KCL = 0x0332,
@@ -100,6 +93,9 @@ enum Eyerok_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
+#include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -174,8 +170,7 @@ enum {
     MSG_AFTER_FIGHT = 0xb9
 };
 
-/* EVec3 is three plain words: unlike a Vector3, a local of it has no destructor. */
-struct EVec3 { int x, y, z; };
+/* Position temporaries are VecFx32: unlike a Vector3, a local of it has no destructor. */
 typedef int (daIwante_c::*EyerokPMF)();
 /* A state descriptor: enter PMF at +0 (run by func_ov066_02119454 on install),
  * run PMF at +8 (run by Behavior every frame). */
@@ -339,16 +334,15 @@ extern CLPS_Block data_ov025_02112cc8;
 extern CLPS_Block data_ov025_02112d48;
 
 /* ---- arm9 data ---- */
-extern int data_0209e650;
 extern void *data_0209f318;
 extern int data_020a0e68[];
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
 extern int AngleDiff(int a, int b);
-extern int ApproachAngle(s16 *angle, int target, int a, int b, int max);
+extern int ApproachAngle(s16 *angle, s16 target, int a, int b, int max);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void Matrix4x3_FromRotationY(void *m, short ang);
+extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(void *a, void *m, void *b);
 extern int RandomIntInternal(int *seed);
@@ -363,8 +357,8 @@ extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
 extern void func_02012694(unsigned int a, void *p);
-extern void func_020393c4(void *p, void *v);
-extern void func_020393d4(void *p, void *v);
+extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern void func_020398fc(void *p);
 
 /* Unreferenced. */
@@ -375,11 +369,10 @@ extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, v
 
 /* ---- the dBgW callback veneer (0x0211a35c), defined at the bottom of this
  *      file; seven call sites pass its address to func_020393c4 ---- */
-extern void func_ov066_0211a35c(void *a, void *b, void *c);
+extern void func_ov066_0211a35c(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
 
-typedef struct { int w[12]; } M48;
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. These int-returning predicates are what make the ROM
@@ -559,7 +552,7 @@ void daIwante_c::func_ov066_02116390() {
         else
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae9c.filePtr, 0x40000000, 0x1000,
                                      0);
-        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf) * 2 + 0x32;
+        mTexTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) * 2 + 0x32;
     } else {
         if (mPartIdx == PART_HAND_2)
             mTextureSequence.SetFile(*(BTP_File *)data_ov066_0211ae3c.filePtr, 0x40000000, 0x1000,
@@ -651,8 +644,8 @@ void daIwante_c::func_ov066_021166c8() {
                                   *(CLPS_Block *)(&data_ov025_02112c88));
     }
 
-    func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
+    func_020393d4(&mMeshCollider2, &dBgW::UpdatePosWithTransform);
+    func_020393c4(&mMeshCollider2, func_ov066_0211a35c);
     func_020398fc(&mMeshCollider2);
     mMeshCollider2.Enable(this);
 
@@ -812,7 +805,7 @@ int daIwante_c::func_ov066_02116c6c() {
         Particle::System::NewSimple(0x7c, mPosX, mPosY, mPosZ);
         Particle::System::NewSimple(0x7d, mPosX, mPosY, mPosZ);
         {
-            EVec3 v;
+            VecFx32 v;
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
@@ -861,7 +854,7 @@ int daIwante_c::func_ov066_02116d14() {
  *      position is snapped and data_ov066_0211ae08 is set to 2 -> 5.
  *   5  waits for the phase to leave PATTERN_9, then back to the waiting state. */
 int daIwante_c::func_ov066_02116db0() {
-    EVec3 in, out;
+    VecFx32 in, out;
     s16 ang;
     int r;
 
@@ -875,7 +868,7 @@ int daIwante_c::func_ov066_02116db0() {
         if (mStateWork1 == 0) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                EVec3 *pp = (EVec3 *)&p->mPosX;
+                VecFx32 *pp = (VecFx32 *)&p->mPosX;
                 mTargetPosX = pp->x;
                 mTargetPosY = pp->y;
                 mTargetPosZ = pp->z;
@@ -938,8 +931,8 @@ int daIwante_c::func_ov066_02116db0() {
                     ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
                                           *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                           *(CLPS_Block *)(&data_ov025_02112d48));
-            func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
-            func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
+            func_020393d4(&mMeshCollider2, &dBgW::UpdatePosWithTransform);
+            func_020393c4(&mMeshCollider2, func_ov066_0211a35c);
             func_020398fc(&mMeshCollider2);
             mMeshCollider2.Enable(this);
             mSubState = 4;
@@ -1017,7 +1010,7 @@ int daIwante_c::func_ov066_021171b0() {
         if (p == 0)
             break;
         {
-            EVec3 *pp = (EVec3 *)&p->mPosX;
+            VecFx32 *pp = (VecFx32 *)&p->mPosX;
             mTargetPosX = pp->x;
             mTargetPosY = pp->y;
             mTargetPosZ = pp->z;
@@ -1178,14 +1171,14 @@ int daIwante_c::func_ov066_021175bc() {
  *      data_ov066_0211ae08 += 1 (and once more if a hand is gone) -> 8.
  *   8  waits for the phase to leave PATTERN_7, then back to the waiting state. */
 int daIwante_c::func_ov066_021175e8() {
-    EVec3 v;
+    VecFx32 v;
 
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                EVec3 *pp = (EVec3 *)&p->mPosX;
+                VecFx32 *pp = (VecFx32 *)&p->mPosX;
                 mTargetPosX = pp->x;
                 mTargetPosY = pp->y;
                 mTargetPosZ = pp->z;
@@ -1232,7 +1225,7 @@ int daIwante_c::func_ov066_021175e8() {
             if (func_ov066_02116a68() == 0) {
                 daPly_c *p = ClosestPlayer();
                 if (p != 0) {
-                    EVec3 *pp = (EVec3 *)&p->mPosX;
+                    VecFx32 *pp = (VecFx32 *)&p->mPosX;
                     v.x = pp->x;
                     v.y = pp->y;
                     v.z = pp->z;
@@ -1303,8 +1296,8 @@ int daIwante_c::func_ov066_021175e8() {
                     ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
                                           *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                           *(CLPS_Block *)(&data_ov025_02112d48));
-            func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
-            func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
+            func_020393d4(&mMeshCollider2, &dBgW::UpdatePosWithTransform);
+            func_020393c4(&mMeshCollider2, func_ov066_0211a35c);
             func_020398fc(&mMeshCollider2);
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
@@ -1370,14 +1363,14 @@ int daIwante_c::func_ov066_02117bd0() {
  *      once more if a hand is gone) -> 7.
  *   7  waits for the phase to leave PATTERN_6, then back to the waiting state. */
 int daIwante_c::func_ov066_02117bf0() {
-    EVec3 v;
+    VecFx32 v;
 
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                EVec3 *pp = (EVec3 *)&p->mPosX;
+                VecFx32 *pp = (VecFx32 *)&p->mPosX;
                 mTargetPosX = pp->x;
                 mTargetPosY = pp->y;
                 mTargetPosZ = pp->z;
@@ -1414,7 +1407,7 @@ int daIwante_c::func_ov066_02117bf0() {
             if (func_ov066_02116a68() == 0) {
                 daPly_c *p = ClosestPlayer();
                 if (p != 0) {
-                    EVec3 *pp = (EVec3 *)&p->mPosX;
+                    VecFx32 *pp = (VecFx32 *)&p->mPosX;
                     v.x = pp->x;
                     v.y = pp->y;
                     v.z = pp->z;
@@ -1485,8 +1478,8 @@ int daIwante_c::func_ov066_02117bf0() {
                     ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211aeac.filePtr),
                                           *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                           *(CLPS_Block *)(&data_ov025_02112d48));
-            func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
-            func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
+            func_020393d4(&mMeshCollider2, &dBgW::UpdatePosWithTransform);
+            func_020393c4(&mMeshCollider2, func_ov066_0211a35c);
             func_020398fc(&mMeshCollider2);
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
@@ -1631,8 +1624,8 @@ int daIwante_c::func_ov066_02118188() {
                                       *(CLPS_Block *)(&data_ov025_02112d48));
         }
 
-        func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
-        func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
+        func_020393d4(&mMeshCollider2, &dBgW::UpdatePosWithTransform);
+        func_020393c4(&mMeshCollider2, func_ov066_0211a35c);
         func_020398fc(&mMeshCollider2);
         mMeshCollider2.Enable(this);
 
@@ -1872,7 +1865,7 @@ int daIwante_c::func_ov066_021189a0() {
  * (data_ov066_0211b03c). */
 int daIwante_c::func_ov066_021189c0() {
     if (func_ov066_021168b0() == 0) return 1;
-    if ((((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1f) & 1) == 0)
+    if ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x1f) & 1) == 0)
         data_ov066_0211ae0c = PART_HAND_2;
     else
         data_ov066_0211ae0c = PART_HAND_1;
@@ -2056,7 +2049,7 @@ int daIwante_c::func_ov066_02118e04() {
     if (p == 0 || mTimer2 != 0)
         return 1;
 
-    coinFlip = ((unsigned int)RandomIntInternal(&data_0209e650) >> 31) & 1;
+    coinFlip = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 31) & 1;
 
     data_ov066_0211ae08 = 0;
     data_ov066_0211ae0c = 0;
@@ -2299,9 +2292,9 @@ void daIwante_c::func_ov066_021194fc() {
     Matrix4x3_FromTranslation(data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, mAngleX, mAngleY, mAngleZ);
     if (mPartIdx == PART_MAIN)
-        *(M48 *)&mModel2.mat4x3 = *(M48*)data_020a0e68;
+        *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)data_020a0e68;
     else
-        *(M48 *)&mBlendAnmModel.mat4x3 = *(M48 *)data_020a0e68;
+        *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
     if (mPartIdx == PART_MAIN)
         return;
     if (mRestPosY >= mPosY)
@@ -2317,7 +2310,7 @@ void daIwante_c::func_ov066_021194fc() {
             (mPosY - 0x8000) >> 3,
             (mPosZ + 0xa0000) >> 3);
     }
-    *(M48 *)mShadowMtx = *(M48*)data_020a0e68;
+    *(Mtx43 *)mShadowMtx = *(Mtx43 *)data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 
@@ -2377,17 +2370,13 @@ int daIwante_c::Render() {
     return 1;
 }
 
-/* Bracketed, and it binds only because of the file-top
- * `#pragma defer_codegen off`: with codegen deferred (mwccarm 2004/b56s
- * default) a bracketed opt_* pragma does not bind and these two go
- * file-global, which costs func_ov066_021184e0 (4 words) and
- * func_ov066_021194fc (a size change).  Deleting them outright instead
- * costs _ZN10daIwante_c8BehaviorEv: 33/34, a 999-word content divergence plus one
- * wrong relocation destination, with the size UNCHANGED at 0x4b0.  (An earlier
- * revision of this comment said 0x4b0 -> 0x4ac; that size change belongs to a
- * ROM-descending arrangement, not this one.  Re-measured by negative control on
- * the shipped source.) */
-#pragma opt_common_subs off
+/* Issue (or re-issue) one dust particle at a slot position. The reference
+ * parameter is what makes the call re-read the slot's x after Behavior's
+ * nonzero test; passing mDustPos[i].x directly reuses the tested register. */
+static inline u32 NewDust(u32 handle, u32 id, const Vector3 &pos) {
+    return Particle::System::New(handle, id, pos.x, pos.y, pos.z, 0, 0);
+}
+
 // @symbol _ZN10daIwante_c8BehaviorEv
 /* Per frame, for all three parts: count mTimer1 and mTimer2 down, then run the
  * current state's run handler (the second pointer-to-member of the descriptor
@@ -2403,118 +2392,78 @@ int daIwante_c::Render() {
  * (mdCcAcPos_c) to its position plus data_ov066_0211ad18, refreshes matrices and
  * collision, clears its hit results, re-registers it (Update links it into the
  * collision list) and advances both animations. */
-/* Vtable slot 6. EVec3 is a local plain-int triple (stack temps); callees whose
+/* Vtable slot 6. The stack temps are POD VecFx32s; callees whose
  * ROM symbols carry by-value/ref class parameters keep their literal mangled
  * extern "C" spellings. */
 int daIwante_c::Behavior() {
-    char *c = (char *)this;
-
     DecIfAbove0_Short(&mTimer1);
     DecIfAbove0_Short(&mTimer2);
 
-    {
-        EyerokState *st = mState;
-        if (*(int *)&st->run != 0)
-            (this->*st->run)();
-    }
+    if (mState->run)
+        (this->*mState->run)();
 
     if (mDustCounter != 0) {
         if ((mDustCounter & 1) == 0) {
-            int rnd = RandomIntInternal(&data_0209e650);
-            int off = (mDustCounter >> 1) * 0xc;
-            char *bx = (char *)&mDustPos[0].x;
-            char *bz = (char *)&mDustPos[0].z;
-            char *by = (char *)&mDustPos[0].y;
-            int *px;
-            int *pz;
-            int *py;
-            int zero;
-            EVec3 vin;
-            EVec3 vout;
-            *(int *)(bx + off) = mPosX;
-            *(int *)(by + off) = mPosY;
-            *(int *)(bz + off) = mPosZ;
-            px = (int *)(bx + off);
-            py = (int *)(by + off);
-            pz = (int *)(bz + off);
-            zero = 0;
-            vin.x = zero;
-            vin.y = zero;
-            vin.z = zero;
-            vout.x = zero;
-            vout.y = zero;
-            vout.z = zero;
+            int rnd = RandomIntInternal(&data_0209e650.value);
+            int idx = mDustCounter >> 1;
+            VecFx32 vin;
+            VecFx32 vout;
+            mDustPos[idx].x = mPosX;
+            mDustPos[idx].y = mPosY;
+            mDustPos[idx].z = mPosZ;
+            vin.x = 0;
+            vin.y = 0;
+            vin.z = 0;
+            vout.x = 0;
+            vout.y = 0;
+            vout.z = 0;
             if (mState != &data_ov066_0211b07c) {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
                     MulVec3Mat4x3(&vin, data_020a0e68, &vout);
-                    *px += vout.x;
-                    *pz += vout.z;
+                    mDustPos[idx].x += vout.x;
+                    mDustPos[idx].z += vout.z;
                 } else {
                     if (((rnd >> 16) & 1) == 0)
-                        *px += (((rnd >> 8) & 3) * 0x28) << 12;
+                        mDustPos[idx].x += (((rnd >> 8) & 3) * 0x28) << 12;
                     else
-                        *px -= (((rnd >> 8) & 3) * 0x28) << 12;
-                    *pz += 0x19000;
+                        mDustPos[idx].x -= (((rnd >> 8) & 3) * 0x28) << 12;
+                    mDustPos[idx].z += 0x19000;
                 }
-                *py += ((mDustCounter * 0xa) + 0x23) << 12;
+                mDustPos[idx].y += ((mDustCounter * 0xa) + 0x23) << 12;
             } else {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
                     MulVec3Mat4x3(&vin, data_020a0e68, &vout);
-                    *px += vout.x;
-                    *pz += vout.z;
+                    mDustPos[idx].x += vout.x;
+                    mDustPos[idx].z += vout.z;
                 } else {
                     int a = ((rnd >> 24) & 7) * 0x1e;
                     int b = ((rnd >> 16) & 7) * 0x1e;
-                    *pz -= 0x64000;
-                    *px += (0x69 - a) << 12;
-                    *pz += (0x69 - b) << 12;
+                    mDustPos[idx].z -= 0x64000;
+                    mDustPos[idx].x += (0x69 - a) << 12;
+                    mDustPos[idx].z += (0x69 - b) << 12;
                 }
-                *py += 0x96000;
+                mDustPos[idx].y += 0x96000;
             }
         }
 
-        {
-            /* cur walks mDustPos as actor-relative offsets; a Vector3 *cur
-               over mDustPos makes Behavior 4 bytes longer. */
-            int i = 0;
-            char *cur = c;
-            u32 id0 = 0x13a;
-            u32 id1 = 0x13b;
-            int z0 = 0;
-            for (; i < 0x14; i++) {
-                if (((daIwante_c *)cur)->mDustPos[0].x != 0 ||
-                    ((daIwante_c *)cur)->mDustPos[0].y != 0 ||
-                    ((daIwante_c *)cur)->mDustPos[0].z != 0) {
-                    mDustParticle1[i] = Particle::System::New(
-                        mDustParticle1[i], id0, ((daIwante_c *)cur)->mDustPos[0].x,
-                        ((daIwante_c *)cur)->mDustPos[0].y, ((daIwante_c *)cur)->mDustPos[0].z,
-                        (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
-                    mDustParticle2[i] = Particle::System::New(
-                        mDustParticle2[i], id1, ((daIwante_c *)cur)->mDustPos[0].x,
-                        ((daIwante_c *)cur)->mDustPos[0].y, ((daIwante_c *)cur)->mDustPos[0].z,
-                        (const Vector3_16f *)((void *)z0), (Particle::Callback *)((void *)z0));
-                }
-                cur += 0xc;
+        for (int i = 0; i < 0x14; i++) {
+            if (mDustPos[i].x != 0 || mDustPos[i].y != 0 || mDustPos[i].z != 0) {
+                mDustParticle1[i] = NewDust(mDustParticle1[i], 0x13a, mDustPos[i]);
+                mDustParticle2[i] = NewDust(mDustParticle2[i], 0x13b, mDustPos[i]);
             }
         }
 
-        {
-            mDustCounter++;
-            if (mDustCounter > 0x26) {
-                /* A Vector3 *q over mDustPos makes Behavior 4 bytes longer. */
-                int j = 0;
-                char *q = c;
-                mDustCounter = (u16)j;
-                for (; j < 0x14; j++) {
-                    ((daIwante_c *)q)->mDustPos[0].x = 0;
-                    ((daIwante_c *)q)->mDustPos[0].y = 0;
-                    ((daIwante_c *)q)->mDustPos[0].z = 0;
-                    q += 0xc;
-                }
+        mDustCounter++;
+        if (mDustCounter > 0x26) {
+            mDustCounter = 0;
+            for (int j = 0; j < 0x14; j++) {
+                mDustPos[j].x = 0;
+                mDustPos[j].y = 0;
+                mDustPos[j].z = 0;
             }
         }
     }
@@ -2527,16 +2476,13 @@ int daIwante_c::Behavior() {
     }
 
     {
-        EVec3 vrel;
         mRestPosY = mSpawnPosY + 0x8000;
         UpdatePos(0);
         mdCcAcPos_c.pos.x = mPosX;
         mdCcAcPos_c.pos.y = mPosY;
         mdCcAcPos_c.pos.z = mPosZ;
-        vrel.x = data_ov066_0211ad18[0];
-        vrel.y = data_ov066_0211ad18[1];
-        vrel.z = data_ov066_0211ad18[2];
-        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&vrel);
+        Vector3 vrel(data_ov066_0211ad18[0], data_ov066_0211ad18[1], data_ov066_0211ad18[2]);
+        mdCcAcPos_c.SetPosRelativeToActor(vrel);
         func_ov066_021194fc();
         if (mMeshCollider2.IsEnabled() != 0)
             func_ov066_021194a4();
@@ -2547,8 +2493,6 @@ int daIwante_c::Behavior() {
     }
     return 1;
 }
-
-#pragma opt_common_subs on
 
 // @symbol _ZN10daIwante_c13InitResourcesEv
 /* mPartIdx comes from the low byte of param1 (0xff, or anything above 2, means
@@ -2633,19 +2577,10 @@ int daIwante_c::InitResources() {
         mdCcAcPos_c.Init((dActor_c *)c, w, 0x64000, 0x64000, 0x200002, 0);
     }
 
-    {
-        /* NOT mDustPos[i]: the ROM walks a running char* and re-derives the
-           three stores from it. Spelling this as `Vector3 *p = mDustPos; p->x
-           = 0; ... p++;` makes InitResources 8 bytes longer. */
-        int i = 0;
-        char *p = c;
-        do {
-            ((daIwante_c *)p)->mDustPos[0].x = 0;
-            ((daIwante_c *)p)->mDustPos[0].y = 0;
-            i += 1;
-            ((daIwante_c *)p)->mDustPos[0].z = 0;
-            p += 0xC;
-        } while (i < 0x14);
+    for (int i = 0; i < 0x14; i++) {
+        mDustPos[i].x = 0;
+        mDustPos[i].y = 0;
+        mDustPos[i].z = 0;
     }
 
     mTerminalVelocity = -0x64000;
@@ -2680,8 +2615,8 @@ int daIwante_c::InitResources() {
             ->dBgW_KcMbg::SetFile((KCL_File *)(data_ov066_0211ae24.filePtr),
                                   *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                   *(CLPS_Block *)(&data_ov025_02112ca8));
-        func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
-        func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
+        func_020393d4(&mMeshCollider2, &dBgW::UpdatePosWithTransform);
+        func_020393c4(&mMeshCollider2, func_ov066_0211a35c);
         mMeshCollider2.Enable(this);
         mTimer2 = 0x64;
         func_ov066_02119454(&data_ov066_0211b09c);
@@ -2705,8 +2640,8 @@ int daIwante_c::InitResources() {
                                       *(CLPS_Block *)(&data_ov025_02112d48));
             mRestPosX += 0x31F000;
         }
-        func_020393d4(&mMeshCollider2, (void *)&dBgW::UpdatePosWithTransform);
-        func_020393c4(&mMeshCollider2, (void *)func_ov066_0211a35c);
+        func_020393d4(&mMeshCollider2, &dBgW::UpdatePosWithTransform);
+        func_020393c4(&mMeshCollider2, func_ov066_0211a35c);
         func_020398fc(&mMeshCollider2);
         mRestPosZ -= 0x32000;
         mHitPoints = 3;
@@ -2767,9 +2702,8 @@ extern "C" void func_ov066_0211a2e4(void *a, int b)
    itself. */
 // @symbol func_ov066_0211a35c
 #pragma long_calls on
-extern "C" void func_ov066_0211a35c(void *a, void *b, void *c)
-{
-    func_ov066_0211a2e4(b, (int)c);
+extern "C" void func_ov066_0211a35c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    func_ov066_0211a2e4(owner, (int)other);
 }
 #pragma long_calls off
 

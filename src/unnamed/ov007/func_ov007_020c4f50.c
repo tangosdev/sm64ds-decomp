@@ -5,8 +5,9 @@ extern void func_ov007_020c4fcc(int r0, int r1);
 extern void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t);
 
 /* Draws every committed stroke and then the stroke being drawn, each in
- * full, through func_ov007_020c19cc. */
-void func_ov007_020c4f50(Ov007Picker *self, int half, int r2, int r3) {
+ * full, through func_ov007_020c19cc. Both callers (func_ov007_020b91b4) pass
+ * a fifth argument, 1, on the stack; this body never reads it. */
+void func_ov007_020c4f50(Ov007Picker *self, int half, int r2, int r3, int unused) {
     int i;
     Vector3 **points = self->groupPoints;
     func_ov007_020c4fcc(r2, r3);

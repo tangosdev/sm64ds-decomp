@@ -1,9 +1,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
-#pragma opt_propagation off
+#include "nitro/gx/g3imm.h"
 
-#define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
-#define reg_G3_TEXPLTT_BASE   (*(volatile u32 *)0x040004ac)
 #define reg_G3_MTX_MODE       (*(volatile u32 *)0x04000440)
 #define reg_G3_IDENTITY       (*(volatile u32 *)0x04000454)
 #define reg_G3_SCALE          (*(volatile u32 *)0x0400046c)
@@ -23,18 +21,6 @@ static inline void G3_Scale(fx32 x, fx32 y, fx32 z)
     reg_G3_SCALE = (u32)x;
     reg_G3_SCALE = (u32)y;
     reg_G3_SCALE = (u32)z;
-}
-
-static inline void G3_TexPlttBase(u32 addr, u32 texFmt)
-{
-    reg_G3_TEXPLTT_BASE = (u32)(addr >> (4 - (texFmt == 2)));
-}
-
-static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 texGen, u32 sizeS, u32 sizeT,
-                                    u32 repeat, u32 flip, u32 pltt0)
-{
-    reg_G3_TEXIMAGE_PARAM = (u32)((addr >> 3) | (texFmt << 26) | (texGen << 30)
-        | (sizeS << 20) | (sizeT << 23) | (repeat << 16) | (flip << 18) | (pltt0 << 29));
 }
 
 struct TexParam
@@ -64,7 +50,8 @@ struct Tex
 void func_0204af3c(struct Tex *self)
 {
     struct TexParam p = self->param;
-    G3_TexImageParam(self->texAddr, p.fmt, 1, p.sizeS, p.sizeT, p.repeat, p.flip, p.color0);
+    G3_TexImageParam(p.fmt, GX_TEXGEN_TEXCOORD, p.sizeS, p.sizeT, p.repeat, p.flip, p.color0,
+                     self->texAddr);
     G3_TexPlttBase(self->pltAddr, p.fmt);
     G3_MtxMode(3);
     G3_Identity();

@@ -366,19 +366,17 @@ extern "C" void func_02046088(void *self, int a, int b)
 }
 
 // @symbol func_0204605c
-extern "C" void func_0204605c(void *self, void *value, int index)
-{
+extern "C" void func_0204605c(void *self, int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = (unsigned int)value;
+    unsigned int bits = value;
     unsigned int *flags = (unsigned int *)(&e->flags);
     *flags &= ~0x3f000000;
     *flags |= bits << 24;
 }
 
 // @symbol func_02046008
-extern "C" void func_02046008(void *a, void *b)
-{
+extern "C" void func_02046008(void *a, int b) {
     int i;
     int count = (*(int **)a)[9];
     for (i = 0; i < count; i++)
@@ -386,19 +384,17 @@ extern "C" void func_02046008(void *a, void *b)
 }
 
 // @symbol func_02045fd4
-extern "C" void func_02045fd4(void *self, void *value, int index)
-{
+extern "C" void func_02045fd4(void *self, unsigned int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = (unsigned int)value;
+    unsigned int bits = value;
     unsigned int *color = (unsigned int *)(&e->diffuseAmbient);
     *color &= 0xffff8000;
     *color |= bits;
 }
 
 // @symbol func_02045f80
-extern "C" void func_02045f80(void *a, void *b)
-{
+extern "C" void func_02045f80(void *a, unsigned int b) {
     int i;
     int count = (*(int **)a)[9];
     for (i = 0; i < count; i++)
@@ -406,19 +402,17 @@ extern "C" void func_02045f80(void *a, void *b)
 }
 
 // @symbol func_02045f4c
-extern "C" void func_02045f4c(void *self, void *value, int index)
-{
+extern "C" void func_02045f4c(void *self, unsigned int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = (unsigned int)value;
+    unsigned int bits = value;
     unsigned int *color = (unsigned int *)(&e->diffuseAmbient);
     *color &= 0xffff;
     *color |= bits << 16;
 }
 
 // @symbol func_02045ef8
-extern "C" void func_02045ef8(void *a, void *b)
-{
+extern "C" void func_02045ef8(void *a, unsigned int b) {
     int i;
     int count = (*(int **)a)[9];
     for (i = 0; i < count; i++)
@@ -437,12 +431,12 @@ extern "C" void func_02045ec4(char *self, unsigned int value, int index)
 }
 
 // @symbol func_02045e70
-extern "C" void func_02045e70(char *self, void *arg1) {
+extern "C" void func_02045e70(char *self, unsigned int arg1) {
     ModelComponents *obj = (ModelComponents *)self;
     int i;
     int count = obj->modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_02045ec4(self, (unsigned int)arg1, i);
+        func_02045ec4(self, arg1, i);
 }
 
 // @symbol func_02045e44
@@ -541,9 +535,6 @@ u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
 }
 
 // @symbol _ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjS0_
-/* Stays off through the rest of the file. Restoring it before deferred
-   codegen emits this function reorders five words. */
-#pragma opt_common_subs off
 u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *dst) {
     u32 vramOffset;
 
@@ -552,7 +543,7 @@ u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *ds
     GX::BeginLoadTex();
     GX::LoadTex(src, data_020a4bc8, size);
     data_020a4be4 += size;
-    GX::LoadTex(dst, data_020a4be0, size >> 1);
+    GX::LoadTex(dst, data_020a4be0, size / 2);
     data_020a4be4 += size >> 1;
     GX::EndLoadTex();
     vramOffset = data_020a4bc8;

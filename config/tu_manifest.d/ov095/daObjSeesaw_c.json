@@ -942,74 +942,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@897",
+      "from": "@891",
       "to": "@982",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @905 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @905 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @897 to @891 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@892",
+      "to": "@898",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @906 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @898 to @892 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@893",
+      "to": "@893",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @907 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @899 to @893 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@894",
+      "to": "@889",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @908 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @900 to @894 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@895",
+      "to": "@884",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @909 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @901 to @895 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@896",
+      "to": "@880",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @910 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @902 to @896 when the opt pragma was removed (#821)."
+    },
+    {
+      "from": "@897",
+      "to": "@876",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @911 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @903 to @897 when the opt pragma was removed (#821)."
     },
     {
       "from": "@898",
-      "to": "@898",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @906 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "to": "@865",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @912 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @904 to @898 when the opt pragma was removed (#821)."
     },
     {
       "from": "@899",
-      "to": "@893",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @907 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "to": "@861",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @913 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @905 to @899 when the opt pragma was removed (#821)."
     },
     {
       "from": "@900",
-      "to": "@889",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @908 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "to": "@814",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @914 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @906 to @900 when the opt pragma was removed (#821)."
     },
     {
       "from": "@901",
-      "to": "@884",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @909 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "to": "@788",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @915 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @907 to @901 when the opt pragma was removed (#821)."
     },
     {
       "from": "@902",
-      "to": "@880",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @910 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "to": "@782",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @916 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @908 to @902 when the opt pragma was removed (#821)."
     },
     {
       "from": "@903",
-      "to": "@876",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @911 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "to": "@780",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @917 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @909 to @903 when the opt pragma was removed (#821)."
     },
     {
       "from": "@904",
-      "to": "@865",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @912 per TU and that name collides with global @NNN rows owned by other TUs on main"
-    },
-    {
-      "from": "@905",
-      "to": "@861",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @913 per TU and that name collides with global @NNN rows owned by other TUs on main"
-    },
-    {
-      "from": "@906",
-      "to": "@814",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @914 per TU and that name collides with global @NNN rows owned by other TUs on main"
-    },
-    {
-      "from": "@907",
-      "to": "@788",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @915 per TU and that name collides with global @NNN rows owned by other TUs on main"
-    },
-    {
-      "from": "@908",
-      "to": "@782",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @916 per TU and that name collides with global @NNN rows owned by other TUs on main"
-    },
-    {
-      "from": "@909",
-      "to": "@780",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @917 per TU and that name collides with global @NNN rows owned by other TUs on main"
-    },
-    {
-      "from": "@910",
       "to": "@650",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @918 per TU and that name collides with global @NNN rows owned by other TUs on main"
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @918 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @910 to @904 when the opt pragma was removed (#821)."
     }
   ],
   "relocations": [

@@ -3,7 +3,7 @@
  * and daSCoin_c (0x020f03c4..):
  *
  * - func_ov002_020effb8: a uniform cubic B-spline through four Vector3
- *   control points. Its one caller is arm9 func_02008b4c, the path
+ *   control points. Its one caller is arm9 MovePointAlongSpline, the path
  *   interpolator.
  * - func_ov002_020f02c8, func_ov002_020f030c and func_ov002_020f035c: the
  *   per-surface slope tables daPly_c.h describes (slide acceleration, slide

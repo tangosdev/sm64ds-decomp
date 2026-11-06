@@ -8,7 +8,9 @@
  * the run and InitResources is the key function. Highest address first.
  * opt_common_subs off and opt_strength_reduction off are file-wide:
  * func_ov065_02118838 needs both, and a bracket around that function
- * does not bind.
+ * does not bind. With either one on, its platform loop recolours and
+ * grows (common subexpressions on: 0x418 bytes, strength reduction on:
+ * 0x430; the ROM's is 0x414).
  */
 // leftovers:
 // - dExtAnmModel_c::SetAnim and the other Fix12<int>-by-value calls stay
@@ -69,6 +71,7 @@ enum daDossy_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -122,7 +125,6 @@ extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
 extern "C" {
 extern s16 data_02082214[];
-extern Matrix4x3 data_020a0e68;
 extern u8 data_ov065_0211c078[];
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -130,11 +132,6 @@ extern SharedFilePtr *data_ov065_0211c080[];
 extern SharedFilePtr *data_ov065_0211c08c[];
 
 extern int atan2_hold_d_a_dossy_1(int a, int b);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 a);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 a);
-void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 a);
-void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *o);
 /* The named local declarations below keep this TU's @NNN compiler-temp
    identities stable. Their signatures now match CalcLib.h exactly. */
 void SubVec3(Vector3 *a, Vector3 *b,
@@ -151,10 +148,9 @@ short Vec3_HorzAngle(
 unsigned short DecIfAbove0_Short(
     unsigned short *counter); /* local extern: named parameters preserve @NNN identities */
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
-extern void func_020393d4(void* p, void* v);
-extern void func_020393c4(void* p, void* v);
+extern void func_020393d4(void *collider, BeforeClsnCallback callback);
+extern void func_020393c4(void *collider, StoodOnCallback callback);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
 extern int AngleDiff(int a, int b);
@@ -162,8 +158,8 @@ extern int AngleDiff(int a, int b);
 int func_ov065_021180d4(char* self);
 void func_ov065_02118c4c(char* c);
 int func_ov065_02119210(unsigned char* c);
-void func_ov065_021195bc(void *a, void *b, void *c);
-void func_ov065_021195d0(void *a, void *b, void *c);
+void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
+void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
 
@@ -195,15 +191,15 @@ int daDossyCap_c::OnYoshiTryEat()
 
 #pragma long_calls on
 // @symbol func_ov065_021195d0
-extern "C" void func_ov065_021195d0(void *a, void *b, void *c) {
-    static_cast<daDossy_c *>(b)->func_ov065_02119594(static_cast<dActor_c *>(c));
+extern "C" void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
 // @symbol func_ov065_021195bc
-extern "C" void func_ov065_021195bc(void *a, void *b, void *c) {
-    static_cast<daDossy_c *>(b)->func_ov065_0211956c(static_cast<dActor_c *>(c));
+extern "C" void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
 }
 #pragma long_calls off
 
@@ -260,11 +256,11 @@ int daDossy_c::InitResources()
                 ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(mtx), 0x1000, mAngleY,
                                       *(CLPS_Block *)(data_ov065_0211cd68[j]));
             if ((unsigned)j <= 2) {
-                func_020393d4(mmc, (void *)&dBgW::UpdatePosAndAngs);
+                func_020393d4(mmc, &dBgW::UpdatePosAndAngs);
                 if (j == 2)
-                    func_020393c4(mmc, (void *)func_ov065_021195bc);
+                    func_020393c4(mmc, func_ov065_021195bc);
                 else
-                    func_020393c4(mmc, (void *)func_ov065_021195d0);
+                    func_020393c4(mmc, func_ov065_021195d0);
             }
             ((dBgW_KcMbg *)mmc)->Enable(this);
             mtx += sizeof(DorriePlatform);
@@ -490,8 +486,6 @@ void daDossy_c::func_ov065_02118838()
     char *c = (char *)this;
     char *pm;
     char *pk;
-    s32 zero;
-    s32 three;
     Vector3s rot;
     Vector3 v;
     Matrix4x3 base;
@@ -503,8 +497,6 @@ void daDossy_c::func_ov065_02118838()
     base = data_020a0e68;
     pm = (char *)&mPlatforms[0].mClsnNextMat;
     pk = (char *)&mPlatforms[0].mClsn;
-    zero = 0;
-    three = 3;
     tbl = data_ov065_0211c078;
     for (i = 0; i < 7; i++) {
         ModelBone *bone = &mAnmModel.data.bones[*tbl];
@@ -522,46 +514,33 @@ void daDossy_c::func_ov065_02118838()
             ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.y += mPlatforms[1].mRot.y;
             ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.z += mPlatforms[1].mRot.z;
         }
-        v.x = zero;
-        v.y = zero;
-        v.z = zero;
-        {
-            Matrix4x3 *m = &data_020a0e68;
-            *m = base;
-            MulMat4x3Mat4x3(&mAnmModel.data.transforms[*tbl], m, m);
-            v.x = m->m[9];
-            v.y = m->m[10];
-            v.z = m->m[11];
-        }
+        v.x = 0;
+        v.y = 0;
+        v.z = 0;
+        data_020a0e68 = base;
+        MulMat4x3Mat4x3(&mAnmModel.data.transforms[*tbl], &data_020a0e68, &data_020a0e68);
+        v.x = data_020a0e68.m[9];
+        v.y = data_020a0e68.m[10];
+        v.z = data_020a0e68.m[11];
         SubVec3(&v, &mPos, &v);
-        Vec3_LslInPlace(&v, three);
+        Vec3_LslInPlace(&v, 3);
         AddVec3(&v, &mPos, &v);
         if (i == 2) {
-            s32 *cx = &mCapPosX;
-            s32 *cy = &mCapPosY;
-            s32 *cz = &mCapPosZ;
-            s32 *hx = &mHomePosX;
-            s32 *hy = &mHomePosY;
-            s32 *hz = &mHomePosZ;
-            s32 k1e = 0x1e;
-            s32 k82 = 0x82;
-            s32 k96 = 0x96;
-            s32 rnd = 0x800;
             s32 scaled;
             mHeadRotX = mPlatforms[2].mRot.x;
             mHomePosX = v.x;
             mHomePosY = v.y;
             mHomePosZ = v.z;
-            scaled = data_02082214[((u16)mHeadRotX >> 4) * 2] * k96;
+            scaled = data_02082214[((u16)mHeadRotX >> 4) * 2] * 0x96;
             mCapPosX = mHomePosX;
             mCapPosY = mHomePosY;
             mCapPosZ = mHomePosZ;
-            *cx += (s32)(((s64)scaled * data_02082214[((u16)mAngleY >> 4) * 2] + rnd) >> 12);
-            *cy += 0x8c000 - data_02082214[((u16)mHeadRotX >> 4) * 2] * k1e;
-            *cz += (s32)(((s64)scaled * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + rnd) >> 12);
-            *hx += data_02082214[((u16)mAngleY >> 4) * 2] * k82;
-            *hy += 0x50000;
-            *hz += data_02082214[((u16)mAngleY >> 4) * 2 + 1] * k82;
+            mCapPosX += FX_MUL(scaled, data_02082214[((u16)mAngleY >> 4) * 2]);
+            mCapPosY += 0x8c000 - data_02082214[((u16)mHeadRotX >> 4) * 2] * 0x1e;
+            mCapPosZ += FX_MUL(scaled, data_02082214[((u16)mAngleY >> 4) * 2 + 1]);
+            mHomePosX += data_02082214[((u16)mAngleY >> 4) * 2] * 0x82;
+            mHomePosY += 0x50000;
+            mHomePosZ += data_02082214[((u16)mAngleY >> 4) * 2 + 1] * 0x82;
         }
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToRotationY(

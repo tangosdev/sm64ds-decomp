@@ -14,7 +14,7 @@
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *   mwcc emits one .text section per ordinary definition in reverse source
  *   order; the inline destructor group comes out retail D1 then D0, no D2.
- *   M48, the array wrapper for the IDENTITY_MATRIX4X3 copy: the nested
+ *   Mtx43, the flat type for the IDENTITY_MATRIX4X3 copy: the nested
  *   math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes it.
  *   Fix12i[3] locals instead of Vector3, which declares its own
  *   destructor.
@@ -65,9 +65,7 @@ extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 // @symbol _ZN8daKpFr_c13InitResourcesEv
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
-/* Array-only wrapper preserves retail's ldm/stm matrix copy in C++ mode.
- * Nested math/Matrix.h spelling (via dExtShadowModel_c.h) scalarizes otherwise. */
-struct M48 { int w[12]; };
+#include "private/mtx43.h"
 extern "C" {
 extern int IDENTITY_MATRIX4X3[];
 }
@@ -84,7 +82,7 @@ int daKpFr_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov070_02122044(0);
-    *(struct M48*)&mMatrix = *(struct M48*)IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mMatrix = *(Mtx43 *)IDENTITY_MATRIX4X3;
     return 1;
 }
 

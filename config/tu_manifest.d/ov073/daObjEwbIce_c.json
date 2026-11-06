@@ -398,34 +398,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@906",
+      "from": "@978",
       "to": "@574",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @872 where main emits @855; licensed under the existing pin @574 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @872 where main emits @855; licensed under the existing pin @574 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@907",
+      "from": "@979",
       "to": "@575",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @873 where main emits @856; licensed under the existing pin @575 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @873 where main emits @856; licensed under the existing pin @575 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@908",
+      "from": "@980",
       "to": "@576",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @874 where main emits @857; licensed under the existing pin @576 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @874 where main emits @857; licensed under the existing pin @576 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@909",
+      "from": "@981",
       "to": "@577",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @875 where main emits @858; licensed under the existing pin @577 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @875 where main emits @858; licensed under the existing pin @577 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@910",
+      "from": "@982",
       "to": "@578",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @876 where main emits @859; licensed under the existing pin @578 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @876 where main emits @859; licensed under the existing pin @578 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@911",
+      "from": "@983",
       "to": "@572",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @877 where main emits @860; licensed under the existing pin @572 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @877 where main emits @860; licensed under the existing pin @572 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "relocations": [

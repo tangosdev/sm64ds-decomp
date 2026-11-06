@@ -61,11 +61,8 @@
  * (notes/model-rtti-names.md); this TU does not emit a homeless _ZTI.
  *
  * deslop leftovers:
- *   func_ov002_020f20f4 compiles to the ROM's loop only as C++ (every
- *   C-flavored spelling walks a byte-offset induction variable).
  *   func_ov002_020f2aec/2bf4/335c/340c/39ec keep opt_common_subs off
- *   brackets; 20f4 keeps opt_strength_reduction / opt_loop_invariants
- *   off. The brackets bind per-member only under defer_codegen off.
+ *   brackets. The brackets bind per-member only under defer_codegen off.
  *   func_ov002_020f27e8 and the OAM tail family return a callee's r0 by
  *   falling off the end; the callees are declared int so the passthrough
  *   is spelled.
@@ -111,10 +108,12 @@ enum daDemo_c_AssetId {
 #include "GX.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "common.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
 #include "daDemo_c.h"
+#include "CutsceneSpline.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
@@ -220,14 +219,6 @@ struct BMD_File;
 /* shadow typedef 's32' */
 typedef int s32;
 
-/* shadow typedef 'Vec3' */
-typedef struct
-{
-  s32 x;
-  s32 y;
-  s32 z;
-} Vec3;
-
 /* shadow typedef 'u8' */
 typedef unsigned char u8;
 
@@ -238,9 +229,6 @@ typedef unsigned short u16;
 typedef int Fix12i;
 
 /* shadow typedef 'Vector3' */
-
-/* shadow struct 'M48' */
-struct M48 { int w[12]; };
 
 /* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f237c, NOT applied:
 struct Obj {
@@ -363,10 +351,6 @@ typedef short s16;
 typedef short s16;
 */
 
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vec3', from the legacy file for func_ov002_020f7538, NOT applied:
-typedef struct Vec3 { int x, y, z; } Vec3;
-*/
-
 /* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov002_020f7bb8, NOT applied:
 typedef short s16;
 */
@@ -476,8 +460,8 @@ extern void func_ov002_020f3954(char *);
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
 extern PMF0 data_ov002_02110f9c[];
 extern void SetSubBg3Offset(int a, int b);
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, void* dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void* p);
 extern void func_02056434(const void* src, int offset, int count);
 extern void func_020562b4(const void* src, u32 offset, u32 count);
@@ -515,17 +499,18 @@ extern void func_0201f138(void);
 extern void func_0201ef38(void);
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vec3* out, const Vec3* in, int scale);
-extern void Vec3_Add(Vec3* out, Vec3* a, Vec3* b);
+extern void Vec3_MulScalar(VecFx32 *out, const VecFx32 *in, int scale);
+extern void Vec3_Add(VecFx32 *out, VecFx32 *a, VecFx32 *b);
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char data_0209f250;
 extern void *data_0209f394[];
-extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
+/* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
+   scratch as Vector3 renumbers this TU's @NNN literals. */
+extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
-/* local extern dropped: decl_common.h declares func_02008b4c(void*,void*,void*,void*) */
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
 extern PMF3 data_ov002_0210b618;
@@ -554,7 +539,7 @@ extern W data_ov002_0210b930;
 extern W data_ov002_0210b938;
 extern PMF3 data_ov002_0211104c[24];
 /* local extern: the Vector3 spelling math/CalcLib.h declares. The locals
-   stay the POD Vec3, so the call casts. */
+   are the POD VecFx32, so the call casts. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
@@ -684,54 +669,28 @@ void daDemo_c::func_ov002_020f1fcc()
  * is clear, spriteX += spriteVelX and the RNG is stepped (result unused); a
  * slot that reaches x 0x140 moving right or x -0x40 moving left goes idle with
  * spriteDelay (slot + 1) << 5. Every active slot is drawn each frame. */
-/* This member is C++, not C: under every C-flavored path here (the legacy .c
-   file, an extern "C" block, #pragma cplusplus off) the backend strength-
-   reduces the shared `d + i*2` into an r8 byte-walk; the ROM recomputes it
-   (`add r0, r0, r9, lsl #1`), which only the C++ backend emits. extern "C" on
-   the definition keeps the unmangled cartridge spelling without changing the
-   backend. */
 extern "C" struct OamAttr *data_ov002_0210be1c[];
-#pragma opt_strength_reduction off
 
 void daDemo_c::func_ov002_020f20f4() {
-    int i = 0;
-    int zpos = 0;
-    int zneg = 0;
-    int two = 2;
-    int m1 = -1;
-    for (; i < 3; i++) {
-        char *d = (char *)this->mScroll;
-        if ((((ScrollState *)d)->spriteActive[i]) != 0) {
+    for (int i = 0; i < 3; i++) {
+        if (mScroll->spriteActive[i] != 0) {
             if ((data_020a0db0 & 1) == 0) {
-                /* q is &spriteX[i] through a base stepped by i * 2:
-                   q = &spriteX[i] builds 4 bytes long, and reading
-                   spriteX[i] directly builds 4 bytes short. */
-                s16 *q = ((ScrollState *)(d + i * 2))->spriteX;
-                s16 vel = ((ScrollState *)d)->spriteVelX[i];
-                s16 pos = *q;
-                int *seed = &data_0209e650;
-                *q = (s16)(pos + vel);
-                RandomIntInternal(seed);
-                d = (char *)this->mScroll;
-                if (((ScrollState *)d)->spriteVelX[i] >= 0) {
-                    if (((ScrollState *)d)->spriteX[i] >= 0x140) {
-                        ((ScrollState *)d)->spriteActive[i] = (u8)zpos;
-                        d = (char *)this->mScroll;
-                        ((ScrollState *)d)->spriteDelay[i] = (s16)((i + 1) << 5);
+                mScroll->spriteX[i] += mScroll->spriteVelX[i];
+                RandomIntInternal(&data_0209e650);
+                if (mScroll->spriteVelX[i] >= 0) {
+                    if (mScroll->spriteX[i] >= 0x140) {
+                        mScroll->spriteActive[i] = 0;
+                        mScroll->spriteDelay[i] = (i + 1) << 5;
                     }
-                } else if (((ScrollState *)d)->spriteX[i] <= (-0x40)) {
-                    ((ScrollState *)d)->spriteActive[i] = (u8)zneg;
-                    d = (char *)this->mScroll;
-                    ((ScrollState *)d)->spriteDelay[i] = (s16)((i + 1) << 5);
+                } else if (mScroll->spriteX[i] <= -0x40) {
+                    mScroll->spriteActive[i] = 0;
+                    mScroll->spriteDelay[i] = (i + 1) << 5;
                 }
             }
-            d = (char *)this->mScroll;
-            OAM::RenderSub(data_ov002_0210be1c[i], ((ScrollState *)d)->spriteX[i],
-                           ((ScrollState *)d)->spriteY[i], m1, two);
+            OAM::RenderSub(data_ov002_0210be1c[i], mScroll->spriteX[i], mScroll->spriteY[i], -1, 2);
         }
     }
 }
-#pragma opt_strength_reduction on
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020f2210, 0x020f2210, size 0x130 */
@@ -1151,32 +1110,30 @@ void func_ov002_020f2a88(char *c, int i) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f2aec
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f2aec(char *c, int idx)
 {
-    unsigned char cnt;
+    StaffRoll *s = (StaffRoll *)c;
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) == 0) {
+    if (s->credit[idx].timer == 0) {
         gSubScreenLayers |= 1;
     }
-    *(unsigned short *)(c + CREDIT_OFF(timer) + idx * 8) += 1;
-    *(unsigned short *)(c + CREDIT_OFF(blendTimer) + idx * 8) += 1;
+    s->credit[idx].timer++;
+    s->credit[idx].blendTimer++;
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) >= 2) {
-        *(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) = 0;
-        *(unsigned char *)(c + CREDIT_OFF(blend) + idx * 8) += 1;
-        cnt = *(unsigned char *)(c + idx * 8 + CREDIT_OFF(blend));
+    if (s->credit[idx].blendTimer >= 2) {
+        s->credit[idx].blendTimer = 0;
+        s->credit[idx].blend++;
+        unsigned char cnt = s->credit[idx].blend;
         G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, cnt, 0x10 - cnt);
     }
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) < 30) {
+    if (s->credit[idx].timer < 30) {
         return;
     }
-    *(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) = 0;
-    *(unsigned char *)(c + CREDIT_OFF(step) + idx * 8) += 1;
+    s->credit[idx].timer = 0;
+    s->credit[idx].step++;
     *(volatile unsigned short *)0x4001050 = 0;
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1184,33 +1141,31 @@ void func_ov002_020f2aec(char *c, int idx)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f2bf4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f2bf4(char *c, int idx)
 {
-    unsigned char cnt;
+    StaffRoll *s = (StaffRoll *)c;
 
-    *(unsigned short *)(c + CREDIT_OFF(timer) + idx * 8) += 1;
-    *(unsigned short *)(c + CREDIT_OFF(blendTimer) + idx * 8) += 1;
+    s->credit[idx].timer++;
+    s->credit[idx].blendTimer++;
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) >= 2) {
-        *(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) = 0;
-        *(unsigned char *)(c + CREDIT_OFF(blend) + idx * 8) += 1;
-        cnt = *(unsigned char *)(c + idx * 8 + CREDIT_OFF(blend));
+    if (s->credit[idx].blendTimer >= 2) {
+        s->credit[idx].blendTimer = 0;
+        s->credit[idx].blend++;
+        unsigned char cnt = s->credit[idx].blend;
         G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, 0x10 - cnt, cnt);
     }
 
-    if (*(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) < 30) {
+    if (s->credit[idx].timer < 30) {
         return;
     }
-    *(unsigned short *)(c + idx * 8 + CREDIT_OFF(timer)) = 0;
-    *(unsigned char *)(c + CREDIT_OFF(step) + idx * 8) += 1;
-    *(unsigned char *)(c + CREDIT_OFF(message) + idx * 8) += 1;
-    *(unsigned char *)(c + idx * 8 + CREDIT_OFF(blend)) = 0;
-    *(unsigned short *)(c + idx * 8 + CREDIT_OFF(blendTimer)) = 0;
+    s->credit[idx].timer = 0;
+    s->credit[idx].step++;
+    s->credit[idx].message++;
+    s->credit[idx].blend = 0;
+    s->credit[idx].blendTimer = 0;
     gSubScreenLayers &= ~1;
-    func_0201ef50(*(unsigned char *)(c + idx * 8 + CREDIT_OFF(message)));
+    func_0201ef50(s->credit[idx].message);
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1493,25 +1448,23 @@ extern "C" void func_ov002_020f3310(C* self, int idx) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f335c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f335c(char *o, int i) {
-    int idx = i * 0x30;
-    int *fld = (int *)(o + WINDOW_OFF(top) + idx);
-    *fld = *fld + 0x1800;
-    if (*fld >= 0x66000) {
-        *fld = 0x66000;
-        ((StaffRoll *)o)->window[i].active = 0;
-        ((StaffRoll *)o)->window[i].step = 0;
+    StaffRoll *s = (StaffRoll *)o;
+    s->window[i].top += 0x1800;
+    if (s->window[i].top >= 0x66000) {
+        s->window[i].top = 0x66000;
+        s->window[i].active = 0;
+        s->window[i].step = 0;
     }
-    char *b = o + idx;
-    int f140 = ((StaffRoll *)b)->window[0].left >> 0xc;
-    int f148 = ((StaffRoll *)b)->window[0].right >> 0xc;
-    int f14c = ((StaffRoll *)b)->window[0].bottom >> 0xc;
-    int fv   = *fld >> 0xc;
-    *(volatile unsigned short *)0x4001042 = (unsigned short)(((f140 << 8) & 0xff00) | (f148 & 0xff));
-    *(volatile unsigned short *)0x4001046 = (unsigned short)(((fv   << 8) & 0xff00) | (f14c & 0xff));
+    int left = s->window[i].left >> 0xc;
+    int right = s->window[i].right >> 0xc;
+    int bottom = s->window[i].bottom >> 0xc;
+    int top = s->window[i].top >> 0xc;
+    *(volatile unsigned short *)0x4001042 =
+        (unsigned short)(((left << 8) & 0xff00) | (right & 0xff));
+    *(volatile unsigned short *)0x4001046 =
+        (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1519,25 +1472,23 @@ void func_ov002_020f335c(char *o, int i) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f340c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f340c(char *o, int i) {
-    int idx = i * 0x30;
-    int *fld = (int *)(o + WINDOW_OFF(top) + idx);
-    *fld = *fld + 0x1800;
-    if (*fld >= 0x66000) {
-        *fld = 0x66000;
-        ((StaffRoll *)o)->window[i].active = 0;
-        ((StaffRoll *)o)->window[i].step = 0;
+    StaffRoll *s = (StaffRoll *)o;
+    s->window[i].top += 0x1800;
+    if (s->window[i].top >= 0x66000) {
+        s->window[i].top = 0x66000;
+        s->window[i].active = 0;
+        s->window[i].step = 0;
     }
-    char *b = o + idx;
-    int f140 = ((StaffRoll *)b)->window[0].left >> 0xc;
-    int f148 = ((StaffRoll *)b)->window[0].right >> 0xc;
-    int f14c = ((StaffRoll *)b)->window[0].bottom >> 0xc;
-    int fv   = *fld >> 0xc;
-    *(volatile unsigned short *)0x4001042 = (unsigned short)(((f140 << 8) & 0xff00) | (f148 & 0xff));
-    *(volatile unsigned short *)0x4001046 = (unsigned short)(((fv   << 8) & 0xff00) | (f14c & 0xff));
+    int left = s->window[i].left >> 0xc;
+    int right = s->window[i].right >> 0xc;
+    int bottom = s->window[i].bottom >> 0xc;
+    int top = s->window[i].top >> 0xc;
+    *(volatile unsigned short *)0x4001042 =
+        (unsigned short)(((left << 8) & 0xff00) | (right & 0xff));
+    *(volatile unsigned short *)0x4001046 =
+        (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1747,51 +1698,29 @@ void func_ov002_020f3978(char *c) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f39ec
 extern "C" { /* .c-derived member: C linkage for the whole block */
-#pragma opt_common_subs off
 void func_ov002_020f39ec(char *self, int idx) {
-    char pad[4];
-    (void)pad[0];
-    int off = idx * 0x4c;
-    unsigned short *timerBase = &((StaffRoll *)self)->stars[0].frameTimer;
-    unsigned short *ctr = (unsigned short *)((char *)timerBase + off);
-    *ctr = (unsigned short)(*ctr + 1);
-    if (*ctr < 4)
+    StaffRoll *s = (StaffRoll *)self;
+    s->stars[idx].frameTimer++;
+    if (s->stars[idx].frameTimer < 4)
         return;
-    int zero = 0;
-    *ctr = (unsigned short)zero;
-    {
-        unsigned short *frameBase = &((StaffRoll *)self)->stars[0].frame;
-        unsigned short *ctr2 = (unsigned short *)((char *)frameBase + off);
-        *ctr2 = (unsigned short)(*ctr2 + 1);
-        char *row = self + off;
-        if (((StaffRoll *)row)->stars[0].holdFrame != 0) {
-            if (*ctr2 >= 0x10)
-                *ctr2 = 0x10;
-        } else if (*ctr2 >= 0x20) {
-            *ctr2 = (unsigned short)zero;
-        }
+    s->stars[idx].frameTimer = 0;
+    s->stars[idx].frame++;
+    if (s->stars[idx].holdFrame != 0) {
+        if (s->stars[idx].frame >= 0x10)
+            s->stars[idx].frame = 0x10;
+    } else if (s->stars[idx].frame >= 0x20) {
+        s->stars[idx].frame = 0;
     }
 
-    int i = 0;
-    int acc = i;
-    int dst_off = i;
-    char *row = self + off;
-    unsigned base = 0x6600000u;
-    base += 0x2000u;
-    base += (unsigned)(idx << 8);
-    int n100 = 0x100;
-    for (; i < 4; i++) {
-        int v = data_ov002_021002a0[((StaffRoll *)row)->stars[0].frame];
-        int src_off = acc + ((v & 7) << 8);
+    for (int i = 0; i < 4; i++) {
+        int v = data_ov002_021002a0[s->stars[idx].frame];
+        int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
-            src_off += 0x2000;
-        MultiCopyHalf((void *)(((StaffRoll *)self)->starChars + src_off),
-                      (void *)(base + (unsigned)dst_off), (unsigned)n100);
-        acc += 0x800;
-        dst_off += 0x400;
+            src += 0x2000;
+        MultiCopyHalf(s->starChars + src,
+                      (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
 }
-#pragma opt_common_subs on
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3390,8 +3319,8 @@ int func_ov002_020f5fb8(void* c){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5fe4(char* c)
 {
-    int f;
-    int r5;
+    void *f;
+    void *r5;
 
     SetSubBg0Offset(0, 0);
     SetSubBg1Offset(0, 0);
@@ -3403,11 +3332,11 @@ void func_ov002_020f5fe4(char* c)
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCG_BIN);
     DecompressLZ16(f, (void*)0x6400000);
-    Deallocate((void*)f);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCL_BIN);
-    GX::LoadOBJPltt((const void *)f, 0, 0x200);
-    Deallocate((void*)f);
+    GX::LoadOBJPltt(f, 0, 0x200);
+    Deallocate(f);
 
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3);
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & 0x43) | 0x1100;
@@ -3418,16 +3347,16 @@ void func_ov002_020f5fe4(char* c)
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCG_BIN);
     DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
-    Deallocate((void*)f);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCL_BIN);
-    GX::LoadBGPltt((const void *)f, 0, 2);
-    GXS::LoadBGPltt((const void *)f, 0, 0x200);
-    Deallocate((void*)f);
+    GX::LoadBGPltt(f, 0, 2);
+    GXS::LoadBGPltt(f, 0, 0x200);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK1_NSC_BIN);
-    func_02056434((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_02056434(f, 0, 0x800);
+    Deallocate(f);
 
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0xc90;
@@ -3445,37 +3374,37 @@ void func_ov002_020f5fe4(char* c)
     }
 
     DecompressLZ16(r5, (void *)G2S::GetBG3CharPtr());
-    Deallocate((void*)r5);
+    Deallocate(r5);
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
     CP15::FlushAndInvalidateDataCache((u32)r5, 0x200);
     GX::SetBankForSubBGExtPltt(0x80);
     GXS::BeginLoadBGExtPltt();
-    GXS::LoadBGExtPltt((const void *)r5, 0x4000, 0x200);
-    GXS::LoadBGExtPltt((const void *)r5, 0x6000, 0x200);
+    GXS::LoadBGExtPltt(r5, 0x4000, 0x200);
+    GXS::LoadBGExtPltt(r5, 0x6000, 0x200);
     GXS::EndLoadBGExtPltt();
-    Deallocate((void*)r5);
+    Deallocate(r5);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_BRIGHT_NSC_BIN);
-    func_020562b4((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_020562b4(f, 0, 0x800);
+    Deallocate(f);
 
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0xa90;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK2_NSC_BIN);
-    func_02056374((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_02056374(f, 0, 0x800);
+    Deallocate(f);
 
     gSubScreenLayers |= 0x10;
 
     {
-        int f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
+        void *f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCL_BIN);
         DecompressLZ16(f6, (void*)0x6600000);
-        GXS::LoadOBJPltt((const void *)r5, 0, 0x200);
-        Deallocate((void*)f6);
-        Deallocate((void*)r5);
+        GXS::LoadOBJPltt(r5, 0, 0x200);
+        Deallocate(f6);
+        Deallocate(r5);
     }
 
     ((StaffRoll *)c)->starChars = 0;
@@ -3484,7 +3413,7 @@ void func_ov002_020f5fe4(char* c)
     }
     f = LoadFile(ASSET_D_2D_ED_STAR_NCG_BIN);
     DecompressLZ16(f, ((StaffRoll *)c)->starChars);
-    Deallocate((void*)f);
+    Deallocate(f);
 
     func_ov002_020f5ad4(c);
 }
@@ -3816,14 +3745,14 @@ int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 
 int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
 {
-    struct { int x, y, z; } target;
+    Vector3 target;
     int y, z;
     z = ReadUnalignedShort(p + 4) << 12;
     y = ReadUnalignedShort(p + 2) << 12;
     target.x = ReadUnalignedShort(p) << 12;
     target.y = y;
     target.z = z;
-    this->mAngleY = Vec3_HorzAngle(&this->mPos, (const Vector3 *)&target);
+    this->mAngleY = Vec3_HorzAngle(&this->mPos, &target);
     this->mPrevAngleY = this->mAngleY;
     this->mHorzSpeed = ReadUnalignedShort(p + 6);
     return 1;
@@ -3887,7 +3816,7 @@ inline unsigned int inline_fn(unsigned int arg0)
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
 {
   u8 *flag = (u8 *) arg1;
-  Vec3 v;
+  VecFx32 v;
   if (arg2 == gKuppaScriptFrame) {
       if ((*flag) != 0) {
           int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
@@ -4189,7 +4118,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     int f2 = b << 8;
     int *base;
     int scale;
-    Vec3 tmp, diff, scaled, sum;
+    VecFx32 tmp, diff, scaled, sum;
 
     if (f1 != 0 && arg2 == gKuppaScriptFrame) {
         this->mAngleX = 0xd00;
@@ -4217,7 +4146,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     tmp.y = diff.y;
     tmp.z = diff.z;
     Vec3_MulScalar(&scaled, &tmp, this->mRate);
-    Vec3_Add(&sum, (Vec3 *)base, &scaled);
+    Vec3_Add(&sum, (VecFx32 *)base, &scaled);
 
     {
         Vector3 *dp = ((param_c &)*(anmModel_c *)this->mAnmModel).mScale;
@@ -4408,10 +4337,10 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     tbl1 = ReadUnalignedInt(p);
     tbl2 = ReadUnalignedInt(p + 4);
 
-    if (func_02008b4c(&v1, &this->mPhase, &this->mMagnitude, (char *)tbl1) != 0) {
+    if (MovePointAlongSpline(&v1, &this->mPhase, &this->mMagnitude, (CutsceneSpline *)tbl1) != 0) {
         return 0;
     }
-    if (func_02008b4c(&v0, &this->mPhase, &this->mMagnitude, (char *)tbl2) != 0) {
+    if (MovePointAlongSpline(&v0, &this->mPhase, &this->mMagnitude, (CutsceneSpline *)tbl2) != 0) {
         return 0;
     }
 
@@ -4514,12 +4443,12 @@ int daDemo_c::Render() {
         struct {
             char *p;
             char *cur;
-            M48 *src;
+            Matrix4x3 *src;
         } s;
-        s.src = (M48 *)&data_0209b41c;
+        s.src = &data_0209b41c;
         s.p = (char *)&mModel->mat4x3;
         s.cur = s.p;
-        *(M48 *)s.cur = *s.src;
+        *(Matrix4x3 *)s.cur = *s.src;
         int *tbl = data_ov002_0210bb7c;
         int i = 0;
         do {
@@ -4550,7 +4479,7 @@ int daDemo_c::Render() {
 int daDemo_c::Behavior()
 {
     Vector3 v;
-    Vec3 asr;
+    VecFx32 asr;
     int new_var2;
     s32 t;
     t = this->param1;

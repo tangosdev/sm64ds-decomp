@@ -47,12 +47,6 @@
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 
-/* Three ints, so the transform helpers can take their address without
- * calling ~Vector3. */
-struct Vec3 {
-    int x, y, z;
-};
-
 /* LEVEL_ID 0xc is Big Boo's Haunt (its course overlay is ov020). */
 enum {
     kBigBoosHaunt = 0xc,
@@ -110,10 +104,10 @@ int daObjFlamethrower_c::InitResources() {
     char *rowBase;
     Vector3 *flamePos;
     dCcPos_c *collider;
-    struct Vec3 offset;
-    struct Vec3 dst;
-    struct Vec3 firstPos;
-    struct Vec3 nextPos;
+    Vector3 offset;
+    Vector3 dst;
+    Vector3 firstPos;
+    Vector3 nextPos;
 
     count = kSegments;
     if (gCurrentSublevel == kBigBoosHaunt)
@@ -135,15 +129,14 @@ int daObjFlamethrower_c::InitResources() {
             dst.y = zero;
             dst.z = zero;
             offset.z = data_ov095_02136fb0[i];
-            MulVec3Mat4x3((Vector3 *)&offset, &mTransform, (Vector3 *)&dst);
+            MulVec3Mat4x3(&offset, &mTransform, &dst);
             if (im1 < 0) {
-                Vec3_Add((Vector3 *)&firstPos, (const Vector3 *)&mPosX, (const Vector3 *)&dst);
+                Vec3_Add(&firstPos, (const Vector3 *)&mPosX, &dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = firstPos.x;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = firstPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = firstPos.z;
             } else {
-                Vec3_Add((Vector3 *)&nextPos, (const Vector3 *)&mFlamePositions[im1],
-                         (const Vector3 *)&dst);
+                Vec3_Add(&nextPos, (const Vector3 *)&mFlamePositions[im1], &dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = nextPos.x;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = nextPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = nextPos.z;

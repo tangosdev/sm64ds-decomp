@@ -14,11 +14,11 @@
  * then D0 pair without a D2 or a forcing helper.
  *
  * What stays, and why:
- * - HikariVec3 POD locals; Vector3's empty destructor would add
+ * - VecFx32 POD locals; Vector3's empty destructor would add
  *   _ZN7Vector3D1Ev to this TU
  * - gC1HikariModelFile is the model SharedFilePtr this Init LoadFile's,
  *   defined at the end of this file (constructed as file ID 1453)
- * - data_0209caa0[1] & 0x80000000; this Init is the consumer, no recovered
+ * - data_0209caa0.file.flags1 & 0x80000000; this Init is the consumer, no recovered
  *   name for that save-flag bit
  * - Sound::PlaySmallSecretSound stays TU-local; Sound.h has no declaration.
  *   MulVec3Mat4x3, Vec3_Add, AngleDiff and NumStars have no shared header
@@ -36,16 +36,12 @@ enum d_a_obj_c1_hikari_AssetId { ASSET_C1_HIKARI_BMD = 0x05ad };
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
-/* POD copies of the two world-space offsets this Behavior rotates through
- * data_020a0e68. The shared Vector3 has an empty destructor, which would add
- * an unrelated compiler helper to this TU. */
-struct HikariVec3 {
-    s32 x;
-    s32 y;
-    s32 z;
-};
-
+/* Behavior's copies of the two world-space offsets it rotates through
+ * data_020a0e68 are VecFx32. The shared Vector3 has an empty destructor,
+ * which would add an unrelated compiler helper to this TU. */
 /* The beam's file-scope SharedFilePtr object, spelled through the same
    wrapper idiom the landed folds use: the handle's code is the veneer pair
    the cartridge already carries, so the wrapper gets no bodies of its own.
@@ -58,7 +54,7 @@ struct C1HikariModelFilePtr : SharedFilePtr {
 
 /* Defined at the end of this file so its constructor does not enter .text. */
 extern C1HikariModelFilePtr gC1HikariModelFile;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
@@ -91,7 +87,7 @@ int daObjC1Hikari_c::InitResources() {
     dExtSimpleModel_c::LoadFile(gC1HikariModelFile);
     if (NumStars() < 0xe)
         return 0;
-    if (data_0209caa0[1] & 0x80000000)
+    if (data_0209caa0.file.flags1 & 0x80000000)
         return 0;
     mModel.SetFile((BMD_File *)gC1HikariModelFile.filePtr, 1, 0x13);
     mCylinder.Init(this, mPos, 0xf0000, 0x8c000, 0x4800002, 0);
@@ -101,9 +97,9 @@ int daObjC1Hikari_c::InitResources() {
 
 // @symbol _ZN15daObjC1Hikari_c8BehaviorEv
 int daObjC1Hikari_c::Behavior() {
-    HikariVec3 vIn, vMid, vRes;
-    HikariVec3 hv;
-    HikariVec3 vIn2, vMid2, vRes2;
+    VecFx32 vIn, vMid, vRes;
+    VecFx32 hv;
+    VecFx32 vIn2, vMid2, vRes2;
 
     if (mTalkPlayer != 0) {
         daPly_c *p;
@@ -141,7 +137,7 @@ int daObjC1Hikari_c::Behavior() {
             if (o) {
                 int b = (int)(o->actorID == 0xbf);
                 if (b) {
-                    HikariVec3 *op = (HikariVec3 *)&o->mPosX;
+                    VecFx32 *op = (VecFx32 *)&o->mPosX;
                     hv = *op;
                     if (AngleDiff(Vec3_HorzAngle(&mPos, (const Vector3 *)&hv), mAngleY) < 0x4000) {
                         daPly_c *player = static_cast<daPly_c *>(o);

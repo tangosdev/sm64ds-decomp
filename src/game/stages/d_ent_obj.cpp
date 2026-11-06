@@ -24,7 +24,8 @@
  *  - LAUNDER((char*)) stays on the mModel.data / mAnimation.data /
  *    mModel.mat4x3 alias reads in func_ov075_02114be4 -- the plain member
  *    read changes which value-numbering class mwcc folds them into.
- *  - MatrixCopyWords stays a flat 12-word view for the Matrix4x3 copies.
+ *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
+ *    itself grows .text by 0x6c bytes.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
  *    alongside `player`: folding it into `player->mFellOffThisFrame` drops a
  *    register and rewrites the whole function.
@@ -44,6 +45,8 @@
 #include "G3X.h"
 #include "math/Approach.h"
 #include "BMD_File.h"
+#include "private/mtx43.h"
+#include "LevelRng.h"
 
 struct BTP_File;
 
@@ -108,7 +111,6 @@ long long __aeabi_uidiv(unsigned int n, unsigned int d);
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
-extern int data_0209e650;
 extern short data_02082214[]; /* sine/cosine table, interleaved */
 extern short data_02082614[];
 extern u8 data_0209fc5c[];
@@ -176,10 +178,6 @@ struct UnknownVsPlayerStateRow {
 };
 extern "C" UnknownVsPlayerStateRow data_ov075_0211d56c[];
 extern "C" UnknownVsPlayerStateRow data_ov075_0211d53c[];
-
-struct MatrixCopyWords {
-    int words[12];
-};
 
 #define LAUNDER(x) ((char*)(x))
 
@@ -316,7 +314,8 @@ void UnknownVsPlayer::func_ov075_021143e4() {
     BTP_File *textureFile;
     if (data_ov075_0211d380 < 0) {
         data_ov075_0211d380 =
-            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 6];
+            data_ov075_0211b524[((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) %
+                                6];
     }
     if (data_0209b2f0[mPlayerNo] != 0) {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ac.filePtr, 0, 0, 0x1000, 0);
@@ -332,7 +331,7 @@ void UnknownVsPlayer::func_ov075_021143e4() {
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov075_0211d3c4.filePtr, *textureFile);
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
     {
-        unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650);
+        unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         long long divisionResult = __aeabi_uidiv(randomValue >> 0x10, frameCount);
         mTextureSequence.currFrame = ((unsigned)((int)(divisionResult >> 32) << 0x10)) >> 4;
@@ -460,7 +459,7 @@ int UnknownVsPlayer::func_ov075_021148f0() {
 // @symbol _ZN15UnknownVsPlayer19func_ov075_02114904Ei
 void UnknownVsPlayer::func_ov075_02114904(int exitX) {
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d384.filePtr, 8, 0x40000000, 0x1000, 0);
-    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) + 0x1e) & 0xf;
+    mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) + 0x1e) & 0xf;
     mExitPos.x = exitX;
     mExitPos.y = 0;
     mExitPos.z = -0x3e8000;
@@ -580,7 +579,7 @@ void UnknownVsPlayer::func_ov075_02114be4() {
         animation->Virtual10(components->transforms[15]);
     }
 
-    *(MatrixCopyWords *)&mAnimation.mat4x3 = *(MatrixCopyWords *)LAUNDER(&mModel.mat4x3);
+    *(Mtx43 *)&mAnimation.mat4x3 = *(Mtx43 *)LAUNDER(&mModel.mat4x3);
 
     {
         ModelComponents *components = (ModelComponents *)LAUNDER(&mAnimation.data);
@@ -606,7 +605,7 @@ void UnknownVsPlayer::func_ov075_02114cd8() {
     (this->*data_ov075_0211d56c[mMoveState].state)();
     Matrix4x3_FromTranslation(&data_020a0e68, mPosition.x >> 3, mPosition.y >> 3, mPosition.z >> 3);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    *(MatrixCopyWords *)&mModel.mat4x3 = *(MatrixCopyWords *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     (this->*data_ov075_0211d53c[mAnimState].state)();
     mModel.Advance();
     mTextureSequence.Advance();
@@ -640,7 +639,7 @@ int UnknownVsPlayer::func_ov075_02114ddc(unsigned char kind, unsigned char playe
     mTextureSequence.SetFile(*textureFile, 0, 0x1000, 0);
 
     {
-        unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650);
+        unsigned randomValue = (unsigned)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
         mTextureSequence.currFrame = (((randomValue >> 0x10) % (unsigned)frameCount) << 0x10) >> 4;
     }
@@ -755,7 +754,7 @@ void dEntObj_c::func_ov075_021151b4(int playerNo) {
     markerPosition.y += 0x32000;
     Vec3_Asr(&renderPosition, &markerPosition, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, renderPosition.x, renderPosition.y, renderPosition.z);
-    *(MatrixCopyWords *)&mAnmModel.mat4x3 = *(MatrixCopyWords *)&data_020a0e68;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 // @symbol _ZN9dEntObj_c19func_ov075_0211524cEi
@@ -960,7 +959,7 @@ int dEntObj_c::InitResources() {
     func_0203c178(&data_020a0e68, 0x7d000, 0x7d000, 0x7d000);
     /* 0x888 is +0x1c inside the dExtSimpleModel_c at 0x86c -- its mat4x3. The cartridge's own
        ~dEntObj_c proves the extent; see tools/dtor_members.py. */
-    *(MatrixCopyWords *)((char *)&mModel.mat4x3) = *(MatrixCopyWords *)&data_020a0e68;
+    *(Mtx43 *)((char *)&mModel.mat4x3) = *(Mtx43 *)&data_020a0e68;
 
     if (param1 != 1) {
         mAnmModel.SetFile((BMD_File *)data_ov075_0211d3bc.filePtr, 1, -1);

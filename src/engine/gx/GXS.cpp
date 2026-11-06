@@ -6,10 +6,7 @@
  * LoadOBJPltt, LoadOBJ, LoadBG0Char, LoadBG1Char) are defined here too. The
  * 3D uploads above 0x020568cc are gx_load3d.c (src/engine/gx/GX.cpp).
  */
-// leftovers: opt_propagation off is file-global for LoadOBJ and
-// func_020565b4 (constant VRAM destinations 0x6400000/0x6600000); every other
-// member matches either way. The func_ helpers keep address names (no
-// recovered names exist).
+// The func_ helpers keep address names (no recovered names exist).
 
 #include "types.h"
 #include "GX.h"
@@ -20,6 +17,13 @@ void *GetBG1ScrPtr(void);
 void *GetBG2CharPtr(void);
 void *GetBG2ScrPtr(void);
 void *GetBG3ScrPtr(void);
+
+/* OBJ character VRAM has a fixed base, so the SDK's getter is an inline, not a
+ * call. LoadOBJ reads the base through it, which keeps the base in a register
+ * where a literal would fold into each copy's address add. */
+inline void *GetOBJCharPtr(void) {
+    return (void *)0x6400000;
+}
 }
 
 namespace G2S {
@@ -31,11 +35,12 @@ unsigned int GetBG2CharPtr(void);
 unsigned int GetBG2ScrPtr(void);
 unsigned int GetBG3CharPtr(void);
 unsigned int GetBG3ScrPtr(void);
-}
 
-/* opt_propagation off is what LoadOBJ and func_020565b4 (the two
- * constant-destination VRAM copies, 0x6400000/0x6600000) were built under. */
-#pragma opt_propagation off
+/* See G2::GetOBJCharPtr. */
+inline void *GetOBJCharPtr(void) {
+    return (void *)0x6600000;
+}
+}
 
 /* GX sub-screen extended palette VRAM bases */
 #define GXS_OBJ_EXT_PLTT_BASE 0x068a0000u
@@ -150,12 +155,11 @@ void func_02056674(const void *src, unsigned int offset, unsigned int count) {
 namespace GX {
 
 // Copies count words from src to VRAM address (0x6400000 + offset) -- main
-// OBJ VRAM. Needs opt_propagation off: the constant is kept out of the
-// address arithmetic.
+// OBJ VRAM.
 // @symbol _ZN2GX7LoadOBJEPKvjj
 void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
-    unsigned int base = 0x6400000;
+    unsigned int base = (unsigned int)G2::GetOBJCharPtr();
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
     } else {
@@ -168,11 +172,11 @@ void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
 extern "C" {
 
 // Copies count words from src to VRAM address (0x6600000 + offset) -- sub
-// OBJ VRAM. Same opt_propagation-off build as GX::LoadOBJ.
+// OBJ VRAM. GX::LoadOBJ's sub-engine twin.
 // @symbol func_020565b4
 void func_020565b4(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
-    unsigned int base = 0x6600000;
+    unsigned int base = (unsigned int)G2S::GetOBJCharPtr();
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
     } else {

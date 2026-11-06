@@ -18,6 +18,7 @@
 #include "decl_common.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 extern "C" {
 // local extern: PlayerInput.h cannot be included here, its flat gTouchX/gTouchY spelling does not reproduce dMgCardObj_c::Update.
 extern unsigned char gActivePlayerSlot;
@@ -61,13 +62,12 @@ extern void func_0203d680(int *out, int *in, int scale);
 extern const Five sCardHandOrder;
 extern int RandomIntInternal(int *seed);
 extern int sCardFaceWeights[];
-extern int data_0209e650;
 extern void Camera_InitDealerView(void *c);
-extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void Dealer_Draw(void *c);
-extern int data_ov006_02134028;
+extern OamAttr *data_ov006_02134028;
 void Dealer_Update(Dealer *table);
 void MgCoins_Update(void);
 extern int Dealer_IsBusy(void *p);
@@ -810,7 +810,9 @@ int dScMgCard_c::DrawCardValue(void)
       sum += sCardFaceWeights[i];
   }
 
-  sum = (sum * ((int) ((((unsigned int) RandomIntInternal(&data_0209e650)) & 0x7fffffff) >> 0x13))) >> 0xc;
+  sum = (sum *
+         ((int)((((unsigned int)RandomIntInternal(&data_0209e650.value)) & 0x7fffffff) >> 0x13))) >>
+        0xc;
   for (i = 0; i < 6; i++)
   {
       sum -= sCardFaceWeights[i];

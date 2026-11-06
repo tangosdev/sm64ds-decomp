@@ -121,9 +121,9 @@ extern u32 data_ov007_020d7aa0[];   /* keep-masks per pixel offset in a tile */
 extern u32 data_ov007_020d7ac4[];   /* colour masks per text colour */
 extern u8 data_ov007_020d7b04[][6]; /* first text line per kind and language */
 
-extern void MultiCopy32Bytes(int *src, int *dst, int len);
+extern void MultiCopy32Bytes(const void *src, void *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 
 extern int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
@@ -134,7 +134,7 @@ extern int func_ov007_020c94a0(int unused, unsigned int messageIndex);
 extern void func_ov007_020c94e4(void);
 /* local extern: the definition (unit020c94a0.cpp) takes two parameters;
  * this call passes the bank's name as a third, which retail never reads. */
-extern void func_ov007_020c951c(int unused, void *bank, void *name);
+extern void func_ov007_020c951c(int unused, void *bank, const char *name);
 
 void func_ov007_020b7a44(void);
 void func_ov007_020b797c(void);
@@ -507,8 +507,8 @@ void func_ov007_020b8548(void *unused, void *sheet, int baseTile, void *plane0, 
     }
 
     func_ov007_020c0308(data_ov007_02103998, 0x18, 0xf);
-    MultiCopy32Bytes((int *)data_ov007_02103998, (int *)data_ov007_02104598, 0x600);
-    MultiCopy32Bytes((int *)data_ov007_02103998, (int *)data_ov007_02103f98, 0x600);
+    MultiCopy32Bytes(data_ov007_02103998, data_ov007_02104598, 0x600);
+    MultiCopy32Bytes(data_ov007_02103998, data_ov007_02103f98, 0x600);
 
     func_ov007_020b8860(0, OV007_WINDOW_CLOSED);
     func_ov007_020b797c();

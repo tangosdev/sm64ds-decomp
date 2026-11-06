@@ -20,8 +20,8 @@ extern void func_02018770(void);
    block: an LZ77-tagged file is decompressed into a block of its unpacked
    size, anything else copied. Closes the file, unloads any archive the open
    mounted, and with flag set flushes the result from the data cache. */
-unsigned int func_0201834c(FSFile *self, int flag) {
-    unsigned int result = 0;
+void *func_0201834c(FSFile *self, int flag) {
+    void *result = 0;
     unsigned int len = self->prop.file.bottom - self->prop.file.top;
     if (len > 8) {
         void *buf = Memory::Allocate(len, -4);
@@ -31,11 +31,11 @@ unsigned int func_0201834c(FSFile *self, int flag) {
             return result;
         if (func_02018568(buf) != 0) {
             len = func_02018ac4((void *)((char *)buf + 4));
-            result = (unsigned int)Memory::Allocate(len);
-            DecompressLZ16((void *)((char *)buf + 4), (void *)result);
+            result = Memory::Allocate(len);
+            DecompressLZ16((void *)((char *)buf + 4), result);
         } else {
-            result = (unsigned int)Memory::Allocate(len);
-            CpuCopy8(buf, (void *)result, len);
+            result = Memory::Allocate(len);
+            CpuCopy8(buf, result, len);
         }
         Memory::Deallocate(buf);
     } else {
@@ -44,7 +44,7 @@ unsigned int func_0201834c(FSFile *self, int flag) {
     FS_CloseFile(self);
     func_02018770();
     if (flag != 0)
-        CP15::FlushDataCache(result, len);
+        CP15::FlushDataCache((unsigned int)result, len);
     return result;
 }
 }

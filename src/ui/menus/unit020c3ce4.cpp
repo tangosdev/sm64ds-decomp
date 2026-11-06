@@ -45,7 +45,7 @@ extern Ov007QueryHook data_ov007_02104c14;
 extern Ov007FreeHook data_ov007_02103254;
 extern Ov007AllocHook data_ov007_02103258;
 
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void func_0205a588(void *dst, unsigned char value, unsigned int size);
@@ -90,7 +90,7 @@ void *func_ov007_020c3df4(const char *name, int size) {
 }
 
 // @symbol func_ov007_020c3d40
-int func_ov007_020c3d40(const char *name, int n) {
+void *func_ov007_020c3d40(const char *name, int n) {
     int *r = (int *)func_ov007_020c3df4(name, n);
     volatile unsigned short v16;
     volatile unsigned v32;
@@ -114,7 +114,7 @@ int func_ov007_020c3d40(const char *name, int n) {
         func_0205a588(r, 0, n);
         break;
     }
-    return (int)r;
+    return r;
 }
 
 // @symbol func_ov007_020c3d1c

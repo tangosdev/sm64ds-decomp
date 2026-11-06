@@ -1,7 +1,5 @@
 #include "types.h"
-
-typedef unsigned long __file_handle;
-typedef void (*__idle_proc)(void);
+#include "file_struc.h"
 
 extern void func_02071974(const unsigned char *c);
 

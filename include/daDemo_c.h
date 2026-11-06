@@ -268,14 +268,14 @@ struct daDemo_c : dActor_c {
        the speed along the model's facing (6c60, 6e48, 6f48) or along
        mPrevAngleX (7780), the orbit radius (79c0), the opacity level that
        mOpacity takes as mMagnitude >> 12 (71c4, 7410, 7538), and the
-       segment progress func_02008b4c advances (7bb8). Medium confidence:
+       segment progress MovePointAlongSpline advances (7bb8). Medium confidence:
        no single role covers every reader. */
     s32 mMagnitude; /* 0x0f4 */
     /* A fix12 rate eased toward a target: the sink speed 7038 subtracts
        from mPosY (scaled by 0x199), the x drift 79c0 adds to mPosX, and
        the 0..0x1000 blend weight 7538 interpolates two vectors by. */
     s32 mRate; /* 0x0f8 */
-    /* The handler's phase: the path segment func_02008b4c walks (7bb8),
+    /* The handler's phase: the path segment MovePointAlongSpline walks (7bb8),
        the frame count 7780 compares against 0x3c/0x6a/0xa9, and the sine
        angle 79c0 bobs mPosY by. */
     s16 mPhase;     /* 0x0fc */

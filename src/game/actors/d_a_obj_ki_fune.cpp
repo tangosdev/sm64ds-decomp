@@ -43,7 +43,7 @@ typedef char KiFuneClsnFileHandle_size_must_be_8[sizeof(KiFuneClsnFileHandle) ==
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern void func_020393d4(int *p, int v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 extern int IsStarCollected(int a, int b);
 extern short data_02082214[];
@@ -86,7 +86,7 @@ int daObjKi_Fune_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)clpsBlocks[idx]);
     if (mModelIndex == 0) {
-        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
+        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     }
     mMeshCollider.Enable(this);
     mSoundHandle = 0;

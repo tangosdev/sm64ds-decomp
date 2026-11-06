@@ -25,10 +25,7 @@
  *   a plain `playerPos = o->mPos` uses [r8,#0x5c] addressing and shortens
  *   Behavior by 4 bytes. The focus copy already goes through a pointer
  *   local, so `&focus->mPos` needs no launder.
- * - GetMinimapID's extern keeps GetMinimapID.c's own `struct Obj` slice
- *   spelling; the Obj tag is only a forward here so the declaration agrees.
- * - struct Vec3 stays the launder for the two projection helpers.
- *   GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
+ * - GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
  *   the third parameter is the scalar, not Fix12<int>.
  * - The OAM, G2x and Vec3 helpers stay on C-linkage or hand-mangled
  *   externs for the same reason.
@@ -68,15 +65,9 @@ struct Event {
     static int GetBit(unsigned int bit);
 };
 
-/* Forward tag for GetMinimapID's parameter: its own file cuts a `struct Obj`
-   slice, and this declaration must spell the param the same way. */
-struct Obj;
-
 struct Vtbl { s32 (*f[8])(void *); };
 
 struct VtblOwner { Vtbl *vt; };
-
-struct Vec3 { int x, y, z; };
 
 /* An icon is drawn when it lies within 16 pixels of the 256x192 screen. */
 #define ICON_X_VISIBLE(x) ((u16)((x) + 0x10) < 0x120)
@@ -86,12 +77,12 @@ extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 data_0209f220;
-extern u32 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 
 extern u8 data_0209f20c;
-extern u8 data_0209f2c4;
+extern u8 gGamePaused;
 extern u8 gVsExitScreenActive;
 extern u8 data_0209f250;
 extern u8 gLevelClearStep;
@@ -125,17 +116,17 @@ extern ControllerInput data_0209f498[];
 extern u8 gSubScreenLayers;
 extern u8   data_ov002_0211114c;
 extern u8   data_ov002_02111144;
-extern int data_0209f40c[];
+extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
 extern int data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern s32  GetMinimapID(struct Obj *obj, s32 arg);
+extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
-int *Vec3_DivScalarInPlace(struct Vec3 *v, int s);
-void Vec3_MulScalarInPlace(struct Vec3* v, int s);
-void Vec3_RotateYAndTranslate(struct Vec3* out, struct Vec3* in, short ang, struct Vec3* t);
+int *Vec3_DivScalarInPlace(Vector3 *v, int s);
+void Vec3_MulScalarInPlace(Vector3 *v, int s);
+void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
 }
 
 /* The centre of the 256x192 touch screen, (128, 96) in 20.12 fixed point:
@@ -254,7 +245,8 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0[1] & 0x204)) return;
+        if (!(data_0209caa0.file.flags1 & 0x204))
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x748);
         tile = 0x35d;
         for (i = 0; i < 6; i++) {
@@ -270,7 +262,8 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0[2] & 0x80000)) return;
+        if (!(data_0209caa0.file.flags2 & 0x80000))
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x73a);
         tile = 0x396;
         for (i = 0; i < 4; i++) {
@@ -293,7 +286,8 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0[2] & 0x80000)) return;
+        if (!(data_0209caa0.file.flags2 & 0x80000))
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x1ca4);
         tile = 0x38e;
         for (i = 0; i < 4; i++) {
@@ -385,13 +379,14 @@ void dMap_c::OnPendingDestroy()
 int dMap_c::Render()
 {
     u8 flag20c = data_0209f20c;
-    u8 flag2c4 = data_0209f2c4;
+    u8 flag2c4 = gGamePaused;
     u8 flag294 = gVsExitScreenActive;
     int i;
     int j;
     u8 idx = data_0209f250;
 
-    if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 || !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) ||
+    if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 ||
+        !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
         (flag20c != 0 && (u32)gLevelClearStep < 3)) {
         daPly_c *player = (daPly_c *)data_0209f394[idx];
         int vs = (data_0209f2d8 == 1);
@@ -442,7 +437,7 @@ int dMap_c::Render()
                     OAM::RenderSub(OAM::MM_PLAYER_ICONS[icon], this->mPlayerIconX[idx],
                                    this->mPlayerIconY[idx], -1, 2);
                 }
-                if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
+                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
                     u8 s = this->mArrowType;
                     if (s != 0) {
                         u16 ang;
@@ -529,7 +524,7 @@ int dMap_c::Render()
             }
         }
 
-        if (!(data_0209caa0[1] & 0x40) && (data_0209caa0[2] & 0x20000)) {
+        if (!(data_0209caa0.file.flags1 & 0x40) && (data_0209caa0.file.flags2 & 0x20000)) {
             this->mStarKeyBlinkTimer += 1;
             if ((u32)this->mStarKeyBlinkTimer >= 5)
                 this->mStarKeyBlinkTimer = 0;
@@ -593,7 +588,7 @@ s32 dMap_c::Behavior()
         this->mTouchCircleTimer -= data_0208ee44;
     }
 
-    flagsOr = data_0209f2c4 | data_0209f20c | gVsExitScreenActive;
+    flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
     if ((u8)flagsOr) goto L200;
     if (data_02092110 >= 0) goto L200;
     if (data_0209f204 != 0) goto L200;
@@ -620,7 +615,7 @@ L200:
     {
         s32 b = (data_0209f2d8 == 1);
         if (b == 0) {
-            if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+            if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
                 goto L2a4;
         }
         gSubScreenLayers &= ~4;
@@ -634,7 +629,7 @@ L200:
     }
 
 L274:
-    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0) {
+    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0) {
         if (data_0209d4b0 == 0) goto L2a4;
     }
     gSubScreenLayers &= ~4;
@@ -660,7 +655,7 @@ L318:
     {
         s32 b = (data_0209f2d8 == 0);
         if (b == 0) goto L360;
-        if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)
+        if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
             goto L360;
         if (this->mInIntroCutscene != 0) goto L360;
     }
@@ -800,23 +795,23 @@ L738:
             this->mPlayerIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mPlayerIconY[i] = (miniPos.z + 0x800) >> 12;
             if (i != data_0209f250)
-                this->mPlayerMapIDs[i] = (s8)GetMinimapID((Obj *)o, -1);
+                this->mPlayerMapIDs[i] = (s8)GetMinimapID(o, -1);
             else
-                this->mPlayerMapIDs[i] = (s8)GetMinimapID((Obj *)o, data_ov002_02111148);
+                this->mPlayerMapIDs[i] = (s8)GetMinimapID(o, data_ov002_02111148);
         } else {
             this->mPlayerMapIDs[i] = -1;
         }
     }
 
     for (i = 0; i < 0xc; i++) {
-        dActor_c *o = (dActor_c *)data_0209f40c[i];
+        dActor_c *o = STAR_MARKERS[i];
         if (o != 0) {
             GetPosOnMinimap(&o->mPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
                             this->mAngle, &miniPos);
             this->mStarIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mStarIconY[i] = (miniPos.z + 0x800) >> 12;
             if (gStarMarkerTypes[i] != 4)
-                this->mStarMapIDs[i] = (s8)GetMinimapID((Obj *)o, -1);
+                this->mStarMapIDs[i] = (s8)GetMinimapID(o, -1);
             else
                 this->mStarMapIDs[i] = 1;
         } else {
@@ -831,15 +826,17 @@ L738:
                             this->mAngle, &miniPos);
             this->mCapIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mCapIconY[i] = (miniPos.z + 0x800) >> 12;
-            this->mCapMapIDs[i] = (s8)GetMinimapID((Obj *)o, -1);
+            this->mCapMapIDs[i] = (s8)GetMinimapID(o, -1);
         } else {
             this->mCapMapIDs[i] = -1;
         }
     }
 
     /* The star key: Render blinks it under the same two flag tests. */
-    if (data_0209caa0[1] & 0x40) goto La64;
-    if ((data_0209caa0[2] & 0x20000) == 0) goto La64;
+    if (data_0209caa0.file.flags1 & 0x40)
+        goto La64;
+    if ((data_0209caa0.file.flags2 & 0x20000) == 0)
+        goto La64;
     {
         dActor_c *o = (dActor_c *)data_0209f33c;
         if (o == 0) { this->mStarKeyMapID = -1; goto La64; }
@@ -866,19 +863,22 @@ La64:
 
 Lae4:
     {
-        s32 id = GetMinimapID((Obj *)focus, data_ov002_02111148);
-        if (id == data_ov002_02111148) goto Lc30;
-        if (id >= 0x10) goto Lc30;
-        if (id < 0) goto Lbf0;
+    s32 id = GetMinimapID(focus, data_ov002_02111148);
+    if (id == data_ov002_02111148)
+        goto Lc30;
+    if (id >= 0x10)
+        goto Lc30;
+    if (id < 0)
+        goto Lbf0;
 
-        if (SublevelToLevel(gCurrentSublevel) != 0x1d)
-            goto C1;
-        if (gCurrentSublevel == 1)
-            goto C1;
-        if (gCurrentSublevel == 0x33)
-            goto C1;
-        if (gCurrentSublevel != 3)
-            goto Lb9c;
+    if (SublevelToLevel(gCurrentSublevel) != 0x1d)
+        goto C1;
+    if (gCurrentSublevel == 1)
+        goto C1;
+    if (gCurrentSublevel == 0x33)
+        goto C1;
+    if (gCurrentSublevel != 3)
+        goto Lb9c;
 C1:
     if (SublevelToLevel(gCurrentSublevel) == 4)
         goto Lb9c;
@@ -912,8 +912,8 @@ Lc30:
 /* What InitResources loads the map graphics with. */
 extern "C" {
 int func_0202a980(void);
-int LoadFile(int handle);
-void DecompressLZ16(int src, void* dst);
+void *LoadFile(int handle);
+void DecompressLZ16(void *src, void *dst);
 void Deallocate(void* ptr);
 int func_0202a96c(void);
 
@@ -924,6 +924,8 @@ extern s32 gRunningKuppaScript;
 }
 
 #pragma opt_strength_reduction off
+/* Kept: the ROM recomputes i << 11 for each screen block; strength reduction
+ * turns it into a running offset and needs one more register. */
 // @symbol _ZN6dMap_c13InitResourcesEv
 int dMap_c::InitResources()
 {
@@ -937,30 +939,30 @@ int dMap_c::InitResources()
     {
         int id1 = func_0202a980();
         if (id1 != 0) {
-            int f1 = LoadFile(id1);
+            void *f1 = LoadFile(id1);
             DecompressLZ16(f1, G2S::GetBG3CharPtr());
-            Deallocate((void*)f1);
+            Deallocate(f1);
         }
     }
 
     {
         int id2 = func_0202a96c();
         if (id2 != 0) {
-            int f2 = LoadFile(id2);
+            void *f2 = LoadFile(id2);
             GXS::BeginLoadBGExtPltt();
-            GXS::LoadBGExtPltt((void *)f2, 0x6000, 0x200);
+            GXS::LoadBGExtPltt(f2, 0x6000, 0x200);
             GXS::EndLoadBGExtPltt();
-            GXS::LoadBGPltt((void *)f2, 0, 2);
-            Deallocate((void*)f2);
+            GXS::LoadBGPltt(f2, 0, 2);
+            Deallocate(f2);
         }
     }
 
     p = data_0209f334;
     for (i = 0; i < data_0209f2e8; i++) {
         if (*p != 0) {
-            int f3 = LoadFile(*p);
+            void *f3 = LoadFile(*p);
             DecompressLZ16(f3, (char *)G2S::GetBG3ScrPtr() - (i << 11));
-            Deallocate((void*)f3);
+            Deallocate(f3);
         }
         p++;
     }
@@ -972,7 +974,7 @@ int dMap_c::InitResources()
         }
     }
 
-    data_ov002_02111148 = (signed char)GetMinimapID((Obj *)data_0209f394[data_0209f250], -1);
+    data_ov002_02111148 = (signed char)GetMinimapID((dActor_c *)data_0209f394[data_0209f250], -1);
 
     if (data_ov002_02111148 >= 0) {
         if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
@@ -1019,7 +1021,7 @@ int dMap_c::InitResources()
     {
         int b1 = (data_0209f2d8 == 0);
         if (b1) {
-            if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+            if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 int b3 = (gRunningKuppaScript != 0);
                 if (!b3) {
                     mInvScale = (mTargetInvScale) << 1;
@@ -1060,19 +1062,18 @@ int dMap_c::InitResources()
 
 // @symbol _ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_isS1_
 void dMap_c::GetPosFromMinimapPos(Vector3 &a, Vector3 &b, Fix12i c, short d, Vector3 &e) {
-    struct Vec3 local;
-    Vec3_Sub((Vector3 *)&local, &a, &sMapScreenCenter);
+    Vector3 local;
+    Vec3_Sub(&local, &a, &sMapScreenCenter);
     Vec3_DivScalarInPlace(&local, c);
-    Vec3_RotateYAndTranslate((struct Vec3 *)&e, (struct Vec3 *)&b, d, &local);
+    Vec3_RotateYAndTranslate(&e, &b, d, &local);
 }
 
 // @symbol _ZN6dMap_c15GetPosOnMinimapEP7Vector3S1_isS1_
 void dMap_c::GetPosOnMinimap(Vector3 *out, Vector3 *a, Fix12i s, short ang, Vector3 *res) {
-    struct Vec3 v;
-    Vec3_Sub((Vector3*)&v, out, a);
+    Vector3 v;
+    Vec3_Sub(&v, out, a);
     Vec3_MulScalarInPlace(&v, s);
-    Vec3_RotateYAndTranslate((struct Vec3 *)res, (struct Vec3 *)&sMapScreenCenter, (short)(-ang),
-                             &v);
+    Vec3_RotateYAndTranslate(res, &sMapScreenCenter, (short)(-ang), &v);
 }
 
 /* Reconstructed source-style name: SM64DS proves dMap_c through RTTI,

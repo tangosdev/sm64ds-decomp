@@ -12,7 +12,7 @@ extern int data_02082210;
 /* func_0204921c's twin, for the same sequences and modes: the target volume
    (data_020a4c54) and per-step delta (data_020a4c4c, from the constants
    data_02082200..data_02082210) of each track mask. The per-frame sound
-   update func_020132d8 (Sound.cpp) calls it on the handle at data_0209b4a0
+   update func_020132d8 (Sound.cpp) calls it on the handle at sMusicHandle
    with func_02013078's mode. */
 void func_020494cc(NNSSndHandle *a, int mode) {
     NNSSndSeqPlayer *p;

@@ -30,13 +30,6 @@
 #define PXI_FIFO_TAG_CTRDG 13
 #define PXI_PROC_ARM7 1
 
-/* For func_0206a6d0's 0x027ffc30 stores. mwccarm generates code for the
- * file's bodies after it has read all of them, so an optimization pragma has
- * to be in force at the end of the file to reach any function: scoped with
- * push/pop around func_0206a6d0 alone, it changes nothing. The other four
- * functions compile the same either way. */
-#pragma opt_strength_reduction off
-
 extern "C" {
 
 extern void Crash(void);
@@ -114,21 +107,14 @@ void func_0206a6d0(void) {
     *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0x8000) | (flag << 15);
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(data_020a9de0.lockID, sp);
-    CTRDG_MODULE_INFO->moduleID = CTRDG_HEADER.moduleID;
-    for (i = 0; i < 3; i++)
-        /* Indexed off a typed pointer, not `*(volatile u8 *)(0x27ffc32 + i)`. Under
-           2004/b56 the integer form parks the whole address in the literal pool and
-           stores through a register offset, while the ROM builds 0x27ff000 from two
-           immediates and puts 0xc32 in the store's 12-bit displacement -- one more
-           instruction and one FEWER literal. That single pool entry shifts every
-           pc-relative load in the function by 4, which is the whole 52-word diff. */
-        CTRDG_MODULE_INFO->exLsiID[i] = CTRDG_HEADER.exLsiID[i];
     {
-        /* Through a local: writing these two through CTRDG_MODULE_INFO as
-           well moves the bytes. */
-        volatile CTRDGModuleInfo *info = CTRDG_MODULE_INFO;
-        info->makerCode = CTRDG_HEADER.makerCode;
-        info->gameCode = CTRDG_HEADER.gameCode;
+        volatile CTRDGModuleInfo *cip = CTRDG_MODULE_INFO;
+        CTRDGHeader *chd = &CTRDG_HEADER;
+        cip->moduleID = chd->moduleID;
+        for (i = 0; i < 3; i++)
+            cip->exLsiID[i] = chd->exLsiID[i];
+        cip->makerCode = chd->makerCode;
+        cip->gameCode = chd->gameCode;
     }
     MultiCopy_Int((int *)0xffff0020, &data_020a9e04, 0x9c);
     CP15::FlushAndInvalidateDataCache();

@@ -714,9 +714,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@334",
+      "from": "@333",
       "to": "@261",
-      "evidence": "the compiler emits @334, which ov033 daObjTtWater_c already defines as a global (config/arm9/overlays/ov033/symbols.txt @334 kind:bss addr:0x021124f8), so the pin is the unused @261. It was @333 until dWipe_c::SetForwardTime gained its second parameter; @333 is an ov033 global too, so the collision argument is unchanged."
+      "evidence": "the compiler emits @334, which ov033 daObjTtWater_c already defines as a global (config/arm9/overlays/ov033/symbols.txt @334 kind:bss addr:0x021124f8), so the pin is the unused @261. It was @333 until dWipe_c::SetForwardTime gained its second parameter; @333 is an ov033 global too, so the collision argument is unchanged. Re-keyed from @334 to @333 when the opt pragma was removed and func_0202efa0's pixel pointer became a struct index (#821); @333 is the ov033 global noted above, so the pin stands."
     }
   ]
 }

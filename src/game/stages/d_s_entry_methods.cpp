@@ -186,7 +186,7 @@ extern struct OamAttr data_ov075_0211cba4[];
  * rematch and results steps, in ROM order ahead of the course-select
  * steps. */
 extern "C" {
-extern s8 data_0209f310[];
+extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern u8 data_0209b2f0[];
 extern u8 data_0209b2ec[];
@@ -293,12 +293,12 @@ void dScEntry_c::TallyRoundWinners() {
         pc = pc + 1;
     } while (i < 4);
 
-    if (data_0209f310[0] != 0 || data_0209f310[1] != 0 || data_0209f310[2] != 0 ||
-        data_0209f310[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
+    if (gNumStageStars[0] != 0 || gNumStageStars[1] != 0 || gNumStageStars[2] != 0 ||
+        gNumStageStars[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
         gNumCoins[3] != 0) {
         max = 0;
         i = max;
-        pc = (u8 *)data_0209f310;
+        pc = (u8 *)gNumStageStars;
         do {
             t = (s8)*pc;
             i = i + 1;
@@ -309,7 +309,7 @@ void dScEntry_c::TallyRoundWinners() {
         } while (i < 4);
 
         n = 0;
-        pb = (u8 *)data_0209f310;
+        pb = (u8 *)gNumStageStars;
         pc = data_0209b2f0;
         i = n;
         do {
@@ -667,8 +667,6 @@ void dScEntry_c::RenderSoundSettings() {
     OAM::Render(false, &OAM::BOUNCING_ARROW, 0xc0, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
-#pragma push
-#pragma opt_strength_reduction off
 // @symbol _ZN10dScEntry_c19UpdateSoundSettingsEv
 void dScEntry_c::UpdateSoundSettings() {
     int w = func_0203da9c();
@@ -749,41 +747,20 @@ void dScEntry_c::UpdateSoundSettings() {
 
     /* Light the selected option's label: two 11 x 2-tile strips of the
        BG2 screen from tile (2, 6), six rows apart, take palette 4 when
-       their index is mSelectedIcon and palette 3 otherwise. dir is reused
-       as the strip's tile offset. */
+       their index is mSelectedIcon and palette 3 otherwise. */
     {
         int i;
-        int zero;
-        u16 palOff;
-        u16 palOn;
-        u16 mask;
-        i = 0;
-        dir = i;
-        zero = i;
-        palOff = 0x3000;
-        palOn = 0x4000;
-        mask = 0xfff;
-        do {
-            u16 *p = static_cast<u16 *>(G2S::GetBG2ScrPtr()) + 6 * 32 + 2;
-            p += dir;
-            u16 pal = (i == mSelectedIcon) ? palOn : palOff;
-            int j = zero;
-            do {
-                unsigned v = *p;
-                j++;
-                v = v & mask;
-                *p = v | pal;
-                v = p[32];
-                v = v & mask;
-                p[32] = v | pal;
-                p++;
-            } while (j < 11);
-            i++;
-            dir += 6 * 32;
-        } while (i < 2);
+        for (i = 0; i < 2; i++) {
+            u16 *p = static_cast<u16 *>(G2S::GetBG2ScrPtr()) + 6 * 32 + 2 + i * 6 * 32;
+            int pal = (i == mSelectedIcon) ? 0x4000 : 0x3000;
+            int j;
+            for (j = 0; j < 11; j++, p++) {
+                *p = (*p & 0xfff) | pal;
+                p[32] = (p[32] & 0xfff) | pal;
+            }
+        }
     }
 }
-#pragma pop
 
 #define SH(base, i) (*(short *)((char *)(base) + (i) * 4))
 
@@ -1288,19 +1265,11 @@ void dScEntry_c::RenderResults() {
     func_0202048c(&mOamAnimations[1], 0x80, 0x88);
 }
 
-#pragma push
-// 6e: keep pointer-induction un-reduced
-#pragma opt_strength_reduction off
-// 6e: EBB-local CSE
-#pragma opt_common_subs off
 // @symbol _ZN10dScEntry_c13UpdateResultsEv
 void dScEntry_c::UpdateResults() {
     int id;
     int acc;
     int i;
-    int zero;
-    int one;
-    int bit;
     u8 *p;
 
     id = func_0203da9c();
@@ -1315,23 +1284,13 @@ void dScEntry_c::UpdateResults() {
                and func_02020334 has been sent; this step reads it back. */
             if (mStepWork[3] == 0) {
                 acc = 0;
-                p = data_0209fc5c;
-                i = acc;
-                zero = acc;
-                one = 1;
-                do {
-                    bit = *p;
-                    if (bit != 0) {
+                for (i = 0; i < 4; i++) {
+                    if (data_0209fc5c[i] != 0) {
                         acc |= data_020a0e58[i].pressed & 0xc;
-                        if (gTouchHeld[i << 2] != 0 && (gTouchHeld + (i << 2))[1] != 0)
-                            bit = one;
-                        else
-                            bit = zero;
-                        acc |= bit;
+                        acc |=
+                            ((TouchInfo *)gTouchHeld)[i].held && ((TouchInfo *)gTouchHeld)[i].edge;
                     }
-                    i = i + 1;
-                    p = p + 1;
-                } while (i < 4);
+                }
                 mStepDelay -= data_0208ee44;
                 if (mStepDelay <= 0 || (mStepDelay < 0x21c && acc != 0)) {
                     func_02020334();
@@ -1372,7 +1331,6 @@ void dScEntry_c::UpdateResults() {
         }
     }
 }
-#pragma pop
 
 // @symbol _ZN10dScEntry_c12EnterResultsEv
 void dScEntry_c::EnterResults() {

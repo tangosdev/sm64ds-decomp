@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x02115c80",
       "end": "0x02115ca8"
+    },
+    {
+      "name": ".data",
+      "start": "0x02114ee4",
+      "end": "0x02114f04"
     }
   ],
   "functions": [
@@ -91,7 +96,15 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov030_02114ee4",
+      "address": "0x02114ee4",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block the basket mesh collider is handed: CLPS header, layer 1, entry 0x01000fc0, all-ones terminator"
+    }
+  ],
   "production_mode": "intact-object",
   "bss": [
     {
@@ -417,7 +430,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -453,11 +466,18 @@
           "start": "0x02115c80",
           "end": "0x02115ca8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02114ee4",
+          "end": "0x02114f04",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -468,19 +488,19 @@
           {
             "section": ".init",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
             ]
           },
           {
@@ -497,6 +517,15 @@
               14,
               21
             ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
+            ]
           }
         ],
         "objisolate": null,
@@ -512,7 +541,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "compiler_only_output": [

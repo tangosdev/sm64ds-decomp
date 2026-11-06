@@ -29,6 +29,7 @@ enum d_s_mg_memory_AssetId {
 #include "types.h"
 #include "PlayerInput.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
@@ -87,7 +88,6 @@ extern void Mg_SetSharedState(int c);
 extern void Mg_SubmitScore(int self);
 extern void Dealer_PlayWin(void *c);
 extern void Dealer_StartShuffle(char *c, int unused, short count, int ready);
-extern int data_0209d4b8;
 extern int RandomIntInternal(int *seed);
 extern void FreeGfxSlotsById(int x);
 void Camera_InitDealerView(char *p);
@@ -310,6 +310,8 @@ void dScMgMemory_c::JudgePair() {
 }
 
 #pragma push
+/* Kept: indexed or cursor forms without it give the card counter sl, not r4
+ * (colour only). */
 #pragma opt_propagation off
 void dScMgMemory_c::DrawCards() {
     char *raw = (char *)this;
@@ -346,26 +348,23 @@ void dScMgMemory_c::UpdateCards() {
 }
 
 #pragma push
+/* Kept: without opt_lifetimes off the two loops' counter and limit take other registers (colour only). */
 #pragma opt_lifetimes off
 void dScMgMemory_c::CardFlyAway(int cardIndex) {
     int j;
     int n;
-    unsigned char *started;
-    int *cardX;
 
-    cardX = &mCards[cardIndex].x;
-    started = &mCards[cardIndex].flyAwayStarted;
-    *cardX -= 0x10000;
-    if (*started == 0) {
+    mCards[cardIndex].x -= 0x10000;
+    if (mCards[cardIndex].flyAwayStarted == 0) {
         if (mDifficulty == 1) {
             if (cardIndex == 6 || cardIndex == 0xb) {
-                *started = 1;
+                mCards[cardIndex].flyAwayStarted = 1;
             }
             n = (cardIndex >= 7) ? 0xc - cardIndex : 7 - cardIndex;
             for (j = 1; j < n; j++) {
                 if (mCards[cardIndex + j].active != 0) {
                     if (((mCards[cardIndex].x - mCards[cardIndex + j].x) >> 12) <= 4) {
-                        *started = 1;
+                        mCards[cardIndex].flyAwayStarted = 1;
                         mCards[cardIndex + j].state = CARD_FLYING_AWAY;
                         break;
                     }
@@ -373,13 +372,13 @@ void dScMgMemory_c::CardFlyAway(int cardIndex) {
             }
         } else {
             if ((cardIndex & 3) == 3) {
-                *started = 1;
+                mCards[cardIndex].flyAwayStarted = 1;
             }
             j = 4 - (cardIndex & 3);
             for (n = 1; n < j; n++) {
                 if (mCards[cardIndex + n].active != 0) {
                     if (((mCards[cardIndex].x - mCards[cardIndex + n].x) >> 12) <= 4) {
-                        *started = 1;
+                        mCards[cardIndex].flyAwayStarted = 1;
                         mCards[cardIndex + n].state = CARD_FLYING_AWAY;
                         break;
                     }
@@ -387,7 +386,7 @@ void dScMgMemory_c::CardFlyAway(int cardIndex) {
             }
         }
     }
-    if ((*cardX >> 12) > -0x18) {
+    if ((mCards[cardIndex].x >> 12) > -0x18) {
         return;
     }
     mCards[cardIndex].active = 0;
@@ -770,7 +769,8 @@ void dScMgMemory_c::ShuffleCards() {
         cardBase = raw + 0x60;
         for (valueIndex = 4; valueIndex < 12; valueIndex++) {
             cardValue =
-                (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 4 >> 15) + 1;
+                (int)((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 4 >> 15) +
+                1;
             for (;;) {
                 /* mValueCounts[cardValue] hoists the base. Same spelling below. */
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
@@ -780,7 +780,9 @@ void dScMgMemory_c::ShuffleCards() {
                     break;
                 }
                 cardValue =
-                    (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 4 >> 15) + 1;
+                    (int)((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 4 >>
+                          15) +
+                    1;
             }
             cardBase += 0x18;
         }
@@ -797,7 +799,8 @@ void dScMgMemory_c::ShuffleCards() {
         cardBase = raw + 0x30;
         for (cardIndex = 2; cardIndex < 12; cardIndex++) {
             cardValue =
-                (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5 >> 15) + 1;
+                (int)((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15) +
+                1;
             for (;;) {
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
                 if (*valueCount < 2) {
@@ -806,7 +809,9 @@ void dScMgMemory_c::ShuffleCards() {
                     break;
                 }
                 cardValue =
-                    (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5 >> 15) + 1;
+                    (int)((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >>
+                          15) +
+                    1;
             }
             cardBase += 0x18;
         }
@@ -823,7 +828,8 @@ void dScMgMemory_c::ShuffleCards() {
         cardBase = raw;
         for (cardIndex = 0; cardIndex < 12; cardIndex++) {
             cardValue =
-                (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6 >> 15) + 1;
+                (int)((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 6 >> 15) +
+                1;
             for (;;) {
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
                 if (*valueCount < 2) {
@@ -832,7 +838,9 @@ void dScMgMemory_c::ShuffleCards() {
                     break;
                 }
                 cardValue =
-                    (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6 >> 15) + 1;
+                    (int)((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 6 >>
+                          15) +
+                    1;
             }
             cardBase += 0x18;
         }

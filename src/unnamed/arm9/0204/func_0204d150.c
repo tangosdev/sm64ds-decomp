@@ -1,6 +1,5 @@
 #include "types.h"
 #include "private/spl_particle_views.h"
-#pragma opt_strength_reduction off /* required: without it the match fails */
 
 /* The particle definition's texture animation (SPL's SPLTexAnim): up to eight
  * texture indices, each shown for `step` life-rate units. */
@@ -14,21 +13,11 @@ struct TexAnim {
  * frame whose span holds lifeRate. */
 void func_0204d150(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     struct TexAnim *anim = def->texAnim;
-    int i = 0;
-    int end;
-    int count = anim->frameCount;
-    u8 step;
-    if (count <= 0) {
-        return;
-    }
-    step = anim->step;
-    end = 0;
-    do {
-        if (lifeRate < (end + step)) {
+    int i;
+    for (i = 0; i < anim->frameCount; i++) {
+        if (lifeRate < anim->step * (i + 1)) {
             ptcl->texture = anim->textures[i];
             return;
         }
-        i++;
-        end += step;
-    } while (i < anim->frameCount);
+    }
 }

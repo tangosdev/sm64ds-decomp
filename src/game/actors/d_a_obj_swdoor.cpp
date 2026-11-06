@@ -27,17 +27,10 @@
 #include "Event.h"
 #include "math/CalcLib.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern "C" {
-void func_020393d4(dBgW_KcMbg *clsn, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol _ZN13daObjSwdoor_cD0Ev
@@ -140,7 +133,7 @@ s32 daObjSwdoor_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
                           mAngleY, *descriptor->clps);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mTurnDir = param1 & 1;
     mEventBit = (param1 >> 1) & 0x1f;

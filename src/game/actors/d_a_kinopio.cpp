@@ -17,8 +17,7 @@
  *   cartridge keeps D1 below D0 and no D2 (measured note below).
  * - Source is ROM-ascending under defer_codegen off; the destructor is
  *   header-declared and defined out of line (D1 then D0, no D2).
- * - The opt_propagation off brackets on St_Talk_Main and InitResources
- *   and the qualified `mAnmModel.dExtSimpleModel_c::Render(0)` are the matched
+ * - The qualified `mAnmModel.dExtSimpleModel_c::Render(0)` is the matched
  *   form.
  * - The companion Spawn passes mPos itself (a real Vector3 local changes
  *   codegen, unlike the star Spawn's).
@@ -26,9 +25,6 @@
  *   ObjectMessageIDToActualMessageID, IsStarCollectedInCurLevel,
  *   NumStars and gCurrentSublevel / data_0209caa0 keep linker names; the
  *   ov002 file handles stay address-named.
- * - MatrixWords keeps UpdateModelPose's aggregate 12-word copies in
- *   ldm/stm form; the head bone is still reached as a byte offset
- *   (+0xf0) into mAnmModel.data.transforms.
  */
 /* common.h FIRST, and the order is load-bearing. Both it and math/Matrix.h
  * define Matrix4x3 behind one shared guard -- flat `s32 m[12]` here,
@@ -47,6 +43,8 @@
 #include "dBgCh_Gnd.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "math/MtxStack.h"
+#include "SaveBlock.h"
 
 struct BCA_File;
 struct BMD_File;
@@ -98,8 +96,7 @@ extern SharedFilePtr data_ov002_0210d9c0;
 
 /* arm9 statics */
 extern s8 gCurrentSublevel;
-extern int data_0209caa0[];
-extern Matrix4x3 data_020a0e68;
+extern SaveBlock data_0209caa0;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
@@ -109,12 +106,6 @@ s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s32 AngleDiff(s32 a, s32 b);
-void Matrix4x3_FromRotationY(void *m, int angY);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 ang);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 ang);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void MulMat4x3Mat4x3(void *a, void *b, void *out);
 
 /* game state */
 int func_020138dc(void);
@@ -188,11 +179,6 @@ int daKinopio_c::GetMessageID() {
 }
 
 // @symbol _ZN11daKinopio_c12St_Talk_MainEv
-/* This member's legacy file carried `#pragma opt_propagation off`. That pragma
-   is file-global last-wins in mwccarm, so it is bracketed here rather than left
-   to leak into the members below; `defer_codegen off` is what makes the bracket
-   bind to the definition it encloses. */
-#pragma opt_propagation off
 void daKinopio_c::St_Talk_Main()
 {
     char *c = (char *)this;
@@ -219,20 +205,17 @@ void daKinopio_c::St_Talk_Main()
         if (ApproachLinear(mAngleY, angleToPlayer, 0x800) == 0)
             return;
         if (gCurrentSublevel == 0x32) {
-            if ((data_0209caa0[1] & 0x40000000) == 0)
-                data_0209caa0[1] |= 0x40000000;
+            if ((data_0209caa0.file.flags1 & 0x40000000) == 0)
+                data_0209caa0.file.flags1 |= 0x40000000;
         }
         if (Sound::PlaySub(0x25, 0x14, 0x7f, 0x15666, 1) == 0)
             return;
         {
-            int y = mPosY;
             int z = mPosZ;
-            int x;
-            y += 0x46000;
+            int y = mPosY + 0x46000;
             messagePos.x = mPosX;
             messagePos.y = y;
             messagePos.z = z;
-            (void)x;
         }
         ((daPly_c *)player)->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
         return;
@@ -269,10 +252,8 @@ void daKinopio_c::St_Talk_Main()
                 SpawnSoundObj(1);
                 {
                     u32 param = 0x13;
-                    u8 character = ((daPly_c *)player)->mCharacter;
-                    dActor_c::Spawn(
-                        0x10d, param | ((u32)character << 8),
-                        playerPos, 0, mAreaId, -1);
+                    param |= ((daPly_c *)player)->mCharacter << 8;
+                    dActor_c::Spawn(0x10d, param, playerPos, 0, mAreaId, -1);
                 }
             }
         }
@@ -283,7 +264,6 @@ void daKinopio_c::St_Talk_Main()
     Message::EndTalk();
     SetState(0);
 }
-#pragma opt_propagation on
 
 // @symbol _ZN11daKinopio_c12St_Talk_InitEv
 void daKinopio_c::St_Talk_Init()
@@ -335,13 +315,9 @@ void daKinopio_c::RunState()
 }
 
 // @symbol _ZN11daKinopio_c15UpdateModelPoseEv
-/* An array-only wrapper keeps the C++ aggregate copies in the same ldm/stm form
- * the original C-shaped match used. It stays local to the member that recovered
- * it rather than being promoted to a shared type. */
-struct MatrixWords {
-    s32 words[12];
-};
-
+/* The matrix assignments are block copies because this TU sees common.h's
+ * flat Matrix4x3 first (see the include note above). transforms[5] is the
+ * head bone. */
 void daKinopio_c::UpdateModelPose()
 {
     char *c = (char *)this;
@@ -355,10 +331,10 @@ void daKinopio_c::UpdateModelPose()
     mAnmModel.mat4x3.m[10] = (mPosY + 0x4000) >> 3;
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 
-    *(MatrixWords *)&data_020a0e68 = *(MatrixWords *)((char *)mAnmModel.data.transforms + 0xf0);
+    data_020a0e68 = mAnmModel.data.transforms[5];
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mHeadYaw);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mHeadPitch);
-    *(MatrixWords *)((char *)mAnmModel.data.transforms + 0xf0) = *(MatrixWords *)&data_020a0e68;
+    mAnmModel.data.transforms[5] = data_020a0e68;
 
     id = mCapUniqueID;
     if (id != 0) {
@@ -367,19 +343,19 @@ void daKinopio_c::UpdateModelPose()
             *(s32 *)&x = 0;
             *(s32 *)&y = 0;
             *(s32 *)&z = 0;
-            dst = (Matrix4x3 *)((char *)mAnmModel.data.transforms + 0xf0);
+            dst = &mAnmModel.data.transforms[5];
             MulMat4x3Mat4x3(dst, &mAnmModel.mat4x3, &mCapTransform);
 
-            *(MatrixWords *)&data_020a0e68 = *(MatrixWords *)&mCapTransform;
+            data_020a0e68 = mCapTransform;
             Matrix4x3_ApplyInPlaceToTranslation(
                 &data_020a0e68, 0, 0x4000, -0xa00);
             Matrix4x3_ApplyInPlaceToRotationXYZExt(
                 &data_020a0e68, -0x1000, 0, 0);
-            *(MatrixWords *)&mCapTransform = *(MatrixWords *)&data_020a0e68;
+            mCapTransform = data_020a0e68;
 
-            x = ((s32 *)&data_020a0e68)[9];
-            y = ((s32 *)&data_020a0e68)[10];
-            z = ((s32 *)&data_020a0e68)[11];
+            x = data_020a0e68.m[9];
+            y = data_020a0e68.m[10];
+            z = data_020a0e68.m[11];
             y <<= 3;
             x <<= 3;
             z <<= 3;
@@ -390,7 +366,7 @@ void daKinopio_c::UpdateModelPose()
         }
     }
 
-    *(MatrixWords *)&mShadowTransform = *(MatrixWords *)&IDENTITY_MATRIX4X3;
+    mShadowTransform = IDENTITY_MATRIX4X3;
     mShadowTransform.m[9] = mPosX >> 3;
     mShadowTransform.m[10] = (mPosY - 0x8000) >> 3;
     mShadowTransform.m[11] = mPosZ >> 3;
@@ -546,12 +522,7 @@ int daKinopio_c::Behavior()
  * Finally he is dropped onto the ground: a dBgCh_Gnd is aimed 0x14000 above his
  * spawn point and, if it hits, mPosY is snapped to the surface. The local
  * dBgCh_Gnd is declared at that exact mid-function construction point, so the
- * compiler emits both its constructor and destructor naturally.
- *
- * `#pragma opt_propagation off` IS LOAD-BEARING and stays, bracketed: without it
- * mwcc propagates the reloaded mMessageID through the 0xffff test and the
- * function changes shape. */
-#pragma opt_propagation off
+ * compiler emits both its constructor and destructor naturally. */
 int daKinopio_c::InitResources()
 {
     Vector3 objPos;
@@ -575,12 +546,9 @@ int daKinopio_c::InitResources()
         if (func_02013a44() != 0) {
             daPly_c *player = ClosestPlayer();
             if (player != 0) {
-                u32 k = 0xd;
-                u8 character = player->mCharacter;
-                s8 area = mAreaId;
-                s16 m1 = -1;
-                void *spawned =
-                    dActor_c::Spawn(0x10d, k | ((u32)character << 8), mPos, 0, area, m1);
+                u32 param = 0xd;
+                param |= player->mCharacter << 8;
+                void *spawned = dActor_c::Spawn(0x10d, param, mPos, 0, mAreaId, -1);
                 if (spawned != 0)
                     mCapUniqueID = *(s32 *)((char *)spawned + 4);
             }
@@ -612,7 +580,6 @@ int daKinopio_c::InitResources()
     }
     return 1;
 }
-#pragma opt_propagation on
 
 // @symbol daKinopio_c_classInit
 /* The registry factory behind the KINOPIO profile: `return new` allocates

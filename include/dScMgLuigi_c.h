@@ -20,7 +20,7 @@ struct dScMgLuigi_Penalty {
     Fix12i x;    /* +0x00 picture position, in pixels << 12 */
     Fix12i y;    /* +0x04 */
     Fix12i velY; /* +0x08 starts at 0x1100 and gains 0x100 a frame */
-    s16 timer;   /* +0x0c counts down, then reloads to 0x40 */
+    u16 timer;   /* +0x0c counts down, then reloads to 0x40; the clamp reads it signed */
     u8 pad_e[2];
     u8 active; /* +0x10 UpdatePenalties runs while this is set */
     u8 shown;  /* +0x11 DrawPenalties */

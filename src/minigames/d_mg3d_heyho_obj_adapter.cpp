@@ -25,8 +25,11 @@
      the TU's @NNN numbering. The inline comments at each site say what the
      ROM does.
    - The Diagonal starters, Heyho_CheckHitA/B, Heyho_IsChasing and the
-     SeparateAll/SettleAll/AllIdle walks take or index a Heyho directly; their
-     Vec3 helpers still take the per-function Vec3, hence the casts. Three
+     SeparateAll/SettleAll/AllIdle walks take or index a Heyho directly, and
+     the VShape/Diagonal starters, CheckHitA/B, SeparateAll and the Chase, Leave
+     and React motions hold Vector3 locals. The FlyIn/Regroup starters and the
+     VShape and Diagonal motions still keep a per-function Vec3, hence their
+     casts. Three
      partial views stay: Heyho_Update's Foo (it calls mMotion as a pointer to
      member, which Heyho.h spells as s32[2]), Heyho_Settle's ParticleSystemView
      and Heyho_LoadResources' fBaseView (this TU does not include
@@ -41,6 +44,7 @@
 #include "dMgJump3DMario_c.h"
 #include "Heyho.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 /* Typed access to a Heyho record from the char* helpers below. */
 #define HEYHO(p) ((Heyho *)(p))
 
@@ -286,10 +290,8 @@ void Heyho_StartMotionRegroup(char *dst, char *src) {
 /* ---- Heyho_MotionRegroup ---- */
 namespace n020c66bc {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
-
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(Vec3 *v);
+extern int LenVec3(const Vector3 *v);
 extern int D3D_PlaySeAtX(int a, int b);
 extern void Heyho_StartMotionHover(char *p);
 extern void Heyho_StartMotionPatrolBob(int *c);
@@ -379,7 +381,7 @@ void Heyho_MotionRegroup(char *c) {
         D3D_PlaySeAtX(0x1c5, HEYHO(c)->mPos.x);
     }
 
-    if (LenVec3((Vec3 *)&HEYHO(c)->mVel) < 0x1000) {
+    if (LenVec3(&HEYHO(c)->mVel) < 0x1000) {
         Heyho_CheckHitB(c);
     } else {
         Heyho_CheckHitA(c);
@@ -391,10 +393,9 @@ void Heyho_MotionRegroup(char *c) {
 /* ---- Heyho_React ---- */
 namespace n020c64e4 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
 typedef struct { int w[2]; } W2;
 
-extern void Vec3_Add(Vec3 *out, Vec3 *a, Vec3 *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 extern int pmf_Heyho_StateIdle[2];
 extern int pmf_Heyho_MotionHitSpin_2[2];
@@ -402,7 +403,7 @@ extern W2 pmf_Heyho_MotionLeave_2;
 
 void Heyho_React(char *c)
 {
-    Vec3 locals[3];
+    Vector3 locals[3];
     int *v;
     volatile int *q;
     unsigned base;
@@ -423,12 +424,12 @@ void Heyho_React(char *c)
     static Vector3 sHeyho_React_Right256(0x100000, 0, 0);
 
     if (HEYHO(c)->mPos.x > 0) {
-        Vec3_Add(&locals[1], (Vec3 *)&HEYHO(c)->mPos, (Vec3 *)&sHeyho_React_Right256);
+        Vec3_Add(&locals[1], &HEYHO(c)->mPos, &sHeyho_React_Right256);
         HEYHO(c)->mWaypoint.x = locals[1].x;
         HEYHO(c)->mWaypoint.y = locals[1].y;
         HEYHO(c)->mWaypoint.z = locals[1].z;
     } else {
-        Vec3_Add(&locals[2], (Vec3 *)&HEYHO(c)->mPos, (Vec3 *)&sHeyho_React_Left256);
+        Vec3_Add(&locals[2], &HEYHO(c)->mPos, &sHeyho_React_Left256);
         HEYHO(c)->mWaypoint.x = locals[2].x;
         HEYHO(c)->mWaypoint.y = locals[2].y;
         HEYHO(c)->mWaypoint.z = locals[2].z;
@@ -446,28 +447,24 @@ void Heyho_React(char *c)
 /* ---- Heyho_MotionLeave ---- */
 namespace n020c6400 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
-
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vec3 *out, const Vec3 *in, int scale);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Heyho_SetIdle(char *self);
 
 void Heyho_MotionLeave(char *self) {
-    Vec3 diff, scaled;
+    Vector3 diff, scaled;
     int x, y;
     {
         short *pa = &HEYHO(self)->mPhase;
         *pa += 0x200;
     }
-    Vec3_Sub((Vector3 *)(&diff), (const Vector3 *)((Vec3 *)&HEYHO(self)->mWaypoint),
-             (const Vector3 *)((Vec3 *)&HEYHO(self)->mPos));
+    Vec3_Sub(&diff, &HEYHO(self)->mWaypoint, &HEYHO(self)->mPos);
     Vec3_MulScalar(&scaled, &diff, 0x100);
     HEYHO(self)->mVel.x = scaled.x;
     HEYHO(self)->mVel.y = scaled.y;
     HEYHO(self)->mVel.z = scaled.z;
-    AddVec3((Vector3 *)&HEYHO(self)->mPos, (Vector3 *)&HEYHO(self)->mVel,
-            (Vector3 *)&HEYHO(self)->mPos);
+    AddVec3(&HEYHO(self)->mPos, &HEYHO(self)->mVel, &HEYHO(self)->mPos);
     if (HEYHO(self)->mVel.x > 0)
         ApproachLinear(HEYHO(self)->mLean, 0x3000, 0x200);
     else
@@ -685,24 +682,22 @@ after_y:;
 /* ---- Heyho_StartMotionVShape ---- */
 namespace n020c5ec8 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
-
-extern int LenVec3(Vec3* v);
+extern int LenVec3(const Vector3 *v);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int NormalizeVec3IfNonZero(Vec3* v);
-extern void Vec3_MulScalarInPlace(int* v, int s);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 typedef struct { int w[2]; } S2;
 extern S2 pmf_Heyho_MotionVShape;
 
 void Heyho_StartMotionVShape(char *self) {
-    Vec3 v0, v1, v2, d0, d1, d2, diff;
+    Vector3 v0, v1, v2, d0, d1, d2, diff;
     int len0, len1, len2;
 
     HEYHO(self)->mLean = 0;
     HEYHO(self)->mVel.x = HEYHO(self)->mStartVel.x;
     HEYHO(self)->mVel.y = HEYHO(self)->mStartVel.y;
     HEYHO(self)->mVel.z = HEYHO(self)->mStartVel.z;
-    HEYHO(self)->mSpeed = LenVec3((Vec3 *)&HEYHO(self)->mVel);
+    HEYHO(self)->mSpeed = LenVec3(&HEYHO(self)->mVel);
 
     {
         int y = HEYHO(self)->mRangeTop;
@@ -727,14 +722,11 @@ void Heyho_StartMotionVShape(char *self) {
         v2.z = 0;
     }
 
-    Vec3_Sub((Vector3 *)(&d0), (const Vector3 *)(&v0),
-             (const Vector3 *)((Vec3 *)&HEYHO(self)->mPos));
+    Vec3_Sub(&d0, &v0, &HEYHO(self)->mPos);
     len0 = LenVec3(&d0);
-    Vec3_Sub((Vector3 *)(&d1), (const Vector3 *)(&v1),
-             (const Vector3 *)((Vec3 *)&HEYHO(self)->mPos));
+    Vec3_Sub(&d1, &v1, &HEYHO(self)->mPos);
     len1 = LenVec3(&d1);
-    Vec3_Sub((Vector3 *)(&d2), (const Vector3 *)(&v2),
-             (const Vector3 *)((Vec3 *)&HEYHO(self)->mPos));
+    Vec3_Sub(&d2, &v2, &HEYHO(self)->mPos);
     len2 = LenVec3(&d2);
 
     if (len2 < len1 && len2 < len0) {
@@ -751,17 +743,16 @@ void Heyho_StartMotionVShape(char *self) {
         HEYHO(self)->mWaypoint.z = v0.z;
     }
 
-    Vec3_Sub((Vector3 *)(&diff), (const Vector3 *)((Vec3 *)&HEYHO(self)->mWaypoint),
-             (const Vector3 *)((Vec3 *)&HEYHO(self)->mPos));
+    Vec3_Sub(&diff, &HEYHO(self)->mWaypoint, &HEYHO(self)->mPos);
     HEYHO(self)->mVel.x = diff.x;
     HEYHO(self)->mVel.y = diff.y;
     HEYHO(self)->mVel.z = diff.z;
-    if (NormalizeVec3IfNonZero((Vec3 *)&HEYHO(self)->mVel) == 0) {
+    if (NormalizeVec3IfNonZero(&HEYHO(self)->mVel) == 0) {
         HEYHO(self)->mVel.x = HEYHO(self)->mStartVel.x;
         HEYHO(self)->mVel.y = HEYHO(self)->mStartVel.y;
         HEYHO(self)->mVel.z = HEYHO(self)->mStartVel.z;
     } else {
-        Vec3_MulScalarInPlace(&HEYHO(self)->mVel.x, HEYHO(self)->mSpeed);
+        Vec3_MulScalarInPlace(&HEYHO(self)->mVel, HEYHO(self)->mSpeed);
     }
 
     *(S2 *)HEYHO(self)->mMotion = pmf_Heyho_MotionVShape;
@@ -775,7 +766,7 @@ extern "C" {
 typedef struct { int x, y, z; } Vec3;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void func_0203ce80(Vec3* dst, Vec3* src);
-extern void Vec3_MulScalarInPlace(int* v, int s);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern void Heyho_CheckHitB(void* c);
 
 void Heyho_MotionVShape(char *c) {
@@ -803,7 +794,7 @@ void Heyho_MotionVShape(char *c) {
         HEYHO(c)->mVel.y = sp0.y;
         HEYHO(c)->mVel.z = sp0.z;
         func_0203ce80(&spC, (Vec3 *)&HEYHO(c)->mVel);
-        Vec3_MulScalarInPlace(&HEYHO(c)->mVel.x, HEYHO(c)->mSpeed);
+        Vec3_MulScalarInPlace(&HEYHO(c)->mVel, HEYHO(c)->mSpeed);
         HEYHO(c)->mPhase = 0;
     } else if (r5 != 0 && r0v != 0 && HEYHO(c)->mWaypoint.y == HEYHO(c)->mRangeTop) {
         HEYHO(c)->mWaypoint.x = (HEYHO(c)->mRangeLeft + HEYHO(c)->mRangeRight) >> 1;
@@ -814,7 +805,7 @@ void Heyho_MotionVShape(char *c) {
         HEYHO(c)->mVel.y = sp18.y;
         HEYHO(c)->mVel.z = sp18.z;
         func_0203ce80(&sp24, (Vec3 *)&HEYHO(c)->mVel);
-        Vec3_MulScalarInPlace(&HEYHO(c)->mVel.x, HEYHO(c)->mSpeed);
+        Vec3_MulScalarInPlace(&HEYHO(c)->mVel, HEYHO(c)->mSpeed);
         HEYHO(c)->mPhase = 0;
     }
 
@@ -876,23 +867,22 @@ void Heyho_MotionBounceInRange(char *c) {
 /* ---- Heyho_StartMotionDiagonal ---- */
 namespace n020c5aa4 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
 typedef struct { int w[2]; } W2;
-extern int LenVec3(Vec3 *v);
+extern int LenVec3(const Vector3 *v);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int NormalizeVec3IfNonZero(Vec3 *v);
-extern void Vec3_MulScalarInPlace(int *v, int s);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 
 extern W2 pmf_Heyho_MotionDiagonal;
 
 void Heyho_StartMotionDiagonal(Heyho *o) {
-    Vec3 a, b, da, db, t;
+    Vector3 a, b, da, db, t;
     int la;
     int ay, ax, by, bx;
     o->mVel.x = o->mStartVel.x;
     o->mVel.y = o->mStartVel.y;
     o->mVel.z = o->mStartVel.z;
-    o->mSpeed = LenVec3((Vec3 *)&o->mVel);
+    o->mSpeed = LenVec3(&o->mVel);
     o->mLean = 0;
     ay = o->mRangeTop;
     ax = o->mRangeLeft;
@@ -904,9 +894,9 @@ void Heyho_StartMotionDiagonal(Heyho *o) {
     b.x = bx;
     b.y = by;
     b.z = 0;
-    Vec3_Sub((Vector3 *)(&da), (const Vector3 *)(&a), (const Vector3 *)((Vec3 *)&o->mPos));
+    Vec3_Sub(&da, &a, &o->mPos);
     la = LenVec3(&da);
-    Vec3_Sub((Vector3 *)(&db), (const Vector3 *)(&b), (const Vector3 *)((Vec3 *)&o->mPos));
+    Vec3_Sub(&db, &b, &o->mPos);
     if (LenVec3(&db) < la) {
         o->mWaypoint.x = a.x;
         o->mWaypoint.y = a.y;
@@ -916,17 +906,16 @@ void Heyho_StartMotionDiagonal(Heyho *o) {
         o->mWaypoint.y = b.y;
         o->mWaypoint.z = b.z;
     }
-    Vec3_Sub((Vector3 *)(&t), (const Vector3 *)((Vec3 *)&o->mWaypoint),
-             (const Vector3 *)((Vec3 *)&o->mPos));
+    Vec3_Sub(&t, &o->mWaypoint, &o->mPos);
     o->mVel.x = t.x;
     o->mVel.y = t.y;
     o->mVel.z = t.z;
-    if (NormalizeVec3IfNonZero((Vec3 *)&o->mVel) == 0) {
+    if (NormalizeVec3IfNonZero(&o->mVel) == 0) {
         o->mVel.x = o->mStartVel.x;
         o->mVel.y = o->mStartVel.y;
         o->mVel.z = o->mStartVel.z;
     } else {
-        Vec3_MulScalarInPlace(&o->mVel.x, o->mSpeed);
+        Vec3_MulScalarInPlace(&o->mVel, o->mSpeed);
     }
     *(W2 *)o->mMotion = pmf_Heyho_MotionDiagonal;
 }
@@ -939,7 +928,7 @@ extern "C" {
 typedef struct { int x, y, z; } Vec3;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void func_0203ce80(Vec3* dst, Vec3* src);
-extern void Vec3_MulScalarInPlace(int* v, int s);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern void Heyho_CheckHitB(void* c);
 
 void Heyho_MotionDiagonal(char *c) {
@@ -961,7 +950,7 @@ void Heyho_MotionDiagonal(char *c) {
         HEYHO(c)->mVel.y = sp0.y;
         HEYHO(c)->mVel.z = sp0.z;
         func_0203ce80(&spC, (Vec3 *)&HEYHO(c)->mVel);
-        Vec3_MulScalarInPlace(&HEYHO(c)->mVel.x, HEYHO(c)->mSpeed);
+        Vec3_MulScalarInPlace(&HEYHO(c)->mVel, HEYHO(c)->mSpeed);
         HEYHO(c)->mPhase = 0;
     } else if (r5 != 0 && r0v != 0 && HEYHO(c)->mWaypoint.y == HEYHO(c)->mRangeTop) {
         HEYHO(c)->mWaypoint.x = HEYHO(c)->mRangeRight;
@@ -972,7 +961,7 @@ void Heyho_MotionDiagonal(char *c) {
         HEYHO(c)->mVel.y = sp18.y;
         HEYHO(c)->mVel.z = sp18.z;
         func_0203ce80(&sp24, (Vec3 *)&HEYHO(c)->mVel);
-        Vec3_MulScalarInPlace(&HEYHO(c)->mVel.x, HEYHO(c)->mSpeed);
+        Vec3_MulScalarInPlace(&HEYHO(c)->mVel, HEYHO(c)->mSpeed);
         HEYHO(c)->mPhase = 0;
     }
 
@@ -989,23 +978,22 @@ void Heyho_MotionDiagonal(char *c) {
 /* ---- Heyho_StartMotionDiagonalMirror ---- */
 namespace n020c57d4 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
 typedef struct { int w[2]; } W2;
-extern int LenVec3(Vec3 *v);
+extern int LenVec3(const Vector3 *v);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int NormalizeVec3IfNonZero(Vec3 *v);
-extern void Vec3_MulScalarInPlace(int *v, int s);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 
 extern W2 pmf_Heyho_MotionDiagonalMirror;
 
 void Heyho_StartMotionDiagonalMirror(Heyho *o) {
-    Vec3 a, b, da, db, t;
+    Vector3 a, b, da, db, t;
     int la;
     int ay, ax, by, bx;
     o->mVel.x = o->mStartVel.x;
     o->mVel.y = o->mStartVel.y;
     o->mVel.z = o->mStartVel.z;
-    o->mSpeed = LenVec3((Vec3 *)&o->mVel);
+    o->mSpeed = LenVec3(&o->mVel);
     o->mLean = 0;
     ay = o->mRangeTop;
     ax = o->mRangeRight;
@@ -1017,9 +1005,9 @@ void Heyho_StartMotionDiagonalMirror(Heyho *o) {
     b.x = bx;
     b.y = by;
     b.z = 0;
-    Vec3_Sub((Vector3 *)(&da), (const Vector3 *)(&a), (const Vector3 *)((Vec3 *)&o->mPos));
+    Vec3_Sub(&da, &a, &o->mPos);
     la = LenVec3(&da);
-    Vec3_Sub((Vector3 *)(&db), (const Vector3 *)(&b), (const Vector3 *)((Vec3 *)&o->mPos));
+    Vec3_Sub(&db, &b, &o->mPos);
     if (LenVec3(&db) < la) {
         o->mWaypoint.x = a.x;
         o->mWaypoint.y = a.y;
@@ -1029,17 +1017,16 @@ void Heyho_StartMotionDiagonalMirror(Heyho *o) {
         o->mWaypoint.y = b.y;
         o->mWaypoint.z = b.z;
     }
-    Vec3_Sub((Vector3 *)(&t), (const Vector3 *)((Vec3 *)&o->mWaypoint),
-             (const Vector3 *)((Vec3 *)&o->mPos));
+    Vec3_Sub(&t, &o->mWaypoint, &o->mPos);
     o->mVel.x = t.x;
     o->mVel.y = t.y;
     o->mVel.z = t.z;
-    if (NormalizeVec3IfNonZero((Vec3 *)&o->mVel) == 0) {
+    if (NormalizeVec3IfNonZero(&o->mVel) == 0) {
         o->mVel.x = o->mStartVel.x;
         o->mVel.y = o->mStartVel.y;
         o->mVel.z = o->mStartVel.z;
     } else {
-        Vec3_MulScalarInPlace(&o->mVel.x, o->mSpeed);
+        Vec3_MulScalarInPlace(&o->mVel, o->mSpeed);
     }
     *(W2 *)o->mMotion = pmf_Heyho_MotionDiagonalMirror;
 }
@@ -1052,7 +1039,7 @@ extern "C" {
 typedef struct { int x, y, z; } Vec3;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void func_0203ce80(Vec3* dst, Vec3* src);
-extern void Vec3_MulScalarInPlace(int* v, int s);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern void Heyho_CheckHitB(void* c);
 
 void Heyho_MotionDiagonalMirror(char *c) {
@@ -1074,7 +1061,7 @@ void Heyho_MotionDiagonalMirror(char *c) {
         HEYHO(c)->mVel.y = sp0.y;
         HEYHO(c)->mVel.z = sp0.z;
         func_0203ce80(&spC, (Vec3 *)&HEYHO(c)->mVel);
-        Vec3_MulScalarInPlace(&HEYHO(c)->mVel.x, HEYHO(c)->mSpeed);
+        Vec3_MulScalarInPlace(&HEYHO(c)->mVel, HEYHO(c)->mSpeed);
         HEYHO(c)->mPhase = 0;
     } else if (r5 != 0 && r0v != 0 && HEYHO(c)->mWaypoint.y == HEYHO(c)->mRangeTop) {
         HEYHO(c)->mWaypoint.x = HEYHO(c)->mRangeLeft;
@@ -1085,7 +1072,7 @@ void Heyho_MotionDiagonalMirror(char *c) {
         HEYHO(c)->mVel.y = sp18.y;
         HEYHO(c)->mVel.z = sp18.z;
         func_0203ce80(&sp24, (Vec3 *)&HEYHO(c)->mVel);
-        Vec3_MulScalarInPlace(&HEYHO(c)->mVel.x, HEYHO(c)->mSpeed);
+        Vec3_MulScalarInPlace(&HEYHO(c)->mVel, HEYHO(c)->mSpeed);
         HEYHO(c)->mPhase = 0;
     }
 
@@ -1199,7 +1186,6 @@ void Heyho_MotionCircleLower(char *c) {
 namespace n020c5370 {
 extern "C" {
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern int pmf_Heyho_MotionChase[];
 
 struct W2 { int w[2]; };
@@ -1207,7 +1193,7 @@ struct W2 { int w[2]; };
 void Heyho_StartMotionChase(char *c) {
     unsigned int r;
     HEYHO(c)->mLean = 0;
-    r = (unsigned int)RandomIntInternal(&data_0209e650);
+    r = (unsigned int)RandomIntInternal(&data_0209e650.value);
     r &= 0x7fffffff;
     HEYHO(c)->mDelay = (short)(((int)((r >> 0x13) * 0x2d) >> 0xc) + 0xf);
     HEYHO(c)->mWaypoint.x = HEYHO(c)->mPos.x;
@@ -1224,8 +1210,6 @@ void Heyho_StartMotionChase(char *c) {
 /* ---- Heyho_MotionChase ---- */
 namespace n020c4fa4 {
 
-typedef struct Vec3 { int x, y, z; } Vec3;
-
 struct VB {
     virtual int *m0();
     virtual int *m1();
@@ -1234,32 +1218,31 @@ struct VB {
 
 extern "C" {
 extern int RandomIntInternal(int *seed);
-extern int NormalizeVec3IfNonZero(Vec3 *v);
-extern int Vec3_Dist(Vec3 *a, Vec3 *b);
-extern void Vec3_MulScalar(Vec3 *d, Vec3 *s, int m);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
+extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
+extern void Vec3_MulScalar(Vector3 *d, const Vector3 *s, int m);
 extern void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
-extern void Vec3_Add(Vec3 *d, Vec3 *a, Vec3 *b);
-extern int LenVec3(Vec3 *v);
-extern int DotVec3(Vec3 *a, Vec3 *b);
+extern void Vec3_Add(Vector3 *d, const Vector3 *a, const Vector3 *b);
+extern int LenVec3(const Vector3 *v);
+extern int DotVec3(const Vector3 *a, const Vector3 *b);
 extern void Heyho_CheckHitB(char *c);
-extern int data_0209e650;
 extern char *sJumpAdapters[];
 }
 
 extern "C" void Heyho_MotionChase(char *c) {
     VB *best;
-    Vec3 bp;
-    Vec3 op;
-    Vec3 delta;
-    Vec3 nrm;
-    Vec3 cand;
-    Vec3 dir;
-    Vec3 diff;
-    Vec3 scaled;
-    Vec3 proj;
-    Vec3 sc2;
-    Vec3 tgt;
-    Vec3 vel;
+    Vector3 bp;
+    Vector3 op;
+    Vector3 delta;
+    Vector3 nrm;
+    Vector3 cand;
+    Vector3 dir;
+    Vector3 diff;
+    Vector3 scaled;
+    Vector3 proj;
+    Vector3 sc2;
+    Vector3 tgt;
+    Vector3 vel;
     int bm, i, ra, rb;
 
     if (HEYHO(c)->mSeparated != 0) {
@@ -1290,8 +1273,7 @@ extern "C" void Heyho_MotionChase(char *c) {
                 int dot;
                 v = ((VB *)sJumpAdapters[i])->m0();
                 op.x = v[0]; op.y = v[1]; op.z = v[2];
-                Vec3_Sub((Vector3 *)(&delta), (const Vector3 *)((Vec3 *)&HEYHO(c)->mPos),
-                         (const Vector3 *)(&op));
+                Vec3_Sub(&delta, &HEYHO(c)->mPos, &op);
                 v = ((VB *)sJumpAdapters[i])->m1();
                 nrm.x = v[0]; nrm.y = v[1]; nrm.z = v[2];
                 if (NormalizeVec3IfNonZero(&nrm) != 0) {
@@ -1301,7 +1283,7 @@ extern "C" void Heyho_MotionChase(char *c) {
                         Vec3_MulScalar(&scaled, &nrm, dot);
                         Vec3_Add(&proj, &op, &scaled);
                         cand.x = proj.x; cand.y = proj.y; cand.z = proj.z;
-                        d = Vec3_Dist((Vec3 *)&HEYHO(c)->mPos, &cand);
+                        d = Vec3_Dist(&HEYHO(c)->mPos, &cand);
                         if (d < bm) {
                             best = (VB *)sJumpAdapters[i];
                             bp = cand;
@@ -1312,13 +1294,12 @@ extern "C" void Heyho_MotionChase(char *c) {
             }
         }
         if (best != 0) {
-            Vec3_Sub((Vector3 *)(&dir), (const Vector3 *)((Vec3 *)&HEYHO(c)->mPos),
-                     (const Vector3 *)(&bp));
+            Vec3_Sub(&dir, &HEYHO(c)->mPos, &bp);
             if (NormalizeVec3IfNonZero(&dir) == 0) {
                 dir.x = 0x1000; dir.y = 0; dir.z = 0;
             }
             Vec3_MulScalar(&sc2, &dir, 0x40000);
-            Vec3_Add(&tgt, (Vec3 *)&HEYHO(c)->mPos, &sc2);
+            Vec3_Add(&tgt, &HEYHO(c)->mPos, &sc2);
             HEYHO(c)->mWaypoint.x = tgt.x;
             HEYHO(c)->mWaypoint.y = tgt.y;
             HEYHO(c)->mWaypoint.z = tgt.z;
@@ -1336,9 +1317,8 @@ extern "C" void Heyho_MotionChase(char *c) {
             }
             {
                 int len;
-                Vec3_Sub((Vector3 *)(&diff), (const Vector3 *)((Vec3 *)&HEYHO(c)->mWaypoint),
-                         (const Vector3 *)((Vec3 *)&HEYHO(c)->mPos));
-                len = LenVec3((Vec3 *)&HEYHO(c)->mStartVel);
+                Vec3_Sub(&diff, &HEYHO(c)->mWaypoint, &HEYHO(c)->mPos);
+                len = LenVec3(&HEYHO(c)->mStartVel);
                 if (NormalizeVec3IfNonZero(&diff) != 0) {
                     Vec3_MulScalar(&vel, &diff, len);
                     HEYHO(c)->mVel.x = vel.x;
@@ -1351,7 +1331,7 @@ extern "C" void Heyho_MotionChase(char *c) {
                 }
             }
             {
-                int rr = RandomIntInternal(&data_0209e650) & 0x7fffffff;
+                int rr = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
                 HEYHO(c)->mDelay = (short)(((int)((unsigned int)rr >> 0x13) * 0x2d >> 12) + 0xf);
             }
         }
@@ -1549,16 +1529,13 @@ void Heyho_UpdateMatrix(char* c) {
 /* ---- Heyho_CheckHitB ---- */
 namespace n020c49d8 {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
 typedef int (**VT)(void *);
 
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_Add(Vec3* out, Vec3* a, Vec3* b);
-extern int LenVec3(Vec3* v);
-extern int DotVec3(Vec3* a, Vec3* b);
-extern int NormalizeVec3IfNonZero(Vec3* v);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern int LenVec3(const Vector3 *v);
+extern int DotVec3(const Vector3 *a, const Vector3 *b);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Heyho_StartMotionHitSpin(Heyho *self);
 extern char *sJumpAdapters[];
 
@@ -1573,17 +1550,15 @@ void Heyho_CheckHitB(Heyho *self) {
     int half = lim >> 1;
 
     for (i = 0; i < 3; i++) {
-        Vec3 a;
-        Vec3 b;
-        Vec3 d;
-        Vec3 c;
+        Vector3 a;
+        Vector3 b;
+        Vector3 d;
+        Vector3 c;
 
         if ((*(VT *)sJumpAdapters[i])[2](sJumpAdapters[i]) == 0)
             continue;
 
-        Vec3_Sub((Vector3 *)(&a),
-                 (const Vector3 *)((Vec3 *)(*(VT *)sJumpAdapters[i])[0](sJumpAdapters[i])),
-                 (const Vector3 *)((Vec3 *)&self->mPos));
+        Vec3_Sub(&a, (const Vector3 *)(*(VT *)sJumpAdapters[i])[0](sJumpAdapters[i]), &self->mPos);
         a.y -= half;
         if (a.y < 0) {
             if (a.y > -0x18000) a.y = 0;
@@ -1594,9 +1569,7 @@ void Heyho_CheckHitB(Heyho *self) {
             else a.x = 0;
         }
 
-        Vec3_Sub((Vector3 *)(&b),
-                 (const Vector3 *)((Vec3 *)(*(VT *)sJumpAdapters[i])[1](sJumpAdapters[i])),
-                 (const Vector3 *)((Vec3 *)&self->mVel));
+        Vec3_Sub(&b, (const Vector3 *)(*(VT *)sJumpAdapters[i])[1](sJumpAdapters[i]), &self->mVel);
         Vec3_Add(&c, &a, &b);
         if (LenVec3(&c) > lim) continue;
 
@@ -1632,27 +1605,24 @@ void Heyho_CheckHitB(Heyho *self) {
 /* ---- Heyho_CheckHitA ---- */
 namespace n020c47d4 {
 extern "C" {
-typedef int Fix12;
-typedef struct Vec3 { Fix12 x, y, z; } Vec3;
-
 typedef struct Obj Obj;
 typedef struct ObjVt {
-    Vec3 *(*f0)(Obj *);
-    Vec3 *(*f1)(Obj *);
+    Vector3 *(*f0)(Obj *);
+    Vector3 *(*f1)(Obj *);
     int   (*f2)(Obj *);
 } ObjVt;
 struct Obj {
     ObjVt *vt;      /* 0x0 */
-    Vec3 anchor;    /* 0x4 dMg3DHeyhoObjAdapter_c::mAnchor */
+    Vector3 anchor; /* 0x4 dMg3DHeyhoObjAdapter_c::mAnchor */
     short command;  /* 0x10 dMg3DHeyhoObjAdapter_c::mCommand */
 };
 
 extern char *sJumpAdapters[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_Add(Vec3 *out, Vec3 *a, Vec3 *b);
-extern Fix12 DotVec3(const Vec3 *a, const Vec3 *b);
-extern int LenVec3(Vec3 *v);
-extern int NormalizeVec3IfNonZero(Vec3 *v);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
+extern int DotVec3(const Vector3 *a, const Vector3 *b);
+extern int LenVec3(const Vector3 *v);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Heyho_StartMotionHitSpin(Heyho *self);
 
 void Heyho_CheckHitA(Heyho *self) {
@@ -1660,15 +1630,15 @@ void Heyho_CheckHitA(Heyho *self) {
     int thresh = FX_MUL(self->mSize, 0x12000);
 
     for (i = 0; i < 3; i++) {
-        Vec3 disp, rel, up, sum;
-        Vec3 *p, *q;
+        Vector3 disp, rel, up, sum;
+        Vector3 *p, *q;
         Obj *o;
 
         if (((Obj **)sJumpAdapters)[i]->vt->f2(((Obj **)sJumpAdapters)[i]) == 0)
             continue;
 
         p = ((Obj **)sJumpAdapters)[i]->vt->f0(((Obj **)sJumpAdapters)[i]);
-        Vec3_Sub((Vector3 *)(&disp), (const Vector3 *)(p), (const Vector3 *)((Vec3 *)&self->mPos));
+        Vec3_Sub(&disp, p, &self->mPos);
 
         disp.y -= thresh >> 1;
         if (disp.y < 0) {
@@ -1686,7 +1656,7 @@ void Heyho_CheckHitA(Heyho *self) {
         }
 
         q = ((Obj **)sJumpAdapters)[i]->vt->f1(((Obj **)sJumpAdapters)[i]);
-        Vec3_Sub((Vector3 *)(&rel), (const Vector3 *)(q), (const Vector3 *)((Vec3 *)&self->mVel));
+        Vec3_Sub(&rel, q, &self->mVel);
         Vec3_Add(&sum, &disp, &rel);
 
         if (LenVec3(&sum) > thresh)
@@ -1804,7 +1774,6 @@ extern int sHeyhoLayout;
 extern char *sHeyhos;
 extern int sHeyhoCount;
 extern int data_ov006_021403b8[];
-extern int data_0209e650;
 extern char sHeyhoLayoutFlyInPaths[];
 extern char sHeyhoFlyInPaths[];
 
@@ -1838,7 +1807,7 @@ void Heyho_SpawnAll(void *arg0, int arg1)
     if (count <= 0)
         return;
 
-    seed = &data_0209e650;
+    seed = &data_0209e650.value;
     sl = 0;
     r8 = sl;
     sp4 = sl;
@@ -1895,31 +1864,27 @@ void Heyho_SpawnAll(void *arg0, int arg1)
 /* ---- Heyho_SeparateAll ---- */
 namespace n020c42bc {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
-
 extern char *sHeyhos;
 extern int sHeyhoCount;
 
 extern void Heyho_Update(Heyho *o);
 extern int Heyho_IsChasing(Heyho *o);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(Vec3* v);
-extern int NormalizeVec3IfNonZero(Vec3* v);
+extern int LenVec3(const Vector3 *v);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 
 void Heyho_SeparateAll(void)
 {
-    Vec3 v1;
-    Vec3 v2;
+    Vector3 v1;
+    Vector3 v2;
     Heyho *oi;
     Heyho *oj;
-    Vec3* pi;
-    Vec3* pj;
+    Vector3 *pi;
+    Vector3 *pj;
     int i, j, k, t;
-    Vec3* ai;
+    Vector3 *ai;
 
     for (i = 0; i < sHeyhoCount; i++) {
         Heyho_Update(&((Heyho *)sHeyhos)[i]);
@@ -1930,20 +1895,19 @@ void Heyho_SeparateAll(void)
     for (t = 0; t < sHeyhoCount; t++) {
         if (Heyho_IsChasing(&((Heyho *)sHeyhos)[t]) != 0) {
             oi = &((Heyho *)sHeyhos)[t];
-            pi = (Vec3 *)&oi->mPos;
-            ai = (Vec3 *)&oi->mVel;
+            pi = &oi->mPos;
+            ai = &oi->mVel;
             for (j = t + 1; j < sHeyhoCount; j++) {
                 if (Heyho_IsChasing(&((Heyho *)sHeyhos)[j]) != 0) {
                     oj = (Heyho *)((long long)(int)&((Heyho *)sHeyhos)[j]);
-                    pj = (Vec3 *)&oj->mPos;
-                    Vec3_Sub((Vector3 *)(&v1), (const Vector3 *)(pi), (const Vector3 *)(pj));
-                    Vec3_Sub((Vector3 *)(&v2), (const Vector3 *)(ai),
-                             (const Vector3 *)((Vec3 *)&oj->mVel));
+                    pj = &oj->mPos;
+                    Vec3_Sub(&v1, pi, pj);
+                    Vec3_Sub(&v2, ai, &oj->mVel);
                     if (LenVec3(&v1) >= 0x12000) continue;
                     if (LenVec3(&v2) >= 0x100) continue;
                     if (NormalizeVec3IfNonZero(&v1) == 0) continue;
-                    AddVec3((Vector3 *)pi, (Vector3 *)&v1, (Vector3 *)pi);
-                    SubVec3((Vector3 *)pj, (Vector3 *)&v1, (Vector3 *)pj);
+                    AddVec3(pi, &v1, pi);
+                    SubVec3(pj, &v1, pj);
                     ((Heyho *)sHeyhos)[t].mSeparated = 1;
                     ((Heyho *)sHeyhos)[j].mSeparated = 1;
                 }
@@ -1983,7 +1947,6 @@ extern char *sHeyhos;
 extern int data_ov006_0213afc8[2];
 extern char sHeyhoSettlePaths;
 extern int sHeyhoUnsettledCount;
-extern int data_0209e650;
 
 extern int RandomIntInternal(int *seed);
 extern void Heyho_StartMotionRegroup(char *a, char *b);
@@ -1998,8 +1961,8 @@ void Heyho_SettleAll(void)
             (v[1] != q[1] && ((Heyho *)sHeyhos)[i].mMotion[0] != 0))
             continue;
         {
-            int r1 = RandomIntInternal(&data_0209e650);
-            int r2 = RandomIntInternal(&data_0209e650);
+            int r1 = RandomIntInternal(&data_0209e650.value);
+            int r2 = RandomIntInternal(&data_0209e650.value);
             unsigned v0 = (unsigned)(r1 & 0x7fffffff) >> 0x13;
             unsigned u0 = (unsigned)(r2 & 0x7fffffff) >> 0x13;
             Heyho_StartMotionRegroup((char *)sHeyhos + i * 0xf0,

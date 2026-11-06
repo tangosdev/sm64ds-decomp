@@ -45,7 +45,7 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern dFdColor_c data_0209f5e8;
 
-u32 LoadCompressedFileAt(u16 fileID, void *target);
+u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int handle);
 
 void DecompressLZ16(const void *src, void *dst);
@@ -391,10 +391,9 @@ void dScBoot_c::func_02005348() {
  * (arm9 0x02005324..0x02005348): pre-talk camera backup plus event-flag
  * setup, returns 1. Defined last because this file emits .text in reverse
  * source order, so the lead body lands at the run's left edge. The camera
- * call is spelled as the member it is (dCamera_c.h); func_0200cb58 comes
- * from decl_common.h. */
+ * calls are spelled as the members they are (dCamera_c.h). */
 extern "C" int func_02005324(void *p) {
     ((dCamera_c *)p)->SaveCameraStateBeforeTalk();
-    func_0200cb58(p, 0x19);
+    ((dCamera_c *)p)->func_0200cb58(0x19);
     return 1;
 }

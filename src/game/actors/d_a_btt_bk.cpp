@@ -12,17 +12,12 @@
 // Notes:
 // - States: 0 fall (bounce on landing), 1 carried, 2 in Yoshi's mouth (mFlags
 //   0x20000 / 0x40000). Each row of data_ov080_0212847c is an Init/Main pair.
-// - mShadowMtx stays u8[0x30] and is cast to Matrix4x3. The header names the
-//   array, not a Matrix4x3.
 // - StateYoshiMouthMain stores 0 through *(int *)pad_0d0, the pad in front of
 //   mModel.
 // - StateYoshiMouthMain keeps `goto done` and StateCarriedMain keeps
 //   `goto clear`: early returns reschedule the tail (+48 bytes) and a
 //   keepCrate flag reschedules the break block (+16 bytes), both measured
 //   against the ROM-matching spelling.
-// - Matrix4x3_ApplyInPlaceToTranslation and Matrix4x3_FromRotationY stay
-//   local: the carrier-matrix copy goes through the 12-word Mtx43, which
-//   conflicts with math/MtxStack.h's Matrix4x3 data_020a0e68.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
@@ -36,23 +31,19 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 
-#include "private/mtx43.h"
+#include "math/MtxStack.h"
 
 /* State-table rows are 8-byte mwcc pointer-to-member pairs. */
 typedef void (daBttBk_c::*PMF)();
 
-/* arm9 C helpers. local extern: the two matrix routines take this TU's Mtx43
- * (see the notes above); the rest have no shared header. */
+/* arm9 C helpers. local extern: no shared header declares these. */
 extern "C" {
 void *func_02010304(void *a, void *b);
-void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
 int *Vec3_LslInPlace(Vector3 *v, int sh);
-void Matrix4x3_FromRotationY(void *m, int angle);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
 
-extern Mtx43 data_020a0e68;
 extern s16 data_02082214[];
 
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
@@ -159,12 +150,12 @@ void daBttBk_c::UpdateModelTransform() {
                 t.y = ty;
                 t.z = tz;
                 carrier = mCarrier;
-                data_020a0e68 = *(Mtx43 *)carrier->mCarryMatrix;
+                data_020a0e68 = *carrier->mCarryMatrix;
                 Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, t.x, t.y, t.z);
 
-                mPosX = data_020a0e68.a[9];
-                mPosY = data_020a0e68.a[10];
-                mPosZ = data_020a0e68.a[11];
+                mPosX = data_020a0e68.m[9];
+                mPosY = data_020a0e68.m[10];
+                mPosZ = data_020a0e68.m[11];
                 Vec3_LslInPlace(&mPos, 3);
             }
         }
@@ -183,18 +174,17 @@ void daBttBk_c::UpdateModelTransform() {
     if (rg.DetectClsn()) {
         groundY = rg.clsnY;
     }
-    Matrix4x3_FromRotationY(mShadowMtx, mAngleY);
-    ((Matrix4x3 *)mShadowMtx)->m[9] = mPosX >> 3;
-    ((Matrix4x3 *)mShadowMtx)->m[10] = groundY >> 3;
-    ((Matrix4x3 *)mShadowMtx)->m[11] = mPosZ >> 3;
+    Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
+    mShadowMtx.m[9] = mPosX >> 3;
+    mShadowMtx.m[10] = groundY >> 3;
+    mShadowMtx.m[11] = mPosZ >> 3;
     {
         s16 a = mAngleX;
         int sv = data_02082214[((unsigned short)(short)(a << 1) >> 4) * 2];
         if (sv < 0)
             sv = -sv;
         int result = FX_MUL(sv, 0x28000);
-        DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0x96000, 0x32000,
-                           result + 0x96000, 0xf);
+        DropShadowScaleXYZ(mShadowModel, mShadowMtx, 0x96000, 0x32000, result + 0x96000, 0xf);
     }
 }
 

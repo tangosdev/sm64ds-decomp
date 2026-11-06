@@ -25,7 +25,6 @@
  * 0x020addfc..0x020b0580. Base is dScene_c.
  */
 #pragma defer_codegen off
-#pragma opt_strength_reduction off
 #include "common.h"
 #include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
@@ -42,6 +41,7 @@
 #include "G2.h"
 #include "GX.h"
 #include "private/controller_input.h"
+#include "math/MtxStack.h"
 
 /* The cosine table lookup used by Render. */
 #define COS(a) data_02082214[((u16)(a) >> 4) * 2 + 1]
@@ -64,14 +64,11 @@ extern int data_0208ee44;
 extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
-void Matrix4x3_FromTranslation(Matrix4x3 *, s32, s32, s32);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *, s16);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
 extern s8 data_02092110;
 extern s16 data_02082214[];
 extern s32 data_020a0db0;
-extern u8 data_0209caa0[0x50];
-extern Matrix4x3 data_020a0e68;
+extern SaveBlock data_0209caa0;
 extern u8 data_02092128;
 extern signed char gNumLives[];
 extern u8 data_ov001_020ab938;
@@ -271,9 +268,9 @@ void dScStarSel_c::func_ov003_020ae238() {
 // gTouchHeld..gTouchY. If byte 0 of that record is set and byte 1 (gTouchEdge)
 // is set, its bytes 2 and 3 are tested against a box around the face at
 // (0x80, mFaceY); a hit sets mCursorTarget 2, mPickedChar 3, mAnimMode 1, seeds
-// mPickPressTimer and mExitDelay and plays sound data_0209caa0[0x41] + 0x3c.
+// mPickPressTimer and mExitDelay and plays sound data_0209caa0.file.mCharacter + 0x3c.
 //
-// Failing that (and only with mStripMode above 1 and data_0209caa0[0x41] == 3),
+// Failing that (and only with mStripMode above 1 and data_0209caa0.file.mCharacter == 3),
 // the three characters are scanned in order: for each unlocked i, bytes 2 and 3
 // of the same record are tested against mCharX/mCharY, and a hit sets
 // mCursorTarget 1, mCharCursor to its strip slot, and mPickedChar, data_02092128
@@ -308,13 +305,13 @@ void dScStarSel_c::func_ov003_020ae358() {
             mPickPressTimer = (unsigned char)(data_0208ee44 * 6);
             mAnimMode = 1;
             mExitDelay = 0x10;
-            func_02012790(data_0209caa0[0x41] + 0x3c);
+            func_02012790(data_0209caa0.file.mCharacter + 0x3c);
             return;
         }
         if (mStripMode <= 1) {
             return;
         }
-        if (data_0209caa0[0x41] != 3) {
+        if (data_0209caa0.file.mCharacter != 3) {
             return;
         }
         for (i = 0; i < 3; i++) {
@@ -331,7 +328,7 @@ void dScStarSel_c::func_ov003_020ae358() {
                         mPickPressTimer = (unsigned char)(data_0208ee44 * 3);
                         mAnimMode = 2;
                         mExitDelay = 0x10;
-                        func_02012790(data_0209caa0[0x41] + 0x3c);
+                        func_02012790(data_0209caa0.file.mCharacter + 0x3c);
                         return;
                     }
                 }
@@ -340,7 +337,7 @@ void dScStarSel_c::func_ov003_020ae358() {
 
         return;
     }
-    if (data_0209caa0[0x42] == 0) {
+    if (data_0209caa0.file.controllerMode == 0) {
         unsigned short ctrl = data_020a0e58[0].held;
         if ((ctrl & 0x30) != 0) {
             unsigned short timer = mCharRepeatTimer;
@@ -519,7 +516,7 @@ s32 dScStarSel_c::Render() {
             }
         }
 
-        switch (data_0209caa0[0x41]) {
+        switch (data_0209caa0.file.mCharacter) {
         case 0:
             OAM::Render(1, (OamAttr *)&data_ov001_020abb34, 0x80, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
@@ -574,7 +571,7 @@ s32 dScStarSel_c::Render() {
             break;
         }
 
-        if (mStripMode <= 1 || data_0209caa0[0x41] != 3) {
+        if (mStripMode <= 1 || data_0209caa0.file.mCharacter != 3) {
             if (SublevelToLevel(data_02092110) <= 0xe) {
                 OAM::RenderSub((OamAttr *)&data_ov001_020abbb4, 0x80, (mPromptYOffset >> 8) + 0xa0);
             } else {
@@ -643,7 +640,7 @@ s32 dScStarSel_c::Behavior() {
             }
         } else if (mCursorShown != 0 && IsButtonInputValid() != 0) {
             val = mCursorTarget;
-            if (val == 0 && mStripMode > 1 && data_0209caa0[0x41] == 3) {
+            if (val == 0 && mStripMode > 1 && data_0209caa0.file.mCharacter == 3) {
                 mCursorTarget = 2;
                 func_02012790(0x12e);
             } else if (mAnimMode == 0) {
@@ -661,7 +658,7 @@ s32 dScStarSel_c::Behavior() {
                     mAnimMode = 1;
                 }
                 mExitDelay = 0x10;
-                func_02012790(data_0209caa0[0x41] + 0x3c);
+                func_02012790(data_0209caa0.file.mCharacter + 0x3c);
             }
         } else if (SublevelToLevel(data_02092110) <= 0xe) {
             idx = gActivePlayerSlot;
@@ -693,7 +690,8 @@ s32 dScStarSel_c::Behavior() {
                     } while (i < num);
                 }
             }
-            if (found == 0 && mCursorShown == 2 && mCursorTarget == 0 && data_0209caa0[0x42] == 0) {
+            if (found == 0 && mCursorShown == 2 && mCursorTarget == 0 &&
+                data_0209caa0.file.controllerMode == 0) {
                 if (data_020a0e58[0].held & 0x20) {
                     pressed = data_020a0e58[0].pressed & 0x20;
                     if (pressed != 0 || mPlateRepeatTimer == 0) {
@@ -735,17 +733,18 @@ s32 dScStarSel_c::Behavior() {
         if (SublevelToLevel(data_02092110) <= 0xe) {
             if (mCursorShown == 0) {
                 if (IsButtonInputValid() != 0 ||
-                    (data_0209caa0[0x42] == 0 &&
+                    (data_0209caa0.file.controllerMode == 0 &&
                      (data_020a0e58[gActivePlayerSlot].pressed & 0xf0))) {
                     func_02012790(0x12e);
-                    if (data_0209caa0[0x42] == 0 && (data_020a0e58[0].pressed & 0x30)) {
+                    if (data_0209caa0.file.controllerMode == 0 &&
+                        (data_020a0e58[0].pressed & 0x30)) {
                         mCursorShown = 1;
                     } else {
                         mCursorShown = 2;
                     }
                     if (SublevelToLevel(data_02092110) <= 0xe) {
                         mCursorTarget = 0;
-                    } else if (mStripMode > 1 && data_0209caa0[0x41] == 3) {
+                    } else if (mStripMode > 1 && data_0209caa0.file.mCharacter == 3) {
                         mCursorTarget = 1;
                         if (mStripMode != 4) {
                             mCharCursor = 0;
@@ -760,13 +759,13 @@ s32 dScStarSel_c::Behavior() {
                 if (data_020a0e58[0].pressed != 0) {
                     mCursorShown = 2;
                 }
-            } else if (data_0209caa0[0x42] == 0 && (data_020a0e58[0].held & 0xc0)) {
+            } else if (data_0209caa0.file.controllerMode == 0 && (data_020a0e58[0].held & 0xc0)) {
                 u16 keys = data_020a0e58[0].pressed;
                 if (keys & 0x40) {
                     if (mCursorTarget != 0) {
                         mCursorTarget -= 1;
                         if (mCursorTarget == 1) {
-                            if (mStripMode > 1 && data_0209caa0[0x41] == 3) {
+                            if (mStripMode > 1 && data_0209caa0.file.mCharacter == 3) {
                                 if (mStripMode != 4) {
                                     mCharCursor = 0;
                                 } else {
@@ -782,7 +781,7 @@ s32 dScStarSel_c::Behavior() {
                     if (mCursorTarget != 2) {
                         mCursorTarget += 1;
                         if (mCursorTarget == 1) {
-                            if (mStripMode > 1 && data_0209caa0[0x41] == 3) {
+                            if (mStripMode > 1 && data_0209caa0.file.mCharacter == 3) {
                                 if (mStripMode != 4) {
                                     mCharCursor = 0;
                                 } else {
@@ -797,7 +796,7 @@ s32 dScStarSel_c::Behavior() {
                 }
             }
 
-            if (mStripMode <= 1 || data_0209caa0[0x41] != 3) {
+            if (mStripMode <= 1 || data_0209caa0.file.mCharacter != 3) {
                 if (mBounceDelay != 0) {
                     mBounceDelay -= 1;
                     if (mBounceDelay == 0) {
@@ -898,7 +897,6 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
  * pitch, and each star adds one pitch. Written as one u8 with if/else constant
  * arms, which is what keeps the value in the register the ternary lands in (r3)
  * and lets the loop's +0x23 temp take a fresh r1. */
-#pragma push
 
 extern "C" {
 void Enable3dEngines(void);
@@ -1074,8 +1072,8 @@ s32 dScStarSel_c::InitResources() {
     file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_NCL_BIN);
     GXS::LoadOBJPltt(file, 0, 0x200);
     Deallocate(file);
-    data_02092128 = data_0209caa0[0x41];
-    switch (data_0209caa0[0x41]) {
+    data_02092128 = data_0209caa0.file.mCharacter;
+    switch (data_0209caa0.file.mCharacter) {
     case 0:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCG_BIN);
         {
@@ -1211,7 +1209,7 @@ s32 dScStarSel_c::InitResources() {
     } while (charIdx < 4);
 
     if (SublevelToLevel(data_02092110) <= 0xE) {
-        if ((mStripMode != 1) && (data_0209caa0[0x41] == 3)) {
+        if ((mStripMode != 1) && (data_0209caa0.file.mCharacter == 3)) {
             mFaceY = 0x88;
             mBounceDelay = 0;
         } else {
@@ -1262,11 +1260,10 @@ s32 dScStarSel_c::InitResources() {
     gSubScreenLayers = 0x10;
     REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (gMainScreenLayers << 8);
     REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
-    mLifeIcon = data_0209caa0[0x41];
+    mLifeIcon = data_0209caa0.file.mCharacter;
     data_0208ee44 = 1;
     return 1;
 }
-#pragma pop
 
 // @symbol dScStarSel_c_classInit
 /* Reconstructed source-style name: SM64DS proves dScStarSel_c through RTTI,

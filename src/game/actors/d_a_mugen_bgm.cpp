@@ -2,9 +2,9 @@
 /**
  * Endless BGM / fog controller (registry profile MUGEN_BGM).
  *
- * param1 == 1 steers data_0208e434 from the rotated offset; otherwise it
+ * param1 == 1 steers gMusicTrackModeOverride from the rotated offset; otherwise it
  * drives Fog depth/color from the rotated offset, star count and
- * data_0209caa0[0x41], then keeps Sound sub 0x2e playing while
+ * data_0209caa0.file.mCharacter, then keeps Sound sub 0x2e playing while
  * func_ov100_02144f84 gates mHorzSpeed.
  *
  * This TU owns text only: ov002 delinks no .data here, so the _ZTV / _ZTI /
@@ -28,6 +28,7 @@
 #include "decl_common.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "SaveBlock.h"
 
 extern signed char data_ov002_02110af0;
 extern signed char data_02092120;
@@ -35,13 +36,15 @@ extern void *data_ov002_02110af8;
 extern u8 data_0209f250;
 extern char *data_0209f394[];
 extern int data_020a0ebc[];
-extern u8 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern char *data_0209f318;
 
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
+/* void *: Behavior's diff/rotated scratch stays POD int[3]; a Vector3 local
+   would emit ~Vector3, which this object does not have. */
+void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 u8 NumStars(void);
 int func_ov100_02144f84(void);
 }
@@ -100,7 +103,7 @@ int daMugenBGM_c::Behavior() {
         if (x < 0x320000) {
             int y = rotated[1];
             if (y > -0x12c000 && y < 0x5dc000 && az > 0x32000 && az < 0xc8000)
-                data_0208e434 = (z < 0) ? 2 : -1;
+                gMusicTrackModeOverride = (z < 0) ? 2 : -1;
         }
         return 1;
     }
@@ -110,7 +113,7 @@ int daMugenBGM_c::Behavior() {
     color = depth;
     flag = 0;
 
-    if (NumStars() < 0x50 || data_0209caa0[0x41] != 0) {
+    if (NumStars() < 0x50 || data_0209caa0.file.mCharacter != 0) {
         int x = rotated[0];
         color = 0xd00;
         if (x < 0)

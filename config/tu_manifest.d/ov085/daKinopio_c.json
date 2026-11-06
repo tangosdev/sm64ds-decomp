@@ -605,49 +605,49 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@468",
+      "from": "@544",
       "to": "data_ov085_02130498",
-      "evidence": "compiler temp mapped to 0x02130498 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02130498 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@469",
+      "from": "@545",
       "to": "data_ov085_021304a4",
-      "evidence": "compiler temp mapped to 0x021304a4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021304a4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@470",
+      "from": "@546",
       "to": "data_ov085_021304b0",
-      "evidence": "compiler temp mapped to 0x021304b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021304b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@866",
+      "from": "@914",
       "to": "data_ov085_0212fe40",
-      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @866 to @861 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@868",
+      "from": "@916",
       "to": "data_ov085_0212fe48",
-      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @868 to @863 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@871",
+      "from": "@919",
       "to": "data_ov085_0212fe30",
-      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @871 to @866 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@873",
+      "from": "@921",
       "to": "data_ov085_0212fe38",
-      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @873 to @868 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@869",
+      "from": "@917",
       "to": "data_ov085_0212fe28",
-      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @869 to @864 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@874",
+      "from": "@922",
       "to": "data_ov085_0212fe20",
-      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @874 to @869 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "symbol_binding_rewrites": [

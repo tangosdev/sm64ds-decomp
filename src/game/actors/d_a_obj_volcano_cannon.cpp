@@ -23,14 +23,13 @@
 #include "daObj_volcanoCannon_c.h"
 #include "daObjFl_Ring_c.h"
 #include "daPly_c.h"
-
+#include "LevelRng.h"
 
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 extern "C" {
 int RandomIntInternal(int *seed);
-extern int data_0209e650;
 void func_ov022_02112654(daObj_volcanoCannon_c *c);
 
 /* The state table, ov022 .bss; the definition at the end of this file
@@ -96,7 +95,7 @@ extern "C" int func_ov022_021126ac(daObj_volcanoCannon_c *c) {
  * Launches the flame: a 0x3c kill timer, a random heading, and randomised
  * horizontal and vertical speed in 12-bit fixed point, under a -4.0 gravity. */
 extern "C" int func_ov022_02112710(daObj_volcanoCannon_c *c) {
-    unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650) >> 8;
+    unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
     c->mKillTimer = 0x3c;
     c->mPrevAngleY = (short)((r & 0xf) << 0xc);
     c->mHorzSpeed = (r & 0x1f) + 0x14;

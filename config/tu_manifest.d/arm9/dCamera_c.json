@@ -11,7 +11,8 @@
     "ChangeState's mangling _ZN9dCamera_c11ChangeStateEPNS_5StateE proves the nested State type the header forward-declares.",
     "LOWER EDGE (private data): func_020073a0 is the lowest function that reads this TU's .data -- data_02086ed8, an offset triple between _ZTI7dView_c (0x02086ecc) and _ZTI9dCamera_c (0x02086ee4), read by nothing else. The run's other private .data (the triples 0x02086e84..0x02086ec0, the script-op member-function constants 0x02086bc0..0x02086e38 loaded by func_02008550, the follow rates 0x02086cc8/0x02086d50 of func_0200bb28) is interleaved with g_profile_CAMERA and the dCamera_c RTTI, and the mode records 0x02086fcc..0x0208747c are shared between func_02009e70 and func_0200c394/func_0200c66c/Behavior/GoBehindPlayer. The controller records data_0209f49c (bss) are read only by func_0200bb28 and func_02009e70. the D1/D0 pair and its helpers at 0x0200705c..0x020072c4 are their own TU (src/engine/view/d_camera_dtor.cpp).",
     "Pragmas: none added. #4479 showed opt_common_subs off inert for func_0200bb28, which matches under the file's defaults.",
-    "func_020072c4 (0x020072c4..0x020073a0) folded in as the low edge. Its only reference is the script-op member-function constant data_02086ca8 in this TU's .data, between the constants for func_020071e0 and func_020073a0. Below it, _ZN7Vector3D1Ev at 0x020072c0 ends the d_camera_dtor.cpp object, so no other TU can sit between. Defined last in source; deferred codegen emits it first."
+    "func_020072c4 (0x020072c4..0x020073a0) folded in as the low edge. Its only reference is the script-op member-function constant data_02086ca8 in this TU's .data, between the constants for func_020071e0 and func_020073a0. Below it, _ZN7Vector3D1Ev at 0x020072c0 ends the d_camera_dtor.cpp object, so no other TU can sit between. Defined last in source; deferred codegen emits it first.",
+    "BSS SPAN 0x0209b000..0x0209b270: arm9 .bss starts at 0x0209b000 with this TU (the TUs below it in .text order own no .bss) and runs size-ascending, 4, 4, nineteen 0x10 State records, then the 0x138 script-op table. KuppaScript.cpp's run starts at 0x0209b270 with the 1-byte gKuppaScriptNumPlayers, a drop from 0x138 to 1, so the TU owns the whole 0x270."
   ],
   "sections": [
     {
@@ -31,8 +32,8 @@
     },
     {
       "name": ".bss",
-      "start": "0x0209b008",
-      "end": "0x0209b138"
+      "start": "0x0209b000",
+      "end": "0x0209b270"
     }
   ],
   "functions": [
@@ -338,21 +339,21 @@
       "ordinal": 77
     },
     {
-      "symbol": "func_0200897c",
+      "symbol": "_ZN9dCamera_c13func_0200897cER5dBgCh",
       "address": "0x0200897c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200897c.cpp",
       "ordinal": 78
     },
     {
-      "symbol": "func_020089d8",
+      "symbol": "_ZN9dCamera_c13func_020089d8Ev",
       "address": "0x020089d8",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020089d8.c",
       "ordinal": 79
     },
     {
-      "symbol": "func_020089f8",
+      "symbol": "_ZN9dCamera_c13func_020089f8Ev",
       "address": "0x020089f8",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0200/func_020089f8.c",
@@ -380,35 +381,35 @@
       "ordinal": 83
     },
     {
-      "symbol": "func_02008b4c",
+      "symbol": "_Z20MovePointAlongSplineP7Vector3PsPiP14CutsceneSpline",
       "address": "0x02008b4c",
       "size": "0x00000168",
       "legacy_source": "src/unnamed/arm9/0200/func_02008b4c.c",
       "ordinal": 84
     },
     {
-      "symbol": "func_02008cb4",
+      "symbol": "_ZN9dCamera_c13func_02008cb4Ev",
       "address": "0x02008cb4",
       "size": "0x00000484",
       "legacy_source": "src/unnamed/arm9/0200/func_02008cb4.cpp",
       "ordinal": 85
     },
     {
-      "symbol": "func_02009138",
+      "symbol": "_ZN9dCamera_c13func_02009138Ei",
       "address": "0x02009138",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0200/func_02009138.c",
       "ordinal": 86
     },
     {
-      "symbol": "func_020091f8",
+      "symbol": "_ZN9dCamera_c13func_020091f8EP7Vector3ii",
       "address": "0x020091f8",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0200/func_020091f8.c",
       "ordinal": 87
     },
     {
-      "symbol": "func_0200928c",
+      "symbol": "_ZN9dCamera_c13func_0200928cEv",
       "address": "0x0200928c",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0200/func_0200928c.c",
@@ -429,14 +430,14 @@
       "ordinal": 90
     },
     {
-      "symbol": "func_020093d4",
+      "symbol": "_ZN9dCamera_c13func_020093d4Ei",
       "address": "0x020093d4",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020093d4.c",
       "ordinal": 91
     },
     {
-      "symbol": "func_020093f4",
+      "symbol": "_ZN9dCamera_c13func_020093f4Ei",
       "address": "0x020093f4",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020093f4.c",
@@ -520,14 +521,14 @@
       "ordinal": 103
     },
     {
-      "symbol": "func_020098e0",
+      "symbol": "_ZN9dCamera_c13func_020098e0Ev",
       "address": "0x020098e0",
       "size": "0x000001ac",
       "legacy_source": "src/unnamed/arm9/0200/func_020098e0.c",
       "ordinal": 104
     },
     {
-      "symbol": "func_02009a8c",
+      "symbol": "_ZN9dCamera_c13func_02009a8cEv",
       "address": "0x02009a8c",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0200/func_02009a8c.cpp",
@@ -541,7 +542,7 @@
       "ordinal": 106
     },
     {
-      "symbol": "func_02009d30",
+      "symbol": "_ZN9dCamera_c13func_02009d30Ev",
       "address": "0x02009d30",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/arm9/0200/func_02009d30.c",
@@ -597,28 +598,28 @@
       "ordinal": 114
     },
     {
-      "symbol": "func_02009e50",
+      "symbol": "_ZN9dCamera_c13func_02009e50Ev",
       "address": "0x02009e50",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009e50.c",
       "ordinal": 115
     },
     {
-      "symbol": "func_02009e70",
+      "symbol": "_ZN9dCamera_c13func_02009e70Ev",
       "address": "0x02009e70",
       "size": "0x0000109c",
       "legacy_source": "src/unnamed/arm9/0200/func_02009e70.cpp",
       "ordinal": 116
     },
     {
-      "symbol": "func_0200af0c",
+      "symbol": "_ZN9dCamera_c13func_0200af0cEv",
       "address": "0x0200af0c",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0200/func_0200af0c.c",
       "ordinal": 117
     },
     {
-      "symbol": "func_0200af20",
+      "symbol": "_ZN9dCamera_c13func_0200af20EP7Vector3S1_Ps",
       "address": "0x0200af20",
       "size": "0x000001dc",
       "legacy_source": "src/unnamed/arm9/0200/func_0200af20.cpp",
@@ -639,14 +640,14 @@
       "ordinal": 120
     },
     {
-      "symbol": "func_0200b798",
+      "symbol": "_ZN9dCamera_c13func_0200b798EP10CamViewObji",
       "address": "0x0200b798",
       "size": "0x000001f8",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b798.cpp",
       "ordinal": 121
     },
     {
-      "symbol": "func_0200b990",
+      "symbol": "_ZN9dCamera_c13func_0200b990EP10CamViewObji",
       "address": "0x0200b990",
       "size": "0x00000198",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b990.cpp",
@@ -660,28 +661,28 @@
       "ordinal": 123
     },
     {
-      "symbol": "func_0200bec4",
+      "symbol": "_ZN9dCamera_c13func_0200bec4EPiiPci",
       "address": "0x0200bec4",
       "size": "0x000004d0",
       "legacy_source": "src/func_0200bec4.c",
       "ordinal": 124
     },
     {
-      "symbol": "func_0200c394",
+      "symbol": "_ZN9dCamera_c13func_0200c394EiPvS0_PS0_Pi",
       "address": "0x0200c394",
       "size": "0x000002d8",
       "legacy_source": "src/func_0200c394.c",
       "ordinal": 125
     },
     {
-      "symbol": "func_0200c66c",
+      "symbol": "_ZN9dCamera_c13func_0200c66cEPvPiS1_S1_",
       "address": "0x0200c66c",
       "size": "0x00000374",
       "legacy_source": "src/func_0200c66c.c",
       "ordinal": 126
     },
     {
-      "symbol": "func_0200c9e0",
+      "symbol": "_ZN9dCamera_c13func_0200c9e0EPiS0_",
       "address": "0x0200c9e0",
       "size": "0x00000034",
       "legacy_source": "src/func_0200c9e0.c",
@@ -695,21 +696,21 @@
       "ordinal": 128
     },
     {
-      "symbol": "func_0200ca50",
+      "symbol": "_ZN9dCamera_c13func_0200ca50Ev",
       "address": "0x0200ca50",
       "size": "0x00000094",
       "legacy_source": "src/func_0200ca50.cpp",
       "ordinal": 129
     },
     {
-      "symbol": "func_0200cae4",
+      "symbol": "_ZN9dCamera_c13func_0200cae4Ev",
       "address": "0x0200cae4",
       "size": "0x00000074",
       "legacy_source": "src/func_0200cae4.cpp",
       "ordinal": 130
     },
     {
-      "symbol": "func_0200cb58",
+      "symbol": "_ZN9dCamera_c13func_0200cb58Ei",
       "address": "0x0200cb58",
       "size": "0x00000018",
       "legacy_source": "src/func_0200cb58.c",
@@ -723,7 +724,7 @@
       "ordinal": 132
     },
     {
-      "symbol": "func_0200cbe0",
+      "symbol": "_ZN9dCamera_c13func_0200cbe0Ev",
       "address": "0x0200cbe0",
       "size": "0x0000007c",
       "legacy_source": "src/func_0200cbe0.c",
@@ -751,14 +752,14 @@
       "ordinal": 136
     },
     {
-      "symbol": "func_0200cce4",
+      "symbol": "_ZN9dCamera_c13func_0200cce4Ev",
       "address": "0x0200cce4",
       "size": "0x0000025c",
       "legacy_source": "src/func_0200cce4.c",
       "ordinal": 137
     },
     {
-      "symbol": "func_0200cf40",
+      "symbol": "_ZN9dCamera_c13func_0200cf40Ev",
       "address": "0x0200cf40",
       "size": "0x00000108",
       "legacy_source": "src/func_0200cf40.c",
@@ -961,7 +962,7 @@
       "ordinal": 166
     },
     {
-      "symbol": "func_0200d89c",
+      "symbol": "_ZN9dCamera_c13func_0200d89cEv",
       "address": "0x0200d89c",
       "size": "0x00000010",
       "legacy_source": "src/func_0200d89c.c",
@@ -982,7 +983,7 @@
       "ordinal": 169
     },
     {
-      "symbol": "func_0200d954",
+      "symbol": "_ZN9dCamera_c13func_0200d954Es",
       "address": "0x0200d954",
       "size": "0x0000007c",
       "legacy_source": "src/func_0200d954.c",
@@ -1033,6 +1034,20 @@
   ],
   "data": [],
   "bss": [
+    {
+      "symbol": "sPrevTurnInput$1940",
+      "address": "0x0209b000",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_02009e70's function-local static s32: last frame's turn-button bits; it plays sound 0xe (func_02012790) only when the bits go nonzero while this is still 0, then stores them, and clears it when no turn button is held. Its only reference is func_02009e70 (0x0200af08); the crt0 words at 0x02004ae0/0x02004ae4 are the arm9 .bss-start bounds, not a reader. No initializer, so no guard."
+    },
+    {
+      "symbol": "_ZGVsScriptOps$2648",
+      "address": "0x0209b004",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of func_02008550's function-local static sScriptOps; mwcc emits the ands #1 test, the orr #1 store and the 39 copies ahead of the dispatch exactly as retail (0x020088d8)"
+    },
     {
       "symbol": "data_0209b008",
       "address": "0x0209b008",
@@ -1165,6 +1180,13 @@
       "size": "0x10",
       "binding": "STB_GLOBAL",
       "evidence": "dCamera_c::State (enter CamPmf, execute CamPmf) plain-copied by __sinit_d_camera.cpp"
+    },
+    {
+      "symbol": "sScriptOps$2648",
+      "address": "0x0209b138",
+      "size": "0x138",
+      "binding": "STB_GLOBAL",
+      "evidence": "func_02008550's function-local static CamScriptOp[39] (8-byte member-function pointers), initialised on first call from the .data constants data_02086bc0..data_02086e38 and indexed by command byte 6; only func_02008550 references it (0x020088e0)"
     }
   ],
   "init": [
@@ -1197,6 +1219,41 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "sPrevTurnInput$1940",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static; DSD requires a configured global symbol at 0x0209b000, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsScriptOps$2648",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static guard; DSD requires a configured global symbol at 0x0209b004, and changing the ELF binding preserves storage, relocations and bytes"
+    },
+    {
+      "symbol": "sScriptOps$2648",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static table; DSD requires a configured global symbol at 0x0209b138, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
+    }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "sPrevTurnInput$1928",
+      "to": "sPrevTurnInput$1940",
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
+    },
+    {
+      "from": "_ZGVsScriptOps$2630",
+      "to": "_ZGVsScriptOps$2648",
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types)."
+    },
+    {
+      "from": "sScriptOps$2630",
+      "to": "sScriptOps$2648",
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types)."
     }
   ],
   "relocations": [
@@ -1785,7 +1842,8 @@
     "Fold of dCamera_c: 16 named members plus 37 camera state handlers/dispatchers recovered as unmangled func_* symbols. mwccarm emits .text in reverse source order, so the file runs ROM-descending from classInit. The recovered bodies were C; each sits under `#pragma cplusplus off` (the pinned -lang c++ build parses those regions as C89, so block-top declarations only) keeping the unmangled symbol names.",
     "Leftovers: the C bodies keep raw-offset member access ((char*)self + 0xNNN) where the real field names are not yet recovered, and the camera state records are TU-local opaque typedefs (CamEntryE, CamFixedTab, CamViewObj, CamStateBase, CamStateIdx, CamJitter, the dBgCh_* shadows). POD `Vec3` shadows replace Vector3 inside the C regions because Vector3's empty destructor makes it non-POD and inflates the stack frame by 8 bytes (measured on func_0200c394).",
     "The 88 functions below 0x0200bec4 were one-function shards (66 C, 20 C++); they now use dCamera_c/dActor_c/daPly_c member names in C++ under extern \"C\" (no cplusplus-off regions), share the file's CamMode/CamViewObj/Entry3 records, and keep their ROM names.",
-    "Static initializer folded: the nineteen dCamera_c::State records (two CamPmf each) are defined in this TU. mwcc emits __sinit_d_camera.cpp, byte- and relocation-identical to retail __sinit_02073a24, plus the .ctor word at 0x02086b60 and the .bss span 0x0209b008..0x0209b138. The .data PMF constants stay unowned. No destructor-registration nodes and no @ temps."
+    "Static initializer folded: the nineteen dCamera_c::State records (two CamPmf each) are defined in this TU. mwcc emits __sinit_d_camera.cpp, byte- and relocation-identical to retail __sinit_02073a24, plus the .ctor word at 0x02086b60 and the .bss span 0x0209b008..0x0209b138. The .data PMF constants stay unowned. No destructor-registration nodes and no @ temps.",
+    "Function-local statics folded (0x0209b000..0x0209b008, 0x0209b138..0x0209b270): func_02008550's hand-written `if ((data_0209b004 & 1) == 0) { data_0209b004 |= 1; data_0209b138[i] = ...; }` was the decompiler's rendering of a function-local static with a dynamic initializer. It is now `static CamScriptOp sScriptOps[39] = { data_02086c80, ... };`, and mwcc emits the guard test, the guard store and the 39 copies itself, byte- and relocation-identical. func_02009e70's data_0209b000 is its function-local `static s32 sPrevTurnInput;`. The compiler names are sScriptOps$2648, _ZGVsScriptOps$2648 and sPrevTurnInput$1940; the .data member-function constants still stay unowned, so the initializer names them by address."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1797,13 +1855,24 @@
     "functions_declared": 142,
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN7dView_cD2Ev",
+        "_ZN7dBase_cD2Ev",
+        "_ZN9Matrix4x3D1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN7dBase_cD2Ev",
+        "_ZN7dView_cD2Ev",
+        "_ZN9Matrix4x3D1Ev"
       ],
       "droppedSections": [
-        19
+        41,
+        297,
+        298,
+        299,
+        300,
+        301
       ],
       "data": [],
       "dataExternalized": [],
@@ -1812,7 +1881,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1859,14 +1928,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x0209b008",
-          "end": "0x0209b138",
+          "start": "0x0209b000",
+          "end": "0x0209b270",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 163
+          "LICENSED": 166
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1877,19 +1946,19 @@
           {
             "section": ".init",
             "original": [
-              301
+              304
             ],
             "desired": [
-              301
+              304
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              299
+              302
             ],
             "desired": [
-              299
+              302
             ]
           },
           {
@@ -1913,28 +1982,34 @@
               20,
               21,
               22,
-              23
+              23,
+              24,
+              25,
+              26
             ],
             "desired": [
+              6,
+              5,
               22,
               21,
-              20,
+              12,
               19,
               18,
               17,
               16,
               15,
               14,
-              13,
-              12,
+              24,
               11,
+              20,
               10,
               9,
-              8,
+              13,
+              23,
               7,
-              6,
-              5,
-              23
+              8,
+              25,
+              26
             ]
           }
         ],
@@ -1961,28 +2036,34 @@
                 20,
                 21,
                 22,
-                23
+                23,
+                24,
+                25,
+                26
               ],
               "desired": [
+                6,
+                5,
                 22,
                 21,
-                20,
+                12,
                 19,
                 18,
                 17,
                 16,
                 15,
                 14,
-                13,
-                12,
+                24,
                 11,
+                20,
                 10,
                 9,
-                8,
+                13,
+                23,
                 7,
-                6,
-                5,
-                23
+                8,
+                25,
+                26
               ],
               "slots": [
                 5,
@@ -2003,11 +2084,14 @@
                 20,
                 21,
                 22,
-                23
+                23,
+                24,
+                25,
+                26
               ]
             }
           ],
-          "symbolIndices": 19,
+          "symbolIndices": 22,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null

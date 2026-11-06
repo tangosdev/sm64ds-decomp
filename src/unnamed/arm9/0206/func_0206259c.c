@@ -1,7 +1,5 @@
-extern int WM_GetSystemWork(void);
-extern int WM_CheckStateEx(int a, int b);
+#include "private/wm_views.h"
 extern void WM_SetCallbackTable(int i, int val);
-extern int WM_SendCommand(int a, int b, int c);
 
 int func_0206259c(int a, int b)
 {

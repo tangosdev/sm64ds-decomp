@@ -5,8 +5,7 @@
  *
  * leftovers:
  * - defer_codegen is off for the whole file, so definitions run low
- *   address first. func_02044284 needs opt_common_subs off and the other
- *   bodies need it on; under deferred codegen one setting covers the file.
+ *   address first.
  * - data_020a4b68 is the currently executing process node. It stays
  *   void *: ActorBase.cpp and ShowCrashScreen.c spell it that way, and
  *   the fLiNdBa_c destructor's old fLiNdBa_c * spelling was a second claim
@@ -43,8 +42,7 @@ fLiNdBa_c::~fLiNdBa_c() {
 }
 
 /* func_020441cc's own view of a tree node and the descriptor that names the
- * callback. The namespace keeps this Obj apart from the pending-sequence Obj
- * further down. */
+ * callback. */
 namespace ProcessTree {
 class Obj {
 public:
@@ -148,10 +146,12 @@ void *Thing::func_020441cc() {
 /* The pending lifecycle sequence fBase_c holds at +0x48. Slot 2 runs one
  * table entry and returns the new state; slot 3 is called on each entry
  * already run when the sequence is drained. The layout is ROM-proven; the
- * class name is not. fBase_c declares the member void *, nothing in the tree
- * stores to it, and no ROM vtable or RTTI is tied to it, so v00..v08 and m3
- * stay placeholders until the class is found. */
-struct Obj {
+ * class name is not. LifecycleSequence is coined from its role: fBase_c's
+ * lifecycleState member holds it and BeforeCleanupResources/
+ * AfterCleanupResources step and drain it. fBase_c declares the member
+ * void *, nothing in the tree stores to it, and no ROM vtable or RTTI is tied
+ * to it, so v00..v08 and m3 stay placeholders until the class is found. */
+struct LifecycleSequence {
     virtual void v00();
     virtual void v04();
     virtual int v08(void *p);
@@ -165,12 +165,12 @@ struct Obj {
     s16 f12;    // 0x12
 };
 
-extern "C" int func_02044284(Obj *self, int flag);
+extern "C" int func_02044284(LifecycleSequence *self, int flag);
 
 /* Step a pending sequence once. Returns 0 while it is still pending. */
 // @symbol func_0204424c
 extern "C" int func_0204424c(char *c) {
-    Obj *self = (Obj *)c;
+    LifecycleSequence *self = (LifecycleSequence *)c;
     if (self->state == 1)
         self->state = func_02044284(self, 0);
     if (self->state == 1)
@@ -180,10 +180,8 @@ extern "C" int func_0204424c(char *c) {
 
 /* Run table entries from idx while each returns state 2. With flag == 0,
  * run at most one. */
-#pragma push
-#pragma opt_common_subs off
 // @symbol func_02044284
-extern "C" int func_02044284(Obj *self, int flag) {
+extern "C" int func_02044284(LifecycleSequence *self, int flag) {
     void **arr = self->arr;
     s16 i;
 
@@ -191,7 +189,7 @@ extern "C" int func_02044284(Obj *self, int flag) {
         return 2;
 
     i = self->idx;
-    while (arr[i] != 0) {
+    while (self->arr[self->idx] != 0) {
         self->state = self->v08(arr[i]);
         if (self->state != 2)
             break;
@@ -204,12 +202,11 @@ extern "C" int func_02044284(Obj *self, int flag) {
     }
     return self->state;
 }
-#pragma pop
 
 /* Drain a started sequence: call slot 3 on each entry already run, newest
  * first. */
 // @symbol func_02044334
-extern "C" void func_02044334(Obj *self) {
+extern "C" void func_02044334(LifecycleSequence *self) {
     if (self->arr == 0)
         return;
     if (self->state == 0)

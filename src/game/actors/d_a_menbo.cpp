@@ -20,8 +20,7 @@
  *
  * common.h is included first so Matrix4x3 is the flat twelve words the two
  * matrix copies were matched under. defer_codegen is off, so the bodies are
- * ROM-ascending. opt_strength_reduction stays off for the file;
- * opt_common_subs is off except around the ground probe and Behavior.
+ * ROM-ascending. opt_strength_reduction stays off for the file.
  *
  * deslop leftovers:
  * - func_ov090_02131ac4: `mStateTimer == 0` is ldrsh. The ROM is ldrh, one
@@ -42,9 +41,10 @@
 #include "dExtFrameCtrl_c.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 #pragma opt_strength_reduction off
-#pragma opt_common_subs off
 
 struct BMD_File;
 struct BCA_File;
@@ -69,8 +69,6 @@ struct MenboAnimationFilePtr : SharedFilePtr {
     ~MenboAnimationFilePtr();
 };
 
-struct CoinVec3 { s32 x, y, z; };
-
 /* By-value Fix12<int> in a mangled name; the calls pass a bare word. */
 typedef int LocFix12;
 
@@ -78,17 +76,17 @@ extern "C" {
 
 void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void  Matrix4x3_FromRotationY(void *m, s16 angle);
+void Matrix4x3_FromRotationY(void *m, int angle);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s16 rx, s16 ry, s16 rz);
+void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int rx, int ry, int rz);
 void  Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 void  Vec3_Asr(void *dst, void *src, int n);
 int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int   AngleDiff(int a, int b);
-int   ApproachAngle(s16 *cur, int target, int divisor, int band, int maxStep);
+int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 u16   DecIfAbove0_Short(u16 *p);
 int   RandomIntInternal(int *seed);
 void func_02012694(unsigned int id, const Vector3 *pos);
@@ -105,7 +103,6 @@ void  func_ov002_020aea30(void *self, void *actor, void *collision);
 
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
-extern int           data_0209e650;
 extern unsigned char data_0209f2d8;
 extern signed char gCurrentSublevel;
 extern int           data_0209f32c;
@@ -286,7 +283,6 @@ void func_ov090_021310b4(daMenbo_c *c)
     ((daPly_c *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
 }
 
-#pragma opt_common_subs on
 // @symbol func_ov090_02131378
 /* Ground probe. Mode 2 on course 0x12 skips it and only spawns ripples.
  * Otherwise a hit below the published water height (data_0209f32c) means
@@ -325,7 +321,6 @@ void func_ov090_02131378(daMenbo_c *c)
         c->mVertSpeed = 0;
     }
 }
-#pragma opt_common_subs off
 
 // @symbol func_ov090_021314a0
 /* 1 while a player is close and within a quarter turn of the heading.
@@ -404,7 +399,7 @@ int daMenbo_c::func_ov090_02131648()
     s16 ha;
     s32 *p390;
 
-    rnd = (u32)RandomIntInternal(&data_0209e650) >> 8;
+    rnd = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
     dist = Vec3_Dist(&self->mPos, (Vector3 *)&self->mAnchorPosX);
 
     if (((((u32) static_cast<dExtFrameCtrl_c &>(self->mAnmModel).currFrame) << 4) >> 0x10 & 0xf) ==
@@ -559,10 +554,10 @@ int daMenbo_c::func_ov090_02131ac4()
         mAnchorPosX = mPosX;
         mAnchorPosY = mPosY;
         mAnchorPosZ = mPosZ;
-        mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650) >> 8) << 0xd);
+        mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
-    ApproachAngle(&mPrevAngleY, (s16)mTargetAngleY, 1, 0x100, 0x100);
+    ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x100);
     if (*(unsigned short *)&mStateTimer == 0)
         func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
     return 1;
@@ -575,13 +570,13 @@ int daMenbo_c::func_ov090_02131b94()
 {
     unsigned int r;
     short *s;
-    r = (unsigned)RandomIntInternal(&data_0209e650);
+    r = (unsigned)RandomIntInternal(&data_0209e650.value);
     s = (short *)&mTargetAngleY;
     *s = (short)(*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650);
+    r = (unsigned)RandomIntInternal(&data_0209e650.value);
     s = (short *)&mTargetAngleY;
     *s = (short)(*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650);
+    r = (unsigned)RandomIntInternal(&data_0209e650.value);
     mStateTimer = (short)(((r >> 8) & 0x1f) + 0x96);
     mAnimSpeed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134490.filePtr, 0, 0x1000, 0);
@@ -608,7 +603,7 @@ int daMenbo_c::func_ov090_02131c48()
     }
 
     if (mTurnTimer != 0) {
-        ApproachAngle(&mPrevAngleY, (s16)mTargetAngleY, 1, 0x1000, 0x1000);
+        ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x1000, 0x1000);
     } else {
         if (static_cast<dExtFrameCtrl_c &>(mAnmModel).Finished()) {
             s32 *q = &mAnimLoops;
@@ -622,7 +617,7 @@ int daMenbo_c::func_ov090_02131c48()
         mAnchorPosX = mPosX;
         mAnchorPosY = mPosY;
         mAnchorPosZ = mPosZ;
-        mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650) >> 8) << 13);
+        mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) << 13);
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
 
@@ -694,7 +689,6 @@ int daMenbo_c::Render()
     return 1;
 }
 
-#pragma opt_common_subs on
 // @symbol _ZN9daMenbo_c8BehaviorEv
 /* Yoshi's mouth, a killing blow, the death tumble, or one ordinary frame.
  * Course 0x15 area 1 treats a water hit on the mesh as a knock into the
@@ -733,7 +727,7 @@ int daMenbo_c::Behavior()
             }
         }
         if (mDeathState != 1 && mPosY <= mSurfaceY) {
-            CoinVec3 v;
+            VecFx32 v;
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
@@ -888,7 +882,7 @@ int daMenbo_c::InitResources()
         }
 
         {
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
             *(short *)&mTargetAngleY = ang;
             mPrevAngleY = *(short *)&mTargetAngleY;

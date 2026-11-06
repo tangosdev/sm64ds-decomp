@@ -55,7 +55,7 @@ extern "C" {
 extern void func_02012694(unsigned int, void *);
 extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s32 LenVec3(Vector3 *value);
+extern s32 LenVec3(const Vector3 *value);
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *matrix, Vector3 *b);
 }

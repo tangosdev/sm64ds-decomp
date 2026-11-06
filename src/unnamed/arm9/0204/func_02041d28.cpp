@@ -15,8 +15,9 @@ extern int data_02082158;
    registered with func_020658c0 (with the first page as data when the region
    fits in 0x400 bytes) and moved to the ready list by func_02041b24. Each
    waiting child then takes a reference and gets the node's file id in its
-   reply slot. Only while FILE_SHARE_WORK->mState is set. */
-void func_02041d28(char *r7, FileShareNode *node) {
+   reply slot. Only while FILE_SHARE_WORK->mState is set. The third word is
+   unused: func_02042254 passes 1 (reloaded from its frame into r2). */
+void func_02041d28(char *r7, FileShareNode *node, int) {
     unsigned int saved = IRQ::Disable();
     int mask;
 

@@ -41,8 +41,7 @@
  * other state, and one object cannot place a definition in two runs. By
  * link order that run is d_view.cpp's.
  *
- * The file is ROM-ascending under `#pragma defer_codegen off`, which also
- * keeps ProcessKuppaScript's opt_common_subs bracket to that one function.
+ * The file is ROM-ascending under `#pragma defer_codegen off`.
  */
 
 #pragma defer_codegen off
@@ -56,6 +55,7 @@
 #include "private/controller_input.h"
 #include "SaveData.h"
 #include "Sound.h"
+#include "CutsceneSpline.h"
 
 struct dCamera_c;
 struct daDemo_c;
@@ -128,7 +128,7 @@ extern u8 data_0209f250;               /* CURR_PLAYER_ID */
 extern u8 data_0209f2d8;               /* CURRENT_GAMEMODE */
 extern dActor_c *data_0209f394[];      /* PLAYER_ARR */
 extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
-extern int data_0209caa0[];            /* SaveData; [1] is flags1 */
+extern SaveBlock data_0209caa0;        /* the live save block */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
 extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
 extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */
@@ -144,20 +144,13 @@ extern int data_ov002_02110aec;        /* WATERFALL_SOUNDS_DISABLED */
 #define KS_S16(v) (u8)(v), (u8)((v) >> 8)
 #define KS_PTR(p) (u32) & (p) & 0xff, ((u32) & (p) >> 8) & 0xff, ((u32) & (p) >> 16) & 0xff, ((u32) & (p) >> 24) & 0xff
 
-/* A camera path for a camera record: numPoints spline points, SM64's
- * CutsceneSplinePoint layout. All but two lists end with index -1. */
-struct KuppaScriptPathPoint {
-    s8 index;
-    u8 speed;
-    s16 x;
-    s16 y;
-    s16 z;
-};
-
-struct KuppaScriptPath {
-    s32 numPoints;
-    KuppaScriptPathPoint *points;
-};
+/* The camera paths below are CutsceneSpline objects (CutsceneSpline.h).
+ * They are ports of Super Mario 64's cutscene splines and keep their names:
+ * index and speed columns are copied, and the points are the N64 ones moved
+ * by a fixed offset (castle grounds z+2000, Dire, Dire Docks a constant
+ * shift, the intro flyover turned 180 degrees and raised 260). A path's
+ * points are its name plus Points. All but two point lists end with
+ * index -1; gEndWavingFocus and gEndWavingPos lack it, as on the N64. */
 
 u8 data_020876d4[] = {6,    KS_SCENE_FADE, KS_S16(0),  KS_S16(29), 7,
                       0x03, KS_S16(30),    KS_S16(30), 0x02,       0};
@@ -167,194 +160,194 @@ u8 data_0208776c[] = {14,         KS_CAMERA,    KS_S16(0), KS_S16(20), 0x12, 0x0
                       0x10,       0x10,         0x00,      0x00,       0x00, 13,   KS_CAMERA,
                       KS_S16(30), KS_S16(30),   0x18,      0x00,       0x02, 0x28, 0x00,
                       0x00,       0x80,         0};
-KuppaScriptPathPoint data_02087798[] = {
+CutsceneSplinePoint sEndingMarioToPeachFocusPoints[] = {
     {0, 50, -37, 1020, 668}, {1, 20, -36, 1012, 670}, {2, 20, -24, 1006, 785},
     {3, 20, 28, 1002, 776},  {4, 24, 45, 1013, 738},  {-1, 0, 56, 1071, 754},
 };
-KuppaScriptPath data_020876bc = {6, data_02087798};
-KuppaScriptPathPoint data_020877c8[] = {
+CutsceneSpline sEndingMarioToPeachFocus = {6, sEndingMarioToPeachFocusPoints};
+CutsceneSplinePoint sTHIWigglerCreditsSplineFocusPoints[] = {
     {1, 50, -1053, 2512, -928}, {2, 50, -1234, 2377, -114}, {0, 50, -758, 2147, 1054},
     {0, 0, -758, 2147, 1054},   {0, 0, -758, 2147, 1054},   {-1, 0, -758, 2147, 1054},
 };
-KuppaScriptPath data_0208759c = {6, data_020877c8};
-KuppaScriptPathPoint data_020877f8[] = {
+CutsceneSpline sTHIWigglerCreditsSplineFocus = {6, sTHIWigglerCreditsSplineFocusPoints};
+CutsceneSplinePoint sEndingMarioToPeachPosPoints[] = {
     {0, 0, -130, 1111, 185}, {1, 0, -131, 1052, 180}, {2, 0, -271, 1008, 349},
     {3, 0, -439, 1043, 602}, {4, 0, -433, 1040, 880}, {-1, 0, -465, 1062, 811},
 };
-KuppaScriptPath data_0208769c = {6, data_020877f8};
-KuppaScriptPathPoint data_02087828[] = {
+CutsceneSpline sEndingMarioToPeachPos = {6, sEndingMarioToPeachPosPoints};
+CutsceneSplinePoint sTHIWigglerCreditsSplinePositionsPoints[] = {
     {1, 0, -1411, 2474, -1276}, {2, 0, -1606, 2479, -434}, {0, 0, -1170, 2122, 1337},
     {0, 0, -1170, 2122, 1337},  {0, 0, -1170, 2122, 1337}, {-1, 0, -1170, 2122, 1337},
 };
-KuppaScriptPath data_0208754c = {6, data_02087828};
-KuppaScriptPathPoint data_02087c68[] = {
+CutsceneSpline sTHIWigglerCreditsSplinePositions = {6, sTHIWigglerCreditsSplinePositionsPoints};
+CutsceneSplinePoint sCCMOutsideCreditsSplineFocusPoints[] = {
     {1, 50, 1003, -1480, 5170},  {2, 50, -2050, -1600, 4248}, {3, 50, -3957, -1401, 3426},
     {0, 50, -4730, -1215, 1795}, {0, 0, -4730, -1215, 1795},  {0, 0, -4730, -1215, 1795},
     {-1, 0, -4730, -1215, 1795},
 };
-KuppaScriptPath data_020875e4 = {7, data_02087c68};
-KuppaScriptPathPoint data_02087ca0[] = {
+CutsceneSpline sCCMOutsideCreditsSplineFocus = {7, sCCMOutsideCreditsSplineFocusPoints};
+CutsceneSplinePoint sBBHCreditsSplinePositionsPoints[] = {
     {1, 0, 1088, 341, 2447},   {2, 0, 1338, 610, 2808},  {3, 0, 2267, 1612, 2966},
     {0, 0, 2296, 1913, 2990},  {0, 0, 2296, 1913, 2990}, {0, 0, 2296, 1913, 2990},
     {-1, 0, 2296, 1913, 2990},
 };
-KuppaScriptPath data_0208763c = {7, data_02087ca0};
-KuppaScriptPathPoint data_02087cd8[] = {
+CutsceneSpline sBBHCreditsSplinePositions = {7, sBBHCreditsSplinePositionsPoints};
+CutsceneSplinePoint sCCMOutsideCreditsSplinePositionsPoints[] = {
     {1, 0, 1452, -1390, 5307},   {2, 0, -1588, -1537, 4406}, {3, 0, -3852, -1448, 3913},
     {0, 0, -5199, -1366, 1886},  {0, 0, -5199, -1366, 1886}, {0, 0, -5199, -1366, 1886},
     {-1, 0, -5199, -1366, 1886},
 };
-KuppaScriptPath data_020876cc = {7, data_02087cd8};
-KuppaScriptPathPoint data_02087d10[] = {
+CutsceneSpline sCCMOutsideCreditsSplinePositions = {7, sCCMOutsideCreditsSplinePositionsPoints};
+CutsceneSplinePoint sSLCreditsSplineFocusPoints[] = {
     {0, 50, 875, 6411, 5763}, {0, 50, 1659, 4951, 3313}, {0, 50, 2630, 3565, 1215},
     {0, 50, 2417, 4056, 639}, {0, 0, 2417, 4056, 639},   {0, 0, 2417, 4056, 639},
     {-1, 0, 2417, 4056, 639},
 };
-KuppaScriptPath data_0208760c = {7, data_02087d10};
-KuppaScriptPathPoint data_02087d48[] = {
+CutsceneSpline sSLCreditsSplineFocus = {7, sSLCreditsSplineFocusPoints};
+CutsceneSplinePoint sSLCreditsSplinePositionsPoints[] = {
     {0, 0, 939, 6654, 6196},  {0, 0, 1873, 5160, 3714}, {0, 0, 3120, 3564, 1314},
     {0, 0, 2881, 4231, 573},  {0, 0, 2881, 4231, 573},  {0, 0, 2881, 4231, 573},
     {-1, 0, 2881, 4231, 573},
 };
-KuppaScriptPath data_02087634 = {7, data_02087d48};
-KuppaScriptPathPoint data_02087d80[] = {
+CutsceneSpline sSLCreditsSplinePositions = {7, sSLCreditsSplinePositionsPoints};
+CutsceneSplinePoint sWDWCreditsSplineFocusPoints[] = {
     {0, 50, 3637, 2460, 3294},  {0, 50, 1984, 2067, 918},  {0, 50, 1941, 2255, -261},
     {0, 50, 1779, 2587, -1158}, {0, 0, 1779, 2587, -1158}, {0, 0, 1779, 2587, -1158},
     {-1, 0, 1779, 2587, -1158},
 };
-KuppaScriptPath data_02087584 = {7, data_02087d80};
-KuppaScriptPathPoint data_02087db8[] = {
+CutsceneSpline sWDWCreditsSplineFocus = {7, sWDWCreditsSplineFocusPoints};
+CutsceneSplinePoint sWDWCreditsSplinePositionsPoints[] = {
     {0, 0, 3927, 2573, 3685},  {0, 0, 2389, 2054, 1210}, {0, 0, 2309, 2069, 22},
     {0, 0, 2122, 2271, -979},  {0, 0, 2122, 2271, -979}, {0, 0, 2122, 2271, -979},
     {-1, 0, 2122, 2271, -979},
 };
-KuppaScriptPath data_02087654 = {7, data_02087db8};
-KuppaScriptPathPoint data_02087df0[] = {
+CutsceneSpline sWDWCreditsSplinePositions = {7, sWDWCreditsSplinePositionsPoints};
+CutsceneSplinePoint sTTCCreditsSplineFocusPoints[] = {
     {1, 50, -1554, 742, -1063}, {2, 50, -1245, 571, -1102}, {3, 50, -1220, 603, -1151},
     {0, 50, -1412, 520, -1053}, {0, 0, -1412, 520, -1053},  {0, 0, -1412, 520, -1053},
     {-1, 0, -1412, 520, -1053},
 };
-KuppaScriptPath data_02087694 = {7, data_02087df0};
-KuppaScriptPathPoint data_02087e28[] = {
+CutsceneSpline sTTCCreditsSplineFocus = {7, sTTCCreditsSplineFocusPoints};
+CutsceneSplinePoint sTTCCreditsSplinePositionsPoints[] = {
     {1, 0, -1724, 277, -994},   {2, 0, -1720, 456, -995},  {3, 0, -1655, 810, -1014},
     {0, 0, -1753, 883, -1009},  {0, 0, -1753, 883, -1009}, {0, 0, -1753, 883, -1009},
     {-1, 0, -1753, 883, -1009},
 };
-KuppaScriptPath data_020875b4 = {7, data_02087e28};
-KuppaScriptPathPoint data_02087e60[] = {
+CutsceneSpline sTTCCreditsSplinePositions = {7, sTTCCreditsSplinePositionsPoints};
+CutsceneSplinePoint sRRCreditsSplineFocusPoints[] = {
     {0, 50, -1376, 3885, -81},  {0, 50, -146, 3343, -734}, {0, 50, 1570, 3446, -1415},
     {0, 50, 2794, 3627, -3218}, {0, 0, 2794, 3627, -3218}, {0, 0, 2794, 3627, -3218},
     {-1, 0, 2794, 3627, -3218},
 };
-KuppaScriptPath data_02087534 = {7, data_02087e60};
-KuppaScriptPathPoint data_02087e98[] = {
+CutsceneSpline sRRCreditsSplineFocus = {7, sRRCreditsSplineFocusPoints};
+CutsceneSplinePoint sRRCreditsSplinePositionsPoints[] = {
     {0, 0, -1818, 4036, 97},    {0, 0, -575, 3460, -505},  {0, 0, 1191, 3611, -1134},
     {0, 0, 2701, 3777, -3686},  {0, 0, 2701, 3777, -3686}, {0, 0, 2701, 3777, -3686},
     {-1, 0, 2701, 3777, -3686},
 };
-KuppaScriptPath data_0208761c = {7, data_02087e98};
-KuppaScriptPathPoint data_02087ed0[] = {
+CutsceneSpline sRRCreditsSplinePositions = {7, sRRCreditsSplinePositionsPoints};
+CutsceneSplinePoint sEndingLookAtSkyFocusPoints[] = {
     {0, 50, 484, 1468, 1112}, {0, 73, 479, 1472, 1108}, {0, 50, 351, 1817, 1082},
     {0, 51, 351, 1922, 1402}, {0, 0, 636, 2027, 1585},  {0, 0, 636, 2027, 1585},
     {-1, 0, 636, 2027, 1585},
 };
-KuppaScriptPath data_020875ec = {7, data_02087ed0};
-KuppaScriptPathPoint data_02087f08[] = {
+CutsceneSpline sEndingLookAtSkyFocus = {7, sEndingLookAtSkyFocusPoints};
+CutsceneSplinePoint sBBHCreditsSplineFocusPoints[] = {
     {1, 50, 1160, 263, 1958},  {2, 50, 1034, 472, 2436}, {3, 50, 1915, 1833, 2688},
     {0, 50, 2134, 2316, 2742}, {0, 0, 2134, 2316, 2742}, {0, 0, 2134, 2316, 2742},
     {-1, 0, 2134, 2316, 2742},
 };
-KuppaScriptPath data_02087554 = {7, data_02087f08};
-KuppaScriptPathPoint data_02087f80[] = {
+CutsceneSpline sBBHCreditsSplineFocus = {7, sBBHCreditsSplineFocusPoints};
+CutsceneSplinePoint sDDDSubCreditsSplineFocusPoints[] = {
     {0, 50, 8350, 3429, 4798}, {0, 50, 8165, 2084, 4557}, {0, 50, 8612, 1995, 3068},
     {0, 50, 9117, 1906, 1012}, {0, 50, 8032, 2131, 174},  {0, 0, 8032, 2131, 174},
     {0, 0, 8032, 2131, 174},   {-1, 0, 8032, 2131, 174},
 };
-KuppaScriptPath data_0208767c = {8, data_02087f80};
-KuppaScriptPathPoint data_02087fc0[] = {
+CutsceneSpline sDDDSubCreditsSplineFocus = {8, sDDDSubCreditsSplineFocusPoints};
+CutsceneSplinePoint sJRBCreditsSplinePositionsPoints[] = {
     {0, 0, 5538, -4272, 2376}, {0, 0, 5997, -3303, 2261},  {0, 0, 6345, -3255, 2179},
     {0, 0, 6345, -3255, 2179}, {0, 0, 6143, -3259, 2198},  {0, 0, 6143, -3259, 2198},
     {0, 0, 6143, -3259, 2198}, {-1, 0, 6143, -3259, 2198},
 };
-KuppaScriptPath data_0208764c = {8, data_02087fc0};
-KuppaScriptPathPoint data_02088000[] = {
+CutsceneSpline sJRBCreditsSplinePositions = {8, sJRBCreditsSplinePositionsPoints};
+CutsceneSplinePoint sCCMSlideCreditsSplineFocusPoints[] = {
     {0, 50, -5911, 6758, -5908}, {1, 50, -5911, 6758, -5908}, {2, 50, -5652, 6814, -5968},
     {3, 50, -5277, 6801, -6043}, {0, 50, -5179, 6804, -6060}, {0, 0, -5179, 6804, -6060},
     {0, 0, -5179, 6804, -6060},  {-1, 0, -5179, 6804, -6060},
 };
-KuppaScriptPath data_020876c4 = {8, data_02088000};
-KuppaScriptPathPoint data_02088040[] = {
+CutsceneSpline sCCMSlideCreditsSplineFocus = {8, sCCMSlideCreditsSplineFocusPoints};
+CutsceneSplinePoint sDDDSubCreditsSplinePositionsPoints[] = {
     {0, 0, 8494, 3417, 5277}, {0, 0, 8386, 2428, 4845}, {0, 0, 8845, 2059, 3506},
     {0, 0, 9519, 1894, 1309}, {0, 0, 8482, 2020, 362},  {0, 0, 8482, 2020, 362},
     {0, 0, 8482, 2020, 362},  {-1, 0, 8482, 2020, 362},
 };
-KuppaScriptPath data_020875dc = {8, data_02088040};
-KuppaScriptPathPoint data_02088080[] = {
+CutsceneSpline sDDDSubCreditsSplinePositions = {8, sDDDSubCreditsSplinePositionsPoints};
+CutsceneSplinePoint sCCMSlideCreditsSplinePositionsPoints[] = {
     {0, 0, -6324, 6745, -5626}, {1, 0, -6324, 6745, -5626},  {2, 0, -6108, 6762, -5770},
     {3, 0, -5771, 6787, -5962}, {0, 0, -5672, 6790, -5979},  {0, 0, -5672, 6790, -5979},
     {0, 0, -5672, 6790, -5979}, {-1, 0, -5672, 6790, -5979},
 };
-KuppaScriptPath data_0208755c = {8, data_02088080};
-KuppaScriptPathPoint data_020880c0[] = {
+CutsceneSpline sCCMSlideCreditsSplinePositions = {8, sCCMSlideCreditsSplinePositionsPoints};
+CutsceneSplinePoint sJRBCreditsSplineFocusPoints[] = {
     {0, 50, 5261, -4683, 2443}, {0, 50, 5726, -3675, 2456}, {0, 50, 6268, -2817, 2409},
     {0, 50, 6596, -2866, 2369}, {0, 50, 7176, -3053, 2043}, {0, 0, 7176, -3053, 2043},
     {0, 0, 7176, -3053, 2043},  {-1, 0, 7176, -3053, 2043},
 };
-KuppaScriptPath data_02087564 = {8, data_020880c0};
-KuppaScriptPathPoint data_02088100[] = {
+CutsceneSpline sJRBCreditsSplineFocus = {8, sJRBCreditsSplineFocusPoints};
+CutsceneSplinePoint sBoBCreditsSplineFocusPoints[] = {
     {0, 30, 5817, 3306, 4507}, {0, 40, 4025, 3378, 1593},  {0, 50, 1088, 2652, -2205},
     {0, 60, 205, 3959, -3517}, {0, 60, 1231, 4400, -5649}, {0, 0, 1231, 4400, -5649},
     {0, 0, 1231, 4400, -5649}, {-1, 0, 1231, 4400, -5649},
 };
-KuppaScriptPath data_02087624 = {8, data_02088100};
-KuppaScriptPathPoint data_02088140[] = {
+CutsceneSpline sBoBCreditsSplineFocus = {8, sBoBCreditsSplineFocusPoints};
+CutsceneSplinePoint sSACreditsSplineFocusPoints[] = {
     {0, 50, -175, -594, -142}, {1, 50, -175, -594, -142}, {2, 50, -195, -956, -92},
     {3, 50, -572, -956, -150}, {0, 50, -307, -956, -537}, {0, 0, -307, -956, -537},
     {0, 0, -307, -956, -537},  {-1, 0, -307, -956, -537},
 };
-KuppaScriptPath data_0208751c = {8, data_02088140};
-KuppaScriptPathPoint data_02088180[] = {
+CutsceneSpline sSACreditsSplineFocus = {8, sSACreditsSplineFocusPoints};
+CutsceneSplinePoint sSACreditsSplinePositionsPoints[] = {
     {0, 0, -295, -396, -585}, {1, 0, -295, -396, -585}, {2, 0, -292, -856, -573},
     {3, 0, -312, -856, -541}, {0, 0, 175, -856, -654},  {0, 0, 175, -856, -654},
     {0, 0, 175, -856, -654},  {-1, 0, 175, -856, -654},
 };
-KuppaScriptPath data_020875ac = {8, data_02088180};
-KuppaScriptPathPoint data_020881c0[] = {
+CutsceneSpline sSACreditsSplinePositions = {8, sSACreditsSplinePositionsPoints};
+CutsceneSplinePoint sCotMCCreditsSplineFocusPoints[] = {
     {0, 50, -176, 483, 2092},  {0, 50, -122, 392, 1019}, {0, 50, -268, 450, -792},
     {0, 50, -172, 399, -2046}, {0, 50, -51, 355, -3420}, {0, 0, -51, 355, -3420},
     {0, 0, -51, 355, -3420},   {-1, 0, -51, 355, -3420},
 };
-KuppaScriptPath data_0208762c = {8, data_020881c0};
-KuppaScriptPathPoint data_02088200[] = {
+CutsceneSpline sCotMCCreditsSplineFocus = {8, sCotMCCreditsSplineFocusPoints};
+CutsceneSplinePoint sBoBCreditsSplinePositionsPoints[] = {
     {1, 0, 5984, 3255, 4975},  {2, 0, 4423, 3315, 1888},  {3, 0, 776, 2740, -1825},
     {4, 0, -146, 3894, -3167}, {0, 0, 741, 4387, -5474},  {0, 0, 741, 4387, -5474},
     {0, 0, 741, 4387, -5474},  {-1, 0, 741, 4387, -5474},
 };
-KuppaScriptPath data_0208768c = {8, data_02088200};
-KuppaScriptPathPoint data_02088240[] = {
+CutsceneSpline sBoBCreditsSplinePositions = {8, sBoBCreditsSplinePositionsPoints};
+CutsceneSplinePoint sEndingLookUpAtCastlePoints[] = {
     {0, 10, 49, 1050, 623},   {1, 10, 49, 1050, 623},   {2, 10, 49, 1050, 623},
     {3, 50, 49, 1050, 623},   {4, 50, -35, 1253, 677},  {5, 50, -112, 1345, 655},
     {6, 50, -183, 1394, 659}, {-1, 0, -183, 1394, 659},
 };
-KuppaScriptPath data_0208765c = {8, data_02088240};
-KuppaScriptPathPoint data_02088280[] = {
+CutsceneSpline sEndingLookUpAtCastle = {8, sEndingLookUpAtCastlePoints};
+CutsceneSplinePoint sWFCreditsSplineFocusPoints[] = {
     {1, 30, -249, 1484, 2153},  {2, 40, -200, 2470, 4082},  {3, 40, 4200, 3916, 370},
     {4, 40, 1523, 4976, -1072}, {0, 40, 1523, 4976, -1072}, {0, 0, 1523, 4976, -1072},
     {0, 0, 1523, 4976, -1072},  {-1, 0, 1523, 4976, -1072},
 };
-KuppaScriptPath data_020876ac = {8, data_02088280};
-KuppaScriptPathPoint data_020882c0[] = {
+CutsceneSpline sWFCreditsSplineFocus = {8, sWFCreditsSplineFocusPoints};
+CutsceneSplinePoint sCotMCCreditsSplinePositionsPoints[] = {
     {0, 0, -296, 495, 1607},  {0, 0, -430, 541, 654},   {0, 0, -466, 601, -359},
     {0, 0, -217, 433, -1549}, {0, 0, -95, 366, -2922},  {0, 0, -95, 366, -2922},
     {0, 0, -95, 366, -2922},  {-1, 0, -95, 366, -2922},
 };
-KuppaScriptPath data_02087684 = {8, data_020882c0};
-KuppaScriptPathPoint data_02088300[] = {
+CutsceneSpline sCotMCCreditsSplinePositions = {8, sCotMCCreditsSplinePositionsPoints};
+CutsceneSplinePoint sWFCreditsSplinePositionsPoints[] = {
     {0, 0, -301, 1399, 2643},  {0, 0, -182, 2374, 4572},   {0, 0, 4696, 3864, 413},
     {0, 0, 1738, 4891, -1516}, {0, 0, 1783, 4891, -1516},  {0, 0, 1783, 4891, -1516},
     {0, 0, 1783, 4891, -1516}, {-1, 0, 1783, 4891, -1516},
 };
-KuppaScriptPath data_020875cc = {8, data_02088300};
+CutsceneSpline sWFCreditsSplinePositions = {8, sWFCreditsSplinePositionsPoints};
 u8 data_02088388[] = {
     7,         KS_CAMERA,    KS_S16(0), KS_S16(0),  0x19,         14,         KS_CAMERA,
     KS_S16(0), KS_S16(9999), 0x12,      0x00,       0x00,         0x7d,       0x00,
@@ -365,110 +358,110 @@ u8 data_02088388[] = {
     0x1c,      0x3e,         0x01,      13,         KS_CAMERA,    KS_S16(30), KS_S16(30),
     0x18,      0x00,         0x03,      0x30,       0x00,         0x00,       0x80,
     0};
-KuppaScriptPathPoint data_020883d0[] = {
+CutsceneSplinePoint sVolcanoCreditsSplineFocusPoints[] = {
     {0, 50, -1500, 757, 1251}, {0, 50, -1401, 439, 431},  {0, 50, -749, 270, -532},
     {0, 50, -396, 270, -1363}, {0, 50, -321, 143, -2151}, {0, 50, 1002, 460, -694},
     {0, 0, 1002, 460, -694},   {0, 0, 1002, 460, -694},   {-1, 0, 1002, 460, -694},
 };
-KuppaScriptPath data_02087544 = {9, data_020883d0};
-KuppaScriptPathPoint data_02088418[] = {
+CutsceneSpline sVolcanoCreditsSplineFocus = {9, sVolcanoCreditsSplineFocusPoints};
+CutsceneSplinePoint sVolcanoCreditsSplinePositionsPoints[] = {
     {0, 0, -1445, 1094, 1617}, {0, 0, -1509, 649, 871},  {0, 0, -1133, 420, -248},
     {0, 0, -778, 359, -1052},  {0, 0, -565, 260, -1730}, {0, 0, 1274, 473, -275},
     {0, 0, 1274, 473, -275},   {0, 0, 1274, 473, -275},  {-1, 0, 1274, 473, -275},
 };
-KuppaScriptPath data_020875f4 = {9, data_02088418};
-KuppaScriptPathPoint data_02088460[] = {
+CutsceneSpline sVolcanoCreditsSplinePositions = {9, sVolcanoCreditsSplinePositionsPoints};
+CutsceneSplinePoint sSSLCreditsSplineFocusPoints[] = {
     {0, 50, -4083, 4277, -4745}, {0, 50, -2975, 2574, -4759}, {0, 50, -2343, 736, -6088},
     {0, 50, -535, 572, -6755},   {0, 50, 1311, 597, -6427},   {0, 50, 2448, 612, -5884},
     {0, 0, 2448, 612, -5884},    {0, 0, 2448, 612, -5884},    {-1, 0, 2448, 612, -5884},
 };
-KuppaScriptPath data_02087574 = {9, data_02088460};
-KuppaScriptPathPoint data_020884a8[] = {
+CutsceneSpline sSSLCreditsSplineFocus = {9, sSSLCreditsSplineFocusPoints};
+CutsceneSplinePoint sSSLCreditsSplinePositionsPoints[] = {
     {0, 0, -4262, 4658, -5015}, {0, 0, -3274, 2963, -4661}, {0, 0, -2568, 812, -6528},
     {0, 0, -414, 660, -7232},   {0, 0, 1466, 660, -6898},   {0, 0, 2724, 660, -6298},
     {0, 0, 2724, 660, -6298},   {0, 0, 2724, 660, -6298},   {-1, 0, 2724, 660, -6298},
 };
-KuppaScriptPath data_0208757c = {9, data_020884a8};
-KuppaScriptPathPoint data_020884f0[] = {
+CutsceneSpline sSSLCreditsSplinePositions = {9, sSSLCreditsSplinePositionsPoints};
+CutsceneSplinePoint sTTMCreditsSplineFocusPoints[] = {
     {1, 50, 751, 2434, 318},    {2, 50, 768, 2382, 603},    {3, 60, 3115, 2086, 1969},
     {4, 30, 6370, -3108, 4727}, {5, 50, 4172, -3385, 4001}, {0, 50, 4172, -3385, 4001},
     {0, 0, 4172, -3385, 4001},  {0, 0, 4172, -3385, 4001},  {-1, 0, 4172, -3385, 4001},
 };
-KuppaScriptPath data_02087594 = {9, data_020884f0};
-KuppaScriptPathPoint data_02088538[] = {
+CutsceneSpline sTTMCreditsSplineFocus = {9, sTTMCreditsSplineFocusPoints};
+CutsceneSplinePoint sTTMCreditsSplinePositionsPoints[] = {
     {0, 0, 386, 2535, 644},    {0, 0, 1105, 2576, 918},   {0, 0, 3565, 2261, 2098},
     {0, 0, 6715, -2791, 4554}, {0, 0, 3917, -3130, 3656}, {0, 0, 3917, -3130, 3656},
     {0, 0, 3917, -3130, 3656}, {0, 0, 3917, -3130, 3656}, {-1, 0, 3917, -3130, 3656},
 };
-KuppaScriptPath data_0208756c = {9, data_02088538};
-KuppaScriptPathPoint data_02088580[] = {
+CutsceneSpline sTTMCreditsSplinePositions = {9, sTTMCreditsSplinePositionsPoints};
+CutsceneSplinePoint gEndWavingFocusPoints[] = {
     {0, 50, 18, 1013, 585},    {0, 101, 17, 1037, 588},   {0, 100, 16, 1061, 592},
     {0, 101, -54, 1053, 2243}, {0, 100, -84, 1575, 4740}, {0, 50, -156, 1718, 7086},
     {0, 0, -156, 1718, 7086},  {0, 0, -156, 1718, 7086},  {0, 0, -156, 1718, 7086},
 };
-KuppaScriptPath data_020876a4 = {9, data_02088580};
-KuppaScriptPathPoint data_020885c8[] = {
+CutsceneSpline gEndWavingFocus = {9, gEndWavingFocusPoints};
+CutsceneSplinePoint gEndWavingPosPoints[] = {
     {0, 0, -5, 975, 1083},    {0, 0, -5, 975, 1083},    {0, 0, -5, 975, 1083},
     {0, 0, -76, 1067, 2742},  {0, 0, -105, 1576, 5240}, {0, 0, -177, 1709, 7586},
     {0, 0, -177, 1709, 7586}, {0, 0, -177, 1709, 7586}, {0, 0, -177, 1709, 7586},
 };
-KuppaScriptPath data_020875fc = {9, data_020885c8};
-KuppaScriptPathPoint data_02088660[] = {
+CutsceneSpline gEndWavingPos = {9, gEndWavingPosPoints};
+CutsceneSplinePoint sHMCCreditsSplineFocusPoints[] = {
     {1, 80, -5952, 1884, -6376}, {1, 70, -5952, 1884, -6376}, {1, 70, -5952, 1884, -6376},
     {2, 58, -5891, 1711, -5283}, {3, 30, -5835, 1804, -1279}, {4, 31, -5546, 794, -777},
     {0, 31, -5548, -85, -572},   {0, 0, -5548, -85, -572},    {0, 0, -5548, -85, -572},
     {-1, 0, -5548, -85, -572},
 };
-KuppaScriptPath data_0208752c = {10, data_02088660};
-KuppaScriptPathPoint data_020886b0[] = {
+CutsceneSpline sHMCCreditsSplineFocus = {10, sHMCCreditsSplineFocusPoints};
+CutsceneSplinePoint sHMCCreditsSplinePositionsPoints[] = {
     {1, 0, -5952, 1807, -5882}, {1, 0, -5952, 1807, -5882}, {1, 0, -5952, 1807, -5882},
     {2, 0, -5623, 1749, -4863}, {3, 0, -5719, 1681, -1671}, {4, 0, -5546, 1267, -936},
     {0, 0, -5547, 391, -721},   {0, 0, -5547, 391, -721},   {0, 0, -5547, 391, -721},
     {-1, 0, -5547, 391, -721},
 };
-KuppaScriptPath data_020875d4 = {10, data_020886b0};
-KuppaScriptPathPoint data_02088700[] = {
+CutsceneSpline sHMCCreditsSplinePositions = {10, sHMCCreditsSplinePositionsPoints};
+CutsceneSplinePoint sDDDCreditsSplineFocusPoints[] = {
     {0, 50, -5438, -3437, 871},  {0, 50, -6020, -3161, 1346}, {0, 50, -6486, -3086, 1567},
     {0, 50, -7300, -2802, 1683}, {0, 50, -8515, -1198, 782},  {0, 50, -8969, 77, -187},
     {0, 50, -8827, 582, -758},   {0, 0, -8827, 582, -758},    {0, 0, -8827, 582, -758},
     {-1, 0, -8827, 582, -758},
 };
-KuppaScriptPath data_020876b4 = {10, data_02088700};
-KuppaScriptPathPoint data_02088750[] = {
+CutsceneSpline sDDDCreditsSplineFocus = {10, sDDDCreditsSplineFocusPoints};
+CutsceneSplinePoint sDDDCreditsSplinePositionsPoints[] = {
     {0, 0, -5036, -3687, 615},  {0, 0, -5625, -3536, 1212}, {0, 0, -6055, -3438, 1552},
     {0, 0, -6980, -3257, 1832}, {0, 0, -8257, -1678, 979},  {0, 0, -8899, -348, 186},
     {0, 0, -8843, 162, -374},   {0, 0, -8843, 162, -374},   {0, 0, -8843, 162, -374},
     {-1, 0, -8843, 162, -374},
 };
-KuppaScriptPath data_02087674 = {10, data_02088750};
-KuppaScriptPathPoint data_020887a0[] = {
+CutsceneSpline sDDDCreditsSplinePositions = {10, sDDDCreditsSplinePositionsPoints};
+CutsceneSplinePoint sTHIHugeCreditsSplineFocusPoints[] = {
     {1, 70, 7022, -965, -5356}, {2, 40, 7799, -915, 2405},  {3, 60, 1878, -1137, 10568},
     {4, 50, -1931, -308, 2394}, {5, 50, -2066, -386, 2521}, {6, 50, -2875, 182, 3045},
     {0, 50, -2875, 182, 3045},  {0, 0, -2875, 182, 3045},   {0, 0, -2875, 182, 3045},
     {-1, 0, -2875, 182, 3045},
 };
-KuppaScriptPath data_020875a4 = {10, data_020887a0};
-KuppaScriptPathPoint data_020887f0[] = {
+CutsceneSpline sTHIHugeCreditsSplineFocus = {10, sTHIHugeCreditsSplineFocusPoints};
+CutsceneSplinePoint sTHIHugeCreditsSplinePositionsPoints[] = {
     {0, 0, 6990, -1000, -4858}, {0, 0, 7886, -1055, 2878}, {0, 0, 1952, -1481, 10920},
     {0, 0, -1684, -219, 2819},  {0, 0, -2427, -131, 2755}, {0, 0, -3246, 416, 3286},
     {0, 0, -3246, 416, 3286},   {0, 0, -3246, 416, 3286},  {0, 0, -3246, 416, 3286},
     {-1, 0, -3246, 416, 3286},
 };
-KuppaScriptPath data_02087614 = {10, data_020887f0};
-KuppaScriptPathPoint data_02088840[] = {
+CutsceneSpline sTHIHugeCreditsSplinePositions = {10, sTHIHugeCreditsSplinePositionsPoints};
+CutsceneSplinePoint sEndingFlyToWindowFocusPoints[] = {
     {0, 50, -33, 889, 1993},  {1, 35, -33, 889, 1993},  {2, 31, -17, 1070, 1807},
     {3, 25, -65, 1182, 1728}, {4, 20, -64, 1559, 1458}, {5, 25, -68, 2029, 1323},
     {6, 25, -9, 2204, 1327},  {7, 25, -8, 2529, 1228},  {8, 0, -8, 2529, 1228},
     {9, 0, -8, 2529, 1228},   {-1, 0, -8, 2529, 1228},
 };
-KuppaScriptPath data_020875c4 = {11, data_02088840};
-KuppaScriptPathPoint data_02088898[] = {
+CutsceneSpline sEndingFlyToWindowFocus = {11, sEndingFlyToWindowFocusPoints};
+CutsceneSplinePoint sEndingFlyToWindowPosPoints[] = {
     {0, 0, -89, 876, 2640},  {1, 0, -86, 876, 2610},   {2, 0, -66, 945, 2393},
     {3, 0, -80, 976, 2272},  {4, 0, -66, 1306, 1964},  {5, 0, -70, 1869, 1851},
     {6, 0, -10, 2093, 1854}, {7, 0, -10, 2530, 1752},  {8, 0, -10, 2530, 1737},
     {9, 0, -10, 2530, 1727}, {-1, 0, -10, 2530, 1727},
 };
-KuppaScriptPath data_0208758c = {11, data_02088898};
+CutsceneSpline sEndingFlyToWindowPos = {11, sEndingFlyToWindowPosPoints};
 u8 data_020888f0[] = {7,          KS_CAMERA,    KS_S16(0),    KS_S16(0),  0x11,         14,
                       KS_CAMERA,  KS_S16(0),    KS_S16(9999), 0x12,       0x00,         0x00,
                       0x7d,       0x00,         0x00,         0x00,       0x33,         16,
@@ -517,7 +510,7 @@ u8 data_02088b14[] = {
 /* the star-camera scripts, by setting */
 u8 *data_020876e4[6] = {data_02088388, data_020888f0, data_0208776c,
                         data_020889b0, data_0208776c, data_02088b14};
-KuppaScriptPathPoint data_02088c2c[] = {
+CutsceneSplinePoint sEndingPeachDescentCamPosPoints[] = {
     {0, 50, 1, 120, 850},    {1, 50, 1, 120, 850},    {2, 40, 118, 121, 801},
     {3, 40, 147, 74, 694},   {4, 40, 162, 95, 584},   {5, 40, 25, 111, 445},
     {6, 40, -188, 154, 561}, {7, 40, -203, 181, 758}, {8, 40, 7, 191, 943},
@@ -526,8 +519,8 @@ KuppaScriptPathPoint data_02088c2c[] = {
     {5, 26, -4, 106, 2200},  {6, 26, -6, 72, 2574},   {7, 0, -6, 72, 2574},
     {8, 0, -6, 72, 2574},    {-1, 0, -6, 72, 2574},
 };
-KuppaScriptPath data_02087604 = {20, data_02088c2c};
-KuppaScriptPathPoint data_02088d80[] = {
+CutsceneSpline sEndingPeachDescentCamPos = {20, sEndingPeachDescentCamPosPoints};
+CutsceneSplinePoint sIntroStartToPipeFocusPoints[] = {
     {0, 50, -3081, 30060, -2335}, {0, 50, -3081, 30060, -2335}, {1, 50, -3081, 8840, -2335},
     {1, 100, -3081, 8840, -2335}, {2, 50, -1848, 5660, -2010},  {3, 50, -1450, 4697, -1211},
     {4, 50, -1644, 3593, 126},    {5, 36, 198, 2449, 1216},     {6, 50, 189, 712, 4933},
@@ -537,8 +530,8 @@ KuppaScriptPathPoint data_02088d80[] = {
     {6, 20, -2578, 457, 6215},    {7, 50, -1576, 451, 6437},    {7, 0, -1376, 451, 6437},
     {7, 0, -1376, 451, 6437},     {-1, 0, -1376, 451, 6437},
 };
-KuppaScriptPath data_02087644 = {23, data_02088d80};
-KuppaScriptPathPoint data_02088e38[] = {
+CutsceneSpline sIntroStartToPipeFocus = {23, sIntroStartToPipeFocusPoints};
+CutsceneSplinePoint sIntroStartToPipePositionPoints[] = {
     {0, 0, -3450, 9022, -2450}, {0, 0, -3450, 9022, -2450}, {1, 0, -3450, 8176, -2450},
     {1, 0, -3450, 8176, -2450}, {2, 0, -2285, 5426, -1949}, {3, 0, -1917, 4598, -1063},
     {4, 0, -2018, 3626, 397},   {5, 0, 272, 2411, 1709},    {6, 0, 229, 492, 5381},
@@ -548,8 +541,11 @@ KuppaScriptPathPoint data_02088e38[] = {
     {6, 0, -2564, 396, 5719},   {0, 0, -1776, 396, 6100},   {0, 0, -1776, 396, 6100},
     {0, 0, -1776, 396, 6100},   {-1, 0, -1776, 396, 6100},
 };
-KuppaScriptPath data_02087664 = {23, data_02088e38};
-KuppaScriptPathPoint data_020891a8[] = {
+CutsceneSpline sIntroStartToPipePosition = {23, sIntroStartToPipePositionPoints};
+/* The intro shot after the pipes: the brothers walk to the door and the
+   camera rises to the roof. It opens on the first points of the N64's
+   sIntroPipeToDialog paths, then leaves them; the name is ours. */
+CutsceneSplinePoint sIntroPipeToRoofFocusPoints[] = {
     {0, 20, -1248, 450, 6596}, {1, 60, -1258, 485, 6606}, {2, 60, -1379, 344, 6769},
     {3, 10, -1337, 364, 6814}, {3, 10, -1337, 364, 6814}, {3, 10, -1337, 364, 6814},
     {3, 10, -1337, 364, 6814}, {4, 8, -1321, 366, 6510},  {4, 20, -1321, 366, 6510},
@@ -563,8 +559,8 @@ KuppaScriptPathPoint data_020891a8[] = {
     {0, 50, -1322, 571, 6172}, {0, 0, -1322, 571, 6172},  {0, 0, -1322, 571, 6172},
     {0, 0, -1322, 571, 6172},  {-1, 0, -1322, 571, 6172},
 };
-KuppaScriptPath data_020875bc = {35, data_020891a8};
-KuppaScriptPathPoint data_020892c0[] = {
+CutsceneSpline sIntroPipeToRoofFocus = {35, sIntroPipeToRoofFocusPoints};
+CutsceneSplinePoint sIntroPipeToRoofPositionPoints[] = {
     {0, 0, -785, 625, 6527},   {1, 0, -785, 625, 6527},    {2, 0, -1286, 644, 6376},
     {3, 0, -1286, 623, 6387},  {3, 0, -1286, 623, 6387},   {3, 0, -1286, 623, 6387},
     {3, 0, -1286, 623, 6387},  {4, 0, -1303, 376, 6193},   {4, 0, -1303, 376, 6192},
@@ -578,8 +574,11 @@ KuppaScriptPathPoint data_020892c0[] = {
     {8, 0, -846, 3572, -1596}, {9, 0, -846, 3572, -1596},  {0, 0, -846, 3572, -1596},
     {0, 0, -846, 3572, -1596}, {-1, 0, -846, 3572, -1596},
 };
-KuppaScriptPath data_0208766c = {35, data_020892c0};
-KuppaScriptPathPoint data_020893d8[] = {
+CutsceneSpline sIntroPipeToRoofPosition = {35, sIntroPipeToRoofPositionPoints};
+/* Lakitu's own flight in the intro (daDemo_c). The N64 names are swapped
+   against their use there too: OffsetFromCamera is the point Lakitu faces,
+   and Focus is his offset from the camera. */
+CutsceneSplinePoint gIntroLakituStartToPipeOffsetFromCameraPoints[] = {
     {0, 0, -46, 87, -15},  {1, 0, -38, 91, -11},   {2, 0, -31, 93, -13},  {3, 0, -50, 84, -16},
     {4, 0, -52, 83, -17},  {5, 0, -10, 99, 3},     {6, 0, -54, 83, -10},  {7, 0, -31, 85, -40},
     {8, 0, -34, 91, 19},   {9, 0, -9, 95, 28},     {10, 0, 17, 72, 66},   {11, 0, 88, -7, 45},
@@ -590,8 +589,9 @@ KuppaScriptPathPoint data_020893d8[] = {
     {28, 0, -97, -11, 19}, {29, 0, -91, -11, 38},  {30, 0, -76, -11, 63}, {31, 0, -13, 33, 93},
     {32, 0, 51, -11, 84},  {33, 0, 51, -11, 84},   {-1, 0, 51, -11, 84},
 };
-KuppaScriptPath data_0208753c = {35, data_020893d8};
-KuppaScriptPathPoint data_020894f0[] = {
+CutsceneSpline gIntroLakituStartToPipeOffsetFromCamera = {
+    35, gIntroLakituStartToPipeOffsetFromCameraPoints};
+CutsceneSplinePoint gIntroLakituStartToPipeFocusPoints[] = {
     {0, 32, 58, -250, 346},    {1, 50, -159, -382, 224},  {2, 37, 0, -277, 237},
     {3, 15, 1, -44, 245},      {4, 35, 0, -89, 228},      {5, 15, 28, 3, 259},
     {6, 25, -38, -201, 371},   {7, 20, -642, 118, 652},   {8, 25, 103, -90, 861},
@@ -605,14 +605,14 @@ KuppaScriptPathPoint data_020894f0[] = {
     {30, 7, 0, 96, 1400},      {31, 8, -59, 269, 1450},   {32, 15, 57, 1705, 1500},
     {0, 15, -227, 511, 1550},  {-1, 15, -227, 511, 1550},
 };
-KuppaScriptPath data_02087524 = {35, data_020894f0};
+CutsceneSpline gIntroLakituStartToPipeFocus = {35, gIntroLakituStartToPipeFocusPoints};
 u8 data_02089af8[] = {15,
                       KS_CAMERA,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020875bc),
-                      KS_PTR(data_0208766c),
+                      KS_PTR(sIntroPipeToRoofFocus),
+                      KS_PTR(sIntroPipeToRoofPosition),
                       7,
                       0x00,
                       KS_S16(120),
@@ -1212,15 +1212,15 @@ u8 data_02088a94[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087644),
-                      KS_PTR(data_02087664),
+                      KS_PTR(sIntroStartToPipeFocus),
+                      KS_PTR(sIntroStartToPipePosition),
                       15,
                       0x12,
                       KS_S16(0),
                       KS_S16(720),
                       0x00,
-                      KS_PTR(data_0208753c),
-                      KS_PTR(data_02087524),
+                      KS_PTR(gIntroLakituStartToPipeOffsetFromCamera),
+                      KS_PTR(gIntroLakituStartToPipeFocus),
                       7,
                       0x12,
                       KS_S16(721),
@@ -1360,8 +1360,8 @@ u8 data_020890a0[] = {7,
                       KS_S16(0),
                       KS_S16(0),
                       0x06,
-                      KS_PTR(data_02087644),
-                      KS_PTR(data_02087664),
+                      KS_PTR(sIntroStartToPipeFocus),
+                      KS_PTR(sIntroStartToPipePosition),
                       7,
                       0x19,
                       KS_S16(0),
@@ -1386,8 +1386,8 @@ u8 data_020890a0[] = {7,
                       KS_S16(0),
                       KS_S16(0),
                       0x00,
-                      KS_PTR(data_0208753c),
-                      KS_PTR(data_02087524),
+                      KS_PTR(gIntroLakituStartToPipeOffsetFromCamera),
+                      KS_PTR(gIntroLakituStartToPipeFocus),
                       15,
                       0x14,
                       KS_S16(0),
@@ -1499,8 +1499,8 @@ u8 data_02088fb8[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020876a4),
-                      KS_PTR(data_020875fc),
+                      KS_PTR(gEndWavingFocus),
+                      KS_PTR(gEndWavingPos),
                       15,
                       0x00,
                       KS_S16(0),
@@ -1682,8 +1682,8 @@ u8 data_02087858[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020875e4),
-                      KS_PTR(data_020876cc),
+                      KS_PTR(sCCMOutsideCreditsSplineFocus),
+                      KS_PTR(sCCMOutsideCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1717,8 +1717,8 @@ u8 data_0208788c[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_0208767c),
-                      KS_PTR(data_020875dc),
+                      KS_PTR(sDDDSubCreditsSplineFocus),
+                      KS_PTR(sDDDSubCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1752,8 +1752,8 @@ u8 data_020878c0[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_0208762c),
-                      KS_PTR(data_02087684),
+                      KS_PTR(sCotMCCreditsSplineFocus),
+                      KS_PTR(sCotMCCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1787,8 +1787,8 @@ u8 data_020878f4[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_0208751c),
-                      KS_PTR(data_020875ac),
+                      KS_PTR(sSACreditsSplineFocus),
+                      KS_PTR(sSACreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1822,8 +1822,8 @@ u8 data_02087928[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087534),
-                      KS_PTR(data_0208761c),
+                      KS_PTR(sRRCreditsSplineFocus),
+                      KS_PTR(sRRCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1857,8 +1857,8 @@ u8 data_0208795c[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087694),
-                      KS_PTR(data_020875b4),
+                      KS_PTR(sTTCCreditsSplineFocus),
+                      KS_PTR(sTTCCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1892,8 +1892,8 @@ u8 data_02087990[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020875a4),
-                      KS_PTR(data_02087614),
+                      KS_PTR(sTHIHugeCreditsSplineFocus),
+                      KS_PTR(sTHIHugeCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1927,8 +1927,8 @@ u8 data_020879c4[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087594),
-                      KS_PTR(data_0208756c),
+                      KS_PTR(sTTMCreditsSplineFocus),
+                      KS_PTR(sTTMCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1962,8 +1962,8 @@ u8 data_020879f8[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087584),
-                      KS_PTR(data_02087654),
+                      KS_PTR(sWDWCreditsSplineFocus),
+                      KS_PTR(sWDWCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -1997,8 +1997,8 @@ u8 data_02087a2c[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_0208760c),
-                      KS_PTR(data_02087634),
+                      KS_PTR(sSLCreditsSplineFocus),
+                      KS_PTR(sSLCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2032,8 +2032,8 @@ u8 data_02087a60[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020876b4),
-                      KS_PTR(data_02087674),
+                      KS_PTR(sDDDCreditsSplineFocus),
+                      KS_PTR(sDDDCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2067,8 +2067,8 @@ u8 data_02087a94[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087574),
-                      KS_PTR(data_0208757c),
+                      KS_PTR(sSSLCreditsSplineFocus),
+                      KS_PTR(sSSLCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2102,8 +2102,8 @@ u8 data_02087ac8[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087544),
-                      KS_PTR(data_020875f4),
+                      KS_PTR(sVolcanoCreditsSplineFocus),
+                      KS_PTR(sVolcanoCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2137,8 +2137,8 @@ u8 data_02087afc[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_0208759c),
-                      KS_PTR(data_0208754c),
+                      KS_PTR(sTHIWigglerCreditsSplineFocus),
+                      KS_PTR(sTHIWigglerCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2172,8 +2172,8 @@ u8 data_02087b30[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_0208752c),
-                      KS_PTR(data_020875d4),
+                      KS_PTR(sHMCCreditsSplineFocus),
+                      KS_PTR(sHMCCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2207,8 +2207,8 @@ u8 data_02087b64[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087554),
-                      KS_PTR(data_0208763c),
+                      KS_PTR(sBBHCreditsSplineFocus),
+                      KS_PTR(sBBHCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2242,8 +2242,8 @@ u8 data_02087c34[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020876c4),
-                      KS_PTR(data_0208755c),
+                      KS_PTR(sCCMSlideCreditsSplineFocus),
+                      KS_PTR(sCCMSlideCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2277,8 +2277,8 @@ u8 data_02087b98[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087564),
-                      KS_PTR(data_0208764c),
+                      KS_PTR(sJRBCreditsSplineFocus),
+                      KS_PTR(sJRBCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2312,8 +2312,8 @@ u8 data_02087bcc[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020876ac),
-                      KS_PTR(data_020875cc),
+                      KS_PTR(sWFCreditsSplineFocus),
+                      KS_PTR(sWFCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2348,8 +2348,8 @@ u8 data_02087c00[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_02087624),
-                      KS_PTR(data_0208768c),
+                      KS_PTR(sBoBCreditsSplineFocus),
+                      KS_PTR(sBoBCreditsSplinePositions),
                       13,
                       KS_LOAD_LEVEL,
                       KS_S16(204),
@@ -2387,7 +2387,7 @@ u8 data_02089dcc[0x314] = {9,
                            KS_S16(0),
                            KS_S16(0),
                            0x06,
-                           KS_PTR(data_020875ec),
+                           KS_PTR(sEndingLookAtSkyFocus),
                            0x00,
                            0x00,
                            0x00,
@@ -2408,7 +2408,7 @@ u8 data_02089dcc[0x314] = {9,
                            KS_S16(500),
                            KS_S16(-1),
                            0x06,
-                           KS_PTR(data_020875ec),
+                           KS_PTR(sEndingLookAtSkyFocus),
                            0x00,
                            0x00,
                            0x00,
@@ -3261,7 +3261,7 @@ u8 data_02089850[] = {15,
                       KS_S16(542),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_0208765c),
+                      KS_PTR(sEndingLookUpAtCastle),
                       0x00,
                       0x00,
                       0x00,
@@ -3825,8 +3825,8 @@ u8 data_02088ba0[] = {15,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020876bc),
-                      KS_PTR(data_0208769c),
+                      KS_PTR(sEndingMarioToPeachFocus),
+                      KS_PTR(sEndingMarioToPeachPos),
                       15,
                       0x03,
                       KS_S16(0),
@@ -3969,7 +3969,7 @@ u8 data_02088ccc[] = {8,
                       0x00,
                       0x00,
                       0x00,
-                      KS_PTR(data_02087604),
+                      KS_PTR(sEndingPeachDescentCamPos),
                       7,
                       KS_CAMERA,
                       KS_S16(0),
@@ -3999,7 +3999,7 @@ u8 data_02088ccc[] = {8,
                       0x00,
                       0x00,
                       0x00,
-                      KS_PTR(data_02087604),
+                      KS_PTR(sEndingPeachDescentCamPos),
                       7,
                       0x13,
                       KS_S16(139),
@@ -4068,8 +4068,8 @@ u8 data_0208894c[] = {8,
                       KS_S16(0),
                       KS_S16(-1),
                       0x06,
-                      KS_PTR(data_020875c4),
-                      KS_PTR(data_0208758c),
+                      KS_PTR(sEndingFlyToWindowFocus),
+                      KS_PTR(sEndingFlyToWindowPos),
                       7,
                       0x18,
                       KS_S16(0),
@@ -4431,8 +4431,9 @@ static inline int IsCastleFallCutsceneRunning() {
 }
 
 /* Stylus down this frame with its edge bit set: the touch just began. */
-static inline int IsTouchJustBegun(u32 off) {
-    return gTouchHeld[off] != 0 && *(gTouchHeld + off + 1) != 0;
+static inline int IsTouchJustBegun(u32 slot) {
+    TouchInfo *touch = (TouchInfo *)gTouchHeld;
+    return touch[slot].held != 0 && touch[slot].edge != 0;
 }
 
 /* Shaped like RunPlayerCommand, but the demo dispatcher returns nothing, so the
@@ -4582,8 +4583,6 @@ void EndKuppaScript() {
         data_0209f2d8 = 0;
 }
 
-#pragma opt_common_subs off
-
 void ProcessKuppaScript() {
     u8 *s = gRunningKuppaScript;
     u8 *next;
@@ -4603,8 +4602,7 @@ void ProcessKuppaScript() {
             if (command == KS_SKIP_ON_INPUT) {
                 if (data_0209f5bc->IsBetweenStartAndEnd() == 0) {
                     u32 i = gActivePlayerSlot;
-                    u32 off = i * 4;
-                    if (data_020a0e58[i].pressed != 0 || IsTouchJustBegun(off)) {
+                    if (data_020a0e58[i].pressed != 0 || IsTouchJustBegun(i)) {
                         dScene_c::StartSceneFade(1, 0, 0);
                         Sound::StopLoadedMusic_Layer1(0x3c);
                     }
@@ -4696,8 +4694,6 @@ void ProcessKuppaScript() {
         gKuppaScriptFrame--;
 }
 
-#pragma opt_common_subs on
-
 int IsStarCameraScript3Running() {
     return gRunningKuppaScript == data_020889b0;
 }
@@ -4742,7 +4738,7 @@ int ContinueKuppaScriptIfNecessary() {
     if (saved == data_02089608) {
         data_0209f2d8 = 2;
         Sound::LoadInitialGroup(0x26);
-        data_0209caa0[1] &= ~0x204;
+        data_0209caa0.file.flags1 &= ~0x204;
         CollectStarInLevel(7, 1);
         CollectStarInLevel(8, 1);
     } else if (saved == data_02087c00) {

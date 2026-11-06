@@ -1,4 +1,4 @@
-extern void Copy36Bytes(int *src, int *dst);
+extern void Copy36Bytes(const void *src, void *dst);
 
 void func_0205532c(int *a, int *v)
 {

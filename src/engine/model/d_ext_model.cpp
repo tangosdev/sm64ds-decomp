@@ -58,7 +58,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
-extern Matrix4x3 data_020a0e68; /* local extern: dExtShadowModel_c's shared render matrix scratch */
 /* local extern: no header declares it; data.transforms-bone walk in Virtual10 */
 void func_02045074(ModelComponents *data, BMD_Bone *bones);
 /* local extern: no header declares it; sizes the transforms buffer from the file */
@@ -80,9 +79,9 @@ void func_0203cbc0(void *ptr);
    defines this veneer for the host). */
 void *func_0203cc0c(u32 size);
 #endif
-/* local extern: LoadFile.c defines int(int). This is the spelling
-   LoadAndSetFile's shard matched (banked return and parameter rows). */
-void *LoadFile(u16 ov0ID);
+/* local extern: LoadFile.c defines int(int); the file comes back as a
+   pointer here (banked return row). */
+void *LoadFile(int ov0ID);
 /* local extern: func_020469e0.c defines int(int *). The caller's shard
    matched this spelling (banked rows). */
 int func_020469e0(void *ptr);
@@ -108,14 +107,14 @@ extern int data_0208e738;
 void func_02046234(ModelComponents *data, int mode);
 void func_02046008(ModelComponents *data, int id);
 void func_020461b4(ModelComponents *data, u32 a);
-/* local extern: the +8 adjustors the low veneers forward to. The one-param
-   spellings are deliberate under-declarations -- the thunks forward r1/r2
-   untouched, which C cannot express (banked arity rows). */
+/* local extern: the +8 adjustors the low veneers forward to; Model4.cpp
+   defines them and no header declares them. Each veneer passes its own
+   arguments straight through in r1/r2. */
 void func_02045ec4(void *self, unsigned int value, int index);
-void func_02045e70(char *p);
-void func_02045ef8(char *p);
-void func_02045f80(char *p);
-void func_0204605c(char *p);
+void func_02045e70(char *p, unsigned int color);
+void func_02045ef8(char *p, unsigned int color);
+void func_02045f80(char *p, unsigned int color);
+void func_0204605c(char *p, int id, int index);
 /* defined below; LoadAndSetFile calls it */
 int func_02016ff4(dExtModel_c *self, BMD_File *file, int c, int d);
 u32 func_02017060(void *ptr);
@@ -348,20 +347,14 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
 
 // @symbol _ZN17dExtSimpleModel_c9Virtual10ER9Matrix4x3
 void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
-    /* The copy is one flat 12-word ldm/stm run in the ROM. CW copies the
-       nested Matrix4x3 (Matrix3x3 + Vector3) memberwise, which is bigger,
-       so it goes through a flat 12-word view instead. */
-    struct Mtx12w {
-        Fix12i m[12];
-    };
-    *(Mtx12w *)data.transforms = *(const Mtx12w *)&mat;
+    *data.transforms = mat;
     func_02045074(&data, data.modelFile->bones);
 }
 
 // @symbol _ZN17dExtSimpleModel_c6RenderEPK7Vector3
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3((const int *)&mat4x3, (const int *)&data_0209b3ec, (int *)&temp);
+    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
     data.Render(&temp, (Vector3 *)scale);
 }
 
@@ -395,8 +388,8 @@ void dExtSimpleModel_c::SetPolygonID(int id) {
 }
 
 // @symbol func_02016aac
-extern "C" void func_02016aac(char *self) {
-    func_0204605c(self + 8);
+extern "C" void func_02016aac(char *self, int id, int index) {
+    func_0204605c(self + 8, id, index);
 }
 
 // @symbol _ZN11dExtModel_c12ApplyOpacityEjj
@@ -426,18 +419,18 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
 }
 
 // @symbol func_02016a14
-extern "C" void func_02016a14(char *self) {
-    func_02045f80(self + 8);
+extern "C" void func_02016a14(char *self, int color) {
+    func_02045f80(self + 8, color);
 }
 
 // @symbol func_02016a04
-extern "C" void func_02016a04(char *self) {
-    func_02045ef8(self + 8);
+extern "C" void func_02016a04(char *self, int color) {
+    func_02045ef8(self + 8, color);
 }
 
 // @symbol func_020169f4
-extern "C" void func_020169f4(char *self) {
-    func_02045e70(self + 8);
+extern "C" void func_020169f4(char *self, int color) {
+    func_02045e70(self + 8, color);
 }
 
 // @symbol func_020169d8
@@ -725,7 +718,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 // @symbol _ZN17dExtCommonModel_c6RenderEPK7Vector3
 void dExtCommonModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3((const int *)&mat4x3, (const int *)&data_0209b3ec, (int *)&temp);
+    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
     data->Render(&temp, (Vector3 *)scale);
 }
 
@@ -871,11 +864,9 @@ void dExtShadowModel_c::RenderAll() {
         do {
             ModelComponents *model = node->data;
             func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
-            MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)node->mat,
-                            (int *)&data_020a0e68);
+            MulMat4x3Mat4x3(&data_020a0e68, node->mat, &data_020a0e68);
             data_020a0e68.m[10] += 0x2000;
-            MulMat4x3Mat4x3((const int *)&data_020a0e68, (const int *)&data_0209b3ec,
-                            (int *)&data_020a0e68);
+            MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
             func_02046120(model, node->opacity);
             model->Render(&data_020a0e68, 0);
             func_02046088(model, node->opacity, 1);

@@ -42,14 +42,7 @@ struct Km2GuraClsnFilePtr : SharedFilePtr {
 typedef char Km2GuraModelFilePtr_size_must_be_8[sizeof(Km2GuraModelFilePtr) == 8 ? 1 : -1];
 typedef char Km2GuraClsnFilePtr_size_must_be_8[sizeof(Km2GuraClsnFilePtr) == 8 ? 1 : -1];
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern Km2GuraModelFilePtr data_ov045_02113220;
 extern Km2GuraClsnFilePtr data_ov045_02113228;

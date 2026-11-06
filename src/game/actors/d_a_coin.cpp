@@ -9,7 +9,7 @@
  *
  * One out-of-line destructor is the key function. Under defer_codegen off
  * it emits D1, D0, then a D2 the cartridge does not keep, and .text follows
- * source order. opt_common_subs off is bracketed around InitResources only.
+ * source order.
  */
 // leftovers:
 // - The FL_COIN puzzle manager (actor 0x4f) has no header, so its live-coin
@@ -882,17 +882,13 @@ s32 daCoin_c::InitResources()
      * Launders kept: the three `mCoinFlags = (mCoinFlags & ~m) | v` stores
      * go through `*(u8 *)((int)&mCoinFlags)`. Spelled as the plain member,
      * each one changes the code (measured per site); the plain `&=`/`|=`
-     * sites take the member as is.
-     *
-     * `#pragma opt_common_subs off` is load-bearing: the ROM re-issues loads
-     * this compiler would otherwise CSE. */
-    #pragma opt_common_subs off
+     * sites take the member as is. */
 
     typedef struct { void* sfp; void* bmd; } FileEntry;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
     extern s8 gCurrentSublevel;
     extern u8 data_0209f220;
-    extern s32 data_0209f40c[];
+    extern dActor_c *STAR_MARKERS[12];
     extern u8 data_0209f2d8;
     extern FileEntry* data_ov002_020ff06c[];
     extern FileEntry* data_ov002_020ff060[];
@@ -973,7 +969,7 @@ common:;
             if (SublevelToLevel(gCurrentSublevel) == 0x13 || mSpawnFilter == data_0209f220) {
                 if (GetBitInDeathTable() == 0) {
                     for (slot = 0; slot < 0xc; slot = (s8)(slot + 1)) {
-                        if (data_0209f40c[slot] == 0) {
+                        if (STAR_MARKERS[slot] == 0) {
                             SetStarMarker(slot, this, 4);
                             mTrackStarID = slot;
                             break;
