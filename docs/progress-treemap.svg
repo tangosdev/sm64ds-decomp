@@ -137,11 +137,11 @@ matched: yes</title></rect><rect x="279.56" y="34.32" width="17.03" height="7.56
 module: arm9
 addr: 0x020070e8
 size: 192 bytes
-matched: yes</title></rect><rect x="296.59" y="34.32" width="4.97" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020071a8
+matched: yes</title></rect><rect x="296.59" y="34.32" width="4.97" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>StarDanceBoundYaw
 module: arm9
 addr: 0x020071a8
 size: 56 bytes
-matched: yes</title></rect><rect x="301.55" y="34.32" width="19.86" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020071e0
+matched: yes</title></rect><rect x="301.55" y="34.32" width="19.86" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyAppCvars
 module: arm9
 addr: 0x020071e0
 size: 224 bytes
@@ -149,43 +149,43 @@ matched: yes</title></rect><rect x="5.00" y="41.88" width="0.60" height="4.50" f
 module: arm9
 addr: 0x020072c0
 size: 4 bytes
-matched: yes</title></rect><rect x="5.60" y="41.88" width="32.77" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020072c4
+matched: yes</title></rect><rect x="5.60" y="41.88" width="32.77" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyMarioOffscreen
 module: arm9
 addr: 0x020072c4
 size: 220 bytes
-matched: yes</title></rect><rect x="38.37" y="41.88" width="17.28" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020073a0
+matched: yes</title></rect><rect x="38.37" y="41.88" width="17.28" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyMoveToMario
 module: arm9
 addr: 0x020073a0
 size: 116 bytes
-matched: yes</title></rect><rect x="55.65" y="41.88" width="8.94" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007414
+matched: yes</title></rect><rect x="55.65" y="41.88" width="8.94" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyStart
 module: arm9
 addr: 0x02007414
 size: 60 bytes
-matched: yes</title></rect><rect x="64.59" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007450
+matched: yes</title></rect><rect x="64.59" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarMoveCvar2
 module: arm9
 addr: 0x02007450
 size: 52 bytes
-matched: yes</title></rect><rect x="72.34" y="41.88" width="14.90" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007484
+matched: yes</title></rect><rect x="72.34" y="41.88" width="14.90" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarApproachMario
 module: arm9
 addr: 0x02007484
 size: 100 bytes
-matched: yes</title></rect><rect x="87.23" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020074e8
+matched: yes</title></rect><rect x="87.23" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarAccelCvar2
 module: arm9
 addr: 0x020074e8
 size: 52 bytes
-matched: yes</title></rect><rect x="94.98" y="41.88" width="6.55" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200751c
+matched: yes</title></rect><rect x="94.98" y="41.88" width="6.55" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarMarioJump
 module: arm9
 addr: 0x0200751c
 size: 44 bytes
-matched: yes</title></rect><rect x="101.53" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007548
+matched: yes</title></rect><rect x="101.53" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFocusMario
 module: arm9
 addr: 0x02007548
 size: 108 bytes
-matched: yes</title></rect><rect x="117.62" y="41.88" width="17.88" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020075b4
+matched: yes</title></rect><rect x="117.62" y="41.88" width="17.88" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFrontOfMario
 module: arm9
 addr: 0x020075b4
 size: 120 bytes
-matched: yes</title></rect><rect x="135.50" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200762c
+matched: yes</title></rect><rect x="135.50" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarStart
 module: arm9
 addr: 0x0200762c
 size: 108 bytes
@@ -193,11 +193,11 @@ matched: yes</title></rect><rect x="151.59" y="41.88" width="28.60" height="4.50
 module: arm9
 addr: 0x02007698
 size: 192 bytes
-matched: yes</title></rect><rect x="180.19" y="41.88" width="22.64" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007758
+matched: yes</title></rect><rect x="180.19" y="41.88" width="22.64" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneDanceCloseupFlyAbove
 module: arm9
 addr: 0x02007758
 size: 152 bytes
-matched: yes</title></rect><rect x="202.84" y="41.88" width="19.07" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020077f0
+matched: yes</title></rect><rect x="202.84" y="41.88" width="19.07" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneDanceCloseupStart
 module: arm9
 addr: 0x020077f0
 size: 128 bytes
@@ -213,7 +213,7 @@ matched: yes</title></rect><rect x="245.74" y="41.88" width="23.24" height="4.50
 module: arm9
 addr: 0x02007910
 size: 156 bytes
-matched: yes</title></rect><rect x="268.98" y="41.88" width="33.37" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020079ac
+matched: yes</title></rect><rect x="268.98" y="41.88" width="33.37" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutscenePanCvar9
 module: arm9
 addr: 0x020079ac
 size: 224 bytes
@@ -221,7 +221,7 @@ matched: yes</title></rect><rect x="302.35" y="41.88" width="19.07" height="4.50
 module: arm9
 addr: 0x02007a8c
 size: 128 bytes
-matched: yes</title></rect><rect x="5.00" y="46.39" width="16.86" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007b0c
+matched: yes</title></rect><rect x="5.00" y="46.39" width="16.86" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FocusInFrontOfMario
 module: arm9
 addr: 0x02007b0c
 size: 140 bytes
@@ -245,7 +245,7 @@ matched: yes</title></rect><rect x="66.65" y="46.39" width="9.15" height="5.57" 
 module: arm9
 addr: 0x02007d0c
 size: 76 bytes
-matched: yes</title></rect><rect x="75.80" y="46.39" width="31.30" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007d58
+matched: yes</title></rect><rect x="75.80" y="46.39" width="31.30" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneDanceFlyAwayStart
 module: arm9
 addr: 0x02007d58
 size: 260 bytes
