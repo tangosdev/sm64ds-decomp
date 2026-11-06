@@ -209,11 +209,6 @@
         "return:void"
       ]
     },
-    "Camera_UpdateMatrices": {
-      "src/minigames/d_s_mg_roulette_methods.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "Copy36Bytes": {
       "src/unnamed/arm9/0204/func_0204b460.c": [
         "param:#1 int *"
@@ -16852,17 +16847,6 @@
         "arity:1"
       ]
     },
-    "Camera_InitDealerView": {
-      "src/minigames/d_s_mg_memory.cpp": [
-        "param:#1 char *"
-      ],
-      "src/minigames/d_s_mg_memory2.cpp": [
-        "param:#1 char *"
-      ],
-      "src/minigames/d_s_mg_roulette_methods.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "Dealer_Update": {
       "src/minigames/d_s_mg_memory.cpp": [
         "return:int"
@@ -16883,11 +16867,6 @@
     },
     "Mascot_Draw": {
       "include/decl_common.h": [
-        "param:#1 char *"
-      ]
-    },
-    "Camera_InitPresenterView": {
-      "src/minigames/d_s_mg_cup.cpp": [
         "param:#1 char *"
       ]
     },
