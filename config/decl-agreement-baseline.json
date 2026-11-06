@@ -443,9 +443,6 @@
       ]
     },
     "DrawOamSprite": {
-      "src/minigames/d_s_mg_base.cpp": [
-        "param:#1 int"
-      ],
       "src/minigames/d_s_mg_curling.cpp": [
         "param:#1 int",
         "param:#2 int",
@@ -516,9 +513,6 @@
       ]
     },
     "Hud_RenderSprite": {
-      "src/minigames/d_s_mg_base.cpp": [
-        "param:#1 int"
-      ],
       "src/minigames/d_s_mg_sound.cpp": [
         "param:#1 int",
         "return:int"
@@ -1348,12 +1342,6 @@
       ],
       "src/minigames/d_s_mg_m_carlo2.cpp": [
         "return:int"
-      ],
-      "src/minigames/d_s_mg_slots.cpp": [
-        "param:#1 void *"
-      ],
-      "src/minigames/d_s_mg_teresa.cpp": [
-        "param:#1 void *"
       ],
       "src/minigames/d_s_mg_trampoline.cpp": [
         "return:int"
@@ -18216,9 +18204,6 @@
       ]
     },
     "Mg_RenderSpriteBoth": {
-      "src/minigames/d_s_mg_base.cpp": [
-        "param:#1 int"
-      ],
       "src/minigames/d_s_mg_curling.cpp": [
         "param:#1 int",
         "return:int"
