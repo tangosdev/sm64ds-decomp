@@ -904,7 +904,7 @@ extern "C" {
 extern int data_02092768[4];
 }
 extern "C" {
-extern int data_020a0ebc[3];
+extern Vector3 data_020a0ebc;
 }
 extern "C" void func_0203cc28(int *p, int angle);
 extern "C" void Quaternion_FromVector3(int *q, Vec3 *a, Vec3 *b);
@@ -964,9 +964,9 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
         TRMPITEM(self)->mModel = &TRMPITEM(self)->mRingC;
         break;
     }
-    TRMPITEM(self)->mScale.x = data_020a0ebc[0];
-    TRMPITEM(self)->mScale.y = data_020a0ebc[1];
-    TRMPITEM(self)->mScale.z = data_020a0ebc[2];
+    TRMPITEM(self)->mScale.x = data_020a0ebc.x;
+    TRMPITEM(self)->mScale.y = data_020a0ebc.y;
+    TRMPITEM(self)->mScale.z = data_020a0ebc.z;
     TRMPITEM(self)->mAppearScale = 0;
     *(short *)(self + 0x92) = 0x5a;
     TrmpItem_StartAppear(self);
