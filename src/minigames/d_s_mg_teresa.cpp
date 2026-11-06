@@ -99,7 +99,7 @@ extern unsigned short sTeresaBg3FlashTimes[];
 extern void *sTeresaExclaimSprites;
 extern void *sTeresaVanishPuffSprites[];
 extern int sTeresaBigBooHoverSprites[];
-extern int sMgDigitSprites[];
+extern OamAttr *sMgDigitSprites[];
 extern void *sTeresaMarkerSprites;
 extern struct OamAttr *sTeresaRevealSprites[];
 extern OamAttr **sTeresaCountdownSprites[];
@@ -685,8 +685,7 @@ void dScMgTeresa_c::FoundNumber_DrawAll() {
             int a = mFoundNumbers[i].x >> 12;
             if (b <= 8) b = 8;
             if (b >= 0xb8) b = 0xb8;
-            Mg_RenderSubSpriteMtx((void *)sMgDigitSprites[mFoundNumbers[i].sprite + 1], a, b,
-                                  (void *)0);
+            Mg_RenderSubSpriteMtx(sMgDigitSprites[mFoundNumbers[i].sprite + 1], a, b, (void *)0);
         }
     }
 }

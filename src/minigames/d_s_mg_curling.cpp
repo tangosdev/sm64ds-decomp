@@ -87,7 +87,7 @@ extern "C" {
 
 extern int Mg_GetSubmittedScore(void);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
-extern void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
+extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void func_02012718(int a, int b);
@@ -696,7 +696,7 @@ void dScMgCurling_c::DrawAimMarker() {
         return;
     int x = mAimX;
     int y = mAimY;
-    Mg_RenderSpriteBoth((int)sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
+    Mg_RenderSpriteBoth(sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
 // @symbol _ZN14dScMgCurling_c9Aim_SwingEv

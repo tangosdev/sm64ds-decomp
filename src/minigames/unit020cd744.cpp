@@ -1643,7 +1643,7 @@ extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" int DotVec3(const Vector3 *a, const Vector3 *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
-extern "C" int func_0203d524(int *a, int *b);
+extern "C" int func_0203d524(struct V2 *a, struct V2 *b);
 extern "C" void D3D_PlaySePannedLoop(int a0, int a1, int a2);
 extern "C" void TrmpLine_PointDistance(char *sl, void *arg1, const Vector3 *r2);
 extern "C" void TrmpLine_SetStateSettle(char *p);
@@ -1727,8 +1727,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
         Vec2_Sub((int *)&secondOffset, (int *)&lineStart, (int *)&currentProjection);
 
         crossedLine = 0;
-        previousSide = func_0203d524((int *)&edgeDirection, (int *)&firstOffset);
-        currentSide = func_0203d524((int *)&edgeDirection, (int *)&secondOffset);
+        previousSide = func_0203d524(&edgeDirection, &firstOffset);
+        currentSide = func_0203d524(&edgeDirection, &secondOffset);
         previousSide = CLAMP(previousSide, -1, 1);
         currentSide = CLAMP(currentSide, -1, 1);
 
@@ -1742,8 +1742,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
             Vec2_Sub((int *)&e2, (int *)&previousProjection, (int *)&lineEnd);
             secondOffset = e2;
 
-            startSide = func_0203d524((int *)&edgeDirection, (int *)&firstOffset);
-            endSide = func_0203d524((int *)&edgeDirection, (int *)&secondOffset);
+            startSide = func_0203d524(&edgeDirection, &firstOffset);
+            endSide = func_0203d524(&edgeDirection, &secondOffset);
             startSide = CLAMP(startSide, -1, 1);
             endSide = CLAMP(endSide, -1, 1);
             if (startSide * endSide <= 0)

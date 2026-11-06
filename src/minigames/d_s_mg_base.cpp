@@ -3250,7 +3250,7 @@ void Mg_DrawTopCenterCounter(int arg) {
 // @symbol Mg_DrawNumber
 namespace s20b1ea4 {
 extern "C" {
-extern int sMgDigitSprites[];
+extern OamAttr *sMgDigitSprites[];
 extern void Mg_RenderSpriteOnNoMtx(void *glyph, int x, int a2, int a3, int a4);
 
 /* Draws `val`, capped at 999999, in digits 8 px apart: glyph
@@ -3280,7 +3280,7 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
         else if (mode == 1) x -= 0x28;
         r5 = 5;
         for (k = 0; k < 5; k++) {
-            Mg_RenderSpriteOnNoMtx((void *)sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
+            Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
             x += 8;
             r5--;
         }
@@ -3291,7 +3291,7 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
         else if (mode == 1) x -= 0x20;
         r5 = 4;
         for (k = 0; k < 4; k++) {
-            Mg_RenderSpriteOnNoMtx((void *)sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
+            Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
             x += 8;
             r5--;
         }
@@ -3302,7 +3302,7 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
         else if (mode == 1) x -= 0x18;
         r5 = 3;
         for (k = 0; k < 3; k++) {
-            Mg_RenderSpriteOnNoMtx((void *)sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
+            Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
             x += 8;
             r5--;
         }
@@ -3313,17 +3313,17 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
         else if (mode == 1) x -= 0x10;
         r5 = 2;
         for (k = 0; k < 2; k++) {
-            Mg_RenderSpriteOnNoMtx((void *)sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
+            Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[r5]], x, a1, a3, a4);
             x += 8;
             r5--;
         }
     } else if (d[1] != 0) {
         if (mode == 0) x -= 4;
         else if (mode == 1) x -= 8;
-        Mg_RenderSpriteOnNoMtx((void *)sMgDigitSprites[fb + d[1]], x, a1, a3, a4);
+        Mg_RenderSpriteOnNoMtx(sMgDigitSprites[fb + d[1]], x, a1, a3, a4);
         x += 8;
     }
-    Mg_RenderSpriteOnNoMtx((void *)sMgDigitSprites[d[0] + fb], x, a1, a3, a4);
+    Mg_RenderSpriteOnNoMtx(sMgDigitSprites[d[0] + fb], x, a1, a3, a4);
 }
 }
 }
@@ -3345,7 +3345,7 @@ extern "C" {
 struct M { int _00, _01, _10, _11; };
 extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
 extern s16 data_02082214[];
-extern int sMgDigitSprites[];
+extern OamAttr *sMgDigitSprites[];
 
 static inline int FX_Mul(int v1, int v2)
 {
@@ -3380,19 +3380,19 @@ void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u1
     MTX_Rot22(&m, FX_Mul(FX_SinIdx(idx), scale), FX_Mul(FX_CosIdx(idx), scale));
 
     if (th != 0) {
-        Mg_RenderSpriteOnMtx((void *)sMgDigitSprites[th], x - 0x30, y, a3, a4, &m);
-        Mg_RenderSpriteOnMtx((void *)sMgDigitSprites[hu], x - 0x10, y, a3, a4, &m);
-        Mg_RenderSpriteOnMtx((void *)sMgDigitSprites[te], x + 0x10, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[th], x - 0x30, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[hu], x - 0x10, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x + 0x10, y, a3, a4, &m);
         x += 0x30;
     } else if (hu != 0) {
-        Mg_RenderSpriteOnMtx((void *)sMgDigitSprites[hu], x - 0x20, y, a3, a4, &m);
-        Mg_RenderSpriteOnMtx((void *)sMgDigitSprites[te], x, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[hu], x - 0x20, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x, y, a3, a4, &m);
         x += 0x20;
     } else if (te != 0) {
-        Mg_RenderSpriteOnMtx((void *)sMgDigitSprites[te], x - 0x10, y, a3, a4, &m);
+        Mg_RenderSpriteOnMtx(sMgDigitSprites[te], x - 0x10, y, a3, a4, &m);
         x += 0x10;
     }
-    Mg_RenderSpriteOnMtx((void *)sMgDigitSprites[value], x, y, a3, a4, &m);
+    Mg_RenderSpriteOnMtx(sMgDigitSprites[value], x, y, a3, a4, &m);
 }
 }
 }
@@ -3401,8 +3401,8 @@ void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u1
 // @symbol Mg_DrawBigNumber
 namespace s20b2444 {
 extern "C" {
-extern int sMgDigitSprites[];
-extern void Mg_RenderSpriteOnNoMtx(int a0, int a1, int a2, int a3, int a4);
+extern OamAttr *sMgDigitSprites[];
+extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
 
 /* Draws `num` in digits 16 px apart, glyph sMgDigitSprites[idx +
    digit]. The units digit sits at a1 for sel 1 (or any value but 0 and

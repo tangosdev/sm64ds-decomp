@@ -89,7 +89,7 @@ extern void Mg_DrawTopLeftCounter(int self);
 extern void Mg_DrawTopRightCounter(int a, int b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
-extern void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
+extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern void func_02012718(int id, int v);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);
@@ -788,7 +788,7 @@ void dScMgCurling2_c::DrawCursor() {
 
     int x = mDragX;
     int y = mDragY;
-    Mg_RenderSpriteBoth((int)sCurling2CursorSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
+    Mg_RenderSpriteBoth(sCurling2CursorSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
 /* Stylus drag update. Runs while the player drags a stone before the throw. With no touch in

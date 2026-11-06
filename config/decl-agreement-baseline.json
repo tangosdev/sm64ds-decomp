@@ -497,7 +497,6 @@
     },
     "Hud_RenderSprite": {
       "src/minigames/d_s_mg_sound.cpp": [
-        "param:#1 int",
         "return:int"
       ]
     },
@@ -1253,13 +1252,6 @@
       ],
       "src/minigames/unit020cd744.cpp": [
         "param:#1 int *"
-      ]
-    },
-    "Quaternion_SLerp": {
-      "src/game/actors/d_a_obj_guragura.cpp": [
-        "param:#1 char *",
-        "param:#2 char *",
-        "param:#4 char *"
       ]
     },
     "RandomIntInternal": {
@@ -10328,11 +10320,6 @@
         "return:int []"
       ]
     },
-    "sMgDigitSprites": {
-      "src/minigames/d_s_mg_hanachan_methods.cpp": [
-        "return:char []"
-      ]
-    },
     "sPresenterLoseLoopTexAnim": {
       "src/minigames/unit020bfec0.cpp": [
         "return:int"
@@ -13914,11 +13901,6 @@
         "param:#2 int"
       ]
     },
-    "func_02016b24": {
-      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "func_02016ff4": {
       "src/_ZN17dExtSimpleModel_c14LoadAndSetFileEtii.cpp": [
         "param:#1 dExtSimpleModel_c *"
@@ -16120,12 +16102,6 @@
         "param:#2 V2 *"
       ]
     },
-    "func_0203d524": {
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 int *",
-        "param:#2 int *"
-      ]
-    },
     "func_0203d5dc": {
       "src/minigames/d_s_mg_hanachan_methods.cpp": [
         "param:#1 const V2 *",
@@ -17520,8 +17496,6 @@
         "param:#4 int"
       ],
       "src/game/actors/d_a_holhei.cpp": [
-        "param:#1 int",
-        "param:#4 int",
         "return:int"
       ],
       "src/unnamed/ov002/func_ov002_020da9d4.cpp": [
@@ -17696,11 +17670,9 @@
     },
     "Mg_RenderSpriteBoth": {
       "src/minigames/d_s_mg_curling.cpp": [
-        "param:#1 int",
         "return:int"
       ],
       "src/minigames/d_s_mg_curling2.cpp": [
-        "param:#1 int",
         "return:int"
       ]
     },
@@ -17949,11 +17921,6 @@
     "Heyho_StartMotionPatrolBob": {
       "include/decl_common.h": [
         "param:#1 char *"
-      ]
-    },
-    "Heyho_React": {
-      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
-        "param:#1 int"
       ]
     },
     "Jump3D_Arrange": {
@@ -18249,11 +18216,6 @@
     "func_ov007_020c4e98": {
       "src/ui/menus/unit020b8f50.cpp": [
         "param:#6 int"
-      ]
-    },
-    "func_ov007_020c55bc": {
-      "src/ui/menus/unit020b8f50.cpp": [
-        "param:#1 char *"
       ]
     },
     "func_ov007_020c7694": {
@@ -18634,11 +18596,6 @@
         "param:#6 int"
       ]
     },
-    "func_ov075_02116128": {
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "FindDemoActor": {
       "src/engine/view/d_camera.cpp": [
         "param:#1 int",
@@ -18686,8 +18643,6 @@
     "func_02060484": {
       "src/engine/save/SaveData2.cpp": [
         "param:#1 int",
-        "param:#2 int",
-        "param:#3 int",
         "param:#4 int",
         "param:#5 int"
       ]
