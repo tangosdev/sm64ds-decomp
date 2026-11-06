@@ -71,7 +71,7 @@ extern TrapStateRec data_ov010_02112d28;
 /* local extern: the dBgW callback setter and the two horizontal helpers, on
    the VecFx32 POD seam (see the banner). */
 extern "C" {
-extern void func_020393c4(dBgW *collider, void *callback);
+extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 extern s16 Vec3_HorzAngle(const VecFx32 *from, const VecFx32 *to);
 extern s32 Vec3_HorzDist(const VecFx32 *from, const VecFx32 *to);
 }
@@ -95,8 +95,8 @@ extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
 /*
  * registered directly in InitResources. */
 // @symbol func_ov010_02111984
-extern "C" void func_ov010_02111984(int unused, daObjC1_Trap_c *trap, dActor_c *other) {
-    trap->OnCollision(*other);
+extern "C" void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
 
 // @symbol _ZN14daObjC1_Trap_c11OnCollisionER8dActor_c
@@ -200,7 +200,7 @@ int daObjC1_Trap_c::InitResources() {
     UpdateCollisionTransform();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000,
                           mAngleY, data_ov010_021122f8);
-    func_020393c4(&mMeshCollider, (void *)func_ov010_02111984);
+    func_020393c4(&mMeshCollider, func_ov010_02111984);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;
     mState = 0;

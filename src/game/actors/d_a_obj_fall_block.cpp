@@ -58,7 +58,7 @@ int DecIfAbove0_Short(u16 *p);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 
 /* local extern: d_bg_w.cpp defines it and no header declares it. */
-void func_020393c4(int *p, int v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern s16 data_02082214[];       /* sine table */
@@ -424,7 +424,7 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*fp->collision)), mClsnMat, 0x199,
                               mAngleY, *fp->clps);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
     v.x = mPosX;
     y = mPosY;
     v.y = y;
@@ -461,11 +461,11 @@ int daObjFallBlock_c::RequestShake(dActor_c *other) {
     mShakeRequested = 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
+// @symbol _ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
    RequestShake. long_calls is the ROM's pooled absolute tail-call. */
 #pragma long_calls on
-int daObjFallBlock_c::StoodOnCallback(dBgW *collider, daObjFallBlock_c *block, dActor_c *other) {
-    return block->RequestShake(other);
+void daObjFallBlock_c::StoodOnCallback(dBgW *collider, dActor_c *block, dActor_c *other) {
+    static_cast<daObjFallBlock_c *>(block)->RequestShake(other);
 }
 #pragma long_calls off

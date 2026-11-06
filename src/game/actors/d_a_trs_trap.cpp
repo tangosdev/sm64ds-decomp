@@ -40,7 +40,7 @@
  * deslop leftovers:
  * - dBgW_KcMbg::SetFile keeps its mangled TU-local spelling: its signature
  *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
- * - func_020393d4/func_020393c4 install the BeforeClsn/unk_1c callback words;
+ * - func_020393d4/func_020393c4 install the before-collision and stood-on words;
  *   dBgW carries no setter, and dBgW.h itself blesses this spelling.
  * - The ROM re-reads the loaded KCL from filePtr rather than keeping
  *   dBgW_Kc::LoadFile's return.
@@ -135,7 +135,7 @@ void func_ov063_0211c6f8(daTrsTrap_c *c);
 void func_ov063_0211c82c(char *p);
 /* dBgW callback-word stores (see above). */
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(int *p, int v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
 extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
@@ -545,7 +545,7 @@ int daTrsTrap_c::InitResources()
     }
 
     func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
-    func_020393c4((int *)&mMovingMeshCollider, (int)&daTrsTrap_c::OnMeshClsnTouch);
+    func_020393c4(&mMovingMeshCollider, &daTrsTrap_c::OnMeshClsnTouch);
     mMovingMeshCollider.Enable(this);
 
     if (mIndex == 2) {

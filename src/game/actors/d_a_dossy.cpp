@@ -150,7 +150,7 @@ unsigned short DecIfAbove0_Short(
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
 extern void func_020393d4(void* p, void* v);
-extern void func_020393c4(void* p, void* v);
+extern void func_020393c4(void *collider, StoodOnCallback callback);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
 extern int AngleDiff(int a, int b);
@@ -158,8 +158,8 @@ extern int AngleDiff(int a, int b);
 int func_ov065_021180d4(char* self);
 void func_ov065_02118c4c(char* c);
 int func_ov065_02119210(unsigned char* c);
-void func_ov065_021195bc(void *a, void *b, void *c);
-void func_ov065_021195d0(void *a, void *b, void *c);
+void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
+void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
 
@@ -191,15 +191,15 @@ int daDossyCap_c::OnYoshiTryEat()
 
 #pragma long_calls on
 // @symbol func_ov065_021195d0
-extern "C" void func_ov065_021195d0(void *a, void *b, void *c) {
-    static_cast<daDossy_c *>(b)->func_ov065_02119594(static_cast<dActor_c *>(c));
+extern "C" void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
 // @symbol func_ov065_021195bc
-extern "C" void func_ov065_021195bc(void *a, void *b, void *c) {
-    static_cast<daDossy_c *>(b)->func_ov065_0211956c(static_cast<dActor_c *>(c));
+extern "C" void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
 }
 #pragma long_calls off
 
@@ -258,9 +258,9 @@ int daDossy_c::InitResources()
             if ((unsigned)j <= 2) {
                 func_020393d4(mmc, (void *)&dBgW::UpdatePosAndAngs);
                 if (j == 2)
-                    func_020393c4(mmc, (void *)func_ov065_021195bc);
+                    func_020393c4(mmc, func_ov065_021195bc);
                 else
-                    func_020393c4(mmc, (void *)func_ov065_021195d0);
+                    func_020393c4(mmc, func_ov065_021195d0);
             }
             ((dBgW_KcMbg *)mmc)->Enable(this);
             mtx += sizeof(DorriePlatform);

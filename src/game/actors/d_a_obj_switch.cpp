@@ -17,8 +17,6 @@
 //   - ChangeMusicVolume / IsClsnInRange / KcMbg::SetFile stay computed-spelling
 //     externs: the member form changes codegen under 2004/b56 (Fix12<int> by
 //     value, wall 6az -- noted at use).
-//   - func_020393c4 stores a callback address as a 32-bit word at +0x1c; a
-//     typed callback signature has no byte proof, so the int* decl stays.
 //   - The collision callback func_ov002_020baa98 and its touch helper
 //     func_ov002_020baa2c keep their address names and stay free extern "C"
 //     functions.
@@ -77,8 +75,8 @@ int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 // committed experiment.
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
-// The existing setter stores a callback address as a 32-bit word at +0x1c.
-void func_020393c4(int *self, int callback);
+// The setter stores the collider's stood-on callback at +0x1c.
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other);
 int func_02012310(int handle, int sound, int arg);
 unsigned char IsAreaShowing(int area);
@@ -118,9 +116,8 @@ extern "C" daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
 #pragma push
 #pragma long_calls on
 // @symbol func_ov002_020baa98
-extern "C" void func_ov002_020baa98(void *collider, daObjSwitch_c *self, dActor_c *other)
-{
-    func_ov002_020baa2c(self, other);
+extern "C" void func_ov002_020baa98(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    func_ov002_020baa2c(static_cast<daObjSwitch_c *>(owner), other);
 }
 #pragma pop
 
@@ -191,8 +188,7 @@ int daObjSwitch_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)(f), *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov002_021098e8[idx].clps));
 
-    func_020393c4(reinterpret_cast<int *>(&mMeshCollider),
-                  reinterpret_cast<int>(&func_ov002_020baa98));
+    func_020393c4(&mMeshCollider, &func_ov002_020baa98);
 
     {
         u16 h = mTimeLimit;

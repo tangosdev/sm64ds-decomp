@@ -87,8 +87,8 @@ extern int data_0208e738;
 extern void hold_d_a_kpa3_bg(void *, KCL_File *, const Matrix4x3 &, int fix, short sh,
                              CLPS_Block &b);
 void func_020393d4(void *p, void *v);
-void func_020393c4(void *p, void *v);
-void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
 
 // local extern: defined below as a free function (cplusplus off has no member syntax); the header declares the member spelling for the PMF table.
@@ -125,9 +125,8 @@ extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
 /* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
    collider and forwards the platform and the touching actor into
    func_ov060_021183cc. */
-extern "C" void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other)
-{
-    func_ov060_021183cc(self, other);
+extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    func_ov060_021183cc(static_cast<daKpa3Bg_c *>(owner), other);
 }
 
 // @symbol func_ov060_021183cc
@@ -157,7 +156,7 @@ s32 daKpa3Bg_c::InitResources()
                               mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
     func_020393d4(&mMeshCollider,
                   (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&func_ov060_021183f4);
+    func_020393c4(&mMeshCollider, &func_ov060_021183f4);
     mMeshCollider.Enable(this);
     mKoopaUniqueId = 0;
     mTouchedKoopa = 0;

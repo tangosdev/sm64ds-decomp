@@ -66,7 +66,7 @@ static inline int IsOffScreen(dActor_c *actor) {
 /* local extern: no shared header declares these. func_020393c4 is the
  * dBgW+0x1c store; naming belongs with dBgW. */
 extern "C" {
-extern void func_020393c4(dBgW *collider, void *callback);
+extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 extern void Vec3_Asr(Vector3 *destination, Vector3 *source, s32 shift);
 }
 
@@ -152,7 +152,7 @@ s32 daObjHatenaSwitch_c::InitResources() {
     file = dBgW_Kc::LoadFile(data_ov002_0210dd50);
     mMovingMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY, data_ov002_0210d774);
 
-    func_020393c4(&mStaticMeshCollider, (void *)&daObjHatenaSwitch_c::AfterClsnCallback);
+    func_020393c4(&mStaticMeshCollider, &daObjHatenaSwitch_c::AfterClsnCallback);
 
     if (data_0209caa0[1] & 0x80000000) {
         mActiveMeshCollider = &mMovingMeshCollider;
