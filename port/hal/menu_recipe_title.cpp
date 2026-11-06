@@ -808,7 +808,11 @@ void build_main(MenuLayout *L, bool intro)
             turn_tag(L, np0, dw0);      /* FLIPSMOOTH1 */
             continue;
         }
-        static const int kPlateX[3] = { 0, 70, 188 }, kPlateW[3] = { 70, 118, 68 };
+        /* MENUFIT1 (Tango 11-05, one screen without the HD UI mod: "ONLINE hides the left of ADVENTURE"): each cut is its own plate's art, whole.
+           Measured on the ROM's lower screen (two-screen picture, every cursor state and the VS wobble): VS spans columns 1..66, ADVENTURE 68..187,
+           REC ROOM 190..253. The ADVENTURE cut used to start at 70, so its left border (68, 69) sat in the VS cut; once the ONLINE plank stood in
+           for VS that cut was never drawn and ADVENTURE lost its left edge. ADVENTURE is now 68..187 (centre 128, where the ROM draws it). */
+        static const int kPlateX[3] = { 0, 68, 188 }, kPlateW[3] = { 68, 120, 68 };
         MenuPiece pl = menu_piece_make(SRC_TOP_PIC, kPlateX[k], 140, kPlateW[k], 52, MENU_AX_C, MENU_AY_B, kPlateX[k] - 128 + kPlateW[k] / 2, 0, 1, 1);
         pl.keycover = 1; pl.touch = 1;
         if (w1000 < 1000) {                                                    /* NAME1: the turn of the ROM's own plate: its cut, narrowed about its centre */
