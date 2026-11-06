@@ -118,7 +118,7 @@ extern s8 gCurrentSublevel;                /* current level */
 extern u8  data_0209f220;
 extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
-extern int data_0209caa0[];             /* save data; word 2 holds the progress flags */
+extern SaveBlock data_0209caa0;         /* the live save block */
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
 extern u16 data_0209d6d4;               /* message on screen */
@@ -541,8 +541,8 @@ void daRedBombhei_c::func_ov084_0212c508()
     case 0:
         if (ApproachLinear(this->mAngleY, angle, 0x800) != 0) {
             if (func_ov084_0212caa8() != 0) {
-                if ((data_0209caa0[2] & 0x8000) == 0) {
-                    data_0209caa0[2] |= 0x8000;
+                if ((data_0209caa0.file.flags2 & 0x8000) == 0) {
+                    data_0209caa0.file.flags2 |= 0x8000;
                     msg = 0x15b;
                 } else if (NumRedCoins() <= 3) {
                     msg = 0x15c;

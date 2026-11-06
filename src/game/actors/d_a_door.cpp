@@ -153,7 +153,7 @@ enum DoorSound {
     SND_SWING_END_ALT = 7
 };
 
-/* Bits of the save flags (data_0209caa0.flags1) the door uses. The shift is
+/* Bits of the save flags (data_0209caa0.file.flags1) the door uses. The shift is
    DoorEntry::flagShift, except for the key bit, which is shifted by
    DoorEntry::keyIndex. */
 enum DoorSaveFlag {
@@ -248,7 +248,7 @@ extern daDoor_StatePmf data_ov100_02148134;
 extern daDoor_StatePmf data_ov100_0214813c;
 extern daDoor_StatePmf data_ov100_02148144;
 
-extern FileSaveData data_0209caa0; /* the live save file (include/SaveData.h) */
+extern SaveBlock data_0209caa0; /* the live save block (include/SaveBlock.h) */
 /* The camera, and the player array indexed by the current player id. */
 extern char *data_0209f318;
 extern unsigned char data_0209f250;
@@ -399,7 +399,7 @@ int daDoor_c::func_ov100_02144528(daPly_c *pl) {
         if (mTimer == 0) {
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 unsigned int ch = data_ov100_021480d0[mKeyModelIdx - 1];
-                if (ch == data_0209caa0.mCharacter)
+                if (ch == data_0209caa0.file.mCharacter)
                     ch = 3;
                 pl->SetRealCharacter(ch);
                 if (data_ov100_02148704 != 0) {
@@ -499,7 +499,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
             u32 *p = &((dCamera_c *)data_0209f318)->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
-                Sound::PlayCharVoice(data_0209caa0.mCharacter, 0x21, mCamSpacePos);
+                Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
             } else if (data_ov100_02148704 == 0) {
                 arg1->PlayMammaMiaSound();
             }
@@ -563,7 +563,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
+        data_0209caa0.file.flags1 |= DOOR_SAVE_KEY_UNLOCKED << sh;
         func_ov100_021453d8(&data_ov100_021488b4, (int)a2);
     }
     return 1;
@@ -627,7 +627,7 @@ int daDoor_c::func_ov100_02144bf4(daPly_c *a2) {
             (((signed char *)data_ov100_02148204) +
              (param1
               << 4))[0xa]; /* flagShift; the array-indexed spelling compiles to a different load */
-        data_0209caa0.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
+        data_0209caa0.file.flags1 |= DOOR_SAVE_STAR_UNLOCKED << sh;
         func_ov100_021451c4(&data_ov100_021488f4, a2);
     }
     return 1;
@@ -701,7 +701,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
     if (func_ov100_021452e4(b)) {
         entry = &data_ov100_02148204[param1];
         if (entry->starsNeeded >= 0) {
-            if (data_0209caa0.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift))
+            if (data_0209caa0.file.flags1 & (DOOR_SAVE_STAR_UNLOCKED << entry->flagShift))
                 goto L240;
             if (NumStars() < entry->starsNeeded) {
                 if (func_ov100_02144f84() == 0)
@@ -721,7 +721,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
             int val;
             if (e9 < 0)
                 goto L240;
-            val = data_0209caa0.flags1;
+            val = data_0209caa0.file.flags1;
             if (val & (DOOR_SAVE_KEY_UNLOCKED << entry->flagShift))
                 goto L240;
             if (val & (DOOR_SAVE_HAVE_KEY << e9))
@@ -737,7 +737,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
                     int sel = 1;
                     int inRange = (unsigned)idx2 >= DOOR_FIRST_KEY_MODEL && (unsigned)idx2 <= 0xb;
                     if (!inRange) {
-                        if (!(data_0209caa0.flags1 & 0xbe))
+                        if (!(data_0209caa0.file.flags1 & 0xbe))
                             sel = 0;
                     }
                     msg = sel ? entry->msg : 0x17;
@@ -747,7 +747,7 @@ int daDoor_c::func_ov100_02144cf8(daPly_c *b) {
             }
             func_ov100_021453d8(&data_ov100_021488c4, (int)b);
             if (entry->keyIndex == 5)
-                data_0209caa0.flags2 |= 0x10000;
+                data_0209caa0.file.flags2 |= 0x10000;
             return 1;
         L210:
             if (b->TryTalkToKeyDoor() == 0)

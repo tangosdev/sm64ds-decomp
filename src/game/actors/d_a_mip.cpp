@@ -1241,7 +1241,7 @@ void daMip_c::RenderMirrorImage()
 /* The glowing-rabbit chase, and it is mostly a conversation.
  *
  * The opening gate depends on the mode. Normally mIsDisabled latches the rabbit
- * out of the level until data_0209caa0[2] clears bit 0x20000; in mode 0x32 the
+ * out of the level until data_0209caa0.file.flags2 clears bit 0x20000; in mode 0x32 the
  * test inverts -- the rabbit runs only for the player whose character id matches
  * mCharacterId and latches itself off for everyone else, which is what makes one
  * actor behave differently per player.
@@ -1273,7 +1273,7 @@ int daMip_c::Behavior()
 
     extern s8 gCurrentSublevel;
     extern s8 data_02092120;
-    extern int data_0209caa0[];
+    extern SaveBlock data_0209caa0;
     extern void* data_0209f33c;
     extern DaMipAnimationFilePtr data_ov085_021305c0;
     extern MipStatePair data_ov085_0213068c;
@@ -1286,7 +1286,7 @@ int daMip_c::Behavior()
 
     if (gCurrentSublevel != 0x32) {
         if (mIsDisabled == 1) {
-            if (data_0209caa0[2] & 0x20000)
+            if (data_0209caa0.file.flags2 & 0x20000)
                 mIsDisabled = 0;
             return 1;
         }
@@ -1294,14 +1294,14 @@ int daMip_c::Behavior()
         player = ClosestPlayer();
         if (player == 0)
             return 1;
-        if (!(data_0209caa0[2] & 0x20000) || mCharacterId != player->mCharacter) {
+        if (!(data_0209caa0.file.flags2 & 0x20000) || mCharacterId != player->mCharacter) {
             mIsDisabled = 1;
             return 1;
         }
         mIsDisabled = 0;
     }
 
-    if (mRabbitId == 7 && !(data_0209caa0[1] & 0x40))
+    if (mRabbitId == 7 && !(data_0209caa0.file.flags1 & 0x40))
         data_0209f33c = c;
 
     if (mIsGlowing != 0) {
@@ -1448,7 +1448,7 @@ int daMip_c::InitResources()
     extern DaMipModelFile data_ov085_021305e0;
     extern MipStatePair data_ov085_021306cc;
     extern s32 data_ov085_021305ac;
-    extern int data_0209caa0[];
+    extern SaveBlock data_0209caa0;
     extern s8 gCurrentSublevel;
 
     void* player;
@@ -1484,13 +1484,13 @@ int daMip_c::InitResources()
 
     rabbitId = mRabbitId;
     if (rabbitId != 7) {
-        if (!(data_0209caa0[1] & 0x40000000))
+        if (!(data_0209caa0.file.flags1 & 0x40000000))
             return 0;
     }
 
     if ((rabbitId == 5 && mCharacterId == 0) || (rabbitId == 1 && mCharacterId == 1) ||
         (rabbitId == 6 && mCharacterId == 3)) {
-        if (!(data_0209caa0[2] & 0x80000))
+        if (!(data_0209caa0.file.flags2 & 0x80000))
             return 0;
     }
 
@@ -1514,7 +1514,7 @@ int daMip_c::InitResources()
     mScaleY = mScaleZ;
 
     if (mRabbitId == 7) {
-        if (data_0209caa0[1] & 0x40)
+        if (data_0209caa0.file.flags1 & 0x40)
             return 0;
         mIsDisabled = 1;
     } else {

@@ -14,10 +14,6 @@
  *   is still declared without the argument and result.
  * - The ov004 registry words stay raw: sMgTopScreenYOffset and the
  *   file-id table sSingle3DCommonNcgByLanguage name no struct this TU can see.
- *   sMgGraphCallback keeps the int[] spelling: the typed
- *   dScMgBase_c::graphCallback_c form matches (9/9 still MATCH) but trips
- *   the decl ratchet against src/minigames/d_s_mg_d3d_base.cpp's banked int[],
- *   and that file is outside this job's area.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -64,10 +60,10 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern u32 data_020a0db0;
 extern int sMgTopScreenYOffset;
-extern int sMgGraphCallback[];
+extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 extern int sSingle3DCommonNcgByLanguage[];
 extern int data_0208ee44;
-extern void **data_0209d4a8;
+extern dGraph_c::callback_c *data_0209d4a8;
 }
 
 // @symbol _ZN19dScMgSingle3DBase_c11InitEnginesEv
@@ -117,8 +113,8 @@ void dScMgSingle3DBase_c::InitEngines()
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
-    sMgGraphCallback[1] = (int)this;
-    data_0209d4a8 = (void **)sMgGraphCallback;
+    sMgGraphCallback.mScene = this;
+    data_0209d4a8 = &sMgGraphCallback;
     *(vu32 *)0x40004ccu = 0x7fff;
     *(vu32 *)0x40004ccu = 0x40007fff;
 }

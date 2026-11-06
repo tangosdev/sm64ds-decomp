@@ -18,7 +18,7 @@
  *   _ZN7Vector3D1Ev to this TU
  * - gC1HikariModelFile is the model SharedFilePtr this Init LoadFile's,
  *   defined at the end of this file (constructed as file ID 1453)
- * - data_0209caa0[1] & 0x80000000; this Init is the consumer, no recovered
+ * - data_0209caa0.file.flags1 & 0x80000000; this Init is the consumer, no recovered
  *   name for that save-flag bit
  * - Sound::PlaySmallSecretSound stays TU-local; Sound.h has no declaration.
  *   MulVec3Mat4x3, Vec3_Add, AngleDiff and NumStars have no shared header
@@ -37,6 +37,7 @@ enum d_a_obj_c1_hikari_AssetId { ASSET_C1_HIKARI_BMD = 0x05ad };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
 /* Behavior's copies of the two world-space offsets it rotates through
  * data_020a0e68 are VecFx32. The shared Vector3 has an empty destructor,
@@ -53,7 +54,7 @@ struct C1HikariModelFilePtr : SharedFilePtr {
 
 /* Defined at the end of this file so its constructor does not enter .text. */
 extern C1HikariModelFilePtr gC1HikariModelFile;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
@@ -86,7 +87,7 @@ int daObjC1Hikari_c::InitResources() {
     dExtSimpleModel_c::LoadFile(gC1HikariModelFile);
     if (NumStars() < 0xe)
         return 0;
-    if (data_0209caa0[1] & 0x80000000)
+    if (data_0209caa0.file.flags1 & 0x80000000)
         return 0;
     mModel.SetFile((BMD_File *)gC1HikariModelFile.filePtr, 1, 0x13);
     mCylinder.Init(this, mPos, 0xf0000, 0x8c000, 0x4800002, 0);

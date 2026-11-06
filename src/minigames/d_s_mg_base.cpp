@@ -91,7 +91,7 @@ int sMgSparkleSprites[16];
 
 extern "C" {
 extern void *sMgWorkBuffer;
-extern void **data_0209d4a8;
+extern dGraph_c::callback_c *data_0209d4a8;
 void Mg_UpdateMenu(char *c);
 void Banner_Update(char *c);
 void Mg_UpdateFx(char *c);
@@ -3491,7 +3491,7 @@ extern "C" {
    GetGameLanguage into sMgStockCounterFiles) is decompressed into BOTH engines'
    BG char VRAM at 0x06404000 and 0x06604000, OBJ palette file 0xc3 is loaded
    into both, and the scene object is published into the global registry --
-   sMgGraphCallback[1] = this, then data_0209d4a8 points at that registry.
+   sMgGraphCallback.mScene = this, then data_0209d4a8 points at that registry.
    The object fields it touches are its own: +0x68 cleared and +0x6c set to -1.
 
    WHEN IT RUNS.  First out of dScMgBase_c::BeforeInitResources
@@ -3522,7 +3522,7 @@ extern int sMgTopScreenYOffset;
 extern u8 gMainScreenLayers;
 extern int sMgStockCounterFiles[];
 extern u8 gSubScreenLayers;
-extern void **data_0209d4a8;
+extern dGraph_c::callback_c *data_0209d4a8;
 extern int data_0208ee44;
 }
 }
@@ -3578,7 +3578,7 @@ void dScMgBase_c::InitEngines() {
     Ov004_Deallocate(p);
     gSubScreenLayers = 0x10;
     sMgGraphCallback.mScene = this;
-    data_0209d4a8 = (void **)&sMgGraphCallback;
+    data_0209d4a8 = &sMgGraphCallback;
     Mg_ResetOverlays();
     FreeGfxSlotsById(0x1d);
     data_0208ee44 = 1;

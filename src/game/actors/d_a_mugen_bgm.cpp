@@ -4,7 +4,7 @@
  *
  * param1 == 1 steers gMusicTrackModeOverride from the rotated offset; otherwise it
  * drives Fog depth/color from the rotated offset, star count and
- * data_0209caa0[0x41], then keeps Sound sub 0x2e playing while
+ * data_0209caa0.file.mCharacter, then keeps Sound sub 0x2e playing while
  * func_ov100_02144f84 gates mHorzSpeed.
  *
  * This TU owns text only: ov002 delinks no .data here, so the _ZTV / _ZTI /
@@ -28,6 +28,7 @@
 #include "decl_common.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "SaveBlock.h"
 
 extern signed char data_ov002_02110af0;
 extern signed char data_02092120;
@@ -35,7 +36,7 @@ extern void *data_ov002_02110af8;
 extern u8 data_0209f250;
 extern char *data_0209f394[];
 extern int data_020a0ebc[];
-extern u8 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern char *data_0209f318;
 
 /* arm9 / ov100 C helpers with no shared header. */
@@ -112,7 +113,7 @@ int daMugenBGM_c::Behavior() {
     color = depth;
     flag = 0;
 
-    if (NumStars() < 0x50 || data_0209caa0[0x41] != 0) {
+    if (NumStars() < 0x50 || data_0209caa0.file.mCharacter != 0) {
         int x = rotated[0];
         color = 0xd00;
         if (x < 0)

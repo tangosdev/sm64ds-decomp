@@ -34,7 +34,7 @@ extern "C" {
 /* data_0209caa0 is the live save block; its first 0x44 bytes are the
  * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
  * flags2. */
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 
 /* data_0209f5c0 is the parent passed to dBase_c::Spawn. */
 extern fBase_c *data_0209f5c0;
@@ -107,8 +107,6 @@ struct LVL_Overlay_Layout {
     u8 subCount;  /* 0x14 */
 };
 
-#define sCurrentFile (*(FileSaveData *)data_0209caa0)
-
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {
     return data_0209f2d8 == mode;
@@ -116,7 +114,7 @@ static inline int IsGameMode(int mode) {
 
 /* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
 static inline int IntroAllowed() {
-    return IsGameMode(0) && (sCurrentFile.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
+    return IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
 }
 
 /* Spawn simple actors, or hand a minimap-change sentinel to
@@ -207,7 +205,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
             u16 param = entry->param;
             entranceKind = (param >> 7) & 0xf;
 
-            int savedCharacter = sCurrentFile.mCharacter;
+            int savedCharacter = data_0209caa0.file.mCharacter;
             int playerCharacter = data_02092128[playerIndex];
             if (IsGameMode(1)) {
                 savedCharacter = 3;

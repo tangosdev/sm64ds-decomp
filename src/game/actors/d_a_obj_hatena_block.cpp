@@ -177,7 +177,7 @@ enum {
     ACTOR_FEATHER = 345       /* 0x159 */
 };
 
-/* SaveData::flags1 (data_0209caa0[1]) bit 31. Its meaning is not named in
+/* SaveData::flags1 (data_0209caa0.file.flags1) bit 31. Its meaning is not named in
    the tree; this class only tests it. While it is CLEAR, an actor 20
    (HATENA_BLOCK) is drawn as the animated model (mAnmModel), Behavior only
    advances that animation (while IDLE) and keeps the collider off, and the mega-player
@@ -191,7 +191,7 @@ extern int data_0209f32c;
 extern unsigned char data_0209f2d8;
 extern char data_0209f318[];
 extern char data_020a0edc[];
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern s16 data_02082214[];
 
 extern SharedFilePtr data_ov002_0210d9a0;
@@ -491,7 +491,7 @@ int daObjHatenaBlock_c::Behavior()
         }
         goto end;
     }
-    if ((data_0209caa0[1] & SAVE_FLAGS1_BIT31) == 0) {
+    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
         int b = (int)(actorID == ACTOR_HATENA_BLOCK);
         if (b != 0) {
             mAnmModel.Advance();
@@ -531,7 +531,7 @@ int daObjHatenaBlock_c::Render()
 {
     if (mState == STATE_POPPED)
         goto done;
-    if ((data_0209caa0[1] & SAVE_FLAGS1_BIT31) == 0) {
+    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
         int b = (actorID == ACTOR_HATENA_BLOCK);
         if (b != 0) {
             mAnmModel.Render(0);
@@ -637,7 +637,7 @@ void daObjHatenaBlock_c::func_ov102_02149ff0()
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = (mPosY + mBounceYOffs) >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
-    if (data_0209caa0[1] & SAVE_FLAGS1_BIT31)
+    if (data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)
         return;
     int b = (int)(actorID == ACTOR_HATENA_BLOCK);
     if (b == 0)
@@ -738,7 +738,7 @@ void daObjHatenaBlock_c::func_ov102_02149d80() {
 void daObjHatenaBlock_c::func_ov102_02149ccc()
 {
     daPly_c *player;
-    if (!(data_0209caa0[1] & SAVE_FLAGS1_BIT31)) {
+    if (!(data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)) {
         int b = (int)(actorID == ACTOR_HATENA_BLOCK);
         if (b)
             return;

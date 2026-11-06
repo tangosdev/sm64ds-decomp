@@ -27,8 +27,6 @@
  * Leftover: data_ov100_02148390 gate table.
  * Leftover: (Vector3 *)&mSpeedX (dActor_c consecutive
  *   s32s; a Vector3 member is not this class).
- * Leftover: data_0209caa0 +0x41 character byte (SaveData.mCharacter).
- *   SaveData.h shifts this TU's @432..@446 PTMF uniquifiers in symbols.txt.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_star_gate_AssetId {
@@ -43,6 +41,7 @@ enum d_a_star_gate_AssetId {
 #include "dCamera_c.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
 extern "C" {
 int func_ov100_02144fcc(...);
@@ -66,7 +65,7 @@ void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 extern u8 data_0209f250;
 extern dCamera_c *data_0209f318;
 extern daPly_c *data_0209f394[];
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern char data_020a0ebc[];
 
 struct StarGateModelFilePtr : SharedFilePtr {
@@ -266,14 +265,14 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
         entry = &data_ov100_02148390[param1];
         isSpecial = entry->numStars == 0x50;
         notEnoughStars = (int)NumStars() < entry->numStars;
-        isMario = ((unsigned char *)data_0209caa0)[0x41] == 0;
+        isMario = data_0209caa0.file.mCharacter == 0;
 
         /* A door already unlocked in the save just opens. So does the 80-star
            door from behind (mScaleZ <= 0), or for Mario with enough stars.
            Otherwise it shows its message (or, for Mario with enough stars,
            starts the unlock talk) and falls back to TryOpenDoor when that
            call returns 0. */
-        if (!(data_0209caa0[1] & (0x8000 << entry->saveFlag))) {
+        if (!(data_0209caa0.file.flags1 & (0x8000 << entry->saveFlag))) {
             if (!isSpecial || (mScaleZ > 0 && (notEnoughStars || !isMario))) {
                 {
                     int x = mPosX;
@@ -345,7 +344,7 @@ bool daStarGate_c::St_Unlocking_Main(daPly_c *player) {
     if (!player->IsOpeningDoorWithStar()) {
         daStarGateInfo *entry = &data_ov100_02148390[param1];
         s8 sh = entry->saveFlag;
-        data_0209caa0[1] |= 0x8000 << sh;
+        data_0209caa0.file.flags1 |= 0x8000 << sh;
         TryOpenDoor(player);
     }
     return true;

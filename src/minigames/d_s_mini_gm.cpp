@@ -61,8 +61,8 @@
 #include "G3X.h"
 #include "dScene_c.h"
 #include "LevelRng.h"
+#include "SaveData.h"
 
-struct MinigameSaveData;
 struct OamAttr;
 
 struct TouchRec {
@@ -74,8 +74,6 @@ struct TouchRec {
 typedef struct Pair { int x, y; } Pair;
 struct Off9 { int v[9]; };
 
-namespace SaveData { void SaveMinigames(MinigameSaveData *); }
-
 extern "C" {
 
 /* ---- arm9 globals ---- */
@@ -84,7 +82,7 @@ extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
-extern u32 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset[];
@@ -177,7 +175,7 @@ s32 dScMiniGm_c::InitResources()
     Sound::LoadGroupAndSetBank(0x27, 5);
     Disable3dEngines();
 
-    if (!(data_0209caa0[0x48 / 4] & 0x80000000)) {
+    if (!(data_0209caa0.mg.unlocked & 0x80000000)) {
         tbl = sMiniGmRows;
         for (i = 0; i < 0x24; i++) {
             for (j = 0; j < 5; j++) {
@@ -185,7 +183,7 @@ s32 dScMiniGm_c::InitResources()
             }
             tbl++;
         }
-        data_0209caa0[0x48 / 4] |= 0x80000000;
+        data_0209caa0.mg.unlocked |= 0x80000000;
         gMgSaveDirty = 1;
     }
 

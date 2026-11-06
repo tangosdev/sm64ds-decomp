@@ -128,7 +128,7 @@ extern u8 data_0209f250;               /* CURR_PLAYER_ID */
 extern u8 data_0209f2d8;               /* CURRENT_GAMEMODE */
 extern dActor_c *data_0209f394[];      /* PLAYER_ARR */
 extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
-extern int data_0209caa0[];            /* SaveData; [1] is flags1 */
+extern SaveBlock data_0209caa0;        /* the live save block */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
 extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
 extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */
@@ -4738,7 +4738,7 @@ int ContinueKuppaScriptIfNecessary() {
     if (saved == data_02089608) {
         data_0209f2d8 = 2;
         Sound::LoadInitialGroup(0x26);
-        data_0209caa0[1] &= ~0x204;
+        data_0209caa0.file.flags1 &= ~0x204;
         CollectStarInLevel(7, 1);
         CollectStarInLevel(8, 1);
     } else if (saved == data_02087c00) {

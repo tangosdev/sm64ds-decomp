@@ -44,6 +44,7 @@
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
+#include "SaveBlock.h"
 
 struct BCA_File;
 struct BMD_File;
@@ -95,7 +96,7 @@ extern SharedFilePtr data_ov002_0210d9c0;
 
 /* arm9 statics */
 extern s8 gCurrentSublevel;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
@@ -204,8 +205,8 @@ void daKinopio_c::St_Talk_Main()
         if (ApproachLinear(mAngleY, angleToPlayer, 0x800) == 0)
             return;
         if (gCurrentSublevel == 0x32) {
-            if ((data_0209caa0[1] & 0x40000000) == 0)
-                data_0209caa0[1] |= 0x40000000;
+            if ((data_0209caa0.file.flags1 & 0x40000000) == 0)
+                data_0209caa0.file.flags1 |= 0x40000000;
         }
         if (Sound::PlaySub(0x25, 0x14, 0x7f, 0x15666, 1) == 0)
             return;

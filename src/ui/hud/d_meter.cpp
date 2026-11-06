@@ -157,7 +157,7 @@ extern struct OamAttr *data_ov002_0210c230[];
 extern struct OamAttr data_ov002_0210d5d0;
 extern struct OamAttr data_ov002_0210d4f0;
 extern struct OamAttr data_ov002_0210c690;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *data_0209f5bc;
 void *LoadFile(int handle);
@@ -356,7 +356,7 @@ int dMeter_c::InitResources() {
         mLifeCountX = 0x10;
         mStarCountX = 0xF0;
         mStarCountSlideIn = 0;
-    } else if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+    } else if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
         gMeterCounterSlideState = 6;
         mLifeCountX = -0x3A;
         mStarCountX = (s16)(starDigitsWidth + 0x120);
@@ -389,7 +389,7 @@ int dMeter_c::Behavior() {
 
     /* vs is computed only once the first test passes and is reused below. */
     if (data_0209f5bc->IsAtStart() == 0 ||
-        ((vs = IsVsMode()) == 0 && (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0))
+        ((vs = IsVsMode()) == 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {
         UpdateVsTimer();
@@ -494,7 +494,7 @@ int dMeter_c::Render() {
                 }
             }
         }
-    } else if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) != 0) {
+    } else if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0) {
         unsigned char v = data_0209f20c;
         if (((gGamePaused | v | gVsExitScreenActive) & 0xff) == 0) {
             RenderHealthMeter();

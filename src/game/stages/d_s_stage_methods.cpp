@@ -250,7 +250,7 @@ extern unsigned int data_02092134;
 extern int data_02092138;
 extern u16 *data_0209214c[];
 extern s32 data_02092208[];
-extern u8 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern s32 data_0209cef0;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -2792,7 +2792,7 @@ int IsButtonInputValid(void) {
 
     if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) == 0 && data_0209f204 == 0 &&
         gVsExitScreenActive == 0) {
-        mode = data_0209caa0[0x42];
+        mode = data_0209caa0.file.controllerMode;
         if (mode == 0) {
             val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
             if (val & 0xf)
@@ -2874,7 +2874,7 @@ extern "C" void StartEntranceFaderWipe(int index) {
 // @symbol StartExitCharacterWipe
 /* Start the exit wipe for the current character (per-character wipe table). */
 extern "C" void StartExitCharacterWipe(void) {
-    StartExitFaderWipe(data_020755bc[data_0209caa0[0x41]]);
+    StartExitFaderWipe(data_020755bc[data_0209caa0.file.mCharacter]);
 }
 
 // @symbol StartExitFaderWipe
@@ -3369,17 +3369,17 @@ extern "C" void func_0202a850(int a, int b) {
 // @symbol InitControllerMode
 /* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
    is their +0x16, data_0209f4ae. The save file keeps the active player's
-   copy at data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveData.h). */
+   copy at data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
 extern "C" void InitControllerMode(int idx, u8 val) {
     data_0209f4ae[idx * 0x18] = val;
     if (idx == gActivePlayerSlot)
-        data_0209caa0[0x42] = val;
+        data_0209caa0.file.controllerMode = val;
 }
 
 // @symbol SetControllerMode
 extern "C" void SetControllerMode(unsigned char mode) {
     data_0209f4ae[gActivePlayerSlot * 0x18] = mode;
-    data_0209caa0[0x42] = mode;
+    data_0209caa0.file.controllerMode = mode;
 }
 
 // @symbol func_0202a8e0
@@ -3564,7 +3564,7 @@ extern "C" void SetPlayerGlobals(void) {
     gNumLives = 4;
     s32 i = 0;
     do {
-        u8 mode = data_0209caa0[0x42];
+        u8 mode = data_0209caa0.file.controllerMode;
         gPlayerHealth[i] = 0x880;
         InitControllerMode(i, mode);
         i++;
@@ -3603,7 +3603,7 @@ extern "C" void PrepareVsMode(void) {
     data_0209f2d8 = 1;
     SetPlayerGlobals();
     dScene_c::StartSceneFade(3, 0, 0x7fff);
-    SaveData::SetDefaultValues((FileSaveData *)data_0209caa0);
+    SaveData::SetDefaultValues(&data_0209caa0.file);
 }
 
 // @symbol func_0202ae74
@@ -3619,7 +3619,7 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
     data_0209f2d8 = 0;
     LoadLevelNoReturn(levelID, entranceID, 1, 0);
     SetPlayerGlobals();
-    data_02092128[0] = data_0209caa0[0x41];
+    data_02092128[0] = data_0209caa0.file.mCharacter;
     SetNumPlayers(1);
     gLastCourseSublevel = 6;
     gCollectedStarId = 0;
@@ -4251,7 +4251,7 @@ int dScStage_c::Behavior() {
             u8 st = data_0209f2d8;
             int b1 = (st == 1);
             if ((b1 && data_0209fc68 == 0) ||
-                (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE)) {
+                (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 int b2 = (st == 2);
                 if (b2 == 0) {
                     int b3 = (gRunningKuppaScript != 0);
@@ -4303,8 +4303,7 @@ void dScStage_c::CheckInput() {
     int isVsMode = (mode == 1);
     if (isVsMode == false) {
         int modeIsTwo = (mode == 2);
-        if (modeIsTwo != false ||
-            !(((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) ||
+        if (modeIsTwo != false || !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
             (data_0209d660 == 0 && (int)(gRunningKuppaScript != 0) != false)) {
             {
                 ControllerInput *control = data_0209f498;
@@ -4906,8 +4905,7 @@ int dScStage_c::InitResources() {
                     !IsLevelInsideCastle(previousSublevel)) {
                     if (!IsLevelTinyHugeIslandOutside(gCurrentSublevel) ||
                         !IsLevelTinyHugeIslandOutside(previousSublevel)) {
-                        if (gCurrentSublevel != 2 ||
-                            (((FileSaveData *)data_0209caa0)->flags2 & 0x200)) {
+                        if (gCurrentSublevel != 2 || (data_0209caa0.file.flags2 & 0x200)) {
                             Sound::LoadAndSetMusic_Layer1(data_0207576a[gCurrentSublevel * 3]);
                             u8 localPlayer = data_0209f250;
                             if (((u8 *)data_0209f394[localPlayer])[0x6ff] != 0) {
@@ -5039,7 +5037,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     }
 
     if ((int)(data_0209f2d8 == 0) != 0 &&
-        (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+        (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0) {
         BG0CNT_SUB &= ~3;
         BG0CNT_SUB &= ~0x40;

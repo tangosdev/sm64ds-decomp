@@ -181,7 +181,7 @@ extern ChompState data_ov100_021486f4;
 /* The ROM PMF constants the state record copies from (unlicensed .data). */
 extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
-extern unsigned char data_0209f2d8[];
+extern unsigned char data_0209f2d8;
 extern short data_02082214[];
 extern Matrix4x3 data_020a0e68;
 }
@@ -308,7 +308,7 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
 // @symbol func_ov100_021435e8
 /* The actor kept at the chain's last link (mLinkPos[5]). While
    mChainEndActorID is 0 it is spawned (once Spawn succeeds): SILVER_STAR (0xb3) normally, or
-   when data_0209f2d8[0] is 1 a STAR (0xb2, param mSpawnParam | 0x30) plus a
+   when data_0209f2d8 is 1 a STAR (0xb2, param mSpawnParam | 0x30) plus a
    STARBASE (0xb4) whose ID is not kept. Its uniqueID goes into
    mChainEndActorID, and afterwards the actor is pinned to the link every
    frame until it is gone or its +0x440 word (daStar_c's unk_440) reads 5;
@@ -318,7 +318,7 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
 {
     if (c->mChainEndDone != 0) return;
 
-    int flag = (data_0209f2d8[0] == 1);
+    int flag = (data_0209f2d8 == 1);
     if (!flag) {
         if (c->mChainEndActorID == 0) {
             dActor_c *a = dActor_c::Spawn(daWanwan2_ACTOR_SILVER_STAR, 0,
@@ -594,7 +594,7 @@ int daWanwan2_c::Render()
    at 23 units/frame (0x17000), and when the floor probe hits plays
    SND_FLOOR_HIT (unless unk_6a8 is nonzero), sets its vertical speed to 20
    units/frame (0x14000) and kicks up landing dust. Every 200 frames
-   (mCoinTimer) in game mode 1 (data_0209f2d8[0] is 1) it spawns a COIN at its
+   (mCoinTimer) in game mode 1 (data_0209f2d8 is 1) it spawns a COIN at its
    position, its mPrevAngleY set to 0x10000 / mPathNodeIndex (truncated to 16
    bits; this divides by zero if the index has wrapped to 0), its mVertSpeed to
    4 units/frame and its mSpeedX and mSpeedZ to 0, playing SND_COIN_SPAWN
@@ -644,7 +644,7 @@ int daWanwan2_c::Behavior()
         HugeLandingDust(true);
     }
 
-    int flag = (data_0209f2d8[0] == 1);
+    int flag = (data_0209f2d8 == 1);
     if (flag != 0 && mCoinTimer == 0) {
         int q16 = __aeabi_idiv(0x10000, mPathNodeIndex);
         short spd = (short)q16;

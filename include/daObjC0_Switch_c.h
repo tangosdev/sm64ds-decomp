@@ -29,7 +29,7 @@
  * mPressed is this pillar's own pressed state. InitResources and
  * OnGroundPounded both guard on and set it; OnGroundPounded no-ops if already
  * set, then returns at the first non-this actorID-0x22 pillar and, if that
- * one is already pressed, sets a shared flag in data_0209caa0[2].
+ * one is already pressed, sets a shared flag in data_0209caa0.file.flags2.
  *
  * The destructor is declared LAST and INLINE on purpose. Class instantiation
  * via the factory's `new` emits the retail D1/D0 pair in cartridge order
