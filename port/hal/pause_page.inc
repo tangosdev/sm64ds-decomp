@@ -75,9 +75,12 @@ void plain_hi(const Surf &sf, int id, int dx, int dy, int dw, int dh, int alpha,
     case MENU_IMG_P_TAB_L: case MENU_IMG_P_TAB_R: {
         fill_rrect(sf, x, y, w, h, w * 0.18f, plain_tint(0x8A5A10, light, shade), alpha, 0);
         fill_rrect(sf, x + w * 0.06f, y + w * 0.06f, w * 0.88f, h - w * 0.12f, w * 0.14f, plain_tint(0xF0B850, light, shade), alpha, 0);
+        /* PAUSEPOLISH1: the label sits in the middle of the tab. It used to sit at h * 0.88, the place the HD UI mod's tab picture gives its
+           label under that picture's arrow and star; the plain skin draws neither, so the label was left alone at the tab's foot.
+           ui_text_draw takes a baseline: half the capital height under the centre line centres the capitals. */
         const char *t = id == MENU_IMG_P_TAB_L ? "LB" : "RB";
         const float em = w * 0.34f, tw = ui_text_width(t, em);
-        ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.88f, t, em, plain_tint(0x7A3A0C, light, shade), alpha, 0);
+        ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.5f + ui_text_cap_height(em) * 0.5f, t, em, plain_tint(0x7A3A0C, light, shade), alpha, 0);
         break;
     }
     default: break;
