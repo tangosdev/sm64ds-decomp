@@ -145,7 +145,14 @@ struct daObjHatenaBlock_c : dBgActor_c {
        class. */
     dActor_c *mHeldActor;             /* 0x3f4 */
 
-    /* Inline is load-bearing: out-of-line emits D0 before D1. */
+    /* Inline is load-bearing: out-of-line emits D0 before D1.
+       The two-arm pair from include/daObjHatenaBlock_c.h, which this view
+       replaces: without it the compiler vtable's slot 16 named
+       dBgActor_c::Destructor1, so deleting a block never ran this
+       destructor and its mShadowModel stayed on the shadow list. The
+       virtual destructor stays, so the slot after Kill keeps its place. */
+    virtual void Destructor1();   /* D1 */
+    virtual void Destructor0();   /* D0 */
     virtual ~daObjHatenaBlock_c() {}
 
     int Behavior();
