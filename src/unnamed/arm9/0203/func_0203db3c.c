@@ -1,4 +1,4 @@
-extern char data_020a1052[];
+extern unsigned char data_020a1052[];
 /* Set link settings byte `byte` of this console, at 0x12 of its own input
    record data_020a1040 (data_020a1052): the writer the 0202 accessors pair
    with GetPlayerFlagByte. */

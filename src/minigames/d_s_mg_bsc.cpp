@@ -44,7 +44,7 @@ extern "C" {
 extern short gMgCoinsStatus;
 extern int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
 extern void Mg_ResumeSharedState(void);
-extern int Dealer_IsIdle(int *r0);
+extern int Dealer_IsIdle(Dealer *dealer);
 extern void MgCoins_StartPayout(int x);
 extern void MgCoins_StartLose(void);
 extern int gMgCoinsInPlay;
@@ -58,7 +58,7 @@ extern void Mg_SaveRecordPair(int a, int b);
 extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern int RandomIntInternal(int *seed);
-extern void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
+extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern void FreeGfxSlotsById(int arg);
 extern void MgCoins_Reset(void);
 void Camera_InitDealerView(void *camera);
@@ -179,7 +179,7 @@ s32 dScMgBSC_c::CanEndState(int mode) {
     int state;
     short coinStatus;
     if (mState == STATE_WAIT_RESULT) {
-        if (Dealer_IsIdle((int *)&mDealer) != 0) {
+        if (Dealer_IsIdle(&mDealer) != 0) {
             if (mode == 4) {
                 FreeGfxSlotsById(0x1d);
                 mState = STATE_WAIT_WIN;
@@ -249,7 +249,7 @@ void dScMgBSC_c::StateDealCards() {
     mOtherCard = 0;
     mChosenCard = 1;
     mCardsDealt = 0;
-    Dealer_StartShuffle((char *)&mDealer, 3, 2, (int)&mCardsDealt);
+    Dealer_StartShuffle(&mDealer, 3, 2, &mCardsDealt);
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -448,7 +448,7 @@ void dScMgBSC_c::StateTableReaction() {
 /* States 9 and 10: wait for the table's reaction to finish, then pay out
  * a win (state 12) or play the loss sting and gather the cards (state 11). */
 void dScMgBSC_c::StateWaitTable() {
-    if (Dealer_IsIdle((int *)&mDealer) == 0)
+    if (Dealer_IsIdle(&mDealer) == 0)
         return;
     if (mState == STATE_WAIT_WIN) {
         MgCoins_StartPayout(gMgCoinsInPlay << 1);

@@ -386,10 +386,6 @@
    "ref": "docs/class-reference-confidence"
   },
   {
-   "file": "notes/handoff-issue-2422.md",
-   "ref": "tools/check_src_tu.py"
-  },
-  {
    "file": "notes/handoff-marker-typing.md",
    "ref": "src/_ZN10FlameChomp13InitResourcesEv.cpp"
   },
@@ -404,22 +400,6 @@
   {
    "file": "notes/handoff-sphereclsn-detectclsn.md",
    "ref": "src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp"
-  },
-  {
-   "file": "notes/handoff-validator-and-tests.md",
-   "ref": "tools/test_"
-  },
-  {
-   "file": "notes/handoff-validator-and-tests.md",
-   "ref": "tools/test_check_src_tu.py"
-  },
-  {
-   "file": "notes/match-attempts.md",
-   "ref": "notes/adopting-match-conventions.md"
-  },
-  {
-   "file": "notes/match-provenance.md",
-   "ref": "src/NAME.c"
   },
   {
    "file": "notes/matching-style.md",
@@ -462,18 +442,6 @@
    "ref": "src_tu/actors"
   },
   {
-   "file": "notes/port-selftest-bmp-gate.md",
-   "ref": "port/hal/host_settings.cpp"
-  },
-  {
-   "file": "notes/port-selftest-bmp-gate.md",
-   "ref": "port/ov009_syms.txt"
-  },
-  {
-   "file": "notes/port-selftest-bmp-gate.md",
-   "ref": "port/tools/battery.py"
-  },
-  {
    "file": "notes/research-matching-levers.md",
    "ref": "src/randomizer.py"
   },
@@ -506,26 +474,6 @@
    "ref": "src/unnamed/ov002/__sinit_ov002_02100938.c"
   },
   {
-   "file": "notes/sinit-ownership-wave-edges.md",
-   "ref": "src/unnamed/ov002/__sinit_ov002_02107304.c"
-  },
-  {
-   "file": "notes/sinit-ownership-wave-resource-handles.md",
-   "ref": "src/unnamed/ov002/__sinit_ov002_02100f84.c"
-  },
-  {
-   "file": "notes/sinit-ownership-wave-resource-handles.md",
-   "ref": "src/unnamed/ov009/__sinit_ov009_02112458.c"
-  },
-  {
-   "file": "notes/sinit-ownership-wave-resource-handles.md",
-   "ref": "src/unnamed/ov009/__sinit_ov009_02112524.c"
-  },
-  {
-   "file": "notes/sinit-ownership-wave-resource-handles.md",
-   "ref": "tools/tu_config.py"
-  },
-  {
    "file": "notes/sinit-wave-a-ownership.md",
    "ref": "src/unnamed/ov002/__sinit_ov002_02100f84.c"
   },
@@ -540,30 +488,6 @@
   {
    "file": "notes/tu-cpp-census-2026-08.md",
    "ref": "src/_ZN7dWipe_c15SetBackwardTimeEj.c"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/ChainChomp_Spawn.cpp"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/__sinit_ov020_02113674.c"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/func_ov005_020c21ec.c"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/func_ov006_020e0574.cpp"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/unnamed/ov002/__sinit_ov002_02101968.c"
-  },
-  {
-   "file": "notes/tu-filename-reconstruction-pilot.md",
-   "ref": "src/unnamed/ov006/__sinit_ov006_021304ac.c"
   },
   {
    "file": "notes/tu-reconstruction-pilot-2-report.md",
