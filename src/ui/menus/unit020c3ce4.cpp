@@ -90,7 +90,7 @@ void *func_ov007_020c3df4(const char *name, int size) {
 }
 
 // @symbol func_ov007_020c3d40
-int func_ov007_020c3d40(const char *name, int n) {
+void *func_ov007_020c3d40(const char *name, int n) {
     int *r = (int *)func_ov007_020c3df4(name, n);
     volatile unsigned short v16;
     volatile unsigned v32;
@@ -114,7 +114,7 @@ int func_ov007_020c3d40(const char *name, int n) {
         func_0205a588(r, 0, n);
         break;
     }
-    return (int)r;
+    return r;
 }
 
 // @symbol func_ov007_020c3d1c

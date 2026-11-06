@@ -60,11 +60,11 @@ extern MessageInfo *data_ov007_02104c1c; /* INF1 header */
 extern MessageBank *data_ov007_02104c20; /* the bound bank */
 extern char *data_ov007_02104c24;        /* DAT1 payload */
 
-/* Every section but INF1 and DAT1 is skipped. A caller passes a third,
- * diagnostic-name argument that retail never reads; sections the bank lacks
- * keep their previous pointers. */
+/* Every section but INF1 and DAT1 is skipped. name is the bank's
+ * diagnostic name (func_ov007_020b8548 loads it into r2); retail never reads
+ * it. Sections the bank lacks keep their previous pointers. */
 // @symbol func_ov007_020c951c
-void func_ov007_020c951c(int unused, MessageBank *bank) {
+void func_ov007_020c951c(int unused, MessageBank *bank, const char *name) {
     u32 sectionIndex;
     char *section = (char *)bank;
     data_ov007_02104c20 = bank;

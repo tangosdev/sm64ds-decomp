@@ -5,17 +5,17 @@
 
 extern "C" {
 
-extern int func_02065ae0(void);
-extern void func_02065ad0(int v);
+extern struct WBTBlockInfoList *func_02065ae0(void);
+extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_020658c0(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
                   int dataSize, u16 permissionBmp) {
     u32 irq = IRQ::Disable();
     if (func_02065ae0() == 0) {
-        func_02065ad0((int)node);
+        func_02065ad0(node);
     } else {
-        struct WBTBlockInfoList *p = (struct WBTBlockInfoList *)func_02065ae0();
+        struct WBTBlockInfoList *p = func_02065ae0();
         struct WBTBlockInfoList *nx = p->next;
         if (nx != 0) {
             do {

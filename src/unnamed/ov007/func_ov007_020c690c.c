@@ -5,7 +5,7 @@ extern void func_ov007_020c684c(void *self);
 extern Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
 extern Ov007Link *func_ov007_020c80a4(void);
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
-extern int func_ov007_020c2c68(int a, int b, int c);
+extern Ov007StrokePath *func_ov007_020c2c68(int a, int b, int c);
 
 /* Allocates the 0xd0-byte picker and its per-group tables for maxGroups
  * strokes, resets it (func_ov007_020c684c), builds the pos and anchor
@@ -55,7 +55,7 @@ Ov007Picker *func_ov007_020c690c(int maxGroups, int maxPoints, int pathCapacity,
     p->link = func_ov007_020c80a4();
     func_ov007_020c8010(p->link, p->anchorPoint, p->posPoint);
 
-    p->path = (Ov007StrokePath *)func_ov007_020c2c68(0, pathCapacity, 1);
+    p->path = func_ov007_020c2c68(0, pathCapacity, 1);
     p->pathPoints = func_ov007_020c3df4(0, pathCapacity * 0xc);
 
     func_ov007_020c6724(p, 1);

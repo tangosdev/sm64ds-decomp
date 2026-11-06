@@ -5,12 +5,12 @@
 
 extern int data_0209d574;
 
-extern int func_0201a9ec(int *timer);
+extern unsigned char func_0201a9ec(int *timer);
 extern int func_02018a58(int count);
 extern int func_020189f0(int path);
 extern void func_02018a40(unsigned handle, int fileId);
 extern void func_0201a9fc(int *timer);
-extern int func_0201a96c(int *timer, int suspended);
+extern unsigned char func_0201a96c(int *timer, unsigned char suspended);
 
 enum { ASSET_HANDLE_COUNT = 0x80a, ASSET_LOOKUP_PRIORITY = 0x1f };
 
@@ -2080,7 +2080,7 @@ static const char *sAssetPaths[ASSET_HANDLE_COUNT] = {
 
 void InitializeAssetHandleTable(void) {
     /* Suspend the timer callback and allocate the zeroed file-ID table. */
-    int savedTimerState = func_0201a9ec(&data_0209d574);
+    unsigned char savedTimerState = func_0201a9ec(&data_0209d574);
     func_02018a58(ASSET_HANDLE_COUNT);
 
     OSThread *currentThread = data_020a6134.current;

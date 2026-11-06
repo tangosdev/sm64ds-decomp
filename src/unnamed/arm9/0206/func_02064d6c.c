@@ -1,8 +1,7 @@
 #include "types.h"
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
-int func_02064d6c(int dest, u16 a, u8 b, int c, int d, void *p, int n)
-{
+int func_02064d6c(int dest, u16 a, u8 b, int c, int d, const void *p, int n) {
     u8 kind = 5;
     u16 a16 = a;
     int pos;
