@@ -575,7 +575,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@958",
+      "from": "@956",
       "to": "@887",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier | compiler temp; the five rock helpers becoming members, and including SharedFilePtr.h, Particle__System.h, math/MtxStack.h and cstd.h in place of the local stubs, move the per-TU @NNN uniquifier, so mwcc emits it under this name now | CalcLib removed eight named helper parameters; baseline @967 and candidate @959 pair at ELF section 33, size 0xc. Re-keyed from @959 to @958 when InitResources' function-local POD Vec3 was respelled as VecFx32 (#4570)."
     }
