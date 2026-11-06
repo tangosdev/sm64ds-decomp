@@ -67,6 +67,7 @@ enum d_a_nknk_AssetId {
 #include "math/CalcLib.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the two models,
@@ -98,7 +99,6 @@ extern int data_ov062_0211cf0c[];
 extern void func_ov002_020aea30(void* self, void* attacker, dBgCh_Actr* collision);
 extern void d_a_nknkRunningSlidingDustAtHold(int a, int b, int c);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 extern SharedFilePtr* data_ov062_0211ced8[2];
@@ -417,11 +417,11 @@ void daNknk_c::func_ov062_02118de8()
         mState = 5;
     else
         mState = 2;
-    if (((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x8000) {
-        int r = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+    if (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000) {
+        int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
         mTargetAngle = (s16)(mPrevAngleY - r);
     } else {
-        int r = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+        int r = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
         mTargetAngle = (s16)(mPrevAngleY + r);
     }
     func_ov062_02118058();
@@ -560,10 +560,12 @@ void daNknk_c::func_ov062_02118718()
                     *turn = (u16)(*turn - 1);
                 } else {
                     /* (int)& forces the pool add. mTargetAngle -= folds to mAnmModel+0xc2. */
-                    if (((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x8000)
-                        *(s16 *)((int)&mTargetAngle) -= ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                    if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x8000)
+                        *(s16 *)((int)&mTargetAngle) -=
+                            ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     else
-                        *(s16 *)((int)&mTargetAngle) += ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                        *(s16 *)((int)&mTargetAngle) +=
+                            ((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 0x1fff;
                     mTurnTimer = 0x14;
                 }
             }
@@ -749,8 +751,7 @@ void daNknk_c::func_ov062_021181a0() {
         u16 *p = &mWalkState;
         *p = (u16)(*p + 1);
     }
-    mTimer =
-        (u16)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 70 + 30);
+    mTimer = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 70 + 30);
     func_ov062_02117994(1);
 }
 

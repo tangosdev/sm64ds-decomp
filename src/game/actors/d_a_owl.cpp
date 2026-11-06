@@ -75,6 +75,7 @@ enum daOwl_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* Resource handles the static initializer constructs. The wrapper spellings
  * are reconstructed; the constructor and destructor addresses, the file IDs
@@ -151,7 +152,6 @@ extern "C" {
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
 extern short data_02082214[];
-extern int data_0209e650[];
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
@@ -377,8 +377,8 @@ int daOwl_c::func_ov094_02135c28()
         mStateTimer = 0x32;
         mWanderAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
     } else if (OWL_TIMER(this) == 0) {
-        mWanderAngleY = (s16)(((u32)RandomIntInternal(data_0209e650) >> 8) << 12);
-        mStateTimer = (s16)((((u32)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x32);
+        mWanderAngleY = (s16)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
+        mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
     }
 
     ApproachAngle(&mPrevAngleY, mWanderAngleY, 0xa, 0x200, 0x100);
@@ -410,8 +410,8 @@ int daOwl_c::func_ov094_02135c28()
 int daOwl_c::func_ov094_02135e64()
 {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
-    mWanderAngleY = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
-    mStateTimer = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x32);
+    mWanderAngleY = (short)((RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = (short)(((RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
     mAnimSpeed = 0x1000;
     return 1;
 }

@@ -41,6 +41,7 @@ enum daObjCtMecha04_c_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 enum {
     ACTOR_CT_MECHA04L = 0x6f,
@@ -74,7 +75,6 @@ extern SharedFilePtr *data_ov065_0211d194[][3];
 extern SharedFilePtr *data_ov065_0211d198[][3];
 extern CLPS_Block *data_ov065_0211d19c[][3];
 extern u8 data_0209f2c0;
-extern int data_0209e650;
 extern int data_ov065_0211c0b8[]; /* per-clock-setting belt speeds */
 extern s16 data_02082214[];       /* sin/cos pair per (angle >> 4) index */
 
@@ -213,7 +213,7 @@ int daObjCtMecha04_c::Behavior() {
                 if (ApproachLinear(mBeltSpeed, mTargetBeltSpeed, 0xcc) != 0 &&
                     DecIfAbove0_Short((u16 *)&mDirectionTimer) == 0) {
                     unsigned int randomValue =
-                        (u16)((unsigned int)RandomIntInternal(&data_0209e650) >> 16);
+                        (u16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16);
                     /* New direction, held for 0xa + 0x14 * (0..6) ticks. */
                     mDirectionTimer = (s16)(((int)randomValue % 7) * 0x14 + 0xa);
                     if (randomValue >= 0x7fff) {

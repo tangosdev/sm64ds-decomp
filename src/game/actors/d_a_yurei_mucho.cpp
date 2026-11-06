@@ -33,6 +33,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "LevelRng.h"
 
 /* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
    available, but their non-POD copies change these two helpers' codegen; see
@@ -70,7 +71,6 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void MulVec3Mat4x3(const void *in, Matrix4x3 *m, void *out);
 extern void func_02012694(unsigned int id, void *v);
-extern int data_0209e650[];
 extern short data_02082214[];
 
 /* ov002 -- unnamed particle helper. */
@@ -359,8 +359,8 @@ int daYurei_Mucho_c::func_ov065_0211691c(State *s)
    literal at 0x02116918, not a call, so the field read is what reproduces. */
 int daYurei_Mucho_c::func_ov065_021168a8()
 {
-    mTargetAngle = (short)(((u32)RandomIntInternal(data_0209e650) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
+    mTargetAngle = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
     return 1;
 }

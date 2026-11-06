@@ -35,6 +35,7 @@
 #include "math/MtxStack.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 enum Bool { FALSE, TRUE };
 
@@ -57,7 +58,6 @@ enum { VARIANT_DROPS_ITEM = 0, VARIANT_KEEPS_HEADING = 3, VARIANT_COIN_DROP = 4 
 /* dCc_c::hitFlags bit, per the table in dCc_c.h. */
 enum { HIT_MEGA_CHARACTER = 0x10 };
 
-extern int data_0209e650;
 extern s32 data_ov002_02100320[];
 extern s32 data_ov002_02100334[];
 extern s32 data_ov002_02100348[];
@@ -82,7 +82,7 @@ daFPknBall_c::~daFPknBall_c() {}
  * its velocity words. Called when a variant-4 ball ends by range or water. */
 void daFPknBall_c::TryDropCoin() {
     dActor_c *coin;
-    if (((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 10 >= 4)
+    if (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10 >= 4)
         return;
     coin = dActor_c::Spawn(ACTOR_COIN, 0, mPos, 0, mAreaId, -1);
     if (coin != 0) {
@@ -99,7 +99,7 @@ void daFPknBall_c::TryDropCoin() {
  * random unlocked character 0..2 and marks actor 279's byte at +0x42b. If none
  * of that happens, a roll below 4 spawns a coin as TryDropCoin does. */
 void daFPknBall_c::TryDropItem() {
-    u8 roll = (u8)(((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 10);
+    u8 roll = (u8)(((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10);
     if (roll >= 4) {
         if (ClosestWithActorID(ACTOR_FPAKUN_BALL) != 0)
             return;
@@ -119,7 +119,7 @@ void daFPknBall_c::TryDropItem() {
                 }
             }
             do {
-                idx = ((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 3;
+                idx = ((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 3;
             } while ((unlocked & (1 << idx)) == 0);
             if (dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb, mPos, &mAngle, mAreaId,
                                 -1) != 0) {

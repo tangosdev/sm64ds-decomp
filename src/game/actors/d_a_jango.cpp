@@ -63,6 +63,7 @@ enum daJango_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 /* decl_common.h deliberately NOT included; AngleDiff is declared locally. */
 extern "C" int AngleDiff(int a, int b);
 #include "PathPtr.h"
@@ -181,7 +182,6 @@ extern int data_020a0e68[];
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-extern int data_0209e650;
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
@@ -214,7 +214,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of _ZNK7PathPtr7GetNodeER7Vector3j, from the legacy file for func_ov062_0211bd10, NOT applied: extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, Vector3 *v, unsigned int i); */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bd10, NOT applied: extern s8 gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c218, NOT applied: extern int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c218, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s16 Vec3_HorzAngle(const void *a, const void *b); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int ApproachAngle(void *p, int target, int a, int b, int c); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int RandomIntInternal(int *seed); */
@@ -222,7 +221,6 @@ extern void *data_0209f394;
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void MulVec3Mat4x3(Vector3 *in, void *m, void *out); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s8 gCurrentSublevel; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209e650, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int data_0209e650; */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX); */
 /* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c594, NOT applied: extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out); */
@@ -692,7 +690,7 @@ int daJango_c::func_ov062_0211c2f4() {
             if (mPathNodeIndex >= 4)
                 mPathNodeIndex = 0;
         } else if (func_ov062_0211b3ac() == 0) {
-            u32 r = (u32)RandomIntInternal(&data_0209e650) >> 8 & 3;
+            u32 r = (u32)RandomIntInternal(&data_0209e650.value) >> 8 & 3;
             if (mPathNodeIndex != r) {
                 mPathNodeIndex = r;
             } else {
@@ -746,7 +744,7 @@ int daJango_c::func_ov062_0211c218()
 {
     mTargetAngleY = mAngleY;
     mStateParam = 0;
-    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 3) * 0x64 + 0x12c;
+    mStateTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 3) * 0x64 + 0x12c;
     if (mHitPlayer == 1) {
         mStateTimer = 0;
         mHitPlayer = 0;
@@ -939,14 +937,13 @@ int daJango_c::func_ov062_0211bc54()
     if (gCurrentSublevel == 0x10) {
         mStateTimer = 0x32;
     } else {
-        mStateTimer =
-            (((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 0xf) + 0x14;
+        mStateTimer = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) + 0x14;
     }
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
     func_02012694(SND_AT_SWOOP_ENTER, &mCamSpacePosX);
-    mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650) >> 8) & 3) << 8) + 0x300;
+    mStateParam = ((((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 3) << 8) + 0x300;
     mBlendAnmModel.SetAnim(*(BCA_File *)data_ov062_0211e114.filePtr, 4, 0, 0x1000, 0);
     return 1;
 }

@@ -59,6 +59,7 @@ enum daBtfly_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "LevelRng.h"
 
 /* Lays .text down in source order (see the note at the top). */
 #pragma defer_codegen off
@@ -97,7 +98,6 @@ void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern s16 data_02082214[]; /* sin/cos; index (u16 angle >> 4) * 2 */
 extern Matrix4x3 data_020a0e68; /* scratch matrix */
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
@@ -250,8 +250,10 @@ void daBtfly_c::State5()
 
     {
         s16 target;
-        if (mPosY < mHomePosY +
-                (int)(((unsigned)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) * 0x32 + 0x32000))
+        if (mPosY <
+            mHomePosY +
+                (int)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) * 0x32 +
+                      0x32000))
             target = -0x2000;
         else
             target = 0x2000;
@@ -259,7 +261,7 @@ void daBtfly_c::State5()
     }
 
     ApproachLinear(mPrevAngleY, hAngle,
-        (s16)((((unsigned)RandomIntInternal(&data_0209e650) >> 16) % 800) + 0x190));
+        (s16)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) % 800) + 0x190));
 }
 
 // @symbol _ZN9daBtfly_c6State4Ev
@@ -272,7 +274,7 @@ void daBtfly_c::State4()
         if (DistToCPlayer() >= 0xc8000)
             return;
         {
-            int sb = (int)((unsigned int)RandomIntInternal(&data_0209e650) % 3);
+            int sb = (int)((unsigned int)RandomIntInternal(&data_0209e650.value) % 3);
             int sel;
             int i;
             int mask = typ & 0x30;
@@ -289,7 +291,9 @@ void daBtfly_c::State4()
                     sel = two;
                 else
                     sel = three;
-                rot.w[1] = (s16)((s16)rot.w[1] + (s16)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10));
+                rot.w[1] =
+                    (s16)((s16)rot.w[1] +
+                          (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10));
                 dActor_c::Spawn(0x150, mask | (sel << 6), mPos, (Vector3_16 *)&rot, mAreaId, -1);
             }
             if (sb == 0)
@@ -301,9 +305,13 @@ void daBtfly_c::State4()
         }
     }
 
-    mWanderAngle = (s16)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10);
-    mPrevAngleY = (s16)(mWanderAngle + (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0x3fff));
-    mHorzSpeed = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) & 0xfff) * 0xf + 0xf000;
+    mWanderAngle = (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
+    mPrevAngleY =
+        (s16)(mWanderAngle +
+              (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) & 0x3fff));
+    mHorzSpeed =
+        (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) & 0xfff) * 0xf +
+        0xf000;
     mStateTimer = 0;
     mState = 5;
 }
@@ -415,13 +423,13 @@ void daBtfly_c::State0()
         do {
             Vector3 pos;
             int r;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosX;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.y = mPosY + ((int)((unsigned int)r % 40) << 13);
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosZ;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
             dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
             i++;
@@ -533,7 +541,7 @@ int daBtfly_c::InitResources()
     if (sub != 0x10 && sub != 0x20) {
         mKind = 0;
         mHorzSpeed = 0x7800;
-        mStateTimer = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 100;
+        mStateTimer = ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 100;
         if ((u32)(u8)(param1 & 0xf) > 1)
             mState = 0;
         else
@@ -546,7 +554,7 @@ int daBtfly_c::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
 
-    int r = RandomIntInternal(&data_0209e650);
+    int r = RandomIntInternal(&data_0209e650.value);
     int fc = mAnmModel.GetFrameCount();
     u32 rem = (u32)r % (u32)fc;
     mAnmModel.currFrame = (rem << 16) >> 4;

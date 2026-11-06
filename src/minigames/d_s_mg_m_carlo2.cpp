@@ -21,6 +21,7 @@
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -50,7 +51,6 @@ extern Carlo2SpriteWords sMCarlo2CardSprites;
 extern unsigned short sMCarlo2CardFrameSprites[];
 extern int sMCarlo2StartFaceCounts[]; /* the starting weights                     */
 extern int sMCarlo2BoardRows[][10];   /* per-difficulty weight top-ups          */
-extern int data_0209e650[];
 extern int data_020a0db0;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMainScreenLayers;
@@ -634,7 +634,7 @@ int dScMgMCarlo2_c::DrawCardValue(){
     int roll;
     for (i = 0; i < 0xa; i++)
         total += sMCarlo2FaceCounts[i];
-    roll = (int)(((unsigned int)RandomIntInternal(data_0209e650) & 0x7fffffff) >> 0x13);
+    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
     for(i=0;i<0xa;i++){
         total -= sMCarlo2FaceCounts[i];

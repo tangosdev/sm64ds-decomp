@@ -44,6 +44,7 @@
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -107,7 +108,6 @@ typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int heig
                          Vector3_16 *first, Vector3_16 *second);
 }
 
-extern int data_0209e650[];     /* the random number generator's state */
 extern s16 data_02082214[];     /* sin/cos table, see SINCOS_INDEX */
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
@@ -181,7 +181,7 @@ void daBook_c::func_ov020_021112b0()
  * at the touching player's depth and turned a quarter turn to cross it. */
 void daBook_c::func_ov020_02111340()
 {
-    int bit = ((unsigned int)RandomIntInternal(data_0209e650) >> 16) & 1;
+    int bit = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
     if (mTouchedPlayer == 0)
         return;
     {

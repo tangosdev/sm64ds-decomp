@@ -42,6 +42,7 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 #pragma opt_strength_reduction off
 
@@ -102,7 +103,6 @@ void  func_ov002_020aea30(void *self, void *actor, void *collision);
 
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
-extern int           data_0209e650;
 extern unsigned char data_0209f2d8;
 extern signed char gCurrentSublevel;
 extern int           data_0209f32c;
@@ -399,7 +399,7 @@ int daMenbo_c::func_ov090_02131648()
     s16 ha;
     s32 *p390;
 
-    rnd = (u32)RandomIntInternal(&data_0209e650) >> 8;
+    rnd = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
     dist = Vec3_Dist(&self->mPos, (Vector3 *)&self->mAnchorPosX);
 
     if (((((u32) static_cast<dExtFrameCtrl_c &>(self->mAnmModel).currFrame) << 4) >> 0x10 & 0xf) ==
@@ -554,7 +554,7 @@ int daMenbo_c::func_ov090_02131ac4()
         mAnchorPosX = mPosX;
         mAnchorPosY = mPosY;
         mAnchorPosZ = mPosZ;
-        mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650) >> 8) << 0xd);
+        mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
     ApproachAngle(&mPrevAngleY, (s16)mTargetAngleY, 1, 0x100, 0x100);
@@ -570,13 +570,13 @@ int daMenbo_c::func_ov090_02131b94()
 {
     unsigned int r;
     short *s;
-    r = (unsigned)RandomIntInternal(&data_0209e650);
+    r = (unsigned)RandomIntInternal(&data_0209e650.value);
     s = (short *)&mTargetAngleY;
     *s = (short)(*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650);
+    r = (unsigned)RandomIntInternal(&data_0209e650.value);
     s = (short *)&mTargetAngleY;
     *s = (short)(*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
-    r = (unsigned)RandomIntInternal(&data_0209e650);
+    r = (unsigned)RandomIntInternal(&data_0209e650.value);
     mStateTimer = (short)(((r >> 8) & 0x1f) + 0x96);
     mAnimSpeed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)data_ov090_02134490.filePtr, 0, 0x1000, 0);
@@ -617,7 +617,7 @@ int daMenbo_c::func_ov090_02131c48()
         mAnchorPosX = mPosX;
         mAnchorPosY = mPosY;
         mAnchorPosZ = mPosZ;
-        mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650) >> 8) << 13);
+        mTargetAngleY = (u16)(((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) << 13);
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
 
@@ -882,7 +882,7 @@ int daMenbo_c::InitResources()
         }
 
         {
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
             *(short *)&mTargetAngleY = ang;
             mPrevAngleY = *(short *)&mTargetAngleY;

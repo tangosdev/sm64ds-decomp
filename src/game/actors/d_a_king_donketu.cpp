@@ -558,7 +558,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
 
         c->mHitCooldown = 0x10;
         func_02012694(SND_HIT_REGISTERED, &c->mCamSpacePosX);
-        rnd = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
+        rnd = RandomIntInternal(&data_0209e650.value);
         if (((rnd >> 8) & 7) == 0) {
             v.x = c->mPosX;
             v.y = c->mPosY;
@@ -572,7 +572,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
                 do {
                     dActor_c* actor = dActor_c::Spawn(ACTOR_COIN, 0, v, 0, c->mAreaId, -1);
                     if (actor != 0) {
-                        rnd = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
+                        rnd = RandomIntInternal(&data_0209e650.value);
                         shortY = ((s32)((((u32)rnd >> 8) & 0xf) << 0x1c)) >> 0x10;
                         actor->mPrevAngleX = 0;
                         actor->mPrevAngleY = (s16)shortY;
@@ -1489,10 +1489,8 @@ int daKing_Donketu_c::func_ov073_02120ed0() {
             if (c->mStateScratch == 0) {
                 if (c->DistToCPlayer() < 0x1f4000) {
                     c->mStateScratch = 1;
-                    if ((((unsigned int)RandomIntInternal(
-                              reinterpret_cast<int *>(&data_0209e650)) >>
-                          0x18) &
-                         7) == 0) {
+                    if ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x18) & 7) ==
+                        0) {
                         c->mPhase = 3;
                         c->mHorzSpeed = 0;
                         c->mStateTimer = 0xf;

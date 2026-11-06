@@ -57,6 +57,7 @@
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* The shadow update copies its matrix through Mtx43: the plain word union
  * keeps the block copy in C++ with Vector3's user-declared constructor in
@@ -125,7 +126,6 @@ extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650[];          /* RNG_STATE (symbols/verified.tsv) */
 extern short data_02082214[];        /* SINE_TABLE: a sin/cos pair per angle >> 4 */
 
 /* ov060 tables indexed by mSubVariant (02119358, 0211934c) and the mouth-pose
@@ -371,7 +371,7 @@ void daKpaFire_c::func_ov060_021172e0() {
                                 *(Fix12i *)&this->mPosZ);
     this->MarkForDestruction();
 
-    if ((((u32)RandomIntInternal(&data_0209e650[0]) >> 0x10) % 10) >= 2) {
+    if ((((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 10) >= 2) {
         return;
     }
 
@@ -390,7 +390,7 @@ void daKpaFire_c::func_ov060_021172e0() {
                 }
             }
             do {
-                idx = ((u32)RandomIntInternal(&data_0209e650[0]) >> 0x10) % 3;
+                idx = ((u32)RandomIntInternal(&data_0209e650.value) >> 0x10) % 3;
             } while ((mask & (1 << idx)) == 0);
             {
                 dActor_c *spawned = dActor_c::Spawn(ACTOR_OBJ_MARIO_CAP, (idx << 8) | 0xb,
@@ -426,8 +426,8 @@ int daKpaFire_c::func_ov060_021172c8(unsigned int n) {
  * (so from 1.0 to just under 2.0); shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_0211722c() {
     unsigned int r;
-    this->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 0x10);
-    r = (unsigned int)RandomIntInternal(&data_0209e650[0]) >> 0x10;
+    this->mPrevAngleY = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
+    r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
     if (r % 10 < 2)
         this->mVertSpeed = 0x1e000;
     else
@@ -435,7 +435,7 @@ void daKpaFire_c::func_ov060_0211722c() {
     this->mHorzSpeed = 0x5000;
     this->mVertAccel = -0x1000;
     this->mFireScale =
-        (int)(((unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16) & 0xfff) + 0x1000;
+        (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 0xfff) + 0x1000;
     this->mShadowRadiusMul = 0x10;
 }
 
@@ -444,7 +444,7 @@ void daKpaFire_c::func_ov060_0211722c() {
  * horizontal speed, mFireScale 6.0 (0x6000), shadow multiplier 0x10. Gravity
  * is left at the InitResources default. */
 void daKpaFire_c::func_ov060_021171e8() {
-    unsigned int r = RandomIntInternal(data_0209e650);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     this->mPrevAngleY = r >> 0x10;
     this->mVertSpeed = 0xa000;
     this->mHorzSpeed = 0;
@@ -511,7 +511,7 @@ void daKpaFire_c::func_ov060_02116f90() {
                 this->mFireScale = 0x6000;
             } else {
                 this->mFireScale =
-                    ((u32)RandomIntInternal(&data_0209e650[0]) >> 16 & 0xfff) * 2 + 0x6000;
+                    ((u32)RandomIntInternal(&data_0209e650.value) >> 16 & 0xfff) * 2 + 0x6000;
             }
             this->mHorzSpeed = 0;
             this->mVertSpeed = 0;
@@ -591,7 +591,7 @@ void daKpaFire_c::func_ov060_02116d78() {
 
     func_ov060_02116518(PARTICLE_SCALED_9A, 1, this->mFireScale * 0xc);
     if (this->mWithMeshClsn.IsOnGround() != 0) {
-        int rnd = RandomIntInternal(&data_0209e650[0]);
+        int rnd = RandomIntInternal(&data_0209e650.value);
         unsigned int roll = (unsigned int)rnd >> 16;
         if (roll % 17 != 0)
             dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), this->mPos, 0, this->mAreaId, -1);
@@ -611,20 +611,20 @@ void daKpaFire_c::func_ov060_02116d78() {
  * mFireScale 2.0 (0x2000); shadow multiplier 0x10. */
 void daKpaFire_c::func_ov060_02116c68() {
     unsigned int r;
-    this->mPrevAngleY = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
+    this->mPrevAngleY = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
     if (this->mSubVariant != 0) {
-        r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
+        r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
         this->mHorzSpeed = (int)((r % 10) << 0xc) >> 1;
     } else {
-        r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
+        r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
         this->mHorzSpeed = (int)((r % 10) * 0x7000) >> 1;
     }
 
-    r = ((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10;
+    r = ((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10;
     this->mVertSpeed = (r % 10) << 0xc;
     this->mVertAccel = -0x1000;
 
-    this->mPhaseOffset = (short)(((unsigned int)RandomIntInternal(&data_0209e650[0])) >> 0x10);
+    this->mPhaseOffset = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value)) >> 0x10);
     this->mTerminalVelocity = data_ov060_0211934c[this->mSubVariant];
     this->mFireScale = 0x2000;
     this->mShadowRadiusMul = 0x10;
@@ -666,7 +666,7 @@ void daKpaFire_c::func_ov060_02116b18() {
     this->mHorzSpeed = 0x11800;
     this->mFireScale = 0x2000;
     this->mVertAccel = 0x1000;
-    this->mPhaseOffset = (unsigned int)RandomIntInternal(data_0209e650) >> 0x10;
+    this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10;
     this->mShadowRadiusMul = 0x10;
 }
 
@@ -713,7 +713,7 @@ void daKpaFire_c::func_ov060_021169f8() {
 void daKpaFire_c::func_ov060_021169b0() {
     this->mVertSpeed = 0x1e000;
     this->mHorzSpeed = 0xf000;
-    this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650[0]) >> 16;
+    this->mPhaseOffset = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 16;
     this->mWithMeshClsn.SetLimMovFlag();
     this->mShadowRadiusMul = 0x10;
 }
