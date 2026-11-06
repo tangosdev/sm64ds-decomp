@@ -63,7 +63,7 @@ void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 int Vec2_Len(V2 *p);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
-void DecompressLZ16(int src, void *dst);
+void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *ptr);
 extern int data_0208ee44;
 extern u8 gMainScreenLayers;
@@ -251,7 +251,7 @@ s32 dScMgFlower_c::Render() {
         }
     }
 
-    Camera_InitFlowerView(pad_4660);
+    Camera_InitFlowerView(&mCamera);
     FlowerFace_Draw(&mFace);
     return 1;
 }
@@ -478,7 +478,7 @@ s32 dScMgFlower_c::Behavior() {
  * The bare 0x040000xx stores are the BGxCNT and BGxOFS registers, and
  * 0x06400000 and 0x06600000 are the two OBJ VRAM banks. */
 s32 dScMgFlower_c::InitResources() {
-    int fileData;
+    void *fileData;
 
     mScore = Mg_GetSavedRecord0();
 
@@ -499,32 +499,32 @@ s32 dScMgFlower_c::InitResources() {
     *(volatile u32 *)0x400101c = 0;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
     DecompressLZ16(fileData, G2::GetBG2CharPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgDownNcgPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNcgPath);
     DecompressLZ16(fileData, G2S::GetBG2CharPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgUpNscPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNscPath);
     DecompressLZ16(fileData, G2::GetBG2ScrPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgDownNscPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNscPath);
     DecompressLZ16(fileData, G2S::GetBG2ScrPtr());
     DecompressLZ16(fileData, G2S::GetBG3ScrPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgUpNclPath);
-    CP15::FlushAndInvalidateDataCache(fileData, 0x1a0);
-    GX::LoadBGPltt((const void *)fileData, 0x60, 0x1a0);
-    Ov004_Deallocate((void *)fileData);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNclPath);
+    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
+    GX::LoadBGPltt(fileData, 0x60, 0x1a0);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgDownNclPath);
-    CP15::FlushAndInvalidateDataCache(fileData, 0x1a0);
-    GXS::LoadBGPltt((const void *)fileData, 0x60, 0x1a0);
-    Ov004_Deallocate((void *)fileData);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNclPath);
+    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
+    GXS::LoadBGPltt(fileData, 0x60, 0x1a0);
+    Ov004_Deallocate(fileData);
 
     *(volatile u16 *)0x4000050 = 0;
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
@@ -532,16 +532,16 @@ s32 dScMgFlower_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 0xc;
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerNcgPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerNcgPath);
     DecompressLZ16(fileData, (void *)0x6400000);
     DecompressLZ16(fileData, (void *)0x6600000);
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerNclPath);
-    CP15::FlushAndInvalidateDataCache(fileData, 0x100);
-    GX::LoadOBJPltt((const void *)fileData, 0, 0x100);
-    GXS::LoadOBJPltt((const void *)fileData, 0, 0x100);
-    Ov004_Deallocate((void *)fileData);
+    fileData = Ov004_LoadFileByPath(&sFlowerNclPath);
+    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x100);
+    GX::LoadOBJPltt(fileData, 0, 0x100);
+    GXS::LoadOBJPltt(fileData, 0, 0x100);
+    Ov004_Deallocate(fileData);
 
     sMgPlayAgainX = 0x40;
     sMgPlayAgainY = 0xa0;
@@ -556,7 +556,7 @@ s32 dScMgFlower_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
     FlowerFace_Load((char *)&mFace);
-    Camera_InitFlowerView(pad_4660);
+    Camera_InitFlowerView(&mCamera);
 
     return 1;
 }

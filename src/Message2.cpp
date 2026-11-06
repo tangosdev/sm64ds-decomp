@@ -32,7 +32,7 @@
 extern "C" {
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-/* The message box rectangle: see the comment at Message.cpp's externs. */
+/* The message box rectangle: see the comment at Message.cpp's definitions. */
 extern u8 gMsgBoxWinTop;
 extern u8 gMsgBoxLeft;
 extern u8 gMsgBoxWinLeft;

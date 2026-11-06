@@ -230,7 +230,6 @@ extern struct BCA_File *data_ov002_0210da30[2];
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(const void* in, void* m, void* out);
-extern void func_0200d8c8(void *cam, void *v, int strength);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
@@ -252,7 +251,7 @@ extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
 extern s16 Vec3_VertAngle(const void* a, const void* b);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
+extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
 extern void d_a_king_donketuRunningSlidingDustAtHold(int a, int b, int c);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
    locals are the POD VecFx32, so the call casts. */
@@ -306,7 +305,7 @@ void daKing_Donketu_c::func_ov073_0211f144() {
     }
 }
 
-/* Called where the boss lands or steps (a reading from the callers). Shakes the camera by `strength` (func_0200d8c8; callers pass
+/* Called where the boss lands or steps (a reading from the callers). Shakes the camera by `strength` (dCamera_c::func_0200d8c8; callers pass
    0x3e8000 to 0x1388000), then takes the translation of bone mStepBoneIdx
    times the model matrix, shifted left by 3 (the matrix words are held >> 3),
    and flips mStepBoneIdx between 2 and 3 for the next call. In the chase
@@ -331,7 +330,7 @@ void daKing_Donketu_c::func_ov073_0211f2c0(int strength)
     int x;
     int y;
     int z;
-    func_0200d8c8(data_0209f318, &c->mPosX, strength);
+    data_0209f318->func_0200d8c8(&c->mPos, strength);
     data_020a0e68 = c->mBlendAnmModel.mat4x3;
     MulMat4x3Mat4x3(&c->mBlendAnmModel.data.transforms[c->mStepBoneIdx], &data_020a0e68,
                     &data_020a0e68);
@@ -1854,7 +1853,7 @@ struct RayParams { Vector3 start, end, in, out; };
 int daKing_Donketu_c::Behavior()
 {
     C *c = (C *)this;
-    int angx;
+    short angx;
     Vector3 v0;
     RayParams rp;
     Vector3 v3C;

@@ -66,7 +66,6 @@ int  func_0203d5dc(void* a, void* b);
 void Mg_CommitRecords(void);
 void Mg_SubmitScore(int score);
 void LoadCard2SubBg3(void* c);
-void Camera_InitDealerView(void* c);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);
 void Dealer_Draw(void* t);
@@ -117,7 +116,7 @@ s32 dScMgMCarlo2_c::InitResources()
     gSubScreenLayers = 0x18;
     *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
-    Camera_InitDealerView((void *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load((void *)&mDealer) == 0)
         return 0;
     Mg_PlaceBannersOnTopScreen();
@@ -276,7 +275,7 @@ s32 dScMgMCarlo2_c::Render()
     int j;
     dMgMCarlo2CardObj_c *flat;
 
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
 
     score = sMCarlo2Score;
     if (score > 0x270f)
