@@ -211,14 +211,14 @@ void daPiano_c::InitStateSearch() {
  * (current position plus a 36.0 lookahead along the facing). */
 void daPiano_c::StateSearch() {
     extern unsigned char data_0209f21c;
-    extern void *data_0209f394[];
+    extern daPly_c *data_0209f394[];
     extern short data_02082214[]; /* sine table: (angle >> 4) * 2 taps sin/cos */
 
     volatile Vector3 tmp;
     Vector3 v;
     int bestDist;
     int i;
-    void *cand;
+    daPly_c *cand;
     int dist;
 
     bestDist = 0x7fffffff;
@@ -226,11 +226,10 @@ void daPiano_c::StateSearch() {
         cand = data_0209f394[i];
         if (cand == 0)
             continue;
-        Vec3_Sub((Vector3 *)&v, (const Vector3 *)&this->mPosX,
-                 (const Vector3 *)&((dActor_c *)cand)->mPosX);
+        Vec3_Sub((Vector3 *)&v, (const Vector3 *)&this->mPosX, (const Vector3 *)&cand->mPosX);
         dist = LenVec3(&v);
-        if (IsTargetMoving((dActor_c *)cand) != 0 && dist < 0x1f4000 && dist < bestDist) {
-            this->mTarget = (dActor_c *)cand;
+        if (IsTargetMoving(cand) != 0 && dist < 0x1f4000 && dist < bestDist) {
+            this->mTarget = cand;
             SetState(kStateAttack);
             return;
         }

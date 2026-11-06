@@ -416,7 +416,7 @@ extern s8 data_0209f30d;
 s8 gNumStageStars[4];
 extern s8 data_0209f311;
 static int data_0209f314;
-void *data_0209f318;
+dCamera_c *data_0209f318;
 static char *data_0209f31c;
 static int data_0209f320;
 static void *data_0209f324;
@@ -446,7 +446,7 @@ u8 gMapCapIconCharacters[9];
    draws no star marker, only a red-coin icon while gShowRedCoinMarkers is
    set. */
 u8 gStarMarkerTypes[12];
-void *data_0209f394[4];
+daPly_c *data_0209f394[4];
 void *data_0209f3a4[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
@@ -1023,7 +1023,7 @@ void dScStage_c::CheckCameraInput() {
                 cam->pressed = 0;
                 cam->held = 0;
                 if (((TouchInfo *)gTouchHeld)[i].held != 0) {
-                    if (((dCamera_c *)data_0209f318)->mFlags & 0x1000) {
+                    if (data_0209f318->mFlags & 0x1000) {
                         // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
                         u8 state = data_0209f498[i].mode;
                         if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 &&
@@ -2704,7 +2704,7 @@ void dScStage_c::PS_Update() {
  * dScStage_c polls it before opening the pause menu. */
 
 extern "C" int func_02029408(void) {
-    return ((daPly_c *)data_0209f394[data_0209f250])->CanPause();
+    return data_0209f394[data_0209f250]->CanPause();
 }
 
 // @symbol _ZN10dScStage_c7PS_InitEv
@@ -3150,7 +3150,7 @@ void dScStage_c::RenderVsModeCountdown() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209f394[i]) {
-            int t = (((daPly_c *)data_0209f394[i])->mLevelEntryDone != 0);
+            int t = (data_0209f394[i]->mLevelEntryDone != 0);
             if (t == 1)
                 count++;
         }
@@ -3960,7 +3960,7 @@ void dScStage_c::RenderFog() {
     if (gCurrentSublevel == 5)
         fog = daMugenBGM_c::GetActiveFog();
     if (fog == 0) {
-        dCamera_c *camera = (dCamera_c *)data_0209f318;
+        dCamera_c *camera = data_0209f318;
         fog = mFog;
         if (camera->IsUnderwater())
             fog++;
@@ -4059,7 +4059,7 @@ int dScStage_c::Render() {
         dExtSimpleModel_c *skybox = mSkyboxModel;
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
-            Vector3 *cameraPosition = &((dCamera_c *)data_0209f318)->pos;
+            Vector3 *cameraPosition = &data_0209f318->pos;
             transform->t.x = cameraPosition->x >> 3;
             transform->t.y = cameraPosition->y >> 3;
             transform->t.z = cameraPosition->z >> 3;
@@ -4089,7 +4089,7 @@ int dScStage_c::Render() {
         int playerIndex = 0;
         int playerCount = data_0209f21c;
         for (; playerIndex < playerCount; playerIndex++) {
-            daPly_c *player = (daPly_c *)data_0209f394[playerIndex];
+            daPly_c *player = data_0209f394[playerIndex];
             if (player != 0) {
                 u8 playerFlags = player->mHasWings;
                 int *position = (int *)(&player->mPosX);
@@ -4174,9 +4174,9 @@ int dScStage_c::Behavior() {
                 int cnt = 0;
                 int i;
                 for (i = 0; i < 4; i++) {
-                    char *p = (char *)data_0209f394[i];
+                    daPly_c *p = data_0209f394[i];
                     if (p != 0) {
-                        int t = (((daPly_c *)p)->mLevelEntryDone != 0) ? 1 : 0;
+                        int t = (p->mLevelEntryDone != 0) ? 1 : 0;
                         if (t == 1)
                             cnt++;
                     }

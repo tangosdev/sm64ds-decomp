@@ -118,7 +118,7 @@ void func_01ffb098(void *collider);
 void func_01ffb0a4(void *collider);
 void func_01ffb0b0(void *collider);
 void func_01ffb0bc(void *);
-int func_0200fa04(void *c, void *v, int b);
+void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
@@ -138,7 +138,7 @@ extern u8 data_0209d660;
 extern u8 data_0209f21c;
 extern u8 data_0209f220;
 extern signed char gCurrentSublevel;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern daPly_c *data_0209f394[];
 /* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
    hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */
@@ -414,7 +414,7 @@ int daBtn_c::Behavior()
             /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA).
                While the player is within 0x1770000 the king asks the camera
                to frame him each frame, as daBombking_c::Behavior does. */
-            ((dCamera_c *)data_0209f318)->mFramedActor = this;
+            data_0209f318->mFramedActor = this;
         }
     }
 

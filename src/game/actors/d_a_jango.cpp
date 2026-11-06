@@ -194,7 +194,7 @@ typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void 
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211b800, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for func_ov062_0211b8d8, NOT applied: extern void* data_ov062_0211e17c; */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211b8d8, NOT applied: extern "C" int func_ov062_0211c658(unsigned char* c, void* p); */
@@ -381,7 +381,7 @@ int daJango_c::InitResources()
         mPosZ = mPathNodePosZ;
         func_ov062_0211c658(JANGO_STATE_FLY_PATH);
     } else {
-        pl = (daPly_c *)data_0209f394[0];
+        pl = data_0209f394[0];
         /* No star: if the player has already lost the cap (and param1 is not 3),
            start out holding a cap object, spawned with the player's mCharacter
            shifted left 8. (func_ov062_0211b51c builds the same shape from

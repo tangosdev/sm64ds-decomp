@@ -59,7 +59,8 @@ extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_ov002_020db54c(void *self, int a, int b, short c);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int data_02092138;
-extern void* data_0209f318;
+struct dCamera_c;
+extern dCamera_c *data_0209f318;
 int ApproachAngle(short *angle, short target, int a, int b,
                   int c); /* local extern: named parameters preserve @NNN */
 short Vec3_HorzAngle(const Vector3 *v0,

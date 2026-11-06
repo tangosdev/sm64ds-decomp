@@ -127,7 +127,7 @@ void  func_ov002_020e4374(void *p, int *a, int *b);
 void  func_0201f32c(int a);
 
 /* globals */
-extern void          *data_0209f318;        /* the camera object */
+extern dCamera_c *data_0209f318;            /* the camera object */
 extern SaveBlock data_0209caa0;             /* the live save block */
 extern u8             data_0209d66c;
 extern u8             data_0209d6bc;
@@ -199,7 +199,7 @@ daC_Jugem_c::~daC_Jugem_c()
    while the fanfare plays; on the last frame hand the camera back and go
    wait in StateHidden. */
 int daC_Jugem_c::StateIntroMain() {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
     CamPose r;
     cam->SetFlag_3();
     r.lx = -0x4b0000;
@@ -253,7 +253,7 @@ int daC_Jugem_c::StateApproachMain()
     int spd;
     int len;
 
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
     ApproachLinear(mAngleY,
@@ -297,7 +297,7 @@ int daC_Jugem_c::StateApproachInit()
     mTimer = 0;
     mAuxCounter = 0;
     unk_2e0 = 0;
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     cam->SetFlag_3();
     mCamLookX = 0xffc67000;
     mCamLookY = 0x6ea000;
@@ -366,7 +366,7 @@ int daC_Jugem_c::StateBobInit()
     mTargetX = mPosX;
     mTargetY = mPosY;
     mTargetZ = mPosZ;
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     cam->SetFlag_3();
     look.x = -0x304000;
     look.y = 0x3c1000;
@@ -467,7 +467,7 @@ int daC_Jugem_c::StateTurnInit()
     mTimer = 0;
     mTalkPlayer = 0;
     mAngleZ = 0;
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     cam->SetFlag_3();
     look.x = 0xffadd000;
     look.y = 0x17e000;
@@ -535,7 +535,7 @@ int daC_Jugem_c::StateArriveInit()
         mSavedAngleY = player->mAngleY;
         func_ov002_020d228c(player);
     }
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     cam->SetFlag_3();
     look.x = 0xff883000;
     look.y = 0x2ef000;
@@ -733,7 +733,7 @@ int daC_Jugem_c::StateHoverMain()
     Vector3 *src;
     daPly_c *p;
 
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
     src = &cam->pos;

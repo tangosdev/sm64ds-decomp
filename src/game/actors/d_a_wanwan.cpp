@@ -68,7 +68,7 @@ extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
-extern void *data_0209f318; /* CAMERA */
+extern dCamera_c *data_0209f318; /* CAMERA */
 
 void func_ov014_02111fb8(daWanwan_c *c);
 void func_ov014_02112114(daWanwan_c *c);
@@ -843,7 +843,7 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self) {
         partnerPos.z = src[2];
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
-    camera = (dCamera_c *)data_0209f318;
+    camera = data_0209f318;
     angleToPlayer = self->HorzAngleToCPlayer();
     angleToAnchor = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mSpawnPosX);
     /* Steps 0-6 make the chomp the camera's mFocusActor. */

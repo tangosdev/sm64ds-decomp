@@ -334,7 +334,7 @@ extern CLPS_Block data_ov025_02112cc8;
 extern CLPS_Block data_ov025_02112d48;
 
 /* ---- arm9 data ---- */
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern Matrix4x3 data_020a0e68;
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
@@ -2127,7 +2127,7 @@ int daIwante_c::func_ov066_0211903c() {
 
     if (mTimer2) return 1;
 
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     if (mSubState == 0) {
         cam->SetFlag_3();
         mTalkPlayer = ClosestPlayer();
