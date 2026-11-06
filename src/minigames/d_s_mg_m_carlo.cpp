@@ -72,13 +72,13 @@ void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void MgCoins_Draw(void);
 void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
 void Dealer_Draw(void *p);
-int Dealer_IsIdle(void *p);
+int Dealer_IsIdle(Dealer *dealer);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
-void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 void MgCoins_Reset(char *p);
 void FreeGfxSlotsById(int arg);
-void MgCoins_StartPayout(char *p);
+void MgCoins_StartPayout(int count);
 extern unsigned short gMgCoinsStatus;
 extern void LoadCard2SubBg3(void *c);
 extern int GetGameLanguage(void);
@@ -150,7 +150,7 @@ void dScMgMCarlo_c::StartRound(int arg) {
     sMCarloPickAllowed = 0;
     mRoundProgress = 0;
     mDealer.mReserved = 1;
-    Dealer_StartShuffle((char *)&mDealer, 4, 4, (int)&mRoundProgress);
+    Dealer_StartShuffle(&mDealer, 4, 4, &mRoundProgress);
     mDealer.mHand = 1;
     mRoundTimer = 0;
     mRoundState = STATE_START_PROMPT;
@@ -178,7 +178,7 @@ int dScMgMCarlo_c::CanEndState(int mode) {
                 MgCoins_StartSpend(dealt);
                 mRoundTimer = -1;
             } else {
-                MgCoins_StartPayout((char *)sMCarloPayout);
+                MgCoins_StartPayout(sMCarloPayout);
             }
             mRoundProgress = 0;
             mRoundState += 1;

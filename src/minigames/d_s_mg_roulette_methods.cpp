@@ -186,12 +186,12 @@ void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
 void Mg_DrawCredits(char *, int, int, int);
 void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-void MgCoins_StartPayout(void);
+void MgCoins_StartPayout(int);
 void MgCoins_Update(void);
 void MgCoins_Reset(void);
 void Camera_InitDealerView(char *c);
 int Dealer_IsAnimDone(char *a);
-int Dealer_IsIdle(char *c);
+int Dealer_IsIdle(Dealer *dealer);
 void Dealer_Draw(char *c);
 void Dealer_Update(Dealer *dealer);
 int Dealer_Load(char *c);
@@ -649,7 +649,7 @@ int dScMgRoulette_c::CanEndState(int /* mode */) {
             (mPhase)++;
         break;
     case 6:
-        if (Dealer_IsIdle((char *)&mDealer) != 0) {
+        if (Dealer_IsIdle(&mDealer) != 0) {
             mPhaseTimer = 0x3c;
             mDealIndex = 0;
             (mPhase)++;
@@ -659,7 +659,7 @@ int dScMgRoulette_c::CanEndState(int /* mode */) {
         (mPhaseTimer)--;
         if (mPhaseTimer == 0) {
             if (mScore != 0)
-                MgCoins_StartPayout();
+                MgCoins_StartPayout(mScore);
             (mPhase)++;
         }
         break;

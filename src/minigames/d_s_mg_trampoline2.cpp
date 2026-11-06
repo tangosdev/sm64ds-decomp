@@ -111,7 +111,7 @@ extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
 extern void Trmp2Spinner_Update(char *obj);
-extern void Trmp2Spinner_Init(void *obj, void *kind);
+extern void Trmp2Spinner_Init(void *obj, int hitCount);
 extern void Trmp2Spinner_SetModel(void *self);
 extern int sTrmp2BrushWord[];
 extern void *func_02054efc(void);
@@ -1130,7 +1130,7 @@ void Trmp2Spinner_LoadAll(int x, int count) {
 
 // @symbol Trmp2Spinner_InitAll
 extern "C" {
-void Trmp2Spinner_InitAll(unsigned char *c) {
+void Trmp2Spinner_InitAll(int hitCount) {
     int i = 0;
     int n = sTrmp2SpinnerCount;
     unsigned char *base;
@@ -1142,7 +1142,7 @@ void Trmp2Spinner_InitAll(unsigned char *c) {
     p = base;
     do {
         if (((Trmp2Spinner *)p)->mLifeTimer == 0) {
-            Trmp2Spinner_Init(base + (i * 0x78), c);
+            Trmp2Spinner_Init(base + (i * 0x78), hitCount);
             return;
         }
         i++;
@@ -1205,9 +1205,8 @@ extern int RandomIntInternal(int *seed);
 extern void func_020169f4(char *self, int kind);
 
 // @symbol Trmp2Spinner_Init
-void Trmp2Spinner_Init(void *r0, void *r1) {
+void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
-    int value = (int)r1;
     struct Tbl t = sTrmp2SpinnerSpeeds;
     unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
     int idx;

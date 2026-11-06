@@ -48,7 +48,7 @@ int sTrmpItemsActive;
 char *sTrmpItems;
 int sTrmp2Score;
 int sTrmpItemCount;
-int sTrmp2MarioPtrs[5];
+void *sTrmp2MarioPtrs[5];
 void *sTrmpJumpers[5];
 }
 
@@ -122,7 +122,7 @@ extern "C" {
 extern struct P2 pmf_TrmpItem_GrowScale;
 }
 
-extern "C" void TrmpItem_ProjectToScreen(char *c, int scoreValue) {
+extern "C" void TrmpItem_ProjectToScreen(char *c, unsigned short scoreValue) {
     int screenX, screenY;
     if (TRMPITEM(c)->mPos.y > 0) {
         Camera_ProjectToScreen(sMgSubCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
@@ -165,7 +165,7 @@ struct S {
 extern "C" {
 extern struct S pmf_TrmpItem_MotionSpinHover;
 }
-extern "C" void TrmpItem_SetMotionSpinHover(int *c) {
+extern "C" void TrmpItem_SetMotionSpinHover(char *c) {
     TRMPITEM(c)->mPhase = 0;
     *(struct S *)c = pmf_TrmpItem_MotionSpinHover;
 }
@@ -1031,7 +1031,7 @@ extern "C" {
 extern int sTrmpItemCount;
 }
 extern "C" {
-extern unsigned char *sTrmpItems;
+extern char *sTrmpItems;
 }
 extern "C" {
 extern int sTrmpItemsActive;
@@ -1071,10 +1071,10 @@ extern "C" void TrmpItem_ReleaseFiles(void) {
 namespace s020cef14 {
 extern "C" void TrmpItem_Load(void *p);
 extern "C" {
-extern char *sTrmpItems[];
+extern char *sTrmpItems;
 }
 extern "C" {
-extern int sTrmpItemCount[];
+extern int sTrmpItemCount;
 }
 
 extern "C" void TrmpItem_LoadAll(char *items, int count) {
@@ -1083,17 +1083,17 @@ extern "C" void TrmpItem_LoadAll(char *items, int count) {
     dExtSimpleModel_c::LoadFile(sTrmpItemRingAModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingBModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingCModelFile);
-    sTrmpItems[0] = items;
-    sTrmpItemCount[0] = count;
+    sTrmpItems = items;
+    sTrmpItemCount = count;
     itemIndex = 0;
     if (count <= 0)
         return;
     itemOffset = 0;
     do {
-        TrmpItem_Load(sTrmpItems[0] + itemOffset);
+        TrmpItem_Load(sTrmpItems + itemOffset);
         itemIndex++;
         itemOffset += 0x1d0;
-    } while (itemIndex < sTrmpItemCount[0]);
+    } while (itemIndex < sTrmpItemCount);
 }
 }
 
@@ -2106,26 +2106,23 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
 }
 
 namespace s020d09e0 {
-struct V3 {
-    int z, y, x;
-};
-extern "C" void func_020553a4(void *p);
-extern "C" void func_0203cd80(struct V3 *out, int a, int b);
+extern "C" void func_0203cd80(int *v, short angle);
 extern "C" void TrmpLine_Draw(char *p);
 extern "C" {
-extern char data_0209b3ec[];
+extern Matrix4x3 data_0209b3ec; /* local extern: the view matrix (Graphics3D.cpp) */
 }
 // @symbol TrmpLine_DrawAll
 extern "C" void TrmpLine_DrawAll(void) {
-    struct V3 s;
+    int light[3];
     *(volatile int *)0x4000440 = 2;
-    func_020553a4(data_0209b3ec);
-    s.z = 0;
-    s.y = 0;
-    s.x = 0xfffff008;
-    func_0203cd80(&s, -0x2000, 0xfffff008);
-    *(volatile int *)0x40004c8 = (((short)s.z >> 3) & 0x3ff) | ((((short)s.y >> 3) & 0x3ff) << 10) |
-                                 ((((short)s.x >> 3) & 0x3ff) << 20) | 0x40000000;
+    func_020553a4(&data_0209b3ec);
+    light[0] = 0;
+    light[1] = 0;
+    light[2] = 0xfffff008;
+    func_0203cd80(light, -0x2000);
+    *(volatile int *)0x40004c8 = (((short)light[0] >> 3) & 0x3ff) |
+                                 ((((short)light[1] >> 3) & 0x3ff) << 10) |
+                                 ((((short)light[2] >> 3) & 0x3ff) << 20) | 0x40000000;
     *(volatile int *)0x40004cc = 0x40007fff;
     int i;
     char *p = (char *)sTrmpLines;
@@ -2185,12 +2182,12 @@ extern "C" void TrmpLine_LoadTextures(void) {
 
 namespace s020d0b78 {
 extern "C" {
-extern short sTrmpStartLinePoints[];
+extern char sTrmpStartLinePoints[];
 }
 extern "C" {
 extern short sTrmpStartLine[];
 }
-extern "C" void TrmpLine_Build(short *g, short *a, short *b);
+extern "C" void TrmpLine_Build(char *g, short *a, short *b);
 // @symbol TrmpLine_CreateStartLineT2
 extern "C" void TrmpLine_CreateStartLineT2(void) {
     short a[2];
@@ -2209,12 +2206,12 @@ extern "C" void TrmpLine_CreateStartLineT2(void) {
 
 namespace s020d0bd8 {
 extern "C" {
-extern short sTrmpStartLinePoints[];
+extern char sTrmpStartLinePoints[];
 }
 extern "C" {
 extern short sTrmpStartLine[];
 }
-extern "C" void TrmpLine_Build(short *g, short *a, short *b);
+extern "C" void TrmpLine_Build(char *g, short *a, short *b);
 // @symbol TrmpLine_CreateStartLineT1
 extern "C" void TrmpLine_CreateStartLineT1(void) {
     short a[2];
@@ -2255,7 +2252,7 @@ extern "C" int Vec2_Len(int *v);
 extern "C" void func_0203d630(int *p, int m);
 extern "C" void func_0203d704(int *o, int *a, int *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
-extern "C" void TrmpLine_Build(s16 *slot, s16 *a, s16 *b);
+extern "C" void TrmpLine_Build(char *slot, s16 *a, s16 *b);
 
 extern "C" {
 extern s16 data_ov006_02140cb4[];
@@ -2297,7 +2294,7 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
     int weightedY;
     int scaledDirectionLength;
     int slotOffset;
-    s16 *newLine;
+    char *newLine;
 
     func_0203b958(deltaPixels, startPoint, endPoint);
 
@@ -2419,7 +2416,7 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
             endCopy[0] = endPoint[0];
             endCopy[1] = endPoint[1];
             slotOffset = slotIndex * 0x32c;
-            newLine = (s16 *)((int)sTrmpLines + slotOffset);
+            newLine = (char *)sTrmpLines + slotOffset;
             TrmpLine_Build(newLine, startCopy, endCopy);
             // sTrmpLines + 0x324, 0x326 and 0x31e, addressed through their own
             // symbols: mBouncesLeft, mBounceCount and mSlotIndex.

@@ -10,8 +10,8 @@ extern int WM_Init(void *buf, int ch);
 
 extern unsigned short data_020a0f14;
 extern int data_020a0f94;
-extern short data_020a0f24;
-extern short data_020a0f2c;
+extern unsigned short data_020a0f24;
+extern unsigned short data_020a0f2c;
 extern void *data_020a0f4c;
 extern void *data_020a0f44;
 extern void *data_020a0f48;
@@ -19,11 +19,11 @@ extern void *data_020a0f54;
 extern unsigned short data_020a0f28;
 extern void *data_020a0f74;
 extern void *data_020a0f80;
-extern int data_020a0f58;
+extern unsigned int data_020a0f58;
 extern void *data_020a0f60;
-extern int data_020a0f64;
+extern unsigned int data_020a0f64;
 extern void *data_020a0f68;
-extern char data_020a1064[];
+extern unsigned char data_020a1064[];
 
 /* Allocate the link's buffers. On a download-play child (the halfword at
    0x27ffc40 is 2), rebuild the parent's WMBssDesc into data_020a0f54, keep its

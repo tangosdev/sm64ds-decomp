@@ -67,8 +67,8 @@ void Mg_CommitRecords(void);
 void Mg_SubmitScore(int score);
 void LoadCard2SubBg3(void* c);
 void Camera_InitDealerView(void* c);
-void Dealer_StartShuffle(char *t, int unused, short a2, void *a3);
-int  Dealer_IsIdle(void* t);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
+int Dealer_IsIdle(Dealer *dealer);
 void Dealer_Draw(void* t);
 void Dealer_Update(Dealer *t);
 int  Dealer_Load(void* t);
@@ -137,7 +137,7 @@ void dScMgMCarlo2_c::StartRound(int /* arg */)
     sMCarlo2PickAllowed = 0;
     mDealCount = 0;
     mDealer.mReserved = 1;
-    Dealer_StartShuffle((char *)&mDealer, 4, 4, &mDealCount);
+    Dealer_StartShuffle(&mDealer, 4, 4, &mDealCount);
     mDealer.mHand = 1;
     mTimer = 0;
     Mg_SubmitScore(0);
@@ -150,7 +150,7 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     short state = mRoundState;
     switch (state) {
     case 4:
-        if (Dealer_IsIdle((int *)&mDealer) != 0) {
+        if (Dealer_IsIdle(&mDealer) != 0) {
             short *p = &mRoundState;
             *p += 1;
         }

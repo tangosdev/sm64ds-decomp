@@ -71,8 +71,8 @@ extern OamAttr *data_ov006_02134028;
 void Dealer_Update(Dealer *table);
 void MgCoins_Update(void);
 extern int Dealer_IsBusy(void *p);
-extern int Dealer_IsIdle(void *p);
-extern void Dealer_StartDeal(void *c, s16 arg1, void *arg2);
+extern int Dealer_IsIdle(Dealer *dealer);
+extern void Dealer_StartDeal(void *c, s16 arg1, s16 *arg2);
 extern void Dealer_PlayLose(void *c);
 extern void Dealer_PlayWin(void *c);
 extern void Mg_SaveRecordPair(int a0, int a1);
@@ -86,7 +86,7 @@ extern int sCardHandPayouts[];
 extern void FreeGfxSlotsById(int arg);
 extern void MgCoins_StartPayout(int a);
 extern s16 gMgCoinsStatus;
-extern void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
+extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern void MgCoins_Reset(void);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -219,7 +219,7 @@ void dScMgCard_c::StartRound(int mode)
     mPlayerHandFace2 = 6;
     mDealerHandFace = 6;
     mDealerHandFace2 = 6;
-    Dealer_StartShuffle((char *)&mDealer, 4, 5, (int)&mDealCount);
+    Dealer_StartShuffle(&mDealer, 4, 5, &mDealCount);
 
     mDealer.mReserved = 1;
     mDealer.mHand = 2;
