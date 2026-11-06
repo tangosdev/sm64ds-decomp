@@ -7391,15 +7391,15 @@
     },
     "arm9:0x02044534": {
       "author": "tangosdev",
-      "name": "func_02044534"
+      "name": "_ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3"
     },
     "arm9:0x0204488c": {
       "author": "andrewboudreau",
-      "name": "func_0204488c"
+      "name": "_ZN15ModelComponents13func_0204488cEiP7Vector3"
     },
     "arm9:0x02044b30": {
       "author": "andrewboudreau",
-      "name": "func_02044b30"
+      "name": "_ZN15ModelComponents13func_02044b30Ei"
     },
     "arm9:0x02044dc4": {
       "author": "andrewboudreau",
@@ -7423,7 +7423,7 @@
     },
     "arm9:0x02045074": {
       "author": "tangosdev",
-      "name": "func_02045074"
+      "name": "_ZN15ModelComponents13func_02045074EP8BMD_Bone"
     },
     "arm9:0x02045178": {
       "author": "tangosdev",
@@ -7439,7 +7439,7 @@
     },
     "arm9:0x020453c0": {
       "author": "aitddlabs",
-      "name": "func_020453c0"
+      "name": "_ZN15ModelComponents13func_020453c0EP8BMD_BoneP8BCA_Filei"
     },
     "arm9:0x0204547c": {
       "author": "tangosdev",
