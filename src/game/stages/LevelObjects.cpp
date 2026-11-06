@@ -66,7 +66,7 @@ void StartEntranceFaderWipe(int index);
 /* dScStage_c::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
 struct CLPS_Block;
-KCL_File *LoadFile(int handle);
+void *LoadFile(int handle);
 
 /* LoadObjects dispatches through this table. Its entries are the
  * category loaders. This text-only TU does not define it. */
@@ -435,7 +435,7 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
     PathPtr::SetPathTable(0, 0);
 
     if (overlay->kclFileId != 0) {
-        collisionFile = LoadFile(overlay->kclFileId);
+        collisionFile = static_cast<KCL_File *>(LoadFile(overlay->kclFileId));
         dBgW_Kc::UpdateFileOffsets(*collisionFile);
         ((dBgW_Kc *)meshCollider)->SetFile(collisionFile, *overlay->clps);
         func_0202a850(((dBgW_Kc *)meshCollider)->GetOctreeOriginY(),

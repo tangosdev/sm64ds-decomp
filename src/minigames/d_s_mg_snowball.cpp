@@ -70,6 +70,7 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "OamAttr.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -101,8 +102,8 @@ void SetFog(int enable, int blend, int slope, int offset);
 }
 
 extern "C" {
-extern void RenderOamBothScreens(int a, int b, int c, int d, int e, int f);
-extern int sSnowballBitSprites[];
+extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
+extern OamAttr *sSnowballBitSprites[];
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
@@ -1975,8 +1976,8 @@ void dScMgSnowball_c::Bit_DrawAll() {
         if (a->mBits[i].visible != 0) {
             int bb = a->mBits[i].x >> 12;
             int cc = (a->mBits[i].y - a->mScrollY) >> 12;
-            Mg_RenderSubSpriteMtx((void *)sSnowballBitSprites[a->mBits[i].spriteA], bb, cc, 0);
-            DrawOamSprite((OamAttr *)sSnowballBitSprites[a->mBits[i].spriteB], bb, cc, 0);
+            Mg_RenderSubSpriteMtx(sSnowballBitSprites[a->mBits[i].spriteA], bb, cc, 0);
+            DrawOamSprite(sSnowballBitSprites[a->mBits[i].spriteB], bb, cc, 0);
         }
     }
 }

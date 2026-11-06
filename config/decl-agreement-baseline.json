@@ -413,9 +413,6 @@
       "src/minigames/d_s_mg_flower.cpp": [
         "param:#1 int"
       ],
-      "src/minigames/d_s_mg_roulette_methods.cpp": [
-        "param:#2 int"
-      ],
       "src/ui/hud/d_meter.cpp": [
         "param:#2 int"
       ],
@@ -458,12 +455,6 @@
         "param:#1 int",
         "param:#2 int",
         "param:#4 int"
-      ],
-      "src/minigames/d_s_mg_luigi.cpp": [
-        "param:#1 int"
-      ],
-      "src/minigames/d_s_mg_teresa.cpp": [
-        "param:#1 int"
       ]
     },
     "FS_CloseFile": {
@@ -736,9 +727,6 @@
     "LoadFile": {
       "src/engine/model/d_ext_model.cpp": [
         "param:#1 unsigned short"
-      ],
-      "src/game/stages/LevelObjects.cpp": [
-        "return:KCL_File *"
       ],
       "src/minigames/d_s_mg_base.cpp": [
         "arity:0",
@@ -1352,12 +1340,6 @@
       "src/engine/view/d_camera.cpp": [
         "param:#1 const char *",
         "param:#1 const void *"
-      ]
-    },
-    "RenderOamBothScreens": {
-      "src/minigames/d_s_mg_snowball.cpp": [
-        "param:#1 int",
-        "param:#6 int"
       ]
     },
     "RenderOamMainScreen": {
@@ -18223,16 +18205,6 @@
       "src/minigames/d_s_mg_slots.cpp": [
         "param:#1 void *",
         "return:void"
-      ]
-    },
-    "Mg_RenderSubSpriteMtx": {
-      "src/minigames/d_s_mg_curling.cpp": [
-        "param:#1 int",
-        "param:#4 int"
-      ],
-      "src/minigames/d_s_mg_curling2.cpp": [
-        "param:#1 int",
-        "param:#4 int"
       ]
     },
     "Mg_RenderMainSpriteScaled": {

@@ -82,7 +82,7 @@ extern void Mg_SubmitScore(int self);
 extern int Mg_IsNewRecord(void);
 extern int Mg_GetTopRecord(void);
 extern void *Ov004_LoadFileByPath(const char *p);
-extern void Mg_RenderSubSpriteMtx(int a, int b, int c, int d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_SetSharedState(s32 state);
 extern void Mg_DrawTopLeftCounter(int self);
@@ -125,11 +125,11 @@ extern int data_ov006_0212e504[];
 extern int data_ov006_0212e51c[];
 extern int sCurling2ScrollX[];
 extern int sCurling2ScrollY[];
-extern int sCurlingBitSprites[];
+extern OamAttr *sCurlingBitSprites[];
 extern int sCurling2StoneSprite;
 extern int sCurling2TargetStoneSprite;
 extern int sCurling2StonesSprites;
-extern int *sCurling2CounterSprites[];
+extern OamAttr **sCurling2CounterSprites[];
 extern int sCurling2CursorSprites[];
 extern char sCurling2BgJokyuNcgPath;
 
@@ -293,7 +293,7 @@ void dScMgCurling2_c::DrawPieces() {
             int x = mPiece[i].x >> 0xc;
             int y = mPiece[i].y >> 0xc;
             Mg_RenderSubSpriteMtx(sCurlingBitSprites[mPiece[i].sprite0], x, y, 0);
-            DrawOamSprite((OamAttr *)sCurlingBitSprites[mPiece[i].sprite1], x, y, 0);
+            DrawOamSprite(sCurlingBitSprites[mPiece[i].sprite1], x, y, 0);
         }
     }
 }
@@ -955,7 +955,7 @@ void dScMgCurling2_c::DrawCounter() {
     left = 5 - thrown;
     if (left < 0)
         left = 0;
-    Mg_RenderSubSpriteMtx((int)&sCurling2StoneSprite, 0xd0, 0xb4, 0);
+    Mg_RenderSubSpriteMtx(&sCurling2StoneSprite, 0xd0, 0xb4, 0);
     Mg_RenderSubSpriteMtx(sCurling2CounterSprites[GetGameLanguage()][1], 0xe8, 0xb4, 0);
     Mg_DrawBigNumber(0xf8, 0xb4, left, 0, 0, 0, 0);
 }
