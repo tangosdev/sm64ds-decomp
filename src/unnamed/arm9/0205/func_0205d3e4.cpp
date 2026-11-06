@@ -11,7 +11,7 @@ extern "C" {
 extern int FSi_SendCommand(FSFile *self, int a);
 extern void OS_SleepThread(unsigned short *self);
 extern int FSi_ExecuteSyncCommand(FSFile *);
-extern int func_0205d688(void *, int, int, int);
+extern int func_0205d688(FSFile *p_file, void *dst, int len, int async);
 
 /* NitroSDK FS_GetPathName: store buf and len in arg.getpath, restarting the
    measure unless the last command was already FS_COMMAND_GETPATH (5), and
@@ -47,7 +47,7 @@ int func_0205d3f4(FSFile *t) {
     return t->error == 0;
 }
 
-void func_0205d3e4(void *a, int b, int c) {
-    func_0205d688(a, b, c, 1);
+void func_0205d3e4(FSFile *p_file, void *dst, int len) {
+    func_0205d688(p_file, dst, len, 1);
 }
 }

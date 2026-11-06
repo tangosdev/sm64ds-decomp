@@ -1,10 +1,12 @@
 //cpp
+#include "types.h"
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 
 extern "C" {
 
-typedef long long s64;
+/* A POD twin of Vector3 for the working copies: a Vector3 local adds an
+ * empty .text section to this object (Vector3's inline ctor and dtor). */
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int x, y, z, w; } Quat;
 
@@ -14,8 +16,7 @@ extern int func_020531a4(int a);
 extern void func_0203cebc(Vec3 *out, Vec3 *p, Vec3 *q, Vec3 *r);
 extern Quat data_02075b04;
 
-void Quaternion_FromVector3(Quat *out, Vec3 *a, Vec3 *b)
-{
+void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     Vec3 vb, va, vb2, vcross;
     int r4, absr4, q;
 

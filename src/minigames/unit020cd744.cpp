@@ -172,31 +172,21 @@ extern "C" void TrmpItem_SetMotionSpinHover(int *c) {
 }
 
 namespace s020cd9b0 {
-typedef struct {
-    int x, y, z;
-} Vec3;
-extern "C" void func_0203cc28(int *p, int angle);
-extern "C" void func_0203ce80(Vec3 *dst, Vec3 *src);
-extern "C" void func_0203cf00(Vec3 *out, Vec3 *a, Vec3 *b);
-extern "C" void Quaternion_FromVector3(int *q, Vec3 *axis, Vec3 *v);
-extern "C" void Quaternion_Normalize(int *q);
-
 extern "C" void TrmpItem_MotionSpinDrift(char *self) {
     /* The spin axis and the reference direction, built on first use. */
     static Vector3 sUnitY(0, 0x1000, 0);
     static Vector3 sUnitZ(0, 0, 0x1000);
 
-    Vec3 normalCopy, tangent, tangentCopy, unused;
+    struct Vector3 normalCopy, tangent, tangentCopy;
 
     func_0203cc28((int *)&TRMPITEM(self)->mForward, 0x100);
-    func_0203ce80(&normalCopy, (Vec3 *)&TRMPITEM(self)->mForward);
-    func_0203cf00(&tangent, (Vec3 *)&TRMPITEM(self)->mForward, (Vec3 *)&sUnitZ);
+    func_0203ce80(&normalCopy, &TRMPITEM(self)->mForward);
+    func_0203cf00(&tangent, &TRMPITEM(self)->mForward, &sUnitZ);
     TRMPITEM(self)->mSide.x = tangent.x;
     TRMPITEM(self)->mSide.y = tangent.y;
     TRMPITEM(self)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (Vec3 *)&TRMPITEM(self)->mSide);
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
-                           (Vec3 *)&TRMPITEM(self)->mForward);
+    func_0203ce80(&tangentCopy, &TRMPITEM(self)->mSide);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sUnitY, &TRMPITEM(self)->mForward);
     Quaternion_Normalize(TRMPITEM(self)->mRotation);
 }
 }
@@ -307,31 +297,21 @@ extern "C" void TrmpItem_SetMotionSway(char *c) {
 }
 
 namespace s020cdd08 {
-typedef struct {
-    int x, y, z;
-} Vec3;
-extern "C" void func_0203cc28(int *p, int angle);
-extern "C" void func_0203ce80(Vec3 *dst, Vec3 *src);
-extern "C" void func_0203cf00(Vec3 *out, Vec3 *a, Vec3 *b);
-extern "C" void Quaternion_FromVector3(int *q, Vec3 *axis, Vec3 *v);
-extern "C" void Quaternion_Normalize(int *q);
-
 extern "C" void TrmpItem_MotionSpin(char *self) {
     /* The spin axis and the reference direction, built on first use. */
     static Vector3 sUnitY(0, 0x1000, 0);
     static Vector3 sUnitZ(0, 0, 0x1000);
 
-    Vec3 normalCopy, tangent, tangentCopy, d;
+    struct Vector3 normalCopy, tangent, tangentCopy;
 
     func_0203cc28((int *)&TRMPITEM(self)->mForward, 0x100);
-    func_0203ce80(&normalCopy, (Vec3 *)&TRMPITEM(self)->mForward);
-    func_0203cf00(&tangent, (Vec3 *)&TRMPITEM(self)->mForward, (Vec3 *)&sUnitZ);
+    func_0203ce80(&normalCopy, &TRMPITEM(self)->mForward);
+    func_0203cf00(&tangent, &TRMPITEM(self)->mForward, &sUnitZ);
     TRMPITEM(self)->mSide.x = tangent.x;
     TRMPITEM(self)->mSide.y = tangent.y;
     TRMPITEM(self)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (Vec3 *)&TRMPITEM(self)->mSide);
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
-                           (Vec3 *)&TRMPITEM(self)->mForward);
+    func_0203ce80(&tangentCopy, &TRMPITEM(self)->mSide);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sUnitY, &TRMPITEM(self)->mForward);
     Quaternion_Normalize(TRMPITEM(self)->mRotation);
 }
 }
@@ -896,18 +876,12 @@ extern "C" void TrmpItem_Update(char *item) {
 }
 
 namespace s020ceabc {
-typedef struct {
-    int x, y, z;
-} Vec3;
-
 extern "C" {
 extern int data_02092768[4];
 }
 extern "C" {
 extern Vector3 data_020a0ebc;
 }
-extern "C" void func_0203cc28(int *p, int angle);
-extern "C" void Quaternion_FromVector3(int *q, Vec3 *a, Vec3 *b);
 extern "C" void TrmpItem_StartAppear(char *c);
 
 extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemType,
@@ -947,8 +921,7 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
     TRMPITEM(self)->mRotation[1] = data_02092768[1];
     TRMPITEM(self)->mRotation[2] = data_02092768[2];
     TRMPITEM(self)->mRotation[3] = data_02092768[3];
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
-                           (Vec3 *)&TRMPITEM(self)->mForward);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sUnitY, &TRMPITEM(self)->mForward);
     TRMPITEM(self)->mSizeIdx = itemType;
     TRMPITEM(self)->mMotionKind = motionType;
     TRMPITEM(self)->mActive = 1;
