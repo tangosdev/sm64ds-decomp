@@ -16307,10 +16307,6 @@
       "src/game/actors/d_a_dossy.cpp": [
         "param:#2 void *"
       ],
-      "src/game/actors/d_a_dsn_base.cpp": [
-        "param:#1 int *",
-        "param:#2 int"
-      ],
       "src/game/actors/d_a_iwante.cpp": [
         "param:#2 void *"
       ],
