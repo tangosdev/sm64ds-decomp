@@ -511,20 +511,8 @@
       "src/game/actors/d_a_brq.cpp": [
         "return:char"
       ],
-      "src/game/actors/d_a_ibl.cpp": [
-        "return:int []"
-      ],
-      "src/game/actors/d_a_kp_fr.cpp": [
-        "return:int []"
-      ],
-      "src/game/actors/d_a_krpa.cpp": [
-        "return:int []"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "return:Mtx"
-      ],
-      "src/game/actors/d_a_tgz.cpp": [
-        "return:char"
       ]
     },
     "InvMat4x3": {
@@ -7420,21 +7408,7 @@
         "return:int []"
       ]
     },
-    "data_0208ee3c": {
-      "src/game/stages/d_s_dsmt.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/unnamed/arm9/0201/func_020196cc.c": [
-        "return:unsigned char []"
-      ]
-    },
     "data_0208ee44": {
-      "src/game/stages/d_s_title.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/minigames/d_s_mg_bsc.cpp": [
-        "return:int []"
-      ],
       "src/unnamed/ov075/func_ov075_02119d78.c": [
         "return:int []"
       ]
@@ -7447,14 +7421,6 @@
     "data_0208eeac": {
       "src/unnamed/arm9/0201/func_0201b388.c": [
         "return:int []"
-      ]
-    },
-    "data_02092110": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:char"
-      ],
-      "src/game/actors/d_a_obj_clock_huriko.cpp": [
-        "return:signed char []"
       ]
     },
     "data_02092114": {
@@ -7569,14 +7535,8 @@
       ]
     },
     "data_0209b3ec": {
-      "src/engine/particle/Particle.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_bg_snm_bdy.cpp": [
         "return:int []"
-      ],
-      "src/game/actors/d_a_kpa3_bg.cpp": [
-        "return:int"
       ],
       "src/game/stages/d_ent_obj.cpp": [
         "return:int []"
@@ -7627,11 +7587,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020e032c.c": [
         "return:int"
-      ]
-    },
-    "data_0209cae4": {
-      "src/minigames/d_s_mini_gm.cpp": [
-        "return:MinigameSaveData"
       ]
     },
     "data_0209cddc": {
@@ -7686,13 +7641,7 @@
       ]
     },
     "gMainScreenLayers": {
-      "src/game/stages/d_s_title.cpp": [
-        "return:unsigned char []"
-      ],
       "src/minigames/d_s_mg_base.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/minigames/d_s_mg_bsc.cpp": [
         "return:unsigned char []"
       ]
     },
@@ -7797,11 +7746,6 @@
       ],
       "src/KuppaScript.cpp": [
         "return:dFdBrightness_c *"
-      ]
-    },
-    "data_0209d4b4": {
-      "src/unnamed/arm9/0201/func_020196cc.c": [
-        "return:unsigned char []"
       ]
     },
     "data_0209d4b8": {
@@ -8201,9 +8145,6 @@
       ]
     },
     "data_0209f220": {
-      "src/game/actors/d_a_bombking.cpp": [
-        "return:unsigned char []"
-      ],
       "src/runtime/actor/d_actor.cpp": [
         "return:unsigned char []"
       ]
@@ -8214,15 +8155,6 @@
       ]
     },
     "data_0209f2c0": {
-      "src/game/actors/d_a_ch_scene.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/actors/d_a_obj_ct_mecha11.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/actors/d_a_obj_wc_mizu.cpp": [
-        "return:unsigned char []"
-      ],
       "src/runtime/actor/d_actor.cpp": [
         "return:unsigned char []"
       ]
@@ -8287,26 +8219,8 @@
       "src/_ZN7daPly_c22St_GrabBowserTail_InitEv.cpp": [
         "return:int *"
       ],
-      "src/game/actors/d_a_btn.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_demo.cpp": [
         "return:char *"
-      ],
-      "src/game/actors/d_a_door.cpp": [
-        "return:char *"
-      ],
-      "src/game/actors/d_a_kpa.cpp": [
-        "return:char *"
-      ],
-      "src/game/actors/d_a_kuri_king.cpp": [
-        "return:char *"
-      ],
-      "src/game/actors/d_a_mugen_bgm.cpp": [
-        "return:char *"
-      ],
-      "src/game/actors/d_a_obj_hatena_block.cpp": [
-        "return:char []"
       ],
       "src/game/actors/d_a_obj_mip_key.cpp": [
         "return:dCamera_c *"
@@ -8348,15 +8262,6 @@
       ],
       "src/game/actors/d_a_ch_scene.cpp": [
         "return:dActor_c * []"
-      ],
-      "src/game/actors/d_a_door.cpp": [
-        "return:char * []"
-      ],
-      "src/game/actors/d_a_jango.cpp": [
-        "return:void *"
-      ],
-      "src/game/actors/d_a_mugen_bgm.cpp": [
-        "return:char * []"
       ],
       "src/game/actors/d_a_star_gate.cpp": [
         "return:daPly_c * []"
@@ -8578,36 +8483,9 @@
         "return:int []"
       ]
     },
-    "data_0209fc50": {
-      "src/unnamed/arm9/0203/func_02030994.c": [
-        "return:signed char"
-      ],
-      "src/unnamed/arm9/0203/func_02030aa4.c": [
-        "return:unsigned char []"
-      ]
-    },
-    "data_0209fc58": {
-      "src/unnamed/arm9/0203/func_02030994.c": [
-        "return:signed char"
-      ],
-      "src/unnamed/arm9/0203/func_02030aa4.c": [
-        "return:unsigned char []"
-      ]
-    },
     "data_0209fc5c": {
       "src/unnamed/ov075/func_ov075_02119dc4.cpp": [
         "return:unsigned char"
-      ]
-    },
-    "data_0209fc64": {
-      "src/unnamed/arm9/0203/func_020308d0.c": [
-        "return:char []"
-      ],
-      "src/unnamed/arm9/0203/func_02030aa4.c": [
-        "return:char []"
-      ],
-      "src/unnamed/arm9/0203/func_02030ca0.c": [
-        "return:char []"
       ]
     },
     "data_0209fc68": {
@@ -8718,12 +8596,6 @@
       "src/game/actors/d_a_hanachan.cpp": [
         "return:char []"
       ],
-      "src/game/actors/d_a_iwante.cpp": [
-        "return:int []"
-      ],
-      "src/game/actors/d_a_jango.cpp": [
-        "return:int []"
-      ],
       "src/game/actors/d_a_obj_ct_rotate_block.cpp": [
         "return:int []"
       ],
@@ -8735,9 +8607,6 @@
       ],
       "src/game/actors/d_a_popoi.cpp": [
         "return:char []"
-      ],
-      "src/game/actors/d_a_propeller_heyho.cpp": [
-        "return:int []"
       ],
       "src/game/actors/d_a_propeller_heyho_fire.cpp": [
         "return:M48"
@@ -8790,26 +8659,6 @@
         "return:Heap *"
       ]
     },
-    "data_020a0ebc": {
-      "src/game/actors/d_a_ch_room.cpp": [
-        "return:char"
-      ],
-      "src/game/actors/d_a_door.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_star_gate.cpp": [
-        "return:char []"
-      ],
-      "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "return:Triple"
-      ],
-      "src/minigames/unit020bfec0.cpp": [
-        "return:Vector3"
-      ],
-      "src/minigames/unit020cd744.cpp": [
-        "return:Vector3"
-      ]
-    },
     "data_020a0edc": {
       "src/game/actors/d_a_obj_hatena_block.cpp": [
         "return:char []"
@@ -8824,9 +8673,6 @@
       ]
     },
     "data_020a0f1c": {
-      "src/unnamed/arm9/0203/func_0203d9f4.c": [
-        "return:unsigned short []"
-      ],
       "src/unnamed/arm9/0203/func_0203e20c.cpp": [
         "return:volatile unsigned short"
       ]
@@ -8839,14 +8685,6 @@
     "data_020a0f2c": {
       "src/unnamed/arm9/0203/func_0203fd64.c": [
         "return:unsigned short"
-      ]
-    },
-    "data_020a0f30": {
-      "src/unnamed/arm9/0203/func_0203d81c.c": [
-        "return:unsigned short []"
-      ],
-      "src/unnamed/arm9/0203/func_0203d854.c": [
-        "return:short []"
       ]
     },
     "data_020a0f34": {
@@ -8944,26 +8782,8 @@
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord"
       ],
-      "src/unnamed/arm9/0203/func_0203da4c.c": [
-        "return:unsigned char []"
-      ],
-      "src/unnamed/arm9/0203/func_0203dad4.c": [
-        "return:int"
-      ],
-      "src/unnamed/arm9/0203/func_0203dafc.c": [
-        "return:short []"
-      ],
-      "src/unnamed/arm9/0203/func_0203df40.c": [
-        "return:Rec"
-      ],
-      "src/unnamed/arm9/0203/func_0203e0ac.c": [
-        "return:unsigned char []"
-      ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "return:Rec"
-      ],
-      "src/unnamed/arm9/0203/func_0203e20c.cpp": [
-        "return:unsigned char []"
       ]
     },
     "data_020a1052": {
@@ -8992,9 +8812,6 @@
     "data_020a1154": {
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord []"
-      ],
-      "src/unnamed/arm9/0203/func_0203d8fc.c": [
-        "return:unsigned short []"
       ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "return:Rec []"
