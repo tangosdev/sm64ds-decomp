@@ -27,6 +27,7 @@ enum daObjEmmYuka_c_AssetId {
 #include "decl_common.h"
 #include "daObjEmmYuka_c.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx.h"
 
 struct CLPS_Block;
 
@@ -92,9 +93,9 @@ int daObjEmmYuka_c::Render()
 // @symbol _ZN14daObjEmmYuka_c8BehaviorEv
 int daObjEmmYuka_c::Behavior()
 {
-    /* Plain ints, not Vector3: its inline destructor comes out out-of-line
+    /* VecFx32, not Vector3: its inline destructor comes out out-of-line
      * here (_ZN7Vector3D1Ev), which the link step refuses as unlicensed. */
-    struct Vec { int x, y, z; } prev, node, diff, scaled1, scaled2;
+    VecFx32 prev, node, diff, scaled1, scaled2;
     int looped;
     int delta;
     int len;
