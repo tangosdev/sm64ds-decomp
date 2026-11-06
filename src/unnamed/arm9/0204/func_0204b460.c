@@ -1,17 +1,18 @@
 #include "common.h"
 #include "nitro/fx/fx.h"
+#include "math/Matrix.h"
 #include "private/spl_particle_views.h"
 
 #define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
 #define reg_G3_IDENTITY     (*(volatile u32 *)0x04000454)
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
-/* No header declares these. MulVec3Mat3x3 uses raw component words. */
+/* No header declares these. */
 extern void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 struct Vector3;
 extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
-extern void Copy36Bytes(int *src, int *dst);
-extern void MulVec3Mat3x3(const int *in, const int *m, int *out);
+extern void Copy36Bytes(const void *src, void *dst);
+extern void MulVec3Mat3x3(const Vector3 *in, const Matrix3x3 *m, Vector3 *out);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void func_02055388(int *m);             /* multiply by the 4x3 matrix */
 extern void func_0204c24c(u8 tileS, u8 tileT); /* the XY-plane quad */
@@ -29,7 +30,7 @@ void func_0204b460(ManagerView *mgr, ParticleElement *ptcl) {
     Vector3 trans;
     Vector3 dir;
     Vector3 look;
-    int rot[9];
+    Matrix3x3 rot;
     int mat[12];
     u32 id;
     u32 v;
@@ -70,12 +71,12 @@ void func_0204b460(ManagerView *mgr, ParticleElement *ptcl) {
     if (dir.x == 0 && dir.y == 0 && dir.z == 0)
         return;
 
-    NormalizeVec3((const struct Vector3 *)&dir, (struct Vector3 *)&dir);
-    Copy36Bytes(view, rot);
-    MulVec3Mat3x3((int *)&dir, rot, (int *)&dir);
+    NormalizeVec3(&dir, &dir);
+    Copy36Bytes(view, &rot);
+    MulVec3Mat3x3(&dir, &rot, &dir);
     MulVec3Mat4x3(&trans, (Matrix4x3 *)view, &trans);
     velDir = ptcl->velocity;
-    NormalizeVec3((const struct Vector3 *)&velDir, (struct Vector3 *)&velDir);
+    NormalizeVec3(&velDir, &velDir);
 
     {
         /* |velocity . -view z|: 1 when the particle flies straight at the
