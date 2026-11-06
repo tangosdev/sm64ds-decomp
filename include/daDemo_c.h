@@ -241,7 +241,7 @@ struct daDemo_c : dActor_c {
         u8 burstTimer;     /* 0x1ec - wraps at 0x1e */
         u8 burstActive;    /* 0x1ed */
         u8 pad_1ee[2];     /* 0x1ee */
-        u8 pad_1f0[8];     /* 0x1f0 - 5ad4 clears both words; nothing reads them */
+        s32 pad_1f0[2];    /* 0x1f0 - 5ad4 clears both words; nothing reads them */
         s32 kiraStar;      /* 0x1f8 - the star whose sparkle 5990 spawns this frame, 0..3 */
         u32 kiraParticle;  /* 0x1fc - Particle::System::New handle */
         dPa_c::level_c::edStarKiraCallback_c kira; /* 0x200 - the sparkle callback */

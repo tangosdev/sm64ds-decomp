@@ -76,9 +76,6 @@
  *   PMF37/PMF2dd4 dispatch tables over it are its members; the tables'
  *   .data descriptors still name the member symbols because a pointer
  *   to member does not convert to the int word a descriptor holds.
- *   Pointer-walking helpers keep a char * copy of the receiver, and
- *   indexed entry fields are spelled with STAR_OFF and its siblings
- *   where the ROM adds the field offset before the index.
  *   common.h must precede daDemo_c.h: dExtAnmModel_c.h's nested Matrix4x3
  *   otherwise wins and scalarizes Behavior's 12-word matrix copy.
  */
@@ -137,9 +134,11 @@ struct OamAttr;
 typedef daDemo_c::StaffRoll StaffRoll;
 
 /* Field offsets inside one star, window or credit entry. Where a helper
-   indexes an entry, the ROM adds the field offset to the block first and
-   the scaled index second; the member spelling folds the two into one
-   multiply-add and comes out shorter. */
+   indexes an entry, the ROM's code adds the field offset to the block
+   first and the scaled index second ([base, i*stride] addressing, with
+   unencodable sums like 0x1c9 in the literal pool); the arr[i] member
+   spelling folds the index into the element pointer first and compiles
+   differently. */
 #define STAR_OFF(m) ((int)&((StaffRoll *)0)->stars[0].m)
 #define WINDOW_OFF(m) ((int)&((StaffRoll *)0)->window[0].m)
 #define CREDIT_OFF(m) ((int)&((StaffRoll *)0)->credit[0].m)
@@ -1032,7 +1031,7 @@ void StaffRoll::func_ov002_020f2958() {
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2984Ev
 int StaffRoll::func_ov002_020f2984() {
     this->burstActive = 0;
-    return (int)(char *)this;
+    return (int)this;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1044,7 +1043,7 @@ int StaffRoll::func_ov002_020f2990() {
     int idx;
 
     if (this->endVisible == 0)
-        return (int)(char*)this;
+        return (int)this;
 
     x = this->endX >> 0xc;
     y = this->endY >> 0xc;
@@ -1169,11 +1168,11 @@ void StaffRoll::func_ov002_020f2d0c(int i) {
     *((short *)(((char *)this + CREDIT_OFF(timer)) + (i * 8))) =
         (*((unsigned short *)(((char *)this + CREDIT_OFF(timer)) + (i * 8)))) + 1;
     new_var = 8;
-    char *r = (char *)this + (i * new_var);
-    if (((StaffRoll *)r)->credit[0].timer < 0x39) {
+    StaffRoll *r = (StaffRoll *)((char *)this + (i * new_var));
+    if (r->credit[0].timer < 0x39) {
         return;
     }
-    ((StaffRoll *)r)->credit[0].timer = 0;
+    r->credit[0].timer = 0;
     *((unsigned char *)(((char *)this + CREDIT_OFF(step)) + (i * new_var))) =
         (*((unsigned char *)(((char *)this + CREDIT_OFF(step)) + (i * new_var)))) + 1;
 }
@@ -1183,14 +1182,14 @@ void StaffRoll::func_ov002_020f2d0c(int i) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2d70Ei
 void StaffRoll::func_ov002_020f2d70(int i) {
-    char *p;
-    p = (char *)this + CREDIT_OFF(timer);
-    *((short *)(p + (i * 8))) = (*((unsigned short *)(p + (i * 8)))) + 1;
-    p = (char *)this + (i * 8);
-    if (((StaffRoll *)p)->credit[0].timer < 0x1e) {
+    StaffRoll *p;
+    p = (StaffRoll *)((char *)this + CREDIT_OFF(timer));
+    *((short *)(((char *)p) + (i * 8))) = (*((unsigned short *)(((char *)p) + (i * 8)))) + 1;
+    p = (StaffRoll *)((char *)this + (i * 8));
+    if (p->credit[0].timer < 0x1e) {
         return;
     }
-    ((StaffRoll *)p)->credit[0].timer = 0;
+    p->credit[0].timer = 0;
     *((unsigned char *)(((char *)this + CREDIT_OFF(step)) + (i * 8))) =
         (*((unsigned char *)(((char *)this + CREDIT_OFF(step)) + (i * 8)))) + 1;
 }
@@ -1243,14 +1242,14 @@ void StaffRoll::func_ov002_020f2ea0() {
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2eacEv
 void StaffRoll::func_ov002_020f2eac() {
     int i;
-    char *p = (char*)this;
+    StaffRoll *p = this;
     for (i = 0; i < 5; i++) {
-        if (((StaffRoll *)p)->dolls[0].visible != 0) {
-            OAM::RenderSub(data_ov002_0210bba0[((StaffRoll *)p)->dolls[0].frame],
-                           ((StaffRoll *)p)->dolls[0].x >> 12, ((StaffRoll *)p)->dolls[0].y >> 12,
-                           -1, ((StaffRoll *)p)->dolls[0].priority);
+        if (p->dolls[0].visible != 0) {
+            OAM::RenderSub(data_ov002_0210bba0[p->dolls[0].frame],
+                           p->dolls[0].x >> 12, p->dolls[0].y >> 12,
+                           -1, p->dolls[0].priority);
         }
-        p += 0x14;
+        p = (StaffRoll *)((char *)p + 0x14);
     }
 }
 
@@ -1259,15 +1258,15 @@ void StaffRoll::func_ov002_020f2eac() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2f18Eii
 void StaffRoll::func_ov002_020f2f18(int a, int b) {
-    char* c = (char*)this;
+    StaffRoll *c = this;
     int i = 0;
     do {
-        if (((StaffRoll *)c)->dolls[0].active != 0) {
-            ((StaffRoll *)c)->dolls[0].x -= a;
-            ((StaffRoll *)c)->dolls[0].y -= b;
+        if (c->dolls[0].active != 0) {
+            c->dolls[0].x -= a;
+            c->dolls[0].y -= b;
         }
         i++;
-        c += 0x14;
+        c = (StaffRoll *)((char *)c + 0x14);
     } while (i < 5);
 }
 
@@ -1276,13 +1275,13 @@ void StaffRoll::func_ov002_020f2f18(int a, int b) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2f64Ev
 void StaffRoll::func_ov002_020f2f64() {
-    char* self = (char*)this;
+    StaffRoll *self = this;
     int i;
     for (i = 0; i < 5; i++) {
-        if (((StaffRoll *)self)->dolls[0].active != 0) {
-            ((StaffRoll *)self)->dolls[0].frame++;
+        if (self->dolls[0].active != 0) {
+            self->dolls[0].frame++;
         }
-        self += 0x14;
+        self = (StaffRoll *)((char *)self + 0x14);
     }
 }
 
@@ -1291,7 +1290,7 @@ void StaffRoll::func_ov002_020f2f64() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2f9cEi
 void StaffRoll::func_ov002_020f2f9c(int count) {
-    char* sl = (char*)this;
+    StaffRoll *sl = this;
     int i;
     int idx = func_ov002_020f5a94() - 2;
     if (idx < 0) idx = 0;
@@ -1308,15 +1307,15 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
         }
         if (ok) {
             int* p;
-            ((StaffRoll *)sl)->dolls[0].active = 1;
-            ((StaffRoll *)sl)->dolls[0].visible = 1;
+            sl->dolls[0].active = 1;
+            sl->dolls[0].visible = 1;
             p = data_ov002_0210b97c[idx];
-            ((StaffRoll *)sl)->dolls[0].x = (p[i * 4 + 0] + 0xe0) << 12;
-            ((StaffRoll *)sl)->dolls[0].y = (p[i * 4 + 1] + 0x66) << 12;
-            ((StaffRoll *)sl)->dolls[0].priority = (u8)p[i * 4 + 2];
-            ((StaffRoll *)sl)->dolls[0].frame = (u8)p[i * 4 + 3];
+            sl->dolls[0].x = (p[i * 4 + 0] + 0xe0) << 12;
+            sl->dolls[0].y = (p[i * 4 + 1] + 0x66) << 12;
+            sl->dolls[0].priority = (u8)p[i * 4 + 2];
+            sl->dolls[0].frame = (u8)p[i * 4 + 3];
         }
-        sl += 0x14;
+        sl = (StaffRoll *)((char *)sl + 0x14);
     }
 }
 
@@ -1325,12 +1324,12 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f30d4Ev
 void StaffRoll::func_ov002_020f30d4() {
-    char * p = (char *)this;
+    StaffRoll * p = this;
     int i;
     for (i = 0; i < 5; i++) {
-        ((StaffRoll *)p)->dolls[0].active = 0;
-        ((StaffRoll *)p)->dolls[0].visible = 0;
-        p += 0x14;
+        p->dolls[0].active = 0;
+        p->dolls[0].visible = 0;
+        p = (StaffRoll *)((char *)p + 0x14);
     }
 }
 
@@ -1625,15 +1624,15 @@ void StaffRoll::func_ov002_020f396c() {
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3978Ev
 extern void *data_ov002_0210b998[];
 void StaffRoll::func_ov002_020f3978() {
-    char * c = (char *)this;
+    Star * c = this->stars;
     int i;
     for (i = 0; i < 4; i++) {
-        if (((StaffRoll *)c)->stars[0].visible) {
+        if (c->visible) {
             OAM::Render(true, (OamAttr *)data_ov002_0210b998[i],
-                        ((StaffRoll *)c)->stars[0].x >> 0xc, ((StaffRoll *)c)->stars[0].y >> 0xc,
+                        c->x >> 0xc, c->y >> 0xc,
                         -1, 1, 0);
         }
-        c += 0x4c;
+        c++;
     }
 }
 
@@ -1670,7 +1669,7 @@ void StaffRoll::func_ov002_020f39ec(int idx) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8Ei
 void StaffRoll::func_ov002_020f3ae8(int idx) {
-    StaffRoll::Star *arr = (StaffRoll::Star *)(char *)this;
+    Star *arr = this->stars;
     int a;
     int b;
     a = data_02082214[((arr[idx].heading >> 4) * 2) + 1];
@@ -1847,22 +1846,23 @@ void StaffRoll::func_ov002_020f3de4(int i) {
         *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
     *(int *)(c + STAR_OFF(orbitTravel) + off) += *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
 
-    if (i != ((StaffRoll*)c)->func_ov002_020f5a94() - 1)
+    if (i != func_ov002_020f5a94() - 1)
         return;
-    if ((unsigned int)((StaffRoll *)c)->stars[0].orbitTravel < 0x10000)
+    if ((unsigned int)this->stars[0].orbitTravel < 0x10000)
         return;
 
+    Star *p = this->stars;
     for (j = 0; j < 4; j++) {
-        if (((StaffRoll *)c)->stars[0].active != 0) {
-            ((StaffRoll *)c)->stars[0].step = 1;
-            ((StaffRoll *)c)->stars[0].loops = 0;
-            ((StaffRoll *)c)->stars[0].phase = 0;
-            ((StaffRoll *)c)->stars[0].radius = 0x38000;
-            ((StaffRoll *)c)->stars[0].heading = data_ov002_021000c0[j];
-            ((StaffRoll *)c)->stars[0].orbitTravel = 0;
-            ((StaffRoll *)c)->stars[0].angSpeed = 0x200;
+        if (p->active != 0) {
+            p->step = 1;
+            p->loops = 0;
+            p->phase = 0;
+            p->radius = 0x38000;
+            p->heading = data_ov002_021000c0[j];
+            p->orbitTravel = 0;
+            p->angSpeed = 0x200;
         }
-        c += 0x4c;
+        p++;
     }
 }
 
@@ -2009,11 +2009,11 @@ void StaffRoll::func_ov002_020f43cc(int i) {
             *(int *)((char *)this + STAR_OFF(speed) + off) = *(int *)((char *)this + STAR_OFF(speed) + off) + 0x120;
         {
             s = (char *)this + idx * 0x4c;
-            int dx = (((StaffRoll *)s)->stars[0].targetX - *(int *)px) >> 12;
-            int dy = (((StaffRoll *)s)->stars[0].targetY - *(int *)((char *)this + STAR_OFF(y) + off)) >> 12;
+            int dx = (((Star *)s)->targetX - ((Star *)px)->x) >> 12;
+            int dy = (((Star *)s)->targetY - *(int *)((char *)this + STAR_OFF(y) + off)) >> 12;
             if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
                 (*(unsigned char *)((char *)this + STAR_OFF(phase) + off))++;
-                ((StaffRoll *)s)->stars[0].orbitTravel = 0;
+                ((Star *)s)->orbitTravel = 0;
                 *(unsigned short *)((char *)this + STAR_OFF(heading) + off) = 0xc000;
                 return;
             }
@@ -2067,21 +2067,21 @@ void StaffRoll::func_ov002_020f43cc(int i) {
         return;
     {
         int j;
-        char *p = (char *)this;
+        Star *p = this->stars;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                (((StaffRoll *)p)->stars[0].step)++;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000b8[j];
+            if (p->active != 0) {
+                (p->step)++;
+                p->loops = 0;
+                p->phase = 0;
+                p->radius = 0x38000;
+                p->heading = data_ov002_021000b8[j];
                 if (func_ov002_020f5a94() == 3) {
                     if (j == 2)
-                        ((StaffRoll *)p)->stars[0].heading = 0;
+                        p->heading = 0;
                 }
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+                p->orbitTravel = 0;
             }
-            p += 0x4c;
+            p++;
         }
     }
 }
@@ -2275,21 +2275,21 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
 
     {
         int j;
-        char *p = (char *)this;
+        Star *p = this->stars;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                ((StaffRoll *)p)->stars[0].step += 1;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000c8[j];
+            if (p->active != 0) {
+                p->step += 1;
+                p->loops = 0;
+                p->phase = 0;
+                p->radius = 0x38000;
+                p->heading = data_ov002_021000c8[j];
                 if (func_ov002_020f5a94() == 3) {
                     if (j == 2)
-                        ((StaffRoll *)p)->stars[0].heading = 0;
+                        p->heading = 0;
                 }
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+                p->orbitTravel = 0;
             }
-            p += 0x4c;
+            p++;
         }
     }
 }
@@ -2484,17 +2484,17 @@ void StaffRoll::func_ov002_020f5010(int i) {
 
     {
         int j;
-        char *p = (char *)this;
+        Star *p = this->stars;
         for (j = 0; j < 4; j++) {
-            if (((StaffRoll *)p)->stars[0].active != 0) {
-                ((StaffRoll *)p)->stars[0].step += 1;
-                ((StaffRoll *)p)->stars[0].loops = 0;
-                ((StaffRoll *)p)->stars[0].phase = 0;
-                ((StaffRoll *)p)->stars[0].radius = 0x38000;
-                ((StaffRoll *)p)->stars[0].heading = data_ov002_021000d0[j];
-                ((StaffRoll *)p)->stars[0].orbitTravel = 0;
+            if (p->active != 0) {
+                p->step += 1;
+                p->loops = 0;
+                p->phase = 0;
+                p->radius = 0x38000;
+                p->heading = data_ov002_021000d0[j];
+                p->orbitTravel = 0;
             }
-            p += 0x4c;
+            p++;
         }
     }
 }
@@ -2585,18 +2585,18 @@ void StaffRoll::func_ov002_020f5328(int i) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f55b4Ei
 void StaffRoll::func_ov002_020f55b4(int i) {
-    char *e = (char *)this + i * 0x4c;
-    if (((StaffRoll *)e)->stars[0].frame != 0x10)
+    Star *e = (Star *)((char *)this + i * 0x4c);
+    if (e->frame != 0x10)
         return;
     *(unsigned char *)((char *)this + STAR_OFF(step) + i * 0x4c) += 1;
-    ((StaffRoll *)e)->stars[0].radius = 0x38000;
-    ((StaffRoll *)e)->stars[0].heading = data_ov002_021000d8[i];
-    ((StaffRoll *)e)->stars[0].phase = 0;
-    ((StaffRoll *)e)->stars[0].loops = 0;
-    ((StaffRoll *)e)->stars[0].orbitTravel = 0;
-    ((StaffRoll *)e)->stars[0].angSpeed = 0x200;
-    ((StaffRoll *)e)->stars[0].kiraDefParam = 0x1000;
-    ((StaffRoll *)e)->stars[0].kiraSysParam = 0x200;
+    e->radius = 0x38000;
+    e->heading = data_ov002_021000d8[i];
+    e->phase = 0;
+    e->loops = 0;
+    e->orbitTravel = 0;
+    e->angSpeed = 0x200;
+    e->kiraDefParam = 0x1000;
+    e->kiraSysParam = 0x200;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2613,7 +2613,7 @@ void StaffRoll::func_ov002_020f562c(int idx) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5678Ei
 void StaffRoll::func_ov002_020f5678(int i) {
-    StaffRoll::Star *e = (StaffRoll::Star *)(char *)this + i;
+    Star *e = &this->stars[i];
     e->kiraDefParam = 0xccc;
     e->kiraSysParam = 0x155;
 }
@@ -2778,13 +2778,13 @@ void StaffRoll::func_ov002_020f5990() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5a6cEv
 void StaffRoll::func_ov002_020f5a6c() {
-    char * p = (char *)this;
+    Star * p = this->stars;
     int i;
     for (i = 0; i < 4; i++) {
-        ((StaffRoll *)p)->stars[0].active = 0;
-        ((StaffRoll *)p)->stars[0].visible = 0;
-        ((StaffRoll *)p)->stars[0].holdFrame = 0;
-        p += 0x4c;
+        p->active = 0;
+        p->visible = 0;
+        p->holdFrame = 0;
+        p++;
     }
 }
 
@@ -2808,8 +2808,8 @@ int StaffRoll::func_ov002_020f5a94() {
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ad4Ev
 void StaffRoll::func_ov002_020f5ad4() {
     /* StaffRoll::pad_1f0: two words cleared here and read nowhere. */
-    *(int*)((char*)this+0x1f0) = 0;
-    *(int*)((char*)this+0x1f4) = 0;
+    this->pad_1f0[0] = 0;
+    this->pad_1f0[1] = 0;
     this->kiraStar = 0;
     this->holdOrbit = 0;
     func_ov002_020f5a6c();
@@ -2891,12 +2891,12 @@ void StaffRoll::func_ov002_020f5b98() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv
 void StaffRoll::func_ov002_020f5bcc() {
-    char * p = (char *)this;
+    Star * p = this->stars;
     int i;
     for (i = 0; i < 4; i++) {
-        if (((StaffRoll *)p)->stars[0].active)
-            ((StaffRoll *)p)->stars[0].holdFrame = 1;
-        p += 0x4c;
+        if (p->active)
+            p->holdFrame = 1;
+        p++;
     }
 }
 
@@ -2974,30 +2974,30 @@ void StaffRoll::func_ov002_020f5cd0() {
 void StaffRoll::func_ov002_020f5d34() {
     int n = func_ov002_020f5a94();
     int i = 0;
-    u8 *e;
+    Star *e;
     int v;
     if (n <= 0) goto done;
-    e = (u8 *)this;
+    e = this->stars;
     v = 0;
     do {
         /* +0x38 is Star::pad_38: written twice here, read nowhere. */
-        ((StaffRoll *)e)->stars[0].active = 1;
-        ((StaffRoll *)e)->stars[0].visible = 0;
-        ((StaffRoll *)e)->stars[0].heading = 0;
-        ((StaffRoll *)e)->stars[0].pad_38 = 0;
-        ((StaffRoll *)e)->stars[0].x = 0x80000;
-        ((StaffRoll *)e)->stars[0].y = 0x60000;
-        ((StaffRoll *)e)->stars[0].delay = v;
-        ((StaffRoll *)e)->stars[0].frameTimer = 0;
-        ((StaffRoll *)e)->stars[0].kiraTimer = 0;
-        ((StaffRoll *)e)->stars[0].kiraPeriods = 0;
-        ((StaffRoll *)e)->stars[0].kiraDefParam = 0x199;
-        ((StaffRoll *)e)->stars[0].kiraSysParam = 0x199;
-        ((StaffRoll *)e)->stars[0].pad_38 = 0;
-        ((StaffRoll *)e)->stars[0].state = 0;
-        ((StaffRoll *)e)->stars[0].step = 0;
-        ((StaffRoll *)e)->stars[0].sparkling = 0;
-        e += 0x4c;
+        e->active = 1;
+        e->visible = 0;
+        e->heading = 0;
+        e->pad_38 = 0;
+        e->x = 0x80000;
+        e->y = 0x60000;
+        e->delay = v;
+        e->frameTimer = 0;
+        e->kiraTimer = 0;
+        e->kiraPeriods = 0;
+        e->kiraDefParam = 0x199;
+        e->kiraSysParam = 0x199;
+        e->pad_38 = 0;
+        e->state = 0;
+        e->step = 0;
+        e->sparkling = 0;
+        e++;
         v += 0x40;
         i++;
     } while (i < n);
