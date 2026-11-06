@@ -812,7 +812,7 @@ namespace s020ce8a0 {
 // @symbol TrmpItem_ProjectOnLine
 
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern "C" int DotVec3(struct Vector3 *a, struct Vector3 *b);
+extern "C" int DotVec3(const struct Vector3 *a, const struct Vector3 *b);
 
 typedef TrampolineObjectCallbacks Obj;
 
@@ -1161,20 +1161,15 @@ extern "C" char *TrmpItem_Spawn(int position, int *normal, int itemType, int mot
 }
 
 namespace s020cf040 {
-struct Vec3 {
-    int x;
-    int y;
-    int z;
-};
-extern "C" int DotVec3(struct Vec3 *a, struct Vec3 *b);
+extern "C" int DotVec3(const Vector3 *a, const Vector3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" int LenVec3(const Vector3 *v);
 extern "C" {
 extern int data_ov006_0212e0f0[];
 }
-extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, struct Vec3 *offsetVector) {
+extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint, const Vector3 *offsetVector) {
     int row;
-    int negatedProjection = -DotVec3(offsetVector, (struct Vec3 *)&TRMPLINE(sl)->mNormal);
+    int negatedProjection = -DotVec3(offsetVector, &TRMPLINE(sl)->mNormal);
     int *amplitude = TRMPLINE(sl)->mFlexAmplitude;
     char *restVertex = (char *)TRMPLINE(sl)->mRestVerts;
     int weightedAmplitude;
@@ -1645,11 +1640,11 @@ struct TrampolineContactView : TrampolineObjectCallbacks {
 
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern "C" int DotVec3(Vector3 *a, Vector3 *b);
+extern "C" int DotVec3(const Vector3 *a, const Vector3 *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
 extern "C" int func_0203d524(int *a, int *b);
 extern "C" void D3D_PlaySePannedLoop(int a0, int a1, int a2);
-extern "C" void TrmpLine_PointDistance(char *sl, void *arg1, Vector3 *r2);
+extern "C" void TrmpLine_PointDistance(char *sl, void *arg1, const Vector3 *r2);
 extern "C" void TrmpLine_SetStateSettle(char *p);
 extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern "C" void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
