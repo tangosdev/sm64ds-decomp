@@ -715,7 +715,7 @@ extern u8 data_0209d678;
 extern u8 data_0209d67c;
 extern u8 data_0209d680;
 extern u8 data_0209d6b0;
-extern u8 data_0209d6c4;
+extern u8 gMsgBoxStyle;
 extern u8 gMsgBoxCenterY;
 extern u8 gMsgBoxTop;
 extern u8 gMsgBoxCenterX;

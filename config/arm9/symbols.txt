@@ -4678,7 +4678,7 @@ data_0209d6b4 kind:bss addr:0x0209d6b4
 data_0209d6b8 kind:bss addr:0x0209d6b8
 data_0209d6bc kind:bss addr:0x0209d6bc
 data_0209d6c0 kind:bss addr:0x0209d6c0
-data_0209d6c4 kind:bss addr:0x0209d6c4
+gMsgBoxStyle kind:bss addr:0x0209d6c4
 gMsgBoxCenterY kind:bss addr:0x0209d6c8
 gMsgBoxTop kind:bss addr:0x0209d6cc
 gMsgBoxCenterX kind:bss addr:0x0209d6d0
@@ -4798,7 +4798,7 @@ data_0209f304 kind:bss addr:0x0209f304
 data_0209f308 kind:bss addr:0x0209f308
 gNumRedCoins kind:bss addr:0x0209f30c
 data_0209f30d kind:bss addr:0x0209f30d
-data_0209f310 kind:bss addr:0x0209f310
+gNumStageStars kind:bss addr:0x0209f310
 data_0209f311 kind:bss addr:0x0209f311
 data_0209f314 kind:bss addr:0x0209f314
 data_0209f318 kind:bss addr:0x0209f318
