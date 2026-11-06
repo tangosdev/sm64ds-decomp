@@ -252,7 +252,7 @@ extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
 extern s16 Vec3_VertAngle(const void* a, const void* b);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
+extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
 extern void d_a_king_donketuRunningSlidingDustAtHold(int a, int b, int c);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
    locals are the POD VecFx32, so the call casts. */
@@ -1854,7 +1854,7 @@ struct RayParams { Vector3 start, end, in, out; };
 int daKing_Donketu_c::Behavior()
 {
     C *c = (C *)this;
-    int angx;
+    short angx;
     Vector3 v0;
     RayParams rp;
     Vector3 v3C;

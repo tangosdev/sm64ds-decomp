@@ -156,6 +156,24 @@ struct fBase_c {
     int Process(ProcessFunction action, BeforeProcessFunction before,
                 AfterProcessFunction after);
     void MarkForDestruction();
+    /* Address-named helpers whose names are not recovered. Every one takes
+       the process in r0; see src/runtime/actor/ActorBase.cpp.
+       func_02043810: the parent process (the owner of the scene node above
+         this one), or null at the root.
+       func_02043880, func_0204335c, func_02043288, func_020432e4 and
+         func_0204322c: the callbacks of the process tree and the four process
+         lists. Each is stored as a ProcessFunction constant in .data
+         (data_02099f60, f70, f48, f50, f68), so each keeps int ().
+       func_020433b8: queues a newly created process.
+       func_020431c4: nonzero while any descendant is still uncreated. */
+    fBase_c *func_02043810();
+    int func_02043880();
+    int func_0204335c();
+    int func_020432e4();
+    int func_02043288();
+    int func_0204322c();
+    void func_020433b8();
+    int func_020431c4();
     /* The actor-heap allocator every process is created through; defined in
        src/runtime/actor/ActorBase.cpp. size_t is unsigned long under mwccarm,
        so this is _ZN7fBase_cnwEm, and `new T` on any class derived from this

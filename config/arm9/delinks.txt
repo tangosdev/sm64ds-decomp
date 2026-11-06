@@ -616,6 +616,7 @@ src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp:
 src/Message.cpp:
     complete
     .text start:0x0201cb7c end:0x0201fcd4
+    .bss start:0x0209d64c end:0x0209e64c
 
 src/LoadFont.cpp:
     complete

@@ -118,7 +118,6 @@ unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
 void MulMat4x3Mat4x3(void *a, void *b, void *dst);
-void func_0200f760(void *thiz, void *cyl);
 u8 IsAreaShowing(int idx);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
@@ -3026,7 +3025,7 @@ int daTrs_c::Behavior()
     int d1;
     int v;
 
-    func_0200f760(this, &mdCcAcPos_c);
+    func_0200f760(&mdCcAcPos_c);
     if (mSpawnedActorID != 0) {
         mFoundActor = dActor_c::FindWithID(mSpawnedActorID);
         q = (char *)mFoundActor;
