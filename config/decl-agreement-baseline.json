@@ -364,9 +364,6 @@
         "param:#1 char *",
         "return:int"
       ],
-      "src/game/actors/d_a_obj_fall_block.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_obj_hatena_block.cpp": [
         "return:int"
       ],
@@ -4012,27 +4009,7 @@
         "return:void"
       ]
     },
-    "_ZN17dScMgTrampoline_c10StateIntroEv": {
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:0"
-      ]
-    },
-    "_ZN17dScMgTrampoline_c12StateResultsEv": {
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:0"
-      ]
-    },
-    "_ZN17dScMgTrampoline_c13StateWaitExitEv": {
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:0"
-      ]
-    },
     "_ZN17dScMgTrampoline_c9StateDoneEv": {
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:0"
-      ]
-    },
-    "_ZN17dScMgTrampoline_c9StatePlayEv": {
       "src/minigames/d_s_mg_trampoline.cpp": [
         "arity:0"
       ]
@@ -4080,27 +4057,7 @@
         "return:void"
       ]
     },
-    "_ZN18dScMgTrampoline2_c10StateIntroEv": {
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:0"
-      ]
-    },
-    "_ZN18dScMgTrampoline2_c12StateResultsEv": {
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:0"
-      ]
-    },
-    "_ZN18dScMgTrampoline2_c13StateWaitExitEv": {
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:0"
-      ]
-    },
     "_ZN18dScMgTrampoline2_c9StateDoneEv": {
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:0"
-      ]
-    },
-    "_ZN18dScMgTrampoline2_c9StatePlayEv": {
       "src/minigames/d_s_mg_trampoline2.cpp": [
         "arity:0"
       ]
@@ -14024,47 +13981,13 @@
         "param:#1 dExtBlendAnmModel_c *"
       ]
     },
-    "func_020169f4": {
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:2"
-      ]
-    },
     "func_02016a04": {
-      "include/decl_common.h": [
-        "arity:2"
-      ],
-      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
-        "arity:2"
-      ],
-      "src/minigames/d_mg_jump3d_mario.cpp": [
-        "arity:2"
-      ],
       "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "arity:2"
-      ],
-      "src/minigames/unit020bfec0.cpp": [
         "arity:2"
       ]
     },
     "func_02016a14": {
-      "include/decl_common.h": [
-        "arity:2"
-      ],
-      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
-        "arity:2"
-      ],
-      "src/minigames/d_mg_jump3d_mario.cpp": [
-        "arity:2"
-      ],
       "src/minigames/d_mg_trmpln2_mario.cpp": [
-        "arity:3"
-      ],
-      "src/minigames/unit020bfec0.cpp": [
-        "arity:2"
-      ]
-    },
-    "func_02016aac": {
-      "include/decl_common.h": [
         "arity:3"
       ]
     },
@@ -15694,11 +15617,6 @@
         "return:void"
       ]
     },
-    "func_0201a03c": {
-      "src/Crash.cpp": [
-        "arity:2"
-      ]
-    },
     "func_0201a244": {
       "src/_ZN10dScEntry_c18UpdateMatchLoadingEv.cpp": [
         "param:#1 void *",
@@ -16212,18 +16130,6 @@
       ]
     },
     "func_0203c178": {
-      "include/decl_common.h": [
-        "arity:4"
-      ],
-      "src/engine/model/d_ext_model.cpp": [
-        "arity:4"
-      ],
-      "src/game/actors/d_a_luigi.cpp": [
-        "arity:4"
-      ],
-      "src/game/actors/d_a_mip.cpp": [
-        "arity:4"
-      ],
       "src/unnamed/ov002/func_ov002_020e3e00.cpp": [
         "arity:4"
       ]
@@ -16364,19 +16270,12 @@
     },
     "func_0203f604": {
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "arity:0",
         "return:void"
-      ]
-    },
-    "func_020402a0": {
-      "src/Wireless_Reset.c": [
-        "arity:0"
       ]
     },
     "func_0204068c": {
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "param:#1 unsigned short",
-        "return:void *"
+        "param:#1 unsigned short"
       ]
     },
     "func_020406b4": {
@@ -16389,20 +16288,10 @@
         "param:#1 int"
       ]
     },
-    "func_02040a5c": {
-      "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "arity:0"
-      ]
-    },
     "func_02040c34": {
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "param:#3 void *",
         "param:#4 void *"
-      ]
-    },
-    "func_02041d28": {
-      "src/unnamed/arm9/0204/func_02042254.cpp": [
-        "arity:3"
       ]
     },
     "func_02041e14": {
@@ -16417,7 +16306,6 @@
     },
     "func_02042ffc": {
       "src/runtime/actor/ActorDerived.cpp": [
-        "arity:2",
         "param:#1 unsigned int",
         "return:fBase_c *"
       ]
@@ -16490,31 +16378,6 @@
     "func_02045e44": {
       "src/unnamed/arm9/0204/func_020469e8.c": [
         "param:#1 Ctx *"
-      ]
-    },
-    "func_02045e70": {
-      "src/engine/model/d_ext_model.cpp": [
-        "arity:1"
-      ]
-    },
-    "func_02045ef8": {
-      "src/engine/model/d_ext_model.cpp": [
-        "arity:1"
-      ]
-    },
-    "func_02045f80": {
-      "src/engine/model/d_ext_model.cpp": [
-        "arity:1"
-      ]
-    },
-    "func_02046008": {
-      "src/engine/model/d_ext_model.cpp": [
-        "param:#2 int"
-      ]
-    },
-    "func_0204605c": {
-      "src/engine/model/d_ext_model.cpp": [
-        "arity:1"
       ]
     },
     "func_02046234": {
@@ -16672,11 +16535,6 @@
         "param:#1 Particle::System *"
       ]
     },
-    "func_0204af38": {
-      "src/unnamed/arm9/0204/func_0204a5c8.c": [
-        "arity:1"
-      ]
-    },
     "func_0204c24c": {
       "src/unnamed/arm9/0204/func_0204b460.c": [
         "param:#1 unsigned char",
@@ -16825,16 +16683,8 @@
       "src/Matrix4x3_ApplyInPlaceToScale.c": [
         "param:#1 Matrix4x3 *"
       ],
-      "src/unnamed/arm9/0203/func_0203c178.c": [
-        "arity:0"
-      ],
       "src/engine/model/ModelComponents.cpp": [
         "param:#1 Mtx43 *"
-      ]
-    },
-    "func_02052ec8": {
-      "src/unnamed/ov007/func_ov007_020c0128.cpp": [
-        "arity:1"
       ]
     },
     "func_02053274": {
@@ -17062,11 +16912,6 @@
         "return:void"
       ]
     },
-    "TPi_TpCallback": {
-      "src/TP_Init.c": [
-        "arity:0"
-      ]
-    },
     "CARD_GetBackupTotalSize": {
       "src/engine/save/SaveData2.cpp": [
         "return:unsigned int"
@@ -17086,11 +16931,6 @@
     "func_02061128": {
       "src/unnamed/arm9/0201/func_02019ebc.c": [
         "param:#1 int (*)(void)"
-      ]
-    },
-    "WmReceiveFifo": {
-      "src/WM_Init.cpp": [
-        "arity:0"
       ]
     },
     "WM_Init": {
@@ -17927,17 +17767,6 @@
         "arity:2"
       ]
     },
-    "Mg_CommitRecords": {
-      "src/minigames/d_s_mg_hanachan_methods.cpp": [
-        "arity:1"
-      ],
-      "src/minigames/d_s_mg_m_carlo2.cpp": [
-        "arity:1"
-      ],
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:1"
-      ]
-    },
     "Mg_SetSessionBest": {
       "src/minigames/d_s_mg_base.cpp": [
         "return:int"
@@ -18238,12 +18067,6 @@
         "return:void"
       ]
     },
-    "Heyho_AllIdle": {
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "arity:1",
-        "return:void *"
-      ]
-    },
     "Heyho_IsChasing": {
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "param:#1 struct Obj *"
@@ -18300,12 +18123,6 @@
         "param:#2 int"
       ]
     },
-    "Jump3D_AllIdle": {
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "arity:1",
-        "return:void *"
-      ]
-    },
     "Trmp2Mario_EnterBounce": {
       "src/minigames/d_mg_trmpln2_mario.cpp": [
         "arity:2"
@@ -18319,21 +18136,6 @@
     "Trmp2Mario_Destruct": {
       "include/dScMgTrampoline2_c.h": [
         "arity:0"
-      ]
-    },
-    "Trmp2Mario_EnterAll": {
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:1"
-      ]
-    },
-    "Trmp2Mario_PlaceAtStart": {
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:1"
-      ]
-    },
-    "Trmp2Mario_ResetAll": {
-      "include/decl_common.h": [
-        "arity:1"
       ]
     },
     "Trmp2Mario_InitPool": {
@@ -18360,16 +18162,6 @@
       "src/minigames/d_s_mg_trampoline.cpp": [
         "arity:0",
         "return:void"
-      ]
-    },
-    "Trmp3DMario_StartAll": {
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:1"
-      ]
-    },
-    "Trmp3DMario_UpdateAll": {
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:1"
       ]
     },
     "Trmp3DMario_SetTuning": {
@@ -18431,11 +18223,6 @@
         "return:int"
       ]
     },
-    "TrmpItem_HideAll": {
-      "include/decl_common.h": [
-        "arity:1"
-      ]
-    },
     "TrmpItem_Spawn": {
       "src/minigames/d_s_mg_trampoline2.cpp": [
         "param:#2 int *"
@@ -18449,14 +18236,6 @@
     "TrmpLine_Build": {
       "src/minigames/unit020cd744.cpp": [
         "param:#1 short *"
-      ]
-    },
-    "TrmpLine_ClearAll": {
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "arity:1"
-      ],
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "arity:1"
       ]
     },
     "TrmpLine_Create": {
@@ -19077,11 +18856,6 @@
         "return:CLPS_Block"
       ]
     },
-    "func_02045ad8": {
-      "src/game/stages/d_s_entry_entry.cpp": [
-        "arity:1"
-      ]
-    },
     "func_02020028": {
       "src/game/stages/d_s_entry_methods.cpp": [
         "param:#2 unsigned char"
@@ -19215,11 +18989,6 @@
     "WmCheckParentParameter": {
       "src/WM_SetParentParameter.cpp": [
         "return:void"
-      ]
-    },
-    "MIi_UncompressBackward": {
-      "src/engine/fs/FS_Overlay.cpp": [
-        "arity:1"
       ]
     },
     "func_0206cf98": {
