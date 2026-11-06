@@ -7655,47 +7655,20 @@
       ]
     },
     "data_0209caa0": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:unsigned char []"
-      ],
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
         "return:CAA0"
       ],
       "src/_ZN8SaveData22NumGlowingRabbitsFoundEv.cpp": [
         "return:unsigned char []"
       ],
-      "src/game/actors/d_a_door.cpp": [
-        "return:FileSaveData"
-      ],
-      "src/game/actors/d_a_mugen_bgm.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/actors/d_a_obj_hatena_switch.cpp": [
-        "return:unsigned int []"
-      ],
       "src/game/actors/d_a_obj_wl_koopa_shutter.cpp": [
         "return:char []"
-      ],
-      "src/game/actors/d_a_obj_wl_polelift.cpp": [
-        "return:unsigned int []"
       ],
       "src/game/actors/d_a_obj_wl_submarine.cpp": [
         "return:char []"
       ],
       "src/game/stages/LevelObjects.cpp": [
         "return:unsigned char []"
-      ],
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/minigames/d_s_mini_gm.cpp": [
-        "return:unsigned int []"
-      ],
-      "src/ui/hud/d_map.cpp": [
-        "return:unsigned int []"
-      ],
-      "src/engine/save/SaveData.cpp": [
-        "return:SaveBlock"
       ],
       "src/unnamed/arm9/0201/func_020139b8.c": [
         "return:SaveData"
@@ -7860,21 +7833,6 @@
       ]
     },
     "data_0209d4a8": {
-      "src/minigames/d_s_mg_d3d_base.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_base.cpp": [
-        "return:void * *"
-      ],
-      "src/minigames/d_s_mg_single3d_base.cpp": [
-        "return:void * *"
-      ],
-      "src/unnamed/arm9/0201/func_02019440.cpp": [
-        "return:int"
-      ],
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:struct UnkObj *"
-      ],
       "src/unnamed/arm9/0201/func_02019390.cpp": [
         "return:Obj *"
       ]
@@ -8324,22 +8282,7 @@
       "src/_ZN7daPly_c16InitWingFeathersEb.cpp": [
         "return:unsigned char []"
       ],
-      "src/engine/save/SaveData.cpp": [
-        "return:unsigned char []"
-      ],
       "src/game/actors/d_a_obj_mario_cap.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/actors/d_a_obj_mc_water.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/actors/d_a_obj_simple_bg.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/actors/d_a_snm_bth.cpp": [
-        "return:unsigned char []"
-      ],
-      "src/game/actors/d_a_wanwan2.cpp": [
         "return:unsigned char []"
       ]
     },
