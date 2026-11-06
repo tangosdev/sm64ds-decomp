@@ -7,16 +7,21 @@
  * sites.  tools/spa_dump.py prints a definition and
  * tools/particle_id_sites.py lists every literal that spawns it.
  *
- * Evidence for the five below: all share texture 40 and are billboards.
+ * Evidence for the six below: all share texture 40 and are billboards.
  *  - kPtclLandingDust: ring, radius 2.0, 25 frames.  dActor_c::HugeLandingDustAt
  *    spawns it, and several actors spawn it directly.
  *  - kPtclGroundPuff: ring, radius 1.0, 18 frames.  func_0200fc44 spawns it 25.0
  *    above a (raycast) ground point.  Seen at runtime on Mario's landing
  *    (daPly_c::St_Land_Init); the hurt, thrown and punch/kick states reach it
  *    through the same helper, all skipped in shallow water.
+ *  - kPtclFlameOutPuff: ring, radius 0.5, 35 frames, base colour dark grey on
+ *    the same puff texture 40.  Spawned where a flame ends: daKpaFire_c's
+ *    variants 6/7 and daObjFire_c when the flame is being eaten.  The name
+ *    states the context; "smoke" is an inference from the colour.
  *  - kPtclTriplePoof*: dActor_c::TriplePoofDustAt spawns the three in order.
  *    Their letter suffixes only record that order. */
 enum ParticleId {
+    kPtclFlameOutPuff = 0x9f,
     kPtclLandingDust = 0xb2,
     kPtclGroundPuff = 0xb3,
     kPtclTriplePoofA = 0x124,
