@@ -1125,9 +1125,9 @@ void daNknk_c::func_ov062_021175c0()
             pos.y = pos.y + 0xa000;
         }
 
-        spawned =
-            Particle::System::New(0, kPtclLandingDust, pos.x, pos.y, zArg, (const Vector3_16f *)((void *)0),
-                                  (Particle::Callback *)((void *)0));
+        spawned = Particle::System::New(0, kPtclLandingDust, pos.x, pos.y, zArg,
+                                        (const Vector3_16f *)((void *)0),
+                                        (Particle::Callback *)((void *)0));
     }
 
     Particle::SetSelfDestructFlag(kPtclLandingDust);
