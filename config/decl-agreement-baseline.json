@@ -432,9 +432,6 @@
       "src/game/stages/d_s_star_sel_methods.cpp": [
         "param:#2 unsigned int"
       ],
-      "src/game/actors/d_a_demo.cpp": [
-        "param:#1 int"
-      ],
       "src/game/stages/d_s_game_over.cpp": [
         "param:#1 int"
       ],
