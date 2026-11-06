@@ -58,7 +58,7 @@ typedef void (*WMCallbackFunc)(void *arg);
 extern int WM_SetMPDataToPort(WMCallbackFunc callback, int sendData, int sendDataSize,
                               int destBitmap, u16 port, u16 prio);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void MultiCopyHalf(const void *src, void *dst, int nbytes);
 
 void WmDataSharingSetDataCallback(void *arg);
@@ -113,7 +113,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     }
 
     zero = 0;
-    MultiStore32Bytes(zero, (int *)dsInfo, 0x420);
+    MultiStore32Bytes(zero, dsInfo, 0x420);
 
     dsInfo->writeIndex = 0;
     dsInfo->sendIndex = 0;

@@ -45,7 +45,7 @@ extern Ov007QueryHook data_ov007_02104c14;
 extern Ov007FreeHook data_ov007_02103254;
 extern Ov007AllocHook data_ov007_02103258;
 
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void func_0205a588(void *dst, unsigned char value, unsigned int size);

@@ -25,8 +25,8 @@
 // hand-written runtime block, not compiled C.
 
 extern unsigned int *func_0207322c(void);
-extern double func_0206dd7c(void);
-extern double func_0206dcd4(void);
+extern double func_0206dd7c(double a, int op);
+extern double func_0206dcd4(double a, double b, int op);
 extern void _dsub_core(void);
 
 asm double _dadd(double a, double b)

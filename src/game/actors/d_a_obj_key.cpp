@@ -191,7 +191,7 @@ extern ObjKeyStateTable data_ov089_02132cec;
  * UpdateContinuous veneer, not the method. */
 extern "C" {
 extern void *data_0209f318;
-extern int gNextActorUpdateMask;
+extern u32 gNextActorUpdateMask;
 extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern void func_ov002_020c3dbc(void *player);

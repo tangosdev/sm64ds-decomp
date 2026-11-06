@@ -906,12 +906,12 @@ extern "C" void Trmp2Mario_StateMissed(char *c) {
 namespace ns_020c9fe4 {
 extern "C" {
 extern int D3D_PlaySeAtX(int a, int b);
-extern int sTrmp2Lives[];
+extern int sTrmp2Lives;
 extern double pmf_Trmp2Mario_StateMissed_2;
 void Trmp2Mario_EnterMissed(char *c);
 // @symbol Trmp2Mario_EnterMissed
 void Trmp2Mario_EnterMissed(char *c) {
-    if (sTrmp2Lives[0] > 1)
+    if (sTrmp2Lives > 1)
         D3D_PlaySeAtX(0x1ca, MARIO2(c)->mPos.x);
     else
         Sound::PlayBank2_2D(0x1c9);
@@ -1650,11 +1650,11 @@ extern "C" void Trmp3DMario_Update(char *o) {
 // ---- Trmp3DMario_ApplyGravity
 namespace ns_020cb134 {
 extern "C" {
-extern int sTrmp3DFallSpeed[];
+extern int sTrmp3DFallSpeed;
 void AddVec3(void *dst, void *a, void *b);
 // @symbol Trmp3DMario_ApplyGravity
 void Trmp3DMario_ApplyGravity(char *o) {
-    ApproachLinear(MARIO3D(o)->mVel.y, sTrmp3DFallSpeed[0], MARIO3D(o)->mGravityStep);
+    ApproachLinear(MARIO3D(o)->mVel.y, sTrmp3DFallSpeed, MARIO3D(o)->mGravityStep);
     AddVec3(&MARIO3D(o)->mPos, &MARIO3D(o)->mVel, &MARIO3D(o)->mPos);
 }
 }
@@ -1821,7 +1821,7 @@ void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp3DMario_StateGoal(char *c);
 extern int sTrmpRowHeights[];
 extern int pmf_Trmp3DMario_StateGoal[];
-extern int sTrmpMariosOnLedges[];
+extern int sTrmpMariosOnLedges;
 }
 // @symbol Trmp3DMario_EnterGoal
 extern "C" void Trmp3DMario_EnterGoal(char *c) {
@@ -1831,7 +1831,7 @@ extern "C" void Trmp3DMario_EnterGoal(char *c) {
     MARIO3D(c)->mVel.y = 0;
     Sound_PlayBank1Panned(0, 0x10, MARIO3D(c)->mPos.x);
     MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimRollJumpEnd, 0x40000000, 0x800, 0);
-    sTrmpMariosOnLedges[0] = sTrmpMariosOnLedges[0] + 1;
+    sTrmpMariosOnLedges = sTrmpMariosOnLedges + 1;
     a = pmf_Trmp3DMario_StateGoal[0];
     b = pmf_Trmp3DMario_StateGoal[1];
     MARIO3D(c)->mState[0] = b ? a : a;
@@ -2493,12 +2493,12 @@ void Trmp3DMario_StateMissed(char *c) {
 namespace ns_020cc37c {
 extern "C" {
 extern int D3D_PlaySeAtX(int a, int b);
-extern int sTrmp3DLives[];
+extern int sTrmp3DLives;
 extern double pmf_Trmp3DMario_StateMissed_2;
 void Trmp3DMario_EnterMissed(char *c);
 // @symbol Trmp3DMario_EnterMissed
 void Trmp3DMario_EnterMissed(char *c) {
-    if (sTrmp3DLives[0] > 1)
+    if (sTrmp3DLives > 1)
         D3D_PlaySeAtX(0x1ca, MARIO3D(c)->mPos.x);
     else
         Sound::PlayBank2_2D(0x1c9);
@@ -2647,9 +2647,9 @@ namespace ns_020cc63c {
 extern "C" {
 extern int sTrmpRowHeights[];
 extern int sTrmpMariosOnLedges;
-extern void Trmp3DMario_JumpOff(int *c);
+extern void Trmp3DMario_JumpOff(char *c);
 // @symbol Trmp3DMario_StateWalkBack
-void Trmp3DMario_StateWalkBack(int *c) {
+void Trmp3DMario_StateWalkBack(char *c) {
     short idx = MARIO3D(c)->mHeightRow;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[idx];
     if (MARIO3D(c)->mPos.x >= 0x5bff8)
@@ -2684,11 +2684,11 @@ namespace ns_020cc724 {
 extern "C" {
 extern void Trmp3DMario_EnterWalkBack(char *c);
 
-extern void *sTrmpRowHeights[];
+extern int sTrmpRowHeights[];
 
 // @symbol Trmp3DMario_StateOnLedge
 void Trmp3DMario_StateOnLedge(char *c) {
-    MARIO3D(c)->mPos.y = (int)sTrmpRowHeights[MARIO3D(c)->mHeightRow];
+    MARIO3D(c)->mPos.y = sTrmpRowHeights[MARIO3D(c)->mHeightRow];
 
     if (MARIO3D(c)->mAnmModel.file == sTrmpAnimJumpEnd) {
         if (MARIO3D(c)->mAnmModel.Finished() != 0) {
@@ -2735,7 +2735,7 @@ typedef struct {
 } G2;
 extern int pmf_Trmp3DMario_StateFallToLedge_2[2];
 extern G2 pmf_Trmp3DMario_StateOnLedge;
-extern void *sTrmpRowHeights[];
+extern int sTrmpRowHeights[];
 extern int sTrmpMariosOnLedges;
 
 // @symbol Trmp3DMario_EnterOnLedge
@@ -2744,7 +2744,7 @@ void Trmp3DMario_EnterOnLedge(char *p) {
     int *want;
     int z = 0;
     MARIO3D(p)->mGravityStep = z;
-    MARIO3D(p)->mPos.y = (int)sTrmpRowHeights[MARIO3D(p)->mHeightRow];
+    MARIO3D(p)->mPos.y = sTrmpRowHeights[MARIO3D(p)->mHeightRow];
     MARIO3D(p)->mPos.z = z;
     MARIO3D(p)->mVel.x = z;
     MARIO3D(p)->mVel.y = z;
@@ -2768,11 +2768,11 @@ void Trmp3DMario_EnterOnLedge(char *p) {
 // ---- Trmp3DMario_StateWalkIn
 namespace ns_020cc9b8 {
 extern "C" {
-extern int sTrmpRowHeights;
-extern void Trmp3DMario_JumpOff(int *c);
+extern int sTrmpRowHeights[];
+extern void Trmp3DMario_JumpOff(char *c);
 // @symbol Trmp3DMario_StateWalkIn
-void Trmp3DMario_StateWalkIn(int *c) {
-    MARIO3D(c)->mPos.y = sTrmpRowHeights;
+void Trmp3DMario_StateWalkIn(char *c) {
+    MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
     if (MARIO3D(c)->mPos.x <= -0x5c008)
         return;
     Trmp3DMario_JumpOff(c);
@@ -2785,7 +2785,7 @@ namespace ns_020cc9fc {
 struct G2 {
     int w[2];
 };
-extern "C" int sTrmpRowHeights;
+extern "C" int sTrmpRowHeights[];
 extern "C" struct G2 pmf_Trmp3DMario_StateOnGround;
 extern "C" int sTrmpMariosInPlay;
 extern "C" struct G2 pmf_Trmp3DMario_StateWalkIn;
@@ -2793,7 +2793,7 @@ extern "C" struct G2 pmf_Trmp3DMario_StateWalkIn;
 // @symbol Trmp3DMario_EnterWalkIn
 extern "C" void Trmp3DMario_EnterWalkIn(char *c) {
     MARIO3D(c)->mGravityStep = 0;
-    MARIO3D(c)->mPos.y = sTrmpRowHeights;
+    MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
     MARIO3D(c)->mPos.z = 0;
     MARIO3D(c)->mPrevPos.x = MARIO3D(c)->mPos.x;
     MARIO3D(c)->mPrevPos.y = MARIO3D(c)->mPos.y;
@@ -2817,11 +2817,11 @@ namespace ns_020ccae0 {
 extern "C" {
 extern void Trmp3DMario_EnterWalkIn(char *c);
 
-extern void *sTrmpRowHeights;
+extern int sTrmpRowHeights[];
 
 // @symbol Trmp3DMario_StateOnGround
 void Trmp3DMario_StateOnGround(char *c) {
-    MARIO3D(c)->mPos.y = (int)sTrmpRowHeights;
+    MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
 
     if (MARIO3D(c)->mAnmModel.file == sTrmpAnimJumpEnd) {
         if (MARIO3D(c)->mAnmModel.Finished() != 0) {
@@ -2861,13 +2861,13 @@ void Trmp3DMario_StateOnGround(char *c) {
 // ---- Trmp3DMario_EnterOnGround
 namespace ns_020ccc8c {
 extern "C" {
-extern int sTrmpRowHeights;
+extern int sTrmpRowHeights[];
 extern double pmf_Trmp3DMario_StateOnGround_2;
 }
 // @symbol Trmp3DMario_EnterOnGround
 extern "C" void Trmp3DMario_EnterOnGround(char *c) {
     MARIO3D(c)->mGravityStep = 0;
-    MARIO3D(c)->mPos.y = sTrmpRowHeights;
+    MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
     MARIO3D(c)->mPos.z = 0;
     MARIO3D(c)->mVel.x = 0;
     MARIO3D(c)->mVel.y = 0;
@@ -2901,20 +2901,17 @@ out:
 // ---- Trmp3DMario_StateOffstage
 namespace ns_020ccd64 {
 extern "C" {
-struct S {
-    int w[1];
-};
-extern struct S sTrmpRowHeights;
+extern int sTrmpRowHeights[];
 // @symbol Trmp3DMario_StateOffstage
 void Trmp3DMario_StateOffstage(char *p) {
-    MARIO3D(p)->mPos.y = sTrmpRowHeights.w[0];
+    MARIO3D(p)->mPos.y = sTrmpRowHeights[0];
 }
 }
 }
 // ---- Trmp3DMario_EnterOffstage
 namespace ns_020ccd78 {
 extern "C" {
-extern int sTrmpRowHeights;
+extern int sTrmpRowHeights[];
 struct V3 {
     int a, b, c;
 };
@@ -2925,7 +2922,7 @@ struct G2 {
 extern struct G2 pmf_Trmp3DMario_StateOffstage_2;
 // @symbol Trmp3DMario_EnterOffstage
 void Trmp3DMario_EnterOffstage(char *c) {
-    MARIO3D(c)->mPos.y = sTrmpRowHeights;
+    MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
     MARIO3D(c)->mPos.x = -0x90000;
     MARIO3D(c)->mPos.z = 0;
     MARIO3D(c)->mVel.x = data_020a0ebc.a;
@@ -3059,27 +3056,27 @@ namespace ns_020cd1e0 {
 extern "C" {
 extern void Trmp3DMario_EnterByKind(void *p);
 extern void Trmp3DMario_UpdateMatrix(char *o);
-extern int sTrmp3DMarioCount[];
-extern int sTrmp3DFallSpeed[];
-extern int sTrmp3DGravityStep[];
-extern char *sTrmp3DMarios[];
+extern int sTrmp3DMarioCount;
+extern int sTrmp3DFallSpeed;
+extern int sTrmp3DGravityStep;
+extern char *sTrmp3DMarios;
 
 // @symbol Trmp3DMario_StartAll
 void Trmp3DMario_StartAll(void) {
     int i;
     int off;
     i = 0;
-    sTrmp3DGravityStep[0] = 0x100;
-    sTrmp3DFallSpeed[0] = -0x4800;
-    if (sTrmp3DMarioCount[0] <= 0)
+    sTrmp3DGravityStep = 0x100;
+    sTrmp3DFallSpeed = -0x4800;
+    if (sTrmp3DMarioCount <= 0)
         return;
     off = 0;
     do {
-        Trmp3DMario_EnterByKind(sTrmp3DMarios[0] + off);
-        Trmp3DMario_UpdateMatrix(sTrmp3DMarios[0] + off);
+        Trmp3DMario_EnterByKind(sTrmp3DMarios + off);
+        Trmp3DMario_UpdateMatrix(sTrmp3DMarios + off);
         i++;
         off += 0xd0;
-    } while (i < sTrmp3DMarioCount[0]);
+    } while (i < sTrmp3DMarioCount);
 }
 }
 }

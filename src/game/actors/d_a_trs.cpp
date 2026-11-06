@@ -118,7 +118,7 @@ int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
 void MulMat4x3Mat4x3(void *a, void *b, void *dst);
 void func_0200f760(void *thiz, void *cyl);
-u8 IsAreaShowing(s8 idx);
+u8 IsAreaShowing(int idx);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
 /* Parameter names keep this TU's @NNN. */
