@@ -63,7 +63,7 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Vec2_Sub(int* out, int* a, int* b);
 int  func_0203d5dc(void* a, void* b);
-void Mg_CommitRecords(void* t);
+void Mg_CommitRecords(void);
 void Mg_SubmitScore(int score);
 void LoadCard2SubBg3(void* c);
 void Camera_InitDealerView(void* c);
@@ -311,11 +311,10 @@ s32 dScMgMCarlo2_c::Render()
 }
 
 // @symbol _ZN14dScMgMCarlo2_c16CleanupResourcesEv
-/* Slot 3. Sibling scenes call Mg_CommitRecords with no argument; `this`
- * is already in r0 here, so either spelling compiles the same. */
+/* Slot 3. */
 s32 dScMgMCarlo2_c::CleanupResources()
 {
-    Mg_CommitRecords(this);
+    Mg_CommitRecords();
     return 1;
 }
 

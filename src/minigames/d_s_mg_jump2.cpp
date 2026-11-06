@@ -90,8 +90,8 @@ void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern Matrix4x3 data_020a0e68;
 void Jump2Popup_UpdateAll(void);
-extern void *Jump3D_AllIdle(void *);
-extern void *Heyho_AllIdle(void *);
+extern int Jump3D_AllIdle(void);
+extern int Heyho_AllIdle(void);
 extern void Mg_SubmitScore(int);
 extern void Mg_SetSharedState(int);
 extern void Heyho_SeparateAll(void);
@@ -358,10 +358,8 @@ void dScMgJump2_c::State_End() {
 
 // @symbol _ZN12dScMgJump2_c12State_ResultEv
 void dScMgJump2_c::State_Result() {
-    void *obj = Jump3D_AllIdle(this);
-    if (obj) {
-        obj = Heyho_AllIdle(obj);
-        if (obj) {
+    if (Jump3D_AllIdle()) {
+        if (Heyho_AllIdle()) {
             Mg_SubmitScore(sJumpComboCount);
             Mg_SetSharedState(MG_STATE_GAME_OVER);
             mPromptEnabled = 0;

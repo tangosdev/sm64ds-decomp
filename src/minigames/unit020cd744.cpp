@@ -1070,7 +1070,7 @@ extern "C" {
 extern int sTrmp2Score;
 }
 extern "C" void TrmpItem_Hide(int *p);
-extern "C" void TrmpItem_HideAll(void) {
+extern "C" void TrmpItem_HideAll(u32) {
     int itemIndex = 0;
     int itemOffset;
     if (sTrmpItemCount > 0) {
@@ -2183,7 +2183,7 @@ extern "C" void TrmpLine_UpdateAll(void) {
 namespace s020d0b04 {
 
 // @symbol TrmpLine_ClearAll
-extern "C" void TrmpLine_ClearAll(void) {
+extern "C" void TrmpLine_ClearAll(u32) {
     int i = 0;
     unsigned char *p = (unsigned char *)sTrmpLines;
     int r0 = i;

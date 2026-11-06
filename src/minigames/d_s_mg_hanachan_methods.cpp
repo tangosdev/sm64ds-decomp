@@ -215,7 +215,7 @@ extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
 extern s16 atan2_hold_d_s_mg_hanachan_methods_1(int y, int x);
-extern void Mg_CommitRecords(void *);
+extern void Mg_CommitRecords(void);
 extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
@@ -1758,7 +1758,7 @@ void Hana_SpawnWigglers(char *raw, int arg1, int arg2) {
 
 // @symbol _ZN15dScMgHanachan_c16CleanupResourcesEv
 s32 dScMgHanachan_c::CleanupResources() {
-    Mg_CommitRecords(this);
+    Mg_CommitRecords();
     return 1;
 }
 

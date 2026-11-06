@@ -147,7 +147,7 @@ extern int pmf_dScMgTrampoline2_c_StateDone[];
 extern void TrmpItem_UpdateAll(void);
 extern int Trmp2Mario_Hide(void);
 extern union StateValue pmf_dScMgTrampoline2_c_StateWaitExit;
-extern void Trmp2Mario_EnterAll(void *c);
+extern void Trmp2Mario_EnterAll(void);
 extern struct P2 pmf_dScMgTrampoline2_c_StateResults;
 extern int sTrmpItemsHit;
 extern int sTrmp2Lives;
@@ -160,7 +160,7 @@ extern void TrmpLine_UpdateAll(void);
 extern void Trmp2Mario_UpdateAll(void);
 extern void Trmp2Mario_SetTuning(int a);
 extern void Trmp2Mario_MoveToStart(void);
-extern void Trmp2Mario_PlaceAtStart(void *a);
+extern void Trmp2Mario_PlaceAtStart(void);
 extern struct S2 pmf_dScMgTrampoline2_c_StatePlay;
 extern void TrmpLine_CreateStartLineT2(void);
 extern s16 sTrmp2IntroFromX;
@@ -227,10 +227,10 @@ dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
    .data, so the mangled externs stay. StateDone is static, so the
    descriptor below names it directly. A pointer to member does not convert
    to the int word a descriptor holds. */
-extern void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void); /* local extern: PMF -> int */
-extern void _ZN18dScMgTrampoline2_c12StateResultsEv(void);  /* local extern: PMF -> int */
-extern void _ZN18dScMgTrampoline2_c9StatePlayEv(void);      /* local extern: PMF -> int */
-extern void _ZN18dScMgTrampoline2_c10StateIntroEv(void);    /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void *); /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c12StateResultsEv(void *);  /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c9StatePlayEv(void *);      /* local extern: PMF -> int */
+extern void _ZN18dScMgTrampoline2_c10StateIntroEv(void *);    /* local extern: PMF -> int */
 
 /* Data owned by this production TU; the original TU grouping is inferred. */
 int sTrmp2TouchBlocked = 1;
@@ -473,7 +473,7 @@ void dScMgTrampoline2_c::BeginPlay() {
     mTimer = 0xb4;
     mInputEnabled = 1;
     /* The callee ignores r0; this + 0x7b00 lands mid-element in mScorePopups. */
-    Trmp2Mario_PlaceAtStart((char *)this + 0x7b00);
+    Trmp2Mario_PlaceAtStart();
     *(struct S2 *)mState = pmf_dScMgTrampoline2_c_StatePlay;
 }
 
@@ -559,7 +559,7 @@ void dScMgTrampoline2_c::StatePlay() {
 
 // @symbol _ZN18dScMgTrampoline2_c12BeginResultsEv
 void dScMgTrampoline2_c::BeginResults() {
-    Trmp2Mario_EnterAll((char *)this);
+    Trmp2Mario_EnterAll();
     mTimer = 0x5a;
     *(struct P2 *)mState = pmf_dScMgTrampoline2_c_StateResults;
 }

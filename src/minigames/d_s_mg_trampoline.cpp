@@ -160,7 +160,7 @@ int TrmpLine_Create(Vec2s *a, Vec2s *b);
 void SetBg2Offset(int a, int b);
 int Mg_GetTopScreenYOffset(void);
 extern unsigned char gMainScreenLayers;
-extern void Mg_CommitRecords(void *scene);
+extern void Mg_CommitRecords(void);
 int GetGameLanguage(void);
 struct OamAttr;
 struct Matrix2x2;
@@ -170,10 +170,10 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern short sTrmpGoalRow;
 
-extern void Trmp3DMario_UpdateAll(...);
+extern void Trmp3DMario_UpdateAll(void);
 extern int Trmp3DMario_CountFinished(void);
 extern void Mg_SetSharedState(int);
-extern void Trmp3DMario_StartAll(void *c);
+extern void Trmp3DMario_StartAll(void);
 extern int sTrmpComboCount;
 extern int sTrmp3DLives;
 extern int sTrmpMariosInPlay;
@@ -218,10 +218,10 @@ dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
    to the int word a descriptor holds, and a pointer-to-member initializer
    is not static .data (see the note above the P2 definition). StateDone is
    static, so the descriptor below names it directly. */
-extern void _ZN17dScMgTrampoline_c13StateWaitExitEv(void); /* local extern: PMF -> int */
-extern void _ZN17dScMgTrampoline_c12StateResultsEv(void);  /* local extern: PMF -> int */
-extern void _ZN17dScMgTrampoline_c9StatePlayEv(void);      /* local extern: PMF -> int */
-extern void _ZN17dScMgTrampoline_c10StateIntroEv(void);    /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c13StateWaitExitEv(void *); /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c12StateResultsEv(void *);  /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c9StatePlayEv(void *);      /* local extern: PMF -> int */
+extern void _ZN17dScMgTrampoline_c10StateIntroEv(void *);    /* local extern: PMF -> int */
 extern int sTrmpPuffEnglish[];
 extern int sTrmpPuffSpanish[];
 extern int sTrmpPuffFrench[];
@@ -381,7 +381,7 @@ s32 dScMgTrampoline_c::InitResources() {
 }
 
 // @symbol _ZN17dScMgTrampoline_c10StartRoundEi
-extern "C" void TrmpLine_ClearAll(int);
+extern "C" void TrmpLine_ClearAll(u32);
 extern volatile s16 data_020a0dbc[];
 
 void dScMgTrampoline_c::StartRound(int /* arg */) {
@@ -633,16 +633,14 @@ void dScMgTrampoline_c::StatePlay() {
 
 // @symbol _ZN17dScMgTrampoline_c12BeginResultsEv
 void dScMgTrampoline_c::BeginResults() {
-    char *c = (char *)this;
-    Trmp3DMario_StartAll(c);
+    Trmp3DMario_StartAll();
     mTimer = 0x5a;
     *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StateResults;
 }
 
 // @symbol _ZN17dScMgTrampoline_c12StateResultsEv
 void dScMgTrampoline_c::StateResults() {
-    unsigned char *c = (unsigned char *)this;
-    Trmp3DMario_UpdateAll(c);
+    Trmp3DMario_UpdateAll();
     if (ApproachLinear(mTimer, 0, 1) == 0)
         return;
     if (Trmp3DMario_CountFinished() == 0)
@@ -812,7 +810,7 @@ s32 dScMgTrampoline_c::Render() {
 // @symbol _ZN17dScMgTrampoline_c16CleanupResourcesEv
 /* Slot 3. */
 s32 dScMgTrampoline_c::CleanupResources() {
-    Mg_CommitRecords(this);
+    Mg_CommitRecords();
     return 1;
 }
 
