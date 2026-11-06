@@ -196,7 +196,7 @@ extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern void func_ov002_020c3dbc(void *player);
 extern int data_0209caa0[];
-void Matrix4x3_FromRotationY(void *m, short angle);
+void Matrix4x3_FromRotationY(void *m, int angle);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;

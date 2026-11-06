@@ -68,7 +68,7 @@ extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
+extern void MulVec3Mat4x3(const void *in, Matrix4x3 *m, void *out);
 extern void func_02012694(unsigned int id, void *v);
 extern int data_0209e650[];
 extern short data_02082214[];
