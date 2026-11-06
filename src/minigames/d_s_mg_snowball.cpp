@@ -136,7 +136,7 @@ s32 GetGameLanguage(void);
 void FreeGfxSlotsById(int arg);
 void Vec2_Sub(int *o, int *a, int *b);
 extern void Ov004_Deallocate(void *p);
-u32 LoadCompressedFileAt(u16 fileID, void *target);
+u32 LoadCompressedFileAt(int fileID, void *target);
 void *Ov004_LoadFileByPath(void *p);
 void DecompressLZ16(void *src, void *dst);
 extern int data_0208ee44;
