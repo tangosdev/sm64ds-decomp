@@ -42,11 +42,6 @@ enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* POD position. Vector3's destructor is not in Behavior's bytes. */
-typedef struct {
-    s32 x, y, z;
-} Vec3;
-
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */

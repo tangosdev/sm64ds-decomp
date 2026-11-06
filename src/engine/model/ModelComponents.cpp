@@ -77,7 +77,6 @@ struct Node {
 };
 
 
-typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct Vec3w { int w[3]; } Vec3w;
 struct Buf8 { s16 v[8]; };
 struct MeshPart {
@@ -108,7 +107,7 @@ void Geometry_MatrixMultiply3x3(void *m);
 void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, void (*callback)(void *),
                            void *arg);
 void MI_WaitDma(u32 dmaNo);
-extern Vec3 data_02099f88;
+extern VecFx32 data_02099f88;
 extern u32 data_020a4bd4;
 extern int data_02082190;
 extern void *data_020a4bd0;
@@ -123,7 +122,7 @@ void func_02052514(void *a, void *b);
 void func_02055998(int *n);
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 void func_02044b30(char *obj, int idx);
-void func_02044534(char *self, int index, Mtx43 *mtx, Vec3 *light);
+void func_02044534(char *self, int index, Mtx43 *mtx, VecFx32 *light);
 void func_0204488c(char *self, int index, int *color);
 }
 
@@ -533,8 +532,7 @@ void func_0204488c(char* self, int index, int* color)
 
 // @symbol func_02044534
 extern "C" {
-void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
-{
+void func_02044534(char *self, int index, Mtx43 *mtx, VecFx32 *light) {
     int i;
     struct MeshEntry* e;
     int off;
@@ -547,11 +545,11 @@ void func_02044534(char* self, int index, Mtx43* mtx, Vec3* light)
     int two;
     int z2c;
     int three;
-    Vec3 dirv;
+    VecFx32 dirv;
     Mtx43 mw;
     Mtx43 m;
     int out[9];
-    Vec3* dir;
+    VecFx32 *dir;
     struct MeshPart* part;
     int j;
     Mtx43* mp;
@@ -690,7 +688,7 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
                     if (!hidden) {
                         ((void (*)(void *))func_02044b30)(this);
                         func_02044534((char *)this, node->displayListIds[j], (Mtx43 *)mat,
-                                      (Vec3 *)vec);
+                                      (VecFx32 *)vec);
                     }
                 }
             } else {

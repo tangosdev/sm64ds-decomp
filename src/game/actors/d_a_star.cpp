@@ -79,9 +79,8 @@ enum daStar_c_AssetId {
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
- * not have; these same-layout PODs keep the bytes identical. Whole matrices
- * are copied through Mtx43. */
-struct Vec3 { int x, y, z; };          /* a Vector3's three Fix12 words */
+ * not have; NitroSDK VecFx32 and these same-layout PODs keep the bytes
+ * identical. Whole matrices are copied through Mtx43. */
 struct Vec1 { s32 a; };                /* one word, copied component by component */
 
 /* A state handler: data_ov002_021109d8 holds one pointer-to-member per
@@ -261,8 +260,8 @@ s32 daStar_c::InitResources()
     s32 kind;
     char *sp;
     s32 *q;
-    struct Vec3 v;
-    struct Vec3 v2;
+    VecFx32 v;
+    VecFx32 v2;
 
     ret = 1;
     mStarFlags = 0;
@@ -622,7 +621,7 @@ int daStar_c::Behavior()
     func_ov002_020e84ec();
     mdCc_c.Clear();
     {
-        Vec3 v;
+        VecFx32 v;
         v.x = data_ov002_0210aa0c[0];
         v.y = data_ov002_0210aa0c[1];
         v.z = data_ov002_0210aa0c[2];
@@ -1283,8 +1282,8 @@ void daStar_c::func_ov002_020e9d18() {
     u32 r2v;
     u32 b2;
     bool st;
-    Vec3 t1;
-    Vec3 t2;
+    VecFx32 t1;
+    VecFx32 t2;
     int *src;
     u8 st2;
 
@@ -2357,7 +2356,7 @@ extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member 
 void func_ov002_020e8244(void *out, daStar_c *b)
 {
     Mtx43 local;
-    Vec3 zero;
+    VecFx32 zero;
     zero.x = 0;
     zero.y = 0;
     zero.z = 0;
@@ -2707,7 +2706,7 @@ void daStar_c::func_ov002_020e7934(void* cam) {
  * counts up, so 0x1d6 (set by STATE_LAND) and 0x1b6 reach 0x1f4 after 30 and
  * 62 frames: that restores the saved view, and 0x1f5 ends the cutscene. */
 void daStar_c::func_ov002_020e763c() {
-    Vec3 v;
+    VecFx32 v;
     dCamera_c *cam;
 
     if ((gNextActorUpdateMask & CUTSCENE_FLAG) == 0)
@@ -2894,7 +2893,7 @@ ret0:
  * marker and gets the coin-reward flag. */
 void daStarBase_c::SpawnRedCoinStarIfNecessary()
 {
-    struct Vec3 v;
+    VecFx32 v;
     daStar_c *star;
     int y;
     if (mBits.spawned) return;
