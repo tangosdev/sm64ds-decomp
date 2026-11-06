@@ -46,7 +46,7 @@ s32 RandomIntInternal(s32 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 int *Vec3_LslInPlace(Vector3 *, int);
-int InvMat4x3(Matrix4x3 *dst, const Matrix4x3 *src);
+int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
 extern s32 data_0209e650;

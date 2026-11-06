@@ -156,7 +156,7 @@ extern void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos,
 
 extern s16 atan2_hold_d_a_obj_block_s_1(s32 y, s32 x);
 extern s32 Vec3_HorzLen(const Vector3 *v0);
-extern void Vec3_MulScalarInPlace(int *v, int s);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
@@ -1015,7 +1015,7 @@ int daObjBlockS_c::func_ov098_02139228()
         a2.y = 0;
         a2.z = FX_MUL(hl, data_02082214[sMove * 2 + 1]);
     }
-    Vec3_MulScalarInPlace(&a2.x, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
+    Vec3_MulScalarInPlace(&a2, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);
     newAng = cstd::atan2(sum.x, sum.z);
     mHorzSpeed = Vec3_HorzLen(&sum);

@@ -93,7 +93,7 @@ struct Matrix3x3_Vecs { struct Vector3 v0, v1, v2; };
 
 extern "C" {
 void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
-int InvMat4x3(int *a, int *b);
+int InvMat4x3(const Matrix4x3 *a, Matrix4x3 *b);
 
 void func_02048234(int *out, int sa, int sb, int sc, int ax, int ay, int az, int tx, int ty, int tz);
 void func_02047218(void *a, void *b, void *out, fx32 c);
@@ -291,7 +291,7 @@ void func_02044efc(BMD_File *self) {
         do {
             Matrix4x3 *mat =
                 (Matrix4x3 *)((char *)((Matrix4x3 *)((struct Sub *)self->skin)->blk) + byteOff);
-            InvMat4x3((int *)mat, (int *)mat);
+            InvMat4x3(mat, mat);
             count = self->numBones;
             i++;
             byteOff += 0x30;

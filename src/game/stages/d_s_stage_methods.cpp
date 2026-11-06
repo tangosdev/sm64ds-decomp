@@ -108,7 +108,7 @@ void SetSubBg1Offset(int x, int y);
 int func_02029408(void);
 void *LoadFile(int handle);
 void SetControllerMode(unsigned char m);
-unsigned int LoadCompressedFileAt(unsigned short id, void *dst);
+unsigned int LoadCompressedFileAt(int id, void *dst);
 int GetSoundMode(void);
 void SetSoundMode(int m);
 void TurnBacklightOn(void);
@@ -4986,7 +4986,7 @@ extern "C" {
 void SetBg0Offset(int a, int b);
 void LoadFont(u8 arg);
 int GetOwnerLanguage(void);
-u32 LoadCompressedFileAt(u16 fileID, void *target);
+u32 LoadCompressedFileAt(int fileID, void *target);
 int LoadFileAt(int handle, int dest);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);

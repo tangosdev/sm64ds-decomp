@@ -66,7 +66,7 @@ int   GetGameLanguage(void);
 void  DecompressLZ16(void *src, void *dst);
 /* The file ID is really u16, but passing it narrowed grows InitSubScreenBg by
  * 16 bytes. Keep it wide. */
-u32   LoadCompressedFileAt(unsigned int fileID, void *target);
+u32 LoadCompressedFileAt(int fileID, void *target);
 void  Ov004_Deallocate(void *x);
 struct dCamera_c;
 void  Camera_UpdateMatrices(dCamera_c *camera);

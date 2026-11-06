@@ -1246,14 +1246,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1337",
+      "from": "@1335",
       "to": "@1336",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1344 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1346 before -> @1344 after); licensed under the existing pin @1336 Re-keyed from @1343 to @1337 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1344 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1346 before -> @1344 after); licensed under the existing pin @1336 Re-keyed from @1343 to @1337 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1337 to @1335 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "@1338",
+      "from": "@1336",
       "to": "@1337",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1345 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1347 before -> @1345 after); licensed under the existing pin @1337. The six function-local Vector3s did not move this node: the sinit still relocates to @1288. Re-keyed from @1344 to @1338 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1345 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1347 before -> @1345 after); licensed under the existing pin @1337. The six function-local Vector3s did not move this node: the sinit still relocates to @1288. Re-keyed from @1344 to @1338 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1338 to @1336 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     },
     {
       "from": "@223",
@@ -1276,19 +1276,19 @@
       "evidence": "registration node of sHeyho_StartMotionRegroup_Right256. ov070 defines the compiled @229 and ov006 unit020cd744 defines @236, so this maps it to the unused same-length @242."
     },
     {
-      "from": "@375",
+      "from": "@374",
       "to": "@243",
-      "evidence": "registration node of sHeyho_React_Left256. ov006 unit020cd744 also defines the compiled @320, so this maps it to the unused same-length @243. Re-keyed from @376 to @375 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "registration node of sHeyho_React_Left256. ov006 unit020cd744 also defines the compiled @320, so this maps it to the unused same-length @243. Re-keyed from @376 to @375 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @375 to @374 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "_ZGVsHeyho_React_Left256$372",
+      "from": "_ZGVsHeyho_React_Left256$371",
       "to": "_ZGVsHeyho_React_Left256$317",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Left256$373 to _ZGVsHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Left256$373 to _ZGVsHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from _ZGVsHeyho_React_Left256$372 to _ZGVsHeyho_React_Left256$371 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "_ZGVsHeyho_React_Right256$376",
+      "from": "_ZGVsHeyho_React_Right256$375",
       "to": "_ZGVsHeyho_React_Right256$321",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Right256$377 to _ZGVsHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from _ZGVsHeyho_React_Right256$377 to _ZGVsHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from _ZGVsHeyho_React_Right256$376 to _ZGVsHeyho_React_Right256$375 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     },
     {
       "from": "_ZGVsHeyho_StartMotionRegroup_Left256$278",
@@ -1331,19 +1331,19 @@
       "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
     },
     {
-      "from": "sHeyho_React_Left256$372",
+      "from": "sHeyho_React_Left256$371",
       "to": "sHeyho_React_Left256$317",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Left256$373 to sHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Left256$373 to sHeyho_React_Left256$372 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from sHeyho_React_Left256$372 to sHeyho_React_Left256$371 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "@379",
+      "from": "@378",
       "to": "@324",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @380 to @379 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @380 to @379 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @379 to @378 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "sHeyho_React_Right256$376",
+      "from": "sHeyho_React_Right256$375",
       "to": "sHeyho_React_Right256$321",
-      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Right256$377 to sHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; including Particle__System.h shifts the per-TU uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from sHeyho_React_Right256$377 to sHeyho_React_Right256$376 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from sHeyho_React_Right256$376 to sHeyho_React_Right256$375 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
     }
   ]
 }
