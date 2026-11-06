@@ -587,7 +587,7 @@
     },
     "arm9:0x0200ca14": {
       "author": "ruspecial",
-      "name": "func_0200ca14"
+      "name": "_ZN9dCamera_c13func_0200ca14Ehi"
     },
     "arm9:0x0200ca50": {
       "author": "tangosdev",
@@ -635,11 +635,11 @@
     },
     "arm9:0x0200d064": {
       "author": "tangosdev",
-      "name": "func_0200d064"
+      "name": "_ZN9dCamera_c13func_0200d064Eh"
     },
     "arm9:0x0200d0ac": {
       "author": "tangosdev",
-      "name": "func_0200d0ac"
+      "name": "_ZN9dCamera_c13func_0200d0acEj"
     },
     "arm9:0x0200d10c": {
       "author": "tangosdev",
@@ -655,7 +655,7 @@
     },
     "arm9:0x0200d1e4": {
       "author": "lplaat",
-      "name": "func_0200d1e4"
+      "name": "_ZN9dCamera_c13func_0200d1e4Ev"
     },
     "arm9:0x0200d304": {
       "author": "tangosdev",
@@ -675,7 +675,7 @@
     },
     "arm9:0x0200d4b0": {
       "author": "tangosdev",
-      "name": "func_0200d4b0"
+      "name": "_ZN9dCamera_c13func_0200d4b0Eji"
     },
     "arm9:0x0200d508": {
       "author": "tangosdev",
@@ -735,7 +735,7 @@
     },
     "arm9:0x0200d858": {
       "author": "tangosdev",
-      "name": "func_0200d858"
+      "name": "_ZN9dCamera_c13func_0200d858EPK7Vector3"
     },
     "arm9:0x0200d890": {
       "author": "tangosdev",
@@ -747,11 +747,11 @@
     },
     "arm9:0x0200d8ac": {
       "author": "tangosdev",
-      "name": "func_0200d8ac"
+      "name": "_ZN9dCamera_c11SetFovShakeEiii"
     },
     "arm9:0x0200d8c8": {
       "author": "tangosdev",
-      "name": "func_0200d8c8"
+      "name": "_ZN9dCamera_c13func_0200d8c8EPK7Vector3i"
     },
     "arm9:0x0200d954": {
       "author": "tangosdev",

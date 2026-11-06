@@ -824,9 +824,6 @@ extern void MI_SendGXCommand(int, int, int);
 /* func_02005348 removed: it is the member dScBoot_c::func_02005348(), declared in include/dScBoot_c.h */
 extern void func_02007c14(struct Vector3*, const struct Vector3*, int, short, short);
 extern void func_02007c9c(const struct Vector3*, const struct Vector3*, int*, short*, short*);
-extern void func_0200ca14(void*, unsigned char, int);
-extern void func_0200d1e4(char*);
-extern void func_0200d858(void*, const struct Vector3*);
 extern void func_0200f13c(void);
 extern void func_0200f220(void);
 extern void func_0200f2cc(void);
