@@ -17,7 +17,7 @@
 // It keeps live values across those calls by pushing the argument registers themselves
 // (`stmdb sp!, {r0, r1, r3, ip, lr}`), a register set no compiler prologue saves.
 
-extern int func_0207322c(void);
+extern unsigned int *func_0207322c(void);
 extern float func_0206ddcc(void);
 
 asm int _ffix(int bits)

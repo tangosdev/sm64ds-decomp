@@ -67,7 +67,7 @@ short Vec3_HorzAngle(const Vector3 *v0,
 int Vec3_Dist(const Vector3 *a,
               const Vector3 *b); /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, s16 angY);
+extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, int angY);
 extern void MulMat4x3Mat4x3(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0, struct Matrix4x3 *mF);
 extern int Math_Function_0203b14c(void*, int, int, int, int);
 unsigned short

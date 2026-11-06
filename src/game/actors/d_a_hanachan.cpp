@@ -96,7 +96,7 @@ extern void **data_ov034_0211389c[];
 extern void **data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern int data_ov034_021138c4[];
-extern short Vec3_HorzAngle(const void* a, const void* b);
+extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -369,7 +369,7 @@ void daHanachan_c::StateDamageMain()
     ((dCamera_c *)data_0209f318)->SetFlag_3();
     mDriveCamera = 1;
 
-    ApproachLinear(mPlayer->mAngleY, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPosX), 0x100);
+    ApproachLinear(mPlayer->mAngleY, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPos), 0x100);
 
     func_ov002_020c51d0(talk, &st);
 
@@ -446,7 +446,7 @@ void daHanachan_c::StateMoveMain()
 
     if (mWithMeshClsn.IsOnWall() != 0 || len > 0x5dc000) {
         rnd = RandomIntInternal(&data_0209e650);
-        mTargetAngleY = Vec3_HorzAngle(&mPosX, &mHomePos);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         mStateTimer = (unsigned char)((unsigned int)(rnd + 0x1e) >> 0x1b);
         mStateTimer = (unsigned char)(mStateTimer - (4 - mHealth) * 0x1e);
         if (mStateTimer >= 0x40)
@@ -665,7 +665,7 @@ void daHanachan_c::StateDemoWaitMain()
     }
 
     if (mWithMeshClsn.IsOnWall() || len > 0x5dc000) {
-        mTargetAngleY = Vec3_HorzAngle(&mPosX, &mHomePos);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
         mStateTimer = data_ov034_0211433c[mHealth];
     }
     ApproachLinear(mHorzSpeed, data_ov034_02114488[0], 0x1000);

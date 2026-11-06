@@ -168,7 +168,7 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(void *out, const void *in, int scale);
 int Vec3_HorzLen(void *v);
-int LenVec3(Vector3 *v);
+int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(short *cur, short target, int step, int a, int b);
 int atan2_hold_d_a_wanwan2_1(int y, int x);

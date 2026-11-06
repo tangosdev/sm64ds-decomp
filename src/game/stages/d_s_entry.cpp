@@ -420,7 +420,7 @@ extern u8 data_ov075_0211c6e8[];
 extern OamAttr data_ov075_0211c7c0[];
 extern char data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211c870[];
-extern s8 data_0209f310[];
+extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern char data_0209ee90[];
 }
@@ -474,7 +474,7 @@ extern "C" void func_ov075_0211621c(char *c) {
                     int *q = p + 1;
                     int val = *q;
                     *q = (val & (~0x3ff)) |
-                         ((data_0209f310[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
+                         ((gNumStageStars[pid] + (((u32)(val << 22)) >> 22)) & 0x3ff);
                 }
                 OAM::Render(zB, data_ov075_0211c870, xbase + i * stride, yNum, minus1, minus1,
                             scale, scale, zB, minus1);

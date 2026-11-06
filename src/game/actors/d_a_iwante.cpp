@@ -342,7 +342,7 @@ extern int AngleDiff(int a, int b);
 extern int ApproachAngle(s16 *angle, int target, int a, int b, int max);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void Matrix4x3_FromRotationY(void *m, short ang);
+extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(void *a, void *m, void *b);
 extern int RandomIntInternal(int *seed);

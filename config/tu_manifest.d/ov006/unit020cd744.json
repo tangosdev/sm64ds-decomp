@@ -1216,24 +1216,37 @@
       "evidence": "compiler temp: mwcc numbers this destructor-registration node @937, and ov098 already defines @937; @817 is unused fleet-wide and the same length, configured at 0x0214089c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @937 to @936 when the opt pragma was removed (#821)."
     },
     {
-      "from": "@2193",
+      "from": "@2198",
       "to": "@2175",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2194, and ov066 already defines @2194; @2175 is unused fleet-wide and the same length, configured at 0x021408cc. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2194 to @2193 when the opt pragma was removed (#821)."
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2194, and ov066 already defines @2194; @2175 is unused fleet-wide and the same length, configured at 0x021408cc. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2194 to @2193 when the opt pragma was removed (#821). Re-keyed from @2193 to @2198 when the TrmpLine_PointDistance and TrmpLine_ComputeNormals POD vector twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "@2204",
+      "from": "@2209",
       "to": "@2174",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2205, and @2205 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2174 is unused fleet-wide and the same length, configured at 0x0214092c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2205 to @2204 when the opt pragma was removed (#821)."
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2205, and @2205 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2174 is unused fleet-wide and the same length, configured at 0x0214092c. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2205 to @2204 when the opt pragma was removed (#821). Re-keyed from @2204 to @2209 when the TrmpLine_PointDistance and TrmpLine_ComputeNormals POD vector twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "@2205",
+      "from": "@2210",
       "to": "@2173",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2206, and ov006 already defines @2206; @2173 is unused fleet-wide and the same length, configured at 0x02140944. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2206 to @2205 when the opt pragma was removed (#821)."
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2206, and ov006 already defines @2206; @2173 is unused fleet-wide and the same length, configured at 0x02140944. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2206 to @2205 when the opt pragma was removed (#821). Re-keyed from @2205 to @2210 when the TrmpLine_PointDistance and TrmpLine_ComputeNormals POD vector twins were retired for Vector3 (#4570)."
     },
     {
-      "from": "@2206",
+      "from": "@2211",
       "to": "@2171",
-      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2207, and @2207 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2171 is unused fleet-wide and the same length, configured at 0x02140950. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2207 to @2206 when the opt pragma was removed (#821)."
+      "evidence": "compiler temp: mwcc numbers this destructor-registration node @2207, and @2207 is the compiled name another manifest renames away (ov006/dScMgLuigi_c), so it is kept off for clarity; @2171 is unused fleet-wide and the same length, configured at 0x02140950. Paired by relocation: the emitted reference lands where the retail reference does. No bytes or relocations change. Re-keyed from @2207 to @2206 when the opt pragma was removed (#821). Re-keyed from @2206 to @2211 when the TrmpLine_PointDistance and TrmpLine_ComputeNormals POD vector twins were retired for Vector3 (#4570)."
+    },
+    {
+      "from": "__arraydtor$2197",
+      "to": "__arraydtor$2192",
+      "owned_function": {
+        "module": "ov006",
+        "address": "0x020d0fe4",
+        "size": "0x00000024",
+        "function_ordinal": 56,
+        "raw_type": "STT_FUNC",
+        "raw_binding": "STB_LOCAL"
+      },
+      "evidence": "the sTrmpLines array destructor thunk; after the TrmpLine_PointDistance and TrmpLine_ComputeNormals POD vector twins were retired for Vector3, the candidate ELF emits it as __arraydtor$2197. It is renamed onto the configured __arraydtor$2192 at 0x020d0fe4, paired by address; bytes and relocations are otherwise identical (#4570)."
     }
   ],
   "symbol_binding_rewrites": [

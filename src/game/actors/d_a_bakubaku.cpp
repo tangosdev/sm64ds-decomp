@@ -100,7 +100,7 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-void Matrix4x3_FromRotationY(void *m, s16 angY);
+void Matrix4x3_FromRotationY(void *m, int angY);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 

@@ -89,7 +89,7 @@ void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
  * TU's compiler-numbered aliases remain stable. */
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int Vec3_HorzLen(void *v);
-int LenVec3(Vector3 *v);
+int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
 int AngleDiff(int a, int b);

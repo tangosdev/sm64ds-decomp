@@ -118,7 +118,7 @@ extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
 extern u32 gNextActorUpdateMask;
 extern u8 data_0209d660;
-extern signed char data_0209f310[];
+extern signed char gNumStageStars[];
 /* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
 * so can never be the module this reaches. */
 extern int data_ov001_020abac8[];
@@ -832,7 +832,7 @@ void dMeter_c::RenderCoinCount() {
 /* ROM ordinal 8 -- dMeter_c::RenderRedCoins(), 0x020fc77c, size 0xa0 */
 // @symbol _ZN8dMeter_c14RenderRedCoinsEv
 /* Draws one sprite per red coin collected so far, stepping 0xb across from
- * x=0x10. Both the count (gNumRedCoins) and the row selector (data_0209f310)
+ * x=0x10. Both the count (gNumRedCoins) and the row selector (gNumStageStars)
  * are indexed by the same data_0209f250.
  *
  * That row selector is the interesting bit: it is the SAME byte
@@ -842,14 +842,14 @@ void dMeter_c::RenderCoinCount() {
  *
  * The count is read through an explicit unsigned char cast off a signed char
  * array -- kept as the ROM spells it. RenderSilverStars does not read this
- * array; it reads data_0209f310.
+ * array; it reads gNumStageStars.
  *
  * TOUCHES NO FIELD; the ROM body takes no `this` and now ignores the one it is
  * passed. Byte-free.
  */
 void dMeter_c::RenderRedCoins() {
     int idx = data_0209f250;
-    int flag = data_0209f310[idx];
+    int flag = gNumStageStars[idx];
     int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
     for (int i = 0; i < count; i++) {
@@ -866,7 +866,7 @@ void dMeter_c::RenderRedCoins() {
  * Three paths, and what differs between them is only WHICH count is shown and
  * on WHICH screen:
  *
- *   data_0209f2d8 == 1   a per-slot count out of data_0209f310, main screen
+ *   data_0209f2d8 == 1   a per-slot count out of gNumStageStars, main screen
  *   the middle path      NumStars(), main screen, but only while
  *                        gMeterCounterSlideState has the counter sliding onto,
  *                        resting on or sliding off the main screen, and suppressed
@@ -886,7 +886,7 @@ void dMeter_c::RenderStarCount() {
     int i;
 
     if (IsVsMode()) {
-        CalculateDigits((unsigned short)data_0209f310[data_0209f250]);
+        CalculateDigits((unsigned short)gNumStageStars[data_0209f250]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
                 OAM::Render(false, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
@@ -932,7 +932,7 @@ void dMeter_c::RenderStarCount() {
 /* ROM ordinal 6 -- dMeter_c::RenderSilverStars(), 0x020fc3c4, size 0x94 */
 // @symbol _ZN8dMeter_c17RenderSilverStarsEv
 /* Draws one sprite per silver star collected, in a row starting at x=0x10 and
- * stepping 0x11 across at y=0xa. The count comes from data_0209f310 indexed by
+ * stepping 0x11 across at y=0xa. The count comes from gNumStageStars indexed by
  * data_0209f250 -- the same byte dMeter_c::RenderRedCoins reads, where a non-zero
  * value instead pushes the red-coin row from y=0xa down to y=0x1c. So this row
  * and that one share a slot, and the red coins move when silver stars occupy it.
@@ -944,7 +944,7 @@ void dMeter_c::RenderStarCount() {
  */
 void dMeter_c::RenderSilverStars() {
     int sl = 0;
-    unsigned short n = (unsigned short)(short)data_0209f310[data_0209f250];
+    unsigned short n = (unsigned short)(short)gNumStageStars[data_0209f250];
     int sb;
     if (sl < n) {
         sb = 0x10;

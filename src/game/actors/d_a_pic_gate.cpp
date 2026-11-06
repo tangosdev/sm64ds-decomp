@@ -75,11 +75,8 @@
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
 
 /* Stack vectors are NitroSDK VecFx32: types.h Vector3 declares an empty
-   destructor under C++, and a stack object would emit ~Vector3. NormalizeVec3
-   takes a Vector3 view, so calls cast this POD storage explicitly. */
-/* CrossVec3's own file spells the same triple Vec3_Fix12; the declaration
- * has to carry its definition's name to agree. */
-typedef struct { int x, y, z; } Vec3_Fix12;
+   destructor under C++, and a stack object would emit ~Vector3. CrossVec3 and
+   NormalizeVec3 take Vector3 views, so calls cast this POD storage explicitly. */
 
 namespace cstd {
 Fix12i fdiv(s32, s32);
@@ -90,7 +87,7 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int   InvMat4x3(int *src, int *dst);
 void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void  CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
+void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 void NormalizeVec3(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void  func_020553a4(void *m);
@@ -306,7 +303,7 @@ void daPicGate_c::func_ov080_02125940()
             else
                 SubVec3((Vector3 *)(p - mRows), (Vector3 *)(p + mRows), (Vector3 *)&ei);
 
-            CrossVec3((const Vec3_Fix12 *)&ej, (const Vec3_Fix12 *)&ei, (Vec3_Fix12 *)&n);
+            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
             NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);

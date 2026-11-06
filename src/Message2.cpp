@@ -66,7 +66,7 @@ extern u8 data_0209d6b4;
 extern u8 data_0209d6b8;
 extern u8 data_0209d6bc;
 extern u8 data_0209d6c0;
-extern u8 data_0209d6c4; /* the box style: see Message.cpp */
+extern u8 gMsgBoxStyle; /* the box style: see Message.cpp */
 extern u8 gMsgBoxCenterY;
 extern u8 gMsgBoxTop;
 extern u8 gMsgBoxCenterX;
@@ -502,7 +502,7 @@ void Message::AddChar(u8 c) {
     else
         ip = (int *)((char *)func_02054d88() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
 
-    mask = data_0208eecc[data_0209d6c4];
+    mask = data_0208eecc[gMsgBoxStyle];
     sh = data_0209d678;
     for (i = 0; i < 0x10; i++) {
         word = *ip++;
@@ -985,7 +985,7 @@ void Message::Update() {
             if (!(data_020a0db0 & (0x10 / data_0208ee44))) {
                 return;
             }
-            if (data_0209d6c4 != 0) {
+            if (gMsgBoxStyle != 0) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c390, r5, r4, -1, -1, 0x1000, 0x1000, 0,
                             -1);
             } else {
@@ -1005,7 +1005,7 @@ void Message::Update() {
             if (IsCastleFallCutsceneRunning()) {
                 return;
             }
-            if (data_0209d6c4 != 0) {
+            if (gMsgBoxStyle != 0) {
                 func_02012790(0x21);
                 return;
             }

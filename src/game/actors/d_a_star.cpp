@@ -126,7 +126,7 @@ extern void UnloadSilverStarAndNumber(void);
 extern StarAnimationFileHandle data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
-extern signed char data_0209f310[];
+extern signed char gNumStageStars[];
 extern signed char NumRedCoins(void);
 extern unsigned char data_0209f2d8;
 extern void func_02035860(void* o, void* src);
@@ -174,8 +174,8 @@ extern "C" {
 extern int func_ov002_020c6e14(void*);
 extern u8 data_0209d660;
 extern void EndKuppaScript(void);
-extern s8 data_0209f310[];
-extern signed char data_0209f310[];
+extern s8 gNumStageStars[];
+extern signed char gNumStageStars[];
 extern int NumVsStarsObtained(void);
 extern StarModelFilePtr data_ov002_0211092c;
 extern StarModelFilePtr data_ov002_0211093c;
@@ -1107,13 +1107,13 @@ void daStar_c::func_ov002_020ea410() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c19func_ov002_020ea3a4Ev
 /* Picks the sound id for the collection sound object into mSoundObjSoundID and
- * returns it: for the silver star data_0209f310[player number] + 0x19, in a VS
+ * returns it: for the silver star gNumStageStars[player number] + 0x19, in a VS
  * match 0x4f, otherwise 0x22. */
 int daStar_c::func_ov002_020ea3a4() {
     int b = (actorID == ACTOR_SILVER_STAR);
     if (b != 0) {
         unsigned char idx = mPlayer->mPlayerNo;
-        mSoundObjSoundID = data_0209f310[idx] + 0x19;
+        mSoundObjSoundID = gNumStageStars[idx] + 0x19;
     } else {
         int b2 = (data_0209f2d8 == 1);
         if (b2 != 0) mSoundObjSoundID = 0x4f;
@@ -1222,7 +1222,7 @@ void daStar_c::func_ov002_020ea100() {
             int ok = (data_0209f2d8 == 1);
             if (ok) {
                 unsigned char idx = common->mPlayerNo;
-                if (data_0209f310[idx] != 0) {
+                if (gNumStageStars[idx] != 0) {
                     GiveVsStars(idx, -1);
                 }
             }
@@ -1325,7 +1325,7 @@ modes:
         mode = mSeqTimer;
         if (mode == 1 && r2v == 0) {
             int idx = mPlayer->mPlayerNo;
-            if (data_0209f310[idx] == 4) {
+            if (gNumStageStars[idx] == 4) {
                 GiveVsStars(idx, 1);
                 func_ov002_020e8244(&t1, this);
                 SpawnNumber(*(Vector3 *)&t1, 5, st, 0, mPlayer);
@@ -1333,12 +1333,12 @@ modes:
             }
         } else if (mode == 5) {
             int idx2 = mPlayer->mPlayerNo;
-            if (data_0209f310[idx2] == 5 && r2v == false)
+            if (gNumStageStars[idx2] == 5 && r2v == false)
                 goto end;
             if (r2v == false)
                 GiveVsStars(idx2, 1);
             func_ov002_020e8244(&t2, this);
-            SpawnNumber(*(Vector3 *)&t2, data_0209f310[mPlayer->mPlayerNo], st, 0, mPlayer);
+            SpawnNumber(*(Vector3 *)&t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
             func_ov002_020e8618();
         }
         goto end;
@@ -1574,7 +1574,7 @@ void daStar_c::func_ov002_020e96a0() {
             GiveVsStars(mPlayer->mPlayerNo, 1);
             func_ov002_020e8244(v, this);
             p = (char *)mPlayer;
-            SpawnNumber(*(Vector3 *)v, (unsigned int)data_0209f310[mPlayer->mPlayerNo], 1, 0,
+            SpawnNumber(*(Vector3 *)v, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
                         (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
@@ -2934,7 +2934,7 @@ void daStar_c::func_ov002_020e7218(char* player, int gate) {
         pos[1].x = pos[0].x;
         pos[1].z = pos[0].z;
         pos[1].y = pos[0].y;
-        SpawnNumber(pos[1], data_0209f310[a->mPlayerNo], b, 0x15, a);
+        SpawnNumber(pos[1], gNumStageStars[a->mPlayerNo], b, 0x15, a);
     }
     mBits.relink = 1;
     func_ov002_020e7554();
