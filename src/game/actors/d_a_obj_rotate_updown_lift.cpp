@@ -75,12 +75,6 @@ struct UpdownTopY {
     u8 pad[0x74];
 };
 
-/* Three words, one per variant. Copied onto the stack and indexed by
-   mVariant. */
-struct VariantWords {
-    s32 v[3];
-};
-
 /* The file table at 0x02134c30 is three records of
    { SharedFilePtr *model, SharedFilePtr *collision, CLPS_Block *clps }.
    Each symbol below is one field of that record, so [variant] on that
