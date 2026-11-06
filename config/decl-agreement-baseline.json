@@ -162,31 +162,15 @@
       "src/game/actors/d_a_holhei.cpp": [
         "param:#2 int"
       ],
-      "src/game/actors/d_a_iwante.cpp": [
-        "param:#2 int"
-      ],
-      "src/game/actors/d_a_kuri_king.cpp": [
-        "param:#2 int"
-      ],
-      "src/game/actors/d_a_menbo.cpp": [
-        "param:#2 int"
-      ],
       "src/game/actors/d_a_obj_fl_ring.cpp": [
         "param:#2 int"
       ],
-      "src/game/actors/d_a_owl.cpp": [
-        "param:#2 int"
-      ],
       "src/game/actors/d_a_propeller_heyho.cpp": [
-        "param:#2 int",
         "return:void"
       ],
       "src/game/actors/d_a_snowman.cpp": [
         "param:#2 int",
         "return:void"
-      ],
-      "src/game/actors/d_a_wanwan.cpp": [
-        "param:#2 int"
       ],
       "src/game/actors/d_a_wanwan2.cpp": [
         "return:void"
@@ -379,22 +363,10 @@
       "src/game/actors/d_a_gmch.cpp": [
         "return:int"
       ],
-      "src/game/actors/d_a_hanachan.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_obj_bk_lift.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_obj_fall_block.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_obj_maruta.cpp": [
         "return:int"
       ],
       "src/game/actors/d_a_obj_sl_ice_block.cpp": [
-        "return:int"
-      ],
-      "src/game/actors/d_a_snm_bth.cpp": [
         "return:int"
       ]
     },
@@ -14110,13 +14082,7 @@
       "src/game/actors/d_a_popoi.cpp": [
         "arity:3"
       ],
-      "src/game/actors/d_a_propeller_heyho_fire.cpp": [
-        "param:#2 const Vector3 &"
-      ],
       "src/game/actors/d_a_star_gate.cpp": [
-        "arity:3"
-      ],
-      "src/game/actors/d_a_trs.cpp": [
         "arity:3"
       ]
     },
@@ -17151,11 +17117,6 @@
       ]
     },
     "func_0205a588": {
-      "include/decl_common.h": [
-        "param:#2 int",
-        "param:#3 int",
-        "return:void *"
-      ],
       "src/WM_StartConnect.cpp": [
         "param:#2 int"
       ],
@@ -17193,10 +17154,6 @@
         "param:#2 int"
       ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0204/func_02040c34.c": [
         "param:#2 int",
         "param:#3 int"
       ],
@@ -19495,14 +19452,10 @@
     },
     "WM_StartMPEx": {
       "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *",
-        "param:#3 unsigned short",
-        "param:#7 int"
+        "param:#1 void *"
       ],
       "src/unnamed/arm9/0203/func_0203faa8.c": [
-        "param:#1 void *",
-        "param:#3 unsigned short",
-        "param:#7 int"
+        "param:#1 void *"
       ]
     },
     "WmCheckParentParameter": {

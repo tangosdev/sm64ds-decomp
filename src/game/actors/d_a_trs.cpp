@@ -168,7 +168,7 @@ extern "C" {
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 int func_020092c4(void *cam, void *out, void *target);
-void func_02012694(int a, void *p, ...);
+void func_02012694(unsigned int a, const Vector3 *p);
 u16 func_0201277c(unsigned int a);
 extern s16 data_02082214[];
 extern void *data_0209f318;

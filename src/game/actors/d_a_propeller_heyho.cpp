@@ -15,8 +15,7 @@
  * func_ov070_0211f48c, and the Vector3 write through ((int *)&v)[i] in
  * func_ov070_0211f368, stay as written. The mPrevAngle triple keeps
  * the base-class names.
- * FlyGuy_ChangeState keeps its C-ABI name. ApproachAngleInt is the
- * int-target overload. V3w and V3h keep the ldm/stm copy in
+ * FlyGuy_ChangeState keeps its C-ABI name. V3w and V3h keep the ldm/stm copy in
  * func_ov070_0211f6e0 and func_ov070_0211f48c. The six state records and
  * the file handles keep address names; this file's static initializer
  * fills them. daPropeller_Heyho_Fire_c is a separate TU.
@@ -527,7 +526,6 @@ extern "C" {
 // local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
 extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(void *v1, void *v0);
-extern int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *a, void *m, void *out);
@@ -653,15 +651,6 @@ int func_ov070_0211fa80(daPropeller_Heyho_c *c) {
 }
 }
 
-/* ApproachAngle, int-target view (byte-load-bearing: the target is not
- * narrowed to short). The file-scope C declarations take a short target. A
- * block-scope extern inside a member function gets C++ linkage and names a
- * symbol nothing defines, so the view is a C-linkage redeclaration in its own
- * namespace, used by func_ov070_0211f6e0 and func_ov070_0211f48c. */
-namespace ApproachAngleInt {
-extern "C" int ApproachAngle(s16 *angle, int target, int step, int maxDelta, int minDelta);
-}
-
 /* -------------------------------------------------------------------------- */
 extern "C" {
 typedef int s32;
@@ -679,7 +668,6 @@ extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern s32 data_0209f32c;
 extern int data_020a0e68[];
 
-/* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern short Vec3_VertAngle(void* v1, void* v0);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
@@ -716,8 +704,8 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     s16 half;
     s32 z;
 
-    ApproachAngleInt::ApproachAngle(&mPrevAngleY, mTargetAngY, 0x100, 0x1000, 0x1000);
-    ApproachAngleInt::ApproachAngle(&mPrevAngleZ, 0, 0x100, 0x1000, 0x1000);
+    ApproachAngle(&mPrevAngleY, mTargetAngY, 0x100, 0x1000, 0x1000);
+    ApproachAngle(&mPrevAngleZ, 0, 0x100, 0x1000, 0x1000);
 
     if (mAnmModel.dExtFrameCtrl_c::Finished()) {
         if (mStateStep == 0) {
@@ -793,7 +781,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         aim.z = tz;
     }
     vAngle = Vec3_VertAngle(&mPosX, &aim);
-    ApproachAngleInt::ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
     if (mPosY <= tmp.y + 0x5000 ||
@@ -804,7 +792,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     }
 
     half = (mPrevAngleY - mTargetAngY) / 2;
-    ApproachAngleInt::ApproachAngle(&mPrevAngleZ, half, 0xa, 0x100, 0x50);
+    ApproachAngle(&mPrevAngleZ, half, 0xa, 0x100, 0x50);
 
     Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mPrevAngleX);
@@ -870,7 +858,6 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 extern "C" {
 // local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-/* (ApproachAngle: this file's own int-target view, namespace ApproachAngleInt above) */
 short Vec3_VertAngle(void* a, void* b);
 void func_02012694(unsigned int a, void *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
@@ -904,7 +891,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             tmp.z = posbuf.z;
             mTargetAngY = Vec3_HorzAngle(&mPos, &tmp);
         }
-        ApproachAngleInt::ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x400, 0x200);
+        ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x400, 0x200);
     }
 
     if (mAnmModel.dExtFrameCtrl_c::WillHitFrame(kFireFrame) != 0) {
@@ -954,7 +941,6 @@ extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c,
                                                void *f, void *g);
 extern "C" u32 d_a_propeller_heyhoNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
                                                         const Vector3_16f *f);
-extern "C" int ApproachAngle(short *v, short a, int b, int c, int d);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
  * mega-character hit leaves it unchanged) it refreshes the effects 0x13a and

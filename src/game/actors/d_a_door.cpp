@@ -200,7 +200,7 @@ extern "C" {
    does (Sound.h); func_02012694(id, pos) plays it at a position. */
 unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, void *b);
-unsigned char DecIfAbove0_Byte(void *p);
+unsigned char DecIfAbove0_Byte(unsigned char *p);
 int DecIfAbove0_Short(void *p);
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(void *res, void *translation, short angY, void *v);

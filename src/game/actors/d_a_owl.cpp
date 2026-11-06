@@ -157,7 +157,7 @@ void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *
                          unsigned int d);
 int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
-int ApproachAngle(short *p, int target, int a, int b, int c);
+int ApproachAngle(short *p, short target, int a, int b, int c);
 int Vec3_Dist(const void *a, const void *b);
 // local extern: CalcLib.h conflicts with the retained opaque Vec3_Dist prototype.
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
