@@ -198,6 +198,9 @@ void free_retired()
     g_retired.clear();
 }
 
+/* PLAINSKIN1: the plain skin's pieces from the game's own pause art (frames, panel, star and coin icons) */
+#include "plain_rom_art.inc"
+
 /* ============================================================ drawing primitives ======================================= */
 
 typedef UiSurface Surf;
@@ -417,6 +420,7 @@ const Piece *sheet_piece(int w, int h, int u100)
     }
     const bool have_tile = !tilepx.empty();
     p = new_piece(2, w, h, u100, w, h);
+    if (!have_tile && pr_frame_fill(p, PR_PANEL, 4, tl_pr_k)) return p;      /* PLAINSKIN1: no mod tile: the DS's own tan dialog panel */
     const float rad = (float)(26 * u), rim = (float)(6 * u);
     for (int y = 0; y < h; ++y)
         for (int x = 0; x < w; ++x) {
@@ -449,6 +453,8 @@ const Piece *slice3_piece(int kind, int imgid, int w, int h, double end_frac)
     const Img &I = g_im[imgid];
     p = new_piece(kind, w, h, 0, w, h);
     if (I.px.empty()) {                                           /* no mod art: a flat cream keycap / orange plank */
+        /* PLAINSKIN1: the DS's own cream option field (a key) or orange button (a plank), else the flat plate */
+        if (pr_frame_fill(p, kind == 3 ? PR_FIELD : PR_BUTTON, kind == 3 ? 6 : 1, tl_pr_k)) return p;
         if (kind == 3) plain_plate(p, 0x8A5A10, 0xFFF3CD, h * 0.24f, h * 0.07f + 1.f);
         else plain_plate(p, 0x8A5A10, 0xF0B850, h * 0.24f, h * 0.07f + 1.f);
         return p;
@@ -555,13 +561,17 @@ const Piece *plain_im_piece(int id, int w, int h)
             }
         return p;
     }
-    plain_plate(p, 0x8A5A10, id == IM_TITLE ? 0xFFF3CD : 0xFFF3CD, h * 0.22f, h * 0.07f + 1.f);
+    /* PLAINSKIN1: the DS's own cream option field, else a flat plate. The field's rim is wider than the plate's and a pixel deeper at the
+       foot (6 DS pixels at the top, 8 at the foot, hal/plain_rom_art.inc), so the word is a little smaller and half a pixel higher */
+    const bool rom = pr_frame_fill(p, PR_FIELD, 6, tl_pr_k);
+    if (!rom) plain_plate(p, 0x8A5A10, id == IM_TITLE ? 0xFFF3CD : 0xFFF3CD, h * 0.22f, h * 0.07f + 1.f);
     const char *label = id == IM_TITLE ? "SETTINGS" : "BACK";
-    float em = h * 0.52f;
-    const float maxw = w * 0.86f, tw = ui_text_width(label, em);
+    const float lift = rom ? 0.5f * tl_pr_k : 0.f;
+    float em = h * (rom ? 0.44f : 0.52f);
+    const float maxw = w * (rom ? 0.74f : 0.86f), tw = ui_text_width(label, em);
     if (tw > maxw) em *= maxw / tw;
     UiSurface us = { p->px.data(), w, w, h };
-    ui_text_draw(&us, (w - ui_text_width(label, em)) * 0.5f, h * 0.5f + ui_text_cap_height(em) * 0.5f, label, em, 0x8C4200, 255, 0);
+    ui_text_draw(&us, (w - ui_text_width(label, em)) * 0.5f, h * 0.5f - lift + ui_text_cap_height(em) * 0.5f, label, em, 0x8C4200, 255, 0);
     return p;
 }
 
@@ -1777,6 +1787,7 @@ extern "C" int settings_page_warm_step(int w, int h)
     if (S.open) return 0;                              /* the LIVE page is open (S is the live state here) */
     /* WARMFIX1 F1: everything below runs on the scratch S and L, and the pieces it makes stay private until the step ends */
     struct Scope { Scope() { tl_warm = true; } ~Scope() { publish_pieces(); tl_warm = false; } } scope;
+    tl_pr_k = pr_ds_px(w, h);                          /* PLAINSKIN1: the plain pieces' DS pixel size on this picture */
     S.emb_on = 1; S.emb_wide = (long long)w * 192 / h >= 300; S.emb_dx = 0; S.emb_input = 1;      /* PAUSE3: warm the layout the pause will use */
     if (w != g_ws_w || h != g_ws_h) {
         g_ws_w = w; g_ws_h = h; g_ws_stage = 0; g_ws_y = 0; g_ws_tab = 0; g_ws_row = -1; g_ws_cpn = 1;
@@ -1811,6 +1822,7 @@ extern "C" int settings_page_warm_step(int w, int h)
         } else if (st == ST_SHEET) {
             Piece *sp = find_piece(102, L.sw, L.sh, g_ws_u100);
             if (find_piece(2, L.sw, L.sh, g_ws_u100)) { ++g_ws_stage; }       /* the page already built it */
+            else if (!(g_ws_tile_ok && !g_ws_tile.empty()) && pr_load()) { sheet_piece(L.sw, L.sh, g_ws_u100); ++g_ws_stage; }   /* PLAINSKIN1: the ROM panel, cheap */
             else {
                 if (!sp) { sp = new_piece(102, L.sw, L.sh, g_ws_u100, L.sw, L.sh); g_ws_y = 0; }
                 /* the same per-pixel work as sheet_piece, in row slices */
@@ -2033,6 +2045,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
     const auto t0 = std::chrono::steady_clock::now();
     S.w = w; S.h = h;
     compute_layout(w, h);
+    tl_pr_k = pr_ds_px(w, h);                          /* PLAINSKIN1: the plain pieces' DS pixel size on this picture */
     Surf s = { px, stride, w, h };
     int n = 0;
     const Row *rows = rows_of(S.tab, &n);
@@ -2193,7 +2206,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
         const int dy = S.pressed_plank == 2 ? P(2) : 0;
         if (pl) blit(s, pl->px, pl->w, pl->h, L.reset[0], L.reset[1] + dy, 255, (sel || hov) ? 28 : 0, S.pressed_plank == 2 ? 25 : 0, 0);
         const float em = L.reset[3] * 0.50f;
-        text_c(s, L.reset[0] + L.reset[2] * 0.5f, L.reset[1] + dy + L.reset[3] * 0.5f + ui_text_cap_height(em) * 0.5f, "RESET", em, C_LETTER, 255, 0);
+        text_c(s, L.reset[0] + L.reset[2] * 0.5f, L.reset[1] + dy + L.reset[3] * 0.5f + ui_text_cap_height(em) * 0.5f, "RESET", em, pl && pl->kind == 4 && g_im[IM_PLANK].px.empty() && g_pr.state > 0 ? C_CREAM : C_LETTER, 255, 0);   /* PLAINSKIN1: cream on the ROM's orange button */
         if (sel) {
             const int aw = P(24), ah = P(34);
             const Piece *ap = arrow_right_piece(aw, ah);

@@ -51,9 +51,33 @@ void plain_star(const Surf &sf, float cx, float cy, float r0, uint32_t rgb, int 
     }
 }
 
+/* PLAINSKIN1: the piece from the game's own art (hal/plain_rom_art.inc), or null to draw the code shape below */
+const Piece *plain_rom_piece(int id, int dw, int dh)
+{
+    switch (id) {
+    case MENU_IMG_P_STAR_GOT: return pr_sprite(PR_STAR_GOT, dw, dh);       /* the HUD's power star */
+    case MENU_IMG_P_STAR_OFF: return pr_sprite(PR_STAR_OFF, dw, dh);       /* the HUD's empty star */
+    case MENU_IMG_P_COIN_GOLD: return pr_sprite(PR_COIN_GOLD, dw, dh);     /* the HUD's coin */
+    case MENU_IMG_P_COIN_RED: return pr_sprite(PR_COIN_RED, dw, dh);       /* the map's red coin */
+    case MENU_IMG_P_TITLE_BLANK: return pr_frame(PR_FIELD, 6, dw, dh, tl_pr_k);                 /* the option screen's cream field */
+    case MENU_IMG_P_TAB_L: case MENU_IMG_P_TAB_R: return pr_frame(PR_BUTTON, 1, dw, dh, tl_pr_k);   /* the pause's orange button */
+    default: return 0;
+    }
+}
+
 void plain_hi(const Surf &sf, int id, int dx, int dy, int dw, int dh, int alpha, int light, int shade)
 {
     const float x = (float)dx, y = (float)dy, w = (float)dw, h = (float)dh;
+    if (const Piece *rp = plain_rom_piece(id, dw, dh)) {
+        blit(sf, rp->px, rp->w, rp->h, dx - (rp->w - dw) / 2, dy - (rp->h - dh) / 2, alpha, light, shade, 0);
+        if (id == MENU_IMG_P_TAB_L || id == MENU_IMG_P_TAB_R) {
+            const char *t = id == MENU_IMG_P_TAB_L ? "LB" : "RB";
+            const float em = w * 0.34f, tw = ui_text_width(t, em);
+            /* cream on the ROM's orange button (the brown of the old light plank read poorly on it) */
+            ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.5f + ui_text_cap_height(em) * 0.5f, t, em, plain_tint(0xFFF3CD, 0, shade), alpha, 0);
+        }
+        return;
+    }
     switch (id) {
     case MENU_IMG_P_STAR_GOT: case MENU_IMG_P_STAR_OFF: {
         const bool got = id == MENU_IMG_P_STAR_GOT;
@@ -412,8 +436,12 @@ void pp_air_plank(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
     const PauseRect r = pause_plank_rect(g, f, 1, 0);
     const int shade = f->pressed ? 25 : 0, sink = f->pressed ? (int)(2 * g.u + 0.5) : 0;
     const float x = (float)r.x, y = (float)(r.y + sink), w = (float)r.w, h = (float)r.h;
-    fill_rrect(sf, x, y, w, h, h * 0.28f, plain_tint(0x8A5A10, 30, shade), 255, 0);
-    fill_rrect(sf, x + h * 0.08f, y + h * 0.08f, w - h * 0.16f, h * 0.84f, h * 0.22f, plain_tint(0xF0B850, 30, shade), 255, 0);
+    if (const Piece *rp = pr_frame(PR_BUTTON, 2, r.w, r.h, tl_pr_k))      /* PLAINSKIN1: the DS's own lit button */
+        blit(sf, rp->px, rp->w, rp->h, r.x, r.y + sink, 255, 0, shade, 0);
+    else {
+        fill_rrect(sf, x, y, w, h, h * 0.28f, plain_tint(0x8A5A10, 30, shade), 255, 0);
+        fill_rrect(sf, x + h * 0.08f, y + h * 0.08f, w - h * 0.16f, h * 0.84f, h * 0.22f, plain_tint(0xF0B850, 30, shade), 255, 0);
+    }
     const char *t = "Resume";
     const float em = h * 0.62f, tw = ui_text_width(t, em);
     ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.5f + ui_text_cap_height(em) * 0.5f, t, em, plain_tint(0x7A3A0C, 0, shade), 255, 0);
@@ -423,6 +451,7 @@ void pp_air_plank(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
 
 extern "C" void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride)
 {
+    tl_pr_k = pr_ds_px(w, h);                          /* PLAINSKIN1: the plain pieces' DS pixel size on this picture */
     (void)piece;
     const PauseFacts *f0 = (const PauseFacts *)lay->facts.blob;
     if (f0->magic != PAUSE_FACTS_MAGIC || w < 64 || h < 64) return;
