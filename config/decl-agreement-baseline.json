@@ -13198,14 +13198,6 @@
         "param:#1 int"
       ]
     },
-    "func_0200d8c8": {
-      "src/_ZN7daPly_c19St_GroundPound_MainEv.cpp": [
-        "param:#2 const void *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
-        "arity:2"
-      ]
-    },
     "func_0200fa04": {
       "src/game/actors/d_a_btn.cpp": [
         "param:#1 void *",
