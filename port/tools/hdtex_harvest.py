@@ -9,8 +9,17 @@ a per-row directory, then merges the rows into <dump_dir>. Every file is named
 by the content hash the loader looks a replacement up by, so what comes out of
 here is exactly the set of names a pack may contain.
 
+The names are the SECOND name, hdtex_name2 in port/ntr/hdtex.cpp, which hashes
+only the palette entries the decoder reads and so does not change from level
+to level. The loader also takes a file under the first name (hdtex_name), so
+older packs keep working. Each row also writes the dump's index
+(SM64DS_HD_TEXTURES_INDEX), and the rows are merged into <dump_dir>/index.tsv:
+one line per texture with both names, the second one first, so a tool can map
+a pack from one name to the other off that table.
+
 Quiet, like every other launcher in this tree: SW_SHOWMINNOACTIVE +
-CREATE_NO_WINDOW, SM64DS_NO_FOCUS=1, SM64DS_VOLUME=0, every inherited SM64DS_*
+CREATE_NO_WINDOW, SM64DS_NO_FOCUS=1, SM64DS_VOLUME=0, SM64DS_NO_DIALOG=1 (a
+kit exe would otherwise put error boxes on the screen), every inherited SM64DS_*
 dropped except SM64DS_TEST_LOCK* so each row takes the machine-wide test slot.
 Nothing is ever shown and nothing ever makes a sound.
 
@@ -56,8 +65,13 @@ SI = subprocess.STARTUPINFO()
 SI.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 SI.wShowWindow = 7  # SW_SHOWMINNOACTIVE: minimized, never activated
 NOCON = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+# Every inherited SM64DS_* knob is dropped so a stray SM64DS_LEVEL cannot turn a
+# row into a different row. Two exceptions: the test lock (so each row takes the
+# machine-wide slot) and SM64DS_ASSET_ROOT, which is a location, not a knob: a
+# kit exe refuses to start without it (battery.py keeps it for the same reason).
 BASE_ENV = {k: v for k, v in os.environ.items()
-            if not k.startswith("SM64DS_") or k.startswith("SM64DS_TEST_LOCK")}
+            if not k.startswith("SM64DS_") or k.startswith("SM64DS_TEST_LOCK")
+            or k == "SM64DS_ASSET_ROOT"}
 
 os.makedirs(DUMP, exist_ok=True)
 ROWS = os.path.join(DUMP, "rows")
@@ -80,7 +94,9 @@ def run_row(kind, ident):
     env["SM64DS_FAULTS_FATAL"] = "1"
     env["SM64DS_NO_FOCUS"] = "1"
     env["SM64DS_VOLUME"] = "0"
+    env["SM64DS_NO_DIALOG"] = "1"
     env["SM64DS_HD_TEXTURES_DUMP"] = rowdir
+    env["SM64DS_HD_TEXTURES_INDEX"] = os.path.join(rowdir, "index.tsv")
 
     t0 = time.time()
     rc, out = "TIMEOUT", ""
@@ -105,8 +121,34 @@ def run_row(kind, ident):
     return tag, rc, dt, names
 
 
+def merge_index(tag, index):
+    """Add a row's index lines to <dump_dir>/index.tsv, one per name."""
+    src = os.path.join(ROWS, tag, "index.tsv")
+    if not os.path.exists(src):
+        return
+    with open(src, encoding="utf-8", errors="replace") as f:
+        lines = f.read().splitlines()
+    if not lines:
+        return
+    path = os.path.join(DUMP, "index.tsv")
+    fresh = not os.path.exists(path)
+    with open(path, "a", encoding="utf-8") as out:
+        if fresh:
+            out.write(lines[0] + "\n")
+        for line in lines[1:]:
+            name = line.split("\t", 1)[0]
+            if name and name not in index:
+                index.add(name)
+                out.write(line + "\n")
+
+
 def main():
     merged = set(f for f in os.listdir(DUMP) if f.endswith(".png"))
+    index = set()
+    if os.path.exists(os.path.join(DUMP, "index.tsv")):
+        with open(os.path.join(DUMP, "index.tsv"), encoding="utf-8",
+                  errors="replace") as f:
+            index = set(l.split("\t", 1)[0] for l in f.read().splitlines()[1:])
     started = len(merged)
     rows = []
     plan = ([("SM64DS_LEVEL", i) for i in LEVELS] +
@@ -119,6 +161,7 @@ def main():
             if not os.path.exists(dst):
                 shutil.copyfile(os.path.join(ROWS, tag, n), dst)
         merged.update(names)
+        merge_index(tag, index)
         rows.append((tag, rc, dt, len(names), len(new)))
         print("%-10s rc=%-10s %6.1fs  unique=%-4d new=%-4d  total=%d"
               % (tag, rc, dt, len(names), len(new), len(merged)),
@@ -137,6 +180,7 @@ def main():
         for tag, rc, dt, n, new in rows:
             f.write("%s\t%s\t%.1f\t%d\t%d\n" % (tag, rc, dt, n, new))
     print("  per-row table     : %s" % os.path.join(DUMP, "harvest.tsv"))
+    print("  both names        : %s" % os.path.join(DUMP, "index.tsv"))
     return 0
 
 

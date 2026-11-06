@@ -219,6 +219,12 @@
 #include <cstdlib>
 #include <cstring>
 
+/* hal/mods.cpp's port_mods_stage_entry, through a pointer defined at the foot
+   of this file, because the narrow smoke targets link this file without
+   hal/mods.cpp. */
+extern "C" int (*port_stage_entry_hook)(int i, char *path, unsigned cap,
+                                        const char **mod);
+
 namespace {
 
 typedef unsigned char u8;
@@ -342,12 +348,21 @@ u8 *arena_take(u32 n)
 
 /* ---- the file ----------------------------------------------------------- */
 
-int g_state;            /* 0 not tried, 1 loaded, -1 off, absent or refused */
-u8 *g_blob;
-u32 g_blob_len;
-int g_blob_level;
-u32 g_nsection;
-char g_shown[1024];
+/* One level-edits file in memory, validated against itself. Two of them live
+   for the whole run: the one SM64DS_STAGE_MOD names (read once, at the first
+   mount, as it always was) and the one a mod's stage/ supplies for the level
+   being mounted now (read at that mount, the previous one released first). */
+struct Lvlm {
+    u8 *blob;
+    u32 len;
+    int level;
+    u32 nsection;
+    char shown[1024];
+};
+
+int g_env_state;        /* 0 not tried, 1 loaded, -1 off, absent or refused */
+Lvlm g_env;
+Lvlm g_mod;
 /* Which stage-property fields the file has already set, so a field named twice
    anywhere in it is refused rather than resolved by ordering. Indexed by the
    record's field byte, so it covers the whole 0..255 space a file can spell. */
@@ -365,42 +380,43 @@ void refuse(const char *why)
     std::fflush(stderr);
 }
 
-void release(void)
+void release(Lvlm &L)
 {
-    std::free(g_blob);
-    g_blob = 0;
-    g_blob_len = 0;
-    g_nsection = 0;
+    std::free(L.blob);
+    L.blob = 0;
+    L.len = 0;
+    L.nsection = 0;
 }
 
-/* Read and fully validate the file's own shape. Nothing here can look at the
-   level -- the level is not mounted when this is called for the first mount --
-   so this pass proves the file is self-consistent and the per-level checks
-   happen in apply_sections below. */
-void stage_mod_load(void)
+/* Read and fully validate the file's own shape into L (whatever L held is
+   released first). Nothing here can look at the level (the level is not
+   mounted when this is called for the first mount), so this pass proves the
+   file is self-consistent and the per-level checks happen in apply_sections
+   below. Returns 1 loaded, 0 refused out loud (L then holds no file). `mod` is
+   the mod's id for a file out of a mod's stage/ folder and 0 for the file
+   SM64DS_STAGE_MOD names; `quiet` leaves out the one success line, for the
+   boot index below, which reads every mod file once only to learn its level. */
+int load_file(Lvlm &L, const char *path, const char *mod, int quiet)
 {
-    const char *path;
     std::FILE *f;
     long len;
     u32 cur, s;
     char msg[1280];
 
-    if (g_state)
-        return;
-    g_state = -1;
-
-    path = std::getenv("SM64DS_STAGE_MOD");
-    if (!path || !*path)
-        return;                 /* off, and off is silent like every mod's off */
-
-    std::snprintf(g_shown, sizeof g_shown, "%s", path);
+    release(L);
+    std::snprintf(L.shown, sizeof L.shown, "%s", path);
     f = std::fopen(path, "rb");
     if (!f) {
-        std::snprintf(msg, sizeof msg,
-                      "SM64DS_STAGE_MOD names %s and nothing there opens",
-                      g_shown);
+        if (mod)
+            std::snprintf(msg, sizeof msg,
+                          "%s is in mod %s's stage/ folder and will not open",
+                          L.shown, mod);
+        else
+            std::snprintf(msg, sizeof msg,
+                          "SM64DS_STAGE_MOD names %s and nothing there opens",
+                          L.shown);
         refuse(msg);
-        return;
+        return 0;
     }
     std::fseek(f, 0, SEEK_END);
     len = std::ftell(f);
@@ -409,79 +425,79 @@ void stage_mod_load(void)
         std::fclose(f);
         std::snprintf(msg, sizeof msg,
                       "%s is %ld bytes, and a level-edits file is between 8 "
-                      "and 4194304", g_shown, len);
+                      "and 4194304", L.shown, len);
         refuse(msg);
-        return;
+        return 0;
     }
-    g_blob = (u8 *)std::malloc((size_t)len);
-    if (!g_blob || (long)std::fread(g_blob, 1, (size_t)len, f) != len) {
+    L.blob = (u8 *)std::malloc((size_t)len);
+    if (!L.blob || (long)std::fread(L.blob, 1, (size_t)len, f) != len) {
         std::fclose(f);
-        release();
-        std::snprintf(msg, sizeof msg, "%s would not read", g_shown);
+        release(L);
+        std::snprintf(msg, sizeof msg, "%s would not read", L.shown);
         refuse(msg);
-        return;
+        return 0;
     }
     std::fclose(f);
-    g_blob_len = (u32)len;
+    L.len = (u32)len;
 
-    if (std::memcmp(g_blob, "LVLM", 4) != 0) {
-        release();
+    if (std::memcmp(L.blob, "LVLM", 4) != 0) {
+        release(L);
         std::snprintf(msg, sizeof msg,
                       "%s does not start with LVLM, so it is not a "
-                      "level-edits file", g_shown);
+                      "level-edits file", L.shown);
         refuse(msg);
-        return;
+        return 0;
     }
-    if (g_blob[4] != 1) {
+    if (L.blob[4] != 1) {
         /* THE MESSAGE IS BUILT BEFORE release(), and every refusal below does
-           the same. release() frees the blob AND zeroes g_blob_len and
-           g_nsection, so a message composed after it reads a freed pointer or
+           the same. release() frees the blob AND zeroes L.len and
+           L.nsection, so a message composed after it reads a freed pointer or
            reports zero. Both shapes shipped in the first draft of this file and
            both were caught by the refusal battery: the version arm faulted
-           c0000005 reading g_blob[4] through the freed pointer, and the
+           c0000005 reading L.blob[4] through the freed pointer, and the
            overrun arm printed "4294967284 bytes are left" from 0 - (cur + 4).
            A refusal path is the one path least likely to be exercised, so it
            is the one that has to be ordered right by construction. */
         std::snprintf(msg, sizeof msg,
                       "%s is level-edits version %u and this build reads "
-                      "version 1", g_shown, g_blob[4]);
-        release();
+                      "version 1", L.shown, L.blob[4]);
+        release(L);
         refuse(msg);
-        return;
+        return 0;
     }
-    g_blob_level = g_blob[5];
-    g_nsection = rd16(g_blob, 6);
+    L.level = L.blob[5];
+    L.nsection = rd16(L.blob, 6);
 
     /* Walk every section header and prove the whole file is accounted for. */
     std::memset(g_seen_field, 0, sizeof g_seen_field);
     cur = 8;
-    for (s = 0; s < g_nsection; ++s) {
+    for (s = 0; s < L.nsection; ++s) {
         unsigned scope, type, star, reserved, count;
         int rs;
         u32 need;
 
-        if (cur + 6 > g_blob_len) {
+        if (cur + 6 > L.len) {
             std::snprintf(msg, sizeof msg,
                           "%s says %u section(s) and section %u's header runs "
-                          "past the end of the file", g_shown, g_nsection, s);
-            release();
+                          "past the end of the file", L.shown, L.nsection, s);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
-        scope = g_blob[cur];
-        type = g_blob[cur + 1];
-        star = g_blob[cur + 2];
-        reserved = g_blob[cur + 3];
-        count = rd16(g_blob, cur + 4);
+        scope = L.blob[cur];
+        type = L.blob[cur + 1];
+        star = L.blob[cur + 2];
+        reserved = L.blob[cur + 3];
+        count = rd16(L.blob, cur + 4);
         rs = section_recsize(type);
         if (!rs) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u names sub-table type %u, and this "
                           "build only writes 0 standard, 1 entrance, 5 simple "
-                          "and 240 stage properties", g_shown, s, type);
-            release();
+                          "and 240 stage properties", L.shown, s, type);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         /* A properties section is addressed to the level rather than to one of
            its sub-tables, so the two key bytes that name a sub-table have
@@ -492,37 +508,37 @@ void stage_mod_load(void)
             std::snprintf(msg, sizeof msg,
                           "%s section %u is a stage-properties section with "
                           "scope %u, and stage properties belong to the level, "
-                          "so their scope is 255", g_shown, s, scope);
-            release();
+                          "so their scope is 255", L.shown, s, scope);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         if (type == TYPE_PROPS && star != 0) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u is a stage-properties section with "
                           "star %u, and stage properties are not per-mission, "
-                          "so their star is 0", g_shown, s, star);
-            release();
+                          "so their star is 0", L.shown, s, star);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         if (scope != SCOPE_MISC && scope > 7) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u names scope %u, and a scope is an "
                           "area 0..7 or 0xFF for the misc table",
-                          g_shown, s, scope);
-            release();
+                          L.shown, s, scope);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         if (star > 7) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u names star %u, and a star filter is "
                           "0..7 -- it is the top three bits of the ROM's own "
-                          "sub-table byte", g_shown, s, star);
-            release();
+                          "sub-table byte", L.shown, s, star);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         /* The reserved byte is refused rather than ignored ON PURPOSE. It is
            the format's only room to grow, and a reader that skips it now would
@@ -532,31 +548,31 @@ void stage_mod_load(void)
         if (reserved != 0) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u has %u in its reserved byte and this "
-                          "build only reads 0 there", g_shown, s, reserved);
-            release();
+                          "build only reads 0 there", L.shown, s, reserved);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         if (count > 255) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u carries %u entries and a sub-table's "
                           "count is one byte, so 255 is the ceiling",
-                          g_shown, s, count);
-            release();
+                          L.shown, s, count);
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         need = count * (u32)rs;
-        if (cur + 6 + need > g_blob_len) {
+        if (cur + 6 + need > L.len) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u says %u %s entries (%u bytes) and "
                           "only %u bytes are left in the file",
-                          g_shown, s, count, type_name(type), need,
-                          g_blob_len - (cur + 6 <= g_blob_len
-                                        ? cur + 6 : g_blob_len));
-            release();
+                          L.shown, s, count, type_name(type), need,
+                          L.len - (cur + 6 <= L.len
+                                        ? cur + 6 : L.len));
+            release(L);
             refuse(msg);
-            return;
+            return 0;
         }
         /* PROPERTY RECORDS ARE VALIDATED HERE, in the file pass, because
            nothing about them depends on the level: a field id and a value are
@@ -566,7 +582,7 @@ void stage_mod_load(void)
         if (type == TYPE_PROPS) {
             unsigned r;
             for (r = 0; r < count; ++r) {
-                const u8 *rec = g_blob + cur + 6 + r * PROPS_RECSIZE;
+                const u8 *rec = L.blob + cur + 6 + r * PROPS_RECSIZE;
                 unsigned field = rec[0];
                 unsigned value = rec[1];
                 unsigned pad = rd16(rec, 2);
@@ -575,10 +591,10 @@ void stage_mod_load(void)
                     std::snprintf(msg, sizeof msg,
                                   "%s section %u property %u has %u in its "
                                   "padding and this build only reads 0 there",
-                                  g_shown, s, r, pad);
-                    release();
+                                  L.shown, s, r, pad);
+                    release(L);
                     refuse(msg);
-                    return;
+                    return 0;
                 }
                 /* THE UNKNOWN FIELD IS THE WHOLE POINT OF THE RULE. A build
                    that skipped a field it did not implement would apply the
@@ -590,20 +606,20 @@ void stage_mod_load(void)
                     std::snprintf(msg, sizeof msg,
                                   "%s section %u property %u sets stage field "
                                   "%u and this build only knows field 0, the "
-                                  "skybox", g_shown, s, r, field);
-                    release();
+                                  "skybox", L.shown, s, r, field);
+                    release(L);
                     refuse(msg);
-                    return;
+                    return 0;
                 }
                 if (value > SKYBOX_MAX) {
                     std::snprintf(msg, sizeof msg,
                                   "%s section %u asks for skybox %u, and the "
                                   "game has 0 for none and 1 to %u for the "
-                                  "vrbox skies", g_shown, s, value,
+                                  "vrbox skies", L.shown, s, value,
                                   SKYBOX_MAX);
-                    release();
+                    release(L);
                     refuse(msg);
-                    return;
+                    return 0;
                 }
                 /* One field, one answer. A scalar property named twice is a
                    file that does not know what it wants, and quietly taking
@@ -612,31 +628,33 @@ void stage_mod_load(void)
                 if (g_seen_field[field]) {
                     std::snprintf(msg, sizeof msg,
                                   "%s sets the %s more than once, and a stage "
-                                  "property has one value", g_shown,
+                                  "property has one value", L.shown,
                                   field_name(field));
-                    release();
+                    release(L);
                     refuse(msg);
-                    return;
+                    return 0;
                 }
                 g_seen_field[field] = 1;
             }
         }
         cur += 6 + need;
     }
-    if (cur != g_blob_len) {
+    if (cur != L.len) {
         std::snprintf(msg, sizeof msg,
                       "%s has %u byte(s) left over after its last section, so "
                       "it is not the file it says it is",
-                      g_shown, g_blob_len - cur);
-        release();
+                      L.shown, L.len - cur);
+        release(L);
         refuse(msg);
-        return;
+        return 0;
     }
 
-    g_state = 1;
-    std::fprintf(stderr, "[mods] StageMod: %u section(s) for level %d (%s)\n",
-                 g_nsection, g_blob_level, g_shown);
-    std::fflush(stderr);
+    if (!quiet) {
+        std::fprintf(stderr, "[mods] StageMod: %u section(s) for level %d (%s)\n",
+                     L.nsection, L.level, L.shown);
+        std::fflush(stderr);
+    }
+    return 1;
 }
 
 /* ---- resolving a section onto the mounted level ------------------------- */
@@ -708,7 +726,7 @@ ObjSubTable *find_descriptor(LvlOverlay *ovl, unsigned scope, unsigned star,
    arena bytes without writing one word into the level; only if all of them
    resolve does the second commit. That is what makes "never half-apply" a
    property of the code rather than a hope. */
-void apply_sections(LvlOverlay *ovl, int level_id)
+void apply_sections(Lvlm &L, LvlOverlay *ovl, int level_id)
 {
     struct Plan {
         ObjSubTable *desc;
@@ -724,10 +742,10 @@ void apply_sections(LvlOverlay *ovl, int level_id)
     u32 arena_mark = g_arena_used;
     char msg[1280];
 
-    if (g_nsection > sizeof plan / sizeof plan[0]) {
+    if (L.nsection > sizeof plan / sizeof plan[0]) {
         std::snprintf(msg, sizeof msg,
                       "%s carries %u sections and this build applies at most "
-                      "%u", g_shown, g_nsection,
+                      "%u", L.shown, L.nsection,
                       (unsigned)(sizeof plan / sizeof plan[0]));
         refuse(msg);
         return;
@@ -737,11 +755,11 @@ void apply_sections(LvlOverlay *ovl, int level_id)
        word of the level is written here, so a complaint at section five costs
        nothing that sections zero to four did. */
     cur = 8;
-    for (s = 0; s < g_nsection; ++s) {
-        unsigned scope = g_blob[cur];
-        unsigned type = g_blob[cur + 1];
-        unsigned star = g_blob[cur + 2];
-        unsigned count = rd16(g_blob, cur + 4);
+    for (s = 0; s < L.nsection; ++s) {
+        unsigned scope = L.blob[cur];
+        unsigned type = L.blob[cur + 1];
+        unsigned star = L.blob[cur + 2];
+        unsigned count = rd16(L.blob, cur + 4);
         u32 need = count * (u32)section_recsize(type);
         const char *why = 0;
         ObjSubTable *d;
@@ -753,7 +771,7 @@ void apply_sections(LvlOverlay *ovl, int level_id)
            all-or-nothing guarantee. */
         if (type == TYPE_PROPS) {
             plan[s].desc = 0;
-            plan[s].src = g_blob + cur + 6;
+            plan[s].src = L.blob + cur + 6;
             plan[s].bytes = need;
             plan[s].count = (u16)count;
             plan[s].scope = (u8)scope;
@@ -771,12 +789,12 @@ void apply_sections(LvlOverlay *ovl, int level_id)
                 std::snprintf(msg, sizeof msg,
                               "%s section %u wants the misc star %u %s "
                               "sub-table and %s",
-                              g_shown, s, star, type_name(type), why);
+                              L.shown, s, star, type_name(type), why);
             else
                 std::snprintf(msg, sizeof msg,
                               "%s section %u wants area %u's star %u %s "
                               "sub-table and %s",
-                              g_shown, s, scope, star, type_name(type), why);
+                              L.shown, s, scope, star, type_name(type), why);
             refuse(msg);
             return;
         }
@@ -784,13 +802,13 @@ void apply_sections(LvlOverlay *ovl, int level_id)
             g_arena_used = arena_mark;
             std::snprintf(msg, sizeof msg,
                           "%s section %u needs %u bytes and this build's "
-                          "level-edit arena has %u left", g_shown, s, need,
+                          "level-edit arena has %u left", L.shown, s, need,
                           (unsigned)(sizeof g_arena) - arena_mark);
             refuse(msg);
             return;
         }
         plan[s].desc = d;
-        plan[s].src = g_blob + cur + 6;
+        plan[s].src = L.blob + cur + 6;
         plan[s].bytes = need;
         plan[s].count = (u16)count;
         plan[s].scope = (u8)scope;
@@ -803,7 +821,7 @@ void apply_sections(LvlOverlay *ovl, int level_id)
        same order with the same sizes, so every section lands on the block pass
        one proved there was room for. */
     g_arena_used = arena_mark;
-    for (s = 0; s < g_nsection; ++s) {
+    for (s = 0; s < L.nsection; ++s) {
         u32 need = plan[s].bytes;
         u8 *dst;
 
@@ -958,7 +976,152 @@ void dump_level_tables(int level_id, LvlOverlay *ovl)
     std::fflush(stderr);
 }
 
+/* ---- the file SM64DS_STAGE_MOD names ------------------------------------ */
+
+/* Read once, at the first mount, exactly as before mods could carry level
+   edits: the Studio's own launch names its export here and keeps working
+   unchanged. */
+void env_load(void)
+{
+    const char *path;
+
+    if (g_env_state)
+        return;
+    g_env_state = -1;
+
+    path = std::getenv("SM64DS_STAGE_MOD");
+    if (!path || !*path)
+        return;                 /* off, and off is silent like every mod's off */
+    if (load_file(g_env, path, 0, 0))
+        g_env_state = 1;
+}
+
+/* ---- level edits out of the mods (run studio1, lane PORTLVLM1) ----------
+
+   A mod's stage/ folder may hold any number of <anything>.lvlm files
+   (hal/mods.cpp lists them, latest mod first). The LEVEL a file is for is
+   byte 5 of its own header, never its name, so the Studio can copy its
+   export folder in as it is.
+
+   THE INDEX is built once, at the first mount: every listed file is read and
+   validated whole by load_file, the same pass the SM64DS_STAGE_MOD file gets,
+   and kept only for its level number. A file that fails is refused out loud
+   right there and claims no level, so the levels it might have meant stay
+   stock. Then, per level:
+
+     - the first file met wins, which is the LATER mod in EnabledMods, the
+       rule files/ and textures_hd/ use in hal/mods.cpp; every file it beats is
+       named in a line;
+     - two files for the SAME level inside ONE mod is a mod that does not know
+       what it wants: both are refused in a line and the level is stock. An
+       earlier mod's file for that level does not step in, because the mod that
+       outranks it asked for something and the answer to a disagreement is
+       always stock, never a guess.
+
+   THE FILE ITSELF is read again at the mount of its level (g_mod; the file
+   held before is released first) and applied by the same apply_sections. A
+   second mount of the same level, a save-state restore included (the restore
+   rolls the overlay and hal/level_boot.cpp's g_level_mounted back together, so
+   the next entry re-patches and calls this again), re-applies the bytes
+   already held, the same way the SM64DS_STAGE_MOD file is re-applied.
+
+   SM64DS_STAGE_MOD STILL WINS, for the level its file is for. Every other
+   level takes what the mods give it. A refused SM64DS_STAGE_MOD file names no
+   level, so it outranks nothing.
+
+   DECISION (lane PORTLVLM1): the index is a few hundred bytes per file and a
+   map project's export is a few kilobytes, so the boot read is cheap; the
+   alternative of reading headers only would let a broken file claim a level
+   and then fail at its mount, which is the later and worse place to learn it. */
+enum { MAX_MOD_LVLM = 256, LEVEL_COUNT = 256 };
+
+struct ModLvlm {
+    char path[1024];
+    char mod[96];
+    int level;
+};
+
+ModLvlm g_found[MAX_MOD_LVLM];
+unsigned g_nfound;
+int g_pick[LEVEL_COUNT];        /* index into g_found, or -1 when no mod names it */
+u8 g_dup[LEVEL_COUNT];          /* the winning mod carries two files for it */
+u8 g_said_outranked[LEVEL_COUNT];
+int g_indexed;
+
+void index_mods(void)
+{
+    static char path[1024];
+    static Lvlm probe;
+    const char *mod;
+    int i, kind;
+    char msg[2600];
+
+    if (g_indexed)
+        return;
+    g_indexed = 1;
+    for (i = 0; i < LEVEL_COUNT; ++i)
+        g_pick[i] = -1;
+    if (!port_stage_entry_hook)
+        return;                 /* a target without the mods layer */
+
+    for (i = 0; (kind = port_stage_entry_hook(i, path, sizeof path, &mod)) != 0;
+         ++i) {
+        int lv, p;
+        ModLvlm *e;
+
+        if (kind != 1)
+            continue;           /* a _geom folder: hal/stage_geom.cpp's */
+        if (!mod)
+            mod = "?";
+        if (!load_file(probe, path, mod, 1))
+            continue;           /* refused out loud already, claims no level */
+        lv = probe.level;
+        release(probe);
+        if (g_nfound >= MAX_MOD_LVLM) {
+            std::snprintf(msg, sizeof msg,
+                          "the enabled mods carry more than %u level-edits "
+                          "files, so %s (mod %s) and every one after it are "
+                          "not read", (unsigned)MAX_MOD_LVLM, path, mod);
+            refuse(msg);
+            break;
+        }
+        e = &g_found[g_nfound];
+        std::snprintf(e->path, sizeof e->path, "%s", path);
+        std::snprintf(e->mod, sizeof e->mod, "%s", mod);
+        e->level = lv;
+        p = g_pick[lv];
+        if (p < 0) {
+            g_pick[lv] = (int)g_nfound;
+        } else if (std::strcmp(g_found[p].mod, mod) == 0) {
+            std::snprintf(msg, sizeof msg,
+                          "mod %s carries more than one level-edits file for "
+                          "level %d (%s and %s), so none of them applies",
+                          mod, lv, g_found[p].path, path);
+            g_dup[lv] = 1;
+            refuse(msg);
+        } else {
+            std::fprintf(stderr, "[mods] StageMod: level %d: %s (mod %s) is "
+                                 "outranked by mod %s, later in EnabledMods%s\n",
+                         lv, path, mod, g_found[p].mod,
+                         g_dup[lv] ? ", whose own files for it were refused"
+                                   : "");
+        }
+        ++g_nfound;
+    }
+    for (i = 0; i < LEVEL_COUNT; ++i)
+        if (g_pick[i] >= 0 && !g_dup[i])
+            std::fprintf(stderr, "[mods] StageMod: level %d takes %s (mod %s) "
+                                 "at its mount\n", i, g_found[g_pick[i]].path,
+                         g_found[g_pick[i]].mod);
+    std::fflush(stderr);
+}
+
 }  /* namespace */
+
+/* Set by hal/mods.cpp when it is linked (the two game targets): its
+   port_mods_stage_entry. Null in the narrow targets, which have no mods. */
+extern "C" int (*port_stage_entry_hook)(int i, char *path, unsigned cap,
+                                        const char **mod) = 0;
 
 /* THE ONE ENTRY POINT. hal/level_boot.cpp calls this from port_level_mount_at
    after d->patch() and after d->at() has resolved the LVL_Overlay, which is
@@ -968,20 +1131,50 @@ void dump_level_tables(int level_id, LvlOverlay *ovl)
 extern "C" void port_stage_mod_apply(int level_id, void *lvlv)
 {
     LvlOverlay *ovl = (LvlOverlay *)lvlv;
+    int pick;
 
     if (!ovl)
         return;
-    stage_mod_load();
-    if (g_state == 1) {
-        if (g_blob_level != level_id) {
-            char msg[1280];
-            std::snprintf(msg, sizeof msg,
-                          "%s is for level %d and this boot mounted level %d",
-                          g_shown, g_blob_level, level_id);
-            refuse(msg);
-        } else {
-            apply_sections(ovl, level_id);
+    env_load();
+    index_mods();
+    pick = (level_id >= 0 && level_id < LEVEL_COUNT && !g_dup[level_id])
+         ? g_pick[level_id] : -1;
+
+    if (g_env_state == 1 && g_env.level == level_id) {
+        if (pick >= 0 && !g_said_outranked[level_id]) {
+            g_said_outranked[level_id] = 1;
+            std::fprintf(stderr, "[mods] StageMod: level %d: %s (mod %s) is "
+                                 "outranked by SM64DS_STAGE_MOD (%s)\n",
+                         level_id, g_found[pick].path, g_found[pick].mod,
+                         g_env.shown);
         }
+        apply_sections(g_env, ovl, level_id);
+    } else if (pick >= 0) {
+        const ModLvlm *e = &g_found[pick];
+        /* Held already (a second entry, or the re-apply after a save-state
+           restore): the same bytes again. Otherwise read it now, the file held
+           before released first. A file that changed on disk since the index
+           and no longer reads is refused out loud and the level is stock. */
+        if (!g_mod.blob || std::strcmp(g_mod.shown, e->path) != 0)
+            load_file(g_mod, e->path, e->mod, 0);
+        if (g_mod.blob && std::strcmp(g_mod.shown, e->path) == 0) {
+            if (g_mod.level != level_id) {
+                char msg[1280];
+                std::snprintf(msg, sizeof msg,
+                              "%s (mod %s) was for level %d at boot and now "
+                              "says level %d", g_mod.shown, e->mod, level_id,
+                              g_mod.level);
+                refuse(msg);
+            } else {
+                apply_sections(g_mod, ovl, level_id);
+            }
+        }
+    } else if (g_env_state == 1) {
+        char msg[1280];
+        std::snprintf(msg, sizeof msg,
+                      "%s is for level %d and this boot mounted level %d",
+                      g_env.shown, g_env.level, level_id);
+        refuse(msg);
     }
     dump_level_tables(level_id, ovl);
 }

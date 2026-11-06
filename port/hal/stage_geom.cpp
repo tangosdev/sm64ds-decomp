@@ -167,6 +167,10 @@ typedef unsigned int u32;
 
 extern "C" const char *port_fs_catalog_path(unsigned file_id); /* hal/fs.cpp */
 extern "C" void DecompressLZ16(void *src, void *dst);          /* hal/fs.cpp */
+/* hal/mods.cpp: the enabled mods' stage/ entries (only the two game targets
+   link this file, and both link hal/mods.cpp) */
+extern "C" int port_mods_stage_entry(int i, char *path, unsigned cap,
+                                     const char **mod);
 
 extern "C" {
 extern u32 (*port_fs_mod_filter)(unsigned fileID, u8 **data, u32 size);
@@ -232,13 +236,16 @@ void note(const char *what)
     fflush(stderr);
 }
 
-void release(void)
+/* Drop what one source folder added, back to `mark` (0 drops everything):
+   that folder's whole-file refusal, which leaves the earlier sources' files in
+   place. */
+void release_from(unsigned mark)
 {
-    for (unsigned i = 0; i < g_nsub; ++i) {
+    for (unsigned i = mark; i < g_nsub; ++i) {
         free(g_sub[i].bytes);
         g_sub[i].bytes = 0;
     }
-    g_nsub = 0;
+    g_nsub = mark;
 }
 
 /* The third probe location, or 0 when there is not a trustworthy one.
@@ -777,19 +784,19 @@ int bmd_ok(const u8 *d, u32 n, const char **why)
 
 /* ---- reading one substitute --------------------------------------------- */
 
-/* Read <g_dir>/<leaf> into the slot, decompressing if it carries the LZ77
+/* Read <dir>/<leaf> into the slot, decompressing if it carries the LZ77
    magic. Returns 1, or 0 with `msg` filled in with the plain-words complaint.
    Whole-file by construction: the bytes are in memory and validated before
    anything can be served, so a substitution can never fail halfway. */
-int load_sub(const char *leaf, const char *stage, int kind, Sub *s,
-             char *msg, size_t cap)
+int load_sub(const char *dir, const char *leaf, const char *stage, int kind,
+             Sub *s, char *msg, size_t cap)
 {
     char full[PATH_CAP];
     FILE *f;
     long len;
     u8 *raw;
 
-    snprintf(full, sizeof full, "%s/%s", g_dir, leaf);
+    snprintf(full, sizeof full, "%s/%s", dir, leaf);
     f = fopen(full, "rb");
     if (!f) {
         snprintf(msg, cap, "%s is there but will not open", full);
@@ -888,53 +895,58 @@ int load_sub(const char *leaf, const char *stage, int kind, Sub *s,
    middle of a running program rather than during static initialization, where
    the message competes with nothing that is listening yet. Read ONCE, like
    every mod in this tree: the fs cache keys master copies by file id, so a
-   mid-run flip would serve half one level's ground and half another's. */
-void latch(void)
+   mid-run flip would serve half one level's ground and half another's.
+
+   THE SOURCES (run studio1, lane PORTLVLM1). The SM64DS_STAGE_GEOM folder
+   first, then every <name>_geom folder in an enabled mod's stage/ folder,
+   latest mod first (hal/mods.cpp port_mods_stage_entry). Each folder is read
+   and validated whole exactly as the SM64DS_STAGE_GEOM folder always was: any
+   complaint inside one folder drops that whole folder, out loud, and the other
+   folders are read as usual. ACROSS folders the rule is per stage file: a
+   stage's .bmd or .kcl found in an earlier source wins and the later copy is
+   named in a line and never read, the same "later in EnabledMods wins" rule
+   files/ uses, with SM64DS_STAGE_GEOM ahead of every mod so the Studio's own
+   launch keeps meaning what it says. The mods' list is the one the game
+   started with: the relatch at the title does not re-read stage files
+   (hal/mods.cpp says so in a line when the stage/ mods change there). */
+
+/* Every refusal of one mod folder, so they read alike: the folder named, what
+   is wrong with it, and that the other sources still count. */
+void refuse_mod_folder(const char *mod, const char *why)
 {
-    const char *want;
+    fprintf(stderr, "[mods] StageGeom: mod %s: %s; that folder serves nothing "
+                    "and the other stage folders are read as usual\n", mod, why);
+    fflush(stderr);
+}
+
+/* Read one source folder into g_sub, after whatever earlier sources put
+   there. `mod` is 0 for the SM64DS_STAGE_GEOM folder (whose messages are the
+   ones this file always printed) and the mod's id otherwise. */
+void read_folder(const char *dir, const char *mod)
+{
     char msg[PATH_CAP + 160];
     char list[512];
     size_t used = 0;
+    const unsigned mark = g_nsub;
+    unsigned outranked = 0;
 
     list[0] = '\0';
-
-    if (g_state)
-        return;
-    g_state = -1;
-
-    want = getenv("SM64DS_STAGE_GEOM");
-    if (!want || !*want)
-        return;                 /* off, and off is silent like every mod's off */
-
-    if (!probe_dir(want)) {
-        snprintf(msg, sizeof msg, "SM64DS_STAGE_GEOM names %s and there is no "
-                                  "folder there", want);
-        refuse(msg);
-        return;
-    }
-
-    scan_stage_names();
-    if (g_nstage == 0) {
-        refuse("the file catalog lists no stages at all, so there is nothing a "
-               "substitute could be matched against");
-        return;
-    }
+    msg[0] = '\0';
 
     /* Enumerate, validate and READ EVERYTHING before serving one byte. Any
        single complaint drops all of it, so `bad` breaks the walk rather than
        jumping out of it: the directory handle has to be closed either way. */
-    msg[0] = '\0';
     {
         int bad = 0;
 #ifdef _WIN32
         char glob[PATH_CAP];
         WIN32_FIND_DATAA fd;
         HANDLE h;
-        snprintf(glob, sizeof glob, "%s/*", g_dir);
+        snprintf(glob, sizeof glob, "%s/*", dir);
         h = FindFirstFileA(glob, &fd);
         if (h == INVALID_HANDLE_VALUE) {
-            snprintf(msg, sizeof msg, "%s will not list", g_dir);
-            refuse(msg);
+            snprintf(msg, sizeof msg, "%s will not list", dir);
+            if (mod) refuse_mod_folder(mod, msg); else refuse(msg);
             return;
         }
         do {
@@ -942,11 +954,11 @@ void latch(void)
             if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
                 continue;
 #else
-        DIR *d = opendir(g_dir);
+        DIR *d = opendir(dir);
         struct dirent *de;
         if (!d) {
-            snprintf(msg, sizeof msg, "%s will not list", g_dir);
-            refuse(msg);
+            snprintf(msg, sizeof msg, "%s will not list", dir);
+            if (mod) refuse_mod_folder(mod, msg); else refuse(msg);
             return;
         }
         while ((de = readdir(d)) != 0) {
@@ -976,7 +988,7 @@ void latch(void)
                 if (n == 0 || n >= NAME_CAP) {
                     snprintf(msg, sizeof msg, "%s/%s does not have a usable "
                                               "stage name in front of its "
-                                              "extension", g_dir, leaf);
+                                              "extension", dir, leaf);
                     bad = 1;
                     break;
                 }
@@ -987,7 +999,7 @@ void latch(void)
                 if (!canon) {
                     snprintf(msg, sizeof msg, "%s/%s is named for a stage "
                                               "called '%s', and no level in "
-                                              "this ROM has one", g_dir, leaf,
+                                              "this ROM has one", dir, leaf,
                              stage);
                     bad = 1;
                     break;
@@ -996,20 +1008,28 @@ void latch(void)
                     if (g_sub[i].kind == kind &&
                         strcmp(g_sub[i].stage, canon) == 0)
                         break;
-                if (i < g_nsub) {
+                if (i < g_nsub && i >= mark) {
                     snprintf(msg, sizeof msg, "%s/%s is a second %s file for "
-                                              "stage '%s'", g_dir, leaf,
+                                              "stage '%s'", dir, leaf,
                              KIND_EXT[kind], canon);
                     bad = 1;
                     break;
                 }
+                if (i < g_nsub) {
+                    /* an earlier source has this stage file: it wins */
+                    fprintf(stderr, "[mods] StageGeom: %s/%s (mod %s) is "
+                                    "outranked by %s, which comes first\n",
+                            dir, leaf, mod ? mod : "-", g_sub[i].shown);
+                    ++outranked;
+                    continue;
+                }
                 if (g_nsub >= MAX_SUB) {
                     snprintf(msg, sizeof msg, "%s holds more than %u stage "
-                                              "files", g_dir, (unsigned)MAX_SUB);
+                                              "files", dir, (unsigned)MAX_SUB);
                     bad = 1;
                     break;
                 }
-                if (!load_sub(leaf, canon, kind, &g_sub[g_nsub], msg,
+                if (!load_sub(dir, leaf, canon, kind, &g_sub[g_nsub], msg,
                               sizeof msg)) {
                     bad = 1;
                     break;
@@ -1024,20 +1044,27 @@ void latch(void)
         closedir(d);
 #endif
         if (bad) {
-            release();
-            refuse(msg);
+            release_from(mark);
+            if (mod) refuse_mod_folder(mod, msg); else refuse(msg);
             return;
         }
     }
 
-    if (g_nsub == 0) {
+    if (g_nsub == mark) {
+        if (outranked) {
+            fprintf(stderr, "[mods] StageGeom: %s (mod %s): every stage file "
+                            "in it is outranked, so it serves nothing\n", dir,
+                    mod ? mod : "-");
+            fflush(stderr);
+            return;
+        }
         snprintf(msg, sizeof msg, "%s holds no .bmd or .kcl files, so there is "
-                                  "nothing to put in a level", g_dir);
-        refuse(msg);
+                                  "nothing to put in a level", dir);
+        if (mod) refuse_mod_folder(mod, msg); else refuse(msg);
         return;
     }
 
-    for (unsigned i = 0; i < g_nsub; ++i) {
+    for (unsigned i = mark; i < g_nsub; ++i) {
         const char *sep = used ? ", " : "";
         size_t need = strlen(sep) + strlen(g_sub[i].stage) + 4;
         if (used + need + 4 >= sizeof list) {
@@ -1047,11 +1074,62 @@ void latch(void)
         used += (size_t)snprintf(list + used, sizeof list - used, "%s%s%s", sep,
                                  g_sub[i].stage, KIND_EXT[g_sub[i].kind]);
     }
-    fprintf(stderr, "[mods] StageGeom: %s: %u file(s) ready (%s); %s the file "
-                    "mod filter\n", g_dir, g_nsub, list,
-            g_chained ? "chained onto" : "installed as the only");
+    if (mod)
+        fprintf(stderr, "[mods] StageGeom: %s (mod %s): %u file(s) ready (%s); "
+                        "%s the file mod filter\n", dir, mod, g_nsub - mark,
+                list, g_chained ? "chained onto" : "installed as the only");
+    else
+        fprintf(stderr, "[mods] StageGeom: %s: %u file(s) ready (%s); %s the "
+                        "file mod filter\n", dir, g_nsub - mark, list,
+                g_chained ? "chained onto" : "installed as the only");
     fflush(stderr);
-    g_state = 1;
+}
+
+void latch(void)
+{
+    const char *want;
+    char msg[PATH_CAP + 160];
+    char mdir[PATH_CAP];
+    const char *mod;
+    int have_env = 0, nmod = 0, i, kind;
+
+    if (g_state)
+        return;
+    g_state = -1;
+
+    want = getenv("SM64DS_STAGE_GEOM");
+    if (want && *want) {
+        if (probe_dir(want)) {
+            have_env = 1;
+        } else {
+            snprintf(msg, sizeof msg, "SM64DS_STAGE_GEOM names %s and there is "
+                                      "no folder there", want);
+            refuse(msg);
+        }
+    }
+    for (i = 0; (kind = port_mods_stage_entry(i, mdir, sizeof mdir, &mod)) != 0;
+         ++i)
+        if (kind == 2)
+            ++nmod;
+    if (!have_env && !nmod)
+        return;                 /* off, and off is silent like every mod's off */
+
+    scan_stage_names();
+    if (g_nstage == 0) {
+        refuse("the file catalog lists no stages at all, so there is nothing a "
+               "substitute could be matched against");
+        return;
+    }
+
+    if (have_env)
+        read_folder(g_dir, 0);
+    for (i = 0; (kind = port_mods_stage_entry(i, mdir, sizeof mdir, &mod)) != 0;
+         ++i)
+        if (kind == 2)
+            read_folder(mdir, mod ? mod : "?");
+
+    if (g_nsub)
+        g_state = 1;
 }
 
 /* ---- the filter --------------------------------------------------------- */

@@ -57,6 +57,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -82,6 +83,9 @@ unsigned port_fs_member_claim_cap(void);              /* hal/fs.cpp */
 extern unsigned (*port_fs_mod_map)(unsigned fileID);
 extern u32 (*port_fs_mod_filter)(unsigned fileID, u8 **data, u32 size);
 extern void (*port_fs_mod_claims)(void (*claim)(unsigned fileID));
+/* hal/stage_mods.cpp (lane PORTLVLM1): how the level-edits reader, which the
+   narrow smoke targets link without this file, reaches the stage/ list. */
+extern int (*port_stage_entry_hook)(int i, char *path, unsigned cap, const char **mod);
 }
 
 /* A multiplayer session is any of: the
@@ -304,8 +308,8 @@ void add_parts(const Mod &parent, std::vector<Mod> &list, std::string &summary)
     if (vals) free(vals);
 }
 
-/* A files mod with none of files/, sound/, textures_hd/, palettes/, hd_ui/ (in itself
-   or in an applied part) replaces nothing: say so, once. The usual cause is a
+/* A files mod with none of files/, sound/, textures_hd/, palettes/, character/, hd_ui/,
+   stage/ (in itself or in an applied part) replaces nothing: say so, once. The usual cause is a
    zip that was unpacked with its contents inside one extra folder. */
 bool has_content(const std::string &folder)
 {
@@ -314,7 +318,7 @@ bool has_content(const std::string &folder)
     const size_t slash = folder.find_last_of("/\\");
     const std::string leaf = slash == std::string::npos ? folder : folder.substr(slash + 1);
     if (leaf == "character-palettes" || leaf == "loves-me-swap") return true;
-    static const char *const D[] = { "/files", "/sound", "/textures_hd", "/palettes", "/character", "/hd_ui", 0 };
+    static const char *const D[] = { "/files", "/sound", "/textures_hd", "/palettes", "/character", "/hd_ui", "/stage", 0 };
     for (int i = 0; D[i]; ++i)
         if (dir_exists(folder + D[i])) return true;
     return false;
@@ -551,7 +555,7 @@ void latch(void)
             bool any = has_content(folder);
             for (size_t q = at + 1; q < g_mods.size() && !any; ++q) any = has_content(g_mods[q].folder);
             if (!any)
-                mlog("[mods] WARNING: %s replaces nothing: it has no files/, sound/, textures_hd/ or palettes/ folder "
+                mlog("[mods] WARNING: %s replaces nothing: it has no files/, sound/, textures_hd/, palettes/ or stage/ folder "
                         "(a zip unpacked with everything inside one extra folder looks like this)\n", id.c_str());
             continue;
         }
@@ -566,7 +570,7 @@ void latch(void)
             bool any = has_content(folder);
             for (size_t q = before; q < g_mods.size() && !any; ++q) any = has_content(g_mods[q].folder);
             if (!any)
-                mlog("[mods] WARNING: %s replaces nothing: it has no files/, sound/, textures_hd/ or palettes/ folder "
+                mlog("[mods] WARNING: %s replaces nothing: it has no files/, sound/, textures_hd/, palettes/ or stage/ folder "
                         "(a zip unpacked with everything inside one extra folder looks like this)\n", id.c_str());
         }
     }
@@ -812,6 +816,88 @@ int mods_tex_dir(int i, char *out, unsigned cap)
     return 1;
 }
 
+/* ---- stage/ (run studio1, lane PORTLVLM1) -------------------------------
+   A mod's stage/ folder holds a Map project's export exactly as the Studio
+   writes it: <name>.lvlm level-edits files, read by hal/stage_mods.cpp, and
+   <name>_geom/ folders of <stage>.bmd and <stage>.kcl, read by
+   hal/stage_geom.cpp. This file only LISTS them. Which file a level takes,
+   what outranks what and every refusal belong to those two readers, which
+   validate a mod's file the way they validate the one SM64DS_STAGE_MOD or
+   SM64DS_STAGE_GEOM names.
+
+   ORDER: latest mod first (the same "the later in EnabledMods wins" walk as
+   mods_tex_dir), and inside one mod by name, ignoring case, so two runs list
+   the same folder the same way. A part folder is its own entry, as everywhere
+   in this file.
+
+   TAKEN ONCE. The readers latch at boot (a level's objects are patched at
+   mount and the ground files are served out of a boot-time read), so this
+   list is taken on the first ask and kept for the run. The relatch at the
+   title takes it before it changes the mod list and never again: a stage/
+   change there is said in one line and waits for the next start. In a
+   multiplayer session a mod with stage/ is never in the list at all (stage/
+   is outside online_ok's cosmetic set), so it lists nothing there. */
+struct StageEntry {
+    std::string mod, path;
+    int kind;   /* 1 a .lvlm file, 2 a _geom folder */
+};
+std::vector<StageEntry> g_stage;
+int g_stage_taken;
+
+bool ends_nocase(const std::string &s, const char *suf)
+{
+    const size_t n = strlen(suf);
+    return s.size() > n && _stricmp(s.c_str() + s.size() - n, suf) == 0;
+}
+
+bool stage_entry_before(const StageEntry &a, const StageEntry &b)
+{
+    return _stricmp(a.path.c_str(), b.path.c_str()) < 0;
+}
+
+void stage_take(void)
+{
+    if (g_stage_taken) return;
+    g_stage_taken = 1;
+    latch();
+    for (int i = (int)g_mods.size() - 1; i >= 0; --i) {
+        const Mod &m = g_mods[(size_t)i];
+        const std::string dir = m.folder + "/stage";
+        if (!dir_exists(dir)) continue;
+        std::vector<StageEntry> here;
+        WIN32_FIND_DATAA fd;
+        HANDLE h = FindFirstFileA((dir + "/*").c_str(), &fd);
+        if (h == INVALID_HANDLE_VALUE) continue;
+        do {
+            const std::string n = fd.cFileName;
+            if (n == "." || n == "..") continue;
+            if (fd.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+                mlog("[mods] %s/%s is a link, skipped\n", dir.c_str(), n.c_str());
+                continue;
+            }
+            const bool isdir = (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+            StageEntry e;
+            e.mod = m.id;
+            e.path = dir + "/" + n;
+            e.kind = (!isdir && ends_nocase(n, ".lvlm")) ? 1 : (isdir && ends_nocase(n, "_geom")) ? 2 : 0;
+            if (!e.kind) {
+                mlog("[mods] %s: stage/%s is not a .lvlm file or a _geom folder, ignored\n", m.id.c_str(), n.c_str());
+                continue;
+            }
+            here.push_back(e);
+        } while (FindNextFileA(h, &fd));
+        FindClose(h);
+        std::sort(here.begin(), here.end(), stage_entry_before);
+        unsigned nl = 0, ng = 0;
+        for (size_t k = 0; k < here.size(); ++k) {
+            if (here[k].kind == 1) ++nl; else ++ng;
+            g_stage.push_back(here[k]);
+        }
+        mlog("[mods] %s: stage/ carries %u level-edits file(s) and %u stage-geometry folder(s)\n", m.id.c_str(), nl, ng);
+    }
+    fflush(stderr);
+}
+
 /* Runs after every ordinary initializer, hal/fs_mods.cpp's and (.CRT$XCV)
    hal/stage_geom.cpp's included. */
 void __cdecl mods_install(void)
@@ -821,6 +907,7 @@ void __cdecl mods_install(void)
     g_prev_claims = port_fs_mod_claims;
     port_fs_mod_claims = mods_claims;
     ntr::hdtex_mod_dir_hook = mods_tex_dir;
+    port_stage_entry_hook = port_mods_stage_entry;
 }
 
 }  /* namespace */
@@ -834,6 +921,17 @@ const char *port_mods_game(int i) { latch(); return i >= 0 && i < (int)g_mods.si
 const char *port_mods_min_game(int i) { latch(); return i >= 0 && i < (int)g_mods.size() ? g_mods[i].min_game.c_str() : 0; }
 int port_mods_api(int i) { latch(); return i >= 0 && i < (int)g_mods.size() ? g_mods[i].api : 0; }
 const char *port_mods_bundle(void) { latch(); return g_bundle.c_str(); }
+
+int port_mods_stage_entry(int i, char *path, unsigned cap, const char **mod)
+{
+    stage_take();
+    if (i < 0 || i >= (int)g_stage.size() || !path || !cap) return 0;
+    const StageEntry &e = g_stage[(size_t)i];
+    if (e.path.size() + 1 > cap) return 0;
+    memcpy(path, e.path.c_str(), e.path.size() + 1);
+    if (mod) *mod = e.mod.c_str();
+    return e.kind;
+}
 }
 
 #pragma section(".CRT$XCW", read)
@@ -1103,6 +1201,7 @@ int relatch(const char *reason, const char *list_json)
     }
     latch();
     build_overrides();
+    stage_take();   /* the stage/ list is the boot list: taken before the mod list changes, and never again */
 
     std::vector<Mod> old_mods = g_mods;
     std::unordered_map<unsigned, std::string> old_override = g_override;
@@ -1185,6 +1284,13 @@ int relatch(const char *reason, const char *list_json)
         return 0;
     }
     fputs(held_log.c_str(), stderr);
+    {
+        const std::string stg_old = ids_with(old_mods, "/stage"), stg_new = ids_with(g_mods, "/stage");
+        if (stg_old != stg_new)
+            fprintf(stderr, "[mods] relatch at the title: the mods shipping stage/ change (%s -> %s); level edits and stage "
+                    "geometry stay as the game started with them until the next start\n", stg_old.empty() ? "-" : stg_old.c_str(),
+                    stg_new.empty() ? "-" : stg_new.c_str());
+    }
 
     const std::string snd_old = ids_with(old_mods, "/sound"), snd_new = ids_with(g_mods, "/sound");
     g_said.clear();

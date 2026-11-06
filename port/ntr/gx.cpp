@@ -3338,10 +3338,14 @@ void bind_from_vram() {
            of binds a frame makes -- the key above already discriminates a
            stale slot, so a hit needs no re-examination. */
         if (hdtex_wants_work()) {
-            const uint64_t name = hdtex_name(g_teximage, g_plttbase);
+            /* TWO NAMES (run studio1, HDNAME2). hdtex_lookup2 asks for both
+               and the higher-priority mod's file wins, so every older pack
+               still loads and keeps its place in the mod order. */
+            const uint64_t name = hdtex_name2(g_teximage, g_plttbase);
             hdtex_dump(name, d.width, d.height, rgba.data());
             std::vector<uint32_t> hd;
-            const int s = hdtex_lookup(name, d.width, d.height, hd);
+            const int s = hdtex_lookup2(name, 1, g_teximage, g_plttbase,
+                                        d.width, d.height, hd);
             if (s >= 1) {
                 entry.px = std::move(hd);
                 entry.w = d.width * s;
