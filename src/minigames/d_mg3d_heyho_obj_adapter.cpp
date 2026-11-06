@@ -92,7 +92,7 @@ struct fBaseView {
 };
 namespace n020c6e4c {
 extern "C" void func_02016acc(dExtSimpleModel_c *m, unsigned int a);
-extern "C" void func_02016b24(char *m, unsigned int a);
+extern "C" void func_02016b24(dExtSimpleModel_c *m, unsigned int a);
 extern "C" void func_02016a14(char *m, int a);
 extern "C" void func_02016a04(char *m, int a);
 extern "C" void Heyho_UpdateMatrix(char *c);
@@ -106,7 +106,7 @@ extern "C" int Heyho_LoadResources(char *c) {
     }
     HEYHO(c)->mAnmModel.SetAnim(a, 0, 0x800, 0);
     func_02016acc(&HEYHO(c)->mAnmModel, 1u);
-    func_02016b24((char *)&HEYHO(c)->mAnmModel, 2);
+    func_02016b24(&HEYHO(c)->mAnmModel, 2);
     int b = (((fBaseView *)data_0209f5c0)->actorID == 0x175);
     if (b != 0) {
         func_02016a14((char *)&HEYHO(c)->mAnmModel, 0x7fff);
@@ -1980,7 +1980,7 @@ void Heyho_SettleAll(void)
 /* ---- Heyho_ReactAll ---- */
 namespace n020c40e8 {
 extern "C" {
-extern void Heyho_React(int);
+extern void Heyho_React(char *);
 extern int sHeyhoCount;
 extern char *sHeyhos;
 void Heyho_ReactAll(void){
@@ -1988,7 +1988,7 @@ void Heyho_ReactAll(void){
   if (sHeyhoCount > 0) {
       int off = 0;
       do {
-          Heyho_React((int)(sHeyhos + off));
+          Heyho_React(sHeyhos + off);
           i++;
           off += 0xf0;
       } while (i < sHeyhoCount);

@@ -56,7 +56,7 @@ extern short func_02010844(void* unused, Vector3* v, short angle);
 extern void func_02012694(unsigned int a, void *p);
 extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_ov002_020db54c(int p, int a, int b, int s);
+extern void func_ov002_020db54c(void *self, int a, int b, short c);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int data_02092138;
 extern void* data_0209f318;
@@ -702,7 +702,7 @@ int daHolhei_c::func_ov062_02116238() {
 // @symbol _ZN10daHolhei_c19func_ov062_021161a8Ev
 int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
-        func_ov002_020db54c((int)mHeld, 0x28000, 0x50000, mAngleY);
+        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
         mHeld = 0;
         func_02012694(0x126, &mCamSpacePosX);
     }
