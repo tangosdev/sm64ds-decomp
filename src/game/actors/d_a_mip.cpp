@@ -89,7 +89,7 @@ void  Vec3_Asr(void *, void *, int);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 s32   LenVec3(const void *);
 int   AngleDiff(int, int);
-int   ApproachAngle(void *, s16, int, int, int);
+int ApproachAngle(s16 *, s16, int, int, int);
 void  Matrix4x3_FromTranslation(void *, int, int, int);
 void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);

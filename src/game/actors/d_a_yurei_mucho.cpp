@@ -64,7 +64,7 @@ extern "C" {
  * keeps the TU's compiler-numbered static-initializer aliases stable. */
 extern int RandomIntInternal(int *seed);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern int ApproachAngle(void *p, short target, int a, int b, int limit);
+extern int ApproachAngle(short *p, short target, int a, int b, int limit);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);

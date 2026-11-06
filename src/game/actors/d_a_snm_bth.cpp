@@ -42,7 +42,7 @@ extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);
 void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-int DecIfAbove0_Byte(void *);
+u8 DecIfAbove0_Byte(u8 *);
 s32 RandomIntInternal(s32 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);

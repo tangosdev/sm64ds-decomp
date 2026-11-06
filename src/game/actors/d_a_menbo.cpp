@@ -86,7 +86,7 @@ int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 s16   Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int   AngleDiff(int a, int b);
-int   ApproachAngle(s16 *cur, int target, int divisor, int band, int maxStep);
+int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 u16   DecIfAbove0_Short(u16 *p);
 int   RandomIntInternal(int *seed);
 void func_02012694(unsigned int id, const Vector3 *pos);
@@ -557,7 +557,7 @@ int daMenbo_c::func_ov090_02131ac4()
         mTargetAngleY = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xd);
         func_ov090_02131e00((MenboState *)this, data_ov090_021344e4);
     }
-    ApproachAngle(&mPrevAngleY, (s16)mTargetAngleY, 1, 0x100, 0x100);
+    ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x100);
     if (*(unsigned short *)&mStateTimer == 0)
         func_ov090_02131e00((MenboState *)this, data_ov090_021344f4);
     return 1;
@@ -603,7 +603,7 @@ int daMenbo_c::func_ov090_02131c48()
     }
 
     if (mTurnTimer != 0) {
-        ApproachAngle(&mPrevAngleY, (s16)mTargetAngleY, 1, 0x1000, 0x1000);
+        ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x1000, 0x1000);
     } else {
         if (static_cast<dExtFrameCtrl_c &>(mAnmModel).Finished()) {
             s32 *q = &mAnimLoops;

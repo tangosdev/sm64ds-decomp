@@ -93,7 +93,7 @@ int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const void *a, const void *b);
 int AngleDiff(int a, int b);
-int ApproachAngle(short *angles, int target, int a, int b, int c);
+int ApproachAngle(short *angles, short target, int a, int b, int c);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 }

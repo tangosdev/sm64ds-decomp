@@ -81,7 +81,7 @@ extern u8 data_0209f220;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-int DecIfAbove0_Byte(u8 *p);
+u8 DecIfAbove0_Byte(u8 *p);
 int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void func_020393c4(dBgW *collider, StoodOnCallback callback);

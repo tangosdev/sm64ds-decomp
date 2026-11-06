@@ -53,7 +53,7 @@ extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
-int DecIfAbove0_Byte(u8 *p);
+u8 DecIfAbove0_Byte(u8 *p);
 int DecIfAbove0_Short(u16 *p);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 

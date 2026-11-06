@@ -92,7 +92,7 @@ extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
 extern void **data_ov034_02113888[];
-extern int DecIfAbove0_Byte(void*);
+extern u8 DecIfAbove0_Byte(u8 *);
 extern void **data_ov034_0211389c[];
 extern void **data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);

@@ -149,7 +149,7 @@ void ChangeMusicVolume(u32 a, int f);
 }
 extern "C" int func_01ffa344(int f);
 extern "C" unsigned short data_ov074_02122e04[];
-extern "C" int ApproachAngle(void*,int,int,int,int);
+extern "C" int ApproachAngle(short *, short, int, int, int);
 extern "C" void func_ov084_021296b0(void* a, void* b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
@@ -1465,7 +1465,7 @@ int daKuriKing_c::func_ov074_021216f4()
         this->mPosX = FX_MUL(data_02082214[(((u16)this->mWalkAngle) >> 4) * 2], 0x546000);
         this->mPosZ = FX_MUL(data_02082214[(((u16)this->mWalkAngle) >> 4) * 2 + 1], 0x546000);
     }
-    ApproachAngle(&this->mAngleY, (short)((this->mDirection * 0x4500) + this->mWalkAngle), 0xa, 0x800, 0x10);
+    ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
 
 // @symbol _ZN12daKuriKing_c19func_ov074_02121800Ev

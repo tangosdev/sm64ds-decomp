@@ -18,7 +18,7 @@ extern int WM_GetMPReceiveBufferSize(void);
 extern int WM_GetMPSendBufferSize(void);
 extern void WM_SetCallbackTable(int i, int val);
 
-int WM_StartMPEx(int arg0, int arg1, int arg2, int arg3, u16 arg4, u16 arg5, u16 arg6, int arg7,
+int WM_StartMPEx(int arg0, int arg1, u16 arg2, int arg3, u16 arg4, u16 arg5, u16 arg6, int arg7,
                  int arg8, int arg9, int arg10) {
     WMArm9Buf *base;
     int r;
