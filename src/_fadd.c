@@ -28,7 +28,7 @@
 // helper the double-precision primitives use, confirming this is one hand-written
 // runtime block, not compiled C.
 
-extern int func_0207322c(void);
+extern unsigned int *func_0207322c(void);
 extern float func_0206ddcc(void);
 extern float func_0206dd30(void);
 extern void _fsub_core(void);
