@@ -16142,7 +16142,8 @@ int daPly_c::func_ov002_020d94cc() {
     int xv, yv, sum, zv;
     int b;
 
-    if ((&gNumStageStars)[this->mPlayerNo] <= 0) goto fail;
+    if ((&gNumStageStars)[this->mPlayerNo] <= 0)
+        goto fail;
 
     sndobj = SpawnSoundObj(3);
     b = (data_0209f2d8 == 1);
