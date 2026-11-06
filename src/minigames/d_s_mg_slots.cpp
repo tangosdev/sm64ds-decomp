@@ -62,6 +62,7 @@ enum dScMgSlots_AssetId {
 #include "G2x.h"
 #include "CP15.h"
 #include "GX.h"
+#include "LevelRng.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
@@ -102,7 +103,6 @@ extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
 extern int Sound_PlayIfNotActive(int, int, int, int);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
@@ -564,7 +564,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             mReelReverse[2] = 1;
         } else {
             for (i = 0; i < 3; i++) {
-                if ((u8)(((u32)RandomIntInternal(&data_0209e650) >> 16) & 1)) {
+                if ((u8)(((u32)RandomIntInternal(&data_0209e650.value) >> 16) & 1)) {
                     mReelReverse[i] = 1;
                 } else {
                     mReelReverse[i] = 0;
@@ -572,7 +572,7 @@ void dScMgSlot3_c::StartRound(int mode) {
             }
         }
 
-        mNextWinSymbol = ((u32)RandomIntInternal(&data_0209e650) >> 16) % mStripLength;
+        mNextWinSymbol = ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % mStripLength;
         if (mode != 4) {
             mReelDrawY = 0;
             mWinSymbol = mNextWinSymbol;
@@ -812,7 +812,7 @@ s32 dScMgSlot3_c::Behavior() {
         }
     }
 
-    t = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 1;
+    t = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
     if (t)
         gMainScreenLayers |= DISPLAY_LAYER_BG1;
     else
@@ -890,7 +890,7 @@ s32 dScMgSlot3_c::InitResources() {
     mReelDrawY = 0;
 
     for (int i = 0; i < 3; i++) {
-        int rnd = RandomIntInternal(&data_0209e650);
+        int rnd = RandomIntInternal(&data_0209e650.value);
         u32 divisor = mStripLength;
         u32 val = ((u32)rnd >> 16) % divisor;
         mReelPos[i] = val * 0x50000;

@@ -57,6 +57,7 @@
 #include "dMgTrmpln2Mario_c.h"
 #include "dMgTrmpln3DMario_c.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 /* Typed access to the Mario records from the char* helpers below. */
 #define MARIO2(p) ((dMgTrmpln2Mario_c *)(p))
 #define MARIO3D(p) ((dMgTrmpln3DMario_c *)(p))
@@ -817,7 +818,6 @@ extern "C" {
 /* best near-miss div=2 @ mwccarm 1.2/sp2p3 */
 extern int RandomIntInternal(int *seed);
 extern void Trmp2Mario_EnterFall(void *c);
-extern int data_0209e650;
 extern int sTrmp2DriftScale;
 
 // @symbol Trmp2Mario_StateRespawnWait
@@ -827,11 +827,11 @@ void Trmp2Mario_StateRespawnWait(char *c) {
     MARIO2(c)->mTimer -= 1;
     if (MARIO2(c)->mTimer == 0) {
         MARIO2(c)->mPos.y = 0x100000;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
         MARIO2(c)->mPos.x = ((int)r - 0x800) * 0xc0;
         MARIO2(c)->mVel.y = 0;
         tbl = sTrmp2DriftScale;
-        r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        r = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
         MARIO2(c)->mVel.x = FX_MUL(((int)r - 0x800) << 1, tbl);
         MARIO2(c)->mAnmModel.SetAnim(sTrmpAnimWallJump, 0x40000000, 0x800, 0);
         MARIO2(c)->mPrevPos.x = MARIO2(c)->mPos.x;
@@ -2414,7 +2414,6 @@ void Trmp3DMario_StateBounce(char *c);
 }
 
 extern "C" int sTrmp3DGravityStep;
-extern "C" int data_0209e650;
 extern "C" int sTrmp3DJumpOffSpeed;
 extern "C" int sTrmp3DBounceScale;
 extern "C" int pmf_Trmp3DMario_StateBounce_2[2];
@@ -2427,7 +2426,7 @@ extern "C" void Trmp3DMario_JumpOff(char *c) {
     MARIO3D(c)->mGravityStep = sTrmp3DGravityStep;
     MARIO3D(c)->mVel.x =
         sTrmp3DJumpOffSpeed +
-        (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 19);
+        (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19);
 
     b = MARIO3D(c)->mPos.x;
     if (b > 0)

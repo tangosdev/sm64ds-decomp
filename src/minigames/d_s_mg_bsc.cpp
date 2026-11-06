@@ -17,6 +17,7 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
@@ -58,7 +59,6 @@ extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern int RandomIntInternal(int *seed);
 extern void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
-extern int data_0209e650;
 extern void FreeGfxSlotsById(int arg);
 extern void MgCoins_Reset(void);
 void Camera_InitDealerView(void *camera);
@@ -233,7 +233,7 @@ void dScMgBSC_c::StateDealCards() {
     for (cardIndex = 0; cardIndex < 2; cardIndex++) {
         mCardPos[cardIndex].x = 0x80000;
         mCardPos[cardIndex].y = -0x40000;
-        cardValue = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) % 5u;
+        cardValue = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) % 5u;
         for (;;) {
             if (valueUsed[cardValue] == 0) {
                 mCardValue[cardIndex] = cardValue;

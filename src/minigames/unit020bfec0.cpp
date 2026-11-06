@@ -42,6 +42,7 @@
 #include "math/Approach.h"
 #include "dScMgBase_c.h"
 #include "MWCPlusLib.h"
+#include "LevelRng.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -467,7 +468,6 @@ struct S8 {
     int w[2];
 };
 
-extern int data_0209e650;
 extern int pmf_FlowerFace_StatePick[2];
 
 void FlowerFace_PlayPetalPulled(char *c) {
@@ -495,11 +495,17 @@ void FlowerFace_PlayPetalPulled(char *c) {
             b.vel.y = 0xa00;
             b.vel.z = 0xa00;
             b.vel.x +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.vel.y +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.vel.z +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.pos2.x = b.pos.x;
             b.pos2.y = b.pos.y;
             b.pos2.z = b.pos.z;
@@ -577,7 +583,6 @@ void FallingPetal_SetModel(char *t, int a1) {
 
 namespace s020c3754 {
 extern "C" {
-extern int data_0209e650;
 extern int data_02092768[4];
 
 void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
@@ -598,7 +603,7 @@ void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
     r6[9] = sAxis.x;
     r6[10] = sAxis.y;
     r6[11] = sAxis.z;
-    func_0203cd80(&PETAL(r6)->mAxis, (short)RandomIntInternal(&data_0209e650));
+    func_0203cd80(&PETAL(r6)->mAxis, (short)RandomIntInternal(&data_0209e650.value));
     r6[12] = data_02092768[0];
     r6[13] = data_02092768[1];
     r6[14] = data_02092768[2];
@@ -2397,9 +2402,6 @@ struct P2 {
 };
 
 extern "C" {
-extern int data_0209e650;
-}
-extern "C" {
 extern P2 pmf_MascotWalker_StateWalk_3;
 }
 
@@ -2407,7 +2409,7 @@ extern "C" void MascotWalker_StatePause(char *c) {
     if (ApproachLinear2(WALKER(c)->mStateTimer, 0, 1) == 0)
         return;
     WALKER(c)->mModel.SetAnim(*(BCA_File *)WALKER(c)->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    int r = RandomIntInternal(&data_0209e650);
+    int r = RandomIntInternal(&data_0209e650.value);
     int idx = (int)((unsigned int)(r & 0x7fffffff) >> 0x13);
     WALKER(c)->mStateTimer = (short)(((idx * 0x258) >> 12) + 0x258);
     WALKER(c)->mPaused = 0;

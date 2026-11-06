@@ -82,6 +82,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "math/CalcLib.h"
 #include "dGraph_c.h"
 #include "dClipper.h"
+#include "LevelRng.h"
 
 struct OamAttr;
 
@@ -258,7 +259,6 @@ extern s32 data_0209cef0;
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *data_0209d4a8;
-extern s32 data_0209e650;
 /* The stage's .bss, 0x0209f1ec..0x0209f5b8: the pause, VS-exit and
    level-clear screens' state, the level and player globals the free
    functions keep, and the per-level tables. mwcc sorts a TU's objects by
@@ -4960,7 +4960,7 @@ int dScStage_c::InitResources() {
     }
 
     data_02092778 = 0;
-    func_0203b9b4(&data_0209e650, func_0203dad4());
+    func_0203b9b4(&data_0209e650.value, func_0203dad4());
     data_0209f208 = 0;
     u32 idx = func_0203dad4() % 6;
     data_0209f344 = (u8 *)VS_STAR_SPAWN_ORDERS[idx];

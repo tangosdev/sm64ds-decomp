@@ -28,6 +28,7 @@
 #include "SpawnInfo.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* This scene owns the position used by the breath effect. */
 extern Vector3 data_ov027_02113d10;
@@ -49,7 +50,6 @@ int *Vec3_LslInPlace(Vector3 *, int);
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
-extern s32 data_0209e650;
 extern u8 data_0209f2d8[];
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
@@ -192,7 +192,7 @@ int SnowmanBreathParticle::TrySpawn(daPly_c &player) {
     if (angle < 0x9de)
         angle = 0x9de;
     {
-        s32 random = RandomIntInternal(&data_0209e650);
+        s32 random = RandomIntInternal(&data_0209e650.value);
         mAngleX = 0xc1c;
         mAngleY = (s16)(angle + ((random & 0x1fff) - 0x1000));
     }

@@ -76,6 +76,7 @@ enum daStar_c_AssetId {
 #include "Event.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
@@ -131,7 +132,6 @@ extern signed char NumRedCoins(void);
 extern unsigned char data_0209f2d8;
 extern void func_02035860(void* o, void* src);
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650;
 extern void *data_0209f318;
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -2808,7 +2808,7 @@ void daStar_c::func_ov002_020e7554() {
         }
     } while (cnt < 5);
 
-    idx = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) % (unsigned int)cnt;
+    idx = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) % (unsigned int)cnt;
     found = arr[idx];
     if (found == 0) return;
     mMarkerID = found->uniqueID;

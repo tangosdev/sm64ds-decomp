@@ -37,6 +37,7 @@ struct C { char pad[0x5004]; PMF m; };
 
 /* Whole-matrix copies go through this so they stay one block move. */
 #include "private/mtx43.h"
+#include "LevelRng.h"
 struct V3 { int w[3]; };
 
 /* Vtable shim for InitResources' last call, a virtual dispatch through slot
@@ -104,7 +105,6 @@ void Jump3D_EnableInput(void);
 int  RandomIntInternal(int *seed);
 
 extern Matrix4x3 data_020a0e68;
-extern int  data_0209e650;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;
 extern s16  data_02082614;
@@ -169,7 +169,9 @@ void dScMgJump_c::StartRound(int arg)
         idx = mLevel;
     } else {
         do {
-            idx = (int)((u32)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) * 0xa >> 0xc;
+            idx =
+                (int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) * 0xa >>
+                0xc;
         } while (idx == (u32)sJumpLastPick);
         sJumpLastPick = idx;
     }

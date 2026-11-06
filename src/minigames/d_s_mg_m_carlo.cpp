@@ -23,6 +23,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* Coined from the card transitions in DealIn and Update. The byte-sized
  * mState field retains its existing layout. */
@@ -50,7 +51,6 @@ extern short sMCarloBoardDelay;
 extern int sMCarloCardTotal;
 extern int sMCarloDealProgress;
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern int sMCarloCardsMoving;
 extern int sMCarloCols;
 extern int sMCarloRows;
@@ -803,7 +803,7 @@ int dScMgMCarlo_c::DrawCardValue(void) {
     int roll;
     for (face = 0; face < 8; face++)
         total += sMCarloFaceCounts[face];
-    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
     for (face = 0; face < 8; face++) {
         total -= sMCarloFaceCounts[face];

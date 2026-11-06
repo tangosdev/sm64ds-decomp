@@ -60,6 +60,7 @@
 #include "CP15.h"
 #include "G3X.h"
 #include "dScene_c.h"
+#include "LevelRng.h"
 
 struct MinigameSaveData;
 struct OamAttr;
@@ -88,7 +89,6 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset[];
 extern short gSubBg0HOffset[];
-extern int data_0209e650;
 extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
@@ -555,7 +555,7 @@ s32 dScMiniGm_c::Behavior()
         return 1;
     }
     RandomIntInternal(&data_0209d4b8);
-    RandomIntInternal(&data_0209e650);
+    RandomIntInternal(&data_0209e650.value);
 
     if (mPrevPageTimer > 0) {
         mPrevPageTimer -= 1;

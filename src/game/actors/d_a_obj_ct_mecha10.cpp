@@ -58,6 +58,7 @@ enum daObjCtMecha10_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* Actor ids are the registry profile ids. Clock settings are the byte at
  * data_0209f2c0: 2 re-rolls the dwell, 3 holds the cog still. */
@@ -89,7 +90,6 @@ extern CLPS_Block data_ov035_021121d8;
 extern s16 data_ov035_02111ef0[];    /* |angle step| by rotation state */
 extern s16 data_ov035_02111ef4[][4]; /* dwell by state, by clock setting */
 extern u8 data_0209f2c0;             /* arm9 clock setting */
-extern int data_0209e650;            /* arm9 RNG state */
 
 extern "C" {
 u16 DecIfAbove0_Short(u16 *p);
@@ -170,7 +170,7 @@ int daObjCtMecha10_c::Behavior() {
         u8 setting = data_0209f2c0;
         mStepTimer = data_ov035_02111ef4[mRotationState][setting];
         if (setting == CLOCK_SETTING_RANDOM) {
-            int rnd = RandomIntInternal(&data_0209e650);
+            int rnd = RandomIntInternal(&data_0209e650.value);
             if (DecIfAbove0_Short((u16 *)&mDirTimer) == 0) {
                 if ((unsigned int)rnd % 3 != 0) {
                     mAngleYStep = data_ov035_02111ef0[mRotationState];
