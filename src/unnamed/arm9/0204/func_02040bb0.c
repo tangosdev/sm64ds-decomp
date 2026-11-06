@@ -1,6 +1,5 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
-extern char data_020a1fc0[];
 extern int data_020a0f38;
 extern char data_020a2400[];
 
@@ -13,8 +12,8 @@ extern void func_02040f30(void *arg);
 void func_02040bb0(void) {
     int old;
     data_020a0f38 = 1;
-    old = FILE_SHARE_WORK->mIsParent;
-    FILE_SHARE_WORK->mSendRequest = 1;
+    old = data_020a1fc0.mIsParent;
+    data_020a1fc0.mSendRequest = 1;
     if (old == 0) {
         /* The child area past its sixteen block infos (0xc0 + 0x10 * 0x28):
            WM_ReadStatus copies the WM status block, 0x930 bytes, to +0x340,
@@ -28,8 +27,8 @@ void func_02040bb0(void) {
         func_020657d0(1, (void *)func_02040f30);
     } else {
         void (*fn)(int);
-        FILE_SHARE_WORK->mState = 2;
-        fn = (void (*)(int))FILE_SHARE_WORK->mStateCallback;
+        data_020a1fc0.mState = 2;
+        fn = (void (*)(int))data_020a1fc0.mStateCallback;
         if (fn != 0) {
             fn(0);
         }

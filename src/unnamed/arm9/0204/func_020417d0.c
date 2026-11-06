@@ -1,7 +1,6 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/wm_views.h"
-extern u32 data_020a1fc0[];
 extern void func_02041930(void);
 extern void func_020650d8(int data, int length, int aid);
 extern void func_02065050(int data, int length);

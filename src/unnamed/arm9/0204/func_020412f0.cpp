@@ -40,7 +40,6 @@ extern char data_020a2400[];
 extern char data_020a2404[];
 extern u8 data_020a2408[];
 extern u8 data_020a2409[];
-extern char data_020a1fc0[];
 extern int data_020a0f8c;
 
 typedef struct {
@@ -106,7 +105,7 @@ void func_020412f0(char *thiz)
             u32 unk18v = m->w1;
             int val = (m->f4 << 8) | m->b8;
 
-            if (area->mResizePending != 0 || val != FILE_SHARE_WORK->mParentPacketSize) {
+            if (area->mResizePending != 0 || val != data_020a1fc0.mParentPacketSize) {
                 area->mResizePending = 1;
                 area->mResizeChildren |= (1 << sb);
                 area->mOpenChildren |= (1 << sb);

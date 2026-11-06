@@ -8810,24 +8810,6 @@
       ]
     },
     "data_020a1fc0": {
-      "src/unnamed/arm9/0204/func_02040a94.c": [
-        "return:int []"
-      ],
-      "src/unnamed/arm9/0204/func_02040c34.c": [
-        "return:FileShareWork"
-      ],
-      "src/unnamed/arm9/0204/func_020417d0.c": [
-        "return:unsigned int []"
-      ],
-      "src/unnamed/arm9/0204/func_020418f0.c": [
-        "return:unsigned int []"
-      ],
-      "src/unnamed/arm9/0204/func_02041e14.c": [
-        "return:Globals"
-      ],
-      "src/unnamed/arm9/0204/func_02042254.cpp": [
-        "return:int"
-      ],
       "src/unnamed/arm9/0204/func_020424c0.cpp": [
         "return:WorkInfo"
       ]
