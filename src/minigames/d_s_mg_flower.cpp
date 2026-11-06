@@ -251,7 +251,7 @@ s32 dScMgFlower_c::Render() {
         }
     }
 
-    Camera_InitFlowerView(pad_4660);
+    Camera_InitFlowerView(&mCamera);
     FlowerFace_Draw(&mFace);
     return 1;
 }
@@ -556,7 +556,7 @@ s32 dScMgFlower_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
     FlowerFace_Load((char *)&mFace);
-    Camera_InitFlowerView(pad_4660);
+    Camera_InitFlowerView(&mCamera);
 
     return 1;
 }
