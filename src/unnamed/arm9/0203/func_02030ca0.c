@@ -5,7 +5,7 @@ extern void func_02020214(unsigned int flags);
 
 extern unsigned char data_0208f274;
 extern unsigned char data_0209fc5c[];
-extern char data_0209fc64[];
+extern signed char data_0209fc64[];
 extern unsigned char data_0209fc50;
 extern int data_0209fc68;
 

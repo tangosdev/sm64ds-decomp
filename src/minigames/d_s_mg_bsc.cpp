@@ -68,8 +68,8 @@ void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
 void Dealer_Draw(void *table);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
-extern unsigned char gMainScreenLayers[];
-extern int data_0208ee44[];
+extern unsigned char gMainScreenLayers;
+extern int data_0208ee44;
 extern void LoadCard2SubBg3(void);
 extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
@@ -104,7 +104,7 @@ extern "C" void *dScMgBSC_c_classInit() {
  * block, untyped in the header. */
 s32 dScMgBSC_c::InitResources() {
     void *paletteData;
-    gMainScreenLayers[0] = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     LoadCard2SubBg3();
     LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
     paletteData = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);
@@ -115,7 +115,7 @@ s32 dScMgBSC_c::InitResources() {
         return 0;
     Mg_SetTopScreenYOffset(0x20);
     Mg_PlaceBannersOnTopScreen();
-    data_0208ee44[0] = 1;
+    data_0208ee44 = 1;
     mCredits = Mg_GetSavedRecord0();
     mCreditsShown = mCredits;
     this->StartRound(3);

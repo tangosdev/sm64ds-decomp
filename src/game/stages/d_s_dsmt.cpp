@@ -54,9 +54,9 @@ extern FileSaveData *data_0209b33c;
 extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
 extern u8 data_0209b3d8[];
-extern u8 data_0208ee3c[];
+extern u8 data_0208ee3c;
 extern SaveBlock data_0209caa0;
-extern u8 data_0209cae4[];
+extern MinigameSaveData data_0209cae4;
 extern u8 gSoftResetPending;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -194,7 +194,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
             func_ov007_020cc168(saveSlot);
         }
     } else if (command == 21) {
-        if (SaveData::ReadMinigameData((MinigameSaveData *)data_0209cae4) == 0)
+        if (SaveData::ReadMinigameData(&data_0209cae4) == 0)
             failed = 1;
     } else if (command == 22) {
         s32 saveSlot;
@@ -204,7 +204,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
                 SaveData::EraseSaveFile(saveSlot, (char *)fileBuffer);
         }
     } else if (command == 23) {
-        SaveData::SaveMinigames((MinigameSaveData *)data_0209cae4);
+        SaveData::SaveMinigames(&data_0209cae4);
     } else if (command == 19) {
         Sound::StopLoadedMusic_Layer1(0x3c);
     }
@@ -329,7 +329,7 @@ extern "C" void func_ov007_020cc168(u32 saveSlot) {
         sBootArgs.soundModeItem = 0;
     }
 
-    sBootArgs.backlightOn = data_0208ee3c[0];
+    sBootArgs.backlightOn = data_0208ee3c;
     data_0209b34b[saveSlot] = (data_0209caa0.file.flags1 & 1) != 0;
 
     highestUnlockedPlusOne = 3;

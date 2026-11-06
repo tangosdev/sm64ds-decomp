@@ -66,7 +66,7 @@ extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern short data_02082214[];
 extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
 extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;
-extern unsigned char data_0209f2c0[];
+extern unsigned char data_0209f2c0;
 extern short data_ov035_02112b80[];
 extern CLPS_Block data_ov035_02112238;
 
@@ -123,7 +123,7 @@ int daObjCtMecha11_c::Render() {
 
 // @symbol _ZN16daObjCtMecha11_c8BehaviorEv
 int daObjCtMecha11_c::Behavior() {
-    unsigned char idx = data_0209f2c0[0];
+    unsigned char idx = data_0209f2c0;
     mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
         if (DecIfAbove0_Short((unsigned short *)&mRandTimer) == 0) {

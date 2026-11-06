@@ -36,7 +36,7 @@ void StartExitFaderWipe(int);
 int IsStarCollectedInLevel(signed char levelID, int starID);
 }
 
-extern u8 data_0209f2c0[];
+extern u8 data_0209f2c0;
 extern unsigned char data_0209f250;
 extern dActor_c *data_0209f394[];
 extern signed char data_02092110;
@@ -215,7 +215,7 @@ s32 daChScene_c::CleanupResources() {
    names: level in the top byte, entrance in the next, and LoadLevel's last
    argument in the third (0xff passes as -1). */
 void daChScene_c::LoadDestinationLevel() {
-    data_0209f2c0[0] = (u8)mAngleZ;
+    data_0209f2c0 = (u8)mAngleZ;
     {
         u32 v = param1;
         u32 hi = v >> 0x18;

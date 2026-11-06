@@ -108,7 +108,7 @@ void func_02038414(void *p);
 int atan2_hold_d_a_ibl_1(int y, int x);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
 
-extern int IDENTITY_MATRIX4X3[];
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 extern signed char gCurrentSublevel;
@@ -258,7 +258,7 @@ void daIbl_c::func_ov100_02142130()
    being 1.0. */
 void daIbl_c::func_ov100_02142264()
 {
-    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
