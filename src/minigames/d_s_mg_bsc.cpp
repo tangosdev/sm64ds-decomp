@@ -73,7 +73,7 @@ extern int data_0208ee44[];
 extern void LoadCard2SubBg3(void);
 extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern int Dealer_Load(char *c);
 }
 
@@ -103,13 +103,13 @@ extern "C" void *dScMgBSC_c_classInit() {
  * (mwcc does not devirtualize it). pad_4660 is the head of the camera
  * block, untyped in the header. */
 s32 dScMgBSC_c::InitResources() {
-    int paletteData;
+    void *paletteData;
     gMainScreenLayers[0] = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     LoadCard2SubBg3();
     LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
     paletteData = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);
-    GXS::LoadOBJPltt((void *)paletteData, 0, 0x100);
-    Deallocate((void *)paletteData);
+    GXS::LoadOBJPltt(paletteData, 0, 0x100);
+    Deallocate(paletteData);
     Camera_InitDealerView(pad_4660);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;

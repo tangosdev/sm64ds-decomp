@@ -153,7 +153,7 @@ int fdiv(s32 a, s32 b);
 extern "C" {
 void Deallocate(void *ptr);
 int GetGameLanguage(void);
-int LoadFile(int handle);
+void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(int a, void *b, int c, int d);
 int func_02053200(int x);
@@ -198,7 +198,7 @@ enum MgBannerCharOffset {
 extern PairW sBannerUpdateTable[];
 extern PairW sBannerSetupTable[];
 extern PairW sBannerDrawTable[];
-extern int sMgBannerFiles[];
+extern void *sMgBannerFiles[];
 extern int sMgBannerSprites[];
 
 extern int sMgMsgRetryNcgByLanguage[];
@@ -262,7 +262,7 @@ extern int sMgMsgFiveCardSpritesByLanguage[];
 extern "C" void Mg_FreeBannerFiles(void) {
     int i;
     for (i = 0; i < 0x1d; i++) {
-        Deallocate((void *)sMgBannerFiles[i]);
+        Deallocate(sMgBannerFiles[i]);
         sMgBannerFiles[i] = 0;
     }
 }
@@ -389,25 +389,25 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     case 14: case 16: case 17: case 18: case 19: case 20: case 21:
         if (sMgBannerGfxSlotUsed[0] != 0)
             return;
-        DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT0_CHARS));
+        DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT0_CHARS));
         if (b != 0)
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT0_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT0_CHARS));
         e->mGfxSlot = 0;
         sMgBannerGfxSlotUsed[0] = 1;
         break;
     default:
         if (sMgBannerGfxSlotUsed[1] == 0) {
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT1_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT1_CHARS));
             if (b != 0)
-                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT1_CHARS));
+                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT1_CHARS));
             e->mGfxSlot = 1;
             sMgBannerGfxSlotUsed[1] = 1;
             break;
         }
         if (sMgBannerGfxSlotUsed[2] == 0) {
-            DecompressLZ16((void *)sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT2_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT2_CHARS));
             if (b != 0)
-                DecompressLZ16((void *)sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT2_CHARS));
+                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT2_CHARS));
             e->mGfxSlot = 2;
             sMgBannerGfxSlotUsed[2] = 1;
             break;
@@ -1201,5 +1201,5 @@ PairW sBannerDrawTable[13] = {
     pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA,
     pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, data_02086b58, pmf_Banner_DrawLevelNumber
 };
-int sMgBannerFiles[29];
+void *sMgBannerFiles[29];
 }

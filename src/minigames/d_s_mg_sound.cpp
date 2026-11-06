@@ -203,8 +203,8 @@ extern void Presenter_ResetPose(char *c);
 extern void Presenter_PlayCheer(void *c);
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
-int LoadFile(int handle);
-void DecompressLZ16(int src, void *dst);
+void *LoadFile(int handle);
+void DecompressLZ16(void *src, void *dst);
 void Camera_InitPresenterView(void *p);
 int Presenter_Load(void *p);
 extern u8 gMainScreenLayers;
@@ -311,35 +311,35 @@ extern "C" void *dScMgSound_c_classInit(void) {
 /* Loads the minigame's graphics for both screens, sets up the camera and
    the table, then deals the first round. */
 s32 dScMgSound_c::InitResources() {
-    int objChars, objPltt, file;
+    void *objChars, *objPltt, *file;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     objChars = LoadFile(ASSET_D_2D_MG_SOUND_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_SOUND_NCL_BIN);
     DecompressLZ16(objChars, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)objPltt, 0, 0x100);
+    GX::LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
     DecompressLZ16(file, (void *)G2S::GetBG2CharPtr());
-    Deallocate((void *)file);
+    Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCL_BIN);
-    GXS::LoadBGPltt((const void *)file, 0x60, 0x1a0);
-    Deallocate((void *)file);
+    GXS::LoadBGPltt(file, 0x60, 0x1a0);
+    Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NSC_BIN);
-    func_02056374((const void *)file, 0, 0x800);
-    Deallocate((void *)file);
+    func_02056374(file, 0, 0x800);
+    Deallocate(file);
 
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
     DecompressLZ16(objChars, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)objPltt, 0, 0x100);
-    Deallocate((void *)objChars);
-    Deallocate((void *)objPltt);
+    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    Deallocate(objChars);
+    Deallocate(objPltt);
 
     /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h);
        d_s_mg_cup.cpp passes it the same way. */

@@ -73,7 +73,8 @@ extern s32 GetGameLanguage(void);
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
 extern char *Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                        unsigned short a6);
-extern void DrawOamSprite(int p, int a, int b, int c);
+struct Matrix2x2;
+extern void DrawOamSprite(int attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, int g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
@@ -1734,7 +1735,7 @@ extern LuigiStateHandler sLuigiStateTable[];
 extern void *sLuigiBg1NcgPath;
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
 extern int func_02054d88(void);
@@ -1812,8 +1813,8 @@ s32 dScMgLuigi_c::InitResources() {
     volatile u16 fillMain;
     volatile u16 fillSub;
     void *arc;
-    int fileData;
-    int objectTiles;
+    void *fileData;
+    void *objectTiles;
 
     arc = Ov004_LoadFileByPath((const char *)&sLuigiBg1NcgPath);
     if (arc == 0)
@@ -1826,12 +1827,12 @@ s32 dScMgLuigi_c::InitResources() {
     DecompressLZ16(arc, (void *)func_02054d88());
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NCL_BIN);
-    GX::LoadBGPltt((const void *)fileData, 0x60, 0x1a0);
-    Deallocate((void *)fileData);
+    GX::LoadBGPltt(fileData, 0x60, 0x1a0);
+    Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NSC_BIN);
-    func_02056314((void *)fileData, 0, 0x800);
-    Deallocate((void *)fileData);
+    func_02056314(fileData, 0, 0x800);
+    Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x0400000c &= ~3;
@@ -1840,12 +1841,12 @@ s32 dScMgLuigi_c::InitResources() {
     *(volatile u16 *)0x0400000c = (*(volatile u16 *)0x0400000c & 0x43) | 0x1410;
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-    DecompressLZ16((void *)fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
-    Deallocate((void *)fileData);
+    DecompressLZ16(fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
+    Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-    GX::LoadBGPltt((const void *)fileData, 0x40, 0x20);
-    Deallocate((void *)fileData);
+    GX::LoadBGPltt(fileData, 0x40, 0x20);
+    Deallocate(fileData);
 
     screenMap = G2::GetBG2ScrPtr();
     fillMain = 0x23e1;
@@ -1853,8 +1854,8 @@ s32 dScMgLuigi_c::InitResources() {
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
-    DecompressLZ16((void *)objectTiles, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)fileData, 0, 0x100);
+    DecompressLZ16(objectTiles, (void *)0x6400000);
+    GX::LoadOBJPltt(fileData, 0, 0x100);
 
     *(volatile u16 *)0x0400100c &= ~3;
     *(volatile u16 *)0x0400100c &= ~0x40;
@@ -1862,18 +1863,18 @@ s32 dScMgLuigi_c::InitResources() {
     *(volatile u16 *)0x0400100c = (*(volatile u16 *)0x0400100c & 0x43) | 0x1210;
 
     {
-        int subFileData;
+        void *subFileData;
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-        DecompressLZ16((void *)subFileData, (void *)(G2S::GetBG2CharPtr() + 0x4000));
-        Deallocate((void *)subFileData);
+        DecompressLZ16(subFileData, (void *)(G2S::GetBG2CharPtr() + 0x4000));
+        Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-        GXS::LoadBGPltt((const void *)subFileData, 0x1e0, 0x20);
-        Deallocate((void *)subFileData);
+        GXS::LoadBGPltt(subFileData, 0x1e0, 0x20);
+        Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NSC_BIN);
-        func_02056374((const void *)subFileData, 0, 0x800);
-        Deallocate((void *)subFileData);
+        func_02056374(subFileData, 0, 0x800);
+        Deallocate(subFileData);
 
         gSubScreenLayers |= 8;
         *(volatile u16 *)0x0400100e &= ~3;
@@ -1883,13 +1884,13 @@ s32 dScMgLuigi_c::InitResources() {
         screenMap = G2S::GetBG3ScrPtr();
         fillSub = 0xf3e1;
         MultiStore16(fillSub, screenMap, 0x800);
-        Deallocate((void *)subFileData);
+        Deallocate(subFileData);
     }
 
-    DecompressLZ16((void *)objectTiles, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)fileData, 0, 0x100);
-    Deallocate((void *)objectTiles);
-    Deallocate((void *)fileData);
+    DecompressLZ16(objectTiles, (void *)0x6600000);
+    GXS::LoadOBJPltt(fileData, 0, 0x100);
+    Deallocate(objectTiles);
+    Deallocate(fileData);
 
     mClears = 0;
     ResetBoard();

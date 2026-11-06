@@ -460,8 +460,8 @@ extern void func_ov002_020f3954(char *);
 /* local extern dropped: decl_common.h already declares LoadFont(u8) */
 extern PMF0 data_ov002_02110f9c[];
 extern void SetSubBg3Offset(int a, int b);
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, void* dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void* p);
 extern void func_02056434(const void* src, int offset, int count);
 extern void func_020562b4(const void* src, u32 offset, u32 count);
@@ -3319,8 +3319,8 @@ int func_ov002_020f5fb8(void* c){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5fe4(char* c)
 {
-    int f;
-    int r5;
+    void *f;
+    void *r5;
 
     SetSubBg0Offset(0, 0);
     SetSubBg1Offset(0, 0);
@@ -3332,11 +3332,11 @@ void func_ov002_020f5fe4(char* c)
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCG_BIN);
     DecompressLZ16(f, (void*)0x6400000);
-    Deallocate((void*)f);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCL_BIN);
-    GX::LoadOBJPltt((const void *)f, 0, 0x200);
-    Deallocate((void*)f);
+    GX::LoadOBJPltt(f, 0, 0x200);
+    Deallocate(f);
 
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3);
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & 0x43) | 0x1100;
@@ -3347,16 +3347,16 @@ void func_ov002_020f5fe4(char* c)
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCG_BIN);
     DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
-    Deallocate((void*)f);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCL_BIN);
-    GX::LoadBGPltt((const void *)f, 0, 2);
-    GXS::LoadBGPltt((const void *)f, 0, 0x200);
-    Deallocate((void*)f);
+    GX::LoadBGPltt(f, 0, 2);
+    GXS::LoadBGPltt(f, 0, 0x200);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK1_NSC_BIN);
-    func_02056434((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_02056434(f, 0, 0x800);
+    Deallocate(f);
 
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0xc90;
@@ -3374,37 +3374,37 @@ void func_ov002_020f5fe4(char* c)
     }
 
     DecompressLZ16(r5, (void *)G2S::GetBG3CharPtr());
-    Deallocate((void*)r5);
+    Deallocate(r5);
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
     CP15::FlushAndInvalidateDataCache((u32)r5, 0x200);
     GX::SetBankForSubBGExtPltt(0x80);
     GXS::BeginLoadBGExtPltt();
-    GXS::LoadBGExtPltt((const void *)r5, 0x4000, 0x200);
-    GXS::LoadBGExtPltt((const void *)r5, 0x6000, 0x200);
+    GXS::LoadBGExtPltt(r5, 0x4000, 0x200);
+    GXS::LoadBGExtPltt(r5, 0x6000, 0x200);
     GXS::EndLoadBGExtPltt();
-    Deallocate((void*)r5);
+    Deallocate(r5);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_BRIGHT_NSC_BIN);
-    func_020562b4((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_020562b4(f, 0, 0x800);
+    Deallocate(f);
 
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0xa90;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK2_NSC_BIN);
-    func_02056374((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_02056374(f, 0, 0x800);
+    Deallocate(f);
 
     gSubScreenLayers |= 0x10;
 
     {
-        int f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
+        void *f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCL_BIN);
         DecompressLZ16(f6, (void*)0x6600000);
-        GXS::LoadOBJPltt((const void *)r5, 0, 0x200);
-        Deallocate((void*)f6);
-        Deallocate((void*)r5);
+        GXS::LoadOBJPltt(r5, 0, 0x200);
+        Deallocate(f6);
+        Deallocate(r5);
     }
 
     ((StaffRoll *)c)->starChars = 0;
@@ -3413,7 +3413,7 @@ void func_ov002_020f5fe4(char* c)
     }
     f = LoadFile(ASSET_D_2D_ED_STAR_NCG_BIN);
     DecompressLZ16(f, ((StaffRoll *)c)->starChars);
-    Deallocate((void*)f);
+    Deallocate(f);
 
     func_ov002_020f5ad4(c);
 }

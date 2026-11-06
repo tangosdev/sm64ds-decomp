@@ -1944,7 +1944,9 @@ dScMgSnowball_c::dScMgSnowball_c() : mBallBmd(0) {}
 // @symbol _ZN15dScMgSnowball_c11Bit_DrawAllEv
 extern "C" {
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
-extern void DrawOamSprite(void *a, int b, int c, void *m);
+struct OamAttr;
+struct Matrix2x2;
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 
 /* Unused since Bit_DrawAll reads mBits directly. Kept: deleting these
    anonymous structs renumbers the TU's @NNN constants. */
@@ -1974,7 +1976,7 @@ void dScMgSnowball_c::Bit_DrawAll() {
             int bb = a->mBits[i].x >> 12;
             int cc = (a->mBits[i].y - a->mScrollY) >> 12;
             Mg_RenderSubSpriteMtx((void *)sSnowballBitSprites[a->mBits[i].spriteA], bb, cc, 0);
-            DrawOamSprite((void *)sSnowballBitSprites[a->mBits[i].spriteB], bb, cc, 0);
+            DrawOamSprite((OamAttr *)sSnowballBitSprites[a->mBits[i].spriteB], bb, cc, 0);
         }
     }
 }

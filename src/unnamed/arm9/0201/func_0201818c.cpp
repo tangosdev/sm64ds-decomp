@@ -3,6 +3,8 @@
 #include "Memory.h"
 #include "private/fs_views.h"
 
+typedef struct FSFile FSFile;
+
 extern "C" {
 
 extern int func_020186c0(unsigned int val);
@@ -14,34 +16,34 @@ extern int FS_CloseFile(void *a);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void func_02018770(void);
 extern unsigned int func_02018a24(unsigned int i);
-extern unsigned int func_0201834c(void *buf, int x);
+extern void *func_0201834c(FSFile *file, int flush);
 
 /* Load file id (an asset handle, or an archived file id) into a new heap
    block, as SharedFilePtr::Load does: a file resident in a mounted archive
    is decompressed or copied out of it, anything else read through
    func_0201834c. flush nonzero flushes the result from the data cache. */
-int func_0201818c(unsigned int id, int flush) {
+void *func_0201818c(unsigned int id, int flush) {
     FSFile obj;
     FSFile file;
     int p = func_020186c0(id);
     if (p != 0) {
         unsigned int size;
-        int mem;
+        void *mem;
         if (func_02018568(p)) {
             unsigned int *q = (unsigned int *)(p + 4);
             size = func_02018ac4(q);
-            mem = (int)Memory::Allocate(size);
-            DecompressLZ16(q, (void *)mem);
+            mem = Memory::Allocate(size);
+            DecompressLZ16(q, mem);
         } else {
             func_020185c0(&obj, id);
             size = obj.prop.file.bottom - obj.prop.file.top; /* FS_GetLength */
             FS_CloseFile(&obj);
-            mem = (int)Memory::Allocate(size, 0x20);
-            CpuCopy8((const void *)p, (void *)mem, size);
+            mem = Memory::Allocate(size, 0x20);
+            CpuCopy8((const void *)p, mem, size);
         }
         func_02018770();
         if (flush != 0)
-            CP15::FlushDataCache(mem, size);
+            CP15::FlushDataCache((unsigned int)mem, size);
         return mem;
     }
     func_020185c0(&file, func_02018a24(id));

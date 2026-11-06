@@ -218,7 +218,7 @@ extern s16 atan2_hold_d_s_mg_hanachan_methods_1(int y, int x);
 extern void Mg_CommitRecords(void *);
 extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 extern int GetGameLanguage(void);
-extern void DrawOamSprite(void *a, int b, int c, int d);
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, void *c, int d, int e, int f, int g);
 extern void StarPopup_Start(int x, int y);
 extern void HanaPopup_Spawn(int x, int y);
@@ -1834,7 +1834,7 @@ tail:
         if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
             int idx = GetGameLanguage();
             void *e = sHanaTextSpritesByLanguage[idx];
-            void *f = ((void **)e)[3];
+            OamAttr *f = ((OamAttr **)e)[3];
             DrawOamSprite(f, 0x80, 0x10, 0);
             Mg_DrawNumberRotated(0x80, 0x28, (void *)mTimeLeft, 1, -1, 0x800, 0);
         }

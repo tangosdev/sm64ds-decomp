@@ -72,7 +72,7 @@ extern u8 gTouchX[];
 // local extern: see above.
 extern u8 gTouchY[];
 extern u16 sBomroomSpawnDelays[];
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 
 extern void MultiStore16(u16 val, char *dst, int nbytes);
@@ -1976,24 +1976,24 @@ s32 dScMgBomroom_c::Behavior()
 s32 dScMgBomroom_c::InitResources() {
     char *b;
     volatile u16 fill;
-    int f;
-    int arc;
+    void *f;
+    void *arc;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 2;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
     f = LoadFile(0x23);
-    DecompressLZ16((void *)f, (void *)(func_02054d88() + 0x4000));
-    Deallocate((void *)f);
+    DecompressLZ16(f, (void *)(func_02054d88() + 0x4000));
+    Deallocate(f);
 
     f = LoadFile(0x24);
-    GX::LoadBGPltt((const void *)f, 0x180, 0x80);
-    Deallocate((void *)f);
+    GX::LoadBGPltt(f, 0x180, 0x80);
+    Deallocate(f);
 
     f = LoadFile(0x25);
-    func_02056314((void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_02056314(f, 0, 0x800);
+    Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
@@ -2003,49 +2003,49 @@ s32 dScMgBomroom_c::InitResources() {
     b = (char *)G2::GetBG2ScrPtr();
     fill = 0xf23f;
     MultiStore16(fill, b, 0x1000);
-    func_020563d4((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_020563d4(f, 0, 0x800);
+    Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3);
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x5610;
 
     f = LoadFile(2);
-    func_02056554((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_02056554(f, 0, 0x800);
+    Deallocate(f);
 
     f = LoadFile(7);
-    func_02056554((const void *)f, 0x800, 0x800);
-    Deallocate((void *)f);
+    func_02056554(f, 0x800, 0x800);
+    Deallocate(f);
 
     G2x::SetBlendAlpha((volatile u16 *)0x4000050, 1, 0x1c, 4, 3);
 
     arc = LoadFile(0xb5);
     f = LoadFile(0xb6);
-    DecompressLZ16((void *)arc, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)f, 0, 0x100);
+    DecompressLZ16(arc, (void *)0x6400000);
+    GX::LoadOBJPltt(f, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
 
     {
-        int f7 = LoadFile(0x23);
-        DecompressLZ16((void *)f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
-        Deallocate((void *)f7);
+        void *f7 = LoadFile(0x23);
+        DecompressLZ16(f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
+        Deallocate(f7);
 
         f7 = LoadFile(0x24);
-        GXS::LoadBGPltt((const void *)f7, 0x180, 0x80);
-        Deallocate((void *)f7);
+        GXS::LoadBGPltt(f7, 0x180, 0x80);
+        Deallocate(f7);
 
         f7 = LoadFile(0x22);
-        func_020562b4((const void *)f7, 0, 0x800);
-        Deallocate((void *)f7);
+        func_020562b4(f7, 0, 0x800);
+        Deallocate(f7);
 
-        DecompressLZ16((void *)arc, (void *)0x6600000);
-        GXS::LoadOBJPltt((const void *)f, 0, 0x100);
-        Deallocate((void *)arc);
-        Deallocate((void *)f);
+        DecompressLZ16(arc, (void *)0x6600000);
+        GXS::LoadOBJPltt(f, 0, 0x100);
+        Deallocate(arc);
+        Deallocate(f);
     }
 
     ResetRound();

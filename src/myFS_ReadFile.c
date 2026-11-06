@@ -29,7 +29,7 @@ int func_0205d568(int a, struct BC bc);
 extern int func_0205d518(void *file, const char *path);
 extern int data_0208eb8c[];
 extern int FS_ReadFile(int a, int b, int c);
-extern void func_0205d4a0(int a, void *buf, int n);
+extern int func_0205d4a0(int file, char *buf, u32 len);
 extern char data_0208eb9c;
 
 void func_02018e68(void *c) {
