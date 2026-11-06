@@ -11,6 +11,8 @@
 #include "types.h"
 #include "private/fs_views.h"
 
+typedef struct FSFile FSFile;
+
 struct BC {
     int x, y;
 };
@@ -28,8 +30,8 @@ extern char data_0208ec74;
 int func_0205d568(int a, struct BC bc);
 extern int func_0205d518(void *file, const char *path);
 extern int data_0208eb8c[];
-extern int FS_ReadFile(int a, int b, int c);
-extern int func_0205d4a0(int file, char *buf, u32 len);
+extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
+extern int func_0205d4a0(FSFile *p_file, char *buf, u32 len);
 extern char data_0208eb9c;
 
 void func_02018e68(void *c) {
@@ -83,12 +85,12 @@ int myFS_OpenFile(void *file, const char *path) {
     return r;
 }
 
-int myFS_ReadFile(int a, int b, int c) {
+int myFS_ReadFile(FSFile *p_file, void *dst, int len) {
     char buf[0x100];
-    int r = FS_ReadFile(a, b, c);
-    if (r != c) {
+    int r = FS_ReadFile(p_file, dst, len);
+    if (r != len) {
         func_02018e68(&data_0208eb9c);
-        func_0205d4a0(a, buf, 0x100);
+        func_0205d4a0(p_file, buf, 0x100);
         Crash();
     }
     return r;

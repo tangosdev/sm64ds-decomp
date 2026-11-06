@@ -1246,14 +1246,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1335",
+      "from": "@1326",
       "to": "@1336",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1344 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1346 before -> @1344 after); licensed under the existing pin @1336 Re-keyed from @1343 to @1337 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1337 to @1335 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1344 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1346 before -> @1344 after); licensed under the existing pin @1336 Re-keyed from @1343 to @1337 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1337 to @1335 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Re-keyed from @1335 to @1326 when the VShape, Diagonal and DiagonalMirror motions' per-namespace POD Vec3 twins were retired for Vector3 (symtab index 115, section 33, offset 0, size 0xc on both sides; every non-strtab section byte-identical)."
     },
     {
-      "from": "@1336",
+      "from": "@1327",
       "to": "@1337",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1345 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1347 before -> @1345 after); licensed under the existing pin @1337. The six function-local Vector3s did not move this node: the sinit still relocates to @1288. Re-keyed from @1344 to @1338 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1338 to @1336 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1345 now (measured 2026-10-23: the typed Heyho::mModelAnim retires Heyho_Draw's local Sub view (one label, bisected) and the other shadow declarations (one more), @1347 before -> @1345 after); licensed under the existing pin @1337. The six function-local Vector3s did not move this node: the sinit still relocates to @1288. Re-keyed from @1344 to @1338 when the per-namespace POD Vec3 twins behind LenVec3 were retired for Vector3 (#4570). Re-keyed from @1338 to @1336 when Heyho_React's and Heyho_MotionLeave's dead POD Vec3 twins were retired for Vector3 (#4570). Re-keyed from @1336 to @1327 when the VShape, Diagonal and DiagonalMirror motions' per-namespace POD Vec3 twins were retired for Vector3 (symtab index 116, section 34, offset 0, size 0xc on both sides; every non-strtab section byte-identical)."
     },
     {
       "from": "@223",

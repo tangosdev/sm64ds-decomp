@@ -9,10 +9,9 @@
 
 typedef struct FSFile FSFile;
 
-extern int FSi_SendCommand(void *self, int a);
-extern int func_0205d3f4(void *self);
-int func_0205d688(char *self, int dst, int len, int async) {
-    FSFile *p_file = (FSFile *)self;
+extern int FSi_SendCommand(FSFile *p_file, int command);
+extern int func_0205d3f4(FSFile *p_file);
+int func_0205d688(FSFile *p_file, void *dst, int len, int async) {
     int n;
     int is_async;
     int oldpos;
@@ -26,7 +25,7 @@ int func_0205d688(char *self, int dst, int len, int async) {
             n = avail;
         }
     }
-    p_file->arg.readfile.dst = (void *)dst;
+    p_file->arg.readfile.dst = dst;
     if (n < 0) {
         n = 0;
     }
@@ -35,9 +34,9 @@ int func_0205d688(char *self, int dst, int len, int async) {
     if (is_async == 0) {
         p_file->stat |= 4;
     }
-    FSi_SendCommand(self, 0);
+    FSi_SendCommand(p_file, 0);
     if (is_async == 0) {
-        if (func_0205d3f4(self)) {
+        if (func_0205d3f4(p_file)) {
             n = p_file->prop.file.pos - oldpos;
         } else {
             n = -1;
