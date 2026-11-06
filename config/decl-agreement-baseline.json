@@ -13163,7 +13163,7 @@
         "param:#7 int"
       ]
     },
-    "func_02007c9c": {
+    "Vec3fGetDistAndAngle": {
       "src/engine/view/d_camera.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"
@@ -13180,7 +13180,7 @@
         "param:#2 const Vector3 *"
       ]
     },
-    "func_02007d0c": {
+    "ApproachVec3fAsymptotic": {
       "src/engine/view/d_camera.cpp": [
         "param:#2 Vec3 *",
         "param:#2 Vector3 *",

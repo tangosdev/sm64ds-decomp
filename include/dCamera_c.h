@@ -185,7 +185,7 @@ struct dCamera_c : dView_c {
     /* Shake amplitudes. Render adds mRollShake times the sine of
        mRollShakePhase to the roll, and mFovShake times the cosine of
        mFovShakePhase to the field of view; Behavior decays both.
-       func_0200d89c sets mRollShake to 0x180; func_0200d8ac raises mFovShake
+       func_0200d89c sets mRollShake to 0x180; SetFovShake raises mFovShake
        and sets its decay step and phase step together. */
     s16 mRollShake; /* 0x18c */
     s16 mFovShake;  /* 0x18e */

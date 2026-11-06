@@ -551,17 +551,18 @@ void func_0200d8c8(struct dCamera_c *cam, const struct Vector3 *v, int strength)
     cam->mShakeY = offset;
 }
 
-// @symbol func_0200d8ac
-void func_0200d8ac(char *c, int r1, int r2, int r3)
-{
+// @symbol SetFovShake
+/* Super Mario 64's set_fov_shake: a shake only replaces a weaker one. The
+   N64 keeps its shake in the global sFOVState; here it is the camera's. */
+void SetFovShake(char *c, int amplitude, int decay, int phaseStep) {
     short ip;
 
     struct dCamera_c *cam = (struct dCamera_c *)c;
     ip = cam->mFovShake;
-    if (r1 > ip) {
-        cam->mFovShake = (short)r1;
-        cam->mFovShakeDecay = (short)r2;
-        cam->mFovShakePhaseStep = (short)r3;
+    if (amplitude > ip) {
+        cam->mFovShake = (short)amplitude;
+        cam->mFovShakeDecay = (short)decay;
+        cam->mFovShakePhaseStep = (short)phaseStep;
     }
 }
 
@@ -1571,10 +1572,10 @@ int func_020094a8(dCamera_c *cam);
 int func_02008b08(dCamera_c *cam);
 short func_02008abc(dCamera_c *cam);
 short func_02008a70(dCamera_c *cam);
-void func_02007c14(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
-void func_02007c9c(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
-                   short *outHorzAng);
-void func_02007d0c(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
+void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
+void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
+                          short *outHorzAng);
+void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
 }
 
 extern "C" {
@@ -3740,10 +3741,11 @@ int CutsceneDanceFlyAwayStart(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_02007d0c
-/* Step each axis of self toward src by its own rate. self is a Vector3, not
-   the camera: callers pass &camera->lookAt. */
-void func_02007d0c(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ) {
+// @symbol ApproachVec3fAsymptotic
+/* Super Mario 64's approach_vec3f_asymptotic, in fixed point: step each axis
+   of self toward src by its own fraction of the gap (0x1000 = all of it).
+   self is a Vector3, not the camera: callers pass &camera->lookAt. */
+void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ) {
     Math_Function_0203b0fc(&self->x, src->x, stepX, 0x7fffffff);
     Math_Function_0203b0fc(&self->y, src->y, stepY, 0x7fffffff);
     Math_Function_0203b0fc(&self->z, src->z, stepZ, 0x7fffffff);
@@ -3751,24 +3753,27 @@ void func_02007d0c(Vector3 *self, const Vector3 *src, int stepX, int stepY, int 
 
 // @symbol func_02007cec
 /* The same with one rate for all three axes. Its callers' declaration
-   says int, and the ROM hands back whatever func_02007d0c left in r0, so
+   says int, and the ROM hands back whatever ApproachVec3fAsymptotic left in r0, so
    there is no return statement. */
 int func_02007cec(void *dest, const Vector3 *src, int step) {
-    func_02007d0c((Vector3 *)dest, src, step, step, step);
+    ApproachVec3fAsymptotic((Vector3 *)dest, src, step, step, step);
 }
 
-// @symbol func_02007c9c
-/* Distance and the two angles from v0 to v1. */
-void func_02007c9c(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
-                   short *outHorzAng) {
+// @symbol Vec3fGetDistAndAngle
+/* Super Mario 64's vec3f_get_dist_and_angle: the distance and the pitch and
+   yaw from v0 to v1. */
+void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
+                          short *outHorzAng) {
     *outDist = Vec3_Dist(v0, v1);
     *outVertAng = Vec3_VertAngle(v1, v0);
     *outHorzAng = Vec3_HorzAngle(v0, v1);
 }
 
-// @symbol func_02007c14
-/* The inverse: res is trans plus mag along pitch ang, turned by angY. */
-void func_02007c14(Vector3 *res, const Vector3 *trans, Fix12i mag, short ang, short angY) {
+// @symbol Vec3fSetDistAndAngle
+/* Super Mario 64's vec3f_set_dist_and_angle, the inverse: res is trans plus
+   mag along pitch ang, turned by yaw angY. The N64 takes the origin first;
+   this takes the result first. */
+void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short ang, short angY) {
     Vector3 v;
     unsigned idx = (unsigned short)ang >> 4;
 
@@ -3851,10 +3856,10 @@ int CutscenePanCvar9(dCamera_c *cam, u8 *p, int tag) {
     }
     cam->mPitchOffset -= ReadUnalignedShort(p);
     cam->mYawOffset += ReadUnalignedShort(p + 2);
-    func_02007c9c(&cam->pos, &cam->savedLookAt, &dist, &vert, &horz);
+    Vec3fGetDistAndAngle(&cam->pos, &cam->savedLookAt, &dist, &vert, &horz);
     vert = (short)(vert + cam->mPitchOffset);
     horz = (short)(horz + cam->mYawOffset);
-    func_02007c14(&cam->lookAt, &cam->pos, dist, vert, horz);
+    Vec3fSetDistAndAngle(&cam->lookAt, &cam->pos, dist, vert, horz);
     return 1;
 }
 
@@ -3867,11 +3872,11 @@ int func_02007910(dCamera_c *cam, u8 *p) {
     short vert;
     short horz;
 
-    func_02007c9c(v, &cam->pos, &dist, &vert, &horz);
+    Vec3fGetDistAndAngle(v, &cam->pos, &dist, &vert, &horz);
     dist = ReadUnalignedSignedInt(p) + dist;
     vert = (short)(ReadUnalignedShort(p + 4) + vert);
     horz = (short)(ReadUnalignedShort(p + 6) + horz);
-    func_02007c14(&cam->pos, v, dist, vert, horz);
+    Vec3fSetDistAndAngle(&cam->pos, v, dist, vert, horz);
     return 1;
 }
 
@@ -3885,12 +3890,12 @@ int func_020078c4(dCamera_c *cam, u8 *data) {
 }
 
 // @symbol func_02007870
-/* Script op: the field-of-view shake (func_0200d8ac). */
+/* Script op: the field-of-view shake (SetFovShake). */
 int func_02007870(dCamera_c *cam, u8 *data) {
     int v1 = (int)ReadUnalignedShort(data);
     int v2 = (int)ReadUnalignedShort(data + 2);
     int v3 = (int)ReadUnalignedShort(data + 4);
-    func_0200d8ac((char *)cam, v1, v2, v3);
+    SetFovShake((char *)cam, v1, v2, v3);
     return 1;
 }
 
@@ -3983,7 +3988,7 @@ int CutsceneGrandStarFrontOfMario(dCamera_c *cam) {
     short vertAng;
     short horzAng;
 
-    func_02007c9c(&cam->mTargetPlayer->mPos, &cam->savedLookAt, &dist, &vertAng, &horzAng);
+    Vec3fGetDistAndAngle(&cam->mTargetPlayer->mPos, &cam->savedLookAt, &dist, &vertAng, &horzAng);
     func_020070e8(cam, dist, 0x199, vertAng, 0x20, (short)(horzAng + 0x1200), 0x14);
     return 1;
 }
@@ -4000,7 +4005,7 @@ int CutsceneGrandStarFocusMario(dCamera_c *cam) {
     src.y = 0x197000 + (y0 >> 1);
     src.x = tx;
     src.z = tz;
-    func_02007d0c(&cam->lookAt, &src, 0x800, 0xccc, 0x800);
+    ApproachVec3fAsymptotic(&cam->lookAt, &src, 0x800, 0xccc, 0x800);
     return 1;
 }
 

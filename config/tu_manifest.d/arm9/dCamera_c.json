@@ -178,14 +178,14 @@
       "ordinal": 54
     },
     {
-      "symbol": "func_02007c14",
+      "symbol": "Vec3fSetDistAndAngle",
       "address": "0x02007c14",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0200/func_02007c14.c",
       "ordinal": 55
     },
     {
-      "symbol": "func_02007c9c",
+      "symbol": "Vec3fGetDistAndAngle",
       "address": "0x02007c9c",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_02007c9c.c",
@@ -199,7 +199,7 @@
       "ordinal": 57
     },
     {
-      "symbol": "func_02007d0c",
+      "symbol": "ApproachVec3fAsymptotic",
       "address": "0x02007d0c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0200/func_02007d0c.c",
@@ -969,7 +969,7 @@
       "ordinal": 167
     },
     {
-      "symbol": "func_0200d8ac",
+      "symbol": "SetFovShake",
       "address": "0x0200d8ac",
       "size": "0x0000001c",
       "legacy_source": "src/func_0200d8ac.c",
