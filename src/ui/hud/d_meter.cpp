@@ -161,7 +161,7 @@ extern int data_0209caa0[];
 extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *data_0209f5bc;
 void *LoadFile(int handle);
-void DecompressLZ16(void *handle, int addr);
+void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *handle);
 void func_0203da4c(void);
 }
@@ -205,47 +205,47 @@ int dMeter_c::InitResources() {
         void *h;
         if (GetOwnerLanguage() == 5) {
             h = LoadFile(0xB003);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xB007);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 4) {
             h = LoadFile(0xAC03);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xAC07);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 3) {
             h = LoadFile(0xA803);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xA807);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 2) {
             h = LoadFile(0xA403);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xA407);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         } else {
             h = LoadFile(0xA003);
-            DecompressLZ16(h, 0x6400000);
-            DecompressLZ16(h, 0x6600000);
+            DecompressLZ16(h, objVramMain);
+            DecompressLZ16(h, objVramSub);
             Deallocate(h);
             h = LoadFile(0xA007);
-            DecompressLZ16(h, (int)(objVramMain + 0x2000));
+            DecompressLZ16(h, objVramMain + 0x2000);
             Deallocate(h);
         }
         h = LoadFile(0x8000);
-        DecompressLZ16(h, (int)(objVramSub + 0x2000));
+        DecompressLZ16(h, objVramSub + 0x2000);
         Deallocate(h);
         h = LoadFile(0x8002);
         GX::LoadOBJPltt(h, 0, 0x120);
@@ -269,8 +269,8 @@ int dMeter_c::InitResources() {
             h = LoadFile(ASSET_D_2D_CMN_ICON_F_NCG_BIN);
         else
             h = LoadFile(ASSET_D_2D_CMN_ICON_E_NCG_BIN);
-        DecompressLZ16(h, 0x6400000);
-        DecompressLZ16(h, 0x6600000);
+        DecompressLZ16(h, objVramMain);
+        DecompressLZ16(h, objVramSub);
         Deallocate(h);
         if (GetOwnerLanguage() == 5)
             h = LoadFile(0xB00E);
@@ -282,10 +282,10 @@ int dMeter_c::InitResources() {
             h = LoadFile(0xA40E);
         else
             h = LoadFile(0xA00E);
-        DecompressLZ16(h, (int)(objVramMain + 0x2000));
+        DecompressLZ16(h, objVramMain + 0x2000);
         Deallocate(h);
         h = LoadFile(ASSET_D_2D_BTM_ICON_NCG_BIN);
-        DecompressLZ16(h, (int)(objVramSub + 0x2000));
+        DecompressLZ16(h, objVramSub + 0x2000);
         Deallocate(h);
         if (GetOwnerLanguage() == 5)
             h = LoadFile(0xB00A);

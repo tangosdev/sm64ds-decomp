@@ -79,9 +79,9 @@ void func_0203cbc0(void *ptr);
    defines this veneer for the host). */
 void *func_0203cc0c(u32 size);
 #endif
-/* local extern: LoadFile.c defines int(int). This is the spelling
-   LoadAndSetFile's shard matched (banked return and parameter rows). */
-void *LoadFile(u16 ov0ID);
+/* local extern: LoadFile.c defines int(int); the file comes back as a
+   pointer here (banked return row). */
+void *LoadFile(int ov0ID);
 /* local extern: func_020469e0.c defines int(int *). The caller's shard
    matched this spelling (banked rows). */
 int func_020469e0(void *ptr);
