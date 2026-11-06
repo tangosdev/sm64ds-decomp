@@ -117,8 +117,8 @@ extern int __aeabi_idiv(int a, int b);
 extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 
-extern void Mg_GainCredits(void* c);
-extern void Mg_LoseCredits(void* x);
+extern void Mg_GainCredits(int c);
+extern void Mg_LoseCredits(int x);
 extern void Mg_DrawCreditsIcon(int a, int b, int c, int d);
 extern int Mg_GetTopScreenYOffset(void);
 extern int Mg_GetScoringMode(void);
@@ -149,7 +149,7 @@ extern void MgCoins_StepLaunch(void);
 extern void MgCoins_AddBetCoin(void);
 extern void MgCoins_DrawDelta(int arg);
 
-extern int sMgCoinRiseFrames[];
+extern int sMgCoinRiseFrames;
 extern int sMgCoinsBetCap;   /* cap MgCoins_AddBetCoin raises the count to */
 extern int gMgCoinsShowDelta;   /* nonzero: sequences also show their count */
 /* Sprite states: member-pointer records (ov004 relocs.txt names each
@@ -612,10 +612,8 @@ extern "C" void MgCoins_StepRefund() {
 }
 
 // @symbol MgCoins_StartPayout
-/* Hide every sprite and lay out p of them (MgCoins_StepPayoutLayout). p is a
-   count; the callers in d_s_mg_bsc.cpp and d_s_mg_card.cpp pass an int. */
-extern "C" void MgCoins_StartPayout(char* p)
-{
+/* Hide every sprite and lay out count of them (MgCoins_StepPayoutLayout). */
+extern "C" void MgCoins_StartPayout(int count) {
     int i;
     int cond;
     Sprite* it = sMgCoins;
@@ -624,16 +622,15 @@ extern "C" void MgCoins_StartPayout(char* p)
         it++;
     }
     cond = gMgCoinsShowDelta;
-    sMgCoinsPayoutLeft = (int)p;
+    sMgCoinsPayoutLeft = count;
     sMgCoinsWait = 0;
     gMgCoinsStatus = 3;
     if (cond != 0) {
-        sMgCoinsDelta = (int)p;
+        sMgCoinsDelta = count;
         sMgCoinsDeltaShown = 1;
     }
     sMgCoinsStep = MgCoins_StepPayoutLayout;
 }
-
 
 // @symbol MgCoins_StepPayoutLayout
 /* Step: place up to 20 sprites on a grid five wide (rows 16 pixels apart,
@@ -798,7 +795,7 @@ extern "C" void Coin_MoveThenBank(Sprite* s) {
   Vec2_Sub(out, &s->mTarget, &s->mPos);
   if (out[0] != 0) return;
   if (out[1] != 0) return;
-  Mg_GainCredits((void*)1);
+  Mg_GainCredits(1);
   Coin_Hide(s);
   s->mState = pmf_Coin_Move_2;
 }
@@ -837,7 +834,7 @@ extern "C" void Coin_Launch(Sprite* s, int* in)
         s->mStep.y = v;
     }
     if (s->mState != pmf_Coin_MoveThenBank)
-        Mg_LoseCredits((void*)1);
+        Mg_LoseCredits(1);
     s->mState = pmf_Coin_Move_3;
 }
 
@@ -880,13 +877,13 @@ extern "C" void Coin_MoveThenRise(Sprite *s) {
 }
 
 // @symbol Coin_Rise
-/* State: rise. g = sMgCoinRiseFrames[0] is 0x14 in the ROM; for mDelay
+/* State: rise. g = sMgCoinRiseFrames is 0x14 in the ROM; for mDelay
    0x14 down to 1, y changes by -3.5 px a frame, 0.2 px less each frame,
    ending near +0.3 px (about 32 px up in all). When mDelay reaches 0 the
    sprite leaves play and resets. */
 extern "C" void Coin_Rise(Sprite* s){
   int* p = &s->mPos.y;
-  int g = sMgCoinRiseFrames[0];
+  int g = sMgCoinRiseFrames;
   int n = -(((short)s->mDelay - (g >> 1)) << 12);
   int q;
   int v;
@@ -908,7 +905,7 @@ extern "C" void Coin_Spend(Sprite *s)
 {
     Vec2i a;
     Vec2i b;
-    Mg_LoseCredits((void*)1);
+    Mg_LoseCredits(1);
     s->mVisible = 1;
     s->mPos.x = 0xc000;
     s->mPos.y = 0xc000;
@@ -948,7 +945,7 @@ extern "C" void Coin_MoveThenRiseSpent(Sprite *s) {
 /* State: Coin_Rise's rise, dividing with `/`. */
 extern "C" void Coin_RiseSpent(Sprite* s){
   int* p = &s->mPos.y;
-  int g = sMgCoinRiseFrames[0];
+  int g = sMgCoinRiseFrames;
   int n = -(((short)s->mDelay - (g >> 1)) << 12);
   int q = n / g;
   int v = FX_MUL((q - 0x600), 0x4000);
@@ -991,7 +988,7 @@ extern "C" void Coin_MoveThenRefund(Sprite* s){
   if (v[0] != 0) return;
   if (v[1] != 0) return;
   ApproachLinear(gMgCoinsInPlay, 0, 1);
-  Mg_GainCredits((void*)1);
+  Mg_GainCredits(1);
   Coin_Reset(s);
 }
 
@@ -1037,7 +1034,7 @@ extern "C" void Coin_FlyToCounter(Sprite* s) {
     if (t.y != 0) return;
     if (ApproachLinear2(s->mDelay, 0, 1) == 0) return;
     Sound::PlayBank2_2D(0x149);
-    Mg_GainCredits((void*)1);
+    Mg_GainCredits(1);
     ApproachLinear(sMgCoinsPayoutLeft, 0, 1);
     Coin_Reset(s);
 }

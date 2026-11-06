@@ -127,7 +127,7 @@ extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
-extern void Mg_LoseCredits(void *c);
+extern void Mg_LoseCredits(int c);
 extern void func_ov001_020ab3f0(void *c);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
 extern void *data_ov006_0213e528[];
@@ -1058,7 +1058,7 @@ void SlotBet_OnTouch(void *c_) {
         return;
     }
     BET_ICON(icon)->mBetCount += 1;
-    Mg_LoseCredits((void *)1);
+    Mg_LoseCredits(1);
     func_ov001_020ab3f0(icon);
     sid = 0x163;
     Sound::PlayBank2_2D(sid);
