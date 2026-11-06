@@ -435,7 +435,7 @@ struct CameraRaw;
  * below is the body's own, moved out unchanged, and the body keeps its own
  * declaration of the object. */
 struct Entry18 { s16 val; /* 0x0 */ char _pad[0x16]; };
-extern EndingFlyPoint gEndingFlyPath[];
+extern EndingFlyPoint gJumboStarKeyframes[];
 struct ObjTeleport { s16 x, y, z; u16 param; };
 struct State2i { int a; int b; };
 struct S18a { short f0; char pad[0x16]; };
@@ -3961,8 +3961,18 @@ void daPly_c::func_ov002_020c2f64() {
     Sound::PlayBank0(this->mGroundSoundType + 0x40, mCamSpacePos);
 }
 
-// @symbol _ZN7daPly_c19func_ov002_020c2fecEPi
-int daPly_c::func_ov002_020c2fec(int *out) {
+/* The states of Super Mario 64's spline animation. The ends of a path
+   take clamped variants of the B-spline basis. */
+#define CURVE_BEGIN_1 1
+#define CURVE_BEGIN_2 2
+#define CURVE_MIDDLE 3
+#define CURVE_END_1 4
+#define CURVE_END_2 5
+
+// @symbol _ZN7daPly_c14AnimSplinePollEPi
+/* SM64's anim_spline_poll: blend the current four keyframes into out,
+   advance, and return 1 once the path has run out. */
+int daPly_c::AnimSplinePoll(int *out) {
     Fix12i tmp[4];
     int i;
     int ret;
@@ -3972,64 +3982,66 @@ int daPly_c::func_ov002_020c2fec(int *out) {
     out[0] = 0;
     out[1] = 0;
     out[2] = 0;
-    ComputeSplineWeights(tmp);
+    SplineGetWeights(tmp);
 
-    row = &gEndingFlyPath[mSplinePoint];
+    row = &gJumboStarKeyframes[mSplineKeyframe];
     for (i = 0; i < 4; i++) {
         out[0] += tmp[i] * row[i].x;
         out[1] += tmp[i] * row[i].y;
         out[2] += tmp[i] * row[i].z;
     }
 
-    mSplineT += (row[0].speed << 12) / 1000;
-    if (mSplineT >= 0x1000) {
-        mSplinePoint++;
-        mSplineT -= 0x1000;
-        switch (mSplineSpan) {
-        case 5:
+    mSplineKeyframeFraction += (row[0].speed << 12) / 1000;
+    if (mSplineKeyframeFraction >= 0x1000) {
+        mSplineKeyframe++;
+        mSplineKeyframeFraction -= 0x1000;
+        switch (mSplineState) {
+        case CURVE_END_2:
             ret = 1;
             break;
-        case 3:
-            if (gEndingFlyPath[mSplinePoint + 2].speed == 0) {
-                mSplineSpan = 4;
+        case CURVE_MIDDLE:
+            if (gJumboStarKeyframes[mSplineKeyframe + 2].speed == 0) {
+                mSplineState = CURVE_END_1;
             }
             break;
         default:
-            mSplineSpan++;
+            mSplineState++;
             break;
         }
     }
     return ret;
 }
 
-// @symbol _ZN7daPly_c19func_ov002_020c3148Ev
-void daPly_c::func_ov002_020c3148() {
-    mSplinePoint = 0;
-    mSplineT = 0;
-    mSplineSpan = 1;
+// @symbol _ZN7daPly_c14AnimSplineInitEv
+/* SM64's anim_spline_init. The keyframes are always gJumboStarKeyframes. */
+void daPly_c::AnimSplineInit() {
+    mSplineKeyframe = 0;
+    mSplineKeyframeFraction = 0;
+    mSplineState = CURVE_BEGIN_1;
 }
 
-// @symbol _ZN7daPly_c20ComputeSplineWeightsEPi
+// @symbol _ZN7daPly_c16SplineGetWeightsEPi
 extern "C" {
 static inline int FX(int a, int b) {
     return FX_MUL((a), (b));
 }
 
-/* The uniform cubic B-spline basis at mSplineT, four weights for the four
-   control points func_ov002_020c2fec then blends; mSplineSpan picks the
-   clamped-end variant. The caller passes a Fix12i[4]. */
-void daPly_c::ComputeSplineWeights(Fix12i *out) {
+/* SM64's spline_get_weights: the uniform cubic B-spline basis at
+   mSplineKeyframeFraction, four weights for the four keyframes
+   AnimSplinePoll blends; mSplineState picks the clamped-end variant. The
+   caller passes a Fix12i[4]. */
+void daPly_c::SplineGetWeights(Fix12i *out) {
     typedef long long s64;
-    int t = mSplineT;
+    int t = mSplineKeyframeFraction;
     int u = 0x1000 - t;
     int u2 = FX(u, u);
     int u3 = FX(u2, u);
     int t2 = FX(t, t);
     int t3 = FX(t2, t);
 
-    switch (mSplineSpan) {
+    switch (mSplineState) {
     case 0: break;
-    case 1: {
+    case CURVE_BEGIN_1: {
         int a = FX(t, 0x3000);
         int b = FX(t3, 0x1c00);
         int c = FX(t2, 0x4800);
@@ -4039,7 +4051,7 @@ void daPly_c::ComputeSplineWeights(Fix12i *out) {
         out[3] = FX(t3, 0x2aa);
         break;
     }
-    case 2: {
+    case CURVE_BEGIN_2: {
         int k1400 = 0x1400;
         s64 p955 = (s64)t3 * 0x955;
         s64 p1400 = (s64)t2 * k1400;
@@ -4054,21 +4066,21 @@ void daPly_c::ComputeSplineWeights(Fix12i *out) {
         out[3] = FX(t3, 0x2aa);
         break;
     }
-    case 3: {
+    case CURVE_MIDDLE: {
         out[0] = FX(u3, 0x2aa);
         out[1] = FX(t3, 0x800) - t2 + 0xaaa;
         out[2] = FX(t, 0x800) + (FX(t2, 0x800) - FX(t3, 0x800)) + 0x2aa;
         out[3] = FX(t3, 0x2aa);
         break;
     }
-    case 4: {
+    case CURVE_END_1: {
         out[0] = FX(u3, 0x2aa);
         out[1] = FX(u, 0x800) + (FX(u2, 0x800) - FX(u3, 0x800)) + 0x2aa;
         out[2] = FX(u, 0x400) + (FX(u3, 0x955) - FX(u2, 0x1400)) + 0x955;
         out[3] = FX(t3, 0x400);
         break;
     }
-    case 5: {
+    case CURVE_END_2: {
         out[0] = FX(u3, 0x2aa);
         out[1] = FX(u2, 0x1800) - FX(u3, 0xeaa);
         out[2] = FX(u, 0x3000) + (FX(u3, 0x1c00) - FX(u2, 0x4800));
@@ -4101,12 +4113,12 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
 }
 }
 
-// @symbol _ZN7daPly_c19func_ov002_020c38a0Ev
+// @symbol _ZN7daPly_c23JumboStarCutsceneFlyingEv
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 #define LA(p) ((int)(p))
 extern "C" {
-void daPly_c::func_ov002_020c38a0() {
+void daPly_c::JumboStarCutsceneFlying() {
     extern int Vec3_HorzLen(void*);
     V3Quad s;
     int hlen;
@@ -4121,13 +4133,13 @@ void daPly_c::func_ov002_020c38a0() {
     case 0:
         this->SetAnim(0xc1, 0, 0x1000, 0);
         mRootMotionMode = 0;
-        func_ov002_020c3148();
+        AnimSplineInit();
         mModelOffsetY = -0x20000;
         p = &this->mStateWork;
         *p = *p + 1;
         /* fallthrough */
     case 1:
-        if (func_ov002_020c2fec((int *)&s.d) != 0) {
+        if (AnimSplinePoll((int *)&s.d) != 0) {
             p = &this->mStateWork;
             *p = *p + 1;
             return;
@@ -4156,8 +4168,8 @@ void daPly_c::func_ov002_020c38a0() {
 }
 #undef LA
 
-// @symbol _ZN7daPly_c19func_ov002_020c3a48Ev
-int daPly_c::func_ov002_020c3a48() {
+// @symbol _ZN7daPly_c26JumboStarCutsceneTakingOffEv
+int daPly_c::JumboStarCutsceneTakingOff() {
     unsigned int r5;
     char *anim;
     int id;
@@ -4196,7 +4208,7 @@ int daPly_c::func_ov002_020c3a48() {
         }
         mAttachOffsetY -= 0x21000;
         if (this->FinishedAnim()) {
-            func_ov002_020c3cf0();
+            AdvanceCutsceneStep();
             return 1;
         }
     }
@@ -4207,8 +4219,8 @@ int daPly_c::func_ov002_020c3a48() {
     return 0;
 }
 
-// @symbol _ZN7daPly_c19func_ov002_020c3bdcEv
-void daPly_c::func_ov002_020c3bdc() {
+// @symbol _ZN7daPly_c24JumboStarCutsceneFallingEv
+void daPly_c::JumboStarCutsceneFalling() {
     typedef int Fix12i;
   if (mStateWork == 0){
     mHasWings = 1;
@@ -4226,7 +4238,7 @@ void daPly_c::func_ov002_020c3bdc() {
   } else {
     if (this->FinishedAnim()){
         StartEndingCutscene();
-        func_ov002_020c3cf0();
+        AdvanceCutsceneStep();
         this->SetAnim(0xc0, 0x40000000, 0x1000, 0);
         mRootMotionMode = 3;
         mSkipGroundUpdate = 1;
@@ -4239,8 +4251,8 @@ void daPly_c::func_ov002_020c3bdc() {
   Player_AdvanceAnims(this);
 }
 
-// @symbol _ZN7daPly_c19func_ov002_020c3cf0Ev
-void daPly_c::func_ov002_020c3cf0() {
+// @symbol _ZN7daPly_c19AdvanceCutsceneStepEv
+void daPly_c::AdvanceCutsceneStep() {
     mStateStep = 0;
     mStateWork = mStateStep;
     (this->mStatePhase)++;
@@ -4257,8 +4269,10 @@ void daPly_c::func_ov002_020c3cf0() {
  * also starts phase 2 rather than idling. Written as a `case 1:` with no
  * `break` on the non-zero path, which is what the ROM's branch structure does.
  *
- * The three workers stay placeholders: they are ov002 functions with no
- * recovered name, and naming them from this call site alone would be a guess.
+ * St_EndingFly is Super Mario 64's ACT_JUMBO_STAR_CUTSCENE: the three
+ * workers are the N64 decomp's jumbo_star_cutscene_falling, _taking_off and
+ * _flying, and AdvanceCutsceneStep is its advance_cutscene_step. Their
+ * bodies match statement for statement, in fixed point.
  *
  * This file carried the placeholder name func_ov002_020c3d1c until the symbol
  * was moved here from ov007, where it had been sitting on an unrelated 0x50
@@ -4267,12 +4281,13 @@ void daPly_c::func_ov002_020c3cf0() {
 int daPly_c::St_EndingFly_Main() {
     switch (mStatePhase) {
     case 0:
-        func_ov002_020c3bdc();
+        JumboStarCutsceneFalling();
         break;
     case 1:
-        if (func_ov002_020c3a48() == 0) break;
+        if (JumboStarCutsceneTakingOff() == 0)
+            break;
     case 2:
-        func_ov002_020c38a0();
+        JumboStarCutsceneFlying();
         break;
     }
     return 1;
