@@ -19,6 +19,7 @@
    form, so no declaration here relies on C++ mangling. The remaining 72 resolve
    to neither spelling and are unresolvable with or without this guard. */
 struct daPly_c;
+struct OamAttr;
 struct MascotWalker;
 struct Ov007MenuState;
 
@@ -273,10 +274,10 @@ extern int sMiniGmSavingCaption;
 extern int sMiniGmCaption;
 extern int sTrmpItemHitWidths[];
 extern int sTrmpRowScreenY[];
-extern int sMCarloHudSprite;
-extern int sCardPayoutRowSprites[6];
-extern int sJumpLifeIconSprite;
-extern int sTrmpLifeIconSprite;
+extern struct OamAttr *sMCarloHudSprite;
+extern struct OamAttr *sCardPayoutRowSprites[6];
+extern struct OamAttr *sJumpLifeIconSprite;
+extern struct OamAttr *sTrmpLifeIconSprite;
 extern int data_ov006_02138c18;
 extern int pmf_MascotWalker_StateWalk_2[2];
 extern int data_ov006_0213aee8[12];
@@ -577,10 +578,10 @@ extern int func_ov100_02145014(void);
 extern int*data_0209d70c;
 extern int *sFlowerFaceSprites[];
 extern int*data_ov006_0213abe0;
-extern int *sJumpTextSpritesByLanguage[];
-extern int *sJump2TextSpritesByLanguage[];
-extern int *sTrmpTextSpritesByLanguage[];
-extern int *sTrmp2TextSpritesByLanguage[];
+extern struct OamAttr **sJumpTextSpritesByLanguage[];
+extern struct OamAttr **sJump2TextSpritesByLanguage[];
+extern struct OamAttr **sTrmpTextSpritesByLanguage[];
+extern struct OamAttr **sTrmp2TextSpritesByLanguage[];
 extern int*data_ov056_021124d4[];
 extern int*func_02043f4c(int*, unsigned int, int);
 extern long long func_0203d5bc(int*);

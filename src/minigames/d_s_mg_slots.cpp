@@ -54,6 +54,7 @@ enum dScMgSlots_AssetId {
 #include "dScMgSlot3_c.h"
 #include "Sound.h"
 #include "OAM.h"
+#include "OamAttr.h"
 #include "dScMgBase_c.h"
 #include "decl_common.h"
 #include "types.h"
@@ -124,8 +125,8 @@ extern void *LoadFile(int handle);
 
 extern u8 gSubScreenLayers;
 extern int data_0208ee44;
-extern void RenderOamMainScreen(void *, int, int, int, int);
-extern void *sSlotsSlotBlinkSprites;
+extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
+extern OamAttr sSlotsSlotBlinkSprites[];
 extern void Mg_LoseCredits(void *c);
 extern void func_ov001_020ab3f0(void *c);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
@@ -982,7 +983,7 @@ void SlotBlink_Draw(unsigned char *raw) {
     SlotBlink *sprite = (SlotBlink *)raw;
     if (sprite->mVisible == 0)
         return;
-    RenderOamMainScreen(&sSlotsSlotBlinkSprites, sprite->mX, sprite->mY, -1, -1);
+    RenderOamMainScreen(sSlotsSlotBlinkSprites, sprite->mX, sprite->mY, -1, -1);
 }
 }
 

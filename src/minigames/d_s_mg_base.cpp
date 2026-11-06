@@ -116,10 +116,10 @@ int func_02013580(int table, int index);
 void func_02013568(int table, int index, int value);
 int Mg_GetSaveTable(void *scene);
 
-/* One table of sprite-list words per language, indexed by
-   GetGameLanguage(); the helpers below hand its words to the OAM
+/* One table of OAM sprite lists per language, indexed by
+   GetGameLanguage(); the helpers below hand its lists to the OAM
    wrappers. */
-extern int *sMgSpriteTables[];
+extern OamAttr **sMgSpriteTables[];
 }
 
 // @symbol _ZN11dScMgBase_c12IsAltVariantEv
@@ -538,14 +538,14 @@ void *Ov004_LoadFileByPath(const char *path)
 namespace s20adc80 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(int, int, int, long long);
+extern void Mg_RenderSpriteOnNoMtx(void *, int, int, long long);
 }
 }
 /* State 1's draw: word 2 of the current language's entry in
    sMgSpriteTables, at mPos >> 12. */
 void MgFx::DrawFlyTo() {
     int idx=s20adc80::GetGameLanguage();
-    int *t=sMgSpriteTables[idx];
+    OamAttr **t = sMgSpriteTables[idx];
     s20adc80::Mg_RenderSpriteOnNoMtx(t[2], mPos[0] >> 0xc, mPos[1] >> 0xc, -1);
 }
 
@@ -1168,7 +1168,7 @@ extern int *sMgMenuItem0SpritesByLanguage[];
 extern int *sMgMenuItem1SpritesByLanguage[];
 extern int *sMgMenuItem2SpritesByLanguage[];
 extern s16 data_02082214[];
-extern int data_ov006_021346bc;
+extern OamAttr *data_ov006_021346bc;
 
 /* Draws the three-item overlay menu: each item's per-language sprite list
    at its mMenuItemNX/Y, followed by data_ov006_021346bc at the same spot.
@@ -1222,11 +1222,11 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
                 cursor += 8;
             } while (v != 0xffff);
 
-            Mg_DrawSpriteList((void *)data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
+            Mg_DrawSpriteList(data_ov006_021346bc, tbl[i][0], tbl[i][1], 0);
         } else {
             s16 *pos = tbl[i];
             Mg_DrawSpriteList((void *)extra[i], pos[0], pos[1], 0);
-            Mg_DrawSpriteList((void *)data_ov006_021346bc, pos[0], pos[1], 0);
+            Mg_DrawSpriteList(data_ov006_021346bc, pos[0], pos[1], 0);
         }
     }
 }
@@ -1933,7 +1933,7 @@ extern "C" {
 extern "C" {
 void OamRender10_d_s_mg_base_a(int, OamAttr *, s32, s32, int, int, int, int, int, int);
 
-extern "C" void RenderOamMainScreen(int oam, int x, int y, int palette, int priority) {
+extern "C" void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int priority) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
@@ -1941,11 +1941,11 @@ extern "C" void RenderOamMainScreen(int oam, int x, int y, int palette, int prio
         if (scene->GetDisplayMode() == 2) {
             if (((D3DBaseView *)gMgScene)->mDrawSubScreen != 1)
                 return;
-            OAM::Render(0, (OamAttr *)oam, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, oam, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
             return;
         }
     }
-    OAM::Render(0, (OamAttr *)oam, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
+    OAM::Render(0, oam, x, y, palette, priority, 0x1000, 0x1000, 0, -1);
 }
 }
 }
@@ -2626,8 +2626,8 @@ void Mg_DrawBlinkSprite(void *c, s32 arg1, s32 arg2)
     s32 idx1 = ((dScMgBase_c *)c)->mFrameCounter;
     s32 r4 = (idx1 < 0x14) ? 0x11 : 0x12;
     s32 idx2 = GetGameLanguage();
-    int *table = sMgSpriteTables[idx2];
-    Hud_RenderSprite((void *)table[r4], arg1, arg2, -1, -1);
+    OamAttr **table = sMgSpriteTables[idx2];
+    Hud_RenderSprite(table[r4], arg1, arg2, -1, -1);
 }
 }
 }
@@ -2636,7 +2636,7 @@ void Mg_DrawBlinkSprite(void *c, s32 arg1, s32 arg2)
 namespace s20b0de0 {
 extern "C" {
 s32 GetGameLanguage(void);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 
 /* Draws the per-language prompt sprite at (0xc0, 0xb0) while mPromptEnabled
    is set: blinking (shown for the first 0x18 frames of each 0x30-frame
@@ -2667,7 +2667,7 @@ void Mg_DrawPrompt(char* c)
 namespace s20b0e84 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 
 static inline int sdiv4(int d) {
     int t = d + (int)((unsigned)(d >> 1) >> 0x1e);
@@ -2689,7 +2689,7 @@ static inline int sdiv2(int e) {
    five, the icons close up as mTallyAnimTimer runs from mTimeLimit to
    mTimeLimit + 0x20, with sound 0x1ba as they start. */
 extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
-    int *r8;
+    OamAttr **r8;
     int r7;
     int i;
     int pin;
@@ -2957,7 +2957,7 @@ void Mg_DrawRecordRow(int a0, int x, int y, int val)
 {
     int idx = GetGameLanguage();
     int mode = gMgMenuRow.scoringMode;
-    int *tbl = sMgSpriteTables[idx];
+    OamAttr **tbl = sMgSpriteTables[idx];
     int flag = 0;
 
     if (mode == 5) {
@@ -2968,7 +2968,7 @@ void Mg_DrawRecordRow(int a0, int x, int y, int val)
             return;
         major = val / 60;
         Mg_DrawNumber(x - 0x18, y, major, flag, -1, 1, 0xa);
-        Hud_RenderSprite((void *)tbl[7], x - 0x10, y, -1, -1);
+        Hud_RenderSprite(tbl[7], x - 0x10, y, -1, -1);
 
         rem = val % 60;
         pct = rem * 100;
@@ -2984,19 +2984,19 @@ void Mg_DrawRecordRow(int a0, int x, int y, int val)
         flag = 1;
     switch (mode) {
     case 1:
-        Hud_RenderSprite((void *)tbl[9], 0x58, y, -1, -1);
-        Hud_RenderSprite((void *)tbl[1], 0x68, y, -1, -1);
+        Hud_RenderSprite(tbl[9], 0x58, y, -1, -1);
+        Hud_RenderSprite(tbl[1], 0x68, y, -1, -1);
         break;
     case 2:
-        Hud_RenderSprite((void *)tbl[2], 0x58, y, -1, -1);
-        Hud_RenderSprite((void *)tbl[1], 0x68, y, -1, -1);
+        Hud_RenderSprite(tbl[2], 0x58, y, -1, -1);
+        Hud_RenderSprite(tbl[1], 0x68, y, -1, -1);
         break;
     case 3:
         flag = 1;
         break;
     case 4:
-        Hud_RenderSprite((void *)tbl[0x13], 0x58, y, -1, -1);
-        Hud_RenderSprite((void *)tbl[1], 0x68, y, -1, -1);
+        Hud_RenderSprite(tbl[0x13], 0x58, y, -1, -1);
+        Hud_RenderSprite(tbl[1], 0x68, y, -1, -1);
         break;
     default:
         break;
@@ -3018,7 +3018,7 @@ void Mg_DrawRecordRow(int a0, int x, int y, int val)
 namespace s20b19f0 {
 extern "C" {
 s32 GetGameLanguage(void);
-void RenderOamMainScreen(int a, int b, int c, int d, int e);
+void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 /* Draws sprite word 8 at (0x20, 0xc) and `value`, starting at x
    0x48, through Mg_DrawNumber. */
 void Mg_DrawTopLeftCounter(int value) {
@@ -3033,7 +3033,7 @@ void Mg_DrawTopLeftCounter(int value) {
 namespace s20b1a5c {
 extern "C" {
 s32 GetGameLanguage(void);
-void RenderOamMainScreen(int a, int b, int c, int d, int e);
+void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern int sMgCounterMaxByDigits[];
 /* Draws a0, capped at sMgCounterMaxByDigits[a1], right-aligned at (0xf4,
    0xc), and sprite word 4 to its left at an x that a1 sets. */
@@ -3166,15 +3166,21 @@ void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5
 // @symbol Mg_RenderSpriteOn
 namespace s20b1cf0 {
 extern "C" {
-void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
-void Hud_RenderSprite(int a, int b, int c, int d, int e);
-void RenderOamMainScreen(int a, int b, int c, int d, int e);
+void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 /* `sel` picks the wrapper: -1 Mg_RenderSpriteBoth, 0 Hud_RenderSprite,
    anything else RenderOamMainScreen; each is passed -1 in its place. */
-void Mg_RenderSpriteOn(int a, int b, int c, int sel, int e){
-  if(sel == -1){ Mg_RenderSpriteBoth(a,b,c,-1,e); return; }
-  if(sel == 0){ Hud_RenderSprite(a,b,c,-1,e); return; }
-  RenderOamMainScreen(a,b,c,-1,e);
+void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int sel, int e) {
+    if (sel == -1) {
+        Mg_RenderSpriteBoth(a, b, c, -1, e);
+        return;
+    }
+    if (sel == 0) {
+        Hud_RenderSprite(a, b, c, -1, e);
+        return;
+    }
+    RenderOamMainScreen(a, b, c, -1, e);
 }
 }
 }
@@ -3203,12 +3209,12 @@ void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
 namespace s20b1de8 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void Mg_RenderSpriteOnNoMtx(int, int, int, int, int);
+extern void Mg_RenderSpriteOnNoMtx(void *, int, int, int, int);
 
 /* Draws sprite word 2 at (r0, r1) through Mg_RenderSpriteOnNoMtx. */
 void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
     int idx = GetGameLanguage();
-    int *t = sMgSpriteTables[idx];
+    OamAttr **t = sMgSpriteTables[idx];
     Mg_RenderSpriteOnNoMtx(t[2], r0, r1, r2, r3);
 }
 }
@@ -3230,7 +3236,7 @@ void Mg_DrawScoreTally(void* a, int unused1, int unused2, int unused3) {
 namespace s20b1e44 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void DrawOamSprite(int attr, int x, int y, Matrix2x2 *mtx);
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 /* Draws `arg` centred at (0x80, 0xc) and sprite word 3 at (0x60, 0xc). */
 void Mg_DrawTopCenterCounter(int arg) {
     int r;
@@ -3451,12 +3457,12 @@ extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
    16 px apart from (12, 12). */
 void Mg_DrawStockCounter(int arg0, int arg1)
 {
-    int *table = sMgSpriteTables[GetGameLanguage()];
-    OamAttr *sb = (OamAttr *)table[0];
+    OamAttr **table = sMgSpriteTables[GetGameLanguage()];
+    OamAttr *sb = table[0];
     int b = 12;
     if (arg1 != 1) {
         DrawOamSprite(sb, b, b, 0);
-        DrawOamSprite((OamAttr *)sMgSpriteTables[GetGameLanguage()][1], 30, b, 0);
+        DrawOamSprite(sMgSpriteTables[GetGameLanguage()][1], 30, b, 0);
         Mg_DrawBigNumber(0x30, b, arg0, 1, -1, 2, 0);
     } else {
         int i;

@@ -65,7 +65,6 @@ extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d630(int *p, int m);
 extern int sMgCoinsBetPlaced;
 extern int func_0203d5dc(void *a, void *b);
-extern int sMCarloHudSprite;
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Camera_InitDealerView(void *p);
@@ -389,7 +388,7 @@ void dScMgMCarlo_c::RenderHud(void) {
     if (deck == 0)
         return;
     Mg_DrawNumber(0xe8, 0x28, deck, -1, -1, 0, 0);
-    Hud_RenderSprite((void *)sMCarloHudSprite, 0xe8, 0x18, -1, -1);
+    Hud_RenderSprite(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c4InitEi

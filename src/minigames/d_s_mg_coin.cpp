@@ -119,7 +119,7 @@ extern int RandomIntInternal(int *seed);
 extern const int sCoinBagRowTopY[];
 extern const int sCoinBagRowHeight[];
 extern const int sCoinBagHopVX[];
-extern int sCoinCaptionSprites[];
+extern OamAttr *sCoinCaptionSprites[];
 extern const unsigned char sCoinCaptionLoopTimes[];
 extern const unsigned char sCoinCaptionLoopSprites[];
 extern const unsigned char sCoinCaptionBlinkTimes[];
@@ -133,7 +133,7 @@ extern const u16 sCoinSparkleAngles[];
 extern s16 data_02082214[];
 extern int sCoinPopupSprites;
 extern const int sCoinPopupY[];
-extern int *sCoinScorePlayerSprites[];
+extern OamAttr **sCoinScorePlayerSprites[];
 extern int GetGameLanguage(void);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
 struct OamAttr;
@@ -147,7 +147,7 @@ extern void Mg_RenderSpriteBothPalMtx(void *obj, int x, int y, int w, int *vec);
 extern void func_020127a4(int a, int b, int c, int d);
 extern const int sCoinRowY[];
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern void RenderOamMainScreen(int a, int b, int c, int d, int e);
+extern void RenderOamMainScreen(OamAttr *a, int b, int c, int d, int e);
 extern const u16 sCoinBlockFrameSprites[];
 extern void *sCoinBlocksSprites[];
 extern const int sCoinBlockFallRowY[];
@@ -690,7 +690,7 @@ void dScMgCoin_c::DrawScorePlayer() {
     RenderOamMainScreen(sCoinScorePlayerSprites[lang][8], 0x80, 0x18, -1, -1);
     Mg_DrawCreditsIcon(0x68, 0x28, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite((OamAttr *)sCoinScorePlayerSprites[lang][1], 0x7a, 0x28, 0);
+    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 0x7a, 0x28, 0);
     Mg_DrawBigNumber(0x8c, 0x28, scene->mPlayerScore, 1, -1, 2, 0);
 }
 
@@ -707,7 +707,7 @@ void dScMgCoin_c::DrawScoreRival() {
     RenderOamMainScreen(sCoinScorePlayerSprites[lang][4], 0x80, 0x50, -1, -1);
     Mg_DrawCreditsIcon(0x6c, 0x60, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite((OamAttr *)sCoinScorePlayerSprites[lang][1], 0x7e, 0x60, 0);
+    DrawOamSprite(sCoinScorePlayerSprites[lang][1], 0x7e, 0x60, 0);
     if (gMgScene != 0)
         count = gMgScene->mCreditsShown;
     else

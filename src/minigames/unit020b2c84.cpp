@@ -115,6 +115,7 @@ struct PairW { int w0, w1; };
 struct S3 { int v[3]; };
 struct Entry { int id; int ptr; };
 struct EntryTable { Entry e[29]; };
+struct OamAttr;
 
 /* One of the three 0x134-byte records at gMgBanners: a graphic
    loaded from the file table and drawn as a list of OAM records. The class
@@ -165,7 +166,7 @@ void Mg_SpawnFx(int c, short a1, int *a2, int *r3, int *sp0);
    named parameters hold the @NNN count noted above. */
 void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, dtor_t dtor);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
-void Mg_RenderSpriteOn(int a, int b, int c, int d, int e);
+void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
 void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 void Banner_DrawPlain(MgBanner *e);
@@ -177,7 +178,7 @@ extern s16 data_02082214[];
 extern S3 data_ov004_020bc27c;
 extern int sMgMsgGiveUpSprites;
 static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};
-extern int data_ov006_021346bc;
+extern OamAttr *data_ov006_021346bc;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
 extern Pair pmf_Banner_UpdateWave;
@@ -515,7 +516,7 @@ extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     x = x - (w >> 1);
     left = w >> 1;
     left = originX - left;
-    Mg_RenderSpriteOn((int)e->mOam, left, e->mY, e->mScreen, e->mPriority);
+    Mg_RenderSpriteOn((OamAttr *)e->mOam, left, e->mY, e->mScreen, e->mPriority);
     drawY = e->mY;
     Mg_DrawBigNumber(x, drawY, n, e->mScreen, e->mPriority, 2, 0);
 }
@@ -894,7 +895,7 @@ extern "C" void Banner_Press(MgBanner *e) {
 
 // @symbol Banner_DrawPlain
 extern "C" void Banner_DrawPlain(MgBanner *e) {
-    Mg_RenderSpriteOn((int)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
+    Mg_RenderSpriteOn((OamAttr *)e->mOam, e->mX, e->mY, e->mScreen, e->mPriority);
     if (e->mFileIndex != 0 && e->mFileIndex != 1 && e->mFileIndex != 2)
         return;
     Mg_RenderSpriteOn(data_ov006_021346bc, e->mX, e->mY, e->mScreen, e->mPriority);

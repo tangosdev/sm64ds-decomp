@@ -85,7 +85,7 @@ int  GetGameLanguage(void);
 struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void FreeGfxSlotsById(int arg);
@@ -455,7 +455,7 @@ s32 dScMgJump_c::Render()
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((OamAttr *)sJumpTextSpritesByLanguage[idx][1], y, 0xc, 0);
+                DrawOamSprite(sJumpTextSpritesByLanguage[idx][1], y, 0xc, 0);
             } else {
                 RenderOamMainScreen(sJumpLifeIconSprite, y, 0xc, -1, -1);
             }
