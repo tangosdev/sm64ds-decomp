@@ -335,7 +335,7 @@ extern CLPS_Block data_ov025_02112d48;
 
 /* ---- arm9 data ---- */
 extern void *data_0209f318;
-extern int data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
 extern int AngleDiff(int a, int b);
@@ -882,8 +882,8 @@ int daIwante_c::func_ov066_02116db0() {
                 in.z = 0x3e8000;
 
                 ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
-                Matrix4x3_FromRotationY(data_020a0e68, ang);
-                MulVec3Mat4x3(&in, data_020a0e68, &out);
+                Matrix4x3_FromRotationY(&data_020a0e68, ang);
+                MulVec3Mat4x3(&in, &data_020a0e68, &out);
 
                 mTargetPosX += out.x;
                 mTargetPosZ += out.z;
@@ -2160,8 +2160,8 @@ int daIwante_c::func_ov066_0211903c() {
             in.y = 0x32000;
             in.z = -0x32000;
 
-            Matrix4x3_FromRotationY(data_020a0e68, 0);
-            MulVec3Mat4x3(&in, data_020a0e68, &out);
+            Matrix4x3_FromRotationY(&data_020a0e68, 0);
+            MulVec3Mat4x3(&in, &data_020a0e68, &out);
 
             out.x += mPosX;
             out.y += mPosY;
@@ -2289,12 +2289,12 @@ void daIwante_c::func_ov066_021194a4() {
 void daIwante_c::func_ov066_021194fc() {
     int v[3];
     Vec3_Asr(v, &mPosX, 3);
-    Matrix4x3_FromTranslation(data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     if (mPartIdx == PART_MAIN)
-        *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)data_020a0e68;
+        *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)&data_020a0e68;
     else
-        *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
+        *(Mtx43 *)&mBlendAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     if (mPartIdx == PART_MAIN)
         return;
     if (mRestPosY >= mPosY)
@@ -2305,12 +2305,10 @@ void daIwante_c::func_ov066_021194fc() {
             d = 0x64000;
         else
             d = -0x64000;
-        Matrix4x3_FromTranslation(data_020a0e68,
-            (mPosX + d) >> 3,
-            (mPosY - 0x8000) >> 3,
-            (mPosZ + 0xa0000) >> 3);
+        Matrix4x3_FromTranslation(&data_020a0e68, (mPosX + d) >> 3, (mPosY - 0x8000) >> 3,
+                                  (mPosZ + 0xa0000) >> 3);
     }
-    *(Mtx43 *)mShadowMtx = *(Mtx43 *)data_020a0e68;
+    *(Mtx43 *)mShadowMtx = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0x140000, 0x258000, 0xf);
 }
 
@@ -2420,8 +2418,8 @@ int daIwante_c::Behavior() {
             if (mState != &data_ov066_0211b07c) {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MulVec3Mat4x3(&vin, data_020a0e68, &vout);
+                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
+                    MulVec3Mat4x3(&vin, &data_020a0e68, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {
@@ -2435,8 +2433,8 @@ int daIwante_c::Behavior() {
             } else {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MulVec3Mat4x3(&vin, data_020a0e68, &vout);
+                    Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
+                    MulVec3Mat4x3(&vin, &data_020a0e68, &vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {

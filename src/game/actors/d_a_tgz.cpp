@@ -125,7 +125,7 @@ int RandomIntInternal(int *seed);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
 extern int data_0209f32c;
-extern char IDENTITY_MATRIX4X3;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern signed char gCurrentSublevel;
 }
 
@@ -843,7 +843,7 @@ int daTgz_c::InitResources()
     mScaleZ = 0x1000;
     mDespawnTimer = 0x2c;
     func_ov077_02125e94(this, 0);
-    *(Matrix4x3 *)mShadowMatrix = *(Matrix4x3 *)&IDENTITY_MATRIX4X3;
+    *(Matrix4x3 *)mShadowMatrix = IDENTITY_MATRIX4X3;
     func_ov077_02125304((char *)this);
     return 1;
 }

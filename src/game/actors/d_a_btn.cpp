@@ -138,7 +138,7 @@ extern u8 data_0209d660;
 extern u8 data_0209f21c;
 extern u8 data_0209f220;
 extern signed char gCurrentSublevel;
-extern int data_0209f318;
+extern void *data_0209f318;
 extern daPly_c *data_0209f394[];
 /* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
    hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */

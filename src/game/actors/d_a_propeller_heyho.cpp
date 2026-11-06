@@ -372,7 +372,7 @@ extern "C" {
 extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern int data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 
 /* The matrix copies go through the flat Mtx43: assigning Matrix4x3 grows
    .text by 0x34 bytes. */
@@ -385,11 +385,12 @@ void func_ov070_02120070(daPropeller_Heyho_c* c)
 {
     Vector3 v;
     Vec3_Asr(&v, &c->mPosX, 3);
-    Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    *(Mtx43 *)&c->mAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
-    Matrix4x3_FromTranslation(data_020a0e68, c->mPosX >> 3, (c->mPosY - 0xa000) >> 3, c->mPosZ >> 3);
-    *(Mtx43 *)c->mShadowMatrix = *(Mtx43 *)data_020a0e68;
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
+    *(Mtx43 *)&c->mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    Matrix4x3_FromTranslation(&data_020a0e68, c->mPosX >> 3, (c->mPosY - 0xa000) >> 3,
+                              c->mPosZ >> 3);
+    *(Mtx43 *)c->mShadowMatrix = *(Mtx43 *)&data_020a0e68;
     c->DropShadowRadHeight(c->mShadowModel, *(Matrix4x3 *)c->mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 }
@@ -441,7 +442,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
-extern int data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235ac;
 
@@ -479,9 +480,9 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
                   0xa, 0x100, 0x50);
 
     in[2] = 0xa000;
-    Matrix4x3_FromRotationY(data_020a0e68, c->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, c->mPrevAngleX);
-    MulVec3Mat4x3(in, data_020a0e68, out);
+    Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
+    MulVec3Mat4x3(in, &data_020a0e68, out);
 
     ApproachLinear(c->mSpeedX, out[0], 0x1000);
     ApproachLinear(c->mVertSpeed, out[1], 0x800);
@@ -536,7 +537,7 @@ extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State
 
 extern signed char gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
-extern int data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_0212358c;
@@ -604,9 +605,9 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
                   0xa, 0x100, 0x50);
 
     vin.z = 0xf000;
-    Matrix4x3_FromRotationY(data_020a0e68, c->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, c->mPrevAngleX);
-    MulVec3Mat4x3(&vin, data_020a0e68, &c->mSpeedX);
+    Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
+    MulVec3Mat4x3(&vin, &data_020a0e68, &c->mSpeedX);
 
     if (Vec3_Dist(&c->mPos, &c->mHomePos) > kHomeLeashDist) {
         FlyGuy_ChangeState(c, &data_ov070_0212359c);
@@ -666,7 +667,7 @@ extern s8 gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
 extern s32 data_0209f32c;
-extern int data_020a0e68[];
+extern Matrix4x3 data_020a0e68;
 
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern short Vec3_VertAngle(void* v1, void* v0);
@@ -794,9 +795,9 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
     half = (mPrevAngleY - mTargetAngY) / 2;
     ApproachAngle(&mPrevAngleZ, half, 0xa, 0x100, 0x50);
 
-    Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mPrevAngleX);
-    MulVec3Mat4x3(&v, data_020a0e68, &mSpeedX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
+    MulVec3Mat4x3(&v, &data_020a0e68, &mSpeedX);
 
     return 1;
 }
