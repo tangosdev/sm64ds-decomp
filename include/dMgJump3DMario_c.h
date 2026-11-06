@@ -46,7 +46,8 @@ struct dMg3DHeyhoObjAdapter_c {
     virtual void *GetVelocity() = 0; /* slot 1 -- returns &mVel */
     virtual int IsLaunched() = 0;    /* slot 2 -- 0 in StateIdle or StateWindUp, 1 once launched */
 
-    VecFx32 mAnchor;        /* 0x04 -- the point EnterHold measures mPos against; written by the owning scene, never in this TU */
+    /* The point EnterHold measures mPos against; written by the owning scene, never in this TU. */
+    VecFx32 mAnchor;        /* 0x04 */
     u16 mCommand;           /* 0x10 -- the scene's command: 1 = hit, 2 = hold; consumed (cleared) by the State* handlers. The one field the base ctor touches */
     u8 pad_012[2];          /* 0x12 */
     VecFx32 mPos;           /* 0x14 -- position (20.12); advanced by mVel every update */

@@ -66,7 +66,7 @@ extern "C" {
 void Sound_PlayBank1Panned(int a, int b, int c);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-int  NormalizeVec3IfNonZero(VecFx32 *v);
+int NormalizeVec3IfNonZero(VecFx32 *v);
 int  RandomIntInternal(int *seed);
 void func_02012718(int a, int b);
 int  func_02053200(int x);
