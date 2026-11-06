@@ -52,6 +52,7 @@
 #include "daKpa3Bg_c.h"
 #include "daKpa_c.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx.h"
 
 struct BMD_File;
 struct KCL_File;
@@ -59,11 +60,9 @@ struct CLPS_Block;
 
 extern "C" {
 
-typedef struct Vec3 { int x, y, z; } Vec3;
-
-int *Vec3_AsrInPlace(Vec3 *v, int n);
+int *Vec3_AsrInPlace(VecFx32 *v, int n);
 /* Unnamed on purpose: see the @NNN note in the banner. */
-void MulVec3Mat4x3(Vec3 *, void *, void *);
+void MulVec3Mat4x3(VecFx32 *, void *, void *);
 void func_02012694(unsigned int, void *);
 int CopyTexPalFromLevelModel(void *);
 
@@ -244,10 +243,10 @@ void daKpa3Bg_c::func_ov060_021180e0()
 
 /* The C body cannot spell a member call. These inline to the direct calls.
    They sit above the @symbol so that marker stays on the C function. */
-static inline void kpaCallEarthquake(daKpa3Bg_c *self, Vec3 *v, int fix) {
+static inline void kpaCallEarthquake(daKpa3Bg_c *self, VecFx32 *v, int fix) {
     self->Earthquake(*(const Vector3 *)v, fix);
 }
-static inline void kpaCallPoof(daKpa3Bg_c *self, Vec3 *v) {
+static inline void kpaCallPoof(daKpa3Bg_c *self, VecFx32 *v) {
     self->PoofDustAt(*(const Vector3 *)v);
 }
 static inline void kpaCallDestroy(daKpa3Bg_c *self) {
@@ -271,9 +270,9 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
     volatile int saved[3];
     int yimm;
     int v[6];
-    Vec3 eq;
-    Vec3 dust1;
-    Vec3 dust2;
+    VecFx32 eq;
+    VecFx32 dust1;
+    VecFx32 dust2;
     u16 state;
     int row;
     int ang;
@@ -297,8 +296,8 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         v[0] = (s16)data_02082214[(ang >> 4) * 2] * (s16)0x366 + (data_ov060_02119564[row].x << 12);
         v[2] = (s16)data_02082214[(ang >> 4) * 2 + 1] * (s16)0x366 +
                (data_ov060_02119564[self->mVariant].z << 12);
-        Vec3_AsrInPlace((Vec3 *)v, 3);
-        MulVec3Mat4x3((Vec3 *)v, &data_0209b3ec, &self->mCamSpacePosX);
+        Vec3_AsrInPlace((VecFx32 *)v, 3);
+        MulVec3Mat4x3((VecFx32 *)v, &data_0209b3ec, &self->mCamSpacePosX);
         func_02012694(0xbc, &self->mCamSpacePosX);
         self->mCamSpacePosX = saved[0];
         self->mCamSpacePosY = saved[1];

@@ -58,9 +58,6 @@ dBgCh_Lin data_020a0d0c;
  * Mtx43 and this local vector view preserves the retail block copies without
  * changing it.
  */
-struct RawVector3 {
-    s32 x, y, z;
-};
 
 // @symbol _ZN10dBgW_KcMbgC1Ev
 // @symbol _ZN10dBgW_KcMbgC2Ev
@@ -82,7 +79,7 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16
     struct Scratch {
         Mtx43 rotation;
         Mtx43 scaled;
-        RawVector3 up;
+        VecFx32 up;
     } scratch;
     self->dBgW_Kc::SetFile(file, clps);
     self->Reset();
@@ -156,7 +153,7 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&invScaledMat = *(Mtx43 *)&newScaledMat;
     InvMat4x3(&invScaledMat, &invScaledMat);
 
-    RawVector3 up;
+    VecFx32 up;
     up.x = 0;
     up.y = 0x1000;
     up.z = 0;
@@ -168,13 +165,13 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     /* Aim dBgW_Kc's depth policy along the horizontal motion: depthByDir on,
        depthDir the direction in collider space, depthDirMinDot its threshold.
        A collider that is not moving sideways sets shallowOnly instead. */
-    RawVector3 moveDir;
+    VecFx32 moveDir;
     GetVelocity(*(Vector3 *)&moveDir);
     moveDir.y = 0;
     if (LenVec3((Vector3 *)&moveDir) != 0) {
         func_01ffb0a4(this);
         NormalizeVec3((Vector3 *)&moveDir, (Vector3 *)&moveDir);
-        RawVector3 localDir;
+        VecFx32 localDir;
         WorldToLocalDirection(*(Vector3 *)&moveDir, *(Vector3 *)&localDir);
         func_01ffb07c(this, (Vector3 *)&localDir);
         SetDepthDirMinDot(0xe66);
@@ -274,8 +271,8 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 localCentre;
     /* The local query's push-out bounds, and the same bounds scaled back out. */
     struct {
-        RawVector3 localMin, localMax;
-        RawVector3 scaledMin, scaledMax;
+        VecFx32 localMin, localMax;
+        VecFx32 scaledMin, scaledMax;
     } bounds;
     dBgCh_SphCrr localSphere;
     int hit;

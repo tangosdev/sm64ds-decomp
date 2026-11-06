@@ -1362,11 +1362,8 @@ void Trmp2Mario_PlaceAtStart(void) {
 // ---- Trmp2Mario_DrawAll
 namespace ns_020caadc {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
-extern void func_0203cd80(Vec3 *m, short angle);
-extern void func_0203ccd4(Vec3 *m, short angle);
+extern void func_0203cd80(VecFx32 *m, short angle);
+extern void func_0203ccd4(VecFx32 *m, short angle);
 extern void Trmp2Mario_Render(char *o);
 extern void Puff_DrawAll(void);
 extern int sTrmp2MarioCount;
@@ -1374,8 +1371,8 @@ extern char *sTrmp2Marios;
 
 // @symbol Trmp2Mario_DrawAll
 void Trmp2Mario_DrawAll(void) {
-    Vec3 v;
-    Vec3 w;
+    VecFx32 v;
+    VecFx32 w;
     int i, n, off;
     v.x = 0;
     v.y = 0;

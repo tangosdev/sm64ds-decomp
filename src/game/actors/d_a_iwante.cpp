@@ -41,7 +41,7 @@
  *    resource handles and 19 state descriptors are now typed objects defined
  *    at the bottom of this file; the 38 pointer-to-member records they copy
  *    from keep their data_ov066 names.
- *  - EVec3 is a plain word struct standing in for Vector3, and the matrix
+ *  - Position temporaries are the POD VecFx32, not Vector3, and the matrix
  *    copies go through the flat Mtx43: assigning Matrix4x3 grows .text by
  *    0x54 bytes. Vec4 is an unused stack object with a destructor.
  *  - Handler descriptions come from reading the code, not from play-testing.
@@ -94,6 +94,7 @@ enum Eyerok_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
 /* Actor ids, from symbols/actor_debug_names.tsv. */
 enum {
@@ -168,8 +169,7 @@ enum {
     MSG_AFTER_FIGHT = 0xb9
 };
 
-/* EVec3 is three plain words: unlike a Vector3, a local of it has no destructor. */
-struct EVec3 { int x, y, z; };
+/* Position temporaries are VecFx32: unlike a Vector3, a local of it has no destructor. */
 typedef int (daIwante_c::*EyerokPMF)();
 /* A state descriptor: enter PMF at +0 (run by func_ov066_02119454 on install),
  * run PMF at +8 (run by Behavior every frame). */
@@ -805,7 +805,7 @@ int daIwante_c::func_ov066_02116c6c() {
         Particle::System::NewSimple(0x7c, mPosX, mPosY, mPosZ);
         Particle::System::NewSimple(0x7d, mPosX, mPosY, mPosZ);
         {
-            EVec3 v;
+            VecFx32 v;
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
@@ -854,7 +854,7 @@ int daIwante_c::func_ov066_02116d14() {
  *      position is snapped and data_ov066_0211ae08 is set to 2 -> 5.
  *   5  waits for the phase to leave PATTERN_9, then back to the waiting state. */
 int daIwante_c::func_ov066_02116db0() {
-    EVec3 in, out;
+    VecFx32 in, out;
     s16 ang;
     int r;
 
@@ -868,7 +868,7 @@ int daIwante_c::func_ov066_02116db0() {
         if (mStateWork1 == 0) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                EVec3 *pp = (EVec3 *)&p->mPosX;
+                VecFx32 *pp = (VecFx32 *)&p->mPosX;
                 mTargetPosX = pp->x;
                 mTargetPosY = pp->y;
                 mTargetPosZ = pp->z;
@@ -1010,7 +1010,7 @@ int daIwante_c::func_ov066_021171b0() {
         if (p == 0)
             break;
         {
-            EVec3 *pp = (EVec3 *)&p->mPosX;
+            VecFx32 *pp = (VecFx32 *)&p->mPosX;
             mTargetPosX = pp->x;
             mTargetPosY = pp->y;
             mTargetPosZ = pp->z;
@@ -1171,14 +1171,14 @@ int daIwante_c::func_ov066_021175bc() {
  *      data_ov066_0211ae08 += 1 (and once more if a hand is gone) -> 8.
  *   8  waits for the phase to leave PATTERN_7, then back to the waiting state. */
 int daIwante_c::func_ov066_021175e8() {
-    EVec3 v;
+    VecFx32 v;
 
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                EVec3 *pp = (EVec3 *)&p->mPosX;
+                VecFx32 *pp = (VecFx32 *)&p->mPosX;
                 mTargetPosX = pp->x;
                 mTargetPosY = pp->y;
                 mTargetPosZ = pp->z;
@@ -1225,7 +1225,7 @@ int daIwante_c::func_ov066_021175e8() {
             if (func_ov066_02116a68() == 0) {
                 daPly_c *p = ClosestPlayer();
                 if (p != 0) {
-                    EVec3 *pp = (EVec3 *)&p->mPosX;
+                    VecFx32 *pp = (VecFx32 *)&p->mPosX;
                     v.x = pp->x;
                     v.y = pp->y;
                     v.z = pp->z;
@@ -1363,14 +1363,14 @@ int daIwante_c::func_ov066_02117bd0() {
  *      once more if a hand is gone) -> 7.
  *   7  waits for the phase to leave PATTERN_6, then back to the waiting state. */
 int daIwante_c::func_ov066_02117bf0() {
-    EVec3 v;
+    VecFx32 v;
 
     switch (mSubState) {
     case 0:
         if (data_ov066_0211ae0c == mPartIdx) {
             daPly_c *p = ClosestPlayer();
             if (p != 0) {
-                EVec3 *pp = (EVec3 *)&p->mPosX;
+                VecFx32 *pp = (VecFx32 *)&p->mPosX;
                 mTargetPosX = pp->x;
                 mTargetPosY = pp->y;
                 mTargetPosZ = pp->z;
@@ -1407,7 +1407,7 @@ int daIwante_c::func_ov066_02117bf0() {
             if (func_ov066_02116a68() == 0) {
                 daPly_c *p = ClosestPlayer();
                 if (p != 0) {
-                    EVec3 *pp = (EVec3 *)&p->mPosX;
+                    VecFx32 *pp = (VecFx32 *)&p->mPosX;
                     v.x = pp->x;
                     v.y = pp->y;
                     v.z = pp->z;
@@ -2392,7 +2392,7 @@ static inline u32 NewDust(u32 handle, u32 id, const Vector3 &pos) {
  * (mdCcAcPos_c) to its position plus data_ov066_0211ad18, refreshes matrices and
  * collision, clears its hit results, re-registers it (Update links it into the
  * collision list) and advances both animations. */
-/* Vtable slot 6. EVec3 is a local plain-int triple (stack temps); callees whose
+/* Vtable slot 6. The stack temps are POD VecFx32s; callees whose
  * ROM symbols carry by-value/ref class parameters keep their literal mangled
  * extern "C" spellings. */
 int daIwante_c::Behavior() {
@@ -2406,8 +2406,8 @@ int daIwante_c::Behavior() {
         if ((mDustCounter & 1) == 0) {
             int rnd = RandomIntInternal(&data_0209e650);
             int idx = mDustCounter >> 1;
-            EVec3 vin;
-            EVec3 vout;
+            VecFx32 vin;
+            VecFx32 vout;
             mDustPos[idx].x = mPosX;
             mDustPos[idx].y = mPosY;
             mDustPos[idx].z = mPosZ;

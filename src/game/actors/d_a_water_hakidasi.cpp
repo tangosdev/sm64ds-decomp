@@ -41,15 +41,10 @@
 #include "Particle__System.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx.h"
 
 #pragma defer_codegen off
 
-struct Vec3 {
-    int x, y, z;
-};
-struct Vec3_16 {
-    s16 x, y, z;
-};
 
 /* The ROM member-function-pointer constants the state table copies from
  * (unlicensed .data), and the table itself (defined at the end of this
@@ -69,7 +64,7 @@ extern HakPmfSlot data_ov064_0211c2dc;
 extern HakPmfTable data_ov064_0211c934;
 
 /* local extern: no shared header declares MulVec3Mat4x3 yet. Its definition
- * takes Vector3 and Matrix4x3; State0's Vec3 values are local POD views. */
+ * takes Vector3 and Matrix4x3; State0's VecFx32 values are local POD views. */
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int SublevelToLevel(int);
@@ -95,12 +90,12 @@ daWater_Hakidasi_c::~daWater_Hakidasi_c() {}
  * waits 0x1e frames, spawns a STAR (actor 0xb2) and sets mRingsPassed to 0xa. */
 // @symbol _ZN18daWater_Hakidasi_c6State0Ev
 int daWater_Hakidasi_c::State0() {
-    struct Vec3_16 rot;
-    struct Vec3 vec;
-    struct Vec3 delta;
-    struct Vec3 rewardPos;
-    struct Vec3 hitPos1;
-    struct Vec3 hitPos2;
+    Vector3_16 rot;
+    VecFx32 vec;
+    VecFx32 delta;
+    VecFx32 rewardPos;
+    VecFx32 hitPos1;
+    VecFx32 hitPos2;
     daPly_c *player;
     int dist;
     daWater_Ring_c *ring;

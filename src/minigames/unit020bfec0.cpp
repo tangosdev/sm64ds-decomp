@@ -463,9 +463,6 @@ void FlowerFace_StateIdle(void) {}
 
 namespace s020c3990 {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
 struct S8 {
     int w[2];
 };
@@ -477,7 +474,7 @@ void FlowerFace_PlayPetalPulled(char *c) {
     int i;
     char *p;
     struct {
-        Vec3 pos, vel, pos2, vel2;
+        VecFx32 pos, vel, pos2, vel2;
     } b;
 
     FLOWERFACE(c)->mModel.SetAnim((BCA_File *)FLOWERFACE(c)->mPickAnim.filePtr, 0x40000000, 0x800,
@@ -614,9 +611,6 @@ void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
 
 namespace s020c35e8 {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
 struct Quat {
     int w[4];
 };
@@ -625,10 +619,10 @@ extern Quat data_02092768;
 extern int data_02082214[];
 
 void FallingPetal_Update(char *self) {
-    Vec3 v0;
-    Vec3 v1;
-    Vec3 v2;
-    Vec3 v3;
+    VecFx32 v0;
+    VecFx32 v1;
+    VecFx32 v2;
+    VecFx32 v3;
     Quat q0;
     Quat q1;
     int idx;
@@ -2145,9 +2139,6 @@ extern "C" void MascotWalker_Load(MascotWalker *walker) {
 
 namespace s020c07e8 {
 typedef int s16;
-struct Vector3 {
-    int x, y, z;
-};
 
 struct C;
 typedef void (C::*PMF)();
@@ -2303,10 +2294,6 @@ extern "C" {
 typedef short s16;
 typedef long long s64;
 
-typedef struct {
-    int x, y, z;
-} Vector3;
-
 void MascotWalker_StateWalk(char *c) {
     char *path;
     char *arr;
@@ -2350,8 +2337,7 @@ void MascotWalker_StateWalk(char *c) {
             path = (char *)WALKER(c)->mPath;
             idx = WALKER(c)->mPathPoint * 0xc;
             arr = *(char **)(path + 4);
-            Vec3_Sub((::Vector3 *)&dir, (const ::Vector3 *)&WALKER(c)->mPos,
-                     (const ::Vector3 *)(arr + idx));
+            Vec3_Sub(&dir, &WALKER(c)->mPos, (const Vector3 *)(arr + idx));
 
             WALKER(c)->mDir.x = dir.x;
             WALKER(c)->mDir.y = dir.y;
@@ -2370,7 +2356,7 @@ void MascotWalker_StateWalk(char *c) {
             next.y = *(int *)(arr + idx + 4);
             next.z = *(int *)(arr + idx + 8);
 
-            WALKER(c)->mTargetAngle = Vec3_HorzAngle((const Vector3 *)&WALKER(c)->mPos, &next);
+            WALKER(c)->mTargetAngle = Vec3_HorzAngle(&WALKER(c)->mPos, &next);
             return;
         }
 

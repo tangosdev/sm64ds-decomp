@@ -32,7 +32,7 @@
  */
 
 // What stays, and why:
-// - StateInit keeps its Vec-typed read of the manager's position;
+// - StateInit reads the manager's position through a Vector3 pointer;
 //   spelling it as a plain member changes the bytes.
 // - unk_32c is only zeroed in this file.
 // - The two callback helpers keep their address names and stay free
@@ -361,14 +361,11 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
  * manager the piece marks itself for destruction. */
 void daObjFl_Puzzle_c::StateInit() {
     /* Stack shape: the ROM frame reserves these 16 bytes. */
-    typedef struct {
-        int x, y, z;
-    } Vec;
     volatile int pad[4];
     daObjFl_Coin_c *a = (daObjFl_Coin_c *)dActor_c::FindWithActorID(ACTOR_ID_FL_COIN, 0);
     (void)&pad;
     if (a != 0) {
-        Vec *p = (Vec *)&a->mPosX;
+        Vector3 *p = &a->mPos;
         mCoinMgrId = a->uniqueID;
         int z = p->z;
         int x = p->x;

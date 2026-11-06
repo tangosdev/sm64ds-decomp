@@ -164,9 +164,6 @@ struct C;
 typedef int (C::*PMF)();
 struct C { char pad[0x37c]; PMF *pp; };
 
-struct V3 { int x; int y; int z; };
-typedef struct { int x, y, z; } Vec3;
-
 enum Bool { FALSE, TRUE };
 
 #include "private/mtx43.h"
@@ -258,7 +255,7 @@ extern s16 Vec3_VertAngle(const void* a, const void* b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 extern void d_a_king_donketuRunningSlidingDustAtHold(int a, int b, int c);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
-   locals stay the POD Vec3 above, so the call casts. */
+   locals are the POD VecFx32, so the call casts. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
@@ -321,13 +318,13 @@ void daKing_Donketu_c::func_ov073_0211f144() {
 void daKing_Donketu_c::func_ov073_0211f2c0(int strength)
 {
     daKing_Donketu_c *c = this;
-    struct V3 src;
-    volatile struct V3 pv;
-    struct V3 *new_var;
-    struct V3 in;
-    struct V3 res;
-    struct V3 out;
-    struct V3 dv;
+    VecFx32 src;
+    volatile VecFx32 pv;
+    VecFx32 *new_var;
+    VecFx32 in;
+    VecFx32 res;
+    VecFx32 out;
+    VecFx32 dv;
     int ty;
     int tx;
     int tz;
@@ -417,7 +414,7 @@ void daKing_Donketu_c::func_ov073_0211f494(void *pb)
 {
     daKing_Donketu_c *a = this;
     dActor_c *b = (dActor_c *)pb;
-    Vec3 t, p, q, d;
+    VecFx32 t, p, q, d;
     int ay, ax, vx, tmp, sin_ax, cos_ax, sin_ay, cos_ay, rx, ry, rz;
     int y0;
     int *bp = &b->mPosX;
@@ -426,9 +423,9 @@ void daKing_Donketu_c::func_ov073_0211f494(void *pb)
     y0 = a->mPosY;
     p.y = y0;
     {
-        Vec3 *pq = &q;
+        VecFx32 *pq = &q;
         int zval = a->mPosZ;
-        Vec3 *pp = &p;
+        VecFx32 *pp = &p;
         pp->z = zval;
         pq->x = bp[0];
         pq->y = bp[1];
@@ -938,8 +935,8 @@ int daKing_Donketu_c::func_ov073_021200e0()
     }
     /* state == 0 */
     if (mStateScratch == 0) {
-        Vec3 offset;
-        Vec3 rotated;
+        VecFx32 offset;
+        VecFx32 rotated;
         s16 horz;
         ApproachLinear(mAngleX, 0, 0x2000);
         horz = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
@@ -967,7 +964,7 @@ int daKing_Donketu_c::func_ov073_021200e0()
                 if (actor != 0) {
                     enum Bool eq = (enum Bool)(actor->actorID == ACTOR_PLAYER);
                     if (eq != FALSE) {
-                        Vec3 pos = *(Vec3*)&actor->mPosX;
+                        VecFx32 pos = *(VecFx32 *)&actor->mPosX;
                         if (mPosY > pos.y) {
                             ((daPly_c *)actor)->Unk_020c6a10(1);
                         }
@@ -1746,18 +1743,18 @@ void daKing_Donketu_c::func_ov073_021215cc()
 {
     daKing_Donketu_c *c = this;
     int sh;
-    Vec3 v;
-    Vec3 out;
+    VecFx32 v;
+    VecFx32 out;
     void* m;
     Mtx43* saved;
     int i;
-    Vec3* p;
+    VecFx32 *p;
 
     Vec3_Asr((Vector3 *)&v, (Vector3 *)&c->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
 
-    p = (Vec3 *)&c->mFootPos;
+    p = (VecFx32 *)&c->mFootPos;
     c->mBlendAnmModel.mat4x3 = data_020a0e68;
     saved = (Mtx43 *)&c->mBlendAnmModel.mat4x3;
     sh = 3;

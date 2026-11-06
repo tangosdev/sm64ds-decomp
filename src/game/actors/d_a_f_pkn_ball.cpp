@@ -15,7 +15,7 @@
 // What stays, and why:
 // - Vec3_Asr, func_02012694 and func_ov002_020ad660 have no shared header,
 //   so they keep a local extern "C" block.
-// - Behavior's position copies use the file-local POD Vec3F. types.h's
+// - Behavior's position copies use the SDK's POD VecFx32. types.h's
 //   Vector3 is not a POD.
 // - The Bool enum and the volatile sparkPos stay. Behavior needs both.
 // - TryDropItem writes a byte at +0x42b on actor 279 so a second
@@ -34,14 +34,8 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx.h"
 
-typedef struct {
-    s32 x, y, z;
-} Vec3;
-
-struct Vec3F {
-    int x, y, z;
-};
 enum Bool { FALSE, TRUE };
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
@@ -151,8 +145,8 @@ void daFPknBall_c::TryDropItem() {
  * (x mirrored when mMirrored is set), move the shadow matrix to that
  * position >> 3, and draw the drop shadow. */
 void daFPknBall_c::UpdateVisuals() {
-    Vec3 pos;
-    Vec3 shadowPos;
+    VecFx32 pos;
+    VecFx32 shadowPos;
 
     {
         s32 x = mPosX;
@@ -198,15 +192,15 @@ int daFPknBall_c::Render() {
  * player unless the variant is 3), handle whatever hit the collider, steer,
  * move, and die on range, wall or water.
  *
- * The file-local POD Vec3F stands in for types.h's Vector3, which is not a
+ * The SDK's POD VecFx32 stands in for types.h's Vector3, which is not a
  * POD: a struct copy of it scalarises differently, and this function needs the
  * POD's. The choice is per function and has to be measured (see the note in
  * d_enemy_base.cpp, where the real Vector3 costs nothing).
  */
 int daFPknBall_c::Behavior() {
-    struct Vec3F dustPos1;
-    volatile struct Vec3F sparkPos;
-    struct Vec3F dustPos2, dustPos3, dustArg1, dustArg2, dustArg3;
+    VecFx32 dustPos1;
+    volatile VecFx32 sparkPos;
+    VecFx32 dustPos2, dustPos3, dustArg1, dustArg2, dustArg3;
     int flags;
     int clsnResult;
     void *hitActor;

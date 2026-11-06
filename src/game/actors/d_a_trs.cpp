@@ -163,8 +163,6 @@ extern SharedFilePtr data_ov002_0210d9b8;
 
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */
-typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct Vec3_16 { s16 x, y, z; } Vec3_16;
 extern "C" {
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
 int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
@@ -182,7 +180,7 @@ extern int data_0209e650;
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-extern int LenVec3(Vec3 *v);
+extern int LenVec3(VecFx32 *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
@@ -235,7 +233,10 @@ enum TrsFlag {
 };
 
 inline int inline_fn(int arg0) { return data_020a0e68.m[arg0]; }
-struct Frame { Vec3 v; int pad[10]; };
+struct Frame {
+    VecFx32 v;
+    int pad[10];
+};
 /* mBooFlags seen as 8:1:7, for the one `mirrored` toggle in 02117364. Spelling
    that toggle as mBooFlags.mirrored ^= 1 keeps the bytes but lowers every
    @NNN by one for the dropped local and one more for this dropped
@@ -279,7 +280,7 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOffZ = inline_fn(11);
     SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mPosX, (Vector3 *)&this->mClsnOffX);
     SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mClsnBaseX, (Vector3 *)&this->mClsnOffX);
-    Vec3_MulScalarInPlace((Vec3 *)&this->mClsnOffX, 0x6800);
+    Vec3_MulScalarInPlace((VecFx32 *)&this->mClsnOffX, 0x6800);
     p = (int *)&this->mClsnOffZ;
     *p += this->mClsnZBias;
 }
@@ -514,7 +515,7 @@ void daTBasket_c::func_ov063_021169c4() {
    a fixed path and fades. */
 // @symbol _ZN7daTrs_c19func_ov063_02116a1cEv
 void daTrs_c::func_ov063_02116a1c() {
-    Vec3 v;
+    VecFx32 v;
     int a;
     int scale;
 
@@ -858,7 +859,7 @@ void daTrs_c::func_ov063_021172a8() {
 // @symbol _ZN7daTrs_c19func_ov063_02117364Ev
 void daTrs_c::func_ov063_02117364() {
 
-    volatile Vec3 pos;
+    volatile VecFx32 pos;
     pos.x = this->mPosX;
     pos.y = this->mPosY;
     pos.z = this->mPosZ;
@@ -978,9 +979,9 @@ void daTrs_c::func_ov063_021177b0() {
         if (((unsigned)(flags << 21)) >> 31) {
             daPly_c *pl = ClosestPlayer();
             if (pl != 0) {
-                Vec3 v;
-                Vec3 mid;
-                Vec3 look;
+                VecFx32 v;
+                VecFx32 mid;
+                VecFx32 look;
                 int dist;
                 int scaled;
                 short ang;
@@ -1038,7 +1039,7 @@ void daTrs_c::func_ov063_021177b0() {
         this->mSubState = 0;
 
         {
-            volatile Vec3 pos;
+            volatile VecFx32 pos;
             int px = this->mPosX;
             pos.x = px;
             int py = this->mPosY;
@@ -1173,17 +1174,17 @@ void daTrs_c::func_ov063_02117cdc() {
         return;
     }
     case 2: {
-        Vec3 *src;
+        VecFx32 *src;
         int *d54c;
         int *d554;
         if (this->mTalkPlayer == 0) {
             return;
         }
-        src = (Vec3 *)&this->mTalkPlayer->mPosX;
+        src = (VecFx32 *)&this->mTalkPlayer->mPosX;
         w[0] = src->x;
         w[1] = src->y;
         w[2] = src->z;
-        if (LenVec3((Vec3 *)w) >= 0x12c000) {
+        if (LenVec3((VecFx32 *)w) >= 0x12c000) {
             return;
         }
         if (this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1) == 0) {
@@ -1428,7 +1429,7 @@ void daTrs_c::func_ov063_02118458() {
     } else {
         if (this->mAnmModel.file == (BCA_File *)data_ov063_0211edd4.filePtr &&
             this->mAnmModel.WillHitFrame(6)) {
-            Vec3 v;
+            VecFx32 v;
             s16 m = 0x78;
             v.x = this->mPosX;
             v.y = this->mPosY;
@@ -2423,7 +2424,7 @@ int daTrs_c::func_ov063_0211a0dc() {
     dActor_c *actor;
     daPly_c *player;
     u32 id;
-    Vec3 v1, v2;
+    VecFx32 v1, v2;
 
     id = this->mdCcAcPos_c.otherOwner;
     if (id == 0)
@@ -2539,7 +2540,7 @@ ret0:
 // @symbol _ZN7daTrs_c19func_ov063_0211a3d0Ev
 int daTrs_c::func_ov063_0211a3d0() {
 
-    Vec3 v, w;
+    VecFx32 v, w;
 
     if (*(u16 *)&this->mStateTimer == 0) {
         this->mHorzSpeed = 0x28000;
@@ -2821,9 +2822,9 @@ void daTrs_c::func_ov063_0211aa34() {
 // @symbol _ZN7daTrs_c19func_ov063_0211ab68Ev
 void daTrs_c::func_ov063_0211ab68() {
 
-    Vec3 pos;
-    Vec3 tmp;
-    Vec3_16 rot;
+    VecFx32 pos;
+    VecFx32 tmp;
+    Vector3_16 rot;
     int i;
 
     static Vector3 sSpawnOff[3] = {

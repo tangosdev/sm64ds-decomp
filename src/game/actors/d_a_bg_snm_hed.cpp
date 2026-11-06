@@ -21,6 +21,7 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx.h"
 
 struct BMD_File;
 struct BTP_File;
@@ -72,13 +73,9 @@ void daBgSnmHed_c::UpdateModel() {
 
 // @symbol _ZN12daBgSnmHed_c6State3Ev
 int daBgSnmHed_c::State3() {
-    /* A plain-int triple: a Vector3 here schedules the four stores
+    /* The POD VecFx32: a Vector3 here schedules the four stores
        differently. */
-    struct Position {
-        s32 x;
-        s32 y;
-        s32 z;
-    } pos;
+    VecFx32 pos;
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;

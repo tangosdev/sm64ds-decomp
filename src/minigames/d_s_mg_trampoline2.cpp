@@ -6,6 +6,7 @@
 #include "GX.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_s_mg_trampoline2_AssetId {
     ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NCG_BIN = 0x00a2,
@@ -66,11 +67,6 @@ struct BMD_File;
 
 struct Vector3_16f;
 
-struct Vec3i {
-    int x;
-    int y;
-    int z;
-};
 
 struct P2 {
     int words[2];
@@ -93,7 +89,7 @@ typedef unsigned short u16;
  * Positions are Q12; angles rotate the item's forward vector in the XY plane. */
 struct Trampoline2WaveDef {
     int count;
-    const Vec3i *positions;
+    const VecFx32 *positions;
     const short *angles;
     const short *itemTypes;
     const short *motionTypes;
@@ -136,7 +132,7 @@ unsigned int d_s_mg_trampoline2NewUnkCallback818Hold(unsigned int a, unsigned in
 void Jump2Popup_UpdateAll(void);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
-extern const Vec3i sTrmp2RandomSpawnPositions[];
+extern const VecFx32 sTrmp2RandomSpawnPositions[];
 extern int Trmp2_ColumnForKind(int kind);
 extern unsigned short Trmp2_OccupancyBits(int column, int side);
 extern int Trmp2_PickFaceA(int kind);
@@ -524,7 +520,7 @@ void dScMgTrampoline2_c::StatePlay() {
     if (mScriptDone == 0) {
         const Trampoline2WaveDef *d = &sTrmp2SpawnDefs[mPattern];
         int i;
-        Vec3i vecA;
+        VecFx32 vecA;
         for (i = 0; i < d->count; i++) {
             vecA.x = 0;
             vecA.y = 0x1000;
@@ -541,7 +537,7 @@ void dScMgTrampoline2_c::StatePlay() {
             unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff;
             const Trampoline2WaveDef *d = &sTrmp2SpawnDefs[(int)((rnd >> 19) * 6) >> 12];
             int i;
-            Vec3i vecB;
+            VecFx32 vecB;
             for (i = 0; i < d->count; i++) {
                 vecB.x = 0;
                 vecB.y = 0x1000;
@@ -751,7 +747,7 @@ void dScMgTrampoline2_c::SpawnWave() {
     int kind;
     int kinds[7];
     short faces[7];
-    Vec3i up;
+    VecFx32 up;
     int i;
     int j;
     int variant;
@@ -1307,27 +1303,27 @@ extern const short sTrmp2Wave2ItemTypes[5] = {2, 1, 2, 1, 0};
 extern const short sTrmp2Wave5ItemTypes[5] = {2, 2, 2, 2, 2};
 extern const short sTrmp2Wave2MotionTypes[5] = {1, 1, 1, 1, 1};
 extern const short sTrmp2Wave5MotionTypes[5] = {0, 0, 0, 0, 0};
-extern const Vec3i sTrmp2Wave3Positions[2] = {{0x54000, 0x70000, 0x0}, {-0x54000, 0x70000, 0x0}};
+extern const VecFx32 sTrmp2Wave3Positions[2] = {{0x54000, 0x70000, 0x0}, {-0x54000, 0x70000, 0x0}};
 extern const u16 sTrmp2BrushPltt[16] = {0x0000, 0x0000, 0x7fff, 0x0000, 0x0000, 0x0000,
                                         0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
                                         0x0000, 0x0000, 0x0000, 0x0000};
-extern const Vec3i sTrmp2Wave0Positions[3] = {
+extern const VecFx32 sTrmp2Wave0Positions[3] = {
     {0x40000, 0x48000, 0x0}, {0x40000, 0xb0000, 0x0}, {0x40000, -0x30000, 0x0}};
-extern const Vec3i sTrmp2Wave1Positions[3] = {
+extern const VecFx32 sTrmp2Wave1Positions[3] = {
     {-0x40000, 0x48000, 0x0}, {-0x40000, 0xb0000, 0x0}, {-0x40000, -0x30000, 0x0}};
-extern const Vec3i sTrmp2Wave4Positions[3] = {
+extern const VecFx32 sTrmp2Wave4Positions[3] = {
     {-0x40000, 0x50000, 0x0}, {0x0, 0x88000, 0x0}, {0x40000, 0x50000, 0x0}};
-extern const Vec3i sTrmp2Wave2Positions[5] = {{-0x38000, 0x30000, 0x0},
-                                              {0x40000, 0x48000, 0x0},
-                                              {-0x38000, 0x60000, 0x0},
-                                              {0x40000, 0x78000, 0x0},
-                                              {-0x48000, 0x90000, 0x0}};
-extern const Vec3i sTrmp2Wave5Positions[5] = {{-0x3c000, 0x38000, 0x0},
-                                              {-0x1e000, 0x56000, 0x0},
-                                              {0x0, 0x74000, 0x0},
-                                              {0x1e000, 0x92000, 0x0},
-                                              {0x3c000, 0xb0000, 0x0}};
-extern const Vec3i sTrmp2RandomSpawnPositions[11] = {
+extern const VecFx32 sTrmp2Wave2Positions[5] = {{-0x38000, 0x30000, 0x0},
+                                                {0x40000, 0x48000, 0x0},
+                                                {-0x38000, 0x60000, 0x0},
+                                                {0x40000, 0x78000, 0x0},
+                                                {-0x48000, 0x90000, 0x0}};
+extern const VecFx32 sTrmp2Wave5Positions[5] = {{-0x3c000, 0x38000, 0x0},
+                                                {-0x1e000, 0x56000, 0x0},
+                                                {0x0, 0x74000, 0x0},
+                                                {0x1e000, 0x92000, 0x0},
+                                                {0x3c000, 0xb0000, 0x0}};
+extern const VecFx32 sTrmp2RandomSpawnPositions[11] = {
     {0x0, 0xc0000, 0x0},      {0x0, 0x9a000, 0x0},       {0x0, 0x74000, 0x0},
     {0x0, 0x4e000, 0x0},      {0x0, 0x28000, 0x0},       {-0x50000, 0x98000, 0x0},
     {-0x50000, 0x3c000, 0x0}, {-0x50000, -0x20000, 0x0}, {0x50000, 0x98000, 0x0},
