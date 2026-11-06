@@ -1,21 +1,12 @@
 //cpp
 #include "OAM.h"
+#include "dGraph_c.h"
 
 extern "C" {
 
 typedef volatile unsigned int vu32;
 
-typedef struct UnkObj UnkObj;
-typedef struct UnkVt {
-    void *pad0;
-    void *pad4;
-    int (*func8)(UnkObj *);
-} UnkVt;
-struct UnkObj {
-    UnkVt *vt;
-};
-
-extern UnkObj *data_0209d4a8;
+extern dGraph_c::callback_c *data_0209d4a8;
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 extern short gBg0HOffset;
@@ -47,9 +38,9 @@ void func_02055454(int v);
    G3X_SetHOffset (func_02055454) instead. */
 void func_02019144(void)
 {
-    UnkObj *p = data_0209d4a8;
-    if (p != 0) {
-        if (p->vt->func8(p) == 0)
+    dGraph_c::callback_c *callback = data_0209d4a8;
+    if (callback != 0) {
+        if (callback->GraphCallback2() == 0)
             return;
     }
     OAM::Flush();

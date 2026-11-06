@@ -121,7 +121,7 @@ extern u8 data_0209f20c;
 extern u8 data_0209f220;
 extern u8 gCollectedStarId;
 extern u8 data_0209f2d8;
-extern int data_0209caa0[3];
+extern SaveBlock data_0209caa0;
 extern s32 gRunningKuppaScript;
 extern s8 data_02092110;
 extern u32 gNextActorUpdateMask;
@@ -1392,7 +1392,7 @@ extern "C" void func_0201f32c(int arg0)
     f2d8_val = data_0209f2d8;
     {
         u32 b1 = (f2d8_val == 0);
-        if (b1 != 0 && !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+        if (b1 != 0 && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
             u32 b2 = (gRunningKuppaScript != 0);
             if (b2 == 0) {
                 gMsgBoxLeft = 0x10;

@@ -93,7 +93,7 @@ extern int data_0208eeac[];
 extern int data_0208eecc[];
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern u32 gNextActorUpdateMask;
 extern u8 data_0209f2d8;
 extern s16 data_0209f4a2[];
@@ -829,7 +829,7 @@ void Message::Update() {
                 func_02012790(0x96);
             }
             gMsgChoiceIndex = 0;
-        } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
+        } else if (data_0209caa0.file.controllerMode == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0x30)) {
             gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
@@ -865,7 +865,7 @@ void Message::Update() {
                 func_02012790(0x96);
             }
             gMsgChoiceIndex = 0;
-        } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
+        } else if (data_0209caa0.file.controllerMode == 0 &&
                    (*(u16 *)((u8 *)data_020a0e5a + gActivePlayerSlot * 4) & 0xC0)) {
             gMsgChoiceIndex ^= 1;
             func_02012790(0x96);
@@ -938,7 +938,7 @@ void Message::Update() {
                 }
                 break;
             }
-        } else if (*((u8 *)data_0209caa0 + 0x42) == 0) {
+        } else if (data_0209caa0.file.controllerMode == 0) {
             u16 mask = data_020a0e5a[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
@@ -966,8 +966,8 @@ void Message::Update() {
         }
     }
     case 7: {
-        if (((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning() &&
-             IsButtonInputValid() != 0) ||
+        if (((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
+             !IsCastleFallCutsceneRunning() && IsButtonInputValid() != 0) ||
             data_0209d66c != 0) {
             data_0209d6f4 += 1;
             data_0209d69c = 1;
@@ -976,7 +976,7 @@ void Message::Update() {
             data_0209d6bc = 1;
             func_02012790(0x14);
         }
-        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
             return;
         }
         {
@@ -996,8 +996,8 @@ void Message::Update() {
         }
     }
     case 8: {
-        if (((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) && !IsCastleFallCutsceneRunning() &&
-             IsButtonInputValid() != 0) ||
+        if (((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
+             !IsCastleFallCutsceneRunning() && IsButtonInputValid() != 0) ||
             data_0209d66c != 0) {
             data_0209d670 = 1;
             data_0209d66c = 0;

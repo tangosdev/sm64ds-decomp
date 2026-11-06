@@ -69,6 +69,7 @@ enum daTrs_c_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "LevelRng.h"
+#include "SaveBlock.h"
 
 /* Views of three classes this Boo reaches through other actors' pointers.
    Their headers are not included because each one renumbers this file's
@@ -188,7 +189,7 @@ extern void func_ov055_02111264(void);
 extern int func_ov002_020c51d0(void *c, int *st);
 extern u16 func_02011d14(void);
 extern int data_ov008_02111b6c;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern s16 data_ov063_0211e1dc[];
 extern s16 data_ov063_0211e1e4[];
 extern s16 data_ov063_0211e1c0[];
@@ -1267,13 +1268,13 @@ void daTrs_c::func_ov063_02117cdc() {
         int *d560;
         u8 *st;
         int v0;
-        if ((&data_ov008_02111b6c)[0] == 0x1f000 || (data_0209caa0[1] & 0x10)) {
+        if ((&data_ov008_02111b6c)[0] == 0x1f000 || (data_0209caa0.file.flags1 & 0x10)) {
             v0 = 1;
         } else {
             v0 = 0;
         }
         if (v0 == 0) {
-            if ((data_0209caa0[1] & 0x10) == 0) {
+            if ((data_0209caa0.file.flags1 & 0x10) == 0) {
                 return;
             }
         }
@@ -1357,7 +1358,7 @@ void daTrs_c::func_ov063_02117cdc() {
             int x = 0 - this->mPosX;
             int z = this->mPosZ;
             int y = this->mPosY + 0xc8000;
-            int fl = data_0209caa0[1] & 0x10;
+            int fl = data_0209caa0.file.flags1 & 0x10;
             w[0] = x;
             w[1] = y;
             w[2] = z;

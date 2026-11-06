@@ -8,7 +8,7 @@
  * State 0 is the ripple mesh: fill the grid, count the wave down, draw a
  * triangle strip. State 1 fills that mesh and pulses the center, then each
  * frame slides picture 7 from mClosedPosX by 2050 once star 1 of level
- * 0x12 is in, and latches bit 0x40000 of data_0209caa0[2]. The same shift
+ * 0x12 is in, and latches bit 0x40000 of data_0209caa0.file.flags2. The same shift
  * is what daChScene_c applies to an exit whose high param byte is 0x12.
  * Picture 4 in state 1 clears the two clip-enable flags. States 2 and 3
  * are the flat 2x2 quad; their other handlers are outside this run.
@@ -69,6 +69,7 @@ enum daPicGate_c_AssetId {
 #include "common.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "SaveBlock.h"
 
 /* Geometry command ports. Plain stores, not volatile: a volatile port
  * reloads where the cartridge keeps the value in a register. */
@@ -106,7 +107,7 @@ enum {
 
 extern "C" {
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern Matrix4x3 data_0209b3ec;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 data_ov080_02127714[];
@@ -133,7 +134,6 @@ namespace Memory { void *operator_new2(unsigned int size); }
 #define BuildGateMatrix func_ov080_0212555c
 #define LoadTexture func_ov080_02125630
 #define LoadMtx43 func_020553a4
-#define kSave data_0209caa0
 #define kStates data_ov080_02128628
 #define kDefaultWave data_ov080_02127834
 
@@ -170,11 +170,10 @@ struct PicGateFilePtr : SharedFilePtr {
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
 void daPicGate_c::func_ov080_021264ec()
 {
-    if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide &&
-        !(kSave[2] & kOpened) &&
+    if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide && !(data_0209caa0.file.flags2 & kOpened) &&
         IsStarCollectedInLevel(kGateLevel, kGateStar)) {
         if (ApproachLinear(this->mPosX, this->mClosedPosX + kSlide, kSlideStep))
-            kSave[2] |= kOpened;
+            data_0209caa0.file.flags2 |= kOpened;
         this->BuildGateMatrix();
     }
     this->HitTest();
@@ -449,7 +448,7 @@ s32 daPicGate_c::InitResources() {
     if ((unsigned char)((param1 >> 8) & 0x1f) == kPicSlide) {
         if ((unsigned char)((param1 >> 0xd) & 3) == 1) {
             mClosedPosX = mPosX;
-            if (kSave[2] & kOpened)
+            if (data_0209caa0.file.flags2 & kOpened)
                 mPosX += kSlide;
         }
     }

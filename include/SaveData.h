@@ -8,8 +8,7 @@
  * SaveData: the save-file manager. 18 of its 20 methods are defined in
  * src/engine/save/SaveData.cpp, beside the free functions folded with them;
  * the two cart I/O methods are in src/engine/save/SaveData2.cpp. FileSaveData
- * is the 0x44-byte save-file record those methods move. Offsets/widths are
- * observed, not guessed.
+ * (include/SaveBlock.h) is the 0x44-byte save-file record those methods move.
  *
  * SaveData is NOT polymorphic -- it has no RTTI record and no vtable -- so the
  * key-function rule (runbook section 7) does not apply and its methods can be
@@ -20,64 +19,7 @@
 #ifndef SAVEDATA_H
 #define SAVEDATA_H
 #include "types.h"
-
-/* fwd */
-struct MinigameSaveData;
-
-/* One save file: 0x44 bytes, the unit ReadFileData/SaveFile/EraseSaveFile
-   move to and from cart slots 0..2. The live copy is the first 0x44 bytes of
-   the save block at 0x0209caa0, and the file-select scene (d_s_dsmt.cpp)
-   keeps three of them while copying files. */
-struct FileSaveData {
-    /* 0x000 -- "8000" as four ASCII bytes, written by SetDefaultValues
-       (0x30303038 little-endian). The file-format magic. */
-    u32 magic8000;
-    /* 0x004 -- per-character cap state. Bit 24+n is set when character n has
-       lost their cap; PlayerLoseCap sets it, HasPlayerLostCap tests it. */
-    u32 flags1;
-    /* 0x008 -- character unlocks in the low bits (bit 0 Mario, 1 Luigi,
-       2 Wario ...), FILE_FLAGS2_INTRO_DONE at bit 7 (enum FileSaveFlags2
-       below), and the eight glowing rabbits at bits 20..27.
-       WIDTH CORRECTED: this was declared `u8 unk_008`, but every access is
-       32 bits wide -- IsCharacterUnlocked tests the whole word,
-       SetCharacterIntro read-modify-writes it, and NumGlowingRabbitsFound
-       loads it as an int. The u8 was the marker the generator emitted, not
-       the width. */
-    s32 flags2;
-    /* 0x00c -- one bit per minigame rabbit caught, bit (rabbit << 2) | b.
-       daMip_c tests it with func_02013890(mRabbitId, player->param1), where
-       b < 0 asks for all four; func_02013868 sets it and unlocks the minigame
-       bit of the same index in MinigameSaveData. ReadFileData ANDs it with
-       that unlock word when a file is loaded. */
-    u32 minigameRabbits;
-    /* 0x010 -- one bit per course whose cannon is open (OpenCannon). */
-    u32 cannonFlags;
-    /* 0x014 -- star bits, one byte per course (data_0209cab4 in the live
-       block). */
-    u8 stars[30];
-    /* 0x032 -- coin records, one byte per main course (data_0209cad2). */
-    u8 coinRecords[15];
-    u8 mCharacter; /* 0x041 -- current character */
-    /* 0x042 -- the active player's controller mode: SetDefaultValues clears
-       it, and InitControllerMode/SetControllerMode (d_s_stage_methods.cpp)
-       keep it in step with the per-controller record. */
-    u8 controllerMode;
-};
-
-/* Named bits of FileSaveData::flags2 (the live word is 0x0209caa8). */
-enum FileSaveFlags2 {
-    /* The opening camera sweep has played for this file. The only writer is
-       the intro Lakitu: daC_Jugem_c::StateIntroMain sets it when the sweep
-       hands the camera back, and the Lakitu's variant 1 enters the intro
-       while it is clear. Outside VS mode, normal play waits on it: dMeter_c
-       and dMap_c draw the in-course HUD only once it is set, dScStage_c
-       refuses pause and clears camera touch input before it, the message
-       box ignores the advance button before it, and LevelObjects'
-       IntroAllowed() tests it clear. At runtime, clearing it in a course
-       hides the whole HUD and turns the bottom map to a north-up zoomed
-       view with a star marker. */
-    FILE_FLAGS2_INTRO_DONE = 0x80
-};
+#include "SaveBlock.h"
 
 #ifdef __cplusplus
 struct SaveData {

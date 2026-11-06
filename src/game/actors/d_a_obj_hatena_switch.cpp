@@ -44,6 +44,7 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
 /* Plain VecFx32 stack values avoid pulling unrelated Vector3 special
  * members into this TU while preserving their measured three-word ABI. */
@@ -96,7 +97,7 @@ extern CLPS_Block data_ov002_0210d8b4;
 extern CLPS_Block data_ov002_0210d774;
 extern u8 data_0209d684;
 extern u8 data_0209d660;
-extern u32 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 
 /*
  * Every instruction the cartridge has here falls out of the one `new`.
@@ -154,7 +155,7 @@ s32 daObjHatenaSwitch_c::InitResources() {
 
     func_020393c4(&mStaticMeshCollider, &daObjHatenaSwitch_c::AfterClsnCallback);
 
-    if (data_0209caa0[1] & 0x80000000) {
+    if (data_0209caa0.file.flags1 & 0x80000000) {
         mActiveMeshCollider = &mMovingMeshCollider;
         mAnmModel.currFrame = mAnmModel.GetFrameCount() << 12;
         mAnmModel.Advance();
@@ -224,7 +225,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 if (mActiveMeshCollider->IsEnabled() != 0)
                     mActiveMeshCollider->Disable();
                 mActiveMeshCollider = &mMovingMeshCollider;
-                data_0209caa0[1] |= 0x80000000;
+                data_0209caa0.file.flags1 |= 0x80000000;
                 {
                     volatile VecFx32 position;
                     s32 y = mPosY + 0x64000;
@@ -245,7 +246,7 @@ s32 daObjHatenaSwitch_c::Behavior() {
         }
     }
 
-    if ((data_0209caa0[1] & 0x80000000) == 0)
+    if ((data_0209caa0.file.flags1 & 0x80000000) == 0)
         mActiveMeshCollider = &mStaticMeshCollider;
 
     if (UpdateClsnState() == 0) {

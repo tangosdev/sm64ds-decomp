@@ -128,7 +128,7 @@ void  func_0201f32c(int a);
 
 /* globals */
 extern void          *data_0209f318;        /* the camera object */
-extern int            data_0209caa0[];      /* level progress flags */
+extern SaveBlock data_0209caa0;             /* the live save block */
 extern u8             data_0209d66c;
 extern u8             data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
@@ -226,7 +226,7 @@ int daC_Jugem_c::StateIntroMain() {
             daPly_c *player = ClosestPlayer();
             if (player != 0) {
                 func_ov002_020c3e8c(player);
-                data_0209caa0[2] |= FILE_FLAGS2_INTRO_DONE;
+                data_0209caa0.file.flags2 |= FILE_FLAGS2_INTRO_DONE;
             }
             SetState(data_ov085_021307e0);
         }
@@ -624,8 +624,8 @@ int daC_Jugem_c::StateTalkMain()
 // @symbol _ZN11daC_Jugem_c13StateTalkInitEv
 int daC_Jugem_c::StateTalkInit()
 {
-    int *p = data_0209caa0;
-    p[2] |= 0x20000;
+    SaveBlock *save = &data_0209caa0;
+    save->file.flags2 |= 0x20000;
     mTalkStep = 0;
     return 1;
 }
@@ -698,8 +698,7 @@ int daC_Jugem_c::StateHiddenMain()
     daPly_c *p = ClosestPlayer();
     if (p != 0) {
         VecFx32 v = *(VecFx32 *)&p->mPosX;
-        if ((data_0209caa0[2] & 0x10000) != 0 &&
-            v.z > -0x28000 &&
+        if ((data_0209caa0.file.flags2 & 0x10000) != 0 && v.z > -0x28000 &&
             p->SetNoControlState(0x12, -1, 0) != 0) {
             p->mStateTargetX = mPosX;
             p->mStateTargetY = mPosY;
@@ -945,13 +944,13 @@ int daC_Jugem_c::InitResources()
         SetState(data_ov085_021307d0);
         break;
     case 1: {
-        int v = data_0209caa0[2];
+        int v = data_0209caa0.file.flags2;
         if (v & 0x20000)
             return 0;
         if (v & 0x10000)
-            data_0209caa0[2] = v & ~0x10000;
+            data_0209caa0.file.flags2 = v & ~0x10000;
         mHidden = 1;
-        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE))
+        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
             SetState(data_ov085_02130790);
         else
             SetState(data_ov085_021307e0);

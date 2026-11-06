@@ -44,6 +44,7 @@
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
 /* The matrix copies go through the flat Mtx43. Assigning Matrix4x3 itself
    is a different sequence (.text grows by 0xa0 bytes). */
@@ -62,7 +63,7 @@
 #define kHideBit 0x20000
 #define kReqReset 1
 #define kReqFade 2
-/* data_0209caa0[1] is SaveData::flags1. Bit 0x10 is unnamed there. */
+/* Bit 0x10 of FileSaveData::flags1 is unnamed. */
 #define kSysHold 0x10
 #define kShadowOpacity 0xf
 #define kAppearSound 0x179
@@ -91,7 +92,7 @@ extern SharedFilePtr data_ov002_0210ebd8;
 
 extern unsigned char data_0209f250;
 extern void *data_0209f394[];
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern void *data_0209f318;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
@@ -170,7 +171,7 @@ int daLuigi_c::Behavior() {
         data_ov055_02111b6c = 0;
         data_ov055_02111a90 = kFadeFull;
         data_ov055_02111b60 = 0;
-    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0[1] & kSysHold)) {
+    } else if ((data_ov055_02111b68 & kReqFade) && !(data_0209caa0.file.flags1 & kSysHold)) {
         ApproachLinear(data_ov055_02111b6c, kFadeFull, kFadeStep);
         data_ov055_02111b64 = (data_ov055_02111b64 & ~kHideBit) + (kFadeFull - data_ov055_02111b6c);
     }

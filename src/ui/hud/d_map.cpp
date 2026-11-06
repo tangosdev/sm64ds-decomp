@@ -77,7 +77,7 @@ extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 data_0209f220;
-extern u32 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 
@@ -245,7 +245,8 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0[1] & 0x204)) return;
+        if (!(data_0209caa0.file.flags1 & 0x204))
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x748);
         tile = 0x35d;
         for (i = 0; i < 6; i++) {
@@ -261,7 +262,8 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0[2] & 0x80000)) return;
+        if (!(data_0209caa0.file.flags2 & 0x80000))
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x73a);
         tile = 0x396;
         for (i = 0; i < 4; i++) {
@@ -284,7 +286,8 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         u16* p;
-        if (!(data_0209caa0[2] & 0x80000)) return;
+        if (!(data_0209caa0.file.flags2 & 0x80000))
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x1ca4);
         tile = 0x38e;
         for (i = 0; i < 4; i++) {
@@ -382,7 +385,8 @@ int dMap_c::Render()
     int j;
     u8 idx = data_0209f250;
 
-    if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 || !(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) ||
+    if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 ||
+        !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
         (flag20c != 0 && (u32)gLevelClearStep < 3)) {
         daPly_c *player = (daPly_c *)data_0209f394[idx];
         int vs = (data_0209f2d8 == 1);
@@ -433,7 +437,7 @@ int dMap_c::Render()
                     OAM::RenderSub(OAM::MM_PLAYER_ICONS[icon], this->mPlayerIconX[idx],
                                    this->mPlayerIconY[idx], -1, 2);
                 }
-                if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
+                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
                     u8 s = this->mArrowType;
                     if (s != 0) {
                         u16 ang;
@@ -520,7 +524,7 @@ int dMap_c::Render()
             }
         }
 
-        if (!(data_0209caa0[1] & 0x40) && (data_0209caa0[2] & 0x20000)) {
+        if (!(data_0209caa0.file.flags1 & 0x40) && (data_0209caa0.file.flags2 & 0x20000)) {
             this->mStarKeyBlinkTimer += 1;
             if ((u32)this->mStarKeyBlinkTimer >= 5)
                 this->mStarKeyBlinkTimer = 0;
@@ -611,7 +615,7 @@ L200:
     {
         s32 b = (data_0209f2d8 == 1);
         if (b == 0) {
-            if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+            if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
                 goto L2a4;
         }
         gSubScreenLayers &= ~4;
@@ -625,7 +629,7 @@ L200:
     }
 
 L274:
-    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0) {
+    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0) {
         if (data_0209d4b0 == 0) goto L2a4;
     }
     gSubScreenLayers &= ~4;
@@ -651,7 +655,7 @@ L318:
     {
         s32 b = (data_0209f2d8 == 0);
         if (b == 0) goto L360;
-        if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)
+        if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
             goto L360;
         if (this->mInIntroCutscene != 0) goto L360;
     }
@@ -829,8 +833,10 @@ L738:
     }
 
     /* The star key: Render blinks it under the same two flag tests. */
-    if (data_0209caa0[1] & 0x40) goto La64;
-    if ((data_0209caa0[2] & 0x20000) == 0) goto La64;
+    if (data_0209caa0.file.flags1 & 0x40)
+        goto La64;
+    if ((data_0209caa0.file.flags2 & 0x20000) == 0)
+        goto La64;
     {
         dActor_c *o = (dActor_c *)data_0209f33c;
         if (o == 0) { this->mStarKeyMapID = -1; goto La64; }
@@ -1015,7 +1021,7 @@ int dMap_c::InitResources()
     {
         int b1 = (data_0209f2d8 == 0);
         if (b1) {
-            if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+            if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 int b3 = (gRunningKuppaScript != 0);
                 if (!b3) {
                     mInvScale = (mTargetInvScale) << 1;

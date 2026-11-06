@@ -6,13 +6,13 @@
  * - func_ov026_02111234 and func_ov026_021112a4 stay address-named
  *   C-linkage helpers.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c
- *   the collision offset. data_0209caa0 is the stage-state block.
+ *   the collision offset. data_0209caa0 is the save block.
  *   g_profile_WL_POLELIFT is outside this TU.
  *
  * daObjWlPolelift_c, the Wet-Dry World pole lift. It rides the path
  * in param1 at 10.0 a frame, pauses 60 frames at a dead end, and
  * drops a shadow. InitResources requires a bit of 0x204 in
- * data_0209caa0[1]. .text 0x021111a0..0x021116c8. _ZTS17daObjWlPolelift_c
+ * data_0209caa0.file.flags1. .text 0x021111a0..0x021116c8. _ZTS17daObjWlPolelift_c
  * and the vtable at 0x02113ae0 name the class. classInit is
  * reconstructed.
  */
@@ -33,6 +33,7 @@ enum d_a_obj_wl_polelift_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "math/MtxStack.h"
+#include "SaveBlock.h"
 
 /* The file-scope object at the end of this file constructs the resource
  * handle (model file 0x6db). mwcc emits __sinit_d_a_obj_wl_polelift.cpp
@@ -58,7 +59,7 @@ void SubVec3(Vector3 *out, Vector3 *a, Vector3 *b);
 void func_ov026_02111234(daObjWlPolelift_c *actor);
 void func_ov026_021112a4(daObjWlPolelift_c *actor);
 
-extern u32 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
@@ -75,7 +76,7 @@ extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
 s32 daObjWlPolelift_c::InitResources()
 {
     model.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov026_02113ea0), 1, -1);
-    if ((data_0209caa0[1] & 0x204) == 0)
+    if ((data_0209caa0.file.flags1 & 0x204) == 0)
         return 0;
 
     shadow.InitCuboid();

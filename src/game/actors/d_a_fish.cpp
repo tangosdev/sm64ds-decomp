@@ -59,6 +59,7 @@ enum d_a_fish_AssetId {
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "SaveBlock.h"
 
 struct daFishState {
     void (daFish_c::*func)();
@@ -97,7 +98,7 @@ extern daFishState data_ov100_02148468;
 extern daFishState data_ov100_02148458;
 extern daFishState data_ov100_02148470;
 extern daFishState data_ov100_02148478;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
 /* local extern: arm9 C helpers with no shared header yet. */
@@ -226,7 +227,7 @@ void daFish_c::StateWaitForPlayer() {
     if (Vec3_HorzLen(&diff) >= 0x1388000)
         return;
 
-    if (data_0209caa0[2] & 0x80000) {
+    if (data_0209caa0.file.flags2 & 0x80000) {
         int lim = data_0209f32c - 0x64000;
         if (this->mSurfaceY > lim) {
             this->mSurfaceY = lim;

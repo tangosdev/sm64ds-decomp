@@ -1,11 +1,12 @@
 //cpp
 #include "types.h"
 #include "GX.h"
+#include "dGraph_c.h"
 #include "nitro/hw/registers.h"
 
 extern "C" {
 
-extern int data_0209d4a8; /* the scene graph callback (d_s_dsmt.cpp) */
+extern dGraph_c::callback_c *data_0209d4a8; /* the scene graph callback (d_s_dsmt.cpp) */
 extern int data_0209d4ac; /* the brightness fader (d_scene.cpp) */
 /* the active transition fader (d_s_stage_methods.cpp wipes, KuppaScript.cpp colour fades) */
 extern int data_0209d4b0;
