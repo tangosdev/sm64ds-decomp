@@ -12,17 +12,17 @@ extern char data_0207533c[];
 extern char data_020752cc[];
 extern char data_020752e8[];
 extern char data_02075304[];
-extern int func_0201a9ec(char *c);
+extern unsigned char func_0201a9ec(char *c);
 extern void OS_GetOwnerInfo(unsigned char *dst);
 extern void func_0203db64(char *a, char *b);
 extern int func_0203daac(void);
 extern void func_0201a9fc(char *c);
-extern unsigned char func_0201a96c(char *self, int newVal);
+extern unsigned char func_0201a96c(char *self, unsigned char newVal);
 
 void func_0201fec8(void)
 {
     unsigned char buf[0x50];
-    int saved;
+    unsigned char saved;
     if (data_0209e64c != 0) return;
     saved = func_0201a9ec(data_0209d574);
     OS_GetOwnerInfo(buf);

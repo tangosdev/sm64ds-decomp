@@ -384,7 +384,6 @@ extern short data_ov060_02119296[];
 extern short data_ov060_02119298[];
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2);
-extern void func_02011d50(void *a);
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for func_ov060_02112434, NOT applied: int Vec3_HorzDist(const Vector3* a, const Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov060_02112434, NOT applied: short Vec3_HorzAngle(const Vector3* a, const Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov060_02111cc0, from the legacy file for func_ov060_021125f0, NOT applied: extern int func_ov060_02111cc0(char *c, int a, int b); */
@@ -657,7 +656,7 @@ int daKpa_c::InitResources()
     this->mFootfallLatch = 0;
     this->mSoundHandle = 0;
     this->mSoundID = 0;
-    func_02011d50(tail);
+    func_02011d50();
     return 1;
 }
 

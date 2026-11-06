@@ -124,7 +124,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);        /* local extern: prese
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); /* local extern: preserve @NNN names */
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
-void func_02012694(int a, void *b, int c);
+void func_02012694(unsigned int id, const Vector3 *pos);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
@@ -608,7 +608,7 @@ int daPopoi_c::func_ov077_02126640()
                                     if (func_ov002_020db674(a, 0x28000, 0x70000,
                                             (int)(short)(mAngleY + 0x8000)) != 0) {
                                         mCaughtPlayer = 0;
-                                        func_02012694(daPopoi_SND_THROW_PLAYER, &mCamSpacePosX, 0);
+                                        func_02012694(daPopoi_SND_THROW_PLAYER, &mCamSpacePos);
                                     }
                                 }
                             }

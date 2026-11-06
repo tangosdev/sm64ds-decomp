@@ -1,6 +1,6 @@
 #include "private/wbt_block_info_list.h"
 
-extern int func_02065ae0(void);
+extern struct WBTBlockInfoList *func_02065ae0(void);
 extern int func_02065bc0(void);
 extern int data_0209a064;
 extern int data_0209a068;
@@ -12,7 +12,7 @@ int func_0206491c(unsigned int key, int val)
   struct WBTBlockInfoList *node;
   int q;
 
-  node = (struct WBTBlockInfoList *)func_02065ae0();
+  node = func_02065ae0();
   if (key < 0x3e8)
     return val;
 

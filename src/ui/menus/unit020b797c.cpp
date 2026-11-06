@@ -134,7 +134,7 @@ extern int func_ov007_020c94a0(int unused, unsigned int messageIndex);
 extern void func_ov007_020c94e4(void);
 /* local extern: the definition (unit020c94a0.cpp) takes two parameters;
  * this call passes the bank's name as a third, which retail never reads. */
-extern void func_ov007_020c951c(int unused, void *bank, void *name);
+extern void func_ov007_020c951c(int unused, void *bank, const char *name);
 
 void func_ov007_020b7a44(void);
 void func_ov007_020b797c(void);

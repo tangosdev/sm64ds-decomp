@@ -55,7 +55,7 @@ typedef struct Ov007MenuHooks {
 extern int data_ov007_02103430;
 
 extern void func_02045d9c(void);
-extern void func_ov007_020aed98(void *thiz);
+extern void func_ov007_020aed98(void);
 extern void func_ov007_020b2e64(u16 *buf);
 extern void func_ov007_020b3050(void);
 extern void func_ov007_020b30b0(void);
@@ -146,7 +146,8 @@ int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4) {
     buf[3] = a3;
     func_ov007_020b2e64(buf);
     func_ov007_020c1db0(WORK->touch, buf);
-    func_ov007_020aed98(func_ov007_020bdebc());
+    func_ov007_020bdebc();
+    func_ov007_020aed98();
     {
         Ov007Work *ip = WORK;
         if (ip->choiceReady != 0 || ip->pendingChoice == 1)
