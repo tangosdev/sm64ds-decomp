@@ -22,7 +22,8 @@ char *WM_ReadMPData(char *a, unsigned int idx) {
     if (idx < 1 || idx > 0xf)
         return 0;
     CP15::InvalidateDataCache((u32)&sys->status->child_bitmap, 2);
-    if ((sys->status->child_bitmap & (1u << idx)) == 0) return 0;
+    if ((sys->status->child_bitmap & (1u << idx)) == 0)
+        return 0;
     n = *(u16*)(a + 4);
     if (n == 0) return 0;
     local[0] = a + 0xa;

@@ -25,7 +25,8 @@ int WM_Disconnect(int self, unsigned int idx) {
             if (idx < 1 || idx > 0xf)
                 return 6;
             CP15::InvalidateDataCache((u32)&status->child_bitmap, 2);
-            if ((sys->status->child_bitmap & (1u << idx)) == 0) return 7;
+            if ((sys->status->child_bitmap & (1u << idx)) == 0)
+                return 7;
         } else {
             if (idx != 0) return 6;
         }

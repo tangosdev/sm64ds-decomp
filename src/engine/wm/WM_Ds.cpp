@@ -217,7 +217,7 @@ int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
     CP15::InvalidateDataCache((u32)(&p->status->aid), 2);
     aid = p->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32) & p->status->mp_readyBitmap, 2);
+        CP15::InvalidateDataCache((u32)&p->status->mp_readyBitmap, 2);
         childMask = p->status->mp_readyBitmap;
     }
 
@@ -478,7 +478,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     saved = IRQ::Disable();
     slot = dsInfo->writeIndex;
     if (dsInfo->ds[slot].aidHeader == 0) {
-        CP15::InvalidateDataCache((u32) & ctx->status->mp_readyBitmap, 2);
+        CP15::InvalidateDataCache((u32)&ctx->status->mp_readyBitmap, 2);
 
         prevSlot = dsInfo->writeIndex;
         next = (u16)((prevSlot + 1) % 4);
