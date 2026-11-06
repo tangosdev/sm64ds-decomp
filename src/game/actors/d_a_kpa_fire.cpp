@@ -125,6 +125,7 @@ extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int RandomIntInternal(int* seed);
+/* local extern: this file indexes it as int[] for RandomIntInternal(int *); include/LevelRng.h declares it as LevelRng */
 extern int data_0209e650[];          /* RNG_STATE (symbols/verified.tsv) */
 extern short data_02082214[];        /* SINE_TABLE: a sin/cos pair per angle >> 4 */
 
