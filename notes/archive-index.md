@@ -15,3 +15,24 @@ git checkout archive/notes-pre-cleanup-1107 -- <path>
 ```
 
 Older retired notes live in [archive/ARCHIVE_LOG.md](archive/ARCHIVE_LOG.md).
+
+## Class-note cleanup (branch 2)
+
+A second pass removed finished or superseded per-class and per-subsystem notes
+from the top level of `notes/`. Notes cited by `src/`, `include/`, `tools/`,
+`config/`, workflows, `docs/`, `AGENTS.md`, or any kept note stayed in place.
+They are recoverable from the annotated tag
+`archive/notes-pre-cleanup-1107-classnotes`.
+
+Removed: `class-init-pilot`, `collision-predicates-1031`,
+`dScMgSingle3DBase_c-vtable-ownership`, `handoff-issue-2422`,
+`handoff-validator-and-tests`, `match-attempts`, `match-provenance`,
+`port-selftest-bmp-gate`, `rtti-name-audit`, `sinit-kurumajiku-interior-pointers`,
+`sinit-ownership-wave-edges` (+ `-probe.cpp`), `sinit-ownership-wave-resource-handles`,
+`tu-filename-reconstruction-pilot`.
+
+```sh
+git ls-tree -r --name-only archive/notes-pre-cleanup-1107-classnotes notes
+git show archive/notes-pre-cleanup-1107-classnotes:notes/<file>
+git checkout archive/notes-pre-cleanup-1107-classnotes -- notes/<file>
+```
