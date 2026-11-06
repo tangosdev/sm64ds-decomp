@@ -60,8 +60,9 @@
 #include "CP15.h"
 #include "G3X.h"
 #include "dScene_c.h"
+#include "LevelRng.h"
+#include "SaveData.h"
 
-struct MinigameSaveData;
 struct OamAttr;
 
 struct TouchRec {
@@ -73,8 +74,6 @@ struct TouchRec {
 typedef struct Pair { int x, y; } Pair;
 struct Off9 { int v[9]; };
 
-namespace SaveData { void SaveMinigames(MinigameSaveData *); }
-
 extern "C" {
 
 /* ---- arm9 globals ---- */
@@ -83,12 +82,11 @@ extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
-extern u32 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern short gSubBg3HOffset[];
-extern short gSubBg0HOffset[];
-extern int data_0209e650;
+extern short gSubBg3HOffset;
+extern short gSubBg0HOffset;
 extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
@@ -142,7 +140,7 @@ void func_02013598(int x);
 int  func_020135d0(int r0);
 int  func_02013638(int n);
 int  RandomIntInternal(int *seed);
-extern char *LoadFile(int id);
+extern void *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 
@@ -169,7 +167,7 @@ s32 dScMiniGm_c::InitResources()
     volatile u16 sp0;
     volatile u16 sp2;
     char *dst;
-    char *f;
+    void *f;
 
     LoadTextNarcs();
     LoadArchive(0);
@@ -177,7 +175,7 @@ s32 dScMiniGm_c::InitResources()
     Sound::LoadGroupAndSetBank(0x27, 5);
     Disable3dEngines();
 
-    if (!(data_0209caa0[0x48 / 4] & 0x80000000)) {
+    if (!(data_0209caa0.mg.unlocked & 0x80000000)) {
         tbl = sMiniGmRows;
         for (i = 0; i < 0x24; i++) {
             for (j = 0; j < 5; j++) {
@@ -185,7 +183,7 @@ s32 dScMiniGm_c::InitResources()
             }
             tbl++;
         }
-        data_0209caa0[0x48 / 4] |= 0x80000000;
+        data_0209caa0.mg.unlocked |= 0x80000000;
         gMgSaveDirty = 1;
     }
 
@@ -262,12 +260,12 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0x58);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GX::LoadBGPltt((const void *)f, 0, 0x200);
-    Deallocate((void *)f);
+    GX::LoadBGPltt(f, 0, 0x200);
+    Deallocate(f);
 
     f = LoadFile(0x59);
     DecompressLZ16(f, G2::GetBG2ScrPtr());
-    Deallocate((void *)f);
+    Deallocate(f);
 
     if (GetOwnerLanguage() == 5) {
         f = LoadFile(0xda);
@@ -281,12 +279,12 @@ s32 dScMiniGm_c::InitResources()
         f = LoadFile(0xd8);
     }
     DecompressLZ16(f, (void *)0x6400000);
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(0xd9);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GX::LoadOBJPltt((const void *)f, 0, 0x100);
-    Deallocate((void *)f);
+    GX::LoadOBJPltt(f, 0, 0x100);
+    Deallocate(f);
 
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x404;
@@ -302,12 +300,12 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0x53);
     DecompressLZ16(f, G2S::GetBG2CharPtr());
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(0x5a);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GXS::LoadBGPltt((const void *)f, 0, 0x200);
-    Deallocate((void *)f);
+    GXS::LoadBGPltt(f, 0, 0x200);
+    Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x6010;
@@ -336,12 +334,12 @@ s32 dScMiniGm_c::InitResources()
         f = LoadFile(0xd8);
     }
     DecompressLZ16(f, (void *)0x6600000);
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(0xd9);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GXS::LoadOBJPltt((const void *)f, 0, 0x100);
-    Deallocate((void *)f);
+    GXS::LoadOBJPltt(f, 0, 0x100);
+    Deallocate(f);
 
     mPageFlipped = 0;
     mArrowBobPhase = 0;
@@ -398,7 +396,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
     volatile u16 valA; /* pin MultiStore16 src */
     volatile u16 valB; /* pin MultiStore16 src */
     struct Off9 tbl;
-    char *f;
+    void *f;
     int fill;
     int nbytes;
     int t;
@@ -526,10 +524,10 @@ void MiniGm_LoadGroupIcons(void *selfv)
 extern "C" {
 void MiniGm_LoadIconPalette(char *self, int index)
 {
-    char *file = LoadFile(sMiniGmIconPalettes[index]);
+    void *file = LoadFile(sMiniGmIconPalettes[index]);
     CP15::FlushAndInvalidateDataCache((u32)file, 0x200);
     u32 slot = ((dScMiniGm_c *)self)->mGfxSlots[index / 4];
-    GXS::LoadBGPltt(file + 0x20, slot << 5, 0x20);
+    GXS::LoadBGPltt((u16 *)file + 16, slot << 5, 0x20);
     Deallocate(file);
 }
 }
@@ -554,8 +552,8 @@ s32 dScMiniGm_c::Behavior()
         MiniGm_SaveIfDirty((char *)this);
         return 1;
     }
-    RandomIntInternal(&data_0209d4b8);
-    RandomIntInternal(&data_0209e650);
+    RandomIntInternal(&data_0209d4b8.value);
+    RandomIntInternal(&data_0209e650.value);
 
     if (mPrevPageTimer > 0) {
         mPrevPageTimer -= 1;
@@ -1092,8 +1090,8 @@ void MiniGm_UpdatePageScroll(char *self) {
             }
         }
     }
-    gSubBg0HOffset[0] = (short)scene->mSubBgScrollX;
-    gSubBg3HOffset[0] = (short)scene->mSubBgScrollX;
+    gSubBg0HOffset = (short)scene->mSubBgScrollX;
+    gSubBg3HOffset = (short)scene->mSubBgScrollX;
 }
 }
 

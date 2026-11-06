@@ -8,10 +8,8 @@ extern void func_ov007_020c28ac(void* c);
  * planar paths get their X/Y coordinate and segment-angle arrays, the
  * alternate one its 12-byte point storage; every path gets segment lengths,
  * and progress thresholds when flags has OV007_PATH_HAS_PROGRESS. */
-int func_ov007_020c2c68(int a, int b, int cc)
-{
-    char *p = func_ov007_020c3df4(0, 0x30);
-    Ov007StrokePath *path = (Ov007StrokePath *)p;
+Ov007StrokePath *func_ov007_020c2c68(int a, int b, int cc) {
+    Ov007StrokePath *path = func_ov007_020c3df4(0, 0x30);
     func_ov007_020c29b4(path);
     path->representation = a;
     path->flags = cc;
@@ -30,6 +28,6 @@ int func_ov007_020c2c68(int a, int b, int cc)
     if (path->flags & OV007_PATH_HAS_PROGRESS) {
         path->progressThresholds = func_ov007_020c3df4(0, b << 2);
     }
-    func_ov007_020c28ac(p);
-    return (int)p;
+    func_ov007_020c28ac(path);
+    return path;
 }

@@ -929,74 +929,74 @@
       "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
     },
     {
-      "from": "@2133",
-      "to": "@2061",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@2134",
-      "to": "@2062",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@2135",
-      "to": "@2063",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@2136",
-      "to": "@2064",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@2137",
-      "to": "@2065",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@2138",
-      "to": "@2066",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@2139",
-      "to": "@2067",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@2140",
-      "to": "@2068",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
       "from": "@2141",
-      "to": "@2069",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@2061",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2133 to @2141 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
     },
     {
       "from": "@2142",
-      "to": "@2070",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@2062",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2134 to @2142 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
     },
     {
       "from": "@2143",
-      "to": "@2071",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@2063",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2135 to @2143 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
     },
     {
       "from": "@2144",
-      "to": "@2072",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@2064",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2136 to @2144 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
     },
     {
       "from": "@2145",
-      "to": "@2073",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@2065",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2137 to @2145 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
     },
     {
       "from": "@2146",
+      "to": "@2066",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2138 to @2146 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2147",
+      "to": "@2067",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2139 to @2147 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2148",
+      "to": "@2068",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2140 to @2148 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2149",
+      "to": "@2069",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2141 to @2149 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2150",
+      "to": "@2070",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2142 to @2150 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2151",
+      "to": "@2071",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2143 to @2151 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2152",
+      "to": "@2072",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2144 to @2152 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2153",
+      "to": "@2073",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2145 to @2153 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+    },
+    {
+      "from": "@2154",
       "to": "@2074",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2146 to @2154 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
     }
   ],
   "symbol_binding_rewrites": [

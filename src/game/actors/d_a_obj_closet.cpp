@@ -28,7 +28,7 @@
  *   0x3c4 against 0x3e0; the Y store reloads that stack slot.
  * - Behavior: the front point reloads mAngleY as a volatile unsigned
  *   halfword, twice. (u16)mAngleY is 0x3ec against 0x3e0.
- * - Behavior: keep the position locals as Vec3Raw; constructing Vector3
+ * - Behavior: keep the position locals as VecFx32; constructing Vector3
  *   locals makes the function 0x3f0 against 0x3e0. Cast only at the
  *   Vec3_HorzAngle call boundary to match CalcLib.h.
  * - Behavior: the jingles call func_02012790 (Sound.h), the ROM's wrapper
@@ -42,15 +42,12 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx.h"
 
 /* include/types.h's Vector3 declares a destructor. Under that type the
    five locals below grow the frame by 0x10. The ROM copies are a plain
-   12-byte triple, so this TU keeps a POD and casts only at typed helper
+   12-byte triple, so the locals are VecFx32 and cast only at typed helper
    calls. */
-struct Vec3Raw {
-    int x, y, z;
-};
-
 enum {
     kPlayerActor = 0xbf,
     kCylinderCount = 5,
@@ -100,9 +97,9 @@ s32 daObjCloset_c::CleanupResources() {
 
 // @symbol _ZN13daObjCloset_c8BehaviorEv
 s32 daObjCloset_c::Behavior() {
-    volatile Vec3Raw selfPos, frontPos, playerPos;
-    Vec3Raw actorPos;
-    volatile Vec3Raw colliderPos;
+    volatile VecFx32 selfPos, frontPos, playerPos;
+    VecFx32 actorPos;
+    volatile VecFx32 colliderPos;
     daPly_c *target = mTalkingPlayer;
 
     if (target) {
@@ -123,7 +120,7 @@ s32 daObjCloset_c::Behavior() {
                    kFxRound) >>
                   12);
         {
-            struct Vec3Raw *tp = (struct Vec3Raw *)&target->mPosX;
+            VecFx32 *tp = (VecFx32 *)&target->mPosX;
             playerPos.x = tp->x;
             playerPos.y = tp->y;
             playerPos.z = tp->z;
@@ -186,7 +183,7 @@ s32 daObjCloset_c::Behavior() {
             int isMatch = (actor->actorID == kPlayerActor);
             if (isMatch == 0)
                 continue;
-            struct Vec3Raw *ap = (struct Vec3Raw *)&actor->mPosX;
+            VecFx32 *ap = (VecFx32 *)&actor->mPosX;
             short angleToActor;
             int diff;
             actorPos.x = ap->x;

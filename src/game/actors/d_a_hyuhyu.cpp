@@ -53,6 +53,7 @@ enum d_a_hyuhyu_AssetId {
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 struct BCA_File;
 struct BMD_File;
@@ -64,7 +65,6 @@ extern daHyuhyu_c_State data_ov091_021356b0; /* cloud: blowing */
 extern daHyuhyu_c_State data_ov091_021356c0; /* gust: flying */
 extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
 extern s16 data_02082214[];                  /* sin/cos pairs */
-extern int data_0209e650;                    /* random seed */
 
 /* C helpers with no shared header. */
 extern "C" {
@@ -77,7 +77,6 @@ s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 }
 
@@ -356,9 +355,10 @@ int daHyuhyu_c::StateBlowMain() {
 
                     {
                         s16 base = mPrevAngleY;
-                        heading = base + (s16)(0x2000 -
-                                               ((((u32)RandomIntInternal(&data_0209e650) >> 8) & 3)
-                                                << 0xc));
+                        heading =
+                            base + (s16)(0x2000 -
+                                         ((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 3)
+                                          << 0xc));
                     }
 
                     gust->mPrevAngleX = Vec3_VertAngle(&mPos, &target);

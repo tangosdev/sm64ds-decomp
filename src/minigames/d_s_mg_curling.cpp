@@ -40,6 +40,7 @@ enum dScMgCurling_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "G2x.h"
+#include "LevelRng.h"
 
 namespace G2 {
 void *GetBG2CharPtr(void);
@@ -85,12 +86,14 @@ struct B4 {
 extern "C" {
 
 extern int Mg_GetSubmittedScore(void);
-extern void Mg_RenderSubSpriteMtx(int a, int b, int c, int d);
-extern void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
-extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
+extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
+extern void Mg_DrawNumberRotated(int a1, int a2, int a3, int a4, int a5, int a6, u16 a7);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void func_02012718(int a, int b);
-extern void DrawOamSprite(void *a, void *b, int c, void *d);
+struct OamAttr;
+struct Matrix2x2;
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int RandomIntInternal(int *seed);
 extern int atan2_hold_d_s_mg_curling_1(int y, int x);
@@ -112,14 +115,13 @@ extern void Ov004_Deallocate(void *p);
 extern void func_020563d4(const void *src, u32 offset, u32 count);
 extern void func_02056374(const void *src, u32 offset, u32 count);
 
-extern int data_0209d4b8;
 extern s16 data_02082214[];
 extern unsigned char sCurlingBitAStates[];
 extern unsigned char sCurlingBitBStates[];
 extern u8 sCurlingScoreDelays[];
 extern int sCurlingBitKinds[];
 extern int sCurlingStonesLeftX[];
-extern int sCurlingBitSprites[];
+extern OamAttr *sCurlingBitSprites[];
 extern int sCurlingStoneLeftSprite;
 extern int sCurlingStoneLeftShadowSprite;
 extern int sCurlingAimMarkerSprites[];
@@ -193,7 +195,7 @@ void dScMgCurling_c::Bit_DrawAll() {
             int x = mBit[i].x >> 0xc;
             int y = mBit[i].y >> 0xc;
             Mg_RenderSubSpriteMtx(sCurlingBitSprites[mBit[i].texA], x, y, 0);
-            DrawOamSprite((void *)sCurlingBitSprites[mBit[i].texB], (void *)x, y, 0);
+            DrawOamSprite(sCurlingBitSprites[mBit[i].texB], x, y, 0);
         }
     }
 }
@@ -230,7 +232,8 @@ void dScMgCurling_c::Bit_StateFallSpeedUp(int index) {
         mBit[index].state2 = 2;
         (s16 &)mBit[index].wait2 =
             (short)(unsigned char)((((0x20 *
-                                      (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
+                                      (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
+                                        16) &
                                        0x7fff)) >>
                                      0xf)) +
                                    0x20);
@@ -241,10 +244,10 @@ void dScMgCurling_c::Bit_StateFallSpeedUp(int index) {
 void dScMgCurling_c::Bit_StateFallStart(int index) {
     unsigned int roll;
     mBit[index].vy = 0;
-    roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mBit[index].vyCap = (((roll << 4) >> 15) << 4) + 0x300;
     mBit[index].state2 = 1;
-    roll = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     roll = ((roll << 5) >> 15) + 0x20;
     (s16 &)mBit[index].wait2 = (unsigned char)roll;
 }
@@ -304,7 +307,8 @@ void dScMgCurling_c::BitA_StateDriftLeft(int index) {
 
     mBit[index].state = 3;
     mBit[index].timer =
-        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >>
+        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
+                             << 5 >>
                          0xf) +
                         0x20);
 }
@@ -340,7 +344,8 @@ void dScMgCurling_c::BitA_StateDriftRight(int index) {
 
     mBit[index].state = 3;
     (s16 &)mBit[index].timer =
-        (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 &
+        (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf) +
+            0x20 &
         0xff;
 }
 
@@ -354,16 +359,18 @@ void dScMgCurling_c::BitA_StatePause(int index) {
     }
     mBit[index].vx = 0;
     mBit[index].state =
-        sCurlingBitAStates[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+        sCurlingBitAStates[(((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
                                << 1 >>
                            15];
     mBit[index].wait =
-        (short)(unsigned char)((0x10 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
-                                        0x7fff)) >>
+        (short)(unsigned char)((0x10 *
+                                (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                 0x7fff)) >>
                                0xf);
     mBit[index].timer =
-        (short)(unsigned char)(((0x40 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
-                                         0x7fff)) >>
+        (short)(unsigned char)(((0x40 *
+                                 (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                  0x7fff)) >>
                                 0xf) +
                                0x60);
 }
@@ -490,13 +497,13 @@ void dScMgCurling_c::BitB_StatePause(int idx) {
         return;
     }
     mBit[idx].vx = 0;
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mBit[idx].vy = (int)(((roll << 5) >> 15) << 4) + 0x600;
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mBit[idx].state = sCurlingBitBStates[(roll << 1) >> 15];
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     (s16 &)mBit[idx].wait = (unsigned char)((roll << 4) >> 15);
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     (s16 &)mBit[idx].timer = (unsigned char)(((roll * 0x30) >> 15) + 0x30);
 }
 
@@ -508,7 +515,7 @@ void dScMgCurling_c::Bit_RunKindB(int idx) {
 
 // @symbol _ZN14dScMgCurling_c12Bit_PickKindEi
 void dScMgCurling_c::Bit_PickKind(int idx) {
-    unsigned roll = (unsigned)RandomIntInternal(&data_0209d4b8);
+    unsigned roll = (unsigned)RandomIntInternal(&data_0209d4b8.value);
     int k = 0;
     unsigned pick = ((roll >> 16) & 0x7fff) << 3 >> 0xf;
     if (pick == 5)
@@ -525,7 +532,7 @@ void dScMgCurling_c::Bit_UpdateAll() {
             unsigned char kind = mBit[i].kind;
             (((C *)this)->*sCurlingBitKindTable[kind])(i);
             if ((mBit[i].y >> 0xc) >= 0xc8) {
-                mBit[i].x = (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+                mBit[i].x = (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
                                 << 5 >>
                             0xf << 0xf;
                 mBit[i].y = -0x8000;
@@ -570,7 +577,7 @@ void dScMgCurling_c::Bit_InitAll() {
     i = 0;
     bit = (char *)this;
     for (; i < 0x32; i++) {
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((roll >> 16) & 0x7fff) << 5;
         ((dScMgCurling_c *)bit)->mBit[0].x = (int)((m >> 0xf)) << 0xf;
         ((dScMgCurling_c *)bit)->mBit[0].y = -0x8000;
@@ -579,10 +586,10 @@ void dScMgCurling_c::Bit_InitAll() {
         ((dScMgCurling_c *)bit)->mBit[0].kind = 0;
         ((dScMgCurling_c *)bit)->mBit[0].state = 0;
 
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         ((dScMgCurling_c *)bit)->mBit[0].texA = (char)(((roll >> 16) & 0x7fff) * 5 >> 0xf);
 
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         v = *(unsigned char *)(bit + CURL_OFF(mBit[0].texA)) +
             ((((roll >> 16) & 0x7fff) << 2) >> 0xf) + 1;
         v = v & 0xff;
@@ -590,15 +597,15 @@ void dScMgCurling_c::Bit_InitAll() {
             v = (v - 5) & 0xff;
         ((dScMgCurling_c *)bit)->mBit[0].texB = (char)v;
 
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         ((dScMgCurling_c *)bit)->mBit[0].wait =
             (short)(((i & 7) << 6) + (((roll >> 16) & 0x7fff) * 0x30 >> 0xf));
 
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((roll >> 16) & 0x7fff) << 5;
         *(int *)(bit + CURL_OFF(mBit[0].x)) = (int)((m >> 0xf)) << 0xf;
 
-        roll = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         q = (((roll >> 16) & 0x7fff) * 0x1a) >> 0xf;
         *(int *)(bit + CURL_OFF(mBit[0].y)) = (((q << 3) - 8)) << 0xc;
         *(short *)(bit + CURL_OFF(mBit[0].wait)) = 0;
@@ -689,7 +696,7 @@ void dScMgCurling_c::DrawAimMarker() {
         return;
     int x = mAimX;
     int y = mAimY;
-    Mg_RenderSpriteBoth((int)sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
+    Mg_RenderSpriteBoth(sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
 // @symbol _ZN14dScMgCurling_c9Aim_SwingEv
@@ -1502,9 +1509,9 @@ void dScMgCurling_c::PickHouse() {
     if (mHouse == 0xff) {
         mHouse = 0;
     } else {
-        m = (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3 >> 15;
+        m = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3 >> 15;
         if (mHouse == m) {
-            m += ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 2 >> 15) + 1;
+            m += ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15) + 1;
             if (m >= 3)
                 m -= 3;
         }

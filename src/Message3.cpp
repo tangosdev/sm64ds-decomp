@@ -87,7 +87,7 @@ extern void (*data_02092830[])(void);
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern s32 data_0208ee44;
-extern int data_0209caa0[3];
+extern SaveBlock data_0209caa0;
 extern u32 gNextActorUpdateMask;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
@@ -118,7 +118,7 @@ extern int func_020138dc(void);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(void *src, void *dst);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 /* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
    from a header; the literal name keeps the def's own scalar params. */
 extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
@@ -902,7 +902,7 @@ extern "C" void func_020326ac(void) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
-        } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
+        } else if (data_0209caa0.file.controllerMode == 0 &&
                    (data_020a0e5a[gActivePlayerSlot * 2] & 0x30)) {
             data_0209fcd0 ^= 1;
         }
@@ -931,7 +931,7 @@ extern "C" void func_020326ac(void) {
             data_0209fcd0 = 1;
         } else if (t < -0x80) {
             data_0209fcd0 = 0;
-        } else if (*((u8 *)data_0209caa0 + 0x42) == 0 &&
+        } else if (data_0209caa0.file.controllerMode == 0 &&
                    (data_020a0e5a[gActivePlayerSlot * 2] & 0xC0)) {
             data_0209fcd0 ^= 1;
         }
@@ -999,7 +999,7 @@ extern "C" void func_020326ac(void) {
                 }
                 break;
             }
-        } else if (*((u8 *)data_0209caa0 + 0x42) == 0) {
+        } else if (data_0209caa0.file.controllerMode == 0) {
             u16 mask = data_020a0e5a[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
@@ -1026,13 +1026,13 @@ extern "C" void func_020326ac(void) {
         }
     }
     case 7: {
-        if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) && IsButtonInputValid() != 0) {
+        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) && IsButtonInputValid() != 0) {
             data_0209fd0c += 1;
             data_0209fcc4 = 1;
             data_0209fcbc = 0;
             data_0209fcc8 = 1;
         }
-        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)) {
+        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
             return;
         }
         {
@@ -1869,10 +1869,10 @@ extern "C" void LoadFont3D(void) {
     void *r5;
     void *r4;
 
-    r5 = (void *)LoadFile(0x980e);
+    r5 = LoadFile(0x980e);
     MultiCopy_Int((int *)r5, (int *)func_02054d88(), 0x4000);
 
-    r4 = (void *)LoadFile(0x980d);
+    r4 = LoadFile(0x980d);
     DecompressLZ16(r4, (u8 *)func_02054d88() + 0x8000);
 
     Deallocate(r4);

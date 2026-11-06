@@ -1,14 +1,15 @@
 //cpp
 #include "types.h"
 #include "private/arm9_wbt.h"
+#include "private/wbt_block_info_list.h"
 #include "IRQ.h"
 
 extern "C" {
 
 extern int data_020a94c0;
 extern void func_02065a84(int x);
-extern void func_02065ad0(int v);
-extern void *func_02065b94(void);
+extern void func_02065ad0(struct WBTBlockInfoList *list);
+extern WBTWork *func_02065b94(void);
 extern int func_02065af0(int *thiz);
 extern void func_02065be0(void);
 extern void func_02065ba0(int v);
@@ -35,7 +36,7 @@ void func_020652fc(int send_packet_size, int recv_packet_size, void (*callback)(
     data_020a94c0 = 1;
     func_02065a84(0);
     func_02065ad0(0);
-    work = (WBTWork *)func_02065b94();
+    work = func_02065b94();
     work->cmd.command = 0;
     work->cmd.target_bmp = 0;
     work->cmd.peer_bmp = 0;

@@ -44,13 +44,8 @@ typedef void (*F1)(int);
  * is its ACTIVECATCHBLOCK (hand a live catch object's destructor on to a
  * rethrow at the same location, else destroy it), and func_02071ccc fills the
  * CatchInfo the same way that runtime's catch setup does ('*' pointer types
- * get a copied pointer). Names follow those roles. */
-typedef struct ActionIterator {
-    int mFuncStart;              /* 0x00 -- func_02072dac: start of the covered range */
-    unsigned char *mActionTable; /* 0x04 -- null when no table covers the PC */
-    unsigned char *mAction;      /* 0x08 -- next action byte; null at end of list */
-} ActionIterator;
-
+ * get a copied pointer). Names follow those roles. ActionIterator is shared
+ * (private/throw_context.h). */
 typedef struct CatchInfo {
     int mLocation; /* 0x00 -- func_02071ccc: ThrowContext.mLocation */
     int mTypeInfo; /* 0x04 -- func_02071ccc: ThrowContext.mThrowType */

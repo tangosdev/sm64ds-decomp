@@ -29,7 +29,7 @@ extern "C" {
  * OS_Terminate and MultiStore32Bytes MIi_CpuClearFast. */
 extern void Crash(void);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 
 #define OS_LOCK_ID_ERROR (-3)
 #define CARD_TARGET_NONE 0
@@ -115,7 +115,7 @@ void CARDi_InitCommon(void) {
     {
         /* MI_CpuFillFast's value: the ROM passes it through a stack slot. */
         volatile u32 fill = 0;
-        MultiStore32Bytes(fill, (int *)&cardi_arg, sizeof(cardi_arg));
+        MultiStore32Bytes(fill, &cardi_arg, sizeof(cardi_arg));
     }
     CP15::FlushAndInvalidateDataCache((unsigned int)&cardi_arg, sizeof(cardi_arg));
     p->lock_queue = 0;

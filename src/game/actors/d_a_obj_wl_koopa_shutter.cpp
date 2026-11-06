@@ -13,7 +13,7 @@
  *
  * NOTES:
  * - data_ov026_02112f74 is the unnamed CLPS block this TU feeds SetFile.
- * - data_0209caa0[1] is SaveData::flags1; either of its unnamed bits
+ * - data_0209caa0.file.flags1: either of its unnamed bits
  *   0x204 keeps the collider disabled.
  */
 
@@ -25,6 +25,7 @@ enum daObjWlKoopaShutter_c_AssetId {
 
 #include "daObjWlKoopaShutter_c.h"
 #include "SharedFilePtr.h"
+#include "SaveBlock.h"
 
 /* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
  * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (func_02017acc /
@@ -43,7 +44,7 @@ struct KoopaShutterCollisionFilePtr : SharedFilePtr {
 extern KoopaShutterCollisionFilePtr BowserShutter_ClsnFile;
 
 extern CLPS_Block data_ov026_02112f74;
-extern int data_0209caa0[]; /* SaveData; [1] is flags1 */
+extern SaveBlock data_0209caa0;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -87,7 +88,7 @@ s32 daObjWlKoopaShutter_c::InitResources() {
         void *k = dBgW_Kc::LoadFile(BowserShutter_ClsnFile);
         mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY, data_ov026_02112f74);
     }
-    if (data_0209caa0[1] & 0x204)
+    if (data_0209caa0.file.flags1 & 0x204)
         return 0;
     mMeshCollider.Enable(this);
     return 1;

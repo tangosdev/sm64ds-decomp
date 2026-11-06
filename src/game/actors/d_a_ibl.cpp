@@ -51,6 +51,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
 enum {
@@ -81,9 +82,8 @@ enum {
 /* Particle played at the ball's position where it breaks up. */
 enum { daIbl_PTCL_BREAK = 0xf };
 
-/* The model and shadow matrices, as twelve words: a copy through the C++
-   Matrix4x3 DIFFs. */
-struct M48 { int w[12]; };
+/* The model and shadow matrix copies go through the flat Mtx43: assigning
+   the C++ Matrix4x3 grows .text by 0x34 bytes. */
 
 /* Behavior's handler table, gIblKindHandlers: one pointer-to-member
    per kind, as the two words mwcc lays one out in (function or vtable
@@ -108,7 +108,7 @@ void func_02038414(void *p);
 int atan2_hold_d_a_ibl_1(int y, int x);
 int func_ov002_020ad660(void *a, void *b, void *d, int e);
 
-extern int IDENTITY_MATRIX4X3[];
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 extern signed char gCurrentSublevel;
@@ -258,11 +258,11 @@ void daIbl_c::func_ov100_02142130()
    being 1.0. */
 void daIbl_c::func_ov100_02142264()
 {
-    *(M48 *)&mModel.mat4x3 = *(M48 *)IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    *(M48 *)mShadowMtx = *(M48 *)&mModel.mat4x3;
+    *(Mtx43 *)mShadowMtx = *(Mtx43 *)&mModel.mat4x3;
     int k = 0x32;
     mShadowMtx[10] = (mDrawScale.x * k + mPosY) >> 3;
     if (mWithMeshClsn.IsOnGround() != 0)

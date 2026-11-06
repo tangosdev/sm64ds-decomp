@@ -56,6 +56,7 @@ enum daSnowman_c_AssetId {
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 namespace cstd {
 s16 atan2(s32, s32);
@@ -79,23 +80,22 @@ enum {
 extern "C" {
 extern int RandomIntInternal(int *seed);
 /* Sound::Play2D(2, id). This TU calls the wrapper, not Play2D. */
-extern int data_0209e650;
 extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;
 extern s16 data_ov081_021289a8;
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
-extern int ApproachAngle(void *p, int target, int a, int b, int c);
+extern int ApproachAngle(short *p, int target, int a, int b, int c);
 extern int AngleDiff(int a, int b);
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
 extern void func_02012694(unsigned int a, void *p);
 extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
 extern unsigned char data_0209f21c[];
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, const void *f,
                                    void *g);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(struct Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
@@ -183,7 +183,7 @@ void daSnowman_c::func_ov081_02124134()
         a = dActor_c::FindWithID(id);
         if (a) {
             a->mVertAccel = -0x2000;
-            unsigned int rv = ((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf;
+            unsigned int rv = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf;
             a->mPrevAngleX = 0;
             a->mPrevAngleY = rv << 0xc;
             a->mPrevAngleZ = 0;
@@ -337,7 +337,7 @@ int daSnowman_c::func_ov081_021245e8()
     this->mClosestPlayerIdx = -1;
     if ((int)data_0209f21c[0] > 0) {
         do {
-            daPly_c *obj = (daPly_c *)data_0209f394[i];
+            daPly_c *obj = data_0209f394[i];
             if (obj != 0) {
                 int dist;
                 int *s = &obj->mPosX;   /* one base pointer; see 0212423c */
@@ -399,7 +399,7 @@ int daSnowman_c::func_ov081_0212479c()
         dActor_c *a = dActor_c::FindWithID(this->mCapUniqueID);
         if (a != 0) {
             a->mVertAccel = -0x2000;
-            int rv = ((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf;
+            int rv = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf;
             a->mPrevAngleX = 0;
             a->mPrevAngleY = rv << 0xc;
             a->mPrevAngleZ = 0;

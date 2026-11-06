@@ -74,6 +74,8 @@ enum daObjKey_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx.h"
+#include "SaveBlock.h"
 
 #pragma defer_codegen off
 
@@ -100,13 +102,9 @@ struct ObjKeyAnimationFilePtr : ObjKeyFile {
     ~ObjKeyAnimationFilePtr();
 };
 
-/* Plain three-word offset (data_ov089_02132ca4). A Vector3 static would
+/* data_ov089_02132ca4 is a plain VecFx32 offset. A Vector3 static would
  * register a destructor and grow __sinit, which the retail initializer
  * does not do; the zero-init here emits plain BSS. */
-struct ObjKeyVec3 {
-    int x, y, z;
-};
-
 enum {
     ACTOR_OBJ_KEY = 0x11a,
     KEY_KIND_STAR = 7,
@@ -193,13 +191,13 @@ extern ObjKeyStateTable data_ov089_02132cec;
  * temporary size-DIFFs (see the file comment). The ROM calls the
  * UpdateContinuous veneer, not the method. */
 extern "C" {
-extern void *data_0209f318;
-extern int gNextActorUpdateMask;
+extern dCamera_c *data_0209f318;
+extern u32 gNextActorUpdateMask;
 extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern void func_ov002_020c3dbc(void *player);
-extern int data_0209caa0[];
-void Matrix4x3_FromRotationY(void *m, short angle);
+extern SaveBlock data_0209caa0;
+void Matrix4x3_FromRotationY(void *m, int angle);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void *data_ov089_021328b4[];
 extern ObjKeyFile data_ov002_02110964;
@@ -212,7 +210,7 @@ extern ObjKeyModelFile gLuigiKeyModelFile;
 extern ObjKeyModelFile gMarioKeyModelFile;
 extern ObjKeyModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
-extern ObjKeyVec3 data_ov089_02132ca4;
+extern VecFx32 data_ov089_02132ca4;
 extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
@@ -334,7 +332,7 @@ void daObjKey_c::StateFlyToCenter()
     Vector3 v;
     Vector3 center1;
     Vector3 center2;
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
 
     switch (mStep) {
     case 0:
@@ -463,7 +461,7 @@ void daObjKey_c::StateStarJump()
 {
     Vector3 v;
     Vector3 target;
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
 
     if (mStep < 3) {
         v.x = mPosX;
@@ -611,7 +609,7 @@ void daObjKey_c::StateStarJump()
 // @symbol _ZN10daObjKey_c9StateDropEv
 void daObjKey_c::StateDrop()
 {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
     Vector3 v;
 
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -702,11 +700,11 @@ void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
     /* Word 1, bit (2 << kind): already collected. 1 asks dScStage_c/dMeter/daPly_c
      * for the new-star fanfare; 0 suppresses it. Kind 7 takes neither arm.
      * One arm is shorter (0x110 -> 0xe8); the ROM has both. */
-    if (data_0209caa0[1] & (2 << mState))
+    if (data_0209caa0.file.flags1 & (2 << mState))
         gNewStarCollected = 0;
     else
         gNewStarCollected = 1;
-    data_0209caa0[1] |= (2 << mState);
+    data_0209caa0.file.flags1 |= (2 << mState);
 
     if (mState <= 1) {
         player->SetNoControlState(3, -1, 0);
@@ -982,6 +980,6 @@ ObjKeyAnimationFilePtr data_ov089_02132c40(ASSET_KOOPA_KEY_GET_DEMO_BCA);
 ObjKeyAnimationFilePtr data_ov089_02132c70(ASSET_KOOPA_KEY_OPEN_BCA);
 ObjKeyAnimationFilePtr data_ov089_02132c48(ASSET_KOOPA_KEY_W_GET_BCA);
 
-ObjKeyVec3 data_ov089_02132ca4;
+VecFx32 data_ov089_02132ca4;
 
 ObjKeyStateTable data_ov089_02132cec;

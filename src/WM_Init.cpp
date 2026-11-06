@@ -19,7 +19,7 @@ extern int PXI_IsCallbackReady(int tag, int proc);
 /* MI_DmaFill32 */
 extern void DMASyncFillTransfer(u32 dmaNo, void *dest, u32 data, u32 size);
 extern void WmClearFifoRecvFlag(void);
-extern int WM_SetPortCallback(int idx, int b, int c);
+extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern void OS_InitMessageQueue(void *s, int *v1, int v2);
 extern int OS_SendMessage(void *q, void *val, int flag);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
@@ -29,7 +29,7 @@ extern WMArm9Buf *data_020a89ac;
 extern void *data_020a89b0; /* the free FIFO-buffer message queue */
 extern int data_020a89c4;
 extern char data_020a8a40[];
-extern void WmReceiveFifo(void);
+extern void WmReceiveFifo(int tag, u16 *msg, int err);
 
 int WM_Init(void *buf, int ch) {
     if (data_020a89a8 != 0)

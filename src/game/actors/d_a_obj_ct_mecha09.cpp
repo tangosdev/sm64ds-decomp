@@ -34,6 +34,7 @@ enum daObjCtMecha09_c_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
 #include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
@@ -56,7 +57,6 @@ extern Mecha09ClsnFilePtr data_ov065_0211d9cc;
 extern Mecha09ModelFilePtr data_ov065_0211d9d4;
 extern u8 data_0209f2c0;
 extern s32 data_ov065_0211d520[];
-extern s32 data_0209e650[];
 
 extern CLPS_Block data_ov035_02112118;
 
@@ -106,7 +106,7 @@ int daObjCtMecha09_c::Behavior() {
 
     if (setting == 2) {
         if (DecIfAbove0_Short(&mLegTimer) == 0) {
-            u16 rnd = (u32)RandomIntInternal(data_0209e650) >> 16;
+            u16 rnd = (u32)RandomIntInternal(&data_0209e650.value) >> 16;
             if (rnd >= 0x7fff)
                 mDirection = 1;
             else

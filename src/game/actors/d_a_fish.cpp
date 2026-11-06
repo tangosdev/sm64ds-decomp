@@ -33,8 +33,8 @@
  *   BCA_File * SetAnim takes.
  * - data_0209caa0 / data_0209f32c are the arm9 level-state words that
  *   carry the "has water" flag and the water height; neither is named yet.
- * - RawMatrix4x3 / RawVector3_16 are POD views whose aggregate copies
- *   keep the ROM's ldm/stm / halfword-move shapes.
+ * - Mtx43 / RawVector3_16 are POD views whose aggregate copies keep the
+ *   ROM's ldm/stm / halfword-move shapes.
  * - func_0203b9b4, Vec3_Sub and Vec3_Asr have no shared header, so they
  *   keep a local extern "C" block.
  */
@@ -57,6 +57,9 @@ enum d_a_fish_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "private/mtx43.h"
+#include "LevelRng.h"
+#include "SaveBlock.h"
 
 struct daFishState {
     void (daFish_c::*func)();
@@ -95,8 +98,7 @@ extern daFishState data_ov100_02148468;
 extern daFishState data_ov100_02148458;
 extern daFishState data_ov100_02148470;
 extern daFishState data_ov100_02148478;
-extern int data_0209e650; /* the shared random seed */
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
 /* local extern: arm9 C helpers with no shared header yet. */
@@ -112,12 +114,9 @@ enum {
 };
 
 /* Matrix4x3 contains a non-trivial Vector3 tail, whose generated assignment
- * schedules differently. This POD view preserves the ROM's three ldm/stm copies.
+ * schedules differently. Copying through Mtx43 preserves the ROM's three
+ * ldm/stm copies.
  */
-struct RawMatrix4x3 {
-    int words[12];
-};
-
 /* The same for the spawn rotation: C++'s memberwise Vector3_16 copy loads
  * each field sign-extended; the ROM moves three plain halfwords. */
 struct RawVector3_16 {
@@ -180,7 +179,7 @@ s32 daFish_c::Behavior() {
         Matrix4x3_FromTranslation(&data_020a0e68, shiftedPos.x, shiftedPos.y, shiftedPos.z);
         mAngleY = mPrevAngleY;
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-        *(RawMatrix4x3 *)&mAnmModel.mat4x3 = *(RawMatrix4x3 *)&data_020a0e68;
+        *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         mAnmModel.Advance();
     }
     return 1;
@@ -228,7 +227,7 @@ void daFish_c::StateWaitForPlayer() {
     if (Vec3_HorzLen(&diff) >= 0x1388000)
         return;
 
-    if (data_0209caa0[2] & 0x80000) {
+    if (data_0209caa0.file.flags2 & 0x80000) {
         int lim = data_0209f32c - 0x64000;
         if (this->mSurfaceY > lim) {
             this->mSurfaceY = lim;
@@ -251,21 +250,21 @@ void daFish_c::StateWaitForPlayer() {
     for (i = 0; i < n; i++) {
         int r;
         if (this->mVariant != 0) {
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.x = this->mPosX + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.z = this->mPosZ + (((unsigned)r % 0x140) - 0xa0) * 0x1000;
         } else {
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.x = this->mPosX + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&data_0209e650.value);
             pos.z = this->mPosZ + (((unsigned)r % 0x2bc) - 0x15e) * 0x1000;
         }
 
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&data_0209e650.value);
         pos.y = (this->mSurfaceY - 0x64000) - (((unsigned)r >> 11 & 0xfff) * 0xc8);
 
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&data_0209e650.value);
         rot.y = rot.y + (s16)((unsigned)r >> 16);
 
         {
@@ -305,9 +304,9 @@ void daFish_c::StateIdle() {
     Vector3 d;
     int st = this->mStateTimer;
     if (st == 0) {
-        unsigned r = RandomIntInternal(&data_0209e650);
+        unsigned r = RandomIntInternal(&data_0209e650.value);
         this->mHorzSpeed = ((r >> 15) & 0x1fff) + 0x3000;
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&data_0209e650.value);
         this->mTriggerDist = ((r % 500) + 0x96) << 0xc;
         this->mAnmModel.speed = 0x2000;
     } else if (st == 0xa) {
@@ -344,10 +343,10 @@ void daFish_c::StateFlee() {
     daPly_c *pl;
     Vector3 v;
     if (this->mStateTimer == 0) {
-        this->mMaxSpeed = (RandomIntInternal(&data_0209e650) & 0x3fff) + 0xd000;
-        this->mTriggerDist = (((unsigned int)RandomIntInternal(&data_0209e650) % 0x12c) + 0x1f4)
-                             << 12;
-        this->mTurnSpeed = (RandomIntInternal(&data_0209e650) & 0x3ff) + 0x400;
+        this->mMaxSpeed = (RandomIntInternal(&data_0209e650.value) & 0x3fff) + 0xd000;
+        this->mTriggerDist =
+            (((unsigned int)RandomIntInternal(&data_0209e650.value) % 0x12c) + 0x1f4) << 12;
+        this->mTurnSpeed = (RandomIntInternal(&data_0209e650.value) & 0x3ff) + 0x400;
         this->mAnmModel.speed = 0x4000;
     } else if (this->mStateTimer == 0x14) {
         this->mAnmModel.speed = 0x1000;
@@ -395,10 +394,11 @@ void daFish_c::StateTurnAbout() {
     }
     if (Vec3_HorzLen(&v) >= 0xfa000)
         return;
-    this->mHorzSpeed = (((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x1fff) + 0x2000;
+    this->mHorzSpeed =
+        (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
     this->mAnmModel.speed = 0x1000;
     this->mWanderTimer =
-        (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x7f) + 0x3c);
+        (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) + 0x3c);
     this->mState = 5;
 }
 
@@ -413,7 +413,7 @@ int daFish_c::IsSpawnerIdle() {
 void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mVertAccel = 0;
     this->mTerminalVelocity = -0x1e000;
-    unsigned int r = RandomIntInternal(&data_0209e650);
+    unsigned int r = RandomIntInternal(&data_0209e650.value);
     int fc = this->mAnmModel.GetFrameCount();
     this->mAnmModel.currFrame = (unsigned short)(r % (unsigned)fc) << 12;
     this->mIsSpawner = 0;
@@ -429,9 +429,11 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
         } else {
             *angle = *angle | 0x4000;
         }
-        this->mHorzSpeed = (((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x1fff) + 0x2000;
+        this->mHorzSpeed =
+            (((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x1fff) + 0x2000;
         this->mWanderTimer =
-            (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x7f) + 0x3c);
+            (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 15) & 0x7f) +
+                            0x3c);
         this->mState = 5;
     } else {
         this->mState = 3;

@@ -17,8 +17,8 @@
 // flag, and check the enable bits, with the trapping and out-of-range paths leaving
 // through func_0206dd7c carrying a packed exception code (0x04c000f8 / 0x40c000f8).
 
-extern int func_0207322c(void);
-extern double func_0206dd7c(void);
+extern unsigned int *func_0207322c(void);
+extern double func_0206dd7c(double a, int op);
 
 asm long long _ll_ufrom_d(double x)
 {

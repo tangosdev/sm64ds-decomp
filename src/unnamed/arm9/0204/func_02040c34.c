@@ -13,13 +13,13 @@ static inline void FlushFileShareArea(char *base, unsigned int size) {
  * the ROM uses; the node's mFreeList and mReadyList updates below use it too.
  * The other callees are C. */
 extern "C" {
-extern int WM_SetPortCallback(int a, int b, int c);
+extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern void Crash(void);
 extern void FS_Init(int x);
 extern void FS_InitFile(void *s);
 extern void func_020652fc(int a, int b, void (*c)(char *));
 extern void func_020424c0(void);
-extern void func_0205a588(void *p, int v, int n);
+extern void func_0205a588(void *p, u8 v, u32 n);
 extern int func_020658c0(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02042200(void);
 extern void func_02041224(char *thiz, int n);
@@ -31,7 +31,6 @@ extern void func_02040f30(void *arg);
 
 extern int data_020a0f84;
 extern int data_020a0f88;
-extern FileShareWork data_020a1fc0;
 extern char data_02082158[];
 }
 
@@ -65,7 +64,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
         G->mParentPacketSize = 0;
         G->mChildPacketSize = 0xe;
         data_020a0f88 = 0;
-        if (WM_SetPortCallback((u16)port, (int)func_020417d0, 0) != 0)
+        if (WM_SetPortCallback((u16)port, (void *)func_020417d0, 0) != 0)
             Crash();
         FS_Init(-1);
 

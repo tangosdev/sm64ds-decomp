@@ -26,7 +26,7 @@
 // context struct, three fields zeroed, func_02071be8(&ctx) as the last statement) compiles
 // to 0x2c bytes opening `stmdb sp!,{lr}; sub sp,sp,#0x74` with a full epilogue, and no
 // source form reaches a prologue that saves without restoring.
-extern void func_02071be8(void);
+extern void func_02071be8(void *context);
 
 asm void __rethrow(void) {
     mov ip, sp

@@ -4,8 +4,10 @@
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 // func_0205283c @ 0x0205283c (arm9, Thumb): build 4x3 fx32 Z-rotation matrix
 // from (sin, cos): rows {c,s,0},{-s,c,0},{0,0,1},{0,0,0} with 4096 = 1.0.
+struct Matrix4x3;
+
 #pragma thumb on
-asm void func_0205283c(int *m, int s, int c) {
+asm void func_0205283c(struct Matrix4x3 *m, int s, int c) {
     stmia r0!, {r2}
     mov r3, #0
     stmia r0!, {r1, r3}

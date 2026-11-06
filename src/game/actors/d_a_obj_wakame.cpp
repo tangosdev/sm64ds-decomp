@@ -34,10 +34,9 @@
  * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names. The model
  *   handle constructs through func_02017acc; the animation handle
  *   constructs through SharedFilePtr::Construct.
- * - common.h is not included: this file wants math/Matrix.h's Matrix4x3 so
- *   mAnmModel.mat4x3.t is a Vector3, which is also why
- *   Matrix4x3_FromRotationY is declared locally rather than taken from
- *   math/MtxStack.h (that header pulls in common.h).
+ * - This file wants math/Matrix.h's Matrix4x3 so mAnmModel.mat4x3.t is a
+ *   Vector3. daObjWakame_c.h brings that spelling in first, so
+ *   math/MtxStack.h (which pulls in common.h) is included after it.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -45,6 +44,7 @@ enum d_a_obj_wakame_AssetId { ASSET_OBJ_WAKAME_BMD = 0x0495, ASSET_OBJ_WAKAME_WA
 
 #include "daObjWakame_c.h"
 #include "SharedFilePtr.h"
+#include "math/MtxStack.h"
 
 /* dExtSimpleModel_c: func_02017acc / func_02017ab4. Animation: SharedFilePtr::Construct /
  * SharedFilePtr_Destruct_Anim. filePtr is the file LoadFile just filled in. */
@@ -59,9 +59,6 @@ struct WakameAnimationFileHandle : SharedFilePtr {
 typedef char WakameModelFilePtr_size_must_be_8[sizeof(WakameModelFilePtr) == 8 ? 1 : -1];
 typedef char
     WakameAnimationFileHandle_size_must_be_8[sizeof(WakameAnimationFileHandle) == 8 ? 1 : -1];
-
-/* local extern: math/MtxStack.h's spelling needs common.h (see above). */
-extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angleY);
 
 extern WakameModelFilePtr data_ov002_0210e0dc;        /* BMD model */
 extern WakameAnimationFileHandle data_ov002_0210e0d4; /* BCA animation */

@@ -1442,34 +1442,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@548",
+      "from": "@620",
       "to": "@228",
-      "evidence": "Compiler-local registration node at ov070:0x02123614; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "Compiler-local registration node at ov070:0x02123614; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@549",
+      "from": "@621",
       "to": "@229",
-      "evidence": "Compiler-local registration node at ov070:0x02123620; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "Compiler-local registration node at ov070:0x02123620; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@550",
+      "from": "@622",
       "to": "@230",
-      "evidence": "Compiler-local registration node at ov070:0x0212362c; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "Compiler-local registration node at ov070:0x0212362c; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@551",
+      "from": "@623",
       "to": "@232",
-      "evidence": "Compiler-local registration node at ov070:0x02123638; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "Compiler-local registration node at ov070:0x02123638; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@553",
+      "from": "@625",
       "to": "@233",
-      "evidence": "Compiler-local registration node at ov070:0x02123644; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "Compiler-local registration node at ov070:0x02123644; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@552",
+      "from": "@624",
       "to": "@234",
-      "evidence": "Compiler-local registration node at ov070:0x02123650; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "Compiler-local registration node at ov070:0x02123650; unique short configured label changes no bytes or relocations. | compiler temp; including Sound.h, Particle__System.h, dBgCh_Gnd.h and daPly_c.h at the top of the TU (replacing its local stubs) raises the per-TU @NNN uniquifier, so mwcc emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "symbol_binding_rewrites": [

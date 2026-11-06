@@ -728,14 +728,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@295",
+      "from": "@373",
       "to": "@284",
-      "evidence": "mwcc numbers the first-constructed (0x0211229c long-hand) destructor node @291 per TU; @284 is fleet-free and carries the 0x021122b0 claim"
+      "evidence": "mwcc numbers the first-constructed (0x0211229c long-hand) destructor node @291 per TU; @284 is fleet-free and carries the 0x021122b0 claim; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@296",
+      "from": "@374",
       "to": "@283",
-      "evidence": "mwcc numbers the second-constructed (0x02112294 short-hand) destructor node @292 per TU; @283 is fleet-free and carries the 0x021122a4 claim"
+      "evidence": "mwcc numbers the second-constructed (0x02112294 short-hand) destructor node @292 per TU; @283 is fleet-free and carries the 0x021122a4 claim; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "symbol_binding_rewrites": [

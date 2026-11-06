@@ -176,7 +176,7 @@ mwccarm sometimes emits `add rX, base, #OFF; ldr/strb [rX]` (materialize) where 
 
 The materialized base (`add rX, base, #OFF`) is NOT random. Reproduced examples from the matched
 corpus show exactly what makes mwccarm emit it instead of folding:
-- ARGUMENT MATERIALIZATION (func_02022b04, func_0200762c): passing `&obj->field` or `(T*)(base+OFF)`
+- ARGUMENT MATERIALIZATION (func_02022b04, CutsceneGrandStarStart): passing `&obj->field` or `(T*)(base+OFF)`
   as a POINTER ARGUMENT to a call emits `add rX, base, #OFF`. Dereferencing the same expression
   (`*(T*)(base+OFF)`) stays folded `[base,#OFF]`. So `f(&this->sub)` materializes; `this->sub.x` folds.
 - LIVE-ACROSS-CALL (_ZN18SolidHeapAllocatorC1EPvj): a base pointer that is used both before and after

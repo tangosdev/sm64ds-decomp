@@ -180,7 +180,7 @@ struct daObjFallBlock_c : dBgActor_c {
     void ResetMotion();
     void ApplyModelXyz();
     int RequestShake(dActor_c *);
-    static int StoodOnCallback(dBgW *, daObjFallBlock_c *, dActor_c *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

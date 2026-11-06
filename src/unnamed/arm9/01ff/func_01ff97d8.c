@@ -19,8 +19,8 @@
 // exception code.
 
 extern unsigned int *func_0207322c(void);
-extern float func_0206dd30(void);
-extern float func_0206dc7c(void);
+extern float func_0206dd30(float a, float b, int op);
+extern float func_0206dc7c(double a, double b, int op);
 
 asm double func_01ff97d8(double a, double b)
 {

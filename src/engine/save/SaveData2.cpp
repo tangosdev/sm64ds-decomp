@@ -21,7 +21,9 @@ extern "C" {
 int func_0203da3c(void);
 u32 CARD_GetBackupTotalSize(void);
 int func_02060558(u32 addr, void* buf, u32 len, int d, int e, int f);
-int func_02060484(int a, int b, int c, int d, int e, int f);
+/* local extern: the backup write request takes a u32 dst, but SaveDataToCart's
+ * offsets are int; converting them at the call moves its register allocation. */
+int func_02060484(int dst, const void *src, u32 len, int d, int e, int f);
 /* local extern: no include/ header declares the CARD backup setup. */
 void CARD_Init(void);
 void CARD_IdentifyBackup(int type);
@@ -122,9 +124,9 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
     v10 = 0;
     hdrOff = need + 2;
     dataOff = need + 10;
-    while (func_02060484(need, (int)&sum, 2, v10, v10, v10) != 1 ||
-           func_02060484(hdrOff, (int)data_020a4b40, 8, v14, v14, v14) != 1 ||
-           func_02060484(dataOff, (int)data, (int)size, v18, v18, v18) != 1) {
+    while (func_02060484(need, &sum, 2, v10, v10, v10) != 1 ||
+           func_02060484(hdrOff, data_020a4b40, 8, v14, v14, v14) != 1 ||
+           func_02060484(dataOff, data, size, v18, v18, v18) != 1) {
         retry++;
         if (retry > 0) {
             CARD_UnlockBackup((u16)lockID);
@@ -143,9 +145,9 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
     v1c = 0;
     hdrOff2 = newBase + 2;
     dataOff2 = newBase + 10;
-    while (func_02060484(newBase, (int)&sum, 2, v1c, v1c, v1c) != 1 ||
-           func_02060484(hdrOff2, (int)data_020a4b40, 8, v20, v20, v20) != 1 ||
-           func_02060484(dataOff2, (int)data, (int)size, v24, v24, v24) != 1) {
+    while (func_02060484(newBase, &sum, 2, v1c, v1c, v1c) != 1 ||
+           func_02060484(hdrOff2, data_020a4b40, 8, v20, v20, v20) != 1 ||
+           func_02060484(dataOff2, data, size, v24, v24, v24) != 1) {
         retry2++;
         if (retry2 > 0) {
             CARD_UnlockBackup((u16)lockID);

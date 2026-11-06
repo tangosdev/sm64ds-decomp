@@ -22,6 +22,25 @@
 typedef signed int fx32;
 typedef signed long long fx64;
 typedef signed long long fx64c;
+typedef signed short fx16;
+
+/* NitroSDK's VecFx32 and VecFx16: plain three-component fixed-point vectors.
+ * The game's Vector3 / Vector3s hold the same words but declare a constructor
+ * and destructor in C++, which changes how a copy of one is lowered; a POD
+ * temporary or view of those words is one of these. */
+typedef struct VecFx32 {
+    fx32 x, y, z;
+} VecFx32;
+
+typedef struct VecFx16 {
+    fx16 x, y, z;
+} VecFx16;
+
+/* NitroSDK's MtxFx43: a 4x3 fixed-point matrix, row by row. The same 12
+ * words as include/private/mtx43.h's Mtx43, a distinct type. */
+typedef struct MtxFx43 {
+    fx32 m[4][3];
+} MtxFx43;
 
 #define FX32_SHIFT 12
 #define FX32_CAST(x) ((fx32)(x))

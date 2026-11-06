@@ -26,6 +26,7 @@ enum dScMgSound_c_AssetId {
 #include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
@@ -62,7 +63,7 @@ void LoadBGPltt(const void *data, u32 offset, u32 size);
 void LoadOBJPltt(const void *data, u32 offset, u32 size);
 }
 
-#define RND (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+#define RND (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
 #define LAUNDER(p) ((int)(p))
 
 /* ROM PMF descriptor constants; the runtime tables below use native C++ PMFs. */
@@ -125,11 +126,11 @@ extern Pmf pmf_dScMgSound_c_Pop12_Fly;
 extern Pmf pmf_dScMgSound_c_Pop12_Finish;
 
 extern "C" {
-extern void Hud_RenderSprite(int a, int b, int c, int d, int e);
-extern int sSoundWinSpriteBSprites[];
+extern void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+extern void *sSoundWinSpriteBSprites[];
 /* WinSpriteB reads indices 0 through 2; the fourth stored value is unused here. */
 extern const u16 sSoundWinSpriteBTimes[4] = {50, 3, 3, 50};
-extern int sSoundWinSpriteASprites[];
+extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
@@ -183,7 +184,6 @@ u16 sSoundNoteSfx[42] = {70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  56,  
                          169, 170, 171, 172, 173, 174, 176, 177, 178, 266, 267, 268, 56,  120,
                          184, 248, 57,  121, 185, 249, 58,  122, 186, 250, 59,  123, 187, 251};
 extern int RandomIntInternal(int *seed);
-extern int data_0209d4b8;
 extern const u8 sSoundPitchCounts[5] = {10, 4, 10, 4, 14};
 extern const u8 sSoundDealCounts[5] = {6, 6, 8, 6, 8};
 extern const u8 sSoundNoteLayoutByPattern[5] = {0, 0, 1, 0, 1};
@@ -203,8 +203,8 @@ extern void Presenter_ResetPose(char *c);
 extern void Presenter_PlayCheer(void *c);
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
-int LoadFile(int handle);
-void DecompressLZ16(int src, void *dst);
+void *LoadFile(int handle);
+void DecompressLZ16(void *src, void *dst);
 void Camera_InitPresenterView(void *p);
 int Presenter_Load(void *p);
 extern u8 gMainScreenLayers;
@@ -311,35 +311,35 @@ extern "C" void *dScMgSound_c_classInit(void) {
 /* Loads the minigame's graphics for both screens, sets up the camera and
    the table, then deals the first round. */
 s32 dScMgSound_c::InitResources() {
-    int objChars, objPltt, file;
+    void *objChars, *objPltt, *file;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     objChars = LoadFile(ASSET_D_2D_MG_SOUND_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_SOUND_NCL_BIN);
     DecompressLZ16(objChars, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)objPltt, 0, 0x100);
+    GX::LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
     DecompressLZ16(file, (void *)G2S::GetBG2CharPtr());
-    Deallocate((void *)file);
+    Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCL_BIN);
-    GXS::LoadBGPltt((const void *)file, 0x60, 0x1a0);
-    Deallocate((void *)file);
+    GXS::LoadBGPltt(file, 0x60, 0x1a0);
+    Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NSC_BIN);
-    func_02056374((const void *)file, 0, 0x800);
-    Deallocate((void *)file);
+    func_02056374(file, 0, 0x800);
+    Deallocate(file);
 
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
     DecompressLZ16(objChars, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)objPltt, 0, 0x100);
-    Deallocate((void *)objChars);
-    Deallocate((void *)objPltt);
+    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    Deallocate(objChars);
+    Deallocate(objPltt);
 
     /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h);
        d_s_mg_cup.cpp passes it the same way. */
@@ -1641,7 +1641,7 @@ void dScMgSound_c::DrawNotes() {
             if (mState != 1)
                 priority = 1;
             unsigned char frame = note->note.frame;
-            Hud_RenderSprite((int)sSoundNotesSprites[frame], screenX, screenY, -1, priority);
+            Hud_RenderSprite(sSoundNotesSprites[frame], screenX, screenY, -1, priority);
         }
         noteCursor += 0x14;
     }

@@ -7,7 +7,6 @@ extern "C" {
 extern int func_020658c0(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02041b24(FileShareParentArea *area, FileShareNode *node);
 
-extern char data_020a1fc0[];
 extern int data_02082158;
 
 /* A node has finished loading (func_02042254). The children that asked for it
@@ -15,12 +14,13 @@ extern int data_02082158;
    registered with func_020658c0 (with the first page as data when the region
    fits in 0x400 bytes) and moved to the ready list by func_02041b24. Each
    waiting child then takes a reference and gets the node's file id in its
-   reply slot. Only while FILE_SHARE_WORK->mState is set. */
-void func_02041d28(char *r7, FileShareNode *node) {
+   reply slot. Only while mState is set. The third word is
+   unused: func_02042254 passes 1 (reloaded from its frame into r2). */
+void func_02041d28(char *r7, FileShareNode *node, int) {
     unsigned int saved = IRQ::Disable();
     int mask;
 
-    if (FILE_SHARE_WORK->mState != 0) {
+    if (data_020a1fc0.mState != 0) {
         int bit;
         int *q = &((FileShareParentArea *)r7)->mReplyPending;
         mask = node->mWaitingChildren;

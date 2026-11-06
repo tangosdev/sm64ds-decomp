@@ -1,25 +1,25 @@
 //cpp
 #include "Heap.h"
+#include "nitro/os/exception.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
 
 extern void OS_InitTick(void);
 extern void OS_InitAlarm(void);
-typedef void (*OSExceptionHandler)(u32 context, void *arg);
 extern void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg);
 extern void func_0201a054(void);
 extern void func_020197b8(void);
 
 /* The game's exception handler: it takes the context and ignores arg, which
  * NitroMain passes as the launcher thread (the thread NitroMain runs on). */
-extern void func_0201a03c(int context);
+extern void func_0201a03c(u32 context, void *arg);
 extern mHeap::Heap_t *data_020a0e9c;
 
 void NitroMain(void) {
     OS_InitTick();
     OS_InitAlarm();
-    OS_SetUserExceptionHandler((OSExceptionHandler)func_0201a03c, &data_020a621c);
+    OS_SetUserExceptionHandler(func_0201a03c, &data_020a621c);
     data_020a0e9c->SetNodeID(2);
     func_0201a054();
     data_020a0e9c->SetNodeID(3);

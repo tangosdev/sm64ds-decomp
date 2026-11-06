@@ -17,6 +17,8 @@
  * out, sit after SND_SetTrackPan in the order of pret's SND_interface.h.
  */
 #include "types.h"
+#include "nitro/snd/alarm.h"
+#include "nitro/snd/command.h"
 
 extern "C" {
 
@@ -58,14 +60,7 @@ extern "C" {
 #define SND_TRACK_MOD_SPEED 0x19
 #define SND_TRACK_MOD_DEPTH 0x1a
 
-typedef struct SNDCommand {
-    struct SNDCommand *next; /* 0x00 */
-    s32 id;                  /* 0x04 */
-    u32 arg[4];              /* 0x08 */
-} SNDCommand;
-
 struct SNDBankData;
-typedef void (*SNDAlarmCallback)(void *userData);
 
 SNDCommand *SND_AllocCommand(u32 flags);
 void SND_PushCommand(SNDCommand *cmd);

@@ -6,7 +6,6 @@ extern "C" {
 
 typedef int (*FnT)(int a, int b, int c);
 
-extern char data_020a1fc0[];
 extern unsigned int __aeabi_uidiv(unsigned int n, unsigned int d);
 
 /* Grow the child's receive work (WBT's packet bitmap) to cover a read of n
@@ -18,7 +17,6 @@ void func_02041224(char *thiz, int n)
     int oldWork;
     unsigned int saved;
     unsigned int q;
-    char *g; /* char *, cast at each use: a FileShareWork * local is 12 bytes longer */
     if (n < 0) {
         n = child->mMaxReadSize;
         child->mMaxReadSize = 0;
@@ -28,19 +26,17 @@ void func_02041224(char *thiz, int n)
     child->mMaxReadSize = n;
     oldWork = child->mRecvWork;
     if (oldWork != 0) {
-        g = data_020a1fc0;
         saved = IRQ::Disable();
-        ((FnT)((FileShareWork *)g)->mAllocFunc)(((FileShareWork *)g)->mAllocArg, 0, oldWork);
+        ((FnT)data_020a1fc0.mAllocFunc)(data_020a1fc0.mAllocArg, 0, oldWork);
         IRQ::Restore(saved);
     }
     {
-        int dm = FILE_SHARE_WORK->mParentPacketSize - 0xe;
+        int dm = data_020a1fc0.mParentPacketSize - 0xe;
         q = __aeabi_uidiv(child->mMaxReadSize + dm - 1, dm);
     }
     work = ((q + 0x1f) >> 2) << 4; /* the bitmap's size, then the work itself */
-    g = data_020a1fc0;
     saved = IRQ::Disable();
-    work = ((FnT)((FileShareWork *)g)->mAllocFunc)(((FileShareWork *)g)->mAllocArg, work, 0);
+    work = ((FnT)data_020a1fc0.mAllocFunc)(data_020a1fc0.mAllocArg, work, 0);
     IRQ::Restore(saved);
     child->mRecvWork = work;
     child->mPacketBitmapTable[0] = child->mRecvWork;

@@ -17,6 +17,7 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
@@ -43,7 +44,7 @@ extern "C" {
 extern short gMgCoinsStatus;
 extern int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
 extern void Mg_ResumeSharedState(void);
-extern int Dealer_IsIdle(int *r0);
+extern int Dealer_IsIdle(Dealer *dealer);
 extern void MgCoins_StartPayout(int x);
 extern void MgCoins_StartLose(void);
 extern int gMgCoinsInPlay;
@@ -57,8 +58,7 @@ extern void Mg_SaveRecordPair(int a, int b);
 extern int sBscLaneX[];
 extern int sMgCoinsBetPlaced;
 extern int RandomIntInternal(int *seed);
-extern void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
-extern int data_0209e650;
+extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern void FreeGfxSlotsById(int arg);
 extern void MgCoins_Reset(void);
 void Camera_InitDealerView(void *camera);
@@ -68,12 +68,12 @@ void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
 void Dealer_Draw(void *table);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
-extern unsigned char gMainScreenLayers[];
-extern int data_0208ee44[];
+extern unsigned char gMainScreenLayers;
+extern int data_0208ee44;
 extern void LoadCard2SubBg3(void);
 extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern int Dealer_Load(char *c);
 }
 
@@ -103,19 +103,19 @@ extern "C" void *dScMgBSC_c_classInit() {
  * (mwcc does not devirtualize it). pad_4660 is the head of the camera
  * block, untyped in the header. */
 s32 dScMgBSC_c::InitResources() {
-    int paletteData;
-    gMainScreenLayers[0] = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
+    void *paletteData;
+    gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     LoadCard2SubBg3();
     LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
     paletteData = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);
-    GXS::LoadOBJPltt((void *)paletteData, 0, 0x100);
-    Deallocate((void *)paletteData);
+    GXS::LoadOBJPltt(paletteData, 0, 0x100);
+    Deallocate(paletteData);
     Camera_InitDealerView(pad_4660);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
     Mg_SetTopScreenYOffset(0x20);
     Mg_PlaceBannersOnTopScreen();
-    data_0208ee44[0] = 1;
+    data_0208ee44 = 1;
     mCredits = Mg_GetSavedRecord0();
     mCreditsShown = mCredits;
     this->StartRound(3);
@@ -179,7 +179,7 @@ s32 dScMgBSC_c::CanEndState(int mode) {
     int state;
     short coinStatus;
     if (mState == STATE_WAIT_RESULT) {
-        if (Dealer_IsIdle((int *)&mDealer) != 0) {
+        if (Dealer_IsIdle(&mDealer) != 0) {
             if (mode == 4) {
                 FreeGfxSlotsById(0x1d);
                 mState = STATE_WAIT_WIN;
@@ -233,7 +233,7 @@ void dScMgBSC_c::StateDealCards() {
     for (cardIndex = 0; cardIndex < 2; cardIndex++) {
         mCardPos[cardIndex].x = 0x80000;
         mCardPos[cardIndex].y = -0x40000;
-        cardValue = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) % 5u;
+        cardValue = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) % 5u;
         for (;;) {
             if (valueUsed[cardValue] == 0) {
                 mCardValue[cardIndex] = cardValue;
@@ -249,7 +249,7 @@ void dScMgBSC_c::StateDealCards() {
     mOtherCard = 0;
     mChosenCard = 1;
     mCardsDealt = 0;
-    Dealer_StartShuffle((char *)&mDealer, 3, 2, (int)&mCardsDealt);
+    Dealer_StartShuffle(&mDealer, 3, 2, &mCardsDealt);
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -448,7 +448,7 @@ void dScMgBSC_c::StateTableReaction() {
 /* States 9 and 10: wait for the table's reaction to finish, then pay out
  * a win (state 12) or play the loss sting and gather the cards (state 11). */
 void dScMgBSC_c::StateWaitTable() {
-    if (Dealer_IsIdle((int *)&mDealer) == 0)
+    if (Dealer_IsIdle(&mDealer) == 0)
         return;
     if (mState == STATE_WAIT_WIN) {
         MgCoins_StartPayout(gMgCoinsInPlay << 1);

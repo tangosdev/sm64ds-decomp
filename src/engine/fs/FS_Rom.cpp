@@ -46,12 +46,6 @@ extern "C" {
 /* The ROM header's {offset, length} of the FNT and the FAT. */
 #define HW_ROM_HEADER_BUF 0x027ffe00
 
-/* NitroSDK CARDRomRegion. */
-typedef struct CARDRomRegion {
-    u32 offset;
-    u32 length;
-} CARDRomRegion;
-
 extern u32 data_020a8060;           /* fsi_default_dma_no */
 extern s32 data_020a805c;           /* fsi_card_lock_id */
 extern CARDRomRegion data_020a8064; /* fsi_ovt9 */

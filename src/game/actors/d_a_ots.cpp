@@ -107,6 +107,7 @@
 #include "Particle__System.h"
 #include "math/CalcLib.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -202,7 +203,6 @@ extern "C" {
 extern s16 data_02082214[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_ots_1(int a, int b);
-extern void Matrix4x3_FromRotationY(void* m, short angle);
 
 void func_ov064_021163c0(daOts_c *c);
 }

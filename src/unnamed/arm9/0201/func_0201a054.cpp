@@ -7,7 +7,7 @@
 extern "C" {
 
 extern void func_020427f8(void);
-extern u32 func_02042784(void);
+extern u64 func_02042784(void);
 extern void func_02053a8c(void);
 extern void func_02053c40(void);
 extern void PXI_Init(void);

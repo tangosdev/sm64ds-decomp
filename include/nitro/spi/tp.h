@@ -71,6 +71,19 @@ typedef struct TPWork {
    Every TP function reaches it by this name. */
 extern TPWork data_020a80cc;
 
+/* The SDK's TPCalibrateParam: the screen origin and dot size, in raw panel
+   units, that TP_CalcCalibrateParam derives from two point pairs. */
+typedef struct TPCalibrateParam {
+    s16 x0;       /* 0x0 */
+    s16 y0;       /* 0x2 */
+    s16 xDotSize; /* 0x4 */
+    s16 yDotSize; /* 0x6 */
+} TPCalibrateParam;
+
+u32 TP_CalcCalibrateParam(TPCalibrateParam *calibrate, u16 raw_x1, u16 raw_y1, u16 dx1, u16 dy1,
+                          u16 raw_x2, u16 raw_y2, u16 dx2, u16 dy2);
+int TP_GetUserInfo(TPCalibrateParam *calibrate);
+
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TPData_size_must_be_0x8[sizeof(struct TPData) == 0x8 ? 1 : -1];

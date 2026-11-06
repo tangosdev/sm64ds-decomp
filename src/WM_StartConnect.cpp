@@ -1,14 +1,11 @@
 //cpp
 #include "CP15.h"
+#include "private/wm_views.h"
 
 extern "C" {
 
-extern int WM_CheckStateEx(int a, int b);
-extern void WM_SetCallbackTable(int i, int val);
-extern int *WM_GetSystemWork(void);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void func_0205a588(void *dst, unsigned char v, unsigned int size);
-extern int WM_SendCommand(int a, int b);
 
 /* NitroSDK WM_StartConnect(callback, pInfo, ssid): func_020690b0 passes it
  * its connectBssDesc (a 0xc0-byte WMBssDesc, flushed here) and no ssid. The
@@ -23,17 +20,17 @@ typedef struct WMStartConnectReq {
 
 typedef char WMStartConnectReq_size_must_be_0x20[sizeof(WMStartConnectReq) == 0x20 ? 1 : -1];
 
-int WM_StartConnect(int a, int b, void *c) {
+int WM_StartConnect(void *callback, int b, void *c) {
     int r;
-    int *p;
+    WMArm9Buf *p;
     WMStartConnectReq *q;
     r = WM_CheckStateEx(1, 2);
     if (r != 0) return r;
     if (b == 0) return 6;
     CP15::FlushDataCache(b, 0xc0);
-    WM_SetCallbackTable(0xc, a);
+    WM_SetCallbackTable(0xc, callback);
     p = WM_GetSystemWork();
-    q = (WMStartConnectReq *)p[3];
+    q = (WMStartConnectReq *)p->fifo9to7;
     q->apiid = 0xc;
     q->pInfo = b;
     if (c != 0) {

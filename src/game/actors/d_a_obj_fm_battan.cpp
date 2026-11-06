@@ -25,7 +25,7 @@
  *   ROM-low helper last. InitResources is the key function; with the inline
  *   destructor in the real header this emits retail D1 then D0 and the
  *   class RTTI/vtable without a forcing object.
- *   BattanVector3: a local Vector3 would emit vague-linkage ~Vector3.
+ *   VecFx32 locals: a local Vector3 would emit vague-linkage ~Vector3.
  *   common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so the
  *   translation stays m[9]/m[10]/m[11].
  *
@@ -33,8 +33,7 @@
  *   func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
  *   mMeshCollider; dBgW.h has no setter.
  *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
- *   AddVec3 / Matrix4x3_FromRotationXYZExt: no shared header declares
- *   them.
+ *   AddVec3: no shared header declares it.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
  *   owns; data_ov064_0211ba4c (CLPS) is overlay .data; data_02082214 is the
  *   sine table.
@@ -51,23 +50,16 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
 
-/* A local Vector3 value would make mwccarm emit its vague-linkage destructor.
- * These calls only require the three-word ABI value, so keep that value POD. */
-struct BattanVector3 {
-    s32 x, y, z;
-};
-
 /* local extern: no shared header declares these. */
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
 extern s16 data_02082214[];
 
-extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
 extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-extern int func_0200fa04(dActor_c *, BattanVector3 *, int);
+extern void *func_0200fa04(dActor_c *, VecFx32 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
-extern void func_020393d4(int *, int);
+extern void func_020393d4(dBgW *, BeforeClsnCallback);
 }
 
 /* The retail static initializer constructs these two 8-byte resource handles
@@ -114,7 +106,7 @@ int daObjFm_Battan_c::InitResources() {
     mMeshCollider.SetFile(file, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba4c);
     /* Stores dBgW::UpdatePosWithTransform at mMeshCollider+0x18; dBgW.h has
        no setter, so this stays the 8-byte store helper. */
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mMeshCollider.Enable(this);
 
     mAngVelX = 0;
@@ -139,9 +131,9 @@ int daObjFm_Battan_c::Behavior() {
             mAngVelX = -0x1000;
         mAngleX += mAngVelX;
         if (mAngleX <= -0x4000) {
-            BattanVector3 offset;
-            BattanVector3 pos;
-            BattanVector3 dustPos;
+            VecFx32 offset;
+            VecFx32 pos;
+            VecFx32 dustPos;
             int sinY;
             int cosY;
 

@@ -46,7 +46,7 @@ extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void FS_InitFile(int *s);
 extern int func_0205d518(void *file, const char *path);
 extern int FS_CloseFile(int *s);
-extern int FS_ReadFile(int *s, int a, int b);
+extern int FS_ReadFile(int *s, void *dst, int len);
 extern u16 func_02067ee4(u16 *p, int len);
 extern int func_020688e4(void);
 extern int func_020688cc(void);
@@ -198,7 +198,7 @@ int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
         return 0;
     }
 
-    FS_ReadFile(local, (int)iconp, sz);
+    FS_ReadFile(local, iconp, sz);
     FS_CloseFile(local);
     return 1;
 }

@@ -84,4 +84,54 @@ typedef struct WMBssDesc {
 
 typedef char WMBssDesc_size_must_be_0xc0[sizeof(WMBssDesc) == 0xc0 ? 1 : -1];
 
+/* Leading fields of NitroSDK WMStartParentCallback, the argument the WM
+ * parent callback (func_02069994) passes for CONNECTED (code 0),
+ * DISCONNECTED (code 1) and BEACON_SENT (code 0x1c). Codes 0xff (a failed
+ * WM call, from MBi_CheckWmErrcode: {apiid, errcode}) and 0x100 (any other WM
+ * result) read only the WMCallback header the SDK callbacks all share. */
+typedef struct WmStartParentCallback {
+    unsigned short apiid;    /* 0x00 */
+    unsigned short errcode;  /* 0x02 */
+    unsigned short wlCmdID;  /* 0x04 */
+    unsigned short wlResult; /* 0x06 */
+    /* 0x08 -- 0 PARENT_START, 2 BEACON_SENT, 7 CONNECTED, 9 DISCONNECTED */
+    unsigned short state;
+    unsigned char macAddress[6]; /* 0x0a -- the child's */
+    unsigned short aid;          /* 0x10 */
+} WmStartParentCallback;
+
+/* NitroSDK WMPortRecvCallback, the leading fields: the offsets agree with
+ * every port receive callback that reads one (WM_Ds.cpp's two data-sharing
+ * receive callbacks and the file-sharing one, func_020417d0). */
+typedef struct WMPortRecvCallback {
+    unsigned short apiid;        /* 0x00 */
+    unsigned short errcode;      /* 0x02 */
+    unsigned short state;        /* 0x04 -- 7 CONNECTED, 9 DISCONNECTED, 0x15 PORT_RECV */
+    unsigned short port;         /* 0x06 */
+    void *recvBuf;               /* 0x08 */
+    unsigned short *data;        /* 0x0c */
+    unsigned short length;       /* 0x10 -- bytes at data */
+    unsigned short aid;          /* 0x12 -- the sender */
+    unsigned char macAddress[6]; /* 0x14 */
+    unsigned short seqNo;        /* 0x1a */
+    void *arg;                   /* 0x1c -- WM_SetPortCallback's argument */
+} WMPortRecvCallback;
+
+/* The SDK-private calls every WM_* wrapper makes; NitroSDK spells them
+ * WMi_GetSystemWork, WMi_CheckStateEx, WMi_SendCommand and
+ * WMi_SetCallbackTable. The check and the send are variadic: paramNum
+ * states to accept, or paramNum words to copy into the request block.
+ * WM_SetCallbackTable stores a request's callback in callbackTable by API
+ * id. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+WMArm9Buf *WM_GetSystemWork(void);
+int WM_CheckStateEx(int paramNum, ...);
+int WM_SendCommand(short id, unsigned short paramNum, ...);
+void WM_SetCallbackTable(int apiid, void *callback);
+#ifdef __cplusplus
+}
+#endif
+
 #endif

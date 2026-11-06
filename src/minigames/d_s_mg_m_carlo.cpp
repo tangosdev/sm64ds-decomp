@@ -23,6 +23,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "PlayerInput.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 /* Coined from the card transitions in DealIn and Update. The byte-sized
  * mState field retains its existing layout. */
@@ -50,7 +51,6 @@ extern short sMCarloBoardDelay;
 extern int sMCarloCardTotal;
 extern int sMCarloDealProgress;
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
 extern int sMCarloCardsMoving;
 extern int sMCarloCols;
 extern int sMCarloRows;
@@ -65,7 +65,6 @@ extern void Vec2_Sub(int *o, int *a, int *b);
 extern void func_0203d630(int *p, int m);
 extern int sMgCoinsBetPlaced;
 extern int func_0203d5dc(void *a, void *b);
-extern int sMCarloHudSprite;
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Camera_InitDealerView(void *p);
@@ -73,17 +72,17 @@ void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void MgCoins_Draw(void);
 void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
 void Dealer_Draw(void *p);
-int Dealer_IsIdle(void *p);
+int Dealer_IsIdle(Dealer *dealer);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
-void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 void MgCoins_Reset(char *p);
 void FreeGfxSlotsById(int arg);
-void MgCoins_StartPayout(char *p);
+void MgCoins_StartPayout(int count);
 extern unsigned short gMgCoinsStatus;
 extern void LoadCard2SubBg3(void *c);
 extern int GetGameLanguage(void);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern int Dealer_Load(char *p);
 extern unsigned char gMainScreenLayers;
@@ -111,8 +110,8 @@ s32 dScMgMCarlo_c::InitResources() {
 
     Mg_SetTopScreenYOffset(0x20);
     LoadCard2SubBg3(this);
-    tileData = (void *)LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
-    paletteData = (void *)LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
+    tileData = LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
+    paletteData = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(tileData, (void *)0x6600000);
     GXS::LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(tileData);
@@ -151,7 +150,7 @@ void dScMgMCarlo_c::StartRound(int arg) {
     sMCarloPickAllowed = 0;
     mRoundProgress = 0;
     mDealer.mReserved = 1;
-    Dealer_StartShuffle((char *)&mDealer, 4, 4, (int)&mRoundProgress);
+    Dealer_StartShuffle(&mDealer, 4, 4, &mRoundProgress);
     mDealer.mHand = 1;
     mRoundTimer = 0;
     mRoundState = STATE_START_PROMPT;
@@ -179,7 +178,7 @@ int dScMgMCarlo_c::CanEndState(int mode) {
                 MgCoins_StartSpend(dealt);
                 mRoundTimer = -1;
             } else {
-                MgCoins_StartPayout((char *)sMCarloPayout);
+                MgCoins_StartPayout(sMCarloPayout);
             }
             mRoundProgress = 0;
             mRoundState += 1;
@@ -389,7 +388,7 @@ void dScMgMCarlo_c::RenderHud(void) {
     if (deck == 0)
         return;
     Mg_DrawNumber(0xe8, 0x28, deck, -1, -1, 0, 0);
-    Hud_RenderSprite((void *)sMCarloHudSprite, 0xe8, 0x18, -1, -1);
+    Hud_RenderSprite(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 }
 
 // @symbol _ZN18dMgMCarloCardObj_c4InitEi
@@ -803,7 +802,7 @@ int dScMgMCarlo_c::DrawCardValue(void) {
     int roll;
     for (face = 0; face < 8; face++)
         total += sMCarloFaceCounts[face];
-    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13);
+    roll = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13);
     total = (total * roll) >> 0xc;
     for (face = 0; face < 8; face++) {
         total -= sMCarloFaceCounts[face];

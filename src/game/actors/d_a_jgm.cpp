@@ -73,17 +73,11 @@ enum d_a_jgm_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
-/* Local three-word ABI value. Vector3 has a genuine non-trivial destructor;
- * these stack values are plain fixed-point words and must not instantiate its
- * otherwise unrelated vague-linkage D1 in this class TU. */
-struct DaJgmVector3Words { Fix12i x, y, z; };
-
-typedef char DaJgmVector3Words_size_must_be_0xc[
-    sizeof(DaJgmVector3Words) == 0xc ? 1 : -1];
-
-struct DaJgmMatrixWords { int words[12]; };
-
+/* Vector stack values are NitroSDK VecFx32. Vector3 has a genuine non-trivial
+ * destructor and must not instantiate its otherwise unrelated vague-linkage D1
+ * in this class TU. */
 
 /* File-scope objects at the end of this file construct the seven resource
  * handles (model files 0x34c/0x429/0x42a, animation files 0x34f/0x34d,
@@ -148,19 +142,12 @@ extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
 extern s16 data_02082214[];
-extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 angY);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void MulMat4x3Mat4x3(void *a, void *b, void *out);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern void Vec3_Asr(void *d, void *s, int sh);
 
@@ -342,7 +329,7 @@ s32 daJgm_c::UpdateHoverState()
     HandlePlayerCollision();
     {
         const JgmVector3 &offset = data_ov077_02127b88;
-        DaJgmVector3Words pos;
+        VecFx32 pos;
         pos.y = offset.y + mBobOffsetY;
         pos.x = offset.x;
         pos.z = offset.z;
@@ -386,7 +373,7 @@ s32 daJgm_c::UpdateThrowState()
     HandlePlayerCollision();
     {
         const JgmVector3 &offset = data_ov077_02127b88;
-        DaJgmVector3Words pos;
+        VecFx32 pos;
         pos.y = offset.y + mBobOffsetY;
         pos.x = offset.x;
         pos.z = offset.z;
@@ -577,14 +564,14 @@ void daJgm_c::UpdateModels()
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, lv.t[0], lv.t[1], lv.t[2]);
 
-    *(DaJgmMatrixWords *)&mModel.mat4x3 = *(DaJgmMatrixWords *)&data_020a0e68;
+    mModel.mat4x3 = data_020a0e68;
 }
 
 // @symbol _ZN7daJgm_c18UpdateWallAndWaterER10dBgCh_Actr
 void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
 {
-    DaJgmVector3Words nrm;
-    DaJgmVector3Words pos;
+    VecFx32 nrm;
+    VecFx32 pos;
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&collision);
     if (collision.IsOnWall() != 0) {
@@ -669,7 +656,7 @@ void daJgm_c::HandlePlayerCollision()
         return;
 
     {
-        DaJgmVector3Words v;
+        VecFx32 v;
         v.x = mPosX;
         v.y = mPosY;
         v.z = mPosZ;
@@ -680,7 +667,7 @@ void daJgm_c::HandlePlayerCollision()
 // @symbol _ZN7daJgm_c15DieAndDropCoinsEv
 void daJgm_c::DieAndDropCoins()
 {
-    DaJgmVector3Words t;
+    VecFx32 t;
     t.x = mPosX;
     t.y = mPosY;
     t.z = mPosZ;

@@ -29,6 +29,7 @@
 #include "dCamera_c.h"
 #include "dClipper.h"
 #include "Memory.h"
+#include "math/MtxStack.h"
 
 /* One tree instance's list node: the billboard/clip center in
  * matrix-shifted units (>> 3, y lifted by kCanopyLift), its cylinder
@@ -64,9 +65,8 @@ enum {
 
 /* Shared ABI seams, kept above the first `// @symbol` marker so no member
  * is charged with their mangled spellings. local extern: no shared header
- * declares either helper. */
+ * declares this helper. */
 extern "C" {
-void Matrix4x3_FromRotationY(Matrix4x3 *m, short ang);
 /* Spelled Vector3 * for the object actually passed. The definition in
  * src/Vec3_AsrInPlace.c says int *, and the tree also carries s32 * and a
  * file-local `struct Vec3 { int x, y, z; }` in src/game/actors/d_a_kpa3_bg.cpp --

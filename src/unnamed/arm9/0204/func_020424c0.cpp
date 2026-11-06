@@ -8,6 +8,8 @@ typedef struct FSFile FSFile;
 
 extern "C" {
 
+/* Measured: without loop_invariants 7 of 106 words differ (&file and -1 swap
+ * r4/r5); without propagation 22; without both 29. for-loop forms are 0x1b0. */
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 /* data_020a1fc0, the file-sharing work block, under FileShareWork's names
@@ -34,6 +36,9 @@ typedef struct {
     int size;
 } RomRegion;
 
+/* local extern: the header's FileShareWork (arm9_a1fc0_file_share.h) types
+ * mAllocFunc, mAllocArg and mTable as int, so through it this function would
+ * cast the allocator, its argument and the result back. Same layout. */
 extern WorkInfo data_020a1fc0;
 extern char data_02099e6c[]; /* "rom" */
 
@@ -41,7 +46,7 @@ extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern void FS_InitFile(int *s);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
-extern int FS_ReadFile(int a, int b, int c);
+extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int FS_CloseFile(char *self);
 
 /* Allocate one block for the card's FAT, FNT and both overlay tables (each
@@ -101,7 +106,7 @@ void func_020424c0(void) {
             data0 = p->offset;
             end = roundedSize + data0;
             FS_OpenFileDirect((char *)&file, sb, data0, end, -1);
-            FS_ReadFile((int)&file, (int)buf, roundedSize);
+            FS_ReadFile(&file, buf, roundedSize);
             FS_CloseFile((char *)&file);
             buf += roundedSize;
             j++;

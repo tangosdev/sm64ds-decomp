@@ -11,12 +11,12 @@ extern "C" daPly_c *daPly_c_classInit() {
     return new daPly_c;
 }
 
-/* The path St_EndingFly_Main flies the player along after
-   StartEndingCutscene: uniform cubic B-spline control points circling the
-   origin at radius ~4000 for two laps while climbing from y 713 to 2300.
-   daPly_c::func_ov002_020c2fec blends four consecutive rows and advances by
-   speed / 1000; the trailing speed-0 rows end the flight. */
-EndingFlyPoint gEndingFlyPath[27] = {
+/* Super Mario 64's sJumboStarKeyframes: the jumbo star flight's path.
+   After the take-off it circles the origin at radius ~4000 for two laps,
+   climbing from y 713 to 2300. AnimSplinePoll blends four consecutive rows
+   and advances by speed / 1000; the three speed-0 rows end the flight. The
+   N64 table is the same but for its first row, {20, 0, 678, -2916}. */
+EndingFlyPoint gJumboStarKeyframes[27] = {
     {20, 0, 713, -2970},      {30, 0, 680, -3500},      {40, 1000, 700, -4000},
     {50, 2500, 750, -3500},   {50, 3500, 800, -2000},   {50, 4000, 850, 0},
     {50, 3500, 900, 2000},    {50, 2000, 950, 3500},    {50, 0, 1000, 4000},

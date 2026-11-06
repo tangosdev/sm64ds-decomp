@@ -33,8 +33,7 @@ void MultiCopy_Int(int *src, int *dst, int len)
 }
 
 /* 32-byte-block copy primitive (asm on the DS) */
-void MultiCopy32Bytes(int *src, int *dst, int len)
-{
+void MultiCopy32Bytes(const void *src, void *dst, int len) {
     memcpy(dst, src, len);
 }
 

@@ -914,6 +914,14 @@
       "evidence": "origin/main:src/game/player/d_a_ply_methods.cpp passes `c + 0x5bc` to the mangled extern; batch 5 member call"
     },
     {
+      "path": "src/game/player/d_a_ply_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)b+0xd0",
+      "count": 1,
+      "reason": "daPly_c::func_ov002_020d7030 takes the object Yoshi swallows. Its callers pass that object as void *, so the member takes void *; the free function had taken char * and wrote `b + 0xd0`. 0xd0 is the first word past dActor_c (sizeof 0xd0), a field of the derived class that points back at the eater (St_DeadPit_Init clears the same word through mObjInMouth). No shared type declares it. Follow-up: name the field once the swallowable classes share a base or an interface.",
+      "evidence": "origin/main:src/game/player/d_a_ply_methods.cpp spelled `*(void **)(b + 0xd0) = a;` with `char *b`; tubuild verify ov002/daPly_c 624/624 MATCH with the cast"
+    },
+    {
       "path": "src/game/actors/d_a_kinopio.cpp",
       "rule": "raw-offset",
       "match": "(dExtShadowModel_c*)(c+0x16c",

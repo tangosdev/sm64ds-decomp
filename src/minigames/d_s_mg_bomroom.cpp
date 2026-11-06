@@ -35,6 +35,7 @@
 #include "GX.h"
 #include "cstd.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "G2x.h"
 #include "nitro/fx/fx.h"
@@ -45,8 +46,8 @@ extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern int sBomroomPenGateSprites[];
 extern int sBomroomPenGateX[];
 extern int sBomroomPenGateY[];
-extern int sBomroomHatchPanelSprites[];
-extern int sBomroomTopDoorSprites[];
+extern OamAttr *sBomroomHatchPanelSprites[];
+extern OamAttr *sBomroomTopDoorSprites[];
 extern int sBomroomHatchPanelX[];
 extern int sBomroomHatchPanelY[];
 extern int func_020126e8(int a);
@@ -59,8 +60,8 @@ extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
 extern unsigned char *sBomroomBombLitSprites[];
 extern void *sBomroomBombsSprites[];
-extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-extern void *sBomroomRoundOverSprites;
+extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+extern OamAttr *sBomroomRoundOverSprites;
 extern void *sBomroomMarkerPlainSprites[];
 extern void *sBomroomMarkerLitSprites[];
 extern int sBomroomMarkerY[];
@@ -71,7 +72,7 @@ extern u8 gTouchX[];
 // local extern: see above.
 extern u8 gTouchY[];
 extern u16 sBomroomSpawnDelays[];
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 
 extern void MultiStore16(u16 val, char *dst, int nbytes);
@@ -98,7 +99,7 @@ dScMgBomroom_c::~dScMgBomroom_c()
 void dScMgBomroom_c::DrawRoundOver() {
     if (mRoundOver == 0)
         return;
-    RenderOamMainScreen((int)sBomroomRoundOverSprites, 0x80, 0xc0, -1, 1);
+    RenderOamMainScreen(sBomroomRoundOverSprites, 0x80, 0xc0, -1, 1);
 }
 
 
@@ -473,8 +474,8 @@ void dScMgBomroom_c::HatchPanel_DrawAll() {
             int xv = mHatchPanels[i].x >> 12;
             int yv = mHatchPanels[i].y >> 12;
             int k = mHatchPanels[i].level;
-            int v = (i == 0) ? sBomroomTopDoorSprites[k] : sBomroomHatchPanelSprites[k];
-            Hud_RenderSprite((void*)v, xv, yv, -1, 1);
+            OamAttr *v = (i == 0) ? sBomroomTopDoorSprites[k] : sBomroomHatchPanelSprites[k];
+            Hud_RenderSprite(v, xv, yv, -1, 1);
         }
     }
 }
@@ -1531,7 +1532,7 @@ void dScMgBomroom_c::SpawnBombs() {
                     mBombs[j].x = 0x80000;
                     mBombs[j].marchDelay = 4;
                     mBombs[j].fuse = 0x200;
-                    rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                    rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                     ptype = &((dScMgBomroom_c *)(c + (j << 6)))->mBombs[0].color;
                     *ptype = (((rnd >> 16) & 0x7fff) << 1) >> 15;
                     mBombs[j].speed = 0x999;
@@ -1541,7 +1542,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         HatchPanel_Activate(0);
                     }
                     if (sb <= 1) {
-                        rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                        rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                         mBombs[j].angle = (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
                         mBombs[j].y = 0;
                     } else if (flag != 0) {
@@ -1558,7 +1559,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0x2800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                             mBombs[j].angle =
                                 (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
                         }
@@ -1568,7 +1569,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0xa800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8);
+                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
                             mBombs[j].angle =
                                 (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0xa000;
                         }
@@ -1975,24 +1976,24 @@ s32 dScMgBomroom_c::Behavior()
 s32 dScMgBomroom_c::InitResources() {
     char *b;
     volatile u16 fill;
-    int f;
-    int arc;
+    void *f;
+    void *arc;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 2;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
     f = LoadFile(0x23);
-    DecompressLZ16((void *)f, (void *)(func_02054d88() + 0x4000));
-    Deallocate((void *)f);
+    DecompressLZ16(f, (void *)(func_02054d88() + 0x4000));
+    Deallocate(f);
 
     f = LoadFile(0x24);
-    GX::LoadBGPltt((const void *)f, 0x180, 0x80);
-    Deallocate((void *)f);
+    GX::LoadBGPltt(f, 0x180, 0x80);
+    Deallocate(f);
 
     f = LoadFile(0x25);
-    func_02056314((void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_02056314(f, 0, 0x800);
+    Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
@@ -2002,49 +2003,49 @@ s32 dScMgBomroom_c::InitResources() {
     b = (char *)G2::GetBG2ScrPtr();
     fill = 0xf23f;
     MultiStore16(fill, b, 0x1000);
-    func_020563d4((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_020563d4(f, 0, 0x800);
+    Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3);
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x5610;
 
     f = LoadFile(2);
-    func_02056554((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_02056554(f, 0, 0x800);
+    Deallocate(f);
 
     f = LoadFile(7);
-    func_02056554((const void *)f, 0x800, 0x800);
-    Deallocate((void *)f);
+    func_02056554(f, 0x800, 0x800);
+    Deallocate(f);
 
     G2x::SetBlendAlpha((volatile u16 *)0x4000050, 1, 0x1c, 4, 3);
 
     arc = LoadFile(0xb5);
     f = LoadFile(0xb6);
-    DecompressLZ16((void *)arc, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)f, 0, 0x100);
+    DecompressLZ16(arc, (void *)0x6400000);
+    GX::LoadOBJPltt(f, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
 
     {
-        int f7 = LoadFile(0x23);
-        DecompressLZ16((void *)f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
-        Deallocate((void *)f7);
+        void *f7 = LoadFile(0x23);
+        DecompressLZ16(f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
+        Deallocate(f7);
 
         f7 = LoadFile(0x24);
-        GXS::LoadBGPltt((const void *)f7, 0x180, 0x80);
-        Deallocate((void *)f7);
+        GXS::LoadBGPltt(f7, 0x180, 0x80);
+        Deallocate(f7);
 
         f7 = LoadFile(0x22);
-        func_020562b4((const void *)f7, 0, 0x800);
-        Deallocate((void *)f7);
+        func_020562b4(f7, 0, 0x800);
+        Deallocate(f7);
 
-        DecompressLZ16((void *)arc, (void *)0x6600000);
-        GXS::LoadOBJPltt((const void *)f, 0, 0x100);
-        Deallocate((void *)arc);
-        Deallocate((void *)f);
+        DecompressLZ16(arc, (void *)0x6600000);
+        GXS::LoadOBJPltt(f, 0, 0x100);
+        Deallocate(arc);
+        Deallocate(f);
     }
 
     ResetRound();

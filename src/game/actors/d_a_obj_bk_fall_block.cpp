@@ -38,14 +38,7 @@ struct FallBlockClsnFileHandle : SharedFilePtr {
 typedef char FallBlockModelFilePtr_size_must_be_8[sizeof(FallBlockModelFilePtr) == 8 ? 1 : -1];
 typedef char FallBlockClsnFileHandle_size_must_be_8[sizeof(FallBlockClsnFileHandle) == 8 ? 1 : -1];
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern ResourceDescriptor data_ov015_02114880;
 

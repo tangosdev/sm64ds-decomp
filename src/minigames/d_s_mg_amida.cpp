@@ -85,6 +85,7 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/hw/registers.h"
 #include "G2.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "dScMgAmida_c.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
@@ -103,7 +104,7 @@ extern int RandomIntInternal(int *seed);
 extern int Vec2_Len(int *v);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void SetSubBg2Offset(int a, int b);
 extern void func_02012dbc(int a);
 extern int func_020126e8(int a);
@@ -298,7 +299,7 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
             arg1 = 1;
             do {
                 for (i = 0; i < 4; i++) {
-                    t = RandomIntInternal(&data_0209d4b8);
+                    t = RandomIntInternal(&data_0209d4b8.value);
                     pi = (int *)((char *)this + (i << 2) + off);
                     j = ((u32)(((u32)t >> 16) & 0x7fff) * 4) >> 15;
                     t = *pi;
@@ -327,7 +328,7 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
         {
             int off = (int)&((dScMgAmida_c *)0)->mLaneResult;
             for (i = 0; i < 4; i++) {
-                t = RandomIntInternal(&data_0209d4b8);
+                t = RandomIntInternal(&data_0209d4b8.value);
                 pi = (int *)((char *)this + (i << 2) + off);
                 j = ((u32)(((u32)t >> 16) & 0x7fff) * 4) >> 15;
                 t = *pi;
@@ -1338,7 +1339,7 @@ void dScMgAmida_c::InitWalkers() {
         }
         do {
             for (k = 0; k < 4; k++) {
-                rand = (u32)RandomIntInternal(&data_0209d4b8) >> 16;
+                rand = (u32)RandomIntInternal(&data_0209d4b8.value) >> 16;
                 pick = ((rand & 0x7fff) * 4) >> 15;
                 tmp = this->mLanePerm[k];
                 this->mLanePerm[k] = this->mLanePerm[pick];
@@ -1387,12 +1388,13 @@ void dScMgAmida_c::InitWalkers() {
         } while (again == 1);
     } else if (this->mWalkerCount == 1) {
         if (this->mRoundCount == 0) {
-            pick = ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 4) >> 15;
+            pick = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 4) >> 15;
             tmp = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
             this->mLanePerm[pick] = tmp;
         } else {
-            pick = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3) >> 15) + 1;
+            pick =
+                (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >> 15) + 1;
             tmp = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
             this->mLanePerm[pick] = tmp;
@@ -1413,7 +1415,7 @@ void dScMgAmida_c::InitWalkers() {
                 this->mLanePerm[i] = i;
             }
             for (k = 0; k < 4; k++) {
-                rand = (u32)RandomIntInternal(&data_0209d4b8) >> 16;
+                rand = (u32)RandomIntInternal(&data_0209d4b8.value) >> 16;
                 pick = ((rand & 0x7fff) * 4) >> 15;
                 tmp = this->mLanePerm[k];
                 this->mLanePerm[k] = this->mLanePerm[pick];
@@ -1480,7 +1482,8 @@ void dScMgAmida_c::SetupRound() {
         }
     } else if (level >= 0xa) {
         shuffle = 1;
-        level = (((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5) >> 15) + 4;
+        level =
+            (((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5) >> 15) + 4;
         if (level == mPatternIndex) {
             level = 9;
         }
@@ -1591,7 +1594,8 @@ void dScMgAmida_c::SetupRound() {
             int msk = 0x7fff;
             int cnt = 3;
             do {
-                int idx = ((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & msk) * 0xb) >> 15;
+                int idx =
+                    ((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & msk) * 0xb) >> 15;
                 if (skip[idx] == 0) {
                     cnt--;
                     skip[idx] = 1;
@@ -1603,16 +1607,17 @@ void dScMgAmida_c::SetupRound() {
             case 0:
                 break;
             case 1:
-                skip[((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5) >> 15] =
-                    1;
+                skip[((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5) >>
+                     15] = 1;
                 break;
             case 2: {
                 int cnt =
-                    (((u32)(((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 3) >> 15) +
+                    (((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
+                     15) +
                     1;
                 int j = 0;
                 if (cnt > 0) {
-                    int *seedp2 = &data_0209d4b8;
+                    int *seedp2 = &data_0209d4b8.value;
                     do {
                         skip[((u32)(((u32)RandomIntInternal(seedp2) >> 16) & 0x7fff) * 0xb) >> 15] =
                             1;
@@ -2051,8 +2056,8 @@ s32 dScMgAmida_c::Behavior() {
                 scan = raw;
                 do {
                     if (PIECE_AT(scan)->active != 1) {
-                        randA = RandomIntInternal(&data_0209d4b8);
-                        randB = RandomIntInternal(&data_0209d4b8);
+                        randA = RandomIntInternal(&data_0209d4b8.value);
+                        randB = RandomIntInternal(&data_0209d4b8.value);
                         bv = ((u32)randB >> 16) & 0x7fff;
                         av = ((u32)randA >> 16) & 0x7fff;
                         cosB = data_02082214[((int)((bv << 15) >> 16) >> 4) * 2 + 1];
@@ -2151,14 +2156,14 @@ s32 dScMgAmida_c::InitResources() {
 
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)func_02054d88());
-        file = (void *)LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCL_BIN);
+        file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
         GX::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NSC_BIN, G2::GetBG3ScrPtr());
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NCG_BIN, (void *)func_02054d88());
-        file = (void *)LoadFile(ASSET_D_2D_MG_BG_AMIDA1_NCL_BIN);
+        file = LoadFile(ASSET_D_2D_MG_BG_AMIDA1_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
         GX::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
@@ -2176,7 +2181,7 @@ s32 dScMgAmida_c::InitResources() {
 
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCG_BIN, G2S::GetBG3CharPtr());
-        file = (void *)LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCL_BIN);
+        file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCL_BIN);
         GXS::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NSC_BIN, G2S::GetBG3ScrPtr());
@@ -2184,7 +2189,7 @@ s32 dScMgAmida_c::InitResources() {
         gSubScreenLayers |= 9;
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_NCG_BIN, G2S::GetBG3CharPtr());
-        file = (void *)LoadFile(ASSET_D_2D_MG_BG_AMIDA2_NCL_BIN);
+        file = LoadFile(ASSET_D_2D_MG_BG_AMIDA2_NCL_BIN);
         GXS::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_2_NSC_BIN, G2S::GetBG2ScrPtr());
@@ -2212,14 +2217,14 @@ s32 dScMgAmida_c::InitResources() {
             LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_NCG_BIN, (void *)0x6400000);
             LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_NCG_BIN, (void *)0x6600000);
         }
-        file = (void *)LoadFile(ASSET_D_2D_MG_AMIDA_FACE_NCL_BIN);
+        file = LoadFile(ASSET_D_2D_MG_AMIDA_FACE_NCL_BIN);
         GX::LoadOBJPltt(file, 0, 0x100);
         GXS::LoadOBJPltt(file, 0, 0x100);
         Deallocate(file);
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, (void *)0x6400000);
         LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, (void *)0x6600000);
-        file = (void *)LoadFile(ASSET_D_2D_MG_AMIDA_NCL_BIN);
+        file = LoadFile(ASSET_D_2D_MG_AMIDA_NCL_BIN);
         GX::LoadOBJPltt(file, 0, 0x100);
         GXS::LoadOBJPltt(file, 0, 0x100);
         Deallocate(file);

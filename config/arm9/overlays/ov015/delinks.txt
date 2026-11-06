@@ -45,6 +45,7 @@ src/game/actors/d_a_obj_bk_ukisima.cpp:
     .init start:0x0211333c end:0x021133a8
     .ctor start:0x02113424 end:0x02113428
     .bss start:0x02114aac end:0x02114ad4
+    .data start:0x021147a4 end:0x021147b0
 
 src/game/actors/d_a_obj_bk_fall_block.cpp:
     complete

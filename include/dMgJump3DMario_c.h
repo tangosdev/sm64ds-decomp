@@ -2,6 +2,7 @@
 #define DMGJUMP3DMARIO_C_H
 
 #include "dExtAnmModel_c.h"
+#include "nitro/fx/fx.h"
 
 /* dMgJump3DMario_c -- one of the three Marios in Bounce and Pounce (MG_JUMP)
  * and its sequel (MG_JUMP2), ov006.
@@ -21,17 +22,14 @@
  * address-derived (RTTI proves ownership and slot order, not spelling).
  */
 
-/* Three 20.12 words. Plain on purpose, and the reason is measured rather than
- * assumed -- notes/experiments/jump3d-2711-members-vector3.md. types.h's
- * Vector3 declares an (empty) destructor, but swapping these members to it
- * leaves D1, C1 and EnterHold byte-identical: no member-destructor call is
- * emitted anywhere measured, so a per-function compare sees nothing. What it
- * does do is make this TU define _ZN7Vector3D1Ev, which no
- * compiler_only_output row in
+/* mAnchor, mPos and mVel are NitroSDK VecFx32s, not the game's Vector3, and
+ * the reason is measured rather than assumed --
+ * notes/experiments/jump3d-2711-members-vector3.md. types.h's Vector3
+ * declares an (empty) destructor; swapping these members to it leaves D1, C1
+ * and EnterHold byte-identical, but makes this TU define _ZN7Vector3D1Ev,
+ * which no compiler_only_output row in
  * config/tu_manifest.d/ov006/dMgJump3DMario_c.json licenses, and packaging
- * then refuses the emission. Retained substitution, accepted as partial scope
- * alongside issue #2722. */
-struct Jump3DVec { s32 x, y, z; };
+ * then refuses the emission. Accepted as partial scope alongside issue #2722. */
 
 struct dMgJump3DMario_c;
 /* The state handler at +0x3c. Formed over the INCOMPLETE class on purpose:
@@ -48,11 +46,12 @@ struct dMg3DHeyhoObjAdapter_c {
     virtual void *GetVelocity() = 0; /* slot 1 -- returns &mVel */
     virtual int IsLaunched() = 0;    /* slot 2 -- 0 in StateIdle or StateWindUp, 1 once launched */
 
-    Jump3DVec mAnchor;      /* 0x04 -- the point EnterHold measures mPos against; written by the owning scene, never in this TU */
+    /* The point EnterHold measures mPos against; written by the owning scene, never in this TU. */
+    VecFx32 mAnchor;        /* 0x04 */
     u16 mCommand;           /* 0x10 -- the scene's command: 1 = hit, 2 = hold; consumed (cleared) by the State* handlers. The one field the base ctor touches */
     u8 pad_012[2];          /* 0x12 */
-    Jump3DVec mPos;         /* 0x14 -- position (20.12); advanced by mVel every update */
-    Jump3DVec mVel;         /* 0x20 -- velocity (20.12) */
+    VecFx32 mPos;           /* 0x14 -- position (20.12); advanced by mVel every update */
+    VecFx32 mVel;           /* 0x20 -- velocity (20.12) */
     u8 pad_02c[2];          /* 0x2c */
     s16 mAngleY;            /* 0x2e -- facing angle; eased toward the direction of travel */
     u8 pad_030[2];          /* 0x30 */

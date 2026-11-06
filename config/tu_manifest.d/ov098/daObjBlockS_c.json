@@ -32,6 +32,11 @@
       "name": ".bss",
       "start": "0x0213c850",
       "end": "0x0213c8e8"
+    },
+    {
+      "name": ".data",
+      "start": "0x0213c4e0",
+      "end": "0x0213c500"
     }
   ],
   "functions": [
@@ -295,7 +300,22 @@
       "ordinal": 36
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov098_0213c4e0",
+      "address": "0x0213c4e0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four 20.12 throw speeds {40, 40, 80, 30} for the four character weights, copied by value in func_ov098_02138818"
+    },
+    {
+      "symbol": "data_ov098_0213c4f0",
+      "address": "0x0213c4f0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four 20.12 vertical throw speeds {20, 20, 20, 15}, copied by value beside the horizontal table"
+    }
+  ],
   "bss": [
     {
       "symbol": "gBrokenBlockSModelFile",
@@ -522,7 +542,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -558,11 +578,18 @@
           "start": "0x0213c850",
           "end": "0x0213c8e8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x0213c4e0",
+          "end": "0x0213c500",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 44
+          "LICENSED": 46
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -573,36 +600,47 @@
           {
             "section": ".init",
             "original": [
-              101
+              103
             ],
             "desired": [
-              101
+              103
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              99
+              101
             ],
             "desired": [
-              99
+              101
             ]
           },
           {
             "section": ".bss",
             "original": [
-              77,
-              78,
               79,
               80,
-              81
+              81,
+              82,
+              83
             ],
             "desired": [
-              78,
               80,
-              77,
+              82,
               79,
-              81
+              81,
+              83
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
             ]
           }
         ],
@@ -611,25 +649,25 @@
             {
               "section": ".bss",
               "original": [
-                77,
-                78,
                 79,
                 80,
-                81
+                81,
+                82,
+                83
               ],
               "desired": [
-                78,
                 80,
-                77,
+                82,
                 79,
-                81
+                81,
+                83
               ],
               "slots": [
-                77,
-                78,
                 79,
                 80,
-                81
+                81,
+                82,
+                83
               ]
             }
           ],
@@ -650,7 +688,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on a stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "init": [
@@ -992,14 +1031,14 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@1573",
+      "from": "@1645",
       "to": "@1560",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1574",
+      "from": "@1646",
       "to": "@1561",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address)"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ]
 }
