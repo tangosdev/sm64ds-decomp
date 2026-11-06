@@ -20,7 +20,7 @@
  * - ROM-descending source order: the factory stays first and
  *   OnYoshiTryEat last. InitResources is the key function; the inline
  *   destructor emits D1 then D0, the RTTI/vtable, and no D2.
- * - DaEyBmVector3Words, not Vector3: a Vector3 stack local would
+ * - VecFx32, not Vector3: a Vector3 stack local would
  *   instantiate its vague-linkage D1 into this TU. EyBmVec3's
  *   declared-not-defined destructor is that D1's alias.
  * - daPly_c::Hurt stays mangled: by-value Fix12<int> is wall 6az.
@@ -40,13 +40,7 @@
 #include "daPly_c.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
-
-/* Local three-word ABI value. Vector3 has a genuine non-trivial destructor;
- * these stack values are plain fixed-point words and must not instantiate its
- * otherwise unrelated vague-linkage D1 in this class TU. */
-struct DaEyBmVector3Words {
-    Fix12i x, y, z;
-};
+#include "nitro/fx/fx.h"
 
 /* Dynamic offset at 0x021230b8. A user constructor keeps the three stores in
  * the sinit (bss, not .data). The undefined destructor is Vector3's D1. */
@@ -64,9 +58,8 @@ extern EyBmVec3 data_ov071_021230b8;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* local extern: MulVec3Mat4x3 has no shared header, and this TU spells its
-   vectors as DaEyBmVector3Words. */
-extern "C" void MulVec3Mat4x3(const DaEyBmVector3Words *source, const Matrix4x3 *matrix,
-                              DaEyBmVector3Words *destination);
+   vectors as VecFx32. */
+extern "C" void MulVec3Mat4x3(const VecFx32 *source, const Matrix4x3 *matrix, VecFx32 *destination);
 
 /* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
  * Yoshi is eating the actor, then has it in his mouth. Actor ID 0xbf is
@@ -117,13 +110,13 @@ int daEyBm_c::InitResources() {
 
 // @symbol _ZN8daEyBm_c8BehaviorEv
 int daEyBm_c::Behavior() {
-    DaEyBmVector3Words offset;
-    DaEyBmVector3Words velocity;
+    VecFx32 offset;
+    VecFx32 velocity;
     if (IsInYoshiMouth(this))
         return 1;
 
     if (!IsBeingEaten(this)) {
-        offset = *(DaEyBmVector3Words *)&data_ov071_021230b8;
+        offset = *(VecFx32 *)&data_ov071_021230b8;
         mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)&offset);
 
         velocity.z = mHorzSpeed;
@@ -131,10 +124,10 @@ int daEyBm_c::Behavior() {
         velocity.y = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MulVec3Mat4x3(&velocity, &data_020a0e68, (DaEyBmVector3Words *)&mSpeedX);
+        MulVec3Mat4x3(&velocity, &data_020a0e68, (VecFx32 *)&mSpeedX);
 
         /* Retail retains a typed whole-vector writeback after the transform. */
-        *(DaEyBmVector3Words *)&mSpeedX = *(DaEyBmVector3Words *)&mSpeedX;
+        *(VecFx32 *)&mSpeedX = *(VecFx32 *)&mSpeedX;
 
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
         UpdateCollision(mWithMeshClsn);
@@ -201,7 +194,7 @@ void daEyBm_c::HurtPlayer() {
     if (player->mIsVanish)
         return;
 
-    DaEyBmVector3Words position;
+    VecFx32 position;
     position.x = mPosX;
     position.y = mPosY;
     position.z = mPosZ;

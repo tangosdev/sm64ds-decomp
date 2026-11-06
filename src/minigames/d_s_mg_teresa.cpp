@@ -1542,7 +1542,7 @@ void dScMgTeresa_c::UpdateRubbing() {
 
     if (mRubTouching != 0) {
         /* Not Vector3: its C++ destructor changes this frame. */
-        struct { Fix12i x, y, z; } d;
+        VecFx32 d;
         int dist;
         d.x = mRubX - mRubPrevX;
         d.y = mRubY - mRubPrevY;

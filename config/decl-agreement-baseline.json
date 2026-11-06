@@ -721,7 +721,7 @@
         "param:#1 Vector3 *"
       ],
       "src/game/actors/d_a_owl.cpp": [
-        "param:#1 OwlVec *"
+        "param:#1 VecFx32 *"
       ],
       "src/game/actors/d_a_red_bombhei.cpp": [
         "param:#1 const Vector3 *"
@@ -1209,9 +1209,9 @@
         "param:#2 const void *"
       ],
       "src/game/actors/d_a_ey_bm.cpp": [
-        "param:#1 const DaEyBmVector3Words *",
+        "param:#1 const VecFx32 *",
         "param:#2 const Matrix4x3 *",
-        "param:#3 DaEyBmVector3Words *"
+        "param:#3 VecFx32 *"
       ],
       "src/game/actors/d_a_jango.cpp": [
         "param:#1 const Vector3 *",
@@ -1335,7 +1335,7 @@
         "param:#1 Vec3 *"
       ],
       "src/minigames/d_mg_jump3d_mario.cpp": [
-        "param:#1 Jump3DVec *"
+        "param:#1 VecFx32 *"
       ]
     },
     "NumStars": {
@@ -2726,10 +2726,6 @@
       "src/game/actors/d_a_menbo.cpp": [
         "param:#1 Vector3 *",
         "param:#2 const Vector3 *"
-      ],
-      "src/game/actors/d_a_obj_tatefuda.cpp": [
-        "param:#1 struct Vec3 *",
-        "param:#2 struct Vec3 *"
       ],
       "src/runtime/actor/d_actor.cpp": [
         "param:#1 Vector3 *",
@@ -14131,7 +14127,7 @@
       ],
       "src/game/actors/d_a_obj_fm_battan.cpp": [
         "param:#1 dActor_c *",
-        "param:#2 BattanVector3 *",
+        "param:#2 VecFx32 *",
         "return:void"
       ]
     },
