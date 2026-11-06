@@ -10,8 +10,9 @@
  *   parameter spellings disagree.
  * - data_0209f394 is the player table, data_0209f250 the current player
  *   index. Typed here as dActor_c *: Behavior only uses mPos and mAreaId.
- * - data_020a0ebc is an arm9 scratch transform; the tree disagrees on its
- *   type (char / int / Vector3 / Triple).
+ * - data_020a0ebc is arm9's zero Vector3 (0xc bytes of .bss after
+ *   GAME_HEAP_PTR, constructed (0, 0, 0) in Heap.cpp); here it is the
+ *   translation Vec3_RotateYAndTranslate adds.
  * - D1/D0 come from the header's inline dtor: writing them out of line here
  *   ICEs mwccarm (ELFgen.c:483) beside a real D1, and emits D0 before D1
  *   plus a homeless D2.
@@ -29,7 +30,7 @@ void ChangeArea(int);
 
 extern u8 data_0209f250;
 extern dActor_c *data_0209f394[];
-extern char data_020a0ebc;
+extern Vector3 data_020a0ebc;
 
 // @symbol daChRoom_c_classInit
 extern "C" daChRoom_c *daChRoom_c_classInit() {

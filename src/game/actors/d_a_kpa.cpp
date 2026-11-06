@@ -300,7 +300,7 @@ struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
-extern char *data_0209f318;
+extern void *data_0209f318;
 extern short data_02082214[];
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);

@@ -165,7 +165,7 @@ PMF data_ov078_0212705c[2] = {&daBombking_c::func_ov078_02123a3c,
 extern "C" {
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
-extern unsigned char data_0209f220[];
+extern unsigned char data_0209f220;
 extern void *data_0209f318;
 /* local extern: math/MtxStack.h's spellings of the matrix calls below
    clash with these (illegal function overloading). */
@@ -403,7 +403,7 @@ int daBombking_c::func_ov078_02123d3c()
     v.y = this->mArenaPosY;
     v.z = this->mArenaPosZ;
 
-    if (data_0209f220[0] != 1) {
+    if (data_0209f220 != 1) {
         v.x = this->mPosX;
         v.y = this->mPosY;
         v.z = this->mPosZ;
@@ -524,7 +524,7 @@ int daBombking_c::func_ov078_021240a0() {
                 daPly_c *pl = mTalkingPlayer;
                 if (pl->StartTalk(*this, 1) != 0) {
                     msg = 0;
-                    if (data_0209f220[0] == 1) {
+                    if (data_0209f220 == 1) {
                         msg += (short)(pl->param1 + 0x9a);
                     } else {
                         msg = 0x95;
@@ -920,7 +920,7 @@ int daBombking_c::func_ov078_02124cf4()
 
     short msg = 0;
     Sound::ChangeMusicVolume(0x14, 0x15666);
-    if (data_0209f220[0] == 1) {
+    if (data_0209f220 == 1) {
         msg += (short)(other->param1 + 0x9a);
     } else {
         msg = 0x95;
@@ -1215,7 +1215,7 @@ int daBombking_c::func_ov078_02125448()
         }
 
         if (this->mThrowCooldown == 0) {
-            if (data_0209f220[0] == 1) {
+            if (data_0209f220 == 1) {
                 if (this->DistToCPlayer() < 0x3e8000) {
                     if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x2800) {
                         index = 0;
@@ -1396,7 +1396,7 @@ int daBombking_c::func_ov078_021259ec()
 
                 if (this->mTalkingPlayer->StartTalk(*(fBase_c *)this, 1)) {
                     Message::PrepareTalk();
-                    b = (data_0209f220[0] != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
+                    b = (data_0209f220 != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
                     if (player->ShowMessage(*(fBase_c *)this, b, (Vector3 *)(&v), 0, 0)) {
                         func_02012694(0x12a, &this->mCamSpacePosX);
                         this->mIntroTalked = 1;

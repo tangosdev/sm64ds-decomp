@@ -250,17 +250,17 @@ extern daDoor_StatePmf data_ov100_02148144;
 
 extern SaveBlock data_0209caa0; /* the live save block (include/SaveBlock.h) */
 /* The camera, and the player array indexed by the current player id. */
-extern char *data_0209f318;
+extern void *data_0209f318;
 extern unsigned char data_0209f250;
-extern char *data_0209f394[];
+extern void *data_0209f394[];
 /* The current game mode. */
 extern unsigned char data_0209f2d8;
 /* The next-level id (signed byte). */
-extern char data_02092110;
+extern signed char data_02092110;
 /* The music and sub-channel volumes, both in Fix12 (0x7f000 = 127.0). */
 extern int gMusicVolume;
 extern int gSubVolume;
-extern int data_020a0ebc;
+extern Vector3 data_020a0ebc;
 /* local extern: including math/MtxStack.h instead renumbers every @NNN and
    $NNN in this TU (+72, measured). */
 extern Matrix4x3 data_020a0e68;
@@ -506,7 +506,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         }
     } else {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x18)) != 0) {
-            if (*(s8 *)&data_02092110 >= 0)
+            if (data_02092110 >= 0)
                 mModel.speed = 0;
             ((dCamera_c *)data_0209f318)->GoBehindPlayer(data_0209f250);
         }

@@ -1,21 +1,7 @@
 #include "types.h"
 #include "nitro/spi/tp.h"
+#include "private/player_input_record.h"
 
-/* The per-frame input record at data_020a1040 (0x24 bytes; data_020a1154
-   holds four of them, one per player). func_0203dafc stores the camera's
-   input yaw at 0x10 (dCamera_c.h). */
-typedef struct {
-    s32 frame;         /* 0x00 -- counts up once per frame here */
-    TPData touch;      /* 0x04 -- the calibrated sample func_0203b9bc returns */
-    u16 flags;         /* 0x0c -- 0x8000 set every frame here */
-    u16 keys;          /* 0x0e -- pressed buttons (PAD_Read inlined) */
-    s16 inputYaw;      /* 0x10 -- the camera's input yaw (GetAngleToCamera reads it ldrsh) */
-    u8 settings[0x10]; /* 0x12 -- the link settings bytes (GetPlayerFlagByte, func_0203db3c) */
-    u8 unk22;
-    u8 unk23;
-} Rec;
-
-extern Rec data_020a1040;
 extern u8 data_020a0f04;
 extern u8 data_020a0f10;
 extern u8 data_02099e18;

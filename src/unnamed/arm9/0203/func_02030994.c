@@ -1,8 +1,8 @@
 extern int data_0209fc68;
 extern unsigned char data_0209fc5c[];
 extern signed char data_0209fc64[];
-extern signed char data_0209fc50;
-extern signed char data_0209fc58;
+extern unsigned char data_0209fc50;
+extern unsigned char data_0209fc58;
 
 /* Re-rank the present slots once a session is running: each present slot
    (data_0209fc5c) gets the next rank in data_0209fc64, an absent one -1.
