@@ -134,7 +134,7 @@ unsigned int GetBG1CharPtr();
 
 /* data_0209f2d8 (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
  * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
- * script it resumes is FALL_IN_FRONT_OF_CASTLE_CUTSCENE (data_02089608),
+ * script it resumes is FALL_IN_FRONT_OF_CASTLE_CUTSCENE (sCutsceneEndingMarioFall),
  * and EndKuppaScript clears it once no script is left to resume. The
  * credits script does not set it. This int-returning predicate is what
  * makes the ROM materialize 0/1 before testing it. */
