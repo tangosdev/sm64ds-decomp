@@ -4,7 +4,7 @@
 extern void func_ov007_020c7694(Ov007PointList *list, Vector3 *rest);
 extern void func_ov007_020c775c(Ov007PointList *list);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 
 /* Re-measures group idx's own links and, with more than one group, its head
  * and tail links. With flag set it measures from the rest copies

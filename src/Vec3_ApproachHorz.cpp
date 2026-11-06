@@ -2,8 +2,8 @@
 /* Move a point toward another, in 3D and on the horizontal plane.
  *
  * leftovers:
- * - Vec3, Vector3 and Vec3_Fix12 are the same three ints. LenVec3 takes
- *   Vec3; Vec3_Sub, SubVec3, Vec3_HorzLen and Vec3_Equal take Vector3;
+ * - Vec3, Vector3 and Vec3_Fix12 are the same three ints. LenVec3,
+ *   Vec3_Sub, SubVec3, Vec3_HorzLen and Vec3_Equal take Vector3;
  *   Vec3_MulScalar takes Vec3_Fix12. Keep the local POD views so each call
  *   uses its declared helper interface without adding Vector3 lifetimes.
  */
@@ -21,7 +21,7 @@ int fdiv(int, int);
 extern "C" {
 extern void Vec3_Sub(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);
 extern int Vec3_HorzLen(const struct Vector3* v);
-extern int LenVec3(struct Vec3* v);
+extern int LenVec3(const struct Vector3 *v);
 extern void Vec3_MulScalar(Vec3_Fix12* out, const Vec3_Fix12* in, int scale);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int Vec3_Equal(const struct Vector3 *a, const struct Vector3 *b);
@@ -33,7 +33,7 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
     struct Vector3 scaled;
     if (step != 0) {
         Vec3_Sub(&diff, &dst, &target);
-        int len = LenVec3((struct Vec3*)&diff);
+        int len = LenVec3(&diff);
         if (len == 0 || len <= step) {
             dst = target;
             return 1;

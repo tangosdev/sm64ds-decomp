@@ -1,7 +1,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 extern void NormalizeVec3(const Vector3 *src, Vector3 *dst);
 
 /* Blend the 4x3 matrix m0 toward m1 by t into dst. The Y and X rows lerp
