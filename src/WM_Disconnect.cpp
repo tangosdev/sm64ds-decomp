@@ -5,13 +5,11 @@
 
 extern "C" {
 
-extern void WM_SetCallbackTable(int i, int val);
-
 /* NitroSDK wm_standard.c WM_Disconnect(callback, aid), by body against pret's
  * pokediamond WM_standard.s: in a connected state, a parent (7, 9) cuts child
  * aid (1..15 and connected, else 6 or 7) and a child (aid 0) its parent. It
  * sends API 0xd (DISCONNECT) with 1 << aid. */
-int WM_Disconnect(int self, unsigned int idx) {
+int WM_Disconnect(void *callback, unsigned int idx) {
     WMArm9Buf *sys;
     WMStatus *status;
     int r;
@@ -31,7 +29,7 @@ int WM_Disconnect(int self, unsigned int idx) {
             if (idx != 0) return 6;
         }
     }
-    WM_SetCallbackTable(0xd, self);
+    WM_SetCallbackTable(0xd, callback);
     r = WM_SendCommand(0xd, 1, 1u << idx);
     if (r == 0) return 2;
     return r;

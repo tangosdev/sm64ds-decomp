@@ -1,5 +1,5 @@
 extern void func_0203f650(int x);
-extern int WM_Initialize(int a0, int a1, int a2);
+extern int WM_Initialize(int wmSysBuf, void *callback, int dmaNo);
 extern void func_0203f6a4(int v);
 extern int data_02099e20;
 extern int data_020a0f90;
@@ -19,7 +19,7 @@ void func_0203f9d4(int sysBuf, int callback) {
         func_0203f650(-10);
         return;
     }
-    if (WM_Initialize(sysBuf, (int)&func_0203f920, 1) != 2) {
+    if (WM_Initialize(sysBuf, (void *)func_0203f920, 1) != 2) {
         func_0203f650(-1);
         return;
     }

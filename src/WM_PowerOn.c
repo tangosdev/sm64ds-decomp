@@ -2,11 +2,9 @@
  * hardware on. Refuse unless WM is in state STOP (1), register callback for API
  * 5 (POWER_ON) and send that command with no parameters; WM_ERRCODE_OPERATING
  * (2) once it is queued, the callback reporting the result. */
-extern int WM_CheckStateEx(int paramNum, ...);
-extern void WM_SetCallbackTable(int i, int val);
-extern int WM_SendCommand(short id, unsigned short paramNum, ...);
+#include "private/wm_views.h"
 
-int WM_PowerOn(int callback) {
+int WM_PowerOn(void *callback) {
     int result;
 
     result = WM_CheckStateEx(1, 1);
