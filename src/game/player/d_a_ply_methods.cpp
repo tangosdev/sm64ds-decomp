@@ -234,7 +234,7 @@ extern u16 gKuppaScriptFrame;
 extern s32 gRunningKuppaScript;
 extern void HitDeathPlane(int arg);
 extern unsigned char IsPlayerWarping(int a0);
-extern int IsStarCameraScript3Running(void);
+extern int IsDanceRotateCutsceneRunning(void);
 extern void KillPlayer(void);
 extern void LoadKeyModels(int idx);
 extern void LoadSilverStarAndNumber(void);
@@ -6654,7 +6654,7 @@ int daPly_c::St_NoControl_Cleanup() {
 int daPly_c::St_NoControl_Main() {
     u8 mode = mNoCtrlKind;
     if (mode == 0 || mode == 1 || (mode == 0x11 && mStateStep != 0x18)) {
-        if (IsStarCameraScript3Running() == 0) {
+        if (IsDanceRotateCutsceneRunning() == 0) {
             mAngleY = GetAngleToCamera(mPlayerNo);
             mPrevAngleY = mAngleY;
         }

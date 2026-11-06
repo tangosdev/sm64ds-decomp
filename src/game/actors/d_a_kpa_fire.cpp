@@ -54,6 +54,7 @@
 #include "daPly_c.h"
 #include "SaveData.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
@@ -94,13 +95,12 @@ enum {
 /* Particle ids, named by where they are used, not recovered names. 0x9a, 0x9c
    and 0xa6 are passed to func_ov060_02116518, which also starts id + 1 in the
    second handle. 0x9e goes straight to NewUnkCallback818 (one handle only);
-   0x9f is a one-shot NewSimple. */
+   0x9c, 0x9e, 0xa4 and 0x9f are kPtclFlame, kPtclFlameSmall, kPtclFlameBlue and
+   kPtclFlameOutPuff (ParticleIds.h); 0x9f is a one-shot NewSimple. */
 enum {
-    PARTICLE_LANDED_BURN = 0x9c,   /* variants 6/7 once mLanded is set */
-    PARTICLE_FALLING = 0x9e,       /* variants 6/7 while airborne */
-    PARTICLE_SCALED_9A = 0x9a,     /* variants 1 and 5; the one id that also gets the extra +0x44 / +0x4c sizing */
-    PARTICLE_VARIANT_4 = 0xa6,     /* variant 4 */
-    PARTICLE_END_PUFF = 0x9f       /* one-shot at the end of variant 6/7 (NewSimple, not a handle) */
+    /* variants 1 and 5; the one id that also gets the extra +0x44 / +0x4c sizing */
+    PARTICLE_SCALED_9A = 0x9a,
+    PARTICLE_VARIANT_4 = 0xa6 /* variant 4 */
 };
 
 /* Sound id variant 0 plays through its mSoundHandle; named by use site, not decoded. */
@@ -356,7 +356,7 @@ void daKpaFire_c::func_ov060_0211747c() {
 
 // @symbol _ZN11daKpaFire_c19func_ov060_021172e0Ev
 /* End of a variant 6/7 fire, called once its mFireScale has burnt down to 0 or
- * below: plays the one-shot particle PARTICLE_END_PUFF at the fire's position
+ * below: plays the one-shot particle kPtclFlameOutPuff at the fire's position
  * and destroys the fire. Then, with a 2 in 10 chance (random >> 16, % 10 < 2),
  * it leaves something behind:
  *   - if the nearest player's param1 is 3 (not decoded; daFPknBall_c and
@@ -367,7 +367,7 @@ void daKpaFire_c::func_ov060_0211747c() {
  *     and stops -- this branch returns whether or not the spawn worked;
  *   - otherwise it spawns a coin and zeroes the coin's three velocity words. */
 void daKpaFire_c::func_ov060_021172e0() {
-    Particle::System::NewSimple(PARTICLE_END_PUFF, *(Fix12i *)&this->mPosX, *(Fix12i *)&this->mPosY,
+    Particle::System::NewSimple(kPtclFlameOutPuff, *(Fix12i *)&this->mPosX, *(Fix12i *)&this->mPosY,
                                 *(Fix12i *)&this->mPosZ);
     this->MarkForDestruction();
 
@@ -482,7 +482,7 @@ void daKpaFire_c::func_ov060_0211712c() {
  * Every frame it moves (UpdatePos), clamps its vertical speed to at least
  * -4.0 (-0x4000), and destroys itself once its y is below 0.
  *
- * While mLanded is 0 (airborne): keeps the PARTICLE_FALLING particle at the
+ * While mLanded is 0 (airborne): keeps the kPtclFlameSmall particle at the
  * fire's position, 55 units up (0x37000); sets cylinder flags bit 0 (cylinder
  * disabled); runs the wobble. On the first frame the mesh collision reports the
  * ground it sets mLanded, picks mFireScale (6.0 for variant 7, else 6.0 plus
@@ -490,7 +490,7 @@ void daKpaFire_c::func_ov060_0211712c() {
  * horizontal speed, vertical speed and gravity, and forgets both particle
  * handles.
  *
- * Once mLanded is set: shows PARTICLE_LANDED_BURN scaled by mFireScale (y
+ * Once mLanded is set: shows kPtclFlame scaled by mFireScale (y
  * offset 12 * scale), clears flags bit 0 (cylinder enabled), and once
  * mFrameCount exceeds mFireScale * 10 / 0x1000 + 5 it shrinks mFireScale by
  * 0x266 (about 0.15) per frame; at 0 or below it ends in func_ov060_021172e0. */
@@ -501,8 +501,8 @@ void daKpaFire_c::func_ov060_02116f90() {
 
     if (this->mLanded == 0) {
         this->mParticleHandle =
-            Particle::System::NewUnkCallback818(this->mParticleHandle, PARTICLE_FALLING,
-                                                this->mPosX, this->mPosY + 0x37000, this->mPosZ, 0);
+            Particle::System::NewUnkCallback818(this->mParticleHandle, kPtclFlameSmall, this->mPosX,
+                                                this->mPosY + 0x37000, this->mPosZ, 0);
         this->mdCcAc_c.flags |= 1;
         func_ov060_0211712c();
         if (this->mWithMeshClsn.IsOnGround()) {
@@ -520,7 +520,7 @@ void daKpaFire_c::func_ov060_02116f90() {
             this->mParticleHandle = this->mParticleHandle2;
         }
     } else {
-        func_ov060_02116518(PARTICLE_LANDED_BURN, 1, this->mFireScale * 0xc);
+        func_ov060_02116518(kPtclFlame, 1, this->mFireScale * 0xc);
         this->mdCcAc_c.flags &= ~1;
         if (this->mFrameCount > this->mFireScale * 0xa / 0x1000 + 5) {
             this->mFireScale -= 0x266;
@@ -834,7 +834,7 @@ void daKpaFire_c::func_ov060_02116740() {
 void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
     Particle::System *sys;
 
-    if (kind == 0xa2 || kind == 0xa4) {
+    if (kind == 0xa2 || kind == kPtclFlameBlue) {
         this->mParticleHandle = Particle::System::NewUnkCallback818(
             this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0);
     } else {

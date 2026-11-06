@@ -84,9 +84,9 @@ struct dCamera_c : dView_c {
        u8 and are read and written as full words at both ends, so both were
        too narrow -- they are the z of their respective vectors.
        The scripted states (the member-function table from 0x02086bc0) also
-       use the pair as working vectors. func_020071e0 rotates both by the
+       use the pair as working vectors. CutsceneGrandStarFlyAppCvars rotates both by the
        target player's facing: savedLookAt gives pos its goal and savedPos
-       gives lookAt its goal. func_020079ac copies lookAt into savedLookAt
+       gives lookAt its goal. CutscenePanCvar9 copies lookAt into savedLookAt
        to orbit around it. */
     Vector3 savedLookAt; /* 0x0b0 */
     Vector3 savedPos;    /* 0x0bc */
@@ -188,11 +188,11 @@ struct dCamera_c : dView_c {
        func_020094a8 clears it with mPathIndex. */
     s32 mPathProgress; /* 0x16c */
     /* Set (func_02008008) and eased (func_02007fcc) by script ops. The
-       states read it differently: func_020080b0 as a height, func_020071e0
+       states read it differently: func_020080b0 as a height, CutsceneGrandStarFlyAppCvars
        as a speed. */
     s32 mScriptParam; /* 0x170 */
-    /* func_02007414 zeroes it; func_020072c4 ramps it up to 0xf000 and moves
-       savedLookAt and savedPos by it. */
+    /* CutsceneGrandStarFlyStart zeroes it; CutsceneGrandStarFlyMarioOffscreen
+       ramps it up to 0xf000 and moves savedLookAt and savedPos by it. */
     s32 mRampSpeed; /* 0x174 */
     /* Render feeds mAngleZ to Matrix4x3_FromRotationZ for the view roll, and
        looks mFovAngle up in the sine table for PerspectiveW_'s sin/cos. */
@@ -245,9 +245,9 @@ struct dCamera_c : dView_c {
     u16 mStateTimer; /* 0x196 */
     /* The path segment MovePointAlongSpline is in; func_020094a8 clears it. */
     s16 mPathIndex; /* 0x198 */
-    /* The yaw func_020070e8 orbits pos toward: func_02007758 always passes
+    /* The yaw func_020070e8 orbits pos toward: CutsceneDanceCloseupFlyAbove always passes
        it, and func_02007a8c passes it when the script's yaw is -1. Seeded from
-       mFixedViewPos or per level (func_02007d58) and from mAngleY
+       mFixedViewPos or per level (CutsceneDanceFlyAwayStart) and from mAngleY
        (func_0200d4b0). */
     s16 mOrbitTargetYaw; /* 0x19a */
     /* func_02008b08 eases it toward the active player's camera-input entry;
@@ -259,8 +259,8 @@ struct dCamera_c : dView_c {
        func_0200bb28). */
     s16 mBehindAngleY; /* 0x19e */
     u16 mRecentering;  /* 0x1a0 */
-    /* Accumulated by the func_020079ac script op and added to the pitch and
-       yaw it orbits lookAt by; func_02007d58 zeroes both. */
+    /* Accumulated by the CutscenePanCvar9 script op and added to the pitch and
+       yaw it orbits lookAt by; CutsceneDanceFlyAwayStart zeroes both. */
     s16 mPitchOffset; /* 0x1a2 */
     s16 mYawOffset;   /* 0x1a4 */
     /* Set when a new mTargetAngleY is chosen (func_02009d30 on entry,
