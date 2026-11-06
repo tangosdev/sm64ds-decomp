@@ -12771,77 +12771,77 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4537",
+      "from": "_ZGVsLevelIntroOff$4536",
       "to": "_ZGVsLevelIntroOff$4424",
       "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@4540",
+      "from": "@4539",
       "to": "@4427",
       "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sLevelIntroOff$4537",
+      "from": "sLevelIntroOff$4536",
       "to": "sLevelIntroOff$4424",
       "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsTalkOff$4755",
+      "from": "_ZGVsTalkOff$4754",
       "to": "_ZGVsTalkOff$4648",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@4758",
+      "from": "@4757",
       "to": "@4651",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sTalkOff$4755",
+      "from": "sTalkOff$4754",
       "to": "sTalkOff$4648",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsAnchorOff$6311",
+      "from": "_ZGVsAnchorOff$6310",
       "to": "_ZGVsAnchorOff$6223",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@6314",
+      "from": "@6313",
       "to": "@6226",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sAnchorOff$6311",
+      "from": "sAnchorOff$6310",
       "to": "sAnchorOff$6223",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsDoorMsgOff$6339",
+      "from": "_ZGVsDoorMsgOff$6338",
       "to": "_ZGVsDoorMsgOff$6251",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@6342",
+      "from": "@6341",
       "to": "@6254",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sDoorMsgOff$6339",
+      "from": "sDoorMsgOff$6338",
       "to": "sDoorMsgOff$6251",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "_ZGVsStarDoorOff$6990",
+      "from": "_ZGVsStarDoorOff$6989",
       "to": "_ZGVsStarDoorOff$6917",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "@6993",
+      "from": "@6992",
       "to": "@6920",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     },
     {
-      "from": "sStarDoorOff$6990",
+      "from": "sStarDoorOff$6989",
       "to": "sStarDoorOff$6917",
       "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570)."
     }

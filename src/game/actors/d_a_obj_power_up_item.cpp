@@ -97,7 +97,6 @@ extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *data_0209f318;
 extern void func_0203568c(int *p, int v);
 extern void func_02035684(int *p, int v);
-extern int func_0200fccc(char* s, int r1);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void *gPFlowerCloseModelFile[];
 extern void *gPFlowerOpenModelFile[];
@@ -210,7 +209,7 @@ void daObjPowerUpItem_c::BeginOpening()
  * an amount that grows with its vertical speed (towards the speed's sign), and
  * moves it with the mesh collision. Touching water either dissolves it in a
  * puff (when the ground probe under it is missing or more than 0x64000 away) or
- * stops the water detection. Landing calls func_0200fccc(this, 1) and enters
+ * stops the water detection. Landing calls func_0200fccc(1) and enters
  * FLOWER_STATE_OPENING. */
 // @symbol _ZN18daObjPowerUpItem_c13StateLaunchedEv
 void daObjPowerUpItem_c::StateLaunched()
@@ -271,7 +270,7 @@ void daObjPowerUpItem_c::StateLaunched()
 
     if (!mWithMeshClsn.IsOnGround())
         return;
-    func_0200fccc((char*)this, 1);
+    func_0200fccc(1);
     SetState(FLOWER_STATE_OPENING);
 }
 

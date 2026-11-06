@@ -450,27 +450,27 @@ void dActor_c::SetRanges(Fix12i clipOffsetY, Fix12i clipRadius, Fix12i clipDista
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_02010da4
-/* ROM ordinal 76 -- func_02010da4
+// @symbol _ZN8dActor_c13func_02010da4Ev
+/* ROM ordinal 76 -- dActor_c::func_02010da4()
  * 0x02010da4  size 0x64 */
 /* Clamps each axis of mPos to +-32000.0, the edge of the world. */
-extern "C" void func_02010da4(dActor_c *actor) {
+void dActor_c::func_02010da4() {
     s32 v;
-    v = actor->mPosX;
+    v = mPosX;
     if (v < -0x7d00000)
-        actor->mPosX = -0x7d00000;
+        mPosX = -0x7d00000;
     else if (v > 0x7d00000)
-        actor->mPosX = 0x7d00000;
-    v = actor->mPosY;
+        mPosX = 0x7d00000;
+    v = mPosY;
     if (v < -0x7d00000)
-        actor->mPosY = -0x7d00000;
+        mPosY = -0x7d00000;
     else if (v > 0x7d00000)
-        actor->mPosY = 0x7d00000;
-    v = actor->mPosZ;
+        mPosY = 0x7d00000;
+    v = mPosZ;
     if (v < -0x7d00000)
-        actor->mPosZ = -0x7d00000;
+        mPosZ = -0x7d00000;
     else if (v > 0x7d00000)
-        actor->mPosZ = 0x7d00000;
+        mPosZ = 0x7d00000;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -479,7 +479,6 @@ extern "C" void func_02010da4(dActor_c *actor) {
  * 0x02010d40  size 0x64 */
 extern "C" {
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void func_02010da4(dActor_c *actor);
 }
 /* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
@@ -489,7 +488,7 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
         mPosX += clsn->pushback.x;
         mPosZ += clsn->pushback.z;
     }
-    func_02010da4(this);
+    func_02010da4();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -979,19 +978,19 @@ dActor_c *dActor_c::FindExplosionActor(dCc_c &clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_02010304
-/* ROM ordinal 49 -- func_02010304
+// @symbol _ZN8dActor_c13func_02010304EP5dCc_c
+/* ROM ordinal 49 -- dActor_c::func_02010304(dCc_c *)
  * 0x02010304  size 0x70 */
 /* Returns the player behind `clsn`'s last hit if that hit carried hitFlags
-   0x1000 and the player then grabs `target`; otherwise null. 0xbf is the
+   0x1000 and the player then grabs this actor; otherwise null. 0xbf is the
    player's actor ID. */
-extern "C" void *func_02010304(dActor_c *target, dCc_c *clsn) {
+daPly_c *dActor_c::func_02010304(dCc_c *clsn) {
     u32 id = clsn->otherOwner;
     dActor_c *found;
     if (id != 0 && (found = dActor_c::FindWithID(id)) != 0 && (clsn->hitFlags & 0x1000)) {
         int isPlayer = found->actorID == 0xbf;
-        if (isPlayer && ((daPly_c *)found)->TryGrab(*target))
-            return found;
+        if (isPlayer && ((daPly_c *)found)->TryGrab(*this))
+            return (daPly_c *)found;
     }
     return 0;
 }
@@ -1377,21 +1376,19 @@ void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_0200fccc
-/* ROM ordinal 19 -- func_0200fccc
+// @symbol _ZN8dActor_c13func_0200fcccEi
+/* ROM ordinal 19 -- dActor_c::func_0200fccc(int)
  * 0x0200fccc  size 0x38 */
 extern "C" {
 extern int func_0200fc44(int actor, Vector3 *pos, int doRaycast);
 }
-/* func_0200fc44 at this actor's position. The parameter keeps the char *
-   every declaration of this symbol spells. */
-extern "C" int func_0200fccc(char *actorp, int doRaycast) {
-    dActor_c *actor = (dActor_c *)actorp;
+/* func_0200fc44 at this actor's position. */
+int dActor_c::func_0200fccc(int doRaycast) {
     Vector3 pos;
-    pos.x = actor->mPosX;
-    pos.y = actor->mPosY;
-    pos.z = actor->mPosZ;
-    return func_0200fc44((int)actor, &pos, doRaycast);
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    return func_0200fc44((int)this, &pos, doRaycast);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1634,16 +1631,16 @@ void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_0200f760
-/* ROM ordinal 2 -- func_0200f760
+// @symbol _ZN8dActor_c13func_0200f760EP5dCc_c
+/* ROM ordinal 2 -- dActor_c::func_0200f760(dCc_c *)
  * 0x0200f760  size 0x48 */
-/* MakeVanishLuigiWork again, as a free function taking the cylinder by
-   pointer; the ROM keeps both copies. */
-extern "C" void func_0200f760(dActor_c *actor, dCc_c *clsn) {
+/* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
+   both copies. */
+void dActor_c::func_0200f760(dCc_c *clsn) {
     daPly_c *player;
 
     clsn->flags &= ~2;
-    player = actor->ClosestPlayer();
+    player = ClosestPlayer();
     if (player == 0)
         return;
     if (player->mIsVanish)
