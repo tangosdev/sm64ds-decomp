@@ -181,7 +181,7 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void func_0200fa8c(void *c, int a);
 extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);

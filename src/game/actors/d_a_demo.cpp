@@ -506,7 +506,9 @@ extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
 extern unsigned char data_0209f250;
 extern void *data_0209f394[];
-extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
+/* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
+   scratch as Vector3 renumbers this TU's @NNN literals. */
+extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 extern int data_ov002_0210b964[3];
 /* local extern dropped: decl_common.h declares func_02008b4c(void*,void*,void*,void*) */
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);

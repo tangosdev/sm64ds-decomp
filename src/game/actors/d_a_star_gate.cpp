@@ -48,7 +48,7 @@ extern "C" {
 int func_ov100_02144fcc(...);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_02012694(int soundID, void *position, ...);
-void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, Vector3 *in);
+void Vec3_RotateYAndTranslate(Vector3 *out, void *m, short angle, const Vector3 *in);
 void ChangeArea(int areaID);
 void ShowArea(int areaID);
 int func_ov100_02145014(void);

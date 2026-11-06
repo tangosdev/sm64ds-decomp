@@ -159,9 +159,9 @@ int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
 int ApproachAngle(short *p, int target, int a, int b, int c);
 int Vec3_Dist(const void *a, const void *b);
-// local extern: CalcLib.h conflicts with retained opaque Vec3_Dist and Vec3_VertAngle prototypes.
+// local extern: CalcLib.h conflicts with the retained opaque Vec3_Dist prototype.
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-short Vec3_VertAngle(const void *a, const void *b);
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 unsigned int RandomIntInternal(void *seed);
 void MulVec3Mat4x3(void *dst, void *mat, void *src);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -437,7 +437,7 @@ int daOwl_c::func_ov094_02135ee0()
     u.x = v.x - 0;
     u.y = v.y;
     u.z = v.z;
-    ApproachAngle(&mPrevAngleX, Vec3_VertAngle(&mPosX, &u), 0xa, 0x200, 0x100);
+    ApproachAngle(&mPrevAngleX, Vec3_VertAngle(&mPos, &u), 0xa, 0x200, 0x100);
     if (mTalkTarget->GetTalkState() < 0) {
         mTalkState = TALK_DONE;
         func_ov094_02136188(OWL_STATE_HOVER);
