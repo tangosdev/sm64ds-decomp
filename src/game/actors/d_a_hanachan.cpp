@@ -110,8 +110,8 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 // local extern: no shared header declares Vec3_Add.
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int NormalizeVec3IfNonZero(void *v);
-extern void Vec3_MulScalarInPlace(void *v, int s);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern SharedFilePtr *data_ov034_02113838[];
 extern SharedFilePtr *data_ov034_0211384c[];
 extern void **data_ov034_02113874[];

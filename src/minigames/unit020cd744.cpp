@@ -1861,7 +1861,7 @@ extern "C" {
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalarInPlace(int *v, int s);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
@@ -1974,7 +1974,7 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
     TRMPLINE(c)->mContactMotion.x = 0 - TRMPLINE(c)->mNormal.x;
     TRMPLINE(c)->mContactMotion.y = 0 - TRMPLINE(c)->mNormal.y;
     TRMPLINE(c)->mContactMotion.z = 0 - TRMPLINE(c)->mNormal.z;
-    Vec3_MulScalarInPlace((s32 *)&TRMPLINE(c)->mContactMotion, 0x800);
+    Vec3_MulScalarInPlace(&TRMPLINE(c)->mContactMotion, 0x800);
 
     SubVec3(&startPosition, &TRMPLINE(c)->mCenter, &startPosition);
     SubVec3(&endPosition, &TRMPLINE(c)->mCenter, &endPosition);
