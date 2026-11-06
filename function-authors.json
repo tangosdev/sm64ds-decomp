@@ -411,7 +411,7 @@
     },
     "arm9:0x02008b4c": {
       "author": "tangosdev",
-      "name": "func_02008b4c"
+      "name": "_Z20MovePointAlongSplineP7Vector3PsPiP14CutsceneSpline"
     },
     "arm9:0x02008cb4": {
       "author": "tangosdev",

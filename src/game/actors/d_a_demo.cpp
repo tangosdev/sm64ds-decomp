@@ -113,6 +113,7 @@ enum daDemo_c_AssetId {
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
 #include "daDemo_c.h"
+#include "CutsceneSpline.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 #include "dBgCh_Gnd.h"
@@ -508,7 +509,6 @@ extern unsigned char data_0209f250;
 extern void *data_0209f394[];
 extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
 extern int data_ov002_0210b964[3];
-/* local extern dropped: decl_common.h declares func_02008b4c(void*,void*,void*,void*) */
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
 extern PMF3 data_ov002_0210b618;
@@ -4335,10 +4335,10 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     tbl1 = ReadUnalignedInt(p);
     tbl2 = ReadUnalignedInt(p + 4);
 
-    if (func_02008b4c(&v1, &this->mPhase, &this->mMagnitude, (char *)tbl1) != 0) {
+    if (MovePointAlongSpline(&v1, &this->mPhase, &this->mMagnitude, (CutsceneSpline *)tbl1) != 0) {
         return 0;
     }
-    if (func_02008b4c(&v0, &this->mPhase, &this->mMagnitude, (char *)tbl2) != 0) {
+    if (MovePointAlongSpline(&v0, &this->mPhase, &this->mMagnitude, (CutsceneSpline *)tbl2) != 0) {
         return 0;
     }
 
