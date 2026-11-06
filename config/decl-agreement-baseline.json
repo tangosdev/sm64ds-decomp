@@ -8552,7 +8552,7 @@
         "return:signed char []"
       ]
     },
-    "data_0209f310": {
+    "gNumStageStars": {
       "src/_ZN7daPly_c19func_ov002_020d94ccEv.cpp": [
         "return:signed char"
       ]

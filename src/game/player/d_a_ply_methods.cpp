@@ -16133,7 +16133,7 @@ int daPly_c::func_ov002_020d94cc() {
     short GetAngleToCamera(int i);
     void GiveVsStars(int idx, int delta);
     extern u8 data_0209f2d8;
-    extern s8 data_0209f310;
+    extern s8 gNumStageStars;
     char *self = (char*)this;
     Vector3 pos;
     dActor_c *sndobj;
@@ -16142,7 +16142,7 @@ int daPly_c::func_ov002_020d94cc() {
     int xv, yv, sum, zv;
     int b;
 
-    if ((&data_0209f310)[this->mPlayerNo] <= 0) goto fail;
+    if ((&gNumStageStars)[this->mPlayerNo] <= 0) goto fail;
 
     sndobj = SpawnSoundObj(3);
     b = (data_0209f2d8 == 1);
@@ -22919,7 +22919,7 @@ extern "C" {
 void func_ov002_020e5948(void* arg0)
 {
     extern void func_ov002_020bec2c(void* p);
-    extern s8 data_0209f310[];
+    extern s8 gNumStageStars[];
     extern u8 data_0209f2d8;
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210eb88;
@@ -22948,7 +22948,7 @@ void func_ov002_020e5948(void* arg0)
     dExtFrameCtrl_c::LoadFile(data_ov002_0210eb88);
     dExtFrameCtrl_c::LoadFile(data_ov002_0210e4c0);
 
-    if (data_0209f310[player->mPlayerNo] != 0) {
+    if (gNumStageStars[player->mPlayerNo] != 0) {
         LoadSilverStarAndNumber();
         player->mLoadedResourceFlags |= 1;
     }

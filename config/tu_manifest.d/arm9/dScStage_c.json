@@ -1417,7 +1417,7 @@
       "evidence": "s8[4]. Read here by GiveRedCoins, NumRedCoins and dScStage_c::InitResources. Read outside this TU by dMeter_c::RenderRedCoins (ov002), so global."
     },
     {
-      "symbol": "data_0209f310",
+      "symbol": "gNumStageStars",
       "address": "0x0209f310",
       "size": "0x4",
       "binding": "STB_GLOBAL",
