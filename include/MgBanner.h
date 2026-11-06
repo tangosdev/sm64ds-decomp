@@ -11,6 +11,7 @@
    the three records. */
 struct MgBanner;
 typedef void (MgBanner::*ElemFn)();
+typedef char ElemFn_size_must_be_0x8[sizeof(ElemFn) == 0x8 ? 1 : -1];
 struct MgBanner {
     ElemFn mBehavior; /* 0x00 run by Banner_Update */
     ElemFn mRender;   /* 0x08 run by Banner_Draw; 0 draws plainly */
@@ -34,5 +35,6 @@ struct MgBanner {
     MgBanner();
     ~MgBanner() {}
 };
+typedef char MgBanner_size_must_be_0x134[sizeof(MgBanner) == 0x134 ? 1 : -1];
 
 #endif
