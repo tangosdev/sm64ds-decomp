@@ -25,7 +25,7 @@
  *   ROM-low helper last. InitResources is the key function; with the inline
  *   destructor in the real header this emits retail D1 then D0 and the
  *   class RTTI/vtable without a forcing object.
- *   BattanVector3: a local Vector3 would emit vague-linkage ~Vector3.
+ *   VecFx32 locals: a local Vector3 would emit vague-linkage ~Vector3.
  *   common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so the
  *   translation stays m[9]/m[10]/m[11].
  *
@@ -50,19 +50,13 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
 
-/* A local Vector3 value would make mwccarm emit its vague-linkage destructor.
- * These calls only require the three-word ABI value, so keep that value POD. */
-struct BattanVector3 {
-    s32 x, y, z;
-};
-
 /* local extern: no shared header declares these. */
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
 extern s16 data_02082214[];
 
 extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-extern int func_0200fa04(dActor_c *, BattanVector3 *, int);
+extern int func_0200fa04(dActor_c *, VecFx32 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
 extern void func_020393d4(int *, int);
@@ -137,9 +131,9 @@ int daObjFm_Battan_c::Behavior() {
             mAngVelX = -0x1000;
         mAngleX += mAngVelX;
         if (mAngleX <= -0x4000) {
-            BattanVector3 offset;
-            BattanVector3 pos;
-            BattanVector3 dustPos;
+            VecFx32 offset;
+            VecFx32 pos;
+            VecFx32 dustPos;
             int sinY;
             int cosY;
 

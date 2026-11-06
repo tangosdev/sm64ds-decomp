@@ -113,9 +113,8 @@ enum {
     daWanwan2_SND_COIN_SPAWN  = 0x3a    /* Behavior's COIN spawn (played whether or not Spawn returned an actor) */
 };
 
-/* Three plain words retained for the daPly_c::Hurt ABI bridge and chain-link
-   arithmetic below; the collision offset uses the real Vector3 interface. */
-struct Vec3i { s32 x, y, z; };
+/* The daPly_c::Hurt ABI bridge and chain-link arithmetic below use NitroSDK
+   VecFx32; the collision offset uses the real Vector3 interface. */
 
 /* func_ov100_02143b68 copies its identity matrix through the flat Mtx43: a
    copy through the C++ Matrix4x3 splits into two block moves here. */
@@ -297,7 +296,7 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
     if (other->mIsVanish != 0)
         return;
     {
-        Vec3i pos;
+        VecFx32 pos;
         pos.x = self->mPosX;
         pos.y = self->mPosY;
         pos.z = self->mPosZ;
@@ -391,15 +390,15 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
    carries. */
 extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 {
-    Vec3i in, out, cur, delta, added, v48, v54, v60;
-    Vec3i *pos, *vel, *src;
+    VecFx32 in, out, cur, delta, added, v48, v54, v60;
+    VecFx32 *pos, *vel, *src;
     int *heights;
     int loop;
     int angOff;
     int idx, val, ang, hlen, angz;
 
-    pos = (Vec3i *)thisx->mLinkPos;
-    vel = (Vec3i *)thisx->mLinkVel;
+    pos = (VecFx32 *)thisx->mLinkPos;
+    vel = (VecFx32 *)thisx->mLinkVel;
     heights = thisx->mLinkMinY;
 
     in.z = -0xfa000; in.x = 0; in.y = 0;    /* 250 units behind */
@@ -435,8 +434,10 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
     }
 
     for (; loop < 6; ) {
-        if (loop != 0) src = (Vec3i *)((char *)pos - 0xc);
-        else src = &cur;
+        if (loop != 0)
+            src = (VecFx32 *)((char *)pos - 0xc);
+        else
+            src = &cur;
         delta.x = vel->x + (pos->x - src->x);
         delta.z = vel->z + (pos->z - src->z);
         idx = ((unsigned short)(short)(angOff + (thisx->mChainTimer << 12))) >> 4;
@@ -459,8 +460,8 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         *heights = thisx->mPosY - 0xc8000;     /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
         angOff += 0x2000;
-        vel = (Vec3i *)((char *)vel + 0xc);
-        pos = (Vec3i *)((char *)pos + 0xc);
+        vel = (VecFx32 *)((char *)vel + 0xc);
+        pos = (VecFx32 *)((char *)pos + 0xc);
         loop++;
         heights = heights + 1;
     }

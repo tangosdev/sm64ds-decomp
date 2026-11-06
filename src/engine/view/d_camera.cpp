@@ -49,8 +49,6 @@
 #include "G2x.h"
 #include "G3i.h"
 
-typedef struct { int x, y, z; } Vec3;	/* POD triple for the C bodies */
-
 /* Defined at the bottom of this file; every use here only takes the address. */
 extern dCamera_c::State data_0209b008;
 extern dCamera_c::State data_0209b018;
@@ -917,13 +915,13 @@ void dCamera_c::func_0200cf40() {
 
 // @symbol _ZN9dCamera_c13func_0200cce4Ev
 void dCamera_c::func_0200cce4() {
-    Vec3 vec;
-    Vec3 tmp1;
-    Vec3 tmp2;
+    VecFx32 vec;
+    VecFx32 tmp1;
+    VecFx32 tmp2;
     u32 d;
 
     if (mTargetPlayer != 0) {
-        Vec3 *p = (Vec3 *)&mTargetPlayer->mPos;
+        VecFx32 *p = (VecFx32 *)&mTargetPlayer->mPos;
         mTargetPos.x = p->x;
         mTargetPos.y = p->y;
         mTargetPos.z = p->z;
@@ -935,7 +933,7 @@ void dCamera_c::func_0200cce4() {
             tmp1.y = data_02086f2c.y;
             data_02086f2c.z = d1;
         }
-        Vec3_RotateYAndTranslate((Vec3 *)&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &tmp1);
+        Vec3_RotateYAndTranslate((VecFx32 *)&lookAt, &mTargetPos, mTargetPlayer->mAngleY, &tmp1);
 
         d = func_020093d4(mMode->lookAtHeight);
         lookAt.y += d;
@@ -947,7 +945,8 @@ void dCamera_c::func_0200cce4() {
             tmp2.x = data_02086f20.x;
             tmp2.y = data_02086f20.y;
         }
-        Vec3_RotateYAndTranslate((Vec3 *)&pos, (Vec3 *)&lookAt, mTargetPlayer->mAngleY, &tmp2);
+        Vec3_RotateYAndTranslate((VecFx32 *)&pos, (VecFx32 *)&lookAt, mTargetPlayer->mAngleY,
+                                 &tmp2);
 
         dBgCh_Lin line;
         func_0200897c(line);
@@ -1149,10 +1148,10 @@ void dCamera_c::func_0200c9e0(s32 *r1, s32 *r2) {
 
 // @symbol _ZN9dCamera_c13func_0200c66cEPvPiS1_S1_
 int dCamera_c::func_0200c66c(void *pos_, int *out2_, int *out1_, int *arg5_) {
-    Vec3 *pos = (Vec3 *)pos_;
+    VecFx32 *pos = (VecFx32 *)pos_;
     void **out2 = (void **)out2_;
     void **out1 = (void **)out1_;
-    Vec3 tmp;
+    VecFx32 tmp;
     int hval;
     int col1;
     int col2;
@@ -1273,7 +1272,7 @@ extern "C" {
 int dCamera_c::func_0200c394(int a1, void *a2_, void *a3, void **a5, int *a6) {
     unsigned char *a2 = (unsigned char *)a2_;
     CamMode *p = mMode;
-    Vec3 local, local2;
+    VecFx32 local, local2;
     signed char g;
     int flags = p->flags;
     int v;
@@ -1300,7 +1299,7 @@ body:
                     mLookTargetPos.y = q->y;
                     mLookTargetPos.z = q->z;
                 } else {
-                    Vec3 t;
+                    VecFx32 t;
                     sx = *(short *)(a2 + 2);
                     sz = *(short *)(a2 + 6);
                     sy = *(short *)(a2 + 4);
@@ -1334,8 +1333,8 @@ body:
                     mLookTargetPos.z = local2.z;
                     mFocusDist = 0xc0000;
                 } else {
-                    AddVec3((Vec3 *)&mLookTargetPos, a3, (Vec3 *)&mLookTargetPos);
-                    Vec3_AsrInPlace((Vec3 *)&mLookTargetPos, 1);
+                    AddVec3((VecFx32 *)&mLookTargetPos, a3, (VecFx32 *)&mLookTargetPos);
+                    Vec3_AsrInPlace((VecFx32 *)&mLookTargetPos, 1);
                 }
                 *a5 = &data_02087274;
                 return v;
@@ -1362,12 +1361,12 @@ body:
 }
 int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     int r5 = arg4;
-    Vec3 sp8;
-    Vec3 sp14;
-    Vec3 sp20;
-    Vec3 sp2C;
-    Vec3 sp38;
-    Vec3 sp44;
+    VecFx32 sp8;
+    VecFx32 sp14;
+    VecFx32 sp20;
+    VecFx32 sp2C;
+    VecFx32 sp38;
+    VecFx32 sp44;
     int r4;
     int t;
     int sl;
@@ -1429,7 +1428,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     }
     sp8.y += func_020093d4(t);
     sl = Vec3_HorzLen(&sp8);
-    Vec3 sp68;
+    VecFx32 sp68;
     Vec3_MulScalar(&sp68, &mLookTargetPos, mFocusBlend);
     AddVec3(&sp8, &sp68, &sp8);
     if (mFlags & 4) {
@@ -1512,7 +1511,7 @@ extern "C" dActor_c *FindDemoActor(u32 param1);
 
 extern "C" {
 /* local extern: math/CalcLib.h spells the Vec3 helpers with const Vector3 *,
-   which this file's POD Vec3 callers cannot pass; only these two are taken
+   which this file's VecFx32 callers cannot pass; only these two are taken
    from it. */
 extern s32 ApproachAngle(s16 *cur, s32 target, s32 div, s32 band, s32 step);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -3310,7 +3309,7 @@ int func_02008b4c(void *out, void *segIndex, void *segProgress, void *table) {
     CamPathPoint *elem;
     CamPathTable *path = (CamPathTable *)table;
     int i;
-    Vec3 v[4];
+    VecFx32 v[4];
     int lo, hi;
     int m;
 

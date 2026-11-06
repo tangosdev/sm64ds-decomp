@@ -74,10 +74,9 @@
 #define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
 
-/* A plain {x, y, z} for stack locals: types.h Vector3 declares an empty
+/* Stack vectors are NitroSDK VecFx32: types.h Vector3 declares an empty
    destructor under C++, and a stack object would emit ~Vector3. NormalizeVec3
    takes a Vector3 view, so calls cast this POD storage explicitly. */
-struct Vec3 { int x, y, z; };
 /* CrossVec3's own file spells the same triple Vec3_Fix12; the declaration
  * has to carry its definition's name to agree. */
 typedef struct { int x, y, z; } Vec3_Fix12;
@@ -146,7 +145,7 @@ void daPicGate_c::func_ov080_02125460()
  * mesh sits centred on its position, and mInvMtx maps back into it. */
 void daPicGate_c::func_ov080_0212555c()
 {
-    Vec3 v;
+    VecFx32 v;
     Vec3_Asr((Vector3 *)&v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
@@ -200,10 +199,10 @@ u8 *daPicGate_c::func_ov080_02125630(s32 i)
  * beyond the far edge starts one from the other side and clicks. */
 void daPicGate_c::func_ov080_021256f8()
 {
-    Vec3 a;
-    Vec3 b;
-    Vec3 ob;
-    Vec3 oa;
+    VecFx32 a;
+    VecFx32 b;
+    VecFx32 ob;
+    VecFx32 oa;
     daPly_c *r5;
     int x, y;
     int lim;
@@ -275,9 +274,9 @@ void daPicGate_c::func_ov080_021256f8()
  * normalized and packed 10 bits per axis into Vertex::normal. */
 void daPicGate_c::func_ov080_02125940()
 {
-    Vec3 ej;
-    Vec3 ei;
-    Vec3 n;
+    VecFx32 ej;
+    VecFx32 ei;
+    VecFx32 n;
     Vertex *p;
     int i;
     int j;
@@ -407,7 +406,7 @@ extern "C" void func_ov080_02125d64(char *c)
 
     for (i = 0; i < ((daPicGate_c *)c)->mNumCells; i++) {
         struct Elem *e = (struct Elem *)((char *)((daPicGate_c *)c)->mCells + i * 0x18);
-        Vec3 tmp = *(struct Vec3 *)&e->pos;
+        VecFx32 tmp = *(VecFx32 *)&e->pos;
         tmp.z = 0;
         e->dist =
             Vec3_Dist((struct Vector3 *)((daPicGate_c *)c)->mWaveOrigin, (struct Vector3 *)&tmp);

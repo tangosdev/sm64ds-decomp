@@ -84,11 +84,6 @@ struct NknkAnimationFileHandle : SharedFilePtr {
     ~NknkAnimationFileHandle();
 };
 
-/* shadow typedef 'Vec3' */
-typedef struct { s32 x, y, z; } Vec3;
-
-struct V3 { int x, y, z; };
-
 extern "C" {
 extern int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
                            void *callback);
@@ -349,7 +344,7 @@ int daNknk_c::Behavior()
 // @symbol _ZN8daNknk_c6RenderEv
 int daNknk_c::Render()
 {
-    volatile struct V3 saved;
+    volatile VecFx32 saved;
     int b = (mFlags & 0x40000) != 0;
     if (b)
         return 1;
@@ -880,7 +875,10 @@ void daNknk_c::func_ov062_02117c98()
         }
     } else {
         daPly_c *player = (daPly_c *)found;
-        struct { Vec3 sv; Vec3 hv; } L;
+        struct {
+            VecFx32 sv;
+            VecFx32 hv;
+        } L;
         int isPlayer;
         isPlayer = (player->actorID == 0xbf /* PLAYER */) ? 1 : turnAround;
         if (isPlayer == 0)

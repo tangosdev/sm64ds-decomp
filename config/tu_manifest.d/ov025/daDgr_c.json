@@ -500,14 +500,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@576",
+      "from": "@575",
       "to": "@147",
-      "evidence": "compiler temporary; mwcc numbers it @467 per TU and ov060 daKpa3Bg_c (this batch) also defines a global @467, so the scratch link collides; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temporary; mwcc numbers it @467 per TU and ov060 daKpa3Bg_c (this batch) also defines a global @467, so the scratch link collides; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @576 to @575 when the unused file-local POD vector twin typedef was deleted (one fewer compiler-numbered type) and shifted this local number (#4570)."
     },
     {
-      "from": "@577",
+      "from": "@576",
       "to": "@148",
-      "evidence": "compiler temporary; mwcc numbers it @468 per TU and ov060 daKpa3Bg_c (this batch) also defines a global @468, so the scratch link collides; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temporary; mwcc numbers it @468 per TU and ov060 daKpa3Bg_c (this batch) also defines a global @468, so the scratch link collides; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @577 to @576 when the unused file-local POD vector twin typedef was deleted (one fewer compiler-numbered type) and shifted this local number (#4570)."
     }
   ],
   "symbol_binding_rewrites": [

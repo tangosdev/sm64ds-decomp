@@ -116,11 +116,6 @@ extern OwlState data_ov094_02136b70;
  * spelling. math/Matrix.h (via daOwl_c.h -> dExtAnmModel_c.h) stands down. */
 typedef char Matrix4x3_size_must_be_0x30[sizeof(Matrix4x3) == 0x30 ? 1 : -1];
 
-struct OwlVec {
-    int x, y, z;
-};
-typedef char OwlVec_size_must_be_0x0c[sizeof(OwlVec) == 0x0c ? 1 : -1];
-
 struct V6 {
     int v[6];
 };
@@ -170,7 +165,7 @@ short Vec3_VertAngle(const void *a, const void *b);
 unsigned int RandomIntInternal(void *seed);
 void MulVec3Mat4x3(void *dst, void *mat, void *src);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(OwlVec *v);
+int LenVec3(VecFx32 *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int IsStarCollectedInCurLevel(int);
 unsigned short DecIfAbove0_Short(void *);
@@ -201,7 +196,7 @@ daOwl_c::~daOwl_c()
 void daOwl_c::func_ov094_021357a4()
 {
     int st[3];
-    OwlVec tmp;
+    VecFx32 tmp;
     tmp.x = data_ov094_02136a1c[0];
     tmp.y = data_ov094_02136a1c[1];
     tmp.z = data_ov094_02136a1c[2];
@@ -431,7 +426,7 @@ int daOwl_c::func_ov094_02135ee0()
         func_ov094_02136188(OWL_STATE_HOVER);
         return 1;
     }
-    OwlVec v = *(OwlVec *)&mTalkTarget->mPosX;
+    VecFx32 v = *(VecFx32 *)&mTalkTarget->mPosX;
     Vector3 w;
     w.x = v.x;
     w.y = v.y;
@@ -471,10 +466,10 @@ int daOwl_c::func_ov094_02136024()
 {
     daPly_c *p = ClosestPlayer();
     if (p != 0 && p->mClimbClsn != 0) {
-        OwlVec *playerPos = (OwlVec *)&p->mPosX;
-        OwlVec pp;
-        OwlVec d;
-        OwlVec *selfpos = (OwlVec *)&mPosX;
+        VecFx32 *playerPos = (VecFx32 *)&p->mPosX;
+        VecFx32 pp;
+        VecFx32 d;
+        VecFx32 *selfpos = (VecFx32 *)&mPosX;
         pp.x = playerPos->x;
         pp.y = playerPos->y;
         pp.z = playerPos->z;
@@ -489,7 +484,7 @@ int daOwl_c::func_ov094_02136024()
             d.y = 0;
             d.z = 0x320000;
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MulVec3Mat4x3(&d, &data_020a0e68, (OwlVec *)&mAnchorX);
+            MulVec3Mat4x3(&d, &data_020a0e68, (VecFx32 *)&mAnchorX);
             {
                 int *px = &mAnchorX;
                 int *py = &mAnchorY;
@@ -531,7 +526,7 @@ int daOwl_c::func_ov094_02136188(State *state)
 void daOwl_c::func_ov094_021361d8()
 {
     Matrix4x3 out;
-    OwlVec v;
+    VecFx32 v;
     Vec3_Asr((Vector3 *)&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
@@ -553,7 +548,7 @@ void daOwl_c::func_ov094_021361d8()
  * model matrix. */
 void daOwl_c::func_ov094_021362e0()
 {
-    OwlVec v;
+    VecFx32 v;
     daPly_c *m;
     int z = 0;
     if (mRider == 0)
