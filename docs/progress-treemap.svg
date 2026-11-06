@@ -14617,15 +14617,15 @@ matched: yes</title></rect><rect x="597.91" y="249.39" width="7.76" height="11.6
 module: ov002
 addr: 0x020c2f64
 size: 136 bytes
-matched: yes</title></rect><rect x="354.12" y="261.05" width="20.59" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c2fecEPi
+matched: yes</title></rect><rect x="354.12" y="261.05" width="20.59" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c14AnimSplinePollEPi
 module: ov002
 addr: 0x020c2fec
 size: 348 bytes
-matched: yes</title></rect><rect x="374.71" y="261.05" width="1.42" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c3148Ev
+matched: yes</title></rect><rect x="374.71" y="261.05" width="1.42" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c14AnimSplineInitEv
 module: ov002
 addr: 0x020c3148
 size: 24 bytes
-matched: yes</title></rect><rect x="376.13" y="261.05" width="94.89" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c20ComputeSplineWeightsEPi
+matched: yes</title></rect><rect x="376.13" y="261.05" width="94.89" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c16SplineGetWeightsEPi
 module: ov002
 addr: 0x020c3160
 size: 1604 bytes
@@ -14633,19 +14633,19 @@ matched: yes</title></rect><rect x="471.02" y="261.05" width="14.91" height="11.
 module: ov002
 addr: 0x020c37a4
 size: 252 bytes
-matched: yes</title></rect><rect x="485.93" y="261.05" width="25.08" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c38a0Ev
+matched: yes</title></rect><rect x="485.93" y="261.05" width="25.08" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c23JumboStarCutsceneFlyingEv
 module: ov002
 addr: 0x020c38a0
 size: 424 bytes
-matched: yes</title></rect><rect x="511.01" y="261.05" width="23.90" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c3a48Ev
+matched: yes</title></rect><rect x="511.01" y="261.05" width="23.90" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c26JumboStarCutsceneTakingOffEv
 module: ov002
 addr: 0x020c3a48
 size: 404 bytes
-matched: yes</title></rect><rect x="534.91" y="261.05" width="16.33" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c3bdcEv
+matched: yes</title></rect><rect x="534.91" y="261.05" width="16.33" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c24JumboStarCutsceneFallingEv
 module: ov002
 addr: 0x020c3bdc
 size: 276 bytes
-matched: yes</title></rect><rect x="551.24" y="261.05" width="2.60" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19func_ov002_020c3cf0Ev
+matched: yes</title></rect><rect x="551.24" y="261.05" width="2.60" height="11.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daPly_c19AdvanceCutsceneStepEv
 module: ov002
 addr: 0x020c3cf0
 size: 44 bytes
