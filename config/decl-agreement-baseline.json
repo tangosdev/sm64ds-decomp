@@ -7443,15 +7443,7 @@
         "return:int"
       ]
     },
-    "data_02099e70": {
-      "src/runtime/actor/ActorBase.cpp": [
-        "return:unsigned int"
-      ]
-    },
     "data_02099f24": {
-      "src/runtime/actor/ActorBase.cpp": [
-        "return:int []"
-      ],
       "src/unnamed/arm9/0204/func_020433b8.c": [
         "return:int []"
       ]
@@ -7567,19 +7559,9 @@
         "return:int"
       ]
     },
-    "data_0209ceec": {
-      "src/engine/model/d_ext_model.cpp": [
-        "return:unsigned char"
-      ]
-    },
     "data_0209cef0": {
       "src/CleanCommonModelDataArr.c": [
         "return:void *"
-      ]
-    },
-    "data_0209cef4": {
-      "src/engine/model/d_ext_model.cpp": [
-        "return:dExtShadowModel_c *"
       ]
     },
     "data_0209cef8": {
@@ -7621,86 +7603,6 @@
     "data_0209d460": {
       "src/minigames/d_s_mg_base.cpp": [
         "return:unsigned char"
-      ]
-    },
-    "gBg0HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gBg0VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg2VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg3HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gBg2VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg2HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg1VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg1HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg3VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gBg3HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gBg3VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg0HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gSubBg0VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gBg2HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gBg1VOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
-      ]
-    },
-    "gBg1HOffset": {
-      "src/unnamed/arm9/0201/func_02019144.cpp": [
-        "return:short"
       ]
     },
     "data_0209d4a8": {
@@ -8779,26 +8681,6 @@
         "return:int []"
       ]
     },
-    "data_020a4b48": {
-      "src/runtime/actor/ActorBase.cpp": [
-        "return:unsigned char"
-      ]
-    },
-    "data_020a4b54": {
-      "src/runtime/actor/ActorBase.cpp": [
-        "return:unsigned short"
-      ]
-    },
-    "data_020a4b60": {
-      "src/runtime/actor/ActorBase.cpp": [
-        "return:unsigned int"
-      ]
-    },
-    "data_020a4b64": {
-      "src/runtime/actor/ActorBase.cpp": [
-        "return:void *"
-      ]
-    },
     "data_020a4b68": {
       "src/unnamed/arm9/0204/func_02043fdc.cpp": [
         "return:Node *"
@@ -8856,9 +8738,6 @@
       ],
       "src/WM_SendCommand.cpp": [
         "return:Ctx *"
-      ],
-      "src/WM_SetCallbackTable.c": [
-        "return:int *"
       ],
       "src/WM_Finish.c": [
         "return:int"
@@ -16014,11 +15893,6 @@
         "param:#2 BTA_File *"
       ]
     },
-    "func_02046d50": {
-      "src/engine/model/d_ext_model.cpp": [
-        "param:#2 BTP_File *"
-      ]
-    },
     "func_02046e28": {
       "src/engine/model/d_ext_model.cpp": [
         "param:#1 ModelComponents *",
@@ -16521,65 +16395,6 @@
         "param:#1 int"
       ]
     },
-    "WM_SetIndCallback": {
-      "src/unnamed/arm9/0203/func_0203fc38.c": [
-        "param:#1 void *"
-      ],
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_StartParent": {
-      "src/unnamed/arm9/0203/func_0203fb98.c": [
-        "param:#1 void *"
-      ],
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_End": {
-      "src/unnamed/arm9/0203/func_0203f6b4.c": [
-        "param:#1 void *"
-      ],
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_Reset": {
-      "src/Wireless_Reset.c": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_PowerOff": {
-      "src/unnamed/arm9/0203/func_0203fc74.c": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_PowerOn": {
-      "src/unnamed/arm9/0203/func_0203fcb0.c": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_Disable": {
-      "src/unnamed/arm9/0203/func_0203fcec.c": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_Enable": {
-      "src/unnamed/arm9/0203/func_0203fd28.c": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0206259c": {
-      "src/unnamed/arm9/0203/func_0203fd64.c": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_MeasureChannel": {
-      "src/unnamed/arm9/0203/func_0203f818.c": [
-        "param:#1 void *"
-      ]
-    },
     "func_02063718": {
       "src/unnamed/arm9/0206/func_020653cc.c": [
         "arity:3"
@@ -16653,7 +16468,6 @@
     },
     "func_020647fc": {
       "src/unnamed/arm9/0206/func_02063718.c": [
-        "param:#1 char *",
         "param:#3 void *"
       ]
     },
@@ -16664,13 +16478,6 @@
       ]
     },
     "func_02064a94": {
-      "src/unnamed/arm9/0206/func_02063718.c": [
-        "param:#1 char *",
-        "param:#2 int",
-        "param:#3 int",
-        "param:#4 char *",
-        "param:#5 int"
-      ],
       "src/unnamed/arm9/0206/func_02063980.c": [
         "param:#4 unsigned int *"
       ]
@@ -16687,11 +16494,6 @@
       ]
     },
     "func_02064cd8": {
-      "src/unnamed/arm9/0206/func_02063718.c": [
-        "param:#1 char *",
-        "param:#2 int",
-        "param:#3 int"
-      ],
       "src/unnamed/arm9/0206/func_02063980.c": [
         "param:#5 int"
       ]
@@ -16703,24 +16505,8 @@
       ]
     },
     "func_02064e18": {
-      "src/unnamed/arm9/0206/func_02063718.c": [
-        "param:#1 char *",
-        "param:#2 int",
-        "param:#3 int"
-      ],
       "src/unnamed/arm9/0206/func_02063980.c": [
         "param:#5 int"
-      ]
-    },
-    "func_02064f54": {
-      "src/unnamed/arm9/0206/func_02063718.c": [
-        "param:#1 char *",
-        "param:#2 int"
-      ],
-      "src/unnamed/arm9/0206/func_02063980.c": [
-        "param:#1 unsigned char *",
-        "param:#2 unsigned short",
-        "param:#3 unsigned char"
       ]
     },
     "func_02064fe8": {
@@ -16766,12 +16552,6 @@
       ],
       "src/unnamed/arm9/0206/func_020652fc.cpp": [
         "return:char *"
-      ],
-      "src/unnamed/arm9/0206/func_020653cc.c": [
-        "return:int"
-      ],
-      "src/unnamed/arm9/0206/func_02065538.c": [
-        "return:int"
       ]
     },
     "func_02067bfc": {
@@ -18384,28 +18164,12 @@
     },
     "WM_SetParentParameter": {
       "src/unnamed/arm9/0203/func_0203fbc4.c": [
-        "param:#1 void *",
         "param:#2 int"
-      ],
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
       ]
     },
     "WM_StartConnect": {
       "src/unnamed/arm9/0203/func_0203fb5c.c": [
-        "param:#1 void *",
         "param:#3 int"
-      ],
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_StartMPEx": {
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0203/func_0203faa8.c": [
-        "param:#1 void *"
       ]
     },
     "WmCheckParentParameter": {
@@ -18452,30 +18216,10 @@
         "param:#1 S72d90 *"
       ]
     },
-    "WM_SetPortCallback": {
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#2 void *"
-      ]
-    },
-    "WM_SetBeaconIndication": {
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
-      ]
-    },
     "WM_SetGameInfo": {
       "src/engine/mb/MB_GameInfo.c": [
         "param:#5 int",
         "param:#6 int"
-      ]
-    },
-    "WM_SetLifeTime": {
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "WM_StartScan": {
-      "src/engine/mb/MB_WmBase.cpp": [
-        "param:#1 void *"
       ]
     }
   },
