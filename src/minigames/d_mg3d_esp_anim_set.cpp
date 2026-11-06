@@ -109,7 +109,7 @@ void Mg_ShowBanner(int, int, int, int, int, short);
 void Mg_SetTopScreenYOffset(int);
 void InitialiseVramGlobals(void);
 void Deallocate(void*);
-int LoadFile(int handle);
+void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void func_02056374(const void*, u32, u32);
 
@@ -1453,9 +1453,9 @@ s32 dScMg3DEsp_c::Behavior()
 s32 dScMg3DEsp_c::InitResources()
 {
     Matrix4x3 tmp;
-    int f;
-    int r5v;
-    int r4v;
+    void *f;
+    void *r5v;
+    void *r4v;
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;
@@ -1500,23 +1500,23 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x400100c = (*(volatile unsigned short*)0x400100c & 0x43) | 0x210;
 
     f = LoadFile(0x12);
-    DecompressLZ16((void *)f, (void *)((unsigned)G2S::GetBG2CharPtr() + 0x4000));
-    Deallocate((void*)f);
+    DecompressLZ16(f, (void *)((unsigned)G2S::GetBG2CharPtr() + 0x4000));
+    Deallocate(f);
 
     f = LoadFile(0x13);
-    GXS::LoadBGPltt((const void *)f, 0x1e0, 0x20);
-    Deallocate((void*)f);
+    GXS::LoadBGPltt(f, 0x1e0, 0x20);
+    Deallocate(f);
 
     f = LoadFile(0x14);
-    func_02056374((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_02056374(f, 0, 0x800);
+    Deallocate(f);
 
     r5v = LoadFile(8);
     r4v = LoadFile(9);
-    DecompressLZ16((void*)r5v, (void*)0x6600000);
-    GXS::LoadOBJPltt((const void *)r4v, 0, 0x100);
-    Deallocate((void*)r5v);
-    Deallocate((void*)r4v);
+    DecompressLZ16(r5v, (void *)0x6600000);
+    GXS::LoadOBJPltt(r4v, 0, 0x100);
+    Deallocate(r5v);
+    Deallocate(r4v);
 
     Mg_SetTopScreenYOffset(0x20);
 

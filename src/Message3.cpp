@@ -118,7 +118,7 @@ extern int func_020138dc(void);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(void *src, void *dst);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 /* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
    from a header; the literal name keeps the def's own scalar params. */
 extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
@@ -1869,10 +1869,10 @@ extern "C" void LoadFont3D(void) {
     void *r5;
     void *r4;
 
-    r5 = (void *)LoadFile(0x980e);
+    r5 = LoadFile(0x980e);
     MultiCopy_Int((int *)r5, (int *)func_02054d88(), 0x4000);
 
-    r4 = (void *)LoadFile(0x980d);
+    r4 = LoadFile(0x980d);
     DecompressLZ16(r4, (u8 *)func_02054d88() + 0x8000);
 
     Deallocate(r4);

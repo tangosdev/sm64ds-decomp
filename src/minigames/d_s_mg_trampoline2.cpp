@@ -126,7 +126,9 @@ int TrmpLine_Create(u16 *a, u16 *b);
 extern void Mg_CommitRecords(void);
 void func_0203cd80(int *m, short angle);
 int GetGameLanguage(void);
-void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
+struct OamAttr;
+struct Matrix2x2;
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 unsigned int d_s_mg_trampoline2NewUnkCallback818Hold(unsigned int a, unsigned int b, int c, int d,
                                                      int e, const Vector3_16f *f);
@@ -170,8 +172,8 @@ extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
 extern void Camera_UpdateMatrices(void *cam);
 extern u8 gMainScreenLayers;
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, void *dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *ptr);
 extern int sTrmp2NcgByLanguage[];
 extern int sTrmpPuffEnglish[];
@@ -274,7 +276,7 @@ extern "C" dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void) {
 
 // @symbol _ZN18dScMgTrampoline2_c11InitDisplayEv
 void dScMgTrampoline2_c::InitDisplay() {
-    int objChar, objPltt, bgChar, bgScr, bgPltt;
+    void *objChar, *objPltt, *bgChar, *bgScr, *bgPltt;
     volatile u16 sp0;
 
     objChar = LoadFile(sTrmp2NcgByLanguage[GetGameLanguage()]);
@@ -294,20 +296,20 @@ void dScMgTrampoline2_c::InitDisplay() {
     }
     DecompressLZ16(bgChar, (void *)((char *)G2::GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, G2::GetBG2ScrPtr());
-    GX::LoadBGPltt((const void *)bgPltt, 0x1a0, 0x60);
+    GX::LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1318;
     *(volatile u16 *)0x400000e &= ~0x40;
 
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)objPltt, 0, 0x60);
+    GX::LoadOBJPltt(objPltt, 0, 0x60);
 
-    Deallocate((void *)bgChar);
-    Deallocate((void *)bgScr);
-    Deallocate((void *)bgPltt);
-    Deallocate((void *)objChar);
-    Deallocate((void *)objPltt);
+    Deallocate(bgChar);
+    Deallocate(bgScr);
+    Deallocate(bgPltt);
+    Deallocate(objChar);
+    Deallocate(objPltt);
 
     InitBrush(3);
 }
@@ -894,8 +896,7 @@ s32 dScMgTrampoline2_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)sTrmp2TextSpritesByLanguage[idx][1], (void *)a1v, 0xc,
-                              (void *)0);
+                DrawOamSprite((OamAttr *)sTrmp2TextSpritesByLanguage[idx][1], a1v, 0xc, 0);
             } else {
                 RenderOamMainScreen(sTrmpLifeIconSprite, a1v, 0xc, -1, -1);
             }

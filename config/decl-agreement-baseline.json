@@ -441,40 +441,11 @@
       "src/game/stages/d_s_mb.cpp": [
         "param:#1 int"
       ],
-      "src/minigames/d_s_mg_coin.cpp": [
-        "param:#1 int"
-      ],
       "src/minigames/d_s_mg_flower.cpp": [
-        "param:#1 int"
-      ],
-      "src/minigames/d_s_mg_jump2.cpp": [
-        "param:#1 int",
-        "param:#2 int"
-      ],
-      "src/minigames/d_s_mg_m_carlo2.cpp": [
-        "param:#1 int",
-        "param:#2 int"
-      ],
-      "src/minigames/d_s_mg_pachinko2.cpp": [
-        "param:#1 int"
-      ],
-      "src/minigames/d_s_mg_panel.cpp": [
         "param:#1 int"
       ],
       "src/minigames/d_s_mg_roulette_methods.cpp": [
         "param:#2 int"
-      ],
-      "src/minigames/d_s_mg_sound.cpp": [
-        "param:#1 int"
-      ],
-      "src/minigames/d_s_mg_trampoline.cpp": [
-        "param:#1 int"
-      ],
-      "src/minigames/d_s_mg_trampoline2.cpp": [
-        "param:#1 int"
-      ],
-      "src/ui/hud/d_map.cpp": [
-        "param:#1 int"
       ],
       "src/ui/hud/d_meter.cpp": [
         "param:#2 int"
@@ -507,9 +478,7 @@
     },
     "DrawOamSprite": {
       "src/minigames/d_s_mg_base.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#4 int"
+        "param:#1 int"
       ],
       "src/minigames/d_s_mg_curling.cpp": [
         "param:#1 int",
@@ -521,22 +490,11 @@
         "param:#2 int",
         "param:#4 int"
       ],
-      "src/minigames/d_s_mg_hanachan_methods.cpp": [
-        "param:#2 int",
-        "param:#4 int"
-      ],
       "src/minigames/d_s_mg_luigi.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#4 int"
-      ],
-      "src/minigames/d_s_mg_snowball.cpp": [
-        "param:#2 int"
+        "param:#1 int"
       ],
       "src/minigames/d_s_mg_teresa.cpp": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#4 int"
+        "param:#1 int"
       ]
     },
     "FS_CloseFile": {
@@ -807,24 +765,8 @@
       ]
     },
     "LoadFile": {
-      "src/game/stages/d_s_boot_methods.cpp": [
-        "return:void *"
-      ],
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "return:void *"
-      ],
-      "src/game/stages/d_s_game_over.cpp": [
-        "return:void *"
-      ],
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:void *"
-      ],
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:void *"
-      ],
       "src/engine/model/d_ext_model.cpp": [
-        "param:#1 unsigned short",
-        "return:void *"
+        "param:#1 unsigned short"
       ],
       "src/game/stages/LevelObjects.cpp": [
         "return:KCL_File *"
@@ -833,42 +775,8 @@
         "arity:0",
         "return:void"
       ],
-      "src/minigames/d_s_mg_card.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_cup.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_curling.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_hanachan_methods.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_memory.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_memory2.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_roulette_methods.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mg_teresa.cpp": [
-        "return:void *"
-      ],
-      "src/minigames/d_s_mini_gm.cpp": [
-        "return:char *"
-      ],
-      "src/ui/hud/d_meter.cpp": [
-        "return:void *"
-      ],
-      "src/ui/messages/_ZN7Message8LoadTextEv.cpp": [
-        "return:void *"
-      ],
       "src/unnamed/arm9/0200/func_0200f13c.cpp": [
-        "param:#1 unsigned short",
-        "return:void *"
+        "param:#1 unsigned short"
       ]
     },
     "LoadFont": {
@@ -15845,8 +15753,7 @@
     },
     "func_0201817c": {
       "src/LoadCompressedFileAt.c": [
-        "param:#1 unsigned short",
-        "return:void *"
+        "param:#1 unsigned short"
       ]
     },
     "func_0201834c": {
@@ -17315,8 +17222,7 @@
     },
     "func_0205d4a0": {
       "src/myFS_ReadFile.c": [
-        "param:#1 int",
-        "param:#2 void *"
+        "param:#1 int"
       ]
     },
     "func_0205d568": {

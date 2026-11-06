@@ -83,7 +83,7 @@ void MgCoins_StartPayout(char *p);
 extern unsigned short gMgCoinsStatus;
 extern void LoadCard2SubBg3(void *c);
 extern int GetGameLanguage(void);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern int Dealer_Load(char *p);
 extern unsigned char gMainScreenLayers;
@@ -111,8 +111,8 @@ s32 dScMgMCarlo_c::InitResources() {
 
     Mg_SetTopScreenYOffset(0x20);
     LoadCard2SubBg3(this);
-    tileData = (void *)LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
-    paletteData = (void *)LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
+    tileData = LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
+    paletteData = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(tileData, (void *)0x6600000);
     GXS::LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(tileData);

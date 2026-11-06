@@ -188,7 +188,7 @@ extern void func_02012718(int a, int b);
 extern int  Sound_PlayIfNotActive(int handle, int player, int id, int unused);
 extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
 extern void FreeGfxSlotsById(int arg);
-extern int  LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *p);
 extern int  func_02054d88(void);
@@ -2722,9 +2722,9 @@ s32 dScMgPachinko_c::InitResources()
     volatile u16 fillScr;
     volatile u16 fillZero;
     volatile u16 fillIdx;
-    int objChar;
-    int objPltt;
-    int f;
+    void *objChar;
+    void *objPltt;
+    void *f;
     int n;
     int y;
     int x;
@@ -2736,37 +2736,37 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
     f = LoadFile(0x5f);
-    DecompressLZ16((void *)f, (void *)func_02054d88());
-    Deallocate((void *)f);
+    DecompressLZ16(f, (void *)func_02054d88());
+    Deallocate(f);
 
     f = LoadFile(0x60);
-    GX::LoadBGPltt((const void *)f, 0x60, 0x1a0);
-    Deallocate((void *)f);
+    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    Deallocate(f);
 
     f = LoadFile(0x61);
-    func_02056314((void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_02056314(f, 0, 0x800);
+    Deallocate(f);
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
     *(volatile u16 *)0x400000c &= ~0x40;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x5418;
 
     f = LoadFile(0x46);
-    DecompressLZ16((void *)f, G2::GetBG2CharPtr());
-    Deallocate((void *)f);
+    DecompressLZ16(f, G2::GetBG2CharPtr());
+    Deallocate(f);
 
     b = (char *)G2::GetBG2ScrPtr();
     fillScr = 0x3073;
     MultiStore16(fillScr, b, 0x1000);
 
     f = LoadFile(6);
-    func_020563d4((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_020563d4(f, 0, 0x800);
+    Deallocate(f);
 
     objChar = LoadFile(0xe0);
     objPltt = LoadFile(0xe1);
-    DecompressLZ16((void *)objChar, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)objPltt, 0, 0x100);
+    DecompressLZ16(objChar, (void *)0x6400000);
+    GX::LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd;
     *(volatile u16 *)0x400100c &= ~3;
@@ -2796,16 +2796,16 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x208;
 
     f = LoadFile(0x5c);
-    DecompressLZ16((void *)f, (void *)G2S::GetBG3CharPtr());
-    Deallocate((void *)f);
+    DecompressLZ16(f, (void *)G2S::GetBG3CharPtr());
+    Deallocate(f);
 
     f = LoadFile(0x5d);
-    GXS::LoadBGPltt((const void *)f, 0x60, 0x1a0);
-    Deallocate((void *)f);
+    GXS::LoadBGPltt(f, 0x60, 0x1a0);
+    Deallocate(f);
 
     f = LoadFile(0x5e);
-    func_020562b4((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_020562b4(f, 0, 0x800);
+    Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
     *(volatile u16 *)0x4001008 &= ~0x40;
@@ -2813,13 +2813,13 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x608;
 
     f = LoadFile(5);
-    func_020564f4((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_020564f4(f, 0, 0x800);
+    Deallocate(f);
 
-    DecompressLZ16((void *)objChar, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)objPltt, 0, 0x100);
-    Deallocate((void *)objChar);
-    Deallocate((void *)objPltt);
+    DecompressLZ16(objChar, (void *)0x6600000);
+    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    Deallocate(objChar);
+    Deallocate(objPltt);
 
     Pachinko_ResetRound(c);
     PachinkoPipe_ResetAll((u8 *)c);

@@ -515,9 +515,9 @@ void Ov004_Deallocate(void *ptr)
 // @symbol Ov004_LoadFile
 namespace s20adc68 {
 extern "C" {
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 void *Ov004_LoadFile(int id) {
-    return (void *)LoadFile(id);
+    return LoadFile(id);
 }
 }
 }
@@ -2001,17 +2001,17 @@ void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a
 // @symbol DrawOamSprite
 namespace s20afcf8 {
 extern "C" {
-extern "C" void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3) {
+extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
     dScMgBase_c *scene = gMgScene;
     if (scene == 0)
         return;
     if (scene->mMenuOpen == 0 && scene->GetDisplayMode() == 2) {
         if (((D3DBaseView *)gMgScene)->mDrawSubScreen != 1)
             return;
-        OAM::Render(false, (OamAttr *)arg0, (int)arg1, arg2, -1, -1, (Matrix2x2 *)arg3);
+        OAM::Render(false, attr, x, y, -1, -1, mtx);
         return;
     }
-    OAM::Render(false, (OamAttr *)arg0, (int)arg1, arg2, -1, -1, (Matrix2x2 *)arg3);
+    OAM::Render(false, attr, x, y, -1, -1, mtx);
 }
 }
 }
@@ -3230,7 +3230,7 @@ void Mg_DrawScoreTally(void* a, int unused1, int unused2, int unused3) {
 namespace s20b1e44 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void DrawOamSprite(int a, int b, int c, int d);
+extern void DrawOamSprite(int attr, int x, int y, Matrix2x2 *mtx);
 /* Draws `arg` centred at (0x80, 0xc) and sprite word 3 at (0x60, 0xc). */
 void Mg_DrawTopCenterCounter(int arg) {
     int r;
@@ -3444,7 +3444,7 @@ void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx)
 namespace s20b2574 {
 extern "C" {
 extern int GetGameLanguage(void);
-extern void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 
 /* Unless arg1 is 1, draws sprite words 0 and 1 at (12, 12) and (30, 12)
    and arg0 from x 0x30. With arg1 1, draws sprite word 0 arg0 times,
@@ -3452,11 +3452,11 @@ extern void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
 void Mg_DrawStockCounter(int arg0, int arg1)
 {
     int *table = sMgSpriteTables[GetGameLanguage()];
-    void *sb = (void *)table[0];
+    OamAttr *sb = (OamAttr *)table[0];
     int b = 12;
     if (arg1 != 1) {
-        DrawOamSprite(sb, (void *)b, b, 0);
-        DrawOamSprite((void *)sMgSpriteTables[GetGameLanguage()][1], (void *)30, b, 0);
+        DrawOamSprite(sb, b, b, 0);
+        DrawOamSprite((OamAttr *)sMgSpriteTables[GetGameLanguage()][1], 30, b, 0);
         Mg_DrawBigNumber(0x30, b, arg0, 1, -1, 2, 0);
     } else {
         int i;

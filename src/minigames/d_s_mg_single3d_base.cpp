@@ -49,7 +49,7 @@ void SetFog(int enable, int, int, int);
 }
 
 extern "C" {
-int LoadFile(int fileId);
+void *LoadFile(int fileId);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void Mg_ResetBgOffsets(void);
@@ -178,15 +178,15 @@ int dScMgSingle3DBase_c::GetDisplayMode()
  * buffer. */
 extern "C" void LoadCard2SubBg3(void)
 {
-    void *fileData = (void *)LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
+    void *fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
     gSubScreenLayers |= 8;
     *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & 0x43) | 0x214;
     DecompressLZ16(fileData, (void *)G2S::GetBG3CharPtr());
     Ov004_Deallocate(fileData);
-    fileData = (void *)LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
+    fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
     GXS::LoadBGPltt(fileData, 0xa0, 0x160);
     Deallocate(fileData);
-    fileData = (void *)LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
+    fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
     func_020562b4(fileData, 0, 0x800);
     Deallocate(fileData);
     *(vu16 *)0x400100eu &= ~0x40;

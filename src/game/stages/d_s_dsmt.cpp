@@ -114,9 +114,9 @@ extern "C" void func_ov007_020cca80(void) {
 
 /* File-op veneers: `#pragma long_calls` emits the pooled absolute tail call. */
 #pragma long_calls on
-extern "C" int LoadFile(int);
+extern "C" void *LoadFile(int);
 // @symbol func_ov007_020cca74
-extern "C" int func_ov007_020cca74(int a) {
+extern "C" void *func_ov007_020cca74(int a) {
     return LoadFile(a);
 }
 // @symbol func_ov007_020cca68

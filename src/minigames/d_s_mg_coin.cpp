@@ -136,7 +136,9 @@ extern const int sCoinPopupY[];
 extern int *sCoinScorePlayerSprites[];
 extern int GetGameLanguage(void);
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
-extern void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
+struct OamAttr;
+struct Matrix2x2;
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void *sCoinValuesSprites[];
 extern void *sCoinSparkleSprites[];
@@ -159,8 +161,8 @@ extern const u16 sCoinBlockFrameTimes[];
 extern void FreeGfxSlotsById(int n);
 extern void Mg_PlayJingle(void *c);
 extern int Mg_GetTopRecord(void);
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, void *dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -688,7 +690,7 @@ void dScMgCoin_c::DrawScorePlayer() {
     RenderOamMainScreen(sCoinScorePlayerSprites[lang][8], 0x80, 0x18, -1, -1);
     Mg_DrawCreditsIcon(0x68, 0x28, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite((void *)sCoinScorePlayerSprites[lang][1], (void *)0x7a, 0x28, (void *)0);
+    DrawOamSprite((OamAttr *)sCoinScorePlayerSprites[lang][1], 0x7a, 0x28, 0);
     Mg_DrawBigNumber(0x8c, 0x28, scene->mPlayerScore, 1, -1, 2, 0);
 }
 
@@ -705,7 +707,7 @@ void dScMgCoin_c::DrawScoreRival() {
     RenderOamMainScreen(sCoinScorePlayerSprites[lang][4], 0x80, 0x50, -1, -1);
     Mg_DrawCreditsIcon(0x6c, 0x60, 1, -1);
     lang = GetGameLanguage();
-    DrawOamSprite((void *)sCoinScorePlayerSprites[lang][1], (void *)0x7e, 0x60, (void *)0);
+    DrawOamSprite((OamAttr *)sCoinScorePlayerSprites[lang][1], 0x7e, 0x60, 0);
     if (gMgScene != 0)
         count = gMgScene->mCreditsShown;
     else
@@ -1604,7 +1606,7 @@ int dScMgCoin_c::Behavior() {
 int dScMgCoin_c::InitResources() {
     dScMgCoin_c *self = this;
     char *c = (char *)self;
-    int a, b, d;
+    void *a, *b, *d;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e &= ~3;
@@ -1612,20 +1614,20 @@ int dScMgCoin_c::InitResources() {
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(a, (void *)(func_02054d88() + 0x4000));
-    Deallocate((void *)a);
+    Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    GX::LoadBGPltt((const void *)a, 0x1e0, 0x20);
-    Deallocate((void *)a);
+    GX::LoadBGPltt(a, 0x1e0, 0x20);
+    Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_UP_NSC_BIN);
-    func_02056314((void *)a, 0, 0x800);
-    Deallocate((void *)a);
+    func_02056314(a, 0, 0x800);
+    Deallocate(a);
 
     b = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCG_BIN);
     a = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCL_BIN);
     DecompressLZ16(b, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)a, 0, 0x100);
+    GX::LoadOBJPltt(a, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
@@ -1633,20 +1635,20 @@ int dScMgCoin_c::InitResources() {
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
     DecompressLZ16(d, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
-    Deallocate((void *)d);
+    Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    GXS::LoadBGPltt((const void *)d, 0x1e0, 0x20);
-    Deallocate((void *)d);
+    GXS::LoadBGPltt(d, 0x1e0, 0x20);
+    Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_DOWN_NSC_BIN);
-    func_020562b4((const void *)d, 0, 0x800);
-    Deallocate((void *)d);
+    func_020562b4(d, 0, 0x800);
+    Deallocate(d);
 
     DecompressLZ16(b, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)a, 0, 0x100);
-    Deallocate((void *)b);
-    Deallocate((void *)a);
+    GXS::LoadOBJPltt(a, 0, 0x100);
+    Deallocate(b);
+    Deallocate(a);
 
     self->mCredits = 0;
     self->mCreditsShown = self->mCredits;

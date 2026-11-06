@@ -84,7 +84,9 @@ extern void *sJump2BackFile;
 void Mg_CommitRecords(void);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int GetGameLanguage(void);
-void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
+struct OamAttr;
+struct Matrix2x2;
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern Matrix4x3 data_020a0e68;
 void Jump2Popup_UpdateAll(void);
@@ -106,8 +108,8 @@ extern struct G2 pmf_dScMgJump2_c_State_Play;
 extern void Jump3D_StartRoundLayout(void);
 extern struct G2 pmf_dScMgJump2_c_State_Result;
 extern struct G2 pmf_dScMgJump2_c_State_Intro;
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, int dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 extern void Camera_UpdateMatrices(void *cam);
 extern void Jump3D_SetLowGravity(void);
 extern void Heyho_ReactAll(void);
@@ -166,16 +168,16 @@ int dScMgJump2_c::CanEndState(int /* mode */) {
 // @symbol _ZN12dScMgJump2_c13InitResourcesEv
 /* Slot 0. */
 s32 dScMgJump2_c::InitResources() {
-    int tiles, palette;
+    void *tiles, *palette;
     s32 fov;
     void *bmdFile;
 
     tiles = LoadFile(sJump2NcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_JUMP_NCL_BIN);
-    DecompressLZ16(tiles, 0x6400000);
-    GX::LoadOBJPltt((const void *)palette, 0, 0x80);
-    Deallocate((void *)tiles);
-    Deallocate((void *)palette);
+    DecompressLZ16(tiles, (void *)0x6400000);
+    GX::LoadOBJPltt(palette, 0, 0x80);
+    Deallocate(tiles);
+    Deallocate(palette);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
@@ -468,8 +470,7 @@ s32 dScMgJump2_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)sJump2TextSpritesByLanguage[idx][1], (void *)x, 0xc,
-                              (void *)0);
+                DrawOamSprite((OamAttr *)sJump2TextSpritesByLanguage[idx][1], x, 0xc, 0);
             } else {
                 RenderOamMainScreen(sJumpLifeIconSprite, x, 0xc, -1, -1);
             }

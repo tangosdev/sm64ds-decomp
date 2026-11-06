@@ -906,8 +906,8 @@ Lc30:
 /* What InitResources loads the map graphics with. */
 extern "C" {
 int func_0202a980(void);
-int LoadFile(int handle);
-void DecompressLZ16(int src, void* dst);
+void *LoadFile(int handle);
+void DecompressLZ16(void *src, void *dst);
 void Deallocate(void* ptr);
 int func_0202a96c(void);
 
@@ -933,30 +933,30 @@ int dMap_c::InitResources()
     {
         int id1 = func_0202a980();
         if (id1 != 0) {
-            int f1 = LoadFile(id1);
+            void *f1 = LoadFile(id1);
             DecompressLZ16(f1, G2S::GetBG3CharPtr());
-            Deallocate((void*)f1);
+            Deallocate(f1);
         }
     }
 
     {
         int id2 = func_0202a96c();
         if (id2 != 0) {
-            int f2 = LoadFile(id2);
+            void *f2 = LoadFile(id2);
             GXS::BeginLoadBGExtPltt();
-            GXS::LoadBGExtPltt((void *)f2, 0x6000, 0x200);
+            GXS::LoadBGExtPltt(f2, 0x6000, 0x200);
             GXS::EndLoadBGExtPltt();
-            GXS::LoadBGPltt((void *)f2, 0, 2);
-            Deallocate((void*)f2);
+            GXS::LoadBGPltt(f2, 0, 2);
+            Deallocate(f2);
         }
     }
 
     p = data_0209f334;
     for (i = 0; i < data_0209f2e8; i++) {
         if (*p != 0) {
-            int f3 = LoadFile(*p);
+            void *f3 = LoadFile(*p);
             DecompressLZ16(f3, (char *)G2S::GetBG3ScrPtr() - (i << 11));
-            Deallocate((void*)f3);
+            Deallocate(f3);
         }
         p++;
     }
