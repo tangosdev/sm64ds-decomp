@@ -908,7 +908,11 @@ void compute_layout(int w, int h)
     L.u = u < v ? u : v;
     if (L.u < 0.3) L.u = 0.3;
     L.sw = P(900); L.sh = P(shu);
-    L.sx = (col ? (int)(w * 0.74) : w / 2) - L.sw / 2 + (S.emb_on ? S.emb_dx : 0);
+    /* PLAINSKIN1: at the 0.3 floor (RenderScale 1, 4:3: a 256 px picture) the 900-unit sheet is 270 px, wider than the picture, and the
+       LB / RB hints at its sides fell off the edges. The sheet narrows to the picture, 2 px in from each side; the text keeps its size and
+       the tab strip's gap gives way first, as it does for the HD font */
+    if (L.sw > w - 4) L.sw = w - 4;
+    L.sx =(col ? (int)(w * 0.74) : w / 2) - L.sw / 2 + (S.emb_on ? S.emb_dx : 0);
     L.sy = (h - L.sh) / 2 + P(36);
     if (L.sy + L.sh > h - 2) L.sy = h - 2 - L.sh;
     {   /* PAUSESCALE1: the title plate (half above the sheet's top edge) stays on the picture: where the sheet at the 0.3 floor is taller than
