@@ -36,6 +36,8 @@ struct CardBusState {
 };
 
 extern "C" {
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
 // @symbol func_0206ce20
 void func_0206ce20(struct CardBusState* s){

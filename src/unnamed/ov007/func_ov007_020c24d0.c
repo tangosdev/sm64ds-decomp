@@ -22,9 +22,11 @@ void func_ov007_020c24d0(Ov007StrokePath *path, int idx) {
     if (idx == path->pointCount)
         return;
 
-    /* The round trip through long long is load-bearing: it gives i its own
-     * register apart from idx, which the plain copy and a for loop do not. */
-    i = (int)(long long)idx;
+    /* The cast is load-bearing: it gives i its own register apart from idx,
+     * which the plain copy `i = idx;` and a for loop do not (two words each).
+     * It does NOT need the trip through long long the shard used -- (int) on
+     * its own, on an int, reproduces the cartridge. */
+    i = (int)idx;
     while (i < path->pointCount) {
         switch (path->representation) {
         case OV007_PATH_PLANAR:

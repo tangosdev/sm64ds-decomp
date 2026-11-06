@@ -73,7 +73,7 @@ int dBgCh_Gnd::DetectClsn()
             } else {
                 pos.y = pos.y + obj->GetClipOffsetY();
             }
-            Vector3* selfpos = (Vector3*)((long long)(int)&this->pos);
+            Vector3 *selfpos = (Vector3 *)((int)&this->pos);
             if (selfpos->y < pos.y - thr) continue;
             if (Vec3_HorzDist(selfpos, &pos) > thr)
                 continue;

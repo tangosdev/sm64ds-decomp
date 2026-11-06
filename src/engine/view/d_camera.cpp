@@ -301,14 +301,14 @@ block_7:
                 if (ApproachLinear2(mRollShake, 0, 0x10) != 0) {
                     mRollShakePhase = 0;
                 } else {
-                    *(s16 *)((long long)(int)&mRollShakePhase) =
-                        (s16)(*(s16 *)((long long)(int)&mRollShakePhase) + 0x3000);
+                    *(s16 *)((int)&mRollShakePhase) =
+                        (s16)(*(s16 *)((int)&mRollShakePhase) + 0x3000);
                 }
             }
         }
         if (mFovShake != 0) {
-            *(s16 *)((long long)(int)&mFovShakePhase) =
-                (s16)(*(s16 *)((long long)(int)&mFovShakePhase) + mFovShakePhaseStep);
+            *(s16 *)((int)&mFovShakePhase) =
+                (s16)(*(s16 *)((int)&mFovShakePhase) + mFovShakePhaseStep);
             ApproachLinear2(mFovShake, 0, mFovShakeDecay);
         }
         {
