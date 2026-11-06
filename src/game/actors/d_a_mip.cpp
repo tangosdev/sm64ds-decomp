@@ -51,6 +51,7 @@ enum daMip_c_AssetId {
 #include "Particle__System.h"
 #include "LevelRng.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx.h"
 
 namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
@@ -238,11 +239,9 @@ daMip_c::~daMip_c()
    water flag to pick splash over dust. */
 int daMip_c::TestWaterBelow()
 {
-    /* A POD twin: a real Vector3 local emits the vague-linkage ~Vector3. */
-    typedef struct Vector3 { int x, y, z; } Vector3;
-
+    /* The POD VecFx32: a real Vector3 local emits the vague-linkage ~Vector3. */
     dBgCh_Gnd rg;
-    Vector3 v;
+    VecFx32 v;
     rg.StartDetectingWater();
     int x = mPosX;
     int y = mPosY;
@@ -293,18 +292,17 @@ void daMip_c::UpdateGrab()
    Message::DisplaySaving, then Released. */
 int daMip_c::StateSaveTalkMain()
 {
-    /* POD triple. types.h Vector3 has a destructor this function does not emit. */
-    struct V3 { int x, y, z; };
+    /* The POD VecFx32: types.h Vector3 has a destructor this function does not emit. */
     extern unsigned char data_0209d684;
     extern unsigned char data_0209d660;
     extern MipStatePair data_ov085_021306bc;
 
     daPly_c *player = mSaveTalkPlayer;
-    struct V3 vec;
+    VecFx32 vec;
     unsigned char gb;
     int state;
 
-    mTargetAngY = Vec3_HorzAngle((struct V3 *)&mPosX, (struct V3 *)&player->mPosX);
+    mTargetAngY = Vec3_HorzAngle((VecFx32 *)&mPosX, (VecFx32 *)&player->mPosX);
     ApproachAngle(&mPrevAngleY, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
@@ -366,13 +364,12 @@ int daMip_c::StateSaveTalkInit()
    Faces mSaveTalkPlayer, picks the line from mRabbitId, then Released. */
 int daMip_c::StateTalkMain()
 {
-    struct V3 { int x, y, z; };
     extern MipStatePair data_ov085_021306bc;
 
     daPly_c *player;
     int *pq;
-    struct V3 pos;
-    struct V3 pp;
+    VecFx32 pos;
+    VecFx32 pp;
     s16 angle;
     unsigned int id;
 
@@ -384,7 +381,7 @@ int daMip_c::StateTalkMain()
     pp.x = pq[0];
     pp.y = pq[1];
     pp.z = pq[2];
-    angle = Vec3_HorzAngle((struct V3 *)&mPosX, &pp);
+    angle = Vec3_HorzAngle((VecFx32 *)&mPosX, &pp);
 
     id = 0x139;
     switch (player->GetTalkState()) {
@@ -504,9 +501,8 @@ int daMip_c::StateReleasedInit()
    branch that runs once all eight glowing rabbits are found. */
 int daMip_c::StateCaughtMain()
 {
-    /* POD triple. The ::Vector3 casts below are the destructor-bearing type
-       ShowMessage and Spawn take by pointer; this local is not that type. */
-    typedef struct { s32 x, y, z; } Vector3;
+    /* POD VecFx32 locals. The ::Vector3 casts below are the destructor-bearing type
+       ShowMessage and Spawn take by pointer; these locals are not that type. */
 
     extern MipStatePair data_ov085_021306cc;
     extern MipStatePair data_ov085_021306bc;
@@ -515,10 +511,10 @@ int daMip_c::StateCaughtMain()
     extern u8 data_0209d6bc;
 
     daPly_c *pl;
-    Vector3 pv;
-    Vector3 pos;
-    Vector3 pos7;
-    Vector3 posR;
+    VecFx32 pv;
+    VecFx32 pos;
+    VecFx32 pos7;
+    VecFx32 posR;
     int soundId;
     int msg;
 
@@ -755,11 +751,8 @@ int daMip_c::StateRestInit()
 /* Runs the path away from the player. Dust or splash at a node, steps
    mPathDir, and falls back to Rest past 0x4b0000. */
 int daMip_c::StateFleeMain() {
-    /* POD triples. V3Blk's array member is what makes the player-position
+    /* POD VecFx32 locals. V3Blk's array member is what makes the player-position
        copy a block move; a three-scalar struct scalarises. */
-    struct Vector3 {
-        s32 x, y, z;
-    };
     struct V3Blk {
         s32 w[3];
     };
@@ -767,11 +760,11 @@ int daMip_c::StateFleeMain() {
 
     daPly_c *pl;
     struct V3Blk v;
-    struct Vector3 pos;
-    struct Vector3 node;
-    struct Vector3 node2;
-    struct Vector3 delta;
-    struct Vector3 scaled;
+    VecFx32 pos;
+    VecFx32 node;
+    VecFx32 node2;
+    VecFx32 delta;
+    VecFx32 scaled;
     s32 len;
     s32 lim;
     s16 ang;
@@ -875,25 +868,22 @@ int daMip_c::StateFleeMain() {
 
 // @symbol _ZN7daMip_c13StateFleeInitEv
 /* Whichever neighbouring node is further from the player becomes mPathDir.
-   The scratch triple is a local Vector3 shadow, not types.h Vector3: the
+   The scratch vectors are the POD VecFx32, not types.h Vector3: the
    ROM emits no scope-exit cleanup here. */
 int daMip_c::StateFleeInit()
 {
-    typedef struct Vector3 {
-        int x, y, z;
-    } Vector3;
     extern DaMipAnimationFilePtr gMipRunAnimationFile;
 
-    struct Vector3 v;
-    struct Vector3 nodes[2];
+    VecFx32 v;
+    VecFx32 nodes[2];
     int i;
     int d0;
-    struct Vector3 *src;
+    VecFx32 *src;
 
     daPly_c *p = ClosestPlayer();
     mActionStep = 0;
     if (p) {
-        src = (struct Vector3 *)&p->mPosX;
+        src = (VecFx32 *)&p->mPosX;
         v = *src;
         PathPtr pathptr;
         int indices[2];
@@ -944,11 +934,10 @@ int daMip_c::StateStartleInit()
    stored. */
 int daMip_c::StateIdleMain()
 {
-    /* Scratch triples are a local Vector3 shadow, not types.h Vector3: the
+    /* Scratch vectors are the POD VecFx32, not types.h Vector3: the
        ROM emits no scope-exit cleanup here, so the genuine destructor must
        not instantiate (its vague-linkage D1 lived in this TU only for
        these two locals). */
-    typedef struct Vector3 { int x, y, z; } Vector3;
     extern LevelRng data_0209e650;
     extern MipStatePair data_ov085_0213066c;
     extern DaMipAnimationFilePtr gMipRunAnimationFile;
@@ -960,7 +949,7 @@ int daMip_c::StateIdleMain()
     if (player == 0) return 1;
 
     if (TestWaterBelow() == 1) {
-        Vector3 sp;
+        VecFx32 sp;
         s32 pair[2];
         pair[0] = mPosX;
         pair[1] = mFloorY;
@@ -974,7 +963,7 @@ int daMip_c::StateIdleMain()
             *((volatile s32*)(&sp.x)), *(&sp.y), z, 0);
     }
 
-    Vector3 pp;
+    VecFx32 pp;
     const ::Vector3 *ppp = &player->mPos;
     pp.x = ppp->x;
     pp.y = ppp->y;
@@ -1026,7 +1015,7 @@ int daMip_c::StateIdleMain()
     }
 
     if (mActionStep == 0 && *(u16 *)&mStateTimer == 0) {
-        mTargetAngY = Vec3_HorzAngle(&mPos, (Vector3 *)&mIdlePosX);
+        mTargetAngY = Vec3_HorzAngle(&mPos, (VecFx32 *)&mIdlePosX);
         {
             s16 *ang = &mTargetAngY;
             *ang = *ang + (0x1800 - ((r & 3) << 12));
@@ -1068,11 +1057,10 @@ int daMip_c::SetState(void *record)
 // @symbol _ZN7daMip_c21UpdateMatrixAndShadowEv
 void daMip_c::UpdateMatrixAndShadow()
 {
-    struct Vector3 { s32 x, y, z; };
     extern Mtx43 data_020a0e68;
 
     char tmp[0x30];
-    struct Vector3 t;
+    VecFx32 t;
     Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
@@ -1120,7 +1108,6 @@ void daMip_c::UpdateCarriedMatrix()
    the same size and differs by 34 words. The overlay keeps the block move. */
 void daMip_c::UpdateMirrorShadow()
 {
-    struct Vector3_local { int x; int y; int z; };
     struct Obj {
         char pad5c[0x5c];
         int v5c;
@@ -1134,9 +1121,9 @@ void daMip_c::UpdateMirrorShadow()
 
     struct Obj *c = (struct Obj *)this;
 
-    struct Vector3_local v;
-    struct Vector3_local res;
-    struct Vector3_local vd;
+    VecFx32 v;
+    VecFx32 res;
+    VecFx32 vd;
 
     v.x = 0; v.y = 0; v.z = 0;
     res.x = 0; res.y = 0; res.z = 0;
@@ -1146,8 +1133,8 @@ void daMip_c::UpdateMirrorShadow()
     vd.y = c->v60;
     vd.z = c->v64;
     vd.x = 0x1086000;
-    v.z = Vec3_HorzDist((struct Vector3_local *)&c->v5c, &vd);
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle((struct Vector3_local *)&c->v5c, &vd));
+    v.z = Vec3_HorzDist((VecFx32 *)&c->v5c, &vd);
+    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle((VecFx32 *)&c->v5c, &vd));
     MulVec3Mat4x3(&v, &data_020a0e68, &res);
     {
         int t;

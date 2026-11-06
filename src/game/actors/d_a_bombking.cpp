@@ -52,13 +52,11 @@ s16 atan2(s32, s32);
  * generated preamble redefined all of them. The shapes below are surviving
  * views from the legacy shards, not evidence of original local classes. */
 
-struct Vec3 { int x, y, z; };
-
 /* Whole-struct 3-word copies go through an array member: mwccarm block-moves
  * (ldm/stm) a POD struct copy under -lang c99 but scalarises the same copy
  * under -lang c++, and an array member forces the block move back. Two sites
  * still need it; the snapshots in func_ov078_021240a0 and func_ov078_02125448
- * initialize the POD Vec3 directly instead. */
+ * initialize the POD VecFx32 directly instead. */
 struct M3 { int w[3]; };
 struct BCA_File;
 typedef daBombking_c::StateFunction PMF;
@@ -121,7 +119,7 @@ Vector3 data_ov078_0212711c[2] = {
 /* Offset of both collision spheres from the king's position, read
  * field by field in InitResources and Behavior. Initialized data, not
  * built by the initializer. */
-Vec3 data_ov078_02126e00 = {0, 0x3c000, 0};
+VecFx32 data_ov078_02126e00 = {0, 0x3c000, 0};
 
 /* State records: {enter, tick}. KingBobOmb_SetState runs the first and
  * Behavior the second. The handlers keep their address names, so the
@@ -239,9 +237,9 @@ void daBombking_c::func_ov078_02123864() {
 int daBombking_c::func_ov078_021238ac()
 {
     dCamera_c *cam = (dCamera_c *)data_0209f318;
-    struct Vec3 v;
-    struct Vec3 t;
-    struct Vec3 u;
+    VecFx32 v;
+    VecFx32 t;
+    VecFx32 u;
 
     if (this->mTalkingPlayer->GetTalkState() != -1) {
         cam->SetFlag_3();
@@ -306,7 +304,7 @@ int daBombking_c::func_ov078_02123aa0()
     if (func_ov078_02123804() == 1) return 1;
     daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
-        struct Vec3 v = *(struct Vec3 *)&p->mPosX;
+        VecFx32 v = *(VecFx32 *)&p->mPosX;
         if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) < 0x640000) {
             if (this->mArenaPosY - 0x64000 < v.y) {
                 KingBobOmb_SetState(data_ov078_0212703c);
@@ -573,7 +571,7 @@ int daBombking_c::func_ov078_021240a0() {
                 if (a != 0) {
                     int b = (int)(a->actorID == 0xbf);
                     if (b != 0) {
-                        Vec3 v = *(const Vec3 *)&a->mPosX;
+                        VecFx32 v = *(const VecFx32 *)&a->mPosX;
                         if (mPosY > v.y)
                             a->Unk_020c6a10(1);
                     }
@@ -731,11 +729,11 @@ int daBombking_c::func_ov078_021247bc()
 {
     short horz;
     short vert;
-    Vec3 vA;
-    Vec3 vB;
-    Vec3 vC;
-    Vec3 D;
-    Vec3 E;
+    VecFx32 vA;
+    VecFx32 vB;
+    VecFx32 vC;
+    VecFx32 D;
+    VecFx32 E;
 
     if (this->mActionStep != 2) {
         horz = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
@@ -978,7 +976,7 @@ int daBombking_c::func_ov078_02124f28()
             return 1;
         }
         {
-            struct Vec3 copy = *(struct Vec3 *)&obj->mPosX;
+            VecFx32 copy = *(VecFx32 *)&obj->mPosX;
             if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&copy) > 0x640000)
                 goto drop;
             if (this->mArenaPosY - 0xa000 <= copy.y)
@@ -1175,7 +1173,7 @@ int daBombking_c::func_ov078_02125448()
 
     p = this->ClosestPlayer();
     if (p != 0) {
-        Vec3 v = *(const Vec3 *)&p->mPosX;
+        VecFx32 v = *(const VecFx32 *)&p->mPosX;
         if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) > 0x640000 ||
             (this->mArenaPosY - 0xa000) > v.y) {
             this->mHorzSpeed = 0;

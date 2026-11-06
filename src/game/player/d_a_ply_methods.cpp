@@ -1983,16 +1983,15 @@ void daPly_c::SetAnim(u32 animId, int flags, Fix12i speed, u16 startFrame) {
 // @symbol _ZN7daPly_c19func_ov002_020bf13cEv
 /* matched pure C — was HAND-ASM regperm floor; y-early preload cracks r4/r5 */
 void daPly_c::func_ov002_020bf13c() {
-    /* Stays a POD twin of Vector3, measured: v never escapes, and the ROM keeps
+    /* v is the POD VecFx32, not Vector3, measured: v never escapes, and the ROM keeps
        all three components in registers -- the frame here is 0x10, which is just
        the volatile pad[4] below. Vector3 declares a destructor, so the object
        must have an address, and that pushes v onto the stack and grows the frame
        to 0x20. No other instruction in the function changes. This is a second
-       reason for a twin, besides the copy lowering include/types.h describes. */
-    typedef struct { int x, y, z; } Vec3b;
+       reason for a POD, besides the copy lowering include/types.h describes. */
     volatile int pad[4];
     int vel; int* dst; short s, cs; int ang; int r6, flags;
-    Vec3b v;
+    VecFx32 v;
     (void)&pad;
     if (param1 != 3)
         return;
@@ -2711,23 +2710,22 @@ int daPly_c::func_ov002_020c0688() {
 extern "C" {
 int daPly_c::func_ov002_020c06fc(int arg) {
     char *c = (char *)this;
-    /* Stays a POD twin of Vector3, and this is the strongest case in the file:
-       Vec3 is a MEMBER of the local struct Frame below, so a non-POD element
+    /* The POD VecFx32, not Vector3, and this is the strongest case in the file:
+       it is a MEMBER of the local struct Frame below, so a non-POD element
        gives Frame an implicit destructor, and mwccarm emits that as a new
        compiler-numbered local-class symbol -- measured as
        a D1 for daPly_c::Frame$2583Player_cpp. This TU emits no @NNNN/$NNN symbols
        at all today, and such a name depends on declaration order (compare
        Bundle$902d_a_mky_cpp in AGENTS.md). Frame has to stay POD. */
-    struct Vec3 { s32 x, y, z; };
     extern int Vec3_HorzLen(void*);
     extern void ApproachAngle(void*, short target, int divisor, int band, int maxStep);
     extern short data_0209f4a0[];
     extern char data_0209f4ac[];
     struct Frame {
-        struct Vec3 v0;
-        struct Vec3 v1;
-        struct Vec3 v2;
-        struct Vec3 v3;
+        VecFx32 v0;
+        VecFx32 v1;
+        VecFx32 v2;
+        VecFx32 v3;
     } f;
     int a;
     int t;
@@ -2802,7 +2800,7 @@ int daPly_c::func_ov002_020c06fc(int arg) {
             int p64 = this->mPosZ;
             int j = ((u16)r6b >> 4) * 2;
             int p60 = this->mPosY;
-            struct Vec3 t;
+            VecFx32 t;
             t.x = p5c; t.y = p60 + 0x32000; t.z = p64;
             f.v1.x = t.x; f.v1.y = t.y; f.v1.z = t.z;
             tx = data_02082214[j] * 0x46 + this->mPosX;
@@ -11314,16 +11312,13 @@ int daPly_c::St_LedgeHang_Main() {
 // @symbol _ZN7daPly_c17St_LedgeHang_InitEv
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_LedgeHang_Init() {
-    /* Stays a POD twin of Vector3, measured: `Vec3 z3 = {0, 0, 0}` on a POD
+    /* The POD VecFx32, not Vector3, measured: `VecFx32 z3 = {0, 0, 0}` on a POD
        lowers to `add r1, sp, #4` plus three stores through that pointer and
        two reloads, which is what the ROM does. Vector3 has a constructor, so every
        non-POD spelling constant-folds the zeros into the later stores and the
        function loses 12 bytes. Tested as Vector3(0,0,0), default plus three
        stores, copy-assignment, member-wise construction, Vector3(), and stores
        through a plain and a volatile pointer -- none reproduce it. */
-    struct Vec3 {
-        int x, y, z;
-    };
 
     mStateWaitTimer = 0;
     if (mStateStep == 0) {
@@ -11338,8 +11333,8 @@ int daPly_c::St_LedgeHang_Init() {
     mIsAirborne = 0;
     Sound::PlayCharVoice(mCharacter, 0x16, mCamSpacePos);
     {
-        struct Vec3 z3 = {0, 0, 0};
-        struct Vec3 off;
+        VecFx32 z3 = {0, 0, 0};
+        VecFx32 off;
         z3.y = -0x64000;
         off.x = z3.x;
         off.y = z3.y;

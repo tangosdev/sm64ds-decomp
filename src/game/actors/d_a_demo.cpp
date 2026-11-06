@@ -218,14 +218,6 @@ struct BMD_File;
 /* shadow typedef 's32' */
 typedef int s32;
 
-/* shadow typedef 'Vec3' */
-typedef struct
-{
-  s32 x;
-  s32 y;
-  s32 z;
-} Vec3;
-
 /* shadow typedef 'u8' */
 typedef unsigned char u8;
 
@@ -356,10 +348,6 @@ typedef short s16;
 
 /* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov002_020f6f48, NOT applied:
 typedef short s16;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'Vec3', from the legacy file for func_ov002_020f7538, NOT applied:
-typedef struct Vec3 { int x, y, z; } Vec3;
 */
 
 /* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov002_020f7bb8, NOT applied:
@@ -510,8 +498,8 @@ extern void func_0201f138(void);
 extern void func_0201ef38(void);
 extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Vec3_MulScalar(Vec3* out, const Vec3* in, int scale);
-extern void Vec3_Add(Vec3* out, Vec3* a, Vec3* b);
+extern void Vec3_MulScalar(VecFx32 *out, const VecFx32 *in, int scale);
+extern void Vec3_Add(VecFx32 *out, VecFx32 *a, VecFx32 *b);
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern int data_0208ee44;
@@ -549,7 +537,7 @@ extern W data_ov002_0210b930;
 extern W data_ov002_0210b938;
 extern PMF3 data_ov002_0211104c[24];
 /* local extern: the Vector3 spelling math/CalcLib.h declares. The locals
-   stay the POD Vec3, so the call casts. */
+   are the POD VecFx32, so the call casts. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
@@ -3755,14 +3743,14 @@ int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 
 int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
 {
-    struct { int x, y, z; } target;
+    Vector3 target;
     int y, z;
     z = ReadUnalignedShort(p + 4) << 12;
     y = ReadUnalignedShort(p + 2) << 12;
     target.x = ReadUnalignedShort(p) << 12;
     target.y = y;
     target.z = z;
-    this->mAngleY = Vec3_HorzAngle(&this->mPos, (const Vector3 *)&target);
+    this->mAngleY = Vec3_HorzAngle(&this->mPos, &target);
     this->mPrevAngleY = this->mAngleY;
     this->mHorzSpeed = ReadUnalignedShort(p + 6);
     return 1;
@@ -3826,7 +3814,7 @@ inline unsigned int inline_fn(unsigned int arg0)
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
 {
   u8 *flag = (u8 *) arg1;
-  Vec3 v;
+  VecFx32 v;
   if (arg2 == gKuppaScriptFrame) {
       if ((*flag) != 0) {
           int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
@@ -4128,7 +4116,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     int f2 = b << 8;
     int *base;
     int scale;
-    Vec3 tmp, diff, scaled, sum;
+    VecFx32 tmp, diff, scaled, sum;
 
     if (f1 != 0 && arg2 == gKuppaScriptFrame) {
         this->mAngleX = 0xd00;
@@ -4156,7 +4144,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     tmp.y = diff.y;
     tmp.z = diff.z;
     Vec3_MulScalar(&scaled, &tmp, this->mRate);
-    Vec3_Add(&sum, (Vec3 *)base, &scaled);
+    Vec3_Add(&sum, (VecFx32 *)base, &scaled);
 
     {
         Vector3 *dp = ((param_c &)*(anmModel_c *)this->mAnmModel).mScale;
@@ -4489,7 +4477,7 @@ int daDemo_c::Render() {
 int daDemo_c::Behavior()
 {
     Vector3 v;
-    Vec3 asr;
+    VecFx32 asr;
     int new_var2;
     s32 t;
     t = this->param1;

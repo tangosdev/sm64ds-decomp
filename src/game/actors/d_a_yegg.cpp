@@ -98,10 +98,11 @@ struct dBgPi;
 
 /* Three plain words: the stack vectors the C helpers build, which carry
    none of Vector3's empty destructor. */
-struct Vec3i { s32 x, y, z; };
-struct Vec3_16f { s16 x, y, z; };
 
-struct Spawn { struct Vec3_16f rot; struct Vec3i pos; };
+struct Spawn {
+    Vector3_16 rot;
+    VecFx32 pos;
+};
 
 /* Actor registry IDs this file tests or spawns (symbols/actor_debug_names.tsv). */
 enum {
@@ -165,7 +166,7 @@ extern int RandomIntInternal(int *seed);
    destinations (measured). */
 extern int func_ov002_020d5f98(void *c, unsigned char *a, unsigned char *b);
 extern int func_ov002_020d6048(void *c);
-extern s32 d_a_yeggNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, struct Vec3_16f *rot, void *cb);
+extern s32 d_a_yeggNewHold(u32 a, u32 b, s32 x, s32 y, s32 z, Vector3_16 *rot, void *cb);
 extern void d_a_yeggRunningSlidingDustAtHold(s32 x, s32 y, s32 z);
 extern void d_a_yeggPlayLongHold(u32 a, u32 b, u32 c, void *v, u32 d);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -493,7 +494,7 @@ void daYegg_c::func_ov002_020ecb0c()
     s16 rx;
     s16 rz;
     u16 ang;
-    struct Vec3_16f *pr;
+    Vector3_16 *pr;
     s32 pz;
     s32 px;
 
@@ -1074,7 +1075,7 @@ void daYegg_c::func_ov002_020ed998()
 {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && *(int *)&mPlayer) {
-        volatile struct Vec3i v;
+        volatile VecFx32 v;
         int t9, t10, t11;
         v.x = 0;
         v.y = 0;
