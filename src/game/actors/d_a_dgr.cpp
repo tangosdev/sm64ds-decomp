@@ -90,7 +90,7 @@ CLPS_Block data_ov025_02112c28 = {
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
 void func_02012694(unsigned int, const Vector3 *);
-void func_020393d4(int *collider, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daDgr_c_classInit
@@ -111,7 +111,7 @@ s32 daDgr_c::InitResources() {
         ((dBgW_KcMbg *)(&mMeshCollider))
             ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mAngleY = 0;
     mBasePosY = mPosY;
     mAngleXSpeed = 0;

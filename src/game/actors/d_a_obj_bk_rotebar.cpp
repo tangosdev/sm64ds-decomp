@@ -51,7 +51,7 @@ extern CLPS_Block data_ov015_02113654;
 /* arm9 C helpers with no shared header. */
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void func_020393d4(dBgW *bgw, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjBk_Rotebar_c_classInit
@@ -69,7 +69,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(&data_ov015_02113654));
 
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     mPauseTimer = 0x3c;
     return 1;

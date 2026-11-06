@@ -36,7 +36,7 @@ enum d_a_obj_rc_guruguru_AssetId { ASSET_RC_GURUGURU_BMD = 0x06a4, ASSET_RC_GURU
 extern void *data_ov036_02113d78[];
 
 extern "C" {
-void func_020393d4(void *bgw, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -79,7 +79,7 @@ s32 daObjRc_Guruguru_c::InitResources() {
 
     /* The mesh follows the actor's position AND angles -- this platform turns,
        so the collision has to turn with it. */
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     /* The default spin is clockwise at 0x80 units of yaw a frame; a level
        author overrides both rate and direction through the spawn's mAngleZ. */

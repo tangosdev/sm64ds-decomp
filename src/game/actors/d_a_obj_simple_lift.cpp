@@ -79,7 +79,7 @@ struct SimpleLiftClsnFileHandle : SharedFilePtr {
 };
 
 /* local extern: no shared header declares it. */
-extern "C" void func_020393d4(void *collider, void *callback);
+extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 extern char data_ov091_0213502c[];
 
@@ -195,7 +195,7 @@ int daObjSimpleLift_c::InitResources() {
         mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(*(void **)(data_ov091_0213502c + tableOffset)));
     }
-    func_020393d4(&mMeshCollider, (void *)dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     return 1;
 }
 

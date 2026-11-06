@@ -134,7 +134,7 @@ void func_ov063_0211c684(char *p);
 void func_ov063_0211c6f8(daTrsTrap_c *c);
 void func_ov063_0211c82c(char *p);
 /* dBgW callback-word stores (see above). */
-void func_020393d4(int *p, int v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(int *p, int v);
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
@@ -544,7 +544,7 @@ int daTrsTrap_c::InitResources()
         }
     }
 
-    func_020393d4((int *)&mMovingMeshCollider, (int)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
     func_020393c4((int *)&mMovingMeshCollider, (int)&daTrsTrap_c::OnMeshClsnTouch);
     mMovingMeshCollider.Enable(this);
 

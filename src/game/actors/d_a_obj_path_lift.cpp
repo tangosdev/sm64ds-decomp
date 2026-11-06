@@ -39,7 +39,7 @@ extern unsigned char data_0209f2d8;
 /* local extern: no shared header declares these. */
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void func_020393d4(dBgW_KcMbg *p, void *v);
+extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern SharedFilePtr data_ov002_0210d9f0;
@@ -77,7 +77,7 @@ int daObjPathLift_c::InitResources() {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000,
                           mAngleY, data_ov002_0210d7d4);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
     BaseInitResources();

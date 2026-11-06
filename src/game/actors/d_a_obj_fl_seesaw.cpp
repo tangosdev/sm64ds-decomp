@@ -51,7 +51,7 @@ extern "C" {
 
 /* local extern: stores beforeClsnCallback at dBgW+0x18. d_bg_w.cpp
  * defines it and no header declares it. */
-void func_020393d4(int *mesh, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 #pragma defer_codegen off
@@ -115,7 +115,7 @@ s32 daObjFl_Seesaw_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
                               *(CLPS_Block *)(data_ov064_0211bacc));
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;
 }

@@ -61,7 +61,7 @@ extern char data_ov064_0211bb0c[];
 extern "C" {
 /* local extern: stores the callbacks at dBgW+0x18 and +0x1c. d_bg_w.cpp
  * defines them and no header declares them. */
-void func_020393d4(int *mesh, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(int *mesh, int callback);
 }
 
@@ -109,7 +109,7 @@ s32 daObjFl_Block_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov064_0211bb0c));
 
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
     func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
 
     mMaxPosY = mPosY;

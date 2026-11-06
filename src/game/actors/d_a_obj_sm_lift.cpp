@@ -44,7 +44,7 @@ int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int n);
-void func_020393d4(int *p, int v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(int *p, int v);
 int AngleDiff(int, int);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
@@ -240,7 +240,7 @@ s32 daObjSm_Lift_c::InitResources() {
     void *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)data_ov018_02112f48);
-    func_020393d4((int *)&mMeshCollider, (int)dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     func_020393c4((int *)&mMeshCollider, (int)&daObjSm_Lift_c::BeforeClsnCallback);
     mPauseTimer = 0x3c;
     mBasePosX = mPosX;

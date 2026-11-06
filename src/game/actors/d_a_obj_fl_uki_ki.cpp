@@ -76,7 +76,7 @@ extern CLPS_Block data_ov064_0211ba6c; /* the CLPS block SetFile is handed */
 extern s16 data_02082214[];            /* shared sin/cos table, sin at [i*2] */
 
 /* local extern: d_bg_w.cpp defines it and no header declares it. */
-extern "C" void func_020393d4(dBgW *bgw, void *fn);
+extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 // @symbol daObjFl_UkiKi_c_classInit
 /* The registry's allocator for FL_UKI_KI. The implicit default constructor is
@@ -98,7 +98,7 @@ s32 daObjFl_UkiKi_c::InitResources() {
 
     /* The platform carries the mesh along by velocity rather than by its
        transform -- it slides straight up and down. */
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
 
     mOriginalPosY = mPosY;
     mPhaseAngle = mAngleX;
