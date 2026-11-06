@@ -51,9 +51,33 @@ void plain_star(const Surf &sf, float cx, float cy, float r0, uint32_t rgb, int 
     }
 }
 
+/* PLAINSKIN1: the piece from the game's own art (hal/plain_rom_art.inc), or null to draw the code shape below */
+const Piece *plain_rom_piece(int id, int dw, int dh)
+{
+    switch (id) {
+    case MENU_IMG_P_STAR_GOT: return pr_sprite(PR_STAR_GOT, dw, dh);       /* the HUD's power star */
+    case MENU_IMG_P_STAR_OFF: return pr_sprite(PR_STAR_OFF, dw, dh);       /* the HUD's empty star */
+    case MENU_IMG_P_COIN_GOLD: return pr_sprite(PR_COIN_GOLD, dw, dh);     /* the HUD's coin */
+    case MENU_IMG_P_COIN_RED: return pr_sprite(PR_COIN_RED, dw, dh);       /* the map's red coin */
+    case MENU_IMG_P_TITLE_BLANK: return pr_frame(PR_FIELD, 6, dw, dh, tl_pr_k);                 /* the option screen's cream field */
+    case MENU_IMG_P_TAB_L: case MENU_IMG_P_TAB_R: return pr_frame(PR_BUTTON, 1, dw, dh, tl_pr_k);   /* the pause's orange button */
+    default: return 0;
+    }
+}
+
 void plain_hi(const Surf &sf, int id, int dx, int dy, int dw, int dh, int alpha, int light, int shade)
 {
     const float x = (float)dx, y = (float)dy, w = (float)dw, h = (float)dh;
+    if (const Piece *rp = plain_rom_piece(id, dw, dh)) {
+        blit(sf, rp->px, rp->w, rp->h, dx - (rp->w - dw) / 2, dy - (rp->h - dh) / 2, alpha, light, shade, 0);
+        if (id == MENU_IMG_P_TAB_L || id == MENU_IMG_P_TAB_R) {
+            const char *t = id == MENU_IMG_P_TAB_L ? "LB" : "RB";
+            const float em = w * 0.34f, tw = ui_text_width(t, em);
+            /* cream on the ROM's orange button (the brown of the old light plank read poorly on it) */
+            ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.5f + ui_text_cap_height(em) * 0.5f, t, em, plain_tint(0xFFF3CD, 0, shade), alpha, 0);
+        }
+        return;
+    }
     switch (id) {
     case MENU_IMG_P_STAR_GOT: case MENU_IMG_P_STAR_OFF: {
         const bool got = id == MENU_IMG_P_STAR_GOT;
@@ -75,9 +99,12 @@ void plain_hi(const Surf &sf, int id, int dx, int dy, int dw, int dh, int alpha,
     case MENU_IMG_P_TAB_L: case MENU_IMG_P_TAB_R: {
         fill_rrect(sf, x, y, w, h, w * 0.18f, plain_tint(0x8A5A10, light, shade), alpha, 0);
         fill_rrect(sf, x + w * 0.06f, y + w * 0.06f, w * 0.88f, h - w * 0.12f, w * 0.14f, plain_tint(0xF0B850, light, shade), alpha, 0);
+        /* PAUSEPOLISH1: the label sits in the middle of the tab. It used to sit at h * 0.88, the place the HD UI mod's tab picture gives its
+           label under that picture's arrow and star; the plain skin draws neither, so the label was left alone at the tab's foot.
+           ui_text_draw takes a baseline: half the capital height under the centre line centres the capitals. */
         const char *t = id == MENU_IMG_P_TAB_L ? "LB" : "RB";
         const float em = w * 0.34f, tw = ui_text_width(t, em);
-        ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.88f, t, em, plain_tint(0x7A3A0C, light, shade), alpha, 0);
+        ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.5f + ui_text_cap_height(em) * 0.5f, t, em, plain_tint(0x7A3A0C, light, shade), alpha, 0);
         break;
     }
     default: break;
@@ -260,9 +287,12 @@ void pp_hms(uint32_t sec, char *out, int cap)
     snprintf(out, (size_t)cap, "%u:%02u:%02u", sec / 3600, sec / 60 % 60, sec % 60);
 }
 
-void pp_career(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
+void pp_career(const Surf &sf, const PauseGeo &g, const PauseFacts *f, int pin_top = 0)
 {
-    const PauseRect r = pause_career_rect(g, f);
+    PauseRect r = pause_career_rect(g, f);
+    /* PLAINSKIN1: pin_top puts the title plank's top on the picture's top edge (the two-screen pause's upper screen, whose own course
+       label runs along that edge: the plank covers the label whole instead of cutting it in half) */
+    if (pin_top) r.y = pause_round(pause_title_over() * g.tsc);
     if (r.x >= sf.w || r.x + r.w <= 0) return;
     const double sc = g.tsc;
     const int x = r.x, y = r.y, w = r.w;
@@ -409,8 +439,12 @@ void pp_air_plank(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
     const PauseRect r = pause_plank_rect(g, f, 1, 0);
     const int shade = f->pressed ? 25 : 0, sink = f->pressed ? (int)(2 * g.u + 0.5) : 0;
     const float x = (float)r.x, y = (float)(r.y + sink), w = (float)r.w, h = (float)r.h;
-    fill_rrect(sf, x, y, w, h, h * 0.28f, plain_tint(0x8A5A10, 30, shade), 255, 0);
-    fill_rrect(sf, x + h * 0.08f, y + h * 0.08f, w - h * 0.16f, h * 0.84f, h * 0.22f, plain_tint(0xF0B850, 30, shade), 255, 0);
+    if (const Piece *rp = pr_frame(PR_BUTTON, 2, r.w, r.h, tl_pr_k))      /* PLAINSKIN1: the DS's own lit button */
+        blit(sf, rp->px, rp->w, rp->h, r.x, r.y + sink, 255, 0, shade, 0);
+    else {
+        fill_rrect(sf, x, y, w, h, h * 0.28f, plain_tint(0x8A5A10, 30, shade), 255, 0);
+        fill_rrect(sf, x + h * 0.08f, y + h * 0.08f, w - h * 0.16f, h * 0.84f, h * 0.22f, plain_tint(0xF0B850, 30, shade), 255, 0);
+    }
     const char *t = "Resume";
     const float em = h * 0.62f, tw = ui_text_width(t, em);
     ui_text_draw(&sf, x + (w - tw) * 0.5f, y + h * 0.5f + ui_text_cap_height(em) * 0.5f, t, em, plain_tint(0x7A3A0C, 0, shade), 255, 0);
@@ -420,6 +454,7 @@ void pp_air_plank(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
 
 extern "C" void pause_page_draw(const MenuLayout *lay, int piece, uint32_t *dst, int w, int h, int stride)
 {
+    tl_pr_k = pr_ds_px(w, h);                          /* PLAINSKIN1: the plain pieces' DS pixel size on this picture */
     (void)piece;
     const PauseFacts *f0 = (const PauseFacts *)lay->facts.blob;
     if (f0->magic != PAUSE_FACTS_MAGIC || w < 64 || h < 64) return;
@@ -450,7 +485,7 @@ extern "C" void pause_page_rom_draw(const PauseFacts *f, uint32_t *px, int strid
     if (!f || f->magic != PAUSE_FACTS_MAGIC || !px || w < 64 || h < 64) return;
     const Surf sf = { px, stride, w, h };
     const PauseGeo g = pause_geo(w, h, f, 3);
-    if (pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f);
+    if (pause_page_visible(f, PAUSE_PG_CAREER)) pp_career(sf, g, f, !g.wide && !f->rom_fit);
     if (!f->rom_fit) { pp_tabs(sf, g, f); return; }
     /* PAUSESCALE2: the fit ring's tabs (pause_rom_tab_rect: on the plates view only as far into the picture as the room, top corners on the page view) */
     for (int side = 0; side < 2; ++side) {

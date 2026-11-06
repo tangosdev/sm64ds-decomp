@@ -995,7 +995,9 @@ extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int m
     if (v != V_NOSAVE) g_nosave_focus = 0;
     else if (!g_nosave_focus && hal_menu_focus_set(0)) g_nosave_focus = 1;     /* the confirm page is touch only: the cursor starts on "No, keep playing" (hotspot 0) */
     if (!is_main_page(v) || GetOwnerLanguage() > 1) return 1;
-    const int open = settings_page_open();
+    /* PLAINSKIN1: the page asked for counts as open: between the Settings plate's press and the page coming up (the press hold, about a
+       quarter second) LB / RB slid the 4:3 pause to the tracker and the page then opened behind it */
+    const int open = settings_page_open() || settings_page_pending();
     unsigned left = edge & (1u | 4u), right = edge & (2u | 8u);       /* LB / Q, RB / E */
     if (open) { left &= 4u; right &= 8u; }                             /* the settings page's own tabs take LB / RB */
     if (open && g_wide_now) left = right = 0;                          /* the wide settings column does not slide */
