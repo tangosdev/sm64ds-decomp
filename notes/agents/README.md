@@ -28,6 +28,8 @@ former class/TU/review skill wrappers are retired; no installed coordinator skil
 is needed. Compiler and review observations remain ordinary technical references.
 Keep using the [worktree automation](../worktree-inputs.md) for private inputs.
 
+Removed historical experiments and handoffs are recoverable: see [archive-index.md](../archive-index.md).
+
 ## Read only what your task needs
 
 - Everyone: PIPELINE, then their current task and accepted handoff.
