@@ -611,7 +611,7 @@ struct daPly_c : dActor_c {
        everything that reacts to it (slide type, floor snap, wall push,
        ground sounds, the lava and water-run checks) while this is set.
        Talk, DeadPit, Squish, Grabbed and the scripted sequences
-       (func_ov002_020c3bdc, func_ov002_020c9ac0 and its siblings) set it;
+       (JumboStarCutsceneFalling, func_ov002_020c9ac0 and its siblings) set it;
        ChangeState and St_Respawn_Init clear it. */
     u8 mSkipGroundUpdate; /* 0x716 */
     /* func_ov002_020e444c skips DropShadowRadHeight while it is set. The
@@ -680,17 +680,15 @@ struct daPly_c : dActor_c {
        scripts is left; func_ov002_020bcdf0 keeps it on mPos and the
        player's angles. */
     dActor_c *mCapActor; /* 0x72c */
-    /* A flight along the control points gEndingFlyPath ({speed, x, y,
-       z} rows), a uniform cubic B-spline: func_ov002_020c3148 resets it,
-       ComputeSplineWeights weights four rows from mSplinePoint by the basis
-       at mSplineT (fx12), using mSplineSpan 1..5 to pick the clamped-end
-       variants, and func_ov002_020c2fec advances mSplineT by the row's
-       speed / 1000, moving to the next point at 0x1000. Driven by
-       func_ov002_020c38a0 (anim 0xc1). */
-    u8 mSplinePoint; /* 0x730 */
+    /* Super Mario 64's spline animation state (anim_spline_init/poll),
+       held per player: the jumbo star flight flies the player along
+       gJumboStarKeyframes. mSplineKeyframe is the first of the four rows
+       SplineGetWeights blends, mSplineKeyframeFraction the fx12 progress
+       through the span, and mSplineState one of the CURVE_* states. */
+    u8 mSplineKeyframe; /* 0x730 */
     u8 pad_731[0x3];
-    s32 mSplineT;             /* 0x734 */
-    s32 mSplineSpan;          /* 0x738 */
+    s32 mSplineKeyframeFraction; /* 0x734 */
+    s32 mSplineState;            /* 0x738 */
     u16 mCapFlags;            /* 0x73c */
     /* Ticks left in the current mCapFlags phase. The cap-change update loads
        it from a per-phase table, counts it down every frame, and advances
@@ -709,7 +707,7 @@ struct daPly_c : dActor_c {
        mStateTarget and mStateAnchor and steps to the even value, which then
        moves mPos by the bone's per-frame delta rotated by mAngleY and zeroes
        the bone. Armed by scripted animations (event case 14 in
-       func_ov002_020bd06c, func_ov002_020c3bdc, func_ov002_020c9ac0,
+       func_ov002_020bd06c, JumboStarCutsceneFalling, func_ov002_020c9ac0,
        func_ov002_020c9c4c) and cleared when they end. */
     u8 mRootMotionMode; /* 0x743 */
     /* A point the current state works with, written per state rather than
@@ -1097,7 +1095,7 @@ struct daPly_c : dActor_c {
     /* Non-virtual helpers that were free functions taking the player as `self`.
        Coined names; parameters stay unnamed because a named parameter in a
        class-scope declaration renumbers @NNN in every consumer TU. */
-    void ComputeSplineWeights(Fix12i *); /* func_ov002_020c3160 */
+    void SplineGetWeights(Fix12i *); /* func_ov002_020c3160 */
     void ClearClimbCollider();           /* func_ov002_020caf68 */
     void LeaveShellRide();               /* func_ov002_020cc1f4 */
     void StartAnim0xAB();                /* func_ov002_020cd2c4 */
@@ -1165,13 +1163,13 @@ struct daPly_c : dActor_c {
     void func_ov002_020c2db8();
     void func_ov002_020c2e78();
     void func_ov002_020c2f64();
-    int func_ov002_020c2fec(int *);
-    void func_ov002_020c3148();
+    int AnimSplinePoll(int *);
+    void AnimSplineInit();
     void func_ov002_020c37a4(char *);
-    void func_ov002_020c38a0();
-    int func_ov002_020c3a48();
-    void func_ov002_020c3bdc();
-    void func_ov002_020c3cf0();
+    void JumboStarCutsceneFlying();
+    int JumboStarCutsceneTakingOff();
+    void JumboStarCutsceneFalling();
+    void AdvanceCutsceneStep();
     int func_ov002_020c3ea0();
     int func_ov002_020c4188();
     void func_ov002_020c43c4(unsigned int);

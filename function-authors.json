@@ -14711,15 +14711,15 @@
     },
     "ov002:0x020c2fec": {
       "author": "andrewboudreau",
-      "name": "func_ov002_020c2fec"
+      "name": "_ZN7daPly_c14AnimSplinePollEPi"
     },
     "ov002:0x020c3148": {
       "author": "tangosdev",
-      "name": "func_ov002_020c3148"
+      "name": "_ZN7daPly_c14AnimSplineInitEv"
     },
     "ov002:0x020c3160": {
       "author": "lunavyqo",
-      "name": "func_ov002_020c3160"
+      "name": "_ZN7daPly_c16SplineGetWeightsEPi"
     },
     "ov002:0x020c37a4": {
       "author": "tangosdev",
@@ -14727,19 +14727,19 @@
     },
     "ov002:0x020c38a0": {
       "author": "ruspecial",
-      "name": "_ZN6Player19func_ov002_020c38a0Ev"
+      "name": "_ZN7daPly_c23JumboStarCutsceneFlyingEv"
     },
     "ov002:0x020c3a48": {
       "author": "ruspecial",
-      "name": "_ZN6Player19func_ov002_020c3a48Ev"
+      "name": "_ZN7daPly_c26JumboStarCutsceneTakingOffEv"
     },
     "ov002:0x020c3bdc": {
       "author": "tangosdev",
-      "name": "_ZN6Player19func_ov002_020c3bdcEv"
+      "name": "_ZN7daPly_c24JumboStarCutsceneFallingEv"
     },
     "ov002:0x020c3cf0": {
       "author": "ruspecial",
-      "name": "_ZN6Player19func_ov002_020c3cf0Ev"
+      "name": "_ZN7daPly_c19AdvanceCutsceneStepEv"
     },
     "ov002:0x020c3d1c": {
       "author": "tangosdev",

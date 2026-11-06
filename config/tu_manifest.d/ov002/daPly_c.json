@@ -777,21 +777,21 @@
       "ordinal": 104
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c2fecEPi",
+      "symbol": "_ZN7daPly_c14AnimSplinePollEPi",
       "address": "0x020c2fec",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov002_020c2fec.c",
       "ordinal": 105
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3148Ev",
+      "symbol": "_ZN7daPly_c14AnimSplineInitEv",
       "address": "0x020c3148",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020c3148.c",
       "ordinal": 106
     },
     {
-      "symbol": "_ZN7daPly_c20ComputeSplineWeightsEPi",
+      "symbol": "_ZN7daPly_c16SplineGetWeightsEPi",
       "address": "0x020c3160",
       "size": "0x00000644",
       "legacy_source": "src/func_ov002_020c3160.c",
@@ -805,28 +805,28 @@
       "ordinal": 108
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c38a0Ev",
+      "symbol": "_ZN7daPly_c23JumboStarCutsceneFlyingEv",
       "address": "0x020c38a0",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov002_020c38a0.c",
       "ordinal": 109
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3a48Ev",
+      "symbol": "_ZN7daPly_c26JumboStarCutsceneTakingOffEv",
       "address": "0x020c3a48",
       "size": "0x00000194",
       "legacy_source": "src/func_ov002_020c3a48.c",
       "ordinal": 110
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3bdcEv",
+      "symbol": "_ZN7daPly_c24JumboStarCutsceneFallingEv",
       "address": "0x020c3bdc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov002_020c3bdc.c",
       "ordinal": 111
     },
     {
-      "symbol": "_ZN7daPly_c19func_ov002_020c3cf0Ev",
+      "symbol": "_ZN7daPly_c19AdvanceCutsceneStepEv",
       "address": "0x020c3cf0",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020c3cf0.c",
