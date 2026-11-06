@@ -119,11 +119,6 @@ typedef struct RacerScene {
     RouletteRacer racers[5]; /* 0x51a8, the scene's mRacers */
 } RacerScene;
 
-/* A value launder: the round trip through long long keeps the compiler
-   from folding the expression into its use, which the ROM does not do.
-   Behavior's deal position needs it; without it Behavior shrinks from
-   0x6e8 to 0x6e4 bytes. */
-#define LNDR(e) ((int)(((long long)(e))))
 /* A raw short of the scene, for unk_53f4: phase 3's clear is its only
    access in this unit, so there is nothing to name it from. */
 #define H(o) (*(short*)(c + (o)))
@@ -341,7 +336,11 @@ s32 dScMgRoulette_c::Behavior() {
                 if (mDealIndex < mRacerCount) {
                     int dealPos[2];
                     int dealY;
-                    dealY = LNDR(0 - (mDealIndex << 16)) + 0x80000;
+                    /* The int cast keeps the negation out of the add that uses
+                       it, as the ROM does; without it Behavior's size changes
+                       (measured 2026-11-06). The long long round trip it used
+                       to go through was doing nothing. */
+                    dealY = (int)(0 - (mDealIndex << 16)) + 0x80000;
                     dealPos[0] = 0x20000;
                     dealPos[1] = dealY;
                     RouletteRacer_AimAt((int *)&mRacers[mDealIndex], dealPos);
@@ -569,7 +568,7 @@ s32 dScMgRoulette_c::Render() {
     Roulette_DrawResultsThunk(raw);
 
     {
-        int idle = (int)(((long long)(mBoard.mSpinSpeed == 0)));
+        int idle = (int)(mBoard.mSpinSpeed == 0);
         if (idle != 0) {
             if (mPhase < 8) {
                 if (data_020a0db0 & 8) {

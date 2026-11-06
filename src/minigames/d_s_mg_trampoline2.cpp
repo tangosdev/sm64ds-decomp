@@ -21,8 +21,13 @@ enum d_s_mg_trampoline2_AssetId {
  * so Mario can bounce through the shapes that drop in.
  *
  * Functions are in reverse ROM order; do not reorder.
- * opt_loop_invariants is off for the whole file. TUBUILD CONFLICT lines
- * stay; the manifest pairs them.
+ * opt_loop_invariants is off for the whole file. Measured 2026-11-06:
+ * PaintSquare is the only function in the TU whose bytes move when
+ * invariants are hoisted, and the setting still cannot be narrowed to it --
+ * this TU leaves codegen deferred, so mwccarm reads the state at the end of
+ * the file and an `on` placed after PaintSquare (or after the function
+ * following it) puts hoisting back for PaintSquare as well. TUBUILD CONFLICT
+ * lines stay; the manifest pairs them.
  *
  * leftovers:
  * - 0x7acc has no matched read.
@@ -796,8 +801,7 @@ void dScMgTrampoline2_c::SpawnWave() {
                     continue;
                 }
 
-                if ((savedOccupancy = (int)(volatile int)occupancy,
-                     (savedOccupancy & rightBit) != 0)) {
+                if ((savedOccupancy = (int)occupancy, (savedOccupancy & rightBit) != 0)) {
                     kinds[i] = kind;
                     faces[i] = 8;
                     occupancy |= Trmp2_OccupancyBits(column, 1);

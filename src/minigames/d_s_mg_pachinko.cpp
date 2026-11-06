@@ -971,8 +971,7 @@ void PachinkoPopup_UpdateAll(char *popup) {
     for (i = 0; i < 0x1e; i++) {
         unsigned short v = PACHINKO(popup)->mPopup[0].timer;
         if (v != 0) {
-            unsigned short *timer =
-                (unsigned short *)(((long long)((int)(popup + REC_OFF(mPopup, timer)))));
+            unsigned short *timer = (unsigned short *)((int)(popup + REC_OFF(mPopup, timer)));
             *timer = (*timer) - 1;
             /* mPopup[0].timer, signed: the member spelling shares the laundered
                address above instead of a fresh + 0x4c00 base. */
@@ -1657,6 +1656,10 @@ void PachinkoBall_StateSpinAway(char *c, int i) {
 }
 
 // @symbol PachinkoBall_StateGlide
+/* The two `ip & 0xFFFFFFFFFFFFFFFF` masks on the rotation stores are measured
+   load-bearing (2026-11-06): each one dropped on its own costs a word. They sit
+   outside any parenthesis group, which is why tools/delaunder.py never offers
+   them -- its MASK rule needs an enclosing group to rebalance. */
 void PachinkoBall_StateGlide(char *self, int idx) {
     char *new_var;
     *((int *)((self + BALL_OFF(x)) + (idx * 0x38))) =
@@ -2339,7 +2342,7 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
         {
             s32 dy = 0x80 - (*(s32 *)(c + SHOT_OFF(x) + off) >> 12);
             s32 dx = 0x20 - (*(s32 *)(c + SHOT_OFF(y) + off) >> 12);
-            s32 dist = cstd::sqrt((u64)(s64)(dy * dy + dx * dx));
+            s32 dist = cstd::sqrt((dy * dy + dx * dx));
             s32 prev = *(s32 *)(c + SHOT_OFF(dist) + off);
 
             *(s32 *)(c + SHOT_OFF(dist) + off) = dist;
@@ -2359,7 +2362,7 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
         *(u8 *)(c + SHOT_OFF(state) + off) = 2;
         dy = 0x80 - (*(s32 *)(c + SHOT_OFF(x) + off) >> 12);
         dx = 0x20 - (*(s32 *)(c + SHOT_OFF(y) + off) >> 12);
-        dist = cstd::sqrt((u64)(s64)(dy * dy + dx * dx));
+        dist = cstd::sqrt((dy * dy + dx * dx));
         if (dist >= 0x10) {
             {
                 s16 ang = cstd::atan2(dx, dy);
@@ -2367,7 +2370,7 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
 
                 *(s16 *)(p + SHOT_OFF(angle)) = ang;
             }
-            *(s32 *)(c + SHOT_OFF(speed) + off) = cstd::sqrt((u64)(s64)(dy * dy + dx * dx)) << 8;
+            *(s32 *)(c + SHOT_OFF(speed) + off) = cstd::sqrt((dy * dy + dx * dx)) << 8;
             *(s32 *)(c + SHOT_OFF(speed) + off) += *(s32 *)(c + SHOT_OFF(speed) + off) >> 2;
             *(s32 *)(c + SHOT_OFF(speed) + off) += *(s32 *)(c + SHOT_OFF(speed) + off) >> 2;
             *(s32 *)(c + SHOT_OFF(speed) + off) += *(s32 *)(c + SHOT_OFF(speed) + off) >> 2;
