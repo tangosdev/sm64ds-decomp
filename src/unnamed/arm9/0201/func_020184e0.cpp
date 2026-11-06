@@ -2,9 +2,11 @@
 #include "CP15.h"
 #include "private/fs_views.h"
 
+typedef struct FSFile FSFile;
+
 extern "C" {
 
-extern int myFS_ReadFile(void *a, int b, int c);
+extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int FS_CloseFile(void *a);
 extern void func_02018770(void);
 extern int func_02018568(int a);
@@ -19,7 +21,7 @@ int func_020184e0(FSFile *self, unsigned int buf, unsigned int n) {
     if (len > n)
         len = n;
     CP15::FlushAndInvalidateDataCache(buf, len);
-    r = myFS_ReadFile(self, buf, len);
+    r = myFS_ReadFile(self, (void *)buf, len);
     FS_CloseFile(self);
     func_02018770();
     if (len != r)

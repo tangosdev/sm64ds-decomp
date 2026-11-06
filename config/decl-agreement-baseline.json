@@ -458,23 +458,15 @@
     },
     "FS_ReadFile": {
       "src/unnamed/arm9/0204/func_02042254.cpp": [
-        "param:#1 char *",
-        "param:#2 char *"
-      ],
-      "src/unnamed/arm9/0206/func_02067e70.c": [
-        "param:#1 void *",
-        "param:#2 void *"
-      ],
-      "src/engine/fs/FS_Archive.cpp": [
-        "param:#1 int *"
-      ],
-      "src/engine/fs/FS_Overlay.cpp": [
-        "param:#1 void *",
-        "param:#2 void *"
+        "param:#1 char *"
       ],
       "src/engine/mb/MB_GameInfo.c": [
         "param:#1 int *",
         "return:void"
+      ],
+      "src/engine/sound/SoundEngine.cpp": [
+        "param:#1 int",
+        "param:#2 int"
       ]
     },
     "GetLevelPart": {
@@ -1225,20 +1217,9 @@
     },
     "Quaternion_FromVector3": {
       "include/decl_common.h": [
-        "param:#1 int *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/game/actors/d_a_obj_cv_news_lift.cpp": [
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
+        "param:#1 int *"
       ],
       "src/game/actors/d_a_obj_guragura.cpp": [
-        "param:#1 int *",
-        "param:#2 Vector3 *",
-        "param:#3 Vector3 *"
-      ],
-      "src/minigames/unit020cd744.cpp": [
         "param:#1 int *"
       ]
     },
@@ -15249,27 +15230,8 @@
       ]
     },
     "myFS_ReadFile": {
-      "src/SharedFilePtr.cpp": [
-        "param:#1 void *",
-        "param:#2 void *"
-      ],
-      "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "param:#1 void *",
-        "param:#2 void *"
-      ],
-      "src/unnamed/arm9/0201/func_020184e0.cpp": [
-        "param:#1 void *"
-      ],
       "src/unnamed/arm9/0201/func_02018934.cpp": [
-        "param:#1 int *",
-        "param:#2 void *"
-      ],
-      "src/unnamed/arm9/0201/func_02018b64.c": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0201/func_02018c00.c": [
-        "param:#1 void *",
-        "param:#2 void *"
+        "param:#1 int *"
       ]
     },
     "myFS_OpenFileFast": {
@@ -15816,29 +15778,12 @@
         "arity:3"
       ]
     },
-    "func_0203ce80": {
-      "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
-        "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
-      ],
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vec3 *",
-        "param:#2 Vec3 *"
-      ]
-    },
     "func_0203cebc": {
       "src/Quaternion_FromVector3.cpp": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
         "param:#3 Vec3 *",
         "param:#4 Vec3 *"
-      ]
-    },
-    "func_0203cf00": {
-      "src/minigames/unit020cd744.cpp": [
-        "param:#1 Vec3 *",
-        "param:#2 Vec3 *",
-        "param:#3 Vec3 *"
       ]
     },
     "func_0203cf94": {
@@ -16480,22 +16425,12 @@
         "param:#1 FSFile *"
       ]
     },
-    "func_0205d4a0": {
-      "src/myFS_ReadFile.c": [
-        "param:#1 int"
-      ]
-    },
     "func_0205d568": {
       "src/unnamed/arm9/0205/func_0205d518.c": [
         "arity:2"
       ],
       "src/engine/sound/SoundEngine.cpp": [
         "param:#1 struct Node *"
-      ]
-    },
-    "func_0205d688": {
-      "src/FS_ReadFile.c": [
-        "param:#1 int"
       ]
     },
     "FSi_FindPath": {

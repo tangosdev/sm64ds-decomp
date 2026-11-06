@@ -46,7 +46,7 @@ extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern void FS_InitFile(int *s);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
-extern int FS_ReadFile(int a, int b, int c);
+extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int FS_CloseFile(char *self);
 
 /* Allocate one block for the card's FAT, FNT and both overlay tables (each
@@ -106,7 +106,7 @@ void func_020424c0(void) {
             data0 = p->offset;
             end = roundedSize + data0;
             FS_OpenFileDirect((char *)&file, sb, data0, end, -1);
-            FS_ReadFile((int)&file, (int)buf, roundedSize);
+            FS_ReadFile(&file, buf, roundedSize);
             FS_CloseFile((char *)&file);
             buf += roundedSize;
             j++;
