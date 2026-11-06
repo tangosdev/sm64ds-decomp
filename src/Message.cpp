@@ -115,7 +115,7 @@ extern int data_0209d6fc;
 extern volatile int data_0209d6f4;
 extern s32 data_0209d704;
 extern s32 data_0209d74c[];
-extern u8 data_0208ee74[];
+extern u8 data_0208ee74[12];
 extern u8 data_0208f074[];
 extern u8 data_0209f20c;
 extern u8 data_0209f220;

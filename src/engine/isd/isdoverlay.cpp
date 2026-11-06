@@ -112,7 +112,7 @@ extern const char data_0208690c;
 extern const char data_0208692c;
 extern const char data_0208696c;
 extern const char data_0208698c;
-extern const char data_020869bc;
+extern const char data_020869bc[32];
 extern const char data_020869dc;
 extern const char data_02086a08;
 extern const char data_02086a30;
@@ -240,7 +240,7 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
                     *LM(&EB(pInfo, j)->m_info[0].romOffset) += (u32)nWrapSize;
                     *LM(&EB(pInfo, j)->m_info[0].m_SIZE) -= (u32)nWrapSize;
                     if (!(pInfo->m_info[j].m_SIZE != 0)) {
-                        cstd::__assert(&data_020868fc, (const char *)0x127, &data_020869bc, 1);
+                        cstd::__assert(&data_020868fc, (const char *)0x127, data_020869bc, 1);
                     }
                     if (!(pInfo->m_info[j].m_SIZE < 0xf0000000)) {
                         cstd::__assert(&data_020868fc, (const char *)0x128, &data_020869dc, 1);

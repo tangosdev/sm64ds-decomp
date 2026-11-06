@@ -5,7 +5,7 @@ struct Stream {
     CopyFn fn;
 };
 
-extern unsigned char data_02086880[];
+extern const unsigned char data_02086880[20];
 
 #pragma optimize_for_size on
 /* Write n spaces through the stream's output callback (+0x10), up to 16 at

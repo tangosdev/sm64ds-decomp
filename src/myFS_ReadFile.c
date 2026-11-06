@@ -22,7 +22,7 @@ extern void OS_SleepThread(int);
 extern void *data_0209d3c0;
 extern int func_0205d644(void *out_file_id, const char *path);
 extern void Crash(void);
-extern int data_0208ecd8[];
+extern int data_0208ecd8[7];
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
 extern int data_0208ecc4;

@@ -794,8 +794,8 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
 /* ROM ordinal 60 -- dActor_c::GivePlayerCoins(daPly_c &, unsigned char, unsigned int)
  * 0x0201061c  size 0xf8 */
 extern "C" {
-extern u32 data_02075238[]; /* coins each kind is worth */
-extern u16 data_02075230[]; /* actor ID of the coin each kind spawns */
+extern const u16 data_02075230[4]; /* yellow, red, blue */
+extern const u32 data_02075238[3];
 void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
 }
 void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
