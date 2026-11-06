@@ -407,10 +407,13 @@ static u16 sPauseInputLockout;
 static u16 data_0209f304;
 static u16 data_0209f308;
 s8 gNumRedCoins[4];
-/* gNumRedCoins + 1 and data_0209f310 + 1: NumRedCoins and NumVsStarsObtained
+/* gNumRedCoins + 1 and gNumStageStars + 1: NumRedCoins and NumVsStarsObtained
    load each sum's second element through its own literal. */
 extern s8 data_0209f30d;
-s8 data_0209f310[4];
+/* Stars collected in this stage, one count per player: the silver stars of a
+   course (shown as that many star icons on the HUD; the next silver star's
+   sound is 0x19 + it) and each player's stars in a VS match. */
+s8 gNumStageStars[4];
 extern s8 data_0209f311;
 static int data_0209f314;
 void *data_0209f318;
@@ -3193,7 +3196,7 @@ void dScStage_c::RenderVsModeCountdown() {
 // @symbol NumVsStarsObtained
 extern "C" s32 NumVsStarsObtained(void) {
     int i = 1;
-    signed char sum = data_0209f310[0];
+    signed char sum = gNumStageStars[0];
     signed char *p;
     if (i >= (int)data_0209f21c)
         return sum;
@@ -3208,7 +3211,7 @@ extern "C" s32 NumVsStarsObtained(void) {
 
 // @symbol GiveVsStars
 extern "C" void GiveVsStars(int idx, int delta) {
-    data_0209f310[idx] += delta;
+    gNumStageStars[idx] += delta;
 }
 
 // @symbol _ZN10dScStage_c15IsPauseDisabledEv
@@ -4707,7 +4710,7 @@ int dScStage_c::InitResources() {
                 int count = data_0209f21c;
                 int idx = 0;
                 u8 *p1 = (u8 *)gNumRedCoins;
-                u8 *vsStars = (u8 *)data_0209f310;
+                u8 *vsStars = (u8 *)gNumStageStars;
                 int vsModeCounters = (mode == 1) ? 1 : 0;
                 u8 loadMode = sReturnState;
                 do {

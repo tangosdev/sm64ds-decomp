@@ -59,7 +59,7 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* local extern: MulVec3Mat4x3 has no shared header, and this TU spells its
    vectors as VecFx32. */
-extern "C" void MulVec3Mat4x3(const VecFx32 *source, const Matrix4x3 *matrix, VecFx32 *destination);
+extern "C" void MulVec3Mat4x3(const VecFx32 *source, Matrix4x3 *matrix, VecFx32 *destination);
 
 /* dActor_c::mFlags bits 0x20000 and 0x40000 are the two yoshi-mouth states:
  * Yoshi is eating the actor, then has it in his mouth. Actor ID 0xbf is

@@ -1,10 +1,10 @@
 #include "types.h"
+#include "private/wm_views.h"
 extern int WMi_CheckInitialized(void);
-extern int WM_CheckStateEx(int a, int b);
 extern void WmClearFifoRecvFlag(void);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 
-extern int data_020a89ac;
+extern WMArm9Buf *data_020a89ac;
 extern u16 data_020a89a8;
 
 /* NitroSDK wm_system.c WM_Finish: once ARM7 has ended WM (WM_STATE_READY),

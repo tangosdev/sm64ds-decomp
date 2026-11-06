@@ -41,7 +41,9 @@ extern char *data_0209f318;
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
+/* void *: Behavior's diff/rotated scratch stays POD int[3]; a Vector3 local
+   would emit ~Vector3, which this object does not have. */
+void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
 u8 NumStars(void);
 int func_ov100_02144f84(void);
 }

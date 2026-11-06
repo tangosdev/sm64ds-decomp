@@ -110,7 +110,7 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int   LenVec3(const void *v);
 int   AngleDiff(int a, int b);
-void  MulVec3Mat4x3(const void *v, const void *m, void *out);
+void MulVec3Mat4x3(const void *v, Matrix4x3 *m, void *out);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,
    which mwccarm passes differently at the call site than the loose scalar

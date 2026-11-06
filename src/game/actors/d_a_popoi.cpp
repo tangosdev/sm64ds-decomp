@@ -126,7 +126,7 @@ extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(int a, void *b, int c);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 }
 

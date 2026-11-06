@@ -51,8 +51,6 @@ typedef struct WMPortSendCallback {
     u16 seqNo; /* 0x1c */
 } WMPortSendCallback;
 
-extern int WM_GetSystemWork(void);
-extern int WM_CheckStateEx(int count, ...);
 extern int WM_SetPortCallback(int port, int callback, int arg);
 typedef void (*WMCallbackFunc)(void *arg);
 
@@ -91,7 +89,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     u16 bits;
     volatile unsigned zero;
 
-    sys = (WMArm9Buf *)WM_GetSystemWork();
+    sys = WM_GetSystemWork();
     r = WM_CheckStateEx(2, 9, 0xa);
     if (r != 0)
         return r;
@@ -193,23 +191,20 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
 // @symbol WM_StepDataSharing
 int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
     WMDataSharingInfo *dsInfo = (WMDataSharingInfo *)self;
-    /* the system work, then the return code: a separate WMArm9Buf * local
-     * recolours the registers */
     int result;
     u16 aid;
     u16 childMask;
     int did;
     int fp;
     int state;
-    int r;
+    WMArm9Buf *p = WM_GetSystemWork();
 
-    result = WM_GetSystemWork();
-    r = WM_CheckStateEx(2, 9, 0xa);
-    if (r != 0)
-        return r;
+    result = WM_CheckStateEx(2, 9, 0xa);
+    if (result != 0)
+        return result;
 
-    CP15::InvalidateDataCache((u32)(&((WMArm9Buf *)result)->status->mp_flag), 4);
-    if (((WMArm9Buf *)result)->status->mp_flag == 0)
+    CP15::InvalidateDataCache((u32)(&p->status->mp_flag), 4);
+    if (p->status->mp_flag == 0)
         return 3;
 
     if (self == 0)
@@ -219,11 +214,11 @@ int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
     if (receiveData == 0)
         return 6;
 
-    CP15::InvalidateDataCache((u32)(&((WMArm9Buf *)result)->status->aid), 2);
-    aid = ((WMArm9Buf *)result)->status->aid;
+    CP15::InvalidateDataCache((u32)(&p->status->aid), 2);
+    aid = p->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32) & ((WMArm9Buf *)result)->status->mp_readyBitmap, 2);
-        childMask = ((WMArm9Buf *)result)->status->mp_readyBitmap;
+        CP15::InvalidateDataCache((u32)&p->status->mp_readyBitmap, 2);
+        childMask = p->status->mp_readyBitmap;
     }
 
     state = dsInfo->state;
@@ -324,7 +319,7 @@ int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
 // @symbol WmDataSharingSetDataCallback
 void WmDataSharingSetDataCallback(void *arg) {
     WMPortSendCallback *callback = (WMPortSendCallback *)arg;
-    WMArm9Buf *c = (WMArm9Buf *)WM_GetSystemWork();
+    WMArm9Buf *c = WM_GetSystemWork();
     WMDataSharingInfo *r4 = (WMDataSharingInfo *)c->portCallbackArgument[callback->port];
     CP15::InvalidateDataCache((u32)&c->status->aid, 2);
     u16 v = c->status->aid;
@@ -389,7 +384,7 @@ void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback) {
  * failed receive (errcode != 0) puts the sharing into state 3. */
 // @symbol WmDataSharingReceiveCallback_Child
 void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
-    WMArm9Buf *h = (WMArm9Buf *)WM_GetSystemWork();
+    WMArm9Buf *h = WM_GetSystemWork();
     WMDataSharingInfo *r5 = (WMDataSharingInfo *)callback->arg;
     if (callback->errcode == 0) {
         u32 r4;
@@ -469,7 +464,7 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
  * set counts as sent; any failure but OPERATING (2) is state 3. */
 // @symbol WmDataSharingSendDataSet
 void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
-    int ctx;
+    WMArm9Buf *ctx;
     u32 saved;
     u16 slot;
     u16 next;
@@ -483,11 +478,11 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     saved = IRQ::Disable();
     slot = dsInfo->writeIndex;
     if (dsInfo->ds[slot].aidHeader == 0) {
-        CP15::InvalidateDataCache((u32) & ((WMArm9Buf *)ctx)->status->mp_readyBitmap, 2);
+        CP15::InvalidateDataCache((u32)&ctx->status->mp_readyBitmap, 2);
 
         prevSlot = dsInfo->writeIndex;
         next = (u16)((prevSlot + 1) % 4);
-        mask = ((WMArm9Buf *)ctx)->status->mp_readyBitmap;
+        mask = ctx->status->mp_readyBitmap;
         newSlot = (dsInfo->doubleMode == 1) ? (u16)((next + 1) % 4) : next;
 
         zero = 0;
