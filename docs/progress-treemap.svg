@@ -521,7 +521,7 @@ matched: yes</title></rect><rect x="5.00" y="89.17" width="21.31" height="1.64" 
 module: arm9
 addr: 0x0200c9e0
 size: 52 bytes
-matched: yes</title></rect><rect x="26.31" y="89.17" width="24.59" height="1.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200ca14
+matched: yes</title></rect><rect x="26.31" y="89.17" width="24.59" height="1.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200ca14Ehi
 module: arm9
 addr: 0x0200ca14
 size: 60 bytes
@@ -569,11 +569,11 @@ matched: yes</title></rect><rect x="86.84" y="90.80" width="2.64" height="7.11" 
 module: arm9
 addr: 0x0200d048
 size: 28 bytes
-matched: yes</title></rect><rect x="89.48" y="90.80" width="6.79" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d064
+matched: yes</title></rect><rect x="89.48" y="90.80" width="6.79" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d064Eh
 module: arm9
 addr: 0x0200d064
 size: 72 bytes
-matched: yes</title></rect><rect x="96.27" y="90.80" width="9.05" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d0ac
+matched: yes</title></rect><rect x="96.27" y="90.80" width="9.05" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d0acEj
 module: arm9
 addr: 0x0200d0ac
 size: 96 bytes
@@ -589,7 +589,7 @@ matched: yes</title></rect><rect x="116.63" y="90.80" width="9.05" height="7.11"
 module: arm9
 addr: 0x0200d184
 size: 96 bytes
-matched: yes</title></rect><rect x="125.68" y="90.80" width="27.15" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d1e4
+matched: yes</title></rect><rect x="125.68" y="90.80" width="27.15" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d1e4Ev
 module: arm9
 addr: 0x0200d1e4
 size: 288 bytes
@@ -609,7 +609,7 @@ matched: yes</title></rect><rect x="187.53" y="90.80" width="5.66" height="7.11"
 module: arm9
 addr: 0x0200d474
 size: 60 bytes
-matched: yes</title></rect><rect x="193.19" y="90.80" width="8.30" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d4b0
+matched: yes</title></rect><rect x="193.19" y="90.80" width="8.30" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d4b0Eji
 module: arm9
 addr: 0x0200d4b0
 size: 88 bytes
@@ -669,7 +669,7 @@ matched: yes</title></rect><rect x="275.79" y="90.80" width="5.66" height="7.11"
 module: arm9
 addr: 0x0200d81c
 size: 60 bytes
-matched: yes</title></rect><rect x="281.44" y="90.80" width="5.28" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d858
+matched: yes</title></rect><rect x="281.44" y="90.80" width="5.28" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d858EPK7Vector3
 module: arm9
 addr: 0x0200d858
 size: 56 bytes
@@ -681,11 +681,11 @@ matched: yes</title></rect><rect x="287.85" y="90.80" width="1.51" height="7.11"
 module: arm9
 addr: 0x0200d89c
 size: 16 bytes
-matched: yes</title></rect><rect x="289.36" y="90.80" width="2.64" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d8ac
+matched: yes</title></rect><rect x="289.36" y="90.80" width="2.64" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c11SetFovShakeEiii
 module: arm9
 addr: 0x0200d8ac
 size: 28 bytes
-matched: yes</title></rect><rect x="292.00" y="90.80" width="13.20" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d8c8
+matched: yes</title></rect><rect x="292.00" y="90.80" width="13.20" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d8c8EPK7Vector3i
 module: arm9
 addr: 0x0200d8c8
 size: 140 bytes
