@@ -914,9 +914,26 @@ void compute_layout(int w, int h)
     {   /* the tab names in a row, centred on the sheet. CHEATS1: the row is the TAB_VIS names of the window, so the strip is as wide as five
            names (what it was with five tabs); the names outside the window have no place (tab_w 0) */
         const float em = (float)P(27);
-        const float gap = (float)P(22);   /* INPUTMATRIX1: was 34; the margins beside the first and last tab hold the LB / RB hints */
+        float gap = (float)P(22);   /* INPUTMATRIX1: was 34; the margins beside the first and last tab hold the LB / RB hints */
         float pos = 0, tw[T_COUNT];
-        for (int i = 0; i < T_COUNT; ++i) { tw[i] = ui_text_width(TAB_NAMES[i], em); L.tab_pos[i] = pos; pos += tw[i] + gap; }
+        for (int i = 0; i < T_COUNT; ++i) tw[i] = ui_text_width(TAB_NAMES[i], em);
+        {   /* PAUSEPOLISH1: the margins must hold the hints. A wider font (the HD UI mod's) made the widest window of names so wide that LB and
+               RB, centred in what was left, crossed the sheet's border at 4:3. Each margin keeps the wider hint and P(14) on both of its sides;
+               the gap between the names gives way first, down to P(10). The plain font's strip already fits and is unchanged. */
+            const float sm = (float)P(22), hint = fmaxf(ui_text_width("LB", sm), ui_text_width("RB", sm));
+            const float room = L.sw - 2.f * (hint + 2.f * P(14));
+            float names = 0;
+            for (int ws = 0; ws + TAB_VIS <= T_COUNT; ++ws) {
+                float t = 0;
+                for (int i = ws; i < ws + TAB_VIS; ++i) t += tw[i];
+                if (t > names) names = t;
+            }
+            if (names + (TAB_VIS - 1) * gap > room) {
+                gap = (room - names) / (TAB_VIS - 1);
+                if (gap < P(10)) gap = (float)P(10);
+            }
+        }
+        for (int i = 0; i < T_COUNT; ++i) { L.tab_pos[i] = pos; pos += tw[i] + gap; }
         L.tab_pos[T_COUNT] = pos;
         L.tab_gap = gap;
         const int ws = tab_win_of(S.tab);
