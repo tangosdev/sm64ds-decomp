@@ -127,7 +127,7 @@ extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern void RenderOamMainScreen(OamAttr *, int, int, int, int);
 extern OamAttr sSlotsSlotBlinkSprites[];
-extern void Mg_LoseCredits(void *c);
+extern void Mg_LoseCredits(int c);
 extern void func_ov001_020ab3f0(void *c);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
 extern void *data_ov006_0213e528[];
@@ -648,7 +648,7 @@ s32 dScMgSlot3_c::Render() {
     char *c = (char *)this;
     int i;
 
-    Camera_InitSlotsView((char *)pad_4660);
+    Camera_InitSlotsView((char *)&mCamera);
     Mascot_Draw((char *)&mMascot);
 
     if (mReelDrawY > 0) {
@@ -881,7 +881,7 @@ s32 dScMgSlot3_c::InitResources() {
     G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     Mascot_Load((char *)&mMascot);
-    Camera_InitSlotsView((char *)pad_4660);
+    Camera_InitSlotsView((char *)&mCamera);
 
     mReelDifficulty = (int)mLevel;
 
@@ -1058,7 +1058,7 @@ void SlotBet_OnTouch(void *c_) {
         return;
     }
     BET_ICON(icon)->mBetCount += 1;
-    Mg_LoseCredits((void *)1);
+    Mg_LoseCredits(1);
     func_ov001_020ab3f0(icon);
     sid = 0x163;
     Sound::PlayBank2_2D(sid);

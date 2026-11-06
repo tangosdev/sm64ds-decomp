@@ -74,7 +74,6 @@ extern s16 data_02082214[];                       /* sin/cos pairs */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void func_02010da4(dActor_c *actor);
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
@@ -291,7 +290,7 @@ int daLinelift2_c::StepAlongPath() {
         }
         return result;
     }
-    func_02010da4(this);
+    func_02010da4();
     return 0;
 }
 

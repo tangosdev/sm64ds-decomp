@@ -48,7 +48,7 @@ struct Dealer {
        materials 0, 4 and 5 of its data.materials. */
     dExtSimpleModel_c mTable; /* 0x08c */
     MascotWalker mWalker; /* 0x0dc */
-    s32 mDealtCount;   /* 0x1d4 -- a short the deal loop bumps once per card, or 0 */
+    s16 *mDealCounter;    /* 0x1d4 -- the scene's s16 the deal loop bumps once per card, or 0 */
     s16 mShuffleLeft;  /* 0x1d8 -- shuffle repeats left */
     s16 mDealDoneAt;   /* 0x1da -- the repeat that calls OnDealDone */
     s16 mShuffleRound; /* 0x1dc -- 0 for the first hand (four shuffles), then one; cycles 0..5 */

@@ -137,11 +137,11 @@ matched: yes</title></rect><rect x="279.56" y="34.32" width="17.03" height="7.56
 module: arm9
 addr: 0x020070e8
 size: 192 bytes
-matched: yes</title></rect><rect x="296.59" y="34.32" width="4.97" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020071a8
+matched: yes</title></rect><rect x="296.59" y="34.32" width="4.97" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>StarDanceBoundYaw
 module: arm9
 addr: 0x020071a8
 size: 56 bytes
-matched: yes</title></rect><rect x="301.55" y="34.32" width="19.86" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020071e0
+matched: yes</title></rect><rect x="301.55" y="34.32" width="19.86" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyAppCvars
 module: arm9
 addr: 0x020071e0
 size: 224 bytes
@@ -149,43 +149,43 @@ matched: yes</title></rect><rect x="5.00" y="41.88" width="0.60" height="4.50" f
 module: arm9
 addr: 0x020072c0
 size: 4 bytes
-matched: yes</title></rect><rect x="5.60" y="41.88" width="32.77" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020072c4
+matched: yes</title></rect><rect x="5.60" y="41.88" width="32.77" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyMarioOffscreen
 module: arm9
 addr: 0x020072c4
 size: 220 bytes
-matched: yes</title></rect><rect x="38.37" y="41.88" width="17.28" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020073a0
+matched: yes</title></rect><rect x="38.37" y="41.88" width="17.28" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyMoveToMario
 module: arm9
 addr: 0x020073a0
 size: 116 bytes
-matched: yes</title></rect><rect x="55.65" y="41.88" width="8.94" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007414
+matched: yes</title></rect><rect x="55.65" y="41.88" width="8.94" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFlyStart
 module: arm9
 addr: 0x02007414
 size: 60 bytes
-matched: yes</title></rect><rect x="64.59" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007450
+matched: yes</title></rect><rect x="64.59" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarMoveCvar2
 module: arm9
 addr: 0x02007450
 size: 52 bytes
-matched: yes</title></rect><rect x="72.34" y="41.88" width="14.90" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007484
+matched: yes</title></rect><rect x="72.34" y="41.88" width="14.90" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarApproachMario
 module: arm9
 addr: 0x02007484
 size: 100 bytes
-matched: yes</title></rect><rect x="87.23" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020074e8
+matched: yes</title></rect><rect x="87.23" y="41.88" width="7.75" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarAccelCvar2
 module: arm9
 addr: 0x020074e8
 size: 52 bytes
-matched: yes</title></rect><rect x="94.98" y="41.88" width="6.55" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200751c
+matched: yes</title></rect><rect x="94.98" y="41.88" width="6.55" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarMarioJump
 module: arm9
 addr: 0x0200751c
 size: 44 bytes
-matched: yes</title></rect><rect x="101.53" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007548
+matched: yes</title></rect><rect x="101.53" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFocusMario
 module: arm9
 addr: 0x02007548
 size: 108 bytes
-matched: yes</title></rect><rect x="117.62" y="41.88" width="17.88" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020075b4
+matched: yes</title></rect><rect x="117.62" y="41.88" width="17.88" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarFrontOfMario
 module: arm9
 addr: 0x020075b4
 size: 120 bytes
-matched: yes</title></rect><rect x="135.50" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200762c
+matched: yes</title></rect><rect x="135.50" y="41.88" width="16.09" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneGrandStarStart
 module: arm9
 addr: 0x0200762c
 size: 108 bytes
@@ -193,11 +193,11 @@ matched: yes</title></rect><rect x="151.59" y="41.88" width="28.60" height="4.50
 module: arm9
 addr: 0x02007698
 size: 192 bytes
-matched: yes</title></rect><rect x="180.19" y="41.88" width="22.64" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007758
+matched: yes</title></rect><rect x="180.19" y="41.88" width="22.64" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneDanceCloseupFlyAbove
 module: arm9
 addr: 0x02007758
 size: 152 bytes
-matched: yes</title></rect><rect x="202.84" y="41.88" width="19.07" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020077f0
+matched: yes</title></rect><rect x="202.84" y="41.88" width="19.07" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneDanceCloseupStart
 module: arm9
 addr: 0x020077f0
 size: 128 bytes
@@ -213,7 +213,7 @@ matched: yes</title></rect><rect x="245.74" y="41.88" width="23.24" height="4.50
 module: arm9
 addr: 0x02007910
 size: 156 bytes
-matched: yes</title></rect><rect x="268.98" y="41.88" width="33.37" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020079ac
+matched: yes</title></rect><rect x="268.98" y="41.88" width="33.37" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutscenePanCvar9
 module: arm9
 addr: 0x020079ac
 size: 224 bytes
@@ -221,7 +221,7 @@ matched: yes</title></rect><rect x="302.35" y="41.88" width="19.07" height="4.50
 module: arm9
 addr: 0x02007a8c
 size: 128 bytes
-matched: yes</title></rect><rect x="5.00" y="46.39" width="16.86" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007b0c
+matched: yes</title></rect><rect x="5.00" y="46.39" width="16.86" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FocusInFrontOfMario
 module: arm9
 addr: 0x02007b0c
 size: 140 bytes
@@ -245,7 +245,7 @@ matched: yes</title></rect><rect x="66.65" y="46.39" width="9.15" height="5.57" 
 module: arm9
 addr: 0x02007d0c
 size: 76 bytes
-matched: yes</title></rect><rect x="75.80" y="46.39" width="31.30" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007d58
+matched: yes</title></rect><rect x="75.80" y="46.39" width="31.30" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneDanceFlyAwayStart
 module: arm9
 addr: 0x02007d58
 size: 260 bytes
@@ -521,7 +521,7 @@ matched: yes</title></rect><rect x="5.00" y="89.17" width="21.31" height="1.64" 
 module: arm9
 addr: 0x0200c9e0
 size: 52 bytes
-matched: yes</title></rect><rect x="26.31" y="89.17" width="24.59" height="1.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200ca14
+matched: yes</title></rect><rect x="26.31" y="89.17" width="24.59" height="1.64" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200ca14Ehi
 module: arm9
 addr: 0x0200ca14
 size: 60 bytes
@@ -569,11 +569,11 @@ matched: yes</title></rect><rect x="86.84" y="90.80" width="2.64" height="7.11" 
 module: arm9
 addr: 0x0200d048
 size: 28 bytes
-matched: yes</title></rect><rect x="89.48" y="90.80" width="6.79" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d064
+matched: yes</title></rect><rect x="89.48" y="90.80" width="6.79" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d064Eh
 module: arm9
 addr: 0x0200d064
 size: 72 bytes
-matched: yes</title></rect><rect x="96.27" y="90.80" width="9.05" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d0ac
+matched: yes</title></rect><rect x="96.27" y="90.80" width="9.05" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d0acEj
 module: arm9
 addr: 0x0200d0ac
 size: 96 bytes
@@ -589,7 +589,7 @@ matched: yes</title></rect><rect x="116.63" y="90.80" width="9.05" height="7.11"
 module: arm9
 addr: 0x0200d184
 size: 96 bytes
-matched: yes</title></rect><rect x="125.68" y="90.80" width="27.15" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d1e4
+matched: yes</title></rect><rect x="125.68" y="90.80" width="27.15" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d1e4Ev
 module: arm9
 addr: 0x0200d1e4
 size: 288 bytes
@@ -609,7 +609,7 @@ matched: yes</title></rect><rect x="187.53" y="90.80" width="5.66" height="7.11"
 module: arm9
 addr: 0x0200d474
 size: 60 bytes
-matched: yes</title></rect><rect x="193.19" y="90.80" width="8.30" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d4b0
+matched: yes</title></rect><rect x="193.19" y="90.80" width="8.30" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d4b0Eji
 module: arm9
 addr: 0x0200d4b0
 size: 88 bytes
@@ -669,7 +669,7 @@ matched: yes</title></rect><rect x="275.79" y="90.80" width="5.66" height="7.11"
 module: arm9
 addr: 0x0200d81c
 size: 60 bytes
-matched: yes</title></rect><rect x="281.44" y="90.80" width="5.28" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d858
+matched: yes</title></rect><rect x="281.44" y="90.80" width="5.28" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d858EPK7Vector3
 module: arm9
 addr: 0x0200d858
 size: 56 bytes
@@ -681,11 +681,11 @@ matched: yes</title></rect><rect x="287.85" y="90.80" width="1.51" height="7.11"
 module: arm9
 addr: 0x0200d89c
 size: 16 bytes
-matched: yes</title></rect><rect x="289.36" y="90.80" width="2.64" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d8ac
+matched: yes</title></rect><rect x="289.36" y="90.80" width="2.64" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c11SetFovShakeEiii
 module: arm9
 addr: 0x0200d8ac
 size: 28 bytes
-matched: yes</title></rect><rect x="292.00" y="90.80" width="13.20" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200d8c8
+matched: yes</title></rect><rect x="292.00" y="90.80" width="13.20" height="7.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9dCamera_c13func_0200d8c8EPK7Vector3i
 module: arm9
 addr: 0x0200d8c8
 size: 140 bytes
@@ -761,11 +761,11 @@ matched: yes</title></rect><rect x="51.30" y="104.89" width="130.14" height="7.3
 module: arm9
 addr: 0x0200e8d4
 size: 1428 bytes
-matched: yes</title></rect><rect x="181.44" y="104.89" width="3.28" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>IsStarCameraScript3Running
+matched: yes</title></rect><rect x="181.44" y="104.89" width="3.28" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>IsDanceRotateCutsceneRunning
 module: arm9
 addr: 0x0200ee68
 size: 36 bytes
-matched: yes</title></rect><rect x="184.72" y="104.89" width="5.47" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>RunStarCameraScript
+matched: yes</title></rect><rect x="184.72" y="104.89" width="5.47" height="7.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>StartDanceCutscene
 module: arm9
 addr: 0x0200ee8c
 size: 60 bytes
@@ -841,7 +841,7 @@ matched: yes</title></rect><rect x="102.05" y="112.25" width="12.06" height="4.6
 module: arm9
 addr: 0x0200f70c
 size: 84 bytes
-matched: yes</title></rect><rect x="114.11" y="112.25" width="10.34" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200f760
+matched: yes</title></rect><rect x="114.11" y="112.25" width="10.34" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_0200f760EP5dCc_c
 module: arm9
 addr: 0x0200f760
 size: 72 bytes
@@ -909,7 +909,7 @@ matched: yes</title></rect><rect x="293.85" y="112.25" width="19.52" height="4.6
 module: arm9
 addr: 0x0200fc44
 size: 136 bytes
-matched: yes</title></rect><rect x="313.38" y="112.25" width="8.04" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200fccc
+matched: yes</title></rect><rect x="313.38" y="112.25" width="8.04" height="4.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_0200fcccEi
 module: arm9
 addr: 0x0200fccc
 size: 56 bytes
@@ -1029,7 +1029,7 @@ matched: yes</title></rect><rect x="118.25" y="118.31" width="11.95" height="4.7
 module: arm9
 addr: 0x020102b0
 size: 84 bytes
-matched: yes</title></rect><rect x="130.20" y="118.31" width="15.93" height="4.71" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02010304
+matched: yes</title></rect><rect x="130.20" y="118.31" width="15.93" height="4.71" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_02010304EP5dCc_c
 module: arm9
 addr: 0x02010304
 size: 112 bytes
@@ -1137,7 +1137,7 @@ matched: yes</title></rect><rect x="213.55" y="123.03" width="16.34" height="4.1
 module: arm9
 addr: 0x02010d40
 size: 100 bytes
-matched: yes</title></rect><rect x="229.89" y="123.03" width="16.34" height="4.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02010da4
+matched: yes</title></rect><rect x="229.89" y="123.03" width="16.34" height="4.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dActor_c13func_02010da4Ev
 module: arm9
 addr: 0x02010da4
 size: 100 bytes
@@ -7141,27 +7141,27 @@ matched: yes</title></rect><rect x="306.65" y="554.76" width="5.84" height="7.81
 module: arm9
 addr: 0x02043180
 size: 68 bytes
-matched: yes</title></rect><rect x="312.49" y="554.76" width="8.93" height="7.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020431c4
+matched: yes</title></rect><rect x="312.49" y="554.76" width="8.93" height="7.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_020431c4Ev
 module: arm9
 addr: 0x020431c4
 size: 104 bytes
-matched: yes</title></rect><rect x="5.00" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204322c
+matched: yes</title></rect><rect x="5.00" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_0204322cEv
 module: arm9
 addr: 0x0204322c
 size: 92 bytes
-matched: yes</title></rect><rect x="15.24" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02043288
+matched: yes</title></rect><rect x="15.24" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_02043288Ev
 module: arm9
 addr: 0x02043288
 size: 92 bytes
-matched: yes</title></rect><rect x="25.47" y="562.57" width="13.35" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020432e4
+matched: yes</title></rect><rect x="25.47" y="562.57" width="13.35" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_020432e4Ev
 module: arm9
 addr: 0x020432e4
 size: 120 bytes
-matched: yes</title></rect><rect x="38.82" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204335c
+matched: yes</title></rect><rect x="38.82" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_0204335cEv
 module: arm9
 addr: 0x0204335c
 size: 92 bytes
-matched: yes</title></rect><rect x="49.06" y="562.57" width="15.58" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020433b8
+matched: yes</title></rect><rect x="49.06" y="562.57" width="15.58" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_020433b8Ev
 module: arm9
 addr: 0x020433b8
 size: 140 bytes
@@ -7181,7 +7181,7 @@ matched: yes</title></rect><rect x="99.35" y="562.57" width="73.43" height="6.03
 module: arm9
 addr: 0x0204357c
 size: 660 bytes
-matched: yes</title></rect><rect x="172.78" y="562.57" width="2.23" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02043810
+matched: yes</title></rect><rect x="172.78" y="562.57" width="2.23" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_02043810Ev
 module: arm9
 addr: 0x02043810
 size: 20 bytes
@@ -7189,7 +7189,7 @@ matched: yes</title></rect><rect x="175.00" y="562.57" width="10.24" height="6.0
 module: arm9
 addr: 0x02043824
 size: 92 bytes
-matched: yes</title></rect><rect x="185.24" y="562.57" width="64.08" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02043880
+matched: yes</title></rect><rect x="185.24" y="562.57" width="64.08" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_02043880Ev
 module: arm9
 addr: 0x02043880
 size: 576 bytes

@@ -1057,7 +1057,7 @@ void Trmp2Mario_EnterFall(void *self) {
 }
 // ---- Trmp2Mario_StateAppearWait
 namespace ns_020ca310 {
-extern "C" void Trmp2Mario_EnterBounce(char *, int);
+extern "C" void Trmp2Mario_EnterBounce(char *);
 // @symbol Trmp2Mario_StateAppearWait
 extern "C" void Trmp2Mario_StateAppearWait(char *c) {
     if (ApproachLinear2(MARIO2(c)->mTimer, 0, 1) == 0) {
@@ -1069,7 +1069,7 @@ extern "C" void Trmp2Mario_StateAppearWait(char *c) {
     MARIO2(c)->mPrevPos.y = MARIO2(c)->mPos.y;
     MARIO2(c)->mPrevPos.z = MARIO2(c)->mPos.z;
     MARIO2(c)->mVisible = 1;
-    Trmp2Mario_EnterBounce(c, 1);
+    Trmp2Mario_EnterBounce(c);
 }
 }
 // ---- Trmp2Mario_EnterAppearWait
@@ -1100,7 +1100,7 @@ void Trmp2Mario_StateHidden(int *p) {
 namespace ns_020ca3a8 {
 
 extern "C" {
-extern int data_020a0ebc[];
+extern Vector3 data_020a0ebc;
 extern double pmf_Trmp2Mario_StateHidden_3;
 }
 
@@ -1110,9 +1110,9 @@ extern "C" void Trmp2Mario_EnterHidden(char *c) {
     MARIO2(c)->mPos.y = 0;
     MARIO2(c)->mPos.x = 0;
     MARIO2(c)->mPos.z = 0;
-    MARIO2(c)->mVel.x = data_020a0ebc[0];
-    MARIO2(c)->mVel.y = data_020a0ebc[1];
-    MARIO2(c)->mVel.z = data_020a0ebc[2];
+    MARIO2(c)->mVel.x = data_020a0ebc.x;
+    MARIO2(c)->mVel.y = data_020a0ebc.y;
+    MARIO2(c)->mVel.z = data_020a0ebc.z;
     MARIO2(c)->mGravityStep = 0;
     MARIO2(c)->mWallBumpTimer = 0;
     MARIO2(c)->mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
@@ -1124,10 +1124,9 @@ namespace ns_020ca430 {
 extern "C" {
 typedef struct BMD_File BMD_File;
 
-extern char *sMgMainCamera;
+extern void *sMgMainCamera;
 
-extern void Camera_ProjectToScreen16(char *p, void *q, short *s);
-extern void func_02016a14(void *self, int a, int b);
+extern void Camera_ProjectToScreen16(void *p, void *q, short *s);
 extern void Trmp2Mario_EnterHidden(char *c);
 
 // @symbol Trmp2Mario_Load
@@ -1154,7 +1153,7 @@ int Trmp2Mario_Load(char *c) {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &MARIO2(c)->mPos, MARIO2(c)->mScreenPos);
     MARIO2(c)->mGravityStep = 0;
-    func_02016a14(&MARIO2(c)->mAnmModel, 0x73ff, 0);
+    func_02016a14(&MARIO2(c)->mAnmModel, 0x73ff);
     func_02016a04(&MARIO2(c)->mAnmModel, 0x3e52);
     Trmp2Mario_EnterHidden(c);
     return ret;
@@ -1504,15 +1503,15 @@ void Trmp2Mario_SetTuning(int a) {
 // ---- Trmp2Mario_InitPool
 namespace ns_020cae9c {
 extern "C" {
-extern int Trmp2Mario_Load(int p);
+extern int Trmp2Mario_Load(char *);
 extern int sTrmp2MarioCount;
 extern int sTrmp2MarioTarget;
-extern int sTrmp2Marios;
-extern int sTrmpJumpers[];
-extern int sTrmp2MarioPtrs[];
+extern char *sTrmp2Marios;
+extern void *sTrmpJumpers[];
+extern void *sTrmp2MarioPtrs[];
 
 // @symbol Trmp2Mario_InitPool
-int Trmp2Mario_InitPool(int base, int n) {
+int Trmp2Mario_InitPool(char *base, int n) {
     int i;
     int off;
 
@@ -1524,7 +1523,7 @@ int Trmp2Mario_InitPool(int base, int n) {
     if (i < n) {
         off = i;
         do {
-            int p;
+            char *p;
             if (Trmp2Mario_Load(sTrmp2Marios + off) == 0)
                 return 0;
             p = sTrmp2Marios + off;
@@ -1731,14 +1730,14 @@ extern int sTrmpRowHeights[];
 extern int sTrmpComboCount;
 extern int sTrmpMariosInPlay;
 extern int sTrmpMariosOnLedges;
-extern char *sMgSubCamera;
-extern char *sMgMainCamera;
+extern void *sMgSubCamera;
+extern void *sMgMainCamera;
 extern int sTrmpGoalSlotCursor;
 extern Triple sTrmpGoalSlots[];
-extern Triple data_020a0ebc;
+extern Vector3 data_020a0ebc;
 
 extern void func_02012718(int, int);
-extern void Camera_ProjectToScreen(char *, void *, int *, int *);
+extern void Camera_ProjectToScreen(void *, void *, int *, int *);
 extern int Mg_GetTopScreenYOffset(void);
 extern void TrmpFx_Spawn(int, int);
 extern void Trmp3DMario_EnterOffstage(char *);
@@ -1804,9 +1803,9 @@ void Trmp3DMario_StateGoal(void *self) {
         MARIO3D(c)->mPos.y = p->m4;
         MARIO3D(c)->mPos.z = p->m8;
     }
-    MARIO3D(c)->mVel.x = data_020a0ebc.m0;
-    MARIO3D(c)->mVel.y = data_020a0ebc.m4;
-    MARIO3D(c)->mVel.z = data_020a0ebc.m8;
+    MARIO3D(c)->mVel.x = data_020a0ebc.x;
+    MARIO3D(c)->mVel.y = data_020a0ebc.y;
+    MARIO3D(c)->mVel.z = data_020a0ebc.z;
 
     Trmp3DMario_EnterOffstage(c);
 }
@@ -1873,7 +1872,7 @@ namespace ns_020cb690 {
 extern "C" {
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp3DMario_StateLand(char *c);
-extern int data_020a0ebc[];
+extern Vector3 data_020a0ebc;
 struct W2 {
     int a, b;
 };
@@ -1882,9 +1881,9 @@ void Trmp3DMario_EnterLand(char *c);
 }
 // @symbol Trmp3DMario_EnterLand
 void Trmp3DMario_EnterLand(char *c) {
-    MARIO3D(c)->mVel.x = data_020a0ebc[0];
-    MARIO3D(c)->mVel.y = data_020a0ebc[1];
-    MARIO3D(c)->mVel.z = data_020a0ebc[2];
+    MARIO3D(c)->mVel.x = data_020a0ebc.x;
+    MARIO3D(c)->mVel.y = data_020a0ebc.y;
+    MARIO3D(c)->mVel.z = data_020a0ebc.z;
     MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimHangUp, 0x40000000, 0x800, 0);
     Sound_PlayBank1Panned(0, 0x17, MARIO3D(c)->mPos.x);
     {
@@ -2912,10 +2911,7 @@ void Trmp3DMario_StateOffstage(char *p) {
 namespace ns_020ccd78 {
 extern "C" {
 extern int sTrmpRowHeights[];
-struct V3 {
-    int a, b, c;
-};
-extern struct V3 data_020a0ebc;
+extern Vector3 data_020a0ebc;
 struct G2 {
     int w[2];
 };
@@ -2925,9 +2921,9 @@ void Trmp3DMario_EnterOffstage(char *c) {
     MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
     MARIO3D(c)->mPos.x = -0x90000;
     MARIO3D(c)->mPos.z = 0;
-    MARIO3D(c)->mVel.x = data_020a0ebc.a;
-    MARIO3D(c)->mVel.y = data_020a0ebc.b;
-    MARIO3D(c)->mVel.z = data_020a0ebc.c;
+    MARIO3D(c)->mVel.x = data_020a0ebc.x;
+    MARIO3D(c)->mVel.y = data_020a0ebc.y;
+    MARIO3D(c)->mVel.z = data_020a0ebc.z;
     MARIO3D(c)->mGravityStep = 0;
     MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
     *(struct G2 *)MARIO3D(c)->mState = pmf_Trmp3DMario_StateOffstage_2;
@@ -2939,10 +2935,9 @@ namespace ns_020cce0c {
 extern "C" {
 typedef struct BMD_File BMD_File;
 
-extern char *sMgMainCamera;
+extern void *sMgMainCamera;
 
-extern void Camera_ProjectToScreen16(char *p, void *q, short *s);
-extern void func_02016a14(void *self, int a, int b);
+extern void Camera_ProjectToScreen16(void *p, void *q, short *s);
 extern void Trmp3DMario_EnterOffstage(char *c);
 
 // @symbol Trmp3DMario_Load
@@ -2968,7 +2963,7 @@ int Trmp3DMario_Load(char *c) {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &MARIO3D(c)->mPos, MARIO3D(c)->mScreenPos);
     MARIO3D(c)->mGravityStep = 0;
-    func_02016a14(&MARIO3D(c)->mAnmModel, 0x6bff, 0);
+    func_02016a14(&MARIO3D(c)->mAnmModel, 0x6bff);
     func_02016a04(&MARIO3D(c)->mAnmModel, 0x21d);
     Trmp3DMario_EnterOffstage(c);
     return ret;
@@ -3085,8 +3080,8 @@ void Trmp3DMario_StartAll(void) {
 namespace ns_020cd270 {
 extern "C" {
 
-extern void func_0203cd80(int *v, int a);
-extern void func_0203ccd4(int *v, int a);
+extern void func_0203cd80(int *v, short angle);
+extern void func_0203ccd4(int *v, short angle);
 extern int sTrmp3DMarioCount;
 extern char *sTrmp3DMarios;
 extern void Trmp3DMario_Render(char *p);
@@ -3222,7 +3217,7 @@ namespace ns_020cd658 {
 extern "C" {
 extern int sTrmp3DMarioCount;
 extern unsigned char *sTrmp3DMarios;
-extern unsigned char *sTrmpJumpers[];
+extern void *sTrmpJumpers[];
 extern int Trmp3DMario_Load(unsigned char *);
 // @symbol Trmp3DMario_InitPool
 int Trmp3DMario_InitPool(unsigned char *a0, int a1) {

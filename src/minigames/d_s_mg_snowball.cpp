@@ -114,7 +114,6 @@ extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int 
 extern void func_02012718(int a, int b);
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
 extern s16 data_02082214[];
-extern void Camera_UpdateMatrices(void *self);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
@@ -676,25 +675,24 @@ void Snowball_UpdateCamera(char *scene) {
     int t = cstd::fdiv(0xc0000, data_02082314);
     Vector3 v;
     int x, y;
-    /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h). */
     if (self->mScreensSwapped == 0) {
-        self->mCameraEyeX = 0;
-        self->mCameraEyeY = 0xd0000;
-        self->mCameraEyeZ = 0;
-        self->mCameraTargetX = 0;
-        self->mCameraTargetY = 0;
-        self->mCameraTargetZ = t;
-        self->mCameraAngle = 0x200;
-        Camera_UpdateMatrices((char *)self->pad_4660);
+        self->mCamera.mLookAt.x = 0;
+        self->mCamera.mLookAt.y = 0xd0000;
+        self->mCamera.mLookAt.z = 0;
+        self->mCamera.mPos.x = 0;
+        self->mCamera.mPos.y = 0;
+        self->mCamera.mPos.z = t;
+        self->mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&self->mCamera);
     } else {
-        self->mCameraEyeX = 0;
-        self->mCameraEyeY = -0x60000;
-        self->mCameraEyeZ = 0;
-        self->mCameraTargetX = 0;
-        self->mCameraTargetY = 0;
-        self->mCameraTargetZ = t;
-        self->mCameraAngle = 0x200;
-        Camera_UpdateMatrices((char *)self->pad_4660);
+        self->mCamera.mLookAt.x = 0;
+        self->mCamera.mLookAt.y = -0x60000;
+        self->mCamera.mLookAt.z = 0;
+        self->mCamera.mPos.x = 0;
+        self->mCamera.mPos.y = 0;
+        self->mCamera.mPos.z = t;
+        self->mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&self->mCamera);
     }
     y = self->mScrollY - self->mPosY + 0x110000;
     x = self->mPosX - 0x80000;

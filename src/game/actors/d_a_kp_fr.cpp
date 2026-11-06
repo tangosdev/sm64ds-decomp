@@ -67,7 +67,7 @@ extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
 #include "dBgCh_Actr.h"
 #include "private/mtx43.h"
 extern "C" {
-extern int IDENTITY_MATRIX4X3[];
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 int daKpFr_c::InitResources()
@@ -82,7 +82,7 @@ int daKpFr_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov070_02122044(0);
-    *(Mtx43 *)&mMatrix = *(Mtx43 *)IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     return 1;
 }
 

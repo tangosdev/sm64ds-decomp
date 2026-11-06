@@ -18,7 +18,7 @@ typedef struct {
     u8 unk23;
 } Rec;
 
-extern void func_020408b0(s32 a);
+extern void func_020408b0(u16 arg);
 extern void CpuCopy8(const void *src, void *dst, u32 size);
 extern void func_0205a588(void *dst, u8 val, u32 len);
 extern s32 func_02040714(void);
@@ -27,7 +27,7 @@ extern void func_02040790(void);
 extern void func_02040c34(s32 a, s32 b, void *c, void *d, s32 e);
 extern s32 func_020406b4(void *a, void *b);
 extern int func_02040704(void);
-extern void *func_0204068c(u16 a);
+extern void *func_0204068c(u16 aid);
 extern s32 func_0204271c(void *o);
 extern s32 func_02042748(void *a, void *b);
 extern s32 func_02040a84(void);
@@ -82,8 +82,8 @@ extern Rec data_020a1154[4];
 extern Rec data_020a1178; /* data_020a1154[1] */
 extern u8 data_020a0f10;
 extern u8 data_020a0fa6[24];
-extern u8 data_020a0fbe[24];
-extern s16 data_020a0f2c;
+extern u16 data_020a0fbe[4][3];
+extern u16 data_020a0f2c;
 extern u16 data_020a0f30;
 extern u8 data_020a0efc;
 
@@ -108,7 +108,7 @@ void func_0203ea5c(void) {
     Rec *var_r3_3;
     s32 sp10;
     Rec *var_r6_4;
-    u8 *var_r7_2;
+    u16(*var_r7_2)[3];
     s32 sp20;
     Rec *var_r1;
     s32 temp_r0;
@@ -336,7 +336,7 @@ void func_0203ea5c(void) {
                                                         if (func_02042748(var_sb, var_r7_2) != 0) {
                                                             CpuCopy8(var_r6_3, var_r8, 0x16);
                                                         }
-                                                        var_r7_2 += 6;
+                                                        var_r7_2 += 1;
                                                         var_r6_3 += 0x16;
                                                         var_r5_2 += 1;
                                                     } while (var_r5_2 < 4);

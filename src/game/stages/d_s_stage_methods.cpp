@@ -48,6 +48,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "dScStage_c.h"
+#include "LVL_Overlay.h"
 #include "Timer.h"
 #include "decl_common.h"
 #include "Sound.h"
@@ -416,11 +417,11 @@ extern s8 data_0209f30d;
 s8 gNumStageStars[4];
 extern s8 data_0209f311;
 static int data_0209f314;
-void *data_0209f318;
+dCamera_c *data_0209f318;
 static char *data_0209f31c;
 static int data_0209f320;
 static void *data_0209f324;
-static int *data_0209f328;
+static LVL_Overlay::StandardEntry *data_0209f328;
 s32 data_0209f32c;
 static void *data_0209f330;
 u16 *data_0209f334;
@@ -446,7 +447,7 @@ u8 gMapCapIconCharacters[9];
    draws no star marker, only a red-coin icon while gShowRedCoinMarkers is
    set. */
 u8 gStarMarkerTypes[12];
-void *data_0209f394[4];
+daPly_c *data_0209f394[4];
 void *data_0209f3a4[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
@@ -532,14 +533,14 @@ void PrepareVsMode(void);
 int StartWithFarCamera(void);
 unsigned char GetStarCameraSetting(int idx);
 int GetMinimapScale(int idx);
-void func_0202af80(int a, int b);
+void func_0202af80(short *table, int count);
 int GetMinimapID(dActor_c *actor, int arg);
-void func_0202b044(int a, int b);
-void func_0202b060(int a, int b);
+void func_0202b044(u16 *table, int count);
+void func_0202b060(char *table, int count);
 struct ObjTeleport *GetTeleportDestObj(int i);
-void func_0202b090(int a, int b);
-void func_0202b0c4(int a, int b);
-void func_0202b0e0(int a, int b);
+void func_0202b090(void *table, int count);
+void func_0202b0c4(void *table, int count);
+void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count);
 void SetTouchScreenDelay(void);
 void ResetInput(void);
 int IsLevelTinyHugeIslandOutside(int level);
@@ -1023,7 +1024,7 @@ void dScStage_c::CheckCameraInput() {
                 cam->pressed = 0;
                 cam->held = 0;
                 if (((TouchInfo *)gTouchHeld)[i].held != 0) {
-                    if (((dCamera_c *)data_0209f318)->mFlags & 0x1000) {
+                    if (data_0209f318->mFlags & 0x1000) {
                         // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
                         u8 state = data_0209f498[i].mode;
                         if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 &&
@@ -2704,7 +2705,7 @@ void dScStage_c::PS_Update() {
  * dScStage_c polls it before opening the pause menu. */
 
 extern "C" int func_02029408(void) {
-    return ((daPly_c *)data_0209f394[data_0209f250])->CanPause();
+    return data_0209f394[data_0209f250]->CanPause();
 }
 
 // @symbol _ZN10dScStage_c7PS_InitEv
@@ -3150,7 +3151,7 @@ void dScStage_c::RenderVsModeCountdown() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209f394[i]) {
-            int t = (((daPly_c *)data_0209f394[i])->mLevelEntryDone != 0);
+            int t = (data_0209f394[i]->mLevelEntryDone != 0);
             if (t == 1)
                 count++;
         }
@@ -3647,9 +3648,9 @@ extern "C" int GetMinimapScale(int idx) {
 
 // @symbol func_0202af80
 /* The six table setters below each store a pointer and its count. */
-extern "C" void func_0202af80(int a, int b) {
-    data_0209f348 = (short *)a;
-    data_0209f25c = b;
+extern "C" void func_0202af80(short *table, int count) {
+    data_0209f348 = table;
+    data_0209f25c = count;
 }
 
 // @symbol GetMinimapID
@@ -3684,15 +3685,15 @@ extern "C" int GetMinimapID(dActor_c *actor, int arg) {
 }
 
 // @symbol func_0202b044
-extern "C" void func_0202b044(int a, int b) {
-    data_0209f334 = (u16 *)a;
-    data_0209f2e8 = b;
+extern "C" void func_0202b044(u16 *table, int count) {
+    data_0209f334 = table;
+    data_0209f2e8 = count;
 }
 
 // @symbol func_0202b060
-extern "C" void func_0202b060(int a, int b) {
-    data_0209f31c = (char *)a;
-    data_0209f258 = b;
+extern "C" void func_0202b060(char *table, int count) {
+    data_0209f31c = table;
+    data_0209f258 = count;
 }
 
 // @symbol GetTeleportDestObj
@@ -3706,9 +3707,9 @@ extern "C" struct ObjTeleport *GetTeleportDestObj(int i) {
 }
 
 // @symbol func_0202b090
-extern "C" void func_0202b090(int a, int b) {
-    data_0209f330 = (void *)a;
-    data_0209f2d0 = b;
+extern "C" void func_0202b090(void *table, int count) {
+    data_0209f330 = table;
+    data_0209f2d0 = count;
 }
 
 // @symbol GetViewObj
@@ -3721,15 +3722,15 @@ extern "C" struct ViewObj *GetViewObj(int idx) {
 }
 
 // @symbol func_0202b0c4
-extern "C" void func_0202b0c4(int a, int b) {
-    data_0209f354 = (void *)a;
-    data_0209f1f8 = b;
+extern "C" void func_0202b0c4(void *table, int count) {
+    data_0209f354 = table;
+    data_0209f1f8 = count;
 }
 
 // @symbol func_0202b0e0
-extern "C" void func_0202b0e0(int a, int b) {
-    data_0209f328 = (int *)a;
-    data_0209f214 = b;
+extern "C" void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count) {
+    data_0209f328 = entries;
+    data_0209f214 = count;
 }
 
 // @symbol _ZN10dScStage_c10LoadSkyboxEv
@@ -3960,7 +3961,7 @@ void dScStage_c::RenderFog() {
     if (gCurrentSublevel == 5)
         fog = daMugenBGM_c::GetActiveFog();
     if (fog == 0) {
-        dCamera_c *camera = (dCamera_c *)data_0209f318;
+        dCamera_c *camera = data_0209f318;
         fog = mFog;
         if (camera->IsUnderwater())
             fog++;
@@ -4059,7 +4060,7 @@ int dScStage_c::Render() {
         dExtSimpleModel_c *skybox = mSkyboxModel;
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
-            Vector3 *cameraPosition = &((dCamera_c *)data_0209f318)->pos;
+            Vector3 *cameraPosition = &data_0209f318->pos;
             transform->t.x = cameraPosition->x >> 3;
             transform->t.y = cameraPosition->y >> 3;
             transform->t.z = cameraPosition->z >> 3;
@@ -4089,7 +4090,7 @@ int dScStage_c::Render() {
         int playerIndex = 0;
         int playerCount = data_0209f21c;
         for (; playerIndex < playerCount; playerIndex++) {
-            daPly_c *player = (daPly_c *)data_0209f394[playerIndex];
+            daPly_c *player = data_0209f394[playerIndex];
             if (player != 0) {
                 u8 playerFlags = player->mHasWings;
                 int *position = (int *)(&player->mPosX);
@@ -4174,9 +4175,9 @@ int dScStage_c::Behavior() {
                 int cnt = 0;
                 int i;
                 for (i = 0; i < 4; i++) {
-                    char *p = (char *)data_0209f394[i];
+                    daPly_c *p = data_0209f394[i];
                     if (p != 0) {
-                        int t = (((daPly_c *)p)->mLevelEntryDone != 0) ? 1 : 0;
+                        int t = (p->mLevelEntryDone != 0) ? 1 : 0;
                         if (t == 1)
                             cnt++;
                     }

@@ -189,7 +189,7 @@ extern "C" {
 extern signed char gCurrentSublevel;
 extern int data_0209f32c;
 extern unsigned char data_0209f2d8;
-extern char data_0209f318[];
+extern dCamera_c *data_0209f318;
 extern char data_020a0edc[];
 extern SaveBlock data_0209caa0;
 extern s16 data_02082214[];
@@ -1033,7 +1033,7 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
     o = dActor_c::Spawn(
         ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
     if (o == 0) return;
-    g = *(dCamera_c**)data_0209f318;
+    g = data_0209f318;
     f.vel[0] = 0;
     f.vel[1] = 0x11000;
     f.vel[2] = 0;
@@ -1121,7 +1121,7 @@ void daObjHatenaBlock_c::func_ov102_021492d4() {
   if ((int)(*(unsigned char*)(&data_0209f2d8) == 1) != 0) {
     rot.y = mAngleY;
   } else {
-    rot.y = ((dCamera_c *)*(char**)data_0209f318)->mAngleY + 0x4000;
+      rot.y = data_0209f318->mAngleY + 0x4000;
   }
   dActor_c::Spawn(ACTOR_FEATHER, 0, pos, &rot, mAreaId, -1);
 }

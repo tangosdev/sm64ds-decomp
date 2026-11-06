@@ -111,7 +111,7 @@ extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
 extern void Trmp2Spinner_Update(char *obj);
-extern void Trmp2Spinner_Init(void *obj, void *kind);
+extern void Trmp2Spinner_Init(void *obj, int hitCount);
 extern void Trmp2Spinner_SetModel(void *self);
 extern int sTrmp2BrushWord[];
 extern void *func_02054efc(void);
@@ -170,7 +170,6 @@ extern short sTrmpStartTouchX;
 extern struct P2 pmf_dScMgTrampoline2_c_StateIntro;
 extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
-extern void Camera_UpdateMatrices(void *cam);
 extern u8 gMainScreenLayers;
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -328,21 +327,21 @@ s32 dScMgTrampoline2_c::InitResources() {
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082414);
-    this->mCameras[0].mEyeX = 0;
-    this->mCameras[0].mEyeY = -0x64000;
-    this->mCameras[0].mEyeZ = 0;
-    this->mCameras[0].mTargetX = 0;
-    this->mCameras[0].mTargetY = 0;
-    this->mCameras[0].mTargetZ = fov;
-    this->mCameras[0].mAngle = 0x400;
+    this->mCameras[0].mLookAt.x = 0;
+    this->mCameras[0].mLookAt.y = -0x64000;
+    this->mCameras[0].mLookAt.z = 0;
+    this->mCameras[0].mPos.x = 0;
+    this->mCameras[0].mPos.y = 0;
+    this->mCameras[0].mPos.z = fov;
+    this->mCameras[0].mFovAngle = 0x400;
     Camera_UpdateMatrices(&mCameras[0]);
-    this->mCameras[1].mEyeX = 0;
-    this->mCameras[1].mEyeY = 0x82000;
-    this->mCameras[1].mEyeZ = 0;
-    this->mCameras[1].mTargetX = 0;
-    this->mCameras[1].mTargetY = 0;
-    this->mCameras[1].mTargetZ = fov;
-    this->mCameras[1].mAngle = 0x400;
+    this->mCameras[1].mLookAt.x = 0;
+    this->mCameras[1].mLookAt.y = 0x82000;
+    this->mCameras[1].mLookAt.z = 0;
+    this->mCameras[1].mPos.x = 0;
+    this->mCameras[1].mPos.y = 0;
+    this->mCameras[1].mPos.z = fov;
+    this->mCameras[1].mFovAngle = 0x400;
     Camera_UpdateMatrices(&mCameras[1]);
     if (Trmp2Mario_InitPool(mMarios, 5) == 0)
         return 0;
@@ -1130,7 +1129,7 @@ void Trmp2Spinner_LoadAll(int x, int count) {
 
 // @symbol Trmp2Spinner_InitAll
 extern "C" {
-void Trmp2Spinner_InitAll(unsigned char *c) {
+void Trmp2Spinner_InitAll(int hitCount) {
     int i = 0;
     int n = sTrmp2SpinnerCount;
     unsigned char *base;
@@ -1142,7 +1141,7 @@ void Trmp2Spinner_InitAll(unsigned char *c) {
     p = base;
     do {
         if (((Trmp2Spinner *)p)->mLifeTimer == 0) {
-            Trmp2Spinner_Init(base + (i * 0x78), c);
+            Trmp2Spinner_Init(base + (i * 0x78), hitCount);
             return;
         }
         i++;
@@ -1205,9 +1204,8 @@ extern int RandomIntInternal(int *seed);
 extern void func_020169f4(char *self, int kind);
 
 // @symbol Trmp2Spinner_Init
-void Trmp2Spinner_Init(void *r0, void *r1) {
+void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
-    int value = (int)r1;
     struct Tbl t = sTrmp2SpinnerSpeeds;
     unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
     int idx;

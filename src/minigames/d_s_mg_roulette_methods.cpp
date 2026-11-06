@@ -15,8 +15,6 @@
  */
 
 // leftovers:
-// - The camera is reached through the base's pad_4660, its head, as the
-//   sibling scenes do: nothing names the bytes before mCameraEyeX.
 // - Behavior keeps two raw spellings, each with its measured reason beside
 //   it: the four mMeter strips it adds racers to, and the reload of a
 //   racer's tile in phase 2.
@@ -178,7 +176,6 @@ void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
-void Camera_UpdateMatrices(char *cam);
 
 void func_0203d680(Vec2_Fix12 *out, const Vec2_Fix12 *in, int scale);
 void *Ov004_LoadFile(int id);
@@ -186,12 +183,11 @@ void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
 void Mg_DrawCredits(char *, int, int, int);
 void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
-void MgCoins_StartPayout(void);
+void MgCoins_StartPayout(int);
 void MgCoins_Update(void);
 void MgCoins_Reset(void);
-void Camera_InitDealerView(char *c);
 int Dealer_IsAnimDone(char *a);
-int Dealer_IsIdle(char *c);
+int Dealer_IsIdle(Dealer *dealer);
 void Dealer_Draw(char *c);
 void Dealer_Update(Dealer *dealer);
 int Dealer_Load(char *c);
@@ -299,7 +295,7 @@ s32 dScMgRoulette_c::InitResources() {
     gSubScreenLayers = 0x15;
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
     if (RouletteBoard_LoadModels((char *)&mBoard) == 0)
@@ -605,22 +601,22 @@ s32 dScMgRoulette_c::Render() {
                 int d1 = *(int *)(data_ov006_0213e354 + off);
                 int b1 = *(int *)(data_ov006_0213e350 + off);
                 int a1 = *(int *)(data_ov006_0213e34c + off);
-                mCameraTargetX = a1;
-                mCameraTargetY = b1;
-                mCameraTargetZ = d1;
+                mCamera.mPos.x = a1;
+                mCamera.mPos.y = b1;
+                mCamera.mPos.z = d1;
             }
             {
                 int f2 = *(int *)(data_ov006_0213e378 + off);
                 int e2 = *(int *)(data_ov006_0213e374 + off);
                 int d2 = *(int *)(data_ov006_0213e370 + off);
-                mCameraEyeX = d2;
-                mCameraEyeY = e2;
-                mCameraEyeZ = f2;
+                mCamera.mLookAt.x = d2;
+                mCamera.mLookAt.y = e2;
+                mCamera.mLookAt.z = f2;
             }
-            mCameraAngle = angle;
-            Camera_UpdateMatrices((char *)pad_4660);
+            mCamera.mFovAngle = angle;
+            Camera_UpdateMatrices(&mCamera);
         } else {
-            Camera_InitDealerView((char *)pad_4660);
+            Camera_InitDealerView(&mCamera);
         }
         if (preset != 0)
             RouletteBoard_Draw((char *)&mBoard);
@@ -649,7 +645,7 @@ int dScMgRoulette_c::CanEndState(int /* mode */) {
             (mPhase)++;
         break;
     case 6:
-        if (Dealer_IsIdle((char *)&mDealer) != 0) {
+        if (Dealer_IsIdle(&mDealer) != 0) {
             mPhaseTimer = 0x3c;
             mDealIndex = 0;
             (mPhase)++;
@@ -659,7 +655,7 @@ int dScMgRoulette_c::CanEndState(int /* mode */) {
         (mPhaseTimer)--;
         if (mPhaseTimer == 0) {
             if (mScore != 0)
-                MgCoins_StartPayout();
+                MgCoins_StartPayout(mScore);
             (mPhase)++;
         }
         break;

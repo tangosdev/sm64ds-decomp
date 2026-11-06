@@ -48,7 +48,7 @@ int sTrmpItemsActive;
 char *sTrmpItems;
 int sTrmp2Score;
 int sTrmpItemCount;
-int sTrmp2MarioPtrs[5];
+void *sTrmp2MarioPtrs[5];
 void *sTrmpJumpers[5];
 }
 
@@ -122,7 +122,7 @@ extern "C" {
 extern struct P2 pmf_TrmpItem_GrowScale;
 }
 
-extern "C" void TrmpItem_ProjectToScreen(char *c, int scoreValue) {
+extern "C" void TrmpItem_ProjectToScreen(char *c, unsigned short scoreValue) {
     int screenX, screenY;
     if (TRMPITEM(c)->mPos.y > 0) {
         Camera_ProjectToScreen(sMgSubCamera, &TRMPITEM(c)->mPos, &screenX, &screenY);
@@ -165,38 +165,28 @@ struct S {
 extern "C" {
 extern struct S pmf_TrmpItem_MotionSpinHover;
 }
-extern "C" void TrmpItem_SetMotionSpinHover(int *c) {
+extern "C" void TrmpItem_SetMotionSpinHover(char *c) {
     TRMPITEM(c)->mPhase = 0;
     *(struct S *)c = pmf_TrmpItem_MotionSpinHover;
 }
 }
 
 namespace s020cd9b0 {
-typedef struct {
-    int x, y, z;
-} Vec3;
-extern "C" void func_0203cc28(int *p, int angle);
-extern "C" void func_0203ce80(Vec3 *dst, Vec3 *src);
-extern "C" void func_0203cf00(Vec3 *out, Vec3 *a, Vec3 *b);
-extern "C" void Quaternion_FromVector3(int *q, Vec3 *axis, Vec3 *v);
-extern "C" void Quaternion_Normalize(int *q);
-
 extern "C" void TrmpItem_MotionSpinDrift(char *self) {
     /* The spin axis and the reference direction, built on first use. */
     static Vector3 sUnitY(0, 0x1000, 0);
     static Vector3 sUnitZ(0, 0, 0x1000);
 
-    Vec3 normalCopy, tangent, tangentCopy, unused;
+    struct Vector3 normalCopy, tangent, tangentCopy;
 
     func_0203cc28((int *)&TRMPITEM(self)->mForward, 0x100);
-    func_0203ce80(&normalCopy, (Vec3 *)&TRMPITEM(self)->mForward);
-    func_0203cf00(&tangent, (Vec3 *)&TRMPITEM(self)->mForward, (Vec3 *)&sUnitZ);
+    func_0203ce80(&normalCopy, &TRMPITEM(self)->mForward);
+    func_0203cf00(&tangent, &TRMPITEM(self)->mForward, &sUnitZ);
     TRMPITEM(self)->mSide.x = tangent.x;
     TRMPITEM(self)->mSide.y = tangent.y;
     TRMPITEM(self)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (Vec3 *)&TRMPITEM(self)->mSide);
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
-                           (Vec3 *)&TRMPITEM(self)->mForward);
+    func_0203ce80(&tangentCopy, &TRMPITEM(self)->mSide);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sUnitY, &TRMPITEM(self)->mForward);
     Quaternion_Normalize(TRMPITEM(self)->mRotation);
 }
 }
@@ -307,31 +297,21 @@ extern "C" void TrmpItem_SetMotionSway(char *c) {
 }
 
 namespace s020cdd08 {
-typedef struct {
-    int x, y, z;
-} Vec3;
-extern "C" void func_0203cc28(int *p, int angle);
-extern "C" void func_0203ce80(Vec3 *dst, Vec3 *src);
-extern "C" void func_0203cf00(Vec3 *out, Vec3 *a, Vec3 *b);
-extern "C" void Quaternion_FromVector3(int *q, Vec3 *axis, Vec3 *v);
-extern "C" void Quaternion_Normalize(int *q);
-
 extern "C" void TrmpItem_MotionSpin(char *self) {
     /* The spin axis and the reference direction, built on first use. */
     static Vector3 sUnitY(0, 0x1000, 0);
     static Vector3 sUnitZ(0, 0, 0x1000);
 
-    Vec3 normalCopy, tangent, tangentCopy, d;
+    struct Vector3 normalCopy, tangent, tangentCopy;
 
     func_0203cc28((int *)&TRMPITEM(self)->mForward, 0x100);
-    func_0203ce80(&normalCopy, (Vec3 *)&TRMPITEM(self)->mForward);
-    func_0203cf00(&tangent, (Vec3 *)&TRMPITEM(self)->mForward, (Vec3 *)&sUnitZ);
+    func_0203ce80(&normalCopy, &TRMPITEM(self)->mForward);
+    func_0203cf00(&tangent, &TRMPITEM(self)->mForward, &sUnitZ);
     TRMPITEM(self)->mSide.x = tangent.x;
     TRMPITEM(self)->mSide.y = tangent.y;
     TRMPITEM(self)->mSide.z = tangent.z;
-    func_0203ce80(&tangentCopy, (Vec3 *)&TRMPITEM(self)->mSide);
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
-                           (Vec3 *)&TRMPITEM(self)->mForward);
+    func_0203ce80(&tangentCopy, &TRMPITEM(self)->mSide);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sUnitY, &TRMPITEM(self)->mForward);
     Quaternion_Normalize(TRMPITEM(self)->mRotation);
 }
 }
@@ -896,18 +876,12 @@ extern "C" void TrmpItem_Update(char *item) {
 }
 
 namespace s020ceabc {
-typedef struct {
-    int x, y, z;
-} Vec3;
-
 extern "C" {
 extern int data_02092768[4];
 }
 extern "C" {
-extern int data_020a0ebc[3];
+extern Vector3 data_020a0ebc;
 }
-extern "C" void func_0203cc28(int *p, int angle);
-extern "C" void Quaternion_FromVector3(int *q, Vec3 *a, Vec3 *b);
 extern "C" void TrmpItem_StartAppear(char *c);
 
 extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemType,
@@ -947,8 +921,7 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
     TRMPITEM(self)->mRotation[1] = data_02092768[1];
     TRMPITEM(self)->mRotation[2] = data_02092768[2];
     TRMPITEM(self)->mRotation[3] = data_02092768[3];
-    Quaternion_FromVector3(TRMPITEM(self)->mRotation, (Vec3 *)&sUnitY,
-                           (Vec3 *)&TRMPITEM(self)->mForward);
+    Quaternion_FromVector3(TRMPITEM(self)->mRotation, &sUnitY, &TRMPITEM(self)->mForward);
     TRMPITEM(self)->mSizeIdx = itemType;
     TRMPITEM(self)->mMotionKind = motionType;
     TRMPITEM(self)->mActive = 1;
@@ -964,9 +937,9 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
         TRMPITEM(self)->mModel = &TRMPITEM(self)->mRingC;
         break;
     }
-    TRMPITEM(self)->mScale.x = data_020a0ebc[0];
-    TRMPITEM(self)->mScale.y = data_020a0ebc[1];
-    TRMPITEM(self)->mScale.z = data_020a0ebc[2];
+    TRMPITEM(self)->mScale.x = data_020a0ebc.x;
+    TRMPITEM(self)->mScale.y = data_020a0ebc.y;
+    TRMPITEM(self)->mScale.z = data_020a0ebc.z;
     TRMPITEM(self)->mAppearScale = 0;
     *(short *)(self + 0x92) = 0x5a;
     TrmpItem_StartAppear(self);
@@ -1058,7 +1031,7 @@ extern "C" {
 extern int sTrmpItemCount;
 }
 extern "C" {
-extern unsigned char *sTrmpItems;
+extern char *sTrmpItems;
 }
 extern "C" {
 extern int sTrmpItemsActive;
@@ -1098,10 +1071,10 @@ extern "C" void TrmpItem_ReleaseFiles(void) {
 namespace s020cef14 {
 extern "C" void TrmpItem_Load(void *p);
 extern "C" {
-extern char *sTrmpItems[];
+extern char *sTrmpItems;
 }
 extern "C" {
-extern int sTrmpItemCount[];
+extern int sTrmpItemCount;
 }
 
 extern "C" void TrmpItem_LoadAll(char *items, int count) {
@@ -1110,17 +1083,17 @@ extern "C" void TrmpItem_LoadAll(char *items, int count) {
     dExtSimpleModel_c::LoadFile(sTrmpItemRingAModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingBModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingCModelFile);
-    sTrmpItems[0] = items;
-    sTrmpItemCount[0] = count;
+    sTrmpItems = items;
+    sTrmpItemCount = count;
     itemIndex = 0;
     if (count <= 0)
         return;
     itemOffset = 0;
     do {
-        TrmpItem_Load(sTrmpItems[0] + itemOffset);
+        TrmpItem_Load(sTrmpItems + itemOffset);
         itemIndex++;
         itemOffset += 0x1d0;
-    } while (itemIndex < sTrmpItemCount[0]);
+    } while (itemIndex < sTrmpItemCount);
 }
 }
 
@@ -1643,7 +1616,7 @@ extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" int DotVec3(const Vector3 *a, const Vector3 *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
-extern "C" int func_0203d524(int *a, int *b);
+extern "C" int func_0203d524(struct V2 *a, struct V2 *b);
 extern "C" void D3D_PlaySePannedLoop(int a0, int a1, int a2);
 extern "C" void TrmpLine_PointDistance(char *sl, void *arg1, const Vector3 *r2);
 extern "C" void TrmpLine_SetStateSettle(char *p);
@@ -1727,8 +1700,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
         Vec2_Sub((int *)&secondOffset, (int *)&lineStart, (int *)&currentProjection);
 
         crossedLine = 0;
-        previousSide = func_0203d524((int *)&edgeDirection, (int *)&firstOffset);
-        currentSide = func_0203d524((int *)&edgeDirection, (int *)&secondOffset);
+        previousSide = func_0203d524(&edgeDirection, &firstOffset);
+        currentSide = func_0203d524(&edgeDirection, &secondOffset);
         previousSide = CLAMP(previousSide, -1, 1);
         currentSide = CLAMP(currentSide, -1, 1);
 
@@ -1742,8 +1715,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
             Vec2_Sub((int *)&e2, (int *)&previousProjection, (int *)&lineEnd);
             secondOffset = e2;
 
-            startSide = func_0203d524((int *)&edgeDirection, (int *)&firstOffset);
-            endSide = func_0203d524((int *)&edgeDirection, (int *)&secondOffset);
+            startSide = func_0203d524(&edgeDirection, &firstOffset);
+            endSide = func_0203d524(&edgeDirection, &secondOffset);
             startSide = CLAMP(startSide, -1, 1);
             endSide = CLAMP(endSide, -1, 1);
             if (startSide * endSide <= 0)
@@ -2133,26 +2106,23 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
 }
 
 namespace s020d09e0 {
-struct V3 {
-    int z, y, x;
-};
-extern "C" void func_020553a4(void *p);
-extern "C" void func_0203cd80(struct V3 *out, int a, int b);
+extern "C" void func_0203cd80(int *v, short angle);
 extern "C" void TrmpLine_Draw(char *p);
 extern "C" {
-extern char data_0209b3ec[];
+extern Matrix4x3 data_0209b3ec; /* local extern: the view matrix (Graphics3D.cpp) */
 }
 // @symbol TrmpLine_DrawAll
 extern "C" void TrmpLine_DrawAll(void) {
-    struct V3 s;
+    int light[3];
     *(volatile int *)0x4000440 = 2;
-    func_020553a4(data_0209b3ec);
-    s.z = 0;
-    s.y = 0;
-    s.x = 0xfffff008;
-    func_0203cd80(&s, -0x2000, 0xfffff008);
-    *(volatile int *)0x40004c8 = (((short)s.z >> 3) & 0x3ff) | ((((short)s.y >> 3) & 0x3ff) << 10) |
-                                 ((((short)s.x >> 3) & 0x3ff) << 20) | 0x40000000;
+    func_020553a4(&data_0209b3ec);
+    light[0] = 0;
+    light[1] = 0;
+    light[2] = 0xfffff008;
+    func_0203cd80(light, -0x2000);
+    *(volatile int *)0x40004c8 = (((short)light[0] >> 3) & 0x3ff) |
+                                 ((((short)light[1] >> 3) & 0x3ff) << 10) |
+                                 ((((short)light[2] >> 3) & 0x3ff) << 20) | 0x40000000;
     *(volatile int *)0x40004cc = 0x40007fff;
     int i;
     char *p = (char *)sTrmpLines;
@@ -2212,12 +2182,12 @@ extern "C" void TrmpLine_LoadTextures(void) {
 
 namespace s020d0b78 {
 extern "C" {
-extern short sTrmpStartLinePoints[];
+extern char sTrmpStartLinePoints[];
 }
 extern "C" {
 extern short sTrmpStartLine[];
 }
-extern "C" void TrmpLine_Build(short *g, short *a, short *b);
+extern "C" void TrmpLine_Build(char *g, short *a, short *b);
 // @symbol TrmpLine_CreateStartLineT2
 extern "C" void TrmpLine_CreateStartLineT2(void) {
     short a[2];
@@ -2236,12 +2206,12 @@ extern "C" void TrmpLine_CreateStartLineT2(void) {
 
 namespace s020d0bd8 {
 extern "C" {
-extern short sTrmpStartLinePoints[];
+extern char sTrmpStartLinePoints[];
 }
 extern "C" {
 extern short sTrmpStartLine[];
 }
-extern "C" void TrmpLine_Build(short *g, short *a, short *b);
+extern "C" void TrmpLine_Build(char *g, short *a, short *b);
 // @symbol TrmpLine_CreateStartLineT1
 extern "C" void TrmpLine_CreateStartLineT1(void) {
     short a[2];
@@ -2282,7 +2252,7 @@ extern "C" int Vec2_Len(int *v);
 extern "C" void func_0203d630(int *p, int m);
 extern "C" void func_0203d704(int *o, int *a, int *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
-extern "C" void TrmpLine_Build(s16 *slot, s16 *a, s16 *b);
+extern "C" void TrmpLine_Build(char *slot, s16 *a, s16 *b);
 
 extern "C" {
 extern s16 data_ov006_02140cb4[];
@@ -2324,7 +2294,7 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
     int weightedY;
     int scaledDirectionLength;
     int slotOffset;
-    s16 *newLine;
+    char *newLine;
 
     func_0203b958(deltaPixels, startPoint, endPoint);
 
@@ -2446,7 +2416,7 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
             endCopy[0] = endPoint[0];
             endCopy[1] = endPoint[1];
             slotOffset = slotIndex * 0x32c;
-            newLine = (s16 *)((int)sTrmpLines + slotOffset);
+            newLine = (char *)sTrmpLines + slotOffset;
             TrmpLine_Build(newLine, startCopy, endCopy);
             // sTrmpLines + 0x324, 0x326 and 0x31e, addressed through their own
             // symbols: mBouncesLeft, mBounceCount and mSlotIndex.

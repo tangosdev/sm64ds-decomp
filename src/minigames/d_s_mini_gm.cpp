@@ -85,8 +85,8 @@ extern MinigameSaveData data_0209cae4;
 extern SaveBlock data_0209caa0;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern short gSubBg3HOffset[];
-extern short gSubBg0HOffset[];
+extern short gSubBg3HOffset;
+extern short gSubBg0HOffset;
 extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
@@ -1090,8 +1090,8 @@ void MiniGm_UpdatePageScroll(char *self) {
             }
         }
     }
-    gSubBg0HOffset[0] = (short)scene->mSubBgScrollX;
-    gSubBg3HOffset[0] = (short)scene->mSubBgScrollX;
+    gSubBg0HOffset = (short)scene->mSubBgScrollX;
+    gSubBg3HOffset = (short)scene->mSubBgScrollX;
 }
 }
 

@@ -13577,7 +13577,7 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
       "linkerOutput": null
@@ -13674,12 +13674,6 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the function-local static local; symbols.txt homes it at 0x0210f344"
-    },
-    {
-      "symbol": "data_ov002_0210a3b4",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     },
     {
       "symbol": "data_ov002_0210a3bc",
@@ -14028,377 +14022,383 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
+    },
+    {
+      "symbol": "data_ov002_0210a3b4",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF descriptor emits local; the configured ROM symbol uses global binding"
     }
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4919",
+      "from": "_ZGVsLevelIntroOff$4914",
       "to": "_ZGVsLevelIntroOff$4424",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "@4922",
+      "from": "@4917",
       "to": "@4427",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "sLevelIntroOff$4919",
+      "from": "sLevelIntroOff$4914",
       "to": "sLevelIntroOff$4424",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "_ZGVsTalkOff$5137",
+      "from": "_ZGVsTalkOff$5132",
       "to": "_ZGVsTalkOff$4648",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "@5140",
+      "from": "@5135",
       "to": "@4651",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "sTalkOff$5137",
+      "from": "sTalkOff$5132",
       "to": "sTalkOff$4648",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "_ZGVsAnchorOff$6693",
+      "from": "_ZGVsAnchorOff$6686",
       "to": "_ZGVsAnchorOff$6223",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "@6696",
+      "from": "@6689",
       "to": "@6226",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "sAnchorOff$6693",
+      "from": "sAnchorOff$6686",
       "to": "sAnchorOff$6223",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "_ZGVsDoorMsgOff$6721",
+      "from": "_ZGVsDoorMsgOff$6714",
       "to": "_ZGVsDoorMsgOff$6251",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "@6724",
+      "from": "@6717",
       "to": "@6254",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "sDoorMsgOff$6721",
+      "from": "sDoorMsgOff$6714",
       "to": "sDoorMsgOff$6251",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "_ZGVsStarDoorOff$7372",
+      "from": "_ZGVsStarDoorOff$7365",
       "to": "_ZGVsStarDoorOff$6917",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "@7375",
+      "from": "@7368",
       "to": "@6920",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "sStarDoorOff$7372",
+      "from": "sStarDoorOff$7365",
       "to": "sStarDoorOff$6917",
       "evidence": "compiler temp; re-keyed to the current composed TU after the state-descriptor accessors shifted compiler uniquifiers"
     },
     {
-      "from": "@1001",
-      "to": "data_ov002_0210a3b4",
-      "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
-    },
-    {
-      "from": "@1007",
+      "from": "@1002",
       "to": "data_ov002_0210a3bc",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1013",
+      "from": "@1008",
       "to": "data_ov002_0210a3c4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1019",
+      "from": "@1014",
       "to": "data_ov002_0210a3cc",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1025",
+      "from": "@1020",
       "to": "data_ov002_0210a3d4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1031",
+      "from": "@1026",
       "to": "data_ov002_0210a3e4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1037",
+      "from": "@1032",
       "to": "data_ov002_0210a3ec",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1043",
+      "from": "@1038",
       "to": "data_ov002_0210a3f4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1049",
+      "from": "@1044",
       "to": "data_ov002_0210a3fc",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1055",
+      "from": "@1050",
       "to": "data_ov002_0210a404",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1061",
+      "from": "@1056",
       "to": "data_ov002_0210a40c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1067",
+      "from": "@1062",
       "to": "data_ov002_0210a414",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1073",
+      "from": "@1068",
       "to": "data_ov002_0210a41c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1079",
+      "from": "@1074",
       "to": "data_ov002_0210a42c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1085",
+      "from": "@1080",
       "to": "data_ov002_0210a43c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1091",
+      "from": "@1086",
       "to": "data_ov002_0210a444",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1097",
+      "from": "@1092",
       "to": "data_ov002_0210a44c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1103",
+      "from": "@1098",
       "to": "data_ov002_0210a454",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1109",
+      "from": "@1104",
       "to": "data_ov002_0210a464",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1115",
+      "from": "@1110",
       "to": "data_ov002_0210a46c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1121",
+      "from": "@1116",
       "to": "data_ov002_0210a474",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1127",
+      "from": "@1122",
       "to": "data_ov002_0210a484",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1133",
+      "from": "@1128",
       "to": "data_ov002_0210a48c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1139",
+      "from": "@1134",
       "to": "data_ov002_0210a494",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1145",
+      "from": "@1140",
       "to": "data_ov002_0210a49c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1151",
+      "from": "@1146",
       "to": "data_ov002_0210a4a4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1157",
+      "from": "@1152",
       "to": "data_ov002_0210a4ac",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1163",
+      "from": "@1158",
       "to": "data_ov002_0210a4b4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1169",
+      "from": "@1164",
       "to": "data_ov002_0210a4c4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1175",
+      "from": "@1170",
       "to": "data_ov002_0210a4cc",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1181",
+      "from": "@1176",
       "to": "data_ov002_0210a4d4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1187",
+      "from": "@1182",
       "to": "data_ov002_0210a4dc",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1193",
+      "from": "@1188",
       "to": "data_ov002_0210a4e4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1199",
+      "from": "@1194",
       "to": "data_ov002_0210a4ec",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1205",
+      "from": "@1200",
       "to": "data_ov002_0210a4f4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1211",
+      "from": "@1206",
       "to": "data_ov002_0210a4fc",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1217",
+      "from": "@1212",
       "to": "data_ov002_0210a504",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1223",
+      "from": "@1218",
       "to": "data_ov002_0210a50c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1229",
+      "from": "@1224",
       "to": "data_ov002_0210a514",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1235",
+      "from": "@1230",
       "to": "data_ov002_0210a51c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1241",
+      "from": "@1236",
       "to": "data_ov002_0210a524",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1247",
+      "from": "@1242",
       "to": "data_ov002_0210a52c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1253",
+      "from": "@1248",
       "to": "data_ov002_0210a534",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1259",
+      "from": "@1254",
       "to": "data_ov002_0210a53c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1265",
+      "from": "@1260",
       "to": "data_ov002_0210a544",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@1271",
+      "from": "@1266",
       "to": "data_ov002_0210a54c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@923",
+      "from": "@918",
       "to": "data_ov002_0210a36c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@929",
+      "from": "@924",
       "to": "data_ov002_0210a45c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@935",
+      "from": "@930",
       "to": "data_ov002_0210a354",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@941",
+      "from": "@936",
       "to": "data_ov002_0210a35c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@947",
+      "from": "@942",
       "to": "data_ov002_0210a364",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@953",
+      "from": "@948",
       "to": "data_ov002_0210a374",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@959",
+      "from": "@954",
       "to": "data_ov002_0210a37c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@965",
+      "from": "@960",
       "to": "data_ov002_0210a384",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@971",
+      "from": "@966",
       "to": "data_ov002_0210a38c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@977",
+      "from": "@972",
       "to": "data_ov002_0210a394",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@983",
+      "from": "@978",
       "to": "data_ov002_0210a39c",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@989",
+      "from": "@984",
       "to": "data_ov002_0210a3a4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     },
     {
-      "from": "@995",
+      "from": "@990",
       "to": "data_ov002_0210a3ac",
+      "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
+    },
+    {
+      "from": "@996",
+      "to": "data_ov002_0210a3b4",
       "evidence": "compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged"
     }
   ],

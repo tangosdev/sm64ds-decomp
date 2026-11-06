@@ -11,7 +11,7 @@
  * dBgCh_Actr::SetWaterTrackFlag is the call
  * that ORs 0x4000 into dBgCh_Actr::mFlags; inlining the or deletes the call.
  * func_02012694 plays bank 3 at mCamSpacePos. It is not Sound::PlayBank3
- * (that body is 0x02012664). func_0200d8c8 shakes the camera.
+ * (that body is 0x02012664). dCamera_c::func_0200d8c8 shakes the camera.
  * func_ov002_020db54c launches the grabbed player; func_ov002_020db5f4
  * starts the hold state. func_ov102_0214b384 arms a bob-omb fuse;
  * func_ov102_0214ad14 makes it chase. GetHealth in func_ov078_02123f1c is
@@ -165,8 +165,8 @@ PMF data_ov078_0212705c[2] = {&daBombking_c::func_ov078_02123a3c,
 extern "C" {
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
-extern unsigned char data_0209f220[];
-extern void *data_0209f318;
+extern unsigned char data_0209f220;
+extern dCamera_c *data_0209f318;
 /* local extern: math/MtxStack.h's spellings of the matrix calls below
    clash with these (illegal function overloading). */
 extern Matrix4x3 data_020a0e68;
@@ -186,7 +186,6 @@ extern void func_0200fa8c(void *c, int a);
 extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_0200d8c8(void* cam, void* v, int strength);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
@@ -236,7 +235,7 @@ void daBombking_c::func_ov078_02123864() {
 
 int daBombking_c::func_ov078_021238ac()
 {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
     VecFx32 v;
     VecFx32 t;
     VecFx32 u;
@@ -403,7 +402,7 @@ int daBombking_c::func_ov078_02123d3c()
     v.y = this->mArenaPosY;
     v.z = this->mArenaPosZ;
 
-    if (data_0209f220[0] != 1) {
+    if (data_0209f220 != 1) {
         v.x = this->mPosX;
         v.y = this->mPosY;
         v.z = this->mPosZ;
@@ -524,7 +523,7 @@ int daBombking_c::func_ov078_021240a0() {
                 daPly_c *pl = mTalkingPlayer;
                 if (pl->StartTalk(*this, 1) != 0) {
                     msg = 0;
-                    if (data_0209f220[0] == 1) {
+                    if (data_0209f220 == 1) {
                         msg += (short)(pl->param1 + 0x9a);
                     } else {
                         msg = 0x95;
@@ -650,7 +649,7 @@ int daBombking_c::func_ov078_02124520()
     int *pp;
     s16 ang;
 
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         func_ov078_02125c24(0x7d0000);
         func_02012694(0x12c, &this->mCamSpacePosX);
@@ -814,7 +813,7 @@ int daBombking_c::func_ov078_021247bc()
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
                 if (pl2->ShowMessage(*(fBase_c *)this, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
-                    ((dCamera_c *)data_0209f318)->SetFlag_3();
+                    data_0209f318->SetFlag_3();
                     func_02012694(0x12a, &this->mCamSpacePosX);
                     KingBobOmb_SetState(&data_ov078_021270dc);
                 }
@@ -920,7 +919,7 @@ int daBombking_c::func_ov078_02124cf4()
 
     short msg = 0;
     Sound::ChangeMusicVolume(0x14, 0x15666);
-    if (data_0209f220[0] == 1) {
+    if (data_0209f220 == 1) {
         msg += (short)(other->param1 + 0x9a);
     } else {
         msg = 0x95;
@@ -1215,7 +1214,7 @@ int daBombking_c::func_ov078_02125448()
         }
 
         if (this->mThrowCooldown == 0) {
-            if (data_0209f220[0] == 1) {
+            if (data_0209f220 == 1) {
                 if (this->DistToCPlayer() < 0x3e8000) {
                     if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x2800) {
                         index = 0;
@@ -1396,7 +1395,7 @@ int daBombking_c::func_ov078_021259ec()
 
                 if (this->mTalkingPlayer->StartTalk(*(fBase_c *)this, 1)) {
                     Message::PrepareTalk();
-                    b = (data_0209f220[0] != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
+                    b = (data_0209f220 != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
                     if (player->ShowMessage(*(fBase_c *)this, b, (Vector3 *)(&v), 0, 0)) {
                         func_02012694(0x12a, &this->mCamSpacePosX);
                         this->mIntroTalked = 1;
@@ -1432,7 +1431,7 @@ int daBombking_c::func_ov078_02125bc8() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02125c24Ei
 void daBombking_c::func_ov078_02125c24(int strength) {
-    func_0200d8c8(data_0209f318, &this->mPosX, strength);
+    data_0209f318->func_0200d8c8(&mPos, strength);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1590,7 +1589,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 int daBombking_c::Behavior()
 {
     if (DistToCPlayer() < 0x1770000) {
-        ((dCamera_c *)data_0209f318)->mFramedActor = this;
+        data_0209f318->mFramedActor = this;
     }
 
     if (mState[1] != 0) {

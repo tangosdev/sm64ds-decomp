@@ -53,7 +53,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_0200f760",
+      "symbol": "_ZN8dActor_c13func_0200f760EP5dCc_c",
       "address": "0x0200f760",
       "size": "0x00000048",
       "legacy_source": "src/func_0200f760.c",
@@ -172,7 +172,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_0200fccc",
+      "symbol": "_ZN8dActor_c13func_0200fcccEi",
       "address": "0x0200fccc",
       "size": "0x00000038",
       "legacy_source": "src/func_0200fccc.c",
@@ -382,7 +382,7 @@
       "ordinal": 48
     },
     {
-      "symbol": "func_02010304",
+      "symbol": "_ZN8dActor_c13func_02010304EP5dCc_c",
       "address": "0x02010304",
       "size": "0x00000070",
       "legacy_source": "src/func_02010304.cpp",
@@ -571,7 +571,7 @@
       "ordinal": 75
     },
     {
-      "symbol": "func_02010da4",
+      "symbol": "_ZN8dActor_c13func_02010da4Ev",
       "address": "0x02010da4",
       "size": "0x00000064",
       "legacy_source": "src/func_02010da4.c",
@@ -737,22 +737,22 @@
       "reason": "This TU odr-uses Vector3 (members pass it by reference and build by-value temporaries), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     },
     {
-      "symbol": "_ZN8dActor_c21@class$107d_actor_cppD1Ev",
+      "symbol": "_ZN8dActor_c21@class$163d_actor_cppD1Ev",
       "disposition": "deadstrip",
       "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
     },
     {
-      "symbol": "_ZN8dActor_c21@class$104d_actor_cppD1Ev",
+      "symbol": "_ZN8dActor_c21@class$160d_actor_cppD1Ev",
       "disposition": "deadstrip",
       "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
     },
     {
-      "symbol": "_ZN8dActor_c21@class$101d_actor_cppD1Ev",
+      "symbol": "_ZN8dActor_c21@class$157d_actor_cppD1Ev",
       "disposition": "deadstrip",
       "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
     },
     {
-      "symbol": "_ZN8dActor_c20@class$98d_actor_cppD1Ev",
+      "symbol": "_ZN8dActor_c21@class$154d_actor_cppD1Ev",
       "disposition": "deadstrip",
       "reason": "Unnamed Vector3 union destructor emitted between C1 and C2. No symbols.txt row names it. Deadstripped so the kept constructor order is C1, Vector3sD1, C2."
     },
@@ -832,7 +832,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -940,22 +940,21 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7Vector3D1Ev",
-        "_ZN8dActor_c21@class$111d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$108d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$105d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$102d_actor_cppD1Ev",
+        "_ZN8dActor_c21@class$163d_actor_cppD1Ev",
+        "_ZN8dActor_c21@class$160d_actor_cppD1Ev",
+        "_ZN8dActor_c21@class$157d_actor_cppD1Ev",
+        "_ZN8dActor_c21@class$154d_actor_cppD1Ev",
         "_ZN7dBase_cD2Ev"
       ],
       "deadstripped": [
         "_ZN7Vector3D1Ev",
         "_ZN7dBase_cD2Ev",
-        "_ZN8dActor_c21@class$102d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$105d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$108d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$111d_actor_cppD1Ev"
+        "_ZN8dActor_c21@class$154d_actor_cppD1Ev",
+        "_ZN8dActor_c21@class$157d_actor_cppD1Ev",
+        "_ZN8dActor_c21@class$160d_actor_cppD1Ev",
+        "_ZN8dActor_c21@class$163d_actor_cppD1Ev"
       ],
       "droppedSections": [
-        5,
         6,
         7,
         8,
@@ -966,13 +965,14 @@
         13,
         14,
         15,
-        44,
-        191,
+        16,
+        45,
         192,
         193,
         194,
         195,
-        196
+        196,
+        197
       ],
       "data": [
         "_ZTV8dActor_c",

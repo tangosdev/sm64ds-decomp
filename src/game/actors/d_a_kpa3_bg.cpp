@@ -76,7 +76,7 @@ typedef struct Kpa3BgPieceSpot {
 
 extern s16 data_02082214[];
 extern Kpa3BgPieceSpot data_ov060_02119564[10];
-extern int data_0209b3ec;
+extern Matrix4x3 data_0209b3ec;
 
 extern SharedFilePtr *data_ov060_02119514[];
 extern SharedFilePtr *data_ov060_0211953c[];

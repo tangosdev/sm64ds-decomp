@@ -313,7 +313,7 @@ void dScMgLuigi_c::StartIris() {
 // @symbol _ZN12dScMgLuigi_c10DrawRewardEv
 void dScMgLuigi_c::DrawReward() {
     extern OamAttr **sLuigiTextSpritesByLanguage[];
-    extern char sMgDigitSprites[];
+    extern OamAttr *sMgDigitSprites[];
     if (mReward.shown == 0)
         return;
     int x = mReward.x >> 0xc;
@@ -328,7 +328,7 @@ void dScMgLuigi_c::DrawReward() {
         y = 0xb8;
     s32 language = GetGameLanguage();
     Mg_RenderSubSpriteMtx(sLuigiTextSpritesByLanguage[language][13], x - 8, y, 0);
-    Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[25], x + 8, y, 0);
+    Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
 }
 
 // @symbol _ZN12dScMgLuigi_c12UpdateRewardEv
@@ -739,7 +739,7 @@ void dScMgLuigi_c::DrawPictures() {
 // @symbol _ZN12dScMgLuigi_c13DrawPenaltiesEv
 void dScMgLuigi_c::DrawPenalties() {
     extern OamAttr **sLuigiTextSpritesByLanguage[];
-    extern char sMgDigitSprites[];
+    extern OamAttr *sMgDigitSprites[];
     int penaltyIndex;
     for (penaltyIndex = 0; penaltyIndex < 0x10; penaltyIndex++) {
         if (mPenalty[penaltyIndex].shown != 0) {
@@ -756,8 +756,8 @@ void dScMgLuigi_c::DrawPenalties() {
                 y = 0xb8;
             language = GetGameLanguage();
             Mg_RenderSubSpriteMtx(sLuigiTextSpritesByLanguage[language][14], x - 0x10, y, 0);
-            Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[41], x, y, 0);
-            Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[40], x + 0x10, y, 0);
+            Mg_RenderSubSpriteMtx(sMgDigitSprites[41], x, y, 0);
+            Mg_RenderSubSpriteMtx(sMgDigitSprites[40], x + 0x10, y, 0);
         }
     }
 }

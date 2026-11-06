@@ -67,18 +67,17 @@ extern int sMgCoinsBetPlaced;
 extern int func_0203d5dc(void *a, void *b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Camera_InitDealerView(void *p);
 void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void MgCoins_Draw(void);
 void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
 void Dealer_Draw(void *p);
-int Dealer_IsIdle(void *p);
+int Dealer_IsIdle(Dealer *dealer);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
-void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 void MgCoins_Reset(char *p);
 void FreeGfxSlotsById(int arg);
-void MgCoins_StartPayout(char *p);
+void MgCoins_StartPayout(int count);
 extern unsigned short gMgCoinsStatus;
 extern void LoadCard2SubBg3(void *c);
 extern int GetGameLanguage(void);
@@ -121,7 +120,7 @@ s32 dScMgMCarlo_c::InitResources() {
     gSubScreenLayers = 0x18;
     *(unsigned short *)0x4000008 = (*(unsigned short *)0x4000008 & ~3) | 1;
     *(unsigned short *)0x400100a = *(unsigned short *)0x400100a & ~3;
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
 
@@ -150,7 +149,7 @@ void dScMgMCarlo_c::StartRound(int arg) {
     sMCarloPickAllowed = 0;
     mRoundProgress = 0;
     mDealer.mReserved = 1;
-    Dealer_StartShuffle((char *)&mDealer, 4, 4, (int)&mRoundProgress);
+    Dealer_StartShuffle(&mDealer, 4, 4, &mRoundProgress);
     mDealer.mHand = 1;
     mRoundTimer = 0;
     mRoundState = STATE_START_PROMPT;
@@ -178,7 +177,7 @@ int dScMgMCarlo_c::CanEndState(int mode) {
                 MgCoins_StartSpend(dealt);
                 mRoundTimer = -1;
             } else {
-                MgCoins_StartPayout((char *)sMCarloPayout);
+                MgCoins_StartPayout(sMCarloPayout);
             }
             mRoundProgress = 0;
             mRoundState += 1;
@@ -339,7 +338,7 @@ s32 dScMgMCarlo_c::Behavior() {
  * cards with a positive vertical movement step first, then those with a
  * zero step. mYStep is an absolute magnitude, not a direction. */
 s32 dScMgMCarlo_c::Render() {
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
     Mg_DrawScoreTally((char *)this, 0xe0, 0x14, 1);

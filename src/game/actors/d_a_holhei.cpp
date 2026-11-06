@@ -33,6 +33,7 @@
 #include "daHolhei_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
+#include "dCamera_c.h"
 #include "SurfaceInfo.h"
 #include "dBgPi.h"
 #include "Sound.h"
@@ -56,10 +57,9 @@ extern short func_02010844(void* unused, Vector3* v, short angle);
 extern void func_02012694(unsigned int a, void *p);
 extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_ov002_020db54c(int p, int a, int b, int s);
-extern void func_0200d8c8(void* cam, void* v, int strength);
+extern void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int data_02092138;
-extern void* data_0209f318;
+extern dCamera_c *data_0209f318;
 int ApproachAngle(short *angle, short target, int a, int b,
                   int c); /* local extern: named parameters preserve @NNN */
 short Vec3_HorzAngle(const Vector3 *v0,
@@ -642,7 +642,7 @@ int daHolhei_c::func_ov062_021163b0() {
         TriplePoofDust();
         KillAndTrackInDeathTable();
         func_02012694(0x125, &mCamSpacePosX);
-        func_0200d8c8(data_0209f318, &mPosX, 0x7d0000);
+        data_0209f318->func_0200d8c8(&mPos, 0x7d0000);
         v[0].x = mPosX;
         v[0].y = mPosY;
         v[0].z = mPosZ;
@@ -702,7 +702,7 @@ int daHolhei_c::func_ov062_02116238() {
 // @symbol _ZN10daHolhei_c19func_ov062_021161a8Ev
 int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
-        func_ov002_020db54c((int)mHeld, 0x28000, 0x50000, mAngleY);
+        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
         mHeld = 0;
         func_02012694(0x126, &mCamSpacePosX);
     }

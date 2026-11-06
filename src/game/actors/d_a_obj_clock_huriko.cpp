@@ -57,8 +57,7 @@ struct ClockHurikoModelFilePtr : SharedFilePtr {
     ~ClockHurikoModelFilePtr();
 };
 
-
-extern signed char data_02092110[];
+extern signed char data_02092110;
 extern ClockHurikoModelFilePtr data_ov013_02112280;
 
 /* -------------------------------------------------------------------------- */
@@ -98,7 +97,7 @@ s32 daObjClockHuriko_c::InitResources() {
  * The swing angle is dActor_c::mAngleZ. Its separately materialized pointer
  * below preserves the ROM's load/read-modify-write order under 2004/b56. */
 s32 daObjClockHuriko_c::Behavior() {
-    if (data_02092110[0] <= 0) {
+    if (data_02092110 <= 0) {
         s16 *angleZ = &mAngleZ;
         /* The test reads the field instead of going through angleZ, and that is
            load-bearing under 2004/b56: the ROM tests the field directly

@@ -321,37 +321,37 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@482",
+      "from": "@481",
       "to": "@511",
       "evidence": "compiler temp; mwcc numbers this registration node @480 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
     },
     {
-      "from": "@483",
+      "from": "@482",
       "to": "@510",
       "evidence": "compiler temp; mwcc numbers this registration node @481 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
     },
     {
-      "from": "@485",
+      "from": "@484",
       "to": "@512",
       "evidence": "compiler temp; mwcc numbers this registration node @483 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
     },
     {
-      "from": "@484",
+      "from": "@483",
       "to": "@508",
       "evidence": "compiler temp; mwcc numbers this registration node @482 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
     },
     {
-      "from": "@487",
+      "from": "@486",
       "to": "data_ov091_02134e54",
       "evidence": "StateWait pointer-to-member constant (the initializer's first table copy source); ov100 already defines a global @485"
     },
     {
-      "from": "@489",
+      "from": "@488",
       "to": "data_ov091_02134e44",
       "evidence": "StateForward pointer-to-member constant (second table copy source); ov100 already defines a global @487"
     },
     {
-      "from": "@491",
+      "from": "@490",
       "to": "data_ov091_02134e4c",
       "evidence": "StateReturn pointer-to-member constant (third table copy source); ov100 already defines a global @489"
     }

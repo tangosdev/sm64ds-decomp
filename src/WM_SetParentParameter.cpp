@@ -7,13 +7,12 @@
 extern "C" {
 
 extern int WmCheckParentParameter(void *o);
-extern void WM_SetCallbackTable(int i, int val);
 
 /* NitroSDK WM_SetParentParameter(callback, pparaBuf): refuse user game info
  * without a buffer and MP sizes that, with the key-sharing overhead, pass
  * 0x200 bytes; then flush the parameter block (and the game info) and send
  * the command. */
-int WM_SetParentParameter(int self, char *o) {
+int WM_SetParentParameter(void *callback, char *o) {
     WmParentParam *param = (WmParentParam *)o;
     int r;
     u16 ksFlag;
@@ -29,7 +28,7 @@ int WM_SetParentParameter(int self, char *o) {
         param->childMaxSize + (ksFlag != 0 ? 6 : 0) > 0x200)
         return 6;
     WmCheckParentParameter(o);
-    WM_SetCallbackTable(7, self);
+    WM_SetCallbackTable(7, callback);
     CP15::FlushDataCache((u32)o, sizeof(WmParentParam));
     if (param->userGameInfoLength != 0) {
         CP15::FlushDataCache((u32)param->userGameInfo, param->userGameInfoLength);

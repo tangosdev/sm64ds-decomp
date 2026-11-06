@@ -333,6 +333,28 @@ two identical images. A respec deletes the registration. ROUND holds savestate
 paths and screenshots, so it lives outside the repository. The module docstring
 has the design.json format.
 
+### Particle lab: `tools/particle_lab.py`
+
+A sandbox for the 321 SPA particle effects (table decode in `tools/spa_dump.py`).
+Exploration tooling, not evidence by itself: it writes to a work directory outside the
+repo (default `C:/tmp/ptcl-lab`) because the shots are screenshots of the game.
+
+```sh
+python tools/particle_lab.py shoot --range 0 321      # GIF per effect + a no-spawn baseline diff (visible_pixels)
+python tools/particle_lab.py shoot 0x9c --place air   # placements: beside (default) feet air far
+python tools/particle_lab.py watch idle-walk          # log the effects the game spawns itself during scripted input
+python tools/particle_lab.py quiz r1 -n 40            # blind tagging round (key kept outside the quiz folder)
+python tools/particle_lab.py quizscore r1 answers.json
+python tools/particle_lab.py catalog && python tools/particle_lab.py gallery   # index.html: filter, search, name, export labels.json
+```
+
+`shoot` spawns through the landing helper `func_0200fc44` (patches its `mov r0,#0xb3` and
+moves the spawn point), then reloads the savestate and refuses to finish unless the original
+instruction is back. Effects that need an actor handle or callback draw nothing through
+`NewSimple` (0xa6); `visible_pixels` = 0 means "nothing here", not "nothing ever". `watch`
+records `NewSimple` calls only (not `System::New`). The quiz and the labels give a name an
+evidence trail; a name still has to be justified in the PR that lands it.
+
 ### Savestates, framing, overlays
 
 ```sh

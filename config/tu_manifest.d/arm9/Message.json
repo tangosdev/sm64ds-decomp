@@ -9,13 +9,20 @@
     "contiguous linker run: 0x0201cb7c..0x0201fcd4, 32 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "TOP EDGE: src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp (Message::SetTextGlobals, 0x0201cb2c..0x0201cb7c) ends where dScStage_c::UpdateMessage begins. It is the message-bank parser, called from the bank loader past this file's bottom edge (Message::LoadText), and nothing in this run calls it, so it stays out. It is also Message2.cpp's bottom edge. BOTTOM EDGE: src/LoadFont.cpp begins exactly at 0x0201fcd4. Message::ResetAllGlobals at 0x0201fcac is the last function of this file.",
     "CLASS-LOCAL COMPLETE: the run is every Message::* display entry point plus the message-window helpers they call (star-entry table walk, tile fill, BG clear), ending at the shared state reset func_0201eaac's consumers. DisplayText/Display self-calls resolve inside the TU.",
-    "UPPER EXTENSION (0x0201cb7c..0x0201ce10): func_0201cd08 is a display entry of the same shape as DisplaySaveStatusText, which follows it. It clears the BG0 message planes and draws two lines through func_0201d418 and Message_DrawCenteredLine, both members of this run, after the func_0201eaac reset. dScStage_c::UpdateMessage drives the window from the stage's frame: Message::UpdateWindow/Update, and Message::DisplaySaving for the 0x295 save prompt. It sits in the gap between the two Message runs and has no other home."
+    "UPPER EXTENSION (0x0201cb7c..0x0201ce10): func_0201cd08 is a display entry of the same shape as DisplaySaveStatusText, which follows it. It clears the BG0 message planes and draws two lines through func_0201d418 and Message_DrawCenteredLine, both members of this run, after the func_0201eaac reset. dScStage_c::UpdateMessage drives the window from the stage's frame: Message::UpdateWindow/Update, and Message::DisplaySaving for the 0x295 save prompt. It sits in the gap between the two Message runs and has no other home.",
+    ".bss EDGES: 0x0209d64c..0x0209e64c is one size-sorted run. mwcc places a TU's .bss objects in ascending size (notes/mwccarm-codegen.md 6dg), and the run climbs without a drop: 34 u8 (0x0209d64c..0x0209d6d0), four 16-bit words (0x0209d6d4..0x0209d6e0), the u8[4] choice table gMsgChoicePositions, ten words and pointers (0x0209d6e8..0x0209d70c), u8[0x3c] (0x0209d710) and the 0xf00-byte buffer data_0209d74c. BOTTOM: the 0x94-byte object at 0x0209d5b8 (read by func_0201a1bc/func_0201a244) drops to the u8 at 0x0209d64c. TOP: 0x0209e64c is a u8 again (read by func_020197b8, func_0201fec8, func_0201ffcc, func_02030790), the next TU's.",
+    "ONE ORIGINAL TU, FIVE TREE FILES: every arm9 .text reference into the run (config/arm9/relocs.txt) comes from 0x0201ab04..0x0201fec8, which the tree tiles with src/Message2.cpp, src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp, this file, src/LoadFont.cpp and src/ui/messages/_ZN7Message8LoadTextEv.cpp; the only other references are the stage (dScStage_c methods, KuppaScript) and overlays. A linker never interleaves two TUs' .bss, and data_0209d6e8/data_0209d6ec, written only by Message::SetTextGlobals, sit between data_0209d6e4 (Message2.cpp) and data_0209d6f0 (both message files) with no size drop at either side, so SetTextGlobals shares the original TU; LoadFont (data_0209d698, data_0209d6f8) and LoadText (data_0209d6fc) do too. The VS twin corroborates it: Message3.cpp, one tree TU, holds SetTextGlobalsVS, LoadFont3D and LoadTextVS beside the twins of Message2.cpp's functions, and its own .bss likewise ends in a u8[0x3c] (0x0209fd20) followed by a glyph buffer (0x0209fd5c), both referenced only from Message3.cpp. The whole run is claimed here, in the largest fragment, because the tree has not merged the five files."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x0201cb7c",
       "end": "0x0201fcd4"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0209d64c",
+      "end": "0x0209e64c"
     }
   ],
   "functions": [
@@ -245,7 +252,365 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "gMsgBoxWinTop",
+      "address": "0x0209d64c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::UpdateWindow, func_0201f138, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "gMsgBoxLeft",
+      "address": "0x0209d650",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::Update, Message::UpdateWindow, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d654",
+      "address": "0x0209d654",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, dScStage_c::UpdateMessage, func_0201eaac. Only this file references it, but include/decl_common.h declares it, so it stays global."
+    },
+    {
+      "symbol": "gMsgBoxWinLeft",
+      "address": "0x0209d658",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::UpdateWindow, func_0201f138, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d65c",
+      "address": "0x0209d65c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::LayoutLine, Message::Update, Message_DrawCenteredLine, Message_DrawLineBG2 and 9 more. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d660",
+      "address": "0x0209d660",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by LoadControllerModeText, LoadFont, Message::Display, Message::DisplayControllerModeText, Message::DisplayCourseNameForStarSelect, Message::DisplayDontSaveText, Message::DisplaySaveMenuText, Message::DisplaySaveStatusText and 34 more. Global: also referenced from LoadFont.cpp, Message2.cpp, ov002, ov058, ov063, ov079, ov084, ov085, game/stages/d_s_stage_methods.cpp."
+    },
+    {
+      "symbol": "data_0209d664",
+      "address": "0x0209d664",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::EndTalk, Message::PrepareTalk, func_0201fb4c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d668",
+      "address": "0x0209d668",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by LoadControllerModeText, Message::Display, Message::DisplayControllerModeText, Message::DisplayDontSaveText, Message::DisplayLevelClearText, Message::DisplayPauseText, Message::DisplaySaveMenuText, Message::DisplaySaveStatusText and 6 more. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d66c",
+      "address": "0x0209d66c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::Update, ProcessKuppaScript, daC_Jugem_c::StateArriveMain, daC_Jugem_c::StateGuideMain, func_0201eaac. Global: also referenced from Message2.cpp, ov085, KuppaScript.cpp."
+    },
+    {
+      "symbol": "data_0209d670",
+      "address": "0x0209d670",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::Update, Message::UpdateWindow, dScStage_c::UpdateMessage, func_0201eaac. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d674",
+      "address": "0x0209d674",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by LoadControllerModeText, Message::DisplayControllerModeText, Message::DisplaySaveStatusText, Message_DrawLineBG2, func_0201b100, func_0201cebc. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d678",
+      "address": "0x0209d678",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::AddChar, Message::DisplayText, Message::LayoutLine, func_0201d850. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d67c",
+      "address": "0x0209d67c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, dScStage_c::UpdateMessage, func_0201eaac. Only this file references it, but include/decl_common.h declares it, so it stays global."
+    },
+    {
+      "symbol": "data_0209d680",
+      "address": "0x0209d680",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::UpdateWindow, func_0201ef50, func_0201f138, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d684",
+      "address": "0x0209d684",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::Update, daMip_c::StateSaveTalkMain, daMky_c::func_ov030_02112da0, daMky_c::func_ov030_02113324, daObjCloset_c::Behavior, daObjHatenaSwitch_c::Behavior, daObj_Mip_Key_c::StateCarried, daPgRcer_c::func_ov019_02111fec and 4 more. Global: also referenced from Message2.cpp, ov002, ov019, ov030, ov058, ov062, ov085."
+    },
+    {
+      "symbol": "gMsgChoiceLine",
+      "address": "0x0209d688",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::AddChoice, Message::Update. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "gMsgChoiceIndex",
+      "address": "0x0209d68c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::AddChoice, Message::LayoutLine, Message::Update, func_0201eaac. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d690",
+      "address": "0x0209d690",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by func_0201b388, func_0201eaac, func_0201ef50. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d694",
+      "address": "0x0209d694",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::AddChoice, Message::LayoutLine, func_0201eaac. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d698",
+      "address": "0x0209d698",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by LoadFont, Message::AddChar, Message::UpdateWindow, func_0201adfc, func_0201b388, func_0201f32c. Global: also referenced from LoadFont.cpp, Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d69c",
+      "address": "0x0209d69c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::LayoutLine, Message::Update, func_0201eaac. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6a0",
+      "address": "0x0209d6a0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::LayoutLine, Message::Update, func_0201adfc. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6a4",
+      "address": "0x0209d6a4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::AddChar, Message::LayoutLine, func_0201adfc, func_0201b388, func_0201b6f8, func_0201d850. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6a8",
+      "address": "0x0209d6a8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by LoadControllerModeText, Message::Display, Message::DisplayControllerModeText, Message::DisplayCourseNameForStarSelect, Message::DisplayDontSaveText, Message::DisplayOptionsMenuText, Message::DisplayPauseText, Message::DisplaySaveMenuText and 18 more. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6ac",
+      "address": "0x0209d6ac",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::UpdateWindow, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6b0",
+      "address": "0x0209d6b0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by LoadControllerModeText, Message::AddChar, Message::AddChoice, Message::DisplayCourseNameForStarSelect, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::LayoutLine, Message::Update and 7 more. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6b4",
+      "address": "0x0209d6b4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::AddChoice, Message::LayoutLine, Message::Update, func_0201eaac. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6b8",
+      "address": "0x0209d6b8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::LayoutLine, func_0201d850, func_0201eaac. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6bc",
+      "address": "0x0209d6bc",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::LayoutLine, Message::Update, Message::UpdateWindow, daC_Jugem_c::StateTalkMain, daMip_c::StateCaughtMain, daObjTatefuda_c::Talk, daRedBombhei_c::func_ov084_0212c508 and 6 more. Global: also referenced from Message2.cpp, ov002, ov084, ov085."
+    },
+    {
+      "symbol": "data_0209d6c0",
+      "address": "0x0209d6c0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplayCourseNameForStarSelect, Message::DisplayOptionsMenuText, Message::DisplayStarNameForStarSelect, Message::DisplayText, func_0201b388, func_0201d418, func_0201d850, func_0201eaac. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "gMsgBoxStyle",
+      "address": "0x0209d6c4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::AddChar, Message::Display, Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::Update, func_0201eaac and 3 more. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "gMsgBoxCenterY",
+      "address": "0x0209d6c8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::Update, Message::UpdateWindow, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "gMsgBoxTop",
+      "address": "0x0209d6cc",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::Update, Message::UpdateWindow, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "gMsgBoxCenterX",
+      "address": "0x0209d6d0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::Update, Message::UpdateWindow, func_0201f32c. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6d4",
+      "address": "0x0209d6d4",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16. Referenced by LoadControllerModeText, LoadFont, Message::Display, Message::DisplayControllerModeText, Message::DisplayCourseNameForStarSelect, Message::DisplayDontSaveText, Message::DisplayLevelClearText, Message::DisplayOptionsMenuText and 19 more. Global: also referenced from LoadFont.cpp, ov084."
+    },
+    {
+      "symbol": "data_0209d6d8",
+      "address": "0x0209d6d8",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16. Referenced by Message::Update. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6dc",
+      "address": "0x0209d6dc",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16. Referenced by Message::Update. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6e0",
+      "address": "0x0209d6e0",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16. Referenced by func_0201b388, func_0201ef50. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "gMsgChoicePositions",
+      "address": "0x0209d6e4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8[4]. Referenced by Message::AddChoice, Message::Update. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6e8",
+      "address": "0x0209d6e8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. Referenced by Message::SetTextGlobals. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp."
+    },
+    {
+      "symbol": "data_0209d6ec",
+      "address": "0x0209d6ec",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. Referenced by Message::SetTextGlobals. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp."
+    },
+    {
+      "symbol": "data_0209d6f0",
+      "address": "0x0209d6f0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8 *. Referenced by Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::LayoutLine, Message::Update, Message_DrawCenteredLine, Message_DrawLineBG2 and 6 more. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6f4",
+      "address": "0x0209d6f4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "volatile int. Referenced by Message::AddCharPair, Message::AddChoice, Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::LayoutLine, Message::Update and 10 more. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6f8",
+      "address": "0x0209d6f8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. Referenced by LoadFont, Message::AddChar. Global: also referenced from LoadFont.cpp, Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d6fc",
+      "address": "0x0209d6fc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. Referenced by Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::LoadText, Message::SetTextGlobals, Message_DrawCenteredLine, Message_DrawLineBG2 and 6 more. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp, _ZN7Message8LoadTextEv.cpp, ov007."
+    },
+    {
+      "symbol": "data_0209d700",
+      "address": "0x0209d700",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int. Referenced by Message::LayoutLine. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d704",
+      "address": "0x0209d704",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "s32. Referenced by Message::AddChar, Message::LayoutLine, func_0201d850. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d708",
+      "address": "0x0209d708",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "MessageEntry *. Referenced by Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::SetTextGlobals, Message_DrawCenteredLine, Message_DrawLineBG2, func_0201d418 and 4 more. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp."
+    },
+    {
+      "symbol": "data_0209d70c",
+      "address": "0x0209d70c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int *. Referenced by Message::DisplayCourseNameForStarSelect, Message::DisplaySaving, Message::DisplayStarNameForStarSelect, Message::DisplayText, Message::SetTextGlobals, Message_DrawCenteredLine, Message_DrawLineBG2, func_0201d418 and 4 more. Global: also referenced from _ZN7Message14SetTextGlobalsEv.cpp."
+    },
+    {
+      "symbol": "data_0209d710",
+      "address": "0x0209d710",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8[0x3c]. Referenced by Message::AddChar, func_0201adfc, func_0201b388. Global: also referenced from Message2.cpp."
+    },
+    {
+      "symbol": "data_0209d74c",
+      "address": "0x0209d74c",
+      "size": "0xf00",
+      "binding": "STB_GLOBAL",
+      "evidence": "s32[0x3c0]. Referenced by Message::AddChar, Message::LayoutLine, func_0201adfc, func_0201b388, func_0201d850. Global: also referenced from Message2.cpp."
+    }
+  ],
   "compiler_only_output": [],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
@@ -255,8 +620,10 @@
     "#pragma defer_codegen off gives source-order emission: src/Message.cpp lists definitions ROM-ascending and the emitted section order is ROM-ascending. Deferred codegen was unusable because the three optimization-pragma functions would read their offs last-wins at end of file.",
     "The address-named helpers and the two C helpers (LoadControllerModeText, Message_DrawCenteredLine) keep extern \"C\" linkage and their existing names. LoadControllerModeText keeps its per-function opt_common_subs off under a scoped #pragma push/pop.",
     "data_0209d6f4 is declared `volatile int`: DisplayCourseNameForStarSelect stores it twice back-to-back and both stores must emit under the merged decl.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    ".bss 0x0209d64c..0x0209e64c (2026-11-06): the 51 objects of the message run are defined in this file instead of declared extern. All are global: 49 are referenced from another tree fragment of the original TU (Message2.cpp, SetTextGlobals, LoadFont, LoadText) or from outside the run, and the two this file alone references (data_0209d654, data_0209d67c) are declared in include/decl_common.h. Once the five fragments are one file, objects with no reader outside the run can become statics. Names are unchanged: the address-named objects keep their address names, and no symbols.txt row moves. Types follow the existing declarations (data_0209d6f4 keeps this file's volatile int spelling; gMsgChoicePositions is u8[4], the bound its 4-byte slot allows; data_0209d710 is u8[0x3c]; data_0209d74c is s32[0x3c0], 0xf00 bytes, the size Message.cpp's MultiStore_Int clears)."
   ],
+  "production_mode": "intact-object",
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -280,7 +647,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/arm9-Message/link (gitignored)",
       "phases": {
         "delink": true,
@@ -288,11 +655,11 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
-        "start": "0x0201ce10",
+        "start": "0x0201cb7c",
         "end": "0x0201fcd4",
         "differingBytes": 0,
         "firstDiff": null
@@ -300,23 +667,308 @@
       "tuRanges": [
         {
           "section": ".text",
-          "start": "0x0201ce10",
+          "start": "0x0201cb7c",
           "end": "0x0201fcd4",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0209d64c",
+          "end": "0x0209e64c",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 30
+          "LICENSED": 83
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55
+            ],
+            "desired": [
+              19,
+              12,
+              20,
+              13,
+              14,
+              8,
+              11,
+              15,
+              16,
+              9,
+              17,
+              18,
+              7,
+              5,
+              10,
+              6,
+              38,
+              37,
+              36,
+              35,
+              34,
+              33,
+              32,
+              31,
+              30,
+              29,
+              28,
+              27,
+              26,
+              25,
+              24,
+              23,
+              22,
+              21,
+              41,
+              42,
+              39,
+              40,
+              44,
+              45,
+              48,
+              49,
+              51,
+              52,
+              43,
+              46,
+              50,
+              53,
+              47,
+              54,
+              55
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55
+              ],
+              "desired": [
+                19,
+                12,
+                20,
+                13,
+                14,
+                8,
+                11,
+                15,
+                16,
+                9,
+                17,
+                18,
+                7,
+                5,
+                10,
+                6,
+                38,
+                37,
+                36,
+                35,
+                34,
+                33,
+                32,
+                31,
+                30,
+                29,
+                28,
+                27,
+                26,
+                25,
+                24,
+                23,
+                22,
+                21,
+                41,
+                42,
+                39,
+                40,
+                44,
+                45,
+                48,
+                49,
+                51,
+                52,
+                43,
+                46,
+                50,
+                53,
+                47,
+                54,
+                55
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55
+              ]
+            }
+          ],
+          "symbolIndices": 51,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

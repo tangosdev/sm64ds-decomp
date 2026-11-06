@@ -132,7 +132,7 @@ extern signed char NumRedCoins(void);
 extern unsigned char data_0209f2d8;
 extern void func_02035860(void* o, void* src);
 extern int RandomIntInternal(int* seed);
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
@@ -2716,7 +2716,7 @@ void daStar_c::func_ov002_020e763c() {
         return;
 
     v.x = mPosX;
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     v.y = mPosY;
     v.z = mPosZ;
 

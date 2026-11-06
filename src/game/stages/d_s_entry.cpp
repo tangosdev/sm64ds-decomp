@@ -364,7 +364,7 @@ static inline void SetPalette(u16 *entry, u16 pal) {
     *entry = (*entry & 0xfff) | (u16)(pal << 12);
 }
 
-extern "C" void func_ov075_02116128(int unused, int slot, int dim) {
+extern "C" void func_ov075_02116128(dScEntry_c *scene, int slot, int dim) {
     int players = data_0209fc50;
     u16 *map = (u16 *)G2::GetBG1ScrPtr();
     u16 pal = func_02030958(slot) + 10;
@@ -429,7 +429,7 @@ static inline int EntryPlayerIndex(int arg0) {
     return func_02030958(arg0);
 }
 
-extern "C" void func_ov075_0211621c(char *c) {
+extern "C" void func_ov075_0211621c(dScEntry_c *scene) {
     int count = data_0209fc50;
     int stride;
     int tens;
@@ -437,7 +437,7 @@ extern "C" void func_ov075_0211621c(char *c) {
     int i = 0;
     int d = 4 - count;
     int xbase;
-    (void)c;
+    (void)scene;
     xbase = data_ov075_0211c6e8[d];
     stride = (d * 16) + 0x38;
     {

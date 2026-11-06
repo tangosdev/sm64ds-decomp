@@ -597,12 +597,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@776",
+      "from": "@795",
       "to": "@160",
       "evidence": "emitted destructor-registration node collides with ov002 @657; renumber to fleet-free name of the same length; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@777",
+      "from": "@796",
       "to": "@161",
       "evidence": "emitted destructor-registration node renumbered alongside @657 so both nodes leave the collision-prone emission range; @161 is unused everywhere and the same length; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }

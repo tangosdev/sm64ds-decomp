@@ -22,6 +22,8 @@
 #include "LVL_Overlay.h"
 #include "dScStage_c.h"
 #include "dActor_c.h"
+#include "daPly_c.h"
+#include "dCamera_c.h"
 #include "dBgW.h"
 #include "PathPtr.h"
 #include "Vector3s.h"
@@ -43,11 +45,11 @@ extern u8 data_0209f21c;
 extern u8 data_0209f220;
 extern u8 data_0209f250;
 extern u8 data_0209f2d8;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern void *data_0209f338;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern u8 data_0209fc5c[];
-extern int data_02092134;
+extern unsigned int data_02092134;
 extern u8 data_02092128[];
 
 extern s8 data_ov002_0210cb5c[];
@@ -214,7 +216,8 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
             u32 spawnParam =
                 savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
 
-            void *player = dActor_c::Spawn(data_ov002_0210cbf4[entry->raw], spawnParam, pos,
+            daPly_c *player =
+                (daPly_c *)dActor_c::Spawn(data_ov002_0210cbf4[entry->raw], spawnParam, pos,
                                            (const Vector3_16 *)&entry->rot, (s8)(param & 7), -1);
 
             if (data_0209fc5c[playerIndex] == 0)
@@ -230,7 +233,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         }
     }
 
-    data_0209f318 = dBase_c::Spawn(0x14c, data_0209f5c0, entranceId, 0);
+    data_0209f318 = (dCamera_c *)dBase_c::Spawn(0x14c, data_0209f5c0, entranceId, 0);
 
     if (IsGameMode(2))
         return;
@@ -388,7 +391,7 @@ void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
  * unlike most of this family: it wants one value, not a list. */
 // @symbol _Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEaj
 void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_02092134 = *(int *)table.entries;
+    data_02092134 = *(unsigned int *)table.entries;
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category

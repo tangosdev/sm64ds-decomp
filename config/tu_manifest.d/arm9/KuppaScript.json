@@ -9,8 +9,8 @@
     "contiguous linker run: 0x0200e494..0x0200f0bc, 19 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "BOTTOM EDGE: src/engine/view/d_camera.cpp ends at 0x0200e494 with dCamera_c_classInit (0x0200e444..0x0200e494), the class factory that closes that TU; its own manifest (arm9/dCamera_c) already names the helpers at 0x0200e494 as a different data table with no camera receiver. The seven functions 0x0200e494..0x0200e748 are not camera code: RunDemoCommand (e494) and RunPlayerCommand (e5ac) are called only from ProcessKuppaScript (bl at 0x0200ed84 for command >= 0x12, bl at 0x0200ed68 for command <= 3) and take the command record plus its first/last frame; SpawnDemoActor/FindDemoActor (e4e4/e55c) walk the 16-word actor-ID table data_0209b2a4 that EndKuppaScript and ResetKuppaScript also clear; SpawnScriptPlayer/FindScriptPlayer (e5fc/e6d8) walk the 4-word data_0209b284 that EndKuppaScript and ResetKuppaScript clear; ReadUnalignedSignedInt (e728) is the signed twin of ReadUnalignedInt (byte-identical body) and opens the four unaligned script-argument readers.",
     "TOP EDGE: GetLanguageIndex (0x0200f0bc) maps GetOwnerLanguage to a localized-asset index for func_0200f13c/func_0200f220 and the d_s_entry/d_s_mb scenes. It touches no script state, so ResetKuppaScript (0x0200f04c..0x0200f0bc) is the last function of this file.",
-    "STATE: every function here reads or writes the script state at data_0209fc48 (running script), data_0209fc4c (saved script), data_0209b274 (frame), data_0209b270 (spawned-player count), data_0209b284 (player IDs) or data_0209b2a4 (cutscene-actor IDs), or is called only by a function that does (ReadUnaligned*, the Find/Spawn helpers). StartIntroCutscene, StartEndingCutscene and RunStarCameraScript are the script entry points that bracket RunKuppaScript.",
-    "INITIALIZER AND DATA: __sinit_02073e6c (.init 0x02073e6c..0x02074d90, .ctor word 0x02086b64) is this file's static initializer. It stores, byte by byte, the addresses that the scripts this file runs hold in their records (INTRO_CUTSCENE data_020890a0, FALL_IN_FRONT_OF_CASTLE_CUTSCENE data_02089608, the staff roll data_02088fb8, the ending flight data_02088610, data_02087c00 and 33 more), then constructs the dFdColor_c fader data_0209b294 that the fade commands drive and registers its destructor on node 0x0209b278. The .data run 0x0208751c..0x0208a0e0 is those scripts, the 55 camera paths and point lists their camera records name, and the six-entry star-camera table data_020876e4 RunStarCameraScript indexes; every object in it is referenced only from inside the run or by this file. The .bss run 0x0209b270..0x0209b2e4 is the player count, frame counter, node, player-ID table, fader and demo-actor-ID table, in that order.",
+    "STATE: every function here reads or writes the script state at data_0209fc48 (running script), data_0209fc4c (saved script), data_0209b274 (frame), data_0209b270 (spawned-player count), data_0209b284 (player IDs) or data_0209b2a4 (cutscene-actor IDs), or is called only by a function that does (ReadUnaligned*, the Find/Spawn helpers). StartIntroCutscene, StartEndingCutscene and StartDanceCutscene are the script entry points that bracket RunKuppaScript.",
+    "INITIALIZER AND DATA: __sinit_02073e6c (.init 0x02073e6c..0x02074d90, .ctor word 0x02086b64) is this file's static initializer. It stores, byte by byte, the addresses that the scripts this file runs hold in their records (the intro sCutsceneIntroPeachLetter, the castle fall sCutsceneEndingMarioFall, the end waving sCutsceneEndWaving, the ending flight sCutsceneGrandStar, sCutsceneCreditsBoB and 33 more; each is named for the Super Mario 64 cutscene shot it ports), then constructs the dFdColor_c fader data_0209b294 that the fade commands drive and registers its destructor on node 0x0209b278. The .data run 0x0208751c..0x0208a0e0 is those scripts, the 55 camera paths and point lists their camera records name, and the six-entry star-dance table sDanceCutsceneTable StartDanceCutscene indexes; every object in it is referenced only from inside the run or by this file. The .bss run 0x0209b270..0x0209b2e4 is the player count, frame counter, node, player-ID table, fader and demo-actor-ID table, in that order.",
     "NOT CLAIMED: gRunningKuppaScript and gSavedKuppaScript (0x0209fc48/0x0209fc4c). They are this file's state but sit in a second .bss run, apart from 0x0209b270..0x0209b2e4, and one object cannot place a definition in two runs, so they stay extern."
   ],
   "sections": [
@@ -126,14 +126,14 @@
       "ordinal": 11
     },
     {
-      "symbol": "IsStarCameraScript3Running",
+      "symbol": "IsDanceRotateCutsceneRunning",
       "address": "0x0200ee68",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0200/func_0200ee68.c",
       "ordinal": 12
     },
     {
-      "symbol": "RunStarCameraScript",
+      "symbol": "StartDanceCutscene",
       "address": "0x0200ee8c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200ee8c.c",
@@ -562,42 +562,42 @@
       "evidence": "CutsceneSpline {7, sCCMOutsideCreditsSplinePositionsPoints}: a camera path a camera record names; retail second word relocates to the points"
     },
     {
-      "symbol": "data_020876d4",
+      "symbol": "sCutsceneIntroEnd",
       "address": "0x020876d4",
       "size": "0xe",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated"
     },
     {
-      "symbol": "data_020876e4",
+      "symbol": "sDanceCutsceneTable",
       "address": "0x020876e4",
       "size": "0x18",
       "binding": "STB_GLOBAL",
-      "evidence": "the six star-camera scripts RunStarCameraScript indexes by setting; six ABS32 words"
+      "evidence": "the six star-camera scripts StartDanceCutscene indexes by setting; six ABS32 words"
     },
     {
-      "symbol": "data_020876fc",
+      "symbol": "sCutsceneEndingStartMusic",
       "address": "0x020876fc",
       "size": "0x1d",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_0208771c",
+      "symbol": "sCutsceneEndingMarioLandHold",
       "address": "0x0208771c",
       "size": "0x23",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087740",
+      "symbol": "sCutsceneGrandStarFly",
       "address": "0x02087740",
       "size": "0x2a",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_0208776c",
+      "symbol": "sCutsceneDanceDefault",
       "address": "0x0208776c",
       "size": "0x2c",
       "binding": "STB_GLOBAL",
@@ -632,140 +632,140 @@
       "evidence": "6 CutsceneSplinePoint records of path sTHIWigglerCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02087858",
+      "symbol": "sCutsceneCreditsCCMOutside",
       "address": "0x02087858",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_0208788c",
+      "symbol": "sCutsceneCreditsDDDSub",
       "address": "0x0208788c",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_020878c0",
+      "symbol": "sCutsceneCreditsCotMC",
       "address": "0x020878c0",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_020878f4",
+      "symbol": "sCutsceneCreditsSA",
       "address": "0x020878f4",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087928",
+      "symbol": "sCutsceneCreditsRR",
       "address": "0x02087928",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_0208795c",
+      "symbol": "sCutsceneCreditsTTC",
       "address": "0x0208795c",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087990",
+      "symbol": "sCutsceneCreditsTHIHuge",
       "address": "0x02087990",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_020879c4",
+      "symbol": "sCutsceneCreditsTTM",
       "address": "0x020879c4",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_020879f8",
+      "symbol": "sCutsceneCreditsWDW",
       "address": "0x020879f8",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087a2c",
+      "symbol": "sCutsceneCreditsSL",
       "address": "0x02087a2c",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087a60",
+      "symbol": "sCutsceneCreditsDDD",
       "address": "0x02087a60",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087a94",
+      "symbol": "sCutsceneCreditsSSL",
       "address": "0x02087a94",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087ac8",
+      "symbol": "sCutsceneCreditsVolcano",
       "address": "0x02087ac8",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087afc",
+      "symbol": "sCutsceneCreditsTHIWiggler",
       "address": "0x02087afc",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087b30",
+      "symbol": "sCutsceneCreditsHMC",
       "address": "0x02087b30",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087b64",
+      "symbol": "sCutsceneCreditsBBH",
       "address": "0x02087b64",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087b98",
+      "symbol": "sCutsceneCreditsJRB",
       "address": "0x02087b98",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087bcc",
+      "symbol": "sCutsceneCreditsWF",
       "address": "0x02087bcc",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087c00",
+      "symbol": "sCutsceneCreditsBoB",
       "address": "0x02087c00",
       "size": "0x34",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02087c34",
+      "symbol": "sCutsceneCreditsCCMSlide",
       "address": "0x02087c34",
       "size": "0x34",
       "binding": "STB_GLOBAL",
@@ -863,7 +863,7 @@
       "evidence": "7 CutsceneSplinePoint records of path sBBHCreditsSplineFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02087f40",
+      "symbol": "sCutsceneEndingMarioLandCloseup",
       "address": "0x02087f40",
       "size": "0x3e",
       "binding": "STB_GLOBAL",
@@ -975,14 +975,14 @@
       "evidence": "8 CutsceneSplinePoint records of path sWFCreditsSplinePositions; the last point has index -1"
     },
     {
-      "symbol": "data_02088340",
+      "symbol": "sCutsceneEndingMarioLand",
       "address": "0x02088340",
       "size": "0x45",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02088388",
+      "symbol": "sCutsceneDanceCloseup",
       "address": "0x02088388",
       "size": "0x45",
       "binding": "STB_GLOBAL",
@@ -1045,7 +1045,7 @@
       "evidence": "9 CutsceneSplinePoint records of path gEndWavingPos; the list is bounded by its path count (last index 0)"
     },
     {
-      "symbol": "data_02088610",
+      "symbol": "sCutsceneGrandStar",
       "address": "0x02088610",
       "size": "0x4d",
       "binding": "STB_GLOBAL",
@@ -1108,49 +1108,49 @@
       "evidence": "11 CutsceneSplinePoint records of path sEndingFlyToWindowPos; the last point has index -1"
     },
     {
-      "symbol": "data_020888f0",
+      "symbol": "sCutsceneDanceFlyAway",
       "address": "0x020888f0",
       "size": "0x5c",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated"
     },
     {
-      "symbol": "data_0208894c",
+      "symbol": "sCutsceneEndingStarsFreePeach",
       "address": "0x0208894c",
       "size": "0x63",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_020889b0",
+      "symbol": "sCutsceneDanceRotate",
       "address": "0x020889b0",
       "size": "0x67",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated"
     },
     {
-      "symbol": "data_02088a18",
+      "symbol": "sCutsceneEndingDialog",
       "address": "0x02088a18",
       "size": "0x7c",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02088a94",
+      "symbol": "sCutsceneIntroPeachFlyToPipe",
       "address": "0x02088a94",
       "size": "0x7d",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 5 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02088b14",
+      "symbol": "sCutsceneKeyDance",
       "address": "0x02088b14",
       "size": "0x8b",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated"
     },
     {
-      "symbol": "data_02088ba0",
+      "symbol": "sCutsceneEndingMarioToPeach",
       "address": "0x02088ba0",
       "size": "0x8c",
       "binding": "STB_GLOBAL",
@@ -1164,7 +1164,7 @@
       "evidence": "20 CutsceneSplinePoint records of path sEndingPeachDescentCamPos; the last point has index -1"
     },
     {
-      "symbol": "data_02088ccc",
+      "symbol": "sCutsceneEndingPeachDescends",
       "address": "0x02088ccc",
       "size": "0xb3",
       "binding": "STB_GLOBAL",
@@ -1185,21 +1185,21 @@
       "evidence": "23 CutsceneSplinePoint records of path sIntroStartToPipePosition; the last point has index -1"
     },
     {
-      "symbol": "data_02088ef0",
+      "symbol": "sCutsceneEndingKiss",
       "address": "0x02088ef0",
       "size": "0xc6",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02088fb8",
+      "symbol": "sCutsceneEndWaving",
       "address": "0x02088fb8",
       "size": "0xe8",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 2 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_020890a0",
+      "symbol": "sCutsceneIntroPeachLetter",
       "address": "0x020890a0",
       "size": "0x108",
       "binding": "STB_GLOBAL",
@@ -1234,28 +1234,28 @@
       "evidence": "35 CutsceneSplinePoint records of path gIntroLakituStartToPipeFocus; the last point has index -1"
     },
     {
-      "symbol": "data_02089608",
+      "symbol": "sCutsceneEndingMarioFall",
       "address": "0x02089608",
       "size": "0x245",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 1 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02089850",
+      "symbol": "sCutsceneEndingPeachWakeup",
       "address": "0x02089850",
       "size": "0x2a8",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 2 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02089af8",
+      "symbol": "sCutsceneIntroPeachMarioAppears",
       "address": "0x02089af8",
       "size": "0x2d4",
       "binding": "STB_GLOBAL",
       "evidence": "Kuppa script, size-0 terminated; 3 pointer argument(s) are zero in the static image and stored by the initializer"
     },
     {
-      "symbol": "data_02089dcc",
+      "symbol": "sCutsceneEndingCakeForMario",
       "address": "0x02089dcc",
       "size": "0x314",
       "binding": "STB_GLOBAL",
@@ -2316,7 +2316,7 @@
       "source": "0x02074c00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088fb8",
+      "symbol": "sCutsceneEndWaving",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088fb8"
@@ -2356,7 +2356,7 @@
       "source": "0x02074c10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02089af8",
+      "symbol": "sCutsceneIntroPeachMarioAppears",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02089af8"
@@ -2376,7 +2376,7 @@
       "source": "0x02074c18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876d4",
+      "symbol": "sCutsceneIntroEnd",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876d4"
@@ -2386,7 +2386,7 @@
       "source": "0x02074c1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087858",
+      "symbol": "sCutsceneCreditsCCMOutside",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087858"
@@ -2406,7 +2406,7 @@
       "source": "0x02074c24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088a94",
+      "symbol": "sCutsceneIntroPeachFlyToPipe",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088a94"
@@ -2466,7 +2466,7 @@
       "source": "0x02074c3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020890a0",
+      "symbol": "sCutsceneIntroPeachLetter",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020890a0"
@@ -2476,7 +2476,7 @@
       "source": "0x02074c40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208788c",
+      "symbol": "sCutsceneCreditsDDDSub",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208788c"
@@ -2486,7 +2486,7 @@
       "source": "0x02074c44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020878c0",
+      "symbol": "sCutsceneCreditsCotMC",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020878c0"
@@ -2536,7 +2536,7 @@
       "source": "0x02074c58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020878f4",
+      "symbol": "sCutsceneCreditsSA",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020878f4"
@@ -2566,7 +2566,7 @@
       "source": "0x02074c64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087928",
+      "symbol": "sCutsceneCreditsRR",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087928"
@@ -2596,7 +2596,7 @@
       "source": "0x02074c70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208795c",
+      "symbol": "sCutsceneCreditsTTC",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208795c"
@@ -2626,7 +2626,7 @@
       "source": "0x02074c7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087990",
+      "symbol": "sCutsceneCreditsTHIHuge",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087990"
@@ -2646,7 +2646,7 @@
       "source": "0x02074c84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020879c4",
+      "symbol": "sCutsceneCreditsTTM",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020879c4"
@@ -2686,7 +2686,7 @@
       "source": "0x02074c94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020879f8",
+      "symbol": "sCutsceneCreditsWDW",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020879f8"
@@ -2716,7 +2716,7 @@
       "source": "0x02074ca0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087a2c",
+      "symbol": "sCutsceneCreditsSL",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087a2c"
@@ -2746,7 +2746,7 @@
       "source": "0x02074cac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087a60",
+      "symbol": "sCutsceneCreditsDDD",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087a60"
@@ -2776,7 +2776,7 @@
       "source": "0x02074cb8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087a94",
+      "symbol": "sCutsceneCreditsSSL",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087a94"
@@ -2806,7 +2806,7 @@
       "source": "0x02074cc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087ac8",
+      "symbol": "sCutsceneCreditsVolcano",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087ac8"
@@ -2836,7 +2836,7 @@
       "source": "0x02074cd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087afc",
+      "symbol": "sCutsceneCreditsTHIWiggler",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087afc"
@@ -2866,7 +2866,7 @@
       "source": "0x02074cdc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087b30",
+      "symbol": "sCutsceneCreditsHMC",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087b30"
@@ -2896,7 +2896,7 @@
       "source": "0x02074ce8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087b64",
+      "symbol": "sCutsceneCreditsBBH",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087b64"
@@ -2926,7 +2926,7 @@
       "source": "0x02074cf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087c34",
+      "symbol": "sCutsceneCreditsCCMSlide",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087c34"
@@ -2956,7 +2956,7 @@
       "source": "0x02074d00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087b98",
+      "symbol": "sCutsceneCreditsJRB",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087b98"
@@ -2986,7 +2986,7 @@
       "source": "0x02074d0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087bcc",
+      "symbol": "sCutsceneCreditsWF",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087bcc"
@@ -3016,7 +3016,7 @@
       "source": "0x02074d18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087c00",
+      "symbol": "sCutsceneCreditsBoB",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087c00"
@@ -3046,7 +3046,7 @@
       "source": "0x02074d24",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02089dcc",
+      "symbol": "sCutsceneEndingCakeForMario",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02089dcc"
@@ -3066,7 +3066,7 @@
       "source": "0x02074d2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088ef0",
+      "symbol": "sCutsceneEndingKiss",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088ef0"
@@ -3076,7 +3076,7 @@
       "source": "0x02074d30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088a18",
+      "symbol": "sCutsceneEndingDialog",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088a18"
@@ -3086,7 +3086,7 @@
       "source": "0x02074d34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02089850",
+      "symbol": "sCutsceneEndingPeachWakeup",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02089850"
@@ -3106,7 +3106,7 @@
       "source": "0x02074d3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088ba0",
+      "symbol": "sCutsceneEndingMarioToPeach",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088ba0"
@@ -3136,7 +3136,7 @@
       "source": "0x02074d48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088ccc",
+      "symbol": "sCutsceneEndingPeachDescends",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088ccc"
@@ -3146,7 +3146,7 @@
       "source": "0x02074d4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208894c",
+      "symbol": "sCutsceneEndingStarsFreePeach",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208894c"
@@ -3186,7 +3186,7 @@
       "source": "0x02074d5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020876fc",
+      "symbol": "sCutsceneEndingStartMusic",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020876fc"
@@ -3196,7 +3196,7 @@
       "source": "0x02074d60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087f40",
+      "symbol": "sCutsceneEndingMarioLandCloseup",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087f40"
@@ -3206,7 +3206,7 @@
       "source": "0x02074d64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208771c",
+      "symbol": "sCutsceneEndingMarioLandHold",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208771c"
@@ -3216,7 +3216,7 @@
       "source": "0x02074d68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088340",
+      "symbol": "sCutsceneEndingMarioLand",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088340"
@@ -3226,7 +3226,7 @@
       "source": "0x02074d6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02089608",
+      "symbol": "sCutsceneEndingMarioFall",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02089608"
@@ -3236,7 +3236,7 @@
       "source": "0x02074d70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02087740",
+      "symbol": "sCutsceneGrandStarFly",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02087740"
@@ -3246,7 +3246,7 @@
       "source": "0x02074d74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088610",
+      "symbol": "sCutsceneGrandStar",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088610"
@@ -3876,7 +3876,7 @@
       "source": "0x020876e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088388",
+      "symbol": "sCutsceneDanceCloseup",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088388"
@@ -3886,7 +3886,7 @@
       "source": "0x020876e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020888f0",
+      "symbol": "sCutsceneDanceFlyAway",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020888f0"
@@ -3896,7 +3896,7 @@
       "source": "0x020876ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208776c",
+      "symbol": "sCutsceneDanceDefault",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208776c"
@@ -3906,7 +3906,7 @@
       "source": "0x020876f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020889b0",
+      "symbol": "sCutsceneDanceRotate",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020889b0"
@@ -3916,7 +3916,7 @@
       "source": "0x020876f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0208776c",
+      "symbol": "sCutsceneDanceDefault",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0208776c"
@@ -3926,7 +3926,7 @@
       "source": "0x020876f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_02088b14",
+      "symbol": "sCutsceneKeyDance",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02088b14"

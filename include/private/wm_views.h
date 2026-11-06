@@ -118,15 +118,18 @@ typedef struct WMPortRecvCallback {
 } WMPortRecvCallback;
 
 /* The SDK-private calls every WM_* wrapper makes; NitroSDK spells them
- * WMi_GetSystemWork, WMi_CheckStateEx and WMi_SendCommand. The two checks
- * are variadic: paramNum states to accept, or paramNum words to copy into
- * the request block. */
+ * WMi_GetSystemWork, WMi_CheckStateEx, WMi_SendCommand and
+ * WMi_SetCallbackTable. The check and the send are variadic: paramNum
+ * states to accept, or paramNum words to copy into the request block.
+ * WM_SetCallbackTable stores a request's callback in callbackTable by API
+ * id. */
 #ifdef __cplusplus
 extern "C" {
 #endif
 WMArm9Buf *WM_GetSystemWork(void);
 int WM_CheckStateEx(int paramNum, ...);
 int WM_SendCommand(short id, unsigned short paramNum, ...);
+void WM_SetCallbackTable(int apiid, void *callback);
 #ifdef __cplusplus
 }
 #endif

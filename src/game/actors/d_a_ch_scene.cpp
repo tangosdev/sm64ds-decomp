@@ -36,13 +36,13 @@ void StartExitFaderWipe(int);
 int IsStarCollectedInLevel(signed char levelID, int starID);
 }
 
-extern u8 data_0209f2c0[];
+extern u8 data_0209f2c0;
 extern unsigned char data_0209f250;
-extern dActor_c *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern signed char data_02092110;
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern dFdColor_c data_0209f5e8;
 
 /* -------------------------------------------------------------------------- */
@@ -105,7 +105,7 @@ s32 daChScene_c::InitResources() {
 s32 daChScene_c::Behavior() {
     Vector3 out1;
     Vector3 out2;
-    dActor_c *player = data_0209f394[data_0209f250];
+    daPly_c *player = data_0209f394[data_0209f250];
     if (mHorzSpeed != 0) {
         MulVec3Mat4x3(&player->mPos, &mInvMat, &out1);
         if (out1.z > mHorzSpeed || out1.z < -0x300000) {
@@ -125,7 +125,7 @@ s32 daChScene_c::Behavior() {
         }
     } else {
         if (data_02092110 < 0) {
-            if (((daPly_c *)player)->IsStateEnteringLevel() == 0) {
+            if (player->IsStateEnteringLevel() == 0) {
                 MulVec3Mat4x3(&player->mPos, &mInvMat, &out2);
                 {
                     int a = out2.x;
@@ -134,7 +134,7 @@ s32 daChScene_c::Behavior() {
                     if (a <= mScaleX) {
                         if (out2.y >= 0 && out2.y <= mScaleY) {
                             if ((out2.z ^ mScaleZ) < 0) {
-                                void *cam;
+                                dCamera_c *cam;
                                 mAngleZ = 0;
                                 if (out2.y > 0x100000) {
                                     mAngleZ = 2;
@@ -142,17 +142,17 @@ s32 daChScene_c::Behavior() {
                                     mAngleZ = 1;
                                 }
                                 cam = data_0209f318;
-                                if (((daPly_c *)player)->Unk_020c9e5c(7)) {
+                                if (player->Unk_020c9e5c(7)) {
                                     LoadDestinationLevel();
                                     StartExitFaderWipe(6);
-                                    ((dCamera_c *)cam)->SetFlag_3();
+                                    cam->SetFlag_3();
                                 } else {
-                                    ((daPly_c *)player)->SetNoControlState(6, -1, 0);
+                                    player->SetNoControlState(6, -1, 0);
                                     if (mAngleX != 0) {
                                         dActor_c *o;
                                         LoadDestinationLevel();
                                         StartExitFaderWipe(5);
-                                        ((dCamera_c *)cam)->SetFlag_3();
+                                        cam->SetFlag_3();
                                         o = dActor_c::FindWithActorID(0x12a, 0);
                                         while (o != 0) {
                                             if (Vec3_Dist(&o->mPos, &mPos) < 0x12c000)
@@ -174,7 +174,7 @@ s32 daChScene_c::Behavior() {
                                             data_0209f5e8.color = 0x7fff;
                                         }
                                         mHorzSpeed = out2.z;
-                                        ((dCamera_c *)cam)->LookAtExit(*this);
+                                        cam->LookAtExit(*this);
                                         func_02012790(0x1e);
                                     }
                                 }
@@ -215,7 +215,7 @@ s32 daChScene_c::CleanupResources() {
    names: level in the top byte, entrance in the next, and LoadLevel's last
    argument in the third (0xff passes as -1). */
 void daChScene_c::LoadDestinationLevel() {
-    data_0209f2c0[0] = (u8)mAngleZ;
+    data_0209f2c0 = (u8)mAngleZ;
     {
         u32 v = param1;
         u32 hi = v >> 0x18;

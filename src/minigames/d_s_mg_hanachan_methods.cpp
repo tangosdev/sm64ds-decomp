@@ -266,7 +266,7 @@ struct S_ea81c {
 extern "C" {
 extern char sHanaStarPopup[];
 extern struct S_ea81c sHanaPopups[];
-extern char sMgDigitSprites[];
+extern OamAttr *sMgDigitSprites[];
 }
 
 // @symbol _ZN15dScMgHanachan_cD1Ev
@@ -315,7 +315,7 @@ extern "C" void StarPopup_Draw(void) {
     y = ((HanaStarPopup *)new_var)->y >> 12;
     r = GetGameLanguage();
     Mg_RenderSubSpriteMtx(((void **)sHanaTextSpritesByLanguage[r])[13], x - 8, y, 0);
-    Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[25], x + 8, y, 0);
+    Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
 }
 
 // @symbol StarPopup_Update
@@ -443,8 +443,8 @@ extern "C" void HanaPopup_DrawAll(void) {
             int idx = GetGameLanguage();
             void *obj = sHanaTextSpritesByLanguage[idx];
             Mg_RenderSubSpriteMtx(((void **)obj)[14], sb - 0x10, r8, a);
-            Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[41], sb, r8, b);
-            Mg_RenderSubSpriteMtx(((void **)sMgDigitSprites)[40], sb + 0x10, r8, c);
+            Mg_RenderSubSpriteMtx(sMgDigitSprites[41], sb, r8, b);
+            Mg_RenderSubSpriteMtx(sMgDigitSprites[40], sb + 0x10, r8, c);
         }
     }
 }

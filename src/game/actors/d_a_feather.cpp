@@ -46,7 +46,7 @@ extern "C" void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 
 extern SharedFilePtr data_ov002_0210da58;
 extern unsigned char data_0209f2d8;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern s16 data_02082214[];
 
 /* ==========================================================================
@@ -99,7 +99,7 @@ int daFeather_c::InitResources() {
     b = (data_0209f2d8 == 1);
     if (!b) {
         /* dCamera_c::mAngleY, the same halfword Behavior re-reads every frame. */
-        mAngleY = ((dCamera_c *)data_0209f318)->mAngleY + 0x4000;
+        mAngleY = data_0209f318->mAngleY + 0x4000;
     }
     mLifeTimer = 0xb4;
     mVertSpeed = 0x3000;
@@ -159,7 +159,7 @@ int daFeather_c::Behavior() {
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            mAngleY = ((dCamera_c *)data_0209f318)->mAngleY + 0x4000;
+            mAngleY = data_0209f318->mAngleY + 0x4000;
         }
     }
 

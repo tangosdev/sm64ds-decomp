@@ -87,10 +87,9 @@ extern void Mg_SetPerfectBanner(void);
 extern void Mg_SetSharedState(int c);
 extern void Mg_SubmitScore(int self);
 extern void Dealer_PlayWin(void *c);
-extern void Dealer_StartShuffle(char *c, int unused, short count, int ready);
+extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern int RandomIntInternal(int *seed);
 extern void FreeGfxSlotsById(int x);
-void Camera_InitDealerView(char *p);
 void Mg_DrawCredits(char *c, int a, int b, int d);
 void Dealer_Draw(char *p);
 void MgCoins_Update(void);
@@ -104,7 +103,7 @@ int Dealer_Load(void *c);
 int Mg_GetSavedRecord0(void);
 int Mg_GetSavedRecord1(void);
 void MgCoins_Reset(void);
-int Dealer_IsIdle(int *p);
+int Dealer_IsIdle(Dealer *dealer);
 void Mg_SetTopScreenYOffset(int v);
 void Mg_PlaceBannersOnTopScreen(void);
 extern u8 gMainScreenLayers;
@@ -742,9 +741,9 @@ void dScMgMemory_c::RoundStart() {
     mDealSignals = 0;
     mCardsDealt = 0;
     if (mDifficulty >= 2)
-        Dealer_StartShuffle((char *)&mDealer, 4, 3, (int)&mDealSignals);
+        Dealer_StartShuffle(&mDealer, 4, 3, &mDealSignals);
     else
-        Dealer_StartShuffle((char *)&mDealer, 4, 2, (int)&mDealSignals);
+        Dealer_StartShuffle(&mDealer, 4, 2, &mDealSignals);
     mDealer.mReserved = 1;
     mSubstate = ROUND_DEAL_EASY;
     if (mPromptBlinkCount == 0) {
@@ -966,7 +965,7 @@ void dScMgMemory_c::OnDealDone() {
 // @symbol _ZN13dScMgMemory_c11CanEndStateEi
 int dScMgMemory_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
-        if (Dealer_IsIdle((int *)&mDealer) == 0)
+        if (Dealer_IsIdle(&mDealer) == 0)
             return 0;
         mSubstate = RESULT_REWARD;
         FreeGfxSlotsById(0x1d);
@@ -996,7 +995,7 @@ void dScMgMemory_c::StartRound(int /* arg */) {
 // @symbol _ZN13dScMgMemory_c6RenderEv
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
@@ -1033,7 +1032,7 @@ s32 dScMgMemory_c::InitResources() {
     Deallocate(palette);
     gSubScreenLayers = 0x18;
     ResetGame();
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
         return 0;
     mCredits = Mg_GetSavedRecord0();

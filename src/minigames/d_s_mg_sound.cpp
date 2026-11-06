@@ -126,11 +126,11 @@ extern Pmf pmf_dScMgSound_c_Pop12_Fly;
 extern Pmf pmf_dScMgSound_c_Pop12_Finish;
 
 extern "C" {
-extern void Hud_RenderSprite(int a, int b, int c, int d, int e);
-extern int sSoundWinSpriteBSprites[];
+extern void Hud_RenderSprite(void *a, int b, int c, int d, int e);
+extern void *sSoundWinSpriteBSprites[];
 /* WinSpriteB reads indices 0 through 2; the fourth stored value is unused here. */
 extern const u16 sSoundWinSpriteBTimes[4] = {50, 3, 3, 50};
-extern int sSoundWinSpriteASprites[];
+extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
@@ -205,7 +205,6 @@ extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-void Camera_InitPresenterView(void *p);
 int Presenter_Load(void *p);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -341,9 +340,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(objChars);
     Deallocate(objPltt);
 
-    /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h);
-       d_s_mg_cup.cpp passes it the same way. */
-    Camera_InitPresenterView((void *)pad_4660);
+    Camera_InitPresenterView(&mCamera);
     if (Presenter_Load((void *)&mTable) == 0)
         return 0;
 
@@ -1641,7 +1638,7 @@ void dScMgSound_c::DrawNotes() {
             if (mState != 1)
                 priority = 1;
             unsigned char frame = note->note.frame;
-            Hud_RenderSprite((int)sSoundNotesSprites[frame], screenX, screenY, -1, priority);
+            Hud_RenderSprite(sSoundNotesSprites[frame], screenX, screenY, -1, priority);
         }
         noteCursor += 0x14;
     }

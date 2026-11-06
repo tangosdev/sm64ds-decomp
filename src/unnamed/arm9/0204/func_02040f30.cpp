@@ -22,7 +22,6 @@ extern void func_020657d0(u16 id, void *obj);
 extern void FS_NotifyArchiveAsyncEnd(void *self, int arg);
 extern void func_02042160(void);
 extern void func_02040f30(void *arg);
-extern char data_020a1fc0[];
 extern char data_020a2400[];
 void func_02040f30(void *arg) {
     WBTCommand *cmdp = (WBTCommand *)arg;
@@ -37,14 +36,14 @@ void func_02040f30(void *arg) {
         if (cmdp->target_bmp != 0) {
             return;
         }
-        FILE_SHARE_WORK->mParentPacketSize = cmdp->u.sync.peer_packet_size + 0xe;
-        FILE_SHARE_WORK->mChildPacketSize = cmdp->u.sync.my_packet_size + 0xe;
-        if (FILE_SHARE_WORK->mState != 2) {
+        data_020a1fc0.mParentPacketSize = cmdp->u.sync.peer_packet_size + 0xe;
+        data_020a1fc0.mChildPacketSize = cmdp->u.sync.my_packet_size + 0xe;
+        if (data_020a1fc0.mState != 2) {
             func_02065788((u16)1, 0, (const void *)child->mBlockInfoTable, (u32)func_02040f30);
             return;
         }
         {
-            int request = FILE_SHARE_WORK->mReadRequest;
+            int request = data_020a1fc0.mReadRequest;
             if (request != 0) {
                 func_02041a00((FSFile *)request);
             }
@@ -52,9 +51,9 @@ void func_02040f30(void *arg) {
         return;
 
     case 6:
-        child->mRecvBufTable[idx] = FILE_SHARE_WORK->mTable;
+        child->mRecvBufTable[idx] = data_020a1fc0.mTable;
         func_02065730((u16)1, 0x20000, (const void *)child->mRecvBufTable,
-                      (u32)FILE_SHARE_WORK->mTableSize, (const void *)child->mPacketBitmapTable,
+                      (u32)data_020a1fc0.mTableSize, (const void *)child->mPacketBitmapTable,
                       (u32)func_02040f30);
         return;
 
@@ -62,14 +61,14 @@ void func_02040f30(void *arg) {
         if (cmdp->target_bmp != 0) {
             return;
         }
-        if ((FILE_SHARE_WORK->mState != 2) != 0) {
-            CP15::FlushAndInvalidateDataCache((u32)FILE_SHARE_WORK->mTable,
-                                              (u32)FILE_SHARE_WORK->mTableSize);
-            func_020423dc((int *)FILE_SHARE_WORK->mTable);
+        if ((data_020a1fc0.mState != 2) != 0) {
+            CP15::FlushAndInvalidateDataCache((u32)data_020a1fc0.mTable,
+                                              (u32)data_020a1fc0.mTableSize);
+            func_020423dc((int *)data_020a1fc0.mTable);
             {
-                FILE_SHARE_WORK->mState = 2;
+                data_020a1fc0.mState = 2;
                 {
-                    int fn = FILE_SHARE_WORK->mStateCallback;
+                    int fn = data_020a1fc0.mStateCallback;
                     if (fn != 0) {
                         ((void (*)(int))fn)(0);
                     }
@@ -84,7 +83,7 @@ void func_02040f30(void *arg) {
             FileShareMsg cmd;
             cmd.mKind = 2;
             cmd.mFlag = 1;
-            c = FILE_SHARE_WORK->mParentPacketSize;
+            c = data_020a1fc0.mParentPacketSize;
             cmd.mFileId = w4;
             cmd.mPacketSizeHigh = (u8)(c >> 8);
             cmd.mPacketSizeLow = (u8)c;
@@ -106,16 +105,16 @@ void func_02040f30(void *arg) {
             }
             child->mReadRegion = m->mFileId;
             child->mRecvBufTable[idx] =
-                (int)((FSFile *)FILE_SHARE_WORK->mReadRequest)->arg.readfile.dst;
+                (int)((FSFile *)data_020a1fc0.mReadRequest)->arg.readfile.dst;
             func_02065730((u16)1, child->mReadRegion, (const void *)child->mRecvBufTable,
-                          ((FSFile *)FILE_SHARE_WORK->mReadRequest)->arg.readfile.len,
+                          ((FSFile *)data_020a1fc0.mReadRequest)->arg.readfile.len,
                           (const void *)child->mPacketBitmapTable, (u32)func_02040f30);
             return;
 
         case 3: {
-            FSFile *p = (FSFile *)FILE_SHARE_WORK->mReadRequest;
+            FSFile *p = (FSFile *)data_020a1fc0.mReadRequest;
             void *arc = p->arc;
-            FILE_SHARE_WORK->mReadRequest = 0;
+            data_020a1fc0.mReadRequest = 0;
             p->prop.file.pos += p->arg.readfile.len;
             FS_NotifyArchiveAsyncEnd(arc, 0);
             return;

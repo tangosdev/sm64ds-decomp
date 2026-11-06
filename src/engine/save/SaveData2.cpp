@@ -20,8 +20,9 @@
 extern "C" {
 int func_0203da3c(void);
 u32 CARD_GetBackupTotalSize(void);
-int func_02060558(u32 addr, void* buf, u32 len, int d, int e, int f);
-int func_02060484(int a, int b, int c, int d, int e, int f);
+int func_02060558(u32 src, void *dst, u32 len, MIDmaCallback callback, void *arg, int is_async);
+int func_02060484(u32 dst, const void *src, u32 len, MIDmaCallback callback, void *arg,
+                  int is_async);
 /* local extern: no include/ header declares the CARD backup setup. */
 void CARD_Init(void);
 void CARD_IdentifyBackup(int type);
@@ -68,24 +69,22 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
 {
     int lockID;
     u16 sum = 0;
-    int freeVal;
+    u32 freeVal;
     int retry;
-    int v14, v18, v10;
-    int hdrOff, dataOff;
-    int need;
-    int newBase;
-    int v20, v24, v1c;
-    int hdrOff2, dataOff2;
+    u32 hdrOff, dataOff;
+    u32 need;
+    u32 newBase;
+    u32 hdrOff2, dataOff2;
     int retry2;
 
     if (func_0203da3c() == 2)
         return 1;
 
-    freeVal = (int)((u32)CARD_GetBackupTotalSize() >> 1);
-    need = (int)(fileID << 7);
-    if ((u32)freeVal <= (u32)need)
+    freeVal = CARD_GetBackupTotalSize() >> 1;
+    need = fileID << 7;
+    if (freeVal <= need)
         return 1;
-    if (size > (u32)(freeVal - need - 10))
+    if (size > freeVal - need - 10)
         return 1;
 
     sum = 0;
@@ -117,14 +116,11 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
     CARD_LockBackup((u16)lockID);
 
     retry = 0;
-    v14 = 0;
-    v18 = 0;
-    v10 = 0;
     hdrOff = need + 2;
     dataOff = need + 10;
-    while (func_02060484(need, (int)&sum, 2, v10, v10, v10) != 1 ||
-           func_02060484(hdrOff, (int)data_020a4b40, 8, v14, v14, v14) != 1 ||
-           func_02060484(dataOff, (int)data, (int)size, v18, v18, v18) != 1) {
+    while (func_02060484(need, &sum, 2, 0, 0, 0) != 1 ||
+           func_02060484(hdrOff, data_020a4b40, 8, 0, 0, 0) != 1 ||
+           func_02060484(dataOff, data, size, 0, 0, 0) != 1) {
         retry++;
         if (retry > 0) {
             CARD_UnlockBackup((u16)lockID);
@@ -138,14 +134,11 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
 
     retry2 = 0;
     newBase = freeVal + need;
-    v20 = 0;
-    v24 = 0;
-    v1c = 0;
     hdrOff2 = newBase + 2;
     dataOff2 = newBase + 10;
-    while (func_02060484(newBase, (int)&sum, 2, v1c, v1c, v1c) != 1 ||
-           func_02060484(hdrOff2, (int)data_020a4b40, 8, v20, v20, v20) != 1 ||
-           func_02060484(dataOff2, (int)data, (int)size, v24, v24, v24) != 1) {
+    while (func_02060484(newBase, &sum, 2, 0, 0, 0) != 1 ||
+           func_02060484(hdrOff2, data_020a4b40, 8, 0, 0, 0) != 1 ||
+           func_02060484(dataOff2, data, size, 0, 0, 0) != 1) {
         retry2++;
         if (retry2 > 0) {
             CARD_UnlockBackup((u16)lockID);
@@ -175,8 +168,6 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
     int ok;
     u16 crc;
     u8 magic[8];
-    int fa, fb, fc;
-    int ga, gb, gc;
     int retry;
     u32 a2;
     u32 a10;
@@ -204,14 +195,10 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
         return 1;
     CARD_LockBackup((u16)lock);
     retry = 0;
-    fb = 0;
-    fc = 0;
-    fa = 0;
     a2 = off + 2;
     a10 = off + 10;
-    while (func_02060558(off, &crc, 2, fa, fa, fa) != 1 ||
-           func_02060558(a2, magic, 8, fb, fb, fb) != 1 ||
-           func_02060558(a10, buf, len, fc, fc, fc) != 1) {
+    while (func_02060558(off, &crc, 2, 0, 0, 0) != 1 || func_02060558(a2, magic, 8, 0, 0, 0) != 1 ||
+           func_02060558(a10, buf, len, 0, 0, 0) != 1) {
         retry++;
         if (retry > 0)
             break;
@@ -246,14 +233,11 @@ int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
     CARD_LockBackup((u16)lock);
     retry2 = 0;
     off2 = half + off;
-    gb = 0;
-    gc = 0;
-    ga = 0;
     b2 = off2 + 2;
     b10 = off2 + 10;
-    while (func_02060558(off2, &crc, 2, ga, ga, ga) != 1 ||
-           func_02060558(b2, magic, 8, gb, gb, gb) != 1 ||
-           func_02060558(b10, buf, len, gc, gc, gc) != 1) {
+    while (func_02060558(off2, &crc, 2, 0, 0, 0) != 1 ||
+           func_02060558(b2, magic, 8, 0, 0, 0) != 1 ||
+           func_02060558(b10, buf, len, 0, 0, 0) != 1) {
         retry2++;
         if (retry2 > 0) {
             CARD_UnlockBackup((u16)lock);

@@ -14,7 +14,7 @@
  *   the plain reads renumber @NNN. unk_5407 is only cleared.
  * - ResultWait decrements mResultTimer as (int)this + its offset.
  * - MEMORY2_OFF/MEMORY2_HI name the offsets the char* loops add.
- * - Camera_InitDealerView sets the camera at this+0x4660 and tail-calls
+ * - Camera_InitDealerView sets mCamera and tail-calls
  *   Camera_UpdateMatrices. Render and InitResources call that wrapper.
  * - Mg_DrawScoreTally, Mg_SaveRecordPair and Dealer_Load
  *   stay the linker names. Their bodies are not in this file.
@@ -116,14 +116,14 @@ extern void Mg_SaveRecordPair(int a, int b);
 extern u16 *sMemory2CardPositionsPerDifficulty[];
 extern int sMemory2ResultRowsPerDifficulty[];
 extern int sMemory2ResultColsPerDifficulty[];
-extern void MgCoins_StartPayout(char *p);
+extern void MgCoins_StartPayout(int count);
 extern short gMgCoinsStatus;
 extern void Mg_SetPerfectBanner(void);
 extern void Mg_SetSharedState(int);
 extern void Mg_SubmitScore(int self);
 extern void Dealer_PlayWin(void *c);
 extern void Dealer_PlayLose(void *c);
-extern void Dealer_StartShuffle(char *c, int unused, short count, int ready);
+extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern int sMemory2FourthDealsPerDifficulty[];
 extern int sMemory2HardDealsPerMode[];
 extern int sMemory2NormalDealsPerDifficulty[];
@@ -133,9 +133,8 @@ extern int sMemory2PreviewCountPerDifficulty[];
 extern int sMemory2PreviewTimePerDifficulty[];
 extern void FreeGfxSlotsById(int x);
 extern void Dealer_PlayIdle(char *p);
-extern int Dealer_IsIdle(int *p);
+extern int Dealer_IsIdle(Dealer *dealer);
 extern void MgCoins_Reset(void);
-void Camera_InitDealerView(char *);
 void Mg_DrawCredits(char *, int, int, int);
 void Dealer_Draw(char *);
 extern void MgCoins_Update(void);
@@ -632,7 +631,7 @@ void dScMgMemory2_c::ResultReward() {
         if (mPairsFound < mTargetPairs) {
             return;
         }
-        MgCoins_StartPayout((char *)(5 * (5 - mMisses)));
+        MgCoins_StartPayout(5 * (5 - mMisses));
         return;
     }
     if (gMgCoinsStatus == 1) {
@@ -917,9 +916,9 @@ void dScMgMemory2_c::RoundStart() {
     mDealSignals = 0;
     mCardsDealt = 0;
     if (mDifficulty == 1)
-        Dealer_StartShuffle((char *)&mDealer, 4, 3, (int)&mDealSignals);
+        Dealer_StartShuffle(&mDealer, 4, 3, &mDealSignals);
     else
-        Dealer_StartShuffle((char *)&mDealer, 4, 4, (int)&mDealSignals);
+        Dealer_StartShuffle(&mDealer, 4, 4, &mDealSignals);
     mDealer.mReserved = 1;
     mSubstate = ROUND_DEAL_EASY;
     if (mPromptBlinkCount == 0) {
@@ -1186,7 +1185,7 @@ void dScMgMemory2_c::OnDealDone() {
 // @symbol _ZN14dScMgMemory2_c11CanEndStateEi
 int dScMgMemory2_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
-        if (Dealer_IsIdle((int *)&mDealer) == 0)
+        if (Dealer_IsIdle(&mDealer) == 0)
             return 0;
         mSubstate = RESULT_REWARD;
         FreeGfxSlotsById(0x1d);
@@ -1216,8 +1215,7 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
 /* Vtable slot 9: set the camera, then draw credits, coins, the message,
  * cursor, cards and dealer. */
 s32 dScMgMemory2_c::Render() {
-    /* pad_4660 is the minigame camera, in dScMgSingle3DBase_c's padding. */
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
@@ -1260,7 +1258,7 @@ s32 dScMgMemory2_c::InitResources() {
     gSubScreenLayers = 0x18;
     ResetGame();
     /* 0x4660..0x471c is dScMgSingle3DBase_c's minigame camera. */
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
         return 0;
     mCredits = Mg_GetSavedRecord0();

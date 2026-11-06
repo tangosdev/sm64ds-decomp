@@ -56,7 +56,7 @@ extern "C" {
 extern s16 data_02082214[];
 
 extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-extern int func_0200fa04(dActor_c *, VecFx32 *, int);
+extern void *func_0200fa04(dActor_c *, VecFx32 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
 extern void func_020393d4(dBgW *, BeforeClsnCallback);

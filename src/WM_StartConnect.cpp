@@ -4,7 +4,6 @@
 
 extern "C" {
 
-extern void WM_SetCallbackTable(int i, int val);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void func_0205a588(void *dst, unsigned char v, unsigned int size);
 
@@ -21,7 +20,7 @@ typedef struct WMStartConnectReq {
 
 typedef char WMStartConnectReq_size_must_be_0x20[sizeof(WMStartConnectReq) == 0x20 ? 1 : -1];
 
-int WM_StartConnect(int a, int b, void *c) {
+int WM_StartConnect(void *callback, int b, void *c) {
     int r;
     WMArm9Buf *p;
     WMStartConnectReq *q;
@@ -29,7 +28,7 @@ int WM_StartConnect(int a, int b, void *c) {
     if (r != 0) return r;
     if (b == 0) return 6;
     CP15::FlushDataCache(b, 0xc0);
-    WM_SetCallbackTable(0xc, a);
+    WM_SetCallbackTable(0xc, callback);
     p = WM_GetSystemWork();
     q = (WMStartConnectReq *)p->fifo9to7;
     q->apiid = 0xc;

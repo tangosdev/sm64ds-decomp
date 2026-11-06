@@ -50,7 +50,7 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 
-extern int IDENTITY_MATRIX4X3[];
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern int data_0209f32c;
 extern short data_02082214[];
 
@@ -118,7 +118,7 @@ int daKrpa_c::InitResources() {
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    *(Mtx43 *)&mMatrix = *(Mtx43 *)IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mMatrix = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ground;
     ground.SetObjAndPos(mPos, this);

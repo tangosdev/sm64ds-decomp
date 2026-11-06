@@ -3,11 +3,9 @@
  * callback for API 8 (START_PARENT) and send that command with no parameters;
  * WM_ERRCODE_OPERATING (2) once it is queued, the callback reporting the
  * result. */
-extern int WM_CheckStateEx(int paramNum, ...);
-extern void WM_SetCallbackTable(int i, int val);
-extern int WM_SendCommand(short id, unsigned short paramNum, ...);
+#include "private/wm_views.h"
 
-int WM_StartParent(int callback) {
+int WM_StartParent(void *callback) {
     int result;
 
     result = WM_CheckStateEx(1, 2);

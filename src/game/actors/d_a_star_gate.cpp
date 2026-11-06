@@ -66,7 +66,7 @@ extern u8 data_0209f250;
 extern dCamera_c *data_0209f318;
 extern daPly_c *data_0209f394[];
 extern SaveBlock data_0209caa0;
-extern char data_020a0ebc[];
+extern Vector3 data_020a0ebc;
 
 struct StarGateModelFilePtr : SharedFilePtr {
     StarGateModelFilePtr(u32 fileID);
@@ -149,7 +149,7 @@ int daStarGate_c::InitResources()
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    ChangeState(&ST_WAIT, (daPly_c *)data_0209f394[data_0209f250]);
+    ChangeState(&ST_WAIT, data_0209f394[data_0209f250]);
     return 1;
 }
 
@@ -220,7 +220,7 @@ daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
     VecFx32 tmp;
     daPly_c *player = data_0209f394[data_0209f250];
     Vec3_Sub((Vector3 *)&tmp, &player->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScale, data_020a0ebc, (short)-mAngleY, (Vector3 *)&tmp);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (short)-mAngleY, (Vector3 *)&tmp);
     return player;
 }
 
