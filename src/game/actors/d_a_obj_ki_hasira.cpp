@@ -87,7 +87,7 @@ extern char data_ov016_02113cac[];
 extern "C" {
 /* The camera-shake request and the camera it goes to (arm9). */
 void func_0200d8c8(dCamera_c *cam, const Vector3 *pos, int strength);
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 /* The sin/cos table: (sin, cos) pairs of s16 indexed by angle >> 4. */
 extern s16 data_02082214[];
 }
@@ -196,7 +196,7 @@ s32 daObjKi_Hasira_c::Behavior() {
             dustPos.y = crashPos.y;
             dustPos.z = crashPos.z;
             LandingDustAt(dustPos, true);
-            func_0200d8c8((dCamera_c *)data_0209f318, &mPos, 0x5dc000);
+            func_0200d8c8(data_0209f318, &mPos, 0x5dc000);
             Sound::PlayBank3(0x41, mCamSpacePos);
             MarkForDestruction();
         }

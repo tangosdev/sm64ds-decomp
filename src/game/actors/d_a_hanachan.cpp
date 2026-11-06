@@ -123,7 +123,7 @@ extern s32 data_ov034_021138d8[];
 extern int func_020092c4(void *arg0, void *out, void *target);
 extern u32 data_ov034_02113828[];
 extern s16 data_02082214[];
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int fix1, int fix2, void *v, int t);
 }
@@ -366,7 +366,7 @@ void daHanachan_c::StateDamageMain()
     if (!talk->StartTalk(*this, true))
         return;
 
-    ((dCamera_c *)data_0209f318)->SetFlag_3();
+    data_0209f318->SetFlag_3();
     mDriveCamera = 1;
 
     ApproachLinear(mPlayer->mAngleY, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPos), 0x100);
@@ -521,7 +521,7 @@ void daHanachan_c::StateMoveStartMain()
                         mVertAccel = -0x4000;
                     }
                 }
-                ((dCamera_c *)data_0209f318)->mFlags &= ~8;
+                data_0209f318->mFlags &= ~8;
                 mDriveCamera = 0;
                 SetState(4);
             }
@@ -625,7 +625,7 @@ void daHanachan_c::StateDemoCallMain()
     if (player->ShowMessage(*this, data_ov034_02113820[0], &v, 1, 0) == 0)
         return;
     Message::PrepareTalk();
-    ((dCamera_c *)data_0209f318)->SetFlag_3();
+    data_0209f318->SetFlag_3();
     mDriveCamera = 1;
     func_0201267c(0x11b, &mCamSpacePos);
     SetState(2);
@@ -1055,7 +1055,7 @@ int daHanachan_c::Behavior()
     }
 
     if (mDriveCamera != 0) {
-        dCamera_c *cam = (dCamera_c *)data_0209f318;
+        dCamera_c *cam = data_0209f318;
         camA.x = 0; camA.y = 0x80000; camA.z = 0;
         camB.x = 0; camB.y = 0x80000; camB.z = 0x1f4000;
         scratch.x = 0; scratch.y = 0; scratch.z = 0;

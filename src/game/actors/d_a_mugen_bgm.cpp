@@ -30,15 +30,16 @@
 #include "Sound.h"
 #include "SaveBlock.h"
 #include "dCamera_c.h"
+#include "daPly_c.h"
 
 extern signed char data_ov002_02110af0;
 extern signed char data_02092120;
 extern void *data_ov002_02110af8;
 extern u8 data_0209f250;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern Vector3 data_020a0ebc;
 extern SaveBlock data_0209caa0;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
@@ -91,8 +92,7 @@ int daMugenBGM_c::Behavior() {
     int diff[3];
     int rotated[3];
 
-    Vec3_Sub((Vector3 *)diff, &((dActor_c *)data_0209f394[data_0209f250])->mPos,
-             (const Vector3 *)&mPosX);
+    Vec3_Sub((Vector3 *)diff, &data_0209f394[data_0209f250]->mPos, (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(rotated, &data_020a0ebc, mAngleY, diff);
 
     if (param1 == 1) {
@@ -125,7 +125,7 @@ int daMugenBGM_c::Behavior() {
                 int d;
                 vol = 0;
                 flag = 0x7f;
-                d = AngleDiff(mAngleY, ((dCamera_c *)data_0209f318)->mAngleY) - 0x2000;
+                d = AngleDiff(mAngleY, data_0209f318->mAngleY) - 0x2000;
                 if (d < 0)
                     d = 0;
                 else if (d > 0x4000)

@@ -234,7 +234,7 @@ extern void func_0200d8c8(void *cam, void *v, int strength);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern struct Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h; the shared implementation uses
    Vector3, while this function keeps POD locals to avoid Vector3 construction. */
@@ -648,13 +648,13 @@ done0:
 // @symbol _ZN16daKing_Donketu_c19func_ov073_0211fa74Ev
 int daKing_Donketu_c::func_ov073_0211fa74() {
     daKing_Donketu_c *c = this;
-    void* cam;
+    dCamera_c *cam;
     dActor_c* spawned;
     dActor_c* found;
     volatile struct Vector3_16 rot;
     struct Vector3 pos;
     cam = data_0209f318;
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
     ApproachLinear(*(int *)&c->mScaleX, 0, 0x80);
     c->mScaleZ = c->mScaleX;
     c->mScaleY = c->mScaleZ;
@@ -692,7 +692,7 @@ int daKing_Donketu_c::func_ov073_0211fa74() {
         found->MarkForDestruction();
     }
     if (spawned != 0) {
-        ((dCamera_c *)cam)->mFlags &= ~8;
+        cam->mFlags &= ~8;
         c->MarkForDestruction();
     }
 end:
@@ -713,7 +713,7 @@ int daKing_Donketu_c::func_ov073_0211fbf4() {
     daKing_Donketu_c *c = this;
     daPly_c *pl = c->mTalkPlayer;
     c->mSoundHandle = Sound::PlayLong(c->mSoundHandle, 3, 0x170, *(Vector3 *)&c->mCamSpacePos, 0);
-    ((dCamera_c *)data_0209f318)->SetFlag_3();
+    data_0209f318->SetFlag_3();
     c->func_ov073_0211f144();
     if (pl->GetTalkState() == -1) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123370);
@@ -754,12 +754,12 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
         msgpos[0].y = pv[1];
         msgpos[0].z = pv[2];
     }
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     msgpos[1].x = c->mPosX;
     msgpos[1].y = c->mPosY;
     msgpos[1].z = c->mPosZ;
 
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
 
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
@@ -791,7 +791,7 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
         Sound::ChangeMusicVolume(0x14, 0x15666);
         Message::PrepareTalk();
         if (c->mTalkPlayer->StartTalk(*c, 1)) {
-            ((dCamera_c *)cam)->SetFlag_3();
+            cam->SetFlag_3();
             if (c->mTalkPlayer->ShowMessage(*c, msg, &msgpos[1], 0, 2)) {
                 func_02012694(SND_TALK_DONE, (void*)&c->mCamSpacePosX);
                 ChiefChilly_ChangeState((C *)(c), (PMF *)(&data_ov073_02123410));
@@ -835,8 +835,8 @@ int daKing_Donketu_c::func_ov073_0211fe8c() {
 
     c->func_ov073_0211f144();
 
-    cam = (dCamera_c *)data_0209f318;
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam = data_0209f318;
+    cam->SetFlag_3();
 
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
@@ -1604,12 +1604,12 @@ int daKing_Donketu_c::func_ov073_0212128c()
     daKing_Donketu_c *c = this;
     struct Vector3 la;
     struct Vector3 ps;
-    void* cam;
+    dCamera_c *cam;
     daPly_c *player;
 
     cam = data_0209f318;
     player = c->mTalkPlayer;
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
 
     la.x = c->mPosX;
     la.y = c->mPosY;
@@ -1623,11 +1623,11 @@ int daKing_Donketu_c::func_ov073_0212128c()
     ps.y = ps.y + 0x20000;
     ps.z = ps.z + 0xffa34000;
 
-    ((dCamera_c *)cam)->SetLookAt(la);
-    ((dCamera_c *)cam)->SetPos(ps);
+    cam->SetLookAt(la);
+    cam->SetPos(ps);
 
     if (player->GetTalkState() == -1) {
-        ((dCamera_c *)cam)->mFlags &= ~8;
+        cam->mFlags &= ~8;
         Sound::LoadAndSetMusic_Layer3(0x2d);
         func_02011d08();
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123360);
@@ -1658,7 +1658,7 @@ int daKing_Donketu_c::func_ov073_02121388() {
     struct Vector3 la;
     struct Vector3 ps;
     daPly_c *player;
-    void* cam;
+    dCamera_c *cam;
     int msg;
     daPly_c *p;
 
@@ -1676,7 +1676,7 @@ int daKing_Donketu_c::func_ov073_02121388() {
     vmsg.y = c->mPosY;
     vmsg.z = c->mPosZ;
 
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
 
     la.x = c->mPosX;
     la.y = c->mPosY;
@@ -1690,8 +1690,8 @@ int daKing_Donketu_c::func_ov073_02121388() {
     ps.y = ps.y + 0x20000;
     ps.z = ps.z + 0xffa34000;
 
-    ((dCamera_c *)cam)->SetLookAt(la);
-    ((dCamera_c *)cam)->SetPos(ps);
+    cam->SetLookAt(la);
+    cam->SetPos(ps);
 
     vmsg.y = vmsg.y + 0x64000;
     ApproachLinear(c->mPrevAngleY, Vec3_HorzAngle(&c->mPos, &vplayer), 0x800);
@@ -1861,7 +1861,7 @@ int daKing_Donketu_c::Behavior()
     Vector3 v48;
     Vector3 v54;
 
-    ((dCamera_c *)data_0209f318)->mFramedActor = this;
+    data_0209f318->mFramedActor = this;
     DecIfAbove0_Short(&mStateTimer);
 
     if (c->pp[1] != 0)

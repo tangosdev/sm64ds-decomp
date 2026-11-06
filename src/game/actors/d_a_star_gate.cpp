@@ -149,7 +149,7 @@ int daStarGate_c::InitResources()
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    ChangeState(&ST_WAIT, (daPly_c *)data_0209f394[data_0209f250]);
+    ChangeState(&ST_WAIT, data_0209f394[data_0209f250]);
     return 1;
 }
 

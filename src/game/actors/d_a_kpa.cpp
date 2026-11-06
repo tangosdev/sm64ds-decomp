@@ -300,7 +300,7 @@ struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern short data_02082214[];
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
@@ -325,7 +325,7 @@ extern KpaAnimationFileHandle data_ov060_0211ac60;
 extern int Vec3_HorzLen(const Vector3* v);
 extern int RandomIntInternal(int* seed);
 extern KpaAnimationFileHandle data_ov060_0211abe0;
-extern int func_0200fa04(void *c, void *v, int a);
+extern void *func_0200fa04(void *c, void *v, int a);
 extern KpaAnimationFileHandle data_ov060_0211acd8;
 extern KpaAnimationFileHandle data_ov060_0211acf0;
 extern KpaAnimationFileHandle data_ov060_0211ac20;
@@ -732,7 +732,7 @@ int daKpa_c::Behavior()
     mAnmModel.speed = mAnimSpeed;
     mAnmModel.Advance();
     func_ov060_0211577c();
-    ((dCamera_c *)data_0209f318)->mFramedActor = this;
+    data_0209f318->mFramedActor = this;
     mdCcAcPos_c.Clear();
     Vector3 v;
     v.z = 0x50000;
@@ -3370,7 +3370,7 @@ axis, to a point 0xc0 (192) units ahead along mAngleY and 0xfa000 (250 units) up
 return 1 when func_020092c4 returns non-zero. Step 4: clear bit 0x8 of
 Camera::mFlags. */
 int daKpa_c::func_ov060_02111f08(){
-    dCamera_c* cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = data_0209f318;
     daPly_c *player = this->ClosestPlayer();
     struct Vector3 sp;
     struct Vector3* pv;
