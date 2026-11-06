@@ -1008,7 +1008,7 @@
       "address": "0x0209f224",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. No reader in this TU. Read outside this TU by CollectStar, RunStarCameraScript, func_02007758, func_020077f0 and func_02007d58 (arm9), so global."
+      "evidence": "u8. No reader in this TU. Read outside this TU by CollectStar, StartDanceCutscene, func_02007758, func_020077f0 and func_02007d58 (arm9), so global."
     },
     {
       "symbol": "gCollectedStarId",

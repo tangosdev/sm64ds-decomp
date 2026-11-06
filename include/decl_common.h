@@ -449,7 +449,7 @@ extern int data_ov100_0214871c;
 extern int data_ov100_02148720;
 extern void func_01ffb07c(void*, void*);
 extern int func_02007cec(void*, const struct Vector3*, int);
-extern int IsStarCameraScript3Running(void);
+extern int IsDanceRotateCutsceneRunning(void);
 extern int GetLanguageIndex(void);
 extern int func_02013890(int, int);
 extern int func_02013a44(void);

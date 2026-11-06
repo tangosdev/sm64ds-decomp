@@ -113,7 +113,7 @@ extern void *data_ov002_0210c3e0[2];
 extern "C" {
 /* Siblings below 0x0200bec4 (defined at the end of the file). */
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
-extern void RunStarCameraScript(int arg0);
+extern void StartDanceCutscene(int arg0);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern int StartWithFarCamera();
 extern void *GetViewObj(int idx);
@@ -701,7 +701,7 @@ void func_0200d4b0(char* self, unsigned int playerID, int arg2)
         ((struct dCamera_c *)self)->mOrbitTargetYaw = ((struct dCamera_c *)self)->mAngleY;
         other = ((struct dCamera_c *)self)->mTargetPlayer;
         other->mFlags |= 0x20000000;
-        RunStarCameraScript(arg2);
+        StartDanceCutscene(arg2);
     }
 }
 }
