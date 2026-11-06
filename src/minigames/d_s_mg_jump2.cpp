@@ -87,7 +87,7 @@ int GetGameLanguage(void);
 struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern Matrix4x3 data_020a0e68;
 void Jump2Popup_UpdateAll(void);
 extern void *Jump3D_AllIdle(void *);
@@ -470,7 +470,7 @@ s32 dScMgJump2_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((OamAttr *)sJump2TextSpritesByLanguage[idx][1], x, 0xc, 0);
+                DrawOamSprite(sJump2TextSpritesByLanguage[idx][1], x, 0xc, 0);
             } else {
                 RenderOamMainScreen(sJumpLifeIconSprite, x, 0xc, -1, -1);
             }

@@ -56,7 +56,7 @@ extern unsigned char gSubScreenLayers;
 extern unsigned char gMainScreenLayers;
 
 int  RandomIntInternal(void* seed);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 int  GetGameLanguage(void);
 void *LoadFile(int handle);

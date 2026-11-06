@@ -39,6 +39,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
+#include "decl_common.h"
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -164,7 +165,7 @@ int GetGameLanguage(void);
 struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern short sTrmpGoalRow;
@@ -206,8 +207,6 @@ extern void func_02012718(int, int);
 extern void TrmpFx_UpdateAll(void);
 extern void Mg_SubmitScore(int);
 extern void TrmpFx_DrawAll(void);
-extern int *sTrmpTextSpritesByLanguage[];
-extern int sTrmpLifeIconSprite;
 extern void Mg_DrawTopRightCounter(int, int);
 extern void *sTrmpDoorSignSprites[];
 extern void *sTrmpArrowSprite;
@@ -228,11 +227,11 @@ extern int sTrmpPuffSpanish[];
 extern int sTrmpPuffFrench[];
 extern int sTrmpPuffGerman[];
 extern int sTrmpPuffItalian[];
-extern int sMgTextSpritesEnglish[];
-extern int sMgTextSpritesSpanish[];
-extern int sMgTextSpritesFrench[];
-extern int sMgTextSpritesGerman[];
-extern int sMgTextSpritesItalian[];
+extern OamAttr *sMgTextSpritesEnglish[];
+extern OamAttr *sMgTextSpritesSpanish[];
+extern OamAttr *sMgTextSpritesFrench[];
+extern OamAttr *sMgTextSpritesGerman[];
+extern OamAttr *sMgTextSpritesItalian[];
 
 /* Data owned by the same original TU. */
 P2 pmf_dScMgTrampoline_c_StateWaitExit = {(int)_ZN17dScMgTrampoline_c13StateWaitExitEv, 0};
@@ -246,9 +245,9 @@ BaseSpawnInfo<dScMgTrampoline_c> g_profile_MG_TRAMPOLINE = {
 P2 pmf_dScMgTrampoline_c_StatePlay = {(int)_ZN17dScMgTrampoline_c9StatePlayEv, 0};
 P2 pmf_dScMgTrampoline_c_StateResults = {(int)_ZN17dScMgTrampoline_c12StateResultsEv, 0};
 int sTrmpNcgByLanguage[] = {0x107, 0x109, 0x104, 0x105, 0x106};
-int *sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesSpanish,
-                                     sMgTextSpritesFrench, sMgTextSpritesGerman,
-                                     sMgTextSpritesItalian};
+OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesSpanish,
+                                          sMgTextSpritesFrench, sMgTextSpritesGerman,
+                                          sMgTextSpritesItalian};
 int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
                               (int)sTrmpPuffGerman, (int)sTrmpPuffItalian};
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpFxList, from the legacy file for TrmpFx_Link, NOT applied: extern void *sTrmpFxList; */
@@ -773,7 +772,7 @@ s32 dScMgTrampoline_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((OamAttr *)sTrmpTextSpritesByLanguage[idx][1], a1v, 0xc, 0);
+                DrawOamSprite(sTrmpTextSpritesByLanguage[idx][1], a1v, 0xc, 0);
             } else {
                 RenderOamMainScreen(sTrmpLifeIconSprite, a1v, 0xc, -1, -1);
             }

@@ -46,8 +46,8 @@ extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern int sBomroomPenGateSprites[];
 extern int sBomroomPenGateX[];
 extern int sBomroomPenGateY[];
-extern int sBomroomHatchPanelSprites[];
-extern int sBomroomTopDoorSprites[];
+extern OamAttr *sBomroomHatchPanelSprites[];
+extern OamAttr *sBomroomTopDoorSprites[];
 extern int sBomroomHatchPanelX[];
 extern int sBomroomHatchPanelY[];
 extern int func_020126e8(int a);
@@ -60,8 +60,8 @@ extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
 extern unsigned char *sBomroomBombLitSprites[];
 extern void *sBomroomBombsSprites[];
-extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-extern void *sBomroomRoundOverSprites;
+extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+extern OamAttr *sBomroomRoundOverSprites;
 extern void *sBomroomMarkerPlainSprites[];
 extern void *sBomroomMarkerLitSprites[];
 extern int sBomroomMarkerY[];
@@ -99,7 +99,7 @@ dScMgBomroom_c::~dScMgBomroom_c()
 void dScMgBomroom_c::DrawRoundOver() {
     if (mRoundOver == 0)
         return;
-    RenderOamMainScreen((int)sBomroomRoundOverSprites, 0x80, 0xc0, -1, 1);
+    RenderOamMainScreen(sBomroomRoundOverSprites, 0x80, 0xc0, -1, 1);
 }
 
 
@@ -474,8 +474,8 @@ void dScMgBomroom_c::HatchPanel_DrawAll() {
             int xv = mHatchPanels[i].x >> 12;
             int yv = mHatchPanels[i].y >> 12;
             int k = mHatchPanels[i].level;
-            int v = (i == 0) ? sBomroomTopDoorSprites[k] : sBomroomHatchPanelSprites[k];
-            Hud_RenderSprite((void*)v, xv, yv, -1, 1);
+            OamAttr *v = (i == 0) ? sBomroomTopDoorSprites[k] : sBomroomHatchPanelSprites[k];
+            Hud_RenderSprite(v, xv, yv, -1, 1);
         }
     }
 }
