@@ -1916,7 +1916,7 @@ void daPly_c::func_ov002_020bf13c() {
  * No callees; data: gActivePlayerSlot (u8 index), data_0209f4a0 (s16 table).
  */
 extern "C" {
-int func_ov002_020bf224(int a, int b, int c)
+int func_ov002_020bf224(void *unusedPlayer, int b, int c)
 {
     extern struct Entry18 data_0209f4a0[];
     b = FX_MUL(b, data_0209f4a0[gActivePlayerSlot].val);
@@ -7594,7 +7594,7 @@ int func_ov002_020ca78c(daPly_c *player) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DebugFly_Main() {
-    extern int func_ov002_020bf224(int a, int b, int c);
+    extern int func_ov002_020bf224(void *a, int b, int c);
     extern char data_0209f4a0[];
     extern char data_0209f49c[];
     extern char data_020a0e5a[];
@@ -7607,7 +7607,7 @@ int daPly_c::St_DebugFly_Main() {
 
     if (*(s16 *)(data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         mPrevAngleY = mDesiredAngleY;
-        mHorzSpeed = func_ov002_020bf224((int)((char *)this), 0x50000, 0);
+        mHorzSpeed = func_ov002_020bf224(this, 0x50000, 0);
     }
 
     idx = gActivePlayerSlot;
@@ -12214,7 +12214,7 @@ static inline int StickScale(void) { return (GetMode() != 2) ? 0x24 : 0x30; }
 static inline int StickLoSpd(void) { return (GetMode() != 2) ? 0xa : 0x10; }
 static inline int StickHiSpd(void) { return (GetMode() != 2) ? 0x15 : 0x20; }
 int daPly_c::func_ov002_020d3b9c() {
-    extern int func_ov002_020bf224(int c, int a, int b);
+    extern int func_ov002_020bf224(void *c, int a, int b);
     extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     extern short data_0209f4a0[];
     extern char data_0209f49c[];
@@ -12249,7 +12249,7 @@ int daPly_c::func_ov002_020d3b9c() {
             } else {
                 int a = Player_ScaleByCharFactor(this, 0x28000);
                 int b = Player_ScaleByCharFactor(this, 0xa000);
-                spd = func_ov002_020bf224((int)this, a, b);
+                spd = func_ov002_020bf224(this, a, b);
             }
             acc = 0x1000;
             if ((*((s16 *)(((char *)data_0209f4a0) + (gActivePlayerSlot * 0x18)))) >= 0xf00) {
