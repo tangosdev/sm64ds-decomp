@@ -434,11 +434,9 @@
         "return:void"
       ],
       "src/unnamed/arm9/0201/func_02018934.cpp": [
-        "param:#1 int *",
         "return:void"
       ],
       "src/engine/mb/MB_GameInfo.c": [
-        "param:#1 int *",
         "return:void"
       ]
     },
@@ -447,7 +445,6 @@
         "param:#1 char *"
       ],
       "src/engine/mb/MB_GameInfo.c": [
-        "param:#1 int *",
         "return:void"
       ],
       "src/engine/sound/SoundEngine.cpp": [
@@ -2108,11 +2105,6 @@
       ]
     },
     "Vec2_Sub": {
-      "src/minigames/d_s_mg_flower.cpp": [
-        "param:#1 V2 *",
-        "param:#2 V2 *",
-        "param:#3 V2 *"
-      ],
       "src/minigames/d_s_mg_hanachan_methods.cpp": [
         "param:#1 V2 *",
         "param:#2 V2 *",
@@ -2693,10 +2685,6 @@
       "src/game/actors/d_a_shark.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_wanwan.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
       ],
       "src/minigames/unit020bfec0.cpp": [
         "param:#1 const void *",
@@ -14805,54 +14793,14 @@
         "param:#1 unsigned short"
       ]
     },
-    "func_0201834c": {
-      "src/unnamed/arm9/0201/func_020182bc.c": [
-        "param:#1 int *"
-      ]
-    },
-    "func_020184e0": {
-      "src/unnamed/arm9/0201/func_02018474.c": [
-        "param:#1 int *"
-      ]
-    },
     "func_02018568": {
       "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_020185c0": {
-      "src/SharedFilePtr.cpp": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0201/func_02018270.c": [
         "param:#1 void *"
       ]
     },
     "func_02018a40": {
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
         "param:#2 int"
-      ]
-    },
-    "myFS_ReadFile": {
-      "src/unnamed/arm9/0201/func_02018934.cpp": [
-        "param:#1 int *"
-      ]
-    },
-    "myFS_OpenFileFast": {
-      "src/unnamed/arm9/0201/func_020182bc.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0201/func_02018474.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0201/func_020185c0.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0201/func_02018b64.c": [
-        "arity:2"
       ]
     },
     "myFS_ConvertPathToFileID": {
