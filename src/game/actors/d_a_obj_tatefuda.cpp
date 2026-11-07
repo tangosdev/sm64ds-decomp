@@ -91,12 +91,6 @@ enum daObjTatefuda_c_AssetId {
 /* shadow typedef 's32' */
 typedef int s32;
 
-/* shadow struct 'Sub041' */
-struct Sub041 {
-  virtual void v0(); virtual void v1(); virtual void v2();
-  virtual void v3(); virtual void v4(); virtual void v5(int);
-};
-
 /* shadow enum 'Bool' */
 enum Bool { FALSE, TRUE };
 
@@ -397,8 +391,7 @@ int daObjTatefuda_c::Behavior()
 /* recovered: named members + shared header, real C++ method */
 /* Draws the sign: nothing while hidden. If a player holds it (same test as
    Behavior's step 2) the sign is put on the holder first, so the model is drawn
-   where the holder has it this frame. The draw itself is a call through slot 5
-   of the dExtSimpleModel_c (via the local Sub041 view). */
+   where the holder has it this frame. */
 int daObjTatefuda_c::Render() {
     if (mHidden != 0)
         return 1;
@@ -409,8 +402,7 @@ int daObjTatefuda_c::Render() {
             AttachToHolder(this);
         }
     }
-    Sub041 *s = (Sub041 *)&mModel;
-    s->v5(0);
+    mModel.Render(0);
     return 1;
 }
 
