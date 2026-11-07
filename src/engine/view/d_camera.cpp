@@ -30,6 +30,7 @@
  * - The controller records at 0x0209f498 are read through the separate
  *   data_0209f49c..data_0209f4ae symbols with (char *) stride arithmetic.
  */
+#include "KuppaScript.h"
 #include "dCamera_c.h"
 #include "CutsceneSpline.h"
 #include "daPly_c.h"
@@ -113,7 +114,6 @@ extern void *data_ov002_0210c3e0[2];
 extern "C" {
 /* Siblings below 0x0200bec4 (defined at the end of the file). */
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
-extern void StartDanceCutscene(int arg0);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern int StartWithFarCamera();
 extern void *GetViewObj(int idx);
@@ -706,7 +706,7 @@ void dCamera_c::func_0200d4b0(unsigned int playerID, int arg2) {
         mOrbitTargetYaw = mAngleY;
         other = mTargetPlayer;
         other->mFlags |= 0x20000000;
-        StartDanceCutscene(arg2);
+        KuppaScript::StartDanceCutscene(arg2);
     }
 }
 
@@ -1499,11 +1499,8 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
 
 /* KuppaScript.cpp's readers of the script's unaligned operands and its
    lookups of the script's actors. */
-extern "C" s16 ReadUnalignedShort(u8 *p);
-extern "C" u16 ReadUnalignedUshort(u8 *p);
-extern "C" s32 ReadUnalignedSignedInt(u8 *p);
-extern "C" dActor_c *FindScriptPlayer(u32 character);
-extern "C" dActor_c *FindDemoActor(u32 param1);
+extern "C" dActor_c *KuppaScript::FindScriptPlayer(u32 character);
+extern "C" dActor_c *KuppaScript::FindDemoActor(u32 param1);
 
 extern "C" {
 /* local extern: math/CalcLib.h spells the Vec3 helpers with const Vector3 *,
@@ -3538,7 +3535,7 @@ int func_02008200(dCamera_c *cam, u8 *data, int first) {
     int diff, val, target;
     if (first == gKuppaScriptFrame)
         cam->savedLookAt.y = 0x190000;
-    a = (daPly_c *)FindScriptPlayer(0);
+    a = (daPly_c *)KuppaScript::FindScriptPlayer(0);
     diff = a->mPosY - a->mGroundY;
     val = FX_MUL(diff, 0x1199);
     target = a->mGroundY + 0x50000 + val;
@@ -3556,7 +3553,7 @@ int func_0200814c(dCamera_c *cam) {
     int diff, absdiff, val;
     Vector3 v;
 
-    a = FindScriptPlayer(0);
+    a = KuppaScript::FindScriptPlayer(0);
     diff = a->mPos.y - cam->pos.y;
     v.x = 0;
     v.y = 0x50000;
@@ -3574,7 +3571,7 @@ int func_0200814c(dCamera_c *cam) {
 // @symbol func_020080f0
 /* Script op: ease pos.y and lookAt.y toward heights above demo actor 0x13. */
 int func_020080f0(dCamera_c *cam) {
-    dActor_c *tmp = FindDemoActor(0x13);
+    dActor_c *tmp = KuppaScript::FindDemoActor(0x13);
     Vector3 *r4 = &tmp->mPos;
     int v1 = r4->y;
     Math_Function_0203b0fc(&cam->pos.y, v1 + 0x23000, 0x51, 0x7fffffff);
@@ -3586,7 +3583,7 @@ int func_020080f0(dCamera_c *cam) {
 // @symbol func_020080b0
 /* Script op: lookAt at demo actor 0x13, mScriptParam above it. */
 int func_020080b0(dCamera_c *cam) {
-    dActor_c *obj = FindDemoActor(0x13);
+    dActor_c *obj = KuppaScript::FindDemoActor(0x13);
     Vector3 *base = &obj->mPos;
 
     int z = base->z;
@@ -3605,7 +3602,7 @@ int func_02008080(dCamera_c *cam) {
     dActor_c *a;
     int *dst;
 
-    a = FindDemoActor(0x13);
+    a = KuppaScript::FindDemoActor(0x13);
     dst = &cam->pos.y;
     *dst = *dst + a->mPosY;
     return 1;
@@ -3620,7 +3617,7 @@ int func_02008028(dCamera_c *cam) {
 
     y = cam->pos.y;
     func_02009414(cam);
-    obj = FindDemoActor(0x13);
+    obj = KuppaScript::FindDemoActor(0x13);
     Math_Function_0203b0fc(&y, cam->pos.y + obj->mPosY, 0x11e, 0x7fffffff);
     cam->pos.y = y;
     return 1;
