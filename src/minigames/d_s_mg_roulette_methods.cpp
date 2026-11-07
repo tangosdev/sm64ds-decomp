@@ -172,7 +172,7 @@ void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
 
-void func_0203d680(Vec2_Fix12 *out, const Vec2_Fix12 *in, int scale);
+void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
@@ -726,7 +726,7 @@ void RouletteRacer_SetVelocityToward(int *out, int *target, int scale) {
     out[6] = target[0];
     out[7] = target[1];
     Vec2_Sub((int *)&v1, out + 6, out);
-    func_0203d680(&v2, &v1, scale);
+    func_0203d680((Vector2 *)&v2, (const Vector2 *)&v1, scale);
     out[4] = v2.x;
     out[5] = v2.y;
     if (out[4] < 0)
