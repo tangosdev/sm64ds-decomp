@@ -83,10 +83,6 @@
  *   the hitter's param1 picks the prize column (it is clamped to 0..3 and
  *   the table has no column names); and why a lost cap swaps the prize for a
  *   BOMBHEI.
- *   data_ov002_0210da58 and gPFlower* stay char[]. A SharedFilePtr decl
- *   would outvote the char[] spelling that daKuriKing_c, daFeather and
- *   PowerFlower share, and check_decl_agreement would flag those files; and
- *   Init's LoadFile still treats each slot as the model handle.
  *
  * Native file-handle and dispatch-table storage is owned in .bss and
  * initialized by this TU. Its complete RTTI, six SpawnInfo profiles and
@@ -198,20 +194,18 @@ extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr data_ov002_0210d9e0;
-/* da58 / gPFlower*: SharedFilePtr here would outvote the char[]
-   spelling daKuriKing_c, daFeather and PowerFlower share, so
-   check_decl_agreement would flag those files. */
+/* The ov002 model-file handles (src/ov002_handles.cpp defines all of them). */
 extern SharedFilePtr data_ov002_0210da18;
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov002_0210da40;
-extern char data_ov002_0210da58[];
-extern char gPFlowerOpenModelFile[];
-extern char gPFlowerCloseModelFile[];
+extern SharedFilePtr data_ov002_0210da58;
+extern SharedFilePtr gPFlowerOpenModelFile;
+extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
 
 extern int RandomIntInternal(int *seed);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int DecIfAbove0_Short(void *p);
+extern u16 DecIfAbove0_Short(u16 *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
@@ -414,7 +408,7 @@ int daObjHatenaBlock_c::InitResources()
         int b16 = !(actorID != ACTOR_VS_ITEM_BLOCK);
         if (b16 != 0) {
             mContentType = 0;
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
         }
     }
 
@@ -441,18 +435,18 @@ int daObjHatenaBlock_c::InitResources()
         dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
         break;
     case CONTENT_POWER_UP_7:
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     case CONTENT_POWER_UP_5:
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
         break;
     case CONTENT_POWER_UP_6:
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
         break;
     }
 end:
@@ -559,7 +553,7 @@ int daObjHatenaBlock_c::CleanupResources()
 
     b = (int)(actorID == ACTOR_VS_ITEM_BLOCK);
     if (b)
-        ((SharedFilePtr *)data_ov002_0210da58)->Release();
+        data_ov002_0210da58.Release();
 
     b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
     if (b2)
@@ -581,18 +575,18 @@ int daObjHatenaBlock_c::CleanupResources()
             data_ov002_0210da30.Release();
             break;
         case CONTENT_POWER_UP_7:
-            ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
-            ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
+            gPFlowerOpenModelFile.Release();
+            gPFlowerCloseModelFile.Release();
             data_ov002_0210d9e0.Release();
             break;
         case CONTENT_POWER_UP_5:
-            ((SharedFilePtr *)data_ov002_0210da58)->Release();
-            ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
-            ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
+            data_ov002_0210da58.Release();
+            gPFlowerOpenModelFile.Release();
+            gPFlowerCloseModelFile.Release();
             break;
         case CONTENT_POWER_UP_6:
-            ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
-            ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
+            gPFlowerOpenModelFile.Release();
+            gPFlowerCloseModelFile.Release();
             break;
         }
     }

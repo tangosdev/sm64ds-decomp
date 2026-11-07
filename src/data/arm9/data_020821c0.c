@@ -1,0 +1,7 @@
+/* Near/far range pairs for the sound slots. */
+#include "types.h"
+
+extern const u32 data_020821c0[16] = {
+    0x0000005a, 0x00000226, 0x000000c8, 0x000005dc, 0x000000c8, 0x000002ee, 0x00000096, 0x00000190,
+    0x00000028, 0x00000190, 0x0000005a, 0x000003e8, 0x00000032, 0x00000190, 0x000000c8, 0x000005dc,
+};

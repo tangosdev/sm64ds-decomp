@@ -2,7 +2,7 @@ extern int func_0203f818(int a);
 extern void func_0203f6e8(short v);
 extern void func_0203f6a4(int v);
 extern short data_020a0f18;
-extern short data_020a0f34;
+extern unsigned short data_020a0f34;
 
 /* Begin measuring once WM has initialized: clear the outcome, seed the
    best busy ratio above any real one (0x65, past 100 percent) and measure

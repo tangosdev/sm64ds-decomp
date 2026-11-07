@@ -91,7 +91,7 @@ void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int Vec3_HorzLen(void *v);
 int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-short Vec3_VertAngle(const void *a, const void *b);
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
 int ApproachAngle(short *angles, short target, int a, int b, int c);
 unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -750,7 +750,7 @@ extern "C" void func_ov014_02111ca8(daWanwan_c *c) {
  * the player (raised 0x50000). The third argument of the sound call is real
  * in this body; the two-argument definition ignores it. */
 extern "C" void func_ov014_02111b70(daWanwan_c *c) {
-    int tgt[3];
+    Vector3 tgt;
     daPly_c *player;
     int a;
     int i;
@@ -766,12 +766,12 @@ extern "C" void func_ov014_02111b70(daWanwan_c *c) {
         int y = player->mPosY;
         int z = player->mPosZ;
         int x = player->mPosX;
-        tgt[0] = x;
-        tgt[1] = y + 0x50000;
-        tgt[2] = z;
+        tgt.x = x;
+        tgt.y = y + 0x50000;
+        tgt.z = z;
     }
 
-    a = (unsigned short)Vec3_VertAngle(&c->mPosX, tgt);
+    a = (unsigned short)Vec3_VertAngle(&c->mPos, &tgt);
     i = (a >> 4) << 1;
     c->mVertSpeed = -FX_MUL(data_02082214[i], 0x8c000);
     v = c->mVertSpeed;

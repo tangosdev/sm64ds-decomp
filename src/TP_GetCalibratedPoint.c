@@ -21,14 +21,14 @@ void TP_GetCalibratedPoint(TPData *disp, TPData *raw) {
         disp->y = 0;
         return;
     }
-    disp->x = (int)(((long long)p[2] * ((long long)(raw->x << 2) - (long long)p[0])) >> 22);
+    disp->x = (int)(((long long)p[2] * ((raw->x << 2) - (long long)p[0])) >> 22);
     t = (short)disp->x;
     if (t < 0) {
         disp->x = 0;
     } else if (t > 0xff) {
         disp->x = 0xff;
     }
-    disp->y = (int)(((long long)p[5] * ((long long)(raw->y << 2) - (long long)p[3])) >> 22);
+    disp->y = (int)(((long long)p[5] * ((raw->y << 2) - (long long)p[3])) >> 22);
     t = (short)disp->y;
     if (t < 0) {
         disp->y = 0;

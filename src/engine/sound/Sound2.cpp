@@ -51,7 +51,7 @@ extern u16 data_02099fa4;   /* pan channel */
 extern u32 data_02099fa8;   /* near range: full volume inside it */
 extern u32 data_02099fac;   /* far range: silent beyond it */
 extern int data_02099fb0;   /* slot-9 voice count */
-extern u32 data_020821c0[]; /* near/far pairs, one per sound mode */
+extern const u32 data_020821c0[16];
 extern int *data_020a4bec;  /* the registry owner */
 extern SoundSlot data_020a4c18[];
 extern SoundSlot data_020a4c08[];
@@ -93,7 +93,7 @@ void func_02048fd4(int i) {
         return;
     if (i > 8)
         return;
-    tbl = data_020821c0;
+    tbl = (volatile u32 *)data_020821c0;
     j = i * 2;
     data_02099fa8 = tbl[j];
     j++;

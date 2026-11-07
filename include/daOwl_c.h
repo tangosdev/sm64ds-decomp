@@ -66,9 +66,7 @@ struct daOwl_c : dEnemyBase_c {
     struct daPly_c *mTalkTarget;      /* 0x3d0 -- the player it faces and talks to */
     u8  mTalkState;                   /* 0x3d4 -- 0 idle, 1 talking, 2 talk finished */
     u8  pad_3d5[3];
-    s32 mAnchorX;                     /* 0x3d8 -- hover anchor, returned to after a carry */
-    s32 mAnchorY;                     /* 0x3dc */
-    s32 mAnchorZ;                     /* 0x3e0 */
+    Vector3 mAnchor;                  /* 0x3d8 -- hover anchor, returned to after a carry */
     u8  mOpacity;                     /* 0x3e4 -- 0..0x1f, passed to ApplyOpacity */
     u8  pad_3e5[3];
     s32 unk_3e8;                      /* 0x3e8 -- per-state scratch, see d_a_owl.cpp */
