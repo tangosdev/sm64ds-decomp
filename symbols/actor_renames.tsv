@@ -8027,3 +8027,6 @@ arm9	0x0200d4b0	func_0200d4b0	_ZN9dCamera_c13func_0200d4b0Eji	free camera helper
 arm9	0x0200d858	func_0200d858	_ZN9dCamera_c13func_0200d858EPK7Vector3	free camera helper -> dCamera_c member: every caller passes the camera (data_0209f318, or this inside the TU), the body uses r0 only as the camera, and the address is inside the dCamera_c TU; name still the address
 arm9	0x0200d8ac	func_0200d8ac	_ZN9dCamera_c11SetFovShakeEiii	free camera helper -> dCamera_c member, named for Super Mario 64's set_fov_shake: same statement-level body (raise amplitude only if larger, then store decay and phase step); every caller passes the camera
 arm9	0x0200d8c8	func_0200d8c8	_ZN9dCamera_c13func_0200d8c8EPK7Vector3i	free camera helper -> dCamera_c member: every caller passes the camera (data_0209f318, or this inside the TU), the body uses r0 only as the camera, and the address is inside the dCamera_c TU; name still the address
+arm9	0x02007c14	func_02007c14	Vec3fSetDistAndAngle	dCamera_c helper: Super Mario 64's vec3f_set_dist_and_angle in fixed point (result first, origin second)
+arm9	0x02007c9c	func_02007c9c	Vec3fGetDistAndAngle	dCamera_c helper: Super Mario 64's vec3f_get_dist_and_angle in fixed point
+arm9	0x02007d0c	func_02007d0c	ApproachVec3fAsymptotic	dCamera_c helper: Super Mario 64's approach_vec3f_asymptotic in fixed point, three per-axis fractions
