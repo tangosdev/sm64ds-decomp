@@ -942,6 +942,8 @@ void watch_boos(unsigned now) {
 // standing is hunted: every 150 est frames my player is put 80 units east of it and its room is shown (Big Boo's Haunt
 // keeps a Boo at home while its room is hidden, and only doors show rooms), and while it chases (state 1) its collider
 // reads as punched by my player, so the cartridge's own hit and defeat path runs (the talk, the count, the Big Boo).
+// Once none of them stands, my player waits 400 units from the Big Boo the small Boos report to (it only shows itself to a
+// player within 742 units, func_ov063_0211ad00), with its room shown, so its coming out is on this console's pictures.
 struct BooHitKnob { unsigned at; int n; short slot[8]; };
 BooHitKnob g_boohit = {0, 0, {}};
 void boohit_knob() {
@@ -984,6 +986,21 @@ void boohit_knob() {
             if (area >= 0 && data_02092120 != area) ChangeArea(area);
             std::fprintf(stderr, "[coop-knob] boo hunt: put by Boo slot %d at %d,%d,%d (est %u)" "\n", (int)g_boohit.slot[i], bp[0] >> 12, bp[1] >> 12, bp[2] >> 12, g_est_frames);
         }
+        return;
+    }
+    if ((g_est_frames - g_boohit.at) % 150u != 0) return;
+    for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {
+        if (*(const unsigned short *)(b + 0x0c) != 210) continue;
+        const unsigned char v = *(const unsigned char *)(b + 0x5cf);
+        if (v != 0xd && v != 0xe) continue;
+        const int *bp = (const int *)(b + 0x5c);
+        int *pp = (int *)(body + 0x5c);
+        const long long dx = (long long)(pp[0] - bp[0]) >> 12, dz = (long long)(pp[2] - bp[2]) >> 12;
+        if (dx * dx + dz * dz < 600LL * 600LL) return;
+        pp[0] = bp[0]; pp[1] = bp[1]; pp[2] = bp[2] + (400 << 12);
+        const signed char area = *(const signed char *)(b + 0x5d0);
+        if (area >= 0 && data_02092120 != area) ChangeArea(area);
+        std::fprintf(stderr, "[coop-knob] boo hunt: my Boos are beaten, waiting by the Big Boo at %d,%d,%d (est %u)" "\n", bp[0] >> 12, bp[1] >> 12, bp[2] >> 12, g_est_frames);
         return;
     }
 }
