@@ -737,13 +737,12 @@ void daYegg_c::func_ov002_020ecfc8() {
  *    more away. */
 void daYegg_c::func_ov002_020ed0d4()
 {
-    struct Vector3 in, out;
+    Vector3 in, out;
     daPly_c *com;
     int* p;
-    volatile struct Vector3 t1, t2;
-    struct Vector3 v1, v2;
-    struct Vector3 sumA, sumB, sumC;
-    int *pt1, *pt2, *pv1, *pv2;
+    Vector3 t1, t2;
+    Vector3 v1, v2;
+    Vector3 sumA, sumB, sumC;
 
     com = mPlayer;
     mHoldOffsetZ = -0x68000;
@@ -766,14 +765,12 @@ void daYegg_c::func_ov002_020ed0d4()
             if (mWithMeshClsn.IsOnGround() != 0) {
                 mGoalAngleX = mPlayer->mAngleX;
                 mGoalAngleZ = mPlayer->mAngleZ;
-                pt1 = &com->mPrevPosX;
-                pt2 = &com->mPosX;
-                t1.x = pt1[0];
-                t1.y = pt1[1];
-                t1.z = pt1[2];
-                t2.x = pt2[0];
-                t2.y = pt2[1];
-                t2.z = pt2[2];
+                {
+                    const Vector3 &a = com->mPrevPos;
+                    const Vector3 &b = com->mPos;
+                    t1 = a;
+                    t2 = b;
+                }
                 Vec3_Add(&sumA, &com->mPos, &out);
                 mHoldTargetX = sumA.x;
                 mHoldTargetY = sumA.y;
@@ -789,14 +786,12 @@ void daYegg_c::func_ov002_020ed0d4()
         } else {
             mGoalAngleX = com->mAngleX;
             mGoalAngleZ = com->mAngleZ;
-            pv1 = &com->mPrevPosX;
-            pv2 = &com->mPosX;
-            v1.x = pv1[0];
-            v1.y = pv1[1];
-            v1.z = pv1[2];
-            v2.x = pv2[0];
-            v2.y = pv2[1];
-            v2.z = pv2[2];
+            {
+                const Vector3 &a = com->mPrevPos;
+                const Vector3 &b = com->mPos;
+                v1 = a;
+                v2 = b;
+            }
             if (Vec3_HorzDist(&v1, &v2) >= 0x5000) {
                 mGoalAngleY = Vec3_HorzAngle(&v1, &v2);
             }
