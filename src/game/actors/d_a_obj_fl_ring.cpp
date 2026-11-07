@@ -17,8 +17,7 @@
  * _ZTI14daObjFl_Ring_c and _ZTS14daObjFl_Ring_c as vague linkage, alongside the
  * inherited bases' RTTI records. Every one of them has a configured ROM home,
  * so all of them license as deadstrip-data and the object isolates cleanly. The destructor is declared and defined inline and empty in the class
- * header (see that file for why), so there is no destructor text here for an
- * @symbol marker to sit above.
+ * header (see that file for why), so there is no destructor text here.
  *
  * Function order is the reverse of the ROM's: mwccarm 2004/b56 emits one .text
  * section per function in the reverse of source order, so the highest-address
@@ -91,7 +90,6 @@ static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
 
-// @symbol daObjFl_Ring_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjFl_Ring_c through RTTI,
  * allocation size, vtable identity, and the FL_RING registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
@@ -109,20 +107,17 @@ extern "C" daObjFl_Ring_c *daObjFl_Ring_c_classInit(void) {
  * long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol _ZN14daObjFl_Ring_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
 void daObjFl_Ring_c::StoodOnCallback(dBgW *collider, daObjFl_Ring_c *self, dActor_c *other) {
     self->OnStoodOn(other);
 }
 #pragma pop
 
-// @symbol _ZN14daObjFl_Ring_c9OnStoodOnEP8dActor_c
 /* Something touched the ring: raise mTriggered, which the next Behavior
  * reads once and clears. */
 void daObjFl_Ring_c::OnStoodOn(dActor_c *other) {
     mTriggered = 1;
 }
 
-// @symbol _ZN14daObjFl_Ring_c13InitResourcesEv
 s32 daObjFl_Ring_c::InitResources() {
     void *f = dExtSimpleModel_c::LoadFile(*data_ov022_02113cc8.mModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
@@ -145,7 +140,6 @@ s32 daObjFl_Ring_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjFl_Ring_c8BehaviorEv
 s32 daObjFl_Ring_c::Behavior() {
     switch (mState) {
     case 0:
@@ -210,13 +204,11 @@ s32 daObjFl_Ring_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjFl_Ring_c6RenderEv
 s32 daObjFl_Ring_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjFl_Ring_c16CleanupResourcesEv
 s32 daObjFl_Ring_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

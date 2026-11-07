@@ -67,7 +67,6 @@ extern s16 data_02082214[];
 
 extern "C" {
 
-// @symbol daFeather_c_classInit
 daFeather_c *daFeather_c_classInit(void) {
     return new daFeather_c();
 }
@@ -77,7 +76,6 @@ daFeather_c *daFeather_c_classInit(void) {
  * Vtable slot 0.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c13InitResourcesEv
 int daFeather_c::InitResources() {
     BMD_File *bmd;
     int b;
@@ -110,7 +108,6 @@ int daFeather_c::InitResources() {
  * Vtable slot 6.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c8BehaviorEv
 int daFeather_c::Behavior() {
     {
         int b = (data_0209f2d8 == 1);
@@ -187,7 +184,6 @@ int daFeather_c::Behavior() {
  * Vtable slot 9.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c6RenderEv
 int daFeather_c::Render() {
     u8 b = mLifeTimer;
     if (b < 0x2d && (b & 1) != 0)
@@ -202,7 +198,6 @@ int daFeather_c::Render() {
  * nullary and still reproduce.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c16CleanupResourcesEv
 int daFeather_c::CleanupResources() {
     data_ov002_0210da58.Release();
     return 1;
@@ -213,7 +208,6 @@ int daFeather_c::CleanupResources() {
  * shadow: a fixed-size one in game mode 1, a ground-raycast one otherwise.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c20UpdateModelAndShadowEv
 void daFeather_c::UpdateModelAndShadow() {
     Vector3 pos;
     Vector3 v;

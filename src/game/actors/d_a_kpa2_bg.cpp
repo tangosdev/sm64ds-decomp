@@ -57,19 +57,16 @@ void Vec3_Asr(void *dst, void *src, int shift);
 void func_020393d4(dBgW *, BeforeClsnCallback);
 }
 
-// @symbol _ZN10daKpa2Bg_cD1Ev
 daKpa2Bg_c::~daKpa2Bg_c() {}
 
 /* Plays sound 0x95 through the handle kept in mSoundHandle. Bowser calls it
    on odd frames while he tilts the arena. */
-// @symbol _ZN10daKpa2Bg_c13PlayTiltSoundEv
 void daKpa2Bg_c::PlayTiltSound() {
     mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 3, 0x95, 0);
 }
 
 /* Rebuilds the collision matrix from the position and the X and Z angles,
    then moves the moving mesh collider to it with the Y angle. */
-// @symbol _ZN10daKpa2Bg_c16UpdateClsnMatrixEv
 void daKpa2Bg_c::UpdateClsnMatrix() {
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
@@ -80,7 +77,6 @@ void daKpa2Bg_c::UpdateClsnMatrix() {
 
 /* Rebuilds the model matrix the same way from the position shifted down by 3
    bits. The Y angle is not part of this matrix build. */
-// @symbol _ZN10daKpa2Bg_c17UpdateModelMatrixEv
 void daKpa2Bg_c::UpdateModelMatrix() {
     int pos[4];
     Vec3_Asr(&pos, &mPosX, 3);
@@ -90,7 +86,6 @@ void daKpa2Bg_c::UpdateModelMatrix() {
     mModel2.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN10daKpa2Bg_c16CleanupResourcesEv
 s32 daKpa2Bg_c::CleanupResources() {
     if (mMovingMeshCollider2.IsEnabled()) {
         mMovingMeshCollider2.Disable();
@@ -100,13 +95,11 @@ s32 daKpa2Bg_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN10daKpa2Bg_c6RenderEv
 s32 daKpa2Bg_c::Render() {
     mModel2.Render(0);
     return 1;
 }
 
-// @symbol _ZN10daKpa2Bg_c8BehaviorEv
 s32 daKpa2Bg_c::Behavior() {
     /* mAngleX / mAngleY / mAngleZ, reached through rematerialised pointers.
        The plain member form (`mAngleX = mAngleX + mAngleXSpeed;`) is five
@@ -128,7 +121,6 @@ s32 daKpa2Bg_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10daKpa2Bg_c13InitResourcesEv
 int daKpa2Bg_c::InitResources() {
     mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(daKpa2Bg_c_ModelFile), 1, -1);
     UpdateClsnMatrix();
@@ -148,7 +140,6 @@ int daKpa2Bg_c::InitResources() {
 /* `new daKpa2Bg_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x570), dBgActor_c's base constructor, the vptr store,
  * then the dExtSimpleModel_c and dBgW_KcMbg member constructors. */
-// @symbol daKpa2Bg_c_classInit
 extern "C" daKpa2Bg_c *daKpa2Bg_c_classInit(void) {
     return new daKpa2Bg_c;
 }

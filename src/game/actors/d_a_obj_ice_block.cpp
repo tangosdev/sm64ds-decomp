@@ -73,12 +73,10 @@ enum {
     kShardHeight = 0x96000, /* 150.0 */
 };
 
-// @symbol daObjIceBlock_c_classInit
 extern "C" daObjIceBlock_c *daObjIceBlock_c_classInit() {
     return new daObjIceBlock_c();
 }
 
-// @symbol _ZN15daObjIceBlock_c13InitResourcesEv
 s32 daObjIceBlock_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov081_02128fd8), 1, 0x17);
     mCollider.Init(this, 0xc8000, 0x12c000, 0x800002, 0x44000);
@@ -92,7 +90,6 @@ s32 daObjIceBlock_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjIceBlock_c8BehaviorEv
 s32 daObjIceBlock_c::Behavior() {
     IsClsnInRangeOnScreen(0, 0);
 
@@ -147,7 +144,6 @@ s32 daObjIceBlock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObjIceBlock_c6RenderEv
 s32 daObjIceBlock_c::Render() {
     Vector3 scale;
     scale.x = mScale;
@@ -157,7 +153,6 @@ s32 daObjIceBlock_c::Render() {
     return 1;
 }
 
-// @symbol _ZN15daObjIceBlock_c16CleanupResourcesEv
 s32 daObjIceBlock_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -166,7 +161,6 @@ s32 daObjIceBlock_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjIceBlock_c4KillEv
 /* vtable slot 31, dBgActor_c's own Kill overridden. Unlike the rest of the
  * family this one plays its sound FIRST, and it throws three shatter
  * particles -- 0x74, 0x75, 0x76 -- at one point 150.0 above itself.
@@ -195,13 +189,11 @@ void daObjIceBlock_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN15daObjIceBlock_c15OnHitByMegaCharER7daPly_c
 void daObjIceBlock_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }
 
-// @symbol _ZN15daObjIceBlock_c11ReleaseStarEv
 /* Let the frozen star go: destroy it and respawn it free-standing at the
  * same place and angle, with its star base beside it.
  *
@@ -232,14 +224,11 @@ void daObjIceBlock_c::ReleaseStar() {
     mFlags |= 0x4000000;
 }
 
-// @symbol _ZN15daObjIceBlock_cD1Ev
-// @symbol _ZN15daObjIceBlock_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
 
 /* Source order is construction order: model file 1114, collision file 1115.
  * __sinit_d_a_obj_ice_block.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-// @symbol __sinit_d_a_obj_ice_block.cpp
 IceBlockModelFilePtr data_ov081_02128fd8(ASSET_ICE_BLOCK_LL_BMD);
 IceBlockCollisionFilePtr data_ov081_02128fd0(ASSET_ICE_BLOCK_LL_KCL);

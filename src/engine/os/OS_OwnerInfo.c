@@ -16,7 +16,6 @@
 extern void CpuCopy8(const void *src, void *dst, unsigned int size); /* MI_CpuCopy8 */
 extern void MultiCopyHalf(const void *src, void *dst, int size);     /* MIi_CpuCopy16 */
 
-// @symbol OS_GetMacAddress
 void OS_GetMacAddress(unsigned char *macAddress) {
     CpuCopy8((void *)0x027ffcf4, macAddress, 6);
 }
@@ -36,7 +35,6 @@ typedef struct OSOwnerInfo {
 
 /* Copies the owner fields into an OSOwnerInfo. The parameter stays a byte
  * pointer, the spelling two of its three callers declare. */
-// @symbol OS_GetOwnerInfo
 void OS_GetOwnerInfo(unsigned char *dst) {
     NVRAMConfigData *src = (NVRAMConfigData *)0x27ffc80;
     OSOwnerInfo *info = (OSOwnerInfo *)dst;

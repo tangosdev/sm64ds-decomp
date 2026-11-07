@@ -43,12 +43,10 @@ enum {
     kRayStartAboveFix12 = 0x14000 /* 20.0 */
 };
 
-// @symbol daObjWcObj06_c_classInit
 extern "C" daObjWcObj06_c *daObjWcObj06_c_classInit() {
     return new daObjWcObj06_c();
 }
 
-// @symbol _ZN14daObjWcObj06_c13InitResourcesEv
 int daObjWcObj06_c::InitResources() {
     int startEnd[6]; /* start[3] then end[3] */
     int waterY;

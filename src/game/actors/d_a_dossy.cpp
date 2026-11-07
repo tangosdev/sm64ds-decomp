@@ -166,44 +166,37 @@ void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 typedef void (daDossy_c::*StateFunc)();
 extern "C" StateFunc data_ov065_0211d7fc[];
 
-// @symbol _ZN14DorriePlatformC1Ev
 DorriePlatform::DorriePlatform()
 {
 }
 
-// @symbol daDossy_c_classInit
 extern "C" daDossy_c *daDossy_c_classInit(void)
 {
     return new daDossy_c();
 }
 
-// @symbol daDossyCap_c_classInit
 extern "C" daDossyCap_c *daDossyCap_c_classInit(void)
 {
     return new daDossyCap_c();
 }
 
-// @symbol _ZN12daDossyCap_c13OnYoshiTryEatEv
 int daDossyCap_c::OnYoshiTryEat()
 {
     return 4;
 }
 
 #pragma long_calls on
-// @symbol func_ov065_021195d0
 extern "C" void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_02119594(other);
 }
 #pragma long_calls off
 
 #pragma long_calls on
-// @symbol func_ov065_021195bc
 extern "C" void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daDossy_c *>(owner)->func_ov065_0211956c(other);
 }
 #pragma long_calls off
 
-// @symbol _ZN9daDossy_c19func_ov065_02119594EP8dActor_c
 void daDossy_c::func_ov065_02119594(dActor_c *other)
 {
     BOOL isPlayer = (other->actorID == 0xbf) ? TRUE : FALSE;
@@ -213,7 +206,6 @@ void daDossy_c::func_ov065_02119594(dActor_c *other)
     }
 }
 
-// @symbol _ZN9daDossy_c19func_ov065_0211956cEP8dActor_c
 void daDossy_c::func_ov065_0211956c(dActor_c *other)
 {
     BOOL isPlayer = (other->actorID == 0xbf) ? TRUE : FALSE;
@@ -223,7 +215,6 @@ void daDossy_c::func_ov065_0211956c(dActor_c *other)
     }
 }
 
-// @symbol _ZN12daDossyCap_c13InitResourcesEv
 int daDossyCap_c::InitResources()
 {
     mModel.SetFile((BMD_File *)data_ov002_0210d9c0.filePtr, 1, -1);
@@ -233,7 +224,6 @@ int daDossyCap_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN9daDossy_c13InitResourcesEv
 int daDossy_c::InitResources()
 {
     int i;
@@ -316,7 +306,6 @@ int daDossy_c::InitResources()
     return 1;
 }
 
-// @symbol func_ov065_02119210
 extern "C" int func_ov065_02119210(unsigned char *c)
 {
     daDossyCap_c *cap = (daDossyCap_c *)c;
@@ -324,7 +313,6 @@ extern "C" int func_ov065_02119210(unsigned char *c)
     return ((unsigned)flags >> 31) != 0;
 }
 
-// @symbol _ZN12daDossyCap_c8BehaviorEv
 int daDossyCap_c::Behavior()
 {
     daDossy_c *carrier = (daDossy_c *)mCarrier;
@@ -363,7 +351,6 @@ int daDossyCap_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daDossy_c8BehaviorEv
 int daDossy_c::Behavior()
 {
     int d;
@@ -420,7 +407,6 @@ int daDossy_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN12daDossyCap_c6RenderEv
 int daDossyCap_c::Render()
 {
     unsigned int flags = mCapIcon.mFlags;
@@ -434,14 +420,12 @@ int daDossyCap_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daDossy_c6RenderEv
 int daDossy_c::Render()
 {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN9daDossy_c16CleanupResourcesEv
 int daDossy_c::CleanupResources()
 {
     int i;
@@ -459,7 +443,6 @@ int daDossy_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daDossy_c19func_ov065_02118cc4Ev
 void daDossy_c::func_ov065_02118cc4()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -468,7 +451,6 @@ void daDossy_c::func_ov065_02118cc4()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol func_ov065_02118c4c
 extern "C" void func_ov065_02118c4c(char *c)
 {
     daDossyCap_c *cap = (daDossyCap_c *)c;
@@ -480,7 +462,6 @@ extern "C" void func_ov065_02118c4c(char *c)
     cap->mModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN9daDossy_c19func_ov065_02118838Ev
 void daDossy_c::func_ov065_02118838()
 {
     char *c = (char *)this;
@@ -557,7 +538,6 @@ void daDossy_c::func_ov065_02118838()
     }
 }
 
-// @symbol _ZN9daDossy_c19func_ov065_02118634Ev
 void daDossy_c::func_ov065_02118634()
 {
     int landed = 0;
@@ -622,7 +602,6 @@ void daDossy_c::func_ov065_02118634()
     }
 }
 
-// @symbol _ZN9daDossy_c19func_ov065_021183c8Ev
 void daDossy_c::func_ov065_021183c8()
 {
     Vector3 playerPos;
@@ -677,7 +656,6 @@ void daDossy_c::func_ov065_021183c8()
     }
 }
 
-// @symbol _ZN9daDossy_c19func_ov065_021182e4Ev
 void daDossy_c::func_ov065_021182e4()
 {
     switch (mStateState) {
@@ -701,7 +679,6 @@ void daDossy_c::func_ov065_021182e4()
     }
 }
 
-// @symbol _ZN9daDossy_c19func_ov065_02118248Ev
 int daDossy_c::func_ov065_02118248()
 {
     int hidden = (int)((mFlags & 8) != 0);
@@ -725,7 +702,6 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
-// @symbol func_ov065_021180d4
 extern "C" int func_ov065_021180d4(char *self)
 {
     daDossyCap_c *cap = (daDossyCap_c *)self;
@@ -774,7 +750,6 @@ extern "C" int func_ov065_021180d4(char *self)
     return 0;
 }
 
-// @symbol _ZN14DorriePlatformD1Ev
 DorriePlatform::~DorriePlatform()
 {
 }

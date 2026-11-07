@@ -47,7 +47,6 @@ extern dFdColor_c data_0209f5e8;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daChScene_c_classInit
 /* Reconstructed source-style name: SM64DS proves daChScene_c through RTTI,
  * allocation size, vtable identity, and the CH_SCENE registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -60,7 +59,6 @@ extern "C" daChScene_c *daChScene_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c13InitResourcesEv
 s32 daChScene_c::InitResources() {
     if (gCurrentSublevel == 8 && data_0209f220 != 1) {
         if (IsStarCollectedInLevel(8, 1) != 0)
@@ -101,7 +99,6 @@ s32 daChScene_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c8BehaviorEv
 s32 daChScene_c::Behavior() {
     Vector3 out1;
     Vector3 out2;
@@ -191,26 +188,22 @@ s32 daChScene_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c6RenderEv
 s32 daChScene_c::Render() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c16OnPendingDestroyEv
 void daChScene_c::OnPendingDestroy() {}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c16CleanupResourcesEv
 s32 daChScene_c::CleanupResources() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c20LoadDestinationLevelEv
 /* Hand the exit band to the next level and load the destination param1
    names: level in the top byte, entrance in the next, and LoadLevel's last
    argument in the third (0xff passes as -1). */
@@ -226,7 +219,6 @@ void daChScene_c::LoadDestinationLevel() {
     }
 }
 
-// @symbol _ZN11daChScene_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 destroys through this class and its bases, then returns the object to its
@@ -242,7 +234,6 @@ void daChScene_c::LoadDestinationLevel() {
  * exactly D1 then D0 and no D2 -- the ROM's shape -- so both variants are
  * licensed functions of this TU and neither needs a deadstrip policy row. */
 
-// @symbol _ZN11daChScene_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * One vptr store and the base chain's own destruction, every bit of it a

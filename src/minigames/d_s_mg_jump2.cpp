@@ -129,14 +129,12 @@ namespace cstd {
 s32 fdiv(s32 a, s32 b);
 }
 
-// @symbol _ZN10Jump2PopupC1Ev
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
  * it). Written above the factory because this TU emits .text in reverse
  * source order, and the ROM has it directly after the factory. */
 Jump2Popup::Jump2Popup() {}
 
-// @symbol dScMgJump2_c_classInit
 /* Reconstructed source-style name. `new dScMgJump2_c` reproduces it: the
  * inline dScMgD3DBase_c constructor (dScMgBase_c's C2, its vtable,
  * mDrawSubScreen, the empty loop over the two cameras, mSysTracker), then
@@ -146,7 +144,6 @@ extern "C" dScMgJump2_c *dScMgJump2_c_classInit() {
     return new dScMgJump2_c;
 }
 
-// @symbol _ZN12dScMgJump2_c10StartRoundEi
 /* Slot 18: resets the round and arms the start countdown. */
 void dScMgJump2_c::StartRound(int /* arg */) {
     Jump3D_DisableInput();
@@ -157,14 +154,12 @@ void dScMgJump2_c::StartRound(int /* arg */) {
     BeginIntro();
 }
 
-// @symbol _ZN12dScMgJump2_c11CanEndStateEi
 /* Slot 19. */
 int dScMgJump2_c::CanEndState(int /* mode */) {
     Puff_ClearAll(0, 0);
     return 1;
 }
 
-// @symbol _ZN12dScMgJump2_c13InitResourcesEv
 /* Slot 0. */
 s32 dScMgJump2_c::InitResources() {
     void *tiles, *palette;
@@ -234,7 +229,6 @@ s32 dScMgJump2_c::InitResources() {
  * 0x1000.
  *
  * This one arms the countdown and installs the next state. */
-// @symbol _ZN12dScMgJump2_c10BeginIntroEv
 void dScMgJump2_c::BeginIntro() {
     mStateTimer = 0x78;
     mTextureOffsetT = 0;
@@ -242,7 +236,6 @@ void dScMgJump2_c::BeginIntro() {
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Intro;
 }
 
-// @symbol _ZN12dScMgJump2_c11State_IntroEv
 void dScMgJump2_c::State_Intro() {
     s16 *countdown = &mStateTimer;
     *countdown = *countdown - 1;
@@ -258,13 +251,11 @@ void dScMgJump2_c::State_Intro() {
     Heyho_SeparateAll();
 }
 
-// @symbol _ZN12dScMgJump2_c9BeginPlayEv
 void dScMgJump2_c::BeginPlay() {
     mStateTimer = 0xf0;
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Play;
 }
 
-// @symbol _ZN12dScMgJump2_c10State_PlayEv
 void dScMgJump2_c::State_Play() {
     s16 done;
     int prevScore = sJumpComboCount;
@@ -332,13 +323,11 @@ void dScMgJump2_c::State_Play() {
     BeginEnd();
 }
 
-// @symbol _ZN12dScMgJump2_c8BeginEndEv
 void dScMgJump2_c::BeginEnd() {
     mStateTimer = 0x20;
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_End;
 }
 
-// @symbol _ZN12dScMgJump2_c9State_EndEv
 void dScMgJump2_c::State_End() {
     int *acc = &mTextureOffsetT;
     *acc += mTextureScrollRate >> 12;
@@ -355,7 +344,6 @@ void dScMgJump2_c::State_End() {
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Result;
 }
 
-// @symbol _ZN12dScMgJump2_c12State_ResultEv
 void dScMgJump2_c::State_Result() {
     if (Jump3D_AllIdle()) {
         if (Heyho_AllIdle()) {
@@ -369,10 +357,8 @@ void dScMgJump2_c::State_Result() {
     Jump3D_UpdateAll();
 }
 
-// @symbol _ZN12dScMgJump2_c10State_IdleEv
 void dScMgJump2_c::State_Idle() {}
 
-// @symbol _ZN12dScMgJump2_c8BehaviorEv
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
  * NewUnkCallback818 and back each frame. The object FromUniqueID returns is
  * a Particle::System. Both Particle::System
@@ -424,7 +410,6 @@ void Jump2_SetLights(void) {
 }
 }
 
-// @symbol _ZN12dScMgJump2_c6RenderEv
 /* Slot 9. */
 // Consumed runtime-material prefix; this is not the BMD file record.
 struct MaterialScrollView {
@@ -478,7 +463,6 @@ s32 dScMgJump2_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12dScMgJump2_c16CleanupResourcesEv
 /* Slot 3. sJump2BackFile points at the model's file handle; it is
  * released and cleared. */
 s32 dScMgJump2_c::CleanupResources() {
@@ -544,13 +528,11 @@ void Jump2Popup_DrawAll(void) {
 }
 }
 
-// @symbol _ZN14Jump2PopupLink4LinkEv
 void Jump2PopupLink::Link() {
     *(void **)this = sJump2PopupList;
     sJump2PopupList = this;
 }
 
-// @symbol _ZN14Jump2PopupLink6UnlinkEv
 void Jump2PopupLink::Unlink() {
     struct Jump2PopupLink *prev = sJump2PopupList;
     if (prev == this) {
@@ -568,7 +550,6 @@ void Jump2PopupLink::Unlink() {
     }
 }
 
-// @symbol _ZN10Jump2Popup5SpawnEiii
 void Jump2Popup ::Spawn(int startX, int startY, int value) {
     x = startX;
     y = startY;
@@ -593,7 +574,6 @@ done:
     ((Jump2PopupLink *)this)->Link();
 }
 
-// @symbol _ZN10Jump2Popup4TickEv
 void Jump2Popup::Tick() {
     if (active == 0)
         return;
@@ -606,21 +586,17 @@ void Jump2Popup::Tick() {
     func_0203d630(&speedX, 0xf00);
 }
 
-// @symbol _ZN10Jump2Popup10DrawNumberEv
 void Jump2Popup::DrawNumber() {
     if (active == 0)
         return;
     Mg_DrawBigNumber(x >> 12, y >> 12, number, -1, -1, 0, data_ov006_021421b4);
 }
 
-// @symbol _ZN10Jump2PopupD1Ev
 /* Empty and out of line, the partner of the constructor above. */
 Jump2Popup::~Jump2Popup() {}
 
-// @symbol _ZN12dScMgJump2_cD0Ev
 /* Generated from the destructor below. */
 
-// @symbol _ZN12dScMgJump2_cD1Ev
 /* Defined in the class body in include/dScMgJump2_c.h, which explains why.
    mwccarm emits D1 and D0 from it, in this order. */
 

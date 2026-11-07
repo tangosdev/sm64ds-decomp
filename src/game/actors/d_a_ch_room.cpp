@@ -33,7 +33,6 @@ extern u8 data_0209f250;
 extern daPly_c *data_0209f394[];
 extern Vector3 data_020a0ebc;
 
-// @symbol daChRoom_c_classInit
 extern "C" daChRoom_c *daChRoom_c_classInit() {
     return new daChRoom_c();
 }
@@ -41,7 +40,6 @@ extern "C" daChRoom_c *daChRoom_c_classInit() {
 extern "C" SpawnInfo<daChRoom_c> g_profile_CH_ROOM = {
     daChRoom_c_classInit, 0x015c, 0x015c, 0, 0, 0, 0, 0};
 
-// @symbol _ZN10daChRoom_c13InitResourcesEv
 int daChRoom_c::InitResources() {
     mScaleX = (((param1 & 0xf) + 1) * 0x64000) >> 1;
     mScaleY = (((param1 >> 4 & 0xf) + 1) * 0x64000);
@@ -49,7 +47,6 @@ int daChRoom_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN10daChRoom_c8BehaviorEv
 int daChRoom_c::Behavior() {
     dActor_c *player;
     Vector3 delta;
@@ -79,15 +76,12 @@ int daChRoom_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10daChRoom_c6RenderEv
 int daChRoom_c::Render() {
     return 1;
 }
 
-// @symbol _ZN10daChRoom_c16OnPendingDestroyEv
 void daChRoom_c::OnPendingDestroy() {}
 
-// @symbol _ZN10daChRoom_c16CleanupResourcesEv
 int daChRoom_c::CleanupResources() {
     return 1;
 }

@@ -184,8 +184,6 @@ struct CamPose { s32 lx, ly, lz, px, py, pz; };
 
 #pragma defer_codegen off
 
-// @symbol _ZN11daC_Jugem_cD1Ev
-// @symbol _ZN11daC_Jugem_cD0Ev
 /* Empty body: one vptr store and the member destructors in reverse
    declaration order are the whole work, and D0's deallocation is the
    inline operator delete reached through dEnemyBase_c. */
@@ -193,7 +191,6 @@ daC_Jugem_c::~daC_Jugem_c()
 {
 }
 
-// @symbol _ZN11daC_Jugem_c14StateIntroMainEv
 /* The intro camera sweep: pull the look-at and eye down toward the player
    while the fanfare plays; on the last frame hand the camera back and go
    wait in StateHidden. */
@@ -233,7 +230,6 @@ int daC_Jugem_c::StateIntroMain() {
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c14StateIntroInitEv
 int daC_Jugem_c::StateIntroInit()
 {
   mHidden = 1;
@@ -241,7 +237,6 @@ int daC_Jugem_c::StateIntroInit()
   return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c17StateApproachMainEv
 /* Fly toward the fixed vantage point, camera tracking, until close enough
    to start the intro sweep. */
 int daC_Jugem_c::StateApproachMain()
@@ -285,7 +280,6 @@ int daC_Jugem_c::StateApproachMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c17StateApproachInitEv
 int daC_Jugem_c::StateApproachInit()
 {
     volatile VecFx32 look, pos;
@@ -313,7 +307,6 @@ int daC_Jugem_c::StateApproachInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c12StateBobMainEv
 /* Bob on a sine wave and pick up speed; at the end of the timer switch to
    the long approach. */
 int daC_Jugem_c::StateBobMain()
@@ -352,7 +345,6 @@ int daC_Jugem_c::StateBobMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c12StateBobInitEv
 int daC_Jugem_c::StateBobInit()
 {
     VecFx32 look, pos;
@@ -379,7 +371,6 @@ int daC_Jugem_c::StateBobInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c14StateGuideMainEv
 /* Walk the player into the talking spot on a fixed beat: message steps at
    0x14 and 0x28..0xee, player angles snapped at 0xf0. */
 int daC_Jugem_c::StateGuideMain()
@@ -422,7 +413,6 @@ int daC_Jugem_c::StateGuideMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c14StateGuideInitEv
 int daC_Jugem_c::StateGuideInit()
 {
     mTalkPlayer = 0;
@@ -430,7 +420,6 @@ int daC_Jugem_c::StateGuideInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c13StateTurnMainEv
 /* Turn the player around to face Lakitu while Lakitu pitches up toward
    him, then move on to StateGuide. */
 int daC_Jugem_c::StateTurnMain()
@@ -458,7 +447,6 @@ int daC_Jugem_c::StateTurnMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c13StateTurnInitEv
 int daC_Jugem_c::StateTurnInit()
 {
     VecFx32 look, pos;
@@ -479,7 +467,6 @@ int daC_Jugem_c::StateTurnInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c15StateArriveMainEv
 /* Face the player and pitch up, stepping through the greeting beats; the
    last beat hands off to StateTurn. */
 int daC_Jugem_c::StateArriveMain()
@@ -519,7 +506,6 @@ int daC_Jugem_c::StateArriveMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c15StateArriveInitEv
 int daC_Jugem_c::StateArriveInit()
 {
     /* NitroSDK VecFx32, not Vector3: the ROM emits no scope-exit cleanup here. */
@@ -552,7 +538,6 @@ int daC_Jugem_c::StateArriveInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c14StateLeaveMainEv
 /* Fly to the target point; when the countdown ends and the talk is over,
    mark for destruction. */
 int daC_Jugem_c::StateLeaveMain()
@@ -577,7 +562,6 @@ int daC_Jugem_c::StateLeaveMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c14StateLeaveInitEv
 int daC_Jugem_c::StateLeaveInit()
 {
     short r3 = mAngleY;
@@ -586,7 +570,6 @@ int daC_Jugem_c::StateLeaveInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c13StateTalkMainEv
 /* The message 0x182 exchange, step by step; when the talk is done go
    StateLeave. */
 int daC_Jugem_c::StateTalkMain()
@@ -620,7 +603,6 @@ int daC_Jugem_c::StateTalkMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c13StateTalkInitEv
 int daC_Jugem_c::StateTalkInit()
 {
     SaveBlock *save = &data_0209caa0;
@@ -629,7 +611,6 @@ int daC_Jugem_c::StateTalkInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c20StateFlyToPlayerMainEv
 /* Home in on a point above and ahead of the player; once close enough,
    start the talk. */
 int daC_Jugem_c::StateFlyToPlayerMain()
@@ -680,7 +661,6 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c20StateFlyToPlayerInitEv
 int daC_Jugem_c::StateFlyToPlayerInit()
 {
     mPosZ = 2457600;
@@ -689,7 +669,6 @@ int daC_Jugem_c::StateFlyToPlayerInit()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c15StateHiddenMainEv
 /* Hidden; watch for the player to step inside the trigger volume, then
    take his control and fly to him. */
 int daC_Jugem_c::StateHiddenMain()
@@ -715,13 +694,11 @@ int daC_Jugem_c::StateHiddenMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c15StateHiddenInitEv
 int daC_Jugem_c::StateHiddenInit()
 {
     mHidden = 1; return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c14StateHoverMainEv
 /* The ambient state: hover in place beside the camera, one shadow tracking
    the player, one sound trigger behind it. */
 int daC_Jugem_c::StateHoverMain()
@@ -771,13 +748,11 @@ int daC_Jugem_c::StateHoverMain()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c14StateHoverInitEv
 int daC_Jugem_c::StateHoverInit()
 {
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c8SetStateEPMS_FivE
 /* Install a state record and run its enter slot, if it has one. */
 int daC_Jugem_c::SetState(StateFn *record)
 {
@@ -787,7 +762,6 @@ int daC_Jugem_c::SetState(StateFn *record)
     return (this->**q)();
 }
 
-// @symbol _ZN11daC_Jugem_c12UpdateShadowEv
 /* The single blob shadow, used by the cutscene variant. */
 void daC_Jugem_c::UpdateShadow()
 {
@@ -801,7 +775,6 @@ void daC_Jugem_c::UpdateShadow()
     DropShadowRadHeight(mShadowModel1, *(Matrix4x3 *)&mShadowMat1, 0x46000, 0x258000, 0xf);
 }
 
-// @symbol _ZN11daC_Jugem_c18UpdateShadowPlayerEv
 /* The ambient variant's two shadows: one at Lakitu's own position, one
    projected ahead of the player. */
 void daC_Jugem_c::UpdateShadowPlayer()
@@ -872,7 +845,6 @@ void daC_Jugem_c::UpdateShadowPlayer()
     DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mShadowMat2, p2, p1, 0xf);
 }
 
-// @symbol _ZN11daC_Jugem_c16CleanupResourcesEv
 int daC_Jugem_c::CleanupResources()
 {
     data_ov085_0213074c.Release();
@@ -881,14 +853,12 @@ int daC_Jugem_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c16OnPendingDestroyEv
 /* Empty on purpose: the override suppresses whatever the base does on
    pending destroy. */
 void daC_Jugem_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN11daC_Jugem_c6RenderEv
 int daC_Jugem_c::Render()
 {
     if (mHidden == 1)
@@ -898,7 +868,6 @@ int daC_Jugem_c::Render()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c8BehaviorEv
 int daC_Jugem_c::Behavior()
 {
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
@@ -921,7 +890,6 @@ int daC_Jugem_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11daC_Jugem_c13InitResourcesEv
 int daC_Jugem_c::InitResources()
 {
     BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov085_0213074c);
@@ -958,7 +926,6 @@ int daC_Jugem_c::InitResources()
     return 1;
 }
 
-// @symbol daC_Jugem_c_classInit
 /* The registry factory behind the C_JUGEM profile: allocates this class's
    0x2e8 and installs its vtable. Reconstructed source-style name
    (historical alias LakituBro_Spawn); the exact original spelling is not

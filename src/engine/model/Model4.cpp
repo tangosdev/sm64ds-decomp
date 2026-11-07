@@ -33,7 +33,6 @@ int func_02053e34(void);
 int func_02053e1c(void);
 }
 
-// @symbol _ZN17dExtSimpleModel_c17UpdateFileOffsetsER8BMD_File
 #define REBASE(p) ((char *)(p) + base)
 void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
     u32 i;
@@ -97,7 +96,6 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
 }
 #undef REBASE
 
-// @symbol func_02046590
 extern "C" int func_02046590(const void *tbl, const char *name)
 {
     const BMD_File *t = (const BMD_File *)tbl;
@@ -119,7 +117,6 @@ extern "C" int func_02046590(const void *tbl, const char *name)
     return -1;
 }
 
-// @symbol func_02046564
 extern "C" int func_02046564(void *p)
 {
     BMD_File *s = (BMD_File *)p;
@@ -132,7 +129,6 @@ extern "C" int func_02046564(void *p)
     return t;
 }
 
-// @symbol func_020462d0
 extern "C" {
 typedef struct SrcA {
     int f0, f4, f8, fc, f10;
@@ -282,19 +278,16 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
 }
 }
 
-// @symbol func_020462bc
 extern "C" void *func_020462bc(int *p)
 {
     return &((Matrix4x3 *)0)[p[1]];
 }
 
-// @symbol func_020462b4
 extern "C" void func_020462b4(int *p, int v)
 {
     p[4] = v;
 }
 
-// @symbol func_02046288
 extern "C" void func_02046288(void *self, void *value, int index)
 {
     ModelComponents *obj = (ModelComponents *)self;
@@ -305,7 +298,6 @@ extern "C" void func_02046288(void *self, void *value, int index)
     *flags |= bits << 4;
 }
 
-// @symbol func_02046234
 extern "C" void func_02046234(void *a, void *b)
 {
     int i;
@@ -314,7 +306,6 @@ extern "C" void func_02046234(void *a, void *b)
         func_02046288(a, b, i);
 }
 
-// @symbol func_02046208
 extern "C" void func_02046208(void *self, unsigned int value, int index)
 {
     ModelComponents *obj = (ModelComponents *)self;
@@ -324,7 +315,6 @@ extern "C" void func_02046208(void *self, unsigned int value, int index)
     *flags |= value << 16;
 }
 
-// @symbol func_020461b4
 extern "C" void func_020461b4(void *a, unsigned int b)
 {
     int i;
@@ -333,7 +323,6 @@ extern "C" void func_020461b4(void *a, unsigned int b)
         func_02046208(a, b, i);
 }
 
-// @symbol func_02046120
 extern "C" void func_02046120(void *self, int a)
 {
     ModelComponents *obj = (ModelComponents *)self;
@@ -349,7 +338,6 @@ extern "C" void func_02046120(void *self, int a)
     }
 }
 
-// @symbol func_02046088
 extern "C" void func_02046088(void *self, int a, int b)
 {
     ModelComponents *obj = (ModelComponents *)self;
@@ -366,7 +354,6 @@ extern "C" void func_02046088(void *self, int a, int b)
     }
 }
 
-// @symbol func_0204605c
 extern "C" void func_0204605c(void *self, int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
@@ -376,7 +363,6 @@ extern "C" void func_0204605c(void *self, int value, int index) {
     *flags |= bits << 24;
 }
 
-// @symbol func_02046008
 extern "C" void func_02046008(void *a, int b) {
     int i;
     int count = (*(int **)a)[9];
@@ -384,7 +370,6 @@ extern "C" void func_02046008(void *a, int b) {
         func_0204605c(a, b, i);
 }
 
-// @symbol func_02045fd4
 extern "C" void func_02045fd4(void *self, unsigned int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
@@ -394,7 +379,6 @@ extern "C" void func_02045fd4(void *self, unsigned int value, int index) {
     *color |= bits;
 }
 
-// @symbol func_02045f80
 extern "C" void func_02045f80(void *a, unsigned int b) {
     int i;
     int count = (*(int **)a)[9];
@@ -402,7 +386,6 @@ extern "C" void func_02045f80(void *a, unsigned int b) {
         func_02045fd4(a, b, i);
 }
 
-// @symbol func_02045f4c
 extern "C" void func_02045f4c(void *self, unsigned int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
@@ -412,7 +395,6 @@ extern "C" void func_02045f4c(void *self, unsigned int value, int index) {
     *color |= bits << 16;
 }
 
-// @symbol func_02045ef8
 extern "C" void func_02045ef8(void *a, unsigned int b) {
     int i;
     int count = (*(int **)a)[9];
@@ -420,7 +402,6 @@ extern "C" void func_02045ef8(void *a, unsigned int b) {
         func_02045f4c(a, b, i);
 }
 
-// @symbol func_02045ec4
 extern "C" void func_02045ec4(char *self, unsigned int value, int index)
 {
     ModelComponents *obj = (ModelComponents *)self;
@@ -431,7 +412,6 @@ extern "C" void func_02045ec4(char *self, unsigned int value, int index)
     *color |= bits << 16;
 }
 
-// @symbol func_02045e70
 extern "C" void func_02045e70(char *self, unsigned int arg1) {
     ModelComponents *obj = (ModelComponents *)self;
     int i;
@@ -440,7 +420,6 @@ extern "C" void func_02045e70(char *self, unsigned int arg1) {
         func_02045ec4(self, arg1, i);
 }
 
-// @symbol func_02045e44
 extern "C" void func_02045e44(void *self, unsigned int value, int index)
 {
     struct Element { char pad[0x1c]; unsigned int flags; char pad2[0x30 - 0x1c - 4]; };
@@ -452,7 +431,6 @@ extern "C" void func_02045e44(void *self, unsigned int value, int index)
     *flags |= value << 30;
 }
 
-// @symbol func_02045e2c
 extern "C" void func_02045e2c(int obj, int i, int a, short b)
 {
     ElemB *e = (ElemB *)(*(int *)(obj + 8) + i * 0x34);
@@ -461,7 +439,6 @@ extern "C" void func_02045e2c(int obj, int i, int a, short b)
 }
 
 
-// @symbol func_02045d9c
 extern "C" void func_02045d9c(void)
 {
     CP15::EnableDTCM();
@@ -484,7 +461,6 @@ extern "C" void func_02045d9c(void)
     Crash();
 }
 
-// @symbol InitialiseVramGlobals
 extern "C" void InitialiseVramGlobals(void)
 {
     int r = func_02053e34();
@@ -497,19 +473,14 @@ extern "C" void InitialiseVramGlobals(void)
     data_020a4bcc = 0;
 }
 
-// @symbol func_02045d10
 extern "C" int func_02045d10(void) { return data_020a4bc8; }
 
-// @symbol func_02045d00
 extern "C" int func_02045d00(void) { return data_020a4bdc; }
 
-// @symbol func_02045cf0
 extern "C" int func_02045cf0(void) { return data_020a4bcc; }
 
-// @symbol func_02045ce0
 extern "C" int func_02045ce0(void) { return data_020a4bd8; }
 
-// @symbol _ZN17dExtSimpleModel_c13GetVramOffsetEj
 u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     u32 *p;
     u32 b = data_020a4be8 - data_020a4bc8;
@@ -525,7 +496,6 @@ u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     return *p;
 }
 
-// @symbol _ZN17dExtSimpleModel_c17LoadTextureToVramEPcj
 u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
     u32 vramOffset = GetVramOffset(size);
     GX::BeginLoadTex();
@@ -535,7 +505,6 @@ u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
     return vramOffset;
 }
 
-// @symbol _ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjS0_
 u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *dst) {
     u32 vramOffset;
 
@@ -554,7 +523,6 @@ u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *ds
 }
 
 // 0x02045ad8 (0x80)
-// @symbol func_02045ad8
 extern "C" u32 func_02045ad8(const void *src, u32 size)
 {
     u32 slot;
@@ -577,7 +545,6 @@ extern "C" u32 func_02045ad8(const void *src, u32 size)
 }
 
 // 0x02045a50 (0x88)
-// @symbol func_02045a50
 extern "C" u32 func_02045a50(const void *src, u32 size)
 {
     u32 slot;
@@ -599,7 +566,6 @@ extern "C" u32 func_02045a50(const void *src, u32 size)
 }
 
 // 0x020458e0 (0x170)
-// @symbol _ZN17dExtSimpleModel_c13LoadTexAndPalER8BMD_File
 void dExtSimpleModel_c::LoadTexAndPal(BMD_File &file) {
     u32 i;
     u32 ret;

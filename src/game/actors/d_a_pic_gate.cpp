@@ -105,15 +105,12 @@ extern SharedFilePtr *data_ov080_0212775c[];
 extern unsigned char data_ov080_02128688[];
 extern unsigned char data_ov080_0212869c[];
 
-// @symbol _ZN11daPicGate_cD1Ev
-// @symbol _ZN11daPicGate_cD0Ev
 /* Members in reverse, then ~dActor_c. Written first: with codegen not
  * deferred it comes out as D1, D0, D2 in place, the cartridge's order. */
 daPicGate_c::~daPicGate_c()
 {
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125460Ev
 void daPicGate_c::func_ov080_02125460()
 {
     Ov080Mat *mat = (Ov080Mat *)mTexRecord;
@@ -137,7 +134,6 @@ void daPicGate_c::func_ov080_02125460()
     reg_G3_POLYGON_ATTR = 0x11f0088;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_0212555cEv
 /* mMtx = translate(pos) * rotate(mAngle) * translate(-width/2): the gate's
  * mesh sits centred on its position, and mInvMtx maps back into it. */
 void daPicGate_c::func_ov080_0212555c()
@@ -153,7 +149,6 @@ void daPicGate_c::func_ov080_0212555c()
     mInvMtx = data_020a0e68;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125630Ei
 /* LoadTexture: one 0x18-byte record per picture id, decompressed to VRAM on
  * first use (the parallel data_ov080_0212869c table is the loaded flag).
  * The record keeps the texture port address, the palette port address and
@@ -189,7 +184,6 @@ u8 *daPicGate_c::func_ov080_02125630(s32 i)
     return (u8 *)e;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_021256f8Ev
 /* HitTest: the closest player's position and previous position transformed
  * into gate space (mInvMtx). A z-straddle means the player crossed the gate
  * plane this frame: inside the cell bounds starts a wave toward the field,
@@ -265,7 +259,6 @@ void daPicGate_c::func_ov080_021256f8()
     func_02012694(0x7b, &mCamSpacePosX);
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125940Ev
 /* BuildNormals: each cell's normal is the cross product of its column and
  * row neighbours (edge cells take the one-sided edge), halved in z, then
  * normalized and packed 10 bits per axis into Vertex::normal. */
@@ -312,7 +305,6 @@ void daPicGate_c::func_ov080_02125940()
     }
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125af0Ev
 /* FlattenFrame: every cell on the picture's border (x at 0 or the full
  * width, y at 0 or the full height) is reset to z = 0 and the flat packed
  * normal (0x1ff00000); interior cells are left as they are. */
@@ -328,7 +320,6 @@ void daPicGate_c::func_ov080_02125af0()
     }
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125bb0Ei
 /* RippleHeight: the wave height at a cell, from the phase the wave clock
  * has reached (func_ov080_02125d08) scaled down linearly over the wave's
  * run, looked up in the quarter-wave sine table data_02082214. */
@@ -368,7 +359,6 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
     return FX_MUL(tv, sum);
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125cd4Ei
 /* The wave's amplitude after n frames: it decays linearly from
  * amplitude to 0 over duration. */
 s32 daPicGate_c::func_ov080_02125cd4(s32 n)
@@ -380,7 +370,6 @@ s32 daPicGate_c::func_ov080_02125cd4(s32 n)
     return r4 - r * n;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125d08Ei
 /* The wave's phase at distance dist from the origin: dist * 0xffff /
  * wavelength, 4.12 fixed-point, minus the running phase mWavePhase. */
 s32 daPicGate_c::func_ov080_02125d08(s32 dist) {
@@ -394,7 +383,6 @@ s32 daPicGate_c::func_ov080_02125d08(s32 dist) {
  * copy in C++ mode. This helper retains its existing C-linkage boundary. */
 struct Elem { struct Vector3 pos; int dist; int pad[2]; };  /* 0x18 */
 
-// @symbol func_ov080_02125d64
 /* Refresh every cell's planar distance from the wave origin (mWaveOrigin);
  * Elem::dist feeds RippleHeight. */
 extern "C" void func_ov080_02125d64(char *c)
@@ -410,7 +398,6 @@ extern "C" void func_ov080_02125d64(char *c)
     }
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125de0Eiii
 /* BeginWave: the origin in cell space goes to mWaveOrigin, every cell's dist
  * is refreshed, then a WaveParams row is picked for this param1 shape
  * (front/back rows differ) and mWaveTimer reloads from it. */
@@ -447,7 +434,6 @@ void daPicGate_c::func_ov080_02125de0(s32 a1, s32 a2, s32 a3)
     mWaveTimer = mWaveParams->duration;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125f00Ev
 /* mCorners defaults, state row 0: the picture's four border vertices,
  * scaled by the param1 width/height. */
 void daPicGate_c::func_ov080_02125f00()
@@ -474,7 +460,6 @@ void daPicGate_c::func_ov080_02125f00()
     mCorners[3].texCoord = 0x800;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02125fd0Ev
 /* DrawFlat: the flat 2x2 quad for states 2/3. mMtx is composed onto the
  * camera matrix, scaled to 32, then each corner emits TEXCOORD, NORMAL and
  * one VTX_16 pair at >>8. */
@@ -520,13 +505,11 @@ void daPicGate_c::func_ov080_02125fd0()
     G3_MTX_POP = 1;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02126120Ev
 /* Empty. A no-op row for the state tables that need one. */
 void daPicGate_c::func_ov080_02126120()
 {
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02126124Ev
 /* mCorners defaults, state row 1: same layout as func_ov080_02125f00 with
  * the texCoord pattern rotated. */
 void daPicGate_c::func_ov080_02126124()
@@ -575,7 +558,6 @@ extern int data_ov080_0212771c[];
     G3_VTX_16 = vx | ((u16)s1 << 16); \
     G3_VTX_16 = (u16)s2
 
-// @symbol _ZN11daPicGate_c19func_ov080_021261f4Ev
 /* DrawWave. The ports this one needs beyond the file's set are spelled
  * the same plain way. The texture binds with normal-based texture
  * coordinates (GX_TEXGEN_NORMAL) and no repeat or flip. */

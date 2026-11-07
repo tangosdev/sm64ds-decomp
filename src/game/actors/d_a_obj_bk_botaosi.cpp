@@ -86,8 +86,6 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_cD1Ev
-// @symbol _ZN17daObjBk_Botaosi_cD0Ev
 /* Empty on purpose. mwccarm destroys the dExtShadowModel_c member, then runs
    ~dBgActor_c inline (its dExtSimpleModel_c and dBgW_KcMbg, then ~dActor_c), and emits
    retail D1 followed by D0. D0's deallocation is an inline operator delete,
@@ -95,7 +93,6 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 daObjBk_Botaosi_c::~daObjBk_Botaosi_c() {}
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c15OnHitByMegaCharER7daPly_c
 void daObjBk_Botaosi_c::OnHitByMegaChar(daPly_c &player) {
     if (mState >= 2)
         return;
@@ -105,7 +102,6 @@ void daObjBk_Botaosi_c::OnHitByMegaChar(daPly_c &player) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c8OnKickedER8dActor_c
 #pragma long_calls on
 void daObjBk_Botaosi_c::OnKicked(dActor_c &other) {
     HandleHit(&other);
@@ -113,7 +109,6 @@ void daObjBk_Botaosi_c::OnKicked(dActor_c &other) {
 #pragma long_calls off
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c11OnAttacked2ER8dActor_c
 /* The helper is void; the override falls off its end so the call stays a
    tail call, the shape func_ov015_021128e8 has in d_a_obj_bk_lift.cpp. */
 #pragma long_calls on
@@ -123,7 +118,6 @@ int daObjBk_Botaosi_c::OnAttacked2(dActor_c &other) {
 #pragma long_calls off
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c9HandleHitEP8dActor_c
 /* The hit handler OnKicked and OnAttacked2 share. The first hit starts the
    wobble; a hit within 0x2000 of mAngleY knocks toward -1, one more than
    0x6000 off it toward +1, and one from the flank in between changes
@@ -163,7 +157,6 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c12UpdateShadowEv
 /* Re-aims the cuboid shadow. The plank's tilt (the sine of mAngleX, scaled
    by 0x7d0) sets how far the shadow stretches and toward which end: a
    non-positive tilt turns it a further half turn. It is centred half a lean
@@ -203,7 +196,6 @@ void daObjBk_Botaosi_c::UpdateShadow() {
 #pragma pop
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c17UpdateModelMatrixEv
 /* mModel's matrix from all three angles, the position in its translation
    row. */
 void daObjBk_Botaosi_c::UpdateModelMatrix() {
@@ -214,7 +206,6 @@ void daObjBk_Botaosi_c::UpdateModelMatrix() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c16CleanupResourcesEv
 int daObjBk_Botaosi_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -225,14 +216,12 @@ int daObjBk_Botaosi_c::CleanupResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c6RenderEv
 int daObjBk_Botaosi_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c8BehaviorEv
 int daObjBk_Botaosi_c::Behavior() {
     switch (mState) {
     case 0:
@@ -308,7 +297,6 @@ int daObjBk_Botaosi_c::Behavior() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Botaosi_c13InitResourcesEv
 int daObjBk_Botaosi_c::InitResources() {
     Vector3 a, b, c, d;
     int one;
@@ -368,7 +356,6 @@ int daObjBk_Botaosi_c::InitResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol daObjBk_Botaosi_c_classInit
 /* BK_BOTAOSI's registry factory. 0x39c is this class's size, and the calls
    the cartridge inlines here -- fBase_c::operator new, dBgActor_c's base
    constructor, the vptr store and dExtShadowModel_c's constructor on the member at

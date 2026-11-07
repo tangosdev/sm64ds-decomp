@@ -17,7 +17,6 @@ extern "C" {
 typedef struct Vec3Words {
     Fix12i w[3];
 } Vec3Words;
-// @symbol func_ov007_020b1718
 /* recovered: per-frame update of a two-mode screen transition driven by the
  * manager at data_ov007_0210342c. Mode 1 eases a scale toward 0x1000 over
  * 12 frames and flags completion when the slot reaches its end; mode 0 copies

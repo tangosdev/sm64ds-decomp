@@ -23,7 +23,6 @@ void func_0203cebc(Vector3 *out, Vector3 *tmp, Vector3 *a, Vector3 *b) {
 /* func_0203ce80 at 0x0203ce80, size=0x3c
  * Normalizes *src in-place (NormalizeVec3(src,src)), then copies to *dst field-by-field.
  */
-// @symbol func_0203ce80
 void func_0203ce80(struct Vector3 *dst, struct Vector3 *src) {
     NormalizeVec3(src, src);
     dst->x = src->x;

@@ -98,7 +98,6 @@ extern void *func_ov007_020c9388(int initialState);
 /* The menu cursor (data_ov007_02103360). */
 #define CURSOR data_ov007_02103360
 
-// @symbol func_ov007_020b3e84
 /* Writes a stylus touch at the current item's position, in pixels: touch
  * down, both axes valid. */
 void func_ov007_020b3e84(Ov007TouchSample *sample) {
@@ -111,7 +110,6 @@ void func_ov007_020b3e84(Ov007TouchSample *sample) {
     sample->validity = 0;
 }
 
-// @symbol func_ov007_020b3e04
 /* The sprite offset, in pixels, for each of func_ov007_020b3c54's modes. */
 void func_ov007_020b3e04(int sel, s16 *p1, s16 *p2) {
     *p2 = 0;
@@ -138,7 +136,6 @@ void func_ov007_020b3e04(int sel, s16 *p1, s16 *p2) {
     }
 }
 
-// @symbol func_ov007_020b3d30
 /* Sets up `sprite` as entry idx of the data_ov007_020d7dc0..
  * data_ov007_020d7dea tables: its texture, texel origin, pixel size, shadow
  * polygon id and shadow offset, and its depth; then sizes it in world space
@@ -159,7 +156,6 @@ void func_ov007_020b3d30(Ov007Sprite *sprite, int idx) {
     func_ov007_020c43bc(sprite, WORK->cameras[1]);
 }
 
-// @symbol func_ov007_020b3c54
 /* Maps the cursor state to a sprite mode (0..5) and re-dresses the sprite;
  * states 8..0xd also record the state as the chosen item. */
 void func_ov007_020b3c54(void) {
@@ -206,7 +202,6 @@ void func_ov007_020b3c54(void) {
     func_ov007_020b3d30(CURSOR->sprite, mode);
 }
 
-// @symbol func_ov007_020b3708
 int func_ov007_020b3708(void) {
     int ip;
     int r3 = 1;
@@ -441,7 +436,6 @@ int func_ov007_020b3708(void) {
     return r4;
 }
 
-// @symbol func_ov007_020b3360
 void func_ov007_020b3360(void) {
     Ov007MenuState *p0 = CURSOR->state;
 
@@ -566,7 +560,6 @@ void func_ov007_020b3360(void) {
     }
 }
 
-// @symbol func_ov007_020b3190
 /* On a fresh key press with B not held (and no touch, func_ov007_020c1da0):
  * from states[0] 0 / states[1] 0 it requests cursor state 0 and plays sound
  * 3; from states[0] 5 (unless states[1] is 0xb or 0xc) cursor state 0xe and
@@ -632,7 +625,6 @@ void func_ov007_020b3190(void) {
     }
 }
 
-// @symbol func_ov007_020b30b0
 /* Allocates the cursor: state machine in state 0xff, a one-frame sprite
  * with a drop shadow, mode 1, no direction and no return state. */
 void func_ov007_020b30b0(void) {
@@ -656,7 +648,6 @@ void func_ov007_020b30b0(void) {
     sprite->depth = (int)0xffffef01;
 }
 
-// @symbol func_ov007_020b3050
 /* Frees the cursor's state machine, its sprite and the cursor. */
 void func_ov007_020b3050(void) {
     if (data_ov007_02103360 == 0)
@@ -667,7 +658,6 @@ void func_ov007_020b3050(void) {
     data_ov007_02103360 = 0;
 }
 
-// @symbol func_ov007_020b2e64
 /* Reads the d-pad into dirPressed with key repeat (the press frame, then
  * every 10 frames from frame 20) and a fresh A or START press into confirm,
  * ticks the cursor state, and runs the cursor (func_ov007_020b3360) unless
@@ -725,7 +715,6 @@ void func_ov007_020b2e64(Ov007TouchSample *sample) {
     func_ov007_020b3190();
 }
 
-// @symbol func_ov007_020b2cf0
 /* Places the cursor sprite over the current item at the mode's offset
  * (func_ov007_020b3e04), easing it back from the last move's nudge over the
  * first four frames of the state. Not in state 0xff or mode 2, and outside
@@ -776,7 +765,6 @@ void func_ov007_020b2cf0(void) {
     func_ov007_020c421c(data_ov007_02103360->sprite);
 }
 
-// @symbol func_ov007_020b2cdc
 /* The cursor's state machine. */
 Ov007MenuState *func_ov007_020b2cdc(void) {
     return data_ov007_02103360->state;

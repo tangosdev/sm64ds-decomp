@@ -52,14 +52,11 @@ extern s16 data_02082214[];
 
 #pragma defer_codegen off
 
-// @symbol _ZN13daObjKanban_cD1Ev
-// @symbol _ZN13daObjKanban_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: its own vptr, then dCcAcPos_c (0x320), then dBgActor_c's
  * inlined, then dBgActor_c's dBgW_KcMbg and dExtSimpleModel_c, then dActor_c. */
 daObjKanban_c::~daObjKanban_c() {}
 
-// @symbol _ZN13daObjKanban_c16CleanupResourcesEv
 /* One release. A wall sign owns exactly one shared file -- the sign
  * model -- and gives it back on the way out. */
 int daObjKanban_c::CleanupResources() {
@@ -67,13 +64,11 @@ int daObjKanban_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjKanban_c6RenderEv
 int daObjKanban_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjKanban_c8BehaviorEv
 int daObjKanban_c::Behavior() {
     daPly_c *tgt = mTalkingPlayer;
     Vector3 mine, pos, tpos;
@@ -161,7 +156,6 @@ int daObjKanban_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjKanban_c13InitResourcesEv
 int daObjKanban_c::InitResources() {
     struct Vector3 v;
     void *file = dExtSimpleModel_c::LoadFile(data_ov085_02130858);
@@ -174,7 +168,6 @@ int daObjKanban_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjKanban_c_classInit
 /* The registry factory behind the KANBAN profile. `return new
  * daObjKanban_c()` is the whole body: the synthesized constructor is
  * what runs dBgActor_c's base step, stores the vptr and then

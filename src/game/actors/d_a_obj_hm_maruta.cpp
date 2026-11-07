@@ -24,7 +24,7 @@
  * include/daObjHmMaruta_c.h, which puts the key function on Behavior and
  * makes the vtable's slots 16 and 17 emit D1 (0x0211155c) then D0
  * (0x021115ac) -- the cartridge order -- with no D2. There is deliberately
- * no destructor text in this .cpp for an @symbol marker to sit above; both
+ * no destructor text in this .cpp; both
  * variants score through that inline header definition.
  *
  * Written in reverse ROM order: mwccarm emits one .text section per
@@ -91,24 +91,20 @@ extern int data_ov030_021159f4;
  * is the highest ROM address (0x0211164c), so it must be first here for the
  * three explicitly-written functions below to keep coming out in their
  * documented ROM order. */
-// @symbol daObjHmMaruta_c_classInit
 extern "C" daObjHmMaruta_c *daObjHmMaruta_c_classInit() {
     return new daObjHmMaruta_c();
 }
 
-// @symbol _ZN15daObjHmMaruta_c13InitResourcesEv
 /* Vtable slot 0. */
 int daObjHmMaruta_c::InitResources() {
     return func_ov080_021274ac(this, &data_ov030_02115a04);
 }
 
-// @symbol _ZN15daObjHmMaruta_c8BehaviorEv
 /* Vtable slot 6. The word handed over reads 0x412000 on the cartridge. */
 int daObjHmMaruta_c::Behavior() {
     return func_ov080_0212714c(this, &data_ov030_021159f4);
 }
 
-// @symbol _ZN15daObjHmMaruta_c16CleanupResourcesEv
 /* Vtable slot 3. */
 int daObjHmMaruta_c::CleanupResources() {
     return func_ov080_021270dc(this, &data_ov030_02115a04);

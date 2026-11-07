@@ -63,7 +63,6 @@ extern CLPS_Block data_ov017_02111a94;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjKsWater_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: ShipWater_Spawn.
  *
@@ -80,7 +79,6 @@ extern "C" daObjKsWater_c *daObjKsWater_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjKsWater_c13InitResourcesEv
 int daObjKsWater_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov017_02111c88), 1, -1);
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)data_ov017_02111c88.filePtr, data_ov017_02111a60);
@@ -96,7 +94,6 @@ int daObjKsWater_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjKsWater_c8BehaviorEv
 int daObjKsWater_c::Behavior() {
     if (mChestsOpen == 0) {
         int ok = 1;
@@ -132,7 +129,6 @@ int daObjKsWater_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjKsWater_c6RenderEv
 int daObjKsWater_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(0);
@@ -141,7 +137,6 @@ int daObjKsWater_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjKsWater_c16CleanupResourcesEv
 int daObjKsWater_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -153,8 +148,6 @@ int daObjKsWater_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjKsWater_cD1Ev
-// @symbol _ZN14daObjKsWater_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjKsWater_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no leaf D2. Writing the

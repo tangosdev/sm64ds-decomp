@@ -49,13 +49,10 @@ extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 #pragma defer_codegen off
 
-// @symbol _ZN18daObjEwmIceBlock_cD1Ev
-// @symbol _ZN18daObjEwmIceBlock_cD0Ev
 daObjEwmIceBlock_c::~daObjEwmIceBlock_c()
 {
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c16CleanupResourcesEv
 int daObjEwmIceBlock_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
@@ -65,14 +62,12 @@ int daObjEwmIceBlock_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c6RenderEv
 int daObjEwmIceBlock_c::Render()
 {
     mModel.Render((const Vector3 *)0);
     return 1;
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c8BehaviorEv
 int daObjEwmIceBlock_c::Behavior()
 {
     Vector3 prev;
@@ -147,7 +142,6 @@ int daObjEwmIceBlock_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c13InitResourcesEv
 int daObjEwmIceBlock_c::InitResources()
 {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov056_02113314[0]), 1, -1);
@@ -164,7 +158,6 @@ int daObjEwmIceBlock_c::InitResources()
     return 1;
 }
 
-// @symbol daObjEwmIceBlock_c_classInit
 extern "C" daObjEwmIceBlock_c *daObjEwmIceBlock_c_classInit()
 {
     return new daObjEwmIceBlock_c();
@@ -182,6 +175,5 @@ struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
     ~EwmIceBlockCollisionFilePtr();
 };
 
-// @symbol __sinit_d_a_obj_ewm_ice_block.cpp
 EwmIceBlockModelFilePtr gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);      /* model */
 EwmIceBlockCollisionFilePtr gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL);  /* collision */

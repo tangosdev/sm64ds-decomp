@@ -243,13 +243,10 @@ extern int data_ov055_02111b68;
 
 /* The key function, defined first. Under defer_codegen off it emits D1, D0 and
  * a D2 the cartridge does not keep, then the vtable and RTTI chain. */
-// @symbol _ZN10daObjKey_cD1Ev
-// @symbol _ZN10daObjKey_cD0Ev
 daObjKey_c::~daObjKey_c()
 {
 }
 
-// @symbol _ZN10daObjKey_c19func_ov089_02130fb4EP7Vector3i
 /* Aim a jump at target so it lands in 30 frames with its peak `height` above
  * the higher end. Sets gravity, the launch speed and the heading. */
 void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
@@ -287,7 +284,6 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
 }
 
 /* UnloadKeyModels, 0x021310cc */
-// @symbol UnloadKeyModels
 /* daDoor_c, daPly_c and the bosses that drop a key call these two by name. */
 extern "C" void UnloadKeyModels(int kind)
 {
@@ -300,7 +296,6 @@ extern "C" void UnloadKeyModels(int kind)
 }
 
 /* LoadKeyModels, 0x02131114 */
-// @symbol LoadKeyModels
 extern "C" void LoadKeyModels(int kind)
 {
     SharedFilePtr *extra;
@@ -313,7 +308,6 @@ extern "C" void LoadKeyModels(int kind)
     dExtSimpleModel_c::LoadFile(*extra);
 }
 
-// @symbol _ZN10daObjKey_c19func_ov089_0213115cEi
 /* Start collect animation `anim` (1..4); 0 or anything past 4 clears it. */
 void daObjKey_c::func_ov089_0213115c(int anim)
 {
@@ -325,7 +319,6 @@ void daObjKey_c::func_ov089_0213115c(int anim)
     mAnmModel.SetAnim((BCA_File *)(data_ov089_02132880[anim]->filePtr), ANIM_FLAGS, ANIM_SPEED, 0);
 }
 
-// @symbol _ZN10daObjKey_c16StateFlyToCenterEv
 /* Kind 3. Take the camera, fade the music, then fly toward the room's origin,
  * bounce once on the home height and settle 800 units above it until touched. */
 void daObjKey_c::StateFlyToCenter()
@@ -454,7 +447,6 @@ void daObjKey_c::StateFlyToCenter()
     mParticleID[2] = (u32)Particle::System::New(mParticleID[2], FX_TRAIL_C, v.x, v.y, v.z, 0, 0);
 }
 
-// @symbol _ZN10daObjKey_c13StateStarJumpEv
 /* Kind 7, the power star. Take the camera, jump to a spot beside the nearest
  * player, bounce to rest, hand the camera back and wait to be collected, then
  * ride along with the player while the collect animation plays. */
@@ -607,7 +599,6 @@ void daObjKey_c::StateStarJump()
     }
 }
 
-// @symbol _ZN10daObjKey_c9StateDropEv
 void daObjKey_c::StateDrop()
 {
     dCamera_c *cam = data_0209f318;
@@ -686,7 +677,6 @@ void daObjKey_c::StateDrop()
     }
 }
 
-// @symbol _ZN10daObjKey_c19func_ov089_02131dccER7daPly_c
 /* Last-star path. Hands the collector to ov002 and removes the star. */
 void daObjKey_c::func_ov089_02131dcc(daPly_c &player) {
     func_ov002_020c3dbc(&player);
@@ -694,7 +684,6 @@ void daObjKey_c::func_ov089_02131dcc(daPly_c &player) {
     MarkForDestruction();
 }
 
-// @symbol _ZN10daObjKey_c19func_ov089_02131df4ER7daPly_c
 void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
     daPly_c *player = &p;
 
@@ -729,7 +718,6 @@ void daObjKey_c::func_ov089_02131df4(daPly_c &p) {
     }
 }
 
-// @symbol _ZN10daObjKey_c13OnTurnIntoEggER7daPly_c
 void daObjKey_c::OnTurnIntoEgg(daPly_c &player) {
     /* The flag keeps the ROM's moveq and movne pair. */
     unsigned isKey = (actorID == ACTOR_OBJ_KEY);
@@ -738,12 +726,10 @@ void daObjKey_c::OnTurnIntoEgg(daPly_c &player) {
     return func_ov089_02131dcc(player);
 }
 
-// @symbol _ZN10daObjKey_c13OnYoshiTryEatEv
 s32 daObjKey_c::OnYoshiTryEat() {
     return 4;
 }
 
-// @symbol _ZN10daObjKey_c20UpdateModelTransformEv
 void daObjKey_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -765,7 +751,6 @@ void daObjKey_c::UpdateModelTransform()
         DropShadowRadHeight(mShadowModel, mShadowMatrix, SHADOW_R, SHADOW_DEPTH, SHADOW_OPACITY);
 }
 
-// @symbol _ZN10daObjKey_c16CleanupResourcesEv
 int daObjKey_c::CleanupResources()
 {
     UnloadKeyModels(mState);
@@ -780,7 +765,6 @@ int daObjKey_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daObjKey_c6RenderEv
 int daObjKey_c::Render()
 {
     int hidden = (mFlags & FLAG_HIDE) != 0;
@@ -797,7 +781,6 @@ int daObjKey_c::Render()
     return 1;
 }
 
-// @symbol _ZN10daObjKey_c8BehaviorEv
 int daObjKey_c::Behavior()
 {
     Vector3 vec;
@@ -880,7 +863,6 @@ int daObjKey_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN10daObjKey_c13InitResourcesEv
 int daObjKey_c::InitResources()
 {
     Vector3 offset7;
@@ -955,13 +937,11 @@ int daObjKey_c::InitResources()
 /* Both profiles build the same class. fBase_c's inline operator new forwards to
  * _ZN7fBase_cnwEm; the implicit constructor inlines dEnemyBase_c's base step,
  * the vptr store and the five member constructors. */
-// @symbol daObjKey_c_classInit_LAST_STAR
 extern "C" daObjKey_c *daObjKey_c_classInit_LAST_STAR()
 {
     return new daObjKey_c();
 }
 
-// @symbol daObjKey_c_classInit_OBJ_KEY
 extern "C" daObjKey_c *daObjKey_c_classInit_OBJ_KEY()
 {
     return new daObjKey_c();

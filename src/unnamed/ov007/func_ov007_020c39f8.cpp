@@ -3,7 +3,6 @@
 #include "math/MtxStack.h"
 
 extern "C" {
-// @symbol func_ov007_020c39f8
 /* recovered: shared common types */
 extern short data_02082214[];
 extern void func_0205283c(struct Matrix4x3 *out, int s, int c);

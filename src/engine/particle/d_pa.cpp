@@ -48,12 +48,10 @@ void func_0204dc84(char *record);
 void func_02049d60(Particle::Manager *manager, Particle::System *system);
 }
 
-// @symbol _ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE
 void dPa_c::level_c::callback_c::SpawnParticles(Particle::System&)
 {
 }
 
-// @symbol _ZN5dPa_c7level_c10callback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::callback_c::OnUpdate(Particle::System&, bool)
 {
     return 1;
@@ -62,14 +60,11 @@ int dPa_c::level_c::callback_c::OnUpdate(Particle::System&, bool)
 /* Complete- and base-object constructors. One definition emits the C1/C2
  * pair; calls from derived callback construction identify 0x020226a4 as
  * C2 and the matching C1 variant lives at 0x02022680. */
-// @symbol _ZN5dPa_c7level_c16simpleCallback_cC1Ev
-// @symbol _ZN5dPa_c7level_c16simpleCallback_cC2Ev
 dPa_c::level_c::simpleCallback_c::simpleCallback_c()
     : value(0)
 {
 }
 
-// @symbol _ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE
 void dPa_c::level_c::simpleCallback_c::SpawnParticles(
     Particle::System& system)
 {
@@ -78,7 +73,6 @@ void dPa_c::level_c::simpleCallback_c::SpawnParticles(
     func_02049d60(data_0209ee74->mManager, &system);
 }
 
-// @symbol _ZN5dPa_c7level_c16simpleCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::simpleCallback_c::OnUpdate(
     Particle::System& system, bool)
 {
@@ -89,13 +83,11 @@ int dPa_c::level_c::simpleCallback_c::OnUpdate(
 /* Four SysTracker member calls identify the complete-object variant. The
  * compiler emits simpleCallback_c C2 and the scaleCallback_c vptr store;
  * the unused C2 twin is a homeless compiler copy with no ROM address. */
-// @symbol _ZN5dPa_c7level_c15scaleCallback_cC1Ev
 dPa_c::level_c::scaleCallback_c::scaleCallback_c()
     : scale(0x1000), velocity(0)
 {
 }
 
-// @symbol _ZN5dPa_c7level_c15scaleCallback_c14SpawnParticlesERN8Particle6SystemE
 void dPa_c::level_c::scaleCallback_c::SpawnParticles(Particle::System& system)
 {
     system.callbackScale = scale;
@@ -104,7 +96,6 @@ void dPa_c::level_c::scaleCallback_c::SpawnParticles(Particle::System& system)
     timer = 0x10;
 }
 
-// @symbol _ZN5dPa_c7level_c15scaleCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::scaleCallback_c::OnUpdate(Particle::System& system,
                                                bool active)
 {
@@ -112,7 +103,6 @@ int dPa_c::level_c::scaleCallback_c::OnUpdate(Particle::System& system,
     return DecIfAbove0_Byte(&timer) != 0;
 }
 
-// @symbol _ZN5dPa_c7level_c16splashCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::splashCallback_c::OnUpdate(
     Particle::System& system, bool active)
 {
@@ -133,7 +123,6 @@ int dPa_c::level_c::splashCallback_c::OnUpdate(
     return simpleCallback_c::OnUpdate(system, active);
 }
 
-// @symbol _ZN5dPa_c7level_c16bubbleCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::bubbleCallback_c::OnUpdate(
     Particle::System& system, bool active)
 {
@@ -154,7 +143,6 @@ int dPa_c::level_c::bubbleCallback_c::OnUpdate(
     return simpleCallback_c::OnUpdate(system, active);
 }
 
-// @symbol _ZN5dPa_c7level_c24fitWaterSimpleCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::fitWaterSimpleCallback_c::OnUpdate(
     Particle::System& system, bool active)
 {
@@ -172,7 +160,6 @@ int dPa_c::level_c::fitWaterSimpleCallback_c::OnUpdate(
     return simpleCallback_c::OnUpdate(system, active);
 }
 
-// @symbol _ZN5dPa_c7level_c20checkYoganCallback_c14SpawnParticlesERN8Particle6SystemE
 void dPa_c::level_c::checkYoganCallback_c::SpawnParticles(
     Particle::System& system)
 {
@@ -199,7 +186,6 @@ void dPa_c::level_c::checkYoganCallback_c::SpawnParticles(
     }
 }
 
-// @symbol _ZN5dPa_c7level_c20checkYoganCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::checkYoganCallback_c::OnUpdate(Particle::System& system,
                                                     bool active)
 {
@@ -209,7 +195,6 @@ int dPa_c::level_c::checkYoganCallback_c::OnUpdate(Particle::System& system,
     return simpleCallback_c::OnUpdate(system, active);
 }
 
-// @symbol _ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev
 dPa_c::level_c::edStarKiraCallback_c::edStarKiraCallback_c()
 {
     trackingRecordStorage_c *record = trackingRecords;
@@ -232,7 +217,6 @@ extern "C" void func_02022260(int *position, short *screenX, short *screenY, int
     *scale = 0xfff;
 }
 
-// @symbol _ZN5dPa_c7level_c20edStarKiraCallback_c14SpawnParticlesERN8Particle6SystemE
 void dPa_c::level_c::edStarKiraCallback_c::SpawnParticles(
     Particle::System& system)
 {
@@ -241,7 +225,6 @@ void dPa_c::level_c::edStarKiraCallback_c::SpawnParticles(
     simpleCallback_c::SpawnParticles(system);
 }
 
-// @symbol _ZN5dPa_c7level_c20edStarKiraCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::edStarKiraCallback_c::OnUpdate(Particle::System& system,
                                                     bool active)
 {
@@ -250,7 +233,6 @@ int dPa_c::level_c::edStarKiraCallback_c::OnUpdate(Particle::System& system,
     return simpleCallback_c::OnUpdate(system, active);
 }
 
-// @symbol _ZN5dPa_c7level_c20checkWaterCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::checkWaterCallback_c::OnUpdate(
     Particle::System& system, bool active)
 {
@@ -274,7 +256,6 @@ int dPa_c::level_c::checkWaterCallback_c::OnUpdate(
     return 1;
 }
 
-// @symbol _ZN5dPa_c7level_c26checkWaterRippleCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::checkWaterRippleCallback_c::OnUpdate(
     Particle::System& system, bool active)
 {
@@ -302,7 +283,6 @@ int dPa_c::level_c::checkWaterRippleCallback_c::OnUpdate(
     return 1;
 }
 
-// @symbol _ZN5dPa_c7level_c18fitWaterCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::fitWaterCallback_c::OnUpdate(
     Particle::System& system, bool active)
 {
@@ -324,7 +304,6 @@ int dPa_c::level_c::fitWaterCallback_c::OnUpdate(
     return 1;
 }
 
-// @symbol _ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::clipCallback_c::OnUpdate(
     Particle::System& system, bool active)
 {
@@ -375,7 +354,6 @@ int dPa_c::level_c::clipCallback_c::OnUpdate(
     return 1;
 }
 
-// @symbol _ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb
 int dPa_c::level_c::cleanParticleCallback_c::OnUpdate(
     Particle::System& system, bool done)
 {

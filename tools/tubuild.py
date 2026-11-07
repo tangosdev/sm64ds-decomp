@@ -950,13 +950,12 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
             out.append(" * ROM's own bytes cover this range. Recover it before promotion. */")
             out.append("")
             continue
-        # `tiers._marked_member_fragment` slices a promoted TU's member source from
-        # each `// @symbol` marker to the NEXT marker, so an unmarked body is
-        # charged to whichever member is marked above it, and the ratchet reports
-        # a BACKSLID against a member that does not contain the offending code.
-        # Emitting the marker here is byte-neutral (measured on ov066/Eyerok: 29
-        # markers added, object sha256 and its 18136 bytes unchanged) and removes
-        # a manual step every promotion previously had to remember.
+        # Production source no longer carries marker comments; def_locate
+        # names an enrolled member from the ownership table. A shadow is not
+        # enrolled yet, so it still has no table to bind against, and the
+        # marker is what a later slice falls back to. Emitting it is
+        # byte-neutral (measured on ov066/Eyerok: 29 markers added, object
+        # sha256 and its 18136 bytes unchanged).
         if not _AT_SYMBOL_RE.search("\n".join(p["notes"])) \
                 and not _DTOR_VARIANT_RE.search(name):
             out.append(f"// @symbol {name}")

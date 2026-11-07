@@ -46,7 +46,6 @@ extern WanwanShutterModelFilePtr data_ov014_021149c0; /* the BMD model */
 extern WanwanShutterClsnFilePtr data_ov014_021149b8;  /* the KCL collision mesh */
 extern CLPS_Block data_ov014_02114558;
 
-// @symbol daObjWanwanShutter_c_classInit
 /* Reconstructed source-style name. Historical alias: ChainChompFence_Spawn.
  *
  * Every instruction the cartridge has here falls out of the one `new`.
@@ -58,7 +57,6 @@ extern "C" daObjWanwanShutter_c *daObjWanwanShutter_c_classInit(void) {
     return new daObjWanwanShutter_c();
 }
 
-// @symbol _ZN20daObjWanwanShutter_c13InitResourcesEv
 /* Vtable slot 0. Loads the fence's model and collision mesh and plants both at
    the actor's position. Scale 0x1000 is 1.0. */
 int daObjWanwanShutter_c::InitResources() {
@@ -72,7 +70,6 @@ int daObjWanwanShutter_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN20daObjWanwanShutter_c8BehaviorEv
 int daObjWanwanShutter_c::Behavior() {
     if (mDisabled != 0)
         return 1;
@@ -80,7 +77,6 @@ int daObjWanwanShutter_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN20daObjWanwanShutter_c6RenderEv
 int daObjWanwanShutter_c::Render() {
     if (mDisabled != 0)
         return 1;
@@ -88,7 +84,6 @@ int daObjWanwanShutter_c::Render() {
     return 1;
 }
 
-// @symbol _ZN20daObjWanwanShutter_c16CleanupResourcesEv
 int daObjWanwanShutter_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -97,7 +92,6 @@ int daObjWanwanShutter_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN20daObjWanwanShutter_c5BreakEv
 /* The chomp's "break the fence" trigger, reached from daWanwan_c when the
    chomp finishes its lunge at the gate. Plays bank-3 sound 0xf at camera-space
    position, spawns particle 0x1e 300.0 above the fence, poofs, sets mDisabled
@@ -123,8 +117,6 @@ void daObjWanwanShutter_c::Break() {
         mMeshCollider.Disable();
 }
 
-// @symbol _ZN20daObjWanwanShutter_cD1Ev
-// @symbol _ZN20daObjWanwanShutter_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjWanwanShutter_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no D2. Writing the body

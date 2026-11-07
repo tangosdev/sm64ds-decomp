@@ -105,13 +105,11 @@ SoundObjectCallback data_ov002_0211110c[7] = {
     *(SoundObjectCallback *)&data_ov002_0210c028,
 };
 
-// @symbol daSoundObj_c_classInit
 extern "C" daSoundObj_c *daSoundObj_c_classInit()
 {
     return new daSoundObj_c();
 }
 
-// @symbol _ZN12daSoundObj_c13InitResourcesEv
 /* opt_loop_invariants is file-global last-wins: this off covers the
    FindWithActorID loop below (dropping it un-matches InitResources),
    and no other member has a loop. Without it the loop's constant
@@ -154,7 +152,6 @@ int daSoundObj_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN12daSoundObj_c8BehaviorEv
 int daSoundObj_c::Behavior()
 {
     SoundObjectCallbackOwner *owner = (SoundObjectCallbackOwner *)this;
@@ -178,7 +175,6 @@ int daSoundObj_c::Behavior()
    precedent and is left bare. */
 static const int kPoolDist = 0x8777;
 
-// @symbol func_ov002_020f9468
 extern "C" int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     /* The starter shape PlaySecretSound, PlaySmallSecretSound and
        func_0200f7f0 share: the pool fallback is an else-if, so the
@@ -193,7 +189,6 @@ extern "C" int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     return 0;
 }
 
-// @symbol func_ov002_020f93a8
 extern "C" int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter)
 {
     if (counter[0] < self->mCounterLimit) {

@@ -149,13 +149,11 @@ extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pa
 
 }
 
-// @symbol dScMiniGm_c_classInit
 extern "C" dScMiniGm_c *dScMiniGm_c_classInit()
 {
     return new dScMiniGm_c();
 }
 
-// @symbol _ZN11dScMiniGm_c13InitResourcesEv
 s32 dScMiniGm_c::InitResources()
 {
     int i, j;
@@ -375,7 +373,6 @@ s32 dScMiniGm_c::InitResources()
     return 1;
 }
 
-// @symbol MiniGm_LoadGroupIcons
 extern "C" {
 void MiniGm_LoadGroupIcons(void *selfv)
 {
@@ -520,7 +517,6 @@ void MiniGm_LoadGroupIcons(void *selfv)
 }
 }
 
-// @symbol MiniGm_LoadIconPalette
 extern "C" {
 void MiniGm_LoadIconPalette(char *self, int index)
 {
@@ -532,7 +528,6 @@ void MiniGm_LoadIconPalette(char *self, int index)
 }
 }
 
-// @symbol _ZN11dScMiniGm_c16CleanupResourcesEv
 s32 dScMiniGm_c::CleanupResources()
 {
     if (gMgLastSelected[0] >= 0) {
@@ -542,7 +537,6 @@ s32 dScMiniGm_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11dScMiniGm_c8BehaviorEv
 s32 dScMiniGm_c::Behavior()
 {
     if ((data_020a0e5a[gActivePlayerSlot << 1] & 0xfff) != 0) {
@@ -590,7 +584,6 @@ s32 dScMiniGm_c::Behavior()
     return 1;
 }
 
-// @symbol MiniGm_DrawRecords
 extern "C" {
 void MiniGm_DrawRecords(void *selfv)
 {
@@ -681,7 +674,6 @@ void MiniGm_DrawRecords(void *selfv)
 }
 }
 
-// @symbol MiniGm_DrawNumber
 extern "C" {
 
 void MiniGm_DrawNumber(void *a0, int x, int y, int val){
@@ -708,7 +700,6 @@ void MiniGm_DrawNumber(void *a0, int x, int y, int val){
 }
 }
 
-// @symbol MiniGm_DrawNewBadges
 extern "C" {
 void MiniGm_DrawNewBadges(void *selfv)
 {
@@ -737,7 +728,6 @@ void MiniGm_DrawNewBadges(void *selfv)
 }
 }
 
-// @symbol _ZN11dScMiniGm_c6RenderEv
 s32 dScMiniGm_c::Render()
 {
     int i;
@@ -821,12 +811,10 @@ s32 dScMiniGm_c::Render()
     return 1;
 }
 
-// @symbol _ZN11dScMiniGm_c16OnPendingDestroyEv
 void dScMiniGm_c::OnPendingDestroy()
 {
 }
 
-// @symbol MiniGm_UpdateGroupTabs
 extern "C" {
 
 void MiniGm_UpdateGroupTabs(char *self)
@@ -922,7 +910,6 @@ void MiniGm_UpdateGroupTabs(char *self)
 }
 }
 
-// @symbol MiniGm_UpdatePageArrows
 extern "C" {
 void MiniGm_UpdatePageArrows(char *self)
 {
@@ -967,7 +954,6 @@ void MiniGm_UpdatePageArrows(char *self)
 }
 }
 
-// @symbol _ZN11dScMiniGm_c16UpdateGameSelectEv
 void dScMiniGm_c::UpdateGameSelect()
 {
     int sel;
@@ -1033,7 +1019,6 @@ void dScMiniGm_c::UpdateGameSelect()
     data_0209b2fc = 1;
 }
 
-// @symbol MiniGm_UpdateExitButton
 extern "C" {
 
 void MiniGm_UpdateExitButton(char *self) {
@@ -1062,7 +1047,6 @@ void MiniGm_UpdateExitButton(char *self) {
 }
 }
 
-// @symbol MiniGm_UpdatePageScroll
 extern "C" {
 
 void MiniGm_UpdatePageScroll(char *self) {
@@ -1095,7 +1079,6 @@ void MiniGm_UpdatePageScroll(char *self) {
 }
 }
 
-// @symbol MiniGm_HasSecondPage
 extern "C" {
 int MiniGm_HasSecondPage(void *self){
   int i, j;
@@ -1110,7 +1093,6 @@ int MiniGm_HasSecondPage(void *self){
 }
 }
 
-// @symbol MiniGm_IsUnlocked
 extern "C" {
 int MiniGm_IsUnlocked(void *self, int n) {
     if (n < 8) {
@@ -1120,7 +1102,6 @@ int MiniGm_IsUnlocked(void *self, int n) {
 }
 }
 
-// @symbol MiniGm_IsNew
 extern "C" {
 int MiniGm_IsNew(void *self, int n) {
     if (n < 8) {
@@ -1131,7 +1112,6 @@ int MiniGm_IsNew(void *self, int n) {
 }
 }
 
-// @symbol MiniGm_ClearNew
 extern "C" {
 void MiniGm_ClearNew(void *self, int n)
 {
@@ -1146,7 +1126,6 @@ void MiniGm_ClearNew(void *self, int n)
 }
 }
 
-// @symbol MiniGm_GetSaveTable
 extern "C" {
 int MiniGm_GetSaveTable(void *a, int i) {
     int offset = i * 0x34;
@@ -1154,7 +1133,6 @@ int MiniGm_GetSaveTable(void *a, int i) {
 }
 }
 
-// @symbol MiniGm_GetRecord
 extern "C" {
 int MiniGm_GetRecord(void *a, int b, int c) {
     int res = MiniGm_GetSaveTable(a, b);
@@ -1162,7 +1140,6 @@ int MiniGm_GetRecord(void *a, int b, int c) {
 }
 }
 
-// @symbol MiniGm_SetRecord
 extern "C" {
 void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
     int r5 = r2;
@@ -1172,7 +1149,6 @@ void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
 }
 }
 
-// @symbol MiniGm_SaveIfDirty
 extern "C" void MiniGm_SaveIfDirty(char *self)
 {
     if (gMgSaveDirty != 1) return;

@@ -28,8 +28,6 @@
 /* local extern: no shared header declares it. */
 extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
-// @symbol _ZN16daObjKaitendai_cD0Ev
-// @symbol _ZN16daObjKaitendai_cD1Ev
 /* ROM ordinals 0 and 1 -- ov002 0x020b660c (D0, 0x58) and 0x020b6664 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
  * inline body in include/daObjKaitendai_c.h, which the class's descendants need
@@ -55,7 +53,6 @@ void daObjKaitendai_c_EmitDestructor(daObjKaitendai_c *p) {
 
 /* ROM ordinal 2 -- ov002 0x020b66a8, size 0x48.
  * Teardown half the five leaves call. */
-// @symbol _ZN16daObjKaitendai_c20CleanupResourcesFromEP18ResourceDescriptor
 int daObjKaitendai_c::CleanupResourcesFrom(ResourceDescriptor *descriptor) {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -65,7 +62,6 @@ int daObjKaitendai_c::CleanupResourcesFrom(ResourceDescriptor *descriptor) {
 }
 
 /* ROM ordinal 3 -- vtable slot 9, ov002 0x020b66f0. */
-// @symbol _ZN16daObjKaitendai_c6RenderEv
 s32 daObjKaitendai_c::Render() {
     mModel.Render(0);
     return 1;
@@ -74,7 +70,6 @@ s32 daObjKaitendai_c::Render() {
 /* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6718.
  * s16 *p is load-bearing: mPrevAngleY += mPrevAngleZ recomputes the
  * address and comes out 0x50 against the ROM's 0x54. */
-// @symbol _ZN16daObjKaitendai_c8BehaviorEv
 s32 daObjKaitendai_c::Behavior() {
     s16 *p = &mPrevAngleY;
     *p = *p + mPrevAngleZ;
@@ -89,7 +84,6 @@ s32 daObjKaitendai_c::Behavior() {
  * Shared resource setup the five leaves call. Slot 0 is dExtSimpleModel_c::LoadFile,
  * slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then bind
  * UpdatePosAndAngs and seed mPrevAngleZ. */
-// @symbol _ZN16daObjKaitendai_c17InitResourcesFromEP18ResourceDescriptors
 int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angle) {
     s16 y;
 

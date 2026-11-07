@@ -23,7 +23,6 @@
 #include "math/CalcLib.h"
 #include "daPly_c.h"
 
-// @symbol _ZN5dCc_cC2Ev
 /* C2, the base-subobject constructor. The vptr store is the compiler's; the
  * body is only what the ROM's constructor actually writes -- both intrusive
  * list links zeroed, an unlinked node. */
@@ -32,7 +31,6 @@ dCc_c::dCc_c() {
     next = 0;
 }
 
-// @symbol _ZN5dCc_cD1Ev
 /* One definition emits D2, D0 and D1: the destructor body's only obligation
    is the intrusive-list unlink, and D0 follows it with the class-local
    operator delete (Memory::operator_delete2, see the header). */
@@ -40,7 +38,6 @@ dCc_c::~dCc_c() {
     Unlink();
 }
 
-// @symbol _ZN5dCc_c4InitEiijj
 void dCc_c::Init(Fix12i radius_, Fix12i height_, u32 flags_, u32 vulnFlags_) {
     radius = radius_;
     height = height_;
@@ -48,7 +45,6 @@ void dCc_c::Init(Fix12i radius_, Fix12i height_, u32 flags_, u32 vulnFlags_) {
     vulnFlags = vulnFlags_;
 }
 
-// @symbol _ZN5dCc_c5ClearEv
 void dCc_c::Clear() {
     pushback.x = 0;
     pushback.y = 0;
@@ -57,7 +53,6 @@ void dCc_c::Clear() {
     hitFlags = 0;
 }
 
-// @symbol _ZN5dCc_c6UpdateEv
 /* Link this node in at the head of the active list. The mirror of the unlink
    that the destructors run; see include/dCc_c.h. */
 void dCc_c::Update() {
@@ -69,7 +64,6 @@ void dCc_c::Update() {
     listHead = this;
 }
 
-// @symbol _ZN5dCc_c6UnlinkEv
 /* Removes this collision node from the global intrusive list. The member role
  * is proven by the prev/next rewiring; the original spelling `Unlink` is an
  * evidence-bounded reconstruction. */
@@ -86,7 +80,6 @@ void dCc_c::Unlink() {
     next = 0;
 }
 
-// @symbol func_02014f5c
 /* Resolve a collider hit owner and, only when it is the player, offer it the
  * collider to climb. IsPlayer returns int: the ROM materialises the 0/1 before
  * testing it, and a bool predicate or a direct compare folds that away. */
@@ -101,12 +94,10 @@ extern "C" void func_02014f5c(dCc_c *self, u32 id) {
         static_cast<daPly_c *>(actor)->StartClimb(self);
 }
 
-// @symbol func_02014f44
 extern "C" void func_02014f44(u32 id, dCc_c *self) {
     func_02014f5c(self, id);
 }
 
-// @symbol _ZN5dCc_c7ProcessEv
 void dCc_c::Process() {
     u32 ownerID;
     Fix12i verticalOverlap;

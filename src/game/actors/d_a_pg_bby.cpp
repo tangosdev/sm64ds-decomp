@@ -64,18 +64,15 @@ extern Vector3 gPenguinBabyCarryOffsets[4];
 extern daPgBby_c::State gPenguinBabyStates[6];
 }
 
-// @symbol daPgBby_c_classInit
 extern "C" daPgBby_c *daPgBby_c_classInit()
 {
     return new daPgBby_c();
 }
 
-// @symbol _ZN9daPgBby_c13OnTurnIntoEggER7daPly_c
 void daPgBby_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
-// @symbol _ZN9daPgBby_c13InitResourcesEv
 s32 daPgBby_c::InitResources()
 {
     BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(gPenguinBabyModelFile);
@@ -102,7 +99,6 @@ s32 daPgBby_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c8BehaviorEv
 s32 daPgBby_c::Behavior()
 {
     if (IsTooFarAwayFromPlayer(0x7d0000) && mWithMeshClsn.IsOnGround()) {
@@ -117,7 +113,6 @@ s32 daPgBby_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c6RenderEv
 s32 daPgBby_c::Render()
 {
     unsigned int f = mFlags;
@@ -127,12 +122,10 @@ s32 daPgBby_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c16OnPendingDestroyEv
 void daPgBby_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daPgBby_c16CleanupResourcesEv
 s32 daPgBby_c::CleanupResources()
 {
     gPenguinBabyModelFile.Release();
@@ -146,7 +139,6 @@ s32 daPgBby_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121d50Ei
 /* Switch to state `state` and run its enter step. */
 void daPgBby_c::func_ov072_02121d50(int state)
 {
@@ -154,7 +146,6 @@ void daPgBby_c::func_ov072_02121d50(int state)
     func_ov072_02121d18();
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121d18Ev
 /* Run the current state's enter step. */
 void daPgBby_c::func_ov072_02121d18()
 {
@@ -162,7 +153,6 @@ void daPgBby_c::func_ov072_02121d18()
     (this->**step)();
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121cdcEv
 /* Run the current state's per-frame update step. */
 void daPgBby_c::func_ov072_02121cdc()
 {
@@ -170,7 +160,6 @@ void daPgBby_c::func_ov072_02121cdc()
     (this->**step)();
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121c94Ev
 /* State 0, enter. */
 int daPgBby_c::func_ov072_02121c94()
 {
@@ -180,7 +169,6 @@ int daPgBby_c::func_ov072_02121c94()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121a84Ev
 /* State 0, update: keep a comfortable distance from the closest player,
    walking away when it comes near and back when it wanders off. */
 int daPgBby_c::func_ov072_02121a84()
@@ -248,7 +236,6 @@ int daPgBby_c::func_ov072_02121a84()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121a28Ev
 /* State 1, enter: a hop. */
 int daPgBby_c::func_ov072_02121a28()
 {
@@ -260,7 +247,6 @@ int daPgBby_c::func_ov072_02121a28()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_021218dcEv
 /* State 1, update. */
 int daPgBby_c::func_ov072_021218dc()
 {
@@ -297,7 +283,6 @@ int daPgBby_c::func_ov072_021218dc()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121890Ev
 /* State 2, enter: picked up. */
 int daPgBby_c::func_ov072_02121890()
 {
@@ -307,7 +292,6 @@ int daPgBby_c::func_ov072_02121890()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_021217acEv
 /* State 2, update: face where the carrier faces; once no longer held, drop
    to the ground under the carrier and return to state 0. */
 int daPgBby_c::func_ov072_021217ac()
@@ -347,7 +331,6 @@ animate:
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121758Ev
 /* State 3, enter. */
 int daPgBby_c::func_ov072_02121758()
 {
@@ -358,7 +341,6 @@ int daPgBby_c::func_ov072_02121758()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121670Ev
 /* State 3, update: walk to the mother, keeping between 0xc8 and 0xdc
    units from her. */
 int daPgBby_c::func_ov072_02121670()
@@ -388,7 +370,6 @@ int daPgBby_c::func_ov072_02121670()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121640Ev
 /* State 4, enter. */
 int daPgBby_c::func_ov072_02121640()
 {
@@ -399,7 +380,6 @@ int daPgBby_c::func_ov072_02121640()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_021214dcEv
 /* State 4, update: the carrier's message 0xb2, then wait for the talk to
    close and be put down. */
 int daPgBby_c::func_ov072_021214dc()
@@ -450,7 +430,6 @@ int daPgBby_c::func_ov072_021214dc()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02121368Ev
 /* State 5, enter: spat out by Yoshi -- appear 0x50 units in front of the
    eating player and raycast down from above it. The statement order below
    is the retail schedule's. */
@@ -525,7 +504,6 @@ int daPgBby_c::func_ov072_02121368()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_021212c0Ev
 /* State 5, update: fall, bounce once at 40% and settle back into state 0. */
 int daPgBby_c::func_ov072_021212c0()
 {
@@ -544,7 +522,6 @@ int daPgBby_c::func_ov072_021212c0()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_021210c4Ev
 /* Place the model: in the carrier's hands (one of four carry offsets) or at
    the actor, then size the drop shadow by the height above the ground. */
 void daPgBby_c::func_ov072_021210c4()
@@ -598,7 +575,6 @@ void daPgBby_c::func_ov072_021210c4()
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, shadowRadius, shadowHeight, 0xf);
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02120fd4EP10dBgCh_Actr
 /* Wall/floor pass: on a slope, turn horizontal motion into vertical speed. */
 void daPgBby_c::func_ov072_02120fd4(dBgCh_Actr *clsn)
 {
@@ -620,7 +596,6 @@ void daPgBby_c::func_ov072_02120fd4(dBgCh_Actr *clsn)
     }
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02120f14Ev
 /* Refuse a step onto ground more than 0x1.9 away from the current height:
    put the actor back where it was last frame. */
 int daPgBby_c::func_ov072_02120f14()
@@ -653,7 +628,6 @@ int daPgBby_c::func_ov072_02120f14()
     return 0;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02120e50Ev
 /* Touched by the player (actor 0xbf): enter state 4 while talking, or
    state 2 when the player grabs it. */
 int daPgBby_c::func_ov072_02120e50()
@@ -675,7 +649,6 @@ int daPgBby_c::func_ov072_02120e50()
     return 1;
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02120e20Ev
 /* A diving player nearby startles it into state 1. */
 void daPgBby_c::func_ov072_02120e20()
 {
@@ -683,7 +656,6 @@ void daPgBby_c::func_ov072_02120e20()
     if (player->IsDiving()) func_ov072_02121d50(1);
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02120ddcEv
 /* Within 0x190 of the mother: state 3. */
 void daPgBby_c::func_ov072_02120ddc()
 {
@@ -695,7 +667,6 @@ void daPgBby_c::func_ov072_02120ddc()
     func_ov072_02121d50(3);
 }
 
-// @symbol _ZN9daPgBby_c19func_ov072_02120d04Ev
 /* Respawn: fallen far below the level, or far from home with the timer
    run out, and off screen -- go back to the spawn position. */
 void daPgBby_c::func_ov072_02120d04()
@@ -716,7 +687,6 @@ void daPgBby_c::func_ov072_02120d04()
     mPosZ = mSpawnPosZ;
 }
 
-// @symbol _ZN9daPgBby_c13OnYoshiTryEatEv
 s32 daPgBby_c::OnYoshiTryEat()
 {
     return 7;
@@ -724,8 +694,6 @@ s32 daPgBby_c::OnYoshiTryEat()
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
-// @symbol _ZN9daPgBby_cD1Ev
-// @symbol _ZN9daPgBby_cD0Ev
 
 /* Runtime asset handles, distinct from NitroFS file IDs. Construction order
  * follows the retail initializer, including each destructor registration. */

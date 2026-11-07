@@ -79,7 +79,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 /* `new` calls the inherited fBase_c::operator new; the implicit constructor
  * emits the measured dActor_c C2, vptr store, and three member C1s. */
-// @symbol daEyBm_c_classInit
 extern "C" daEyBm_c *daEyBm_c_classInit() {
     return new daEyBm_c();
 }
@@ -88,7 +87,6 @@ extern "C" daEyBm_c *daEyBm_c_classInit() {
 extern "C" SpawnInfo<daEyBm_c> g_profile_EYEKUN_BEAM = {
     daEyBm_c_classInit, 0x0108, 0x007a, 0x00000002, 0, 0x00019000, 0x01000000, 0x01000000};
 
-// @symbol _ZN8daEyBm_c13InitResourcesEv
 int daEyBm_c::InitResources() {
     if (!mShadowModel.InitCylinder())
         return 0;
@@ -108,7 +106,6 @@ int daEyBm_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN8daEyBm_c8BehaviorEv
 int daEyBm_c::Behavior() {
     VecFx32 offset;
     VecFx32 velocity;
@@ -143,20 +140,16 @@ int daEyBm_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN8daEyBm_c6RenderEv
 int daEyBm_c::Render() {
     mParticle1 = Particle::System::NewUnkCallback818(mParticle1, 0x46, mPosX, mPosY, mPosZ, 0);
     mParticle2 = Particle::System::NewUnkCallback818(mParticle2, 0x47, mPosX, mPosY, mPosZ, 0);
     return 1;
 }
-// @symbol _ZN8daEyBm_c16OnPendingDestroyEv
 void daEyBm_c::OnPendingDestroy() {}
 
-// @symbol _ZN8daEyBm_c16CleanupResourcesEv
 int daEyBm_c::CleanupResources() {
     return 1;
 }
-// @symbol _ZN8daEyBm_c12UpdateShadowEv
 
 void daEyBm_c::UpdateShadow() {
     mMatrix.m[9] = mPosX >> 3;
@@ -176,7 +169,6 @@ void daEyBm_c::UpdateShadow() {
 /*
  * 0x02121ba4, size 0xc8. daPly_c::Hurt retains the measured by-value Fix12
  * ABI seam; daPly_c itself and all accessed fields are the real type. */
-// @symbol _ZN8daEyBm_c10HurtPlayerEv
 
 void daEyBm_c::HurtPlayer() {
     u32 ownerID = mdCcAcPos_c.otherOwner;
@@ -206,7 +198,6 @@ void daEyBm_c::HurtPlayer() {
  * 0x02121b50, size 0x54. The coined mangling uses a reference; a pointer
  * would generate identical ARM. The retail caller passes the owned
  * collision subobject explicitly in r1. */
-// @symbol _ZN8daEyBm_c15UpdateCollisionER10dBgCh_Actr
 void daEyBm_c::UpdateCollision(dBgCh_Actr &collision) {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&collision);
     if (collision.IsOnGround() || collision.IsOnWall())
@@ -214,18 +205,14 @@ void daEyBm_c::UpdateCollision(dBgCh_Actr &collision) {
 }
 
 /* 0x02121b08, size 0x48. */
-// @symbol _ZN8daEyBm_c18SpawnDestroyEffectEv
 void daEyBm_c::SpawnDestroyEffect() {
     mParticle1 = Particle::System::New(0, 0x45, mPosX, mPosY, mPosZ, 0, 0);
     MarkForDestruction();
 }
 
-// @symbol _ZN8daEyBm_c13OnYoshiTryEatEv
 int daEyBm_c::OnYoshiTryEat() {
     return 4;
 }
 
 EyBmVec3 data_ov071_021230b8(0, -0x19000, 0);
-// @symbol _ZN8daEyBm_cD1Ev
-// @symbol _ZN8daEyBm_cD0Ev
 /* The inline class destructor and InitResources vtable instantiation emit both naturally. */

@@ -61,13 +61,11 @@ extern C1PeachModelFilePtr gC1PeachModelFile;
  *
  * fBase_c::operator new(unsigned long) keeps the allocation on
  * _ZN7fBase_cnwEm. The emitted constructor stores the vtable address point. */
-// @symbol daObjC1Peach_c_classInit
 extern "C" daObjC1Peach_c *daObjC1Peach_c_classInit()
 {
     return new daObjC1Peach_c();
 }
 
-// @symbol _ZN14daObjC1Peach_c13InitResourcesEv
 int daObjC1Peach_c::InitResources()
 {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gC1PeachModelFile), 1, -1);
@@ -76,7 +74,6 @@ int daObjC1Peach_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN14daObjC1Peach_c8BehaviorEv
 int daObjC1Peach_c::Behavior()
 {
     int distance = DistToCPlayer();
@@ -94,7 +91,6 @@ int daObjC1Peach_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN14daObjC1Peach_c6RenderEv
 int daObjC1Peach_c::Render()
 {
     if (mOpacity == 0)
@@ -104,14 +100,12 @@ int daObjC1Peach_c::Render()
     return 1;
 }
 
-// @symbol _ZN14daObjC1Peach_c16CleanupResourcesEv
 int daObjC1Peach_c::CleanupResources()
 {
     gC1PeachModelFile.Release();
     return 1;
 }
 
-// @symbol _ZN14daObjC1Peach_c20UpdateModelTransformEv
 void daObjC1Peach_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);

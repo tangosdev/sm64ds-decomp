@@ -104,8 +104,6 @@ extern void *gPFlowerOpenModelFile[];
 typedef void BgchInitAt_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
 }
 
-// @symbol _ZN18daObjPowerUpItem_cD1Ev
-// @symbol _ZN18daObjPowerUpItem_cD0Ev
 daObjPowerUpItem_c::~daObjPowerUpItem_c()
 {
 }
@@ -115,7 +113,6 @@ daObjPowerUpItem_c::~daObjPowerUpItem_c()
  * destruction (not while the 0x20000 / 0x40000 yoshi-mouth bits are set).
  * Every frame it keeps the particle effect 0x104 following 0x82000 above the
  * flower. */
-// @symbol _ZN18daObjPowerUpItem_c12StateRestingEv
 void daObjPowerUpItem_c::StateResting()
 {
     int flags;
@@ -143,7 +140,6 @@ void daObjPowerUpItem_c::StateResting()
 }
 
 /* Forgets the particle effect handle. */
-// @symbol _ZN18daObjPowerUpItem_c12BeginRestingEv
 void daObjPowerUpItem_c::BeginResting()
 {
     mEffectHandle = 0;
@@ -154,7 +150,6 @@ void daObjPowerUpItem_c::BeginResting()
  * left) and the angle advances 0x2000 a frame. When the timer is spent,
  * mScaleY eases back to 0xfa0 and, once there, the flower enters
  * FLOWER_STATE_RESTING. */
-// @symbol _ZN18daObjPowerUpItem_c12StateOpeningEv
 void daObjPowerUpItem_c::StateOpening()
 {
     if (DecIfAbove0_Byte(&mWobbleTimer)) {
@@ -188,7 +183,6 @@ void daObjPowerUpItem_c::StateOpening()
 /* Enter action that starts the pop: puffs particle 0x102 above the flower,
  * plays sound 0x7d, drops the effect handle, takes mAngleY from the camera's
  * mAngleY and starts mWobbleTimer at 0x1b. */
-// @symbol _ZN18daObjPowerUpItem_c12BeginOpeningEv
 void daObjPowerUpItem_c::BeginOpening()
 {
     Vector3 pos;
@@ -211,7 +205,6 @@ void daObjPowerUpItem_c::BeginOpening()
  * puff (when the ground probe under it is missing or more than 0x64000 away) or
  * stops the water detection. Landing calls func_0200fccc(1) and enters
  * FLOWER_STATE_OPENING. */
-// @symbol _ZN18daObjPowerUpItem_c13StateLaunchedEv
 void daObjPowerUpItem_c::StateLaunched()
 {
     Vector3 pos;
@@ -277,7 +270,6 @@ void daObjPowerUpItem_c::StateLaunched()
 /* Enter action for the launch: plays sound 0x7c, drops the effect handle and
  * sets gravity (-0x668), terminal velocity (-0xf000) and vertical speed
  * (0xd000). */
-// @symbol _ZN18daObjPowerUpItem_c13BeginLaunchedEv
 void daObjPowerUpItem_c::BeginLaunched()
 {
     func_02012694(0x7c, &mCamSpacePos);
@@ -288,7 +280,6 @@ void daObjPowerUpItem_c::BeginLaunched()
 }
 
 /* Switches to state `i` and runs that state's enter action. */
-// @symbol _ZN18daObjPowerUpItem_c8SetStateEi
 void daObjPowerUpItem_c::SetState(int i) {
   mState = i;
   int j = mState;
@@ -296,7 +287,6 @@ void daObjPowerUpItem_c::SetState(int i) {
 }
 
 /* Runs the current state's per-frame update. */
-// @symbol _ZN18daObjPowerUpItem_c11UpdateStateEv
 void daObjPowerUpItem_c::UpdateState() {
   int j = mState;
   (this->*data_ov002_021097bc[j].pmf[1])();
@@ -310,7 +300,6 @@ void daObjPowerUpItem_c::UpdateState() {
  * otherwise, Luigi vanishes, Wario turns to metal, Yoshi breathes fire. With
  * the 0x20000 yoshi-mouth bit set on the flower it only resets mLifeTimer to
  * 0x64. */
-// @symbol _ZN18daObjPowerUpItem_c11CheckPickupEv
 void daObjPowerUpItem_c::CheckPickup() {
     daPly_c *player;
     u32 id = mdCcAc_c.otherOwner;
@@ -377,7 +366,6 @@ void daObjPowerUpItem_c::CheckPickup() {
  * shrinks with the flower's height above the ground (0x64000 down to a floor of
  * 0x3c000); otherwise it is 0x78000. Does nothing while the 0x40000 yoshi-mouth
  * bit is set. */
-// @symbol _ZN18daObjPowerUpItem_c10DropShadowEv
 void daObjPowerUpItem_c::DropShadow() {
     int r3;
     int b = (int)((mFlags & 0x40000) != 0);
@@ -397,7 +385,6 @@ void daObjPowerUpItem_c::DropShadow() {
 
 /* dExtSimpleModel_c matrices: rotates mOpenModel's matrix by mAngleY, sets its translation
  * to the position >> 3 and copies it to mCloseModel. */
-// @symbol _ZN18daObjPowerUpItem_c14UpdateMatricesEv
 void daObjPowerUpItem_c::UpdateMatrices(){
   Matrix4x3_FromRotationY(&mOpenModel.mat4x3, mAngleY);
   mOpenModel.mat4x3.m[9] = mPosX >> 3;
@@ -406,7 +393,6 @@ void daObjPowerUpItem_c::UpdateMatrices(){
   *(struct Matrix4x3*)&mCloseModel.mat4x3 = *(struct Matrix4x3*)&mOpenModel.mat4x3;
 }
 
-// @symbol _ZN18daObjPowerUpItem_c16CleanupResourcesEv
 s32 daObjPowerUpItem_c::CleanupResources()
 {
     ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
@@ -414,7 +400,6 @@ s32 daObjPowerUpItem_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN18daObjPowerUpItem_c6RenderEv
 int daObjPowerUpItem_c::Render()
 {
   int f = (int)((mFlags & 0x40000) != 0);
@@ -436,7 +421,6 @@ int daObjPowerUpItem_c::Render()
   return 1;
 }
 
-// @symbol _ZN18daObjPowerUpItem_c8BehaviorEv
 int daObjPowerUpItem_c::Behavior()
 {
     int b = (int)((mFlags & 0x40000) != 0);
@@ -457,7 +441,6 @@ int daObjPowerUpItem_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN18daObjPowerUpItem_c13InitResourcesEv
 int daObjPowerUpItem_c::InitResources()
 {
     struct Vector3 pos;
@@ -508,7 +491,6 @@ int daObjPowerUpItem_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN18daObjPowerUpItem_c13OnYoshiTryEatEv
 s32 daObjPowerUpItem_c::OnYoshiTryEat()
 {
     return 5;
@@ -518,13 +500,11 @@ s32 daObjPowerUpItem_c::OnYoshiTryEat()
  * RTTI, allocation size, vtable identity, and the POWER_UP_ITEM registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: PowerFlower_Spawn. */
-// @symbol daObjPowerUpItem_c_classInit
 extern "C" daObjPowerUpItem_c *daObjPowerUpItem_c_classInit()
 {
     return new daObjPowerUpItem_c();
 }
 
-// @symbol g_profile_POWER_UP_ITEM
 extern "C" SpawnInfo<daObjPowerUpItem_c> g_profile_POWER_UP_ITEM = {
     daObjPowerUpItem_c_classInit,
     0x0132, /* POWER_UP_ITEM registry id 306 */
