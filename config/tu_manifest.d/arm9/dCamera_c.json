@@ -696,24 +696,24 @@
       "ordinal": 128
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200ca50Ev",
+      "symbol": "_ZN9dCamera_c11UpdateStateEv",
       "address": "0x0200ca50",
       "size": "0x00000094",
-      "legacy_source": "src/func_0200ca50.cpp",
+      "legacy_source": "src/UpdateState.cpp",
       "ordinal": 129
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200cae4Ev",
+      "symbol": "_ZN9dCamera_c10EnterStateEv",
       "address": "0x0200cae4",
       "size": "0x00000074",
-      "legacy_source": "src/func_0200cae4.cpp",
+      "legacy_source": "src/EnterState.cpp",
       "ordinal": 130
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200cb58Ei",
+      "symbol": "_ZN9dCamera_c7SetModeEi",
       "address": "0x0200cb58",
       "size": "0x00000018",
-      "legacy_source": "src/func_0200cb58.c",
+      "legacy_source": "src/SetMode.c",
       "ordinal": 131
     },
     {
@@ -787,10 +787,10 @@
       "ordinal": 141
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200d10cEh",
+      "symbol": "_ZN9dCamera_c22SetGrabBowserTailStateEh",
       "address": "0x0200d10c",
       "size": "0x0000003c",
-      "legacy_source": "src/func_0200d10c.c",
+      "legacy_source": "src/SetGrabBowserTailState.c",
       "ordinal": 142
     },
     {
@@ -843,10 +843,10 @@
       "ordinal": 149
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200d4b0Eji",
+      "symbol": "_ZN9dCamera_c18StartDanceCutsceneEji",
       "address": "0x0200d4b0",
       "size": "0x00000058",
-      "legacy_source": "src/func_0200d4b0.c",
+      "legacy_source": "src/StartDanceCutscene.c",
       "ordinal": 150
     },
     {
@@ -864,10 +864,10 @@
       "ordinal": 152
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200d580Ei",
+      "symbol": "_ZN9dCamera_c17SetHeadstandStateEi",
       "address": "0x0200d580",
       "size": "0x00000040",
-      "legacy_source": "src/func_0200d580.c",
+      "legacy_source": "src/SetHeadstandState.c",
       "ordinal": 153
     },
     {
@@ -892,10 +892,10 @@
       "ordinal": 156
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200d678Eh",
+      "symbol": "_ZN9dCamera_c12SetSpinStateEh",
       "address": "0x0200d678",
       "size": "0x0000003c",
-      "legacy_source": "src/func_0200d678.c",
+      "legacy_source": "src/SetSpinState.c",
       "ordinal": 157
     },
     {
@@ -934,10 +934,10 @@
       "ordinal": 162
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200d7e0Ei",
+      "symbol": "_ZN9dCamera_c18SetCameraZoomStateEi",
       "address": "0x0200d7e0",
       "size": "0x0000003c",
-      "legacy_source": "src/func_0200d7e0.c",
+      "legacy_source": "src/SetCameraZoomState.c",
       "ordinal": 163
     },
     {
@@ -983,10 +983,10 @@
       "ordinal": 169
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200d954Es",
+      "symbol": "_ZN9dCamera_c11SetFovAngleEs",
       "address": "0x0200d954",
       "size": "0x0000007c",
-      "legacy_source": "src/func_0200d954.c",
+      "legacy_source": "src/SetFovAngle.c",
       "ordinal": 170
     },
     {
