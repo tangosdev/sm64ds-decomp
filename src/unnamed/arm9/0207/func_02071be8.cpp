@@ -14,7 +14,7 @@ typedef struct Src Src;
 extern void func_02072dac(int handle, Ctx *ctx);
 extern void func_02071864(Src *s, Ctx *ctx);
 extern int func_02072014(Src *s, Ctx *ctx);
-extern unsigned char *func_02071d3c(Src *s, Ctx *ctx, int *out);
+extern unsigned char *func_02071d3c(void *s, void *ctx, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern void func_02072168(Src *s, Ctx *ctx, unsigned char *p);
