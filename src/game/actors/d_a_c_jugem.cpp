@@ -110,7 +110,7 @@ void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int   Vec3_ApproachHorz(void *cur, const void *tgt, int maxStep);
 int   LenVec3(const void *v);
 int   AngleDiff(int a, int b);
-void MulVec3Mat4x3(const void *v, Matrix4x3 *m, void *out);
+void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 
 /* local extern: each of these real members takes a Fix12<int> BY VALUE,
    which mwccarm passes differently at the call site than the loose scalar
@@ -662,7 +662,7 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     out.z = 0;
     in.z = 0xc8000;
     Matrix4x3_FromRotationY(&data_020a0e68, 0);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
     out.x += p->mPosX;
     out.y += p->mPosY + 0x70000;
     out.z += p->mPosZ;
@@ -756,7 +756,7 @@ int daC_Jugem_c::StateHoverMain()
     in.z = ::Vec3_HorzDist((const Vector3 *)&plpos, (const Vector3 *)&mPosX);
     Matrix4x3_FromRotationY(&data_020a0e68,
                             ::Vec3_HorzAngle((const Vector3 *)&plpos, (const Vector3 *)&mPosX));
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
     mPosX += out.x;
     if (gCurrentSublevel == 0x2f) {
         if (mPosX > 0x79e000) {
@@ -859,7 +859,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
         short ang = ::Vec3_HorzAngle((const Vector3 *)&pp, (const Vector3 *)&p);
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
     }
-    MulVec3Mat4x3(&z1, &data_020a0e68, &off);
+    MulVec3Mat4x3((Vector3 *)&z1, &data_020a0e68, (Vector3 *)&off);
 
     p.x = p.x + off.x;
     p.y = pp.y;
