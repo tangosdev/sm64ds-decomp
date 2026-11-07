@@ -168,8 +168,6 @@ enum Bool { FALSE, TRUE };
 
 #include "private/mtx43.h"
 
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void M(void*); };
-
 /* The eight file handles __sinit_d_a_king_donketu.cpp constructs below.
  * Construct writes the u16 file ID at +0, the u8 reference count at +2,
  * and the loaded-file pointer at +4. Byte +3 is alignment padding.
@@ -1804,7 +1802,7 @@ void daKing_Donketu_c::OnPendingDestroy()
 // @symbol _ZN16daKing_Donketu_c6RenderEv
 int daKing_Donketu_c::Render()
 {
-    ((Base *)&mBlendAnmModel)->M((char *)&mScaleX);
+    mBlendAnmModel.Render(0);
     return 1;
 }
 
