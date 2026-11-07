@@ -10166,9 +10166,10 @@ static unsigned long long g_ip_tween_pics;
 /* HUDMENU2 (H11): the one-screen HUD slide-in, glided at the display rate. The compositor notes the host rectangles of the life and star counters
    while the ROM slides them in (state 3) and how far each moved this tick; a picture between two ticks puts each counter's pixels (the tick's own
    2D where it differs from the 3D layer) where the counter was (1 - alpha) of its step earlier. CPU blend only; a tick with a fade or an opening box
-   keeps its old picture. SM64DS_HUD_GLIDE=0 puts the stepped slide back. */
-struct HudSlideRectW { int x0, y0, x1, y1; float d; };
-struct HudSlideNoteW { int n; HudSlideRectW r[2]; };
+   keeps its old picture. SM64DS_HUD_GLIDE=0 puts the stepped slide back.
+   METERGLIDE1: the power meter rising in and out rides the same note as a third entry with a vertical step, under the same switch. */
+struct HudSlideRectW { int x0, y0, x1, y1; float d, dy; };   /* METERGLIDE1: dy, the power meter's vertical step (hal/message_compositor.cpp) */
+struct HudSlideNoteW { int n; HudSlideRectW r[3]; };
 extern "C" const void *port_hud_slide_note(void);
 static int hud_glide_on(void)
 {
@@ -10512,16 +10513,20 @@ static int ip_build_b(IpPend *P)
         }
     } else {
         const HudSlideNoteW *gn = (hud_glide_on() && alpha < 0.999 && !tw) ? (const HudSlideNoteW *)port_hud_slide_note() : 0;
-        int gx0[2] = {0, 0}, gx1[2] = {0, 0}, gdx[2] = {0, 0}, gn_n = 0;
+        /* METERGLIDE1: a third entry, the power meter, moves up and down (dy) instead of sideways; each entry's zone is its rectangle
+           grown by its move both ways, the merge leaves the zone to the replayed 3D and the moved copy after the row loop puts the tick's
+           2D pixels of the rectangle back in at (x + dx, y + dy) */
+        int gx0[3] = {0, 0, 0}, gx1[3] = {0, 0, 0}, gy0[3] = {0, 0, 0}, gy1[3] = {0, 0, 0}, gdx[3] = {0, 0, 0}, gdy[3] = {0, 0, 0}, gn_n = 0;
         if (gn && gn->n > 0) {
             const double uni = (double)ntr::present_h() / 192.0;
-            for (int i = 0; i < gn->n && i < 2; ++i) {
-                const int dx = (int)((alpha - 1.0) * gn->r[i].d * uni + (alpha - 1.0 < 0 && gn->r[i].d > 0 ? -0.5 : 0.5));
-                gdx[i] = dx;
-                const int lo = dx < 0 ? dx : 0, hi = dx > 0 ? dx : 0;
-                gx0[i] = gn->r[i].x0 + lo; gx1[i] = gn->r[i].x1 + hi;
+            gn_n = gn->n < 3 ? gn->n : 3;
+            for (int i = 0; i < gn_n; ++i) {
+                const double vx = (alpha - 1.0) * gn->r[i].d * uni, vy = (alpha - 1.0) * gn->r[i].dy * uni;
+                const int dx = (int)(vx + (vx < 0 ? -0.5 : 0.5)), dy = (int)(vy + (vy < 0 ? -0.5 : 0.5));
+                gdx[i] = dx; gdy[i] = dy;
+                gx0[i] = gn->r[i].x0 + (dx < 0 ? dx : 0); gx1[i] = gn->r[i].x1 + (dx > 0 ? dx : 0);
+                gy0[i] = gn->r[i].y0 + (dy < 0 ? dy : 0); gy1[i] = gn->r[i].y1 + (dy > 0 ? dy : 0);
             }
-            gn_n = gn->n < 2 ? gn->n : 2;
             ++g_ip_glide_pics;
         }
         if (gn_n == 0 && !tw && ts_D <= 0) {
@@ -10539,25 +10544,14 @@ static int ip_build_b(IpPend *P)
             uint32_t *row = o.px[y];
             const uint32_t *a = g_ip_p3->px[y], *b = g_ip_p2->px[y];
             if (gn_n) {
-                int skip = -1;
+                int sx0[3], sx1[3], ns = 0;
                 for (int i = 0; i < gn_n; ++i)
-                    if (y >= gn->r[i].y0 && y < gn->r[i].y1) skip = i;
-                if (skip >= 0) {
-                    int sx0[2], sx1[2], ns = 0;
-                    for (int i = 0; i < gn_n; ++i)
-                        if (y >= gn->r[i].y0 && y < gn->r[i].y1) { sx0[ns] = gx0[i]; sx1[ns] = gx1[i]; ++ns; }
+                    if (y >= gy0[i] && y < gy1[i]) { sx0[ns] = gx0[i]; sx1[ns] = gx1[i]; ++ns; }
+                if (ns > 0) {
                     for (int x = 0; x < ntr::active_w; ++x) {
                         bool in = false;
                         for (int k = 0; k < ns; ++k) if (x >= sx0[k] && x < sx1[k]) in = true;
                         if (!in && a[x] != b[x]) row[x] = b[x];
-                    }
-                    for (int i = 0; i < gn_n; ++i) {
-                        if (!(y >= gn->r[i].y0 && y < gn->r[i].y1)) continue;
-                        for (int x = gn->r[i].x0; x < gn->r[i].x1; ++x) {
-                            if (x < 0 || x >= ntr::active_w || a[x] == b[x]) continue;
-                            const int hx = x + gdx[i];
-                            if (hx >= 0 && hx < ntr::active_w) row[hx] = b[x];
-                        }
                     }
                     continue;
                 }
@@ -10582,6 +10576,19 @@ static int ip_build_b(IpPend *P)
             }
             ip_merge_row(row, a, b, ntr::active_w);
         }
+        /* HUDMENU2 (H11) / METERGLIDE1: the moved copy, after every row's merge (a vertical move writes rows other than its own) */
+        for (int i = 0; i < gn_n; ++i)
+            for (int y = gn->r[i].y0; y < gn->r[i].y1; ++y) {
+                const int hy = y + gdy[i];
+                if (y < 0 || y >= ntr::active_h || hy < 0 || hy >= ntr::active_h) continue;
+                const uint32_t *a = g_ip_p3->px[y], *b = g_ip_p2->px[y];
+                uint32_t *row = o.px[hy];
+                for (int x = gn->r[i].x0; x < gn->r[i].x1; ++x) {
+                    if (x < 0 || x >= ntr::active_w || a[x] == b[x]) continue;
+                    const int hx = x + gdx[i];
+                    if (hx >= 0 && hx < ntr::active_w) row[hx] = b[x];
+                }
+            }
     }
     /* run hunt8, lane MENUINTERP2: the menu again, on this picture's own 3D (the pieces it lifts from the 3D picture are cut from
        the replay, not from the tick) */
@@ -10659,6 +10666,7 @@ static void ip_note(double build_ms, double pres_ms)
             g_ip_sum_compose / IP_WIN, ap / IP_WIN, sp[(IP_WIN * 95) / 100],
             sp[IP_WIN - 1], g_ip_pictures, g_ip_blended, g_ip_plain, g_ip_card_pics, g_ip_cpu_pics);
     if (g_ip_tag_pics) fprintf(stderr, "[interp] name tags painted on %llu pictures between ticks\n", g_ip_tag_pics);
+    if (g_ip_glide_pics) fprintf(stderr, "[interp] HUD glide (counters, power meter) on %llu pictures between ticks\n", g_ip_glide_pics);   /* METERGLIDE1 */
     if (g_ip_menu_n) fprintf(stderr, "[interp] menu re-draw in %u of those pictures: %.2f ms each (inside '2D')\n", g_ip_menu_n, g_ip_sum_menu / g_ip_menu_n);
     g_ip_sum_menu = 0; g_ip_menu_n = 0;
     g_ip_sum_replay = g_ip_sum_raster = g_ip_sum_compose = 0;
