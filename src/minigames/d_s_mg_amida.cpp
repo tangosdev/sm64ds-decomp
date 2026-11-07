@@ -81,6 +81,7 @@ enum dScMgAmida_c_AssetId {
     ASSET_D_2D_MG_OPTION_S_NCG_BIN = 0x00df
 };
 
+#include "PlayerInput.h"
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "G2.h"
@@ -121,16 +122,6 @@ extern void *dScMgAmida_c_classInit(void);
 extern s16 data_02082214[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8 gActivePlayerSlot;
-// local extern: see above.
-extern u8 gTouchHeld[];
-// local extern: see above.
-extern u8 gTouchEdge[];
-// local extern: see above.
-extern u8 gTouchX[][4];
-// local extern: see above.
-extern u8 gTouchY[][4];
 extern int sAmidaPatternSpeedUp[];
 extern s32 data_0208ee44;
 extern char sAmidaPatterns[];
@@ -517,8 +508,8 @@ void dScMgAmida_c::CheckHurryButton() {
     }
     if (pressed == 0)
         return;
-    int touchX = gTouchX[playerSlot][0];
-    int touchY = gTouchY[playerSlot][0];
+    int touchX = ((u8 (*)[4])gTouchX)[playerSlot][0];
+    int touchY = ((u8 (*)[4])gTouchY)[playerSlot][0];
     if (touchX < 0x60)
         return;
     if (touchX >= 0xa0)
@@ -553,8 +544,8 @@ void dScMgAmida_c::CheckEdgeBoost() {
     }
     playerSlot = gActivePlayerSlot;
     if (gTouchHeld[playerSlot * 4] != 0) {
-        touchX = gTouchX[playerSlot][0];
-        touchY = gTouchY[playerSlot][0];
+        touchX = ((u8 (*)[4])gTouchX)[playerSlot][0];
+        touchY = ((u8 (*)[4])gTouchY)[playerSlot][0];
         if ((touchX >= 0 && touchX < 0x10 && touchY >= 0x40 && touchY < 0x80) ||
             (touchX >= 0xf0 && touchX < 0x100 && touchY >= 0x40 && touchY < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -593,8 +584,8 @@ void dScMgAmida_c::HandlePen() {
     oldY = this->mPen.y;
 
     if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = gTouchX[gActivePlayerSlot][0];
-        int newY = gTouchY[gActivePlayerSlot][0];
+        int newX = ((u8 (*)[4])gTouchX)[gActivePlayerSlot][0];
+        int newY = ((u8 (*)[4])gTouchY)[gActivePlayerSlot][0];
         if (newX < 0)
             return;
         if (newX >= 0x100)
