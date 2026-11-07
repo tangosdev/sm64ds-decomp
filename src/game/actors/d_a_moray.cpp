@@ -113,7 +113,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-int LenVec3(void *v);
+int LenVec3(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 
