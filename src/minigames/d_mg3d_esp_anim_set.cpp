@@ -598,29 +598,20 @@ void dScMg3DEsp_c::RenderSlots() {
 
 // @symbol _ZN12dScMg3DEsp_c10SlotDampenEi
 void dScMg3DEsp_c::SlotDampen(int i) {
-    char *c = (char *)this;
-    unsigned long new_var;
-    /* b steps `this` by one slot, so b->mSlots[0] is mSlots[i]. Spelled as
-     mSlots[i] the code is the same, but without b the file's @NNN labels
-     renumber by one. */
-    dScMg3DEsp_c *b = (dScMg3DEsp_c *)(c + (i * 32));
-    new_var = i;
-    mSlots[new_var].mX = mSlots[new_var].mX + b->mSlots[0].mVelX;
-    mSlots[new_var].mY = mSlots[new_var].mY + b->mSlots[0].mVelY;
-    if (b->mSlots[0].mVelX > 0) {
-        unsigned char e = b->mSlots[0].mAccel;
-        mSlots[new_var].mVelX = mSlots[new_var].mVelX - ((e * 16) + 0x10);
-        if (((short)b->mSlots[0].mVelX) < 0) {
-            b->mSlots[0].mVelX = 0;
+    mSlots[i].mX += mSlots[i].mVelX;
+    mSlots[i].mY += mSlots[i].mVelY;
+    if (mSlots[i].mVelX > 0) {
+        mSlots[i].mVelX -= ((mSlots[i].mAccel * 16) + 0x10);
+        if ((short)mSlots[i].mVelX < 0) {
+            mSlots[i].mVelX = 0;
         }
-    } else if (b->mSlots[0].mVelX < 0) {
-        unsigned char e = b->mSlots[0].mAccel;
-        mSlots[new_var].mVelX = mSlots[new_var].mVelX + ((e * 16) + 0x10);
-        if (((short)b->mSlots[0].mVelX) > 0) {
-            b->mSlots[0].mVelX = 0;
+    } else if (mSlots[i].mVelX < 0) {
+        mSlots[i].mVelX += ((mSlots[i].mAccel * 16) + 0x10);
+        if ((short)mSlots[i].mVelX > 0) {
+            mSlots[i].mVelX = 0;
         }
     } else {
-        b->mSlots[0].mType = 0;
+        mSlots[i].mType = 0;
     }
 }
 
@@ -888,17 +879,11 @@ extern unsigned short data_ov006_0212e58c[];
 
 // @symbol _ZN12dScMg3DEsp_c9SpawnRowsEi
 void dScMg3DEsp_c::SpawnRows(int idx) {
-    char *c = (char *)this;
     int i;
-    /* e steps `this` by one card, so this reads mCards[idx]; spelled that
-       way, SpawnRows grows from 0x94 to 0x9c bytes. */
-    char *e = c + idx * 0x18;
-    s32 *src1 = &((dScMg3DEsp_c *)e)->mCards[0].mX;
-    s32 *src2 = &((dScMg3DEsp_c *)e)->mCards[0].mY;
     for (i = 0; i < 3; i++) {
         mRows[i].mActive = 1;
-        mRows[i].mX = *src1;
-        mRows[i].mY = *src2;
+        mRows[i].mX = mCards[idx].mX;
+        mRows[i].mY = mCards[idx].mY;
         mRows[i].mVisible = 0;
         mRows[i].mState = 0;
         mRows[i].mTimer = data_ov006_0212e58c[i];
