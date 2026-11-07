@@ -106,7 +106,7 @@ struct dCamera_c : dView_c {
     s32 mAspect; /* 0x0f8 */
     s32 mNear;   /* 0x0fc */
     s32 mFar;    /* 0x100 */
-    /* func_0200d954 stores func_02053200 (the fixed-point reciprocal) of the
+    /* SetFovAngle stores func_02053200 (the fixed-point reciprocal) of the
        sine and cosine table entries for the field-of-view angle it is given,
        beside the aspect/near/far it hands dClipper. Nothing in d_camera.cpp
        reads them back; the names follow the writer (medium confidence). */
@@ -146,9 +146,9 @@ struct dCamera_c : dView_c {
        swaps it -- and clears mTurningToTarget -- when they differ. */
     struct State *mState; /* 0x138 */
     /* The current 0x28-byte mode record, entry N of the table at 0x02086fcc
-       (func_0200cb58 stores table + N * 0x28). Its +0x10/+0x14/+0x20 are the
+       (SetMode stores table + N * 0x28). Its +0x10/+0x14/+0x20 are the
        distances func_0200cce4 places lookAt and pos by, +0x24 the field-of-view
-       angle func_0200ca50 eases mFovAngle toward, and +0x26 a flag halfword.
+       angle UpdateState eases mFovAngle toward, and +0x26 a flag halfword.
        The record is CamMode, defined in d_camera.cpp; consumers that never
        read it see only the tag. */
     struct CamMode *mMode; /* 0x13c */
@@ -248,7 +248,7 @@ struct dCamera_c : dView_c {
     /* The yaw func_020070e8 orbits pos toward: CutsceneDanceCloseupFlyAbove always passes
        it, and func_02007a8c passes it when the script's yaw is -1. Seeded from
        mFixedViewPos or per level (CutsceneDanceFlyAwayStart) and from mAngleY
-       (func_0200d4b0). */
+       (StartDanceCutscene). */
     s16 mOrbitTargetYaw; /* 0x19a */
     /* func_02008b08 eases it toward the active player's camera-input entry;
        func_02008abc and func_02008a70 scale the input axes by it. */
@@ -294,24 +294,24 @@ struct dCamera_c : dView_c {
     /* State changes. Parameter names stay off the declarations: a named
        parameter in this header renumbers @NNN in every includer. */
     void func_0200d81c(int);
-    void func_0200d7e0(int);
+    void SetCameraZoomState(int);
     void func_0200d7a4(u8);
     void func_0200d768(unsigned char);
     void func_0200d72c(unsigned char);
     void func_0200d6f0(unsigned char);
     void func_0200d6b4(unsigned char);
-    void func_0200d678(unsigned char);
+    void SetSpinState(unsigned char);
     void func_0200d63c(unsigned char);
     void func_0200d5fc(int);
     void func_0200d5c0(unsigned char);
-    void func_0200d580(int);
+    void SetHeadstandState(int);
     void func_0200d544(unsigned char);
     void func_0200d508(unsigned char);
     void func_0200d474(unsigned char);
     void func_0200d438(unsigned char);
     void func_0200d3f8(unsigned char, void *);
     void func_0200d148(unsigned char);
-    void func_0200d10c(unsigned char);
+    void SetGrabBowserTailState(unsigned char);
     /* Follow, placement and state helpers. Their names are not recovered, so
        each keeps its address. */
     void func_0200897c(dBgCh &);
@@ -336,9 +336,9 @@ struct dCamera_c : dView_c {
     int func_0200c394(int, void *, void *, void **, int *);
     int func_0200c66c(void *, int *, int *, int *);
     void func_0200c9e0(s32 *, s32 *);
-    int func_0200ca50();
-    int func_0200cae4();
-    void func_0200cb58(int);
+    int UpdateState();
+    int EnterState();
+    void SetMode(int);
     void func_0200cbe0();
     void func_0200cce4();
     void func_0200cf40();
@@ -346,11 +346,11 @@ struct dCamera_c : dView_c {
     void func_0200d064(unsigned char);
     int func_0200d0ac(unsigned int);
     void func_0200d1e4();
-    void func_0200d4b0(unsigned int, int);
+    void StartDanceCutscene(unsigned int, int);
     void func_0200d858(const Vector3 *);
     void func_0200d89c();
     void func_0200d8c8(const Vector3 *, int);
-    void func_0200d954(short);
+    void SetFovAngle(short);
     /* Super Mario 64's set_fov_shake. */
     void SetFovShake(int, int, int);
 };

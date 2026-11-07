@@ -390,6 +390,6 @@ void dScBoot_c::func_02005348() {
  * calls are spelled as the members they are (dCamera_c.h). */
 extern "C" int func_02005324(void *p) {
     ((dCamera_c *)p)->SaveCameraStateBeforeTalk();
-    ((dCamera_c *)p)->func_0200cb58(0x19);
+    ((dCamera_c *)p)->SetMode(0x19);
     return 1;
 }
