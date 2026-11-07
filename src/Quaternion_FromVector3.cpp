@@ -30,13 +30,11 @@ void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     va.z = a->z;
     if (NormalizeVec3IfNonZero((Vector3 *)&vb) != 0 &&
         NormalizeVec3IfNonZero((Vector3 *)&va) != 0) {
-        r4 = func_020531a4(
-            (DotVec3((const Vector3 *)&va, (const Vector3 *)&vb) + 0x1000) << 1);
+        r4 = func_020531a4((DotVec3((const Vector3 *)&va, (const Vector3 *)&vb) + 0x1000) << 1);
         vb2.x = vb.x;
         vb2.y = vb.y;
         vb2.z = vb.z;
-        func_0203cebc((Vector3 *)&vcross, (Vector3 *)&vb, (Vector3 *)&va,
-                      (Vector3 *)&vb2);
+        func_0203cebc((Vector3 *)&vcross, (Vector3 *)&vb, (Vector3 *)&va, (Vector3 *)&vb2);
         vb.x = vcross.x;
         vb.y = vcross.y;
         vb.z = vcross.z;
