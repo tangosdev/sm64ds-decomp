@@ -602,13 +602,7 @@ void dScMgTrampoline2_c::StateWaitExit() {
         MultiStore16(h, (char *)r, 0x6000);
     }
     mRoundOver = 1;
-    {
-        int w0 = pmf_dScMgTrampoline2_c_StateDone[0];
-        int w1 = pmf_dScMgTrampoline2_c_StateDone[1];
-        w0 = w1 ? w0 : w0;
-        mState[0] = w0;
-        mState[1] = w1;
-    }
+    *(struct P2 *)mState = *(struct P2 *)pmf_dScMgTrampoline2_c_StateDone;
 }
 
 // @symbol _ZN18dScMgTrampoline2_c9StateDoneEv

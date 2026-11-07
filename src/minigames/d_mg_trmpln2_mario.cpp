@@ -320,12 +320,7 @@ body:
     D3D_PlaySeAtX(0x1c9, MARIO2(c)->mPos.x);
     MARIO2(c)->mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     MARIO2(c)->mAnmModel.currFrame = 0;
-    {
-        int a = pmf_Trmp2Mario_StateKnockedOut[0];
-        int b = pmf_Trmp2Mario_StateKnockedOut[1];
-        MARIO2(c)->mState[0] = b ? a : a;
-        MARIO2(c)->mState[1] = b;
-    }
+    *(W2 *)MARIO2(c)->mState = *(W2 *)&pmf_Trmp2Mario_StateKnockedOut;
 }
 }
 // ---- Trmp2Mario_StateBounce
@@ -554,13 +549,7 @@ extern "C" void Trmp2Mario_BounceOffLineA(char *c) {
     Sound_PlayBank1Panned(0, 4, MARIO2(c)->mPos.x);
     D3D_PlaySeAtX(0x1b5, MARIO2(c)->mPos.x);
     *(int *)(c + 0x68) = 0; /* stays raw: only ever stored 0, no reader */
-    {
-        int a = pmf_Trmp2Mario_StateBounce_2[0];
-        int b = pmf_Trmp2Mario_StateBounce_2[1];
-        a = b ? a : a;
-        MARIO2(c)->mState[0] = a;
-        MARIO2(c)->mState[1] = b;
-    }
+    *(W2 *)MARIO2(c)->mState = *(W2 *)&pmf_Trmp2Mario_StateBounce_2;
     Trmp2Mario_StateBounce(c);
 }
 }
@@ -765,13 +754,7 @@ extern "C" void Trmp2Mario_BounceOffLineB(char *c) {
     MARIO2(c)->mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, MARIO2(c)->mAnim, MARIO2(c)->mPos.x);
 
-    {
-        int a = pmf_Trmp2Mario_StateWallBounce_2[0];
-        int b = pmf_Trmp2Mario_StateWallBounce_2[1];
-        a = b ? a : a;
-        MARIO2(c)->mState[0] = a;
-        MARIO2(c)->mState[1] = b;
-    }
+    *(W2 *)MARIO2(c)->mState = *(W2 *)&pmf_Trmp2Mario_StateWallBounce_2;
     Trmp2Mario_StateWallBounce(c);
 }
 }
@@ -793,7 +776,6 @@ extern void Trmp2Mario_StateBounce(char *c);
 // @symbol Trmp2Mario_EnterBounce
 extern "C" void Trmp2Mario_EnterBounce(char *c) {
     dMgTrmpObjAdapter_c *callbacks = (dMgTrmpObjAdapter_c *)c;
-    int a, b;
     MARIO2(c)->mGravityStep = sTrmp2GravityStep;
     MARIO2(c)->mVel.y = FX_MUL(sTrmpSpeedScale, 0xc00);
     MARIO2(c)->mBounceVy = MARIO2(c)->mVel.y;
@@ -805,10 +787,7 @@ extern "C" void Trmp2Mario_EnterBounce(char *c) {
     D3D_PlaySeAtX(0x110, MARIO2(c)->mPos.x);
     D3D_PlaySeAtX(0x1b5, MARIO2(c)->mPos.x);
     *(int *)(c + 0x68) = 0; /* stays raw: only ever stored 0, no reader */
-    a = pmf_Trmp2Mario_StateBounce.a;
-    b = pmf_Trmp2Mario_StateBounce.b;
-    MARIO2(c)->mState[0] = b ? a : a;
-    MARIO2(c)->mState[1] = b;
+    *(W2 *)MARIO2(c)->mState = *(W2 *)&pmf_Trmp2Mario_StateBounce;
     Trmp2Mario_StateBounce(c);
 }
 }
@@ -1711,12 +1690,7 @@ body:
     Sound::PlayBank2_2D(0x1c9);
     MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimStruggle, 0, 0x800, 0);
     MARIO3D(c)->mAnmModel.currFrame = 0;
-    {
-        int a = pmf_Trmp3DMario_StateKnockedOut[0];
-        int b = pmf_Trmp3DMario_StateKnockedOut[1];
-        MARIO3D(c)->mState[0] = b ? a : a;
-        MARIO3D(c)->mState[1] = b;
-    }
+    *(W2 *)MARIO3D(c)->mState = *(W2 *)&pmf_Trmp3DMario_StateKnockedOut;
 }
 }
 // ---- Trmp3DMario_StateGoal
@@ -1824,17 +1798,13 @@ extern int sTrmpMariosOnLedges;
 }
 // @symbol Trmp3DMario_EnterGoal
 extern "C" void Trmp3DMario_EnterGoal(char *c) {
-    int a, b;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[MARIO3D(c)->mHeightRow];
     MARIO3D(c)->mVel.x = 0;
     MARIO3D(c)->mVel.y = 0;
     Sound_PlayBank1Panned(0, 0x10, MARIO3D(c)->mPos.x);
     MARIO3D(c)->mAnmModel.SetAnim(sTrmpAnimRollJumpEnd, 0x40000000, 0x800, 0);
     sTrmpMariosOnLedges = sTrmpMariosOnLedges + 1;
-    a = pmf_Trmp3DMario_StateGoal[0];
-    b = pmf_Trmp3DMario_StateGoal[1];
-    MARIO3D(c)->mState[0] = b ? a : a;
-    MARIO3D(c)->mState[1] = b;
+    *(W2 *)MARIO3D(c)->mState = *(W2 *)&pmf_Trmp3DMario_StateGoal;
     Trmp3DMario_StateGoal(c);
 }
 }
@@ -2190,13 +2160,7 @@ extern "C" void Trmp3DMario_BounceOffLineA(char *c) {
     D3D_PlaySeAtX(0x1b5, MARIO3D(c)->mPos.x);
 
     *(int *)(c + 0x5c) = 0; /* stays raw: only ever stored 0, no reader */
-    {
-        int a = pmf_Trmp3DMario_StateHardBounce[0];
-        int b = pmf_Trmp3DMario_StateHardBounce[1];
-        a = b ? a : a;
-        MARIO3D(c)->mState[0] = a;
-        MARIO3D(c)->mState[1] = b;
-    }
+    *(W2 *)MARIO3D(c)->mState = *(W2 *)&pmf_Trmp3DMario_StateHardBounce;
     Trmp3DMario_StateHardBounce(c);
 }
 }
@@ -2393,13 +2357,7 @@ extern "C" void Trmp3DMario_BounceOffLineB(char *c) {
     MARIO3D(c)->mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, MARIO3D(c)->mAnim, MARIO3D(c)->mPos.x);
 
-    {
-        int a = pmf_Trmp3DMario_StateBounce[0];
-        int b = pmf_Trmp3DMario_StateBounce[1];
-        a = b ? a : a;
-        MARIO3D(c)->mState[0] = a;
-        MARIO3D(c)->mState[1] = b;
-    }
+    *(W2 *)MARIO3D(c)->mState = *(W2 *)&pmf_Trmp3DMario_StateBounce;
 
     Trmp3DMario_StateBounce(c);
 }
@@ -2443,13 +2401,7 @@ extern "C" void Trmp3DMario_JumpOff(char *c) {
     MARIO3D(c)->mAnmModel.currFrame = 0;
     Sound_PlayBank1Panned(0, MARIO3D(c)->mAnim, MARIO3D(c)->mPos.x);
 
-    {
-        int a = pmf_Trmp3DMario_StateBounce_2[0];
-        int b2 = pmf_Trmp3DMario_StateBounce_2[1];
-        a = b2 ? a : a;
-        MARIO3D(c)->mState[0] = a;
-        MARIO3D(c)->mState[1] = b2;
-    }
+    *(W2 *)MARIO3D(c)->mState = *(W2 *)&pmf_Trmp3DMario_StateBounce_2;
 
     Trmp3DMario_StateBounce(c);
 }
