@@ -91,10 +91,13 @@
  *   swaps two registers. Those functions also ldrh mStateTimer and
  *   mAngleX/Y/Z through unsigned short; a plain s16 read is ldrsh.
  * - s16* behind mPrevAngleY in func_ov073_0211f61c and 02120d80, the
- *   const s32* walk of mPosX, mFootPos[i] in the dust loops, and
- *   *(void**)&mState in func_ov073_0211f2c0 stay. The direct member forms
- *   change addressing. data_020a0e68's translation words stay a char*
- *   walk; .m[9..11] changes bytes.
+ *   const s32* walk of mPosX, and mFootPos[i] in the dust loops stay. The
+ *   direct member forms change addressing.
+ * - func_ov073_0211f2c0's six Vector3 locals are declared up front in
+ *   frame order (bone, spawn, offset, rotated, shifted, dust). Declared
+ *   inside the state branch, offset/rotated land above shifted/dust in the
+ *   frame. Vector3's user-declared dtor is what keeps the dead stores
+ *   (bonePos = shifted, the zeroed offset.z before the -230.0 store).
  * - mEdgePos, mLandedWaypoint, mEdgeRecovered, mStateParam and mFootPos are
  *   named from their readers in this TU and d_a_obj_ewb_ice.cpp.
  *   The hit masks in func_ov073_0211f61c stay literals (0x10000 is not in
@@ -312,89 +315,43 @@ void daKing_Donketu_c::func_ov073_0211f144() {
 // @symbol _ZN16daKing_Donketu_c19func_ov073_0211f2c0Ei
 void daKing_Donketu_c::func_ov073_0211f2c0(int strength)
 {
-    daKing_Donketu_c *c = this;
-    VecFx32 src;
-    volatile VecFx32 pv;
-    VecFx32 *new_var;
-    VecFx32 in;
-    VecFx32 res;
-    VecFx32 out;
-    VecFx32 dv;
-    int ty;
-    int tx;
-    int tz;
-    int x;
-    int y;
-    int z;
-    data_0209f318->func_0200d8c8(&c->mPos, strength);
-    data_020a0e68 = c->mBlendAnmModel.mat4x3;
-    MulMat4x3Mat4x3(&c->mBlendAnmModel.data.transforms[c->mStepBoneIdx], &data_020a0e68,
-                    &data_020a0e68);
-    c->mStepBoneIdx ^= 1;
-    ty = *((int *)(((char *)(&data_020a0e68)) + 0x28));
-    tx = *((int *)(((char *)(&data_020a0e68)) + 0x24));
-    src.y = ty;
-    tz = *((int *)(((char *)(&data_020a0e68)) + 0x2c));
-    src.z = tz;
-    src.x = tx;
-    Vec3_Lsl(&out, &src, 3);
-    x = out.x;
-    y = out.y;
-    z = out.z;
-    src.x = x;
-    src.y = y;
-    src.z = z;
-    if (*(void **)&c->mState == (&data_ov073_02123360)) {
-        dv.x = x;
-        dv.y = y;
-        dv.z = z;
-        c->HugeLandingDustAt(*(Vector3 *)&dv, 1);
+    Vector3 bonePos;
+    Vector3 pos;
+    Vector3 offset;
+    Vector3 rotated;
+    Vector3 shifted;
+    Vector3 dustPos;
+
+    data_0209f318->func_0200d8c8(&mPos, strength);
+    data_020a0e68 = mBlendAnmModel.mat4x3;
+    MulMat4x3Mat4x3(&mBlendAnmModel.data.transforms[mStepBoneIdx], &data_020a0e68, &data_020a0e68);
+    mStepBoneIdx ^= 1;
+    bonePos.x = data_020a0e68.m[9];
+    bonePos.y = data_020a0e68.m[10];
+    bonePos.z = data_020a0e68.m[11];
+    Vec3_Lsl(&shifted, &bonePos, 3);
+    bonePos = shifted;
+    if (mState == &data_ov073_02123360) {
+        dustPos = bonePos;
+        HugeLandingDustAt(dustPos, 1);
         return;
     }
-    pv.x = c->mPosX;
-    pv.y = c->mPosY;
-    pv.z = c->mPosZ;
-    {
-        void *anim = c->mState;
-        if (anim == (&data_ov073_021233c0)) {
-            goto do_mtx;
-        }
-        if (anim != (&data_ov073_021233f0)) {
-            goto spawn;
-        }
+    pos = mPos;
+    if (mState == &data_ov073_021233c0 || mState == &data_ov073_021233f0) {
+        offset.x = 0;
+        offset.y = 0;
+        offset.z = 0;
+        offset.z = -0xe6000;
+        rotated.x = 0;
+        rotated.y = 0;
+        rotated.z = 0;
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        MulVec3Mat4x3(&offset, &data_020a0e68, &rotated);
+        pos.x += rotated.x;
+        pos.z += rotated.z;
     }
-do_mtx:
-    in.z = 0;
-
-    in.z = -0xe6000;
-    in.x = 0;
-    in.y = 0;
-    res.x = 0;
-    res.y = 0;
-    res.z = 0;
-    new_var = &res;
-    Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &res);
-
-    {
-        int px = pv.x;
-        int rx = (*new_var).x;
-        px = px + rx;
-        rx = px;
-        int pz = pv.z;
-        int rz = res.z;
-        {
-            int t = pz + rz;
-            rz = t;
-        }
-        pv.x = rx;
-        pv.z = rz;
-    }
-
-spawn:
-    Particle::System::NewSimple(0x88, pv.x, pv.y, pv.z);
-
-    Particle::System::NewSimple(0x89, pv.x, pv.y, pv.z);
+    Particle::System::NewSimple(0x88, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0x89, pos.x, pos.y, pos.z);
 }
 
 /* Particles 0x84 and 0x85 on the surface of this actor's collision sphere,
