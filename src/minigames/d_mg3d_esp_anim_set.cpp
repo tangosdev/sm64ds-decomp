@@ -16,8 +16,7 @@
  *
  * deslop leftovers:
  * - The scene's cards, rows and slots are the header's Card, Row and Slot
- *   arrays. RenderRows indexes mRows directly; RenderCards still reads its
- *   cards through EspAt5000 and FlashSync keeps the raw this+0x5034.
+ *   arrays, indexed by element; FlashSync keeps the raw this+0x5034.
  * - Ent_8e10 stands in for a card sprite's part record; RenderCards walks
  *   the list until f6 is 0xffff.
  * - dMg3DEspModel_c's unk_000..unk_008 are set by its constructor
@@ -35,6 +34,7 @@
 #include "GX.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/g2_oam.h"
 #include "SharedFilePtr.h"
 #include "dScMg3DEsp_c.h"
 #include "dMg3DEspModel_c.h"
@@ -779,21 +779,6 @@ void dScMg3DEsp_c::ResetSlots() {
     }
 }
 
-/* RenderCards reads its element through a this+0x5000 base: the ROM adds
-   0x5000 to the stepping pointer and loads mCard's fields off it. Spelling
-   them as dScMg3DEsp_c::mCards folds that split base into a hoisted element
-   pointer (RenderCards grows from 0x104 to 0x118 bytes), so this view keeps
-   the split and names the fields. */
-struct EspAt5000 {
-    char pad[0x208];
-    dScMg3DEsp_c::Card mCard; /* 0x5208, mCards[0] */
-    char pad2[0x54e - 0x220];
-    u8 mFade; /* 0x554e */
-};
-typedef char EspAt5000_size_must_be_0x550[sizeof(EspAt5000) == 0x550 ? 1 : -1];
-
-#define ESP_AT_5000(base) ((EspAt5000 *)((base) + 0x5000))
-
 extern int sEsp3DAnimSetRowsSprites;
 
 // @symbol _ZN12dScMg3DEsp_c10RenderRowsEv
@@ -806,16 +791,10 @@ void dScMg3DEsp_c::RenderRows()
             int y = mRows[i].mY >> 12;
             int priority = mRows[i].mPriority;
             int scale = mRows[i].mScale;
-            int *o = (int *)Mg_RenderSubSpriteScaled(sEsp3DAnimSetRowsSprites, x, y, -1, priority,
-                                                     scale, 0);
+            GXOamAttr *oam = (GXOamAttr *)Mg_RenderSubSpriteScaled(sEsp3DAnimSetRowsSprites, x, y,
+                                                                   -1, priority, scale, 0);
             if (mRows[i].mState == 2) {
-
-                int w0 = o[0];
-                int w1 = o[1];
-                unsigned bits = (((unsigned)w1) << 0x10) >> 0x1c;
-                o[0] = (w0 & (~0xc00)) | 0x400;
-                *((unsigned short *)(((char *)o) + 4)) =
-                    ((*((unsigned short *)(((char *)o) + 4))) & (~0xf000)) | (bits << 12);
+                G2_SetOBJMode(oam, GX_OAM_MODE_XLU, oam->cParam);
             }
         }
     }
@@ -897,42 +876,26 @@ extern Ent_8e10 *data_ov006_02133f24[];
 
 // @symbol _ZN12dScMg3DEsp_c11RenderCardsEv
 void dScMg3DEsp_c::RenderCards() {
-    char *c0 = (char *)this;
     int i;
-    int x;
-    int y;
-    int c;
-    Ent_8e10 *r7;
-    char *c2;
-    u8 b;
-    c2 = c0;
     for (i = 0; i < 5; i++) {
-        if (ESP_AT_5000(c2)->mCard.mVisible != 0) {
-            b = ESP_AT_5000(c2)->mCard.mFace;
-            x = ESP_AT_5000(c2)->mCard.mX >> 0xc;
-            y = ESP_AT_5000(c2)->mCard.mY >> 0xc;
-            c = ESP_AT_5000(c2)->mCard.mPriority;
-            r7 = data_ov006_02133f24[b];
+        if (mCards[i].mVisible != 0) {
+            int x = mCards[i].mX >> 12;
+            int y = mCards[i].mY >> 12;
+            int priority = mCards[i].mPriority;
+            Ent_8e10 *r7 = data_ov006_02133f24[mCards[i].mFace];
             for (;;) {
-                int *r0 = (int *)Mg_RenderSubSpriteScaled((int)r7, x, y, -1, c, 0x1000, 0);
-                if (ESP_AT_5000(c0)->mFade && !ESP_AT_5000(c2)->mCard.mState) {
-                    int v = r0[0];
-                    int w = r0[1];
-                    int bits = (int)((unsigned int)(w << 0x10) >> 0x1c);
-                    r0[0] = (v & ~0xc00) | 0x400;
-                    *(u16 *)((char *)r0 + 4) =
-                        (u16)((*(u16 *)((char *)r0 + 4) & ~0xf000) | (bits << 12));
+                GXOamAttr *oam =
+                    (GXOamAttr *)Mg_RenderSubSpriteScaled((int)r7, x, y, -1, priority, 0x1000, 0);
+                if (mFade && !mCards[i].mState) {
+                    G2_SetOBJMode(oam, GX_OAM_MODE_XLU, oam->cParam);
                 }
                 if (r7->f6 == 0xffff)
                     break;
                 r7++;
             }
         }
-        c2 += 0x18;
     }
 }
-
-#undef ESP_AT_5000
 
 // @symbol _ZN12dScMg3DEsp_c8CardSeekEi
 void dScMg3DEsp_c::CardSeek(int i) {
