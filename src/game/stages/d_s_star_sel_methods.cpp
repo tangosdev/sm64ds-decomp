@@ -997,7 +997,7 @@ s32 dScStarSel_c::InitResources() {
         Deallocate(file);
         SetBg2Offset(0, -4);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
-        GXS::LoadBGPltt(&data_ov003_020b1698, 0, 2);
+        GXS::LoadBGPltt(&sStarSelectSubBackdropColor, 0, 2);
     }
     if (GetOwnerLanguage() == 5) {
         file = LoadFile(ASSET_D_2D_CMN_ICON_S_NCG_BIN);
@@ -1197,22 +1197,22 @@ s32 dScStarSel_c::InitResources() {
         }
         charCount = mStripMode;
         charCountM1 = charCount - 1;
-        tabR5 = data_ov003_020b16a8[charCountM1];
-        tabSL = data_ov003_020b16a0[charCountM1];
+        tabR5 = sStarSelectCharXStart[charCountM1];
+        tabSL = sStarSelectCharYStart[charCountM1];
         if ((u32)charCount > 1U) {
             varFp = 0;
             varR6 = 0;
-            tabSB = data_ov003_020b16a4[charCountM1];
+            tabSB = sStarSelectCharSpriteStart[charCountM1];
             idx8 = (charCount - 2) * 4;
             if (charCountM1 > 0) {
-                tablePtr = &data_ov003_020b16c8[idx8];
+                tablePtr = &sStarSelectCharYStep[idx8];
                 do {
                     if (SaveData::IsCharacterUnlocked(varR6) != 0) {
                         mCharX[varR6] = tabR5;
                         mCharY[varR6] = tabSL;
                         mCharSprite[varR6] = tabSB;
                         varFp += 1;
-                        tabR5 = (u8)(tabR5 + data_ov003_020b16e4[idx8]);
+                        tabR5 = (u8)(tabR5 + sStarSelectCharXStep[idx8]);
                         tabSL = (u8)(tabSL + *tablePtr);
                         tabSB = (u8)(tabSB + 1);
                         tablePtr += 1;
@@ -1253,22 +1253,23 @@ extern "C" dScStarSel_c *dScStarSel_c_classInit(void) {
 }
 
 extern "C" {
-/* Inferred role: background palette entry; existing address label retained. */
-u16 data_ov003_020b1698 = 32767;
+/* Sub-screen BG palette entry 0, the backdrop colour (0x7fff, white):
+   InitResources loads these two bytes with GXS::LoadBGPltt(.., 0, 2). */
+u16 sStarSelectSubBackdropColor = 32767;
 /* The inverse lookup visits three entries; mode 4 bounds the cursor to 0..2. */
 u8 sStarSelectCharacterOrder[3] = {1, 0, 2};
-/* Inferred role: initial icon y position by unlocked count; existing address label retained. */
-u8 data_ov003_020b16a0[4] = {0, 72, 72, 72};
-/* Inferred role: initial icon sprite index by unlocked count; existing address label retained. */
-u8 data_ov003_020b16a4[4] = {0, 0, 1, 0};
-/* Inferred role: initial icon x position by unlocked count; existing address label retained. */
-u8 data_ov003_020b16a8[4] = {0, 128, 92, 128};
+/* The character strip's layout, indexed by the unlocked count minus one.
+   With two or more characters unlocked, InitResources gives the first of
+   them its mCharY, mCharSprite and mCharX from these three tables. */
+u8 sStarSelectCharYStart[4] = {0, 72, 72, 72};
+u8 sStarSelectCharSpriteStart[4] = {0, 0, 1, 0};
+u8 sStarSelectCharXStart[4] = {0, 128, 92, 128};
 /* Divisors for the hundreds, tens and units digits. */
 u16 sStarSelectDecimalDivisors[3] = {100, 10, 1};
-/* Inferred role: icon y position steps for two, three and four unlocked characters; existing address label retained. */
-/* Four-slot strides are observed; unused slots do not prove original bounds. */
-s8 data_ov003_020b16c8[12] = {0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0};
-/* Inferred role: icon x position steps for two, three and four unlocked characters; existing address label retained. */
-s16 data_ov003_020b16e4[12] = {0, 0, 0, 0, 72, 0, 0, 0, -68, 136, 0, 0};
+/* Each later unlocked character's mCharY and mCharX step, four entries per
+   unlocked count of two, three and four. Four-slot strides are observed;
+   unused slots do not prove original bounds. */
+s8 sStarSelectCharYStep[12] = {0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0};
+s16 sStarSelectCharXStep[12] = {0, 0, 0, 0, 72, 0, 0, 0, -68, 136, 0, 0};
 BaseSpawnInfo<dScStarSel_c> g_profile_STAR_SELECT = {dScStarSel_c_classInit, 4, 7};
 }
