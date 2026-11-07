@@ -31,6 +31,8 @@
 #include <cstring>
 
 extern "C" {
+void ChangeArea(int areaID);              // COOPBOO2 proof knob: show the Boo's room (doors do this in play)
+extern signed char data_02092120;        // the area shown (-1 none)
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;
 extern short data_0209f358[];
@@ -49,6 +51,10 @@ void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 void func_ov084_02129498(void *goomba);
 }
+
+// COOPBOO2: daTrs_c::func_ov063_02116244 (src/game/actors/d_a_trs.cpp), called on a Big Boo: with mBooDefeatCount at 5 or
+// more and nothing spawned yet, it brings the Big Boo out (the ghost hunt). Declared bare: only the member's name is needed.
+class daTrs_c { public: void func_ov063_02116244(); };
 
 namespace port {
 void coop_api_test_register();
@@ -370,9 +376,47 @@ bool for_me(const CoopKey &k) {
     return g_part >= 0 && g_key.valid() && k == g_key;
 }
 
+// COOPBOO2: Boos that report to a Big Boo (daTrs_c, class 209, mBigBooID at +0x490). The killer's console adds each one to
+// the Big Boo's mBooDefeatCount (+0x180): variant 2 (Big Boo's Haunt lobby) in its state-5 talk (d_a_trs.cpp:2003-2015), the
+// others in func_ov063_0211a3d0 (d_a_trs.cpp:2598-2606), and the Big Boo comes out at 5. A friend's copy removed here never
+// ran that code, so each console counted only its own kills and a split pair saw no Big Boo at all. boo_credit is the same
+// add, for a copy this console removes because a friend killed it; then the ROM's own func_ov063_02116244 decides.
+enum : int { kBooCount = 0x180, kBooTalk = 0x488, kBooBig = 0x490, kBooVar = 0x5cf, kBooState = 0x5cc };
+// A lobby Boo (variant 2) always reports; the others only once they have found their Big Boo. A lobby Boo whose room this
+// console has not shown yet never ran its home state, so it has not looked its Big Boo up (func_ov063_02119c58): big_boo_of
+// then does the same lookup.
+bool count_boo(const char *a) {
+    if (*(const unsigned short *)(a + 0x0c) != 209) return false;
+    const unsigned char v = *(const unsigned char *)(a + kBooVar);
+    return v == 2 || (v != 0 && *(const unsigned *)(a + kBooBig) != 0);
+}
+// A Boo in its hit states (3 fade, 4, 5 talk: d_a_trs.cpp func_ov063_021162c8 and on) is being beaten on this console
+// by the cartridge's own code, which counts it.
+bool boo_beaten_here(const char *a) { const unsigned st = *(const unsigned char *)(a + kBooState); return st >= 3 && st <= 5; }
+char *big_boo_of(const char *a) {
+    const unsigned id = *(const unsigned *)(a + kBooBig);
+    if (id) return (char *)_ZN8dActor_c10FindWithIDEj(id);
+    for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {   // func_ov063_02119c58's pick
+        if (*(const unsigned short *)(b + 0x0c) != 210) continue;
+        const unsigned char v = *(const unsigned char *)(b + kBooVar);
+        if (v == 0xd || v == 0xe) return b;
+    }
+    return nullptr;
+}
+bool boo_credit(const char *a, int seat, const char *why) {
+    char *big = big_boo_of(a);
+    if (!big || *(const unsigned short *)(big + 0x0c) != 210) return false;
+    int &cnt = *(int *)(big + kBooCount);
+    ++cnt;
+    reinterpret_cast<::daTrs_c *>(big)->func_ov063_02116244();
+    std::fprintf(stderr, "[coop] boo: seat %d's Boo slot %d (variant %u) counted for the Big Boo here (%s): count %d wall=%lld\n", seat,
+                 (int)*(const short *)(a + 0xce), (unsigned)*(const unsigned char *)(a + kBooVar), why, cnt, wall_ms());
+    return true;
+}
+
 // Remove the live actors whose slot a remote bit names. The ROM's own
 // kill-and-track (bit already up, actor marked for destruction): no effects
-// play on this console, no counters move.
+// play on this console, no counters move (COOPBOO2: but a Boo the friend killed still counts for my Big Boo).
 int reconcile() {
     int kills = 0;
     bool any = false;
@@ -385,6 +429,7 @@ int reconcile() {
         if (!((g_remote[slot >> 5] >> (slot & 31)) & 1u)) continue;
         if (*(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2) continue;
         if (is_player_ptr(a)) continue;
+        if (count_boo(a) && *(const unsigned char *)(a + kBooVar) != 2) boo_credit(a, -1, "death bit");
         _ZN8dActor_c24KillAndTrackInDeathTableEv(a);
         ++kills;
         if (g_log)
@@ -412,8 +457,13 @@ struct CoopSwallowWire {                   // 8 B
     uint16_t cls;                          // actor class id, 0..1023
 };
 static_assert(sizeof(CoopSwallowWire) == 8, "swallow wire is 8 bytes");
+// COOPBOO2: a Boo beaten for its Big Boo (a lobby Boo of Big Boo's Haunt) goes out as the swallow head plus the Big Boo count
+// on the sender's console (log only): 12 bytes, a length 0.9.3.8 refuses as bad, so an older friend keeps his own Boos and
+// count exactly as before (he can still beat all five himself). Class 209 only.
+struct CoopBooWire { CoopSwallowWire head; int32_t count; };
+static_assert(sizeof(CoopBooWire) == 12, "boo wire is 12 bytes");
 enum : int { kKrbCapId = 0x113, kKrbReward = 0x464, kKrbHome = 0x41c, kMouthObj = 0x360, kEggs = 0x588, kSwOutMax = 32 };
-struct SwOut { uint16_t slot, cls; uint8_t sent; unsigned next; };
+struct SwOut { uint16_t slot, cls; uint8_t sent; unsigned next; uint8_t boo; };   // boo: send the 12-byte Boo form (COOPBOO2)
 SwOut g_sw_out[kSwOutMax]; int g_sw_n = 0;
 char *g_mouth = nullptr; int g_mouth_cls = 0, g_mouth_slot = -1, g_mouth_eggs = 0;
 const char *g_mouth_body = nullptr;      // the body whose mouth held g_mouth
@@ -616,11 +666,11 @@ void send_swallows(unsigned now) {
     int k = 0;
     for (int i = 0; i < g_sw_n; ++i) {
         SwOut &o = g_sw_out[i];
-        if (alone && !breakable_block(o.cls)) continue;
+        if (alone && !breakable_block(o.cls) && !o.boo) continue;
         if ((int)(now - o.next) >= 0) {
-            CoopSwallowWire w; std::memset(&w, 0, sizeof w);
-            w.key = wire_key(g_key); w.slot = o.slot; w.cls = o.cls;
-            if (send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, (int)sizeof w)) {
+            CoopBooWire w; std::memset(&w, 0, sizeof w);
+            w.head.key = wire_key(g_key); w.head.slot = o.slot; w.head.cls = o.cls; w.count = -1;
+            if (send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, o.boo ? (int)sizeof w : (int)sizeof w.head)) {
                 ++o.sent;
                 o.next = now + (o.sent == 1 ? 120u : 240u);
             }
@@ -645,7 +695,8 @@ bool capped_goomba(const char *a) {
     return (*(const unsigned char *)(a + kKrbCapId) & 0xf) < 6 || *(const unsigned char *)(a + kKrbReward) == 2;
 }
 void cage_reset();
-void cap_reset() { g_cap_n = 0; g_cap_slotted = -1; g_sw_applied_n = 0; g_gone_n = 0; g_gone_push_left = 0; cage_reset(); }
+void boo_reset();
+void cap_reset() { g_cap_n = 0; g_cap_slotted = -1; g_sw_applied_n = 0; g_gone_n = 0; g_gone_push_left = 0; cage_reset(); boo_reset(); }
 void watch_capped(unsigned now) {
     CapW cur[kCapMax]; int n = 0, slotted = 0;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
@@ -686,8 +737,24 @@ void watch_capped(unsigned now) {
 // the rewards left to his console. A Goomba with a cap, or one that gives the silver star only on its own star, goes
 // home and RespawnIfHasCap leaves the dormant replacement there; func_ov084_02129498 removes it (MarkForDestruction for a
 // capped one, KillAndTrackInDeathTable otherwise). Any other class: MarkForDestruction, what every OnTurnIntoEgg ends in.
-void apply_swallow(int seat, int slot, unsigned cls) {
+void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
     char *a = live_slot(cls, slot);
+    if (boo_beaten) {   // COOPBOO2: a Boo the friend beat (no death bit): count it here, then remove my copy
+        gone_note(slot, cls); room_gone_note(g_key, slot, cls);
+        if (!a || going(a) || is_player_ptr(a)) {
+            std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, no live copy here (counted when it stands) wall=%lld\n", seat, slot, wall_ms());
+            return;
+        }
+        if (boo_beaten_here(a)) {   // both hit it: this console's own defeat counts it once
+            std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, it is beaten here too (counted once) wall=%lld\n", seat, slot, wall_ms());
+            return;
+        }
+        if (count_boo(a) && !boo_credit(a, seat, "his kill")) return;   // no Big Boo yet: gone_apply counts it once it stands
+        _ZN7fBase_c18MarkForDestructionEv(a);
+        if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = (uint16_t)slot;
+        std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, removed here wall=%lld\n", seat, slot, wall_ms());
+        return;
+    }
     if (breakable_block(cls)) { gone_note(slot, cls); room_gone_note(g_key, slot, cls); }   // kept even with no copy standing yet
     if (!a || going(a) || is_player_ptr(a)) {
         if (g_log) std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d, no live copy here\n", seat, cls, slot);
@@ -712,10 +779,18 @@ void apply_swallow(int seat, int slot, unsigned cls) {
 
 // COOPSYNC1: a block on the group's broken list that stands here (it spawned after the break: I entered later, or the
 // message came before my objects) goes the same way. Every 10 est frames; a block never respawns inside one level visit.
+unsigned g_boo_visit = 0;   // COOPBOO2: est frames of this visit (boo_reset clears it)
 void gone_apply() {
     for (int i = 0; i < g_gone_n; ++i) {
         char *a = live_slot(g_gone[i].cls, g_gone[i].slot);
         if (!a || going(a) || is_player_ptr(a)) continue;
+        if (g_gone[i].cls == 209) {   // COOPBOO2: a lobby Boo a friend beat earlier in this visit: count it, then remove it
+            if (boo_beaten_here(a)) continue;   // its own defeat runs on this console (my kill): the cartridge counts it
+            if (!count_boo(a) || !boo_credit(a, -1, "beaten earlier")) { if (g_boo_visit < 300) continue; }   // wait up to 5 s for the Big Boo
+            _ZN7fBase_c18MarkForDestructionEv(a);
+            std::fprintf(stderr, "[coop] boo: slot %d beaten in this group, removed here wall=%lld\n", (int)g_gone[i].slot, wall_ms());
+            continue;
+        }
         _ZN7fBase_c18MarkForDestructionEv(a);
         if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = g_gone[i].slot;
         else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = g_gone[i].slot; }
@@ -730,9 +805,9 @@ void gone_push(unsigned now) {
     if (g_gone_push_left <= 0 || g_gone_n == 0 || (int)(now - g_gone_push_at) < 0) return;
     if (g_grp.others() == 0) { g_gone_push_left = 0; return; }
     for (int i = 0; i < g_gone_n; ++i) {
-        CoopSwallowWire w; std::memset(&w, 0, sizeof w);
-        w.key = wire_key(g_key); w.slot = g_gone[i].slot; w.cls = g_gone[i].cls;
-        send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, (int)sizeof w);
+        CoopBooWire w; std::memset(&w, 0, sizeof w);
+        w.head.key = wire_key(g_key); w.head.slot = g_gone[i].slot; w.head.cls = g_gone[i].cls; w.count = -1;
+        send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, g_gone[i].cls == 209 ? (int)sizeof w : (int)sizeof w.head);
     }
     if (g_log) std::fprintf(stderr, "[coop] block list: %d broken block(s) sent to the group (round %d)\n", g_gone_n,
                             kGonePushes - g_gone_push_left + 1);
@@ -836,6 +911,102 @@ void cage_apply_remote(int seat, int slot, const int *pos, int area) {
                      seat, pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, wall_ms());
     }
 }
+// COOPBOO2: every est frame: a lobby Boo (variant 2) I beat goes into its state-5 talk with my player and ends in
+// MarkForDestruction with no death bit. Tell the group once (the 12-byte Boo form of the swallow message, which an older build ignores),
+// and keep it on the group and room lists so a member who comes in later counts it too.
+uint16_t g_boo_told[16]; int g_boo_told_n = 0;
+void boo_reset() { g_boo_told_n = 0; g_boo_visit = 0; }
+void watch_boos(unsigned now) {
+    ++g_boo_visit;
+    const int me = (int)data_0209f250;
+    const char *body = (me >= 0 && me < 16) ? (const char *)data_0209f394[me] : nullptr;
+    if (!body) return;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 209 || *(const unsigned char *)(a + kBooVar) != 2) continue;
+        const short slot = *(const short *)(a + 0xce);
+        if (slot < 0 || slot >= kCoopSlots || !*(const unsigned *)(a + kBooBig)) continue;
+        if (*(const unsigned char *)(a + kBooState) != 5 || *(const char *const *)(a + kBooTalk) != body) continue;
+        bool told = false;
+        for (int i = 0; i < g_boo_told_n && !told; ++i) told = g_boo_told[i] == (uint16_t)slot;
+        if (told) continue;
+        if (g_boo_told_n < 16) g_boo_told[g_boo_told_n++] = (uint16_t)slot;
+        gone_note(slot, 209); room_gone_note(g_key, slot, 209);
+        if (g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {(uint16_t)slot, 209, 0, now, 1};
+        const char *big = big_boo_of(a);
+        std::fprintf(stderr, "[coop] boo: I beat Boo slot %d (Big Boo count %d here): told the group wall=%lld\n", (int)slot,
+                     big ? *(const int *)(big + kBooCount) : -1, wall_ms());
+    }
+}
+
+// Proof knob SM64DS_COOP_BOOHIT=EST:SLOT[,SLOT...] (COOPBOO2): from that est frame, the first listed Boo (class 209) still
+// standing is hunted: every 150 est frames my player is put 80 units east of it and its room is shown (Big Boo's Haunt
+// keeps a Boo at home while its room is hidden, and only doors show rooms), and while it chases (state 1) its collider
+// reads as punched by my player, so the cartridge's own hit and defeat path runs (the talk, the count, the Big Boo).
+struct BooHitKnob { unsigned at; int n; short slot[8]; };
+BooHitKnob g_boohit = {0, 0, {}};
+void boohit_knob() {
+    static const bool parsed = [] {
+        if (const char *e = std::getenv("SM64DS_COOP_BOOHIT")) {
+            unsigned at = 0; int used = 0;
+            if (std::sscanf(e, "%u:%n", &at, &used) >= 1 && used > 0) {
+                g_boohit.at = at;
+                for (const char *p = e + used; *p && g_boohit.n < 8;) {
+                    int v = 0, u = 0;
+                    if (std::sscanf(p, "%d%n", &v, &u) < 1 || u <= 0) break;
+                    g_boohit.slot[g_boohit.n++] = (short)v; p += u;
+                    while (*p == ',') ++p;
+                }
+            }
+        }
+        return true;
+    }();
+    (void)parsed;
+    if (!g_boohit.n || !g_boohit.at || g_est_frames < g_boohit.at) return;
+    const int me = (int)data_0209f250;
+    char *body = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
+    if (!body) return;
+    for (int i = 0; i < g_boohit.n; ++i) {
+        char *b = live_slot(209u, g_boohit.slot[i]);
+        if (!b || going(b) || *(const unsigned char *)(b + kBooState) >= 3) continue;
+        if (*(const unsigned char *)(b + kBooState) == 1) {
+            *(unsigned *)(b + 0x184 + 0x20) |= 0x40u;
+            *(unsigned *)(b + 0x184 + 0x24) = *(const unsigned *)(body + 0x04);
+            static unsigned last = 0;
+            if (last + 60u < g_est_frames || last > g_est_frames) {
+                last = g_est_frames;
+                std::fprintf(stderr, "[coop-knob] boo hit: Boo slot %d reads as punched by my player (est %u)" "\n", (int)g_boohit.slot[i], g_est_frames);
+            }
+        } else if ((g_est_frames - g_boohit.at) % 150u == 0) {
+            const int *bp = (const int *)(b + 0x5c);
+            int *pp = (int *)(body + 0x5c);
+            pp[0] = bp[0] + (80 << 12); pp[1] = bp[1]; pp[2] = bp[2];
+            const signed char area = *(const signed char *)(b + 0x5d0);
+            if (area >= 0 && data_02092120 != area) ChangeArea(area);
+            std::fprintf(stderr, "[coop-knob] boo hunt: put by Boo slot %d at %d,%d,%d (est %u)" "\n", (int)g_boohit.slot[i], bp[0] >> 12, bp[1] >> 12, bp[2] >> 12, g_est_frames);
+        }
+        return;
+    }
+}
+
+// COOPBOO2: the log line for the Big Boo (class 210, variant 0xd or 0xe) on this console: its Boo count, and when it is out (the cartridge
+// spawned its icon actor, mSpawnedActorID at +0x49c). Logged when either changes, so both consoles can be read side by side.
+int g_big_cnt = -1; bool g_big_out = false;
+void log_big_boo() {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 210) continue;
+        const unsigned char v = *(const unsigned char *)(a + 0x5cf);
+        if (v != 0xd && v != 0xe) continue;   // the Big Boos small Boos report to (func_ov063_02119c58)
+        const int cnt = *(const int *)(a + 0x180);
+        const bool out = *(const unsigned *)(a + 0x49c) != 0;
+        if (cnt != g_big_cnt || out != g_big_out) {
+            g_big_cnt = cnt; g_big_out = out;
+            std::fprintf(stderr, "[coop] boo: Big Boo here: count %d%s est %u wall=%lld\n", cnt, out ? ", it is out" : "", g_est_frames, wall_ms());
+        }
+        return;
+    }
+    g_big_cnt = -1; g_big_out = false;
+}
+
 // Every est frame: did my cage Boo drop its cage (tell the room), or does it still carry one that is already out (free it).
 void watch_cage(unsigned now) {
     char *boo = nullptr;
@@ -1019,6 +1190,16 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         g_heard[seat] = comms_hub_now_ms() | 1u;
         if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
         cage_apply_remote(seat, (int)w.head.slot, pos, w.area);
+        return;
+    }
+    if (sub == kWorldSwallowGone && pl == (int)sizeof(CoopBooWire)) {   // COOPBOO2: a friend beat a Boo of my Big Boo
+        CoopBooWire w; std::memcpy(&w, p, sizeof w);
+        if (!coop_key_ok(w.head.key) || w.head.slot >= kCoopSlots || w.head.cls != 209) { ++g_st.drop_bad; return; }
+        key_from_wire(w.head.key, &k);
+        if (!for_me(k)) { if (k.valid()) room_gone_note(k, (int)w.head.slot, 209u); ++g_st.drop_group; return; }   // filed for my visit
+        g_heard[seat] = comms_hub_now_ms() | 1u;
+        if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
+        apply_swallow(seat, (int)w.head.slot, 209u, true);
         return;
     }
     if (sub == kWorldSwallowGone) {
@@ -1473,6 +1654,9 @@ void tick_est(unsigned now) {
         send_swallows(now);
         gone_push(now);
         watch_cage(now);   // COOPBOO1
+        watch_boos(now);   // COOPBOO2
+        boohit_knob();     // COOPBOO2 proof knob, inert unless SM64DS_COOP_BOOHIT is set
+        log_big_boo();     // COOPBOO2
         cage_send(now);
         // 2. announce them (three tries each: now, +120 ms, +360 ms)
         unsigned char buf[sizeof(CoopDeltaWire) + 2 * kCoopMaxDelta];
