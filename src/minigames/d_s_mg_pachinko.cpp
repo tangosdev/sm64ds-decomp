@@ -276,7 +276,7 @@ extern void PachinkoPopup_DrawAll(char *base);
 extern void PachinkoPopup_UpdateAll(char *c);
 extern void PachinkoPopup_SpawnScore(char *c, int idx, unsigned short val);
 extern void Pachinko_ClearAimLine(char *c);
-extern void Pachinko_PlotSubBg2Pixels(void *a0, int a1, int a2, int a3);
+extern void Pachinko_PlotSubBg2Pixels(void *scene, int x, int y, int colour);
 extern void Pachinko_DrawAimLine(void *arg0);
 extern void PachinkoPipe_DrawAll(char *base);
 extern void PachinkoPipe_SetAll(char *base, int val);
@@ -936,27 +936,29 @@ void Pachinko_ClearAimLine(char* raw)
 #pragma push
 #pragma opt_loop_invariants off
 // @symbol Pachinko_PlotSubBg2Pixels
-/* Sets a 2x2 block of pixels in the sub BG2 character data. The first
-   parameter is never read.
+/* Sets the 2x2 block of pixels centred on (x, y) in the sub BG2 character
+   data, 4bpp tiles laid out 32 to a row: y picks the tile row and the
+   4-byte line inside the tile, x the tile column and the nibble. The scene
+   argument is never read.
    opt_loop_invariants stays off: the ROM keeps j on the stack and every spelling without these staged locals is a word short (0x7c of 0x80). */
-void Pachinko_PlotSubBg2Pixels(void *a0, int a1, int px, int colour)
+void Pachinko_PlotSubBg2Pixels(void *scene, int x, int y, int colour)
 {
-    int i, j, x, lo, hi, col, row, yb, py;
+    int i, j, py, line, tileY, lineOfs, rowTile, xb, x0;
     u32 *bp;
-    py = a1;
+    x0 = x;
     for (i = 0; i < 2; i++)
     {
-        x = px - 1 + i;
-        lo = x & 7;
-        hi = x >> 3;
-        col = lo * 4;
+        py = y - 1 + i;
+        line = py & 7;
+        tileY = py >> 3;
+        lineOfs = line * 4;
         for (j = 0; j < 2; j++)
         {
-            row = hi * 32;
-            yb = py - 1;
-            a1 = yb + j;
+            rowTile = tileY * 32;
+            xb = x0 - 1;
+            x = xb + j;
             bp = (u32 *)G2S::GetBG2CharPtr();
-            *(u32 *)((char *)(bp + (row + (a1 >> 3)) * 8) + col) |= colour << ((a1 & 7) * 4);
+            *(u32 *)((char *)(bp + (rowTile + (x >> 3)) * 8) + lineOfs) |= colour << ((x & 7) * 4);
         }
     }
 }
