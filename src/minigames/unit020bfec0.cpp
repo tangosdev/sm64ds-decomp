@@ -63,7 +63,8 @@ struct Sound {
 void CopyToViewMat(const Matrix4x3 *);
 
 extern "C" {
-void MulVec3Mat4x3(void *, void *, void *);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
 void Matrix4x3_FromQuaternion(void *, void *);
 void MulVec3Mat3x3(void *, void *, void *);
@@ -2428,7 +2429,7 @@ extern short data_02082214[];
 
 void Camera_ProjectToScreen(MgCamera *camera, void *r1, int *r6, int *r5) {
     int out[3];
-    MulVec3Mat4x3(r1, &camera->mViewMtx, out);
+    MulVec3Mat4x3((Vector3 *)r1, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)out);
     int ang = camera->mFovAngle >> 4;
     int i = ang * 2;
     int cosv = data_02082214[i];
@@ -2452,7 +2453,7 @@ extern short data_02082214[];
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *r1, short *r5) {
     int out[3];
-    MulVec3Mat4x3(r1, &camera->mViewMtx, out);
+    MulVec3Mat4x3((Vector3 *)r1, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)out);
     int ang = camera->mFovAngle >> 4;
     int i = ang * 2;
     int cosv = data_02082214[i];
