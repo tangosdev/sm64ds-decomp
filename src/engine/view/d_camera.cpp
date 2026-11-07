@@ -97,7 +97,7 @@ extern char data_02087404;
 extern u8 data_0208738c;
 extern s8 gNextSublevel;
 extern s32 data_0209ee90[];
-extern u8 data_0209f1f8;
+extern u8 gNumViewObjs;
 extern u8 data_0209f20c;
 extern u8 gLocalPlayerId;
 extern u8 gVsExitScreenActive;
@@ -222,7 +222,7 @@ extern "C" dCamera_c *dCamera_c_classInit() {
 int dCamera_c::InitResources()
 {
     u32 i;
-    for (i = 0; i < data_0209f1f8; i = (u8)(i + 1)) {
+    for (i = 0; i < gNumViewObjs; i = (u8)(i + 1)) {
         CamViewObj *v = (CamViewObj *)GetViewObj(i);
         if (v->type == 7) {
             s32 *p;

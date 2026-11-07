@@ -283,7 +283,7 @@ extern dGraph_c::callback_c *data_0209d4a8;
 static u8 sNextPauseState;
 u8 gNextStarId;
 static u8 data_0209f1f4;
-u8 data_0209f1f8;
+u8 gNumViewObjs;
 static u8 data_0209f1fc;
 u8 gReturnEntranceId;
 u8 data_0209f204;
@@ -292,7 +292,7 @@ u8 data_0209f20c;
 /* Counts down from 3 frames after a pause arrow is touched; PS_Update clears
    sPressedPauseArrow when it reaches 0. */
 static u8 sPauseArrowPressTimer;
-static u8 data_0209f214;
+static u8 sNumEntranceObjs;
 /* Set when the pause was opened with SELECT rather than START. */
 static u8 sPausedWithSelect;
 /* How many players this stage runs with: InitResources copies it from
@@ -329,8 +329,8 @@ static u8 sCheckpointEntranceId;
    per-player arrays (gPlayers, gPlayerHealth, gNumStageStars) by it. */
 u8 gLocalPlayerId;
 u8 data_0209f254;
-static u8 data_0209f258;
-static u8 data_0209f25c;
+static u8 sNumFogObjs;
+static u8 sNumMinimapScaleObjs;
 static u8 sLevelClearCoinCount;
 u8 gCurrentEntranceId;
 static u8 sNextEntranceId;
@@ -388,7 +388,7 @@ static u8 sPauseDisplayedCourse;
    selected backlight button with the highlight palette (0x6000) only while it
    is 0, so the press blinks; PS_Update repaints the page when it reaches 0. */
 static u8 sBacklightFlashTimer;
-static u8 data_0209f2d0;
+static u8 sNumTeleportDestObjs;
 u8 gLevelClearStep;
 /* 0 in the adventure (StartFile), 1 in VS (PrepareVsMode), 2 while the
    ending's fall-in-front-of-the-castle cutscene runs: KuppaScript sets it when
@@ -406,7 +406,7 @@ static u8 sSelectedMenuButton;
    PS_UpdateOptionsMenu draws the SOUND box with palette 0x5000 instead of the
    highlight 0x6000, and PS_Update repaints the page when it reaches 0. */
 static u8 sSoundBoxFlashTimer;
-u8 data_0209f2e8;
+u8 gNumMinimapTileObjs;
 /* The backlight button drawn selected on the options page: 0 the left (on)
    and 1 the right (off). Seeded from data_0208ee3c ^ 1 when the page opens;
    touching a button sets it, and the toggle flips it. The buttons show it only
@@ -439,21 +439,21 @@ s8 gNumStageStars[4];
 extern s8 data_0209f311;
 static int data_0209f314;
 dCamera_c *data_0209f318;
-static char *data_0209f31c;
+static char *sFogObjs;
 static int data_0209f320;
 static void *data_0209f324;
-static LVL_Overlay::StandardEntry *data_0209f328;
+static LVL_Overlay::StandardEntry *sEntranceObjs;
 s32 data_0209f32c;
-static void *data_0209f330;
-u16 *data_0209f334;
-void *data_0209f338;
+static void *sTeleportDestObjs;
+u16 *gMinimapTileObjs;
+void *gUnusedType13Objs;
 void *data_0209f33c;
 static char *data_0209f340;
 u8 *data_0209f344;
-static short *data_0209f348;
+static short *sMinimapScaleObjs;
 static s32 sEventFlags;
 u8 data_0209f350[4];
-static void *data_0209f354;
+static void *sViewObjs;
 short gNumCoins[4];
 /* Each big button's offset, in screen entries, into the sub engine's BG1
    map; the menu that opens sets them with sNumMenuButtons. */
@@ -3657,17 +3657,22 @@ extern "C" unsigned char GetStarCameraSetting(int idx) {
 // @symbol GetMinimapScale
 extern "C" int GetMinimapScale(int idx) {
     if (idx >= 0) {
-        if (idx < (int)data_0209f25c)
-            return data_0209f348[idx];
+        if (idx < (int)sNumMinimapScaleObjs)
+            return sMinimapScaleObjs[idx];
     }
     return 0xa00;
 }
 
 // @symbol func_0202af80
-/* The six table setters below each store a pointer and its count. */
+/* The six table setters below each store a pointer and its count. Each is
+   called by one LevelObjects loader with that object type's table:
+   LoadMinimapScaleObjects, LoadMinimapTileObjects, LoadFogObjects,
+   LoadTeleportDestObjects, LoadViewObjects and LoadEntranceObjects.
+   InitResources zeroes every count but the entrances' before the level's
+   objects load. */
 extern "C" void func_0202af80(short *table, int count) {
-    data_0209f348 = table;
-    data_0209f25c = count;
+    sMinimapScaleObjs = table;
+    sNumMinimapScaleObjs = count;
 }
 
 // @symbol GetMinimapID
@@ -3703,14 +3708,14 @@ extern "C" int GetMinimapID(dActor_c *actor, int arg) {
 
 // @symbol func_0202b044
 extern "C" void func_0202b044(u16 *table, int count) {
-    data_0209f334 = table;
-    data_0209f2e8 = count;
+    gMinimapTileObjs = table;
+    gNumMinimapTileObjs = count;
 }
 
 // @symbol func_0202b060
 extern "C" void func_0202b060(char *table, int count) {
-    data_0209f31c = table;
-    data_0209f258 = count;
+    sFogObjs = table;
+    sNumFogObjs = count;
 }
 
 // @symbol GetTeleportDestObj
@@ -3720,13 +3725,13 @@ struct ObjTeleport {
     int b;
 };
 extern "C" struct ObjTeleport *GetTeleportDestObj(int i) {
-    return (ObjTeleport *)data_0209f330 + i;
+    return (ObjTeleport *)sTeleportDestObjs + i;
 }
 
 // @symbol func_0202b090
 extern "C" void func_0202b090(void *table, int count) {
-    data_0209f330 = table;
-    data_0209f2d0 = count;
+    sTeleportDestObjs = table;
+    sNumTeleportDestObjs = count;
 }
 
 // @symbol GetViewObj
@@ -3735,19 +3740,19 @@ struct ViewObj {
     unsigned char d[0xe];
 };
 extern "C" struct ViewObj *GetViewObj(int idx) {
-    return &((ViewObj *)data_0209f354)[idx];
+    return &((ViewObj *)sViewObjs)[idx];
 }
 
 // @symbol func_0202b0c4
 extern "C" void func_0202b0c4(void *table, int count) {
-    data_0209f354 = table;
-    data_0209f1f8 = count;
+    sViewObjs = table;
+    gNumViewObjs = count;
 }
 
 // @symbol func_0202b0e0
 extern "C" void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count) {
-    data_0209f328 = entries;
-    data_0209f214 = count;
+    sEntranceObjs = entries;
+    sNumEntranceObjs = count;
 }
 
 // @symbol _ZN10dScStage_c10LoadSkyboxEv
@@ -4007,14 +4012,14 @@ void dScStage_c::LoadFog() {
     mFog[1].mShift = 6;
     mFog[1].mOffset = 0;
     mFog[1].mColor = 0x6000;
-    if (data_0209f258 == 0) {
+    if (sNumFogObjs == 0) {
         return;
     }
     {
-        unsigned char *fogRecord = (unsigned char *)data_0209f31c;
+        unsigned char *fogRecord = (unsigned char *)sFogObjs;
         Fog *fog = mFog;
         int fogIndex;
-        for (fogIndex = 0; fogIndex < data_0209f258; fogIndex++) {
+        for (fogIndex = 0; fogIndex < sNumFogObjs; fogIndex++) {
             if (fogRecord[0] != 1) {
                 fog->mEnabled = 0;
             } else {
@@ -4843,12 +4848,12 @@ int dScStage_c::InitResources() {
             }
         }
 
-        data_0209f1f8 = 0;
-        data_0209f2d0 = 0;
-        data_0209f258 = 0;
-        data_0209f2e8 = 0;
-        data_0209f25c = 0;
-        data_0209f338 = 0;
+        gNumViewObjs = 0;
+        sNumTeleportDestObjs = 0;
+        sNumFogObjs = 0;
+        gNumMinimapTileObjs = 0;
+        sNumMinimapScaleObjs = 0;
+        gUnusedType13Objs = 0;
         data_02092134 = 0x44444444;
         LoadLevelOverlays(gCurrentSublevel);
 

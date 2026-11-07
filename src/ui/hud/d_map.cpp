@@ -918,8 +918,8 @@ void Deallocate(void* ptr);
 int func_0202a96c(void);
 
 int func_0202a958(void);
-extern u8 data_0209f2e8;
-extern u16* data_0209f334;
+extern u8 gNumMinimapTileObjs;
+extern u16 *gMinimapTileObjs;
 extern s32 gRunningKuppaScript;
 }
 
@@ -957,8 +957,8 @@ int dMap_c::InitResources()
         }
     }
 
-    p = data_0209f334;
-    for (i = 0; i < data_0209f2e8; i++) {
+    p = gMinimapTileObjs;
+    for (i = 0; i < gNumMinimapTileObjs; i++) {
         if (*p != 0) {
             void *f3 = LoadFile(*p);
             DecompressLZ16(f3, (char *)G2S::GetBG3ScrPtr() - (i << 11));

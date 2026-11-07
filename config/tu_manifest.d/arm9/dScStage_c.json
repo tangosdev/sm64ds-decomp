@@ -927,7 +927,7 @@
       "evidence": "u8. Read here by FUN_0202a130 and dScStage_c::RenderVsModeNewStar. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f1f8",
+      "symbol": "gNumViewObjs",
       "address": "0x0209f1f8",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -976,7 +976,7 @@
       "evidence": "u8. Read here by dScStage_c::PS_Init and dScStage_c::PS_Update. No reader outside this TU, so static. Was gPauseArrowPressTimer; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f214",
+      "symbol": "sNumEntranceObjs",
       "address": "0x0209f214",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1095,14 +1095,14 @@
       "evidence": "u8. Read here by SetPlayerGlobals. Read outside this TU by daPly_c::Behavior and daPly_c::InitResources (ov002), so global."
     },
     {
-      "symbol": "data_0209f258",
+      "symbol": "sNumFogObjs",
       "address": "0x0209f258",
       "size": "0x1",
       "binding": "STB_GLOBAL",
       "evidence": "u8. Read here by dScStage_c::InitResources, dScStage_c::LoadFog and func_0202b060. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f25c",
+      "symbol": "sNumMinimapScaleObjs",
       "address": "0x0209f25c",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1305,7 +1305,7 @@
       "evidence": "u8. Read here by dScStage_c::PS_Init, dScStage_c::PS_Update and dScStage_c::PS_UpdateOptionsMenu. No reader outside this TU, so static. Was gBacklightFlashTimer; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f2d0",
+      "symbol": "sNumTeleportDestObjs",
       "address": "0x0209f2d0",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1347,7 +1347,7 @@
       "evidence": "u8. Read here by dScStage_c::PS_Update and dScStage_c::PS_UpdateOptionsMenu. No reader outside this TU, so static. Was gSoundBoxFlashTimer; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f2e8",
+      "symbol": "gNumMinimapTileObjs",
       "address": "0x0209f2e8",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1438,7 +1438,7 @@
       "evidence": "void *. Read here by dScStage_c::CheckCameraInput, dScStage_c::CleanupResources, dScStage_c::Render and dScStage_c::RenderFog. Read outside this TU by LoadEntranceObjects, ProcessKuppaScript, dActor_c::Earthquake, dMap_c::Behavior, dMeter_c::RenderCameraButtons, daBombking_c::Behavior and 113 more (arm9, ov002, ov014, ov016, ov030, ov034, ov055, ov060, ov062, ov063, ov066, ov073, ov074, ov078, ov079, ov084, ov085, ov089, ov100, ov102), so global."
     },
     {
-      "symbol": "data_0209f31c",
+      "symbol": "sFogObjs",
       "address": "0x0209f31c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1459,7 +1459,7 @@
       "evidence": "void *. Read here by FUN_02029980, FUN_020299f4, FUN_02029a68, FUN_02029ab0, StartEntranceFaderWipe, StartExitFaderWipe and 2 more. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f328",
+      "symbol": "sEntranceObjs",
       "address": "0x0209f328",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1473,21 +1473,21 @@
       "evidence": "s32. Read here by dScStage_c::InitResources. Read outside this TU by dCamera_c::Behavior, dPa_c::level_c::bubbleCallback_c::OnUpdate, dPa_c::level_c::checkWaterCallback_c::OnUpdate, dPa_c::level_c::checkWaterRippleCallback_c::OnUpdate, dPa_c::level_c::fitWaterCallback_c::OnUpdate, dPa_c::level_c::fitWaterSimpleCallback_c::OnUpdate and 40 more (arm9, ov002, ov009, ov012, ov029, ov032, ov070, ov077, ov090, ov100, ov102), so global."
     },
     {
-      "symbol": "data_0209f330",
+      "symbol": "sTeleportDestObjs",
       "address": "0x0209f330",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "void *. Read here by GetTeleportDestObj and func_0202b090. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f334",
+      "symbol": "gMinimapTileObjs",
       "address": "0x0209f334",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "u16 *. Read here by func_0202b044. Read outside this TU by dMap_c::InitResources (ov002), so global."
     },
     {
-      "symbol": "data_0209f338",
+      "symbol": "gUnusedType13Objs",
       "address": "0x0209f338",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1515,7 +1515,7 @@
       "evidence": "u8 *. The VS star spawn order: InitResources points it at one of the six VS_STAR_SPAWN_ORDERS rows at random. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior and daStar_c::func_ov002_020e9840 (ov002, ov084), so global."
     },
     {
-      "symbol": "data_0209f348",
+      "symbol": "sMinimapScaleObjs",
       "address": "0x0209f348",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1536,7 +1536,7 @@
       "evidence": "u8[4]. Read here by dScStage_c::CheckCameraInput and dScStage_c::CheckInput. Read outside this TU by dMap_c::Behavior (ov002), so global."
     },
     {
-      "symbol": "data_0209f354",
+      "symbol": "sViewObjs",
       "address": "0x0209f354",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -2616,7 +2616,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f210"
     },
     {
-      "symbol": "data_0209f214",
+      "symbol": "sNumEntranceObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f214"
@@ -2682,13 +2682,13 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f24c"
     },
     {
-      "symbol": "data_0209f258",
+      "symbol": "sNumFogObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f258"
     },
     {
-      "symbol": "data_0209f25c",
+      "symbol": "sNumMinimapScaleObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f25c"
@@ -2802,7 +2802,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f2cc"
     },
     {
-      "symbol": "data_0209f2d0",
+      "symbol": "sNumTeleportDestObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f2d0"
@@ -2862,7 +2862,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f314"
     },
     {
-      "symbol": "data_0209f31c",
+      "symbol": "sFogObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f31c"
@@ -2880,13 +2880,13 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f324"
     },
     {
-      "symbol": "data_0209f328",
+      "symbol": "sEntranceObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f328"
     },
     {
-      "symbol": "data_0209f330",
+      "symbol": "sTeleportDestObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f330"
@@ -2898,7 +2898,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f340"
     },
     {
-      "symbol": "data_0209f348",
+      "symbol": "sMinimapScaleObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f348"
@@ -2910,7 +2910,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f34c"
     },
     {
-      "symbol": "data_0209f354",
+      "symbol": "sViewObjs",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f354"
