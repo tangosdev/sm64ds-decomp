@@ -148,7 +148,7 @@ virtual, so its table is dScMgBase_c's 36 slots (ov006:0x0213e448, 0x90 bytes).
 on the offset: this class's D1 and D0 both destroy it
 (`_ZN5dPa_cD1Ev((char*)c + 0x471c)`), AfterInitResources
 initialises it, BeforeBehavior updates it conditionally. Its type is the one
-shared definition in include/Particle__SysTracker.h, which dScStage_c.h also uses.
+shared definition in Particle__SysTracker.h (since folded into include/dPa_c.h), which dScStage_c.h also uses.
 
 **0x4660..0x471c** is one `MgCamera` (include/MgCamera.h), named `mCamera`.
 dScMgRoulette_c's Render (_ZN15dScMgRoulette_c6RenderEv, in src/minigames/d_s_mg_roulette_methods.cpp) and dScMg3DEsp_c's Render

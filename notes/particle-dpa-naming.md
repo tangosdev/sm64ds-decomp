@@ -137,7 +137,7 @@ Done (branch `names/particle-dpa-level`):
 - `Contents::Entry` -> `dPa_c::level_c::emitter_c`, its methods and fields ->
   TP's names (`get`, `entry`, `addTable`, `cutTable`, `execute`, `cleanup`,
   `mFreeNo`, `mId`, `mNameId`, `mStatus`, `mEmitter`, `mCallback`, `mPre`, `mNext`)
-- `Particle::SysTracker` -> `dPa_c` (`include/Particle__SysTracker.h` folded
+- `Particle::SysTracker` -> `dPa_c` (`Particle__SysTracker.h` folded
   into `include/dPa_c.h`). It owns the `level_c` at +8 and the bank of
   `level_c` callbacks at +0x750, and its constructor, destructor, `Initialise`
   and `Update` are in the same TU. The scenes' embedded instance is

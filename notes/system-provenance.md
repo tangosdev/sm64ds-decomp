@@ -16,7 +16,7 @@ the name does not overclaim.
 ## dPa_c (was `Particle::SysTracker`) — `include/dPa_c.h`
 
 > The tree called this class `Particle::SysTracker` (header
-> `include/Particle__SysTracker.h`, and before that a flat C `struct Particle`
+> `Particle__SysTracker.h` (since folded into `include/dPa_c.h`), and before that a flat C `struct Particle`
 > in `Particle.h`). Neither name was the ROM's: the mangled names were coined
 > here. It is `dPa_c` because it owns the `dPa_c::level_c` at +0x8 and the bank
 > of `level_c` callbacks at +0x750, and its methods share one translation unit
@@ -143,7 +143,7 @@ constructor variants are now generated from the real nested C++ class.
 
 ### The third shadow — collapsed onto the real names
 
-`include/Particle__SysTracker.h` is a *third* declaration of this class, and it
+`Particle__SysTracker.h` is a *third* declaration of this class, and it
 is what `src/engine/particle/Particle.cpp` and
 `src/engine/particle/Particle.cpp` include. A later pass that owned the
 file finished it: its three fields now read `mResourceFile` / `mManager` /
@@ -318,9 +318,9 @@ conservative name stands.
 
 `dScStage_c` is the playable level scene, and it had no `unk_` fields of its own:
 the thirty this pass was pointed at all belonged to the `Particle::SysTracker`
-embedded at 0x50, which is `Particle::SysTracker` (`include/Particle__SysTracker.h`) and is
+embedded at 0x50, which is `Particle::SysTracker` (`Particle__SysTracker.h`) and is
 covered by the table at the top of this file. The two copies are kept identical
-by hand. (`include/Particle__SysTracker.h` is a third copy; it spelled `unk_`
+by hand. (`Particle__SysTracker.h` is a third copy; it spelled `unk_`
 until a later pass that owned it collapsed its three fields onto these same
 names -- see "The third shadow" above.)
 
