@@ -12771,79 +12771,79 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4532",
+      "from": "_ZGVsLevelIntroOff$4516",
       "to": "_ZGVsLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from _ZGVsLevelIntroOff$4532 to _ZGVsLevelIntroOff$4516 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "@4535",
+      "from": "@4519",
       "to": "@4427",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from @4535 to @4519 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "sLevelIntroOff$4532",
+      "from": "sLevelIntroOff$4516",
       "to": "sLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from sLevelIntroOff$4532 to sLevelIntroOff$4516 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "_ZGVsTalkOff$4750",
+      "from": "_ZGVsTalkOff$4734",
       "to": "_ZGVsTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from _ZGVsTalkOff$4750 to _ZGVsTalkOff$4734 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "@4753",
+      "from": "@4737",
       "to": "@4651",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from @4753 to @4737 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "sTalkOff$4750",
+      "from": "sTalkOff$4734",
       "to": "sTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from sTalkOff$4750 to sTalkOff$4734 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "_ZGVsAnchorOff$6304",
+      "from": "_ZGVsAnchorOff$6288",
       "to": "_ZGVsAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from _ZGVsAnchorOff$6304 to _ZGVsAnchorOff$6288 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "@6307",
+      "from": "@6291",
       "to": "@6226",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from @6307 to @6291 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "sAnchorOff$6304",
+      "from": "sAnchorOff$6288",
       "to": "sAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from sAnchorOff$6304 to sAnchorOff$6288 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "_ZGVsDoorMsgOff$6332",
+      "from": "_ZGVsDoorMsgOff$6316",
       "to": "_ZGVsDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from _ZGVsDoorMsgOff$6332 to _ZGVsDoorMsgOff$6316 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "@6335",
+      "from": "@6319",
       "to": "@6254",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from @6335 to @6319 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "sDoorMsgOff$6332",
+      "from": "sDoorMsgOff$6316",
       "to": "sDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from sDoorMsgOff$6332 to sDoorMsgOff$6316 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "_ZGVsStarDoorOff$6983",
+      "from": "_ZGVsStarDoorOff$6965",
       "to": "_ZGVsStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from _ZGVsStarDoorOff$6983 to _ZGVsStarDoorOff$6965 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "@6986",
+      "from": "@6968",
       "to": "@6920",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from @6986 to @6968 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     },
     {
-      "from": "sStarDoorOff$6983",
+      "from": "sStarDoorOff$6965",
       "to": "sStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570)."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Re-keyed from sStarDoorOff$6983 to sStarDoorOff$6965 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821)."
     }
   ],
   "relocations": [

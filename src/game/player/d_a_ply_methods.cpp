@@ -97,7 +97,6 @@ extern "C" daPly_c *daPly_c_classInit();
  * used to be repeated inside every body that needed it; C linkage keeps
  * the names unmangled, as those body-local copies had it. */
 extern "C" {
-extern int __aeabi_idiv(int a, int b);
 extern int atan2_hold_Player_11(int a, int b);
 extern int atan2_hold_Player_12(int, int);
 extern int atan2_hold_Player_13(int a, int b);
@@ -761,9 +760,8 @@ void func_ov002_020bcdf0(char *self)
 
     if (player->param1 == 0) {
         if (cur.w[0] == 0xbb) {
-            id = player->GetBodyModelID(player->param1 & 0xff, 0);
-            anim = reinterpret_cast<dExtFrameCtrl_c *>(
-                (long long)(int)&static_cast<dExtFrameCtrl_c &>(*player->mModels.mBodyModels[id]));
+            anim = &static_cast<dExtFrameCtrl_c &>(
+                *player->mModels.mBodyModels[player->GetBodyModelID(player->param1 & 0xff, 0)]);
             frame = (unsigned int)(anim->currFrame << 4) >> 0x10;
             if (frame >= 0x1e)
                 goto particle;
@@ -1671,9 +1669,7 @@ void daPly_c::func_ov002_020be3b0() {
         break;
     case 6: {
         int divv = data_ov002_020ff14c[var_r4 + 4];
-        /* Launder kept: `mCapPaletteBlend -= ...` and `= (u16)(mCapPaletteBlend - ...)` both move bytes. */
-        *(u16 *)((long long)(int)&mCapPaletteBlend) =
-            (u16)(*(u16 *)((long long)(int)&mCapPaletteBlend) - __aeabi_idiv(0x1000, divv));
+        mCapPaletteBlend -= 0x1000 / divv;
         if ((s16)mCapPaletteBlend < 0) {
             mCapPaletteBlend = 0;
         }
@@ -1873,85 +1869,65 @@ int daPly_c::IsAnim(unsigned int a) {
 }
 
 // @symbol _ZN7daPly_c7SetAnimEjiit
-#define LAUNDER16(p) ((u16 *)(int)(p))
-#pragma push
-#pragma opt_propagation off
-/* mwccarm rejects a linkage-spec inside a function, and these six names are
-   redeclared with other types elsewhere in the TU, so they cannot be hoisted.
-   The block stays so the hand-spelled callees keep C linkage. The method
-   itself still mangles as the daPly_c member. */
-extern "C" {
 void daPly_c::SetAnim(u32 animId, int flags, Fix12i speed, u16 startFrame) {
     extern u8 data_0209f2d8;
-    char *self = (char *)this;
-    daPly_c *player = (daPly_c *)self;
-    u32 charId;
-    SharedFilePtr *sfp;
-    u32 sl;
-    int field8;
-    u32 newVal;
-    int id;
+    u32 capChar;
+    SharedFilePtr *capFile;
+    u32 texIdx;
+    int character;
+    u32 fileBase;
     int flag;
-    int param2;
-    void *modelPtr;
+    int texFlags;
+    dExtAnmModel_c *body;
 
     flag = (data_0209f2d8 == 1);
     if (flag) {
         if ((int)animId < 0x11 || (int)animId >= 0x72) {
-            u16 *f = LAUNDER16(&player->mStateFlags);
-            *f = (u16)(*f | 0x80);
+            mStateFlags |= 0x80;
             return;
         }
     }
 
-    newVal = animId << 2;
-    if (newVal != player->mCharFileBase) {
-        data_ov002_020ff480[player->mCharFileBase + (player->param1 & 3)]->Release();
-        dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[newVal + (player->param1 & 3)]);
+    fileBase = animId << 2;
+    if (fileBase != mCharFileBase) {
+        data_ov002_020ff480[mCharFileBase + (param1 & 3)]->Release();
+        dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[fileBase + (param1 & 3)]);
 
-        id = this->GetBodyModelID(player->param1 & 0xff, 0);
-        modelPtr = player->mModels.mBodyModels[id];
-        ((dExtAnmModel_c *)modelPtr)->file = 0;
+        body = mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+        body->file = 0;
 
-        if ((player->mCapFlags & 7) == 4) {
-            charId = player->mHatCharacter;
-            if (charId == player->param1)
-                charId = player->mPrevCharacter;
+        if ((mCapFlags & 7) == 4) {
+            capChar = mHatCharacter;
+            if (capChar == param1)
+                capChar = mPrevCharacter;
 
-            data_ov002_020ff480[player->mCharFileBase + charId]->Release();
-            sfp = data_ov002_020ff480[newVal + charId];
-            dExtFrameCtrl_c::LoadFile(*sfp);
-
-            id = this->GetBodyModelID(charId & 0xff, 0);
-            player->mModels.mBodyModels[id]->SetAnim((BCA_File *)sfp->filePtr, flags, speed,
-                                                     startFrame);
-            {
-                u16 *g = LAUNDER16(&player->mCapTimer);
-                *g = (u16)(*g + 1);
-            }
+            data_ov002_020ff480[mCharFileBase + capChar]->Release();
+            capFile = data_ov002_020ff480[fileBase + capChar];
+            dExtFrameCtrl_c::LoadFile(*capFile);
+            mModels.mBodyModels[GetBodyModelID(capChar & 0xff, 0)]->SetAnim(
+                (BCA_File *)capFile->filePtr, flags, speed, startFrame);
+            mCapTimer++;
         }
     }
 
-    field8 = player->param1;
-    sl = animId * 4;
-    id = this->GetBodyModelID((u32)(field8 & 0xff), 0);
-    player->mModels.mBodyModels[id]->SetAnim(
-        (BCA_File *)data_ov002_020ff480[(field8 & 3) + (animId * 4)]->filePtr, flags, speed,
+    character = param1;
+    texIdx = animId * 4;
+    mModels.mBodyModels[GetBodyModelID(character & 0xff, 0)]->SetAnim(
+        (BCA_File *)data_ov002_020ff480[(character & 3) + animId * 4]->filePtr, flags, speed,
         startFrame);
 
-    field8 = player->param1;
-    if ((int)sl >= 0x60) sl = 0x60;
-    sl += (field8 & 3);
-    param2 = 0;
-    if (((int)sl >> 2) == 1) param2 = 0x40000000;
-    player->mModels.mTexSeqBody[field8].SetFile(*(BTP_File *)data_ov002_020ff2f0[sl]->filePtr,
-                                                param2, 0x1000, 0);
+    character = param1;
+    if ((int)texIdx >= 0x60)
+        texIdx = 0x60;
+    texIdx += character & 3;
+    texFlags = 0;
+    if (((int)texIdx >> 2) == 1)
+        texFlags = 0x40000000;
+    mModels.mTexSeqBody[character].SetFile(*(BTP_File *)data_ov002_020ff2f0[texIdx]->filePtr,
+                                           texFlags, 0x1000, 0);
 
-    player->mCharFileBase = newVal;
+    mCharFileBase = fileBase;
 }
-}
-#pragma pop
-#undef LAUNDER16
 
 // @symbol _ZN7daPly_c19func_ov002_020bf13cEv
 /* matched pure C — was HAND-ASM regperm floor; y-early preload cracks r4/r5 */
@@ -3236,7 +3212,7 @@ void daPly_c::func_ov002_020c18b0(int p1) {
     if (p1 == 0) return;
     {
         int r0v = Player_ScaleByCharFactor(this, 0x28000);
-        int divr = __aeabi_idiv(mHorzSpeed << 12, r0v);
+        int divr = (mHorzSpeed << 12) / r0v;
         mAngleX = (short)FX_MUL(mAngleX, divr);
         mAngleZ = (short)FX_MUL(mAngleZ, divr);
     }
@@ -4166,7 +4142,6 @@ void daPly_c::JumboStarCutsceneFlying() {
 // @symbol _ZN7daPly_c26JumboStarCutsceneTakingOffEv
 int daPly_c::JumboStarCutsceneTakingOff() {
     unsigned int r5;
-    char *anim;
     int id;
 
     if (mStateWork == 0) {
@@ -4186,10 +4161,8 @@ int daPly_c::JumboStarCutsceneTakingOff() {
         buf[4] = 0;
         buf[5] = 0;
         func_ov002_020c37a4((char *)(buf + 3));
-        id = this->GetBodyModelID(param1 & 0xff, 0);
-        /* Launder kept: reading mBodyModels[id]->currFrame directly moves bytes. */
-        anim = (char *)((long long)(int)&(dExtFrameCtrl_c &)*mModels.mBodyModels[id]);
-        r5 = (unsigned int)(((dExtFrameCtrl_c *)anim)->currFrame << 4) >> 0x10;
+        dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+        r5 = (unsigned int)(anim.currFrame << 4) >> 0x10;
         if (r5 == 0x6d || r5 == 0x8d) {
             Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
         }
@@ -7026,7 +6999,6 @@ int daPly_c::func_ov002_020c8d14() {
     Vector3 v;
     int val;
     int id;
-    char *anim;
 
     val = this->mScaleY + 0xf0;
     if (val >= 0x3000) val = 0x3000;
@@ -7055,10 +7027,8 @@ int daPly_c::func_ov002_020c8d14() {
         mMegaTimer = 0x258;
     }
 
-    id = this->GetBodyModelID(param1 & 0xff, 0);
-    /* Launder kept: reading mBodyModels[id]->currFrame directly moves bytes. */
-    anim = (char *)((long long)(int)&(dExtFrameCtrl_c &)*mModels.mBodyModels[id]);
-    if ((unsigned int)(((dExtFrameCtrl_c *)anim)->currFrame << 4) >> 0x10 >= 0x2f) {
+    dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+    if ((unsigned int)(anim.currFrame << 4) >> 0x10 >= 0x2f) {
         if (mIsUnderwater == 0) {
             if (func_ov002_020d22ec(0))
                 return 0;
@@ -8178,7 +8148,7 @@ int func_ov002_020cac60(char *self)
  *
  * The zoomed-in camera pose. Runs only while data_02092110 is negative. Losing
  * the 0x4 state flag ends it: back to walking, the body model's animation
- * field at +0x50+8 is cleared, and the facing angle is latched. Landing, or
+ * rewinds to frame 0, and the facing angle is latched. Landing, or
  * any of the 0x8f03 input bits, clears that flag.
  */
 extern "C" {
@@ -8188,13 +8158,9 @@ int daPly_c::St_CameraZoom_Main() {
     extern unsigned short data_0209f49e;
     if (data_02092110 < 0) {
         if ((unsigned short)(mStateFlags & 4) == 0) {
-            unsigned int id;
             this->ChangeState(data_ov002_0211013c);
-            id = GetBodyModelID(param1 & 0xff, 0);
-            /* currFrame of the body model's frame controller, kept split: the ROM adds
-               +0x50 and stores at +8, and ->currFrame folds that to one +0x58. */
-            int q = (int)(*(dExtAnmModel_c *volatile *)&mModels.mBodyModels[id]) + 0x50;
-            ((dExtFrameCtrl_c *)q)->currFrame = 0;
+            dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+            anim.currFrame = 0;
             mPrevAngleY = mAngleY;
             return 1;
         }
@@ -8401,11 +8367,9 @@ int func_ov002_020cb354(daPly_c *thisptr) {
     daPly_c *player = (daPly_c *)p;
     int a = thisptr->IsAnim(0x24);
     if (a == 0) return a;
-    int idx = thisptr->GetBodyModelID(player->param1 & 0xff, 0);
-    dExtAnmModel_c *m = player->mModels.mBodyModels[idx];
-    /* q is the frame controller (+0x50); m->currFrame would fold +0x50 and +8. */
-    int *q = (int *)((int)m + 0x50);
-    if ((int)((unsigned int)((((dExtFrameCtrl_c *)q)->currFrame) << 4) >> 0x10) < 8) {
+    dExtFrameCtrl_c &anim =
+        *player->mModels.mBodyModels[thisptr->GetBodyModelID(player->param1 & 0xff, 0)];
+    if ((int)((unsigned int)(anim.currFrame << 4) >> 0x10) < 8) {
         unsigned char f = player->mStateArg;
         if (f != 0) return f;
         if (player->mClimbClsn->flags & 0x1000000)
@@ -8606,10 +8570,8 @@ int daPly_c::St_Climb_Main() {
                     s32 fx2 = FX_MUL(fx, 0x500);
                     if (fx2 >= 0x4000) fx2 = 0x4000;
                     {
-                        s32 modelIdx = GetBodyModelID((u8)param1, 0);
-                        char *p2 = (char *)((long long)(int)&(
-                                                dExtFrameCtrl_c &)*mModels.mBodyModels[modelIdx]);
-                        ((dExtFrameCtrl_c *)p2)->speed = fx2;
+                        dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID((u8)param1, 0)];
+                        anim.speed = fx2;
                     }
                     mStateWork = 0;
                 }
@@ -9464,9 +9426,6 @@ tail:
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020cd550Ev
-/* the += / -= on 0x92 go through a materialized base (add r1,c,#0x92;
-   ldrsh/strh [r1]); the (long long)-mask launder stops mwcc folding it. */
-#define LS16(p) (*(short*)(int)(p))
 void daPly_c::func_ov002_020cd550() {
     short lim, v, w, a;
     int step, idx;
@@ -9476,11 +9435,11 @@ void daPly_c::func_ov002_020cd550() {
 
     step = mPrevAngleX > 0 ? 0x100 : 0x200;
     if (mPrevAngleX < lim) {
-        LS16(&mPrevAngle) += step;
+        mPrevAngleX += step;
         if (mPrevAngleX > lim)
             mPrevAngleX = lim;
     } else if (mPrevAngleX > lim) {
-        LS16(&mPrevAngle) -= step;
+        mPrevAngleX -= step;
         if (mPrevAngleX < lim)
             mPrevAngleX = lim;
     }
@@ -9504,7 +9463,6 @@ void daPly_c::func_ov002_020cd550() {
     idx = (u16)(short)(a * 2) >> 4;
     mModelOffsetZ = data_02082214[idx * 2 + 1] * -0x30;
 }
-#undef LS16
 
 // @symbol _ZN7daPly_c19func_ov002_020cd71cEv
 void daPly_c::func_ov002_020cd71c() {
@@ -9984,9 +9942,6 @@ int daPly_c::func_ov002_020ce5f8() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020ce798Ev
-/* the -= 0x4000 goes through a materialized base (add r1,c,#0x60; ldr/str [r1]);
-   the (long long)-mask launder is what stops mwcc folding it to [c,#0x60]. */
-#define LDR_I(p) (*(int*)(int)(p))
 extern "C" {
 void daPly_c::func_ov002_020ce798() {
     typedef struct dActor_c dActor_c;
@@ -10014,14 +9969,13 @@ void daPly_c::func_ov002_020ce798() {
     if (rl.DetectClsn()) {
         ::Vector3 cp = rl.GetClsnPos();
         if (mPosY >= cp.y - 0x82000) {
-            LDR_I(&mPosY) -= 0x4000;
+            mPosY -= 0x4000;
             if (mPosY < cp.y - 0x82000)
                 mPosY = cp.y - 0x82000;
         }
     }
 }
 }
-#undef LDR_I
 
 // @symbol _ZN7daPly_c19func_ov002_020ce8bcEi
 extern "C" {
@@ -10107,10 +10061,6 @@ int daPly_c::func_ov002_020ceb54() {
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020ceb7cEv
-/* The 0x6e5 read-modify-write goes through a materialized base
-   (ldr rN,[pc]; add rN,c,rN) because 0x6e5 is not an ARM rotated immediate;
-   the (long long)-mask launder is what stops mwcc folding it to [c,#0x6e5]. */
-#define LAUNDER_U8(p)      ((unsigned char *)(int)(p))
 extern "C" {
 void daPly_c::func_ov002_020ceb7c() {
     extern struct CameraRaw *data_0209f318;
@@ -10121,16 +10071,15 @@ void daPly_c::func_ov002_020ceb7c() {
         if (data_0209f32c - 0x50000 - mPosY >= 0x64000)
             return;
         ((::dCamera_c *)g)->func_0200d768(mPlayerNo);
-        *LAUNDER_U8(&mStateWork) ^= 2;
+        mStateWork ^= 2;
     } else {
         if (data_0209f32c - 0x50000 - mPosY <= 0x12c000)
             return;
         ((::dCamera_c *)g)->func_0200d72c(mPlayerNo);
-        *LAUNDER_U8(&mStateWork) |= 2;
+        mStateWork |= 2;
     }
 }
 }
-#undef LAUNDER_U8
 
 // @symbol _ZN7daPly_c19func_ov002_020cec2cEv
 /* recovered: shared common types, declarations from a shared header */
@@ -11317,11 +11266,8 @@ int daPly_c::St_Crawl_Main() {
                 Sound::PlayBank0(mGroundSoundType + 0xc0, mCamSpacePos);
             }
             int shifted = mHorzSpeed >> 2;
-            int id3 = this->GetBodyModelID(param1 & 0xff, 0);
-            /* Launder kept: storing through mBodyModels[id3] directly moves bytes. */
-            dExtFrameCtrl_c *anim3 = reinterpret_cast<dExtFrameCtrl_c *>(
-                (long long)(int)&static_cast<dExtFrameCtrl_c &>(*mModels.mBodyModels[id3]));
-            anim3->speed = shifted;
+            dExtFrameCtrl_c &anim3 = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+            anim3.speed = shifted;
             if (func_ov002_020d36d8(1))
                 return 1;
             int r4v = Player_ScaleByCharFactor(this, 0x8000);
@@ -11838,7 +11784,6 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
     int idx;
     int flag;
     int id;
-    char *anim;
     u32 w;
     int state;
     int target;
@@ -11854,9 +11799,8 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
     }
 
     if (p->param1 == 2 && flag == 0) {
-        id = self->GetBodyModelID(p->param1 & 0xff, 0);
-        anim = (char *)((long long)(int)&(dExtFrameCtrl_c &)*p->mModels.mBodyModels[id]);
-        w = ((dExtFrameCtrl_c *)anim)->currFrame;
+        dExtFrameCtrl_c &anim = *p->mModels.mBodyModels[self->GetBodyModelID(p->param1 & 0xff, 0)];
+        w = anim.currFrame;
         /* The whole frame of the 20.12 counter; the u16 parameter's narrowing
            folds with the shift into the ROM's lsl #4 / lsr #16. */
         p->SetAnim(0x3f, 0, 0x2800, w >> 12);
@@ -12358,11 +12302,9 @@ void func_ov002_020d2f24(daPly_c *player) {
     if (id != 3) return;
 
     r4 = player->mSleepBubbleScaleX;
-    id = player->GetBodyModelID(id & 0xff, 0);
     {
-        /* q is the frame controller; m->currFrame would fold the split +0x50. */
-        int *q = (int *)((int)player->mModels.mBodyModels[id] + 0x50);
-        v = (u32)(((dExtFrameCtrl_c *)q)->currFrame << 4) >> 0x10;
+        dExtFrameCtrl_c &anim = *player->mModels.mBodyModels[player->GetBodyModelID(id & 0xff, 0)];
+        v = (u32)(anim.currFrame << 4) >> 0x10;
     }
 
     if (v >= 6) {
@@ -14822,11 +14764,8 @@ int daPly_c::St_YoshiPower_Main() {
     case 0: {
         if (mStateArg == 0) {
             int t4 = (((dExtAnmModel_c *)mModels.mHeadModels[3])->currFrame >> 0xc) << 0x10;
-            int id0 = this->GetBodyModelID(this->param1 & 0xff, 0);
-            /* Split: a plain ->currFrame folds +0x50 and +8 into one +0x58 and moves bytes. */
-            dp = (char *)mModels.mBodyModels[id0];
-            dp = (char *)&(dExtFrameCtrl_c &)*(dExtAnmModel_c *)dp;
-            ((dExtFrameCtrl_c *)dp)->currFrame = (unsigned int)t4 >> 4;
+            dExtFrameCtrl_c &anim0 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
+            anim0.currFrame = (unsigned int)t4 >> 4;
             mStateArg = 1;
         }
         if (this->func_ov002_020d6998() != 0) {
@@ -14934,10 +14873,8 @@ int daPly_c::St_YoshiPower_Main() {
         if (mStateTimer != 0) {
             return 1;
         }
-        int id4 = this->GetBodyModelID(this->param1 & 0xff, 0);
-        int *a50b =
-            (int *)((long long)(int)((char *)&(dExtFrameCtrl_c &)*mModels.mBodyModels[id4]));
-        if ((unsigned short)(((dExtFrameCtrl_c *)a50b)->currFrame >> 0xc) == 0) {
+        dExtFrameCtrl_c &anim4 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
+        if ((unsigned short)(anim4.currFrame >> 0xc) == 0) {
             if (mIsAirborne != 0) {
                 this->ChangeState(data_ov002_021101b4);
             } else {
@@ -14969,14 +14906,12 @@ int daPly_c::St_YoshiPower_Main() {
             int z = 0;
             mUseAltBodyModel = z;
             if (mUseAltBodyModel == 0) {
-                int id6 = this->GetBodyModelID(this->param1 & 0xff, z);
-                int *a50c = (int *)((
-                    long long)(int)((char *)&(dExtFrameCtrl_c &)*mModels.mBodyModels[id6]));
+                dExtFrameCtrl_c &anim6 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, z)];
                 /* The u16 startFrame takes the whole frame, currFrame >> 12;
                    its narrowing folds into the ROM's lsl #4 / lsr #16. */
                 ((dExtAnmModel_c *)mModels.mHeadModels[3])
                     ->SetAnim((BCA_File *)data_ov002_0210e3d8[1], 0x40000000, 0x1000,
-                              ((dExtFrameCtrl_c *)a50c)->currFrame >> 12);
+                              anim6.currFrame >> 12);
             }
         }
         int id7 = this->GetBodyModelID(this->param1 & 0xff, 0);
@@ -15004,10 +14939,8 @@ int daPly_c::St_YoshiPower_Main() {
 
     case 5: {
         if (mStateTimer != 0) {
-            int id8 = this->GetBodyModelID(this->param1 & 0xff, 0);
-            int *a50d =
-                (int *)((long long)(int)((char *)&(dExtFrameCtrl_c &)*mModels.mBodyModels[id8]));
-            if (((unsigned int)(((dExtFrameCtrl_c *)a50d)->currFrame << 4) >> 0x10) >= 4) {
+            dExtFrameCtrl_c &anim8 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
+            if (((unsigned int)(anim8.currFrame << 4) >> 0x10) >= 4) {
                 int i2 = (*(unsigned short*)&mAngleY >> 4) * 2;
                 short* tbl = data_02082214;
                 int zv = mPosZ + (int)(((((long long)tbl[i2+1]) << 18) + 0x800) >> 12);
@@ -15028,12 +14961,11 @@ int daPly_c::St_YoshiPower_Main() {
                 if (mStateTimer == 1 && mFireBreaths == 0) {
                     int z2 = 0;
                     mUseAltBodyModel = z2;
-                    int id9 = this->GetBodyModelID(this->param1 & 0xff, z2);
-                    int *a50e = (int *)((
-                        long long)(int)((char *)&(dExtFrameCtrl_c &)*mModels.mBodyModels[id9]));
+                    dExtFrameCtrl_c &anim9 =
+                        *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, z2)];
                     ((dExtAnmModel_c *)mModels.mHeadModels[3])
                         ->SetAnim((BCA_File *)data_ov002_0210e3d8[1], 0x40000000, 0x1000,
-                                  ((dExtFrameCtrl_c *)a50e)->currFrame >> 12);
+                                  anim9.currFrame >> 12);
                 }
                 return 1;
             }
@@ -15338,9 +15270,9 @@ int func_ov002_020d853c(daPly_c *player, char *o) {
     extern short Vec3_HorzAngle(const void *v0, const void *v1);
     if (player->IsState(data_ov002_02110574)) {
         int j = (player->mPunchKickStep << 1) & 0xff;
-        unsigned idx = player->GetBodyModelID(player->param1 & 0xff, 0);
-        dExtAnmModel_c *mp = player->mModels.mBodyModels[idx];
-        int v = ((dExtFrameCtrl_c *)((long long)(int)&(dExtFrameCtrl_c &)*mp))->currFrame;
+        dExtFrameCtrl_c &anim =
+            *player->mModels.mBodyModels[player->GetBodyModelID(player->param1 & 0xff, 0)];
+        int v = anim.currFrame;
         int k = (unsigned short)(v >> 12);
         if (k < data_ov002_0210a5dc[j] || k > data_ov002_0210a5dc[j + 1])
             return 1;
@@ -15534,15 +15466,11 @@ void func_ov002_020d8a50(char* self, int which)
     int flag = 1;
     u32 i2 = (u8)(which << 1);
     dExtAnmModel_c *model;
-    dExtFrameCtrl_c *anim;
     int frame;
 
-    model =
-        player->mModels.mBodyModels[((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0)];
-    /* Launder kept: reading model->currFrame directly moves bytes. */
-    anim = reinterpret_cast<dExtFrameCtrl_c *>(
-        (long long)(int)&static_cast<dExtFrameCtrl_c &>(*model));
-    frame = (u16)(anim->currFrame >> 12);
+    dExtFrameCtrl_c &anim =
+        *player->mModels.mBodyModels[((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0)];
+    frame = (u16)(anim.currFrame >> 12);
     if (frame < data_ov002_0210a5cc[i2] || frame > data_ov002_0210a5cc[i2 + 1]) {
         flag = 0;
         player->mAttackClsn.Clear();
@@ -17652,9 +17580,8 @@ L14c:
 
 L18c:
     {
-        int id = this->GetBodyModelID(param1 & 0xff, 0);
-        dExtAnmModel_c *anim = mModels.mBodyModels[id];
-        u32 w = ((dExtFrameCtrl_c *)((long long)(int)&(dExtFrameCtrl_c &)*anim))->currFrame;
+        dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+        u32 w = anim.currFrame;
         if ((u16)(w >> 12) < 4)
             goto L1d8;
         func_ov002_020dbaec(this);
@@ -18953,7 +18880,7 @@ int daPly_c::St_WindCarry_Main() {
             if (val < 0)
                 speed = 0x32000;
             else
-                speed = __aeabi_idiv(0x2710000, (val + 0xc8000) >> 12);
+                speed = 0x2710000 / ((val + 0xc8000) >> 12);
             if (mVertSpeed < speed) {
                 int* p = &this->mVertSpeed;
                 *p = *p + (speed >> 3);
@@ -20335,9 +20262,8 @@ int daPly_c::St_SideFlip_Main() {
         }
 
         if (IsState(data_ov002_021101e4)) {
-            int id = this->GetBodyModelID(param1 & 0xff, 0);
-            dExtAnmModel_c *anim = mModels.mBodyModels[id];
-            u32 w = ((dExtFrameCtrl_c *)((long long)(int)&(dExtFrameCtrl_c &)*anim))->currFrame;
+            dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+            u32 w = anim.currFrame;
             if ((u16)(w >> 12) == 0x10) {
                 Sound::PlayBank0(0xf, mCamSpacePos);
             }
@@ -20730,9 +20656,8 @@ int daPly_c::St_Jump_Main() {
             }
 
             {
-                u32 id = this->GetBodyModelID(*(u32 *)((char *)&param1) & 0xff, 0);
-                dExtAnmModel_c *anim = mModels.mBodyModels[id];
-                u32 w = ((dExtFrameCtrl_c *)((long long)(int)&(dExtFrameCtrl_c &)*anim))->currFrame;
+                dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+                u32 w = anim.currFrame;
                 u16 t = (u16)(w >> 12);
                 if (t == 4 || t == 0x18 || t == 0x2c) {
                     Sound::PlayBank0(0xf, mCamSpacePos);
