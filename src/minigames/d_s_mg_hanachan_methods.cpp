@@ -935,12 +935,7 @@ extern "C" void Wiggler_Move(char *c) {
         w->seg[1].x += v[0];
         w->seg[1].y += v[1];
         if (w->busy != 0) {
-            /* The cast pair keeps the field in a register: a plain w->flash -= 1
-               reloads it, and without the pair Wiggler_Move moves. Dropping only
-               the (long long) keeps every byte but renumbers a compiler-local
-               symbol Wiggler_StartBounce relocates against (@1645 -> @1647), so
-               it would need a manifest re-key; measured 2026-11-06. */
-            *(short *)(long long)(int)&w->flash = *(short *)(long long)(int)&w->flash - 1;
+            w->flash--;
             if (w->flash == 0) {
                 Wiggler_SetCruiseSpeed(c);
             }
