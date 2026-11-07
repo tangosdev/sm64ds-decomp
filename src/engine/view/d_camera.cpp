@@ -116,7 +116,7 @@ extern "C" {
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern int StartWithFarCamera();
-extern void *GetViewObj(int idx);
+extern struct ViewObj *GetViewObj(int idx);
 
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
