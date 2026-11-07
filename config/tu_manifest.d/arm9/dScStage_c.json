@@ -14,7 +14,7 @@
     "UpdateMessage (0x0201cb7c) is a dScStage_c static that the linker placed with the message system, far below this range; it is not claimed here.",
     "func_02029408, previously described as a foreign helper, is the pause-gate query (daPly_c::CanPause on the current player, gPlayers[gLocalPlayerId]) that PS_Init opens with.",
     "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU.",
-    "static initializer: __sinit_02074e84 (.init 0x02074e84..0x02074edc, .ctor word 0x02086b88) stores _ZTVN8dGraph_c10callback_cE then _ZTVN10dScStage_c15graphCallback_cE into data_0209f3c4 and constructs data_0209f43c with _ZN8dClipperC1Ev, registering _ZN8dClipperD1Ev through the node at data_0209f388. The node, the player list, the graph callback (data_0209f3c8 is its +4), the nine cap slots, STAR_MARKERS and the clipper sit inside this TU's .bss. The next initializer, 0x02074edc, is d_scene.cpp.",
+    "static initializer: __sinit_02074e84 (.init 0x02074e84..0x02074edc, .ctor word 0x02086b88) stores _ZTVN8dGraph_c10callback_cE then _ZTVN10dScStage_c15graphCallback_cE into sStageGraphCallback and constructs data_0209f43c with _ZN8dClipperC1Ev, registering _ZN8dClipperD1Ev through the node at data_0209f388. The node, the player list, the graph callback (data_0209f3c8 is its +4), the nine cap slots, STAR_MARKERS and the clipper sit inside this TU's .bss. The next initializer, 0x02074edc, is d_scene.cpp.",
     ".bss EDGES: 0x0209f1ec..0x0209f5b8 is one size-sorted run. mwcc places a TU's .bss objects in ascending size, so it climbs from the 1-byte flags at 0x0209f1ec through the u16s (0x0209f300), the words, the u16[4]/u8[9]/u8[12] arrays, the 0x10/0x20/0x24/0x30 tables and dClipper, to the ControllerInput[4] records (0x0209f498) and the 0xc0 death table (0x0209f4f8). BOTTOM: 0x0209f1e8 is d_s_boot's (its only readers are dScBoot_c::InitResources and dScBoot_c::Behavior), and 0x0209f1d8..0x0209f1e8 belongs to the soft-reset TU below it. TOP: the death table ends at 0x0209f5b8, where the size drops back to d_scene.cpp's objects.",
     "All but five objects are read from this TU's .text or .init (config/arm9/relocs.txt); data_0209f224, gShowRedCoinMarkers, data_0209f28c, data_0209f2c0 and data_0209f33c are read only by other TUs, and they are claimed because they sit between this TU's own objects in its size-sorted run, and a linker never interleaves two TUs' .bss. 57 have no reader outside it (config/**/relocs.txt, overlays included) and are file-scope statics here, published global through symbol_binding_rewrites; the rest are read by other TUs or overlays and stay global. Interior labels (data_0209f30d, data_0209f311, data_0209f3c8, data_0209f49c..data_0209f4ae) name addresses inside owned objects and are left as externs."
   ],
@@ -1599,7 +1599,7 @@
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209f3c4",
+      "symbol": "sStageGraphCallback",
       "address": "0x0209f3c4",
       "size": "0x24",
       "evidence": "the global dScStage_c::graphCallback_c. Retail __sinit_02074e84 stores the base vptr then _ZTVN10dScStage_c15graphCallback_cE and nothing else. data_0209f3c8 is the matrix at +4.",
@@ -1647,7 +1647,7 @@
     "The factory's `new dScStage_c()` inlines the base constructor chain, which makes the compiler emit dScene_c's and dBase_c's D2 as standalone fallback bodies; neither has a cartridge home, so both are deadstripped (the same cell as arm9/dScBoot_c_classInit).",
     "The free functions keep their unmangled C names through extern \"C\"; Event's accessors stay in `namespace Event`; Fog::Init stays a mangled-name extern \"C\" definition (Fix12 by value).",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build and to the strict baseline control -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Static initializer folded: data_0209f3c4 (dScStage_c::graphCallback_c) and data_0209f43c (dClipper) are defined in this TU. mwcc emits __sinit_d_s_stage_methods.cpp, its .ctor word, and the registration node @834, renamed to data_0209f388 because ov032 already uses @834. The handwritten src/unnamed/arm9/0207/__sinit_02074e84.cpp is retired."
+    "Static initializer folded: sStageGraphCallback (dScStage_c::graphCallback_c) and data_0209f43c (dClipper) are defined in this TU. mwcc emits __sinit_d_s_stage_methods.cpp, its .ctor word, and the registration node @834, renamed to data_0209f388 because ov032 already uses @834. The handwritten src/unnamed/arm9/0207/__sinit_02074e84.cpp is retired."
   ],
   "compiler_only_output": [
     {
@@ -2552,7 +2552,7 @@
       "address": "0x02074e84",
       "size": "0x58",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer for data_0209f3c4 and data_0209f43c is raw-byte-identical to retail __sinit_02074e84 (0x58: two vptr stores, dClipper C1, one registration, six pool words)"
+      "evidence": "compiler-generated static initializer for sStageGraphCallback and data_0209f43c is raw-byte-identical to retail __sinit_02074e84 (0x58: two vptr stores, dClipper C1, one registration, six pool words)"
     }
   ],
   "ctor": [
@@ -2970,7 +2970,7 @@
       "source": "0x02074ec8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209f3c4",
+      "symbol": "sStageGraphCallback",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209f3c4"

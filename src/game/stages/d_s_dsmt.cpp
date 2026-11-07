@@ -64,7 +64,7 @@ extern u8 gSoftResetPending;
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 extern void *data_020a0ea0;
 /* Linker-defined overlay IDs: the address is the overlay number. */
@@ -224,7 +224,7 @@ s32 dScDSMT_c::InitResources() {
     *(volatile u32 *)0x4001000 |= 0x10000;
     Enable3dEngines();
     ::Initialise3dGraphics(0);
-    data_0209d4a8 = &mGraphCallback;
+    gGraphCallback = &mGraphCallback;
     dScene_c::SetFaders(&fader);
     data_0208ee44 = 1;
     GX::DisableAllBanks();
@@ -237,7 +237,7 @@ s32 dScDSMT_c::InitResources() {
 
 /* CleanupResources: unregister callback, record exit reason, release voice group. */
 s32 dScDSMT_c::CleanupResources() {
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     dScene_c::SetAndStopColorFader();
     sBootArgs.bootFlags = func_ov007_020b6f4c();
     sBootArgs.status = 2;

@@ -56,7 +56,7 @@ extern u8 gSubScreenLayers;
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
 
@@ -64,7 +64,7 @@ extern int data_0208ee44;
    it at the scene and hands it to the graph hook. Its constructor is inline,
    so mwcc emits __sinit_d_s_mb.cpp to run it (was the handwritten
    __sinit_02074fb8). */
-dScMB_c::graphCallback_c data_020a0c68;
+dScMB_c::graphCallback_c sMBGraphCallback;
 
 #pragma defer_codegen off
 
@@ -160,7 +160,7 @@ void dScMB_c::func_02034d34() {
 }
 
 s32 dScMB_c::CleanupResources() {
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     dScene_c::SetAndStopColorFader();
     return 1;
 }
@@ -296,9 +296,9 @@ s32 dScMB_c::InitResources() {
     GX::DispOn();
 
     *(volatile u32 *)0x4001000 |= 0x10000;
-    func_02034b1c(&data_020a0c68, (int)this);
+    func_02034b1c(&sMBGraphCallback, (int)this);
 
-    data_0209d4a8 = &data_020a0c68;
+    gGraphCallback = &sMBGraphCallback;
     mStep = 0;
     mTimeout = 0;
     dScene_c::SetFaders(&fader);

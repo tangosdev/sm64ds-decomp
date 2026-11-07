@@ -92,7 +92,7 @@ struct OamAttr;
    constructor stores the base vptr, then this vtable, and leaves the matrix
    and affine words zero. dClipper's virtual destructor is what makes mwcc
    register it; the callback has none. */
-dScStage_c::graphCallback_c data_0209f3c4;
+dScStage_c::graphCallback_c sStageGraphCallback;
 dClipper data_0209f43c;
 
 extern "C" {
@@ -271,7 +271,7 @@ extern s32 data_0209cef0;
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 /* The stage's .bss, 0x0209f1ec..0x0209f5b8: the pause, VS-exit and
    level-clear screens' state, the level and player globals the free
    functions keep, and the per-level tables. mwcc sorts a TU's objects by
@@ -2855,11 +2855,11 @@ int dScStage_c::graphCallback_c::GraphCallback1() {
    a single ldm/stm block move and a struct copy of four named fields
    scalarizes. */
 extern "C" void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d) {
-    *(MinimapDesc *)(&data_0209f3c4.matrix) = *desc;
-    data_0209f3c4.originX = a;
-    data_0209f3c4.originY = b;
-    data_0209f3c4.targetX = c;
-    data_0209f3c4.targetY = d;
+    *(MinimapDesc *)(&sStageGraphCallback.matrix) = *desc;
+    sStageGraphCallback.originX = a;
+    sStageGraphCallback.originY = b;
+    sStageGraphCallback.targetX = c;
+    sStageGraphCallback.targetY = d;
 }
 
 /* The fader wipe array. dScStage_c::InitResources fills data_0209f324 with
@@ -4459,7 +4459,7 @@ int dScStage_c::CleanupResources() {
             Sound::ResetPlayerVoiceGroup();
     }
     KuppaScript::End();
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
 
     {
         dExtSimpleModel_c *skybox = mSkyboxModel;
@@ -4703,7 +4703,7 @@ int dScStage_c::InitResources() {
         *bg1Control = *bg1Control & ~0x40;
         gSubScreenLayers = 0x18;
         data_0209f204 = 0;
-        data_0209d4a8 = (dGraph_c::callback_c *)&data_0209f3c4;
+        gGraphCallback = (dGraph_c::callback_c *)&sStageGraphCallback;
         gNextActorUpdateMask = 0;
         func_02039218();
         KuppaScript::Reset();

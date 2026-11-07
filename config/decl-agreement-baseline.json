@@ -7458,7 +7458,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209d4a8": {
+    "gGraphCallback": {
       "src/unnamed/arm9/0201/func_02019390.cpp": [
         "return:Obj *"
       ]
@@ -8168,7 +8168,7 @@
         "return:int *"
       ]
     },
-    "data_020a0c68": {
+    "sMBGraphCallback": {
       "src/unnamed/arm9/0207/__sinit_02074fb8.c": [
         "return:void * []"
       ]
@@ -11966,7 +11966,7 @@
         "return:void *"
       ]
     },
-    "data_ov075_0211d71c": {
+    "sEntryGraphCallback": {
       "include/decl_common.h": [
         "return:void *"
       ],

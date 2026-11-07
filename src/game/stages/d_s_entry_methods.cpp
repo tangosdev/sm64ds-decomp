@@ -96,7 +96,7 @@ void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s32 data_0208ee44;
@@ -129,7 +129,7 @@ void func_ov075_02116028(dScEntry_c::graphCallback_c *, int);
 /* The entry scene's one global graph callback, ov075 .bss 0x0211d71c. The
    generated decl_common.h catch-all declares that storage `void *`, so its real
    type is spelled once here instead of at each of the eighteen call sites. */
-#define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&data_ov075_0211d71c)
+#define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&sEntryGraphCallback)
 
 extern "C" {
 void func_020338b0(int, int, short, int);
@@ -2007,7 +2007,7 @@ s32 dScEntry_c::CleanupResources() {
         Deallocate(data_0209b2e8);
         data_0209b2e8 = (void *)0;
     }
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     Sound::UnsetPlayerVoiceGroup();
     CleanCommonModelDataArr();
     return 1;
@@ -2141,7 +2141,7 @@ s32 dScEntry_c::InitResources() {
     }
 
     func_ov075_0211601c(ENTRY_GRAPH_CALLBACK, this, 1);
-    data_0209d4a8 = ENTRY_GRAPH_CALLBACK;
+    gGraphCallback = ENTRY_GRAPH_CALLBACK;
     Sound::LoadInitialGroup(0x2b);
 
     {

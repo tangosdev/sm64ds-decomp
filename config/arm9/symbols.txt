@@ -4616,7 +4616,7 @@ gSubBg0VOffset kind:bss addr:0x0209d498
 gBg2HOffset kind:bss addr:0x0209d49c
 gBg1VOffset kind:bss addr:0x0209d4a0
 gBg1HOffset kind:bss addr:0x0209d4a4
-data_0209d4a8 kind:bss addr:0x0209d4a8
+gGraphCallback kind:bss addr:0x0209d4a8
 data_0209d4ac kind:bss addr:0x0209d4ac
 data_0209d4b0 kind:bss addr:0x0209d4b0
 data_0209d4b4 kind:bss addr:0x0209d4b4
@@ -4825,7 +4825,7 @@ gStarMarkerTypes kind:bss addr:0x0209f37c
 data_0209f388 kind:bss addr:0x0209f388
 gPlayers kind:bss addr:0x0209f394
 data_0209f3a4 kind:bss addr:0x0209f3a4
-data_0209f3c4 kind:bss addr:0x0209f3c4
+sStageGraphCallback kind:bss addr:0x0209f3c4
 data_0209f3c8 kind:bss addr:0x0209f3c8
 data_0209f3e8 kind:bss addr:0x0209f3e8
 STAR_MARKERS kind:bss addr:0x0209f40c
@@ -4920,7 +4920,7 @@ data_020a0244 kind:bss addr:0x020a0244
 data_020a0c5c kind:bss addr:0x020a0c5c
 data_020a0c60 kind:bss addr:0x020a0c60
 data_020a0c64 kind:bss addr:0x020a0c64
-data_020a0c68 kind:bss addr:0x020a0c68
+sMBGraphCallback kind:bss addr:0x020a0c68
 data_020a0c78 kind:bss addr:0x020a0c78
 data_020a0c80 kind:bss addr:0x020a0c80
 data_020a0ce0 kind:bss addr:0x020a0ce0
