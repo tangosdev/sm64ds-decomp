@@ -28,7 +28,7 @@ void func_02039db8(dBgW_KcMbg *collider, Vector3 *v, Vector3 *res);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
-int LenVec3(void *v);
+int LenVec3(const Vector3 *v);
 void NormalizeVec3(const Vector3 *src, Vector3 *dst);
 int func_02053200(int v);
 
