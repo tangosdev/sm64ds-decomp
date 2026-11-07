@@ -1522,7 +1522,6 @@ extern Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
 extern long long func_0203cf94(int *a, int *b);
 extern void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2,
                                 Vector3 *p3);
-extern int func_ov002_020ca270(char *player);
 extern void FUN_02029ab0(void);
 extern int Sound_PlayIfNotActive(int handle, int bank, int id, int arg);
 extern void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget,
@@ -3164,7 +3163,7 @@ int dCamera_c::func_02008cb4() {
         int b = p->actorID;
         b = b == 0xbf;
         if (b != false) {
-            if (func_ov002_020ca270((char *)p) != 0)
+            if (((daPly_c *)p)->func_ov002_020ca270() != 0)
                 return 0;
         }
     }

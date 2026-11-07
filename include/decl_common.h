@@ -505,7 +505,6 @@ extern int func_ov002_020c51d0(void*, void*);
 extern int func_ov002_020c56f0(unsigned char*, int);
 extern int func_ov002_020cf20c(char*);
 extern int func_ov002_020cf700(void*);
-extern int func_ov002_020d0d2c(void*);
 extern int func_ov002_020d1164(void*);
 extern int func_ov002_020d1204(void*);
 extern int func_ov002_020d12b0(void*);

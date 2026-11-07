@@ -1195,12 +1195,6 @@ void Heyho_StartMotionChase(char *c) {
 /* ---- Heyho_MotionChase ---- */
 namespace n020c4fa4 {
 
-struct VB {
-    virtual int *m0();
-    virtual int *m1();
-    virtual int m2();
-};
-
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
@@ -1215,7 +1209,7 @@ extern char *sJumpAdapters[];
 }
 
 extern "C" void Heyho_MotionChase(char *c) {
-    VB *best;
+    dMg3DHeyhoObjAdapter_c *best;
     Vector3 bp;
     Vector3 op;
     Vector3 delta;
@@ -1253,13 +1247,13 @@ extern "C" void Heyho_MotionChase(char *c) {
         best = 0;
         bm = 0x20000;
         for (i = 0; i < 3; i++) {
-            if (((VB *)sJumpAdapters[i])->m2() != 0) {
+            if (((dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i])->IsLaunched() != 0) {
                 int *v;
                 int dot;
-                v = ((VB *)sJumpAdapters[i])->m0();
+                v = (int *)((dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i])->GetPos();
                 op.x = v[0]; op.y = v[1]; op.z = v[2];
                 Vec3_Sub(&delta, &HEYHO(c)->mPos, &op);
-                v = ((VB *)sJumpAdapters[i])->m1();
+                v = (int *)((dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i])->GetVelocity();
                 nrm.x = v[0]; nrm.y = v[1]; nrm.z = v[2];
                 if (NormalizeVec3IfNonZero(&nrm) != 0) {
                     dot = DotVec3(&nrm, &delta);
@@ -1270,7 +1264,7 @@ extern "C" void Heyho_MotionChase(char *c) {
                         cand.x = proj.x; cand.y = proj.y; cand.z = proj.z;
                         d = Vec3_Dist(&HEYHO(c)->mPos, &cand);
                         if (d < bm) {
-                            best = (VB *)sJumpAdapters[i];
+                            best = (dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i];
                             bp = cand;
                             bm = d;
                         }
