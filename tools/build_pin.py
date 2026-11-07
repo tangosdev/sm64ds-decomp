@@ -202,8 +202,8 @@ def verify(src, func, addr, size, label, strict=None, version=None):
 def verify_many(src, targets, strict=None, version=None, fp_targets=()):
     """Does `src` reproduce EVERY function in `targets`? One compile, N comparisons.
 
-    `targets` is a sequence of `(func, addr, size, label)`. Returns `(ok, detail)` with
-    the same contract as verify(): False on the first function that fails, named, and no
+    `targets` is a sequence of `(func, addr, size, label)`. Returns `(ok, detail, fingerprint)`
+    with the same contract as verify(): False on the first function that fails, named, and no
     path that returns True on a question it could not answer.
 
     This exists because verify() answers for one symbol, and a caller that edits a
@@ -255,7 +255,7 @@ def verify_many(src, targets, strict=None, version=None, fp_targets=()):
             rows, missing = None, f"reloc-destination check raised: {e}"
         if rows is None:
             return False, (f"{func}: bytes match under {version} but the "
-                           f"reloc-destination check could not run: {missing}")
+                           f"reloc-destination check could not run: {missing}"), ()
         bad = [r for r in rows if r["verdict"] == "WRONG-DEST"]
         if bad:
             return False, (f"{func}: bytes match under {version} but {len(bad)} reloc "
