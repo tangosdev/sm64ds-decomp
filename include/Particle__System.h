@@ -124,6 +124,6 @@ typedef char System_size_must_be_0x78[sizeof(System) == 0x78 ? 1 : -1];
 
 }
 
-extern "C" Particle::SysTracker *data_0209ee74;
+extern "C" Particle::SysTracker *gParticleSysTracker;
 
 #endif

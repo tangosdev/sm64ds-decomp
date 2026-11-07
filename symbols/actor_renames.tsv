@@ -8050,3 +8050,10 @@ arm9	0x0203842c	func_0203842c	_ZN9dBgCh_Lin21DetectClsnExceptSlot0Ev	extern "C" 
 arm9	0x0203859c	func_0203859c	_ZN9dBgCh_Lin15DetectClsnSlot0Ev	extern "C" free function -> dBgCh_Lin member (r0 is the line query at every caller); scans collider slot 0 only (the stage mesh, registered first and ownerless by dScStage_c::LoadClsnAndObjects); name after dBgCh_Gnd::DetectClsnSlot0
 arm9	0x02038824	_ZN12dBgCh_SphCrr13func_02038824Ev	_ZN12dBgCh_SphCrr21DetectClsnExceptSlot0Ev	DetectClsn without its slot-0 head: collider slots 1..0x17 only, never the stage mesh
 arm9	0x02038a38	_ZN12dBgCh_SphCrr13func_02038a38Ev	_ZN12dBgCh_SphCrr15DetectClsnSlot0Ev	scans collider slot 0 only (the stage mesh, registered first and ownerless by dScStage_c::LoadClsnAndObjects); name after dBgCh_Gnd::DetectClsnSlot0
+arm9	0x0209ee74	data_0209ee74	gParticleSysTracker	Particle::SysTracker singleton pointer: the ctor stores this, the dtor clears it, every Particle wrapper reaches the tracker through it (PARTICLE_SYS_TRACKER); storage unchanged
+arm9	0x0209ee78	data_0209ee78	sParticleHeapCursor	particle bump-heap cursor: func_02023178 returns it and advances it by size; SysTracker::Initialise seeds it with the heap base; storage unchanged
+arm9	0x0209ee7c	data_0209ee7c	sParticleHeapEnd	particle bump-heap end: SysTracker::Initialise stores base + allocSize; storage unchanged
+arm9	0x0209ee80	data_0209ee80	sParticleHeapBase	particle bump-heap base: SysTracker::Initialise stores the operator_new2 block, ~SysTracker frees it and clears it; storage unchanged
+arm9	0x0209ee84	data_0209ee84	sParticlePalVramLowCursor	particle low palette-VRAM cursor: Texture::AllocPalVram(fromLowAddress) returns it and advances it by the 8-aligned size; storage unchanged
+arm9	0x0209ee88	data_0209ee88	sParticleTex4x4VramCursor	particle 4x4-texel VRAM cursor: Texture::AllocTexVram(isTexel4x4) returns it and advances it by size; storage unchanged
+arm9	0x0209ee8c	data_0209ee8c	sParticlePalVramHighCursor	particle high palette-VRAM cursor: Texture::AllocPalVram allocates downward from it by the 16-aligned size; storage unchanged

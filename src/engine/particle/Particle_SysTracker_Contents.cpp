@@ -13,7 +13,7 @@
  *   single |= on the field DIFFs Reset.
  * - Update widens active == 1 to an int before testing it. A plain
  *   if on entry->active DIFFs Update.
- * - data_0209ee74 is the global tracker. This TU does not own it.
+ * - gParticleSysTracker is the global tracker. This TU does not own it.
  */
 
 #include "Particle__System.h"
@@ -27,10 +27,10 @@ bool SysTracker::Contents::Entry::Initialise(
     dPa_c::level_c::callback_c *newCallback)
 {
     SystemDefinition::Data& data =
-        *data_0209ee74->mManager->mDefinitions[newDefinitionID].data;
+        *gParticleSysTracker->mManager->mDefinitions[newDefinitionID].data;
 
     data.flags &= ~0x4000;
-    system = data_0209ee74->mManager->AddSystem(newDefinitionID, position);
+    system = gParticleSysTracker->mManager->AddSystem(newDefinitionID, position);
     if (system == 0)
         return false;
 
@@ -62,10 +62,8 @@ bool SysTracker::Contents::Entry::Initialise(
 }
 
 // @symbol _ZN8Particle10SysTracker8Contents5Entry5ResetEv
-void SysTracker::Contents::Entry::Reset()
-{
-    SystemDefinition::Data& data =
-        *data_0209ee74->mManager->mDefinitions[definitionID].data;
+void SysTracker::Contents::Entry::Reset() {
+    SystemDefinition::Data &data = *gParticleSysTracker->mManager->mDefinitions[definitionID].data;
     u32 *flagsAddress;
     u32 flags;
 

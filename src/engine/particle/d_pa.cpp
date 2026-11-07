@@ -75,7 +75,7 @@ void dPa_c::level_c::simpleCallback_c::SpawnParticles(
 {
     system.callbackFlags |= 2;
     system.callbackValue = value;
-    func_02049d60(data_0209ee74->mManager, &system);
+    func_02049d60(gParticleSysTracker->mManager, &system);
 }
 
 // @symbol _ZN5dPa_c7level_c16simpleCallback_c8OnUpdateERN8Particle6SystemEb
