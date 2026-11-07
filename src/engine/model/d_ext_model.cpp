@@ -56,6 +56,10 @@
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
+/* func_02046e28 uses these local C-layout views in its implementation TU. */
+struct Model;
+struct MatAnimData;
+
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
 /* local extern: no header declares it; sizes the transforms buffer from the file */
@@ -156,7 +160,7 @@ void func_02046bbc(ModelComponents *model, BTP_File *file, unsigned int frame);
 void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
-void func_02046e28(ModelComponents *model, BMA_File *file, int frame);
+void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
 }
 
 namespace cstd {
@@ -1098,7 +1102,7 @@ void dExtAnmMaterial_c::SetFile(BMA_File &animFile, int flags, Fix12i speed, u16
 
 // @symbol _ZN17dExtAnmMaterial_c6UpdateER15ModelComponents
 void dExtAnmMaterial_c::Update(ModelComponents &model) {
-    func_02046e28(&model, file, (u16)((u32)currFrame >> 12));
+    func_02046e28((struct Model *)&model, (struct MatAnimData *)file, (u16)((u32)currFrame >> 12));
 }
 
 /* Static: no this. */
