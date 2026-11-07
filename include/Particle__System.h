@@ -111,6 +111,7 @@ struct System {
     static u32 NewRedFlame(Fix12i, Fix12i, Fix12i);
     static u32 NewBlueFlame(Fix12i, Fix12i, Fix12i);
     static void NewBigSplash(Fix12i, Fix12i, Fix12i);
+    static u32 NewCheckYogan(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
     static u32 NewUnkCallback818(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
     /* Last parameter is u8. unsigned int shrinks a caller and reloads the
        argument as a word; the matched body loads a byte. */

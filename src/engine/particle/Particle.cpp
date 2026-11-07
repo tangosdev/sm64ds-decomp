@@ -256,16 +256,17 @@ u32 func_02022c80(
     return Particle::System::New(uniqueID, effectID, x, y, z, (const Vector3_16f *)dir,
                                  (Particle::Callback *)&gParticleSysTracker->mCallback_800);
 }
-
-u32 func_02022c3c(
-    u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* dir)
-{
-    return Particle::System::New(uniqueID, effectID, x, y, z, (const Vector3_16f *)dir,
-                                 (Particle::Callback *)&gParticleSysTracker->mCheckYoganCallback);
-}
 }
 
 namespace Particle {
+
+/* System::New with the tracker's checkYoganCallback_c ("yogan" is lava);
+   daObjLava_c's popping lava bubbles are its one caller. */
+u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
+                          const Vector3_16f *dir) {
+    return New(uniqueID, effectID, x, y, z, dir,
+               (Callback *)&gParticleSysTracker->mCheckYoganCallback);
+}
 
 u32 System::NewWeather(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                        const Vector3_16f *dir, u8 numWeatherEffectsNow) {

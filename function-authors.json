@@ -3779,7 +3779,7 @@
     },
     "arm9:0x02022c3c": {
       "author": "tangosdev",
-      "name": "func_02022c3c"
+      "name": "_ZN8Particle6System13NewCheckYoganEjjiiiPK11Vector3_16f"
     },
     "arm9:0x02022c80": {
       "author": "tangosdev",

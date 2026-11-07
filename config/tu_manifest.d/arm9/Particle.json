@@ -124,7 +124,7 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_02022c3c",
+      "symbol": "_ZN8Particle6System13NewCheckYoganEjjiiiPK11Vector3_16f",
       "address": "0x02022c3c",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0202/func_02022c3c.c",
