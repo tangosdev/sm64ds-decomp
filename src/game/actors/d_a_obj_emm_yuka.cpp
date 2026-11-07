@@ -56,7 +56,7 @@ extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4
                                   s16 angleY, CLPS_Block *clps);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(const Vector3 *v);
-void Vec3_MulScalar(void *out, void *v, int s);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 }
@@ -122,11 +122,11 @@ int daObjEmmYuka_c::Behavior()
     Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&mPosX, (const Vector3 *)&prev);
     len = LenVec3((const Vector3 *)&diff);
     if (len == 0 || len <= mHorzSpeed) {
-        Vec3_MulScalar(&scaled1, &diff, cstd::fdiv(mHorzSpeed, len));
+        Vec3_MulScalar((Vector3 *)&scaled1, (const Vector3 *)&diff, cstd::fdiv(mHorzSpeed, len));
         SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled1, (Vector3 *)&mPosX);
         looped = 1;
     } else {
-        Vec3_MulScalar(&scaled2, &diff, cstd::fdiv(mHorzSpeed, len));
+        Vec3_MulScalar((Vector3 *)&scaled2, (const Vector3 *)&diff, cstd::fdiv(mHorzSpeed, len));
         SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled2, (Vector3 *)&mPosX);
     }
     if (looped) {
