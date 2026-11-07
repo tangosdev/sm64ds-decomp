@@ -746,10 +746,8 @@ void daBmb_c::func_ov102_0214b988() {
     if (Vec3_Dist(&mPos, &pl->mPos) > 0x190000)
         return;
     {
-        int *src = (int *)&pl->mPosX;
-        v.x = src[0];
-        v.y = src[1];
-        v.z = src[2];
+        const Vector3 &p = pl->mPos;
+        v = p;
     }
     if (AngleDiff(Vec3_HorzAngle(&mPos, &v), mAngleY) >= mNoticeAngle)
         return;
