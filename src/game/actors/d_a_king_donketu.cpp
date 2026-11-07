@@ -227,7 +227,7 @@ int ChiefChilly_ChangeState(C *c, PMF *p);
 extern struct BCA_File *data_ov002_0210da30[2];
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
-extern void MulVec3Mat4x3(const void* in, void* m, void* out);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
@@ -287,7 +287,7 @@ void daKing_Donketu_c::func_ov073_0211f144() {
     in.z = 0; in.z = 0xc8000; in.x = 0; in.y = 0;
     out.x = 0; out.y = 0; out.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mPrevAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
     pos.x = pos.x + out.x;
     pos.z = pos.z + out.z;
     c->mParticleId0 = Particle::System::New(c->mParticleId0, 0x77, pos.x, pos.y, pos.z, 0, 0);
@@ -376,7 +376,7 @@ do_mtx:
     res.z = 0;
     new_var = &res;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &res);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&res);
 
     {
         int px = pv.x;
@@ -772,7 +772,7 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
     in.z = -0x55e000;
 
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
     ps.x = ps.x + out.x;
     ps.y = ps.y + 0x200000;
@@ -849,7 +849,7 @@ int daKing_Donketu_c::func_ov073_0211fe8c() {
     in.z = -0x59c000;
 
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
     pos.y -= 0x100000;
     pos.x = pos.x + out.x;
@@ -951,7 +951,7 @@ int daKing_Donketu_c::func_ov073_021200e0()
             offset.z = 0x1e000;
         }
         Matrix4x3_FromRotationY(&data_020a0e68, horz);
-        MulVec3Mat4x3(&offset, &data_020a0e68, &rotated);
+        MulVec3Mat4x3((Vector3 *)&offset, &data_020a0e68, (Vector3 *)&rotated);
         mSpeedX = rotated.x;
         mSpeedZ = rotated.z;
         if (mVertSpeed < 0) {
@@ -1066,7 +1066,7 @@ mainblock:
         in[2] = 0x50000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MulVec3Mat4x3(in, &data_020a0e68, out);
+        MulVec3Mat4x3((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
         c->mSpeedX = out[0];
         c->mSpeedZ = out[2];
     }
@@ -1154,7 +1154,7 @@ mainblock:
         in[2] = 0x28000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MulVec3Mat4x3(in, &data_020a0e68, out);
+        MulVec3Mat4x3((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
         c->mSpeedX = out[0];
         if (c->mStateScratch != 0 || c->mVertSpeed < 0) {
             c->mVertSpeed = out[1];
@@ -1261,7 +1261,7 @@ int daKing_Donketu_c::func_ov073_02120910()
     out.y = 0;
     out.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY + 0x8000);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
     in.x = c->mEdgePosX + out.x;
     in.y = c->mEdgePosY;
     in.z = c->mEdgePosZ + out.z;
@@ -1915,7 +1915,7 @@ int daKing_Donketu_c::Behavior()
             Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angx);
         }
-        MulVec3Mat4x3(&rp.in, &data_020a0e68, &rp.out);
+        MulVec3Mat4x3((Vector3 *)&rp.in, &data_020a0e68, (Vector3 *)&rp.out);
         {
             int sx = rp.start.x;
             int ox = rp.out.x;
