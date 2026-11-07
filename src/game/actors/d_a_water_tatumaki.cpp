@@ -19,9 +19,10 @@
  * - StateDrag: ApproachLinear on mPullPos with a Fix12<int>
  *   temporary is 0x198 against ROM 0x190 and adds a 4-byte .rodata word.
  *   The int step math/Approach.h declares keeps it in a register.
- * - StateDrag: without volatile, the spilled player position is
- *   0x178 against ROM 0x190. The ROM stores the three words and compares
- *   the y still in the register.
+ * - StateDrag copies the player position through a const reference into a
+ *   Vector3 that is never read again (#821). Vector3 is non-POD, so mwccarm
+ *   keeps the three stores; a POD triple without volatile was 0x178
+ *   against ROM 0x190.
  * - StateDrag, InitStateDrag, StateSpin, UpdateModelMatrix: a TU-local reference to mPosX grows those
  *   functions by 4 bytes (0x190, 0x98, 0x18c, 0x74 become 0x194, 0x9c,
  *   0x190, 0x78).
@@ -37,10 +38,9 @@
  *   dExtAnmModel_c::SetAnim the same way is 0xdc against ROM 0xd0, also with
  *   a 4-byte .rodata word. Both are member calls under their scalar
  *   spellings, which match.
- * - Behavior: Particle::System::New(mParticleID, 0x139, mPosX,
- *   mPosY + 0x384000, mPosZ, 0, 0) is 0xc8 against ROM 0xe0. The ROM
- *   spills the position, adds the lift into the spill, and reloads x and
- *   the raised y.
+ * - Behavior: the spray position is `Vector3 pos = mPos; pos.y += lift;`
+ *   (#821). Passing mPosX, mPosY + 0x384000, mPosZ directly is 0xc8
+ *   against ROM 0xe0.
  * - Without #pragma defer_codegen off the sections come out in reverse
  *   source order (InitResources first, D1 last). The pragma is what puts
  *   this TU in ROM order. D2 still has no cartridge home.
@@ -131,7 +131,7 @@ daWater_Tatumaki_c::~daWater_Tatumaki_c() {}
 int daWater_Tatumaki_c::StateDrag() {
     Vector3 target;
     Vector3 offset;
-    volatile s32 spilled[3]; /* stored, never read; the compare uses y in r1 */
+    Vector3 playerPos;
     daPly_c *player;
 
     target.x = 0;
@@ -166,11 +166,9 @@ int daWater_Tatumaki_c::StateDrag() {
             player->mAngleZ = 0;
         }
         {
-            const Vector3 *playerPos = &player->mPos;
-            spilled[0] = playerPos->x;
-            spilled[1] = playerPos->y;
-            spilled[2] = playerPos->z;
-            if (this->mCenter.y > playerPos->y) {
+            const Vector3 &p = player->mPos;
+            playerPos = p;
+            if (this->mCenter.y > playerPos.y) {
                 if (this->mPlayerKilled == 0) {
                     KillPlayer();
                     this->mPlayerKilled = 1;
@@ -310,26 +308,15 @@ int daWater_Tatumaki_c::Render() {
 
 // @symbol _ZN18daWater_Tatumaki_c8BehaviorEv
 int daWater_Tatumaki_c::Behavior() {
-    volatile int spilled[3]; /* x and the raised y are reloaded as arguments */
-    int x, y, z;
-
     DecIfAbove0_Short((u16 *)&mStateTimer);
     if (mState->execute != 0) {
         (this->*mState->execute)();
     }
     UpdatePos(0);
 
-    x = mPosX;
-    spilled[0] = x;
-    y = mPosY;
-    spilled[1] = y;
-    z = mPosZ;
-    spilled[2] = z;
-    y += kSprayLift;
-    spilled[1] = y;
-
-    mParticleID = Particle::System::New(*(volatile u32 *)&mParticleID, kSprayEffect, spilled[0],
-                                        spilled[1], z, 0, 0);
+    Vector3 pos = mPos;
+    pos.y += kSprayLift;
+    mParticleID = Particle::System::New(mParticleID, kSprayEffect, pos.x, pos.y, pos.z, 0, 0);
 
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
