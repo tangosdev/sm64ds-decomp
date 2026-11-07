@@ -650,10 +650,7 @@ int daWanwan2_c::Behavior()
         dActor_c *pl = ClosestPlayer();
         (void)pl;
 
-        volatile Vector3 v;
-        v.x = 0;
-        v.y = 4;
-        v.z = 0;
+        Vector3 v(0, 4, 0);
 
         dActor_c *sp =
             dActor_c::Spawn(daWanwan2_ACTOR_COIN, 2, mPos, (const Vector3_16 *)0, mAreaId, -1);
