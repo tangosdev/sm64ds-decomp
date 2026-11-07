@@ -148,7 +148,7 @@ typedef struct dBgCh_LinHit { char pad[0x14]; char surf[0x64]; } dBgCh_LinHit;  
 typedef struct Entry3 { int a, b, c; } Entry3;                      /* data_02086f58 rows */
 extern Entry3 data_02086f58[];
 /* The 0x28-byte mode record dCamera_c::mMode and mAreaMode point at, entry N
-   of the table at 0x02086fcc (func_0200cb58). func_02009e70 calls it CamMode.
+   of the table at 0x02086fcc (SetMode). func_02009e70 calls it CamMode.
    Only the fields this file reads are named. */
 typedef struct CamMode {
     /* func_02009e70: below nearDist (func_020093f4-scaled) of horizontal
@@ -174,7 +174,7 @@ typedef struct CamMode {
     /* The z of the offset that places pos from lookAt (func_0200d1e4,
        func_0200cce4). */
     s32 posDist; /* 0x20 */
-    /* func_0200ca50 eases mFovAngle toward it. */
+    /* UpdateState eases mFovAngle toward it. */
     s16 fovAngle; /* 0x24 */
     /* Mode flags. 0x4: func_0200c394 returns early and func_0200c66c keeps
        the record it chose; 0x10: func_0200c66c falls back to mAreaMode and
@@ -197,7 +197,7 @@ typedef struct CamEntryE {
     s16 f0, f2, f4, f6, f8, fa;
 } CamEntryE; /* func_0200cf40's spawn view */
 /* The state objects carry member-function pointers back into the camera at
-   +0 and +8; func_0200cae4/func_0200ca50 dispatch them through this shadow,
+   +0 and +8; EnterState/UpdateState dispatch them through this shadow,
    which exists only to give the pointer-to-member a class. */
 struct CamPmfHost;
 typedef int (CamPmfHost::*CamPmf)();
@@ -284,7 +284,7 @@ block_7:
             } else {
                 Math_Function_0203b0fc((int *)&mFovBlend, 0, 0x88, 0x7fffffff);
             }
-            func_0200ca50();
+            UpdateState();
             if (mShakeY != 0) {
                 ApproachLinear(*(int *)&mShakeY, 0, 0x1000);
                 mShakeY = 0 - mShakeY;
@@ -445,7 +445,7 @@ int dCamera_c::Render()
         sp18 = (s16)(sp18 + ((tr0 * m) << 4 >> 16));
     }
 
-    func_0200d954(sp18);
+    SetFovAngle(sp18);
 
     *(volatile s32 *)0x04000580 = self->mViewport[0] | (self->mViewport[1] << 8) |
                                   (self->mViewport[2] << 16) | (self->mViewport[3] << 24);
@@ -509,7 +509,7 @@ int dCamera_c::CleanupResources()
 }
 
 extern "C" {
-void dCamera_c::func_0200d954(short arg) {
+void dCamera_c::SetFovAngle(short arg) {
     int i = (int)(unsigned short)arg >> 4;
     int j = i * 2;
     mInvSinFov = func_02053200(data_02082214[j]);
@@ -589,7 +589,7 @@ void dCamera_c::func_0200d81c(int playerID) {
     ChangeState((dCamera_c::State *)&data_0209b008);
 }
 
-void dCamera_c::func_0200d7e0(int playerID) {
+void dCamera_c::SetCameraZoomState(int playerID) {
     if (playerID != (int)data_0209f250)
         return;
     ChangeState((dCamera_c::State *)&data_0209b098);
@@ -625,7 +625,7 @@ void dCamera_c::func_0200d6b4(unsigned char playerID) {
     ChangeState((dCamera_c::State *)&data_0209b048);
 }
 
-void dCamera_c::func_0200d678(unsigned char playerID) {
+void dCamera_c::SetSpinState(unsigned char playerID) {
     if (playerID != *(unsigned char *)&data_0209f250)
         return;
     ChangeState((dCamera_c::State *)&data_0209b058);
@@ -640,7 +640,7 @@ void dCamera_c::func_0200d63c(unsigned char playerID) {
 void dCamera_c::func_0200d5fc(int playerID) {
     if (playerID == data_0209f250) {
         ChangeState((dCamera_c::State *)&data_0209b078);
-        func_0200cb58(5);
+        SetMode(5);
     }
 }
 
@@ -650,11 +650,11 @@ void dCamera_c::func_0200d5c0(unsigned char playerID) {
     ChangeState((dCamera_c::State *)&data_0209b078);
 }
 
-void dCamera_c::func_0200d580(int playerID) {
+void dCamera_c::SetHeadstandState(int playerID) {
     if (playerID != data_0209f250)
         return;
     ChangeState((dCamera_c::State *)&data_0209b078);
-    func_0200cb58(8);
+    SetMode(8);
 }
 
 void dCamera_c::func_0200d544(unsigned char playerID) {
@@ -669,7 +669,7 @@ void dCamera_c::func_0200d508(unsigned char playerID) {
     ChangeState((dCamera_c::State *)&data_0209b0a8);
 }
 
-void dCamera_c::func_0200d4b0(unsigned int playerID, int arg2) {
+void dCamera_c::StartDanceCutscene(unsigned int playerID, int arg2) {
     unsigned char tmp = data_0209f250;
     if (playerID == tmp)
     {
@@ -712,7 +712,7 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
         return;
 
     mFlags &= 0xfffffaf7u;
-    func_0200cb58(0xa);
+    SetMode(0xa);
     mFlags |= 4u;
 
     slot4 = (int)mMode;
@@ -797,7 +797,7 @@ void dCamera_c::func_0200d148(unsigned char playerID) {
     ChangeState((dCamera_c::State *)&data_0209b118);
 }
 
-void dCamera_c::func_0200d10c(unsigned char playerID) {
+void dCamera_c::SetGrabBowserTailState(unsigned char playerID) {
     if (playerID != *(unsigned char *)&data_0209f250)
         return;
     ChangeState((dCamera_c::State *)&data_0209b128);
@@ -851,9 +851,9 @@ void dCamera_c::func_0200cf40() {
         int x;
         int y;
         int z;
-        func_0200cb58(0xa);
+        SetMode(0xa);
         mFovAngle = mMode->fovAngle;
-        func_0200d954(mFovAngle);
+        SetFovAngle(mFovAngle);
         func_0200cce4();
         v = (CamEntryE *)GetViewObj((int)param1 & 0xff);
         x = v->f2;
@@ -866,9 +866,9 @@ void dCamera_c::func_0200cf40() {
         mBaseAngleY = v->fa + 0x8000;
         return;
     }
-    func_0200cb58(9);
+    SetMode(9);
     mFovAngle = mMode->fovAngle;
-    func_0200d954(mFovAngle);
+    SetFovAngle(mFovAngle);
     func_0200cce4();
 }
 
@@ -1020,16 +1020,16 @@ int dCamera_c::ChangeState(State * state)
         mState = state;
         mTurningToTarget = 0;
     }
-    return func_0200cae4();
+    return EnterState();
 }
 
-void dCamera_c::func_0200cb58(int index) {
+void dCamera_c::SetMode(int index) {
     mMode = (CamMode *)(index * 0x28 + (int)&data_02086fcc);
 }
 
 /* State dispatch: honors the deferred-change flags, then calls the state's
  * +0 member-function pointer on the camera. */
-int dCamera_c::func_0200cae4() {
+int dCamera_c::EnterState() {
     CamPmfHost *c = (CamPmfHost *)this;
     if (c->flags & 0x4000) {
         volatile unsigned int *flags = (volatile unsigned int *)&c->flags;
@@ -1044,7 +1044,7 @@ int dCamera_c::func_0200cae4() {
 
 /* Per-frame state tick: mFovAngle eases toward the mode record's +0x24
  * angle, then the state's +8 member-function pointer runs. */
-int dCamera_c::func_0200ca50() {
+int dCamera_c::UpdateState() {
     CamPmfHost *ch = (CamPmfHost *)this;
     int flags;
     int r5;
@@ -2555,45 +2555,45 @@ s32 dCamera_c::func_02009e70() {
 /* The states' entry ops: each switches to mode record N of the table at
    0x02086fcc. */
 int dCamera_c::func_02009e50() {
-    func_0200cb58(1);
+    SetMode(1);
     return 1;
 }
 
 int func_02009e30(dCamera_c *cam) {
     int dummy = 0;
     (void)&dummy;
-    cam->func_0200cb58(0);
+    cam->SetMode(0);
     return 1;
 }
 
 int func_02009e10(dCamera_c *cam) {
-    cam->func_0200cb58(6);
+    cam->SetMode(6);
     return 1;
 }
 
 int func_02009df0(dCamera_c *cam) {
-    cam->func_0200cb58(2);
+    cam->SetMode(2);
     return 1;
 }
 
 int func_02009dd0(dCamera_c *cam) {
-    cam->func_0200cb58(3);
+    cam->SetMode(3);
     return 1;
 }
 
 int func_02009db0(dCamera_c *cam) {
-    cam->func_0200cb58(4);
+    cam->SetMode(4);
     return 1;
 }
 
 int func_02009d90(dCamera_c *cam) {
     volatile int dummy __attribute__((unused));
-    cam->func_0200cb58(7);
+    cam->SetMode(7);
     return 1;
 }
 
 int func_02009d70(dCamera_c *cam) {
-    cam->func_0200cb58(0x10);
+    cam->SetMode(0x10);
     return 1;
 }
 
@@ -2775,7 +2775,7 @@ int dCamera_c::func_020098e0() {
 
 /* Entry to state 0x13: arm mStateTimer, which func_0200987c counts down. */
 int func_020098b8(dCamera_c *cam) {
-    cam->func_0200cb58(0x13);
+    cam->SetMode(0x13);
     cam->mStateTimer = 0x1c;
     return 1;
 }
@@ -2784,13 +2784,13 @@ int func_020098b8(dCamera_c *cam) {
    0x14. */
 void func_0200987c(dCamera_c *cam) {
     if (DecIfAbove0_Short(&cam->mStateTimer) == 0) {
-        cam->func_0200cb58(0x14);
+        cam->SetMode(0x14);
     }
     cam->func_02009e70();
 }
 
 int func_0200985c(dCamera_c *cam) {
-    cam->func_0200cb58(0x17);
+    cam->SetMode(0x17);
     return 1;
 }
 
@@ -2798,7 +2798,7 @@ int func_0200985c(dCamera_c *cam) {
 int func_020097ec(dCamera_c *cam) {
     Vector3 *src;
 
-    cam->func_0200cb58(0x18);
+    cam->SetMode(0x18);
     src = &cam->mTargetPlayer->mPos;
     cam->pos.x = src->x;
     cam->pos.y = src->y;
@@ -2868,7 +2868,7 @@ int func_020095e4(dCamera_c *cam) {
 }
 
 int func_020095c4(dCamera_c *cam) {
-    cam->func_0200cb58(0x1d);
+    cam->SetMode(0x1d);
     return 1;
 }
 
@@ -2897,7 +2897,7 @@ int func_02009540(dCamera_c *cam) {
 
 int func_020094e4(dCamera_c *cam) {
     int buf[3];
-    cam->func_0200cb58(0x1f);
+    cam->SetMode(0x1f);
     buf[0] = data_02086eb4[0];
     buf[1] = data_02086eb4[1];
     buf[2] = data_02086eb4[2];
