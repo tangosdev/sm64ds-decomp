@@ -43,7 +43,7 @@
  * - data_ov084_02130cf8 is the BMD. 02130278 is the BCA table.
  *   02130ce0/ce8/cf0/cc0/cc8/cd0 are BCA handles (SetAnim reads [1]).
  *   0213089c / 0213088c are BMA. The 021302xx words are the per-type
- *   tables. Render keeps a volatile Vector3 backup of the scale.
+ *   tables.
  * - GetCapState is the dCapEnemy_c.h member.
  * - What dCcAc_c bits 0x4 and 0x20000 mean, the king's mState 4 that
  *   mFreeRoamTimer watches, sounds 0xd0 / 0xe0 / 0xd6 / 0x110 / 0x111 / 0x118 /
@@ -884,8 +884,8 @@ void daKrb_c::func_ov084_02129ed4() {
     s16 killDirNormal[3];
     s16 killDirVariant[3];
     s16 killDirPlayer[3];
-    volatile Vector3 playerPos;
-    volatile Vector3 playerPosJump;
+    Vector3 playerPos;
+    Vector3 playerPosJump;
     Vector3 capReleaseOnHit;
     Vector3 capReleaseOnKill;
     Vector3 hurtOriginFirstHit;
@@ -993,10 +993,8 @@ void daKrb_c::func_ov084_02129ed4() {
                     return;
                 }
                 {
-                    Vector3 *pp = &((dActor_c *)other)->mPos;
-                    playerPos.x = pp->x;
-                    playerPos.y = pp->y;
-                    playerPos.z = pp->z;
+                    const Vector3 &p = other->mPos;
+                    playerPos = p;
                 }
                 if (other->IsOnShell() != 0) {
                     goomba->mDeathState = daKrb_c::DEATH_DIVE_OR_EGG;
@@ -1020,14 +1018,14 @@ void daKrb_c::func_ov084_02129ed4() {
                 if (goomba->mState == daKrb_c::STATE_WALK) {
                     if (goomba->mGoombaType == daKrb_c::GOOMBA_SMALL) {
                         ((dActor_c *)goomba)->SmallPoofDust();
-                        hurtOriginFirstHit.x = goomba->mPosX; hurtOriginFirstHit.y = goomba->mPosY; hurtOriginFirstHit.z = goomba->mPosZ;
+                        hurtOriginFirstHit = goomba->mPos;
                         other->Hurt(hurtOriginFirstHit, 0, hurtKnockback, 1, 0, 1);
                         goomba->func_ov084_02129498();
                         func_02012694(SND_DEATH_SMALL, &goomba->mCamSpacePos);
                         return;
                     }
                     if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
-                    hurtOriginRepeat.x = goomba->mPosX; hurtOriginRepeat.y = goomba->mPosY; hurtOriginRepeat.z = goomba->mPosZ;
+                    hurtOriginRepeat = goomba->mPos;
                     other->Hurt(hurtOriginRepeat, data_ov084_02130204[goomba->mGoombaType],
                                 hurtKnockback, 1, 0, 1);
                     goomba->mState = daKrb_c::STATE_HOP_START;
@@ -1043,10 +1041,8 @@ void daKrb_c::func_ov084_02129ed4() {
     typeMatch = (s32)(((dActor_c *)other)->actorID == ACTOR_PLAYER);
     if (typeMatch != 0) {
         {
-            Vector3 *pp = &((dActor_c *)other)->mPos;
-            playerPosJump.x = pp->x;
-            playerPosJump.y = pp->y;
-            playerPosJump.z = pp->z;
+            const Vector3 &p = other->mPos;
+            playerPosJump = p;
         }
         if (((dActor_c *)goomba)->JumpedOnByPlayer(*(dCc_c *)&goomba->mdCcAc_c, *other) != 0) {
             other->Bounce(0x28000); /* 40.0 */
@@ -1062,7 +1058,7 @@ void daKrb_c::func_ov084_02129ed4() {
         if (goomba->mState == daKrb_c::STATE_WALK) {
             goomba->mState = daKrb_c::STATE_HOP_START;
             if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
-            hurtOriginJumped.x = goomba->mPosX; hurtOriginJumped.y = goomba->mPosY; hurtOriginJumped.z = goomba->mPosZ;
+            hurtOriginJumped = goomba->mPos;
             other->Hurt(hurtOriginJumped, data_ov084_02130204[goomba->mGoombaType], hurtKnockback,
                         1, 0, 1);
             return;
@@ -1666,15 +1662,10 @@ void daKrb_c::OnPendingDestroy()
  * the draw and restored afterwards. */
 int daKrb_c::Render()
 {
-    int locked;
-    volatile Vector3 backup;
-
-    locked = (mFlags & 0x40000) != 0;
+    int locked = (mFlags & 0x40000) != 0;
     if (locked || mIsDormant != 0) return 1;
 
-    backup.x = mScaleX;
-    backup.y = mScaleY;
-    backup.z = mScaleZ;
+    Vector3 backup = mScale;
 
     if (mDeathState == DEATH_STOMPED) {
         mScaleX = FX_MUL(mScaleX, data_ov084_02130258[mGoombaType]);
@@ -1684,9 +1675,7 @@ int daKrb_c::Render()
 
     mAnmModel.Render(&mScale);
 
-    mScaleX = backup.x;
-    mScaleY = backup.y;
-    mScaleZ = backup.z;
+    mScale = backup;
     mMaterialChanger.Update(mAnmModel.data);
     RenderCapModel(0);
     return 1;
