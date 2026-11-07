@@ -36,21 +36,20 @@
  */
 
 // leftovers:
-// - The 16 small Boos at 0x4660 are typed (dScMgTeresa_c::SmallBoo mBoos[16]).
-//   Their handlers use mBoos[i] where that measured identical. StepBoo and
-//   Boo_StateFadeAway spell most fields as `(char *)&mBoos[0].field + i * 0x24`
-//   (field first, stride last, the cartridge's order);
-//   CheckRevealDone, CheckRoundEnd and CountRubbedTiles walk a 0x24-stepped
-//   pointer and read `((dScMgTeresa_c *)p)->mBoos[0].field`.
-// - ResetRound clears 0x4bfc, 0x4c00 and 0x4c10 by offset: nothing in this TU
-//   reads them, so they have no names. Reveal_Start clears mReveal's byte 0x1b
-//   (unk_1b) by offset for the same reason.
+// - Reveal_Start clears mReveal's byte 0x1b (unk_1b) by offset: nothing in
+//   this TU reads it, so it has no name.
+// - Boo_StateFadeAway and CountRubbedTiles flip a Boo's heading as
+//   `mHeading = mHeading + 0x8000`; `+=` is a word longer in FadeAway
+//   (measured 2026-11-07).
+// - PaintSquare keeps opt_loop_invariants off and a hand-rotated loop; its
+//   comment has the measurements.
 
 #pragma defer_codegen off
 
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "OamAttr.h"
 #include "dScMgTeresa_c.h"
 #include "decl_common.h"
@@ -109,7 +108,6 @@ extern int sTeresaSpawnCounts[];
 extern int sTeresaSpawnKinds[];
 extern int sTeresaSpawnBurst[];
 extern int sTeresaPaintMask[];
-extern short          data_02082214[];
 extern int            sMgTopScreenYOffset;
 
 /* The four pointer-to-member state tables. Pmf handlers take the Boo/slot
@@ -935,19 +933,15 @@ void dScMgTeresa_c::Exclaim_Spawn(int idx)
 // @symbol _ZN13dScMgTeresa_c15CheckRevealDoneEv
 void dScMgTeresa_c::CheckRevealDone()
 {
-    char *raw = (char *)this;
     int found;
     int i;
-    char* p;
     if (mRevealDone != 0)
         return;
     found = 0;
-    for (i = 0, p = raw; i < 0x10; i++, p += 0x24) {
-        if (((dScMgTeresa_c *)p)->mBoos[0].mInPlay != 0) {
-            if (((dScMgTeresa_c *)p)->mBoos[0].mState <= 2) {
-                found++;
-                break;
-            }
+    for (i = 0; i < 0x10; i++) {
+        if (mBoos[i].mInPlay != 0 && mBoos[i].mState <= 2) {
+            found++;
+            break;
         }
     }
     if (found != 0)
@@ -960,7 +954,6 @@ void dScMgTeresa_c::CheckRevealDone()
 // @symbol _ZN13dScMgTeresa_c13CheckRoundEndEv
 void dScMgTeresa_c::CheckRoundEnd()
 {
-    unsigned char *raw = (unsigned char *)this;
     if (mTimeLeft == 0 && mRevealDone != 0) {
         mRoundCleared = 0;
         mSceneState = 3;
@@ -971,18 +964,13 @@ void dScMgTeresa_c::CheckRoundEnd()
     }
     {
         int count = 0;
-        int i = 0;
-        unsigned char* p = raw;
-        do {
-            if (((dScMgTeresa_c *)p)->mBoos[0].mInPlay != 0) {
-                if (((dScMgTeresa_c *)p)->mBoos[0].mFound == 0) {
-                    count++;
-                    break;
-                }
+        int i;
+        for (i = 0; i < 0x10; i++) {
+            if (mBoos[i].mInPlay != 0 && mBoos[i].mFound == 0) {
+                count++;
+                break;
             }
-            i++;
-            p += 0x24;
-        } while (i < 0x10);
+        }
         if (count != 0)
             return;
         mSceneState = 3;
@@ -1106,30 +1094,20 @@ void dScMgTeresa_c::TouchTestBoo(int idx)
 #undef A
 
 
-#pragma push
-/* Kept: the ROM recomputes idx * 0x24 for mHeading after reusing `off`; CSE folds them (true CSE recompute). */
-#pragma opt_common_subs off
 // @symbol _ZN13dScMgTeresa_c16CountRubbedTilesEi
 void dScMgTeresa_c::CountRubbedTiles(int idx)
 {
-    char *self = (char *)this;
     int gx, gy;
     int cnt;
     int y;
     int x;
-    int *pA;
-    int *pB;
     int *row;
-    int off;
 
-    off = idx * 0x24;
     cnt = 0;
-    pA = &((dScMgTeresa_c *)(self + off))->mBoos[0].mX;
-    pB = &((dScMgTeresa_c *)(self + off))->mBoos[0].mY;
     for (y = 0; y < 8; y++) {
         for (x = 0; x < 8; x++) {
-            gx = x + ((*pA >> 12) - 4);
-            gy = y + ((*pB >> 12) - 4);
+            gx = x + ((mBoos[idx].mX >> 12) - 4);
+            gy = y + ((mBoos[idx].mY >> 12) - 4);
             row = (int *)((char *)G2S::GetBG0CharPtr() + ((gx >> 3) + ((gy >> 3) << 5)) * 32);
             if (((row[gy & 7] >> ((gx & 7) << 2)) & 0xf) == 0)
                 cnt++;
@@ -1137,11 +1115,10 @@ void dScMgTeresa_c::CountRubbedTiles(int idx)
     }
     if (cnt == 0)
         return;
-    if (((dScMgTeresa_c *)(self + off))->mBoos[0].mKind == 0)
+    if (mBoos[idx].mKind == 0)
         return;
-    mBoos[idx].mHeading += 0x8000;
+    mBoos[idx].mHeading = mBoos[idx].mHeading + 0x8000;
 }
-#pragma pop
 
 
 // @symbol _ZN13dScMgTeresa_c7MoveBooEi
@@ -1156,70 +1133,52 @@ void dScMgTeresa_c::MoveBoo(int i)
 
 // @symbol _ZN13dScMgTeresa_c17Boo_StateFadeAwayEi
 void dScMgTeresa_c::Boo_StateFadeAway(int i) {
-    char *c = (char *)this;
-    u8 *s;
-    int o = i * 0x24;
-    u8 *fade;
-
-    /* Most mBoos[i] fields are spelled (char *)&mBoos[0].field + o: the
-       cartridge adds the field offset to `this` first and the stride last,
-       and mBoos[i].field (stride first) moves bytes. */
-    if (*(u16 *)((char *)&mBoos[0].mDelay + o) != 0) {
-        (*(u16 *)((char *)&mBoos[0].mDelay + o))--;
-        if (*(u16 *)((char *)&mBoos[0].mDelay + o) == 0)
+    if (mBoos[i].mDelay != 0) {
+        mBoos[i].mDelay--;
+        if (mBoos[i].mDelay == 0)
             Sound::PlayBank2_2D(0x1f1);
     }
 
-    s = (u8 *)((char *)&mBoos[0].mFrame + o);
-    if (*s != 6) {
-        u16 *p70 = (u16 *)((char *)&mBoos[0].mAnimTimer + o);
-        *p70 = *p70 + 1;
-        if (*p70 >= 0xf) {
-            *p70 = 0;
-            (*s)++;
-            if (*s >= 6)
-                *s = 3;
+    if (mBoos[i].mFrame != 6) {
+        mBoos[i].mAnimTimer++;
+        if (mBoos[i].mAnimTimer >= 0xf) {
+            mBoos[i].mAnimTimer = 0;
+            mBoos[i].mFrame++;
+            if (mBoos[i].mFrame >= 6)
+                mBoos[i].mFrame = 3;
         }
     }
 
     StepBoo(i);
     BounceBooOffWalls(i);
 
-    {
-        char *row = c + o;
-        if (data_02082214[((((dScMgTeresa_c *)row)->mBoos[0].mHeading >> 4) << 1) + 1] >= 0)
-            ((dScMgTeresa_c *)row)->mBoos[0].mAnim = 1;
-        else
-            ((dScMgTeresa_c *)row)->mBoos[0].mAnim = 0;
-    }
+    if (FX_CosIdx(mBoos[i].mHeading >> 4) >= 0)
+        mBoos[i].mAnim = 1;
+    else
+        mBoos[i].mAnim = 0;
 
-    if (((dScMgTeresa_c *)((char *)c + o))->mBoos[0].mTurnTimer != 0) {
-        u16 *p72 = (u16 *)((char *)&mBoos[0].mTurnTimer + o);
-        *p72 = *p72 - 1;
-        if (*p72 != 0)
+    if (mBoos[i].mTurnTimer != 0) {
+        mBoos[i].mTurnTimer--;
+        if (mBoos[i].mTurnTimer != 0)
             return;
-        *(u16 *)((char *)&mBoos[0].mHeading + o) += 0x8000;
-        *s = 6;
-        if (((dScMgTeresa_c *)((char *)c + o))->mBoos[0].mPlaySettleSound != 0)
+        mBoos[i].mHeading = mBoos[i].mHeading + 0x8000;
+        mBoos[i].mFrame = 6;
+        if (mBoos[i].mPlaySettleSound != 0)
             Sound::PlayBank2_2D(0x1f4);
         return;
     }
 
-    {
-        u16 *p6e = (u16 *)((char *)&mBoos[0].mTimer + o);
-        *p6e = *p6e + 1;
-        if (*p6e < 4)
-            return;
-        fade = (u8 *)((char *)&mBoos[0].mFade + o);
-        *fade = *fade + 1;
-        *p6e = 0;
-        if (i == mLastSettledBoo) {
-            G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 4, 0x10 - *fade, 0x10);
-        }
-        if (*fade >= 0x10) {
-            *(u8 *)((char *)&mBoos[0].mInPlay + o) = 0;
-            *(u8 *)((char *)&mBoos[0].mVisible + o) = 0;
-        }
+    mBoos[i].mTimer++;
+    if (mBoos[i].mTimer < 4)
+        return;
+    mBoos[i].mFade++;
+    mBoos[i].mTimer = 0;
+    if (i == mLastSettledBoo) {
+        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 4, 0x10 - mBoos[i].mFade, 0x10);
+    }
+    if (mBoos[i].mFade >= 0x10) {
+        mBoos[i].mInPlay = 0;
+        mBoos[i].mVisible = 0;
     }
 }
 
@@ -1245,7 +1204,7 @@ void dScMgTeresa_c::Boo_StateFadeIn(int i) {
     StepBoo(i);
     BounceBooOffWalls(i);
 
-    if (data_02082214[2 * (mBoos[i].mHeading >> 4) + 1] >= 0)
+    if (FX_CosIdx(mBoos[i].mHeading >> 4) >= 0)
         mBoos[i].mAnim = 1;
     else
         mBoos[i].mAnim = 0;
@@ -1303,7 +1262,7 @@ void dScMgTeresa_c::Boo_StateHiddenTimed(int idx) {
     }
     StepBoo(idx);
     BounceBooOffWalls(idx);
-    if (data_02082214[(mBoos[idx].mHeading >> 4) * 2 + 1] >= 0)
+    if (FX_CosIdx(mBoos[idx].mHeading >> 4) >= 0)
         mBoos[idx].mAnim = 1;
     else
         mBoos[idx].mAnim = 0;
@@ -1315,7 +1274,7 @@ void dScMgTeresa_c::Boo_StateHidden(int i) {
     MoveBoo(i);
     CountRubbedTiles(i);
     TouchTestBoo(i);
-    if (data_02082214[(mBoos[i].mHeading >> 4) * 2 + 1] >= 0)
+    if (FX_CosIdx(mBoos[i].mHeading >> 4) >= 0)
         mBoos[i].mAnim = 1;
     else
         mBoos[i].mAnim = 0;
@@ -1325,7 +1284,7 @@ void dScMgTeresa_c::Boo_StateHidden(int i) {
 void dScMgTeresa_c::Boo_StateFadeOut(int i) {
     StepBoo(i);
     BounceBooOffWalls(i);
-    if (data_02082214[2 * (mBoos[i].mHeading >> 4) + 1] >= 0)
+    if (FX_CosIdx(mBoos[i].mHeading >> 4) >= 0)
         mBoos[i].mAnim = 1;
     else
         mBoos[i].mAnim = 0;
@@ -1367,23 +1326,11 @@ void dScMgTeresa_c::BounceBooOffWalls(int i)
 
 // @symbol _ZN13dScMgTeresa_c7StepBooEi
 void dScMgTeresa_c::StepBoo(int i) {
-    int n = i * 0x24;
-    char *pm = (char *)&mBoos[0].mSpeed;
-    char *pa = (char *)&mBoos[0].mHeading;
-    int *new_var;
-    short *tbl = data_02082214;
-    int angle = *((unsigned short *)(pa + n));
-    int s = tbl[((angle >> 4) * 2) + 1];
-    int mult = *((int *)(pm + n));
-    char *p0 = (char *)&mBoos[0].mX;
-    *((int *)(p0 + n)) = (*((int *)(p0 + n))) + FX_MUL(*(new_var = &s), mult);
-    {
-        int angle2 = *((unsigned short *)(pa + n));
-        int mult2 = *((int *)(pm + n));
-        int s2 = tbl[(angle2 >> 4) * 2];
-        char *p1 = (char *)&mBoos[0].mY;
-        *((int *)(p1 + n)) = (*((int *)(p1 + n))) + FX_MUL(s2, mult2);
-    }
+    int c, s;
+    c = FX_CosIdx(mBoos[i].mHeading >> 4);
+    mBoos[i].mX += FX_MUL(c, mBoos[i].mSpeed);
+    s = FX_SinIdx(mBoos[i].mHeading >> 4);
+    mBoos[i].mY += FX_MUL(s, mBoos[i].mSpeed);
 }
 
 // @symbol _ZN13dScMgTeresa_c15StartBoosHidingEv
@@ -1401,7 +1348,7 @@ void dScMgTeresa_c::Boo_StateFly(int i) {
     mBoos[i].mTimer = 0;
     StepBoo(i);
     BounceBooOffWalls(i);
-    if (data_02082214[(mBoos[i].mHeading >> 4) * 2 + 1] >= 0)
+    if (FX_CosIdx(mBoos[i].mHeading >> 4) >= 0)
         mBoos[i].mAnim = 1;
     else
         mBoos[i].mAnim = 0;
@@ -1521,7 +1468,7 @@ void dScMgTeresa_c::SpawnBoos() {
         mBoos[i].mFrame = 0;
         {
             int ang = mBoos[i].mHeading;
-            if (data_02082214[(ang >> 4) * 2 + 1] >= 0) {
+            if (FX_CosIdx(ang >> 4) >= 0) {
                 mBoos[i].mAnim = 1;
             } else {
                 mBoos[i].mAnim = 0;
@@ -1588,7 +1535,6 @@ void dScMgTeresa_c::ReadRubTouch() {
 
 // @symbol _ZN13dScMgTeresa_c10ResetRoundEv
 void dScMgTeresa_c::ResetRound() {
-    char *p = (char *)this;
 
     for (int i = 0; i < 0x10; i++) {
         mBoos[i].mX = 0;
@@ -1621,10 +1567,9 @@ void dScMgTeresa_c::ResetRound() {
     mRubY = 0;
     mRubPrevX = 0;
     mRubPrevY = 0;
-    /* 0x4bfc, 0x4c00 and 0x4c10 are cleared here and read nowhere in this TU. */
-    *((int *)(p + 0x4bfc)) = 0;
-    *((int *)(p + 0x4c00)) = 0;
-    *((short *)(p + 0x4c10)) = 0;
+    pad_4bfc = 0;
+    pad_4c00 = 0;
+    pad_4c10 = 0;
     mSceneTimer = 0;
     mBg3FlashTimer = 0;
     mRubTouching = 0;
@@ -1756,7 +1701,10 @@ void dScMgTeresa_c::Scene_StateInit() {
 
 #pragma push
 /* Kept: with loop invariants hoisted, the constants spill, the stack frame
- * grows and buf moves to another slot. */
+ * grows and buf moves to another slot. The hand-rotated do/while is kept
+ * too: `for (j = 0; j < n; j++)` with y = cy - half + j is the right size
+ * but schedules cx - half and cy - half ahead of the n <= 0 exit (12 words
+ * off; corner in the for initialiser, a word short; measured 2026-11-07). */
 #pragma opt_loop_invariants off
 // @symbol _ZN13dScMgTeresa_c11PaintSquareEiiii
 /* dScMgTeresa_c::PaintSquare - slot 34, a STIPPLED brush.

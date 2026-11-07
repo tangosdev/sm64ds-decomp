@@ -249,7 +249,10 @@ struct dScMgTeresa_c : dScMgBase_c {
        the rub line from it to mRubX/Y, then copies mRubX/Y in. */
     s32 mRubPrevX; /* 0x4bf4 */
     s32 mRubPrevY; /* 0x4bf8 */
-    u8 pad_4bfc[0xc];
+    /* ResetRound zeroes these two words; nothing in this TU reads them. */
+    s32 pad_4bfc;
+    s32 pad_4c00;
+    u8 pad_4c04[0x4];
     s32 mRubSound; /* 0x4c08 -- the rub sound's handle; func_02012468 takes it back */
     /* Scene_StateRoundEnd's and Scene_StateResult's delay: CheckRoundEnd and
        Scene_StateRoundEnd load 0x60 on entering scene states 3 and 4, and each
@@ -258,7 +261,8 @@ struct dScMgTeresa_c : dScMgBase_c {
     /* Loaded with 0x60 once the found numbers spawn; Scene_StateRoundEnd calls
        StepBg3Scroll each frame while it counts down. */
     u16 mBg3FlashTimer; /* 0x4c0e */
-    u8 pad_4c10[0x4];
+    u16 pad_4c10;       /* zeroed by ResetRound; read nowhere in this TU */
+    u8 pad_4c12[0x2];
     /* The countdown's seconds: StartCountdown loads 3 (2 from level 15),
        UpdateCountdown takes one off every 0x3c frames, DrawCountdown draws it,
        and CheckRoundEnd ends the round when it reaches 0. */
