@@ -1,10 +1,9 @@
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+#include "CaptureEffect.h"
+
+extern void MultiStore16(unsigned short val, void *dst, int nbytes);
 extern void SNDi_SetSurroundDecay(int decay);
 extern int func_020507e0(void *buffer, unsigned int size, int format, int rate, int interval,
                          void *callback, void *arg);
-extern char data_020a4c70[];
-extern int data_020a4c64;
-extern void func_02049ba8(void *left, void *right, unsigned int len, int format, void *ctx);
 
 /* Start the sound-capture effect: clear its state (0xc0 bytes at
    data_020a4c70), set the effect kind data_020a4c64 to mode, and for kind
@@ -15,8 +14,8 @@ extern void func_02049ba8(void *left, void *right, unsigned int len, int format,
    kind 0. */
 void func_02049cd8(void *buffer, int size, int mode) {
     volatile unsigned short tmp = 0;
-    MultiStore16(tmp, data_020a4c70, 0xc0);
-    data_020a4c64 = mode;
+    MultiStore16(tmp, &data_020a4c70, sizeof(data_020a4c70));
+    data_020a4c64.kind = mode;
     if (mode == 1)
         SNDi_SetSurroundDecay(0x3000);
     func_020507e0(buffer, size, 0, 0x7d00, 2, (void *)func_02049ba8, &data_020a4c64);

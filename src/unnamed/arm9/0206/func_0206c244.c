@@ -6,7 +6,14 @@
     else \
         *(u16 *)(a) = (*(u16 *)(a) & 0xff00) | ((v) & 0xff)
 
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
+/* opt_common_subs stays off for register and schedule colour only: with it on the
+   function is still 0x2d8, with 26 words moved. The pad() identity, the shr_n()
+   loop, the volatile store that zeroes mant and the (i = 5) comma are each
+   load-bearing on top of that -- measured one at a time, every one of them
+   changes the object. */
 #pragma opt_common_subs off
 
 extern int func_0206c90c(u64 d);

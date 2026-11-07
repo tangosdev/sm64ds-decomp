@@ -98,7 +98,6 @@ int func_020179b4(void* r0, void* r1, int r2);
 s16 atan2_hold_d_mg3d_esp_anim_set_1(s32 y, s32 x);
 int RandomIntInternal(int *seed);
 void FreeGfxSlotsById(int a);
-void Camera_UpdateMatrices(void* self);
 int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 void Mg_RenderSubSpriteMtx(void* a, int b, int c, void* m);
 void Mg_DrawScoreTally(void *c, int a, int b, int d);
@@ -1417,14 +1416,14 @@ s32 dScMg3DEsp_c::Render()
     RenderCards();
     RenderRows();
     RenderSlots();
-    mCameraEyeX = 0;
-    mCameraEyeY = 0xd0000;
-    mCameraEyeZ = 0x40000;
-    mCameraTargetX = 0xffed3000;
-    mCameraTargetY = 0xe0000;
-    mCameraTargetZ = 0x40000;
-    mCameraAngle = 0xc00;
-    Camera_UpdateMatrices(pad_4660);
+    mCamera.mLookAt.x = 0;
+    mCamera.mLookAt.y = 0xd0000;
+    mCamera.mLookAt.z = 0x40000;
+    mCamera.mPos.x = 0xffed3000;
+    mCamera.mPos.y = 0xe0000;
+    mCamera.mPos.z = 0x40000;
+    mCamera.mFovAngle = 0xc00;
+    Camera_UpdateMatrices(&mCamera);
     /* dExtSimpleModel_c::data, at +8. Naming the member makes mwcc add the 8 in a separate instruction. */
     mTextureTransformer.Update(mModel1.data);
     mModel1.Render(0);
@@ -1466,14 +1465,14 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x4000008 = (*(volatile unsigned short*)0x4000008 & ~3) | 1;
     Mg_SetTopScreenYOffset(0x10);
 
-    mCameraEyeX = 0;
-    mCameraEyeY = 0xd0000;
-    mCameraEyeZ = 0x40000;
-    mCameraTargetX = 0xffed3000;
-    mCameraTargetY = 0xe0000;
-    mCameraTargetZ = 0x40000;
-    mCameraAngle = 0xc00;
-    Camera_UpdateMatrices(pad_4660); /* the camera block starts at 0x4660 */
+    mCamera.mLookAt.x = 0;
+    mCamera.mLookAt.y = 0xd0000;
+    mCamera.mLookAt.z = 0x40000;
+    mCamera.mPos.x = 0xffed3000;
+    mCamera.mPos.y = 0xe0000;
+    mCamera.mPos.z = 0x40000;
+    mCamera.mFovAngle = 0xc00;
+    Camera_UpdateMatrices(&mCamera);
 
     if (func_020179b4(&gEspIrieModelFile, &mModel1, 1) == 0)
         return 0;

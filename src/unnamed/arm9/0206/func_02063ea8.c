@@ -3,7 +3,7 @@
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02065a74(void);
 extern void func_02064470(void *self, int code, int idx);
-extern void func_02064554(void *self, int sel, int idx, int a3);
+extern void func_02064554(void *self, int sel, int idx, s16 a3);
 extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
 extern int func_020647d8(void *p, int i);

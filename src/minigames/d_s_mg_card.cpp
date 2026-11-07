@@ -62,7 +62,6 @@ extern void func_0203d680(int *out, int *in, int scale);
 extern const Five sCardHandOrder;
 extern int RandomIntInternal(int *seed);
 extern int sCardFaceWeights[];
-extern void Camera_InitDealerView(void *c);
 extern void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
@@ -172,7 +171,7 @@ s32 dScMgCard_c::InitResources()
 
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
 
@@ -691,7 +690,7 @@ s32 dScMgCard_c::Render()
     int i;
     int y;
 
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
 
     state = this->mState;
     if (state > 3 && state < 0x11) {

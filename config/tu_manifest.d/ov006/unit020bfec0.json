@@ -1033,19 +1033,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sAxis$657",
+      "from": "sAxis$649",
       "to": "sAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from sAxis$657 to sAxis$649 (same symtab index 194, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "_ZGVsAxis$657",
+      "from": "_ZGVsAxis$649",
       "to": "_ZGVsAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$649 (same symtab index 192, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@660",
+      "from": "@652",
       "to": "@546",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from @660 to @652 (same symtab index 193, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     }
   ]
 }

@@ -56,6 +56,8 @@ extern void func_02068a54(void);
 
 #define H(base, off) (*(u16 *)((char *)(base) + (off)))
 
+/* opt_dead_assignments stays off: the cartridge keeps the step's overwritten
+   stores, and dropping the pragma loses four of them (0x75c against 0x76c). */
 #pragma opt_dead_assignments off
 
 /* Link mode 3's step (func_0203df40), a download-play parent by its

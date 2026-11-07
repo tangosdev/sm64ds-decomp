@@ -86,7 +86,7 @@ int func_0203da3c(void);
 void UnloadArchive(int i);
 void func_02030aa4(int arg);
 int func_0203da9c(void);
-void func_02020028(int a, unsigned char b);
+void func_02020028(int player, unsigned char mode);
 void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
 }
 
@@ -218,7 +218,7 @@ extern int data_ov075_0211cc4c;
 extern int data_ov075_0211cc54;
 extern int data_ov075_0211cc5c;
 extern void *data_0208a0e4[];
-extern void *data_0209f5c0;
+extern fBase_c *data_0209f5c0;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
@@ -243,7 +243,7 @@ void func_02030994(void);
 void func_020201c0(void);
 void func_0202048c(void *dst, int a, int b);
 void func_02020768(char *thiz);
-void func_02020820(void *dst, void *src, int a, int b, int c, int d);
+void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine);
 void MultiStore_Int(int val, void *dst, int len);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
@@ -490,7 +490,7 @@ s32 dScEntry_c::InitResultResources() {
     }
 
     SetSteps(&data_ov075_0211d7e0);
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, (fBase_c *)data_0209f5c0, 1, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, 1, 0);
     return 1;
 }
 
@@ -537,7 +537,7 @@ s32 dScEntry_c::InitEntryResources() {
         mode = 2;
     }
 
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, (fBase_c *)data_0209f5c0, mode, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, mode, 0);
     return 1;
 }
 
@@ -1343,15 +1343,15 @@ void dScEntry_c::EnterResults() {
 
     if (data_0209b2f0[id] != 0) {
         LoadCompressedFileAt(0x8404, G2S::GetBG3ScrPtr());
-        func_02020820((char *)&mOamAnimations[0], &data_ov075_0211ca64, 1, 1, 1, 1);
-        func_02020820((char *)&mOamAnimations[1], &data_ov075_0211ca6c, 1, 0, 0, 0);
-        func_02020820((char *)&mOamAnimations[2], &data_ov075_0211ca74, 1, 1, 1, 1);
+        func_02020820(&mOamAnimations[0], &data_ov075_0211ca64, 1, 1, 1, 1);
+        func_02020820(&mOamAnimations[1], &data_ov075_0211ca6c, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[2], &data_ov075_0211ca74, 1, 1, 1, 1);
     } else {
         LoadCompressedFileAt(0x8401, G2S::GetBG3ScrPtr());
-        func_02020820((char *)&mOamAnimations[0], &data_ov075_0211cc44, 1, 1, 1, 1);
-        func_02020820((char *)&mOamAnimations[1], &data_ov075_0211cc4c, 1, 0, 0, 0);
-        func_02020820((char *)&mOamAnimations[2], &data_ov075_0211cc54, 1, 0, 0, 0);
-        func_02020820((char *)&mOamAnimations[3], &data_ov075_0211cc5c, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[0], &data_ov075_0211cc44, 1, 1, 1, 1);
+        func_02020820(&mOamAnimations[1], &data_ov075_0211cc4c, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[2], &data_ov075_0211cc54, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[3], &data_ov075_0211cc5c, 1, 0, 0, 0);
     }
 
     mOamAnimations[0].palette = id + 0xa;

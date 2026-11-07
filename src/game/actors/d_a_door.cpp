@@ -201,7 +201,7 @@ extern "C" {
 unsigned int func_0201277c(unsigned int a);
 void func_02012694(unsigned int a, void *b);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-int DecIfAbove0_Short(void *p);
+unsigned short DecIfAbove0_Short(unsigned short *p);
 int func_ov002_020ca78c(void *p);
 void Vec3_RotateYAndTranslate(void *res, void *translation, short angY, void *v);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -264,8 +264,8 @@ extern Vector3 data_020a0ebc;
 /* local extern: including math/MtxStack.h instead renumbers every @NNN and
    $NNN in this TU (+72, measured). */
 extern Matrix4x3 data_020a0e68;
-extern int data_ov002_0211094c;
-extern int data_ov089_02132c50;
+extern char data_ov002_0211094c;
+extern SharedFilePtr data_ov089_02132c50;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
    entries in that overlay's .rodata, the table LoadKeyModels loads into
    (bounds-checked `idx >= 8`). src/game/actors/d_a_obj_key.cpp, home of

@@ -14,33 +14,6 @@
 
 extern "C" {
 
-/* NitroSDK WMDataSet / WMDataSharingInfo (0x420; WM_StartDataSharing clears
- * that many bytes): four 0x100-byte data sets, then the ring indices. */
-typedef struct WMDataSet {
-    u16 aidHeader;      /* 0x00 -- members whose data the set holds */
-    u16 receivedBitmap; /* 0x02 */
-    u16 data[0x7e];     /* 0x04 */
-} WMDataSet;
-
-typedef struct WMDataSharingInfo {
-    WMDataSet ds[4];   /* 0x000 */
-    u16 seqNum[4];     /* 0x400 -- each set's MP sequence number */
-    u16 writeIndex;    /* 0x408 */
-    u16 sendIndex;     /* 0x40a */
-    u16 readIndex;     /* 0x40c */
-    u16 aidBitmap;     /* 0x40e -- the members, this station included */
-    u16 dataLength;    /* 0x410 -- per member */
-    u16 stationNumber; /* 0x412 */
-    u16 dataSetLength; /* 0x414 -- dataLength * stationNumber + 4 */
-    u16 port;          /* 0x416 */
-    u16 doubleMode;    /* 0x418 */
-    u16 currentSeqNum; /* 0x41a */
-    u16 state;         /* 0x41c -- 1 running, 2 retry the send, 3 error */
-    u16 reserved[1];   /* 0x41e */
-} WMDataSharingInfo;
-
-typedef char WMDataSharingInfo_size_must_be_0x420[sizeof(WMDataSharingInfo) == 0x420 ? 1 : -1];
-
 /* NitroSDK WMPortSendCallback: only the fields read here. */
 typedef struct WMPortSendCallback {
     char pad0[2];
@@ -189,8 +162,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
  * the received set and sends its own data to the parent. Returns 0 with a
  * set handed over, 5 when none was ready, 1 on a send error. */
 // @symbol WM_StepDataSharing
-int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
-    WMDataSharingInfo *dsInfo = (WMDataSharingInfo *)self;
+int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSet *receiveData) {
     int result;
     u16 aid;
     u16 childMask;
@@ -207,7 +179,7 @@ int WM_StepDataSharing(u8 *self, u8 *sendData, u8 *receiveData) {
     if (p->status->mp_flag == 0)
         return 3;
 
-    if (self == 0)
+    if (dsInfo == 0)
         return 6;
     if (sendData == 0)
         return 6;
@@ -516,15 +488,14 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
  * received data set, or 0 for a null dsInfo or receiveData or when the set
  * holds nothing from aid (its receivedBitmap bit is clear). */
 // @symbol WM_GetSharedDataAddress
-u16 *WM_GetSharedDataAddress(char *dsInfo, WMDataSet *receiveData, int aid) {
+u16 *WM_GetSharedDataAddress(WMDataSharingInfo *dsInfo, WMDataSet *receiveData, int aid) {
     if (dsInfo == 0)
         return 0;
     if (receiveData == 0)
         return 0;
     if ((receiveData->receivedBitmap & (1u << aid)) == 0)
         return 0;
-    return WmGetSharedDataAddress((WMDataSharingInfo *)dsInfo, receiveData->aidHeader,
-                                  receiveData->data, aid);
+    return WmGetSharedDataAddress(dsInfo, receiveData->aidHeader, receiveData->data, aid);
 }
 
 /* Member aid's slot in a set: receiveBuf, past dataLength bytes for each

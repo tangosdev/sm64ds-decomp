@@ -48,6 +48,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "dScStage_c.h"
+#include "LVL_Overlay.h"
 #include "Timer.h"
 #include "decl_common.h"
 #include "Sound.h"
@@ -420,7 +421,7 @@ dCamera_c *data_0209f318;
 static char *data_0209f31c;
 static int data_0209f320;
 static void *data_0209f324;
-static int *data_0209f328;
+static LVL_Overlay::StandardEntry *data_0209f328;
 s32 data_0209f32c;
 static void *data_0209f330;
 u16 *data_0209f334;
@@ -532,14 +533,14 @@ void PrepareVsMode(void);
 int StartWithFarCamera(void);
 unsigned char GetStarCameraSetting(int idx);
 int GetMinimapScale(int idx);
-void func_0202af80(int a, int b);
+void func_0202af80(short *table, int count);
 int GetMinimapID(dActor_c *actor, int arg);
-void func_0202b044(int a, int b);
-void func_0202b060(int a, int b);
+void func_0202b044(u16 *table, int count);
+void func_0202b060(char *table, int count);
 struct ObjTeleport *GetTeleportDestObj(int i);
-void func_0202b090(int a, int b);
-void func_0202b0c4(int a, int b);
-void func_0202b0e0(int a, int b);
+void func_0202b090(void *table, int count);
+void func_0202b0c4(void *table, int count);
+void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count);
 void SetTouchScreenDelay(void);
 void ResetInput(void);
 int IsLevelTinyHugeIslandOutside(int level);
@@ -3647,9 +3648,9 @@ extern "C" int GetMinimapScale(int idx) {
 
 // @symbol func_0202af80
 /* The six table setters below each store a pointer and its count. */
-extern "C" void func_0202af80(int a, int b) {
-    data_0209f348 = (short *)a;
-    data_0209f25c = b;
+extern "C" void func_0202af80(short *table, int count) {
+    data_0209f348 = table;
+    data_0209f25c = count;
 }
 
 // @symbol GetMinimapID
@@ -3684,15 +3685,15 @@ extern "C" int GetMinimapID(dActor_c *actor, int arg) {
 }
 
 // @symbol func_0202b044
-extern "C" void func_0202b044(int a, int b) {
-    data_0209f334 = (u16 *)a;
-    data_0209f2e8 = b;
+extern "C" void func_0202b044(u16 *table, int count) {
+    data_0209f334 = table;
+    data_0209f2e8 = count;
 }
 
 // @symbol func_0202b060
-extern "C" void func_0202b060(int a, int b) {
-    data_0209f31c = (char *)a;
-    data_0209f258 = b;
+extern "C" void func_0202b060(char *table, int count) {
+    data_0209f31c = table;
+    data_0209f258 = count;
 }
 
 // @symbol GetTeleportDestObj
@@ -3706,9 +3707,9 @@ extern "C" struct ObjTeleport *GetTeleportDestObj(int i) {
 }
 
 // @symbol func_0202b090
-extern "C" void func_0202b090(int a, int b) {
-    data_0209f330 = (void *)a;
-    data_0209f2d0 = b;
+extern "C" void func_0202b090(void *table, int count) {
+    data_0209f330 = table;
+    data_0209f2d0 = count;
 }
 
 // @symbol GetViewObj
@@ -3721,15 +3722,15 @@ extern "C" struct ViewObj *GetViewObj(int idx) {
 }
 
 // @symbol func_0202b0c4
-extern "C" void func_0202b0c4(int a, int b) {
-    data_0209f354 = (void *)a;
-    data_0209f1f8 = b;
+extern "C" void func_0202b0c4(void *table, int count) {
+    data_0209f354 = table;
+    data_0209f1f8 = count;
 }
 
 // @symbol func_0202b0e0
-extern "C" void func_0202b0e0(int a, int b) {
-    data_0209f328 = (int *)a;
-    data_0209f214 = b;
+extern "C" void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count) {
+    data_0209f328 = entries;
+    data_0209f214 = count;
 }
 
 // @symbol _ZN10dScStage_c10LoadSkyboxEv

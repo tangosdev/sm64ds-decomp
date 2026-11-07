@@ -3,7 +3,8 @@
 // the Nitro SDK's FX_mtx33.c MTX_RotX33_ from pret's FX_mtx33.c, whose body
 // is the same instructions.
 // The named `one` local + opt_propagation off keeps 1<<12 materialized as
-// movs #1; lsls #12 instead of a literal-pool load.
+// movs #1; lsls #12 instead of a literal-pool load. Both are needed: dropping
+// either (or both, written 1 << 12 or 0x1000) gives 0x20 against the ROM's 0x1c.
 #pragma thumb on
 #pragma opt_propagation off
 typedef int s32;

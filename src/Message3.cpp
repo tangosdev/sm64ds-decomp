@@ -98,14 +98,14 @@ extern u8 data_ov002_0210c390;
 extern u8 data_ov002_0210c398;
 extern u8 data_ov002_0210c3a0;
 extern u8 data_ov002_0210c3a8;
-extern int data_0209289c;
+extern int data_0209289c[296];
 extern int data_02092d3c;
 extern int data_0209325c;
 extern int data_020937bc;
 extern int data_02093d7c;
 
-extern u16 data_02075b14[];
-extern u16 data_02075d14[];
+extern const u16 data_02075b14[256];
+extern const u16 data_02075d14[256];
 extern u16 data_02092808[];
 extern u8 data_02092810[];
 extern u8 data_02092824[];

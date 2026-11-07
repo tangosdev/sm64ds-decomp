@@ -43,7 +43,7 @@ extern WorkInfo data_020a1fc0;
 extern char data_02099e6c[]; /* "rom" */
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern void FS_InitFile(int *s);
+extern void FS_InitFile(FSFile *p_file);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
@@ -91,7 +91,7 @@ void func_020424c0(void) {
 
         sb = FS_FindArchive(data_02099e6c, 3);
         buf = (char *)fp + 4;
-        FS_InitFile((int *)&file);
+        FS_InitFile(&file);
         j = 0;
 
         do {
