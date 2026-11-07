@@ -21,13 +21,9 @@
  */
 #include "Particle__System.h"
 
-bool dPa_c::level_c::emitter_c::entry(
-    u32 id, u32 nameId, Vector3& position,
-    const Vector3_16f *direction,
-    callback_c *callback)
-{
-    Particle::SystemDefinition::Data& data =
-        *gParticleControl->mManager->mDefinitions[nameId].data;
+bool dPa_c::level_c::emitter_c::entry(u32 id, u32 nameId, Vector3 &position,
+                                      const Vector3_16f *direction, callback_c *callback) {
+    Particle::SystemDefinition::Data &data = *gParticleControl->mManager->mDefinitions[nameId].data;
     data.flags &= ~0x4000;
     mEmitter = gParticleControl->mManager->AddSystem(nameId, position);
     if (mEmitter == 0)
@@ -55,9 +51,8 @@ bool dPa_c::level_c::emitter_c::entry(
     return true;
 }
 
-void dPa_c::level_c::emitter_c::cleanup()
-{
-    Particle::SystemDefinition::Data& data =
+void dPa_c::level_c::emitter_c::cleanup() {
+    Particle::SystemDefinition::Data &data =
         *gParticleControl->mManager->mDefinitions[mNameId].data;
     u32 *flagsAddress;
     u32 flags;
@@ -70,9 +65,8 @@ void dPa_c::level_c::emitter_c::cleanup()
     mId = 0;
 }
 
-dPa_c::level_c::level_c()
-{
-    emitter_c* emitter = mEmitter;
+dPa_c::level_c::level_c() {
+    emitter_c *emitter = mEmitter;
     int i;
     do {
         emitter->mId = 0;
@@ -84,9 +78,8 @@ dPa_c::level_c::level_c()
         mTable[i] = 0;
 }
 
-void dPa_c::level_c::execute()
-{
-    emitter_c* emitter = mEmitter;
+void dPa_c::level_c::execute() {
+    emitter_c *emitter = mEmitter;
     int i;
     for (i = 0; i < 0x40; i++, emitter++) {
         if (emitter->mId == 0)
@@ -108,9 +101,8 @@ void dPa_c::level_c::execute()
     }
 }
 
-void dPa_c::level_c::cleanup()
-{
-    emitter_c* emitter = mEmitter;
+void dPa_c::level_c::cleanup() {
+    emitter_c *emitter = mEmitter;
     int i;
     for (i = 0; i < 0x40; i++, emitter++) {
         if (emitter->mId != 0) {
@@ -121,8 +113,7 @@ void dPa_c::level_c::cleanup()
     }
 }
 
-dPa_c::level_c::emitter_c *dPa_c::level_c::get(u32 id)
-{
+dPa_c::level_c::emitter_c *dPa_c::level_c::get(u32 id) {
     if (id == 0)
         return 0;
     emitter_c *emitter = mTable[id & 0xf];
@@ -134,18 +125,15 @@ dPa_c::level_c::emitter_c *dPa_c::level_c::get(u32 id)
     return 0;
 }
 
-u32 dPa_c::level_c::entry(
-    u32 nameId, Vector3& position, const Vector3_16f *direction,
-    callback_c *callback)
-{
+u32 dPa_c::level_c::entry(u32 nameId, Vector3 &position, const Vector3_16f *direction,
+                          callback_c *callback) {
     int i;
     for (i = 0; i < 0x40; i++) {
         if (mEmitter[mFreeNo].mId == 0) {
             ++mLastId;
             if (mLastId == 0)
                 ++mLastId;
-            if (!mEmitter[mFreeNo].entry(mLastId, nameId, position,
-                                         direction, callback))
+            if (!mEmitter[mFreeNo].entry(mLastId, nameId, position, direction, callback))
                 return 0;
             addTable(&mEmitter[mFreeNo]);
             return mLastId;
@@ -155,10 +143,9 @@ u32 dPa_c::level_c::entry(
     return 0;
 }
 
-void dPa_c::level_c::addTable(emitter_c *emitter)
-{
+void dPa_c::level_c::addTable(emitter_c *emitter) {
     int index = emitter->mId & 0xf;
-    emitter_c* head = mTable[index];
+    emitter_c *head = mTable[index];
     if (head == 0) {
         mTable[index] = emitter;
     } else {
@@ -168,10 +155,9 @@ void dPa_c::level_c::addTable(emitter_c *emitter)
     }
 }
 
-void dPa_c::level_c::cutTable(emitter_c *emitter)
-{
-    emitter_c* pre = emitter->mPre;
-    emitter_c* next = emitter->mNext;
+void dPa_c::level_c::cutTable(emitter_c *emitter) {
+    emitter_c *pre = emitter->mPre;
+    emitter_c *next = emitter->mNext;
     if (pre == 0)
         mTable[emitter->mId & 0xf] = next;
     else

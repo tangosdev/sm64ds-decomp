@@ -823,7 +823,8 @@ void daBmb_c::func_ov102_0214b53c() {
         }
         int haveMtx3 = (int)((mFlags & 0x4000) != 0);
         if (haveMtx3 != 0) {
-            mCarryParticle = Particle::System::New(mCarryParticle, kPtclBobOmbCarried, p.x, p.y, p.z, 0, 0);
+            mCarryParticle =
+                Particle::System::New(mCarryParticle, kPtclBobOmbCarried, p.x, p.y, p.z, 0, 0);
         }
         if (mFuse != 0) {
             int haveShadow = (int)((mFlags & 0x40000) != 0);
@@ -878,7 +879,8 @@ void daBmb_c::func_ov102_0214b53c() {
                     }
                 }
             }
-            mFuseParticle = Particle::System::New(mFuseParticle, kPtclBobOmbFuse, p.x, p.y, p.z, 0, 0);
+            mFuseParticle =
+                Particle::System::New(mFuseParticle, kPtclBobOmbFuse, p.x, p.y, p.z, 0, 0);
         }
     }
     UpdateShadow();

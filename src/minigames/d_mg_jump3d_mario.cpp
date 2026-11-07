@@ -614,9 +614,12 @@ void dMgJump3DMario_c::StateMove()
                     mAnmModel.SetAnim((BCA_File *)(*sJump3DAnimTable[mAnimIdx]), 0x40000000,
                                       kAnimSpeed, 0);
                     mAnmModel.dExtFrameCtrl_c::currFrame = 0;
-                    Particle::System::NewSimple(kPtclMgJump3DJumpA, mPos.x << 3, mPos.y << 3, mPos.z << 3);
-                    Particle::System::NewSimple(kPtclMgJump3DJumpB, v[0] << 3, v[1] << 3, v[2] << 3);
-                    Particle::System::NewSimple(kPtclMgJump3DJumpC, v[0] << 3, v[1] << 3, v[2] << 3);
+                    Particle::System::NewSimple(kPtclMgJump3DJumpA, mPos.x << 3, mPos.y << 3,
+                                                mPos.z << 3);
+                    Particle::System::NewSimple(kPtclMgJump3DJumpB, v[0] << 3, v[1] << 3,
+                                                v[2] << 3);
+                    Particle::System::NewSimple(kPtclMgJump3DJumpC, v[0] << 3, v[1] << 3,
+                                                v[2] << 3);
                     Sound_PlayBank1Panned(0, mAnimIdx, mPos.x);
                     func_02012718(0x1c6, mScreenX << 12);
                     EnterBounce();

@@ -155,7 +155,7 @@ struct dScMgD3DBase_c : dScMgBase_c {
        dScMgJump_c::InitResources settles which element is which by passing
        each to Camera_UpdateMatrices. */
     MgCamera mCameras[2];             /* 0x466c -- [0] main screen, [1] sub screen */
-    dPa_c mParticle; /* 0x47e4 -- AfterInitResources initialises
+    dPa_c mParticle;                  /* 0x47e4 -- AfterInitResources initialises
                                           it, BeforeBehavior updates it, and all
                                           four children destroy it inline */
     s32  unk_5000;                    /* 0x5000 -- real matched access, this

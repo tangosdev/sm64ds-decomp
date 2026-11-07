@@ -3838,9 +3838,12 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], kPtclDemoDescendA, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], kPtclDemoDescendB, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], kPtclDemoDescendC, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] =
+            Particle::System::New(mParticleID[0], kPtclDemoDescendA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] =
+            Particle::System::New(mParticleID[1], kPtclDemoDescendB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] =
+            Particle::System::New(mParticleID[2], kPtclDemoDescendC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }
@@ -3866,9 +3869,12 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], kPtclDemoFadeInA, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], kPtclDemoFadeInB, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], kPtclDemoFadeInC, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] =
+            Particle::System::New(mParticleID[0], kPtclDemoFadeInA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] =
+            Particle::System::New(mParticleID[1], kPtclDemoFadeInB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] =
+            Particle::System::New(mParticleID[2], kPtclDemoFadeInC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }

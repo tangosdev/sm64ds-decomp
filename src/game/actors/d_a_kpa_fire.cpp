@@ -118,7 +118,7 @@ extern PMF data_ov060_0211af74[];
 
 /* Fix12<int>-by-value and other mangled-name calls (see the banner). */
 extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
-                                             const struct Vector3_16f *f);
+                                            const struct Vector3_16f *f);
 extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
 void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
 extern void d_a_kpa_firePlayLongHold(u32 a, u32 b, u32 c, void *pos, u32 d);
@@ -489,7 +489,7 @@ void daKpaFire_c::func_ov060_02116f90() {
     if (this->mLanded == 0) {
         this->mParticleHandle =
             Particle::System::NewCleanParticle(this->mParticleHandle, kPtclFlameSmall, this->mPosX,
-                                                this->mPosY + 0x37000, this->mPosZ, 0);
+                                               this->mPosY + 0x37000, this->mPosZ, 0);
         this->mdCcAc_c.flags |= 1;
         func_ov060_0211712c();
         if (this->mWithMeshClsn.IsOnGround()) {

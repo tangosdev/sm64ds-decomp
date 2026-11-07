@@ -11,7 +11,10 @@
  * parameter is a reference-sized Particle system object. `Particle::System`
  * is the established imported spelling, but unlike the callback class names
  * it is not RTTI-backed and remains an inferred exact-source spelling. */
-namespace Particle { struct System; struct Manager; }
+namespace Particle {
+struct System;
+struct Manager;
+}
 struct Vector3_16f;
 
 struct dPa_c {
@@ -131,26 +134,26 @@ struct dPa_c {
          * (n + 1) % max, addTable/cutTable on a doubly linked bucket chain,
          * execute() clearing or cutting, cleanup() cutting every live slot. */
         struct emitter_c {
-            u32 mId;              /* 0x00 - 0 marks a free slot */
-            u32 mNameId;          /* 0x04 - the effect: index into Manager::mDefinitions */
+            u32 mId;                 /* 0x00 - 0 marks a free slot */
+            u32 mNameId;             /* 0x04 - the effect: index into Manager::mDefinitions */
             u16 mSavedCallbackValue; /* 0x08 - the definition's callbackValue, restored by cleanup() */
-            u8  mStatus;          /* 0x0a - 1 while requested this frame; execute() clears it */
-            u8  pad_00b;
+            u8 mStatus;              /* 0x0a - 1 while requested this frame; execute() clears it */
+            u8 pad_00b;
             Particle::System *mEmitter; /* 0x0c */
             callback_c *mCallback;      /* 0x10 */
             emitter_c *mPre;            /* 0x14 */
             emitter_c *mNext;           /* 0x18 */
 
             void cleanup();
-            bool entry(u32 id, u32 nameId, Vector3& position,
-                       const Vector3_16f *direction, callback_c *callback);
+            bool entry(u32 id, u32 nameId, Vector3 &position, const Vector3_16f *direction,
+                       callback_c *callback);
         };
 
         /* entry() pre-increments this for each new emitter and skips 0,
            which get() treats as "no emitter". */
         u32 mLastId;
-        u8  mFreeNo;              /* 0x004 - where entry() looks for a free slot first */
-        u8  pad_005[0x3];
+        u8 mFreeNo; /* 0x004 - where entry() looks for a free slot first */
+        u8 pad_005[0x3];
         emitter_c mEmitter[0x40]; /* 0x008 */
         emitter_c *mTable[16];    /* 0x708 - bucket heads, indexed by id & 0xf */
 
@@ -158,8 +161,8 @@ struct dPa_c {
         emitter_c *get(u32 id);
         void cutTable(emitter_c *emitter);
         void addTable(emitter_c *emitter);
-        u32 entry(u32 nameId, Vector3& position,
-                  const Vector3_16f *direction, callback_c *callback);
+        u32 entry(u32 nameId, Vector3 &position, const Vector3_16f *direction,
+                  callback_c *callback);
         void cleanup();
         void execute();
     };
@@ -197,9 +200,9 @@ struct dPa_c {
      * them. Each callback is constructed by storing callback_c's vtable
      * (0x0208f3b4) and then the derived one. Field names cannot change
      * codegen. */
-    void *mResourceFile;      /* 0x000 */
+    void *mResourceFile;         /* 0x000 */
     Particle::Manager *mManager; /* 0x004 */
-    level_c mLevel;           /* 0x008 */
+    level_c mLevel;              /* 0x008 */
     /* The callback bank. Each level emitter the New* wrappers keep alive
      * has an id slot and the callback it was started with; the members
      * are named for that effect. The callbacks from 0x7f0 on have
@@ -207,23 +210,23 @@ struct dPa_c {
      * except the clipCallback_c NewWeather starts.
      * mFitWaterRaisedCallback is the fitWaterCallback_c whose waterOffset
      * the constructor raises from 3.0 to 75.0. */
-    s32 mRunningSlidingDustSystemID;                               /* 0x750 */
-    level_c::simpleCallback_c mRunningSlidingDustCallback;         /* 0x754 */
-    s32 mMegaRunningSlidingDustSystemID;                                  /* 0x75c */
-    level_c::simpleCallback_c mMegaRunningSlidingDustCallback;            /* 0x760 */
-    s32 mBigSplashSystemID;                                        /* 0x768 */
-    level_c::splashCallback_c mBigSplashCallback;                  /* 0x76c */
-    s32 mSplashSystemID;                                           /* 0x774 */
+    s32 mRunningSlidingDustSystemID;                           /* 0x750 */
+    level_c::simpleCallback_c mRunningSlidingDustCallback;     /* 0x754 */
+    s32 mMegaRunningSlidingDustSystemID;                       /* 0x75c */
+    level_c::simpleCallback_c mMegaRunningSlidingDustCallback; /* 0x760 */
+    s32 mBigSplashSystemID;                                    /* 0x768 */
+    level_c::splashCallback_c mBigSplashCallback;              /* 0x76c */
+    s32 mSplashSystemID;                                       /* 0x774 */
     /* Constructed but never passed: NewSplash hands New &mBigSplashCallback. */
     level_c::splashCallback_c mSplashCallback;                     /* 0x778 */
     s32 mBubbleSystemID;                                           /* 0x780 */
     level_c::bubbleCallback_c mBubbleCallback;                     /* 0x784 */
     s32 mRippleSystemID;                                           /* 0x78c */
     level_c::fitWaterSimpleCallback_c mRippleCallback;             /* 0x790 */
-    s32 mRedFlameSystemID;                                          /* 0x798 */
-    level_c::simpleCallback_c mRedFlameCallback;                    /* 0x79c */
-    s32 mBlueFlameSystemID;                                         /* 0x7a4 */
-    level_c::simpleCallback_c mBlueFlameCallback;                   /* 0x7a8 */
+    s32 mRedFlameSystemID;                                         /* 0x798 */
+    level_c::simpleCallback_c mRedFlameCallback;                   /* 0x79c */
+    s32 mBlueFlameSystemID;                                        /* 0x7a4 */
+    level_c::simpleCallback_c mBlueFlameCallback;                  /* 0x7a8 */
     s32 mFlamethrowerRedASystemID;                                 /* 0x7b0 */
     level_c::scaleCallback_c mFlamethrowerRedACallback;            /* 0x7b4 */
     s32 mFlamethrowerRedBSystemID;                                 /* 0x7c0 */
@@ -270,10 +273,9 @@ typedef char dPa_splashCallback_c_size_must_be_0x8[
     sizeof(dPa_c::level_c::splashCallback_c) == 0x8 ? 1 : -1];
 typedef char dPa_clipCallback_c_size_must_be_0x8[
     sizeof(dPa_c::level_c::clipCallback_c) == 0x8 ? 1 : -1];
-typedef char dPa_level_c_size_must_be_0x748[
-    sizeof(dPa_c::level_c) == 0x748 ? 1 : -1];
-typedef char dPa_level_c_emitter_c_size_must_be_0x1c[
-    sizeof(dPa_c::level_c::emitter_c) == 0x1c ? 1 : -1];
+typedef char dPa_level_c_size_must_be_0x748[sizeof(dPa_c::level_c) == 0x748 ? 1 : -1];
+typedef char
+    dPa_level_c_emitter_c_size_must_be_0x1c[sizeof(dPa_c::level_c::emitter_c) == 0x1c ? 1 : -1];
 typedef char dPa_cleanParticleCallback_c_size_must_be_0x4[
     sizeof(dPa_c::level_c::cleanParticleCallback_c) == 0x4 ? 1 : -1];
 typedef char dPa_checkWaterRippleCallback_c_size_must_be_0x4[

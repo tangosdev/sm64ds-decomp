@@ -81,7 +81,7 @@ enum {
     /* Played at the race start (two positional calls) and, in 2D, when the
      * post-race talk begins; the sound itself is unidentified. */
     kSfx4D = 0x4d,
-    kMusicRace = 0x41        /* loaded on layer 2 when the race starts, stopped when it ends */
+    kMusicRace = 0x41 /* loaded on layer 2 when the race starts, stopped when it ends */
 };
 
 /* Distances, in fix12 units (0x1000 = 1.0; the numbers here are the whole-unit

@@ -130,7 +130,8 @@ void daObjDlPyramid_c::Descend() {
         mAngleY += mAngVelY;
         mPosY += mVertSpeed;
     }
-    mSpinParticleID = Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPosX, mPosY, mPosZ, 0, 0);
+    mSpinParticleID =
+        Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPosX, mPosY, mPosZ, 0, 0);
     if (mStateTimer == 150)
         mState = 2;
 }

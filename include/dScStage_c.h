@@ -65,7 +65,7 @@ void LoadMinimapChangeObject(int, Fix12i, s8);
 struct dScStage_c : dScene_c {
     class graphCallback_c;
 
-    dPa_c mParticle;  /* 0x050 */
+    dPa_c mParticle;                   /* 0x050 */
     dExtSimpleModel_c mModel;          /* 0x86c */
     StageArea mAreas[8];               /* 0x8bc - dExtSimpleModel_c ends here, and dBgW_Kc
                                            does not start until 0x91c */

@@ -671,7 +671,8 @@ int daTgz_c::func_ov077_02125bb4() {
         if (mInWater == 0) {
             func_02012694(0xe2, &mCamSpacePos);
             Particle::System::NewBigSplash(mPosX, data_0209f32c, mPosZ);
-            mRippleId = Particle::System::New(mRippleId, kPtclRipple, mPosX, data_0209f32c, mPosZ, 0, 0);
+            mRippleId =
+                Particle::System::New(mRippleId, kPtclRipple, mPosX, data_0209f32c, mPosZ, 0, 0);
         }
         mVertAccel = -0x400;
         mTerminalVelocity = -0x5000;

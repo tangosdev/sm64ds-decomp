@@ -142,8 +142,10 @@ int daEyBm_c::Behavior() {
 }
 
 int daEyBm_c::Render() {
-    mParticle1 = Particle::System::NewCleanParticle(mParticle1, kPtclMrIBeamA, mPosX, mPosY, mPosZ, 0);
-    mParticle2 = Particle::System::NewCleanParticle(mParticle2, kPtclMrIBeamB, mPosX, mPosY, mPosZ, 0);
+    mParticle1 =
+        Particle::System::NewCleanParticle(mParticle1, kPtclMrIBeamA, mPosX, mPosY, mPosZ, 0);
+    mParticle2 =
+        Particle::System::NewCleanParticle(mParticle2, kPtclMrIBeamB, mPosX, mPosY, mPosZ, 0);
     return 1;
 }
 void daEyBm_c::OnPendingDestroy() {}

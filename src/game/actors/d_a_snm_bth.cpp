@@ -158,7 +158,8 @@ void SnowmanBreathParticle::Render()
 {
     if (mTimer == 0)
         return;
-    mParticleID = Particle::System::New(mParticleID, kPtclSnowmanBreath, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticleID =
+        Particle::System::New(mParticleID, kPtclSnowmanBreath, mPos.x, mPos.y, mPos.z, 0, 0);
 }
 
 void SnowmanBreathParticle::Behavior()

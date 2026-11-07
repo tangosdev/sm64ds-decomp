@@ -2401,7 +2401,8 @@ void daStar_c::func_ov002_020e7fcc() {
     if (!mAnmModel1.Finished() && (u32)((*(u32 *)&mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
         *(int *)((char *)obj + 0xc) != 0) {
         func_ov002_020e8244(&v1, this);
-        mParticle[0] = (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
+        mParticle[0] =
+            (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
         return;
     }
 
@@ -2435,7 +2436,8 @@ void daStar_c::func_ov002_020e7f2c() {
         zvar = zraw;
         y = yadj;
     }
-    mParticle[2] = (u32)Particle::System::New(*(volatile u32 *)&mParticle[2], kPtclStarSparkle, x, y, z, 0, 0);
+    mParticle[2] =
+        (u32)Particle::System::New(*(volatile u32 *)&mParticle[2], kPtclStarSparkle, x, y, z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2447,7 +2449,8 @@ void daStar_c::func_ov002_020e7eb8() {
     int b = (actorID == ACTOR_SILVER_STAR);
     if (b == 0) return;
     func_ov002_020e8244(&v, this);
-    mParticle[3] = (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
+    mParticle[3] =
+        (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */

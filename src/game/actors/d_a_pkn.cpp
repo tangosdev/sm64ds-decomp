@@ -510,8 +510,8 @@ void daPkn_c::StateDie()
         pos.x += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2];
         pos.z += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2 + 1];
         pos.y += data_ov084_02130334[(u16)mStateTimer] << 12;
-        mParticleHandle =
-            (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x, pos.y, pos.z, 0, 0);
+        mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
+                                                     pos.y, pos.z, 0, 0);
     }
     if (mAnmModel.Finished() == 0)
         return;
@@ -532,10 +532,10 @@ void daPkn_c::StateShrink()
         scale = 0x1000;
     }
 
-    mParticleHandle =
-        (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
-    mParticleHandle2 =
-        (s32)Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPosX,
+                                                 mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle2 = (s32)Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX,
+                                                  mPosY + 0x1e000, mPosZ, 0, 0);
 
     if (scale > 0) {
         scale = scale - 0xa3;

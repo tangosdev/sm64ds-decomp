@@ -423,7 +423,7 @@ extern "C" {
 extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);
 extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
-                                             Fix12i z, const Vector3_16f *dir);
+                                            Fix12i z, const Vector3_16f *dir);
 }
 
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
@@ -455,7 +455,7 @@ int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
                                    *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0, 0);
     mDeathParticleID1 =
         Particle::System::NewCleanParticle(mDeathParticleID1, kPtclDeathB, *(int *)((char *)v + 0),
-                                            *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
+                                           *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
     return 0;
 }
 
@@ -747,7 +747,8 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
 
     Particle::System::New(0, kPtclKnockAwayA, dst.x, dst.y, dst.z, 0, 0);
     Particle::System::New(0, kPtclKnockAwayB, dst.x, dst.y, dst.z, 0, 0);
-    Particle::System::New(0, kPtclAttackHitA, dst.x, dst.y, dst.z, (const Vector3_16f *)(dirvec), 0);
+    Particle::System::New(0, kPtclAttackHitA, dst.x, dst.y, dst.z, (const Vector3_16f *)(dirvec),
+                          0);
     Particle::System::New(0, kPtclAttackHitB, dst.x, dst.y, dst.z, 0, 0);
 }
 

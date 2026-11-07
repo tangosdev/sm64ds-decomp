@@ -212,8 +212,8 @@ void daGrock_c::HandleMeshCollision() {
             Particle::System::NewSimple(kPtclBigSteelieBounce, pos.x, pos.y, pos.z);
             func_0201267c(0x48, &mCamSpacePos);
         } else {
-            mDustParticleID =
-                (int)Particle::System::New(mDustParticleID, kPtclBigSteelieRollDust, pos.x, pos.y, pos.z, 0, 0);
+            mDustParticleID = (int)Particle::System::New(mDustParticleID, kPtclBigSteelieRollDust,
+                                                         pos.x, pos.y, pos.z, 0, 0);
             mRollSoundID = Sound::PlayLong(mRollSoundID, 3, 0x8a, mCamSpacePos, 0);
         }
         {

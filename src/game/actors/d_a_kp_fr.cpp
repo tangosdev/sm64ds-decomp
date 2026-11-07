@@ -99,10 +99,10 @@ int daKpFr_c::Render()
 {
   int hidden = (mFlags & 0x40000) != 0;
   if (hidden) return 1;
-  mParticle1 =
-      Particle::System::NewCleanParticle(mParticle1, kPtclKeronpaFireA, mPosX, mPosY + 0x4b000, mPosZ, 0);
-  mParticle2 =
-      Particle::System::NewCleanParticle(mParticle2, kPtclKeronpaFireB, mPosX, mPosY + 0x4b000, mPosZ, 0);
+  mParticle1 = Particle::System::NewCleanParticle(mParticle1, kPtclKeronpaFireA, mPosX,
+                                                  mPosY + 0x4b000, mPosZ, 0);
+  mParticle2 = Particle::System::NewCleanParticle(mParticle2, kPtclKeronpaFireB, mPosX,
+                                                  mPosY + 0x4b000, mPosZ, 0);
   return 1;
 }
 

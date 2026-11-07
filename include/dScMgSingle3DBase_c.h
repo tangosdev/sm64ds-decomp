@@ -43,7 +43,7 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
     /* 0x4660..0x471c is one MgCamera: 0x4660 + 0xbc = 0x471c, where
      * mParticle starts. The scenes pass &mCamera to the Camera_* routines. */
     MgCamera mCamera;                 /* offset 0x4660 */
-    dPa_c mParticle; /* 0x471c */
+    dPa_c mParticle;                  /* 0x471c */
 };
 
 /* A floor, not a claim the object ends here: 0x471c + sizeof(dPa_c).

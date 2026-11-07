@@ -597,8 +597,10 @@ void dScMgSnowball_c::UpdateSnowball() {
             part.x = px;
             part.y = py;
             part.z = pz;
-            id1 = Particle::System::New(0, kPtclMgSnowballHitA, part.x * 8, part.y * 8, part.z * 8, 0, 0);
-            id2 = Particle::System::New(0, kPtclMgSnowballHitB, part.x * 8, part.y * 8, part.z * 8, 0, 0);
+            id1 = Particle::System::New(0, kPtclMgSnowballHitA, part.x * 8, part.y * 8, part.z * 8,
+                                        0, 0);
+            id2 = Particle::System::New(0, kPtclMgSnowballHitB, part.x * 8, part.y * 8, part.z * 8,
+                                        0, 0);
             sys = Particle::System::FromUniqueID(id1);
             if (sys != 0) {
                 /* 0x44 lies in Particle::System's unnamed pad_042. */

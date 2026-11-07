@@ -2121,7 +2121,8 @@ flag_done:
     Sound::PlayBank0(0xd0, mCamSpacePos);
 
     if (mIsInShallowWater != 0 && mIsUnderwater == 0) {
-        newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclHeavyStepRipple, this->mPosX, data_0209f32c, this->mPosZ, 0);
+        newId = Particle::System::NewCheckWaterRipple(mParticle1, kPtclHeavyStepRipple, this->mPosX,
+                                                      data_0209f32c, this->mPosZ, 0);
         mParticle1 = newId;
     }
 
@@ -2163,8 +2164,9 @@ void func_ov002_020bf800(char *c, Vector3_16f v)
     int zv = player->mPosZ - v.z * 0x2bc;
     int yv = player->mPosY - v.y * 0x2bc;
     Fix12v a(xv), b(yv), d(zv);
-    player->mParticle1 = Particle::System::New(player->mParticle1, kPtclCurrentFlow, *(int *)&a, *(int *)&b,
-                                               *(int *)&d, (const Vector3_16f *)(&v), 0);
+    player->mParticle1 =
+        Particle::System::New(player->mParticle1, kPtclCurrentFlow, *(int *)&a, *(int *)&b,
+                              *(int *)&d, (const Vector3_16f *)(&v), 0);
 }
 }
 
@@ -2759,7 +2761,8 @@ int daPly_c::func_ov002_020c0d90(int y) {
             if (this->mIsMega == 0) {
                 Particle::System::NewSplash(this->mPosX, y, this->mPosZ);
             } else {
-                this->mParticle1 = Particle::System::NewCheckWaterRipple(this->mParticle1, kPtclMegaSplash, this->mPosX, data_0209f32c, this->mPosZ, 0);
+                this->mParticle1 = Particle::System::NewCheckWaterRipple(
+                    this->mParticle1, kPtclMegaSplash, this->mPosX, data_0209f32c, this->mPosZ, 0);
             }
         }
     }
@@ -3296,7 +3299,8 @@ void daPly_c::func_ov002_020c1eb4(int dmg) {
         vec.x = data_02082214[idx * 2];
         vec.z = data_02082214[idx * 2 + 1];
         vec.y = 0;
-        Particle::System::New(0, kPtclWallBonk, out.x, out.y, out.z, (const Vector3_16f *)(&vec), 0);
+        Particle::System::New(0, kPtclWallBonk, out.x, out.y, out.z, (const Vector3_16f *)(&vec),
+                              0);
     }
     func_ov002_020d91e0(0, 1);
 }
@@ -9299,7 +9303,8 @@ int daPly_c::St_Swim_Main() {
         pos[2] = z;
         y = y + 0x32000;
         pos[1] = y;
-        *(unsigned int*)&mParticle3 = Particle::System::NewCheckWater(*(volatile unsigned int*)(&mParticle3), eid, pos[0], pos[1], z, 0);
+        *(unsigned int *)&mParticle3 = Particle::System::NewCheckWater(
+            *(volatile unsigned int *)(&mParticle3), eid, pos[0], pos[1], z, 0);
     }
 
     if (mPrevVertSpeed == 0 && mMeshClsn.IsOnGround() != 0) {
@@ -9654,7 +9659,7 @@ int daPly_c::func_ov002_020ce5f8() {
     Vec3_LslInPlace(&pos, 3);
 
     if (pos.y < data_0209f32c - 0x1e000) {
-        Particle::System::NewBubble(pos.x, *(volatile int*)&pos.y, pos.z);
+        Particle::System::NewBubble(pos.x, *(volatile int *)&pos.y, pos.z);
         if (mStateWaitTimer == 0) {
             Sound::PlayBank3(0xb, mCamSpacePos);
             mStateWaitTimer = 0xa;
@@ -9713,19 +9718,19 @@ void daPly_c::func_ov002_020ce8bc(int arg1) {
 
     if (mIsMega != 0) {
         if (arg1 != 0) {
-            mWaterMoveParticle =
-                Particle::System::NewFitWater(*(volatile int *)&mWaterMoveParticle, kPtclMegaWaterSurfaceMove, x, y, z, 0);
+            mWaterMoveParticle = Particle::System::NewFitWater(
+                *(volatile int *)&mWaterMoveParticle, kPtclMegaWaterSurfaceMove, x, y, z, 0);
         } else {
-            mWaterStillParticle =
-                Particle::System::NewFitWater(*(volatile int *)&mWaterStillParticle, kPtclMegaWaterSurfaceStill, x, y, z, 0);
+            mWaterStillParticle = Particle::System::NewFitWater(
+                *(volatile int *)&mWaterStillParticle, kPtclMegaWaterSurfaceStill, x, y, z, 0);
         }
     } else {
         if (arg1 != 0) {
-            mWaterMoveParticle =
-                Particle::System::NewFitWater(*(volatile int *)&mWaterMoveParticle, kPtclWaterSurfaceMove, x, y, z, 0);
+            mWaterMoveParticle = Particle::System::NewFitWater(*(volatile int *)&mWaterMoveParticle,
+                                                               kPtclWaterSurfaceMove, x, y, z, 0);
         } else {
-            mWaterStillParticle =
-                Particle::System::NewFitWater(*(volatile int *)&mWaterStillParticle, kPtclWaterSurfaceStill, x, y, z, 0);
+            mWaterStillParticle = Particle::System::NewFitWater(
+                *(volatile int *)&mWaterStillParticle, kPtclWaterSurfaceStill, x, y, z, 0);
         }
     }
 }
@@ -9753,7 +9758,8 @@ void daPly_c::func_ov002_020ce9c8() {
     Particle::System::NewFitWater(0, effectID, v[0], v[1], v[2], 0);
 
     if (mIsMega)
-        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclMegaSplash, mPosX, (int)data_0209f32c, mPosZ, 0);
+        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclMegaSplash, mPosX,
+                                                           (int)data_0209f32c, mPosZ, 0);
     else
         Particle::System::NewBigSplash(mPosX, (int)data_0209f32c, mPosZ);
 
@@ -11507,7 +11513,8 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
     }
 
     if (p->mIsInShallowWater != 0) {
-        u32 newId = Particle::System::NewCheckWaterRipple((u32)p->mParticle1, kPtclShallowWaterLand, p->mPosX, data_0209f32c, p->mPosZ, 0);
+        u32 newId = Particle::System::NewCheckWaterRipple((u32)p->mParticle1, kPtclShallowWaterLand,
+                                                          p->mPosX, data_0209f32c, p->mPosZ, 0);
         p->mParticle1 = newId;
         return;
     }
@@ -12860,7 +12867,8 @@ void daPly_c::PlayLandingEffects() {
     extern int data_0209f32c;
     int id;
     if (mIsInShallowWater) {
-        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPosX, data_0209f32c, mPosZ, 0);
+        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPosX,
+                                                           data_0209f32c, mPosZ, 0);
     }
     if (mSinkDepth > 0x32000) {
         Sound::PlayBank0(0xb3, mCamSpacePos);
@@ -13051,10 +13059,12 @@ int daPly_c::St_BurnLava_Main() {
             info.vec[0] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2];
             info.vec[1] = 0;
             info.vec[2] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2 + 1];
-            mParticle1 = Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
-                                               info.pos[2], (const Vector3_16f *)(info.vec), 0);
-            mParticle2 = Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1],
-                                               info.pos[2], (const Vector3_16f *)(info.vec), 0);
+            mParticle1 =
+                Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
+                                      info.pos[2], (const Vector3_16f *)(info.vec), 0);
+            mParticle2 =
+                Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1],
+                                      info.pos[2], (const Vector3_16f *)(info.vec), 0);
             mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
         }
     }
@@ -13184,10 +13194,10 @@ int daPly_c::St_BurnFire_Main() {
         info.vec[1] = 0;
         info.vec[2] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2 + 1];
 
-        mParticle1 = Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1], info.pos[2],
-                                           (const Vector3_16f *)(info.vec), 0);
-        mParticle2 = Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1], info.pos[2],
-                                           (const Vector3_16f *)(info.vec), 0);
+        mParticle1 = Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
+                                           info.pos[2], (const Vector3_16f *)(info.vec), 0);
+        mParticle2 = Particle::System::New(mParticle2, kPtclPlayerBurnB, info.pos[0], info.pos[1],
+                                           info.pos[2], (const Vector3_16f *)(info.vec), 0);
         mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x106, mCamSpacePos, 0);
     }
 
@@ -13318,8 +13328,10 @@ int daPly_c::St_Electrocute_Main() {
         y = yadjraw;
     }
 
-    mParticle1 = Particle::System::New(*(volatile u32 *)&mParticle1, kPtclElectrocuteA, x, y, z, 0, 0);
-    mParticle2 = Particle::System::New(*(volatile u32 *)&mParticle2, kPtclElectrocuteB, x, y, zvar, 0, 0);
+    mParticle1 =
+        Particle::System::New(*(volatile u32 *)&mParticle1, kPtclElectrocuteA, x, y, z, 0, 0);
+    mParticle2 =
+        Particle::System::New(*(volatile u32 *)&mParticle2, kPtclElectrocuteB, x, y, zvar, 0, 0);
     mParticle3 = Particle::System::New(mParticle3, kPtclElectrocuteC, x, y, zvar, 0, 0);
 
     if (mStateTimer == 0) {
@@ -13990,10 +14002,10 @@ int daPly_c::func_ov002_020d6998() {
 
                 Vec3_RotateYAndTranslate(&out.x, &((dActor_c *)other)->mPosX, angle, &rotSrc.x);
 
-                Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z, (const Vector3_16f *)(&pos16),
-                                      0);
-                Particle::System::New(0, kPtclTongueHitB, out.x, out.y, out.z, (const Vector3_16f *)(&pos16),
-                                      0);
+                Particle::System::New(0, kPtclTongueHitA, out.x, out.y, out.z,
+                                      (const Vector3_16f *)(&pos16), 0);
+                Particle::System::New(0, kPtclTongueHitB, out.x, out.y, out.z,
+                                      (const Vector3_16f *)(&pos16), 0);
                 goto react;
             }
         } else {
@@ -14158,10 +14170,10 @@ int daPly_c::TongueWallProbe() {
     dir.x = data_02082214[idx * 2];
     dir.y = 0;
     dir.z = data_02082214[idx * 2 + 1];
-    Particle::System::New(0, kPtclTongueHitA, clsnPos.x, clsnPos.y, clsnPos.z, (const Vector3_16f *)(&dir),
-                          0);
-    Particle::System::New(0, kPtclTongueHitB, clsnPos.x, clsnPos.y, clsnPos.z, (const Vector3_16f *)(&dir),
-                          0);
+    Particle::System::New(0, kPtclTongueHitA, clsnPos.x, clsnPos.y, clsnPos.z,
+                          (const Vector3_16f *)(&dir), 0);
+    Particle::System::New(0, kPtclTongueHitB, clsnPos.x, clsnPos.y, clsnPos.z,
+                          (const Vector3_16f *)(&dir), 0);
 
     ((dBgPi *)&res)->dBgPi::~dBgPi();
     return 1;
@@ -15192,11 +15204,14 @@ void func_ov002_020d8d10(struct Self *self, Vector3 *pos) {
     vec.z = data_02082214[(((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2) + 1];
 
     if (self->state != 2) {
-        Particle::System::New(0, kPtclAttackHitA, pos->x, pos->y, pos->z, (const Vector3_16f *)(&vec), 0);
+        Particle::System::New(0, kPtclAttackHitA, pos->x, pos->y, pos->z,
+                              (const Vector3_16f *)(&vec), 0);
         Particle::System::New(0, kPtclAttackHitB, pos->x, pos->y, pos->z, 0, 0);
     } else {
-        Particle::System::New(0, kPtclWarioAttackHitA, pos->x, pos->y, pos->z, (const Vector3_16f *)(&vec), 0);
-        Particle::System::New(0, kPtclWarioAttackHitB, pos->x, pos->y, pos->z, (const Vector3_16f *)(&vec), 0);
+        Particle::System::New(0, kPtclWarioAttackHitA, pos->x, pos->y, pos->z,
+                              (const Vector3_16f *)(&vec), 0);
+        Particle::System::New(0, kPtclWarioAttackHitB, pos->x, pos->y, pos->z,
+                              (const Vector3_16f *)(&vec), 0);
         Particle::System::New(0, kPtclWarioAttackHitC, pos->x, pos->y, pos->z, 0, 0);
     }
 }
@@ -15646,7 +15661,8 @@ void daPly_c::func_ov002_020d98b4() {
         MulVec3Mat4x3(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
         Vec3_MulScalar(&s, &v, 0x8000);
         s.y += 0x50000;
-        mParticle1 = (s32)Particle::System::New((u32)mParticle1, kPtclDizzyStars, s.x, s.y, s.z, 0, 0);
+        mParticle1 =
+            (s32)Particle::System::New((u32)mParticle1, kPtclDizzyStars, s.x, s.y, s.z, 0, 0);
     }
     mFlags |= 0x80;
 }

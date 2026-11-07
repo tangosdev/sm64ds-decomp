@@ -309,8 +309,8 @@ void daChoropu_c::func_ov080_02123c24()
             amt = 0x50000;
         } else {
             amt = data_ov080_021276c4[state - 6] << 12;
-            mEmergeSystemID =
-                Particle::System::New(mEmergeSystemID, kPtclMontyMoleEmerge, mPosX, mPosY, mPosZ, 0, 0);
+            mEmergeSystemID = Particle::System::New(mEmergeSystemID, kPtclMontyMoleEmerge, mPosX,
+                                                    mPosY, mPosZ, 0, 0);
         }
     }
 

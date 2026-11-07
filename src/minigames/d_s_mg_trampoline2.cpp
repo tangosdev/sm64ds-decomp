@@ -136,7 +136,7 @@ struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int b, int c, int d,
-                                                     int e, const Vector3_16f *f);
+                                                    int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern int RandomIntInternal(int *seed);
 extern const VecFx32 sTrmp2RandomSpawnPositions[];

@@ -774,8 +774,8 @@ int daMip_c::StateFleeMain() {
             *((volatile s32 *)(&pos.x)) = x;
             *((volatile s32 *)(&pos.y)) = y;
             *((volatile s32 *)(&pos.z)) = z;
-            mDustParticle =
-                Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, *((volatile s32 *)(&pos.x)), *(&pos.y), z, 0);
+            mDustParticle = Particle::System::NewFitWater(
+                mDustParticle, kPtclWaterSurfaceMove, *((volatile s32 *)(&pos.x)), *(&pos.y), z, 0);
         }
     }
 
@@ -928,7 +928,7 @@ int daMip_c::StateIdleMain()
         *((volatile s32*)(&sp.y)) = y;
         *((volatile s32*)(&sp.z)) = z;
         mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
-                                                      *((volatile s32*)(&sp.x)), *(&sp.y), z, 0);
+                                                      *((volatile s32 *)(&sp.x)), *(&sp.y), z, 0);
     }
 
     VecFx32 pp;

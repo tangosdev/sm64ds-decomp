@@ -266,7 +266,7 @@ extern "C" {
 void d_a_sanboRunningSlidingDustAtHold(int x, int y, int z);
 unsigned d_a_sanboNewHold(unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
 unsigned d_a_sanboNewCleanParticleHold(unsigned a, unsigned b, int x, int y, int z,
-                                        const Vector3_16f *dir);
+                                       const Vector3_16f *dir);
 }
 
 /* A segment tracks the one in front of it while that piece is still small. */
@@ -416,7 +416,8 @@ int daSanbo_c::func_ov096_02136434()
         ((int *)&pos)[1] = y;
         ((int *)&pos)[2] = z;
         mParticle0 = Particle::System::New(mParticle0, kPtclDeathA, pos.x, pos.y, pos.z, 0, 0);
-        mParticle1 = Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
+        mParticle1 =
+            Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
         p0 = Particle::System::FromUniqueID(mParticle0);
         p1 = Particle::System::FromUniqueID(mParticle1);
         if (p0)

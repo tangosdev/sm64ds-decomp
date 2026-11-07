@@ -439,12 +439,14 @@ int daBakubaku_c::func_ov032_02111830()
             MulVec3Mat4x3(&forwardOffset, &data_020a0e68, &rotatedOffset);
             splashPosition.x += rotatedOffset.x;
             splashPosition.z += rotatedOffset.z;
-            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntrySurface, splashPosition.x, splashPosition.y, splashPosition.z, 0);
+            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntrySurface, splashPosition.x,
+                                                splashPosition.y, splashPosition.z, 0);
             mSplashParticle = Particle::System::NewCheckWaterRipple(
-                mSplashParticle, kPtclMegaSplash, splashPosition.x, data_0209f32c,
-                splashPosition.z, 0);
+                mSplashParticle, kPtclMegaSplash, splashPosition.x, data_0209f32c, splashPosition.z,
+                0);
             splashPosition.y += 0x4b000;
-            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntryRaised, splashPosition.x, splashPosition.y, splashPosition.z, 0);
+            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntryRaised, splashPosition.x,
+                                                splashPosition.y, splashPosition.z, 0);
         }
     }
 

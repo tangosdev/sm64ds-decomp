@@ -446,8 +446,8 @@ int daPgRcer_c::func_ov019_0211197c() {
             mPenguinFinished = 1;
         }
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, mCamSpacePos, 0);
-        mDustParticle =
-            (u32)Particle::System::New(mDustParticle, kPtclSlideDust, mPosX, mPosY + 0x32000, mPosZ, 0, 0);
+        mDustParticle = (u32)Particle::System::New(mDustParticle, kPtclSlideDust, mPosX,
+                                                   mPosY + 0x32000, mPosZ, 0, 0);
         break;
 
     case 2:

@@ -155,7 +155,7 @@ void daFPknBall_c::UpdateVisuals() {
     pos.y = pos.y + data_ov002_02100320[mVariant];
 
     mTrailEffect = Particle::System::NewCleanParticle(mTrailEffect, data_ov002_02100334[mVariant],
-                                                       pos.x, pos.y, pos.z, 0);
+                                                      pos.x, pos.y, pos.z, 0);
 
     mSparkEffect = (void *)Particle::System::New((u32)mSparkEffect, data_ov002_02100348[mVariant],
                                                  pos.x, pos.y, pos.z, 0, 0);
@@ -275,7 +275,8 @@ int daFPknBall_c::Behavior() {
                         sparkPos.y = py;
                         Particle::System::NewSimple(kPtclKnockAwayA, px, py, pz);
                     }
-                    Particle::System::NewSimple(kPtclKnockAwayB, sparkPos.x, sparkPos.y, sparkPos.z);
+                    Particle::System::NewSimple(kPtclKnockAwayB, sparkPos.x, sparkPos.y,
+                                                sparkPos.z);
                     UpdateVisuals();
                     mdCcAc_c.Clear();
                     return 1;

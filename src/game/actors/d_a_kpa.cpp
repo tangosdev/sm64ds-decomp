@@ -2179,8 +2179,9 @@ void daKpa_c::func_ov060_02113d8c(){
     case 3:
         this->mStepCounter = 0;
         func_ov060_02111cc0(0x1a, 0x40000000);
-        this->mParticleHandle = (unsigned int)Particle::System::New(
-            this->mParticleHandle, kPtclSlideDust, this->mPosX, this->mPosY + 0x32000, this->mPosZ, 0, 0);
+        this->mParticleHandle =
+            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPosX,
+                                                this->mPosY + 0x32000, this->mPosZ, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;

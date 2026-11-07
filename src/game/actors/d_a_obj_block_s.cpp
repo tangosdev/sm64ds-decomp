@@ -134,7 +134,7 @@ extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
-                                                const Vector3_16f *v);
+                                               const Vector3_16f *v);
 }
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);

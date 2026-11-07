@@ -183,8 +183,10 @@ cont:
 
     UpdateSpin(0x1000);
 
-    mParticleHandle0 = Particle::System::New(mParticleHandle0, kPtclTornadoA, mPosX, mPosY, mPosZ, 0, 0);
-    mParticleHandle1 = Particle::System::New(mParticleHandle1, kPtclTornadoB, mPosX, mPosY, mPosZ, 0, 0);
+    mParticleHandle0 =
+        Particle::System::New(mParticleHandle0, kPtclTornadoA, mPosX, mPosY, mPosZ, 0, 0);
+    mParticleHandle1 =
+        Particle::System::New(mParticleHandle1, kPtclTornadoB, mPosX, mPosY, mPosZ, 0, 0);
 }
 
 void daTor_c::State0()

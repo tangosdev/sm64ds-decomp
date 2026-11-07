@@ -232,8 +232,10 @@ s32 daObjHatenaSwitch_c::Behavior() {
                     position.y = y;
                     position.z = z;
                     Particle::System::NewSimple(kPtclHatenaSwitchPressA, x, y, z);
-                    Particle::System::NewSimple(kPtclHatenaSwitchPressB, position.x, position.y, position.z);
-                    Particle::System::NewSimple(kPtclHatenaSwitchPressC, position.x, position.y, position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressB, position.x, position.y,
+                                                position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressC, position.x, position.y,
+                                                position.z);
                 }
                 Particle::System::NewSimple(kPtclHatenaSwitchPressD, mPosX, mPosY, mPosZ);
                 mTalking = 1;

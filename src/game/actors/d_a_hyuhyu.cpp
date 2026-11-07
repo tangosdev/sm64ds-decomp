@@ -324,8 +324,8 @@ int daHyuhyu_c::StateBlowMain() {
 
         mGustParticle = Particle::System::New(mGustParticle, kPtclFwooshGustA, pos.x, pos.y, pos.z,
                                               (const Vector3_16f *)(&rot), 0);
-        mGustParticle2 = Particle::System::New(mGustParticle2, kPtclFwooshGustB, pos.x, pos.y, pos.z,
-                                               (const Vector3_16f *)(&rot), 0);
+        mGustParticle2 = Particle::System::New(mGustParticle2, kPtclFwooshGustB, pos.x, pos.y,
+                                               pos.z, (const Vector3_16f *)(&rot), 0);
 
         if (!((u16)(mAnmModel.currFrame >> 12) & 1)) {
             gust = dActor_c::Spawn(0xe7, 1, mPos, 0, mAreaId, -1);

@@ -188,9 +188,9 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         v.y = r.y;
         v.z = r.z;
         v.y = c->mSurfaceY;
-        c->mRippleParticles[i] =
-            Particle::System::New(c->mRippleParticles[i], id, v.x, v.y, r.z,
-                                  (const Vector3_16f *)(zero), (dPa_c::level_c::callback_c *)(zero));
+        c->mRippleParticles[i] = Particle::System::New(c->mRippleParticles[i], id, v.x, v.y, r.z,
+                                                       (const Vector3_16f *)(zero),
+                                                       (dPa_c::level_c::callback_c *)(zero));
     }
 }
 

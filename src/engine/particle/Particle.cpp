@@ -34,8 +34,7 @@ extern u32 sParticlePalVramLowCursor;
 extern u32 sParticlePalVramHighCursor;
 extern signed char gCurrentSublevel;
 
-dPa_c::dPa_c()
-{
+dPa_c::dPa_c() {
     gParticleControl = this;
     mManager = 0;
     mRunningSlidingDustSystemID = 0;
@@ -51,8 +50,7 @@ dPa_c::dPa_c()
     mFitWaterRaisedCallback.waterOffset = 0x4b000;
 }
 
-dPa_c::~dPa_c()
-{
+dPa_c::~dPa_c() {
     if (sParticleHeapBase != 0) {
         mLevel.cleanup();
         func_0203cbc0(sParticleHeapBase);
@@ -103,8 +101,7 @@ u32 Texture::AllocPalVram(u32 size, bool fromLowAddress)
 
 }
 
-void dPa_c::Initialise()
-{
+void dPa_c::Initialise() {
     signed char v = gCurrentSublevel;
     unsigned int allocSize = 0x8c00;
     int countA = 0x28;
@@ -128,8 +125,7 @@ void dPa_c::Initialise()
     sParticlePalVramLowCursor = func_02045cf0();
     sParticlePalVramHighCursor = func_02045ce0();
 
-    mManager = (Particle::Manager*)func_0204a4c8(
-        func_02023178, countA, countB, 0x1a, 0x3e);
+    mManager = (Particle::Manager *)func_0204a4c8(func_02023178, countA, countB, 0x1a, 0x3e);
     mManager->mPolygonAttr = 0x8000;
 
     if (func_0206e28c((u8*)data_02075f14, data_0208f668, 4) != 0) {
@@ -148,10 +144,8 @@ void dPa_c::Initialise()
     }
 
     func_0204a17c(mManager, mResourceFile);
-    func_0204a0dc(mManager,
-        (u32 (*)(const void *, u32))Particle::Texture::AllocTexVram);
-    func_0204a028(mManager,
-        (u32 (*)(u32, u32))Particle::Texture::AllocPalVram);
+    func_0204a0dc(mManager, (u32(*)(const void *, u32))Particle::Texture::AllocTexVram);
+    func_0204a028(mManager, (u32(*)(u32, u32))Particle::Texture::AllocPalVram);
 
     if (mResourceFile != data_02075f14) {
         /* The textures are in VRAM now; keep only the resource's resident
@@ -164,8 +158,7 @@ void dPa_c::Initialise()
     }
 }
 
-void dPa_c::Update()
-{
+void dPa_c::Update() {
     mLevel.execute();
     func_02049f58(mManager);
 }
@@ -191,8 +184,7 @@ void *System::NewSimple(u32 uniqueID, Fix12i x, Fix12i y, Fix12i z) {
 
 System *System::FromUniqueID(u32 uniqueID)
 {
-    dPa_c::level_c::emitter_c *emitter =
-        gParticleControl->mLevel.get(uniqueID);
+    dPa_c::level_c::emitter_c *emitter = gParticleControl->mLevel.get(uniqueID);
     return emitter->mEmitter;
 }
 
@@ -237,40 +229,30 @@ int System::New(u32 uniqueID, u32 definitionID, Fix12i x, Fix12i y, Fix12i z,
 namespace Particle {
 
 u32 System::NewCheckWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                          const Vector3_16f *dir)
-{
-    return New(uniqueID, effectID, x, y, z, dir,
-               &gParticleControl->mCheckWaterCallback);
+                          const Vector3_16f *dir) {
+    return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCheckWaterCallback);
 }
 
 u32 System::NewCheckWaterRipple(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                                const Vector3_16f *dir)
-{
-    return New(uniqueID, effectID, x, y, z, dir,
-               &gParticleControl->mCheckWaterRippleCallback);
+                                const Vector3_16f *dir) {
+    return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCheckWaterRippleCallback);
 }
 
 u32 System::NewFitWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                        const Vector3_16f *dir)
-{
-    return New(uniqueID, effectID, x, y, z, dir,
-               &gParticleControl->mFitWaterCallback);
+                        const Vector3_16f *dir) {
+    return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mFitWaterCallback);
 }
 
 u32 System::NewFitWaterRaised(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                              const Vector3_16f *dir)
-{
-    return New(uniqueID, effectID, x, y, z, dir,
-               &gParticleControl->mFitWaterRaisedCallback);
+                              const Vector3_16f *dir) {
+    return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mFitWaterRaisedCallback);
 }
 
 /* System::New with dPa_c's checkYoganCallback_c ("yogan" is lava);
    daObjLava_c's popping lava bubbles are its one caller. */
 u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                          const Vector3_16f *dir)
-{
-    return New(uniqueID, effectID, x, y, z, dir,
-               &gParticleControl->mCheckYoganCallback);
+                          const Vector3_16f *dir) {
+    return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCheckYoganCallback);
 }
 }
 
@@ -284,7 +266,7 @@ u32 System::NewWeather(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
 }
 
 u32 System::NewCleanParticle(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                              const Vector3_16f *dir) {
+                             const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &gParticleControl->mCleanParticleCallback);
 }
 
@@ -301,40 +283,36 @@ namespace Particle {
 /* RunningSlidingDustAt for Mega Mario: daPly_c calls this instead whenever
    mIsMega is set. Effect 0x61 is effect 0xda's dust (same texture, shape,
    lifetime and animation) at twice the emitter radius. */
-void MegaRunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z)
-{
+void MegaRunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
     gParticleControl->mMegaRunningSlidingDustSystemID =
-        System::New(gParticleControl->mMegaRunningSlidingDustSystemID, kPtclMegaRunningDust,
-                    x, y, z, 0, &gParticleControl->mMegaRunningSlidingDustCallback);
+        System::New(gParticleControl->mMegaRunningSlidingDustSystemID, kPtclMegaRunningDust, x, y,
+                    z, 0, &gParticleControl->mMegaRunningSlidingDustCallback);
 }
 }
 
 namespace Particle {
 
 void System::NewBigSplash(Fix12i x, Fix12i y, Fix12i z) {
-    gParticleControl->mBigSplashSystemID =
-        New(gParticleControl->mBigSplashSystemID, kPtclBigSplash, x, y, z, 0,
-            &gParticleControl->mBigSplashCallback);
+    gParticleControl->mBigSplashSystemID = New(gParticleControl->mBigSplashSystemID, kPtclBigSplash,
+                                               x, y, z, 0, &gParticleControl->mBigSplashCallback);
 }
 
 }
 
 namespace Particle {
 
-u32 System::NewSplash(Fix12i x, Fix12i y, Fix12i z)
-{
+u32 System::NewSplash(Fix12i x, Fix12i y, Fix12i z) {
     dPa_c *particle = gParticleControl;
-    u32 result = New(particle->mSplashSystemID, kPtclSplash, x, y, z, 0,
-                     &particle->mBigSplashCallback);
+    u32 result =
+        New(particle->mSplashSystemID, kPtclSplash, x, y, z, 0, &particle->mBigSplashCallback);
     gParticleControl->mSplashSystemID = result;
     return result;
 }
 
-u32 System::NewBubble(Fix12i x, Fix12i y, Fix12i z)
-{
+u32 System::NewBubble(Fix12i x, Fix12i y, Fix12i z) {
     dPa_c *particle = gParticleControl;
-    u32 result = New(particle->mBubbleSystemID, kPtclBubble, x, y, z, 0,
-                     &particle->mBubbleCallback);
+    u32 result =
+        New(particle->mBubbleSystemID, kPtclBubble, x, y, z, 0, &particle->mBubbleCallback);
     gParticleControl->mBubbleSystemID = result;
     return result;
 }
@@ -356,19 +334,17 @@ namespace Particle {
 
 /* daObjFire_c's RED_FLAME. Effect 0x118 is kPtclFlame's red-orange
    flipbook (textures 14..21) as a continuous emitter. */
-u32 System::NewRedFlame(Fix12i x, Fix12i y, Fix12i z)
-{
+u32 System::NewRedFlame(Fix12i x, Fix12i y, Fix12i z) {
     dPa_c *particle = gParticleControl;
-    u32 result = New(particle->mRedFlameSystemID, kPtclObjRedFire, x, y, z, 0,
-                     &particle->mRedFlameCallback);
+    u32 result =
+        New(particle->mRedFlameSystemID, kPtclObjRedFire, x, y, z, 0, &particle->mRedFlameCallback);
     gParticleControl->mRedFlameSystemID = result;
     return result;
 }
 
 /* daObjFire_c's BLUE_FLAME (actor 0x13d): effect 0x117, NewRedFlame's
    emitter on the other flame flipbook (textures 6..13). */
-u32 System::NewBlueFlame(Fix12i x, Fix12i y, Fix12i z)
-{
+u32 System::NewBlueFlame(Fix12i x, Fix12i y, Fix12i z) {
     dPa_c *particle = gParticleControl;
     u32 result = New(particle->mBlueFlameSystemID, kPtclObjBlueFire, x, y, z, 0,
                      &particle->mBlueFlameCallback);

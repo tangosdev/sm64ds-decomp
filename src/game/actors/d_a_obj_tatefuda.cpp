@@ -151,7 +151,7 @@ extern void AttachToHolder(struct daObjTatefuda_c *self);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern u32 d_a_obj_tatefudaNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
-                                                 const Vector3_16f *v);
+                                                const Vector3_16f *v);
 extern void RebuildModelMatrix(struct daObjTatefuda_c *self);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
                                   CLPS_Block &b);

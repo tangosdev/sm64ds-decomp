@@ -169,7 +169,8 @@ int daObjShell_c::Behavior() {
                 u.lungePuff[1] = mPosY;
                 u.lungePuff[2] = mPosZ;
                 u.lungePuff[1] = u.lungePuff[1] + 0x32000;
-                Particle::System::NewSimple(kPtclClamLunge, u.lungePuff[0], u.lungePuff[1], u.lungePuff[2]);
+                Particle::System::NewSimple(kPtclClamLunge, u.lungePuff[0], u.lungePuff[1],
+                                            u.lungePuff[2]);
                 mStateTimer = 0;
                 mState = STATE_LUNGE;
                 mAnmModel.SetAnim((BCA_File *)data_ov064_0211c9cc.filePtr, 0x40000000, 0x1000, 0);

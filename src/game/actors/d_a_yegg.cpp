@@ -523,8 +523,9 @@ void daYegg_c::func_ov002_020ecb0c()
                 ang = *(u16 *)&mAngleY;
                 rz = data_02082214[(ang >> 4) * 2 + 1];
                 sp.rot.z = rz;
-                mParticleHandle = Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, sp.pos.x, sp.pos.y,
-                                                        pz, (const Vector3_16f *)(pr), 0);
+                mParticleHandle =
+                    Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, sp.pos.x, sp.pos.y,
+                                          pz, (const Vector3_16f *)(pr), 0);
                 mSoundHandle =
                     Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
                 flag = 1;
