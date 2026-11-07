@@ -167,7 +167,7 @@ void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(void *out, const void *in, int scale);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 int Vec3_HorzLen(void *v);
 int LenVec3(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -456,7 +456,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         Vec3_Add((Vector3 *)&v48, (const Vector3 *)src, (const Vector3 *)&out);
         pos->x = v48.x; pos->y = v48.y; pos->z = v48.z;
         Vec3_Sub((Vector3 *)&v54, (const Vector3 *)pos, (const Vector3 *)vel);
-        Vec3_MulScalar(&v60, &v54, 0xbb8);
+        Vec3_MulScalar((Vector3 *)&v60, (const Vector3 *)&v54, 0xbb8);
         vel->x = v60.x; vel->y = v60.y; vel->z = v60.z;
         *heights = thisx->mPosY - 0xc8000;     /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
