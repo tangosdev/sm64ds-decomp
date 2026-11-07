@@ -88,7 +88,7 @@ void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 void  MulMat4x3Mat4x3(void *, void *, void *);
 void  MulMat3x3Mat3x3(void *, void *, void *);
-void MulVec3Mat4x3(const void *, const void *, void *);
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
 int func_02013890(int, int);
 void func_02013944(void);
@@ -1124,7 +1124,7 @@ void daMip_c::UpdateMirrorShadow()
     v.z = Vec3_HorzDist((const Vector3 *)&c->v5c, (const Vector3 *)&vd);
     Matrix4x3_FromRotationY(&data_020a0e68,
                             Vec3_HorzAngle((const Vector3 *)&c->v5c, (const Vector3 *)&vd));
-    MulVec3Mat4x3(&v, &data_020a0e68, &res);
+    MulVec3Mat4x3((Vector3 *)&v, (Matrix4x3 *)&data_020a0e68, (Vector3 *)&res);
     {
         int t;
         vd.x = vd.x + res.x;
