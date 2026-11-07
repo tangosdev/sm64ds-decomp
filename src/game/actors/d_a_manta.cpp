@@ -82,7 +82,7 @@ extern MantaModelFilePtr data_ov090_02134524;
 extern SharedFilePtr data_ov002_0210da10;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern MantaAnimationFilePtr data_ov090_0213452c;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 
 /* local extern: arm9 vector helpers with no shared header yet. */
 extern "C" {
@@ -357,7 +357,7 @@ int daManta_c::InitResources() {
     {
         /* ContinueKuppaScriptIfNecessary stores 2 here. That visit snaps
          * the manta onto node 3 at a fixed pose and clears mFlags. */
-        int kuppa = (int)(data_0209f2d8 == 2);
+        int kuppa = (int)(gGameMode == 2);
         if (kuppa != 0) {
             mPathNode = 3;
             mPrevAngleX = (short)0xf303;

@@ -504,8 +504,8 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
-extern unsigned char data_0209f250;
-extern void *data_0209f394[];
+extern unsigned char gLocalPlayerId;
+extern void *gPlayers[];
 /* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
@@ -545,7 +545,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z)
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern char data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of gSubScreenLayers, from the legacy file for func_ov002_020f23f0, NOT applied: extern u8 gSubScreenLayers; */
@@ -4183,9 +4183,9 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             v[1] = *(int *)((char *)data_ov002_0210b970 + 4);
             v[2] = *(int *)((char *)data_ov002_0210b970 + 8);
 
-            idx = *(volatile unsigned char *)&data_0209f250;
+            idx = *(volatile unsigned char *)&gLocalPlayerId;
             {
-                short ang = ((dActor_c *)data_0209f394[idx])->mAngleY;
+                short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
                 Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (short)(ang + 0x8000), v);
             }
@@ -4559,7 +4559,7 @@ int daDemo_c::InitResources()
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
             return 0;
-        t = (*(volatile unsigned char *)&data_0209f2d8 == 2);
+        t = (*(volatile unsigned char *)&gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
                     ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110b98, 1,

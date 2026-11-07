@@ -12,7 +12,7 @@
     "The ~80 interleaved C free functions share the stage's .bss block 0x0209f1ec..0x0209f5b8 with the members (current sublevel gCurrentSublevel, the per-level table pointers and counts their setters store, data_0209f314 = this->mAreas, data_0209f340 = the level record InitResources loads), so they are the class's file-scope layer, not a foreign TU interleaved by the linker.",
     "Event's three bit accessors (0x02029ea4..0x02029ef8) sit mid-run over data_0209f34c, a stage .bss word InitResources clears; the old standalone arm9/Event manifest is subsumed. Fog::Init (0x0202c830) is a non-virtual member of the Fog record dScStage_c embeds twice (mFog at 0x96c); LoadFog is its caller here (daMugenBGM reuses it on its own fog), and it sits between LoadFog and Render with no foreign neighbour.",
     "UpdateMessage (0x0201cb7c) is a dScStage_c static that the linker placed with the message system, far below this range; it is not claimed here.",
-    "func_02029408, previously described as a foreign helper, is the pause-gate query (daPly_c::CanPause on the current player, data_0209f394[data_0209f250]) that PS_Init opens with.",
+    "func_02029408, previously described as a foreign helper, is the pause-gate query (daPly_c::CanPause on the current player, gPlayers[gLocalPlayerId]) that PS_Init opens with.",
     "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU.",
     "static initializer: __sinit_02074e84 (.init 0x02074e84..0x02074edc, .ctor word 0x02086b88) stores _ZTVN8dGraph_c10callback_cE then _ZTVN10dScStage_c15graphCallback_cE into data_0209f3c4 and constructs data_0209f43c with _ZN8dClipperC1Ev, registering _ZN8dClipperD1Ev through the node at data_0209f388. The node, the player list, the graph callback (data_0209f3c8 is its +4), the nine cap slots, STAR_MARKERS and the clipper sit inside this TU's .bss. The next initializer, 0x02074edc, is d_scene.cpp.",
     ".bss EDGES: 0x0209f1ec..0x0209f5b8 is one size-sorted run. mwcc places a TU's .bss objects in ascending size, so it climbs from the 1-byte flags at 0x0209f1ec through the u16s (0x0209f300), the words, the u16[4]/u8[9]/u8[12] arrays, the 0x10/0x20/0x24/0x30 tables and dClipper, to the ControllerInput[4] records (0x0209f498) and the 0xc0 death table (0x0209f4f8). BOTTOM: 0x0209f1e8 is d_s_boot's (its only readers are dScBoot_c::InitResources and dScBoot_c::Behavior), and 0x0209f1d8..0x0209f1e8 belongs to the soft-reset TU below it. TOP: the death table ends at 0x0209f5b8, where the size drops back to d_scene.cpp's objects.",
@@ -990,7 +990,7 @@
       "evidence": "u8. Set by Behavior when the pause is opened with SELECT (pad bit 4) rather than START; PS_Init and PS_Update read it. Name from the blind melonDS round suite14 (10/10)."
     },
     {
-      "symbol": "data_0209f21c",
+      "symbol": "gNumPlayers",
       "address": "0x0209f21c",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1081,7 +1081,7 @@
       "evidence": "u8. Read here by LoadLevel. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f250",
+      "symbol": "gLocalPlayerId",
       "address": "0x0209f250",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1319,7 +1319,7 @@
       "evidence": "u8. Read here by dScStage_c::CleanupResources, dScStage_c::InitResources, dScStage_c::LC_Render, dScStage_c::LC_Update and dScStage_c::Render. Read outside this TU by dMap_c::Render, dMeter_c::Render and dMeter_c::RenderStarCount (ov002), so global."
     },
     {
-      "symbol": "data_0209f2d8",
+      "symbol": "gGameMode",
       "address": "0x0209f2d8",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1585,7 +1585,7 @@
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209f394",
+      "symbol": "gPlayers",
       "address": "0x0209f394",
       "size": "0x10",
       "evidence": "the live player list, four pointers. It sits between the registration node and data_0209f3a4, so the one .bss claim has to define it.",

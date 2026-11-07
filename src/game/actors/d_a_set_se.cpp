@@ -40,7 +40,7 @@ extern int gCurrentMusicID;        /* current music ID */
 extern dCamera_c *data_0209f318;   /* CAMERA */
 extern s8 gCurrentSublevel;        /* LEVEL_ID */
 extern u8 gCurrentStarId;          /* STAR_ID */
-extern u8 data_0209f2d8;           /* CURRENT_GAMEMODE */
+extern u8 gGameMode;               /* CURRENT_GAMEMODE */
 extern SaveBlock data_0209caa0;    /* the live save block */
 extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
 
@@ -68,8 +68,7 @@ int daSetSE_c::InitResources()
     /* The (int) casts are load-bearing, not noise: each forces its boolean
        to materialize into a word before the re-test, and spelling the
        tests directly comes out six words short of the ROM. */
-    if ((int)(data_0209f2d8 == 0) != 0 &&
-        (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0)
         disabled = 1;
     else

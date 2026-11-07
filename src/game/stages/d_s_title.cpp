@@ -68,7 +68,7 @@ extern u32 data_0209b2f4;
 extern char data_0209e674[];
 extern dFdBrightness_c *data_0209f5bc;
 extern PadData data_020a0e58[];
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 /* The scene-wide colour fader, dScene_c's dFdColor_c in
    src/game/stages/d_scene.cpp. Element 6 is its u16 `color` at offset 0xc.
    local extern: spelled as a u16 array because including dFdColor_c.h adds
@@ -274,7 +274,7 @@ s32 dScTitle_c::Behavior() {
             dScene_c::StartSceneFade(6, 0, 0);
             Sound::StopLoadedMusic_Layer1(0x3c);
         } else {
-            data_0209f2d8 = 0;
+            gGameMode = 0;
             LoadLevelNoReturn(t, sTitleLevelEntries[i].entranceID, 1, 0);
             SetPlayerGlobals();
             SetNumPlayers(1);

@@ -46,7 +46,7 @@
 extern "C" {
 extern SaveBlock data_0209caa0;       /* the live save block; local extern: see SaveBlock.h */
 extern int data_0209caf4[][5];        /* the minigame record tables, at block + 0x54 */
-extern u8 data_0209f2d8;              /* gate byte read by CanPlayerHaveCap */
+extern u8 gGameMode;                  /* gate byte read by CanPlayerHaveCap */
 extern u8 data_0209cad2[];            /* coin records; local extern: no field on the byte array */
 extern unsigned char data_0209cab4[]; /* star bits per course */
 extern unsigned char data_0209f224;   /* last collected star id */
@@ -157,7 +157,7 @@ int SaveData::SaveCurrentFile() {
 // @symbol _ZN8SaveData16CanPlayerHaveCapEv
 int SaveData::CanPlayerHaveCap() {
     if (data_0209caa0.file.mCharacter != 3) {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(gGameMode == 1);
         if (b == 0)
             return 1;
     }

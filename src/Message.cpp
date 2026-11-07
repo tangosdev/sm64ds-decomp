@@ -145,7 +145,7 @@ extern u8 data_0208f074[];
 extern u8 data_0209f20c;
 extern u8 gCurrentStarId;
 extern u8 gCollectedStarId;
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern SaveBlock data_0209caa0;
 extern s32 gRunningKuppaScript;
 extern s8 gNextSublevel;
@@ -1403,7 +1403,7 @@ extern "C" void func_0201f32c(int arg0)
     } else {
         u32 b0;
         gMsgBoxStyle = 0;
-        b0 = (data_0209f2d8 == 2);
+        b0 = (gGameMode == 2);
         if (b0 == 0) {
             func_02012790(4);
         }
@@ -1418,7 +1418,7 @@ extern "C" void func_0201f32c(int arg0)
     }
     data_0209d6a8 = (u8)((entry->width + 7) / 8);
 
-    f2d8_val = data_0209f2d8;
+    f2d8_val = gGameMode;
     {
         u32 b1 = (f2d8_val == 0);
         if (b1 != 0 && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
@@ -1501,7 +1501,7 @@ extern "C" void func_0201f32c(int arg0)
         }
         var_r8 = (char *)G2::GetBG3ScrPtr() + 0x42;
         {
-            u32 b4 = (data_0209f2d8 == 2);
+            u32 b4 = (gGameMode == 2);
             if (b4 != 0) {
                 SetBg3Offset(0 - gMsgBoxLeft, 8 - gMsgBoxTop);
             } else {
@@ -1586,7 +1586,7 @@ extern "C" int func_0201fb4c(void)
     short v;
     unsigned int b;
     if (data_0209d664 != 0) goto no;
-    b = (data_0209f2d8 == 2);
+    b = (gGameMode == 2);
     if (b != 0) goto no;
     v = data_0209d6d4;
     if (v == 0xcc) goto no;

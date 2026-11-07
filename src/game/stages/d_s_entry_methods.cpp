@@ -174,7 +174,7 @@ u8 func_020200b8(void);
 void func_02020078(u32 flags);
 void func_0202029c(u32 idx);
 extern s8 data_ov075_0211c6ec[];
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern u8 data_0209b2e4;
 }
 
@@ -1436,7 +1436,7 @@ void dScEntry_c::LoadCourseResources(int course) {
     }
     LoadArchive(selectedArchive);
     previousHeap->SetDefault();
-    data_0209f2d8 = 1;
+    gGameMode = 1;
     func_0202deac(data_ov075_0211c6ec[course]);
 }
 

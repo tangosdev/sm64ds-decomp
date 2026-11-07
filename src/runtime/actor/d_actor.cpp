@@ -111,7 +111,7 @@ int func_0203b244(void *list, void *node);
 /* local extern: no header declares it. Actor info table, indexed by actorID. */
 extern void *data_020a4bb8;
 /* local extern: no header declares it. Game mode; 2 pushes the clip distance. */
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 /* Defined below as extern "C". Fix12-by-value, so it is not a method. */
 }
 
@@ -163,7 +163,7 @@ dActor_c::dActor_c() : mActorListNode(this) {
         SpawnInfo<void> *info = (SpawnInfo<void> *)table[actorID];
         mFlags = info->actorFlags;
         {
-            int isMode2 = (data_0209f2d8 == 2);
+            int isMode2 = (gGameMode == 2);
             int clipDistance;
             int farDistance = info->farDistance;
             if (isMode2)
@@ -579,16 +579,16 @@ void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, 
 extern "C" {
 extern int data_0208e380;           /* distance to the cached closest player */
 extern int data_0208e37c;           /* distance to the cached farthest player */
-extern unsigned char data_0209f21c; /* number of players */
-extern daPly_c *data_0209f394[];    /* the player table */
+extern unsigned char gNumPlayers;   /* number of players */
+extern daPly_c *gPlayers[];         /* the player table */
 }
 daPly_c *dActor_c::ClosestPlayer() {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
         data_0208e37c = 0x80000000;
         int i;
-        for (i = 0; i < data_0209f21c; i++) {
-            daPly_c *player = data_0209f394[i];
+        for (i = 0; i < gNumPlayers; i++) {
+            daPly_c *player = gPlayers[i];
             if (!player)
                 continue;
             int dist = Vec3_Dist(&mPos, &player->mPos);
@@ -614,8 +614,8 @@ daPly_c *dActor_c::ClosestNonVanishPlayer() {
         data_0208e380 = 0x7fffffff;
         data_0208e37c = 0x80000000;
         int i;
-        for (i = 0; i < data_0209f21c; i++) {
-            daPly_c *player = data_0209f394[i];
+        for (i = 0; i < gNumPlayers; i++) {
+            daPly_c *player = gPlayers[i];
             if (!player)
                 continue;
             if (player->mIsVanish)

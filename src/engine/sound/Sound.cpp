@@ -194,9 +194,9 @@ extern int data_0209baa0;
    next 4-aligned object, and that tail fill cannot be claimed yet. */
 extern char data_0208e498[];
 extern struct WatchdogAlarm data_0209d574;
-extern unsigned char data_0209f250;
+extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
-extern void *data_0209f394[];
+extern void *gPlayers[];
 extern signed char gCurrentAreaId;
 extern const unsigned char data_02075250[8];
 extern unsigned char data_02075258[];
@@ -272,7 +272,7 @@ void LoadAndSetMusic_Layer1(int j)
 // @symbol func_02013078
 extern "C" int func_02013078(void)
 {
-    char *obj = (char *)data_0209f394[data_0209f250];
+    char *obj = (char *)gPlayers[gLocalPlayerId];
     int state;
     int flag;
     int result;
@@ -484,7 +484,8 @@ void StopLoadedMusic_Layer3(void)
 // @symbol _ZN5Sound8SetMusicEjj
 void SetMusic(unsigned int j1, unsigned int j2)
 {
-    if (j1 != data_0209f250) return;
+    if (j1 != gLocalPlayerId)
+        return;
     if (gCurrentMusicID < 0) {
         if (sLayer1Music >= 0)
             return;
@@ -505,7 +506,7 @@ void SetMusic(unsigned int j1, unsigned int j2)
 void EndMusic(unsigned int playerNo) {
     if (gCurrentMusicID < 0)
         return;
-    if (playerNo != data_0209f250)
+    if (playerNo != gLocalPlayerId)
         return;
     int e43c = sLayer1Music;
     int e444 = sLayer3Music;

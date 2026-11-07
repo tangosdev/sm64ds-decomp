@@ -217,9 +217,9 @@ da1up_c::~da1up_c()
    Mushroom (actorID 277) and 0 for the 1-Up. The previous frame's handle is read
    back through a volatile pointer and the new one stored in mParticleID. While
    the actor is off screen (mFlags bit 3) it only runs when CURRENT_GAMEMODE
-   (data_0209f2d8) is 1. */
+   (gGameMode) is 1. */
 void da1up_c::func_ov002_020aeee4() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
 
     int t1 = (actorID == ACTOR_SCALEUP_KINOKO);
     unsigned int effectID = 0;
@@ -227,7 +227,7 @@ void da1up_c::func_ov002_020aeee4() {
 
     int t2 = ((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (t2 != false) {
-        int t3 = (data_0209f2d8 == 1);
+        int t3 = (gGameMode == 1);
         if (t3 == false) return;
     }
 

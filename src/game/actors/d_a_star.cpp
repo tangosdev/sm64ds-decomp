@@ -130,7 +130,7 @@ extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
 extern signed char gNumStageStars[];
 extern signed char NumRedCoins(void);
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern void func_02035860(void* o, void* src);
 extern int RandomIntInternal(int* seed);
 extern dCamera_c *data_0209f318;
@@ -250,7 +250,7 @@ daStar_c::~daStar_c()
  * kind 1 bounces out (32.0 up), kinds 2 and 4 launch, anything else waits for
  * a marker. Kind 6 spawns its own marker (param 0x40) 10.0 above itself and
  * starts at full size only when NumVsStarsObtained() is 5. In a VS match
- * (data_0209f2d8 == 1) and for the silver star, a marker with param 0x50 is
+ * (gGameMode == 1) and for the silver star, a marker with param 0x50 is
  * spawned at the star's own position instead. Returns 0 to cancel the spawn
  * when a model, a marker or the shadow fails; a few level rules (level 0x1d
  * with the star already collected, sublevel 8 star 7, sublevel 7 star 2)
@@ -410,8 +410,8 @@ s32 daStar_c::InitResources()
     if (!mBits.visible)
         mdCc_c.flags |= 1;
 
-    if (mStarID < 8 && mKind != KIND_5 && mKind != KIND_3 &&
-        (s32)(data_0209f2d8 == 1) == 0 && IsStarCollectedInCurLevel(mStarID) != 0) {
+    if (mStarID < 8 && mKind != KIND_5 && mKind != KIND_3 && (s32)(gGameMode == 1) == 0 &&
+        IsStarCollectedInCurLevel(mStarID) != 0) {
         if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             MarkForDestruction();
             return 0;
@@ -426,7 +426,7 @@ s32 daStar_c::InitResources()
         Event::ClearBit(0x1e);
         Event::ClearBit(EVENT_COLLECTING_STAR);
         if (mKind != KIND_3) {
-            if ((s32)(data_0209f2d8 == 1) != 0 || (s32)(actorID == ACTOR_SILVER_STAR) != 0) {
+            if ((s32)(gGameMode == 1) != 0 || (s32)(actorID == ACTOR_SILVER_STAR) != 0) {
                 sp = (char *)dActor_c::Spawn(ACTOR_STAR_MARKER, 0x50, mPos, 0, mSavedAreaId, -1);
                 if (sp != 0) {
                     mMarkerID = ((dActor_c *)sp)->uniqueID;
@@ -568,7 +568,7 @@ int daStarBase_c::InitResources()
     mLinkedStarDeathTableID = -1;
     mHitActor = 0;
 
-    if (data_0209f2d8 == 1)
+    if (gGameMode == 1)
         r3 = 1;
     if (r3 == 0 && SublevelToLevel((s8)gCurrentSublevel) == 0x1d &&
         IsStarCollectedInCurLevel(mStarID) != 0) {
@@ -1119,7 +1119,7 @@ int daStar_c::func_ov002_020ea3a4() {
         unsigned char idx = mPlayer->mPlayerNo;
         mSoundObjSoundID = gNumStageStars[idx] + 0x19;
     } else {
-        int b2 = (data_0209f2d8 == 1);
+        int b2 = (gGameMode == 1);
         if (b2 != 0) mSoundObjSoundID = 0x4f;
         else mSoundObjSoundID = 0x22;
     }
@@ -1218,7 +1218,7 @@ void daStar_c::func_ov002_020ea100() {
             mPosZ = s[2];
             *posY2 += 0xc8000;
         } else {
-            int ok = (data_0209f2d8 == 1);
+            int ok = (gGameMode == 1);
             if (ok) {
                 unsigned char idx = common->mPlayerNo;
                 if (gNumStageStars[idx] != 0) {
@@ -1304,7 +1304,7 @@ void daStar_c::func_ov002_020e9d18() {
     } else {
         func_ov002_020e7eb4();
     }
-    r2v = data_0209f2d8 == 1;
+    r2v = gGameMode == 1;
     if (r2v != false)
         goto modes;
     b2 = actorID;
@@ -1525,7 +1525,7 @@ void daStar_c::func_ov002_020e9840() {
     mdCc_c.flags &= ~1;
 
     {
-        int r0 = (data_0209f2d8 == 1) ? 1 : 0;
+        int r0 = (gGameMode == 1) ? 1 : 0;
         daPly_c *r3 = static_cast<daPly_c *>(actor->mHitActor);
         if (r0 == 0) return;
         if (r3 == 0) return;
@@ -1580,7 +1580,7 @@ void daStar_c::func_ov002_020e96a0() {
         mBits.visible = 0;
         if (mSeqTimer < 0x64) return;
         func_ov002_020e7e58();
-        if ((int)(data_0209f2d8 == 1) != 0) {
+        if ((int)(gGameMode == 1) != 0) {
             MarkForDestruction();
         } else {
             KillAndTrackInDeathTable();
@@ -1760,8 +1760,8 @@ void daStar_c::func_ov002_020e930c() {
  * record). The star plays sound 0x2d, enters STATE_COLLECT_BEGIN with the
  * cutscene bits set, and a Power Star with a non-zero talk state heals the
  * player (0x880). Returns 0 when the player cannot be put in the state. */
-int daStar_c::func_ov002_020e8ef0(void* p) {
-    void* found;
+int daStar_c::func_ov002_020e8ef0(void *p) {
+    void *found;
     int r5;
     u8 r4;
     int sb;
@@ -1794,7 +1794,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
     r4 = func_ov002_020e73ac();
     {
         if (r4 != 0) {
-            int t1 = (data_0209f2d8 == 1);
+            int t1 = (gGameMode == 1);
             if (!t1) {
                 int t2 = (actorID == ACTOR_SILVER_STAR);
                 if (!t2) {
@@ -1823,7 +1823,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         }
 
         {
-            int b1 = (data_0209f2d8 == 1);
+            int b1 = (gGameMode == 1);
             if (!b1) {
                 Event::SetBit(0x1e);
             } else {
@@ -1835,33 +1835,32 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         }
 
         {
-        int b2 = (data_0209f2d8 == 1);
-        int b3;
-        if (!b2 && !(b3 = (actorID == ACTOR_SILVER_STAR)) &&
-            mStarID < 8 &&
-            mHomeState != STATE_WAIT_MARKER) {
-            gCollectedStarId = mStarID;
-            if (IsStarCollectedInCurLevel(mStarID) != 0) {
-                gNewStarCollected = 0;
-            } else {
-                gNewStarCollected = 1;
-            }
-            CollectStarInCurLevel(mStarID);
-            if (r5 != 0) {
-                int lvl;
-                if (mBits.coinReward != 0 && found != 0) {
-                    ((dActor_c *)found)->TrackInDeathTable();
+            int b2 = (gGameMode == 1);
+            int b3;
+            if (!b2 && !(b3 = (actorID == ACTOR_SILVER_STAR)) && mStarID < 8 &&
+                mHomeState != STATE_WAIT_MARKER) {
+                gCollectedStarId = mStarID;
+                if (IsStarCollectedInCurLevel(mStarID) != 0) {
+                    gNewStarCollected = 0;
+                } else {
+                    gNewStarCollected = 1;
                 }
-                lvl = SublevelToLevel((signed char)gCurrentSublevel);
-                if (lvl <= 0xe) {
-                    int rec = SaveData::GetCoinRecord(lvl);
-                    if (rec < NumCoins()) {
-                        SaveData::SetCoinRecordIfHigher(
-                            lvl, (u8)(gNumCoins[((daPly_c *)p)->mPlayerNo] & 0xff));
+                CollectStarInCurLevel(mStarID);
+                if (r5 != 0) {
+                    int lvl;
+                    if (mBits.coinReward != 0 && found != 0) {
+                        ((dActor_c *)found)->TrackInDeathTable();
+                    }
+                    lvl = SublevelToLevel((signed char)gCurrentSublevel);
+                    if (lvl <= 0xe) {
+                        int rec = SaveData::GetCoinRecord(lvl);
+                        if (rec < NumCoins()) {
+                            SaveData::SetCoinRecordIfHigher(
+                                lvl, (u8)(gNumCoins[((daPly_c *)p)->mPlayerNo] & 0xff));
+                        }
                     }
                 }
             }
-        }
         }
     }
 
@@ -1872,7 +1871,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
     mState = STATE_COLLECT_BEGIN;
     mPlayer = (daPly_c *)p;
     {
-        int b4 = (data_0209f2d8 == 1);
+        int b4 = (gGameMode == 1);
         if (!b4) {
             mPlayer->mFlags |= CUTSCENE_FLAG;
             mFlags |= CUTSCENE_FLAG;
@@ -2239,7 +2238,7 @@ void daStar_c::func_ov002_020e8618() {
     func_ov002_020e7e58();
     mBits.visible = 0;
     UntrackStar(mMarkerSlot);
-    if ((int)(data_0209f2d8 == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         MarkForDestruction();
     } else {
         KillAndTrackInDeathTable();
@@ -2860,7 +2859,7 @@ u8 daStar_c::func_ov002_020e73ac() {
         return 3;
     }
 
-    a = data_0209f2d8 == 1;
+    a = gGameMode == 1;
     if (a != false) {
         goto ret2;
     }

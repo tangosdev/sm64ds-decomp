@@ -50,7 +50,7 @@ int *Vec3_LslInPlace(Vector3 *, int);
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -250,7 +250,7 @@ void daSnmBth_c::OnPendingDestroy()
 // @symbol _ZN10daSnmBth_c6RenderEv
 int daSnmBth_c::Render()
 {
-    int b = data_0209f2d8;
+    int b = gGameMode;
     b = (b == 2);
     if (b)
         return 1;
@@ -274,7 +274,7 @@ int daSnmBth_c::Behavior()
     SnowmanBreathParticle *slot;
     int zero;
 
-    b = data_0209f2d8;
+    b = gGameMode;
     b = (b == 2);
     if (b) {
         return 1;

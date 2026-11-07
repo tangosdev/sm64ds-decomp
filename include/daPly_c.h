@@ -303,7 +303,7 @@ struct daPly_c : dActor_c {
     /* Yoshi's per-player material word for VS mode. func_ov002_020e5948 sets it
        to word +0x20 of material 0 of Yoshi's body model (GetBodyModelID(3))
        plus mPlayerNo * 2; the draw path copies it into word +0x20 of every
-       body and head material when data_0209f2d8 == 1 and param1 == 3. */
+       body and head material when gGameMode == 1 and param1 == 3. */
     s32 mVsYoshiMaterialParam;          /* 0x61c */
     s32 mLoopingSoundHandle;            /* 0x620 */
     s32 mSurfaceSoundHandle;            /* 0x624  Sound::PlayLong handle recycled by func_ov002_020bfa74 */

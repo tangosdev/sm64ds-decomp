@@ -79,10 +79,10 @@ int IsStarCollected(int level, int star);
 extern u8 data_0209f20c;
 extern u8 gGamePaused;
 extern u8 gVsExitScreenActive;
-extern u8 data_0209f250;
+extern u8 gLocalPlayerId;
 extern u8 gLevelClearStep;
-extern u8 data_0209f2d8;
-extern daPly_c *data_0209f394[];
+extern u8 gGameMode;
+extern daPly_c *gPlayers[];
 extern s16 data_02082214[];
 extern s8 data_ov002_02111148;
 /* Per star-marker slot: the marker type (4 = draw a red-coin icon instead). */
@@ -380,13 +380,13 @@ int dMap_c::Render()
     u8 flag294 = gVsExitScreenActive;
     int i;
     int j;
-    u8 idx = data_0209f250;
+    u8 idx = gLocalPlayerId;
 
     if ((u8)(flag294 | (flag2c4 | flag20c)) == 0 ||
         !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
         (flag20c != 0 && (u32)gLevelClearStep < 3)) {
-        daPly_c *player = data_0209f394[idx];
-        int vs = (data_0209f2d8 == 1);
+        daPly_c *player = gPlayers[idx];
+        int vs = (gGameMode == 1);
         if (vs != 0) {
             OAM::RenderSub(OAM::MM_VS_PLAYER_ICONS[player->param1 + idx * 4],
                            this->mPlayerIconX[idx], this->mPlayerIconY[idx], -1, 2);
@@ -411,8 +411,8 @@ int dMap_c::Render()
                             if (ICON_X_VISIBLE(x)) {
                                 if (data_ov002_02111148 == this->mPlayerMapIDs[i]) {
                                     OAM::RenderSub(
-                                        OAM::MM_VS_PLAYER_ICONS_S[j + data_0209f394[i]->param1], x,
-                                        y, -1, 2);
+                                        OAM::MM_VS_PLAYER_ICONS_S[j + gPlayers[i]->param1], x, y,
+                                        -1, 2);
                                 }
                             }
                         }
@@ -503,7 +503,7 @@ int dMap_c::Render()
         {
             u8 *p1 = gMapCapIconShown;
             u8 *p2 = gMapCapIconCharacters;
-            int vs2 = (data_0209f2d8 == 1);
+            int vs2 = (gGameMode == 1);
             void **tbl = (vs2 != 0) ? data_ov002_0210cac8 : data_ov002_0210c748;
             for (i = 0; i < 9; i++, p1++, p2++) {
                 if (*p1 != 0) {
@@ -570,7 +570,7 @@ s32 dMap_c::Behavior()
     s32 i;
 
     cam = data_0209f318;
-    player = data_0209f394[data_0209f250];
+    player = gPlayers[gLocalPlayerId];
     focus = 0;
 
     if (data_0209f5bc->IsAtStart() == 0)
@@ -578,7 +578,8 @@ s32 dMap_c::Behavior()
     if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         goto L274;
     if (data_0209d4b0 != 0) goto L274;
-    if (data_0209f350[data_0209f250] != 0) goto L274;
+    if (data_0209f350[gLocalPlayerId] != 0)
+        goto L274;
     if (player->Unk_020ca8f8() == 1) goto L274;
 
     if (this->mTouchCircleTimer != 0) {
@@ -609,22 +610,21 @@ s32 dMap_c::Behavior()
         goto L2a4;
     }
 
-L200:
-    {
-        s32 b = (data_0209f2d8 == 1);
-        if (b == 0) {
-            if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
-                goto L2a4;
-        }
-        gSubScreenLayers &= ~4;
-        if (!(u8)flagsOr) {
-            *(volatile s32 *)0x4001000 =
-                (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-            *(volatile u16 *)0x4001050 = 0;
-        }
-        this->mTouchCircleTimer = 0;
-        goto L2a4;
+L200: {
+    s32 b = (gGameMode == 1);
+    if (b == 0) {
+        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
+            goto L2a4;
     }
+    gSubScreenLayers &= ~4;
+    if (!(u8)flagsOr) {
+        *(volatile s32 *)0x4001000 =
+            (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
+        *(volatile u16 *)0x4001050 = 0;
+    }
+    this->mTouchCircleTimer = 0;
+    goto L2a4;
+}
 
 L274:
     if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0) {
@@ -651,11 +651,13 @@ A1:
         goto L350;
 L318:
     {
-        s32 b = (data_0209f2d8 == 0);
-        if (b == 0) goto L360;
-        if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
-            goto L360;
-        if (this->mInIntroCutscene != 0) goto L360;
+    s32 b = (gGameMode == 0);
+    if (b == 0)
+        goto L360;
+    if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
+        goto L360;
+    if (this->mInIntroCutscene != 0)
+        goto L360;
     }
 L350:
     this->mAngle = 0;
@@ -739,7 +741,7 @@ L4d8:
     GetPosOnMinimap(&focusPos, (Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
                     this->mAngle, &miniPos);
     {
-        s32 p = data_0209f250;
+        s32 p = gLocalPlayerId;
         this->mPlayerIconX[p] = (miniPos.x + 0x800) >> 12;
         this->mPlayerIconY[p] = (miniPos.z + 0x800) >> 12;
 
@@ -783,7 +785,7 @@ L738:
     /* Project each object list onto the map. A missing object gets map id -1. Stars whose
      * kind byte in gStarMarkerTypes is 4 are the ones Render draws as MM_RED_COIN. */
     for (i = 0; i < 4; i++) {
-        daPly_c *o = data_0209f394[i];
+        daPly_c *o = gPlayers[i];
         if (o != 0) {
             /* the (int) launder keeps the ROM's precomputed copy source */
             playerPos = *(Vector3 *)((int)&o->mPos);
@@ -792,7 +794,7 @@ L738:
                             this->mAngle, &miniPos);
             this->mPlayerIconX[i] = (miniPos.x + 0x800) >> 12;
             this->mPlayerIconY[i] = (miniPos.z + 0x800) >> 12;
-            if (i != data_0209f250)
+            if (i != gLocalPlayerId)
                 this->mPlayerMapIDs[i] = (s8)GetMinimapID(o, -1);
             else
                 this->mPlayerMapIDs[i] = (s8)GetMinimapID(o, data_ov002_02111148);
@@ -966,13 +968,13 @@ int dMap_c::InitResources()
     }
 
     {
-        int b = (data_0209f2d8 == 1);
+        int b = (gGameMode == 1);
         if (!b) {
             UpdateLevelSpecific();
         }
     }
 
-    data_ov002_02111148 = (signed char)GetMinimapID(data_0209f394[data_0209f250], -1);
+    data_ov002_02111148 = (signed char)GetMinimapID(gPlayers[gLocalPlayerId], -1);
 
     if (data_ov002_02111148 >= 0) {
         if ((SublevelToLevel(gCurrentSublevel) == 0x1d && gCurrentSublevel != 1 &&
@@ -1017,7 +1019,7 @@ int dMap_c::InitResources()
     mTargetInvScale = GetMinimapScale(data_ov002_02111148);
 
     {
-        int b1 = (data_0209f2d8 == 0);
+        int b1 = (gGameMode == 0);
         if (b1) {
             if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 int b3 = (gRunningKuppaScript != 0);

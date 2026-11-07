@@ -37,8 +37,8 @@ int IsStarCollectedInLevel(signed char levelID, int starID);
 }
 
 extern u8 data_0209f2c0;
-extern unsigned char data_0209f250;
-extern daPly_c *data_0209f394[];
+extern unsigned char gLocalPlayerId;
+extern daPly_c *gPlayers[];
 extern signed char gNextSublevel;
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
@@ -105,7 +105,7 @@ s32 daChScene_c::InitResources() {
 s32 daChScene_c::Behavior() {
     Vector3 out1;
     Vector3 out2;
-    daPly_c *player = data_0209f394[data_0209f250];
+    daPly_c *player = gPlayers[gLocalPlayerId];
     if (mHorzSpeed != 0) {
         MulVec3Mat4x3(&player->mPos, &mInvMat, &out1);
         if (out1.z > mHorzSpeed || out1.z < -0x300000) {

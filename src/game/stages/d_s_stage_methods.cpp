@@ -295,7 +295,10 @@ static u8 sPauseArrowPressTimer;
 static u8 data_0209f214;
 /* Set when the pause was opened with SELECT rather than START. */
 static u8 sPausedWithSelect;
-u8 data_0209f21c;
+/* How many players this stage runs with: InitResources copies it from
+   data_0208a0e0 (1 at boot; dScEntry_c::EnterMatchLoading can set 4), and
+   the player loops run to it. */
+u8 gNumPlayers;
 u8 gCurrentStarId;
 u8 data_0209f224;
 u8 gCollectedStarId;
@@ -321,7 +324,10 @@ static u8 sMenuHighlightDelay;
 /* The pause page shown, the switch PS_Update runs. */
 static u8 sPauseState;
 static u8 sCheckpointEntranceId;
-u8 data_0209f250;
+/* This console's player: InitResources stores func_0203da9c(), the local
+   player number, so the HUD, the pause screen and the camera index the
+   per-player arrays (gPlayers, gPlayerHealth, gNumStageStars) by it. */
+u8 gLocalPlayerId;
 u8 data_0209f254;
 static u8 data_0209f258;
 static u8 data_0209f25c;
@@ -384,7 +390,10 @@ static u8 sPauseDisplayedCourse;
 static u8 sBacklightFlashTimer;
 static u8 data_0209f2d0;
 u8 gLevelClearStep;
-u8 data_0209f2d8;
+/* 0 in the adventure (StartFile), 1 in VS (PrepareVsMode), 2 while the
+   ending's fall-in-front-of-the-castle cutscene runs: KuppaScript sets it when
+   it resumes sCutsceneEndingMarioFall and clears it when that script ends. */
+u8 gGameMode;
 /* The controller mode chosen on the controls page (0..2), seeded from the
    player's record, saved through SetControllerMode, and the index of the
    callout-text sprite PS_Render draws. */
@@ -459,7 +468,8 @@ u8 gMapCapIconCharacters[9];
    draws no star marker, only a red-coin icon while gShowRedCoinMarkers is
    set. */
 u8 gStarMarkerTypes[12];
-daPly_c *data_0209f394[4];
+/* The live players, one per gNumPlayers slot; LevelObjects fills it. */
+daPly_c *gPlayers[4];
 void *data_0209f3a4[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
@@ -727,7 +737,7 @@ void dScStage_c::RenderBouncingArrows() {
         r4 = (data_020a0db0 & 8) ? 0xae : 0xb0;
     }
     A = gGamePaused;
-    if ((A == 0 && gShowTouchScreenArrows != 0 && (int)(data_0209f2d8 == 1) == 0) ||
+    if ((A == 0 && gShowTouchScreenArrows != 0 && (int)(gGameMode == 1) == 0) ||
         (A != 0 && (unsigned char)(sPauseState + 0xf7) <= 2u)) {
         OAM::Render(0, &OAM::BOUNCING_ARROW, 0x40, r4, -1, -1, 0x1000, 0x1000, 0, -1);
         OAM::Render(0, &OAM::BOUNCING_ARROW, 0x80, r4, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -1029,7 +1039,7 @@ void dScStage_c::CheckCameraInput() {
     ControllerInput *cam = data_0209f498;
     if ((u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 && data_0209d660 == 0) {
         int i = 0;
-        int n1 = data_0209f21c;
+        int n1 = gNumPlayers;
         if (n1 > 0) {
             u8 *st = data_0209f350;
             do {
@@ -1117,12 +1127,12 @@ void dScStage_c::CheckCameraInput() {
                 i++;
                 cam++;
                 st++;
-            } while (i < data_0209f21c);
+            } while (i < gNumPlayers);
         }
     } else {
         int i = 0;
         u8 *st;
-        int n = data_0209f21c;
+        int n = gNumPlayers;
         if (n > 0) {
             st = data_0209f350;
             do {
@@ -1159,13 +1169,13 @@ void dScStage_c::RenderNumber(unsigned char num, int x, int y, bool b, int p5) {
 }
 // @symbol _ZN10dScStage_c9PS_RenderEv
 void dScStage_c::PS_Render() {
-    if (func_02029408() != 0 && gPlayerHealth[data_0209f250] != 0 && sPauseState != 0xb &&
+    if (func_02029408() != 0 && gPlayerHealth[gLocalPlayerId] != 0 && sPauseState != 0xb &&
         sPauseState != 0xe && sPauseState != 0xf &&
         ((unsigned int)sPauseState < 7U || (unsigned int)sPauseState > 8U)) {
         dScStage_c::RenderBouncingArrows();
     }
 
-    int r0v = (data_0209f2d8 == 1);
+    int r0v = (gGameMode == 1);
     if (r0v != 0 && data_0209fc68 == 0) {
         OAM::Render(0, &OAM::VS_PAUSE, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
     } else if (sPauseState == 1 ||
@@ -1798,7 +1808,7 @@ void dScStage_c::PS_Update() {
         dScStage_c::UpdateMenuButtons(1);
         SetBg3Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG3;
-        if (func_02029408() != 0 && gPlayerHealth[data_0209f250] != 0) {
+        if (func_02029408() != 0 && gPlayerHealth[gLocalPlayerId] != 0) {
             SetBg2Offset(0, 0);
             SetSubBg0Offset(0, 0);
             SetSubBg1Offset(0, 0);
@@ -2689,7 +2699,7 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 0x13: {
-        int t = (data_0209f2d8 == 1);
+        int t = (gGameMode == 1);
         if (t != false && data_0209fc68 == 0) {
             dScene_c::StartSceneFade(6, 1, 0);
             data_0209f280 = 1;
@@ -2713,11 +2723,11 @@ void dScStage_c::PS_Update() {
 
 // @symbol func_02029408
 /* Can the current player pause? Forwards to daPly_c::CanPause on the active
- * entry of the live player list (data_0209f394, indexed by data_0209f250).
+ * entry of the live player list (gPlayers, indexed by gLocalPlayerId).
  * dScStage_c polls it before opening the pause menu. */
 
 extern "C" int func_02029408(void) {
-    return data_0209f394[data_0209f250]->CanPause();
+    return gPlayers[gLocalPlayerId]->CanPause();
 }
 
 // @symbol _ZN10dScStage_c7PS_InitEv
@@ -2766,7 +2776,7 @@ void dScStage_c::PS_Init() {
     if (specialPauseState != 0) {
         sNextPauseState = 7;
     } else {
-        if (data_0209f2d8 == 1)
+        if (gGameMode == 1)
             isVsMode = 1;
         if (isVsMode != 0 && data_0209fc68 == 0) {
             sNextPauseState = 4;
@@ -2786,7 +2796,7 @@ void dScStage_c::PS_Init() {
 // @symbol func_02029600
 extern "C" {
 int func_02029600(int x) {
-    int b = (int)(data_0209f2d8 == 2);
+    int b = (int)(gGameMode == 2);
     if (b == 0) {
         unsigned char saved = *(u8 *)&data_ov002_02111148;
         int r = GetMinimapID((dActor_c *)x, -1);
@@ -3046,7 +3056,7 @@ extern "C" void SetNextStar(void) {
     int b;
     if (gNextStarId == 1)
         return;
-    b = (int)(data_0209f2d8 == 1);
+    b = (int)(gGameMode == 1);
     if (b != 0)
         return;
     if (level != -1) {
@@ -3161,8 +3171,8 @@ void dScStage_c::RenderVsModeCountdown() {
     int count = 0;
     int i;
     for (i = 0; i < 4; i++) {
-        if (data_0209f394[i]) {
-            int t = (data_0209f394[i]->mLevelEntryDone != 0);
+        if (gPlayers[i]) {
+            int t = (gPlayers[i]->mLevelEntryDone != 0);
             if (t == 1)
                 count++;
         }
@@ -3210,14 +3220,14 @@ extern "C" s32 NumVsStarsObtained(void) {
     int i = 1;
     signed char sum = gNumStageStars[0];
     signed char *p;
-    if (i >= (int)data_0209f21c)
+    if (i >= (int)gNumPlayers)
         return sum;
     p = &data_0209f311;
     do {
         sum = (signed char)(sum + *p);
         i++;
         p++;
-    } while (i < (int)data_0209f21c);
+    } while (i < (int)gNumPlayers);
     return sum;
 }
 
@@ -3231,7 +3241,7 @@ extern "C" void GiveVsStars(int idx, int delta) {
  * caller sets up an object. */
 
 int dScStage_c::IsPauseDisabled() {
-    daPly_c *p = data_0209f394[0];
+    daPly_c *p = gPlayers[0];
     if (p != 0 && p->func_ov002_020bd8ac() == 0)
         return 1;
     return 0;
@@ -3289,14 +3299,14 @@ extern "C" signed char NumRedCoins(void) {
     int i = 1;
     signed char sum = gNumRedCoins[0];
     signed char *p;
-    if (i >= (int)data_0209f21c)
+    if (i >= (int)gNumPlayers)
         return sum;
     p = &data_0209f30d;
     do {
         sum = (signed char)(sum + *p);
         i++;
         p++;
-    } while (i < (int)data_0209f21c);
+    } while (i < (int)gNumPlayers);
     return sum;
 }
 
@@ -3321,7 +3331,7 @@ extern "C" int GiveRedCoins(int i, int amt) {
 // @symbol NumCoins
 extern "C" short NumCoins(void) {
     int i = 1;
-    int n = data_0209f21c;
+    int n = gNumPlayers;
     short *p = gNumCoins;
     short sum = p[0];
     if (n <= 1)
@@ -3345,7 +3355,7 @@ extern "C" void GiveCoins(int idx, int amount) {
     } else if (v < 0) {
         p[idx] = 0;
     }
-    func_ov002_020b18f0((int)data_0209f394[idx]);
+    func_ov002_020b18f0((int)gPlayers[idx]);
 }
 
 // @symbol GiveHealth
@@ -3608,7 +3618,7 @@ extern "C" void StartMinigameMenu(u8 returnToRecRoom) {
 /* Set up VS mode: mark the game mode, initialise the player globals, start
    the scene fade, then reset the save data to its defaults. */
 extern "C" void PrepareVsMode(void) {
-    data_0209f2d8 = 1;
+    gGameMode = 1;
     SetPlayerGlobals();
     dScene_c::StartSceneFade(3, 0, 0x7fff);
     SaveData::SetDefaultValues(&data_0209caa0.file);
@@ -3624,7 +3634,7 @@ extern "C" void func_0202ae74(void) {
    player globals, copy the current character to data_02092128, one player,
    clear the star/level flags, then start the scene fade. */
 extern "C" void StartFile(s8 levelID, u8 entranceID) {
-    data_0209f2d8 = 0;
+    gGameMode = 0;
     LoadLevelNoReturn(levelID, entranceID, 1, 0);
     SetPlayerGlobals();
     data_02092128[0] = data_0209caa0.file.mCharacter;
@@ -4022,7 +4032,7 @@ void dScStage_c::LoadFog() {
 // @symbol _ZN10dScStage_c8CanPauseEv
 /* Static: five globals, no object. */
 int dScStage_c::CanPause() {
-    if (((unsigned)(data_0209f2d8 == 1)) == 0)
+    if (((unsigned)(gGameMode == 1)) == 0)
         return 1;
     if (data_0209fc68 != 0)
         return 0;
@@ -4078,7 +4088,7 @@ int dScStage_c::Render() {
     dExtShadowModel_c::RenderAll();
     RenderModelTransparent();
     {
-        int isVsMode = (data_0209f2d8 == 1);
+        int isVsMode = (gGameMode == 1);
         if (isVsMode) {
             if (data_0209fc9c == 0 && gGamePaused == 0) {
                 RenderVsModeCountdown();
@@ -4095,9 +4105,9 @@ int dScStage_c::Render() {
         int positionXor = 0;
         int playerFlagBits = 0;
         int playerIndex = 0;
-        int playerCount = data_0209f21c;
+        int playerCount = gNumPlayers;
         for (; playerIndex < playerCount; playerIndex++) {
-            daPly_c *player = data_0209f394[playerIndex];
+            daPly_c *player = gPlayers[playerIndex];
             if (player != 0) {
                 u8 playerFlags = player->mHasWings;
                 int *position = (int *)(&player->mPosX);
@@ -4153,7 +4163,7 @@ int dScStage_c::Behavior() {
         return 1;
     }
     {
-        int b = (data_0209f2d8 == 1);
+        int b = (gGameMode == 1);
         if (b == 0) {
             UpdateMessage();
         } else {
@@ -4181,7 +4191,7 @@ int dScStage_c::Behavior() {
                 int cnt = 0;
                 int i;
                 for (i = 0; i < 4; i++) {
-                    daPly_c *p = data_0209f394[i];
+                    daPly_c *p = gPlayers[i];
                     if (p != 0) {
                         int t = (p->mLevelEntryDone != 0) ? 1 : 0;
                         if (t == 1)
@@ -4228,7 +4238,7 @@ int dScStage_c::Behavior() {
     if (gNextSublevel >= 0) {
         int lvl = SublevelToLevel(gNextSublevel);
         int lvl2 = SublevelToLevel(gCurrentSublevel);
-        int bb = (data_0209f2d8 == 2);
+        int bb = (gGameMode == 2);
         if (bb == 0 && lvl <= 0xe && lvl != lvl2 && gCheckpointSublevel < 0 &&
             (gNextSublevel != 0xc || sNextEntranceId != 4)) {
             dScene_c::SetSceneToSpawn(4, 0);
@@ -4239,7 +4249,7 @@ int dScStage_c::Behavior() {
              IsLevelInsideCastle(gNextSublevel) == 0) &&
             (IsLevelTinyHugeIslandOutside(gCurrentSublevel) == 0 ||
              IsLevelTinyHugeIslandOutside(gNextSublevel) == 0)) {
-            int bb2 = (data_0209f2d8 == 2);
+            int bb2 = (gGameMode == 2);
             if (bb2 == 0)
                 Sound::StopLoadedMusic_Layer1(0x3c);
         }
@@ -4255,7 +4265,7 @@ int dScStage_c::Behavior() {
             data_0209d660 == 0 && data_0209d4b0 == 0 && CanPause() != 0 && IsPauseDisabled() == 0 &&
             (u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 &&
             MaskOff(gNextActorUpdateMask, 0) == 0) {
-            u8 st = data_0209f2d8;
+            u8 st = gGameMode;
             int b1 = (st == 1);
             if ((b1 && data_0209fc68 == 0) ||
                 (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
@@ -4306,7 +4316,7 @@ s16 atan2_hold_d_s_stage_methods_1(int y, int x);
 }
 
 void dScStage_c::CheckInput() {
-    u8 mode = data_0209f2d8;
+    u8 mode = gGameMode;
     int isVsMode = (mode == 1);
     if (isVsMode == false) {
         int modeIsTwo = (mode == 2);
@@ -4333,7 +4343,7 @@ void dScStage_c::CheckInput() {
     }
     ControllerInput *control = data_0209f498;
     int playerIndex = 0;
-    int playerCount = data_0209f21c;
+    int playerCount = gNumPlayers;
     int touchX;
     int touchY;
     u8 *playerInputState;
@@ -4459,7 +4469,7 @@ void dScStage_c::CheckInput() {
         playerInputState++;
         playerIndex++;
         control++;
-    } while (playerIndex < data_0209f21c);
+    } while (playerIndex < gNumPlayers);
 }
 
 // @symbol _ZN3Fog4InitEtii
@@ -4500,7 +4510,7 @@ void Fog::Init(unsigned short color, Fix12i nearv, Fix12i farv) {
 extern "C" void SetTouchScreenDelay(void) {
     ControllerInput *p = data_0209f498;
     int i;
-    for (i = 0; i < data_0209f21c; i++) {
+    for (i = 0; i < gNumPlayers; i++) {
         p->delay = 5;
         p++;
     }
@@ -4512,9 +4522,9 @@ extern "C" u8 GetControllerMode(int a0);
 extern "C" void ResetInput(void) {
     ControllerInput *p = data_0209f498;
     int i;
-    for (i = 0; i < data_0209f21c; i++) {
+    for (i = 0; i < gNumPlayers; i++) {
         u8 mode;
-        int m = (int)(data_0209f2d8 == 1);
+        int m = (int)(gGameMode == 1);
         if (m == 0)
             mode = p->mode;
         else
@@ -4548,7 +4558,7 @@ int dScStage_c::CleanupResources() {
         ((SharedFilePtr *)(data_020756f0[fileIndex]))->Release();
 
     {
-        int atEnd = (data_0209f2d8 == 2);
+        int atEnd = (gGameMode == 2);
         if (!atEnd)
             Sound::ResetPlayerVoiceGroup();
     }
@@ -4596,14 +4606,14 @@ int dScStage_c::CleanupResources() {
     {
         int playerIndex;
         for (playerIndex = 0; playerIndex < 4; playerIndex++)
-            data_0209f394[playerIndex] = 0;
+            gPlayers[playerIndex] = 0;
     }
     data_0209f318 = 0;
     gGamePaused = 0;
     Message::ResetAllGlobals();
 
     {
-        u8 mode = data_0209f2d8;
+        u8 mode = gGameMode;
         int resetSequenceCounts = 0;
         sSelectedMenuButton = 0;
         gLevelClearStep = 0;
@@ -4672,7 +4682,7 @@ int dScStage_c::InitResources() {
     dScStage_c *scene = this;
 
     if (scene->mWaitingForLoad == 0) {
-        u8 mode = data_0209f2d8;
+        u8 mode = gGameMode;
         int isVsMode = (mode == 1) ? 1 : 0;
         if (isVsMode) {
             Sound::Player::SetPlayableSeqCount(2, 5);
@@ -4681,8 +4691,8 @@ int dScStage_c::InitResources() {
         }
         dScene_c::Initialise3dGraphics();
         Enable3dEngines();
-        data_0209f21c = data_0208a0e0;
-        data_0209f250 = (u8)func_0203da9c();
+        gNumPlayers = data_0208a0e0;
+        gLocalPlayerId = (u8)func_0203da9c();
         ResetInput();
         gGamePaused = 0;
 
@@ -4694,7 +4704,7 @@ int dScStage_c::InitResources() {
             if ((1 << sublevelBit) & 0x2A15)
                 specialSublevel = 1;
         }
-        mode = data_0209f2d8;
+        mode = gGameMode;
         int vsModeReset = (mode == 1) ? 1 : 0;
 
         if (vsModeReset || sReturnState == 2 || specialSublevel || nextLevel == 0x1D ||
@@ -4710,8 +4720,8 @@ int dScStage_c::InitResources() {
                 row += 1;
             } while (row < 3);
 
-            if ((s32)data_0209f21c > 0) {
-                int count = data_0209f21c;
+            if ((s32)gNumPlayers > 0) {
+                int count = gNumPlayers;
                 int idx = 0;
                 u8 *p1 = (u8 *)gNumRedCoins;
                 u8 *vsStars = (u8 *)gNumStageStars;
@@ -4803,7 +4813,7 @@ int dScStage_c::InitResources() {
         func_02039218();
         KuppaScript::Reset();
 
-        int vsModeTimers = (data_0209f2d8 == 1) ? 1 : 0;
+        int vsModeTimers = (gGameMode == 1) ? 1 : 0;
         if (vsModeTimers != 0) {
             data_0209f2bc = 3;
             data_0209f304 = 0x28;
@@ -4842,7 +4852,7 @@ int dScStage_c::InitResources() {
         data_02092134 = 0x44444444;
         LoadLevelOverlays(gCurrentSublevel);
 
-        int skipSoundGroup = (data_0209f2d8 == 2) ? 1 : 0;
+        int skipSoundGroup = (gGameMode == 2) ? 1 : 0;
         if (skipSoundGroup == 0) {
             s8 sublevel = gCurrentSublevel;
             int soundGroup = 0;
@@ -4866,7 +4876,7 @@ int dScStage_c::InitResources() {
         }
 
         *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 2;
-        LoadGraphics2D(data_0209f2d8 == 1, gCurrentSublevel);
+        LoadGraphics2D(gGameMode == 1, gCurrentSublevel);
 
         {
             u32 i;
@@ -4875,7 +4885,7 @@ int dScStage_c::InitResources() {
             }
         }
 
-        int vsModeFaders = (data_0209f2d8 == 1) ? 1 : 0;
+        int vsModeFaders = (gGameMode == 1) ? 1 : 0;
         u16 *faderFileIds;
         if (vsModeFaders && levelArchive != 0xBF) {
             faderFileIds = data_02075600;
@@ -4901,7 +4911,7 @@ int dScStage_c::InitResources() {
         dScStage_c::LoadClsnAndObjects(*(LVL_Overlay *)data_0209f340, gCurrentEntranceId,
                                        scene->mMeshCollider);
 
-        int vsModeMusic = (data_0209f2d8 == 1) ? 1 : 0;
+        int vsModeMusic = (gGameMode == 1) ? 1 : 0;
         if (vsModeMusic == 0) {
             int skipMusicSetup = (gRunningKuppaScript != 0) ? 1 : 0;
             if (skipMusicSetup == 0) {
@@ -4911,8 +4921,8 @@ int dScStage_c::InitResources() {
                         !IsLevelTinyHugeIslandOutside(previousSublevel)) {
                         if (gCurrentSublevel != 2 || (data_0209caa0.file.flags2 & 0x200)) {
                             Sound::LoadAndSetMusic_Layer1(data_0207576a[gCurrentSublevel * 3]);
-                            u8 localPlayer = data_0209f250;
-                            if (((u8 *)data_0209f394[localPlayer])[0x6ff] != 0) {
+                            u8 localPlayer = gLocalPlayerId;
+                            if (((u8 *)gPlayers[localPlayer])[0x6ff] != 0) {
                                 Sound::SetMusic(localPlayer, 0x33);
                             }
                         }
@@ -4943,7 +4953,7 @@ int dScStage_c::InitResources() {
         gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
         *p0 = (*p0 & ~0x1F00) | 0x1100;
-        int skipSubDisplayLayers = (data_0209f2d8 == 2) ? 1 : 0;
+        int skipSubDisplayLayers = (gGameMode == 2) ? 1 : 0;
         if (skipSubDisplayLayers == 0) {
             *p1 = (*p1 & ~0x1F00) | (gSubScreenLayers << 8);
         }
@@ -5040,8 +5050,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadFont3D();
     }
 
-    if ((int)(data_0209f2d8 == 0) != 0 &&
-        (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+    if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0) {
         BG0CNT_SUB &= ~3;
         BG0CNT_SUB &= ~0x40;
@@ -5228,11 +5237,11 @@ void LoadLevelOverlays(int level) {
 // @symbol _Z26LoadOrUnloadObjectOverlaysPFviEi
 void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
     unsigned int i;
-    int b = (data_0209f2d8 == 1);
+    int b = (gGameMode == 1);
     if (b != 0)
         return;
     for (i = 0; i < 7; i++) {
-        b = (data_0209f2d8 == 1);
+        b = (gGameMode == 1);
         if (b == 0 || i == 6) {
             unsigned char v = data_02075998[idx][i];
             if (v != 0) {
@@ -5244,7 +5253,7 @@ void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
         fn((int)&OVERLAY_60_ID);
         return;
     }
-    b = (data_0209f2d8 == 1);
+    b = (gGameMode == 1);
     if (b == 0) {
         fn((int)&OVERLAY_98_ID);
     }

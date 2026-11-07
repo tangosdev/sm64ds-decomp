@@ -7874,7 +7874,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f2d8": {
+    "gGameMode": {
       "src/_ZN7daPly_c16InitWingFeathersEb.cpp": [
         "return:unsigned char []"
       ],
@@ -7944,7 +7944,7 @@
         "return:dCamera_c *"
       ]
     },
-    "data_0209f394": {
+    "gPlayers": {
       "src/ui/hud/d_map.cpp": [
         "return:daPly_c * []"
       ],

@@ -4736,7 +4736,7 @@ data_0209f20c kind:bss addr:0x0209f20c
 sPauseArrowPressTimer kind:bss addr:0x0209f210
 data_0209f214 kind:bss addr:0x0209f214
 sPausedWithSelect kind:bss addr:0x0209f218
-data_0209f21c kind:bss addr:0x0209f21c
+gNumPlayers kind:bss addr:0x0209f21c
 gCurrentStarId kind:bss addr:0x0209f220
 data_0209f224 kind:bss addr:0x0209f224
 gCollectedStarId kind:bss addr:0x0209f228
@@ -4749,7 +4749,7 @@ data_0209f240 kind:bss addr:0x0209f240
 sMenuHighlightDelay kind:bss addr:0x0209f244
 sPauseState kind:bss addr:0x0209f248
 sCheckpointEntranceId kind:bss addr:0x0209f24c
-data_0209f250 kind:bss addr:0x0209f250
+gLocalPlayerId kind:bss addr:0x0209f250
 data_0209f254 kind:bss addr:0x0209f254
 data_0209f258 kind:bss addr:0x0209f258
 data_0209f25c kind:bss addr:0x0209f25c
@@ -4783,7 +4783,7 @@ sPauseDisplayedCourse kind:bss addr:0x0209f2c8
 sBacklightFlashTimer kind:bss addr:0x0209f2cc
 data_0209f2d0 kind:bss addr:0x0209f2d0
 gLevelClearStep kind:bss addr:0x0209f2d4
-data_0209f2d8 kind:bss addr:0x0209f2d8
+gGameMode kind:bss addr:0x0209f2d8
 sSelectedControllerMode kind:bss addr:0x0209f2dc
 sSelectedMenuButton kind:bss addr:0x0209f2e0
 sSoundBoxFlashTimer kind:bss addr:0x0209f2e4
@@ -4823,7 +4823,7 @@ data_0209f368 kind:bss addr:0x0209f368
 gMapCapIconCharacters kind:bss addr:0x0209f370
 gStarMarkerTypes kind:bss addr:0x0209f37c
 data_0209f388 kind:bss addr:0x0209f388
-data_0209f394 kind:bss addr:0x0209f394
+gPlayers kind:bss addr:0x0209f394
 data_0209f3a4 kind:bss addr:0x0209f3a4
 data_0209f3c4 kind:bss addr:0x0209f3c4
 data_0209f3c8 kind:bss addr:0x0209f3c8

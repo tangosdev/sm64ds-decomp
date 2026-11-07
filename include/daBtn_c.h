@@ -49,8 +49,8 @@ struct daBtn_c : dEnemyBase_c {
     /* The drop shadow's matrix: func_ov079_02124188 builds it every frame
        and hands it to dActor_c::DropShadowScaleXYZ. */
     s32                          mShadowMatrix[12];     /* 0x36c */
-    /* InitResources zeroes all four and then refills as many as data_0209f21c
-       says from data_0209f394, the live player list. func_ov079_02123f34
+    /* InitResources zeroes all four and then refills as many as gNumPlayers
+       says from gPlayers, the live player list. func_ov079_02123f34
        measures each one's distance and bearing. */
     daPly_c *mPlayers[4]; /* 0x39c */
     /* The player whose touch counted as a hit this frame: func_ov079_02125058

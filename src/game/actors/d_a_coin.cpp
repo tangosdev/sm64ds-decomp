@@ -824,7 +824,7 @@ int daCoin_c::Behavior()
      * selected by mBehaviorType and refreshes the collider. */
     typedef void (daCoin_c::*Handler)();
     extern Handler data_ov002_0210dc70[];
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
 
     if ((unsigned int)(mCoinFlags << 0x1e) >> 0x1f) {
         mCoinFlags &= ~2;
@@ -845,7 +845,7 @@ int daCoin_c::Behavior()
     mEatingPlayer = 0;
     if (func_ov002_020b19dc() != 0) return 1;
     (this->*data_ov002_0210dc70[mBehaviorType])();
-    if ((int)(data_0209f2d8 == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
+    if ((int)(gGameMode == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
         mdCc_c.Clear();
         if (mNoClsnTimer == 0 && LenVec3(&mCamSpacePos) < 0x64000) {
             if (mCoinType != COIN_RED || mInBrickBlock == 0)
@@ -889,7 +889,7 @@ s32 daCoin_c::InitResources()
     extern s8 gCurrentSublevel;
     extern u8 gCurrentStarId;
     extern dActor_c *STAR_MARKERS[12];
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern FileEntry* data_ov002_020ff06c[];
     extern FileEntry* data_ov002_020ff060[];
     extern void* data_ov002_0210d9a8;
@@ -1025,7 +1025,7 @@ common:;
     } else {
         if (behavior == 6) {
             int inMode1;
-            inMode1 = data_0209f2d8;
+            inMode1 = gGameMode;
             inMode1 = (inMode1 == 1);
             if (inMode1 == 0) {
                 mDisappearTimer = 0xffffu;

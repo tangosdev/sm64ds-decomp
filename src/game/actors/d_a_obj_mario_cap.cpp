@@ -256,7 +256,7 @@ typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void 
 extern Matrix4x3      data_020a0e68;
 extern short          data_02082214[];
 extern int            data_02092138;
-extern u8             data_0209f2d8[];
+extern u8 gGameMode[];
 
 extern daObjMarioCapFileHandle data_ov002_0210de00, data_ov002_0210de08;
 extern daObjMarioCapFileHandle data_ov002_0210de10, data_ov002_0210de18;
@@ -941,7 +941,8 @@ int daObjMarioCap_c::InitSlide()
     state = mType;
     if (state == 5 || state == 7 || state == 9) {
         CAP_TIMER(this) = 0xd2;
-        if ((int)(data_0209f2d8[0] == 1) == 0) CAP_TIMER(this) = 0x78;
+        if ((int)(gGameMode[0] == 1) == 0)
+            CAP_TIMER(this) = 0x78;
         mStartTimer = CAP_TIMER(this);
     }
 
@@ -1098,7 +1099,7 @@ int daObjMarioCap_c::InitTaken()
     }
 
     {
-        unsigned b = (data_0209f2d8[0] == 1);
+        unsigned b = (gGameMode[0] == 1);
         if (b == 0) {
             daPly_c *p = mPlayer;
             if (p->mCharacter == 3) {

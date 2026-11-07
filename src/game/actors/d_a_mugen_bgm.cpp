@@ -17,8 +17,9 @@
  *
  * Notes:
  * - data_ov002_02110af0 / 02110af4 / 02110af8 are this TU's stored area,
- *   angle and Fog instance; data_0209f250 / 0209f394 / 020a0ebc / 0209caa0 /
- *   0209f318 / 0208e434 / 02092120 are arm9 scene state this TU does not own.
+ *   angle and Fog instance; gLocalPlayerId, gPlayers, 020a0ebc, 0209caa0,
+ *   0209f318, 0208e434 and gCurrentAreaId are arm9 scene state this TU does
+ *   not own.
  * - g_profile_MUGEN_BGM lives outside this TU.
  */
 
@@ -35,8 +36,8 @@
 extern signed char data_ov002_02110af0;
 extern signed char gCurrentAreaId;
 extern void *data_ov002_02110af8;
-extern u8 data_0209f250;
-extern daPly_c *data_0209f394[];
+extern u8 gLocalPlayerId;
+extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 extern SaveBlock data_0209caa0;
 extern dCamera_c *data_0209f318;
@@ -92,7 +93,7 @@ int daMugenBGM_c::Behavior() {
     int diff[3];
     int rotated[3];
 
-    Vec3_Sub((Vector3 *)diff, &data_0209f394[data_0209f250]->mPos, (const Vector3 *)&mPosX);
+    Vec3_Sub((Vector3 *)diff, &gPlayers[gLocalPlayerId]->mPos, (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(rotated, &data_020a0ebc, mAngleY, diff);
 
     if (param1 == 1) {

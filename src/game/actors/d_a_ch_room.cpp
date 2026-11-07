@@ -8,7 +8,7 @@
  * Notes:
  * - Vec3_Sub / Vec3_RotateYAndTranslate have no owning header; tree-wide
  *   parameter spellings disagree.
- * - data_0209f394 is the player table, data_0209f250 the current player
+ * - gPlayers is the player table, gLocalPlayerId the current player
  *   index. Typed here as dActor_c *: Behavior only uses mPos and mAreaId.
  * - data_020a0ebc is arm9's zero Vector3 (0xc bytes of .bss after
  *   GAME_HEAP_PTR, constructed (0, 0, 0) in Heap.cpp); here it is the
@@ -29,8 +29,8 @@ void Vec3_RotateYAndTranslate(Vector3 *out, void *m, s16 ang, const Vector3 *in)
 void ChangeArea(int);
 }
 
-extern u8 data_0209f250;
-extern daPly_c *data_0209f394[];
+extern u8 gLocalPlayerId;
+extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 
 // @symbol daChRoom_c_classInit
@@ -56,7 +56,7 @@ int daChRoom_c::Behavior() {
     Vector3 local;
     int distX;
 
-    player = data_0209f394[data_0209f250];
+    player = gPlayers[gLocalPlayerId];
     Vec3_Sub(&delta, &player->mPos, &mPos);
     Vec3_RotateYAndTranslate(&local, &data_020a0ebc, mAngleY, &delta);
 

@@ -61,10 +61,9 @@ u8 IsAreaShowing(int areaID);
 void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
 
-
-extern u8 data_0209f250;
+extern u8 gLocalPlayerId;
 extern dCamera_c *data_0209f318;
-extern daPly_c *data_0209f394[];
+extern daPly_c *gPlayers[];
 extern SaveBlock data_0209caa0;
 extern Vector3 data_020a0ebc;
 
@@ -149,7 +148,7 @@ int daStarGate_c::InitResources()
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    ChangeState(&ST_WAIT, data_0209f394[data_0209f250]);
+    ChangeState(&ST_WAIT, gPlayers[gLocalPlayerId]);
     return 1;
 }
 
@@ -218,7 +217,7 @@ bool daStarGate_c::ChangeState(State *nextState, daPly_c *player) {
 // @symbol _ZN12daStarGate_c26CalculateRelativePlayerPosEv
 daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
     VecFx32 tmp;
-    daPly_c *player = data_0209f394[data_0209f250];
+    daPly_c *player = gPlayers[gLocalPlayerId];
     Vec3_Sub((Vector3 *)&tmp, &player->mPos, &mPos);
     Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (short)-mAngleY, (Vector3 *)&tmp);
     return player;
@@ -379,7 +378,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
                 mTerminalVelocity = 0;
                 func_02012694(0x4f, &mCamSpacePosX, 0);
             } else if (mCloseDoorTimer == 8) {
-                data_0209f318->GoBehindPlayer(data_0209f250);
+                data_0209f318->GoBehindPlayer(gLocalPlayerId);
             }
         } else if (ready != 0) {
             ChangeState(&ST_WAIT, player);

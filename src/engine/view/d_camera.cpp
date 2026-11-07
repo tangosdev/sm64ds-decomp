@@ -99,12 +99,12 @@ extern s8 gNextSublevel;
 extern s32 data_0209ee90[];
 extern u8 data_0209f1f8;
 extern u8 data_0209f20c;
-extern u8 data_0209f250;
+extern u8 gLocalPlayerId;
 extern u8 gVsExitScreenActive;
 extern u8 gGamePaused;
 extern s8 gCurrentSublevel;
 extern s32 data_0209f32c;
-extern daPly_c *data_0209f394[];
+extern daPly_c *gPlayers[];
 extern dClipper data_0209f43c;
 extern s32 gRunningKuppaScript;
 extern Matrix4x3 data_020a0e68;
@@ -236,14 +236,14 @@ int dCamera_c::InitResources()
         }
     }
     this->mFovBlend = 0;
-    this->mTargetPlayer = data_0209f394[data_0209f250];
+    this->mTargetPlayer = gPlayers[gLocalPlayerId];
     ChangeArea(this->mTargetPlayer->mAreaId);
     this->mFramedActor = 0;
     this->mFocusActor = 0;
     ChangeState((State *)&data_0209b008);
     func_0200cf40();
     if (StartWithFarCamera() != 0)
-        func_0200d0ac(data_0209f250);
+        func_0200d0ac(gLocalPlayerId);
     return this->Render();
 }
 
@@ -598,70 +598,69 @@ void dCamera_c::func_0200d858(const Vector3 *offset) {
 
 // @symbol _ZN9dCamera_c13func_0200d81cEi
 void dCamera_c::func_0200d81c(int playerID) {
-    if (playerID != (int)data_0209f250)
+    if (playerID != (int)gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b008);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d7e0Ei
 void dCamera_c::func_0200d7e0(int playerID) {
-    if (playerID != (int)data_0209f250)
+    if (playerID != (int)gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b098);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d7a4Eh
 void dCamera_c::func_0200d7a4(u8 playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b108);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d768Eh
 void dCamera_c::func_0200d768(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b018);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d72cEh
 void dCamera_c::func_0200d72c(unsigned char playerID) {
-    if (playerID == *(unsigned char *)&data_0209f250)
+    if (playerID == *(unsigned char *)&gLocalPlayerId)
         ChangeState((dCamera_c::State *)&data_0209b028);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d6f0Eh
 void dCamera_c::func_0200d6f0(unsigned char playerID) {
-    if (playerID == *(unsigned char *)&data_0209f250)
-    {
+    if (playerID == *(unsigned char *)&gLocalPlayerId) {
         ChangeState((dCamera_c::State *)&data_0209b038);
     }
 }
 
 // @symbol _ZN9dCamera_c13func_0200d6b4Eh
 void dCamera_c::func_0200d6b4(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b048);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d678Eh
 void dCamera_c::func_0200d678(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b058);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d63cEh
 void dCamera_c::func_0200d63c(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b068);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d5fcEi
 void dCamera_c::func_0200d5fc(int playerID) {
-    if (playerID == data_0209f250) {
+    if (playerID == gLocalPlayerId) {
         ChangeState((dCamera_c::State *)&data_0209b078);
         func_0200cb58(5);
     }
@@ -669,14 +668,14 @@ void dCamera_c::func_0200d5fc(int playerID) {
 
 // @symbol _ZN9dCamera_c13func_0200d5c0Eh
 void dCamera_c::func_0200d5c0(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b078);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d580Ei
 void dCamera_c::func_0200d580(int playerID) {
-    if (playerID != data_0209f250)
+    if (playerID != gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b078);
     func_0200cb58(8);
@@ -684,21 +683,21 @@ void dCamera_c::func_0200d580(int playerID) {
 
 // @symbol _ZN9dCamera_c13func_0200d544Eh
 void dCamera_c::func_0200d544(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b088);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d508Eh
 void dCamera_c::func_0200d508(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b0a8);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d4b0Eji
 void dCamera_c::func_0200d4b0(unsigned int playerID, int arg2) {
-    unsigned char tmp = data_0209f250;
+    unsigned char tmp = gLocalPlayerId;
     if (playerID == tmp)
     {
         volatile int dummy;
@@ -712,21 +711,21 @@ void dCamera_c::func_0200d4b0(unsigned int playerID, int arg2) {
 
 // @symbol _ZN9dCamera_c13func_0200d474Eh
 void dCamera_c::func_0200d474(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b0b8);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d438Eh
 void dCamera_c::func_0200d438(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b0c8);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d3f8EhPv
 void dCamera_c::func_0200d3f8(unsigned char playerID, void *ptr) {
-    unsigned char tmp = *(unsigned char *)&data_0209f250;
+    unsigned char tmp = *(unsigned char *)&gLocalPlayerId;
     if (playerID != tmp)
         return;
     mLookTarget = (s32 *)ptr;
@@ -738,7 +737,7 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
 {
     int slot4, slot8, slotc;
 
-    if (j != data_0209f250)
+    if (j != gLocalPlayerId)
         return;
     if (gNextSublevel >= 0)
         return;
@@ -827,21 +826,21 @@ void dCamera_c::LookAtExit(dActor_c &actor)
 
 // @symbol _ZN9dCamera_c13func_0200d148Eh
 void dCamera_c::func_0200d148(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b118);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d10cEh
 void dCamera_c::func_0200d10c(unsigned char playerID) {
-    if (playerID != *(unsigned char *)&data_0209f250)
+    if (playerID != *(unsigned char *)&gLocalPlayerId)
         return;
     ChangeState((dCamera_c::State *)&data_0209b128);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d0acEj
 int dCamera_c::func_0200d0ac(unsigned int playerID) {
-    if (playerID == data_0209f250) {
+    if (playerID == gLocalPlayerId) {
         unsigned short v = mAreaMode->flags;
         if (v & 1) {
             return 0;
@@ -854,7 +853,7 @@ int dCamera_c::func_0200d0ac(unsigned int playerID) {
 
 // @symbol _ZN9dCamera_c13func_0200d064Eh
 void dCamera_c::func_0200d064(unsigned char playerID) {
-    unsigned char tmp = data_0209f250;
+    unsigned char tmp = gLocalPlayerId;
     if (playerID == tmp) {
         volatile int dummy;
         unsigned int *addr = &mFlags;
@@ -1119,7 +1118,7 @@ int dCamera_c::func_0200ca50() {
 
 // @symbol _ZN9dCamera_c13func_0200ca14Ehi
 void dCamera_c::func_0200ca14(unsigned char playerID, int r2) {
-    if (playerID != (unsigned int)data_0209f250)
+    if (playerID != (unsigned int)gLocalPlayerId)
         return;
 
     if (r2 == 0)
@@ -1537,7 +1536,7 @@ extern s16 data_0209f4a0[];
 extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
 extern u8 data_0209f4ae[];
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern int data_02086cc8[2];
 extern int data_02086d50[2];
 extern Vector3 data_02086e84;
@@ -2168,7 +2167,7 @@ static inline void SetVec(struct Vector3 &v, s32 x, s32 y, s32 z) {
 }
 
 static inline int CheckMode(void) {
-    return data_0209f2d8 == 1;
+    return gGameMode == 1;
 }
 
 static inline s32 CollisionCeiling(dBgCh_Lin &line, s32 floorHeight) {
