@@ -366,15 +366,13 @@ void daCoin_c::func_ov002_020b1674(daPly_c *player) {
  * sound 0x2f + total. When the eighth is collected it spawns a STAR (0xb2) 120
  * units above the coin's STARBASE and hands that marker over to the star. */
 // @symbol _ZN8daCoin_c19func_ov002_020b16c4EP7daPly_c
-#define LAUNDER(p) ((int)(p))
 void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
-    volatile Vector3 unusedPos; /* written but never read; the ROM stores it */
+    Vector3 pos;
     Vector3 starPos;
     Vector3 popupPos;
     daStarBase_c *marker;
     daStar_c *star;
     Vector3 *markerPos;
-    int x, y, z;
     u8 filter;
 
     mDisappearTimer = 0;
@@ -387,17 +385,9 @@ void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
     filter = mSpawnFilter;
     if (filter != 0 && filter <= 7) {
         GiveRedCoins(player->mPlayerNo, 1);
-        x = mPosX;
-        unusedPos.x = x;
-        y = mPosY;
-        unusedPos.y = y;
-        z = mPosZ;
-        unusedPos.z = z;
-        y += 0x64000;
-        unusedPos.y = y;
-        popupPos.x = x;
-        popupPos.y = y;
-        popupPos.z = z;
+        pos = mPos;
+        pos.y += 0x64000;
+        popupPos = pos;
         SpawnNumber(popupPos, NumRedCoins(), 0, 0, 0);
         func_02012790(NumRedCoins() + 0x2f);
     }
@@ -407,26 +397,19 @@ void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
     if (NumRedCoins() != 8) return;
     marker = func_ov002_020b1328();
     if (marker == 0) return;
-    markerPos = (Vector3 *)LAUNDER(&marker->mPosX);
-    x = markerPos->x;
-    starPos.x = x;
-    y = markerPos->y;
-    starPos.y = y;
-    z = markerPos->z;
-    starPos.z = z;
-    y += 0x78000;
-    starPos.y = y;
+    markerPos = &marker->mPos;
+    starPos = *markerPos;
+    starPos.y += 0x78000;
     star = (daStar_c *)dActor_c::Spawn(
         0xb2, mSpawnFilter | 0x40, starPos, 0, marker->mAreaId, -1);
     if (star == 0) return;
     if (mAreaId != star->mAreaId)
         star->mAreaId = -1;
     star->AddStarMarker();
-    *(unsigned short *)LAUNDER(&star->unk_4a2) |= 0x1000;
+    star->mStarFlags |= daStar_c::FLAG_COIN_REWARD;
     star->mMarkerID = marker->uniqueID;
-    *(u8 *)LAUNDER(&marker->mFlags) |= 4;
+    marker->mBits.spawned = 1;
 }
-#undef LAUNDER
 
 /* Yellow coin picked up: same sound choice as the red coin, 1 coin and 0x100
  * health. */
