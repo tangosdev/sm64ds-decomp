@@ -27,6 +27,7 @@
 #include "TrmpLine.h"
 #include "TrmpItem.h"
 #include "math/Approach.h"
+#include "math/Quaternion.h"
 /* Typed access to a TrmpLine slot from the char* helpers below. */
 #define TRMPLINE(p) ((TrmpLine *)(p))
 /* Typed access to a TrmpItem record from the char* helpers below. */
@@ -827,7 +828,7 @@ namespace s020ce988 {
 // @symbol TrmpItem_UpdateMatrix
 
 extern "C" {
-void Matrix4x3_FromQuaternion(const void *q, struct Matrix4x3 *mF);
+void Matrix4x3_FromQuaternion(const Quaternion *q, struct Matrix4x3 *mF);
 void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 void MulMat4x3Mat4x3(const struct Matrix4x3 *a, const struct Matrix4x3 *b, struct Matrix4x3 *out);
 }
@@ -837,7 +838,8 @@ extern struct Matrix4x3 data_020a0e68;
 
 extern "C" void TrmpItem_UpdateMatrix(char *self) {
     Matrix4x3 rotation;
-    Matrix4x3_FromQuaternion(TRMPITEM(self)->mRotation, &rotation);
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(TRMPITEM(self)->mRotation),
+                             &rotation);
     Matrix4x3_FromTranslation(&data_020a0e68, TRMPITEM(self)->mPos.x, TRMPITEM(self)->mPos.y,
                               TRMPITEM(self)->mPos.z);
     MulMat4x3Mat4x3(&rotation, &data_020a0e68, &data_020a0e68);

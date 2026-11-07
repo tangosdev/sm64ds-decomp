@@ -28,6 +28,7 @@
 #include "daObjGuragura_c.h"
 #include "SharedFilePtr.h"
 #include "math/CalcLib.h"
+#include "math/Quaternion.h"
 
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
@@ -42,7 +43,7 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Quaternion_FromVector3(int *q, Vector3 *from, Vector3 *to);
 void Quaternion_Normalize(int *q);
 void Quaternion_SLerp(int *q0, int *q1, int t, int *out);
-void Matrix4x3_FromQuaternion(void *q, Matrix4x3 *m);
+void Matrix4x3_FromQuaternion(const Quaternion *q, Matrix4x3 *m);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
@@ -86,7 +87,7 @@ void daObjGuragura_c_EmitDestructor(daObjGuragura_c *p) {
 void daObjGuragura_c::UpdateModelMatrix() {
     Matrix4x3 q;
     Vector3 v;
-    Matrix4x3_FromQuaternion(mTilt, &q);
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mTilt), &q);
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     MulMat4x3Mat4x3(&q, &data_020a0e68, &data_020a0e68);
