@@ -114,7 +114,7 @@ int *Vec3_LslInPlace(int *v, int sh);
 void  func_ov102_0214b3b8(void *c);
 /* Real definitions: func_0201267c and func_0200fc44 (arm9).
    The methods call through these so the names stay unmangled. */
-int   func_0200fc44(int a, Vector3 *pos, int flag);
+int   func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
 
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
@@ -510,7 +510,7 @@ void daBmb_c::func_ov102_0214bd90(){
     v.x = mPosX;
     v.y = mPosY;
     v.z = mPosZ;
-    func_0200fc44((int)this, &v, 1);
+    func_0200fc44(this, &v, 1);
   }
   if (mWithMeshClsn.IsOnGround()) {
     if (mChasePlayer == 0) {
@@ -1310,7 +1310,7 @@ int daBmb_c::func_ov102_0214aa18() {
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
-            func_0200fc44((int)this, &v, 1);
+            func_0200fc44(this, &v, 1);
         }
         if (mWithMeshClsn.IsOnGround() == 0)
             return 1;
