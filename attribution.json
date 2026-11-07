@@ -9571,7 +9571,7 @@
     "src/engine/model/ModelComponents.cpp#func_02044efc": "tangosdev",
     "src/engine/model/ModelComponents.cpp#func_02044f74": "tangosdev",
     "src/engine/model/ModelComponents.cpp#_ZN15ModelComponents21UpdateVertsUsingBonesEv": "tangosdev",
-    "src/engine/model/ModelComponents.cpp#func_02045074": "tangosdev",
+    "src/engine/model/ModelComponents.cpp#_ZN15ModelComponents13func_02045074EP8BMD_Bone": "tangosdev",
     "src/engine/model/ModelComponents.cpp#func_02045178": "tangosdev",
     "src/engine/model/ModelComponents.cpp#func_0204531c": "tangosdev",
     "src/engine/model/ModelComponents.cpp#_ZN15ModelComponents11UpdateBonesEP8BCA_Filei": "tangosdev",

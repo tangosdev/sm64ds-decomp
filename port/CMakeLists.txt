@@ -187,8 +187,9 @@ endif()
 
 # Gate 4b: the whole dExtSimpleModel_c pipeline. Adds the material-bind and matrix
 # feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
-set(GATE4B_SYMS func_02044b30 Geometry_MatrixMultiply3x3 func_02055998
-    func_02044534 func_0204488c NormalizeVec3)
+set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei Geometry_MatrixMultiply3x3
+    func_02055998 _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
+    _ZN15ModelComponents13func_0204488cEiP7Vector3 NormalizeVec3)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)
