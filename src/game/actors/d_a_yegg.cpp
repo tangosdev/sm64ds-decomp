@@ -1064,21 +1064,14 @@ void daYegg_c::func_ov002_020ed998()
 {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && *(int *)&mPlayer) {
-        volatile VecFx32 v;
-        int t9, t10, t11;
-        v.x = 0;
-        v.y = 0;
-        v.z = 0;
+        Vector3 v(0, 0, 0);
         *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        t9 = ((volatile Mtx43 *)&data_020a0e68)->r[3].x;
-        t10 = ((volatile Mtx43 *)&data_020a0e68)->r[3].y;
-        t11 = ((volatile Mtx43 *)&data_020a0e68)->r[3].z;
-        v.y = t10;
-        v.z = t11;
-        v.x = t9;
-        mPosX = t9 << 3;
+        v.x = ((Mtx43 *)&data_020a0e68)->r[3].x;
+        v.y = ((Mtx43 *)&data_020a0e68)->r[3].y;
+        v.z = ((Mtx43 *)&data_020a0e68)->r[3].z;
+        mPosX = v.x << 3;
         mPosY = v.y << 3;
         mPosZ = v.z << 3;
         return;
