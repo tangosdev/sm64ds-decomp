@@ -326,17 +326,9 @@ int daSpd_c::func_ov071_02120028() {
     UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        Vector3 v;
-        int x, y, z;
-        x = *(volatile int *)&mPosX;
-        v.x = x;
-        y = *(volatile int *)&mPosY;
-        v.y = y;
-        z = *(volatile int *)&mPosZ;
-        y += 0x28000;
-        v.z = z;
-        *(volatile int *)&v.y = y;
-        Particle::System::NewSimple(kPtclLandingDust, x, y, z);
+        Vector3 v = mPos;
+        v.y += 0x28000;
+        Particle::System::NewSimple(kPtclLandingDust, v.x, v.y, v.z);
         mVertSpeed = mVertSpeed * -0x28 / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;
