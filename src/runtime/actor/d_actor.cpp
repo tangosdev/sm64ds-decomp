@@ -76,6 +76,7 @@
 #include "decl_common.h"
 #include "dActor_c.h"
 #include "daPly_c.h"
+#include "dCamera_c.h"
 #include "common.h"
 #include "math/CalcLib.h"
 #include "dCc_c.h"
@@ -793,8 +794,8 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
 /* ROM ordinal 60 -- dActor_c::GivePlayerCoins(daPly_c &, unsigned char, unsigned int)
  * 0x0201061c  size 0xf8 */
 extern "C" {
-extern u32 data_02075238[]; /* coins each kind is worth */
-extern u16 data_02075230[]; /* actor ID of the coin each kind spawns */
+extern const u16 data_02075230[4]; /* yellow, red, blue */
+extern const u32 data_02075238[3];
 void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
 }
 void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
@@ -1057,14 +1058,12 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
 // @symbol _ZN8dActor_c10EarthquakeERK7Vector3i
 /* ROM ordinal 46 -- dActor_c::Earthquake(Vector3 const &, int)
  * 0x02010168  size 0x18 */
-struct dCamera_c;
 extern "C" {
-extern void func_0200d8c8(void *, const Vector3 *, int);
 extern dCamera_c *data_0209f318; /* the camera */
 }
 /* r1 is the position and r2 the intensity; both are forwarded untouched. */
 void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
-    func_0200d8c8(data_0209f318, &pos, magnitude);
+    data_0209f318->func_0200d8c8(&pos, magnitude);
 }
 
 /* -------------------------------------------------------------------------- */

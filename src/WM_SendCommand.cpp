@@ -2,16 +2,14 @@
 #include "types.h"
 #include "CP15.h"
 #include "private/wm_views.h"
+#include "nitro/os/message.h"
 
 extern "C" {
 
-extern int OS_ReceiveMessage(void *a, void **out, int c);
 /* MI_DmaCopy32 */
 extern void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size);
 extern int PXI_SendWordByFifo(u32 a, u32 c, u32 b);
-extern int OS_SendMessage(void *a, void *b, int c);
-
-extern void *data_020a89b0;
+extern OSMessageQueue data_020a89b0;
 
 extern WMArm9Buf *data_020a89ac;
 
@@ -22,7 +20,7 @@ int WM_SendCommand(short a0, unsigned short count, ...)
     int i;
     int r;
 
-    OS_ReceiveMessage(&data_020a89b0, (void **)&buf, 1);
+    OS_ReceiveMessage(&data_020a89b0, (OSMessage *)&buf, OS_MESSAGE_BLOCK);
 
     if (count == 0) {
         CP15::FlushDataCache((u32)data_020a89ac->fifo9to7, 0x100);
@@ -39,7 +37,7 @@ int WM_SendCommand(short a0, unsigned short count, ...)
 
     CP15::FlushDataCache((u32)buf, 0x100);
     r = PXI_SendWordByFifo(0xa, (u32)buf, 0);
-    OS_SendMessage(&data_020a89b0, buf, 1);
+    OS_SendMessage(&data_020a89b0, buf, OS_MESSAGE_BLOCK);
     if (r < 0) return 8;
     return 2;
 }

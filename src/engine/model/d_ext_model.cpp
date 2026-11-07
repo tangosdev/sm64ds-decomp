@@ -914,7 +914,7 @@ void dExtFrameCtrl_c::Advance() {
            read-modify-write, and reloads currFrame through the member
            afterwards; the launder keeps this store aliasing the member so
            the compiler re-reads it the way the ROM does */
-        int *pFrame = (int *)((long long)((int)this + 8));
+        int *pFrame = (int *)((int)this + 8);
         *pFrame = *pFrame + speed;
         if (currFrame < 0) {
             currFrame = 0;

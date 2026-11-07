@@ -13,9 +13,9 @@ void func_02053380(s16 *in, s16 *out) {
     s64 scale;
     s64 prod;
 
-    sq = (long long)(in[0] * in[0]);
-    sq += (long long)(in[1] * in[1]);
-    sq += (long long)(in[2] * in[2]);
+    sq = (in[0] * in[0]);
+    sq += (in[1] * in[1]);
+    sq += (in[2] * in[2]);
 
     *(volatile unsigned short *)0x4000280 = 2;
     *(volatile u64 *)0x4000290 = (u64)0x1000000 << 32;

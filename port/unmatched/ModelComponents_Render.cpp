@@ -11,7 +11,7 @@
 
 extern "C" {
 extern u32 data_020a4bd4;
-extern int data_02082190;
+extern const int data_02082190[12];
 extern void *data_020a4bd0;
 
 struct Matrix4x3;
@@ -55,7 +55,7 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec)
 {
     data_020a4bd4 = 1u << (info->field0 + 12);
     if (!mat) {
-        data_020a4bd0 = &data_02082190;
+        data_020a4bd0 = (void *)data_02082190;
     } else {
         data_020a4bd0 = mat;
     }

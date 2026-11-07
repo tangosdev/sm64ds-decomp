@@ -1,23 +1,27 @@
 //cpp
 #include "cstd.h"
+#include "types.h"
 
 extern "C" {
 
-typedef int s32;
-
-s32 *Vec3_DivScalarInPlace(s32 *v, s32 s)
-{
+Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s) {
     if (s == 0) {
-        if (v[0] > 0) v[0] = 0x7fffffff;
-        else if (v[0] < 0) v[0] = (s32)0x80000000;
-        if (v[1] > 0) v[1] = 0x7fffffff;
-        else if (v[1] < 0) v[1] = (s32)0x80000000;
-        if (v[2] > 0) v[2] = 0x7fffffff;
-        else if (v[2] < 0) v[2] = (s32)0x80000000;
+        if (v->x > 0)
+            v->x = 0x7fffffff;
+        else if (v->x < 0)
+            v->x = (s32)0x80000000;
+        if (v->y > 0)
+            v->y = 0x7fffffff;
+        else if (v->y < 0)
+            v->y = (s32)0x80000000;
+        if (v->z > 0)
+            v->z = 0x7fffffff;
+        else if (v->z < 0)
+            v->z = (s32)0x80000000;
     } else {
-        v[0] = cstd::fdiv(v[0], s);
-        v[1] = cstd::fdiv(v[1], s);
-        v[2] = cstd::fdiv(v[2], s);
+        v->x = cstd::fdiv(v->x, s);
+        v->y = cstd::fdiv(v->y, s);
+        v->z = cstd::fdiv(v->z, s);
     }
     return v;
 }

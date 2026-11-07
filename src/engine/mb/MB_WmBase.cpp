@@ -133,7 +133,7 @@ extern int WM_StartParent(void *callback);
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern u16 WM_GetAllowedChannel(void);
 extern int WM_SetLifeTime(void *callback, int tableNo, int camLife, int frameLife);
-extern int WM_SetParentParameter(void *callback, char *parentParam);
+extern int WM_SetParentParameter(void *callback, WmParentParam *parentParam);
 extern int WM_SetBeaconIndication(void *callback, int flag);
 extern int WM_StartScan(void *callback, char *scanParam);
 extern int WM_StartConnect(void *callback, int bssDesc, void *ssid);
@@ -233,8 +233,8 @@ void func_02069994(char *arg0) {
 
     case 0x1D:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(
-                7, WM_SetParentParameter((void *)func_02069994, (char *)&WM_WORK->parentParam));
+            MBi_CheckWmErrcode(7,
+                               WM_SetParentParameter((void *)func_02069994, &WM_WORK->parentParam));
             return;
         }
         WM_WORK->userCallback(0x100, arg0);

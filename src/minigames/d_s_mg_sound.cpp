@@ -205,7 +205,6 @@ extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-void Camera_InitPresenterView(void *p);
 int Presenter_Load(void *p);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -341,9 +340,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(objChars);
     Deallocate(objPltt);
 
-    /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h);
-       d_s_mg_cup.cpp passes it the same way. */
-    Camera_InitPresenterView((void *)pad_4660);
+    Camera_InitPresenterView(&mCamera);
     if (Presenter_Load((void *)&mTable) == 0)
         return 0;
 

@@ -90,7 +90,6 @@ extern void Dealer_PlayWin(void *c);
 extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern int RandomIntInternal(int *seed);
 extern void FreeGfxSlotsById(int x);
-void Camera_InitDealerView(char *p);
 void Mg_DrawCredits(char *c, int a, int b, int d);
 void Dealer_Draw(char *p);
 void MgCoins_Update(void);
@@ -996,7 +995,7 @@ void dScMgMemory_c::StartRound(int /* arg */) {
 // @symbol _ZN13dScMgMemory_c6RenderEv
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
@@ -1033,7 +1032,7 @@ s32 dScMgMemory_c::InitResources() {
     Deallocate(palette);
     gSubScreenLayers = 0x18;
     ResetGame();
-    Camera_InitDealerView((char *)pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
         return 0;
     mCredits = Mg_GetSavedRecord0();

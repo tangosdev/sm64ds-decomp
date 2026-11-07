@@ -5,12 +5,12 @@
 
 extern int data_0209d574;
 
-extern unsigned char func_0201a9ec(int *timer);
+extern unsigned char func_0201a9ec(void *timer);
 extern int func_02018a58(int count);
-extern int func_020189f0(int path);
+extern int func_020189f0(const char *path);
 extern void func_02018a40(unsigned handle, int fileId);
-extern void func_0201a9fc(int *timer);
-extern unsigned char func_0201a96c(int *timer, unsigned char suspended);
+extern void func_0201a9fc(void *timer);
+extern unsigned char func_0201a96c(void *timer, unsigned char suspended);
 
 enum { ASSET_HANDLE_COUNT = 0x80a, ASSET_LOOKUP_PRIORITY = 0x1f };
 
@@ -2090,7 +2090,7 @@ void InitializeAssetHandleTable(void) {
     /* Resolve each path once so later loads can use numeric file IDs. */
     int handle;
     for (handle = 0; handle < ASSET_HANDLE_COUNT; handle++) {
-        int fileId = func_020189f0((int)sAssetPaths[handle]);
+        int fileId = func_020189f0(sAssetPaths[handle]);
         if (fileId != 0) {
             func_02018a40(handle, fileId);
         }

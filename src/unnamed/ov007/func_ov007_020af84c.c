@@ -8,7 +8,7 @@ extern int data_ov007_020ccc20[];
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020b0244(void);
 extern void func_ov007_020b7d94(int kind);
-extern void func_ov007_020b43dc(void *self);
+extern void func_ov007_020b43dc(int kind);
 extern int func_ov007_020b79e4(void);
 extern int func_ov007_020b4438(void);
 extern void func_ov007_020c1d8c(int i);
@@ -63,7 +63,7 @@ void func_ov007_020af84c(void)
                     s2->requestedState = 8;
                     return;
                 }
-                func_ov007_020b43dc((void *)9);
+                func_ov007_020b43dc(9);
                 s2->stateWork = 3;
                 return;
             }

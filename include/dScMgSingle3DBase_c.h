@@ -1,12 +1,13 @@
 /* Base class for the single-camera 3D minigames. Its 13 direct RTTI
  * children are Cup, Memory, Memory2, Slot3, Sound, Snowball, Card, MCarlo,
- * MCarlo2, Roulette, BSC, 3DEsp and Flower. Adds one camera at 0x4660 and
+ * MCarlo2, Roulette, BSC, 3DEsp and Flower. Adds one MgCamera at 0x4660 and
  * a Particle::SysTracker at 0x471c. See notes/minigame-provenance.md for
  * the field evidence. */
 #ifndef DSCMGSINGLE3DBASE_C_H
 #define DSCMGSINGLE3DBASE_C_H
 #include "dScMgBase_c.h"
 
+#include "MgCamera.h"
 #include "Particle__SysTracker.h"
 
 namespace Particle {
@@ -34,30 +35,14 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
     virtual int  GetDisplayMode();      /* slot 26 */
     virtual void InitEngines();                          /* slot 33 */
 
-    /* DO NOT restyle the seven `offset 0xNN` comments below into this
+    /* DO NOT restyle the `offset 0xNN` comment below into this
      * tree's usual hex-comment form: check_header_offsets.py's DATA_SIZE
      * precompute cannot parse the namespaced mSysTracker line and stops at
      * the last field it CAN parse, which silently undercounts every derived
      * class's field offsets. MEASURED -- see notes/minigame-provenance.md. */
-    /* 0x4660..0x471c IS ONE MINIGAME CAMERA, 0xbc bytes, and three readings
-     * agree. Camera_UpdateMatrices (src/minigames/unit020bfec0.cpp) -- the ov006 routine both
-     * dScMgRoulette_c::Render and dScMg3DEsp_c::Render call as
-     * Camera_UpdateMatrices(this + 0x4660) -- carries the layout outright:
-     * view matrix at +0x00, projection at +0x60, `eye` at +0xa0, `target` at
-     * +0xac, `angle` at +0xb8, and it computes the view direction as
-     * eye - target. Those three land on 0x4700 / 0x470c / 0x4718 here. And
-     * 0x4660 + 0xbc = 0x471c, which is exactly where mSysTracker starts.
-     * The head of the object stays a pad: nothing in this family reads a
-     * matrix element individually. */
-    u8  pad_4660[0xa0];
-    s32 mCameraEyeX; /* offset 0x4700 */
-    s32 mCameraEyeY; /* offset 0x4704 */
-    s32 mCameraEyeZ; /* offset 0x4708 */
-    s32 mCameraTargetX; /* offset 0x470c */
-    s32 mCameraTargetY; /* offset 0x4710 */
-    s32 mCameraTargetZ; /* offset 0x4714 */
-    s16 mCameraAngle; /* offset 0x4718 */
-    u8  pad_471a[0x2];
+    /* 0x4660..0x471c is one MgCamera: 0x4660 + 0xbc = 0x471c, where
+     * mSysTracker starts. The scenes pass &mCamera to the Camera_* routines. */
+    MgCamera mCamera;                 /* offset 0x4660 */
     Particle::SysTracker mSysTracker; /* 0x471c */
 };
 

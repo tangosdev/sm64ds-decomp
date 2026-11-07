@@ -1,3 +1,5 @@
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
 /* Unsigned x / base for the formatter's radixes: shifts for 2, 8 and 16;
    for 10 a 0x1999 reciprocal multiply on the two half-words, then a

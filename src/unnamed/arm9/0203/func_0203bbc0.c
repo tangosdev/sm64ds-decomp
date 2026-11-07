@@ -6,10 +6,10 @@ extern void TP_RequestSetStabilityAsync(int a, int b);
 extern void TP_WaitBusy(int mask);
 extern int TP_CheckError(int mask);
 extern void Crash(void);
-extern void TP_RequestAutoSamplingStartAsync(unsigned int a, unsigned int b, void *p,
-                                             unsigned int d);
+extern void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned int frequency,
+                                             TPData *samplingBufs, unsigned int bufSize);
 extern TPCalibrateParam data_020a0de0;
-extern void *data_020a0df8;
+extern volatile TPData data_020a0df8[];
 
 /* Touch-panel setup at boot (func_0201a054): TP_Init, TP_GetUserInfo and
    TP_SetCalibrateParam on the calibration data_020a0de0, then
@@ -26,7 +26,7 @@ void func_0203bbc0(void)
     TP_WaitBusy(8);
     if (TP_CheckError(8) != 0)
         Crash();
-    TP_RequestAutoSamplingStartAsync(0, 4, &data_020a0df8, 9);
+    TP_RequestAutoSamplingStartAsync(0, 4, (TPData *)data_020a0df8, 9);
     TP_WaitBusy(2);
     if (TP_CheckError(2) != 0)
         Crash();

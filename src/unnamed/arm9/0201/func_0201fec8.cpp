@@ -7,11 +7,11 @@ extern unsigned char data_0209e64c;
 extern char data_0209d574[];
 extern unsigned char data_0208f274;
 extern char data_02075358[];
-extern char data_02075320[];
-extern char data_0207533c[];
-extern char data_020752cc[];
-extern char data_020752e8[];
-extern char data_02075304[];
+extern const char data_020752cc[28];
+extern const char data_020752e8[28];
+extern const char data_02075304[28];
+extern const char data_02075320[28];
+extern const char data_0207533c[28];
 extern unsigned char func_0201a9ec(char *c);
 extern void OS_GetOwnerInfo(unsigned char *dst);
 extern void func_0203db64(char *a, char *b);
@@ -28,19 +28,19 @@ void func_0201fec8(void)
     OS_GetOwnerInfo(buf);
     switch (buf[0]) {
     case 2:
-        func_0203db64(data_02075358, data_02075320);
+        func_0203db64(data_02075358, (char *)data_02075320);
         break;
     case 3:
-        func_0203db64(data_02075358, data_0207533c);
+        func_0203db64(data_02075358, (char *)data_0207533c);
         break;
     case 4:
-        func_0203db64(data_02075358, data_020752cc);
+        func_0203db64(data_02075358, (char *)data_020752cc);
         break;
     case 5:
-        func_0203db64(data_02075358, data_020752e8);
+        func_0203db64(data_02075358, (char *)data_020752e8);
         break;
     default:
-        func_0203db64(data_02075358, data_02075304);
+        func_0203db64(data_02075358, (char *)data_02075304);
         break;
     }
     data_0208f274 = func_0203daac();
