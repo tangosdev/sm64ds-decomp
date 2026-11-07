@@ -106,7 +106,6 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_0201251c(int a, int b, void *pos, int c);
 unsigned int func_02012174(unsigned int a, unsigned int b);
 void func_020167a4(dExtAnmModel_c *model);
-long long __aeabi_uidiv(unsigned int n, unsigned int d);
 
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
@@ -333,8 +332,7 @@ void UnknownVsPlayer::func_ov075_021143e4() {
     {
         unsigned int randomValue = (unsigned int)RandomIntInternal(&data_0209e650.value);
         int frameCount = mModel.GetFrameCount();
-        long long divisionResult = __aeabi_uidiv(randomValue >> 0x10, frameCount);
-        mTextureSequence.currFrame = ((unsigned)((int)(divisionResult >> 32) << 0x10)) >> 4;
+        mTextureSequence.currFrame = (u16)((randomValue >> 0x10) % frameCount) << 12;
     }
 }
 
