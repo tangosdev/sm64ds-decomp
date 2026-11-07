@@ -80,6 +80,7 @@ enum dScMgHanachan_c_AssetId {
 #pragma defer_codegen off
 
 #include "types.h"
+#include "Vector2.h"
 #include "OAM.h"
 #include "nitro/hw/registers.h"
 #include "private/ov006_ec4dc_obj.h"
@@ -233,7 +234,7 @@ extern u8 gSubScreenLayers;
 extern int func_0203d5dc(const int *a, const int *b);
 extern void func_0203d704(int *o, int *a, int *b);
 extern void Vec2_Sub(int *o, int *a, int *b);
-extern void func_0203d680(Vec2 *out, const Vec2 *in, int scale);
+extern void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 extern int RandomIntInternal(int *seed);
 /* sHanaPickedLow is only read where it is unsigned and only written as a
    halfword, so the unsigned spelling costs the writer nothing. */
@@ -587,7 +588,8 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
                 rot += (s16)(((s64)v * (0x1800 - B) + 0x800) >> 12);
             }
         }
-        func_0203d680((Vec2 *)&vout, (const Vec2 *)&va, data_02082214[((u16)(ang * 2) >> 4) * 2]);
+        func_0203d680((Vector2 *)&vout, (const Vector2 *)&va,
+                      data_02082214[((u16)(ang * 2) >> 4) * 2]);
         pos.x = pos.x + vout.x;
         pos.y = pos.y + vout.y;
         res = Wiggler_GetFrame((char *)self, i);
@@ -661,7 +663,8 @@ void Wiggler_DrawField(void *arg) {
         if (sHanaFieldWigglerCount >= 6) {
             rot = (short)(rot & 0xfc00);
         }
-        func_0203d680(&s.vout, &s.va, data_02082214[((unsigned short)(ang << 1) >> 4) * 2]);
+        func_0203d680((Vector2 *)&s.vout, (const Vector2 *)&s.va,
+                      data_02082214[((unsigned short)(ang << 1) >> 4) * 2]);
         s.pos.x += s.vout.x;
         s.pos.y += s.vout.y;
 
