@@ -3855,7 +3855,8 @@ int CutscenePanCvar9(dCamera_c *cam, u8 *p, int tag) {
 
 // @symbol func_02007910
 /* Script op: move pos by a distance and two angles relative to the target
-   player. */
+   player, the steps of Super Mario 64's rotate_and_move_vec3f. The rotate
+   and fly-away dances use it where the N64 calls that helper. */
 int func_02007910(dCamera_c *cam, u8 *p) {
     Vector3 *v = &cam->mTargetPlayer->mPos;
     int dist;
@@ -3879,9 +3880,12 @@ int func_020078c4(dCamera_c *cam, u8 *data) {
     return 1;
 }
 
-// @symbol func_02007870
-/* Script op: the field-of-view shake (SetFovShake). */
-int func_02007870(dCamera_c *cam, u8 *data) {
+// @symbol CutsceneDanceShakeFov
+/* Script op, Super Mario 64's cutscene_dance_shake_fov with set_fov_shake's
+   arguments as operands. Each dance script passes the values of its N64
+   *_shake_fov: 0x200/0x28 for the default and rotate dances, 0x300/0x30
+   closeup, 0x400/0x30 fly-away and 0x180/0x30 key dance, each with 0x8000. */
+int CutsceneDanceShakeFov(dCamera_c *cam, u8 *data) {
     int v1 = (int)ReadUnalignedShort(data);
     int v2 = (int)ReadUnalignedShort(data + 2);
     int v3 = (int)ReadUnalignedShort(data + 4);
@@ -3917,10 +3921,13 @@ int CutsceneDanceCloseupFlyAbove(dCamera_c *cam) {
     return 1;
 }
 
-// @symbol func_02007698
-/* Script op: place lookAt and pos at whole-unit offsets turned to face the
-   target player. */
-int func_02007698(dCamera_c *cam, u8 *rec) {
+// @symbol CutsceneKeyDanceJumpCvar
+/* Script op, Super Mario 64's cutscene_key_dance_jump_cvar with the cvar 7
+   and 8 offsets as operands: place lookAt and pos at whole-unit offsets
+   turned to face the target player. Only the key dance uses it, and its four
+   records carry the N64's jump_closeup, jump_lower_left, jump_above and
+   jump_last offsets exactly. */
+int CutsceneKeyDanceJumpCvar(dCamera_c *cam, u8 *rec) {
     Vector3 v;
     Vector3 w;
     dActor_c *owner;

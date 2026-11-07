@@ -108,7 +108,7 @@
       "ordinal": 44
     },
     {
-      "symbol": "func_02007698",
+      "symbol": "CutsceneKeyDanceJumpCvar",
       "address": "0x02007698",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0200/func_02007698.c",
@@ -129,7 +129,7 @@
       "ordinal": 47
     },
     {
-      "symbol": "func_02007870",
+      "symbol": "CutsceneDanceShakeFov",
       "address": "0x02007870",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0200/func_02007870.c",
