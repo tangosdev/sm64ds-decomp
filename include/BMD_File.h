@@ -95,7 +95,10 @@ struct BMD_Texture {
     char *name;            /* 0x00 - file-relative, fixed up on load */
     char *data;            /* 0x04 */
     u32 size;              /* 0x08 */
-    u32 unk_0c;
+    /* 0x0c/0x0e - texels; func_02044b30 builds the texture matrix's
+       aspect correction from width / height */
+    u16 width;
+    u16 height;
     u32 flags;             /* 0x10 - format in bits 26..28; VRAM offset >> 3
                                      packed into the low 16 bits on load */
 };
