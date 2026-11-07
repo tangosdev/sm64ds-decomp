@@ -17138,7 +17138,7 @@ extern "C" {
 void daPly_c::func_ov002_020db8d8() {
     extern unsigned char data_0209f2d8;
     extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
-    volatile Vector3 backup;
+    Vector3 backup;
     Vector3 tmp;
     Vector3 dir;
     Vector3 scaled;
@@ -17146,17 +17146,13 @@ void daPly_c::func_ov002_020db8d8() {
     Matrix4x3 *m;
     int b;
     int cond;
-    backup.x = this->mPosX;
-    backup.y = this->mPosY;
-    backup.z = this->mPosZ;
+    backup = mPos;
     b = this->mUseAltBodyModel;
     m = &mModels.mHeadModels[(b << 2) + 3]->data.transforms[3];
     model = this->GetBodyModelID(param1 & 0xff, 0);
     MulVec3Mat4x3(&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
     Vec3_MulScalar(&scaled, &tmp, 0x8000);
-    this->mPosX = scaled.x;
-    this->mPosY = scaled.y;
-    this->mPosZ = scaled.z;
+    mPos = scaled;
     dir.x = 0;
     dir.z = 0;
     dir.y = -0x32000;
@@ -17166,9 +17162,7 @@ void daPly_c::func_ov002_020db8d8() {
     } else {
         func_ov002_020dc174(&dir, 0x32000, 0x64000, 0x8000, 0);
     }
-    this->mPosX = backup.x;
-    this->mPosY = backup.y;
-    this->mPosZ = backup.z;
+    mPos = backup;
 }
 }
 
