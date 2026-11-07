@@ -8367,11 +8367,6 @@
         "return:void *"
       ]
     },
-    "data_020a0f80": {
-      "src/unnamed/arm9/0204/func_020406b4.c": [
-        "return:unsigned short *"
-      ]
-    },
     "data_020a0f90": {
       "src/unnamed/arm9/0203/func_0203f650.c": [
         "return:void (*)(short *)"
@@ -8447,16 +8442,6 @@
     "data_020a4bdc": {
       "src/engine/model/Model4.cpp": [
         "return:unsigned int"
-      ]
-    },
-    "data_020a4c70": {
-      "src/unnamed/arm9/0204/func_02049c48.cpp": [
-        "return:unsigned short []"
-      ]
-    },
-    "data_020a6088": {
-      "src/unnamed/arm9/0205/func_02053d9c.c": [
-        "return:unsigned short []"
       ]
     },
     "data_020a6134": {
@@ -15464,11 +15449,6 @@
     "func_02048e94": {
       "src/engine/sound/Sound.cpp": [
         "return:void"
-      ]
-    },
-    "func_020497a0": {
-      "src/unnamed/arm9/0204/func_02049ba8.c": [
-        "param:#4 Ctx *"
       ]
     },
     "func_02049cd8": {
