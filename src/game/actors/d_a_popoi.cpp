@@ -552,7 +552,7 @@ int daPopoi_c::func_ov077_0212679c()
 
     spd = *(unsigned short *)&mStateTimer;
     if (spd < 0x64) {
-        mAnmModel.speed = __aeabi_idiv(0x1000, 5 - spd / 20);
+        mAnmModel.speed = 0x1000 / (5 - spd / 20);
     }
 
     if (dist > 0x5dc000 || *(unsigned short *)&mStateTimer == 0 || func_ov077_02126300() != 0)

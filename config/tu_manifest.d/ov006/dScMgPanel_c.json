@@ -1384,139 +1384,139 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@2245",
+      "from": "@2243",
       "to": "@2234",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2234 to @2228; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2234; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2221) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2229 to @2245 when the opt pragma was removed (#821)."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2234 to @2228; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2234; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2221) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2229 to @2245 when the opt pragma was removed (#821). Re-keyed from @2245 to @2243 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2245",
+      "to": "@2236",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2236 to @2230; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2236; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2223) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2231 to @2247 when the opt pragma was removed (#821). Re-keyed from @2247 to @2245 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2247",
-      "to": "@2236",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2236 to @2230; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2236; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2223) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2231 to @2247 when the opt pragma was removed (#821)."
+      "to": "@2238",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2238 to @2232; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2238; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2225) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2233 to @2249 when the opt pragma was removed (#821). Re-keyed from @2249 to @2247 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2249",
-      "to": "@2238",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2238 to @2232; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2238; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2225) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2233 to @2249 when the opt pragma was removed (#821)."
+      "to": "@2240",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2240 to @2234; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2240; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2227) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2235 to @2251 when the opt pragma was removed (#821). Re-keyed from @2251 to @2249 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2251",
-      "to": "@2240",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2240 to @2234; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2240; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2227) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2235 to @2251 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2253",
       "to": "@2242",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2242 to @2236; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2242; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2229) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2237 to @2253 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2267",
-      "to": "@2256",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2256 to @2250; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2256; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2243) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2251 to @2267 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2255",
-      "to": "@2244",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2244 to @2238; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2244; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2231) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2239 to @2255 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2257",
-      "to": "@2246",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2246 to @2240; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2246; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2233) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2241 to @2257 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2259",
-      "to": "@2248",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2248 to @2242; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2248; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2235) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2243 to @2259 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2261",
-      "to": "@2250",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2250 to @2244; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2250; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2237) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2245 to @2261 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2263",
-      "to": "@2252",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2252 to @2246; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2252; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2239) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2247 to @2263 when the opt pragma was removed (#821)."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2242 to @2236; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2242; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2229) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2237 to @2253 when the opt pragma was removed (#821). Re-keyed from @2253 to @2251 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2265",
+      "to": "@2256",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2256 to @2250; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2256; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2243) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2251 to @2267 when the opt pragma was removed (#821). Re-keyed from @2267 to @2265 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2253",
+      "to": "@2244",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2244 to @2238; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2244; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2231) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2239 to @2255 when the opt pragma was removed (#821). Re-keyed from @2255 to @2253 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2255",
+      "to": "@2246",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2246 to @2240; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2246; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2233) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2241 to @2257 when the opt pragma was removed (#821). Re-keyed from @2257 to @2255 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2257",
+      "to": "@2248",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2248 to @2242; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2248; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2235) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2243 to @2259 when the opt pragma was removed (#821). Re-keyed from @2259 to @2257 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2259",
+      "to": "@2250",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2250 to @2244; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2250; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2237) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2245 to @2261 when the opt pragma was removed (#821). Re-keyed from @2261 to @2259 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2261",
+      "to": "@2252",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2252 to @2246; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2252; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2239) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2247 to @2263 when the opt pragma was removed (#821). Re-keyed from @2263 to @2261 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2263",
       "to": "@2254",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2254 to @2248; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2254; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2241) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2249 to @2265 when the opt pragma was removed (#821)."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2254 to @2248; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2254; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2241) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2249 to @2265 when the opt pragma was removed (#821). Re-keyed from @2265 to @2263 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2267",
+      "to": "@2258",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2258 to @2252; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2258; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2245) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2253 to @2269 when the opt pragma was removed (#821). Re-keyed from @2269 to @2267 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2269",
-      "to": "@2258",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2258 to @2252; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2258; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2245) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2253 to @2269 when the opt pragma was removed (#821)."
+      "to": "@2260",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2260 to @2254; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2260; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2247) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2255 to @2271 when the opt pragma was removed (#821). Re-keyed from @2271 to @2269 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2271",
-      "to": "@2260",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2260 to @2254; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2260; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2247) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2255 to @2271 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2273",
       "to": "@8810",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2262 to @2256; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8810; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2249) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2257 to @2273 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2277",
-      "to": "@8812",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2266 to @2260; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8812; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2253) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2261 to @2277 when the opt pragma was removed (#821)."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2262 to @2256; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8810; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2249) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2257 to @2273 when the opt pragma was removed (#821). Re-keyed from @2273 to @2271 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2275",
+      "to": "@8812",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2266 to @2260; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8812; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2253) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2261 to @2277 when the opt pragma was removed (#821). Re-keyed from @2277 to @2275 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2273",
       "to": "@8811",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2264 to @2258; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8811; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2251) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2259 to @2275 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2283",
-      "to": "@8815",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2272 to @2266; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8815; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2259) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2267 to @2283 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2279",
-      "to": "@8813",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2268 to @2262; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8813; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2255) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2263 to @2279 when the opt pragma was removed (#821)."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2264 to @2258; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8811; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2251) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2259 to @2275 when the opt pragma was removed (#821). Re-keyed from @2275 to @2273 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2281",
+      "to": "@8815",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2272 to @2266; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8815; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2259) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2267 to @2283 when the opt pragma was removed (#821). Re-keyed from @2283 to @2281 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2277",
+      "to": "@8813",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2268 to @2262; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8813; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2255) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2263 to @2279 when the opt pragma was removed (#821). Re-keyed from @2279 to @2277 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2279",
       "to": "@8814",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2270 to @2264; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8814; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2257) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2265 to @2281 when the opt pragma was removed (#821)."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2270 to @2264; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8814; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2257) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2265 to @2281 when the opt pragma was removed (#821). Re-keyed from @2281 to @2279 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
+    },
+    {
+      "from": "@2283",
+      "to": "@8816",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2274 to @2268; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8816; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2261) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2269 to @2285 when the opt pragma was removed (#821). Re-keyed from @2285 to @2283 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2285",
-      "to": "@8816",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2274 to @2268; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @8816; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2261) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2269 to @2285 when the opt pragma was removed (#821)."
+      "to": "@2276",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2276 to @2270; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2276; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2263) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2271 to @2287 when the opt pragma was removed (#821). Re-keyed from @2287 to @2285 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2287",
-      "to": "@2276",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2276 to @2270; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2276; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2263) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2271 to @2287 when the opt pragma was removed (#821)."
+      "to": "@2278",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2278 to @2272; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2278; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2265) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2273 to @2289 when the opt pragma was removed (#821). Re-keyed from @2289 to @2287 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2289",
-      "to": "@2278",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2278 to @2272; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2278; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2265) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2273 to @2289 when the opt pragma was removed (#821)."
+      "to": "@2280",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2280 to @2274; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2280; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2267) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2275 to @2291 when the opt pragma was removed (#821). Re-keyed from @2291 to @2289 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2291",
-      "to": "@2280",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2280 to @2274; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2280; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2267) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2275 to @2291 when the opt pragma was removed (#821)."
+      "to": "@2282",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2282 to @2276; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2282; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2269) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2277 to @2293 when the opt pragma was removed (#821). Re-keyed from @2293 to @2291 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2293",
-      "to": "@2282",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2282 to @2276; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2282; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2269) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2277 to @2293 when the opt pragma was removed (#821)."
+      "to": "@2284",
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2284 to @2278; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2284; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2271) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2279 to @2295 when the opt pragma was removed (#821). Re-keyed from @2295 to @2293 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     },
     {
       "from": "@2295",
-      "to": "@2284",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2284 to @2278; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2284; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2271) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2279 to @2295 when the opt pragma was removed (#821)."
-    },
-    {
-      "from": "@2297",
       "to": "@2286",
-      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2286 to @2280; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2286; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2273) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2281 to @2297 when the opt pragma was removed (#821)."
+      "evidence": "Native dispatcher cleanup renumbers compiler PMF @2286 to @2280; same local object section, offset, size, bytes and relocations verified against 6a985edeaf. Preserve canonical @2286; see notes/experiments/scene-physics3955-review.md. Re-keyed +6 (from @2273) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @2281 to @2297 when the opt pragma was removed (#821). Re-keyed from @2297 to @2295 when the unused named-parameter __aeabi_idiv extern was deleted (#821)."
     }
   ],
   "symbol_binding_rewrites": [

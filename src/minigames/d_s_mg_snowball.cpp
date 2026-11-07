@@ -1615,7 +1615,7 @@ s32 dScMgSnowball_c::Behavior() {
             short *hp;
             v = Vec2_Len((int *)ATS(SNOW_OFF(mVelX)));
             hp = (short *)&mRollAngle;
-            q = __aeabi_idiv(v * 0x2710, mBallSize);
+            q = v * 0x2710 / mBallSize;
             *hp = *hp + (unsigned short)q;
             m = cstd::atan2(mVelX, mVelY);
             ApproachLinear(*(short *)&mHeadingAngle, (short)m,
@@ -1692,7 +1692,7 @@ s32 dScMgSnowball_c::Behavior() {
             short *hp;
             v = Vec2_Len((int *)ATS(SNOW_OFF(mVelX)));
             hp = (short *)&mRollAngle;
-            q = __aeabi_idiv(v * 0x2710, mBallSize);
+            q = v * 0x2710 / mBallSize;
             *hp = *hp + (unsigned short)q;
             mHeadingAngle = cstd::atan2(mVelX, mVelY);
         }
@@ -1759,7 +1759,7 @@ s32 dScMgSnowball_c::Behavior() {
             short *hp;
             v = Vec2_Len((int *)ATS(SNOW_OFF(mVelX)));
             hp = (short *)&mRollAngle;
-            q = __aeabi_idiv(v * 0x2710, mBallSize);
+            q = v * 0x2710 / mBallSize;
             *hp = *hp + (unsigned short)q;
             mHeadingAngle = cstd::atan2(mVelX, mVelY);
         }

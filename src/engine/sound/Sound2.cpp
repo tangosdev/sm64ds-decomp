@@ -62,7 +62,6 @@ extern int func_0204fa2c(int *obj, int v);
 extern void func_0204f934(int **slot);
 extern void func_0204f94c(void *slot);
 extern void *func_02050cdc(int kind, int id);
-extern int __aeabi_idiv(int a, int b);
 
 // @symbol func_02049018
 int func_02049018(Vector3 *v) {
@@ -371,7 +370,7 @@ void func_02048908(void *obj, Vector3 *p) {
     if ((unsigned)cur < (unsigned)den)
         arg = a;
     else
-        arg = b + __aeabi_idiv((a - b) * (num - cur), num - den);
+        arg = b + (a - b) * (num - cur) / (num - den);
     NNS_SndPlayerSetVolume((NNSSndHandle *)obj, arg);
 
     half = p->x >> 12;
