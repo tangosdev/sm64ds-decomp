@@ -2225,6 +2225,9 @@ extern "C" void TrmpLine_CreateStartLineT1(void) {
 }
 }
 
+/* Preserve the earlier local-static uniquifiers in this ordered TU. */
+#include "Vector2Math.h"
+
 namespace s020d0c38 {
 /*
  * Try to place a new line segment between two 16-bit points.
@@ -2245,7 +2248,6 @@ namespace s020d0c38 {
  */
 extern "C" void func_0203b958(s16 *o, s16 *a, s16 *b);
 extern "C" int func_0203d434(int *in);
-extern "C" int Vec2_Len(int *v);
 extern "C" void func_0203d630(int *p, int m);
 extern "C" void func_0203d704(int *o, int *a, int *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
@@ -2333,13 +2335,13 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
             return 0;
     }
 
-    if (Vec2_Len(delta) < 0x30000) {
+    if (Vec2_Len((const Vector2 *)delta) < 0x30000) {
         weightedYProduct = (long long)direction[1] * 0xc00 + 0x800;
         weightedY = (int)(weightedYProduct >> 12);
         scaledDirection[0] = direction[0];
         scaledDirection[1] = direction[1];
         scaledDirection[1] = weightedY;
-        scaledDirectionLength = Vec2_Len(scaledDirection);
+        scaledDirectionLength = Vec2_Len((const Vector2 *)scaledDirection);
         func_0203d630(direction, cstd::fdiv(0x18000, scaledDirectionLength));
 
         func_0203d704(adjustedStart, midpoint, direction);
