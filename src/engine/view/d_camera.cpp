@@ -210,7 +210,6 @@ struct CamPmfHost {
 
 enum Bool { FALSE, TRUE };
 
-
 /* Allocation factory. new dCamera_c is the fBase constructor, the dBase and
  * dView vtables, the view-matrix clear, and the dCamera vtable. */
 extern "C" dCamera_c *dCamera_c_classInit() {
