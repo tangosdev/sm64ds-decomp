@@ -129,6 +129,7 @@
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 
@@ -309,12 +310,9 @@ void da1up_c::func_ov002_020aefb8() {
    otherwise -- and steps mPrevAngleY toward the horizontal bearing and
    mPrevAngleX toward the pitch (cstd::atan2(horizontal length, height
    difference)), at most 0x1000 (22.5 degrees) per frame each. mVertSpeed and
-   mHorzSpeed are then 30 units (0x1e) times the two s16 words of
-   data_02082214's entry for mPrevAngleX >> 4 -- the sin/cos table, 0x1000 = 1.0
-   -- mVertSpeed from word 1 and mHorzSpeed from word 0. Always finishes with
-   func_ov002_020af3a8. */
+   mHorzSpeed are then 30 units (0x1e) times the cosine and the sine of
+   mPrevAngleX. Always finishes with func_ov002_020af3a8. */
 void da1up_c::func_ov002_020af0c0() {
-    extern short data_02082214[];
     /* Forward: ordinal 11 sits above this one in ROM order. */
 
     daPly_c *p = ClosestPlayer();
@@ -341,8 +339,8 @@ void da1up_c::func_ov002_020af0c0() {
         short yaw = Vec3_HorzAngle(&mPos, &ppos);
         ApproachLinear(mPrevAngleY, yaw, 0x1000);
         ApproachLinear(mPrevAngleX, pitch, 0x1000);
-        mVertSpeed = (short)data_02082214[(*(unsigned short*)&mPrevAngleX >> 4)*2+1] * (short)0x1e;
-        mHorzSpeed = (short)data_02082214[(*(unsigned short*)&mPrevAngleX >> 4)*2] * (short)0x1e;
+        mVertSpeed = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e;
+        mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * 0x1e;
     }
     func_ov002_020af3a8();
 }
@@ -499,28 +497,18 @@ void da1up_c::func_ov002_020af3a8() {
 /* The launch arc of the types that pop out (0, 1, 5 and 7). For the first five
    frames of the state (mStateTimer < 5) it only sets mVertSpeed to 40 units
    (0x28000). After that, every frame it lowers mPrevAngleX by 0x1000 (22.5
-   degrees) and reads the s16 pair of data_02082214 (the sin/cos table, 0x1000 =
-   1.0) at index mPrevAngleX >> 4: mVertSpeed = 30 units (0x1e) times word 1 plus
-   2 units (0x2000); mHorzSpeed = -30 units times word 0. */
+   degrees): mVertSpeed = 30 units (0x1e) times the cosine of mPrevAngleX plus
+   2 units (0x2000); mHorzSpeed = -30 units times its sine. */
 void da1up_c::func_ov002_020af474() {
-    extern s16 data_02082214[];
-    int a;
-
-    if (*(u16*)&mStateTimer < 5) {
+    if ((u16)mStateTimer < 5) {
         mVertSpeed = 0x28000;
         return;
     }
 
-    {
-        s16* p = &mPrevAngleX;
-        *p = *p - 0x1000;
-    }
+    mPrevAngleX -= 0x1000;
 
-    a = (int)*(u16*)&mPrevAngleX >> 4;
-    mVertSpeed = (s16)data_02082214[a * 2 + 1] * (s16)0x1e + 0x2000;
-
-    a = (int)*(u16*)&mPrevAngleX >> 4;
-    mHorzSpeed = (s16)data_02082214[a * 2] * (s16)-0x1e;
+    mVertSpeed = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e + 0x2000;
+    mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * -0x1e;
 }
 
 /* -------------------------------------------------------------------------- */
