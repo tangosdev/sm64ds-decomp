@@ -134,7 +134,6 @@ void MBi_SendFixedBeacon(void);
 void MBi_InitSendVolatBeacon(void);
 void MBi_SendVolatBeacon(void);
 
-// @symbol MBi_MakeGameInfo
 /* NitroSDK MBi_MakeGameInfo(gameInfo, mbGameList, parent): build the game
  * record a parent beacons from the game's registry entry. func_02067928
  * builds it into each registered file's slot of the data_020a9db8 work
@@ -170,7 +169,6 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
     info->volat.broadcastedPlayerFlag = 1;
 }
 
-// @symbol MBi_ReadIconInfo
 /* NitroSDK MBi_ReadIconInfo: read one icon file into a game record. With
  * char_flag set it reads 0x200 bytes of character data to iconp + 0x20,
  * otherwise 0x20 bytes of palette to iconp. It fails (0) on a null path, a
@@ -206,7 +204,6 @@ int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
     return 1;
 }
 
-// @symbol MB_UpdateGameInfoMember
 /* NitroSDK MB_UpdateGameInfoMember(gameInfo, member, nowPlayerFlag,
  * changePlayerFlag): copy the fifteen child MBUserInfo records (0x14a bytes
  * in all) into the record's volatile part, count the children in
@@ -230,7 +227,6 @@ void MB_UpdateGameInfoMember(char *self, void *src, unsigned int flags, int s) {
     gameInfo->seqNoVolat += 1;
 }
 
-// @symbol mystrlen
 /* NitroSDK mystrlen: length of a NUL-terminated u16 string, in characters.
  * MBi_MakeGameInfo sizes the game name and introduction with it. */
 int mystrlen(const u16 *str) {
@@ -242,7 +238,6 @@ int mystrlen(const u16 *str) {
     return count;
 }
 
-// @symbol MB_AddGameInfo
 /* NitroSDK MB_AddGameInfo: append a game record to the beacon list. The new
  * record ends the list. func_02067928 adds each registered file's record
  * this way. */
@@ -259,7 +254,6 @@ void MB_AddGameInfo(MBGameInfo *n) {
     n->nextp = 0;
 }
 
-// @symbol MB_InitSendGameInfoStatus
 /* NitroSDK MB_InitSendGameInfoStatus: reset the beacon send status. It
  * empties the record list, clears the current record, sets state 1 (pick a
  * record) and clears the send counters. The parent setup func_02068ae8
@@ -276,7 +270,6 @@ void MB_InitSendGameInfoStatus(void) {
     MBi_ClearSendStatus();
 }
 
-// @symbol MBi_ClearSendStatus
 /* NitroSDK MBi_ClearSendStatus: clear the per-record send counters, bytes
  * 0xd..0x11 of the send status. Called when MBi_ReadyBeaconSendStatus picks the next
  * record and from MB_InitSendGameInfoStatus. */
@@ -288,7 +281,6 @@ void MBi_ClearSendStatus(void) {
     data_020a9d2c.beaconNo = 0;
 }
 
-// @symbol MB_SendGameInfoBeacon
 /* NitroSDK MB_SendGameInfoBeacon: run the beacon send state machine until
  * a step sets a beacon or there is nothing to send. Newer SDKs pass ggid,
  * tgid and attr down to the two send steps. In this one MBi_SendFixedBeacon
@@ -321,7 +313,6 @@ void MB_SendGameInfoBeacon(void) {
     }
 }
 
-// @symbol MBi_ReadyBeaconSendStatus
 /* Pick the next record to advertise: the one after the current record, or
  * the list's first when there is no current record or it is the last.
  * Then latch its seqNoVolat and move to state 2. Returns 0 with an empty
@@ -360,7 +351,6 @@ int MBi_ReadyBeaconSendStatus(void) {
     return 1;
 }
 
-// @symbol MBi_InitSendFixedBeacon
 /* NitroSDK MBi_InitSendFixedBeacon, beacon send state 2: set up the fixed
  * part of the current record. With dataAttr zero the send starts at the
  * record's first byte and takes 9 beacons. Otherwise it starts past the
@@ -381,7 +371,6 @@ void MBi_InitSendFixedBeacon(void) {
     data_020a9d2c.state = 3;
 }
 
-// @symbol MBi_SendFixedBeacon
 /* NitroSDK MBi_SendFixedBeacon, beacon send state 3: copy the next 0x62-byte
  * piece of the record's fixed part into the beacon, zero-filling a short
  * last piece, stamp the record's attributes and the checksum, and set the
@@ -427,7 +416,6 @@ void MBi_SendFixedBeacon(void) {
                    MBi_GetAttribute() | 2);
 }
 
-// @symbol MBi_InitSendVolatBeacon
 /* NitroSDK MBi_InitSendVolatBeacon, beacon send state 4: start the volatile
  * part of the current record. Mark the parent's bit in its
  * broadcastedPlayerFlag, latch its seqNoVolat into the send status, and go
@@ -439,7 +427,6 @@ void MBi_InitSendVolatBeacon(void) {
     data_020a9d2c.state = 5;
 }
 
-// @symbol MBi_SendVolatBeacon
 /* NitroSDK MBi_SendVolatBeacon, beacon send state 5: fill the beacon with
  * the record's volatile part (player count, player flags and up to four
  * child records not yet broadcast), checksum it and set it. When every

@@ -19,7 +19,6 @@ void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
 }
 
-// @symbol _ZN3G3i13PerspectiveW_EiiiiiiiP9Matrix4x3
 /* The Nitro SDK's G3i_PerspectiveW_: the load flag is a BOOL. Spelled bool,
    the body tests it differently from the ROM; int reproduces it. */
 void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i f, Fix12i scaleW,
@@ -96,7 +95,6 @@ void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12
     }
 }
 
-// @symbol _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3
 void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
                   Matrix4x3 *mat) {
     Vector3 forward;
@@ -161,7 +159,6 @@ void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *targe
     mat->t.z = tz;
 }
 
-// @symbol func_02055998
 extern "C" void func_02055998(int *m)
 {
     *(volatile int *)0x4000440 = 3;

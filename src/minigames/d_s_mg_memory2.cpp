@@ -165,11 +165,9 @@ extern u8 gSubScreenLayers;
 
 #pragma defer_codegen off
 
-// @symbol _ZN14dScMgMemory2_cD1Ev
 /* Destroys mDealer, then the inherited scene. CodeWarrior emits both D1 and
  * D0 from this one definition. */
 dScMgMemory2_c::~dScMgMemory2_c() {}
-// @symbol _ZN14dScMgMemory2_cD0Ev
 /* Deleting variant, emitted from the destructor above. */
 
 void dScMgMemory2_c::DrawMessage() {
@@ -1177,12 +1175,10 @@ void dScMgMemory2_c::SetupDifficulty() {
     }
 }
 
-// @symbol _ZN14dScMgMemory2_c10OnDealDoneEv
 void dScMgMemory2_c::OnDealDone() {
     MgCoins_PlaceBet(mMaxMisses);
 }
 
-// @symbol _ZN14dScMgMemory2_c11CanEndStateEi
 int dScMgMemory2_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
         if (Dealer_IsIdle(&mDealer) == 0)
@@ -1193,7 +1189,6 @@ int dScMgMemory2_c::CanEndState(int /* mode */) {
     return mState == STATE_EXIT;
 }
 
-// @symbol _ZN14dScMgMemory2_c10StartRoundEi
 /* Clear the board, go back to StateSetup and reload the miss limit. */
 void dScMgMemory2_c::StartRound(int /* arg */) {
     dScMgBase_c *scene;
@@ -1211,7 +1206,6 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
     mMaxMisses = (unsigned char)missLimit;
 }
 
-// @symbol _ZN14dScMgMemory2_c6RenderEv
 /* Vtable slot 9: set the camera, then draw credits, coins, the message,
  * cursor, cards and dealer. */
 s32 dScMgMemory2_c::Render() {
@@ -1225,7 +1219,6 @@ s32 dScMgMemory2_c::Render() {
     return 1;
 }
 
-// @symbol _ZN14dScMgMemory2_c8BehaviorEv
 /* Vtable slot 6: run the current state, then the two per-frame calls every
  * minigame in this family makes. __sinit_ov006_021314e4 fills the state table
  * with StateSetup, StatePlay, StateJudge, StateResult and StateExit. */
@@ -1236,7 +1229,6 @@ s32 dScMgMemory2_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14dScMgMemory2_c13InitResourcesEv
 /* Vtable slot 0: load the language's card art into both OBJ banks with the
  * shared palette, reset the board, then set up the timer and the dMeter_c.
  * LoadCard2SubBg3 is the shared free function that loads the sub-screen
@@ -1272,7 +1264,6 @@ s32 dScMgMemory2_c::InitResources() {
     return 1;
 }
 
-// @symbol dScMgMemory2_c_classInit
 extern "C" void *dScMgMemory2_c_classInit() {
     return new dScMgMemory2_c;
 }

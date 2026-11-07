@@ -13,7 +13,6 @@
 
 namespace IRQ {
 
-// @symbol _ZN3IRQ6EnableEv
 asm unsigned int Enable(void)
 {
     mrs r0, cpsr
@@ -23,7 +22,6 @@ asm unsigned int Enable(void)
     bx lr
 }
 
-// @symbol _ZN3IRQ7DisableEv
 asm unsigned int Disable(void)
 {
     mrs r0, cpsr
@@ -33,7 +31,6 @@ asm unsigned int Disable(void)
     bx lr
 }
 
-// @symbol _ZN3IRQ7RestoreEj
 asm unsigned int Restore(unsigned int state)
 {
     mrs r1, cpsr
@@ -44,7 +41,6 @@ asm unsigned int Restore(unsigned int state)
     bx lr
 }
 
-// @symbol _ZN3IRQ10DisableAllEv
 asm unsigned int DisableAll(void)
 {
     mrs r0, cpsr
@@ -54,7 +50,6 @@ asm unsigned int DisableAll(void)
     bx lr
 }
 
-// @symbol _ZN3IRQ10RestoreAllEj
 asm unsigned int RestoreAll(unsigned int state)
 {
     mrs r1, cpsr
@@ -67,7 +62,6 @@ asm unsigned int RestoreAll(unsigned int state)
 
 }
 
-// @symbol ARMProcessorMode
 extern "C" asm int ARMProcessorMode(void)
 {
     mrs r0, cpsr
@@ -77,7 +71,6 @@ extern "C" asm int ARMProcessorMode(void)
 
 namespace CP15 {
 
-// @symbol _ZN4CP1516WaitForInterruptEv
 asm void WaitForInterrupt(void)
 {
     mov r0, #0

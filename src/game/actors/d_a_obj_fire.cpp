@@ -47,17 +47,14 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-// @symbol daObjFire_c_classInit_OBJ_RED_FIRE
 extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_RED_FIRE() {
     return new daObjFire_c();
 }
 
-// @symbol daObjFire_c_classInit_OBJ_BLUE_FIRE
 extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_BLUE_FIRE() {
     return new daObjFire_c();
 }
 
-// @symbol g_profile_OBJ_RED_FIRE
 extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     daObjFire_c_classInit_OBJ_RED_FIRE,
     0x013c,
@@ -69,7 +66,6 @@ extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     0x00000000,
 };
 
-// @symbol g_profile_OBJ_BLUE_FIRE
 extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
     daObjFire_c_classInit_OBJ_BLUE_FIRE,
     0x013d,
@@ -81,15 +77,12 @@ extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
     0x00000000,
 };
 
-// @symbol _ZN11daObjFire_c13OnYoshiTryEatEv
 s32 daObjFire_c::OnYoshiTryEat() {
     return 5;
 }
 
-// @symbol _ZN11daObjFire_c13OnTurnIntoEggER7daPly_c
 void daObjFire_c::OnTurnIntoEgg(daPly_c &player) {}
 
-// @symbol _ZN11daObjFire_c13InitResourcesEv
 int daObjFire_c::InitResources() {
     mdCcAc_c.Init(this, 0x41000, 0x41000, 0x200002, 0x8000);
     mFlamePos.x = mPosX;
@@ -98,7 +91,6 @@ int daObjFire_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN11daObjFire_c8BehaviorEv
 int daObjFire_c::Behavior() {
     Vector3 pos;
     Vector3 particlePos;
@@ -159,7 +151,6 @@ int daObjFire_c::Behavior() {
 }
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjFire_cD0Ev
 /* Deleting destructor, vtable slot 17. No body here: the destructor is inline in
  * include/daObjFire_c.h, which is what makes mwccarm emit exactly the retail
  * D1/D0 pair in retail order and no D2. dActor_c's inline operator delete
@@ -167,7 +158,6 @@ int daObjFire_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjFire_cD1Ev
 /* Complete destructor, vtable slot 16. No body here either -- same inline header
  * definition. The only member with a destructor is the dCcAc_c collider, and it
  * is destroyed before the dActor_c base. */

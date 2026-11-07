@@ -35,14 +35,10 @@ extern Vector3 data_020a0d60;   /* == data_020a0d0c.lineEnd  (+0x54) */
 extern dBgPi data_020a0d1c;     /* == data_020a0d0c's dBgPi   (+0x10) */
 }
 
-// @symbol _ZN14dBgW_KcMbgSclYC1Ev
 dBgW_KcMbgSclY::dBgW_KcMbgSclY() {}
 
-// @symbol _ZN14dBgW_KcMbgSclYD0Ev
-// @symbol _ZN14dBgW_KcMbgSclYD1Ev
 dBgW_KcMbgSclY::~dBgW_KcMbgSclY() {}
 
-// @symbol _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block
 void dBgW_KcMbgSclY::SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale, s16 angY,
                              CLPS_Block &clps) {
     dBgW_KcMbg::SetFile(file, mat, scale, angY, clps);
@@ -50,7 +46,6 @@ void dBgW_KcMbgSclY::SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12i scale,
     invScaleY = 0x1000;
 }
 
-// @symbol _ZN14dBgW_KcMbgSclY9SetScaleYEi
 void dBgW_KcMbgSclY::SetScaleY(Fix12i newScaleY) {
     scaleY = newScaleY;
     if (scaleY == 0)
@@ -58,14 +53,12 @@ void dBgW_KcMbgSclY::SetScaleY(Fix12i newScaleY) {
     invScaleY = func_02053200(scaleY);
 }
 
-// @symbol _ZN14dBgW_KcMbgSclY9GetScaleYEv
 s32 dBgW_KcMbgSclY::GetScaleY() {
     return scaleY;
 }
 
 /* World -> collider space: the parent's inverse-scale matrix, then a divide
  * out of the y stretch. */
-// @symbol _ZN14dBgW_KcMbgSclY15ToColliderSpaceEP7Vector3S1_
 void dBgW_KcMbgSclY::ToColliderSpace(Vector3 *worldPos, Vector3 *localPos) {
     MulVec3Mat4x3(worldPos, &invScaledMat, localPos);
     Fix12i inverseVerticalScale = invScaleY;
@@ -76,7 +69,6 @@ void dBgW_KcMbgSclY::ToColliderSpace(Vector3 *worldPos, Vector3 *localPos) {
 
 /* Collider -> world space: fold the y stretch in first, then the parent's
  * scaled matrix. */
-// @symbol _ZN14dBgW_KcMbgSclY12ToWorldSpaceEP7Vector3S1_
 void dBgW_KcMbgSclY::ToWorldSpace(Vector3 *localPos, Vector3 *worldPos) {
     Vector3 scaledPos;
     scaledPos.x = localPos->x;
@@ -89,10 +81,8 @@ void dBgW_KcMbgSclY::ToWorldSpace(Vector3 *localPos, Vector3 *worldPos) {
     MulVec3Mat4x3(&scaledPos, &newScaledMat, worldPos);
 }
 
-// @symbol _ZN14dBgW_KcMbgSclY9Virtual08Ev
 void dBgW_KcMbgSclY::Virtual08() {}
 
-// @symbol _ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Gnd
 int dBgW_KcMbgSclY::DetectClsn(dBgCh_Gnd &ground) {
     Vector3 localStart;
     Vector3 probePos;
@@ -129,7 +119,6 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Gnd &ground) {
     return hit;
 }
 
-// @symbol _ZN14dBgW_KcMbgSclY10DetectClsnER12dBgCh_SphCrr
 
 int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 centre;
@@ -199,7 +188,6 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere) {
  * the unscaled dBgW_Kc test runs on the scratch line there, and the winning
  * point transforms back out. The qualified dBgW_Kc::DetectClsn call keeps
  * this override from dispatching back into itself. */
-// @symbol _ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin
 int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray) {
     Vector3 start, end, worldPos;
 
@@ -227,7 +215,6 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray) {
 
 /* The mesh only stretches in y, so the normal's x and z scale by scaleY
  * and the vector is re-normalized. The double scaleY read mirrors the ROM. */
-// @symbol _ZN14dBgW_KcMbgSclY9GetNormalEsR7Vector3
 void dBgW_KcMbgSclY::GetNormal(s16 triID, Vector3 &res) {
     KCL_File *mesh = kclFile;
     u16 normalIndex = mesh->tris[triID].normalIdx;

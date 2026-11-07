@@ -89,12 +89,10 @@ static inline MemoryNode **GetList(void *t) {
     return &((ExpandingHeapAllocator *)t)->mFirstNode;
 }
 
-// @symbol _ZN10MemoryNode6TargetC1EPS_
 MemoryNode::Target::Target(MemoryNode *node)
     : start((char *)node - (u16)((node->flags >> 8) & 0x7f)),
       end((char *)(node->size + (u32)(node + 1))) {}
 
-// @symbol _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_
 /* Doubly-linked-list removal writing head/tail (c[0], c[1]) directly when the
  * node was at either end. Returns the former predecessor, which FreeNode needs
  * to decide whether the freed block merges backwards. `list` mangles
@@ -112,7 +110,6 @@ void *ExpandingHeapAllocator::UnlinkNode(MemoryNode *list, MemoryNode *node_)
     return r2;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_
 /* Insert `node` immediately after `prev`, or at the head when `prev` is null,
  * fixing both neighbours and the list's head/tail. The inverse of UnlinkNode,
  * and the reason UnlinkNode returns the predecessor. */
@@ -136,7 +133,6 @@ void *ExpandingHeapAllocator::LinkNode(MemoryNode *list, MemoryNode *node, Memor
     return node;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt
 /* Stamp a fresh header at the start of an extent and return it. The recorded
  * size is `end - (node + 0x10)` -- user bytes from just past the header, the
  * definition Target's constructor inverts. The flags word is zeroed here; the
@@ -154,7 +150,6 @@ void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
     return n;
 }
 
-// @symbol _ZN22ExpandingHeapAllocatorC1EPvj
 ExpandingHeapAllocator::ExpandingHeapAllocator(void *heapEnd, u32 flags)
 {
     NodeList *nodeList = (NodeList *)&mFirstNode;
@@ -175,7 +170,6 @@ ExpandingHeapAllocator::ExpandingHeapAllocator(void *heapEnd, u32 flags)
     nodeList->mUsedLastNode = 0;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt
 /* Carve one allocation out of a free block: unlink it, split into up to three
  * pieces -- leading gap, the allocation, trailing gap -- and stamp a fresh
  * header on each survivor. A gap smaller than a header (0x10) collapses into
@@ -247,7 +241,6 @@ void *ExpandingHeapAllocator::AllocateNode(MemoryNode *c, MemoryNode *node,
     return target;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator16AllocateForwardsEjj
 /* Walk the free list forward from the head, aligning each node's data start
  * upward. Bit 0 of the list's flag word selects the search: clear is first
  * fit, set is best fit; the `nsize == size` break is an exact-fit shortcut for
@@ -282,7 +275,6 @@ void *ExpandingHeapAllocator::AllocateForwards(u32 size, u32 align)
     return AllocateNode((MemoryNode *)c, best, bestTarget, size, 0);
 }
 
-// @symbol _ZN22ExpandingHeapAllocator17AllocateBackwardsEjj
 /* The mirror of AllocateForwards: walk from the tail and align downward so the
  * padding lands below the block rather than above it. The fit test is
  * `aligned - data >= 0` -- did it stay inside the node. */
@@ -316,7 +308,6 @@ void *ExpandingHeapAllocator::AllocateBackwards(u32 size, u32 align)
     return AllocateNode((MemoryNode *)c, best, bestTarget, size, 1);
 }
 
-// @symbol _ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE
 /* Merge a released extent into the address-ordered free list: absorb a free
  * node directly above it, coalesce with the free node directly below, then
  * link the merged extent back where the lower neighbour sat. The first
@@ -360,7 +351,6 @@ int ExpandingHeapAllocator::FreeNode(MemoryNode *list, MemoryNode::Target *exten
     return 1;
 }
 
-// @symbol _ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj
 /* The expanding twin of Heap::CreateSolidHeapAllocator, identical bar the
  * minimum: 0x4c against the solid allocator's 0x30, because an expanding heap
  * keeps a free-node list. */
@@ -379,7 +369,6 @@ ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 
 
 } /* namespace mHeap */
 
-// @symbol _ZN13HeapAllocator7DestroyEv
 /* Detach this allocator from its containing heap -- a 12-byte tail veneer to
  * Remove(). */
 void HeapAllocator::Destroy()
@@ -387,7 +376,6 @@ void HeapAllocator::Destroy()
     Remove();
 }
 
-// @symbol _ZN22ExpandingHeapAllocator8AllocateEji
 /* The public entry point. A zero-byte request becomes one byte and the size
  * rounds up to a multiple of 4. THE SIGN OF `align` IS THE DIRECTION, not part
  * of the alignment: non-negative allocates from the low end, negative from the
@@ -411,7 +399,6 @@ static inline void FillZero(void *p, u32 len) {
     MultiStore_Int(zero, p, len);
 }
 
-// @symbol _ZN22ExpandingHeapAllocator10ReallocateEPvj
 /* Grow a block in place by swallowing the free node directly after it, or
  * shrink it and hand the tail back to the free list. The allocator's low flag
  * bit asks for freshly-gained bytes to be zero filled. */
@@ -479,7 +466,6 @@ u32 ExpandingHeapAllocator::Reallocate(void *ptrRaw, u32 size)
     return node->size;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator10DeallocateEPv
 /* Free one block: build a Target describing the node, unlink it from the
  * in-use list, and hand it to FreeNode to merge back into the free list. The
  * MemoryNode header sits 0x10 before the user pointer; the in-use list head is
@@ -496,7 +482,6 @@ int ExpandingHeapAllocator::Deallocate(void *ptr)
     return FreeNode((MemoryNode *)inner, &target);
 }
 
-// @symbol _ZN22ExpandingHeapAllocator10MemoryLeftEv
 /* Total free bytes: walk the free-node list and sum each node's size. NOT the
  * largest allocatable block -- MaxAllocatableSize answers that, and the two
  * differ by fragmentation. */
@@ -511,7 +496,6 @@ u32 ExpandingHeapAllocator::MemoryLeft()
     return total;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi
 /* The largest single block still obtainable at this alignment: align each
  * free node's data start upward and keep the largest usable remainder, with
  * ties broken toward the node wasting least on alignment padding. `align` goes
@@ -540,7 +524,6 @@ int ExpandingHeapAllocator::MaxAllocatableSize(int arg)
     return bestSize;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator9SetNodeIDEj
 /* Stamp the ID subsequently allocated nodes carry and return the previous one.
  * The field is the header's mNodeID (u16 at +0x34); the incoming u32 truncates
  * on the way in and the u16 widens to int on the way out. */
@@ -552,13 +535,11 @@ int ExpandingHeapAllocator::SetNodeID(u32 id)
     return old;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator9GetNodeIDEv
 u32 ExpandingHeapAllocator::GetNodeID()
 {
     return this->mNodeID;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj
 /* Walk the in-use list and hand each block's user pointer (node + 0x10) to the
  * callback, along with the allocator and the caller's opaque argument. `next`
  * is read BEFORE the call, because the callback frees the node it is given.
@@ -576,7 +557,6 @@ void *ExpandingHeapAllocator::DeallocateAll(DeallocationFunction fn, u32 ctx)
     return node;
 }
 
-// @symbol _ZN22ExpandingHeapAllocator14SizeofInternalEPv
 /* The allocated size of a block from a user pointer alone: every block carries
  * a MemoryNode header immediately before its user data, and `size` sits three
  * words (0xc) back. */

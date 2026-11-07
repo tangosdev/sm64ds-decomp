@@ -50,6 +50,9 @@ for p in sorted(SRC.rglob("*")):
 
 print(f"marker-bound owned symbols: {tot_mark}")
 print(f"locator-bound owned symbols: {tot_loc}")
+if tot_mark == 0:
+    print("no // @symbol markers remain; the locator outline is the map")
+    raise SystemExit(0)
 print(f"regressions: {sum(regress.values())} in {len(regress)} files")
 print(f"improvements: {sum(improve.values())} in {len(improve)} files")
 print("\nworst regressions:")

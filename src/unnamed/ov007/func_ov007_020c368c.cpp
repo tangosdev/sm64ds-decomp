@@ -14,7 +14,6 @@ extern "C" {
    0x040002b8 SQRT_PARAM, 0x04000208 IME. Interrupts are masked around each
    square-root start because an interrupt handler that used the unit mid-write
    would corrupt the parameter. */
-// @symbol func_ov007_020c368c
 
 void func_ov007_020c368c(Vector3_16 *v, int count, int clamp) {
     int i;

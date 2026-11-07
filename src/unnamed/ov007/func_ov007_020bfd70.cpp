@@ -1,5 +1,4 @@
 //cpp
-// @symbol func_ov007_020bfd70
 /* recovered: project a world point into DS screen pixels through an ov007 camera.
  *
  * The point at `pos` is transformed by the camera's viewMatrix into a local

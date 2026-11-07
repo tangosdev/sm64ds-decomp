@@ -27,30 +27,24 @@
 
 #include "daCamTag_c.h"
 
-// @symbol daCamTag_c_classInit
 extern "C" daCamTag_c *daCamTag_c_classInit() {
     return new daCamTag_c();
 }
 
-// @symbol _ZN10daCamTag_c13InitResourcesEv
 int daCamTag_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN10daCamTag_c8BehaviorEv
 int daCamTag_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10daCamTag_c6RenderEv
 int daCamTag_c::Render() {
     return 1;
 }
 
-// @symbol _ZN10daCamTag_c16OnPendingDestroyEv
 void daCamTag_c::OnPendingDestroy() {}
 
-// @symbol _ZN10daCamTag_c16CleanupResourcesEv
 int daCamTag_c::CleanupResources() {
     return 1;
 }

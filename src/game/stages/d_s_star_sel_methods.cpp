@@ -85,19 +85,16 @@ extern u8 data_ov001_020abbf4;
 
 void CopyToViewMat(const Matrix4x3 *);
 
-// @symbol _ZN12dScStarSel_cD1Ev
 // ROM 0x020addfc, size 0x58; vtable slot 16. Written first so D1 and D0 are
 // emitted first, as in the cartridge. The body is empty: tearing down the
 // dExtSimpleModel_c pair (__cxa_vec_cleanup) and the base destructors is all
 // compiler-generated.
 dScStarSel_c::~dScStarSel_c() {}
 
-// @symbol _ZN12dScStarSel_cD0Ev
 // ROM 0x020ade54, size 0x6c; vtable slot 17. The deleting destructor has no
 // source of its own: mwccarm emits it from the definition above, directly
 // after D1, ending with dScene_c's inline operator delete.
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020adec0Ej
 // ROM 0x020adec0, size 0x90. The inverse of func_ov003_020adf50: maps a
 // character index to its strip slot, or 0 when it has none.
 int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
@@ -126,7 +123,6 @@ int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
     return 0;
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020adf50Ev
 // ROM 0x020adf50, size 0x78. Maps the strip slot mCharCursor to a character
 // index: through sStarSelectCharacterOrder when mStripMode is 4, otherwise the
 // mCharCursor-th unlocked character when mStripMode is 2 or more; else 0.
@@ -150,7 +146,6 @@ int dScStarSel_c::func_ov003_020adf50() {
     return 0;
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020adfc8Ev
 // ROM 0x020adfc8, size 0xe8. Draws the coin record of the current level
 // (SaveData::GetCoinRecord) as three digits drawn right to left, then the
 // TIMES and COIN sprites.
@@ -171,7 +166,6 @@ void dScStarSel_c::func_ov003_020adfc8() {
     OAM::Render(0, &OAM::COIN, x - 0x10, 0x4c, -1, -1, 0);
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae0b0Ev
 // ROM 0x020ae0b0, size 0xf4. Draws the power-star count: NumStars() as three
 // digits, drawn right to left, then the TIMES and POWER_STAR sprites.
 void dScStarSel_c::func_ov003_020ae0b0() {
@@ -200,7 +194,6 @@ void dScStarSel_c::func_ov003_020ae0b0() {
     OAM::Render(0, &OAM::POWER_STAR, x - 0x10, y + 8, -1, -1, 0);
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae1a4Ei
 // ROM 0x020ae1a4, size 0x94. Splits value into three decimal digits in
 // mDigits[0..2], dividing by sStarSelectDecimalDivisors[i] in turn; leading
 // zeros are stored as -1 (blank) except the last digit.
@@ -222,7 +215,6 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
     }
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae238Ev
 // ROM 0x020ae238, size 0x120. Draws the life counter: the LIFE_ICONS entry for
 // mLifeIcon, the TIMES sprite, and the three digits of gNumLives.
 void dScStarSel_c::func_ov003_020ae238() {
@@ -252,7 +244,6 @@ void dScStarSel_c::func_ov003_020ae238() {
     }
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae358Ev
 // ROM 0x020ae358, size 0x398. Per-frame selection handling: record hit
 // tests and the D-pad.
 //
@@ -376,11 +367,9 @@ void dScStarSel_c::func_ov003_020ae358() {
     mCharRepeatTimer = 0;
 }
 
-// @symbol _ZN12dScStarSel_c16OnPendingDestroyEv
 // ROM 0x020ae6f0, size 0x4; vtable slot 12. Empty override.
 void dScStarSel_c::OnPendingDestroy() {}
 
-// @symbol _ZN12dScStarSel_c6RenderEv
 // ROM 0x020ae6f4, size 0x944; vtable slot 9. Draws the whole screen: level
 // number, the star plates, the character strip, the cursor and the bottom sprite.
 //
@@ -575,7 +564,6 @@ s32 dScStarSel_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12dScStarSel_c8BehaviorEv
 // ROM 0x020af038, size 0x834; vtable slot 6.
 //
 // The stylus-hit loop reads the touch record as one 4-byte row of gTouchHeld (the
@@ -831,7 +819,6 @@ s32 dScStarSel_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12dScStarSel_c16CleanupResourcesEv
 // ROM 0x020af86c, size 0x34; vtable slot 3.
 s32 dScStarSel_c::CleanupResources() {
     CleanCommonModelDataArr();
@@ -876,7 +863,6 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
     ASSET_D_2D_CMN_ICON_S_NCG_BIN = 0x0270
 };
 
-// @symbol _ZN12dScStarSel_c13InitResourcesEv
 /* recovered: real C++ method over include/dScStarSel_c.h -- vtable slot 0.
  *
  * Loads the star-select screen: sound group, VRAM banks, the two dExtSimpleModel_c members
@@ -1258,7 +1244,6 @@ s32 dScStarSel_c::InitResources() {
     return 1;
 }
 
-// @symbol dScStarSel_c_classInit
 /* Reconstructed source-style name: SM64DS proves dScStarSel_c through RTTI,
  * allocation size, vtable identity, and the STAR_SELECT registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

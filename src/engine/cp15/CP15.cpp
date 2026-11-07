@@ -6,7 +6,6 @@
 
 namespace CP15 {
 
-// @symbol _ZN4CP1514FlushDataCacheEv
 asm void FlushDataCache(void)
 {
     mov r1, #0
@@ -27,7 +26,6 @@ seg:
 /* Clean and invalidate the whole data cache by set and way (c7,c14,2). Same
  * traversal as FlushDataCache: r1 walks the four ways in the top two bits, r0
  * walks the 32 lines of each set; the outer loop ends when r1 wraps to zero. */
-// @symbol _ZN4CP1527FlushAndInvalidateDataCacheEv
 asm void FlushAndInvalidateDataCache(void)
 {
     mov r1, #0
@@ -45,7 +43,6 @@ seg:
     bx lr
 }
 
-// @symbol _ZN4CP1519InvalidateDataCacheEjj
 asm void InvalidateDataCache(unsigned int addr, unsigned int size)
 {
     add r1, r1, r0
@@ -58,7 +55,6 @@ loop:
     bx lr
 }
 
-// @symbol _ZN4CP1514FlushDataCacheEjj
 asm void FlushDataCache(unsigned int addr, unsigned int size)
 {
     add r1, r1, r0
@@ -71,7 +67,6 @@ loop:
     bx lr
 }
 
-// @symbol _ZN4CP1527FlushAndInvalidateDataCacheEjj
 asm void FlushAndInvalidateDataCache(unsigned int addr, unsigned int size)
 {
     add r1, r1, r0
@@ -84,7 +79,6 @@ loop:
     bx lr
 }
 
-// @symbol _ZN4CP1516DrainWriteBufferEv
 asm void DrainWriteBuffer(void)
 {
     mov r0, #0
@@ -92,7 +86,6 @@ asm void DrainWriteBuffer(void)
     bx lr
 }
 
-// @symbol _ZN4CP1526InvalidateInstructionCacheEjj
 asm void InvalidateInstructionCache(unsigned int addr, unsigned int size)
 {
     add r1, r1, r0

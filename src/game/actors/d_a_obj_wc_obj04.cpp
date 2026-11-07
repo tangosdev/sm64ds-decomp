@@ -58,7 +58,6 @@ extern CLPS_Block data_ov029_0211304c;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjWc_Obj04_c_classInit
 /* Historical alias: SwitchActivatedPlank_Spawn -- this entry point carried the
  * project's coined class name until the ROM's RTTI name was adopted.
  * The ROM proves the class through RTTI (_ZTS15daObjWc_Obj04_c at
@@ -78,7 +77,6 @@ extern "C" daObjWc_Obj04_c *daObjWc_Obj04_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj04_c13InitResourcesEv
 int daObjWc_Obj04_c::InitResources() {
     mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_0211432c), 1, -1);
     UpdateModelMatrix();
@@ -97,7 +95,6 @@ int daObjWc_Obj04_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj04_c8BehaviorEv
 int daObjWc_Obj04_c::Behavior() {
     mMeshCollider.SetClipRadius(0x100000);
 
@@ -141,7 +138,6 @@ int daObjWc_Obj04_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj04_c6RenderEv
 int daObjWc_Obj04_c::Render() {
     if (mVisible != 0) {
         mModel2.Render(0);
@@ -151,7 +147,6 @@ int daObjWc_Obj04_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj04_c16CleanupResourcesEv
 int daObjWc_Obj04_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -164,7 +159,6 @@ int daObjWc_Obj04_c::CleanupResources() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* The plank model's matrix: yaw plus position >> 3 (world fix12 to model units). */
-// @symbol _ZN15daObjWc_Obj04_c17UpdateModelMatrixEv
 void daObjWc_Obj04_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel2.mat4x3, mAngleY);
     mModel2.mat4x3.m[9] = mPosX >> 3;
@@ -175,7 +169,6 @@ void daObjWc_Obj04_c::UpdateModelMatrix() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* The plank collision matrix: yaw plus the world position. */
-// @symbol _ZN15daObjWc_Obj04_c16UpdateClsnMatrixEv
 void daObjWc_Obj04_c::UpdateClsnMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
     mClsnMat2.m[9] = mPosX;
@@ -185,8 +178,6 @@ void daObjWc_Obj04_c::UpdateClsnMatrix() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj04_cD1Ev
-// @symbol _ZN15daObjWc_Obj04_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in
  * include/daObjWc_Obj04_c.h and declared LAST. Two measurements force that:
  *   - out of line, mwcc emits D0 ahead of D1 and the cartridge has D1 first,

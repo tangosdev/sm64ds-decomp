@@ -2,7 +2,6 @@
 #include "common.h"
 
 extern "C" {
-// @symbol func_ov007_020c30ac
 /* recovered: shared common types */
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 int func_ov007_020c30ac(struct Vector3 *arr, int count, struct Vector3 *target, int arg4,

@@ -56,17 +56,14 @@ typedef char DorifuClsnFileHandle_size_must_be_8[sizeof(DorifuClsnFileHandle) ==
 
 extern daObjDorifuResources data_ov047_02112508[5];
 
-// @symbol daObjKm3_Dorifu_c_classInit
 extern "C" daObjKm3_Dorifu_c *daObjKm3_Dorifu_c_classInit() {
     return new daObjKm3_Dorifu_c();
 }
 
-// @symbol _ZN17daObjKm3_Dorifu_c13InitResourcesEv
 s32 daObjKm3_Dorifu_c::InitResources() {
     return daObjDorifu_c::InitResources(data_ov047_02112508);
 }
 
-// @symbol _ZN17daObjKm3_Dorifu_c16CleanupResourcesEv
 s32 daObjKm3_Dorifu_c::CleanupResources() {
     return daObjDorifu_c::CleanupResources(data_ov047_02112508);
 }

@@ -88,7 +88,6 @@ void func_020393c4(dBgW *collider, StoodOnCallback callback);
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjBk_Lift_c_classInit
 /* BK_LIFT01's registry factory. 0x394 is this class's size, and the calls the
    cartridge inlines here -- fBase_c::operator new, dBgActor_c's base
    constructor, the vptr store and dExtShadowModel_c's constructor on the member at
@@ -99,7 +98,6 @@ extern "C" daObjBk_Lift_c *daObjBk_Lift_c_classInit() {
     return new daObjBk_Lift_c();
 }
 
-// @symbol _ZN14daObjBk_Lift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* dBgW stood-on callback, armed by func_020393c4 in InitResources. Drops the
    collider and forwards (lift, rider) into OnStoodOn. long_calls is the
    ROM's pooled absolute tail-call. */
@@ -109,7 +107,6 @@ void daObjBk_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *r
 }
 #pragma long_calls off
 
-// @symbol _ZN14daObjBk_Lift_c9OnStoodOnEP8dActor_c
 /* Marks the lift as stood on, which is what restarts a kind-2 ride in
    Behavior. The rider is the veneer's extra forwarded register -- a
    callee taking only `this` drops `mov r1, r2`. */
@@ -118,7 +115,6 @@ int daObjBk_Lift_c::OnStoodOn(dActor_c *rider) {
     mMove = 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c13InitResourcesEv
 int daObjBk_Lift_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov015_02114a64), 1, -1);
     mShadowModel.InitCuboid();
@@ -172,7 +168,6 @@ int daObjBk_Lift_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c8BehaviorEv
 int daObjBk_Lift_c::Behavior() {
     int kind = param1 & 0xff;
 
@@ -237,13 +232,11 @@ int daObjBk_Lift_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c6RenderEv
 int daObjBk_Lift_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c16CleanupResourcesEv
 int daObjBk_Lift_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -253,7 +246,6 @@ int daObjBk_Lift_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c12UpdateShadowEv
 /* Re-aims the cuboid shadow: the model's matrix, then the step's own position
    biased by mShadowOffsetX / mShadowOffsetY and flattened onto mFloorPosY. */
 void daObjBk_Lift_c::UpdateShadow() {
@@ -264,7 +256,6 @@ void daObjBk_Lift_c::UpdateShadow() {
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x190000, 0x28000, 0x258000, 0xf);
 }
 
-// @symbol _ZN14daObjBk_Lift_c15OnHitByMegaCharER7daPly_c
 /* Slot 27. daPly_c::IncMegaKillCount is a real method, and the trailing
    unqualified Kill() reaches this class's own slot-31 override. */
 void daObjBk_Lift_c::OnHitByMegaChar(daPly_c &player) {
@@ -272,7 +263,6 @@ void daObjBk_Lift_c::OnHitByMegaChar(daPly_c &player) {
     Kill();
 }
 
-// @symbol _ZN14daObjBk_Lift_c4KillEv
 /* Slot 31, attributed by the vtable: _ZTV14daObjBk_Lift_c (ov015 0x02114650)
    carries 0x0211233c at slot 31 -- config/arm9/overlays/ov015/relocs.txt has
    `from:0x021146cc kind:load to:0x0211233c` -- while _ZTV10dBgActor_c's word at

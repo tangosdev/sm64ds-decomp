@@ -39,7 +39,6 @@ void CARD_IdentifyBackup(int type);
  * (func_0203da3c), the mode func_0203db64 gives a download-play child, but
  * never does at that call site: data_020a0f04 is still 0 then.
  */
-// @symbol func_02042f68
 extern "C" void func_02042f68(int type, unsigned char *magic) {
     int i;
     unsigned char *d;
@@ -64,7 +63,6 @@ extern "C" void func_02042f68(int type, unsigned char *magic) {
  * opposite of the 1-is-success convention its callers use, which is why every one
  * of them inverts it.
  */
-// @symbol _ZN8SaveData14SaveDataToCartEPcjj
 int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
 {
     int lockID;
@@ -159,7 +157,6 @@ int SaveData::SaveDataToCart(char* data, u32 size, u32 fileID)
  * primary fails either check. Three-valued: 0 read good, 2 no valid data on the
  * cart at all, 1 read failed.
  */
-// @symbol _ZN8SaveData16ReadDataFromCartEPcjj
 int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
 {
     u16 sum;

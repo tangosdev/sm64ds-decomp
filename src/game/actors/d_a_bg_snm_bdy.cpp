@@ -70,10 +70,8 @@ namespace cstd {
 int fdiv(int numerator, int denominator);
 }
 
-/* Shared ABI seams, kept above the first `// @symbol` marker so no member is
- * charged with their mangled spellings (notes/tu-promotion-conventions.md
- * sec 6). Each is the most complete of the spellings the retired one-function
- * shards carried. */
+/* Shared ABI seams. Each is the most complete of the spellings the retired
+ * one-function shards carried. */
 extern "C" {
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
@@ -160,7 +158,6 @@ static inline short AbsAngle(short angle) {
 /* Reconstructed source-style names. SM64DS preserves this class's RTTI, the
  * BIG_SNOWMAN_BODY registry ID, the descriptor relationship and the factory's
  * behavior; it preserves neither identifier below. */
-// @symbol daBgSnmBdy_c_classInit
 extern "C" daBgSnmBdy_c *daBgSnmBdy_c_classInit()
 {
     return new daBgSnmBdy_c();
@@ -182,7 +179,6 @@ SpawnInfo<daBgSnmBdy_c> g_profile_BIG_SNOWMAN_BODY = {
     0x01000000
 };
 
-// @symbol _ZN12daBgSnmBdy_c13InitResourcesEv
 int daBgSnmBdy_c::InitResources()
 {
     Vector3 pos;
@@ -220,7 +216,6 @@ int daBgSnmBdy_c::InitResources()
 /* dCc_c comes from the real dCcAc_c chain now that the header types
    mCylinder; Clear and Update are non-virtual there, so the direct bl is
    unchanged. */
-// @symbol _ZN12daBgSnmBdy_c8BehaviorEv
 int daBgSnmBdy_c::Behavior()
 {
     CallStateBehavior();
@@ -230,7 +225,6 @@ int daBgSnmBdy_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c6RenderEv
 int daBgSnmBdy_c::Render()
 {
     mModel.Render(&mScale);
@@ -239,14 +233,12 @@ int daBgSnmBdy_c::Render()
 
 /* Vtable slot 12. The ROM body is empty: the override exists only to occupy
  * the slot. */
-// @symbol _ZN12daBgSnmBdy_c16OnPendingDestroyEv
 void daBgSnmBdy_c::OnPendingDestroy()
 {
 }
 
 /* Vtable slot 3. Releases the one shared file the class holds; it never
  * touches `this`. */
-// @symbol _ZN12daBgSnmBdy_c16CleanupResourcesEv
 int daBgSnmBdy_c::CleanupResources()
 {
     gBgSnmBdyModelFile.Release();
@@ -255,26 +247,22 @@ int daBgSnmBdy_c::CleanupResources()
 
 /* SetState and its int parameter are inferred spellings. The ROM proves
  * the table indexing, not the original identifier or int-versus-enum type. */
-// @symbol _ZN12daBgSnmBdy_c8SetStateEi
 void daBgSnmBdy_c::SetState(int state)
 {
     mState = &gBgSnmBdyStates[state];
     CallStateInit();
 }
 
-// @symbol _ZN12daBgSnmBdy_c13CallStateInitEv
 void daBgSnmBdy_c::CallStateInit()
 {
     (this->*mState->init)();
 }
 
-// @symbol _ZN12daBgSnmBdy_c17CallStateBehaviorEv
 void daBgSnmBdy_c::CallStateBehavior()
 {
     (this->*mState->behavior)();
 }
 
-// @symbol _ZN12daBgSnmBdy_c10InitState0Ev
 int daBgSnmBdy_c::InitState0()
 {
     mVertAccel = 0;
@@ -293,7 +281,6 @@ int daBgSnmBdy_c::InitState0()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c6State0Ev
 int daBgSnmBdy_c::State0()
 {
     daPly_c *player = ClosestPlayer();
@@ -306,7 +293,6 @@ int daBgSnmBdy_c::State0()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c10InitState1Ev
 int daBgSnmBdy_c::InitState1()
 {
     mSubstate = 0;
@@ -315,7 +301,6 @@ int daBgSnmBdy_c::InitState1()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c6State1Ev
 int daBgSnmBdy_c::State1()
 {
     Vector3 messagePos;
@@ -342,7 +327,6 @@ int daBgSnmBdy_c::State1()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c10InitState2Ev
 int daBgSnmBdy_c::InitState2()
 {
     mVertAccel = -0x2000;
@@ -354,7 +338,6 @@ int daBgSnmBdy_c::InitState2()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c6State2Ev
 int daBgSnmBdy_c::State2()
 {
     int growScale;
@@ -393,7 +376,6 @@ int daBgSnmBdy_c::State2()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c10InitState3Ev
 int daBgSnmBdy_c::InitState3()
 {
     mSubstate = 0;
@@ -401,7 +383,6 @@ int daBgSnmBdy_c::InitState3()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c6State3Ev
 int daBgSnmBdy_c::State3() {
     switch (mSubstate) {
     case 0: {
@@ -448,7 +429,6 @@ int daBgSnmBdy_c::State3() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c10InitState4Ev
 int daBgSnmBdy_c::InitState4()
 {
     mFlags &= ~1;
@@ -456,7 +436,6 @@ int daBgSnmBdy_c::InitState4()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c6State4Ev
 int daBgSnmBdy_c::State4()
 {
     ApproachLinear(mHorzSpeed, 0x28000, 0x400);
@@ -471,7 +450,6 @@ int daBgSnmBdy_c::State4()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c10InitState5Ev
 int daBgSnmBdy_c::InitState5()
 {
     mFlags &= ~1;
@@ -479,7 +457,6 @@ int daBgSnmBdy_c::InitState5()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c6State5Ev
 int daBgSnmBdy_c::State5()
 {
     if (!IsOffScreen(this))
@@ -503,7 +480,6 @@ int daBgSnmBdy_c::State5()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c11UpdateModelEv
 void daBgSnmBdy_c::UpdateModel()
 {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
@@ -516,7 +492,6 @@ void daBgSnmBdy_c::UpdateModel()
     DropShadowRadHeight(mShadowModel, mShadowMat, mRadius << 1, mRadius << 1, 0xf);
 }
 
-// @symbol _ZN12daBgSnmBdy_c21UpdateGroundCollisionEP10dBgCh_Actr
 // The P10dBgCh_Actr in that spelling asserts a POINTER parameter. The bytes
 // cannot distinguish a pointer from a reference here -- R10dBgCh_Actr would have
 // matched equally well -- so the parameter type is a disclosed guess.
@@ -536,7 +511,6 @@ void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
     }
 }
 
-// @symbol _ZN12daBgSnmBdy_c10HurtPlayerEv
 int daBgSnmBdy_c::HurtPlayer()
 {
     dActor_c *actor;
@@ -557,7 +531,6 @@ int daBgSnmBdy_c::HurtPlayer()
     return 1;
 }
 
-// @symbol _ZN12daBgSnmBdy_c11AdvancePathEv
 int daBgSnmBdy_c::AdvancePath()
 {
     Vector3 node;
@@ -575,7 +548,6 @@ int daBgSnmBdy_c::AdvancePath()
     return 0;
 }
 
-// @symbol _ZN12daBgSnmBdy_c15UpdateRollAngleEv
 void daBgSnmBdy_c::UpdateRollAngle()
 {
     int circumference = FX_Mul32x64c(mRadius << 1, FX64C_PI);
@@ -583,7 +555,6 @@ void daBgSnmBdy_c::UpdateRollAngle()
     mAngleX = (short)(mAngleX + FX_Mul(turns, ANGLE_FULL_TURN));
 }
 
-// @symbol _ZN12daBgSnmBdy_c18IsPlayerNearCenterEv
 int daBgSnmBdy_c::IsPlayerNearCenter()
 {
     int bodyDist = Vec3_Dist(&gBgSnmBdyLandingPoint, &mPos);

@@ -34,14 +34,12 @@ extern CTRDGWork data_020a9de0; /* CTRDGi_Work */
 /* Where a cartridge that is not ROM code keeps its module ID. */
 #define CTRDG_MODULE_ID_IMAGE (*(u16 *)0x0801fffe)
 
-// @symbol CTRDGi_InitCommon
 void CTRDGi_InitCommon(void) {
     u32 local = 0;
     CpuSet(&local, &data_020a9de0, 0x5000001);
     data_020a9de0.lockID = (u16)OS_GetLockID();
 }
 
-// @symbol CTRDG_IsExisting
 int CTRDG_IsExisting(void) {
     int lockInfo[2];
     int cycle[2];
@@ -69,7 +67,6 @@ int CTRDG_IsExisting(void) {
     return ret;
 }
 
-// @symbol CTRDGi_ChangeLatestAccessCycle
 void CTRDGi_ChangeLatestAccessCycle(int *cycle) {
     cycle[0] = (*(volatile u16 *)0x4000204 & 0xc) >> 2;
     cycle[1] = (*(volatile u16 *)0x4000204 & 0x10) >> 4;
@@ -77,14 +74,12 @@ void CTRDGi_ChangeLatestAccessCycle(int *cycle) {
     *(volatile u16 *)0x4000204 = *(volatile u16 *)0x4000204 & ~0x10;
 }
 
-// @symbol CTRDGi_RestoreAccessCycle
 void CTRDGi_RestoreAccessCycle(int *cycle) {
     volatile u16 *reg = (volatile u16 *)0x4000204;
     *reg = (cycle[0] << 2) | (*reg & ~0xc);
     *reg = (cycle[1] << 4) | (*reg & ~0x10);
 }
 
-// @symbol CTRDGi_LockByProcessor
 void CTRDGi_LockByProcessor(u16 lockID, int *info) {
     for (;;) {
         info[1] = IRQ::Disable();
@@ -98,14 +93,12 @@ void CTRDGi_LockByProcessor(u16 lockID, int *info) {
     }
 }
 
-// @symbol CTRDGi_UnlockByProcessor
 void CTRDGi_UnlockByProcessor(u16 lockID, int *info) {
     if (info[0] == 0)
         OS_UnLockCartridge(lockID);
     IRQ::Restore(info[1]);
 }
 
-// @symbol CTRDGi_SendtoPxi
 void CTRDGi_SendtoPxi(u32 data) {
     while (PXI_SendWordByFifo(0xd, data, 0) != 0)
         WaitByLoop(1);

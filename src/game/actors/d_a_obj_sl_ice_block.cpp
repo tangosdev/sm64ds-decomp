@@ -53,14 +53,11 @@ extern SlIceBlockClsnFileHandle data_ov027_02113be0;
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN17daObjSlIceBlock_cD1Ev
-// @symbol _ZN17daObjSlIceBlock_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: its own vptr, then dBgActor_c's inlined, then dBgActor_c's
  * dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. */
 daObjSlIceBlock_c::~daObjSlIceBlock_c() {}
 
-// @symbol _ZN17daObjSlIceBlock_c15OnHitByMegaCharER7daPly_c
 /* Same idiom as daObjBk_Dossunbar_c/daObjBk_Lift_c/daObjIceBoard_c: the
  * trailing unqualified Kill() dispatches virtually to the inherited
  * base implementation (this class does not override slot 31). */
@@ -69,7 +66,6 @@ void daObjSlIceBlock_c::OnHitByMegaChar(daPly_c &player) {
     Kill();
 }
 
-// @symbol _ZN17daObjSlIceBlock_c16CleanupResourcesEv
 int daObjSlIceBlock_c::CleanupResources() {
     unsigned char ok = (actorID == 0x5d);
     if (ok) {
@@ -80,7 +76,6 @@ int daObjSlIceBlock_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN17daObjSlIceBlock_c6RenderEv
 int daObjSlIceBlock_c::Render() {
     int x = actorID == 0x5d;
     if (x) {
@@ -91,7 +86,6 @@ int daObjSlIceBlock_c::Render() {
     return 1;
 }
 
-// @symbol _ZN17daObjSlIceBlock_c8BehaviorEv
 int daObjSlIceBlock_c::Behavior() {
     int isType = (actorID == 0x5d);
     if (isType) {
@@ -124,7 +118,6 @@ int daObjSlIceBlock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN17daObjSlIceBlock_c13InitResourcesEv
 int daObjSlIceBlock_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov027_02113be8);
     dBgW_Kc::LoadFile(data_ov027_02113be0);
@@ -155,7 +148,6 @@ int daObjSlIceBlock_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the SL_ICEBLOCK_SHOT registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SlidingIce_Spawn. */
-// @symbol daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT
 extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
     return new daObjSlIceBlock_c();
 }
@@ -164,7 +156,6 @@ extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK_SHOT() {
  * RTTI, allocation size, vtable identity, and the SL_ICEBLOCK registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SlidingIceSpawner_Spawn. */
-// @symbol daObjSlIceBlock_c_classInit_SL_ICEBLOCK
 extern "C" daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK() {
     return new daObjSlIceBlock_c();
 }

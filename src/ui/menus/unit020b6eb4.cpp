@@ -93,7 +93,6 @@ extern void func_ov007_020c3e1c(int v);
 extern void func_ov007_020c3e2c(int v);
 extern void func_ov007_020c3e3c(int v);
 
-// @symbol func_ov007_020b7138
 int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     Ov007Work *p;
     int flags;
@@ -134,7 +133,6 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     return 1;
 }
 
-// @symbol func_ov007_020b7090
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4) {
     Ov007TouchSample sample;
     int ret = 0;
@@ -157,7 +155,6 @@ int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4) {
     return ret;
 }
 
-// @symbol func_ov007_020b7040
 int func_ov007_020b7040(void) {
     func_ov007_020bcf90();
     func_ov007_020bc9c8(WORK->display);
@@ -166,7 +163,6 @@ int func_ov007_020b7040(void) {
     return 1;
 }
 
-// @symbol func_ov007_020b6f4c
 int func_ov007_020b6f4c(void) {
     Ov007Work *p = WORK;
     int r;
@@ -196,7 +192,6 @@ int func_ov007_020b6f4c(void) {
     return r;
 }
 
-// @symbol func_ov007_020b6eb4
 int func_ov007_020b6eb4(void) {
     ARMMathState s;
     if (data_ov007_02103430 != 0) {

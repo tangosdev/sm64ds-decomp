@@ -122,20 +122,16 @@ static inline int IsPlayingAnim(daMky_c *mky, int *animFile) {
  * dExtShadowModel_c, dCcAc_c and dBgCh_Actr destroyed in reverse declaration order
  * (PathPtr is trivial and skipped), then ~dActor_c; D0 additionally inlines
  * all of that and tail-calls Memory::Deallocate. */
-// @symbol _ZN7daMky_cD1Ev
-// @symbol _ZN7daMky_cD0Ev
 daMky_c::~daMky_c()
 {
 }
 
-// @symbol _ZN7daMky_c13OnYoshiTryEatEv
 /* Vtable slot 18.  Two instructions: mov r0,#7; bx lr. */
 s32 daMky_c::OnYoshiTryEat()
 {
     return 7;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02111734Ev
 void daMky_c::func_ov030_02111734()
 {
 
@@ -176,7 +172,6 @@ void daMky_c::func_ov030_02111734()
         }
     }
 }
-// @symbol _ZN7daMky_c19func_ov030_02111890Ev
 void daMky_c::func_ov030_02111890()
 {
     extern int gMonkeyRunAnimationFile[];
@@ -186,7 +181,6 @@ void daMky_c::func_ov030_02111890()
     if (v == 0xa || v == 0xc)
         func_0201267c(0xea, &this->mCamSpacePos);
 }
-// @symbol _ZN7daMky_c19func_ov030_02111908Ev
 void daMky_c::func_ov030_02111908()
 {
     extern int data_ov030_02115cf0[];
@@ -208,7 +202,6 @@ void daMky_c::func_ov030_02111908()
             func_0201267c(0xe9, &this->mCamSpacePos);
     }
 }
-// @symbol _ZN7daMky_c19func_ov030_02111a00Ev
 int daMky_c::func_ov030_02111a00()
 {
     extern int data_ov030_02115cf0[];
@@ -234,7 +227,6 @@ int daMky_c::func_ov030_02111a00()
     }
     return 0;
 }
-// @symbol _ZN7daMky_c19func_ov030_02111b20Ev
 int daMky_c::func_ov030_02111b20()
 {
     typedef short s16;
@@ -259,7 +251,6 @@ int daMky_c::func_ov030_02111b20()
   }
   return 0;
 }
-// @symbol _ZN7daMky_c19func_ov030_02111bc4Ev
 int daMky_c::func_ov030_02111bc4()
 {
     daPly_c *player;
@@ -307,7 +298,6 @@ int daMky_c::func_ov030_02111bc4()
     }
     return 1;
 }
-// @symbol _ZN7daMky_c19func_ov030_02111dd0Ev
 int daMky_c::func_ov030_02111dd0()
 {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
@@ -334,7 +324,6 @@ int daMky_c::func_ov030_02111dd0()
     }
     return 0;
 }
-// @symbol _ZN7daMky_c19func_ov030_02111ea4Ev
 int daMky_c::func_ov030_02111ea4()
 {
 
@@ -364,7 +353,6 @@ int daMky_c::func_ov030_02111ea4()
     }
     return 0;
 }
-// @symbol _ZN7daMky_c19func_ov030_02111f6cEP10dBgCh_Actr
 void daMky_c::func_ov030_02111f6c(dBgCh_Actr *w) {
     if (IsFlagSet(this, 0x4000))
         return;
@@ -385,7 +373,6 @@ void daMky_c::func_ov030_02111f6c(dBgCh_Actr *w) {
         static_cast<const dBgPi *>(w->GetWallResult())->surface.CopyNormalTo(wn);
     }
 }
-// @symbol _ZN7daMky_c19func_ov030_02112094Ev
 void daMky_c::func_ov030_02112094()
 {
     /* from include/decl_common.h:255, which this TU does not include. */
@@ -444,7 +431,6 @@ void daMky_c::func_ov030_02112094()
     obj->mPosY = this->mPosY;
     obj->mPosZ = this->mPosZ;
 }
-// @symbol _ZN7daMky_c19func_ov030_021122b0Ev
 int daMky_c::func_ov030_021122b0()
 {
     short ang = this->HorzAngleToCPlayer() + 0x8000;
@@ -469,7 +455,6 @@ int daMky_c::func_ov030_021122b0()
     func_ov030_02111890();
     return 1;
 }
-// @symbol _ZN7daMky_c12EnterState10Ev
 int daMky_c::EnterState10(){
     struct S { int w[2]; };
     extern struct S gMonkeyRunAnimationFile;
@@ -481,7 +466,6 @@ int daMky_c::EnterState10(){
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02112400Ev
 int daMky_c::func_ov030_02112400()
 {
     func_ov030_02111a00();
@@ -508,7 +492,6 @@ int daMky_c::func_ov030_02112400()
     }
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState9Ev
 int daMky_c::EnterState9()
 {
     mHorzSpeed = 0;
@@ -516,7 +499,6 @@ int daMky_c::EnterState9()
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02112578Ev
 int daMky_c::func_ov030_02112578()
 {
 
@@ -666,7 +648,6 @@ int daMky_c::func_ov030_02112578()
     this->mdCcAc_c.Clear();
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState8Ev
 int daMky_c::EnterState8() {
     struct G { void *a; void *b; };
     extern struct G gMonkeyRunAnimationFile;
@@ -680,7 +661,6 @@ int daMky_c::EnterState8() {
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02112a84Ev
 int daMky_c::func_ov030_02112a84()
 {
     dBgCh_Actr_UpdateContinuous_Veneer(&this->mWithMeshClsn);
@@ -708,7 +688,6 @@ int daMky_c::func_ov030_02112a84()
     this->mdCcAc_c.Clear();
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState7Ev
 int daMky_c::EnterState7()
 {
     typedef unsigned char u8;
@@ -770,7 +749,6 @@ int daMky_c::EnterState7()
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02112da0Ev
 int daMky_c::func_ov030_02112da0()
 {
     extern u8 data_0209d684;
@@ -843,7 +821,6 @@ int daMky_c::func_ov030_02112da0()
     }
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState6Ev
 int daMky_c::EnterState6()
 {
     this->mFlags &= ~0x80000;
@@ -862,7 +839,6 @@ int daMky_c::EnterState6()
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02113094Ev
 int daMky_c::func_ov030_02113094()
 {
     if (IsInYoshiMouth(this)) {
@@ -925,7 +901,6 @@ int daMky_c::func_ov030_02113094()
 
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState5Ev
 int daMky_c::EnterState5() {
     this->mFlags &= ~0x80000;
     mSubState = 0;
@@ -937,7 +912,6 @@ int daMky_c::EnterState5() {
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02113324Ev
 int daMky_c::func_ov030_02113324()
 {
 
@@ -1027,7 +1001,6 @@ int daMky_c::func_ov030_02113324()
     this->mdCcAc_c.Clear();
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState4Ev
 int daMky_c::EnterState4(){
     extern int gMonkeyHoldAnimationFile[];
     this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyHoldAnimationFile[1]), 0, 0x1000, 0);
@@ -1044,7 +1017,6 @@ int daMky_c::EnterState4(){
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_021136b0Ev
 int daMky_c::func_ov030_021136b0()
 {
     typedef short s16;
@@ -1201,7 +1173,6 @@ int daMky_c::func_ov030_021136b0()
     this->mdCcAc_c.Clear();
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState3Ev
 int daMky_c::EnterState3()
 {
     /* The scalar ABI binding is retained: the
@@ -1230,7 +1201,6 @@ int daMky_c::EnterState3()
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02113b38Ev
 int daMky_c::func_ov030_02113b38()
 {
     typedef int Fix12i;
@@ -1251,7 +1221,6 @@ int daMky_c::func_ov030_02113b38()
     func_ov030_02111bc4();
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState2Ev
 int daMky_c::EnterState2() {
     typedef int Fix12i;
     typedef short s16;
@@ -1285,7 +1254,6 @@ int daMky_c::EnterState2() {
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02113d20Ev
 int daMky_c::func_ov030_02113d20()
 {
     typedef int Fix12i;
@@ -1367,14 +1335,12 @@ int daMky_c::func_ov030_02113d20()
     func_ov030_02111890();
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState1Ev
 int daMky_c::EnterState1(){
     mSubState = 0;
     mState = 1;
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02113ff0Ev
 int daMky_c::func_ov030_02113ff0()
 {
     typedef int Fix12i;
@@ -1408,24 +1374,20 @@ int daMky_c::func_ov030_02113ff0()
     func_ov030_02111890();
     return 1;
 }
-// @symbol _ZN7daMky_c11EnterState0Ev
 int daMky_c::EnterState0()
 {
     mState = 0;
     return 1;
 }
 
-// @symbol _ZN7daMky_c19func_ov030_02114134Ev
 void daMky_c::func_ov030_02114134()
 {
     (this->*mStateDesc->update)();
 }
-// @symbol _ZN7daMky_c19func_ov030_02114170Ev
 void daMky_c::func_ov030_02114170()
 {
     (this->*mStateDesc->enter)();
 }
-// @symbol _ZN7daMky_c19func_ov030_021141a8Ei
 void daMky_c::func_ov030_021141a8(int idx)
 {
     extern StateFunctions data_ov030_02115e0c[];
@@ -1460,7 +1422,6 @@ extern SharedFilePtr *data_ov030_02114824[10];
 
 }
 
-// @symbol _ZN7daMky_c16CleanupResourcesEv
 /* Vtable slot 3.  Releases the four shared files the class holds plus its
  * ten-entry table; it never touches `this`, which is why the legacy C form
  * could declare itself nullary and still reproduce. */
@@ -1476,14 +1437,12 @@ s32 daMky_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daMky_c16OnPendingDestroyEv
 /* Vtable slot 12.  The ROM body is one `bx lr`: the override exists only to
  * occupy the slot. */
 void daMky_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7daMky_c6RenderEv
 /* Vtable slot 9. */
 s32 daMky_c::Render()
 {
@@ -1493,7 +1452,6 @@ s32 daMky_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daMky_c8BehaviorEv
 /* Vtable slot 6. */
 s32 daMky_c::Behavior()
 {
@@ -1519,7 +1477,6 @@ s32 daMky_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daMky_c13InitResourcesEv
 /* Vtable slot 0. */
 s32 daMky_c::InitResources()
 {
@@ -1575,7 +1532,6 @@ s32 daMky_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daMky_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19.  The cartridge's twelve bytes at this address are a linker
  * long-branch veneer to _ZN7fBase_c18MarkForDestructionEv in arm9 -- r0 still
  * holds `this` at the jump and the daPly_c& is dropped -- so the source form
@@ -1588,7 +1544,6 @@ void daMky_c::OnTurnIntoEgg(daPly_c &player) {
  * allocation size, vtable identity, and the MONKEY_STAR registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiStar_Spawn. */
-// @symbol daMky_c_classInit_MONKEY_STAR
 extern "C" daMky_c *daMky_c_classInit_MONKEY_STAR()
 {
     return new daMky_c();
@@ -1598,7 +1553,6 @@ extern "C" daMky_c *daMky_c_classInit_MONKEY_STAR()
  * allocation size, vtable identity, and the MONKEY_THIEF registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: UkikiThief_Spawn. */
-// @symbol daMky_c_classInit_MONKEY_THIEF
 extern "C" daMky_c *daMky_c_classInit_MONKEY_THIEF()
 {
     return new daMky_c();

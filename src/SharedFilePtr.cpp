@@ -83,13 +83,11 @@ int myFS_ReadFile(void *a, void *b, int c);
 }
 
 #ifndef _MSC_VER
-// @symbol func_02017e48
 extern "C" void *func_02017e48(void *self, unsigned int fileID) {
     func_02017e0c(self, fileID);
     return self;
 }
 
-// @symbol func_02017e34
 extern "C" void *func_02017e34(void *self) {
     data_0209d3bc = static_cast<SharedFilePtr *>(self)->fileID;
     return self;
@@ -98,7 +96,6 @@ extern "C" void *func_02017e34(void *self) {
 
 /* Stamps a fresh handle: no file, no holders, and the FAT file ID that
    func_02018a24 resolves from the overlay-0 file ID. */
-// @symbol func_02017e0c
 extern "C" void func_02017e0c(void *self, unsigned int fileID) {
     SharedFilePtr *handle = static_cast<SharedFilePtr *>(self);
     handle->filePtr = 0;
@@ -110,7 +107,6 @@ extern "C" void func_02017e0c(void *self, unsigned int fileID) {
 /* Resolve fileID to its bytes, either already resident in the overlay-file
    table or streamed from the card, decompress them if they are LZ-tagged,
    and stash and return the buffer. */
-// @symbol _ZN13SharedFilePtr4LoadEv
 void *SharedFilePtr::Load() {
     data_0209d3bc = fileID;
     int p = func_020186c0(fileID);
@@ -173,7 +169,6 @@ void *SharedFilePtr::Load() {
 #endif
 
 /* Frees the file once the last holder lets go. */
-// @symbol func_02017c24
 extern "C" void func_02017c24(SharedFilePtr *self) {
     data_0209d3bc = self->fileID;
     Memory::Deallocate(self->filePtr);
@@ -182,7 +177,6 @@ extern "C" void func_02017c24(SharedFilePtr *self) {
 
 /* Takes one reference and hands back the file. The first taker loads it;
    at 255 holders the count would wrap, so the call is refused instead. */
-// @symbol _ZN13SharedFilePtr8LoadFileEv
 void *SharedFilePtr::LoadFile() {
     data_0209d3bc = fileID;
 
@@ -200,7 +194,6 @@ void *SharedFilePtr::LoadFile() {
 }
 
 /* Hands one reference back and frees the file when it was the last. */
-// @symbol _ZN13SharedFilePtr7ReleaseEv
 void SharedFilePtr::Release() {
     data_0209d3bc = fileID;
 
@@ -216,13 +209,11 @@ void SharedFilePtr::Release() {
 }
 
 #ifndef _MSC_VER
-// @symbol func_02017b4c
 extern "C" void *func_02017b4c(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-// @symbol SharedFilePtr_Destruct_Clsn
 extern "C" int SharedFilePtr_Destruct_Clsn(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
@@ -231,7 +222,6 @@ extern "C" int SharedFilePtr_Destruct_Clsn(int self) {
 
 #if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE8)
 /* Loads a KCL collision file; the first holder rebases its offsets. */
-// @symbol _ZN7dBgW_Kc8LoadFileER13SharedFilePtr
 char *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
     u8 refs;
     char *file;
@@ -247,32 +237,27 @@ char *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
 #endif
 
 #ifndef _MSC_VER
-// @symbol func_02017ae4
 extern "C" void *func_02017ae4(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-// @symbol func_02017acc
 extern "C" void *func_02017acc(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-// @symbol func_02017ab4
 extern "C" int func_02017ab4(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
 
-// @symbol func_02017a9c
 extern "C" int func_02017a9c(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
 
 /* Gives the model file back the heap space past its real size. */
-// @symbol _ZN13SharedFilePtr19ReallocateModelFileEv
 void SharedFilePtr::ReallocateModelFile() {
     func_02017060(filePtr);
 }
@@ -281,7 +266,6 @@ void SharedFilePtr::ReallocateModelFile() {
 #if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE4B)
 /* Loads a BMD model. The first holder rebases its offsets, registers it in
    the common model data array, and trims its allocation to the real size. */
-// @symbol _ZN17dExtSimpleModel_c8LoadFileER13SharedFilePtr
 void *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
     void *filePtr;
     ptr.LoadFile();
@@ -296,13 +280,11 @@ void *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
 #endif
 
 #ifndef _MSC_VER
-// @symbol func_02017a24
 extern "C" void *func_02017a24(void *self, unsigned int fileID) {
     func_02017ae4(self, fileID);
     return self;
 }
 
-// @symbol func_02017a0c
 extern "C" int func_02017a0c(int self) {
     func_02017a9c(self);
     return self;
@@ -310,7 +292,6 @@ extern "C" int func_02017a0c(int self) {
 
 /* Loads a BMD through the handle and gives it to a dExtModel_c. If SetFile
    refuses it, the reference is handed back. */
-// @symbol func_020179b4
 extern "C" int func_020179b4(SharedFilePtr *filePtr, dExtModel_c *model, int arg) {
     int result = 0;
     if (model) {
@@ -326,13 +307,11 @@ extern "C" int func_020179b4(SharedFilePtr *filePtr, dExtModel_c *model, int arg
 }
 
 /* Hands the handle back so the caller can chain. */
-// @symbol _ZN13SharedFilePtr9ConstructEj
 SharedFilePtr &SharedFilePtr::Construct(unsigned int fileID) {
     func_02017e48(this, fileID);
     return *this;
 }
 
-// @symbol SharedFilePtr_Destruct_Anim
 extern "C" int SharedFilePtr_Destruct_Anim(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
@@ -341,7 +320,6 @@ extern "C" int SharedFilePtr_Destruct_Anim(int self) {
 
 #if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE4B)
 /* Loads a BCA animation; the first holder rebases its offsets. */
-// @symbol _ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr
 char *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
     u8 refs;
     char *file;
@@ -357,20 +335,17 @@ char *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
 #endif
 
 #ifndef _MSC_VER
-// @symbol SharedFilePtr_Construct_TexSeq
 extern "C" void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID) {
     func_02017e48(self, fileID);
     return self;
 }
 
-// @symbol SharedFilePtr_Destruct_TexSeq
 extern "C" int SharedFilePtr_Destruct_TexSeq(int self) {
     func_02017e34(reinterpret_cast<void *>(self));
     return self;
 }
 
 /* Loads a BTP texture animation; the first holder rebases its offsets. */
-// @symbol _ZN15dExtAnmTexPat_c8LoadFileER13SharedFilePtr
 void *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
     void *filePtr;
     ptr.LoadFile();
@@ -381,13 +356,11 @@ void *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
     return filePtr;
 }
 
-// @symbol func_020178cc
 extern "C" void *func_020178cc(void *self, unsigned int fileID) {
     func_02017ae4(self, fileID);
     return self;
 }
 
-// @symbol func_020178b4
 extern "C" int func_020178b4(int self) {
     func_02017a9c(self);
     return self;
@@ -395,7 +368,6 @@ extern "C" int func_020178b4(int self) {
 
 /* A BMD LoadFile that rebases the file but, unlike dExtSimpleModel_c::LoadFile, neither
    registers it in the common model data array nor trims its allocation. */
-// @symbol func_0201787c
 extern "C" void *func_0201787c(SharedFilePtr *ptr) {
     void *filePtr;
     ptr->LoadFile();

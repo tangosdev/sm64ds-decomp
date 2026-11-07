@@ -88,17 +88,14 @@ extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 }
 
-// @symbol _ZN18dMgMCarloCardObj_cC1Ev
 dMgMCarloCardObj_c::dMgMCarloCardObj_c() : mPrev(0), mNext(0) {}
 
-// @symbol dScMgMCarlo_c_classInit
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer and the card array in declaration order. */
 extern "C" void *dScMgMCarlo_c_classInit() {
     return new dScMgMCarlo_c;
 }
 
-// @symbol _ZN13dScMgMCarlo_c13InitResourcesEv
 /* Slot 0. Loads the language's board graphics and the shared palette
  * (0xbb), sets the engine mode bytes, parks the 3D matrix at the family
  * camera and arms mDealer. The round starts with the virtual
@@ -137,7 +134,6 @@ s32 dScMgMCarlo_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN13dScMgMCarlo_c10StartRoundEi
 /* Slot 18: restart the round from a fresh board. SetupBoard deals a new
  * layout, the round state re-arms (mRoundState = 1), and the shared prompt
  * window re-opens watching mRoundProgress. */
@@ -154,7 +150,6 @@ void dScMgMCarlo_c::StartRound(int arg) {
     gMgCoinsShowDelta = 1;
 }
 
-// @symbol _ZN13dScMgMCarlo_c11CanEndStateEi
 /* Slot 19: the egg-exit sequence, run on the same round state (mRoundState)
  * as Behavior. 4 frees the Gfx slots. 5 waits for the shared window, then
  * hands the dealt total on (or plays the wrap-up cue). 6 hides the board
@@ -222,7 +217,6 @@ int dScMgMCarlo_c::CanEndState(int mode) {
     return 0;
 }
 
-// @symbol _ZN13dScMgMCarlo_c8BehaviorEv
 /* Slot 6: the round, on the s16 state at mRoundState. Case 1 arms the prompt
  * blink and falls through into case 2 on purpose. gMgScene is
  * the active scene (dScMgBase_c.h declares it void *), so it is cast at
@@ -330,7 +324,6 @@ s32 dScMgMCarlo_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13dScMgMCarlo_c6RenderEv
 /* Slot 9. The board draws in two passes over the same tail-to-head walk:
  * cards with a positive vertical movement step first, then those with a
  * zero step. mYStep is an absolute magnitude, not a direction. */
@@ -373,7 +366,6 @@ s32 dScMgMCarlo_c::Render() {
     return 1;
 }
 
-// @symbol _ZN13dScMgMCarlo_c9RenderHudEv
 /* The ROM passes `this` and the body never reads it. Draw the deck
  * gauge while cards remain in the deck: the count -- sMCarloDeckSize,
  * seeded with the deck size by SetupBoard and drained one card at a time
@@ -387,7 +379,6 @@ void dScMgMCarlo_c::RenderHud(void) {
     Hud_RenderSprite(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 }
 
-// @symbol _ZN18dMgMCarloCardObj_c4InitEi
 /* Reset an unlinked card. The first twenty slots stagger the deal by
  * column; reserve cards wait one frame. Slot 19 marks the last visible card. */
 void dMgMCarloCardObj_c::Init(int slot) {
@@ -408,7 +399,6 @@ void dMgMCarloCardObj_c::Init(int slot) {
     mPrev = mNext;
 }
 
-// @symbol _ZN18dMgMCarloCardObj_c6DealInEi
 /* Move toward a board slot. Cards coming from reserve start above the
  * board and become the last visible card; waiting cards use the same start.
  * Other cards move from their current position. The target is the slot's
@@ -452,14 +442,12 @@ void dMgMCarloCardObj_c::DealIn(int slot) {
     }
 }
 
-// @symbol _ZN18dMgMCarloCardObj_c8FlipAwayEi
 /* Leave in reverse column order after the round ends. */
 void dMgMCarloCardObj_c::FlipAway(int slot) {
     mDealDelay = (short)((4 - slot % 5) * 2);
     mState = CARD_LEAVING;
 }
 
-// @symbol _ZN18dMgMCarloCardObj_c10IsPairWithEPS_
 /* Can this card and that card be removed
  * together? Same face value, and the two board slots within one step in
  * BOTH axes (slot is col = slot%5, row = slot/5) -- the board
@@ -486,7 +474,6 @@ fail:
     return 0;
 }
 
-// @symbol _ZN18dMgMCarloCardObj_c7HitTestEv
 /* Is this card the one under the stylus?
  * Only when the round is armed (sMCarloPickAllowed) and the board is
  * settled (no card still flying or flipping in), the touch panel has to
@@ -522,7 +509,6 @@ fail:
     return 0;
 }
 
-// @symbol _ZN18dMgMCarloCardObj_c6UpdateEi
 /* Advance the card toward its current board slot. Touching an idle card
  * selects it; touching a selected card deselects it. A matching second pick
  * starts the pair's removal delay. Incoming cards settle when their position
@@ -606,7 +592,6 @@ void dMgMCarloCardObj_c::Update(int slot) {
     }
 }
 
-// @symbol _ZN18dMgMCarloCardObj_c6RenderEv
 /* Draw this card through the dMeter_c sprite bank.
  * Hidden cards (mVisible 0) and ones still waiting to be dealt (mState 0)
  * draw nothing, and a selected card blinks according to bit 3 of
@@ -634,7 +619,6 @@ void dMgMCarloCardObj_c::Render(void) {
     }
 }
 
-// @symbol _ZN13dScMgMCarlo_c10SetupBoardEP18dMgMCarloCardObj_c
 /* Lay out a fresh round. The active
  * base's star count picks the tier -- under 5 stars, 6 face values at 6
  * cards each (36); under 10, 7 at 8 (56); past that, all 8 at 0xa (80) --
@@ -722,7 +706,6 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards) {
     } while (dScMgMCarlo_c::HasRemovablePair() == 0);
 }
 
-// @symbol _ZN13dScMgMCarlo_c16HasRemovablePairEv
 /* Does the board still hold two
  * cards that can be removed together (IsPairWith true for some pair)? The
  * walk skips the spare cards past slot 0x13 (they are never on the board),
@@ -744,7 +727,6 @@ int dScMgMCarlo_c::HasRemovablePair(void) {
     return 0;
 }
 
-// @symbol _ZN13dScMgMCarlo_c9BoardBusyEv
 /* Busy while the deal count is changing, a card is moving, or both
  * picks are waiting for removal. A single selected card does not block input. */
 int dScMgMCarlo_c::BoardBusy(void) {
@@ -764,7 +746,6 @@ int dScMgMCarlo_c::BoardBusy(void) {
     return busy;
 }
 
-// @symbol _ZN13dScMgMCarlo_c10BoardReadyEv
 /* Ready once the visible count reaches the board size, movement has
  * stopped, and no selected pair is waiting for removal. */
 int dScMgMCarlo_c::BoardReady(void) {
@@ -784,7 +765,6 @@ int dScMgMCarlo_c::BoardReady(void) {
     return ready;
 }
 
-// @symbol _ZN13dScMgMCarlo_c13DrawCardValueEv
 /* One weighted draw from the
  * eight-face deck. Roll the seeded RNG scaled by the weight total, then walk
  * the weights subtracting until the running total goes negative -- that face
@@ -811,7 +791,6 @@ int dScMgMCarlo_c::DrawCardValue(void) {
     return drawnFace;
 }
 
-// @symbol _ZN13dScMgMCarlo_c14FlipDealtCardsEv
 /* Between rounds, queue every card
  * currently on the board for the flip-out, walking the board list head to
  * tail and numbering the walk so FlipAway's flip stagger mirrors the deal
@@ -830,7 +809,6 @@ void dScMgMCarlo_c::FlipDealtCards(void) {
     } while (slot < (sMCarloDealProgress >> 12));
 }
 
-// @symbol _ZN13dScMgMCarlo_c11UpdateBoardEv
 /* Resolve a selected pair after its delay, unlink both cards, and restart
  * the deal count at the earlier slot so the remaining cards close the gap.
  * While a pair is selected, update only cards entering from reserve. Otherwise
@@ -906,7 +884,6 @@ void dScMgMCarlo_c::UpdateBoard(void) {
     }
 }
 
-// @symbol _ZN18dMgMCarloCardObj_cD1Ev
 /* Empty: the card has no base and nothing to destroy. */
 dMgMCarloCardObj_c::~dMgMCarloCardObj_c() {}
 

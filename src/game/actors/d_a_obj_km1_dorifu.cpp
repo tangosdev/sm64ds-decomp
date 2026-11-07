@@ -86,12 +86,10 @@ extern DorifuModelFilePtr data_ov043_02112690;
 extern DorifuCollisionFilePtr data_ov043_02112660;
 extern Km1DorifuClpsBlock sKm1Dorifu4Clps;
 
-// @symbol daObjKm1_Dorifu_c_classInit
 extern "C" daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit() {
     return new daObjKm1_Dorifu_c();
 }
 
-// @symbol g_profile_KM1_DORIFU
 extern "C" SpawnInfo<daObjKm1_Dorifu_c> g_profile_KM1_DORIFU = {
     daObjKm1_Dorifu_c_classInit,
     0x0086, /* KM1_DORIFU registry id 134 */
@@ -109,12 +107,10 @@ daObjDorifuResources data_ov043_02112518[5] = {
     {&data_ov043_02112688, &data_ov043_02112698, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu3Clps)},
     {&data_ov043_02112690, &data_ov043_02112660, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu4Clps)}};
 
-// @symbol _ZN17daObjKm1_Dorifu_c13InitResourcesEv
 s32 daObjKm1_Dorifu_c::InitResources() {
     return daObjDorifu_c::InitResources(data_ov043_02112518);
 }
 
-// @symbol _ZN17daObjKm1_Dorifu_c16CleanupResourcesEv
 s32 daObjKm1_Dorifu_c::CleanupResources() {
     return daObjDorifu_c::CleanupResources(data_ov043_02112518);
 }

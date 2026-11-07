@@ -29,7 +29,6 @@ extern "C" {
 
 extern AlarmCallback data_020a7f60[SND_ALARM_COUNT]; /* sCallbackTable */
 
-// @symbol SND_AlarmInit
 void SND_AlarmInit(void) {
     for (s32 i = 0; i < SND_ALARM_COUNT; i++) {
         data_020a7f60[i].cb = 0;
@@ -38,13 +37,11 @@ void SND_AlarmInit(void) {
     }
 }
 
-// @symbol SNDi_IncAlarmId
 void SNDi_IncAlarmId(u32 idx) {
     AlarmCallback *ac = &data_020a7f60[idx];
     ac->id++;
 }
 
-// @symbol SNDi_SetAlarmHandler
 u8 SNDi_SetAlarmHandler(u32 idx, SNDAlarmCallback cb, void *data) {
     AlarmCallback *ac = &data_020a7f60[idx];
     ac->cb = cb;
@@ -53,7 +50,6 @@ u8 SNDi_SetAlarmHandler(u32 idx, SNDAlarmCallback cb, void *data) {
     return ac->id;
 }
 
-// @symbol SNDi_CallAlarmHandler
 void SNDi_CallAlarmHandler(s32 idx) {
     AlarmCallback *ac = &data_020a7f60[idx & 0xff];
     if (((idx >> 8) & 0xff) != ac->id)

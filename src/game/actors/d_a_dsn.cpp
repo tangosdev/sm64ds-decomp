@@ -84,7 +84,6 @@ extern "C" void func_02012694(unsigned int id, const Vector3 *pos);
 
 /* -------------------------------------------------------------------------- */
 
-// @symbol daDsn_c_classInit
 /* Reconstructed source-style name: SM64DS proves daDsn_c through RTTI,
  * allocation size, vtable identity, and the DOSUN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -98,7 +97,6 @@ extern "C" daDsn_c *daDsn_c_classInit() {
     return new daDsn_c();
 }
 
-// @symbol _ZN7daDsn_c13InitResourcesEv
 /* Vtable slot 0. Stores this leaf's file table and starts the cycle at rest.
    data_ov091_02135138 is the table daDsnBase_c::Init reads: model, KCL,
    CLPS, BTP, then the two shadow extents. Overlay .data owns the bytes. */
@@ -111,7 +109,6 @@ int daDsn_c::InitResources() {
     return result;
 }
 
-// @symbol _ZN7daDsn_c8BehaviorEv
 /* Vtable slot 6, and this class's key function.
  *
  * A trigger while the countdown (0) or the hover (1) is running skips
@@ -189,7 +186,6 @@ int daDsn_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN7daDsn_c15OnHitByMegaCharER7daPly_c
 /* Vtable slot 27. Credit the mega kill, burst particle 0x48 at the
    actor position plus OnAimedAtWithEgg's height (real virtual call),
    poof, remove, and play bank-3 sound 0x1e at the camera-space position.
@@ -211,7 +207,6 @@ void daDsn_c::OnHitByMegaChar(daPly_c &player) {
     func_02012694(0x1e, &mCamSpacePos);
 }
 
-// @symbol _ZN7daDsn_c16OnAimedAtWithEggEv
 /* Vtable slot 29. Constant aim height, 206.0 in 20.12. */
 int daDsn_c::OnAimedAtWithEgg() {
     return 0xce000;

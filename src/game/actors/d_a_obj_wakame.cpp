@@ -75,14 +75,12 @@ extern WakameAnimationFileHandle data_ov002_0210e0d4; /* BCA animation */
  * inline operator new; 0x020bc5bc calls dActor_c's C2, the store at
  * 0x020bc5c8 lays down this class's vptr, and 0x020bc5d0 constructs
  * mAnmModel. The null check is the one `new` itself emits. */
-// @symbol daObjWakame_c_classInit
 extern "C" daObjWakame_c *daObjWakame_c_classInit(void) {
     return new daObjWakame_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjWakame_c13InitResourcesEv
 s32 daObjWakame_c::InitResources() {
     void *m = dExtSimpleModel_c::LoadFile(data_ov002_0210e0dc);
     mAnmModel.SetFile((BMD_File *)m, 1, -1);
@@ -94,7 +92,6 @@ s32 daObjWakame_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjWakame_c8BehaviorEv
 /* The ROM's `add r0, r0, #0x124` then `bl 0x02015c3c` is this call and the
    implicit conversion in front of it: Advance is dExtFrameCtrl_c's, dExtFrameCtrl_c sits at
    +0x50 inside a dExtAnmModel_c, and the member is at +0xd4. Nothing else happens --
@@ -106,7 +103,6 @@ s32 daObjWakame_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjWakame_c6RenderEv
 /* A REAL VIRTUAL DISPATCH, and the ROM insists on it: `ldr r2,[r0,#0xd4]!` loads
    the member's own vptr, `ldr r2,[r2,#0x14]` picks slot 5 -- dExtSimpleModel_c::Render -- and
    `blx r2` calls through it. mwccarm does not devirtualize this even though the
@@ -119,7 +115,6 @@ s32 daObjWakame_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjWakame_c16CleanupResourcesEv
 s32 daObjWakame_c::CleanupResources() {
     data_ov002_0210e0dc.Release();
     data_ov002_0210e0d4.Release();
@@ -128,7 +123,6 @@ s32 daObjWakame_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjWakame_c20UpdateModelTransformEv
 /* Posts the actor's placement into the model's transform. Model matrices
    are in eighths of a unit, hence the >> 3. */
 void daObjWakame_c::UpdateModelTransform() {
@@ -148,7 +142,6 @@ void daObjWakame_c::UpdateModelTransform() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjWakame_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  * Vtable slot 16: one vptr store, the member destroyed, then the tail into
  * ~dActor_c.

@@ -64,19 +64,16 @@ enum {
  * same 0x128 allocation. They cannot share one C name: the EAD spelling
  * would be daObjClock_c_classInit for both. CLOCK_SHORT at 0x02090230 and
  * CLOCK_LONG at 0x0208ffa8 are the ROM debug strings. */
-// @symbol daObjClock_c_classInit_CLOCK_LONG
 extern "C" daObjClock_c *daObjClock_c_classInit_CLOCK_LONG() {
     return new daObjClock_c();
 }
 
-// @symbol daObjClock_c_classInit_CLOCK_SHORT
 extern "C" daObjClock_c *daObjClock_c_classInit_CLOCK_SHORT() {
     return new daObjClock_c();
 }
 
 /* The two actor profiles. Source order is CLOCK_LONG (0x021121c0) then
  * CLOCK_SHORT (0x021121dc). */
-// @symbol g_profile_CLOCK_LONG
 extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
     daObjClock_c_classInit_CLOCK_LONG,
     ACTOR_CLOCK_LONG,
@@ -88,7 +85,6 @@ extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_LONG = {
     0x00640000,
 };
 
-// @symbol g_profile_CLOCK_SHORT
 extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_SHORT = {
     daObjClock_c_classInit_CLOCK_SHORT,
     ACTOR_CLOCK_SHORT,
@@ -100,7 +96,6 @@ extern "C" SpawnInfo<daObjClock_c> g_profile_CLOCK_SHORT = {
     0x00640000,
 };
 
-// @symbol _ZN12daObjClock_c13InitResourcesEv
 /* Hand 0 is the long hand, hand 1 the short. The actorID test stays in an
  * int: folding it into the if sizes this 0x64 against 0x70, and a ternary
  * or mHandIndex = actorID != 0x125 sizes it 0x60. */
@@ -116,7 +111,6 @@ int daObjClock_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12daObjClock_c8BehaviorEv
 /* While the level id is not positive the hand advances by its per-hand
  * speed. Otherwise the long hand, when its area is showing, writes the
  * clock setting from the quadrant of -mAngleZ. Upper bound first is the
@@ -144,19 +138,16 @@ int daObjClock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daObjClock_c6RenderEv
 int daObjClock_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN12daObjClock_c16CleanupResourcesEv
 int daObjClock_c::CleanupResources() {
     data_ov013_021116b0[mHandIndex]->Release();
     return 1;
 }
 
-// @symbol _ZN12daObjClock_c20UpdateModelTransformEv
 /* Rebuild mModel.mat4x3 from the actor angles and from position >> 3.
  * Assigning a Vector3 to mat4x3.t sizes this 0x50 against 0x48.
  * The marker above is not decoration -- without it tools/tiers.py folds this
@@ -168,8 +159,6 @@ void daObjClock_c::UpdateModelTransform() {
     mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
-// @symbol _ZN12daObjClock_cD1Ev
-// @symbol _ZN12daObjClock_cD0Ev
 /* Both destructors come from the inline `~daObjClock_c() {}` in the header.
  * Out of line, mwccarm emits D0 before D1 (objisolate refuses the TU) and a
  * D2 the cartridge has no home for.

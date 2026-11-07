@@ -37,14 +37,12 @@ void OSi_EnqueueTail(OSThread *thread, OSMutex *mutex);
 void OSi_DequeueItem(OSThread *thread, OSMutex *mutex);
 OSMutex *func_02058960(OSThread *thread);
 
-// @symbol OS_InitMutex
 void OS_InitMutex(OSMutex *mutex) {
     mutex->queue = 0;
     mutex->thread = 0;
     mutex->count = 0;
 }
 
-// @symbol OS_LockMutex
 void OS_LockMutex(OSMutex *mutex) {
     u32 saved = IRQ::Disable();
     OSThread *current = data_020a6134.current;
@@ -68,7 +66,6 @@ void OS_LockMutex(OSMutex *mutex) {
     IRQ::Restore(saved);
 }
 
-// @symbol OS_UnlockMutex
 void OS_UnlockMutex(OSMutex *mutex) {
     u32 saved = IRQ::Disable();
     OSThread *current = data_020a6134.current;
@@ -82,7 +79,6 @@ void OS_UnlockMutex(OSMutex *mutex) {
     IRQ::Restore(saved);
 }
 
-// @symbol OSi_UnlockAllMutex
 void OSi_UnlockAllMutex(OSThread *thread) {
     OSMutex *mutex;
     while (thread->mutexQueue.head != 0) {
@@ -93,7 +89,6 @@ void OSi_UnlockAllMutex(OSThread *thread) {
     }
 }
 
-// @symbol OS_TryLockMutex
 int OS_TryLockMutex(OSMutex *mutex) {
     u32 saved = IRQ::Disable();
     OSThread *current = data_020a6134.current;
@@ -114,7 +109,6 @@ int OS_TryLockMutex(OSMutex *mutex) {
 
 /* Unlike pret, this SDK links the new mutex after the list's head rather
  * than after prev: the ROM reloads mutexQueue.head for the store. */
-// @symbol OSi_EnqueueTail
 void OSi_EnqueueTail(OSThread *thread, OSMutex *mutex) {
     OSMutex *prev = thread->mutexQueue.tail;
     if (prev == 0)
@@ -126,7 +120,6 @@ void OSi_EnqueueTail(OSThread *thread, OSMutex *mutex) {
     thread->mutexQueue.tail = mutex;
 }
 
-// @symbol OSi_DequeueItem
 void OSi_DequeueItem(OSThread *thread, OSMutex *mutex) {
     OSMutex *next = mutex->link.next;
     OSMutex *prev = mutex->link.prev;
@@ -141,7 +134,6 @@ void OSi_DequeueItem(OSThread *thread, OSMutex *mutex) {
 }
 
 /* Unlink and return the first mutex the thread holds. */
-// @symbol func_02058960
 OSMutex *func_02058960(OSThread *thread) {
     OSMutex *mutex = thread->mutexQueue.head;
     OSMutex *next = mutex->link.next;

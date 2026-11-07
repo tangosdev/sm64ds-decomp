@@ -45,7 +45,6 @@ extern u32 data_0208a134[5]; /* sub BG3 characters at +0x6000 */
 extern u32 data_0208a148[5]; /* main BG2 characters */
 extern u32 data_0208a15c[5]; /* main OBJ characters */
 
-// @symbol func_0200f220
 /* Loads the sub-engine BG graphics: per-language BG2 characters (and BG3
  * characters at +0x6000), file 0x8405 at BG3 characters +0x3000, files
  * 0x9802, 0x9800 and 0x8408 into BG2 screen memory at +0x800, +0x2000 and
@@ -63,7 +62,6 @@ void func_0200f220(void) {
     LoadCompressedFileAt(0x8407, G2S::GetBG3ScrPtr());
 }
 
-// @symbol func_0200f13c
 /* Loads the main-engine BG2 graphics (language-specific characters and the
  * three screens 0x9808..0x980a), main OBJ characters at 0x2000 into OBJ VRAM
  * (0x06400000) with palette file 0x980f, and sub OBJ characters at 0x800

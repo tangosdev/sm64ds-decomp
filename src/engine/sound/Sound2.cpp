@@ -64,7 +64,6 @@ extern void func_0204f94c(void *slot);
 extern void *func_02050cdc(int kind, int id);
 extern int __aeabi_idiv(int a, int b);
 
-// @symbol func_02049018
 int func_02049018(Vector3 *v) {
     int tx = v->x >> 12;
     int ty = (v->y >> 12) * 2;
@@ -84,7 +83,6 @@ int func_02049018(Vector3 *v) {
     return *(volatile int *)0x40002b4;
 }
 
-// @symbol func_02048fd4
 /* Copies pair i (i in 0..8) from data_020821c0 into the near/far range. */
 void func_02048fd4(int i) {
     volatile u32 *tbl;
@@ -100,7 +98,6 @@ void func_02048fd4(int i) {
     data_02099fac = tbl[j];
 }
 
-// @symbol func_02048f34
 void func_02048f34(int *owner) {
     int i;
     data_020a4bec = owner;
@@ -114,22 +111,18 @@ void func_02048f34(int *owner) {
     func_02048fd4(0);
 }
 
-// @symbol func_02048f24
 void func_02048f24(void) {
     func_02048fd4(1);
 }
 
-// @symbol func_02048f14
 void func_02048f14(void) {
     func_02048fd4(2);
 }
 
-// @symbol func_02048f04
 void func_02048f04(void) {
     func_02048fd4(3);
 }
 
-// @symbol func_02048ef4
 void func_02048ef4(void) {
     func_02048fd4(4);
 }
@@ -137,26 +130,22 @@ void func_02048ef4(void) {
 
 namespace Sound {
 
-// @symbol _ZN5Sound13Func_02048ee4Ev
 void Func_02048ee4() {
     func_02048fd4(5);
 }
 
 }
 
-// @symbol func_02048ed4
 extern "C" void func_02048ed4(void) {
     func_02048fd4(6);
 }
 
 namespace Sound {
 
-// @symbol _ZN5Sound13Func_02048ec4Ev
 void Func_02048ec4() {
     func_02048fd4(7);
 }
 
-// @symbol _ZN5Sound13Func_02048eb4Ev
 void Func_02048eb4() {
     func_02048fd4(0);
 }
@@ -165,25 +154,21 @@ void Func_02048eb4() {
 
 extern "C" {
 
-// @symbol func_02048e94
 void func_02048e94(void) {
     data_02099fb0 = 4;
     Sound::Player::SetPlayableSeqCount(9, 4);
 }
 
-// @symbol func_02048e74
 void func_02048e74(void) {
     data_02099fb0 = 4;
     Sound::Player::SetPlayableSeqCount(9, 4);
 }
 
-// @symbol func_02048e54
 void func_02048e54(void) {
     data_02099fb0 = 4;
     Sound::Player::SetPlayableSeqCount(9, 4);
 }
 
-// @symbol func_02048d80
 void func_02048d80(NNSSndHandle *handle, Vector3 *p) {
     int s = p->x >> 12;
     int hi = data_02099fac;
@@ -210,7 +195,6 @@ void func_02048d80(NNSSndHandle *handle, Vector3 *p) {
     NNS_SndPlayerSetTrackPan(handle, data_02099fa4, s);
 }
 
-// @symbol func_02048c30
 void func_02048c30(NNSSndHandle *handle, Vector3 *p, int q) {
     int t;
     int a;
@@ -253,7 +237,6 @@ void func_02048c30(NNSSndHandle *handle, Vector3 *p, int q) {
     NNS_SndPlayerSetTrackPan(handle, data_02099fa4, a);
 }
 
-// @symbol func_02048af4
 void func_02048af4(NNSSndHandle *handle, Vector3 *p, int q) {
     int a = p->x >> 12;
     int b = q >> 12;
@@ -291,7 +274,6 @@ void func_02048af4(NNSSndHandle *handle, Vector3 *p, int q) {
     func_0204fa2c((int *)handle, 0);
 }
 
-// @symbol func_02048a1c
 int func_02048a1c(Vector3 *pos, int kind, int id) {
     u32 lim = data_02099fac;
     u32 dist;
@@ -326,12 +308,10 @@ int func_02048a1c(Vector3 *pos, int kind, int id) {
     return 1;
 }
 
-// @symbol func_02048a18
 int func_02048a18(int a, int b) {
     return a;
 }
 
-// @symbol func_02048908
 void func_02048908(void *obj, Vector3 *p) {
     int num = data_02099fac;
     int den = data_02099fa8;
@@ -383,7 +363,6 @@ void func_02048908(void *obj, Vector3 *p) {
     NNS_SndPlayerSetTrackPan((NNSSndHandle *)obj, data_02099fa4, half);
 }
 
-// @symbol func_02048720
 void *func_02048720(Vector3 *v, int kind, int id) {
     u32 lim;
     void *elem;
@@ -474,7 +453,6 @@ void *func_02048720(Vector3 *v, int kind, int id) {
     return 0;
 }
 
-// @symbol func_020485f0
 void func_020485f0(NNSSndHandle *handle, Vector3 *a) {
     int r5 = a->x >> 12;
     unsigned int x;
@@ -514,7 +492,6 @@ void func_020485f0(NNSSndHandle *handle, Vector3 *a) {
     }
 }
 
-// @symbol func_02048528
 void func_02048528(NNSSndHandle *handle, Vector3 *a) {
     int r4 = a->x >> 12;
     unsigned int x;

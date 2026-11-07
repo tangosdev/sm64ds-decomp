@@ -59,11 +59,8 @@ daBgSnmHed_c::StateEntry gBgSnmHedStates[4] = {
     {&daBgSnmHed_c::InitState3, &daBgSnmHed_c::State3},
 };
 
-// @symbol _ZN12daBgSnmHed_cD1Ev
-// @symbol _ZN12daBgSnmHed_cD0Ev
 daBgSnmHed_c::~daBgSnmHed_c() {}
 
-// @symbol _ZN12daBgSnmHed_c11UpdateModelEv
 void daBgSnmHed_c::UpdateModel() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -71,7 +68,6 @@ void daBgSnmHed_c::UpdateModel() {
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN12daBgSnmHed_c6State3Ev
 int daBgSnmHed_c::State3() {
     /* The POD VecFx32: a Vector3 here schedules the four stores
        differently. */
@@ -109,7 +105,6 @@ int daBgSnmHed_c::State3() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c10InitState3Ev
 int daBgSnmHed_c::InitState3() {
     mTextureSequence.SetFile(*(BTP_File *)gBigSnowmanSmileTextureSequenceFile.filePtr, 0, 0x1000,
                              0);
@@ -120,7 +115,6 @@ int daBgSnmHed_c::InitState3() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c6State2Ev
 int daBgSnmHed_c::State2() {
     Vector3 pos;
     switch (mSubstate) {
@@ -148,7 +142,6 @@ int daBgSnmHed_c::State2() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c10InitState2Ev
 int daBgSnmHed_c::InitState2() {
     mFlags &= ~1;
     mVertAccel = -0x2000;
@@ -160,7 +153,6 @@ int daBgSnmHed_c::InitState2() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c6State1Ev
 int daBgSnmHed_c::State1() {
     switch (mSubstate) {
     case 0: {
@@ -184,7 +176,6 @@ int daBgSnmHed_c::State1() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c10InitState1Ev
 int daBgSnmHed_c::InitState1() {
     mSubstate = 0;
     mStateTimer = 0x96;
@@ -192,7 +183,6 @@ int daBgSnmHed_c::InitState1() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c6State0Ev
 int daBgSnmHed_c::State0() {
     ApproachLinear(mAngleY, -0x4000, 0x514);
     mTextureSequence.Advance();
@@ -210,7 +200,6 @@ int daBgSnmHed_c::State0() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c10InitState0Ev
 int daBgSnmHed_c::InitState0() {
     mTextureSequence.SetFile(*(BTP_File *)gBigSnowmanCryTextureSequenceFile.filePtr, 0, 0x1000, 0);
     mVertAccel = 0;
@@ -219,23 +208,19 @@ int daBgSnmHed_c::InitState0() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c17CallStateBehaviorEv
 void daBgSnmHed_c::CallStateBehavior() {
     (this->*mState->behavior)();
 }
 
-// @symbol _ZN12daBgSnmHed_c13CallStateInitEv
 void daBgSnmHed_c::CallStateInit() {
     (this->*mState->init)();
 }
 
-// @symbol _ZN12daBgSnmHed_c8SetStateEi
 void daBgSnmHed_c::SetState(int state) {
     mState = &gBgSnmHedStates[state];
     CallStateInit();
 }
 
-// @symbol _ZN12daBgSnmHed_c16CleanupResourcesEv
 int daBgSnmHed_c::CleanupResources() {
     gBgSnmHedModelFile.Release();
     int i = 0;
@@ -246,17 +231,14 @@ int daBgSnmHed_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c16OnPendingDestroyEv
 void daBgSnmHed_c::OnPendingDestroy() {}
 
-// @symbol _ZN12daBgSnmHed_c6RenderEv
 int daBgSnmHed_c::Render() {
     mTextureSequence.Update(mModel.data);
     mModel.Render(&mScale);
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c8BehaviorEv
 int daBgSnmHed_c::Behavior() {
     CallStateBehavior();
     mCylinder.Clear();
@@ -265,7 +247,6 @@ int daBgSnmHed_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daBgSnmHed_c13InitResourcesEv
 int daBgSnmHed_c::InitResources() {
     struct Vector3 pos;
     int i;
@@ -301,7 +282,6 @@ int daBgSnmHed_c::InitResources() {
     return 1;
 }
 
-// @symbol daBgSnmHed_c_classInit
 extern "C" daBgSnmHed_c *daBgSnmHed_c_classInit() {
     return new daBgSnmHed_c();
 }

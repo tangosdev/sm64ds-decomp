@@ -1,4 +1,3 @@
-// @symbol func_ov007_020c2390
 /* recovered: shared common types */
 #include "common.h"
 #include "Ov007Light.h"

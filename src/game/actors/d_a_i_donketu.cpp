@@ -59,7 +59,6 @@ struct IDonketuAnimationFileHandle : SharedFilePtr {
 extern int data_ov027_021138f4[];
 
 /* -------------------------------------------------------------------------- */
-// @symbol daIDonketu_c_classInit
 /* Factory: `return new` emits the size (0x3fc), the base C2, the member
  * C1s and both vptr stores. Reconstructed source-style name: SM64DS proves
  * daIDonketu_c through RTTI, allocation size, vtable identity, and the
@@ -71,7 +70,6 @@ extern "C" daIDonketu_c *daIDonketu_c_classInit(void) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daIDonketu_c13InitResourcesEv
 /* daIDonketu_c::InitResources -- vtable slot 0, ov027 0x0211181c.
  *
  * daOts_c leaves slot 0 pure virtual (the word in its vtable is a literal zero), so
@@ -86,7 +84,6 @@ int daIDonketu_c::InitResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daIDonketu_c8BehaviorEv
 /* daIDonketu_c::Behavior -- vtable slot 6, ov027 0x02111770, and THE KEY FUNCTION
  * of this class: the destructor is inline in the header, so the first declared
  * non-inline virtual is what makes this TU emit the _ZTV/_ZTI/_ZTS group.
@@ -117,7 +114,6 @@ int daIDonketu_c::Behavior() {
     return BehaviorCommon();
 }
 
-// @symbol _ZN12daIDonketu_c16UpdateDeathStateEv
 /* daIDonketu_c::UpdateDeathState -- vtable slot 32, daOts_c's state-4 hook. The
  * same star drop as Behavior's kill path without the invincible-character test: by
  * the time state 4 runs the death is already decided. */
@@ -135,7 +131,6 @@ void daIDonketu_c::UpdateDeathState() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daIDonketu_c14UpdateRunStateEv
 /* daIDonketu_c::UpdateRunState -- vtable slot 31, daOts_c's state-1 hook. The
  * charge: hold still while the wind-up plays out over the first ten frames, then
  * run at 0x14000. The pointer returned from the first arm is the cartridge's own
@@ -163,8 +158,6 @@ int daIDonketu_c::UpdateRunState() {
     }
     return value;
 }
-// @symbol _ZN12daIDonketu_cD1Ev
-// @symbol _ZN12daIDonketu_cD0Ev
 /* D1/D0 emit from the header's inline destructor: written out-of-line here
  * it would produce D0 before D1 and a homeless D2. The empty body still
  * chains two vptr stores and the member destructor calls

@@ -131,7 +131,6 @@ extern void *func_ov007_020c9388(int a);
  * the next stroke). For param 0, sprites[0] also fades in up to alpha
  * 0x1f000. Returns 1 once the replay has passed the last stroke (for
  * param 0, only once sprites[0] is fully opaque). */
-// @symbol func_ov007_020bbd24
 int func_ov007_020bbd24(int param) {
     int r4;
     int r5;
@@ -180,7 +179,6 @@ int func_ov007_020bbd24(int param) {
     return 0;
 }
 
-// @symbol func_ov007_020bbc08
 void func_ov007_020bbc08(int mode, int a1, int a2) {
     Ov007Picker *p;
 
@@ -232,7 +230,6 @@ static inline int pressed(Ov007Pad *pad, u16 h, int m1, int m2) {
     return ok;
 }
 
-// @symbol func_ov007_020bb4b0
 void func_ov007_020bb4b0(void) {
     int t1;
     Ov007Picker *s;
@@ -451,7 +448,6 @@ void func_ov007_020bb4b0(void) {
  * B/down step tweens[0] between its three stops, R/L request menu state 3 or
  * 4 by sprites[1]'s alpha, and Y/left and A/right undo or redo the last
  * committed stroke. */
-// @symbol func_ov007_020bb09c
 int func_ov007_020bb09c(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Pad *r4 = WORK->pad;
@@ -618,7 +614,6 @@ int func_ov007_020bb09c(void) {
     }
 }
 
-// @symbol func_ov007_020bad8c
 void func_ov007_020bad8c(void) {
     Ov007PickerScene *mgr;
     Ov007MenuState *obj;
@@ -750,7 +745,6 @@ void func_ov007_020bad8c(void) {
 
 /* Each menu state drives the picker's per-step offset across the clamp
  * rectangle; state 5 puts pos back at its rest position. */
-// @symbol func_ov007_020baa10
 void func_ov007_020baa10(void) {
     Ov007Picker *a;
     s16 state;
@@ -835,7 +829,6 @@ void func_ov007_020baa10(void) {
     }
 }
 
-// @symbol func_ov007_020ba9bc
 void func_ov007_020ba9bc(void) {
     func_ov007_020bad8c();
     func_ov007_020baa10();
@@ -843,7 +836,6 @@ void func_ov007_020ba9bc(void) {
     func_ov007_020c5188(SCENE->picker, 0);
 }
 
-// @symbol func_ov007_020ba368
 int func_ov007_020ba368(int t) {
     Ov007Picker *s;
     int done = 0;
@@ -1059,7 +1051,6 @@ int func_ov007_020ba368(int t) {
     return done;
 }
 
-// @symbol func_ov007_020ba2e0
 void func_ov007_020ba2e0(void) {
     func_ov007_020c5dec(SCENE->picker);
     SCENE->awaitingTap = 1;
@@ -1070,7 +1061,6 @@ void func_ov007_020ba2e0(void) {
     SCENE->states[1]->requestedState = 5;
 }
 
-// @symbol func_ov007_020ba05c
 int func_ov007_020ba05c(void) {
     Ov007PickerScene *mgr = SCENE;
     int r6 = 0;
@@ -1157,7 +1147,6 @@ int func_ov007_020ba05c(void) {
     return r6;
 }
 
-// @symbol func_ov007_020b9fc0
 int func_ov007_020b9fc0(void) {
     Ov007PickerSprites *base = SPRITES;
     Ov007Sprite *p1 = base->sprites[0];
@@ -1184,7 +1173,6 @@ int func_ov007_020b9fc0(void) {
 
 /* Commits a stroke still being drawn, settles the picker, clears the
  * requests on states[2] and [3] and presets idleFrames to its 0xf0 limit. */
-// @symbol func_ov007_020b9f0c
 void func_ov007_020b9f0c(void) {
     if (SCENE->picker->path->pointCount != 0) {
         func_ov007_020c6550(SCENE->picker);
@@ -1200,7 +1188,6 @@ void func_ov007_020b9f0c(void) {
     SPRITES->slideProgress = 0x1000;
 }
 
-// @symbol func_ov007_020b9ca8
 void func_ov007_020b9ca8(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Touch *r4 = WORK->touch;
@@ -1266,7 +1253,6 @@ void func_ov007_020b9ca8(void) {
     }
 }
 
-// @symbol func_ov007_020b9880
 void func_ov007_020b9880(int a0, int a1) {
     int sp14, sp18, sp10, sp1c;
     int var_sl;
@@ -1378,7 +1364,6 @@ void func_ov007_020b9880(int a0, int a1) {
     func_ov007_020bbe60(a1);
 }
 
-// @symbol func_ov007_020b9770
 void func_ov007_020b9770(void) {
     int i;
 
@@ -1404,7 +1389,6 @@ void func_ov007_020b9770(void) {
     data_ov007_02104b9c = 0;
 }
 
-// @symbol func_ov007_020b9640
 void func_ov007_020b9640(void) {
     Ov007MenuState *p;
     short st;
@@ -1446,7 +1430,6 @@ void func_ov007_020b9640(void) {
     }
 }
 
-// @symbol func_ov007_020b91b4
 void func_ov007_020b91b4(void) {
     int r7;
     Ov007Picker *r6;
@@ -1592,7 +1575,6 @@ void func_ov007_020b91b4(void) {
     }
 }
 
-// @symbol func_ov007_020b8fd4
 void func_ov007_020b8fd4(Ov007Camera *camera) {
     int v;
     int mode;
@@ -1673,34 +1655,28 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
     func_ov007_020c421c(p_10);
 }
 
-// @symbol func_ov007_020b8fb4
 int func_ov007_020b8fb4(void) {
     Ov007PickerScene *p = SCENE;
     return p->idleFrames >= 0xf0;
 }
 
 /* Getters for the rest of the menu. */
-// @symbol func_ov007_020b8fa0
 int func_ov007_020b8fa0(void) {
     return SCENE->awaitingTap;
 }
 
-// @symbol func_ov007_020b8f8c
 Ov007MenuState *func_ov007_020b8f8c(void) {
     return SCENE->states[0];
 }
 
-// @symbol func_ov007_020b8f78
 Ov007MenuState *func_ov007_020b8f78(void) {
     return SCENE->states[1];
 }
 
-// @symbol func_ov007_020b8f64
 Ov007MenuState *func_ov007_020b8f64(void) {
     return SCENE->states[2];
 }
 
-// @symbol func_ov007_020b8f50
 Ov007MenuState *func_ov007_020b8f50(void) {
     return SCENE->states[3];
 }

@@ -52,12 +52,10 @@ extern CLPS_Block data_ov045_02112510;
 /* local extern: the shared arm9 sine table has no header. */
 extern "C" s16 data_02082214[];
 
-// @symbol daObjKm2_Ami_Bou_c_classInit
 extern "C" daObjKm2_Ami_Bou_c *daObjKm2_Ami_Bou_c_classInit() {
     return new daObjKm2_Ami_Bou_c();
 }
 
-// @symbol g_profile_KM2_AMI_BOU
 extern "C" SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
     daObjKm2_Ami_Bou_c_classInit,
     0x008e, /* KM2_AMI_BOU registry id 142 */
@@ -68,7 +66,6 @@ extern "C" SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
     0x01000000,
     0};
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c13InitResourcesEv
 s32 daObjKm2_Ami_Bou_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov045_021131b0), 1, -1);
     if (param1 != kUnsetParam)
@@ -82,7 +79,6 @@ s32 daObjKm2_Ami_Bou_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c8BehaviorEv
 s32 daObjKm2_Ami_Bou_c::Behavior() {
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -100,13 +96,11 @@ s32 daObjKm2_Ami_Bou_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c6RenderEv
 s32 daObjKm2_Ami_Bou_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv
 s32 daObjKm2_Ami_Bou_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov045_021131b0.Release();
@@ -114,8 +108,6 @@ s32 daObjKm2_Ami_Bou_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_cD1Ev
-// @symbol _ZN18daObjKm2_Ami_Bou_cD0Ev
 /* The inline destructor in the header emits D1 then D0, and no D2. */
 
 AmiBouModelFilePtr data_ov045_021131b0(ASSET_KM2_AMI_BOU_BMD);

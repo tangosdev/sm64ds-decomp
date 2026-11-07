@@ -127,7 +127,6 @@ void func_0206d8c4(struct OverlayTable *pInfo, u32 nIndex);
 void func_0206d890(SavedIntState *state);
 void func_0206d868(const SavedIntState *s);
 
-// @symbol func_0206d940
 /* Open a gap at nIndex: move entries nIndex.. up one and count one more. */
 void func_0206d940(struct OverlayTable *pInfo, u32 nIndex) {
     unsigned int n;
@@ -143,7 +142,6 @@ void func_0206d940(struct OverlayTable *pInfo, u32 nIndex) {
     pInfo->m_header.m_nInfoCount++;
 }
 
-// @symbol func_0206d8c4
 /* Delete entry nIndex: move the entries above it down one. */
 void func_0206d8c4(struct OverlayTable *pInfo, u32 nIndex) {
     unsigned int n;
@@ -155,7 +153,6 @@ void func_0206d8c4(struct OverlayTable *pInfo, u32 nIndex) {
         CopyInfo(&pInfo->m_info[nIndex], &pInfo->m_info[nIndex + 1]);
 }
 
-// @symbol func_0206d890
 /* Disable IRQ and FIQ, and open MPU data region 7 (0x02600029) for the
  * edit. Saves all three previous states for func_0206d868. */
 void func_0206d890(SavedIntState *state) {
@@ -165,7 +162,6 @@ void func_0206d890(SavedIntState *state) {
     CP15::MPUDataRegion7(0x02600029);
 }
 
-// @symbol func_0206d868
 /* Put back what func_0206d890 saved. */
 void func_0206d868(const SavedIntState *s) {
     CP15::MPUDataRegion7(s->mpuRegion7);
@@ -174,7 +170,6 @@ void func_0206d868(const SavedIntState *s) {
     ((void (*)(int))IRQ::SetIRQState)(s->irqState);
 }
 
-// @symbol func_0206d32c
 /* Record [nVMA, nVMA + size) at ROM offset lma in table type, in address
  * order. Entries it covers are deleted or trimmed, an entry it starts
  * inside is split, and an entry with the same start takes the new ROM
@@ -331,7 +326,6 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
     return 1;
 }
 
-// @symbol func_0206cf98
 /* Remove [nVMA, nVMA + size) from table type (0 or 1; FS_EndOverlay passes
  * its overlay's target processor). An entry inside the range is deleted,
  * and an entry crossing either end is split or trimmed. Interrupts are off

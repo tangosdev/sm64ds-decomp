@@ -84,7 +84,6 @@ static inline SystemState &StateOf(Particle::System *system) {
 
 extern "C" {
 
-// @symbol func_0204a4c8
 char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int arg3,
                     unsigned short arg4) {
     int i;
@@ -121,7 +120,6 @@ char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int a
     return (char *)manager;
 }
 
-// @symbol func_0204a17c
 void func_0204a17c(Particle::Manager *manager, char *resource) {
     int offset = sizeof(ParticleResourceHeader);
     int i;
@@ -230,7 +228,6 @@ void func_0204a17c(Particle::Manager *manager, char *resource) {
     }
 }
 
-// @symbol func_0204a0dc
 int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(const void *, u32)) {
     int i;
     GX::BeginLoadTex();
@@ -249,7 +246,6 @@ int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(const void *, 
     return 1;
 }
 
-// @symbol func_0204a028
 int func_0204a028(Particle::Manager *manager,
                   unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
     int i;
@@ -274,7 +270,6 @@ int func_0204a028(Particle::Manager *manager,
     return 1;
 }
 
-// @symbol func_02049f58
 void func_02049f58(Particle::Manager *manager) {
     Particle::System *system = manager->mActiveSystems.head;
     Particle::System *next;
@@ -298,7 +293,6 @@ void func_02049f58(Particle::Manager *manager) {
     } while (next != 0);
 }
 
-// @symbol func_02049ee8
 void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
     Particle::System *system;
     u16 control = REG_DISP3DCNT;
@@ -333,7 +327,6 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
  */
 namespace Particle {
 
-// @symbol _ZN8Particle7Manager9AddSystemEiR7Vector3
 System *Manager::AddSystem(int definitionID, Vector3 &position) {
     System *result;
     System *system;
@@ -361,7 +354,6 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
 
 extern "C" {
 
-// @symbol func_02049d78
 void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     void *particle;
     particle = func_0204d958(&system->particles);
@@ -378,7 +370,6 @@ void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     func_0204d9a0(&manager->mFreeSystems, system);
 }
 
-// @symbol func_02049d60
 void func_02049d60(Particle::Manager *manager, Particle::System *system) {
     func_0204a5bc(system, &manager->mFreeParticles);
 }

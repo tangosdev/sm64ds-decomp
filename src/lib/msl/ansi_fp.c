@@ -60,7 +60,6 @@ extern unsigned char data_0209a6f8[];
    algorithms differ: Wind Waker's halves a mask (16, 8, 4, 2, 1 bits),
    Spirit Tracks' is 32 - __cntlzw(~x & (x - 1)), and this one walks zero
    bytes in memory. So the body does not confirm either name. */
-// @symbol func_02071708
 int func_02071708(int w0, ...) {
     unsigned char *p;
     int count;
@@ -93,7 +92,6 @@ int func_02071708(int w0, ...) {
    digits digits rounds up. 1 when the first dropped digit is above 5, or is
    5 with a non-zero digit after it, or is exactly 5 after an odd last kept
    digit (half to even). Otherwise -1. */
-// @symbol __must_round
 int __must_round(const Decimal *d, int digits) {
     const u8 *p = d->sig.text + digits;
     u8 e = *p;
@@ -115,7 +113,6 @@ int __must_round(const Decimal *d, int digits) {
 /* MSL __dorounddecup: increment the decimal significand, propagating carry
    into the exponent. Real C, no asm hatch; the investigation is in
    notes/mwccarm-codegen.md 9a(3). */
-// @symbol __dorounddecup
 void __dorounddecup(Decimal *d, int len) {
     unsigned char *base = d->sig.text;
     unsigned char *p = base + len - 1;
@@ -137,7 +134,6 @@ void __dorounddecup(Decimal *d, int len) {
 /* MSL __rounddec: cut the significand to length digits, then round up
    (__dorounddecup) when __must_round says so: above half,
    or exactly half with an odd last kept digit. */
-// @symbol __rounddec
 void __rounddec(Decimal *value, int length) {
     int r;
     if (length <= 0)
@@ -154,7 +150,6 @@ void __rounddec(Decimal *value, int length) {
 /* MSL __ull2dec: v as a Decimal. Digit values (0..9, not ASCII) are
    generated low first, the string is reversed, and the exponent is
    length - 1. 0 gives length 0. */
-// @symbol __ull2dec
 void __ull2dec(Decimal *result, unsigned long long v) {
     result->sign = 0;
     result->sig.length = 0;
@@ -179,7 +174,6 @@ void __ull2dec(Decimal *result, unsigned long long v) {
     result->exp = (short)(result->sig.length - 1);
 }
 
-// @symbol __timesdec
 void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
     unsigned int accumulator = 0;
     unsigned char mantissa[64];
@@ -251,7 +245,6 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
     }
 }
 
-// @symbol __str2dec
 void __str2dec(Decimal *result, unsigned char *digits, short exp) {
     int i;
     unsigned char c;
@@ -290,7 +283,6 @@ docall:
    Any other n is 2^(n/2) squared (__timesdec, the Decimal multiply),
    times one more 2 or 0.5 when n is odd. __num2dec_internal
    calls it to scale the binary exponent. */
-// @symbol __two_exp
 void __two_exp(Decimal *out, int n) {
     Decimal half;
     Decimal copy;
@@ -374,7 +366,6 @@ void __two_exp(Decimal *out, int n) {
     }
 }
 
-// @symbol __num2dec_internal
 void __num2dec_internal(char *out, double x) {
     int e;
     double t1;
@@ -466,7 +457,6 @@ void __num2dec_internal(char *out, double x) {
  * digits (capped at 32), then turn the digit values into ASCII. decform is
  * MSL's layout, as in float2str.c, which calls this.
  */
-// @symbol __num2dec
 void __num2dec(void *a0, double x, void *d) {
     int n;
     Decimal *c = (Decimal *)d;

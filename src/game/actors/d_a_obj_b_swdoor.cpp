@@ -54,26 +54,22 @@ typedef char BSwdoorClsnFilePtr_size_must_be_8[sizeof(BSwdoorClsnFilePtr) == 8 ?
 
 extern ResourceDescriptor data_ov014_021145c4;
 
-// @symbol daObjBSwdoor_c_classInit
 extern "C" daObjBSwdoor_c *daObjBSwdoor_c_classInit() {
     return new daObjBSwdoor_c();
 }
 
-// @symbol _ZN14daObjBSwdoor_c13InitResourcesEv
 s32 daObjBSwdoor_c::InitResources() {
     s32 r = InitResourcesFrom(&data_ov014_021145c4);
     mMeshCollider.Enable(this);
     return r;
 }
 
-// @symbol _ZN14daObjBSwdoor_c8BehaviorEv
 s32 daObjBSwdoor_c::Behavior() {
     s32 r = UpdateShutter();
     UpdateClsnPosAndRot();
     return r;
 }
 
-// @symbol _ZN14daObjBSwdoor_c16CleanupResourcesEv
 /* Cross-overlay tail-call. #pragma long_calls is positional in 2004/b56. */
 #pragma long_calls on
 s32 daObjBSwdoor_c::CleanupResources() {
@@ -82,14 +78,12 @@ s32 daObjBSwdoor_c::CleanupResources() {
 #pragma long_calls off
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjBSwdoor_cD0Ev
 /* vtable: VT0 = _ZTV14daObjBSwdoor_c; VT1 = _ZTV13daObjSwdoor_c.
  * No definition here: the inline ~daObjBSwdoor_c() emits D0 and D1
  * together. */
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjBSwdoor_cD1Ev
 /* No definition here either: `virtual ~daObjBSwdoor_c() {}` is in
  * include/daObjBSwdoor_c.h. Defined out of line in this file, the pair came
  * out D0-before-D1 -- the reverse of the cartridge -- with a third, homeless

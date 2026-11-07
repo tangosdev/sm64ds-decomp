@@ -1,4 +1,3 @@
-// @symbol func_ov007_020c7c60
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */

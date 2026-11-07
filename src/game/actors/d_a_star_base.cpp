@@ -1,5 +1,4 @@
 //cpp
-// @symbol daStarBase_c_classInit
 #include "daStarBase_c.h"
 
 /* Reconstructed source-style name: SM64DS proves daStarBase_c through RTTI,

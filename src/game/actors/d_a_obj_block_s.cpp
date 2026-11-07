@@ -199,8 +199,6 @@ BlockSW4 data_ov098_0213c4f0 = {{0x14000, 0x14000, 0x14000, 0xf000}};
 
 #pragma defer_codegen off
 
-// @symbol _ZN13daObjBlockS_cD1Ev
-// @symbol _ZN13daObjBlockS_cD0Ev
 /* Destroys dCcAcPos_c x2, dExtShadowModel_c and dBgCh_Actr in reverse declaration
  * order, then dBgActor_c's inline destructor stores its own vptr and destroys
  * its dBgW_KcMbg and dExtSimpleModel_c before chaining to dActor_c. D0 then returns the
@@ -209,7 +207,6 @@ daObjBlockS_c::~daObjBlockS_c()
 {
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_0213814cEv
 /* STATE_BROKEN, update. Every frame it puts the crate back at its home (the
  * reset helper), keeps the collider disabled and refreshes the model matrix
  * and collider transform. Once the crate is off screen (mFlags 0x8) and more
@@ -231,7 +228,6 @@ void daObjBlockS_c::func_ov098_0213814c()
         ((dBgW *)&mMeshCollider)->Disable();
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021381e8Ev
 /* STATE_BROKEN, enter. Disables the collider, resets the crate to its home
  * and refreshes the model matrix and collider transform. Clears mFlags bits
  * 0x20000 / 0x40000 / 0x80000 (the two yoshi-mouth bits and 0x80000, which
@@ -246,7 +242,6 @@ void daObjBlockS_c::func_ov098_021381e8()
     mFlags &= ~(ACTOR_FLAG_YOSHI_MOUTH_A | ACTOR_FLAG_YOSHI_MOUTH_B | 0x80000);
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138238Ev
 /* STATE_IN_MOUTH, update. mFlags 0x80000 sends the crate to STATE_SPIT_OUT;
  * with both yoshi-mouth bits (0x20000 / 0x40000) clear it goes to
  * STATE_BOUNCING. While 0x20000 is clear and mEatingPlayer is set, the crate
@@ -297,7 +292,6 @@ void daObjBlockS_c::func_ov098_02138238()
     ((dBgW *)&mMeshCollider)->Disable();
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138318Ev
 /* STATE_IN_MOUTH, enter. Drops the sink offset and its target to 0, stops
  * the horizontal motion and clears dCc_c flags bit 0x2000 on the first
  * cylinder (the bit the thrown / spit-out enters set). */
@@ -309,7 +303,6 @@ void daObjBlockS_c::func_ov098_02138318()
     mdCcAcPos_c1.flags &= ~0x2000;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138344Ev
 /* STATE_BOUNCING, update. Moves the crate (UpdatePos, then the
  * collision step) and slows its horizontal speed by 1/3 unit per frame
  * (0x555). Each frame on the ground it plays sound bank 0x51, counts
@@ -350,7 +343,6 @@ void daObjBlockS_c::func_ov098_02138344()
     }
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138484Ev
 /* STATE_BOUNCING, enter. Zeroes the sink offset and target, clears mFlags
  * bit 0x80000, starts mBounceCount at 3 (vertical speed 30 units, horizontal
  * speed 15 units to begin with) and forgets mEatingPlayer and
@@ -368,7 +360,6 @@ void daObjBlockS_c::func_ov098_02138484()
     mdCcAcPos_c1.flags &= ~0x2000;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021384fcEv
 /* STATE_SPIT_OUT, update. The same frame as STATE_THROWN's: move, run the
  * slide step, and go to STATE_IDLE as soon as that reports the crate on the
  * ground; otherwise ease the horizontal speed down by 1/3 unit per frame
@@ -400,7 +391,6 @@ void daObjBlockS_c::func_ov098_021384fc()
     }
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021385e0Ev
 /* STATE_SPIT_OUT, enter. Zeroes the sink offset and target, then puts the
  * crate 80 units ahead of mEatingPlayer along that player's Y angle (the x
  * offset is table word 0 and the z offset table word 1 of data_02082214 at
@@ -452,7 +442,6 @@ void daObjBlockS_c::func_ov098_021385e0()
     mdCcAcPos_c1.flags |= 0x2000;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138734Ev
 /* STATE_THROWN, update. The same frame as STATE_SPIT_OUT's: move, run the
  * slide step and go to STATE_IDLE as soon as that reports the crate on the
  * ground; otherwise ease the horizontal speed down by 1/3 unit per frame
@@ -482,7 +471,6 @@ void daObjBlockS_c::func_ov098_02138734()
     }
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138818Ev
 /* STATE_THROWN, enter. Zeroes the sink offset and target and launches the
  * crate: the player in mHoldingPlayer picks an index (its param1, which
  * daMky_c compares with daPly_c::mCharacter, clamped to 4; 0 when nobody
@@ -520,7 +508,6 @@ void daObjBlockS_c::func_ov098_02138818()
     mdCcAcPos_c1.flags |= 0x2000;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021388bcEv
 /* STATE_CARRIED, update. Runs the collision step, and kills the crate (after
  * telling the carrying player to drop it) if it is standing on water. Then
  * follows three mFlags bits whose meaning is not recovered: 0x400 set goes
@@ -569,7 +556,6 @@ void daObjBlockS_c::func_ov098_021388bc()
     }
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021389ccEv
 /* STATE_CARRIED, enter. Stops the horizontal motion, clears dCc_c flags bit
  * 0x2000 on the first cylinder and zeroes the sink offset and target. */
 void daObjBlockS_c::func_ov098_021389cc()
@@ -580,7 +566,6 @@ void daObjBlockS_c::func_ov098_021389cc()
     mClsnYOffset = 0;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021389f8Ev
 /* STATE_IDLE, update. While off screen (mFlags 0x8) with both speeds at 0
  * there is nothing to do and it returns at once. Otherwise: move, run the
  * collision and slide steps, then hit handling and the wall test. It is
@@ -620,7 +605,6 @@ void daObjBlockS_c::func_ov098_021389f8()
     func_ov098_021397c8();
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138b18Ev
 /* STATE_IDLE, enter. Forgets mHoldingPlayer and mEatingPlayer. */
 void daObjBlockS_c::func_ov098_02138b18()
 {
@@ -628,7 +612,6 @@ void daObjBlockS_c::func_ov098_02138b18()
     BLOCKS_EATING_PLAYER(this) = 0;
 }
 
-// @symbol Crate_SetState
 /* Enters state `i`: stores it in mState and calls that row's enter member of
  * the table at data_ov098_0213c878. */
 extern "C" void Crate_SetState(daObjBlockS_c *self, int i)
@@ -639,7 +622,6 @@ extern "C" void Crate_SetState(daObjBlockS_c *self, int i)
     (c->*data_ov098_0213c878[j].fn[0])();
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138b70Ev
 /* Runs the update member of the current state's row (called once a frame
  * from the end of Behavior). */
 void daObjBlockS_c::func_ov098_02138b70()
@@ -649,7 +631,6 @@ void daObjBlockS_c::func_ov098_02138b70()
     (c->*data_ov098_0213c878[j].fn[1])();
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138bb8Ev
 /* Returns 1 when the crate is on the ground and the floor's CLPS entry has
  * the water bit set (include/CLPS.h, `w0 & 0x20`); the callers kill the
  * crate on it. */
@@ -662,7 +643,6 @@ int daObjBlockS_c::func_ov098_02138bb8()
     return 0;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138bfcEv
 /* Returns 1 when func_02035638 (a hit test on the crate's dBgCh_Actr, a
  * sibling of IsOnWall) holds and the actor owning the collision it reports is
  * a DOSUN, DONKAKU, DONGURU, BATAN or ONIMASU; STATE_IDLE kills the crate
@@ -691,7 +671,6 @@ int daObjBlockS_c::func_ov098_02138bfc()
     }
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138ce0Ev
 /* Puts the crate back in its starting condition: zeroes the sink offset,
  * target, particle handles and mBreakTimer, restores the home position and
  * angles, zeroes horizontal / vertical speed and the two velocity words
@@ -737,7 +716,6 @@ void daObjBlockS_c::func_ov098_02138ce0()
     mdCcAcPos_c2.Init(this, a2, 0x3c000, 0x1e000, 0x800004, 0);
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138e08Ev
 /* Pays out three coins at the crate's position (spread argument 15 units, 0xf000;
  * angle 0), the first time only: mCoinsPaid guards it. */
 void daObjBlockS_c::func_ov098_02138e08()
@@ -751,7 +729,6 @@ void daObjBlockS_c::func_ov098_02138e08()
     mCoinsPaid = 1;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02138e6cEv
 /* Reacts to what touched the crate, from the first cylinder's hit state.
  * Does nothing while mBreakTimer runs. A set mFlags 0x20000 or 0x40000 (the
  * yoshi-mouth bits) enters STATE_IN_MOUTH. Otherwise, if the cylinder has an
@@ -838,7 +815,6 @@ void daObjBlockS_c::func_ov098_02138e6c()
     }
 }
 
-// @symbol _ZN13daObjBlockS_c4KillEv
 /* Slot 31. Runs the one-time coin payout, then puffs a simple particle
  * (id 0xe, the same NewSimple id daObjTatefuda_c and daObjYajirusi_c use)
  * and a dust poof at the crate's own position raised 40 units
@@ -865,7 +841,6 @@ void daObjBlockS_c::Kill()
     Crate_SetState(this, STATE_BROKEN);
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021390ecEv
 /* Wall test. Returns early while mWallCooldown, decremented by one per call,
  * is still nonzero after the decrement (set to 3, the next two calls return
  * early). If the dBgCh_Actr reports a wall hit: a wall owned by
@@ -907,7 +882,6 @@ void daObjBlockS_c::func_ov098_021390ec()
     mPrevAngleY = ReflectAngle(v.x, v.z, mPrevAngleY);
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02139228Ev
 /* Ground contact and slide step; returns 1 when it ran to the end, 0 when the
  * crate is airborne or it left early (see below).
  *
@@ -1056,7 +1030,6 @@ int daObjBlockS_c::func_ov098_02139228()
     return 1;
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021396a4Ev
 /* Drop shadow. Probes for ground 10 units below the crate (0xa000) with
  * dBgCh_Gnd and stores the ground height in mGroundY (the probe's own Y if
  * nothing is found). The height above it, h = mPosY - mGroundY, is floored
@@ -1094,7 +1067,6 @@ void daObjBlockS_c::func_ov098_021396a4()
     DropShadowScaleXYZ(mShadowModel, mShadowMtx, r4, r5 + 0x28000, r4, 0xf);
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_021397c8Ev
 /* Collider transform. Copies the model matrix (mModel's mat4x3, at 0xf0)
  * into mClsnMat, overwrites its translation row with the crate's position
  * lowered by mClsnYOffset, and hands it and mAngleY to dBgW_KcMbg::Transform
@@ -1114,7 +1086,6 @@ void daObjBlockS_c::func_ov098_021397c8()
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN13daObjBlockS_c19func_ov098_02139850Ev
 /* dExtSimpleModel_c matrix. When mHoldingPlayer is set, mFlags bit 0x4000 is set and the
  * player's mCarryMatrix is nonzero, the
  * crate follows the player's hand: it picks a row r5 of the carry-offset
@@ -1185,7 +1156,6 @@ other:
     }
 }
 
-// @symbol _ZN13daObjBlockS_c16CleanupResourcesEv
 /* Disables the collider, then releases the model and collision files
  * (data_ov098_0213c4c8[0] / [1]) when the actor is BLOCK_S. Always returns 1. */
 int daObjBlockS_c::CleanupResources()
@@ -1203,7 +1173,6 @@ int daObjBlockS_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN13daObjBlockS_c6RenderEv
 /* Draws the model through dExtSimpleModel_c::Render unless the crate is in
  * STATE_BROKEN or mFlags 0x40000 (a yoshi-mouth bit) is set. Always returns 1. */
 int daObjBlockS_c::Render()
@@ -1219,7 +1188,6 @@ int daObjBlockS_c::Render()
     return 1;
 }
 
-// @symbol _ZN13daObjBlockS_c8BehaviorEv
 /* Per-frame update; always returns 1.
  *  - While mFlags bit 0x4000000 is set, gNextActorUpdateMask has bit 0x4000000
  *    (an unrecovered global) and a player is holding the crate, that player
@@ -1300,7 +1268,6 @@ done:
     return 1;
 }
 
-// @symbol _ZN13daObjBlockS_c13InitResourcesEv
 /* Fails (returns 0) unless the actor is BLOCK_S. Saves the spawn position and
  * angles as the home, then builds the crate from data_ov098_0213c4c8 (three
  * words: the model file, the collision file and a CLPS block): model,
@@ -1341,7 +1308,6 @@ int daObjBlockS_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN13daObjBlockS_c15OnGroundPoundedER8dActor_c
 /* Slot 21 (include/dActor_c.h), recovered from vtable slot identity.
  * Ground-pounding the crate just calls its own Kill (slot 31); the
  * `dActor_c &other` parameter is unused, matching the ROM body -- it loads
@@ -1351,7 +1317,6 @@ void daObjBlockS_c::OnGroundPounded(dActor_c &other)
     Kill();
 }
 
-// @symbol _ZN13daObjBlockS_c13OnYoshiTryEatEv
 /* Slot 18. Returns 0 while mBreakTimer is running and 6 otherwise.
  * Behavior counts mBreakTimer down once a frame and poofs the crate when it
  * reaches 0, so Yoshi gets 0 while that is under way. What 6 means to the
@@ -1364,7 +1329,6 @@ int daObjBlockS_c::OnYoshiTryEat()
     return 6;
 }
 
-// @symbol _ZN13daObjBlockS_c13OnTurnIntoEggER7daPly_c
 /* Slot 19. Pays out three coins the first time only, tracked by mCoinsPaid:
  * handed over directly if the player is mid cap-collect, otherwise banked on
  * the egg. Either way the crate goes to STATE_BROKEN. The shared actor hook
@@ -1387,7 +1351,6 @@ void daObjBlockS_c::OnTurnIntoEgg(daPly_c &player) {
     Crate_SetState(this, STATE_BROKEN);
 }
 
-// @symbol daObjBlockS_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjBlockS_c through RTTI,
  * allocation size, vtable identity, and the BLOCK_S registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -1397,7 +1360,6 @@ extern "C" daObjBlockS_c *daObjBlockS_c_classInit()
     return new daObjBlockS_c();
 }
 
-// @symbol __sinit_d_a_obj_block_s.cpp
 BlockSModelFilePtr gBrokenBlockSModelFile(ASSET_BROKEN_BLOCK_S_BMD);       /* model */
 BlockSCollisionFilePtr gBrokenBlockSCollisionFile(ASSET_BROKEN_BLOCK_S_KCL);   /* collision */
 

@@ -91,7 +91,6 @@ extern ArrowSignFileColumn data_ov098_0213c384[];
 extern ArrowSignFileColumn data_ov098_0213c388[];
 
 // 0x02138008 (0x38)
-// @symbol daObjYajirusi_c_classInit_YAJIRUSI_L
 /* Second registry factory for the same class (YAJIRUSI_L profile); body twin
  * of _R below. Contiguous at 0x02138008..0x02138040, so the genuine TU spans
  * 0x02137be0..0x02138040 with no hole. Historical alias: ArrowSignLeft_Spawn. */
@@ -100,7 +99,6 @@ extern "C" int *daObjYajirusi_c_classInit_YAJIRUSI_L(void) {
 }
 
 // 0x02137fd0 (0x38)
-// @symbol daObjYajirusi_c_classInit_YAJIRUSI_R
 extern "C" int *daObjYajirusi_c_classInit_YAJIRUSI_R(void) {
     return (int *)new daObjYajirusi_c;
 }
@@ -134,7 +132,6 @@ int daObjYajirusi_c::InitResources() {
 }
 
 // 0x02137e48 (0xa4)
-// @symbol _ZN15daObjYajirusi_c8BehaviorEv
 int daObjYajirusi_c::Behavior() {
     if (UpdateKillByMegaChar(-0x2000, 0, 0, 0x96000))
         return 1;
@@ -146,14 +143,12 @@ int daObjYajirusi_c::Behavior() {
 }
 
 // 0x02137e20 (0x28)
-// @symbol _ZN15daObjYajirusi_c6RenderEv
 int daObjYajirusi_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 // 0x02137dbc (0x64)
-// @symbol _ZN15daObjYajirusi_c16CleanupResourcesEv
 int daObjYajirusi_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -163,7 +158,6 @@ int daObjYajirusi_c::CleanupResources() {
 }
 
 // 0x02137d80 (0x3c)
-// @symbol _ZN15daObjYajirusi_c15OnHitByMegaCharER7daPly_c
 void daObjYajirusi_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePosX);
@@ -171,7 +165,6 @@ void daObjYajirusi_c::OnHitByMegaChar(daPly_c &player) {
 }
 
 // 0x02137d40 (0x40)
-// @symbol _ZN15daObjYajirusi_c11OnAttacked1ER8dActor_c
 /* Slot 22. A Bob-omb (actorID 0xce) breaks the sign. The slot's type is
  * int, and neither path returns a value. */
 int daObjYajirusi_c::OnAttacked1(dActor_c &other) {
@@ -182,7 +175,6 @@ int daObjYajirusi_c::OnAttacked1(dActor_c &other) {
 }
 
 // 0x02137ccc (0x74)
-// @symbol _ZN15daObjYajirusi_c4KillEv
 /* Kill is vtable slot 31: _ZTV15daObjYajirusi_c (0x0213c3d8) relocates +0x7c to
  * 0x02137ccc where _ZTV10dBgActor_c carries dBgActor_c::Kill, so this is the
  * class's own override. Slot 30 is the same main-module function in both
@@ -215,7 +207,6 @@ void daObjYajirusi_c::Kill() {
 }
 
 // 0x02137c8c (0x40)
-// @symbol _ZN15daObjYajirusi_c18UpdateShadowMatrixEv
 /* Shadow matrix at mShadowMat: rotation from mAngleY, translation
  * mPos >> 3 (model matrices are in eighths of a unit). */
 void daObjYajirusi_c::UpdateShadowMatrix() {
@@ -226,8 +217,6 @@ void daObjYajirusi_c::UpdateShadowMatrix() {
 }
 
 // 0x02137c2c (0x60), 0x02137be0 (0x4c)
-// @symbol _ZN15daObjYajirusi_cD0Ev
-// @symbol _ZN15daObjYajirusi_cD1Ev
 /* The destructor is defined inline-first in daObjYajirusi_c.h, which is what
  * makes mwccarm emit the retail D1-then-D0 pair in ROM order with the vtable
  * homed in this TU and no leaf D2 (class-form skill). Its body is the empty

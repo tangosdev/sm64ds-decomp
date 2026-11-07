@@ -141,7 +141,6 @@ void func_0203d738(void);
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
 
-// @symbol _ZN10dScMgCup_cD1Ev
 /* Reverse of the factory: cups, effects, then the model, which the
    compiler destroys as a member. The tracker and the base chain are the
    inlined dScMgSingle3DBase_c destructor. */
@@ -426,10 +425,8 @@ extern "C" void Cup_PickShuffleSpeed(char *raw) {
     }
 }
 
-// @symbol _ZN10dScMgCup_c9StateIdleEv
 void dScMgCup_c::StateIdle() {}
 
-// @symbol _ZN10dScMgCup_c11StateFinishEv
 void dScMgCup_c::StateFinish() {
     mTimer -= 1;
     if (mTimer > 0)
@@ -451,7 +448,6 @@ void dScMgCup_c::StateFinish() {
     }
 }
 
-// @symbol _ZN10dScMgCup_c11StateResultEv
 void dScMgCup_c::StateResult() {
     int score;
     int i;
@@ -486,7 +482,6 @@ void dScMgCup_c::StateResult() {
     mPromptEnabled = 0;
 }
 
-// @symbol _ZN10dScMgCup_c11StateSelectEv
 void dScMgCup_c::StateSelect() {
     char *raw = (char *)this;
     int touchPressed = 0;
@@ -536,7 +531,6 @@ void dScMgCup_c::StateSelect() {
     }
 }
 
-// @symbol _ZN10dScMgCup_c17StateWaitForInputEv
 void dScMgCup_c::StateWaitForInput() {
     mTimer -= 1;
     if (mTimer > 0)
@@ -545,7 +539,6 @@ void dScMgCup_c::StateWaitForInput() {
     mState = 4;
 }
 
-// @symbol _ZN10dScMgCup_c12StateShuffleEv
 void dScMgCup_c::StateShuffle() {
     char *raw = (char *)this;
     int oldX, oldY;
@@ -698,7 +691,6 @@ void dScMgCup_c::StateShuffle() {
     mTimer += 1;
 }
 
-// @symbol _ZN10dScMgCup_c19StatePrepareShuffleEv
 void dScMgCup_c::StatePrepareShuffle() {
     char *raw = (char *)this;
     int *countdown = &mTimer;
@@ -713,7 +705,6 @@ void dScMgCup_c::StatePrepareShuffle() {
     mState = 2;
 }
 
-// @symbol _ZN10dScMgCup_c10StateSetupEv
 void dScMgCup_c::StateSetup() {
     int cupIndex;
     int score;
@@ -774,7 +765,6 @@ void dScMgCup_c::StateSetup() {
     }
 }
 
-// @symbol _ZN10dScMgCup_c11OnNewRecordEv
 /* Slot 20: the win animation on mModel. */
 void dScMgCup_c::OnNewRecord() {
     Presenter_PlayCheer(&mModel);
@@ -832,7 +822,6 @@ void dScMgCup_c::StartRound(int msg) {
     Mg_ShowBanner(0xd, 0x80, 0xa0, 1, -1, 0xd);
 }
 
-// @symbol _ZN10dScMgCup_c6RenderEv
 /* Slot 9: submits cups in descending screen-y order. The animation frame
  * index follows draw order, while position/content follow the cup index. */
 s32 dScMgCup_c::Render() {
@@ -878,7 +867,6 @@ s32 dScMgCup_c::Render() {
     return 1;
 }
 
-// @symbol _ZN10dScMgCup_c8BehaviorEv
 /* Slot 6: runs the current state, then advances each cup's animation
    according to the duration stored in its current frame. */
 s32 dScMgCup_c::Behavior() {
@@ -902,7 +890,6 @@ s32 dScMgCup_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10dScMgCup_c13InitResourcesEv
 /* Slot 0: sets up the sub-screen backgrounds, loads the board graphics,
    places the three cups and starts a game through StartRound(3). */
 s32 dScMgCup_c::InitResources() {
@@ -976,12 +963,10 @@ inline dScMgCup_c::dScMgCup_c() {
     __cxa_vec_ctor(mCup, 3, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
 }
 
-// @symbol dScMgCup_c_classInit
 extern "C" void *dScMgCup_c_classInit() {
     return new dScMgCup_c;
 }
 
-// @symbol Cup_Nothing
 extern "C" void Cup_Nothing() {}
 
 /* Static-init globals (was the handwritten __sinit_ov006_021303d0 shard).

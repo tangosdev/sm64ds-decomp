@@ -72,7 +72,6 @@ extern "C" {
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjRcCarpet_c_classInit
 extern "C" daObjRcCarpet_c *daObjRcCarpet_c_classInit() {
     return new daObjRcCarpet_c();
 }
@@ -88,7 +87,6 @@ extern "C" SpawnInfo<daObjRcCarpet_c> g_profile_RC_CARPET = {
     0x00000000,
 };
 
-// @symbol _ZN15daObjRcCarpet_c13InitResourcesEv
 int daObjRcCarpet_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0);
     void *modelFile = dExtSimpleModel_c::LoadFile(*data_ov036_02113f58.model);
@@ -108,7 +106,6 @@ int daObjRcCarpet_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjRcCarpet_c8BehaviorEv
 int daObjRcCarpet_c::Behavior() {
     if (mAfterClsnRan)
         ApproachLinear(mRideDipY, -0x14000, 0x5000);
@@ -122,7 +119,6 @@ int daObjRcCarpet_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObjRcCarpet_c6RenderEv
 int daObjRcCarpet_c::Render() {
     if (mWaitTimer < 0x5a && (mWaitTimer & 1))
         return 1;
@@ -130,7 +126,6 @@ int daObjRcCarpet_c::Render() {
     return 1;
 }
 
-// @symbol _ZN15daObjRcCarpet_c16CleanupResourcesEv
 int daObjRcCarpet_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -141,7 +136,6 @@ int daObjRcCarpet_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjRcCarpet_c20UpdateModelTransformEv
 void daObjRcCarpet_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
@@ -149,7 +143,6 @@ void daObjRcCarpet_c::UpdateModelTransform() {
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN15daObjRcCarpet_c19UpdateClsnTransformEv
 void daObjRcCarpet_c::UpdateClsnTransform() {
     mClsnMat = mAnmModel.mat4x3;
     mClsnMat.m[9] = mPosX;
@@ -158,8 +151,6 @@ void daObjRcCarpet_c::UpdateClsnTransform() {
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 /* ROM ordinals 0/1 are emitted by the inline virtual destructor:*/
-// @symbol _ZN15daObjRcCarpet_cD1Ev
-// @symbol _ZN15daObjRcCarpet_cD0Ev
 
 CarpetModelFilePtr gRcCarpetModelFile(ASSET_RC_CARPET_BMD);
 CarpetAnimationFilePtr gRcCarpetWaitAnimationFile(ASSET_RC_CARPET_WAIT_BCA);

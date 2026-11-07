@@ -30,13 +30,11 @@ struct Kb1BillboardModelFilePtr : SharedFilePtr {
     ~Kb1BillboardModelFilePtr();
 };
 
-// @symbol __sinit_d_a_obj_kb1_billboard.cpp
 Kb1BillboardModelFilePtr gKb1BallModelFile(ASSET_KB1_BALL_BMD);
 
 /* Every instruction the cartridge has here falls out of the one `new`.
  * The header's inline operator new keeps the allocation on fBase_c::operator
  * new; without it the call relocates to the unavailable global `_Znwm`. */
-// @symbol daObjKb1Billboard_c_classInit
 extern "C" daObjKb1Billboard_c *daObjKb1Billboard_c_classInit() {
     return new daObjKb1Billboard_c();
 }
@@ -44,7 +42,6 @@ extern "C" daObjKb1Billboard_c *daObjKb1Billboard_c_classInit() {
 extern "C" SpawnInfo<daObjKb1Billboard_c> g_profile_KB1_BILLBOARD = {
     daObjKb1Billboard_c_classInit, 0x012d, 0x00be, 0, 0, 0x00010000, 0, 0};
 
-// @symbol _ZN19daObjKb1Billboard_c13InitResourcesEv
 int daObjKb1Billboard_c::InitResources() {
     BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(gKb1BallModelFile);
     mModel.SetFile(file, 1, -1);
@@ -52,19 +49,16 @@ int daObjKb1Billboard_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjKb1Billboard_c6RenderEv
 int daObjKb1Billboard_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN19daObjKb1Billboard_c16CleanupResourcesEv
 int daObjKb1Billboard_c::CleanupResources() {
     gKb1BallModelFile.Release();
     return 1;
 }
 
-// @symbol _ZN19daObjKb1Billboard_c20UpdateModelTransformEv
 void daObjKb1Billboard_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.t.x = mPosX >> 3;

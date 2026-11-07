@@ -64,13 +64,11 @@ extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
 
-// @symbol daObjWlPolelift_c_classInit
 extern "C" daObjWlPolelift_c *daObjWlPolelift_c_classInit()
 {
     return new daObjWlPolelift_c();
 }
 
-// @symbol _ZN17daObjWlPolelift_c13InitResourcesEv
 /* Load the lift model, bind its path and collision state, and initialize the
  * actor-owned shadow and cylinder. */
 s32 daObjWlPolelift_c::InitResources()
@@ -93,7 +91,6 @@ s32 daObjWlPolelift_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN17daObjWlPolelift_c8BehaviorEv
 /* Move toward the current path node, reverse or wrap at path ends, and keep
  * the owned collision and shadow state aligned with the lift. */
 s32 daObjWlPolelift_c::Behavior()
@@ -183,7 +180,6 @@ s32 daObjWlPolelift_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN17daObjWlPolelift_c6RenderEv
 /* Vtable slot 9. The owned dExtSimpleModel_c renders through its own vtable. */
 s32 daObjWlPolelift_c::Render()
 {
@@ -191,7 +187,6 @@ s32 daObjWlPolelift_c::Render()
     return 1;
 }
 
-// @symbol _ZN17daObjWlPolelift_c16CleanupResourcesEv
 /* Vtable slot 3. Releases the one shared file the class holds and reports
  * success; it never touches the object. */
 s32 daObjWlPolelift_c::CleanupResources()
@@ -200,7 +195,6 @@ s32 daObjWlPolelift_c::CleanupResources()
     return 1;
 }
 
-// @symbol func_ov026_021112a4
 /* File-local helper: rebuild the model matrix from the actor's Y rotation and
  * position. */
 extern "C" void func_ov026_021112a4(daObjWlPolelift_c *actor)
@@ -211,7 +205,6 @@ extern "C" void func_ov026_021112a4(daObjWlPolelift_c *actor)
     actor->model.mat4x3.m[11] = actor->mPosZ >> 3;
 }
 
-// @symbol func_ov026_02111234
 /* File-local helper: copy the model matrix into the drop-shadow matrix and
  * hand the owned dExtShadowModel_c to dActor_c::DropShadowScaleXYZ. */
 extern "C" void func_ov026_02111234(daObjWlPolelift_c *actor)
@@ -222,7 +215,7 @@ extern "C" void func_ov026_02111234(daObjWlPolelift_c *actor)
 }
 
 /* _ZN17daObjWlPolelift_cD1Ev and _ZN17daObjWlPolelift_cD0Ev are NOT written
- * here on purpose, and carry no @symbol marker: the inline destructor in
+ * here on purpose: the inline destructor in
  * include/daObjWlPolelift_c.h emits D1 then D0 -- the cartridge's order -- and
  * no D2. tools/tiers.py scores both through that inline definition. */
 

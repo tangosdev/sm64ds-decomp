@@ -64,12 +64,10 @@ CLPS_Block data_ov030_02114ee4 = {
     {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 
-// @symbol daObjHmBskt_c_classInit
 extern "C" daObjHmBskt_c *daObjHmBskt_c_classInit() {
     return new daObjHmBskt_c();
 }
 
-// @symbol _ZN13daObjHmBskt_c13InitResourcesEv
 s32 daObjHmBskt_c::InitResources() {
     BMD_File *modelFile = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov030_02115c88);
     mModel.SetFile(modelFile, 1, -1);
@@ -99,7 +97,6 @@ s32 daObjHmBskt_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjHmBskt_c8BehaviorEv
 s32 daObjHmBskt_c::Behavior() {
     volatile int dummy[4];
     (void)&dummy;
@@ -124,7 +121,6 @@ s32 daObjHmBskt_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjHmBskt_c6RenderEv
 s32 daObjHmBskt_c::Render() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
@@ -132,7 +128,6 @@ s32 daObjHmBskt_c::Render() {
     return 1;
 }
 
-// @symbol _ZN13daObjHmBskt_c16CleanupResourcesEv
 s32 daObjHmBskt_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -146,7 +141,6 @@ s32 daObjHmBskt_c::CleanupResources() {
  * star it carried, respawn a free star 150.0 above the landing point, puff
  * two particle effects and destroy the cage. The landed path falls off the
  * end without a return value; the caller ignores it. */
-// @symbol _ZN13daObjHmBskt_c12CheckLandingEP10dBgCh_Actr
 int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     int g = clsn->IsOnGround();
@@ -164,7 +158,7 @@ int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
 }
 
 /* _ZN13daObjHmBskt_cD1Ev and _ZN13daObjHmBskt_cD0Ev are NOT WRITTEN HERE ON
-   PURPOSE, and carry no @symbol marker. The inline destructor in
+   PURPOSE. The inline destructor in
    include/daObjHmBskt_c.h emits D1 then D0 -- the cartridge's order -- and no
    D2, and tools/tiers.py scores both through that inline definition. */
 

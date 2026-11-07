@@ -23,7 +23,7 @@
  * them has a configured ROM home, so all of them license as deadstrip-data.
  * The destructor is declared and defined inline and empty in the class
  * header -- see that file for why -- so there is deliberately no destructor
- * text in this .cpp for an @symbol marker to sit above.
+ * text in this .cpp.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
  * emits one .text section per function in the REVERSE of source order, so the
@@ -96,13 +96,11 @@ extern s16 data_02082214[];
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical aliases: RockPillar_Spawn, and RockPillar for
  * the class itself. */
-// @symbol daObjKi_Hasira_c_classInit
 extern "C" daObjKi_Hasira_c *daObjKi_Hasira_c_classInit() {
     return new daObjKi_Hasira_c();
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjKi_Hasira_c13InitResourcesEv
 s32 daObjKi_Hasira_c::InitResources() {
     void *f = dExtSimpleModel_c::LoadFile(RockPillar_ModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
@@ -118,7 +116,6 @@ s32 daObjKi_Hasira_c::InitResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjKi_Hasira_c8BehaviorEv
 s32 daObjKi_Hasira_c::Behavior() {
     Vector3 targetPos;
     /* volatile on purpose: the cartridge stores each crash coordinate as soon
@@ -209,14 +206,12 @@ s32 daObjKi_Hasira_c::Behavior() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjKi_Hasira_c6RenderEv
 s32 daObjKi_Hasira_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjKi_Hasira_c16CleanupResourcesEv
 s32 daObjKi_Hasira_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -227,7 +222,6 @@ s32 daObjKi_Hasira_c::CleanupResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjKi_Hasira_c17UpdateModelMatrixEv
 /* dBgActor_c::UpdateModelPosAndRotY with pitch and roll as well: rebuild the
  * model matrix from all three angles, then drop the position into its
  * translation row at 1/8 scale, the model-space unit. */

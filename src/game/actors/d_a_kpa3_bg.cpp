@@ -131,14 +131,12 @@ struct Kpa3BgCollisionFilePtr : SharedFilePtr {
     ~Kpa3BgCollisionFilePtr();
 };
 
-// @symbol daKpa3Bg_c_classInit
 /* Historical alias BowserSkyPlatform_Spawn. */
 extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
 {
     return new daKpa3Bg_c;
 }
 
-// @symbol func_ov060_021183f4
 /* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
    collider and forwards the platform and the touching actor into
    func_ov060_021183cc. */
@@ -146,7 +144,6 @@ extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *o
     func_ov060_021183cc(static_cast<daKpa3Bg_c *>(owner), other);
 }
 
-// @symbol func_ov060_021183cc
 /* Flags the platform when the actor that touched it is Bowser
    (actor ID 0x117); Behavior clears the flag every frame. The comparison
    is materialised into an int before the test, as the ROM does. */
@@ -157,7 +154,6 @@ extern "C" void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other)
         self->mTouchedKoopa = 1;
 }
 
-// @symbol _ZN10daKpa3Bg_c13InitResourcesEv
 s32 daKpa3Bg_c::InitResources()
 {
     mVariant = (u8)(param1 & 0xf);
@@ -185,7 +181,6 @@ s32 daKpa3Bg_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN10daKpa3Bg_c8BehaviorEv
 s32 daKpa3Bg_c::Behavior()
 {
     (this->*(data_ov060_0211b1ac[mState].pmf))();
@@ -195,14 +190,12 @@ s32 daKpa3Bg_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN10daKpa3Bg_c6RenderEv
 s32 daKpa3Bg_c::Render()
 {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN10daKpa3Bg_c16CleanupResourcesEv
 s32 daKpa3Bg_c::CleanupResources()
 {
     mMeshCollider.Disable();
@@ -211,7 +204,6 @@ s32 daKpa3Bg_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daKpa3Bg_c19func_ov060_021181b4Ev
 /* mState 0: finds the daKpa actor (id 0x117), remembers its uniqueID and
    moves to mState 1. Retries every frame until Bowser exists. */
 int daKpa3Bg_c::func_ov060_021181b4() {
@@ -223,7 +215,6 @@ int daKpa3Bg_c::func_ov060_021181b4() {
     }
 }
 
-// @symbol _ZN10daKpa3Bg_c19func_ov060_021180e0Ev
 /* mState 1. Destroys the platform once Bowser is gone. Drops it at once
    (mState 2) if Bowser touched it this frame in state 0xd with condition
    bit 0x10000 set (BOWSER_STATE_JUMP and BOWSER_COND_RECOVERING in
@@ -257,7 +248,7 @@ void daKpa3Bg_c::func_ov060_021180e0()
 }
 
 /* The C body cannot spell a member call. These inline to the direct calls.
-   They sit above the @symbol so that marker stays on the C function. */
+   They sit above that function. */
 static inline void kpaCallEarthquake(daKpa3Bg_c *self, VecFx32 *v, int fix) {
     self->Earthquake(*(const Vector3 *)v, fix);
 }
@@ -268,7 +259,6 @@ static inline void kpaCallDestroy(daKpa3Bg_c *self) {
     self->MarkForDestruction();
 }
 
-// @symbol _ZN10daKpa3Bg_c19func_ov060_02117db8Ev
 /* mState 2: the platform lifts, then falls away. On mPhase 0 and 0x16 it
  * plays sound 0xbc at a point computed from this variant's (x, z, angle)
  * row. Before mPhase 0x16 it calls Earthquake and moves up at mVertSpeed
@@ -373,8 +363,6 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
 }
 #pragma cplusplus on
 
-// @symbol _ZN10daKpa3Bg_cD1Ev
-// @symbol _ZN10daKpa3Bg_cD0Ev
 #pragma opt_propagation on
 #pragma defer_codegen off
 daKpa3Bg_c::~daKpa3Bg_c()

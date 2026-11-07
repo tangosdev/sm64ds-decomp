@@ -112,13 +112,10 @@ namespace cstd {
 int sqrt(unsigned long long x);
 }
 
-// @symbol _ZN12dScMgLuigi_cD1Ev
-// @symbol _ZN12dScMgLuigi_cD0Ev
 /* One definition, so D1 and D0 come out in that order under defer_codegen
    off. The extra D2 is not in the ROM; the manifest lets it be deadstripped. */
 dScMgLuigi_c::~dScMgLuigi_c() {}
 
-// @symbol _ZN12dScMgLuigi_c21AfterCleanupResourcesEj
 /* The base cleanup returns void; call it, don't return it. */
 void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
     if (vfSuccess == 2 && IRQ::GetIRQHandler(2) == Luigi_PrepareScanlines) {
@@ -136,7 +133,6 @@ void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
 
-// @symbol Luigi_PrepareScanlines
 /* IRQ 2's handler uses the void(*)() callback installed by StartIris.
  * It accesses shared scanline state and remains a free function. */
 extern "C" {
@@ -161,7 +157,6 @@ void Luigi_PrepareScanlines(void) {
 }
 }
 
-// @symbol Luigi_PushScanlineRecord
 extern "C" {
 /* Latches the pending table index and copies its first four-byte scanline
    entry to 0x04000040. The record type retains the table stride. */
@@ -175,7 +170,6 @@ void Luigi_PushScanlineRecord(void) {
 }
 }
 
-// @symbol _ZN12dScMgLuigi_c14BuildIrisTableEi
 void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
     extern int data_0209f608;
     extern struct IrisScanline data_0209f648[][0xc0];
@@ -218,7 +212,6 @@ void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
     data_0209f60c = writeBuffer;
 }
 
-// @symbol _ZN12dScMgLuigi_c8IrisStopEi
 extern "C" {
 extern unsigned char gSubScreenLayers;
 }
@@ -240,7 +233,6 @@ void dScMgLuigi_c::IrisStop(int idx) {
     gSubScreenLayers |= 4;
 }
 
-// @symbol _ZN12dScMgLuigi_c8IrisGrowEi
 extern "C" {
 extern unsigned char gMainScreenLayers;
 }
@@ -254,12 +246,10 @@ void dScMgLuigi_c::IrisGrow(int idx) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
 }
 
-// @symbol _ZN12dScMgLuigi_c8IrisHoldEi
 void dScMgLuigi_c::IrisHold(int idx) {
     mIris[idx].scale = 0x1000;
 }
 
-// @symbol _ZN12dScMgLuigi_c10UpdateIrisEv
 void dScMgLuigi_c::UpdateIris() {
     extern LuigiSlotHandler sLuigiIrisTable[];
     if (mIris[0].active == 0)
@@ -268,7 +258,6 @@ void dScMgLuigi_c::UpdateIris() {
     (this->*sLuigiIrisTable[irisState])(0);
 }
 
-// @symbol _ZN12dScMgLuigi_c9StartIrisEv
 void dScMgLuigi_c::StartIris() {
     extern unsigned int data_0209f608;
     extern unsigned char data_0209d460;
@@ -310,7 +299,6 @@ void dScMgLuigi_c::StartIris() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c10DrawRewardEv
 void dScMgLuigi_c::DrawReward() {
     extern OamAttr **sLuigiTextSpritesByLanguage[];
     extern OamAttr *sMgDigitSprites[];
@@ -331,7 +319,6 @@ void dScMgLuigi_c::DrawReward() {
     Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
 }
 
-// @symbol _ZN12dScMgLuigi_c12UpdateRewardEv
 extern "C" {
 extern void Mg_SubmitScore(int self);
 }
@@ -398,7 +385,6 @@ void dScMgLuigi_c::UpdateReward() {
     mReward.active = 0;
 }
 
-// @symbol _ZN12dScMgLuigi_c11StartRewardEi
 void dScMgLuigi_c::StartReward(int pictureIndex) {
     mReward.active = 1;
     mReward.x = mPosX[pictureIndex];
@@ -410,7 +396,6 @@ void dScMgLuigi_c::StartReward(int pictureIndex) {
     mReward.velY = -3840;
 }
 
-// @symbol _ZN12dScMgLuigi_c12DrawCurtainsEv
 void dScMgLuigi_c::DrawCurtains() {
     extern char *sLuigiCurtainSprite;
     int curtainIndex;
@@ -437,7 +422,6 @@ void dScMgLuigi_c::DrawCurtains() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c16CurtainStateSlowEi
 void dScMgLuigi_c::CurtainStateSlow(int curtainIndex) {
     int *velocity;
     int *position;
@@ -471,7 +455,6 @@ void dScMgLuigi_c::CurtainStateSlow(int curtainIndex) {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c16CurtainStateFastEi
 /* The tests on i inside the arm that already tested i stay. Folding them
    drops code this compiler still emits. */
 void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
@@ -514,7 +497,6 @@ void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c16CurtainStateHoldEi
 void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
     int *velocity;
     int *position;
@@ -570,7 +552,6 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c18CurtainStateBounceEi
 void dScMgLuigi_c::CurtainStateBounce(int curtainIndex) {
     int *velocity = &mCurtain[curtainIndex].velX;
     int *position = &mCurtain[curtainIndex].x;
@@ -600,13 +581,11 @@ void dScMgLuigi_c::CurtainStateBounce(int curtainIndex) {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c13CurtainUpdateEi
 void dScMgLuigi_c::CurtainUpdate(int i) {
     extern LuigiSlotHandler sLuigiCurtainStateTable[];
     (this->*(sLuigiCurtainStateTable[mCurtain[i].phase]))(i);
 }
 
-// @symbol _ZN12dScMgLuigi_c12CurtainStartEi
 void dScMgLuigi_c::CurtainStart(int curtainIndex) {
     extern unsigned char data_0209d460;
     extern int sLuigiCurtainX[];
@@ -655,7 +634,6 @@ void dScMgLuigi_c::CurtainStart(int curtainIndex) {
     mCurtain[curtainIndex].sound = 0;
 }
 
-// @symbol _ZN12dScMgLuigi_c12CurtainsDoneEv
 int dScMgLuigi_c::CurtainsDone() {
     extern LuigiSlotHandler sLuigiCurtainTable[];
     int activeCurtains = 0;
@@ -670,7 +648,6 @@ int dScMgLuigi_c::CurtainsDone() {
     return activeCurtains == 0;
 }
 
-// @symbol _ZN12dScMgLuigi_c13ResetCurtainsEv
 void dScMgLuigi_c::ResetCurtains() {
     int i;
     for (i = 0; i < 2; i++) {
@@ -683,7 +660,6 @@ void dScMgLuigi_c::ResetCurtains() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c9DrawTimerEv
 void dScMgLuigi_c::DrawTimer() {
     extern OamAttr **sLuigiTextSpritesByLanguage[];
     int language;
@@ -694,7 +670,6 @@ void dScMgLuigi_c::DrawTimer() {
     Mg_DrawNumberRotated(0x80, 0x28, static_cast<u16>(mTime), 1, -1, 0x800, 0);
 }
 
-// @symbol _ZN12dScMgLuigi_c9TickTimerEv
 void dScMgLuigi_c::TickTimer() {
     if (*(u16 *)&mTime != 0) {
         {
@@ -722,7 +697,6 @@ void dScMgLuigi_c::TickTimer() {
     BeginCatch(0);
 }
 
-// @symbol _ZN12dScMgLuigi_c12DrawPicturesEv
 void dScMgLuigi_c::DrawPictures() {
     extern void *sLuigiPictureSprites[];
     int i;
@@ -736,7 +710,6 @@ void dScMgLuigi_c::DrawPictures() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c13DrawPenaltiesEv
 void dScMgLuigi_c::DrawPenalties() {
     extern OamAttr **sLuigiTextSpritesByLanguage[];
     extern OamAttr *sMgDigitSprites[];
@@ -762,7 +735,6 @@ void dScMgLuigi_c::DrawPenalties() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c15UpdatePenaltiesEv
 void dScMgLuigi_c::UpdatePenalties() {
     for (int i = 0; i < 0x10; i++) {
         if (mPenalty[i].active != 0) {
@@ -792,7 +764,6 @@ void dScMgLuigi_c::UpdatePenalties() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c10AddPenaltyEi
 /* First free miss mark, at the picture that was tapped, and ten seconds off. */
 void dScMgLuigi_c::AddPenalty(int pictureIndex) {
     int penaltyIndex;
@@ -813,7 +784,6 @@ void dScMgLuigi_c::AddPenalty(int pictureIndex) {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c14DrawWantedIconEv
 void dScMgLuigi_c::DrawWantedIcon() {
     extern void *sLuigiPictureSprites[];
     if (mIconOn == 0)
@@ -822,7 +792,6 @@ void dScMgLuigi_c::DrawWantedIcon() {
                           (unsigned short)mIconY, 0);
 }
 
-// @symbol _ZN12dScMgLuigi_c16TickPictureFlashEi
 void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
     char *blinkBase = (char *)mBlink;
     int byteOffset = pictureIndex * 2;
@@ -853,7 +822,6 @@ after_flag:
     *shown = 1;
 }
 
-// @symbol _ZN12dScMgLuigi_c17MovePictureBounceEi
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     extern int sLuigiBounceSpeeds[];
     extern s16 data_02082214[];
@@ -922,7 +890,6 @@ void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c15MovePictureSwayEi
 /* Sway. A new slot takes phase 0 and a signed x speed; a running slot
    coasts, flips at zero, and wraps at the screen edge. */
 void dScMgLuigi_c::MovePictureSway(int idx) {
@@ -970,7 +937,6 @@ void dScMgLuigi_c::MovePictureSway(int idx) {
     WrapPicture(idx);
 }
 
-// @symbol _ZN12dScMgLuigi_c22MovePictureDriftRandomEi
 /* Drift on a random angle, one of sixteen steps of 0x1000. */
 void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
     extern int sLuigiDriftRandomSpeed[];
@@ -996,7 +962,6 @@ void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
     WrapPicture(pictureIndex);
 }
 
-// @symbol _ZN12dScMgLuigi_c21MovePictureDriftByRowEi
 /* Drift left or right from mRowDir of the slot's row. */
 void dScMgLuigi_c::MovePictureDriftByRow(int pictureIndex) {
     extern int sLuigiDriftByRowSpeed[];
@@ -1033,7 +998,6 @@ void dScMgLuigi_c::MovePictureDriftByRow(int pictureIndex) {
     WrapPicture(pictureIndex);
 }
 
-// @symbol _ZN12dScMgLuigi_c24MovePictureDriftByColumnEi
 /* Drift up or down from mColDir of the slot's column. */
 void dScMgLuigi_c::MovePictureDriftByColumn(int pictureIndex) {
     extern int sLuigiDriftByColumnSpeed[];
@@ -1060,7 +1024,6 @@ void dScMgLuigi_c::MovePictureDriftByColumn(int pictureIndex) {
     WrapPicture(pictureIndex);
 }
 
-// @symbol _ZN12dScMgLuigi_c23MovePictureDriftByLevelEi
 /* Drift on the angle stored for this picture's speed. */
 void dScMgLuigi_c::MovePictureDriftByLevel(int pictureIndex) {
     extern int sLuigiDriftByLevelSpeed[];
@@ -1082,7 +1045,6 @@ void dScMgLuigi_c::MovePictureDriftByLevel(int pictureIndex) {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c21MovePictureDriftFixedEi
 /* Drift on a fixed angle of 0x6000. */
 void dScMgLuigi_c::MovePictureDriftFixed(int pictureIndex) {
     extern int sLuigiDriftFixedSpeed[];
@@ -1105,7 +1067,6 @@ void dScMgLuigi_c::MovePictureDriftFixed(int pictureIndex) {
     WrapPicture(pictureIndex);
 }
 
-// @symbol _ZN12dScMgLuigi_c11WrapPictureEi
 /* Wraps one picture's 20.12 position round the 0x110 x 0xd0 screen. Leaf. */
 void dScMgLuigi_c::WrapPicture(int i) {
     int x = mPosX[i] >> 12;
@@ -1120,13 +1081,11 @@ void dScMgLuigi_c::WrapPicture(int i) {
         mPosY[i] = 0xd0000;
 }
 
-// @symbol _ZN12dScMgLuigi_c11StopPictureEi
 void dScMgLuigi_c::StopPicture(int idx) {
     mVelX[idx] = 0;
     mVelY[idx] = 0;
 }
 
-// @symbol _ZN12dScMgLuigi_c14RestartPictureEi
 void dScMgLuigi_c::RestartPicture(int idx) {
     unsigned char *self = (unsigned char *)this;
     extern unsigned char data_ov006_0213ceac[];
@@ -1137,7 +1096,6 @@ void dScMgLuigi_c::RestartPicture(int idx) {
     ((dScMgLuigi_c *)self)->mKind[0] = data_ov006_0213ceac[board] + 1;
 }
 
-// @symbol _ZN12dScMgLuigi_c14UpdatePicturesEv
 void dScMgLuigi_c::UpdatePictures() {
     extern LuigiSlotHandler sLuigiSlotHandlers[];
     int pictureIndex;
@@ -1149,7 +1107,6 @@ void dScMgLuigi_c::UpdatePictures() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c10BeginCatchEi
 void dScMgLuigi_c::BeginCatch(int found) {
     int roundInSet;
     mIconX = (short)(mPosX[mTarget - 1] >> 0xc);
@@ -1169,7 +1126,6 @@ void dScMgLuigi_c::BeginCatch(int found) {
     mIris[0].state = IRIS_GROW;
 }
 
-// @symbol _ZN12dScMgLuigi_c10CheckTouchEv
 void dScMgLuigi_c::CheckTouch() {
     // local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
     extern unsigned char gActivePlayerSlot;
@@ -1249,7 +1205,6 @@ void dScMgLuigi_c::CheckTouch() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c16PlaceBoardLayoutEv
 /* One of four fixed boards, placed in a single call. The randomValue temporary and
    the per-arm loop locals are the spelling that matches; the tail loops
    keep the random call inline. */
@@ -1370,7 +1325,6 @@ void dScMgLuigi_c::PlaceBoardLayout() {
     mFilled++;
 }
 
-// @symbol _ZN12dScMgLuigi_c16PlaceNextPictureEv
 /* One picture per call, or a whole fixed board. character and targetFirst
    stay as pointers: character selection and the final capacity test reload them. */
 void dScMgLuigi_c::PlaceNextPicture() {
@@ -1502,7 +1456,6 @@ void dScMgLuigi_c::PlaceNextPicture() {
                      << 12;
 }
 
-// @symbol _ZN12dScMgLuigi_c12ChooseTargetEv
 void dScMgLuigi_c::ChooseTarget() {
     extern u8 sLuigiWantedPicks[];
     extern u16 sLuigiWantedPosterTiles[];
@@ -1550,7 +1503,6 @@ void dScMgLuigi_c::ChooseTarget() {
     }
 }
 
-// @symbol _ZN12dScMgLuigi_c11ChooseBoardEv
 void dScMgLuigi_c::ChooseBoard() {
     int boardIndex;
     mPrevBoard = mBoard;
@@ -1573,7 +1525,6 @@ void dScMgLuigi_c::ChooseBoard() {
     mBoard = boardIndex;
 }
 
-// @symbol _ZN12dScMgLuigi_c10ResetBoardEv
 void dScMgLuigi_c::ResetBoard() {
     s32 pictureIndex;
     s32 penaltyIndex;
@@ -1632,7 +1583,6 @@ void dScMgLuigi_c::ResetBoard() {
     mFilled = 0;
 }
 
-// @symbol _ZN12dScMgLuigi_c10StateCatchEv
 
 void dScMgLuigi_c::StateCatch() {
     extern LuigiSlotHandler sLuigiSlotHandlers[];
@@ -1684,7 +1634,6 @@ void dScMgLuigi_c::StateCatch() {
     mPromptEnabled = 0;
 }
 
-// @symbol _ZN12dScMgLuigi_c9StatePlayEv
 void dScMgLuigi_c::StatePlay() {
     TickTimer();
     if (mState == STATE_CATCH)
@@ -1694,7 +1643,6 @@ void dScMgLuigi_c::StatePlay() {
     UpdatePenalties();
 }
 
-// @symbol _ZN12dScMgLuigi_c10StatePlaceEv
 void dScMgLuigi_c::StatePlace() {
     int i;
     for (i = 0; i < 8; i++)
@@ -1709,7 +1657,6 @@ void dScMgLuigi_c::StatePlace() {
     unk_516e = 0;
 }
 
-// @symbol _ZN12dScMgLuigi_c10StateSetupEv
 void dScMgLuigi_c::StateSetup() {
     mIconOn = 0;
     ResetCurtains();
@@ -1746,7 +1693,6 @@ extern int sMgResultsBannerX;
 extern int sMgResultsBannerY;
 }
 
-// @symbol _ZN12dScMgLuigi_c10StartRoundEi
 /* Same signature as dScMgBase_c::StartRound, or this stops overriding it.
    mLevel is re-read through an int* so the compare is not folded away. */
 void dScMgLuigi_c::StartRound(int mode) {
@@ -1785,7 +1731,6 @@ void dScMgLuigi_c::StartRound(int mode) {
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
 }
 
-// @symbol _ZN12dScMgLuigi_c6RenderEv
 s32 dScMgLuigi_c::Render() {
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
     DrawCurtains();
@@ -1797,7 +1742,6 @@ s32 dScMgLuigi_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12dScMgLuigi_c8BehaviorEv
 /* One step of the round: setup, place, play, or catch. */
 s32 dScMgLuigi_c::Behavior() {
     int state = mState;
@@ -1805,7 +1749,6 @@ s32 dScMgLuigi_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12dScMgLuigi_c13InitResourcesEv
 s32 dScMgLuigi_c::InitResources() {
     char *screenMap;
     /* Plain u16 fills are 16 bytes short of these two tile copies. */
@@ -1907,7 +1850,6 @@ s32 dScMgLuigi_c::InitResources() {
     return 1;
 }
 
-// @symbol dScMgLuigi_c_classInit
 extern "C" {
 /* Allocates the scene. The ROM has no spelling for this factory. */
 dScMgLuigi_c *dScMgLuigi_c_classInit(void) {

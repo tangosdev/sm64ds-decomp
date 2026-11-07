@@ -88,14 +88,12 @@ void LoadOBJPltt(const void *plt, u32 base, u32 size);
 
 /* Moves value toward target by step; nonzero once it gets there. */
 
-// @symbol dScMgBSC_c_classInit
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer and mCardPos in declaration order. */
 extern "C" void *dScMgBSC_c_classInit() {
     return new dScMgBSC_c;
 }
 
-// @symbol _ZN10dScMgBSC_c13InitResourcesEv
 /* Slot 0, and the key function: the destructor is inline in the header, so
  * this is the first virtual defined out of line, and defining it here emits
  * the vtable and the D1 and D0 pair. The last call dispatches virtually
@@ -120,7 +118,6 @@ s32 dScMgBSC_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN10dScMgBSC_c8BehaviorEv
 /* Slot 6: runs the current state from the table. */
 s32 dScMgBSC_c::Behavior() {
     (this->*sBSCStateTable[mState])();
@@ -129,7 +126,6 @@ s32 dScMgBSC_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10dScMgBSC_c6RenderEv
 /* Slot 9. Card positions are 20.12 fixed point. Sprite frames 0 to 2 are
  * the flip; from frame 3 the card's value picks the face. */
 s32 dScMgBSC_c::Render() {
@@ -154,7 +150,6 @@ s32 dScMgBSC_c::Render() {
     return 1;
 }
 
-// @symbol _ZN10dScMgBSC_c10StartRoundEi
 /* Slot 18. Mode 3 reads the meter score into mHudScore and posts it; every
    mode then restarts the state machine. The redundant `!= 4 && != 5`
    compares are in the ROM and must stay. */
@@ -168,7 +163,6 @@ void dScMgBSC_c::StartRound(int mode) {
     mState = STATE_DEAL_CARDS;
 }
 
-// @symbol _ZN10dScMgBSC_c11CanEndStateEi
 /* Slot 19. In state 13, once the table's reaction has finished, mode 4
    moves to state 9 and mode 5 to state 10. When the round has settled
    (state 12, with gMgCoinsStatus set) the final scores go to the
@@ -203,7 +197,6 @@ settle:
     return 1;
 }
 
-// @symbol _ZN10dScMgBSC_c10OnDealDoneEv
 /* Slot 21: raises the bet to one of four tiers from mHudScore / 5,
    capped at tier 3. */
 void dScMgBSC_c::OnDealDone() {
@@ -215,7 +208,6 @@ void dScMgBSC_c::OnDealDone() {
     MgCoins_RaiseBet(tier + 1);
 }
 
-// @symbol _ZN10dScMgBSC_c14StateDealCardsEv
 /* State 0: deals two cards with distinct random values out of five
  * (valueUsed marks the values taken), starts the deal animation and the
  * prompt, and moves to StateWaitDeal. */
@@ -258,7 +250,6 @@ void dScMgBSC_c::StateDealCards() {
     mState += 1;
 }
 
-// @symbol _ZN10dScMgBSC_c13StateWaitDealEv
 /* State 1: slides each card to its lane (x toward
  * sBscLaneX, y toward 0x60000). The dealer animation increments
  * mCardsDealt as cards are dealt; the loop reloads that count each pass.
@@ -301,7 +292,6 @@ after_loop:
     mState++;
 }
 
-// @symbol _ZN10dScMgBSC_c15StateChooseCardEv
 /* State 2: waits for a touch within 16 pixels of a lane's x and 24 of y
  * 0x60. The touched card becomes mChosenCard and the machine moves on. */
 void dScMgBSC_c::StateChooseCard() {
@@ -336,7 +326,6 @@ void dScMgBSC_c::StateChooseCard() {
     }
 }
 
-// @symbol _ZN10dScMgBSC_c14StateMoveCardsEv
 /* State 3: moves the chosen card down and the other up, then primes the
  * 30-frame timer. */
 void dScMgBSC_c::StateMoveCards() {
@@ -352,7 +341,6 @@ void dScMgBSC_c::StateMoveCards() {
     mState += 1;
 }
 
-// @symbol _ZN10dScMgBSC_c13StateWaitMoveEv
 /* State 4: waits out the timer, then plays the move sound. */
 void dScMgBSC_c::StateWaitMove() {
     mStateTimer = mStateTimer - 1;
@@ -362,7 +350,6 @@ void dScMgBSC_c::StateWaitMove() {
     mState = mState + 1;
 }
 
-// @symbol _ZN10dScMgBSC_c16StateRevealCardsEv
 /* State 5: flips both cards, one frame every four ticks, until the other
  * card is face up. Then settles the stakes: the higher card wins, which
  * adds twice gMgCoinsInPlay to mCredits and one to the score; a loss
@@ -395,7 +382,6 @@ void dScMgBSC_c::StateRevealCards() {
     }
 }
 
-// @symbol _ZN10dScMgBSC_c15StateJudgeCardsEv
 /* State 6: 30 frames after the flip, bumps the score (capped at 9999) and
  * the best score on a win, plays jingle 4 or 5, queues the table's win or
  * loss reaction, and parks in state 13. The bump goes through a pointer on
@@ -429,7 +415,6 @@ void dScMgBSC_c::StateJudgeCards() {
     }
 }
 
-// @symbol _ZN10dScMgBSC_c18StateTableReactionEv
 /* States 7 and 8: queue the table's win or loss reaction. Nothing in this
  * file sets state 7 or 8; StateJudgeCards does the same work inline. */
 void dScMgBSC_c::StateTableReaction() {
@@ -442,7 +427,6 @@ void dScMgBSC_c::StateTableReaction() {
     }
 }
 
-// @symbol _ZN10dScMgBSC_c14StateWaitTableEv
 /* States 9 and 10: wait for the table's reaction to finish, then pay out
  * a win (state 12) or play the loss sting and gather the cards (state 11). */
 void dScMgBSC_c::StateWaitTable() {
@@ -457,7 +441,6 @@ void dScMgBSC_c::StateWaitTable() {
     }
 }
 
-// @symbol _ZN10dScMgBSC_c16StateReturnCardsEv
 /* State 11, while gMgCoinsStatus is set: if the credits are spent,
  * first walks both cards back to the deck (mCardsDealt re-read every pass,
  * as in StateWaitDeal). Then refreshes the meter and settles in state 12. */
@@ -490,7 +473,6 @@ void dScMgBSC_c::StateReturnCards() {
     mState = STATE_WAIT_COINS;
 }
 
-// @symbol _ZN10dScMgBSC_c9StateDoneEv
 /* States 12 and 13: at rest. */
 void dScMgBSC_c::StateDone() {}
 

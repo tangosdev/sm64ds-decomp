@@ -125,13 +125,11 @@ extern SharedFilePtr *data_ov018_02112c04[2];
 typedef void BgchInitAt_(void *self, void *act, int a, int b, void *c2, void *d);
 }
 
-// @symbol daPgMthr_c_classInit
 extern "C" daPgMthr_c *daPgMthr_c_classInit()
 {
     return new daPgMthr_c();
 }
 
-// @symbol _ZN10daPgMthr_c13InitResourcesEv
 int daPgMthr_c::InitResources()
 {
     void *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
@@ -174,7 +172,6 @@ int daPgMthr_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c8BehaviorEv
 int daPgMthr_c::Behavior()
 {
     func_ov018_0211235c(this);
@@ -187,7 +184,6 @@ int daPgMthr_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c6RenderEv
 int daPgMthr_c::Render()
 {
     mTextureSequence.Update(mAnmModel.data);
@@ -196,12 +192,10 @@ int daPgMthr_c::Render()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c16OnPendingDestroyEv
 void daPgMthr_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN10daPgMthr_c16CleanupResourcesEv
 int daPgMthr_c::CleanupResources()
 {
     data_ov018_02113c00.Release();
@@ -212,7 +206,6 @@ int daPgMthr_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_021123d0Ei
 void daPgMthr_c::func_ov018_021123d0(int i)
 {
     mState = &data_ov018_02113c4c[i];
@@ -231,7 +224,6 @@ extern "C" void func_ov018_0211235c(daPgMthr_c *self)
     (self->* *update)();
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_021122ecEv
 /* State 0 enter. Idle anim, stopped, not talking. */
 int daPgMthr_c::func_ov018_021122ec()
 {
@@ -244,7 +236,6 @@ int daPgMthr_c::func_ov018_021122ec()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02112234Ev
 int daPgMthr_c::func_ov018_02112234()
 {
     daPly_c *toucher;
@@ -273,7 +264,6 @@ int daPgMthr_c::func_ov018_02112234()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_021121dcEv
 int daPgMthr_c::func_ov018_021121dc()
 {
     mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
@@ -284,7 +274,6 @@ int daPgMthr_c::func_ov018_021121dc()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111facEv
 int daPgMthr_c::func_ov018_02111fac()
 {
     switch (mTalkStep) {
@@ -349,7 +338,6 @@ int daPgMthr_c::func_ov018_02111fac()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111f1cEv
 int daPgMthr_c::func_ov018_02111f1c()
 {
     if (mPlayer == 0 && mGaveStar == 0)
@@ -362,7 +350,6 @@ int daPgMthr_c::func_ov018_02111f1c()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111e28Ev
 int daPgMthr_c::func_ov018_02111e28()
 {
     ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
@@ -385,7 +372,6 @@ int daPgMthr_c::func_ov018_02111e28()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111d28Ev
 void daPgMthr_c::func_ov018_02111d28()
 {
     /* Unused, but deleting this local DIFFs. */
@@ -466,7 +452,6 @@ void func_ov018_02111bf0(void *cv, void *wv)
 }
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111b3cEv
 void daPgMthr_c::func_ov018_02111b3c()
 {
     daPly_c *p = ClosestPlayer();
@@ -494,7 +479,6 @@ void daPgMthr_c::func_ov018_02111b3c()
     func_ov018_021123d0(2);
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111a48EPc
 void daPgMthr_c::func_ov018_02111a48(char *b)
 {
     dActor_c *who;
@@ -535,7 +519,6 @@ void daPgMthr_c::func_ov018_02111a48(char *b)
     ApproachLinear(mLookAngX, vert, 0x250);
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111968EPvPc
 void daPgMthr_c::func_ov018_02111968(void *found, char *heldRaw)
 {
     dActor_c *held = (dActor_c *)heldRaw;

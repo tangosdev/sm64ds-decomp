@@ -194,8 +194,6 @@ void Matrix4x3_FromTranslation(void*, int, int, int);
 void GiveCoins(int, int);
 short atan2_hold_d_a_1up_1(int, int);
 }
-// @symbol _ZN7da1up_cD1Ev
-// @symbol _ZN7da1up_cD0Ev
 /* ONE definition, both variants. The complete-object destructor (D1) tears the
    four members down in exact reverse of the factories' construction order --
    dExtShadowModel_c at 0x350, dExtSimpleModel_c at 0x300, dBgCh_Actr at 0x144, dCcAc_c at 0x110,
@@ -211,7 +209,6 @@ da1up_c::~da1up_c()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020aeee4Ev
 /* Trail effect: asks Particle::System::New for one effect at the mushroom's
    position, 30 units (0x1e000) above it. The effect id is 0x108 for the Mega
    Mushroom (actorID 277) and 0 for the 1-Up. The previous frame's handle is read
@@ -242,7 +239,6 @@ void da1up_c::func_ov002_020aeee4() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020aefa4
 /* Sets bit 0x8000 in the cylinder's vulnFlags -- the "yoshi tongue" bit of the
    table in include/dCc_c.h (a best-effort reading there) -- so the mushroom can
    be eaten. func_ov002_020af218 calls it while the player is in range.
@@ -261,7 +257,6 @@ void func_ov002_020aefa4(char *raw)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020aefb8Ev
 /* The shared per-frame physics step. Moves by mHorzSpeed along mPrevAngleY
    (UpdatePosWithHorzSpeedAndAng). While on the ground it adds ten times the
    floor normal's x and z to the words at 0xa4 / 0xac (the x and z of a velocity
@@ -301,7 +296,6 @@ void da1up_c::func_ov002_020aefb8() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af0c0Ev
 /* Steering toward the player, called from state 1 of type 7. Takes the closest
    player; if there is one, builds the vector to it -- the aim point is the
    player's y lowered by 80 units (0x50000) when func_ov002_020d0d2c says the
@@ -348,7 +342,6 @@ void da1up_c::func_ov002_020af0c0() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af1dcEv
 /* The player touching the mushroom, or 0. mdCcAc_c.otherOwner is the unique ID
    of the other cylinder's owner (cleared by dCc_c::Clear, which Behavior calls
    every frame); it is looked up with dActor_c::FindWithID and returned only
@@ -364,7 +357,6 @@ daPly_c *da1up_c::func_ov002_020af1dc() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af218Ei
 /* Stores in mShown whether the player is within `range` whole units
    (IsPlayerInRange shifts it into 20.12), and when it is calls
    func_ov002_020aefa4 to open the mushroom to Yoshi. Returns 0 when out of range,
@@ -386,7 +378,6 @@ int da1up_c::func_ov002_020af218(int range) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af248Ei
 /* The expiry countdown, called with n = 30 from state 2 of the behaviours that
    have one. Nothing happens while mStateFrames < n; for the next 40 frames
    (n <= mStateFrames < n + 0x28) mBlinkOn follows the low bit of mStateFrames
@@ -417,7 +408,6 @@ void func_ov002_020bdf8c(daPly_c *player);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19, verified against config/arm9/overlays/ov002/relocs.txt:
    _ZTV7da1up_c (0x021083c8) + 0x4c relocates to 0x020af2b0, this address.
    Collects the mushroom for `player` (the hook for a mushroom being turned
@@ -452,7 +442,6 @@ void da1up_c::OnTurnIntoEgg(daPly_c &player) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c13OnYoshiTryEatEv
 /* Vtable slot 18. Two instructions: mov r0,#4; bx lr. */
 s32 da1up_c::OnYoshiTryEat()
 {
@@ -460,7 +449,6 @@ s32 da1up_c::OnYoshiTryEat()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af3a8Ev
 /* The touch-collection step, called from every behaviour except types 6, 8, 9,
    10, 11 and 12. Does nothing unless func_ov002_020af1dc finds a player touching
    the cylinder. Then: the Mega Mushroom (actorID 277) calls
@@ -495,7 +483,6 @@ void da1up_c::func_ov002_020af3a8() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af474Ev
 /* The launch arc of the types that pop out (0, 1, 5 and 7). For the first five
    frames of the state (mStateTimer < 5) it only sets mVertSpeed to 40 units
    (0x28000). After that, every frame it lowers mPrevAngleX by 0x1000 (22.5
@@ -524,7 +511,6 @@ void da1up_c::func_ov002_020af474() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af4ecEv
 /* Per-frame model matrix and drop shadow, run at the end of every Behavior,
    including the frames UpdateYoshiEat returns nonzero. mModel's matrix gets
      types 11 and 12: a Y rotation by mAngleY and translation mPos >> 3;
@@ -591,7 +577,6 @@ void da1up_c::func_ov002_020af4ec() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af684EiP7daPly_c
 /* Shared with the egg-turn hook and dispatch indices 8 and 6. This helper
    finishes by killing the actor and returns no value. Its callers use the same
    void contract; the lookup result in ordinals 19 and 22 is still needed as
@@ -628,7 +613,6 @@ void da1up_c::func_ov002_020af684(int target, daPly_c *player) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af724Ev
 /* Dispatch-table index 13 (MUSHROOM_FALL_THEN_WAIT). Physics runs every frame.
    State 0 plays sound 0x69 and moves on; state 1 waits until the actor's floor
    collision (mWithMeshClsn) reports ground contact, then enables the cylinder
@@ -657,7 +641,6 @@ void da1up_c::func_ov002_020af724() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af7ccEv
 /* Dispatch-table index 10 (MUSHROOM_RISE_THEN_POP_OUT). Marks the mushroom
    shown and, while it is below 100 units (0x64000) above mSpawnPosY, raises it 5
    units (0x5000) per frame. On the frame it reaches that height it is clamped
@@ -677,7 +660,6 @@ void da1up_c::func_ov002_020af7cc() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af838Ev
 /* Dispatch-table index 9 (MUSHROOM_SPAWNER). Spawns three mushrooms of the same
    actor ID around mSpawnPos and then removes itself: spawn param 0x25 (type 5
    with mUnlockCount 2) 50 units (0x32000) above the spawn point, and two of
@@ -706,7 +688,6 @@ void da1up_c::func_ov002_020af838() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af908Ev
 /* Dispatch-table index 12 (MUSHROOM_SPIN_TRIGGER_FOR_7). Turns mAngleY by 0xc00
    (16.875 degrees) a frame, then runs index 8's handler. */
 void da1up_c::func_ov002_020af908() {
@@ -715,7 +696,6 @@ void da1up_c::func_ov002_020af908() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af924Ev
 /* Dispatch-table index 8 (MUSHROOM_TRIGGER_FOR_7). If a player is touching it,
    hands off to func_ov002_020af684 with target 7 (a waiting type 7 loses one
    from its mUnlockCount). */
@@ -727,7 +707,6 @@ void da1up_c::func_ov002_020af924() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020af950Ev
 /* Dispatch-table index 7 (MUSHROOM_HIDDEN_CHASE). State 0: hidden (mShown 0)
    until mUnlockCount is 0; then it appears -- mVertSpeed 40 units (0x28000),
    state 3, shown, opened to Yoshi (func_ov002_020aefa4), sound 0x68, mFlags bit
@@ -775,7 +754,6 @@ void da1up_c::func_ov002_020af950() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afa50Ev
 /* Dispatch-table index 11 (MUSHROOM_SPIN_TRIGGER_FOR_5). Turns mAngleY by 0xc00
    (16.875 degrees) a frame, then runs index 6's handler. */
 void da1up_c::func_ov002_020afa50() {
@@ -784,7 +762,6 @@ void da1up_c::func_ov002_020afa50() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afa6cEv
 /* Dispatch-table index 6 (MUSHROOM_TRIGGER_FOR_5). If a player is touching it,
    hands off to func_ov002_020af684 with target 5 (a waiting type 5 loses one
    from its mUnlockCount). */
@@ -796,7 +773,6 @@ void da1up_c::func_ov002_020afa6c() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afa98Ev
 /* Dispatch-table index 5 (MUSHROOM_HIDDEN_FLEE). State 0: hidden until
    mUnlockCount is 0, then it appears exactly as index 7 does (state 3, sound
    0x68, and so on). State 3 is the launch arc under physics with the trail
@@ -845,7 +821,6 @@ void da1up_c::func_ov002_020afa98() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afbb4Ev
 /* Dispatch-table index 4 (MUSHROOM_WAIT_THEN_FACE_AWAY). State 0 waits for the
    player to come within 1000 units (0x3e8), then sets mVertSpeed to 40 units
    (0x28000) and goes to state 1. State 1 turns away from the player
@@ -878,7 +853,6 @@ void da1up_c::func_ov002_020afbb4() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afc44Ev
 /* Dispatch-table index 3 (MUSHROOM_STATIONARY). Only the touch check and the
    3000-unit range check; no physics and no state. */
 int da1up_c::func_ov002_020afc44() {
@@ -887,7 +861,6 @@ int da1up_c::func_ov002_020afc44() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afc68Ev
 /* State 1 of index 2 (MUSHROOM_WAIT_THEN_ACCELERATE). On the ground it adds 25
    units (0x19000) to mHorzSpeed and zeroes mVertSpeed. In the air it multiplies
    mHorzSpeed by 0xfae / 0x1000 (about 0.98) and passes the product through
@@ -911,7 +884,6 @@ void da1up_c::func_ov002_020afc68() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afd10Ev
 /* Dispatch-table index 2 (MUSHROOM_WAIT_THEN_ACCELERATE). From state 1 on, the
    words at 0xa4 / 0xa8 / 0xac are saved before the physics step and the first
    and last restored afterwards. State 0: range check (3000 units), and when the
@@ -952,7 +924,6 @@ void da1up_c::func_ov002_020afd10() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afde4Ev
 /* Walking away from the player, called from state 1 of types 1, 4 and 5. Sets
    mPrevAngleY to the bearing from the mushroom to the closest player plus half
    a turn (0x8000), runs the touch check, and goes to state 2 when the floor
@@ -970,7 +941,6 @@ void da1up_c::func_ov002_020afde4() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020afe4cEv
 /* Dispatch-table index 1 (MUSHROOM_POP_OUT_FLEE). Physics every frame. State 0:
    sound 0x68 on the first frame and the launch arc; at mStateTimer 0x25 (37) it
    enables the cylinder, goes to state 1 and sets mHorzSpeed to 8 units (0x8000).
@@ -1005,7 +975,6 @@ void da1up_c::func_ov002_020afe4c() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c19func_ov002_020aff10Ev
 /* Dispatch-table index 0 (MUSHROOM_POP_OUT_DRIFT). Physics every frame.
    State 0: sound 0x68 on the first frame and the launch arc; at mStateTimer
    0x25 (37) it enables the cylinder, goes to state 1 and sets mHorzSpeed to
@@ -1058,7 +1027,6 @@ typedef void (da1up_c::*PMF)();
 extern PMF data_ov002_0210dc00[14];
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c16CleanupResourcesEv
 /* Vtable slot 3. Releases the model file InitResources loaded -- the 1-Up's
    (data_ov002_0210d9d8) for actorID 276, the other's (data_ov002_0210da30)
    otherwise -- except for types 11 and 12, which use the shared model
@@ -1082,14 +1050,12 @@ int da1up_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c16OnPendingDestroyEv
 /* Vtable slot 12. One instruction: bx lr. */
 void da1up_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c6RenderEv
 /* Vtable slot 9. Draws mModel unless mShown or mBlinkOn is 0 or mFlags bit
    0x40000 -- one of the yoshi-mouth states named in dActor_c.h -- is set.
    Returns 1 either way. */
@@ -1107,7 +1073,6 @@ int da1up_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c8BehaviorEv
 /* Vtable slot 6, and the only code reference to the 14-element dispatch array at
    0x0210dc00 besides the static initializer, which fills it from the 14
    descriptors at 0x02108300..0x02108370. mMushroomType is the index.
@@ -1142,7 +1107,6 @@ int da1up_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7da1up_c13InitResourcesEv
 /* Vtable slot 0, the largest member in the TU, and -- because the destructor is
    declared out of line above it -- NOT this class's key function.
    Order of work: mMushroomType from param1 bits 0..3; the model (the shared
@@ -1250,7 +1214,6 @@ int da1up_c::InitResources()
 /* MEGA_MUSHROOM (277 / SCALEUP_KINOKO). `new` calls the inherited
    fBase_c::operator new; the implicit constructor inlines the dEnemyBase_c
    base step, vptr store, and the four member constructors. */
-// @symbol da1up_c_classInit_SCALEUP_KINOKO
 extern "C" da1up_c *da1up_c_classInit_SCALEUP_KINOKO()
 {
     return new da1up_c();
@@ -1258,7 +1221,6 @@ extern "C" da1up_c *da1up_c_classInit_SCALEUP_KINOKO()
 
 /* -------------------------------------------------------------------------- */
 /* ONE_UP_MUSHROOM (276 / ONEUPKINOKO). Same class, second profile. */
-// @symbol da1up_c_classInit_ONEUPKINOKO
 extern "C" da1up_c *da1up_c_classInit_ONEUPKINOKO()
 {
     return new da1up_c();

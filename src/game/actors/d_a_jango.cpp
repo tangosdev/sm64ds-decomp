@@ -283,13 +283,11 @@ static inline int IsNoControl(daPly_c *player) {
     return player->mIsNoControl != 0;
 }
 
-// @symbol daJango_c_classInit
 extern "C" daJango_c *daJango_c_classInit()
 {
     return new daJango_c();
 }
 
-// @symbol _ZN9daJango_c16OnAimedAtWithEggEv
 // recovered name: Klepto_OnAimedAtWithEgg
 /* daJango_c::OnAimedAtWithEgg - recovered from vtable slot identity.
    Returns the constant 458752 (0x70000, which is 112.0 if read as fix12) and
@@ -298,7 +296,6 @@ s32 daJango_c::OnAimedAtWithEgg() {
     return 458752;
 }
 
-// @symbol _ZN9daJango_c13InitResourcesEv
 /* Loads the model and the three animations, decodes the spawn parameter, sets
    up the two cylinders and the wall collider, then picks the first state.
 
@@ -404,7 +401,6 @@ int daJango_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN9daJango_c8BehaviorEv
 /* A state record, as __sinit_ov062_0211d6fc fills the five JANGO_STATE_*
    records: two pointers-to-member, `enter` (called once by
    func_ov062_0211c658 when the state is selected) and `update` (called here
@@ -508,7 +504,6 @@ int daJango_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daJango_c6RenderEv
 /* Draws the model through dExtBlendAnmModel_c::Render with a null scale. */
 int daJango_c::Render()
 {
@@ -516,7 +511,6 @@ int daJango_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daJango_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
@@ -525,7 +519,6 @@ void daJango_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daJango_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Releases the seven shared files InitResources claimed -- three of them from
@@ -546,7 +539,6 @@ int daJango_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211c6a8Ev
 /* Per-frame matrices (called from Behavior).
    1. dExtSimpleModel_c matrix: translation = mPos >> 3, rotation = mAngle X/Y/Z
       (Matrix4x3_ApplyInPlaceToRotationZXYExt), stored in mBlendAnmModel.mat4x3.
@@ -602,13 +594,11 @@ void daJango_c::func_ov062_0211c6a8()
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)&mShadowMat, 0x40000, 0x258000, 0xf);
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211c658EPv
 /* Select a state: store the record (its address) in mState, then call the
    record's first member, `enter`, on the actor if it has one and return its
    result (1 if it has none). */
 int daJango_c::func_ov062_0211c658(void *p) { StateRecord *qq = (StateRecord *)p; mState = qq; StateRecord *q = (StateRecord *)mState; if (*(int *)q == 0) return 1; return (this->*q->enter)(); }
 
-// @symbol _ZN9daJango_c19func_ov062_0211c594Ev
 /* FLY_PATH enter. Clears the three velocity words (mSpeedX, mVertSpeed, mSpeedZ).
    If mRiseToFarNode is 1 -- func_ov062_0211b3ac set it because the node it
    picked is index ^ 2 (assumed to be the far side of the square) -- the vector (0, 0, 20.0) is turned by mAngleY and
@@ -638,7 +628,6 @@ int daJango_c::func_ov062_0211c594() {
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211c2f4Ev
 /* FLY_PATH update: follow the path through its four nodes.
    Each frame it steers mPrevAngleY toward the node at mPathNodeIndex and
    levels the roll. While more than 20 units from the node it is pulled toward
@@ -727,7 +716,6 @@ int daJango_c::func_ov062_0211c2f4() {
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211c218Ev
 /* CIRCLE enter. Takes the current yaw as the steering target, restarts the
    phase counter (mStateParam = 0) and sets mStateTimer to 300, 400, 500 or 600 frames
    (random, 100 apart) before the actor may leave along the path. If the last thing that happened was a hit on the player
@@ -754,7 +742,6 @@ int daJango_c::func_ov062_0211c218()
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211bd10Ev
 /* CIRCLE update (Klepto flying a turning loop: constant yaw turn, pitch steered
    toward mSpawnPos when empty-handed or toward mPathNodePos otherwise). gCurrentSublevel is LEVEL_ID in symbols/verified.tsv; this code
    special-cases level 0x10 and levels 0x18 / 0x19.
@@ -916,7 +903,6 @@ int daJango_c::func_ov062_0211bd10()
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211bc54Ev
 /* SWOOP enter. mStateTimer is the swoop length: 50 frames in level 0x10 (the
    LEVEL_ID in gCurrentSublevel), else a random 20 to 35. Clears the velocity words,
    plays sound 0xee at the actor's camera-space position, picks the turn rate in
@@ -943,7 +929,6 @@ int daJango_c::func_ov062_0211bc54()
     return 1;
 }
 
-// @symbol func_ov062_0211ba84
 /* SWOOP update: dive at the nearest player. The position snapshot keeps
    the retail three-word block copy; field access and calls use the actor and
    player interfaces.
@@ -1017,7 +1002,6 @@ int func_ov062_0211ba84(char *c)
 }
 
 
-// @symbol _ZN9daJango_c19func_ov062_0211b930Ev
 /* HURT enter. Starts jango_damage.bca (4 blend frames, flags 0x40000000, speed
    1.0, from frame 0; the animations that run continuously pass flags 0,
    this one passes 0x40000000 and func_ov062_0211b8d8 waits for its last frame). mStateParam = 1.
@@ -1068,7 +1052,6 @@ int daJango_c::func_ov062_0211b930()
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211b8d8Ev
 /* HURT update: when jango_damage.bca has reached its last frame (the integer
    part of the 20.12 frame counter, with its top four bits masked off, against
    the frame count minus 1), set mTimer to 30 and go back to CIRCLE. */
@@ -1082,7 +1065,6 @@ int daJango_c::func_ov062_0211b8d8() {
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211b880Ev
 /* RISE enter (state record data_ov062_0211e16c, which nothing in this file
    selects): doubles the animation speed (0x2000 = 2.0), zeroes the three
    velocity words and mVertAccel, and starts jango_fly.bca (4 blend frames,
@@ -1101,7 +1083,6 @@ int daJango_c::func_ov062_0211b880() {
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211b800Ev
 /* RISE update: climbs at 20 units per frame while pitch (mPrevAngleX) and roll
    (mPrevAngleZ) level off by 0x300 per frame. Once mPosY is within 2 units
    below mPathNodePosY or above it, it stops, snaps to that height, restores
@@ -1121,7 +1102,6 @@ int daJango_c::func_ov062_0211b800() {
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211b51cEv
 /* Contact tests, run by Behavior every frame outside HURT and by the SWOOP
    update every frame. The return value is incidental: the early outs
    return whatever value they just tested (0, a nonzero query result, a held
@@ -1246,7 +1226,6 @@ int daJango_c::func_ov062_0211b51c()
     return func_ov062_0211c658(JANGO_STATE_CIRCLE);
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211b3acEv
 /* Pick which of the four path nodes to fly to next, based on where the player is.
    Called from the circling and path states; does its work on every eighth call
    (mPathPickTick counts 1..7 and wraps; c2f4 sets it to 7 so the next call runs).
@@ -1311,7 +1290,6 @@ int daJango_c::func_ov062_0211b3ac()
     return 1;
 }
 
-// @symbol _ZN9daJango_c19func_ov062_0211b2fcEv
 /* Sets the velocity words (mSpeedX, mVertSpeed, mSpeedZ) for the circling
    state: the vector (0, 0, 20.0) turned by mAngleY then mAngleX. Empty-handed
    (nothing carried or held) it is (0, 0, 40.0) instead, and while mTimer is
@@ -1340,7 +1318,6 @@ void daJango_c::func_ov062_0211b2fc(){
   MulVec3Mat4x3(&v[0], &data_020a0e68, (Vector3 *)&mSpeedX);
 }
 
-// @symbol _ZN9daJango_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is the DELETING destructor: destroy through this class and its bases, then
@@ -1355,7 +1332,6 @@ void daJango_c::func_ov062_0211b2fc(){
  * definition for the merged TU; the compiler emits D0 from the visible body.)
  */
 
-// @symbol _ZN9daJango_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * One vtable store and six destructor calls, every one a consequence of

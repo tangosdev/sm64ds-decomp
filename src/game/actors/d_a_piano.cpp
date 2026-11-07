@@ -67,14 +67,12 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 /* Reconstructed registry name; the class identity is backed by retail RTTI.
  * Historical alias: daPiano_c_Spawn. The inherited allocator and native
  * construction establish the base, vtable and member lifetimes. */
-// @symbol daPiano_c_classInit
 extern "C" daPiano_c *daPiano_c_classInit() {
     return new daPiano_c();
 }
 
 /* Load the piano's three shared assets, initialize its typed render/collision
  * members, and snapshot its home position. */
-// @symbol _ZN9daPiano_c13InitResourcesEv
 int daPiano_c::InitResources() {
     int i;
     dCcAcPos_c *cylinder;
@@ -111,7 +109,6 @@ int daPiano_c::InitResources() {
 
 /* Advance the piano and its collision, constrain it to its home area, and
  * disable the inherited moving mesh while the nearest player is vanished. */
-// @symbol _ZN9daPiano_c8BehaviorEv
 int daPiano_c::Behavior() {
     CallStateBehavior();
     UpdatePos(0);
@@ -138,7 +135,6 @@ int daPiano_c::Behavior() {
 }
 
 /* dExtAnmModel_c's real virtual API expresses the same slot-5 dispatch as the ROM. */
-// @symbol _ZN9daPiano_c6RenderEv
 int daPiano_c::Render() {
     mAnmModel.Render(0);
     return 1;
@@ -146,7 +142,6 @@ int daPiano_c::Render() {
 
 /* Release the three shared assets after removing the inherited moving mesh
  * collider from the collision world. */
-// @symbol _ZN9daPiano_c16CleanupResourcesEv
 int daPiano_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -174,14 +169,12 @@ extern PianoStateEntry data_ov063_0211efbc[2];
  * with what and which routine runs per-frame. */
 enum PianoState { kStateSearch = 0, kStateAttack = 1 };
 
-// @symbol _ZN9daPiano_c17CallStateBehaviorEv
 /* Run the current state's body routine (pmf[1]) every frame. */
 void daPiano_c::CallStateBehavior() {
     int cur = mStateIdx;
     (this->*data_ov063_0211efbc[cur].pmf[1])();
 }
 
-// @symbol _ZN9daPiano_c8SetStateEi
 /* Switch to `state` and run its entry routine (pmf[0]) once. The idx
  * re-read after the store is ROM-true. */
 void daPiano_c::SetState(int state) {
@@ -190,7 +183,6 @@ void daPiano_c::SetState(int state) {
     (this->*data_ov063_0211efbc[cur].pmf[0])();
 }
 
-// @symbol _ZN9daPiano_c14IsTargetMovingEP8dActor_c
 /* True when the candidate target is moving (either speed above 20.0). The
  * piano itself is not read. */
 int daPiano_c::IsTargetMoving(dActor_c *cand) {
@@ -199,13 +191,11 @@ int daPiano_c::IsTargetMoving(dActor_c *cand) {
     return 0;
 }
 
-// @symbol _ZN9daPiano_c15InitStateSearchEv
 /* State-0 entry, reached via the PMF table: stop dead. */
 void daPiano_c::InitStateSearch() {
     this->mHorzSpeed = 0;
 }
 
-// @symbol _ZN9daPiano_c11StateSearchEv
 /* State-0 body, run every frame: scan the player slots for a moving target
  * within 500.0 and attack it; otherwise refresh the idle cylinder sweep
  * (current position plus a 36.0 lookahead along the facing). */
@@ -267,7 +257,6 @@ void daPiano_c::StateSearch() {
     }
 }
 
-// @symbol _ZN9daPiano_c15InitStateAttackEv
 /* State-1 entry, reached via the PMF table: full-speed animation and a
  * 30-frame windup before the bite. */
 void daPiano_c::InitStateAttack() {
@@ -275,7 +264,6 @@ void daPiano_c::InitStateAttack() {
     this->mAttackTimer = 30;
 }
 
-// @symbol _ZN9daPiano_c11StateAttackEv
 /* State-1 body, run every frame: lunge at the target and bite any player
  * caught by the cylinders. Gives up (back to state 0) when the target is
  * gone or farther than 939.0 at a frame boundary. */
@@ -380,7 +368,6 @@ void daPiano_c::StateAttack() {
     }
 }
 
-// @symbol _ZN9daPiano_c17UpdateModelMatrixEv
 /* Sync the model matrix from the facing and position (eighths). */
 void daPiano_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -389,7 +376,6 @@ void daPiano_c::UpdateModelMatrix() {
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN9daPiano_c16UpdateClsnMatrixEv
 /* Refresh the collision matrix from the model matrix and position, then
  * refit the mesh collider to it. */
 void daPiano_c::UpdateClsnMatrix() {
@@ -400,7 +386,6 @@ void daPiano_c::UpdateClsnMatrix() {
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN9daPiano_c13UpdateShadowsEv
 /* Pose the three drop shadows: rotate a body-frame offset by the facing,
  * add the actor position, and drop one shadow per dExtShadowModel_c.
  * data_020a0e68 is the shared scratch matrix. */
@@ -455,7 +440,7 @@ void daPiano_c::UpdateShadows() {
 }
 
 /* _ZN9daPiano_cD1Ev (0x0211d4b8) and _ZN9daPiano_cD0Ev (0x0211d54c) are NOT
- * written here on purpose, and carry no @symbol marker: the inline destructor
+ * written here on purpose: the inline destructor
  * in include/daPiano_c.h emits D1 then D0 -- the cartridge's order -- and no
  * D2, ahead of every function written below. tools/tiers.py scores both
  * through that inline definition. Their pre-promotion one-line sources lived

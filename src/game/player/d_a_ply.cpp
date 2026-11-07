@@ -1,5 +1,4 @@
 //cpp
-// @symbol daPly_c_classInit
 #include "daPly_c.h"
 #include "EndingFlyPoint.h"
 
