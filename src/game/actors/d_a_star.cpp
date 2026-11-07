@@ -155,7 +155,7 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern int data_0209f32c;
 extern signed char gCurrentSublevel;
-extern void SetStarMarker(int i, int v1, int v2);
+extern void SetStarMarker(int i, dActor_c *actor, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern dActor_c *STAR_MARKERS[12];
 extern u8 data_0209f208;
@@ -1977,9 +1977,9 @@ void daStar_c::AddStarMarker()
 
         if (mMarkerType == 0) {
             if (mBits.collectedModel) {
-                SetStarMarker((int)i, (int)this, 3);
+                SetStarMarker((int)i, this, 3);
             } else {
-                SetStarMarker((int)i, (int)this, 2);
+                SetStarMarker((int)i, this, 2);
             }
         } else {
             if (mMarkerType == 2) {
@@ -1995,7 +1995,7 @@ void daStar_c::AddStarMarker()
                 mMarkerType = 3;
             skipmark:;
             }
-            SetStarMarker((int)i, (int)this, mMarkerType);
+            SetStarMarker((int)i, this, mMarkerType);
         }
 
         mMarkerSlot = i;
