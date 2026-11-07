@@ -3,7 +3,8 @@
  */
 #include "nitro/os/thread.h"
 
-extern int data_0209d574;
+struct WatchdogAlarm;
+extern struct WatchdogAlarm data_0209d574;
 
 extern unsigned char func_0201a9ec(void *timer);
 extern int func_02018a58(int count);
