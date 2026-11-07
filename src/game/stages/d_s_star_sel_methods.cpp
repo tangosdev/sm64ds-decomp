@@ -887,9 +887,6 @@ extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
-#define REG16(a) (*(vu16 *)(a))
-#define REG32(a) (*(vu32 *)(a))
-
 s32 dScStarSel_c::InitResources() {
     void *file;
     s32 loopI;
@@ -926,7 +923,7 @@ s32 dScStarSel_c::InitResources() {
     } else {
         Sound::LoadAndSetMusic_Layer1(0x16);
     }
-    REG16(0x4000304) |= 0x8000;
+    REG_POWCNT1 |= 0x8000;
     ::Initialise3dGraphics(0);
     G3X::SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
     GX::DisableAllBanks();
@@ -937,28 +934,28 @@ s32 dScStarSel_c::InitResources() {
     GX::SetBankForSubBG(0x80);
     GX::SetBankForSubOBJ(8);
     GX::SetBankForSubOBJExtPltt(0x100);
-    REG32(0x4000000) &= 0xFFCFFFEF;
-    REG32(0x4001000) &= 0xFFCFFFEF;
+    REG_DISPCNT &= 0xFFCFFFEF;
+    REG_DISPCNT_SUB &= 0xFFCFFFEF;
     GX::SetGraphicsMode(1, 0, 1);
     GXS::SetGraphicsMode(0);
-    REG32(0x4000000) = (REG32(0x4000000) & ~0x38000000) | 0x08000000;
-    REG16(0x4000304) = (REG16(0x4000304) & 0xFFFFFDF1) | 0x20E;
+    REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x08000000;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
     GX::DispOn();
-    REG32(0x4001000) |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);
-    REG16(0x4000008) = (REG16(0x4000008) & ~3) | 2;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
-    REG16(0x400000E) &= ~3;
-    REG16(0x400000E) = (REG16(0x400000E) & 0x43) | 0x1700;
-    REG16(0x400000E) &= ~0x40;
+    REG_BG3CNT &= ~3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1700;
+    REG_BG3CNT &= ~0x40;
     LoadFont(0);
     if (SublevelToLevel(gNextSublevel) >= 0xF) {
-        REG16(0x400000C) = (REG16(0x400000C) & ~3) | 1;
-        REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
-        REG16(0x400000C) &= ~0x40;
+        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
+        REG_BG2CNT &= ~0x40;
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
         DecompressLZ16(file, G2::GetBG2CharPtr());
         Deallocate(file);
@@ -973,9 +970,9 @@ s32 dScStarSel_c::InitResources() {
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     } else {
-        REG16(0x400000C) = (REG16(0x400000C) & ~3) | 1;
-        REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
-        REG16(0x400000C) &= ~0x40;
+        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
+        REG_BG2CNT &= ~0x40;
         if (GetOwnerLanguage() == 5) {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_S_NCG_BIN);
         } else if (GetOwnerLanguage() == 4) {
@@ -1237,8 +1234,8 @@ s32 dScStarSel_c::InitResources() {
     mBounceDelay = 0x78;
     mAnimFlip = 0;
     gSubScreenLayers = 0x10;
-    REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (gMainScreenLayers << 8);
-    REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
+    REG_DISPCNT = (REG_DISPCNT & ~0x1F00) | (gMainScreenLayers << 8);
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1F00) | 0x1000;
     mLifeIcon = data_0209caa0.file.mCharacter;
     data_0208ee44 = 1;
     return 1;

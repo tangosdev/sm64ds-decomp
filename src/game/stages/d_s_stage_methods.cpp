@@ -597,8 +597,6 @@ void LoadGroupAndSetBank(int group, int bank);
 void SetMusic(u32 player, u32 music);
 }
 
-#define REG16(a) (*(volatile u16 *)(a))
-#define REG32(a) (*(volatile u32 *)(a))
 /* The TouchInfo record at byte offset off (slot * 4) from gTouchHeld. */
 #define TOUCHP(off) ((TouchInfo *)(gTouchHeld + (off)))
 
@@ -831,7 +829,7 @@ void dScStage_c::LC_Update() {
 
     switch (gLevelClearStep) {
     case 0:
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd00;
         Message::DisplayLevelClearText(0x27a, SublevelToLevel(gLastCourseSublevel));
         sMenuButtonTileOffsets[0] = 0xa0;
         sMenuButtonTileOffsets[1] = 0x140;
@@ -901,9 +899,9 @@ void dScStage_c::LC_Update() {
         int t6;
         int t5;
         if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
-            REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1210;
+            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1210;
         } else {
-            REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
+            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
         }
         gNumCoins[0] = 0;
         t6 = gMainScreenLayers ^ (DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
@@ -981,7 +979,7 @@ void dScStage_c::LC_Update() {
         }
     }
     case 4:
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xe00;
         gLevelClearStep = 5;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         Message::DisplaySaveStatusText(0x295);
@@ -1006,7 +1004,7 @@ void dScStage_c::LC_Update() {
         }
         gMainScreenLayers &= ~(DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
         gSubScreenLayers &= ~3;
-        REG16(0x4000050) = 0;
+        REG_BLDCNT = 0;
         if (sSelectedMenuButton != 1) {
             gMeterCounterSlideState = 5;
         } else {
@@ -1584,9 +1582,9 @@ void dScStage_c::PS_Update() {
     switch (sPauseState) {
     case 0: {
         u8 i;
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
-        REG16(0x400000a) = (REG16(0x400000a) & 0x43) | 0x1210;
-        REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
+        REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1210;
+        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
         i = 0;
         do {
             if (CountStarsCollectedInLevelToDisplay(i) != 0)
@@ -1781,8 +1779,8 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 2: {
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
-        REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
+        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
         sNextPauseState = 3;
         sPauseDisplayedCourse = SublevelToLevel(gCurrentSublevel);
         Message::DisplayPauseText(0x277, sPauseDisplayedCourse);
@@ -1885,8 +1883,8 @@ void dScStage_c::PS_Update() {
         }
     }
     case 4: {
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
-        REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd00;
+        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
         sNextPauseState = 5;
         Message::DisplayPauseTextVS(0);
         sMenuButtonTileOffsets[0] = 0xa0;
@@ -1979,7 +1977,7 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 7: {
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xf00;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xf00;
         if (sPausedWithSelect != 0) {
             if (GetOwnerLanguage() == 5) {
                 LoadCompressedFileAt(0xb001, G2S::GetBG1ScrPtr());
@@ -2017,12 +2015,11 @@ void dScStage_c::PS_Update() {
         }
         dScStage_c::UpdateMenuButtons(0);
         Message::DisplayControllerModeText(0x280);
-        REG16(0x400000c) =
-            (((sSelectedControllerMode + 0xd) << 8) | (REG16(0x400000c) & 0x43)) | 0x10;
+        REG_BG2CNT = (((sSelectedControllerMode + 0xd) << 8) | (REG_BG2CNT & 0x43)) | 0x10;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        REG32(0x4001010) = 0;
-        REG32(0x4001014) = 0;
+        REG_DB_BG0OFS = 0;
+        REG_DB_BG1OFS = 0;
         sBackButtonSelected = 0;
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
@@ -2077,7 +2074,7 @@ void dScStage_c::PS_Update() {
                     return;
             }
             data_0209f2a4 = 1;
-            REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xd10;
+            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xd10;
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
@@ -2110,7 +2107,7 @@ void dScStage_c::PS_Update() {
                     return;
             }
             data_0209f2a4 = 2;
-            REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xe10;
+            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xe10;
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
@@ -2143,7 +2140,7 @@ void dScStage_c::PS_Update() {
                     return;
             }
             data_0209f2a4 = 3;
-            REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xf10;
+            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xf10;
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
@@ -2208,7 +2205,7 @@ void dScStage_c::PS_Update() {
         }
     }
     case 9: {
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0x1000;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x1000;
         sNextPauseState = 0xa;
         data_0209f234 = GetSoundMode();
         sSelectedBacklightButton = data_0208ee3c ^ 1;
@@ -2498,7 +2495,7 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 0xc: {
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd00;
         Message::DisplaySaveMenuText(0x290);
         sMenuButtonTileOffsets[0] = 0xa0;
         sMenuButtonTileOffsets[1] = 0x140;
@@ -2574,7 +2571,7 @@ void dScStage_c::PS_Update() {
         }
     }
     case 0xe: {
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xe00;
         sNextPauseState = 0xf;
         Message::DisplaySaveStatusText(0x295);
         gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
@@ -2604,7 +2601,7 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 0x10: {
-        REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0x1100;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x1100;
         sNextPauseState = 0x11;
         Message::DisplayDontSaveText(0x297);
         sSelectedMenuButton = 1;
