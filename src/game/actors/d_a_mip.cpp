@@ -291,7 +291,7 @@ int daMip_c::StateSaveTalkMain()
     unsigned char gb;
     int state;
 
-    mTargetAngY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&player->mPosX);
+    mTargetAngY = Vec3_HorzAngle(&mPos, &player->mPos);
     ApproachAngle(&mPrevAngleY, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
@@ -370,7 +370,7 @@ int daMip_c::StateTalkMain()
     pp.x = pq[0];
     pp.y = pq[1];
     pp.z = pq[2];
-    angle = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&pp);
+    angle = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp);
 
     id = 0x139;
     switch (player->GetTalkState()) {
