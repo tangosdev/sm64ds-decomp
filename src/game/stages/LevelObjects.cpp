@@ -17,11 +17,14 @@
  * Fifteen category loaders, then LoadObjects, then
  * dScStage_c::LoadClsnAndObjects. ov002 .text 0x020fe190..0x020fea4c.
  */
+#include "KuppaScript.h"
 #include "decl_common.h"
 
 #include "LVL_Overlay.h"
 #include "dScStage_c.h"
 #include "dActor_c.h"
+#include "daPly_c.h"
+#include "dCamera_c.h"
 #include "dBgW.h"
 #include "PathPtr.h"
 #include "Vector3s.h"
@@ -34,7 +37,7 @@ extern "C" {
 /* data_0209caa0 is the live save block; its first 0x44 bytes are the
  * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
  * flags2. */
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 
 /* data_0209f5c0 is the parent passed to dBase_c::Spawn. */
 extern fBase_c *data_0209f5c0;
@@ -43,11 +46,11 @@ extern u8 data_0209f21c;
 extern u8 data_0209f220;
 extern u8 data_0209f250;
 extern u8 data_0209f2d8;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern void *data_0209f338;
-extern void *data_0209f394[];
+extern daPly_c *data_0209f394[];
 extern u8 data_0209fc5c[];
-extern int data_02092134;
+extern unsigned int data_02092134;
 extern u8 data_02092128[];
 
 extern s8 data_ov002_0210cb5c[];
@@ -66,7 +69,7 @@ void StartEntranceFaderWipe(int index);
 /* dScStage_c::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
 struct CLPS_Block;
-KCL_File *LoadFile(int handle);
+void *LoadFile(int handle);
 
 /* LoadObjects dispatches through this table. Its entries are the
  * category loaders. This text-only TU does not define it. */
@@ -107,8 +110,6 @@ struct LVL_Overlay_Layout {
     u8 subCount;  /* 0x14 */
 };
 
-#define sCurrentFile (*(FileSaveData *)data_0209caa0)
-
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {
     return data_0209f2d8 == mode;
@@ -116,7 +117,7 @@ static inline int IsGameMode(int mode) {
 
 /* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
 static inline int IntroAllowed() {
-    return IsGameMode(0) && (sCurrentFile.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
+    return IsGameMode(0) && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0;
 }
 
 /* Spawn simple actors, or hand a minimap-change sentinel to
@@ -207,7 +208,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
             u16 param = entry->param;
             entranceKind = (param >> 7) & 0xf;
 
-            int savedCharacter = sCurrentFile.mCharacter;
+            int savedCharacter = data_0209caa0.file.mCharacter;
             int playerCharacter = data_02092128[playerIndex];
             if (IsGameMode(1)) {
                 savedCharacter = 3;
@@ -216,7 +217,8 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
             u32 spawnParam =
                 savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
 
-            void *player = dActor_c::Spawn(data_ov002_0210cbf4[entry->raw], spawnParam, pos,
+            daPly_c *player =
+                (daPly_c *)dActor_c::Spawn(data_ov002_0210cbf4[entry->raw], spawnParam, pos,
                                            (const Vector3_16 *)&entry->rot, (s8)(param & 7), -1);
 
             if (data_0209fc5c[playerIndex] == 0)
@@ -232,7 +234,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         }
     }
 
-    data_0209f318 = dBase_c::Spawn(0x14c, data_0209f5c0, entranceId, 0);
+    data_0209f318 = (dCamera_c *)dBase_c::Spawn(0x14c, data_0209f5c0, entranceId, 0);
 
     if (IsGameMode(2))
         return;
@@ -390,7 +392,7 @@ void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
  * unlike most of this family: it wants one value, not a list. */
 // @symbol _Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEaj
 void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_02092134 = *(int *)table.entries;
+    data_02092134 = *(unsigned int *)table.entries;
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category
@@ -435,7 +437,7 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
     PathPtr::SetPathTable(0, 0);
 
     if (overlay->kclFileId != 0) {
-        collisionFile = LoadFile(overlay->kclFileId);
+        collisionFile = static_cast<KCL_File *>(LoadFile(overlay->kclFileId));
         dBgW_Kc::UpdateFileOffsets(*collisionFile);
         ((dBgW_Kc *)meshCollider)->SetFile(collisionFile, *overlay->clps);
         func_0202a850(((dBgW_Kc *)meshCollider)->GetOctreeOriginY(),
@@ -453,7 +455,7 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
         subTable++;
     }
 
-    continuedKuppaScript = ContinueKuppaScriptIfNecessary();
+    continuedKuppaScript = KuppaScript::ContinueIfNecessary();
 
     playIntro = IntroAllowed() && continuedKuppaScript == 0;
 
@@ -464,5 +466,5 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
     }
 
     if (playIntro != 0)
-        StartIntroCutscene();
+        KuppaScript::StartIntroCutscene();
 }

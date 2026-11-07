@@ -234,14 +234,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@906",
+      "from": "@902",
       "to": "@46",
-      "evidence": "mwcc numbers this model registration node @836 per TU and ov063 already defines a global @836, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed again when InitResources dropped the _ZN9dBgCh_GndC1Ev local extern and its word storage for a real dBgCh_Gnd local"
+      "evidence": "mwcc numbers this model registration node @836 per TU and ov063 already defines a global @836, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed again when InitResources dropped the _ZN9dBgCh_GndC1Ev local extern and its word storage for a real dBgCh_Gnd local; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@907",
+      "from": "@903",
       "to": "@47",
-      "evidence": "mwcc numbers this collision registration node @837 per TU and ov063 already defines a global @837, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed again when InitResources dropped the _ZN9dBgCh_GndC1Ev local extern and its word storage for a real dBgCh_Gnd local"
+      "evidence": "mwcc numbers this collision registration node @837 per TU and ov063 already defines a global @837, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed again when InitResources dropped the _ZN9dBgCh_GndC1Ev local extern and its word storage for a real dBgCh_Gnd local; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ],
   "relocations": [

@@ -46,6 +46,7 @@
 #include "IRQ.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "private/wm_views.h"
 
 /* The SDK built this file as C, where the GameInfo copy in
  * RecordScannedParent is an inline 0x20-pass halfword loop. As C++ it is an
@@ -90,15 +91,6 @@ typedef struct WmCallback {
     u16 errcode; /* 0x02 */
 } WmCallback;
 
-/* Leading fields of WMStartParentCallback (apiid 8). */
-typedef struct WmStartParentCallback {
-    u16 apiid;    /* 0x00 */
-    u16 errcode;  /* 0x02 */
-    u16 wlCmdID;  /* 0x04 */
-    u16 wlResult; /* 0x06 */
-    u16 state;    /* 0x08 -- 2 BEACON_SENT, 7 CONNECTED, 9 DISCONNECTED */
-} WmStartParentCallback;
-
 /* Leading fields of WMStartMPCallback (apiid 0xe). */
 typedef struct WmStartMPCallback {
     u16 apiid;   /* 0x00 */
@@ -115,16 +107,6 @@ typedef struct WmIndCallback {
     u16 state;   /* 0x04 */
 } WmIndCallback;
 
-/* Leading fields of WMStartConnectCallback (apiid 0xc). */
-typedef struct WmStartConnectCallback {
-    u16 apiid;    /* 0x0 */
-    u16 errcode;  /* 0x2 */
-    u16 wlCmdID;  /* 0x4 */
-    u16 wlResult; /* 0x6 */
-    u16 state;    /* 0x8 */
-    u16 aid;      /* 0xa */
-} WmStartConnectCallback;
-
 /* Leading fields of WMPortRecvCallback. */
 typedef struct WmPortRecvCallback {
     u16 apiid;   /* 0x0 */
@@ -139,25 +121,24 @@ typedef struct {
 
 /* The WM API (WM_StartScan, WM_StartConnect, WM_StartMP, WM_SetLifeTime,
  * WM_SetParentParameter, WM_SetBeaconIndication and the rest). The callbacks
- * are WMCallbackFunc pointers, as in the SDK's headers. The definitions in
- * this tree still take them as ints. WM_Initialize and WM_Reset are declared
- * that way; the rest keep a pointer, because a function cast to int at the
- * func_02069994 call sites schedules differently from passing its address. */
-extern int WM_Initialize(int buf, int callback, int dma);
+ * are WMCallbackFunc pointers in the SDK's headers; the definitions take them
+ * as void *, the type of the callback tables they are stored in. Only
+ * WM_SetMPDataToPort's definition still takes its callback as an int. */
+extern int WM_Initialize(int buf, void *callback, int dma);
 extern int WM_SetIndCallback(void *callback);
-extern int WM_Reset(int callback);
+extern int WM_Reset(void *callback);
 extern int WM_End(void *callback);
 extern int WM_ReadStatus(int *status);
 extern int WM_StartParent(void *callback);
-extern int WM_SetPortCallback(int port, void *callback, int arg);
+extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern u16 WM_GetAllowedChannel(void);
 extern int WM_SetLifeTime(void *callback, int tableNo, int camLife, int frameLife);
-extern int WM_SetParentParameter(void *callback, char *parentParam);
+extern int WM_SetParentParameter(void *callback, WmParentParam *parentParam);
 extern int WM_SetBeaconIndication(void *callback, int flag);
 extern int WM_StartScan(void *callback, char *scanParam);
 extern int WM_StartConnect(void *callback, int bssDesc, void *ssid);
 extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBuf, u16 sendBufSize,
-                        u16 mpFreq, int defaultRetryCount, int minPollBmpMode, int singlePacketMode,
+                        u16 mpFreq, u16 defaultRetryCount, int minPollBmpMode, int singlePacketMode,
                         int fixFreqMode, int ignoreFatalError);
 /* It returns WM_SetMPDataToPortEx's WM result. */
 extern int WM_SetMPDataToPort(int callback, int data, int size, int aidBitmap, u16 port, u16 prio);
@@ -252,8 +233,8 @@ void func_02069994(char *arg0) {
 
     case 0x1D:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(
-                7, WM_SetParentParameter((void *)func_02069994, (char *)&WM_WORK->parentParam));
+            MBi_CheckWmErrcode(7,
+                               WM_SetParentParameter((void *)func_02069994, &WM_WORK->parentParam));
             return;
         }
         WM_WORK->userCallback(0x100, arg0);
@@ -784,7 +765,7 @@ int func_02068d08(void) {
     *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e2e: no reader here */
     MBi_SetMaxScanTime(0xa);
     do {
-        ret = WM_Initialize((int)WM_WORK->wmSysBuf, (int)WM_WORK->stateCallback, data_020a9db0);
+        ret = WM_Initialize((int)WM_WORK->wmSysBuf, (void *)WM_WORK->stateCallback, data_020a9db0);
     } while (ret == 4);
     if (ret != 2)
         return 8;
@@ -868,7 +849,7 @@ int func_02068a74(void) {
         p->scanContinue = 0;
         /* through the global again: the ROM reloads data_020a9db4 here */
         WM_WORK->resetting = 1;
-        r = WM_Reset((int)WM_WORK->stateCallback);
+        r = WM_Reset((void *)WM_WORK->stateCallback);
         if (r == 2)
             return 0;
         return r;

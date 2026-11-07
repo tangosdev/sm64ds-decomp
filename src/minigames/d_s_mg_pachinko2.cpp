@@ -51,6 +51,7 @@ enum dScMgPachinko2_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "GX.h"
 #include "G2.h"
+#include "LevelRng.h"
 
 namespace Sound {
 void PlayBank2_2D(unsigned int id);
@@ -67,7 +68,8 @@ extern "C" {
 
 /* --- shared ov004, main and library helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
-extern int Mg_RenderSpriteBothScaled(int a, int b, int c, int d, int e, int f, int g);
+struct OamAttr;
+extern int Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
 extern int Mg_GetSubmittedScore(void);
 extern int Mg_IsNewRecord(void);
@@ -86,9 +88,9 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_02012718(int, int);
 extern s16 atan2_hold_d_s_mg_pachinko2_1(s32 y, s32 x);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void Deallocate(void *);
-extern void DecompressLZ16(int src, void *dst);
+extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern int func_02054d88(void);
 extern void func_02056314(void *, u32, u32);
@@ -96,14 +98,13 @@ extern void func_020562b4(const void *, u32, u32);
 extern void func_020564f4(const void *, int, int);
 
 /* --- ROM data this TU reads --- */
-extern int data_0209d4b8;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
 extern int sPachinkoPipeSprites[];
 extern int sPachinko2SparkSprites[];
 extern int sPachinko2PaddleSprite;
-extern int sPachinko2BallSprite;
+extern OamAttr *sPachinko2BallSprite;
 extern int sPachinko2BallCountSprites[];
 extern u8 sPachinko2CupHopRightStartFrames[];
 extern u8 sPachinko2CupHopLeftStartFrames[];
@@ -221,7 +222,7 @@ void dScMgPachinko2_c::Cup_PickTarget(int k) {
     }
     if (found == 0)
         return;
-    if ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 2) >> 15) {
+    if ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 2) >> 15) {
         mCups[k].state = 3;
         mCups[k].phase = 0;
         mCups[k].vx = 0x1800;
@@ -245,10 +246,10 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
     unsigned int random;
     int moveSideways;
     moveSideways = 0;
-    random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+    random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
     if ((((random >> 16) & 0x7fff) << 1) >> 0xf) {
         moveSideways = 1;
-        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         if ((((random >> 16) & 0x7fff) << 2) >> 0xf) {
             mCups[n].state = 3;
             mCups[n].vx = 0x1800;
@@ -256,11 +257,11 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
             mCups[n].state = 2;
             mCups[n].vx = -0x1800;
         }
-        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mCups[n].hops = (char)((((random >> 16) & 0x7fff) * 6 >> 0xf) + 1);
     } else {
         mCups[n].state = 1;
-        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mCups[n].hops = (char)((((random >> 16) & 0x7fff) << 1) >> 0xf);
     }
 
@@ -272,11 +273,11 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
                 if (mCups[n].repeats >= 2) {
                     if (moveSideways != 0) {
                         mCups[n].state = 1;
-                        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+                        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
                         mCups[n].hops = (char)((((random >> 16) & 0x7fff) << 1) >> 0xf);
                         moveSideways = 0;
                     } else {
-                        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+                        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
                         if ((((random >> 16) & 0x7fff) << 1) >> 0xf) {
                             mCups[n].state = 3;
                             mCups[n].vx = 0x1800;
@@ -284,7 +285,7 @@ void dScMgPachinko2_c ::Cup_StateDecide(int n) {
                             mCups[n].state = 2;
                             mCups[n].vx = -0x1800;
                         }
-                        random = (unsigned int)RandomIntInternal(&data_0209d4b8);
+                        random = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
                         mCups[n].hops = (char)((((random >> 16) & 0x7fff) * 6 >> 0xf) + 1);
                         moveSideways = 1;
                     }
@@ -519,10 +520,11 @@ void dScMgPachinko2_c::ChooseLaneConfig() {
     unsigned int nextConfig, configOffset;
     if ((int)mLevel != 0) {
         nextConfig =
-            ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6) >> 0xf;
+            ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 6) >> 0xf;
         if ((unsigned int)mLaneConfig == nextConfig) {
             configOffset =
-                (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5) >> 0xf) +
+                (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5) >>
+                 0xf) +
                 1;
             nextConfig = nextConfig + configOffset;
             if ((int)nextConfig >= 6)
@@ -531,7 +533,8 @@ void dScMgPachinko2_c::ChooseLaneConfig() {
         mLaneConfig = nextConfig;
         return;
     }
-    mLaneConfig = ((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6) >> 0xf;
+    mLaneConfig =
+        ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 6) >> 0xf;
 }
 
 // @symbol _ZN16dScMgPachinko2_c13Popup_DrawAllEv
@@ -949,7 +952,7 @@ void dScMgPachinko2_c ::Paddle_StateFallToGround(int i) {
     mPaddles[i].state = 0xa;
     mPaddles[i].vy = 0;
     mPaddles[i].timer = 0x40;
-    if ((((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) << 1) >> 15) {
+    if ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) << 1) >> 15) {
         mPaddles[i].vx = 0x1000;
         mPaddles[i].swing = 0;
     } else {
@@ -1317,7 +1320,7 @@ void dScMgPachinko2_c::Paddle_StateSweep(int i) {
             mPaddles[i].x = 0xe0000;
             mPaddles[i].vx = 0;
             mPaddles[i].dir ^= 1;
-            a = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            a = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mPaddles[i].timer = (u16)(((a << 3) >> 15) * 3 + 0x40);
             mPaddles[i].state = 7;
         }
@@ -1335,7 +1338,7 @@ void dScMgPachinko2_c::Paddle_StateSweep(int i) {
             mPaddles[i].x = 0x20000;
             mPaddles[i].vx = 0;
             mPaddles[i].dir ^= 1;
-            a = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            a = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             mPaddles[i].timer = (u16)(((a << 3) >> 15) * 3 + 0x40);
             mPaddles[i].state = 7;
         }
@@ -1429,7 +1432,7 @@ void dScMgPachinko2_c::Paddle_StateSpawn(int idx) {
 
     mPaddles[idx].state = 1;
 
-    r = RandomIntInternal(&data_0209d4b8);
+    r = RandomIntInternal(&data_0209d4b8.value);
     bit = (int)(((unsigned int)r >> 16 & 0x7fffu) * 2u >> 15);
 
     if (idx & 1)
@@ -1448,7 +1451,7 @@ void dScMgPachinko2_c::Paddle_StateSpawn(int idx) {
             if (idx) {
                 mPaddles[idx].step = mPaddles[0].step;
             } else {
-                r = RandomIntInternal(&data_0209d4b8);
+                r = RandomIntInternal(&data_0209d4b8.value);
                 bit = (int)(((unsigned int)r >> 16 & 0x7fffu) * 2u >> 15);
                 mPaddles[idx].step = bit;
             }
@@ -1464,7 +1467,7 @@ void dScMgPachinko2_c::Paddle_StateSpawn(int idx) {
             if (idx) {
                 mPaddles[idx].step = mPaddles[0].step;
             } else {
-                r = RandomIntInternal(&data_0209d4b8);
+                r = RandomIntInternal(&data_0209d4b8.value);
                 bit = (int)(((unsigned int)r >> 16 & 0x7fffu) * 2u >> 15);
                 mPaddles[idx].step = bit;
             }
@@ -2114,7 +2117,7 @@ void dScMgPachinko2_c::Ball_StateHop(int i) {
             mBalls[i].sprite = 1;
             mBalls[i].vx = -0x1000;
         } else {
-            unsigned int r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            unsigned int r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             if (((r << 1) >> 15) != 0) {
                 mBalls[i].facingRight = 1;
                 mBalls[i].sprite = 5;
@@ -2363,9 +2366,9 @@ s32 dScMgPachinko2_c::InitResources() {
     /* volatile: the ROM stores each fill value to the stack and reloads it */
     volatile u16 spC;
     volatile u16 spE;
-    int sp4;
-    int sp8;
-    int f;
+    void *objChar;
+    void *objPltt;
+    void *f;
     int n;
     int y;
     int x;
@@ -2378,20 +2381,20 @@ s32 dScMgPachinko2_c::InitResources() {
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCG_BIN);
     DecompressLZ16(f, (void *)func_02054d88());
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCL_BIN);
-    GX::LoadBGPltt((const void *)f, 0x60, 0x1a0);
-    Deallocate((void *)f);
+    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NSC_BIN);
-    func_02056314((void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_02056314(f, 0, 0x800);
+    Deallocate(f);
 
-    sp4 = LoadFile(ASSET_D_2D_MG_PACHINKO_NCG_BIN);
-    sp8 = LoadFile(ASSET_D_2D_MG_PACHINKO_NCL_BIN);
-    DecompressLZ16(sp4, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)sp8, 0, 0x100);
+    objChar = LoadFile(ASSET_D_2D_MG_PACHINKO_NCG_BIN);
+    objPltt = LoadFile(ASSET_D_2D_MG_PACHINKO_NCL_BIN);
+    DecompressLZ16(objChar, (void *)0x6400000);
+    GX::LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd; /* sub BG0, BG2 and BG3 on */
     *(volatile u16 *)0x400100c &= ~3;
@@ -2422,15 +2425,15 @@ s32 dScMgPachinko2_c::InitResources() {
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCG_BIN);
     DecompressLZ16(f, (void *)G2S::GetBG3CharPtr());
-    Deallocate((void *)f);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCL_BIN);
-    GXS::LoadBGPltt((const void *)f, 0x60, 0x1a0);
-    Deallocate((void *)f);
+    GXS::LoadBGPltt(f, 0x60, 0x1a0);
+    Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NSC_BIN);
-    func_020562b4((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_020562b4(f, 0, 0x800);
+    Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
     *(volatile u16 *)0x4001008 &= ~0x40;
@@ -2438,13 +2441,13 @@ s32 dScMgPachinko2_c::InitResources() {
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x608;
 
     f = LoadFile(ASSET_D_2D_HEI_TOP_DOWN_NSC_BIN);
-    func_020564f4((const void *)f, 0, 0x800);
-    Deallocate((void *)f);
+    func_020564f4(f, 0, 0x800);
+    Deallocate(f);
 
-    DecompressLZ16(sp4, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)sp8, 0, 0x100);
-    Deallocate((void *)sp4);
-    Deallocate((void *)sp8);
+    DecompressLZ16(objChar, (void *)0x6600000);
+    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    Deallocate(objChar);
+    Deallocate(objPltt);
 
     ResetRound();
     ChooseLaneConfig();

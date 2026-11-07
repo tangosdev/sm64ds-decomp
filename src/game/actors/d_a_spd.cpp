@@ -11,8 +11,8 @@
  * deslop leftovers:
  *  - The 25 state handlers/helpers keep func_ov071_* address names as member
  *    names; no original names are recovered. SetState was Scuttlebug_SetState.
- *  - Vec3 and Mtx43 stay plain words: spelling them as Vector3/Matrix4x3
- *    drags ~Vector3's vague-linkage D1 into functions that never had it.
+ *  - The position temporaries are Vector3 (measured: same object as the old
+ *    POD twin).
  *  - The extern "C" preamble is hand-spelt: Fix12<int>/Vector3 parameters
  *    are written as plain words where the true types break the register
  *    convention, and the spelled mangled calls stay where the member
@@ -29,6 +29,7 @@ enum Scuttlebug_AssetId {
 };
 
 #include "common.h"
+#include "ParticleIds.h"
 #include "daSpd_c.h"
 #include "dBgCh_Gnd.h"
 #include "daPly_c.h"
@@ -45,14 +46,8 @@ enum Scuttlebug_AssetId {
  * Local value shapes carried from the legacy one-function files.
  * ------------------------------------------------------------------------ */
 
-/* Three plain fixed-point words.  Vector3 has a user-declared destructor, so
- * spelling these as Vector3 would drag its vague-linkage D1 into functions
- * that never had it. */
-typedef struct { int x, y, z; } Vec3;
-
 /* Flat 0x30-byte matrix block, as func_ov071_0211f524 and the scratch matrix
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
-#include "private/mtx43.h"
 
 typedef void (daSpd_c::*PMF)();
 
@@ -87,7 +82,7 @@ typedef void BgchInitAt_(void *self, dActor_c *actor, int radius, int height, Ve
                          Vector3_16 *b);
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern Mtx43     data_020a0e68;           /* scratch matrix        */
+extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
 extern s16       data_02082214[];         /* sin/cos table         */
 
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
@@ -330,7 +325,7 @@ int daSpd_c::func_ov071_02120028() {
     UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        Vec3 v;
+        Vector3 v;
         int x, y, z;
         x = *(volatile int *)&mPosX;
         v.x = x;
@@ -340,7 +335,7 @@ int daSpd_c::func_ov071_02120028() {
         y += 0x28000;
         v.z = z;
         *(volatile int *)&v.y = y;
-        Particle::System::NewSimple(0xb2, x, y, z);
+        Particle::System::NewSimple(kPtclLandingDust, x, y, z);
         mVertSpeed = mVertSpeed * -0x28 / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;
@@ -675,13 +670,13 @@ void daSpd_c::func_ov071_0211f524() {
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 
     if (mAngleX != 0) {
-        data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
+        data_020a0e68 = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
+        mAnmModel.mat4x3 = data_020a0e68;
     }
 
     mShadowMtx[9] = mPosX >> 3;
@@ -694,11 +689,11 @@ void daSpd_c::func_ov071_0211f524() {
 
 // @symbol _ZN7daSpd_c19func_ov071_0211f498Ev
 void daSpd_c::func_ov071_0211f498() {
-    Vec3 v;
+    Vector3 v;
     v.x = mPosX;
     v.y = mPosY;
     v.z = mPosZ;
-    SpawnCoins(*(const Vector3 *)&v, mCoinCount, 0xf000, 0);
+    SpawnCoins(v, mCoinCount, 0xf000, 0);
     PoofDust();
     func_02012694(0xc4, &mCamSpacePosX);
     if (param1) {

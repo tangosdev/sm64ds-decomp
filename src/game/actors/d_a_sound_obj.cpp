@@ -114,7 +114,8 @@ extern "C" daSoundObj_c *daSoundObj_c_classInit()
 // @symbol _ZN12daSoundObj_c13InitResourcesEv
 /* opt_loop_invariants is file-global last-wins: this off covers the
    FindWithActorID loop below (dropping it un-matches InitResources),
-   and no other member has a loop. */
+   and no other member has a loop. Without it the loop's constant
+   arguments are hoisted: 0x15c, not 0x14c. */
 #pragma opt_loop_invariants off
 int daSoundObj_c::InitResources()
 {

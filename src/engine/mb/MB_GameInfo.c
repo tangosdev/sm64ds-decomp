@@ -38,15 +38,18 @@
  */
 #include "types.h"
 #include "private/mb_views.h"
+#include "private/fs_views.h"
+
+typedef struct FSFile FSFile;
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void MultiCopyHalf(const void *src, void *dst, s32 size);
 extern void MultiStore32Bytes(unsigned val, void *dst, int len);
-extern void FS_InitFile(int *s);
+extern void FS_InitFile(FSFile *p_file);
 extern int func_0205d518(void *file, const char *path);
-extern int FS_CloseFile(int *s);
-extern int FS_ReadFile(int *s, int a, int b);
+extern int FS_CloseFile(void *p_file);
+extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
 extern u16 func_02067ee4(u16 *p, int len);
 extern int func_020688e4(void);
 extern int func_020688cc(void);
@@ -176,7 +179,7 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
  * FS_OpenFileEx(file, path, FS_FILEMODE_R); this one takes the
  * two-argument open func_0205d518. */
 int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
-    int local[0x12];
+    FSFile file;
     int sz;
     int param;
 
@@ -187,19 +190,19 @@ int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
     if (filePathp == 0)
         return 0;
 
-    FS_InitFile(local);
+    FS_InitFile(&file);
 
-    if (func_0205d518(local, filePathp) == 0)
+    if (func_0205d518(&file, filePathp) == 0)
         return 0;
 
-    param = local[9] - local[8];
+    param = file.prop.file.bottom - file.prop.file.top;
     if (sz != param) {
-        FS_CloseFile(local);
+        FS_CloseFile(&file);
         return 0;
     }
 
-    FS_ReadFile(local, (int)iconp, sz);
-    FS_CloseFile(local);
+    FS_ReadFile(&file, iconp, sz);
+    FS_CloseFile(&file);
     return 1;
 }
 

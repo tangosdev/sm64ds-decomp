@@ -24,9 +24,9 @@
 // exception code -- the same helpers func_01ff8708 (_dmul) uses, confirming this is one
 // hand-written runtime block, not compiled C.
 
-extern int func_0207322c(void);
-extern double func_0206dd7c(void);
-extern double func_0206dcd4(void);
+extern unsigned int *func_0207322c(void);
+extern double func_0206dd7c(double a, int op);
+extern double func_0206dcd4(double a, double b, int op);
 extern void _dsub_core(void);
 
 asm double _dadd(double a, double b)

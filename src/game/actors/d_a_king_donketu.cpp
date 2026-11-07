@@ -164,14 +164,9 @@ struct C;
 typedef int (C::*PMF)();
 struct C { char pad[0x37c]; PMF *pp; };
 
-struct V3 { int x; int y; int z; };
-typedef struct { int x, y, z; } Vec3;
-
 enum Bool { FALSE, TRUE };
 
 #include "private/mtx43.h"
-
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void M(void*); };
 
 /* The eight file handles __sinit_d_a_king_donketu.cpp constructs below.
  * Construct writes the u16 file ID at +0, the u8 reference count at +2,
@@ -232,12 +227,11 @@ int ChiefChilly_ChangeState(C *c, PMF *p);
 extern struct BCA_File *data_ov002_0210da30[2];
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
-extern void MulVec3Mat4x3(const void* in, void* m, void* out);
-extern void func_0200d8c8(void *cam, void *v, int strength);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern struct Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h; the shared implementation uses
    Vector3, while this function keeps POD locals to avoid Vector3 construction. */
@@ -255,10 +249,10 @@ extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
 extern s16 Vec3_VertAngle(const void* a, const void* b);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
+extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
 extern void d_a_king_donketuRunningSlidingDustAtHold(int a, int b, int c);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
-   locals stay the POD Vec3 above, so the call casts. */
+   locals are the POD VecFx32, so the call casts. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
@@ -293,7 +287,7 @@ void daKing_Donketu_c::func_ov073_0211f144() {
     in.z = 0; in.z = 0xc8000; in.x = 0; in.y = 0;
     out.x = 0; out.y = 0; out.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mPrevAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
     pos.x = pos.x + out.x;
     pos.z = pos.z + out.z;
     c->mParticleId0 = Particle::System::New(c->mParticleId0, 0x77, pos.x, pos.y, pos.z, 0, 0);
@@ -309,7 +303,7 @@ void daKing_Donketu_c::func_ov073_0211f144() {
     }
 }
 
-/* Called where the boss lands or steps (a reading from the callers). Shakes the camera by `strength` (func_0200d8c8; callers pass
+/* Called where the boss lands or steps (a reading from the callers). Shakes the camera by `strength` (dCamera_c::func_0200d8c8; callers pass
    0x3e8000 to 0x1388000), then takes the translation of bone mStepBoneIdx
    times the model matrix, shifted left by 3 (the matrix words are held >> 3),
    and flips mStepBoneIdx between 2 and 3 for the next call. In the chase
@@ -321,20 +315,20 @@ void daKing_Donketu_c::func_ov073_0211f144() {
 void daKing_Donketu_c::func_ov073_0211f2c0(int strength)
 {
     daKing_Donketu_c *c = this;
-    struct V3 src;
-    volatile struct V3 pv;
-    struct V3 *new_var;
-    struct V3 in;
-    struct V3 res;
-    struct V3 out;
-    struct V3 dv;
+    VecFx32 src;
+    volatile VecFx32 pv;
+    VecFx32 *new_var;
+    VecFx32 in;
+    VecFx32 res;
+    VecFx32 out;
+    VecFx32 dv;
     int ty;
     int tx;
     int tz;
     int x;
     int y;
     int z;
-    func_0200d8c8(data_0209f318, &c->mPosX, strength);
+    data_0209f318->func_0200d8c8(&c->mPos, strength);
     data_020a0e68 = c->mBlendAnmModel.mat4x3;
     MulMat4x3Mat4x3(&c->mBlendAnmModel.data.transforms[c->mStepBoneIdx], &data_020a0e68,
                     &data_020a0e68);
@@ -382,7 +376,7 @@ do_mtx:
     res.z = 0;
     new_var = &res;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &res);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&res);
 
     {
         int px = pv.x;
@@ -417,7 +411,7 @@ void daKing_Donketu_c::func_ov073_0211f494(void *pb)
 {
     daKing_Donketu_c *a = this;
     dActor_c *b = (dActor_c *)pb;
-    Vec3 t, p, q, d;
+    VecFx32 t, p, q, d;
     int ay, ax, vx, tmp, sin_ax, cos_ax, sin_ay, cos_ay, rx, ry, rz;
     int y0;
     int *bp = &b->mPosX;
@@ -426,9 +420,9 @@ void daKing_Donketu_c::func_ov073_0211f494(void *pb)
     y0 = a->mPosY;
     p.y = y0;
     {
-        Vec3 *pq = &q;
+        VecFx32 *pq = &q;
         int zval = a->mPosZ;
-        Vec3 *pp = &p;
+        VecFx32 *pp = &p;
         pp->z = zval;
         pq->x = bp[0];
         pq->y = bp[1];
@@ -561,7 +555,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
 
         c->mHitCooldown = 0x10;
         func_02012694(SND_HIT_REGISTERED, &c->mCamSpacePosX);
-        rnd = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
+        rnd = RandomIntInternal(&data_0209e650.value);
         if (((rnd >> 8) & 7) == 0) {
             v.x = c->mPosX;
             v.y = c->mPosY;
@@ -575,7 +569,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
                 do {
                     dActor_c* actor = dActor_c::Spawn(ACTOR_COIN, 0, v, 0, c->mAreaId, -1);
                     if (actor != 0) {
-                        rnd = RandomIntInternal(reinterpret_cast<int *>(&data_0209e650));
+                        rnd = RandomIntInternal(&data_0209e650.value);
                         shortY = ((s32)((((u32)rnd >> 8) & 0xf) << 0x1c)) >> 0x10;
                         actor->mPrevAngleX = 0;
                         actor->mPrevAngleY = (s16)shortY;
@@ -651,13 +645,13 @@ done0:
 // @symbol _ZN16daKing_Donketu_c19func_ov073_0211fa74Ev
 int daKing_Donketu_c::func_ov073_0211fa74() {
     daKing_Donketu_c *c = this;
-    void* cam;
+    dCamera_c *cam;
     dActor_c* spawned;
     dActor_c* found;
     volatile struct Vector3_16 rot;
     struct Vector3 pos;
     cam = data_0209f318;
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
     ApproachLinear(*(int *)&c->mScaleX, 0, 0x80);
     c->mScaleZ = c->mScaleX;
     c->mScaleY = c->mScaleZ;
@@ -695,7 +689,7 @@ int daKing_Donketu_c::func_ov073_0211fa74() {
         found->MarkForDestruction();
     }
     if (spawned != 0) {
-        ((dCamera_c *)cam)->mFlags &= ~8;
+        cam->mFlags &= ~8;
         c->MarkForDestruction();
     }
 end:
@@ -716,7 +710,7 @@ int daKing_Donketu_c::func_ov073_0211fbf4() {
     daKing_Donketu_c *c = this;
     daPly_c *pl = c->mTalkPlayer;
     c->mSoundHandle = Sound::PlayLong(c->mSoundHandle, 3, 0x170, *(Vector3 *)&c->mCamSpacePos, 0);
-    ((dCamera_c *)data_0209f318)->SetFlag_3();
+    data_0209f318->SetFlag_3();
     c->func_ov073_0211f144();
     if (pl->GetTalkState() == -1) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123370);
@@ -757,12 +751,12 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
         msgpos[0].y = pv[1];
         msgpos[0].z = pv[2];
     }
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     msgpos[1].x = c->mPosX;
     msgpos[1].y = c->mPosY;
     msgpos[1].z = c->mPosZ;
 
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
 
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
@@ -778,7 +772,7 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
     in.z = -0x55e000;
 
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
     ps.x = ps.x + out.x;
     ps.y = ps.y + 0x200000;
@@ -794,7 +788,7 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
         Sound::ChangeMusicVolume(0x14, 0x15666);
         Message::PrepareTalk();
         if (c->mTalkPlayer->StartTalk(*c, 1)) {
-            ((dCamera_c *)cam)->SetFlag_3();
+            cam->SetFlag_3();
             if (c->mTalkPlayer->ShowMessage(*c, msg, &msgpos[1], 0, 2)) {
                 func_02012694(SND_TALK_DONE, (void*)&c->mCamSpacePosX);
                 ChiefChilly_ChangeState((C *)(c), (PMF *)(&data_ov073_02123410));
@@ -838,8 +832,8 @@ int daKing_Donketu_c::func_ov073_0211fe8c() {
 
     c->func_ov073_0211f144();
 
-    cam = (dCamera_c *)data_0209f318;
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam = data_0209f318;
+    cam->SetFlag_3();
 
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
@@ -855,7 +849,7 @@ int daKing_Donketu_c::func_ov073_0211fe8c() {
     in.z = -0x59c000;
 
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
     pos.y -= 0x100000;
     pos.x = pos.x + out.x;
@@ -938,8 +932,8 @@ int daKing_Donketu_c::func_ov073_021200e0()
     }
     /* state == 0 */
     if (mStateScratch == 0) {
-        Vec3 offset;
-        Vec3 rotated;
+        VecFx32 offset;
+        VecFx32 rotated;
         s16 horz;
         ApproachLinear(mAngleX, 0, 0x2000);
         horz = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
@@ -957,7 +951,7 @@ int daKing_Donketu_c::func_ov073_021200e0()
             offset.z = 0x1e000;
         }
         Matrix4x3_FromRotationY(&data_020a0e68, horz);
-        MulVec3Mat4x3(&offset, &data_020a0e68, &rotated);
+        MulVec3Mat4x3((Vector3 *)&offset, &data_020a0e68, (Vector3 *)&rotated);
         mSpeedX = rotated.x;
         mSpeedZ = rotated.z;
         if (mVertSpeed < 0) {
@@ -967,7 +961,7 @@ int daKing_Donketu_c::func_ov073_021200e0()
                 if (actor != 0) {
                     enum Bool eq = (enum Bool)(actor->actorID == ACTOR_PLAYER);
                     if (eq != FALSE) {
-                        Vec3 pos = *(Vec3*)&actor->mPosX;
+                        VecFx32 pos = *(VecFx32 *)&actor->mPosX;
                         if (mPosY > pos.y) {
                             ((daPly_c *)actor)->Unk_020c6a10(1);
                         }
@@ -1072,7 +1066,7 @@ mainblock:
         in[2] = 0x50000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MulVec3Mat4x3(in, &data_020a0e68, out);
+        MulVec3Mat4x3((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
         c->mSpeedX = out[0];
         c->mSpeedZ = out[2];
     }
@@ -1160,7 +1154,7 @@ mainblock:
         in[2] = 0x28000;
         Matrix4x3_FromRotationY(&data_020a0e68, hz);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-        MulVec3Mat4x3(in, &data_020a0e68, out);
+        MulVec3Mat4x3((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
         c->mSpeedX = out[0];
         if (c->mStateScratch != 0 || c->mVertSpeed < 0) {
             c->mVertSpeed = out[1];
@@ -1267,7 +1261,7 @@ int daKing_Donketu_c::func_ov073_02120910()
     out.y = 0;
     out.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY + 0x8000);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
     in.x = c->mEdgePosX + out.x;
     in.y = c->mEdgePosY;
     in.z = c->mEdgePosZ + out.z;
@@ -1492,10 +1486,8 @@ int daKing_Donketu_c::func_ov073_02120ed0() {
             if (c->mStateScratch == 0) {
                 if (c->DistToCPlayer() < 0x1f4000) {
                     c->mStateScratch = 1;
-                    if ((((unsigned int)RandomIntInternal(
-                              reinterpret_cast<int *>(&data_0209e650)) >>
-                          0x18) &
-                         7) == 0) {
+                    if ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x18) & 7) ==
+                        0) {
                         c->mPhase = 3;
                         c->mHorzSpeed = 0;
                         c->mStateTimer = 0xf;
@@ -1609,12 +1601,12 @@ int daKing_Donketu_c::func_ov073_0212128c()
     daKing_Donketu_c *c = this;
     struct Vector3 la;
     struct Vector3 ps;
-    void* cam;
+    dCamera_c *cam;
     daPly_c *player;
 
     cam = data_0209f318;
     player = c->mTalkPlayer;
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
 
     la.x = c->mPosX;
     la.y = c->mPosY;
@@ -1628,11 +1620,11 @@ int daKing_Donketu_c::func_ov073_0212128c()
     ps.y = ps.y + 0x20000;
     ps.z = ps.z + 0xffa34000;
 
-    ((dCamera_c *)cam)->SetLookAt(la);
-    ((dCamera_c *)cam)->SetPos(ps);
+    cam->SetLookAt(la);
+    cam->SetPos(ps);
 
     if (player->GetTalkState() == -1) {
-        ((dCamera_c *)cam)->mFlags &= ~8;
+        cam->mFlags &= ~8;
         Sound::LoadAndSetMusic_Layer3(0x2d);
         func_02011d08();
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123360);
@@ -1663,7 +1655,7 @@ int daKing_Donketu_c::func_ov073_02121388() {
     struct Vector3 la;
     struct Vector3 ps;
     daPly_c *player;
-    void* cam;
+    dCamera_c *cam;
     int msg;
     daPly_c *p;
 
@@ -1681,7 +1673,7 @@ int daKing_Donketu_c::func_ov073_02121388() {
     vmsg.y = c->mPosY;
     vmsg.z = c->mPosZ;
 
-    ((dCamera_c *)cam)->SetFlag_3();
+    cam->SetFlag_3();
 
     la.x = c->mPosX;
     la.y = c->mPosY;
@@ -1695,8 +1687,8 @@ int daKing_Donketu_c::func_ov073_02121388() {
     ps.y = ps.y + 0x20000;
     ps.z = ps.z + 0xffa34000;
 
-    ((dCamera_c *)cam)->SetLookAt(la);
-    ((dCamera_c *)cam)->SetPos(ps);
+    cam->SetLookAt(la);
+    cam->SetPos(ps);
 
     vmsg.y = vmsg.y + 0x64000;
     ApproachLinear(c->mPrevAngleY, Vec3_HorzAngle(&c->mPos, &vplayer), 0x800);
@@ -1746,18 +1738,18 @@ void daKing_Donketu_c::func_ov073_021215cc()
 {
     daKing_Donketu_c *c = this;
     int sh;
-    Vec3 v;
-    Vec3 out;
+    VecFx32 v;
+    VecFx32 out;
     void* m;
     Mtx43* saved;
     int i;
-    Vec3* p;
+    VecFx32 *p;
 
     Vec3_Asr((Vector3 *)&v, (Vector3 *)&c->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
 
-    p = (Vec3 *)&c->mFootPos;
+    p = (VecFx32 *)&c->mFootPos;
     c->mBlendAnmModel.mat4x3 = data_020a0e68;
     saved = (Mtx43 *)&c->mBlendAnmModel.mat4x3;
     sh = 3;
@@ -1810,7 +1802,7 @@ void daKing_Donketu_c::OnPendingDestroy()
 // @symbol _ZN16daKing_Donketu_c6RenderEv
 int daKing_Donketu_c::Render()
 {
-    ((Base *)&mBlendAnmModel)->M((char *)&mScaleX);
+    mBlendAnmModel.Render((const Vector3 *)&mScaleX);
     return 1;
 }
 
@@ -1841,7 +1833,8 @@ int daKing_Donketu_c::Render()
  * the camera frames the boss with the player.
  *
  * `opt_propagation off` is what stops the many position temporaries being
- * folded. It is bracketed to this one member: under `defer_codegen off` above,
+ * folded (without it Behavior is 0x428, not 0x42c: angx's 0x2000 and the
+ * data_020a0e68 address are folded instead of held in r4). It is bracketed to this one member: under `defer_codegen off` above,
  * the bracket binds positionally, so the members before and after it keep
  * the file's default propagation. The closing `#pragma pop` must NOT follow
  * Behavior's closing brace directly: the parser reads one token past the `}`
@@ -1857,26 +1850,22 @@ struct RayParams { Vector3 start, end, in, out; };
 // @symbol _ZN16daKing_Donketu_c8BehaviorEv
 int daKing_Donketu_c::Behavior()
 {
-    char *self = (char *)this;
     C *c = (C *)this;
-    int angx;
+    short angx;
     Vector3 v0;
     RayParams rp;
     Vector3 v3C;
     Vector3 v48;
     Vector3 v54;
 
-    ((dCamera_c *)data_0209f318)->mFramedActor = this;
+    data_0209f318->mFramedActor = this;
     DecIfAbove0_Short(&mStateTimer);
 
-    if (c->pp[1] != 0) {
-        PMF *p = c->pp + 1;
-        (c->**p)();
-    }
+    if (c->pp[1] != 0)
+        (c->*c->pp[1])();
 
-    if ((char *)c->pp != (char *)&data_ov073_02123400
-        && (char *)c->pp != (char *)&data_ov073_02123320
-        && (char *)c->pp != (char *)&data_ov073_02123340) {
+    if (mState != &data_ov073_02123400 && mState != &data_ov073_02123320 &&
+        mState != &data_ov073_02123340) {
         UpdatePos(&mdCcAcPos_c);
     } else {
         int sum = mVertSpeed + mVertAccel;
@@ -1888,8 +1877,7 @@ int daKing_Donketu_c::Behavior()
         UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     }
 
-    if (((char *)c->pp == (char *)&data_ov073_02123330 ||
-         (char *)c->pp == (char *)&data_ov073_02123350) &&
+    if ((mState == &data_ov073_02123330 || mState == &data_ov073_02123350) &&
         mBlendAnmModel.WillHitFrame(7) != 0) {
         data_020a0e68 = mBlendAnmModel.mat4x3;
         MulMat4x3Mat4x3(&mBlendAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
@@ -1903,13 +1891,10 @@ int daKing_Donketu_c::Behavior()
         HugeLandingDustAt(v48, 1);
     }
 
-    if ((char *)c->pp != (char *)&data_ov073_021233c0
-        && (char *)c->pp != (char *)&data_ov073_021233d0
-        && (char *)c->pp != (char *)&data_ov073_021233f0
-        && (char *)c->pp != (char *)&data_ov073_02123400
-        && (char *)c->pp != (char *)&data_ov073_02123320
-        && (char *)c->pp != (char *)&data_ov073_02123340
-        && (char *)c->pp != (char *)&data_ov073_02123380) {
+    if (mState != &data_ov073_021233c0 && mState != &data_ov073_021233d0 &&
+        mState != &data_ov073_021233f0 && mState != &data_ov073_02123400 &&
+        mState != &data_ov073_02123320 && mState != &data_ov073_02123340 &&
+        mState != &data_ov073_02123380) {
         dBgCh_Lin line;
         rp.start.x = 0; rp.start.y = 0; rp.start.z = 0;
         rp.end.x = 0; rp.end.y = 0; rp.end.z = 0;
@@ -1930,7 +1915,7 @@ int daKing_Donketu_c::Behavior()
             Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angx);
         }
-        MulVec3Mat4x3(&rp.in, &data_020a0e68, &rp.out);
+        MulVec3Mat4x3((Vector3 *)&rp.in, &data_020a0e68, (Vector3 *)&rp.out);
         {
             int sx = rp.start.x;
             int ox = rp.out.x;
@@ -1954,7 +1939,7 @@ int daKing_Donketu_c::Behavior()
             mGroundMissPosX = mPosX;
             mGroundMissPosY = mPosY;
             mGroundMissPosZ = mPosZ;
-            if ((char *)c->pp != (char *)&data_ov073_021233a0) {
+            if (mState != &data_ov073_021233a0) {
                 mPosX = mPrevPosX;
                 mPosY = mPrevPosY;
                 mPosZ = mPrevPosZ;
@@ -1970,13 +1955,12 @@ int daKing_Donketu_c::Behavior()
     v54 = data_ov073_02123040;
     mdCcAcPos_c.SetPosRelativeToActor(v54);
 
-    if ((char *)c->pp == (char *)&data_ov073_02123360
-        || (char *)c->pp == (char *)&data_ov073_02123390) {
-        ((daKing_Donketu_c *)self)->func_ov073_0211f61c();
+    if (mState == &data_ov073_02123360 || mState == &data_ov073_02123390) {
+        func_ov073_0211f61c();
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
-    ((daKing_Donketu_c *)self)->func_ov073_021215cc();
+    func_ov073_021215cc();
     mBlendAnmModel.Advance();
     return 1;
 }

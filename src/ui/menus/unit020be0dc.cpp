@@ -55,6 +55,7 @@
 #include "Vector3s.h"
 #include "dExtModel_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/gxcommon.h"
 #include "types.h"
 #include "Ov007Model.h"
 #include "Ov007Figure.h"
@@ -96,15 +97,6 @@ struct TrackingRecord {
 };
 
 typedef char TrackingRecord_size_must_be_0xc[sizeof(TrackingRecord) == 0xc ? 1 : -1];
-
-/* NitroSDK's GXOamAttr: one 8-byte OAM entry, its fourth halfword an
- * affine parameter. */
-typedef struct GXOamAttr {
-    u16 attr0;
-    u16 attr1;
-    u16 attr2;
-    s16 affine;
-} GXOamAttr;
 
 /* NitroSDK's GXOamAffine: one OBJ affine matrix, its four Q8 parameters in
  * the fourth halfword of four consecutive OAM entries. */

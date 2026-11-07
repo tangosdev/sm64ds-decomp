@@ -76,6 +76,7 @@ enum daKrb_c_AssetId {
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "decl_dCapEnemy_c.h"
+#include "LevelRng.h"
 #include "dExtAnmMaterial_c.h"
 #include "daPly_c.h"
 #include "daKuriKing_c.h"
@@ -216,7 +217,6 @@ extern short data_02082214[];
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
-extern int data_0209e650;
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
@@ -801,7 +801,7 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
     }
 
     {
-        int *ppos_src = (int *)(int)(&goomba->mClosestPlayer->mPosX);
+        int *ppos_src = (int *)(&goomba->mClosestPlayer->mPosX);
         ppos.x = ppos_src[0];
         ppos.y = ppos_src[1];
         ppos.z = ppos_src[2];
@@ -1405,14 +1405,16 @@ void daKrb_c::func_ov084_0212abd4() {
             if (*(u16 *)&goomba->mHeadingHoldTimer != 0) {
                 *(u16 *)((int)&goomba->mHeadingHoldTimer) =
                     *(u16 *)((int)&goomba->mHeadingHoldTimer) - 1;
-            } else if (((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 3) {
-                goomba->mTargetAngleY = goomba->mPrevAngleY + (s16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
+            } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 3) {
+                goomba->mTargetAngleY =
+                    goomba->mPrevAngleY +
+                    (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
                 goomba->mHeadingHoldTimer = 0x64;
             } else {
-                goomba->mTargetAngleY = (s16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
+                goomba->mTargetAngleY =
+                    (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
                 goomba->func_ov084_02129c9c();
             }
-
         }
     }
     if (goomba->mCapId >= 6) {
@@ -1509,7 +1511,7 @@ void daKrb_c::func_ov084_0212af74() {
             } else {
                 if (DecIfAbove0_Short(
                         reinterpret_cast<unsigned short *>(&goomba->mWanderRerollTimer)) == 0) {
-                    rnd = RandomIntInternal(&data_0209e650);
+                    rnd = RandomIntInternal(&data_0209e650.value);
                     goomba->mWanderRerollTimer = (s16)((rnd >> 0x1b) + 0x1e);
                     goomba->mInitAngleY = (s16)(rnd >> 0x10);
                 }

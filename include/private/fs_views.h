@@ -87,10 +87,13 @@ typedef struct FSFindPathInfo {
     FSDirPos pos;       /* 0x00 -- where the search starts */
     const char *path;   /* 0x0c */
     int find_directory; /* 0x10 */
-    /* 0x14 -- the FSFileID or FSDirPos to fill. The SDK's is a union of the
-     * two pointers; it stays an int while FSi_FindPath takes them as ints. */
-    int result;
+    union {
+        FSFileID *file; /* 0x14 -- filled when find_directory is 0 */
+        FSDirPos *dir;  /* 0x14 -- filled when find_directory is 1 */
+    } result;
 } FSFindPathInfo;
+
+typedef char FSFindPathInfo_size_must_be_0x18[sizeof(FSFindPathInfo) == 0x18 ? 1 : -1];
 
 typedef struct FSGetPathInfo {
     unsigned char *buf;       /* 0x00 */

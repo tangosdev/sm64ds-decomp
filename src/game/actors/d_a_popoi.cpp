@@ -62,6 +62,7 @@ enum daPopoi_c_AssetId {
 #include "decl_common.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Static-init ownership (was the handwritten __sinit_ov077_021275fc shard).
  * The file-scope objects at the end of this file construct the four
@@ -112,8 +113,7 @@ extern PopoiPMF data_ov077_02127cd8[2];
 extern "C" {
 extern int data_0209f32c;               /* WATER_HEIGHT */
 extern signed char gCurrentSublevel;    /* LEVEL_ID */
-extern int data_0209e650[];             /* RandomIntInternal state */
-extern char data_020a0e68[];            /* scratch Matrix4x3 */
+extern Matrix4x3 data_020a0e68;         /* scratch Matrix4x3 */
 extern Vector3 data_ov077_02127a5c;     /* sensor offset (0, 0, 44 units) */
 
 /* Named local declarations preserve this TU's compiler-numbered @NNN symbols;
@@ -124,10 +124,11 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);        /* local extern: prese
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); /* local extern: preserve @NNN names */
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
-void func_02012694(int a, void *b, int c);
+void func_02012694(unsigned int id, const Vector3 *pos);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
-extern void MulVec3Mat4x3(void *in, void *m, void *out);
+extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
@@ -347,8 +348,10 @@ int daPopoi_c::func_ov077_02126d5c(daPopoi_StateRecord *next)
  * speed and plays file 0x40f's animation (data_ov077_02127c90), and starts walking
  * at 8 units/frame (0x8000). Always returns 1. */
 int daPopoi_c::func_ov077_02126cd4(){
-    mTargetAngleY = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0xf) << 0xc);
-    mStateTimer = (short)((((unsigned int)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0xaa);
+    mTargetAngleY =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
+    mStateTimer =
+        (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0xaa);
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x8000;
     unk_41c = 0;
@@ -487,7 +490,8 @@ int daPopoi_c::func_ov077_021269a8() {
  * mAnmModel.speed is overwritten by SetAnim's speed argument 0x1000, so the
  * animation ends up at speed 1.0. Returns 1. */
 int daPopoi_c::func_ov077_02126930(){
-    mStateTimer = (short)(((unsigned int)RandomIntInternal(data_0209e650) >> 8 & 0x3f) + 0xaa);
+    mStateTimer =
+        (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 0xaa);
     mHorzSpeed = 0x6000;
     mTurnRate = 0;
     unk_41c = 0;
@@ -605,7 +609,7 @@ int daPopoi_c::func_ov077_02126640()
                                     if (func_ov002_020db674(a, 0x28000, 0x70000,
                                             (int)(short)(mAngleY + 0x8000)) != 0) {
                                         mCaughtPlayer = 0;
-                                        func_02012694(daPopoi_SND_THROW_PLAYER, &mCamSpacePosX, 0);
+                                        func_02012694(daPopoi_SND_THROW_PLAYER, &mCamSpacePos);
                                     }
                                 }
                             }
@@ -700,8 +704,8 @@ int daPopoi_c::func_ov077_02126300()
         start.z = mPosZ;
         start.y = y + 0x28000;
         dir.z = 0xc8000;
-        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&dir, data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;
@@ -728,9 +732,9 @@ int daPopoi_c::func_ov077_02126300()
         dir.x = 0;
         dir.y = 0;
         dir.z = 0x2c000;
-        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, 0x3000);
-        MulVec3Mat4x3(&dir, data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x3000);
+        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;

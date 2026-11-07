@@ -64,6 +64,8 @@
 #include "dBgCh_Actr.h"
 #include "Sound.h"
 #include "cstd.h"
+#include "private/mtx43.h"
+#include "LevelRng.h"
 
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
@@ -158,7 +160,6 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
    lets dActor_c::Spawn take it by const reference as its real signature says. */
 extern "C" int RandomIntInternal(int *seed);
 extern u16 data_ov002_020ff014[]; /* coin actor IDs: 0x120, 0x121, 0x122 */
-extern int data_0209e650;
 
 // @symbol _ZN12dEnemyBase_c9SpawnCoinEv
 void dEnemyBase_c::SpawnCoin()
@@ -178,8 +179,8 @@ void dEnemyBase_c::SpawnCoin()
             dActor_c *coin =
                 dActor_c::Spawn(data_ov002_020ff014[mCoinType - 1], 0xf2, v, 0, mAreaId, -1);
             if (coin != 0) {
-                int rnd1 = RandomIntInternal(&data_0209e650);
-                int rnd2 = RandomIntInternal(&data_0209e650);
+                int rnd1 = RandomIntInternal(&data_0209e650.value);
+                int rnd2 = RandomIntInternal(&data_0209e650.value);
                 int a = (int)((u32)rnd1 >> 16 << 27) >> 16;
                 u32 b = (u32)rnd2 >> 16;
                 coin->mPrevAngleX = 0;
@@ -828,7 +829,7 @@ extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-extern char data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 }
 
 // @symbol _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR14dExtAnmModel_cj
@@ -868,14 +869,9 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);
         /* Vector3's constructor makes Matrix4x3's own assignment copy the
-           rotation and the translation separately. A flat 12-word record
-           is the one copy this function's bytes are. */
-        {
-            struct M12 {
-                s32 m[12];
-            };
-            *(struct M12 *)&anim.mat4x3 = *(struct M12 *)&data_020a0e68;
-        }
+           rotation and the translation separately (.text grows by 0x1c
+           bytes). The flat Mtx43 copy is the one this function's bytes are. */
+        *(Mtx43 *)&anim.mat4x3 = *(Mtx43 *)&data_020a0e68;
     }
     return 1;
 }

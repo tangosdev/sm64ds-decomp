@@ -122,8 +122,8 @@ extern State data_ov095_0213759c;
 /* dBgW+0x18 and dBgW+0x1c. A direct store shrinks InitResources.
    local extern: no shared header declares these on void *. */
 extern "C" {
-void func_020393d4(void *collider, void *callback);
-void func_020393c4(void *collider, void *callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 // @symbol daUdlift_c_classInit_UDLIFT_TERESA
@@ -184,8 +184,8 @@ int daUdlift_c::InitResources()
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov095_02136f74[mVariant]), mClsnMat,
                           0x199, mAngleY, *data_ov095_021375a4[mVariant]);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&daUdlift_c::OnMeshClsnTouch);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&daUdlift_c::OnMeshClsnTouch);
     mRider = 0;
     mState = 0;
 

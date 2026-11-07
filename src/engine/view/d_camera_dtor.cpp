@@ -5,15 +5,15 @@
  *   ~dCamera_c     D1 then D0 (0x0200705c, 0x02007098)
  *   func_020070e8  orbit pos around the target player: ease the distance and
  *                  the two angles from the player to pos, then rebuild pos
- *   func_020071a8  set mOrbitTargetYaw to ang once the yaw from mTargetPos
+ *   StarDanceBoundYaw  set mOrbitTargetYaw to ang once the yaw from mTargetPos
  *                  to pos is more than threshold past it
- *   func_020071e0  scripted state: rotate savedLookAt / savedPos by the target
+ *   CutsceneGrandStarFlyAppCvars  scripted state: rotate savedLookAt / savedPos by the target
  *                  player's facing and ease pos and lookAt onto them
  *   Vector3::~Vector3
  *                  the cartridge's copy (0x020072c0), emitted at the end of
- *                  the object for func_020071e0's Vector3 locals
+ *                  the object for CutsceneGrandStarFlyAppCvars's Vector3 locals
  *
- * The emitted Vector3 destructor ends the object, so func_020072c4 starts
+ * The emitted Vector3 destructor ends the object, so CutsceneGrandStarFlyMarioOffscreen starts
  * the next one, src/engine/view/d_camera.cpp (0x020072c4..0x0200e494).
  * This object is built with defer_codegen off and that one is not.
  *
@@ -33,11 +33,12 @@ extern "C" {
    decl_common.h catch-all, which is C. */
 extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short ang,
                                      const Vector3 *add);
-extern void func_02007c9c(const Vector3 *from, const Vector3 *to, int *outDist, short *outVertAng,
-                          short *outHorzAng);
-extern void func_02007c14(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
+extern void Vec3fGetDistAndAngle(const Vector3 *from, const Vector3 *to, int *outDist,
+                                 short *outVertAng, short *outHorzAng);
+extern void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,
+                                 short angY);
 extern int func_02007cec(void *a, const Vector3 *b, int c);
-extern void func_02007d0c(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
+extern void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
 extern void Math_Function_0203b0fc(int *value, int target, int step, int max);
 extern int AngleDiff(int a, int b);
 }
@@ -63,23 +64,29 @@ void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarge
     short vertAng;
     short horzAng;
     Vector3 *trans = &reinterpret_cast<dActor_c *>(cam->mTargetPlayer)->mPos;
-    func_02007c9c(trans, &cam->pos, &dist, &vertAng, &horzAng);
+    Vec3fGetDistAndAngle(trans, &cam->pos, &dist, &vertAng, &horzAng);
     Math_Function_0203b0fc(&dist, distTarget, distStep, 0x7fffffff);
     if (vertDiv != 0)
         ApproachAngle(&vertAng, vertTarget, vertDiv, 0x4000, 0);
     if (horzDiv != 0)
         ApproachAngle(&horzAng, horzTarget, horzDiv, 0x4000, 0);
-    func_02007c14(&cam->pos, trans, dist, vertAng, horzAng);
+    Vec3fSetDistAndAngle(&cam->pos, trans, dist, vertAng, horzAng);
 }
 
-// @symbol func_020071a8
-void func_020071a8(dCamera_c *cam, short ang, int threshold) {
+// @symbol StarDanceBoundYaw
+/* Super Mario 64's star_dance_bound_yaw, called for the same stars. Where
+   the N64 clamps the camera's yaw to within yawMax of absYaw, this aims
+   the orbit at absYaw once the camera strays further than that. */
+void StarDanceBoundYaw(dCamera_c *cam, short ang, int threshold) {
     if (AngleDiff(Vec3_HorzAngle(&cam->mTargetPos, &cam->pos), ang) > threshold)
         cam->mOrbitTargetYaw = ang;
 }
 
-// @symbol func_020071e0
-int func_020071e0(dCamera_c *cam) {
+// @symbol CutsceneGrandStarFlyAppCvars
+/* Script op, Super Mario 64's cutscene_grand_star_fly_app_cvars: turn
+   savedLookAt and savedPos by the target player's yaw, close pos in on the
+   first at a rising speed, and ease lookAt toward the second. */
+int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
     Vector3 va, vb;
     int dist;
     short ang, angY;
@@ -92,11 +99,11 @@ int func_020071e0(dCamera_c *cam) {
         Vec3_RotateYAndTranslate(&va, trans, a, &cam->savedLookAt);
         Vec3_RotateYAndTranslate(&vb, trans, a, &cam->savedPos);
     }
-    func_02007c9c(&va, &cam->pos, &dist, &ang, &angY);
+    Vec3fGetDistAndAngle(&va, &cam->pos, &dist, &ang, &angY);
     ApproachLinear(dist, 0, cam->mScriptParam);
-    func_02007c14(&cam->pos, &va, dist, ang, angY);
+    Vec3fSetDistAndAngle(&cam->pos, &va, dist, ang, angY);
     func_02007cec(&cam->pos, &va, 0x28);
-    func_02007d0c(&cam->lookAt, &vb, 0x800, 0xccc, 0x800);
+    ApproachVec3fAsymptotic(&cam->lookAt, &vb, 0x800, 0xccc, 0x800);
     return 1;
 }
 }

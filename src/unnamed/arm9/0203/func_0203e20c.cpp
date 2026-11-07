@@ -2,12 +2,14 @@
 #include "types.h"
 #include "Memory.h"
 
+typedef struct FSFile FSFile;
+
 extern "C" {
 
 extern u8 data_020a0f04;
 extern u8 data_020a0f08;
 extern u8 data_020a0f0c;
-extern volatile u16 data_020a0f1c;
+extern u16 data_020a0f1c;
 extern u16 data_020a0f20;
 extern u16 data_020a0f28;
 extern void *data_020a0f3c;
@@ -17,8 +19,8 @@ extern s32 data_020a0f6c;
 extern s32 data_020a0f70;
 extern s32 data_020a0f78;
 extern void *data_020a0f7c;
-extern u8 data_020a0f9d;
-extern u8 data_020a0fbe[24];
+extern u8 data_020a0f9d[4];
+extern u16 data_020a0fbe[4][3];
 extern u8 data_020a0fec[];
 extern u8 data_020a1040[];
 extern u8 data_020a1064[];
@@ -41,7 +43,7 @@ extern void MB_CommSetParentStateCallback(u32 val);
 extern void func_0203e9a8(u32 a0, int sel, int a2);
 extern int func_02068ae8(int param0);
 extern int func_02067e70(void *obj);
-extern int func_02067bfc(int a, void *b, unsigned int c);
+extern int func_02067bfc(FSFile *file, void *b, unsigned int c);
 extern int func_02067928(void *a, void *b);
 extern void func_0205a588(void *dst, unsigned char val, unsigned int size);
 extern int WM_ReadStatus(int *arg);
@@ -54,6 +56,8 @@ extern void func_02068a54(void);
 
 #define H(base, off) (*(u16 *)((char *)(base) + (off)))
 
+/* opt_dead_assignments stays off: the cartridge keeps the step's overwritten
+   stores, and dropping the pragma loses four of them (0x75c against 0x76c). */
 #pragma opt_dead_assignments off
 
 /* Link mode 3's step (func_0203df40), a download-play parent by its
@@ -133,7 +137,7 @@ void func_0203e20c(void)
 
         cnt2 = 1;
         i2 = cnt2;
-        p9 = &data_020a0f9d;
+        p9 = data_020a0f9d;
         p11 = data_020a1112;
 
         data_020a0f1c |= 0x9000;
@@ -148,7 +152,7 @@ void func_0203e20c(void)
 
         WM_ReadStatus(&data_020a1680);
 
-        pIdx = &data_020a0f9d;
+        pIdx = data_020a0f9d;
         base1112 = data_020a1112;
         idx = 1;
         sel1 = idx;
@@ -196,7 +200,7 @@ void func_0203e20c(void)
 
     case 4: {
         int ok = 1;
-        u8 *p = &data_020a0f9d;
+        u8 *p = data_020a0f9d;
         int k = 1;
         do {
             if (*p != 0 && MB_CommIsBootable(k) != 1) {
@@ -252,9 +256,9 @@ void func_0203e20c(void)
         Memory::Deallocate(data_020a0f3c);
         Memory::Deallocate(data_020a0f7c);
         if (data_020a0f40 != 0) {
-            u8 *p9d = &data_020a0f9d;
+            u8 *p9d = data_020a0f9d;
             u8 *p1112 = data_020a1112;
-            u8 *pbe = data_020a0fbe;
+            u16(*pbe)[3] = data_020a0fbe;
             int sl;
             data_020a0f40 = 0;
             data_020a0f08 = 0;
@@ -266,7 +270,7 @@ void func_0203e20c(void)
                 sl += 1;
                 p9d += 1;
                 p1112 += 0x16;
-                pbe += 6;
+                pbe += 1;
             } while (sl < 4);
         }
         break;

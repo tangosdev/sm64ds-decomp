@@ -59,6 +59,7 @@ enum daWbm_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "math/MtxStack.h"
 
 typedef void (daWbm_c::*State)();
 
@@ -80,12 +81,8 @@ extern SharedFilePtr data_ov002_0210da38;
 extern u16 data_ov098_0213bf90[];
 /* The sine and cosine table. */
 extern s16 data_02082214[];
-/* The scratch matrix the matrix helpers build in. */
-extern Matrix4x3 data_020a0e68;
 
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
 s16 Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *counter);

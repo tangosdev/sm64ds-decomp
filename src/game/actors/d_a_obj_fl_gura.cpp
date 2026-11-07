@@ -22,14 +22,7 @@ enum d_a_obj_fl_gura_AssetId { ASSET_FL_GURA_BMD = 0x05f3, ASSET_FL_GURA_KCL = 0
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern ResourceDescriptor data_ov064_0211adb0;
 

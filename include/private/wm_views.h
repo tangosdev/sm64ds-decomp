@@ -84,4 +84,93 @@ typedef struct WMBssDesc {
 
 typedef char WMBssDesc_size_must_be_0xc0[sizeof(WMBssDesc) == 0xc0 ? 1 : -1];
 
+/* Leading fields of NitroSDK WMStartParentCallback, the argument the WM
+ * parent callback (func_02069994) passes for CONNECTED (code 0),
+ * DISCONNECTED (code 1) and BEACON_SENT (code 0x1c). Codes 0xff (a failed
+ * WM call, from MBi_CheckWmErrcode: {apiid, errcode}) and 0x100 (any other WM
+ * result) read only the WMCallback header the SDK callbacks all share. */
+typedef struct WmStartParentCallback {
+    unsigned short apiid;    /* 0x00 */
+    unsigned short errcode;  /* 0x02 */
+    unsigned short wlCmdID;  /* 0x04 */
+    unsigned short wlResult; /* 0x06 */
+    /* 0x08 -- 0 PARENT_START, 2 BEACON_SENT, 7 CONNECTED, 9 DISCONNECTED */
+    unsigned short state;
+    unsigned char macAddress[6]; /* 0x0a -- the child's */
+    unsigned short aid;          /* 0x10 */
+} WmStartParentCallback;
+
+/* NitroSDK WMPortRecvCallback, the leading fields: the offsets agree with
+ * every port receive callback that reads one (WM_Ds.cpp's two data-sharing
+ * receive callbacks and the file-sharing one, func_020417d0). */
+typedef struct WMPortRecvCallback {
+    unsigned short apiid;        /* 0x00 */
+    unsigned short errcode;      /* 0x02 */
+    unsigned short state;        /* 0x04 -- 7 CONNECTED, 9 DISCONNECTED, 0x15 PORT_RECV */
+    unsigned short port;         /* 0x06 */
+    void *recvBuf;               /* 0x08 */
+    unsigned short *data;        /* 0x0c */
+    unsigned short length;       /* 0x10 -- bytes at data */
+    unsigned short aid;          /* 0x12 -- the sender */
+    unsigned char macAddress[6]; /* 0x14 */
+    unsigned short seqNo;        /* 0x1a */
+    void *arg;                   /* 0x1c -- WM_SetPortCallback's argument */
+} WMPortRecvCallback;
+
+/* NitroSDK WMDataSet, one data-sharing frame (0x100 bytes): a 4-byte header,
+ * then each member's dataLength bytes in AID order. */
+typedef struct WMDataSet {
+    unsigned short aidHeader;      /* 0x00 -- members whose data the set holds */
+    unsigned short receivedBitmap; /* 0x02 -- members whose data arrived */
+    unsigned short data[0x7e];     /* 0x04 */
+} WMDataSet;
+
+typedef char WMDataSet_size_must_be_0x100[sizeof(WMDataSet) == 0x100 ? 1 : -1];
+
+/* NitroSDK WMDataSharingInfo (0x420; WM_StartDataSharing clears that many
+ * bytes): four data sets in a ring, then the ring indices. writeIndex is the
+ * set being filled, sendIndex the next to send and readIndex the next
+ * WM_StepDataSharing hands over. */
+typedef struct WMDataSharingInfo {
+    WMDataSet ds[4];              /* 0x000 */
+    unsigned short seqNum[4];     /* 0x400 -- each set's MP sequence number */
+    unsigned short writeIndex;    /* 0x408 */
+    unsigned short sendIndex;     /* 0x40a */
+    unsigned short readIndex;     /* 0x40c */
+    unsigned short aidBitmap;     /* 0x40e -- the members, this station included */
+    unsigned short dataLength;    /* 0x410 -- per member */
+    unsigned short stationNumber; /* 0x412 */
+    unsigned short dataSetLength; /* 0x414 -- dataLength * stationNumber + 4 */
+    unsigned short port;          /* 0x416 */
+    unsigned short doubleMode;    /* 0x418 */
+    unsigned short currentSeqNum; /* 0x41a */
+    unsigned short state;         /* 0x41c -- 1 running, 2 retry the send, 3 error */
+    unsigned short reserved[1];   /* 0x41e */
+} WMDataSharingInfo;
+
+typedef char WMDataSharingInfo_size_must_be_0x420[sizeof(WMDataSharingInfo) == 0x420 ? 1 : -1];
+
+/* The SDK-private calls every WM_* wrapper makes; NitroSDK spells them
+ * WMi_GetSystemWork, WMi_CheckStateEx, WMi_SendCommand and
+ * WMi_SetCallbackTable. The check and the send are variadic: paramNum
+ * states to accept, or paramNum words to copy into the request block.
+ * WM_SetCallbackTable stores a request's callback in callbackTable by API
+ * id. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+WMArm9Buf *WM_GetSystemWork(void);
+int WM_CheckStateEx(int paramNum, ...);
+int WM_SendCommand(short id, unsigned short paramNum, ...);
+void WM_SetCallbackTable(int apiid, void *callback);
+
+/* NitroSDK wm_ds.c (WM_Ds.cpp): data sharing. This SDK build takes the
+ * port, bitmap, length and mode as ints. */
+int WM_StartDataSharing(WMDataSharingInfo *, int, int, int, int);
+int WM_StepDataSharing(WMDataSharingInfo *, const void *, WMDataSet *);
+unsigned short *WM_GetSharedDataAddress(WMDataSharingInfo *, WMDataSet *, int);
+#ifdef __cplusplus
+}
+#endif
+
 #endif

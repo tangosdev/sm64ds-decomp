@@ -24,7 +24,7 @@
 extern "C" {
 extern void *data_020a4b68;
 extern int data_02099f24;
-extern int data_02082178[];
+extern const int data_02082178[6];
 extern void *func_02043fdc(void *list);
 }
 
@@ -42,8 +42,7 @@ fLiNdBa_c::~fLiNdBa_c() {
 }
 
 /* func_020441cc's own view of a tree node and the descriptor that names the
- * callback. The namespace keeps this Obj apart from the pending-sequence Obj
- * further down. */
+ * callback. */
 namespace ProcessTree {
 class Obj {
 public:
@@ -147,10 +146,12 @@ void *Thing::func_020441cc() {
 /* The pending lifecycle sequence fBase_c holds at +0x48. Slot 2 runs one
  * table entry and returns the new state; slot 3 is called on each entry
  * already run when the sequence is drained. The layout is ROM-proven; the
- * class name is not. fBase_c declares the member void *, nothing in the tree
- * stores to it, and no ROM vtable or RTTI is tied to it, so v00..v08 and m3
- * stay placeholders until the class is found. */
-struct Obj {
+ * class name is not. LifecycleSequence is coined from its role: fBase_c's
+ * lifecycleState member holds it and BeforeCleanupResources/
+ * AfterCleanupResources step and drain it. fBase_c declares the member
+ * void *, nothing in the tree stores to it, and no ROM vtable or RTTI is tied
+ * to it, so v00..v08 and m3 stay placeholders until the class is found. */
+struct LifecycleSequence {
     virtual void v00();
     virtual void v04();
     virtual int v08(void *p);
@@ -164,12 +165,12 @@ struct Obj {
     s16 f12;    // 0x12
 };
 
-extern "C" int func_02044284(Obj *self, int flag);
+extern "C" int func_02044284(LifecycleSequence *self, int flag);
 
 /* Step a pending sequence once. Returns 0 while it is still pending. */
 // @symbol func_0204424c
 extern "C" int func_0204424c(char *c) {
-    Obj *self = (Obj *)c;
+    LifecycleSequence *self = (LifecycleSequence *)c;
     if (self->state == 1)
         self->state = func_02044284(self, 0);
     if (self->state == 1)
@@ -180,7 +181,7 @@ extern "C" int func_0204424c(char *c) {
 /* Run table entries from idx while each returns state 2. With flag == 0,
  * run at most one. */
 // @symbol func_02044284
-extern "C" int func_02044284(Obj *self, int flag) {
+extern "C" int func_02044284(LifecycleSequence *self, int flag) {
     void **arr = self->arr;
     s16 i;
 
@@ -205,7 +206,7 @@ extern "C" int func_02044284(Obj *self, int flag) {
 /* Drain a started sequence: call slot 3 on each entry already run, newest
  * first. */
 // @symbol func_02044334
-extern "C" void func_02044334(Obj *self) {
+extern "C" void func_02044334(LifecycleSequence *self) {
     if (self->arr == 0)
         return;
     if (self->state == 0)

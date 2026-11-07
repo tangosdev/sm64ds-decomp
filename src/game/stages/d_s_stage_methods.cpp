@@ -42,12 +42,14 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a };
 
+#include "KuppaScript.h"
 #include "types.h"
 #include "G2.h"
 #include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "dScStage_c.h"
+#include "LVL_Overlay.h"
 #include "Timer.h"
 #include "decl_common.h"
 #include "Sound.h"
@@ -82,6 +84,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "math/CalcLib.h"
 #include "dGraph_c.h"
 #include "dClipper.h"
+#include "LevelRng.h"
 
 struct OamAttr;
 
@@ -91,15 +94,6 @@ struct OamAttr;
    register it; the callback has none. */
 dScStage_c::graphCallback_c data_0209f3c4;
 dClipper data_0209f43c;
-
-/* TU-local overlay of the touch records the ROM keeps at gTouchHeld:
-   held/edge are the gTouchHeld/gTouchEdge lanes, x/y the gTouchX/gTouchY lanes. */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
 
 extern "C" {
 int IsButtonInputValid(void);
@@ -117,7 +111,7 @@ void SetSubBg1Offset(int x, int y);
 int func_02029408(void);
 void *LoadFile(int handle);
 void SetControllerMode(unsigned char m);
-unsigned int LoadCompressedFileAt(unsigned short id, void *dst);
+unsigned int LoadCompressedFileAt(int id, void *dst);
 int GetSoundMode(void);
 void SetSoundMode(int m);
 void TurnBacklightOn(void);
@@ -258,7 +252,7 @@ extern unsigned int data_02092134;
 extern int data_02092138;
 extern u16 *data_0209214c[];
 extern s32 data_02092208[];
-extern u8 data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern s32 data_0209cef0;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -267,7 +261,6 @@ extern s32 data_0209cef0;
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *data_0209d4a8;
-extern s32 data_0209e650;
 /* The stage's .bss, 0x0209f1ec..0x0209f5b8: the pause, VS-exit and
    level-clear screens' state, the level and player globals the free
    functions keep, and the per-level tables. mwcc sorts a TU's objects by
@@ -416,17 +409,20 @@ static u16 sPauseInputLockout;
 static u16 data_0209f304;
 static u16 data_0209f308;
 s8 gNumRedCoins[4];
-/* gNumRedCoins + 1 and data_0209f310 + 1: NumRedCoins and NumVsStarsObtained
+/* gNumRedCoins + 1 and gNumStageStars + 1: NumRedCoins and NumVsStarsObtained
    load each sum's second element through its own literal. */
 extern s8 data_0209f30d;
-s8 data_0209f310[4];
+/* Stars collected in this stage, one count per player: the silver stars of a
+   course (shown as that many star icons on the HUD; the next silver star's
+   sound is 0x19 + it) and each player's stars in a VS match. */
+s8 gNumStageStars[4];
 extern s8 data_0209f311;
 static int data_0209f314;
-void *data_0209f318;
+dCamera_c *data_0209f318;
 static char *data_0209f31c;
 static int data_0209f320;
 static void *data_0209f324;
-static int *data_0209f328;
+static LVL_Overlay::StandardEntry *data_0209f328;
 s32 data_0209f32c;
 static void *data_0209f330;
 u16 *data_0209f334;
@@ -452,7 +448,7 @@ u8 gMapCapIconCharacters[9];
    draws no star marker, only a red-coin icon while gShowRedCoinMarkers is
    set. */
 u8 gStarMarkerTypes[12];
-void *data_0209f394[4];
+daPly_c *data_0209f394[4];
 void *data_0209f3a4[8];
 /* The graph callback's minimap descriptor, its +4. */
 extern MinimapDesc data_0209f3c8;
@@ -500,7 +496,6 @@ extern u16 data_ov002_02111188;
 /* The free functions this file defines, declared ahead of their first use
    (the ones decl_common.h and the block above already declare are not
    repeated). */
-struct Obj;
 struct ObjTeleport;
 extern "C" {
 int func_02029600(int x);
@@ -518,7 +513,7 @@ void DeathTable_SetBit(s32 id);
 u32 DeathTable_GetBit(s32 id);
 void GiveVsStars(int idx, int delta);
 void ClearSpikeBomb(int idx);
-void SetStarMarker(int i, int v1, int v2);
+void SetStarMarker(int i, dActor_c *actor, int v2);
 void CollectStarInCurLevel(s32 starID);
 s32 IsStarCollectedInCurLevel(s32 starID);
 signed char NumRedCoins(void);
@@ -539,14 +534,14 @@ void PrepareVsMode(void);
 int StartWithFarCamera(void);
 unsigned char GetStarCameraSetting(int idx);
 int GetMinimapScale(int idx);
-void func_0202af80(int a, int b);
-int GetMinimapID(struct Obj *obj, int arg);
-void func_0202b044(int a, int b);
-void func_0202b060(int a, int b);
+void func_0202af80(short *table, int count);
+int GetMinimapID(dActor_c *actor, int arg);
+void func_0202b044(u16 *table, int count);
+void func_0202b060(char *table, int count);
 struct ObjTeleport *GetTeleportDestObj(int i);
-void func_0202b090(int a, int b);
-void func_0202b0c4(int a, int b);
-void func_0202b0e0(int a, int b);
+void func_0202b090(void *table, int count);
+void func_0202b0c4(void *table, int count);
+void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count);
 void SetTouchScreenDelay(void);
 void ResetInput(void);
 int IsLevelTinyHugeIslandOutside(int level);
@@ -1030,7 +1025,7 @@ void dScStage_c::CheckCameraInput() {
                 cam->pressed = 0;
                 cam->held = 0;
                 if (((TouchInfo *)gTouchHeld)[i].held != 0) {
-                    if (((dCamera_c *)data_0209f318)->mFlags & 0x1000) {
+                    if (data_0209f318->mFlags & 0x1000) {
                         // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
                         u8 state = data_0209f498[i].mode;
                         if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 &&
@@ -2711,7 +2706,7 @@ void dScStage_c::PS_Update() {
  * dScStage_c polls it before opening the pause menu. */
 
 extern "C" int func_02029408(void) {
-    return ((daPly_c *)data_0209f394[data_0209f250])->CanPause();
+    return data_0209f394[data_0209f250]->CanPause();
 }
 
 // @symbol _ZN10dScStage_c7PS_InitEv
@@ -2783,7 +2778,7 @@ int func_02029600(int x) {
     int b = (int)(data_0209f2d8 == 2);
     if (b == 0) {
         unsigned char saved = *(u8 *)&data_ov002_02111148;
-        int r = GetMinimapID((Obj *)x, -1);
+        int r = GetMinimapID((dActor_c *)x, -1);
         if (r == saved)
             return 1;
     }
@@ -2799,7 +2794,7 @@ int IsButtonInputValid(void) {
 
     if (((gGamePaused | data_0209f20c | gVsExitScreenActive) & 0xff) == 0 && data_0209f204 == 0 &&
         gVsExitScreenActive == 0) {
-        mode = data_0209caa0[0x42];
+        mode = data_0209caa0.file.controllerMode;
         if (mode == 0) {
             val = *(unsigned short *)((char *)&data_020a0e5a + (gActivePlayerSlot << 2));
             if (val & 0xf)
@@ -2881,7 +2876,7 @@ extern "C" void StartEntranceFaderWipe(int index) {
 // @symbol StartExitCharacterWipe
 /* Start the exit wipe for the current character (per-character wipe table). */
 extern "C" void StartExitCharacterWipe(void) {
-    StartExitFaderWipe(data_020755bc[data_0209caa0[0x41]]);
+    StartExitFaderWipe(data_020755bc[data_0209caa0.file.mCharacter]);
 }
 
 // @symbol StartExitFaderWipe
@@ -3157,7 +3152,7 @@ void dScStage_c::RenderVsModeCountdown() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209f394[i]) {
-            int t = (((daPly_c *)data_0209f394[i])->mLevelEntryDone != 0);
+            int t = (data_0209f394[i]->mLevelEntryDone != 0);
             if (t == 1)
                 count++;
         }
@@ -3203,7 +3198,7 @@ void dScStage_c::RenderVsModeCountdown() {
 // @symbol NumVsStarsObtained
 extern "C" s32 NumVsStarsObtained(void) {
     int i = 1;
-    signed char sum = data_0209f310[0];
+    signed char sum = gNumStageStars[0];
     signed char *p;
     if (i >= (int)data_0209f21c)
         return sum;
@@ -3218,20 +3213,16 @@ extern "C" s32 NumVsStarsObtained(void) {
 
 // @symbol GiveVsStars
 extern "C" void GiveVsStars(int idx, int delta) {
-    data_0209f310[idx] += delta;
+    gNumStageStars[idx] += delta;
 }
 
 // @symbol _ZN10dScStage_c15IsPauseDisabledEv
 /* dScStage_c::IsPauseDisabled() at 0x0202c8f8. Static: reads only globals, and no
  * caller sets up an object. */
 
-extern "C" {
-extern int func_ov002_020bd8ac(unsigned char *p);
-}
-
 int dScStage_c::IsPauseDisabled() {
-    unsigned char *p = *(unsigned char **)data_0209f394;
-    if (p != 0 && func_ov002_020bd8ac(p) == 0)
+    daPly_c *p = data_0209f394[0];
+    if (p != 0 && p->func_ov002_020bd8ac() == 0)
         return 1;
     return 0;
 }
@@ -3258,8 +3249,8 @@ extern "C" int AddSpikeBomb(void *p) {
 }
 
 // @symbol SetStarMarker
-extern "C" void SetStarMarker(int i, int v1, int v2) {
-    STAR_MARKERS[i] = (dActor_c *)v1;
+extern "C" void SetStarMarker(int i, dActor_c *actor, int v2) {
+    STAR_MARKERS[i] = actor;
     gStarMarkerTypes[i] = v2;
 }
 
@@ -3376,17 +3367,17 @@ extern "C" void func_0202a850(int a, int b) {
 // @symbol InitControllerMode
 /* The per-controller records at data_0209f498 are 0x18 apart; the mode byte
    is their +0x16, data_0209f4ae. The save file keeps the active player's
-   copy at data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveData.h). */
+   copy at data_0209caa0+0x42 (FileSaveData::controllerMode, include/SaveBlock.h). */
 extern "C" void InitControllerMode(int idx, u8 val) {
     data_0209f4ae[idx * 0x18] = val;
     if (idx == gActivePlayerSlot)
-        data_0209caa0[0x42] = val;
+        data_0209caa0.file.controllerMode = val;
 }
 
 // @symbol SetControllerMode
 extern "C" void SetControllerMode(unsigned char mode) {
     data_0209f4ae[gActivePlayerSlot * 0x18] = mode;
-    data_0209caa0[0x42] = mode;
+    data_0209caa0.file.controllerMode = mode;
 }
 
 // @symbol func_0202a8e0
@@ -3571,7 +3562,7 @@ extern "C" void SetPlayerGlobals(void) {
     gNumLives = 4;
     s32 i = 0;
     do {
-        u8 mode = data_0209caa0[0x42];
+        u8 mode = data_0209caa0.file.controllerMode;
         gPlayerHealth[i] = 0x880;
         InitControllerMode(i, mode);
         i++;
@@ -3610,7 +3601,7 @@ extern "C" void PrepareVsMode(void) {
     data_0209f2d8 = 1;
     SetPlayerGlobals();
     dScene_c::StartSceneFade(3, 0, 0x7fff);
-    SaveData::SetDefaultValues((FileSaveData *)data_0209caa0);
+    SaveData::SetDefaultValues(&data_0209caa0.file);
 }
 
 // @symbol func_0202ae74
@@ -3626,7 +3617,7 @@ extern "C" void StartFile(s8 levelID, u8 entranceID) {
     data_0209f2d8 = 0;
     LoadLevelNoReturn(levelID, entranceID, 1, 0);
     SetPlayerGlobals();
-    data_02092128[0] = data_0209caa0[0x41];
+    data_02092128[0] = data_0209caa0.file.mCharacter;
     SetNumPlayers(1);
     gLastCourseSublevel = 6;
     gCollectedStarId = 0;
@@ -3654,23 +3645,16 @@ extern "C" int GetMinimapScale(int idx) {
 
 // @symbol func_0202af80
 /* The six table setters below each store a pointer and its count. */
-extern "C" void func_0202af80(int a, int b) {
-    data_0209f348 = (short *)a;
-    data_0209f25c = b;
+extern "C" void func_0202af80(short *table, int count) {
+    data_0209f348 = table;
+    data_0209f25c = count;
 }
 
 // @symbol GetMinimapID
-/* The actor GetMinimapID places, with dActor_c's names: its height at
-   +0x60, its area at +0xcc. */
-struct Obj {
-    char pad0[0x60];
-    int mPosY; /* 0x60 */
-    char pad64[0xcc - 0x64];
-    s8 mAreaId; /* 0xcc */
-};
-
-extern "C" int GetMinimapID(struct Obj *obj, int arg) {
-    int idx = obj->mAreaId;
+/* The minimap for an actor: its area's height bands, read at the actor's
+   height, or the level's own map when the area has none. */
+extern "C" int GetMinimapID(dActor_c *actor, int arg) {
+    int idx = actor->mAreaId;
     char *g;
     int val;
     struct MinimapChangeNode *node;
@@ -3680,7 +3664,7 @@ extern "C" int GetMinimapID(struct Obj *obj, int arg) {
     if (g != 0) {
         node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
         if (node != 0) {
-            val = obj->mPosY;
+            val = actor->mPosY;
             while (node != 0) {
                 int d = val - node->height;
                 if (d > 0) {
@@ -3698,15 +3682,15 @@ extern "C" int GetMinimapID(struct Obj *obj, int arg) {
 }
 
 // @symbol func_0202b044
-extern "C" void func_0202b044(int a, int b) {
-    data_0209f334 = (u16 *)a;
-    data_0209f2e8 = b;
+extern "C" void func_0202b044(u16 *table, int count) {
+    data_0209f334 = table;
+    data_0209f2e8 = count;
 }
 
 // @symbol func_0202b060
-extern "C" void func_0202b060(int a, int b) {
-    data_0209f31c = (char *)a;
-    data_0209f258 = b;
+extern "C" void func_0202b060(char *table, int count) {
+    data_0209f31c = table;
+    data_0209f258 = count;
 }
 
 // @symbol GetTeleportDestObj
@@ -3720,9 +3704,9 @@ extern "C" struct ObjTeleport *GetTeleportDestObj(int i) {
 }
 
 // @symbol func_0202b090
-extern "C" void func_0202b090(int a, int b) {
-    data_0209f330 = (void *)a;
-    data_0209f2d0 = b;
+extern "C" void func_0202b090(void *table, int count) {
+    data_0209f330 = table;
+    data_0209f2d0 = count;
 }
 
 // @symbol GetViewObj
@@ -3735,15 +3719,15 @@ extern "C" struct ViewObj *GetViewObj(int idx) {
 }
 
 // @symbol func_0202b0c4
-extern "C" void func_0202b0c4(int a, int b) {
-    data_0209f354 = (void *)a;
-    data_0209f1f8 = b;
+extern "C" void func_0202b0c4(void *table, int count) {
+    data_0209f354 = table;
+    data_0209f1f8 = count;
 }
 
 // @symbol func_0202b0e0
-extern "C" void func_0202b0e0(int a, int b) {
-    data_0209f328 = (int *)a;
-    data_0209f214 = b;
+extern "C" void func_0202b0e0(LVL_Overlay::StandardEntry *entries, int count) {
+    data_0209f328 = entries;
+    data_0209f214 = count;
 }
 
 // @symbol _ZN10dScStage_c10LoadSkyboxEv
@@ -3974,7 +3958,7 @@ void dScStage_c::RenderFog() {
     if (gCurrentSublevel == 5)
         fog = daMugenBGM_c::GetActiveFog();
     if (fog == 0) {
-        dCamera_c *camera = (dCamera_c *)data_0209f318;
+        dCamera_c *camera = data_0209f318;
         fog = mFog;
         if (camera->IsUnderwater())
             fog++;
@@ -4073,7 +4057,7 @@ int dScStage_c::Render() {
         dExtSimpleModel_c *skybox = mSkyboxModel;
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
-            Vector3 *cameraPosition = &((dCamera_c *)data_0209f318)->pos;
+            Vector3 *cameraPosition = &data_0209f318->pos;
             transform->t.x = cameraPosition->x >> 3;
             transform->t.y = cameraPosition->y >> 3;
             transform->t.z = cameraPosition->z >> 3;
@@ -4103,7 +4087,7 @@ int dScStage_c::Render() {
         int playerIndex = 0;
         int playerCount = data_0209f21c;
         for (; playerIndex < playerCount; playerIndex++) {
-            daPly_c *player = (daPly_c *)data_0209f394[playerIndex];
+            daPly_c *player = data_0209f394[playerIndex];
             if (player != 0) {
                 u8 playerFlags = player->mHasWings;
                 int *position = (int *)(&player->mPosX);
@@ -4130,7 +4114,6 @@ int dScStage_c::Render() {
 
 // @symbol _ZN10dScStage_c8BehaviorEv
 extern "C" {
-void ProcessKuppaScript();
 void func_02032f54();
 void func_020199a4();
 void func_02019a58();
@@ -4154,7 +4137,7 @@ int dScStage_c::Behavior() {
         sPauseInputLockout -= 1;
     if (gGamePaused == 2 && sMenuWaitTimer == 0)
         PS_Cleanup();
-    ProcessKuppaScript();
+    KuppaScript::Process();
     if (data_0209f5bc->IsAtStart() == 0) {
         dExtShadowModel_c::CleanAll();
         return 1;
@@ -4188,9 +4171,9 @@ int dScStage_c::Behavior() {
                 int cnt = 0;
                 int i;
                 for (i = 0; i < 4; i++) {
-                    char *p = (char *)data_0209f394[i];
+                    daPly_c *p = data_0209f394[i];
                     if (p != 0) {
-                        int t = (((daPly_c *)p)->mLevelEntryDone != 0) ? 1 : 0;
+                        int t = (p->mLevelEntryDone != 0) ? 1 : 0;
                         if (t == 1)
                             cnt++;
                     }
@@ -4265,7 +4248,7 @@ int dScStage_c::Behavior() {
             u8 st = data_0209f2d8;
             int b1 = (st == 1);
             if ((b1 && data_0209fc68 == 0) ||
-                (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE)) {
+                (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
                 int b2 = (st == 2);
                 if (b2 == 0) {
                     int b3 = (gRunningKuppaScript != 0);
@@ -4317,8 +4300,7 @@ void dScStage_c::CheckInput() {
     int isVsMode = (mode == 1);
     if (isVsMode == false) {
         int modeIsTwo = (mode == 2);
-        if (modeIsTwo != false ||
-            !(((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) ||
+        if (modeIsTwo != false || !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) ||
             (data_0209d660 == 0 && (int)(gRunningKuppaScript != 0) != false)) {
             {
                 ControllerInput *control = data_0209f498;
@@ -4540,7 +4522,6 @@ extern "C" void ResetInput(void) {
  * state and unloads the level overlays/archive. Returns 1.
  */
 extern "C" {
-void EndKuppaScript(void);
 void UnloadArchive(int);
 }
 
@@ -4561,7 +4542,7 @@ int dScStage_c::CleanupResources() {
         if (!atEnd)
             Sound::ResetPlayerVoiceGroup();
     }
-    EndKuppaScript();
+    KuppaScript::End();
     data_0209d4a8 = 0;
 
     {
@@ -4665,7 +4646,6 @@ int LoadArchive(int idx);
 void Initialise3dGraphics(int arg);
 void InitialiseVramGlobals(void);
 void func_02039218(void);
-void ResetKuppaScript(void);
 int GetSoundGroupID(int level, int mode);
 void LoadDebugFont(void);
 int IsLevelInsideCastle(int level);
@@ -4724,7 +4704,7 @@ int dScStage_c::InitResources() {
                 int count = data_0209f21c;
                 int idx = 0;
                 u8 *p1 = (u8 *)gNumRedCoins;
-                u8 *vsStars = (u8 *)data_0209f310;
+                u8 *vsStars = (u8 *)gNumStageStars;
                 int vsModeCounters = (mode == 1) ? 1 : 0;
                 u8 loadMode = sReturnState;
                 do {
@@ -4811,7 +4791,7 @@ int dScStage_c::InitResources() {
         data_0209d4a8 = (dGraph_c::callback_c *)&data_0209f3c4;
         gNextActorUpdateMask = 0;
         func_02039218();
-        ResetKuppaScript();
+        KuppaScript::Reset();
 
         int vsModeTimers = (data_0209f2d8 == 1) ? 1 : 0;
         if (vsModeTimers != 0) {
@@ -4854,8 +4834,7 @@ int dScStage_c::InitResources() {
 
         int skipSoundGroup = (data_0209f2d8 == 2) ? 1 : 0;
         if (skipSoundGroup == 0) {
-            s8 sublevel =
-                *(s8 *)(unsigned)(((unsigned long long)(unsigned)&gCurrentSublevel) & ~0ULL);
+            s8 sublevel = gCurrentSublevel;
             int soundGroup = 0;
             u8 bank = 0x36;
             if (data_0209f220 == 2) {
@@ -4920,8 +4899,7 @@ int dScStage_c::InitResources() {
                     !IsLevelInsideCastle(previousSublevel)) {
                     if (!IsLevelTinyHugeIslandOutside(gCurrentSublevel) ||
                         !IsLevelTinyHugeIslandOutside(previousSublevel)) {
-                        if (gCurrentSublevel != 2 ||
-                            (((FileSaveData *)data_0209caa0)->flags2 & 0x200)) {
+                        if (gCurrentSublevel != 2 || (data_0209caa0.file.flags2 & 0x200)) {
                             Sound::LoadAndSetMusic_Layer1(data_0207576a[gCurrentSublevel * 3]);
                             u8 localPlayer = data_0209f250;
                             if (((u8 *)data_0209f394[localPlayer])[0x6ff] != 0) {
@@ -4974,7 +4952,7 @@ int dScStage_c::InitResources() {
     }
 
     data_02092778 = 0;
-    func_0203b9b4(&data_0209e650, func_0203dad4());
+    func_0203b9b4(&data_0209e650.value, func_0203dad4());
     data_0209f208 = 0;
     u32 idx = func_0203dad4() % 6;
     data_0209f344 = (u8 *)VS_STAR_SPAWN_ORDERS[idx];
@@ -5000,7 +4978,7 @@ extern "C" {
 void SetBg0Offset(int a, int b);
 void LoadFont(u8 arg);
 int GetOwnerLanguage(void);
-u32 LoadCompressedFileAt(u16 fileID, void *target);
+u32 LoadCompressedFileAt(int fileID, void *target);
 int LoadFileAt(int handle, int dest);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);
@@ -5053,7 +5031,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     }
 
     if ((int)(data_0209f2d8 == 0) != 0 &&
-        (((FileSaveData *)data_0209caa0)->flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
+        (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0) {
         BG0CNT_SUB &= ~3;
         BG0CNT_SUB &= ~0x40;

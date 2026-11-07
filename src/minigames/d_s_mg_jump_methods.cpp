@@ -37,32 +37,8 @@ struct C { char pad[0x5004]; PMF m; };
 
 /* Whole-matrix copies go through this so they stay one block move. */
 #include "private/mtx43.h"
+#include "LevelRng.h"
 struct V3 { int w[3]; };
-
-/* Vtable shim for InitResources' last call, a virtual dispatch through slot
- * 18 of this class's own table. Calling StartRound by name would compile
- * to a direct branch instead. */
-struct Base {
-    virtual void m00();
-    virtual void m04();
-    virtual void m08();
-    virtual void m0c();
-    virtual void m10();
-    virtual void m14();
-    virtual void m18();
-    virtual void m1c();
-    virtual void m20();
-    virtual void m24();
-    virtual void m28();
-    virtual void m2c();
-    virtual void m30();
-    virtual void m34();
-    virtual void m38();
-    virtual void m3c();
-    virtual void m40();
-    virtual void m44();
-    virtual void m48(int x);
-};
 
 /* The two model file handles InitResources swaps between through
  * sJumpBackFile; a declared-only subclass so the static initializer
@@ -81,14 +57,15 @@ extern "C" {
 void Mg_CommitRecords(void);
 void Mg_DrawScoreTally(void *a, int b, int c, int d);
 int  GetGameLanguage(void);
-void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+struct OamAttr;
+struct Matrix2x2;
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void func_0203cd80(int *m, short angle);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void FreeGfxSlotsById(int arg);
-int  LoadFile(int handle);
+void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-void Camera_UpdateMatrices(void *cam);
 
 void Heyho_ReactAll(void);
 void Heyho_SeparateAll(void);
@@ -103,8 +80,7 @@ int  Jump3D_InitPool(char *base, int count);
 void Jump3D_EnableInput(void);
 int  RandomIntInternal(int *seed);
 
-extern int  data_020a0e68;
-extern int  data_0209e650;
+extern Matrix4x3 data_020a0e68;
 extern int sJumpLastPick;
 extern u8 gMainScreenLayers;
 extern s16  data_02082614;
@@ -169,7 +145,9 @@ void dScMgJump_c::StartRound(int arg)
         idx = mLevel;
     } else {
         do {
-            idx = (int)((u32)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13) * 0xa >> 0xc;
+            idx =
+                (int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) * 0xa >>
+                0xc;
         } while (idx == (u32)sJumpLastPick);
         sJumpLastPick = idx;
     }
@@ -216,7 +194,7 @@ int dScMgJump_c::CanEndState(int sel)
 s32 dScMgJump_c::InitResources()
 {
     s32 idx;
-    int buf1, buf2;
+    void *buf1, *buf2;
     s32 fov;
     void *modelFile;
     int r;
@@ -224,10 +202,10 @@ s32 dScMgJump_c::InitResources()
     idx = GetGameLanguage();
     buf1 = LoadFile(sJumpNcgByLanguage[idx]);
     buf2 = LoadFile(0xd1);
-    DecompressLZ16((void *)buf1, (void *)0x6400000);
-    GX::LoadOBJPltt((void *)buf2, 0, 0x80);
-    Deallocate((void *)buf1);
-    Deallocate((void *)buf2);
+    DecompressLZ16(buf1, (void *)0x6400000);
+    GX::LoadOBJPltt(buf2, 0, 0x80);
+    Deallocate(buf1);
+    Deallocate(buf2);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
@@ -235,22 +213,22 @@ s32 dScMgJump_c::InitResources()
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082614);
 
-    this->mCameras[0].mEyeX = 0;
-    this->mCameras[0].mEyeY = -0x64000;
-    this->mCameras[0].mEyeZ = 0;
-    this->mCameras[0].mTargetX = 0;
-    this->mCameras[0].mTargetY = 0;
-    this->mCameras[0].mTargetZ = fov;
-    this->mCameras[0].mAngle = 0x800;
+    this->mCameras[0].mLookAt.x = 0;
+    this->mCameras[0].mLookAt.y = -0x64000;
+    this->mCameras[0].mLookAt.z = 0;
+    this->mCameras[0].mPos.x = 0;
+    this->mCameras[0].mPos.y = 0;
+    this->mCameras[0].mPos.z = fov;
+    this->mCameras[0].mFovAngle = 0x800;
     Camera_UpdateMatrices(&mCameras[0]);
 
-    this->mCameras[1].mEyeX = 0;
-    this->mCameras[1].mEyeY = 0x82000;
-    this->mCameras[1].mEyeZ = 0;
-    this->mCameras[1].mTargetX = 0;
-    this->mCameras[1].mTargetY = 0;
-    this->mCameras[1].mTargetZ = fov;
-    this->mCameras[1].mAngle = 0x800;
+    this->mCameras[1].mLookAt.x = 0;
+    this->mCameras[1].mLookAt.y = 0x82000;
+    this->mCameras[1].mLookAt.z = 0;
+    this->mCameras[1].mPos.x = 0;
+    this->mCameras[1].mPos.y = 0;
+    this->mCameras[1].mPos.z = fov;
+    this->mCameras[1].mFovAngle = 0x800;
     Camera_UpdateMatrices(&mCameras[1]);
 
     if (Heyho_InitPool((char *)mHeyhos, 6) == 0)
@@ -267,11 +245,11 @@ s32 dScMgJump_c::InitResources()
     r = mModel.SetFile((BMD_File *)modelFile, 1, -1);
     if (r == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        *(struct Mtx43 *)&mModel.mat4x3 = *(struct Mtx43 *)&data_020a0e68;
+        *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         return 0;
     }
     Mg_SetTopScreenYOffset(0x10);
-    ((Base *)this)->m48(-1);
+    StartRound(-1);
     return 1;
 }
 
@@ -451,8 +429,7 @@ s32 dScMgJump_c::Render()
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)sJumpTextSpritesByLanguage[idx][1], (void *)y, 0xc,
-                              (void *)0);
+                DrawOamSprite(sJumpTextSpritesByLanguage[idx][1], y, 0xc, 0);
             } else {
                 RenderOamMainScreen(sJumpLifeIconSprite, y, 0xc, -1, -1);
             }
@@ -486,7 +463,7 @@ s32 dScMgJump_c::Render()
             ((((short)m[2] >> 3) & 0x3ff) << 20)) | 0x40000000;
     }
 
-    *(struct Mtx43 *)&mModel.mat4x3 = *(struct Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     {
         V3 t;

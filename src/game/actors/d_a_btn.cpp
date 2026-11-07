@@ -65,6 +65,7 @@ enum d_a_btn_AssetId {
 };
 
 #include "daBtn_c.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
@@ -75,6 +76,7 @@ enum d_a_btn_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. It
    sits outside the extern "C" block below, where the names would come out
@@ -86,14 +88,13 @@ void StopLoadedMusic_Layer3(void);
 
 struct CLPS_Block;
 
-/* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
-   member through Vector3 and comes out longer. */
-struct MatrixWords { s32 w[12]; };
+/* The matrix copies go through Mtx43, one 0x30-byte block copy. Matrix4x3's
+   own assignment goes member by member through Vector3 and comes out longer. */
 
 extern "C" {
 /* ---- this TU ---- */
-void func_ov079_02123d4c(int *out, daBtn_c *self);
-void func_ov079_0212522c(void *a, void *b, void *c);
+void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
+void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
 int AngleDiff(int, int);
@@ -117,12 +118,12 @@ void func_01ffb098(void *collider);
 void func_01ffb0a4(void *collider);
 void func_01ffb0b0(void *collider);
 void func_01ffb0bc(void *);
-int func_0200fa04(void *c, void *v, int b);
+void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
-void func_020393c4(void *p, int v);
-void func_020393d4(void *p, void *v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 int func_ov002_020dd8b8(void *c);
 
 /* Parameter names keep this TU's @NNN. */
@@ -137,9 +138,11 @@ extern u8 data_0209d660;
 extern u8 data_0209f21c;
 extern u8 data_0209f220;
 extern signed char gCurrentSublevel;
-extern int data_0209f318;
+extern dCamera_c *data_0209f318;
 extern daPly_c *data_0209f394[];
-extern MatrixWords data_020a0e68;
+/* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
+   hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */
+extern Matrix4x3 data_020a0e68;
 /* The king's collision mesh takes Whomp's Fortress's own CLPS block. The
    relocation's target address is shared by 15 level overlays; residency
    leaves ov015 and ov026, and only ov015 holds a CLPS block there (ov026's
@@ -320,7 +323,7 @@ int daBtn_c::InitResources()
     }
 
     func_01ffb0bc(&mMovingMeshCollider);
-    func_020393d4(&mMovingMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
 
     {
         s32 sp[3];
@@ -411,7 +414,7 @@ int daBtn_c::Behavior()
             /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA).
                While the player is within 0x1770000 the king asks the camera
                to frame him each frame, as daBombking_c::Behavior does. */
-            ((dCamera_c *)data_0209f318)->mFramedActor = this;
+            data_0209f318->mFramedActor = this;
         }
     }
 
@@ -836,7 +839,7 @@ void daBtn_c::func_ov079_02125504()
             v[0].x = px + sn * 0xaa;
             v[0].z = pz + cs * 0xaa;
         }
-        Particle::System::NewSimple(0xb2, v[0].x, v[0].y, v[0].z);
+        Particle::System::NewSimple(kPtclLandingDust, v[0].x, v[0].y, v[0].z);
     } else {
         mStepPlayed = 0;
     }
@@ -917,12 +920,12 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPosZ;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    func_020393c4(&mMovingMeshCollider, (int)func_ov079_0212522c);
+    func_020393c4(&mMovingMeshCollider, func_ov079_0212522c);
     if (mIsKing != 0) {
-        func_ov079_02123d4c((int *)&a, this);
+        func_ov079_02123d4c(&a, this);
         func_0200fa04(this, &a, 0);
     } else {
-        func_ov079_02123d4c((int *)&b, this);
+        func_ov079_02123d4c(&b, this);
         LandingDustAt(b, false);
     }
 }
@@ -933,9 +936,8 @@ void daBtn_c::func_ov079_02125240(){
    `ldr ip,[pc,#8]; bx ip` absolute tail-call; bracketed closed immediately
    because it is positional. */
 #pragma long_calls on
-extern "C" void func_ov079_0212522c(void *a, void *b, void *c)
-{
-    ((daBtn_c *)b)->func_ov079_02125058((dActor_c *)c);
+extern "C" void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daBtn_c *>(owner)->func_ov079_02125058(other);
 }
 #pragma long_calls off
 
@@ -1278,7 +1280,7 @@ void daBtn_c::func_ov079_021246dc()
             func_0201267c(0xc6, &mCamSpacePos);
             Sound::StopLoadedMusic_Layer3();
             func_02011cfc();
-            func_ov079_02123d4c((int *)&v, this);
+            func_ov079_02123d4c(&v, this);
             v.y += 0x50000;
             dp.x = v.x;
             dp.y = v.y;
@@ -1294,7 +1296,7 @@ void daBtn_c::func_ov079_021246dc()
         }
     } else {
         func_0201267c(0xc6, &mCamSpacePos);
-        func_ov079_02123d4c((int *)&v2, this);
+        func_ov079_02123d4c(&v2, this);
         v2.y += 0x28000;
         dp2.x = v2.x;
         dp2.y = v2.y;
@@ -1463,7 +1465,7 @@ void daBtn_c::func_ov079_02124188()
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
         (short)(mAngleY + mBodyYaw));
 
-    *(MatrixWords *)mShadowMatrix = data_020a0e68;
+    *(Mtx43 *)mShadowMatrix = *(Mtx43 *)&data_020a0e68;
 
     if (mShouldRender == 0)
         return;
@@ -1502,7 +1504,7 @@ void daBtn_c::func_ov079_02124008()
     }
 
     off = (n + 1) * ((s - 0x1000) * 0x168);
-    *(MatrixWords *)mMeshMatrix = *(MatrixWords *)&mAnmModel.mat4x3;
+    *(Mtx43 *)mMeshMatrix = *(Mtx43 *)&mAnmModel.mat4x3;
 
     Matrix4x3_ApplyInPlaceToRotationY(mMeshMatrix, mBodyYaw);
     if (mState != 1 && mState != 7) {
@@ -1569,7 +1571,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePosX);
     Vector3 pos;
-    func_ov079_02123d4c((int *)&pos, this);
+    func_ov079_02123d4c(&pos, this);
     Vector3 dust;
     pos.y = pos.y + 0x28000;
     dust.x = pos.x;
@@ -1590,10 +1592,10 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
    gives the named local its own stack home (no NRVO, +0xc); the (out, this)
    free form is the byte-exact shape, and the callers that need the member
    view reach it through vecret below. */
-extern "C" void func_ov079_02123d4c(int* out, daBtn_c *self){
-    out[0] = self->mPosX;
-    out[1] = self->mPosY;
-    out[2] = self->mPosZ;
+extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
+    out->x = self->mPosX;
+    out->y = self->mPosY;
+    out->z = self->mPosZ;
     {
         int m;
         int d;
@@ -1602,12 +1604,12 @@ extern "C" void func_ov079_02123d4c(int* out, daBtn_c *self){
         } else {
             m = (s16)data_02082214[((unsigned short)self->mAngleX >> 4) * 2] * (s16)0xc8;
         }
-        out[0] = out[0] + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2]);
+        out->x = out->x + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2]);
         d = self->OnAimedAtWithEgg();
         {
-            out[1] += d;
-            out[2] =
-                out[2] + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2 + 1]);
+            out->y += d;
+            out->z =
+                out->z + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2 + 1]);
         }
     }
 }

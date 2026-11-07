@@ -1,5 +1,6 @@
+#include "nitro/os/alarm.h"
+
 struct OSAlarm;
-typedef void (*OSAlarmHandler)(void *arg);
 
 extern int OS_IsAlarmAvailable(void);
 extern void OS_SetAlarm(struct OSAlarm *alarm, long long tick, OSAlarmHandler handler, void *arg);

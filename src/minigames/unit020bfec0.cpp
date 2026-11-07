@@ -41,6 +41,10 @@
 #include "G2.h"
 #include "math/Approach.h"
 #include "dScMgBase_c.h"
+#include "MWCPlusLib.h"
+#include "LevelRng.h"
+#include "MgCamera.h"
+#include "math/Quaternion.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -60,12 +64,13 @@ struct Sound {
 void CopyToViewMat(const Matrix4x3 *);
 
 extern "C" {
-void MulVec3Mat4x3(void *, void *, void *);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
-void Matrix4x3_FromQuaternion(void *, void *);
+void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
 void MulVec3Mat3x3(void *, void *, void *);
 void MulMat4x3Mat4x3(void *, void *, void *);
-void __cxa_vec_cleanup(void *, unsigned int, unsigned int, void (*)(void *));
+void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
 void func_020169d8(void *, int, unsigned int);
 void func_0203cebc(void *, void *, void *, void *);
 /* local extern: CalcLib conflicts with this TU's void* Vec3_HorzAngle
@@ -75,7 +80,7 @@ int DotVec3(const Vector3 *, const Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationX(void *, short);
 void Matrix4x3_ApplyInPlaceToRotationY(void *, short);
 void Matrix4x3_FromTranslation(void *, int, int, int);
-int NormalizeVec3IfNonZero(void *);
+int NormalizeVec3IfNonZero(Vector3 *);
 void Quaternion_FromVector3(void *, void *, void *);
 void Quaternion_Normalize(void *);
 void Quaternion_SLerp(void *, void *, int, void *);
@@ -84,17 +89,17 @@ int RandomIntInternal(int *);
  * other helper spellings, including its Vec3_HorzAngle declaration. */
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
-short Vec3_HorzAngle(const void *, const void *);
+short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 // local extern: no shared header declares Vec3_VertAngle.
 short Vec3_VertAngle(const Vector3 *, const Vector3 *);
-void Vec3_MulScalar(void *, void *, int);
-void Vec3_MulScalarInPlace(int *, int);
+void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
+void Vec3_MulScalarInPlace(Vector3 *, int);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 int SharedFilePtr_Destruct_Anim(void *);
 int SharedFilePtr_Destruct_TexSeq(void *);
 
-void __cxa_vec_ctor(void *, unsigned int, unsigned int, void (*)(void *), void (*)(void *));
+void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
 unsigned int func_02012174(unsigned int, unsigned int);
 void func_02016a04(void *, int);
 void func_02016a14(void *, int);
@@ -104,9 +109,6 @@ void *func_02017acc(void *, unsigned int);
 void Quaternion_Multiply(void *, void *, void *);
 void func_0203ccd4(void *, short);
 void func_0203cd80(void *, short);
-void Camera_ProjectToScreen16(char *r4, void *r1, short *r5);
-void Camera_ProjectToScreen(char *r4, void *r1, int *r6, int *r5);
-void Camera_UpdateMatrices(void *self);
 void MascotWalker_StatePause(char *c);
 void MascotWalker_StartPause(int *t);
 void MascotWalker_StateWalk(char *c);
@@ -115,7 +117,6 @@ void MascotWalker_UpdateMatrix(MascotWalker *walker);
 void MascotWalker_Draw(char *t);
 void MascotWalker_Update(void *c);
 void MascotWalker_Load(MascotWalker *walker);
-void Camera_InitDealerView(void *self);
 void Dealer_ResetMatrices(char *c);
 void Dealer_StateWin(char *p);
 void Dealer_PlayWin(void *c);
@@ -126,26 +127,24 @@ void Dealer_StartSwap(int *t);
 int Dealer_IsAnimDone(void *a);
 int Dealer_IsBusy(int *c);
 void Dealer_StateReveal(void *cc);
-void Dealer_StartReveal(int *t, int a1, int a2);
+void Dealer_StartReveal(int *t, int a1, s16 *a2);
 void Dealer_StateDeal(char *c);
-void Dealer_StartDeal(char *c, short arg1, int arg2);
+void Dealer_StartDeal(char *c, short arg1, s16 *arg2);
 void Dealer_StateShuffle(char *c);
-void Dealer_StartShuffle(char *c, int unused, short a2, int a3);
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdleAtRest(char *c);
-int Dealer_IsIdle(int *r0);
+int Dealer_IsIdle(Dealer *dealer);
 void Dealer_StateIdle(void);
 void Dealer_PlayIdle(char *c);
 void Dealer_Draw(void *self);
 void Dealer_Update(Dealer *dealer);
 int Dealer_Load(char *c);
-void Camera_InitSlotsView(void *self);
 void Mascot_StopLooking(int *p);
 void Mascot_LookAt(char *c, int *src);
 void Mascot_UpdateMatrix(char *c);
 void Mascot_Draw(void *c);
 void Mascot_Update(void *a);
 void Mascot_Load(char *c);
-void Camera_InitPresenterView(void *self);
 void Presenter_UpdateMatrix(char *c);
 void Presenter_StateSurprisedThenIdle(char *t);
 void Presenter_PlayCheerLoop(void *c);
@@ -179,7 +178,6 @@ void FlowerFace_StatePick(int *c);
 void FlowerFace_PlayPetalPulled(char *c);
 void FlowerFace_StateIdle(void);
 void FlowerFace_PlayIdle(char *p);
-void Camera_InitFlowerView(void *self);
 int FlowerFace_IsIdle(int *c);
 void FlowerFace_Reset(void *a);
 void FlowerFace_Draw(void *self);
@@ -414,33 +412,19 @@ extern "C" {
 // @symbol Camera_InitFlowerView
 /* Camera_InitFlowerView at 0x020c3b2c
  *
- * dCamera_c preset init: sets eye/target vectors and angle, then
+ * MgCamera preset: sets the look-at point, position and fov angle, then
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
-struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitFlowerView(struct dCamera_c *self) {
-    self->target.x = 0x1b000;
-    self->target.y = 0x17600;
-    self->target.z = -0x22f00;
-    self->eye.x = 0x38000;
-    self->eye.y = 0x22500;
-    self->eye.z = -0x51200;
-    self->angle = 0xb30;
-    Camera_UpdateMatrices(self);
+void Camera_InitFlowerView(MgCamera *camera) {
+    camera->mLookAt.x = 0x1b000;
+    camera->mLookAt.y = 0x17600;
+    camera->mLookAt.z = -0x22f00;
+    camera->mPos.x = 0x38000;
+    camera->mPos.y = 0x22500;
+    camera->mPos.z = -0x51200;
+    camera->mFovAngle = 0xb30;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -466,21 +450,17 @@ void FlowerFace_StateIdle(void) {}
 
 namespace s020c3990 {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
 struct S8 {
     int w[2];
 };
 
-extern int data_0209e650;
 extern int pmf_FlowerFace_StatePick[2];
 
 void FlowerFace_PlayPetalPulled(char *c) {
     int i;
     char *p;
     struct {
-        Vec3 pos, vel, pos2, vel2;
+        VecFx32 pos, vel, pos2, vel2;
     } b;
 
     FLOWERFACE(c)->mModel.SetAnim((BCA_File *)FLOWERFACE(c)->mPickAnim.filePtr, 0x40000000, 0x800,
@@ -501,11 +481,17 @@ void FlowerFace_PlayPetalPulled(char *c) {
             b.vel.y = 0xa00;
             b.vel.z = 0xa00;
             b.vel.x +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.vel.y +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.vel.z +=
-                (int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) >> 2;
+                (int)((unsigned int)(RandomIntInternal(&data_0209e650.value) & ~0x80000000) >>
+                      19) >>
+                2;
             b.pos2.x = b.pos.x;
             b.pos2.y = b.pos.y;
             b.pos2.z = b.pos.z;
@@ -583,7 +569,6 @@ void FallingPetal_SetModel(char *t, int a1) {
 
 namespace s020c3754 {
 extern "C" {
-extern int data_0209e650;
 extern int data_02092768[4];
 
 void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
@@ -604,7 +589,7 @@ void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
     r6[9] = sAxis.x;
     r6[10] = sAxis.y;
     r6[11] = sAxis.z;
-    func_0203cd80(&PETAL(r6)->mAxis, (short)RandomIntInternal(&data_0209e650));
+    func_0203cd80(&PETAL(r6)->mAxis, (short)RandomIntInternal(&data_0209e650.value));
     r6[12] = data_02092768[0];
     r6[13] = data_02092768[1];
     r6[14] = data_02092768[2];
@@ -617,21 +602,18 @@ void FallingPetal_Spawn(int *r6, int *r5, int *r4) {
 
 namespace s020c35e8 {
 extern "C" {
-typedef struct {
-    int x, y, z;
-} Vec3;
 struct Quat {
     int w[4];
 };
 
 extern Quat data_02092768;
-extern int data_02082214[];
+extern short data_02082214[];
 
 void FallingPetal_Update(char *self) {
-    Vec3 v0;
-    Vec3 v1;
-    Vec3 v2;
-    Vec3 v3;
+    Vector3 v0;
+    Vector3 v1;
+    Vector3 v2;
+    Vector3 v3;
     Quat q0;
     Quat q1;
     int idx;
@@ -646,16 +628,16 @@ void FallingPetal_Update(char *self) {
     PETAL(self)->mAccel.y = -0x40;
     AddVec3(&PETAL(self)->mVel, &PETAL(self)->mAccel, &PETAL(self)->mVel);
     idx = ((PETAL(self)->mPos.y >> 1) << 16) >> 20;
-    val = *(short *)&data_02082214[idx];
+    val = data_02082214[idx * 2];
     v0.x = val;
     v0.y = 0;
     v0.z = val;
-    Vec3_MulScalarInPlace((int *)&v0, 0x400);
-    Vec3_Add((Vector3 *)&v1, &PETAL(self)->mVel, (const Vector3 *)&v0);
-    dot = DotVec3(&PETAL(self)->mAxis, (const Vector3 *)&v1);
+    Vec3_MulScalarInPlace(&v0, 0x400);
+    Vec3_Add(&v1, &PETAL(self)->mVel, &v0);
+    dot = DotVec3(&PETAL(self)->mAxis, &v1);
     Vec3_MulScalar(&v2, &PETAL(self)->mAxis, dot);
-    Vec3_MulScalarInPlace((int *)&v2, 0x300);
-    SubVec3(&PETAL(self)->mVel, (Vector3 *)&v2, &PETAL(self)->mVel);
+    Vec3_MulScalarInPlace(&v2, 0x300);
+    SubVec3(&PETAL(self)->mVel, &v2, &PETAL(self)->mVel);
     v3.x = v1.x;
     v3.y = v1.y;
     v3.z = v1.z;
@@ -694,7 +676,7 @@ extern struct Vector3 sPetalUpAxis;
 extern struct Matrix4x3 data_020a0e68;
 void FallingPetal_UpdateMatrix(char *c) {
     struct Matrix4x3 sp;
-    Matrix4x3_FromQuaternion(PETAL(c)->mRot, &sp);
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(PETAL(c)->mRot), &sp);
     MulVec3Mat3x3(&sPetalUpAxis, &sp, &PETAL(c)->mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, PETAL(c)->mPos.x, PETAL(c)->mPos.y, PETAL(c)->mPos.z);
     MulMat4x3Mat4x3(&sp, &data_020a0e68, &data_020a0e68);
@@ -934,10 +916,10 @@ extern "C" void Presenter_Draw(char *c) {
     p = *(int **)(mc + 4);
     PRESENTER(c)->mTexSeq.Update(*(ModelComponents *)mc);
     PRESENTER(c)->mTexAnim.Update(*(ModelComponents *)mc);
-    *(int *)(((int)p + 0x104)) -= PRESENTER(c)->mSway[2];
-    *(int *)(((int)p + 0x108)) += PRESENTER(c)->mSway[3];
+    *(int *)((int)p + 0x104) -= PRESENTER(c)->mSway[2];
+    *(int *)((int)p + 0x108) += PRESENTER(c)->mSway[3];
     *(int *)(((int)p + 0x134)) += PRESENTER(c)->mSway[0];
-    *(int *)(((int)p + 0x138)) += PRESENTER(c)->mSway[1];
+    *(int *)((int)p + 0x138) += PRESENTER(c)->mSway[1];
     PRESENTER(c)->mFace.Render(0);
     PRESENTER(c)->mBack.Render(&sPresenterScale);
 }
@@ -994,7 +976,7 @@ void Presenter_ResetPose(char *c) {
 
 namespace s020c2848 {
 extern "C" {
-extern void *sPresenterIdleTexAnim;
+extern char sPresenterIdleTexAnim[];
 extern dFdBrightness_c *data_0209f5bc;
 struct P2 {
     void *a;
@@ -1015,7 +997,7 @@ extern "C" void Presenter_PlayIdle(char *c) {
         PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mWaitAnim.filePtr, blendFrames, 0,
                                     0x800, 0);
         PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mWaitTexSeq.filePtr, 0, 0x800, 0);
-        PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)&sPresenterIdleTexAnim, 0, 0x800, 0);
+        PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
     }
     {
         void *lo = ((volatile P2 *)&pmf_Presenter_StateIdle_2)->a;
@@ -1028,20 +1010,20 @@ extern "C" void Presenter_PlayIdle(char *c) {
 
 namespace s020c27c4 {
 extern "C" {
-extern void *sPresenterIdleTexAnim;
+extern char sPresenterIdleTexAnim[];
 void Presenter_StateIdle(char *c) {
     if (!PRESENTER(c)->mFace.Finished())
         return;
     PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mWaitAnim.filePtr, 0, 0, 0x800, 0);
     PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mWaitTexSeq.filePtr, 0, 0x800, 0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)&sPresenterIdleTexAnim, 0, 0x800, 0);
+    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
 }
 }
 }
 
 namespace s020c271c {
 extern "C" {
-extern int sPresenterMatchTexAnim;
+extern char sPresenterMatchTexAnim[];
 extern long long pmf_Presenter_StateWin;
 void Presenter_PlayMatch(void *c) {
     char *r4 = (char *)c;
@@ -1055,7 +1037,7 @@ void Presenter_PlayMatch(void *c) {
     new_var2 = (long long *)r4;
     PRESENTER(r4)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(r4)->mWinTexSeq.filePtr, 0x40000000,
                                    0x800, 0);
-    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)&sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
+    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
     new_var = pmf_Presenter_StateWin;
     *new_var2 = new_var;
 }
@@ -1075,7 +1057,7 @@ void Presenter_StateWin(char *t) {
 
 namespace s020c2664 {
 extern "C" {
-extern int sPresenterMissTexAnim[];
+extern char sPresenterMissTexAnim[];
 extern int pmf_Presenter_StateMistake[];
 
 struct W2 {
@@ -1106,7 +1088,7 @@ void Presenter_StateMistake(char *t) {
 
 namespace s020c2594 {
 extern "C" {
-extern int sPresenterCheerTexAnim;
+extern char sPresenterCheerTexAnim[];
 extern volatile long long pmf_Presenter_StateSurprisedThenSmile;
 void Presenter_PlayCheer(void *c) {
     char *r4 = (char *)c;
@@ -1117,7 +1099,7 @@ void Presenter_PlayCheer(void *c) {
                                  0x800, 0);
     PRESENTER(r4)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(r4)->mSurprisedTexSeq.filePtr, 0x40000000,
                                    0x800, 0);
-    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)&sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     *((long long *)r4) = pmf_Presenter_StateSurprisedThenSmile;
 }
 }
@@ -1125,7 +1107,7 @@ void Presenter_PlayCheer(void *c) {
 
 namespace s020c24e4 {
 extern "C" {
-extern int sPresenterSmileTexAnim;
+extern char sPresenterSmileTexAnim[];
 void Presenter_StateSurprisedThenSmile(void *c) {
     char *r4 = (char *)c;
     if (!Presenter_IsAnimDone(r4))
@@ -1136,7 +1118,7 @@ void Presenter_StateSurprisedThenSmile(void *c) {
         Sound::PlayBank2_2D(0x1d1);
     PRESENTER(r4)->mFace.SetAnim(*(BCA_File *)PRESENTER(r4)->mSmileAnim.filePtr, 8, 0, 0x800, 0);
     PRESENTER(r4)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(r4)->mSmileTexSeq.filePtr, 0, 0x800, 0);
-    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)&sPresenterSmileTexAnim, 0, 0x800, 0);
+    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)sPresenterSmileTexAnim, 0, 0x800, 0);
 }
 }
 }
@@ -1147,7 +1129,7 @@ struct G2 {
     int w[2];
 };
 extern struct G2 pmf_Presenter_StateLoseStart;
-extern void *sPresenterLoseTexAnim;
+extern char sPresenterLoseTexAnim[];
 void Presenter_PlayLose(char *c) {
     if (PRESENTER(c)->mQuiet == 0)
         Sound::PlayBank2_2D(0x1c9);
@@ -1155,7 +1137,7 @@ void Presenter_PlayLose(char *c) {
                                 0x800, 0);
     PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mLoseStartTexSeq.filePtr, 0x40000000,
                                   0x800, 0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)&sPresenterLoseTexAnim, 0x40000000, 0x800, 0);
+    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterLoseTexAnim, 0x40000000, 0x800, 0);
     *(struct G2 *)c = pmf_Presenter_StateLoseStart;
 }
 }
@@ -1163,7 +1145,7 @@ void Presenter_PlayLose(char *c) {
 
 namespace s020c23a8 {
 extern "C" {
-extern int sPresenterLoseLoopTexAnim;
+extern char sPresenterLoseLoopTexAnim[];
 void Presenter_StateLoseStart(void *c) {
     char *r4 = (char *)c;
     if (!Presenter_IsAnimDone(r4))
@@ -1172,14 +1154,14 @@ void Presenter_StateLoseStart(void *c) {
         return;
     PRESENTER(r4)->mFace.SetAnim(*(BCA_File *)PRESENTER(r4)->mLoseAnim.filePtr, 0, 0, 0x800, 0);
     PRESENTER(r4)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(r4)->mLoseTexSeq.filePtr, 0, 0x800, 0);
-    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)&sPresenterLoseLoopTexAnim, 0, 0x800, 0);
+    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)sPresenterLoseLoopTexAnim, 0, 0x800, 0);
 }
 }
 }
 
 namespace s020c2300 {
 extern "C" {
-extern int sPresenterCheerTexAnim;
+extern char sPresenterCheerTexAnim[];
 extern long long pmf_Presenter_StateSurprisedThenIdle;
 void Presenter_PlayCheerLoop(void *c) {
     long long new_var;
@@ -1191,7 +1173,9 @@ void Presenter_PlayCheerLoop(void *c) {
                                  0x800, 0);
     PRESENTER(r4)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(r4)->mSurprisedTexSeq.filePtr, 0x40000000,
                                    0x800, 0);
-    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)&sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    /* The u64 identity mask is load-bearing (measured 2026-11-06); removing it
+       costs the function its bytes. */
     *((long long *)r4) = (new_var = pmf_Presenter_StateSurprisedThenIdle & 0xFFFFFFFFFFFFFFFF);
 }
 }
@@ -1228,29 +1212,15 @@ extern "C" {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
-struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitPresenterView(struct dCamera_c *self) {
-    self->target.x = 0;
-    self->target.y = 0;
-    self->target.z = 0;
-    self->eye.x = 0;
-    self->eye.y = 0;
-    self->eye.z = 0x2d000;
-    self->angle = 0x800;
-    Camera_UpdateMatrices(self);
+void Camera_InitPresenterView(MgCamera *camera) {
+    camera->mLookAt.x = 0;
+    camera->mLookAt.y = 0;
+    camera->mLookAt.z = 0;
+    camera->mPos.x = 0;
+    camera->mPos.y = 0;
+    camera->mPos.z = 0x2d000;
+    camera->mFovAngle = 0x800;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -1385,33 +1355,19 @@ extern "C" {
 // @symbol Camera_InitSlotsView
 /* Camera_InitSlotsView at 0x020c1eb4
  *
- * dCamera_c preset init: sets eye/target vectors and angle, then
+ * MgCamera preset: sets the look-at point, position and fov angle, then
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
-struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitSlotsView(struct dCamera_c *self) {
-    self->target.x = 0;
-    self->target.y = 0xe000;
-    self->target.z = -0x22f00;
-    self->eye.x = 0;
-    self->eye.y = 0xf000;
-    self->eye.z = 0x32000;
-    self->angle = 0xb00;
-    Camera_UpdateMatrices(self);
+void Camera_InitSlotsView(MgCamera *camera) {
+    camera->mLookAt.x = 0;
+    camera->mLookAt.y = 0xe000;
+    camera->mLookAt.z = -0x22f00;
+    camera->mPos.x = 0;
+    camera->mPos.y = 0xf000;
+    camera->mPos.z = 0x32000;
+    camera->mFovAngle = 0xb00;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -1493,7 +1449,7 @@ int Dealer_Load(char *c) {
     DEALER(c)->mRot[0] = data_020a0edc.x;
     DEALER(c)->mRot[1] = data_020a0edc.y;
     DEALER(c)->mRot[2] = data_020a0edc.z;
-    DEALER(c)->mDealtCount = 0;
+    DEALER(c)->mDealCounter = 0;
     DEALER(c)->mModel.HideMaterial(1, 0);
     Dealer_PlayIdle(c);
     f = ((void *)DEALER(c)->mTableData);
@@ -1633,12 +1589,12 @@ void Dealer_StateIdle(void) {}
 namespace s020c1718 {
 extern "C" {
 extern int pmf_Dealer_StateIdle_2[];
-int Dealer_IsIdle(int *r0) {
+int Dealer_IsIdle(Dealer *dealer) {
     int *g = pmf_Dealer_StateIdle_2;
-    int w0 = r0[0];
+    int w0 = dealer->mState[0];
     int ip = 1;
     if (w0 == g[0]) {
-        if (r0[1] == g[1] || w0 == 0)
+        if (dealer->mState[1] == g[1] || w0 == 0)
             ip = 0;
     }
     return ip == 0;
@@ -1671,23 +1627,22 @@ struct M8 {
 };
 extern char pmf_Dealer_StateShuffle[];
 
-void Dealer_StartShuffle(char *c, int unused, short a2, int a3) {
-    if (DEALER(c)->mShuffleRound == 0) {
-        DEALER(c)->mShuffleLeft = 4;
-        DEALER(c)->mDealDoneAt = 3;
+void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter) {
+    if (dealer->mShuffleRound == 0) {
+        dealer->mShuffleLeft = 4;
+        dealer->mDealDoneAt = 3;
     } else {
-        DEALER(c)->mShuffleLeft = 1;
-        DEALER(c)->mDealDoneAt = 1;
+        dealer->mShuffleLeft = 1;
+        dealer->mDealDoneAt = 1;
     }
-    if (ApproachLinear2(DEALER(c)->mShuffleRound, 5, 1) != 0) {
-        DEALER(c)->mShuffleRound = 0;
+    if (ApproachLinear2(dealer->mShuffleRound, 5, 1) != 0) {
+        dealer->mShuffleRound = 0;
     }
-    DEALER(c)->mDealSoundPlayed = 0;
-    DEALER(c)->mDealLeft = a2;
-    DEALER(c)->mDealtCount = a3;
-    DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mShuffleStartAnim.filePtr, 0, 0x40000000,
-                              0x800, 0);
-    *(struct M8 *)c = *(struct M8 *)pmf_Dealer_StateShuffle;
+    dealer->mDealSoundPlayed = 0;
+    dealer->mDealLeft = count;
+    dealer->mDealCounter = counter;
+    dealer->mModel.SetAnim(*(BCA_File *)dealer->mShuffleStartAnim.filePtr, 0, 0x40000000, 0x800, 0);
+    *(struct M8 *)dealer = *(struct M8 *)pmf_Dealer_StateShuffle;
 }
 }
 }
@@ -1712,7 +1667,7 @@ extern "C" void Dealer_StateShuffle(char *c) {
         short old = *p;
         *p = old - 1;
         if (cv <= 0) {
-            Dealer_StartDeal(c, DEALER(c)->mDealLeft, DEALER(c)->mDealtCount);
+            Dealer_StartDeal(c, DEALER(c)->mDealLeft, DEALER(c)->mDealCounter);
             return;
         }
     }
@@ -1738,10 +1693,10 @@ extern "C" {
 extern P2 pmf_Dealer_StateDeal;
 }
 
-extern "C" void Dealer_StartDeal(char *c, short arg1, int arg2) {
+extern "C" void Dealer_StartDeal(char *c, short arg1, s16 *arg2) {
     DEALER(c)->mDealLeft = arg1;
-    DEALER(c)->mDealtCount = arg2;
-    if (Dealer_IsIdle((int *)c) &&
+    DEALER(c)->mDealCounter = arg2;
+    if (Dealer_IsIdle(DEALER(c)) &&
         DEALER(c)->mModel.file != (BCA_File *)DEALER(c)->mDealWaitAnim.filePtr) {
         DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mShuffleStartAnim.filePtr, 0, 0x40000000,
                                   0x800, 0);
@@ -1769,7 +1724,7 @@ void Dealer_StateDeal(char *c) {
     if (f7c == ((void *)DEALER(c)->mDealEndAnim.filePtr) ||
         f7c == ((void *)DEALER(c)->mDealEnd2Anim.filePtr)) {
         if (DEALER(c)->mModel.Finished()) {
-            DEALER(c)->mDealtCount = 0;
+            DEALER(c)->mDealCounter = 0;
             Dealer_PlayIdle(c);
         }
         return;
@@ -1806,13 +1761,13 @@ void Dealer_StateDeal(char *c) {
             }
         }
 
-        if (DEALER(c)->mDealtCount == 0)
+        if (DEALER(c)->mDealCounter == 0)
             return;
         if (!DEALER(c)->mModel.WillHitFrame(5))
             return;
         Sound::PlayBank2_2D(0x142);
         {
-            short *p = (short *)DEALER(c)->mDealtCount;
+            short *p = DEALER(c)->mDealCounter;
             *p = (short)(*p + 1);
         }
         return;
@@ -1835,9 +1790,9 @@ struct P2 {
 };
 extern P2 pmf_Dealer_StateReveal_2;
 
-void Dealer_StartReveal(int *t, int a1, int a2) {
+void Dealer_StartReveal(int *t, int a1, s16 *a2) {
     DEALER(t)->mDealLeft = a1;
-    DEALER(t)->mDealtCount = a2;
+    DEALER(t)->mDealCounter = a2;
     DEALER(t)->mModel.SetAnim(*(BCA_File *)DEALER(t)->mDealAnim.filePtr, 8, 0, 0x800, 0);
     *(P2 *)t = pmf_Dealer_StateReveal_2;
 }
@@ -1859,7 +1814,7 @@ extern "C" void Dealer_StateReveal(void *cc) {
         *p = old - 1;
         if (cv <= 0) {
             int a;
-            DEALER(c)->mDealtCount = 0;
+            DEALER(c)->mDealCounter = 0;
             a = DEALER(c)->mHand;
             if (a == 0) {
                 DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealEndAnim.filePtr, 0,
@@ -1884,12 +1839,12 @@ extern "C" void Dealer_StateReveal(void *cc) {
         }
     }
 
-    if (DEALER(c)->mDealtCount == 0)
+    if (DEALER(c)->mDealCounter == 0)
         return;
     if (!DEALER(c)->mModel.WillHitFrame(5))
         return;
     Sound::PlayBank2_2D(0x142);
-    *(short *)DEALER(c)->mDealtCount += 1;
+    *DEALER(c)->mDealCounter += 1;
     return;
 
 other:
@@ -2074,33 +2029,19 @@ extern "C" {
 // @symbol Camera_InitDealerView
 /* Camera_InitDealerView at 0x020c0aa8
  *
- * dCamera_c preset init: sets eye/target vectors and angle, then
+ * MgCamera preset: sets the look-at point, position and fov angle, then
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
-struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitDealerView(struct dCamera_c *self) {
-    self->target.x = 0x200;
-    self->target.y = 0x9600;
-    self->target.z = -0x22f00;
-    self->eye.x = -0x100;
-    self->eye.y = 0x10500;
-    self->eye.z = 0x1ee00;
-    self->angle = 0xbb0;
-    Camera_UpdateMatrices(self);
+void Camera_InitDealerView(MgCamera *camera) {
+    camera->mLookAt.x = 0x200;
+    camera->mLookAt.y = 0x9600;
+    camera->mLookAt.z = -0x22f00;
+    camera->mPos.x = -0x100;
+    camera->mPos.y = 0x10500;
+    camera->mPos.z = 0x1ee00;
+    camera->mFovAngle = 0xbb0;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -2160,9 +2101,6 @@ extern "C" void MascotWalker_Load(MascotWalker *walker) {
 
 namespace s020c07e8 {
 typedef int s16;
-struct Vector3 {
-    int x, y, z;
-};
 
 struct C;
 typedef void (C::*PMF)();
@@ -2265,8 +2203,8 @@ extern "C" {
 extern int sMascotWalkerPaths[];
 extern int pmf_MascotWalker_StateWalk[];
 void MascotWalker_StartNextPath(char *c) {
-    int sp8[3];
-    int sp14[3];
+    Vector3 toNext;
+    Vector3 target;
     WALKER(c)->mModel.SetAnim(*(BCA_File *)WALKER(c)->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
     if (WALKER(c)->mPathIndex < 3) {
         WALKER(c)->mPathIndex += 1;
@@ -2284,11 +2222,11 @@ void MascotWalker_StartNextPath(char *c) {
         WALKER(c)->mPos.z = el[2];
     }
     WALKER(c)->mPathPoint += 1;
-    Vec3_Sub((Vector3 *)sp8, (const Vector3 *)&WALKER(c)->mPos,
+    Vec3_Sub(&toNext, &WALKER(c)->mPos,
              (const Vector3 *)((char *)((int *)WALKER(c)->mPath)[1] + WALKER(c)->mPathPoint * 0xc));
-    WALKER(c)->mDir.x = sp8[0];
-    WALKER(c)->mDir.y = sp8[1];
-    WALKER(c)->mDir.z = sp8[2];
+    WALKER(c)->mDir.x = toNext.x;
+    WALKER(c)->mDir.y = toNext.y;
+    WALKER(c)->mDir.z = toNext.z;
     if (NormalizeVec3IfNonZero(&WALKER(c)->mDir) == 0) {
         WALKER(c)->mDir.x = 0xb50;
         WALKER(c)->mDir.y = 0xb50;
@@ -2298,11 +2236,11 @@ void MascotWalker_StartNextPath(char *c) {
         int t = WALKER(c)->mPathPoint * 0xc;
         int *arr = (int *)((int *)WALKER(c)->mPath)[1];
         int *el = (int *)((char *)arr + t);
-        sp14[0] = el[0];
-        sp14[1] = el[1];
-        sp14[2] = el[2];
+        target.x = el[0];
+        target.y = el[1];
+        target.z = el[2];
     }
-    WALKER(c)->mTargetAngle = (short)Vec3_HorzAngle(&WALKER(c)->mPos, sp14);
+    WALKER(c)->mTargetAngle = (short)Vec3_HorzAngle(&WALKER(c)->mPos, &target);
     {
         int a = pmf_MascotWalker_StateWalk[0];
         int b = pmf_MascotWalker_StateWalk[1];
@@ -2317,10 +2255,6 @@ namespace s020c0364 {
 extern "C" {
 typedef short s16;
 typedef long long s64;
-
-typedef struct {
-    int x, y, z;
-} Vector3;
 
 void MascotWalker_StateWalk(char *c) {
     char *path;
@@ -2365,8 +2299,7 @@ void MascotWalker_StateWalk(char *c) {
             path = (char *)WALKER(c)->mPath;
             idx = WALKER(c)->mPathPoint * 0xc;
             arr = *(char **)(path + 4);
-            Vec3_Sub((::Vector3 *)&dir, (const ::Vector3 *)&WALKER(c)->mPos,
-                     (const ::Vector3 *)(arr + idx));
+            Vec3_Sub(&dir, &WALKER(c)->mPos, (const Vector3 *)(arr + idx));
 
             WALKER(c)->mDir.x = dir.x;
             WALKER(c)->mDir.y = dir.y;
@@ -2385,7 +2318,7 @@ void MascotWalker_StateWalk(char *c) {
             next.y = *(int *)(arr + idx + 4);
             next.z = *(int *)(arr + idx + 8);
 
-            WALKER(c)->mTargetAngle = Vec3_HorzAngle((const Vector3 *)&WALKER(c)->mPos, &next);
+            WALKER(c)->mTargetAngle = Vec3_HorzAngle(&WALKER(c)->mPos, &next);
             return;
         }
 
@@ -2426,9 +2359,6 @@ struct P2 {
 };
 
 extern "C" {
-extern int data_0209e650;
-}
-extern "C" {
 extern P2 pmf_MascotWalker_StateWalk_3;
 }
 
@@ -2436,7 +2366,7 @@ extern "C" void MascotWalker_StatePause(char *c) {
     if (ApproachLinear2(WALKER(c)->mStateTimer, 0, 1) == 0)
         return;
     WALKER(c)->mModel.SetAnim(*(BCA_File *)WALKER(c)->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    int r = RandomIntInternal(&data_0209e650);
+    int r = RandomIntInternal(&data_0209e650.value);
     int idx = (int)((unsigned int)(r & 0x7fffffff) >> 0x13);
     WALKER(c)->mStateTimer = (short)(((idx * 0x258) >> 12) + 0x258);
     WALKER(c)->mPaused = 0;
@@ -2453,27 +2383,10 @@ extern "C" {
  */
 typedef int s32;
 
-struct Matrix4x3_local {
-    int data[12];
-};
-
-struct dCamera_c {
-    struct Matrix4x3_local viewMat; /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    struct Matrix4x3_local projMat; /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    /* Camera_UpdateMatrices hands 0xac to G3i::LookAt_ as the camera
-     * position and 0xa0 as the point it looks at. The flower, slots and
-     * dealer presets put 0xac above 0xa0; the presenter view is level. */
-    struct Vector3 target; /* 0xa0 */
-    struct Vector3 eye;    /* 0xac */
-    short angle;           /* 0xb8 */
-};
-
 extern short data_02082214[];
 extern dClipper data_0209f43c;
 
-void Camera_UpdateMatrices(struct dCamera_c *self) {
+void Camera_UpdateMatrices(MgCamera *camera) {
     struct Vector3 up;
     struct Vector3 v1c;
     struct Vector3 v28;
@@ -2485,7 +2398,7 @@ void Camera_UpdateMatrices(struct dCamera_c *self) {
     up.y = 0x1000;
     up.z = 0;
 
-    SubVec3(&self->target, &self->eye, &v1c);
+    SubVec3((Vector3 *)&camera->mLookAt, (Vector3 *)&camera->mPos, &v1c);
     if (NormalizeVec3IfNonZero(&v1c)) {
         func_0203cebc(&v34, &v28, &v1c, &up);
         if (NormalizeVec3IfNonZero(&v28)) {
@@ -2497,15 +2410,16 @@ void Camera_UpdateMatrices(struct dCamera_c *self) {
         }
     }
 
-    idx = (self->angle >> 4) * 2;
+    idx = (camera->mFovAngle >> 4) * 2;
     G3i::PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], 0x1555, 0x1000, 0x1388000,
-                       0x1000, 1, (Matrix4x3 *)&self->projMat);
+                       0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i::LookAt_(&self->eye, &up, &self->target, true, (Matrix4x3 *)&self->viewMat);
+    G3i::LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
+                 (Matrix4x3 *)&camera->mViewMtx);
 
-    CopyToViewMat((const Matrix4x3 *)&self->viewMat);
+    CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
-    data_0209f43c.Func_020156DC(0x1555, self->angle, 0x1000, 0x1388000);
+    data_0209f43c.Func_020156DC(0x1555, camera->mFovAngle, 0x1000, 0x1388000);
 }
 }
 }
@@ -2514,10 +2428,10 @@ namespace s020bfff8 {
 extern "C" {
 extern short data_02082214[];
 
-void Camera_ProjectToScreen(char *r4, void *r1, int *r6, int *r5) {
+void Camera_ProjectToScreen(MgCamera *camera, void *r1, int *r6, int *r5) {
     int out[3];
-    MulVec3Mat4x3(r1, r4, out);
-    int ang = ((s020c0134::dCamera_c *)r4)->angle >> 4;
+    MulVec3Mat4x3((Vector3 *)r1, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)out);
+    int ang = camera->mFovAngle >> 4;
     int i = ang * 2;
     int cosv = data_02082214[i];
     int sinv = data_02082214[i + 1];
@@ -2538,10 +2452,10 @@ namespace s020bfec0 {
 extern "C" {
 extern short data_02082214[];
 
-void Camera_ProjectToScreen16(char *r4, void *r1, short *r5) {
+void Camera_ProjectToScreen16(MgCamera *camera, void *r1, short *r5) {
     int out[3];
-    MulVec3Mat4x3(r1, r4, out);
-    int ang = ((s020c0134::dCamera_c *)r4)->angle >> 4;
+    MulVec3Mat4x3((Vector3 *)r1, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)out);
+    int ang = camera->mFovAngle >> 4;
     int i = ang * 2;
     int cosv = data_02082214[i];
     int sinv = data_02082214[i + 1];

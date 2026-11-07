@@ -11,8 +11,8 @@
  *   id, Vector3 &) is +4 a call: St_Die_Init 0xd4->0xd8, St_Attack_Main
  *   0x314->0x318, St_Die_Main (two calls) 0x3dc->0x3e4. &mCamSpacePosX
  *   does not bind to Vector3 &.
- * - func_0200f760 clears cylinder +0x18 bit 2 unless the closest player's
- *   byte at +0x6fb is set. No recovered name.
+ * - dActor_c::func_0200f760 clears cylinder +0x18 bit 2 unless the closest
+ *   player's byte at +0x6fb is set. No recovered name.
  * - UpdateCircling `if (actorID == kBigMrI)` is 0x154->0x148. The (int)
  *   flag stays. CheckAttacks' egg test and its player test are each
  *   0x17c->0x170; both at once 0x17c->0x164.
@@ -55,6 +55,7 @@
 #pragma defer_codegen off
 
 #include "daEykn_c.h"
+#include "ParticleIds.h"
 #include "common.h"
 #include "types.h"
 #include "SpawnInfo.h"
@@ -65,12 +66,11 @@
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
 
-/* Twelve plain words: assigning a Matrix4x3 copies it member by member,
-   0x1c bytes longer than the cartridge's block copy. */
-struct MatrixWords {
-    s32 m[12];
-};
+/* The shadow matrix is reset through Mtx43: assigning a Matrix4x3 copies it
+   member by member, 0x1c bytes longer than the cartridge's block copy. */
 
 /* Inferred local resource-family ABI views; these type names are not ROM
  * names. The manifest binds each constructor/destructor to its existing
@@ -112,8 +112,6 @@ u8 DecIfAbove0_Byte(u8 *counter);
 s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void func_0200f760(void *actor, void *clsn);
 
 /* Fix12<int> by value. Scalar parameters: the member form size-DIFFs.
    See the leftover list. */
@@ -462,9 +460,9 @@ int daEykn_c::St_Die_Main()
             if (isBig != 0) {
                 unsigned char star = (unsigned char)(param1 & 0xf);
                 UntrackAndSpawnStar(mStarTrackID, star, mPos, 4);
-                Particle::System::NewSimple(0x124, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(0x125, mPosX, mPosY, mPosZ);
-                Particle::System::NewSimple(0x126, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofA, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofB, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclTriplePoofC, mPosX, mPosY, mPosZ);
             }
         }
         func_0201267c(0xc4, &mCamSpacePos);
@@ -742,7 +740,7 @@ int daEykn_c::Render()
 int daEykn_c::Behavior()
 {
     RunState();
-    func_0200f760(this, &mdCcAcPos_c);
+    func_0200f760(&mdCcAcPos_c);
     mTurnRefAngleY = mAngleY;
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
@@ -818,7 +816,7 @@ s32 daEykn_c::InitResources()
     mTarget = 0;
     mCircleTimer = kCircleFrames;
 
-    *(MatrixWords *)mShadowMat = *(MatrixWords *)&IDENTITY_MATRIX4X3;
+    *(Mtx43 *)mShadowMat = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     dBgCh_Gnd ray;
     ray.SetObjAndPos(mPos, this);

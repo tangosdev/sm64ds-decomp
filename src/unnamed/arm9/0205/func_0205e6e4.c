@@ -1,30 +1,13 @@
 #include "types.h"
+#include "SHA1Context.h"
 
-/* RFC 3174 SHA1Context, as func_0205e3d4.c and func_0205e89c.c spell it, with
- * the 32-bit block index this build stores. */
-typedef struct {
-    u32 Intermediate_Hash[5]; /* 0x00 */
-    u32 Length_Low;           /* 0x14 */
-    u32 Length_High;          /* 0x18 */
-    u32 Message_Block_Index;  /* 0x1c */
-    u8 Message_Block[64];     /* 0x20 */
-    int Computed;             /* 0x60 -- more input is refused once set */
-    int Corrupted;            /* 0x64 -- the error code, 0 while good */
-} SHA1Context;
-
-/* The parameter keeps its old struct Obj tag, as does the
- * func_0205e3d4 extern: retyping either changes a declaration the
- * declaration-agreement baseline already records. */
-struct Obj;
-
-extern void func_0205e3d4(struct Obj*);
+extern void func_0205e3d4(SHA1Context *context);
 
 /* RFC 3174 SHA1Input(context, message_array, length): 0 (shaSuccess),
  * 1 (shaNull) without a context or message, 3 (shaStateError) after the
  * result was computed, or the stored error. func_0205e3d4 is
  * SHA1ProcessMessageBlock. */
-int func_0205e6e4(struct Obj *obj, u8 *p, int count) {
-    SHA1Context *context = (SHA1Context *)obj;
+int func_0205e6e4(SHA1Context *context, const u8 *p, int count) {
     if (count == 0)
         return 0;
     if (context == 0 || p == 0)
@@ -44,7 +27,7 @@ int func_0205e6e4(struct Obj *obj, u8 *p, int count) {
                 context->Corrupted = 1;
         }
         if (context->Message_Block_Index == 0x40)
-            func_0205e3d4(obj);
+            func_0205e3d4(context);
         p++;
     }
     return 0;

@@ -74,9 +74,8 @@ extern s16 data_02082214[];                       /* sin/cos pairs */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void func_02010da4(dActor_c *actor);
-void func_020393d4(int *collider, int callback);
-void func_020393c4(int *collider, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 enum {
@@ -126,8 +125,8 @@ int daLinelift2_c::InitResources() {
                           mClsnMat, 0x199, mAngleY, *gLinelift2ClpsBlocks[mVariant]);
 
     UpdateClsnPosAndRot();
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     mPathPtr.FromID(param1 & 0xf);
     mNodeCount = mPathPtr.NumNodes();
@@ -158,9 +157,9 @@ int daLinelift2_c::Behavior() {
        velocity while the state is switching over. */
     if (old != mState) {
         mStateTimer = 0;
-        func_020393d4((int *)&mMeshCollider, 0);
+        func_020393d4(&mMeshCollider, 0);
     } else {
-        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
     }
     if (mVariant == 0) {
         int saved = mPosY;
@@ -220,9 +219,9 @@ void daLinelift2_c::StateForward() {
     s16 old = mAngleY;
     mAngleY = mBaseAngleY;
     if (old != mAngleY) {
-        func_020393d4((int *)&mMeshCollider, 0);
+        func_020393d4(&mMeshCollider, 0);
     } else {
-        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
     }
 }
 
@@ -233,9 +232,9 @@ void daLinelift2_c::StateReturn() {
     s16 old = mAngleY;
     mAngleY = mBaseAngleY + 0x8000;
     if (old != mAngleY) {
-        func_020393d4((int *)&mMeshCollider, 0);
+        func_020393d4(&mMeshCollider, 0);
     } else {
-        func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
+        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
     }
     if (mVariant == 0 && mStateTimer < kWaitFrames)
         return;
@@ -291,7 +290,7 @@ int daLinelift2_c::StepAlongPath() {
         }
         return result;
     }
-    func_02010da4(this);
+    func_02010da4();
     return 0;
 }
 

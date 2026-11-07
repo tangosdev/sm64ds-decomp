@@ -75,6 +75,12 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "nitro/fx/fx.h"
 #include "GX.h"
 #include "cstd.h"
+#include "Vector2Math.h"
+
+/* Local POD pair; Vec2_Len observes these same two words as Vector2. */
+typedef struct {
+    int x, y;
+} Vec2;
 #include "G2.h"
 
 /* Local value types carried over from the legacy files. None of these is a
@@ -97,11 +103,6 @@ typedef struct V2xz {
     int x;
     int z;
 } V2xz;
-
-/* The pair Vec2_Len measures. */
-typedef struct {
-    int x, y;
-} Vec2;
 
 /* The point and triangle corners the pakkun, propeller and ball hit tests
    hand to PointInTriangle. */
@@ -166,7 +167,6 @@ extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                          s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
                                          s32 mode);
-extern int Vec2_Len(Vec2 *v);
 /* Five of this helper's six recorded views spell the first and last arguments
    pointers and one spells them ints; the pointer view is kept. */
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
@@ -221,7 +221,7 @@ extern void *Ov004_LoadFileByPath(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
 
-extern void __cxa_vec_ctor(void *p, unsigned int a, unsigned int b, void *cb1, void *cb2);
+extern void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
 extern void SetSubBg0Offset(int x, int y);
 extern void func_0203d738(void);
 extern char sSmartballPathBuf[];
@@ -376,11 +376,13 @@ static inline void CallObjectConstruct(cMgSmartball_object_c *c, char *a1, int a
 #define N LAUNDER_C
 #define FX(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 #define LP(e) ((int *)(e))
+/* The signed/unsigned pair of fixed-point multiplies. FIX_MUL_SU's inner (s64)
+   is load-bearing (measured 2026-11-06); the one FIX_MUL_US used to carry on
+   its right operand was not, and is gone. */
 #define FIX_MUL_SU(a, b) \
     ((int)(((s64)((u64)(s64)(a) * (b)) + 0x800) >> 12))
 #define FIX_MUL_US(a, b) \
-    ((int)(((s64)((a) * (u64)(s64)(b)) + 0x800) >> 12))
-
+    ((int)(((s64)((a) * (u64)(b)) + 0x800) >> 12))
 
 // @symbol _ZN16dScMgSmartball_cD1Ev
 // @symbol _ZN16dScMgSmartball_cD0Ev
@@ -401,10 +403,10 @@ static inline void CallObjectConstruct(cMgSmartball_object_c *c, char *a1, int a
    `operator delete`, which is why nothing below mentions a heap. Nobody writes
    D0; declaring the destructor is enough. */
 dScMgSmartball_c::~dScMgSmartball_c() {
-    __cxa_vec_cleanup(mSparks, 0x40, 0x24, (void *)SmartballObj_ElemDtor);
-    __cxa_vec_cleanup(mDustVel, 0x10, 8, (void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mDustPos, 0x10, 8, (void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mPopupPos, 5, 8, (void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mSparks, 0x40, 0x24, (dtor_t)SmartballObj_ElemDtor);
+    __cxa_vec_cleanup(mDustVel, 0x10, 8, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mDustPos, 0x10, 8, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mPopupPos, 5, 8, (dtor_t)NullDestructor_0203d47c);
 }
 // @symbol SmartballObj_ElemDtor
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -635,7 +637,7 @@ int cMgSmartball_pushswitch_c::BallsClear() {
             delta = pos;
             delta.x -= mCurrent0;
             delta.y -= mCurrent1;
-            if (Vec2_Len(&delta) < 0x12000)
+            if (Vec2_Len((const Vector2 *)&delta) < 0x12000)
                 return 0;
         }
     }
@@ -1525,7 +1527,8 @@ void cMgSmartball_slot_c::UpdateSpin() {
  * loop, over the same three mReelOffset[i] pairs, draws a stack of four more
  * sprites per element with descending y. Kept identical to the pre-migration
  * source, including the `if (1) {}` no-op, the
- * (x - 0x18) & 0xFFFFFFFFFFFFFFFF mask, and the goto-based second loop --
+ * (x - 0x18) & 0xFFFFFFFFFFFFFFFF mask (measured load-bearing 2026-11-06:
+ * without it Update moves 17 words), and the goto-based second loop --
  * only the raw offset accesses became real member access. */
 inline int inline_fn(int arg0, int arg1) {
     return arg0 + arg1;
@@ -1627,8 +1630,8 @@ cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, char 
     tmp[1] = src->y;
     CallObjectConstruct(c, a1, a2, tmp);
     c->~cMgSmartball_slot_c();
-    __cxa_vec_ctor(c->mReelOffset, 3, 8, func_0203d738, NullDestructor_0203d47c);
-    __cxa_vec_ctor(c->mReelVel, 3, 8, func_0203d738, NullDestructor_0203d47c);
+    __cxa_vec_ctor(c->mReelOffset, 3, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(c->mReelVel, 3, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
     c->mRadius = 0x28000;
     return c;
 }
@@ -1798,7 +1801,7 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
     for (i = 0; i < ((dScMgSmartball_c *)mpManager)->mBallCount; i++) {
         CopyObjectPos(&s[0], (int *)GetObjPakkun((char *)mpManager, i));
         Vec2_Sub(&s[2], &mCurrent0, &s[0]);
-        b = Vec2_Len((Vec2 *)&s[2]) < 0x4000;
+        b = Vec2_Len((const Vector2 *)&s[2]) < 0x4000;
         if (b) {
             mActionTimer = 0x61;
             mTriggered = 0;
@@ -2458,7 +2461,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
                         int hit;
                         CopyObjectPos((int *)&bufA, (int *)m);
                         Vec2_Sub((int *)&bufB, &mCurrent0, (int *)&bufA);
-                        hit = Vec2_Len((Vec2 *)(void *)&bufB) < 0x11000;
+                        hit = Vec2_Len((const Vector2 *)(void *)&bufB) < 0x11000;
                         if (hit != 0) {
                             mHitTimer = 4;
                             goto done;
@@ -2523,7 +2526,7 @@ void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
     {
         int v[2];
         Vec2_Sub(v, &mVel0, vel);
-        spd = Vec2_Len((Vec2 *)v);
+        spd = Vec2_Len((const Vector2 *)v);
     }
     if (spd < 0x1000)
         return;
@@ -3023,6 +3026,8 @@ block2:
 }
 
 // @symbol SmartballBall_UpdatePhysics
+/* Kept: measured 2026-11-06, UpdatePhysics is the only function this bracket
+   reaches, and with strength reduction on its body changes (53 words). */
 #pragma push
 #pragma opt_strength_reduction off
 /* The equal-arm owner selection below preserves mwccarm's address rematerialization. */
@@ -3371,7 +3376,7 @@ outer_loop:
         *pz -= normal.z;
         Vec2_Sub((int *)&moveDelta, (int *)position, (int *)(V2xz *)&self->mSnapshot0);
     }
-    dot = Vec2_Len((Vec2 *)&moveDelta);
+    dot = Vec2_Len((const Vector2 *)&moveDelta);
     state.depth += 0x80;
     state.flags[6]++;
     if (blocked == 1 && state.flags[6] < 0x21 && state.depth <= dot)
@@ -3542,7 +3547,7 @@ outer_loop:
             hazardDelta.z -= hazardPos.z;
             hazardDelta.z *= 2;
             if (func_0203d5bc((int *)&hazardDelta) < square) {
-                dot = self->mRadius + 0x10000 - Vec2_Len((Vec2 *)&hazardDelta);
+                dot = self->mRadius + 0x10000 - Vec2_Len((const Vector2 *)&hazardDelta);
                 if (self->mRadius < dot) {
                     other = i >= ((dScMgSmartball_c *)self->mpManager)->mAnaCount
                                 ? (void *)0
@@ -3726,7 +3731,7 @@ void cMgSmartball_ball_c::SaveSnapshot() {
     } else {
         if ((((dScMgSmartball_c *)mpManager)->param1 & 0xff) != 0) {
             Vec2_Sub((int *)&d1, (int *)(V2xz *)&mCurrent0, (int *)(V2xz *)&mLastPos0);
-            t = Vec2_Len((Vec2 *)&d1) < 0x8000;
+            t = Vec2_Len((const Vector2 *)&d1) < 0x8000;
             if (t != 0) {
                 mStuckFrames += 1;
                 goto after2;
@@ -3783,7 +3788,7 @@ after2:
         }
     }
     if (mVel0 != 0 || mVel1 != 0) {
-        spd = Vec2_Len((Vec2 *)(V2xz *)&mVel0);
+        spd = Vec2_Len((const Vector2 *)(V2xz *)&mVel0);
         if (spd >= 0x8000)
             spd = 0x8000;
         if (func_0203d434((V2 *)(V2xz *)&mVel0) != 0)
@@ -3809,9 +3814,9 @@ after2:
                 mExitGateOpen = 1;
         }
     }
-    mag = Vec2_Len((Vec2 *)(V2xz *)&mVel0);
+    mag = Vec2_Len((const Vector2 *)(V2xz *)&mVel0);
     Vec2_Sub((int *)&d2, (int *)(V2xz *)&mCurrent0, (int *)(V2xz *)&mSnapshot0);
-    dist = Vec2_Len((Vec2 *)&d2);
+    dist = Vec2_Len((const Vector2 *)&d2);
     if (specialHit != 0)
         return;
     if (mag < dist)
@@ -4158,7 +4163,7 @@ void dScMgSmartball_c::UpdateSparks() {
         if (((dScMgSmartball_c *)b)->mSparks[0].mActive) {
             L(b + 0x59a4) += ((dScMgSmartball_c *)b)->mSparks[0].mVel[0];
             L(b + 0x59a8) += ((dScMgSmartball_c *)b)->mSparks[0].mVel[1];
-            d = Vec2_Len((Vec2 *)(const Vector3 *)v) * 7 / 8;
+            d = Vec2_Len((const Vector2 *)(const Vector3 *)v) * 7 / 8;
             if (func_0203d434((V2 *)(Fix12i *)v))
                 func_0203d630((V2 *)(int *)v, (int)d);
             N(b + 0x59b4)++;
@@ -4316,7 +4321,7 @@ void dScMgSmartball_c::UpdateDust() {
             *(int *)&((dScMgSmartball_c *)(self + i * 8))->mDustPos[4] +=
                 *(int *)&((dScMgSmartball_c *)(self + i * 8))->mDustVel[4];
             {
-                int m = Vec2_Len((Vec2 *)obj) * 6 / 8;
+                int m = Vec2_Len((const Vector2 *)obj) * 6 / 8;
                 if (func_0203d434((V2 *)obj)) {
                     func_0203d630((V2 *)obj, m);
                 }
@@ -4493,7 +4498,6 @@ void dScMgSmartball_c::KickGate(int idx) {
             } while (i < mPropellerCount);
         }
     }
-    idx = (int)(((long long)idx));
     mGateLampTimer[idx] = 0x14;
 }
 
@@ -4656,9 +4660,11 @@ void dScMgSmartball_c::CollideBalls() {
  *    f(p,c,j,&tmp)). By-value V2 in C mode splits across r3/[sp] with
  *    dynamic sp adjustment, which pins a frame pointer the ROM lacks.
  *    operator new result flows through p into the slot store (no separate r var).
- *  - u64-mask laundering on the two mpKinokos spawn slot stores -> pooled
- *    0x46bc + str r0,[r1,rK]! writeback (also the 9th live value that pulls
- *    fp into the push set; frame 0x124 with 9 saved regs).
+ *  - The two mpKinokos spawn slot stores go through a `void **slot` taken off a
+ *    `(dScMgSmartball_c *)(c + j * 4)` view -> pooled 0x46bc + str r0,[r1,rK]!
+ *    writeback (also the 9th live value that pulls fp into the push set; frame
+ *    0x124 with 9 saved regs). The u64 mask an earlier draft laundered them
+ *    through is gone and was not needed for it.
  *  - BOTH vtable stores in every teardown site are volatile ints: forces
  *    the per-loop pool reload of the shared base vtable (0213ed10) that
  *    mwccarm otherwise CSEs function-wide, and pins the preamble emission
@@ -4784,8 +4790,8 @@ void dScMgSmartball_c::SpawnObjects() {
         if (p != 0) {
             if (p != 0) {
                 *(int *)p = (int)&cMgSmartball_slot_c_vtbl[0];
-                __cxa_vec_cleanup(p->mReelVel, 3, 8, NullDestructor_0203d47c);
-                __cxa_vec_cleanup(p->mReelOffset, 3, 8, NullDestructor_0203d47c);
+                __cxa_vec_cleanup(p->mReelVel, 3, 8, (dtor_t)NullDestructor_0203d47c);
+                __cxa_vec_cleanup(p->mReelOffset, 3, 8, (dtor_t)NullDestructor_0203d47c);
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
                 Memory::operator_delete2(p);
             }
@@ -4884,7 +4890,7 @@ void dScMgSmartball_c::SpawnObjects() {
     mPropellerCount = 0;
     mPushSwitchCount = 0;
 
-    __cxa_vec_ctor(pos, 0x19, 8, func_0203d738, NullDestructor_0203d47c);
+    __cxa_vec_ctor(pos, 0x19, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
 
     {
         int mask = 0x3ff;
@@ -5420,12 +5426,14 @@ void dScMgSmartball_c::SpawnObjects() {
     mResultSlideX = 0x100;
     SetSubBg0Offset(mResultSlideX, 0);
     ResetSparks();
-    __cxa_vec_cleanup(pos, 0x19, 8, NullDestructor_0203d47c);
+    __cxa_vec_cleanup(pos, 0x19, 8, (dtor_t)NullDestructor_0203d47c);
 }
 
 #pragma pop
 
 // @symbol _ZN16dScMgSmartball_c6RenderEv
+/* Both kept: measured 2026-11-06, Render is the only function this bracket
+   reaches, and its size changes when the two settings go back on. */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -5434,7 +5442,8 @@ void dScMgSmartball_c::SpawnObjects() {
 //  - block-scope pcnt2 for loop G -> val@sp+0x14
 //  - int *slot[2] with early slot[0]=0, slot[1]=loopG pcnt, slot[0]=loop2 pmode
 //    forces spill order pmode@0x18 before pcnt2@0x1c
-// Loop2 digit-count still uses inner u64 mask form for pooled ldr form.
+// Loop2's digit count reaches the same pooled ldr without the inner u64 mask an
+// earlier draft used; the mask is gone.
 //
 /* dScMgSmartball_c::Render -- vtable slot 9: the third of the three slots
  * where this class's table differs from dScMgBase_c's.
@@ -5792,6 +5801,8 @@ s32 dScMgSmartball_c::Render() {
 #pragma pop
 
 // @symbol _ZN16dScMgSmartball_c8BehaviorEv
+/* Kept: measured 2026-11-06, Behavior is the only function this bracket
+   reaches, and its size changes with strength reduction on. */
 #pragma push
 #pragma opt_strength_reduction off
 /* dScMgSmartball_c::Behavior -- vtable slot 6.
@@ -5808,10 +5819,11 @@ s32 dScMgSmartball_c::Render() {
  * three fields Flower's and MCarlo's own Behaviors arm, which is why
  * include/dScMgBase_c.h names 0xc0/0xc3/0xc4.
  *
- * THE `(long long)(int)` CASTS ARE LAUNDERS. They force the address through a wider
- * temporary so mwccarm re-materialises it instead of strength-reducing the loop, and
- * the pragma below is there for the same reason: neither is a spelling that can be
- * simplified without changing bytes.
+ * THE `(int)` CASTS ON THE SLOT ADDRESSES ARE LOAD-BEARING. They force the address
+ * through a temporary so mwccarm re-materialises it instead of strength-reducing the
+ * loop, and the pragma below is there for the same reason: neither is a spelling that
+ * can be simplified without changing bytes. The `(long long)` each one used to widen
+ * through first was measured free on 2026-11-06 and is gone.
  *
  * WAS A C99 FILE, so the declarations move inside `extern "C"`; in C++ they would
  * mangle and resolve to nothing. The `extern` on the four variables is load-bearing
@@ -5836,31 +5848,31 @@ s32 dScMgSmartball_c::Behavior() {
         (**(VFunc **)o)(o);
 
         for (i = 0; i < mBallCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpBalls));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpBalls));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mKinokoCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpKinokos));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpKinokos));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mAnaCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpAnas));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpAnas));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mPropellerCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPropellers));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpPropellers));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mDokanCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpDokans));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpDokans));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mPakkunCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mPushSwitchCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches));
             (**(VFunc **)o)(o);
         }
 
@@ -6240,6 +6252,8 @@ s32 dScMgSmartball_c::InitResources() {
 }
 
 // @symbol _ZN16dScMgSmartball_c21AfterCleanupResourcesEj
+/* Kept: measured 2026-11-06, AfterCleanupResources is the only function this
+   bracket reaches, and its size changes with strength reduction on. */
 #pragma push
 #pragma opt_strength_reduction off
 /* dScMgSmartball_c::AfterCleanupResources -- vtable slot 5.
@@ -6385,9 +6399,9 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *p = (int)&cMgSmartball_slot_c_vtbl[0];
                 __cxa_vec_cleanup(((cMgSmartball_slot_c *)p)->mReelVel, 3, 8,
-                                  NullDestructor_0203d47c);
+                                  (dtor_t)NullDestructor_0203d47c);
                 __cxa_vec_cleanup(((cMgSmartball_slot_c *)p)->mReelOffset, 3, 8,
-                                  NullDestructor_0203d47c);
+                                  (dtor_t)NullDestructor_0203d47c);
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
                 Memory::operator_delete2(p);
             }
@@ -6428,11 +6442,11 @@ extern "C" void SmartballObj_ElemCtor(void);
 /* Inline, so the factory below holds it: dScMgBase_c's C2 and this class's
    vtable are the compiler's, then the four arrays the destructor tears down. */
 inline dScMgSmartball_c::dScMgSmartball_c() {
-    __cxa_vec_ctor(mPopupPos, 5, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-    __cxa_vec_ctor(mDustPos, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-    __cxa_vec_ctor(mDustVel, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-    __cxa_vec_ctor(mSparks, 0x40, 0x24, (void *)SmartballObj_ElemCtor,
-                   (void *)SmartballObj_ElemDtor);
+    __cxa_vec_ctor(mPopupPos, 5, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mDustPos, 0x10, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mDustVel, 0x10, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mSparks, 0x40, 0x24, (ctor_t)SmartballObj_ElemCtor,
+                   (dtor_t)SmartballObj_ElemDtor);
 }
 
 // @symbol dScMgSmartball_c_classInit

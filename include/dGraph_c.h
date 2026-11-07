@@ -22,7 +22,7 @@
  * pointers are typed dFdBrightness_c, the base that defines it):
  * data_0209d4b0 is the active transition fader (stage wipe or KuppaScript
  * colour fade; d_s_stage_methods.cpp points it at a dFdWipe_c, and
- * KuppaScript.cpp at the dFdColor_c data_0209b294 for KS_WHITE/BLACK_FADE_*
+ * KuppaScript.cpp at the dFdColor_c gKuppaScriptFader for KS_WHITE/BLACK_FADE_*
  * and clears it on KS_LOAD_LEVEL), and data_0209d4ac is the scene fader.
  * Neither is this class. An earlier reading
  * ("a table of plain function addresses, therefore static") is falsified by

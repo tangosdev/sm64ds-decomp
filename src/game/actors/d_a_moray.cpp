@@ -48,6 +48,7 @@ enum daMoray_c_AssetId {
 #include "dExtSimpleModel_c.h"
 #include "daPly_c.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 #pragma defer_codegen off
 
@@ -85,12 +86,10 @@ extern daMoray_c::State data_ov016_02114dac;
 extern daMoray_c::State data_ov016_02114dbc;
 
 /* The zero cylinder offset has three signed components and no registered
- * lifetime work in the retail initializer. Keep its storage plain; copy the
- * components into the collision API's Vector3 locals below. */
-struct MorayCylinderOffset { s32 x, y, z; };
-
+ * lifetime work in the retail initializer: a VecFx32, not a Vector3. Its
+ * components are copied into the collision API's Vector3 locals below. */
 extern "C" {
-extern MorayCylinderOffset data_ov016_02114d4c;         /* cylinder offset, bss */
+extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
 extern unsigned char data_0209f220; /* entrance filter */
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
@@ -114,7 +113,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-int LenVec3(void *v);
+int LenVec3(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 
@@ -457,6 +456,11 @@ int daMoray_c::func_ov016_02111994()
    horizontal limit to 0x495000 (1173 units), tightens the height limit to
    0x6ee000 (1774 units), and also lunges when the player is within
    0x224000 (548 units) of a point 0x64000 (100 units) ahead of home. */
+/* KEEPER, MEASURED (#821). Three crutches hold this body and each is load-bearing
+   on its own, measured against the cartridge's 0x1c0: without the propagation
+   bracket it is 0x1bc, with `thrVert = 0x800000` folded into one store 0x1b8, with
+   the `zero` local replaced by literal 0s 0x1bc, and with all three 0x1b0. Re-tried
+   after the respellings below, not inherited. */
 #pragma push
 #pragma opt_propagation off
 // @symbol _ZN9daMoray_c19func_ov016_021119ecEv
@@ -872,4 +876,4 @@ daMoray_c::State data_ov016_02114dbc = { &daMoray_c::func_ov016_02111718,
 daMoray_c::State data_ov016_02114d7c = { &daMoray_c::BookSwitch_Spawn,
                                        &daMoray_c::func_ov016_02111534 };
 
-MorayCylinderOffset data_ov016_02114d4c;
+VecFx32 data_ov016_02114d4c;

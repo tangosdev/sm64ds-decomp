@@ -5,15 +5,9 @@
  * result does not fit. */
 #include "types.h"
 #include "IRQ.h"
+#include "nitro/spi/tp.h"
 
 extern "C" {
-
-typedef struct {
-    s16 x0;
-    s16 y0;
-    s16 xDotSize;
-    s16 yDotSize;
-} TPCalibrateParam;
 
 #define reg_DIVCNT (*(volatile u16 *)0x4000280)
 #define reg_DIV_NUMER_L (*(volatile u32 *)0x4000290)

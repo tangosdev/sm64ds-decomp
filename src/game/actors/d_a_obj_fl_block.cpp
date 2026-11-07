@@ -61,8 +61,8 @@ extern char data_ov064_0211bb0c[];
 extern "C" {
 /* local extern: stores the callbacks at dBgW+0x18 and +0x1c. d_bg_w.cpp
  * defines them and no header declares them. */
-void func_020393d4(int *mesh, int callback);
-void func_020393c4(int *mesh, int callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 // @symbol daObjFl_Block_c_classInit
@@ -83,9 +83,9 @@ extern "C" daObjFl_Block_c *daObjFl_Block_c_classInit(void) {
  * long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol _ZN15daObjFl_Block_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
-void daObjFl_Block_c::StoodOnCallback(dBgW *collider, daObjFl_Block_c *self, dActor_c *other) {
-    self->OnStoodOn(other);
+// @symbol _ZN15daObjFl_Block_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
+void daObjFl_Block_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *other) {
+    static_cast<daObjFl_Block_c *>(self)->OnStoodOn(other);
 }
 #pragma pop
 
@@ -109,8 +109,8 @@ s32 daObjFl_Block_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov064_0211bb0c));
 
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithVelocity);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     mMaxPosY = mPosY;
     return 1;

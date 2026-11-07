@@ -88,7 +88,6 @@ void *_ZTV17ExclamationSwitch[20];
 extern "C" {
 void _ZN7fBase_c9SceneNodeC1Ev(void *node);
 int func_0203b438(void *a, void *b, void *c);
-int func_02043810(void *p);
 
 int data_02099edc[8];           /* the transient fBase_c vtable install */
 int data_02099e70[1];           /* next unique actor id */
@@ -128,7 +127,7 @@ void *_ZN7fBase_cC2Ev(char *self)
         *(unsigned short *)(self + 0x38 + 0xe) = info[3];
     }
     {
-        char *parent = (char *)(size_t)func_02043810(data_020a4b6c);
+        char *parent = (char *)((fBase_c *)data_020a4b6c)->func_02043810();
         if (parent) {
             unsigned char pf = *(unsigned char *)(parent + 0x13);
             if (pf & 3)
@@ -185,9 +184,10 @@ void hal_m43_roty(void *m, int a) { Matrix4x3_FromRotationY(m, a); }
 extern "C" {
 /* asm primitive: 4x3 fx32 Y-rotation from (sin, cos):
    rows {c,0,-s},{0,1,0},{s,0,c},{0,0,0} */
-void func_02052820(int *m, int s, int c)
+void func_02052820(struct Matrix4x3 *mtx, int s, int c)
 {
-    m[0] = c;      m[1] = 0; m[2] = -s;
+    int *m = (int *)mtx; /* the twelve fx32 words, row-major */
+    m[0] = c;     m[1] = 0; m[2] = -s;
     m[3] = 0;      m[4] = 0x1000; m[5] = 0;
     m[6] = s;      m[7] = 0; m[8] = c;
     m[9] = 0;      m[10] = 0; m[11] = 0;

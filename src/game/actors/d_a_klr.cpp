@@ -19,10 +19,10 @@
  * section per function in the reverse of source order.
  *
  * What stays, and why:
- * - func_0200f760, func_02012694 and Vec3_Add have no shared header, so
+ * - func_02012694 and Vec3_Add have no shared header, so
  *   they keep a local extern "C" block. data_ov079_02128300 / 021282f0 are
  *   the model handles, in overlay data this TU does not own.
- * - MatrixWords keeps the one 0x30-byte mat4x3 block copy; Matrix4x3's
+ * - Mtx43 keeps the one 0x30-byte mat4x3 block copy; Matrix4x3's
  *   own memberwise assignment comes out 0x18 bytes longer.
  */
 
@@ -35,6 +35,7 @@
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "private/mtx43.h"
 
 struct BMD_File;
 
@@ -43,7 +44,6 @@ extern SharedFilePtr data_ov079_021282f0;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
-void func_0200f760(dActor_c *self, dCc_c *cc);
 void func_02012694(u32 id, const Vector3 *pos);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
@@ -52,10 +52,6 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
    Defined at the end of this file so it does not insert a function into .text. */
 typedef void (daKlr_c::*KlrStateFunc)();
 extern KlrStateFunc data_ov079_021282e0[2];
-
-struct MatrixWords {
-    s32 w[12];
-};
 
 enum {
     kPlayerActorID = 0xbf,
@@ -98,7 +94,7 @@ s32 daKlr_c::Behavior() {
     u32 which;
     u32 id;
 
-    func_0200f760(this, &mCylClsn);
+    func_0200f760(&mCylClsn);
     UpdatePos(0);
 
     which = (u32)mState;
@@ -256,7 +252,7 @@ void daKlr_c::UpdateModelAndShadow() {
     mModel.mat4x3.t.z = mPosZ >> 3;
     /* One 0x30-byte block copy. Matrix4x3's own assignment goes member by
        member through Vector3 and comes out 0x18 bytes longer. */
-    *(MatrixWords *)&mModel2.mat4x3 = *(MatrixWords *)&mModel.mat4x3;
+    *(Mtx43 *)&mModel2.mat4x3 = *(Mtx43 *)&mModel.mat4x3;
     DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 

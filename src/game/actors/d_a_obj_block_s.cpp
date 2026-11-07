@@ -87,6 +87,7 @@ enum daObjBlockS_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "math/MtxStack.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
 enum {
@@ -155,24 +156,14 @@ extern void d_a_obj_block_sPlayLongHold(u32 a, u32 b, u32 c, const Vector3 *pos,
 
 extern s16 atan2_hold_d_a_obj_block_s_1(s32 y, s32 x);
 extern s32 Vec3_HorzLen(const Vector3 *v0);
-extern void Vec3_MulScalarInPlace(int *v, int s);
+extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern int Math_Function_0203b14c(int *dst, int a, int b, int c, int d);
 
 void Crate_SetState(daObjBlockS_c *c, int i);
 }
 
 enum Bool { FALSE, TRUE };
-
-struct Sub {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void m5(int);
-};
 
 /* The state table: data_ov098_0213c878 holds one {enter, update} pair of
    member pointers per state, indexed by mState (the word at 0x560). The host
@@ -200,10 +191,11 @@ struct BlockSCollisionFilePtr : SharedFilePtr {
 extern BlockSModelFilePtr gBrokenBlockSModelFile;
 extern BlockSCollisionFilePtr gBrokenBlockSCollisionFile;
 
-/* Four-word copy source for the thrown state's speed tables. */
+/* Throw speeds (20.12) for the four character weights: horizontal and
+   vertical, copied by value in func_ov098_02138818. */
 struct BlockSW4 { u32 w[4]; };
-extern "C" BlockSW4 data_ov098_0213c4e0;
-extern "C" BlockSW4 data_ov098_0213c4f0;
+BlockSW4 data_ov098_0213c4e0 = {{0x28000, 0x28000, 0x50000, 0x1e000}};
+BlockSW4 data_ov098_0213c4f0 = {{0x14000, 0x14000, 0x14000, 0xf000}};
 
 #pragma defer_codegen off
 
@@ -1014,7 +1006,7 @@ int daObjBlockS_c::func_ov098_02139228()
         a2.y = 0;
         a2.z = FX_MUL(hl, data_02082214[sMove * 2 + 1]);
     }
-    Vec3_MulScalarInPlace(&a2.x, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
+    Vec3_MulScalarInPlace(&a2, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);
     newAng = cstd::atan2(sum.x, sum.z);
     mHorzSpeed = Vec3_HorzLen(&sum);
@@ -1212,10 +1204,8 @@ int daObjBlockS_c::CleanupResources()
 }
 
 // @symbol _ZN13daObjBlockS_c6RenderEv
-/* Draws the model through dExtSimpleModel_c's vtable slot 5 (Render) unless the crate is
- * in STATE_BROKEN or mFlags 0x40000 (a yoshi-mouth bit) is set. The call goes
- * through the local `Sub` shadow so it stays a virtual dispatch on the member
- * object. Always returns 1. */
+/* Draws the model through dExtSimpleModel_c::Render unless the crate is in
+ * STATE_BROKEN or mFlags 0x40000 (a yoshi-mouth bit) is set. Always returns 1. */
 int daObjBlockS_c::Render()
 {
     if (mState == STATE_BROKEN)
@@ -1225,8 +1215,7 @@ int daObjBlockS_c::Render()
         if (b)
             return 1;
     }
-    Sub *o = (Sub *)&mModel;
-    o->m5(0);
+    mModel.Render(0);
     return 1;
 }
 

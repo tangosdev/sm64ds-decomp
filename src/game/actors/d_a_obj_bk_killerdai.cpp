@@ -44,6 +44,7 @@
 #include "Sound.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "SaveBlock.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjBkKillerdai_c_AssetId {
@@ -78,7 +79,7 @@ BkKillerdaiCollisionFile gBkKillerDaiCollisionFile(ASSET_BK_KILLER_DAI_KCL);
 extern void *data_ov079_02127f64[];
 
 extern s8 gCurrentSublevel;
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern u8 data_0209f220;
 
 /* arm9 C helpers with no shared header. */
@@ -186,7 +187,7 @@ s32 daObjBkKillerdai_c::InitResources() {
 
     course = gCurrentSublevel;
     if (course == 0x12) {
-        if (data_0209caa0[1] & 0x204)
+        if (data_0209caa0.file.flags1 & 0x204)
             return 0;
     }
     if (course == 7) {

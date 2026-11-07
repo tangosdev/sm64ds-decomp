@@ -40,6 +40,7 @@
 #include "common.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -51,11 +52,7 @@ struct PathLiftState {
 
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
-   per-frame local in RenderPathModels goes through this. */
-struct RawVector3 {
-    int x, y, z;
-};
-
+   per-frame local in RenderPathModels is a VecFx32. */
 /* The shared lift model file, in SharedFilePtr's layout. This TU does not
    include SharedFilePtr.h: the header's declarations take one compiler
    label number, and every @NNN of the state table would move up by one. */
@@ -84,11 +81,11 @@ extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
-void func_020393c4(int *collider, int callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
-void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider);
+void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider);
 }
 
 extern PathLiftState data_ov002_0210af2c[];
@@ -367,7 +364,7 @@ void dPathLiftActor_c::BaseInitResources()
     mInitialAngle.x = mAngleX;
     mInitialAngle.y = mAngleY;
     mInitialAngle.z = mAngleZ;
-    func_020393c4((int *)&mMeshCollider, (int)&func_ov002_020eff90);
+    func_020393c4(&mMeshCollider, &func_ov002_020eff90);
 }
 
 // 0x020efbdc (0x98)
@@ -398,7 +395,7 @@ void dPathLiftActor_c::RenderPathModels()
     int i = 0;
     dExtSimpleModel_c *model = mModels;
     do {
-        RawVector3 local = *(RawVector3 *)&data_ov002_0210af00;
+        VecFx32 local = *(VecFx32 *)&data_ov002_0210af00;
         model->Render((Vector3 *)&local);
         i++;
         model++;
@@ -525,8 +522,8 @@ void dPathLiftActor_c::AfterClsn(int)
 // @symbol func_ov002_020eff90
 /* The mesh collider's stoodOnCallback: the actor that landed on the lift
    arrives as AfterClsn's word argument. */
-extern "C" void func_ov002_020eff90(dBgW *collider, dPathLiftActor_c *lift, int rider) {
-    lift->AfterClsn(rider);
+extern "C" void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {
+    static_cast<dPathLiftActor_c *>(lift)->AfterClsn((int)rider);
 }
 
 /* The path-follow scale applied to the path models. Spelled as three s32s:

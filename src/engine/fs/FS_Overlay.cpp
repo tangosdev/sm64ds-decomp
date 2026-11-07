@@ -23,18 +23,13 @@
 #include "types.h"
 #include "CP15.h"
 #include "IRQ.h"
+#include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
 
 extern "C" {
-
-/* NitroSDK CARDRomRegion. */
-typedef struct CARDRomRegion {
-    u32 offset;
-    u32 length;
-} CARDRomRegion;
 
 /* The __global_destructor_chain entries the runtime keeps for objects with
  * static storage. */
@@ -65,7 +60,7 @@ void MIi_UncompressBackward(void *bottom);
 void FS_InitFile(void *s);
 int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                       u32 file_index);
-int FS_ReadFile(void *s, void *b, int c);
+int FS_ReadFile(FSFile *file, void *dst, int len);
 int FS_CloseFile(void *self);
 int func_0206cf98(int a, u32 b, u32 c);
 int func_0205e904(s32 newVal);

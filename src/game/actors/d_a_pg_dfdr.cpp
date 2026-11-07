@@ -65,7 +65,7 @@ enum {
 
 /* local extern: stores dBgW::beforeClsnCallback (p[6]); dBgW.h has no
  * setter. */
-extern "C" void func_020393d4(dBgW *collider, void *callback);
+extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* File-scope objects at the end of this file construct the six resource
  * handles and fill the four-slot state table. mwcc emits
@@ -153,7 +153,7 @@ s32 daPgDfdr_c::InitResources() {
     file = dBgW_Kc::LoadFile(data_ov027_02113c6c);
     mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY,
                           *(CLPS_Block *)&data_ov027_021130e8);
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosAndAngs);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
 
     mVertAccel = 0;
     mTerminalVelocity = 0;

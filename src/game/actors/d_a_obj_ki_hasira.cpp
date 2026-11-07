@@ -54,10 +54,12 @@ enum daObjKi_Hasira_c_AssetId { ASSET_KI_HASIRA_BMD = 0x063d, ASSET_KI_HASIRA_KC
 #include "daObjKi_Hasira_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
+#include "dCamera_c.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "math/MtxStack.h"
 
 typedef long long s64;
 
@@ -74,8 +76,6 @@ struct HasiraCollisionFile : SharedFilePtr {
     ~HasiraCollisionFile();
 };
 
-struct dCamera_c;
-
 /* This class's model and collision files (ov016 .bss) and the CLPS block
  * dBgW_KcMbg::SetFile is handed (ov016 .data). */
 extern HasiraModelFile RockPillar_ModelFile;
@@ -84,10 +84,8 @@ extern char data_ov016_02113cac[];
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
-/* The camera-shake request and the camera it goes to (arm9). */
-void func_0200d8c8(dCamera_c *cam, const Vector3 *pos, int strength);
-extern void *data_0209f318;
+/* The camera the shake request goes to (arm9). */
+extern dCamera_c *data_0209f318;
 /* The sin/cos table: (sin, cos) pairs of s16 indexed by angle >> 4. */
 extern s16 data_02082214[];
 }
@@ -196,7 +194,7 @@ s32 daObjKi_Hasira_c::Behavior() {
             dustPos.y = crashPos.y;
             dustPos.z = crashPos.z;
             LandingDustAt(dustPos, true);
-            func_0200d8c8((dCamera_c *)data_0209f318, &mPos, 0x5dc000);
+            data_0209f318->func_0200d8c8(&mPos, 0x5dc000);
             Sound::PlayBank3(0x41, mCamSpacePos);
             MarkForDestruction();
         }

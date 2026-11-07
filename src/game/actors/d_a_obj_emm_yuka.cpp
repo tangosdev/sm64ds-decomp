@@ -27,6 +27,7 @@ enum daObjEmmYuka_c_AssetId {
 #include "decl_common.h"
 #include "daObjEmmYuka_c.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx.h"
 
 struct CLPS_Block;
 
@@ -50,11 +51,11 @@ struct EmmYukaCollisionFilePtr : SharedFilePtr {
 
 extern "C" {
 extern EmmYukaFiles data_ov052_021125a0;
-void func_020393d4(int *bg, int cb);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
                                   s16 angleY, CLPS_Block *clps);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(void *v);
+int LenVec3(const Vector3 *v);
 void Vec3_MulScalar(void *out, void *v, int s);
 /* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
@@ -92,9 +93,9 @@ int daObjEmmYuka_c::Render()
 // @symbol _ZN14daObjEmmYuka_c8BehaviorEv
 int daObjEmmYuka_c::Behavior()
 {
-    /* Plain ints, not Vector3: its inline destructor comes out out-of-line
+    /* VecFx32, not Vector3: its inline destructor comes out out-of-line
      * here (_ZN7Vector3D1Ev), which the link step refuses as unlicensed. */
-    struct Vec { int x, y, z; } prev, node, diff, scaled1, scaled2;
+    VecFx32 prev, node, diff, scaled1, scaled2;
     int looped;
     int delta;
     int len;
@@ -119,7 +120,7 @@ int daObjEmmYuka_c::Behavior()
     }
     mPath.GetNode(*(Vector3 *)&prev, mNodeIndex);
     Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&mPosX, (const Vector3 *)&prev);
-    len = LenVec3(&diff);
+    len = LenVec3((const Vector3 *)&diff);
     if (len == 0 || len <= mHorzSpeed) {
         Vec3_MulScalar(&scaled1, &diff, cstd::fdiv(mHorzSpeed, len));
         SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled1, (Vector3 *)&mPosX);
@@ -162,7 +163,7 @@ int daObjEmmYuka_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021125a0.collision),
                               *(&mClsnMat), 0x199, mAngleY, *(data_ov052_021125a0.clps));
-    func_020393d4((int *)&mMeshCollider, (int)&dBgW::UpdatePosWithTransform);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;
     mHorzSpeed = 0xa000;

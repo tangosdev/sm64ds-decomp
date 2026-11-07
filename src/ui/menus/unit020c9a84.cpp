@@ -63,13 +63,9 @@ static inline void CopyVec3(Vector3 *dst, const Vector3 *src) {
     *(Vector3Bits *)dst = *(const Vector3Bits *)src;
 }
 
-/* A POD Vector3 for locals. A real Vector3 local emits the vague-linkage
+/* The locals below are VecFx32. A real Vector3 local emits the vague-linkage
    ~Vector3 into this text-only unit, and with Vector3's user-declared
    constructor the zero-initialised locals store differently from the ROM's. */
-struct RawVector3 {
-    int x, y, z;
-};
-
 /* Ov007Swing's side point positions (0x20 xPointPos, 0x38 yPointPos) as
    block-copy rows. Copying into swing->xPointPos[j] through a cast pointer
    shares its address with the func_ov007_020c844c argument; the ROM forms
@@ -103,7 +99,7 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
     swing->chain = func_ov007_020c798c(2, params->chainLength, params->chainPointMass, 1);
     chain = swing->chain;
     for (i = 0; i < params->chainLength; i++) {
-        RawVector3 v = {0, 0, 0};
+        VecFx32 v = {0, 0, 0};
         v.z = i << 12;
         CopyVec3(&swing->chainPositions[i], (Vector3 *)&v);
         chain->items[i]->target = &swing->chainPositions[i];
@@ -112,12 +108,12 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
     chain->items[0]->flags |= 1;
     for (j = 0; j < 2; j++) {
         {
-            RawVector3 a = {0, 0, 0};
+            VecFx32 a = {0, 0, 0};
             a.x = j << 12;
             ((SwingSideRows *)swing)->x[j] = (Vector3Bits &)a;
         }
         {
-            RawVector3 b = {0, 0, 0};
+            VecFx32 b = {0, 0, 0};
             b.y = j << 12;
             ((SwingSideRows *)swing)->y[j] = (Vector3Bits &)b;
         }

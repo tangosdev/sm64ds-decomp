@@ -73,14 +73,14 @@ struct WcMizuCollisionFilePtr : SharedFilePtr {
     ~WcMizuCollisionFilePtr();
 };
 
-extern "C" int IsAreaShowing(int idx);
+extern "C" u8 IsAreaShowing(int idx);
 
 extern WcMizuModelFilePtr daObjWc_Obj07_c_ModelFile;
 extern WcMizuCollisionFilePtr daObjWc_Obj07_c_ClsnFile;
 extern int data_ov029_02112b2c[];
 extern BTA_File data_ov029_02112fb8;
 extern CLPS_Block data_ov029_02112fec;
-extern u8 data_0209f2c0[];
+extern u8 data_0209f2c0;
 extern int data_0209f32c;
 extern s16 data_02082214[];
 
@@ -107,7 +107,7 @@ int daObjWc_Mizu_c::InitResources() {
 
     mUseSpawnPosY = (u8)(param1 & 1);
     if (mUseSpawnPosY == 0) {
-        unsigned int idx = data_0209f2c0[0];
+        unsigned int idx = data_0209f2c0;
         if (idx >= 3)
             idx = 2;
         mPosY = data_ov029_02112b2c[idx];

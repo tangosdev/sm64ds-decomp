@@ -81,11 +81,11 @@ extern u8 data_0209f220;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
-int DecIfAbove0_Byte(u8 *p);
+u8 DecIfAbove0_Byte(u8 *p);
 int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void func_020393c4(dBgW *collider, void *callback);
-void func_020393d4(dBgW *collider, void *callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 // @symbol daObjBk_Lift_c_classInit
@@ -104,8 +104,8 @@ extern "C" daObjBk_Lift_c *daObjBk_Lift_c_classInit() {
    collider and forwards (lift, rider) into OnStoodOn. long_calls is the
    ROM's pooled absolute tail-call. */
 #pragma long_calls on
-int daObjBk_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *rider) {
-    return ((daObjBk_Lift_c *)lift)->OnStoodOn(rider);
+void daObjBk_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *rider) {
+    static_cast<daObjBk_Lift_c *>(lift)->OnStoodOn(rider);
 }
 #pragma long_calls off
 
@@ -128,8 +128,8 @@ int daObjBk_Lift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), *(&mClsnMat),
                               0x199, mAngleY, *(&data_ov015_02113594));
-    func_020393d4(&mMeshCollider, (void *)&dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
 
     Vector3 probePos;
     probePos.x = mPosX;

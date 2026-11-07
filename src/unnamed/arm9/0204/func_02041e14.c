@@ -1,26 +1,13 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 
-/* data_020a1fc0 under FileShareWork's names (arm9_a1fc0_file_share.h). Kept
- * as a local object type: the packet size reads through
- * ((FileShareWork *)&data_020a1fc0) take one more register. */
-typedef struct {
-    int mIsParent;         /* 0x00 */
-    int pad04[9];          /* 0x04..0x27 */
-    int mParentPacketSize; /* 0x28 */
-    int mChildPacketSize;  /* 0x2c */
-    char pad30[0x410];     /* 0x30..0x43f */
-    char mArea[0x2730];    /* 0x440 -- FileShareParentArea */
-} Globals;
-
 extern int func_020659a0(int a, int b);
 extern int func_020656d4(u16 arg0, const void *arg1, int arg2, u32 arg3);
 extern void func_02042160();
-extern Globals data_020a1fc0;
 
 void func_02041e14(void)
 {
-    FileShareParentArea *s = (FileShareParentArea *)((FileShareWork *)&data_020a1fc0)->mArea;
+    FileShareParentArea *s = (FileShareParentArea *)FILE_SHARE_WORK->mArea;
     FileShareMsg cmd;
     FileShareMsg cmd2;
 

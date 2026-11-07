@@ -131,7 +131,7 @@ void daHuwa_c::KillWithCoins() {
     SpawnCoins(coins, 3, 0xa000, 0);
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-    MulMat4x3Mat4x3((const int *)(mAnmModel.data.transforms + 1), data_020a0e68.m, data_020a0e68.m);
+    MulMat4x3Mat4x3(&mAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
 
     dust.x = data_020a0e68.m[9];
     dust.y = data_020a0e68.m[10];

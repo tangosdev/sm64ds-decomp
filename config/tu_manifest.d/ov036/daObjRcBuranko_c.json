@@ -31,6 +31,11 @@
       "name": ".bss",
       "start": "0x02114020",
       "end": "0x02114048"
+    },
+    {
+      "name": ".data",
+      "start": "0x02112b68",
+      "end": "0x02112b88"
     }
   ],
   "functions": [
@@ -98,7 +103,22 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov036_02112b68",
+      "address": "0x02112b68",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block for the swing: CLPS header, layer 2, entries 0x01000fc0 and 0x01002fc0"
+    },
+    {
+      "symbol": "data_ov036_02112b84",
+      "address": "0x02112b84",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "all-ones word closing the CLPS block"
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_rc_buranko.cpp",
@@ -403,7 +423,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -439,11 +459,18 @@
           "start": "0x02114020",
           "end": "0x02114048",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02112b68",
+          "end": "0x02112b88",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -454,38 +481,92 @@
           {
             "section": ".init",
             "original": [
-              45
+              47
             ],
             "desired": [
-              45
+              47
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              43
+              45
             ],
             "desired": [
-              43
+              45
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5,
               8,
-              14,
-              21
+              9,
+              15,
+              22
             ],
             "desired": [
-              5,
+              9,
               8,
-              14,
-              21
+              15,
+              22
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              25
+            ],
+            "desired": [
+              25,
+              5
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                8,
+                9,
+                15,
+                22
+              ],
+              "desired": [
+                9,
+                8,
+                15,
+                22
+              ],
+              "slots": [
+                8,
+                9,
+                15,
+                22
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                5,
+                25
+              ],
+              "desired": [
+                25,
+                5
+              ],
+              "slots": [
+                5,
+                25
+              ]
+            }
+          ],
+          "symbolIndices": 6,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -498,7 +579,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
     }
   },
   "compiler_only_output": [
@@ -587,14 +669,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@381",
+      "from": "@453",
       "to": "@387",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @401 now; licensed under the existing pin @387"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @401 now; licensed under the existing pin @387; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@380",
+      "from": "@452",
       "to": "@386",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @386"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @386; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }
   ]
 }

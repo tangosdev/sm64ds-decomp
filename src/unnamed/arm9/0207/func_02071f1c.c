@@ -3,12 +3,9 @@
 extern void func_02072168(void *a, void *b, int d);
 extern void func_02071790(void *a, void *b, int x);
 
-/* ThrowContext is the shared record (private/throw_context.h). CatchInfo's last
+/* ThrowContext and ActionIterator are shared (private/throw_context.h). CatchInfo's last
  * three fields and the ExSpecification fields follow the runtime's own
  * CatchInfo and ex_specification records, not a reader in this image (medium). */
-typedef struct ActionIterator {
-    int mFuncStart; /* 0x00 -- start of the function the actions cover */
-} ActionIterator;
 
 /* The catch record in the handler's frame. func_02071ccc fills the first
  * five words for a catch; mStackTop is the runtime's stacktop. */

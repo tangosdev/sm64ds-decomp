@@ -1,7 +1,9 @@
-extern void func_0205283c(void* m, int s, int c);
+#include "common.h"
+
+extern void func_0205283c(Matrix4x3 *m, int s, int c);
 extern short data_02082214[];
 
-void Matrix4x3_FromRotationZ(void* m, int angle) {
+void Matrix4x3_FromRotationZ(Matrix4x3 *m, int angle) {
     int a = (unsigned short)angle >> 4;
     func_0205283c(m, data_02082214[a*2], data_02082214[a*2+1]);
 }

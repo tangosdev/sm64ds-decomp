@@ -20,9 +20,6 @@
  *   cards through EspAt5000 and FlashSync keeps the raw this+0x5034.
  * - Ent_8e10 stands in for a card sprite's part record; RenderCards walks
  *   the list until f6 is 0xffff.
- * - Obj_777c is a vtable shim so AnimSet::Render can virtual-call the
- *   dExtAnmModel_c method that takes a void* argument; naming the real slot
- *   needs the dExtAnmModel_c vtable recovered.
  * - dMg3DEspModel_c's unk_000..unk_008 are set by its constructor
  *   (0x8c000, 0x8c000, 0) and read nowhere in this unit, so they stay
  *   unnamed.
@@ -51,6 +48,7 @@
 #include "dExtSimpleModel_c.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 struct BMD_File;
 struct BTP_File;
@@ -96,9 +94,7 @@ void func_02046208(char *a, unsigned int b, int c);
 int func_020179b4(void* r0, void* r1, int r2);
 s16 atan2_hold_d_mg3d_esp_anim_set_1(s32 y, s32 x);
 int RandomIntInternal(int *seed);
-extern int data_0209d4b8;
 void FreeGfxSlotsById(int a);
-void Camera_UpdateMatrices(void* self);
 int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 void Mg_RenderSubSpriteMtx(void* a, int b, int c, void* m);
 void Mg_DrawScoreTally(void *c, int a, int b, int d);
@@ -109,7 +105,7 @@ void Mg_ShowBanner(int, int, int, int, int, short);
 void Mg_SetTopScreenYOffset(int);
 void InitialiseVramGlobals(void);
 void Deallocate(void*);
-int LoadFile(int handle);
+void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void func_02056374(const void*, u32, u32);
 
@@ -150,13 +146,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
 
-struct Obj_777c {
-    void* vt;
-    virtual void v0(); virtual void v1(); virtual void v2();
-    virtual void v3(); virtual void v4();
-    virtual void m(void* arg);
-};
-
 // @symbol _ZN17dMg3DEspAnimSet_c6RenderEv
 void dMg3DEspAnimSet_c::Render()
 {
@@ -174,7 +163,7 @@ void dMg3DEspAnimSet_c::Render()
         if (mActive[i] != 0) {
             ((dExtAnmModel_c *)r5)->mat4x3 = data_020a0e68;
             ((dExtAnmMaterial_c *)r4)->Update(*(ModelComponents *)(r5 + 8));
-            ((Obj_777c*)r5)->m(zero);
+            ((dExtAnmModel_c *)r5)->Render((const Vector3 *)zero);
         }
         i++;
         r5 += 0x64;
@@ -654,7 +643,7 @@ void dScMg3DEsp_c::SlotKick(int i)
         return;
     }
     {
-        int rnd = (int)((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff);
+        int rnd = (int)((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff);
         /* ROM uses lsr (logical), not asr: keep unsigned through the shifts */
         rnd = (int)((((unsigned int)rnd) << 4) >> 0xf);
         rnd = rnd + 0x10;
@@ -701,7 +690,7 @@ void dScMg3DEsp_c::SlotRise(int i)
     }
 
     {
-        unsigned r = (unsigned)RandomIntInternal(&data_0209d4b8);
+        unsigned r = (unsigned)RandomIntInternal(&data_0209d4b8.value);
         unsigned t = (r >> 16) & 0x7fff;
         t = (t << 4) >> 15;
         mSlots[i].mDelay = (unsigned char)(t + 0x10);
@@ -715,16 +704,16 @@ extern unsigned char data_ov006_0212e57c[];
 void dScMg3DEsp_c::SlotSetup(int idx) {
     unsigned int r;
     mSlots[idx].mVelX = 0;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mSlots[idx].mAccel = (unsigned char)((r << 3) >> 15);
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mSlots[idx].mGravity = (unsigned char)((r << 3) >> 15);
     mSlots[idx].mVisible = 1;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mSlots[idx].mDelay = (unsigned char)(((r << 4) >> 15) + 8);
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mSlots[idx].mPushTime = (unsigned char)(((r << 5) >> 15) + 0x10);
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mSlots[idx].mType = data_ov006_0212e57c[(r << 1) >> 15];
 }
 
@@ -757,15 +746,15 @@ void dScMg3DEsp_c::SlotWait(int idx)
         if ((s16)mSlots[idx].mWait < 0)
             mSlots[idx].mWait = 0;
     } else {
-        int rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff);
+        int rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff);
         rnd = (int)((((u32)rnd) << 5) >> 15);
         mSlots[idx].mLife = rnd + 0x40;
         mSlots[idx].mState = 1;
         mSlots[idx].mType = 0;
         mSlots[idx].mVisible = 0;
-        rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff);
+        rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff);
         mSlots[idx].mX = (int)((((u32)rnd) << 5) >> 15) << 15;
-        rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff);
+        rnd = (int)((((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff);
         mSlots[idx].mY = ((int)((((u32)rnd) << 4) >> 15) << 3) + 0x40 << 12;
         mSlots[idx].mVelY = -0x200;
         mSlots[idx].mFrame = 0;
@@ -1010,7 +999,7 @@ void dScMg3DEsp_c::CardSeek(int i) {
         if (mTarget == mCards[i].mFace) {
             mCorrect = 1;
         } else {
-            int rnd = RandomIntInternal(&data_0209d4b8);
+            int rnd = RandomIntInternal(&data_0209d4b8.value);
             u32 temp = ((u32)rnd >> 16) & 0x7fff;
             if (((temp << 1) >> 0xf) == 0) {
                 mCorrect = 0;
@@ -1113,7 +1102,8 @@ void dScMg3DEsp_c::DealCards() {
 
     n = sEsp3DCardsPerDifficulty[mDifficulty];
     mTarget =
-        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) * 5 >>
+        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) *
+                            5 >>
                         15);
     for (i = 0; i < 5; i++) {
         a[i] = 0;
@@ -1121,12 +1111,15 @@ void dScMg3DEsp_c::DealCards() {
     }
     for (i = 0; i < 5; i++) {
         do {
-            k = (int)(((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff) * 5 >> 15);
+            k = (int)(((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff) *
+                          5 >>
+                      15);
         } while (b[k] != 0);
         b[k] = 1;
         a[i] = k & 0xff;
     }
-    m = (int)((n * ((((unsigned int)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)) >> 15);
+    m = (int)((n * ((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)) >>
+              15);
     v = mTarget;
     for (j = 0; j < 5; j++) {
         if (v == a[j]) {
@@ -1182,7 +1175,7 @@ void dScMg3DEsp_c::SetDifficulty()
         mDifficulty = 0;
         mult = 3;
     }
-    unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mFlashMode = (unsigned char)((mult * rnd) >> 0xf);
 }
 
@@ -1413,14 +1406,14 @@ s32 dScMg3DEsp_c::Render()
     RenderCards();
     RenderRows();
     RenderSlots();
-    mCameraEyeX = 0;
-    mCameraEyeY = 0xd0000;
-    mCameraEyeZ = 0x40000;
-    mCameraTargetX = 0xffed3000;
-    mCameraTargetY = 0xe0000;
-    mCameraTargetZ = 0x40000;
-    mCameraAngle = 0xc00;
-    Camera_UpdateMatrices(pad_4660);
+    mCamera.mLookAt.x = 0;
+    mCamera.mLookAt.y = 0xd0000;
+    mCamera.mLookAt.z = 0x40000;
+    mCamera.mPos.x = 0xffed3000;
+    mCamera.mPos.y = 0xe0000;
+    mCamera.mPos.z = 0x40000;
+    mCamera.mFovAngle = 0xc00;
+    Camera_UpdateMatrices(&mCamera);
     /* dExtSimpleModel_c::data, at +8. Naming the member makes mwcc add the 8 in a separate instruction. */
     mTextureTransformer.Update(mModel1.data);
     mModel1.Render(0);
@@ -1449,9 +1442,9 @@ s32 dScMg3DEsp_c::Behavior()
 s32 dScMg3DEsp_c::InitResources()
 {
     Matrix4x3 tmp;
-    int f;
-    int r5v;
-    int r4v;
+    void *f;
+    void *r5v;
+    void *r4v;
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;
@@ -1462,14 +1455,14 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x4000008 = (*(volatile unsigned short*)0x4000008 & ~3) | 1;
     Mg_SetTopScreenYOffset(0x10);
 
-    mCameraEyeX = 0;
-    mCameraEyeY = 0xd0000;
-    mCameraEyeZ = 0x40000;
-    mCameraTargetX = 0xffed3000;
-    mCameraTargetY = 0xe0000;
-    mCameraTargetZ = 0x40000;
-    mCameraAngle = 0xc00;
-    Camera_UpdateMatrices(pad_4660); /* the camera block starts at 0x4660 */
+    mCamera.mLookAt.x = 0;
+    mCamera.mLookAt.y = 0xd0000;
+    mCamera.mLookAt.z = 0x40000;
+    mCamera.mPos.x = 0xffed3000;
+    mCamera.mPos.y = 0xe0000;
+    mCamera.mPos.z = 0x40000;
+    mCamera.mFovAngle = 0xc00;
+    Camera_UpdateMatrices(&mCamera);
 
     if (func_020179b4(&gEspIrieModelFile, &mModel1, 1) == 0)
         return 0;
@@ -1496,23 +1489,23 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x400100c = (*(volatile unsigned short*)0x400100c & 0x43) | 0x210;
 
     f = LoadFile(0x12);
-    DecompressLZ16((void *)f, (void *)((unsigned)G2S::GetBG2CharPtr() + 0x4000));
-    Deallocate((void*)f);
+    DecompressLZ16(f, (void *)((unsigned)G2S::GetBG2CharPtr() + 0x4000));
+    Deallocate(f);
 
     f = LoadFile(0x13);
-    GXS::LoadBGPltt((const void *)f, 0x1e0, 0x20);
-    Deallocate((void*)f);
+    GXS::LoadBGPltt(f, 0x1e0, 0x20);
+    Deallocate(f);
 
     f = LoadFile(0x14);
-    func_02056374((const void*)f, 0, 0x800);
-    Deallocate((void*)f);
+    func_02056374(f, 0, 0x800);
+    Deallocate(f);
 
     r5v = LoadFile(8);
     r4v = LoadFile(9);
-    DecompressLZ16((void*)r5v, (void*)0x6600000);
-    GXS::LoadOBJPltt((const void *)r4v, 0, 0x100);
-    Deallocate((void*)r5v);
-    Deallocate((void*)r4v);
+    DecompressLZ16(r5v, (void *)0x6600000);
+    GXS::LoadOBJPltt(r4v, 0, 0x100);
+    Deallocate(r5v);
+    Deallocate(r4v);
 
     Mg_SetTopScreenYOffset(0x20);
 

@@ -29,9 +29,10 @@
  *
  * Leftover. The first three items were tried in their clean form and moved
  * the bytes; the rest are names or types the evidence does not give:
- * - func_ov002_020e9d18 keeps the masked `(((int)&mStarFlags) & ~0ULL)`
- *   halfword stores and the LA label; a plain mBits.answer store loses the
- *   address rematerialization.
+ * - func_ov002_020e9d18 keeps the `*(u16 *)((int)&mStarFlags)` halfword
+ *   stores and the LA label; a plain mBits.answer store loses the address
+ *   rematerialization. The `& ~0ULL` identity mask that used to sit on that
+ *   address is gone and the sentence no longer claims it.
  * - Render keeps its gotos, and mStateTimer keeps its (u16) casts.
  * - func_ov002_020e8244 stays a free function; its first parameter is the
  *   output vector, not the star.
@@ -71,18 +72,18 @@ enum daStar_c_AssetId {
 #include "daSoundObj_c.h"
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
+#include "private/mtx43.h"
 #include "cstd.h"
 #include "Event.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "LevelRng.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
- * not have; these same-layout PODs keep the bytes identical. */
-struct Vec3 { int x, y, z; };          /* a Vector3's three Fix12 words */
+ * not have; NitroSDK VecFx32 and these same-layout PODs keep the bytes
+ * identical. Whole matrices are copied through Mtx43. */
 struct Vec1 { s32 a; };                /* one word, copied component by component */
-struct M48 { int w[12]; };             /* a Matrix4x3's twelve words, copied whole */
-typedef struct Mtx { int m[12]; } Mtx; /* IDENTITY_MATRIX4X3 */
 
 /* A state handler: data_ov002_021109d8 holds one pointer-to-member per
    daStar_c::State. */
@@ -127,13 +128,12 @@ extern void UnloadSilverStarAndNumber(void);
 extern StarAnimationFileHandle data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
 extern int data_ov002_0210da28[];
-extern signed char data_0209f310[];
+extern signed char gNumStageStars[];
 extern signed char NumRedCoins(void);
 extern unsigned char data_0209f2d8;
 extern void func_02035860(void* o, void* src);
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650;
-extern void *data_0209f318;
+extern dCamera_c *data_0209f318;
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
@@ -143,16 +143,19 @@ extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
+/* local extern: math/MtxStack.h takes Matrix4x3 pointers, and
+   func_ov002_020e8244 passes an Mtx43: its scratch copy cannot be a Matrix4x3,
+   whose Vector3 member brings a destructor (_ZN9Matrix4x3D1Ev) into the TU. */
 extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
 extern int *Vec3_LslInPlace(void *v, int sh);
-extern struct M48 data_020a0e68;
-extern Mtx IDENTITY_MATRIX4X3;
+extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern int data_0209f32c;
 extern signed char gCurrentSublevel;
-extern void SetStarMarker(int i, int v1, int v2);
+extern void SetStarMarker(int i, dActor_c *actor, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern dActor_c *STAR_MARKERS[12];
 extern u8 data_0209f208;
@@ -168,12 +171,15 @@ extern u8 data_0209d684;
 extern s16 GetAngleToCamera(int i);
 extern u8 *data_0209f344;
 }
+/* local extern: the header KuppaScript.h would renumber this TU's compiler temps (@NNN pins in its manifest) */
+namespace KuppaScript {
+void End(void);
+}
 extern "C" {
 extern int func_ov002_020c6e14(void*);
 extern u8 data_0209d660;
-extern void EndKuppaScript(void);
-extern s8 data_0209f310[];
-extern signed char data_0209f310[];
+extern s8 gNumStageStars[];
+extern signed char gNumStageStars[];
 extern int NumVsStarsObtained(void);
 extern StarModelFilePtr data_ov002_0211092c;
 extern StarModelFilePtr data_ov002_0211093c;
@@ -258,8 +264,8 @@ s32 daStar_c::InitResources()
     s32 kind;
     char *sp;
     s32 *q;
-    struct Vec3 v;
-    struct Vec3 v2;
+    VecFx32 v;
+    VecFx32 v2;
 
     ret = 1;
     mStarFlags = 0;
@@ -619,7 +625,7 @@ int daStar_c::Behavior()
     func_ov002_020e84ec();
     mdCc_c.Clear();
     {
-        Vec3 v;
+        VecFx32 v;
         v.x = data_ov002_0210aa0c[0];
         v.y = data_ov002_0210aa0c[1];
         v.z = data_ov002_0210aa0c[2];
@@ -676,7 +682,7 @@ int daStarBase_c::Behavior()
         mModel.mat4x3.t.z = mPosZ >> 3;
     }
     if (mBits.visible) {
-        *(Mtx *)&mShadowMtx = IDENTITY_MATRIX4X3;
+        *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
         mShadowMtx.t.x = mPosX >> 3;
         mShadowMtx.t.y = mPosY >> 3;
         mShadowMtx.t.z = mPosZ >> 3;
@@ -1105,13 +1111,13 @@ void daStar_c::func_ov002_020ea410() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c19func_ov002_020ea3a4Ev
 /* Picks the sound id for the collection sound object into mSoundObjSoundID and
- * returns it: for the silver star data_0209f310[player number] + 0x19, in a VS
+ * returns it: for the silver star gNumStageStars[player number] + 0x19, in a VS
  * match 0x4f, otherwise 0x22. */
 int daStar_c::func_ov002_020ea3a4() {
     int b = (actorID == ACTOR_SILVER_STAR);
     if (b != 0) {
         unsigned char idx = mPlayer->mPlayerNo;
-        mSoundObjSoundID = data_0209f310[idx] + 0x19;
+        mSoundObjSoundID = gNumStageStars[idx] + 0x19;
     } else {
         int b2 = (data_0209f2d8 == 1);
         if (b2 != 0) mSoundObjSoundID = 0x4f;
@@ -1136,10 +1142,6 @@ int daStar_c::func_ov002_020ea3a4() {
 extern "C" {
 extern int func_ov002_020ca0f4(void *player);
 
-
-struct VObj {
-    virtual void unk0();
-};
 
 }
 
@@ -1200,9 +1202,8 @@ void daStar_c::func_ov002_020ea100() {
         }
 
         {
-            struct VObj *vobj = (struct VObj *)&mShadowModel;
             mBits.noSpin = 1;
-            vobj->unk0();
+            mShadowModel.~dExtShadowModel_c();
         }
 
         if (mKind == KIND_9) {
@@ -1220,7 +1221,7 @@ void daStar_c::func_ov002_020ea100() {
             int ok = (data_0209f2d8 == 1);
             if (ok) {
                 unsigned char idx = common->mPlayerNo;
-                if (data_0209f310[idx] != 0) {
+                if (gNumStageStars[idx] != 0) {
                     GiveVsStars(idx, -1);
                 }
             }
@@ -1280,8 +1281,8 @@ void daStar_c::func_ov002_020e9d18() {
     u32 r2v;
     u32 b2;
     bool st;
-    Vec3 t1;
-    Vec3 t2;
+    VecFx32 t1;
+    VecFx32 t2;
     int *src;
     u8 st2;
 
@@ -1323,7 +1324,7 @@ modes:
         mode = mSeqTimer;
         if (mode == 1 && r2v == 0) {
             int idx = mPlayer->mPlayerNo;
-            if (data_0209f310[idx] == 4) {
+            if (gNumStageStars[idx] == 4) {
                 GiveVsStars(idx, 1);
                 func_ov002_020e8244(&t1, this);
                 SpawnNumber(*(Vector3 *)&t1, 5, st, 0, mPlayer);
@@ -1331,12 +1332,12 @@ modes:
             }
         } else if (mode == 5) {
             int idx2 = mPlayer->mPlayerNo;
-            if (data_0209f310[idx2] == 5 && r2v == false)
+            if (gNumStageStars[idx2] == 5 && r2v == false)
                 goto end;
             if (r2v == false)
                 GiveVsStars(idx2, 1);
             func_ov002_020e8244(&t2, this);
-            SpawnNumber(*(Vector3 *)&t2, data_0209f310[mPlayer->mPlayerNo], st, 0, mPlayer);
+            SpawnNumber(*(Vector3 *)&t2, gNumStageStars[mPlayer->mPlayerNo], st, 0, mPlayer);
             func_ov002_020e8618();
         }
         goto end;
@@ -1366,7 +1367,7 @@ LA:
             mState = STATE_SAVE_MESSAGE;
             mSeqTimer = 0;
             mPlayer->mFlags &= ~CUTSCENE_FLAG;
-            EndKuppaScript();
+            KuppaScript::End();
         }
         mAnmModel1.Advance();
         func_ov002_020e8098();
@@ -1572,7 +1573,7 @@ void daStar_c::func_ov002_020e96a0() {
             GiveVsStars(mPlayer->mPlayerNo, 1);
             func_ov002_020e8244(v, this);
             p = (char *)mPlayer;
-            SpawnNumber(*(Vector3 *)v, (unsigned int)data_0209f310[mPlayer->mPlayerNo], 1, 0,
+            SpawnNumber(*(Vector3 *)v, (unsigned int)gNumStageStars[mPlayer->mPlayerNo], 1, 0,
                         (dActor_c *)p);
             UntrackStar(mMarkerSlot);
         }
@@ -1651,9 +1652,9 @@ void daStar_c::func_ov002_020e947c(Vector3 *p, int n) {
     if (dy < 0)
         dy = -dy;
     {
-        int s0 = cstd::sqrt((u64)(s64)n);
-        int s1 = cstd::sqrt((u64)(s64)(n + dy));
-        int s2 = cstd::sqrt((u64)(s64)n);
+        int s0 = cstd::sqrt((s64)n);
+        int s1 = cstd::sqrt((n + dy));
+        int s2 = cstd::sqrt((s64)n);
         dy = (s0 * 0x32) / (s1 + s2);
     }
     {
@@ -1976,9 +1977,9 @@ void daStar_c::AddStarMarker()
 
         if (mMarkerType == 0) {
             if (mBits.collectedModel) {
-                SetStarMarker((int)i, (int)this, 3);
+                SetStarMarker((int)i, this, 3);
             } else {
-                SetStarMarker((int)i, (int)this, 2);
+                SetStarMarker((int)i, this, 2);
             }
         } else {
             if (mMarkerType == 2) {
@@ -1994,7 +1995,7 @@ void daStar_c::AddStarMarker()
                 mMarkerType = 3;
             skipmark:;
             }
-            SetStarMarker((int)i, (int)this, mMarkerType);
+            SetStarMarker((int)i, this, mMarkerType);
         }
 
         mMarkerSlot = i;
@@ -2268,11 +2269,11 @@ void daStar_c::func_ov002_020e84ec() {
         Vec3_Asr(&v, &mPos, 3);
         Matrix4x3_FromTranslation(&mAnmModel1.mat4x3, v.x, v.y, v.z);
     } else if (mCarryMatrix != 0) {
-        /* M48 overlay: the class headers above switch Matrix4x3 to the
+        /* Mtx43 overlay: the class headers above switch Matrix4x3 to the
          * structured math/Matrix.h spelling, whose struct-copy codegen
-         * differs from the flat 12-word copy this shard proved. M48 is the
+         * differs from the flat 12-word copy this shard proved. Mtx43 is the
          * same 12 words; proven byte-identical in isolation. */
-        *(struct M48 *)&mAnmModel1.mat4x3 = *(struct M48 *)mCarryMatrix;
+        *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)mCarryMatrix;
     } else if (!mBits.noSpin) {
         ang = (s16 *)&mAngleY;
         t = *ang + 0xc00;
@@ -2288,7 +2289,7 @@ void daStar_c::func_ov002_020e84ec() {
         mAnmModel1.mat4x3.t.z = mPosZ >> 3;
     }
 
-    *(struct M48 *)&mAnmModel2.mat4x3 = *(struct M48 *)&mAnmModel1.mat4x3;
+    *(Mtx43 *)&mAnmModel2.mat4x3 = *(Mtx43 *)&mAnmModel1.mat4x3;
     func_ov002_020e8398();
 }
 
@@ -2331,7 +2332,7 @@ void daStar_c::func_ov002_020e8398() {
 
     t = delta + 0x28000;
 
-    *(Mtx *)&mShadowMtx = IDENTITY_MATRIX4X3;
+    *(Mtx43 *)&mShadowMtx = *(Mtx43 *)&IDENTITY_MATRIX4X3;
 
     mShadowMtx.tx = mPosX >> 3;
     mShadowMtx.ty = mPosY >> 3;
@@ -2353,8 +2354,8 @@ void daStar_c::func_ov002_020e8398() {
 extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void func_ov002_020e8244(void *out, daStar_c *b)
 {
-    struct M48 local;
-    Vec3 zero;
+    Mtx43 local;
+    VecFx32 zero;
     zero.x = 0;
     zero.y = 0;
     zero.z = 0;
@@ -2366,11 +2367,11 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     }
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPosX, b->mPosY, b->mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
-    local = *(struct M48 *)b->mAnmModel1.data.transforms;
+    local = *(Mtx43 *)b->mAnmModel1.data.transforms;
     MulMat4x3Mat4x3(&local, &data_020a0e68, &data_020a0e68);
-    b->mCenterX = data_020a0e68.w[9];
-    b->mCenterY = data_020a0e68.w[10];
-    b->mCenterZ = data_020a0e68.w[11];
+    b->mCenterX = data_020a0e68.t.x;
+    b->mCenterY = data_020a0e68.t.y;
+    b->mCenterZ = data_020a0e68.t.z;
     SubVec3((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
     Vec3_LslInPlace((void *)&b->mCenterX, 3);
     AddVec3((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
@@ -2704,7 +2705,7 @@ void daStar_c::func_ov002_020e7934(void* cam) {
  * counts up, so 0x1d6 (set by STATE_LAND) and 0x1b6 reach 0x1f4 after 30 and
  * 62 frames: that restores the saved view, and 0x1f5 ends the cutscene. */
 void daStar_c::func_ov002_020e763c() {
-    Vec3 v;
+    VecFx32 v;
     dCamera_c *cam;
 
     if ((gNextActorUpdateMask & CUTSCENE_FLAG) == 0)
@@ -2714,7 +2715,7 @@ void daStar_c::func_ov002_020e763c() {
         return;
 
     v.x = mPosX;
-    cam = (dCamera_c *)data_0209f318;
+    cam = data_0209f318;
     v.y = mPosY;
     v.z = mPosZ;
 
@@ -2806,7 +2807,7 @@ void daStar_c::func_ov002_020e7554() {
         }
     } while (cnt < 5);
 
-    idx = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) % (unsigned int)cnt;
+    idx = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) % (unsigned int)cnt;
     found = arr[idx];
     if (found == 0) return;
     mMarkerID = found->uniqueID;
@@ -2891,7 +2892,7 @@ ret0:
  * marker and gets the coin-reward flag. */
 void daStarBase_c::SpawnRedCoinStarIfNecessary()
 {
-    struct Vec3 v;
+    VecFx32 v;
     daStar_c *star;
     int y;
     if (mBits.spawned) return;
@@ -2932,7 +2933,7 @@ void daStar_c::func_ov002_020e7218(char* player, int gate) {
         pos[1].x = pos[0].x;
         pos[1].z = pos[0].z;
         pos[1].y = pos[0].y;
-        SpawnNumber(pos[1], data_0209f310[a->mPlayerNo], b, 0x15, a);
+        SpawnNumber(pos[1], gNumStageStars[a->mPlayerNo], b, 0x15, a);
     }
     mBits.relink = 1;
     func_ov002_020e7554();

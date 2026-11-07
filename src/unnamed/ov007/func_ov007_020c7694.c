@@ -2,7 +2,7 @@
 #include "Ov007Spring.h"
 
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(Vector3 *v);
+extern int LenVec3(const Vector3 *v);
 
 /* Sets each link's rest offset and length from the rest points: link i
  * runs from rest[i] to rest[i + 1], and in a closed list (flags bit 1) the

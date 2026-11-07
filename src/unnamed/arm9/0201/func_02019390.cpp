@@ -1,5 +1,6 @@
 //cpp
 #include "OAM.h"
+#include "dGraph_c.h"
 
 extern "C" {
 
@@ -10,12 +11,8 @@ extern void func_0200f4b4(void);
 extern void func_0200f468(void);
 extern void func_02018ec0(void);
 
-typedef int (*VFN)(void* o);
-typedef struct Obj {
-    VFN* vt;
-} Obj;
-
-extern Obj* data_0209d4a8;
+/* The scene's graph callback (d_s_dsmt.cpp and the other scenes set it). */
+extern dGraph_c::callback_c *data_0209d4a8;
 
 /* The main loop's frame start (func_020197b8, step 2). The scene's
    GraphCallback0 (data_0209d4a8) returning 0 skips OAM::Reset, the
@@ -25,9 +22,9 @@ extern Obj* data_0209d4a8;
    way. */
 void func_02019390(void)
 {
-    Obj* o = data_0209d4a8;
-    if (o != 0) {
-        if (o->vt[0](o) == 0) {
+    dGraph_c::callback_c *callback = data_0209d4a8;
+    if (callback != 0) {
+        if (callback->GraphCallback0() == 0) {
             func_0202345c();
             func_02018efc();
             return;

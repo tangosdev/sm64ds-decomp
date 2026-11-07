@@ -1,5 +1,7 @@
-extern int *data_020a89ac;
-void WM_SetCallbackTable(int i, int val) {
-    int *arr = data_020a89ac;
-    (arr + i)[5] = val;
+#include "private/wm_views.h"
+
+extern WMArm9Buf *data_020a89ac;
+
+void WM_SetCallbackTable(int apiid, void *callback) {
+    data_020a89ac->callbackTable[apiid] = callback;
 }

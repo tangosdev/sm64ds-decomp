@@ -1,6 +1,6 @@
 extern int WM_Reset(void *cb);
 extern void func_02040aa4(void);
-extern void func_020402a0(void);
+extern void func_020402a0(void *arg); /* the WM_Reset callback */
 extern int data_020a0f94;
 
 int Wireless_Reset(void)

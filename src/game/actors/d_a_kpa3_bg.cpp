@@ -7,7 +7,8 @@
  * destructor is under opt_propagation on and defer_codegen off, so it
  * emits D1, D0, then a D2 the cartridge does not keep, ahead of the
  * deferred functions. opt_propagation off stays last: deferred codegen
- * of func_ov060_02117db8 uses that setting. Do not move it.
+ * of func_ov060_02117db8 uses that setting (without it, 89 of its 202
+ * words differ). Do not move it.
  *
  * Behavior runs data_ov060_0211b1ac[mState]: 0 finds Bowser, 1 watches
  * him, 2 drops the platform. The three handlers are declared in the
@@ -18,7 +19,7 @@
  * pointer-to-member to the table's void handler type.
  *
  * __sinit at the end of this file emits compiler-numbered statics; they
- * compile as @666..@691 and the manifest maps them to the ROM's
+ * compile as @657..@681 and the manifest maps them to the ROM's
  * @456..@479 and @506. mwcc's counter for those names advances for
  * named variables, named parameters (prototypes included) and some
  * compiler temporaries declared before them (`new daKpa3Bg_c` alone
@@ -27,13 +28,28 @@
  * names are there for the count:
  * - InitResources loads the model through the named local bmd.
  * - func_ov060_021180e0 steps its timer through two named locals.
- * - func_ov060_02117db8 keeps live, p and py (never read) and steps
- *   mVertSpeed/mPosY through the speed/posY pointers.
  *
  * leftovers:
  * - The three handlers keep their address names.
  * - func_ov060_02117db8 parses as C (cplusplus off): the same body as
- *   C++ DIFFs. It reaches the members through a struct daKpa3Bg_c *.
+ *   C++ DIFFs. Re-measured for #821, because this is the last hand-spelled
+ *   mangled method in the tree and the language-mode metric counts it.
+ *   `#pragma cplusplus off` is what forces the hand-spelling -- C has no
+ *   member syntax -- so the question is only whether the pragma is needed,
+ *   and it is. With the identical body and only the language mode changed
+ *   (an extern "C" free function under the mangled name, nothing else
+ *   touched), 89 of the 202 words differ, and the real member
+ *   `void daKpa3Bg_c::func_ov060_02117db8()` differs in the same 89. The
+ *   shape is right throughout -- instruction for instruction the same
+ *   schedule -- but the C++ frontend keeps one more value live: it saves
+ *   seven callee-saved registers against the cartridge's six, reserves
+ *   0x4c of stack against 0x48, and holds `this` in r6 where the ROM holds
+ *   it in r8, which renames registers through the whole body. Six
+ *   respellings of the locals were tried against that (dropping the yimm
+ *   staging, initialising it at its declaration, declaring it first,
+ *   `state` as int, `saved` non-volatile, `saved` declared last): every one
+ *   is still 89 words or worse, so it is the frontend's allocation order
+ *   and not the spelling. It reaches the members through a struct daKpa3Bg_c *.
  *   Earthquake, PoofDustAt and MarkForDestruction go through
  *   kpaCallEarthquake, kpaCallPoof and kpaCallDestroy. A member call in
  *   the C body DIFFs; the bridges inline to the same calls.
@@ -53,6 +69,7 @@
 #include "daKpa3Bg_c.h"
 #include "daKpa_c.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx.h"
 
 struct BMD_File;
 struct KCL_File;
@@ -60,11 +77,9 @@ struct CLPS_Block;
 
 extern "C" {
 
-typedef struct Vec3 { int x, y, z; } Vec3;
-
-int *Vec3_AsrInPlace(Vec3 *v, int n);
+int *Vec3_AsrInPlace(VecFx32 *v, int n);
 /* Unnamed on purpose: see the @NNN note in the banner. */
-void MulVec3Mat4x3(Vec3 *, void *, void *);
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 void func_02012694(unsigned int, void *);
 int CopyTexPalFromLevelModel(void *);
 
@@ -78,7 +93,7 @@ typedef struct Kpa3BgPieceSpot {
 
 extern s16 data_02082214[];
 extern Kpa3BgPieceSpot data_ov060_02119564[10];
-extern int data_0209b3ec;
+extern Matrix4x3 data_0209b3ec;
 
 extern SharedFilePtr *data_ov060_02119514[];
 extern SharedFilePtr *data_ov060_0211953c[];
@@ -88,9 +103,9 @@ extern int data_0208e738;
 /* Three parameter names dropped: kpaCallDestroy took those @NNN slots. */
 extern void hold_d_a_kpa3_bg(void *, KCL_File *, const Matrix4x3 &, int fix, short sh,
                              CLPS_Block &b);
-void func_020393d4(void *p, void *v);
-void func_020393c4(void *p, void *v);
-void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
+void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
 
 // local extern: defined below as a free function (cplusplus off has no member syntax); the header declares the member spelling for the PMF table.
@@ -127,9 +142,8 @@ extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
 /* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
    collider and forwards the platform and the touching actor into
    func_ov060_021183cc. */
-extern "C" void func_ov060_021183f4(void *collider, daKpa3Bg_c *self, dActor_c *other)
-{
-    func_ov060_021183cc(self, other);
+extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    func_ov060_021183cc(static_cast<daKpa3Bg_c *>(owner), other);
 }
 
 // @symbol func_ov060_021183cc
@@ -157,9 +171,8 @@ s32 daKpa3Bg_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
                               mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
-    func_020393d4(&mMeshCollider,
-                  (void *)&dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&func_ov060_021183f4);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    func_020393c4(&mMeshCollider, &func_ov060_021183f4);
     mMeshCollider.Enable(this);
     mKoopaUniqueId = 0;
     mTouchedKoopa = 0;
@@ -245,10 +258,10 @@ void daKpa3Bg_c::func_ov060_021180e0()
 
 /* The C body cannot spell a member call. These inline to the direct calls.
    They sit above the @symbol so that marker stays on the C function. */
-static inline void kpaCallEarthquake(daKpa3Bg_c *self, Vec3 *v, int fix) {
+static inline void kpaCallEarthquake(daKpa3Bg_c *self, VecFx32 *v, int fix) {
     self->Earthquake(*(const Vector3 *)v, fix);
 }
-static inline void kpaCallPoof(daKpa3Bg_c *self, Vec3 *v) {
+static inline void kpaCallPoof(daKpa3Bg_c *self, VecFx32 *v) {
     self->PoofDustAt(*(const Vector3 *)v);
 }
 static inline void kpaCallDestroy(daKpa3Bg_c *self) {
@@ -272,9 +285,9 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
     volatile int saved[3];
     int yimm;
     int v[6];
-    Vec3 eq;
-    Vec3 dust1;
-    Vec3 dust2;
+    VecFx32 eq;
+    VecFx32 dust1;
+    VecFx32 dust2;
     u16 state;
     int row;
     int ang;
@@ -282,9 +295,6 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
     int bx, bz, k;
     int x, y, z;
     int a;
-    int live = 2; /* live, p and py are never read: they keep the @NNN count */
-    int *p;
-    int *py;
 
     state = self->mPhase;
     if (state == 0 || state == 0x16) {
@@ -301,8 +311,8 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         v[0] = (s16)data_02082214[(ang >> 4) * 2] * (s16)0x366 + (data_ov060_02119564[row].x << 12);
         v[2] = (s16)data_02082214[(ang >> 4) * 2 + 1] * (s16)0x366 +
                (data_ov060_02119564[self->mVariant].z << 12);
-        Vec3_AsrInPlace((Vec3 *)v, 3);
-        MulVec3Mat4x3((Vec3 *)v, &data_0209b3ec, &self->mCamSpacePosX);
+        Vec3_AsrInPlace((VecFx32 *)v, 3);
+        MulVec3Mat4x3((Vector3 *)v, &data_0209b3ec, &self->mCamSpacePos);
         func_02012694(0xbc, &self->mCamSpacePosX);
         self->mCamSpacePosX = saved[0];
         self->mCamSpacePosY = saved[1];
@@ -353,14 +363,10 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         kpaCallPoof(self, &dust2);
     }
 
-    {
-        int *speed = &self->mVertSpeed;
-        int *posY = &self->mPosY;
-        *speed += self->mVertAccel;
-        if (self->mVertSpeed <= self->mTerminalVelocity)
-            self->mVertSpeed = self->mTerminalVelocity;
-        *posY += self->mVertSpeed;
-    }
+    self->mVertSpeed += self->mVertAccel;
+    if (self->mVertSpeed <= self->mTerminalVelocity)
+        self->mVertSpeed = self->mTerminalVelocity;
+    self->mPosY += self->mVertSpeed;
     if (self->mPhase > 0x12cu)
         kpaCallDestroy(self);
     self->mPhase++;

@@ -25,8 +25,8 @@ typedef struct {
     unsigned int a, b, c, d;
 } Args;
 
-extern int FS_ReadFile(int a, int b, int c);
-extern void FS_InitFile(int *s);
+extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
+extern void FS_InitFile(FSFile *p_file);
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, unsigned int image_top,
                              unsigned int image_bottom, unsigned int file_index);
@@ -60,7 +60,7 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
 
         if (a != 0) {
             base = a->prop.file.pos - a->prop.file.top;
-            if (FS_ReadFile((int)a, (int)b, 0x160) < 0x160) {
+            if (FS_ReadFile(a, b, 0x160) < 0x160) {
                 remain = 0;
             }
         } else {
@@ -69,7 +69,7 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
             if (ctx->f80 == 0) {
                 ctx->f80 = 0x1000000;
             }
-            FS_InitFile((int *)&file);
+            FS_InitFile(&file);
             node = FS_FindArchive(data_0209a080, 3);
             FS_OpenFileDirect((char *)&file, node, 0, ctx->f80 + 0x88, -1);
             a = &file;
@@ -83,19 +83,19 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
             cur += 0x160;
             remain -= 0x160;
             func_0205d368((int *)a, base + ctx->wr, 0);
-            FS_ReadFile((int)a, (int)cur, ctx->f2c);
+            FS_ReadFile(a, cur, ctx->f2c);
             cur += ctx->f2c;
             remain -= ctx->f2c;
 
             func_0205d368((int *)a, base + ctx->f30, 0);
-            FS_ReadFile((int)a, (int)cur, ctx->f3c);
+            FS_ReadFile(a, cur, ctx->f3c);
             cur += ctx->f3c;
             remain -= ctx->f3c;
         }
 
         if (remain >= 0x88) {
             func_0205d368((int *)a, base + ctx->f80, 0);
-            FS_ReadFile((int)a, (int)cur, 0x88);
+            FS_ReadFile(a, cur, 0x88);
             result = 1;
         }
 

@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "IRQ.h"
+#include "nitro/os/alarm.h"
 
 extern "C" {
 
@@ -13,7 +14,6 @@ typedef struct {
     u8 suspended;   /* 0x40 */
 } Struct_0201a96c;
 
-typedef void (*OSAlarmHandler)(void *);
 extern void func_0201aa50(void *, long long, OSAlarmHandler, void *);
 extern void func_0201aaa4(void *);
 

@@ -13,8 +13,8 @@ src/engine/model/d_ext_model.cpp
 # under SM64DS_PORT_GATE4B. AddToCommonModelDataArr and SetPolygonID live
 # in d_ext_model.cpp with the rest of the class.
 src/engine/model/Model4.cpp
-# ModelComponents::Render: HOST copy in port/unmatched -- the matched TU
-# passes the material index by leaving it in r1 (see the file header there).
+# ModelComponents::Render: HOST copy in port/unmatched, written while the
+# matched TU left the material index in r1 (see the file header there).
 port/unmatched/ModelComponents_Render.cpp
 # ModelComponents::UpdateVertsUsingBones/UpdateBones + the 7 helpers between
 # them are one production translation unit; the four shards this slice used

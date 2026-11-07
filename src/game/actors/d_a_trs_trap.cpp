@@ -40,7 +40,7 @@
  * deslop leftovers:
  * - dBgW_KcMbg::SetFile keeps its mangled TU-local spelling: its signature
  *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
- * - func_020393d4/func_020393c4 install the BeforeClsn/unk_1c callback words;
+ * - func_020393d4/func_020393c4 install the before-collision and stood-on words;
  *   dBgW carries no setter, and dBgW.h itself blesses this spelling.
  * - The ROM re-reads the loaded KCL from filePtr rather than keeping
  *   dBgW_Kc::LoadFile's return.
@@ -58,6 +58,17 @@
  *   `(long long)(int)&mAngleX` launder. The plain member, `+=`,
  *   *(s16 *)&mAngleX, `(int)&mAngleX` and a pointer local all change its
  *   codegen.
+ *   Re-measured for #821 by halves, which is the part worth recording: the
+ *   OUTER `(long long)` is free of all seventeen of this file's functions --
+ *   drop it at all four sites and func_ov063_0211cb54 still reproduces --
+ *   but it is NOT free of the file. It lowers mwcc's per-TU @NNN local
+ *   numbering, so __sinit_d_a_trs_trap.cpp comes back WRONG from
+ *   prepush_linkcheck (right bytes, relocations keyed to names the manifest
+ *   does not map). Landing the half-removal means re-keying this TU's
+ *   defined_symbol_renames the way ov090/daMenbo_c was; until someone does,
+ *   the outer cast stays. Same result for d_a_mip.cpp and
+ *   d_a_obj_block_s.cpp; d_s_stage_methods.cpp's one pair renumbered nothing
+ *   and its outer cast is gone.
  * - Behavior names mStateTimer directly at both sites (TRAP-2709
  *   experiment: unified spelling matches).
  * - +0x418 on the spawned BOOK_SWITCH is daBookGen_c's, which has no header;
@@ -134,8 +145,8 @@ void func_ov063_0211c684(char *p);
 void func_ov063_0211c6f8(daTrsTrap_c *c);
 void func_ov063_0211c82c(char *p);
 /* dBgW callback-word stores (see above). */
-void func_020393d4(int *p, int v);
-void func_020393c4(int *p, int v);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
 extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
@@ -544,8 +555,8 @@ int daTrsTrap_c::InitResources()
         }
     }
 
-    func_020393d4((int *)&mMovingMeshCollider, (int)&dBgW::UpdatePosAndAngs);
-    func_020393c4((int *)&mMovingMeshCollider, (int)&daTrsTrap_c::OnMeshClsnTouch);
+    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
+    func_020393c4(&mMovingMeshCollider, &daTrsTrap_c::OnMeshClsnTouch);
     mMovingMeshCollider.Enable(this);
 
     if (mIndex == 2) {

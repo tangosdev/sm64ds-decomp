@@ -32,6 +32,7 @@ enum daRNk_c_AssetId {
 
 #include "daRNk_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daRFlag_c.h"
 #include "daIbl_c.h"
 #include "daPly_c.h"
@@ -43,6 +44,8 @@ enum daRNk_c_AssetId {
 #include "math/CalcLib.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -73,12 +76,13 @@ enum { kAltLevelID = 0x18 };    /* LEVEL_ID with its own offer/result message ID
 
 /* Ids by when they play. */
 enum {
-    kSfxFootstep = 0xe4,        /* a foot comes down in the run cycle */
-    kSfxTurnToTalk = 0xec,      /* Koopa has finished turning to face the player */
-    kSfx4D = 0x4d,              /* played at the race start (two positional calls) and, in 2D, when the post-race talk begins; the sound itself is unidentified */
-    kMusicRace = 0x41,          /* loaded on layer 2 when the race starts, stopped when it ends */
-    kPtclFootstepDust = 0xf9,   /* puff beside a foot */
-    kPtclLandingDust = 0xb2     /* puff where he lands from a jump (dActor_c::HugeLandingDustAt's id too) */
+    kSfxFootstep = 0xe4,   /* a foot comes down in the run cycle */
+    kSfxTurnToTalk = 0xec, /* Koopa has finished turning to face the player */
+    /* Played at the race start (two positional calls) and, in 2D, when the
+     * post-race talk begins; the sound itself is unidentified. */
+    kSfx4D = 0x4d,
+    kMusicRace = 0x41,       /* loaded on layer 2 when the race starts, stopped when it ends */
+    kPtclFootstepDust = 0xf9 /* puff beside a foot */
 };
 
 /* Distances, in fix12 units (0x1000 = 1.0; the numbers here are the whole-unit
@@ -171,14 +175,11 @@ extern short data_02082214[];   /* SINE_TABLE: {sin, cos} pairs in fix12, indexe
 /* Play2D(3, id): a sound with no position. */
 extern unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
-extern s8 gShowRaceTimer;           /* nonzero: dMeter_c draws the race timer */
+extern u8 gShowRaceTimer;            /* nonzero: dMeter_c draws the race timer */
 extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */
 extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);
-extern struct Matrix4x3 data_020a0e68;  /* MATRIX_SCRATCH_PAPER */
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
 /* Parameter names keep this TU's @NNN. */
@@ -320,12 +321,8 @@ void daRNk_c::func_ov062_0211aac0(){
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, this->mAngleY);
-    {
-        struct M43w {
-            int w[12];
-        }; /* array-wrapper copy: keeps C's block copy under -lang c++ */
-        *(M43w *)&this->mAnmModel.mat4x3 = *(M43w *)&data_020a0e68;
-    }
+    /* Flat copy: assigning Matrix4x3 grows .text by 0x1c bytes. */
+    *(Mtx43 *)&this->mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
 }
 

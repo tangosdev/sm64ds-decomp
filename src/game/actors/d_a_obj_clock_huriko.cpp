@@ -47,6 +47,7 @@ enum d_a_obj_clock_huriko_AssetId { ASSET_C2_HURIKO_BMD = 0x05b3 };
 #include "daObjClockHuriko_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
+#include "math/MtxStack.h"
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4. The manifest aliases those undefined members onto the ROM
@@ -56,11 +57,7 @@ struct ClockHurikoModelFilePtr : SharedFilePtr {
     ~ClockHurikoModelFilePtr();
 };
 
-extern "C" {
-extern void Matrix4x3_FromRotationZXYExt(void *, int, int, int);
-}
-
-extern signed char data_02092110[];
+extern signed char data_02092110;
 extern ClockHurikoModelFilePtr data_ov013_02112280;
 
 /* -------------------------------------------------------------------------- */
@@ -100,7 +97,7 @@ s32 daObjClockHuriko_c::InitResources() {
  * The swing angle is dActor_c::mAngleZ. Its separately materialized pointer
  * below preserves the ROM's load/read-modify-write order under 2004/b56. */
 s32 daObjClockHuriko_c::Behavior() {
-    if (data_02092110[0] <= 0) {
+    if (data_02092110 <= 0) {
         s16 *angleZ = &mAngleZ;
         /* The test reads the field instead of going through angleZ, and that is
            load-bearing under 2004/b56: the ROM tests the field directly

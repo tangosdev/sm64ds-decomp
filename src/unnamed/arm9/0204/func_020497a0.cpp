@@ -1,20 +1,9 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
+#include "CaptureEffect.h"
 
 extern "C" {
-
-typedef struct EchoChan {
-    int l;
-    int r;
-} EchoChan;
-
-/* The capture-effect state at data_020a4c64 (func_020499bc's Ctx): the
-   kind, user callback and its argument, then this effect's delay line. */
-typedef struct EchoWork {
-    char pad[0xc];
-    EchoChan ch[24]; /* 0x0c -- cleared (0xc0 bytes) when the kind changes */
-} EchoWork;
 
 /* Capture effect 2, a feedback cross-echo: each output sample is the input
    plus the delay-line entry from 24 samples earlier, saturated to s16. What
@@ -25,7 +14,7 @@ typedef struct EchoWork {
    Both buffers are then flushed from the data cache for the sound
    hardware. */
 
-void func_020497a0(s16 *p0, s16 *p1, u32 len, EchoWork *st) {
+void func_020497a0(s16 *p0, s16 *p1, u32 len, CaptureEffect *st) {
     int n = len >> 1;
     int j;
     int pos = 0;
@@ -36,8 +25,8 @@ void func_020497a0(s16 *p0, s16 *p1, u32 len, EchoWork *st) {
     while (n > pos + 24) {
         for (j = 0; j < 24; j++) {
             int idx = j + pos;
-            int v0 = p0[idx] + st->ch[j].l;
-            int v1 = p1[idx] + st->ch[j].r;
+            int v0 = p0[idx] + st->work.echo[j].l;
+            int v1 = p1[idx] + st->work.echo[j].r;
             int s0 = v0;
             int s1;
             if (v0 < -0x8000) {
@@ -53,8 +42,8 @@ void func_020497a0(s16 *p0, s16 *p1, u32 len, EchoWork *st) {
                 s1 = 0x7fff;
             }
             p1[idx] = s1;
-            st->ch[j].l = (v1 + 1) >> 2;
-            st->ch[j].r = (v0 + 1) >> 2;
+            st->work.echo[j].l = (v1 + 1) >> 2;
+            st->work.echo[j].r = (v0 + 1) >> 2;
         }
         pos += 24;
     }
@@ -62,8 +51,8 @@ void func_020497a0(s16 *p0, s16 *p1, u32 len, EchoWork *st) {
     rem = n - pos;
     for (n = 0; n < rem; n++) {
         int idx = n + pos;
-        int v0 = p0[idx] + st->ch[n].l;
-        int v1 = p1[idx] + st->ch[n].r;
+        int v0 = p0[idx] + st->work.echo[n].l;
+        int v1 = p1[idx] + st->work.echo[n].r;
         if (v0 < -0x8000) {
             v0 = -0x8000;
         } else if (v0 >= 0x8000) {
@@ -80,15 +69,15 @@ void func_020497a0(s16 *p0, s16 *p1, u32 len, EchoWork *st) {
 
     shift = 24 - rem;
     for (i = 0; i < shift; i++) {
-        st->ch[i].l = st->ch[i + rem].l;
-        st->ch[i].r = st->ch[i + rem].r;
+        st->work.echo[i].l = st->work.echo[i + rem].l;
+        st->work.echo[i].r = st->work.echo[i + rem].r;
     }
 
     for (i = 0; i < rem; i++) {
         int idx = i + pos;
         int dst = i + 24 - rem;
-        st->ch[dst].l = (p1[idx] + 1) >> 2;
-        st->ch[dst].r = (p0[idx] + 1) >> 2;
+        st->work.echo[dst].l = (p1[idx] + 1) >> 2;
+        st->work.echo[dst].r = (p0[idx] + 1) >> 2;
     }
 
     CP15::FlushAndInvalidateDataCache((u32)p0, len);

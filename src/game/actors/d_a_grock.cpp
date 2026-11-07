@@ -52,6 +52,8 @@ enum daGrock_c_AssetId { ASSET_CV_GORO_ROCK_BMD = 0x05d4 };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "cstd.h"
+#include "nitro/fx/fx.h"
+#include "LevelRng.h"
 
 /* Kind in param1's low nibble. */
 enum {
@@ -73,7 +75,7 @@ struct GrockModelFilePtr : SharedFilePtr {
 
 /* 02112544 copies three words as a value. The empty constructor and
  * destructor are why that copy matches; a POD Vec3 changes the function.
- * InitResources keeps its own POD Vec3 inside the function. */
+ * InitResources builds its offsets in the POD VecFx32. */
 struct Vec3 {
     int x, y, z;
     Vec3() {}
@@ -87,19 +89,13 @@ struct AngleWords {
     u16 w[3];
 };
 
-/* arm9 C helpers with no shared header. func_02012694 has the same body as
- * Sound::PlayBank3 (0x02012664); the ROM calls this copy. func_0200f760
- * clears the cylinder flags bit 2, then sets it when the closest player is
- * vanish Luigi (MakeVanishLuigiWork is the other copy). */
+/* arm9 C helper with no shared header. func_02012694 has the same body as
+ * Sound::PlayBank3 (0x02012664); the ROM calls this copy. */
 extern "C" {
 extern void func_02012694(unsigned int id, void *pos);
-extern void func_0200f760(void *self, void *cyl);
 }
 
-struct LevelRng;
-
 extern s16 data_02082214[];
-extern LevelRng data_0209e650;
 extern GrockModelFilePtr data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
@@ -227,8 +223,8 @@ void daGrock_c::HandleMeshCollision() {
             mRollSoundID = Sound::PlayLong(mRollSoundID, 3, 0x8a, mCamSpacePos, 0);
         }
         {
-            int *vx = (int *)(int)&mSpeedX;
-            int *vz = (int *)(int)&mSpeedZ;
+            int *vx = (int *)&mSpeedX;
+            int *vz = (int *)&mSpeedZ;
             *vx = *vx + normal.x * 5;
             *vz = *vz + normal.z * 5;
         }
@@ -283,7 +279,7 @@ int daGrock_c::Render() {
 // @symbol _ZN9daGrock_c8BehaviorEv
 int daGrock_c::Behavior() {
     if (mType >= kGrockRolling) {
-        func_0200f760(this, &mdCcAcPos_c);
+        func_0200f760(&mdCcAcPos_c);
         HandleCylinderHit();
         if (mDeathState == 8)
             return 1;
@@ -292,7 +288,7 @@ int daGrock_c::Behavior() {
             s16 *roll;
 
             ApplyGravityAndMove();
-            roll = (s16 *)(int)&mAngleX;
+            roll = (s16 *)&mAngleX;
             *roll = (s16)(*roll + (mHorzSpeed >> 12) * 0x43);
             mAngleY = mPrevAngleY;
             HandleMeshCollision();
@@ -336,14 +332,14 @@ int daGrock_c::Behavior() {
         if (dist > 0x5dc000) {
             u32 threshold = (dist < 0x1770000) ? 0x70 : 0xe0;
             if (*(u16 *)&mStateTimer >= threshold) {
-                u8 *spawned = (u8 *)(int)&mSpawnCount;
+                u8 *spawned = (u8 *)&mSpawnCount;
                 Vector3_16 rot;
                 u32 rnd;
 
                 *spawned = (u8)(*spawned + 1);
                 *(u16 *)&mStateTimer = 0;
                 *(AngleWords *)&rot = *(AngleWords *)&mPrevAngleX;
-                rnd = (u32)RandomIntInternal((int *)&data_0209e650);
+                rnd = (u32)RandomIntInternal(&data_0209e650.value);
                 rot.y = rot.y + (rnd >> 16) % 0xc00;
                 if (mType == kGrockStarSpawner && mSpawnCount >= 5 && mStarRockOut == 0) {
                     daGrock_c *child;
@@ -360,7 +356,7 @@ int daGrock_c::Behavior() {
             }
         }
         {
-            u16 *timer = (u16 *)(int)&mStateTimer;
+            u16 *timer = (u16 *)&mStateTimer;
             *timer = (u16)(*timer + 1);
         }
     }
@@ -369,9 +365,6 @@ int daGrock_c::Behavior() {
 
 // @symbol _ZN9daGrock_c13InitResourcesEv
 int daGrock_c::InitResources() {
-    struct Vec3 {
-        s32 x, y, z;
-    };
 
     mType = (u8)(param1 & 0xf);
     mStarID = 0xff;
@@ -391,14 +384,14 @@ int daGrock_c::InitResources() {
         mRollSoundID = 0;
 
         if (mType == kGrockStill) {
-            Vec3 offset;
+            VecFx32 offset;
             mStarID = (u8)((param1 >> 8) & 0xf);
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;
             mdCcAcPos_c.Init(this, *(Vector3 *)&offset, 0x10e000, 0x226000, 0x200004, 0x3c0);
         } else {
-            Vec3 offset;
+            VecFx32 offset;
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;

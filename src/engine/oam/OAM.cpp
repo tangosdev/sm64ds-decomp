@@ -30,9 +30,9 @@
  * - The two Fix12 Render overloads keep mangled `extern "C"` spellings
  *   (wall above); RenderSub's call sites keep them as one-declared
  *   callee.
- * - data_020755a0/data_020755ac stay `unsigned char[]` table externs --
- *   GetObjWidth/GetObjHeight read single bytes out of stride-4 slots and
- *   the double cast is load-bearing.
+ * - GetObjWidth/GetObjHeight read single bytes out of the stride-4
+ *   slots in data_020755a0/data_020755ac, and the double cast is
+ *   load-bearing.
  */
 
 #pragma defer_codegen off
@@ -87,14 +87,14 @@ extern int data_0209e67c[];
 extern int data_0209e694[];
 extern OamAttr data_0209ea74[];  /* sub OAM staging buffer: 128 x 8B */
 extern s16 data_02082214[];      /* sin/cos table, indexed by (angle >> 4) * 2 */
-extern unsigned char data_020755a0[];  /* OBJ width table, stride 4 */
-extern unsigned char data_020755ac[];  /* OBJ height table, stride 4 */
+extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
+extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
 extern "C" {
 void func_020566dc(const void *src, unsigned int offset, unsigned int count);
 void func_02056674(const void *src, unsigned int offset, unsigned int count);
 void MultiCopy_Int(int *dst, int *src, int len);
-void MultiCopy32Bytes(int *src, int *dst, int len);
+void MultiCopy32Bytes(const void *src, void *dst, int len);
 
 int func_0202043c(int thiz);
 }
@@ -103,24 +103,20 @@ int func_0202043c(int thiz);
 extern "C" {
 
 /* @symbol func_02020820 */
-void func_02020820(char *self, int *src, int arg2, int arg3, u8 arg5, u8 arg6)
-{
-    OamAnimation *anim = (OamAnimation *)self;
+void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine) {
     anim->frames = (const OamAnimFrame *)src[0];
     anim->frameCount = src[1];
-    func_0202043c((int)self);
+    func_0202043c((int)anim);
     anim->palette = -1;
     anim->priority = -1;
     anim->scaleX = 0x1000;
     anim->scaleY = 0x1000;
     anim->rotation = 0;
-    anim->loops = (u8)arg3;
-    anim->enabled = (u8)arg5;
-    anim->affine = (u8)arg6;
-    /* 0x28: no reader in the tree yet, so its role is unproven. */
-    *(int *)(self + 0x28) = arg2;
+    anim->loops = (u8)loops;
+    anim->enabled = enabled;
+    anim->affine = affine;
+    anim->screen = screen;
 }
-
 }
 
 /* -------------------------------------------------------------------------- */
@@ -727,8 +723,8 @@ void OAM::Reset()
         ((OAMEntry *)data_0209e674)[0].a = 0xc0;
         ((OAMEntry *)data_0209e674)[0].b = 0;
         MultiCopy_Int((int*)data_0209e674, data_0209e67c, 0x18);
-        MultiCopy32Bytes((int*)data_0209e674, data_0209e694, 0x3e0);
-        MultiCopy32Bytes((int*)data_0209e674, (int*)data_0209ea74, 0x400);
+        MultiCopy32Bytes(data_0209e674, data_0209e694, 0x3e0);
+        MultiCopy32Bytes(data_0209e674, data_0209ea74, 0x400);
         data_0209e670 = 0;
         data_0209e66c = 0;
     }

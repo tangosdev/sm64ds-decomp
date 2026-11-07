@@ -83,10 +83,6 @@
  *   the hitter's param1 picks the prize column (it is clamped to 0..3 and
  *   the table has no column names); and why a lost cap swaps the prize for a
  *   BOMBHEI.
- *   data_ov002_0210da58 and gPFlower* stay char[]. A SharedFilePtr decl
- *   would outvote the char[] spelling that daKuriKing_c, daFeather and
- *   PowerFlower share, and check_decl_agreement would flag those files; and
- *   Init's LoadFile still treats each slot as the model handle.
  *
  * Native file-handle and dispatch-table storage is owned in .bss and
  * initialized by this TU. Its complete RTTI, six SpawnInfo profiles and
@@ -139,6 +135,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "daShl_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "LevelRng.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -176,7 +173,7 @@ enum {
     ACTOR_FEATHER = 345       /* 0x159 */
 };
 
-/* SaveData::flags1 (data_0209caa0[1]) bit 31. Its meaning is not named in
+/* SaveData::flags1 (data_0209caa0.file.flags1) bit 31. Its meaning is not named in
    the tree; this class only tests it. While it is CLEAR, an actor 20
    (HATENA_BLOCK) is drawn as the animated model (mAnmModel), Behavior only
    advances that animation (while IDLE) and keeps the collider off, and the mega-player
@@ -187,31 +184,28 @@ extern "C" {
 
 extern signed char gCurrentSublevel;
 extern int data_0209f32c;
-extern int data_0209e650;
 extern unsigned char data_0209f2d8;
-extern char data_0209f318[];
+extern dCamera_c *data_0209f318;
 extern char data_020a0edc[];
-extern int data_0209caa0[];
+extern SaveBlock data_0209caa0;
 extern s16 data_02082214[];
 
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr data_ov002_0210d9e0;
-/* da58 / gPFlower*: SharedFilePtr here would outvote the char[]
-   spelling daKuriKing_c, daFeather and PowerFlower share, so
-   check_decl_agreement would flag those files. */
+/* The ov002 model-file handles (src/ov002_handles.cpp defines all of them). */
 extern SharedFilePtr data_ov002_0210da18;
 extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov002_0210da40;
-extern char data_ov002_0210da58[];
-extern char gPFlowerOpenModelFile[];
-extern char gPFlowerCloseModelFile[];
+extern SharedFilePtr data_ov002_0210da58;
+extern SharedFilePtr gPFlowerOpenModelFile;
+extern SharedFilePtr gPFlowerCloseModelFile;
 extern CLPS_Block data_ov002_0210d954;
 
 extern int RandomIntInternal(int *seed);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern int DecIfAbove0_Short(void *p);
+extern u16 DecIfAbove0_Short(u16 *p);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
@@ -414,7 +408,7 @@ int daObjHatenaBlock_c::InitResources()
         int b16 = !(actorID != ACTOR_VS_ITEM_BLOCK);
         if (b16 != 0) {
             mContentType = 0;
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
+            dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
         }
     }
 
@@ -441,18 +435,18 @@ int daObjHatenaBlock_c::InitResources()
         dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
         break;
     case CONTENT_POWER_UP_7:
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
         dExtSimpleModel_c::LoadFile(data_ov002_0210d9e0);
         break;
     case CONTENT_POWER_UP_5:
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov002_0210da58);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(data_ov002_0210da58);
+        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
         break;
     case CONTENT_POWER_UP_6:
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerOpenModelFile);
-        dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gPFlowerCloseModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerOpenModelFile);
+        dExtSimpleModel_c::LoadFile(gPFlowerCloseModelFile);
         break;
     }
 end:
@@ -491,7 +485,7 @@ int daObjHatenaBlock_c::Behavior()
         }
         goto end;
     }
-    if ((data_0209caa0[1] & SAVE_FLAGS1_BIT31) == 0) {
+    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
         int b = (int)(actorID == ACTOR_HATENA_BLOCK);
         if (b != 0) {
             mAnmModel.Advance();
@@ -531,7 +525,7 @@ int daObjHatenaBlock_c::Render()
 {
     if (mState == STATE_POPPED)
         goto done;
-    if ((data_0209caa0[1] & SAVE_FLAGS1_BIT31) == 0) {
+    if ((data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31) == 0) {
         int b = (actorID == ACTOR_HATENA_BLOCK);
         if (b != 0) {
             mAnmModel.Render(0);
@@ -559,7 +553,7 @@ int daObjHatenaBlock_c::CleanupResources()
 
     b = (int)(actorID == ACTOR_VS_ITEM_BLOCK);
     if (b)
-        ((SharedFilePtr *)data_ov002_0210da58)->Release();
+        data_ov002_0210da58.Release();
 
     b2 = (int)(actorID == ACTOR_HATENA_BLOCK);
     if (b2)
@@ -581,18 +575,18 @@ int daObjHatenaBlock_c::CleanupResources()
             data_ov002_0210da30.Release();
             break;
         case CONTENT_POWER_UP_7:
-            ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
-            ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
+            gPFlowerOpenModelFile.Release();
+            gPFlowerCloseModelFile.Release();
             data_ov002_0210d9e0.Release();
             break;
         case CONTENT_POWER_UP_5:
-            ((SharedFilePtr *)data_ov002_0210da58)->Release();
-            ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
-            ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
+            data_ov002_0210da58.Release();
+            gPFlowerOpenModelFile.Release();
+            gPFlowerCloseModelFile.Release();
             break;
         case CONTENT_POWER_UP_6:
-            ((SharedFilePtr *)gPFlowerOpenModelFile)->Release();
-            ((SharedFilePtr *)gPFlowerCloseModelFile)->Release();
+            gPFlowerOpenModelFile.Release();
+            gPFlowerCloseModelFile.Release();
             break;
         }
     }
@@ -637,7 +631,7 @@ void daObjHatenaBlock_c::func_ov102_02149ff0()
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = (mPosY + mBounceYOffs) >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
-    if (data_0209caa0[1] & SAVE_FLAGS1_BIT31)
+    if (data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)
         return;
     int b = (int)(actorID == ACTOR_HATENA_BLOCK);
     if (b == 0)
@@ -738,7 +732,7 @@ void daObjHatenaBlock_c::func_ov102_02149d80() {
 void daObjHatenaBlock_c::func_ov102_02149ccc()
 {
     daPly_c *player;
-    if (!(data_0209caa0[1] & SAVE_FLAGS1_BIT31)) {
+    if (!(data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)) {
         int b = (int)(actorID == ACTOR_HATENA_BLOCK);
         if (b)
             return;
@@ -1033,11 +1027,11 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
     o = dActor_c::Spawn(
         ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
     if (o == 0) return;
-    g = *(dCamera_c**)data_0209f318;
+    g = data_0209f318;
     f.vel[0] = 0;
     f.vel[1] = 0x11000;
     f.vel[2] = 0;
-    rnd = RandomIntInternal(&data_0209e650);
+    rnd = RandomIntInternal(&data_0209e650.value);
     {
         int vsum = rnd + (g->mAngleY + 0x8000);
         o->mPrevAngleX = 0;
@@ -1121,7 +1115,7 @@ void daObjHatenaBlock_c::func_ov102_021492d4() {
   if ((int)(*(unsigned char*)(&data_0209f2d8) == 1) != 0) {
     rot.y = mAngleY;
   } else {
-    rot.y = ((dCamera_c *)*(char**)data_0209f318)->mAngleY + 0x4000;
+      rot.y = data_0209f318->mAngleY + 0x4000;
   }
   dActor_c::Spawn(ACTOR_FEATHER, 0, pos, &rot, mAreaId, -1);
 }
@@ -1172,10 +1166,10 @@ void daObjHatenaBlock_c::func_ov102_02149100(Vector3 *pos, int n, unsigned int s
         a = dActor_c::Spawn(ACTOR_COIN, 2, *pos, 0, mAreaId, -1);
         if (a != 0) {
             do {
-                rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+                rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
                 dir = (int)((rnd >> 0x10) << 0x1b) >> 0x10;
             } while (dir == prevDir);
-            rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+            rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
             a->mPrevAngleX = 0;
             q = rnd >> 0x10;
             speed = (speed * (q % 50 + 100)) / 100;

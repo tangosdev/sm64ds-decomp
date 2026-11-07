@@ -37,6 +37,7 @@ enum d_s_mg_jump2_AssetId {
 #include "decl_common.h"
 #include "Particle__System.h"
 #include "math/Approach.h"
+#include "private/mtx43.h"
 
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
@@ -44,11 +45,6 @@ struct Jump2PopupLink {
     struct Jump2PopupLink *next;
     void Link();   /* push */
     void Unlink(); /* remove */
-};
-
-/* Whole-matrix copies go through this so they stay one block move. */
-struct M48 {
-    int w[12];
 };
 
 /* Three words as an array, not three ints: as separate members the copy
@@ -88,12 +84,14 @@ extern void *sJump2BackFile;
 void Mg_CommitRecords(void);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int GetGameLanguage(void);
-void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
-void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-extern int data_020a0e68;
+struct OamAttr;
+struct Matrix2x2;
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
+void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+extern Matrix4x3 data_020a0e68;
 void Jump2Popup_UpdateAll(void);
-extern void *Jump3D_AllIdle(void *);
-extern void *Heyho_AllIdle(void *);
+extern int Jump3D_AllIdle(void);
+extern int Heyho_AllIdle(void);
 extern void Mg_SubmitScore(int);
 extern void Mg_SetSharedState(int);
 extern void Heyho_SeparateAll(void);
@@ -110,9 +108,8 @@ extern struct G2 pmf_dScMgJump2_c_State_Play;
 extern void Jump3D_StartRoundLayout(void);
 extern struct G2 pmf_dScMgJump2_c_State_Result;
 extern struct G2 pmf_dScMgJump2_c_State_Intro;
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, int dst);
-extern void Camera_UpdateMatrices(void *cam);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 extern void Jump3D_SetLowGravity(void);
 extern void Heyho_ReactAll(void);
 extern int Mg_GetTopScreenYOffset(void);
@@ -170,16 +167,16 @@ int dScMgJump2_c::CanEndState(int /* mode */) {
 // @symbol _ZN12dScMgJump2_c13InitResourcesEv
 /* Slot 0. */
 s32 dScMgJump2_c::InitResources() {
-    int tiles, palette;
+    void *tiles, *palette;
     s32 fov;
     void *bmdFile;
 
     tiles = LoadFile(sJump2NcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_JUMP_NCL_BIN);
-    DecompressLZ16(tiles, 0x6400000);
-    GX::LoadOBJPltt((const void *)palette, 0, 0x80);
-    Deallocate((void *)tiles);
-    Deallocate((void *)palette);
+    DecompressLZ16(tiles, (void *)0x6400000);
+    GX::LoadOBJPltt(palette, 0, 0x80);
+    Deallocate(tiles);
+    Deallocate(palette);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
@@ -187,22 +184,22 @@ s32 dScMgJump2_c::InitResources() {
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082614);
 
-    this->mCameras[0].mEyeX = 0;
-    this->mCameras[0].mEyeY = -0x64000;
-    this->mCameras[0].mEyeZ = 0;
-    this->mCameras[0].mTargetX = 0;
-    this->mCameras[0].mTargetY = 0;
-    this->mCameras[0].mTargetZ = fov;
-    this->mCameras[0].mAngle = 0x800;
+    this->mCameras[0].mLookAt.x = 0;
+    this->mCameras[0].mLookAt.y = -0x64000;
+    this->mCameras[0].mLookAt.z = 0;
+    this->mCameras[0].mPos.x = 0;
+    this->mCameras[0].mPos.y = 0;
+    this->mCameras[0].mPos.z = fov;
+    this->mCameras[0].mFovAngle = 0x800;
     Camera_UpdateMatrices(&mCameras[0]);
 
-    this->mCameras[1].mEyeX = 0;
-    this->mCameras[1].mEyeY = 0x82000;
-    this->mCameras[1].mEyeZ = 0;
-    this->mCameras[1].mTargetX = 0;
-    this->mCameras[1].mTargetY = 0;
-    this->mCameras[1].mTargetZ = fov;
-    this->mCameras[1].mAngle = 0x800;
+    this->mCameras[1].mLookAt.x = 0;
+    this->mCameras[1].mLookAt.y = 0x82000;
+    this->mCameras[1].mLookAt.z = 0;
+    this->mCameras[1].mPos.x = 0;
+    this->mCameras[1].mPos.y = 0;
+    this->mCameras[1].mPos.z = fov;
+    this->mCameras[1].mFovAngle = 0x800;
     Camera_UpdateMatrices(&mCameras[1]);
 
     if (Heyho_InitPool(mHeyhos, 6) == 0)
@@ -219,7 +216,9 @@ s32 dScMgJump2_c::InitResources() {
 
     if (mModel.SetFile((BMD_File *)bmdFile, 1, -1) == 0) {
         Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-        *(struct M48 *)&mModel.mat4x3 = *(struct M48 *)&data_020a0e68;
+        /* Whole-matrix copies go through the flat Mtx43 so they stay one
+           block move; assigning Matrix4x3 grows .text by 0x40 bytes. */
+        *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
         return 0;
     }
 
@@ -358,10 +357,8 @@ void dScMgJump2_c::State_End() {
 
 // @symbol _ZN12dScMgJump2_c12State_ResultEv
 void dScMgJump2_c::State_Result() {
-    void *obj = Jump3D_AllIdle(this);
-    if (obj) {
-        obj = Heyho_AllIdle(obj);
-        if (obj) {
+    if (Jump3D_AllIdle()) {
+        if (Heyho_AllIdle()) {
             Mg_SubmitScore(sJumpComboCount);
             Mg_SetSharedState(MG_STATE_GAME_OVER);
             mPromptEnabled = 0;
@@ -446,7 +443,7 @@ s32 dScMgJump2_c::Render() {
     Jump2Popup_DrawAll();
     Jump2_SetLights();
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0xffead000, -0xa0000);
-    *(struct M48 *)&mModel.mat4x3 = *(struct M48 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 
     scale = *(struct S3 *)&sJump2RenderScale;
 
@@ -470,8 +467,7 @@ s32 dScMgJump2_c::Render() {
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = GetGameLanguage();
-                DrawOamSprite((void *)sJump2TextSpritesByLanguage[idx][1], (void *)x, 0xc,
-                              (void *)0);
+                DrawOamSprite(sJump2TextSpritesByLanguage[idx][1], x, 0xc, 0);
             } else {
                 RenderOamMainScreen(sJumpLifeIconSprite, x, 0xc, -1, -1);
             }

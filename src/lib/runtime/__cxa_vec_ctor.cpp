@@ -40,8 +40,7 @@
 // only ever an address placeholder; MSL's own name for this entry is not recorded
 // anywhere in the cartridge.
 
-typedef void (*ctor_t)(void *);
-typedef void (*dtor_t)(void *);
+#include "MWCPlusLib.h"
 
 extern "C" void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor);
 

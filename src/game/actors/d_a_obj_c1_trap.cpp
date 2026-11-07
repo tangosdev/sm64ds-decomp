@@ -12,7 +12,7 @@
  * then D0 pair without a D2 or a forcing helper.
  *
  * What stays, and why:
- * - TrapVector3 POD locals; Vector3's empty destructor would add an
+ * - VecFx32 POD locals; Vector3's empty destructor would add an
  *   unrelated helper to this TU
  * - InitResources adds to mAngleY through a pointer local (plain
  *   `mAngleY += 0x8000` CSE/size-DIFFs)
@@ -22,8 +22,8 @@
  *   data_ov010_021122f8 is CLPS
  * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
  * - func_ov010_02111984 three-argument C ABI collider adapter
- * - Vec3_HorzAngle / Vec3_HorzDist stay local: they take the TrapVector3
- *   locals, and math/CalcLib.h's spelling takes const Vector3 *
+ * - VecFx32 POD locals stay trivial; math/CalcLib.h's vector helpers operate
+ *   on the same three-word buffers through their Vector3 pointer interface
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -35,15 +35,11 @@ enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 /* The two copied position locals must stay POD. The shared Vector3 has an
  * empty destructor, which would add an unrelated compiler helper to this TU. */
-struct TrapVector3 {
-    s32 x;
-    s32 y;
-    s32 z;
-};
 
 typedef void (daObjC1_Trap_c::*TrapState)();
 
@@ -73,12 +69,9 @@ extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
 extern TrapStateRec data_ov010_02112d28;
 
-/* local extern: the dBgW callback setter and the two horizontal helpers, on
-   the TrapVector3 POD seam (see the banner). */
+/* local extern: the dBgW callback setter. */
 extern "C" {
-extern void func_020393c4(dBgW *collider, void *callback);
-extern s16 Vec3_HorzAngle(const TrapVector3 *from, const TrapVector3 *to);
-extern s32 Vec3_HorzDist(const TrapVector3 *from, const TrapVector3 *to);
+extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
@@ -100,8 +93,8 @@ extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
 /*
  * registered directly in InitResources. */
 // @symbol func_ov010_02111984
-extern "C" void func_ov010_02111984(int unused, daObjC1_Trap_c *trap, dActor_c *other) {
-    trap->OnCollision(*other);
+extern "C" void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
 
 // @symbol _ZN14daObjC1_Trap_c11OnCollisionER8dActor_c
@@ -109,10 +102,10 @@ extern "C" void func_ov010_02111984(int unused, daObjC1_Trap_c *trap, dActor_c *
 void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     daObjC1_Trap_c *spawner;
     u32 spawnerID;
-    TrapVector3 otherPos;
-    TrapVector3 spawnerPos;
-    TrapVector3 *otherPosition;
-    TrapVector3 *spawnerPosition;
+    VecFx32 otherPos;
+    VecFx32 spawnerPos;
+    VecFx32 *otherPosition;
+    VecFx32 *spawnerPosition;
     s16 angle;
     s16 relativeAngle;
     s32 distance;
@@ -135,17 +128,17 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     if (!isPlayer)
         return;
 
-    otherPosition = (TrapVector3 *)&other.mPosX;
-    spawnerPosition = (TrapVector3 *)&spawner->mPosX;
+    otherPosition = (VecFx32 *)&other.mPosX;
+    spawnerPosition = (VecFx32 *)&spawner->mPosX;
     otherPos.x = otherPosition->x;
     otherPos.y = otherPosition->y;
     otherPos.z = otherPosition->z;
     spawnerPos.x = spawnerPosition->x;
     spawnerPos.y = spawnerPosition->y;
     spawnerPos.z = spawnerPosition->z;
-    angle = Vec3_HorzAngle(&spawnerPos, &otherPos);
+    angle = Vec3_HorzAngle((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     relativeAngle = (s16)(angle + spawner->mAngleY);
-    distance = Vec3_HorzDist(&spawnerPos, &otherPos);
+    distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     index = (u16)relativeAngle >> 4;
     projection = data_02082214[index * 2];
     projectedDistance = FX_MUL(distance, projection);
@@ -160,7 +153,7 @@ int daObjC1_Trap_c::InitResources() {
     mSpawnerID = 0;
 
     if ((param1 & 0xff) == 0xff) {
-        TrapVector3 position;
+        VecFx32 position;
         int index;
         int sinAngle;
         int cosAngle;
@@ -205,7 +198,7 @@ int daObjC1_Trap_c::InitResources() {
     UpdateCollisionTransform();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000,
                           mAngleY, data_ov010_021122f8);
-    func_020393c4(&mMeshCollider, (void *)func_ov010_02111984);
+    func_020393c4(&mMeshCollider, func_ov010_02111984);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;
     mState = 0;

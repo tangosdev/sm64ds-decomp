@@ -19,7 +19,8 @@
  * re-dresses the sprite through func_ov007_020b3d30;
  * func_ov007_020b2cf0 places the sprite over the current item with the
  * per-mode offset func_ov007_020b3e04 and eases it back from the last
- * move's nudge; func_ov007_020b3e84 reports the current item's position.
+ * move's nudge; func_ov007_020b3e84 turns a confirm into a stylus touch on
+ * the current item.
  *
  * Edges: the bss words 0x02103360 (the cursor) and 0x02103364 (a confirm
  * toggle) are referenced only by these functions, and every function here
@@ -43,6 +44,7 @@
 #include "Ov007Settings.h"
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
+#include "Ov007Touch.h"
 
 extern "C" {
 
@@ -97,15 +99,16 @@ extern void *func_ov007_020c9388(int initialState);
 #define CURSOR data_ov007_02103360
 
 // @symbol func_ov007_020b3e84
-/* Writes the current item's position, in pixels, as a 1 x 0 rectangle. */
-void func_ov007_020b3e84(short *r0) {
+/* Writes a stylus touch at the current item's position, in pixels: touch
+ * down, both axes valid. */
+void func_ov007_020b3e84(Ov007TouchSample *sample) {
     Ov007Item *item = WORK->itemViews[CURSOR->state->currentState]->item;
     int x = item->posX;
     int y = item->posY;
-    r0[0] = x >> 0xc;
-    r0[1] = y >> 0xc;
-    r0[2] = 1;
-    r0[3] = 0;
+    sample->x = x >> 0xc;
+    sample->y = y >> 0xc;
+    sample->touch = 1;
+    sample->validity = 0;
 }
 
 // @symbol func_ov007_020b3e04
@@ -668,9 +671,10 @@ void func_ov007_020b3050(void) {
 /* Reads the d-pad into dirPressed with key repeat (the press frame, then
  * every 10 frames from frame 20) and a fresh A or START press into confirm,
  * ticks the cursor state, and runs the cursor (func_ov007_020b3360) unless
- * it is in state 0xff; a confirm also flips data_ov007_02103364 and calls
- * func_ov007_020b3e84. */
-void func_ov007_020b2e64(char *self) {
+ * it is in state 0xff; a confirm also flips data_ov007_02103364 and
+ * replaces this frame's touch sample with a touch on the current item
+ * (func_ov007_020b3e84). */
+void func_ov007_020b2e64(Ov007TouchSample *sample) {
     unsigned int *r4;
     int r2;
     int r4v;
@@ -714,7 +718,7 @@ void func_ov007_020b2e64(char *self) {
             return;
         }
         data_ov007_02103364 = (data_ov007_02103364 == 0) ? 1 : 0;
-        func_ov007_020b3e84((short *)self);
+        func_ov007_020b3e84(sample);
         return;
     }
 
@@ -774,7 +778,7 @@ void func_ov007_020b2cf0(void) {
 
 // @symbol func_ov007_020b2cdc
 /* The cursor's state machine. */
-int func_ov007_020b2cdc(void) {
-    return (int)data_ov007_02103360->state;
+Ov007MenuState *func_ov007_020b2cdc(void) {
+    return data_ov007_02103360->state;
 }
 }

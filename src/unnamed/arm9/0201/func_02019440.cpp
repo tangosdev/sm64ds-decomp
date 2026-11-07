@@ -1,19 +1,21 @@
 //cpp
 #include "types.h"
 #include "GX.h"
+#include "dGraph_c.h"
 #include "nitro/hw/registers.h"
 
 extern "C" {
 
-extern int data_0209d4a8; /* the scene graph callback (d_s_dsmt.cpp) */
-extern int data_0209d4ac; /* the brightness fader (d_scene.cpp) */
+extern dGraph_c::callback_c *data_0209d4a8; /* the scene graph callback (d_s_dsmt.cpp) */
+class dFdBrightness_c;
+extern dFdBrightness_c *data_0209d4ac; /* the brightness fader (d_scene.cpp) */
 /* the active transition fader (d_s_stage_methods.cpp wipes, KuppaScript.cpp colour fades) */
 extern int data_0209d4b0;
 
 extern void func_0203bd24(void);
 extern int func_02053be0(int enable);
 extern void func_02054430(int a);
-extern void MultiStore32Bytes(unsigned val, int *dst, int len);
+extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void func_0200f4f4(void);
 extern void func_0200f46c(void);
 

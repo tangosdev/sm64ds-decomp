@@ -1,21 +1,23 @@
 #include "private/fs_views.h"
 
-extern void FS_InitFile(int *s);
-extern int myFS_OpenFileFast(int buf, FSFileID ab);
+typedef struct FSFile FSFile;
+
+extern void FS_InitFile(FSFile *p_file);
+extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern void Crash(void);
-extern unsigned int func_0201834c(int *buf, int x);
+extern void *func_0201834c(FSFile *p_file, int flush);
 extern int myFS_ConvertPathToFileID(void *out_file_id, const char *path);
 
 /* Load the file an FSFileID names (see func_0201834c); flush nonzero
    flushes the result from the data cache. */
-int func_020182ec(FSFileID fileId, int flush) {
-    int file[0x11];
-    int result = 0;
-    FS_InitFile(file);
-    if (myFS_OpenFileFast((int)file, fileId) == 0)
+void *func_020182ec(FSFileID fileId, int flush) {
+    FSFile file;
+    void *result = 0;
+    FS_InitFile(&file);
+    if (myFS_OpenFileFast(&file, fileId) == 0)
         Crash();
     else
-        result = func_0201834c(file, flush);
+        result = func_0201834c(&file, flush);
     return result;
 }
 
@@ -24,5 +26,5 @@ int func_020182ec(FSFileID fileId, int flush) {
 void *func_020182bc(const char *path) {
     FSFileID fileId;
     myFS_ConvertPathToFileID(&fileId, path);
-    return (void *)func_020182ec(fileId, 1);
+    return func_020182ec(fileId, 1);
 }

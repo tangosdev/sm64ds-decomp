@@ -6,19 +6,16 @@
  * scene (dScEntry_c, ov075) and the download-play scene (dScMB_c) call
  * them after func_0200f2cc has set up the banks and BG controls.
  *
- * One file: the two functions' file-ID tables are interleaved in .data,
+ * The two functions' file-ID tables are interleaved in .data,
  * 0x0208a10c (f220), 0x0208a120 (f13c), 0x0208a134 (f220), 0x0208a148
- * (f13c), 0x0208a15c (f13c), five words each, one per language.
+ * (f13c), 0x0208a15c (f13c), five words each, one per language. Those
+ * tables, the player count and the two pointer tables in front of them
+ * live in src/data/arm9, one object per file: this translation unit is
+ * text-only, so it cannot carry them. The eight bytes after the last
+ * file-ID word are not part of them.
  *
  * mwccarm emits .text in reverse source order, so the file reads from the
  * top of the run down.
- *
- * leftovers:
- * - The five tables are this file's data, but the TU is text-only and
- *   they stay extern under their linker names.
- * - Neither neighbour is claimed. GetLanguageIndex (0x0200f0bc, just
- *   below) and func_0200f2cc (just above) touch none of the tables. The
- *   bytes do not say whether either one belongs to this file.
  */
 #include "types.h"
 #include "G2.h"
@@ -27,16 +24,26 @@
 extern "C" {
 
 s32 GetLanguageIndex(void);
-u32 LoadCompressedFileAt(u32 fileID, void *target);
-void *LoadFile(u16 fileID);
+u32 LoadCompressedFileAt(int fileID, void *target);
+void *LoadFile(int fileID);
 void Deallocate(void *ptr);
 
+/* Player count. Callers store one byte; the next object is word-aligned,
+   so the three bytes after it stay 0. */
+extern unsigned char data_0208a0e0;
+
+/* Per-language file pointers, then OAM templates, indexed by GetLanguageIndex(). */
+extern void *data_0208a0e4[5];
+
+struct OamAttr;
+extern struct OamAttr *data_0208a0f8[5];
+
 /* Per-language file IDs, indexed by GetLanguageIndex(). */
-extern u32 data_0208a10c[]; /* sub BG2 characters */
-extern u32 data_0208a120[]; /* sub OBJ characters */
-extern u32 data_0208a134[]; /* sub BG3 characters at +0x6000 */
-extern u32 data_0208a148[]; /* main BG2 characters */
-extern u32 data_0208a15c[]; /* main OBJ characters */
+extern u32 data_0208a10c[5]; /* sub BG2 characters */
+extern u32 data_0208a120[5]; /* sub OBJ characters */
+extern u32 data_0208a134[5]; /* sub BG3 characters at +0x6000 */
+extern u32 data_0208a148[5]; /* main BG2 characters */
+extern u32 data_0208a15c[5]; /* main OBJ characters */
 
 // @symbol func_0200f220
 /* Loads the sub-engine BG graphics: per-language BG2 characters (and BG3

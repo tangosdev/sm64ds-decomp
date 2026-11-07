@@ -8,7 +8,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "The player factory daPly_c_classInit occupies 0x020e6c0c..0x020e6c40; it is the only function in this source.",
-    "gEndingFlyPath (0x0210a8b8, formerly data_ov002_0210a8b8) is the 27-row EndingFlyPoint spline table read by daPly_c::func_ov002_020c2fec, whose only caller is func_ov002_020c38a0, phase 2 of daPly_c::St_EndingFly_Main after StartEndingCutscene. Its .data range is 0x0210a8b8..0x0210a990."
+    "gJumboStarKeyframes (0x0210a8b8, formerly data_ov002_0210a8b8) is the 27-row EndingFlyPoint spline table read by daPly_c::AnimSplinePoll, whose only caller is JumboStarCutsceneFlying, phase 2 of daPly_c::St_EndingFly_Main after StartEndingCutscene. Its .data range is 0x0210a8b8..0x0210a990."
   ],
   "sections": [
     {
@@ -33,11 +33,11 @@
   ],
   "data": [
     {
-      "symbol": "gEndingFlyPath",
+      "symbol": "gJumboStarKeyframes",
       "address": "0x0210a8b8",
       "size": "0xd8",
       "binding": "STB_GLOBAL",
-      "evidence": "27 EndingFlyPoint control-point rows {speed, x, y, z}; daPly_c::func_ov002_020c2fec blends four rows and advances by speed / 1000. Only reader chain: St_EndingFly_Main -> func_ov002_020c38a0 -> func_ov002_020c2fec."
+      "evidence": "27 EndingFlyPoint control-point rows {speed, x, y, z}; daPly_c::AnimSplinePoll blends four rows and advances by speed / 1000. Only reader chain: St_EndingFly_Main -> JumboStarCutsceneFlying -> AnimSplinePoll."
     }
   ],
   "bss": [],

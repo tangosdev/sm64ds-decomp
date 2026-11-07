@@ -1649,44 +1649,44 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@1259",
+      "from": "@1264",
       "to": "pmf_dScMgCup_c_StateSetup",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1180) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1202 to @1259 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1180) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1202 to @1259 when the opt pragma was removed (#821). Re-keyed from @1259 to @1264 (same symtab index 58, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@1261",
+      "from": "@1266",
       "to": "pmf_dScMgCup_c_StatePrepareShuffle",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1182) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1204 to @1261 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1182) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1204 to @1261 when the opt pragma was removed (#821). Re-keyed from @1261 to @1266 (same symtab index 59, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@1263",
+      "from": "@1268",
       "to": "pmf_dScMgCup_c_StateShuffle",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1184) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1206 to @1263 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1184) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1206 to @1263 when the opt pragma was removed (#821). Re-keyed from @1263 to @1268 (same symtab index 60, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@1265",
+      "from": "@1270",
       "to": "pmf_dScMgCup_c_StateWaitForInput",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1186) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1208 to @1265 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1186) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1208 to @1265 when the opt pragma was removed (#821). Re-keyed from @1265 to @1270 (same symtab index 61, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@1267",
+      "from": "@1272",
       "to": "pmf_dScMgCup_c_StateSelect",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1188) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1210 to @1267 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1188) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1210 to @1267 when the opt pragma was removed (#821). Re-keyed from @1267 to @1272 (same symtab index 62, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@1269",
+      "from": "@1274",
       "to": "pmf_dScMgCup_c_StateResult",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1190) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1212 to @1269 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1190) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1212 to @1269 when the opt pragma was removed (#821). Re-keyed from @1269 to @1274 (same symtab index 63, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@1271",
+      "from": "@1276",
       "to": "pmf_dScMgCup_c_StateFinish",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1192) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1214 to @1271 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1192) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1214 to @1271 when the opt pragma was removed (#821). Re-keyed from @1271 to @1276 (same symtab index 64, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     },
     {
-      "from": "@1273",
+      "from": "@1278",
       "to": "pmf_dScMgCup_c_StateIdle",
-      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1194) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1216 to @1273 when the opt pragma was removed (#821)."
+      "evidence": "Native member-pointer temporary identified bijectively from unchanged220-byte initializer relocation sites and verified8-byte retail object/function destination. Re-keyed +6 (from @1194) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed from @1216 to @1273 when the opt pragma was removed (#821). Re-keyed from @1273 to @1278 (same symtab index 65, every non-strtab section identical) after include/MgCamera.h typed the minigame camera."
     }
   ]
 }

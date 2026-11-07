@@ -26,14 +26,7 @@ enum d_a_obj_cv_shutter_AssetId { ASSET_CV_SHUTTER_BMD = 0x05d9, ASSET_CV_SHUTTE
 #include "daObjCvShutter_c.h"
 #include "SharedFilePtr.h"
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
+#include "ResourceDescriptor.h"
 
 extern ResourceDescriptor data_ov021_021148d0;
 

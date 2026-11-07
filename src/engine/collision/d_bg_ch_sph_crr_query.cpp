@@ -36,13 +36,10 @@ extern CLPS data_020a0c78;
 }
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
-   clip-volume fields, as the sphere scans do below. Vec3 remains the plain
-   three-word copy view; PFN retains its pending stored-callback
-   reconstruction. Position reads keep the measured three-word byte view of
-   the actor: direct mPosX/Y/Z accesses remove one address-setup
-   instruction from each of three scans. */
-struct Vec3 { int x, y, z; };
-
+   clip-volume fields, as the sphere scans do below. PFN retains its pending
+   stored-callback reconstruction. Position reads keep the measured
+   three-word byte view of the actor: direct mPosX/Y/Z accesses remove one
+   address-setup instruction from each of three scans. */
 
 // @symbol _ZN9dBgCh_Gnd10DetectClsnEv
 int dBgCh_Gnd::DetectClsn()
@@ -56,7 +53,7 @@ int dBgCh_Gnd::DetectClsn()
     }
     int flag = 1;
     int one = 1;
-    Vec3 pos;
+    Vector3 pos;
     for (int i = 1; i < 24; i++) {
         dBgW *obj = data_020a0c80[i];
         if (obj == 0) continue;
@@ -76,9 +73,10 @@ int dBgCh_Gnd::DetectClsn()
             } else {
                 pos.y = pos.y + obj->GetClipOffsetY();
             }
-            Vector3* selfpos = (Vector3*)((long long)(int)&this->pos);
+            Vector3 *selfpos = (Vector3 *)((int)&this->pos);
             if (selfpos->y < pos.y - thr) continue;
-            if (Vec3_HorzDist(selfpos, (const Vector3 *)&pos) > thr) continue;
+            if (Vec3_HorzDist(selfpos, &pos) > thr)
+                continue;
         }
         if (obj->DetectClsn(*this) != 0) {
             dBgPi::SetCollider(i, obj->GetActorUniqueID(), obj->GetActor(), obj);
@@ -292,7 +290,7 @@ bool dBgCh_Lin::DetectClsn()
         if (info != 0) {
             int active = (info->mFlags & 2) ? 1 : 0;
             if (active != 0) {
-                Vec3 v;
+                Vector3 v;
                 const char *position = (const char *)info + 0x5c;
                 v.x = *(const s32 *)(position + 0);
                 v.y = *(const s32 *)(position + 4);
@@ -306,7 +304,7 @@ bool dBgCh_Lin::DetectClsn()
                 } else {
                     v.y += o->GetClipOffsetY();
                 }
-                if (Vec3_Dist(base, (const Vector3 *)&v) > m + threshold)
+                if (Vec3_Dist(base, &v) > m + threshold)
                     continue;
             }
         }

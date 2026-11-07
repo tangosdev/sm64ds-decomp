@@ -1,12 +1,9 @@
-extern int FS_ReadFile(void *obj, void *buf, int size);
-extern int func_0205d368(void *obj, int len, int sel);
+#include "private/fs_views.h"
 
-struct FSFileView {
-    char pad[0x20];
-    int f20;    /* 0x20 */
-    char pad24[0x28 - 0x24];
-    int f28;    /* 0x28 */
-};
+typedef struct FSFile FSFile;
+
+extern int FS_ReadFile(FSFile *obj, void *buf, int size);
+extern int func_0205d368(void *obj, int len, int sel);
 
 struct G {
     char pad[0x2c];
@@ -15,12 +12,12 @@ struct G {
     int f3c;    /* 0x3c */
 };
 
-int func_02067e70(struct FSFileView *obj) {
+int func_02067e70(struct FSFile *obj) {
     char buf[0x60];
     struct G *g = 0;
     int len;
     if (obj != 0) {
-        len = obj->f28 - obj->f20;
+        len = obj->prop.file.pos - obj->prop.file.top; /* FS_GetPosition */
         if ((unsigned int)FS_ReadFile(obj, buf, 0x60) >= 0x60)
             g = (struct G*)buf;
         func_0205d368(obj, len, 0);

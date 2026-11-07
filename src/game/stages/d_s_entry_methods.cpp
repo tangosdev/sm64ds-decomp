@@ -56,14 +56,6 @@
 #include "AsyncJob.h"
 #include "Heap.h"
 
-/* One player's gTouchHeld/gTouchEdge/gTouchX/gTouchY record (PlayerInput.h). */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
-
 /* The Nitro SDK's sub-engine palette loader. No header in the tree
  * declares the namespace yet; d_s_star_sel_methods.cpp spells it the
  * same way. */
@@ -94,7 +86,7 @@ int func_0203da3c(void);
 void UnloadArchive(int i);
 void func_02030aa4(int arg);
 int func_0203da9c(void);
-void func_02020028(int a, unsigned char b);
+void func_02020028(int player, unsigned char mode);
 void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
 }
 
@@ -194,7 +186,7 @@ extern struct OamAttr data_ov075_0211cba4[];
  * rematch and results steps, in ROM order ahead of the course-select
  * steps. */
 extern "C" {
-extern s8 data_0209f310[];
+extern s8 gNumStageStars[];
 extern s16 gNumCoins[];
 extern u8 data_0209b2f0[];
 extern u8 data_0209b2ec[];
@@ -226,14 +218,14 @@ extern int data_ov075_0211cc4c;
 extern int data_ov075_0211cc54;
 extern int data_ov075_0211cc5c;
 extern void *data_0208a0e4[];
-extern void *data_0209f5c0;
+extern fBase_c *data_0209f5c0;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
 int GetLanguageIndex(void);
 void SetBg1Offset(int a, int b);
-void func_ov075_02116128(char *c, int i, int z);
-void func_ov075_0211621c(char *c);
+void func_ov075_02116128(dScEntry_c *scene, int slot, int dim);
+void func_ov075_0211621c(dScEntry_c *scene);
 void func_02033390(int a);
 void func_02032f9c(int a);
 int func_02030958(int val);
@@ -251,7 +243,7 @@ void func_02030994(void);
 void func_020201c0(void);
 void func_0202048c(void *dst, int a, int b);
 void func_02020768(char *thiz);
-void func_02020820(void *dst, void *src, int a, int b, int c, int d);
+void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine);
 void MultiStore_Int(int val, void *dst, int len);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
@@ -301,12 +293,12 @@ void dScEntry_c::TallyRoundWinners() {
         pc = pc + 1;
     } while (i < 4);
 
-    if (data_0209f310[0] != 0 || data_0209f310[1] != 0 || data_0209f310[2] != 0 ||
-        data_0209f310[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
+    if (gNumStageStars[0] != 0 || gNumStageStars[1] != 0 || gNumStageStars[2] != 0 ||
+        gNumStageStars[3] != 0 || gNumCoins[0] != 0 || gNumCoins[1] != 0 || gNumCoins[2] != 0 ||
         gNumCoins[3] != 0) {
         max = 0;
         i = max;
-        pc = (u8 *)data_0209f310;
+        pc = (u8 *)gNumStageStars;
         do {
             t = (s8)*pc;
             i = i + 1;
@@ -317,7 +309,7 @@ void dScEntry_c::TallyRoundWinners() {
         } while (i < 4);
 
         n = 0;
-        pb = (u8 *)data_0209f310;
+        pb = (u8 *)gNumStageStars;
         pc = data_0209b2f0;
         i = n;
         do {
@@ -444,7 +436,7 @@ s32 dScEntry_c::InitResultResources() {
     if (n > 0) {
         z = i;
         do {
-            func_ov075_02116128((char *)this, i, z);
+            func_ov075_02116128(this, i, z);
             i = i + 1;
         } while (i < n);
     }
@@ -498,7 +490,7 @@ s32 dScEntry_c::InitResultResources() {
     }
 
     SetSteps(&data_ov075_0211d7e0);
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, (fBase_c *)data_0209f5c0, 1, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, 1, 0);
     return 1;
 }
 
@@ -545,7 +537,7 @@ s32 dScEntry_c::InitEntryResources() {
         mode = 2;
     }
 
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, (fBase_c *)data_0209f5c0, mode, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, mode, 0);
     return 1;
 }
 
@@ -1134,7 +1126,7 @@ void dScEntry_c::RenderWinCounts() {
                 p = (int *)OAM::Render(zT, (OamAttr *)data_ov075_0211c8b0, xTens, yBase + yOff,
                                        eight, minus1, sz, zT);
                 if (p != 0) {
-                    int *q = (int *)(int)(p + 1);
+                    int *q = (int *)(p + 1);
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
@@ -1142,7 +1134,7 @@ void dScEntry_c::RenderWinCounts() {
             p = (int *)OAM::Render(zO, (OamAttr *)data_ov075_0211c8b0, xOnes, yBase + yOff, eight,
                                    minus1, sz, zO);
             if (p != 0) {
-                int *q = (int *)(int)(p + 1);
+                int *q = (int *)(p + 1);
                 int val = *q;
                 *q = (val & ~0x3ff) | ((((u32)(val << 22) >> 22) + n % 10) & 0x3ff);
             }
@@ -1163,7 +1155,7 @@ void dScEntry_c::RenderWinCounts() {
         int j = 0;
         do {
             if (data_0209b2f0[func_02030958(j)] != 0)
-                func_ov075_02116128((char *)this, j, mStepWork[1]);
+                func_ov075_02116128(this, j, mStepWork[1]);
             j++;
         } while (j < count);
     }
@@ -1229,7 +1221,7 @@ void dScEntry_c::EnterRematchPrompt() {
 void dScEntry_c::RenderResults() {
     int id = func_0203da9c();
     OAM::Render(false, &data_ov075_0211cb84, 0x80, 0x20, -1, -1, 0x1000, 0x1000, 0, -1);
-    func_ov075_0211621c((char *)this);
+    func_ov075_0211621c(this);
 
     u8 *p = data_0209b2f0 + id;
     OamAttr *sb;
@@ -1351,15 +1343,15 @@ void dScEntry_c::EnterResults() {
 
     if (data_0209b2f0[id] != 0) {
         LoadCompressedFileAt(0x8404, G2S::GetBG3ScrPtr());
-        func_02020820((char *)&mOamAnimations[0], &data_ov075_0211ca64, 1, 1, 1, 1);
-        func_02020820((char *)&mOamAnimations[1], &data_ov075_0211ca6c, 1, 0, 0, 0);
-        func_02020820((char *)&mOamAnimations[2], &data_ov075_0211ca74, 1, 1, 1, 1);
+        func_02020820(&mOamAnimations[0], &data_ov075_0211ca64, 1, 1, 1, 1);
+        func_02020820(&mOamAnimations[1], &data_ov075_0211ca6c, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[2], &data_ov075_0211ca74, 1, 1, 1, 1);
     } else {
         LoadCompressedFileAt(0x8401, G2S::GetBG3ScrPtr());
-        func_02020820((char *)&mOamAnimations[0], &data_ov075_0211cc44, 1, 1, 1, 1);
-        func_02020820((char *)&mOamAnimations[1], &data_ov075_0211cc4c, 1, 0, 0, 0);
-        func_02020820((char *)&mOamAnimations[2], &data_ov075_0211cc54, 1, 0, 0, 0);
-        func_02020820((char *)&mOamAnimations[3], &data_ov075_0211cc5c, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[0], &data_ov075_0211cc44, 1, 1, 1, 1);
+        func_02020820(&mOamAnimations[1], &data_ov075_0211cc4c, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[2], &data_ov075_0211cc54, 1, 0, 0, 0);
+        func_02020820(&mOamAnimations[3], &data_ov075_0211cc5c, 1, 0, 0, 0);
     }
 
     mOamAnimations[0].palette = id + 0xa;

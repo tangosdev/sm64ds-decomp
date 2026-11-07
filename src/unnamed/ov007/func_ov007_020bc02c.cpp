@@ -5,9 +5,7 @@
 
 extern "C" {
 
-typedef struct { int f[12]; } Blk;
-
-#define LS(a) (*(short*)(((long long)(int)(a))))
+#define LS(a) (*(short*)(a))
 
 extern void func_ov007_020bc968(Ov007Model *m, void *other);
 extern void func_ov007_020bc894(Ov007Model *m);
@@ -43,20 +41,20 @@ void func_ov007_020bc02c(Ov007Model *m, void *other) {
         unsigned int i = 0;
         r5->transforms = m->transforms;
         while (i < r5->modelFile->numBones) {
-            Blk *a = (Blk *)((char *)m->transforms + i * 0x30);
-            Blk *b = (Blk *)((char *)m->nextTransforms + i * 0x30);
-            a->f[0] = (a->f[0] + b->f[0]) / 2;
-            a->f[1] = (a->f[1] + b->f[1]) / 2;
-            a->f[2] = (a->f[2] + b->f[2]) / 2;
-            a->f[3] = (a->f[3] + b->f[3]) / 2;
-            a->f[4] = (a->f[4] + b->f[4]) / 2;
-            a->f[5] = (a->f[5] + b->f[5]) / 2;
-            a->f[6] = (a->f[6] + b->f[6]) / 2;
-            a->f[7] = (a->f[7] + b->f[7]) / 2;
-            a->f[8] = (a->f[8] + b->f[8]) / 2;
-            a->f[9] = (a->f[9] + b->f[9]) / 2;
-            a->f[10] = (a->f[10] + b->f[10]) / 2;
-            a->f[11] = (a->f[11] + b->f[11]) / 2;
+            Matrix4x3 *a = &m->transforms[i];
+            Matrix4x3 *b = &m->nextTransforms[i];
+            a->r.m[0] = (a->r.m[0] + b->r.m[0]) / 2;
+            a->r.m[1] = (a->r.m[1] + b->r.m[1]) / 2;
+            a->r.m[2] = (a->r.m[2] + b->r.m[2]) / 2;
+            a->r.m[3] = (a->r.m[3] + b->r.m[3]) / 2;
+            a->r.m[4] = (a->r.m[4] + b->r.m[4]) / 2;
+            a->r.m[5] = (a->r.m[5] + b->r.m[5]) / 2;
+            a->r.m[6] = (a->r.m[6] + b->r.m[6]) / 2;
+            a->r.m[7] = (a->r.m[7] + b->r.m[7]) / 2;
+            a->r.m[8] = (a->r.m[8] + b->r.m[8]) / 2;
+            a->t.x = (a->t.x + b->t.x) / 2;
+            a->t.y = (a->t.y + b->t.y) / 2;
+            a->t.z = (a->t.z + b->t.z) / 2;
             i++;
         }
     }

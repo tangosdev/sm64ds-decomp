@@ -36,7 +36,7 @@
  * - Shake_StateLoseTry: the dead `q` (dropping it renumbers @NNN).
  * - Panel_StateBlink: the mAnimTimer[idx] reset through a +0x4e00 split base.
  * - Scene_StateResult: mSolved through a +0x4000 byte base. mResultTimer and
- *   mScrollFrames go through laundered `scene + off` pointers.
+ *   mScrollFrames go through `scene + off` bases cast to int.
  * - ResetRound: 0x4ec2 and 0x466c are pads that only ResetRound writes.
  * - Answer_StateFindSolution keeps the PanelInputView width view, and
  *   DrawPanels a local layout view. Its native-member rewrite grows the body
@@ -64,9 +64,11 @@ enum dScMgPanel_c_AssetId {
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "dScMgPanel_c.h"
+#include "LevelRng.h"
 #include "SpawnInfo.h"
 
 #include "Sound.h"
+#include "OamAttr.h"
 
 namespace G2 {
 char *GetBG2ScrPtr();
@@ -93,7 +95,8 @@ void SetBg2Offset(int x, int y);
 void SetSubBg2Offset(int x, int y);
 void SetSubBg0Offset(int a, int b);
 void FreeGfxSlotsById(int arg);
-void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
+struct Matrix2x2;
+void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void Hud_RenderSprite(void *a, int b, int c, int d, int e);
 void Mg_SubmitScore(int a);
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *d);
@@ -172,7 +175,6 @@ void dScMgPanel_c::Particle_UpdateAll() {
 /* Spawn one particle in the first free slot, at (x, y).  `mode` picks the
    fixed-drift variant over the random one. */
 void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
-    extern int data_0209d4b8;
     int i;
     for (i = 0; i < 0x40; i++) {
         if (mParticles[i].active == 0) {
@@ -190,7 +192,7 @@ void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
                 mParticles[i].drift = 0;
             } else {
                 mParticles[i].drift =
-                    ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 1) >> 15;
+                    ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 1) >> 15;
             }
             if (x >= 0x80000)
                 mParticles[i].vx = -0x100;
@@ -216,7 +218,6 @@ void dScMgPanel_c::Particle_ClearAll() {
 // @symbol _ZN12dScMgPanel_c13Scroll_UpdateEv
 void dScMgPanel_c::Scroll_Update() {
     char *scene = (char *)this;
-    extern int data_0209d4b8;
     int x;
     int y;
     u32 r;
@@ -232,14 +233,14 @@ void dScMgPanel_c::Scroll_Update() {
         if (mScroll.spawnDelay != 0) {
             mScroll.spawnDelay -= 1;
         } else {
-            r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             x = ((r * 7) >> 15) * 5;
-            r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            r = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             y = ((r << 4) >> 15) + 0xb0;
             Particle_Spawn(x << 12, y << 12, 0);
 
-            r = (u32)RandomIntInternal(&data_0209d4b8);
-            r2 = (u32)RandomIntInternal(&data_0209d4b8);
+            r = (u32)RandomIntInternal(&data_0209d4b8.value);
+            r2 = (u32)RandomIntInternal(&data_0209d4b8.value);
             x = (((r >> 16 & 0x7fff) * 7) >> 15) * 5;
             y = ((((r2 >> 16) & 0x7fff) << 4) >> 15) + 0xb0;
             Particle_Spawn((0x100 - x) << 12, y << 12, 0);
@@ -268,9 +269,9 @@ void dScMgPanel_c::Scroll_Update() {
             else if (y >= 0x100)
                 y = (-0x20 - (y - 0x100)) << 12;
 
-            x = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 7) >> 15) * 5;
+            x = (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 7) >> 15) * 5;
             Particle_Spawn(x << 12, y, 1);
-            x = (((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 7) >> 15) * 5;
+            x = (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 7) >> 15) * 5;
             Particle_Spawn((0x100 - x) << 12, y, 1);
             mScroll.spawnDelay = 2;
         }
@@ -1032,7 +1033,7 @@ typedef struct PanelDrawView {
 }
 void dScMgPanel_c::DrawPanels() {
     PanelDrawView *scene = (PanelDrawView *)this;
-    extern void *sPanelSprites[];
+    extern OamAttr *sPanelSprites[];
     extern u8 sPanelFlipFrameSprites[];
     int x;
     int y;
@@ -1066,10 +1067,10 @@ void dScMgPanel_c::DrawPanels() {
             if (scene->state == 1) {
                 int goalFace = scene->goal[panel];
                 int goalFrame = scene->goalFrame;
-                DrawOamSprite(sPanelSprites[goalFace * 3 + goalFrame], (void *)x, y, 0);
+                DrawOamSprite(sPanelSprites[goalFace * 3 + goalFrame], x, y, 0);
             } else {
                 int goalFace = scene->goal[panel];
-                DrawOamSprite(sPanelSprites[goalFace * 3], (void *)x, y, 0);
+                DrawOamSprite(sPanelSprites[goalFace * 3], x, y, 0);
             }
         }
     }
@@ -1086,8 +1087,9 @@ void dScMgPanel_c::CountMatches() {
     do {
         if (s->mFace[i] != s->mGoal[i]) {
             s->mKind[i] = 2;
-            /* Stepped: `mAnimTimer[i]` moves code. */
-            ((dScMgPanel_c *)(scene + (int)(((long long)i)) * 2))->mAnimTimer[0] = 0;
+            /* Stepped: `mAnimTimer[i]` moves code, and the index's long long
+               round trip is load-bearing here (measured 2026-11-06). */
+            ((dScMgPanel_c *)(scene + (int)((long long)i) * 2))->mAnimTimer[0] = 0;
         }
         i++;
     } while (i < s->mCount);
@@ -1292,7 +1294,6 @@ void dScMgPanel_c::FlipAt(int index) {
    rotates loop 2 or loop 1. The pd/pe pointer locals keep the byte tables
    hoisted above the do-loop and the [idx4] reload inside it. */
 void dScMgPanel_c::DealPuzzle() {
-    extern int data_0209d4b8;
     extern u16 *sPanelPuzzleXPerMode[];
     extern u16 *sPanelPuzzleYPerMode[];
     extern u8 *sPanelPuzzlesAlt[];
@@ -1324,7 +1325,7 @@ void dScMgPanel_c::DealPuzzle() {
         }
         cnt2 = mFlips;
         for (j = 0; j < cnt2; j++) {
-            u32 rnd = (u32)RandomIntInternal(&data_0209d4b8);
+            u32 rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
             u32 s = (rnd >> 16) & 0x7fff;
             v = (cnt1 * s) >> 15;
             FlipAt(v);
@@ -1354,10 +1355,9 @@ void dScMgPanel_c::DealPuzzle() {
 
 // @symbol _ZN12dScMgPanel_c14ScramblePanelsEv
 /* The 15-bit random draw, used a dozen times below. */
-#define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
+#define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)
 
 void dScMgPanel_c::ScramblePanels() {
-    extern int data_0209d4b8;
     extern u8 sPanelScrambleFlipEnabled[];
     extern u8 sPanelScrambleFlips[];
     extern u8 sPanelScrambleWidths[];
@@ -1586,10 +1586,10 @@ void dScMgPanel_c::Panel_StateBlink(int idx) {
         q[idx] = 0;
     }
     {
-        /* b + 0x30 is mAnimTimer[idx]. The `(long long)` round trip on the
-           index and this split base are load-bearing: `s->mAnimTimer[idxL]`
-           moves code. */
-        int idxL = (int)((long long)idx);
+        /* b + 0x30 is mAnimTimer[idx]. The split base is load-bearing:
+           `s->mAnimTimer[idxL]` moves code. The `(long long)` round trip the
+           index went through was measured free on 2026-11-06. */
+        int idxL = idx;
         char *b = c + idxL * 2;
         b += 0x4e00;
         if (((u16 *)b)[0x18] < 0x40)
@@ -1711,10 +1711,11 @@ void dScMgPanel_c::Scene_StateResult() {
         int off;
         u16 *tp;
         u8 *flags;
-        /* scene + 0x4ec0 is mResultTimer, laundered. `&mResultTimer` in place
-           of `scene + off` leaves `off` dead, and dropping it renumbers @NNN. */
+        /* scene + 0x4ec0 is mResultTimer, reached through an int cast of the byte
+           base. `&mResultTimer` in place of `scene + off` leaves `off` dead, and
+           dropping it renumbers @NNN. */
         off = 0x4ec0;
-        tp = (u16 *)(int)((long long)(int)(scene + off));
+        tp = (u16 *)(int)(scene + off);
         /* flags[0xfe6] is mSolved; `&mSolved` moves this code. */
         flags = (u8 *)(scene + 0x4000);
         *tp = *tp - 1;
@@ -1759,9 +1760,9 @@ void dScMgPanel_c::Scene_StateResult() {
     {
         int inc;
         u16 *ip;
-        /* scene + 0x4ec6 is mScrollFrames, laundered the same way. */
+        /* scene + 0x4ec6 is mScrollFrames, reached the same way. */
         inc = 0x4ec6;
-        ip = (u16 *)(int)((long long)(unsigned)(scene + inc));
+        ip = (u16 *)(int)(scene + inc);
         *ip = *ip + 1;
     }
 }
@@ -1872,8 +1873,8 @@ extern "C" {
 
 extern void Deallocate(void *);
 extern int GetOwnerLanguage(void);
-extern int LoadFile(int handle);
-extern void DecompressLZ16(int src, void *dst);
+extern void *LoadFile(int handle);
+extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
@@ -1984,8 +1985,8 @@ s32 dScMgPanel_c::InitResources() {
     char *b;
     volatile u16 mainFill;
     volatile u16 subFill;
-    int file;
-    int msgFile;
+    void *file;
+    void *msgFile;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
@@ -1996,15 +1997,15 @@ s32 dScMgPanel_c::InitResources() {
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
     DecompressLZ16(file, (void *)(func_02054d88() + 0x4000));
-    Deallocate((void *)file);
+    Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
-    GX::LoadBGPltt((const void *)file, 0x1a0, 0x60);
-    Deallocate((void *)file);
+    GX::LoadBGPltt(file, 0x1a0, 0x60);
+    Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_UP_NSC_BIN);
-    func_02056314((void *)file, 0, 0x800);
-    Deallocate((void *)file);
+    func_02056314(file, 0, 0x800);
+    Deallocate(file);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     *(volatile u16 *)0x400000c &= ~0x40;
@@ -2017,8 +2018,8 @@ s32 dScMgPanel_c::InitResources() {
     MultiStore16(mainFill, b, 0x1000);
 
     file = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
-    func_020563d4((const void *)file, 0x800, 0x800);
-    Deallocate((void *)file);
+    func_020563d4(file, 0x800, 0x800);
+    Deallocate(file);
 
     msgFile = LoadFile(ASSET_D_2D_MG_PAZZLE_PANEL_NCG_BIN);
     if (GetOwnerLanguage() == 5) {
@@ -2033,7 +2034,7 @@ s32 dScMgPanel_c::InitResources() {
 
     file = LoadFile(ASSET_D_2D_MG_PAZZLE_PANEL_NCL_BIN);
     DecompressLZ16(msgFile, (void *)0x6400000);
-    GX::LoadOBJPltt((const void *)file, 0, 0x100);
+    GX::LoadOBJPltt(file, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
@@ -2043,17 +2044,17 @@ s32 dScMgPanel_c::InitResources() {
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
 
     {
-        int subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
+        void *subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
         DecompressLZ16(subFile, (void *)(G2S::GetBG3CharPtr() + 0x4000));
-        Deallocate((void *)subFile);
+        Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
-        GXS::LoadBGPltt((const void *)subFile, 0x1a0, 0x60);
-        Deallocate((void *)subFile);
+        GXS::LoadBGPltt(subFile, 0x1a0, 0x60);
+        Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_DOWN_NSC_BIN);
-        func_020562b4((const void *)subFile, 0, 0x800);
-        Deallocate((void *)subFile);
+        func_020562b4(subFile, 0, 0x800);
+        Deallocate(subFile);
 
         gSubScreenLayers |= 4;
         *(volatile u16 *)0x400100c &= ~0x40;
@@ -2066,21 +2067,21 @@ s32 dScMgPanel_c::InitResources() {
         MultiStore16(subFill, b, 0x1000);
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
-        func_02056374((const void *)subFile, 0, 0x800);
-        Deallocate((void *)subFile);
+        func_02056374(subFile, 0, 0x800);
+        Deallocate(subFile);
 
         *(volatile u16 *)0x4001008 &= ~3;
         *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x610;
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_BIKKURI_NSC_BIN);
-        func_020564f4((const void *)subFile, 0, 0x800);
-        Deallocate((void *)subFile);
+        func_020564f4(subFile, 0, 0x800);
+        Deallocate(subFile);
     }
 
     DecompressLZ16(msgFile, (void *)0x6600000);
-    GXS::LoadOBJPltt((const void *)file, 0, 0x100);
-    Deallocate((void *)msgFile);
-    Deallocate((void *)file);
+    GXS::LoadOBJPltt(file, 0, 0x100);
+    Deallocate(msgFile);
+    Deallocate(file);
 
     FreeGfxSlotsById(0x1d);
     ResetRound();
@@ -2116,12 +2117,12 @@ extern "C" dScMgPanel_c *dScMgPanel_c_classInit() {
 
 /* The state tables, in the order the static initializer fills them. Each
    entry's {function, 0} record is a compiler temporary in .data. The two
-   sprite-handle triples are copied whole from data_ov006_02136cf0 and
+   sprite triples (OamAttr lists) are copied whole from data_ov006_02136cf0 and
    data_ov006_02136d1c. */
-extern "C" void *data_ov006_02136cf0[3];
-extern "C" void *data_ov006_02136d1c[3];
+extern "C" OamAttr *data_ov006_02136cf0[3];
+extern "C" OamAttr *data_ov006_02136d1c[3];
 
-void *sPanelSprites[6] = {
+OamAttr *sPanelSprites[6] = {
     data_ov006_02136cf0[0], data_ov006_02136cf0[1], data_ov006_02136cf0[2],
     data_ov006_02136d1c[0], data_ov006_02136d1c[1], data_ov006_02136d1c[2],
 };

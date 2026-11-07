@@ -80,8 +80,8 @@ extern RingCollisionFilePtr gFlRingCollisionFile;
 
 extern "C" {
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-void func_020393d4(void *p, void *fn);
-void func_020393c4(void *p, void *fn);
+void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -134,8 +134,8 @@ s32 daObjFl_Ring_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)(k), mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov022_02113cc8.mClps));
 
-    func_020393d4(&mMeshCollider, (void *)dBgW::UpdatePosAndAngs);
-    func_020393c4(&mMeshCollider, (void *)StoodOnCallback);
+    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)StoodOnCallback);
 
     /* The ring's own Z channel carries its spin rate, not an angle: it rests
        at -0x100 per frame unless the map row gave it one. */

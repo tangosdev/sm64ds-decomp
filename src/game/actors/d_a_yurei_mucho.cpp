@@ -33,11 +33,13 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "LevelRng.h"
 
 /* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
    available, but their non-POD copies change these two helpers' codegen; see
    the measured alternatives in the handoff. */
 #include "private/mtx43.h"
+#include "math/MtxStack.h"
 struct V3A { int w[3]; };
 
 /* func_ov065_02116364 builds a five-Vector3 aggregate on the stack. Leaving it
@@ -62,20 +64,13 @@ extern "C" {
  * keeps the TU's compiler-numbered static-initializer aliases stable. */
 extern int RandomIntInternal(int *seed);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern int ApproachAngle(void *p, short target, int a, int b, int limit);
+extern int ApproachAngle(short *p, short target, int a, int b, int limit);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ax);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
-extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_02012694(unsigned int id, void *v);
-extern int data_020a0e68[];
-extern int data_0209e650[];
 extern short data_02082214[];
 
 /* ov002 -- unnamed particle helper. */
@@ -309,33 +304,28 @@ void daYurei_Mucho_c::func_ov065_0211696c()
     Vector3 v;
 
     Vec3_Asr(&v, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(data_020a0e68,
-        mAngleX, mAngleY, mAngleZ);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
 
-    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)data_020a0e68;
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
     mShotPosX = 0;
     mShotPosY = 0;
     mShotPosZ = 0;
-    *(Mtx43 *)data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
+    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
 
-    MulMat4x3Mat4x3(reinterpret_cast<const int *>(&mAnmModel.data.transforms[4]), data_020a0e68,
-                    data_020a0e68);
+    MulMat4x3Mat4x3(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
 
-    mShotPosX = data_020a0e68[9];
-    mShotPosY = data_020a0e68[10];
-    mShotPosZ = data_020a0e68[11];
+    mShotPosX = data_020a0e68.t.x;
+    mShotPosY = data_020a0e68.t.y;
+    mShotPosZ = data_020a0e68.t.z;
     mShotPosX <<= 3;
     mShotPosY <<= 3;
     mShotPosY -= 0xa000;
     mShotPosZ <<= 3;
 
-    Matrix4x3_FromTranslation(data_020a0e68,
-        mPosX >> 3,
-        (mPosY - 0x18000) >> 3,
-        mPosZ >> 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0x18000) >> 3, mPosZ >> 3);
 
-    *(Mtx43 *)mShadowMat = *(Mtx43 *)data_020a0e68;
+    *(Mtx43 *)mShadowMat = *(Mtx43 *)&data_020a0e68;
 
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x64000, 0x258000, 0xf);
 }
@@ -369,8 +359,8 @@ int daYurei_Mucho_c::func_ov065_0211691c(State *s)
    literal at 0x02116918, not a call, so the field read is what reproduces. */
 int daYurei_Mucho_c::func_ov065_021168a8()
 {
-    mTargetAngle = (short)(((u32)RandomIntInternal(data_0209e650) >> 8) << 0xc);
-    mStateTimer = (short)((((u32)RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
+    mTargetAngle = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
+    mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
     return 1;
 }
@@ -400,8 +390,8 @@ int daYurei_Mucho_c::func_ov065_02116744()
     ApproachAngle(&mPrevAngleX, 0, 1, 0x500, 0x500);
 
     in.z = 0xa000;
-    Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&in, data_020a0e68, &mSpeedX);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+    MulVec3Mat4x3(&in, &data_020a0e68, (Vector3 *)&mSpeedX);
 
     if ((u16)mStateTimer == 0) {
         func_ov065_0211691c(&data_ov065_0211d670);
@@ -469,8 +459,8 @@ int daYurei_Mucho_c::func_ov065_021165d8()
             v.z = -0x1000;
             v.x = 0;
             v.y = 0;
-            Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
-            MulVec3Mat4x3(&v, data_020a0e68, &mSpeedX);
+            Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+            MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
         }
     } else {
         mStateTimer = pitch;
@@ -504,7 +494,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
     V3Quint L;
     daPly_c *pl = ClosestNonVanishPlayer();
     if (pl != 0) {
-        *(V3A *)(int)(&L.pp) = *(V3A *)(int)(&pl->mPosX);
+        *(V3A *)(&L.pp) = *(V3A *)(&pl->mPosX);
         L.tgt = L.pp;
         mTargetAngle = Vec3_HorzAngle(&mPos, &L.tgt);
         ApproachAngle(&mPrevAngleY, mTargetAngle, 1, 0x500, 0x500);
@@ -535,7 +525,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
 
     if (mAnmModel.Finished() != 0) {
         if (pl != 0) {
-            s32 *dsrc = (s32 *)(int)(&pl->mPosX);
+            s32 *dsrc = (s32 *)(&pl->mPosX);
             L.d.x = dsrc[0];
             L.d.y = dsrc[1];
             L.d.z = dsrc[2];
@@ -650,7 +640,7 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
         return;
     }
     {
-        int b = (int)(((long long)(p->actorID == 0xbf)));
+        int b = (int)(p->actorID == 0xbf);
         if (b == 0) return;
     }
     if (p->mIsMetal == 1 || p->IsOnShell() == 1) {

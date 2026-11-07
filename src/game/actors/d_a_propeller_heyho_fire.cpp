@@ -24,9 +24,8 @@
  * the key function.
  */
 // What stays:
-// - UpdateModelMatrix copies the scratch matrix as twelve plain words, so
-//   data_020a0e68 is declared here as M48 and math/MtxStack.h's Matrix4x3
-//   view of it is not included.
+// - UpdateModelMatrix copies the scratch matrix as twelve plain words
+//   through Mtx43; a copy of the C++ Matrix4x3 grows .text by 0x1c bytes.
 
 #pragma defer_codegen off
 
@@ -37,23 +36,16 @@
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
+#include "private/mtx43.h"
 
 struct BMD_File;
-
-/* The scratch matrix at 0x020a0e68 as UpdateModelMatrix copies it: twelve
-   plain words. A struct copy of the C++ Matrix4x3 does not reproduce it. */
-struct M48 {
-    int w[12];
-};
 
 /* Was spelled `func_0211d610`, a name no symbols.txt defines. ov002's relocs
    record both loads (0x020fee10, 0x020fefc0) as `overlays(65,75)`; ov065's
    row there is the one unambiguous `kind:bss`, and CleanupResources already
    named it. It is the fireball's shared model file. */
 extern SharedFilePtr data_ov065_0211d610;
-/* local extern: the twelve-word view (see M48). */
-extern "C" M48 data_020a0e68;
-
 /* The one state, as two member-function pointers of two words each:
  * data_ov002_0210d600 points at InitState0 (init) and
  * data_ov002_0210d5f8 at State0 (main). The static initializer
@@ -70,13 +62,10 @@ struct HeyhoStateTable {
 };
 extern HeyhoStateTable data_ov002_02111190;
 
-/* local extern: no shared header declares these (math/MtxStack.h is not
- * included, see M48). */
+/* local extern: no shared header declares these. */
 extern "C" {
-void func_02012694(unsigned int a, Vector3 const &v);
+void func_02012694(unsigned int a, const Vector3 *v);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, short rx, short ry, short rz);
 }
 
 // @symbol _ZN24daPropeller_Heyho_Fire_cD1Ev
@@ -128,7 +117,7 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
     }
     flags = mdCcAc_c.hitFlags;
     SmallPoofDust();
-    func_02012694(0x166, mCamSpacePos);
+    func_02012694(0x166, &mCamSpacePos);
     MarkForDestruction();
     if ((flags & 0x10) != 0) {
         return;
@@ -145,7 +134,7 @@ void daPropeller_Heyho_Fire_c::CheckPlayerHit() {
 int daPropeller_Heyho_Fire_c::State0() {
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall()) {
         SmallPoofDust();
-        func_02012694(0x166, mCamSpacePos);
+        func_02012694(0x166, &mCamSpacePos);
         MarkForDestruction();
         return 1;
     }
@@ -179,7 +168,7 @@ void daPropeller_Heyho_Fire_c::UpdateModelMatrix() {
     Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    *(M48 *)&mModel.mat4x3 = data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 // @symbol _ZN24daPropeller_Heyho_Fire_c16CleanupResourcesEv

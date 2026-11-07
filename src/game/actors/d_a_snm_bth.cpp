@@ -26,6 +26,9 @@
 #include "daPly_c.h"
 #include "SaveData.h"
 #include "SpawnInfo.h"
+#include "private/mtx43.h"
+#include "math/MtxStack.h"
+#include "LevelRng.h"
 
 /* This scene owns the position used by the breath effect. */
 extern Vector3 data_ov027_02113d10;
@@ -38,30 +41,23 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);
-void Matrix4x3_FromRotationY(Matrix4x3 *, s16);
-void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *, s16);
-void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *, s32, s32, s32);
 void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-int DecIfAbove0_Byte(void *);
+u8 DecIfAbove0_Byte(u8 *);
 s32 RandomIntInternal(s32 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 int *Vec3_LslInPlace(Vector3 *, int);
-void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
-int InvMat4x3(Matrix4x3 *dst, const Matrix4x3 *src);
+int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
-extern Matrix4x3 data_020a0e68;
-extern s32 data_0209e650;
-extern u8 data_0209f2d8[];
+extern u8 data_0209f2d8;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
-/* Whole-matrix copies (InitResources, IsPlayerInRange) cast through a plain
- * 48-byte struct; that is the form both were matched in, so it stays. */
-typedef struct { s32 words[12]; } MatrixWords;
 }
+
+/* Whole-matrix copies (InitResources, IsPlayerInRange) cast through Mtx43;
+ * mInvModelMat is flat words. */
 
 /* Actor ID 0xbf is PLAYER. int-returning, so the ROM materializes the 0/1
  * before testing it; a direct `!=` does not. */
@@ -196,7 +192,7 @@ int SnowmanBreathParticle::TrySpawn(daPly_c &player) {
     if (angle < 0x9de)
         angle = 0x9de;
     {
-        s32 random = RandomIntInternal(&data_0209e650);
+        s32 random = RandomIntInternal(&data_0209e650.value);
         mAngleX = 0xc1c;
         mAngleY = (s16)(angle + ((random & 0x1fff) - 0x1000));
     }
@@ -221,7 +217,7 @@ int daSnmBth_c::IsPlayerInRange()
 
     Vector3 playerPos;
     Vec3_Asr(&playerPos, &player->mPos, 3);
-    *(MatrixWords *)&data_020a0e68 = *(MatrixWords *)&mInvModelMat;
+    *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mInvModelMat;
 
     Vector3 localPos;
     MulVec3Mat4x3(&playerPos, &data_020a0e68, &localPos);
@@ -254,16 +250,17 @@ void daSnmBth_c::OnPendingDestroy()
 // @symbol _ZN10daSnmBth_c6RenderEv
 int daSnmBth_c::Render()
 {
-  int b = data_0209f2d8[0];
-  b = (b == 2);
-  if(b) return 1;
-  {
-    int i;
-    for(i=0;i<0x32;i++){
-      mParticles[i].Render();
+    int b = data_0209f2d8;
+    b = (b == 2);
+    if (b)
+        return 1;
+    {
+        int i;
+        for (i = 0; i < 0x32; i++) {
+            mParticles[i].Render();
+        }
     }
-  }
-  return 1;
+    return 1;
 }
 
 // @symbol _ZN10daSnmBth_c8BehaviorEv
@@ -277,7 +274,7 @@ int daSnmBth_c::Behavior()
     SnowmanBreathParticle *slot;
     int zero;
 
-    b = data_0209f2d8[0];
+    b = data_0209f2d8;
     b = (b == 2);
     if (b) {
         return 1;
@@ -356,7 +353,7 @@ int daSnmBth_c::InitResources()
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     InvMat4x3(&data_020a0e68, &data_020a0e68);
-    *(MatrixWords *)&mInvModelMat = *(MatrixWords *)&data_020a0e68;
+    *(Mtx43 *)&mInvModelMat = *(Mtx43 *)&data_020a0e68;
     return 1;
 }
 

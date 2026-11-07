@@ -15,6 +15,7 @@
  */
 #include "types.h"
 #include "IRQ.h"
+#include "nitro/os/alarm.h"
 
 #define REG_TM1CNT_L (*(volatile u16 *)0x04000104)
 #define REG_TM1CNT_H (*(volatile u16 *)0x04000106)
@@ -23,8 +24,6 @@
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 
 extern "C" {
-
-typedef void (*OSAlarmHandler)(void *arg);
 
 struct OSAlarm {
     OSAlarmHandler handler; /* 0x00 */

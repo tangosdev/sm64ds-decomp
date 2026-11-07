@@ -44,6 +44,7 @@ enum dScMgCurling2_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "G2x.h"
+#include "LevelRng.h"
 
 namespace G2 {
 void *GetBG0ScrPtr(void);
@@ -81,20 +82,22 @@ extern void Mg_SubmitScore(int self);
 extern int Mg_IsNewRecord(void);
 extern int Mg_GetTopRecord(void);
 extern void *Ov004_LoadFileByPath(const char *p);
-extern void Mg_RenderSubSpriteMtx(int a, int b, int c, int d);
+extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *matrix);
 extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_SetSharedState(s32 state);
 extern void Mg_DrawTopLeftCounter(int self);
 extern void Mg_DrawTopRightCounter(int a, int b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Mg_DrawBigNumber(int a, int b, int c, int d, int e, int f, int g);
-extern void Mg_RenderSpriteBoth(int a, int b, int c, int d, int e);
+extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern void func_02012718(int id, int v);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int idx);
-extern void DrawOamSprite(void *a, void *b, int c, void *d);
+struct OamAttr;
+struct Matrix2x2;
+extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int RandomIntInternal(int *seed);
 extern int GetGameLanguage(void);
@@ -102,7 +105,7 @@ extern int atan2_hold_d_s_mg_curling2_1(int y, int x);
 extern void SetBg2Offset(int a, int b);
 extern void SetBg0Offset(int a, int b);
 extern void DecompressLZ16(const void *src, void *dst);
-extern int LoadFile(int handle);
+extern void *LoadFile(int handle);
 extern void Deallocate(void *p);
 extern void Ov004_Deallocate(void *p);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
@@ -112,7 +115,6 @@ extern void func_020563d4(const void *a, u32 b, u32 c);
 extern void func_02056374(const void *a, u32 b, u32 c);
 extern int func_02054d88(void);
 
-extern int data_0209d4b8;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s16 data_02082214[];
@@ -123,11 +125,11 @@ extern int data_ov006_0212e504[];
 extern int data_ov006_0212e51c[];
 extern int sCurling2ScrollX[];
 extern int sCurling2ScrollY[];
-extern int sCurlingBitSprites[];
+extern OamAttr *sCurlingBitSprites[];
 extern int sCurling2StoneSprite;
 extern int sCurling2TargetStoneSprite;
 extern int sCurling2StonesSprites;
-extern int *sCurling2CounterSprites[];
+extern OamAttr **sCurling2CounterSprites[];
 extern int sCurling2CursorSprites[];
 extern char sCurling2BgJokyuNcgPath;
 
@@ -291,7 +293,7 @@ void dScMgCurling2_c::DrawPieces() {
             int x = mPiece[i].x >> 0xc;
             int y = mPiece[i].y >> 0xc;
             Mg_RenderSubSpriteMtx(sCurlingBitSprites[mPiece[i].sprite0], x, y, 0);
-            DrawOamSprite((void *)sCurlingBitSprites[mPiece[i].sprite1], (void *)x, y, 0);
+            DrawOamSprite(sCurlingBitSprites[mPiece[i].sprite1], x, y, 0);
         }
     }
 }
@@ -330,10 +332,11 @@ void dScMgCurling2_c::StepYRampUp(int entry) {
     } else {
         mPiece[entry].yIndex = 2;
         *(short *)&mPiece[entry].countdown3 =
-            (short)(unsigned char)((((0x20 *
-                                      (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
-                                       0x7fff)) >>
-                                     0xf)) +
+            (short)(unsigned char)(((0x20 *
+                                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
+                                       16) &
+                                      0x7fff)) >>
+                                    0xf) +
                                    0x20);
     }
 }
@@ -344,10 +347,10 @@ void dScMgCurling2_c::StepYRestart(int entry) {
     unsigned int rnd;
 
     mPiece[entry].yInc = 0;
-    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     mPiece[entry].yTarget = (((rnd << 4) >> 15) << 4) + 0x300;
     mPiece[entry].yIndex = 1;
-    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     rnd = ((rnd << 5) >> 15) + 0x20;
     *(short *)&mPiece[entry].countdown3 = (unsigned char)rnd;
 }
@@ -417,7 +420,8 @@ void dScMgCurling2_c::StepXPushNeg(int entry) {
 
     mPiece[entry].xIndex = 3;
     mPiece[entry].countdown2 =
-        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >>
+        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
+                             << 5 >>
                          0xf) +
                         0x20);
 }
@@ -455,7 +459,8 @@ void dScMgCurling2_c::StepXPushPos(int entry) {
 
     *(char *)&mPiece[entry].xIndex = 3;
     *(short *)&mPiece[entry].countdown2 =
-        (((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) + 0x20 &
+        (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf) +
+            0x20 &
         0xff;
 }
 
@@ -471,16 +476,18 @@ void dScMgCurling2_c::StepXPick(int entry) {
     }
     mPiece[entry].xInc = 0;
     mPiece[entry].xIndex =
-        sCurling2StepXPicks[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+        sCurling2StepXPicks[(((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
                                 << 1 >>
                             15];
     mPiece[entry].countdown =
-        (short)(unsigned char)((0x10 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
-                                        0x7fff)) >>
+        (short)(unsigned char)((0x10 *
+                                (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                 0x7fff)) >>
                                0xf);
     mPiece[entry].countdown2 =
-        (short)(unsigned char)(((0x40 * (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) &
-                                         0x7fff)) >>
+        (short)(unsigned char)(((0x40 *
+                                 (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                                  0x7fff)) >>
                                 0xf) +
                                0x60);
 }
@@ -599,19 +606,19 @@ void dScMgCurling2_c::StepXPickFast(int entry) {
     }
     mPiece[entry].xInc = 0;
     mPiece[entry].yInc =
-        ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 4) +
+        ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf)
+         << 4) +
         0x600;
-    mPiece[entry].xIndex =
-        sCurling2StepXFastPicks[(((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
-                                    << 1 >>
-                                15];
+    mPiece[entry].xIndex = sCurling2StepXFastPicks
+        [(((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 1 >> 15];
     mPiece[entry].countdown =
-        (unsigned short)((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
+        (unsigned short)((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
                            << 4) >>
                           0xf) &
                          0xff);
     mPiece[entry].countdown2 =
-        (unsigned short)(((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) *
+        (unsigned short)(((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
+                             0x7fff) *
                             0x30) >>
                            0xf) +
                           0x30) &
@@ -629,7 +636,7 @@ void dScMgCurling2_c::StepXOnly(int entry) {
 /* Pick modeIndex from sCurling2StepModes (1 on one roll in eight)
  * and clear xIndex. */
 void dScMgCurling2_c::PickStepMode(int entry) {
-    unsigned rnd = (unsigned)RandomIntInternal(&data_0209d4b8);
+    unsigned rnd = (unsigned)RandomIntInternal(&data_0209d4b8.value);
     int pick = 0;
     unsigned roll = ((rnd >> 16) & 0x7fff) << 3 >> 0xf;
     if (roll == 5)
@@ -648,9 +655,9 @@ void dScMgCurling2_c::StepPieces() {
             unsigned char idx = mPiece[i].modeIndex;
             (((C *)this)->*sCurling2StepModeTable[idx])(i);
             if ((mPiece[i].y >> 0xc) >= 0xc8) {
-                mPiece[i].x = (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
-                                  << 5 >>
-                              0xf << 0xf;
+                mPiece[i].x =
+                    (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5 >>
+                    0xf << 0xf;
                 mPiece[i].y = -0x8000;
                 mPiece[i].xIndex = 0;
                 mPiece[i].modeIndex = 0;
@@ -693,19 +700,19 @@ void dScMgCurling2_c::SeedPieces() {
 
     i = 0;
     for (; i < 0x32; i++) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((rnd >> 16) & 0x7fff) << 5;
-        mPiece[i].x = (int)((m >> 0xf)) << 0xf;
+        mPiece[i].x = (int)(m >> 0xf) << 0xf;
         mPiece[i].y = -0x8000;
         mPiece[i].updateEnable = 1;
         mPiece[i].drawEnable = 1;
         mPiece[i].modeIndex = 0;
         mPiece[i].xIndex = 0;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mPiece[i].sprite0 = (char)(((rnd >> 16) & 0x7fff) * 5 >> 0xf);
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         /* Own local: `mPiece[i].sprite0 + shift` puts the byte in r0. */
         unsigned char spr = mPiece[i].sprite0;
         v = spr + ((((rnd >> 16) & 0x7fff) << 2) >> 0xf) + 1;
@@ -714,16 +721,16 @@ void dScMgCurling2_c::SeedPieces() {
             v = (v - 5) & 0xff;
         mPiece[i].sprite1 = (char)v;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mPiece[i].countdown = (short)(((i & 7) << 6) + (((rnd >> 16) & 0x7fff) * 0x30 >> 0xf));
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((rnd >> 16) & 0x7fff) << 5;
-        mPiece[i].x = (int)((m >> 0xf)) << 0xf;
+        mPiece[i].x = (int)(m >> 0xf) << 0xf;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8);
+        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         q = (((rnd >> 16) & 0x7fff) * 0x1a) >> 0xf;
-        mPiece[i].y = (((q << 3) - 8)) << 0xc;
+        mPiece[i].y = ((q << 3) - 8) << 0xc;
         mPiece[i].countdown = 0;
     }
 }
@@ -781,7 +788,7 @@ void dScMgCurling2_c::DrawCursor() {
 
     int x = mDragX;
     int y = mDragY;
-    Mg_RenderSpriteBoth((int)sCurling2CursorSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
+    Mg_RenderSpriteBoth(sCurling2CursorSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
 /* Stylus drag update. Runs while the player drags a stone before the throw. With no touch in
@@ -834,7 +841,7 @@ void dScMgCurling2_c::DragUpdate() {
         dx = (mDragX - oldx) >> 12;
         dy = (mDragY - oldy) >> 12;
         dy2 = dy * dy;
-        if (cstd::sqrt((u64)(dx * dx + dy2)) <= 1) {
+        if (cstd::sqrt((dx * dx + dy2)) <= 1) {
             mDragX = oldx;
             mDragY = oldy;
             return;
@@ -874,7 +881,7 @@ void dScMgCurling2_c::DragUpdate() {
             }
         }
         mThrowAngle = (mThrowAngle + oldAng) >> 1;
-        mag = cstd::sqrt((u64)(dx * dx + dy2)) * 9;
+        mag = cstd::sqrt((dx * dx + dy2)) * 9;
         mag = (mag << 12) >> 4;
         if (mag >= 0xc000)
             mag = 0xc000;
@@ -948,7 +955,7 @@ void dScMgCurling2_c::DrawCounter() {
     left = 5 - thrown;
     if (left < 0)
         left = 0;
-    Mg_RenderSubSpriteMtx((int)&sCurling2StoneSprite, 0xd0, 0xb4, 0);
+    Mg_RenderSubSpriteMtx(&sCurling2StoneSprite, 0xd0, 0xb4, 0);
     Mg_RenderSubSpriteMtx(sCurling2CounterSprites[GetGameLanguage()][1], 0xe8, 0xb4, 0);
     Mg_DrawBigNumber(0xf8, 0xb4, left, 0, 0, 0, 0);
 }
@@ -999,7 +1006,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
             continue;
         dx = (mStone[hitIndex].x - mStone[stoneIndex].x) >> 12;
         dy = (mStone[hitIndex].y - mStone[stoneIndex].y) >> 12;
-        distance = cstd::sqrt((u64)(dx * dx + dy * dy));
+        distance = cstd::sqrt((dx * dx + dy * dy));
         contactAngle = cstd::atan2(dy, dx);
         if (distance > 0x18)
             continue;
@@ -1028,7 +1035,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
                     continue;
                 dx2 = (mStone[nextIndex].x - mStone[hitIndex].x) >> 12;
                 dy2 = (mStone[nextIndex].y - mStone[hitIndex].y) >> 12;
-                nextDistance = cstd::sqrt((u64)(dx2 * dx2 + dy2 * dy2));
+                nextDistance = cstd::sqrt((dx2 * dx2 + dy2 * dy2));
                 nextContactAngle = cstd::atan2(dy2, dx2);
                 if (nextDistance > 0x18)
                     continue;
@@ -1147,8 +1154,7 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
             hitVelocityY = (int)((wideContactSin * movingNormal + 0x800) >> 12) +
                            FX_MUL(contactCos, hitTangent);
             self->mStone[stoneIndex].angle = cstd::atan2(dx, dy);
-            self->mStone[stoneIndex].speed =
-                cstd ::sqrt((u64)((long long)dy * dy + (long long)dx * dx));
+            self->mStone[stoneIndex].speed = cstd ::sqrt(((long long)dy * dy + (long long)dx * dx));
             self->mStone[stoneIndex].x = self->mStone[hitIndex].x - FX_MUL(contactCos, 0x1b000);
             self->mStone[stoneIndex].y =
                 self->mStone[hitIndex].y - (int)((wideContactSin * 0x1b000 + 0x800) >> 12);
@@ -1168,9 +1174,8 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
                 *pHitY = self->mStone[stoneIndex].y + 0x18000;
             }
             hitAngle = cstd::atan2(hitVelocityY, hitVelocityX);
-            self->mStone[hitIndex].speed =
-                cstd::sqrt((u64)((long long)hitVelocityX * hitVelocityX +
-                                 (long long)hitVelocityY * hitVelocityY));
+            self->mStone[hitIndex].speed = cstd::sqrt(
+                ((long long)hitVelocityX * hitVelocityX + (long long)hitVelocityY * hitVelocityY));
             self->mStone[stoneIndex].state = 1;
             self->mStone[hitIndex].state = 1;
             if (self->mStone[hitIndex].speed >= 0x3800) {
@@ -1195,7 +1200,7 @@ void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     int cosHeading = data_02082214[((heading >> 4) << 1) + 1];
     int speed = ((dScMgCurling2_c *)o)->mStone[0].speed;
     long long product = (long long)cosHeading * speed;
-    int velocityX = (int)(((unsigned long long)(product + 0x800)) >> 12);
+    int velocityX = (int)((product + 0x800) >> 12);
     ((dScMgCurling2_c *)o)->mStone[0].spinVel = (short)((-velocityX) >> 2);
 }
 
@@ -1597,9 +1602,9 @@ void dScMgCurling2_c::Scroll() {
     if (scrollIdx == 0xff) {
         scrollIdx = 0;
     } else {
-        idx = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 4 >> 15;
+        idx = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 4 >> 15;
         if (scrollIdx == idx) {
-            int t = ((u32)RandomIntInternal(&data_0209d4b8) >> 16 & 0x7fff) * 3 >> 15;
+            int t = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 3 >> 15;
             t += 1;
             idx += t;
             if (idx >= 4)
@@ -1740,11 +1745,11 @@ s32 dScMgCurling2_c::InitResources() {
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1220;
     DecompressLZ16(r6, (void *)func_02054d88());
 
-    f = (void *)LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
+    f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
     GX::LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
-    f = (void *)LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_NSC_BIN);
+    f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_NSC_BIN);
     func_02056314(f, 0, 0x800);
     Deallocate(f);
 
@@ -1752,7 +1757,7 @@ s32 dScMgCurling2_c::InitResources() {
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x5420;
 
-    f = (void *)LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_MATO_NSC_BIN);
+    f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_MATO_NSC_BIN);
     {
         char *b = (char *)G2::GetBG2ScrPtr();
         sp4 = 0x4300;
@@ -1770,8 +1775,8 @@ s32 dScMgCurling2_c::InitResources() {
     func_02056554(f, 0, 0x800);
     Deallocate(f);
 
-    c7 = (void *)LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
-    c8 = (void *)LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
+    c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
+    c8 = LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
     DecompressLZ16(c7, (void *)0x6400000);
     GX::LoadOBJPltt(c8, 0, 0x100);
 
@@ -1780,11 +1785,11 @@ s32 dScMgCurling2_c::InitResources() {
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x814;
     DecompressLZ16(r6, (void *)G2S::GetBG2CharPtr());
 
-    f = (void *)LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
+    f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
     GXS::LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
-    f = (void *)LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING2_NSC_BIN);
+    f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING2_NSC_BIN);
     func_02056374(f, 0, 0x800);
     Deallocate(f);
 

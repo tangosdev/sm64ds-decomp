@@ -5,12 +5,11 @@
 extern "C" {
 
 extern int WMi_CheckInitialized(void);
-extern char *WM_GetSystemWork(void);
 
 /* NitroSDK wm_sync.c WM_SetPortCallback: store port's receive callback
  * and its argument, with interrupts off. ILLEGAL_STATE (3) before WM_Init
  * (WMi_CheckInitialized), else WM_ERRCODE_SUCCESS. */
-int WM_SetPortCallback(int port, int callback, int arg) {
+int WM_SetPortCallback(int port, void *callback, void *arg) {
     int token = IRQ::Disable();
     int r = WMi_CheckInitialized();
     if (r != 0) {
@@ -18,9 +17,9 @@ int WM_SetPortCallback(int port, int callback, int arg) {
         return r;
     }
     {
-        WMArm9Buf *sys = (WMArm9Buf *)WM_GetSystemWork();
-        sys->portCallbackTable[port] = (void *)callback;
-        sys->portCallbackArgument[port] = (void *)arg;
+        WMArm9Buf *sys = WM_GetSystemWork();
+        sys->portCallbackTable[port] = callback;
+        sys->portCallbackArgument[port] = arg;
     }
     IRQ::Restore(token);
     return 0;

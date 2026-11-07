@@ -8,31 +8,10 @@ extern char* data_020a9db8;
  * capped at mBlockSize), source offset and segment number. MBi_CommParentSendBlock
  * calls it for the block it is about to send.
  *
- * The views are func_02067604's MbSegmentInfo, MbDownloadFileInfoHeader
- * and MB_BlockInfoTable. The result keeps MBi_CommParentSendBlock's struct Out tag
- * (its declaration names the parameter type) with the SDK's MB_BlockInfo
- * field names. */
-typedef struct MbSegmentInfo {
-    unsigned int recv_addr;  /* 0x00 */
-    unsigned int load_addr;  /* 0x04 */
-    unsigned int size;       /* 0x08 */
-    unsigned int target : 1; /* 0x0c */
-    unsigned int rsv : 31;
-} MbSegmentInfo;
-
-typedef struct MbDownloadFileInfoHeader {
-    unsigned int arm9EntryAddr; /* 0x00 */
-    unsigned int arm7EntryAddr; /* 0x04 */
-    unsigned int padding;       /* 0x08 */
-    MbSegmentInfo seg[3];       /* 0x0c */
-} MbDownloadFileInfoHeader;
-
-typedef struct MB_BlockInfoTable {
-    unsigned int seg_head_offset[3]; /* 0x00 */
-    unsigned short block_head[3];    /* 0x0c */
-    unsigned short block_num;        /* 0x12 */
-} MB_BlockInfoTable;
-
+ * The views are MbSegmentInfo, MbDownloadFileInfoHeader and
+ * MB_BlockInfoTable (private/arm9_a9db8_mb_parent.h). The result keeps
+ * MBi_CommParentSendBlock's struct Out tag (its declaration names the
+ * parameter type) with the SDK's MB_BlockInfo field names. */
 struct Out {
     int child_recv_buff_addr; /* 0x0 */
     u32 size;                 /* 0x4 */

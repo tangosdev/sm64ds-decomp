@@ -1,21 +1,24 @@
 //cpp
+#include "types.h"
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 
 extern "C" {
 
-typedef long long s64;
+/* Trivial 12-byte working storage. The vector routines take Vector3 pointers,
+ * but making these locals Vector3 objects emits its inline destructor; cast
+ * the same-layout buffers at those ABI boundaries to preserve the original
+ * lifetime and code generation. */
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int x, y, z, w; } Quat;
 
-extern int NormalizeVec3IfNonZero(Vec3 *v);
-extern int DotVec3(const Vec3 *a, const Vec3 *b);
+extern int NormalizeVec3IfNonZero(Vector3 *v);
+extern int DotVec3(const Vector3 *a, const Vector3 *b);
 extern int func_020531a4(int a);
-extern void func_0203cebc(Vec3 *out, Vec3 *p, Vec3 *q, Vec3 *r);
+extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
 extern Quat data_02075b04;
 
-void Quaternion_FromVector3(Quat *out, Vec3 *a, Vec3 *b)
-{
+void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     Vec3 vb, va, vb2, vcross;
     int r4, absr4, q;
 
@@ -25,12 +28,13 @@ void Quaternion_FromVector3(Quat *out, Vec3 *a, Vec3 *b)
     va.x = a->x;
     va.y = a->y;
     va.z = a->z;
-    if (NormalizeVec3IfNonZero(&vb) != 0 && NormalizeVec3IfNonZero(&va) != 0) {
-        r4 = func_020531a4((DotVec3(&va, &vb) + 0x1000) << 1);
+    if (NormalizeVec3IfNonZero((Vector3 *)&vb) != 0 &&
+        NormalizeVec3IfNonZero((Vector3 *)&va) != 0) {
+        r4 = func_020531a4((DotVec3((const Vector3 *)&va, (const Vector3 *)&vb) + 0x1000) << 1);
         vb2.x = vb.x;
         vb2.y = vb.y;
         vb2.z = vb.z;
-        func_0203cebc(&vcross, &vb, &va, &vb2);
+        func_0203cebc((Vector3 *)&vcross, (Vector3 *)&vb, (Vector3 *)&va, (Vector3 *)&vb2);
         vb.x = vcross.x;
         vb.y = vcross.y;
         vb.z = vcross.z;

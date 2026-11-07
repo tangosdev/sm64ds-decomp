@@ -41,33 +41,19 @@
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 
-#define U64 0xFFFFFFFFFFFFFFFFLL
-
 /* Profile actor ids (symbols/profile_reconstruction_registry.json). */
 enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 
-struct CLPS_Block;
-
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-#ifndef SM64DS_PLATFORM_PC
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
-#endif
+#include "ResourceDescriptor.h"
+#include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
-void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
-int DecIfAbove0_Byte(u8 *p);
-int DecIfAbove0_Short(u16 *p);
-int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 
 /* local extern: d_bg_w.cpp defines it and no header declares it. */
-void func_020393c4(int *p, int v);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern s16 data_02082214[];       /* sine table */
@@ -361,11 +347,11 @@ s32 daObjFallBlock_c::Behavior() {
         {
             /* Integer-cast address form: plain mAngleX / mAngleZ
                read-modify-writes shrink Behavior by 8 bytes. */
-            s16 t = *(s16 *)((int)&mAngleX & U64);
+            s16 t = *(s16 *)((int)&mAngleX);
             t = (s16)(t + mShakeX);
-            *(s16 *)((int)&mAngleX & U64) = t;
-            t = (s16)(*(s16 *)((int)&mAngleZ & U64) + mTiltVelZ);
-            *(s16 *)((int)&mAngleZ & U64) = t;
+            *(s16 *)((int)&mAngleX) = t;
+            t = (s16)(*(s16 *)((int)&mAngleZ) + mTiltVelZ);
+            *(s16 *)((int)&mAngleZ) = t;
             UpdatePos(0);
         }
         if (DecIfAbove0_Short(&mStateTimer) == 0) {
@@ -433,7 +419,7 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*fp->collision)), mClsnMat, 0x199,
                               mAngleY, *fp->clps);
-    func_020393c4((int *)&mMeshCollider, (int)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, &StoodOnCallback);
     v.x = mPosX;
     y = mPosY;
     v.y = y;
@@ -470,11 +456,11 @@ int daObjFallBlock_c::RequestShake(dActor_c *other) {
     mShakeRequested = 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
+// @symbol _ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
    RequestShake. long_calls is the ROM's pooled absolute tail-call. */
 #pragma long_calls on
-int daObjFallBlock_c::StoodOnCallback(dBgW *collider, daObjFallBlock_c *block, dActor_c *other) {
-    return block->RequestShake(other);
+void daObjFallBlock_c::StoodOnCallback(dBgW *collider, dActor_c *block, dActor_c *other) {
+    static_cast<daObjFallBlock_c *>(block)->RequestShake(other);
 }
 #pragma long_calls off

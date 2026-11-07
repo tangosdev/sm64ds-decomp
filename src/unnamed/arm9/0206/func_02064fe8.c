@@ -4,12 +4,11 @@
  */
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
-int func_02064fe8(void *dst, short b, char c)
-{
+int func_02064fe8(void *dst, unsigned short b, char c) {
     char *p;
     char *q;
     unsigned char one = 1;
-    short s = b;
+    unsigned short s = b;
     CpuCopy8(&one, dst, 1);
     p = (char *)dst + 1;
     CpuCopy8(&s, p, 2);

@@ -32,9 +32,11 @@
 #include "nitro/hw/registers.h"
 #include "types.h"
 #include "decl_common.h"
+#include "LevelRng.h"
 #include "Sound.h"
 #include "G2x.h"
 #include "PlayerInput.h"
+#include "Vector2Math.h"
 #include "G2.h"
 #include "CP15.h"
 #include "GX.h"
@@ -50,7 +52,6 @@ extern "C" {
 extern int RandomIntInternal(int *seed);
 extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
-extern int data_0209d4b8;
 extern s16 data_02082214[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
@@ -59,11 +60,10 @@ typedef struct V2 {
     int x;
     int y;
 } V2;
-void Vec2_Sub(V2 *out, V2 *a, V2 *b);
-int Vec2_Len(V2 *p);
+void Vec2_Sub(int *out, int *a, int *b);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
-void DecompressLZ16(int src, void *dst);
+void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *ptr);
 extern int data_0208ee44;
 extern u8 gMainScreenLayers;
@@ -150,20 +150,20 @@ void dScMgFlower_c::DealPetals() {
         self->mPetals[clearIndex].fallSpeed = 0;
     }
     if (self->mHoldTimer == 0x14) {
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         self->mPetalsLeft = ((roll * 2) >> 15) + 1;
     } else {
-        int raw = RandomIntInternal(&data_0209d4b8);
+        int raw = RandomIntInternal(&data_0209d4b8.value);
         roll = ((unsigned int)raw >> 16) & 0x7fff;
         if (((roll * 10) >> 15) == 0) {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             self->mPetalsLeft = ((roll * 2) >> 15) + 0x14;
         } else {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
             self->mPetalsLeft = ((roll * 8) >> 15) + 8;
         }
     }
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     baseAngle = (roll * 0x10000) >> 15;
     for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
         self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
@@ -176,7 +176,7 @@ void dScMgFlower_c::DealPetals() {
     }
     for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
         int swapIndex;
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
+        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
         swapIndex = (self->mPetalsLeft * roll) >> 15;
         if (swapIndex != shuffleIndex) {
             u16 savedAngle;
@@ -251,7 +251,7 @@ s32 dScMgFlower_c::Render() {
         }
     }
 
-    Camera_InitFlowerView(pad_4660);
+    Camera_InitFlowerView(&mCamera);
     FlowerFace_Draw(&mFace);
     return 1;
 }
@@ -320,8 +320,8 @@ s32 dScMgFlower_c::Behavior() {
                     if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
-                        Vec2_Sub(&toCursor, (V2 *)&mPetals[attachedIndex].x, (V2 *)&mCursorX);
-                        withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
+                        Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].x, &mCursorX);
+                        withinGrabRadius = Vec2_Len((const Vector2 *)&toCursor) < 0x18000 ? 1 : 0;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
                             mPetals[attachedIndex].held = 1;
@@ -341,8 +341,9 @@ s32 dScMgFlower_c::Behavior() {
                     for (freeIndex = 0; freeIndex < 0x16; freeIndex++) {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
-                            Vec2_Sub(&toCursor2, (V2 *)&mPetals[freeIndex].x, (V2 *)&mCursorX);
-                            withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
+                            Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].x, &mCursorX);
+                            withinGrabRadius2 =
+                                Vec2_Len((const Vector2 *)&toCursor2) < 0x18000 ? 1 : 0;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
                                 mPetals[freeIndex].driftX = 0;
@@ -359,7 +360,7 @@ s32 dScMgFlower_c::Behavior() {
         } else {
             newlyCounted = 0;
             if (gTouchHeld[playerSlot * 4] != 0) {
-                Vec2_Sub(&drag, (V2 *)&mCursorX, (V2 *)&mPrevCursorX);
+                Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
                 V2 *pos = (V2 *)&mPetals[mHeldPetal].x;
                 pos->x += drag.x;
                 pos->y += drag.y;
@@ -478,7 +479,7 @@ s32 dScMgFlower_c::Behavior() {
  * The bare 0x040000xx stores are the BGxCNT and BGxOFS registers, and
  * 0x06400000 and 0x06600000 are the two OBJ VRAM banks. */
 s32 dScMgFlower_c::InitResources() {
-    int fileData;
+    void *fileData;
 
     mScore = Mg_GetSavedRecord0();
 
@@ -499,32 +500,32 @@ s32 dScMgFlower_c::InitResources() {
     *(volatile u32 *)0x400101c = 0;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
     DecompressLZ16(fileData, G2::GetBG2CharPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgDownNcgPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNcgPath);
     DecompressLZ16(fileData, G2S::GetBG2CharPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgUpNscPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNscPath);
     DecompressLZ16(fileData, G2::GetBG2ScrPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgDownNscPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNscPath);
     DecompressLZ16(fileData, G2S::GetBG2ScrPtr());
     DecompressLZ16(fileData, G2S::GetBG3ScrPtr());
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgUpNclPath);
-    CP15::FlushAndInvalidateDataCache(fileData, 0x1a0);
-    GX::LoadBGPltt((const void *)fileData, 0x60, 0x1a0);
-    Ov004_Deallocate((void *)fileData);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgUpNclPath);
+    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
+    GX::LoadBGPltt(fileData, 0x60, 0x1a0);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerBgDownNclPath);
-    CP15::FlushAndInvalidateDataCache(fileData, 0x1a0);
-    GXS::LoadBGPltt((const void *)fileData, 0x60, 0x1a0);
-    Ov004_Deallocate((void *)fileData);
+    fileData = Ov004_LoadFileByPath(&sFlowerBgDownNclPath);
+    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
+    GXS::LoadBGPltt(fileData, 0x60, 0x1a0);
+    Ov004_Deallocate(fileData);
 
     *(volatile u16 *)0x4000050 = 0;
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
@@ -532,16 +533,16 @@ s32 dScMgFlower_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 0xc;
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerNcgPath);
+    fileData = Ov004_LoadFileByPath(&sFlowerNcgPath);
     DecompressLZ16(fileData, (void *)0x6400000);
     DecompressLZ16(fileData, (void *)0x6600000);
-    Ov004_Deallocate((void *)fileData);
+    Ov004_Deallocate(fileData);
 
-    fileData = (int)Ov004_LoadFileByPath(&sFlowerNclPath);
-    CP15::FlushAndInvalidateDataCache(fileData, 0x100);
-    GX::LoadOBJPltt((const void *)fileData, 0, 0x100);
-    GXS::LoadOBJPltt((const void *)fileData, 0, 0x100);
-    Ov004_Deallocate((void *)fileData);
+    fileData = Ov004_LoadFileByPath(&sFlowerNclPath);
+    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x100);
+    GX::LoadOBJPltt(fileData, 0, 0x100);
+    GXS::LoadOBJPltt(fileData, 0, 0x100);
+    Ov004_Deallocate(fileData);
 
     sMgPlayAgainX = 0x40;
     sMgPlayAgainY = 0xa0;
@@ -556,7 +557,7 @@ s32 dScMgFlower_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
     FlowerFace_Load((char *)&mFace);
-    Camera_InitFlowerView(pad_4660);
+    Camera_InitFlowerView(&mCamera);
 
     return 1;
 }

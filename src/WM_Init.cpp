@@ -11,6 +11,7 @@
 #include "types.h"
 #include "CP15.h"
 #include "private/wm_views.h"
+#include "nitro/os/message.h"
 
 extern "C" {
 
@@ -19,17 +20,15 @@ extern int PXI_IsCallbackReady(int tag, int proc);
 /* MI_DmaFill32 */
 extern void DMASyncFillTransfer(u32 dmaNo, void *dest, u32 data, u32 size);
 extern void WmClearFifoRecvFlag(void);
-extern int WM_SetPortCallback(int idx, int b, int c);
-extern void OS_InitMessageQueue(void *s, int *v1, int v2);
-extern int OS_SendMessage(void *q, void *val, int flag);
+extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 
 extern u16 data_020a89a8;
 extern WMArm9Buf *data_020a89ac;
-extern void *data_020a89b0; /* the free FIFO-buffer message queue */
-extern int data_020a89c4;
+extern OSMessageQueue data_020a89b0; /* the free FIFO-buffer message queue */
+extern OSMessage data_020a89c4[];
 extern char data_020a8a40[];
-extern void WmReceiveFifo(void);
+extern void WmReceiveFifo(int tag, u16 *msg, int err);
 
 int WM_Init(void *buf, int ch) {
     if (data_020a89a8 != 0)
@@ -73,12 +72,12 @@ int WM_Init(void *buf, int ch) {
             WM_SetPortCallback((u16)i, 0, 0);
     }
 
-    OS_InitMessageQueue(&data_020a89b0, &data_020a89c4, 0xa);
+    OS_InitMessageQueue(&data_020a89b0, data_020a89c4, 0xa);
     {
         int i;
         char *p = &data_020a8a40[0];
         for (i = 0; i < 0xa; i++) {
-            OS_SendMessage(&data_020a89b0, p, 1);
+            OS_SendMessage(&data_020a89b0, p, OS_MESSAGE_BLOCK);
             p += 0x100;
         }
     }

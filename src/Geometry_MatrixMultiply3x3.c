@@ -1,4 +1,4 @@
-extern void Copy36Bytes(int *src, int *dst);
+extern void Copy36Bytes(const void *src, void *dst);
 
 void Geometry_MatrixMultiply3x3(int *m)
 {

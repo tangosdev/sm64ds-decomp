@@ -116,6 +116,16 @@ struct ModelComponents {
     void UpdateVertsUsingBones();               /* 0x02044dcc */
     void UpdateBones(BCA_File *file, int frame);
     void Render(Matrix4x3 *mat, Vector3 *scale); /* 0x020443c8 */
+
+    /* Render's material bind and its two display-list submitters, and the
+       two bone-tree walks. Under melonDS each one's r0 is the ModelComponents
+       its caller runs on: Render's, UpdateVertsUsingBones', UpdateBones'
+       (or the walk's own, recursing). */
+    void func_02044534(int, Matrix4x3 *, Vector3 *);
+    void func_0204488c(int, Vector3 *);
+    void func_02044b30(int);
+    void func_02045074(BMD_Bone *);
+    void func_020453c0(BMD_Bone *, BCA_File *, int);
 };
 
 namespace Memory {

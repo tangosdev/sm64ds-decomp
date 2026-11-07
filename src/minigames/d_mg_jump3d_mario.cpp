@@ -45,10 +45,12 @@
 #include "dMgJump3DMario_c.h"
 #include "SharedFilePtr.h"
 #include "OAM.h"
+#include "PlayerInput.h"
 #include "fBase_c.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
+#include "LevelRng.h"
 
 static const int kWallX = 0x6c000;   /* mPos.x clamp: the arena walls */
 static const int kScreenYMax = 0xbc; /* past this mScreenY the Mario damps out */
@@ -66,14 +68,14 @@ extern "C" {
 void Sound_PlayBank1Panned(int a, int b, int c);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-int  NormalizeVec3IfNonZero(Jump3DVec *v);
+int NormalizeVec3IfNonZero(VecFx32 *v);
 int  RandomIntInternal(int *seed);
 void func_02012718(int a, int b);
 int  func_02053200(int x);
 void func_02016a14(void *self, int a);
 void func_02016a04(void *self, int a);
 int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
-void Camera_ProjectToScreen16(void *cam, Jump3DVec *pos, short *out);
+void Camera_ProjectToScreen16(void *cam, VecFx32 *pos, short *out);
 int D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int a, int b);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -159,19 +161,8 @@ extern OamAttr *data_ov006_02134d1c;
 extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8 gActivePlayerSlot;
-// local extern: see above.
-extern u8 gTouchHeld[][4];
-// local extern: see above.
-extern u8 gTouchEdge[][4];
-// local extern: see above.
-extern u8 gTouchX[][4];
-// local extern: see above.
-extern u8 gTouchY[][4];
 extern Matrix4x3 data_020a0e68;
 extern short data_02082214[];
-extern int data_0209e650;
 extern fBase_c *data_0209f5c0;
 
 }  /* extern "C" */
@@ -506,18 +497,18 @@ void dMgJump3DMario_c::StateHold()
     u32 idx = gActivePlayerSlot;
     int flag = 0;
 
-    if (gTouchHeld[idx][0] != 0) {
-        if (gTouchEdge[idx][0] != 0) {
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
+        if (((u8(*)[4])gTouchEdge)[idx][0] != 0) {
             flag = 1;
         }
     }
     if (flag != 0) {
         /* Keep reusing `flag` here: reading the table straight into `b`
            costs 5 words (notes/experiments/jump3d-2711-statehold-flag-reuse.md). */
-        flag = gTouchY[idx][0];
+        flag = ((u8(*)[4])gTouchY)[idx][0];
         int b = flag;
         int x = mScreenY - 0x20;
-        int dz = mScreenX - gTouchX[idx][0];
+        int dz = mScreenX - ((u8(*)[4])gTouchX)[idx][0];
         if (dz < 0) {
             dz = -dz;
         }
@@ -565,10 +556,10 @@ void dMgJump3DMario_c::StateHold()
 // @symbol _ZN16dMgJump3DMario_c9EnterHoldEv
 void dMgJump3DMario_c::EnterHold()
 {
-    /* Jump3DVec, not Vector3: Vector3 matches here too, but it makes this
+    /* VecFx32, not Vector3: Vector3 matches here too, but it makes this
        file emit Vector3's destructor, which the manifest does not license
        (notes/experiments/jump3d-2711-scratch-vector3.md). */
-    Jump3DVec v;
+    VecFx32 v;
 
     Vec3_Sub((Vector3 *)&v, (const Vector3 *)&mPos, (const Vector3 *)&mAnchor);
     if (NormalizeVec3IfNonZero(&v) != 0) {
@@ -611,13 +602,13 @@ void dMgJump3DMario_c::StateMove()
     {
         int flag = 0;
         u8 idx = gActivePlayerSlot;
-        if (gTouchHeld[idx][0] != 0 && gTouchEdge[idx][0] != 0)
+        if (((u8(*)[4])gTouchHeld)[idx][0] != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0)
             flag = 1;
 
         if (flag != 0) {
             s16 y = mScreenY;
-            int ax = (int)gTouchX[idx][0];
-            int az = (int)gTouchY[idx][0];
+            int ax = (int)((u8(*)[4])gTouchX)[idx][0];
+            int az = (int)((u8(*)[4])gTouchY)[idx][0];
             int dx = (int)mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;
@@ -875,11 +866,11 @@ void dMgJump3DMario_c::StateRespawn()
     mTimer -= 1;
     if (mTimer == 0) {
         mPos.y = 0x100000;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
         mPos.x = ((int)rnd - 0x800) * 0xc0;
         mVel.y = 0;
         speed = sJump3DMoveSpeed;
-        rnd = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;
+        rnd = ((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13;
         mVel.x = FX_MUL((((int)rnd - 0x800) << 1), speed);
         mAnmModel.SetAnim((BCA_File *)sJump3DAnimWallJump, 0x40000000, kAnimSpeed, 0);
         EnterMove();

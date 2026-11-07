@@ -1,24 +1,21 @@
 #include "common.h"
 #include "nitro/fx/fx.h"
+#include "math/Matrix.h"
 #include "private/spl_particle_views.h"
 
 #define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
 #define reg_G3_IDENTITY     (*(volatile u32 *)0x04000454)
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
-/* No header declares these. CrossVec3 uses its Vec3_Fix12 view,
-   NormalizeVec3 uses Vector3, and MulVec3Mat3x3 uses raw component words. */
-typedef struct {
-    Fix12i x, y, z;
-} Vec3_Fix12;
-extern void CrossVec3(const Vec3_Fix12 *a, const Vec3_Fix12 *b, Vec3_Fix12 *out);
+/* No header declares these. */
+extern void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 struct Vector3;
 extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
-extern void Copy36Bytes(int *src, int *dst);
-extern void MulVec3Mat3x3(const int *in, const int *m, int *out);
+extern void Copy36Bytes(const void *src, void *dst);
+extern void MulVec3Mat3x3(const Vector3 *in, const Matrix3x3 *m, Vector3 *out);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void func_02055388(int *m);             /* multiply by the 4x3 matrix */
-extern void func_0204c24c(u8 tileS, u8 tileT); /* the XY-plane quad */
+extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one child particle as a quad stretched along its flight (child draw
  * type 1, func_0204a5c8): func_0204b81c, still with the parent header's
@@ -33,7 +30,7 @@ void func_0204b460(ManagerView *mgr, ParticleElement *ptcl) {
     Vector3 trans;
     Vector3 dir;
     Vector3 look;
-    int rot[9];
+    Matrix3x3 rot;
     int mat[12];
     u32 id;
     u32 v;
@@ -69,17 +66,17 @@ void func_0204b460(ManagerView *mgr, ParticleElement *ptcl) {
     look.x = view[2];
     look.y = view[5];
     look.z = view[8];
-    CrossVec3((Vec3_Fix12 *)&dir, (Vec3_Fix12 *)&look, (Vec3_Fix12 *)&dir);
+    CrossVec3(&dir, &look, &dir);
 
     if (dir.x == 0 && dir.y == 0 && dir.z == 0)
         return;
 
-    NormalizeVec3((const struct Vector3 *)&dir, (struct Vector3 *)&dir);
-    Copy36Bytes(view, rot);
-    MulVec3Mat3x3((int *)&dir, rot, (int *)&dir);
+    NormalizeVec3(&dir, &dir);
+    Copy36Bytes(view, &rot);
+    MulVec3Mat3x3(&dir, &rot, &dir);
     MulVec3Mat4x3(&trans, (Matrix4x3 *)view, &trans);
     velDir = ptcl->velocity;
-    NormalizeVec3((const struct Vector3 *)&velDir, (struct Vector3 *)&velDir);
+    NormalizeVec3(&velDir, &velDir);
 
     {
         /* |velocity . -view z|: 1 when the particle flies straight at the
@@ -114,6 +111,7 @@ void func_0204b460(ManagerView *mgr, ParticleElement *ptcl) {
     reg_G3_COLOR = ptcl->color;
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
-        func_0204c24c(child->textureTileCountS, child->textureTileCountT);
+        /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
+        func_0204c24c((u8)child->textureTileCountS, (u8)child->textureTileCountT);
     }
 }

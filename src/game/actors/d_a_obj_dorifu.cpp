@@ -22,19 +22,12 @@
  * reads low-address-first. Do not reorder.
  */
 
-// What stays, and why: InitResources' two matrix copies stay Matrix4x3Copy
-// block copies (C++ struct assignment scalarizes the ROM's ldm/stm sequence).
-
 #pragma defer_codegen off
 
 #include "daObjDorifu_c.h"
 #include "Event.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
-
-typedef struct {
-    s32 words[12];
-} Matrix4x3Copy;
 
 /* Behavior's mState values. What each does is read off the code: 0 and 2 wait
    on Event::GetBit(mEventBit) going set and clear, 1 and 3 step mActivePlank
@@ -198,7 +191,7 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
     mPlankModels[0].mat4x3.m[9] = mPosX >> 3;
     mPlankModels[0].mat4x3.m[10] = mPosY >> 3;
     mPlankModels[0].mat4x3.m[11] = mPosZ >> 3;
-    *(Matrix4x3Copy *)&mPlatformMat = *(Matrix4x3Copy *)&mPlankModels[0].mat4x3;
+    mPlatformMat = mPlankModels[0].mat4x3;
     mPlatformMat.m[9] = mPosX;
     mPlatformMat.m[10] = mPosY;
     mPlatformMat.m[11] = mPosZ;
@@ -208,7 +201,7 @@ s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources) {
     modelDst = mPlankModels;
     clsn = mPlankClsn;
     for (; j < 5; ++j) {
-        *(Matrix4x3Copy *)&modelDst->mat4x3 = *(Matrix4x3Copy *)sourceMat;
+        modelDst->mat4x3 = *sourceMat;
         clsn->SetFile((KCL_File *)dBgW_Kc::LoadFile(*clsnResource->clsnFile), mPlatformMat, scale,
                       mAngleY, *clsnResource->clps);
         if (j == mActivePlank)

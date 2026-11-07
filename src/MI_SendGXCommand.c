@@ -13,11 +13,11 @@
 #define DMA_CONTROL_DEST_FIXED (2u << 21)
 #define GXFIFO_DMA_CONTROL (DMA_CONTROL_ENABLE | DMA_CONTROL_32_BIT | DMA_CONTROL_DEST_FIXED)
 
-extern void DMAStartTransfer(u32 channel, void *src, void *dst, u32 cnt);
+extern void DMAStartTransfer(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 
-void MI_SendGXCommand(u32 dmaNo, void *src, u32 commandLength) {
+void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength) {
     volatile u32 *dmaCtrl;
-    void *fifo;
+    u32 currentSrc;
     u32 chunk;
 
     if (commandLength == 0)
@@ -28,12 +28,12 @@ void MI_SendGXCommand(u32 dmaNo, void *src, u32 commandLength) {
     while (*dmaCtrl & DMA_CONTROL_ENABLE)
         ;
 
-    fifo = (void *)0x04000400;
+    currentSrc = (u32)src;
     while (commandLength != 0) {
         chunk = commandLength > 0x1d8 ? 0x1d8 : commandLength;
-        DMAStartTransfer(dmaNo, src, fifo, GXFIFO_DMA_CONTROL | (chunk >> 2));
+        DMAStartTransfer(dmaNo, currentSrc, 0x04000400, GXFIFO_DMA_CONTROL | (chunk >> 2));
         commandLength -= chunk;
-        src = (u8 *)src + chunk;
+        currentSrc += chunk;
     }
 
     while (*dmaCtrl & DMA_CONTROL_ENABLE)

@@ -39,17 +39,11 @@ struct UkisimaClsnFileHandle : SharedFilePtr {
 typedef char UkisimaModelFilePtr_size_must_be_8[sizeof(UkisimaModelFilePtr) == 8 ? 1 : -1];
 typedef char UkisimaClsnFileHandle_size_must_be_8[sizeof(UkisimaClsnFileHandle) == 8 ? 1 : -1];
 
-struct CLPS_Block;
+#include "ResourceDescriptor.h"
 
-struct ResourceDescriptor {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
-    CLPS_Block *clps;
-};
-typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
-
-extern ResourceDescriptor data_ov015_021147a4;
 extern s16 data_ov015_02114794;
+extern ResourceDescriptor data_ov015_021147a4;
+extern struct CLPS_Block data_ov015_02113614;
 
 // @symbol daObjBk_Ukisima_c_classInit
 extern "C" daObjBk_Ukisima_c *daObjBk_Ukisima_c_classInit() {
@@ -69,3 +63,9 @@ s32 daObjBk_Ukisima_c::CleanupResources() {
 /* Retail construction order. mwcc emits __sinit_d_a_obj_bk_ukisima.cpp. */
 UkisimaModelFilePtr gBkUkisimaModelFile(ASSET_BK_UKISIMA_BMD);
 UkisimaClsnFileHandle gBkUkisimaCollisionFile(ASSET_BK_UKISIMA_KCL);
+
+ResourceDescriptor data_ov015_021147a4 = {
+    &gBkUkisimaModelFile,
+    &gBkUkisimaCollisionFile,
+    &data_ov015_02113614,
+};

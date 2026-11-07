@@ -1,16 +1,12 @@
-extern int WM_GetSystemWork(void);
-extern int WM_CheckStateEx(int a, int b);
-extern void WM_SetCallbackTable(int i, int val);
-extern int WM_SendCommand(int a, int b, int c);
+#include "private/wm_views.h"
 
-int func_0206259c(int a, int b)
-{
+int func_0206259c(void *callback, int b) {
     int r;
     WM_GetSystemWork();
     r = WM_CheckStateEx(1, 9);
     if (r != 0)
         return r;
-    WM_SetCallbackTable(0x23, a);
+    WM_SetCallbackTable(0x23, callback);
     r = WM_SendCommand(0x23, 1, b);
     if (r == 0)
         r = 2;

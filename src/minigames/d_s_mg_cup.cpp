@@ -78,6 +78,7 @@ void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 
 struct OamAttr;
 #include "OAM.h"
+#include "LevelRng.h"
 
 extern "C" {
 extern void CupFx_Move(char *p, int a, int b);
@@ -95,7 +96,6 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
 extern int func_02053200(int x);
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
-extern int data_0209e650;
 extern RoundRow sCupRoundTable[];
 extern s16 sCupShuffleSpeeds[];
 extern IdxPair sCupSwapFirst[];
@@ -130,22 +130,13 @@ extern AnimStep *sCupAnimTable[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int data_0208ee44;
-extern void Camera_InitPresenterView(char *);
 extern int Presenter_Load(char *);
-extern unsigned int LoadCompressedFileAt(int, int);
+extern unsigned int LoadCompressedFileAt(int, void *);
 extern void *LoadFile(int);
 void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void *ctor, void *dtor);
 void Cup_Nothing(void);
 void func_0203d738(void);
 }
-
-/* One player's record in the touch table at gTouchHeld (PlayerInput.h). */
-struct TouchInfo {
-    u8 held;
-    u8 edge;
-    u8 x;
-    u8 y;
-};
 
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
@@ -155,8 +146,8 @@ struct TouchInfo {
    compiler destroys as a member. The tracker and the base chain are the
    inlined dScMgSingle3DBase_c destructor. */
 dScMgCup_c::~dScMgCup_c() {
-    __cxa_vec_cleanup(mCup, 3, 8, (void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mFx, 0x20, 0x18, (void *)CupFx_ElemDtor);
+    __cxa_vec_cleanup(mCup, 3, 8, (dtor_t)(void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)(void *)CupFx_ElemDtor);
 }
 
 extern "C" void CupFx_ElemDtor(void) {}
@@ -382,7 +373,7 @@ epilogue: {
 
 extern "C" void Cup_PickShuffleSpeed(char *raw) {
     dScMgCup_c *self = (dScMgCup_c *)raw;
-    u32 rnd = (u32)RandomIntInternal(&data_0209e650);
+    u32 rnd = (u32)RandomIntInternal(&data_0209e650.value);
     u32 bits = rnd >> 0x10;
     int speedIndex;
     int swapPair;
@@ -421,7 +412,7 @@ extern "C" void Cup_PickShuffleSpeed(char *raw) {
             goto set0;
         }
         {
-            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650);
+            u32 fakeOutRoll = (u32)RandomIntInternal(&data_0209e650.value);
             if (((fakeOutRoll >> 0x10) & 7) != 0) {
                 goto set0;
             }
@@ -633,7 +624,7 @@ void dScMgCup_c::StateShuffle() {
                 mTimer = 0x1e;
                 mState = 3;
             } else {
-                u32 delayRoll = RandomIntInternal(&data_0209e650);
+                u32 delayRoll = RandomIntInternal(&data_0209e650.value);
                 mTimer = (delayRoll >> 8) % 0x18 + 1;
                 mState = 1;
             }
@@ -745,7 +736,7 @@ void dScMgCup_c::StateSetup() {
     if (score < 0xa) {
         mRoundRow = (unsigned char)score;
     } else {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
         randomUpper = rnd >> 16;
         roundRow = (randomUpper % 5) + 5;
         mRoundRow = (unsigned char)roundRow;
@@ -754,7 +745,7 @@ void dScMgCup_c::StateSetup() {
     mSwapsRemaining = ((unsigned char *)sCupRoundTable)[mRoundRow * 2];
 
     if (score > 3) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
         if (rnd & 1) {
             mTargetContent = 1;
         } else {
@@ -772,7 +763,7 @@ void dScMgCup_c::StateSetup() {
     mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
 
-    rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+    rnd = (unsigned int)RandomIntInternal(&data_0209e650.value);
     fakeOutSwap = (rnd % 10) + 1;
     mFakeOutAt = (unsigned char)fakeOutSwap;
 
@@ -918,7 +909,7 @@ s32 dScMgCup_c::InitResources() {
     void *file;
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    Camera_InitPresenterView((char *)pad_4660);
+    Camera_InitPresenterView(&mCamera);
     if (Presenter_Load((char *)&mModel) == 0)
         return 0;
 
@@ -941,13 +932,14 @@ s32 dScMgCup_c::InitResources() {
 
     gSubScreenLayers |= 4;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN, G2S::GetBG2CharPtr() + 0x4000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN,
+                         (void *)((char *)G2S::GetBG2CharPtr() + 0x4000));
     file = LoadFile(ASSET_D_2D_MG_BG_CUP_NCL_BIN);
     GXS::LoadBGPltt(file, 0x60, 0x1a0);
     Deallocate(file);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, G2S::GetBG0ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, G2S::GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, 0x6600000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, (void *)G2S::GetBG0ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, (void *)G2S::GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, (void *)0x6600000);
     file = LoadFile(ASSET_D_2D_MG_CUP_NCL_BIN);
     GXS::LoadOBJPltt(file, 0, 0xa0);
     Deallocate(file);

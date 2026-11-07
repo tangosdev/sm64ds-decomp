@@ -1,4 +1,6 @@
-extern void func_02073300(int a, unsigned int b, unsigned int c, int dtor);
+#include "MWCPlusLib.h"
+
+extern void func_02073300(void *block, unsigned int n, unsigned int size, dtor_t dtor);
 extern void func_0203cbc0(void *ptr);
 
 /* The Itanium C++ ABI's __cxa_vec_delete(array, element_size,
@@ -11,10 +13,10 @@ extern void func_0203cbc0(void *ptr);
    the compiler never emits that name, so func_02073300 keeps its address.
    The block, starting padding bytes before the array, then goes to
    func_0203cbc0 (operator delete). */
-void __cxa_vec_delete(int a, int b, int c, int d) {
+void __cxa_vec_delete(void *a, int b, int c, void (*d)(void *)) {
     if (a == 0)
         return;
     if (d != 0)
-        func_02073300(a, *(int *)(a - 4), b, d);
-    func_0203cbc0((void *)(a - c));
+        func_02073300(a, ((int *)a)[-1], b, d);
+    func_0203cbc0((char *)a - c);
 }

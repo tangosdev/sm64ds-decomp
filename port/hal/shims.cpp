@@ -2,6 +2,7 @@
 // definitions cannot serve an MSVC build.
 #include "dFader_c.h"
 #include "dFdBrightness_c.h"
+#include "LevelRng.h"
 
 // Native fader callers use the namespace interface. Keep the existing C
 // divider as the host implementation shared with older callers.
@@ -20,6 +21,11 @@ Fix12i fdiv(Fix12i numerator, Fix12i denominator)
 // nothing to release, so empty bodies are faithful.
 dFader_c::~dFader_c() {}
 dFdBrightness_c::~dFdBrightness_c() {}
+
+// LevelRng.h declares the destructor without a body; on the DS it is the
+// empty func_0201973c, a C function in func_020196cc.c that MSVC cannot
+// bind to. Timer.cpp's static object registers it.
+LevelRng::~LevelRng() {}
 
 // Base-class virtual slots not yet in the slice. dFader_c.h declares them
 // non-pure because the ROM's dFader_c vtable carries real entries; their src/
