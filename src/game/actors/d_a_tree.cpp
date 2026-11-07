@@ -80,7 +80,7 @@ extern TreeNode *data_ov002_02110a48[kNumVariants];
 extern u16 data_ov002_0210abb8[];
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 
 // @symbol daTree_c_classInit
 extern "C" daTree_c *daTree_c_classInit()
@@ -139,7 +139,7 @@ int daTree_c::Behavior()
 // @symbol _ZN8daTree_c6RenderEv
 int daTree_c::Render()
 {
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     TreeNode **slot = data_ov002_02110a48;
     dExtSimpleModel_c *model = mModel;
     int i;

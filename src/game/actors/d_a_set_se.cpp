@@ -37,7 +37,7 @@
 extern int data_ov002_0210b498[];  /* sound-ID table, 11 entries: 0x18d, 0x100-0x103, 0x81, 0x89, 0x9c-0x9e, 0; the _ZTV9daSetSE_c header follows it, so spawn params stay 0-10 */
 extern int data_ov002_02110aec;    /* WATERFALL_SOUNDS_DISABLED */
 extern int gCurrentMusicID;        /* current music ID */
-extern dCamera_c *data_0209f318;   /* CAMERA */
+extern dCamera_c *gCamera;         /* CAMERA */
 extern s8 gCurrentSublevel;        /* LEVEL_ID */
 extern u8 gCurrentStarId;          /* STAR_ID */
 extern u8 gGameMode;               /* CURRENT_GAMEMODE */
@@ -90,7 +90,7 @@ int daSetSE_c::Behavior()
 
     effect = param1;
     if (effect >= 1 && effect <= 4) {
-        cam = data_0209f318;
+        cam = gCamera;
         music = gCurrentMusicID;
         if (music == 0x32 || music == 0x33 || music == 0x34 ||
             cam->IsUnderwater())

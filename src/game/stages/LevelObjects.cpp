@@ -46,7 +46,7 @@ extern u8 gNumPlayers;
 extern u8 gCurrentStarId;
 extern u8 gLocalPlayerId;
 extern u8 gGameMode;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern void *gUnusedType13Objs;
 extern daPly_c *gPlayers[];
 extern u8 data_0209fc5c[];
@@ -234,7 +234,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         }
     }
 
-    data_0209f318 = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
+    gCamera = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
 
     if (IsGameMode(2))
         return;

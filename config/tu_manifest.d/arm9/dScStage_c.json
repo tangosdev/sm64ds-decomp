@@ -1431,7 +1431,7 @@
       "evidence": "int. Read here by GetMinimapID, HideArea, IsAreaShowing, LoadMinimapChangeObject, ShowArea, dScStage_c::CleanupResources and 1 more. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f318",
+      "symbol": "gCamera",
       "address": "0x0209f318",
       "size": "0x4",
       "binding": "STB_GLOBAL",

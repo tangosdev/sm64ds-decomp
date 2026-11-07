@@ -4801,7 +4801,7 @@ data_0209f30d kind:bss addr:0x0209f30d
 gNumStageStars kind:bss addr:0x0209f310
 data_0209f311 kind:bss addr:0x0209f311
 data_0209f314 kind:bss addr:0x0209f314
-data_0209f318 kind:bss addr:0x0209f318
+gCamera kind:bss addr:0x0209f318
 sFogObjs kind:bss addr:0x0209f31c
 data_0209f320 kind:bss addr:0x0209f320
 data_0209f324 kind:bss addr:0x0209f324

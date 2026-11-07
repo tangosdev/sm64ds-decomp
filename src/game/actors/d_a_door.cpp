@@ -250,7 +250,7 @@ extern daDoor_StatePmf data_ov100_02148144;
 
 extern SaveBlock data_0209caa0; /* the live save block (include/SaveBlock.h) */
 /* The camera, and the player array indexed by the current player id. */
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
 /* The current game mode. */
@@ -490,13 +490,13 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         arg1->mAreaId = t;
         ChangeArea(t);
         {
-            u32 *p = &data_0209f318->mFlags;
+            u32 *p = &gCamera->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
         }
         func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END, &mCamSpacePosX);
     } else if (mKeyModelIdx != 0) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
-            u32 *p = &data_0209f318->mFlags;
+            u32 *p = &gCamera->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
@@ -508,7 +508,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x18)) != 0) {
             if (gNextSublevel >= 0)
                 mModel.speed = 0;
-            data_0209f318->GoBehindPlayer(gLocalPlayerId);
+            gCamera->GoBehindPlayer(gLocalPlayerId);
         }
     }
     return 1;
@@ -543,7 +543,7 @@ int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
     mModel.currFrame = 0;
     ShowArea((signed char)mAngleX);
     ShowArea((signed char)mAngleZ);
-    data_0209f318->mFlags |= DOOR_CAMERA_FLAGS;
+    gCamera->mFlags |= DOOR_CAMERA_FLAGS;
     func_02012694((param1 == DOOR_ALT_SOUND) ? SND_SWING_START_ALT : SND_SWING_START,
                   &mCamSpacePosX);
     mTimer = 0;

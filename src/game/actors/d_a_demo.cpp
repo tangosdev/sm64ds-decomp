@@ -488,7 +488,7 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
-extern char *data_0209f318;
+extern char *gCamera;
 extern int data_ov002_0210b614;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -594,13 +594,13 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7538, NOT applied: extern int _Z14ApproachLinearRiii(int* dst, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7538, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7780, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7780, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7780, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f7780, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7780, NOT applied: extern short Vec3_HorzAngle(const int *v0, const int *v1); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f79c0, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f79c0, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov002_020f79c0, NOT applied: extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of AddVec3, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
@@ -3822,7 +3822,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
           int m = FX_MUL(r, 0xa000);
           this->mMagnitude = m + 0x19000;
       }
-      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)data_0209f318)->pos, (Vector3 *)&this->mPosX);
+      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
       if (arg2 > 0x2bc) {
           this->mPosY -= 0x96000;
       }
@@ -4168,7 +4168,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = (dCamera_c *)gCamera;
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
@@ -4344,7 +4344,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     this->mOpacity = 0x1f;
-    cam = (dCamera_c *)data_0209f318;
+    cam = (dCamera_c *)gCamera;
 
     AddVec3((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
     dist = Vec3_Dist(&v0, &cam->pos);

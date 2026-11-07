@@ -98,8 +98,8 @@
  *     the caps and contents.
  *   data_02082214 -- NitroSDK FX_SinCosTable_; the bounce squash indexes it
  *     by mBounceAng.
- *   data_0209caa0 / 0209f2d8 / 0209f2f8 / 0209f32c / 0209f318 / 0209e650 /
- *     020a0edc -- arm9 globals.
+ *   data_0209caa0, gGameMode, gCurrentSublevel, data_0209f32c, gCamera,
+ *     data_0209e650, data_020a0edc -- arm9 globals.
  *
  * deslop leftovers:
  * - func_ov102_02149684 stays free: it writes the prize point into a
@@ -185,7 +185,7 @@ extern "C" {
 extern signed char gCurrentSublevel;
 extern int data_0209f32c;
 extern unsigned char gGameMode;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern char data_020a0edc[];
 extern SaveBlock data_0209caa0;
 extern s16 data_02082214[];
@@ -1027,7 +1027,7 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
     o = dActor_c::Spawn(
         ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
     if (o == 0) return;
-    g = data_0209f318;
+    g = gCamera;
     f.vel[0] = 0;
     f.vel[1] = 0x11000;
     f.vel[2] = 0;
@@ -1115,7 +1115,7 @@ void daObjHatenaBlock_c::func_ov102_021492d4() {
     if ((int)(*(unsigned char *)(&gGameMode) == 1) != 0) {
         rot.y = mAngleY;
     } else {
-        rot.y = data_0209f318->mAngleY + 0x4000;
+        rot.y = gCamera->mAngleY + 0x4000;
     }
     dActor_c::Spawn(ACTOR_FEATHER, 0, pos, &rot, mAreaId, -1);
 }

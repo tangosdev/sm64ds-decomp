@@ -113,7 +113,7 @@ extern signed char gNumLives;
 struct OamAttr;
 extern daPly_c *gPlayers[];
 extern u8 gZoomButtonActiveTimer;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
 extern u32 gNextActorUpdateMask;
@@ -963,7 +963,7 @@ void dMeter_c::RenderSilverStars() {
 void dMeter_c::RenderCameraButtons() {
     int idx = gActivePlayerSlot;
     u8 mode = data_0209f498[idx].mode;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)

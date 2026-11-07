@@ -438,7 +438,9 @@ extern s8 data_0209f30d;
 s8 gNumStageStars[4];
 extern s8 data_0209f311;
 static int data_0209f314;
-dCamera_c *data_0209f318;
+/* The stage's camera: LoadEntranceObjects spawns it (profile 0x14c) once the
+   players are placed, and CleanupResources clears it. */
+dCamera_c *gCamera;
 static char *sFogObjs;
 static int data_0209f320;
 static void *data_0209f324;
@@ -1046,7 +1048,7 @@ void dScStage_c::CheckCameraInput() {
                 cam->pressed = 0;
                 cam->held = 0;
                 if (((TouchInfo *)gTouchHeld)[i].held != 0) {
-                    if (data_0209f318->mFlags & 0x1000) {
+                    if (gCamera->mFlags & 0x1000) {
                         // cam->mode here builds 32 bytes shorter; the indexed read is the ROM shape.
                         u8 state = data_0209f498[i].mode;
                         if ((state == 0 && ((((TouchInfo *)gTouchHeld)[i].x <= 0x58 &&
@@ -3983,7 +3985,7 @@ void dScStage_c::RenderFog() {
     if (gCurrentSublevel == 5)
         fog = daMugenBGM_c::GetActiveFog();
     if (fog == 0) {
-        dCamera_c *camera = data_0209f318;
+        dCamera_c *camera = gCamera;
         fog = mFog;
         if (camera->IsUnderwater())
             fog++;
@@ -4082,7 +4084,7 @@ int dScStage_c::Render() {
         dExtSimpleModel_c *skybox = mSkyboxModel;
         if (skybox != 0) {
             Matrix4x3 *transform = &skybox->mat4x3;
-            Vector3 *cameraPosition = &data_0209f318->pos;
+            Vector3 *cameraPosition = &gCamera->pos;
             transform->t.x = cameraPosition->x >> 3;
             transform->t.y = cameraPosition->y >> 3;
             transform->t.z = cameraPosition->z >> 3;
@@ -4613,7 +4615,7 @@ int dScStage_c::CleanupResources() {
         for (playerIndex = 0; playerIndex < 4; playerIndex++)
             gPlayers[playerIndex] = 0;
     }
-    data_0209f318 = 0;
+    gCamera = 0;
     gGamePaused = 0;
     Message::ResetAllGlobals();
 

@@ -138,7 +138,7 @@ extern u8 data_0209d660;
 extern u8 gNumPlayers;
 extern u8 gCurrentStarId;
 extern signed char gCurrentSublevel;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
 /* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
    hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */
@@ -411,10 +411,10 @@ int daBtn_c::Behavior()
 {
     if (mIsKing != 0 && mState != 9) {
         if (DistToCPlayer() < 0x1770000) {
-            /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA).
+            /* gCamera is the camera (symbols/verified.tsv: CAMERA).
                While the player is within 0x1770000 the king asks the camera
                to frame him each frame, as daBombking_c::Behavior does. */
-            data_0209f318->mFramedActor = this;
+            gCamera->mFramedActor = this;
         }
     }
 

@@ -1059,11 +1059,11 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
 /* ROM ordinal 46 -- dActor_c::Earthquake(Vector3 const &, int)
  * 0x02010168  size 0x18 */
 extern "C" {
-extern dCamera_c *data_0209f318; /* the camera */
+extern dCamera_c *gCamera; /* the camera */
 }
 /* r1 is the position and r2 the intensity; both are forwarded untouched. */
 void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
-    data_0209f318->func_0200d8c8(&pos, magnitude);
+    gCamera->func_0200d8c8(&pos, magnitude);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -7897,7 +7897,7 @@
         "return:signed char"
       ]
     },
-    "data_0209f318": {
+    "gCamera": {
       "src/_ZN7daPly_c11St_Fly_InitEv.cpp": [
         "return:int []"
       ],

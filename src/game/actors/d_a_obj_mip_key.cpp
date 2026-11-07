@@ -31,7 +31,7 @@ void func_02013868(int t, int x);
 void StartMinigameMenu(u8 a);
 }
 
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern SaveBlock data_0209caa0;
 extern u8 data_0209d660;
 extern u8 data_0209d684;
@@ -65,7 +65,7 @@ daObj_Mip_Key_c::~daObj_Mip_Key_c() {}
 void daObj_Mip_Key_c::FinishConversation() {
     Sound::PlaySub(0x28, 0x7f, 0, 0x7444, 0);
     Message::EndTalk();
-    data_0209f318->mFlags &= ~8;
+    gCamera->mFlags &= ~8;
     mPlayer->mStateFlags &= ~0x800;
     MarkForDestruction();
 }

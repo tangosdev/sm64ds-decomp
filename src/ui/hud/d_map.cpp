@@ -100,7 +100,7 @@ extern void *data_ov002_0210c748[];
 extern u8 data_0209d660;
 extern s32 data_020a0db0;
 extern dFdBrightness_c *gSceneFader;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern s32  data_0209d4b0;
 extern u8   data_0209f350[];
@@ -569,7 +569,7 @@ s32 dMap_c::Behavior()
     u32 flagsOr;
     s32 i;
 
-    cam = data_0209f318;
+    cam = gCamera;
     player = gPlayers[gLocalPlayerId];
     focus = 0;
 

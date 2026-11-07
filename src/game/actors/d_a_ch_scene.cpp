@@ -42,7 +42,7 @@ extern daPly_c *gPlayers[];
 extern signed char gNextSublevel;
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern dFdColor_c gSceneColorFader;
 
 /* -------------------------------------------------------------------------- */
@@ -141,7 +141,7 @@ s32 daChScene_c::Behavior() {
                                 } else if (out2.y > 0x60000) {
                                     mAngleZ = 1;
                                 }
-                                cam = data_0209f318;
+                                cam = gCamera;
                                 if (player->Unk_020c9e5c(7)) {
                                     LoadDestinationLevel();
                                     StartExitFaderWipe(6);

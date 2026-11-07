@@ -94,7 +94,7 @@ extern "C" {
 extern u8 DecIfAbove0_Byte(u8* p);
 extern signed short data_02082214[];
 extern void func_02012694(unsigned int id, const Vector3 *v);
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern void func_0203568c(int *p, int v);
 extern void func_02035684(int *p, int v);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
@@ -201,7 +201,7 @@ void daObjPowerUpItem_c::BeginOpening()
     Particle::System::NewSimple(0x102, ((int *)&pos)[0], ((int *)&pos)[1], ((int *)&pos)[2]);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
-    mAngleY = data_0209f318->mAngleY;
+    mAngleY = gCamera->mAngleY;
     mWobbleTimer = 0x1b;
 }
 

@@ -19,7 +19,7 @@
  * - The *(short*)&mSwayAngle increment: the cartridge sign-extends it
  *   (ldrsh) while the index below zero-extends (ldrh). The plain u16
  *   re-read holds the reload (volatile disproved, FEATHER-2713-01).
- * - dCamera_c::mAngleY (data_0209f318): the halfword InitResources and Behavior
+ * - dCamera_c::mAngleY (gCamera): the halfword InitResources and Behavior
  *   add 0x4000 to.
  * - gGameMode game-mode flag, data_02082214 sin/cos table,
  *   data_020a0e68 scratch matrix, data_ov002_0210da58 file handle: ROM labels.
@@ -46,7 +46,7 @@ extern "C" void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 
 extern SharedFilePtr data_ov002_0210da58;
 extern unsigned char gGameMode;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern s16 data_02082214[];
 
 /* ==========================================================================
@@ -99,7 +99,7 @@ int daFeather_c::InitResources() {
     b = (gGameMode == 1);
     if (!b) {
         /* dCamera_c::mAngleY, the same halfword Behavior re-reads every frame. */
-        mAngleY = data_0209f318->mAngleY + 0x4000;
+        mAngleY = gCamera->mAngleY + 0x4000;
     }
     mLifeTimer = 0xb4;
     mVertSpeed = 0x3000;
@@ -159,7 +159,7 @@ int daFeather_c::Behavior() {
     {
         int b = (gGameMode == 1);
         if (!b) {
-            mAngleY = data_0209f318->mAngleY + 0x4000;
+            mAngleY = gCamera->mAngleY + 0x4000;
         }
     }
 

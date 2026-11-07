@@ -93,7 +93,7 @@ extern SharedFilePtr data_ov002_0210ebd8;
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
 extern SaveBlock data_0209caa0;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
 extern "C" {
@@ -181,7 +181,7 @@ int daLuigi_c::Behavior() {
     player->func_ov002_020e4374(&depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
-    data_0209f318->mFramedActor = this;
+    gCamera->mFramedActor = this;
     return 1;
 }
 

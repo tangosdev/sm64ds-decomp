@@ -18,7 +18,7 @@
  * Notes:
  * - data_ov002_02110af0 / 02110af4 / 02110af8 are this TU's stored area,
  *   angle and Fog instance; gLocalPlayerId, gPlayers, 020a0ebc, 0209caa0,
- *   0209f318, 0208e434 and gCurrentAreaId are arm9 scene state this TU does
+ *   gCamera, 0208e434 and gCurrentAreaId are arm9 scene state this TU does
  *   not own.
  * - g_profile_MUGEN_BGM lives outside this TU.
  */
@@ -40,7 +40,7 @@ extern u8 gLocalPlayerId;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 extern SaveBlock data_0209caa0;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
@@ -126,7 +126,7 @@ int daMugenBGM_c::Behavior() {
                 int d;
                 vol = 0;
                 flag = 0x7f;
-                d = AngleDiff(mAngleY, data_0209f318->mAngleY) - 0x2000;
+                d = AngleDiff(mAngleY, gCamera->mAngleY) - 0x2000;
                 if (d < 0)
                     d = 0;
                 else if (d > 0x4000)

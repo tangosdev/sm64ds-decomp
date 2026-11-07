@@ -62,7 +62,7 @@ void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 }
 
 extern u8 gLocalPlayerId;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
 extern SaveBlock data_0209caa0;
 extern Vector3 data_020a0ebc;
@@ -355,7 +355,7 @@ bool daStarGate_c::St_Unlocking_Main(daPly_c *player) {
 bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
     ShowArea((s8)mAngleX);
     ShowArea((s8)mAngleZ);
-    data_0209f318->SetFlag_3();
+    gCamera->SetFlag_3();
     mTerminalVelocity = -0x8a000;
     func_02012694(0x4e, &mCamSpacePosX);
     return true;
@@ -378,7 +378,7 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
                 mTerminalVelocity = 0;
                 func_02012694(0x4f, &mCamSpacePosX, 0);
             } else if (mCloseDoorTimer == 8) {
-                data_0209f318->GoBehindPlayer(gLocalPlayerId);
+                gCamera->GoBehindPlayer(gLocalPlayerId);
             }
         } else if (ready != 0) {
             ChangeState(&ST_WAIT, player);

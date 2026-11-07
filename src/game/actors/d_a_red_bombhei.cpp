@@ -113,7 +113,7 @@ RedBombheiState data_ov084_02130dc4[3] = {
 extern "C" {
 
 /* -- globals -- */
-extern dCamera_c *data_0209f318;           /* the camera */
+extern dCamera_c *gCamera;                 /* the camera */
 extern s8 gCurrentSublevel;                /* current level */
 extern u8 gCurrentStarId;
 extern u8 gShowTouchScreenArrows;
@@ -298,7 +298,7 @@ int daRedBombhei_c::func_ov084_0212cda0(Vector3 *cur, Vector3 *target)
    Returns 1 once both points have arrived. */
 int daRedBombhei_c::func_ov084_0212ccb4()
 {
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     int posDone;
     Vector3 lookAt;
     Vector3 *camLookAt = &cam->lookAt;
@@ -336,7 +336,7 @@ int daRedBombhei_c::func_ov084_0212cae0()
     dActor_c *shutter;
     Vector3 lookAt, pos, targetLookAt, targetPos, offset, sum, sum2;
     unsigned id = this->mShutterID;
-    cam = data_0209f318;
+    cam = gCamera;
     if (id != 0) {
         shutter = dActor_c::FindWithID(id);
         if (shutter != 0) {
@@ -652,7 +652,7 @@ void daRedBombhei_c::func_ov084_0212c4a0()
 void daRedBombhei_c::func_ov084_0212c1a0()
 {
     daPly_c *player = this->mTalkPlayer;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     Vector3 playerPos;
     s16 angle;
     int *src = &player->mPosX;

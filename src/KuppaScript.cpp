@@ -114,7 +114,7 @@ extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */
 extern u8 data_0209d66c;               /* set to close the open message */
 extern s8 gNextSublevel;               /* NEXT_LEVEL_ID */
 extern PadData data_020a0e58[];        /* BUTTON_INPUT_ARR, one per player */
-extern dCamera_c *data_0209f318;       /* CAMERA */
+extern dCamera_c *gCamera;             /* CAMERA */
 extern int data_ov002_02110aec;        /* WATERFALL_SOUNDS_DISABLED */
 
 /* Record fields are unaligned little-endian, so a script spells them byte by
@@ -4709,7 +4709,7 @@ void KuppaScript::Process() {
             } else if (command == KS_WATERFALL_SOUNDS) {
                 data_ov002_02110aec = 0;
             } else if (command == KS_CAMERA) {
-                func_02008550(data_0209f318, s, first, last);
+                func_02008550(gCamera, s, first, last);
             } else if (command <= KS_PLAYER_LAST) {
                 KuppaScript::RunPlayerCommand(s, first, last);
             } else if (command >= KS_DEMO_FIRST) {
