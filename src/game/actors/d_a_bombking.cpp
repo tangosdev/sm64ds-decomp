@@ -178,7 +178,7 @@ extern void func_02011cfc(void);
 }
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
