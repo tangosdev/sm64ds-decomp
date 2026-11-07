@@ -102,7 +102,7 @@ void func_0203568c(int *value, int target);
 void func_02035684(int *value, int target);
 /* local extern: no header declares these; each is spelled as its
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
-int func_ov002_020ef228(dBgCh_Actr *clsn, int otherArg);
+int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
 int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
@@ -1006,7 +1006,7 @@ int daBmb_c::UpdateFuse() {
                 mdCc_c.height = v * 0x50;
                 func_0203568c((int *)&mWithMeshClsn, v * 0x3c);
                 func_02035684((int *)&mWithMeshClsn, v * 0x3c);
-                func_ov002_020ef228(&mWithMeshClsn, (int)this);
+                func_ov002_020ef228(&mWithMeshClsn, this);
             }
             {
                 mdCc_c.flags &= ~4;
@@ -1119,7 +1119,7 @@ void func_ov102_0214ae1c(void *cv) {
     Particle::System::NewSimple(0x16, v.x, v.y, v.z);
     Particle::System::NewSimple(0x17, v.x, v.y, v.z);
     Particle::System::NewSimple(0x18, v.x, v.y, v.z);
-    func_ov002_020ef228(&self->mWithMeshClsn, (int)self);
+    func_ov002_020ef228(&self->mWithMeshClsn, self);
     if (self->mCarrier) {
         Vector3 w;
         self->mCarrier->DropActor();

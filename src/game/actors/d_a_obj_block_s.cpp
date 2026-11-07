@@ -146,7 +146,7 @@ typedef void BgchInitAt_(char *thiz, char *actor, int b, int d, void *v, int f);
 
 
 extern int SurfaceInfo_TestFlag0x20(int *p);
-extern int func_ov002_020ef228(void *c, int arg);
+extern int func_ov002_020ef228(void *c, dActor_c *other);
 extern int func_ov002_020f030c(int x);
 extern int func_ov002_020e496c(daPly_c *c);
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
@@ -867,7 +867,7 @@ void daObjBlockS_c::func_ov098_021390ec()
             }
         }
     }
-    if (func_ov002_020ef228(&mWithMeshClsn, (int)this) != 0) {
+    if (func_ov002_020ef228(&mWithMeshClsn, this) != 0) {
         mWallCooldown = 3;
         return;
     }
