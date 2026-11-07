@@ -71,6 +71,7 @@ enum dScMgSnowball_c_AssetId {
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "OamAttr.h"
+#include "Vector2Math.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -109,7 +110,6 @@ extern OamAttr *sSnowballBitSprites[];
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
-extern int Vec2_Len(int *p);
 extern void func_0203d630(int *p, int m);
 extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
                                   void *callback);
@@ -525,7 +525,7 @@ void dScMgSnowball_c::UpdateSnowball() {
                 self->mProbeHit[j] = 1;
                 self->mProbePush[j] = 1;
                 anyHit = 1;
-                if (Vec2_Len(&self->mVelX) >= 0x800)
+                if (Vec2_Len((const Vector2 *)&self->mVelX) >= 0x800)
                     fastWallHit = 1;
                 hit.x = sample[0];
                 hit.y = sample[1];
@@ -565,8 +565,8 @@ void dScMgSnowball_c::UpdateSnowball() {
                 angle = (s16)(angle + 0x800);
             }
             func_0203d434(response);
-            if (Vec2_Len(&self->mVelX) < 0x800)
-                func_0203d630(response, Vec2_Len(&self->mVelX));
+            if (Vec2_Len((const Vector2 *)&self->mVelX) < 0x800)
+                func_0203d630(response, Vec2_Len((const Vector2 *)&self->mVelX));
             else
                 func_0203d630(response, pushDirY);
             self->mPosX -= response[0];
@@ -595,7 +595,7 @@ void dScMgSnowball_c::UpdateSnowball() {
     } while (anyHit == 1 && resolvePass < 0x21);
 
     if (self->mHitBreakable == 1) {
-        len = Vec2_Len(&self->mVelX);
+        len = Vec2_Len((const Vector2 *)&self->mVelX);
         self->mBallSize -= len;
         if (self->mBallSize < 0x4000)
             self->mBallSize = 0x4000;
@@ -1545,7 +1545,7 @@ s32 dScMgSnowball_c::Behavior() {
             s.a[1] = ((gTouchY[(unsigned int)idx * 4] - mTouchY) << 12) / 296;
             mTouchX = gTouchX[(unsigned int)idx * 4];
             mTouchY = gTouchY[(unsigned int)idx * 4];
-            if (Vec2_Len(s.a) >= 0x400) {
+            if (Vec2_Len((const Vector2 *)s.a) >= 0x400) {
                 s.a[0] = 0;
                 s.a[1] = 0;
             }
@@ -1568,7 +1568,8 @@ s32 dScMgSnowball_c::Behavior() {
         }
 
         if (mVelX != 0 || mVelY != 0) {
-            if (Vec2_Len(&mVelX) >= 0x8000 && func_0203d434((int *)ATS(SNOW_OFF(mVelX))) != 0)
+            if (Vec2_Len((const Vector2 *)&mVelX) >= 0x8000 &&
+                func_0203d434((int *)ATS(SNOW_OFF(mVelX))) != 0)
                 func_0203d630((int *)ATI(SNOW_OFF(mVelX)), 0x8000);
         }
         UpdateSnowball();
@@ -1591,7 +1592,7 @@ s32 dScMgSnowball_c::Behavior() {
         if (mBallSize >= 0x37000)
             mBallSize = 0x37000;
         Vec2_Sub(s.b, (int *)AT(C1, SNOW_OFF(mPosX)), &mSoundPosX);
-        gate = (Vec2_Len(s.b) >= 0x30000) ? 1 : 0;
+        gate = (Vec2_Len((const Vector2 *)s.b) >= 0x30000) ? 1 : 0;
         if (gate != 0) {
             mSoundPosX = mPosX;
             mSoundPosY = mPosY;
@@ -1611,15 +1612,15 @@ s32 dScMgSnowball_c::Behavior() {
         if (mScrollY >= r4)
             mScrollY = r4;
 
-        if (Vec2_Len(&mVelX) >= 0x10) {
+        if (Vec2_Len((const Vector2 *)&mVelX) >= 0x10) {
             short *hp;
-            v = Vec2_Len((int *)ATS(SNOW_OFF(mVelX)));
+            v = Vec2_Len((const Vector2 *)ATS(SNOW_OFF(mVelX)));
             hp = (short *)&mRollAngle;
             q = __aeabi_idiv(v * 0x2710, mBallSize);
             *hp = *hp + (unsigned short)q;
             m = cstd::atan2(mVelX, mVelY);
             ApproachLinear(*(short *)&mHeadingAngle, (short)m,
-                           (short)(Vec2_Len((int *)ATI(SNOW_OFF(mVelX))) / 16));
+                           (short)(Vec2_Len((const Vector2 *)ATI(SNOW_OFF(mVelX))) / 16));
         }
 
         if (mAllWater == 1 || mTimeLeft <= 0) {
@@ -1670,7 +1671,7 @@ s32 dScMgSnowball_c::Behavior() {
         UpdateSnowball();
 
         if (mVelX != 0 || mVelY != 0) {
-            r7 = Vec2_Len(&mVelX);
+            r7 = Vec2_Len((const Vector2 *)&mVelX);
             if (mPosY < 0xc0000)
                 r7 -= 0x80;
             if (r7 < 0) {
@@ -1688,9 +1689,9 @@ s32 dScMgSnowball_c::Behavior() {
         else
             mScreensSwapped = 1;
 
-        if (Vec2_Len(&mVelX) >= 0x10) {
+        if (Vec2_Len((const Vector2 *)&mVelX) >= 0x10) {
             short *hp;
-            v = Vec2_Len((int *)ATS(SNOW_OFF(mVelX)));
+            v = Vec2_Len((const Vector2 *)ATS(SNOW_OFF(mVelX)));
             hp = (short *)&mRollAngle;
             q = __aeabi_idiv(v * 0x2710, mBallSize);
             *hp = *hp + (unsigned short)q;
@@ -1709,7 +1710,7 @@ s32 dScMgSnowball_c::Behavior() {
     case 4:
         if (mCrashTimer < 0x3c) {
             if (mVelX != 0 || mVelY != 0) {
-                r4 = Vec2_Len(&mVelX) + 0x100;
+                r4 = Vec2_Len((const Vector2 *)&mVelX) + 0x100;
                 if (r4 >= 0x8000)
                     r4 = 0x8000;
                 if (func_0203d434((int *)ATS(SNOW_OFF(mVelX))) != 0)
@@ -1755,9 +1756,9 @@ s32 dScMgSnowball_c::Behavior() {
             }
         }
 
-        if (Vec2_Len(&mVelX) >= 0x10) {
+        if (Vec2_Len((const Vector2 *)&mVelX) >= 0x10) {
             short *hp;
-            v = Vec2_Len((int *)ATS(SNOW_OFF(mVelX)));
+            v = Vec2_Len((const Vector2 *)ATS(SNOW_OFF(mVelX)));
             hp = (short *)&mRollAngle;
             q = __aeabi_idiv(v * 0x2710, mBallSize);
             *hp = *hp + (unsigned short)q;

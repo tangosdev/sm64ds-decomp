@@ -87,6 +87,7 @@ enum dScMgAmida_c_AssetId {
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "dScMgAmida_c.h"
+#include "Vector2Math.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
@@ -101,7 +102,6 @@ extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void MultiCopyHalf(void *dst, void *src, int nbytes);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern int RandomIntInternal(int *seed);
-extern int Vec2_Len(int *v);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -2042,7 +2042,7 @@ s32 dScMgAmida_c::Behavior() {
             if (PIECE_AT(piecePtr)->active != 0) {
                 IAP(piecePtr, PIECE_OFF(posX)) += IP(piecePtr, PIECE_OFF(velX));
                 IAP(piecePtr, PIECE_OFF(posY)) += IP(piecePtr, PIECE_OFF(velY));
-                speed = Vec2_Len(vel) * 7 / 8;
+                speed = Vec2_Len((const Vector2 *)vel) * 7 / 8;
                 if (func_0203d434(vel) != 0)
                     func_0203d630(vel, speed);
                 IAP(piecePtr, PIECE_OFF(timer)) = IAP(piecePtr, PIECE_OFF(timer)) + 1;

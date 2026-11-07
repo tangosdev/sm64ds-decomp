@@ -75,6 +75,12 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "nitro/fx/fx.h"
 #include "GX.h"
 #include "cstd.h"
+#include "Vector2Math.h"
+
+/* Local POD pair; Vec2_Len observes these same two words as Vector2. */
+typedef struct {
+    int x, y;
+} Vec2;
 #include "G2.h"
 
 /* Local value types carried over from the legacy files. None of these is a
@@ -97,11 +103,6 @@ typedef struct V2xz {
     int x;
     int z;
 } V2xz;
-
-/* The pair Vec2_Len measures. */
-typedef struct {
-    int x, y;
-} Vec2;
 
 /* The point and triangle corners the pakkun, propeller and ball hit tests
    hand to PointInTriangle. */
@@ -166,7 +167,6 @@ extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                          s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
                                          s32 mode);
-extern int Vec2_Len(Vec2 *v);
 /* Five of this helper's six recorded views spell the first and last arguments
    pointers and one spells them ints; the pointer view is kept. */
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
@@ -630,7 +630,7 @@ int cMgSmartball_pushswitch_c::BallsClear() {
             delta = pos;
             delta.x -= mCurrent0;
             delta.y -= mCurrent1;
-            if (Vec2_Len(&delta) < 0x12000)
+            if (Vec2_Len((const Vector2 *)&delta) < 0x12000)
                 return 0;
         }
     }
@@ -1794,7 +1794,7 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
     for (i = 0; i < ((dScMgSmartball_c *)mpManager)->mBallCount; i++) {
         CopyObjectPos(&s[0], (int *)GetObjPakkun((char *)mpManager, i));
         Vec2_Sub(&s[2], &mCurrent0, &s[0]);
-        b = Vec2_Len((Vec2 *)&s[2]) < 0x4000;
+        b = Vec2_Len((const Vector2 *)&s[2]) < 0x4000;
         if (b) {
             mActionTimer = 0x61;
             mTriggered = 0;
@@ -2454,7 +2454,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot() {
                         int hit;
                         CopyObjectPos((int *)&bufA, (int *)m);
                         Vec2_Sub((int *)&bufB, &mCurrent0, (int *)&bufA);
-                        hit = Vec2_Len((Vec2 *)(void *)&bufB) < 0x11000;
+                        hit = Vec2_Len((const Vector2 *)(void *)&bufB) < 0x11000;
                         if (hit != 0) {
                             mHitTimer = 4;
                             goto done;
@@ -2519,7 +2519,7 @@ void cMgSmartball_ball_c::PlayHitSound(int a1, int *vel) {
     {
         int v[2];
         Vec2_Sub(v, &mVel0, vel);
-        spd = Vec2_Len((Vec2 *)v);
+        spd = Vec2_Len((const Vector2 *)v);
     }
     if (spd < 0x1000)
         return;
@@ -3369,7 +3369,7 @@ outer_loop:
         *pz -= normal.z;
         Vec2_Sub((int *)&moveDelta, (int *)position, (int *)(V2xz *)&self->mSnapshot0);
     }
-    dot = Vec2_Len((Vec2 *)&moveDelta);
+    dot = Vec2_Len((const Vector2 *)&moveDelta);
     state.depth += 0x80;
     state.flags[6]++;
     if (blocked == 1 && state.flags[6] < 0x21 && state.depth <= dot)
@@ -3540,7 +3540,7 @@ outer_loop:
             hazardDelta.z -= hazardPos.z;
             hazardDelta.z *= 2;
             if (func_0203d5bc((int *)&hazardDelta) < square) {
-                dot = self->mRadius + 0x10000 - Vec2_Len((Vec2 *)&hazardDelta);
+                dot = self->mRadius + 0x10000 - Vec2_Len((const Vector2 *)&hazardDelta);
                 if (self->mRadius < dot) {
                     other = i >= ((dScMgSmartball_c *)self->mpManager)->mAnaCount
                                 ? (void *)0
@@ -3724,7 +3724,7 @@ void cMgSmartball_ball_c::SaveSnapshot() {
     } else {
         if ((((dScMgSmartball_c *)mpManager)->param1 & 0xff) != 0) {
             Vec2_Sub((int *)&d1, (int *)(V2xz *)&mCurrent0, (int *)(V2xz *)&mLastPos0);
-            t = Vec2_Len((Vec2 *)&d1) < 0x8000;
+            t = Vec2_Len((const Vector2 *)&d1) < 0x8000;
             if (t != 0) {
                 mStuckFrames += 1;
                 goto after2;
@@ -3781,7 +3781,7 @@ after2:
         }
     }
     if (mVel0 != 0 || mVel1 != 0) {
-        spd = Vec2_Len((Vec2 *)(V2xz *)&mVel0);
+        spd = Vec2_Len((const Vector2 *)(V2xz *)&mVel0);
         if (spd >= 0x8000)
             spd = 0x8000;
         if (func_0203d434((V2 *)(V2xz *)&mVel0) != 0)
@@ -3807,9 +3807,9 @@ after2:
                 mExitGateOpen = 1;
         }
     }
-    mag = Vec2_Len((Vec2 *)(V2xz *)&mVel0);
+    mag = Vec2_Len((const Vector2 *)(V2xz *)&mVel0);
     Vec2_Sub((int *)&d2, (int *)(V2xz *)&mCurrent0, (int *)(V2xz *)&mSnapshot0);
-    dist = Vec2_Len((Vec2 *)&d2);
+    dist = Vec2_Len((const Vector2 *)&d2);
     if (specialHit != 0)
         return;
     if (mag < dist)
@@ -4156,7 +4156,7 @@ void dScMgSmartball_c::UpdateSparks() {
         if (((dScMgSmartball_c *)b)->mSparks[0].mActive) {
             L(b + 0x59a4) += ((dScMgSmartball_c *)b)->mSparks[0].mVel[0];
             L(b + 0x59a8) += ((dScMgSmartball_c *)b)->mSparks[0].mVel[1];
-            d = Vec2_Len((Vec2 *)(const Vector3 *)v) * 7 / 8;
+            d = Vec2_Len((const Vector2 *)(const Vector3 *)v) * 7 / 8;
             if (func_0203d434((V2 *)(Fix12i *)v))
                 func_0203d630((V2 *)(int *)v, (int)d);
             N(b + 0x59b4)++;
@@ -4314,7 +4314,7 @@ void dScMgSmartball_c::UpdateDust() {
             *(int *)&((dScMgSmartball_c *)(self + i * 8))->mDustPos[4] +=
                 *(int *)&((dScMgSmartball_c *)(self + i * 8))->mDustVel[4];
             {
-                int m = Vec2_Len((Vec2 *)obj) * 6 / 8;
+                int m = Vec2_Len((const Vector2 *)obj) * 6 / 8;
                 if (func_0203d434((V2 *)obj)) {
                     func_0203d630((V2 *)obj, m);
                 }
