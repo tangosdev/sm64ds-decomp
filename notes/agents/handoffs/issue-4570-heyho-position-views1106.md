@@ -6,7 +6,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570
 - Task: `issue-4570-heyho-position-views1106`; stage `replace-views`; session `codex-heyho-position-views1106`; harness Codex.
-- Source branch: `audit/heyho-position-views1106`; queue input/original source base: `1a882b6e17271993d32fb4e52adba1c079f4798a`.
+- Source branch: `producer branch recorded in the queue`; queue input/original source base: `1a882b6e17271993d32fb4e52adba1c079f4798a`.
 - Candidate was rebased onto and tested against current `main` `ce959c55727fad6c5db2e3c38ed6435f222f7700`.
 - Workflow/tool pin: `1a882b6e17271993d32fb4e52adba1c079f4798a`.
 - Artifacts: this handoff, `src/minigames/d_mg3d_heyho_obj_adapter.cpp`, and `config/tu_manifest.d/ov006/dMg3DHeyhoObjAdapter_c.json`.
