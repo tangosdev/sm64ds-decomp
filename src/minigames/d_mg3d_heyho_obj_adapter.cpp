@@ -1204,7 +1204,7 @@ extern void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *d, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(const Vector3 *v);
 extern int DotVec3(const Vector3 *a, const Vector3 *b);
-extern void Heyho_CheckHitB(char *c);
+extern void Heyho_CheckHitB(Heyho *c);
 extern char *sJumpAdapters[];
 }
 
@@ -1321,7 +1321,7 @@ extern "C" void Heyho_MotionChase(char *c) {
         else if (df < 0)
             ApproachLinear(HEYHO(c)->mLean, -0x3000, 0x200);
     }
-    Heyho_CheckHitB(c);
+    Heyho_CheckHitB(HEYHO(c));
 }
 }
 
