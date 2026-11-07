@@ -248,7 +248,7 @@ extern int RandomIntInternal(int *seed);
 extern "C" {
 extern void d_a_king_donketuPlayLongHold(unsigned int a, unsigned int b, unsigned int c,
                                          struct Vector3 *v, unsigned int d);
-extern s16 Vec3_VertAngle(const void* a, const void* b);
+extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
 extern void d_a_king_donketuRunningSlidingDustAtHold(int a, int b, int c);
 /* local extern: the Vector3 spelling math/CalcLib.h declares. This TU's
@@ -937,7 +937,7 @@ int daKing_Donketu_c::func_ov073_021200e0()
         s16 horz;
         ApproachLinear(mAngleX, 0, 0x2000);
         horz = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
-        Vec3_VertAngle((const void *)&mPosX, (const void *)&mSpawnPosX);
+        Vec3_VertAngle((const Vector3 *)&mPosX, (const Vector3 *)&mSpawnPosX);
         ApproachLinear(mPrevAngleY, horz, 0x800);
         offset.x = 0;
         offset.y = 0;
@@ -1057,7 +1057,7 @@ mainblock:
     }
     {
         short hz = Vec3_HorzAngle(&c->mPos, (const Vector3 *)v);
-        short vt = Vec3_VertAngle(&c->mPosX, v);
+        short vt = Vec3_VertAngle((const Vector3 *)&c->mPosX, (const Vector3 *)v);
         int in[3];
         int out[3];
         ApproachLinear(c->mPrevAngleY, hz, 0x800);
@@ -1142,7 +1142,7 @@ mainblock:
     }
     {
         short hz = Vec3_HorzAngle(&c->mPos, (const Vector3 *)v);
-        short vt = Vec3_VertAngle(&c->mPosX, v);
+        short vt = Vec3_VertAngle((const Vector3 *)&c->mPosX, (const Vector3 *)v);
         int in[3];
         int out[3];
         in[2] = 0;
