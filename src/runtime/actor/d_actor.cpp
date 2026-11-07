@@ -88,6 +88,7 @@
 #include "daCoin_c.h"
 #include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
+#include "LevelRng.h"
 #include "dClipper.h"
 #include "nitro/fx/fx.h"
 #include "daObjNumber_c.h"
@@ -736,7 +737,6 @@ extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
 /* -------------------------------------------------------------------------- */
 extern "C" {
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650[];
 }
 // @symbol _ZN8dActor_c10SpawnCoinsERK7Vector3iis
 /* ROM ordinal 61 -- dActor_c::SpawnCoins(Vector3 const &, int, int, short)
@@ -773,10 +773,10 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
 
         if (actor != 0) {
             do {
-                ang = (s32)(((u32)RandomIntInternal(data_0209e650) >> 16) << 27) >> 16;
+                ang = (s32)(((u32)RandomIntInternal(&data_0209e650.value) >> 16) << 27) >> 16;
             } while (ang == prev);
 
-            r = (u32)RandomIntInternal(data_0209e650);
+            r = (u32)RandomIntInternal(&data_0209e650.value);
             r >>= 16;
 
             actor->mPrevAngleX = 0;
