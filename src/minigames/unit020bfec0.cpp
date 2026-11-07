@@ -914,10 +914,10 @@ extern "C" void Presenter_Draw(char *c) {
     p = *(int **)(mc + 4);
     PRESENTER(c)->mTexSeq.Update(*(ModelComponents *)mc);
     PRESENTER(c)->mTexAnim.Update(*(ModelComponents *)mc);
-    *(int *)(((int)p + 0x104)) -= PRESENTER(c)->mSway[2];
-    *(int *)(((int)p + 0x108)) += PRESENTER(c)->mSway[3];
+    *(int *)((int)p + 0x104) -= PRESENTER(c)->mSway[2];
+    *(int *)((int)p + 0x108) += PRESENTER(c)->mSway[3];
     *(int *)(((int)p + 0x134)) += PRESENTER(c)->mSway[0];
-    *(int *)(((int)p + 0x138)) += PRESENTER(c)->mSway[1];
+    *(int *)((int)p + 0x138) += PRESENTER(c)->mSway[1];
     PRESENTER(c)->mFace.Render(0);
     PRESENTER(c)->mBack.Render(&sPresenterScale);
 }
@@ -1172,6 +1172,8 @@ void Presenter_PlayCheerLoop(void *c) {
     PRESENTER(r4)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(r4)->mSurprisedTexSeq.filePtr, 0x40000000,
                                    0x800, 0);
     PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    /* The u64 identity mask is load-bearing (measured 2026-11-06); removing it
+       costs the function its bytes. */
     *((long long *)r4) = (new_var = pmf_Presenter_StateSurprisedThenIdle & 0xFFFFFFFFFFFFFFFF);
 }
 }

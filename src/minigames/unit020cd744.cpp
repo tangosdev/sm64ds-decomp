@@ -1153,6 +1153,9 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint,
         for (column = 0; column < 4; column++) {
             Vector3 delta;
             SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, &delta);
+            /* The long long widening is load-bearing (measured 2026-11-06).
+               tools/delaunder.py accepts its removal because it byte-checks only
+               one function of this TU; the per-function gate reports NO-REPRO. */
             int halfLength = (long long)(TRMPLINE(sl)->mHalfWidth);
             int distance = LenVec3(&delta);
             int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);

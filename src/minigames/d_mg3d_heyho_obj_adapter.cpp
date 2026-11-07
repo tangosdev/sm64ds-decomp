@@ -1701,7 +1701,7 @@ int Heyho_IsChasing(Heyho *a) {
     if (neq != 0) {
         int flag = 1;
         int neq2 = flag;
-        UID *q = (UID *)(int)((long long)(unsigned int)a->mMotion);
+        UID *q = (UID *)(int)((unsigned int)a->mMotion);
         UID *c2 = (UID *)(int)(&pmf_Heyho_MotionChase_2);
         if (q->low == c2->low) {
             if (q->high == c2->high || a->mMotion[0] == 0)
@@ -1886,6 +1886,9 @@ void Heyho_SeparateAll(void)
             ai = &oi->mVel;
             for (j = t + 1; j < sHeyhoCount; j++) {
                 if (Heyho_IsChasing(&((Heyho *)sHeyhos)[j]) != 0) {
+                    /* The long long widening is load-bearing (measured 2026-11-06):
+                       dropping it alone costs Heyho_SeparateAll 15 words. The one
+                       on a->mMotion above was free and is gone. */
                     oj = (Heyho *)((long long)(int)&((Heyho *)sHeyhos)[j]);
                     pj = &oj->mPos;
                     Vec3_Sub(&v1, pi, pj);

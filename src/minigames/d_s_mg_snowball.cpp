@@ -87,7 +87,9 @@ struct SPS {
 };
 
 #define AT(p, o) ((void *)(int)((char *)(p) + (o)))
-#define LNDR(e) ((int)((long long)(e)))
+/* An int cast of an address, to keep mwcc from folding it into its use. The
+   long long round trip this went through was measured free on 2026-11-06. */
+#define LNDR(e) ((int)(e))
 #define C1 ((char*)(void*)(int)(c))
 #define C2 ((char*)(void*)(int)(C1))
 #define ATS(off) AT(C1,off)
@@ -1479,7 +1481,7 @@ s32 dScMgSnowball_c::Render() {
  * touch screen and grows the ball, 2 and 3 are the crash, 4 is the melt and
  * 5 is over.
  *
- * The address macros and the `AT` and `LNDR` launders stop mwcc from sharing
+ * The address macros and the `AT` and `LNDR` int casts stop mwcc from sharing
  * field addresses across calls, which the ROM does not do; keep them. */
 s32 dScMgSnowball_c::Behavior() {
     char *c = (char *)this;
@@ -1590,7 +1592,7 @@ s32 dScMgSnowball_c::Behavior() {
             mBallSize = 0x37000;
         Vec2_Sub(s.b, (int *)AT(C1, SNOW_OFF(mPosX)), &mSoundPosX);
         gate = (Vec2_Len(s.b) >= 0x30000) ? 1 : 0;
-        if ((int)((long long)gate) != 0) {
+        if (gate != 0) {
             mSoundPosX = mPosX;
             mSoundPosY = mPosY;
             if (mBallSize < 0x10000)

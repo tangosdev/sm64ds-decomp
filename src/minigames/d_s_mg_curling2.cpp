@@ -332,11 +332,11 @@ void dScMgCurling2_c::StepYRampUp(int entry) {
     } else {
         mPiece[entry].yIndex = 2;
         *(short *)&mPiece[entry].countdown3 =
-            (short)(unsigned char)((((0x20 *
-                                      (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
-                                        16) &
-                                       0x7fff)) >>
-                                     0xf)) +
+            (short)(unsigned char)(((0x20 *
+                                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
+                                       16) &
+                                      0x7fff)) >>
+                                    0xf) +
                                    0x20);
     }
 }
@@ -702,7 +702,7 @@ void dScMgCurling2_c::SeedPieces() {
     for (; i < 0x32; i++) {
         rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((rnd >> 16) & 0x7fff) << 5;
-        mPiece[i].x = (int)((m >> 0xf)) << 0xf;
+        mPiece[i].x = (int)(m >> 0xf) << 0xf;
         mPiece[i].y = -0x8000;
         mPiece[i].updateEnable = 1;
         mPiece[i].drawEnable = 1;
@@ -726,11 +726,11 @@ void dScMgCurling2_c::SeedPieces() {
 
         rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((rnd >> 16) & 0x7fff) << 5;
-        mPiece[i].x = (int)((m >> 0xf)) << 0xf;
+        mPiece[i].x = (int)(m >> 0xf) << 0xf;
 
         rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         q = (((rnd >> 16) & 0x7fff) * 0x1a) >> 0xf;
-        mPiece[i].y = (((q << 3) - 8)) << 0xc;
+        mPiece[i].y = ((q << 3) - 8) << 0xc;
         mPiece[i].countdown = 0;
     }
 }
@@ -841,7 +841,7 @@ void dScMgCurling2_c::DragUpdate() {
         dx = (mDragX - oldx) >> 12;
         dy = (mDragY - oldy) >> 12;
         dy2 = dy * dy;
-        if (cstd::sqrt((u64)(dx * dx + dy2)) <= 1) {
+        if (cstd::sqrt((dx * dx + dy2)) <= 1) {
             mDragX = oldx;
             mDragY = oldy;
             return;
@@ -881,7 +881,7 @@ void dScMgCurling2_c::DragUpdate() {
             }
         }
         mThrowAngle = (mThrowAngle + oldAng) >> 1;
-        mag = cstd::sqrt((u64)(dx * dx + dy2)) * 9;
+        mag = cstd::sqrt((dx * dx + dy2)) * 9;
         mag = (mag << 12) >> 4;
         if (mag >= 0xc000)
             mag = 0xc000;
@@ -1006,7 +1006,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
             continue;
         dx = (mStone[hitIndex].x - mStone[stoneIndex].x) >> 12;
         dy = (mStone[hitIndex].y - mStone[stoneIndex].y) >> 12;
-        distance = cstd::sqrt((u64)(dx * dx + dy * dy));
+        distance = cstd::sqrt((dx * dx + dy * dy));
         contactAngle = cstd::atan2(dy, dx);
         if (distance > 0x18)
             continue;
@@ -1035,7 +1035,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
                     continue;
                 dx2 = (mStone[nextIndex].x - mStone[hitIndex].x) >> 12;
                 dy2 = (mStone[nextIndex].y - mStone[hitIndex].y) >> 12;
-                nextDistance = cstd::sqrt((u64)(dx2 * dx2 + dy2 * dy2));
+                nextDistance = cstd::sqrt((dx2 * dx2 + dy2 * dy2));
                 nextContactAngle = cstd::atan2(dy2, dx2);
                 if (nextDistance > 0x18)
                     continue;
@@ -1154,8 +1154,7 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
             hitVelocityY = (int)((wideContactSin * movingNormal + 0x800) >> 12) +
                            FX_MUL(contactCos, hitTangent);
             self->mStone[stoneIndex].angle = cstd::atan2(dx, dy);
-            self->mStone[stoneIndex].speed =
-                cstd ::sqrt((u64)((long long)dy * dy + (long long)dx * dx));
+            self->mStone[stoneIndex].speed = cstd ::sqrt(((long long)dy * dy + (long long)dx * dx));
             self->mStone[stoneIndex].x = self->mStone[hitIndex].x - FX_MUL(contactCos, 0x1b000);
             self->mStone[stoneIndex].y =
                 self->mStone[hitIndex].y - (int)((wideContactSin * 0x1b000 + 0x800) >> 12);
@@ -1175,9 +1174,8 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
                 *pHitY = self->mStone[stoneIndex].y + 0x18000;
             }
             hitAngle = cstd::atan2(hitVelocityY, hitVelocityX);
-            self->mStone[hitIndex].speed =
-                cstd::sqrt((u64)((long long)hitVelocityX * hitVelocityX +
-                                 (long long)hitVelocityY * hitVelocityY));
+            self->mStone[hitIndex].speed = cstd::sqrt(
+                ((long long)hitVelocityX * hitVelocityX + (long long)hitVelocityY * hitVelocityY));
             self->mStone[stoneIndex].state = 1;
             self->mStone[hitIndex].state = 1;
             if (self->mStone[hitIndex].speed >= 0x3800) {
@@ -1202,7 +1200,7 @@ void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     int cosHeading = data_02082214[((heading >> 4) << 1) + 1];
     int speed = ((dScMgCurling2_c *)o)->mStone[0].speed;
     long long product = (long long)cosHeading * speed;
-    int velocityX = (int)(((unsigned long long)(product + 0x800)) >> 12);
+    int velocityX = (int)((product + 0x800) >> 12);
     ((dScMgCurling2_c *)o)->mStone[0].spinVel = (short)((-velocityX) >> 2);
 }
 
