@@ -75,12 +75,6 @@ struct UpdownTopY {
     u8 pad[0x74];
 };
 
-/* Three words, one per variant. Copied onto the stack and indexed by
-   mVariant. */
-struct VariantWords {
-    s32 v[3];
-};
-
 /* The file table at 0x02134c30 is three records of
    { SharedFilePtr *model, SharedFilePtr *collision, CLPS_Block *clps }.
    Each symbol below is one field of that record, so [variant] on that
@@ -117,9 +111,9 @@ struct RotateUpdownLiftCollisionFilePtr : SharedFilePtr {
 extern UpdownPath data_ov091_02134cdc[3];
 extern UpdownTopY data_ov091_02134d1c[3];
 extern s32 data_ov091_021344e8[];
-/* Per-variant word triples InitResources copies onto the stack. The
-   0x02134bd0 triple sits after _ZTI, so it stays in the ROM gap: one
-   .data claim cannot cover both triples and leave that RTTI out. */
+/* Per-variant word triples copied onto the stack. The shadow-width
+   triple lives in its own file: it sits between this class's typeinfo
+   and its name. */
 VariantWords data_ov091_02134ba0 = {{0x200000, 0x200000, 0x500000}};
 VariantWords data_ov091_02134bac = {{0x3c000, 0x3c000, 0x78000}};
 VariantWords data_ov091_02134bb8 = {{0x32000, 0x32000, 0x78000}};

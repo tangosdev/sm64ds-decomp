@@ -29,7 +29,7 @@ extern void func_020233f0(void);
 extern void func_020196cc(void);
 extern void func_0201a5cc(void);
 
-extern char data_0208ee50[]; /* "ds mario", the save magic */
+extern char data_0208ee50[12]; /* save magic, zero padded */
 extern char data_0209d574[];
 extern char ACTOR_SPAWN_TABLE[];
 extern void *data_020a4bb8;
