@@ -4377,8 +4377,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 /* ROM ordinal 139 -- daDemo_c::RunCommand, 0x020f7d74, size 0x2b4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c10RunCommandEPhii
-void daDemo_c::RunCommand(unsigned char* p, int a2, int a3)
-{
+void daDemo_c::RunCommand(unsigned char *p, int a2, int a3) {
     if ((data_ov002_02110b00 & 1) == 0) {
         data_ov002_02110b00 |= 1;
         data_ov002_0211104c[0] = *(PMF3 *)&data_ov002_0210b708;
