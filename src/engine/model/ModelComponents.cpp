@@ -47,10 +47,11 @@
  * - func_02045074 and func_020453c0 take the BMD file bone (BMD_Bone) and
  *   read it through the local Node / short views; BMD_Bone does not name the
  *   id and the parent/child/sibling offsets yet.
- * - func_02044b30's buf[] is block-copied from data_02099f94 (the ROM's
- *   +0x284 load relocates against the table, so an init-list's anonymous
- *   .rodata would be a WRONG-DEST); the void*+int site takes the char* cast
- *   C++ requires.
+ * - func_02044b30's halfSizes[] is block-copied from data_02099f94 (the
+ *   ROM's +0x284 load relocates against the table, so an init-list's
+ *   anonymous .rodata would be a WRONG-DEST), and it reads materials through
+ *   the local MaterialState: dExtModel_c.h types the pointer as the file's
+ *   BMD_Material, whose layout the runtime record does not share.
  * - Render passes func_02044b30 the material index it already holds in r1,
  *   so the call emits no argument move.
  * - func_02044534's z-prefixed zero temps and the two/three constants keep the
@@ -61,6 +62,7 @@
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "nitro/gx/g3imm.h"
 
 namespace CP15 {
 void FlushDataCache(void);
@@ -98,6 +100,36 @@ struct MeshEntry {
     struct MeshPart* part;
 };
 struct Matrix3x3_Vecs { struct Vector3 v0, v1, v2; };
+
+/* The 0x30-byte runtime material ModelComponents::materials points at.
+   func_020462d0 (Model4.cpp) builds one from each file BMD_Material, so the
+   layout is not BMD_Material's: dExtModel_c.h types the pointer as the file
+   record, and func_02046bbc reads the same record as its MaterialState. The
+   texture SRT words at 0x08..0x18 are the ones func_020469e8 (BTA) animates. */
+struct MaterialState {
+    u32 textureId;     /* 0x00 - index into BMD_File::textures */
+    u32 paletteId;     /* 0x04 - index into BMD_File::palettes */
+    fx32 texScaleS;    /* 0x08 */
+    fx32 texScaleT;    /* 0x0c */
+    u16 texRotation;   /* 0x10 - 4096 to the turn */
+    u16 pad_12;        /* 0x12 */
+    fx32 texTransS;    /* 0x14 */
+    fx32 texTransT;    /* 0x18 */
+    u32 texImageParam; /* 0x1c - the file's word ORed with the texture's flags */
+    u32 texPlttBase;   /* 0x20 */
+    u32 polygonAttr;   /* 0x24 - bit 31 hides the material (Render) */
+    u32 difAmb;        /* 0x28 */
+    u32 speEmi;        /* 0x2c */
+};
+
+/* NitroSDK's geometry-engine ports (ioreg_G3.h) and the matrix mode
+   func_02044b30 selects. */
+#define reg_G3_MTX_MODE (*(volatile u32 *)0x04000440)
+#define reg_G3_TEXCOORD (*(volatile u32 *)0x04000488)
+#define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
+#define reg_G3_DIF_AMB (*(volatile u32 *)0x040004c0)
+#define reg_G3_SPE_EMI (*(volatile u32 *)0x040004c4)
+#define GX_MTXMODE_TEXTURE 3
 
 extern "C" {
 void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
@@ -328,92 +360,82 @@ void func_02044dc4(ModelComponents *self) {
 }
 }
 
+/* Material bind at 0x02044b30, called by Render before each display list:
+ * sends material idx's polygon attributes, colours and texture parameters to
+ * the geometry engine, keeps the texture-coordinate generation mode in
+ * data_020a4bbc, and sets up that mode's texture transform. */
 void ModelComponents::func_02044b30(int idx) {
-    char *m = (char *)materials + idx * 0x30;
-    int mtx3;
-    int texParam;
-    *((int *)0x40004a4) = *((int *)(m + 0x24));
-    *((int *)0x40004c0) = *((int *)(m + 0x28));
-    *((int *)0x40004c4) = *((int *)(m + 0x2c));
-    *((int *)0x40004ac) = *((int *)(m + 0x20));
-    texParam = *((int *)(m + 0x1c));
-    *((int *)0x40004a8) = texParam;
-    data_020a4bbc = (u8)(((u32)texParam) >> 0x1e);
+    const MaterialState &mat = ((const MaterialState *)materials)[idx];
+
+    reg_G3_POLYGON_ATTR = mat.polygonAttr;
+    reg_G3_DIF_AMB = mat.difAmb;
+    reg_G3_SPE_EMI = mat.speEmi;
+    reg_G3_TEXPLTT_BASE = mat.texPlttBase;
+    u32 texImageParam = mat.texImageParam;
+    reg_G3_TEXIMAGE_PARAM = texImageParam;
+
+    data_020a4bbc = texImageParam >> 30;
     switch (data_020a4bbc) {
-    case 1:
-    {
-      int mtx[12];
-      int A;
-      int B;
-      int C;
-      int D;
-      u16 elemFieldE;
-      u16 elemFieldC;
-      char *elem;
-      int m0;
-      u16 rawAngle;
-      int angle;
-      int k;
-      s16 sinVal;
-      s16 cosVal;
-      int D0;
-      int D1;
-      *((int *) 0x4000440) = 3;
-      rawAngle = *((u16 *) (m + 0x10));
-      m0 = *((volatile int *) m);
-      elem = (char *)modelFile->textures + m0 * 0x14;
-      angle = ((u16) (rawAngle << 4)) >> 4;
-      k = angle << 1;
-      sinVal = data_02082214[k];
-      cosVal = data_02082214[k + 1];
-      C = (int) ((((long long) (*((int *) (m + 0x8)))) * sinVal) >> 12);
-      B = (int) ((((long long) (*((int *) (m + 0x8)))) * cosVal) >> 12);
-      A = (int) ((((long long) (*((int *) (m + 0xc)))) * sinVal) >> 12);
-      D = (int) ((((long long) (*((int *) (m + 0xc)))) * cosVal) >> 12);
-      elemFieldE = *((u16 *) (elem + 0xe));
-      elemFieldC = *((u16 *) (elem + 0xc));
-      D0 = (A * (-((int) elemFieldE))) / elemFieldC;
-      mtx3 = (C * elemFieldC) / elemFieldE;
-      mtx[0] = B;
-      mtx[1] = D0;
-      mtx[2] = 0;
-      D1 = mtx3;
-      mtx[3] = D1;
-      mtx[4] = D;
-      mtx[5] = 0;
-      mtx[6] = 0;
-      mtx[7] = 0;
-      mtx[8] = 0;
-      mtx[9] = ((elemFieldC * ((*((int *) (m + 0x8))) - (C + B))) * 8) - (elemFieldC * ((int) ((((long long) (*((int *) (m + 0x8)))) * (*((int *) (m + 0x14)))) >> 8)));
-      mtx[10] = ((elemFieldE * (((A - D) - (*((int *) (m + 0xc)))) + 0x2000)) * 8) + (elemFieldE * ((int) ((((long long) (*((int *) (m + 0xc)))) * (*((int *) (m + 0x18)))) >> 8)));
-      mtx[11] = 0;
-      func_020553a4(mtx);
-    }
-      break;
+    case GX_TEXGEN_TEXCOORD: {
+        /* Load the texture SRT as the texture matrix: the rotation is
+           corrected for the texture's aspect ratio and the translation is
+           scaled by its size. */
+        reg_G3_MTX_MODE = GX_MTXMODE_TEXTURE;
 
-    case 2:
-    {
-      /* The texture-size template {4,8,16,32,64,128,256,512} (4 << i) is
-         block-copied from data_02099f94: the ROM's load at +0x284 relocates
-         against the table itself, so an init-list (anonymous .rodata) would be
-         a WRONG-DEST. The struct assignment keeps the ROM's block-copy shape. */
-      s16 buf[8];
-      *(struct Buf8 *)buf = *(const struct Buf8 *)data_02099f94;
-      int idx1;
-      int idx2;
-      s16 sa;
-      s16 sb;
-      idx1 = (((u32) texParam) >> 0x17) & 7;
-      idx2 = (((u32) texParam) >> 0x14) & 7;
-      data_020a4bc0 = ((s16 *) buf)[idx2];
-      data_020a4bc4 = (s16) (-((s16 *) buf)[idx1]);
-      sa = (s16) ((*((int *) (m + 0x14))) >> 8);
-      sb = (s16) ((*((int *) (m + 0x18))) >> 8);
-      *((int *) 0x4000488) = ((u16) sa) | (((u16) sb) << 16);
-    }
-      break;
+        /* The volatile read keeps textureId's load ahead of the textures
+           pointer's. Read plainly -- in the subscript, through a named
+           local, beside a named textures/file local, through an inline
+           accessor, or at any statement position tried -- the ROM's
+           `ldr r5,[r7]; ldr r4,[r4,#0x18]; mla r6,r5,r0,r4` at +0xa8 comes
+           out with the two loads and their registers swapped (3 words). */
+        u32 textureId = *(volatile const u32 *)&mat.textureId;
+        const BMD_Texture &tex = modelFile->textures[textureId];
+        int angle = (u16)(mat.texRotation << 4) >> 4;
+        s16 sin = data_02082214[angle * 2];
+        s16 cos = data_02082214[angle * 2 + 1];
+        int sSin = (int)(((s64)mat.texScaleS * sin) >> 12);
+        int sCos = (int)(((s64)mat.texScaleS * cos) >> 12);
+        int tSin = (int)(((s64)mat.texScaleT * sin) >> 12);
+        int tCos = (int)(((s64)mat.texScaleT * cos) >> 12);
+        int width = tex.width;
+        int height = tex.height;
 
-  }
+        Mtx43 mtx;
+        mtx.r[0].x = sCos;
+        mtx.r[0].y = tSin * -height / width;
+        mtx.r[0].z = 0;
+        mtx.r[1].x = sSin * width / height;
+        mtx.r[1].y = tCos;
+        mtx.r[1].z = 0;
+        mtx.r[2].x = 0;
+        mtx.r[2].y = 0;
+        mtx.r[2].z = 0;
+        mtx.r[3].x = width * (mat.texScaleS - (sSin + sCos)) * 8 -
+                     width * (int)(((s64)mat.texScaleS * mat.texTransS) >> 8);
+        mtx.r[3].y = height * (tSin - tCos - mat.texScaleT + 0x2000) * 8 +
+                     height * (int)(((s64)mat.texScaleT * mat.texTransT) >> 8);
+        mtx.r[3].z = 0;
+        func_020553a4(&mtx);
+        break;
+    }
+
+    case GX_TEXGEN_NORMAL: {
+        /* Half the texture's S and T sizes, {4, 8, ..., 512}: block-copied
+           from data_02099f94, since the ROM's load at +0x284 relocates
+           against the table itself (an init-list's anonymous .rodata would
+           be a WRONG-DEST). */
+        s16 halfSizes[8];
+        *(struct Buf8 *)halfSizes = *(const struct Buf8 *)data_02099f94;
+        int sizeS = (texImageParam >> 20) & 7;
+        int sizeT = (texImageParam >> 23) & 7;
+        data_020a4bc0 = halfSizes[sizeS];
+        data_020a4bc4 = -halfSizes[sizeT];
+        s16 s = mat.texTransS >> 8;
+        s16 t = mat.texTransT >> 8;
+        reg_G3_TEXCOORD = (u16)s | ((u16)t << 16);
+        break;
+    }
+    }
 }
 
 

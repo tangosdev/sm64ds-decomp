@@ -6425,9 +6425,9 @@ void daPly_c::func_ov002_020c7ff8() {
     u8 s = mNoCtrlKind;
     dCamera_c *g = gCamera;
     if (s == 0 || s == 1 || s == 0x11) {
-        g->func_0200d4b0(mPlayerNo, -1);
+        g->StartDanceCutscene(mPlayerNo, -1);
     } else if (s == 3) {
-        g->func_0200d4b0(mPlayerNo, 5);
+        g->StartDanceCutscene(mPlayerNo, 5);
     } else {
         g->func_0200d508(mPlayerNo);
     }
@@ -7996,7 +7996,7 @@ int daPly_c::St_CameraZoom_Init() {
     dCamera_c *cam = gCamera;
     int pid = *(unsigned char *)((char *)&mPlayerNo);
     cam->func_0200d064(pid);
-    cam->func_0200d7e0(*(unsigned char *)((char *)&mPlayerNo));
+    cam->SetCameraZoomState(*(unsigned char *)((char *)&mPlayerNo));
     this->SetAnim(0x47, 0, 0x1000, 0);
     data_0209f28c = 0;
     return 1;
@@ -8132,7 +8132,7 @@ int daPly_c::St_Headstand_Init() {
     *(int *)((char *)&mVertAccel) = 0;
     *(int *)((char *)&mHorzSpeed) = 0;
     *(int *)((char *)&mVertSpeed) = 0;
-    ((::dCamera_c *)gCamera)->func_0200d580(*(unsigned char *)((char *)&mPlayerNo));
+    ((::dCamera_c *)gCamera)->SetHeadstandState(*(unsigned char *)((char *)&mPlayerNo));
     *(unsigned char *)((char *)&mHideShadow) = 1;
     return 1;
 }
@@ -16138,7 +16138,7 @@ int daPly_c::St_GrabBowserTail_Init() {
     mAngleYSpeed = 0;
     mStateWork = 0;
     mStateArg = 0;
-    ((::dCamera_c *)gCamera)->func_0200d10c(mPlayerNo);
+    ((::dCamera_c *)gCamera)->SetGrabBowserTailState(mPlayerNo);
     return 1;
 }
 }
@@ -19667,7 +19667,7 @@ int daPly_c::St_Spin_Init() {
     int **cam_ptr_ptr = &gCamera;
     *p = old | 0x20;
     unsigned char pid = mPlayerNo;
-    ((::dCamera_c *)*cam_ptr_ptr)->func_0200d678(pid);
+    ((::dCamera_c *)*cam_ptr_ptr)->SetSpinState(pid);
     return 1;
 }
 }

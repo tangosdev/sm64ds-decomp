@@ -9,7 +9,7 @@ typedef struct {
     unsigned char *data;
 } List;
 
-extern int __throw_catch_compare(void *a, unsigned int val, void *out);
+extern int __throw_catch_compare(unsigned char *a, unsigned char *b, int *out);
 
 int func_02071f88(void *a, List *list)
 {
@@ -21,7 +21,7 @@ int func_02071f88(void *a, List *list)
     for (i = 0; i < list->count; i++) {
         unsigned int val = p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
         buf[0] = val;
-        if (__throw_catch_compare(a, val, &buf[1]))
+        if (__throw_catch_compare((unsigned char *)a, (unsigned char *)val, (int *)&buf[1]))
             return 1;
         p += 4;
     }
