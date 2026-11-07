@@ -249,7 +249,7 @@ int daTor_c::Behavior()
             if (closest == 0 || Vec3_Dist(&o->mPos, &closest->mPos) > 0x118000) {
                 /* ov002 player-state helper: stores `this` into the player's
                    tornado slot and switches it into the tornado state. */
-                if (func_ov002_020de33c((daPly_c *)o, (int)this) != 0)
+                if (func_ov002_020de33c((daPly_c *)o, this) != 0)
                     mCaughtActor = o;
             }
         }
