@@ -1781,6 +1781,18 @@ static void mirror_restamp()
     if (m.bst) port::bro::restamp(*m.bst, m.bp);
 }
 
+/* BROSTAMP1: THE BALLOON IS THE BODY WHILE IT IS UP. With mIsBalloon
+   (+0x6fd) on, the body draw is the inline balloon model at +0xf0
+   (hal_render_player_world_body's balloon arm, src/game/player/Player.cpp
+   Player::Render's else arm), not mBodyModels[GetBodyModelID], so the
+   stamps go on it. It shares the body's palette names (mario_body_pl ...),
+   so the picks find it the same way. */
+static char *stamp_body_model(char *c, unsigned id)
+{
+    if (*(const unsigned char *)(c + 0x6fd) != 0) return c + 0xf0;
+    return (char *)((ModelAnim **)(c + 0xdc))[id];
+}
+
 /* GHOSTCHAR1: SM64DS_GHOST_DRAW_PROBE=<stride>. What a hub ghost's draw really
    has, for the black-shading field report (F7): once per <stride> draws of a
    ghost, its character, the palette row it is stamped with and that row's
@@ -1962,7 +1974,7 @@ void hal_render_player_world(void *player)
         char *c = (char *)player;
         const unsigned id =
             _ZNK6Player14GetBodyModelIDEjb(c, *(int *)(c + 8) & 0xff, 0);
-        ghost_stamp_one(st, 0, (char *)((ModelAnim **)(c + 0xdc))[id], pal);
+        ghost_stamp_one(st, 0, stamp_body_model(c, id), pal);
         const unsigned hid =
             _ZN6Player19func_ov002_020becf4Eii(c, *(unsigned char *)(c + 0x6db), 1);
         if (hid != 8 && hid != 9)
@@ -1979,7 +1991,7 @@ void hal_render_player_world(void *player)
         port::bro::Picks bp;
         if (chr < 3 && port_bro_picks_for_body(player, &bp) && port::bro::any(bp)) {
             const unsigned id = _ZNK6Player14GetBodyModelIDEjb(c, chr, 0);
-            port::bro::stamp_model(bst, 0, (char *)((ModelAnim **)(c + 0xdc))[id], bp);
+            port::bro::stamp_model(bst, 0, stamp_body_model(c, id), bp);
             const unsigned hid = _ZN6Player19func_ov002_020becf4Eii(c, *(unsigned char *)(c + 0x6db), 1);
             if (hid != 8 && hid != 9)
                 port::bro::stamp_model(bst, 1, ((char **)(c + 0x154))[hid], bp);
