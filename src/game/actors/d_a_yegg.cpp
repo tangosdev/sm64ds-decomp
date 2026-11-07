@@ -98,14 +98,6 @@
 
 struct dBgPi;
 
-/* Three plain words: the stack vectors the C helpers build, which carry
-   none of Vector3's empty destructor. */
-
-struct Spawn {
-    Vector3_16 rot;
-    VecFx32 pos;
-};
-
 /* Actor registry IDs this file tests or spawns (symbols/actor_debug_names.tsv). */
 enum {
     ACTOR_DOSUN       = 0xa1,
@@ -491,7 +483,7 @@ void daYegg_c::func_ov002_020ecb0c()
     s32 b;
     u32 fb0;
     s32 onwall;
-    struct Spawn sp;
+    Vector3_16 rot;
 
     id = mTargetId;
     o = 0;
@@ -515,17 +507,12 @@ void daYegg_c::func_ov002_020ecb0c()
         } else {
             b = (s32)((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
-                s32 py = *(volatile s32 *)&mPosY + 0x28000;
-                s32 pz = mPosZ;
-                s32 px = mPosX;
-                sp.pos.y = py;
-                sp.pos.z = pz;
-                sp.pos.x = px;
-                sp.rot.x = FX_SinIdx((u16)mAngleY >> 4);
-                sp.rot.y = 0;
-                sp.rot.z = FX_CosIdx((u16)mAngleY >> 4);
-                mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, sp.pos.x, sp.pos.y,
-                                                        sp.pos.z, (const Vector3_16f *)&sp.rot, 0);
+                Vector3 pos(mPos.x, mPos.y + 0x28000, mPos.z);
+                rot.x = FX_SinIdx((u16)mAngleY >> 4);
+                rot.y = 0;
+                rot.z = FX_CosIdx((u16)mAngleY >> 4);
+                mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, pos.x, pos.y,
+                                                        pos.z, (const Vector3_16f *)&rot, 0);
                 mSoundHandle =
                     Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
                 flag = 1;
