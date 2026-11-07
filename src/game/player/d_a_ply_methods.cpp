@@ -8392,13 +8392,7 @@ void func_ov002_020cb474(char *c) {
         return;
     if ((r1->height >> 2) > self->mAttachOffsetY)
         return;
-    volatile int v[3];
-    int z = self->mPosZ;
-    int y = self->mPosY + 0x32000;
-    int x = self->mPosX;
-    v[0] = z ? x : x;
-    v[1] = y;
-    v[2] = z;
+    Vector3 v(self->mPosX, self->mPosY + 0x32000, self->mPosZ);
     unsigned int id;
     switch (gCurrentSublevel) {
     case 0x13:
@@ -8414,8 +8408,7 @@ void func_ov002_020cb474(char *c) {
         id = 0xb9;
         break;
     }
-    self->mParticle1 = (s32)Particle::System::New(*(volatile unsigned int *)&self->mParticle1, id,
-                                                  v[0], v[1], v[2], 0, 0);
+    self->mParticle1 = (s32)Particle::System::New(self->mParticle1, id, v.x, v.y, v.z, 0, 0);
 }
 }
 
@@ -9094,13 +9087,10 @@ int daPly_c::St_MetalWaterWater_Main() {
     extern void ApproachAngle(void*, int target, int a, int b, int d);
     extern struct S18b2 data_0209f4a0[];
     extern int data_0209f32c;
-    /* volatile: the original pins these stores to memory in this order. */
-    volatile Vector3 pos;
     u32 f;
     int v;
     int lim;
     int py;
-    int px, py2, pz;
 
     if (func_ov002_020cec2c() != 0)
         return 1;
@@ -9131,20 +9121,13 @@ int daPly_c::St_MetalWaterWater_Main() {
         }
         if (mIsAirborne == 0) {
             Sound::PlayBank0(0xa9, mCamSpacePos);
-            px = mPosX;
-            pos.x = px;
-            py2 = mPosY;
-            pos.y = py2;
-            pz = mPosZ;
-            pos.z = pz;
+            Vector3 pos = mPos;
             if (mIsMega != 0) {
-                py2 += 0x19000;
-                pos.y = py2;
-                Particle::System::NewSimple(0x5c, px, py2, pz);
+                pos.y += 0x19000;
+                Particle::System::NewSimple(0x5c, pos.x, pos.y, pos.z);
             } else {
-                py2 += 0x32000;
-                pos.y = py2;
-                Particle::System::NewSimple(0xd7, px, py2, pz);
+                pos.y += 0x32000;
+                Particle::System::NewSimple(0xd7, pos.x, pos.y, pos.z);
             }
             if (data_0209f4a0[gActivePlayerSlot].a != 0) {
                 this->ChangeState(data_ov002_021106ac);
@@ -9507,7 +9490,7 @@ int daPly_c::St_Swim_Main() {
     extern unsigned short data_0209f49e;
     extern char data_0209ee90[];
     int t4;
-    volatile int pos[3];
+    Vector3 pos;
     int* fr;
     int ang;
     int out[3];
@@ -9545,15 +9528,9 @@ int daPly_c::St_Swim_Main() {
 
     if (mJumpComboTimer != 0) {
         int eid = 0xcd;
-        int y, z;
-        pos[0] = mPosX;
-        y = mPosY;
-        pos[1] = y;
-        z = mPosZ;
-        pos[2] = z;
-        y = y + 0x32000;
-        pos[1] = y;
-        *(unsigned int*)&mParticle3 = func_02022d44(*(volatile unsigned int*)(&mParticle3), eid, pos[0], pos[1], z, 0);
+        pos = mPos;
+        pos.y += 0x32000;
+        mParticle3 = func_02022d44(mParticle3, eid, pos.x, pos.y, pos.z, 0);
     }
 
     if (mPrevVertSpeed == 0 && mMeshClsn.IsOnGround() != 0) {
