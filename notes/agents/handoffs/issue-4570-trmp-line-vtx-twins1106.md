@@ -6,7 +6,7 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Issue: https://github.com/tangosdev/sm64ds-decomp/issues/4570
 - Task: `issue-4570-trmp-line-vtx-twins1106`; stage `replace-views`; session `codex-trmp-line-vtx-twins1106`; harness Codex.
-- Source branch: `audit/trmp-line-vtx-twins1106`; input/base: `c1b98e90c6a1b1997dd66b74b9e138965529c48f`.
+- Source branch: `producer branch recorded in the queue`; input/base: `c1b98e90c6a1b1997dd66b74b9e138965529c48f`.
 - Workflow/tool pin: `c1b98e90c6a1b1997dd66b74b9e138965529c48f`.
 - Evidence artifacts: this handoff, `src/minigames/unit020cd744.cpp`, and `config/tu_manifest.d/ov006/unit020cd744.json`.
 - Next action: independent verifier checks the `TrmpLine::Vtx` aliases, compiler-local symbol rekeys, and exact TU/full ROM proof. Do not self-verify.
