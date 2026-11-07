@@ -5551,12 +5551,15 @@ static int pad_act(const XPad *pad, int action)
    until it is let go, so a punch held into the pause is not a touch on a plate. */
 static int g_left_game;
 static int g_left_game_hold;
+/* MOUSELOCK1 round 2: a left press a coop player list row took (the TP click). The row's handler has already run; the same press is not
+   also the bound action. Set by mo_list_click, cleared by mo_left_frame / mo_scene_frame once the button is up. */
+static int g_left_list_took;
 /* CAMPACK1: a mouse-button binding (settings.json MouseCam*; values are the Win32 VK of the button). */
 static int mouse_act(int action)
 {
     bindings_load();
     const int vk = host_setting_mouse(action);
-    if (vk == VK_LBUTTON && !g_left_game) return 0;     /* MOUSELOCK1: left is the stylus this frame */
+    if (vk == VK_LBUTTON && (!g_left_game || g_left_list_took)) return 0;     /* MOUSELOCK1: left is the stylus this frame, or a list row took it */
     return vk && key_live(vk);     /* GetAsyncKeyState reads the mouse buttons by VK; SM64DS_HOST_KEY=<vk hex>@f0-f1 scripts one for a row */
 }
 /* MOUSEBIND1: the raw DS Start (0x08) and Select (0x04) bits from their mouse buttons, for the two places the keys' own bits are made */
@@ -13460,8 +13463,20 @@ static int mo_left_down(void)
     if (host_key_script(VK_LBUTTON)) return 1;
     return hal_window_focused() && W.GetAsyncKeyState_ && W.GetAsyncKeyState_(VK_LBUTTON) < 0;
 }
+/* MOUSELOCK1 round 2: a left click at framebuffer pixel cx,cy offered to the coop player list (the window procedure's WM_LBUTTONDOWN and
+   the dev proof knob SM64DS_LIST_CLICK_TEST both call this). True = a row took it: no stylus point is published and the press is not
+   the bound action either, for as long as it is held. */
+static int mo_list_click(int cx, int cy)
+{
+    if (!port::player_list_click(cx, cy)) return 0;
+    g_mouse_click_new = 0;
+    if (!g_left_list_took) fprintf(stderr, "[mouse] list click took the left button f%d\n", g_host_key_frame);
+    g_left_list_took = 1;
+    return 1;
+}
 static void mo_left_frame(int stacked)
 {
+    if (g_left_list_took && !mo_left_down()) g_left_list_took = 0;
     int bound = 0;
     for (int i = 0; i < HOST_MOUSE_COUNT; ++i) bound |= host_setting_mouse(i) == VK_LBUTTON;
     if (!bound && !g_left_game && !g_left_game_hold) return;      /* nothing on left: today's program */
@@ -13486,7 +13501,33 @@ static void mo_scene_frame(HWND hwnd)
     if (g_left_game) fprintf(stderr, "[mouse] left button is the stylus (scene) f%d\n", g_host_key_frame);
     g_left_game = 0;
     if (g_left_game_hold && !mo_left_down()) g_left_game_hold = 0;
+    if (g_left_list_took && !mo_left_down()) g_left_list_took = 0;
 }
+#ifndef PORT_ROM_CLEAN
+/* MOUSELOCK1 round 2 proof knob, dev only: SM64DS_LIST_CLICK_TEST=<seat>@<frame> (or x,y@<frame> for a framebuffer pixel) hands one
+   left click to mo_list_click on that level-loop frame, after this frame's input was read, the way a WM_LBUTTONDOWN pumped at the top
+   of the next frame would. <seat> finds that seat's row on the list as drawn. Script the button itself with SM64DS_HOST_KEY=01@<frame+1>-.. */
+static void list_click_test_apply(int frame)
+{
+    static int f = -2, seat = -1, x = -1, y = -1;
+    if (f == -2) {
+        f = -1;
+        const char *e = getenv("SM64DS_LIST_CLICK_TEST");
+        int a = 0, b = 0, c = 0;
+        if (e && sscanf(e, "%d,%d@%d", &a, &b, &c) == 3) { x = a; y = b; f = c; }
+        else if (e && sscanf(e, "%d@%d", &a, &c) == 2) { seat = a; f = c; }
+    }
+    if (f < 0 || frame != f) return;
+    if (seat >= 0) {
+        for (int yy = 0; yy < ntr::active_h && x < 0; yy += 2)
+            for (int xx = 0; xx < ntr::active_w; xx += 2)
+                if (port::player_list_hit_test(xx, yy) == seat) { x = xx; y = yy; break; }
+        if (x < 0) { fprintf(stderr, "[mouse] list click test f%d: no row for seat %d\n", frame, seat); return; }
+    }
+    const int took = mo_list_click(x, y);
+    fprintf(stderr, "[mouse] list click test f%d at %d,%d fb: %s\n", frame, x, y, took ? "a row took it" : "no row took it");
+}
+#endif
 /* hal/sub_screen.cpp's two questions (null on targets without this file): is left a game action now, and is the pointer held now */
 extern "C" int (*port_left_action_hook)(void);
 extern "C" int (*port_pointer_held_hook)(void);
@@ -13953,7 +13994,7 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
         g_mouse_click_x = cx;
         g_mouse_click_y = cy;
         g_mouse_click_new = 1;
-        if (port::player_list_click(cx, cy)) g_mouse_click_new = 0;   /* PLIST1: a coop list row takes it */
+        mo_list_click(cx, cy);   /* PLIST1: a coop list row takes it (MOUSELOCK1: and the bound left action does not) */
         fprintf(stderr, "[mouse] click %d,%d fb\n", cx, cy);
         return 0;
     }
@@ -18965,6 +19006,7 @@ int main(void)
            the inset panel's transform lives, so it is the half of the click
            grid that guards against a stacked fix moving a level. */
         click_test_apply(hwnd, port_rom_frame_checked(frame, "click-test"));
+        list_click_test_apply(frame);
 #endif
         /* ---- THE REBIND CAPTURE, ahead of every other reader of this frame's
            input. The keyboard half already arrived through the window

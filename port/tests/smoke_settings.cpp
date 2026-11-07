@@ -225,12 +225,16 @@ static int child(const char *which)
     } else if (!strcmp(which, "mouse_named")) {
         check_eq(host_setting_mouse(HOST_MOUSE_CAM_HOLD), 4, "MouseCamHold middle");
         check_eq(host_setting_mouse(HOST_MOUSE_CAM_CENTER), 5, "MouseCamCenter X1");
-        check_eq(host_setting_mouse(HOST_MOUSE_CAM_LEFT), 0, "MouseCamLeft: the left button is the stylus, a typo reads as default");
+        check_eq(host_setting_mouse(HOST_MOUSE_CAM_LEFT), 1, "MouseCamLeft left: the left button binds to any action but the look");
         check_eq(host_setting_mouse(HOST_MOUSE_CAM_ZOOM_IN), 6, "MouseCamZoomIn X2");
         check_eq(host_setting_mouse(HOST_MOUSE_LOOK), 0, "MouseLook 3 is not a button we take");
         check_eq(host_setting_key(HOST_KEY_CAM_ZOOM_IN), 0x49, "KeyCamZoomIn I");
         check_eq(host_setting_key(HOST_KEY_CAM_UP), 0x52, "KeyCamUp default");
         check_eq(host_setting_camera_stick_zoom(), 1, "CameraStickZoom on");
+    } else if (!strcmp(which, "mouse_left_hold")) {
+        /* MOUSELOCK1: left is refused on the look button only; the file's 1 reads as the default right */
+        check_eq(host_setting_mouse(HOST_MOUSE_CAM_HOLD), 2, "MouseCamHold left refused, right kept");
+        check_eq(host_setting_mouse(HOST_MOUSE_CAM_CENTER), 1, "MouseCamCenter left");
     } else if (!strcmp(which, "cam_named")) {
         /* named in the file: obeyed as written, onto LB and on to V, and a
            rotate rebound to the right stick click */
@@ -660,6 +664,7 @@ int main(int argc, char **argv)
     bad |= run_case(exe, dir, "mouse_named",
         "{ \"MouseCamHold\": 4, \"MouseCamCenter\": 5, \"MouseCamLeft\": 1, \"MouseCamZoomIn\": 6,\n"
         "  \"MouseLook\": 3, \"KeyCamZoomIn\": 73, \"CameraStickZoom\": true }");
+    bad |= run_case(exe, dir, "mouse_left_hold", "{ \"MouseCamHold\": 1, \"MouseCamCenter\": 1 }");
     bad |= run_case(exe, dir, "cam_named",
         "{ \"KeyCamCenter\": 86, \"PadCamCenter\": 256, \"PadCamRight\": 1,\n"
         "  \"KeyCamMode\": 0 }");
