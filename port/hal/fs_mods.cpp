@@ -2041,14 +2041,16 @@ int g_pc_state;             /* 0 not tried, 1 loaded */
    first, through palette_open_named), or "Custom".
 
    CUSTOM is the player's own colours, `<who>_hat` `<who>_overalls`
-   `<who>_shoes` for the bros and `yoshi_body`, "RRGGBB". They land on
+   `<who>_shoes` for the bros and `yoshi_body` `yoshi_shoes`, "RRGGBB". They land on
    exactly the palette entries an online pick lands on, with the same
    arithmetic: the bros through the category table hal/vs_char_groups.h and
    vspal::char_recolor_palette, group by group in the table's order, as
    hal/bro_colors.cpp's copy_for recolours a body's palette copy; Yoshi
    through vspal::vs_group_pick on the body group of row 0, as an online
-   Yoshi's own row is built (vs_palette_row, body only: the shoes stay the
-   cartridge's). A colour equal to the cartridge's own tone of that part (to
+   Yoshi's own row is built (vs_palette_row: vs_group_pick on the body
+   group, then on the shoe group, both from row 0). A package older than the
+   shoes setting has no `yoshi_shoes` key, so the shoes stay the cartridge's,
+   as they always did. A colour equal to the cartridge's own tone of that part (to
    the DS's 5 bits a channel) is no pick, as it is online, so Custom with
    the default colours serves the ROM's palettes untouched.
 
@@ -2072,7 +2074,7 @@ const char *const CP_PART_KEY[PC_COUNT][3] = {
     { "mario_hat", "mario_overalls", "mario_shoes" },
     { "luigi_hat", "luigi_overalls", "luigi_shoes" },
     { "wario_hat", "wario_overalls", "wario_shoes" },
-    { "yoshi_body", 0, 0 },
+    { "yoshi_body", "yoshi_shoes", 0 },
 };
 
 void cp_mod_read(void)
@@ -2162,10 +2164,29 @@ int pc_name_is_plain(const char *v)
 
 /* Build Yoshi's three records for VS row `row` out of the ROM's own body
    palette. 1 on success; 0 leaves Yoshi on the ROM and sets *why.
-   character-palettes' Custom passes `body_pick` (0xRRGGBB, else -1): the
-   row is then row 0 with its body group recoloured the way an online pick
-   recolours it (vs_classic_alias, then vs_group_pick on the body group). */
-int pc_build_yoshi(int row, long body_pick, const char **why)
+   character-palettes' Custom passes `body_pick` and `shoe_pick` (0xRRGGBB,
+   else -1): the row is then row 0 with its body group and its shoe group
+   recoloured the way an online pick recolours them (vs_palette_row:
+   vs_classic_alias, then vs_group_pick on the body group and on the shoe
+   group, each reading row 0). A part whose colour is the cartridge's own
+   drawn shade is no pick and keeps row 0's words, so Custom with both
+   defaults serves the ROM untouched. */
+static int pc_yoshi_part_pick(const u8 *pal, long rgb, int main_idx,
+                              vspal::u8 alias[3])
+{
+    vspal::u8 pk[3];
+    u16 m;
+    if (rgb < 0)
+        return 0;
+    pk[0] = (vspal::u8)(rgb >> 16);
+    pk[1] = (vspal::u8)(rgb >> 8);
+    pk[2] = (vspal::u8)rgb;
+    vspal::vs_classic_alias(pk, alias);
+    memcpy(&m, pal + main_idx * 2, 2);
+    return (vspal::rgb_word(alias, m) & 0x7fff) != (m & 0x7fff);
+}
+
+int pc_build_yoshi(int row, long body_pick, long shoe_pick, const char **why)
 {
     static const u16 kCount[3] = { 64, 16, 16 };
     static const u32 kOff[3] = { 0, 128, 160 };
@@ -2187,20 +2208,17 @@ int pc_build_yoshi(int row, long body_pick, const char **why)
         free(body);
         return 0;
     }
-    if (body_pick >= 0) {
-        /* a Custom body the cartridge's own drawn green is no pick */
-        vspal::u8 pk[3], al[3];
-        u16 m;
-        pk[0] = (vspal::u8)(body_pick >> 16);
-        pk[1] = (vspal::u8)(body_pick >> 8);
-        pk[2] = (vspal::u8)body_pick;
-        vspal::vs_classic_alias(pk, al);
-        memcpy(&m, body + dp + vspal::kBodyMain * 2, 2);
-        if ((vspal::rgb_word(al, m) & 0x7fff) == (m & 0x7fff)) {
-            free(body);
-            *why = "the body colour is the cartridge's own";
-            return 2;
-        }
+    vspal::u8 body_al[3], shoe_al[3];
+    const int custom = body_pick >= 0 || shoe_pick >= 0;
+    const int body_on = pc_yoshi_part_pick(body + dp, body_pick,
+                                           vspal::kBodyMain, body_al);
+    const int shoe_on = pc_yoshi_part_pick(body + dp, shoe_pick,
+                                           vspal::kShoeMain, shoe_al);
+    if (custom && !body_on && !shoe_on) {
+        /* Custom colours the cartridge's own drawn green and orange: no pick */
+        free(body);
+        *why = "the body and shoe colours are the cartridge's own";
+        return 2;
     }
     *why = "out of host memory";
     syn = (u8 *)malloc(64 * 2 + 16 * 2 + 16 * 2);
@@ -2214,17 +2232,16 @@ int pc_build_yoshi(int row, long body_pick, const char **why)
     /* the body keeps rows 1..3 exactly as authored and only row 0 moves;
        each head file gets the chosen row on its own, 16 colors, in place */
     memcpy(syn, body + dp, 128);
-    if (body_pick >= 0) {
+    if (custom) {
         u16 r0[16], out[16];
-        vspal::u8 pick[3], alias[3];
         memcpy(r0, body + dp, 32);
         memcpy(out, r0, 32);
-        pick[0] = (vspal::u8)(body_pick >> 16);
-        pick[1] = (vspal::u8)(body_pick >> 8);
-        pick[2] = (vspal::u8)body_pick;
-        vspal::vs_classic_alias(pick, alias);
-        vspal::vs_group_pick(r0, vspal::kBodyIdx, 4, vspal::kBodyMain, alias,
-                             out);
+        if (body_on)
+            vspal::vs_group_pick(r0, vspal::kBodyIdx, 4, vspal::kBodyMain,
+                                 body_al, out);
+        if (shoe_on)
+            vspal::vs_group_pick(r0, vspal::kShoeIdx, 2, vspal::kShoeMain,
+                                 shoe_al, out);
         memcpy(syn, out, 32);
         memcpy(syn + 128, out, 32);
         memcpy(syn + 160, out, 32);
@@ -2394,16 +2411,24 @@ void pc_custom(int c)
         return;
     }
     if (c == PC_YOSHI)
-        got = pc_build_yoshi(0, g_cpm.rgb[c][0], &why);
+        got = pc_build_yoshi(0, g_cpm.rgb[c][0], g_cpm.rgb[c][1], &why);
     else
         got = pc_build_bro(c, &why);
     if (got == 1) {
         g_pc[c].active = 1;
-        if (c == PC_YOSHI)
-            fprintf(stderr, "[mods] %s Custom: body %06lX, %u record(s)\n",
-                    CP_LOG_KEY[c], (unsigned long)g_cpm.rgb[c][0],
+        if (c == PC_YOSHI) {
+            /* an older package has no yoshi_shoes: say "ROM", not FFFFFF */
+            char sh[8];
+            if (g_cpm.rgb[c][1] >= 0)
+                snprintf(sh, sizeof sh, "%06lX",
+                         (unsigned long)(g_cpm.rgb[c][1] & 0xFFFFFF));
+            else
+                snprintf(sh, sizeof sh, "ROM");
+            fprintf(stderr, "[mods] %s Custom: body %06lX shoes %s, %u "
+                            "record(s)\n", CP_LOG_KEY[c],
+                    (unsigned long)(g_cpm.rgb[c][0] & 0xFFFFFF), sh,
                     g_pc[c].npatch);
-        else
+        } else
             fprintf(stderr, "[mods] %s Custom: hat %06lX overalls %06lX "
                             "shoes %06lX, %u record(s)\n", CP_LOG_KEY[c],
                     (unsigned long)(g_cpm.rgb[c][0] & 0xFFFFFF),
@@ -2471,7 +2496,7 @@ void pc_load(void)
 
         if (c == PC_YOSHI && row >= 0) {
             const char *why = "?";
-            if (pc_build_yoshi(row, -1, &why) == 1) {
+            if (pc_build_yoshi(row, -1, -1, &why) == 1) {
                 g_pc[c].active = 1;
                 fprintf(stderr, "[mods] %s %s: %u record(s) "
                                 "from the game's own four-player colors "
