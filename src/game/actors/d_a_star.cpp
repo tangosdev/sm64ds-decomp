@@ -1140,10 +1140,6 @@ extern "C" {
 extern int func_ov002_020ca0f4(void *player);
 
 
-struct VObj {
-    virtual void unk0();
-};
-
 }
 
 void daStar_c::func_ov002_020ea100() {
@@ -1203,9 +1199,8 @@ void daStar_c::func_ov002_020ea100() {
         }
 
         {
-            struct VObj *vobj = (struct VObj *)&mShadowModel;
             mBits.noSpin = 1;
-            vobj->unk0();
+            mShadowModel.~dExtShadowModel_c();
         }
 
         if (mKind == KIND_9) {

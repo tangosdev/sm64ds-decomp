@@ -22,8 +22,8 @@
  *   data_ov010_021122f8 is CLPS
  * - common.h first via dBgActor_c.h (Matrix4x3 copies in UpdateModel/Collision)
  * - func_ov010_02111984 three-argument C ABI collider adapter
- * - Vec3_HorzAngle / Vec3_HorzDist stay local: they take the VecFx32
- *   locals, and math/CalcLib.h's spelling takes const Vector3 *
+ * - VecFx32 POD locals stay trivial; math/CalcLib.h's vector helpers operate
+ *   on the same three-word buffers through their Vector3 pointer interface
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -35,6 +35,7 @@ enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
 /* The two copied position locals must stay POD. The shared Vector3 has an
@@ -68,12 +69,9 @@ extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
 extern TrapStateRec data_ov010_02112d28;
 
-/* local extern: the dBgW callback setter and the two horizontal helpers, on
-   the VecFx32 POD seam (see the banner). */
+/* local extern: the dBgW callback setter. */
 extern "C" {
 extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
-extern s16 Vec3_HorzAngle(const VecFx32 *from, const VecFx32 *to);
-extern s32 Vec3_HorzDist(const VecFx32 *from, const VecFx32 *to);
 }
 
 /* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
@@ -138,9 +136,9 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     spawnerPos.x = spawnerPosition->x;
     spawnerPos.y = spawnerPosition->y;
     spawnerPos.z = spawnerPosition->z;
-    angle = Vec3_HorzAngle(&spawnerPos, &otherPos);
+    angle = Vec3_HorzAngle((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     relativeAngle = (s16)(angle + spawner->mAngleY);
-    distance = Vec3_HorzDist(&spawnerPos, &otherPos);
+    distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     index = (u16)relativeAngle >> 4;
     projection = data_02082214[index * 2];
     projectedDistance = FX_MUL(distance, projection);
