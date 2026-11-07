@@ -123,7 +123,6 @@ void  func_ov002_020c3e8c(void *player);
 void  func_ov002_020c3f18(void *p);
 void  func_ov002_020c3f2c(void *p);
 void  func_ov002_020d228c(void *p);
-void  func_ov002_020e4374(void *p, int *a, int *b);
 void  func_0201f32c(int a);
 
 /* globals */
@@ -867,7 +866,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
     p.z = p.z + off.z;
     Matrix4x3_FromTranslation(&data_020a0e68, p.x >> 3, p.y >> 3, p.z >> 3);
 
-    func_ov002_020e4374(pl, &p1, &p2);
+    pl->func_ov002_020e4374(&p1, &p2);
 
     *(Mtx43 *)&mShadowMat2 = *(Mtx43 *)&data_020a0e68;
     DropShadowRadHeight(mShadowModel2, *(Matrix4x3 *)&mShadowMat2, p2, p1, 0xf);

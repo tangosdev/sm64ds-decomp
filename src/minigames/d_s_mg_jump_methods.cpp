@@ -40,31 +40,6 @@ struct C { char pad[0x5004]; PMF m; };
 #include "LevelRng.h"
 struct V3 { int w[3]; };
 
-/* Vtable shim for InitResources' last call, a virtual dispatch through slot
- * 18 of this class's own table. Calling StartRound by name would compile
- * to a direct branch instead. */
-struct Base {
-    virtual void m00();
-    virtual void m04();
-    virtual void m08();
-    virtual void m0c();
-    virtual void m10();
-    virtual void m14();
-    virtual void m18();
-    virtual void m1c();
-    virtual void m20();
-    virtual void m24();
-    virtual void m28();
-    virtual void m2c();
-    virtual void m30();
-    virtual void m34();
-    virtual void m38();
-    virtual void m3c();
-    virtual void m40();
-    virtual void m44();
-    virtual void m48(int x);
-};
-
 /* The two model file handles InitResources swaps between through
  * sJumpBackFile; a declared-only subclass so the static initializer
  * names the real entry points. */
@@ -274,7 +249,7 @@ s32 dScMgJump_c::InitResources()
         return 0;
     }
     Mg_SetTopScreenYOffset(0x10);
-    ((Base *)this)->m48(-1);
+    StartRound(-1);
     return 1;
 }
 

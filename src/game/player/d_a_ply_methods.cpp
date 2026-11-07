@@ -33,11 +33,11 @@
  *   registers its destructor with __register_global_object, as the
  *   compiler-emitted one did.
  * - Helpers whose r0 is the player are daPly_c members, still named by
- *   address. Some helpers that take the player stay free: those also called
- *   from other classes' code (func_ov002_020bd8ac, func_ov002_020bec9c,
- *   func_ov002_020ca270, func_ov002_020d0d2c, func_ov002_020e4374), one that
- *   never uses r0 (func_ov002_020cf700), and func_ov002_020bcdf0, which the
- *   melonDS this sweep did not reach. func_ov002_020e69c0 rotates
+ *   address, including the five other classes also call (the stage, the
+ *   signs, the camera, the 1-up and Yoshi egg, Lakitu and Luigi). Two
+ *   helpers that take the player stay free: one that never uses r0
+ *   (func_ov002_020cf700), and func_ov002_020bcdf0, which the melonDS this
+ *   sweep did not reach. func_ov002_020e69c0 rotates
  *   data_ov002_0210a760, which has no recovered name.
  * - The byte at 0x6da is written by InitResources and never read; it has no
  *   honest name, so it stays a byte store.
@@ -377,7 +377,6 @@ extern u32 func_02022a4c(Fix12i x, Fix12i y, Fix12i z);
 extern void func_02022b04(Fix12i x, Fix12i y, Fix12i z);
 extern u32 func_02022cbc(int uniqueID, int effectID, s32 x, s32 y, s32 z, int dir);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir);
-extern int func_ov002_020d0d2c(daPly_c *c);
 extern int func_ov002_020d1164(void *c);
 extern void func_ov002_020d1f78(void *selfPtr, u32 param);
 extern void func_ov002_020d228c(daPly_c *player);
@@ -1114,12 +1113,9 @@ ret0:
   return 0;
 }
 
-// @symbol func_ov002_020bd8ac
-extern "C" {
-int func_ov002_020bd8ac(unsigned char *p)
-{
-    return p[1801] == 0;
-}
+// @symbol _ZN7daPly_c19func_ov002_020bd8acEv
+int daPly_c::func_ov002_020bd8ac() {
+    return mIsNoControl == 0;
 }
 
 // @symbol _ZN7daPly_c13EndStateMusicEj
@@ -1775,11 +1771,9 @@ int func_ov002_020bec84(daPly_c *p, unsigned int i) {
 }
 }
 
-// @symbol func_ov002_020bec9c
-extern "C" {
-void func_ov002_020bec9c(daPly_c *c, unsigned int a, int b, int d, unsigned short e) {
-    c->SetAnim(data_ov002_020ff220[a], b, d, e);
-}
+// @symbol _ZN7daPly_c19func_ov002_020bec9cEjiit
+void daPly_c::func_ov002_020bec9c(unsigned int a, int b, Fix12i d, u16 e) {
+    SetAnim(data_ov002_020ff220[a], b, d, e);
 }
 
 // @symbol _ZNK7daPly_c14GetBodyModelIDEjb
@@ -7739,17 +7733,13 @@ int daPly_c::SetNoControlState(unsigned char a_, int b, unsigned char c_) {
     return 1;
 }
 
-// @symbol func_ov002_020ca270
-extern "C" {
-int func_ov002_020ca270(char* c){
-    daPly_c *self = (daPly_c *)c;
-
-    if (self->IsState(data_ov002_02110124)) {
-        if (self->mStateStep == 1)
+// @symbol _ZN7daPly_c19func_ov002_020ca270Ev
+int daPly_c::func_ov002_020ca270() {
+    if (IsState(data_ov002_02110124)) {
+        if (mStateStep == 1)
             return 1;
     }
-  return 0;
-}
+    return 0;
 }
 
 // @symbol _ZN7daPly_c15JumpIntoBooCageER7Vector3
@@ -10924,7 +10914,7 @@ int daPly_c::func_ov002_020d0580() {
         if (b354 == 0 && mClimbClsn == 0) {
             b358 = (mHeldObj != 0);
             if (b358 == 0 && mIsTakingDamage == 0 && mIsBalloon == 0 && IsInAir() != 0 &&
-                func_ov002_020d0d2c(this) == 0) {
+                func_ov002_020d0d2c() == 0) {
                 goto cont;
             }
         }
@@ -11158,14 +11148,11 @@ int daPly_c::St_LedgeHang_Init() {
     return 1;
 }
 
-// @symbol func_ov002_020d0d2c
-extern "C" {
-int func_ov002_020d0d2c(daPly_c *c) {
-
-    if (c->IsState(data_ov002_0210ffec) || c->IsState(data_ov002_02110004))
+// @symbol _ZN7daPly_c19func_ov002_020d0d2cEv
+int daPly_c::func_ov002_020d0d2c() {
+    if (IsState(data_ov002_0210ffec) || IsState(data_ov002_02110004))
         return 1;
     return 0;
-}
 }
 
 // @symbol _ZN7daPly_c17St_WallSlide_MainEv
@@ -21772,28 +21759,24 @@ int daPly_c::func_ov002_020e3f90() {
 }
 }
 
-// @symbol func_ov002_020e4374
-extern "C" {
-void func_ov002_020e4374(char* c, int* p1, int* p2)
-{
-    daPly_c *p = (daPly_c *)c;
+// @symbol _ZN7daPly_c19func_ov002_020e4374EPiS0_
+void daPly_c::func_ov002_020e4374(int *p1, int *p2) {
     int v;
     int m;
-    *p1 = (p->mModelOffsetY + (p->mPosY - p->mSinkDepth) + 0xf000) - p->mGroundY;
-    if (p->mIsBalloon != 0)
+    *p1 = (mModelOffsetY + (mPosY - mSinkDepth) + 0xf000) - mGroundY;
+    if (mIsBalloon != 0)
         *p1 -= 0x70000;
     if (*p1 <= 0x1000) *p1 = 0x1000;
     m = 0x64000;
-    if (p->mIsMega != 0) {
-        m = p->mScaleY * 0x64;
-    } else if (p->mIsBalloon != 0) {
+    if (mIsMega != 0) {
+        m = mScaleY * 0x64;
+    } else if (mIsBalloon != 0) {
         m = 0xc8000;
     }
     v = FX_MUL(*p1, 0x180);
     *p2 = m - v;
     if (*p2 < 0xa000) *p2 = 0xa000;
     *p1 += 0x28000;
-}
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020e444cEv
@@ -21858,7 +21841,7 @@ void daPly_c::func_ov002_020e444c() {
         }
     }
 
-    func_ov002_020e4374((char *)this, &sp8, &spC);
+    func_ov002_020e4374(&sp8, &spC);
 
     if ((mOpacity | mIsVanish) == 0)
         mHideShadow = 1;
