@@ -25,7 +25,7 @@ struct S72d90 {
 extern unsigned char func_02072d90(struct ActionWalk *c);
 extern u8 *func_02071a50(u8 *p, int *out);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
-extern int __throw_catch_compare(int a, int b, int c);
+extern int __throw_catch_compare(u8 *a, u8 *b, int *out);
 extern int func_02071f88(void *a, void *list);
 extern void func_02071f1c(char *a, void *b, char *c, int d);
 extern unsigned char func_020729f4(struct ActionWalk *c);
@@ -47,8 +47,9 @@ struct Tmp {
    specification: a thrown type it does not list (func_02071f88) goes to
    func_02071f1c. Actions 1 and 14, and any unknown action, call the
    terminate path (std::terminate). The other actions are skipped. */
-int func_02071d3c(int *self, struct S6 *src, int flag)
-{
+u8 *func_02071d3c(void *selfArg, void *srcArg, int *flag) {
+    int *self = (int *)selfArg;
+    struct S6 *src = (struct S6 *)srcArg;
     struct Tmp tmp;
     struct S72d90 buf;
     int state;
@@ -80,7 +81,7 @@ int func_02071d3c(int *self, struct S6 *src, int flag)
             tmp.val = cur[1] | (cur[2] << 8) | (cur[3] << 16) | (cur[4] << 24);
             u8 *p = func_02071a50(cur + 5, &tmp.a);
             p = ReadSignedVarInt(p, &tmp.b);
-            if (__throw_catch_compare(self[0], tmp.val, flag) == 0) {
+            if (__throw_catch_compare((u8 *)self[0], (u8 *)tmp.val, flag) == 0) {
                 continue;
             }
             break;
@@ -126,6 +127,6 @@ int func_02071d3c(int *self, struct S6 *src, int flag)
         break;
     }
 
-    return buf.p0.v[2];
+    return (u8 *)buf.p0.v[2];
 }
 }
