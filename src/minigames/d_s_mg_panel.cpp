@@ -36,7 +36,7 @@
  * - Shake_StateLoseTry: the dead `q` (dropping it renumbers @NNN).
  * - Panel_StateBlink: the mAnimTimer[idx] reset through a +0x4e00 split base.
  * - Scene_StateResult: mSolved through a +0x4000 byte base. mResultTimer and
- *   mScrollFrames go through laundered `scene + off` pointers.
+ *   mScrollFrames go through `scene + off` bases cast to int.
  * - ResetRound: 0x4ec2 and 0x466c are pads that only ResetRound writes.
  * - Answer_StateFindSolution keeps the PanelInputView width view, and
  *   DrawPanels a local layout view. Its native-member rewrite grows the body
@@ -1087,8 +1087,9 @@ void dScMgPanel_c::CountMatches() {
     do {
         if (s->mFace[i] != s->mGoal[i]) {
             s->mKind[i] = 2;
-            /* Stepped: `mAnimTimer[i]` moves code. */
-            ((dScMgPanel_c *)(scene + (int)(((long long)i)) * 2))->mAnimTimer[0] = 0;
+            /* Stepped: `mAnimTimer[i]` moves code, and the index's long long
+               round trip is load-bearing here (measured 2026-11-06). */
+            ((dScMgPanel_c *)(scene + (int)((long long)i) * 2))->mAnimTimer[0] = 0;
         }
         i++;
     } while (i < s->mCount);
@@ -1585,10 +1586,10 @@ void dScMgPanel_c::Panel_StateBlink(int idx) {
         q[idx] = 0;
     }
     {
-        /* b + 0x30 is mAnimTimer[idx]. The `(long long)` round trip on the
-           index and this split base are load-bearing: `s->mAnimTimer[idxL]`
-           moves code. */
-        int idxL = (int)((long long)idx);
+        /* b + 0x30 is mAnimTimer[idx]. The split base is load-bearing:
+           `s->mAnimTimer[idxL]` moves code. The `(long long)` round trip the
+           index went through was measured free on 2026-11-06. */
+        int idxL = idx;
         char *b = c + idxL * 2;
         b += 0x4e00;
         if (((u16 *)b)[0x18] < 0x40)
@@ -1710,10 +1711,11 @@ void dScMgPanel_c::Scene_StateResult() {
         int off;
         u16 *tp;
         u8 *flags;
-        /* scene + 0x4ec0 is mResultTimer, laundered. `&mResultTimer` in place
-           of `scene + off` leaves `off` dead, and dropping it renumbers @NNN. */
+        /* scene + 0x4ec0 is mResultTimer, reached through an int cast of the byte
+           base. `&mResultTimer` in place of `scene + off` leaves `off` dead, and
+           dropping it renumbers @NNN. */
         off = 0x4ec0;
-        tp = (u16 *)(int)((long long)(int)(scene + off));
+        tp = (u16 *)(int)(scene + off);
         /* flags[0xfe6] is mSolved; `&mSolved` moves this code. */
         flags = (u8 *)(scene + 0x4000);
         *tp = *tp - 1;
@@ -1758,9 +1760,9 @@ void dScMgPanel_c::Scene_StateResult() {
     {
         int inc;
         u16 *ip;
-        /* scene + 0x4ec6 is mScrollFrames, laundered the same way. */
+        /* scene + 0x4ec6 is mScrollFrames, reached the same way. */
         inc = 0x4ec6;
-        ip = (u16 *)(int)((long long)(unsigned)(scene + inc));
+        ip = (u16 *)(int)(scene + inc);
         *ip = *ip + 1;
     }
 }

@@ -879,7 +879,7 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
                 dy2 = 0x40 - py;
                 sy = 0xC0 - px;
             }
-            cstd::sqrt((s64)(sy * sy + dy2 * dy2));
+            cstd::sqrt((sy * sy + dy2 * dy2));
             ang = (u16)cstd::atan2(dy2, sy);
             i2 = (ang >> 4) * 2;
             mBombs[index].x = (0xC0 - FX_MUL(data_02082214[i2 + 1], 0xF)) << 12;
@@ -943,7 +943,7 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
     if (py < 0x60) {
         sy = 0x40 - py;
     }
-    cstd::sqrt((s64)(dy2 * dy2 + sy * sy));
+    cstd::sqrt((dy2 * dy2 + sy * sy));
     ang = (u16)cstd::atan2(sy, dy2);
     i2 = (ang >> 4) * 2;
     mBombs[index].x = (0x40 - FX_MUL(data_02082214[i2 + 1], 0xF)) << 12;
