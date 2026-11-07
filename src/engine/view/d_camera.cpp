@@ -127,7 +127,7 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void AddVec3(void *a, void *b, void *c);
 extern void SubVec3(void *a, void *b, void *c);
-extern void Vec3_MulScalar(void *out, const Vector3 *in, int scale);
+extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
@@ -1425,7 +1425,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     sp8.y += func_020093d4(t);
     sl = Vec3_HorzLen(&sp8);
     VecFx32 sp68;
-    Vec3_MulScalar(&sp68, &mLookTargetPos, mFocusBlend);
+    Vec3_MulScalar((Vector3 *)&sp68, &mLookTargetPos, mFocusBlend);
     AddVec3(&sp8, &sp68, &sp8);
     if (mFlags & 4) {
         mLookAtOffset.x = sp8.x;
