@@ -47,6 +47,7 @@ void *port_debug_spawn(unsigned id, unsigned param);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 void func_ov084_02129498(void *goomba);
+void _ZN6Player19func_ov002_020d718cEv(char *c);      // Yoshi: forget the mouthful (mObjInMouth = 0, mouth model back)
 }
 
 namespace port {
@@ -241,6 +242,25 @@ bool is_player_ptr(const void *a) {
     return false;
 }
 
+// A friend's message is about to remove my copy of an actor (reconcile, apply_swallow). If a Yoshi here holds that copy
+// in his mouth, the cartridge never deletes it under him: a mouthful that ends on its own lets the eater go first
+// (d_a_bmb.cpp:1245-1252: Player::func_ov002_020d718c, then mEatingPlayer = 0) and only then goes away. Without this the
+// body's mObjInMouth (+0x360) keeps the freed actor and St_YoshiPower_Main's next mouthful->v18() calls through the dead
+// vtable (0.9.3.7 field crash, Bob-omb Battlefield host). Returns true when a mouth was emptied.
+bool release_mouth_of(char *a) {
+    bool any = false;
+    for (int i = 0; i < 16; ++i) {
+        char *p = (char *)data_0209f394[i];
+        if (!p || *(char **)(p + 0x360) != a) continue;
+        _ZN6Player19func_ov002_020d718cEv(p);
+        if (*(char **)(a + 0xd0) == p) *(int *)(a + 0xd0) = 0;   // mEatingPlayer (dEnemyBase_c and the other eatables)
+        any = true;
+        std::fprintf(stderr, "[coop] mouthful removed by a friend's message: body %d let go of class %u slot %d first\n", i,
+                     (unsigned)*(const unsigned short *)(a + 0x0c), (int)*(const short *)(a + 0xce));
+    }
+    return any;
+}
+
 // ---------------------------------------------------------------------------
 // Sending.
 // ---------------------------------------------------------------------------
@@ -382,6 +402,7 @@ int reconcile() {
         if (!((g_remote[slot >> 5] >> (slot & 31)) & 1u)) continue;
         if (*(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2) continue;
         if (is_player_ptr(a)) continue;
+        release_mouth_of(a);
         _ZN8dActor_c24KillAndTrackInDeathTableEv(a);
         ++kills;
         if (g_log)
@@ -549,6 +570,7 @@ void apply_swallow(int seat, int slot, unsigned cls) {
         if (g_log) std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d, no live copy here\n", seat, cls, slot);
         return;
     }
+    release_mouth_of(a);
     if (is_goomba(cls)) {
         const int cap = *(const unsigned char *)(a + kKrbCapId) & 0xf;
         if (cap < 6 || *(const unsigned char *)(a + kKrbReward) == 2) {
