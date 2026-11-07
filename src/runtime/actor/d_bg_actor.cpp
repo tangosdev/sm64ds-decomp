@@ -129,8 +129,7 @@ extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, int otherArg) {
-    dActor_c *other = (dActor_c *)otherArg;
+extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
