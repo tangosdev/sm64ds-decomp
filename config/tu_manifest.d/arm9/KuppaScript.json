@@ -42,133 +42,133 @@
   ],
   "functions": [
     {
-      "symbol": "RunDemoCommand",
+      "symbol": "_ZN11KuppaScript14RunDemoCommandEPhii",
       "address": "0x0200e494",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e494.c",
       "ordinal": 0
     },
     {
-      "symbol": "SpawnDemoActor",
+      "symbol": "_ZN11KuppaScript14SpawnDemoActorEj",
       "address": "0x0200e4e4",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e4e4.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "FindDemoActor",
+      "symbol": "_ZN11KuppaScript13FindDemoActorEj",
       "address": "0x0200e55c",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e55c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "RunPlayerCommand",
+      "symbol": "_ZN11KuppaScript16RunPlayerCommandEPhii",
       "address": "0x0200e5ac",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e5ac.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "SpawnScriptPlayer",
+      "symbol": "_ZN11KuppaScript17SpawnScriptPlayerEj",
       "address": "0x0200e5fc",
       "size": "0x000000dc",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e5fc.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "FindScriptPlayer",
+      "symbol": "_ZN11KuppaScript16FindScriptPlayerEj",
       "address": "0x0200e6d8",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e6d8.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "ReadUnalignedSignedInt",
+      "symbol": "_Z22ReadUnalignedSignedIntPh",
       "address": "0x0200e728",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e728.c",
       "ordinal": 6
     },
     {
-      "symbol": "ReadUnalignedInt",
+      "symbol": "_Z16ReadUnalignedIntPh",
       "address": "0x0200e748",
       "size": "0x00000020",
       "legacy_source": "src/ReadUnalignedInt.c",
       "ordinal": 7
     },
     {
-      "symbol": "ReadUnalignedShort",
+      "symbol": "_Z18ReadUnalignedShortPh",
       "address": "0x0200e768",
       "size": "0x00000018",
       "legacy_source": "src/ReadUnalignedShort.c",
       "ordinal": 8
     },
     {
-      "symbol": "ReadUnalignedUshort",
+      "symbol": "_Z19ReadUnalignedUshortPh",
       "address": "0x0200e780",
       "size": "0x00000018",
       "legacy_source": "src/ReadUnalignedUshort.c",
       "ordinal": 9
     },
     {
-      "symbol": "EndKuppaScript",
+      "symbol": "_ZN11KuppaScript3EndEv",
       "address": "0x0200e798",
       "size": "0x0000013c",
       "legacy_source": "src/EndKuppaScript.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "ProcessKuppaScript",
+      "symbol": "_ZN11KuppaScript7ProcessEv",
       "address": "0x0200e8d4",
       "size": "0x00000594",
       "legacy_source": "src/ProcessKuppaScript.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "IsDanceRotateCutsceneRunning",
+      "symbol": "_ZN11KuppaScript28IsDanceRotateCutsceneRunningEv",
       "address": "0x0200ee68",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0200/func_0200ee68.c",
       "ordinal": 12
     },
     {
-      "symbol": "StartDanceCutscene",
+      "symbol": "_ZN11KuppaScript18StartDanceCutsceneEi",
       "address": "0x0200ee8c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200ee8c.c",
       "ordinal": 13
     },
     {
-      "symbol": "StartEndingCutscene",
+      "symbol": "_ZN11KuppaScript19StartEndingCutsceneEv",
       "address": "0x0200eec8",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0200/func_0200eec8.c",
       "ordinal": 14
     },
     {
-      "symbol": "StartIntroCutscene",
+      "symbol": "_ZN11KuppaScript18StartIntroCutsceneEv",
       "address": "0x0200eedc",
       "size": "0x00000028",
       "legacy_source": "src/StartIntroCutscene.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "RunKuppaScript",
+      "symbol": "_ZN11KuppaScript3RunEPh",
       "address": "0x0200ef04",
       "size": "0x0000007c",
       "legacy_source": "src/RunKuppaScript.c",
       "ordinal": 16
     },
     {
-      "symbol": "ContinueKuppaScriptIfNecessary",
+      "symbol": "_ZN11KuppaScript19ContinueIfNecessaryEv",
       "address": "0x0200ef80",
       "size": "0x000000cc",
       "legacy_source": "src/ContinueKuppaScriptIfNecessary.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "ResetKuppaScript",
+      "symbol": "_ZN11KuppaScript5ResetEv",
       "address": "0x0200f04c",
       "size": "0x00000070",
       "legacy_source": "src/ResetKuppaScript.c",
@@ -2295,9 +2295,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@649",
+      "from": "@633",
       "to": "@259",
-      "evidence": "the compiler emits @649, which ov002 already defines as a global, so the pin is the unused @259"
+      "evidence": "the compiler emits @633, which ov002 already defines as a global, so the pin is the unused @259"
     }
   ],
   "relocations": [

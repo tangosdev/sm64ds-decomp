@@ -101,6 +101,7 @@ enum daDemo_c_AssetId {
     ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_S_NCG_BIN = 0x0271
 };
 
+#include "KuppaScript.h"
 #include "types.h"
 #include "CP15.h"
 #include "G2.h"
@@ -480,9 +481,7 @@ extern int func_ov002_020f2990(char *c);
 extern void func_ov002_020f5f0c(C* c, int idx);
 extern void func_ov002_020f5fe4(char *c);
 /* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
-extern unsigned int ReadUnalignedInt(unsigned char *p);
 extern void func_02012694(unsigned int, void*);
-extern short ReadUnalignedShort(unsigned char *p);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
