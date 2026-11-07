@@ -12,7 +12,7 @@ extern int func_02040714(void);
 extern void func_02040724(void);
 extern void func_0201a4d0(void);
 extern unsigned char data_0209d4e4;
-extern char data_02086214[];
+extern const s16 data_02086214[];
 
 void func_0201a028(void) {
     for (;;) {

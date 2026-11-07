@@ -109,7 +109,8 @@ void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, void (
 void MI_WaitDma(u32 dmaNo);
 extern VecFx32 data_02099f88;
 extern u32 data_020a4bd4;
-extern int data_02082190;
+/* Identity, used when Render is given no matrix. */
+extern const int data_02082190[12];
 extern void *data_020a4bd0;
 extern u8 data_020a4bbc;
 extern u16 data_02099f94[8];
@@ -672,7 +673,7 @@ void func_02044534(char *self, int index, Mtx43 *mtx, VecFx32 *light) {
 void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
     data_020a4bd4 = 1u << (modelFile->scaleShift + 12);
     if (!mat) {
-        data_020a4bd0 = &data_02082190;
+        data_020a4bd0 = (void *)data_02082190;
     } else {
         data_020a4bd0 = mat;
     }

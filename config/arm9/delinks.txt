@@ -106,6 +106,38 @@ src/GetLanguageIndex.c:
     complete
     .text start:0x0200f0bc end:0x0200f13c
 
+src/data/arm9/data_0208a0e0.c:
+    complete
+    .data start:0x0208a0e0 end:0x0208a0e4
+
+src/data/arm9/data_0208a0e4.c:
+    complete
+    .data start:0x0208a0e4 end:0x0208a0f8
+
+src/data/arm9/data_0208a0f8.c:
+    complete
+    .data start:0x0208a0f8 end:0x0208a10c
+
+src/data/arm9/data_0208a10c.c:
+    complete
+    .data start:0x0208a10c end:0x0208a120
+
+src/data/arm9/data_0208a120.c:
+    complete
+    .data start:0x0208a120 end:0x0208a134
+
+src/data/arm9/data_0208a134.c:
+    complete
+    .data start:0x0208a134 end:0x0208a148
+
+src/data/arm9/data_0208a148.c:
+    complete
+    .data start:0x0208a148 end:0x0208a15c
+
+src/data/arm9/data_0208a15c.c:
+    complete
+    .data start:0x0208a15c end:0x0208a170
+
 src/unnamed/arm9/0200/func_0200f13c.cpp:
     complete
     .text start:0x0200f13c end:0x0200f2cc
@@ -121,9 +153,21 @@ src/SetNumPlayers.c:
 src/unnamed/arm9/0200/func_0200f468.c:
     complete
     .text start:0x0200f468 end:0x0200f470
+src/data/arm9/data_0208a178.c:
+    complete
+    .data start:0x0208a178 end:0x0208c178
+
 src/engine/view/Graphics3D.cpp:
     complete
     .text start:0x0200f470 end:0x0200f658
+
+src/data/arm9/data_02075230.c:
+    complete
+    .rodata start:0x02075230 end:0x02075238
+
+src/data/arm9/data_02075238.c:
+    complete
+    .rodata start:0x02075238 end:0x02075244
 
 src/runtime/actor/d_actor.cpp:
     complete
@@ -132,6 +176,10 @@ src/runtime/actor/d_actor.cpp:
     .ctor start:0x02086b68 end:0x02086b6c
     .bss start:0x0209b468 end:0x0209b470
 
+src/data/arm9/data_02075250.c:
+    complete
+    .rodata start:0x02075250 end:0x02075258
+
 src/engine/sound/Sound.cpp:
     complete
     .text start:0x02011654 end:0x02013548
@@ -139,6 +187,10 @@ src/engine/sound/Sound.cpp:
     .ctor start:0x02086b6c end:0x02086b70
     .data start:0x0208e420 end:0x0208e498
     .bss start:0x0209b470 end:0x0209ba84
+
+src/data/arm9/data_02075264.c:
+    complete
+    .rodata start:0x02075264 end:0x02075298
 
 src/GetLevelPart.cpp:
     complete
@@ -368,6 +420,10 @@ src/unnamed/arm9/0201/func_02018b64.c:
 src/unnamed/arm9/0201/func_02018c00.c:
     complete
     .text start:0x02018c00 end:0x02018d48
+src/data/arm9/data_0208ecd8.c:
+    complete
+    .data start:0x0208ecd8 end:0x0208ecf4
+
 src/myFS_ReadFile.c:
     complete
     .text start:0x02018d48 end:0x02018ea0
@@ -500,6 +556,10 @@ src/unnamed/arm9/0201/func_0201a03c.c:
     complete
     .text start:0x0201a03c end:0x0201a054
 
+src/data/arm9/data_0208ee50.c:
+    complete
+    .data start:0x0208ee50 end:0x0208ee5c
+
 src/unnamed/arm9/0201/func_0201a054.cpp:
     complete
     .text start:0x0201a054 end:0x0201a1bc
@@ -605,6 +665,18 @@ src/unnamed/arm9/0201/func_0201aaec.c:
     complete
     .text start:0x0201aaec end:0x0201ab04
 
+src/data/arm9/data_0208ee64.c:
+    complete
+    .data start:0x0208ee64 end:0x0208ee6c
+
+src/data/arm9/data_0208ee6c.c:
+    complete
+    .data start:0x0208ee6c end:0x0208ee74
+
+src/data/arm9/data_0208ee74.c:
+    complete
+    .data start:0x0208ee74 end:0x0208ee80
+
 src/Message2.cpp:
     complete
     .text start:0x0201ab04 end:0x0201cb2c
@@ -625,6 +697,26 @@ src/LoadFont.cpp:
 src/ui/messages/_ZN7Message8LoadTextEv.cpp:
     complete
     .text start:0x0201fe08 end:0x0201fec8
+
+src/data/arm9/data_020752cc.c:
+    complete
+    .rodata start:0x020752cc end:0x020752e8
+
+src/data/arm9/data_020752e8.c:
+    complete
+    .rodata start:0x020752e8 end:0x02075304
+
+src/data/arm9/data_02075304.c:
+    complete
+    .rodata start:0x02075304 end:0x02075320
+
+src/data/arm9/data_02075320.c:
+    complete
+    .rodata start:0x02075320 end:0x0207533c
+
+src/data/arm9/data_0207533c.c:
+    complete
+    .rodata start:0x0207533c end:0x02075358
 
 src/unnamed/arm9/0201/func_0201fec8.cpp:
     complete
@@ -739,6 +831,14 @@ src/unnamed/arm9/0202/func_02020768.c:
     complete
     .text start:0x02020768 end:0x02020820
 
+src/data/arm9/data_020755a0.c:
+    complete
+    .rodata start:0x020755a0 end:0x020755ac
+
+src/data/arm9/data_020755ac.c:
+    complete
+    .rodata start:0x020755ac end:0x020755b8
+
 src/engine/oam/OAM.cpp:
     complete
     .text start:0x02020820 end:0x02021a04
@@ -754,6 +854,10 @@ src/engine/particle/d_pa.cpp:
 src/engine/particle/Particle.cpp:
     complete
     .text start:0x020226d4 end:0x020233d4
+
+src/data/arm9/data_020914a0.c:
+    complete
+    .data start:0x020914a0 end:0x020914a8
 
 src/GetActorDebugName.c:
     complete
@@ -780,6 +884,10 @@ src/game/stages/d_s_stage_methods.cpp:
     .init start:0x02074e84 end:0x02074edc
     .ctor start:0x02086b88 end:0x02086b8c
     .bss start:0x0209f1ec end:0x0209f5b8
+
+src/data/arm9/data_02092654.c:
+    complete
+    .data start:0x02092654 end:0x02092660
 
 src/GetStageDebugName.c:
     complete
@@ -900,6 +1008,18 @@ src/unnamed/arm9/0203/func_02030dac.c:
 src/unnamed/arm9/0203/func_02030e4c.c:
     complete
     .text start:0x02030e4c end:0x02030fa8
+
+src/data/arm9/data_02075b14.c:
+    complete
+    .rodata start:0x02075b14 end:0x02075d14
+
+src/data/arm9/data_02075d14.c:
+    complete
+    .rodata start:0x02075d14 end:0x02075f14
+
+src/data/arm9/data_0209289c.c:
+    complete
+    .data start:0x0209289c end:0x02092d3c
 
 src/Message3.cpp:
     complete
@@ -1760,12 +1880,20 @@ src/runtime/actor/ActorBase.cpp:
     complete
     .text start:0x02042fe4 end:0x020440e8
 
+src/data/arm9/data_02082178.c:
+    complete
+    .rodata start:0x02082178 end:0x02082190
+
 src/fListNode.cpp:
     complete
     .text start:0x020440e8 end:0x020443c8
     .init start:0x02075154 end:0x02075230
     .ctor start:0x02086bb8 end:0x02086bbc
     .bss start:0x020a4b6c end:0x020a4bb8
+
+src/data/arm9/data_02082190.c:
+    complete
+    .rodata start:0x02082190 end:0x020821c0
 
 src/engine/model/ModelComponents.cpp:
     complete
@@ -1837,6 +1965,10 @@ src/unnamed/arm9/0204/func_02047910.c:
 src/func_02048234.c:
     complete
     .text start:0x02048234 end:0x02048528
+
+src/data/arm9/data_020821c0.c:
+    complete
+    .rodata start:0x020821c0 end:0x02082200
 
 src/engine/sound/Sound2.cpp:
     complete
@@ -2117,6 +2249,10 @@ src/AddVec3.c:
     complete
     .text start:0x02053884 end:0x020538b8
 
+src/data/arm9/data_02086214.c:
+    complete
+    .rodata start:0x02086214 end:0x02086314
+
 src/unnamed/arm9/0205/func_020538b8.cpp:
     complete
     .text start:0x020538b8 end:0x02053a90
@@ -2172,6 +2308,10 @@ src/engine/gx/GXS.cpp:
     complete
     .text start:0x02055dec end:0x020568cc
 
+src/data/arm9/data_02086314.c:
+    complete
+    .rodata start:0x02086314 end:0x02086324
+
 src/engine/gx/GX.cpp:
     complete
     .text start:0x020568cc end:0x02056c1c
@@ -2179,6 +2319,10 @@ src/engine/gx/GX.cpp:
 src/Copy48BytesFixed.c:
     complete
     .text start:0x02056c1c end:0x02056c40
+
+src/data/arm9/data_02099fd4.c:
+    complete
+    .data start:0x02099fd4 end:0x02099fe4
 
 src/engine/os/OS_IrqTable.cpp:
     complete
@@ -2339,6 +2483,10 @@ src/engine/snd/SND_Alarm.cpp:
 src/engine/snd/SND_Work.cpp:
     complete
     .text start:0x0205b554 end:0x0205b63c
+
+src/data/arm9/data_02086484.c:
+    complete
+    .rodata start:0x02086484 end:0x02086758
 
 src/SND_CalcChannelVolume.c:
     complete
@@ -3135,6 +3283,10 @@ src/unnamed/arm9/0206/func_0206c93c.c:
     complete
     .text start:0x0206c93c end:0x0206c9f4
 
+src/data/arm9/data_02086880.c:
+    complete
+    .rodata start:0x02086880 end:0x02086894
+
 src/unnamed/arm9/0206/func_0206c9f4.c:
     complete
     .text start:0x0206c9f4 end:0x0206ca44
@@ -3155,6 +3307,10 @@ src/unnamed/arm9/0206/func_0206cbc0.c:
     complete
     .text start:0x0206cbc0 end:0x0206ccd8
 
+src/data/arm9/data_020868a0.c:
+    complete
+    .rodata start:0x020868a0 end:0x020868d4
+
 src/cstd3.cpp:
     complete
     .text start:0x0206ccd8 end:0x0206ce90
@@ -3174,6 +3330,10 @@ src/unnamed/arm9/0206/func_0206cee0.c:
 src/unnamed/arm9/0206/func_0206cf7c.c:
     complete
     .text start:0x0206cf7c end:0x0206cf98
+
+src/data/arm9/data_020869bc.c:
+    complete
+    .rodata start:0x020869bc end:0x020869dc
 
 src/engine/isd/isdoverlay.cpp:
     complete

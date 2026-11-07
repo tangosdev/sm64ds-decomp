@@ -19,7 +19,7 @@
 #include "nitro/hw/registers.h"
 
 extern "C" {
-extern char data_020868a0;
+extern const char data_020868a0[52];
 extern char data_020868d4;
 void func_0206ccd8(int fmt, ...);
 int func_0206cf7c(int mask);

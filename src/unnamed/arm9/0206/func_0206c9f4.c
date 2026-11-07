@@ -5,7 +5,7 @@ struct Stream {
     CopyFn fn;
 };
 
-extern unsigned char data_02086880[];
+extern const unsigned char data_02086880[20];
 
 /* optimize_for_size is this library's own build setting, not a matching lever:
    the ISD debug console and its soft-float helpers were shipped size-optimized. */

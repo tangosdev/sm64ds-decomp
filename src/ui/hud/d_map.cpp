@@ -98,7 +98,7 @@ extern u8 gMapCapIconCharacters[];
 extern void *data_ov002_0210cac8[];
 extern void *data_ov002_0210c748[];
 extern u8 data_0209d660;
-extern u32 data_020a0db0;
+extern s32 data_020a0db0;
 extern dFdBrightness_c *data_0209f5bc;
 extern dCamera_c *data_0209f318;
 extern u32 gNextActorUpdateMask;
