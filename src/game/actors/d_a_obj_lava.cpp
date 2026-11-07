@@ -10,8 +10,8 @@
  * registry). Retail does not store that spelling.
  *
  * Note: the particle call is func_02022c3c, an arm9 6-arg wrapper around
- * Particle::System::New that plants the default callback at
- * data_0209ee74+0x808. No header declares it.
+ * Particle::System::New that passes the tracker's checkYoganCallback_c
+ * (SysTracker::mCheckYoganCallback, +0x808). No header declares it.
  */
 
 #include "daObjLava_c.h"

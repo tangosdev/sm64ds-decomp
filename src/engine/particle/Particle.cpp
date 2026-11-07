@@ -74,7 +74,7 @@ SysTracker::SysTracker()
     mSystemID_75c = 0;
     mBigSplashSystemID = 0;
     mSystemID_774 = 0;
-    mSystemID_780 = 0;
+    mBubbleSystemID = 0;
     mRippleSystemID = 0;
     mSystemID_798 = 0;
     mSystemID_7a4 = 0;
@@ -280,14 +280,14 @@ extern "C" {
 u32 func_02022d44(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir)
 {
     return Particle::System::New(uniqueID, effectID, x, y, z, (const Vector3_16f *)dir,
-                                 (Particle::Callback *)&data_0209ee74->mCallback_7f0);
+                                 (Particle::Callback *)&data_0209ee74->mCheckWaterCallback);
 }
 
 // @symbol func_02022d00
 u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir)
 {
     return Particle::System::New(uniqueID, effectID, x, y, z, (const Vector3_16f *)dir,
-                                 (Particle::Callback *)&data_0209ee74->mCallback_7f4);
+                                 (Particle::Callback *)&data_0209ee74->mCheckWaterRippleCallback);
 }
 
 // @symbol func_02022cbc
@@ -310,7 +310,7 @@ u32 func_02022c3c(
     u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* dir)
 {
     return Particle::System::New(uniqueID, effectID, x, y, z, (const Vector3_16f *)dir,
-                                 (Particle::Callback *)&data_0209ee74->mCallback_808);
+                                 (Particle::Callback *)&data_0209ee74->mCheckYoganCallback);
 }
 }
 
@@ -327,7 +327,7 @@ u32 System::NewWeather(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
 // @symbol _ZN8Particle6System17NewUnkCallback818EjjiiiPK11Vector3_16f
 u32 System::NewUnkCallback818(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                               const Vector3_16f *dir) {
-    return New(uniqueID, effectID, x, y, z, dir, (Callback *)&data_0209ee74->mCallback_818);
+    return New(uniqueID, effectID, x, y, z, dir, (Callback *)&data_0209ee74->mCleanParticleCallback);
 }
 
 // @symbol _ZN8Particle20RunningSlidingDustAtEiii
@@ -376,9 +376,9 @@ u32 func_02022a4c(Fix12i x, Fix12i y, Fix12i z)
 u32 func_020229f0(Fix12i x, Fix12i y, Fix12i z)
 {
     Particle::SysTracker *tracker = data_0209ee74;
-    u32 result = Particle::System::New(tracker->mSystemID_780, 0xc4, x, y, z, 0,
-                                       (Particle::Callback *)&tracker->mCallback_784);
-    data_0209ee74->mSystemID_780 = result;
+    u32 result = Particle::System::New(tracker->mBubbleSystemID, 0xc4, x, y, z, 0,
+                                       (Particle::Callback *)&tracker->mBubbleCallback);
+    data_0209ee74->mBubbleSystemID = result;
     return result;
 }
 }

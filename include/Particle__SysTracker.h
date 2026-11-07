@@ -49,9 +49,12 @@
  *     dPa_c::level_c::callback_c vtable at 0x0208f3b4 and then overwriting it with a
  *     derived one, which is exactly what dPa_c::level_c::simpleCallback_c's
  *     own constructor does.
- * Where no New* helper survives to name the effect, the field keeps its
- * offset in the name: the claim is only "this is a Callback" / "this is a
- * system-ID slot", which the evidence above does support.
+ * A callback that is the bank's only instance of its RTTI class (bubble,
+ * checkWater, checkWaterRipple, checkYogan, cleanParticle) is named for that
+ * class, and a system-ID slot below it takes the same name. Where neither a
+ * New* helper nor a unique class names it, the field keeps its offset in the
+ * name: the claim is only "this is a Callback" / "this is a system-ID slot",
+ * which the evidence above does support.
  *
  * Field NAMES cannot change codegen. */
 #ifndef PARTICLE__SYSTRACKER_H
@@ -121,8 +124,8 @@ struct SysTracker {
     dPa_c::level_c::splashCallback_c mBigSplashCallback; /* 0x76c */
     s32 mSystemID_774;      /* 0x774 */
     dPa_c::level_c::splashCallback_c mCallback_778; /* 0x778 */
-    s32 mSystemID_780;      /* 0x780 */
-    dPa_c::level_c::bubbleCallback_c mCallback_784; /* 0x784 */
+    s32 mBubbleSystemID;      /* 0x780 */
+    dPa_c::level_c::bubbleCallback_c mBubbleCallback; /* 0x784 */
     s32 mRippleSystemID;    /* 0x78c */
     dPa_c::level_c::fitWaterSimpleCallback_c mRippleCallback; /* 0x790 */
     s32 mSystemID_798;      /* 0x798 */
@@ -137,13 +140,13 @@ struct SysTracker {
     dPa_c::level_c::scaleCallback_c mCallback_7d4; /* 0x7d4 */
     s32 mSystemID_7e0;                             /* 0x7e0 */
     dPa_c::level_c::scaleCallback_c mCallback_7e4; /* 0x7e4 */
-    dPa_c::level_c::checkWaterCallback_c mCallback_7f0; /* 0x7f0 */
-    dPa_c::level_c::checkWaterRippleCallback_c mCallback_7f4; /* 0x7f4 */
+    dPa_c::level_c::checkWaterCallback_c mCheckWaterCallback; /* 0x7f0 */
+    dPa_c::level_c::checkWaterRippleCallback_c mCheckWaterRippleCallback; /* 0x7f4 */
     dPa_c::level_c::fitWaterCallback_c mCallback_7f8; /* 0x7f8 */
     dPa_c::level_c::fitWaterCallback_c mCallback_800; /* 0x800 */
-    dPa_c::level_c::checkYoganCallback_c mCallback_808; /* 0x808 */
+    dPa_c::level_c::checkYoganCallback_c mCheckYoganCallback; /* 0x808 */
     dPa_c::level_c::clipCallback_c mWeatherCallback; /* 0x810 */
-    dPa_c::level_c::cleanParticleCallback_c mCallback_818; /* 0x818 */
+    dPa_c::level_c::cleanParticleCallback_c mCleanParticleCallback; /* 0x818 */
 
     SysTracker();
     ~SysTracker();

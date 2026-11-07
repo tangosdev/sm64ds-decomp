@@ -62,7 +62,7 @@ takes the unique ID from the caller instead:
 | --- | --- | --- |
 | 0x810 | `mWeatherCallback` | `_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj` builds `data_0209ee74 + 0x810` and passes it as the callback. |
 | 0x814 | `mWeatherCallbackCount` | The same function writes its `numWeatherEffectsNow` argument to `callback + 4`, which is this byte; the constructor seeds it `1`. It is a member of the 0x810 object, not an independent field. |
-| 0x818 | `mCallback_818` | `_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f` passes it. Nothing names the effect, so the field does not claim one. |
+| 0x818 | `mCleanParticleCallback` | `_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f` passes it. Its type is the bank's only `dPa_c::level_c::cleanParticleCallback_c` (RTTI), so the field takes the class name; nothing names the effect. |
 
 The remaining slots are named only as far as the evidence goes. Two structural
 facts carry them:
