@@ -20,6 +20,15 @@ extern "C" {
 #endif
 void *port_pmf_tc(const void *flat);
 void port_pmf_tc_cells(void *base, const int *idx, int n);   /* listed {fn,delta} cells holding flat functions */
+/* The stubs sit at an address computed from the function they enter, in a range
+   reserved at a fixed base, so one build puts each stub at the same address in
+   every process and a disk save state's copies of them stay valid (hal/pmf_tc.cpp).
+   For hal/lk7_persist.cpp: */
+int  port_pmf_tc_pinned(void);       /* 1: every stub so far is at its pinned address */
+unsigned port_pmf_tc_base(void);     /* the range base, 0 when not reserved */
+int  port_pmf_tc_count(void);
+void port_pmf_tc_entry(int i, unsigned *flat, unsigned *stub);
+int  port_pmf_tc_rebuild(const unsigned *pairs, int n);   /* -1 ok, else first bad index */
 #ifdef __cplusplus
 }
 #endif

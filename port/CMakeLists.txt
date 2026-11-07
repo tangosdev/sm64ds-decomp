@@ -26023,3 +26023,8 @@ endforeach()
 if(PORT_ROM_CLEAN)
     set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/polelog_watch.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
 endif()
+# run after093, lane DISKSTATE1: hal/lk7_persist.cpp carries hal/pmf_tc.cpp's stub list in a disk save state, so the
+# one other target that links lk7 (smoke_persist, built by name only) links the stub maker too. Own block.
+if(TARGET smoke_persist)
+    target_sources(smoke_persist PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/pmf_tc.cpp")
+endif()
