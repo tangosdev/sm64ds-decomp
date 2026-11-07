@@ -80,6 +80,7 @@
 #include "Particle__System.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
@@ -142,7 +143,6 @@ void func_ov002_020edca4(daYegg_c *self);
 extern SharedFilePtr data_ov002_0210e6b0;
 extern SharedFilePtr data_ov002_0210eb78;
 extern s16 data_ov002_021000a8[];
-extern s16 data_02082214[];
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. The copies go through the flat Mtx43: assigning this
    TU's nested Matrix4x3 grows the object by 0x30 bytes. */
@@ -492,12 +492,6 @@ void daYegg_c::func_ov002_020ecb0c()
     u32 fb0;
     s32 onwall;
     struct Spawn sp;
-    s16 rx;
-    s16 rz;
-    u16 ang;
-    Vector3_16 *pr;
-    s32 pz;
-    s32 px;
 
     id = mTargetId;
     o = 0;
@@ -522,22 +516,16 @@ void daYegg_c::func_ov002_020ecb0c()
             b = (s32)((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
                 s32 py = *(volatile s32 *)&mPosY + 0x28000;
-                pz = mPosZ;
-                px = mPosX;
+                s32 pz = mPosZ;
+                s32 px = mPosX;
                 sp.pos.y = py;
                 sp.pos.z = pz;
                 sp.pos.x = px;
-                ang = *(u16 *)&mAngleY;
-                onwall = data_02082214[(ang >> 4) * 2];
-                rx = (s16)onwall;
+                sp.rot.x = FX_SinIdx((u16)mAngleY >> 4);
                 sp.rot.y = 0;
-                pr = &sp.rot;
-                sp.rot.x = rx;
-                ang = *(u16 *)&mAngleY;
-                rz = data_02082214[(ang >> 4) * 2 + 1];
-                sp.rot.z = rz;
+                sp.rot.z = FX_CosIdx((u16)mAngleY >> 4);
                 mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, sp.pos.x, sp.pos.y,
-                                                        pz, (const Vector3_16f *)(pr), 0);
+                                                        sp.pos.z, (const Vector3_16f *)&sp.rot, 0);
                 mSoundHandle =
                     Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
                 flag = 1;
