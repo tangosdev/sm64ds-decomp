@@ -3028,19 +3028,10 @@ set0:
 extern "C" {
 void daPly_c::func_ov002_020c14b8() {
     void *arg0 = (void *)this;
-    typedef struct { int a, b; } Pair2i;
-    typedef struct {
-        void *tag;
-        int f04, f08, f0c, f10, f14;
-        unsigned short f18, f1a;
-        int f1c, f20, f24;
-    } ClsnResultTmp;
-    extern int data_02099368;
     extern int data_0209f32c;
     daPly_c *c = (daPly_c *)arg0;
     dBgCh_Gnd rg;
     Vector3 pos;
-    ClsnResultTmp tmp;
     int savedY;
 
     savedY = 0x80000000;
@@ -3067,24 +3058,10 @@ void daPly_c::func_ov002_020c14b8() {
     }
     rg.SetObjAndPos(pos, this);
     if (rg.DetectClsn()) {
-        int *dst = &tmp.f04;
         {
-            struct P2w {
-                int w[2];
-            };
-            *(P2w *)dst = *(P2w *)&rg.surface.clps;
+            dBgPi floor(rg);
+            SetFloorSurfaceInfo(floor);
         }
-        dst[2] = rg.surface.normal.x;
-        dst[3] = rg.surface.normal.y;
-        dst[4] = rg.surface.normal.z;
-        tmp.tag = &data_02099368;
-        tmp.f18 = rg.triangleID;
-        tmp.f1a = rg.colliderIdx;
-        tmp.f1c = rg.clsnID;
-        tmp.f20 = (int)rg.owner;
-        tmp.f24 = (int)rg.collider;
-        SetFloorSurfaceInfo((const dBgPi &)tmp);
-        ((dBgPi *)&tmp)->dBgPi::~dBgPi();
         mProbedGroundY = rg.clsnY;
         mGroundY = mProbedGroundY;
         mProbedSurfaceType = mSurfaceType;
@@ -3520,30 +3497,11 @@ int daPly_c::func_ov002_020c231c() {
 extern "C" {
 int daPly_c::func_ov002_020c25a8(int arg1) {
     void *arg0 = (void *)this;
-    typedef struct {
-        int a, b;
-    } Pair2i;
-    typedef struct {
-        void *tag;
-        int f04;
-        int f08;
-        int f0c;
-        int f10;
-        int f14;
-        unsigned short f18;
-        unsigned short f1a;
-        int f1c;
-        int f20;
-        int f24;
-    } ClsnResultTmp;
-    extern int data_02099368;
     daPly_c *c = (daPly_c *)arg0;
     int ret;
     Vector3 v;
     Vector3 wn;
-    ClsnResultTmp tmp;
     dBgPi *fr;
-    int *dst;
 
     func_02037318(&mMeshClsn);
     mMeshClsn.StopDetectingWater();
@@ -3613,26 +3571,10 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
 
     if (mClsnFlags & 1) {
         fr = mMeshClsn.GetFloorResult();
-        dst = &tmp.f04;
-
         {
-            struct P2w {
-                int w[2];
-            };
-            *(P2w *)dst = *(P2w *)&fr->surface.clps;
+            dBgPi floor(*fr);
+            SetFloorSurfaceInfo(floor);
         }
-        dst[2] = fr->surface.normal.x;
-        dst[3] = fr->surface.normal.y;
-        dst[4] = fr->surface.normal.z;
-        tmp.tag = &data_02099368;
-        tmp.f18 = fr->triangleID;
-        tmp.f1a = fr->colliderIdx;
-        tmp.f1c = fr->clsnID;
-        tmp.f20 = (int)fr->owner;
-        tmp.f24 = (int)fr->collider;
-
-        SetFloorSurfaceInfo((const dBgPi &)tmp);
-        ((dBgPi *)&tmp)->dBgPi::~dBgPi();
 
         mGroundY = mPosY;
         ret = fr->surface.clps.GetFloorClass();
@@ -10153,13 +10095,6 @@ int daPly_c::func_ov002_020cede0() {
 // @symbol _ZN7daPly_c19func_ov002_020cef84Ev
 extern "C" {
 int daPly_c::func_ov002_020cef84() {
-    typedef struct {
-        void *tag;
-        int f04, f08, f0c, f10, f14;
-        unsigned short f18, f1a;
-        int f1c, f20, f24;
-    } ClsnResultTmp;
-    extern int data_02099368;
     Vector3 v1, v2;
     int lim;
 
@@ -10207,29 +10142,12 @@ int daPly_c::func_ov002_020cef84() {
             int d = cp.y - mPosY;
             if (d < 0) d = -d;
             if (d < lim) {
-                void *a;
-                ClsnResultTmp tmp;
-                int *dst = &tmp.f04;
-                int w0, w1;
                 mVertSpeed = -0x1000;
                 mClsnFlags |= 8;
-                w0 = line.surface.clps.w0;
-                w1 = line.surface.clps.w1;
-                dst[0] = w1 ? w0 : w0;
-                dst[1] = w1;
-                dst[2] = line.surface.normal.x;
-                dst[3] = line.surface.normal.y;
-                dst[4] = line.surface.normal.z;
-                tmp.tag = &data_02099368;
-                tmp.f18 = line.triangleID;
-                tmp.f1a = line.colliderIdx;
-                tmp.f1c = line.clsnID;
-                tmp.f20 = (int)line.owner;
-                tmp.f24 = (int)line.collider;
-                a = dActor_c::FindWithID(((dBgPi *)&tmp)->GetClsnID());
+                dBgPi hit(line);
+                dActor_c *a = dActor_c::FindWithID(hit.GetClsnID());
                 if (a)
-                    ((dActor_c *)a)->OnHitFromUnderneath(*this);
-                ((dBgPi *)&tmp)->dBgPi::~dBgPi();
+                    a->OnHitFromUnderneath(*this);
             }
         }
     }
@@ -14375,32 +14293,20 @@ ret0b:
 }
 
 // @symbol _ZN7daPly_c15TongueWallProbeEv
-/* The first two words of the SurfaceInfo rl.surface are copied as one
- * two-int struct. Spelled `{ int a, b; }`, C++ scalarizes that copy into
- * load/store/load/store, 10 words off the ROM's load/load/store/store;
- * the array-wrapper view restores it, as in func_ov002_020c14b8. */
+/* The line hit is copied into a local dBgPi (its implicit copy
+ * constructor) before the collider owner is looked up. */
 extern "C" {
 int daPly_c::TongueWallProbe() {
     daPly_c *player = (daPly_c *)this;
-    typedef struct P2 { int w[2]; } P2;
-    typedef struct dBgPiCopy {
-        void *vtb;
-        int s0, s1, s2, s3, s4;
-        u16 f, g;
-        int h, i, j;
-    } dBgPiCopy;
     extern void MulVec3Mat4x3(void *v, void *m, void *dst);
     extern void Vec3_MulScalarInPlace(int *v, int s);
     extern int func_02053274(int *a, int *b);
     extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
-    extern void *data_02099368[];
     Vector3_16f dir;
     Vector3 p1;
     Vector3 p2;
-    dBgPiCopy res;
     dBgCh_Lin rl;
-    int *d;
     char *actor;
     s16 ang;
     int t;
@@ -14434,21 +14340,9 @@ int daPly_c::TongueWallProbe() {
         return 0;
     }
 
-    d = &res.s0;
-    *(P2 *)d = *(P2 *)&rl.surface.clps;
-    d[2] = rl.surface.normal.x;
-    d[3] = rl.surface.normal.y;
-    d[4] = rl.surface.normal.z;
-    res.vtb = data_02099368;
-    res.f = rl.triangleID;
-    res.g = rl.colliderIdx;
-    res.h = rl.clsnID;
-    res.i = (int)rl.owner;
-    res.j = (int)rl.collider;
-
-    actor = (char *)dActor_c::FindWithID(((dBgPi *)&res)->GetClsnID());
+    dBgPi res(rl);
+    actor = (char *)dActor_c::FindWithID(res.GetClsnID());
     if (actor != 0 && (t = (int)(((dActor_c *)actor)->actorID == 0xc2)) != 0) {
-        ((dBgPi *)&res)->dBgPi::~dBgPi();
         return 0;
     }
 
@@ -14466,7 +14360,6 @@ int daPly_c::TongueWallProbe() {
     Particle::System::New(0, 0x13f, clsnPos.x, clsnPos.y, clsnPos.z, (const Vector3_16f *)(&dir),
                           0);
 
-    ((dBgPi *)&res)->dBgPi::~dBgPi();
     return 1;
 }
 }
