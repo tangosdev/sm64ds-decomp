@@ -80,9 +80,8 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
  * are kept (decl_common.h declares three of them and daObjBlockS_c a fourth;
  * their parameter types stay agreeable with those). The ceiling and any-hit
  * queries on dBgCh_Actr have no member declaration yet and are called by ROM
- * label. The hit record copy is the ROM's field-by-field copy into a local
- * dBgPi-shaped struct; the real dBgPi copy constructor is not what the bytes
- * show. */
+ * label. The ray and ceiling hits are copied into a local dBgPi by its
+ * implicit copy constructor, and its destructor runs on every exit. */
 
 extern "C" {
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
@@ -91,7 +90,6 @@ int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
 int func_0203564c(int clsn);   /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
-extern int data_02099368[];   /* dBgPi's vtable */
 extern short data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 }
 
@@ -100,19 +98,6 @@ extern short data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
-
-/* A dBgPi, field for field, as the ray and hazard functions copy one onto
-   the stack: the vtable word, dBgPc's SurfaceInfo (two CLPS words, then the
-   face normal), and the collider identity. */
-struct ClsnHitCopy {
-    void *vtable;
-    int surface[5];
-    u16 triangleID;
-    u16 colliderIdx;
-    s32 clsnID;
-    dActor_c *owner;
-    dBgW *collider;
-};
 
 // @symbol func_ov002_020ef2a4
 extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
@@ -148,7 +133,6 @@ extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, int otherArg) {
 // @symbol func_ov002_020ef070
 extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     Vector3 start, end;
-    ClsnHitCopy hit;
 
     dBgCh_Lin line;
 
@@ -175,30 +159,13 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     if (line.DetectClsn()) {
         if (IsActorID(mover, 0xbf))
             func_ov002_020d8838(mover);
-        {
-            int *dst = hit.surface;
-            int w0 = line.surface.clps.w0;
-            int w1 = line.surface.clps.w1;
-            dst[0] = w1 ? w0 : w0;
-            dst[1] = w1;
-            dst[2] = line.surface.normal.x;
-            dst[3] = line.surface.normal.y;
-            dst[4] = line.surface.normal.z;
-            hit.vtable = data_02099368;
-            hit.triangleID = line.triangleID;
-            hit.colliderIdx = line.colliderIdx;
-            hit.clsnID = line.clsnID;
-            hit.owner = line.owner;
-            hit.collider = line.collider;
-            if (((dBgPi *)&hit)->GetClsnID() != -1) {
-                dActor_c *owner = dActor_c::FindWithID(((dBgPi *)&hit)->GetClsnID());
-                if (owner) {
-                    owner->OnAttacked2(*mover);
-                    ((dBgPi *)&hit)->dBgPi::~dBgPi();
-                    return 1;
-                }
+        dBgPi hit(line);
+        if (hit.GetClsnID() != -1) {
+            dActor_c *owner = dActor_c::FindWithID(hit.GetClsnID());
+            if (owner) {
+                owner->OnAttacked2(*mover);
+                return 1;
             }
-            ((dBgPi *)&hit)->dBgPi::~dBgPi();
         }
     }
     return 0;
@@ -207,7 +174,6 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
 // @symbol func_ov002_020eeeb8
 extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     Vector3 start, end;
-    ClsnHitCopy hit;
 
     dBgCh_Lin line;
 
@@ -237,34 +203,14 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
         if (IsActorID(mover, 0xbf))
             func_ov002_020d8838(mover);
 
-        {
-            int *dst = hit.surface;
-            int w0 = line.surface.clps.w0;
-            int w1 = line.surface.clps.w1;
-
-            dst[0] = w1 ? w0 : w0;
-            dst[1] = w1;
-            dst[2] = line.surface.normal.x;
-            dst[3] = line.surface.normal.y;
-            dst[4] = line.surface.normal.z;
-
-            hit.vtable = data_02099368;
-            hit.triangleID = line.triangleID;
-            hit.colliderIdx = line.colliderIdx;
-            hit.clsnID = line.clsnID;
-            hit.owner = line.owner;
-            hit.collider = line.collider;
-
-            if (((dBgPi *)&hit)->GetClsnID() != -1) {
-                dActor_c *owner = dActor_c::FindWithID(((dBgPi *)&hit)->GetClsnID());
-                if (owner) {
-                    owner->OnKicked(*mover);
-                    ((dBgPi *)&hit)->dBgPi::~dBgPi();
-                    return 1;
-                }
+        dBgPi hit(line);
+        if (hit.GetClsnID() != -1) {
+            dActor_c *owner = dActor_c::FindWithID(hit.GetClsnID());
+            if (owner) {
+                owner->OnKicked(*mover);
+                return 1;
             }
         }
-        ((dBgPi *)&hit)->dBgPi::~dBgPi();
     }
 
     return 0;
@@ -337,38 +283,24 @@ extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
 /* Only for the player (actor ID 0xbf): a ceiling owned by actor ID 0x3a hurts
  * for 3, a wall owned by actor ID 0x139 hurts for 1 and plays sound 0xb5 at
  * that actor; both with knockback 0xc000. clsn is the mover's dBgCh_Actr
- * (daPly_c::mMeshClsn at +0x380). The two-word struct copy of the CLPS keeps
- * the ceiling-hit snapshot on the stack under 2004/b56 C++; the explicit
- * snapshot and the scalar Hurt ABI remain measured reconstruction
- * boundaries. */
-typedef struct { int w[2]; } ClsnHitHead;
+ * (daPly_c::mMeshClsn at +0x380). The ceiling hit is copied into a local
+ * dBgPi first, so it takes the lowest stack slot; each hurt point is a
+ * Vector3 scoped to its own branch. The scalar Hurt ABI remains a measured
+ * reconstruction boundary. */
 
 // @symbol func_ov002_020eea84
 extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
-    struct ClsnHitCopy hit;
-    Vector3 hurtFrom;
-    Vector3 hurtFrom2;
     dActor_c *owner;
 
     if (!IsActorID(player, 0xbf))
         return 0;
 
     if (func_02035638(clsn)) {
-        const dBgPi *src = (const dBgPi *)func_0203564c((int)clsn);
-        int *d = hit.surface;
-        *(ClsnHitHead *)d = *(const ClsnHitHead *)&src->surface.clps;
-        d[2] = src->surface.normal.x;
-        d[3] = src->surface.normal.y;
-        d[4] = src->surface.normal.z;
-        hit.vtable = data_02099368;
-        hit.triangleID = src->triangleID;
-        hit.colliderIdx = src->colliderIdx;
-        hit.clsnID = src->clsnID;
-        hit.owner = src->owner;
-        hit.collider = src->collider;
-        if (((dBgPi *)&hit)->GetClsnID() != -1) {
-            owner = dActor_c::FindWithID(((dBgPi *)&hit)->GetClsnID());
+        dBgPi hit(*(const dBgPi *)func_0203564c((int)clsn));
+        if (hit.GetClsnID() != -1) {
+            owner = dActor_c::FindWithID(hit.GetClsnID());
             if (owner != 0 && IsActorID(owner, 0x3a)) {
+                Vector3 hurtFrom;
                 {
                     Vector3 *from = &player->mPos;
                     hurtFrom.x = from->x;
@@ -376,11 +308,9 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
                     hurtFrom.z = from->z;
                 }
                 ((daPly_c *)player)->Hurt(hurtFrom, 3, 0xc000, 1, 0, 1);
-                ((dBgPi *)&hit)->dBgPi::~dBgPi();
                 return 1;
             }
         }
-        ((dBgPi *)&hit)->dBgPi::~dBgPi();
     }
 
     if (clsn->IsOnWall()) {
@@ -388,6 +318,7 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
         if (wallHit->GetClsnID() != -1) {
             owner = dActor_c::FindWithID(wallHit->GetClsnID());
             if (owner != 0 && IsActorID(owner, 0x139)) {
+                Vector3 hurtFrom2;
                 {
                     Vector3 *from = &owner->mPos;
                     hurtFrom2.x = from->x;
