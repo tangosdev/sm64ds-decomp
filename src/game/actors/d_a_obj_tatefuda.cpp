@@ -44,7 +44,7 @@
  *   0x2000/0x4000000 of mdCcAc_c.flags, the global words gNextActorUpdateMask,
  *   data_0209d660, data_0209d6bc and gShowTouchScreenArrows, the daPly_c::Hurt
  *   arguments after the first two, and what the player-side calls
- *   func_ov002_020bec84 and func_ov002_020bec9c test and start.
+ *   func_ov002_020bec84 and daPly_c::func_ov002_020bec9c test and start.
  * - The daPly_c helpers stay mangled scalar externs (Fix12<int>-by-value
  *   member form is the 6az wall).
  * - SignPost_ClsnFile / SignPost_ModelFile keep their coined BSS names
@@ -145,7 +145,6 @@ extern u8 data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
 extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
-extern void func_ov002_020bec9c(void *player, unsigned int a, int b, int d, unsigned short e);
 extern unsigned int gNextActorUpdateMask;
 extern void AttachToHolder(struct daObjTatefuda_c *self);
 extern u8 DecIfAbove0_Byte(u8 *p);
@@ -636,9 +635,9 @@ void daObjTatefuda_c::InitTalk()
  * turns the player around to face the sign (0x8000 off the sign's own angle)
  * and then either shows the message straight away or, when mPoundsLeft is
  * exactly 1, goes through a short sequence first (after calling
- * func_ov002_020bec9c(player, 0, 0, 0x1000, 0)): when
+ * player->func_ov002_020bec9c(0, 0, 0x1000, 0)): when
  * func_ov002_020bec84(player, n) is non-zero for n = 1 or 0 it calls
- * func_ov002_020bec9c(player, 2, ...); for n = 2 it calls (player, 3, ...); for
+ * player->func_ov002_020bec9c(2, ...); for n = 2 it calls (3, ...); for
  * n = 3 it shows the message. The last two also wait on daPly_c::FinishedAnim. A talk state other than 0 or 1 sends the sign back to
  * IDLE through SetState.
  *
@@ -738,7 +737,7 @@ void daObjTatefuda_c::Talk()
                        != 0) {
                 talkStep = &mTalkStep;
                 *talkStep = (u8)(*talkStep + 1);
-                func_ov002_020bec9c(player, 1, 0, 0x1000, 0);
+                player->func_ov002_020bec9c(1, 0, 0x1000, 0);
             }
             break;
         case 1:
@@ -756,14 +755,14 @@ void daObjTatefuda_c::Talk()
                 if (mPoundsLeft == 1) {
                     if (func_ov002_020bec84(player, 1) != 0
                         || func_ov002_020bec84(player, 0) != 0) {
-                        func_ov002_020bec9c(player, 2, 0x40000000, 0x1000, 0);
+                        player->func_ov002_020bec9c(2, 0x40000000, 0x1000, 0);
                     } else if (func_ov002_020bec84(player, 2) != 0 && player->FinishedAnim() != 0) {
-                        func_ov002_020bec9c(player, 3, 0x40000000, 0x1000, 0);
+                        player->func_ov002_020bec9c(3, 0x40000000, 0x1000, 0);
                     } else if (func_ov002_020bec84(player, 3) != 0 && player->FinishedAnim() != 0) {
                         player->ShowMessage2(*this, (s16)msgId, &msgPos, 0, 1);
                     }
                 } else {
-                    func_ov002_020bec9c(player, 0, 0, 0x1000, 0);
+                    player->func_ov002_020bec9c(0, 0, 0x1000, 0);
                     player->ShowMessage2(*this, (s16)msgId, &msgPos, 0, 1);
                 }
             }

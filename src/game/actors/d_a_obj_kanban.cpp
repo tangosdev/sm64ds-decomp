@@ -9,8 +9,8 @@
  * sign model and lays the collider.
  *
  * What stays: Vec3_ApproachHorz / AngleDiff have no shared header.
- * What stays: func_ov002_020bec9c is still the linker name of the
- *   daPly_c SetAnim wrapper owned by the daPly_c TU. Naming belongs there.
+ * What stays: daPly_c::func_ov002_020bec9c, the player's SetAnim wrapper,
+ *   is still named by address. Naming belongs to the daPly_c TU.
  * What stays: data_02082214 is the shared arm9 sine table.
  * What stays: the (s16)mMessageID / (u16 *)&mAngleY casts are
  *   load-bearing (sign-extends / zero-extends the halfword load).
@@ -48,7 +48,6 @@ extern int AngleDiff(int a, int b);
 extern s16 data_02082214[];
 
 /* the player side of the conversation */
-extern void func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
 }
 
 #pragma defer_codegen off
@@ -106,12 +105,12 @@ int daObjKanban_c::Behavior() {
                     mState += 1;
                 } else if (ApproachLinear(tgt->mAngleY, Vec3_HorzAngle(&tpos, &pos), 0x800)) {
                     mState += 1;
-                    func_ov002_020bec9c(tgt, 1, 0, 0x1000, 0);
+                    tgt->func_ov002_020bec9c(1, 0, 0x1000, 0);
                 }
                 break;
             case 1:
                 if (Vec3_ApproachHorz(&tgt->mPos, &pos, 0xa000)) {
-                    func_ov002_020bec9c(tgt, 0, 0, 0x1000, 0);
+                    tgt->func_ov002_020bec9c(0, 0, 0x1000, 0);
                     mState += 1;
                 }
                 break;
