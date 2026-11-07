@@ -44,6 +44,7 @@ void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigne
 void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 void *port_debug_spawn(unsigned id, unsigned param);
+char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 void func_ov084_02129498(void *goomba);
@@ -135,7 +136,7 @@ unsigned g_goto_frame = 0; int g_goto_id = -1; bool g_goto_done = false; int g_g
 unsigned g_place_frame = 0; int g_place_xyz[3] = {0, 0, 0}; bool g_place_on = false;   // SM64DS_COOP_PLACE (run after093, lane SEESAW1)
 int g_place_level = -1;   // SM64DS_COOP_PLACE ...:L, only in level L (run after093, lane WHOMPBACK1)
 int g_trace_id = -1; unsigned g_trace_every = 5; int g_trace_off = -1;   // SM64DS_COOP_TRACE (run after093, lane SEESAW1)
-struct WarpKnob { unsigned frame; int level; int act; bool done; };
+struct WarpKnob { unsigned frame; int level; int act; bool done; int entrance; };
 WarpKnob g_warp[4]; int g_nwarp = 0;
 struct ForgeKnob { unsigned frame; char name[16]; bool done; };
 ForgeKnob g_forge[12]; int g_nforge = 0;
@@ -174,13 +175,15 @@ void read_env() {
         if (std::sscanf(rv, "%u:%i:%i", &f, &sl, &cl) == 3) g_revive = {f, sl, cl, false};
     }
     if (const char *w = std::getenv("SM64DS_COOP_WARP")) {
-        // F:level:act[;F:level:act]  (F = ticked frames since the boot release / the end of a new file's opening)
+        // F:level:act[:entrance][;F:level:act[:entrance]]  (F = ticked frames since the boot release / the end of a new
+        // file's opening; entrance 0 unless given)
         const char *p = w;
         while (*p && g_nwarp < 4) {
-            unsigned f = 0; int lv = 0, ac = 1, used = 0;
+            unsigned f = 0; int lv = 0, ac = 1, used = 0, en = 0, used2 = 0;
             if (std::sscanf(p, "%u:%i:%i%n", &f, &lv, &ac, &used) < 3 || used <= 0) break;
-            g_warp[g_nwarp++] = {f, lv, ac, false};
             p += used;
+            if (*p == ':' && std::sscanf(p, ":%i%n", &en, &used2) >= 1 && used2 > 0) p += used2;
+            g_warp[g_nwarp++] = {f, lv, ac, false, en};
             while (*p == ';' || *p == ',' || *p == ' ') ++p;
         }
     }
@@ -517,7 +520,12 @@ void room_gone_load(const CoopKey &k) {   // a new level visit: its broken block
     }
 }
 
-// Tango's rule: the room remembers a level's broken blocks only while somebody has that level loaded,
+// COOPBOO1: the room's freed cage Boo cages, per (level, act), filled and read by the cage code further down.
+enum : int { kRoomCageMax = 16 };
+struct RoomCage { int16_t level; uint8_t act; uint16_t slot; int pos[3]; int8_t area; };
+RoomCage g_room_cage[kRoomCageMax]; int g_room_cage_n = 0;
+
+// Tango's rule: the room remembers a level's broken blocks (and its freed cage) only while somebody has that level loaded,
 // and the next visit after it emptied starts the way the cartridge builds it. Every console judges it alone from what it
 // already has (its own level and every seat's presence), so a console that left earlier forgets too, a seat that drops out
 // stops counting when its presence goes stale, and nothing new goes on the wire. kRoomEmptyMs of nobody rides out a
@@ -528,17 +536,20 @@ enum : unsigned { kRoomEmptyMs = 3000, kRoomEmptyMax = 16 };
 struct RoomEmpty { CoopKey k; unsigned since; };
 RoomEmpty g_room_empty[kRoomEmptyMax]; int g_room_empty_n = 0;
 void room_forget_key(const CoopKey &k) {
-    int blocks = 0;
+    int blocks = 0, cages = 0;
     for (int i = 0; i < g_room_gone_n; ++i)
         if (g_room_gone[i].level == k.level && g_room_gone[i].act == (uint8_t)k.act) { g_room_gone[i--] = g_room_gone[--g_room_gone_n]; ++blocks; }
-    std::fprintf(stderr, "[coop] block list: nobody in the room has level %d act %d loaded: forgot %d broken block(s),"
-                         " the next visit starts whole wall=%lld\n", k.level, k.act, blocks, wall_ms());
+    for (int i = 0; i < g_room_cage_n; ++i)
+        if (g_room_cage[i].level == k.level && g_room_cage[i].act == (uint8_t)k.act) { g_room_cage[i--] = g_room_cage[--g_room_cage_n]; ++cages; }
+    std::fprintf(stderr, "[coop] block list: nobody in the room has level %d act %d loaded: forgot %d broken block(s) and %d freed cage(s),"
+                         " the next visit starts whole wall=%lld\n", k.level, k.act, blocks, cages, wall_ms());
 }
 void room_forget(unsigned now) {
     pres_track();
-    CoopKey keys[kRoomGoneMax]; int nk = 0;
-    for (int i = 0; i < g_room_gone_n; ++i) {
-        const CoopKey k(g_room_gone[i].level, g_room_gone[i].act);
+    CoopKey keys[kRoomGoneMax + kRoomCageMax]; int nk = 0;
+    for (int i = 0; i < g_room_gone_n + g_room_cage_n; ++i) {
+        const CoopKey k = i < g_room_gone_n ? CoopKey(g_room_gone[i].level, g_room_gone[i].act)
+                                            : CoopKey(g_room_cage[i - g_room_gone_n].level, g_room_cage[i - g_room_gone_n].act);
         bool seen = false;
         for (int j = 0; j < nk && !seen; ++j) seen = keys[j] == k;
         if (!seen) keys[nk++] = k;
@@ -633,7 +644,8 @@ bool capped_goomba(const char *a) {
     if (!is_goomba(cls)) return false;
     return (*(const unsigned char *)(a + kKrbCapId) & 0xf) < 6 || *(const unsigned char *)(a + kKrbReward) == 2;
 }
-void cap_reset() { g_cap_n = 0; g_cap_slotted = -1; g_sw_applied_n = 0; g_gone_n = 0; g_gone_push_left = 0; }
+void cage_reset();
+void cap_reset() { g_cap_n = 0; g_cap_slotted = -1; g_sw_applied_n = 0; g_gone_n = 0; g_gone_push_left = 0; cage_reset(); }
 void watch_capped(unsigned now) {
     CapW cur[kCapMax]; int n = 0, slotted = 0;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
@@ -726,6 +738,143 @@ void gone_push(unsigned now) {
                             kGonePushes - g_gone_push_left + 1);
     --g_gone_push_left;
     g_gone_push_at = now + 700u;
+}
+
+// ---------------------------------------------------------------------------
+// The courtyard's cage Boo (run after093, lane COOPBOO1). In the castle garden (level 3, 15 stars or more) the variant-5 Boo
+// (daTrs_c, class 209, src/game/actors/d_a_trs.cpp) carries the cage (T_BASKET, class 212) that is the way into Big Boo's Haunt.
+// When a player hits it, func_ov063_02116e14 spawns the cage at mCarriedPosX (unk_0a4 0, mVertSpeed 0x32000, unk_0ac 0), clears
+// `carrying` and goes to state 3, which fades the Boo and ends in MarkForDestruction: no death bit. So the friend's Boo kept
+// flying with its cage and the friend had no way in. The console where the cage Boo drops its cage says so with the swallow
+// message plus the cage's spawn point (24 bytes: an older build drops a message of that length as malformed and keeps its own
+// behaviour); every console in the level runs the same drop on its copy (same spawn, same fields, the Boo's own state 3), and
+// the room keeps it for the session like the garden block, so a friend who comes in later finds the cage the way the cartridge
+// leaves it when the player comes back out of the Haunt (InitResources, LAST_ENTRANCE_ID 0: the cage stands at once, its
+// secret jingle muted, the Boo removed). Two players beating their copies at once each keep their own cage: nothing doubles.
+// ---------------------------------------------------------------------------
+enum : int { kBooCls = 209, kCageCls = 212, kTrsState = 0x5cc, kTrsVariant = 0x5cf, kTrsFlags = 0x5d4, kTrsCarrying = 0x2,
+             kBasketMute = 0x37e, kCageWireLen = 24, kCagePosLimit = 1 << 28 };
+struct CoopCageWire {                      // 24 B: the swallow message (cls 209) and where the cage was spawned
+    CoopSwallowWire head;
+    int32_t x, y, z;                       // the cage's spawn point, ROM fixed point
+    int8_t area;                           // the area the Boo spawned it in (its mAreaIdx)
+    uint8_t pad[3];
+};
+static_assert(sizeof(CoopCageWire) == kCageWireLen, "cage wire is 24 bytes");
+struct CageState { bool free; int slot; int pos[3]; int area; };
+CageState g_cage = {};                     // this level visit: the cage is out (dropped here, by a friend, or earlier in the room)
+char *g_cage_boo = nullptr; unsigned g_cage_boo_uid = 0; bool g_cage_boo_carry = false;
+int g_cage_send_left = 0; unsigned g_cage_send_at = 0, g_cage_send_gap = 120;
+
+void cage_reset() { g_cage = CageState(); g_cage_boo = nullptr; g_cage_boo_uid = 0; g_cage_boo_carry = false; g_cage_send_left = 0; }
+void room_cage_note(const CoopKey &k, int slot, const int *pos, int area) {
+    for (int i = 0; i < g_room_cage_n; ++i)
+        if (g_room_cage[i].level == k.level && g_room_cage[i].act == (uint8_t)k.act && g_room_cage[i].slot == slot) return;
+    if (g_room_cage_n < kRoomCageMax)
+        g_room_cage[g_room_cage_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, {pos[0], pos[1], pos[2]}, (int8_t)area};
+}
+void room_cage_load(const CoopKey &k) {   // a new level visit: a cage freed here earlier in the room is out again
+    for (int i = 0; i < g_room_cage_n; ++i) {
+        const RoomCage &r = g_room_cage[i];
+        if (r.level != k.level || r.act != (uint8_t)k.act) continue;
+        g_cage.free = true; g_cage.slot = r.slot; g_cage.area = r.area;
+        for (int j = 0; j < 3; ++j) g_cage.pos[j] = r.pos[j];
+        if (g_log) std::fprintf(stderr, "[coop] cage: level %d act %d: the cage Boo's cage was freed earlier in this room\n", k.level, k.act);
+    }
+}
+bool cage_is_boo(const char *a) {
+    return *(const unsigned short *)(a + 0x0c) == kBooCls && *(const unsigned char *)(a + kTrsVariant) == 5 &&
+           *(const short *)(a + 0xce) >= 0 && *(const short *)(a + 0xce) < kCoopSlots;
+}
+bool cage_carrying(const char *a) { return (*(const unsigned short *)(a + kTrsFlags) & kTrsCarrying) != 0; }
+char *cage_newest() {
+    char *best = nullptr; unsigned uid = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (*(const unsigned short *)(a + 0x0c) == kCageCls && !going(a) && *(const unsigned *)(a + 0x04) >= uid) { best = a; uid = *(const unsigned *)(a + 0x04); }
+    return best;
+}
+// The cage the way func_ov063_02116e14 spawns it (drop) or InitResources' free cage (muted).
+char *cage_spawn(const int *pos, int area, bool mute) {
+    char *c = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as((unsigned)kCageCls, 0, pos, nullptr, area, -1);
+    if (c) {
+        *(int *)(c + 0xa4) = 0; *(int *)(c + 0xa8) = 0x32000; *(int *)(c + 0xac) = 0;
+        if (mute) *(unsigned char *)(c + kBasketMute) = 1;
+    }
+    return c;
+}
+void cage_send(unsigned now) {
+    if (g_cage_send_left <= 0 || !g_cage.free || (int)(now - g_cage_send_at) < 0) return;
+    CoopCageWire w; std::memset(&w, 0, sizeof w);
+    w.head.key = wire_key(g_key); w.head.slot = (uint16_t)g_cage.slot; w.head.cls = (uint16_t)kBooCls;
+    w.x = g_cage.pos[0]; w.y = g_cage.pos[1]; w.z = g_cage.pos[2]; w.area = (int8_t)g_cage.area;
+    if (send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, (int)sizeof w)) {
+        --g_cage_send_left;
+        g_cage_send_at = now + g_cage_send_gap;
+        if (g_cage_send_gap < 700u) g_cage_send_gap = 240u;
+    }
+}
+// A friend's console (or the room) says the cage is out: my copy of the cage Boo drops it the same way.
+void cage_apply_remote(int seat, int slot, const int *pos, int area) {
+    if (g_cage.free) {
+        if (g_log) std::fprintf(stderr, "[coop] cage: from seat %d: my cage is already out\n", seat);
+        return;
+    }
+    g_cage.free = true; g_cage.slot = slot; g_cage.area = area;
+    for (int j = 0; j < 3; ++j) g_cage.pos[j] = pos[j];
+    room_cage_note(g_key, slot, pos, area);
+    char *b = live_slot((unsigned)kBooCls, slot);
+    if (b && !going(b) && cage_is_boo(b) && cage_carrying(b)) {
+        cage_spawn(pos, area, false);
+        *(unsigned short *)(b + kTrsFlags) &= (unsigned short)~kTrsCarrying;
+        *(unsigned char *)(b + kTrsState) = 3;
+        g_cage_boo = b; g_cage_boo_uid = *(const unsigned *)(b + 0x04); g_cage_boo_carry = false;
+        std::fprintf(stderr, "[coop] cage: from seat %d: cage Boo slot %d dropped its cage here at %d,%d,%d the way his did wall=%lld\n",
+                     seat, slot, pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, wall_ms());
+    } else if (!cage_newest()) {
+        cage_spawn(pos, area, false);
+        std::fprintf(stderr, "[coop] cage: from seat %d: no carrying cage Boo here, the cage spawned at %d,%d,%d wall=%lld\n",
+                     seat, pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, wall_ms());
+    }
+}
+// Every est frame: did my cage Boo drop its cage (tell the room), or does it still carry one that is already out (free it).
+void watch_cage(unsigned now) {
+    char *boo = nullptr;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !boo; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (cage_is_boo(a) && !going(a) && !is_player_ptr(a)) boo = a;
+    if (!boo) { g_cage_boo = nullptr; g_cage_boo_carry = false; return; }
+    const bool same = boo == g_cage_boo && *(const unsigned *)(boo + 0x04) == g_cage_boo_uid;
+    const bool carry = cage_carrying(boo);
+    // Proof knob SM64DS_COOP_CAGEHIT=EST: from that est frame, while my cage Boo chases (state 1) with its cage, its
+    // collider reads as punched by my player, so the cartridge's own hit path (func_ov063_0211a0dc, 02116e14) runs.
+    static const int hit_at = [] { const char *e = std::getenv("SM64DS_COOP_CAGEHIT"); return e ? std::atoi(e) : 0; }();
+    if (hit_at > 0 && carry && (int)g_est_frames >= hit_at && *(const unsigned char *)(boo + kTrsState) == 1) {
+        const int me = (int)data_0209f250;
+        if (const char *body = (me >= 0 && me < 16) ? (const char *)data_0209f394[me] : nullptr) {
+            *(unsigned *)(boo + 0x184 + 0x20) |= 0x40u;
+            *(unsigned *)(boo + 0x184 + 0x24) = *(const unsigned *)(body + 0x04);
+            static int told = 0;
+            if (told++ < 3) std::fprintf(stderr, "[coop-knob] cage hit: cage Boo slot %d reads as punched by my player wall=%lld\n",
+                                         (int)*(const short *)(boo + 0xce), wall_ms());
+        }
+    }
+    if (same && g_cage_boo_carry && !carry && !g_cage.free) {
+        if (char *c = cage_newest()) {
+            g_cage.free = true; g_cage.slot = *(const short *)(boo + 0xce); g_cage.area = *(const signed char *)(c + 0xcc);
+            for (int j = 0; j < 3; ++j) g_cage.pos[j] = ((const int *)(c + 0x5c))[j];
+            room_cage_note(g_key, g_cage.slot, g_cage.pos, g_cage.area);
+            g_cage_send_left = 3; g_cage_send_at = now; g_cage_send_gap = 120u;
+            std::fprintf(stderr, "[coop] cage: cage Boo slot %d dropped its cage here at %d,%d,%d: told the room wall=%lld\n", g_cage.slot,
+                         g_cage.pos[0] >> 12, g_cage.pos[1] >> 12, g_cage.pos[2] >> 12, wall_ms());
+        }
+    } else if (g_cage.free && carry) {
+        if (!cage_newest()) cage_spawn(g_cage.pos, g_cage.area, true);
+        _ZN7fBase_c18MarkForDestructionEv(boo);
+        std::fprintf(stderr, "[coop] cage: freed earlier in this room: cage stands at %d,%d,%d, cage Boo slot %d removed here wall=%lld\n",
+                     g_cage.pos[0] >> 12, g_cage.pos[1] >> 12, g_cage.pos[2] >> 12, (int)*(const short *)(boo + 0xce), wall_ms());
+        g_cage_boo = nullptr; g_cage_boo_carry = false;
+        return;
+    }
+    g_cage_boo = boo; g_cage_boo_uid = *(const unsigned *)(boo + 0x04); g_cage_boo_carry = carry;
 }
 
 // ---------------------------------------------------------------------------
@@ -857,6 +1006,19 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
             uint16_t s; std::memcpy(&s, p + sizeof w + 2 * i, 2);
             merge_remote_word(s >> 5, 1u << (s & 31));
         }
+        return;
+    }
+    if (sub == kWorldSwallowGone && pl == kCageWireLen) {   // COOPBOO1: the cage Boo dropped its cage
+        CoopCageWire w; std::memcpy(&w, p, sizeof w);
+        if (!coop_key_ok(w.head.key) || w.head.slot >= kCoopSlots || w.head.cls != kBooCls || w.area < -1 || w.area > 7 ||
+            w.x <= -kCagePosLimit || w.x >= kCagePosLimit || w.y <= -kCagePosLimit || w.y >= kCagePosLimit ||
+            w.z <= -kCagePosLimit || w.z >= kCagePosLimit) { ++g_st.drop_bad; return; }
+        key_from_wire(w.head.key, &k);
+        const int pos[3] = {w.x, w.y, w.z};
+        if (!for_me(k)) { if (k.valid()) room_cage_note(k, (int)w.head.slot, pos, w.area); ++g_st.drop_group; return; }
+        g_heard[seat] = comms_hub_now_ms() | 1u;
+        if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
+        cage_apply_remote(seat, (int)w.head.slot, pos, w.area);
         return;
     }
     if (sub == kWorldSwallowGone) {
@@ -1011,6 +1173,7 @@ void join_group(const CoopKey &nk) {
     g_key = nk;
     g_part = part_of_level(nk.level);
     room_gone_load(nk);   // COOPSYNC1: blocks broken here earlier in this room
+    room_cage_load(nk);   // COOPBOO1: and the courtyard cage, if it was freed
     g_grp.enter(nk, now);
     ++g_nonce;
     if (g_part < 0) {   // not a level the table covers: stay out of any group
@@ -1309,6 +1472,8 @@ void tick_est(unsigned now) {
         watch_capped(now);
         send_swallows(now);
         gone_push(now);
+        watch_cage(now);   // COOPBOO1
+        cage_send(now);
         // 2. announce them (three tries each: now, +120 ms, +360 ms)
         unsigned char buf[sizeof(CoopDeltaWire) + 2 * kCoopMaxDelta];
         uint16_t slots[kCoopMaxDelta]; int idx[kCoopMaxDelta]; int n = 0;
@@ -1425,6 +1590,7 @@ void coop_world_session_reset() {
     g_room_empty_n = 0;
     for (int s = 0; s < kCoopSeats; ++s) g_pres_cur[s] = g_pres_prev[s] = CoopKey();
     g_my_cur = g_my_prev = CoopKey();
+    g_room_cage_n = 0;   // COOPBOO1: and with the cage Boo carrying its cage
     g_env_read = false;
     g_on = false;
     g_handlers = false;
@@ -1560,6 +1726,7 @@ extern "C" void port_coop_world_frame(void) {
         const unsigned m = g_grp.member_mask();
         const unsigned gone = g_prev_members & ~m;
         if ((m & ~g_prev_members) && g_gone_n) { g_gone_push_at = now + 300u; g_gone_push_left = kGonePushes; }   // COOPSYNC1
+        if ((m & ~g_prev_members) && g_cage.free) { g_cage_send_at = now + 300u; g_cage_send_left = kGonePushes; g_cage_send_gap = 700u; }   // COOPBOO1
         g_prev_members = m;
         for (int sdx = 0; gone && sdx < 16; ++sdx)
             if ((gone >> sdx) & 1u)
@@ -1581,7 +1748,7 @@ extern "C" void port_coop_world_frame(void) {
         if (!g_warp[i].done && g_kframe >= g_warp[i].frame) {
             g_warp[i].done = true;
             std::fprintf(stderr, "[coop-knob] warp to level %d act %d\n", g_warp[i].level, g_warp[i].act);
-            LoadLevelNoReturn((unsigned)g_warp[i].level, 0, (unsigned)g_warp[i].act, 1);
+            LoadLevelNoReturn((unsigned)g_warp[i].level, (unsigned)g_warp[i].entrance, (unsigned)g_warp[i].act, 1);
         }
     // No body (a level unload or reload): whatever was in my mouth left with the level, not down my throat.
     if (!in_level && g_mouth) { g_mouth = nullptr; g_mouth_slot = -1; }
