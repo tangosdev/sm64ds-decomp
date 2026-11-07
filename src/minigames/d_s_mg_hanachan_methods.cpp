@@ -588,7 +588,8 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
                 rot += (s16)(((s64)v * (0x1800 - B) + 0x800) >> 12);
             }
         }
-        func_0203d680((Vector2 *)&vout, (const Vector2 *)&va, data_02082214[((u16)(ang * 2) >> 4) * 2]);
+        func_0203d680((Vector2 *)&vout, (const Vector2 *)&va,
+                      data_02082214[((u16)(ang * 2) >> 4) * 2]);
         pos.x = pos.x + vout.x;
         pos.y = pos.y + vout.y;
         res = Wiggler_GetFrame((char *)self, i);
