@@ -375,6 +375,13 @@ void merge_remote_word(int w, unsigned bits) {
     g_remote[w] |= fresh;
     g_st.bits_applied += (unsigned)popcnt(fresh);
     g_recon_dirty = true;
+    // A death bit kills some holders of it on their own next Behavior (daCoin_c::func_ov002_020b10a0, d_a_coin.cpp:
+    // KillAndTrackInDeathTable when GetBitInDeathTable is up, in a mouth or not), before reconcile sees them: a Yoshi
+    // here holding one lets go now, the way release_mouth_of does for reconcile.
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        const short slot = *(const short *)(a + 0xce);
+        if (slot >> 5 == w && slot >= 0 && ((fresh >> (slot & 31)) & 1u) && !is_player_ptr(a)) release_mouth_of(a);
+    }
 }
 
 // The owner's full bitmap shows a bit: a guest's pending announcement of it is done.
