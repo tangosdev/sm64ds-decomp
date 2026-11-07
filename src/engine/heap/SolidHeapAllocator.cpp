@@ -50,6 +50,12 @@ extern "C" void MultiStore_Int(s32 val, int *dst, s32 count);
    address. Placement new measured this function 0x4c -> 0x5c. */
 extern "C" SolidHeapAllocator* _ZN18SolidHeapAllocatorC1EPvj(
     SolidHeapAllocator* self, void* heapEnd, u32 flags);
+static inline SolidHeapAllocator* newSolidHeapAllocatorAt(void* at,
+                                                          void* heapEnd,
+                                                          u32 flags)
+{
+    return _ZN18SolidHeapAllocatorC1EPvj((SolidHeapAllocator*)at, heapEnd, flags);
+}
 
 /* The chain view of mFreeRegion: `tail` is the most recent SaveState record. */
 struct FreeList {
@@ -195,7 +201,7 @@ SolidHeapAllocator* Heap_t::CreateSolidHeapAllocator(void* address, u32 size, u3
     if (start > end || (end - start) < 0x30)
         return 0;
 
-    return _ZN18SolidHeapAllocatorC1EPvj((SolidHeapAllocator*)start, (void*)end, flags);
+    return newSolidHeapAllocatorAt((void*)start, (void*)end, flags);
 }
 
 } /* namespace mHeap */

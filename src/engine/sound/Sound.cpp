@@ -694,6 +694,16 @@ extern "C" void func_0201251c(int a, int b, int c, int d)
     func_02048af4(&data_0209b4a4, c, d);
 }
 
+/* Calls SndRegTable::func_0201186c with param 4 untruncated: the member is
+   defined `short' there, and a member call narrows d -- the ROM caller does
+   not. The flat symbol cast through int arity reproduces the caller's
+   declaration (a PMF cannot feed a plain function pointer). */
+static inline int callSndRegTableFunc1186c(char *table, int a, int b, int c)
+{
+    return ((int (*)(char *, int, int, int))_ZN11SndRegTable13func_0201186cEiis)(
+        table, a, b, c);
+}
+
 // @symbol Sound_PlayIfNotActive
 extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
 {
@@ -702,13 +712,7 @@ extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
         o->inUse = 1;
         return o->id;
     }
-    /* original TU declared func_0201186c's #4 as int (def is short):
-       the call site passes d untruncated -- cast through an int-arity
-       pointer to reproduce it without the narrowing sequence.
-       A method call narrows d; the member pointer will not cast to a
-       function pointer, so the cast names the mangled symbol. */
-    return ((int (*)(char *, int, int, int))_ZN11SndRegTable13func_0201186cEiis)(
-        (char *)&data_0209b53c, b, c, d);
+    return callSndRegTableFunc1186c((char *)&data_0209b53c, b, c, d);
 }
 
 // @symbol func_02012468
