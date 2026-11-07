@@ -38,10 +38,14 @@ struct ParticleList {
 };
 
 struct System {
-    struct Flags {
-        u32 unk_000 : 6;
-        u32 unk_006 : 6;
-        u32 unk_00c : 6;
+    /* The polygon IDs the system's particles cycle through, one per drawn
+       particle: the draw routines put `current` into POLYGON_ATTR bits
+       24-29 and wrap it from max back to min. AddSystem seeds min and max
+       from the manager. */
+    struct PolygonIDs {
+        u32 min     : 6;
+        u32 max     : 6;
+        u32 current : 6;
         u32 unused  : 14;
     };
 
@@ -97,7 +101,7 @@ struct System {
     /* func_0204a730 calls it each update when set; func_0204ae2c clears it. */
     void (*callback)(void *); /* 0x68 */
     u8 pad_06c[0x08];
-    Flags flags;                   /* 0x74 */
+    PolygonIDs polygonIDs;         /* 0x74 */
 
     static System *FromUniqueID(u32 uniqueID);
     /* Unnamed parameters: a name here numbers @NNN in every includer. */

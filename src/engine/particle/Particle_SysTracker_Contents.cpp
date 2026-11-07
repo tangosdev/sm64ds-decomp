@@ -13,8 +13,6 @@
  *   single |= on the field DIFFs Reset.
  * - Update widens active == 1 to an int before testing it. A plain
  *   if on entry->active DIFFs Update.
- * - system->flags.unk_000, unk_006 and unk_00c stay the bitfield
- *   names on Particle::System.
  * - data_0209ee74 is the global tracker. This TU does not own it.
  */
 
@@ -37,8 +35,8 @@ bool SysTracker::Contents::Entry::Initialise(
         return false;
 
     if (newDefinitionID == 0x52 || newDefinitionID == 0x50) {
-        if (system->flags.unk_000 <= 5 && system->flags.unk_006 >= 5)
-            system->flags.unk_00c = 5;
+        if (system->polygonIDs.min <= 5 && system->polygonIDs.max >= 5)
+            system->polygonIDs.current = 5;
     }
 
     savedValue = data.callbackValue;
