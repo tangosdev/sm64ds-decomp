@@ -894,7 +894,7 @@ void daStar_c::StateRise() {
             w[0] = v.x;
             w[1] = v.y;
             w[2] = v.z;
-            AimArcTo((Vector3*)w, 0x190000);
+            AimArcTo((Vector3 *)w, 0x190000);
             mState = STATE_FLY_TO_MARKER;
         }
     }
@@ -1697,7 +1697,8 @@ void daStar_c::CheckPickup() {
         if (b->mIsNoControl != 0) return;
         if (Event::GetBit(0x1e) != 0)
             return;
-        if (Collect(o) == 0) return;
+        if (Collect(o) == 0)
+            return;
         if (mKind != KIND_6) return;
         o = dActor_c::FindWithID(mMarkerID);
         if (o == 0)
@@ -1729,7 +1730,7 @@ void daStar_c::CheckPickup() {
  * record). The star plays sound 0x2d, enters STATE_COLLECT_BEGIN with the
  * cutscene bits set, and a Power Star with a non-zero talk state heals the
  * player (0x880). Returns 0 when the player cannot be put in the state. */
-int daStar_c::Collect(void* p) {
+int daStar_c::Collect(void *p) {
     void* found;
     int r5;
     u8 r4;
@@ -2539,7 +2540,7 @@ void daStar_c::ProbeGround() {
  * from the position of the marker whose star id matches. Returns 1 when one
  * was found. */
 
-int daStar_c::PlaceCameraAtStarCamera(void* cam) {
+int daStar_c::PlaceCameraAtStarCamera(void *cam) {
     dActor_c *a = 0;
     for (;;) {
         a = (dActor_c *)dActor_c::FindWithActorID(ACTOR_CAMERA_MARKER, a);
@@ -2561,7 +2562,7 @@ int daStar_c::PlaceCameraAtStarCamera(void* cam) {
  * stepping up or down by 300.0 or 600.0 every four) until the line from the
  * star to the spot is not blocked (dBgCh_Lin). After 20 failures the saved
  * camera position is used. */
-void daStar_c::PlaceCameraOnRing(void* cam) {
+void daStar_c::PlaceCameraOnRing(void *cam) {
     Vector3 vec[2];
     int flag;
     int dist;
@@ -2854,7 +2855,7 @@ void daStarBase_c::SpawnRedCoinStarIfNecessary()
 /* Sends the star looking for a new marker. With gate 0 it first spawns a score
  * popup 200.0 above the player. Sets the relink flag and picks a marker with
  * LinkRandomFreeMarker. */
-void daStar_c::SeekNewMarker(char* player, int gate) {
+void daStar_c::SeekNewMarker(char *player, int gate) {
     daPly_c *a = (daPly_c *)player;
     if (gate == 0) {
         struct Vector3 pos[2];
@@ -2924,17 +2925,17 @@ void UnloadSilverStarAndNumber(void)
 /* Called by the switch with its new state: 0 clears mBits.switchOn and, when
  * no cutscene is running, starts one (mCamSeq 0x64); anything else sets
  * switchOn. */
-void daStar_c::SetSwitchState(int r1){
-  if(r1==0){
-    mBits.switchOn = 0;
-    if (gNextActorUpdateMask & CUTSCENE_FLAG)
+void daStar_c::SetSwitchState(int r1) {
+    if (r1 == 0) {
+        mBits.switchOn = 0;
+        if (gNextActorUpdateMask & CUTSCENE_FLAG)
+            return;
+        mFlags |= CUTSCENE_FLAG;
+        gNextActorUpdateMask |= CUTSCENE_FLAG;
+        mCamSeq = 0x64;
         return;
-    mFlags |= CUTSCENE_FLAG;
-    gNextActorUpdateMask |= CUTSCENE_FLAG;
-    mCamSeq = 0x64;
-    return;
-  }
-  mBits.switchOn = 1;
+    }
+    mBits.switchOn = 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2982,12 +2983,14 @@ void daStar_c::CheckIceBlock() {
 /* Spawns sound object 4 once and remembers it in mSoundObjID. It plays the
  * sound id PickCollectSoundID picks at volume arg. */
 void daStar_c::SpawnCollectSoundObj(int arg) {
-  if (mSoundObjID != 0) return;
-  daSoundObj_c *s = (daSoundObj_c *)SpawnSoundObj(4);
-  if (s == 0) return;
-  mSoundObjID = s->uniqueID;
-  s->mSoundID = PickCollectSoundID();
-  s->mVolume = arg;
+    if (mSoundObjID != 0)
+        return;
+    daSoundObj_c *s = (daSoundObj_c *)SpawnSoundObj(4);
+    if (s == 0)
+        return;
+    mSoundObjID = s->uniqueID;
+    s->mSoundID = PickCollectSoundID();
+    s->mVolume = arg;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3037,14 +3040,14 @@ void daStar_c::InitKind9() {
 /* Puts the appearing star back to nothing: scale 0, switch off, map marker
  * given up, appear and state timers cleared. */
 void daStar_c::ResetAppearance() {
-  mScaleX = 0;
-  mScaleY = 0;
-  mScaleZ = 0;
-  mBits.switchOn = 0;
-  UntrackStar(mMarkerSlot);
-  mBits.appeared = 0;
-  mAppearTimer = 0;
-  mStateTimer = 0;
+    mScaleX = 0;
+    mScaleY = 0;
+    mScaleZ = 0;
+    mBits.switchOn = 0;
+    UntrackStar(mMarkerSlot);
+    mBits.appeared = 0;
+    mAppearTimer = 0;
+    mStateTimer = 0;
 }
 
 /* daStarBase_c's destructor is inline in the header. Out of line it emits
@@ -3076,18 +3079,18 @@ StarAnimationFileHandle data_ov002_02110934(0x8018);
 /* One pointer-to-member per State. mwcc cannot link-time-initialize them, so
    the initializer copies fourteen descriptor records in. */
 StateHandler data_ov002_021109d8[14] = {
-    &daStar_c::StateLaunch,   /* STATE_LAUNCH */
-    &daStar_c::StateRise,   /* STATE_RISE */
-    &daStar_c::StateFlyToMarker,   /* STATE_FLY_TO_MARKER */
-    &daStar_c::StateLand,   /* STATE_LAND */
-    &daStar_c::StateIdle,   /* STATE_IDLE */
-    &daStar_c::StateCollectBegin,   /* STATE_COLLECT_BEGIN */
-    &daStar_c::StateCollectHold,   /* STATE_COLLECT_HOLD */
-    &daStar_c::StateCollectTalk,   /* STATE_COLLECT_TALK */
-    &daStar_c::StateBounce,   /* STATE_BOUNCE */
+    &daStar_c::StateLaunch,       /* STATE_LAUNCH */
+    &daStar_c::StateRise,         /* STATE_RISE */
+    &daStar_c::StateFlyToMarker,  /* STATE_FLY_TO_MARKER */
+    &daStar_c::StateLand,         /* STATE_LAND */
+    &daStar_c::StateIdle,         /* STATE_IDLE */
+    &daStar_c::StateCollectBegin, /* STATE_COLLECT_BEGIN */
+    &daStar_c::StateCollectHold,  /* STATE_COLLECT_HOLD */
+    &daStar_c::StateCollectTalk,  /* STATE_COLLECT_TALK */
+    &daStar_c::StateBounce,       /* STATE_BOUNCE */
     &daStar_c::StateWaitMarker,   /* STATE_WAIT_MARKER */
-    &daStar_c::StateTouched,   /* STATE_TOUCHED */
-    &daStar_c::StateSaveMessage,   /* STATE_SAVE_MESSAGE */
+    &daStar_c::StateTouched,      /* STATE_TOUCHED */
+    &daStar_c::StateSaveMessage,  /* STATE_SAVE_MESSAGE */
     &daStar_c::StatePlayAndEnd,   /* STATE_PLAY_AND_END */
     &daStar_c::StateSpinAndEnd,   /* STATE_SPIN_AND_END */
 };

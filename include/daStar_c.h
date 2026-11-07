@@ -51,20 +51,25 @@ struct daStar_c : dEnemyBase_c {
        table built by __sinit_ov002_02106e40; Behavior calls entry mState) ----
        Each handler is named for its State; its ROM address is in d_a_star.cpp. */
     enum State {
-        STATE_LAUNCH         = 0,   /* StateLaunch: one-shot pop-out start, then 1, 2 or 3 */
-        STATE_RISE           = 1,   /* StateRise: waits for the fall to reach -32.0/frame, then aims at the marker */
-        STATE_FLY_TO_MARKER  = 2,   /* StateFlyToMarker: homes in on the marker, snaps 200.0 above it, then 3 */
-        STATE_LAND           = 3,   /* StateLand: settles, then 4 */
-        STATE_IDLE           = 4,   /* StateIdle: the collectible star */
-        STATE_COLLECT_BEGIN  = 5,   /* StateCollectBegin: player touched it; starts the collection pose */
-        STATE_COLLECT_HOLD   = 6,   /* StateCollectHold: one frame on the player, then starts the pose */
-        STATE_COLLECT_TALK   = 7,   /* StateCollectTalk: pose, score popup, "save?" message */
-        STATE_BOUNCE         = 8,   /* StateBounce: bounces on the ground until picked up */
-        STATE_WAIT_MARKER    = 9,   /* StateWaitMarker: waits for its STARBASE marker, then 8 */
-        STATE_TOUCHED        = 10,  /* StateTouched: veneer to Collect (Collect) */
-        STATE_SAVE_MESSAGE   = 11,  /* StateSaveMessage: the save-prompt message flow */
-        STATE_PLAY_AND_END   = 12,  /* StatePlayAndEnd: plays its animation, then destroys itself */
-        STATE_SPIN_AND_END   = 13   /* StateSpinAndEnd: spins, gives the VS star, then destroys itself */
+        STATE_LAUNCH = 0, /* StateLaunch: one-shot pop-out start, then 1, 2 or 3 */
+        /* StateRise: waits for the fall to reach -32.0/frame, then aims at the marker */
+        STATE_RISE = 1,
+        /* StateFlyToMarker: homes in on the marker, snaps 200.0 above it, then 3 */
+        STATE_FLY_TO_MARKER = 2,
+        STATE_LAND = 3, /* StateLand: settles, then 4 */
+        STATE_IDLE = 4, /* StateIdle: the collectible star */
+        /* StateCollectBegin: player touched it; starts the collection pose */
+        STATE_COLLECT_BEGIN = 5,
+        /* StateCollectHold: one frame on the player, then starts the pose */
+        STATE_COLLECT_HOLD = 6,
+        STATE_COLLECT_TALK = 7,  /* StateCollectTalk: pose, score popup, "save?" message */
+        STATE_BOUNCE = 8,        /* StateBounce: bounces on the ground until picked up */
+        STATE_WAIT_MARKER = 9,   /* StateWaitMarker: waits for its STARBASE marker, then 8 */
+        STATE_TOUCHED = 10,      /* StateTouched: veneer to Collect (Collect) */
+        STATE_SAVE_MESSAGE = 11, /* StateSaveMessage: the save-prompt message flow */
+        STATE_PLAY_AND_END = 12, /* StatePlayAndEnd: plays its animation, then destroys itself */
+        /* StateSpinAndEnd: spins, gives the VS star, then destroys itself */
+        STATE_SPIN_AND_END = 13
     };
 
     /* param1 bits 4..7. Only what InitResources and its callees evidence:
@@ -84,19 +89,26 @@ struct daStar_c : dEnemyBase_c {
 
     /* mStarFlags bits. */
     enum StarFlag {
-        FLAG_NO_SPIN         = 0x0001, /* clear: UpdateModelMatrix spins it (+0xc00 on mAngleY per frame); set: faces mPrevAngleY, 50.0 up */
-        FLAG_VISIBLE         = 0x0002, /* Render, the drop shadow and the touch volume all need it; InitResources disables the touch volume while clear */
+        /* clear: UpdateModelMatrix spins it (+0xc00 on mAngleY per frame); set: faces mPrevAngleY, 50.0 up */
+        FLAG_NO_SPIN = 0x0001,
+        /* Render, the drop shadow and the touch volume all need it; InitResources disables the touch volume while clear */
+        FLAG_VISIBLE = 0x0002,
         /* Render draws mAnmModel2 (the translucent star) instead of mAnmModel1;
            AddStarMarker turns marker type 2 into 3 */
         FLAG_COLLECTED_MODEL = 0x0004,
-        FLAG_NO_PICKUP       = 0x0008, /* STATE_BOUNCE skips the pickup test (CheckPickup) while set */
-        FLAG_WATER_MASK      = 0x0030, /* bits 4..5, a WaterState */
-        FLAG_RELINK_MARKER   = 0x0040, /* out of bounds -> re-link to a marker (RelinkMarker) instead of going home; set by SeekNewMarker */
-        FLAG_SWITCH_STAR     = 0x0080, /* set by daStarBase_c::InitResources on the star its kind-6 marker spawns */
-        FLAG_SWITCH_ON       = 0x0100, /* set/cleared by SetSwitchState (daObjSwitch calls it) */
-        FLAG_APPEARED        = 0x0200, /* STATE_IDLE kind 6: marker added and the appear sound already played */
-        FLAG_ANSWER_MASK     = 0x0c00, /* bits 10..11: the answer to the message, from data_0209d684 & 3 (1 and 2 are acted on) */
-        FLAG_COIN_REWARD     = 0x1000  /* spawned as the reward for the red/silver coin set (SpawnRedCoinStarIfNecessary, daCoin_c); Collect then records the marker in the death table */
+        FLAG_NO_PICKUP = 0x0008,  /* STATE_BOUNCE skips the pickup test (CheckPickup) while set */
+        FLAG_WATER_MASK = 0x0030, /* bits 4..5, a WaterState */
+        /* out of bounds -> re-link to a marker (RelinkMarker) instead of going home; set by SeekNewMarker */
+        FLAG_RELINK_MARKER = 0x0040,
+        /* set by daStarBase_c::InitResources on the star its kind-6 marker spawns */
+        FLAG_SWITCH_STAR = 0x0080,
+        FLAG_SWITCH_ON = 0x0100, /* set/cleared by SetSwitchState (daObjSwitch calls it) */
+        /* STATE_IDLE kind 6: marker added and the appear sound already played */
+        FLAG_APPEARED = 0x0200,
+        /* bits 10..11: the answer to the message, from data_0209d684 & 3 (1 and 2 are acted on) */
+        FLAG_ANSWER_MASK = 0x0c00,
+        /* spawned as the reward for the red/silver coin set (SpawnRedCoinStarIfNecessary, daCoin_c); Collect then records the marker in the death table */
+        FLAG_COIN_REWARD = 0x1000
     };
 
     /* mStarFlags again, as bit-fields (LSB first, as mwccarm lays a u16 out);
@@ -118,9 +130,10 @@ struct daStar_c : dEnemyBase_c {
 
     /* Bits 4..5 of mStarFlags. */
     enum WaterState {
-        WATER_NONE  = 0,   /* dry */
-        WATER_TOUCH = 1,   /* touched water; UpdateWater is probing for the surface */
-        WATER_IN    = 2    /* surface at least 60.0 above it: weak gravity (-0.4375/frame^2), 16.0 terminal fall */
+        WATER_NONE = 0,  /* dry */
+        WATER_TOUCH = 1, /* touched water; UpdateWater is probing for the surface */
+        /* surface at least 60.0 above it: weak gravity (-0.4375/frame^2), 16.0 terminal fall */
+        WATER_IN = 2
     };
 
     dCcAcPos_c    mdCc_c;         /* 0x110 -- the touch volume: radius 100.0, height 150.0 */
@@ -131,8 +144,8 @@ struct daStar_c : dEnemyBase_c {
 
     daStarShadowMtx              mShadowMtx;            /* 0x3fc */
 
-    s32  mGroundY;                /* 0x42c -- ProbeGround's downward probe from 50.0 above the star: the hit, or 0x7fffffff */
-    u32  mSoundObjID;             /* 0x430 -- uniqueID of the sound object SpawnCollectSoundObj spawned, 0 if none */
+    s32 mGroundY; /* 0x42c -- ProbeGround's downward probe from 50.0 above the star: the hit, or 0x7fffffff */
+    u32 mSoundObjID; /* 0x430 -- uniqueID of the sound object SpawnCollectSoundObj spawned, 0 if none */
     u32  mMarkerID;               /* 0x434 -- uniqueID of the STARBASE marker (daStarBase_c) this star is linked to */
     /* Set by Collect, CollectNoPose and OnTurnIntoEgg. */
     daPly_c *mPlayer;             /* 0x438 -- the player that touched it */
@@ -141,7 +154,7 @@ struct daStar_c : dEnemyBase_c {
         s32  mState;              /* 0x440 -- a State */
         s32  unk_440;
     };
-    s32  mHomeState;              /* 0x444 -- the State chosen at init; ReturnToHome returns to it; 9 = placed by a marker */
+    s32 mHomeState; /* 0x444 -- the State chosen at init; ReturnToHome returns to it; 9 = placed by a marker */
     s32  mSafePosX;               /* 0x448 -- last position it rested at; the aim point when it lands on a bad floor */
     s32  mSafePosY;               /* 0x44c */
     s32  mSafePosZ;               /* 0x450 */
@@ -158,27 +171,27 @@ struct daStar_c : dEnemyBase_c {
     s32  mInitPosY;               /* 0x47c */
     s32  mInitPosZ;               /* 0x480 */
     s32  mMinPosY;                /* 0x484 -- STAR_CAP_MIN_POS_Y copied at init: below it the star is out of bounds */
-    s32  mWaterHeight;            /* 0x488 -- the water surface found by UpdateWater */
-    s32  mSoundObjSoundID;        /* 0x48c -- the sound id PickCollectSoundID picked; SpawnCollectSoundObj hands it to the sound object's mSoundID */
+    s32 mWaterHeight;             /* 0x488 -- the water surface found by UpdateWater */
+    s32 mSoundObjSoundID; /* 0x48c -- the sound id PickCollectSoundID picked; SpawnCollectSoundObj hands it to the sound object's mSoundID */
     u16  mSeqTimer;               /* 0x490 -- counts frames of the collection sequence */
     u16  mAppearTimer;            /* 0x492 -- KIND_6: frames spent appearing / disappearing */
-    u16  mSparkleTimer;           /* 0x494 -- frames left of the trail effect UpdateSparkleEffect spawns */
-    u16  mCamSeq;                 /* 0x496 -- camera cutscene step (StepCameraCutscene): 0xffff = none; 0/1 and 0x64/0x65 start and hold, 0x1b6 and 0x1d6 count up to 0x1f4 (restore) and 0x1f5 (end) */
+    u16 mSparkleTimer; /* 0x494 -- frames left of the trail effect UpdateSparkleEffect spawns */
+    u16 mCamSeq; /* 0x496 -- camera cutscene step (StepCameraCutscene): 0xffff = none; 0/1 and 0x64/0x65 start and hold, 0x1b6 and 0x1d6 count up to 0x1f4 (restore) and 0x1f5 (end) */
     s8   mMarkerSlot;             /* 0x498 -- index into STAR_MARKERS from AddStarMarker, -1 = none */
     s8   mSavedAreaId;            /* 0x499 -- mAreaId at init; the cutscene gives it back */
     u8   mMarkerType;             /* 0x49a -- type passed to SetStarMarker: 1 silver star, 2 power star, 3 power star already collected, 0 = decided by mStarFlags */
     u8   mTalkStep;               /* 0x49b -- STATE_SAVE_MESSAGE's step */
-    u8   mSoundObjMode;           /* 0x49c -- 0 none, 1 or 2; at the end StopCollectSoundObj zeroes the sound object's mCounterLimit (1) or destroys it (2) */
+    u8 mSoundObjMode; /* 0x49c -- 0 none, 1 or 2; at the end StopCollectSoundObj zeroes the sound object's mCounterLimit (1) or destroys it (2) */
     union {
         u8   mStarID;             /* 0x49d -- param1 & 0xf */
         u8   unk_49d;
     };
-    u8   mSoundObj6State;                 /* 0x49e -- 0xff until SpawnSoundObj6 spawns sound object 6, then 0x78 */
+    u8 mSoundObj6State; /* 0x49e -- 0xff until SpawnSoundObj6 spawns sound object 6, then 0x78 */
     union {
         u8   mInIceBlock;         /* 0x49f -- an ICE_BLOCK_LL was within 200.0 at spawn (daObjIceBlock clears it) */
         u8   unk_49f;
     };
-    u8   mIceChecked;             /* 0x4a0 -- CheckIceBlock has already looked for that ice block */
+    u8 mIceChecked;               /* 0x4a0 -- CheckIceBlock has already looked for that ice block */
     u8   mMusicTimer;             /* 0x4a1 -- frames of the KIND_9 music-volume hold */
     union {
         u16  mStarFlags;          /* 0x4a2 -- StarFlag bits */
@@ -212,13 +225,13 @@ struct daStar_c : dEnemyBase_c {
     void SpawnCollectSoundObj(int arg);
     void CheckIceBlock();
     void CollectNoPose(int arg);
-    void SeekNewMarker(char* a, int gate);
+    void SeekNewMarker(char *a, int gate);
     u8 PickTalkState();
     void RelinkMarker();
     void LinkRandomFreeMarker();
     void StepCameraCutscene();
-    void PlaceCameraOnRing(void* cam);
-    int PlaceCameraAtStarCamera(void* cam);
+    void PlaceCameraOnRing(void *cam);
+    int PlaceCameraAtStarCamera(void *cam);
     void ProbeGround();
     int RearmSoundObj6();
     void SpawnSoundObj6();
@@ -238,7 +251,7 @@ struct daStar_c : dEnemyBase_c {
     volatile unsigned int CheckBounds();
     int MaybeAddStarMarker();
     void CollectByEgg(int a);
-    int Collect(void* p);
+    int Collect(void *p);
     void CheckPickup();
     void SetDefaultGravity();
     void StopMotion();
