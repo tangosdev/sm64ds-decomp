@@ -146,8 +146,8 @@ void func_0203d738(void);
    compiler destroys as a member. The tracker and the base chain are the
    inlined dScMgSingle3DBase_c destructor. */
 dScMgCup_c::~dScMgCup_c() {
-    __cxa_vec_cleanup(mCup, 3, 8, (void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mFx, 0x20, 0x18, (void *)CupFx_ElemDtor);
+    __cxa_vec_cleanup(mCup, 3, 8, (dtor_t)(void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)(void *)CupFx_ElemDtor);
 }
 
 extern "C" void CupFx_ElemDtor(void) {}
