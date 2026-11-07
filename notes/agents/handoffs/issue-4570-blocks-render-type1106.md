@@ -5,7 +5,7 @@ This document describes this commit. The queue records its immutable output SHA.
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: https://github.com/tangosdev/sm64ds-decomp/issues/4570; `issue-4570-blocks-render-type1106`; producer stage; session `codex-blocks-render-1106-retry`; Codex.
-- Source branch and previous accepted input SHA: `audit/blocks-render1106`; input `ce959c55727fad6c5db2e3c38ed6435f222f7700`.
+- Producer branch recorded in the queue; previous accepted input SHA: `ce959c55727fad6c5db2e3c38ed6435f222f7700`.
 - Original source base SHA and installed workflow/tool SHA: both `ce959c55727fad6c5db2e3c38ed6435f222f7700`.
 - Separate evidence commits and required artifacts in this commit: none; proof commands and results are recorded below.
 - Next action, responsible role and blockers: independent verifier should verify this exact commit, including the two `defined_symbol_renames` rekeys in the reserved ov098 manifest; then integrator review. No known blocker.
