@@ -866,7 +866,7 @@
     "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd": "tangosdev",
-    "src/engine/collision/d_bg_w_kc_mbg.cpp#func_02039db8": "tangosdev",
+    "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg21LocalToWorldDirectionERK7Vector3RS0_": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#func_02039e18": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#func_02039e30": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#func_02039e48": "tangosdev",

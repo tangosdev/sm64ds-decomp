@@ -74,6 +74,9 @@ struct dBgW_KcMbg : dBgW_Kc {
     void WorldToLocalPosition(const Vector3 &, Vector3 &);
     void LocalToWorldPosition(const Vector3 &, Vector3 &);
     void WorldToLocalDirection(const Vector3 &, Vector3 &);
+    /* Inferred name: the mirror of WorldToLocalDirection, rotating by `mat`
+       with its translation dropped. Both GetNormal overrides use it. */
+    void LocalToWorldDirection(const Vector3 &, Vector3 &);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
