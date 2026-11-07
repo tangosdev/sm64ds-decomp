@@ -221,7 +221,7 @@ extern void *Ov004_LoadFileByPath(void *p);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
 
-extern void __cxa_vec_ctor(void *p, unsigned int a, unsigned int b, void *cb1, void *cb2);
+extern void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
 extern void SetSubBg0Offset(int x, int y);
 extern void func_0203d738(void);
 extern char sSmartballPathBuf[];
@@ -396,10 +396,10 @@ static inline void CallObjectConstruct(cMgSmartball_object_c *c, char *a1, int a
    `operator delete`, which is why nothing below mentions a heap. Nobody writes
    D0; declaring the destructor is enough. */
 dScMgSmartball_c::~dScMgSmartball_c() {
-    __cxa_vec_cleanup(mSparks, 0x40, 0x24, (void *)SmartballObj_ElemDtor);
-    __cxa_vec_cleanup(mDustVel, 0x10, 8, (void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mDustPos, 0x10, 8, (void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mPopupPos, 5, 8, (void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mSparks, 0x40, 0x24, (dtor_t)SmartballObj_ElemDtor);
+    __cxa_vec_cleanup(mDustVel, 0x10, 8, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mDustPos, 0x10, 8, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mPopupPos, 5, 8, (dtor_t)NullDestructor_0203d47c);
 }
 // @symbol SmartballObj_ElemDtor
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -1623,8 +1623,8 @@ cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, char 
     tmp[1] = src->y;
     CallObjectConstruct(c, a1, a2, tmp);
     c->~cMgSmartball_slot_c();
-    __cxa_vec_ctor(c->mReelOffset, 3, 8, func_0203d738, NullDestructor_0203d47c);
-    __cxa_vec_ctor(c->mReelVel, 3, 8, func_0203d738, NullDestructor_0203d47c);
+    __cxa_vec_ctor(c->mReelOffset, 3, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(c->mReelVel, 3, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
     c->mRadius = 0x28000;
     return c;
 }
@@ -4777,9 +4777,9 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *p = (int)&_ZTV19cMgSmartball_slot_c[2];
                 __cxa_vec_cleanup(((cMgSmartball_slot_c *)p)->mReelVel, 3, 8,
-                                  NullDestructor_0203d47c);
+                                  (dtor_t)NullDestructor_0203d47c);
                 __cxa_vec_cleanup(((cMgSmartball_slot_c *)p)->mReelOffset, 3, 8,
-                                  NullDestructor_0203d47c);
+                                  (dtor_t)NullDestructor_0203d47c);
                 *(int volatile *)p = (int)&_ZTV21cMgSmartball_object_c[2];
                 Memory::operator_delete2(p);
             }
@@ -4878,7 +4878,7 @@ void dScMgSmartball_c::SpawnObjects() {
     mPropellerCount = 0;
     mPushSwitchCount = 0;
 
-    __cxa_vec_ctor(pos, 0x19, 8, func_0203d738, NullDestructor_0203d47c);
+    __cxa_vec_ctor(pos, 0x19, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
 
     {
         int mask = 0x3ff;
@@ -5414,7 +5414,7 @@ void dScMgSmartball_c::SpawnObjects() {
     mResultSlideX = 0x100;
     SetSubBg0Offset(mResultSlideX, 0);
     ResetSparks();
-    __cxa_vec_cleanup(pos, 0x19, 8, NullDestructor_0203d47c);
+    __cxa_vec_cleanup(pos, 0x19, 8, (dtor_t)NullDestructor_0203d47c);
 }
 
 #pragma pop
@@ -6387,9 +6387,9 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *p = (int)&_ZTV19cMgSmartball_slot_c[2];
                 __cxa_vec_cleanup(((cMgSmartball_slot_c *)p)->mReelVel, 3, 8,
-                                  NullDestructor_0203d47c);
+                                  (dtor_t)NullDestructor_0203d47c);
                 __cxa_vec_cleanup(((cMgSmartball_slot_c *)p)->mReelOffset, 3, 8,
-                                  NullDestructor_0203d47c);
+                                  (dtor_t)NullDestructor_0203d47c);
                 *(int volatile *)p = (int)&_ZTV21cMgSmartball_object_c[2];
                 Memory::operator_delete2(p);
             }
@@ -6430,11 +6430,11 @@ extern "C" void SmartballObj_ElemCtor(void);
 /* Inline, so the factory below holds it: dScMgBase_c's C2 and this class's
    vtable are the compiler's, then the four arrays the destructor tears down. */
 inline dScMgSmartball_c::dScMgSmartball_c() {
-    __cxa_vec_ctor(mPopupPos, 5, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-    __cxa_vec_ctor(mDustPos, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-    __cxa_vec_ctor(mDustVel, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-    __cxa_vec_ctor(mSparks, 0x40, 0x24, (void *)SmartballObj_ElemCtor,
-                   (void *)SmartballObj_ElemDtor);
+    __cxa_vec_ctor(mPopupPos, 5, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mDustPos, 0x10, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mDustVel, 0x10, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
+    __cxa_vec_ctor(mSparks, 0x40, 0x24, (ctor_t)SmartballObj_ElemCtor,
+                   (dtor_t)SmartballObj_ElemDtor);
 }
 
 // @symbol dScMgSmartball_c_classInit
