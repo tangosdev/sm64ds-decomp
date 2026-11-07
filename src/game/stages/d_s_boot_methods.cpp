@@ -38,7 +38,9 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 
 extern "C" {
 extern dFdBrightness_c *gSceneFader;
-extern u8 data_0209f1e8;
+/* Whether the boot job InitResources starts has finished. d_s_boot's own
+   .bss; only InitResources and Behavior read it. */
+extern u8 sBootJobDone;
 extern PadData data_020a0e58[];
 extern int data_0208ee44;
 extern u8 gSubScreenLayers;
@@ -72,8 +74,10 @@ enum BootMenuState {
  * BG/OBJ on both screens, brings up a text-mode main BG and three sub BGs,
  * decompresses the same 0x020918c4 tile set into both screens' character
  * memory with the 0x020914e0 palette, starts the boot countdown at 0x3c
- * frames, and starts the job func_0201a244(func_0201a2f8, ...) whose handle
- * lands in data_0209f1e8 (Behavior polls it).
+ * frames, and starts the background job func_0201a244(func_0201a2f8, ...).
+ * Its return value, 1 when the job already ran synchronously, seeds
+ * sBootJobDone; Behavior polls func_0201a1bc until the job has finished and
+ * then loads the message text.
  *
  * The register writes use include/nitro/hw/registers.h's names (DISPCNT,
  * POWCNT1 and the BGnCNT of both engines); the read-modify-write masks are
@@ -142,7 +146,7 @@ s32 dScBoot_c::InitResources() {
 
     gSceneColorFader.color = 0x7fff;
     Sound::Play2D(4, 0);
-    data_0209f1e8 = (u8)func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
+    sBootJobDone = (u8)func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
     return 1;
 }
 
@@ -161,9 +165,9 @@ s32 dScBoot_c::Behavior() {
     keysHeld = data_020a0e58[gActivePlayerSlot].held;
     keysPressed = data_020a0e58[gActivePlayerSlot].pressed;
 
-    if (data_0209f1e8 == 0) {
-        data_0209f1e8 = (u8)func_0201a1bc();
-        if (data_0209f1e8 == 0) {
+    if (sBootJobDone == 0) {
+        sBootJobDone = (u8)func_0201a1bc();
+        if (sBootJobDone == 0) {
             if ((int)*(volatile u16 *)&mFadeTimer > (int)(frameStep * 2)) {
                 *(u16 *)LADR(&mFadeTimer) -= frameStep;
             }

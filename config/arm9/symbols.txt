@@ -4723,7 +4723,7 @@ gSoftResetDisabled kind:bss addr:0x0209f1d8
 sSoftResetComboHeld kind:bss addr:0x0209f1dc
 gSoftResetPending kind:bss addr:0x0209f1e0
 gSoftResetFader kind:bss addr:0x0209f1e4
-data_0209f1e8 kind:bss addr:0x0209f1e8
+sBootJobDone kind:bss addr:0x0209f1e8
 sNextPauseState kind:bss addr:0x0209f1ec
 gNextStarId kind:bss addr:0x0209f1f0
 data_0209f1f4 kind:bss addr:0x0209f1f4
