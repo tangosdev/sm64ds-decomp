@@ -8030,3 +8030,5 @@ arm9	0x0200d8c8	func_0200d8c8	_ZN9dCamera_c13func_0200d8c8EPK7Vector3i	free came
 arm9	0x02007c14	func_02007c14	Vec3fSetDistAndAngle	dCamera_c helper: Super Mario 64's vec3f_set_dist_and_angle in fixed point (result first, origin second)
 arm9	0x02007c9c	func_02007c9c	Vec3fGetDistAndAngle	dCamera_c helper: Super Mario 64's vec3f_get_dist_and_angle in fixed point
 arm9	0x02007d0c	func_02007d0c	ApproachVec3fAsymptotic	dCamera_c helper: Super Mario 64's approach_vec3f_asymptotic in fixed point, three per-axis fractions
+arm9	0x02007698	func_02007698	CutsceneKeyDanceJumpCvar	dCamera_c script op 0x1b: Super Mario 64's cutscene_key_dance_jump_cvar; the key dance's four records carry the N64 jump_closeup/lower_left/above/last offsets exactly
+arm9	0x02007870	func_02007870	CutsceneDanceShakeFov	dCamera_c script op 0x18: Super Mario 64's cutscene_dance_shake_fov; each dance script passes its N64 *_shake_fov values as operands
