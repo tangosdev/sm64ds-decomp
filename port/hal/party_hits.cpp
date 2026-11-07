@@ -42,6 +42,7 @@ void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *state);
 int _ZN6Player7IsStateERNS_5StateE(void *self, void *state);
 int _ZN6Player7TryGrabER8dActor_c(void *self, void *actor);   // holder->TryGrab(victim)
 int _ZN6Player9DropActorEv(void *holder);
+void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);   // LAB kill held (YOSHIPWR1)
 extern unsigned char data_ov002_02110064[];   // St_InYoshiMouth
 extern unsigned char data_ov002_0211016c[];   // St_Grabbed
 extern unsigned char data_ov002_02110604[];   // St_SwingPlayer
@@ -142,6 +143,9 @@ struct G {
     unsigned held_sent = 0, held_recv = 0, held_pins = 0, held_miss = 0, held_drop = 0, held_owned = 0;
     unsigned mouth_miss = 0, eats_unstepped = 0;
     bool lab_drop_nothing = false;   // LAB (TONGUEFIX2, SM64DS_PHIT_LAB_DROP_NOTHING=1): my one-shot "nothing" held message is not sent (a lost datagram)
+    // LAB (YOSHIPWR1, SM64DS_PHIT_LAB_KILL_HELD=<frames>): this many frames after I pin my copy of a friend's mouthful, my copy
+    // dies through KillAndTrackInDeathTable (what my stomp would do), so its death bit reaches the eater while he still holds it
+    int lab_kill_held = 0; int lab_kill_slot = -1;
     unsigned lab_drop_until = 0;
     unsigned att_claims = 0;         // TONGUEFIX2: claims I sent at a friend the attach book says sits in a mouth / hands
     unsigned att_held_back = 0;      // TONGUEFIX2: claims not sent because the friend is held (the victim refuses them all)
@@ -197,6 +201,7 @@ void read_env() {
     g.tongue_old = env_flag(std::getenv("SM64DS_PHIT_TONGUE_OLD"), false);
     g.held_off = !env_flag(std::getenv("SM64DS_PHIT_HELD"), true);
     g.lab_drop_nothing = env_flag(std::getenv("SM64DS_PHIT_LAB_DROP_NOTHING"), false);
+    if (const char *e = std::getenv("SM64DS_PHIT_LAB_KILL_HELD")) g.lab_kill_held = std::atoi(e);
     r.check_eat_rearm = g.tongue_old || env_flag(std::getenv("SM64DS_PHIT_EAT_REARM"), false);
     // ROMSTATE9: the victim's own console runs the ROM's real St_InYoshiMouth (eat) and St_Grabbed / thrown (carry) by default;
     // SM64DS_ROOM_ROMSTATE=0 falls back to INTERACT9's synthetic holds (SM64DS_ROOM_EATVIS=0/1 still picks the eat alone)
@@ -577,6 +582,12 @@ void held_after_follow_impl() {
         *(short *)(a + 0x8e) = (short)yaw;
         if (h.kind == 1 && h.cls == kClsBobomb) held_draw_bobomb(h, a, yaw);   // FRIENDVIS1
         ++g.held_pins;
+        if (g.lab_kill_held > 0 && h.kind == 2 && h.slot != g.lab_kill_slot && g.frame - h.since >= (unsigned)g.lab_kill_held) {
+            g.lab_kill_slot = h.slot;
+            std::fprintf(stderr, "[phit] LAB kill held: my copy of class %d slot %d in seat %d's mouth dies here (%u frames into his hold)\n",
+                         h.cls, h.slot, seat, g.frame - h.since);
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(a);
+        }
     }
 }
 
