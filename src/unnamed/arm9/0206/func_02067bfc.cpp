@@ -26,7 +26,7 @@ typedef struct {
 } Args;
 
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern void FS_InitFile(int *s);
+extern void FS_InitFile(FSFile *p_file);
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, unsigned int image_top,
                              unsigned int image_bottom, unsigned int file_index);
@@ -69,7 +69,7 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
             if (ctx->f80 == 0) {
                 ctx->f80 = 0x1000000;
             }
-            FS_InitFile((int *)&file);
+            FS_InitFile(&file);
             node = FS_FindArchive(data_0209a080, 3);
             FS_OpenFileDirect((char *)&file, node, 0, ctx->f80 + 0x88, -1);
             a = &file;

@@ -93,7 +93,7 @@ struct CLPS_Block;
 
 extern "C" {
 /* ---- this TU ---- */
-void func_ov079_02123d4c(int *out, daBtn_c *self);
+void func_ov079_02123d4c(Vector3 *out, daBtn_c *self);
 void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *other);
 
 /* ---- arm9 / ov002 ---- */
@@ -922,10 +922,10 @@ void daBtn_c::func_ov079_02125240(){
     mState = 6;
     func_020393c4(&mMovingMeshCollider, func_ov079_0212522c);
     if (mIsKing != 0) {
-        func_ov079_02123d4c((int *)&a, this);
+        func_ov079_02123d4c(&a, this);
         func_0200fa04(this, &a, 0);
     } else {
-        func_ov079_02123d4c((int *)&b, this);
+        func_ov079_02123d4c(&b, this);
         LandingDustAt(b, false);
     }
 }
@@ -1280,7 +1280,7 @@ void daBtn_c::func_ov079_021246dc()
             func_0201267c(0xc6, &mCamSpacePos);
             Sound::StopLoadedMusic_Layer3();
             func_02011cfc();
-            func_ov079_02123d4c((int *)&v, this);
+            func_ov079_02123d4c(&v, this);
             v.y += 0x50000;
             dp.x = v.x;
             dp.y = v.y;
@@ -1296,7 +1296,7 @@ void daBtn_c::func_ov079_021246dc()
         }
     } else {
         func_0201267c(0xc6, &mCamSpacePos);
-        func_ov079_02123d4c((int *)&v2, this);
+        func_ov079_02123d4c(&v2, this);
         v2.y += 0x28000;
         dp2.x = v2.x;
         dp2.y = v2.y;
@@ -1571,7 +1571,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePosX);
     Vector3 pos;
-    func_ov079_02123d4c((int *)&pos, this);
+    func_ov079_02123d4c(&pos, this);
     Vector3 dust;
     pos.y = pos.y + 0x28000;
     dust.x = pos.x;
@@ -1592,10 +1592,10 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
    gives the named local its own stack home (no NRVO, +0xc); the (out, this)
    free form is the byte-exact shape, and the callers that need the member
    view reach it through vecret below. */
-extern "C" void func_ov079_02123d4c(int* out, daBtn_c *self){
-    out[0] = self->mPosX;
-    out[1] = self->mPosY;
-    out[2] = self->mPosZ;
+extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
+    out->x = self->mPosX;
+    out->y = self->mPosY;
+    out->z = self->mPosZ;
     {
         int m;
         int d;
@@ -1604,12 +1604,12 @@ extern "C" void func_ov079_02123d4c(int* out, daBtn_c *self){
         } else {
             m = (s16)data_02082214[((unsigned short)self->mAngleX >> 4) * 2] * (s16)0xc8;
         }
-        out[0] = out[0] + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2]);
+        out->x = out->x + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2]);
         d = self->OnAimedAtWithEgg();
         {
-            out[1] += d;
-            out[2] =
-                out[2] + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2 + 1]);
+            out->y += d;
+            out->z =
+                out->z + FX_MUL(m, data_02082214[((unsigned short)self->mAngleY >> 4) * 2 + 1]);
         }
     }
 }

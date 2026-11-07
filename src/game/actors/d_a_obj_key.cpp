@@ -213,7 +213,8 @@ extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
 extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
+/* local extern: math/MtxStack.h clashes with this TU's void * matrix externs. */
+extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
 /* local extern: named parameters keep this TU's compiler-numbered aliases. */
 extern void SubVec3(Vector3 *d, Vector3 *a, Vector3 *b);
