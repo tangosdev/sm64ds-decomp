@@ -127,7 +127,8 @@ extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(unsigned int id, const Vector3 *pos);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
-extern void MulVec3Mat4x3(void *in, void *m, void *out);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
