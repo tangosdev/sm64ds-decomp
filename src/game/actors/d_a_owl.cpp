@@ -548,17 +548,13 @@ void daOwl_c::func_ov094_021361d8()
  * model matrix. */
 void daOwl_c::func_ov094_021362e0()
 {
-    VecFx32 v;
     daPly_c *m;
-    int z = 0;
     if (mRider == 0)
         return;
-    *(volatile Fix12i *)&v.x = z;
-    v.y = z;
-    v.z = z;
+    Vector3 v(0, 0, 0);
     m = mRider;
     data_020a0e68 = *m->mCarryMatrix;
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, z, z);
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3000, 0, 0);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x6000, 0x1000, 0x4000);
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
@@ -567,7 +563,7 @@ void daOwl_c::func_ov094_021362e0()
     mPosY = v.y << 3;
     mPosZ = v.z << 3;
     mPrevAngleY = mRider->mAngleY;
-    mPrevAngleX = (s16)z;
+    mPrevAngleX = 0;
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
