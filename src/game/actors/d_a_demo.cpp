@@ -4071,7 +4071,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
     int b = in[1] << 8;
     int t;
     if (a != 0 && sel == gKuppaScriptFrame) {
-        register Vector3 *p = ((param_c &)*(simpleModel_c *)this->mModel).mScale;
+        Vector3 *p = ((param_c &)*(simpleModel_c *)this->mModel).mScale;
         p->x = -0x5d00;
         p->y = 0x1800;
         p->z = -0x16000;
