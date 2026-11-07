@@ -26,6 +26,7 @@
 #include "cstd.h"
 #include "CP15.h"
 #include "nnsys/snd/player.h"
+#include "nitro/os/message.h"
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
 
@@ -339,7 +340,7 @@ extern int data_020a5538[];
 extern struct E data_020a5578[];
 extern int data_020a55f8;
 extern int data_020a55fc;
-extern int data_020a5600;
+extern OSMessageQueue data_020a5600;
 extern void *data_020a5614[]; /* the message array of data_020a5600 */
 extern struct T data_020a5634;
 extern OSThread data_020a5684;
@@ -349,9 +350,6 @@ extern NestedHeapIterator data_020a5bbc;
 extern NestedHeapIterator data_020a5bc8;
 extern struct Obj_205212c data_020a5bd4[];
 extern void func_0204ebb8(void *alloc);
-extern int OS_ReceiveMessage(void *mq, void **msg, int flags);
-extern int OS_SendMessage(void *mq, void *msg, int flags);
-extern void OS_InitMessageQueue(void *mq, void **msgArray, int msgCount);
 extern void SND_Init(void);
 extern void SND_SetOutputSelector(s32 left, s32 right, s32 channel1, s32 channel3);
 extern void SND_InvalidateWaveData(const void *start, const void *end);
