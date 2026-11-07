@@ -445,23 +445,18 @@ bool going(const char *a) { return *(const unsigned char *)(a + 0x0f) || *(const
 // itself broken and comes back from its switch: not watched.
 bool breakable_block(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 || cls == 46; }
 enum : int { kGoneMax = 32, kGonePushes = 4 };
-struct Gone { uint16_t slot, cls; bool room; };   // room: came from the room list at the start of this visit
+struct Gone { uint16_t slot, cls; };
 Gone g_gone[kGoneMax]; int g_gone_n = 0;
 unsigned g_gone_push_at = 0; int g_gone_push_left = 0;
-void gone_note(int slot, unsigned cls, bool room = false) {
-    for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) { if (!room) g_gone[i].room = false; return; }
-    if (g_gone_n < kGoneMax) g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls, room};
+void gone_note(int slot, unsigned cls) {
+    for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) return;
+    if (g_gone_n < kGoneMax) g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls};
 }
-// A block with something inside (the star block's star, a tag linked at +0x328: a silver star, a mushroom, a shell) comes back
-// on the next visit on the cartridge, and so does its item: only blocks with nothing inside stay on the room list.
-bool block_holds_item(const char *a) {
-    const unsigned cls = *(const unsigned short *)(a + 0x0c);
-    if (cls == 17 && *(const unsigned char *)(a + 0x08) != 0xff) return true;
-    return *(void *const *)(a + 0x328) != nullptr;
-}
-// The ROOM keeps them too, per (level, act), for the whole coop session: the breaker usually drops straight through the
-// hole he opened, so by the time his friend walks in nobody is left in the level to tell him. Every console stores every
-// break it hears about (its own group's or another level's) and starts each level visit with that level's entries.
+// The ROOM keeps them too, per (level, act): the breaker usually drops straight through the hole he opened, so by the time
+// his friend walks in nobody is left in the level to tell him. Every console stores every break it hears about (its own
+// group's or another level's) and starts each level visit with that level's entries. They last only while somebody in the
+// room has that level loaded (room_forget below): once it has been empty for a moment every console forgets them, and the
+// next visit finds every block whole, star blocks and silver star blocks with their items, as on the cartridge.
 enum : int { kRoomGoneMax = 96 };
 struct RoomGone { int16_t level; uint8_t act; uint16_t slot, cls; };
 RoomGone g_room_gone[kRoomGoneMax]; int g_room_gone_n = 0;
@@ -472,18 +467,68 @@ void room_gone_note(const CoopKey &k, int slot, unsigned cls) {
     }
     if (g_room_gone_n < kRoomGoneMax) g_room_gone[g_room_gone_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, (uint16_t)cls};
 }
-void room_gone_drop(const CoopKey &k, int slot, unsigned cls) {
-    for (int i = 0; i < g_room_gone_n; ++i) {
-        const RoomGone &r = g_room_gone[i];
-        if (r.level == k.level && r.act == (uint8_t)k.act && r.slot == slot && r.cls == cls) { g_room_gone[i] = g_room_gone[--g_room_gone_n]; return; }
+// A seat other than mine with (level, act) loaded, from its fresh presence (a seat that dropped out goes stale and stops
+// counting), or -1.
+int room_seat_in(const CoopKey &k) {
+    for (int s = 0; s < kCoopSeats; ++s) {
+        if (s == g_my) continue;
+        HubPresence p; unsigned age = 0;
+        if (hub_presence_get(s, &p, &age) && p.in_level() && age < kPresenceMs && p.level == k.level && p.act == k.act) return s;
     }
+    return -1;
 }
 void room_gone_load(const CoopKey &k) {   // a new level visit: its broken blocks onto the group list
     for (int i = 0; i < g_room_gone_n; ++i) {
         const RoomGone &r = g_room_gone[i];
-        if (r.level == k.level && r.act == (uint8_t)k.act) gone_note(r.slot, r.cls, true);
+        if (r.level == k.level && r.act == (uint8_t)k.act) gone_note(r.slot, r.cls);
     }
-    if (g_gone_n && g_log) std::fprintf(stderr, "[coop] block list: level %d act %d starts with %d broken block(s) from the room\n", k.level, k.act, g_gone_n);
+    if (g_gone_n) {   // a death or a reload while a friend stayed: the level never emptied, so its blocks stay broken
+        const int s = room_seat_in(k);
+        if (s >= 0) std::fprintf(stderr, "[coop] block list: level %d act %d starts with %d broken block(s) from the room (seat %d still has it"
+                                         " loaded, it never emptied) wall=%lld\n", k.level, k.act, g_gone_n, s, wall_ms());
+        else std::fprintf(stderr, "[coop] block list: level %d act %d starts with %d broken block(s) from the room wall=%lld\n", k.level, k.act,
+                          g_gone_n, wall_ms());
+    }
+}
+
+// Tango's rule: the room remembers a level's broken blocks only while somebody has that level loaded,
+// and the next visit after it emptied starts the way the cartridge builds it. Every console judges it alone from what it
+// already has (its own level and every seat's presence), so a console that left earlier forgets too, a seat that drops out
+// stops counting when its presence goes stale, and nothing new goes on the wire. kRoomEmptyMs of nobody rides out a
+// presence packet or two going missing. A stale push cannot bring entries back: the list is only sent to a member joining a
+// group, and a group has somebody in it.
+enum : unsigned { kRoomEmptyMs = 3000, kRoomEmptyMax = 16 };
+struct RoomEmpty { CoopKey k; unsigned since; };
+RoomEmpty g_room_empty[kRoomEmptyMax]; int g_room_empty_n = 0;
+void room_forget_key(const CoopKey &k) {
+    int blocks = 0;
+    for (int i = 0; i < g_room_gone_n; ++i)
+        if (g_room_gone[i].level == k.level && g_room_gone[i].act == (uint8_t)k.act) { g_room_gone[i--] = g_room_gone[--g_room_gone_n]; ++blocks; }
+    std::fprintf(stderr, "[coop] block list: nobody in the room has level %d act %d loaded: forgot %d broken block(s),"
+                         " the next visit starts whole wall=%lld\n", k.level, k.act, blocks, wall_ms());
+}
+void room_forget(unsigned now) {
+    CoopKey keys[kRoomGoneMax]; int nk = 0;
+    for (int i = 0; i < g_room_gone_n; ++i) {
+        const CoopKey k(g_room_gone[i].level, g_room_gone[i].act);
+        bool seen = false;
+        for (int j = 0; j < nk && !seen; ++j) seen = keys[j] == k;
+        if (!seen) keys[nk++] = k;
+    }
+    for (int i = 0; i < g_room_empty_n; ++i) {   // a level that has nothing left to forget, or has somebody again
+        bool listed = false;
+        for (int j = 0; j < nk && !listed; ++j) listed = keys[j] == g_room_empty[i].k;
+        if (!listed || g_room_empty[i].k == g_key || room_seat_in(g_room_empty[i].k) >= 0) g_room_empty[i--] = g_room_empty[--g_room_empty_n];
+    }
+    for (int j = 0; j < nk; ++j) {
+        if (keys[j] == g_key || room_seat_in(keys[j]) >= 0) continue;
+        int e = -1;
+        for (int i = 0; i < g_room_empty_n && e < 0; ++i) if (g_room_empty[i].k == keys[j]) e = i;
+        if (e < 0) { if (g_room_empty_n < (int)kRoomEmptyMax) g_room_empty[g_room_empty_n++] = {keys[j], now}; continue; }
+        if ((unsigned)(now - g_room_empty[e].since) < kRoomEmptyMs) continue;
+        room_forget_key(keys[j]);
+        g_room_empty[e] = g_room_empty[--g_room_empty_n];
+    }
 }
 
 // Every est frame, after step 1 took this frame's bits: what is in my mouth, and how a mouthful left it.
@@ -552,7 +597,7 @@ void send_swallows(unsigned now) {
 // bit, not in my mouth and not removed here by a friend's message, is told to the group like a swallow. A level teardown
 // marks dozens of placed actors in one frame: that frame (more than kCapMass slotted actors gone) sends nothing.
 enum : int { kCapMax = 64, kCapMass = 4 };
-struct CapW { char *a; uint16_t slot, cls; bool held; };
+struct CapW { char *a; uint16_t slot, cls; };
 CapW g_cap[kCapMax]; int g_cap_n = 0; unsigned g_cap_frame = 0; int g_cap_slotted = -1;
 uint16_t g_sw_applied[kSwOutMax]; int g_sw_applied_n = 0;   // slots a friend's message removed here: never echoed
 bool capped_goomba(const char *a) {
@@ -568,8 +613,7 @@ void watch_capped(unsigned now) {
         if (slot < 0 || slot >= kCoopSlots || going(a) || is_player_ptr(a)) continue;
         ++slotted;
         if (n < kCapMax && (capped_goomba(a) || breakable_block(*(const unsigned short *)(a + 0x0c))))
-            cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c),
-                        breakable_block(*(const unsigned short *)(a + 0x0c)) && block_holds_item(a)};
+            cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c)};
     }
     const bool fresh = g_cap_slotted >= 0 && g_cap_frame + 1 == g_est_frames;
     const bool mass = fresh && g_cap_slotted - slotted > kCapMass;
@@ -584,7 +628,7 @@ void watch_capped(unsigned now) {
         for (int k = 0; k < g_sw_applied_n && !skip; ++k) skip = g_sw_applied[k] == o.slot;
         for (int k = 0; k < g_sw_n && !skip; ++k) skip = g_sw_out[k].slot == o.slot;
         if (!skip && g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {o.slot, o.cls, 0, now};
-        if (!bit && breakable_block(o.cls)) { gone_note(slot, o.cls); if (!o.held) room_gone_note(g_key, slot, o.cls); }
+        if (!bit && breakable_block(o.cls)) { gone_note(slot, o.cls); room_gone_note(g_key, slot, o.cls); }
         std::fprintf(stderr, "[coop] %s watch: class %u slot %d went away here %s wall=%lld\n",
                      breakable_block(o.cls) ? "block" : "capped", (unsigned)o.cls, slot,
                      bit ? "with a death bit (the death table carries it)" : skip ? "(swallow or a friend's message: not told again)"
@@ -604,10 +648,7 @@ void watch_capped(unsigned now) {
 // capped one, KillAndTrackInDeathTable otherwise). Any other class: MarkForDestruction, what every OnTurnIntoEgg ends in.
 void apply_swallow(int seat, int slot, unsigned cls) {
     char *a = live_slot(cls, slot);
-    if (breakable_block(cls)) {   // kept even with no copy standing yet; the room list only for a block with nothing inside
-        gone_note(slot, cls);
-        if (!a || !block_holds_item(a)) room_gone_note(g_key, slot, cls);
-    }
+    if (breakable_block(cls)) { gone_note(slot, cls); room_gone_note(g_key, slot, cls); }   // kept even with no copy standing yet
     if (!a || going(a) || is_player_ptr(a)) {
         if (g_log) std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d, no live copy here\n", seat, cls, slot);
         return;
@@ -635,13 +676,6 @@ void gone_apply() {
     for (int i = 0; i < g_gone_n; ++i) {
         char *a = live_slot(g_gone[i].cls, g_gone[i].slot);
         if (!a || going(a) || is_player_ptr(a)) continue;
-        if (g_gone[i].room && block_holds_item(a)) {   // heard from another level: it holds an item, so it is back this visit
-            std::fprintf(stderr, "[coop] block list: class %u slot %d holds an item, back this visit as on the cartridge wall=%lld\n",
-                         (unsigned)g_gone[i].cls, (int)g_gone[i].slot, wall_ms());
-            room_gone_drop(g_key, (int)g_gone[i].slot, (unsigned)g_gone[i].cls);
-            g_gone[i--] = g_gone[--g_gone_n];
-            continue;
-        }
         _ZN7fBase_c18MarkForDestructionEv(a);
         if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = g_gone[i].slot;
         else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = g_gone[i].slot; }
@@ -1358,6 +1392,7 @@ void tick_est(unsigned now) {
 // room can never match).
 void coop_world_session_reset() {
     g_room_gone_n = 0;   // COOPSYNC1: a new room starts with every block whole
+    g_room_empty_n = 0;
     g_env_read = false;
     g_on = false;
     g_handlers = false;
@@ -1486,6 +1521,7 @@ extern "C" void port_coop_world_frame(void) {
     if (ticking) ++g_kframe;
     const unsigned now = comms_hub_now_ms();
     refresh_presence(now);
+    if (g_frame % 30 == 0) room_forget(now);   // Tango's rule: a level nobody has loaded loses its broken blocks
     for (int i = 0; i < g_n_frame; ++i) g_cb_frame[i](now);
     {   // members that left my group since last frame
         g_grp.update(now);
