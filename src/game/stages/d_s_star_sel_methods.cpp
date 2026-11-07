@@ -26,6 +26,7 @@
  */
 #pragma defer_codegen off
 #include "common.h"
+#include "PlayerInput.h"
 #include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
 #include "dScStarSel_c.h"
@@ -50,16 +51,7 @@ extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
 extern unsigned short sStarSelectDecimalDivisors[];
 extern unsigned char NumStars(void);
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern unsigned char gActivePlayerSlot;
-// local extern: see above.
-extern unsigned char gTouchHeld[][4];
-// local extern: see above.
-extern unsigned char gTouchEdge[][4];
-// local extern: see above.
-extern unsigned char gTouchX[][4];
-// local extern: see above.
-extern unsigned char gTouchY[][4];
+
 extern int data_0208ee44;
 extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
@@ -282,7 +274,7 @@ void dScStarSel_c::func_ov003_020ae238() {
 // or 8 depending on the active player's pressed word.
 //
 // Codegen note: the stride belongs in the TYPE, and the INDEX is what gets named.
-// The 4-byte records are declared `[][4]` so each read refolds its own scale
+// The 4-byte records are viewed as `[][4]` so each read refolds its own scale
 // (`add r2, r4, r1, lsl #2`); flattening gTouchX/gTouchY to a bare `[]` with an
 // explicit `* 4` costs 17 words, and the same is true of the PadData records. The last
 // six words were a register transposition between the `c + i` and record-row
@@ -294,12 +286,12 @@ void dScStarSel_c::func_ov003_020ae358() {
     int idx = gActivePlayerSlot;
     int valid = 0;
     int i;
-    if (gTouchHeld[idx][0] != 0) {
-        valid = gTouchEdge[idx][0] != 0;
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
+        valid = ((u8(*)[4])gTouchEdge)[idx][0] != 0;
     }
     if (valid != 0) {
-        if ((((unsigned char)(gTouchX[idx][0] - 0x58)) < 0x50) &&
-            (((unsigned char)((gTouchY[idx][0] - mFaceY) + 0x28)) < 0x50)) {
+        if ((((unsigned char)(((u8(*)[4])gTouchX)[idx][0] - 0x58)) < 0x50) &&
+            (((unsigned char)((((u8(*)[4])gTouchY)[idx][0] - mFaceY) + 0x28)) < 0x50)) {
             mCursorTarget = 2;
             mPickedChar = 3;
             mPickPressTimer = (unsigned char)(data_0208ee44 * 6);
@@ -317,9 +309,10 @@ void dScStarSel_c::func_ov003_020ae358() {
         for (i = 0; i < 3; i++) {
             if (SaveData::IsCharacterUnlocked(i) != 0) {
                 int ri = gActivePlayerSlot;
-                if (((unsigned short)((gTouchHeld[gActivePlayerSlot][2] - mCharX[i]) + 0x18)) <
-                    0x30) {
-                    if (((unsigned short)((gTouchHeld[ri][3] - mCharY[i]) + 0x18)) < 0x2b) {
+                if (((unsigned short)((((u8(*)[4])gTouchHeld)[gActivePlayerSlot][2] - mCharX[i]) +
+                                      0x18)) < 0x30) {
+                    if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 0x18)) <
+                        0x2b) {
                         mCursorTarget = 1;
                         mCharCursor = (unsigned char)func_ov003_020adec0(i);
                         data_02092128[0] = (unsigned char)i;
@@ -664,17 +657,17 @@ s32 dScStarSel_c::Behavior() {
             idx = gActivePlayerSlot;
             cur = mSelectedPlate;
             found = 0;
-            val = gTouchHeld[idx][0];
+            val = ((u8(*)[4])gTouchHeld)[idx][0];
             if (val != 0) {
                 num = mPlateCount;
                 i = 0;
                 if (num > 0) {
-                    rec = gTouchHeld[idx];
+                    rec = ((u8(*)[4])gTouchHeld)[idx];
                     tx = rec[2];
                     do {
-                        if ((u8)(tx - mPlateX[i] + 8) < 0x10 && gTouchHeld[idx][3] < 0x28 &&
-                            ((mPlateMask >> i) & 1)) {
-                            hit = (val != 0 && gTouchEdge[idx][0] != 0);
+                        if ((u8)(tx - mPlateX[i] + 8) < 0x10 &&
+                            ((u8(*)[4])gTouchHeld)[idx][3] < 0x28 && ((mPlateMask >> i) & 1)) {
+                            hit = (val != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0);
                             if (hit != 0 || cur != i) {
                                 mPlatePressTimer = data_0208ee44 * 3;
                             }
