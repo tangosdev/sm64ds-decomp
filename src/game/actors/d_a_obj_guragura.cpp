@@ -44,7 +44,7 @@ void Quaternion_Normalize(int *q);
 void Quaternion_SLerp(int *q0, int *q1, int t, int *out);
 void Matrix4x3_FromQuaternion(void *q, Matrix4x3 *m);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void func_020393c4(dBgW_KcMbg *clsn, void *fn);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -148,7 +148,7 @@ s32 daObjGuragura_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
                           mAngleY, *descriptor->clps);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
     return 1;
 }
 

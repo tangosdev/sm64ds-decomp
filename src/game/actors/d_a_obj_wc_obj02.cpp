@@ -47,7 +47,7 @@ struct WcObj02CollisionFilePtr : SharedFilePtr {
 extern "C" {
 void func_02012694(unsigned int a, void *p);
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *bgw, void *fn);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern WcObj02ModelFilePtr data_ov029_02114250;
@@ -105,7 +105,7 @@ int daObjWc_Obj02_c::InitResources() {
         mPrevAngleY += 0x4000;
         func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
     }
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
     mTravelDist = 0;
     mStateTimer = 0;
     mTriggered = 0;
