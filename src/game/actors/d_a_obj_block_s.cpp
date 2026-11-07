@@ -1161,21 +1161,20 @@ void daObjBlockS_c::func_ov098_02139850()
     }
     return;
 
-other:
-    {
-        Vector3 pos = mPos;
-        pos.y -= mClsnYOffset;
-        Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-        mModel.mat4x3.m[9] = pos.x >> 3;
-        mModel.mat4x3.m[10] = pos.y >> 3;
-        mModel.mat4x3.m[11] = pos.z >> 3;
-        mCarryOffsetX = 0;
-        mCarryOffsetY = 0;
-        mCarryOffsetZ = 0;
-        if (mWithMeshClsn.IsOnGround() != 0) {
-            mFlags &= ~0x4000000;
-        }
+other: {
+    Vector3 pos = mPos;
+    pos.y -= mClsnYOffset;
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = pos.x >> 3;
+    mModel.mat4x3.m[10] = pos.y >> 3;
+    mModel.mat4x3.m[11] = pos.z >> 3;
+    mCarryOffsetX = 0;
+    mCarryOffsetY = 0;
+    mCarryOffsetZ = 0;
+    if (mWithMeshClsn.IsOnGround() != 0) {
+        mFlags &= ~0x4000000;
     }
+}
 }
 
 // @symbol _ZN13daObjBlockS_c16CleanupResourcesEv

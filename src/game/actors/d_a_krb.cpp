@@ -467,9 +467,9 @@ void daKrb_c::func_ov084_021294d0() {
 
     dBgPi floor(*mWithMeshClsn.GetFloorResult());
     int surfaceType = floor.surface.clps.GetSurfaceType();
-    if ((floor.surface.clps.func_02037e84() == 8
-         && (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9))
-        || surfaceType == 0x13 || surfaceType == 1 || surfaceType == 4 || surfaceType == 5) {
+    if ((floor.surface.clps.func_02037e84() == 8 &&
+         (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)) ||
+        surfaceType == 0x13 || surfaceType == 1 || surfaceType == 4 || surfaceType == 5) {
         SpawnCoin();
         func_ov084_02129498();
         if ((mCapId & 0xf) < 6 || mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {

@@ -9884,19 +9884,15 @@ void daPly_c::func_ov002_020ce8bc(int arg1) {
 
     if (mIsMega != 0) {
         if (arg1 != 0) {
-            mWaterMoveParticle =
-                func_02022cbc(mWaterMoveParticle, 0x65, pos.x, pos.y, pos.z, 0);
+            mWaterMoveParticle = func_02022cbc(mWaterMoveParticle, 0x65, pos.x, pos.y, pos.z, 0);
         } else {
-            mWaterStillParticle =
-                func_02022cbc(mWaterStillParticle, 0x66, pos.x, pos.y, pos.z, 0);
+            mWaterStillParticle = func_02022cbc(mWaterStillParticle, 0x66, pos.x, pos.y, pos.z, 0);
         }
     } else {
         if (arg1 != 0) {
-            mWaterMoveParticle =
-                func_02022cbc(mWaterMoveParticle, 0xe8, pos.x, pos.y, pos.z, 0);
+            mWaterMoveParticle = func_02022cbc(mWaterMoveParticle, 0xe8, pos.x, pos.y, pos.z, 0);
         } else {
-            mWaterStillParticle =
-                func_02022cbc(mWaterStillParticle, 0xe9, pos.x, pos.y, pos.z, 0);
+            mWaterStillParticle = func_02022cbc(mWaterStillParticle, 0xe9, pos.x, pos.y, pos.z, 0);
         }
     }
 }

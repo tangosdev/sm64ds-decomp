@@ -511,8 +511,8 @@ void daYegg_c::func_ov002_020ecb0c()
                 rot.x = FX_SinIdx((u16)mAngleY >> 4);
                 rot.y = 0;
                 rot.z = FX_CosIdx((u16)mAngleY >> 4);
-                mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, pos.x, pos.y,
-                                                        pos.z, (const Vector3_16f *)&rot, 0);
+                mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, pos.x, pos.y, pos.z,
+                                                        (const Vector3_16f *)&rot, 0);
                 mSoundHandle =
                     Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
                 flag = 1;

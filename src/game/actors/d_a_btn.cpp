@@ -980,7 +980,8 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
         if (t - 1 > 1) return;
         const Vector3 &p = other->mPos;
         v2 = p;
-        if (v2.y - mPosY < 0x2bc000) return;
+        if (v2.y - mPosY < 0x2bc000)
+            return;
         if (DecIfAbove0_Byte(&mCoinsLeft) == 0) return;
         w2 = v2;
         SpawnCoins(w2, 1, 0x8000, 0);

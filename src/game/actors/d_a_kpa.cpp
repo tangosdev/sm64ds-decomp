@@ -1729,9 +1729,14 @@ void daKpa_c::func_ov060_02114858(){
             pos.y += 0xb4000;
             pos.z += FX_CosIdx((u16)mPrevAngleY >> 4) * 0xc8;
             if (frame >= 0xf && frame < 0x14) {
-                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 | 0x11, pos, &mPrevAngle, mAreaId, -1);
+                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE,
+                                ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 |
+                                    0x11,
+                                pos, &mPrevAngle, mAreaId, -1);
             } else {
-                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 | 1, pos, &mPrevAngle, mAreaId, -1);
+                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE,
+                                ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 | 1,
+                                pos, &mPrevAngle, mAreaId, -1);
             }
         }
         this->mFireTimer++;
@@ -2337,7 +2342,8 @@ void daKpa_c::func_ov060_02113a94(){
     this->mHorzSpeed = 0;
     this->mVertSpeed = 0;
     this->mPosY = this->mHomePosY - 0x3e8000;
-    if (Vec3_HorzLen(&mPos) < 0xed8000) return;
+    if (Vec3_HorzLen(&mPos) < 0xed8000)
+        return;
     {
         Vector3 zero;
         int a;
@@ -2517,7 +2523,8 @@ void daKpa_c::func_ov060_021135fc(){
     } else {
         Particle::System::NewSimple(0xad, base.x, base.y, base.z);
         Particle::System::NewSimple(0xae, base.x, base.y, base.z);
-        daObjKey_c *key = (daObjKey_c *)dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, mVariantID, mPos, 0, mAreaId, -1);
+        daObjKey_c *key =
+            (daObjKey_c *)dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, mVariantID, mPos, 0, mAreaId, -1);
         key->mSpinSpeed = mSpinSpeed;
         func_02012694(BOWSER_SND_DEFEATED, &mCamSpacePos);
     }
@@ -2723,8 +2730,7 @@ int daKpa_c::func_ov060_021130c0(){
         case 1:
             if (this->mTargetPlayer->GetTalkState() == 0) {
                 int msg = (this->mVariantID == 0) ? 0xcd : 0xcf;
-                if (this->mTargetPlayer->ShowMessage(
-                        *this, msg, &mPos, 0, 2))
+                if (this->mTargetPlayer->ShowMessage(*this, msg, &mPos, 0, 2))
                     this->mTalkStep++;
             }
             break;
@@ -2783,8 +2789,7 @@ int daKpa_c::func_ov060_02112ee0(){
         case 1:
             if (this->mTargetPlayer->GetTalkState() == 0) {
                 unsigned m = (NumStars() != 0x96) ? 0xd1 : 0xd2;
-                if (this->mTargetPlayer->ShowMessage(
-                        *this, m, &mPos, 0, 2)) {
+                if (this->mTargetPlayer->ShowMessage(*this, m, &mPos, 0, 2)) {
                     this->mTalkStep++;
                     Message::PrepareTalk();
                 }
@@ -2806,7 +2811,8 @@ int daKpa_c::func_ov060_02112ee0(){
             this->mOpacity -= 4;
             pos = mPos;
             pos.y += 0x32000;
-            mParticleHandle = (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
+            mParticleHandle =
+                (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
         } else {
             func_ov060_02113260();
             ret = 1;
