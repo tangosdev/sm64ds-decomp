@@ -10,11 +10,11 @@
  * failure. */
 #include "types.h"
 #include "private/fs_views.h"
+#include "nitro/os/thread.h"
 
 typedef struct FSFile FSFile;
 
 extern int func_0203d7d4(int);
-extern void OS_SleepThread(int);
 extern void *data_0209d3c0;
 extern int func_0205d644(void *out_file_id, const char *path);
 extern void Crash(void);
