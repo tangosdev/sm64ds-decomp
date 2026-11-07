@@ -1300,7 +1300,7 @@ void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
 /* ROM ordinal 19 -- dActor_c::func_0200fccc(int)
  * 0x0200fccc  size 0x38 */
 extern "C" {
-extern int func_0200fc44(int actor, Vector3 *pos, int doRaycast);
+extern int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast);
 }
 /* func_0200fc44 at this actor's position. */
 int dActor_c::func_0200fccc(int doRaycast) {
@@ -1308,7 +1308,7 @@ int dActor_c::func_0200fccc(int doRaycast) {
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
-    return func_0200fc44((int)this, &pos, doRaycast);
+    return func_0200fc44(this, &pos, doRaycast);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1316,7 +1316,7 @@ int dActor_c::func_0200fccc(int doRaycast) {
  * 0x0200fc44  size 0x88 */
 /* Particle 0xb3 25.0 above pos, optionally first dropping pos onto the
    ground below it; pos is moved. The leading actor argument is unused. */
-extern "C" int func_0200fc44(int actor, Vector3 *pos, int doRaycast) {
+extern "C" int func_0200fc44(dActor_c *actor, Vector3 *pos, int doRaycast) {
     if (doRaycast) {
         dBgCh_Gnd rc;
         pos->y += 0x32000;
@@ -1389,7 +1389,7 @@ void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
 /* ROM ordinal 13 -- func_0200fa8c
  * 0x0200fa8c  size 0x38 */
 extern "C" {
-extern void *func_0200fa04(int actor, Vector3 *pos, int doRaycast);
+extern void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast);
 }
 /* func_0200fa04 at this actor's position; void * as decl_common.h spells it. */
 extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
@@ -1398,14 +1398,14 @@ extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
     pos.x = actor->mPosX;
     pos.y = actor->mPosY;
     pos.z = actor->mPosZ;
-    func_0200fa04((int)actor, &pos, doRaycast);
+    func_0200fa04(actor, &pos, doRaycast);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_0200fa04
  * 0x0200fa04  size 0x88 */
 /* As func_0200fc44, with particle 0x1b raised 120.0 instead of 25.0. */
-extern "C" void *func_0200fa04(int actor, Vector3 *pos, int doRaycast) {
+extern "C" void *func_0200fa04(dActor_c *actor, Vector3 *pos, int doRaycast) {
     if (doRaycast) {
         dBgCh_Gnd rc;
         pos->y += 0x32000;
