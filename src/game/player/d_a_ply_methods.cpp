@@ -9007,7 +9007,7 @@ int daPly_c::St_Shell_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_HurtWater_Main() {
-    extern int data_0209f32c[];
+    extern int data_0209f32c;
     if (func_ov002_020cec2c())
         return 1;
     ApproachLinear(*((int *)((char *)&mHorzSpeed)), 0, 0x800);
@@ -9031,7 +9031,7 @@ int daPly_c::St_HurtWater_Main() {
             return 1;
         }
     }
-    int lim = *(int *)data_0209f32c - 0x50000;
+    int lim = data_0209f32c - 0x50000;
     if (mPosY >= lim && (mClsnFlags & 1) == 0) {
         if (mVertSpeed >= 0) {
             mPosY = lim;
@@ -9937,27 +9937,24 @@ void daPly_c::func_ov002_020ce798() {
 // @symbol _ZN7daPly_c19func_ov002_020ce8bcEi
 extern "C" {
 void daPly_c::func_ov002_020ce8bc(int arg1) {
-    extern char* data_0209f32c;
-    int z = mPosZ;
-    volatile int x = mPosX;
-    volatile int y = (int)(data_0209f32c + 0x3000);
-    volatile int zshadow = z;
+    extern int data_0209f32c;
+    Vector3 pos(mPosX, data_0209f32c + 0x3000, mPosZ);
 
     if (mIsMega != 0) {
         if (arg1 != 0) {
             mWaterMoveParticle =
-                func_02022cbc(*(volatile int *)&mWaterMoveParticle, 0x65, x, y, z, 0);
+                func_02022cbc(mWaterMoveParticle, 0x65, pos.x, pos.y, pos.z, 0);
         } else {
             mWaterStillParticle =
-                func_02022cbc(*(volatile int *)&mWaterStillParticle, 0x66, x, y, z, 0);
+                func_02022cbc(mWaterStillParticle, 0x66, pos.x, pos.y, pos.z, 0);
         }
     } else {
         if (arg1 != 0) {
             mWaterMoveParticle =
-                func_02022cbc(*(volatile int *)&mWaterMoveParticle, 0xe8, x, y, z, 0);
+                func_02022cbc(mWaterMoveParticle, 0xe8, pos.x, pos.y, pos.z, 0);
         } else {
             mWaterStillParticle =
-                func_02022cbc(*(volatile int *)&mWaterStillParticle, 0xe9, x, y, z, 0);
+                func_02022cbc(mWaterStillParticle, 0xe9, pos.x, pos.y, pos.z, 0);
         }
     }
 }
@@ -9966,29 +9963,26 @@ void daPly_c::func_ov002_020ce8bc(int arg1) {
 // @symbol _ZN7daPly_c19func_ov002_020ce9c8Ev
 extern "C" {
 void daPly_c::func_ov002_020ce9c8() {
-    extern char* data_0209f32c;
-    int v[3];
+    extern int data_0209f32c;
+    Vector3 v = mPos;
     int effectID;
 
-    *(volatile int *)&v[0] = mPosX;
-    *(volatile int *)&v[1] = mPosY;
-    *(volatile int *)&v[2] = mPosZ;
-    v[1] = (int)(data_0209f32c + 0x4b000);
+    v.y = data_0209f32c + 0x4b000;
     effectID = 0xce;
     if (mIsMega)
         effectID = 0x54;
-    func_02022c80(0, effectID, v[0], v[1], v[2], 0);
+    func_02022c80(0, effectID, v.x, v.y, v.z, 0);
 
-    v[1] = (int)(data_0209f32c + 0x3000);
+    v.y = data_0209f32c + 0x3000;
     effectID = 0xcf;
     if (mIsMega)
         effectID = 0x55;
-    func_02022cbc(0, effectID, v[0], v[1], v[2], 0);
+    func_02022cbc(0, effectID, v.x, v.y, v.z, 0);
 
     if (mIsMega)
-        mParticle1 = func_02022d00(mParticle1, 0x56, mPosX, (int)data_0209f32c, mPosZ, 0);
+        mParticle1 = func_02022d00(mParticle1, 0x56, mPosX, data_0209f32c, mPosZ, 0);
     else
-        Particle::System::NewBigSplash(mPosX, (int)data_0209f32c, mPosZ);
+        Particle::System::NewBigSplash(mPosX, data_0209f32c, mPosZ);
 
     if (mIsMega)
         Sound::PlayBank0(0xd4, mCamSpacePos);
@@ -13587,9 +13581,8 @@ int daPly_c::Burn() {
  * the "took damage" path over a plain exit, bit 1 selects the swimming exit
  * over the walking one.
  *
- * The volatile locals and the volatile reads of the particle handles are
- * load-bearing: they pin the order and the memory round-trips the original
- * compiled. They are kept verbatim.
+ * The particle point is a Vector3 declared up front and filled after the
+ * sound call; constructing it at the declaration is 23 words off.
  */
 /* Particle::System::New takes Fix12<int> by value -- the mwccarm 6az wall,
    runbook section 7 -- so it stays extern "C" with scalars in those slots. */
@@ -13599,29 +13592,15 @@ extern "C" {
 int daPly_c::St_Electrocute_Main() {
     extern u32 PlayerNewHold9(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
-    Vector3 *pos = &mCamSpacePos;
-    volatile s32 x;
-    volatile s32 y;
-    volatile s32 zvar;
-    s32 z;
-    s32 yraw;
+    Vector3 pos;
 
-    mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x10b, *pos, 0);
+    mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x10b, mCamSpacePos, 0);
 
-    x = mPosX;
-    yraw = mPosY;
-    y = yraw;
-    {
-        s32 zraw = mPosZ;
-        s32 yadjraw = yraw + 0x32000;
-        z = zraw;
-        zvar = zraw;
-        y = yadjraw;
-    }
-
-    mParticle1 = Particle::System::New(*(volatile u32 *)&mParticle1, 0xc1, x, y, z, 0, 0);
-    mParticle2 = Particle::System::New(*(volatile u32 *)&mParticle2, 0xc2, x, y, zvar, 0, 0);
-    mParticle3 = Particle::System::New(mParticle3, 0xc3, x, y, zvar, 0, 0);
+    pos = mPos;
+    pos.y += 0x32000;
+    mParticle1 = Particle::System::New(mParticle1, 0xc1, pos.x, pos.y, pos.z, 0, 0);
+    mParticle2 = Particle::System::New(mParticle2, 0xc2, pos.x, pos.y, pos.z, 0, 0);
+    mParticle3 = Particle::System::New(mParticle3, 0xc3, pos.x, pos.y, pos.z, 0, 0);
 
     if (mStateTimer == 0) {
         u8 flags = mStateWork;
