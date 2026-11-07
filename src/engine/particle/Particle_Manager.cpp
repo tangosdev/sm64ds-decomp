@@ -19,7 +19,7 @@
  *   func_0204a17c  parse the resource into mDefinitions and mTextures
  *   func_0204a0dc  upload textures
  *   func_0204a028  upload palettes
- *   func_02049f58  retire expired systems (SysTracker::Update)
+ *   func_02049f58  retire expired systems (dPa_c::Update)
  *   func_02049ee8  draw active systems (RenderAll)
  *   AddSystem      spawn one system
  *   func_02049d78  return one system's particles and the system itself

@@ -34,6 +34,7 @@ enum d_a_propeller_heyho_AssetId {
 
 #include "daPropeller_Heyho_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SpawnInfo.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
@@ -940,7 +941,7 @@ typedef int Fix12i;
 
 extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e,
                                                void *f, void *g);
-extern "C" u32 d_a_propeller_heyhoNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
+extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
                                                         const Vector3_16f *f);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
@@ -959,8 +960,8 @@ extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
         ((int*)&v)[0] = x;
         ((int*)&v)[1] = y;
         ((int*)&v)[2] = z;
-        c->mParticle0 = Particle::System::New(c->mParticle0, 0x13a, v.x, v.y, v.z, 0, 0);
-        c->mParticle1 = Particle::System::NewUnkCallback818(c->mParticle1, 0x13b, v.x, v.y, v.z, 0);
+        c->mParticle0 = Particle::System::New(c->mParticle0, kPtclDeathA, v.x, v.y, v.z, 0, 0);
+        c->mParticle1 = Particle::System::NewCleanParticle(c->mParticle1, kPtclDeathB, v.x, v.y, v.z, 0);
     }
     ApproachAngle(&c->mAngleX, -0x4000, 0xa, 0x200, 0x100);
     ApproachLinear(c->mAngleX, -0x4000, 0x200);

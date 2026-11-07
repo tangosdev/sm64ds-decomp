@@ -37,6 +37,7 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "Sound.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
@@ -159,8 +160,8 @@ void daChair_c::UpdateModel() {
 
 // @symbol _ZN9daChair_c5BreakEv
 void daChair_c::Break() {
-    Particle::System::NewSimple(0x25, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0x26, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclChairBreakA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclChairBreakB, mPosX, mPosY, mPosZ);
     PoofDust();
     MarkForDestruction();
 }

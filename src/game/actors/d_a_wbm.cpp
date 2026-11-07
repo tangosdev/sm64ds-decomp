@@ -53,6 +53,7 @@ enum daWbm_c_AssetId {
 
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daWbm_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
@@ -404,8 +405,8 @@ int daWbm_c::func_ov098_0213b6e0()
                 pos.z = mPosZ;
                 other->Hurt(pos, 1, 0xc000, 1, 0, 1);
                 if (mVariant == 1) {
-                    Particle::System::NewSimple(0x1c, mPosX, mPosY, mPosZ);
-                    Particle::System::NewSimple(0x1d, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(kPtclWaterBombBurstA, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(kPtclWaterBombBurstB, mPosX, mPosY, mPosZ);
                     Burst();
                     return 1;
                 }

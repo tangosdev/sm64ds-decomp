@@ -54,6 +54,7 @@ enum daChoropu_c_AssetId {
 #include "daPly_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
@@ -149,8 +150,8 @@ void daChoropu_c::func_ov080_02123860()
         mdCcAc_c.flags |= daChoropu_CC_DISABLED;
         mFlags &= ~daChoropu_FLAG_EMERGED;
         if (idx == 0xf) {
-            Particle::System::NewSimple(0x2a, mPosX, mPosY, mPosZ);
-            Particle::System::NewSimple(0x2b, mPosX, mPosY + 0x1e000, mPosZ);
+            Particle::System::NewSimple(kPtclMontyMoleLeapA, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclMontyMoleLeapB, mPosX, mPosY + 0x1e000, mPosZ);
         }
     }
     {
@@ -318,7 +319,7 @@ void daChoropu_c::func_ov080_02123c24()
         } else {
             amt = data_ov080_021276c4[state - 6] << 12;
             mEmergeSystemID =
-                Particle::System::New(mEmergeSystemID, 0x29, mPosX, mPosY, mPosZ, 0, 0);
+                Particle::System::New(mEmergeSystemID, kPtclMontyMoleEmerge, mPosX, mPosY, mPosZ, 0, 0);
         }
     }
 

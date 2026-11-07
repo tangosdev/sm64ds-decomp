@@ -32,6 +32,7 @@
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPly_c.h"
 #include "SurfaceInfo.h"
 #include "math/Approach.h"
@@ -103,9 +104,9 @@ int daKpFr_c::Render()
   int hidden = (mFlags & 0x40000) != 0;
   if (hidden) return 1;
   mParticle1 =
-      Particle::System::NewUnkCallback818(mParticle1, 0x7f, mPosX, mPosY + 0x4b000, mPosZ, 0);
+      Particle::System::NewCleanParticle(mParticle1, kPtclKeronpaFireA, mPosX, mPosY + 0x4b000, mPosZ, 0);
   mParticle2 =
-      Particle::System::NewUnkCallback818(mParticle2, 0x80, mPosX, mPosY + 0x4b000, mPosZ, 0);
+      Particle::System::NewCleanParticle(mParticle2, kPtclKeronpaFireB, mPosX, mPosY + 0x4b000, mPosZ, 0);
   return 1;
 }
 

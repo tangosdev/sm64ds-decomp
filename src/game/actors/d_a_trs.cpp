@@ -55,6 +55,7 @@ enum daTrs_c_AssetId {
 
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "types.h"
 #include "dActor_c.h"
 #include "daTrs_c.h"
@@ -1057,8 +1058,8 @@ void daTrs_c::func_ov063_021177b0() {
                     int m = ~0;
                     pos.x = px * (volatile int)m;
                 }
-                Particle::System::NewSimple(0x93, pos.x, yarg, pos.z);
-                Particle::System::NewSimple(0x94, pos.x, pos.y, pos.z);
+                Particle::System::NewSimple(kPtclBooDefeatA, pos.x, yarg, pos.z);
+                Particle::System::NewSimple(kPtclBooDefeatB, pos.x, pos.y, pos.z);
             }
         }
         return;
@@ -3325,7 +3326,7 @@ int daTBasket_c::Behavior()
         int y = mPosY;
         int x = mPosX;
         unsigned int pid = (unsigned int)mParticleID;
-        mParticleID = Particle::System::New(pid, 0x119, x, y + 0x64000, z, 0, 0);
+        mParticleID = Particle::System::New(pid, kPtclBooCageFall, x, y + 0x64000, z, 0, 0);
     }
 
     UpdatePos(0);

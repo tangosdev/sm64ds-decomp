@@ -39,6 +39,7 @@
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
@@ -139,7 +140,7 @@ int daWater_Hakidasi_c::State0() {
     }
 
     if (mNoRings == 0) {
-        mParticle = Particle::System::New(mParticle, 0x138, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle = Particle::System::New(mParticle, kPtclWaterSpoutRings, mPosX, mPosY, mPosZ, 0, 0);
         if (mRingsPassed < 5) {
             if (*(u16 *)&mStateTimer == 0) {
                 ax = *(volatile u16 *)&mAngleX;
@@ -216,7 +217,7 @@ int daWater_Hakidasi_c::State0() {
             }
         }
     } else {
-        mParticle = Particle::System::New(mParticle, 0x7b, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle = Particle::System::New(mParticle, kPtclWaterSpout, mPosX, mPosY, mPosZ, 0, 0);
     }
 
     if (mRingsPassed == 5) {

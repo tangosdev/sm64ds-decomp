@@ -45,6 +45,8 @@ enum daBakubaku_c_AssetId {
 #include "LevelRng.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
 enum {
@@ -112,10 +114,6 @@ typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int heig
 int func_ov002_020c5cd8(void *a, void *self);
 /* Sound::Play with bank 3. */
 void func_02012694(unsigned int a, void *p);
-/* Particle::System::New wrappers; they pass the tracker callbacks at
-   +0x800 and +0x7f4. */
-u32 func_02022c80(u32, u32, Fix12i, Fix12i, Fix12i, const void *);
-u32 func_02022d00(u32, u32, Fix12i, Fix12i, Fix12i, void *);
 }
 
 /* Both predicates are int-returning, as the ROM materializes the 0/1
@@ -459,11 +457,12 @@ int daBakubaku_c::func_ov032_02111830()
             MulVec3Mat4x3(&forwardOffset, &data_020a0e68, &rotatedOffset);
             splashPosition.x += rotatedOffset.x;
             splashPosition.z += rotatedOffset.z;
-            func_02022c80(0, 0x55, splashPosition.x, splashPosition.y, splashPosition.z, 0);
-            mSplashParticle = func_02022d00(mSplashParticle, 0x56, splashPosition.x, data_0209f32c,
-                                            splashPosition.z, 0);
+            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntrySurface, splashPosition.x, splashPosition.y, splashPosition.z, 0);
+            mSplashParticle = Particle::System::NewCheckWaterRipple(
+                mSplashParticle, kPtclMegaSplash, splashPosition.x, data_0209f32c,
+                splashPosition.z, 0);
             splashPosition.y += 0x4b000;
-            func_02022c80(0, 0x54, splashPosition.x, splashPosition.y, splashPosition.z, 0);
+            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntryRaised, splashPosition.x, splashPosition.y, splashPosition.z, 0);
         }
     }
 

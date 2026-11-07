@@ -26,11 +26,11 @@
  *
  * From below, two witnesses. Each of the four children's own D1 destroys
  * its own members, then stores THIS class's vtable, then destroys
- * mSysTracker at 0x47e4, then chains to _ZN11dScMgBase_cD2Ev -- nothing of
- * this class's is destroyed after mSysTracker, and
- * 0x47e4 + sizeof(Particle::SysTracker) (0x81c) = 0x5000 exactly. Then this
+ * mParticle at 0x47e4, then chains to _ZN11dScMgBase_cD2Ev -- nothing of
+ * this class's is destroyed after mParticle, and
+ * 0x47e4 + sizeof(dPa_c) (0x81c) = 0x5000 exactly. Then this
  * class's OWN BeforeInitResources writes a 4-byte 0 at 0x5000, which is the
- * only member it has past mSysTracker and the reason this file does not
+ * only member it has past mParticle and the reason this file does not
  * stop at 0x5000 (the first draft of it did; the write is what caught it).
  *
  * From above, the bound is dScMgJump_c's: a Jump helper (State_Final,
@@ -57,7 +57,7 @@
  * a real descendant rather than assumed, because this tree has been bitten
  * both ways (an out-of-line base destructor emitting a call to a D2 that
  * exists nowhere, and an inline one the ROM actually calls as a real `bl`).
- * All four children's own D1s contain this class's vptr store, mSysTracker
+ * All four children's own D1s contain this class's vptr store, mParticle
  * destruction and the chain to dScMgBase_c's D2 written out INLINE, with no
  * call to any dScMgD3DBase_c-specific destructor. Own copy of
  * operator delete for the same reason: mwcc only inlines a D0 route through
@@ -83,9 +83,9 @@ struct dScMgD3DBase_c : dScMgBase_c {
 
     /* Inline, and that is what the four factories show: each runs
        dScMgBase_c's C2, stores this class's vtable, zeroes mDrawSubScreen,
-       steps over mCameras and constructs mSysTracker, with no call to any
+       steps over mCameras and constructs mParticle, with no call to any
        dScMgD3DBase_c constructor (none exists in the cartridge). The zero is
-       a mem-initializer: written in the body it lands after mSysTracker's
+       a mem-initializer: written in the body it lands after mParticle's
        construction instead of before the camera loop (measured on
        dScMgJump_c_classInit). */
     dScMgD3DBase_c() : mDrawSubScreen(0) {}
@@ -155,7 +155,7 @@ struct dScMgD3DBase_c : dScMgBase_c {
        dScMgJump_c::InitResources settles which element is which by passing
        each to Camera_UpdateMatrices. */
     MgCamera mCameras[2];             /* 0x466c -- [0] main screen, [1] sub screen */
-    Particle::SysTracker mSysTracker; /* 0x47e4 -- AfterInitResources initialises
+    dPa_c mParticle; /* 0x47e4 -- AfterInitResources initialises
                                           it, BeforeBehavior updates it, and all
                                           four children destroy it inline */
     s32  unk_5000;                    /* 0x5000 -- real matched access, this

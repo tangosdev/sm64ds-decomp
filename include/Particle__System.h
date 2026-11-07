@@ -2,7 +2,7 @@
 #define PARTICLE__SYSTEM_H
 
 #include "Particle__Manager.h"
-#include "Particle__SysTracker.h"
+#include "dPa_c.h"
 
 /* System::New's compiler-produced name distinguishes this six-byte particle
  * direction from the actor-facing Vector3_16 type. */
@@ -12,9 +12,6 @@ struct Vector3_16f { s16 x, y, z; };
 #endif
 
 namespace Particle {
-
-/* System::New's last parameter. The name is what the linker symbol encodes. */
-struct Callback;
 
 /* The list element's exact source type and member spellings are not
  * RTTI-backed. The water callbacks prove the intrusive link and the two
@@ -102,16 +99,37 @@ struct System {
     static System *FromUniqueID(u32 uniqueID);
     /* Unnamed parameters: a name here numbers @NNN in every includer. */
     static void *NewSimple(u32, Fix12i, Fix12i, Fix12i);
-    static int New(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *, Callback *);
+    /* The callback is stored in the level emitter New() starts (level_c::emitter_c::mCallback). */
+    static int New(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *,
+                   dPa_c::level_c::callback_c *);
     static u32 NewRipple(Fix12i, Fix12i, Fix12i);
     static void NewBigSplash(Fix12i, Fix12i, Fix12i);
-    static u32 NewUnkCallback818(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    /* One wrapper per dPa_c callback: each starts a level emitter with that
+       callback and returns its id (the caller keeps it). Named for the
+       ROM-RTTI callback class they pass (dPa_c::level_c::*Callback_c). */
+    static u32 NewCheckWater(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    static u32 NewCheckWaterRipple(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    static u32 NewFitWater(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    static u32 NewFitWaterRaised(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    static u32 NewCheckYogan(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    static u32 NewCleanParticle(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
+    /* One fixed effect each, kept in dPa_c's own id slot (see the bank in
+       dPa_c.h); named for the effect. */
+    static u32 NewSplash(Fix12i, Fix12i, Fix12i);
+    static u32 NewBubble(Fix12i, Fix12i, Fix12i);
+    static u32 NewRedFire(Fix12i, Fix12i, Fix12i);
+    static u32 NewBlueFire(Fix12i, Fix12i, Fix12i);
+    static void NewFlamethrowerRedA(Fix12i, Fix12i, Fix12i, s16, s16);
+    static void NewFlamethrowerRedB(Fix12i, Fix12i, Fix12i, s16, s16);
+    static void NewFlamethrowerBlueA(Fix12i, Fix12i, Fix12i, s16, s16);
+    static void NewFlamethrowerBlueB(Fix12i, Fix12i, Fix12i, s16, s16);
     /* Last parameter is u8. unsigned int shrinks a caller and reloads the
        argument as a word; the matched body loads a byte. */
     static u32 NewWeather(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *, u8);
 };
 
 void RunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
+void MegaRunningDustAt(Fix12i, Fix12i, Fix12i);
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
@@ -120,6 +138,6 @@ typedef char System_size_must_be_0x78[sizeof(System) == 0x78 ? 1 : -1];
 
 }
 
-extern "C" Particle::SysTracker *data_0209ee74;
+extern "C" dPa_c *data_0209ee74;
 
 #endif

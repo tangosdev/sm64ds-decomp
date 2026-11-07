@@ -1,14 +1,14 @@
 /* Base class for the single-camera 3D minigames. Its 13 direct RTTI
  * children are Cup, Memory, Memory2, Slot3, Sound, Snowball, Card, MCarlo,
  * MCarlo2, Roulette, BSC, 3DEsp and Flower. Adds one MgCamera at 0x4660 and
- * a Particle::SysTracker at 0x471c. See notes/minigame-provenance.md for
+ * a dPa_c at 0x471c. See notes/minigame-provenance.md for
  * the field evidence. */
 #ifndef DSCMGSINGLE3DBASE_C_H
 #define DSCMGSINGLE3DBASE_C_H
 #include "dScMgBase_c.h"
 
 #include "MgCamera.h"
-#include "Particle__SysTracker.h"
+#include "dPa_c.h"
 
 namespace Particle {
 /* Called by dScMgSingle3DBase_c::BeforeRender. */
@@ -37,16 +37,16 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
 
     /* DO NOT restyle the `offset 0xNN` comment below into this
      * tree's usual hex-comment form: check_header_offsets.py's DATA_SIZE
-     * precompute cannot parse the namespaced mSysTracker line and stops at
+     * precompute cannot parse the mParticle line and stops at
      * the last field it CAN parse, which silently undercounts every derived
      * class's field offsets. MEASURED -- see notes/minigame-provenance.md. */
     /* 0x4660..0x471c is one MgCamera: 0x4660 + 0xbc = 0x471c, where
-     * mSysTracker starts. The scenes pass &mCamera to the Camera_* routines. */
+     * mParticle starts. The scenes pass &mCamera to the Camera_* routines. */
     MgCamera mCamera;                 /* offset 0x4660 */
-    Particle::SysTracker mSysTracker; /* 0x471c */
+    dPa_c mParticle; /* 0x471c */
 };
 
-/* A floor, not a claim the object ends here: 0x471c + sizeof(SysTracker).
+/* A floor, not a claim the object ends here: 0x471c + sizeof(dPa_c).
    See notes/minigame-provenance.md. */
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

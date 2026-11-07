@@ -44,6 +44,7 @@ enum daDsn_c_AssetId {
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* The three resource handles as the ROM lays them out: {id, loaded file}.
  * The model handle constructs through func_02017acc and destroys through
@@ -201,7 +202,7 @@ void daDsn_c::OnHitByMegaChar(daPly_c &player) {
     poofPos.y = mPosY;
     poofPos.z = mPosZ;
     poofPos.y += OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x48, poofPos.x, poofPos.y, poofPos.z);
+    Particle::System::NewSimple(kPtclStoneBlockBreak, poofPos.x, poofPos.y, poofPos.z);
     Vector3 poofPosCopy;
     poofPosCopy.x = poofPos.x;
     poofPosCopy.y = poofPos.y;

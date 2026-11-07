@@ -122,6 +122,7 @@ enum daKing_Donketu_c_AssetId {
 #include "types.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SaveData.h"
 #include "Message.h"
 #include "daPly_c.h"
@@ -396,9 +397,9 @@ do_mtx:
     }
 
 spawn:
-    Particle::System::NewSimple(0x88, pv.x, pv.y, pv.z);
+    Particle::System::NewSimple(kPtclChiefChillyStepA, pv.x, pv.y, pv.z);
 
-    Particle::System::NewSimple(0x89, pv.x, pv.y, pv.z);
+    Particle::System::NewSimple(kPtclChiefChillyStepB, pv.x, pv.y, pv.z);
 }
 
 /* Particles 0x84 and 0x85 on the surface of a's collision sphere,
@@ -452,8 +453,8 @@ void daKing_Donketu_c::func_ov073_0211f494(void *pb)
     rx = FX_MUL(tmp, sin_ay);
     rz = FX_MUL(tmp, cos_ay);
     p.x += rx; p.y += ry; p.z += rz;
-    Particle::System::NewSimple(0x84, p.x, p.y, p.z);
-    Particle::System::NewSimple(0x85, p.x, p.y, p.z);
+    Particle::System::NewSimple(kPtclChiefChillyHitA, p.x, p.y, p.z);
+    Particle::System::NewSimple(kPtclChiefChillyHitB, p.x, p.y, p.z);
 }
 
 /* Collision step, called from Behavior in the chase states (..3360, ..3390)
@@ -614,7 +615,7 @@ s32 daKing_Donketu_c::func_ov073_0211f61c()
     }
     {
         s32* pv = &target->mPosX;
-        Particle::System::NewSimple(0x8a, pv[0], pv[1], pv[2]);
+        Particle::System::NewSimple(kPtclChiefChillyHitPlayer, pv[0], pv[1], pv[2]);
     }
     if (c->mState == &data_ov073_021233d0) {
         func_02012694(SND_HIT_REGISTERED, &c->mCamSpacePosX);

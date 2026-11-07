@@ -117,8 +117,8 @@ s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
    See the leftover list. */
 int d_a_eyknNewHold(u32 uniqueID, u32 effectID, int x, int y, int z, const void *dir,
                     void *callback);
-u32 d_a_eyknNewUnkCallback818Hold(u32 uniqueID, u32 effectID, int x, int y, int z,
-                                  const Vector3_16f *dir);
+u32 d_a_eyknNewCleanParticleHold(u32 uniqueID, u32 effectID, int x, int y, int z,
+                                 const Vector3_16f *dir);
 void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
@@ -337,7 +337,7 @@ idCheck:
         mParticleID0 =
             (u32)Particle::System::New(mParticleID0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
         mParticleID1 =
-            Particle::System::NewUnkCallback818(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         SetState(2);
         return;
     }
@@ -386,7 +386,7 @@ int daEykn_c::St_Die_Main()
         Particle::System *p1;
         mParticleID0 = (u32)Particle::System::New(id0, kDeathPtcl0, mPosX, mPosY, mPosZ, 0, 0);
         mParticleID1 =
-            Particle::System::NewUnkCallback818(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
+            Particle::System::NewCleanParticle(mParticleID1, kDeathPtcl1, mPosX, mPosY, mPosZ, 0);
         p0 = Particle::System::FromUniqueID(mParticleID0);
         p1 = Particle::System::FromUniqueID(mParticleID1);
         if (p0 != 0) {

@@ -9,19 +9,17 @@
  * daObjLava_c_classInit is reconstructed (RTTI daObjLava_c, LAVA
  * registry). Retail does not store that spelling.
  *
- * Note: the particle call is func_02022c3c, an arm9 6-arg wrapper around
- * Particle::System::New that plants the default callback at
- * data_0209ee74+0x808. No header declares it.
+ * Note: the particle call is Particle::System::NewCheckYogan, an arm9
+ * wrapper around Particle::System::New that passes dPa_c's
+ * checkYoganCallback_c (data_0209ee74+0x808).
  */
 
 #include "daObjLava_c.h"
 #include "SpawnInfo.h"
 #include "daPly_c.h"
+#include "Particle__System.h"
 
 enum { kLavaBubbleEffect = 0xb7 };
-
-extern "C" u32 func_02022c3c(u32 handle, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                             const void *dir);
 
 // @symbol daObjLava_c_classInit
 extern "C" daObjLava_c *daObjLava_c_classInit() {
@@ -51,7 +49,7 @@ s32 daObjLava_c::Behavior() {
      * is what taking the position as a Vector3 does; three separate member
      * loads off the daPly_c pointer keep the 0x5c/0x60/0x64 offsets instead. */
     Vector3 *pos = &ClosestPlayer()->mPos;
-    mEffectHandle = func_02022c3c(mEffectHandle, kLavaBubbleEffect, pos->x, pos->y, pos->z, 0);
+    mEffectHandle = Particle::System::NewCheckYogan(mEffectHandle, kLavaBubbleEffect, pos->x, pos->y, pos->z, 0);
     return 1;
 }
 

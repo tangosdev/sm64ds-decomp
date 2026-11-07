@@ -35,6 +35,7 @@
 #include "daPly_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
@@ -150,7 +151,7 @@ void daFPkn_c::SpawnDeathSmoke()
         return;
 
     mParticleHandle1 =
-        Particle::System::New(mParticleHandle1, 0xfc, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
+        Particle::System::New(mParticleHandle1, kPtclPiranhaDeathSmokeA, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
     if (mParticleHandle1 != 0) {
         particle = Particle::System::FromUniqueID(mParticleHandle1);
         if (particle != 0) {
@@ -159,7 +160,7 @@ void daFPkn_c::SpawnDeathSmoke()
     }
 
     mParticleHandle2 =
-        Particle::System::New(mParticleHandle2, 0xfd, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
+        Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
     if (mParticleHandle2 == 0)
         return;
     particle = Particle::System::FromUniqueID(mParticleHandle2);
@@ -189,7 +190,7 @@ void daFPkn_c::SpawnDeathBurst()
     product = burstReach * data_02082214[((u16)mAngleY >> 4) * 2 + 1];
     pos.z = pos.z + FX_MUL(product, mScale);
     pos.y = pos.y + mScale * data_ov084_021302c4[frame];
-    mParticleHandle1 = Particle::System::New(mParticleHandle1, 0xfb, pos.x, pos.y, pos.z, 0, 0);
+    mParticleHandle1 = Particle::System::New(mParticleHandle1, kPtclPiranhaDeathBurst, pos.x, pos.y, pos.z, 0, 0);
 }
 
 /* Empty. StateWait passes this in r0 and nothing reads it. */

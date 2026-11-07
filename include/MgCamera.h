@@ -5,7 +5,7 @@
  *
  * dScMgSingle3DBase_c holds one at 0x4660 and dScMgD3DBase_c holds two at
  * 0x466c. dScMgD3DBase_c's array strides by 0xbc, and 0x4660 + 0xbc is where
- * dScMgSingle3DBase_c::mSysTracker starts.
+ * dScMgSingle3DBase_c::mParticle starts.
  *
  * Camera_UpdateMatrices fixes the layout. It hands mPos to G3i::LookAt_ as the
  * camera position and mLookAt as the point looked at, with mViewMtx as the

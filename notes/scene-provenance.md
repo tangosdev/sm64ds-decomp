@@ -179,7 +179,7 @@ two real headers because neither `dScStage_c` source file includes them and a me
 own blast radius across every file that already casts through one shadow or the other.
 
 Its destructor is declared, never defined: `src/engine/particle/Particle.cpp`
-already supplies `_ZN8Particle10SysTrackerD1Ev` as an `extern "C"` free function; the
+already supplies `_ZN5dPa_cD1Ev` as an `extern "C"` free function; the
 declaration only lets `dScStage_c`'s implicit destructor find it by name. Not virtual —
 `dtor_variant_audit.py` established `Particle::SysTracker` has no RTTI record and no
 `_ZTV`, so it is not polymorphic and must not gain a vtable pointer.

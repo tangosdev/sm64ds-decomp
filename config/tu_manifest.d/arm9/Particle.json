@@ -26,42 +26,42 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_020226fc",
+      "symbol": "_ZN8Particle6System20NewFlamethrowerBlueBEiiiss",
       "address": "0x020226fc",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_020226fc.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_02022774",
+      "symbol": "_ZN8Particle6System20NewFlamethrowerBlueAEiiiss",
       "address": "0x02022774",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_02022774.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_020227ec",
+      "symbol": "_ZN8Particle6System19NewFlamethrowerRedBEiiiss",
       "address": "0x020227ec",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_020227ec.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_02022864",
+      "symbol": "_ZN8Particle6System19NewFlamethrowerRedAEiiiss",
       "address": "0x02022864",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_02022864.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_020228dc",
+      "symbol": "_ZN8Particle6System11NewBlueFireEiii",
       "address": "0x020228dc",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0202/func_020228dc.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_0202293c",
+      "symbol": "_ZN8Particle6System10NewRedFireEiii",
       "address": "0x0202293c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202293c.c",
@@ -75,14 +75,14 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_020229f0",
+      "symbol": "_ZN8Particle6System9NewBubbleEiii",
       "address": "0x020229f0",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_020229f0.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_02022a4c",
+      "symbol": "_ZN8Particle6System9NewSplashEiii",
       "address": "0x02022a4c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_02022a4c.c",
@@ -96,7 +96,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_02022b04",
+      "symbol": "_ZN8Particle17MegaRunningDustAtEiii",
       "address": "0x02022b04",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0202/func_02022b04.c",
@@ -110,7 +110,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8Particle6System17NewUnkCallback818EjjiiiPK11Vector3_16f",
+      "symbol": "_ZN8Particle6System16NewCleanParticleEjjiiiPK11Vector3_16f",
       "address": "0x02022bb4",
       "size": "0x00000044",
       "legacy_source": "src/_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f.c",
@@ -124,42 +124,42 @@
       "ordinal": 14
     },
     {
-      "symbol": "func_02022c3c",
+      "symbol": "_ZN8Particle6System13NewCheckYoganEjjiiiPK11Vector3_16f",
       "address": "0x02022c3c",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0202/func_02022c3c.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_02022c80",
+      "symbol": "_ZN8Particle6System17NewFitWaterRaisedEjjiiiPK11Vector3_16f",
       "address": "0x02022c80",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0202/func_02022c80.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_02022cbc",
+      "symbol": "_ZN8Particle6System11NewFitWaterEjjiiiPK11Vector3_16f",
       "address": "0x02022cbc",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0202/func_02022cbc.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_02022d00",
+      "symbol": "_ZN8Particle6System19NewCheckWaterRippleEjjiiiPK11Vector3_16f",
       "address": "0x02022d00",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0202/func_02022d00.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_02022d44",
+      "symbol": "_ZN8Particle6System13NewCheckWaterEjjiiiPK11Vector3_16f",
       "address": "0x02022d44",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0202/func_02022d44.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8Particle6System3NewEjjiiiPK11Vector3_16fPNS_8CallbackE",
+      "symbol": "_ZN8Particle6System3NewEjjiiiPK11Vector3_16fPN5dPa_c7level_c10callback_cE",
       "address": "0x02022d80",
       "size": "0x000000e8",
       "legacy_source": "src/_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE.c",
@@ -187,17 +187,17 @@
       "ordinal": 23
     },
     {
-      "symbol": "_ZN8Particle10SysTracker6UpdateEv",
+      "symbol": "_ZN5dPa_c6UpdateEv",
       "address": "0x02022f20",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN8Particle10SysTracker6UpdateEv.cpp",
+      "legacy_source": "src/_ZN5dPa_c6UpdateEv.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8Particle10SysTracker10InitialiseEv",
+      "symbol": "_ZN5dPa_c10InitialiseEv",
       "address": "0x02022f40",
       "size": "0x000001ac",
-      "legacy_source": "src/_ZN8Particle10SysTracker10InitialiseEv.cpp",
+      "legacy_source": "src/_ZN5dPa_c10InitialiseEv.cpp",
       "ordinal": 25
     },
     {
@@ -222,17 +222,17 @@
       "ordinal": 28
     },
     {
-      "symbol": "_ZN8Particle10SysTrackerD1Ev",
+      "symbol": "_ZN5dPa_cD1Ev",
       "address": "0x02023194",
       "size": "0x00000070",
-      "legacy_source": "src/_ZN8Particle10SysTrackerD1Ev.cpp",
+      "legacy_source": "src/_ZN5dPa_cD1Ev.cpp",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN8Particle10SysTrackerC1Ev",
+      "symbol": "_ZN5dPa_cC1Ev",
       "address": "0x02023204",
       "size": "0x000001d0",
-      "legacy_source": "src/_ZN8Particle10SysTrackerC1Ev.cpp",
+      "legacy_source": "src/_ZN5dPa_cC1Ev.cpp",
       "ordinal": 30
     }
   ],
@@ -240,12 +240,12 @@
   "bss": [],
   "compiler_only_output": [
     {
-      "symbol": "_ZN8Particle10SysTrackerC2Ev",
+      "symbol": "_ZN5dPa_cC2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-subobject constructor beside C1; the cartridge homes only C1 for this class (SysTracker is never constructed as a base subobject), so the emitted C2 section is dropped unenrolled"
     },
     {
-      "symbol": "_ZN8Particle10SysTrackerD2Ev",
+      "symbol": "_ZN5dPa_cD2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-subobject destructor beside D1; the cartridge homes only D1 for this class, so the emitted D2 section is dropped unenrolled"
     },
@@ -274,14 +274,14 @@
     "functions_declared": 31,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN8Particle10SysTrackerC2Ev",
-        "_ZN8Particle10SysTrackerD2Ev",
+        "_ZN5dPa_cC2Ev",
+        "_ZN5dPa_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
         "_ZN7Vector3D1Ev",
-        "_ZN8Particle10SysTrackerC2Ev",
-        "_ZN8Particle10SysTrackerD2Ev"
+        "_ZN5dPa_cC2Ev",
+        "_ZN5dPa_cD2Ev"
       ],
       "droppedSections": [
         51,

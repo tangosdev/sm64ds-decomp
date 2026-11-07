@@ -1085,7 +1085,7 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
             pos.x = k * data_02082214[i2] + pos.x;
             pos.z = k * data_02082214[i1] + pos.z;
         }
-        uid = Particle::System::New(0, 0xf9, pos.x, pos.y, pos.z, 0, 0);
+        uid = Particle::System::New(0, kPtclFootstepDust, pos.x, pos.y, pos.z, 0, 0);
         Particle::SetSelfDestructFlag(0xf9);
         if (uid == 0) return;
         ps = Particle::System::FromUniqueID(uid);
@@ -1126,7 +1126,7 @@ void daNknk_c::func_ov062_021175c0()
 
         spawned = Particle::System::New(0, kPtclLandingDust, pos.x, pos.y, zArg,
                                         (const Vector3_16f *)((void *)0),
-                                        (Particle::Callback *)((void *)0));
+                                        (dPa_c::level_c::callback_c *)((void *)0));
     }
 
     Particle::SetSelfDestructFlag(kPtclLandingDust);

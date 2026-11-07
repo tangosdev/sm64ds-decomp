@@ -146,7 +146,7 @@ virtual, so its table is dScMgBase_c's 36 slots (ov006:0x0213e448, 0x90 bytes).
 
 **mSysTracker at 0x471c is hand-verified**, four independent witnesses agreeing
 on the offset: this class's D1 and D0 both destroy it
-(`_ZN8Particle10SysTrackerD1Ev((char*)c + 0x471c)`), AfterInitResources
+(`_ZN5dPa_cD1Ev((char*)c + 0x471c)`), AfterInitResources
 initialises it, BeforeBehavior updates it conditionally. Its type is the one
 shared definition in include/Particle__SysTracker.h, which dScStage_c.h also uses.
 
@@ -175,7 +175,7 @@ dScMgMemory_c: a merely declared `virtual ~dScMgSingle3DBase_c();` compiles a
 derived destructor referencing `_ZN19dScMgSingle3DBase_cD2Ev` as an undefined
 external, and no such symbol exists anywhere in the ROM. The raw pre-migration
 destructors confirm it -- `func_ov006_020f3834` (`dScMgMemory_c`'s *D1*) destroys
-`_ZN8Particle10SysTrackerD1Ev(c + 0x471c)` inline and then calls
+`_ZN5dPa_cD1Ev(c + 0x471c)` inline and then calls
 `_ZN11dScMgBase_cD2Ev(c)` directly, with no dScMgSingle3DBase_c-specific
 destructor call at all. The out-of-line definition that landed in #1421 was a
 latent bug; #1421 never tested a real descendant. No separate `operator delete`

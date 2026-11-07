@@ -30,6 +30,7 @@ enum d_a_obj_hm_bskt_AssetId { ASSET_HM_BASKET_BMD = 0x0618, ASSET_HM_BASKET_KCL
 #include "daObjHmBskt_c.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 struct KCL_File;
 /* CLPS.h keeps the block opaque: an 8-byte header with the entry stride
@@ -158,8 +159,8 @@ int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
     int py = mPosY + 0x96000;
     Vector3 p(px, py, pz);
     dActor_c::Spawn(0xb2, (unsigned char)(param1 & 0xf) | 0x20, p, 0, mAreaId, -1);
-    Particle::System::NewSimple(0xb, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xd, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclBlockBreakA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclBlockBreakB, mPosX, mPosY, mPosZ);
     MarkForDestruction();
 }
 

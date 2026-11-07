@@ -27,6 +27,7 @@ enum d_a_obj_ice_board_AssetId {
 #include "Sound.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x472, collision file 0x473). mwcc emits
@@ -134,9 +135,9 @@ void daObjIceBoard_c::OnGroundPounded(dActor_c &other) {
  * the cartridge has. */
 void daObjIceBoard_c::Kill() {
     Sound::PlayBank3(0x41, mCamSpacePos);
-    Particle::System::NewSimple(0x74, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0x75, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0x76, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclIceBreakA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclIceBreakB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclIceBreakC, mPosX, mPosY, mPosZ);
     MarkForDestruction();
 }
 

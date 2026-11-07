@@ -27,6 +27,7 @@ enum daObjFl_KomaU_c_AssetId { ASSET_FL_KOMA_U_BMD = 0x05f7, ASSET_FL_KOMA_U_KCL
 #include "dBgW.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (func_02017acc /
@@ -148,9 +149,9 @@ s32 daObjFl_KomaU_c::Behavior() {
 
         out.y = out.y + 0x64000;
         mParticleID[0][i] =
-            Particle::System::New(mParticleID[0][i], 0x4b, out.x, out.y, out.z, 0, 0);
+            Particle::System::New(mParticleID[0][i], kPtclFireBarA, out.x, out.y, out.z, 0, 0);
         mParticleID[1][i] =
-            Particle::System::New(mParticleID[1][i], 0x4c, out.x, out.y, out.z, 0, 0);
+            Particle::System::New(mParticleID[1][i], kPtclFireBarB, out.x, out.y, out.z, 0, 0);
 
         cyl->Clear();
         cyl->Update();

@@ -49,6 +49,7 @@ enum daMip_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
@@ -106,8 +107,6 @@ void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
 void func_02016acc(void *, unsigned int);
 void func_02016b24(void *, unsigned int);
-u32   func_02022a4c(s32, s32, s32);
-u32   func_02022cbc(int, int, s32, s32, s32, const void *);
 void  func_0203c178(void *, int, int, int);
 
 }
@@ -783,7 +782,7 @@ int daMip_c::StateFleeMain() {
         if (((u16)t) == 0) {
             if (TestWaterBelow() == 1) {
                 func_02012694(0x124, &mCamSpacePos);
-                func_02022a4c(mPosX, mFloorY + 0x3000, mPosZ);
+                Particle::System::NewSplash(mPosX, mFloorY + 0x3000, mPosZ);
             } else {
                 func_02012694(0x123, &mCamSpacePos);
             }
@@ -802,7 +801,7 @@ int daMip_c::StateFleeMain() {
             *((volatile s32 *)(&pos.y)) = y;
             *((volatile s32 *)(&pos.z)) = z;
             mDustParticle =
-                func_02022cbc(mDustParticle, 0xe8, *((volatile s32 *)(&pos.x)), *(&pos.y), z, 0);
+                Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove, *((volatile s32 *)(&pos.x)), *(&pos.y), z, 0);
         }
     }
 
@@ -958,8 +957,8 @@ int daMip_c::StateIdleMain()
         *((volatile s32*)(&sp.x)) = x;
         *((volatile s32*)(&sp.y)) = y;
         *((volatile s32*)(&sp.z)) = z;
-        mDustParticle = func_02022cbc(mDustParticle, 0xe8,
-            *((volatile s32*)(&sp.x)), *(&sp.y), z, 0);
+        mDustParticle = Particle::System::NewFitWater(mDustParticle, kPtclWaterSurfaceMove,
+                                                      *((volatile s32*)(&sp.x)), *(&sp.y), z, 0);
     }
 
     VecFx32 pp;

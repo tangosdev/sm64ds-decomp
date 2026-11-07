@@ -78,6 +78,7 @@ enum daObjTatefuda_c_AssetId {
 #include "dCc_c.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 
@@ -156,7 +157,7 @@ extern unsigned int gNextActorUpdateMask;
 extern void AttachToHolder(struct daObjTatefuda_c *self);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern u32 d_a_obj_tatefudaNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
+extern u32 d_a_obj_tatefudaNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
                                                  const Vector3_16f *v);
 extern void RebuildModelMatrix(struct daObjTatefuda_c *self);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
@@ -356,9 +357,9 @@ int daObjTatefuda_c::Behavior()
         ((int *)&v)[2] = z;
         if (DecIfAbove0_Byte(&mBreakTimer) != 0) {
             *(void **)&mParticleHandle1 =
-                (void *)Particle::System::New(mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
+                (void *)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
-                Particle::System::NewUnkCallback818(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
+                Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {
             int x2, y2, z2;
             x2 = mPosX;

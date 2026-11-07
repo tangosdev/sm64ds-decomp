@@ -39,6 +39,7 @@ enum daObjDlPyramid_c_AssetId { ASSET_DL_PYRAMID_BMD = 0x05dd, ASSET_DL_PYRAMID_
 #include "dMap_c.h"
 #include "Event.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 struct BMD_File;
@@ -103,10 +104,10 @@ void daObjDlPyramid_c::FinishDescent() {
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xfa000;
-    Particle::System::NewSimple(0x1f, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x20, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x21, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x22, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkA, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkB, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkC, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkD, v.x, v.y, v.z);
     MarkForDestruction();
     Event::SetBit(0xe);
     dMap_c::UpdateLevelSpecific();
@@ -135,7 +136,7 @@ void daObjDlPyramid_c::Descend() {
         mAngleY += mAngVelY;
         mPosY += mVertSpeed;
     }
-    mSpinParticleID = Particle::System::New(mSpinParticleID, 0x23, mPosX, mPosY, mPosZ, 0, 0);
+    mSpinParticleID = Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPosX, mPosY, mPosZ, 0, 0);
     if (mStateTimer == 150)
         mState = 2;
 }

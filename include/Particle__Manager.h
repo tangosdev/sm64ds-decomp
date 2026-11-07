@@ -92,7 +92,7 @@ struct Manager {
     u16 unk_02c;                    /* 0x2c */
     u16 unk_02e;                    /* 0x2e */
     /* Base POLYGON_ATTR bits the draw routines OR into each polygon;
-       SysTracker::Initialise sets 0x8000. */
+       dPa_c::Initialise sets 0x8000. */
     u32 mPolygonAttr; /* 0x30 */
     /* func_02049ee8 stores each system here before drawing it. */
     System *mCurrentSystem; /* 0x34 */

@@ -440,9 +440,9 @@ int daTgz_c::func_ov077_02125480() {
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int aimHeight = OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x43, mPosX, mPosY + aimHeight, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + aimHeight, mPosZ);
     int aimHeightAgain = OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x44, mPosX, mPosY + aimHeightAgain, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + aimHeightAgain, mPosZ);
     mState = 5;
     return 1;
 }
@@ -693,7 +693,7 @@ int daTgz_c::func_ov077_02125bb4() {
         if (mInWater == 0) {
             func_02012694(0xe2, &mCamSpacePos);
             Particle::System::NewBigSplash(mPosX, data_0209f32c, mPosZ);
-            mRippleId = Particle::System::New(mRippleId, 0x109, mPosX, data_0209f32c, mPosZ, 0, 0);
+            mRippleId = Particle::System::New(mRippleId, kPtclRipple, mPosX, data_0209f32c, mPosZ, 0, 0);
         }
         mVertAccel = -0x400;
         mTerminalVelocity = -0x5000;

@@ -17,6 +17,7 @@
 
 #include "daPgRcer_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"
@@ -463,7 +464,7 @@ int daPgRcer_c::func_ov019_0211197c() {
         }
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, mCamSpacePos, 0);
         mDustParticle =
-            (u32)Particle::System::New(mDustParticle, 0x101, mPosX, mPosY + 0x32000, mPosZ, 0, 0);
+            (u32)Particle::System::New(mDustParticle, kPtclSlideDust, mPosX, mPosY + 0x32000, mPosZ, 0, 0);
         break;
 
     case 2:

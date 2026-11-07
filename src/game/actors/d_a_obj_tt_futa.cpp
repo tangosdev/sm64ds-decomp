@@ -13,6 +13,7 @@ enum daObjTtFuta_c_AssetId { ASSET_TT_OBJ_FUTA_BMD = 0x06c5, ASSET_TT_OBJ_FUTA_K
 #include "Sound.h"
 #include "Event.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -50,7 +51,7 @@ daObjTtFuta_c::~daObjTtFuta_c() {}
  * event bit and destroys the lid. */
 void daObjTtFuta_c::OnGroundPounded(dActor_c &other) {
     Vector3 *v = &other.mPos;
-    Particle::System::NewSimple(0x28, v->x, v->y, v->z);
+    Particle::System::NewSimple(kPtclDrainLidPounded, v->x, v->y, v->z);
     Sound::PlayBank3(0xf, mCamSpacePos);
     Event::SetBit(0xe);
     MarkForDestruction();

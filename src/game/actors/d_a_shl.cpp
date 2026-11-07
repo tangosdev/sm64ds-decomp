@@ -59,6 +59,7 @@
 
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daShl_c.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
@@ -102,8 +103,6 @@ u8   DecIfAbove0_Byte(u8 *counter);
 u16  DecIfAbove0_Short(u16 *counter);
 void Matrix4x3_FromRotationY(void *m, int angle);
 int  SurfaceInfo_TestFlag0x20(int *si);
-u32  func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
-                   void *dir);
 
 int d_a_shlNewHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir, void *cb);
 /* local extern: these five names hold the @NNN count. Sound::PlayLong is the call. */
@@ -563,8 +562,8 @@ void daShl_c::func_ov102_0214c84c()
                 pos.trail.y = ground.clsnY + 0x3c000;
                 mParticleHandle_3d4 = 0;
                 mParticleHandle_3c8 = mParticleHandle_3d4;
-                mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
-                mParticleHandle_3d0 = Particle::System::New(mParticleHandle_3d0, 0xe3, pos.trail.x,
+                mParticleHandle_3cc = Particle::System::NewCheckWaterRipple(mParticleHandle_3cc, kPtclShellRideWaterA, pos.trail.x, pos.trail.y, pos.trail.z, 0);
+                mParticleHandle_3d0 = Particle::System::New(mParticleHandle_3d0, kPtclShellRideWaterB, pos.trail.x,
                                                             pos.trail.y, pos.trail.z, 0, 0);
                 if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
                     mSoundHandle = 0;
@@ -577,9 +576,9 @@ void daShl_c::func_ov102_0214c84c()
                     pos.trail.y = ground.clsnY + 0x3c000;
                     mParticleHandle_3d4 = 0;
                     mParticleHandle_3c8 = mParticleHandle_3d4;
-                    mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
+                    mParticleHandle_3cc = Particle::System::NewCheckWaterRipple(mParticleHandle_3cc, kPtclShellRideWaterA, pos.trail.x, pos.trail.y, pos.trail.z, 0);
                     mParticleHandle_3d0 = Particle::System::New(
-                        mParticleHandle_3d0, 0xe3, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+                        mParticleHandle_3d0, kPtclShellRideWaterB, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
                     if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
                         mSoundHandle = 0;
                     mSoundID = ground.surface.clps.func_02037e84() + 0xf2;
@@ -590,7 +589,7 @@ void daShl_c::func_ov102_0214c84c()
                     mParticleHandle_3cc = mParticleHandle_3d0;
                     mParticleHandle_3d4 = mParticleHandle_3cc;
                     mParticleHandle_3c8 = Particle::System::New(
-                        mParticleHandle_3c8, 0xe1, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
+                        mParticleHandle_3c8, kPtclShellRideLava, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
                     if (mSoundID != 0x102)
                         mSoundHandle = 0;
                     mSoundID = 0x102;
@@ -614,7 +613,7 @@ void daShl_c::func_ov102_0214c84c()
     mParticleHandle_3cc = mParticleHandle_3d0;
     mParticleHandle_3c8 = mParticleHandle_3cc;
     pos.trail.y = pos.trail.y + 0x1e000;
-    mParticleHandle_3d4 = Particle::System::New(mParticleHandle_3d4, 0xe0, pos.trail.x, pos.trail.y,
+    mParticleHandle_3d4 = Particle::System::New(mParticleHandle_3d4, kPtclShellRideTrail, pos.trail.x, pos.trail.y,
                                                 pos.trail.z, 0, 0);
 }
 

@@ -30,6 +30,7 @@
 #include "common.h"
 #include "nitro/hw/registers.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "G2.h"
 #include "G2x.h"
 #include "GX.h"
@@ -134,7 +135,7 @@ extern volatile Matrix4x3 sEsp3DIdentityMtx;
 /* ---- dScMg3DEsp_c: the destructor (key function) ---------------------- */
 
 /* The body is empty: the members' destructors (reverse declaration order),
-   the vtable stores, mSysTracker's destruction and the chain to
+   the vtable stores, mParticle's destruction and the chain to
    ~dScMgBase_c are all compiler-generated; the deleting variant reaches
    dScMgBase_c's operator delete. */
 // @symbol _ZN12dScMg3DEsp_cD1Ev
@@ -337,7 +338,7 @@ void dMg3DEspModel_c::Behavior()
     if (mShowSparks == 0) return;
 
     mParticleSys =
-        (u32)Particle::System::New(mParticleSys, 0xec, 0x48c000, 0x140000, 0x200000, 0, 0);
+        (u32)Particle::System::New(mParticleSys, kPtclMg3DEspSparks, 0x48c000, 0x140000, 0x200000, 0, 0);
 }
 
 // @symbol _ZN15dMg3DEspModel_c3HitEv

@@ -99,6 +99,7 @@ enum daKuriKing_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
@@ -506,8 +507,8 @@ void daKuriKing_c::func_ov074_0211f5b8()
         vzero.y = this->mPosY;
         vzero.z = this->mPosZ;
         vzero.y = vzero.y + 0x190000;
-        Particle::System::NewSimple(0x91, vzero.x, vzero.y, vzero.z);
-        Particle::System::NewSimple(0x92, vzero.x, vzero.y, vzero.z);
+        Particle::System::NewSimple(kPtclGoombossVanishA, vzero.x, vzero.y, vzero.z);
+        Particle::System::NewSimple(kPtclGoombossVanishB, vzero.x, vzero.y, vzero.z);
         func_02012694(0x15f, &this->mCamSpacePosX);
         func_ov074_0211f344(1);
         func_ov074_0211f244();
@@ -948,7 +949,7 @@ int daKuriKing_c::func_ov074_021204c0() {
             v.y = this->mPosY;
             v.z = this->mPosZ;
             v.y += FX_MUL(this->mCurrentScale, (long long)0x190000);
-            Particle::System::NewSimple(0xb1, ((int *)&v)[0], ((int *)&v)[1], ((int *)&v)[2]);
+            Particle::System::NewSimple(kPtclHugeLandingDust, ((int *)&v)[0], ((int *)&v)[1], ((int *)&v)[2]);
         }
     }
     k = ((u16)this->mScalePhase >> 4) * 2;
@@ -1160,11 +1161,11 @@ void daKuriKing_c::func_ov074_02120bb8(dActor_c *other, dCcAcPos_c *clsn, int mo
 
     switch (mode) {
     case 0:
-        Particle::System::NewSimple(0xf6, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclEnemyHit, dst.x, dst.y, dst.z);
         break;
     case 1:
-        Particle::System::NewSimple(0x43, dst.x, dst.y, dst.z);
-        Particle::System::NewSimple(0x44, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclKnockAwayA, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclKnockAwayB, dst.x, dst.y, dst.z);
         break;
     }
 }

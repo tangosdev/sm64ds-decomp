@@ -42,6 +42,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 namespace cstd {
 s16 atan2(s32, s32);
@@ -262,7 +263,7 @@ int daBombking_c::func_ov078_021238ac()
     func_02012694(0x130, &this->mCamSpacePosX);
 
     this->UntrackAndSpawnStar(*(s8 *)&this->mStarTracked, this->mStarID, *(Vector3 *)&v, 4);
-    Particle::System::NewSimple(0x1a, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclKingBobOmbDefeat, v.x, v.y, v.z);
     u.x = v.x;
     u.y = v.y;
     u.z = v.z;

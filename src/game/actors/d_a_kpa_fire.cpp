@@ -94,7 +94,7 @@ enum {
 
 /* Particle ids, named by where they are used, not recovered names. 0x9a, 0x9c
    and 0xa6 are passed to func_ov060_02116518, which also starts id + 1 in the
-   second handle. 0x9e goes straight to NewUnkCallback818 (one handle only);
+   second handle. 0x9e goes straight to NewCleanParticle (one handle only);
    0x9c, 0x9e, 0xa4 and 0x9f are kPtclFlame, kPtclFlameSmall, kPtclFlameBlue and
    kPtclFlameOutPuff (ParticleIds.h); 0x9f is a one-shot NewSimple. */
 enum {
@@ -117,7 +117,7 @@ extern Entry data_ov060_0211afb4[];
 extern PMF data_ov060_0211af74[];
 
 /* Fix12<int>-by-value and other mangled-name calls (see the banner). */
-extern u32 d_a_kpa_fireNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
+extern u32 d_a_kpa_fireNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
                                              const struct Vector3_16f *f);
 extern u32 d_a_kpa_fireNewHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void *f, void *g);
 void d_a_kpa_fireNewSimpleHold(u32 id, Fix12i x, Fix12i y, Fix12i z);
@@ -501,7 +501,7 @@ void daKpaFire_c::func_ov060_02116f90() {
 
     if (this->mLanded == 0) {
         this->mParticleHandle =
-            Particle::System::NewUnkCallback818(this->mParticleHandle, kPtclFlameSmall, this->mPosX,
+            Particle::System::NewCleanParticle(this->mParticleHandle, kPtclFlameSmall, this->mPosX,
                                                 this->mPosY + 0x37000, this->mPosZ, 0);
         this->mdCcAc_c.flags |= 1;
         func_ov060_0211712c();
@@ -823,7 +823,7 @@ void daKpaFire_c::func_ov060_02116740() {
  * by yOffset (Fix12): `kind` in mParticleHandle and `kind + 1` in
  * mParticleHandle2 (each handle is passed back in, so a live particle is
  * presumably refreshed rather than duplicated). Kinds 0xa2 and 0xa4 start the
- * first one through the NewUnkCallback818 form of Particle::System::New; the rest use
+ * first one through the NewCleanParticle form of Particle::System::New; the rest use
  * the plain New.
  *
  * With resize non-zero each live particle is resized. callbackScale becomes
@@ -835,7 +835,7 @@ void daKpaFire_c::func_ov060_02116518(u32 kind, int resize, int yOffset) {
     Particle::System *sys;
 
     if (kind == 0xa2 || kind == kPtclFlameBlue) {
-        this->mParticleHandle = Particle::System::NewUnkCallback818(
+        this->mParticleHandle = Particle::System::NewCleanParticle(
             this->mParticleHandle, kind, this->mPosX, this->mPosY + yOffset, this->mPosZ, 0);
     } else {
         this->mParticleHandle = Particle::System::New(this->mParticleHandle, kind, this->mPosX,

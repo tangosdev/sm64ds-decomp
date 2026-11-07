@@ -1323,8 +1323,8 @@ void dActor_c::PoofDust()
  * 0x0200fdfc  size 0x40 */
 void dActor_c::PoofDustAt(const Vector3 &pos)
 {
-    Particle::System::NewSimple(0x122, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x123, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclPoofDustA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclPoofDustB, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1370,8 +1370,8 @@ void dActor_c::SmallPoofDust()
  * 0x0200fd04  size 0x3c */
 void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
 {
-    Particle::System::NewSimple(0x127, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x128, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclDisappearPoofA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclDisappearPoofB, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1466,7 +1466,7 @@ void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
             pos.y = rc.clsnY;
     }
     pos.y += 0x5a000;
-    Particle::System::NewSimple(0xb1, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclHugeLandingDust, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1500,7 +1500,7 @@ extern "C" void *func_0200fa04(int actor, Vector3 *pos, int doRaycast) {
             pos->y = rc.clsnY;
     }
     pos->y += 0x78000;
-    return Particle::System::NewSimple(0x1b, pos->x, pos->y, pos->z);
+    return Particle::System::NewSimple(kPtclBossLandingDust, pos->x, pos->y, pos->z);
 }
 
 /* -------------------------------------------------------------------------- */

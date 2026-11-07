@@ -31,6 +31,7 @@
  * Matrix4x3-spelling rule its own header comment records. */
 #include "dBgActor_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "dBgW.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Actr.h"
@@ -570,7 +571,7 @@ void dBgActor_c::Kill()
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    Particle::System::NewSimple(0xa, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclBgActorBreak, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;

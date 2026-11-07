@@ -18,6 +18,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* Eight-byte pointer-to-member records. The cartridge stores the four
  * constants in .data and copies them into the two .bss tables below. */
@@ -238,9 +239,9 @@ int daBbl_c::ExecuteJump() {
             mVertSpeed = mVertSpeed * -7 / 10;
         }
     }
-    mFireParticle = Particle::System::New(mFireParticle, 0x4d, mPosX, mPosY + 0x37000, mPosZ, 0, 0);
+    mFireParticle = Particle::System::New(mFireParticle, kPtclLavaBubbleFlame, mPosX, mPosY + 0x37000, mPosZ, 0, 0);
     mSmokeParticle =
-        Particle::System::New(mSmokeParticle, 0x4e, mPosX, mPosY + 0x37000, mPosZ, 0, 0);
+        Particle::System::New(mSmokeParticle, kPtclLavaBubbleSmoke, mPosX, mPosY + 0x37000, mPosZ, 0, 0);
     if ((u16)mStateTimer == 0)
         MarkForDestruction();
     return 1;

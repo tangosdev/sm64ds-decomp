@@ -59,6 +59,7 @@ enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL 
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* The constructors and destructors are the ROM resource-family veneers,
  * aliased in the manifest. */
@@ -284,7 +285,7 @@ void daObjBk_Lift_c::OnHitByMegaChar(daPly_c &player) {
    mPos rather than reusing the words it just passed. */
 void daObjBk_Lift_c::Kill() {
     Vector3 dustPos;
-    Particle::System::NewSimple(0x48, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclStoneBlockBreak, mPosX, mPosY, mPosZ);
     dustPos.x = mPosX;
     dustPos.y = mPosY;
     dustPos.z = mPosZ;

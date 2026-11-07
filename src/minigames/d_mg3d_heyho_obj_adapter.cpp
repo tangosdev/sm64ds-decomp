@@ -36,6 +36,7 @@
      through its vtable, with mAnchor/mCommand as anchor/command. */
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
@@ -1404,9 +1405,9 @@ void Heyho_Settle(char* c)
     int v0, v1;
     int t;
 
-    a = Particle::System::NewSimple(0x122, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
+    a = Particle::System::NewSimple(kPtclPoofDustA, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
                                     HEYHO(c)->mPos.z << 3);
-    b = Particle::System::NewSimple(0x123, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
+    b = Particle::System::NewSimple(kPtclPoofDustB, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
                                     HEYHO(c)->mPos.z << 3);
     t = (int)(HEYHO(c)->mSize << 0x1c) >> 0x10;
     /* Both stores go through a; the cartridge never sets b's scale. */

@@ -6049,7 +6049,7 @@
         "return:void *"
       ]
     },
-    "_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE": {
+    "_ZN5dPa_c7level_c5entryEjR7Vector3PK11Vector3_16fPNS0_10callback_cE": {
       "src/engine/particle/Particle.cpp": [
         "param:#3 void *",
         "param:#4 const void *",
@@ -7109,7 +7109,7 @@
         "param:#2 Vector3 &"
       ]
     },
-    "_ZNK8Particle10SysTracker8Contents8FindDataEj": {
+    "_ZN5dPa_c7level_c3getEj": {
       "src/engine/particle/Particle.cpp": [
         "return:System *"
       ]
@@ -7834,7 +7834,7 @@
     },
     "data_0209ee74": {
       "include/Particle__System.h": [
-        "return:Particle::SysTracker *"
+        "return:dPa_c *"
       ]
     },
     "data_0209ee90": {

@@ -52,6 +52,7 @@ enum d_a_hyuhyu_AssetId {
 #include "SaveData.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 
@@ -337,9 +338,9 @@ int daHyuhyu_c::StateBlowMain() {
 
         pos.y = pos.y + 0x28000;
 
-        mGustParticle = Particle::System::New(mGustParticle, 0x72, pos.x, pos.y, pos.z,
+        mGustParticle = Particle::System::New(mGustParticle, kPtclFwooshGustA, pos.x, pos.y, pos.z,
                                               (const Vector3_16f *)(&rot), 0);
-        mGustParticle2 = Particle::System::New(mGustParticle2, 0x73, pos.x, pos.y, pos.z,
+        mGustParticle2 = Particle::System::New(mGustParticle2, kPtclFwooshGustB, pos.x, pos.y, pos.z,
                                                (const Vector3_16f *)(&rot), 0);
 
         if (!((u16)(mAnmModel.currFrame >> 12) & 1)) {

@@ -294,7 +294,7 @@ PmfEntry sSoundPop12Table[3] = {
 };
 
 /* The body is empty: everything the factory's `new` runs (dScMgBase_c's
-   C2, dScMgSingle3DBase_c's vptr and mSysTracker, this class's vptr, then
+   C2, dScMgSingle3DBase_c's vptr and mParticle, this class's vptr, then
    mTable's constructor) is the compiler's inlining of the base and member
    constructors. */
 inline dScMgSound_c::dScMgSound_c() {}

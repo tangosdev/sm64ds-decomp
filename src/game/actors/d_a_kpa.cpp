@@ -136,6 +136,7 @@ enum daKpa_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* -------------------------------------------------------------------------- */
@@ -2231,7 +2232,7 @@ void daKpa_c::func_ov060_02113d8c(){
         this->mStepCounter = 0;
         func_ov060_02111cc0(0x1a, 0x40000000);
         this->mParticleHandle = (unsigned int)Particle::System::New(
-            this->mParticleHandle, 0x101, this->mPosX, this->mPosY + 0x32000, this->mPosZ, 0, 0);
+            this->mParticleHandle, kPtclSlideDust, this->mPosX, this->mPosY + 0x32000, this->mPosZ, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;
@@ -2568,8 +2569,8 @@ void daKpa_c::func_ov060_021135fc(){
         pos.y = pos.y + 0xa0000;
         dActor_c::Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, this->mAreaId, -1);
     } else {
-        Particle::System::NewSimple(0xad, base.x, base.y, base.z);
-        Particle::System::NewSimple(0xae, base.x, base.y, base.z);
+        Particle::System::NewSimple(kPtclBowserDefeatA, base.x, base.y, base.z);
+        Particle::System::NewSimple(kPtclBowserDefeatB, base.x, base.y, base.z);
         void *spawned = dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, this->mVariantID, *((Vector3*)(&this->mPosX)), 0, this->mAreaId, -1);
         ((daObjKey_c *)spawned)->mSpinSpeed = this->mSpinSpeed;
         func_02012694(BOWSER_SND_DEFEATED, (Vector3*)(&this->mCamSpacePosX));

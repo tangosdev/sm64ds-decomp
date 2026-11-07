@@ -14,9 +14,9 @@
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S.
  *
- * func_020228dc / func_0202293c are the arm9 blue/red flame particle
- * wrappers (effects 0x117 / 0x118). Their names are not recovered and no
- * header declares them.
+ * Particle::System::NewBlueFire / NewRedFire are the arm9 blue/red flame
+ * particle wrappers (effects 0x117 / 0x118). The names are descriptive;
+ * the ROM has none.
  */
 
 #include "daObjFire_c.h"
@@ -27,8 +27,6 @@
 
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *value);
-u32 func_020228dc(Fix12i x, Fix12i y, Fix12i z);
-u32 func_0202293c(Fix12i x, Fix12i y, Fix12i z);
 }
 
 /* Actor ID 0x13d is BLUE_FLAME, 0xbf is PLAYER. dActor_c::mFlags bit
@@ -126,9 +124,9 @@ int daObjFire_c::Behavior() {
     mFlags &= ~0xc0000;
 
     if (IsBlueFlame(this))
-        func_020228dc(pos.x, pos.y, pos.z);
+        Particle::System::NewBlueFire(pos.x, pos.y, pos.z);
     else
-        func_0202293c(pos.x, pos.y, pos.z);
+        Particle::System::NewRedFire(pos.x, pos.y, pos.z);
 
     if (IsBeingEaten(this)) {
         mDisappearTimer = 0x1e;

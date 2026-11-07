@@ -36,6 +36,7 @@ enum d_a_obj_ice_block_AssetId { ASSET_ICE_BLOCK_LL_BMD = 0x045a, ASSET_ICE_BLOC
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "math/CalcLib.h"
@@ -184,9 +185,9 @@ void daObjIceBlock_c::Kill() {
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    Particle::System::NewSimple(0x74, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x75, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x76, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclIceBreakA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclIceBreakB, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclIceBreakC, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;

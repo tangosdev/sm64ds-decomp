@@ -1015,7 +1015,7 @@ void daBtn_c::func_ov079_02124ed4()
             func_02012694(0x134, &mCamSpacePosX);
             {
                 s32 *p = &mPounder->mPosX;
-                Particle::System::NewSimple(3, p[0], p[1], p[2]);
+                Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
             }
             if (mHitPoints == 0) {
                 mAnmModel.SetAnim((BCA_File *)data_ov079_021281b0.filePtr, 0x40000000, 0x1000, 0);
@@ -1286,7 +1286,7 @@ void daBtn_c::func_ov079_021246dc()
             dp.y = v.y;
             dp.z = v.z;
             TriplePoofDustAt(*(Vector3 *)&dp);
-            Particle::System::NewSimple(4, v.x, v.y, v.z);
+            Particle::System::NewSimple(kPtclWhompKingDefeat, v.x, v.y, v.z);
             mShouldRender = 0;
             UntrackAndSpawnStar(mTrackStarID, mStarID, *(Vector3 *)&starPos, 4);
             if (mMovingMeshCollider.IsEnabled() != 0)
@@ -1302,7 +1302,7 @@ void daBtn_c::func_ov079_021246dc()
         dp2.y = v2.y;
         dp2.z = v2.z;
         PoofDustAt(*(Vector3 *)&dp2);
-        Particle::System::NewSimple(5, v2.x, v2.y, v2.z);
+        Particle::System::NewSimple(kPtclWhompDefeat, v2.x, v2.y, v2.z);
         MarkForDestruction();
     }
 }
@@ -1578,7 +1578,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     dust.y = pos.y;
     dust.z = pos.z;
     PoofDustAt(dust);
-    Particle::System::NewSimple(5, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclWhompDefeat, pos.x, pos.y, pos.z);
     MarkForDestruction();
     if (mMovingMeshCollider.IsEnabled() != 0)
         mMovingMeshCollider.Disable();

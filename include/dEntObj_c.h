@@ -1,5 +1,5 @@
 /* The multiplayer entry scene object. Its two ROM destructor variants reveal
- * the complete ownership chain: dBase_c, Particle::SysTracker, dExtSimpleModel_c,
+ * the complete ownership chain: dBase_c, dPa_c, dExtSimpleModel_c,
  * dExtAnmModel_c, and four 0x158-byte player records. The record constructor and
  * destructor were previously anonymous address symbols; their four member
  * constructor/destructor calls prove the typed prefix below, while the array
@@ -16,7 +16,7 @@
 #ifdef __cplusplus
 
 #include "dBase_c.h"
-#include "Particle__SysTracker.h"
+#include "dPa_c.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
 #include "dExtBlendAnmModel_c.h"
@@ -124,7 +124,7 @@ typedef char UnknownVsPlayer_size_must_be_0x158[sizeof(UnknownVsPlayer) == 0x158
 struct dEntObj_c : dBase_c {
     enum SceneState { STATE_IDLE = 0, STATE_WAIT_FOR_EXIT, STATE_RUN_OFF_STAGE };
 
-    Particle::SysTracker mParticles; /* 0x050 */
+    dPa_c mParticle; /* 0x050 */
     dExtSimpleModel_c mModel;        /* 0x86c */
     dExtAnmModel_c mAnmModel;        /* 0x8bc */
     UnknownVsPlayer mPlayers[4];     /* 0x920 */

@@ -126,6 +126,7 @@ enum daDemo_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 struct OamAttr;
 
@@ -945,8 +946,8 @@ void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
     ((StaffRoll *)c)->kira.unk308 = p3;
     ((StaffRoll *)c)->kira.unk30c = p4;
     ((StaffRoll *)c)->kiraParticle = Particle::System::New(
-        ((StaffRoll *)c)->kiraParticle, 0x3e, p1 << 12, p2 << 12, 0, 0,
-        (Particle::Callback *)((struct ParticleCallback *)&((StaffRoll *)c)->kira));
+        ((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12, 0, 0,
+        (dPa_c::level_c::callback_c *)((struct ParticleCallback *)&((StaffRoll *)c)->kira));
 }
 }
 
@@ -3969,9 +3970,9 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], 0x3b, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], 0x3c, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], 0x3d, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] = Particle::System::New(mParticleID[0], kPtclDemoDescendA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] = Particle::System::New(mParticleID[1], kPtclDemoDescendB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] = Particle::System::New(mParticleID[2], kPtclDemoDescendC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }
@@ -3998,9 +3999,9 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], 0x38, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], 0x39, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], 0x3a, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] = Particle::System::New(mParticleID[0], kPtclDemoFadeInA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] = Particle::System::New(mParticleID[1], kPtclDemoFadeInB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] = Particle::System::New(mParticleID[2], kPtclDemoFadeInC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }
@@ -4022,13 +4023,13 @@ int daDemo_c::func_ov002_020f72bc()
     this->mOpacity = 0x1f;
 
     mParticleID[0] =
-        Particle::System::New(mParticleID[0], 0x31, *((Fix12i *)&this->mPosX),
+        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((Fix12i *)&this->mPosX),
                               *((Fix12i *)&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
     mParticleID[1] =
-        Particle::System::New(mParticleID[1], 0x32, *(Fix12i *)(&this->mPosX),
+        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(Fix12i *)(&this->mPosX),
                               *(Fix12i *)(&this->mPosY), *(Fix12i *)(&this->mPosZ), 0, 0);
     mParticleID[2] =
-        Particle::System::New(mParticleID[2], 0x33, *(Fix12i *)(&this->mPosX),
+        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(Fix12i *)(&this->mPosX),
                               *(Fix12i *)(&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
     return 1;
 }

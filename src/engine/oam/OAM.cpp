@@ -5,7 +5,7 @@
  * every member is static and the two OAM staging buffers are file-scope bss,
  * so the key-function/vtable partition rules never engage. The run is
  * contiguous and exhaustive: bounded below by func_02020768 and above by
- * Particle::SysTracker::Contents::Unlink. The OamAttr field initializer
+ * dPa_c::level_c::cutTable. The OamAttr field initializer
  * func_02020820 opens the run under its own address name.
  *
  * Two Render overloads stay `extern "C"` free functions -- the by-value

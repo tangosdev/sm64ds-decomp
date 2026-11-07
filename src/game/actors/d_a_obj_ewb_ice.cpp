@@ -50,6 +50,7 @@ enum daObjEwbIce_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 struct CLPS_Block;
@@ -178,8 +179,8 @@ int daObjEwbIce_c::StateSettled_Enter() {
     pos.y = y;
     pos.z = mPosZ;
     pos.y = y - kSplashDrop;
-    Particle::System::NewSimple(0x8b, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x8c, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclEwbIceSettleA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclEwbIceSettleB, pos.x, pos.y, pos.z);
     func_02012694(0x172, &mCamSpacePos);
     return 1;
 }
@@ -316,7 +317,7 @@ void daObjEwbIce_c::Kill() {
     pos.y = mPosY;
     pos.z = mPosZ;
     pos.y += kKillRise;
-    Particle::System::NewSimple(0xa, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclBgActorBreak, pos.x, pos.y, pos.z);
     dust = pos;
     PoofDustAt(dust);
     Sound::PlayBank3(0x41, mCamSpacePos);

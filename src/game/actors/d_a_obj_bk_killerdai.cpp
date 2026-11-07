@@ -44,6 +44,7 @@
 #include "Sound.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SaveBlock.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
@@ -106,7 +107,7 @@ void daObjBkKillerdai_c::Kill() {
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    Particle::System::NewSimple(0x8d, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclKillerDaiBreak, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;

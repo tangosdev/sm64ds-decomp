@@ -3729,7 +3729,7 @@ matched: yes</title></rect><rect x="5.00" y="282.04" width="7.67" height="5.25" 
 module: arm9
 addr: 0x02022d44
 size: 60 bytes
-matched: yes</title></rect><rect x="12.67" y="282.04" width="29.65" height="5.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Particle6System3NewEjjiiiPK11Vector3_16fPNS_8CallbackE
+matched: yes</title></rect><rect x="12.67" y="282.04" width="29.65" height="5.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Particle6System3NewEjjiiiPK11Vector3_16fPN5dPa_c7level_c10callback_cE
 module: arm9
 addr: 0x02022d80
 size: 232 bytes

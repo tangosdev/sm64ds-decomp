@@ -37,6 +37,7 @@ enum daTor_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "cstd.h"
 
 /* The texture animation InitResources hands to mTextureTransformer lives in
@@ -188,8 +189,8 @@ cont:
 
     UpdateSpin(0x1000);
 
-    mParticleHandle0 = Particle::System::New(mParticleHandle0, 0x11f, mPosX, mPosY, mPosZ, 0, 0);
-    mParticleHandle1 = Particle::System::New(mParticleHandle1, 0x120, mPosX, mPosY, mPosZ, 0, 0);
+    mParticleHandle0 = Particle::System::New(mParticleHandle0, kPtclTornadoA, mPosX, mPosY, mPosZ, 0, 0);
+    mParticleHandle1 = Particle::System::New(mParticleHandle1, kPtclTornadoB, mPosX, mPosY, mPosZ, 0, 0);
 }
 
 // @symbol _ZN7daTor_c6State0Ev

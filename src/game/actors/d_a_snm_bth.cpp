@@ -16,6 +16,7 @@
 //   negated `||` form makes the function 4 bytes larger.
 
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #pragma defer_codegen off
 
 #include "daSnmBth_c.h"
@@ -87,7 +88,7 @@ void SnowmanBreathParticle::HitPlayer()
         return;
     if (!IsPlayerActor(actor))
         return;
-    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSnowmanBreathHit, mPos.x, mPos.y, mPos.z);
 
     daPly_c *player = (daPly_c *)actor;
     if (player->mIsMetal)
@@ -144,7 +145,7 @@ void SnowmanBreathParticle::CheckSnowman()
     s32 distance = Vec3_Dist(&mPos, &snowman->mPos);
     if (distance >= threshold)
         return;
-    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSnowmanBreathHit, mPos.x, mPos.y, mPos.z);
     mTimer = 0;
 }
 
@@ -164,7 +165,7 @@ void SnowmanBreathParticle::Render()
 {
     if (mTimer == 0)
         return;
-    mParticleID = Particle::System::New(mParticleID, 0x111, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticleID = Particle::System::New(mParticleID, kPtclSnowmanBreath, mPos.x, mPos.y, mPos.z, 0, 0);
 }
 
 // @symbol _ZN21SnowmanBreathParticle8BehaviorEv

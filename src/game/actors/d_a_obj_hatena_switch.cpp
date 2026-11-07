@@ -40,6 +40,7 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
@@ -234,11 +235,11 @@ s32 daObjHatenaSwitch_c::Behavior() {
                     position.x = x;
                     position.y = y;
                     position.z = z;
-                    Particle::System::NewSimple(0x6d, x, y, z);
-                    Particle::System::NewSimple(0x6e, position.x, position.y, position.z);
-                    Particle::System::NewSimple(0x6f, position.x, position.y, position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressA, x, y, z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressB, position.x, position.y, position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressC, position.x, position.y, position.z);
                 }
-                Particle::System::NewSimple(0x70, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclHatenaSwitchPressD, mPosX, mPosY, mPosZ);
                 mTalking = 1;
             }
         } else if (pressed == 0) {

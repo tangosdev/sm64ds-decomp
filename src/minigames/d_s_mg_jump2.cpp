@@ -139,7 +139,7 @@ Jump2Popup::Jump2Popup() {}
 // @symbol dScMgJump2_c_classInit
 /* Reconstructed source-style name. `new dScMgJump2_c` reproduces it: the
  * inline dScMgD3DBase_c constructor (dScMgBase_c's C2, its vtable,
- * mDrawSubScreen, the empty loop over the two cameras, mSysTracker), then
+ * mDrawSubScreen, the empty loop over the two cameras, mParticle), then
  * this class's vtable and mPlayers, mHeyhos, mPopups and mModel.
  * Historical alias: dScMgJump2_c_Spawn. */
 extern "C" dScMgJump2_c *dScMgJump2_c_classInit() {
@@ -374,13 +374,13 @@ void dScMgJump2_c::State_Idle() {}
 
 // @symbol _ZN12dScMgJump2_c8BehaviorEv
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
- * NewUnkCallback818 and back each frame. The object FromUniqueID returns is
+ * NewCleanParticle and back each frame. The object FromUniqueID returns is
  * a Particle::System. Both Particle::System
  * calls keep their mangled spellings: declaring the real Fix12<int>
  * parameters changes how the call passes them. */
 s32 dScMgJump2_c::Behavior() {
     mParticleID =
-        Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
+        Particle::System::NewCleanParticle(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
     Particle::System *system = Particle::System::FromUniqueID(mParticleID);
     if (system != 0) {
         system->callbackScale = 0x4000;
