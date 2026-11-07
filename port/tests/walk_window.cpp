@@ -10178,6 +10178,35 @@ static int hud_glide_on(void)
     return v;
 }
 static unsigned long long g_ip_glide_pics;
+/* METERGLIDE1: the processor's top edge slots (see hud_glide_plan): the top rows of the last two ticks, their 2D pixels and mask */
+static std::vector<uint32_t> g_ip_top_px[2];
+static std::vector<unsigned char> g_ip_top_m[2];
+static unsigned g_ip_top_s[2];
+static int g_ip_top_ok[2], g_ip_top_w, g_ip_top_hh;
+/* METERGLIDE1: one picture's glide plan, shared by the card's compose and the processor's blend so both move the same pixels. Per
+   entry: the move in host pixels (alpha - 1) * step, rounded half away from zero; the zone it clears (its rectangle grown by the move
+   both ways). THE TOP EDGE: the power meter rising out has its top above the screen at the tick, so the rows the picture between two
+   ticks brings down from above the screen are not in the tick's picture. They were on the screen one tick before (the meter was a
+   whole move lower), so gband[i] is that whole move in host pixels for an entry on the top edge shown lower than at the tick, and
+   both paths fill rows 0..dy from the tick before's rows gband - dy..gband; without the tick before kept the entry is not moved in
+   that picture. Before this, the band showed the 3D and the meter's top looked cut flat a few pixels below the screen edge. */
+static int hud_glide_plan(const HudSlideNoteW *gn, double alpha, int gx0[3], int gx1[3], int gy0[3], int gy1[3], int gdx[3], int gdy[3],
+                          int gband[3])
+{
+    if (!gn || gn->n <= 0) return 0;
+    const double uni = (double)ntr::present_h() / 192.0;
+    const int n = gn->n < 3 ? gn->n : 3;
+    for (int i = 0; i < n; ++i) {
+        const double vx = (alpha - 1.0) * gn->r[i].d * uni, vy = (alpha - 1.0) * gn->r[i].dy * uni;
+        const int dx = (int)(vx + (vx < 0 ? -0.5 : 0.5)), dy = (int)(vy + (vy < 0 ? -0.5 : 0.5));
+        gdx[i] = dx; gdy[i] = dy;
+        gx0[i] = gn->r[i].x0 + (dx < 0 ? dx : 0); gx1[i] = gn->r[i].x1 + (dx > 0 ? dx : 0);
+        gy0[i] = gn->r[i].y0 + (dy < 0 ? dy : 0); gy1[i] = gn->r[i].y1 + (dy > 0 ? dy : 0);
+        const double st = -gn->r[i].dy * uni;
+        gband[i] = (dy > 0 && gn->r[i].y0 <= 0) ? (int)(st + 0.5) : 0;   /* the top edge band (above) */
+    }
+    return n;
+}
 /* run hunt8, lane GHOSTPERF1: row[x] = b[x] where a[x] != b[x], four pixels at a time (the picture's 2D laid back over the replayed 3D;
    a scalar compare-and-store per pixel over the whole frame was 0.5 ms of every picture) */
 static inline void ip_merge_row(uint32_t *row, const uint32_t *a, const uint32_t *b, int w)
@@ -10379,7 +10408,39 @@ static int ip_build_b(IpPend *P)
            keeps its 3D and the card's own compose */
         if (tw && tw_card != 2) { port_gpu_card_inter_cut(tw_outer, tw_inner); port_gpu_card_inter_cut_closing(twc); }
         /* SM64DS_TWEEN_CARD=2 is the 0.9.3 round 4b behaviour, kept for before/after rows only: the card refuses a box tick */
-        const int card_done = !(tw && tw_card == 2) && !(gl_note && gl_note->n > 0 && alpha < 0.999) && !ts_D && !(g_ip_tag_for && g_ip_tag_for == g_ip_serial) && port_gpu_card_compose_inter(&g_ip_level_fb->px[0][0], ntr::SCREEN_W) != 0;
+        /* METERGLIDE1: a tick whose HUD glides (the counters sliding in, the power meter rising in or out) is composited on the card as
+           well: the card moves the note's rectangles in its own copy of the tick's 2D (hal/gpu_raster.cpp, port_gpu_card_inter_glide).
+           It used to refuse those pictures and send each to the processor's blend (several ms a picture at 144 fps). */
+        int cg_n = 0;
+        if (gl_note && gl_note->n > 0 && alpha < 0.999 && !tw) {
+            int zx0[3], zx1[3], zy0[3], zy1[3], zdx[3], zdy[3], zbd[3], rects[12], zones[12];
+            cg_n = hud_glide_plan(gl_note, alpha, zx0, zx1, zy0, zy1, zdx, zdy, zbd);
+            for (int i = 0; i < cg_n; ++i) {
+                rects[i * 4 + 0] = gl_note->r[i].x0; rects[i * 4 + 1] = gl_note->r[i].y0;
+                rects[i * 4 + 2] = gl_note->r[i].x1; rects[i * 4 + 3] = gl_note->r[i].y1;
+                zones[i * 4 + 0] = zx0[i]; zones[i * 4 + 1] = zy0[i]; zones[i * 4 + 2] = zx1[i]; zones[i * 4 + 3] = zy1[i];
+            }
+            port_gpu_card_inter_glide(cg_n, rects, zones, zdx, zdy, zbd);
+        }
+        port_gpu_card_inter_tick(g_ip_serial);
+        const int card_done = !(tw && tw_card == 2) && !ts_D && !(g_ip_tag_for && g_ip_tag_for == g_ip_serial) && port_gpu_card_compose_inter(&g_ip_level_fb->px[0][0], ntr::SCREEN_W) != 0;
+        port_gpu_card_inter_glide(0, 0, 0, 0, 0, 0);
+        if (card_done && cg_n) ++g_ip_glide_pics;
+#ifndef PORT_ROM_CLEAN
+        /* METERGLIDE1 proof arm (dev builds only): SM64DS_GLIDE_CARD_DUMP=<dir> reads each glide picture the card composed back and
+           writes it as g_f<frame>_a<alpha x 1000>.bmp, so the card's moved HUD can be measured against the tick's own picture */
+        static const bool gdump_all = getenv("SM64DS_GLIDE_CARD_DUMP_ALL") != nullptr;
+        if (card_done && (cg_n || gdump_all)) {
+            static const char *gdump = getenv("SM64DS_GLIDE_CARD_DUMP");
+            if (gdump && *gdump) {
+                ntr::gx_card_retire2(&o);   /* mark the picture the card composed before reading it back */
+                ntr::gx_card_settle_fb(o, "the glide proof dump (METERGLIDE1)");
+                char nm[600];
+                snprintf(nm, sizeof nm, "%s/g_f%05d_a%03d.bmp", gdump, port_rom_frame(), (int)(alpha * 1000.0 + 0.5));
+                ntr::ppu_write_bmp(nm, o);
+            }
+        }
+#endif
         port_gpu_card_inter_cut(0, 0);
         port_gpu_card_inter_cut_closing(0);
         port_gpu_card_inter_fade_off();
@@ -10516,19 +10577,36 @@ static int ip_build_b(IpPend *P)
         /* METERGLIDE1: a third entry, the power meter, moves up and down (dy) instead of sideways; each entry's zone is its rectangle
            grown by its move both ways, the merge leaves the zone to the replayed 3D and the moved copy after the row loop puts the tick's
            2D pixels of the rectangle back in at (x + dx, y + dy) */
-        int gx0[3] = {0, 0, 0}, gx1[3] = {0, 0, 0}, gy0[3] = {0, 0, 0}, gy1[3] = {0, 0, 0}, gdx[3] = {0, 0, 0}, gdy[3] = {0, 0, 0}, gn_n = 0;
-        if (gn && gn->n > 0) {
-            const double uni = (double)ntr::present_h() / 192.0;
-            gn_n = gn->n < 3 ? gn->n : 3;
-            for (int i = 0; i < gn_n; ++i) {
-                const double vx = (alpha - 1.0) * gn->r[i].d * uni, vy = (alpha - 1.0) * gn->r[i].dy * uni;
-                const int dx = (int)(vx + (vx < 0 ? -0.5 : 0.5)), dy = (int)(vy + (vy < 0 ? -0.5 : 0.5));
-                gdx[i] = dx; gdy[i] = dy;
-                gx0[i] = gn->r[i].x0 + (dx < 0 ? dx : 0); gx1[i] = gn->r[i].x1 + (dx > 0 ? dx : 0);
-                gy0[i] = gn->r[i].y0 + (dy < 0 ? dy : 0); gy1[i] = gn->r[i].y1 + (dy > 0 ? dy : 0);
+        int gx0[3] = {0, 0, 0}, gx1[3] = {0, 0, 0}, gy0[3] = {0, 0, 0}, gy1[3] = {0, 0, 0}, gdx[3] = {0, 0, 0}, gdy[3] = {0, 0, 0};
+        int gbd[3] = {0, 0, 0};
+        const int gn_n = hud_glide_plan(gn, alpha, gx0, gx1, gy0, gy1, gdx, gdy, gbd);
+        /* the top edge (see hud_glide_plan): the first picture of each tick keeps the tick's top rows aside (its 2D pixels and which
+           pixels are 2D), in the older of two slots; an entry that needs the tick before and has none is not moved in this picture */
+        const int top_h = ntr::active_h / 8;
+        {
+            int have = -1;
+            for (int k = 0; k < 2; ++k) if (g_ip_top_ok[k] && g_ip_top_s[k] == g_ip_serial) have = k;
+            if (have < 0 && top_h > 0) {
+                const int k = !g_ip_top_ok[0] ? 0 : !g_ip_top_ok[1] ? 1 : ((int)(g_ip_top_s[0] - g_ip_top_s[1]) < 0 ? 0 : 1);
+                g_ip_top_px[k].resize((size_t)top_h * ntr::active_w);
+                g_ip_top_m[k].resize((size_t)top_h * ntr::active_w);
+                for (int y = 0; y < top_h; ++y)
+                    for (int x = 0; x < ntr::active_w; ++x) {
+                        const uint32_t pa = g_ip_p3->px[y][x], pb = g_ip_p2->px[y][x];
+                        g_ip_top_px[k][(size_t)y * ntr::active_w + x] = pb;
+                        g_ip_top_m[k][(size_t)y * ntr::active_w + x] = pa != pb;
+                    }
+                g_ip_top_s[k] = g_ip_serial; g_ip_top_ok[k] = 1; g_ip_top_w = ntr::active_w; g_ip_top_hh = top_h;
             }
-            ++g_ip_glide_pics;
         }
+        int ip_prev = -1;
+        for (int k = 0; k < 2; ++k)
+            if (g_ip_top_ok[k] && g_ip_top_s[k] == g_ip_serial - 1u && g_ip_top_w == ntr::active_w && g_ip_top_hh == top_h) ip_prev = k;
+        for (int i = 0; i < gn_n; ++i)
+            if (gbd[i] > 0 && (ip_prev < 0 || gbd[i] > top_h || gbd[i] < gdy[i])) {
+                gdx[i] = gdy[i] = 0; gbd[i] = 0; gy0[i] = gy1[i] = 0;   /* shown at the tick's own place */
+            }
+        if (gn_n) ++g_ip_glide_pics;
         if (gn_n == 0 && !tw && ts_D <= 0) {
             /* MENU2: the plain case (no HUD glide, no opening box, no text scroll): every row is the same merge, in bands */
             struct MergePk { ntr::Framebuffer *o; const ntr::Framebuffer *a, *b; } pk = { &o, g_ip_p3, g_ip_p2 };
@@ -10589,6 +10667,19 @@ static int ip_build_b(IpPend *P)
                     if (hx >= 0 && hx < ntr::active_w) row[hx] = b[x];
                 }
             }
+        /* the top edge band: rows 0..dy from the tick before's rows gband - dy..gband */
+        for (int i = 0; i < gn_n; ++i) {
+            if (gbd[i] <= 0 || gdy[i] <= 0 || ip_prev < 0) continue;
+            for (int y = 0; y < gdy[i] && y < ntr::active_h; ++y) {
+                const int sy = y + gbd[i] - gdy[i];
+                if (sy < 0 || sy >= top_h) continue;
+                const uint32_t *pp = &g_ip_top_px[ip_prev][(size_t)sy * ntr::active_w];
+                const unsigned char *pm = &g_ip_top_m[ip_prev][(size_t)sy * ntr::active_w];
+                uint32_t *row = o.px[y];
+                for (int x = gn->r[i].x0 + gdx[i]; x < gn->r[i].x1 + gdx[i]; ++x)
+                    if (x >= 0 && x < ntr::active_w && pm[x]) row[x] = pp[x];
+            }
+        }
     }
     /* run hunt8, lane MENUINTERP2: the menu again, on this picture's own 3D (the pieces it lifts from the 3D picture are cut from
        the replay, not from the tick) */
@@ -10666,7 +10757,7 @@ static void ip_note(double build_ms, double pres_ms)
             g_ip_sum_compose / IP_WIN, ap / IP_WIN, sp[(IP_WIN * 95) / 100],
             sp[IP_WIN - 1], g_ip_pictures, g_ip_blended, g_ip_plain, g_ip_card_pics, g_ip_cpu_pics);
     if (g_ip_tag_pics) fprintf(stderr, "[interp] name tags painted on %llu pictures between ticks\n", g_ip_tag_pics);
-    if (g_ip_glide_pics) fprintf(stderr, "[interp] HUD glide (counters, power meter) on %llu pictures between ticks\n", g_ip_glide_pics);   /* METERGLIDE1 */
+    if (g_ip_glide_pics) fprintf(stderr, "[interp] HUD glide (counters, power meter) on %llu pictures between ticks, %lld of them on the card\n", g_ip_glide_pics, port_gpu_card_glide_pics());   /* METERGLIDE1 */
     if (g_ip_menu_n) fprintf(stderr, "[interp] menu re-draw in %u of those pictures: %.2f ms each (inside '2D')\n", g_ip_menu_n, g_ip_sum_menu / g_ip_menu_n);
     g_ip_sum_menu = 0; g_ip_menu_n = 0;
     g_ip_sum_replay = g_ip_sum_raster = g_ip_sum_compose = 0;

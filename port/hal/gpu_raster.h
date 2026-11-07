@@ -114,6 +114,11 @@ void port_gpu_card_inter_fade_off(void);
 void port_gpu_card_inter_cut(const int outer[4], const int inner[4]);
 /* INTERP093 I1: the cut is a CLOSING box's (the ring is the faded 3D, no text) when 1 */
 void port_gpu_card_inter_cut_closing(int closing);
+/* METERGLIDE1: the next picture between two ticks moves n (0..3) HUD rectangles on the card: rects and zones n x {x1 y1 x2 y2} host
+   pixels (the zone is cleared to the 3D first), dx / dy the move; n 0 clears it. _pics: pictures it moved, for the trace. */
+void port_gpu_card_inter_glide(int n, const int *rects, const int *zones, const int *dx, const int *dy, const int *band);
+void port_gpu_card_inter_tick(unsigned serial);
+long long port_gpu_card_glide_pics(void);
 
 /* THE READBACK WAIT, summed in milliseconds over every frame the card has
  * drawn. This is the CPU side of the opaque pass: the copy out of the render

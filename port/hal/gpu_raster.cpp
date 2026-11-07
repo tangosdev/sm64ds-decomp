@@ -406,6 +406,18 @@ ID3D11ShaderResourceView *g_ov_srv, *g_comp_srv, *g_bm_srv;
 ID3D11Texture2D          *g_zov_tex;
 ID3D11ShaderResourceView *g_zov_srv;
 int                       g_cut_on, g_cut_o[4], g_cut_i[4], g_cut_closing;
+/* METERGLIDE1: the HUD glide of a picture between two ticks, done on the card (walk_window.cpp's ip_build_b hands it over). Entry i
+   moves the overlay's rectangle g_gl_r[i] (x1 y1 x2 y2, host pixels) by (g_gl_dx[i], g_gl_dy[i]); g_gl_z[i] is the zone it clears
+   first (the rectangle grown by the move). g_gl_tex is the overlay's own size and keeps the zones' tick pixels for the copy and the
+   restore, so the tick's overlay is whole again after the picture. */
+int                       g_gl_n, g_gl_r[3][4], g_gl_z[3][4], g_gl_dx[3], g_gl_dy[3], g_gl_band[3];
+ID3D11Texture2D          *g_gl_tex;
+long long                 g_gl_pics;
+/* the top edge: the top rows of the last two ticks' overlays (g_gl_top_s: which tick, g_gl_top_ok: written since the overlay was
+   made), so a meter rising out can show, in the rows above the tick's top edge, the pixels the tick before still had on screen */
+ID3D11Texture2D          *g_gl_top[2];
+unsigned                  g_gl_top_s[2], g_gl_now;
+int                       g_gl_top_ok[2];
 ID3D11RenderTargetView   *g_comp_rtv;
 /* run hunt8, lane GPUINTERP1: the composite of a picture BETWEEN two ticks has
    a target of its own, so the tick's composite (g_comp_tex) stays whole for the
@@ -874,6 +886,8 @@ void release_targets()
     if (g_ov_srv) { g_ov_srv->Release(); g_ov_srv = 0; }
     if (g_zov_srv) { g_zov_srv->Release(); g_zov_srv = 0; }
     if (g_zov_tex) { g_zov_tex->Release(); g_zov_tex = 0; }
+    if (g_gl_tex) { g_gl_tex->Release(); g_gl_tex = 0; }   /* METERGLIDE1 */
+    for (int k = 0; k < 2; ++k) { if (g_gl_top[k]) { g_gl_top[k]->Release(); g_gl_top[k] = 0; } g_gl_top_ok[k] = 0; }
     if (g_ov_tex) { g_ov_tex->Release(); g_ov_tex = 0; }
     if (g_bm_srv) { g_bm_srv->Release(); g_bm_srv = 0; }
     if (g_bm_tex) { g_bm_tex->Release(); g_bm_tex = 0; }
@@ -4005,6 +4019,15 @@ bool cp_ensure(int w, int h)
         zi.pSysMem = &zeros[0]; zi.SysMemPitch = (UINT)w * 4u; zi.SysMemSlicePitch = 0;
         if (SUCCEEDED(g_dev->CreateTexture2D(&zd, &zi, &g_zov_tex)))
             g_dev->CreateShaderResourceView(g_zov_tex, 0, &g_zov_srv);
+        /* METERGLIDE1: the glide's keep-aside copy of the overlay (only its zones are ever written) */
+        D3D11_TEXTURE2D_DESC gd = d;
+        gd.Usage = D3D11_USAGE_DEFAULT;
+        gd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        if (FAILED(g_dev->CreateTexture2D(&gd, 0, &g_gl_tex))) g_gl_tex = 0;
+        for (int k = 0; k < 2; ++k) {
+            if (FAILED(g_dev->CreateTexture2D(&gd, 0, &g_gl_top[k]))) g_gl_top[k] = 0;
+            g_gl_top_ok[k] = 0;
+        }
     }
     d.Format = DXGI_FORMAT_R8_UINT;
     d.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
@@ -4272,8 +4295,86 @@ void *cp_compose_inter(const uint32_t *overlay, int stride_px)
                                           f_mask ? g_bm_srv : 0,
                                           g_lay_live ? g_lay_srv : 0,
                                           (g_lay_live && g_lay_two) ? g_lay2_srv : 0 };
+    /* METERGLIDE1: the HUD glide. Each entry's zone is set aside, cleared (no 2D: the replayed 3D shows), and the tick's rectangle is
+       copied back in at its moved place, all inside the overlay texture; the composite then reads the moved HUD; the zones are put
+       back after it. The processor's twin is walk_window.cpp's moved copy (same zones, same rule: inside a zone only the moved
+       rectangle's 2D shows). Not with a fade or an opening box (the processor does not glide those either). */
+    const int gl_run = (g_gl_n > 0 && g_gl_tex && g_zov_tex && !f_on && !g_cut_on) ? 1 : 0;
+    auto gl_box = [&](const int *r, D3D11_BOX &b) -> bool {
+        const int x1 = r[0] < 0 ? 0 : r[0], y1 = r[1] < 0 ? 0 : r[1];
+        const int x2 = r[2] > g_cp_cw ? g_cp_cw : r[2], y2 = r[3] > g_cp_ch ? g_cp_ch : r[3];
+        if (x2 <= x1 || y2 <= y1) return false;
+        b.left = (UINT)x1; b.top = (UINT)y1; b.right = (UINT)x2; b.bottom = (UINT)y2; b.front = 0; b.back = 1;
+        return true;
+    };
+    /* the top edge: the first picture of each tick keeps the overlay's top rows aside (an eighth of the height covers the largest
+       move, 8 DS pixels), in the older of the two slots */
+    const int top_h = g_cp_ch / 8 < g_cp_ch ? g_cp_ch / 8 : g_cp_ch;
+    if (g_gl_now && g_gl_top[0] && g_gl_top[1] && top_h > 0 &&
+        !((g_gl_top_ok[0] && g_gl_top_s[0] == g_gl_now) || (g_gl_top_ok[1] && g_gl_top_s[1] == g_gl_now))) {
+        const int k = !g_gl_top_ok[0] ? 0 : !g_gl_top_ok[1] ? 1 : ((int)(g_gl_top_s[0] - g_gl_top_s[1]) < 0 ? 0 : 1);
+        D3D11_BOX tb;
+        tb.left = 0; tb.top = 0; tb.right = (UINT)g_cp_cw; tb.bottom = (UINT)top_h; tb.front = 0; tb.back = 1;
+        g_ctx->CopySubresourceRegion(g_gl_top[k], 0, 0, 0, 0, g_ov_tex, 0, &tb);
+        g_gl_top_s[k] = g_gl_now; g_gl_top_ok[k] = 1;
+    }
+    /* an entry that needs the band (g_gl_band[i]: the tick's whole move, host pixels) and has no tick before it kept aside is not
+       moved in this picture (it shows at the tick's own place) */
+    int gl_use[3] = { 1, 1, 1 };
+    ID3D11Texture2D *gl_prev = 0;
+    for (int k = 0; k < 2; ++k)
+        if (g_gl_top_ok[k] && g_gl_top_s[k] == g_gl_now - 1u) gl_prev = g_gl_top[k];
+    for (int i = 0; i < g_gl_n && i < 3; ++i)
+        if (g_gl_band[i] > 0 && (!gl_prev || g_gl_band[i] > top_h || g_gl_band[i] < g_gl_dy[i])) gl_use[i] = 0;
+    if (gl_run) {
+        D3D11_BOX b;
+        for (int i = 0; i < g_gl_n; ++i)
+            if (gl_use[i] && gl_box(g_gl_z[i], b)) g_ctx->CopySubresourceRegion(g_gl_tex, 0, b.left, b.top, 0, g_ov_tex, 0, &b);
+        for (int i = 0; i < g_gl_n; ++i)
+            if (gl_use[i] && gl_box(g_gl_z[i], b)) g_ctx->CopySubresourceRegion(g_ov_tex, 0, b.left, b.top, 0, g_zov_tex, 0, &b);
+        for (int i = 0; i < g_gl_n; ++i) {
+            if (!gl_use[i]) continue;
+            /* the source rectangle, clipped so that both it and its moved place lie on the overlay */
+            int r[4] = { g_gl_r[i][0], g_gl_r[i][1], g_gl_r[i][2], g_gl_r[i][3] };
+            const int dx = g_gl_dx[i], dy = g_gl_dy[i];
+            if (r[0] < 0) r[0] = 0; if (r[1] < 0) r[1] = 0;
+            if (r[0] + dx < 0) r[0] = -dx; if (r[1] + dy < 0) r[1] = -dy;
+            if (r[2] > g_cp_cw) r[2] = g_cp_cw; if (r[3] > g_cp_ch) r[3] = g_cp_ch;
+            if (r[2] + dx > g_cp_cw) r[2] = g_cp_cw - dx; if (r[3] + dy > g_cp_ch) r[3] = g_cp_ch - dy;
+            if (r[2] <= r[0] || r[3] <= r[1]) continue;
+            b.left = (UINT)r[0]; b.top = (UINT)r[1]; b.right = (UINT)r[2]; b.bottom = (UINT)r[3]; b.front = 0; b.back = 1;
+            g_ctx->CopySubresourceRegion(g_ov_tex, 0, (UINT)(r[0] + dx), (UINT)(r[1] + dy), 0, g_gl_tex, 0, &b);
+        }
+        /* the top edge band: rows 0..dy of a rectangle on the screen's top edge shown lower than at the tick are the rows the tick
+           before had at band - dy.. band (the meter was a whole move lower then) */
+        for (int i = 0; i < g_gl_n; ++i) {
+            const int dy = g_gl_dy[i], st = g_gl_band[i];
+            if (!gl_use[i] || st <= 0 || dy <= 0 || !gl_prev) continue;
+            int x1 = g_gl_r[i][0] + g_gl_dx[i], x2 = g_gl_r[i][2] + g_gl_dx[i];
+            if (x1 < 0) x1 = 0; if (x2 > g_cp_cw) x2 = g_cp_cw;
+            if (x2 <= x1) continue;
+            b.left = (UINT)x1; b.right = (UINT)x2; b.top = (UINT)(st - dy); b.bottom = (UINT)st; b.front = 0; b.back = 1;
+            g_ctx->CopySubresourceRegion(g_ov_tex, 0, (UINT)x1, 0, 0, gl_prev, 0, &b);
+        }
+        ++g_gl_pics;
+#ifndef PORT_ROM_CLEAN
+        static const bool gdbg = getenv("SM64DS_GLIDE_CARD_DBG") != nullptr;
+        if (gdbg && g_gl_pics <= 40)
+            for (int i = 0; i < g_gl_n; ++i)
+                fprintf(stderr, "[glidecard] pic %lld entry %d rect %d,%d..%d,%d zone %d,%d..%d,%d move %d,%d band %d use %d prev %d tick %u target %dx%d\n", g_gl_pics, i,
+                        g_gl_r[i][0], g_gl_r[i][1], g_gl_r[i][2], g_gl_r[i][3], g_gl_z[i][0], g_gl_z[i][1], g_gl_z[i][2], g_gl_z[i][3],
+                        g_gl_dx[i], g_gl_dy[i], g_gl_band[i], gl_use[i], gl_prev ? 1 : 0, g_gl_now, g_cp_cw, g_cp_ch);
+#endif
+    }
     g_ctx->PSSetShaderResources(0, 6, srvs);
     g_ctx->Draw(3, 0);
+    if (gl_run) {
+        ID3D11ShaderResourceView *none1[6] = { 0, 0, 0, 0, 0, 0 };
+        g_ctx->PSSetShaderResources(0, 6, none1);   /* the overlay is written again below: unbind it from the pixel stage first */
+        D3D11_BOX b;
+        for (int i = 0; i < g_gl_n; ++i)
+            if (gl_use[i] && gl_box(g_gl_z[i], b)) g_ctx->CopySubresourceRegion(g_ov_tex, 0, b.left, b.top, 0, g_gl_tex, 0, &b);
+    }
     const int cut_run = (g_cut_on && g_zov_srv && !(g_cut_closing && !f_on)) ? 1 : 0;
     if (cut_run) {
         /* TEXTBOX2: an opening dialogue box. Inside the outer rectangle and outside the inner one the picture shows the 3D alone:
@@ -4660,7 +4761,7 @@ void card_return()
     g_col = 0; g_col_stage = 0; g_col_rtv = 0; g_id = 0; g_id_stage = 0; g_id_rtv = 0; g_dep = 0;
     g_dep_stage = 0; g_dep_dsv = 0; g_col_srv = 0; g_id_srv = 0; g_fa_out = 0; g_fa_st = 0;
     g_fa_rtv = 0; g_fa_srv = 0; g_ov_tex = 0; g_comp_tex = 0; g_comp_stage = 0; g_bm_tex = 0;
-    g_ov_srv = 0; g_comp_srv = 0; g_bm_srv = 0; g_zov_tex = 0; g_zov_srv = 0; g_comp_rtv = 0;
+    g_ov_srv = 0; g_comp_srv = 0; g_bm_srv = 0; g_zov_tex = 0; g_zov_srv = 0; g_comp_rtv = 0; g_gl_tex = 0;
     g_comp2_tex = 0; g_comp2_srv = 0; g_comp2_rtv = 0; g_comp_cb = 0; g_ps_comp = 0; g_ov_rtv = 0;
     g_bm_rtv = 0; g_tw_wm_tex = 0; g_tw_up_tex = 0; g_tw_st_ov = 0; g_tw_st_bm = 0;
     g_tw_wm_srv = 0; g_tw_up_srv = 0; g_tw_inst_srv = 0; g_tw_inst_buf = 0; g_tw_cb = 0;
@@ -5273,6 +5374,24 @@ extern "C" void port_gpu_card_inter_cut_closing(int closing)
     g_cut_closing = closing ? 1 : 0;
 }
 
+/* METERGLIDE1: the next picture between two ticks moves the HUD glide's n rectangles on the card (see g_gl_n); n 0 clears it.
+   rects: n x {x1 y1 x2 y2} the tick's rectangles, zones: n x {x1 y1 x2 y2} what each clears first, dx / dy: host pixels, band: the
+   tick's whole move in host pixels for an entry whose top rows come from the tick before (0 for none). */
+extern "C" void port_gpu_card_inter_glide(int n, const int *rects, const int *zones, const int *dx, const int *dy, const int *band)
+{
+    g_gl_n = 0;
+    if (n <= 0 || !rects || !zones || !dx || !dy) return;
+    if (n > 3) n = 3;
+    for (int i = 0; i < n; ++i) {
+        for (int k = 0; k < 4; ++k) { g_gl_r[i][k] = rects[i * 4 + k]; g_gl_z[i][k] = zones[i * 4 + k]; }
+        g_gl_dx[i] = dx[i]; g_gl_dy[i] = dy[i]; g_gl_band[i] = band ? band[i] : 0;
+    }
+    g_gl_n = n;
+}
+/* METERGLIDE1: which tick the next pictures between ticks belong to (walk_window.cpp's commit count), for the top edge slots */
+extern "C" void port_gpu_card_inter_tick(unsigned serial) { g_gl_now = serial; }
+extern "C" long long port_gpu_card_glide_pics(void) { return g_gl_pics; }
+
 extern "C" void port_gpu_card_inter_cut(const int outer[4], const int inner[4])
 {
     if (!outer || !inner) { g_cut_on = 0; return; }
@@ -5659,6 +5778,9 @@ void port_gpu_card_inter_fade(int, int) {}
 void port_gpu_card_inter_fade256(int, int) {}
 void port_gpu_card_set_fade256(int, int) {}
 void port_gpu_card_inter_cut(const int *, const int *) {}
+void port_gpu_card_inter_glide(int, const int *, const int *, const int *, const int *, const int *) {}
+void port_gpu_card_inter_tick(unsigned) {}
+long long port_gpu_card_glide_pics(void) { return 0; }
 void port_gpu_card_inter_cut_closing(int) {}
 void port_gpu_card_inter_fade_off(void) {}
 int port_gpu_twod_ready(void) { return 0; }
