@@ -73,7 +73,11 @@ enum daC_Jugem_c_AssetId {
  * the ROM's canonical ~Vector3. Plain `Vector3(x, y, z)` globals were
  * measured (#821): the first reproduces, but the second hoists its zero x
  * ahead of the address load and __sinit stops matching, so JugemVec3 stays
- * until the second vector's real shape is known. */
+ * until the second vector's real shape is known. Also measured and ruled out
+ * for the second vector: copy-initialisation from a Vector3 temporary,
+ * const/static, every literal spelling of the arguments, by-reference, short
+ * and long long ctor parameters, a member Set() from the ctor body, and
+ * scheduling/peephole/optimisation-level pragmas at end of file. */
 struct JugemModelFile : SharedFilePtr {
     JugemModelFile(u32 fileID);
     ~JugemModelFile();

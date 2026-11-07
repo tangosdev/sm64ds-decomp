@@ -481,7 +481,7 @@
       "canonical_symbol": "_ZN7Vector3D1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "evidence": "retail vector destructor registration destination and the inline-built vector exact ABS32 relocation; the TU text never instantiates ~Vector3 itself"
+      "evidence": "retail vector destructor registration destination and the inline-built vector exact ABS32 relocation. The TU now also emits Vector3's own vague-linkage D1 for its Vector3 locals (#821); compiler_only_output externalises that body to an import of _ZN7Vector3D1Ev, and this alias joins the same import (objisolate permits an undefined alias onto an existing import, never onto a definition)"
     }
   ],
   "defined_symbol_renames": [
