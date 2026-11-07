@@ -75,7 +75,7 @@ int Dealer_IsIdle(Dealer *dealer);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
-void MgCoins_Reset(char *p);
+void MgCoins_Reset(void);
 void FreeGfxSlotsById(int arg);
 void MgCoins_StartPayout(int count);
 extern unsigned short gMgCoinsStatus;
@@ -140,10 +140,7 @@ s32 dScMgMCarlo_c::InitResources() {
 // @symbol _ZN13dScMgMCarlo_c10StartRoundEi
 /* Slot 18: restart the round from a fresh board. SetupBoard deals a new
  * layout, the round state re-arms (mRoundState = 1), and the shared prompt
- * window re-opens watching mRoundProgress.
- *
- * MgCoins_Reset never reads its argument, but the ROM still computes
- * this + 0x6000 for it, which is mArray[76].mTargetY. */
+ * window re-opens watching mRoundProgress. */
 void dScMgMCarlo_c::StartRound(int arg) {
     SetupBoard(mArray);
     sMCarloPickAllowed = 0;
@@ -153,7 +150,7 @@ void dScMgMCarlo_c::StartRound(int arg) {
     mDealer.mHand = 1;
     mRoundTimer = 0;
     mRoundState = STATE_START_PROMPT;
-    MgCoins_Reset((char *)&mArray[76].mTargetY);
+    MgCoins_Reset();
     gMgCoinsShowDelta = 1;
 }
 
