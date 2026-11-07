@@ -69,7 +69,7 @@ extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void MulVec3Mat4x3(const void *in, Matrix4x3 *m, void *out);
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_02012694(unsigned int id, void *v);
 extern short data_02082214[];
 
@@ -391,7 +391,7 @@ int daYurei_Mucho_c::func_ov065_02116744()
 
     in.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &mSpeedX);
+    MulVec3Mat4x3(&in, &data_020a0e68, (Vector3 *)&mSpeedX);
 
     if ((u16)mStateTimer == 0) {
         func_ov065_0211691c(&data_ov065_0211d670);
@@ -460,7 +460,7 @@ int daYurei_Mucho_c::func_ov065_021165d8()
             v.x = 0;
             v.y = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-            MulVec3Mat4x3(&v, &data_020a0e68, &mSpeedX);
+            MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
         }
     } else {
         mStateTimer = pitch;
