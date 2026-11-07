@@ -451,6 +451,26 @@ void gone_note(int slot, unsigned cls) {
     for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) return;
     if (g_gone_n < kGoneMax) g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls};
 }
+// The ROOM keeps them too, per (level, act), for the whole coop session: the breaker usually drops straight through the
+// hole he opened, so by the time his friend walks in nobody is left in the level to tell him. Every console stores every
+// break it hears about (its own group's or another level's) and starts each level visit with that level's entries.
+enum : int { kRoomGoneMax = 96 };
+struct RoomGone { int16_t level; uint8_t act; uint16_t slot, cls; };
+RoomGone g_room_gone[kRoomGoneMax]; int g_room_gone_n = 0;
+void room_gone_note(const CoopKey &k, int slot, unsigned cls) {
+    for (int i = 0; i < g_room_gone_n; ++i) {
+        const RoomGone &r = g_room_gone[i];
+        if (r.level == k.level && r.act == (uint8_t)k.act && r.slot == slot && r.cls == cls) return;
+    }
+    if (g_room_gone_n < kRoomGoneMax) g_room_gone[g_room_gone_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, (uint16_t)cls};
+}
+void room_gone_load(const CoopKey &k) {   // a new level visit: its broken blocks onto the group list
+    for (int i = 0; i < g_room_gone_n; ++i) {
+        const RoomGone &r = g_room_gone[i];
+        if (r.level == k.level && r.act == (uint8_t)k.act) gone_note(r.slot, r.cls);
+    }
+    if (g_gone_n && g_log) std::fprintf(stderr, "[coop] block list: level %d act %d starts with %d broken block(s) from the room\n", k.level, k.act, g_gone_n);
+}
 
 // Every est frame, after step 1 took this frame's bits: what is in my mouth, and how a mouthful left it.
 void watch_swallow(unsigned now) {
@@ -547,7 +567,7 @@ void watch_capped(unsigned now) {
         for (int k = 0; k < g_sw_applied_n && !skip; ++k) skip = g_sw_applied[k] == o.slot;
         for (int k = 0; k < g_sw_n && !skip; ++k) skip = g_sw_out[k].slot == o.slot;
         if (!skip && g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {o.slot, o.cls, 0, now};
-        if (!bit && breakable_block(o.cls)) gone_note(slot, o.cls);
+        if (!bit && breakable_block(o.cls)) { gone_note(slot, o.cls); room_gone_note(g_key, slot, o.cls); }
         std::fprintf(stderr, "[coop] %s watch: class %u slot %d went away here %s wall=%lld\n",
                      breakable_block(o.cls) ? "block" : "capped", (unsigned)o.cls, slot,
                      bit ? "with a death bit (the death table carries it)" : skip ? "(swallow or a friend's message: not told again)"
@@ -566,7 +586,7 @@ void watch_capped(unsigned now) {
 // home and RespawnIfHasCap leaves the dormant replacement there; func_ov084_02129498 removes it (MarkForDestruction for a
 // capped one, KillAndTrackInDeathTable otherwise). Any other class: MarkForDestruction, what every OnTurnIntoEgg ends in.
 void apply_swallow(int seat, int slot, unsigned cls) {
-    if (breakable_block(cls)) gone_note(slot, cls);   // kept on the list even with no copy standing yet (a joiner's objects)
+    if (breakable_block(cls)) { gone_note(slot, cls); room_gone_note(g_key, slot, cls); }   // kept even with no copy standing yet
     char *a = live_slot(cls, slot);
     if (!a || going(a) || is_player_ptr(a)) {
         if (g_log) std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d, no live copy here\n", seat, cls, slot);
@@ -756,7 +776,11 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         std::memcpy(&w, p, sizeof w);
         if (!coop_key_ok(w.key) || w.slot >= kCoopSlots || w.cls >= 1024 || w.cls == 0xbf) { ++g_st.drop_bad; return; }
         key_from_wire(w.key, &k);
-        if (!for_me(k)) { ++g_st.drop_group; return; }
+        if (!for_me(k)) {
+            // COOPSYNC1: a block broken in a level I am not in: the room's list keeps it for my visit there
+            if (breakable_block(w.cls) && k.valid()) room_gone_note(k, (int)w.slot, (unsigned)w.cls);
+            ++g_st.drop_group; return;
+        }
         g_heard[seat] = comms_hub_now_ms() | 1u;
         if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }   // members of this group only
         apply_swallow(seat, (int)w.slot, (unsigned)w.cls);
@@ -895,6 +919,7 @@ void join_group(const CoopKey &nk) {
     g_rejected = CoopKey();
     g_key = nk;
     g_part = part_of_level(nk.level);
+    room_gone_load(nk);   // COOPSYNC1: blocks broken here earlier in this room
     g_grp.enter(nk, now);
     ++g_nonce;
     if (g_part < 0) {   // not a level the table covers: stay out of any group
@@ -1305,6 +1330,7 @@ void tick_est(unsigned now) {
 // registrations made once per process and stay; the enter nonce and the sequence numbers keep counting (a stale answer from the last
 // room can never match).
 void coop_world_session_reset() {
+    g_room_gone_n = 0;   // COOPSYNC1: a new room starts with every block whole
     g_env_read = false;
     g_on = false;
     g_handlers = false;
