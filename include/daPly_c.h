@@ -1241,11 +1241,14 @@ struct daPly_c : dActor_c {
        argument. A melonDS `this` sweep saw only the player in r0, and each
        body uses r0 as the player. Names not recovered; each keeps its
        address. Parameters unnamed (see the Kuppa note above). */
+    int func_ov002_020bd8ac();
     void func_ov002_020be008();
+    void func_ov002_020bec9c(unsigned int, int, Fix12i, u16);
     int func_ov002_020bf27c(int);
     int func_ov002_020bf56c(int);
     int func_ov002_020c179c(int);
     void func_ov002_020c18b0(int);
+    int func_ov002_020ca270();
     void func_ov002_020ca940();
     void func_ov002_020cabe0();
     void func_ov002_020cd218(int, int *, int *);
@@ -1272,6 +1275,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020d0580();
     int func_ov002_020d06c0();
     void func_ov002_020d0948();
+    int func_ov002_020d0d2c();
     int func_ov002_020d225c();
     int func_ov002_020d22ec(int);
     int func_ov002_020d2da0();
@@ -1320,6 +1324,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020e301c();
     int func_ov002_020e3078(void *);
     int func_ov002_020e3f90();
+    void func_ov002_020e4374(int *, int *);
     void func_ov002_020e444c();
     void func_ov002_020e4768();
     int func_ov002_020e4990();
