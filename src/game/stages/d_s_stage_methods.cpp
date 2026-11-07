@@ -4692,7 +4692,7 @@ int dScStage_c::InitResources() {
         GX::SetGraphicsMode(one, 0, one);
         GXS::SetGraphicsMode(3);
         *p0 = (*p0 & ~0x38000000) | 0x08000000;
-        *(volatile u16 *)0x04000304 = (*(volatile u16 *)0x04000304 & 0xFFFFFDF1) | 0x20E;
+        REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
         GX::DispOn();
         *p1 |= 0x10000;
         InitialiseVramGlobals();
@@ -4770,7 +4770,7 @@ int dScStage_c::InitResources() {
             Sound::LoadGroupAndSetBank(soundGroup, bank);
         }
 
-        *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 2;
+        REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
         LoadGraphics2D(gGameMode == 1, gCurrentSublevel);
 
         {
@@ -4902,24 +4902,18 @@ void SetSubBg1Offset(int a, int b);
 void SetSubBg2Offset(int a, int b);
 }
 
-#define BG2CNT     (*(volatile u16 *)0x400000c)
-#define BG3CNT     (*(volatile u16 *)0x400000e)
-#define BG0CNT_SUB (*(volatile u16 *)0x4001008)
-#define BG1CNT_SUB (*(volatile u16 *)0x400100a)
-#define BG2CNT_SUB (*(volatile u16 *)0x400100c)
-
 void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     char *screenMap;
     char *subBg2Screen;
 
-    BG3CNT &= ~3;
-    BG3CNT = (BG3CNT & 0x43) | 0x1100;
-    BG3CNT &= ~0x40;
+    REG_BG3CNT &= ~3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1100;
+    REG_BG3CNT &= ~0x40;
     SetBg0Offset(0, 0);
 
-    BG2CNT = (BG2CNT & ~3) | 1;
-    BG2CNT &= ~0x40;
-    BG2CNT = (BG2CNT & 0x43) | 0xd10;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+    REG_BG2CNT &= ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xd10;
 
     if (vsMode == 0) {
         LoadFont(0);
@@ -4946,15 +4940,15 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
 
     if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0) {
-        BG0CNT_SUB &= ~3;
-        BG0CNT_SUB &= ~0x40;
-        BG0CNT_SUB = (BG0CNT_SUB & 0x43) | 0xd000;
-        BG1CNT_SUB &= ~3;
-        BG1CNT_SUB &= ~0x40;
-        BG1CNT_SUB = (BG1CNT_SUB & 0x43) | 0xd400;
-        BG1CNT_SUB &= ~3;
-        BG1CNT_SUB &= ~0x40;
-        BG2CNT_SUB = (BG2CNT_SUB & 0x43) | 0x1800;
+        REG_DB_BG0CNT &= ~3;
+        REG_DB_BG0CNT &= ~0x40;
+        REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0xd000;
+        REG_DB_BG1CNT &= ~3;
+        REG_DB_BG1CNT &= ~0x40;
+        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd400;
+        REG_DB_BG1CNT &= ~3;
+        REG_DB_BG1CNT &= ~0x40;
+        REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1800;
 
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S::GetBG0CharPtr());
         LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, 0x5000400);
@@ -4974,15 +4968,15 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         return;
     }
 
-    BG0CNT_SUB &= ~3;
-    BG0CNT_SUB &= ~0x40;
-    BG0CNT_SUB = (BG0CNT_SUB & 0x43) | 0x1200;
-    BG1CNT_SUB &= ~3;
-    BG1CNT_SUB &= ~0x40;
-    BG1CNT_SUB = (BG1CNT_SUB & 0x43) | 0xc00;
-    BG2CNT_SUB = (BG2CNT_SUB & ~3) | 2;
-    BG2CNT_SUB &= ~0x40;
-    BG2CNT_SUB = (BG2CNT_SUB & 0x43) | 0x1300;
+    REG_DB_BG0CNT &= ~3;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x1200;
+    REG_DB_BG1CNT &= ~3;
+    REG_DB_BG1CNT &= ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1300;
 
     if (GetOwnerLanguage() == 5) {
         LoadCompressedFileAt(0xb00d, G2S::GetBG0CharPtr());

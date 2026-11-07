@@ -75,9 +75,9 @@ enum BootMenuState {
  * frames, and starts the job func_0201a244(func_0201a2f8, ...) whose handle
  * lands in data_0209f1e8 (Behavior polls it).
  *
- * The register writes stay as literal volatile stores to the ARM7/9 I/O
- * block: this tree has no register header, and the read-modify-write masks
- * are the ROM's own.
+ * The register writes use include/nitro/hw/registers.h's names (DISPCNT,
+ * POWCNT1 and the BGnCNT of both engines); the read-modify-write masks are
+ * the ROM's own.
  */
 s32 dScBoot_c::InitResources() {
     GX::DisableAllBanks();
@@ -86,41 +86,41 @@ s32 dScBoot_c::InitResources() {
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(8);
 
-    *(volatile u32 *)0x4000000 &= 0xffcfffef;
-    *(volatile u32 *)0x4001000 &= 0xffcfffef;
+    REG_DISPCNT &= 0xffcfffef;
+    REG_DISPCNT_SUB &= 0xffcfffef;
     GX::SetGraphicsMode(1, 0, 0);
     GXS::SetGraphicsMode(0);
 
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x38000000) | 0x8000000;
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & 0xfffffdf1) | 0x20e;
+    REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x8000000;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
     GX::DispOn();
 
-    *(volatile u32 *)0x4001000 |= 0x10000;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x1710;
-    *(volatile u16 *)0x4000008 = *(volatile u16 *)0x4000008 & ~0x40;
+    REG_DISPCNT_SUB |= 0x10000;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x1710;
+    REG_BG0CNT = REG_BG0CNT & ~0x40;
     SetBg0Offset(0, 0);
 
     DecompressLZ16(&data_020918c4, func_02054efc());
     GX::LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
     DecompressLZ16(&data_020916d8, G2::GetBG0ScrPtr());
 
-    *(volatile u16 *)0x400000e = *(volatile u16 *)0x400000e & ~3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1100;
-    *(volatile u16 *)0x400000e = *(volatile u16 *)0x400000e & ~0x40;
-    *(volatile u16 *)0x4001008 = *(volatile u16 *)0x4001008 & ~3;
-    *(volatile u16 *)0x4001008 = *(volatile u16 *)0x4001008 & ~0x40;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x18;
+    REG_BG3CNT = REG_BG3CNT & ~3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1100;
+    REG_BG3CNT = REG_BG3CNT & ~0x40;
+    REG_DB_BG0CNT = REG_DB_BG0CNT & ~3;
+    REG_DB_BG0CNT = REG_DB_BG0CNT & ~0x40;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x18;
     SetSubBg0Offset(0, 0);
 
-    *(volatile u16 *)0x400100a = *(volatile u16 *)0x400100a & ~3;
-    *(volatile u16 *)0x400100a = *(volatile u16 *)0x400100a & ~0x40;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0x118;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~3;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x118;
     SetSubBg1Offset(0, 0);
 
-    *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~3;
-    *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x310;
+    REG_DB_BG2CNT = REG_DB_BG2CNT & ~3;
+    REG_DB_BG2CNT = REG_DB_BG2CNT & ~0x40;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x310;
     SetSubBg2Offset(0, 0);
 
     DecompressLZ16(&data_020918c4, (void *)G2S::GetBG2CharPtr());
@@ -130,8 +130,8 @@ s32 dScBoot_c::InitResources() {
 
     gMainScreenLayers = DISPLAY_LAYER_BG0;
     gSubScreenLayers = 4;
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x100;
-    *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x400;
+    REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x100;
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x400;
 
     mFadeTimer = 0x3c;
     mState = STATE_BOOT_WAIT;
@@ -317,7 +317,7 @@ s32 dScBoot_c::Behavior() {
             break;
 
         case STATE_BEGIN_ERASE:
-            *(volatile u16 *)0x0400100a = (u16)((*(volatile u16 *)0x0400100a & 0x43) | 0x218);
+            REG_DB_BG1CNT = (u16)((REG_DB_BG1CNT & 0x43) | 0x218);
             Message::DisplaySaveStatusText(0x29c);
             mEraseEffectTimer = 0x78;
             mState = STATE_ERASING;

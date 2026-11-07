@@ -46,6 +46,7 @@
 #include "nitro/spi/tp.h"
 #include "Memory.h"
 #include "GX.h"
+#include "nitro/hw/registers.h"
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
 
@@ -219,9 +220,9 @@ s32 dScDSMT_c::InitResources() {
         func_0201a428();
 
     sBootArgs.messages = (void *)data_0209d6fc;
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & 0xfffffdf1) | 0x20e;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
     GX::DispOn();
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     Enable3dEngines();
     ::Initialise3dGraphics(0);
     gGraphCallback = &mGraphCallback;

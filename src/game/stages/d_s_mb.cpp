@@ -178,8 +178,8 @@ s32 dScMB_c::Behavior() {
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
         gMainScreenLayers = DISPLAY_LAYER_OBJ;
         gSubScreenLayers = 0x10;
-        *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1000;
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1000;
+        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1000;
+        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1000;
         mStep++;
         break;
 
@@ -259,16 +259,16 @@ s32 dScMB_c::InitResources() {
     volatile u16 fillSub;
 
     func_02053b98();
-    *(volatile u32 *)0x4001000 &= ~0x10000;
+    REG_DISPCNT_SUB &= ~0x10000;
     func_02030aa4(2);
 
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & ~0x20e) | 0x20e;
+    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
     func_0200f2cc();
 
-    *(volatile u16 *)0x400000a = (*(volatile u16 *)0x400000a & 0x43) | 0x704;
-    *(volatile u16 *)0x400000a &= ~0x40;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0x408;
-    *(volatile u16 *)0x400100a &= ~0x40;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x704;
+    REG_BG1CNT &= ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x408;
+    REG_DB_BG1CNT &= ~0x40;
 
     fillMain = 0xffff;
     MultiStore16(fillMain, (char *)0x5000000, 2);
@@ -284,18 +284,18 @@ s32 dScMB_c::InitResources() {
     GX::LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
     GXS::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
 
-    *(volatile u16 *)0x400000a &= ~3;
-    *(volatile u16 *)0x400100a &= ~3;
+    REG_BG1CNT &= ~3;
+    REG_DB_BG1CNT &= ~3;
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
     *(u8 *)&gMainScreenLayers = 0;
     *(u8 *)&gSubScreenLayers = 0;
-    *(volatile u32 *)0x4000000 &= ~0x1f00;
-    *(volatile u32 *)0x4001000 &= ~0x1f00;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
     GX::DispOn();
 
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     func_02034b1c(&sMBGraphCallback, (int)this);
 
     gGraphCallback = &sMBGraphCallback;

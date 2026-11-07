@@ -152,32 +152,32 @@ s32 dScGameOver_c::InitResources() {
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(8);
 
-    *(volatile u32 *)0x4000000 &= 0xffcfffef;
-    *(volatile u32 *)0x4001000 &= 0xffcfffef;
+    REG_DISPCNT &= 0xffcfffef;
+    REG_DISPCNT_SUB &= 0xffcfffef;
     GX::SetGraphicsMode(1, 0, 0);
     GXS::SetGraphicsMode(3);
 
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x38000000) | 0x8000000;
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & ~0x20e) | 0x20e;
+    REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x8000000;
+    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
     GX::DispOn();
 
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
 
-    *(volatile u16 *)0x4000008 &= ~3;
-    *(volatile u16 *)0x4000008 &= ~0x40;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0xe10;
+    REG_BG0CNT &= ~3;
+    REG_BG0CNT &= ~0x40;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0xe10;
     SetBg0Offset(0, 0);
 
-    *(volatile u16 *)0x400000a &= ~3;
-    *(volatile u16 *)0x400000a = (*(volatile u16 *)0x400000a & 0x43) | 0x1f1c;
-    *(volatile u16 *)0x400000a &= ~0x40;
+    REG_BG1CNT &= ~3;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1f1c;
+    REG_BG1CNT &= ~0x40;
     SetBg1Offset(0, 0);
 
     LoadDebugFont();
 
-    *(volatile u16 *)0x400000c &= ~3;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0xd10;
+    REG_BG2CNT &= ~3;
+    REG_BG2CNT &= ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xd10;
     SetBg2Offset(0, 0);
 
     if (GetOwnerLanguage() == 5) {
@@ -206,9 +206,9 @@ s32 dScGameOver_c::InitResources() {
     DecompressLZ16(f, G2::GetBG0ScrPtr());
     Deallocate(f);
 
-    *(volatile u16 *)0x400000e &= ~3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1100;
-    *(volatile u16 *)0x400000e &= ~0x40;
+    REG_BG3CNT &= ~3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1100;
+    REG_BG3CNT &= ~0x40;
     LoadFont(0);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_NCG_BIN);
@@ -221,14 +221,14 @@ s32 dScGameOver_c::InitResources() {
 
     gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_OBJ;
 
-    *(volatile u16 *)0x4001008 &= ~3;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x1100;
+    REG_DB_BG0CNT &= ~3;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x1100;
     SetSubBg0Offset(0, 0);
 
-    *(volatile u16 *)0x400100a &= ~3;
-    *(volatile u16 *)0x400100a &= ~0x40;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0xc00;
+    REG_DB_BG1CNT &= ~3;
+    REG_DB_BG1CNT &= ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
     SetSubBg1Offset(0, 0);
 
     if (GetOwnerLanguage() == 5) {
@@ -253,9 +253,9 @@ s32 dScGameOver_c::InitResources() {
     DecompressLZ16(f, G2S::GetBG1ScrPtr());
     Deallocate(f);
 
-    *(volatile u16 *)0x400100c &= ~3;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0xd00;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0xd00;
     SetSubBg2Offset(0, 0);
 
     f = LoadFile(ASSET_D_2D_BTM_GAME_OVER_BG_NSC_BIN);
@@ -278,8 +278,8 @@ s32 dScGameOver_c::InitResources() {
     }
 
     gSubScreenLayers = 0x14;
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
-    *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1400;
+    REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1400;
     data_0209f204 = 1;
     Sound::LoadInitialGroup(2);
     Sound::LoadAndSetMusic_Layer1(0x15);

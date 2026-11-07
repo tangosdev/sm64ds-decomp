@@ -408,8 +408,8 @@ s32 dScEntry_c::InitResultResources() {
     char *sub;
     int n;
 
-    *(volatile u16 *)0x400000a = (u16)((*(volatile u16 *)0x400000a & 0x43) | 0x208);
-    *(volatile u16 *)0x400000a = (u16)(*(volatile u16 *)0x400000a & ~0x40);
+    REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
+    REG_BG1CNT = (u16)(REG_BG1CNT & ~0x40);
 
     LoadCompressedFileAt(0x8413, G2::GetBG2CharPtr());
     tmp = LoadFile(0x8414);
@@ -444,7 +444,7 @@ s32 dScEntry_c::InitResultResources() {
     GX::LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
-    *(volatile u16 *)0x400000a = (u16)((*(volatile u16 *)0x400000a & ~3) | 2);
+    REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
     SetBg1Offset(0, 0);
     sub = (char *)0x6600000;
     LoadCompressedFileAt(0x8402, sub);
@@ -1887,7 +1887,7 @@ void dScEntry_c::UpdateStepFadeOut() {
 }
 
 void dScEntry_c::EnterStepFadeOut() {
-    *(volatile u16 *)0x4000050 = 0;
+    REG_BLDCNT = 0;
     G2x::SetBlendBrightness((volatile u16 *)0x4001050, 0x1d, 0);
     mFadeBrightness = 0;
     mFadeTick = 0;
@@ -1939,7 +1939,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         if (mDisconnectHideMask)
             mRenderStep = 0;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
-        *(volatile u16 *)0x4001050 = 0;
+        REG_DB_BLDCNT = 0;
         Sound::StopLoadedMusic_Layer1(4);
         func_02012790(0x123);
         mEntObj->mSuspended = 1;
