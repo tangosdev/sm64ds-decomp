@@ -1,6 +1,7 @@
+#include "private/wm_views.h"
+
 extern unsigned short data_020a0f14;
-extern void *data_020a0f74;
-extern int WM_StartDataSharing(void *a, int b, int c, int d, int e);
+extern WMDataSharingInfo *data_020a0f74;
 
 /* Start data sharing once MP is running: WM_StartDataSharing
    on the 0x420-byte WMDataSharingInfo func_020408b0 allocates

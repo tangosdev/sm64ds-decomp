@@ -17,8 +17,8 @@ extern void *data_020a0f44;
 extern void *data_020a0f48;
 extern void *data_020a0f54;
 extern unsigned short data_020a0f28;
-extern void *data_020a0f74;
-extern void *data_020a0f80;
+extern WMDataSharingInfo *data_020a0f74;
+extern WMDataSet *data_020a0f80;
 extern unsigned int data_020a0f58;
 extern void *data_020a0f60;
 extern unsigned int data_020a0f64;
@@ -46,8 +46,8 @@ void func_020408b0(unsigned short arg) {
         data_020a0f28 = desc->channel;
         ++desc->gameInfo.tgid;
     }
-    data_020a0f74 = Memory::Allocate(0x420, 0x20);
-    data_020a0f80 = Memory::Allocate(0x100, 0x20);
+    data_020a0f74 = (WMDataSharingInfo *)Memory::Allocate(sizeof(WMDataSharingInfo), 0x20);
+    data_020a0f80 = (WMDataSet *)Memory::Allocate(sizeof(WMDataSet), 0x20);
     data_020a0f58 = 0x220;
     data_020a0f60 = Memory::Allocate(0x220, 0x20);
     data_020a0f64 = 0x480;
