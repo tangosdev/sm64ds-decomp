@@ -125,42 +125,24 @@ VecFx32 data_ov078_02126e00 = {0, 0x3c000, 0};
 /* State records: {enter, tick}. KingBobOmb_SetState runs the first and
  * Behavior the second. The handlers keep their address names, so the
  * records keep theirs. */
-PMF data_ov078_0212710c[2] = {&daBombking_c::EnterInactive,
-                              &daBombking_c::TickInactive};
-PMF data_ov078_0212700c[2] = {&daBombking_c::EnterIntroTalk,
-                              &daBombking_c::TickIntroTalk};
-PMF data_ov078_0212701c[2] = {&daBombking_c::EnterActivate,
-                              &daBombking_c::TickActivate};
-PMF data_ov078_0212703c[2] = {&daBombking_c::EnterChase,
-                              &daBombking_c::TickChase};
-PMF data_ov078_0212704c[2] = {&daBombking_c::EnterThrowBomb,
-                              &daBombking_c::TickThrowBomb};
-PMF data_ov078_0212707c[2] = {&daBombking_c::EnterHeldByPlayer,
-                              &daBombking_c::TickHeldByPlayer};
-PMF data_ov078_0212708c[2] = {&daBombking_c::EnterThrown,
-                              &daBombking_c::TickThrown};
-PMF data_ov078_021270ac[2] = {&daBombking_c::EnterBounceOffHill,
-                              &daBombking_c::TickBounceOffHill};
-PMF data_ov078_021270bc[2] = {&daBombking_c::EnterReturnHome,
-                              &daBombking_c::TickReturnHome};
-PMF data_ov078_021270dc[2] = {&daBombking_c::EnterHomeTalk,
-                              &daBombking_c::TickHomeTalk};
-PMF data_ov078_021270ec[2] = {&daBombking_c::EnterDamaged,
-                              &daBombking_c::TickDamaged};
-PMF data_ov078_02126ffc[2] = {&daBombking_c::EnterKnockback,
-                              &daBombking_c::TickKnockback};
-PMF data_ov078_0212702c[2] = {&daBombking_c::EnterGetUp,
-                              &daBombking_c::TickGetUp};
-PMF data_ov078_0212706c[2] = {&daBombking_c::EnterGrabPlayer,
-                              &daBombking_c::TickGrabPlayer};
-PMF data_ov078_0212709c[2] = {&daBombking_c::EnterCarryPlayer,
-                              &daBombking_c::TickCarryPlayer};
-PMF data_ov078_021270cc[2] = {&daBombking_c::EnterThrowPlayer,
-                              &daBombking_c::TickThrowPlayer};
-PMF data_ov078_021270fc[2] = {&daBombking_c::EnterWalkHome,
-                              &daBombking_c::TickWalkHome};
-PMF data_ov078_0212705c[2] = {&daBombking_c::EnterDefeated,
-                              &daBombking_c::TickDefeated};
+PMF data_ov078_0212710c[2] = {&daBombking_c::EnterInactive, &daBombking_c::TickInactive};
+PMF data_ov078_0212700c[2] = {&daBombking_c::EnterIntroTalk, &daBombking_c::TickIntroTalk};
+PMF data_ov078_0212701c[2] = {&daBombking_c::EnterActivate, &daBombking_c::TickActivate};
+PMF data_ov078_0212703c[2] = {&daBombking_c::EnterChase, &daBombking_c::TickChase};
+PMF data_ov078_0212704c[2] = {&daBombking_c::EnterThrowBomb, &daBombking_c::TickThrowBomb};
+PMF data_ov078_0212707c[2] = {&daBombking_c::EnterHeldByPlayer, &daBombking_c::TickHeldByPlayer};
+PMF data_ov078_0212708c[2] = {&daBombking_c::EnterThrown, &daBombking_c::TickThrown};
+PMF data_ov078_021270ac[2] = {&daBombking_c::EnterBounceOffHill, &daBombking_c::TickBounceOffHill};
+PMF data_ov078_021270bc[2] = {&daBombking_c::EnterReturnHome, &daBombking_c::TickReturnHome};
+PMF data_ov078_021270dc[2] = {&daBombking_c::EnterHomeTalk, &daBombking_c::TickHomeTalk};
+PMF data_ov078_021270ec[2] = {&daBombking_c::EnterDamaged, &daBombking_c::TickDamaged};
+PMF data_ov078_02126ffc[2] = {&daBombking_c::EnterKnockback, &daBombking_c::TickKnockback};
+PMF data_ov078_0212702c[2] = {&daBombking_c::EnterGetUp, &daBombking_c::TickGetUp};
+PMF data_ov078_0212706c[2] = {&daBombking_c::EnterGrabPlayer, &daBombking_c::TickGrabPlayer};
+PMF data_ov078_0212709c[2] = {&daBombking_c::EnterCarryPlayer, &daBombking_c::TickCarryPlayer};
+PMF data_ov078_021270cc[2] = {&daBombking_c::EnterThrowPlayer, &daBombking_c::TickThrowPlayer};
+PMF data_ov078_021270fc[2] = {&daBombking_c::EnterWalkHome, &daBombking_c::TickWalkHome};
+PMF data_ov078_0212705c[2] = {&daBombking_c::EnterDefeated, &daBombking_c::TickDefeated};
 
 extern "C" {
 /* Canonical single declaration per ROM data symbol -- the generated
@@ -200,9 +182,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z)
  * D0 at 0x02123740 / 0x02123798, the two lowest addresses in the run. */
 daBombking_c::~daBombking_c() {}
 
-
-int daBombking_c::CheckKnockbackHit()
-{
+int daBombking_c::CheckKnockbackHit() {
     unsigned int v = this->mdCcAcPos_c2.otherOwner;
     if (v == 0) return 0;
     if (dActor_c::FindWithID(v) == 0) return 0;
@@ -210,7 +190,6 @@ int daBombking_c::CheckKnockbackHit()
     KingBobOmb_SetState(data_ov078_02126ffc);
     return 1;
 }
-
 
 /* -------------------------------------------------------------------------- */
 
@@ -228,8 +207,7 @@ void daBombking_c::DetonateSpawnedBombs() {
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickDefeated()
-{
+int daBombking_c::TickDefeated() {
     dCamera_c *cam = data_0209f318;
     VecFx32 v;
     VecFx32 t;
@@ -273,11 +251,9 @@ int daBombking_c::TickDefeated()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterDefeated()
-{
+int daBombking_c::EnterDefeated() {
     this->mAnimSpeed = 2;
     this->mHorzSpeed = 0;
     this->mStateTimer = 0x32;
@@ -287,13 +263,12 @@ int daBombking_c::EnterDefeated()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickWalkHome()
-{
+int daBombking_c::TickWalkHome() {
     short ang = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mHomePosX);
-    if (CheckKnockbackHit() == 1) return 1;
+    if (CheckKnockbackHit() == 1)
+        return 1;
     daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
         VecFx32 v = *(VecFx32 *)&p->mPosX;
@@ -316,13 +291,11 @@ int daBombking_c::TickWalkHome()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 /* This caller retains the reconstructed SetAnim ABI declaration above.
    The callee's Fix12 definition experiment in notes/mwccarm-codegen.md 6az
    does not establish that a typed call here would fail to match. */
-int daBombking_c::EnterWalkHome()
-{
+int daBombking_c::EnterWalkHome() {
     this->mVertAccel = -0x2000;
     this->mAnimSpeed = 2;
     this->mHorzSpeed = 0xa000;
@@ -332,9 +305,7 @@ int daBombking_c::EnterWalkHome()
 
 /* -------------------------------------------------------------------------- */
 
-
-int daBombking_c::TickThrowPlayer()
-{
+int daBombking_c::TickThrowPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
         int v = *(int*)&this->mHeldActor;
@@ -360,12 +331,10 @@ int daBombking_c::TickThrowPlayer()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 struct BCA_File;
 
-int daBombking_c::EnterThrowPlayer()
-{
+int daBombking_c::EnterThrowPlayer() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingThrowAnimationFile.filePtr, 0, 0x40000000,
                                  0x1000, 0);
     this->mHorzSpeed = 0;
@@ -374,8 +343,7 @@ int daBombking_c::EnterThrowPlayer()
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickCarryPlayer()
-{
+int daBombking_c::TickCarryPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
         if (this->mHeldActor != 0) {
@@ -421,10 +389,8 @@ int daBombking_c::TickCarryPlayer()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
-int daBombking_c::EnterCarryPlayer()
-{
+int daBombking_c::EnterCarryPlayer() {
     mVertAccel = -0x2000;
     mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingWalk2AnimationFile.filePtr, 0, 0, 0x1000, 0);
     mStateTimer = 0x32;
@@ -433,8 +399,7 @@ int daBombking_c::EnterCarryPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-int daBombking_c::TickGrabPlayer()
-{
+int daBombking_c::TickGrabPlayer() {
     if (CheckKnockbackHit() != 1) {
         if (this->mHeldActor == 0) goto L6c;
         if (this->mHeldActor->GetHealth() != 0)
@@ -456,8 +421,7 @@ L6c:
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterGrabPlayer()
-{
+int daBombking_c::EnterGrabPlayer() {
     this->mVertAccel = -0x2000;
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingLiftAnimationFile.filePtr, 0, 0x40000000,
                                  0x1000, 0);
@@ -466,8 +430,7 @@ int daBombking_c::EnterGrabPlayer()
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickGetUp()
-{
+int daBombking_c::TickGetUp() {
     s16 ang = this->HorzAngleToCPlayer();
     ApproachAngle(&this->mPrevAngleY, ang, 1, 0x500, 0x500);
     this->mAngleY = this->mPrevAngleY;
@@ -479,13 +442,11 @@ int daBombking_c::TickGetUp()
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterGetUp()
-{
+int daBombking_c::EnterGetUp() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingGetupAnimationFile.filePtr, 0, 0x40000000,
                                  0x1000, 0);
     return 1;
 }
-
 
 /* -------------------------------------------------------------------------- */
 int daBombking_c::TickKnockback() {
@@ -569,8 +530,7 @@ int daBombking_c::TickKnockback() {
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterKnockback()
-{
+int daBombking_c::EnterKnockback() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
     this->mStateTimer = 0xc8;
@@ -586,11 +546,9 @@ int daBombking_c::EnterKnockback()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickDamaged()
-{
+int daBombking_c::TickDamaged() {
     s16 ang = this->HorzAngleToCPlayer();
     ApproachAngle(&this->mPrevAngleY, ang, 1, 0x500, 0x500);
     this->mAngleY = this->mPrevAngleY;
@@ -599,22 +557,18 @@ int daBombking_c::TickDamaged()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterDamaged()
-{
+int daBombking_c::EnterDamaged() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
     this->mStateTimer = 0x32;
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickHomeTalk()
-{
+int daBombking_c::TickHomeTalk() {
     Vector3 a;
     Vector3 look;
     Vector3 pos;
@@ -688,21 +642,17 @@ int daBombking_c::TickHomeTalk()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterHomeTalk()
-{
+int daBombking_c::EnterHomeTalk() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingStartAnimationFile.filePtr, 8, 0x40000000,
                                  0x1000, 0);
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickReturnHome()
-{
+int daBombking_c::TickReturnHome() {
     short horz;
     short vert;
     VecFx32 vA;
@@ -801,11 +751,9 @@ int daBombking_c::TickReturnHome()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterReturnHome()
-{
+int daBombking_c::EnterReturnHome() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingJumpAnimationFile.filePtr, 0, 0x40000000,
                                  0x1000, 0);
     func_02012694(0x129, &this->mCamSpacePosX);
@@ -820,11 +768,9 @@ int daBombking_c::EnterReturnHome()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickBounceOffHill()
-{
+int daBombking_c::TickBounceOffHill() {
     if ((unsigned short)this->mStateTimer != 0) return 1;
     if (*(int *)&data_02092138 > this->mPosY) {
         KingBobOmb_SetState(data_ov078_021270bc);
@@ -846,11 +792,9 @@ int daBombking_c::TickBounceOffHill()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterBounceOffHill()
-{
+int daBombking_c::EnterBounceOffHill() {
     this->mVertAccel = -0x2000;
     this->mVertSpeed = 0x1e000;
     this->mHorzSpeed = 0x14000;
@@ -862,10 +806,8 @@ int daBombking_c::EnterBounceOffHill()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
-int daBombking_c::TickThrown()
-{
+int daBombking_c::TickThrown() {
     if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
     this->mHorzSpeed = 0;
     if ((int)(this->mArenaPosY - 0x28000) > this->mPosY) {
@@ -908,8 +850,7 @@ done:
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterThrown()
-{
+int daBombking_c::EnterThrown() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
     if (this->mHealth <= 0)
@@ -923,13 +864,9 @@ int daBombking_c::EnterThrown()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-
-
-int daBombking_c::TickHeldByPlayer()
-{
+int daBombking_c::TickHeldByPlayer() {
     if (this->mActionStep == 0) {
         int b = (this->mFlags & 0x4000) != 0;
         if (b != 0) {
@@ -996,11 +933,9 @@ done:
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterHeldByPlayer()
-{
+int daBombking_c::EnterHeldByPlayer() {
     this->mdCcAcPos_c.flags |= 2;
     this->mVertAccel = 0;
     this->mHorzSpeed = 0;
@@ -1008,11 +943,9 @@ int daBombking_c::EnterHeldByPlayer()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickThrowBomb()
-{
+int daBombking_c::TickThrowBomb() {
     struct Vector3 in, out, v[2];
     dActor_c *target;
     daPly_c *player;
@@ -1083,11 +1016,9 @@ int daBombking_c::TickThrowBomb()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterThrowBomb()
-{
+int daBombking_c::EnterThrowBomb() {
     int i;
     int r;
 
@@ -1113,11 +1044,9 @@ int daBombking_c::EnterThrowBomb()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickChase()
-{
+int daBombking_c::TickChase() {
     daPly_c *p;
     dActor_c *a;
     int isType;
@@ -1215,12 +1144,9 @@ int daBombking_c::TickChase()
     return 1;
 }
 
-
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterChase()
-{
+int daBombking_c::EnterChase() {
     this->mAnimSpeed = 1;
     this->mHorzSpeed = 0x5000;
     this->mVertAccel = -0x2000;
@@ -1228,10 +1154,8 @@ int daBombking_c::EnterChase()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
-int daBombking_c::TickActivate()
-{
+int daBombking_c::TickActivate() {
     Vector3 s;
     Vector3 d;
     Vector3 v;
@@ -1267,8 +1191,7 @@ int daBombking_c::TickActivate()
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterActivate()
-{
+int daBombking_c::EnterActivate() {
     this->mVertAccel = -0x2000;
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingStartAnimationFile.filePtr, 8, 0x40000000,
                                  0x1000, 0);
@@ -1279,10 +1202,8 @@ int daBombking_c::EnterActivate()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
-int daBombking_c::TickIntroTalk()
-{
+int daBombking_c::TickIntroTalk() {
     daPly_c *target = this->mTalkingPlayer;
     int *src = &target->mPosX;
     Vector3 v;
@@ -1304,16 +1225,13 @@ int daBombking_c::TickIntroTalk()
 
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::EnterIntroTalk()
-{
+int daBombking_c::EnterIntroTalk() {
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 
-int daBombking_c::TickInactive()
-{
+int daBombking_c::TickInactive() {
     int dist;
     struct Vector3 ppos;
     struct Vector3 v;
@@ -1377,7 +1295,6 @@ int daBombking_c::TickInactive()
     return 1;
 }
 
-
 /* -------------------------------------------------------------------------- */
 int daBombking_c::EnterInactive() {
     this->mHorzSpeed = 0;
@@ -1403,35 +1320,35 @@ int daBombking_c::KingBobOmb_SetState(void *pv) {
 
 /* -------------------------------------------------------------------------- */
 void daBombking_c::UpdateShadow() {
-  int h = mPosY;
-  if (this->mWithMeshClsn.IsOnGround() == 0) {
-    dBgCh_Gnd rg;
-    rg.SetObjAndPos(this->mPos, 0);
-    if (rg.DetectClsn() != 0)
-      h = rg.clsnY;
-  }
-  int b = (this->mFlags & 0x4000) != 0;
-  if (b) {
-      daPly_c *p = this->mHeldActor;
-      if (p != 0)
-          h = p->mPosY;
-  }
-  int ip = this->mPosY - h;
-  if (ip <= 0x1000)
-    ip = 0x1000;
-  int scale = 0x15e000 - FX_MUL(ip, 0x180);
-  if (scale < 0xa000)
-    scale = 0xa000;
-  *(Matrix4x3 *)this->mShadowMtx = IDENTITY_MATRIX4X3;
-  this->mShadowMtx[9] = this->mPosX >> 3;
-  this->mShadowMtx[10] = this->mPosY >> 3;
-  this->mShadowMtx[11] = this->mPosZ >> 3;
-  DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)this->mShadowMtx, scale, ip + 0x28000, 0xf);
+    int h = mPosY;
+    if (this->mWithMeshClsn.IsOnGround() == 0) {
+        dBgCh_Gnd rg;
+        rg.SetObjAndPos(this->mPos, 0);
+        if (rg.DetectClsn() != 0)
+            h = rg.clsnY;
+    }
+    int b = (this->mFlags & 0x4000) != 0;
+    if (b) {
+        daPly_c *p = this->mHeldActor;
+        if (p != 0)
+            h = p->mPosY;
+    }
+    int ip = this->mPosY - h;
+    if (ip <= 0x1000)
+        ip = 0x1000;
+    int scale = 0x15e000 - FX_MUL(ip, 0x180);
+    if (scale < 0xa000)
+        scale = 0xa000;
+    *(Matrix4x3 *)this->mShadowMtx = IDENTITY_MATRIX4X3;
+    this->mShadowMtx[9] = this->mPosX >> 3;
+    this->mShadowMtx[10] = this->mPosY >> 3;
+    this->mShadowMtx[11] = this->mPosZ >> 3;
+    DropShadowRadHeight(this->mShadowModel, *(Matrix4x3 *)this->mShadowMtx, scale, ip + 0x28000,
+                        0xf);
 }
 
 /* -------------------------------------------------------------------------- */
-void daBombking_c::UpdateHandMatrix()
-{
+void daBombking_c::UpdateHandMatrix() {
     struct Vector3 lv;
     int i;
 
@@ -1478,8 +1395,7 @@ void daBombking_c::UpdateHandMatrix()
 
 /* -------------------------------------------------------------------------- */
 
-
-void daBombking_c::AttachHeldPlayer(){
+void daBombking_c::AttachHeldPlayer() {
     daPly_c *player = mHeldActor;
     int idx = 0;
     if (player == 0) return;
