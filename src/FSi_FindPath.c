@@ -15,7 +15,7 @@ extern FSDirPos data_020a804c;
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FSi_SendCommand(FSFile *p_file, int command);
 
-int FSi_FindPath(FSFile *p_dir, char *path, int p_file_id, int p_dir_pos) {
+int FSi_FindPath(FSFile *p_dir, const char *path, FSFileID *p_file_id, FSDirPos *p_dir_pos) {
     FSDirPos pos;
     int i;
     FSArchive *p_arc;
@@ -60,10 +60,10 @@ int FSi_FindPath(FSFile *p_dir, char *path, int p_file_id, int p_dir_pos) {
     p_dir->arg.findpath.pos = pos;
     if (p_dir_pos != 0) {
         p_dir->arg.findpath.find_directory = 1;
-        p_dir->arg.findpath.result = p_dir_pos;
+        p_dir->arg.findpath.result.dir = p_dir_pos;
     } else {
         p_dir->arg.findpath.find_directory = 0;
-        p_dir->arg.findpath.result = p_file_id;
+        p_dir->arg.findpath.result.file = p_file_id;
     }
     return FSi_SendCommand(p_dir, 4);
 }
