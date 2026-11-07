@@ -6632,7 +6632,8 @@ int daPly_c::St_NoControl_Cleanup() {
   mScaleX=v;
   mScaleY=v;
   mScaleZ=v;
-  if(mNoCtrlKind==0x11) KuppaScript::End();
+  if (mNoCtrlKind == 0x11)
+      KuppaScript::End();
   return 1;
 }
 }
