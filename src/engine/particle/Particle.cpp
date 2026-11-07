@@ -327,7 +327,8 @@ u32 System::NewWeather(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
 // @symbol _ZN8Particle6System17NewUnkCallback818EjjiiiPK11Vector3_16f
 u32 System::NewUnkCallback818(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                               const Vector3_16f *dir) {
-    return New(uniqueID, effectID, x, y, z, dir, (Callback *)&data_0209ee74->mCleanParticleCallback);
+    return New(uniqueID, effectID, x, y, z, dir,
+               (Callback *)&data_0209ee74->mCleanParticleCallback);
 }
 
 // @symbol _ZN8Particle20RunningSlidingDustAtEiii

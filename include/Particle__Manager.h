@@ -91,8 +91,8 @@ struct Manager {
     u16 mNumParticles;              /* 0x2a - size of the particle pool */
     /* The polygon-ID range each new system's particles cycle through
        (System::polygonIDs); SysTracker::Initialise passes 0x1a..0x3e. */
-    u16 mMinPolygonID;              /* 0x2c */
-    u16 mMaxPolygonID;              /* 0x2e */
+    u16 mMinPolygonID; /* 0x2c */
+    u16 mMaxPolygonID; /* 0x2e */
     /* Base POLYGON_ATTR bits the draw routines OR into each polygon;
        SysTracker::Initialise sets 0x8000. */
     u32 mPolygonAttr; /* 0x30 */

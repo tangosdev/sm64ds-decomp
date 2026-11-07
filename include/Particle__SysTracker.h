@@ -124,7 +124,7 @@ struct SysTracker {
     dPa_c::level_c::splashCallback_c mBigSplashCallback; /* 0x76c */
     s32 mSystemID_774;      /* 0x774 */
     dPa_c::level_c::splashCallback_c mCallback_778; /* 0x778 */
-    s32 mBubbleSystemID;      /* 0x780 */
+    s32 mBubbleSystemID;                            /* 0x780 */
     dPa_c::level_c::bubbleCallback_c mBubbleCallback; /* 0x784 */
     s32 mRippleSystemID;    /* 0x78c */
     dPa_c::level_c::fitWaterSimpleCallback_c mRippleCallback; /* 0x790 */
@@ -140,7 +140,7 @@ struct SysTracker {
     dPa_c::level_c::scaleCallback_c mCallback_7d4; /* 0x7d4 */
     s32 mSystemID_7e0;                             /* 0x7e0 */
     dPa_c::level_c::scaleCallback_c mCallback_7e4; /* 0x7e4 */
-    dPa_c::level_c::checkWaterCallback_c mCheckWaterCallback; /* 0x7f0 */
+    dPa_c::level_c::checkWaterCallback_c mCheckWaterCallback;             /* 0x7f0 */
     dPa_c::level_c::checkWaterRippleCallback_c mCheckWaterRippleCallback; /* 0x7f4 */
     dPa_c::level_c::fitWaterCallback_c mCallback_7f8; /* 0x7f8 */
     dPa_c::level_c::fitWaterCallback_c mCallback_800; /* 0x800 */
