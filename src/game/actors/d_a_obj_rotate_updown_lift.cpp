@@ -130,7 +130,8 @@ int fdiv(int numerator, int denominator);
 
 extern "C" {
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void MulVec3Mat4x3(void *src, void *m, void *dst);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
@@ -169,8 +170,8 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosZ = mBasePosZ;
     mWaypointIndex = (u8)(param1 & 0xf);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
-                  &data_020a0e68, &tmp[0]);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  (Vector3 *)&tmp[0]);
     Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
     mPosY = tmp[1].y;
@@ -393,12 +394,11 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
-                  &data_020a0e68, &cur);
-    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[prevIndex],
-                  &data_020a0e68, &prev);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  &cur);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
-    Vec3_Sub(&remain, (const Vector3 *)&mPosX, &target);
+    Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
     dist = LenVec3(&remain);
@@ -503,7 +503,7 @@ int daObjRotateUpdownLift_c::InitResources()
         int stride = 0x78;
         int i = mVariant;
         node = mWaypointIndex;
-        MulVec3Mat4x3(tbl + i * stride + node * 0xc, &data_020a0e68, &rotated);
+        MulVec3Mat4x3((Vector3 *)(tbl + i * stride + node * 0xc), &data_020a0e68, &rotated);
     }
     Vec3_Add(&placed, (const Vector3 *)&mBasePosX, &rotated);
     mPosX = placed.x;
