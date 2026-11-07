@@ -42,6 +42,7 @@
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The three shared files this actor claims: ov002's model handle here and the
    two animation handles below.  InitResources loads them and
@@ -758,23 +759,24 @@ void daBmb_c::func_ov102_0214b988() {
 
 /* ==========================================================================
  *
- * The volatile pins are load-bearing: they hold the cartridge's stack layout.
- * Do not simplify them.  The shard's chained `& 0xFFFFFFFFu` masks were
+ * The positions are plain Vector3 locals: its user-declared dtor keeps the
+ * never-read eaterPos copy and the zeroing of p. The angle copies are
+ * still volatile u16 pins. Two POD Vector3_16 locals in their place lose the
+ * dead stores (0x424 against 0x44c), and block-scoped ones keep the stores
+ * but schedule p.x/p.y late. The shard's chained `& 0xFFFFFFFFu` masks were
  * C-only and were dropped; the plain `&&` MATCHES.
  * ======================================================================== */
 
 // @symbol _ZN7daBmb_c19func_ov102_0214b53cEv
 void daBmb_c::func_ov102_0214b53c() {
     extern Matrix4x3 data_020a0e68;
-    extern s16 data_02082214[];
 
     volatile u16 tmp[6]; /* angle-home pins */
     Vector3 p;
-    volatile Vector3 dead; /* stack-layout placeholder; never a live value */
+    Vector3 eaterPos;
     int x0;
     Vector3 d;
     int xSaved;
-    char *pPos;
     char *src;
     /* Plain short-circuit.  A chain of `& 0xFFFFFFFFu` masks is C-only: under
      -lang c++ the `&&` is a bool and the mask costs three instructions. */
@@ -813,33 +815,16 @@ void daBmb_c::func_ov102_0214b53c() {
     }
     int haveMtx2 = (int)((mFlags & 0x4000) != 0);
     if ((haveMtx2 != 0) || (mFuse != 0)) {
-        {
-            Matrix4x3 *g = &data_020a0e68;
-            Matrix4x3 *m = &mAnmModel.mat4x3;
-            p.x = 0;
-            p.y = 0;
-            p.z = 0;
-            *g = *m;
-        }
+        p.x = 0;
+        p.y = 0;
+        p.z = 0;
+        data_020a0e68 = mAnmModel.mat4x3;
         MulMat4x3Mat4x3(&mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
-        {
-            int ty = *((int *)(((char *)(&data_020a0e68)) + 0x28));
-            int tx = *((int *)(((char *)(&data_020a0e68)) + 0x24));
-            p.y = ty;
-            int tz = *((int *)(((char *)(&data_020a0e68)) + 0x2c));
-            p.z = tz;
-            p.x = tx;
-            Vec3_Lsl(&d, &p, 3);
-        }
-        {
-            int dy = *((int *)(((char *)(&d)) + 4));
-            int dx = *((int *)(((char *)(&d)) + 0));
-            x0 = dx;
-            p.y = dy;
-            int dz = *((int *)(((char *)(&d)) + 8));
-            p.x = x0;
-            p.z = dz;
-        }
+        p.x = data_020a0e68.m[9];
+        p.y = data_020a0e68.m[10];
+        p.z = data_020a0e68.m[11];
+        Vec3_Lsl(&d, &p, 3);
+        p = d;
         int haveMtx3 = (int)((mFlags & 0x4000) != 0);
         if (haveMtx3 != 0) {
             mCarryParticle = Particle::System::New(mCarryParticle, 0x13, p.x, p.y, p.z, 0, 0);
@@ -847,28 +832,13 @@ void daBmb_c::func_ov102_0214b53c() {
         if (mFuse != 0) {
             int haveShadow = (int)((mFlags & 0x40000) != 0);
             if (haveShadow != 0) {
-                char *obj = (char *)mEatingPlayer;
-                if (obj != 0) {
-                    char *pos = (char *)&((daPly_c *)obj)->mPos;
-                    int dx = *((int *)pos);
-                    int gbase = (int)&data_020a0e68;
-                    dead.x = dx;
-                    int dy = *((int *)(pos + 4));
-                    dead.y = dy;
-                    int dz = *((int *)(pos + 8));
-                    dead.z = dz;
+                if (mEatingPlayer != 0) {
+                    eaterPos = mEatingPlayer->mPos;
                     data_020a0e68 = mEatingPlayer->mHeadMatrix;
-                    {
-                        /* pin mtx translation loads */
-                        int tx = *(volatile int *)((char *)&data_020a0e68 + 0x24);
-                        int ty = *(volatile int *)((char *)&data_020a0e68 + 0x28);
-                        int tz = *(volatile int *)((char *)&data_020a0e68 + 0x2c);
-                        p.x = tx;
-                        p.z = tz;
-                        pPos = (char *)&p;
-                        p.y = ty;
-                        Vec3_LslInPlace((int *)pPos, 3);
-                    }
+                    p.x = data_020a0e68.m[9];
+                    p.y = data_020a0e68.m[10];
+                    p.z = data_020a0e68.m[11];
+                    Vec3_LslInPlace((int *)&p, 3);
                     daPly_c *eater = mEatingPlayer;
                     u16 a8c = *((volatile u16 *)&eater->mAngleX); /* pin angle loads */
                     u16 a8e = *((volatile u16 *)&eater->mAngleY);
@@ -890,10 +860,9 @@ void daBmb_c::func_ov102_0214b53c() {
                         u16 v582 = (u16)v582s;
                         int py = p.y + 0x14000;
                         p.y = py;
-                        p.y = py + (((int)data_02082214[(v582 >> 4) * 2]) * 0x1e);
-                        int idxX2 = (ang8e >> 4) * 2;
-                        p.x = xSaved + (((int)data_02082214[idxX2]) * 0x3c);
-                        p.z = p.z + (((int)data_02082214[idxX2 + 1]) * 0x3c);
+                        p.y = py + FX_SinIdx(v582 >> 4) * 0x1e;
+                        p.x = xSaved + FX_SinIdx(ang8e >> 4) * 0x3c;
+                        p.z = p.z + FX_CosIdx(ang8e >> 4) * 0x3c;
                     }
                 }
             }
