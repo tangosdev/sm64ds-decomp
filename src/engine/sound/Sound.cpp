@@ -23,6 +23,7 @@
  */
 #include "types.h"
 #include "Sound.h"
+#include "private/watchdog_alarm.h"
 #include "Memory.h"
 #include "math/Approach.h"
 #include "nnsys/snd/player.h"
@@ -192,7 +193,7 @@ extern int data_0209baa0;
    sPlayerSeqLimits). It stays extern because it ends 2 bytes short of the
    next 4-aligned object, and that tail fill cannot be claimed yet. */
 extern char data_0208e498[];
-extern char data_0209d574[];
+extern struct WatchdogAlarm data_0209d574;
 extern unsigned char data_0209f250;
 extern signed char gCurrentSublevel;
 extern void *data_0209f394[];
@@ -1291,14 +1292,14 @@ extern "C" void func_020133bc(void)
     func_0204f070();
     sSndHeap = (int)func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
-    func_0201a9fc(data_0209d574);
+    func_0201a9fc((char *)&data_0209d574);
     func_02050f34(&sSndArc, (int)anim, sSndHeap, 0);
-    func_0201a9fc(data_0209d574);
+    func_0201a9fc((char *)&data_0209d574);
     func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
-        func_0201a9fc(data_0209d574);
+        func_0201a9fc((char *)&data_0209d574);
         func_020134d8((void *)1, (void *)sSndHeap);
-        func_0201a9fc(data_0209d574);
+        func_0201a9fc((char *)&data_0209d574);
     }
     func_0204f94c(&sMusicHandle);
     func_0204f94c(&sSubHandle);
@@ -1329,10 +1330,10 @@ extern "C" void func_02013524(int a, int b, int c)
 // @symbol func_020134d8
 extern "C" int func_020134d8(void *a, void *b)
 {
-    int s = func_0201a9ec((int *)data_0209d574);
+    int s = func_0201a9ec((int *)&data_0209d574);
     int r = func_02051918((u32)a, (int)b);
-    func_0201a9fc(data_0209d574);
-    func_0201a96c((int *)data_0209d574, s);
+    func_0201a9fc((char *)&data_0209d574);
+    func_0201a96c((int *)&data_0209d574, s);
     return r;
 }
 
