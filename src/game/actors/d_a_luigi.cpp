@@ -210,7 +210,7 @@ int daLuigi_c::Render() {
     for (bone = 0; bone < file->numBones; bone++) {
         /* u64 round trip on the destination. A plain store swaps the copy
          * registers (8 words). */
-        *(Mtx43 *)(int)((long long)(int)dst) = *src;
+        *(Mtx43 *)((long long)(int)dst) = *src;
         src++;
         dst++;
     }

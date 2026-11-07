@@ -58,6 +58,17 @@
  *   `(long long)(int)&mAngleX` launder. The plain member, `+=`,
  *   *(s16 *)&mAngleX, `(int)&mAngleX` and a pointer local all change its
  *   codegen.
+ *   Re-measured for #821 by halves, which is the part worth recording: the
+ *   OUTER `(long long)` is free of all seventeen of this file's functions --
+ *   drop it at all four sites and func_ov063_0211cb54 still reproduces --
+ *   but it is NOT free of the file. It lowers mwcc's per-TU @NNN local
+ *   numbering, so __sinit_d_a_trs_trap.cpp comes back WRONG from
+ *   prepush_linkcheck (right bytes, relocations keyed to names the manifest
+ *   does not map). Landing the half-removal means re-keying this TU's
+ *   defined_symbol_renames the way ov090/daMenbo_c was; until someone does,
+ *   the outer cast stays. Same result for d_a_mip.cpp and
+ *   d_a_obj_block_s.cpp; d_s_stage_methods.cpp's one pair renumbered nothing
+ *   and its outer cast is gone.
  * - Behavior names mStateTimer directly at both sites (TRAP-2709
  *   experiment: unified spelling matches).
  * - +0x418 on the spawned BOOK_SWITCH is daBookGen_c's, which has no header;

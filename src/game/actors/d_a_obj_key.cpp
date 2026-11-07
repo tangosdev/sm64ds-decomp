@@ -259,9 +259,9 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
     if (dy < 0)
         dy = -dy;
     {
-        int s0 = cstd::sqrt((unsigned long long)(long long)height);
-        int s1 = cstd::sqrt((unsigned long long)(long long)(height + dy));
-        int s2 = cstd::sqrt((unsigned long long)(long long)height);
+        int s0 = cstd::sqrt((long long)height);
+        int s1 = cstd::sqrt(height + dy);
+        int s2 = cstd::sqrt((long long)height);
         dy = (s0 * JUMP_FRAMES) / (s1 + s2);
     }
     {

@@ -29,9 +29,10 @@
  *
  * Leftover. The first three items were tried in their clean form and moved
  * the bytes; the rest are names or types the evidence does not give:
- * - func_ov002_020e9d18 keeps the masked `(((int)&mStarFlags) & ~0ULL)`
- *   halfword stores and the LA label; a plain mBits.answer store loses the
- *   address rematerialization.
+ * - func_ov002_020e9d18 keeps the `*(u16 *)((int)&mStarFlags)` halfword
+ *   stores and the LA label; a plain mBits.answer store loses the address
+ *   rematerialization. The `& ~0ULL` identity mask that used to sit on that
+ *   address is gone and the sentence no longer claims it.
  * - Render keeps its gotos, and mStateTimer keeps its (u16) casts.
  * - func_ov002_020e8244 stays a free function; its first parameter is the
  *   output vector, not the star.
@@ -1653,9 +1654,9 @@ void daStar_c::func_ov002_020e947c(Vector3 *p, int n) {
     if (dy < 0)
         dy = -dy;
     {
-        int s0 = cstd::sqrt((u64)(s64)n);
-        int s1 = cstd::sqrt((u64)(s64)(n + dy));
-        int s2 = cstd::sqrt((u64)(s64)n);
+        int s0 = cstd::sqrt((s64)n);
+        int s1 = cstd::sqrt((n + dy));
+        int s2 = cstd::sqrt((s64)n);
         dy = (s0 * 0x32) / (s1 + s2);
     }
     {

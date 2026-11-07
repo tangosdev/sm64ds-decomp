@@ -392,7 +392,7 @@ int daObjMarioCap_c::InitResources()
     default:
         break;
     case 0:
-        *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
+        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df64);
         break;
@@ -401,7 +401,7 @@ int daObjMarioCap_c::InitResources()
         EnterState(&data_ov002_0210df84);
         break;
     case 2:
-        *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
+        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df04);
         break;
@@ -1090,8 +1090,8 @@ int daObjMarioCap_c::InitTaken()
     mTaken = 1;
 
     /* (int)self + off is the MATCH form; mFlags &= / vulnFlags &= CSE. */
-    *(u32 *)(((int)&mFlags)) &= ~0x40000u;
-    *(u32 *)(((int)&mdCcAc_c.vulnFlags)) &= ~0x8000u;
+    *(u32 *)((int)&mFlags) &= ~0x40000u;
+    *(u32 *)((int)&mdCcAc_c.vulnFlags) &= ~0x8000u;
 
     if (mPlayer == 0) {
         mPlayer = ClosestPlayer();

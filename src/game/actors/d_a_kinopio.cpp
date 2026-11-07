@@ -193,7 +193,7 @@ void daKinopio_c::St_Talk_Main()
     player = (char *)mTalkPlayer;
     messageID = GetMessageID();
     {
-        int *pos = (int *)(int)M(&((daPly_c *)player)->mPos);
+        int *pos = (int *)M(&((daPly_c *)player)->mPos);
         playerPos.x = pos[0];
         playerPos.y = pos[1];
         playerPos.z = pos[2];
@@ -236,7 +236,7 @@ void daKinopio_c::St_Talk_Main()
                 starPos.y += 0xc8000;
                 dActor_c::Spawn(
                     0xb2, mStarID | 0x20, starPos, 0, mAreaId, -1);
-                u16 *message = (u16 *)(int)M(&mMessageID);
+                u16 *message = (u16 *)M(&mMessageID);
                 *message = (u16)(*message + 1);
             }
         }
