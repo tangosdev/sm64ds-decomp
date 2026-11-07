@@ -26,21 +26,21 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_02044534",
+      "symbol": "_ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3",
       "address": "0x02044534",
       "size": "0x00000358",
       "legacy_source": "src/unnamed/arm9/0204/func_02044534.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_0204488c",
+      "symbol": "_ZN15ModelComponents13func_0204488cEiP7Vector3",
       "address": "0x0204488c",
       "size": "0x000002a4",
       "legacy_source": "src/unnamed/arm9/0204/func_0204488c.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_02044b30",
+      "symbol": "_ZN15ModelComponents13func_02044b30Ei",
       "address": "0x02044b30",
       "size": "0x00000294",
       "legacy_source": "src/unnamed/arm9/0204/func_02044b30.c",
@@ -82,7 +82,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_02045074",
+      "symbol": "_ZN15ModelComponents13func_02045074EP8BMD_Bone",
       "address": "0x02045074",
       "size": "0x00000104",
       "legacy_source": "src/func_02045074.c",
@@ -110,7 +110,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_020453c0",
+      "symbol": "_ZN15ModelComponents13func_020453c0EP8BMD_BoneP8BCA_Filei",
       "address": "0x020453c0",
       "size": "0x000000bc",
       "legacy_source": "src/func_020453c0.c",

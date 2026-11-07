@@ -40,31 +40,6 @@ struct C { char pad[0x5004]; PMF m; };
 #include "LevelRng.h"
 struct V3 { int w[3]; };
 
-/* Vtable shim for InitResources' last call, a virtual dispatch through slot
- * 18 of this class's own table. Calling StartRound by name would compile
- * to a direct branch instead. */
-struct Base {
-    virtual void m00();
-    virtual void m04();
-    virtual void m08();
-    virtual void m0c();
-    virtual void m10();
-    virtual void m14();
-    virtual void m18();
-    virtual void m1c();
-    virtual void m20();
-    virtual void m24();
-    virtual void m28();
-    virtual void m2c();
-    virtual void m30();
-    virtual void m34();
-    virtual void m38();
-    virtual void m3c();
-    virtual void m40();
-    virtual void m44();
-    virtual void m48(int x);
-};
-
 /* The two model file handles InitResources swaps between through
  * sJumpBackFile; a declared-only subclass so the static initializer
  * names the real entry points. */
@@ -91,7 +66,6 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void FreeGfxSlotsById(int arg);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-void Camera_UpdateMatrices(void *cam);
 
 void Heyho_ReactAll(void);
 void Heyho_SeparateAll(void);
@@ -239,22 +213,22 @@ s32 dScMgJump_c::InitResources()
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082614);
 
-    this->mCameras[0].mEyeX = 0;
-    this->mCameras[0].mEyeY = -0x64000;
-    this->mCameras[0].mEyeZ = 0;
-    this->mCameras[0].mTargetX = 0;
-    this->mCameras[0].mTargetY = 0;
-    this->mCameras[0].mTargetZ = fov;
-    this->mCameras[0].mAngle = 0x800;
+    this->mCameras[0].mLookAt.x = 0;
+    this->mCameras[0].mLookAt.y = -0x64000;
+    this->mCameras[0].mLookAt.z = 0;
+    this->mCameras[0].mPos.x = 0;
+    this->mCameras[0].mPos.y = 0;
+    this->mCameras[0].mPos.z = fov;
+    this->mCameras[0].mFovAngle = 0x800;
     Camera_UpdateMatrices(&mCameras[0]);
 
-    this->mCameras[1].mEyeX = 0;
-    this->mCameras[1].mEyeY = 0x82000;
-    this->mCameras[1].mEyeZ = 0;
-    this->mCameras[1].mTargetX = 0;
-    this->mCameras[1].mTargetY = 0;
-    this->mCameras[1].mTargetZ = fov;
-    this->mCameras[1].mAngle = 0x800;
+    this->mCameras[1].mLookAt.x = 0;
+    this->mCameras[1].mLookAt.y = 0x82000;
+    this->mCameras[1].mLookAt.z = 0;
+    this->mCameras[1].mPos.x = 0;
+    this->mCameras[1].mPos.y = 0;
+    this->mCameras[1].mPos.z = fov;
+    this->mCameras[1].mFovAngle = 0x800;
     Camera_UpdateMatrices(&mCameras[1]);
 
     if (Heyho_InitPool((char *)mHeyhos, 6) == 0)
@@ -275,7 +249,7 @@ s32 dScMgJump_c::InitResources()
         return 0;
     }
     Mg_SetTopScreenYOffset(0x10);
-    ((Base *)this)->m48(-1);
+    StartRound(-1);
     return 1;
 }
 

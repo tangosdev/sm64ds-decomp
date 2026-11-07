@@ -47,7 +47,7 @@ enum daMip_c_AssetId {
 #include "daObj_Mip_Key_c.h"
 #include "Sound.h"
 #include "cstd.h"
-#include "math/Approach.h"
+#include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "LevelRng.h"
 #include "private/mtx43.h"
@@ -79,28 +79,17 @@ int   SurfaceInfo_TestFlag0x20(void *);
 
 
 /* maths and the still-unnamed helpers */
-s16   Vec3_HorzAngle(const void *, const void *);
-s32   Vec3_HorzDist(const void *, const void *);
-s32   Vec3_Dist(const void *, const void *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
-void  Vec3_Asr(void *, void *, int);
-/* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
-void SubVec3(Vector3 *, Vector3 *, Vector3 *);
 s32   LenVec3(const void *);
 int   AngleDiff(int, int);
-int ApproachAngle(s16 *, s16, int, int, int);
 void  Matrix4x3_FromTranslation(void *, int, int, int);
 void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 void  MulMat4x3Mat4x3(void *, void *, void *);
 void  MulMat3x3Mat3x3(void *, void *, void *);
 void MulVec3Mat4x3(const void *, const void *, void *);
-/* local extern: CalcLib's int(int *) declaration is kept local because its
-   vector declarations conflict with this TU's other helper signatures. */
-int RandomIntInternal(int *);
 u8 NumStars(void);
-u16 DecIfAbove0_Short(void *);
 int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
@@ -302,7 +291,7 @@ int daMip_c::StateSaveTalkMain()
     unsigned char gb;
     int state;
 
-    mTargetAngY = Vec3_HorzAngle((VecFx32 *)&mPosX, (VecFx32 *)&player->mPosX);
+    mTargetAngY = Vec3_HorzAngle(&mPos, &player->mPos);
     ApproachAngle(&mPrevAngleY, mTargetAngY, 1, 0x500, 0x500);
 
     gb = data_0209d684;
@@ -381,7 +370,7 @@ int daMip_c::StateTalkMain()
     pp.x = pq[0];
     pp.y = pq[1];
     pp.z = pq[2];
-    angle = Vec3_HorzAngle((VecFx32 *)&mPosX, &pp);
+    angle = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp);
 
     id = 0x139;
     switch (player->GetTalkState()) {
@@ -533,7 +522,7 @@ int daMip_c::StateCaughtMain()
         }
 
         if (mCatchState != 0) {
-            s16 ang = Vec3_HorzAngle(&mPos, &pv);
+            s16 ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&pv);
             ApproachLinear(mPrevAngleY, ang, 0x800);
             if (AngleDiff(mPrevAngleY, ang) > 0x200)
                 return 1;
@@ -773,7 +762,7 @@ int daMip_c::StateFleeMain() {
     pl = ClosestPlayer();
     if (pl != 0) {
         v = *((struct V3Blk *)&pl->mPosX);
-        if (Vec3_Dist(&mPos, &v) > 0x4b0000) {
+        if (Vec3_Dist(&mPos, (const Vector3 *)&v) > 0x4b0000) {
             SetState(&data_ov085_0213069c);
             return 1;
         }
@@ -809,7 +798,7 @@ int daMip_c::StateFleeMain() {
     PathPtr pathptr;
     pathptr.FromID(mPathId);
     pathptr.GetNode(*(::Vector3 *)&node, mPathNodeIndex);
-    ang = Vec3_HorzAngle(&mPos, &node);
+    ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&node);
     ApproachAngle(&mPrevAngleY, ang, 1, 0x1000, 0x1000);
     idx = mPathNodeIndex + mPathDir;
     if (idx < 0) {
@@ -844,7 +833,7 @@ int daMip_c::StateFleeMain() {
             mPathNodeIndex = mNumPathNodes - 1;
         }
     } else {
-        ang = Vec3_HorzAngle(&mPos, &node);
+        ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&node);
         if (AngleDiff(ang, mPrevAngleY) < 0x2000) {
             ysave = mPosY;
             {
@@ -900,8 +889,8 @@ int daMip_c::StateFleeInit()
             pathptr.GetNode(*(::Vector3 *)&nodes[i], indices[i]);
 
         mPathDir = 1;
-        d0 = Vec3_Dist(&v, &nodes[0]);
-        if (d0 > Vec3_Dist(&v, &nodes[1]))
+        d0 = Vec3_Dist((const Vector3 *)&v, (const Vector3 *)&nodes[0]);
+        if (d0 > Vec3_Dist((const Vector3 *)&v, (const Vector3 *)&nodes[1]))
             mPathDir = -1;
     }
 
@@ -970,7 +959,7 @@ int daMip_c::StateIdleMain()
     int lim = 0x3e8000;
     if (mRabbitId == 7) lim = 0x2ee000;
 
-    if (Vec3_HorzDist(&mPos, &pp) < lim) {
+    if (Vec3_HorzDist(&mPos, (const Vector3 *)&pp) < lim) {
         int t = mRabbitId;
         int cond = 0;
         if (t == 7 || t == 1 ||
@@ -987,8 +976,8 @@ int daMip_c::StateIdleMain()
 
     u32 r = (u32)RandomIntInternal(&data_0209e650.value) >> 8;
     if (mRabbitId == 1) {
-        if (Vec3_HorzDist(&mPos, &pp) < 0x4b0000) {
-            mTargetAngY = Vec3_HorzAngle(&mPos, &pp) + 0x8000;
+        if (Vec3_HorzDist(&mPos, (const Vector3 *)&pp) < 0x4b0000) {
+            mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&pp) + 0x8000;
             mStateTimer = 0x1e;
         }
     }
@@ -1014,7 +1003,7 @@ int daMip_c::StateIdleMain()
     }
 
     if (mActionStep == 0 && *(u16 *)&mStateTimer == 0) {
-        mTargetAngY = Vec3_HorzAngle(&mPos, (VecFx32 *)&mIdlePosX);
+        mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mIdlePosX);
         {
             s16 *ang = &mTargetAngY;
             *ang = *ang + (0x1800 - ((r & 3) << 12));
@@ -1060,7 +1049,7 @@ void daMip_c::UpdateMatrixAndShadow()
 
     char tmp[0x30];
     VecFx32 t;
-    Vec3_Asr(&t, &mPos, 3);
+    Vec3_Asr((Vector3 *)&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
@@ -1132,8 +1121,9 @@ void daMip_c::UpdateMirrorShadow()
     vd.y = c->v60;
     vd.z = c->v64;
     vd.x = 0x1086000;
-    v.z = Vec3_HorzDist((VecFx32 *)&c->v5c, &vd);
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle((VecFx32 *)&c->v5c, &vd));
+    v.z = Vec3_HorzDist((const Vector3 *)&c->v5c, (const Vector3 *)&vd);
+    Matrix4x3_FromRotationY(&data_020a0e68,
+                            Vec3_HorzAngle((const Vector3 *)&c->v5c, (const Vector3 *)&vd));
     MulVec3Mat4x3(&v, &data_020a0e68, &res);
     {
         int t;
@@ -1398,7 +1388,7 @@ int daMip_c::Behavior()
         mHorzSpeed = 0;
     }
 
-    DecIfAbove0_Short(&mStateTimer);
+    DecIfAbove0_Short((u16 *)&mStateTimer);
 
     {
         daMip_cSelf *self = (daMip_cSelf *)c;

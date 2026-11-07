@@ -7,7 +7,7 @@ extern "C" {
 /* Globals */
 extern void (*data_0209a03c)(void *);
 extern void *data_02099e24;
-extern u32 data_020a0f38;
+extern int data_020a0f38;
 
 #define gGameCardHandlerPtr data_0209a03c
 #define gGameCardHandlerArg data_02099e24

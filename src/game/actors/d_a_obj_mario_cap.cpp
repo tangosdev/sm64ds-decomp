@@ -78,7 +78,7 @@
  *   (unsigned long long)&vulnFlags or-into-vulnFlags in InitSlide
  *   are the matching forms; plain member addressing does not match.
  *
- *   CheckTouch's angle copy keeps `a = b ? a : a` through a V16.
+ *   CheckTouch's angle copy keeps `a = b ? a : a` through a Vector3_16.
  *
  *   Reading the player's angles / position as plain members (`closest->mAngleX`)
  *   misses in InitAnim (0x19c vs 0x1a0 bytes) and Taken
@@ -392,7 +392,7 @@ int daObjMarioCap_c::InitResources()
     default:
         break;
     case 0:
-        *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
+        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df64);
         break;
@@ -401,7 +401,7 @@ int daObjMarioCap_c::InitResources()
         EnterState(&data_ov002_0210df84);
         break;
     case 2:
-        *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
+        *(s32 *)((char *)&mdCcAc_c.vulnFlags) |= 0x8000;
         mIconKind = 4;
         EnterState(&data_ov002_0210df04);
         break;
@@ -1090,8 +1090,8 @@ int daObjMarioCap_c::InitTaken()
     mTaken = 1;
 
     /* (int)self + off is the MATCH form; mFlags &= / vulnFlags &= CSE. */
-    *(u32 *)(((int)&mFlags)) &= ~0x40000u;
-    *(u32 *)(((int)&mdCcAc_c.vulnFlags)) &= ~0x8000u;
+    *(u32 *)((int)&mFlags) &= ~0x40000u;
+    *(u32 *)((int)&mdCcAc_c.vulnFlags) &= ~0x8000u;
 
     if (mPlayer == 0) {
         mPlayer = ClosestPlayer();
@@ -1338,7 +1338,7 @@ int daObjMarioCap_c::Dormant()
 // @symbol _ZN15daObjMarioCap_c10CheckTouchEv
 void daObjMarioCap_c::CheckTouch()
 {
-    struct V16 { u16 x, y, z; } v;
+    Vector3_16 v;
     int normal[3];
     int state;
 
@@ -1393,7 +1393,7 @@ void daObjMarioCap_c::CheckTouch()
         mModelIndex & 0xff, 0, 0);
 
     {
-        /* `a = b ? a : a` through a V16 is the MATCH form. */
+        /* `a = b ? a : a` through a Vector3_16 is the MATCH form. */
         daPly_c *found = mPlayer;
         int a = *(u16*)&found->mAngleX;
         int b = *(u16*)&found->mAngleY;

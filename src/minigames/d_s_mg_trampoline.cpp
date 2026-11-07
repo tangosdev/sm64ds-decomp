@@ -8,8 +8,13 @@
  *
  * Functions are written in reverse of ROM order; do not reorder.
  * `opt_loop_invariants off` above PaintSquare has no matching `on`, so it
- * applies to the whole file. TUBUILD CONFLICT comments are paired with
- * the manifest; leave them.
+ * applies to the whole file. Measured 2026-11-06: PaintSquare is the only
+ * function in the TU whose bytes move when invariants are hoisted, and the
+ * setting still cannot be narrowed to it -- this TU leaves codegen deferred,
+ * so mwccarm reads the state at the end of the file and an `on` placed after
+ * PaintSquare (or after the function following it) puts hoisting back for
+ * PaintSquare as well. TUBUILD CONFLICT comments are paired with the
+ * manifest; leave them.
  *
  * leftovers:
  * - The factory still builds the object by hand, so its offset stores
@@ -188,7 +193,6 @@ void TrmpLine_CreateStartLineT1(void);
 extern s16 sTrmpIntroFromX;
 extern s16 sTrmpStartTouchX;
 extern s16 sTrmpStartTouchY;
-extern void Camera_UpdateMatrices(void *cam);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *ptr);
@@ -355,21 +359,21 @@ s32 dScMgTrampoline_c::InitResources() {
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082414);
-    this->mCameras[0].mEyeX = 0;
-    this->mCameras[0].mEyeY = -0x64000;
-    this->mCameras[0].mEyeZ = 0;
-    this->mCameras[0].mTargetX = 0;
-    this->mCameras[0].mTargetY = 0;
-    this->mCameras[0].mTargetZ = fov;
-    this->mCameras[0].mAngle = 0x400;
+    this->mCameras[0].mLookAt.x = 0;
+    this->mCameras[0].mLookAt.y = -0x64000;
+    this->mCameras[0].mLookAt.z = 0;
+    this->mCameras[0].mPos.x = 0;
+    this->mCameras[0].mPos.y = 0;
+    this->mCameras[0].mPos.z = fov;
+    this->mCameras[0].mFovAngle = 0x400;
     Camera_UpdateMatrices(&mCameras[0]);
-    this->mCameras[1].mEyeX = 0;
-    this->mCameras[1].mEyeY = 0x82000;
-    this->mCameras[1].mEyeZ = 0;
-    this->mCameras[1].mTargetX = 0;
-    this->mCameras[1].mTargetY = 0;
-    this->mCameras[1].mTargetZ = fov;
-    this->mCameras[1].mAngle = 0x400;
+    this->mCameras[1].mLookAt.x = 0;
+    this->mCameras[1].mLookAt.y = 0x82000;
+    this->mCameras[1].mLookAt.z = 0;
+    this->mCameras[1].mPos.x = 0;
+    this->mCameras[1].mPos.y = 0;
+    this->mCameras[1].mPos.z = fov;
+    this->mCameras[1].mFovAngle = 0x400;
     Camera_UpdateMatrices(&mCameras[1]);
     if (Trmp3DMario_InitPool((unsigned char *)(base + 0x500c), 4) == 0)
         return 0;
@@ -934,6 +938,8 @@ void dScMgTrampoline_c::InitBrush(int layer) {
     GX::LoadBGPltt(sTrmpBrushPltt, 0xe0, 0x20);
 }
 
+/* Kept for PaintSquare: see the file comment above for why it reaches the
+   whole TU instead of just that function. */
 #pragma opt_loop_invariants off
 
 // @symbol _ZN17dScMgTrampoline_c11PaintSquareEiiii

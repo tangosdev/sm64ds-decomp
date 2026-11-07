@@ -32,7 +32,7 @@
 extern "C" {
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-/* The message box rectangle: see the comment at Message.cpp's externs. */
+/* The message box rectangle: see the comment at Message.cpp's definitions. */
 extern u8 gMsgBoxWinTop;
 extern u8 gMsgBoxLeft;
 extern u8 gMsgBoxWinLeft;
@@ -85,8 +85,8 @@ extern int data_0209d704;
 extern u8 data_0209d710[];
 extern int data_0209d74c[];
 extern s32 data_0208ee44;
-extern u16 data_0208ee64[];
-extern u8 data_0208ee6c[];
+extern u16 data_0208ee64[4];
+extern u8 data_0208ee6c[8];
 extern u8 data_0208ee74[];
 extern int data_0208ee8c[];
 extern int data_0208eeac[];
@@ -431,6 +431,9 @@ void func_0201b100(int mode) {
 }
 
 #pragma push
+/* opt_common_subs stays off: the inner loop reads data_0209d74c[j + i * 16] once
+ * per store the way the cartridge does, and CSE shares the two loads
+ * (0x218 against 0x220). */
 #pragma opt_common_subs off
 // @symbol func_0201b388
 void func_0201b388(int a0) {

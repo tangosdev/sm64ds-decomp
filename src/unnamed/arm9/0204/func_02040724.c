@@ -1,4 +1,4 @@
-extern unsigned int data_020a0f94;
+extern int data_020a0f94;
 extern int data_020a0f5c;
 extern int Wireless_Reset(void);
 

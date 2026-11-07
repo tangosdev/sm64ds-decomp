@@ -253,8 +253,8 @@ int daOts_c::InitResourcesCommon()
     tail().mHorzDecel = CONFIG(this)->horzDecel;
     tail().mModelYOffset = CONFIG(this)->modelYOffset;
     mStateTimer = 0;
-    mWithMeshClsn.Init((dActor_c *)(int)this, CONFIG(this)->eggAimHeight,
-                       CONFIG(this)->eggAimHeight, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)this, CONFIG(this)->eggAimHeight, CONFIG(this)->eggAimHeight, 0,
+                       0);
     tail().mShadowRadius = CONFIG(this)->shadowRadius;
     mParticle1 = 0;
     mParticle0 = mParticle1;

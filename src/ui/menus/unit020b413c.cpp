@@ -127,7 +127,7 @@ extern void func_ov007_020b647c(int r0, int r1, short r2);
 extern void func_ov007_020b64a8(int dir);
 extern int func_ov007_020b79e4(void);
 extern void func_ov007_020b7a44(void);
-extern void func_ov007_020b7d94(void *self);
+extern void func_ov007_020b7d94(int kind);
 extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
 extern Ov007MenuState *func_ov007_020b8f78(void);
 extern int func_ov007_020b8fa0(void);
@@ -821,10 +821,10 @@ int func_ov007_020b4438(void) {
 }
 
 /* Opens the 0x16 / 0x17 choice: sets the choice word to 1, requests state 3
- * on both items' views, then hands `self` (9 or 0xc at the callers) to
- * func_ov007_020b7d94. */
+ * on both items' views, then opens the message window for `kind` (9 or 0xc
+ * at the callers) with func_ov007_020b7d94. */
 // @symbol func_ov007_020b43dc
-void func_ov007_020b43dc(void *self) {
+void func_ov007_020b43dc(int kind) {
     Ov007Work *work = WORK;
     data_ov007_02103428 = 1;
     Ov007ItemView *view1 = work->itemViews[0x16];
@@ -836,7 +836,7 @@ void func_ov007_020b43dc(void *self) {
     Ov007Item *item2 = view2->item;
     Ov007MenuState *state2 = item2->state;
     state2->requestedState = 3;
-    func_ov007_020b7d94(self);
+    func_ov007_020b7d94(kind);
 }
 
 /* Builds number sprite `index` (Ov007Work's numberSprites): a frame of

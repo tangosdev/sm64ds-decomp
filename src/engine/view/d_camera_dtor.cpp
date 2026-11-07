@@ -33,11 +33,12 @@ extern "C" {
    decl_common.h catch-all, which is C. */
 extern void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short ang,
                                      const Vector3 *add);
-extern void func_02007c9c(const Vector3 *from, const Vector3 *to, int *outDist, short *outVertAng,
-                          short *outHorzAng);
-extern void func_02007c14(Vector3 *res, const Vector3 *trans, int mag, short ang, short angY);
+extern void Vec3fGetDistAndAngle(const Vector3 *from, const Vector3 *to, int *outDist,
+                                 short *outVertAng, short *outHorzAng);
+extern void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,
+                                 short angY);
 extern int func_02007cec(void *a, const Vector3 *b, int c);
-extern void func_02007d0c(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
+extern void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
 extern void Math_Function_0203b0fc(int *value, int target, int step, int max);
 extern int AngleDiff(int a, int b);
 }
@@ -63,13 +64,13 @@ void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarge
     short vertAng;
     short horzAng;
     Vector3 *trans = &reinterpret_cast<dActor_c *>(cam->mTargetPlayer)->mPos;
-    func_02007c9c(trans, &cam->pos, &dist, &vertAng, &horzAng);
+    Vec3fGetDistAndAngle(trans, &cam->pos, &dist, &vertAng, &horzAng);
     Math_Function_0203b0fc(&dist, distTarget, distStep, 0x7fffffff);
     if (vertDiv != 0)
         ApproachAngle(&vertAng, vertTarget, vertDiv, 0x4000, 0);
     if (horzDiv != 0)
         ApproachAngle(&horzAng, horzTarget, horzDiv, 0x4000, 0);
-    func_02007c14(&cam->pos, trans, dist, vertAng, horzAng);
+    Vec3fSetDistAndAngle(&cam->pos, trans, dist, vertAng, horzAng);
 }
 
 // @symbol StarDanceBoundYaw
@@ -98,11 +99,11 @@ int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
         Vec3_RotateYAndTranslate(&va, trans, a, &cam->savedLookAt);
         Vec3_RotateYAndTranslate(&vb, trans, a, &cam->savedPos);
     }
-    func_02007c9c(&va, &cam->pos, &dist, &ang, &angY);
+    Vec3fGetDistAndAngle(&va, &cam->pos, &dist, &ang, &angY);
     ApproachLinear(dist, 0, cam->mScriptParam);
-    func_02007c14(&cam->pos, &va, dist, ang, angY);
+    Vec3fSetDistAndAngle(&cam->pos, &va, dist, ang, angY);
     func_02007cec(&cam->pos, &va, 0x28);
-    func_02007d0c(&cam->lookAt, &vb, 0x800, 0xccc, 0x800);
+    ApproachVec3fAsymptotic(&cam->lookAt, &vb, 0x800, 0xccc, 0x800);
     return 1;
 }
 }

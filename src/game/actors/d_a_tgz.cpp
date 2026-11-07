@@ -519,7 +519,7 @@ int daTgz_c::func_ov077_021256b4() {
 
     carrier = mCarrier;
     one = 1;
-    int *src = (int *)(int)&carrier->mPosX;
+    int *src = (int *)&carrier->mPosX;
     mPosX = src[0];
     mPosY = src[1];
     mPosZ = src[2];
@@ -559,7 +559,7 @@ int daTgz_c::func_ov077_02125830() {
         dActor_c *carrier = mCarrier;
         /* Address of the triple, then [0]/[4]/[8]. Three field loads fold the
            0x5c into the ldr and drop the add the ROM kept. */
-        int *src = (int *)(int)&carrier->mPosX;
+        int *src = (int *)&carrier->mPosX;
         mPosX = src[0];
         mPosY = src[1];
         mPosZ = src[2];

@@ -43,6 +43,7 @@
 #include "dScMgBase_c.h"
 #include "MWCPlusLib.h"
 #include "LevelRng.h"
+#include "MgCamera.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -106,9 +107,6 @@ void *func_02017acc(void *, unsigned int);
 void Quaternion_Multiply(void *, void *, void *);
 void func_0203ccd4(void *, short);
 void func_0203cd80(void *, short);
-void Camera_ProjectToScreen16(char *r4, void *r1, short *r5);
-void Camera_ProjectToScreen(char *r4, void *r1, int *r6, int *r5);
-void Camera_UpdateMatrices(void *self);
 void MascotWalker_StatePause(char *c);
 void MascotWalker_StartPause(int *t);
 void MascotWalker_StateWalk(char *c);
@@ -117,7 +115,6 @@ void MascotWalker_UpdateMatrix(MascotWalker *walker);
 void MascotWalker_Draw(char *t);
 void MascotWalker_Update(void *c);
 void MascotWalker_Load(MascotWalker *walker);
-void Camera_InitDealerView(void *self);
 void Dealer_ResetMatrices(char *c);
 void Dealer_StateWin(char *p);
 void Dealer_PlayWin(void *c);
@@ -140,14 +137,12 @@ void Dealer_PlayIdle(char *c);
 void Dealer_Draw(void *self);
 void Dealer_Update(Dealer *dealer);
 int Dealer_Load(char *c);
-void Camera_InitSlotsView(void *self);
 void Mascot_StopLooking(int *p);
 void Mascot_LookAt(char *c, int *src);
 void Mascot_UpdateMatrix(char *c);
 void Mascot_Draw(void *c);
 void Mascot_Update(void *a);
 void Mascot_Load(char *c);
-void Camera_InitPresenterView(void *self);
 void Presenter_UpdateMatrix(char *c);
 void Presenter_StateSurprisedThenIdle(char *t);
 void Presenter_PlayCheerLoop(void *c);
@@ -181,7 +176,6 @@ void FlowerFace_StatePick(int *c);
 void FlowerFace_PlayPetalPulled(char *c);
 void FlowerFace_StateIdle(void);
 void FlowerFace_PlayIdle(char *p);
-void Camera_InitFlowerView(void *self);
 int FlowerFace_IsIdle(int *c);
 void FlowerFace_Reset(void *a);
 void FlowerFace_Draw(void *self);
@@ -416,29 +410,19 @@ extern "C" {
 // @symbol Camera_InitFlowerView
 /* Camera_InitFlowerView at 0x020c3b2c
  *
- * dCamera_c preset init: sets eye/target vectors and angle, then
+ * MgCamera preset: sets the look-at point, position and fov angle, then
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct dCamera_c {
-    Matrix4x3 viewMat;              /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    Matrix4x3 projMat;              /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitFlowerView(struct dCamera_c *self) {
-    self->target.x = 0x1b000;
-    self->target.y = 0x17600;
-    self->target.z = -0x22f00;
-    self->eye.x = 0x38000;
-    self->eye.y = 0x22500;
-    self->eye.z = -0x51200;
-    self->angle = 0xb30;
-    Camera_UpdateMatrices(self);
+void Camera_InitFlowerView(MgCamera *camera) {
+    camera->mLookAt.x = 0x1b000;
+    camera->mLookAt.y = 0x17600;
+    camera->mLookAt.z = -0x22f00;
+    camera->mPos.x = 0x38000;
+    camera->mPos.y = 0x22500;
+    camera->mPos.z = -0x51200;
+    camera->mFovAngle = 0xb30;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -930,10 +914,10 @@ extern "C" void Presenter_Draw(char *c) {
     p = *(int **)(mc + 4);
     PRESENTER(c)->mTexSeq.Update(*(ModelComponents *)mc);
     PRESENTER(c)->mTexAnim.Update(*(ModelComponents *)mc);
-    *(int *)(((int)p + 0x104)) -= PRESENTER(c)->mSway[2];
-    *(int *)(((int)p + 0x108)) += PRESENTER(c)->mSway[3];
+    *(int *)((int)p + 0x104) -= PRESENTER(c)->mSway[2];
+    *(int *)((int)p + 0x108) += PRESENTER(c)->mSway[3];
     *(int *)(((int)p + 0x134)) += PRESENTER(c)->mSway[0];
-    *(int *)(((int)p + 0x138)) += PRESENTER(c)->mSway[1];
+    *(int *)((int)p + 0x138) += PRESENTER(c)->mSway[1];
     PRESENTER(c)->mFace.Render(0);
     PRESENTER(c)->mBack.Render(&sPresenterScale);
 }
@@ -1188,6 +1172,8 @@ void Presenter_PlayCheerLoop(void *c) {
     PRESENTER(r4)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(r4)->mSurprisedTexSeq.filePtr, 0x40000000,
                                    0x800, 0);
     PRESENTER(r4)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    /* The u64 identity mask is load-bearing (measured 2026-11-06); removing it
+       costs the function its bytes. */
     *((long long *)r4) = (new_var = pmf_Presenter_StateSurprisedThenIdle & 0xFFFFFFFFFFFFFFFF);
 }
 }
@@ -1224,25 +1210,15 @@ extern "C" {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
 
-struct dCamera_c {
-    Matrix4x3 viewMat;              /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    Matrix4x3 projMat;              /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitPresenterView(struct dCamera_c *self) {
-    self->target.x = 0;
-    self->target.y = 0;
-    self->target.z = 0;
-    self->eye.x = 0;
-    self->eye.y = 0;
-    self->eye.z = 0x2d000;
-    self->angle = 0x800;
-    Camera_UpdateMatrices(self);
+void Camera_InitPresenterView(MgCamera *camera) {
+    camera->mLookAt.x = 0;
+    camera->mLookAt.y = 0;
+    camera->mLookAt.z = 0;
+    camera->mPos.x = 0;
+    camera->mPos.y = 0;
+    camera->mPos.z = 0x2d000;
+    camera->mFovAngle = 0x800;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -1377,29 +1353,19 @@ extern "C" {
 // @symbol Camera_InitSlotsView
 /* Camera_InitSlotsView at 0x020c1eb4
  *
- * dCamera_c preset init: sets eye/target vectors and angle, then
+ * MgCamera preset: sets the look-at point, position and fov angle, then
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct dCamera_c {
-    Matrix4x3 viewMat;              /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    Matrix4x3 projMat;              /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitSlotsView(struct dCamera_c *self) {
-    self->target.x = 0;
-    self->target.y = 0xe000;
-    self->target.z = -0x22f00;
-    self->eye.x = 0;
-    self->eye.y = 0xf000;
-    self->eye.z = 0x32000;
-    self->angle = 0xb00;
-    Camera_UpdateMatrices(self);
+void Camera_InitSlotsView(MgCamera *camera) {
+    camera->mLookAt.x = 0;
+    camera->mLookAt.y = 0xe000;
+    camera->mLookAt.z = -0x22f00;
+    camera->mPos.x = 0;
+    camera->mPos.y = 0xf000;
+    camera->mPos.z = 0x32000;
+    camera->mFovAngle = 0xb00;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -2061,29 +2027,19 @@ extern "C" {
 // @symbol Camera_InitDealerView
 /* Camera_InitDealerView at 0x020c0aa8
  *
- * dCamera_c preset init: sets eye/target vectors and angle, then
+ * MgCamera preset: sets the look-at point, position and fov angle, then
  * tail-calls Camera_UpdateMatrices. Sibling of Camera_InitPresenterView.
  */
 
-struct dCamera_c {
-    Matrix4x3 viewMat;              /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    Matrix4x3 projMat;              /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    struct Vector3 target;          /* 0xa0 */
-    struct Vector3 eye;             /* 0xac */
-    short angle;                    /* 0xb8 */
-};
-
-void Camera_InitDealerView(struct dCamera_c *self) {
-    self->target.x = 0x200;
-    self->target.y = 0x9600;
-    self->target.z = -0x22f00;
-    self->eye.x = -0x100;
-    self->eye.y = 0x10500;
-    self->eye.z = 0x1ee00;
-    self->angle = 0xbb0;
-    Camera_UpdateMatrices(self);
+void Camera_InitDealerView(MgCamera *camera) {
+    camera->mLookAt.x = 0x200;
+    camera->mLookAt.y = 0x9600;
+    camera->mLookAt.z = -0x22f00;
+    camera->mPos.x = -0x100;
+    camera->mPos.y = 0x10500;
+    camera->mPos.z = 0x1ee00;
+    camera->mFovAngle = 0xbb0;
+    Camera_UpdateMatrices(camera);
 }
 }
 }
@@ -2425,23 +2381,10 @@ extern "C" {
  */
 typedef int s32;
 
-struct dCamera_c {
-    Matrix4x3 viewMat;              /* 0x00 */
-    char pad30[0x30];               /* 0x30 */
-    Matrix4x3 projMat;              /* 0x60 */
-    char pad90[0x10];               /* 0x90 */
-    /* Camera_UpdateMatrices hands 0xac to G3i::LookAt_ as the camera
-     * position and 0xa0 as the point it looks at. The flower, slots and
-     * dealer presets put 0xac above 0xa0; the presenter view is level. */
-    struct Vector3 target; /* 0xa0 */
-    struct Vector3 eye;    /* 0xac */
-    short angle;           /* 0xb8 */
-};
-
 extern short data_02082214[];
 extern dClipper data_0209f43c;
 
-void Camera_UpdateMatrices(struct dCamera_c *self) {
+void Camera_UpdateMatrices(MgCamera *camera) {
     struct Vector3 up;
     struct Vector3 v1c;
     struct Vector3 v28;
@@ -2453,7 +2396,7 @@ void Camera_UpdateMatrices(struct dCamera_c *self) {
     up.y = 0x1000;
     up.z = 0;
 
-    SubVec3(&self->target, &self->eye, &v1c);
+    SubVec3((Vector3 *)&camera->mLookAt, (Vector3 *)&camera->mPos, &v1c);
     if (NormalizeVec3IfNonZero(&v1c)) {
         func_0203cebc(&v34, &v28, &v1c, &up);
         if (NormalizeVec3IfNonZero(&v28)) {
@@ -2465,15 +2408,16 @@ void Camera_UpdateMatrices(struct dCamera_c *self) {
         }
     }
 
-    idx = (self->angle >> 4) * 2;
+    idx = (camera->mFovAngle >> 4) * 2;
     G3i::PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], 0x1555, 0x1000, 0x1388000,
-                       0x1000, 1, &self->projMat);
+                       0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i::LookAt_(&self->eye, &up, &self->target, true, &self->viewMat);
+    G3i::LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
+                 (Matrix4x3 *)&camera->mViewMtx);
 
-    CopyToViewMat(&self->viewMat);
+    CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
-    data_0209f43c.Func_020156DC(0x1555, self->angle, 0x1000, 0x1388000);
+    data_0209f43c.Func_020156DC(0x1555, camera->mFovAngle, 0x1000, 0x1388000);
 }
 }
 }
@@ -2482,10 +2426,10 @@ namespace s020bfff8 {
 extern "C" {
 extern short data_02082214[];
 
-void Camera_ProjectToScreen(char *r4, void *r1, int *r6, int *r5) {
+void Camera_ProjectToScreen(MgCamera *camera, void *r1, int *r6, int *r5) {
     int out[3];
-    MulVec3Mat4x3(r1, r4, out);
-    int ang = ((s020c0134::dCamera_c *)r4)->angle >> 4;
+    MulVec3Mat4x3(r1, &camera->mViewMtx, out);
+    int ang = camera->mFovAngle >> 4;
     int i = ang * 2;
     int cosv = data_02082214[i];
     int sinv = data_02082214[i + 1];
@@ -2506,10 +2450,10 @@ namespace s020bfec0 {
 extern "C" {
 extern short data_02082214[];
 
-void Camera_ProjectToScreen16(char *r4, void *r1, short *r5) {
+void Camera_ProjectToScreen16(MgCamera *camera, void *r1, short *r5) {
     int out[3];
-    MulVec3Mat4x3(r1, r4, out);
-    int ang = ((s020c0134::dCamera_c *)r4)->angle >> 4;
+    MulVec3Mat4x3(r1, &camera->mViewMtx, out);
+    int ang = camera->mFovAngle >> 4;
     int i = ang * 2;
     int cosv = data_02082214[i];
     int sinv = data_02082214[i + 1];

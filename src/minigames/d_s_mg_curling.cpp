@@ -105,7 +105,7 @@ extern void Mg_SetSharedState(int state);
 extern void Mg_SubmitScore(int score);
 extern int Mg_GetTopRecord(void);
 extern void Mg_DrawTopLeftCounter(int self);
-extern char *Ov004_LoadFileByPath(void *p);
+extern void *Ov004_LoadFileByPath(const char *path);
 extern void Mg_SetTopScreenYOffset(int a);
 
 extern void DecompressLZ16(const void *src, void *dst);
@@ -231,11 +231,11 @@ void dScMgCurling_c::Bit_StateFallSpeedUp(int index) {
     } else {
         mBit[index].state2 = 2;
         (s16 &)mBit[index].wait2 =
-            (short)(unsigned char)((((0x20 *
-                                      (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
-                                        16) &
-                                       0x7fff)) >>
-                                     0xf)) +
+            (short)(unsigned char)(((0x20 *
+                                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
+                                       16) &
+                                      0x7fff)) >>
+                                    0xf) +
                                    0x20);
     }
 }
@@ -579,7 +579,7 @@ void dScMgCurling_c::Bit_InitAll() {
     for (; i < 0x32; i++) {
         roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((roll >> 16) & 0x7fff) << 5;
-        ((dScMgCurling_c *)bit)->mBit[0].x = (int)((m >> 0xf)) << 0xf;
+        ((dScMgCurling_c *)bit)->mBit[0].x = (int)(m >> 0xf) << 0xf;
         ((dScMgCurling_c *)bit)->mBit[0].y = -0x8000;
         ((dScMgCurling_c *)bit)->mBit[0].on = 1;
         ((dScMgCurling_c *)bit)->mBit[0].shown = 1;
@@ -603,11 +603,11 @@ void dScMgCurling_c::Bit_InitAll() {
 
         roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         m = ((roll >> 16) & 0x7fff) << 5;
-        *(int *)(bit + CURL_OFF(mBit[0].x)) = (int)((m >> 0xf)) << 0xf;
+        *(int *)(bit + CURL_OFF(mBit[0].x)) = (int)(m >> 0xf) << 0xf;
 
         roll = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         q = (((roll >> 16) & 0x7fff) * 0x1a) >> 0xf;
-        *(int *)(bit + CURL_OFF(mBit[0].y)) = (((q << 3) - 8)) << 0xc;
+        *(int *)(bit + CURL_OFF(mBit[0].y)) = ((q << 3) - 8) << 0xc;
         *(short *)(bit + CURL_OFF(mBit[0].wait)) = 0;
         bit += 0x24;
     }
@@ -665,7 +665,7 @@ void dScMgCurling_c::ScoreStones() {
         {
             int ax = dx >> 12;
             int az = dz >> 12;
-            dist = cstd::sqrt((u64)(s64)(ax * ax + az * az));
+            dist = cstd::sqrt((ax * ax + az * az));
         }
         mPopup[slot].live = 1;
         mPopup[slot].x = mStone[i].x;
@@ -747,7 +747,7 @@ void dScMgCurling_c::Aim_Swing() {
         dy = (mAimY - oldy) >> 12;
         dy2 = dy * dy;
 
-        if (cstd::sqrt((s64)(dx * dx + dy2)) <= 1) {
+        if (cstd::sqrt((dx * dx + dy2)) <= 1) {
             mAimX = oldx;
             mAimY = oldy;
             return;
@@ -795,7 +795,7 @@ void dScMgCurling_c::Aim_Swing() {
         {
             int mag;
             mSwingAng = (u16)((mSwingAng + ang) >> 1);
-            mag = cstd::sqrt((s64)(dx * dx + dy2)) * 9;
+            mag = cstd::sqrt((dx * dx + dy2)) * 9;
             mag = (mag << 12) >> 4;
             if (mag >= 0xc000)
                 mag = 0xc000;
@@ -914,7 +914,7 @@ void dScMgCurling_c::SeparateStones(int stoneIndex) {
             continue;
         dx = (mStone[hitIndex].x - mStone[stoneIndex].x) >> 12;
         dy = (mStone[hitIndex].y - mStone[stoneIndex].y) >> 12;
-        distance = cstd::sqrt((u64)(dx * dx + dy * dy));
+        distance = cstd::sqrt((dx * dx + dy * dy));
         contactAngle = cstd::atan2(dy, dx);
         if (distance > 0x18)
             continue;
@@ -943,7 +943,7 @@ void dScMgCurling_c::SeparateStones(int stoneIndex) {
                     continue;
                 dx2 = (mStone[nextIndex].x - mStone[hitIndex].x) >> 12;
                 dy2 = (mStone[nextIndex].y - mStone[hitIndex].y) >> 12;
-                nextDistance = cstd::sqrt((u64)(dx2 * dx2 + dy2 * dy2));
+                nextDistance = cstd::sqrt((dx2 * dx2 + dy2 * dy2));
                 nextContactAngle = cstd::atan2(dy2, dx2);
                 if (nextDistance > 0x18)
                     continue;
@@ -999,7 +999,7 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
             continue;
         dx = (mStone[hitIndex].x - mStone[stoneIndex].x) >> 12;
         dy = (mStone[hitIndex].y - mStone[stoneIndex].y) >> 12;
-        if (cstd::sqrt((long long)(dx * dx + dy * dy)) > 0x18)
+        if (cstd::sqrt((dx * dx + dy * dy)) > 0x18)
             continue;
         {
             u16 *pAngle;
@@ -1070,8 +1070,7 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
             hitResultX = FX_MUL(contactCos, movingNormal) - FX_MUL(contactSin, hitTangent);
             hitResultY = FX_MUL(contactSin, movingNormal) + FX_MUL(contactCos, hitTangent);
             *pAngle = cstd::atan2(movingResultY, dx);
-            *pSpeed =
-                cstd ::sqrt((u64)((long long)dx * dx + (long long)movingResultY * movingResultY));
+            *pSpeed = cstd ::sqrt(((long long)dx * dx + (long long)movingResultY * movingResultY));
 
             /* Separate the stones along the contact line, then keep the
              * moving one on the board and hand any overshoot to the other. */
@@ -1095,7 +1094,7 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
 
             *pHitAngle = cstd::atan2(hitResultY, hitResultX);
             mStone[hitIndex].speed = cstd::sqrt(
-                (u64)((long long)hitResultX * hitResultX + (long long)hitResultY * hitResultY));
+                ((long long)hitResultX * hitResultX + (long long)hitResultY * hitResultY));
             mStone[stoneIndex].state = 1;
             mStone[hitIndex].state = 1;
             if (mStone[hitIndex].speed >= 0x3800) {
@@ -1117,7 +1116,7 @@ void dScMgCurling_c::SetStoneSpin(int stoneIndex) {
     int cosHeading = data_02082214[((heading >> 4) << 1) + 1];
     int speed = mStone[stoneIndex].speed;
     long long product = (long long)cosHeading * speed;
-    int velocityX = (int)(((unsigned long long)(product + 0x800)) >> 12);
+    int velocityX = (int)((product + 0x800) >> 12);
     mStone[stoneIndex].spin = (short)((-velocityX) >> 2);
 }
 
@@ -1625,8 +1624,8 @@ s32 dScMgCurling_c::Behavior() {
 /* Slot 0. Loads the board and the stone graphics for both screens, the
  * palettes and the house, then starts the first round with a 0x40 delay. */
 s32 dScMgCurling_c::InitResources() {
-    char *a = Ov004_LoadFileByPath(&sCurlingMgDirPath);
-    char *b = Ov004_LoadFileByPath(&sCurlingBgCurling2NcgPath);
+    void *a = Ov004_LoadFileByPath(&sCurlingMgDirPath);
+    void *b = Ov004_LoadFileByPath(&sCurlingBgCurling2NcgPath);
     void *f;
 
     if (a == 0 || b == 0)

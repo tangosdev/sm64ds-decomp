@@ -1,4 +1,4 @@
-extern int WM_StartConnect(void *cb, int arg, int z);
+extern int WM_StartConnect(void *callback, int pInfo, void *ssid);
 struct WmStartConnectCallback;
 extern void func_0203fec4(struct WmStartConnectCallback *cb);
 extern int data_020a0f54;

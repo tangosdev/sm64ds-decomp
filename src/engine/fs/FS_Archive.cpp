@@ -71,7 +71,7 @@ extern FSDirPos data_020a804c;
 void CpuCopy8(const void *src, void *dst, u32 size);
 void func_0205a588(void *dst, u8 value, u32 size);
 
-void FS_InitFile(int *p_file);
+void FS_InitFile(FSFile *p_file);
 int FS_ReadFile(FSFile *p_file, void *dst, int len);
 int FS_CloseFile(char *p_file);
 int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
@@ -262,7 +262,7 @@ FSFile *FSi_NextCommand(FSArchive *p_arc) {
         p_arc->flag &= ~FS_ARCHIVE_FLAG_RUNNING;
         if (p_arc->proc_flag & FS_ARCHIVE_PROC_IDLE) {
             FSFile tmp;
-            FS_InitFile((int *)&tmp);
+            FS_InitFile(&tmp);
             tmp.arc = p_arc;
             (*p_arc->proc)(&tmp, FS_COMMAND_IDLE);
         }
@@ -507,7 +507,7 @@ u32 FS_LoadArchiveTables(FSArchive *p_arc, void *p_mem, u32 max_size) {
     if (total_size <= max_size) {
         u8 *p_cache = (u8 *)ALIGN_BYTE(p_mem, 32);
         FSFile tmp;
-        FS_InitFile((int *)&tmp);
+        FS_InitFile(&tmp);
         FS_OpenFileDirect((char *)&tmp, p_arc, p_arc->fat, p_arc->fat + p_arc->fat_size, (u32)~0);
         FS_ReadFile(&tmp, p_cache, p_arc->fat_size);
         FS_CloseFile((char *)&tmp);

@@ -4,8 +4,7 @@
  */
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
-int func_02064b2c(int off, short b, int c, int d)
-{
+int func_02064b2c(int off, unsigned short b, int c, int d) {
     unsigned char tag = 9;
     short val = b;
     int c1, c2, c3;

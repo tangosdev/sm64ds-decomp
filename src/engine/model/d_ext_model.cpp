@@ -58,8 +58,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Render paths use */
-/* local extern: no header declares it; data.transforms-bone walk in Virtual10 */
-void func_02045074(ModelComponents *data, BMD_Bone *bones);
 /* local extern: no header declares it; sizes the transforms buffer from the file */
 int func_02046564(BMD_File *file);
 /* local extern: no header declares it; initializes ModelComponents over the file */
@@ -348,7 +346,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
 // @symbol _ZN17dExtSimpleModel_c9Virtual10ER9Matrix4x3
 void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
     *data.transforms = mat;
-    func_02045074(&data, data.modelFile->bones);
+    data.func_02045074(data.modelFile->bones);
 }
 
 // @symbol _ZN17dExtSimpleModel_c6RenderEPK7Vector3
@@ -916,7 +914,7 @@ void dExtFrameCtrl_c::Advance() {
            read-modify-write, and reloads currFrame through the member
            afterwards; the launder keeps this store aliasing the member so
            the compiler re-reads it the way the ROM does */
-        int *pFrame = (int *)((long long)((int)this + 8));
+        int *pFrame = (int *)((int)this + 8);
         *pFrame = *pFrame + speed;
         if (currFrame < 0) {
             currFrame = 0;

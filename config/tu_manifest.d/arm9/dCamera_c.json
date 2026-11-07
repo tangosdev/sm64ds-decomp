@@ -108,7 +108,7 @@
       "ordinal": 44
     },
     {
-      "symbol": "func_02007698",
+      "symbol": "CutsceneKeyDanceJumpCvar",
       "address": "0x02007698",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0200/func_02007698.c",
@@ -129,7 +129,7 @@
       "ordinal": 47
     },
     {
-      "symbol": "func_02007870",
+      "symbol": "CutsceneDanceShakeFov",
       "address": "0x02007870",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0200/func_02007870.c",
@@ -178,14 +178,14 @@
       "ordinal": 54
     },
     {
-      "symbol": "func_02007c14",
+      "symbol": "Vec3fSetDistAndAngle",
       "address": "0x02007c14",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0200/func_02007c14.c",
       "ordinal": 55
     },
     {
-      "symbol": "func_02007c9c",
+      "symbol": "Vec3fGetDistAndAngle",
       "address": "0x02007c9c",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_02007c9c.c",
@@ -199,7 +199,7 @@
       "ordinal": 57
     },
     {
-      "symbol": "func_02007d0c",
+      "symbol": "ApproachVec3fAsymptotic",
       "address": "0x02007d0c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0200/func_02007d0c.c",
@@ -689,7 +689,7 @@
       "ordinal": 127
     },
     {
-      "symbol": "func_0200ca14",
+      "symbol": "_ZN9dCamera_c13func_0200ca14Ehi",
       "address": "0x0200ca14",
       "size": "0x0000003c",
       "legacy_source": "src/func_0200ca14.c",
@@ -773,14 +773,14 @@
       "ordinal": 139
     },
     {
-      "symbol": "func_0200d064",
+      "symbol": "_ZN9dCamera_c13func_0200d064Eh",
       "address": "0x0200d064",
       "size": "0x00000048",
       "legacy_source": "src/func_0200d064.c",
       "ordinal": 140
     },
     {
-      "symbol": "func_0200d0ac",
+      "symbol": "_ZN9dCamera_c13func_0200d0acEj",
       "address": "0x0200d0ac",
       "size": "0x00000060",
       "legacy_source": "src/func_0200d0ac.c",
@@ -808,7 +808,7 @@
       "ordinal": 144
     },
     {
-      "symbol": "func_0200d1e4",
+      "symbol": "_ZN9dCamera_c13func_0200d1e4Ev",
       "address": "0x0200d1e4",
       "size": "0x00000120",
       "legacy_source": "src/func_0200d1e4.c",
@@ -843,7 +843,7 @@
       "ordinal": 149
     },
     {
-      "symbol": "func_0200d4b0",
+      "symbol": "_ZN9dCamera_c13func_0200d4b0Eji",
       "address": "0x0200d4b0",
       "size": "0x00000058",
       "legacy_source": "src/func_0200d4b0.c",
@@ -948,7 +948,7 @@
       "ordinal": 164
     },
     {
-      "symbol": "func_0200d858",
+      "symbol": "_ZN9dCamera_c13func_0200d858EPK7Vector3",
       "address": "0x0200d858",
       "size": "0x00000038",
       "legacy_source": "src/func_0200d858.c",
@@ -969,14 +969,14 @@
       "ordinal": 167
     },
     {
-      "symbol": "func_0200d8ac",
+      "symbol": "_ZN9dCamera_c11SetFovShakeEiii",
       "address": "0x0200d8ac",
       "size": "0x0000001c",
       "legacy_source": "src/func_0200d8ac.c",
       "ordinal": 168
     },
     {
-      "symbol": "func_0200d8c8",
+      "symbol": "_ZN9dCamera_c13func_0200d8c8EPK7Vector3i",
       "address": "0x0200d8c8",
       "size": "0x0000008c",
       "legacy_source": "src/func_0200d8c8.c",
@@ -1035,14 +1035,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "sPrevTurnInput$1940",
+      "symbol": "sPrevTurnInput$1927",
       "address": "0x0209b000",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "func_02009e70's function-local static s32: last frame's turn-button bits; it plays sound 0xe (func_02012790) only when the bits go nonzero while this is still 0, then stores them, and clears it when no turn button is held. Its only reference is func_02009e70 (0x0200af08); the crt0 words at 0x02004ae0/0x02004ae4 are the arm9 .bss-start bounds, not a reader. No initializer, so no guard."
     },
     {
-      "symbol": "_ZGVsScriptOps$2648",
+      "symbol": "_ZGVsScriptOps$2629",
       "address": "0x0209b004",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -1182,7 +1182,7 @@
       "evidence": "dCamera_c::State (enter CamPmf, execute CamPmf) plain-copied by __sinit_d_camera.cpp"
     },
     {
-      "symbol": "sScriptOps$2648",
+      "symbol": "sScriptOps$2629",
       "address": "0x0209b138",
       "size": "0x138",
       "binding": "STB_GLOBAL",
@@ -1221,19 +1221,19 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "sPrevTurnInput$1940",
+      "symbol": "sPrevTurnInput$1927",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static; DSD requires a configured global symbol at 0x0209b000, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
     },
     {
-      "symbol": "_ZGVsScriptOps$2648",
+      "symbol": "_ZGVsScriptOps$2629",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static guard; DSD requires a configured global symbol at 0x0209b004, and changing the ELF binding preserves storage, relocations and bytes"
     },
     {
-      "symbol": "sScriptOps$2648",
+      "symbol": "sScriptOps$2629",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static table; DSD requires a configured global symbol at 0x0209b138, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
@@ -1241,18 +1241,18 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sPrevTurnInput$1928",
-      "to": "sPrevTurnInput$1940",
+      "from": "sPrevTurnInput$1922",
+      "to": "sPrevTurnInput$1927",
       "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
     },
     {
-      "from": "_ZGVsScriptOps$2630",
-      "to": "_ZGVsScriptOps$2648",
+      "from": "_ZGVsScriptOps$2624",
+      "to": "_ZGVsScriptOps$2629",
       "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types)."
     },
     {
-      "from": "sScriptOps$2630",
-      "to": "sScriptOps$2648",
+      "from": "sScriptOps$2624",
+      "to": "sScriptOps$2629",
       "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types)."
     }
   ],
@@ -1843,7 +1843,7 @@
     "Leftovers: the C bodies keep raw-offset member access ((char*)self + 0xNNN) where the real field names are not yet recovered, and the camera state records are TU-local opaque typedefs (CamEntryE, CamFixedTab, CamViewObj, CamStateBase, CamStateIdx, CamJitter, the dBgCh_* shadows). POD `Vec3` shadows replace Vector3 inside the C regions because Vector3's empty destructor makes it non-POD and inflates the stack frame by 8 bytes (measured on func_0200c394).",
     "The 88 functions below 0x0200bec4 were one-function shards (66 C, 20 C++); they now use dCamera_c/dActor_c/daPly_c member names in C++ under extern \"C\" (no cplusplus-off regions), share the file's CamMode/CamViewObj/Entry3 records, and keep their ROM names.",
     "Static initializer folded: the nineteen dCamera_c::State records (two CamPmf each) are defined in this TU. mwcc emits __sinit_d_camera.cpp, byte- and relocation-identical to retail __sinit_02073a24, plus the .ctor word at 0x02086b60 and the .bss span 0x0209b008..0x0209b138. The .data PMF constants stay unowned. No destructor-registration nodes and no @ temps.",
-    "Function-local statics folded (0x0209b000..0x0209b008, 0x0209b138..0x0209b270): func_02008550's hand-written `if ((data_0209b004 & 1) == 0) { data_0209b004 |= 1; data_0209b138[i] = ...; }` was the decompiler's rendering of a function-local static with a dynamic initializer. It is now `static CamScriptOp sScriptOps[39] = { data_02086c80, ... };`, and mwcc emits the guard test, the guard store and the 39 copies itself, byte- and relocation-identical. func_02009e70's data_0209b000 is its function-local `static s32 sPrevTurnInput;`. The compiler names are sScriptOps$2648, _ZGVsScriptOps$2648 and sPrevTurnInput$1940; the .data member-function constants still stay unowned, so the initializer names them by address."
+    "Function-local statics folded (0x0209b000..0x0209b008, 0x0209b138..0x0209b270): func_02008550's hand-written `if ((data_0209b004 & 1) == 0) { data_0209b004 |= 1; data_0209b138[i] = ...; }` was the decompiler's rendering of a function-local static with a dynamic initializer. It is now `static CamScriptOp sScriptOps[39] = { data_02086c80, ... };`, and mwcc emits the guard test, the guard store and the 39 copies itself, byte- and relocation-identical. func_02009e70's data_0209b000 is its function-local `static s32 sPrevTurnInput;`. The compiler names are sScriptOps$2629, _ZGVsScriptOps$2629 and sPrevTurnInput$1927; the .data member-function constants still stay unowned, so the initializer names them by address."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

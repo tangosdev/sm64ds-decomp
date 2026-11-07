@@ -2,6 +2,8 @@
 #include "cstd.h"
 
 extern "C" {
+/* opt_strength_reduction stays off: with it on the row walks become induction
+   variables and the function grows to 0x460 against the ROM's 0x440. */
 #pragma opt_strength_reduction off
 
 typedef unsigned short u16;

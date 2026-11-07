@@ -74,6 +74,7 @@
 #define DSCMGD3DBASE_C_H
 #include "dScMgBase_c.h"
 #include "dScStage_c.h"
+#include "MgCamera.h"
 
 struct dScMgD3DBase_c : dScMgBase_c {
     /* Declared first -- see include/dScene_c.h's KEY FUNCTION note. Overrides
@@ -146,32 +147,14 @@ struct dScMgD3DBase_c : dScMgBase_c {
                              screen (D3D_CaptureToSub), 0 for the main; both
                              factories zero it after the base constructor */
     u8 pad_4666[0x6];     /* 0x4666 */
-    /* 0x466c..0x47e4 is TWO ELEMENTS OF 0xbc, and all four factories say
-       so: each runs `e = p + 0x466c; do { e += 0xbc; } while (e != p +
-       0x47e4);`, and 0x47e4 - 0x466c = 0x178 = 2 * 0xbc. That empty loop is
-       what an array of a class with an empty inline constructor and no
-       destructor compiles to, which is why Camera declares one: with it,
-       `new dScMgJump_c` reproduces dScMgJump_c_classInit byte for byte.
-       The seven fields at +0xa0..+0xb8 prove the stride independently;
-       all four children set them for both elements. */
-    /* EACH ELEMENT IS A MINIGAME CAMERA. Camera_UpdateMatrices (src/minigames/unit020bfec0.cpp)
-       carries the 0xbc layout: matrices in the head, `eye` at +0xa0, `target`
-       at +0xac and `angle` at +0xb8. dScMgJump_c::InitResources settles which
-       element is which by calling Camera_UpdateMatrices(this + 0x466c) and
-       Camera_UpdateMatrices(this + 0x4728) -- the two element bases. */
-    struct Camera {
-        Camera() {}
-        u8 pad_00[0xa0]; /* 0x00 -- matrices */
-        s32 mEyeX;       /* 0xa0 */
-        s32 mEyeY;       /* 0xa4 */
-        s32 mEyeZ;       /* 0xa8 */
-        s32 mTargetX;    /* 0xac */
-        s32 mTargetY;    /* 0xb0 */
-        s32 mTargetZ;    /* 0xb4 */
-        u16 mAngle;      /* 0xb8 */
-        u8 pad_ba[0x2];  /* 0xba */
-    };
-    Camera mCameras[2];               /* 0x466c -- [0] main screen, [1] sub screen */
+    /* 0x466c..0x47e4 is TWO MgCameras, and all four factories say so: each
+       runs `e = p + 0x466c; do { e += 0xbc; } while (e != p + 0x47e4);`,
+       and 0x47e4 - 0x466c = 0x178 = 2 * 0xbc. That empty loop is what an
+       array of a class with an empty inline constructor and no destructor
+       compiles to, and MgCamera is one.
+       dScMgJump_c::InitResources settles which element is which by passing
+       each to Camera_UpdateMatrices. */
+    MgCamera mCameras[2];             /* 0x466c -- [0] main screen, [1] sub screen */
     Particle::SysTracker mSysTracker; /* 0x47e4 -- AfterInitResources initialises
                                           it, BeforeBehavior updates it, and all
                                           four children destroy it inline */
@@ -184,8 +167,6 @@ struct dScMgD3DBase_c : dScMgBase_c {
    both bounds. If this is short, all four children's fields land on the
    wrong bytes and build_pin says so at once. */
 #ifndef SM64DS_PLATFORM_PC
-typedef char
-    dScMgD3DBase_c_Camera_size_must_be_0xbc[sizeof(dScMgD3DBase_c::Camera) == 0xbc ? 1 : -1];
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgD3DBase_c_size_must_be_0x5004[sizeof(dScMgD3DBase_c) == 0x5004 ? 1 : -1];
 #endif

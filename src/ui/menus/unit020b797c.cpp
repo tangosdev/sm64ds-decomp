@@ -220,7 +220,7 @@ void func_ov007_020b8d48(int plane, int glyph) {
         u32 s = *src++ & palmask;
         *dst = (*dst & mask) | (s << shift);
         if (rem != 0) {
-            u32 *d2 = (u32 *)(int)(dst + 8);
+            u32 *d2 = (u32 *)(dst + 8);
             *d2 = (*d2 & ~mask) | (s >> rshift);
         }
         dst++;
