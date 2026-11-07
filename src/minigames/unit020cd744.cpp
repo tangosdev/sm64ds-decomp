@@ -1239,11 +1239,7 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
 namespace s020cf2fc {
 typedef volatile unsigned int vu32;
 
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} Vec3;
+typedef TrmpLine::Vtx Vec3;
 
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 data_0209b3ec;
@@ -1491,9 +1487,7 @@ extern "C" void TrmpLine_SetStateSettle(char *p) {
 }
 
 namespace s020cfa44 {
-typedef struct {
-    int x, y, z;
-} Vec3;
+typedef TrmpLine::Vtx Vec3;
 
 extern "C" {
 extern s16 data_02082214[];

@@ -4836,8 +4836,7 @@ int dScStage_c::InitResources() {
 
         int skipSoundGroup = (data_0209f2d8 == 2) ? 1 : 0;
         if (skipSoundGroup == 0) {
-            s8 sublevel =
-                *(s8 *)(unsigned)(((unsigned long long)(unsigned)&gCurrentSublevel) & ~0ULL);
+            s8 sublevel = gCurrentSublevel;
             int soundGroup = 0;
             u8 bank = 0x36;
             if (data_0209f220 == 2) {

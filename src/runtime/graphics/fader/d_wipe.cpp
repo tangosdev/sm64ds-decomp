@@ -472,7 +472,7 @@ void dWipe_c::func_0202ee94()
     for (i = 0; i < 0x60; i++) {
         if (start <= i) {
             int a = i - 0x60 + radius;
-            int s = cstd::sqrt((u64)(a * (diameter - a)));
+            int s = cstd::sqrt((a * (diameter - a)));
             int lo = 0x80 - s;
             int hi = s + 0x80;
             if (lo < 0)

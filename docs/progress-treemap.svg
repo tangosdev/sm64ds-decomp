@@ -7317,15 +7317,15 @@ matched: yes</title></rect><rect x="264.63" y="568.60" width="56.79" height="4.3
 module: arm9
 addr: 0x020443c8
 size: 364 bytes
-matched: yes</title></rect><rect x="5.00" y="572.90" width="50.12" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02044534
+matched: yes</title></rect><rect x="5.00" y="572.90" width="50.12" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
 module: arm9
 addr: 0x02044534
 size: 856 bytes
-matched: yes</title></rect><rect x="55.12" y="572.90" width="39.58" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204488c
+matched: yes</title></rect><rect x="55.12" y="572.90" width="39.58" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents13func_0204488cEiP7Vector3
 module: arm9
 addr: 0x0204488c
 size: 676 bytes
-matched: yes</title></rect><rect x="94.70" y="572.90" width="38.64" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02044b30
+matched: yes</title></rect><rect x="94.70" y="572.90" width="38.64" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents13func_02044b30Ei
 module: arm9
 addr: 0x02044b30
 size: 660 bytes
@@ -7349,7 +7349,7 @@ matched: yes</title></rect><rect x="171.29" y="572.90" width="2.34" height="11.4
 module: arm9
 addr: 0x0204504c
 size: 40 bytes
-matched: yes</title></rect><rect x="173.63" y="572.90" width="15.22" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02045074
+matched: yes</title></rect><rect x="173.63" y="572.90" width="15.22" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents13func_02045074EP8BMD_Bone
 module: arm9
 addr: 0x02045074
 size: 260 bytes
@@ -7365,7 +7365,7 @@ matched: yes</title></rect><rect x="220.47" y="572.90" width="2.58" height="11.4
 module: arm9
 addr: 0x02045394
 size: 44 bytes
-matched: yes</title></rect><rect x="223.05" y="572.90" width="11.01" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020453c0
+matched: yes</title></rect><rect x="223.05" y="572.90" width="11.01" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents13func_020453c0EP8BMD_BoneP8BCA_Filei
 module: arm9
 addr: 0x020453c0
 size: 188 bytes
