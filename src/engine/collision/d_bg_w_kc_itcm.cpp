@@ -238,7 +238,6 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
         (lo) = v;
 
 /* ---- defs in reverse ROM order ---- */
-// @symbol _ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo
 void dBgW_Kc::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
 {
     CLPS *entry;
@@ -250,7 +249,6 @@ void dBgW_Kc::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
     func_02037eb0(&res, *entry, &normal);
 }
 
-// @symbol _ZN7dBgW_Kc9GetNormalEsR7Vector3
 void dBgW_Kc::GetNormal(s16 triID, Vector3 &res)
 {
     s16 *normal = kclFile->normals[kclFile->tris[triID].normalIdx];
@@ -260,7 +258,6 @@ void dBgW_Kc::GetNormal(s16 triID, Vector3 &res)
     res.z = normal[2] << 2;
 }
 
-// @symbol _ZN7dBgW_Kc17GetTriangleOriginEsR7Vector3
 void dBgW_Kc::GetTriangleOrigin(s16 triID, Vector3 &res)
 {
     s32 *vertex = kclFile->positions[kclFile->tris[triID].posIdx];
@@ -270,7 +267,6 @@ void dBgW_Kc::GetTriangleOrigin(s16 triID, Vector3 &res)
     res.z = vertex[2] << 6;
 }
 
-// @symbol _ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd
 int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
 {
     KCL_File *file = kclFile;
@@ -387,7 +383,6 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
     return 1;
 }
 
-// @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
     /* DECLARATION ORDER BELOW IS LOAD-BEARING -- do not tidy it.
@@ -1017,7 +1012,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
  * and walked with *++leaf. The edge-normal dots stay inline; a named local
  * for them spills the leaf pointer.
  */
-// @symbol _ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin
 s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
 {
     s32 loX, hiX;
@@ -1235,7 +1229,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     return 1;
 }
 
-// @symbol _ZNK7dBgW_Kc16GetOctreeOriginYEv
 Fix12i dBgW_Kc::GetOctreeOriginY() const
 {
     return kclFile->origin.y << 6;
@@ -1246,44 +1239,37 @@ Fix12i dBgW_Kc::GetOctreeOriginY() const
    units, hence the `lsl #12` against the origin's `lsl #6`. The name is the
    ROM's own, so it is kept rather than renamed to what the arithmetic
    suggests. */
-// @symbol _ZNK7dBgW_Kc13GetUnkOctreeYEv
 Fix12i dBgW_Kc::GetUnkOctreeY() const
 {
     return (kclFile->origin.y << 6) + (~kclFile->yMask << 12);
 }
 
-// @symbol func_01ffb0c8
 extern "C" KCL_File *func_01ffb0c8(dBgW_Kc *self)
 {
     return self->kclFile;
 }
 
-// @symbol func_01ffb0bc
 extern "C" void func_01ffb0bc(dBgW_Kc *self)
 {
     self->shallowOnly = true;
 }
 
-// @symbol func_01ffb0b0
 extern "C" void func_01ffb0b0(dBgW_Kc *self)
 {
     self->shallowOnly = false;
 }
 
-// @symbol func_01ffb0a4
 extern "C" void func_01ffb0a4(dBgW_Kc *self)
 {
     self->depthByDir = true;
 }
 
-// @symbol func_01ffb098
 extern "C" void func_01ffb098(dBgW_Kc *self)
 {
     self->depthByDir = false;
 }
 
 /* Copies the depth direction memberwise: three separate word loads and stores. */
-// @symbol func_01ffb07c
 extern "C" void func_01ffb07c(dBgW_Kc *self, const Vector3 *v)
 {
     self->depthDir.x = v->x;

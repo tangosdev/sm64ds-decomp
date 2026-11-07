@@ -80,7 +80,6 @@ inline struct FreeList *inline_fn(void *arg0)
     return (struct FreeList *)&((SolidHeapAllocator *)arg0)->mFreeRegion;
 }
 
-// @symbol _ZN18SolidHeapAllocatorC1EPvj
 SolidHeapAllocator::SolidHeapAllocator(void* heapEnd, u32 flags)
 {
     SolidHeapFreeRegion* freeRegion = &mFreeRegion;
@@ -91,7 +90,6 @@ SolidHeapAllocator::SolidHeapAllocator(void* heapEnd, u32 flags)
     freeRegion->end = mEnd;
     freeRegion->flags = 0;
 }
-// @symbol _ZN18SolidHeapAllocator16AllocateForwardsEPvjj
 /* Carves `size` bytes off the low end: round begin up to `align`, refuse if
  * that runs past end, then push begin past the block. `align` is already a
  * positive power of two here; Allocate took the absolute value and picked the
@@ -116,7 +114,6 @@ void *SolidHeapAllocator::AllocateForwards(void *freeBlockPair, u32 size, u32 al
     return start;
 }
 
-// @symbol _ZN18SolidHeapAllocator17AllocateBackwardsEPvjj
 /* Carves `size` bytes off the HIGH end: subtract from end, round the result
  * DOWN to `align`, refuse if that runs below begin, then pull end down.
  * Because the rounding is downward the alignment gap lands above the block
@@ -146,7 +143,6 @@ void *SolidHeapAllocator::AllocateBackwards(void *freeBlockPair, u32 size, u32 a
     return start;
 }
 
-// @symbol _ZN18SolidHeapAllocator10ResetStartEv
 /* Rewinds the free region's begin pointer back to the heap's start and clears
  * its flags, discarding every forward allocation at once. ResetEnd is the
  * mirror. */
@@ -161,7 +157,6 @@ void SolidHeapAllocator::ResetStart()
     fl->flags = 0;
 }
 
-// @symbol _ZN18SolidHeapAllocator8ResetEndEv
 /* Walks the saved-state chain and rewinds every entry's end pointer to the
  * heap's hard end, then rewinds the live free region's end too. LoadState can
  * then restore any of them without them still pointing into space that has
@@ -174,7 +169,6 @@ void SolidHeapAllocator::ResetEnd()
     p[1] = (int)mEnd;
 }
 
-// @symbol _ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj
 /* Fit a SolidHeapAllocator into [address, address + size), or refuse. Both ends
  * are brought to a 4-byte boundary, inwards, so the aligned span is never
  * larger than asked for. The refusal has two halves: `start > end` catches
@@ -200,7 +194,6 @@ SolidHeapAllocator* Heap_t::CreateSolidHeapAllocator(void* address, u32 size, u3
 
 } /* namespace mHeap */
 
-// @symbol func_0204ebb8
 /* Tail-call veneer to HeapAllocator::Remove -- a three-word thunk
  * (ldr ip,[pc] / bx ip / .word), the same shape Heap.h's _-prefixed veneers
  * take. */
@@ -209,7 +202,6 @@ extern "C" void func_0204ebb8(SolidHeapAllocator *allocator)
     allocator->Remove();
 }
 
-// @symbol _ZN18SolidHeapAllocator8AllocateEji
 /* ALIGN'S SIGN IS THE DIRECTION, not part of the alignment: non-negative
  * allocates from the low end of the free region, negative from the high end.
  * A zero size is rounded up to 1 so every allocation has a distinct address,
@@ -228,7 +220,6 @@ void *SolidHeapAllocator::Allocate(u32 size, int align)
     return AllocateBackwards(fb, size, (u32)(-align));
 }
 
-// @symbol _ZN18SolidHeapAllocator5ResetEj
 /* bit 0: rewind the free region's begin; bit 1: rewind its end. Passing 3
  * empties the heap in both directions; passing 0 is a no-op the ROM still
  * emits. */
@@ -242,7 +233,6 @@ void SolidHeapAllocator::Reset(u32 params)
     }
 }
 
-// @symbol _ZN18SolidHeapAllocator10MemoryLeftEi
 /* How many bytes a forward allocation at this alignment could still get: round
  * the free region's begin up to `align`, subtract from its end, and clamp at 0.
  * `align` goes through cstd::abs, so the direction convention Allocate uses
@@ -283,7 +273,6 @@ int SolidHeapAllocator::MemoryLeft(int align)
     return (int)(end - ((mask + (u32)*(int *)((long long)(int)(new_var2 + 0x24))) & ~(a - 1u)));
 }
 
-// @symbol _ZN18SolidHeapAllocator9SaveStateEj
 /* Pushes a restore point onto the chain: `saved` is read before the
  * allocation, so the restore point is the state BEFORE the record was carved
  * out. Returns 0 if the allocation fails, 1 otherwise. */
@@ -306,7 +295,6 @@ int SolidHeapAllocator::SaveState(u32 arg)
     return 1;
 }
 
-// @symbol _ZN18SolidHeapAllocator9LoadStateEj
 /* Pops back to a restore point pushed by SaveState. `id == 0` means "the most
  * recent one" and skips the search entirely -- note the search loop is inside
  * `if (id != 0)`, so a zero id never compares against a record's id even if
@@ -334,7 +322,6 @@ s32 SolidHeapAllocator::LoadState(u32 id)
     return 1;
 }
 
-// @symbol _ZN18SolidHeapAllocator14TryResizeToFitEv
 /* Shrinks the heap to exactly what has been allocated, but only when nothing
  * has been allocated backwards: the guard compares the hard end (mEnd) against
  * the free region's end and bails returning 0 if they differ. On success the
@@ -350,7 +337,6 @@ s32 SolidHeapAllocator::TryResizeToFit()
     return (s32)((char *)mEnd - (char *)this);
 }
 
-// @symbol _ZN18SolidHeapAllocator10ReallocateEPvj
 /* Resizes IN PLACE, and only for the most recent forward allocation: `curSize`
  * is measured as `freeRegion.begin - ptr`, so the block being resized is assumed
  * to end exactly where the free region starts. Returns the new size, or 0 if

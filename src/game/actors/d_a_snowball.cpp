@@ -63,8 +63,6 @@ void func_02012694(unsigned int a0, void *a1);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 }
 
-// @symbol _ZN12daSnowball_cD1Ev
-// @symbol _ZN12daSnowball_cD0Ev
 /* The key function. D1 stores the vtable, destroys the members in reverse
  * declaration order, then runs dEnemyBase_c::~dEnemyBase_c; D0 does the
  * same and hands the object to dEnemyBase_c's inline operator delete. The
@@ -103,7 +101,6 @@ enum {
  * rows of the dCc_c bit table ("mega character" and "fire"; best-effort names). */
 enum { SNOWBALL_HIT_BIT_0x10 = 0x10, SNOWBALL_HIT_BIT_0x40000 = 0x40000 };
 
-// @symbol _ZN12daSnowball_c13HandleContactEv
 /* Contact handler, called from the update helper whenever one of the x/z
  * velocity words at 0x0a4/0x0ac is non-zero. mdCcAc_c.otherOwner holds the
  * unique id of the actor that owns the other cylinder; hitFlags says which hit
@@ -160,7 +157,6 @@ void daSnowball_c::HandleContact() {
     }
 }
 
-// @symbol _ZN12daSnowball_c6State0Ev
 /* The state record's update function (offset +8 of data_ov081_02128eb4).
  * Behavior calls it once per frame.
  *
@@ -193,7 +189,6 @@ int daSnowball_c::State0() {
     return 1;
 }
 
-// @symbol _ZN12daSnowball_c10InitState0Ev
 /* The state record's enter function (offset +0 of data_ov081_02128eb4).
  * SetState runs it: clear mReachedSpawnY and arm mStateTimer with 200
  * frames. */
@@ -203,7 +198,6 @@ int daSnowball_c::InitState0() {
     return 1;
 }
 
-// @symbol _ZN12daSnowball_c8SetStateEP19daSnowball_StateRec
 /* Installs a state record in mStateRec and runs its enter function, if it has one. */
 int daSnowball_c::SetState(daSnowball_StateRec *p) {
     mStateRec = p;
@@ -213,7 +207,6 @@ int daSnowball_c::SetState(daSnowball_StateRec *p) {
     return (this->*(q->enter))();
 }
 
-// @symbol _ZN12daSnowball_c17UpdateModelMatrixEv
 /* Builds the model's world matrix from position (>> 3 per axis, via Vec3_Asr)
  * and the three angles, through the scratch matrix data_020a0e68, and copies it
  * to mModel.mat4x3. */
@@ -225,7 +218,6 @@ void daSnowball_c::UpdateModelMatrix() {
     mModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN12daSnowball_c16CleanupResourcesEv
 /* Releases the one shared file InitResources claimed. Touches no field: the
  * ROM body never reads `this`, and as a method it receives one and ignores
  * it, which measured byte-free. */
@@ -234,18 +226,15 @@ int daSnowball_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN12daSnowball_c16OnPendingDestroyEv
 /* fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`. */
 void daSnowball_c::OnPendingDestroy() {}
 
-// @symbol _ZN12daSnowball_c6RenderEv
 /* Draws mModel (the matrix Behavior built into mat4x3). Always returns 1. */
 int daSnowball_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN12daSnowball_c8BehaviorEv
 /* Per-frame update, always returns 1:
  *   - count mStateTimer down towards 0 (DecIfAbove0_Short stops at 0);
  *   - run the installed state record's update function (State0 for the
@@ -282,7 +271,6 @@ int daSnowball_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daSnowball_c13InitResourcesEv
 /* Loads and binds the model file, then sets up the snowball: gravity of
  * -0x2000 (-2 units/frame^2) with a terminal velocity of -0x3c000 (-60
  * units/frame); a cylinder of radius and height 0x1e000 (30 units); the spawn
@@ -311,7 +299,6 @@ int daSnowball_c::InitResources() {
     return 1;
 }
 
-// @symbol daSnowball_c_classInit
 extern "C" daSnowball_c *daSnowball_c_classInit() {
     return new daSnowball_c();
 }

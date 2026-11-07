@@ -34,7 +34,6 @@ struct KiItaCollisionFilePtr : SharedFilePtr {
     ~KiItaCollisionFilePtr();
 };
 
-// @symbol daObjKi_Ita_c_classInit
 extern "C" daObjKi_Ita_c *daObjKi_Ita_c_classInit() {
     return new daObjKi_Ita_c();
 }
@@ -50,7 +49,6 @@ extern "C" SpawnInfo<daObjKi_Ita_c> g_profile_KI_ITA = {
     0,
 };
 
-// @symbol _ZN13daObjKi_Ita_c13InitResourcesEv
 int daObjKi_Ita_c::InitResources() {
     return InitResourcesFrom(&data_ov016_02114b8c);
 }

@@ -10,7 +10,7 @@
     "BOTTOM EDGE: src/engine/view/d_camera.cpp ends at 0x0200e494 with dCamera_c_classInit (0x0200e444..0x0200e494), the class factory that closes that TU; its own manifest (arm9/dCamera_c) already names the helpers at 0x0200e494 as a different data table with no camera receiver. The seven functions 0x0200e494..0x0200e748 are not camera code: RunDemoCommand (e494) and RunPlayerCommand (e5ac) are called only from ProcessKuppaScript (bl at 0x0200ed84 for command >= 0x12, bl at 0x0200ed68 for command <= 3) and take the command record plus its first/last frame; SpawnDemoActor/FindDemoActor (e4e4/e55c) walk the 16-word actor-ID table data_0209b2a4 that EndKuppaScript and ResetKuppaScript also clear; SpawnScriptPlayer/FindScriptPlayer (e5fc/e6d8) walk the 4-word data_0209b284 that EndKuppaScript and ResetKuppaScript clear; ReadUnalignedSignedInt (e728) is the signed twin of ReadUnalignedInt (byte-identical body) and opens the four unaligned script-argument readers.",
     "TOP EDGE: GetLanguageIndex (0x0200f0bc) maps GetOwnerLanguage to a localized-asset index for func_0200f13c/func_0200f220 and the d_s_entry/d_s_mb scenes. It touches no script state, so ResetKuppaScript (0x0200f04c..0x0200f0bc) is the last function of this file.",
     "STATE: every function here reads or writes the script state at data_0209fc48 (running script), data_0209fc4c (saved script), data_0209b274 (frame), data_0209b270 (spawned-player count), data_0209b284 (player IDs) or data_0209b2a4 (cutscene-actor IDs), or is called only by a function that does (ReadUnaligned*, the Find/Spawn helpers). StartIntroCutscene, StartEndingCutscene and StartDanceCutscene are the script entry points that bracket RunKuppaScript.",
-    "INITIALIZER AND DATA: __sinit_02073e6c (.init 0x02073e6c..0x02074d90, .ctor word 0x02086b64) is this file's static initializer. It stores, byte by byte, the addresses that the scripts this file runs hold in their records (the intro sCutsceneIntroPeachLetter, the castle fall sCutsceneEndingMarioFall, the end waving sCutsceneEndWaving, the ending flight sCutsceneGrandStar, sCutsceneCreditsBoB and 33 more; each is named for the Super Mario 64 cutscene shot it ports), then constructs the dFdColor_c fader data_0209b294 that the fade commands drive and registers its destructor on node 0x0209b278. The .data run 0x0208751c..0x0208a0e0 is those scripts, the 55 camera paths and point lists their camera records name, and the six-entry star-dance table sDanceCutsceneTable StartDanceCutscene indexes; every object in it is referenced only from inside the run or by this file. The .bss run 0x0209b270..0x0209b2e4 is the player count, frame counter, node, player-ID table, fader and demo-actor-ID table, in that order.",
+    "INITIALIZER AND DATA: __sinit_02073e6c (.init 0x02073e6c..0x02074d90, .ctor word 0x02086b64) is this file's static initializer. It stores, byte by byte, the addresses that the scripts this file runs hold in their records (the intro sCutsceneIntroPeachLetter, the castle fall sCutsceneEndingMarioFall, the end waving sCutsceneEndWaving, the ending flight sCutsceneGrandStar, sCutsceneCreditsBoB and 33 more; each is named for the Super Mario 64 cutscene shot it ports), then constructs the dFdColor_c fader gKuppaScriptFader that the fade commands drive and registers its destructor on node 0x0209b278. The .data run 0x0208751c..0x0208a0e0 is those scripts, the 55 camera paths and point lists their camera records name, and the six-entry star-dance table sDanceCutsceneTable StartDanceCutscene indexes; every object in it is referenced only from inside the run or by this file. The .bss run 0x0209b270..0x0209b2e4 is the player count, frame counter, node, player-ID table, fader and demo-actor-ID table, in that order.",
     "NOT CLAIMED: gRunningKuppaScript and gSavedKuppaScript (0x0209fc48/0x0209fc4c). They are this file's state but sit in a second .bss run, apart from 0x0209b270..0x0209b2e4, and one object cannot place a definition in two runs, so they stay extern."
   ],
   "sections": [
@@ -42,133 +42,133 @@
   ],
   "functions": [
     {
-      "symbol": "RunDemoCommand",
+      "symbol": "_ZN11KuppaScript14RunDemoCommandEPhii",
       "address": "0x0200e494",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e494.c",
       "ordinal": 0
     },
     {
-      "symbol": "SpawnDemoActor",
+      "symbol": "_ZN11KuppaScript14SpawnDemoActorEj",
       "address": "0x0200e4e4",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e4e4.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "FindDemoActor",
+      "symbol": "_ZN11KuppaScript13FindDemoActorEj",
       "address": "0x0200e55c",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e55c.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "RunPlayerCommand",
+      "symbol": "_ZN11KuppaScript16RunPlayerCommandEPhii",
       "address": "0x0200e5ac",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e5ac.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "SpawnScriptPlayer",
+      "symbol": "_ZN11KuppaScript17SpawnScriptPlayerEj",
       "address": "0x0200e5fc",
       "size": "0x000000dc",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e5fc.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "FindScriptPlayer",
+      "symbol": "_ZN11KuppaScript16FindScriptPlayerEj",
       "address": "0x0200e6d8",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e6d8.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "ReadUnalignedSignedInt",
+      "symbol": "_Z22ReadUnalignedSignedIntPh",
       "address": "0x0200e728",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_0200e728.c",
       "ordinal": 6
     },
     {
-      "symbol": "ReadUnalignedInt",
+      "symbol": "_Z16ReadUnalignedIntPh",
       "address": "0x0200e748",
       "size": "0x00000020",
       "legacy_source": "src/ReadUnalignedInt.c",
       "ordinal": 7
     },
     {
-      "symbol": "ReadUnalignedShort",
+      "symbol": "_Z18ReadUnalignedShortPh",
       "address": "0x0200e768",
       "size": "0x00000018",
       "legacy_source": "src/ReadUnalignedShort.c",
       "ordinal": 8
     },
     {
-      "symbol": "ReadUnalignedUshort",
+      "symbol": "_Z19ReadUnalignedUshortPh",
       "address": "0x0200e780",
       "size": "0x00000018",
       "legacy_source": "src/ReadUnalignedUshort.c",
       "ordinal": 9
     },
     {
-      "symbol": "EndKuppaScript",
+      "symbol": "_ZN11KuppaScript3EndEv",
       "address": "0x0200e798",
       "size": "0x0000013c",
       "legacy_source": "src/EndKuppaScript.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "ProcessKuppaScript",
+      "symbol": "_ZN11KuppaScript7ProcessEv",
       "address": "0x0200e8d4",
       "size": "0x00000594",
       "legacy_source": "src/ProcessKuppaScript.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "IsDanceRotateCutsceneRunning",
+      "symbol": "_ZN11KuppaScript28IsDanceRotateCutsceneRunningEv",
       "address": "0x0200ee68",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0200/func_0200ee68.c",
       "ordinal": 12
     },
     {
-      "symbol": "StartDanceCutscene",
+      "symbol": "_ZN11KuppaScript18StartDanceCutsceneEi",
       "address": "0x0200ee8c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200ee8c.c",
       "ordinal": 13
     },
     {
-      "symbol": "StartEndingCutscene",
+      "symbol": "_ZN11KuppaScript19StartEndingCutsceneEv",
       "address": "0x0200eec8",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0200/func_0200eec8.c",
       "ordinal": 14
     },
     {
-      "symbol": "StartIntroCutscene",
+      "symbol": "_ZN11KuppaScript18StartIntroCutsceneEv",
       "address": "0x0200eedc",
       "size": "0x00000028",
       "legacy_source": "src/StartIntroCutscene.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "RunKuppaScript",
+      "symbol": "_ZN11KuppaScript3RunEPh",
       "address": "0x0200ef04",
       "size": "0x0000007c",
       "legacy_source": "src/RunKuppaScript.c",
       "ordinal": 16
     },
     {
-      "symbol": "ContinueKuppaScriptIfNecessary",
+      "symbol": "_ZN11KuppaScript19ContinueIfNecessaryEv",
       "address": "0x0200ef80",
       "size": "0x000000cc",
       "legacy_source": "src/ContinueKuppaScriptIfNecessary.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "ResetKuppaScript",
+      "symbol": "_ZN11KuppaScript5ResetEv",
       "address": "0x0200f04c",
       "size": "0x00000070",
       "legacy_source": "src/ResetKuppaScript.c",
@@ -1282,7 +1282,7 @@
       "address": "0x0209b278",
       "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for data_0209b294; retail __sinit_02073e6c passes it as the third argument of its __register_global_object call"
+      "evidence": "compiler-generated destructor-registration node for gKuppaScriptFader; retail __sinit_02073e6c passes it as the third argument of its __register_global_object call"
     },
     {
       "symbol": "gKuppaScriptPlayerIDs",
@@ -1292,7 +1292,7 @@
       "evidence": "actor IDs of the players a script spawned, by character; SpawnScriptPlayer/FindScriptPlayer walk it"
     },
     {
-      "symbol": "data_0209b294",
+      "symbol": "gKuppaScriptFader",
       "address": "0x0209b294",
       "size": "0x10",
       "binding": "STB_GLOBAL",
@@ -1332,7 +1332,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -2295,9 +2295,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@556",
+      "from": "@633",
       "to": "@259",
-      "evidence": "the compiler emits @557, which ov064 already defines as a global, so the pin is the unused @259"
+      "evidence": "the compiler emits @633, which ov002 already defines as a global, so the pin is the unused @259"
     }
   ],
   "relocations": [
@@ -3266,7 +3266,7 @@
       "source": "0x02074d7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209b294",
+      "symbol": "gKuppaScriptFader",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209b294"

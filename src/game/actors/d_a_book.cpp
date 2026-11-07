@@ -139,8 +139,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 #pragma defer_codegen off
 
-// @symbol _ZN8daBook_cD1Ev
-// @symbol _ZN8daBook_cD0Ev
 /* One native destructor definition emits both ROM variants. D1 destroys the
  * class-typed members in reverse declaration order, then dEnemyBase_c; D0 is
  * the same destruction followed by the inherited actor-heap operator delete. */
@@ -148,13 +146,10 @@ daBook_c::~daBook_c()
 {
 }
 
-// @symbol _ZN11daBookGen_cD1Ev
-// @symbol _ZN11daBookGen_cD0Ev
 daBookGen_c::~daBookGen_c()
 {
 }
 
-// @symbol _ZN8daBook_c19func_ov020_021112b0Ev
 /* Points the book at the closest player: mAimYaw and mAimPitch are the angles
  * from the book to the player, mAimRoll a constant quarter turn. */
 void daBook_c::func_ov020_021112b0()
@@ -174,7 +169,6 @@ void daBook_c::func_ov020_021112b0()
     mAimRoll = 0x4000;
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02111340Ev
 /* BOOK_SWITCH, wrong book pushed: fires a SHOOT_BOOK from beside the partner,
  * 250 units to its -x or +x side (one random bit picks it), 65 units up,
  * at the touching player's depth and turned a quarter turn to cross it. */
@@ -216,7 +210,6 @@ void daBook_c::func_ov020_02111340()
     }
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02111418Ev
 /* What a flying book does about whatever func_ov020_021115ac found. Returns 1
  * when the book is gone. The first count handed to daPly_c::Hurt is 0 for a
  * metal player, 2 for KILLER_BOOK and 1 otherwise; touching the player also
@@ -253,7 +246,6 @@ int daBook_c::func_ov020_02111418()
     return 1;
 }
 
-// @symbol _ZN8daBook_c19func_ov020_021115acEv
 /* Reads the collider: who touched the book (dCc_c otherOwner) and how
  * (hitFlags), and returns one of the HIT_ results. Only a player counts, and
  * a vanished player is ignored by SHOOT_BOOK straight away, and by KILLER_BOOK
@@ -326,7 +318,6 @@ int daBook_c::func_ov020_021115ac()
     return HIT_TOUCHED_PLAYER;
 }
 
-// @symbol _ZN8daBook_c19func_ov020_0211174cEv
 /* The BOOK_SWITCH state machine (mState 6..10): the partner arms the puzzle,
  * the book slides into the shelf, waits to be hit, slides out, reports itself
  * to the partner, then follows the partner's verdict. The partner is the
@@ -432,7 +423,6 @@ void daBook_c::func_ov020_0211174c()
     }
 }
 
-// @symbol _ZN8daBook_c19func_ov020_021119dcEv
 /* STATE_YOSHI_SKID: brakes the book to a standstill at 0x800 a frame, with
  * its collider off while mSpitOutTimer counts down, then resumes mSavedState (a
  * book that was in flight goes back to winding up). func_0203568c stores its
@@ -464,7 +454,6 @@ void daBook_c::func_ov020_021119dc()
     UpdatePos(0);
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02111aa8Ev
 /* STATE_SPAWNED: a SHOOT_BOOK's first three frames. It never drops a coin;
  * on the third frame it becomes STATE_FLY at full speed with the collider on. */
 void daBook_c::func_ov020_02111aa8()
@@ -487,7 +476,6 @@ void daBook_c::func_ov020_02111aa8()
     UpdatePos(0);
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02111b28Ev
 /* STATE_FLY: moves by the velocity in mSpeedX/mVertSpeed/mSpeedZ and is gone
  * when it hits the player, the ground, or a wall that faces it (the wall's
  * normal more than a quarter turn from the book's heading). */
@@ -520,7 +508,6 @@ void daBook_c::func_ov020_02111b28() {
     func_0201267c(kSfxImpact, &mCamSpacePos);
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02111c30Ev
 /* STATE_WIND_UP, by frames of mStateTimer after the speed has ramped to 10
  * units: from 5 it re-aims every frame and turns to face the player, from 9
  * it rolls, from 0x13 it swells toward 1.5 times size, growing the collider
@@ -588,7 +575,6 @@ void daBook_c::func_ov020_02111c30()
     }
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02111ee0Ev
 /* STATE_TILT_BACK: tips the book back by 45 degrees, then switches mAnmModel
  * to the animated model, starts its animation, lifts the book 50 units and
  * moves the collider down 25. */
@@ -616,7 +602,6 @@ void daBook_c::func_ov020_02111ee0()
     UpdatePos(0);
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02111fc4Ev
 /* STATE_WAIT (KILLER_BOOK): when the closest player is within 400 units and
  * within 0x3000 (67.5 degrees) of the book's heading, starts tilting back and
  * switches its collider on. */
@@ -646,7 +631,6 @@ void daBook_c::func_ov020_02111fc4()
     func_0201267c(kSfxTakeOff, &mCamSpacePos);
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02112080Ev
 /* The flying books' state machine; mState 6..10 belong to
  * func_ov020_0211174c. */
 void daBook_c::func_ov020_02112080()
@@ -661,7 +645,6 @@ void daBook_c::func_ov020_02112080()
     }
 }
 
-// @symbol _ZN8daBook_c19func_ov020_02112110Ev
 /* The end of a book: drops a blue coin if mCoinType is set, puffs smoke and
  * removes the actor. */
 void daBook_c::func_ov020_02112110() {
@@ -673,7 +656,6 @@ void daBook_c::func_ov020_02112110() {
     MarkForDestruction();
 }
 
-// @symbol _ZN8daBook_c19func_ov020_0211216cEv
 /* Rebuilds the model matrix from the book's rotation and position (model
  * matrices are in eighths of a unit, so position >> 3), in the animated model
  * once it is in use. KILLER_BOOK also places its drop shadow, which sits at
@@ -693,7 +675,6 @@ void daBook_c::func_ov020_0211216c()
     DropShadowRadHeight(mShadowModel, mShadowMat, mScaleX * 0x64, 0x12c000, 0xf);
 }
 
-// @symbol _ZN8daBook_c16CleanupResourcesEv
 int daBook_c::CleanupResources()
 {
     ((SharedFilePtr *)(&data_ov020_02114aa0))->Release();
@@ -704,7 +685,6 @@ int daBook_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11daBookGen_c16CleanupResourcesEv
 int daBookGen_c::CleanupResources()
 {
     ((SharedFilePtr *)&data_ov020_02114aa0)->Release();
@@ -713,7 +693,6 @@ int daBookGen_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN8daBook_c6RenderEv
 int daBook_c::Render()
 {
     /* mFlags bit 0x40000 is one of the Yoshi-mouth states */
@@ -729,7 +708,6 @@ int daBook_c::Render()
     return 1;
 }
 
-// @symbol _ZN8daBook_c8BehaviorEv
 int daBook_c::Behavior()
 {
     func_0200f760(&mdCcAcPos_c);
@@ -762,7 +740,6 @@ int daBook_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11daBookGen_c8BehaviorEv
 /* Once mSpawnTimer exceeds 0x28 (about 41 frames after the last shot), fires
  * a SHOOT_BOOK from its own position, with its mPrevAngle triple as the
  * rotation, at a player who is within 600 units horizontally and within 0x2000
@@ -793,7 +770,6 @@ int daBookGen_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daBook_c13InitResourcesEv
 /* Loads both models and both animations, builds the collision objects, and
  * sets the profile's starting state by actorID. A book starts at half size;
  * mCoinType is nonzero only for the KILLER_BOOK; it is what makes destroying
@@ -882,7 +858,6 @@ success:
     return 1;
 }
 
-// @symbol _ZN11daBookGen_c13InitResourcesEv
 int daBookGen_c::InitResources()
 {
     mSpawnTimer = 0;
@@ -892,7 +867,6 @@ int daBookGen_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN8daBook_c16OnAimedAtWithEggEv
 /* KILLER_BOOK cannot be aimed at with an egg; the others report 0x19000. */
 s32 daBook_c::OnAimedAtWithEgg()
 {
@@ -901,32 +875,27 @@ s32 daBook_c::OnAimedAtWithEgg()
     return 0x19000;
 }
 
-// @symbol _ZN8daBook_c13OnYoshiTryEatEv
 /* KILLER_BOOK answers 2, the others 0. */
 s32 daBook_c::OnYoshiTryEat()
 {
     unsigned int b = actorID==kKillerBookActorId; return b ? 2 : 0;
 }
 
-// @symbol daBook_c_classInit_BOOK_SWITCH
 extern "C" daBook_c *daBook_c_classInit_BOOK_SWITCH()
 {
     return new daBook_c;
 }
 
-// @symbol daBookGen_c_classInit
 extern "C" daBookGen_c *daBookGen_c_classInit()
 {
     return new daBookGen_c;
 }
 
-// @symbol daBook_c_classInit_KILLER_BOOK
 extern "C" daBook_c *daBook_c_classInit_KILLER_BOOK()
 {
     return new daBook_c;
 }
 
-// @symbol daBook_c_classInit_SHOOT_BOOK
 extern "C" daBook_c *daBook_c_classInit_SHOOT_BOOK()
 {
     return new daBook_c;

@@ -30,7 +30,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
 extern "C" {
 
 /* ROM ordinal 7 -- actor-table C ABI factory. */
-// @symbol daWarpkun_c_classInit
 daWarpkun_c *daWarpkun_c_classInit() {
     return new daWarpkun_c();
 }
@@ -40,7 +39,6 @@ daWarpkun_c *daWarpkun_c_classInit() {
    cylinder from the spawn param's low two nibbles. Init's flags are 2
    (dCc_c.h documents only bit 0x1) and vulnFlags 0x400000 (the player bit
    on dCc_c.h's bit-table reading). */
-// @symbol _ZN11daWarpkun_c13InitResourcesEv
 s32 daWarpkun_c::InitResources() {
     /* Two textual loads of param1 (here and in radius) CSE into the ROM's
        single ldr; routing radius through spawnParam swaps the register
@@ -56,7 +54,6 @@ s32 daWarpkun_c::InitResources() {
 
 /* ROM ordinal 5 -- vtable slot 6. `mAngleY == 0' gates the warp; the found
    actor's actorID/mPlayerNo are real daPly_c members once cast. */
-// @symbol _ZN11daWarpkun_c8BehaviorEv
 s32 daWarpkun_c::Behavior() {
     u32 hitId = mdCcAc_c.otherOwner;
     if (hitId != 0) {
@@ -82,17 +79,14 @@ s32 daWarpkun_c::Behavior() {
 }
 
 /* ROM ordinal 4 -- vtable slot 9. */
-// @symbol _ZN11daWarpkun_c6RenderEv
 s32 daWarpkun_c::Render() {
     return 1;
 }
 
 /* ROM ordinal 3 -- vtable slot 12. */
-// @symbol _ZN11daWarpkun_c16OnPendingDestroyEv
 void daWarpkun_c::OnPendingDestroy() {}
 
 /* ROM ordinal 2 -- vtable slot 3. */
-// @symbol _ZN11daWarpkun_c16CleanupResourcesEv
 s32 daWarpkun_c::CleanupResources() {
     return 1;
 }
@@ -100,9 +94,7 @@ s32 daWarpkun_c::CleanupResources() {
 /* ROM ordinal 1 -- the deleting destructor, vtable slot 17. No definition
    here: the inline ~daWarpkun_c() in the header makes the compiler
    synthesize D0 itself, byte-identical to the ROM. */
-// @symbol _ZN11daWarpkun_cD0Ev
 
 /* ROM ordinal 0 -- vtable slot 16. No definition here either: the inline
    destructor in include/daWarpkun_c.h emits D1 (see the header for why that
    placement is load-bearing). */
-// @symbol _ZN11daWarpkun_cD1Ev

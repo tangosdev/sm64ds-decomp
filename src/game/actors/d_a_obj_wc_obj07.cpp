@@ -41,17 +41,14 @@ struct WcObj07CollisionFilePtr : SharedFilePtr {
     ~WcObj07CollisionFilePtr();
 };
 
-// @symbol daObjWc_Obj07_c_classInit
 extern "C" daObjWc_Obj07_c *daObjWc_Obj07_c_classInit() {
     return new daObjWc_Obj07_c();
 }
 
-// @symbol _ZN15daObjWc_Obj07_c13InitResourcesEv
 s32 daObjWc_Obj07_c::InitResources() {
     return InitResourcesFrom(&data_ov029_02113fd4, data_ov029_02113fc4);
 }
 
-// @symbol _ZN15daObjWc_Obj07_c16CleanupResourcesEv
 s32 daObjWc_Obj07_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov029_02113fd4);
 }

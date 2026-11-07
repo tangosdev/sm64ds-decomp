@@ -44,12 +44,10 @@ typedef void (*terminate_handler)();
 
 extern terminate_handler thandler; /* MSL: static, = dthandler */
 
-// @symbol _ZSt9dthandlerv
 void dthandler() {
     abort();
 }
 
-// @symbol _ZSt9terminatev
 void terminate() {
     thandler();
 }

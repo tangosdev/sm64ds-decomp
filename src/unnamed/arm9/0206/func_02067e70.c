@@ -1,6 +1,8 @@
 #include "private/fs_views.h"
 
-extern int FS_ReadFile(void *obj, void *buf, int size);
+typedef struct FSFile FSFile;
+
+extern int FS_ReadFile(FSFile *obj, void *buf, int size);
 extern int func_0205d368(void *obj, int len, int sel);
 
 struct G {

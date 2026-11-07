@@ -17,8 +17,7 @@
  * them has a configured ROM home, so all of them license as deadstrip-data
  * and the seven-function object isolates cleanly. The destructor is declared
  * and defined inline and empty in the class header (see that file for why),
- * so there is deliberately no destructor text in this .cpp for an @symbol
- * marker to sit above.
+ * so there is deliberately no destructor text in this .cpp.
  *
  * The factory is part of this run: daObjFl_UkiKi_c_classInit at 0x02112350
  * abuts the member run with a zero gap on both sides. ov022's previous
@@ -78,7 +77,6 @@ extern s16 data_02082214[];            /* shared sin/cos table, sin at [i*2] */
 /* local extern: d_bg_w.cpp defines it and no header declares it. */
 extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
-// @symbol daObjFl_UkiKi_c_classInit
 /* The registry's allocator for FL_UKI_KI. The implicit default constructor is
    inlined into it at -O4: operator new, dBgActor_c's constructor, the vptr
    store. Historical alias in the rename ledger: LavaPlank_Spawn. */
@@ -86,7 +84,6 @@ extern "C" daObjFl_UkiKi_c *daObjFl_UkiKi_c_classInit() {
     return new daObjFl_UkiKi_c();
 }
 
-// @symbol _ZN15daObjFl_UkiKi_c13InitResourcesEv
 s32 daObjFl_UkiKi_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(FloatingFloorLllBig_ModelFile), 1, -1);
     UpdateModelPosAndRotY();
@@ -105,7 +102,6 @@ s32 daObjFl_UkiKi_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjFl_UkiKi_c8BehaviorEv
 /* Bob 30 units either side of mOriginalPosY, one cycle per 64 frames
  * (mPhaseAngle advances 0x400 of 0x10000 a frame). */
 s32 daObjFl_UkiKi_c::Behavior() {
@@ -120,13 +116,11 @@ s32 daObjFl_UkiKi_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObjFl_UkiKi_c6RenderEv
 s32 daObjFl_UkiKi_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN15daObjFl_UkiKi_c16CleanupResourcesEv
 s32 daObjFl_UkiKi_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();

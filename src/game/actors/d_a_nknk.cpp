@@ -116,7 +116,6 @@ inline struct Matrix4x3 *inline_fn()
 extern int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 }
 
-// @symbol daNknk_c_classInit_NOKONOKO
 extern "C" {
 daNknk_c *daNknk_c_classInit_NOKONOKO()
 {
@@ -124,7 +123,6 @@ daNknk_c *daNknk_c_classInit_NOKONOKO()
 }
 }
 
-// @symbol daNknk_c_classInit_NOKONOKO_S
 extern "C" {
 daNknk_c *daNknk_c_classInit_NOKONOKO_S()
 {
@@ -132,13 +130,11 @@ daNknk_c *daNknk_c_classInit_NOKONOKO_S()
 }
 }
 
-// @symbol _ZN8daNknk_c13OnYoshiTryEatEv
 s32 daNknk_c::OnYoshiTryEat() {
   if(mModelIndex==0) return 6;
   return 5;
 }
 
-// @symbol _ZN8daNknk_c13OnTurnIntoEggER7daPly_c
 /* daNknk_c::OnTurnIntoEgg -- vtable slot 19, verified against ov062 relocs.txt:
  * _ZTV8daNknk_c (0x0211dab4) + 0x4c -> 0x02119628, exactly this placeholder's
  * former address (former name func_ov062_02119628).
@@ -154,7 +150,6 @@ void daNknk_c::OnTurnIntoEgg(daPly_c &player) {
     KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN8daNknk_c16OnAimedAtWithEggEv
 /* daNknk_c::OnAimedAtWithEgg - named from vtable slot identity */
 s32 daNknk_c::OnAimedAtWithEgg() {
     unsigned short v = actorID;
@@ -164,7 +159,6 @@ s32 daNknk_c::OnAimedAtWithEgg() {
     return r;
 }
 
-// @symbol _ZN8daNknk_c13InitResourcesEv
 int daNknk_c::InitResources()
 {
     int i;
@@ -233,7 +227,6 @@ int daNknk_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN8daNknk_c8BehaviorEv
 int daNknk_c::Behavior()
 {
     int state;
@@ -342,7 +335,6 @@ int daNknk_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daNknk_c6RenderEv
 int daNknk_c::Render()
 {
     volatile VecFx32 saved;
@@ -371,14 +363,12 @@ int daNknk_c::Render()
     return 1;
 }
 
-// @symbol _ZN8daNknk_c16OnPendingDestroyEv
 /* fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
 void daNknk_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN8daNknk_c16CleanupResourcesEv
 int daNknk_c::CleanupResources()
 {
   int b = actorID == 0xcc; /* NOKONOKO_S has no second model */
@@ -395,7 +385,6 @@ int daNknk_c::CleanupResources()
   return 1;
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118de8Ev
 void daNknk_c::func_ov062_02118de8()
 {
     mHorzSpeed = 0;
@@ -427,7 +416,6 @@ void daNknk_c::func_ov062_02118de8()
     func_ov062_02118058();
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118cdcEv
 void daNknk_c::func_ov062_02118cdc()
 {
     if (mTurning) {
@@ -450,7 +438,6 @@ void daNknk_c::func_ov062_02118cdc()
     func_ov062_02118058();
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118b4cEv
 void daNknk_c::func_ov062_02118b4c() {
     if (mAnimIndex == 3)
         func_ov062_02117724(2, 5, 8, 0xb);
@@ -484,7 +471,6 @@ void daNknk_c::func_ov062_02118b4c() {
     ApproachLinear(mHorzSpeed, 0x11000, 0x1000);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118a50Ev
 /* The state helpers decrement mTimer and mTurnTimer through a pointer
  * (&mTimer / &mTurnTimer). */
 void daNknk_c::func_ov062_02118a50()
@@ -517,7 +503,6 @@ void daNknk_c::func_ov062_02118a50()
     func_ov062_02117994(2);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118a00Ev
 void daNknk_c::func_ov062_02118a00() {
     int gr = mWithMeshClsn.IsOnGround();
     if (gr == 0) return;
@@ -531,7 +516,6 @@ void daNknk_c::func_ov062_02118a00() {
     func_ov062_021175c0();
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118718Ev
 void daNknk_c::func_ov062_02118718()
 {
     int dist = 0x7fffffff;
@@ -599,7 +583,6 @@ void daNknk_c::func_ov062_02118718()
     mTimer = 0x14;
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118588Ev
 void daNknk_c::func_ov062_02118588()
 {
     dActor_c *found = 0;
@@ -651,7 +634,6 @@ void daNknk_c::func_ov062_02118588()
     func_ov062_02117994(3);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_021183e0Ev
 void daNknk_c::func_ov062_021183e0()
 {
     int dist = 0x7fffffff;
@@ -693,7 +675,6 @@ void daNknk_c::func_ov062_021183e0()
     func_ov062_02118058();
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118334Ev
 void daNknk_c::func_ov062_02118334()
 {
     short *angleY;
@@ -715,7 +696,6 @@ void daNknk_c::func_ov062_02118334()
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118258Ei
 void daNknk_c::func_ov062_02118258(int lim)
 {
     mClosestPlayer = ClosestPlayer();
@@ -738,7 +718,6 @@ void daNknk_c::func_ov062_02118258(int lim)
     }
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_021181a0Ev
 void daNknk_c::func_ov062_021181a0() {
     if (mKoopaVariant == 2) {
         ApproachLinear(mHorzSpeed, 0x2000, 0x4cc);
@@ -755,7 +734,6 @@ void daNknk_c::func_ov062_021181a0() {
     func_ov062_02117994(1);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_0211811cEv
 void daNknk_c::func_ov062_0211811c() {
     if (mTimer != 0) {
         u16 *p = &mTimer;
@@ -771,7 +749,6 @@ void daNknk_c::func_ov062_0211811c() {
     func_ov062_02117994(2);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_021180d4Ev
 void daNknk_c::func_ov062_021180d4() {
     ApproachLinear(mHorzSpeed, 0, 0x1000);
     int done = mAnmModel.Finished();
@@ -780,7 +757,6 @@ void daNknk_c::func_ov062_021180d4() {
     func_ov062_02117994(4);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118058Ev
 void daNknk_c::func_ov062_02118058() {
     daPly_c *o = mClosestPlayer;
     int d = mPlayerDist;
@@ -798,7 +774,6 @@ void daNknk_c::func_ov062_02118058() {
     func_ov062_02117994(3);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02118004Ei
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -813,7 +788,6 @@ void daNknk_c::func_ov062_02118004(int a1) {
     Particle::RunningSlidingDustAt(x, y, z);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117c98Ev
 void daNknk_c::func_ov062_02117c98()
 {
     dActor_c *found;
@@ -949,7 +923,6 @@ tail:
         mAngleY = (u16)(mPrevAngleY + 0x8000);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117bf4Ev
 void daNknk_c::func_ov062_02117bf4(){
     func_0201267c(0xed, &mCamSpacePos);
     mKoopaVariant = 1;
@@ -969,7 +942,6 @@ void daNknk_c::func_ov062_02117bf4(){
     func_0201267c(1, &mCamSpacePos);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117b9cEv
 dActor_c *daNknk_c::func_ov062_02117b9c() {
     dActor_c *found = 0;
     dActor_c *best = 0;
@@ -986,7 +958,6 @@ dActor_c *daNknk_c::func_ov062_02117b9c() {
     return best;
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117b60Ev
 int daNknk_c::func_ov062_02117b60()
 {
     daPly_c *target = mClosestPlayer;
@@ -994,7 +965,6 @@ int daNknk_c::func_ov062_02117b60()
     return Vec3_Dist(&mPos, &target->mPos);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117b48Ev
 void daNknk_c::func_ov062_02117b48()
 {
     mState = 0;
@@ -1002,7 +972,6 @@ void daNknk_c::func_ov062_02117b48()
     mHorzSpeed = 0;
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117accEv
 void daNknk_c::func_ov062_02117acc(){
   switch(mState){
   case 0: func_ov062_02118a00(); break;
@@ -1013,7 +982,6 @@ void daNknk_c::func_ov062_02117acc(){
   }
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117a3cEv
 void daNknk_c::func_ov062_02117a3c()
 {
     switch (mState) {
@@ -1026,7 +994,6 @@ void daNknk_c::func_ov062_02117a3c()
     }
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_021179e4Ev
 void daNknk_c::func_ov062_021179e4() {
     int x = mPosX;
     int z = mPosZ;
@@ -1038,14 +1005,12 @@ void daNknk_c::func_ov062_021179e4() {
     dActor_c::Spawn(0x122, 2, pos, 0, mAreaId, -1);
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117994Ei
 void daNknk_c::func_ov062_02117994(int idx) {
     mAnmModel.SetAnim((BCA_File *)data_ov062_0211cee8[idx]->filePtr, data_ov062_0211cf0c[idx],
                       mAnimSpeed, 0);
     mAnimIndex = (u8)idx;
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117724Ejjjt
 // 6f: keep constant live / flip coloring
 void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4) /* uxth vs a1-a3: ROM compares h<=a4 after a halfword arg */
 {
@@ -1100,7 +1065,6 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
     }
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_021175c0Ev
 void daNknk_c::func_ov062_021175c0()
 {
     volatile Vector3 pos;
@@ -1152,7 +1116,6 @@ void daNknk_c::func_ov062_021175c0()
     }
 }
 
-// @symbol _ZN8daNknk_c19func_ov062_02117570Ev
 /* Standing on a water floor: drop a coin and die. */
 void daNknk_c::func_ov062_02117570() {
     if (!mWithMeshClsn.IsOnGround()) return;

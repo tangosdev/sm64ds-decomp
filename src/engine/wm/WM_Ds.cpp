@@ -49,7 +49,6 @@ u16 *WmGetSharedDataAddress(WMDataSharingInfo *dsInfo, unsigned aidBitmap, u16 *
  * (aid 0) primes the four sets, registers its port receive callback and
  * sends the first set (two in double mode); a child registers its own
  * receive callback and waits. */
-// @symbol WM_StartDataSharing
 int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int dataLength,
                         int doubleMode) {
     u16 childMask = 1;
@@ -161,7 +160,6 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
  * whatever is ready (WmDataSharingSendDataSet). A child arms or hands over
  * the received set and sends its own data to the parent. Returns 0 with a
  * set handed over, 5 when none was ready, 1 on a send error. */
-// @symbol WM_StepDataSharing
 int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSet *receiveData) {
     int result;
     u16 aid;
@@ -288,7 +286,6 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
  * parent records the sent set's sequence number and steps sendIndex; a full
  * send queue (errcode 0xa) backs a child's sendIndex up and asks for a
  * retry (state 2); any other failure is the error state 3. */
-// @symbol WmDataSharingSetDataCallback
 void WmDataSharingSetDataCallback(void *arg) {
     WMPortSendCallback *callback = (WMPortSendCallback *)arg;
     WMArm9Buf *c = WM_GetSystemWork();
@@ -316,7 +313,6 @@ void WmDataSharingSetDataCallback(void *arg) {
  * DISCONNECTED (9) stops waiting for that child in the current set (and the
  * next one in double mode) before sending. A failed receive puts the
  * sharing into state 3, the error state. */
-// @symbol WmDataSharingReceiveCallback_Parent
 void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback) {
     WMDataSharingInfo *dsInfo = (WMDataSharingInfo *)callback->arg;
     if (callback->errcode == 0) {
@@ -354,7 +350,6 @@ void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback) {
  * parent's whole data set into ds[writeIndex], records its sequence number
  * and steps writeIndex; CONNECTED (7) and DISCONNECTED (9) are ignored. A
  * failed receive (errcode != 0) puts the sharing into state 3. */
-// @symbol WmDataSharingReceiveCallback_Child
 void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
     WMArm9Buf *h = WM_GetSystemWork();
     WMDataSharingInfo *r5 = (WMDataSharingInfo *)callback->arg;
@@ -395,7 +390,6 @@ void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
  * (ds[writeIndex], or in double mode the next one), at that member's slot,
  * or zero the slot when there is no data. The bit then moves from the set's
  * aidHeader to its receivedBitmap. */
-// @symbol WmDataSharingReceiveData
 void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *data) {
     u16 mask = (u16)(1 << aid);
     u16 aidBitmap = dsInfo->aidBitmap;
@@ -434,7 +428,6 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
  * parent, and send the full set to the children. excludeParent clears the
  * parent's own bit from the sent header. With no child to send to (7) the
  * set counts as sent; any failure but OPERATING (2) is state 3. */
-// @symbol WmDataSharingSendDataSet
 void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     WMArm9Buf *ctx;
     u32 saved;
@@ -487,7 +480,6 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
 /* NitroSDK WM_GetSharedDataAddress: where member aid's data sits in a
  * received data set, or 0 for a null dsInfo or receiveData or when the set
  * holds nothing from aid (its receivedBitmap bit is clear). */
-// @symbol WM_GetSharedDataAddress
 u16 *WM_GetSharedDataAddress(WMDataSharingInfo *dsInfo, WMDataSet *receiveData, int aid) {
     if (dsInfo == 0)
         return 0;
@@ -501,7 +493,6 @@ u16 *WM_GetSharedDataAddress(WMDataSharingInfo *dsInfo, WMDataSet *receiveData, 
 /* Member aid's slot in a set: receiveBuf, past dataLength bytes for each
  * member below aid in aidBitmap. pret's later SDK counts them with
  * MATH_CountPopulation; this one steps the bits itself. */
-// @symbol WmGetSharedDataAddress
 u16 *WmGetSharedDataAddress(WMDataSharingInfo *dsInfo, unsigned aidBitmap, u16 *receiveBuf,
                             int aid) {
     int i;

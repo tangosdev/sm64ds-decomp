@@ -40,7 +40,6 @@ extern int (*fsi_default_command[])(FSFile *p_file);
 
 void FSi_CutFromList(FSFile *elem);
 
-// @symbol FSi_ReleaseCommand
 void FSi_ReleaseCommand(FSFile *p_file, int ret) {
     FSi_CutFromList(p_file);
     p_file->stat &= ~FS_FILE_STATUS_COMMAND_MASK;
@@ -48,7 +47,6 @@ void FSi_ReleaseCommand(FSFile *p_file, int ret) {
     OS_WakeupThread(&p_file->queue);
 }
 
-// @symbol FSi_TranslateCommand
 int FSi_TranslateCommand(FSFile *p_file, int command) {
     FSArchive *p_arc;
     u32 stat;

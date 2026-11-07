@@ -30,7 +30,6 @@ void string_put_string(printfStr *dest, const char *src, int count);
 
 /* value is an int, not pret's s8: OS_VSNPrintf passes it both a u8 and an
  * s8, and with a char parameter those calls would narrow them first. */
-// @symbol string_put_char
 void string_put_char(printfStr *dest, int value) {
     if (dest->spaceLeft != 0) {
         dest->stringEnd[0] = value;
@@ -42,7 +41,6 @@ void string_put_char(printfStr *dest, int value) {
 
 /* Both fill and put advance stringEnd by the whole count, even past the
  * space left, so OS_VSNPrintf returns the length the output would have. */
-// @symbol string_fill_char
 void string_fill_char(printfStr *dest, s8 value, int count) {
     u32 written;
     u32 toWrite;
@@ -61,7 +59,6 @@ void string_fill_char(printfStr *dest, s8 value, int count) {
     dest->stringEnd += count;
 }
 
-// @symbol string_put_string
 void string_put_string(printfStr *dest, const char *src, int count) {
     u32 written;
     u32 toWrite;
@@ -82,13 +79,11 @@ void string_put_string(printfStr *dest, const char *src, int count) {
 
 /* The variable arguments start on the stack word after format, which is
  * how pret's file spells va_start. */
-// @symbol OS_SPrintf
 int OS_SPrintf(char *buffer, const char *format, ...) {
     void *args = (void *)((u32 *)((u32)&format & ~3) + 1);
     return OS_VSPrintf(buffer, format, args);
 }
 
-// @symbol OS_VSPrintf
 int OS_VSPrintf(char *buffer, const char *format, void *args) {
     return OS_VSNPrintf(buffer, 0x7fffffff, format, args);
 }
@@ -98,7 +93,6 @@ int OS_VSPrintf(char *buffer, const char *format, void *args) {
  * not SDK source: the shard reached the ROM's register use with them. */
 #pragma opt_strength_reduction off
 #pragma opt_lifetimes off
-// @symbol OS_VSNPrintf
 int OS_VSNPrintf(char *buffer, int bufsz, const char *fmt, int *args) {
     int nsave;
     int pf[3];

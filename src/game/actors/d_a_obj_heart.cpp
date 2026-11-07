@@ -47,11 +47,8 @@ extern HeartAnimationFilePtr data_ov002_0210e0fc;
 /* local extern: no shared header declares it. */
 extern "C" int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
 
-// @symbol _ZN12daObjHeart_cD1Ev
-// @symbol _ZN12daObjHeart_cD0Ev
 daObjHeart_c::~daObjHeart_c() {}
 
-// @symbol _ZN12daObjHeart_c17UpdateModelMatrixEv
 void daObjHeart_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
@@ -59,20 +56,17 @@ void daObjHeart_c::UpdateModelMatrix() {
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN12daObjHeart_c16CleanupResourcesEv
 s32 daObjHeart_c::CleanupResources() {
     data_ov002_0210e104.Release();
     data_ov002_0210e0fc.Release();
     return 1;
 }
 
-// @symbol _ZN12daObjHeart_c6RenderEv
 s32 daObjHeart_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN12daObjHeart_c8BehaviorEv
 s32 daObjHeart_c::Behavior() {
     s32 spin = 0x1000;
     DecIfAbove0_Byte(&mHealTimer);
@@ -113,7 +107,6 @@ s32 daObjHeart_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daObjHeart_c13InitResourcesEv
 s32 daObjHeart_c::InitResources() {
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210e104), 1, -1);
     mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov002_0210e0fc), 0, 0x1000, 0);
@@ -123,7 +116,6 @@ s32 daObjHeart_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjHeart_c_classInit
 /* Reconstructed source-style name; historical alias HealingHeart_Spawn. */
 extern "C" daObjHeart_c *daObjHeart_c_classInit(void) {
     return new daObjHeart_c();

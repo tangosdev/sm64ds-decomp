@@ -195,7 +195,6 @@ extern RNkAnimationFileHandle data_ov062_0211e02c;  /* ANIM_JUMP */
 extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
 }
 
-// @symbol daRNk_c_classInit
 extern "C" {
 int *daRNk_c_classInit(void)
 {
@@ -203,7 +202,6 @@ int *daRNk_c_classInit(void)
 }
 }
 
-// @symbol _ZN7daRNk_c13InitResourcesEv
 /* Load the model and animations, set up the collision, read the actor's
    parameters (see the banner) and start at the first path node. Returns 0 if
    the model or shadow cannot be set up. */
@@ -267,7 +265,6 @@ int daRNk_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c16CleanupResourcesEv
 /* Release the eight shared files, and stop the race music if it is playing. */
 int daRNk_c::CleanupResources()
 {
@@ -284,7 +281,6 @@ int daRNk_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c8BehaviorEv
 /* Per frame: run the handler for mState, advance the animation, put the
    steered heading (mPrevAngleY) into mAngleY, move and collide, refresh the
    body cylinder and draw the drop shadow. */
@@ -302,7 +298,6 @@ int daRNk_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c6RenderEv
 /* dExtSimpleModel_c is the real class now, through daRNk_c.h: HideMaterial is its own
    non-virtual and the slot-5 virtual is Render, which dExtAnmModel_c overrides. */
 int daRNk_c::Render()
@@ -312,7 +307,6 @@ int daRNk_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211aac0Ev
 /* Drop shadow: build a matrix from the position (divided by 8, as the shadow
    matrix expects) and heading in the scratch matrix, copy it into the model's matrix,
    and give DropShadowRadHeight a radius and height of 160 units. */
@@ -326,7 +320,6 @@ void daRNk_c::func_ov062_0211aac0(){
     DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a9c4Ev
 /* STATE_WAIT_FOR_PLAYER. Count mStateTimer down first (a declined offer sets
    it to 60 frames). Then look for the closest player; if there is one within
    200 units and daPly_c::StartTalk accepts, find
@@ -372,7 +365,6 @@ void daRNk_c::func_ov062_0211a9c4()
     this->mStep = 0;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a740Ev
 /* STATE_OFFER_RACE. Offer the race after the player finishes talking.
  *   step 0  turn toward the player (0x800 a frame, mAngleY following); once
  *           facing, switch to the talk animation, play the cue, and for Mario
@@ -460,7 +452,6 @@ void daRNk_c::func_ov062_0211a740()
     }
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a1f4Ev
 /* STATE_RACE.
  *   step 0  wait for daPly_c::Unk_020c4f40(0x5a) to report non-zero
  *   step 1  two PlaySub calls (arguments unidentified) bracket a wait for the
@@ -617,7 +608,6 @@ void daRNk_c::func_ov062_0211a1f4()
     }
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a168Ev
 /* STATE_PULL_UP: ease the speed toward 3 units a frame (1 unit a frame
    step); when the current animation is about to hit its last frame, fix the
    speed at 3 units, play ANIM_BRAKE once and go to STATE_STOP. */
@@ -631,7 +621,6 @@ void daRNk_c::func_ov062_0211a168(){
     SET_ANIM(this, ANIM_BRAKE, kAnimPlayOnce);
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a0f0Ev
 /* STATE_STOP: brake to a standstill (4 units a frame step); when the brake
    animation finishes, go back to the idle animation and on to
    STATE_POST_RACE_TALK. */
@@ -646,7 +635,6 @@ void daRNk_c::func_ov062_0211a0f0()
     this->mStateTimer = 0;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119be0Ev
 /* STATE_POST_RACE_TALK: the result talk, and then chatter forever. mStateTimer
  * counts down every frame and holds back step 0.
  *   step 0  once the timer is 0 and the player is within 400 units and agrees
@@ -810,7 +798,6 @@ void daRNk_c::func_ov062_02119be0() {
     }
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119af0Ev
 /* The path follower. Aims mTargetAngleY at mPathTarget (x and z only). Koopa
    has reached the node when he has run past it (the dot product of the vector
    from the previous node to the target with the vector from him to the target
@@ -861,7 +848,6 @@ int daRNk_c::func_ov062_02119af0() {
     return PATH_TRAVELLING;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_021199acEv
 /* React to the closest rolling iron ball, if it is kind 2 (a path follower;
    daIbl_c.h says kinds 2 and 4 follow paths, Koopa reacts to kind 2 only). With the angle from Koopa's heading to the ball (r) and
    the ball's speed along Koopa's heading (fixed1 = ball speed times the cosine
@@ -926,7 +912,6 @@ ret0:
     return BALL_NONE;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119954Ev
 /* Start a jump: ANIM_JUMP, 45 units a frame up, gravity 4 units a frame
    squared (InitResources' is 2), and the in-the-air step of STATE_RACE. */
 void daRNk_c::func_ov062_02119954()
@@ -937,7 +922,6 @@ void daRNk_c::func_ov062_02119954()
     this->mStep = 3;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119800Ev
 /* Footsteps. The run animation's whole-frame number (currFrame >> 12) says
    which foot is down: on frames 2..8 and 19..25 play the footstep sound and
    a dust puff 30 units to one side (opposite sides in the two ranges) and 30

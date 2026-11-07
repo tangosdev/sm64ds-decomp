@@ -108,7 +108,6 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
 
-// @symbol __sinit_d_a_hyuhyu.cpp
 HyuhyuModelFilePtr data_ov091_02135674(ASSET_HYUHYU_BMD);               /* BMD */
 HyuhyuAnimationFileHandle data_ov091_0213567c(ASSET_HYUHYU_ATTACK_BCA); /* BCA: blow */
 HyuhyuAnimationFileHandle data_ov091_02135684(ASSET_HYUHYU_WAIT_BCA);   /* BCA: wait */
@@ -132,29 +131,24 @@ daHyuhyu_c_State data_ov091_021356b0 = {data_ov091_0213534c,
 daHyuhyu_c_State data_ov091_021356c0 = {data_ov091_02135344,
                                         data_ov091_0213533c}; /* gust: flying */
 
-// @symbol daHyuhyu_c_classInit
 /* The dEnemyBase_c C2, the vptr store and the dCcAc_c / dBgCh_Actr /
    dExtAnmModel_c C1s at 0x110 / 0x144 / 0x300 all fall out of the one `new`. */
 extern "C" daHyuhyu_c *daHyuhyu_c_classInit() {
     return new daHyuhyu_c();
 }
 
-// @symbol _ZN10daHyuhyu_c13OnYoshiTryEatEv
 int daHyuhyu_c::OnYoshiTryEat() {
     return 4;
 }
 
-// @symbol _ZN10daHyuhyu_c13OnTurnIntoEggER7daPly_c
 void daHyuhyu_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
-// @symbol _ZN10daHyuhyu_c16OnAimedAtWithEggEv
 int daHyuhyu_c::OnAimedAtWithEgg() {
     return 0x1f000;
 }
 
-// @symbol _ZN10daHyuhyu_c13InitResourcesEv
 int daHyuhyu_c::InitResources() {
     mVariant = param1 & 0xff;
     mTerminalVelocity = -0x1e000;
@@ -180,7 +174,6 @@ int daHyuhyu_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c8BehaviorEv
 int daHyuhyu_c::Behavior() {
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
@@ -226,7 +219,6 @@ int daHyuhyu_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c6RenderEv
 int daHyuhyu_c::Render() {
     if (mVariant == 1)
         return 1;
@@ -236,10 +228,8 @@ int daHyuhyu_c::Render() {
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c16OnPendingDestroyEv
 void daHyuhyu_c::OnPendingDestroy() {}
 
-// @symbol _ZN10daHyuhyu_c16CleanupResourcesEv
 int daHyuhyu_c::CleanupResources() {
     if (mVariant == 1)
         return 1;
@@ -252,7 +242,6 @@ int daHyuhyu_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c20UpdateModelTransformEv
 /* The model matrix: translation at 1/8 scale, then the rotation. */
 void daHyuhyu_c::UpdateModelTransform() {
     Vector3 pos;
@@ -262,7 +251,6 @@ void daHyuhyu_c::UpdateModelTransform() {
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN10daHyuhyu_c8SetStateEP16daHyuhyu_c_State
 /* Enter `state`, running its enter handler if it has one. */
 int daHyuhyu_c::SetState(daHyuhyu_c_State *state) {
     mState = state;
@@ -272,14 +260,12 @@ int daHyuhyu_c::SetState(daHyuhyu_c_State *state) {
     return (this->*cur->enter)();
 }
 
-// @symbol _ZN10daHyuhyu_c13StateWaitInitEv
 /* Cloud, waiting: enter. Loop the wait animation. */
 int daHyuhyu_c::StateWaitInit() {
     mAnmModel.SetAnim((BCA_File *)data_ov091_02135684.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c13StateWaitMainEv
 /* Cloud, waiting: execute. Turn toward the nearest player; blow once the
    cool-down is over, that player is within 1000.0, and the signed bearing
    returned by Vec3_HorzAngle is below 0x1000. */
@@ -303,14 +289,12 @@ int daHyuhyu_c::StateWaitMain() {
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c13StateBlowInitEv
 /* Cloud, blowing: enter. Play the blow animation once. */
 int daHyuhyu_c::StateBlowInit() {
     mAnmModel.SetAnim((BCA_File *)data_ov091_0213567c.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c13StateBlowMainEv
 /* Cloud, blowing: execute. From frame 31 on, stream the gust particles
    and spawn a gust at the nearest player every other frame; when the
    animation ends, cool down for 100 frames and wait again. */
@@ -377,14 +361,12 @@ int daHyuhyu_c::StateBlowMain() {
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c16StateGustFlyInitEv
 /* Gust, flying: enter. Live 40 frames. */
 int daHyuhyu_c::StateGustFlyInit() {
     mStateTimer = 40;
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c16StateGustFlyMainEv
 /* Gust, flying: execute. Climb, fly 30.0 a frame along pitch and heading,
    and go away when the time runs out or the gust touches ground or wall. */
 int daHyuhyu_c::StateGustFlyMain() {
@@ -402,7 +384,6 @@ int daHyuhyu_c::StateGustFlyMain() {
     return 1;
 }
 
-// @symbol _ZN10daHyuhyu_c17HandleCylinderHitEv
 /* What the collision cylinder hit this frame.
    The cloud: fire hurts it, an egg or a metal player pops it, and a mega
    player destroys it for a mega-kill.
@@ -496,7 +477,5 @@ void daHyuhyu_c::HandleCylinderHit() {
     }
 }
 
-// @symbol _ZN10daHyuhyu_cD1Ev
-// @symbol _ZN10daHyuhyu_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */

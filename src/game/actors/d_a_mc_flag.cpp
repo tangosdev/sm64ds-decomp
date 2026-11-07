@@ -37,14 +37,12 @@ extern McFlagAnimResFileHandle data_ov009_02113eb0;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daMcFlag_c_classInit
 extern "C" daMcFlag_c *daMcFlag_c_classInit() {
     return new daMcFlag_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10daMcFlag_c13InitResourcesEv
 s32 daMcFlag_c::InitResources() {
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov009_02113eb8), 1, -1);
     mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov009_02113eb0), 0, 0x1000, 0);
@@ -53,7 +51,6 @@ s32 daMcFlag_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10daMcFlag_c8BehaviorEv
 s32 daMcFlag_c::Behavior() {
     mAnmModel.Advance();
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -65,7 +62,6 @@ s32 daMcFlag_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10daMcFlag_c6RenderEv
 s32 daMcFlag_c::Render() {
     mAnmModel.Render(0);
     return 1;
@@ -73,15 +69,12 @@ s32 daMcFlag_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10daMcFlag_c16CleanupResourcesEv
 s32 daMcFlag_c::CleanupResources() {
     data_ov009_02113eb8.Release();
     data_ov009_02113eb0.Release();
     return 1;
 }
 
-// @symbol _ZN10daMcFlag_cD0Ev
-// @symbol _ZN10daMcFlag_cD1Ev
 
 McFlagModelFileHandle data_ov009_02113eb8(ASSET_MC_FLAG_BMD);
 McFlagAnimResFileHandle data_ov009_02113eb0(ASSET_MC_FLAG_WAIT_BCA);

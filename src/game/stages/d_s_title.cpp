@@ -54,9 +54,7 @@ struct OamTmp {
 
 /* ROM symbols this TU references that no header in the tree declares yet,
  * spelt by their exact final names under C linkage the way decl_common.h
- * spells its own. Kept above the first `// @symbol` marker so none of these
- * mangled spellings is charged to a member
- * (notes/tu-promotion-conventions.md section 6). Everything else these
+ * spells its own. Everything else these
  * functions call comes from decl_common.h or Sound.h and is deliberately
  * NOT repeated here. */
 extern "C" {
@@ -144,7 +142,6 @@ static inline int IsTouchStarted() {
  * to column 0x1d. Called only from func_ov003_020ad6ec. Each tile goes
  * through MultiStore16 from a volatile temporary, five of them; that is the
  * spelling the bytes need. */
-// @symbol func_ov003_020adcbc
 extern "C" void func_ov003_020adcbc(int level, int row, int col) {
     volatile u16 t0, t1, t2, t3, t4;
     int tens = level / 10;
@@ -179,7 +176,6 @@ extern "C" void func_ov003_020adcbc(int level, int row, int col) {
 /* [9] 0x020adc74 -- copies a NUL-terminated string into the BG0 screen map
  * at (row, col), one tile per character. Called only from
  * func_ov003_020ad6ec, for the caption. */
-// @symbol func_ov003_020adc74
 extern "C" void func_ov003_020adc74(signed char *s, int row, int col) {
     short *p = (short *)G2::GetBG0ScrPtr() + (col + (row << 5));
     if (*s == 0)
@@ -199,7 +195,6 @@ extern "C" void func_ov003_020adc74(signed char *s, int row, int col) {
  * new; the inlined ctor runs fBase_c's C2, stores dBase_c then dScene_c's
  * vptrs, ORs pauseFlags 1 and 4 (dScene_c::dScene_c), then stores this
  * class's vptr. The null check is the one `new` itself emits. */
-// @symbol dScTitle_c_classInit
 extern "C" dScTitle_c *dScTitle_c_classInit(void) {
     return new dScTitle_c();
 }
@@ -208,7 +203,6 @@ extern "C" dScTitle_c *dScTitle_c_classInit(void) {
  * for the title screen: banks, graphics mode, BG0 char/palette and the OBJ
  * set, blanks the BG0 screen map, then seeds the scroll window from the
  * cursor and starts the title music. */
-// @symbol _ZN10dScTitle_c13InitResourcesEv
 s32 dScTitle_c::InitResources() {
     UnloadArchives();
     Enable3dEngines();
@@ -248,7 +242,6 @@ s32 dScTitle_c::InitResources() {
 
 /* [6] 0x020ada80 -- vtable slot 3. The title scene owns only its voice
  * group; releasing that is the whole teardown. */
-// @symbol _ZN10dScTitle_c16CleanupResourcesEv
 s32 dScTitle_c::CleanupResources() {
     Sound::UnsetPlayerVoiceGroup();
     return 1;
@@ -259,7 +252,6 @@ s32 dScTitle_c::CleanupResources() {
  * from sTitleLevelEntries; otherwise moves the
  * cursor by row (+0x35) or column (+1) with repeat delay at mRepeatDelay,
  * wrapping the index modulo 0x36. */
-// @symbol _ZN10dScTitle_c8BehaviorEv
 s32 dScTitle_c::Behavior() {
     if (data_0209f5bc->IsAtStart() && ((data_020a0e58[0].pressed & 9) | IsTouchStarted()) != 0) {
         u32 i;
@@ -308,7 +300,6 @@ s32 dScTitle_c::Behavior() {
 
 /* [4] 0x020ad7a4 -- vtable slot 9. Real C++ method over the shared header;
  * this body never touches its own fields. */
-// @symbol _ZN10dScTitle_c6RenderEv
 s32 dScTitle_c::Render() {
     OamTmp tmp;
     OAM::EnableSubOAM(&tmp);
@@ -324,7 +315,6 @@ s32 dScTitle_c::Render() {
 
 /* [3] 0x020ad7a0 -- vtable slot 12. Nothing to unwind; the slot exists only
  * so dScene_c's teardown has something to call. */
-// @symbol _ZN10dScTitle_c16OnPendingDestroyEv
 void dScTitle_c::OnPendingDestroy() {}
 
 /* [2] 0x020ad6ec -- scrolls the level-grid window so the cursor stays on
@@ -336,7 +326,6 @@ void dScTitle_c::OnPendingDestroy() {}
  * RECONCILED: decl_common.h already declares data_0209b2f8 `extern int`, so
  * the legacy `int[]` spelling is dropped in favour of the header's scalar
  * and the `[0]` subscripts became scalar accesses. */
-// @symbol func_ov003_020ad6ec
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov003_020ad6ec(void *) {
     int v = data_0209b2f4;

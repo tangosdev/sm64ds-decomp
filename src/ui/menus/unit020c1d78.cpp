@@ -30,17 +30,14 @@ extern "C" {
 
 extern int data_ov007_02104bec[10];
 
-// @symbol func_ov007_020c1da0
 int func_ov007_020c1da0(int i) {
     return data_ov007_02104bec[i];
 }
 
-// @symbol func_ov007_020c1d8c
 void func_ov007_020c1d8c(int i) {
     data_ov007_02104bec[i] = 1;
 }
 
-// @symbol func_ov007_020c1d78
 void func_ov007_020c1d78(int i) {
     data_ov007_02104bec[i] = 0;
 }

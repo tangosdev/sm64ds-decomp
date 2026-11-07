@@ -59,12 +59,10 @@ extern void func_0201361c(int n);     /* forward: defined at the end of this fil
 extern s8 SublevelToLevel(s8 levelID);
 }
 
-// @symbol func_02013e64
 extern "C" void func_02013e64(void) {
     func_0205a588(&data_0209caa0, 0, 0x32c);
 }
 
-// @symbol _ZN8SaveData16EraseAllSaveDataEv
 u32 SaveData::EraseAllSaveData() {
     u32 rc;
     rc = SaveData::EraseSaveFile(0, (char *)&data_0209caa0.file);
@@ -74,7 +72,6 @@ u32 SaveData::EraseAllSaveData() {
     return rc | SaveData::SaveMinigames(&data_0209caa0.mg);
 }
 
-// @symbol _ZN8SaveData16SetDefaultValuesEP12FileSaveData
 void SaveData::SetDefaultValues(FileSaveData *fsd_) {
     func_0205a588(fsd_, 0, 0x44);
     fsd_->magic8000 = 0x30303038;
@@ -83,7 +80,6 @@ void SaveData::SetDefaultValues(FileSaveData *fsd_) {
     fsd_->controllerMode = 0;
 }
 
-// @symbol _ZN8SaveData12ReadFileDataEjP12FileSaveData
 int SaveData::ReadFileData(u32 fileID, FileSaveData *dest) {
     s32 result = SaveData::ReadDataFromCart((char *)dest, 0x44, fileID);
     if (result) {
@@ -96,7 +92,6 @@ int SaveData::ReadFileData(u32 fileID, FileSaveData *dest) {
     return 1;
 }
 
-// @symbol _ZN8SaveData8SaveFileEjP12FileSaveData
 int SaveData::SaveFile(u32 fileID, FileSaveData *data) {
     data->flags1 |= 1;
     if (SaveData::SaveDataToCart((char *)data, 0x44, fileID) == 0)
@@ -104,7 +99,6 @@ int SaveData::SaveFile(u32 fileID, FileSaveData *data) {
     return 0;
 }
 
-// @symbol _ZN8SaveData13EraseSaveFileEjPc
 int SaveData::EraseSaveFile(u32 fileID, char *saveArea) {
     SaveData::SetDefaultValues((FileSaveData *)saveArea);
     if (SaveData::SaveDataToCart(saveArea, 0x44, fileID) == 0)
@@ -112,7 +106,6 @@ int SaveData::EraseSaveFile(u32 fileID, char *saveArea) {
     return 0;
 }
 
-// @symbol func_02013c84
 extern "C" int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSaveData *dest) {
     CpuCopy8(src, dest, 0x44);
     if (fileIndex < 0) {
@@ -122,13 +115,11 @@ extern "C" int func_02013c84(u8 charID, FileSaveData *src, s32 fileIndex, FileSa
     return SaveData::SaveFile(fileIndex, dest);
 }
 
-// @symbol _ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData
 void SaveData::SetDefaultValuesMg(MinigameSaveData *mg_) {
     func_0205a588(mg_, 0, 0x2e4);
     mg_->magic5000 = 0x30303035;
 }
 
-// @symbol _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData
 int SaveData::ReadMinigameData(MinigameSaveData *dest) {
     s32 result = SaveData::ReadDataFromCart((char *)dest, 0x2e4, 3);
     if (result) {
@@ -140,21 +131,18 @@ int SaveData::ReadMinigameData(MinigameSaveData *dest) {
     return 1;
 }
 
-// @symbol _ZN8SaveData13SaveMinigamesEP16MinigameSaveData
 int SaveData::SaveMinigames(MinigameSaveData *data) {
     if (SaveData::SaveDataToCart((char *)data, 0x2e4, 3) == 0)
         return 1;
     return 0;
 }
 
-// @symbol _ZN8SaveData15SaveCurrentFileEv
 int SaveData::SaveCurrentFile() {
     if (!SaveData::SaveFile(data_0209caa0.activeFile, &data_0209caa0.file))
         return 0;
     return SaveData::SaveMinigames(&data_0209caa0.mg);
 }
 
-// @symbol _ZN8SaveData16CanPlayerHaveCapEv
 int SaveData::CanPlayerHaveCap() {
     if (data_0209caa0.file.mCharacter != 3) {
         int b = (int)(data_0209f2d8 == 1);
@@ -164,21 +152,18 @@ int SaveData::CanPlayerHaveCap() {
     return 0;
 }
 
-// @symbol _ZN8SaveData16HasPlayerLostCapEv
 int SaveData::HasPlayerLostCap() {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
     return data_0209caa0.file.flags1 & (0x1000000u << data_0209caa0.file.mCharacter);
 }
 
-// @symbol _ZN8SaveData13PlayerLoseCapEv
 void SaveData::PlayerLoseCap() {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 |= (0x1000000u << data_0209caa0.file.mCharacter);
 }
 
-// @symbol func_02013a88
 extern "C" void func_02013a88(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
@@ -186,28 +171,24 @@ extern "C" void func_02013a88(void) {
     func_020139b8();
 }
 
-// @symbol func_02013a44
 extern "C" int func_02013a44(void) {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
     return data_0209caa0.file.flags1 & (0x8000000u << data_0209caa0.file.mCharacter);
 }
 
-// @symbol func_02013a00
 extern "C" void func_02013a00(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 |= (0x8000000u << data_0209caa0.file.mCharacter);
 }
 
-// @symbol func_020139b8
 extern "C" void func_020139b8(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 &= ~(0x8000000u << data_0209caa0.file.mCharacter);
 }
 
-// @symbol _ZN8SaveData22NumGlowingRabbitsFoundEv
 int SaveData::NumGlowingRabbitsFound() {
     int count = 0;
     int f = data_0209caa0.file.flags2;
@@ -223,7 +204,6 @@ int SaveData::NumGlowingRabbitsFound() {
 }
 
 /* Sets flags2 bit (0x100000 << rabbit count). At 7 rabbits, also sets flags1 bit 0x80. */
-// @symbol func_02013944
 extern "C" void func_02013944(void) {
     u32 count = SaveData::NumGlowingRabbitsFound();
     data_0209caa0.file.flags2 |= (0x100000u << count);
@@ -231,17 +211,14 @@ extern "C" void func_02013944(void) {
         data_0209caa0.file.flags1 |= 0x80u;
 }
 
-// @symbol _ZN8SaveData19IsCharacterUnlockedEj
 s32 SaveData::IsCharacterUnlocked(u32 character) {
     return data_0209caa0.file.flags2 & (1 << character);
 }
 
-// @symbol _ZN8SaveData17SetCharacterIntroEi
 void SaveData::SetCharacterIntro(s32 character) {
     data_0209caa0.file.flags2 |= 1 << character;
 }
 
-// @symbol func_020138dc
 extern "C" int func_020138dc(void) {
     int count = 0;
     int i;
@@ -253,7 +230,6 @@ extern "C" int func_020138dc(void) {
     return count;
 }
 
-// @symbol func_02013890
 extern "C" int func_02013890(int a, int b) {
     if (b < 0) {
         int f = data_0209caa0.file.minigameRabbits;
@@ -265,47 +241,39 @@ extern "C" int func_02013890(int a, int b) {
     }
 }
 
-// @symbol func_02013868
 extern "C" void func_02013868(int a, int b) {
     int idx = (a << 2) | b;
     data_0209caa0.file.minigameRabbits |= 1 << idx;
     func_0201361c(idx);
 }
 
-// @symbol IsCannonOpen
 extern "C" int IsCannonOpen(int n) {
     return data_0209caa0.file.cannonFlags & (1 << n);
 }
 
-// @symbol OpenCannon
 extern "C" void OpenCannon(int n) {
     data_0209caa0.file.cannonFlags |= 1 << n;
 }
 
-// @symbol IsCannonOpenInLevel
 extern "C" int IsCannonOpenInLevel(s8 levelID) {
     s8 courseID = SublevelToLevel(levelID);
     return IsCannonOpen(courseID);
 }
 
-// @symbol OpenCannonInLevel
 extern "C" void OpenCannonInLevel(s8 levelID) {
     s8 courseID = SublevelToLevel(levelID);
     OpenCannon(courseID);
 }
 
-// @symbol IsStarCollected
 extern "C" int IsStarCollected(s32 courseID, s32 starID) {
     return ((1 << starID) & data_0209cab4[courseID]) & 0xff;
 }
 
-// @symbol CollectStar
 extern "C" void CollectStar(int a, int b) {
     data_0209cab4[a] |= 1 << b;
     data_0209f224 = b;
 }
 
-// @symbol _ZN8SaveData26CountStarsCollectedInLevelEj
 u8 SaveData::CountStarsCollectedInLevel(u32 courseID) {
     u8 count = 0;
     s32 star;
@@ -316,7 +284,6 @@ u8 SaveData::CountStarsCollectedInLevel(u32 courseID) {
     return count;
 }
 
-// @symbol CountStarsCollectedInLevelToDisplay
 extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
     u8 total;
     s32 course;
@@ -331,19 +298,16 @@ extern "C" u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {
     return total;
 }
 
-// @symbol IsStarCollectedInLevel
 extern "C" int IsStarCollectedInLevel(s8 levelID, s32 starID) {
     s8 courseID = SublevelToLevel(levelID);
     return IsStarCollected(courseID, starID);
 }
 
-// @symbol CollectStarInLevel
 extern "C" void CollectStarInLevel(s8 levelID, s32 starID) {
     s8 courseID = SublevelToLevel(levelID);
     CollectStar(courseID, starID);
 }
 
-// @symbol NumStars
 extern "C" u8 NumStars(void) {
     u8 count = 0;
     s8 level = 0;
@@ -357,12 +321,10 @@ extern "C" u8 NumStars(void) {
     return count;
 }
 
-// @symbol _ZN8SaveData13GetCoinRecordEj
 u8 SaveData::GetCoinRecord(u32 courseID) {
     return data_0209cad2[courseID];
 }
 
-// @symbol _ZN8SaveData21SetCoinRecordIfHigherEih
 void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
     if (coins > data_0209cad2[courseID])
         data_0209cad2[courseID] = coins;
@@ -375,17 +337,14 @@ void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
  * one). The record tables at block + 0x54, five words each, are what
  * src/minigames/d_s_mg_base.cpp reads and writes. */
 
-// @symbol func_02013638
 extern "C" int func_02013638(int n) {
     return data_0209caa0.mg.unlocked & (1 << n);
 }
 
-// @symbol func_0201361c
 extern "C" void func_0201361c(int n) {
     data_0209caa0.mg.unlocked |= 1 << n;
 }
 
-// @symbol func_020135d0
 extern "C" int func_020135d0(int n) {
     int res;
     if (n < 0x1c) {
@@ -398,19 +357,16 @@ extern "C" int func_020135d0(int n) {
 
 /* For n < 0x1c the byte store below shifts by a negative count, which on ARM
  * sets no bit; only the word store takes effect. */
-// @symbol func_02013598
 extern "C" void func_02013598(int n) {
     if (n < 0x1c)
         data_0209caa0.mg.seenLo |= 1 << n;
     data_0209caa0.mg.seenHi |= 1 << (n - 0x1c);
 }
 
-// @symbol func_02013580
 extern "C" int func_02013580(int table, int index) {
     return data_0209caf4[table][index];
 }
 
-// @symbol func_02013568
 extern "C" void func_02013568(int table, int index, int value) {
     data_0209caf4[table][index] = value;
 }

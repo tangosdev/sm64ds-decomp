@@ -79,12 +79,10 @@ ResourceDescriptor data_ov047_02112334 = {
 s16 gKm3KaitendaiRotationIncrement = 312;
 s16 gKm3KaitendaiAlternateRotationIncrement = 624;
 
-// @symbol daObjKm3_Kaitendai_c_classInit
 extern "C" daObjKm3_Kaitendai_c *daObjKm3_Kaitendai_c_classInit() {
     return new daObjKm3_Kaitendai_c();
 }
 
-// @symbol g_profile_KM3_KAITENDAI
 extern "C" SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
     daObjKm3_Kaitendai_c_classInit,
     0x009c, /* KM3_KAITENDAI registry id 156 */
@@ -95,7 +93,6 @@ extern "C" SpawnInfo<daObjKm3_Kaitendai_c> g_profile_KM3_KAITENDAI = {
     0x02000000,
     0};
 
-// @symbol _ZN20daObjKm3_Kaitendai_c13InitResourcesEv
 s32 daObjKm3_Kaitendai_c::InitResources() {
     s16 rotationIncrement = gKm3KaitendaiRotationIncrement;
     if ((param1 & 0xff) == 1)
@@ -103,7 +100,6 @@ s32 daObjKm3_Kaitendai_c::InitResources() {
     return InitResourcesFrom(&data_ov047_02112334, rotationIncrement);
 }
 
-// @symbol _ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv
 s32 daObjKm3_Kaitendai_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov047_02112334);
 }

@@ -40,7 +40,6 @@
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
  * `_ZTV8daKpFr_c + 2`. Historical aliases: daKpFr_c_Spawn, FlameChompFire_Spawn. */
-// @symbol daKpFr_c_classInit
 extern "C" daKpFr_c *daKpFr_c_classInit(void)
 {
     return new daKpFr_c();
@@ -62,7 +61,6 @@ extern "C" SpawnInfo<daKpFr_c> g_profile_KERONPA_FIRE = {
     0x01000000
 };
 
-// @symbol _ZN8daKpFr_c13InitResourcesEv
 #include "decl_common.h"
 #include "dBgCh_Actr.h"
 #include "private/mtx43.h"
@@ -86,7 +84,6 @@ int daKpFr_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN8daKpFr_c8BehaviorEv
 int daKpFr_c::Behavior()
 {
     func_ov070_02121fd0();
@@ -94,7 +91,6 @@ int daKpFr_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daKpFr_c6RenderEv
 /* Particle__System.h owns Vector3_16f but does not yet declare this member;
  * retain its typed, exact-spelling ABI import rather than widening that
  * shared header in a class-source lane. */
@@ -109,13 +105,11 @@ int daKpFr_c::Render()
   return 1;
 }
 
-// @symbol _ZN8daKpFr_c16OnPendingDestroyEv
 
 void daKpFr_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN8daKpFr_c16CleanupResourcesEv
 
 int daKpFr_c::CleanupResources()
 {
@@ -130,26 +124,22 @@ extern "C" daKpFrStateMethod data_ov070_021233fc;
 extern "C" daKpFrStateMethod data_ov070_021233f4;
 extern "C" daKpFrStateMethod data_ov070_02123404;
 
-// @symbol _ZN8daKpFr_c19func_ov070_02122044Ei
 void daKpFr_c::func_ov070_02122044(int idx)
 {
     mStateMethods = &data_ov070_021236ec[idx];
     func_ov070_0212200c();
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_0212200cEv
 void daKpFr_c::func_ov070_0212200c() {
     daKpFrStateMethod *method = &mStateMethods->init;
     (this->**method)();
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121fd0Ev
 void daKpFr_c::func_ov070_02121fd0() {
     daKpFrStateMethod *method = &mStateMethods->behavior;
     (this->**method)();
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121fb0Ev
 int daKpFr_c::func_ov070_02121fb0()
 {
     mHorzSpeed = 40960;
@@ -162,7 +152,6 @@ int daKpFr_c::func_ov070_02121fb0()
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 }
-// @symbol _ZN8daKpFr_c19func_ov070_02121f18Ev
 int daKpFr_c::func_ov070_02121f18() {
     daPly_c *player;
     if (DecIfAbove0_Byte(&mStateTimer) == 0)
@@ -182,7 +171,6 @@ int daKpFr_c::func_ov070_02121f18() {
   return 1;
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121ef8Ev
 int daKpFr_c::func_ov070_02121ef8()
 {
     mdCcAc_c.Clear();
@@ -190,7 +178,6 @@ int daKpFr_c::func_ov070_02121ef8()
     return 1;
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121eb0Ev
 int daKpFr_c::func_ov070_02121eb0() {
     int flags = mFlags;
     int isSet = (flags & 0x20000) ? 1 : 0;
@@ -204,7 +191,6 @@ int daKpFr_c::func_ov070_02121eb0() {
 
 /* Fix12-by-value, notes/mwccarm-codegen.md 6az -- header method form homes the
    class args. */
-// @symbol _ZN8daKpFr_c19func_ov070_02121e14Ev
 void daKpFr_c::func_ov070_02121e14() {
   int shadowDepth;
   mMatrix.t.x = mPosX >> 3;
@@ -219,7 +205,6 @@ void daKpFr_c::func_ov070_02121e14() {
   DropShadowRadHeight(mShadowModel, mMatrix, 0x64000, shadowDepth, 0xf);
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121d50EPv
 /* GetFloorResult is not declared in the shared header yet; keep only that
  * proven typed ABI seam. ROM calls the UpdateContinuous veneer, not the
  * method. FX_MUL's 64-bit product is the smull the ROM uses. */
@@ -245,7 +230,6 @@ void daKpFr_c::func_ov070_02121d50(void* vclsn) {
 
 extern "C" void func_02012694(unsigned int id, void *pos);
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121cbcEv
 void daKpFr_c::func_ov070_02121cbc(){
   dActor_c* found;
   daPly_c *player;
@@ -267,7 +251,6 @@ void daKpFr_c::func_ov070_02121cbc(){
   func_ov070_02121c8c();
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121c8cEv
 void daKpFr_c::func_ov070_02121c8c()
 {
     func_02012694(0x166, &mCamSpacePosX);
@@ -275,7 +258,6 @@ void daKpFr_c::func_ov070_02121c8c()
     MarkForDestruction();
 }
 
-// @symbol _ZN8daKpFr_c19func_ov070_02121be4Ev
 void daKpFr_c::func_ov070_02121be4()
 {
     Fix12i pos[3];
@@ -300,19 +282,16 @@ void daKpFr_c::func_ov070_02121be4()
     }
 }
 
-// @symbol _ZN8daKpFr_c13OnYoshiTryEatEv
 
 int daKpFr_c::OnYoshiTryEat()
 {
     return 5;
 }
 
-// @symbol _ZN8daKpFr_cD0Ev
 
 /* No separate body: the inline class destructor plus vtable instantiation
  * makes mwcc emit the retail deleting variant after D1. */
 
-// @symbol _ZN8daKpFr_cD1Ev
 
 /* No separate body: the inline class destructor emits this complete variant
  * first, through the class vtable instantiated in this TU. */

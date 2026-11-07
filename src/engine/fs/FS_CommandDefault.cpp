@@ -114,7 +114,6 @@ static inline int FSi_IsArchiveSync(FSArchive *p_arc) {
 /* Read len bytes of the FAT or FNT at p->pos through the archive's
  * table_func and advance p->pos. A table_func that answers PROC_ASYNC
  * finishes later; sleep on sync_q until it does. */
-// @symbol FSi_ReadTable
 void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len) {
     FSArchive *p_arc = p->arc;
     p_arc->flag |= FS_ARCHIVE_FLAG_IS_SYNC;
@@ -137,7 +136,6 @@ void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len) {
 
 /* Point the directory handle at the start of directory id in its own archive
  * and seek there synchronously. */
-// @symbol FSi_SeekDirDirect
 void FSi_SeekDirDirect(FSFile *p_dir, u32 id) {
     p_dir->stat |= FS_FILE_STATUS_SYNC;
     p_dir->arg.seekdir.pos.arc = p_dir->arc;
@@ -148,7 +146,6 @@ void FSi_SeekDirDirect(FSFile *p_dir, u32 id) {
 }
 
 /* Compare len characters, ignoring the case of A-Z. */
-// @symbol FSi_StrNICmp
 int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len) {
     int i;
     for (i = 0; i < len; i++) {
@@ -164,7 +161,6 @@ int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len) {
     return 0;
 }
 
-// @symbol FSi_ReadFileCommand
 void FSi_ReadFileCommand(FSFile *p_file) {
     FSArchive *p_arc = p_file->arc;
     u32 len = p_file->arg.readfile.len;
@@ -174,7 +170,6 @@ void FSi_ReadFileCommand(FSFile *p_file) {
     p_arc->read_func(p_arc, dst, pos, len);
 }
 
-// @symbol FSi_WriteFileCommand
 void FSi_WriteFileCommand(FSFile *p_file) {
     FSArchive *p_arc = p_file->arc;
     u32 len = p_file->arg.writefile.len;
@@ -187,7 +182,6 @@ void FSi_WriteFileCommand(FSFile *p_file) {
 /* Read the directory's FNT entry, copy arg.seekdir.pos to prop.dir.pos and,
  * when it names the directory's start (index and pos both 0), point it at the
  * first child instead. */
-// @symbol FSi_SeekDirCommand
 int FSi_SeekDirCommand(FSFile *p_dir) {
     FSArchive *p_arc = p_dir->arc;
     FSDirPos *arg = &p_dir->arg.seekdir.pos;
@@ -218,7 +212,6 @@ typedef struct FSiDirEntryHead {
 /* Read the open directory's next FNT entry into arg.readdir.p_entry. A
  * directory entry is followed by its id, of which the low 12 bits are kept;
  * a file entry takes the next file id. */
-// @symbol FSi_ReadDirCommand
 int FSi_ReadDirCommand(FSFile *p_dir) {
     FSDirEntry *p_entry = p_dir->arg.readdir.p_entry;
     FSiDirEntryHead head;
@@ -273,7 +266,6 @@ static inline int FSi_IsNameChar(int c) {
  * name (case-insensitive). A directory is entered; the final match is stored
  * through arg.findpath.result, as a file id or, with find_directory, as a
  * directory position. */
-// @symbol FSi_FindPathCommand
 int FSi_FindPathCommand(FSFile *p_dir) {
     int find_dir = p_dir->arg.findpath.find_directory;
     /* Read unsigned, as the SDK's MI_ReadByte reads it: the build uses -char signed. */
@@ -355,7 +347,6 @@ int FSi_FindPathCommand(FSFile *p_dir) {
  * entries until one names the file. The total length and directory id are
  * cached in arg.getpath, so a caller can ask for the length first (buf 0)
  * and then call again with a buffer. */
-// @symbol FSi_GetPathCommand
 int FSi_GetPathCommand(FSFile *p_file) {
     FSArchive *p_arc;
     FSDirEntry entry;
@@ -529,7 +520,6 @@ int FSi_GetPathCommand(FSFile *p_file) {
 }
 
 /* Look file_id up in the FAT and open its image range directly. */
-// @symbol FSi_OpenFileFastCommand
 int FSi_OpenFileFastCommand(FSFile *p_file) {
     FSArchive *p_arc = p_file->arc;
     u32 index = p_file->arg.openfilefast.id.file_id;
@@ -546,7 +536,6 @@ int FSi_OpenFileFastCommand(FSFile *p_file) {
     return FSi_TranslateCommand(p_file, FS_COMMAND_OPENFILEDIRECT);
 }
 
-// @symbol FSi_OpenFileDirectCommand
 int FSi_OpenFileDirectCommand(FSFile *p_file) {
     p_file->prop.file.top = p_file->arg.openfiledirect.top;
     p_file->prop.file.pos = p_file->arg.openfiledirect.top;
@@ -555,7 +544,6 @@ int FSi_OpenFileDirectCommand(FSFile *p_file) {
     return FS_RESULT_SUCCESS;
 }
 
-// @symbol FSi_CloseFileCommand
 int FSi_CloseFileCommand(FSFile *p_file) {
     return FS_RESULT_SUCCESS;
 }

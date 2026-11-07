@@ -114,14 +114,11 @@ extern ButterflyState data_ov100_02148628[];
 typedef void BgchInitAt_(void *w, void *actor, int radius, int height, void *a, void *b);
 }
 
-// @symbol _ZN9daBtfly_cD1Ev
-// @symbol _ZN9daBtfly_cD0Ev
 /* One ~daBtfly_c() emits both D1 and D0. */
 daBtfly_c::~daBtfly_c()
 {
 }
 
-// @symbol _ZN9daBtfly_c6State7Ev
 void daBtfly_c::State7()
 {
     char *c = (char *)this; /* unused, but removing it renumbers the @NNN labels */
@@ -199,7 +196,6 @@ cylinder_only:
     mdCcAcPos_c.Update();
 }
 
-// @symbol _ZN9daBtfly_c6State6Ev
 void daBtfly_c::State6()
 {
     if (mStateTimer == 0x14) {
@@ -223,7 +219,6 @@ void daBtfly_c::State6()
     mState = 7;
 }
 
-// @symbol _ZN9daBtfly_c6State5Ev
 void daBtfly_c::State5()
 {
     s16 hAngle;
@@ -264,7 +259,6 @@ void daBtfly_c::State5()
         (s16)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) % 800) + 0x190));
 }
 
-// @symbol _ZN9daBtfly_c6State4Ev
 void daBtfly_c::State4()
 {
     int typ = param1 & 0xff;
@@ -316,7 +310,6 @@ void daBtfly_c::State4()
     mState = 5;
 }
 
-// @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
     ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX), 0x800);
@@ -345,7 +338,6 @@ void daBtfly_c::State3()
     mState = 1;
 }
 
-// @symbol _ZN9daBtfly_c6State2Ev
 void daBtfly_c::State2()
 {
     daPly_c *player;
@@ -399,7 +391,6 @@ void daBtfly_c::State2()
 }
 
 
-// @symbol _ZN9daBtfly_c6State1Ev
 void daBtfly_c::State1()
 {
     if (IsPlayerInRange(0x3e8) == 0)
@@ -409,7 +400,6 @@ void daBtfly_c::State1()
     mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos);
 }
 
-// @symbol _ZN9daBtfly_c6State0Ev
 void daBtfly_c::State0()
 {
     struct AngleTriple { u16 w[3]; };
@@ -438,7 +428,6 @@ void daBtfly_c::State0()
     mState = 1;
 }
 
-// @symbol _ZN9daBtfly_c16CleanupResourcesEv
 int daBtfly_c::CleanupResources()
 {
     gButterflyModelFile.Release();
@@ -448,12 +437,10 @@ int daBtfly_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daBtfly_c16OnPendingDestroyEv
 void daBtfly_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daBtfly_c6RenderEv
 int daBtfly_c::Render()
 {
     if (mState == 4)
@@ -465,7 +452,6 @@ int daBtfly_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daBtfly_c8BehaviorEv
 int daBtfly_c::Behavior()
 {
     (this->*data_ov100_02148628[mState])();
@@ -511,7 +497,6 @@ int daBtfly_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daBtfly_c13InitResourcesEv
 int daBtfly_c::InitResources()
 {
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
@@ -568,7 +553,6 @@ int daBtfly_c::InitResources()
     return 1;
 }
 
-// @symbol daBtfly_c_classInit
 extern "C" daBtfly_c *daBtfly_c_classInit()
 {
     return new daBtfly_c();

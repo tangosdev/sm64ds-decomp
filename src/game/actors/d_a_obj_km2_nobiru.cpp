@@ -45,11 +45,8 @@ struct NobiruClsnFileHandle : SharedFilePtr {
 extern NobiruClsnFileHandle PoleLift_ClsnFile;
 extern NobiruModelFileHandle PoleLift_ModelFile;
 
-// @symbol _ZN17daObjKm2_Nobiru_cD1Ev
-// @symbol _ZN17daObjKm2_Nobiru_cD0Ev
 daObjKm2_Nobiru_c::~daObjKm2_Nobiru_c() {}
 
-// @symbol _ZN17daObjKm2_Nobiru_c23UpdateColliderTransformEv
 void daObjKm2_Nobiru_c::UpdateColliderTransform() {
     Matrix4x3_FromRotationY(&mColliderTransform, mAngleY);
     mColliderTransform.m[9] = mPosX;
@@ -57,7 +54,6 @@ void daObjKm2_Nobiru_c::UpdateColliderTransform() {
     mColliderTransform.m[11] = mPosZ;
 }
 
-// @symbol _ZN17daObjKm2_Nobiru_c20UpdateModelTransformEv
 void daObjKm2_Nobiru_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -65,7 +61,6 @@ void daObjKm2_Nobiru_c::UpdateModelTransform() {
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN17daObjKm2_Nobiru_c16CleanupResourcesEv
 int daObjKm2_Nobiru_c::CleanupResources() {
     mCollider.Disable();
     PoleLift_ModelFile.Release();
@@ -73,10 +68,8 @@ int daObjKm2_Nobiru_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN17daObjKm2_Nobiru_c16OnPendingDestroyEv
 void daObjKm2_Nobiru_c::OnPendingDestroy() {}
 
-// @symbol _ZN17daObjKm2_Nobiru_c6RenderEv
 int daObjKm2_Nobiru_c::Render() {
     Vector3 scale;
     scale.x = 0x1000;
@@ -88,7 +81,6 @@ int daObjKm2_Nobiru_c::Render() {
     return 1;
 }
 
-// @symbol _ZN17daObjKm2_Nobiru_c8BehaviorEv
 int daObjKm2_Nobiru_c::Behavior() {
     /* The scale is read through GetScaleY, because the direct
      * mCollider.scaleY load makes Behavior differ. */
@@ -105,7 +97,6 @@ int daObjKm2_Nobiru_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN17daObjKm2_Nobiru_c13InitResourcesEv
 int daObjKm2_Nobiru_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(PoleLift_ModelFile), 1, -1);
     UpdateModelTransform();
@@ -126,7 +117,6 @@ int daObjKm2_Nobiru_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the KM2_NOBIRU registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: ExtendingPlatform_Spawn. */
-// @symbol daObjKm2_Nobiru_c_classInit
 extern "C" daObjKm2_Nobiru_c *daObjKm2_Nobiru_c_classInit() {
     return new daObjKm2_Nobiru_c();
 }

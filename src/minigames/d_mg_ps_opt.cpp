@@ -124,10 +124,8 @@ extern short sPsOptIconPosAY[];
 extern short sPsOptIconPosBY[];
 extern short sPsOptStylePosY[];
 
-// @symbol _ZN10dMgPsOpt_c11TouchIcon_cC1Ev
 dMgPsOpt_c::TouchIcon_c::TouchIcon_c() {}
 
-// @symbol _ZN10dMgPsOpt_cC1Ev
 dMgPsOpt_c::dMgPsOpt_c() {
     PsOpt_PlaceIcon(&mIcons[kIconSoundMode], kStyleSoundMode, GetSoundMode(), 0xac, 0x38);
     PsOpt_PlaceIcon(&mIcons[kIconSoundPrev], kStyleSoundPrev, 0, 0x64, 0x38);
@@ -146,13 +144,10 @@ dMgPsOpt_c::dMgPsOpt_c() {
     mActive = kPanelShut;
 }
 
-// @symbol _ZN10dMgPsOpt_cD1Ev
 dMgPsOpt_c::~dMgPsOpt_c() {}
 
-// @symbol _ZN10dMgPsOpt_c11TouchIcon_cD1Ev
 dMgPsOpt_c::TouchIcon_c::~TouchIcon_c() {}
 
-// @symbol _ZN10dMgPsOpt_c4OpenEv
 /* Open. Lights the current sound and backlight choices and sets sub BG
    value 2. Called from the pause menu (Mg_UpdateMenu). */
 void dMgPsOpt_c::Open() {
@@ -171,7 +166,6 @@ void dMgPsOpt_c::Open() {
     mActive = kPanelOpen;
 }
 
-// @symbol _ZN10dMgPsOpt_c5CloseEv
 /* Shut. Clears sub BG value 2. The close delay calls this, and so does
    dScMgBase_c::CloseMenu. */
 void dMgPsOpt_c::Close() {
@@ -181,7 +175,6 @@ void dMgPsOpt_c::Close() {
     mActive = kPanelShut;
 }
 
-// @symbol _ZN10dMgPsOpt_c6UpdateEv
 /* One frame of input. Returns mActive; the pause menu
    (Mg_UpdateMenu) yields the frame while that is nonzero. */
 u8 dMgPsOpt_c::Update() {
@@ -288,7 +281,6 @@ u8 dMgPsOpt_c::Update() {
     return mActive;
 }
 
-// @symbol _ZN10dMgPsOpt_c4DrawEv
 /* Draw every live icon. Returns 1 while the panel is up, which makes
    Mg_DrawMenu skip the rest of the touch-screen UI. */
 int dMgPsOpt_c::Draw() {
@@ -304,7 +296,6 @@ int dMgPsOpt_c::Draw() {
     return 1;
 }
 
-// @symbol _ZN10dMgPsOpt_c6IsIdleEv
 /* 1 when no live icon is still counting down a press. BeforeBehavior uses
    that as the gate before CloseMenu closes the panel. */
 int dMgPsOpt_c::IsIdle() {
@@ -320,7 +311,6 @@ int dMgPsOpt_c::IsIdle() {
     return 1;
 }
 
-// @symbol PsOpt_PlaceIcon
 /* Place one icon. Styles below the back button are an edge-triggered hit
    (kind 2); the back button is a held hit (kind 1). TouchArea_Update is
    what reads that kind. The two captions take their half extents from the
@@ -350,7 +340,6 @@ extern "C" void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int va
     }
 }
 
-// @symbol _ZN10dMgPsOpt_c11TouchIcon_c6RenderEv
 /* Styles 2 and 3 draw an OAM arrow and nudge it two pixels while held.
    Styles 0, 1 and 6 repaint BG1 screen entries: style 0 first stamps a
    fresh 13-wide run for the current sound mode, then all three of them

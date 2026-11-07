@@ -28,6 +28,7 @@
 #include "daObjGuragura_c.h"
 #include "SharedFilePtr.h"
 #include "math/CalcLib.h"
+#include "math/Quaternion.h"
 
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
@@ -42,9 +43,9 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Quaternion_FromVector3(int *q, Vector3 *from, Vector3 *to);
 void Quaternion_Normalize(int *q);
 void Quaternion_SLerp(int *q0, int *q1, int t, int *out);
-void Matrix4x3_FromQuaternion(void *q, Matrix4x3 *m);
+void Matrix4x3_FromQuaternion(const Quaternion *q, Matrix4x3 *m);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void func_020393c4(dBgW_KcMbg *clsn, void *fn);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -54,8 +55,6 @@ static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
 
-// @symbol _ZN15daObjGuragura_cD0Ev
-// @symbol _ZN15daObjGuragura_cD1Ev
 /* ROM ordinals 0 and 1 -- ov002 0x020b5fd8 (D0, 0x58) and 0x020b6030 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
  * inline body in include/daObjGuragura_c.h, which the class's descendants need
@@ -82,11 +81,10 @@ void daObjGuragura_c_EmitDestructor(daObjGuragura_c *p) {
 /* ROM ordinal 2 -- 0x020b6074, size 0x88.
  * Per-frame tilt: live quaternion to a matrix, offset by position >> 3,
  * apply mAngleY, publish as the model matrix. */
-// @symbol _ZN15daObjGuragura_c17UpdateModelMatrixEv
 void daObjGuragura_c::UpdateModelMatrix() {
     Matrix4x3 q;
     Vector3 v;
-    Matrix4x3_FromQuaternion(mTilt, &q);
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mTilt), &q);
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     MulMat4x3Mat4x3(&q, &data_020a0e68, &data_020a0e68);
@@ -97,7 +95,6 @@ void daObjGuragura_c::UpdateModelMatrix() {
 /* ROM ordinal 3 -- 0x020b60fc, size 0x48.
  * Teardown half both leaves call: disable the mesh if live, then release
  * the leaf's two SharedFilePtrs. */
-// @symbol _ZN15daObjGuragura_c20CleanupResourcesFromEP18ResourceDescriptor
 s32 daObjGuragura_c::CleanupResourcesFrom(ResourceDescriptor *descriptor) {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -107,14 +104,12 @@ s32 daObjGuragura_c::CleanupResourcesFrom(ResourceDescriptor *descriptor) {
 }
 
 /* ROM ordinal 4 -- vtable slot 9, ov002 0x020b6144. Key function. */
-// @symbol _ZN15daObjGuragura_c6RenderEv
 s32 daObjGuragura_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 /* ROM ordinal 5 -- vtable slot 6, ov002 0x020b616c. */
-// @symbol _ZN15daObjGuragura_c8BehaviorEv
 s32 daObjGuragura_c::Behavior() {
     if (IsOffScreen(this)) {
         if (mMeshCollider.IsEnabled()) {
@@ -141,14 +136,13 @@ s32 daObjGuragura_c::Behavior() {
  * Shared resource setup both leaves call. Slot 0 is dExtSimpleModel_c::LoadFile, slot 1
  * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then install
  * StoodOnCallback as the collider callback. */
-// @symbol _ZN15daObjGuragura_c17InitResourcesFromEP18ResourceDescriptor
 s32 daObjGuragura_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
                           mAngleY, *descriptor->clps);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
     return 1;
 }
 
@@ -157,7 +151,6 @@ s32 daObjGuragura_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
  * scratch matrix, double the toucher's vertical component in slab space,
  * and make mTiltTarget the rotation that carries +Y onto it. Arms
  * mSettleDelay with 10 frames. */
-// @symbol _ZN15daObjGuragura_c10TiltTowardEPh
 void daObjGuragura_c::TiltToward(unsigned char *arg) {
     Vector3 v;
     Vector3 axis;
@@ -178,7 +171,6 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
  * dBgW callback InitResourcesFrom installs: drops the collider and forwards
  * the other two into TiltToward. long_calls is the ROM's pooled absolute
  * tail-call. */
-// @symbol _ZN15daObjGuragura_c15StoodOnCallbackEPvPS_Ph
 #pragma long_calls on
 void daObjGuragura_c::StoodOnCallback(void *collider, daObjGuragura_c *self, unsigned char *arg) {
     self->TiltToward(arg);

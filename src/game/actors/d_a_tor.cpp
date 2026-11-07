@@ -68,18 +68,14 @@ struct TorAnimationFileHandle : SharedFilePtr {
  * InitResources feeds the model to dExtSimpleModel_c::LoadFile and the animation to
  * dExtFrameCtrl_c::LoadFile.
  * ------------------------------------------------------------------------ */
-// @symbol __sinit_d_a_tor.cpp
 TorModelFilePtr   gSandTornadoModelFile(ASSET_SAND_TORNADO_BMD);   /* model */
 TorAnimationFileHandle gSandTornadoAnimationFile(ASSET_SAND_TORNADO_BCA);   /* anim  */
 
 
-// @symbol _ZN7daTor_cD1Ev
-// @symbol _ZN7daTor_cD0Ev
 daTor_c::~daTor_c()
 {
 }
 
-// @symbol _ZN7daTor_c10UpdateSpinEi
 void daTor_c::UpdateSpin(s32 scale)
 {
     u16 idx = (u16)mSpinPhase;
@@ -106,7 +102,6 @@ void daTor_c::UpdateSpin(s32 scale)
     mScaleZ <<= 1;
 }
 
-// @symbol _ZN7daTor_c6State2Ev
 void daTor_c::State2()
 {
     s32 scale = (0x3c - mStateTimer) << 12;
@@ -129,7 +124,6 @@ void daTor_c::State2()
     mState = 0;
 }
 
-// @symbol _ZN7daTor_c6State1Ev
 void daTor_c::State1()
 {
     Vector3 playerPos;
@@ -192,7 +186,6 @@ cont:
     mParticleHandle1 = Particle::System::New(mParticleHandle1, 0x120, mPosX, mPosY, mPosZ, 0, 0);
 }
 
-// @symbol _ZN7daTor_c6State0Ev
 void daTor_c::State0()
 {
     if (mChaseTimer >= 0x384) {
@@ -221,7 +214,6 @@ void daTor_c::State0()
     }
 }
 
-// @symbol _ZN7daTor_c16CleanupResourcesEv
 int daTor_c::CleanupResources()
 {
     gSandTornadoModelFile.Release();
@@ -229,7 +221,6 @@ int daTor_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daTor_c6RenderEv
 int daTor_c::Render()
 {
     mTextureTransformer.Update(mAnmModel.data);
@@ -237,7 +228,6 @@ int daTor_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daTor_c8BehaviorEv
 int daTor_c::Behavior()
 {
     int s = mState;
@@ -272,7 +262,6 @@ int daTor_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daTor_c13InitResourcesEv
 int daTor_c::InitResources()
 {
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gSandTornadoModelFile), 1, 0x15);
@@ -305,7 +294,6 @@ int daTor_c::InitResources()
     return 1;
 }
 
-// @symbol daTor_c_classInit
 extern "C" daTor_c *daTor_c_classInit()
 {
     return new daTor_c();

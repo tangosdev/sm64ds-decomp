@@ -122,7 +122,6 @@ int fdiv(s32, s32);
 }
 
 // ---- dMgTrmpln2Mario_c::GetVelocity
-// @symbol _ZN17dMgTrmpln2Mario_c11GetVelocityEv
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
     return &mVel;
 }
@@ -133,7 +132,6 @@ extern "C" int pmf_Trmp2Mario_StateHidden_4[2];
 }
 
 /* Neither missed nor hidden: the drawn line only bounces a Mario in play. */
-// @symbol _ZN17dMgTrmpln2Mario_c8IsActiveEv
 int dMgTrmpln2Mario_c::IsActive() {
     using namespace ns_020c8ddc;
     int *p;
@@ -171,12 +169,10 @@ after1:
     return result;
 }
 // ---- dMgTrmpln2Mario_c::GetPrevPos
-// @symbol _ZN17dMgTrmpln2Mario_c10GetPrevPosEv
 Vector3 *dMgTrmpln2Mario_c::GetPrevPos() {
     return &mPrevPos;
 }
 // ---- dMgTrmpln2Mario_c::GetPos
-// @symbol _ZN17dMgTrmpln2Mario_c6GetPosEv
 Vector3 *dMgTrmpln2Mario_c::GetPos() {
     return &mPos;
 }
@@ -184,7 +180,6 @@ Vector3 *dMgTrmpln2Mario_c::GetPos() {
 namespace ns_020c8e90 {
 extern "C" {
 extern int sTrmp2MarioScale[];
-// @symbol Trmp2Mario_Render
 void Trmp2Mario_Render(char *self) {
     if (MARIO2(self)->mVisible == 0)
         return;
@@ -201,7 +196,6 @@ extern "C" {
 extern struct Matrix4x3 data_020a0e68;
 void Matrix4x3_FromTranslation(struct Matrix4x3 *mF, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, short angY);
-// @symbol Trmp2Mario_UpdateMatrix
 void Trmp2Mario_UpdateMatrix(char *self) {
     Matrix4x3_FromTranslation(&data_020a0e68, MARIO2(self)->mPos.x, MARIO2(self)->mPos.y,
                               MARIO2(self)->mPos.z);
@@ -224,7 +218,6 @@ struct Closure {
     int adj;
 };
 
-// @symbol Trmp2Mario_Update
 extern "C" void Trmp2Mario_Update(char *o) {
     MARIO2(o)->mPrevPos.x = MARIO2(o)->mPos.x;
     MARIO2(o)->mPrevPos.y = MARIO2(o)->mPos.y;
@@ -257,7 +250,6 @@ namespace ns_020c9024 {
 extern "C" {
 extern int sTrmp2FallSpeed[];
 void AddVec3(void *dst, void *a, void *b);
-// @symbol Trmp2Mario_ApplyGravity
 void Trmp2Mario_ApplyGravity(char *o) {
     ApproachLinear(MARIO2(o)->mVel.y, sTrmp2FallSpeed[0], MARIO2(o)->mGravityStep);
     AddVec3(&MARIO2(o)->mPos, &MARIO2(o)->mVel, &MARIO2(o)->mPos);
@@ -268,7 +260,6 @@ void Trmp2Mario_ApplyGravity(char *o) {
 namespace ns_020c905c {
 extern "C" {
 extern void Trmp2Mario_EnterHidden(char *o);
-// @symbol Trmp2Mario_StateKnockedOut
 void Trmp2Mario_StateKnockedOut(char *o) {
     if (MARIO2(o)->mPos.y >= -0x120000)
         return;
@@ -288,7 +279,6 @@ extern void Trmp2Mario_EnterHidden(char *c);
 extern int D3D_PlaySeAtX(int a, int b);
 }
 
-// @symbol Trmp2Mario_EnterByKind
 extern "C" void Trmp2Mario_EnterByKind(char *c) {
     int *p;
     int *d;
@@ -343,7 +333,6 @@ extern "C" int sTrmpSpeedScale;
 extern "C" int sTrmp2RiseSpeedMax;
 extern "C" int sTrmp2FallSpeed;
 
-// @symbol Trmp2Mario_StateBounce
 extern "C" void Trmp2Mario_StateBounce(char *c) {
     int v24;
 
@@ -481,7 +470,6 @@ extern "C" int sTrmp2GravityStep;
 extern "C" int pmf_Trmp2Mario_StateAppearWait_2[2];
 extern "C" int pmf_Trmp2Mario_StateBounce_2[2];
 
-// @symbol Trmp2Mario_BounceOffLineA
 extern "C" void Trmp2Mario_BounceOffLineA(char *c) {
     Vector3 tmp, tmp2, tmp3;
     int alongLine, lineHalfLength, dot, scale, fdivr, v, fx, cur;
@@ -578,7 +566,6 @@ extern "C" int sTrmpSpeedScale;
 extern "C" int sTrmp2RiseSpeedMax;
 extern "C" int sTrmp2FallSpeed;
 
-// @symbol Trmp2Mario_StateWallBounce
 extern "C" void Trmp2Mario_StateWallBounce(char *c) {
     int v24;
 
@@ -702,7 +689,6 @@ void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp2Mario_StateWallBounce(char *c);
 }
 
-// @symbol Trmp2Mario_BounceOffLineB
 extern "C" void Trmp2Mario_BounceOffLineB(char *c) {
     Vector3 tmp;
     Vector3 tmp2;
@@ -790,7 +776,6 @@ extern int D3D_PlaySeAtX(int a, int b);
 extern void Trmp2Mario_StateBounce(char *c);
 }
 
-// @symbol Trmp2Mario_EnterBounce
 extern "C" void Trmp2Mario_EnterBounce(char *c) {
     dMgTrmpObjAdapter_c *callbacks = (dMgTrmpObjAdapter_c *)c;
     int a, b;
@@ -820,7 +805,6 @@ extern int RandomIntInternal(int *seed);
 extern void Trmp2Mario_EnterFall(void *c);
 extern int sTrmp2DriftScale;
 
-// @symbol Trmp2Mario_StateRespawnWait
 void Trmp2Mario_StateRespawnWait(char *c) {
     unsigned int r;
     int tbl;
@@ -854,7 +838,6 @@ struct Vec2i {
     int y;
 };
 extern struct Vec2i pmf_Trmp2Mario_StateRespawnWait_2;
-// @symbol Trmp2Mario_EnterRespawnWait
 void Trmp2Mario_EnterRespawnWait(unsigned char *c) {
     MARIO2(c)->mTimer = 0x3c;
     MARIO2(c)->mPos.y = 0x100000;
@@ -879,7 +862,6 @@ extern void Trmp2Mario_EnterRespawnWait(void *p);
 extern "C" int data_ov006_02140598;
 extern "C" int sTrmp2Lives;
 
-// @symbol Trmp2Mario_StateMissed
 extern "C" void Trmp2Mario_StateMissed(char *c) {
     /* `mTimer = mTimer - 1` comes out 4 bytes short; the decrement matches. */
     MARIO2(c)->mTimer--;
@@ -909,7 +891,6 @@ extern int D3D_PlaySeAtX(int a, int b);
 extern int sTrmp2Lives;
 extern double pmf_Trmp2Mario_StateMissed_2;
 void Trmp2Mario_EnterMissed(char *c);
-// @symbol Trmp2Mario_EnterMissed
 void Trmp2Mario_EnterMissed(char *c) {
     if (sTrmp2Lives > 1)
         D3D_PlaySeAtX(0x1ca, MARIO2(c)->mPos.x);
@@ -939,7 +920,6 @@ struct S8 {
 };
 extern "C" S8 pmf_Trmp2Mario_StateWallBounce;
 
-// @symbol Trmp2Mario_StateFall
 extern "C" void Trmp2Mario_StateFall(char *c) {
     u16 state = MARIO2(c)->mContact;
     int v24;
@@ -1048,7 +1028,6 @@ typedef struct {
 extern S8 pmf_Trmp2Mario_StateFall;
 extern void Trmp2Mario_StateFall(void *self);
 
-// @symbol Trmp2Mario_EnterFall
 void Trmp2Mario_EnterFall(void *self) {
     *(W2 *)MARIO2(self)->mState = *(W2 *)&pmf_Trmp2Mario_StateFall;
     Trmp2Mario_StateFall(self);
@@ -1058,7 +1037,6 @@ void Trmp2Mario_EnterFall(void *self) {
 // ---- Trmp2Mario_StateAppearWait
 namespace ns_020ca310 {
 extern "C" void Trmp2Mario_EnterBounce(char *);
-// @symbol Trmp2Mario_StateAppearWait
 extern "C" void Trmp2Mario_StateAppearWait(char *c) {
     if (ApproachLinear2(MARIO2(c)->mTimer, 0, 1) == 0) {
         MARIO2(c)->mPos.y = 0;
@@ -1079,7 +1057,6 @@ struct S2 {
     int w[2];
 };
 extern struct S2 pmf_Trmp2Mario_StateAppearWait;
-// @symbol Trmp2Mario_EnterAppearWait
 void Trmp2Mario_EnterAppearWait(char *o, short v) {
     MARIO2(o)->mTimer = v;
     MARIO2(o)->mGravityStep = 0;
@@ -1090,7 +1067,6 @@ void Trmp2Mario_EnterAppearWait(char *o, short v) {
 // ---- Trmp2Mario_StateHidden
 namespace ns_020ca39c {
 extern "C" {
-// @symbol Trmp2Mario_StateHidden
 void Trmp2Mario_StateHidden(int *p) {
     MARIO2(p)->mPos.y = 0;
 }
@@ -1104,7 +1080,6 @@ extern Vector3 data_020a0ebc;
 extern double pmf_Trmp2Mario_StateHidden_3;
 }
 
-// @symbol Trmp2Mario_EnterHidden
 extern "C" void Trmp2Mario_EnterHidden(char *c) {
     MARIO2(c)->mVisible = 0;
     MARIO2(c)->mPos.y = 0;
@@ -1129,7 +1104,6 @@ extern void *sMgMainCamera;
 extern void Camera_ProjectToScreen16(void *p, void *q, short *s);
 extern void Trmp2Mario_EnterHidden(char *c);
 
-// @symbol Trmp2Mario_Load
 int Trmp2Mario_Load(char *c) {
     BMD_File *f;
     int ret;
@@ -1166,7 +1140,6 @@ namespace ns_020ca604 {
 
 /* mAnmModel's destructor, then the ring and base adapters' (each storing its
    own vptr back), run after the body. */
-// @symbol _ZN17dMgTrmpln2Mario_cD1Ev
 dMgTrmpln2Mario_c::~dMgTrmpln2Mario_c() {
     using namespace ns_020ca604;
     sTrmpMarioModelFile.Release();
@@ -1220,7 +1193,6 @@ dMgTrmpln2Mario_c::~dMgTrmpln2Mario_c() {
  */
 
 /* The ring adapter base and mAnmModel are constructed before the (empty) body. */
-// @symbol _ZN17dMgTrmpln2Mario_cC1Ev
 dMgTrmpln2Mario_c::dMgTrmpln2Mario_c() {}
 // ---- Trmp2Mario_Hide
 namespace ns_020ca7b8 {
@@ -1238,7 +1210,6 @@ extern int sTrmp2MarioCount;
 extern Ent *sTrmp2Marios;
 extern int pmf_Trmp2Mario_StateHidden_2[2];
 
-// @symbol Trmp2Mario_Hide
 int Trmp2Mario_Hide(void) {
     int i;
     for (i = 0; i < sTrmp2MarioCount; i++) {
@@ -1263,7 +1234,6 @@ extern int sTrmp2GravityStep;
 extern int sTrmpItemHitsOff;
 extern char *sTrmp2Marios;
 
-// @symbol Trmp2Mario_EnterAll
 void Trmp2Mario_EnterAll(void) {
     int i, n, off;
     n = sTrmp2MarioCount;
@@ -1295,7 +1265,6 @@ extern "C" int sTrmp2DriftScale;
 extern "C" void Trmp2Mario_EnterAppearWait(char *o, short v);
 extern "C" void Trmp2Mario_UpdateMatrix(char *o);
 
-// @symbol Trmp2Mario_MoveToStart
 extern "C" void Trmp2Mario_MoveToStart(void) {
     char *base;
     char *e;
@@ -1342,7 +1311,6 @@ extern int sTrmp2DriftScale;
 extern void Trmp2Mario_EnterAppearWait(char *o, short v);
 extern void Trmp2Mario_UpdateMatrix(char *o);
 
-// @symbol Trmp2Mario_PlaceAtStart
 void Trmp2Mario_PlaceAtStart(void) {
     int n;
     int i;
@@ -1368,7 +1336,6 @@ extern void Puff_DrawAll(void);
 extern int sTrmp2MarioCount;
 extern char *sTrmp2Marios;
 
-// @symbol Trmp2Mario_DrawAll
 void Trmp2Mario_DrawAll(void) {
     VecFx32 v;
     VecFx32 w;
@@ -1423,7 +1390,6 @@ extern char *sTrmp2Marios;
 void Trmp2Mario_Update(void *);
 void TrmpItem_UpdateWithJumper(void *, int);
 void Puff_UpdateAll(void);
-// @symbol Trmp2Mario_UpdateAll
 void Trmp2Mario_UpdateAll(void) {
     int i = 0;
     if (sTrmp2MarioCount > 0) {
@@ -1452,7 +1418,6 @@ extern int data_ov006_02140598;
 extern int sTrmpItemHitsOff;
 extern char *sTrmp2Marios;
 
-// @symbol Trmp2Mario_ResetAll
 void Trmp2Mario_ResetAll(u32) {
     int i;
     int off;
@@ -1485,7 +1450,6 @@ extern int sTrmpSpeedScale;
 extern int sTrmp2RiseSpeedMax;
 extern int sTrmp2DriftScale;
 
-// @symbol Trmp2Mario_SetTuning
 void Trmp2Mario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
@@ -1510,7 +1474,6 @@ extern char *sTrmp2Marios;
 extern void *sTrmpJumpers[];
 extern void *sTrmp2MarioPtrs[];
 
-// @symbol Trmp2Mario_InitPool
 int Trmp2Mario_InitPool(char *base, int n) {
     int i;
     int off;
@@ -1541,7 +1504,6 @@ int Trmp2Mario_InitPool(char *base, int n) {
 }
 }
 // ---- dMgTrmpln3DMario_c::GetVelocity
-// @symbol _ZN18dMgTrmpln3DMario_c11GetVelocityEv
 Vector3 *dMgTrmpln3DMario_c::GetVelocity() {
     return &mVel;
 }
@@ -1551,7 +1513,6 @@ extern "C" int pmf_Trmp3DMario_StateMissed[];
 }
 
 /* Anything but missed: the drawn line only bounces a Mario in play. */
-// @symbol _ZN18dMgTrmpln3DMario_c8IsActiveEv
 int dMgTrmpln3DMario_c::IsActive() {
     using namespace ns_020caf4c;
     int *p = mState;
@@ -1564,12 +1525,10 @@ int dMgTrmpln3DMario_c::IsActive() {
     return lr;
 }
 // ---- dMgTrmpln3DMario_c::GetPrevPos
-// @symbol _ZN18dMgTrmpln3DMario_c10GetPrevPosEv
 Vector3 *dMgTrmpln3DMario_c::GetPrevPos() {
     return &mPrevPos;
 }
 // ---- dMgTrmpln3DMario_c::GetPos
-// @symbol _ZN18dMgTrmpln3DMario_c6GetPosEv
 Vector3 *dMgTrmpln3DMario_c::GetPos() {
     return &mPos;
 }
@@ -1577,7 +1536,6 @@ Vector3 *dMgTrmpln3DMario_c::GetPos() {
 namespace ns_020cafb4 {
 extern "C" {
 extern int sTrmp3DMarioScale[];
-// @symbol Trmp3DMario_Render
 void Trmp3DMario_Render(char *self) {
     dExtAnmModel_c *model = &MARIO3D(self)->mAnmModel;
     model->Render((const Vector3 *)sTrmp3DMarioScale);
@@ -1592,7 +1550,6 @@ extern "C" {
 extern struct Matrix4x3 data_020a0e68;
 void Matrix4x3_FromTranslation(struct Matrix4x3 *mF, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, short angY);
-// @symbol Trmp3DMario_UpdateMatrix
 void Trmp3DMario_UpdateMatrix(char *self) {
     Matrix4x3_FromTranslation(&data_020a0e68, MARIO3D(self)->mPos.x, MARIO3D(self)->mPos.y,
                               MARIO3D(self)->mPos.z);
@@ -1618,7 +1575,6 @@ struct Closure {
     int adj;
 };
 
-// @symbol Trmp3DMario_Update
 extern "C" void Trmp3DMario_Update(char *o) {
     MARIO3D(o)->mPrevPos.x = MARIO3D(o)->mPos.x;
     MARIO3D(o)->mPrevPos.y = MARIO3D(o)->mPos.y;
@@ -1651,7 +1607,6 @@ namespace ns_020cb134 {
 extern "C" {
 extern int sTrmp3DFallSpeed;
 void AddVec3(void *dst, void *a, void *b);
-// @symbol Trmp3DMario_ApplyGravity
 void Trmp3DMario_ApplyGravity(char *o) {
     ApproachLinear(MARIO3D(o)->mVel.y, sTrmp3DFallSpeed, MARIO3D(o)->mGravityStep);
     AddVec3(&MARIO3D(o)->mPos, &MARIO3D(o)->mVel, &MARIO3D(o)->mPos);
@@ -1662,7 +1617,6 @@ void Trmp3DMario_ApplyGravity(char *o) {
 namespace ns_020cb16c {
 extern "C" {
 extern void Trmp3DMario_EnterOffstage(void *c);
-// @symbol Trmp3DMario_StateKnockedOut
 void Trmp3DMario_StateKnockedOut(int *c) {
     if (MARIO3D(c)->mPos.y >= -0x120000)
         return;
@@ -1680,7 +1634,6 @@ extern int pmf_Trmp3DMario_StateGoal_2[2];
 extern int pmf_Trmp3DMario_StateKnockedOut[2];
 }
 
-// @symbol Trmp3DMario_EnterByKind
 extern "C" void Trmp3DMario_EnterByKind(char *c) {
     int *p;
     int *d;
@@ -1742,7 +1695,6 @@ extern int Mg_GetTopScreenYOffset(void);
 extern void TrmpFx_Spawn(int, int);
 extern void Trmp3DMario_EnterOffstage(char *);
 
-// @symbol Trmp3DMario_StateGoal
 void Trmp3DMario_StateGoal(void *self) {
     char *c = (char *)self;
     int va, vb;
@@ -1822,7 +1774,6 @@ extern int sTrmpRowHeights[];
 extern int pmf_Trmp3DMario_StateGoal[];
 extern int sTrmpMariosOnLedges;
 }
-// @symbol Trmp3DMario_EnterGoal
 extern "C" void Trmp3DMario_EnterGoal(char *c) {
     int a, b;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[MARIO3D(c)->mHeightRow];
@@ -1846,7 +1797,6 @@ extern short sTrmpGoalRow;
 extern void Trmp3DMario_EnterGoal(char *c);
 extern void Trmp3DMario_EnterOnLedge(char *c);
 
-// @symbol Trmp3DMario_StateLand
 void Trmp3DMario_StateLand(char *c) {
     ApproachLinear(MARIO3D(c)->mPos.y, sTrmpRowHeights[MARIO3D(c)->mHeightRow], 0x4000);
     if (MARIO3D(c)->mPos.x > 0)
@@ -1879,7 +1829,6 @@ struct W2 {
 extern struct W2 pmf_Trmp3DMario_StateLand;
 void Trmp3DMario_EnterLand(char *c);
 }
-// @symbol Trmp3DMario_EnterLand
 void Trmp3DMario_EnterLand(char *c) {
     MARIO3D(c)->mVel.x = data_020a0ebc.x;
     MARIO3D(c)->mVel.y = data_020a0ebc.y;
@@ -1907,7 +1856,6 @@ extern int D3D_PlaySeAtX(int a, int b);
 extern void Trmp3DMario_EnterOnGround(char *c);
 extern int sTrmpRowHeights[];
 extern short sTrmpGoalRow;
-// @symbol Trmp3DMario_StateFallToLedge
 void Trmp3DMario_StateFallToLedge(char *c) {
     int v = MARIO3D(c)->mPos.x;
     if (v > 0) {
@@ -1958,7 +1906,6 @@ typedef struct {
 extern Pair2 pmf_Trmp3DMario_StateFallToLedge;
 extern void Trmp3DMario_StateFallToLedge(char *c);
 
-// @symbol Trmp3DMario_EnterFallToLedge
 void Trmp3DMario_EnterFallToLedge(char *c) {
     *(W2 *)MARIO3D(c)->mState = *(W2 *)&pmf_Trmp3DMario_StateFallToLedge;
     Trmp3DMario_StateFallToLedge(c);
@@ -1981,7 +1928,6 @@ int D3D_PlaySeAtX(int a, int b);
 extern "C" void *sMgMainCamera;
 extern "C" int sTrmpRowHeights[2];
 
-// @symbol Trmp3DMario_StateHardBounce
 extern "C" void Trmp3DMario_StateHardBounce(char *c) {
     int v;
 
@@ -2105,7 +2051,6 @@ int D3D_PlaySeAtX(int a, int b);
 void Trmp3DMario_StateHardBounce(char *c);
 }
 
-// @symbol Trmp3DMario_BounceOffLineA
 extern "C" void Trmp3DMario_BounceOffLineA(char *c) {
     Vector3 tmp;
     Vector3 tmp2;
@@ -2215,7 +2160,6 @@ void func_02012718(int a, int b);
 extern "C" void *sMgMainCamera;
 extern "C" int sTrmpRowHeights[2];
 
-// @symbol Trmp3DMario_StateBounce
 extern "C" void Trmp3DMario_StateBounce(char *c) {
     int v;
 
@@ -2329,7 +2273,6 @@ void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp3DMario_StateBounce(char *c);
 }
 
-// @symbol Trmp3DMario_BounceOffLineB
 extern "C" void Trmp3DMario_BounceOffLineB(char *c) {
     Vector3 tmp;
     Vector3 tmp2;
@@ -2417,7 +2360,6 @@ extern "C" int sTrmp3DJumpOffSpeed;
 extern "C" int sTrmp3DBounceScale;
 extern "C" int pmf_Trmp3DMario_StateBounce_2[2];
 
-// @symbol Trmp3DMario_JumpOff
 extern "C" void Trmp3DMario_JumpOff(char *c) {
     int *p38;
     int b;
@@ -2463,7 +2405,6 @@ extern void Trmp3DMario_EnterOffstage(char *c);
 extern int sTrmpMariosInPlay;
 extern int sTrmp3DLives;
 
-// @symbol Trmp3DMario_StateMissed
 void Trmp3DMario_StateMissed(char *c) {
     s16 *p = &MARIO3D(c)->mTimer;
     *p = *p - 1;
@@ -2495,7 +2436,6 @@ extern int D3D_PlaySeAtX(int a, int b);
 extern int sTrmp3DLives;
 extern double pmf_Trmp3DMario_StateMissed_2;
 void Trmp3DMario_EnterMissed(char *c);
-// @symbol Trmp3DMario_EnterMissed
 void Trmp3DMario_EnterMissed(char *c) {
     if (sTrmp3DLives > 1)
         D3D_PlaySeAtX(0x1ca, MARIO3D(c)->mPos.x);
@@ -2523,7 +2463,6 @@ void Trmp3DMario_EnterMissed(void *c);
 extern "C" void *sMgMainCamera;
 extern "C" int sTrmpRowHeights[2];
 
-// @symbol Trmp3DMario_StateFall
 extern "C" void Trmp3DMario_StateFall(char *c) {
     int v;
     u16 state = MARIO3D(c)->mContact;
@@ -2634,7 +2573,6 @@ typedef struct {
 extern Pair pmf_Trmp3DMario_StateFall;
 extern void Trmp3DMario_StateFall(void *self);
 
-// @symbol Trmp3DMario_EnterFall
 void Trmp3DMario_EnterFall(void *self) {
     *(W2 *)MARIO3D(self)->mState = *(W2 *)&pmf_Trmp3DMario_StateFall;
     Trmp3DMario_StateFall(self);
@@ -2647,7 +2585,6 @@ extern "C" {
 extern int sTrmpRowHeights[];
 extern int sTrmpMariosOnLedges;
 extern void Trmp3DMario_JumpOff(char *c);
-// @symbol Trmp3DMario_StateWalkBack
 void Trmp3DMario_StateWalkBack(char *c) {
     short idx = MARIO3D(c)->mHeightRow;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[idx];
@@ -2664,7 +2601,6 @@ extern "C" {
 extern int sTrmpRowHeights[];
 extern double pmf_Trmp3DMario_StateWalkBack;
 void Trmp3DMario_EnterWalkBack(char *c);
-// @symbol Trmp3DMario_EnterWalkBack
 void Trmp3DMario_EnterWalkBack(char *c) {
     MARIO3D(c)->mGravityStep = 0;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[MARIO3D(c)->mHeightRow];
@@ -2685,7 +2621,6 @@ extern void Trmp3DMario_EnterWalkBack(char *c);
 
 extern int sTrmpRowHeights[];
 
-// @symbol Trmp3DMario_StateOnLedge
 void Trmp3DMario_StateOnLedge(char *c) {
     MARIO3D(c)->mPos.y = sTrmpRowHeights[MARIO3D(c)->mHeightRow];
 
@@ -2737,7 +2672,6 @@ extern G2 pmf_Trmp3DMario_StateOnLedge;
 extern int sTrmpRowHeights[];
 extern int sTrmpMariosOnLedges;
 
-// @symbol Trmp3DMario_EnterOnLedge
 void Trmp3DMario_EnterOnLedge(char *p) {
     int *cur;
     int *want;
@@ -2769,7 +2703,6 @@ namespace ns_020cc9b8 {
 extern "C" {
 extern int sTrmpRowHeights[];
 extern void Trmp3DMario_JumpOff(char *c);
-// @symbol Trmp3DMario_StateWalkIn
 void Trmp3DMario_StateWalkIn(char *c) {
     MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
     if (MARIO3D(c)->mPos.x <= -0x5c008)
@@ -2789,7 +2722,6 @@ extern "C" struct G2 pmf_Trmp3DMario_StateOnGround;
 extern "C" int sTrmpMariosInPlay;
 extern "C" struct G2 pmf_Trmp3DMario_StateWalkIn;
 
-// @symbol Trmp3DMario_EnterWalkIn
 extern "C" void Trmp3DMario_EnterWalkIn(char *c) {
     MARIO3D(c)->mGravityStep = 0;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
@@ -2818,7 +2750,6 @@ extern void Trmp3DMario_EnterWalkIn(char *c);
 
 extern int sTrmpRowHeights[];
 
-// @symbol Trmp3DMario_StateOnGround
 void Trmp3DMario_StateOnGround(char *c) {
     MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
 
@@ -2863,7 +2794,6 @@ extern "C" {
 extern int sTrmpRowHeights[];
 extern double pmf_Trmp3DMario_StateOnGround_2;
 }
-// @symbol Trmp3DMario_EnterOnGround
 extern "C" void Trmp3DMario_EnterOnGround(char *c) {
     MARIO3D(c)->mGravityStep = 0;
     MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
@@ -2879,7 +2809,6 @@ extern "C" void Trmp3DMario_EnterOnGround(char *c) {
 namespace ns_020ccd04 {
 extern "C" {
 extern int pmf_Trmp3DMario_StateOffstage_3[];
-// @symbol Trmp3DMario_IsOffstage
 int Trmp3DMario_IsOffstage(int *r0) {
     int *p = MARIO3D(r0)->mState;
     int *g = pmf_Trmp3DMario_StateOffstage_3;
@@ -2901,7 +2830,6 @@ out:
 namespace ns_020ccd64 {
 extern "C" {
 extern int sTrmpRowHeights[];
-// @symbol Trmp3DMario_StateOffstage
 void Trmp3DMario_StateOffstage(char *p) {
     MARIO3D(p)->mPos.y = sTrmpRowHeights[0];
 }
@@ -2916,7 +2844,6 @@ struct G2 {
     int w[2];
 };
 extern struct G2 pmf_Trmp3DMario_StateOffstage_2;
-// @symbol Trmp3DMario_EnterOffstage
 void Trmp3DMario_EnterOffstage(char *c) {
     MARIO3D(c)->mPos.y = sTrmpRowHeights[0];
     MARIO3D(c)->mPos.x = -0x90000;
@@ -2940,7 +2867,6 @@ extern void *sMgMainCamera;
 extern void Camera_ProjectToScreen16(void *p, void *q, short *s);
 extern void Trmp3DMario_EnterOffstage(char *c);
 
-// @symbol Trmp3DMario_Load
 int Trmp3DMario_Load(char *c) {
     BMD_File *f;
     int ret;
@@ -2976,7 +2902,6 @@ namespace ns_020ccfc8 {
 
 /* mAnmModel's destructor, then the base adapter's (storing its vptr back),
    run after the body. */
-// @symbol _ZN18dMgTrmpln3DMario_cD1Ev
 dMgTrmpln3DMario_c::~dMgTrmpln3DMario_c() {
     using namespace ns_020ccfc8;
     sTrmpMarioModelFile.Release();
@@ -3007,7 +2932,6 @@ dMgTrmpln3DMario_c::~dMgTrmpln3DMario_c() {
 }
 // ---- Trmp3DMario_Construct
 /* The base adapter and mAnmModel are constructed before the (empty) body. */
-// @symbol _ZN18dMgTrmpln3DMario_cC1Ev
 dMgTrmpln3DMario_c::dMgTrmpln3DMario_c() {}
 // ---- Trmp3DMario_CountFinished
 namespace ns_020cd158 {
@@ -3016,7 +2940,6 @@ extern int sTrmp3DMarioCount;
 extern char *sTrmp3DMarios;
 extern int pmf_Trmp3DMario_StateOffstage[];
 
-// @symbol Trmp3DMario_CountFinished
 int Trmp3DMario_CountFinished(void) {
     int i = 0;
     char *e;
@@ -3056,7 +2979,6 @@ extern int sTrmp3DFallSpeed;
 extern int sTrmp3DGravityStep;
 extern char *sTrmp3DMarios;
 
-// @symbol Trmp3DMario_StartAll
 void Trmp3DMario_StartAll(void) {
     int i;
     int off;
@@ -3087,7 +3009,6 @@ extern char *sTrmp3DMarios;
 extern void Trmp3DMario_Render(char *p);
 extern void Puff_DrawAll(void);
 
-// @symbol Trmp3DMario_DrawAll
 void Trmp3DMario_DrawAll(void) {
     int v[3];
     int w[3];
@@ -3130,7 +3051,6 @@ extern char *sTrmp3DMarios;
 extern int sTrmpMariosOnLedges;
 extern int sTrmpAnyOnLedge;
 
-// @symbol Trmp3DMario_UpdateAll
 void Trmp3DMario_UpdateAll(void) {
     int i;
     for (i = 0; i < sTrmp3DMarioCount; i++)
@@ -3159,7 +3079,6 @@ extern int sTrmpMariosInPlay;
 extern int sTrmpMariosOnLedges;
 extern char *sTrmp3DMarios;
 
-// @symbol Trmp3DMario_ResetAll
 void Trmp3DMario_ResetAll(unsigned int n, int arg1) {
     int i;
     Trmp3DMario_SetTuning((n % 5 + n / 5) * 0x150 + 0x1000);
@@ -3186,7 +3105,6 @@ extern int sTrmp3DJumpOffSpeed;
 extern int sTrmp3DBounceScale;
 extern int sTrmp3DHardBounceScale;
 
-// @symbol Trmp3DMario_SetTuning
 void Trmp3DMario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
@@ -3205,7 +3123,6 @@ namespace ns_020cd62c {
 extern "C" {
 extern int sTrmpRowBaseHeights[];
 extern int sTrmpRowHeights[];
-// @symbol Trmp3DMario_SetSpawnHeight
 void Trmp3DMario_SetSpawnHeight(int n) {
     sTrmpRowHeights[0] = sTrmpRowBaseHeights[0] + (n << 12);
     sTrmpRowHeights[1] = sTrmpRowBaseHeights[1] + (n << 12);
@@ -3219,7 +3136,6 @@ extern int sTrmp3DMarioCount;
 extern unsigned char *sTrmp3DMarios;
 extern void *sTrmpJumpers[];
 extern int Trmp3DMario_Load(unsigned char *);
-// @symbol Trmp3DMario_InitPool
 int Trmp3DMario_InitPool(unsigned char *a0, int a1) {
     int i = 0;
     int off;
@@ -3245,24 +3161,20 @@ int Trmp3DMario_InitPool(unsigned char *a0, int a1) {
 // ---- TrmpRingObjAdapter_Clear
 /* The Clear slot each bounce runs also restarts the combo
    TrmpItem_UpdateWithJumper scores from. */
-// @symbol _ZN23dMgTrmpRingObjAdapter_c5ClearEv
 void dMgTrmpRingObjAdapter_c::Clear() {
     dMgTrmpObjAdapter_c::Clear();
     mItemHitCount = 0;
 }
 // ---- TrmpRingObjAdapter_Construct
 /* The base adapter is constructed before the body. */
-// @symbol _ZN23dMgTrmpRingObjAdapter_cC2Ev
 dMgTrmpRingObjAdapter_c::dMgTrmpRingObjAdapter_c() {
     mItemHitCount = 0;
 }
 // ---- TrmpObjAdapter_Clear
-// @symbol _ZN19dMgTrmpObjAdapter_c5ClearEv
 void dMgTrmpObjAdapter_c::Clear() {
     mContact = 0;
 }
 // ---- TrmpObjAdapter_Construct
-// @symbol _ZN19dMgTrmpObjAdapter_cC2Ev
 dMgTrmpObjAdapter_c::dMgTrmpObjAdapter_c() {
     mContact = 0;
 }

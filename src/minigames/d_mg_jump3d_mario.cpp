@@ -45,6 +45,7 @@
 #include "dMgJump3DMario_c.h"
 #include "SharedFilePtr.h"
 #include "OAM.h"
+#include "PlayerInput.h"
 #include "fBase_c.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
@@ -160,16 +161,6 @@ extern OamAttr *data_ov006_02134d1c;
 extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8 gActivePlayerSlot;
-// local extern: see above.
-extern u8 gTouchHeld[][4];
-// local extern: see above.
-extern u8 gTouchEdge[][4];
-// local extern: see above.
-extern u8 gTouchX[][4];
-// local extern: see above.
-extern u8 gTouchY[][4];
 extern Matrix4x3 data_020a0e68;
 extern short data_02082214[];
 extern fBase_c *data_0209f5c0;
@@ -178,7 +169,6 @@ extern fBase_c *data_0209f5c0;
 
 
 
-// @symbol Jump3D_SetTuning
 /* Rescales the six tuning words at 0213b008..0213b01c from one input,
  * clamped to 0x3000. */
 extern "C" void Jump3D_SetTuning(int a)
@@ -194,7 +184,6 @@ extern "C" void Jump3D_SetTuning(int a)
     sJump3DBounceVy = FX_MUL(b, 0x5000);
 }
 
-// @symbol Jump3D_DrawAll
 extern "C" void Jump3D_DrawAll(void)
 {
     int i;
@@ -204,7 +193,6 @@ extern "C" void Jump3D_DrawAll(void)
     Puff_DrawAll();
 }
 
-// @symbol Jump3D_UpdateAll
 extern "C" void Jump3D_UpdateAll(void)
 {
     int i;
@@ -215,7 +203,6 @@ extern "C" void Jump3D_UpdateAll(void)
     Puff_UpdateAll();
 }
 
-// @symbol Jump3D_Arrange
 extern "C" void Jump3D_Arrange(u32 a0, u32 a1)
 {
     int i;
@@ -238,19 +225,15 @@ extern "C" void Jump3D_Arrange(u32 a0, u32 a1)
     sJump3DRisenOutCount = 0;
 }
 
-// @symbol Jump3D_DisableInput
 extern "C" void Jump3D_DisableInput(void) { data_ov006_02140400 = 0; }
 
-// @symbol Jump3D_EnableInput
 extern "C" void Jump3D_EnableInput(void) { data_ov006_02140400 = 1; }
 
-// @symbol Jump3D_RestoreCount
 extern "C" void Jump3D_RestoreCount(void)
 {
     ApproachLinear(sJump3DMariosLeft, sJump3DMarioCount, 1);
 }
 
-// @symbol Jump3D_AllIdle
 /* Returns 0 if any entry's pair at +0x3c disagrees with the record at
  * 0213b040 (a y mismatch is tolerated when x is 0), else 1. */
 struct Jump3DEnt {
@@ -272,7 +255,6 @@ extern "C" int Jump3D_AllIdle(void)
     return 1;
 }
 
-// @symbol Jump3D_SetLowGravity
 extern "C" void Jump3D_SetLowGravity(void)
 {
     int i;
@@ -291,7 +273,6 @@ extern "C" void Jump3D_SetLowGravity(void)
     } while (i < sJump3DMarioCount);
 }
 
-// @symbol Jump3D_StopGravity
 extern "C" void Jump3D_StopGravity(void)
 {
     int n = sJump3DMarioCount;
@@ -320,7 +301,6 @@ struct Jump3DLayoutSlot {
 };
 typedef char Jump3DLayoutSlot_size_must_be_0xc[sizeof(Jump3DLayoutSlot) == 0xc ? 1 : -1];
 
-// @symbol Jump3D_StartRoundLayout
 extern "C" void Jump3D_StartRoundLayout(void)
 {
     int i;
@@ -350,7 +330,6 @@ extern "C" void Jump3D_StartRoundLayout(void)
     } while (i < sJump3DMarioCount);
 }
 
-// @symbol Jump3D_InitPool
 extern "C" int Jump3D_InitPool(char *base, int count)
 {
     int i;
@@ -378,7 +357,6 @@ extern "C" int Jump3D_InitPool(char *base, int count)
     return 1;
 }
 
-// @symbol _ZN16dMgJump3DMario_c10IsLaunchedEv
 /* Vtable slot 2: 1 once Mario has left StateIdle and StateWindUp. */
 int dMgJump3DMario_c::IsLaunched() {
     int r = 0;
@@ -396,19 +374,16 @@ int dMgJump3DMario_c::IsLaunched() {
     return r;
 }
 
-// @symbol _ZN16dMgJump3DMario_c11GetVelocityEv
 /* Vtable slot 1. */
 void *dMgJump3DMario_c::GetVelocity() {
     return &mVel;
 }
 
-// @symbol _ZN16dMgJump3DMario_c6GetPosEv
 /* Vtable slot 0, and the key function. */
 void *dMgJump3DMario_c::GetPos() {
     return &mPos;
 }
 
-// @symbol _ZN16dMgJump3DMario_c17UpdateModelMatrixEv
 /* Rebuilds the model matrix from mPos and mAngleY. */
 void dMgJump3DMario_c::UpdateModelMatrix()
 {
@@ -417,7 +392,6 @@ void dMgJump3DMario_c::UpdateModelMatrix()
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN16dMgJump3DMario_c4DrawEv
 /* OAM shadow sprite plus the model render. */
 void dMgJump3DMario_c::Draw()
 {
@@ -454,7 +428,6 @@ void dMgJump3DMario_c::Draw()
     mAnmModel.Render(&sJump3DMarioScale);
 }
 
-// @symbol _ZN16dMgJump3DMario_c6UpdateEv
 /* The per-frame update: gravity, integrate, dispatch mState. */
 void dMgJump3DMario_c::Update()
 {
@@ -466,7 +439,6 @@ void dMgJump3DMario_c::Update()
     mAnmModel.dExtFrameCtrl_c::Advance();
 }
 
-// @symbol _ZN16dMgJump3DMario_c9StateDampEv
 void dMgJump3DMario_c::StateDamp()
 {
     mTimer -= 1;
@@ -487,7 +459,6 @@ void dMgJump3DMario_c::StateDamp()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c9EnterDampEv
 void dMgJump3DMario_c::EnterDamp()
 {
     if (sJump3DMariosLeft > 1)
@@ -500,24 +471,23 @@ void dMgJump3DMario_c::EnterDamp()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c9StateHoldEv
 void dMgJump3DMario_c::StateHold()
 {
     u32 idx = gActivePlayerSlot;
     int flag = 0;
 
-    if (gTouchHeld[idx][0] != 0) {
-        if (gTouchEdge[idx][0] != 0) {
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
+        if (((u8(*)[4])gTouchEdge)[idx][0] != 0) {
             flag = 1;
         }
     }
     if (flag != 0) {
         /* Keep reusing `flag` here: reading the table straight into `b`
            costs 5 words (notes/experiments/jump3d-2711-statehold-flag-reuse.md). */
-        flag = gTouchY[idx][0];
+        flag = ((u8(*)[4])gTouchY)[idx][0];
         int b = flag;
         int x = mScreenY - 0x20;
-        int dz = mScreenX - gTouchX[idx][0];
+        int dz = mScreenX - ((u8(*)[4])gTouchX)[idx][0];
         if (dz < 0) {
             dz = -dz;
         }
@@ -562,7 +532,6 @@ void dMgJump3DMario_c::StateHold()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c9EnterHoldEv
 void dMgJump3DMario_c::EnterHold()
 {
     /* VecFx32, not Vector3: Vector3 matches here too, but it makes this
@@ -587,7 +556,6 @@ void dMgJump3DMario_c::EnterHold()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c9StateMoveEv
 void dMgJump3DMario_c::StateMove()
 {
     u16 st = mCommand;
@@ -611,13 +579,13 @@ void dMgJump3DMario_c::StateMove()
     {
         int flag = 0;
         u8 idx = gActivePlayerSlot;
-        if (gTouchHeld[idx][0] != 0 && gTouchEdge[idx][0] != 0)
+        if (((u8(*)[4])gTouchHeld)[idx][0] != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0)
             flag = 1;
 
         if (flag != 0) {
             s16 y = mScreenY;
-            int ax = (int)gTouchX[idx][0];
-            int az = (int)gTouchY[idx][0];
+            int ax = (int)((u8(*)[4])gTouchX)[idx][0];
+            int az = (int)((u8(*)[4])gTouchY)[idx][0];
             int dx = (int)mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;
@@ -692,14 +660,12 @@ void dMgJump3DMario_c::StateMove()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c9EnterMoveEv
 void dMgJump3DMario_c::EnterMove()
 {
     mState = pmf_dMgJump3DMario_c_StateMove;
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c12StateFallOutEv
 void dMgJump3DMario_c::StateFallOut()
 {
     if (mPos.y >= -0x120000)
@@ -709,7 +675,6 @@ void dMgJump3DMario_c::StateFallOut()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c12StartFallOutEv
 void dMgJump3DMario_c::StartFallOut()
 {
     if (mState == pmf_dMgJump3DMario_c_StateRespawn_2) {
@@ -725,7 +690,6 @@ void dMgJump3DMario_c::StartFallOut()
     }
 }
 
-// @symbol _ZN16dMgJump3DMario_c12StateRiseOutEv
 void dMgJump3DMario_c::StateRiseOut()
 {
     if (mAnmModel.file == sJump3DAnimRollJump) {
@@ -741,7 +705,6 @@ void dMgJump3DMario_c::StateRiseOut()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c12StartRiseOutEv
 void dMgJump3DMario_c::StartRiseOut()
 {
     mVel.x = 0;
@@ -753,7 +716,6 @@ void dMgJump3DMario_c::StartRiseOut()
     mState = pmf_dMgJump3DMario_c_StateRiseOut;
 }
 
-// @symbol _ZN16dMgJump3DMario_c8EnterHitEv
 void dMgJump3DMario_c::EnterHit()
 {
     mAnmModel.SetAnim((BCA_File *)sJump3DAnimRollJump, 0x40000000, kAnimSpeed, 0);
@@ -768,7 +730,6 @@ void dMgJump3DMario_c::EnterHit()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c11StateBounceEv
 void dMgJump3DMario_c::StateBounce()
 {
     if (mVel.y < 0) {
@@ -821,14 +782,12 @@ void dMgJump3DMario_c::StateBounce()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c11EnterBounceEv
 void dMgJump3DMario_c::EnterBounce()
 {
     mState = pmf_dMgJump3DMario_c_StateBounce;
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c11StateWindUpEv
 void dMgJump3DMario_c::StateWindUp()
 {
     if (ApproachLinear2(mTimer, 0, 1) == 0) {
@@ -844,21 +803,18 @@ void dMgJump3DMario_c::StateWindUp()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c11StartWindUpEi
 void dMgJump3DMario_c::StartWindUp(int timer)
 {
     mTimer = (s16)timer;
     mState = pmf_dMgJump3DMario_c_StateWindUp;
 }
 
-// @symbol _ZN16dMgJump3DMario_c9StateIdleEv
 void dMgJump3DMario_c::StateIdle()
 {
     mPos.y = 0;
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c11HideAndIdleEv
 void dMgJump3DMario_c::HideAndIdle()
 {
     mVisible = 0;
@@ -866,7 +822,6 @@ void dMgJump3DMario_c::HideAndIdle()
     mState = pmf_dMgJump3DMario_c_StateIdle_2;
 }
 
-// @symbol _ZN16dMgJump3DMario_c12StateRespawnEv
 void dMgJump3DMario_c::StateRespawn()
 {
     unsigned int rnd;
@@ -890,7 +845,6 @@ void dMgJump3DMario_c::StateRespawn()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c12EnterRespawnEv
 void dMgJump3DMario_c::EnterRespawn()
 {
     mTimer = 0x3c;
@@ -901,7 +855,6 @@ void dMgJump3DMario_c::EnterRespawn()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_c13LoadResourcesEv
 /* Loads the model and the six anims. */
 int dMgJump3DMario_c::LoadResources()
 {
@@ -935,7 +888,6 @@ int dMgJump3DMario_c::LoadResources()
     return 1;
 }
 
-// @symbol _ZN16dMgJump3DMario_cD1Ev
 dMgJump3DMario_c::~dMgJump3DMario_c()
 {
     gMarioModelMgModelFile.Release();
@@ -953,7 +905,6 @@ dMgJump3DMario_c::~dMgJump3DMario_c()
 }
 
 
-// @symbol _ZN16dMgJump3DMario_cC1Ev
 /* Empty: the base constructor, the vptr store and the dExtAnmModel_c member
  * construction are all generated. */
 dMgJump3DMario_c::dMgJump3DMario_c()

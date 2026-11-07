@@ -82,7 +82,6 @@ struct BattanCollisionFilePtr : SharedFilePtr {
 BattanModelFilePtr data_ov023_02112088(ASSET_FM_BATTAN_BMD);
 BattanCollisionFilePtr data_ov023_02112080(ASSET_FM_BATTAN_KCL);
 
-// @symbol daObjFm_Battan_c_classInit
 /* Every instruction the cartridge has here falls out of the one `new`.
  * sizeof(daObjFm_Battan_c) is 0x37c, passed to the inherited
  * fBase_c::operator new; the implicit constructor calls dBgActor_c's C2,
@@ -95,7 +94,6 @@ extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit() {
 extern "C" SpawnInfo<daObjFm_Battan_c> g_profile_FM_BATTAN = {
     daObjFm_Battan_c_classInit, 0x0054, 0x0124, 0x02000000, 0, 0x00500000, 0x01000000, 0x01000000};
 
-// @symbol _ZN16daObjFm_Battan_c13InitResourcesEv
 int daObjFm_Battan_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov023_02112088), 1, -1);
     mShadowModel.InitCuboid();
@@ -115,7 +113,6 @@ int daObjFm_Battan_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c8BehaviorEv
 int daObjFm_Battan_c::Behavior() {
     switch (mState) {
     case 0:
@@ -195,13 +192,11 @@ int daObjFm_Battan_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c6RenderEv
 int daObjFm_Battan_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c16CleanupResourcesEv
 int daObjFm_Battan_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov023_02112088.Release();
@@ -209,7 +204,6 @@ int daObjFm_Battan_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c20UpdateModelTransformEv
 void daObjFm_Battan_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -217,7 +211,6 @@ void daObjFm_Battan_c::UpdateModelTransform() {
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN16daObjFm_Battan_c12UpdateShadowEv
 void daObjFm_Battan_c::UpdateShadow() {
     int tableIndex = (u16)mAngleX >> 4;
     int sinX = data_02082214[tableIndex * 2];

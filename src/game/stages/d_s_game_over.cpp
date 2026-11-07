@@ -134,13 +134,11 @@ static inline int IsTouchStarted() {
  * new; the inlined ctor runs fBase_c's C2, stores dBase_c then dScene_c's
  * vptrs, ORs pauseFlags 1 and 4 (dScene_c::dScene_c), then stores this
  * class's vptr. The null check is the one `new` itself emits. */
-// @symbol dScGameOver_c_classInit
 extern "C" dScGameOver_c *dScGameOver_c_classInit(void) {
     return new dScGameOver_c();
 }
 
 /* [8] 0x020b0b3c -- vtable slot 0, KEY FUNCTION */
-// @symbol _ZN13dScGameOver_c13InitResourcesEv
 /* Brings both engines up for the game-over screen, loads the
  * language-specific "GAME OVER" art (five language variants on both
  * screens), then zeroes the cursor FSM and lays the eight glyphs out along
@@ -293,7 +291,6 @@ s32 dScGameOver_c::InitResources() {
 
 /* [7] 0x020b0b34 -- vtable slot 3. Owns no allocation: everything drawn is
  * OAM data belonging to the overlay, so there is nothing to release. */
-// @symbol _ZN13dScGameOver_c16CleanupResourcesEv
 s32 dScGameOver_c::CleanupResources() {
     return 1;
 }
@@ -303,7 +300,6 @@ s32 dScGameOver_c::CleanupResources() {
  * countdowns down and commits -- continue (func_0202ae74) on "yes", or a
  * scene fade back out on "no". mIntroPhase gates all of it until the intro
  * is in. */
-// @symbol _ZN13dScGameOver_c8BehaviorEv
 s32 dScGameOver_c::Behavior() {
     if (data_0209f5bc->IsAtStart() != 0) {
         func_ov003_020b060c();
@@ -368,7 +364,6 @@ s32 dScGameOver_c::Behavior() {
 /* [5] 0x020b0814 -- vtable slot 9. Draws the eight "GAME OVER" glyph
  * sprites from the per-glyph x/y arrays InitResources laid out, then lets
  * dScStage_c draw the yes/no bouncing arrows once the cursor is live. */
-// @symbol _ZN13dScGameOver_c6RenderEv
 s32 dScGameOver_c::Render() {
     int i;
     for (i = 0; i < 8; i++) {
@@ -382,7 +377,6 @@ s32 dScGameOver_c::Render() {
 
 /* [4] 0x020b0810 -- vtable slot 12. Nothing to unwind; the slot exists only
  * so dScene_c's teardown has something to call. */
-// @symbol _ZN13dScGameOver_c16OnPendingDestroyEv
 void dScGameOver_c::OnPendingDestroy() {}
 
 /* [3] 0x020b0730 -- repaints the sub-screen BG1 palette bank over the two
@@ -390,7 +384,6 @@ void dScGameOver_c::OnPendingDestroy() {}
  * sGameOverPromptTileOffsets. `arg` non-zero forces both back to the unselected
  * bank; zero picks the highlighted bank for whichever box mSelection names,
  * and only while the mFlashTimer has run out. */
-// @symbol _ZN13dScGameOver_c19func_ov003_020b0730Ei
 void dScGameOver_c::func_ov003_020b0730(int arg) {
     int i;
     for (i = 0; i < 2; i++) {
@@ -427,7 +420,6 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
  * out one more mGlyphDelay tick, then reaches phase 2, which is what unblocks
  * Behavior's cursor FSM and Render's bouncing arrows, and enables the two
  * BG layers the prompt lives on. */
-// @symbol _ZN13dScGameOver_c19func_ov003_020b060cEv
 void dScGameOver_c::func_ov003_020b060c() {
     unsigned char s = this->mIntroPhase;
     int i;

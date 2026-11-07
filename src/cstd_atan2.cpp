@@ -18,7 +18,6 @@ extern unsigned short data_020994e0[];
 
 namespace cstd {
 
-// @symbol _ZN4cstd5atan2Eii
 s16 atan2(s32 y, s32 x) {
     s32 r;
     if (y == 0) {

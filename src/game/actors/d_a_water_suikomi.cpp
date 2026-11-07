@@ -61,8 +61,6 @@ extern VecFx32 data_ov026_02113f4c;
 
 #pragma defer_codegen off
 
-// @symbol _ZN17daWater_Suikomi_cD1Ev
-// @symbol _ZN17daWater_Suikomi_cD0Ev
 /* The key function. D1 stores the vtable, destroys mWithMeshClsn (+0x150)
  * and mdCcAcPos_c (+0x110) in reverse declaration order, then runs
  * dEnemyBase_c's D2; D0 does the same and hands the object to the inline
@@ -70,7 +68,6 @@ extern VecFx32 data_ov026_02113f4c;
  * cartridge. */
 daWater_Suikomi_c::~daWater_Suikomi_c() {}
 
-// @symbol _ZN17daWater_Suikomi_c12CheckContactEv
 /* Looks up the actor the collider last touched (mdCcAcPos_c.otherOwner) and
  * does nothing with it: the ROM body returns either way. */
 void daWater_Suikomi_c::CheckContact() {
@@ -82,20 +79,17 @@ void daWater_Suikomi_c::CheckContact() {
         return;
 }
 
-// @symbol _ZN17daWater_Suikomi_c6State0Ev
 /* The state's per-frame function (the record's second member pointer). */
 int daWater_Suikomi_c::State0() {
     CheckContact();
     return 1;
 }
 
-// @symbol _ZN17daWater_Suikomi_c10InitState0Ev
 /* The state's entry function (the record's first member pointer). */
 int daWater_Suikomi_c::InitState0() {
     return 1;
 }
 
-// @symbol _ZN17daWater_Suikomi_c8SetStateEPNS_5StateE
 /* Installs a state record at +0x30c and runs its entry function. */
 int daWater_Suikomi_c::SetState(State *state) {
     mState = state;
@@ -105,26 +99,21 @@ int daWater_Suikomi_c::SetState(State *state) {
     return (this->*(s->mInit))();
 }
 
-// @symbol _ZN17daWater_Suikomi_c19func_ov026_02112324Ev
 /* Empty in the ROM: four bytes, `bx lr`. Behavior still calls it. */
 void daWater_Suikomi_c::func_ov026_02112324() {}
 
-// @symbol _ZN17daWater_Suikomi_c16CleanupResourcesEv
 int daWater_Suikomi_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN17daWater_Suikomi_c16OnPendingDestroyEv
 /* fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`. */
 void daWater_Suikomi_c::OnPendingDestroy() {}
 
-// @symbol _ZN17daWater_Suikomi_c6RenderEv
 /* Draws nothing: the suction has no model of its own. */
 int daWater_Suikomi_c::Render() {
     return 1;
 }
 
-// @symbol _ZN17daWater_Suikomi_c8BehaviorEv
 int daWater_Suikomi_c::Behavior() {
     DecIfAbove0_Short((u16 *)&mStateTimer);
     State *s = mState;
@@ -141,7 +130,6 @@ int daWater_Suikomi_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN17daWater_Suikomi_c13InitResourcesEv
 int daWater_Suikomi_c::InitResources() {
     VecFx32 vec;
     unk_314 = param1 & 0xff;
@@ -155,7 +143,6 @@ int daWater_Suikomi_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_SUIKOMI registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: WaterSuction_Spawn. */
-// @symbol daWater_Suikomi_c_classInit
 extern "C" daWater_Suikomi_c *daWater_Suikomi_c_classInit() {
     return new daWater_Suikomi_c();
 }

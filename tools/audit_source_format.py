@@ -28,13 +28,29 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def order_signature(raw):
+def order_signature(raw, rel=None):
     text = raw.decode('utf-8')
+    if rel is not None:
+        # the file's owned linker symbols in definition order -- what the
+        # `// @symbol` marker list recorded, resolved structurally so it
+        # survives the markers' removal. A format pass that breaks a
+        # definition changes the binding, exactly the reorder this field
+        # watches for.
+        try:
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            import def_locate as DL
+            bound = DL.bind(rel, text)[0]
+            symbols = [s for s, _d in sorted(bound.items(),
+                                             key=lambda kv: kv[1].start)]
+        except Exception:
+            symbols = []
+    else:
+        symbols = re.findall(r'//\s*@symbol\s+(\S+)', text)
     return {
         'includes': re.findall(r'^[ \t]*#[ \t]*include[ \t]*([<"][^>"\r\n]+[>"])', text, re.M),
         'pragmas': [re.sub(r'\s+', '', s) for s in
                     re.findall(r'^\s*#\s*pragma\s*(.*)', text, re.M)],
-        'symbols': re.findall(r'//\s*@symbol\s+(\S+)', text),
+        'symbols': symbols,
         'cpp_marker': text.startswith('//cpp'),
     }
 
@@ -157,7 +173,7 @@ def audit(output, executable, sources=None, headers=None, jobs=16, mode="guarded
                 if raw != originals[rel]:
                     key = 'source_changed_count' if phase == 'formatted_sources' else 'header_changed_count'
                     report[key] += 1
-                if order_signature(raw) != order_signature(originals[rel]):
+                if order_signature(raw, rel) != order_signature(originals[rel], rel):
                     report['order_signature_changes'].append(rel)
         print(f'{phase}: compiling {len(sources)} production inputs', flush=True)
         with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as pool:

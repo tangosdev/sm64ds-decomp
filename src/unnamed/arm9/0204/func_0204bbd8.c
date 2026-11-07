@@ -8,7 +8,7 @@
 
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void func_02055388(int *m);             /* multiply by the 4x3 matrix */
-extern void func_0204c24c(u8 tileS, u8 tileT); /* the XY-plane quad */
+extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 extern s16 data_02082214[];                    /* the sin/cos table */
 
 /* Draw one child particle as a camera-facing quad (child draw type 0,
@@ -80,6 +80,7 @@ void func_0204bbd8(ManagerView *mgr, ParticleElement *ptcl) {
     reg_G3_COLOR = ptcl->color;
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
-        func_0204c24c(child->textureTileCountS, child->textureTileCountT);
+        /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
+        func_0204c24c((u8)child->textureTileCountS, (u8)child->textureTileCountT);
     }
 }

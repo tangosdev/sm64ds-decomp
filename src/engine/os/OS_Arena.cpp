@@ -56,7 +56,6 @@ unsigned int OS_GetInitArenaLo(int id);
 void OS_SetArenaHi(int id, unsigned int newHi);
 void OS_SetArenaLo(int id, unsigned int newLo);
 
-// @symbol OS_InitArena
 void OS_InitArena(void) {
     if (data_020a6378 != 0)
         return;
@@ -75,7 +74,6 @@ void OS_InitArena(void) {
     OS_SetArenaLo(OS_ARENA_WRAM_MAIN, OS_GetInitArenaLo(OS_ARENA_WRAM_MAIN));
 }
 
-// @symbol OS_InitArenaEx
 void OS_InitArenaEx(void) {
     if ((OS_GetConsoleType() & OS_CONSOLE_SIZE_MASK) != OS_CONSOLE_SIZE_8MB)
         return;
@@ -84,17 +82,14 @@ void OS_InitArenaEx(void) {
     CP15::MPUDataRegion1(0x200002d); /* main RAM, 8 MB, enabled */
 }
 
-// @symbol OS_GetArenaHi
 unsigned int OS_GetArenaHi(int id) {
     return OSi_ARENA_HI[id];
 }
 
-// @symbol OS_GetArenaLo
 unsigned int OS_GetArenaLo(int id) {
     return OSi_ARENA_LO[id];
 }
 
-// @symbol OS_GetInitArenaHi
 unsigned int OS_GetInitArenaHi(int id) {
     switch (id) {
     case OS_ARENA_MAIN:
@@ -128,7 +123,6 @@ unsigned int OS_GetInitArenaHi(int id) {
     }
 }
 
-// @symbol OS_GetInitArenaLo
 unsigned int OS_GetInitArenaLo(int id) {
     switch (id) {
     case OS_ARENA_MAIN:
@@ -147,18 +141,15 @@ unsigned int OS_GetInitArenaLo(int id) {
     return 0;
 }
 
-// @symbol OS_SetArenaHi
 void OS_SetArenaHi(int id, unsigned int newHi) {
     OSi_ARENA_HI[id] = newHi;
 }
 
-// @symbol OS_SetArenaLo
 void OS_SetArenaLo(int id, unsigned int newLo) {
     OSi_ARENA_LO[id] = newLo;
 }
 
-// @symbol OS_AllocFromArenaLo
-unsigned int OS_AllocFromArenaLo(int id, unsigned int size, unsigned int align) {
+void *OS_AllocFromArenaLo(int id, unsigned int size, unsigned int align) {
     unsigned int ptr = OS_GetArenaLo(id);
     unsigned int arenaLo, arenaHi;
     if (ptr == 0)
@@ -169,7 +160,7 @@ unsigned int OS_AllocFromArenaLo(int id, unsigned int size, unsigned int align) 
     if (arenaHi > OS_GetArenaHi(id))
         return 0;
     OS_SetArenaLo(id, arenaHi);
-    return arenaLo;
+    return (void *)arenaLo;
 }
 
 } // extern "C"

@@ -136,13 +136,10 @@ extern s16 data_02082214[];                 /* the sin and cos table, two shorts
  * That body is the evidence for the header: each member's size closes
  * exactly on the next one's offset. D0 ends in dEnemyBase_c's inline
  * operator delete, reachable because dEnemyBase_c is the immediate base. */
-// @symbol _ZN8daFPkn_cD1Ev
-// @symbol _ZN8daFPkn_cD0Ev
 daFPkn_c::~daFPkn_c()
 {
 }
 
-// @symbol _ZN8daFPkn_c15SpawnDeathSmokeEv
 void daFPkn_c::SpawnDeathSmoke()
 {
     Particle::System *particle;
@@ -168,7 +165,6 @@ void daFPkn_c::SpawnDeathSmoke()
     particle->callbackScale = (short)FX_MUL(mMaxScale, 0x2800);
 }
 
-// @symbol _ZN8daFPkn_c15SpawnDeathBurstEv
 void daFPkn_c::SpawnDeathBurst()
 {
     Vector3 pos;
@@ -193,12 +189,10 @@ void daFPkn_c::SpawnDeathBurst()
 }
 
 /* Empty. StateWait passes this in r0 and nothing reads it. */
-// @symbol _ZN8daFPkn_c21OnGroupMemberDefeatedEv
 void daFPkn_c::OnGroupMemberDefeated()
 {
 }
 
-// @symbol _ZN8daFPkn_c16UpdateClsnOffsetEv
 void daFPkn_c::UpdateClsnOffset()
 {
     struct ClsnOffsetLocals locals;
@@ -262,7 +256,6 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.z = FX_MUL(mClsnOffset.z, mScale);
 }
 
-// @symbol _ZN8daFPkn_c13CheckClsnHitsEv
 void daFPkn_c::CheckClsnHits()
 {
     dActor_c *hitter;
@@ -384,7 +377,6 @@ second:
     ((daPly_c *)hitter)->Hurt(pos2, 2, 0xc000, 1, 0, 1);
 }
 
-// @symbol _ZN8daFPkn_c9StateGrowEv
 void daFPkn_c::StateGrow()
 {
     daPly_c *player;
@@ -432,7 +424,6 @@ tail:
     mdCcAc_c.flags |= 1;
 }
 
-// @symbol _ZN8daFPkn_c9StateSpitEv
 void daFPkn_c::StateSpit()
 {
     Vector3 pos;
@@ -490,7 +481,6 @@ cold:
     mFlags |= 0x10000000;
 }
 
-// @symbol _ZN8daFPkn_c9StateWaitEv
 void daFPkn_c::StateWait()
 {
     Vector3 coinPos;
@@ -625,7 +615,6 @@ void daFPkn_c::StateWait()
     mAngleY = Vec3_HorzAngle(&mPos, &player->mPos);
 }
 
-// @symbol _ZN8daFPkn_c9StateInitEv
 int daFPkn_c::StateInit()
 {
     daFPkn_c *member;
@@ -648,7 +637,6 @@ int daFPkn_c::StateInit()
     return 1;
 }
 
-// @symbol _ZN8daFPkn_c16CleanupResourcesEv
 int daFPkn_c::CleanupResources()
 {
     data_ov084_02130dfc.Release();
@@ -659,7 +647,6 @@ int daFPkn_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN8daFPkn_c6RenderEv
 /* The int inMouth keeps the ROM's flag test; a plain `||` DIFFs. */
 int daFPkn_c::Render()
 {
@@ -676,7 +663,6 @@ int daFPkn_c::Render()
     return 1;
 }
 
-// @symbol _ZN8daFPkn_c8BehaviorEv
 int daFPkn_c::Behavior()
 {
     MakeVanishLuigiWork(mdCcAc_c);
@@ -728,7 +714,6 @@ int daFPkn_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daFPkn_c13InitResourcesEv
 int daFPkn_c::InitResources()
 {
     int i;
@@ -803,7 +788,6 @@ int daFPkn_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN8daFPkn_c16OnAimedAtWithEggEv
 s32 daFPkn_c::OnAimedAtWithEgg() {
     if (mdCcAc_c.flags & 1)
         return mScale * 100;
@@ -814,13 +798,11 @@ s32 daFPkn_c::OnAimedAtWithEgg() {
     return reach;
 }
 
-// @symbol _ZN8daFPkn_c13OnTurnIntoEggER7daPly_c
 void daFPkn_c::OnTurnIntoEgg(daPly_c &player) {
     GivePlayerCoins(player, 1, 0);
     KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN8daFPkn_c13OnYoshiTryEatEv
 /* Two steps; `return actorID == ACTOR_FIREPAKUN_S ? 4 : 0` DIFFs. */
 s32 daFPkn_c::OnYoshiTryEat() {
     int r;
@@ -835,19 +817,16 @@ s32 daFPkn_c::OnYoshiTryEat() {
     return r;
 }
 
-// @symbol daFPkn_c_classInit_PAKUN2
 extern "C" daFPkn_c *daFPkn_c_classInit_PAKUN2()
 {
     return new daFPkn_c();
 }
 
-// @symbol daFPkn_c_classInit_FIREPAKUN_S
 extern "C" daFPkn_c *daFPkn_c_classInit_FIREPAKUN_S()
 {
     return new daFPkn_c();
 }
 
-// @symbol daFPkn_c_classInit_FIREPAKUN
 extern "C" daFPkn_c *daFPkn_c_classInit_FIREPAKUN()
 {
     return new daFPkn_c();

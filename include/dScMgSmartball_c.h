@@ -51,8 +51,9 @@
 #ifndef DSCMGSMARTBALL_C_H
 #define DSCMGSMARTBALL_C_H
 #include "dScMgBase_c.h"
+#include "MWCPlusLib.h"
 
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
 extern "C" void NullDestructor_0203d47c(void);
 extern "C" void SmartballObj_ElemDtor(void);
 

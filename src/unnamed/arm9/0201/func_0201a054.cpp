@@ -3,6 +3,7 @@
 #include "Heap.h"
 #include "IRQ.h"
 #include "dScene_c.h"
+#include "private/watchdog_alarm.h"
 
 extern "C" {
 
@@ -30,7 +31,7 @@ extern void func_020196cc(void);
 extern void func_0201a5cc(void);
 
 extern char data_0208ee50[12]; /* save magic, zero padded */
-extern char data_0209d574[];
+extern struct WatchdogAlarm data_0209d574;
 extern char ACTOR_SPAWN_TABLE[];
 extern void *data_020a4bb8;
 struct S0209ee90 {
@@ -78,9 +79,9 @@ void func_0201a054(void) {
         IRQ::DisableIRQs(0x100000);
     if (!isChild)
         func_0203ad84();
-    func_0201a9fc(data_0209d574);
+    func_0201a9fc((char *)&data_0209d574);
     mHeap::Heap_t::InitializeGameHeap(0x3b000, 0);
-    func_0201a9fc(data_0209d574);
+    func_0201a9fc((char *)&data_0209d574);
     func_02019440();
     if (!isChild)
         func_020134c8();

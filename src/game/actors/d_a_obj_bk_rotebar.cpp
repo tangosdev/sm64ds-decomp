@@ -54,12 +54,10 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjBk_Rotebar_c_classInit
 extern "C" daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
     return new daObjBk_Rotebar_c();
 }
 
-// @symbol _ZN17daObjBk_Rotebar_c13InitResourcesEv
 s32 daObjBk_Rotebar_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov015_02114a8c), 1, -1);
     UpdateModelPosAndRotY();
@@ -75,7 +73,6 @@ s32 daObjBk_Rotebar_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN17daObjBk_Rotebar_c8BehaviorEv
 s32 daObjBk_Rotebar_c::Behavior() {
     if (DecIfAbove0_Byte((unsigned char *)&mPauseTimer) == 0) {
         mPrevAngleY += 0x100;
@@ -93,13 +90,11 @@ s32 daObjBk_Rotebar_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN17daObjBk_Rotebar_c6RenderEv
 s32 daObjBk_Rotebar_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN17daObjBk_Rotebar_c16CleanupResourcesEv
 s32 daObjBk_Rotebar_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -111,8 +106,6 @@ s32 daObjBk_Rotebar_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjBk_Rotebar_cD1Ev
-// @symbol _ZN17daObjBk_Rotebar_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in
  * include/daObjBk_Rotebar_c.h and declared FIRST. Two measurements force that:
  *   - out of line, mwcc emits D0 ahead of D1 and the cartridge has D1 first,

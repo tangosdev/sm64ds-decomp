@@ -130,7 +130,6 @@ void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const 
  * and register ~Vector3() (was the handwritten __sinit_ov002_0210804c). */
 static Vector3 sMapScreenCenter(0x80000, 0, 0x60000);
 
-// @symbol _ZN6dMap_cD1Ev
 /* The complete-object destructor: store this class's vptr and chain to
  * dBase_c's destructor. dMap_c adds no member with a destructor of its own,
  * so the body is empty and the compiler writes the whole thing.
@@ -138,13 +137,11 @@ static Vector3 sMapScreenCenter(0x80000, 0, 0x60000);
 dMap_c::~dMap_c()
 {
 }
-// @symbol _ZN6dMap_cD0Ev
 /* The deleting destructor has no text of its own: the single ~dMap_c() above
  * emits D1, D0 and D2 together, and D0 is D1 plus the inline operator
  * delete. The cartridge keeps D1 and D0 only; the manifest deadstrips D2.
  */
 
-// @symbol _ZN6dMap_c21FixTHIPaintingRoomPosER7Vector3
 /*
  * Bends a position inside the THI painting room so the minimap draws it in the
  * right place -- the room's real geometry and its map are not the same shape.
@@ -192,7 +189,6 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
     }
 }
 
-// @symbol _ZN6dMap_c19UpdateLevelSpecificEv
 /* Per-sublevel touch-ups to the BG3 buffer that GetBG3CharPtr returns. Each
  * case writes rows of consecutive u16 tile numbers, and only when its
  * condition holds (cases 7 and 8 also need data_0209f220 >= 2): a star collected, an event bit, or a bit in data_0209caa0. */
@@ -350,7 +346,6 @@ void dMap_c::UpdateLevelSpecific()
     }
 }
 
-// @symbol _ZN6dMap_c16CleanupResourcesEv
 /* dMap_c::CleanupResources() at 0x020f9e8c (ov002) -- vtable slot 3.
  * Returns VS_FAIL (1); the minimap holds no SharedFilePtr/heap resources
  * to release on death. dMap_c : dBase_c : fBase_c.
@@ -361,7 +356,6 @@ s32 dMap_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN6dMap_c16OnPendingDestroyEv
 /* dMap_c::OnPendingDestroy() at 0x020f9e94 (ov002) -- vtable slot 12.
  * Empty override; the minimap does nothing when marked for destruction.
  */
@@ -370,7 +364,6 @@ void dMap_c::OnPendingDestroy()
     (void)this;
 }
 
-// @symbol _ZN6dMap_c6RenderEv
 int dMap_c::Render()
 {
     u8 flag20c = data_0209f20c;
@@ -548,7 +541,6 @@ int dMap_c::Render()
 }
 
 
-// @symbol _ZN6dMap_c8BehaviorEv
 /* One frame of the minimap: pick the map for the focus object, scroll and
  * scale the BG, then project every icon onto the screen.
  *
@@ -921,7 +913,6 @@ extern s32 gRunningKuppaScript;
 #pragma opt_strength_reduction off
 /* Kept: the ROM recomputes i << 11 for each screen block; strength reduction
  * turns it into a running offset and needs one more register. */
-// @symbol _ZN6dMap_c13InitResourcesEv
 int dMap_c::InitResources()
 {
     u16 *p;
@@ -1055,7 +1046,6 @@ int dMap_c::InitResources()
 
 #pragma opt_strength_reduction on
 
-// @symbol _ZN6dMap_c20GetPosFromMinimapPosER7Vector3S1_isS1_
 void dMap_c::GetPosFromMinimapPos(Vector3 &a, Vector3 &b, Fix12i c, short d, Vector3 &e) {
     Vector3 local;
     Vec3_Sub(&local, &a, &sMapScreenCenter);
@@ -1063,7 +1053,6 @@ void dMap_c::GetPosFromMinimapPos(Vector3 &a, Vector3 &b, Fix12i c, short d, Vec
     Vec3_RotateYAndTranslate(&e, &b, d, &local);
 }
 
-// @symbol _ZN6dMap_c15GetPosOnMinimapEP7Vector3S1_isS1_
 void dMap_c::GetPosOnMinimap(Vector3 *out, Vector3 *a, Fix12i s, short ang, Vector3 *res) {
     Vector3 v;
     Vec3_Sub(&v, out, a);
@@ -1076,7 +1065,6 @@ void dMap_c::GetPosOnMinimap(Vector3 *out, Vector3 *a, Fix12i s, short ang, Vect
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Minimap_Spawn. It was once labelled
  * the dMap_c constructor, but it takes no `this`: it is the registry factory. */
-// @symbol dMap_c_classInit
 extern "C" dMap_c *dMap_c_classInit()
 {
     return new dMap_c();

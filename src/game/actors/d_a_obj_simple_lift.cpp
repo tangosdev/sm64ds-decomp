@@ -101,14 +101,11 @@ extern SimpleLiftClsnFileHandle gBkTransbarCollisionFile;
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN17daObjSimpleLift_cD1Ev
-// @symbol _ZN17daObjSimpleLift_cD0Ev
 /* One definition; mwccarm emits D1 then D0. The body is the inherited
  * dBgW_KcMbg, dExtSimpleModel_c and dActor_c destruction. This class adds nothing
  * that needs destroying. */
 daObjSimpleLift_c::~daObjSimpleLift_c() {}
 
-// @symbol _ZN17daObjSimpleLift_c16CleanupResourcesEv
 int daObjSimpleLift_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -117,13 +114,11 @@ int daObjSimpleLift_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN17daObjSimpleLift_c6RenderEv
 int daObjSimpleLift_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN17daObjSimpleLift_c8BehaviorEv
 int daObjSimpleLift_c::Behavior() {
     if (DecIfAbove0_Byte(&mPauseTimer) == 0) {
         if (DecIfAbove0_Short((unsigned short *)&mMoveTimer) == 0) {
@@ -140,7 +135,6 @@ int daObjSimpleLift_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN17daObjSimpleLift_c13InitResourcesEv
 int daObjSimpleLift_c::InitResources() {
     switch (actorID) {
     case 0x37:
@@ -199,37 +193,30 @@ int daObjSimpleLift_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjSimpleLift_c_classInit_BK_TRANSBAR
 extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_BK_TRANSBAR() {
     return new daObjSimpleLift_c();
 }
 
-// @symbol daObjSimpleLift_c_classInit_KM2_RIFUT02
 extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_KM2_RIFUT02() {
     return new daObjSimpleLift_c();
 }
 
-// @symbol daObjSimpleLift_c_classInit_KM2_RIFUT01
 extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_KM2_RIFUT01() {
     return new daObjSimpleLift_c();
 }
 
-// @symbol daObjSimpleLift_c_classInit_RC_RIFT01
 extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_RC_RIFT01() {
     return new daObjSimpleLift_c();
 }
 
-// @symbol daObjSimpleLift_c_classInit_KM3_DERU02
 extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_KM3_DERU02() {
     return new daObjSimpleLift_c();
 }
 
-// @symbol daObjSimpleLift_c_classInit_KM3_DERU01
 extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_KM3_DERU01() {
     return new daObjSimpleLift_c();
 }
 
-// @symbol daObjSimpleLift_c_classInit_KM1_DERU
 extern "C" daObjSimpleLift_c *daObjSimpleLift_c_classInit_KM1_DERU() {
     return new daObjSimpleLift_c();
 }

@@ -82,7 +82,6 @@ int  D3D_PanForX(int a);
 
 namespace Particle { void RenderAll(); }
 
-// @symbol D3D_CaptureToMain
 extern "C" void D3D_CaptureToMain(void) {
     *(volatile unsigned short *)0x4000304 |= 0x8000;
     GX::ResetBankForSubOBJ();
@@ -99,7 +98,6 @@ extern "C" void D3D_CaptureToMain(void) {
     *(volatile unsigned short *)0x400100c &= ~0x40;
 }
 
-// @symbol D3D_CaptureToSub
 extern "C" void D3D_CaptureToSub(void)
 {
     *(volatile unsigned short *)0x4000304 &= ~0x8000;
@@ -113,7 +111,6 @@ extern "C" void D3D_CaptureToSub(void)
     *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
 }
 
-// @symbol D3D_DrawSpriteTable
 extern "C" void D3D_DrawSpriteTable(void)
 {
     int entry;
@@ -154,13 +151,11 @@ extern "C" void D3D_DrawSpriteTable(void)
     func_02056674(sD3DOamShadow, 0, 0x400);
 }
 
-// @symbol D3D_ClearCaptureTable
 extern "C" void D3D_ClearCaptureTable(void)
 {
     func_02056674(sD3DOamShadow, 0, 0x400u);
 }
 
-// @symbol D3D_InitDualScreen
 extern "C" void D3D_InitDualScreen(void)
 {
     GX::ResetBankForSubBG();
@@ -170,7 +165,6 @@ extern "C" void D3D_InitDualScreen(void)
     *(unsigned int *)0x4001000 &= ~0x300010;
 }
 
-// @symbol _ZN14dScMgD3DBase_c15InitSubScreenBgEv
 /* Slot 31: loads the sub-screen BG and OBJ graphics, then restores the
  * banks it borrowed. Keep the destinations as base plus offset; one folded
  * constant changes the code. */
@@ -202,7 +196,6 @@ int dScMgD3DBase_c::InitSubScreenBg()
     GX::SetBankForSubBG(mSubBgBank);
 }
 
-// @symbol _ZN14dScMgD3DBase_c11InitEnginesEv
 /* Slot 33: sets up the 3D display and VRAM banks, keeps the loaded
  * buffers for later palette and menu work, and publishes the two
  * cameras. */
@@ -249,12 +242,10 @@ void dScMgD3DBase_c::InitEngines()
     data_0209d4a8 = &sMgGraphCallback;
 }
 
-// @symbol D3D_ReleaseSubBg1
 /* Clears the sub-screen BG1 claim. The caller passes this, which is
  * unused. */
 extern "C" void D3D_ReleaseSubBg1(void *) { data_0209e660 = 0; }
 
-// @symbol _ZN14dScMgD3DBase_c19BeforeInitResourcesEv
 /* The key function: the first virtual declared but not defined inline, so
    defining it here emits the vtable, the RTTI and the D1 and D0 pair. */
 bool dScMgD3DBase_c::BeforeInitResources()
@@ -264,14 +255,12 @@ bool dScMgD3DBase_c::BeforeInitResources()
     return 1;
 }
 
-// @symbol _ZN14dScMgD3DBase_c18AfterInitResourcesEj
 void dScMgD3DBase_c::AfterInitResources(unsigned int vfSuccess)
 {
     dScMgBase_c::AfterInitResources(vfSuccess);
     mSysTracker.Initialise();
 }
 
-// @symbol _ZN14dScMgD3DBase_c14BeforeBehaviorEv
 int dScMgD3DBase_c::BeforeBehavior()
 {
     if (dScMgBase_c::BeforeBehavior() == 0) return 0;
@@ -280,7 +269,6 @@ int dScMgD3DBase_c::BeforeBehavior()
     return 1;
 }
 
-// @symbol _ZN14dScMgD3DBase_c12BeforeRenderEv
 int dScMgD3DBase_c::BeforeRender()
 {
     if (dScMgBase_c::BeforeRender() == 0) {
@@ -291,7 +279,6 @@ int dScMgD3DBase_c::BeforeRender()
     return 1;
 }
 
-// @symbol _ZN14dScMgD3DBase_c11AfterRenderEj
 void dScMgD3DBase_c::AfterRender(unsigned int arg)
 {
     volatile unsigned short *reg = (volatile unsigned short *)0x04000006;
@@ -305,7 +292,6 @@ void dScMgD3DBase_c::AfterRender(unsigned int arg)
     dScene_c::AfterRender(arg);
 }
 
-// @symbol _ZN14dScMgD3DBase_c21AfterCleanupResourcesEj
 void dScMgD3DBase_c::AfterCleanupResources(unsigned int vfSuccess)
 {
     if (vfSuccess == 2) {
@@ -322,7 +308,6 @@ void dScMgD3DBase_c::AfterCleanupResources(unsigned int vfSuccess)
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
 
-// @symbol _ZN14dScMgD3DBase_c16OnGraphCallback2Ev
 /* Slot 24, inherited by Jump and Jump2: switches between the two
  * 0xbc-byte cameras. Keep the if/else toggle; `mDrawSubScreen = mDrawSubScreen == 0`
  * compiles differently. */
@@ -351,21 +336,18 @@ int dScMgD3DBase_c::OnGraphCallback2()
     return 1;
 }
 
-// @symbol _ZN14dScMgD3DBase_c16OnGraphCallback3Ev
 /* Slot 25. */
 int dScMgD3DBase_c::OnGraphCallback3()
 {
     return dScMgBase_c::OnGraphCallback3() != 0;
 }
 
-// @symbol _ZN14dScMgD3DBase_c14GetDisplayModeEv
 /* Slot 26: marks the 3D scenes with 2. */
 int dScMgD3DBase_c::GetDisplayMode()
 {
     return 2;
 }
 
-// @symbol D3D_PlaySeAtX
 /* Returns whatever func_02012718 leaves in r0; decl_common.h declares it
    void, so there is no return statement. */
 extern "C" int D3D_PlaySeAtX(int a, int b)
@@ -373,41 +355,35 @@ extern "C" int D3D_PlaySeAtX(int a, int b)
     func_02012718(a, b + 0x80000);
 }
 
-// @symbol Sound_PlayBank1Panned
 extern "C" void Sound_PlayBank1Panned(int a0, int a1, int a2) {
     a1 += sD3DSoundPanOffsets[a0];
     int pan = D3D_PanForX(a2);
     func_020127ec(1, a1, 4, 0, 0, pan);
 }
 
-// @symbol D3D_PlaySePannedLoop
 extern "C" void D3D_PlaySePannedLoop(int a0, int a1, int a2) {
     int pan = func_020126e8(a1 + 0x80000);
     func_020126ac(a0, 6, 0, a2, pan);
 }
 
-// @symbol D3D_PanForX
 /* Thunk: func_020126e8(a + 0x80000). */
 extern "C" int D3D_PanForX(int a)
 {
     return func_020126e8(a + 0x80000);
 }
 
-// @symbol _ZN14dScMgD3DBase_c8OpenMenuEv
 /* Slot 27: a long-branch veneer to the base. */
 void dScMgD3DBase_c::OpenMenu()
 {
     dScMgBase_c::OpenMenu();
 }
 
-// @symbol _ZN14dScMgD3DBase_c9CloseMenuEv
 /* Slot 28. */
 int dScMgD3DBase_c::CloseMenu()
 {
     return dScMgBase_c::CloseMenu();
 }
 
-// @symbol _ZN14dScMgD3DBase_c17SaveScreenForMenuEv
 /* Slot 29: claims the sub-screen banks before the base opens the menu. */
 int dScMgD3DBase_c::SaveScreenForMenu()
 {
@@ -421,7 +397,6 @@ int dScMgD3DBase_c::SaveScreenForMenu()
     return dScMgBase_c::SaveScreenForMenu();
 }
 
-// @symbol _ZN14dScMgD3DBase_c21RestoreScreenFromMenuEv
 /* Slot 30: gives the banks back around the base's menu teardown. */
 void dScMgD3DBase_c::RestoreScreenFromMenu()
 {

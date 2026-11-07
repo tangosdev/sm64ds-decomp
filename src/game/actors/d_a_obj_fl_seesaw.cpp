@@ -57,13 +57,10 @@ void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 #pragma defer_codegen off
 
 /* Vtable slots 16 (D1) and 17 (D0). */
-// @symbol _ZN16daObjFl_Seesaw_cD1Ev
-// @symbol _ZN16daObjFl_Seesaw_cD0Ev
 daObjFl_Seesaw_c::~daObjFl_Seesaw_c() {}
 
 /* Writes mModel's transform from mPosX/Y/Z and mAngleX/Y/Z -- the base's
  * UpdateModelPosAndRotY job, on three axes. */
-// @symbol _ZN16daObjFl_Seesaw_c20UpdateModelTransformEv
 void daObjFl_Seesaw_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.t.x = mPosX >> 3;
@@ -71,7 +68,6 @@ void daObjFl_Seesaw_c::UpdateModelTransform() {
     mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
-// @symbol _ZN16daObjFl_Seesaw_c16CleanupResourcesEv
 s32 daObjFl_Seesaw_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -81,14 +77,12 @@ s32 daObjFl_Seesaw_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjFl_Seesaw_c6RenderEv
 s32 daObjFl_Seesaw_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
 /* Slot 6. */
-// @symbol _ZN16daObjFl_Seesaw_c8BehaviorEv
 s32 daObjFl_Seesaw_c::Behavior() {
     mMeshCollider.SetClipRadius(0x650000);
     if (DecIfAbove0_Byte(&mSwingCooldown) == 0) {
@@ -106,7 +100,6 @@ s32 daObjFl_Seesaw_c::Behavior() {
 }
 
 /* Slot 0. */
-// @symbol _ZN16daObjFl_Seesaw_c13InitResourcesEv
 s32 daObjFl_Seesaw_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov022_021145a8), 1, -1);
     UpdateModelTransform();
@@ -120,7 +113,6 @@ s32 daObjFl_Seesaw_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjFl_Seesaw_c_classInit
 extern "C" daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
     return new daObjFl_Seesaw_c();
 }

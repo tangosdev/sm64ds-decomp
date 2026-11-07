@@ -42,12 +42,10 @@ SldMngVec3 data_ov019_021135d8(-0x12a0000, 0x700000, -0x200000);
  * allocation size, vtable identity, and the SLIDER_MANAGER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: daSldMng_c_Spawn. */
-// @symbol daSldMng_c_classInit
 extern "C" daSldMng_c *daSldMng_c_classInit() {
     return new daSldMng_c();
 }
 
-// @symbol _ZN10daSldMng_c13InitResourcesEv
 int daSldMng_c::InitResources() {
     mPosX = data_ov019_021135d8.x;
     mPosY = data_ov019_021135d8.y;
@@ -56,7 +54,6 @@ int daSldMng_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN10daSldMng_c8BehaviorEv
 int daSldMng_c::Behavior() {
     switch (mState) {
     case 0:
@@ -74,8 +71,6 @@ int daSldMng_c::Behavior() {
     }
     return 1;
 }
-// @symbol _ZN10daSldMng_cD1Ev
-// @symbol _ZN10daSldMng_cD0Ev
 /* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- _ZN10daSldMng_cD1Ev 0x0211261c size 0x24 and       */
 /* _ZN10daSldMng_cD0Ev 0x02112640 size 0x38 -- are NOT written here.         */

@@ -9,8 +9,8 @@
  * sign model and lays the collider.
  *
  * What stays: Vec3_ApproachHorz / AngleDiff have no shared header.
- * What stays: func_ov002_020bec9c is still the linker name of the
- *   daPly_c SetAnim wrapper owned by the daPly_c TU. Naming belongs there.
+ * What stays: daPly_c::func_ov002_020bec9c, the player's SetAnim wrapper,
+ *   is still named by address. Naming belongs to the daPly_c TU.
  * What stays: data_02082214 is the shared arm9 sine table.
  * What stays: the (s16)mMessageID / (u16 *)&mAngleY casts are
  *   load-bearing (sign-extends / zero-extends the halfword load).
@@ -48,19 +48,15 @@ extern int AngleDiff(int a, int b);
 extern s16 data_02082214[];
 
 /* the player side of the conversation */
-extern void func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
 }
 
 #pragma defer_codegen off
 
-// @symbol _ZN13daObjKanban_cD1Ev
-// @symbol _ZN13daObjKanban_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: its own vptr, then dCcAcPos_c (0x320), then dBgActor_c's
  * inlined, then dBgActor_c's dBgW_KcMbg and dExtSimpleModel_c, then dActor_c. */
 daObjKanban_c::~daObjKanban_c() {}
 
-// @symbol _ZN13daObjKanban_c16CleanupResourcesEv
 /* One release. A wall sign owns exactly one shared file -- the sign
  * model -- and gives it back on the way out. */
 int daObjKanban_c::CleanupResources() {
@@ -68,13 +64,11 @@ int daObjKanban_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjKanban_c6RenderEv
 int daObjKanban_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjKanban_c8BehaviorEv
 int daObjKanban_c::Behavior() {
     daPly_c *tgt = mTalkingPlayer;
     Vector3 mine, pos, tpos;
@@ -106,12 +100,12 @@ int daObjKanban_c::Behavior() {
                     mState += 1;
                 } else if (ApproachLinear(tgt->mAngleY, Vec3_HorzAngle(&tpos, &pos), 0x800)) {
                     mState += 1;
-                    func_ov002_020bec9c(tgt, 1, 0, 0x1000, 0);
+                    tgt->func_ov002_020bec9c(1, 0, 0x1000, 0);
                 }
                 break;
             case 1:
                 if (Vec3_ApproachHorz(&tgt->mPos, &pos, 0xa000)) {
-                    func_ov002_020bec9c(tgt, 0, 0, 0x1000, 0);
+                    tgt->func_ov002_020bec9c(0, 0, 0x1000, 0);
                     mState += 1;
                 }
                 break;
@@ -162,7 +156,6 @@ int daObjKanban_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjKanban_c13InitResourcesEv
 int daObjKanban_c::InitResources() {
     struct Vector3 v;
     void *file = dExtSimpleModel_c::LoadFile(data_ov085_02130858);
@@ -175,7 +168,6 @@ int daObjKanban_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjKanban_c_classInit
 /* The registry factory behind the KANBAN profile. `return new
  * daObjKanban_c()` is the whole body: the synthesized constructor is
  * what runs dBgActor_c's base step, stores the vptr and then

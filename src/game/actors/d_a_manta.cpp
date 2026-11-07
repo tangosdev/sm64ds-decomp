@@ -97,13 +97,10 @@ extern MantaState data_ov090_0213454c;
 
 /* One written destructor. The compiler emits D1 then D0 from the
  * members above; D0 adds dEnemyBase_c's inline operator delete. */
-// @symbol _ZN9daManta_cD1Ev
-// @symbol _ZN9daManta_cD0Ev
 daManta_c::~daManta_c() {}
 
 /* Cylinder follows data_ov090_02134200. A PLAYER inside it is hurt
  * from this actor's position. */
-// @symbol _ZN9daManta_c18HurtTouchingPlayerEv
 void daManta_c::HurtTouchingPlayer() {
     Vector3 offset;
     offset.x = data_ov090_02134200.x;
@@ -128,7 +125,6 @@ void daManta_c::HurtTouchingPlayer() {
 
 /* State execute. Advance the swim anim, hurt, drop the next ring,
  * score an in-order pass, and spawn the star once five have landed. */
-// @symbol _ZN9daManta_c11ExecuteSwimEv
 int daManta_c::ExecuteSwim() {
     dActor_c *spawned;
     Vector3 num1;
@@ -204,7 +200,6 @@ int daManta_c::ExecuteSwim() {
 }
 
 /* State init. Swim anim at 1.0, empty ring list. */
-// @symbol _ZN9daManta_c9EnterSwimEv
 int daManta_c::EnterSwim() {
     mAnmModel.SetAnim((BCA_File *)data_ov090_0213452c.filePtr, 0, 0x1000, 0);
     mHitRing = 0;
@@ -218,7 +213,6 @@ int daManta_c::EnterSwim() {
 }
 
 /* Install state and run its init PMF. A null init is "do nothing". */
-// @symbol _ZN9daManta_c11ChangeStateEP10MantaState
 int daManta_c::ChangeState(MantaState *state) {
     mState = state;
     MantaState *current = mState;
@@ -230,7 +224,6 @@ int daManta_c::ChangeState(MantaState *state) {
 /* Position >> 3 and the angle triple become the model matrix. Bone 3's
  * transform is then folded in, and its translation << 3 is where the
  * next ring spawns. */
-// @symbol _ZN9daManta_c21UpdateModelAndRingPosEv
 void daManta_c::UpdateModelAndRingPos() {
     Vector3 scaled;
     Vec3_Asr(&scaled, &mPos, 3);
@@ -250,7 +243,6 @@ void daManta_c::UpdateModelAndRingPos() {
     mRingPos.z <<= 3;
 }
 
-// @symbol _ZN9daManta_c16CleanupResourcesEv
 int daManta_c::CleanupResources() {
     data_ov090_02134524.Release();
     data_ov002_0210da10.Release();
@@ -259,16 +251,13 @@ int daManta_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN9daManta_c16OnPendingDestroyEv
 void daManta_c::OnPendingDestroy() {}
 
-// @symbol _ZN9daManta_c6RenderEv
 int daManta_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN9daManta_c8BehaviorEv
 int daManta_c::Behavior() {
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     {
@@ -319,7 +308,6 @@ int daManta_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9daManta_c13InitResourcesEv
 int daManta_c::InitResources() {
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov090_02134524), 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
@@ -374,7 +362,6 @@ int daManta_c::InitResources() {
     return 1;
 }
 
-// @symbol daManta_c_classInit
 extern "C" daManta_c *daManta_c_classInit() {
     return new daManta_c();
 }

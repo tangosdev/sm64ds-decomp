@@ -43,17 +43,14 @@ typedef char Km2FallClsnFileHandle_size_must_be_8[sizeof(Km2FallClsnFileHandle) 
 
 extern ResourceDescriptor data_ov045_021130ac;
 
-// @symbol daObjKm2_Fall_Block_c_classInit
 extern "C" daObjKm2_Fall_Block_c *daObjKm2_Fall_Block_c_classInit() {
     return new daObjKm2_Fall_Block_c();
 }
 
-// @symbol _ZN21daObjKm2_Fall_Block_c13InitResourcesEv
 s32 daObjKm2_Fall_Block_c::InitResources() {
     return InitResourcesFrom(&data_ov045_021130ac);
 }
 
-// @symbol _ZN21daObjKm2_Fall_Block_c16CleanupResourcesEv
 s32 daObjKm2_Fall_Block_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov045_021130ac);
 }

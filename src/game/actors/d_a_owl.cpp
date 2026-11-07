@@ -163,9 +163,10 @@ int Vec3_Dist(const Vector3 *, const Vector3 *);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 unsigned int RandomIntInternal(void *seed);
-void MulVec3Mat4x3(void *dst, void *mat, void *src);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(VecFx32 *v);
+int LenVec3(const Vector3 *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int IsStarCollectedInCurLevel(int);
 unsigned short DecIfAbove0_Short(void *);
@@ -177,8 +178,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == ACTOR_PLAYER;
 }
 
-// @symbol _ZN7daOwl_cD1Ev
-// @symbol _ZN7daOwl_cD0Ev
 /* The whole body is compiler-emitted: one vptr store, then dExtShadowModel_c
  * (0x370), dExtAnmModel_c (0x30c), dBgCh_Actr (0x150) and dCcAcPos_c (0x110) in
  * reverse declaration order, then dEnemyBase_c::~dEnemyBase_c. D1 is the
@@ -188,7 +187,6 @@ daOwl_c::~daOwl_c()
 {
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_021357a4Ev
 /* Hover, once the talk is over: if the player is touching the owl, grab it.
  * The contact owner is the actor id in the hit-box; only the player (0xbf)
  * counts. Attaches the player, zeroes the owl's velocity and enters the carry
@@ -225,7 +223,6 @@ void daOwl_c::func_ov094_021357a4()
     func_ov094_02136188(OWL_STATE_CARRY);
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_021358b4Ev
 /* Main of the return state. Phase 0 fades the owl out (with an upward speed);
  * once invisible it jumps to just above the anchor and starts phase 1, which
  * eases it onto the anchor while fading back in, then goes to hover. */
@@ -258,7 +255,6 @@ int daOwl_c::func_ov094_021358b4()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_0213598cEv
 /* Enter of the return state: restart the fade and play the animation
  * data_ov094_02136af8[1] at double speed. */
 int daOwl_c::func_ov094_0213598c()
@@ -270,7 +266,6 @@ int daOwl_c::func_ov094_0213598c()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_021359d8Ev
 /* Main of the carry state. Once the 30-frame timer has run out it keeps
  * sound 0x18c playing, plays sound 0x139 once per animation loop, levels the pitch, and
  * hands the rider back (to the return state) when the rider lets go, is lost,
@@ -329,7 +324,6 @@ int daOwl_c::func_ov094_021359d8()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02135bd4Ev
 /* Enter of the carry state: 30-frame timer, animation data_ov094_02136af8[1] at double speed. */
 int daOwl_c::func_ov094_02135bd4()
 {
@@ -340,7 +334,6 @@ int daOwl_c::func_ov094_02135bd4()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02135c28Ev
 /* Main of the hover state. Until a conversation has happened it tries to
  * start one with the player (message 0xa2) and, if that takes, enters the talk
  * state. Otherwise it wanders: when it is too far from the anchor it turns
@@ -400,11 +393,10 @@ int daOwl_c::func_ov094_02135c28()
     ApproachLinear(mPosY, mAnchor.y + result, 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    MulVec3Mat4x3(&buf, &data_020a0e68, &mSpeedX);
+    MulVec3Mat4x3((Vector3 *)&buf, &data_020a0e68, (Vector3 *)&mSpeedX);
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02135e64Ev
 /* Enter of the hover state: animation data_ov094_02136af0[1] at normal speed, random heading and a
  * 50..113 frame wander timer. */
 int daOwl_c::func_ov094_02135e64()
@@ -416,7 +408,6 @@ int daOwl_c::func_ov094_02135e64()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02135ee0Ev
 /* Main of the talk state: turn to face the player (yaw, then pitch toward a
  * point 200 units above its feet). When the player's talk state goes negative
  * the conversation is over; mark it done and return to hover. */
@@ -445,7 +436,6 @@ int daOwl_c::func_ov094_02135ee0()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02135fe0Ev
 /* Enter of the talk state: stop, and play the animation data_ov094_02136af0[1]. */
 int daOwl_c::func_ov094_02135fe0()
 {
@@ -456,7 +446,6 @@ int daOwl_c::func_ov094_02135fe0()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02136024Ev
 /* Main of the dormant state. Watches the nearest player and keeps the owl 400
  * units above that player's ground height. When the player's position is
  * within 40 units of the owl (LenVec3 < 0x28000) it sets the anchor 800 units
@@ -476,7 +465,7 @@ int daOwl_c::func_ov094_02136024()
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
         Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
-        if (LenVec3(&d) < 0x28000) {
+        if (LenVec3((const Vector3 *)&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;
             d.z = mPosZ;
@@ -484,7 +473,7 @@ int daOwl_c::func_ov094_02136024()
             d.y = 0;
             d.z = 0x320000;
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MulVec3Mat4x3(&d, &data_020a0e68, &mAnchor);
+            MulVec3Mat4x3((Vector3 *)&d, &data_020a0e68, &mAnchor);
             {
                 int *px = &mAnchor.x;
                 int *py = &mAnchor.y;
@@ -501,7 +490,6 @@ int daOwl_c::func_ov094_02136024()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02136150Ev
 /* Enter of the dormant state: animation data_ov094_02136af0[1]. */
 int daOwl_c::func_ov094_02136150()
 {
@@ -509,7 +497,6 @@ int daOwl_c::func_ov094_02136150()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_02136188EPNS_5StateE
 /* Switch state: store it, then run its enter handler if it has one. */
 int daOwl_c::func_ov094_02136188(State *state)
 {
@@ -520,7 +507,6 @@ int daOwl_c::func_ov094_02136188(State *state)
     return (this->*(s->mEnter))();
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_021361d8Ev
 /* Per-frame model setup: world matrix from position (>> 3) and angles, the
  * model's opacity, its shadow matrix, and the drop shadow. */
 void daOwl_c::func_ov094_021361d8()
@@ -542,7 +528,6 @@ void daOwl_c::func_ov094_021361d8()
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x64000, 0x320000, 0xf);
 }
 
-// @symbol _ZN7daOwl_c19func_ov094_021362e0Ev
 /* Carry state's placement: take the rider's matrix (pointer at rider + 0xc8),
  * offset and rotate it, and use the result as the owl's own position, yaw and
  * model matrix. */
@@ -571,7 +556,6 @@ void daOwl_c::func_ov094_021362e0()
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN7daOwl_c16CleanupResourcesEv
 int daOwl_c::CleanupResources()
 {
     data_ov094_02136ae0.Release();
@@ -581,12 +565,10 @@ int daOwl_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c16OnPendingDestroyEv
 void daOwl_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7daOwl_c6RenderEv
 int daOwl_c::Render()
 {
     if (mCurrentState == OWL_STATE_DORMANT)
@@ -595,7 +577,6 @@ int daOwl_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c8BehaviorEv
 int daOwl_c::Behavior()
 {
     DecIfAbove0_Short(&mStateTimer);
@@ -652,7 +633,6 @@ int daOwl_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daOwl_c13InitResourcesEv
 int daOwl_c::InitResources()
 {
     int v0[3];
@@ -686,7 +666,6 @@ int daOwl_c::InitResources()
     return 1;
 }
 
-// @symbol daOwl_c_classInit
 extern "C" daOwl_c *daOwl_c_classInit()
 {
     return new daOwl_c();

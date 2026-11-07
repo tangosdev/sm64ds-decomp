@@ -268,11 +268,8 @@ struct KuriKingPmf { char pad[0x5cc]; s32 mState; };
  * D0 at 0x0211f000 / 0x0211f0a0, the two lowest addresses in the run. */
 daKuriKing_c::~daKuriKing_c() {}
 
-// @symbol _ZN12daKuriKing_cD1Ev
 
-// @symbol _ZN12daKuriKing_cD0Ev
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f154Ev
 void daKuriKing_c::func_ov074_0211f154() {
     struct Vector3 look, pos, in, out;
     dCamera_c* cam;
@@ -297,7 +294,6 @@ void daKuriKing_c::func_ov074_0211f154() {
     cam->SetPos(pos);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f244Ev
 void daKuriKing_c::func_ov074_0211f244()
 {
     daKuriKing_c *a = (daKuriKing_c *)dActor_c::FindWithActorID(0xc7, 0);
@@ -330,7 +326,6 @@ void daKuriKing_c::func_ov074_0211f244()
     } while (a != 0);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f344Eh
 void daKuriKing_c::func_ov074_0211f344(u8 value) {
   daKuriKing_c* other = (daKuriKing_c*)dActor_c::FindWithActorID(0xc7, 0);
   while (other) {
@@ -339,7 +334,6 @@ void daKuriKing_c::func_ov074_0211f344(u8 value) {
   }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f38cEv
 /* Release one KURIKING_VANISH copy (actor 0xc7, param 0x1111, drawn with the
    ov084 Goomba model) on a timer during the defeat (state 7, substate 2 of
    0211f5b8), and report whether the whole wave has been released.  This is
@@ -397,7 +391,6 @@ int daKuriKing_c::func_ov074_0211f38c(){
     return this->mSpawnedCount>=spawnTarget ? 1 : 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f5b8Ev
 void daKuriKing_c::func_ov074_0211f5b8()
 {
     Vector3 vzero;
@@ -534,7 +527,6 @@ void daKuriKing_c::func_ov074_0211f5b8()
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fa08Ev
 void daKuriKing_c::func_ov074_0211fa08(){
   this->mSizeIndex = 0;
   int v=func_01ffa344((int)data_ov074_02122e4c[1]);
@@ -548,7 +540,6 @@ void daKuriKing_c::func_ov074_0211fa08(){
   this->mScaleSteps = 3;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fa74Ev
 void daKuriKing_c::func_ov074_0211fa74()
 {
     /* 0x603 does not fit an ARM immediate, so the increment is an address
@@ -585,7 +576,6 @@ void daKuriKing_c::func_ov074_0211fa74()
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fb84Ev
 void daKuriKing_c::func_ov074_0211fb84(){
   func_ov074_02120808();
   this->mScalePhase = 0;
@@ -596,19 +586,16 @@ void daKuriKing_c::func_ov074_0211fb84(){
   this->mScaleSteps = 3;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fbd0Ev
 int daKuriKing_c::func_ov074_0211fbd0(){
     if(ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1)==0)
         return func_ov074_021203e4(3);
     return func_ov074_021216f4();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fc34Ev
 void daKuriKing_c::func_ov074_0211fc34()
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fc38Ev
 void daKuriKing_c::func_ov074_0211fc38()
 {
     if (ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1) != 0) goto reset;
@@ -634,7 +621,6 @@ reset:
     func_ov074_021216f4();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fd48Ev
 void daKuriKing_c::func_ov074_0211fd48()
 {
     unsigned char value;
@@ -646,7 +632,6 @@ void daKuriKing_c::func_ov074_0211fd48()
     this->mSizeIndex = value;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fd74Ev
 void daKuriKing_c::func_ov074_0211fd74()
 {
     if (func_ov074_02121a20(6) != 0) {
@@ -708,13 +693,11 @@ L90:;
     func_ov074_021203e4(3);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211ffacEv
 void daKuriKing_c::func_ov074_0211ffac() {
     func_ov074_02120808();
     this->mTimer = 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211ffccEv
 void daKuriKing_c::func_ov074_0211ffcc() {
   if (func_ov074_02121a20(5) == 0) {
     if (func_ov074_021206c8() == 0) return;
@@ -733,12 +716,10 @@ void daKuriKing_c::func_ov074_0211ffcc() {
   func_ov074_021203e4(2);
 }
 
-// @symbol func_ov074_0212007c
 extern "C" void func_ov074_0212007c(void)
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120080Ev
 void daKuriKing_c::func_ov074_02120080(){
     if (this->mSpawnedCount == 0) {
         func_ov074_021203e4(2);
@@ -759,13 +740,11 @@ void daKuriKing_c::func_ov074_02120080(){
     func_ov074_021203e4(4);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212016cEv
 void daKuriKing_c::func_ov074_0212016c() {
     func_ov074_02121a4c((char*)this, 0xa);
     func_ov074_02120b90();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212018cEv
 extern "C" void func_02011d20(void);
 void daKuriKing_c::func_ov074_0212018c()
 {
@@ -778,12 +757,10 @@ void daKuriKing_c::func_ov074_0212018c()
     func_ov074_021203e4(2);
 }
 
-// @symbol func_ov074_021201ec
 extern "C" void func_ov074_021201ec(void)
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021201f0Ev
 /* daKuriKing_c state-0 tick -- the intro cutscene.
  *
  * Frames the boss for the opening conversation: pins the camera to a fixed
@@ -862,12 +839,10 @@ void daKuriKing_c::func_ov074_021201f0() {
     func_ov074_021203e4(1);
 }
 
-// @symbol func_ov074_021203e0
 extern "C" void func_ov074_021203e0(void)
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021203e4Ei
 int daKuriKing_c::func_ov074_021203e4(int i) {
     mState = i;
     int j = mState;
@@ -875,14 +850,12 @@ int daKuriKing_c::func_ov074_021203e4(int i) {
     (c->*data_ov074_021230f8.entries[j].pmf[0])();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212042cEv
 void daKuriKing_c::func_ov074_0212042c() {
     KuriKingPmf *c = (KuriKingPmf *)this;
     int j = mState;
     (c->*data_ov074_021230f8.entries[j].pmf[1])();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120474Ev
 int daKuriKing_c::func_ov074_02120474() {
     this->mMaterialChanger.Advance();
     unsigned char idx = this->mSizeIndex;
@@ -896,7 +869,6 @@ int daKuriKing_c::func_ov074_02120474() {
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021204c0Ev
 /* daKuriKing_c shrink/grow interpolation tick.
  *
  * Called from func_ov074_0211f5b8 and func_ov074_0211fa74. Picks a pair of
@@ -961,7 +933,6 @@ int daKuriKing_c::func_ov074_021204c0() {
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021206c8Ev
 int daKuriKing_c::func_ov074_021206c8() {
     if (func_ov074_02121a20(8) != 0) {
         if (ApproachAngle(&this->mWalkSpeed, 0, 0x1e, 0x20, 1) == 0) {
@@ -988,7 +959,6 @@ ret0:
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021207b8Ev
 /* If anim 6 is current and mAnmModel has finished, flip mAngleY by half
  * a turn and return 1. Otherwise return 0.
  */
@@ -1003,7 +973,6 @@ int daKuriKing_c::func_ov074_021207b8()
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120808Ev
 void daKuriKing_c::func_ov074_02120808()
 {
     int ang = (short)(this->mWalkAngle + this->mDirection * 0x4500);
@@ -1013,7 +982,6 @@ void daKuriKing_c::func_ov074_02120808()
     this->mDirection *= -1;
 }
 
-// @symbol func_ov074_0212087c
 extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
 {
     int n;
@@ -1097,7 +1065,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120b24Ev
 int daKuriKing_c::func_ov074_02120b24()
 {
     int num = this->mWalkSpeed << 12;
@@ -1111,7 +1078,6 @@ int daKuriKing_c::func_ov074_02120b24()
     return r;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120b90Ev
 void daKuriKing_c::func_ov074_02120b90() {
     int idx = this->mSizeIndex;
     int base = this->mDirection;
@@ -1119,7 +1085,6 @@ void daKuriKing_c::func_ov074_02120b90() {
     this->mMaxWalkSpeed = base * scale;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120bb8EP8dActor_cP10dCcAcPos_ci
 void daKuriKing_c::func_ov074_02120bb8(dActor_c *other, dCcAcPos_c *clsn, int mode)
 {
     Vector3 v, dst, src, delta;
@@ -1169,7 +1134,6 @@ void daKuriKing_c::func_ov074_02120bb8(dActor_c *other, dCcAcPos_c *clsn, int mo
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120d74Ev
 void daKuriKing_c::func_ov074_02120d74() {
     struct Vector3 v0;
     struct Vector3 v1;
@@ -1323,7 +1287,6 @@ void daKuriKing_c::func_ov074_02120d74() {
     func_ov074_02120bb8(player, cur, 1);
 }
 
-// @symbol func_ov074_02121270
 /* World position of model bone `bone`: that bone's transform composed with
  * mBodyMatrix, translation row out, shifted back up from model
  * space (<< 3). */
@@ -1342,7 +1305,6 @@ extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) 
     Vec3_LslInPlace(v, 3);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121300Ev
 
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
@@ -1356,7 +1318,6 @@ void daKuriKing_c::func_ov074_02121300() {
     *(struct Matrix4x3 *)this->mBodyMatrix = data_020a0e68;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121380Ev
 /* Sizes the four collision cylinders from the current scale and places the
  * three foot cylinders under the model's bone positions, then works out which
  * feet are touching the ground this frame: a foot counts as stepped-on only
@@ -1452,7 +1413,6 @@ void daKuriKing_c::func_ov074_02121380() {
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021216f4Ev
 /* Advances mWalkAngle by mWalkSpeed while on the ground and re-derives the
  * walk velocity from the sine table, then eases mAngleY toward the
  * direction-scaled heading. */
@@ -1468,7 +1428,6 @@ int daKuriKing_c::func_ov074_021216f4()
     ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121800Ev
 void daKuriKing_c::func_ov074_02121800()
 {
     Matrix4x3 mtx;
@@ -1515,7 +1474,6 @@ void daKuriKing_c::func_ov074_02121800()
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212195cEv
 /* Fills the model matrix from mAngleY and the position (model space is
  * world >> 3). */
 void daKuriKing_c::func_ov074_0212195c()
@@ -1526,7 +1484,6 @@ void daKuriKing_c::func_ov074_0212195c()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212199cEv
 void daKuriKing_c::func_ov074_0212199c()
 {
     if (func_ov074_02121a20(8)) {
@@ -1549,7 +1506,6 @@ struct KuriKingAnimFile { u16 fileID; u8 numRefs; void *filePtr; };
 struct KuriKingAnimEntry { KuriKingAnimFile *anim; void *btaFile; int animArg; };
 extern KuriKingAnimEntry data_ov074_02122f34[];
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121a20Ei
 /* Is clip `idx` the one currently playing: compare its file pointer with the
  * dExtAnmModel_c's. */
 int daKuriKing_c::func_ov074_02121a20(int idx)
@@ -1558,7 +1514,6 @@ int daKuriKing_c::func_ov074_02121a20(int idx)
     return this->mAnmModel.file == anim->filePtr;
 }
 
-// @symbol func_ov074_02121a4c
 extern "C" void func_ov074_02121a4c(char* c, int idx)
 {
     int off = idx * 0xc;
@@ -1570,7 +1525,6 @@ extern "C" void func_ov074_02121a4c(char* c, int idx)
         ->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
 
-// @symbol _ZN12daKuriKing_c16CleanupResourcesEv
 int daKuriKing_c::CleanupResources()
 {
     int i;
@@ -1590,7 +1544,6 @@ int daKuriKing_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c6RenderEv
 int daKuriKing_c::Render()
 {
     if (param1 == 0x1111) return func_ov074_021222e0();
@@ -1602,7 +1555,6 @@ int daKuriKing_c::Render()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c8BehaviorEv
 int daKuriKing_c::Behavior()
 {
     int t;
@@ -1698,7 +1650,6 @@ int daKuriKing_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c13InitResourcesEv
 int daKuriKing_c::InitResources()
 {
     s32 i;
@@ -1816,7 +1767,6 @@ int daKuriKing_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212229cEv
 /* The vanish variant's file teardown, from CleanupResources. */
 int daKuriKing_c::func_ov074_0212229c()
 {
@@ -1829,7 +1779,6 @@ int daKuriKing_c::func_ov074_0212229c()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021222e0Ev
 /* The vanish variant's render: build the model matrix out of the shared
  * scratch matrix -- position, then +0x6400 up, rotate by the Euler angles,
  * then back down -- and draw the model if visible. */
@@ -1850,7 +1799,6 @@ int daKuriKing_c::func_ov074_021222e0()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021223bcEv
 /* The vanish variant's tick: once mLaunched the clone is a thrown projectile --
  * it bounces on the ground (0x13a/0x13b), dies on water/toxic floor or when
  * mTimer runs out, and tumbles while airborne. */
@@ -1930,7 +1878,6 @@ int daKuriKing_c::func_ov074_021223bc()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02122634Ev
 /* The vanish variant's InitResources: loads the seven shared animation files,
  * binds the model, a single shadow cylinder, material and texture animators,
  * then seeds the rest angles and the actor-cylinder Init. */
@@ -2007,7 +1954,6 @@ KuriKingStateTable data_ov074_021230f8;
  * 0x0212290c), KURIKING_VANISH first. Both construct the same 0x610-byte
  * class; the registry profile selects the actor variant. */
 
-// @symbol daKuriKing_c_classInit_KURIKING_VANISH
 /* Reconstructed source-style name: SM64DS proves daKuriKing_c through RTTI,
  * allocation size, vtable identity, and the KURIKING_VANISH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -2017,7 +1963,6 @@ extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void)
     return new daKuriKing_c;
 }
 
-// @symbol daKuriKing_c_classInit_KURIKING
 /* Reconstructed source-style name: SM64DS proves daKuriKing_c through RTTI,
  * allocation size, vtable identity, and the KURIKING registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
