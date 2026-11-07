@@ -12,9 +12,8 @@
  * The destructor is inline in include/daObjWc_Obj02_c.h (D1 then D0, no D2).
  *
  * What stays:
- * - func_020393d4 / func_020393c4: InitResources stores
- *   dBgW::UpdatePosWithTransform and &StoodOnCallback on mMeshCollider;
- *   dBgW.h has no setter.
+ * - dBgW::SetBeforeClsnCallback / dBgW::SetStoodOnCallback: InitResources stores
+ *   dBgW::UpdatePosWithTransform and &StoodOnCallback on mMeshCollider.
  * - func_02012694: Behavior plays 0x17b at mCamSpacePosX.
  * - data_ov029_02114250 / 02114248 are this TU's BMD/KCL file handles;
  *   data_ov029_0211302c the CLPS block stays unowned overlay data.
@@ -46,8 +45,6 @@ struct WcObj02CollisionFilePtr : SharedFilePtr {
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_02012694(unsigned int a, void *p);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern WcObj02ModelFilePtr data_ov029_02114250;
@@ -99,9 +96,9 @@ int daObjWc_Obj02_c::InitResources() {
     }
     {
         mPrevAngleY += 0x4000;
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mTravelDist = 0;
     mStateTimer = 0;
     mTriggered = 0;

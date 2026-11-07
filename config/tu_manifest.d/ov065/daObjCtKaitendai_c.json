@@ -541,22 +541,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@447",
+      "from": "@445",
       "to": "@878",
       "evidence": "mwcc numbers this registration node @455 per TU and the fleet already defines a global @455, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@448",
+      "from": "@446",
       "to": "@867",
       "evidence": "mwcc numbers this registration node @456 per TU and the in-flight ov060 kpa3bg fork branch already claims @456, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@449",
+      "from": "@447",
       "to": "@863",
       "evidence": "mwcc numbers this registration node @457 per TU and the in-flight ov060 kpa3bg fork branch already claims @457, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@450",
+      "from": "@448",
       "to": "@818",
       "evidence": "mwcc numbers this registration node @458 per TU and the in-flight ov060 kpa3bg fork branch already claims @458, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

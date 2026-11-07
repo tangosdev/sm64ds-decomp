@@ -19,8 +19,7 @@
 //   dBgW::SetClipRadius is the call the ROM makes.
 // - Assigning beforeClsnCallback size-DIFFs InitResources 0xac->0xa8.
 //   Assigning stoodOnCallback from StoodOnCallback size-DIFFs 0xac->0xa8.
-//   func_020393d4 and func_020393c4 stay; d_bg_w.cpp defines them and no
-//   header declares them.
+//   The ROM calls dBgW::SetBeforeClsnCallback and dBgW::SetStoodOnCallback.
 // - Putting the limit on the left of the compare
 //   (`mMaxPosY - 0xc8000 > mPosY`, `mMaxPosY < mPosY`) keeps Behavior at
 //   0xa4 and changes its words. mPosY on the left matches.
@@ -61,8 +60,6 @@ extern char data_ov064_0211bb0c[];
 extern "C" {
 /* local extern: stores the callbacks at dBgW+0x18 and +0x1c. d_bg_w.cpp
  * defines them and no header declares them. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* Reconstructed source-style name: SM64DS proves daObjFl_Block_c through RTTI,
@@ -105,8 +102,8 @@ s32 daObjFl_Block_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov064_0211bb0c));
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     mMaxPosY = mPosY;
     return 1;

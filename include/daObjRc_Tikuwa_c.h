@@ -57,7 +57,7 @@ struct daObjRc_Tikuwa_c : dBgActor_c {
     virtual void OnPendingDestroy(); /* slot 12 -- empty body in the ROM */
 
     /* The mesh's stood-on callback (ov036 0x02111cc4, installed with
-       func_020393c4) and the body it forwards to (0x02111ca4). */
+       dBgW::SetStoodOnCallback) and the body it forwards to (0x02111ca4). */
     void OnStoodOn(dActor_c *);
     static void StoodOnCallback(void *, daObjRc_Tikuwa_c *, dActor_c *);
 };

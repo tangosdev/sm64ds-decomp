@@ -40,7 +40,7 @@
  * - InitResources: SetFile(Fix12<int> by value) grows the function
  *   0xdc to 0xe8. The int extern is the call that matches.
  * - InitResources: storing beforeClsnCallback directly shrinks the
- *   function 0xdc to 0xd8. The ROM calls func_020393d4, the store.
+ *   function 0xdc to 0xd8. The ROM calls dBgW::SetBeforeClsnCallback, the store.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -86,7 +86,6 @@ extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int 
 
 extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
                                void *clps);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* Radius and height passed to dBgCh_Actr::Init, 20.0 in 20.12. */
@@ -255,7 +254,7 @@ int daSlide_Box_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(clsnFile), *(const Matrix4x3 *)(&mClsnMat), kMeshScale,
                               mAngleY, *(CLPS_Block *)(data_ov016_02113bac));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mWithMeshClsn.Init((dActor_c *)this, kClsnRadius, kClsnRadius, 0, 0);
     mVertAccel = kGravity;
     mTerminalVelocity = kTerminalVelocity;

@@ -50,7 +50,7 @@ struct daObjCvNewsLift_c : dBgActor_c {
     void OnPlatform0Ride(dActor_c *player);
     void OnMainMeshRide(dActor_c *player);
 
-    /* Collision callbacks, stored in each collider by func_020393c4. */
+    /* Collision callbacks, stored in each collider by dBgW::SetStoodOnCallback. */
     static void Platform3Callback(dBgW *clsn, dActor_c *owner, dActor_c *other);
     static void Platform2Callback(dBgW *clsn, dActor_c *owner, dActor_c *other);
     static void Platform1Callback(dBgW *clsn, dActor_c *owner, dActor_c *other);

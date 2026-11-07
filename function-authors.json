@@ -5651,7 +5651,7 @@
     },
     "arm9:0x020393c4": {
       "author": "tangosdev",
-      "name": "func_020393c4"
+      "name": "_ZN4dBgW18SetStoodOnCallbackEPFvPS_P8dActor_cS2_E"
     },
     "arm9:0x020393cc": {
       "author": "tangosdev",
@@ -5659,7 +5659,7 @@
     },
     "arm9:0x020393d4": {
       "author": "tangosdev",
-      "name": "func_020393d4"
+      "name": "_ZN4dBgW21SetBeforeClsnCallbackEPFvRS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_E"
     },
     "arm9:0x020393dc": {
       "author": "andrewboudreau",

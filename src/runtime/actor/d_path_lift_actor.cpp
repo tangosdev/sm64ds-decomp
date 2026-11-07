@@ -81,7 +81,6 @@ extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 
 /* Defined last: the ROM-ascending order puts the collider callback after
    BaseInitResources, which stores its address. */
@@ -353,7 +352,7 @@ void dPathLiftActor_c::BaseInitResources()
     mInitialAngle.x = mAngleX;
     mInitialAngle.y = mAngleY;
     mInitialAngle.z = mAngleZ;
-    func_020393c4(&mMeshCollider, &func_ov002_020eff90);
+    mMeshCollider.SetStoodOnCallback(&func_ov002_020eff90);
 }
 
 // 0x020efbdc (0x98)
