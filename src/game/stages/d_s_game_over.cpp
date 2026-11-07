@@ -23,12 +23,10 @@
  *   comes from G2.h as `void *` and 0730 casts it to u16* for its pointer
  *   arithmetic (typing ergonomics, not a codegen wall -- see
  *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
- * - data_0209f5bc (the active scene) gates Behavior through a plain virtual
- *   call on slot 5; the tree's spellings disagree with each other
- *   (SceneVCall6, UnkObj, ...) and none has a ROM RTTI identity. The
- *   TU-local shadow vtable this file used to spell out to slot 5 was
- *   measured inert and dropped for the plain call, so it is no longer a
- *   retained substitution
+ * - gSceneFader, the dFdBrightness_c dScene_c::SetFaders installed, gates
+ *   Behavior through its IsAtStart virtual (slot 5). The TU-local shadow
+ *   vtable this file used to spell out to that slot was measured inert and
+ *   dropped for the plain call, so it is no longer a retained substitution
  *   (notes/experiments/gameover-2711-scenegate-virtual-call.md).
  * - mGlyphUnused[8]: zeroed by InitResources, never read back.
  */
@@ -95,7 +93,7 @@ OamAttr *sGameOverGlyphTemplates[9] = {
 
 /* External scene services not declared by the included headers. */
 extern "C" {
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
  * the spelling the rest of the tree uses for this pair. */
@@ -305,7 +303,7 @@ s32 dScGameOver_c::CleanupResources() {
  * is in. */
 // @symbol _ZN13dScGameOver_c8BehaviorEv
 s32 dScGameOver_c::Behavior() {
-    if (data_0209f5bc->IsAtStart() != 0) {
+    if (gSceneFader->IsAtStart() != 0) {
         func_ov003_020b060c();
 
         if (mIntroPhase < 2)

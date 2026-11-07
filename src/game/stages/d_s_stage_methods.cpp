@@ -195,7 +195,7 @@ struct LevelReturnEntry {
 struct OvTbl {
     unsigned int t[7];
 };
-/* The object at data_0209f5bc; only its slot-5 and slot-7 queries are called
+/* The object at gSceneFader; only its slot-5 and slot-7 queries are called
    from this file. */
 /* The level record data_0209f340 points at, as far as this file and dMap_c
    read it: the per-area table at +0x10 and its count at +0x14. Each area
@@ -490,8 +490,8 @@ extern u8 data_0209f4ae[];
    actor's deathTableID. InitResources clears it only when the course
    changes, so it survives a reload of the same course. */
 static u32 sActorDeathTable[3][16];
-extern dFdBrightness_c *data_0209f5bc;
-extern dFdColor_c data_0209f5e8;
+extern dFdBrightness_c *gSceneFader;
+extern dFdColor_c gSceneColorFader;
 extern int gRunningKuppaScript;
 extern u8 data_0209fcc8;
 extern PadData data_020a0e58[];
@@ -2908,7 +2908,7 @@ extern "C" void StartExitFaderWipe(int index) {
 
 // @symbol FUN_02029934
 extern "C" void FUN_02029934(void) {
-    dFdBrightness_c *o = data_0209f5bc;
+    dFdBrightness_c *o = gSceneFader;
     if (o->IsBetweenStartAndEnd() == 0) {
         data_0209d4b0 = 0;
         *(volatile unsigned short *)0x4000050 = 0;
@@ -2932,7 +2932,7 @@ struct WipeFader {
     virtual void w9();
 };
 extern "C" void FUN_02029980(void) {
-    if (data_0209f5bc->IsBetweenStartAndEnd() != 0)
+    if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
     WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
     data_0209d4b0 = (int)o2;
@@ -2942,7 +2942,7 @@ extern "C" void FUN_02029980(void) {
 
 // @symbol FUN_020299f4
 extern "C" void FUN_020299f4(void) {
-    if (data_0209f5bc->IsBetweenStartAndEnd() != 0)
+    if (gSceneFader->IsBetweenStartAndEnd() != 0)
         return;
     WipeFader *o2 = (WipeFader *)((dFdWipe_c *)data_0209f324 + 6);
     data_0209d4b0 = (int)o2;
@@ -3177,7 +3177,7 @@ void dScStage_c::RenderVsModeCountdown() {
                 count++;
         }
     }
-    if (((dFdBrightness_c *)data_0209f5bc)->IsAtStart() == 0)
+    if (((dFdBrightness_c *)gSceneFader)->IsAtStart() == 0)
         return;
     if (count < data_0209fc50)
         return;
@@ -3532,7 +3532,7 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
 
     if (gNextSublevel < 0) {
         dScene_c::SetAndStopColorFader();
-        data_0209f5e8.color = 0;
+        gSceneColorFader.color = 0;
     }
     gNextSublevel = levelID;
     sNextEntranceId = entranceID;
@@ -4158,7 +4158,7 @@ int dScStage_c::Behavior() {
     if (gGamePaused == 2 && sMenuWaitTimer == 0)
         PS_Cleanup();
     KuppaScript::Process();
-    if (data_0209f5bc->IsAtStart() == 0) {
+    if (gSceneFader->IsAtStart() == 0) {
         dExtShadowModel_c::CleanAll();
         return 1;
     }

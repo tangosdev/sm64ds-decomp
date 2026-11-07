@@ -159,7 +159,7 @@ extern struct OamAttr data_ov002_0210d4f0;
 extern struct OamAttr data_ov002_0210c690;
 extern SaveBlock data_0209caa0;
 extern unsigned char gShowTouchScreenArrows;
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *handle);
@@ -388,7 +388,7 @@ int dMeter_c::Behavior() {
     int vs;
 
     /* vs is computed only once the first test passes and is reused below. */
-    if (data_0209f5bc->IsAtStart() == 0 ||
+    if (gSceneFader->IsAtStart() == 0 ||
         ((vs = IsVsMode()) == 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {

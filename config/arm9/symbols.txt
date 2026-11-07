@@ -4227,7 +4227,7 @@ data_02092570 kind:data(any) addr:0x02092570
 STAGE_DEBUG_NAMES kind:data(any) addr:0x02092584
 data_02092654 kind:data(any) addr:0x02092654
 data_02092660 kind:data(any) addr:0x02092660
-data_02092664 kind:data(any) addr:0x02092664
+gNextSceneId kind:data(any) addr:0x02092664
 data_02092668 kind:data(any) addr:0x02092668
 _ZTV8dScene_c kind:data(any) addr:0x02092680
 data_020926c8 kind:data(any) addr:0x020926c8
@@ -4843,13 +4843,13 @@ data_0209f4ab kind:bss addr:0x0209f4ab
 data_0209f4ac kind:bss addr:0x0209f4ac
 data_0209f4ae kind:bss addr:0x0209f4ae
 sActorDeathTable kind:bss addr:0x0209f4f8
-data_0209f5b8 kind:bss addr:0x0209f5b8
-data_0209f5bc kind:bss addr:0x0209f5bc
-data_0209f5c0 kind:bss addr:0x0209f5c0
+gNextSceneParam kind:bss addr:0x0209f5b8
+gSceneFader kind:bss addr:0x0209f5bc
+gCurrentScene kind:bss addr:0x0209f5c0
 @332 kind:bss addr:0x0209f5c4
-data_0209f5d0 kind:bss addr:0x0209f5d0
+gSoftResetBrightnessFader kind:bss addr:0x0209f5d0
 @331 kind:bss addr:0x0209f5dc
-data_0209f5e8 kind:bss addr:0x0209f5e8
+gSceneColorFader kind:bss addr:0x0209f5e8
 data_0209f5f8 kind:bss addr:0x0209f5f8
 data_0209f5fc kind:bss addr:0x0209f5fc
 data_0209f600 kind:bss addr:0x0209f600

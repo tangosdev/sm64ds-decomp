@@ -43,7 +43,7 @@ extern signed char gNextSublevel;
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 extern dCamera_c *data_0209f318;
-extern dFdColor_c data_0209f5e8;
+extern dFdColor_c gSceneColorFader;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -120,7 +120,7 @@ s32 daChScene_c::Behavior() {
             if (gNextSublevel < 0) {
                 LoadDestinationLevel();
                 dScene_c::SetAndStopColorFader();
-                data_0209f5e8.color = 0x7fff;
+                gSceneColorFader.color = 0x7fff;
             }
         }
     } else {
@@ -171,7 +171,7 @@ s32 daChScene_c::Behavior() {
                                         if (t == 0x1b || t == 0x12) {
                                             LoadDestinationLevel();
                                             dScene_c::SetAndStopColorFader();
-                                            data_0209f5e8.color = 0x7fff;
+                                            gSceneColorFader.color = 0x7fff;
                                         }
                                         mHorzSpeed = out2.z;
                                         cam->LookAtExit(*this);

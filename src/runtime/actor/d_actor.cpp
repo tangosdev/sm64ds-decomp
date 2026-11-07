@@ -427,14 +427,14 @@ extern "C" void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 area
 /* ROM ordinal 78 -- dActor_c::Spawn(unsigned int, unsigned int, Vector3 const &, Vector3_16 const *, signed char, short)
  * 0x02010e2c  size 0x4c */
 extern "C" {
-extern fBase_c *data_0209f5c0;
+extern fBase_c *gCurrentScene;
 void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 }
 dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
     func_02010e78(&pos, rot, areaID, deathTableID);
-    return (dActor_c *)dBase_c::Spawn(actorID, data_0209f5c0, spawnParam, 2);
+    return (dActor_c *)dBase_c::Spawn(actorID, gCurrentScene, spawnParam, 2);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -12,7 +12,7 @@
 // - dScStage_c::SetVramBanks and GX::DisableAllBanks sit between the scene
 //   graphics methods in this span; co-residence is inferred from the
 //   contiguous run, not from an object map.
-// - func_02053c10/02053be0/02053a90/02053fxx and data_02092660/64/68 keep
+// - func_02053c10/02053be0/02053a90/02053fxx and data_02092660/68 keep
 //   linker names: no header home proven for them yet.
 #include "dScene_c.h"
 #include "dScStage_c.h"
@@ -57,7 +57,9 @@ extern void func_0205583c(void);
 
 extern void Initialise3dGraphics(int arg);
 
-extern fBase_c *data_0209f5c0;
+/* The running scene: ResetFadersAndSound stores `this`, and dActor_c::Spawn,
+   LevelObjects and dScEntry_c spawn their children under it. */
+extern fBase_c *gCurrentScene;
 
 extern dFader_c *gSoftResetFader;
 extern void func_02011b7c(void);
@@ -72,12 +74,17 @@ extern u8 data_02092660;
 
 extern u8 gSoftResetPending;
 
-extern dFdBrightness_c *data_0209f5bc;
-extern u16  data_02092664;
+/* The fader the scene change runs, installed by SetFaders. */
+extern dFdBrightness_c *gSceneFader;
+/* The scene SetSceneToSpawn queued, with gNextSceneParam its spawn
+   parameter. 0x187 means none: SpawnIfNecessary stores it once it has
+   spawned the queued scene, and BeforeBehavior fades the running scene out
+   while any other value is pending. */
+extern u16 gNextSceneId;
 
 extern void func_02023544(void);
 
-extern u32 data_0209f5b8;
+extern u32 gNextSceneParam;
 
 extern int func_0203d9b4(void);
 
@@ -88,13 +95,12 @@ extern dFdBrightness_c *data_0209d4ac;
 
 /* The scene's two global faders: the colour fade every scene change runs
    (SetAndStopColorFader, StartSceneFade) and the plain brightness fade
-   BeforeBehavior falls back to. Namespace-scope objects with inline
+   BeforeBehavior runs for a soft reset. Namespace-scope objects with inline
    constructors and real destructors, so mwcc emits __sinit_d_scene.cpp to
    build them in this order and register their destructors (was the
-   handwritten __sinit_02074edc). Other TUs reach them by these address
-   names. */
-dFdColor_c data_0209f5e8;
-dFdBrightness_c data_0209f5d0;
+   handwritten __sinit_02074edc). Other TUs reach them by these names. */
+dFdColor_c gSceneColorFader;
+dFdBrightness_c gSoftResetBrightnessFader;
 
 // @symbol _ZN8dScene_c22ResetHardwareRegistersEv
 void dScene_c::ResetHardwareRegisters()
@@ -247,10 +253,10 @@ void dScene_c::Initialise3dGraphics()
 // @symbol _ZN8dScene_c19ResetFadersAndSoundEv
 bool dScene_c::ResetFadersAndSound()
 {
-    data_0209f5c0 = this;
+    gCurrentScene = this;
     if (!fBase_c::BeforeInitResources())
         return 0;
-    SetFaders(&data_0209f5e8);
+    SetFaders(&gSceneColorFader);
     gSoftResetFader = 0;
     func_02011b7c();
     return 1;
@@ -295,27 +301,27 @@ int dScene_c::BeforeBehavior()
         return 0;
 
     if (gSoftResetPending != 0) {
-        int noActor = (data_0209f5c0->actorID == 0);
+        int noActor = (gCurrentScene->actorID == 0);
         if (noActor != 0) {
             func_02023544();
         } else {
             if (gSoftResetFader == 0) {
-                data_0209f5d0.currInterp = 0;
-                data_0209f5d0.dFdBrightness_c::SetForwardTime(0x10, 0);
-                gSoftResetFader = &data_0209f5d0;
-            } else if (data_0209f5d0.dFdBrightness_c::IsAtEnd()) {
+                gSoftResetBrightnessFader.currInterp = 0;
+                gSoftResetBrightnessFader.dFdBrightness_c::SetForwardTime(0x10, 0);
+                gSoftResetFader = &gSoftResetBrightnessFader;
+            } else if (gSoftResetBrightnessFader.dFdBrightness_c::IsAtEnd()) {
                 StartSceneFade(1, 0, 0);
-                data_0209f5e8.SetForwardTime(0, 0);
+                gSceneColorFader.SetForwardTime(0, 0);
                 MarkForDestruction();
             }
             return 0;
         }
     }
 
-    if (data_02092664 != 0x187) {
-        if (data_0209f5bc->IsAtStart() != 0) {
-            data_0209f5bc->SetForwardTime(0x1e, 0);
-        } else if (data_0209f5bc->IsAtEnd() != 0) {
+    if (gNextSceneId != 0x187) {
+        if (gSceneFader->IsAtStart() != 0) {
+            gSceneFader->SetForwardTime(0x1e, 0);
+        } else if (gSceneFader->IsAtEnd() != 0) {
             MarkForDestruction();
         }
         return 1;
@@ -328,8 +334,8 @@ int dScene_c::BeforeBehavior()
         }
         return 0;
     } else {
-        if (data_0209f5bc->IsAtEnd() != 0) {
-            data_0209f5bc->SetBackwardTime(0x1e, 0);
+        if (gSceneFader->IsAtEnd() != 0) {
+            gSceneFader->SetBackwardTime(0x1e, 0);
         }
         return 1;
     }
@@ -356,9 +362,9 @@ void dScene_c::AfterRender(u32 vfSuccess)
 // @symbol _ZN8dScene_c15SetSceneToSpawnEjj
 int dScene_c::SetSceneToSpawn(u32 sceneID, u32 param)
 {
-    if (sceneID != data_02092664) {
-        data_02092664 = sceneID;
-        data_0209f5b8 = param;
+    if (sceneID != gNextSceneId) {
+        gNextSceneId = sceneID;
+        gNextSceneParam = param;
         return 1;
     }
     return 0;
@@ -368,16 +374,16 @@ int dScene_c::SetSceneToSpawn(u32 sceneID, u32 param)
 void dScene_c::StartSceneFade(u32 sceneID, u32 param, u16 fadeColor)
 {
     if (SetSceneToSpawn(sceneID, param))
-        data_0209f5e8.color = fadeColor;
+        gSceneColorFader.color = fadeColor;
 }
 
 // @symbol _ZN8dScene_c18PrepareToSpawnBootEv
 void dScene_c::PrepareToSpawnBoot()
 {
     if (func_0203d9b4())
-        data_02092664 = 0;
+        gNextSceneId = 0;
     else
-        data_02092664 = 0x168;
+        gNextSceneId = 0x168;
     data_02092660 = 0;
 }
 
@@ -385,13 +391,13 @@ void dScene_c::PrepareToSpawnBoot()
 int dScene_c::SpawnIfNecessary()
 {
     u16 sceneID;
-    if (data_02092660 != 0 || (sceneID = data_02092664) == 0x187)
+    if (data_02092660 != 0 || (sceneID = gNextSceneId) == 0x187)
         return 0;
     {
-        int spawned = func_02013edc(sceneID, data_0209f5b8, 1);
+        int spawned = func_02013edc(sceneID, gNextSceneParam, 1);
         if (spawned == 0)
             return 0;
-        data_02092664 = 0x187;
+        gNextSceneId = 0x187;
         data_02092660 = 1;
         return spawned;
     }
@@ -400,20 +406,20 @@ int dScene_c::SpawnIfNecessary()
 // @symbol _ZN8dScene_c9SetFadersEP15dFdBrightness_c
 void dScene_c::SetFaders(dFdBrightness_c *fader)
 {
-    if (data_0209f5bc) {
-        if (data_0209f5bc->IsAtStart()) {
+    if (gSceneFader) {
+        if (gSceneFader->IsAtStart()) {
             fader->SetToStart();
-        } else if (data_0209f5bc->IsAtEnd()) {
+        } else if (gSceneFader->IsAtEnd()) {
             fader->SetToEnd();
         }
     }
-    data_0209f5bc = fader;
+    gSceneFader = fader;
     data_0209d4ac = fader;
 }
 
 // @symbol _ZN8dScene_c20SetAndStopColorFaderEv
 void dScene_c::SetAndStopColorFader()
 {
-    SetFaders(&data_0209f5e8);
-    data_0209f5e8.speed = 0;
+    SetFaders(&gSceneColorFader);
+    gSceneColorFader.speed = 0;
 }

@@ -8145,7 +8145,7 @@ extern "C" {
 int func_ov002_020cac60(char *self)
 {
     daPly_c *player = (daPly_c *)self;
-    extern short data_0209f5e8;
+    extern short gSceneColorFader;
     short ang;
     short angle;
     if (player->mSurfaceType == 0xd && NumStars() >= 0xe) {
@@ -8154,7 +8154,7 @@ int func_ov002_020cac60(char *self)
         if (ang <= 0x1c00 && angle >= -0x1000 && angle <= 0x1000) {
             LoadLevel(0x1f, 0, 1, 0, 0xe);
             dScene_c::SetAndStopColorFader();
-            *(short *)((char *)&data_0209f5e8 + 0xc) = 0x7fff;
+            *(short *)((char *)&gSceneColorFader + 0xc) = 0x7fff;
             func_02012790(0x1e);
             return 1;
         }

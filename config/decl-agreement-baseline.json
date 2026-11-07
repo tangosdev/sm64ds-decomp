@@ -8094,7 +8094,7 @@
         "return:unsigned char"
       ]
     },
-    "data_0209f5bc": {
+    "gSceneFader": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:UnkVis *"
       ],
@@ -8129,17 +8129,17 @@
         "return:void *"
       ]
     },
-    "data_0209f5c0": {
+    "gCurrentScene": {
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "return:GObj *"
       ]
     },
-    "data_0209f5d0": {
+    "gSoftResetBrightnessFader": {
       "src/unnamed/arm9/0207/__sinit_02074edc.c": [
         "return:FaderNode"
       ]
     },
-    "data_0209f5e8": {
+    "gSceneColorFader": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:unsigned short"
       ],

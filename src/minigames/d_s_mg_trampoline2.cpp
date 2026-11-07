@@ -125,7 +125,7 @@ extern int func_02054d88(void);
 extern void MultiCopy_Int(int *src, int *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern const u16 sTrmp2BrushPltt[];
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
 int TrmpLine_Create(s16 *a, s16 *b);
 extern void Mg_CommitRecords(void);
@@ -960,9 +960,9 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
     if (!dScMgBase_c::OnGraphCallback0())
         return 0;
 
-    if (data_0209f5bc->IsAtStart()) {
+    if (gSceneFader->IsAtStart()) {
         sTrmp2TouchBlocked = 0;
-    } else if (data_0209f5bc->IsBetweenStartAndEnd()) {
+    } else if (gSceneFader->IsBetweenStartAndEnd()) {
         sTrmp2TouchBlocked = 1;
     }
 

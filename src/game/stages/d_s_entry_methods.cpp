@@ -102,7 +102,7 @@ extern u8 gSubScreenLayers;
 extern s32 data_0208ee44;
 
 /* The scene manager Behavior polls through its slot 5. */
-extern "C" dFdBrightness_c *data_0209f5bc;
+extern "C" dFdBrightness_c *gSceneFader;
 
 #include "dEntObj_c.h"
 #include "OAM.h"
@@ -218,7 +218,7 @@ extern int data_ov075_0211cc4c;
 extern int data_ov075_0211cc54;
 extern int data_ov075_0211cc5c;
 extern void *data_0208a0e4[];
-extern fBase_c *data_0209f5c0;
+extern fBase_c *gCurrentScene;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
@@ -490,7 +490,7 @@ s32 dScEntry_c::InitResultResources() {
     }
 
     SetSteps(&data_ov075_0211d7e0);
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, 1, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, gCurrentScene, 1, 0);
     return 1;
 }
 
@@ -537,7 +537,7 @@ s32 dScEntry_c::InitEntryResources() {
         mode = 2;
     }
 
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, mode, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, gCurrentScene, mode, 0);
     return 1;
 }
 
@@ -2102,7 +2102,7 @@ s32 dScEntry_c::Behavior() {
         }
     }
 
-    if (data_0209f5bc->IsAtStart() == 0 || mIsFading != 0)
+    if (gSceneFader->IsAtStart() == 0 || mIsFading != 0)
         return 1;
 
     if (data_0209fc68 != 0) {

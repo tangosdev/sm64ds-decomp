@@ -37,13 +37,13 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 #pragma opt_common_subs off
 
 extern "C" {
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern u8 data_0209f1e8;
 extern PadData data_020a0e58[];
 extern int data_0208ee44;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern dFdColor_c data_0209f5e8;
+extern dFdColor_c gSceneColorFader;
 
 u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int handle);
@@ -141,7 +141,7 @@ s32 dScBoot_c::InitResources() {
     data_0208ee44 = 1;
     func_020233f4();
 
-    data_0209f5e8.color = 0x7fff;
+    gSceneColorFader.color = 0x7fff;
     Sound::Play2D(4, 0);
     data_0209f1e8 = (u8)func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
     return 1;
@@ -174,7 +174,7 @@ s32 dScBoot_c::Behavior() {
         Message::LoadText();
     }
 
-    if (data_0209f5bc->IsAtStart() != 0) {
+    if (gSceneFader->IsAtStart() != 0) {
         int state;
 
         if (*(volatile u8 *)&mButtonFlashTimer != 0) {

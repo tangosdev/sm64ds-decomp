@@ -39,8 +39,8 @@ extern "C" {
  * flags2. */
 extern SaveBlock data_0209caa0;
 
-/* data_0209f5c0 is the parent passed to dBase_c::Spawn. */
-extern fBase_c *data_0209f5c0;
+/* gCurrentScene, the running scene, is the parent passed to dBase_c::Spawn. */
+extern fBase_c *gCurrentScene;
 
 extern u8 gNumPlayers;
 extern u8 gCurrentStarId;
@@ -234,7 +234,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         }
     }
 
-    data_0209f318 = (dCamera_c *)dBase_c::Spawn(0x14c, data_0209f5c0, entranceId, 0);
+    data_0209f318 = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
 
     if (IsGameMode(2))
         return;
@@ -460,9 +460,9 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
     playIntro = IntroAllowed() && continuedKuppaScript == 0;
 
     if (!IsGameMode(2)) {
-        dBase_c::Spawn(0x14f, data_0209f5c0, 0, 0);
+        dBase_c::Spawn(0x14f, gCurrentScene, 0, 0);
         if (playIntro == 0)
-            dBase_c::Spawn(0x14e, data_0209f5c0, 0, 0);
+            dBase_c::Spawn(0x14e, gCurrentScene, 0, 0);
     }
 
     if (playIntro != 0)

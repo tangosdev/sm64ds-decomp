@@ -742,7 +742,7 @@ extern unsigned char data_ov073_02123420[];
 extern unsigned char data_ov073_02123424[];
 extern unsigned char StarPopup_Clear(void);
 extern unsigned int VTable_dBgPi_dBgCh_GndThunk[];
-extern unsigned int data_0209f5b8;
+extern unsigned int gNextSceneParam;
 extern unsigned int data_020a4be4;
 extern unsigned int sD3DSubScreenBgByLanguage[];
 extern unsigned int sD3DCommonNcgByLanguage[];

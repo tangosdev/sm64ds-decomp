@@ -96,7 +96,7 @@ extern dGraph_c::callback_c *data_0209d4a8;
 void Mg_UpdateMenu(char *c);
 void Banner_Update(MgBanner *e);
 void Mg_UpdateFx(MgFx *c);
-extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
+extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern unsigned short data_020a0e5a[];
 extern int data_0208ee44;
 extern void Mg_CommitRecords(void);
@@ -2267,7 +2267,7 @@ int dScMgBase_c::BeforeBehavior()
     if (dScene_c::BeforeBehavior() == 0)
         return 0;
 
-    if (data_0209f5bc->IsAtStart()) {
+    if (gSceneFader->IsAtStart()) {
         mode = gActivePlayerSlot;
         flags = data_020a0e5a[mode * 2];
         if ((flags & 8) || (flags & 4) || (flags & 1) || (flags & 2)) {
@@ -2314,7 +2314,7 @@ int dScMgBase_c::BeforeBehavior()
     }
 
     if (mRunDuringFade == 0) {
-        if (data_0209f5bc->IsAtStart() == 0)
+        if (gSceneFader->IsAtStart() == 0)
             return 0;
     }
 

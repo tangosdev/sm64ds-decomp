@@ -597,8 +597,8 @@ extern "C" {
 u8 DecIfAbove0_Byte(u8 *p);
 u16 DecIfAbove0_Short(u16 *p);
 
-extern dFdBrightness_c *data_0209f5bc;
-extern dFdColor_c data_0209f5e8;
+extern dFdBrightness_c *gSceneFader;
+extern dFdColor_c gSceneColorFader;
 }
 
 s32 dScStarSel_c::Behavior() {
@@ -613,7 +613,7 @@ s32 dScStarSel_c::Behavior() {
     u8 val;
     unsigned char idx;
 
-    if (data_0209f5bc->IsAtStart() != 0) {
+    if (gSceneFader->IsAtStart() != 0) {
         DecIfAbove0_Byte(&mPlatePressTimer);
         DecIfAbove0_Byte(&mPickPressTimer);
         if (mExitDelay != 0 ||
@@ -624,7 +624,7 @@ s32 dScStarSel_c::Behavior() {
             if (mExitDelay == 0 ||
                 (SublevelToLevel(gNextSublevel) > 0xe && IsButtonInputValid() != 0)) {
                 StartSceneFade(3, 0, 0);
-                data_0209f5e8.color = 0x7fff;
+                gSceneColorFader.color = 0x7fff;
                 if (SublevelToLevel(gNextSublevel) <= 0xe) {
                     gNextStarId = mSelectedPlate + 1;
                 } else {

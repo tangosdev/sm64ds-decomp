@@ -99,7 +99,7 @@ extern void *data_ov002_0210cac8[];
 extern void *data_ov002_0210c748[];
 extern u8 data_0209d660;
 extern s32 data_020a0db0;
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern dCamera_c *data_0209f318;
 extern u32 gNextActorUpdateMask;
 extern s32  data_0209d4b0;
@@ -573,7 +573,7 @@ s32 dMap_c::Behavior()
     player = gPlayers[gLocalPlayerId];
     focus = 0;
 
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         goto L274;
     if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         goto L274;

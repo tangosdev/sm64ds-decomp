@@ -35,7 +35,7 @@ static u8 sSoftResetComboHeld;
 u8 gSoftResetDisabled;
 
 /* The fader running the reset's fade out. dScene_c::BeforeBehavior stores
-   &data_0209f5d0 (a dFdBrightness_c) here, dScene_c::ResetFadersAndSound
+   &gSoftResetBrightnessFader (a dFdBrightness_c) here, dScene_c::ResetFadersAndSound
    clears it. */
 dFader_c *gSoftResetFader;
 

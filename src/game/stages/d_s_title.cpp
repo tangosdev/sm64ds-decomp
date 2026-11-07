@@ -66,7 +66,7 @@ extern "C" {
  * ever read at [0]. */
 extern u32 data_0209b2f4;
 extern char data_0209e674[];
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
 extern u8 gGameMode;
 /* The scene-wide colour fader, dScene_c's dFdColor_c in
@@ -74,8 +74,8 @@ extern u8 gGameMode;
    local extern: spelled as a u16 array because including dFdColor_c.h adds
    named parameters that renumber this TU's compiler-numbered string pool
    (sTitleLevelEntries' 54 rodata relocations move with it). */
-extern u16 data_0209f5e8[];
-#define SCENE_FADE_COLOR data_0209f5e8[6]
+extern u16 gSceneColorFader[];
+#define SCENE_FADE_COLOR gSceneColorFader[6]
 extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
 extern int data_0208ee44;
@@ -261,7 +261,7 @@ s32 dScTitle_c::CleanupResources() {
  * wrapping the index modulo 0x36. */
 // @symbol _ZN10dScTitle_c8BehaviorEv
 s32 dScTitle_c::Behavior() {
-    if (data_0209f5bc->IsAtStart() && ((data_020a0e58[0].pressed & 9) | IsTouchStarted()) != 0) {
+    if (gSceneFader->IsAtStart() && ((data_020a0e58[0].pressed & 9) | IsTouchStarted()) != 0) {
         u32 i;
         s8 t;
         func_02012790(1);

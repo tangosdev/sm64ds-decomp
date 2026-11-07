@@ -109,7 +109,7 @@ extern daPly_c *gPlayers[];            /* PLAYER_ARR */
 extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
 extern SaveBlock data_0209caa0;        /* the live save block */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
-extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
+extern dFdBrightness_c *gSceneFader;   /* SCENE_FADER */
 extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */
 extern u8 data_0209d66c;               /* set to close the open message */
 extern s8 gNextSublevel;               /* NEXT_LEVEL_ID */
@@ -4640,7 +4640,7 @@ void KuppaScript::Process() {
         } else if (last < 0 || last >= frame) {
             u8 command = s[1];
             if (command == KS_SKIP_ON_INPUT) {
-                if (data_0209f5bc->IsBetweenStartAndEnd() == 0) {
+                if (gSceneFader->IsBetweenStartAndEnd() == 0) {
                     u32 i = gActivePlayerSlot;
                     if (data_020a0e58[i].pressed != 0 || IsTouchJustBegun(i)) {
                         dScene_c::StartSceneFade(1, 0, 0);

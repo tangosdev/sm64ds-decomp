@@ -396,7 +396,7 @@ extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
    as the void * this file has always declared (the tree's declarations
    disagree); 23f0 casts at the one use. */
-extern void* data_0209f5bc;
+extern void *gSceneFader;
 extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern int func_ov002_020f2630(daDemo_c *self);
@@ -776,7 +776,7 @@ int daDemo_c::func_ov002_020f23d0()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f23f0Ev
 /* Behavior for param1 0x2f: the scroll block's seven states.
- *   0  each frame the scene fader (data_0209f5bc) reports IsAtStart,
+ *   0  each frame the scene fader (gSceneFader) reports IsAtStart,
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
  *      centerSpriteY[0] reaches 8 (it starts at -8)
  *   1  wait for mCue == 3 (written by script handler 26c4), then set
@@ -797,7 +797,7 @@ int daDemo_c::func_ov002_020f23f0()
 {
     switch (mScroll->state) {
     case 0:
-        if (((dFdBrightness_c *)data_0209f5bc)->IsAtStart() != 0) {
+        if (((dFdBrightness_c *)gSceneFader)->IsAtStart() != 0) {
             mScroll->centerSpriteY[0]++;
             mScroll->centerSpriteY[1]--;
             if (mScroll->centerSpriteY[0] == 8) {
