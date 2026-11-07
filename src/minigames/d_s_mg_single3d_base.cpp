@@ -172,7 +172,7 @@ int dScMgSingle3DBase_c::GetDisplayMode()
 // @symbol LoadCard2SubBg3
 /* Load the sub screen's BG3 characters, palette and map, releasing each
  * buffer. */
-extern "C" void LoadCard2SubBg3(void)
+extern "C" void LoadCard2SubBg3(void *)
 {
     void *fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
     gSubScreenLayers |= 8;

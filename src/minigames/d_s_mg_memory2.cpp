@@ -139,7 +139,7 @@ void Mg_DrawCredits(char *, int, int, int);
 void Dealer_Draw(char *);
 extern void MgCoins_Update(void);
 extern void Dealer_Update(Dealer *p);
-void LoadCard2SubBg3(void);
+void LoadCard2SubBg3(void *);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -1246,7 +1246,7 @@ s32 dScMgMemory2_c::InitResources() {
     void *palette;
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    LoadCard2SubBg3();
+    LoadCard2SubBg3(this);
     art = LoadFile(sMemory2CardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(art, (void *)0x6400000);

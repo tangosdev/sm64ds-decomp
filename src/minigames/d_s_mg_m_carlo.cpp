@@ -79,7 +79,7 @@ void MgCoins_Reset(char *p);
 void FreeGfxSlotsById(int arg);
 void MgCoins_StartPayout(int count);
 extern unsigned short gMgCoinsStatus;
-extern void LoadCard2SubBg3(void *c);
+extern void LoadCard2SubBg3(void *);
 extern int GetGameLanguage(void);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
