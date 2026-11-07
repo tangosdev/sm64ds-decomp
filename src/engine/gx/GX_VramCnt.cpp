@@ -21,6 +21,7 @@
 
 #include "types.h"
 #include "nitro/hw/registers.h"
+#include "private/gx_state.h"
 
 #define REG_VRAMCNT_A (*(volatile u8 *)0x04000240)
 #define REG_VRAMCNT_B (*(volatile u8 *)0x04000241)
@@ -33,24 +34,6 @@
 #define REG_VRAMCNT_I (*(volatile u8 *)0x04000249)
 
 #define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
-
-struct GXVRamCnt {
-    u16 lcdc;
-    u16 bg;
-    u16 obj;
-    u16 arm7;
-    u16 tex;
-    u16 texPltt;
-    u16 clrImg;
-    u16 bgExtPltt;
-    u16 objExtPltt;
-    u16 sub_bg;
-    u16 sub_obj;
-    u16 sub_bgExtPltt;
-    u16 sub_objExtPltt;
-};
-
-extern "C" GXVRamCnt data_020a6088;
 
 extern "C" {
 

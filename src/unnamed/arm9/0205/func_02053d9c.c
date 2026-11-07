@@ -1,21 +1,21 @@
-#include "types.h"
-extern u16 data_020a6088[];
+#include "private/gx_state.h"
 
+/* NitroSDK GX_InitGXState: no user holds a VRAM bank, and every bank is off. */
 void func_02053d9c(void)
 {
-    data_020a6088[0] = 0;
-    data_020a6088[1] = 0;
-    data_020a6088[2] = 0;
-    data_020a6088[3] = 0;
-    data_020a6088[4] = 0;
-    data_020a6088[5] = 0;
-    data_020a6088[6] = 0;
-    data_020a6088[7] = 0;
-    data_020a6088[8] = 0;
-    data_020a6088[9] = 0;
-    data_020a6088[10] = 0;
-    data_020a6088[11] = 0;
-    data_020a6088[12] = 0;
+    data_020a6088.lcdc = 0;
+    data_020a6088.bg = 0;
+    data_020a6088.obj = 0;
+    data_020a6088.arm7 = 0;
+    data_020a6088.tex = 0;
+    data_020a6088.texPltt = 0;
+    data_020a6088.clrImg = 0;
+    data_020a6088.bgExtPltt = 0;
+    data_020a6088.objExtPltt = 0;
+    data_020a6088.sub_bg = 0;
+    data_020a6088.sub_obj = 0;
+    data_020a6088.sub_bgExtPltt = 0;
+    data_020a6088.sub_objExtPltt = 0;
 
     *(volatile unsigned int *)0x4000240 = 0;
     *(volatile unsigned char *)0x4000244 = 0;
