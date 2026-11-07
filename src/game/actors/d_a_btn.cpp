@@ -950,10 +950,9 @@ extern "C" void func_ov079_0212522c(dBgW *collider, dActor_c *owner, dActor_c *o
    states 1 and 2. */
 void daBtn_c::func_ov079_02125058(dActor_c *other)
 {
-    /* v1/v2 are second copies of the player's position that the ROM stores
-       too, and v2 is read back into w2. volatile is what keeps those stores
-       and v2's reloads: without it the function shrinks 0x1d4 -> 0x1b0. */
-    volatile Vector3 v1, v2;
+    /* v1/v2 take the player's position; w1/w2 are the copies handed to
+       SpawnCoins. All four are stored, as in the ROM. */
+    Vector3 v1, v2;
     Vector3 w1, w2;
     int eq = (int)(other->actorID == 0xbf);
     if (!eq) return;
@@ -968,30 +967,22 @@ void daBtn_c::func_ov079_02125058(dActor_c *other)
     }
     if (mCoinGiven != 0) return;
     if (mIsKing == 0) {
-        const Vector3 *p;
-        s32 x, y, z;
         if (DecIfAbove0_Byte(&mCoinsLeft) == 0) return;
-        p = &other->mPos;
-        x = p->x; v1.x = x;
-        y = p->y; v1.y = y;
-        z = p->z; v1.z = z;
-        w1.x = x; w1.y = y; w1.z = z;
+        const Vector3 &p = other->mPos;
+        v1 = p;
+        w1 = v1;
         SpawnCoins(w1, 1, 0x8000, 0);
         mCoinGiven = 1;
         return;
     }
     {
-        const Vector3 *p;
-        s32 x, y, z;
         u32 t = mState;
         if (t - 1 > 1) return;
-        p = &other->mPos;
-        x = p->x; v2.x = x;
-        y = p->y; v2.y = y;
-        z = p->z; v2.z = z;
-        if (y - mPosY < 0x2bc000) return;
+        const Vector3 &p = other->mPos;
+        v2 = p;
+        if (v2.y - mPosY < 0x2bc000) return;
         if (DecIfAbove0_Byte(&mCoinsLeft) == 0) return;
-        w2.x = v2.x; w2.y = v2.y; w2.z = v2.z;
+        w2 = v2;
         SpawnCoins(w2, 1, 0x8000, 0);
         mCoinGiven = 1;
         return;
