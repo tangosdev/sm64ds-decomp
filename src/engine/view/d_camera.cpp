@@ -123,7 +123,7 @@ extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
 extern int LenVec3(void *v);
-extern void Vec3_Add(void *out, const void *a, const void *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void AddVec3(void *a, void *b, void *c);
 extern void SubVec3(void *a, void *b, void *c);
@@ -1323,7 +1323,7 @@ body:
                 if (g == 0x2f && mFocusDist > 0xc0000) {
                     int s = cstd::fdiv(0xc0000, mFocusDist << 1);
                     Vec3_MulScalarInPlace(&local, s);
-                    Vec3_Add(&local2, a3, &local);
+                    Vec3_Add((Vector3 *)&local2, (const Vector3 *)a3, (const Vector3 *)&local);
                     mLookTargetPos.x = local2.x;
                     mLookTargetPos.y = local2.y;
                     mLookTargetPos.z = local2.z;
