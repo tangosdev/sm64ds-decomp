@@ -17,6 +17,7 @@
  * Fifteen category loaders, then LoadObjects, then
  * dScStage_c::LoadClsnAndObjects. ov002 .text 0x020fe190..0x020fea4c.
  */
+#include "KuppaScript.h"
 #include "decl_common.h"
 
 #include "LVL_Overlay.h"
@@ -454,7 +455,7 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
         subTable++;
     }
 
-    continuedKuppaScript = ContinueKuppaScriptIfNecessary();
+    continuedKuppaScript = KuppaScript::ContinueIfNecessary();
 
     playIntro = IntroAllowed() && continuedKuppaScript == 0;
 
@@ -465,5 +466,5 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
     }
 
     if (playIntro != 0)
-        StartIntroCutscene();
+        KuppaScript::StartIntroCutscene();
 }

@@ -69,7 +69,7 @@ void MgCoins_Update(void);
 void Dealer_Update(Dealer *c);
 extern unsigned char gMainScreenLayers;
 extern int data_0208ee44;
-extern void LoadCard2SubBg3(void);
+extern void LoadCard2SubBg3(void *);
 extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -103,7 +103,7 @@ extern "C" void *dScMgBSC_c_classInit() {
 s32 dScMgBSC_c::InitResources() {
     void *paletteData;
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    LoadCard2SubBg3();
+    LoadCard2SubBg3(this);
     LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
     paletteData = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);
     GXS::LoadOBJPltt(paletteData, 0, 0x100);

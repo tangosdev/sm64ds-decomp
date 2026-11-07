@@ -171,10 +171,13 @@ extern u8 data_0209d684;
 extern s16 GetAngleToCamera(int i);
 extern u8 *data_0209f344;
 }
+/* local extern: the header KuppaScript.h would renumber this TU's compiler temps (@NNN pins in its manifest) */
+namespace KuppaScript {
+void End(void);
+}
 extern "C" {
 extern int func_ov002_020c6e14(void*);
 extern u8 data_0209d660;
-extern void EndKuppaScript(void);
 extern s8 gNumStageStars[];
 extern signed char gNumStageStars[];
 extern int NumVsStarsObtained(void);
@@ -1364,7 +1367,7 @@ LA:
             mState = STATE_SAVE_MESSAGE;
             mSeqTimer = 0;
             mPlayer->mFlags &= ~CUTSCENE_FLAG;
-            EndKuppaScript();
+            KuppaScript::End();
         }
         mAnmModel1.Advance();
         func_ov002_020e8098();
