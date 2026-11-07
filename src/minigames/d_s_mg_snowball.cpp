@@ -121,7 +121,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
-extern void MultiStore16(int val, char *dst, int n);
+extern void MultiStore16(unsigned short value, void *dst, int count);
 extern u16 sSnowballCourseTiles[];
 extern int RandomIntInternal(int *seed);
 extern void Mg_SetTopScreenYOffset(int);
