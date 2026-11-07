@@ -203,7 +203,6 @@ extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern int SurfaceInfo_TestFlag0x20(int* p);
-extern int data_02099368[];
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
@@ -453,75 +452,32 @@ void daKrb_c::func_ov084_02129498() {
  * 6..9 (daPly_c.h calls those the quicksand tiers) while the collision kind
  * (CLPS bits 0..4, CLPS::func_02037e84) is 8. */
 void daKrb_c::func_ov084_021294d0() {
-    daKrb_c *goomba = this;
-    char obj[0x28];
-    if (!goomba->mWithMeshClsn.IsOnGround())
+    if (!mWithMeshClsn.IsOnGround())
         return;
 
-    char *fr = (char *)goomba->mWithMeshClsn.GetFloorResult();
-    if (SurfaceInfo_TestFlag0x20((int *)&((dBgPi *)fr)->surface)) {
-        goomba->func_ov084_021296cc();
-        goomba->SpawnCoin();
-        goomba->func_ov084_02129498();
-        Vector3 v;
-        v.x = 0; v.y = 0x6c000; v.z = 0;     /* 108.0 */
-        goomba->ReleaseCap(v);
-        goomba->mPosX = goomba->mHomePos.x;
-        goomba->mPosY = goomba->mHomePos.y;
-        goomba->mPosZ = goomba->mHomePos.z;
-        goomba->RespawnIfHasCap();
+    if (SurfaceInfo_TestFlag0x20((int *)&mWithMeshClsn.GetFloorResult()->surface)) {
+        func_ov084_021296cc();
+        SpawnCoin();
+        func_ov084_02129498();
+        ReleaseCap(Vector3(0, 0x6c000, 0)); /* 108.0 */
+        mPos = mHomePos;
+        RespawnIfHasCap();
         return;
     }
 
-    /* Copy the floor result into obj's own surface record, then ask what kind of
-     * ground it is. The Goomba is lost on some terrain types. */
-    char *floorResult = (char *)goomba->mWithMeshClsn.GetFloorResult();
-    int surfaceType;
-    {
-        /* obj + 4 is &((dBgPi *)obj)->surface; that spelling here or in the
-         * func_02037e84 receiver below adds an instruction, so both stay. */
-        char *surface = obj + 4;
-        int clpsLo = ((dBgPi *)floorResult)->surface.clps.w0;
-        int clpsHi = ((dBgPi *)floorResult)->surface.clps.w1;
-        /* `clpsHi ? clpsLo : clpsLo` is not a typo and not dead: both arms are the
-         * same value, and the ternary is what makes mwccarm materialize clpsLo after
-         * the load of clpsHi instead of before it. Collapsing it to a plain store
-         * reorders the pair and the function stops reproducing. */
-        ((SurfaceInfo *)surface)->clps.w0 = clpsHi ? clpsLo : clpsLo;
-        ((SurfaceInfo *)surface)->clps.w1 = clpsHi;
-        ((SurfaceInfo *)surface)->normal.x = ((dBgPi *)floorResult)->surface.normal.x;
-        ((SurfaceInfo *)surface)->normal.y = ((dBgPi *)floorResult)->surface.normal.y;
-        ((SurfaceInfo *)surface)->normal.z = ((dBgPi *)floorResult)->surface.normal.z;
-        *(int *)(obj) = (int)data_02099368;
-        ((dBgPi *)obj)->triangleID = ((dBgPi *)floorResult)->triangleID;
-        ((dBgPi *)obj)->colliderIdx = ((dBgPi *)floorResult)->colliderIdx;
-        ((dBgPi *)obj)->clsnID = ((dBgPi *)floorResult)->clsnID;
-        ((dBgPi *)obj)->owner = ((dBgPi *)floorResult)->owner;
-        ((dBgPi *)obj)->collider = ((dBgPi *)floorResult)->collider;
-        surfaceType = ((SurfaceInfo *)surface)->clps.GetSurfaceType();
+    dBgPi floor(*mWithMeshClsn.GetFloorResult());
+    int surfaceType = floor.surface.clps.GetSurfaceType();
+    if ((floor.surface.clps.func_02037e84() == 8
+         && (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9))
+        || surfaceType == 0x13 || surfaceType == 1 || surfaceType == 4 || surfaceType == 5) {
+        SpawnCoin();
+        func_ov084_02129498();
+        if ((mCapId & 0xf) < 6 || mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
+            mPos = mHomePos;
+            ReleaseCap(Vector3(0, 0x6c000, 0)); /* 108.0 */
+            RespawnIfHasCap();
+        }
     }
-    if (((const CLPS *)(obj + 4))->func_02037e84() == 8) {
-        if (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)
-            goto action;
-    }
-    if (surfaceType == 0x13 || surfaceType == 1)
-        goto action;
-    if ((unsigned)(surfaceType - 4) > 1)
-        goto dtor;
-action:
-    goomba->SpawnCoin();
-    goomba->func_ov084_02129498();
-    if ((goomba->mCapId & 0xf) < 6 || goomba->mRewardType == daKrb_c::REWARD_SILVER_STAR_IF_CURRENT) {
-        goomba->mPosX = goomba->mHomePos.x;
-        goomba->mPosY = goomba->mHomePos.y;
-        goomba->mPosZ = goomba->mHomePos.z;
-        Vector3 v2;
-        v2.x = 0; v2.y = 0x6c000; v2.z = 0;     /* 108.0 */
-        goomba->ReleaseCap(v2);
-        goomba->RespawnIfHasCap();
-    }
-dtor:
-    ((dBgPi *)obj)->dBgPi::~dBgPi();
 }
 
 // @symbol func_ov084_021296b0
