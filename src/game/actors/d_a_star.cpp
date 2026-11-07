@@ -46,7 +46,6 @@
  *
  */
 
-#include "KuppaScript.h"
 #include "Particle__System.h"
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -172,6 +171,8 @@ extern u8 data_0209d684;
 extern s16 GetAngleToCamera(int i);
 extern u8 *data_0209f344;
 }
+/* local extern: the header KuppaScript.h would renumber this TU's compiler temps (@NNN pins in its manifest) */
+namespace KuppaScript { void End(void); }
 extern "C" {
 extern int func_ov002_020c6e14(void*);
 extern u8 data_0209d660;
