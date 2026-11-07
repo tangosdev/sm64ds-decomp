@@ -56,6 +56,7 @@ enum daC_Jugem_c_AssetId {
 #include "Sound.h"
 #include "SaveData.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
@@ -136,7 +137,6 @@ extern u8             data_0209d66c;
 extern u8             data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
 extern s8 gCurrentSublevel;
-extern short          data_02082214[];      /* the sine lookup table */
 
 extern JugemModelFile  data_ov085_0213074c;  /* model file */
 extern JugemAnimationFilePtr  data_ov085_02130744;  /* animation file */
@@ -319,12 +319,8 @@ int daC_Jugem_c::StateBobMain()
     mTimer += 1;
     mAuxCounter += 0x500;
 
-    {
-        int v = (short)mAuxCounter;
-        int idx = (int)((unsigned int)(v << 16) >> 16) >> 4;
-        short e = data_02082214[idx * 2];
-        ApproachLinear(mPosY, FX_MUL(e, 0x1a000) + mTarget.y, 0x10000000);
-    }
+    ApproachLinear(mPosY, FX_MUL(FX_SinIdx((u16)(s16)mAuxCounter >> 4), 0x1a000) + mTarget.y,
+                   0x10000000);
 
     if (mTimer == 0x32) {
         pl->func_ov002_020c3ea0();
