@@ -170,8 +170,8 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosZ = mBasePosZ;
     mWaypointIndex = (u8)(param1 & 0xf);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
-                  &data_020a0e68, (Vector3 *)&tmp[0]);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  (Vector3 *)&tmp[0]);
     Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
     mPosY = tmp[1].y;
@@ -394,12 +394,11 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
-                  &data_020a0e68, &cur);
-    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex],
-                  &data_020a0e68, &prev);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  &cur);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
-    Vec3_Sub(&remain, (const Vector3 *)&mPosX, &target);
+    Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
     dist = LenVec3(&remain);
