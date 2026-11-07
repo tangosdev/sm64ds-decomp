@@ -50,6 +50,7 @@
 #include "dActor_c.h"
 #include "dFdColor_c.h"
 #include "dScene_c.h"
+#include "daDemo_c.h"
 #include "daPly_c.h"
 #include "PlayerInput.h"
 #include "private/controller_input.h"
@@ -58,7 +59,6 @@
 #include "CutsceneSpline.h"
 
 struct dCamera_c;
-struct daDemo_c;
 
 enum KuppaScriptCommand {
     KS_PLAYER_LAST = 3,           /* 0..3: a player, by character */
@@ -101,8 +101,7 @@ int RunKuppaScript(u8 *script);
 int ContinueKuppaScriptIfNecessary();
 void ResetKuppaScript();
 
-/* daDemo_c's and the camera's command dispatchers. */
-void func_ov002_020f7d74(daDemo_c *demo, u8 *command, int first, int last);
+/* The camera's command dispatcher. */
 int func_02008550(dCamera_c *camera, u8 *command, int first, int last);
 void func_0201f32c(int messageID);
 void LoadLevelNoReturn(int levelID, u32 entrance, u32 arg2, u32 arg3);
@@ -4507,7 +4506,7 @@ int RunDemoCommand(u8 *command, int first, int last) {
         if (demo == 0)
             return 0;
     }
-    func_ov002_020f7d74((daDemo_c *)demo, command, first, last);
+    ((daDemo_c *)demo)->RunCommand(command, first, last);
 }
 
 /* Spawns daDemo_c (actor 0x160) into the first free slot of gDemoActorIDs.

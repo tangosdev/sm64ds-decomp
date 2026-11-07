@@ -8,7 +8,7 @@
  * RunDemoCommand: the command byte is used as a param1. FindDemoActor looks
  * for a live actor with that param1 among the 16 IDs at gDemoActorIDs; if
  * none, SpawnDemoActor spawns actor 0x160 with that param1 into a free slot.
- * func_ov002_020f7d74 then calls entry s[6] of the 24-entry daDemo_c::*
+ * daDemo_c::RunCommand then calls entry s[6] of the 24-entry daDemo_c::*
  * table data_ov002_0211104c with (s + 7, start, end). Handlers that compare
  * a frame against gKuppaScriptFrame are acting on the record's first or last
  * frame.
@@ -66,8 +66,8 @@
  *   func_ov002_020f27e8 and the OAM tail family return a callee's r0 by
  *   falling off the end; the callees are declared int so the passthrough
  *   is spelled.
- *   func_ov002_020f7d74, the dispatcher, stays extern "C" and free: its
- *   caller RunDemoCommand (src/KuppaScript.cpp) binds it by that name.
+ *   daDemo_c::RunCommand, the dispatcher RunDemoCommand (src/KuppaScript.cpp)
+ *   calls, is a member: it takes the actor in r0 like any other.
  *   func_ov002_020f26d4 is a ldr/bx veneer that tail-calls
  *   func_ov002_020f2630 through a raw void(*)(void); a member pointer
  *   cannot spell that cast, so both stay free.
@@ -167,7 +167,7 @@ typedef void (C::*PMF)(int);
 /* pointer-to-member taking no args (dispatch tables at 02110f34/02110f9c) */
 typedef void (C::*PMF0)();
 
-/* pointer-to-member taking (cmd, a2, a3) — func_ov002_020f7d74's table */
+/* pointer-to-member taking (cmd, a2, a3) — RunCommand's table */
 typedef void (daDemo_c::*PMF3)(unsigned char*, int, int);
 
 /* 8-byte POD so a static initializer stays in .data and a copy is one move. */
@@ -4374,10 +4374,10 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 139 -- func_ov002_020f7d74, 0x020f7d74, size 0x2b4 */
+/* ROM ordinal 139 -- daDemo_c::RunCommand, 0x020f7d74, size 0x2b4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f7d74
-extern "C" void func_ov002_020f7d74(daDemo_c* self, unsigned char* p, int a2, int a3)
+// @symbol _ZN8daDemo_c10RunCommandEPhii
+void daDemo_c::RunCommand(unsigned char* p, int a2, int a3)
 {
     if ((data_ov002_02110b00 & 1) == 0) {
         data_ov002_02110b00 |= 1;
@@ -4406,7 +4406,7 @@ extern "C" void func_ov002_020f7d74(daDemo_c* self, unsigned char* p, int a2, in
         data_ov002_0211104c[22] = *(PMF3 *)&data_ov002_0210b8d0;
         data_ov002_0211104c[23] = *(PMF3 *)&data_ov002_0210b8c8;
     }
-    (self->*data_ov002_0211104c[p[6]])(p + 7, a2, a3);
+    (this->*data_ov002_0211104c[p[6]])(p + 7, a2, a3);
 }
 
 // @symbol _ZN8daDemo_c16CleanupResourcesEv

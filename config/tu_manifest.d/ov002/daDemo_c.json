@@ -1013,7 +1013,7 @@
       "ordinal": 138
     },
     {
-      "symbol": "func_ov002_020f7d74",
+      "symbol": "_ZN8daDemo_c10RunCommandEPhii",
       "address": "0x020f7d74",
       "size": "0x000002b4",
       "legacy_source": "src/func_ov002_020f7d74.cpp",
@@ -2477,7 +2477,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 15 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 61 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
