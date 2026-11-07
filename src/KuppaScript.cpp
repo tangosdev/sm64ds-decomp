@@ -126,7 +126,7 @@ extern u8 data_0209f21c;               /* NUM_PLAYERS */
 extern s8 data_0209f224;               /* STAR_OBTAINED_COPY */
 extern u8 data_0209f250;               /* CURR_PLAYER_ID */
 extern u8 data_0209f2d8;               /* CURRENT_GAMEMODE */
-extern dActor_c *data_0209f394[];      /* PLAYER_ARR */
+extern daPly_c *data_0209f394[];       /* PLAYER_ARR */
 extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
 extern SaveBlock data_0209caa0;        /* the live save block */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */

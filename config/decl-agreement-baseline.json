@@ -352,14 +352,8 @@
       ]
     },
     "DecIfAbove0_Short": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_obj_ct_mecha11.cpp": [
         "param:#1 char *",
-        "return:int"
-      ],
-      "src/game/actors/d_a_obj_hatena_block.cpp": [
         "return:int"
       ],
       "src/game/actors/d_a_obj_sl_ice_block.cpp": [
@@ -673,13 +667,6 @@
         "param:#1 int"
       ]
     },
-    "LoadLevel": {
-      "src/game/actors/d_a_ch_scene.cpp": [
-        "param:#1 signed char",
-        "param:#2 unsigned char",
-        "param:#3 signed char"
-      ]
-    },
     "Math_Function_0203b0fc": {
       "src/engine/view/d_camera.cpp": [
         "param:#1 int",
@@ -763,9 +750,6 @@
       ]
     },
     "Matrix4x3_ApplyInPlaceToRotationY": {
-      "src/game/actors/d_a_obj_key.cpp": [
-        "param:#2 int"
-      ],
       "src/game/actors/d_a_pkn.cpp": [
         "param:#1 PknMtx43 *"
       ],
@@ -2335,10 +2319,6 @@
         "param:#2 const void *"
       ],
       "src/game/actors/d_a_mip.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
-      "src/game/actors/d_a_owl.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
       ],
@@ -7383,9 +7363,6 @@
     "data_02092128": {
       "src/game/stages/LevelObjects.cpp": [
         "return:unsigned char []"
-      ],
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:unsigned char"
       ]
     },
     "data_02092768": {
@@ -7532,11 +7509,6 @@
     "data_0209d3b8": {
       "src/unnamed/arm9/0201/func_02018a58.cpp": [
         "return:void *"
-      ]
-    },
-    "data_0209d3bc": {
-      "src/ShowCrashScreen.cpp": [
-        "return:int"
       ]
     },
     "gSubScreenLayers": {
@@ -7944,9 +7916,6 @@
       "src/engine/view/d_camera.cpp": [
         "return:int []"
       ],
-      "src/game/stages/d_s_title.cpp": [
-        "return:unsigned char []"
-      ],
       "src/unnamed/arm9/0201/func_020197b8.cpp": [
         "return:unsigned char []"
       ]
@@ -7980,9 +7949,6 @@
       ]
     },
     "gNumLives": {
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:signed char []"
-      ],
       "src/ui/hud/d_meter.cpp": [
         "return:signed char"
       ]
@@ -8056,9 +8022,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020dd908.c": [
         "return:char * []"
-      ],
-      "src/KuppaScript.cpp": [
-        "return:dActor_c * []"
       ],
       "src/engine/sound/Sound.cpp": [
         "return:void * []"
@@ -8327,11 +8290,6 @@
     "data_020a0d60": {
       "include/decl_common.h": [
         "return:char []"
-      ]
-    },
-    "data_020a0d90": {
-      "src/game/stages/d_s_title.cpp": [
-        "return:int []"
       ]
     },
     "data_020a0db0": {
@@ -8756,11 +8714,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020e5948.c": [
         "return:int []"
-      ]
-    },
-    "data_ov002_0210da58": {
-      "src/game/actors/d_a_obj_hatena_block.cpp": [
-        "return:char []"
       ]
     },
     "data_ov002_0210ddd0": {
@@ -9695,9 +9648,6 @@
       ]
     },
     "data_ov002_0211094c": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "return:StarModelFilePtr"
       ],
@@ -12761,9 +12711,6 @@
       ]
     },
     "data_ov089_02132c50": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_kpa.cpp": [
         "return:SharedFilePtr"
       ],
@@ -14910,7 +14857,6 @@
     },
     "myFS_ConvertPathToFileID": {
       "src/unnamed/arm9/0201/func_020189f0.c": [
-        "param:#2 int",
         "return:void"
       ]
     },
@@ -14966,9 +14912,6 @@
         "param:#1 char *",
         "param:#2 unsigned char",
         "return:unsigned char"
-      ],
-      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
-        "param:#1 int *"
       ]
     },
     "func_0201a9ec": {
@@ -14981,7 +14924,6 @@
     },
     "func_0201a9fc": {
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
-        "param:#1 int *",
         "return:int"
       ]
     },
@@ -16144,16 +16086,6 @@
         "arity:4"
       ]
     },
-    "func_02064554": {
-      "src/unnamed/arm9/0206/func_02063bc4.c": [
-        "param:#1 void *",
-        "param:#4 int"
-      ],
-      "src/unnamed/arm9/0206/func_02063ea8.c": [
-        "param:#1 void *",
-        "param:#4 int"
-      ]
-    },
     "func_0206470c": {
       "src/unnamed/arm9/0206/func_02063980.c": [
         "param:#1 Sub *"
@@ -16170,11 +16102,6 @@
         "param:#3 unsigned char"
       ]
     },
-    "func_02064a94": {
-      "src/unnamed/arm9/0206/func_02063980.c": [
-        "param:#4 unsigned int *"
-      ]
-    },
     "func_02064b2c": {
       "src/unnamed/arm9/0206/func_02063da0.c": [
         "param:#2 unsigned short"
@@ -16186,20 +16113,9 @@
         "param:#3 int"
       ]
     },
-    "func_02064cd8": {
-      "src/unnamed/arm9/0206/func_02063980.c": [
-        "param:#5 int"
-      ]
-    },
     "func_02064d6c": {
       "src/unnamed/arm9/0206/func_02063bc4.c": [
-        "param:#2 int",
-        "param:#3 int"
-      ]
-    },
-    "func_02064e18": {
-      "src/unnamed/arm9/0206/func_02063980.c": [
-        "param:#5 int"
+        "param:#2 int"
       ]
     },
     "func_02064fe8": {
@@ -17501,11 +17417,6 @@
       ]
     },
     "nds_printf": {
-      "src/ShowCrashScreen.cpp": [
-        "param:#2 const char *"
-      ]
-    },
-    "nds_printt": {
       "src/ShowCrashScreen.cpp": [
         "param:#2 const char *"
       ]
