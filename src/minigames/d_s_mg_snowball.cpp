@@ -148,7 +148,6 @@ extern u8 gSubScreenLayers;
   * kept. */
 }
 
-// @symbol _ZN15dScMgSnowball_cD1Ev
 /* Empty: every call in the ROM's body is compiler-generated. The members go
    in reverse declaration order -- __cxa_vec_cleanup on mSprays (with
    SnowSpray's destructor), mArray2 and mArray1 (with Vector2's,
@@ -156,14 +155,11 @@ extern u8 gSubScreenLayers;
    is the inlined dScMgSingle3DBase_c destructor. */
 dScMgSnowball_c::~dScMgSnowball_c() {}
 
-// @symbol _ZN15dScMgSnowball_cD0Ev
 /* The deleting destructor (D0) has no source of its own: the compiler emits
    it from the definition above. */
 
-// @symbol _ZN9SnowSprayD1Ev
 /* SnowSpray's empty inline destructor (dScMgSnowball_c.h), emitted here. */
 
-// @symbol _ZN15dScMgSnowball_c17SnowSpray_DrawAllEv
 void dScMgSnowball_c::SnowSpray_DrawAll() {
     char *scene = (char *)this;
     dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
@@ -184,7 +180,6 @@ void dScMgSnowball_c::SnowSpray_DrawAll() {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c19SnowSpray_UpdateAllEv
 void dScMgSnowball_c::SnowSpray_UpdateAll() {
     char *scene = (char *)this;
     int i;
@@ -213,7 +208,6 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c18SnowSpray_ClearAllEv
 void dScMgSnowball_c::SnowSpray_ClearAll() {
     char *rec = (char *)this;
     int i;
@@ -231,7 +225,6 @@ void dScMgSnowball_c::SnowSpray_ClearAll() {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c9IsInWaterEPi
 int dScMgSnowball_c::IsInWater(int *point) {
     char *scene = (char *)this;
     int x = point[0];
@@ -318,7 +311,6 @@ int dScMgSnowball_c::IsInWater(int *point) {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c13HitsBreakableEPi
 int dScMgSnowball_c::HitsBreakable(int *point) {
     int i;
     for (i = 0; i < 0x80; i++) {
@@ -350,7 +342,6 @@ int dScMgSnowball_c::HitsBreakable(int *point) {
 
 // kept: the ROM recomputes x >> 12 after the tile lookup; with CSE on it is reused and the function is 0x288
 #pragma opt_common_subs off
-// @symbol _ZN15dScMgSnowball_c8HitsWallEPi
 int dScMgSnowball_c::HitsWall(int *point) {
     int courseY = point[1];
     int x;
@@ -412,7 +403,6 @@ int dScMgSnowball_c::HitsWall(int *point) {
 }
 #pragma opt_common_subs on
 
-// @symbol _ZN15dScMgSnowball_c14UpdateSnowballEv
 /* The collision ring.
  * Once a tick the snowball fires 32 probes around itself, one every 0x800 of
  * angle at the current ball radius. Each probe records three flags -- solid,
@@ -670,7 +660,6 @@ void dScMgSnowball_c::UpdateSnowball() {
     }
 }
 
-// @symbol Snowball_UpdateCamera
 extern "C" {
 void Snowball_UpdateCamera(char *scene) {
     dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
@@ -709,7 +698,6 @@ void Snowball_UpdateCamera(char *scene) {
 }
 }
 
-// @symbol _ZN15dScMgSnowball_c12RedrawCourseEv
 void dScMgSnowball_c::RedrawCourse() {
     char *scene = (char *)this;
     dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
@@ -737,7 +725,6 @@ void dScMgSnowball_c::RedrawCourse() {
 
 // kept: the body as written moves 56 words with strength reduction on; no rewrite tried here recovers it
 #pragma opt_strength_reduction off
-// @symbol _ZN15dScMgSnowball_c16DrawCourseColumnEii
 /* BG2 tile-column writer.
  *
  * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
@@ -884,7 +871,6 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
 }
 #pragma opt_strength_reduction on
 
-// @symbol _ZN15dScMgSnowball_c11BuildCourseEv
 /* The course generator.
  * Paints mTileMap row by row from the bottom of the course upwards, carving a
  * corridor between a left and a right edge cursor that random-walk one lane at
@@ -1233,7 +1219,6 @@ void dScMgSnowball_c::BuildCourse() {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c10ResetSceneEv
 void dScMgSnowball_c::ResetScene() {
     void *p_ = (void *)this;
     char *c = (char *)p_;
@@ -1338,7 +1323,6 @@ void dScMgSnowball_c::ResetScene() {
 
 // kept: with strength reduction on, the two slot loops grow (0x6b0) and no indexed spelling recovers 0x694
 #pragma opt_strength_reduction off
-// @symbol _ZN15dScMgSnowball_c6RenderEv
 /* Slot 9. `p` (this + i) is the stepping base for the mArray1Active/mArray1Hit
  * byte flags and colours r7; the indexed spelling colours it last. The y reads
  * go through LNDR on `(this + i * 8)->mArray[0].y` because the ROM loads them
@@ -1476,7 +1460,6 @@ s32 dScMgSnowball_c::Render() {
 }
 #pragma opt_strength_reduction on
 
-// @symbol _ZN15dScMgSnowball_c8BehaviorEv
 /* Slot 6. The five-state snowball roll: 0 counts in, 1 steers with the
  * touch screen and grows the ball, 2 and 3 are the crash, 4 is the melt and
  * 5 is over.
@@ -1777,7 +1760,6 @@ s32 dScMgSnowball_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15dScMgSnowball_c16OnGraphCallback2Ev
 /* dScMgSnowball_c::OnGraphCallback2, from its vtable slot. The one-letter `V`
    scroll macro is #undef'd at the end of the function. */
 
@@ -1814,28 +1796,24 @@ int dScMgSnowball_c::OnGraphCallback2() {
 }
 #undef V
 
-// @symbol _ZN15dScMgSnowball_c16OnGraphCallback3Ev
 /* dScMgSnowball_c::OnGraphCallback3, from its vtable slot. */
 int dScMgSnowball_c::OnGraphCallback3() {
     void *t = (void *)this;
     return ((dScMgBase_c *)t)->dScMgBase_c::OnGraphCallback3() != 0;
 }
 
-// @symbol _ZN15dScMgSnowball_c16OnGraphCallback0Ev
 /* dScMgSnowball_c::OnGraphCallback0, from its vtable slot. */
 int dScMgSnowball_c::OnGraphCallback0() {
     void *t = (void *)this;
     return ((dScMgBase_c *)t)->dScMgBase_c::OnGraphCallback0() != 0;
 }
 
-// @symbol _ZN15dScMgSnowball_c16CleanupResourcesEv
 /* Slot 3. Frees the BMD that InitResources parked in mBallBmd. */
 s32 dScMgSnowball_c::CleanupResources() {
     Ov004_Deallocate(mBallBmd);
     return 1;
 }
 
-// @symbol _ZN15dScMgSnowball_c10StartRoundEi
 /* Slot 18, an override of dScMgBase_c::StartRound(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
 void dScMgSnowball_c::StartRound(int i) {
@@ -1849,7 +1827,6 @@ void dScMgSnowball_c::StartRound(int i) {
     RedrawCourse();
 }
 
-// @symbol _ZN15dScMgSnowball_c13InitResourcesEv
 /* Slot 0. Sets up both screens' BG2 and BG3 layers, loads the palettes and
  * tiles, then loads the snowball BMD into mBallBmd and hands it to mModel.
  * Returning 0 when dExtModel_c::SetFile fails aborts the scene. The helpers at
@@ -1931,7 +1908,6 @@ s32 dScMgSnowball_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15dScMgSnowball_cC1Ev
 /* Everything but the `= 0` at 0xabf4 is compiler-generated: the base C2, the
    two vptr stores (dScMgSingle3DBase_c's, then this class's own, which lands
    on the cartridge's _ZTV15dScMgSnowball_c), the tracker at 0x471c, mModel,
@@ -1940,10 +1916,8 @@ s32 dScMgSnowball_c::InitResources() {
    SnowSpray's pair), in the order ~dScMgSnowball_c unwinds them. */
 dScMgSnowball_c::dScMgSnowball_c() : mBallBmd(0) {}
 
-// @symbol _ZN9SnowSprayC1Ev
 /* SnowSpray's empty inline constructor (dScMgSnowball_c.h), emitted here. */
 
-// @symbol _ZN15dScMgSnowball_c11Bit_DrawAllEv
 extern "C" {
 extern void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m);
 struct OamAttr;
@@ -1989,7 +1963,6 @@ void dScMgSnowball_c::Bit_DrawAll() {
  * TU's @NNN constants (+28) or changes the code, measured per site. The
  * dead `char *` copies of this at the top of each handler stay: deleting any
  * one of them renumbers @NNN too. */
-// @symbol _ZN15dScMgSnowball_c21Bit_StateFallSlowDownEi
 void dScMgSnowball_c::Bit_StateFallSlowDown(int idx) {
     char *c = (char *)this;
     int off = idx * 0x24;
@@ -2012,7 +1985,6 @@ void dScMgSnowball_c::Bit_StateFallSlowDown(int idx) {
     *((unsigned char *)&mBits[0].fallState + off) = 0;
 }
 
-// @symbol _ZN15dScMgSnowball_c20Bit_StateFallSpeedUpEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 }
@@ -2042,7 +2014,6 @@ void dScMgSnowball_c::Bit_StateFallSpeedUp(int idx) {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c18Bit_StateFallStartEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 }
@@ -2057,7 +2028,6 @@ void dScMgSnowball_c::Bit_StateFallStart(int i) {
     mBits[i].fallTimer = (unsigned char)r;
 }
 
-// @symbol _ZN15dScMgSnowball_c19BitA_StateDriftStopEi
 void dScMgSnowball_c::BitA_StateDriftStop(int idx) {
     char *self = (char *)this;
     int off = idx * 0x24;
@@ -2088,7 +2058,6 @@ void dScMgSnowball_c::BitA_StateDriftStop(int idx) {
     *(unsigned char *)((char *)&mBits[0].driftState + off) = 0;
 }
 
-// @symbol _ZN15dScMgSnowball_c19BitA_StateDriftLeftEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 }
@@ -2135,7 +2104,6 @@ void dScMgSnowball_c::BitA_StateDriftLeft(int i) {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c20BitA_StateDriftRightEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 }
@@ -2176,7 +2144,6 @@ void dScMgSnowball_c::BitA_StateDriftRight(int index) {
         0xff;
 }
 
-// @symbol _ZN15dScMgSnowball_c15BitA_StatePauseEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern unsigned char data_ov006_0212f3b0[];
@@ -2209,7 +2176,6 @@ void dScMgSnowball_c::BitA_StatePause(int i) {
                                0x60);
 }
 
-// @symbol _ZN15dScMgSnowball_c12Bit_RunKindAEi
 typedef void (dScMgSnowball_c::*PMF_02129d94)(int);
 struct Entry_02129d94 {
     PMF_02129d94 pmf;
@@ -2225,7 +2191,6 @@ void dScMgSnowball_c::Bit_RunKindA(int i) {
     (this->*sSnowballBitStateTable[idx1].pmf)(i);
 }
 
-// @symbol _ZN15dScMgSnowball_c19BitB_StateDriftStopEi
 void dScMgSnowball_c::BitB_StateDriftStop(int i) {
     char *c = (char *)this;
     int o = i * 0x24;
@@ -2258,7 +2223,6 @@ void dScMgSnowball_c::BitB_StateDriftStop(int i) {
     }
 }
 
-// @symbol _ZN15dScMgSnowball_c19BitB_StateDriftLeftEi
 void dScMgSnowball_c::BitB_StateDriftLeft(int idx) {
     char *c = (char *)this;
     int n = idx * 0x24;
@@ -2292,7 +2256,6 @@ void dScMgSnowball_c::BitB_StateDriftLeft(int idx) {
     *(unsigned char *)((char *)&mBits[0].driftState + n) = 3;
 }
 
-// @symbol _ZN15dScMgSnowball_c20BitB_StateDriftRightEi
 void dScMgSnowball_c::BitB_StateDriftRight(int index) {
     char *base = (char *)this;
     int n;
@@ -2325,7 +2288,6 @@ void dScMgSnowball_c::BitB_StateDriftRight(int index) {
     mBits[index].driftState = 3;
 }
 
-// @symbol _ZN15dScMgSnowball_c15BitB_StatePauseEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern unsigned char data_ov006_0212f3ac[];
@@ -2355,7 +2317,6 @@ void dScMgSnowball_c::BitB_StatePause(int idx) {
     *(short *)((char *)&mBits[0].driftTimer + n) = (unsigned char)(((v * 0x30) >> 15) + 0x30);
 }
 
-// @symbol _ZN15dScMgSnowball_c12Bit_RunKindBEi
 
 typedef void (dScMgSnowball_c::*PMF_0212a224)(int);
 extern "C" PMF_0212a224 sSnowballBitBStateTable[];
@@ -2366,7 +2327,6 @@ void dScMgSnowball_c::Bit_RunKindB(int idx) {
     (this->*sSnowballBitBStateTable[state])(idx);
 }
 
-// @symbol _ZN15dScMgSnowball_c12Bit_PickKindEi
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_ov006_0212f3b4[];
@@ -2383,7 +2343,6 @@ void dScMgSnowball_c::Bit_PickKind(int idx) {
     ((dScMgSnowball_c *)self)->mBits[idx].driftState = 0;
 }
 
-// @symbol _ZN15dScMgSnowball_c13Bit_UpdateAllEv
 
 typedef void (dScMgSnowball_c::*PMF_0212a2e0)(int);
 
@@ -2420,7 +2379,6 @@ void dScMgSnowball_c::Bit_UpdateAll() {
     } while (i < 0x32);
 }
 
-// @symbol _ZN15dScMgSnowball_c11Bit_InitAllEv
 extern "C" {
 extern int RandomIntInternal(int *seed);
 }
@@ -2522,7 +2480,6 @@ Entry_02129d94 sSnowballBitStateTable[3] = {
     {&dScMgSnowball_c::Bit_StateFallSlowDown},
 };
 
-// @symbol dScMgSnowball_c_classInit
 /* Reconstructed source-style name: SM64DS proves dScMgSnowball_c through RTTI,
  * allocation size, vtable identity, and the MG_SNOWBALL registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

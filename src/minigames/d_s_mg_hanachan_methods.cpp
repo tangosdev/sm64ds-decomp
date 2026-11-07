@@ -269,15 +269,12 @@ extern struct S_ea81c sHanaPopups[];
 extern OamAttr *sMgDigitSprites[];
 }
 
-// @symbol _ZN15dScMgHanachan_cD1Ev
-// @symbol _ZN15dScMgHanachan_cD0Ev
 /* Empty: the compiler destroys the fifteen 0x98-byte wigglers at 0x4678
    through __cxa_vec_cleanup with Wiggler's destructor, as dScMgBase_c's own
    destructor does for its array. The vptr store, the base destructor call
    and D0's delete are the compiler's too. */
 dScMgHanachan_c::~dScMgHanachan_c() {}
 
-// @symbol _ZN15dScMgHanachan_c7WigglerD1Ev
 /* Wiggler's empty inline destructor (dScMgHanachan_c.h), emitted here after
    the class destructor that first uses it: the compiler tears the five
    Vector2 segment points at +0x18 down through __cxa_vec_cleanup. */
@@ -298,7 +295,6 @@ struct HanaStarPopup {
 };
 typedef char HanaStarPopup_size_must_be_0x14[sizeof(HanaStarPopup) == 0x14 ? 1 : -1];
 
-// @symbol StarPopup_Draw
 /* Draws the single popup while its visible flag is 1: a sprite from the
    language's table 8 pixels left of it and one from sMgDigitSprites
    8 pixels right. */
@@ -318,7 +314,6 @@ extern "C" void StarPopup_Draw(void) {
     Mg_RenderSubSpriteMtx(sMgDigitSprites[25], x + 8, y, 0);
 }
 
-// @symbol StarPopup_Update
 /* Steps the single popup through three phases. Phase 0 moves it by its
    velocity until its timer runs out, phase 1 holds for 0x40 frames and then
    adds one to the scene's mHudScore (capped at 9999, raising
@@ -392,7 +387,6 @@ extern "C" void StarPopup_Update(char *arg) {
     }
 }
 
-// @symbol StarPopup_Start
 /* Starts the single popup at (x, y), x kept between 0x10000 and 0xf4000,
    unless it is already active. */
 extern "C" void StarPopup_Start(int x, int y) {
@@ -413,7 +407,6 @@ extern "C" void StarPopup_Start(int x, int y) {
     ((HanaStarPopup *)g)->vy = -0x800;
 }
 
-// @symbol StarPopup_Clear
 /* Clears the single popup's active and draw flags. */
 extern "C" unsigned char StarPopup_Clear(void) {
     ((HanaStarPopup *)sHanaStarPopup)->active = 0;
@@ -421,7 +414,6 @@ extern "C" unsigned char StarPopup_Clear(void) {
     return 0;
 }
 
-// @symbol HanaPopup_DrawAll
 /* Draws each of the sixteen popups whose +0xb flag is set, as three
    sprites 0x10 pixels apart. */
 typedef struct {
@@ -449,7 +441,6 @@ extern "C" void HanaPopup_DrawAll(void) {
     }
 }
 
-// @symbol HanaPopup_UpdateAll
 /* Steps the sixteen popups: y is kept at or below 0xb8000, phase 0 moves
    each by its velocity until its timer runs out, and phase 1 holds for 0x40
    frames and then clears it. The compound assignments go through (int)e,
@@ -498,7 +489,6 @@ extern "C" void HanaPopup_UpdateAll(void) {
     }
 }
 
-// @symbol HanaPopup_Spawn
 /* Starts a popup in the first free one of the sixteen slots at (r0, r1),
    r0 kept between 0x14000 and 0xf0000. */
 
@@ -522,7 +512,6 @@ extern "C" void HanaPopup_Spawn(int r0, int r1) {
     }
 }
 
-// @symbol HanaPopup_ClearAll
 /* Clears the +0xe and +0xf flags of every one of the sixteen popups whose
    +0xe flag is already clear. */
 struct E6_ea8e0 {
@@ -542,7 +531,6 @@ extern "C" void HanaPopup_ClearAll(void) {
     }
 }
 
-// @symbol Wiggler_DrawTarget
 /* Draws a wiggler's five segments from the tail forward, then one more
    sprite by the head when bloom is set and Wiggler_IsStarVisible agrees. The
    trivial ~Vec2_ea914 and the strength-reduction bracket are both part of
@@ -626,7 +614,6 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
     }
 }
 
-// @symbol Wiggler_DrawField
 extern "C" {
 void Wiggler_DrawField(void *arg) {
     char *raw = (char *)arg;
@@ -729,7 +716,6 @@ void Wiggler_DrawField(void *arg) {
 }
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler6UpdateEv
 #pragma push
 #pragma O3 /* the default schedule misses */
 void dScMgHanachan_c::Wiggler::Update() {
@@ -753,7 +739,6 @@ void dScMgHanachan_c::Wiggler::Update() {
     Wiggler_StepSegmentsB(w);
 }
 #pragma pop
-// @symbol _ZN15dScMgHanachan_c7Wiggler9StateHoldEv
 void dScMgHanachan_c::Wiggler::StateHold() {
     Wiggler *w = this;
     if (ApproachLinear2(w->hold, 0, 1)) {
@@ -791,7 +776,6 @@ void dScMgHanachan_c::Wiggler::StateHold() {
     Wiggler_StepSegmentsB(w);
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler10StateMoveAEv
 void dScMgHanachan_c::Wiggler::StateMoveA() {
     Wiggler *w = this;
     int va[2];
@@ -830,7 +814,6 @@ void dScMgHanachan_c::Wiggler::StateMoveA() {
     }
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler9StateWaitEv
 void dScMgHanachan_c::Wiggler::StateWait() {
     Wiggler *w = this;
     short *t = &w->hold;
@@ -856,7 +839,6 @@ void dScMgHanachan_c::Wiggler::StateWait() {
     w->face = 3;
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler10StateMoveBEv
 void dScMgHanachan_c::Wiggler::StateMoveB() {
     Wiggler *w = this;
     int va[2];
@@ -904,7 +886,6 @@ void dScMgHanachan_c::Wiggler::StateMoveB() {
         w->face = 0;
 }
 
-// @symbol Wiggler_UpdateSway
 extern "C" void Wiggler_UpdateSway(Wiggler *w) {
     if (w->state == &Wiggler::TurnTowardAim && w->decoy == 0) {
         short h = w->bob;
@@ -917,7 +898,6 @@ extern "C" void Wiggler_UpdateSway(Wiggler *w) {
     w->bob += w->bobRate;
 }
 
-// @symbol Wiggler_Move
 extern "C" void Wiggler_Move(char *c) {
     Wiggler *w = (Wiggler *)c;
     int v[2];
@@ -961,7 +941,6 @@ extern "C" void Wiggler_Move(char *c) {
     Wiggler_StepSegmentsA(w);
 }
 
-// @symbol Wiggler_HitTest
 extern "C" {
 int Wiggler_HitTest(char *raw, const V2 *touchPoint) {
     Wiggler *wiggler = (Wiggler *)raw;
@@ -975,7 +954,6 @@ int Wiggler_HitTest(char *raw, const V2 *touchPoint) {
 }
 }
 
-// @symbol Wiggler_IsStarVisible
 extern "C" {
 int Wiggler_IsStarVisible(char *raw) {
     if (((Wiggler *)raw)->busy == 0) {
@@ -987,7 +965,6 @@ int Wiggler_IsStarVisible(char *raw) {
 }
 }
 
-// @symbol Wiggler_StopIfIdle
 extern "C" {
 void Wiggler_StopIfIdle(char *c) {
     Wiggler *w = (Wiggler *)c;
@@ -1010,7 +987,6 @@ void Wiggler_StopIfIdle(char *c) {
 }
 }
 
-// @symbol Wiggler_OnTouched
 extern "C" void Wiggler_OnTouched(char *c) {
     Wiggler *w = (Wiggler *)c;
     if (w->state == &Wiggler::TurnTowardAim) {
@@ -1027,7 +1003,6 @@ extern "C" void Wiggler_OnTouched(char *c) {
     }
 }
 
-// @symbol Wiggler_SetCruiseSpeed
 extern "C" {
 void Wiggler_SetCruiseSpeed(char *raw) {
     Wiggler *w = (Wiggler *)raw;
@@ -1040,7 +1015,6 @@ void Wiggler_SetCruiseSpeed(char *raw) {
 }
 }
 
-// @symbol Wiggler_Retarget
 extern "C" {
 void Wiggler_Retarget(Wiggler *c, int v) {
     short *h = (short *)(int)(&c->tries);
@@ -1069,7 +1043,6 @@ void Wiggler_Retarget(Wiggler *c, int v) {
 }
 }
 
-// @symbol Wiggler_GetFrame
 extern "C" {
 /* Second parameter unused by the body -- Wiggler_DrawField passes an index
    this callee ignores; declaring it keeps the caller's argument setup. */
@@ -1116,7 +1089,6 @@ end:
 }
 }
 
-// @symbol Wiggler_GetFlag
 extern "C" {
 int Wiggler_GetFlag(char *raw, int n) {
     switch (n) {
@@ -1134,7 +1106,6 @@ int Wiggler_GetFlag(char *raw, int n) {
 }
 }
 
-// @symbol Hana_PickUnused
 extern "C" {
 int Hana_PickUnused(int n, int mask) {
     int v;
@@ -1166,7 +1137,6 @@ int Hana_PickUnused(int n, int mask) {
 }
 }
 
-// @symbol Hana_ChooseStarWiggler
 extern "C" {
 void Hana_ChooseStarWiggler(int count) {
     int i, j;
@@ -1194,7 +1164,6 @@ void Hana_ChooseStarWiggler(int count) {
 }
 }
 
-// @symbol Hana_PickMoveKind
 extern "C" {
 int Hana_PickMoveKind(void) {
     int v = 3;
@@ -1209,7 +1178,6 @@ int Hana_PickMoveKind(void) {
 }
 }
 
-// @symbol Wiggler_ClampToScreen
 extern "C" {
 int Wiggler_ClampToScreen(char *raw) {
     Wiggler *wiggler = (Wiggler *)raw;
@@ -1242,7 +1210,6 @@ int Wiggler_ClampToScreen(char *raw) {
 }
 }
 
-// @symbol Wiggler_StepSegmentsA
 extern "C" {
 void Wiggler_StepSegmentsA(Wiggler *wiggler) {
     V2 segmentOffset;
@@ -1315,7 +1282,6 @@ void Wiggler_StepSegmentsA(Wiggler *wiggler) {
 }
 }
 
-// @symbol Wiggler_StepSegmentsB
 extern "C" {
 void Wiggler_StepSegmentsB(Wiggler *wiggler) {
     V2 segmentOffset;
@@ -1367,7 +1333,6 @@ void Wiggler_StepSegmentsB(Wiggler *wiggler) {
 }
 }
 
-// @symbol Wiggler_StepSegmentsC
 extern "C" {
 void Wiggler_StepSegmentsC(Wiggler *wiggler) {
     V2 segmentOffset;
@@ -1416,7 +1381,6 @@ void Wiggler_StepSegmentsC(Wiggler *wiggler) {
 }
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler13CheckOffLeftAEv
 void dScMgHanachan_c::Wiggler::CheckOffLeftA() {
     Wiggler *self = (Wiggler *)this;
     int i;
@@ -1432,7 +1396,6 @@ void dScMgHanachan_c::Wiggler::CheckOffLeftA() {
     }
 }
 
-// @symbol Wiggler_StartPathA
 extern "C" {
 void Wiggler_StartPathA(Obj *self, int n) {
     int b = n % 3;
@@ -1494,7 +1457,6 @@ void Wiggler_StartPathA(Obj *self, int n) {
 }
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler10MoveBounceEv
 void dScMgHanachan_c::Wiggler::MoveBounce() {
     char *raw = (char *)this;
     int boundaryMask = Wiggler_ClampToScreen(raw);
@@ -1551,7 +1513,6 @@ void dScMgHanachan_c::Wiggler::MoveBounce() {
     }
 }
 
-// @symbol Wiggler_StartBounce
 extern "C" {
 void Wiggler_StartBounce(char *raw, int) {
     int i;
@@ -1578,7 +1539,6 @@ void Wiggler_StartBounce(char *raw, int) {
 }
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler13CheckOffLeftBEv
 void dScMgHanachan_c::Wiggler::CheckOffLeftB() {
     Wiggler *self = (Wiggler *)this;
     int i;
@@ -1594,7 +1554,6 @@ void dScMgHanachan_c::Wiggler::CheckOffLeftB() {
     }
 }
 
-// @symbol Wiggler_StartPathB
 extern "C" {
 void Wiggler_StartPathB(char *raw, int idx) {
     int n1;
@@ -1648,13 +1607,11 @@ void Wiggler_StartPathB(char *raw, int idx) {
 }
 }
 
-// @symbol _ZN15dScMgHanachan_c7Wiggler13TurnTowardAimEv
 void dScMgHanachan_c::Wiggler::TurnTowardAim() {
     Wiggler *w = this;
     ApproachLinear(w->ang[0], (short)(w->aim - 0x2000), 0x100);
 }
 
-// @symbol Wiggler_StartPathC
 extern "C" {
 void Wiggler_StartPathC(Wiggler *wiggler, int wigglerIndex) {
     V2 initialHead;
@@ -1718,7 +1675,6 @@ void Wiggler_StartPathC(Wiggler *wiggler, int wigglerIndex) {
 }
 }
 
-// @symbol Hana_SpawnWigglers
 extern "C" {
 void Hana_SpawnWigglers(char *raw, int arg1, int arg2) {
     int i;
@@ -1760,13 +1716,11 @@ void Hana_SpawnWigglers(char *raw, int arg1, int arg2) {
 }
 }
 
-// @symbol _ZN15dScMgHanachan_c16CleanupResourcesEv
 s32 dScMgHanachan_c::CleanupResources() {
     Mg_CommitRecords();
     return 1;
 }
 
-// @symbol _ZN15dScMgHanachan_c6RenderEv
 s32 dScMgHanachan_c::Render() {
     char *raw = (char *)this;
     int i;
@@ -1847,7 +1801,6 @@ tail:
     return 1;
 }
 
-// @symbol _ZN15dScMgHanachan_c8BehaviorEv
 s32 dScMgHanachan_c::Behavior() {
 
     sHanaSpinAngle = sHanaSpinAngle + 0x800;
@@ -1873,10 +1826,8 @@ s32 dScMgHanachan_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15dScMgHanachan_c11Phase_NoneAEv
 void dScMgHanachan_c::Phase_NoneA() {}
 
-// @symbol _ZN15dScMgHanachan_c15Phase_WaitTouchEv
 void dScMgHanachan_c::Phase_WaitTouch() {
     char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
@@ -1894,7 +1845,6 @@ void dScMgHanachan_c::Phase_WaitTouch() {
     s->mPhase = &dScMgHanachan_c::Phase_NoneA;
 }
 
-// @symbol _ZN15dScMgHanachan_c15BeginResultWaitEv
 void dScMgHanachan_c::BeginResultWait() {
     char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
@@ -1902,15 +1852,12 @@ void dScMgHanachan_c::BeginResultWait() {
     s->mPhase = &dScMgHanachan_c::Phase_WaitTouch;
 }
 
-// @symbol _ZN15dScMgHanachan_c11Phase_NoneBEv
 void dScMgHanachan_c::Phase_NoneB() {}
 
-// @symbol _ZN15dScMgHanachan_c12SetPhaseIdleEv
 void dScMgHanachan_c::SetPhaseIdle() {
     mPhase = &dScMgHanachan_c::Phase_NoneB;
 }
 
-// @symbol _ZN15dScMgHanachan_c12Phase_ResultEv
 void dScMgHanachan_c::Phase_Result() {
     char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
@@ -1938,7 +1885,6 @@ void dScMgHanachan_c::Phase_Result() {
     }
 }
 
-// @symbol _ZN15dScMgHanachan_c11BeginResultEv
 void dScMgHanachan_c::BeginResult() {
     char *raw = (char *)this;
     int i = 0;
@@ -1957,7 +1903,6 @@ void dScMgHanachan_c::BeginResult() {
     mPhase = &dScMgHanachan_c::Phase_Result;
 }
 
-// @symbol _ZN15dScMgHanachan_c10Phase_PlayEv
 void dScMgHanachan_c::Phase_Play() {
     char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
@@ -2078,7 +2023,6 @@ void dScMgHanachan_c::Phase_Play() {
         Sound::PlayBank2_2D(0xa6);
 }
 
-// @symbol _ZN15dScMgHanachan_c9BeginPlayEv
 void dScMgHanachan_c::BeginPlay() {
     char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
@@ -2086,7 +2030,6 @@ void dScMgHanachan_c::BeginPlay() {
     s->mPhase = &dScMgHanachan_c::Phase_Play;
 }
 
-// @symbol _ZN15dScMgHanachan_c15Phase_WaitIntroEv
 void dScMgHanachan_c::Phase_WaitIntro() {
     char *raw = (char *)this;
     dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
@@ -2101,7 +2044,6 @@ void dScMgHanachan_c::Phase_WaitIntro() {
     BeginPlay();
 }
 
-// @symbol _ZN15dScMgHanachan_c16Phase_SetupRoundEv
 void dScMgHanachan_c::Phase_SetupRound() {
     dScMgHanachan_c *self = this;
     char *raw = (char *)this;
@@ -2151,7 +2093,6 @@ void dScMgHanachan_c::Phase_SetupRound() {
     }
 }
 
-// @symbol _ZN15dScMgHanachan_c10StartRoundEi
 void dScMgHanachan_c::StartRound(int state) {
     if (state == 1) {
         /* `const` on the read is load-bearing: without it mwcc CSEs the +0xbc field
@@ -2179,7 +2120,6 @@ void dScMgHanachan_c::StartRound(int state) {
     Phase_SetupRound();
 }
 
-// @symbol _ZN15dScMgHanachan_c13InitResourcesEv
 s32 dScMgHanachan_c::InitResources() {
     void *a;
     void *b;
@@ -2212,7 +2152,6 @@ s32 dScMgHanachan_c::InitResources() {
     return 1;
 }
 
-// @symbol Hana_LoadBackground
 extern "C" {
 void Hana_LoadBackground(void) {
     void *r6 = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCG_BIN);

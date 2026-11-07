@@ -57,7 +57,6 @@ void func_ov007_020c15ec(Ov007Texture *tex);
 void func_ov007_020c16dc(int fmt, int width, int height, int colorCount, u32 *texSize,
                          u32 *plttSize);
 
-// @symbol func_ov007_020c184c
 /* Resets both regions to start at 0: the texture region's end from the
  * texture VRAM banks GX::GetBankForTex reports (one 0x20000-byte bank per
  * bit), the palette region's end from the palette banks GX::GetBankForTexPltt
@@ -119,7 +118,6 @@ void func_ov007_020c184c(void) {
     }
 }
 
-// @symbol func_ov007_020c1814
 /* Sizes both regions and starts them at the given VRAM offsets. */
 void func_ov007_020c1814(int textureOffset, int paletteOffset) {
     func_ov007_020c184c();
@@ -127,19 +125,16 @@ void func_ov007_020c1814(int textureOffset, int paletteOffset) {
     data_ov007_02104be8 = paletteOffset;
 }
 
-// @symbol func_ov007_020c1804
 /* The next free texture slot. */
 int func_ov007_020c1804(void) {
     return data_ov007_02104bdc;
 }
 
-// @symbol func_ov007_020c17f4
 /* The next free palette slot. */
 int func_ov007_020c17f4(void) {
     return data_ov007_02104be8;
 }
 
-// @symbol func_ov007_020c16dc
 /* Texel and palette byte sizes of a width x height texture of format fmt
  * with colorCount palette colours; the direct formats (0, 5 and 7) are
  * given none. */
@@ -183,7 +178,6 @@ void func_ov007_020c16dc(int fmt, int width, int height, int colorCount, u32 *te
     }
 }
 
-// @symbol func_ov007_020c162c
 /* Allocates and fills a texture record for texels of format fmt at texSrc,
  * (8 << sizeS) by (8 << sizeT), with an optional palette of plttColorCount
  * colours at plttSrc. */
@@ -207,7 +201,6 @@ Ov007Texture *func_ov007_020c162c(int fmt, int texSrc, int sizeS, int sizeT, int
     return tex;
 }
 
-// @symbol func_ov007_020c1620
 /* Frees a texture record. Built with long_calls, so the tail call is the
  * pooled `ldr ip,[pc]; bx ip` form; bracketed because the pragma is
  * positional. */
@@ -217,7 +210,6 @@ void func_ov007_020c1620(void *tex) {
 }
 #pragma long_calls off
 
-// @symbol func_ov007_020c15ec
 /* Clears a texture record. */
 void func_ov007_020c15ec(Ov007Texture *tex) {
     tex->flags = 0;
@@ -233,7 +225,6 @@ void func_ov007_020c15ec(Ov007Texture *tex) {
     tex->plttAddr = 0;
 }
 
-// @symbol func_ov007_020c1560
 /* Loads a record's texels at the next free texture slot, if it has any;
  * an overflowing region is fatal. */
 void func_ov007_020c1560(Ov007Texture *t) {
@@ -252,7 +243,6 @@ void func_ov007_020c1560(Ov007Texture *t) {
     }
 }
 
-// @symbol func_ov007_020c14d4
 /* Loads a record's palette at the next free palette slot, if it has one;
  * an overflowing region is fatal. */
 void func_ov007_020c14d4(Ov007Texture *t) {
@@ -271,14 +261,12 @@ void func_ov007_020c14d4(Ov007Texture *t) {
     }
 }
 
-// @symbol func_ov007_020c14b8
 /* Loads a record's texels and palette into VRAM. */
 void func_ov007_020c14b8(Ov007Texture *t) {
     func_ov007_020c1560(t);
     func_ov007_020c14d4(t);
 }
 
-// @symbol func_ov007_020c1448
 /* Binds a record's texels for drawing: TEXIMAGE_PARAM gets its VRAM slot,
  * format and size with the given coordinate source (texGen), repeat, flip
  * and colour-0 bits. No record selects no texture. */
@@ -292,7 +280,6 @@ void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u
     }
 }
 
-// @symbol func_ov007_020c1404
 /* Binds a record's palette for drawing: PLTT_BASE gets its VRAM slot, in
  * 8-byte units for 4-colour textures (format 2) and 16-byte units
  * otherwise. No record writes 0. */

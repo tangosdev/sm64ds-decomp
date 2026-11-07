@@ -20,13 +20,11 @@ enum {
     kStarSpawnStyle = 0x40
 };
 
-// @symbol daSCre_c_classInit
 extern "C" daSCre_c *daSCre_c_classInit(void)
 {
     return new daSCre_c;
 }
 
-// @symbol _ZN8daSCre_c8BehaviorEv
 s32 daSCre_c::Behavior()
 {
     if (DistToCPlayer() < kPlayerRangeFix12) {

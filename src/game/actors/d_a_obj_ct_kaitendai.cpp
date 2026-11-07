@@ -105,17 +105,14 @@ extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern int RandomIntInternal(int *seed);
 }
 
-// @symbol daObjCtKaitendai_c_classInit_CT_MECHA06
 extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA06() {
     return new daObjCtKaitendai_c();
 }
 
-// @symbol daObjCtKaitendai_c_classInit_CT_MECHA07
 extern "C" daObjCtKaitendai_c *daObjCtKaitendai_c_classInit_CT_MECHA07() {
     return new daObjCtKaitendai_c();
 }
 
-// @symbol _ZN18daObjCtKaitendai_c13InitResourcesEv
 int daObjCtKaitendai_c::InitResources() {
     Vector3 pos;
 
@@ -156,7 +153,6 @@ int daObjCtKaitendai_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjCtKaitendai_c8BehaviorEv
 int daObjCtKaitendai_c::Behavior() {
     switch (data_0209f2c0) {
     case 0: /* slow hand */
@@ -196,13 +192,11 @@ int daObjCtKaitendai_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN18daObjCtKaitendai_c6RenderEv
 int daObjCtKaitendai_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daObjCtKaitendai_c16CleanupResourcesEv
 int daObjCtKaitendai_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -211,7 +205,6 @@ int daObjCtKaitendai_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjCtKaitendai_c12UpdateShadowEv
 /* Copy the model matrix, plant its translation Y on the floor probe,
  * and drop the shadow. m[10] is that Y in the flat Matrix4x3. */
 void daObjCtKaitendai_c::UpdateShadow() {

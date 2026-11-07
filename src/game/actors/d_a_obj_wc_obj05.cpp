@@ -56,7 +56,6 @@ extern CLPS_Block data_ov029_0211306c;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjWc_Obj05_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: CageLift_Spawn. Attribution stays on
  * daObjWc_Obj05_c_classInit. */
@@ -70,7 +69,6 @@ extern "C" daObjWc_Obj05_c *daObjWc_Obj05_c_classInit() {
  * wants the last two. long_calls emits the pooled `ldr ip,[pc,#8]; bx ip`
  * absolute tail call. */
 #pragma long_calls on
-// @symbol _ZN15daObjWc_Obj05_c15StoodOnCallbackEPvPS_P8dActor_c
 void daObjWc_Obj05_c::StoodOnCallback(void *collider, daObjWc_Obj05_c *self, dActor_c *other) {
     self->OnStoodOn(other);
 }
@@ -80,7 +78,6 @@ void daObjWc_Obj05_c::StoodOnCallback(void *collider, daObjWc_Obj05_c *self, dAc
 /* -------------------------------------------------------------------------- */
 /* Arms mPlayerOnTop when the actor standing on the cage is the player (0xbf).
  * The unsigned char temporary is load-bearing. */
-// @symbol _ZN15daObjWc_Obj05_c9OnStoodOnEP8dActor_c
 void daObjWc_Obj05_c::OnStoodOn(dActor_c *other) {
     unsigned char ok = other->actorID == 0xbf;
     if (ok)
@@ -89,7 +86,6 @@ void daObjWc_Obj05_c::OnStoodOn(dActor_c *other) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj05_c13InitResourcesEv
 s32 daObjWc_Obj05_c::InitResources() {
     BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(gWcObj05ModelFile);
     mModel.SetFile(f, 1, -1);
@@ -112,7 +108,6 @@ s32 daObjWc_Obj05_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj05_c8BehaviorEv
 s32 daObjWc_Obj05_c::Behavior() {
     mMeshCollider.SetClipRadius(0x250000);
 
@@ -177,7 +172,6 @@ s32 daObjWc_Obj05_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj05_c6RenderEv
 s32 daObjWc_Obj05_c::Render() {
     mModel.Render(0);
     return 1;
@@ -185,7 +179,6 @@ s32 daObjWc_Obj05_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj05_c16CleanupResourcesEv
 s32 daObjWc_Obj05_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -194,8 +187,6 @@ s32 daObjWc_Obj05_c::CleanupResources() {
     gWcObj05CollisionFile.Release();
     return 1;
 }
-// @symbol _ZN15daObjWc_Obj05_cD1Ev
-// @symbol _ZN15daObjWc_Obj05_cD0Ev
 /* daObjWc_Obj05_c's inline class-body destructor is instantiated by the
  * definitions above. mwccarm emits D1 and D0 into this object. */
 

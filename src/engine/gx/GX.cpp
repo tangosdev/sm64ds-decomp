@@ -34,7 +34,6 @@ extern void MultiCopy_Int(int *src, int *dst, int len);
 
 namespace GX {
 
-// @symbol _ZN2GX12BeginLoadTexEv
 void BeginLoadTex() {
     int r = GX::ResetBankForTex();
     int i = r * 6;
@@ -47,7 +46,6 @@ void BeginLoadTex() {
 // VRAM texture upload with banked destination: below-top goes to the base
 // window, above-top to the secondary bank, straddling splits into two DMA (or
 // CPU copy) halves.
-// @symbol _ZN2GX7LoadTexEPKvjj
 void LoadTex(const void *src, unsigned int offset, unsigned int size) {
     unsigned int dst;
     int base = data_020a60bc;
@@ -82,7 +80,6 @@ void LoadTex(const void *src, unsigned int offset, unsigned int size) {
 
 // Ends a banked texture upload: waits on the upload DMA channel if one is
 // active, restores the texture bank, then clears the four upload-window globals.
-// @symbol _ZN2GX10EndLoadTexEv
 void EndLoadTex()
 {
     if (data_02099fd0 != -1) {
@@ -95,7 +92,6 @@ void EndLoadTex()
     data_020a60b8 = 0;
 }
 
-// @symbol _ZN2GX16BeginLoadTexPlttEv
 void BeginLoadTexPltt() {
     int r = GX::ResetBankForTexPltt();
     data_020a60b4 = r;
@@ -104,7 +100,6 @@ void BeginLoadTexPltt() {
 
 // Loads a texture palette into VRAM: async DMA when a channel is configured
 // (data_02099fd0 != -1), otherwise MultiCopy_Int.
-// @symbol _ZN2GX11LoadTexPlttEPKvjj
 void LoadTexPltt(const void *src, u32 destSlotAddr, u32 size){
     void *dest = (void *)(data_020a60b0 + destSlotAddr);
     s32 dmaCh = data_02099fd0;
@@ -115,7 +110,6 @@ void LoadTexPltt(const void *src, u32 destSlotAddr, u32 size){
     }
 }
 
-// @symbol _ZN2GX14EndLoadTexPlttEv
 void EndLoadTexPltt(){
     u32 dmaId = data_02099fd0;
     if (dmaId != (u32)-1) {

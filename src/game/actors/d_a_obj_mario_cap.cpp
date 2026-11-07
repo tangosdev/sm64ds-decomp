@@ -292,7 +292,6 @@ extern int            *data_ov002_020ff0c4[];
 
 }
 
-// @symbol daObjMarioCap_c_classInit
 extern "C" daObjMarioCap_c *daObjMarioCap_c_classInit(void)
 {
     return new daObjMarioCap_c();
@@ -303,7 +302,6 @@ extern "C" daObjMarioCap_c *daObjMarioCap_c_classInit(void)
  * two colliders and the gravity, then enters the type's state and registers
  * the cap-icon unless mIconKind is 0xff. Returns 0 (failure) if the character
  * index is 3 or more or the model does not load. */
-// @symbol _ZN15daObjMarioCap_c13InitResourcesEv
 int daObjMarioCap_c::InitResources()
 {
     int flag;   /* 1 only for type 17: the cap-bank bit passed to the icon */
@@ -513,7 +511,6 @@ int daObjMarioCap_c::InitResources()
  * and bone update, UpdateYoshiEat (which ends the frame early when it returns
  * nonzero), the generic move + collide step (skipped for the types listed at
  * the site), and the collider refresh. Always returns 1. */
-// @symbol _ZN15daObjMarioCap_c8BehaviorEv
 int daObjMarioCap_c::Behavior()
 {
     if (mIconKind != 0xff) {
@@ -592,7 +589,6 @@ int daObjMarioCap_c::Behavior()
  * cap is dormant, or its scale is under 0.0625 (0x100). Types 4..9, 11, 16, 17
  * and 18 are also skipped on the frames mBlinkHidden has bit 0 set, except in
  * the taken state. Always returns 1. */
-// @symbol _ZN15daObjMarioCap_c6RenderEv
 int daObjMarioCap_c::Render()
 {
     int b = (mFlags & 0x40000) ? 1 : 0;
@@ -611,7 +607,6 @@ int daObjMarioCap_c::Render()
 }
 
 /* Takes the cap off the cap-icon list, if it was on it. */
-// @symbol _ZN15daObjMarioCap_c16OnPendingDestroyEv
 void daObjMarioCap_c::OnPendingDestroy()
 {
     if (mIconKind == 0xff)
@@ -621,7 +616,6 @@ void daObjMarioCap_c::OnPendingDestroy()
 
 /* Releases the character's model and the animation files InitResources
  * loaded for this type, in the same grouping. Always returns 1. */
-// @symbol _ZN15daObjMarioCap_c16CleanupResourcesEv
 int daObjMarioCap_c::CleanupResources()
 {
   int i = mModelIndex;
@@ -661,7 +655,6 @@ int daObjMarioCap_c::CleanupResources()
 /* Returns 0 for type 2 and 4 for every other type. The other OnYoshiTryEat
    overrides on this tree use 0 for "refuse the bite"; what 4 selects is not
    recovered here. */
-// @symbol _ZN15daObjMarioCap_c13OnYoshiTryEatEv
 s32 daObjMarioCap_c::OnYoshiTryEat() {
   if (mType == 2) return 0;
   return 4;
@@ -671,7 +664,6 @@ s32 daObjMarioCap_c::OnYoshiTryEat() {
  * (SetNoControlState(8) then SetNewHatCharacter, but with 1 where the touch
  * passes 0 as the second argument) and starts the 0x8012 animation, then binds
  * the cap to that player and enters the taken state. */
-// @symbol _ZN15daObjMarioCap_c13OnTurnIntoEggER7daPly_c
 void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.SetNoControlState(8, -1, 0) == 1) {
         player.SetNewHatCharacter(mModelIndex & 0xff, 1, 0);
@@ -697,7 +689,6 @@ void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player) {
 /* depth 50 units, opacity 0xf, and sits 10 units lower for characters 0 and */
 /* 1.                                                                         */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjMarioCap_c12UpdateMatrixEv
 void daObjMarioCap_c::UpdateMatrix()
 {
     int probe[3];
@@ -775,7 +766,6 @@ void daObjMarioCap_c::UpdateMatrix()
 /* Enter a state: stores the record in mStateEntry and calls its first member
  * pointer (the enter function) on the cap, returning its result, or returns 0
  * if that member pointer is null. */
-// @symbol _ZN15daObjMarioCap_c10EnterStateEPv
 int daObjMarioCap_c::EnterState(void *rec)
 {
     *(CapEnterPmf **)&mStateEntry = (CapEnterPmf *)rec;
@@ -785,7 +775,6 @@ int daObjMarioCap_c::EnterState(void *rec)
 }
 
 /* df64's enter function: nothing to do. */
-// @symbol _ZN15daObjMarioCap_c8InitWaitEv
 int daObjMarioCap_c::InitWait()
 {
     return 1;
@@ -801,7 +790,6 @@ int daObjMarioCap_c::InitWait()
  * (STAR_CAP_MIN_POS_Y, data_02092138) marks the cap lost for the player
  * (SaveData::PlayerLoseCap) and removes it. The spawn arguments pass the
  * cap's own area ID. */
-// @symbol _ZN15daObjMarioCap_c4WaitEv
 int daObjMarioCap_c::Wait() {
     if (mCarryMatrix == 0 && !SaveData::HasPlayerLostCap()) {
         if (CAP_TIMER(this) == 0 && mWithMeshClsn.IsOnGround()) {
@@ -827,7 +815,6 @@ int daObjMarioCap_c::Wait() {
 }
 
 /* df84's enter function (type 1): 200-frame timer. */
-// @symbol _ZN15daObjMarioCap_c13InitTimedWaitEv
 int daObjMarioCap_c::InitTimedWait()
 {
     mStateTimer = 200;
@@ -837,7 +824,6 @@ int daObjMarioCap_c::InitTimedWait()
 /* df84's per-frame function (type 1): removes the cap when it is below the
  * kill height, on the ground, out of timer, or off screen (mFlags & 8).
  * Returns 1. */
-// @symbol _ZN15daObjMarioCap_c9TimedWaitEv
 int daObjMarioCap_c::TimedWait()
 {
     if (data_02092138 > mPosY
@@ -852,7 +838,6 @@ int daObjMarioCap_c::TimedWait()
 }
 
 /* df04's enter function (type 2): nothing to do. */
-// @symbol _ZN15daObjMarioCap_c13InitTouchWaitEv
 int daObjMarioCap_c::InitTouchWait()
 {
     return 1;
@@ -860,7 +845,6 @@ int daObjMarioCap_c::InitTouchWait()
 
 /* df04's per-frame function (type 2): the touch check, unless an override
  * matrix is set. */
-// @symbol _ZN15daObjMarioCap_c9TouchWaitEv
 int daObjMarioCap_c::TouchWait()
 {
     if (mCarryMatrix == 0)
@@ -869,7 +853,6 @@ int daObjMarioCap_c::TouchWait()
 }
 
 /* df24's enter function (type 3): 200-frame timer. */
-// @symbol _ZN15daObjMarioCap_c14InitTimedWait2Ev
 int daObjMarioCap_c::InitTimedWait2()
 {
     mStateTimer = 200;
@@ -878,7 +861,6 @@ int daObjMarioCap_c::InitTimedWait2()
 
 /* df24's per-frame function (type 3): the same removal rules as
  * TimedWait. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c10TimedWait2Ev
 int daObjMarioCap_c::TimedWait2()
 {
     if (data_02092138 > mPosY
@@ -893,7 +875,6 @@ int daObjMarioCap_c::TimedWait2()
 }
 
 /* df14's enter function (type 12): switches gravity off. */
-// @symbol _ZN15daObjMarioCap_c8InitFallEv
 int daObjMarioCap_c::InitFall()
 {
     mVertAccel = 0;
@@ -905,7 +886,6 @@ int daObjMarioCap_c::InitFall()
  * 0x8000 vulnFlags bit, and on landing stops its horizontal speed, runs the
  * touch check and widens the clip ranges. Below the kill height it marks the
  * cap lost for the player (SaveData::PlayerLoseCap) and removes it. */
-// @symbol _ZN15daObjMarioCap_c4FallEv
 int daObjMarioCap_c::Fall() {
   if (mVertAccel != 0) {
     UpdatePos(&mdCcAc_c);
@@ -930,7 +910,6 @@ int daObjMarioCap_c::Fall() {
  * other modes; type 18: 300 frames; type 11: 180 frames -- and keeps a copy in
  * mStartTimer for the blink. Then sets the 0x8000 vulnFlags bit for every type.
  * Returns 1. */
-// @symbol _ZN15daObjMarioCap_c9InitSlideEv
 int daObjMarioCap_c::InitSlide()
 {
     int state;
@@ -983,7 +962,6 @@ int daObjMarioCap_c::InitSlide()
  * normal and the words at 0x0a4 / 0x0ac, with 0x8000 (8 units a frame) of
  * extra downward bias, and mAngleX / mAngleZ move toward the floor's tilt
  * along and across mAngleY (UpdateAngle with arguments 4 and 0x1000). Returns 1. */
-// @symbol _ZN15daObjMarioCap_c5SlideEv
 int daObjMarioCap_c::Slide()
 {
     struct Vector3 ownVel;
@@ -1077,7 +1055,6 @@ int daObjMarioCap_c::Slide()
  * and mModelIndex equals the player's param1, plays the 1-up sound, gives one
  * life and spawns the 1-up logo actor 100 units above the cap. Finally
  * starts the 150-frame removal timer and resets the scale to 1.0. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c9InitTakenEv
 int daObjMarioCap_c::InitTaken()
 {
     mSpeedX = 0;
@@ -1132,7 +1109,6 @@ int daObjMarioCap_c::InitTaken()
  * finished. With mTakenStep 0: plays data_ov002_0210de30 when
  * daPly_c::Unk_020c9e5c(8) says 1, and when it has finished removes the cap,
  * first spawning a new OBJ_MARIO_CAP at mHomePos if mType is 4. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c5TakenEv
 int daObjMarioCap_c::Taken() {
     if (DecIfAbove0_Short((unsigned short *)&mStateTimer) == 0) {
         MarkForDestruction();
@@ -1207,7 +1183,6 @@ int daObjMarioCap_c::Taken() {
  * over its angles. Then starts the animation for the type: 10, 15, 20, 21 or
  * 22 each play their own (the animation tables are unrecovered; 15 and 20
  * index them by mModelIndex). Returns 1. */
-// @symbol _ZN15daObjMarioCap_c8InitAnimEv
 int daObjMarioCap_c::InitAnim()
 {
     /* Reading the angles through closest->mAngleX / &mAnmModel methods
@@ -1261,7 +1236,6 @@ int daObjMarioCap_c::InitAnim()
  * types 10, 15 and 22 remove the cap; type 21 does nothing more; type 20
  * starts its second animation (data_ov002_020ff0c4 entry [1]) once, setting
  * mAnimStarted. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c4AnimEv
 int daObjMarioCap_c::Anim()
 {
     short* sp;
@@ -1309,7 +1283,6 @@ int daObjMarioCap_c::Anim()
 }
 
 /* df44's enter function: clears mBlinkHidden. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c11InitDormantEv
 int daObjMarioCap_c::InitDormant()
 {
     mBlinkHidden = 0;
@@ -1317,7 +1290,6 @@ int daObjMarioCap_c::InitDormant()
 }
 
 /* df44's per-frame function: does nothing. Returns 1. */
-// @symbol _ZN15daObjMarioCap_c7DormantEv
 int daObjMarioCap_c::Dormant()
 {
     return 1;
@@ -1335,7 +1307,6 @@ int daObjMarioCap_c::Dormant()
  * daPly_c::SetNoControlState(8) succeeds, it hands over the hat
  * (SetNewHatCharacter(mModelIndex)), copies the player's angles and enters
  * the taken state. */
-// @symbol _ZN15daObjMarioCap_c10CheckTouchEv
 void daObjMarioCap_c::CheckTouch()
 {
     Vector3_16 v;

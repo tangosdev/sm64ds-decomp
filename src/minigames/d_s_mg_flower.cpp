@@ -76,12 +76,10 @@ extern u8 gSubScreenLayers;
  * destructors. */
 dScMgFlower_c::~dScMgFlower_c() {}
 
-// @symbol _ZN13dScMgFlower_c5PetalD1Ev
 /* The petal record's destructor, which __cxa_vec_cleanup runs on each of
  * mPetals. Empty, like its constructor. */
 dScMgFlower_c::Petal::~Petal() {}
 
-// @symbol _ZN13dScMgFlower_c12UpdatePetalsEv
 /* Per-frame petal update: released petals drift and fall, speeding up to
  * 0x4000, and go inactive once below the screen. mPetalsSettled stays 1 only if
  * no petal is still on the flower, held, or falling. */
@@ -115,7 +113,6 @@ void dScMgFlower_c::UpdatePetals() {
     }
 }
 
-// @symbol _ZN13dScMgFlower_c10DealPetalsEv
 /* Round setup, called by InitResources and by StartRound when a round
  * restarts. Clears the cursor, wipes all 0x16 petal records and rolls the
  * petal count (1-2 when the hold counter reads exactly 0x14, else a 1-in-10
@@ -204,7 +201,6 @@ void dScMgFlower_c::DealPetals() {
     G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
 }
 
-// @symbol _ZN13dScMgFlower_c10StartRoundEi
 /* Slot 18: bump mHoldTimer (reset once it passes 0x14), reset the face
  * object mFace and restart the round. */
 void dScMgFlower_c::StartRound(int /* arg */) {
@@ -217,7 +213,6 @@ void dScMgFlower_c::StartRound(int /* arg */) {
     DealPetals();
 }
 
-// @symbol _ZN13dScMgFlower_c6RenderEv
 /* Slot 9. Scrolls the two sub-screen background layers off the sine table
  * (mBgScrollPhase steps 0xc0 a frame), draws the face, then one sprite per
  * live petal; the held petal gets a different palette. */
@@ -256,7 +251,6 @@ s32 dScMgFlower_c::Render() {
     return 1;
 }
 
-// @symbol _ZN13dScMgFlower_c8BehaviorEv
 /* Slot 6, the whole minigame: pick up a petal within the stylus radius, drag it,
  * drop it, flip "loves me" and "loves me not", and run the end-of-round
  * results. */
@@ -473,7 +467,6 @@ s32 dScMgFlower_c::Behavior() {
 }
 #pragma opt_common_subs on
 
-// @symbol _ZN13dScMgFlower_c13InitResourcesEv
 /* Slot 0. Sets up BG2 and BG3 on both screens, decompresses their tiles and
  * maps, loads the palettes and the OBJ tiles, then starts the first round.
  * The bare 0x040000xx stores are the BGxCNT and BGxOFS registers, and
@@ -572,7 +565,6 @@ s32 dScMgFlower_c::InitResources() {
  * constructors. */
 inline dScMgFlower_c::dScMgFlower_c() {}
 
-// @symbol dScMgFlower_c_classInit
 /* Reconstructed source-style name: SM64DS proves dScMgFlower_c through RTTI,
  * allocation size, vtable identity, and the MG_FLOWER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -581,7 +573,6 @@ extern "C" void *dScMgFlower_c_classInit() {
     return new dScMgFlower_c;
 }
 
-// @symbol _ZN13dScMgFlower_c5PetalC1Ev
 /* The petal record's constructor, which __cxa_vec_ctor runs on each of
  * mPetals. Empty, like its destructor. */
 dScMgFlower_c::Petal::Petal() {}

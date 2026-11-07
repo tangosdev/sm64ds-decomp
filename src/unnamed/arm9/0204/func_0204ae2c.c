@@ -1,5 +1,4 @@
 #include "types.h"
-// @symbol func_0204ae2c
 /* recovered: shared common types */
 #include "common.h"
 #include "private/spl_particle_views.h"

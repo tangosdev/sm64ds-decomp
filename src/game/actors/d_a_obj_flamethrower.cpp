@@ -89,12 +89,10 @@ extern void func_020227ec(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity)
 /* The implicit constructor builds twelve collision cylinders and twelve
  * flame positions in member order. Vector3's empty default constructor
  * is the original array callback at arm9 0x0203d384. */
-// @symbol daObjFlamethrower_c_classInit
 extern "C" daObjFlamethrower_c *daObjFlamethrower_c_classInit() {
     return new daObjFlamethrower_c;
 }
 
-// @symbol _ZN19daObjFlamethrower_c13InitResourcesEv
 int daObjFlamethrower_c::InitResources() {
     int count;
     int i;
@@ -155,7 +153,6 @@ int daObjFlamethrower_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjFlamethrower_c8BehaviorEv
 int daObjFlamethrower_c::Behavior() {
     char *self;
     int count;

@@ -166,7 +166,6 @@ struct PicGateFilePtr : SharedFilePtr {
     G3_VTX_16 = (u16)s0 | ((u16)s1 << 16); \
     G3_VTX_16 = (u16)s2
 
-// @symbol _ZN11daPicGate_c19func_ov080_021264ecEv
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
 void daPicGate_c::func_ov080_021264ec()
 {
@@ -187,7 +186,6 @@ void daPicGate_c::func_ov080_021264ec()
     this->mWavePhase = this->mWavePhase + this->mWaveParams->phaseStep;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_021265ecEv
 /* State 1 init. Even grid, flat +Z normal, then a wave at the centre. */
 void daPicGate_c::func_ov080_021265ec()
 {
@@ -228,7 +226,6 @@ void daPicGate_c::func_ov080_021265ec()
     }
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_0212677cEv
 /* State 0 render. A dead wave draws the flat quad; otherwise a strip per column. */
 void daPicGate_c::func_ov080_0212677c()
 {
@@ -285,7 +282,6 @@ void daPicGate_c::func_ov080_0212677c()
     G3_MTX_POP = 1;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_021269b8Ev
 /* State 0 behavior. Ripples only while mWaveTimer is still counting. */
 void daPicGate_c::func_ov080_021269b8()
 {
@@ -306,7 +302,6 @@ void daPicGate_c::func_ov080_021269b8()
     this->mWavePhase = this->mWavePhase + this->mWaveParams->phaseStep;
 }
 
-// @symbol _ZN11daPicGate_c19func_ov080_02126a54Ev
 /* State 0 init. Same grid as state 1, plus a texcoord, and no wave yet. */
 void daPicGate_c::func_ov080_02126a54()
 {
@@ -353,29 +348,24 @@ void daPicGate_c::func_ov080_02126a54()
     this->PlaceCorners();
 }
 
-// @symbol _ZN11daPicGate_c16CleanupResourcesEv
 s32 daPicGate_c::CleanupResources() {
     func_0203cbc0(mCells);
     return 1;
 }
 
-// @symbol _ZN11daPicGate_c16OnPendingDestroyEv
 void daPicGate_c::OnPendingDestroy() {
 }
 
-// @symbol _ZN11daPicGate_c6RenderEv
 s32 daPicGate_c::Render() {
     (this->*mState->render)();
     return 1;
 }
 
-// @symbol _ZN11daPicGate_c8BehaviorEv
 s32 daPicGate_c::Behavior() {
     (this->*mState->behavior)();
     return 1;
 }
 
-// @symbol _ZN11daPicGate_c13InitResourcesEv
 s32 daPicGate_c::InitResources() {
     unsigned int state = (unsigned char)((param1 >> 0xd) & 3);
 
@@ -456,7 +446,6 @@ s32 daPicGate_c::InitResources() {
     return 1;
 }
 
-// @symbol daPicGate_c_classInit
 extern "C" daPicGate_c *daPicGate_c_classInit() {
     return new daPicGate_c;
 }

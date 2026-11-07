@@ -41,7 +41,6 @@ extern CLPS data_020a0c78;
    three-word byte view of the actor: direct mPosX/Y/Z accesses remove one
    address-setup instruction from each of three scans. */
 
-// @symbol _ZN9dBgCh_Gnd10DetectClsnEv
 int dBgCh_Gnd::DetectClsn()
 {
     int ret = 0;
@@ -86,7 +85,6 @@ int dBgCh_Gnd::DetectClsn()
     return ret;
 }
 
-// @symbol _ZN9dBgCh_Gnd15DetectClsnSlot0Ev
 /* Inferred name: reset the ground query and scan only collider slot zero. */
 int dBgCh_Gnd::DetectClsnSlot0() {
     int r = 0;
@@ -106,7 +104,6 @@ int dBgCh_Gnd::DetectClsnSlot0() {
     return r;
 }
 
-// @symbol _ZN12dBgCh_SphCrr10DetectClsnEv
 int dBgCh_SphCrr::DetectClsn()
 {
     int result = 0;
@@ -184,7 +181,6 @@ int dBgCh_SphCrr::DetectClsn()
     return result;
 }
 
-// @symbol _ZN12dBgCh_SphCrr13func_02038a38Ev
 int dBgCh_SphCrr::func_02038a38()
 {
     /* same scan against slot 0 only */
@@ -205,7 +201,6 @@ int dBgCh_SphCrr::func_02038a38()
     return result;
 }
 
-// @symbol _ZN12dBgCh_SphCrr13func_02038824Ev
 int dBgCh_SphCrr::func_02038824()
 {
     /* the full-table scan variant: colliders 1..0x17 only */
@@ -255,7 +250,6 @@ int dBgCh_SphCrr::func_02038824()
     return result;
 }
 
-// @symbol _ZN9dBgCh_Lin10DetectClsnEv
 bool dBgCh_Lin::DetectClsn()
 {
     bool result = false;
@@ -319,7 +313,6 @@ bool dBgCh_Lin::DetectClsn()
     return result;
 }
 
-// @symbol func_0203859c
 /* Slot-0-only line scan: shared with the full scan above, kept under its
    address name. */
 extern "C" int func_0203859c(void *obj)
@@ -339,7 +332,6 @@ extern "C" int func_0203859c(void *obj)
     return result;
 }
 
-// @symbol func_0203842c
 /* Full-table line scan without the slot-0 head: shared with the member
    scans above, kept under its address name. */
 extern "C" int func_0203842c(char *self)
@@ -394,49 +386,42 @@ extern "C" int func_0203842c(char *self)
     return result;
 }
 
-// @symbol dBgCh_Actr_UpdateDiscreteNoLava_veneer
 /* dBgCh_Actr_UpdateDiscreteNoLava_veneer @ 0x2038420 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava (0x2037024).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *self) {
     self->UpdateDiscreteNoLava();
 }
 
-// @symbol func_02038414
 /* func_02038414 @ 0x2038414 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava_2 (0x2036ee4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
 extern "C" void func_02038414(void *self) {
     ((dBgCh_Actr *)self)->UpdateDiscreteNoLava_2();
 }
 
-// @symbol func_02038408
 /* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to func_02036acc (0x2036acc).
  * r0 (the dBgCh_Actr) passes straight through to it. */
 extern "C" void func_02038408(dBgCh_Actr *self) {
     func_02036acc(self);
 }
 
-// @symbol dBgCh_Actr_UpdateContinuous_Veneer
 /* dBgCh_Actr_UpdateContinuous_Veneer @ 0x20383fc (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuous (0x20366b4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
 extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *self) {
     self->UpdateContinuous();
 }
 
-// @symbol func_020383f0
 /* func_020383f0 @ 0x20383f0 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousNoLava (0x2036318).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
 extern "C" void func_020383f0(dBgCh_Actr *self) {
     self->UpdateContinuousNoLava();
 }
 
-// @symbol func_020383e4
 /* func_020383e4 @ 0x20383e4 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateExtraContinous (0x20358ac).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
 extern "C" void func_020383e4(dBgCh_Actr *self) {
     self->UpdateExtraContinous();
 }
 
-// @symbol func_02038324
 /* Bound-to dispatch: gates on func_02038298, indexes the enabled-collider
    table with dBgPi's collider index and calls its BeforeClsn virtual method. */
 extern "C" void func_02038324(void *arg, int b, int c, int d)
@@ -458,7 +443,6 @@ extern "C" void func_02038324(void *arg, int b, int c, int d)
                     (Vector3_16 *)d);
 }
 
-// @symbol func_02038298
 /* Enabled-collider gate: the record must be valid, name a live table slot,
    and re-identify against its entry. Member-called: the mangled free
    spellings emit the same bl and read worse under decl agreement. */
@@ -482,7 +466,6 @@ extern "C" int func_02038298(void *arg)
     return hit->IsHitBy(clsnID, owner, collider);
 }
 
-// @symbol func_02038234
 /* The free helper that ends the CLPS_BlockRef run: gates on func_02038298,
    indexes the enabled-collider table with dBgPi's collider index and
    dispatches the entry's stored callback. Calls the gate through a
@@ -501,20 +484,16 @@ extern "C" void func_02038234(int a, int b)
     fn(entry, entry->GetActor(), (dActor_c *)b);
 }
 
-// @symbol _ZN13CLPS_BlockRefC1Ev
 CLPS_BlockRef::CLPS_BlockRef() : ptr(0) {}
 
-// @symbol _ZN13CLPS_BlockRefD1Ev
 CLPS_BlockRef::~CLPS_BlockRef() {}
 
-// @symbol _ZN13CLPS_BlockRefaSER10CLPS_Block
 CLPS_BlockRef &CLPS_BlockRef::operator=(CLPS_Block &block)
 {
     ptr = &block;
     return *this;
 }
 
-// @symbol func_020381cc
 /* CLPS entry lookup: hands back entry idx of the block's 8-byte-entry
    table, or the default entry data_020a0c78 (reset by func_02037e9c) when
    the block is missing or its entries are not 8 bytes. Written first to
@@ -529,16 +508,11 @@ extern "C" void func_020381cc(void *block, int idx, void **out) {
     *out = e + 8 + (idx << 3);
 }
 
-// @symbol _ZN5dBgPiC1Ev
-// @symbol _ZN5dBgPiC2Ev
 dBgPi::dBgPi()
 {
     Reset();
 }
 
-// @symbol _ZN5dBgPiD1Ev
-// @symbol _ZN5dBgPiD2Ev
-// @symbol _ZN5dBgPiD0Ev
 dBgPi::~dBgPi()
 {
 }
@@ -552,7 +526,6 @@ void dBgPi::Reset()
     collider = 0;
 }
 
-// @symbol _ZNK5dBgPi6CopyToERS_
 void dBgPi::CopyTo(dBgPi &dst) const
 {
     *reinterpret_cast<u64 *>(&dst.surface.clps) =
@@ -567,7 +540,6 @@ void dBgPi::CopyTo(dBgPi &dst) const
     dst.collider = collider;
 }
 
-// @symbol _ZN5dBgPiaSERKS_
 dBgPi &dBgPi::operator=(const dBgPi &other)
 {
     /* CLPS is one 64-bit record. This spelling also preserves its two loads
@@ -585,7 +557,6 @@ dBgPi &dBgPi::operator=(const dBgPi &other)
     return *this;
 }
 
-// @symbol _ZN5dBgPi11SetColliderEiiP8dActor_cP4dBgW
 void dBgPi::SetCollider(int idx, int uid, dActor_c *actor, dBgW *clsn)
 {
     SetColliderIndex(idx);
@@ -594,49 +565,41 @@ void dBgPi::SetCollider(int idx, int uid, dActor_c *actor, dBgW *clsn)
     collider = clsn;
 }
 
-// @symbol _ZN5dBgPi9RecordHitEiP11SurfaceInfo
 void dBgPi::RecordHit(int triID, SurfaceInfo *src) {
     triangleID = triID;
     func_02037de8(&surface, src);
 }
 
-// @symbol _ZNK5dBgPi11HasColliderEv
 int dBgPi::HasCollider() const
 {
     return colliderIdx != 0x18;
 }
 
-// @symbol _ZNK5dBgPi7IsValidEv
 int dBgPi::IsValid() const
 {
     return colliderIdx != 0x18 && triangleID != 0xffff;
 }
 
-// @symbol _ZNK5dBgPi7IsHitByEiP8dActor_cP4dBgW
 int dBgPi::IsHitBy(int uid, dActor_c *actor, dBgW *clsn) const
 {
     return clsnID == uid && owner == actor && collider == clsn;
 }
 
-// @symbol _ZN5dBgPi16SetColliderIndexEi
 void dBgPi::SetColliderIndex(int idx)
 {
     colliderIdx = idx;
 }
 
-// @symbol _ZNK5dBgPi16GetColliderIndexEv
 int dBgPi::GetColliderIndex() const
 {
     return colliderIdx;
 }
 
-// @symbol _ZNK5dBgPi9GetClsnIDEv
 u32 dBgPi::GetClsnID() const
 {
     return clsnID;
 }
 
-// @symbol func_02037f44
 /* The owner of the collider that produced this result; it ends the dBgPi
    run. d_a_mky.cpp is its caller. */
 extern "C" dActor_c *func_02037f44(const dBgPi *p) {
@@ -646,8 +609,6 @@ extern "C" dActor_c *func_02037f44(const dBgPi *p) {
 /* The constructor is defined before the destructor so the deferred
  * emission order lands the D2,D1 group below the C1,C2 group, matching
  * the ROM's layout (mwccarm emits .text in reverse source order). */
-// @symbol _ZN5dBgPcC1Ev
-// @symbol _ZN5dBgPcC2Ev
 dBgPc::dBgPc()
 {
     surface.clps.w0 = 0xfc0;
@@ -657,13 +618,10 @@ dBgPc::dBgPc()
     surface.normal.x = surface.normal.y;
 }
 
-// @symbol _ZN5dBgPcD2Ev
-// @symbol _ZN5dBgPcD1Ev
 dBgPc::~dBgPc()
 {
 }
 
-// @symbol func_02037eb0
 /* Fill a SurfaceInfo from a CLPS entry, passed by value as its two words,
    and a face normal. Opens the dBgPc run. */
 extern "C" void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
@@ -674,64 +632,52 @@ extern "C" void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
     info->normal.z = normal->z;
 }
 
-// @symbol func_02037e9c
 /* The default CLPS entry: the same two words dBgPc's constructor stores. */
 extern "C" void func_02037e9c(CLPS *clps) {
     clps->w0 = 0xfc0;
     clps->w1 = 0xff;
 }
 
-// @symbol _ZNK4CLPS13func_02037e90Ev
 int CLPS::func_02037e90() const {
     return w1 & 0xff;
 }
 
-// @symbol _ZNK4CLPS13func_02037e84Ev
 int CLPS::func_02037e84() const {
     return w0 & 0x1f;
 }
 
-// @symbol SurfaceInfo_TestFlag0x20
 extern "C" int SurfaceInfo_TestFlag0x20(int *p) {
     return p[0] & 0x20;
 }
 
-// @symbol _ZNK4CLPS13func_02037e68Ev
 int CLPS::func_02037e68() const {
     return (w0 >> 6) & 0x3f;
 }
 
-// @symbol _ZNK4CLPS13GetFloorClassEv
 int CLPS::GetFloorClass() const {
     return (w0 >> 12) & 0x7;
 }
 
-// @symbol _ZNK4CLPS13func_02037e48Ev
 int CLPS::func_02037e48() const {
     return (w0 >> 15) & 0xf;
 }
 
-// @symbol _ZNK4CLPS14GetSurfaceTypeEv
 int CLPS::GetSurfaceType() const {
     return (w0 >> 19) & 0x1f;
 }
 
-// @symbol _ZNK4CLPS19IsCameraPassThroughEv
 int CLPS::IsCameraPassThrough() const {
     return w0 & 0x1000000;
 }
 
-// @symbol func_02037e20
 extern "C" int func_02037e20(int *p) {
     return p[0] & 0x2000000;
 }
 
-// @symbol _ZNK4CLPS12IsCameraOnlyEv
 int CLPS::IsCameraOnly() const {
     return w0 & 0x4000000;
 }
 
-// @symbol func_02037de8
 /* Five-word surface copy: one 64-bit record plus three words. Spelled with
    the u64 unit (not the C struct-assign the shard used): C++ schedules the
    struct form load/load/store while the cartridge is load/store
@@ -743,7 +689,6 @@ extern "C" void func_02037de8(SurfaceInfo *dst, const SurfaceInfo *src) {
     dst->normal.z = src->normal.z;
 }
 
-// @symbol _ZNK11SurfaceInfo12CopyNormalToER7Vector3
 /* SurfaceInfo::CopyNormalTo(Vector3 &out) const -- copy the face normal out.
  * The normal sits at 0x08, after the 8-byte CLPS entry; see include/SurfaceInfo.h
  * for how both halves of this 0x14-byte struct are pinned. */
@@ -754,7 +699,6 @@ void SurfaceInfo::CopyNormalTo(Vector3 &out) const
     out.z = normal.z;
 }
 
-// @symbol func_02037dc4
 extern "C" int func_02037dc4(int p) {
     return p + 8;
 }

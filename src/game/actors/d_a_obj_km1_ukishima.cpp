@@ -65,7 +65,6 @@ void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjKm1_Ukishima_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjKm1_Ukishima_c through
    RTTI, allocation size, vtable identity, and the KM1_UKISHIMA registry
    profile; later EAD lineage supplies classInit. Exact original spelling is
@@ -80,7 +79,6 @@ extern "C" daObjKm1_Ukishima_c *daObjKm1_Ukishima_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN19daObjKm1_Ukishima_c13InitResourcesEv
 s32 daObjKm1_Ukishima_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov043_021125e8), 1, -1);
     UpdateModelPosAndRotY();
@@ -101,7 +99,6 @@ s32 daObjKm1_Ukishima_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN19daObjKm1_Ukishima_c8BehaviorEv
 s32 daObjKm1_Ukishima_c::Behavior() {
     if (!DecIfAbove0_Byte(&mTurnTimer)) {
         mTurnTimer = 0x3c;
@@ -124,7 +121,6 @@ s32 daObjKm1_Ukishima_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN19daObjKm1_Ukishima_c6RenderEv
 s32 daObjKm1_Ukishima_c::Render() {
     mModel.Render(0);
     return 1;
@@ -132,7 +128,6 @@ s32 daObjKm1_Ukishima_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN19daObjKm1_Ukishima_c16CleanupResourcesEv
 s32 daObjKm1_Ukishima_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -144,8 +139,6 @@ s32 daObjKm1_Ukishima_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN19daObjKm1_Ukishima_cD1Ev
-// @symbol _ZN19daObjKm1_Ukishima_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjKm1_Ukishima_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no D2, which is the order

@@ -66,7 +66,6 @@ extern int data_ov007_02103448;
 extern void *data_ov007_0210344c;
 extern Particle::System *data_ov007_02103450[];
 
-// @symbol func_ov007_020b7948
 int func_ov007_020b7948(int x, int cond) {
     int r;
     if (cond) {
@@ -79,7 +78,6 @@ int func_ov007_020b7948(int x, int cond) {
     return r;
 }
 
-// @symbol func_ov007_020b7914
 int func_ov007_020b7914(int x, int cond) {
     int r;
     if (cond) {
@@ -92,14 +90,12 @@ int func_ov007_020b7914(int x, int cond) {
     return r;
 }
 
-// @symbol func_ov007_020b78d0
 int func_ov007_020b78d0(int x) {
     int rv = data_ov007_02103448 + data_ov007_02103444;
     data_ov007_02103444 += (x << 1) - (x & ~3);
     return rv;
 }
 
-// @symbol func_ov007_020b782c
 void func_ov007_020b782c(void) {
     int i;
     Particle::System *empty;
@@ -116,7 +112,6 @@ void func_ov007_020b782c(void) {
                   static_cast<char *>(func_ov007_020b3f20(0x17)));
 }
 
-// @symbol func_ov007_020b77ac
 void func_ov007_020b77ac(void) {
     data_ov007_02103440 = func_ov007_020c1804();
     data_ov007_0210343c = func_02045d00();
@@ -126,7 +121,6 @@ void func_ov007_020b77ac(void) {
     func_0204a028(data_ov007_0210344c, (void *)func_ov007_020b7914);
 }
 
-// @symbol func_ov007_020b7764
 void func_ov007_020b7764(void) {
     func_ov007_020b3edc(0x17);
     if (data_ov007_02103448 == 0)
@@ -135,7 +129,6 @@ void func_ov007_020b7764(void) {
     data_ov007_02103448 = 0;
 }
 
-// @symbol func_ov007_020b7708
 void func_ov007_020b7708(int idx, void *pos) {
     if (data_ov007_02103450[idx] == 0) {
         Particle::System *system;
@@ -146,7 +139,6 @@ void func_ov007_020b7708(int idx, void *pos) {
     }
 }
 
-// @symbol func_ov007_020b76c4
 void func_ov007_020b76c4(int c) {
     void *r1 = data_ov007_02103450[c];
     if (!r1)
@@ -155,7 +147,6 @@ void func_ov007_020b76c4(int c) {
     data_ov007_02103450[c] = 0;
 }
 
-// @symbol func_ov007_020b76a0
 void func_ov007_020b76a0() {
     int i;
     for (i = 0; i < 2; i++) {
@@ -163,12 +154,10 @@ void func_ov007_020b76a0() {
     }
 }
 
-// @symbol func_ov007_020b7690
 void *func_ov007_020b7690(int i) {
     return data_ov007_02103450[i];
 }
 
-// @symbol func_ov007_020b7658
 void func_ov007_020b7658(void *c, int flag) {
     if (flag) {
         func_02049f58(data_ov007_0210344c);

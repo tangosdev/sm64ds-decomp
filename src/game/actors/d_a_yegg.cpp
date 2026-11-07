@@ -189,8 +189,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, i
 extern int func_ov002_020cf700(void *g);
 }
 
-// @symbol _ZN8daYegg_cD1Ev
-// @symbol _ZN8daYegg_cD0Ev
 /* One native destructor definition emits both ROM variants. D1 is one vtable
  * store and five destructor calls, every one a consequence of
  * `struct daYegg_c : dEnemyBase_c` and the four members that declaration
@@ -206,7 +204,6 @@ daYegg_c::~daYegg_c()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov002_020ec610, 0x020ec610, size 0x18 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec610Ev
 /* Reads mParamHigh bit 7 (param1 bit 11): nonzero when the egg pays out the
  * tracked star when it bursts. */
 int daYegg_c::func_ov002_020ec610(){
@@ -216,7 +213,6 @@ int daYegg_c::func_ov002_020ec610(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov002_020ec628, 0x020ec628, size 0x18 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec628Ev
 /* Reads mParamHigh bit 6 (param1 bit 10): nonzero when the egg pays out a
  * blue coin. InitResources loads the blue-coin model for it and
  * CleanupResources unloads it. */
@@ -227,7 +223,6 @@ int daYegg_c::func_ov002_020ec628(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020ec640, 0x020ec640, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec640Ev
 /* Reads mParamHigh bits 2-5 (param1 bits 6-9): the number of coins to pay out,
  * 0 to 15. */
 unsigned char daYegg_c::func_ov002_020ec640(){
@@ -237,7 +232,6 @@ unsigned char daYegg_c::func_ov002_020ec640(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov002_020ec654, 0x020ec654, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec654Ev
 /* The egg's variant bit: reads mParamHigh bits 0-1 (param1 bits 4-5) and is
  * nonzero when that value is 0 or 2, zero when it is 1 or 3. It chooses the
  * model, the shadow shape (cylinder when zero, cuboid when nonzero), the
@@ -251,7 +245,6 @@ int daYegg_c::func_ov002_020ec654() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov002_020ec670, 0x020ec670, size 0xb8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec670Ei
 /* What the egg did to the wall it hit. `arg` is the egg's dBgCh_Actr as an
  * integer; dBgCh_Actr::GetSphereResult turns it into a dBgPi, whose collision ID names the
  * actor owning the surface hit. Returns without doing anything if there is no
@@ -294,7 +287,6 @@ docall:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov002_020ec728, 0x020ec728, size 0xe4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec728Ev
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 /* Pays out once for the current payout slot (mPayoutIdx). Does nothing if the
@@ -339,7 +331,6 @@ void daYegg_c::func_ov002_020ec728()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov002_020ec80c, 0x020ec80c, size 0x12c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec80cEPviis
 /* Spawns `count` blue coins (actor BLUE_COIN, param1 2) at *b in the egg's
  * area. When more than one is asked for, the speed `sl` is raised to at least
  * 0x4000 (4 units). Each coin gets a heading of `arg5` plus a random multiple
@@ -389,7 +380,6 @@ void daYegg_c::func_ov002_020ec80c(void* b, int count, int sl, short arg5)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov002_020ec938, 0x020ec938, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec938Ev
 /* State 3 (DROP), execute: moves the egg by its speed and gravity, bursts it
  * if it is on the ground, then runs the ground collision and clears the
  * cylinder's hit record. */
@@ -404,7 +394,6 @@ void daYegg_c::func_ov002_020ec938(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov002_020ec978, 0x020ec978, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec978Ev
 /* State 3 (DROP), enter: plays the idle animation (file 0x0210eb78) at normal
  * speed, zeroes the horizontal speed and sets gravity to -0x2000 (-2 units
  * per frame squared). */
@@ -417,7 +406,6 @@ void daYegg_c::func_ov002_020ec978() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov002_020ec9c4, 0x020ec9c4, size 0x110 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ec9c4Ev
 /* State 2 (WOBBLE), execute. While mWobbling is set it steps the X and Z tilt
  * (mAngleX, mAngleZ) toward 0 by 0x400 a frame (a 64th of a turn) and clears
  * mWobbling once the X tilt and the Y angle are both 0. Otherwise it asks
@@ -458,7 +446,6 @@ void daYegg_c::func_ov002_020ec9c4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov002_020ecad4, 0x020ecad4, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ecad4Ev
 /* State 2 (WOBBLE), enter: zeroes the horizontal speed and plays the idle
  * animation (file 0x0210eb78) at normal speed. */
 void daYegg_c::func_ov002_020ecad4() {
@@ -469,7 +456,6 @@ void daYegg_c::func_ov002_020ecad4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov002_020ecb0c, 0x020ecb0c, size 0x20c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ecb0cEv
 /* State 1 (SEEK), execute, for the egg variant func_ov002_020ec654 calls
  * nonzero (see ecf94). If the actor it is seeking (mTargetId) exists and no
  * longer has profile bit 0x10000000, it pays out and re-enters state 1 so a
@@ -566,7 +552,6 @@ void daYegg_c::func_ov002_020ecb0c()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov002_020ecd18, 0x020ecd18, size 0x27c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ecd18Ev
 /* State 1 (SEEK), execute, for the other egg variant (see ecf94). `o` is the
  * actor being sought (mTargetId). If it is gone, or has lost profile bit
  * 0x10000000, the egg re-enters state 1 to pick again. Unless
@@ -659,7 +644,6 @@ void daYegg_c::func_ov002_020ecd18()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov002_020ecf94, 0x020ecf94, size 0x34 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ecf94Ev
 /* State 1 (SEEK), execute: picks the variant's handler. */
 void daYegg_c::func_ov002_020ecf94()
 {
@@ -672,7 +656,6 @@ void daYegg_c::func_ov002_020ecf94()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov002_020ecfc8, 0x020ecfc8, size 0x10c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ecfc8Ev
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 /* State 1 (SEEK), enter. Clears the target, plays the moving animation (file
@@ -714,7 +697,6 @@ void daYegg_c::func_ov002_020ecfc8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov002_020ed0d4, 0x020ed0d4, size 0x4dc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ed0d4Ev
 // obsolete provenance (this is daYegg_c state 0 execute): recovered name: daWarpkun_c_Kill
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 /* recovered: shared common types, renamed to Class_Method */
@@ -897,7 +879,6 @@ void daYegg_c::func_ov002_020ed0d4()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020ed5b0, 0x020ed5b0, size 0x8c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ed5b0Ev
 // State 0 (FOLLOW_PLAYER), enter. Snaps this object to the actor it follows
 // (mPlayer): copies its position (mPosX/Y/Z) and Y angle (mAngleY), mirrors
 // the position into mHoldTarget, and copies its rotation triple (mAngleX/Y/Z)
@@ -932,7 +913,6 @@ void daYegg_c::func_ov002_020ed5b0()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov002_020ed63c, 0x020ed63c, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020ed63c
 /* Switches to state `i` and runs that state's enter handler. daPly_c's
  * St_YoshiPower_Init calls it with state 1 on the egg it holds. */
 extern "C" void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j = c->mState; (c->*data_ov002_02110a5c[j].pmf[0])(); }
@@ -940,14 +920,12 @@ extern "C" void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j =
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov002_020ed684, 0x020ed684, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ed684Ev
 /* Runs the current state's execute handler. */
 void daYegg_c::func_ov002_020ed684() { int j = mState; (this->*data_ov002_02110a5c[j].pmf[1])(); }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov002_020ed6cc, 0x020ed6cc, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ed6ccEv
 /* recovered: shared common types */
 /* Stall detector. Measures the horizontal distance from the position saved
  * on the previous call (mLastPos) to the current one, then saves the current
@@ -975,7 +953,6 @@ ret0:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov002_020ed738, 0x020ed738, size 0xc0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ed738Ev
 /* recovered: shared common types */
 /* Eases the X and Z tilt (mAngleX, mAngleZ) toward a target pair, each by a
  * quarter of the remaining angle, at most 0x1000 (a 16th of a turn) a call
@@ -1008,7 +985,6 @@ void daYegg_c::func_ov002_020ed738() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov002_020ed7f8, 0x020ed7f8, size 0x1a0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ed7f8Ev
 /* Drop shadow, called from Behavior. Skipped when the followed daPly_c's
  * mOpacity is below 1. It probes the floor with a dBgCh_Gnd from 0x28000 (40
  * units) above the egg (its +0x44 is the floor height, dBgCh_Gnd's clsnY);
@@ -1061,7 +1037,6 @@ void daYegg_c::func_ov002_020ed7f8()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov002_020ed998, 0x020ed998, size 0x1a4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020ed998Ev
 /* Places the egg's model matrix, called from Behavior. With
  * daYegg_FLAG_ATTACHED set and a daPly_c, it copies the 12-word matrix
  * pointed to by the daPly_c's mCarryMatrix, shifts
@@ -1106,7 +1081,6 @@ void daYegg_c::func_ov002_020ed998()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov002_020edb3c, 0x020edb3c, size 0x168 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020edb3cEii
 /* Target search. If five actors have already been targeted it bursts the egg
  * (for the variant func_ov002_020ec654 calls zero) and returns 0. Otherwise it
  * walks the actor list for the nearest actor, closer than `best` (the
@@ -1177,7 +1151,6 @@ end:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov002_020edca4, 0x020edca4, size 0x120 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020edca4
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 /* The burst. Does nothing if mBurstDone is already set. Otherwise it pays out
@@ -1230,7 +1203,6 @@ void func_ov002_020edca4(daYegg_c* self)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov002_020eddc4, 0x020eddc4, size 0x190 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daYegg_c19func_ov002_020eddc4Ev
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 /* func_ov002_020eddc4 at 0x020eddc4
@@ -1310,7 +1282,6 @@ fail:
     return 0;
 }
 
-// @symbol _ZN8daYegg_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
 /* Releases the two shared animation files and, if the egg pays a blue coin,
    unloads the blue-coin model InitResources loaded. */
@@ -1323,7 +1294,6 @@ int daYegg_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN8daYegg_c6RenderEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 9 */
 /* Draws the egg's model unless it is hidden: skipped when mFlags has 0x40000,
    when the followed daPly_c is inside a cannon, or when the daPly_c's opacity
@@ -1343,7 +1313,6 @@ int daYegg_c::Render()
     return 1;
 }
 
-// @symbol _ZN8daYegg_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
 /* Per-frame update: runs the current state's execute handler and advances the
@@ -1401,7 +1370,6 @@ int daYegg_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daYegg_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * Vtable slot 0. This was the last daYegg_c function still written as a C free
@@ -1500,7 +1468,6 @@ int daYegg_c::InitResources()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- daYegg_c_classInit, 0x020ee3d8, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol daYegg_c_classInit
 /* recovered: vtable identified, globals resolved */
 /* Reconstructed source-style name: SM64DS proves daYegg_c through RTTI,
  * allocation size, vtable identity, and the YOSHI_EGG registry profile;

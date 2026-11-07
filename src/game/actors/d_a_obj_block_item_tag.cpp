@@ -59,14 +59,11 @@ static inline int IsActorID(dActor_c *actor, int id) {
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN19daObjBlockItemTag_cD1Ev
-// @symbol _ZN19daObjBlockItemTag_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order. D0 additionally returns the object to the actor heap through
  * dActor_c's inline operator delete. */
 daObjBlockItemTag_c::~daObjBlockItemTag_c() {}
 
-// @symbol _ZN19daObjBlockItemTag_c11GetSpawnPosER7Vector3RS_
 void daObjBlockItemTag_c::GetSpawnPos(Vector3 &destination, daObjBlockItemTag_c &tag) {
     u8 index = tag.mActionIndex;
     s32 z = tag.mPosZ;
@@ -78,7 +75,6 @@ void daObjBlockItemTag_c::GetSpawnPos(Vector3 &destination, daObjBlockItemTag_c 
     destination.z = z;
 }
 
-// @symbol _ZN19daObjBlockItemTag_c15SpawnKoopaShellEv
 void daObjBlockItemTag_c::SpawnKoopaShell() {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);
@@ -87,21 +83,18 @@ void daObjBlockItemTag_c::SpawnKoopaShell() {
         ((daShl_c *)shell)->mDespawnTimer = 0xb4;
 }
 
-// @symbol _ZN19daObjBlockItemTag_c17SpawnMegaMushroomEv
 void daObjBlockItemTag_c::SpawnMegaMushroom() {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);
     Spawn(0x115, 0, spawnPos, 0, mAreaId, -1);
 }
 
-// @symbol _ZN19daObjBlockItemTag_c18SpawnOneUpMushroomEv
 void daObjBlockItemTag_c::SpawnOneUpMushroom() {
     Vector3 spawnPos;
     GetSpawnPos(spawnPos, *this);
     Spawn(0x114, 0, spawnPos, 0, mAreaId, -1);
 }
 
-// @symbol _ZN19daObjBlockItemTag_c15SpawnSilverStarEv
 void daObjBlockItemTag_c::SpawnSilverStar() {
     Vector3 spawnPos;
     dActor_c *starMarker;
@@ -120,7 +113,6 @@ void daObjBlockItemTag_c::SpawnSilverStar() {
     ((daStarBase_c *)starMarker)->LinkSilverStarAndStarMarker((char *)silverStar);
 }
 
-// @symbol _ZN19daObjBlockItemTag_c16CleanupResourcesEv
 int daObjBlockItemTag_c::CleanupResources() {
     switch (actorID) {
     case 0x141:
@@ -139,7 +131,6 @@ int daObjBlockItemTag_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjBlockItemTag_c8BehaviorEv
 int daObjBlockItemTag_c::Behavior() {
     if (mIsAttached == 0) {
         dActor_c *block;
@@ -168,7 +159,6 @@ int daObjBlockItemTag_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN19daObjBlockItemTag_c13InitResourcesEv
 int daObjBlockItemTag_c::InitResources() {
     mStarID = param1 & 0x7f;
     if (mStarID == 0x7f)
@@ -206,27 +196,22 @@ int daObjBlockItemTag_c::InitResources() {
  * preserved. Historical aliases: SilverStarBlockTag_Spawn,
  * GreenShellBlockTag_Spawn, MegaMushroomBlockTag_Spawn,
  * OneUpMushroomBlockTag_Spawn. */
-// @symbol daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG
 extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SLVSTAR_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-// @symbol daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG
 extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_GNSHELL_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-// @symbol daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG
 extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_SKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-// @symbol daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG
 extern "C" daObjBlockItemTag_c *daObjBlockItemTag_c_classInit_BLK_OKINOKO_TAG() {
     return new daObjBlockItemTag_c();
 }
 
-// @symbol data_ov002_0210dd30
 ItemTagAction data_ov002_0210dd30[4] = {
     &daObjBlockItemTag_c::SpawnOneUpMushroom, &daObjBlockItemTag_c::SpawnMegaMushroom,
     &daObjBlockItemTag_c::SpawnKoopaShell, &daObjBlockItemTag_c::SpawnSilverStar};

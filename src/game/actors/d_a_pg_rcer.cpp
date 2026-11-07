@@ -110,7 +110,6 @@ daPgRcerState data_ov019_0211356c[6] = {
 Vector3 data_ov019_021134e8(-0x18c28a1, -0x164c644, -0x18f1a11);
 Vector3 data_ov019_0211353c(-0x1290000, 0x600000, 0);
 
-// @symbol daPgRcer_c_classInit
 extern "C" daPgRcer_c *daPgRcer_c_classInit()
 {
     return new daPgRcer_c();
@@ -124,7 +123,6 @@ extern "C" daPgRcer_c *daPgRcer_c_classInit()
 SpawnInfo<daPgRcer_c> g_profile_PENGUIN_RACER = {
     daPgRcer_c_classInit, 0x0103, 0x0075, 2, 0x96000, 0x96000, 0x02648000, 0x02648000};
 
-// @symbol _ZN10daPgRcer_c13InitResourcesEv
 int daPgRcer_c::InitResources()
 {
     int i;
@@ -169,7 +167,6 @@ int daPgRcer_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c8BehaviorEv
 int daPgRcer_c::Behavior()
 {
     func_ov019_02112268();
@@ -181,7 +178,6 @@ int daPgRcer_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c6RenderEv
 int daPgRcer_c::Render()
 {
     mTextureSequence.Update(mAnmModel.data);
@@ -189,12 +185,10 @@ int daPgRcer_c::Render()
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c16OnPendingDestroyEv
 void daPgRcer_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN10daPgRcer_c16CleanupResourcesEv
 int daPgRcer_c::CleanupResources()
 {
     gOV019PenguinModelFile.Release();
@@ -205,21 +199,18 @@ int daPgRcer_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021122dcEi
 void daPgRcer_c::func_ov019_021122dc(int state)
 {
     mStateDesc = &data_ov019_0211356c[state];
     func_ov019_021122a4();
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021122a4Ev
 void daPgRcer_c::func_ov019_021122a4()
 {
     daPgRcerStateMethod *p = &mStateDesc->init;
     (this->**p)();
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02112268Ev
 void daPgRcer_c::func_ov019_02112268()
 {
     daPgRcerStateMethod *p = &mStateDesc->behavior;
@@ -227,7 +218,6 @@ void daPgRcer_c::func_ov019_02112268()
 }
 
 /* State 0: idle. */
-// @symbol _ZN10daPgRcer_c19func_ov019_021121f8Ev
 int daPgRcer_c::func_ov019_021121f8() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
@@ -239,7 +229,6 @@ int daPgRcer_c::func_ov019_021121f8() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02112168Ev
 int daPgRcer_c::func_ov019_02112168()
 {
     if (DecIfAbove0_Byte(&mTalkWaitTimer))
@@ -258,7 +247,6 @@ int daPgRcer_c::func_ov019_02112168()
 }
 
 /* State 1: invite. */
-// @symbol _ZN10daPgRcer_c19func_ov019_0211213cEv
 int daPgRcer_c::func_ov019_0211213c() {
     mActionStep = 0;
     func_0201267c(0xdf, &mCamSpacePos);
@@ -266,7 +254,6 @@ int daPgRcer_c::func_ov019_0211213c() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02111fecEv
 int daPgRcer_c::func_ov019_02111fec() {
     switch (mActionStep) {
     case 0: {
@@ -313,7 +300,6 @@ int daPgRcer_c::func_ov019_02111fec() {
 }
 
 /* State 2: jump into the countdown. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111f54Ev
 int daPgRcer_c::func_ov019_02111f54() {
     mAnmModel.SetAnim((BCA_File *)gPenguinJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mVertAccel = -0x2000;
@@ -326,7 +312,6 @@ int daPgRcer_c::func_ov019_02111f54() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02111decEv
 int daPgRcer_c::func_ov019_02111dec() {
     switch (mActionStep) {
     case 0:
@@ -360,7 +345,6 @@ int daPgRcer_c::func_ov019_02111dec() {
 }
 
 /* State 3: the race. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111d58Ev
 int daPgRcer_c::func_ov019_02111d58() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -373,7 +357,6 @@ int daPgRcer_c::func_ov019_02111d58() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_0211197cEv
 int daPgRcer_c::func_ov019_0211197c() {
     switch (mActionStep) {
     case 0:
@@ -484,7 +467,6 @@ int daPgRcer_c::func_ov019_0211197c() {
 }
 
 /* State 4: walk up to the player. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111904Ev
 int daPgRcer_c::func_ov019_02111904() {
     mAnmModel.SetAnim((BCA_File *)gOV019PenguinWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -496,7 +478,6 @@ int daPgRcer_c::func_ov019_02111904() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021117a8Ev
 int daPgRcer_c::func_ov019_021117a8() {
     Vector3 node;
     switch (mActionStep) {
@@ -539,7 +520,6 @@ int daPgRcer_c::func_ov019_021117a8() {
 }
 
 /* State 5: result, and the star if the penguin did not win. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111754Ev
 int daPgRcer_c::func_ov019_02111754() {
     mAnmModel.SetAnim((BCA_File *)gOV019PenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -548,7 +528,6 @@ int daPgRcer_c::func_ov019_02111754() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02111558Ev
 int daPgRcer_c::func_ov019_02111558() {
     switch (mActionStep) {
     case 0: {
@@ -608,7 +587,6 @@ int daPgRcer_c::func_ov019_02111558() {
 
 extern "C" {
 
-// @symbol func_ov019_021114ec
 void func_ov019_021114ec(daPgRcer_c *self)
 {
     Matrix4x3_FromRotationY(&self->mAnmModel.mat4x3, self->mAngleY);
@@ -618,7 +596,6 @@ void func_ov019_021114ec(daPgRcer_c *self)
     self->DropShadowRadHeight(self->mShadowModel, self->mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
 }
 
-// @symbol func_ov019_0211140c
 int func_ov019_0211140c(daPgRcer_c *self, dBgCh_Actr *clsn)
 {
     Vector3 floorNormal;
@@ -640,7 +617,6 @@ int func_ov019_0211140c(daPgRcer_c *self, dBgCh_Actr *clsn)
 }
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021113b0Ev
 void daPgRcer_c::func_ov019_021113b0()
 {
     Vector3 node;
@@ -650,7 +626,6 @@ void daPgRcer_c::func_ov019_021113b0()
     mTargetAngY = Vec3_HorzAngle(&mPos, &node);
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_0211131cEv
 int daPgRcer_c::func_ov019_0211131c()
 {
     UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x600);
@@ -666,7 +641,6 @@ int daPgRcer_c::func_ov019_0211131c()
     return mPathDist < 0;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021112b8Ev
 void daPgRcer_c::func_ov019_021112b8()
 {
     if (mPlayerCheated != 0)
@@ -690,7 +664,6 @@ void daPgRcer_c::func_ov019_021112b8()
     mFallAccum = 0;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_0211127cEP7Vector3j
 int daPgRcer_c::func_ov019_0211127c(Vector3 *pos, unsigned int nodeIndex)
 {
     Vector3 node;
@@ -701,7 +674,6 @@ int daPgRcer_c::func_ov019_0211127c(Vector3 *pos, unsigned int nodeIndex)
 
 extern "C" {
 
-// @symbol func_ov019_02111254
 /* The further ahead the player is, in path nodes, the faster the penguin
  * runs. Clamped to 0x30000..0x65000. */
 int func_ov019_02111254(void *unused, int playerLead)

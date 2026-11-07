@@ -83,15 +83,11 @@
    One definition emits C1 AND C2 (sec 1). There is no C1 file and no C1 in the ROM
    -- nothing constructs a standalone dEnemyBase_c, so the linker never kept one;
    the manifest licenses the C1 this TU emits as compiler-only output. */
-// @symbol _ZN12dEnemyBase_cC2Ev
 dEnemyBase_c::dEnemyBase_c()
 {
 }
 
 /* One definition, three emitted sections: D2 0x020aed18, D0 0x020aed3c, D1 0x020aed74. */
-// @symbol _ZN12dEnemyBase_cD2Ev
-// @symbol _ZN12dEnemyBase_cD0Ev
-// @symbol _ZN12dEnemyBase_cD1Ev
 /* Store this class's vtable over the one dActor_c's constructor left, then run the
    dActor_c subobject destructor. D0 additionally returns the object to the actor
    heap through dEnemyBase_c's own inline operator delete (see include/dEnemyBase_c.h). The
@@ -108,7 +104,6 @@ dEnemyBase_c::~dEnemyBase_c()
 
    On a floor that does not limit movement, the vertical velocity is re-derived
    so the motion stays in the floor plane. */
-// @symbol _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj
 /* local extern: func_02038414, the tail-call veneer to
    dBgCh_Actr::UpdateDiscreteNoLava_2, is the one veneer dBgCh_Actr.h does
    not declare -- decl_common.h already spells it with a void *. */
@@ -161,7 +156,6 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
 extern "C" int RandomIntInternal(int *seed);
 extern u16 data_ov002_020ff014[]; /* coin actor IDs: 0x120, 0x121, 0x122 */
 
-// @symbol _ZN12dEnemyBase_c9SpawnCoinEv
 void dEnemyBase_c::SpawnCoin()
 {
     int i;
@@ -193,7 +187,6 @@ void dEnemyBase_c::SpawnCoin()
     PoofDust();
 }
 
-// @symbol func_ov002_020aea30
 /* Start the selected enemy death sequence. This reconstructed interface uses
    receiver, attacker and nullable collision pointers, matching all callers.
    The handler table forwards the latter two registers; current handlers use
@@ -252,18 +245,15 @@ struct EnemyDeathC : dEnemyBase_c {
   int func_ov002_020aea24(dBgCh_Actr & clsn_);
 };
 
-// @symbol _ZN6Aea30C19func_ov002_020aea2cEP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020aea2c(dActor_c*, dBgCh_Actr*)
 {
 }
 
-// @symbol _ZN11EnemyDeathC19func_ov002_020aea24ER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020aea24(dBgCh_Actr&)
 {
     return 0;
 }
 
-// @symbol _ZN6Aea30C19func_ov002_020ae9f8EP8dActor_cP10dBgCh_Actr
 /* Stop the enemy (zero mHorzSpeed and mVertSpeed), start a 0xf-frame
    mDeathTimer, then clear mFlags bit 0x1. */
 void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
@@ -274,7 +264,6 @@ void Aea30C::func_ov002_020ae9f8(dActor_c*, dBgCh_Actr*)
     mFlags &= ~0x1;
 }
 
-// @symbol func_ov002_020ae968
 /* Knock-back strengths, indexed by the attacking player's param1. */
 extern "C" {
 extern u16 data_ov002_020ff01c[];
@@ -298,14 +287,12 @@ extern "C" void func_ov002_020ae968(dEnemyBase_c *c, dActor_c *arg) {
     Sound::PlayBank0(9, c->mCamSpacePos);
 }
 
-// @symbol _ZN6Aea30C19func_ov002_020ae954EP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae954(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = a->mAngleY;
     func_ov002_020ae968(this, a);
 }
 
-// @symbol func_ov002_020ae8b8
 extern "C" void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
     if (IsPlayerActor(arg)) {
         u16 t = data_ov002_020ff01c[(u16)arg->param1];
@@ -322,7 +309,6 @@ extern "C" void func_ov002_020ae8b8(dEnemyBase_c *c, dActor_c *arg) {
     c->mFlags &= ~1;
 }
 
-// @symbol _ZN6Aea30C19func_ov002_020ae890EP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae890(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = a->mAngleY;
@@ -330,7 +316,6 @@ void Aea30C::func_ov002_020ae890(dActor_c* a, dBgCh_Actr*)
     Sound::PlayBank0(0xa, mCamSpacePos);
 }
 
-// @symbol _ZN6Aea30C19func_ov002_020ae87cEP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = a->mAngleY;
@@ -339,7 +324,6 @@ void Aea30C::func_ov002_020ae87c(dActor_c* a, dBgCh_Actr*)
 
 extern "C" s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 
-// @symbol _ZN6Aea30C19func_ov002_020ae844EP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)
 {
     s16 angle = Vec3_HorzAngle(&a->mPos, &mPos);
@@ -347,14 +331,12 @@ void Aea30C::func_ov002_020ae844(dActor_c* a, dBgCh_Actr*)
     func_ov002_020ae968(this, a);
 }
 
-// @symbol _ZN6Aea30C19func_ov002_020ae80cEP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae80c(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
     func_ov002_020ae8b8(this, a);
 }
 
-// @symbol _ZN6Aea30C19func_ov002_020ae73cEP8dActor_cP10dBgCh_Actr
 void Aea30C::func_ov002_020ae73c(dActor_c* a, dBgCh_Actr*)
 {
     mPrevAngleY = Vec3_HorzAngle(&a->mPos, &mPos);
@@ -380,7 +362,6 @@ extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
-// @symbol _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr
 int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
     int ret;
     if (mDeathState == 0)
@@ -405,7 +386,6 @@ int dEnemyBase_c::UpdateDeath(dBgCh_Actr &clsn) {
    carries the parameter unused. */
 extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x);
 
-// @symbol _ZN11EnemyDeathC19func_ov002_020ae64cER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
     int x = (int)&clsn;
     if (mDeathTimer >= 5) {
@@ -419,7 +399,6 @@ int EnemyDeathC::func_ov002_020ae64c(dBgCh_Actr &clsn) {
     return func_ov002_020ae5c8(this, x);
 }
 
-// @symbol _ZN11EnemyDeathC19func_ov002_020ae608ER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020ae608(dBgCh_Actr &clsn) {
     if (clsn.IsOnGround() == 0)
         return 0;
@@ -429,7 +408,6 @@ int EnemyDeathC::func_ov002_020ae608(dBgCh_Actr &clsn) {
     return 1;
 }
 
-// @symbol func_ov002_020ae5c8
 /* `x` is unused on purpose -- see the note on func_ov002_020ae64c, which passes it. */
 extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
     if (c->mDeathTimer != 0)
@@ -447,7 +425,6 @@ extern u32 d_enemy_baseNewUnkCallback818Hold(u32 uniqueID, u32 effectID, Fix12i 
                                              Fix12i z, const Vector3_16f *dir);
 }
 
-// @symbol _ZN11EnemyDeathC19func_ov002_020ae4ccER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     int v[3];
     int n = mScaleY;
@@ -481,7 +458,6 @@ int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
     return 0;
 }
 
-// @symbol _ZN11EnemyDeathC19func_ov002_020ae454ER10dBgCh_Actr
 int EnemyDeathC::func_ov002_020ae454(dBgCh_Actr &clsn) {
     if (mDeathTimer == 0 || clsn.IsOnGround() != 0 || clsn.IsOnWall() != 0) {
         SpawnCoin();
@@ -499,7 +475,6 @@ extern "C" {
 extern short data_02082214[];
 }
 
-// @symbol _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi
 int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, bool detectWater,
                                   bool allowObjFloor, Fix12i up) {
     Vector3 start;
@@ -544,7 +519,6 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, b
 
 /* On a wall, reflect the heading off it; on a cliff edge (mCliffState), turn
    around; otherwise report that nothing was done. */
-// @symbol _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs
 int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr &clsn, short &outAngle) {
     if (clsn.IsOnWall()) {
         outAngle = ReflectAngle(mWallNormalX, mWallNormalZ, outAngle);
@@ -587,7 +561,6 @@ static inline int HasFlag(int flags, int bit) {
     return (flags & bit) != 0;
 }
 
-// @symbol _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr
 int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
     int flags;
     int v;
@@ -683,7 +656,6 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
    IDs 0x120/0x121 spawns the mega-character particles; otherwise bit 0x20000 on
    the collision is raised. Clearing mEatenByYoshi clears that bit instead. */
 
-// @symbol _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c
 int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
     if (mEatenByYoshi != 0) {
         unsigned int id = clsn.otherOwner;
@@ -708,7 +680,6 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c &clsn) {
     return 0;
 }
 
-// @symbol _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s16 atan2_hold_d_enemy_base_1(s32 y, s32 x);
@@ -789,7 +760,6 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
    arity and this address's overlay; this member spent a long time spelled
    func_ov002_020ada40 because the mangled name was sitting on ov004's unrelated
    function at the same address. */
-// @symbol _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R7daPly_ci
 void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player, Fix12i) {
     mFlags &= ~0x10000001;
     mPrevAngleY = Vec3_HorzAngle(&player.mPos, &mPos);
@@ -832,7 +802,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z)
 extern Matrix4x3 data_020a0e68;
 }
 
-// @symbol _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR14dExtAnmModel_cj
 int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &anim,
                                              unsigned int flags) {
     int v[3];

@@ -49,7 +49,6 @@ Puff sPuffs[3];
 
 extern "C" {
 
-// @symbol Puff_Spawn
 void Puff_Spawn(int x, int y) {
     int i;
     int v;
@@ -83,12 +82,10 @@ void Puff_Spawn(int x, int y) {
     }
 }
 
-// @symbol Puff_Clear
 void Puff_Clear(short *p) {
     ((Puff *)p)->mActive = 0;
 }
 
-// @symbol Puff_Update
 void Puff_Update(char *c) {
     Puff *entry = (Puff *)c;
     if (entry->mActive == 0)
@@ -106,7 +103,6 @@ void Puff_Update(char *c) {
     }
 }
 
-// @symbol Puff_Draw
 void Puff_Draw(char *c) {
     Puff *entry = (Puff *)c;
     void *sprite;
@@ -127,7 +123,6 @@ void Puff_Draw(char *c) {
     Hud_RenderSprite(sprite, drawX >> 12, entry->y >> 12, -1, -1);
 }
 
-// @symbol Puff_ClearAll
 void Puff_ClearAll(int a0, int a1) {
     int i;
     short *p = (short *)sPuffs;
@@ -139,7 +134,6 @@ void Puff_ClearAll(int a0, int a1) {
     sPuffXTable = (void **)a1;
 }
 
-// @symbol Puff_UpdateAll
 void Puff_UpdateAll(void) {
     int i = 0;
     char *p = (char *)sPuffs;
@@ -152,7 +146,6 @@ void Puff_UpdateAll(void) {
     }
 }
 
-// @symbol Puff_DrawAll
 void Puff_DrawAll(void) {
     int i;
     char *p = (char *)&sPuffs[2];
@@ -163,8 +156,6 @@ void Puff_DrawAll(void) {
 }
 }
 
-// @symbol _ZN4PuffD1Ev
 inline Puff::~Puff() {}
 
-// @symbol _ZN4PuffC1Ev
 inline Puff::Puff() {}

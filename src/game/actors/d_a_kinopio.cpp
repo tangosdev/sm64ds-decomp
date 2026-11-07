@@ -133,8 +133,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 #pragma defer_codegen off
 
-// @symbol _ZN11daKinopio_cD1Ev
-// @symbol _ZN11daKinopio_cD0Ev
 /* ONE definition, TWO ROM functions (D1 at 0x02129020, D0 at 0x02129060;
  * the D2 the compiler also emits is homeless and discarded). The empty
  * body is one vptr store plus the member destructors in reverse
@@ -144,7 +142,6 @@ daKinopio_c::~daKinopio_c()
 {
 }
 
-// @symbol _ZN11daKinopio_c12GetMessageIDEv
 /* Which line of dialogue this Toad says. The player's param1 (+8) shifts
  * the id per character; the 0x32 mode overrides it entirely. */
 int daKinopio_c::GetMessageID() {
@@ -178,7 +175,6 @@ int daKinopio_c::GetMessageID() {
     return (u16)sum;
 }
 
-// @symbol _ZN11daKinopio_c12St_Talk_MainEv
 void daKinopio_c::St_Talk_Main()
 {
     char *c = (char *)this;
@@ -265,7 +261,6 @@ void daKinopio_c::St_Talk_Main()
     SetState(0);
 }
 
-// @symbol _ZN11daKinopio_c12St_Talk_InitEv
 void daKinopio_c::St_Talk_Init()
 {
     u32 flags = 0;
@@ -273,7 +268,6 @@ void daKinopio_c::St_Talk_Init()
     mAnmModel.SetAnim((BCA_File *)file, 0, 0x1000, flags);
 }
 
-// @symbol _ZN11daKinopio_c12St_Idle_MainEv
 void daKinopio_c::St_Idle_Main()
 {
     if ((mCollider.hitFlags & 0x08000000) == 0)
@@ -293,13 +287,11 @@ void daKinopio_c::St_Idle_Main()
     SetState(1);
 }
 
-// @symbol _ZN11daKinopio_c12St_Idle_InitEv
 void daKinopio_c::St_Idle_Init()
 {
     mAnmModel.SetAnim((BCA_File *)gKinopioIdleAnimFile.filePtr, 0, 0x1000, 0);
 }
 
-// @symbol _ZN11daKinopio_c8SetStateEi
 void daKinopio_c::SetState(s32 state)
 {
     mState = state;
@@ -307,14 +299,12 @@ void daKinopio_c::SetState(s32 state)
     (this->*data_ov085_0212fe88[index].init)();
 }
 
-// @symbol _ZN11daKinopio_c8RunStateEv
 void daKinopio_c::RunState()
 {
     s32 index = mState;
     (this->*data_ov085_0212fe88[index].main)();
 }
 
-// @symbol _ZN11daKinopio_c15UpdateModelPoseEv
 /* The matrix assignments are block copies because this TU sees common.h's
  * flat Matrix4x3 first (see the include note above). transforms[5] is the
  * head bone. */
@@ -373,7 +363,6 @@ void daKinopio_c::UpdateModelPose()
     ((dActor_c *)c)->DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 0xf);
 }
 
-// @symbol _ZN11daKinopio_c16CleanupResourcesEv
 /* The three ov002 handles are released only by the variant that took them. The
  * legacy file reached all six through an `int[]` spelling and a cast; they are
  * the real SharedFilePtr objects, which is how InitResources below already
@@ -391,7 +380,6 @@ int daKinopio_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11daKinopio_c6RenderEv
 /* One call. THE CALL IS QUALIFIED, AND THAT IS LOAD-BEARING. dExtSimpleModel_c::Render is
  * virtual (slot 5 of _ZTV17dExtSimpleModel_c) and dExtAnmModel_c overrides it, so a plain
  * `mAnmModel.Render(0)` emits the vtable dispatch -- three words where the ROM
@@ -405,7 +393,6 @@ int daKinopio_c::Render()
     return 1;
 }
 
-// @symbol _ZN11daKinopio_c8BehaviorEv
 /* This Toad watches the player and turns his head; everything else in the
  * function is bookkeeping around that.
  *
@@ -504,7 +491,6 @@ int daKinopio_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11daKinopio_c13InitResourcesEv
 /* Spawn-time setup, and most of it is unpacking the spawn parameter.
  *
  * mParam carries three things at once. The low half becomes mMessageID, the
@@ -581,7 +567,6 @@ int daKinopio_c::InitResources()
     return 1;
 }
 
-// @symbol daKinopio_c_classInit
 /* The registry factory behind the KINOPIO profile: `return new` allocates
  * 0x210 (this class's sizeof) and installs this class's vtable.
  * Reconstructed source-style name: SM64DS proves daKinopio_c through RTTI,

@@ -102,7 +102,6 @@ struct CnnModelFilePtr : SharedFilePtr {
  * its destructor, then copies the pointers from .data. InitResources feeds
  * the model to dExtSimpleModel_c::LoadFile.
  * ------------------------------------------------------------------------ */
-// @symbol __sinit_d_a_cnn.cpp
 CnnModelFilePtr data_ov098_0213c8e8(ASSET_HOUDAI_BMD);
 
 /* The member pointers the initializer copies into the table
@@ -127,13 +126,11 @@ enum {
 };
 
 /* -------------------------------------------------------------------------- */
-// @symbol daCnn_c_classInit
 extern "C" daCnn_c *daCnn_c_classInit() {
     return new daCnn_c();
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c13InitResourcesEv
 int daCnn_c::InitResources() {
     BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov098_0213c8e8);
     mModel.SetFile(file, 1, -1);
@@ -170,7 +167,6 @@ int daCnn_c::InitResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c8BehaviorEv
 int daCnn_c::Behavior() {
     if (mVariant != 1)
         (this->*data_ov098_0213c8fc[mState])();
@@ -182,7 +178,6 @@ int daCnn_c::Behavior() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c6RenderEv
 int daCnn_c::Render() {
     if (mState == 3 && mLoadStep >= 3)
         return 1;
@@ -193,7 +188,6 @@ int daCnn_c::Render() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c16CleanupResourcesEv
 int daCnn_c::CleanupResources() {
     data_ov098_0213c8e8.Release();
     data_ov098_0213c91c.Release();
@@ -202,7 +196,6 @@ int daCnn_c::CleanupResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c11PickNextAimEv
 /* Pick the next aim: a random pitch in 0x1000..0x1fff and a random heading
    within a quarter turn either side of home, at least 0x800 from the current
    heading. */
@@ -219,7 +212,6 @@ void daCnn_c::PickNextAim() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c8StateAimEv
 /* State 0, aim. */
 void daCnn_c::StateAim() {
     short prevAngleY = mPrevAngleY;
@@ -241,7 +233,6 @@ void daCnn_c::StateAim() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c9StateFireEv
 /* State 1, fire: while a player is within 2048.0, count down; at 60 launch a
    water bomb out of the barrel with a puff of smoke and kick the barrel back,
    and at 0 pick a new aim. The barrel slides back under mRecoilSpeed and
@@ -360,7 +351,6 @@ void daCnn_c::StateFire() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c17StateWaitForRiderEv
 /* State 2, wait: when a player touches the collider, climb them in and start
    the load sequence. A player carrying a Bob-omb has it handed to
    func_ov102_0214ae1c instead. */
@@ -394,7 +384,6 @@ void daCnn_c::StateWaitForRider() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c9StateLoadEv
 /* State 3, the load sequence. The rider is pinned 208.0 above the cannon
    (and turned with it until step 3) while the cannon
      0  rises out of the ground to its spawn height and shakes the camera,
@@ -506,7 +495,6 @@ void daCnn_c::StateLoad() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daCnn_c11UpdateModelEv
 /* Place the model and pose the barrel: yaw on the root bone, pitch and the
    recoil slide on the barrel bone. */
 void daCnn_c::UpdateModel() {
@@ -527,7 +515,5 @@ void daCnn_c::UpdateModel() {
     bones[1].transZ = (mRecoil * data_02082214[idx * 2]) / 0x1000;
 }
 
-// @symbol _ZN7daCnn_cD0Ev
-// @symbol _ZN7daCnn_cD1Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */

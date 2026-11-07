@@ -41,15 +41,12 @@ extern daObjUkiyuka_c::Resources data_ov022_021140d4[];
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN17daObjFl_Ukiyuka_cD1Ev
-// @symbol _ZN17daObjFl_Ukiyuka_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order. The body is empty: the three vptr stores (its own,
  * daObjUkiyuka_c's inlined, then dBgActor_c's) prove the two-level
  * chain, and D0's deallocation is the inline operator delete. */
 daObjFl_Ukiyuka_c::~daObjFl_Ukiyuka_c() {}
 
-// @symbol _ZN17daObjFl_Ukiyuka_c16CleanupResourcesEv
 /* Indexes the ov022 parameter table with mVariant, the one field this
  * class adds. */
 int daObjFl_Ukiyuka_c::CleanupResources() {
@@ -59,7 +56,6 @@ int daObjFl_Ukiyuka_c::CleanupResources() {
 /* 20.12 fixed-point amplitude InitResourcesFrom stores at mBobAmplitude. */
 enum { kBobAmplitude = 0x1051 };
 
-// @symbol _ZN17daObjFl_Ukiyuka_c13InitResourcesEv
 int daObjFl_Ukiyuka_c::InitResources() {
     switch (actorID) {
     case 0x4b:
@@ -96,7 +92,6 @@ UkiyukaCollisionFilePtr gFlUkiYukaCollisionFile(ASSET_FL_UKI_YUKA_KCL);
 UkiyukaModelFilePtr gdaObjFl_UkiyukaFlShisoModelFile(ASSET_FL_SHISO_BMD);
 UkiyukaCollisionFilePtr gdaObjFl_UkiyukaFlShisoCollisionFile(ASSET_FL_SHISO_KCL);
 
-// @symbol daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L
 /* Reconstructed source-style name: SM64DS proves daObjFl_Ukiyuka_c through RTTI,
  * allocation size, vtable identity, and the FL_UKIYUKA_L registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -109,7 +104,6 @@ extern "C" daObjFl_Ukiyuka_c *daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L(void) {
     return new daObjFl_Ukiyuka_c;
 }
 
-// @symbol daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA
 /* Reconstructed source-style name: SM64DS proves daObjFl_Ukiyuka_c through RTTI,
  * allocation size, vtable identity, and the FL_UKIYUKA registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

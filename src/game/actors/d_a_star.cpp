@@ -214,8 +214,6 @@ extern s32 IsStarCollected(s32 level, s32 idx);
  * ends the object. (d_a_kpa.cpp precedent.) */
 #pragma defer_codegen off
 
-// @symbol _ZN8daStar_cD1Ev
-// @symbol _ZN8daStar_cD0Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * One vtable store and 6 destructor calls, every one a consequence of
@@ -243,7 +241,6 @@ daStar_c::~daStar_c()
 
 #pragma defer_codegen on
 
-// @symbol _ZN8daStar_c13InitResourcesEv
 /* Spawn-time set-up for the Power Star (actor 0xb2) and the silver star
  * (0xb3). Loads the shared animation files and the star models, then picks the
  * first State from the Kind in param1 bits 4..7: kinds 0, 5, 6 and 7 idle,
@@ -461,7 +458,6 @@ s32 daStar_c::InitResources()
     return ret;
 }
 
-// @symbol _ZN12daStarBase_c13InitResourcesEv
 /* Spawn-time set-up for the marker that shows where a star will appear. param1
  * bits 4..7 pick the flavour: kind 6 only spawns the switch star (actor 0xb2,
  * kind 6, mBits.switchStar) and returns 0; kind 4 starts in state 2, kind 5 in
@@ -582,7 +578,6 @@ int daStarBase_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN8daStar_c8BehaviorEv
 /* Per-frame update. Looks once for an ice block, clears the cached centre, and
  * while a Yoshi has the star in its mouth only rebuilds the matrices.
  * Otherwise it steps the camera cutscene (func_ov002_020e763c), runs the
@@ -637,7 +632,6 @@ int daStar_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN12daStarBase_c8BehaviorEv
 /* Per-frame update of the marker. mAppearTimer counts down while this marker's
  * star id is the next one in data_0209f344[data_0209f208], and the marker
  * shows itself at 0 unless hold is set. It builds the model and shadow
@@ -718,7 +712,6 @@ int daStarBase_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daStar_c6RenderEv
 /* Draws mAnmModel2 (collected, translucent) or mAnmModel1, unless the star
  * is scaled to nothing, hidden by mFlags & 0x40000, or not visible. */
 int daStar_c::Render()
@@ -738,7 +731,6 @@ callit:
     return 1;
 }
 
-// @symbol _ZN12daStarBase_c6RenderEv
 /* Draws the marker's model while it is visible. */
 int daStarBase_c::Render()
 {
@@ -747,7 +739,6 @@ int daStarBase_c::Render()
     return 1;
 }
 
-// @symbol _ZN8daStar_c16CleanupResourcesEv
 /* Gives up the map marker slot (kind 8 never had one), unloads the silver star
  * and number models when InitResources loaded them (silver star, or kind 6),
  * and releases the four animation files it loaded. */
@@ -772,7 +763,6 @@ int daStar_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN12daStarBase_c16CleanupResourcesEv
 /* Releases the model files that InitResources loaded for this marker's
  * flavour. */
 int daStarBase_c::CleanupResources()
@@ -786,7 +776,6 @@ int daStarBase_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN12daStarBase_c16OnPendingDestroyEv
 /* If the linked star exists but has no death-table slot of its own
  * (mDeathTableID < 0), clears the death-table bit this marker remembered for
  * it. */
@@ -801,7 +790,6 @@ void daStarBase_c::OnPendingDestroy()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 67 -- func_ov002_020ea9d0, 0x020ea9d0, size 0x1bc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea9d0Ev
 /* STATE_LAUNCH: starts the pop-out. A star with a non-zero id first looks for
  * its marker and destroys itself without one. It then starts the cutscene
  * (mFlags and gNextActorUpdateMask get CUTSCENE_FLAG, mCamSeq 0, sound 3/0x57), jumps
@@ -873,7 +861,6 @@ void daStar_c::func_ov002_020ea9d0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 66 -- func_ov002_020ea90c, 0x020ea90c, size 0xc4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea90cEv
 /* STATE_RISE: once the vertical speed has reached -32.0 or lower it looks for its
  * marker. With no marker, or one directly below, it becomes STATE_LAND with an
  * upward speed of 24.0; otherwise it aims a hop at 200.0 above the marker
@@ -917,7 +904,6 @@ void daStar_c::func_ov002_020ea90c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 65 -- func_ov002_020ea824, 0x020ea824, size 0xe8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea824Ev
 /* STATE_FLY_TO_MARKER: without a marker the star destroys itself. Once the
  * marker is closer than one frame of horizontal travel (mHorzSpeed) it snaps
  * to 200.0 above it, stops horizontally, bounces up at 16.0 (star id 3 on
@@ -953,7 +939,6 @@ void daStar_c::func_ov002_020ea824() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 64 -- func_ov002_020ea7ac, 0x020ea7ac, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea7acEv
 /* STATE_LAND: while it is falling at 24.0 per frame or faster the motion
  * is zeroed and the touch volume is enabled. When gravity is zero it becomes
  * STATE_IDLE and sets mCamSeq to 0x1d6; the cutscene camera then counts up and
@@ -977,7 +962,6 @@ void daStar_c::func_ov002_020ea7ac() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 63 -- func_ov002_020ea420, 0x020ea420, size 0x38c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea420Ev
 /* STATE_IDLE: the star waits to be collected. Kind 6 is the star that appears
  * and disappears. While it is enabled (five VS stars taken, or its switch on
  * for the switch star) it grows back to full scale, with the camera cutscene,
@@ -1099,7 +1083,6 @@ void daStar_c::func_ov002_020ea420() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 62 -- func_ov002_020ea410, 0x020ea410, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea410Ev
 /* STATE_TOUCHED: hands mPlayer to func_ov002_020e8ef0. */
 /* func_ov002_020ea410 @ 0x20ea410 (ov002) -- veneer: ldr r1,[r0,#0x438]; b func_ov002_020e8ef0. */
 void daStar_c::func_ov002_020ea410() {
@@ -1109,7 +1092,6 @@ void daStar_c::func_ov002_020ea410() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 61 -- func_ov002_020ea3a4, 0x020ea3a4, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea3a4Ev
 /* Picks the sound id for the collection sound object into mSoundObjSoundID and
  * returns it: for the silver star gNumStageStars[player number] + 0x19, in a VS
  * match 0x4f, otherwise 0x22. */
@@ -1129,7 +1111,6 @@ int daStar_c::func_ov002_020ea3a4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 60 -- func_ov002_020ea100, 0x020ea100, size 0x2a4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea100Ev
 /* STATE_COLLECT_BEGIN: the player has touched the star. func_ov002_020e73ac
  * gives the talk state and daPly_c::Unk_020c9e5c asks whether the player is in
  * the no-control state of that kind. If it is, the sound object is spawned (mode 1 for talk states 1 and 2,
@@ -1240,7 +1221,6 @@ void daStar_c::func_ov002_020ea100() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 59 -- func_ov002_020ea06c, 0x020ea06c, size 0x94 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020ea06cEv
 /* STATE_COLLECT_HOLD: copies the player's position and facing, starts the pose
  * animation and becomes STATE_COLLECT_TALK. */
 void daStar_c::func_ov002_020ea06c() {
@@ -1263,7 +1243,6 @@ void daStar_c::func_ov002_020ea06c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 58 -- func_ov002_020e9d18, 0x020e9d18, size 0x354 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9d18Ev
 /* STATE_COLLECT_TALK: the pose animation plays while the star follows the
  * player (kind 9 keeps adjusting the music volume for 0x78 frames). In a VS
  * match and for the silver star it counts mSeqTimer once the animation has
@@ -1388,7 +1367,6 @@ end:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 57 -- func_ov002_020e9af4, 0x020e9af4, size 0x224 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9af4Ev
 /* STATE_SAVE_MESSAGE: walks the save prompt one mTalkStep at a time. Step 2
  * waits for the talk to end (answer 1 shows saving message 0x295 and goes to
  * 3, answer 2 ends the talk and skips to 4), 3 and 5 wait for the message box
@@ -1448,7 +1426,6 @@ void daStar_c::func_ov002_020e9af4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 56 -- func_ov002_020e99e8, 0x020e99e8, size 0x10c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e99e8Ev
 /* STATE_BOUNCE: the star hops about on the ground. Checks the bounds, moves
  * against the mesh collider, reflects off walls, handles water, and bounces at
  * 14.0 in water or 23.0 on land after each ground contact. The pickup test
@@ -1487,7 +1464,6 @@ void daStar_c::func_ov002_020e99e8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 55 -- func_ov002_020e9840, 0x020e9840, size 0x1a8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9840Ev
 /* STATE_WAIT_MARKER: the star sits hidden until its marker says so. With no
  * marker it looks for one. Once it is this star's turn
  * (data_0209f344[data_0209f208] == mStarID) and the marker's mAppearTimer has
@@ -1539,7 +1515,6 @@ void daStar_c::func_ov002_020e9840() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 54 -- func_ov002_020e9804, 0x020e9804, size 0x3c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9804Ev
 /* STATE_PLAY_AND_END: plays the animation with its effects, then destroys the
  * star. */
 void daStar_c::func_ov002_020e9804() {
@@ -1553,7 +1528,6 @@ void daStar_c::func_ov002_020e9804() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 53 -- func_ov002_020e96a0, 0x020e96a0, size 0x164 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e96a0Ev
 /* STATE_SPIN_AND_END: the silver star taken on a shell. Spins by 0x800 per
  * frame. For 30 frames it hovers 260.0 above the player; at frame 30 it awards
  * the VS star, spawns the score popup and gives its map marker up, then hides;
@@ -1598,7 +1572,6 @@ void daStar_c::func_ov002_020e96a0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 52 -- func_ov002_020e9630, 0x020e9630, size 0x70 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9630Ev
 /* True on levels 0xf-0x14 and 0x1d, where a collected Power Star starts a
  * talk. */
 int daStar_c::func_ov002_020e9630() {
@@ -1612,7 +1585,6 @@ int daStar_c::func_ov002_020e9630() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 51 -- func_ov002_020e9590, 0x020e9590, size 0xa0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9590Ev
 /* Finds a marker for the star when it has none: the first STAR_MARKER with the
  * same star id that is in state 0 (or, for a star placed by a marker, in a
  * non-zero state). Links both ways. */
@@ -1642,7 +1614,6 @@ void daStar_c::func_ov002_020e9590() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 50 -- func_ov002_020e947c, 0x020e947c, size 0x114 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e947cEP7Vector3i
 /* Aims a hop at *p: derives mVertAccel and mVertSpeed from the height
  * difference to p and the arc value n, spreads the horizontal distance over 50
  * frames (mHorzSpeed), sets the terminal speed to -50.0 and turns the star
@@ -1682,7 +1653,6 @@ void daStar_c::func_ov002_020e947c(Vector3 *p, int n) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 49 -- func_ov002_020e9464, 0x020e9464, size 0x18 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9464Ev
 /* Stops the star: vertical speed, gravity, terminal speed and horizontal speed
  * all zero. */
 void daStar_c::func_ov002_020e9464() {
@@ -1695,7 +1665,6 @@ void daStar_c::func_ov002_020e9464() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 48 -- func_ov002_020e9448, 0x020e9448, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e9448Ev
 /* Default gravity: -1.375 per frame squared, terminal speed -32.0. */
 void daStar_c::func_ov002_020e9448() {
     mVertAccel = -0x1600;
@@ -1705,7 +1674,6 @@ void daStar_c::func_ov002_020e9448() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 47 -- func_ov002_020e930c, 0x020e930c, size 0x13c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e930cEv
 /* The pickup test. Reads the touch volume's toucher; hit bit 0x400000 needs a
  * player that is not in a no-control state, event bit 0x1e clear, and
  * func_ov002_020e8ef0 accepting the collection, bit 0x8000 only the first two.
@@ -1750,7 +1718,6 @@ void daStar_c::func_ov002_020e930c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 46 -- func_ov002_020e8ef0, 0x020e8ef0, size 0x41c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8ef0EPv
 /* Collects the star for player p. Unlinks the marker and moves to
  * STATE_TOUCHED. A silver star taken on a shell goes to STATE_SPIN_AND_END.
  * Otherwise the player is put in the no-control state for the talk state
@@ -1894,12 +1861,10 @@ ret0:
     return 0;
 }
 
-// @symbol _ZN8daStar_c13OnYoshiTryEatEv
 s32 daStar_c::OnYoshiTryEat() {
     return 4;
 }
 
-// @symbol _ZN8daStar_c13OnTurnIntoEggER7daPly_c
 /* daStar_c::OnTurnIntoEgg -- vtable slot 19, verified against ov002 relocs.txt:
  * _ZTV8daStar_c (0x0210ab3c) + 0x4c -> 0x020e8edc, exactly this placeholder's
  * former address (former name func_ov002_020e8edc). The ROM body is a
@@ -1914,7 +1879,6 @@ void daStar_c::OnTurnIntoEgg(daPly_c &player) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 43 -- func_ov002_020e8e80, 0x020e8e80, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8e80Ei
 /* A Yoshi egg took the star (OnTurnIntoEgg): unlinks the marker, stops the
  * motion, clears the hidden flag and collects the star for player a. */
 void daStar_c::func_ov002_020e8e80(int a) {
@@ -1931,7 +1895,6 @@ void daStar_c::func_ov002_020e8e80(int a) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 42 -- func_ov002_020e8dd8, 0x020e8dd8, size 0xa8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8dd8Ev
 /* Adds the star's map marker unless the level hides it: sublevel 5 hides star
  * id 5, and sublevel 0x16 shows star id 4 only once data_0209f264 is 4. Marker
  * type 0 is added only for kinds 2 and 4. */
@@ -1961,7 +1924,6 @@ int daStar_c::func_ov002_020e8dd8() {
     AddStarMarker();
 }
 
-// @symbol _ZN8daStar_c13AddStarMarkerEv
 /* Claims a free slot of the map-marker table (STAR_MARKERS, 12 entries) for
  * this star. The marker type is 1 for the silver star, 2 for the Power Star
  * and 3 once collected; type 0 uses 3 or 2 from the collected-model flag. A
@@ -2010,7 +1972,6 @@ void daStar_c::AddStarMarker()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 40 -- func_ov002_020e8c34, 0x020e8c34, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8c34Ev
 /* Bounds test: a star more than 80000.0 from the origin on X or Z, higher than
  * 80000.0, or below mMinPosY goes to func_ov002_020e8abc. */
 volatile unsigned int daStar_c::func_ov002_020e8c34() {
@@ -2039,7 +2000,6 @@ volatile unsigned int daStar_c::func_ov002_020e8c34() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 39 -- func_ov002_020e8abc, 0x020e8abc, size 0x178 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8abcEv
 /* Out of bounds or on a bad floor: puts the star back. Without a marker it
  * destroys itself. A marker-placed star (home state 9) returns to its home
  * position, hides, waits for the marker again and puts the marker back on show
@@ -2097,7 +2057,6 @@ void daStar_c::func_ov002_020e8abc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 38 -- func_ov002_020e88a8, 0x020e88a8, size 0x214 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e88a8Ev
 /* The bounce hit the ground. Clears the no-pickup flag, plays sound 3/0x55 and
  * sets the next bounce (14.0 up in water, 23.0 on land, 12.0 forward). On
  * floor types 1 and 9 it aims back at the last safe position
@@ -2171,7 +2130,6 @@ void daStar_c::func_ov002_020e88a8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 37 -- func_ov002_020e86ec, 0x020e86ec, size 0x1bc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e86ecEv
 /* Water handling for the bounce; mBits.water is a WaterState. On first contact
  * it stops the collider watching for water and probes the surface with a
  * dBgCh_Gnd from 160.0 above the star. A surface at least 60.0 above the star
@@ -2228,7 +2186,6 @@ void daStar_c::func_ov002_020e86ec() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 36 -- func_ov002_020e8618, 0x020e8618, size 0xd4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8618Ev
 /* End of a collection, once the pose animation has finished: stops the sound
  * object, hides the star, gives up the map marker, destroys it (VS match) or
  * records it in the death table, and ends the cutscene (CUTSCENE_FLAG cleared
@@ -2254,7 +2211,6 @@ void daStar_c::func_ov002_020e8618() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 35 -- func_ov002_020e84ec, 0x020e84ec, size 0x12c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e84ecEv
 /* Builds the model matrix for this frame. Kind 8 sits at its position. A
  * matrix pointer in the unnamed dActor_c word at +0xc8 is copied as it is.
  * Otherwise the star spins about Y by 0xc00 per frame, or, with the no-spin
@@ -2296,7 +2252,6 @@ void daStar_c::func_ov002_020e84ec() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 34 -- func_ov002_020e8398, 0x020e8398, size 0x154 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8398Ev
 /* Draws the star's shadow on the ground below it. Skipped while hidden,
  * flagged hidden or no-spin. The radius is 100.0 (160.0 for the Power Star)
  * times the scale, less 0.09375 per unit of height above mGroundY (at least
@@ -2346,7 +2301,6 @@ void daStar_c::func_ov002_020e8398() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- func_ov002_020e8244, 0x020e8244, size 0x154 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020e8244
 /* The star's centre, written to *out. Cached in mCenterX/Y/Z (Behavior zeroes
  * the cache each frame). Otherwise it multiplies the first bone's matrix with
  * a translation and Y rotation of the star, scales the result about the star's
@@ -2388,7 +2342,6 @@ void func_ov002_020e8244(void *out, daStar_c *b)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- func_ov002_020e81e0, 0x020e81e0, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e81e0Ev
 /* Keeps trail effect 0x113 (mParticle[0]) 13.0 above the star. */
 extern "C" void *d_a_starNewHold(int a0, unsigned int a1, int a2, int a3, int a4, void *a5,
                                  void *a6);
@@ -2405,7 +2358,6 @@ void daStar_c::func_ov002_020e81e0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- func_ov002_020e8098, 0x020e8098, size 0x148 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e8098Ev
 /* Collection effects: while the animation runs, effects 0x115 and 0x116
  * (mParticle[0], [1]) at the centre, raised 50.0 (except in
  * STATE_SPIN_AND_END), with the offset from the star scaled by the star's
@@ -2435,7 +2387,6 @@ void daStar_c::func_ov002_020e8098() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- func_ov002_020e7fcc, 0x020e7fcc, size 0xcc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7fccEv
 /* Pose effects: effect 0x2f (mParticle[0]) at the centre while the animation
  * plays from frame 2 on, and a one-shot effect 0x30 when frame 0x75 is
  * reached. */
@@ -2462,7 +2413,6 @@ void daStar_c::func_ov002_020e7fcc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- func_ov002_020e7f2c, 0x020e7f2c, size 0xa0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7f2cEv
 /* Keeps effect 0x114 (mParticle[2]) 13.0 above the star until mSparkleTimer
  * runs out. */
 void daStar_c::func_ov002_020e7f2c() {
@@ -2490,7 +2440,6 @@ void daStar_c::func_ov002_020e7f2c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- func_ov002_020e7eb8, 0x020e7eb8, size 0x74 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7eb8Ev
 /* Silver star only: keeps trail effect 0x10e (mParticle[3]) at the centre. */
 void daStar_c::func_ov002_020e7eb8() {
     Vector3 v;
@@ -2503,7 +2452,6 @@ void daStar_c::func_ov002_020e7eb8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov002_020e7eb4, 0x020e7eb4, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7eb4Ev
 /* Does nothing (STATE_COLLECT_TALK calls it while the pose animation runs). */
 void daStar_c::func_ov002_020e7eb4() {
 }
@@ -2511,7 +2459,6 @@ void daStar_c::func_ov002_020e7eb4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov002_020e7e58, 0x020e7e58, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7e58Ev
 /* Stops the sound object func_ov002_020e6fbc spawned: mode 1 zeroes its
  * mCounterLimit, mode 2 destroys it. mSoundObjID is cleared. */
 void daStar_c::func_ov002_020e7e58() {
@@ -2531,7 +2478,6 @@ void daStar_c::func_ov002_020e7e58() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov002_020e7e24, 0x020e7e24, size 0x34 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7e24Ev
 /* Spawns sound object 6 once; mSoundObj6State records that it exists. */
 void daStar_c::func_ov002_020e7e24() {
     if (mSoundObj6State != 0xff)
@@ -2543,14 +2489,12 @@ void daStar_c::func_ov002_020e7e24() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov002_020e7e14, 0x020e7e14, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7e14Ev
 /* Re-arms func_ov002_020e7e24 by setting mSoundObj6State back to 0xff. */
 int daStar_c::func_ov002_020e7e14() {
     mSoundObj6State = 0xff;
     return 1;
 }
 
-// @symbol _ZN12daStarBase_c7CollectEv
 /* The marker was touched: plays sound 3/0x53, puts the marker on hold and
  * hides it, clears its touch volume and bursts effects 0x12c, 0x12d and 0x12e. */
 void daStarBase_c::Collect()
@@ -2569,7 +2513,6 @@ void daStarBase_c::Collect()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov002_020e7d08, 0x020e7d08, size 0x7c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7d08Ev
 /* Ground probe: casts down from 50.0 above the star and stores the floor
  * height in mGroundY (0x7fffffff when there is none). */
 void daStar_c::func_ov002_020e7d08() {
@@ -2590,7 +2533,6 @@ void daStar_c::func_ov002_020e7d08() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov002_020e7c90, 0x020e7c90, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7c90EPv
 /* Camera placement from a StarCamera marker (actor 0xb1): looks at the star
  * from the position of the marker whose star id matches. Returns 1 when one
  * was found. */
@@ -2612,7 +2554,6 @@ int daStar_c::func_ov002_020e7c90(void* cam) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov002_020e7934, 0x020e7934, size 0x35c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7934EPv
 /* Camera placement when no StarCamera marker exists: looks at the star and
  * tries up to 20 spots on a ring round it (a quarter turn per attempt,
  * stepping up or down by 300.0 or 600.0 every four) until the line from the
@@ -2695,7 +2636,6 @@ void daStar_c::func_ov002_020e7934(void* cam) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov002_020e763c, 0x020e763c, size 0x2f8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e763cEv
 /* Steps the camera cutscene (mCamSeq) while CUTSCENE_FLAG is set; 0xffff means
  * none. Step 0 saves the camera's look-at and position, then points it at the
  * star (StarCamera first, func_ov002_020e7934 as the fallback) and goes to 1.
@@ -2784,7 +2724,6 @@ void daStar_c::func_ov002_020e763c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020e7554, 0x020e7554, size 0xe8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7554Ev
 /* Picks one of up to five free markers at random and links to it. A marker is
  * free when it is in state 3, or is in any state but 0 with hold set, and its
  * star no longer exists. */
@@ -2817,7 +2756,6 @@ void daStar_c::func_ov002_020e7554() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov002_020e7454, 0x020e7454, size 0x100 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7454Ev
 /* Re-links the star to its marker: takes the marker's position. A marker in
  * state 3 hands over the star state it remembered (STATE_IDLE also stops the
  * motion). Any other marker is put back on show and the star waits hidden and
@@ -2849,7 +2787,6 @@ void daStar_c::func_ov002_020e7454() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov002_020e73ac, 0x020e73ac, size 0xa8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e73acEv
 /* The talk state the player is put in when it takes this star: 3 for star id
  * 8; 2 in a VS match, for the silver star and for a marker-placed star; 1 for
  * star id 0 and the levels func_ov002_020e9630 accepts; 0 otherwise. */
@@ -2886,7 +2823,6 @@ ret0:
     return 0;
 }
 
-// @symbol _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv
 /* Once the eighth red coin is in (NumRedCoins() == 8) spawns this marker's
  * Power Star 120.0 above it. The star takes the map marker, remembers this
  * marker and gets the coin-reward flag. */
@@ -2913,7 +2849,6 @@ void daStarBase_c::SpawnRedCoinStarIfNecessary()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov002_020e7218, 0x020e7218, size 0xc0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7218EPci
 /* Sends the star looking for a new marker. With gate 0 it first spawns a score
  * popup 200.0 above the player. Sets the relink flag and picks a marker with
  * func_ov002_020e7554. */
@@ -2942,7 +2877,6 @@ void daStar_c::func_ov002_020e7218(char* player, int gate) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- LinkSilverStarAndStarMarker, 0x020e71d4, size 0x44 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarBase_c27LinkSilverStarAndStarMarkerEPc
 /* Links the marker to the star b, copying its uniqueID, State and (when it has
  * one) death-table id; with 0 it forgets the star. */
 void daStarBase_c::LinkSilverStarAndStarMarker(char* b) {
@@ -2961,7 +2895,6 @@ void daStarBase_c::LinkSilverStarAndStarMarker(char* b) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- LoadSilverStarAndNumber, 0x020e71a8, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol LoadSilverStarAndNumber
 /* Loads the silver star and score-number model files. */
 extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void LoadSilverStarAndNumber(void)
@@ -2974,7 +2907,6 @@ void LoadSilverStarAndNumber(void)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- UnloadSilverStarAndNumber, 0x020e717c, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol UnloadSilverStarAndNumber
 /* Releases the silver star and score-number model files. */
 extern "C" {  /* C linkage: the ROM symbol is a bare name, not a mangled member */
 void UnloadSilverStarAndNumber(void)
@@ -2987,7 +2919,6 @@ void UnloadSilverStarAndNumber(void)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov002_020e7104, 0x020e7104, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7104Ei
 /* Called by the switch with its new state: 0 clears mBits.switchOn and, when
  * no cutscene is running, starts one (mCamSeq 0x64); anything else sets
  * switchOn. */
@@ -3007,7 +2938,6 @@ void daStar_c::func_ov002_020e7104(int r1){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov002_020e7090, 0x020e7090, size 0x74 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e7090Ei
 /* Collects the star for player arg without the pose: starts the cutscene bits,
  * spawns the sound object, stops the star, records the star as collected and
  * plays sound 0x2d. */
@@ -3026,7 +2956,6 @@ void daStar_c::func_ov002_020e7090(int arg) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov002_020e700c, 0x020e700c, size 0x84 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e700cEv
 /* Once per star: looks for an ice block (actor 0x12) within 200.0 and, if one
  * is there, marks the star as inside it and tells the block. */
 void daStar_c::func_ov002_020e700c() {
@@ -3048,7 +2977,6 @@ void daStar_c::func_ov002_020e700c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov002_020e6fbc, 0x020e6fbc, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e6fbcEi
 /* Spawns sound object 4 once and remembers it in mSoundObjID. It plays the
  * sound id func_ov002_020ea3a4 picks at volume arg. */
 void daStar_c::func_ov002_020e6fbc(int arg) {
@@ -3063,7 +2991,6 @@ void daStar_c::func_ov002_020e6fbc(int arg) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov002_020e6edc, 0x020e6edc, size 0xe0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e6edcEv
 /* Kind 8 set-up (param1 & 0x7f == 0x7f): visible, no spin, plays its own
  * animation and goes straight to STATE_PLAY_AND_END. */
 void daStar_c::func_ov002_020e6edc() {
@@ -3083,7 +3010,6 @@ void daStar_c::func_ov002_020e6edc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov002_020e6df8, 0x020e6df8, size 0xe4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e6df8Ev
 /* Kind 9 set-up (param1 & 0x7f == 0x6f): visible, no spin, star id 6, starts
  * in STATE_COLLECT_HOLD. */
 void daStar_c::func_ov002_020e6df8() {
@@ -3106,7 +3032,6 @@ void daStar_c::func_ov002_020e6df8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020e6d88, 0x020e6d88, size 0x70 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daStar_c19func_ov002_020e6d88Ev
 /* Puts the appearing star back to nothing: scale 0, switch off, map marker
  * given up, appear and state timers cleared. */
 void daStar_c::func_ov002_020e6d88() {
@@ -3125,8 +3050,6 @@ void daStar_c::func_ov002_020e6d88() {
  * then the explicit destructor emits D1 then D0 immediately below this
  * function, which is what the cartridge has at 0x020e6cf4. The function
  * itself is not in the ROM. */
-// @symbol _ZN12daStarBase_cD1Ev
-// @symbol _ZN12daStarBase_cD0Ev
 void force_daStarBase_c_dtor_order() {
     daStarBase_c *p = 0;
     delete p;

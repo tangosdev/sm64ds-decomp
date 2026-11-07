@@ -155,7 +155,6 @@ static inline int IsFlagSet(dActor_c *actor, u32 bit) {
     return (actor->mFlags & bit) != 0;
 }
 
-// @symbol daHolhei_c_classInit
 /* The cartridge's body is the one `new`: 0x438 into fBase_c::operator new,
    dEnemyBase_c's C2, this TU's vtable, then the member C1s. */
 extern "C" daHolhei_c *daHolhei_c_classInit(void)
@@ -171,12 +170,10 @@ extern "C" daHolhei_c *daHolhei_c_classInit(void)
 SpawnInfo<daHolhei_c> g_profile_HOLHEI = {
     daHolhei_c_classInit, 0x00be, 0x0064, 0x10000003, 0xc8000, 0x320000, 0x01000000, 0x01000000};
 
-// @symbol _ZN10daHolhei_c16OnAimedAtWithEggEv
 s32 daHolhei_c::OnAimedAtWithEgg() {
     return 0xca000;
 }
 
-// @symbol _ZN10daHolhei_c13InitResourcesEv
 /* One model and five animations, the shadow, both collision volumes,
    home and previous positions, then the starting state. */
 int daHolhei_c::InitResources()
@@ -205,7 +202,6 @@ int daHolhei_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN10daHolhei_c8BehaviorEv
 int daHolhei_c::Behavior()
 {
     if (UpdateKillByInvincibleChar(mMeshClsn, mModel, 3))
@@ -279,7 +275,6 @@ int daHolhei_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN10daHolhei_c6RenderEv
 int daHolhei_c::Render()
 {
     dActor_c *held = mHeld;
@@ -290,12 +285,10 @@ int daHolhei_c::Render()
     return 1;
 }
 
-// @symbol _ZN10daHolhei_c16OnPendingDestroyEv
 void daHolhei_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN10daHolhei_c16CleanupResourcesEv
 int daHolhei_c::CleanupResources()
 {
     gHoruheiModelFile.Release();
@@ -309,7 +302,6 @@ int daHolhei_c::CleanupResources()
 
 /* Home the carry offset toward the param1-selected Vector3, then publish
    the carried matrix onto the model. */
-// @symbol _ZN10daHolhei_c15HomeCarryOffsetEv
 void daHolhei_c::HomeCarryOffset() {
     int idx = 0;
     if (mHeld->param1 == 2)
@@ -322,7 +314,6 @@ void daHolhei_c::HomeCarryOffset() {
 }
 
 /* Bone 3's transform times the model's yaw, stored where a holder looks. */
-// @symbol _ZN10daHolhei_c15BuildHoldMatrixEv
 void daHolhei_c::BuildHoldMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -333,7 +324,6 @@ void daHolhei_c::BuildHoldMatrix() {
 }
 
 /* Shadow under this actor. Off the ground the radius grows. */
-// @symbol func_ov062_02116dbc
 extern "C" void func_ov062_02116dbc(daHolhei_c *self)
 {
     self->mShadowMtx = IDENTITY_MATRIX4X3;
@@ -348,7 +338,6 @@ extern "C" void func_ov062_02116dbc(daHolhei_c *self)
 }
 
 /* Shadow under the held actor. mHeld is reloaded before each word. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116d28Ev
 void daHolhei_c::func_ov062_02116d28()
 {
     mShadowMtx = IDENTITY_MATRIX4X3;
@@ -360,7 +349,6 @@ void daHolhei_c::func_ov062_02116d28()
 
 /* Coined name. Switches to state p and runs its enter function, if any;
    Behavior runs the record's update from then on. */
-// @symbol daHolhei_c_ChangeState
 extern "C" int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p)
 {
     self->mState = p;
@@ -371,7 +359,6 @@ extern "C" int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p)
 }
 
 /* Face home, on the walk animation, and wait before turning. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116c78Ev
 int daHolhei_c::func_ov062_02116c78() {
     mTurnWait = 0x3c;
     mChargeStep = 0;
@@ -383,7 +370,6 @@ int daHolhei_c::func_ov062_02116c78() {
 }
 
 /* Brake, then turn onto mTargetAngY and go back to the walk state. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116bf8Ev
 int daHolhei_c::func_ov062_02116bf8() {
     ApproachLinear(mHorzSpeed, 0, 0x2000);
     if (mTurnWait == 0) {
@@ -395,7 +381,6 @@ int daHolhei_c::func_ov062_02116bf8() {
 }
 
 /* Pick a random facing and a random time on the walk animation. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116b80Ev
 int daHolhei_c::func_ov062_02116b80() {
     mTargetAngY = (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
     mStateTimer =
@@ -407,7 +392,6 @@ int daHolhei_c::func_ov062_02116b80() {
 
 /* Walk. A wall or the edge bails out; a player near home pulls Chuckya off
    the path once the chase cooldown has run out. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116a08Ev
 int daHolhei_c::func_ov062_02116a08() {
     struct { int vd0[3]; int vd1[3]; } L;
     int r;
@@ -457,7 +441,6 @@ int daHolhei_c::func_ov062_02116a08() {
 }
 
 /* Step back to the saved position and pick a new facing toward home. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116980Ev
 int daHolhei_c::func_ov062_02116980() {
     mPosX = mPrevPosX;
     mPosY = mPrevPosY;
@@ -475,7 +458,6 @@ int daHolhei_c::func_ov062_02116980() {
 }
 
 /* After the timer, either commit the turn into a walk or keep steering. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116894Ev
 int daHolhei_c::func_ov062_02116894() {
     if (*(unsigned short *)&mStateTimer != 0)
         return 1;
@@ -497,7 +479,6 @@ int daHolhei_c::func_ov062_02116894() {
 }
 
 /* Stop, and aim the next turn at home. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116850Ev
 int daHolhei_c::func_ov062_02116850() {
     mVertSpeed = 0;
     mTargetAngY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
@@ -509,7 +490,6 @@ int daHolhei_c::func_ov062_02116850() {
 
 /* Turn toward mTargetAngY. Facing it starts the walk; otherwise the timer
    is refreshed. When the timer expires, cool down and return to the walk. */
-// @symbol _ZN10daHolhei_c19func_ov062_021167c0Ev
 int daHolhei_c::func_ov062_021167c0() {
     ApproachAngle(&mPrevAngleY, mTargetAngY, 0xa, 0x200, 0x100);
     if (AngleDiff(mTargetAngY, mAngleY) < 0x100)
@@ -524,7 +504,6 @@ int daHolhei_c::func_ov062_021167c0() {
 }
 
 /* Restart the walk animation with the charge not yet begun. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116784Ev
 int daHolhei_c::func_ov062_02116784() {
     mChargeStep = 0;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
@@ -533,7 +512,6 @@ int daHolhei_c::func_ov062_02116784() {
 
 /* Charge the player. Step 0 turns, step 1 runs at the saved point, step 2
    gives up once Chuckya has gone past it. */
-// @symbol _ZN10daHolhei_c19func_ov062_021165e8Ev
 int daHolhei_c::func_ov062_021165e8()
 {
     daPly_c *player;
@@ -590,14 +568,12 @@ int daHolhei_c::func_ov062_021165e8()
     return 1;
 }
 
-// @symbol _ZN10daHolhei_c19func_ov062_021165e0Ev
 int daHolhei_c::func_ov062_021165e0() {
     return 1;
 }
 
 /* While carried: play the grab animation once, then on release copy the
    holder's facing, mark the cylinder, and hop if param1 is 2. */
-// @symbol _ZN10daHolhei_c19func_ov062_021164e8Ev
 int daHolhei_c::func_ov062_021164e8()
 {
     if (mGrabAnim == 0 && IsFlagSet(this, 0x4000)) {
@@ -619,7 +595,6 @@ int daHolhei_c::func_ov062_021164e8()
 }
 
 /* Pop off: gravity, a launch, and a clear of the runtime flags. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116498Ev
 int daHolhei_c::func_ov062_02116498() {
     mVertAccel = -0x4000;
     mVertSpeed = 0x3c000;
@@ -631,7 +606,6 @@ int daHolhei_c::func_ov062_02116498() {
 }
 
 /* Below the death plane, or on landing: poof, shake, drop coins, die. */
-// @symbol _ZN10daHolhei_c19func_ov062_021163b0Ev
 int daHolhei_c::func_ov062_021163b0() {
     Vector3 v[2];
     if (data_02092138 > mPosY) {
@@ -655,7 +629,6 @@ int daHolhei_c::func_ov062_021163b0() {
     return 1;
 }
 
-// @symbol _ZN10daHolhei_c19func_ov062_02116368Ev
 int daHolhei_c::func_ov062_02116368() {
     mModel.SetAnim((BCA_File *)(gHoruheiLiftAnimationFile.filePtr), 0x40000000, 0x1000, 0);
     mChargeStep = 0;
@@ -663,7 +636,6 @@ int daHolhei_c::func_ov062_02116368() {
 }
 
 /* When the animation finishes, leave this state. */
-// @symbol _ZN10daHolhei_c19func_ov062_0211632cEv
 int daHolhei_c::func_ov062_0211632c() {
     if (mModel.Finished()) {
         mChargeStep = 0;
@@ -673,7 +645,6 @@ int daHolhei_c::func_ov062_0211632c() {
 }
 
 /* Start an animation, then wait a random few frames facing a random way. */
-// @symbol _ZN10daHolhei_c19func_ov062_021162b8Ev
 int daHolhei_c::func_ov062_021162b8() {
     mModel.SetAnim((BCA_File *)(gHoruheiLiftLoopAnimationFile.filePtr), 0, 0x1000, 0);
     mStateTimer =
@@ -683,7 +654,6 @@ int daHolhei_c::func_ov062_021162b8() {
 }
 
 /* Spin, and leave once the timer reaches zero. */
-// @symbol _ZN10daHolhei_c19func_ov062_02116274Ev
 int daHolhei_c::func_ov062_02116274() {
     mPrevAngleY += 0x500;
     if (*(unsigned short *)&mStateTimer == 0)
@@ -691,7 +661,6 @@ int daHolhei_c::func_ov062_02116274() {
     return 1;
 }
 
-// @symbol _ZN10daHolhei_c19func_ov062_02116238Ev
 int daHolhei_c::func_ov062_02116238() {
     mModel.SetAnim((BCA_File *)(gHoruheiThrowAnimationFile.filePtr), 0x40000000, 0x1000, 0);
     return 1;
@@ -699,7 +668,6 @@ int daHolhei_c::func_ov062_02116238() {
 
 /* On frame 0x14 of the throw animation, launch whoever is held. When the
    animation finishes, clear the cylinder bit and leave. */
-// @symbol _ZN10daHolhei_c19func_ov062_021161a8Ev
 int daHolhei_c::func_ov062_021161a8() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
         func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngleY);
@@ -718,7 +686,6 @@ int daHolhei_c::func_ov062_021161a8() {
    than 0x2000 (45 degrees) off Chuckya's facing, hit flag 0x1000 lets the
    hitter try to grab it; within 0x2000, Chuckya tries to grab the hitter
    (func_ov002_020db5f4). */
-// @symbol func_ov062_02116010
 extern "C" void func_ov062_02116010(daHolhei_c *self)
 {
     u32 id;
@@ -771,7 +738,6 @@ extern "C" void func_ov062_02116010(daHolhei_c *self)
 }
 
 /* 1 on a wall, 2 on a slope steeper than 0x1000, else 0. */
-// @symbol _ZN10daHolhei_c19ClassifyObstructionEv
 int daHolhei_c::ClassifyObstruction() {
     Vector3 v;
     short slope = 0;

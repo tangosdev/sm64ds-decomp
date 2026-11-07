@@ -169,8 +169,6 @@ namespace cstd {
 int fdiv(int a, int b);
 }
 
-// @symbol _ZN8daGmch_cD1Ev
-// @symbol _ZN8daGmch_cD0Ev
 /* One definition, two ROM variants (the D2 mwccarm also emits is
    deadstripped), and this is the key function: it is the first virtual
    daGmch_c.h declares out of line, so this TU is where the class's
@@ -182,21 +180,18 @@ daGmch_c::~daGmch_c()
 {
 }
 
-// @symbol _ZN8daGmch_c13OnYoshiTryEatEv
 /* Vtable slot 18.  The ROM body ignores `this` and returns a constant. */
 int daGmch_c::OnYoshiTryEat()
 {
     return 6;
 }
 
-// @symbol _ZN8daGmch_c16OnAimedAtWithEggEv
 /* Vtable slot 29.  The ROM body ignores `this` and returns a constant. */
 int daGmch_c::OnAimedAtWithEgg()
 {
     return 235520;
 }
 
-// @symbol _ZN8daGmch_c15ChooseNextStateEv
 void daGmch_c::ChooseNextState()
 {
     extern int data_0209e650;
@@ -237,7 +232,6 @@ void daGmch_c::ChooseNextState()
     SetState(mNextState);
 }
 
-// @symbol _ZN8daGmch_c16SpawnCoinsAndDieEv
 void daGmch_c::SpawnCoinsAndDie()
 {
     Vector3 coinPos;
@@ -249,7 +243,6 @@ void daGmch_c::SpawnCoinsAndDie()
     KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN8daGmch_c18CheckPlayerContactEv
 /* The actor found through mdCcAc_c.otherOwner is only acted on when its
    actorID is ACTOR_PLAYER, so it is typed as one.  Bounce and Hurt stay
    bridges: daPly_c.h does not declare them yet. */
@@ -319,7 +312,6 @@ void daGmch_c::CheckPlayerContact()
     }
 }
 
-// @symbol _ZN8daGmch_c21ApplySlopeToVertSpeedEPv
 /* Adjust vertical speed from the floor normal; callers need no result. */
 void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
 {
@@ -344,7 +336,6 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
     }
 }
 
-// @symbol _ZN8daGmch_c18UpdateDrawMatricesEv
 /* Both model matrices are edited through the shared scratch matrix
    data_020a0e68: copied out whole, transformed in place, copied back.  The
    slot-29 calls are this class's own OnAimedAtWithEgg, dispatched virtually
@@ -390,7 +381,6 @@ void daGmch_c::UpdateDrawMatrices()
     DropShadowRadHeight(mShadowModel, mMatrix, 0x78000, dh, 0xf);
 }
 
-// @symbol _ZN8daGmch_c12UpdateState8Ev
 int daGmch_c::UpdateState8()
 {
     mAngleX = mAngleX - 0x1000;
@@ -403,7 +393,6 @@ int daGmch_c::UpdateState8()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState8Ev
 int daGmch_c::EnterState8()
 {
     extern GmchAnimationFileHandle data_ov081_02128edc;
@@ -423,7 +412,6 @@ int daGmch_c::EnterState8()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState7Ev
 /* The angle reset is on the IsOnGround path, not the JustHitGround one. */
 int daGmch_c::UpdateState7()
 {
@@ -449,7 +437,6 @@ int daGmch_c::UpdateState7()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState7Ev
 /* mHolder is re-read before each use, as the ROM reloads it: the stores in
    between go to this object's own fields, but the shards were written with the
    reload and the bytes keep it. */
@@ -508,7 +495,6 @@ int daGmch_c::EnterState7()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState6Ev
 int daGmch_c::UpdateState6()
 {
     int flagSet;
@@ -535,7 +521,6 @@ int daGmch_c::UpdateState6()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState6Ev
 int daGmch_c::EnterState6()
 {
     mHorzSpeed = 0;
@@ -544,7 +529,6 @@ int daGmch_c::EnterState6()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState5Ev
 int daGmch_c::UpdateState5()
 {
     Fix12i distToSpawn = Vec3_Dist(&mPos, (Vector3 *)&mSpawnPosX);
@@ -568,7 +552,6 @@ int daGmch_c::UpdateState5()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState5Ev
 int daGmch_c::EnterState5()
 {
     extern GmchAnimationFileHandle data_ov081_02128edc;
@@ -580,7 +563,6 @@ int daGmch_c::EnterState5()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState4Ev
 int daGmch_c::UpdateState4()
 {
     mAnmModel.Advance();
@@ -594,7 +576,6 @@ int daGmch_c::UpdateState4()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState4Ev
 int daGmch_c::EnterState4()
 {
     extern GmchAnimationFileHandle gGamaguchiJumpEndAnimationFile;
@@ -606,7 +587,6 @@ int daGmch_c::EnterState4()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState3Ev
 int daGmch_c::UpdateState3()
 {
     switch (mPhase) {
@@ -634,7 +614,6 @@ int daGmch_c::UpdateState3()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState3Ev
 int daGmch_c::EnterState3()
 {
     extern GmchAnimationFileHandle gGamaguchiJumpAnimationFile;
@@ -651,7 +630,6 @@ int daGmch_c::EnterState3()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState2Ev
 int daGmch_c::UpdateState2()
 {
     if (mAnmModel.Finished()) {
@@ -664,7 +642,6 @@ int daGmch_c::UpdateState2()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState2Ev
 int daGmch_c::EnterState2()
 {
     extern GmchAnimationFileHandle gGamaguchiWalkEndAnimationFile;
@@ -676,7 +653,6 @@ int daGmch_c::EnterState2()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState1Ev
 int daGmch_c::UpdateState1()
 {
     ApproachLinear(mAngleY, mTargetAngleY, 0x2bc);
@@ -693,7 +669,6 @@ int daGmch_c::UpdateState1()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState1Ev
 void daGmch_c::EnterState1()
 {
     extern GmchAnimationFileHandle data_ov081_02128edc;
@@ -707,7 +682,6 @@ void daGmch_c::EnterState1()
     mStateIndex = 1;
 }
 
-// @symbol _ZN8daGmch_c12UpdateState0Ev
 int daGmch_c::UpdateState0()
 {
     switch (mPhase) {
@@ -745,7 +719,6 @@ int daGmch_c::UpdateState0()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c11EnterState0Ev
 int daGmch_c::EnterState0()
 {
     extern GmchAnimationFileHandle gGamaguchiJumpEndAnimationFile;
@@ -758,7 +731,6 @@ int daGmch_c::EnterState0()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c15CallStateUpdateEv
 /* Invokes PMF[1] -- the update half -- of the pair mStatePmfPair points at. */
 void daGmch_c::CallStateUpdate()
 {
@@ -766,7 +738,6 @@ void daGmch_c::CallStateUpdate()
     (this->*(*p))();
 }
 
-// @symbol _ZN8daGmch_c14CallStateEnterEv
 /* Invokes PMF[0] -- the "enter" half -- of the current state's pair.  It is
    never BL'd: SetState takes its address from a literal pool and tail-calls
    it through `bx ip`. */
@@ -776,7 +747,6 @@ void daGmch_c::CallStateEnter()
     (this->*(*p))();
 }
 
-// @symbol _ZN8daGmch_c8SetStateEi
 /* The state setter: stores a pointer to state `a`'s 16-byte pair in the .bss
    mirror at 0x02128f40 and tail-calls the enter half. */
 void daGmch_c::SetState(int n)
@@ -787,7 +757,6 @@ void daGmch_c::SetState(int n)
     CallStateEnter();
 }
 
-// @symbol _ZN8daGmch_c16CleanupResourcesEv
 /* Vtable slot 3.  Releases one shared file, then a four-entry table; it never
    touches `this`. */
 int daGmch_c::CleanupResources()
@@ -802,14 +771,12 @@ int daGmch_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c16OnPendingDestroyEv
 /* Vtable slot 12.  The ROM body is one `bx lr`: the override exists only to
    occupy the slot. */
 void daGmch_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN8daGmch_c6RenderEv
 /* Vtable slot 9.  Draws the dExtAnmModel_c only above mState 1 and the dExtSimpleModel_c only at
    or below 0x1f, so the two overlap for 2..0x1f.  Both draws go through the
    models' own slot-5 Render, virtually, as the ROM dispatches them. */
@@ -827,7 +794,6 @@ int daGmch_c::Render()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c8BehaviorEv
 /* Vtable slot 6.  Runs the current state's update half, then the shared
    per-frame work. */
 int daGmch_c::Behavior()
@@ -843,7 +809,6 @@ int daGmch_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c13InitResourcesEv
 /* Vtable slot 0. */
 int daGmch_c::InitResources()
 {
@@ -893,7 +858,6 @@ int daGmch_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN8daGmch_c13OnTurnIntoEggER7daPly_c
 /* Vtable slot 19.  Gives the player 5 coins -- as cap-collection coins if Yoshi
    is wearing the cap, otherwise as egg coins -- then kills this actor and
    tracks it in the death table. */
@@ -905,7 +869,6 @@ void daGmch_c::OnTurnIntoEgg(daPly_c &player) {
     KillAndTrackInDeathTable();
 }
 
-// @symbol daGmch_c_classInit
 /* The GAMAGUCHI factory. `new` calls fBase_c::operator new (_ZN7fBase_cnwEm),
  * and daGmch_c has no user-declared constructor, so `new` is the base
  * constructor, the vtable store and the five member subobjects in field

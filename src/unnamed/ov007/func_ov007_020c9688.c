@@ -1,4 +1,3 @@
-// @symbol func_ov007_020c9688
 /* func_ov007_020c9688 -- ov007 0x020c9688, 0x300 bytes.
  *
  * Builds a sprite bank from a sprite file (func_ov007_020b6d40 builds six

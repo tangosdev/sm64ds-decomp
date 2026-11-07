@@ -15,11 +15,16 @@ Two jobs:
   symbols, and ``__sinit_<file>`` anchors the first static-initializer data
   block the way the marker convention did.
 
-``member_fragment(text, symbol, bound)`` then reproduces what
-``tiers._marked_member_fragment`` sliced at marker boundaries: the member's
-text from its definition's first line to the next definition's first line --
-which is byte-identical to the marker slice because markers sit immediately
-above their definitions.
+``member_fragment(text, symbol, bound)`` is one member, cut so it still
+compiles to the symbol it was bound to. The cut runs from that definition
+to the next one, and a ``namespace`` or ``extern "C"`` block that wraps
+only this member is part of the cut. A block shared with a neighbour is
+repeated around the member, so the slice does not keep the opening line
+and drop the closing brace.
+
+``python tools/def_locate.py <source>`` prints the file outline the
+``// @symbol`` lines used to be: source order, the definition, the linker
+symbol. That is the map. The comments are not.
 
 The scanner is intentionally not a full C++ parser; it is a statement-level
 walk over comment/string/preprocessor-blanked text, which is the same
@@ -313,11 +318,11 @@ def _norm_params(raw, c_file, tmap=None):
 
 class Def:
     __slots__ = ("start", "end", "qualified", "params", "ns", "extern_c",
-                 "flat_hint", "is_object", "has_init", "dead")
+                 "flat_hint", "is_object", "has_init", "dead", "scopes")
 
     def __init__(self, start, end, qualified, params, ns, extern_c,
                  flat_hint=False, is_object=False, has_init=False,
-                 dead=False):
+                 dead=False, scopes=()):
         self.start = start          # byte offset, first char of the statement
         self.end = end              # byte offset just past the closing `}`
         self.qualified = qualified
@@ -326,6 +331,11 @@ class Def:
         self.extern_c = extern_c    # C linkage: extern "C" block/decl/line
         self.dead = dead            # inside an _MSC_VER branch: mwccarm
                                     # never sees it, so it emits no symbol
+        # Enclosing ``namespace`` / ``extern "C"`` frames, outermost first.
+        # Each is ``{kind, name, stmt, brace, close}``; ``close`` is filled
+        # in when the frame's ``}`` is reached, so a Def built earlier still
+        # sees it.
+        self.scopes = scopes
         # `flat_hint`: an `extern "C" <name>(...);` declaration was seen at
         # top level earlier in this file, so an unmarked definition of <name>
         # still emits the flat symbol (C linkage is sticky per name).
@@ -588,7 +598,7 @@ def definitions(text, extra_flat=frozenset()):
     blank = _blank(text)
     n = len(blank)
     defs = []
-    stack = []            # ('{' offset, container_kind) blocks
+    stack = []            # enclosing namespace / extern "C" frames
     ctx = []              # (kind, name) for namespace / extern-c scope
     flat_names = set(extra_flat)
     cpp_toggles = _cpp_off_regions(text)
@@ -611,8 +621,11 @@ def definitions(text, extra_flat=frozenset()):
                 kind = ("extern_c"
                         if _EXTERN_C_KIND_RE.search(text[head_start:i])
                         else "ns")
-                ctx.append((kind, name_m.group(1) if name_m else None))
-                stack.append((i, kind))
+                frame = {"kind": kind,
+                         "name": name_m.group(1) if name_m else None,
+                         "stmt": head_start, "brace": i, "close": None}
+                ctx.append((kind, frame["name"]))
+                stack.append(frame)
                 i += 1
                 stmt_start = None
                 continue
@@ -636,7 +649,8 @@ def definitions(text, extra_flat=frozenset()):
                         or _cpp_is_off(cpp_toggles, head_start)
                         or bool(_EXTERN_C_KIND_RE.match(
                             text[head_start:i].strip())), flat,
-                        dead=_dead_at(dead_spans, head_start)))
+                        dead=_dead_at(dead_spans, head_start),
+                        scopes=tuple(stack)))
                 i = j
                 stmt_start = None
                 # A function body may be followed by a stray `;`; it is
@@ -655,7 +669,8 @@ def definitions(text, extra_flat=frozenset()):
             continue
         if c == "}":
             if stack:
-                _off, kind = stack.pop()
+                stack[-1]["close"] = i + 1
+                stack.pop()
                 if ctx:
                     ctx.pop()
             i += 1
@@ -677,7 +692,8 @@ def definitions(text, extra_flat=frozenset()):
                     flat_names.update(
                         re.findall(rf'\b({_IDENT})\s*(?=[,;=\[])', stmt))
                 _record_object_defs(stmt, stmt_start, i + 1, ctx, defs,
-                                    _dead_at(dead_spans, stmt_start))
+                                    _dead_at(dead_spans, stmt_start),
+                                    scopes=tuple(stack))
                 stmt_start = None
             i += 1
             continue
@@ -786,7 +802,7 @@ def _declarator_names(head):
     return names
 
 
-def _record_object_defs(stmt, start, end, ctx, defs, dead=False):
+def _record_object_defs(stmt, start, end, ctx, defs, dead=False, scopes=()):
     """Append object ``Def`` records for a `;`-terminated statement that
     defines file-scope objects. ``stmt`` is the blanked statement text."""
     s = stmt.strip()
@@ -817,7 +833,7 @@ def _record_object_defs(stmt, start, end, ctx, defs, dead=False):
     ns = tuple(nm for k, nm in ctx if k == "ns" and nm)
     for nm in names:
         defs.append(Def(start, end, nm, "", ns, extern_c, False, True,
-                        has_init, dead))
+                        has_init, dead, scopes))
 
 
 # ------------------------------------------------------------------ binding
@@ -1062,60 +1078,245 @@ def marks_for(path, text=None, owned=None):
         m = re.search(r'[CD]([0-3])E', sym)
         return 1 if m and sym[m.start():m.start() + 2] in ('C1', 'D1') else 0
 
+    ends = {}
+    for item in bound.values():
+        if isinstance(item, Def):
+            ends[item.start] = max(ends.get(item.start, 0), item.end)
     marks = []
-    for start, syms in per_def.items():
-        syms = sorted(syms, key=_variant_rank)
-        for j, sym in enumerate(syms):
-            marks.append((start - len(syms) + j, sym))
+    for start in sorted(per_def):
+        syms = sorted(per_def[start], key=_variant_rank)
+        # The decl window is the gap before the declarator. Stacking one
+        # byte per variant walks backwards onto the previous function's
+        # `}` when the gap is shorter than the stack, and that variant
+        # then looks like a second, unattached destructor. Share the last
+        # byte of the gap. C1/D1 is appended last; the sort below keeps
+        # that order when the offsets tie.
+        earlier = [end for begun, end in ends.items() if begun < start]
+        prev_end = max(earlier) if earlier else 0
+        if prev_end < start:
+            anchor = start - 1
+            for sym in syms:
+                marks.append((anchor, sym))
+        else:
+            for j, sym in enumerate(syms):
+                marks.append((max(0, start - len(syms) + j), sym))
     # owned-but-unbound symbols (emitted, no definition here -- the header-
     # inline destructor variants) were detached markers; park them past EOF
     # so they never fall into a definition's mark window.
     marks.extend((len(text) + i, sym)
                  for i, sym in enumerate(s for s in owned
                                          if s not in bound))
-    return sorted(marks)
+    # Offset only. A full tuple sort would reorder C1 behind C2 when the
+    # variants share a byte, and marked[-1] would name the base variant.
+    return sorted(marks, key=lambda mark: mark[0])
+
+
+def _line_index(offs, offset):
+    i = bisect.bisect_right(offs, offset) - 1
+    return 0 if i < 0 else i
+
+
+def _banner_start(text, blanked, offs, offset, floor):
+    """Line start of ``offset``, walked up over the comment banner.
+
+    Stops at real code, at a ``// @symbol`` line, and at ``floor`` so the
+    banner cannot swallow the previous member."""
+    line = _line_index(offs, offset)
+    while line > 0:
+        a, b = offs[line - 1], offs[line]
+        if a < floor:
+            break
+        if blanked[a:b].strip():
+            break
+        if re.match(r"\s*//\s*@symbol\b", text[a:b]):
+            break
+        line -= 1
+    return offs[line]
+
+
+def _after_brace_line(text, brace):
+    nl = text.find("\n", brace)
+    return len(text) if nl < 0 else nl + 1
+
+
+def _opener_text(text, scope):
+    """The ``namespace`` / ``extern "C"`` lines, through the line of ``{``."""
+    nl = text.find("\n", scope["brace"])
+    end = len(text) if nl < 0 else nl + 1
+    return text[scope["stmt"]:end]
+
+
+def _scope_frames(d):
+    return [s for s in getattr(d, "scopes", ())
+            if s.get("kind") in ("ns", "extern_c") and s.get("close")]
+
+
+def _private_anchor(d, prev_end, next_body):
+    """Start of a block that closes before the next member, else the def."""
+    anchor = d.start
+    for scope in _scope_frames(d):
+        if scope["stmt"] >= prev_end and scope["close"] <= next_body:
+            anchor = min(anchor, scope["stmt"])
+    return anchor
+
+
+def _shared_interior(text, d, prev_end, next_body):
+    """Offset just after a block's ``{`` when this is the first member of a
+    block that also contains a later member. The opener line itself stays
+    out of every slice and is repeated by ``_reclose``."""
+    interior = None
+    for scope in _scope_frames(d):
+        if scope["stmt"] >= prev_end and scope["close"] > next_body:
+            after = _after_brace_line(text, scope["brace"])
+            interior = after if interior is None else min(interior, after)
+    return interior
+
+
+def _scope_cut(d, prev_end, offs):
+    """Line a previous member must not cross: a block opener that belongs
+    to this member (shared or private)."""
+    cut = None
+    for scope in _scope_frames(d):
+        if prev_end <= scope["stmt"] < d.start:
+            line = offs[_line_index(offs, scope["stmt"])]
+            cut = line if cut is None else min(cut, line)
+    return cut
+
+
+def _reclose(text, frag, start, stop, scopes):
+    """Put back every enclosing block the slice did not already carry whole.
+
+    Innermost first. A closer that rode along without its opener is the
+    old bug (``s32 fdiv() { ... }`` plus a stray ``}``); prepending the
+    opener balances it. A block that spans the next member is repeated
+    around this member only.
+    """
+    body = frag
+    for scope in reversed(scopes):
+        open_in = start <= scope["stmt"] < stop
+        close_in = start < scope["close"] <= stop
+        if open_in and close_in:
+            continue
+        opener = _opener_text(text, scope)
+        if close_in and not open_in:
+            body = opener + body
+        elif open_in and not close_in:
+            if not body.endswith("\n"):
+                body += "\n"
+            body += "}\n"
+        else:
+            if not body.endswith("\n"):
+                body += "\n"
+            body = opener + body + "}\n"
+    return body
 
 
 def member_fragment(text, symbol, bound, defs=None):
-    """``symbol``'s member text: the top of its attached comment banner (the
-    def's own line when there is none) through the next BOUND definition's
-    line -- or the next literal ``// @symbol`` line while markers still
-    exist in the tree. Returns ``None`` when ``symbol`` is not bound.
+    """One member's source, or ``None`` when ``symbol`` is not bound.
 
-    Only bound definitions create boundaries -- an unbound helper, static or
-    unmarked object between two members stays inside the enclosing member's
-    text, which is what the marker convention expressed: a member's fragment
-    ran from its marker to the NEXT marker, sweeping up everything in
-    between."""
+    Bound definitions are the boundaries. An unbound helper between two
+    of them stays with the member it sits under. A ``namespace`` or
+    ``extern "C"`` block that wraps only this member is part of the slice.
+    A block shared with another bound member is repeated around this one,
+    so the slice keeps the linkage the definition was parsed with and does
+    not end on a closing brace whose opener was left behind.
+    """
     d = bound.get(symbol) if isinstance(bound, dict) else None
-    if d is None:
+    if not isinstance(d, Def):
+        return None
+    uniq = {}
+    for item in bound.values():
+        if isinstance(item, Def):
+            uniq[id(item)] = item
+    members = sorted(uniq.values(), key=lambda m: (m.start, m.end))
+    try:
+        idx = next(i for i, m in enumerate(members) if m is d)
+    except StopIteration:
         return None
     offs = _line_offsets(text)
-    start_line = bisect.bisect_right(offs, d.start) - 1
-    # The marker sat above the member's comment banner, so the old fragment
-    # (marker end -> next marker) carried the banner too. Reproduce that by
-    # extending upward over comment-only/blank lines, stopping at code or a
-    # literal marker line (which bound the gap on its own).
     blanked = _blank(text)
-    while start_line > 0:
-        a, b = offs[start_line - 1], offs[start_line]
-        if blanked[a:b].strip():            # real code above -> boundary
-            break
-        if re.match(r'\s*//\s*@symbol\b', text[a:b]):
-            break                           # marker line -> stay below it
-        start_line -= 1
-    start = offs[start_line]
-    later = sorted({x.start for x in bound.values()
-                    if isinstance(x, Def) and x.start > d.start})
-    if later:
-        nl = bisect.bisect_right(offs, later[0]) - 1
-        stop = offs[nl]
+    recs = []
+    for i, m in enumerate(members):
+        prev_end = members[i - 1].end if i else 0
+        next_body = (members[i + 1].start if i + 1 < len(members)
+                     else len(text) + 1)
+        anchor = _private_anchor(m, prev_end, next_body)
+        interior = _shared_interior(text, m, prev_end, next_body)
+        start_at = anchor if interior is None else min(anchor, interior)
+        start = _banner_start(text, blanked, offs, start_at, prev_end)
+        recs.append((start, _scope_cut(m, prev_end, offs)))
+    start = recs[idx][0]
+    if idx + 1 < len(members):
+        nstart, ncut = recs[idx + 1]
+        stop = nstart if ncut is None else min(nstart, ncut)
     else:
         stop = len(text)
-    # While literal markers still exist in the tree they bound the fragment
-    # exactly as the next bound definition does; once stripped this clause is
-    # inert and the bound-definition boundary alone slices.
-    nxt = re.search(r'^\s*//\s*@symbol\s', text[start:], re.M)
-    if nxt is not None and start + nxt.start() < stop:
-        stop = start + nxt.start()
-    return text[start:stop]
+    if stop < start:
+        stop = start
+    frag = _reclose(text, text[start:stop], start, stop, _scope_frames(d))
+    # ``#pragma cplusplus off`` gives C linkage with no brace block. The
+    # slice does not carry a pragma that sits above every member, so say
+    # the linkage here. A qualified name still mangles inside the block.
+    if (d.extern_c and 'extern "C"' not in frag
+            and "cplusplus" not in frag
+            and not any(s["kind"] == "extern_c" for s in _scope_frames(d))):
+        if not frag.endswith("\n"):
+            frag += "\n"
+        frag = 'extern "C" {\n' + frag + "}\n"
+    return frag
+
+
+def file_outline(path, text=None):
+    """``[(line, name, symbol)]`` in source order.
+
+    Line 0 is an owned symbol with no definition in this file (a header
+    inline, or a symbol the binder could not place). Several symbols on
+    one definition -- the constructor and destructor variants -- each get
+    a row, which is the list the stacked marker comments used to be.
+    """
+    if text is None:
+        with open(path, encoding="utf-8", errors="replace") as f:
+            text = f.read()
+    bound, _defs = bind(path, text)
+    offs = _line_offsets(text)
+    rows, seen = [], set()
+    for sym, item in bound.items():
+        if not isinstance(item, Def):
+            continue
+        rows.append((_line_index(offs, item.start) + 1, item.full, sym))
+        seen.add(sym)
+    rows.sort()
+    for sym in _all_owned(path):
+        if sym not in seen:
+            rows.append((0, "", sym))
+    return rows
+
+
+def main(argv=None):
+    import sys
+    args = list(sys.argv[1:] if argv is None else argv)
+    if not args or args[0] in ("-h", "--help"):
+        sys.stderr.write(
+            "usage: python tools/def_locate.py <source> [<source> ...]\n"
+            "\n"
+            "Print the file outline: line, definition, linker symbol.\n"
+            "This is the map the marker comments used to spell by hand.\n")
+        return 2 if not args else 0
+    for n, path in enumerate(args):
+        if n:
+            print()
+        print(path)
+        rows = file_outline(path)
+        if not rows:
+            print("  (nothing owned here)")
+            continue
+        width = max(len(name) for _line, name, _sym in rows)
+        for line, name, sym in rows:
+            where = f"{line:5d}" if line else "    -"
+            print(f"  {where}  {name:<{width}}  {sym}")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys
+    raise SystemExit(main())

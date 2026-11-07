@@ -38,7 +38,6 @@ extern void OSi_EnterDmaCallback(u32 dmaNo, u32 callback, u32 arg);
 void MI_WaitDma(u32 dmaNo);
 
 /* MI_DmaFill32 */
-// @symbol DMASyncFillTransfer
 void DMASyncFillTransfer(u32 dmaNo, void *dest, u32 data, u32 size) {
     vu32 *dmaCntp;
     vu32 *fillReg;
@@ -60,7 +59,6 @@ void DMASyncFillTransfer(u32 dmaNo, void *dest, u32 data, u32 size) {
 }
 
 /* MI_DmaCopy32 */
-// @symbol DMASyncWordTransfer
 void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
     vu32 *dmaCntp;
 
@@ -78,7 +76,6 @@ void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
 }
 
 /* MI_DmaCopy16 */
-// @symbol DMASyncHalfTransfer
 void DMASyncHalfTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
     vu32 *dmaCntp;
 
@@ -95,7 +92,6 @@ void DMASyncHalfTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
         ;
 }
 
-// @symbol MI_DmaFill32Async
 void MI_DmaFill32Async(u32 dmaNo, void *dest, u32 data, u32 size, MIDmaCallback callback,
                        void *arg) {
     if (size == 0) {
@@ -119,7 +115,6 @@ void MI_DmaFill32Async(u32 dmaNo, void *dest, u32 data, u32 size, MIDmaCallback 
     }
 }
 
-// @symbol MI_DmaCopy32Async
 void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size, MIDmaCallback callback,
                        void *arg) {
     if (size == 0) {
@@ -138,7 +133,6 @@ void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size, MIDmaCa
     }
 }
 
-// @symbol MI_WaitDma
 void MI_WaitDma(u32 dmaNo) {
     vu32 *dmaCntp = REG_DMA_CNT_PTR(dmaNo);
 
@@ -148,7 +142,6 @@ void MI_WaitDma(u32 dmaNo) {
 
 /* Clears the channel's timing and repeat bits, then its enable bit, and
  * reads the control register twice while the channel winds down. */
-// @symbol MI_StopDma
 void MI_StopDma(u32 dmaNo) {
     u32 enabled = IRQ::Disable();
     vu16 *dmaCntp = &((vu16 *)REG_DMA_BASE)[dmaNo * 6 + 5];

@@ -45,7 +45,6 @@ extern u32 gNextActorUpdateMask;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjNumber_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjNumber_c through RTTI,
  * allocation size, vtable identity, and the OBJ_NUMBER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -61,7 +60,6 @@ extern "C" daObjNumber_c *daObjNumber_c_classInit(void) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjNumber_c13InitResourcesEv
 s32 daObjNumber_c::InitResources() {
     if (param1 & 0x10) {
         dExtAnmTexPat_c::LoadFile(data_ov002_0210da08);
@@ -98,7 +96,6 @@ s32 daObjNumber_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjNumber_c8BehaviorEv
 s32 daObjNumber_c::Behavior() {
     VecFx32 pos;
 
@@ -151,7 +148,6 @@ s32 daObjNumber_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjNumber_c6RenderEv
 s32 daObjNumber_c::Render() {
     /* While gNextActorUpdateMask bit 0x4000000 is set, a power star (0xb2) of
        kind 6 at camera step 0x64 removes the popup. */
@@ -180,7 +176,6 @@ s32 daObjNumber_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjNumber_c16CleanupResourcesEv
 s32 daObjNumber_c::CleanupResources() {
     if (param1 & 0x10) {
         data_ov002_0210da28.Release();
@@ -194,7 +189,6 @@ s32 daObjNumber_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjNumber_c8SetOwnerEP8dActor_c
 /* dActor_c::SpawnNumber's attach step (coined name; formerly
  * func_ov002_020f0918). Follows the owner by uniqueID, at this popup's
  * height above it. Returns this, which SpawnNumber hands back. */

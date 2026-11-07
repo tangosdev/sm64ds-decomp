@@ -42,19 +42,16 @@ typedef struct SNDSharedWork {
 
 extern SNDSharedWork *data_020a7fc0; /* SNDi_SharedWork */
 
-// @symbol SND_GetPlayerStatus
 u32 SND_GetPlayerStatus(void) {
     CP15::InvalidateDataCache((u32)data_020a7fc0, sizeof(SNDSharedWork));
     return data_020a7fc0->playerStatus;
 }
 
-// @symbol SNDi_GetFinishedCommandTag
 u32 SNDi_GetFinishedCommandTag(void) {
     CP15::InvalidateDataCache((u32)data_020a7fc0, sizeof(SNDSharedWork));
     return data_020a7fc0->finishCommandTag;
 }
 
-// @symbol SNDi_InitSharedWork
 void SNDi_InitSharedWork(SNDSharedWork *sw) {
     int i, j;
 

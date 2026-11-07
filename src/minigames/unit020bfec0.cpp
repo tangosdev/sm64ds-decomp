@@ -247,14 +247,12 @@ inline FlowerFaceAnimationFileHandle::~FlowerFaceAnimationFileHandle() {
 
 /* ---- FallingPetal::FallingPetal ---- */
 /* mModel is the only member with a constructor. */
-// @symbol _ZN12FallingPetalC1Ev
 FallingPetal::FallingPetal() {}
 
 /* ---- FlowerFace::FlowerFace ---- */
 /* The petals, the model and the six file handles are members, so the
    compiler builds them in declaration order: the petal array through
    __cxa_vec_ctor with FallingPetal's own constructor and destructor. */
-// @symbol _ZN10FlowerFaceC1Ev
 FlowerFace::FlowerFace()
     : mModelFile(0x222), mPetalFile(0x201), mWaitAnim(0x224), mPickAnim(0x223), mLikeAnim(0x221),
       mHateAnim(0x220) {}
@@ -263,7 +261,6 @@ FlowerFace::FlowerFace()
 /* Releases every file; the members' destructors then run in reverse
    declaration order: the four animations, the two models' files, the
    model and the petal array. */
-// @symbol _ZN10FlowerFaceD1Ev
 FlowerFace::~FlowerFace() {
     mModelFile.Release();
     mPetalFile.Release();
@@ -274,7 +271,6 @@ FlowerFace::~FlowerFace() {
 }
 
 /* ---- FallingPetal::~FallingPetal ---- */
-// @symbol _ZN12FallingPetalD1Ev
 FallingPetal::~FallingPetal() {}
 
 namespace s020c3d88 {
@@ -333,7 +329,6 @@ void FlowerFace_Update(char *c) {
 }
 
 namespace s020c3bf4 {
-// @symbol FlowerFace_Draw
 
 extern "C" {
 extern int data_ov006_0213aee8[12];
@@ -409,7 +404,6 @@ int FlowerFace_IsIdle(int *c) {
 
 namespace s020c3b2c {
 extern "C" {
-// @symbol Camera_InitFlowerView
 /* Camera_InitFlowerView at 0x020c3b2c
  *
  * MgCamera preset: sets the look-at point, position and fov angle, then
@@ -653,7 +647,6 @@ void FallingPetal_Update(char *self) {
 }
 
 namespace s020c35a8 {
-// @symbol FallingPetal_Draw
 
 extern "C" void FallingPetal_Draw(char *c) {
     FallingPetal_UpdateMatrix(c);
@@ -666,7 +659,6 @@ extern "C" void FallingPetal_Draw(char *c) {
 }
 
 namespace s020c3528 {
-// @symbol FallingPetal_UpdateMatrix
 extern "C" {
 struct Q {
     int a, b, c, d;
@@ -688,7 +680,6 @@ void FallingPetal_UpdateMatrix(char *c) {
 /* ---- Presenter::Presenter ---- */
 /* The four model parts and the eighteen file handles are members, so the
    compiler builds them in declaration order before the body runs. */
-// @symbol _ZN9PresenterC1Ev
 Presenter::Presenter()
     : mFaceModel(0x286), mBackModel(0x200), mWaitAnim(0x1fc), mMistakeAnim(0x1f6), mWinAnim(0x1fe),
       mLoseAnim(0x1f0), mLoseStartAnim(0x1f4), mLoseEndAnim(0x1f2), mSmileAnim(0x1f8),
@@ -703,7 +694,6 @@ Presenter::Presenter()
 /* Releases every file; the members' destructors then run in reverse
    declaration order: the sixteen animation handles, the two model files,
    then mTexAnim, mTexSeq, mBack and mFace. */
-// @symbol _ZN9PresenterD1Ev
 Presenter::~Presenter() {
     mFaceModel.Release();
     mBackModel.Release();
@@ -735,7 +725,6 @@ extern char sPresenterMissTexAnim[];
 extern char sPresenterTextureAnim[];
 extern char sPresenterCheerTexAnim[];
 extern char sPresenterMatchTexAnim[];
-// @symbol Presenter_Load
 extern struct Matrix4x3 data_020a0e68;
 
 int Presenter_Load(char *c) {
@@ -1194,7 +1183,6 @@ void Presenter_StateSurprisedThenIdle(char *t) {
 
 namespace s020c2290 {
 extern "C" {
-// @symbol Presenter_UpdateMatrix
 extern struct Matrix4x3 data_020a0e68;
 void Presenter_UpdateMatrix(char *c) {
     Matrix4x3_FromTranslation(&data_020a0e68, PRESENTER(c)->mPos.x, PRESENTER(c)->mPos.y,
@@ -1206,7 +1194,6 @@ void Presenter_UpdateMatrix(char *c) {
 
 namespace s020c225c {
 extern "C" {
-// @symbol Camera_InitPresenterView
 /* Camera_InitPresenterView at 0x020c225c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
@@ -1228,7 +1215,6 @@ void Camera_InitPresenterView(MgCamera *camera) {
 /* ---- Mascot::Mascot ---- */
 /* The two file handles and the model are members, so the compiler builds
    them in declaration order before the body runs. */
-// @symbol _ZN6MascotC1Ev
 Mascot::Mascot() : mModelFile(0x205), mWaitAnimFile(0x206) {
     mLooking = 0;
 }
@@ -1236,7 +1222,6 @@ Mascot::Mascot() : mModelFile(0x205), mWaitAnimFile(0x206) {
 /* ---- Mascot::~Mascot ---- */
 /* Releases both files; the members' destructors then run in reverse
    declaration order: the model, the animation, the model file. */
-// @symbol _ZN6MascotD1Ev
 Mascot::~Mascot() {
     mModelFile.Release();
     mWaitAnimFile.Release();
@@ -1304,7 +1289,6 @@ extern "C" void Mascot_Draw(Mascot *c) {
 }
 
 namespace s020c1f4c {
-// @symbol Mascot_UpdateMatrix
 typedef short s16;
 
 extern "C" {
@@ -1352,7 +1336,6 @@ void Mascot_StopLooking(int *p) {
 
 namespace s020c1eb4 {
 extern "C" {
-// @symbol Camera_InitSlotsView
 /* Camera_InitSlotsView at 0x020c1eb4
  *
  * MgCamera preset: sets the look-at point, position and fov angle, then
@@ -1376,7 +1359,6 @@ void Camera_InitSlotsView(MgCamera *camera) {
 /* mModel, mTable, mWalker and the two model files are members with
    constructors, so the compiler builds them in declaration order; the
    animation handles take their files in the body. */
-// @symbol _ZN6DealerC1Ev
 Dealer::Dealer()
     : mHand(0), mShuffleRound(0), mReserved(0), mModelFile(0x208), mTableFile(0), mWaitAnim(0x212),
       mShuffleStartAnim(0x210), mShuffleAnim(0x20f), mDealStartAnim(0x20c), mDealAnim(0x209),
@@ -1392,7 +1374,6 @@ Dealer::Dealer()
 /* Releases every file; the members' destructors then run in reverse
    declaration order: the thirteen animations, the two model files, the
    walker, the table and the model. */
-// @symbol _ZN6DealerD1Ev
 Dealer::~Dealer() {
     mModelFile.Release();
     mTableFile.Release();
@@ -1413,7 +1394,6 @@ Dealer::~Dealer() {
 
 namespace s020c1a88 {
 extern "C" {
-// @symbol Dealer_Load
 extern struct Vector3 data_020a0ebc;
 extern struct Vector3_16 data_020a0edc;
 
@@ -1499,7 +1479,6 @@ extern "C" void Dealer_Update(Dealer *dealer) {
 }
 
 namespace s020c1804 {
-// @symbol Dealer_Draw
 
 
 extern "C" void Dealer_Draw(void *self) {
@@ -2014,7 +1993,6 @@ void Dealer_StateWin(char *p) {
 namespace s020c0af8 {
 extern "C" {
 extern volatile struct Matrix4x3 sDealerIdentityMtx;
-// @symbol Dealer_ResetMatrices
 void Dealer_ResetMatrices(char *c) {
     struct Matrix4x3 tmp;
     tmp = *(struct Matrix4x3 *)&sDealerIdentityMtx;
@@ -2026,7 +2004,6 @@ void Dealer_ResetMatrices(char *c) {
 
 namespace s020c0aa8 {
 extern "C" {
-// @symbol Camera_InitDealerView
 /* Camera_InitDealerView at 0x020c0aa8
  *
  * MgCamera preset: sets the look-at point, position and fov angle, then
@@ -2049,7 +2026,6 @@ void Camera_InitDealerView(MgCamera *camera) {
 /* ---- MascotWalker::MascotWalker ---- */
 /* The file handles, the model and the shadow are members, so the compiler
    constructs them in declaration order before the body runs. */
-// @symbol _ZN12MascotWalkerC1Ev
 MascotWalker::MascotWalker() : mModelFile(0x205), mPauseAnimFile(0x206), mWalkAnimFile(0x207) {
     mPathIndex = 0;
     mHeadAngle = 0;
@@ -2059,7 +2035,6 @@ MascotWalker::MascotWalker() : mModelFile(0x205), mPauseAnimFile(0x206), mWalkAn
 /* ---- MascotWalker::~MascotWalker ---- */
 /* Releases the three files; the members' destructors then run in reverse
    declaration order: shadow, model, walk, pause, model file. */
-// @symbol _ZN12MascotWalkerD1Ev
 MascotWalker::~MascotWalker() {
     mModelFile.Release();
     mWalkAnimFile.Release();
@@ -2067,7 +2042,6 @@ MascotWalker::~MascotWalker() {
 }
 
 namespace s020c092c {
-// @symbol MascotWalker_Load
 
 extern "C" {
 extern Vector3 data_020a0ebc;
@@ -2175,7 +2149,6 @@ void MascotWalker_Draw(char *t) {
 }
 
 namespace s020c06dc {
-// @symbol MascotWalker_UpdateMatrix
 typedef short s16;
 
 extern "C" {
@@ -2376,7 +2349,6 @@ extern "C" void MascotWalker_StatePause(char *c) {
 
 namespace s020c0134 {
 extern "C" {
-// @symbol Camera_UpdateMatrices
 /* Camera_UpdateMatrices at 0x020c0134
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).

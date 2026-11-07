@@ -85,7 +85,6 @@ extern void DecompressLZ16(void *, void *);
 extern int Dealer_Load(char *);
 }
 
-// @symbol dScMgCard_c_classInit
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, mDealer, then the two hands through __cxa_vec_ctor. The two card
    classes' implicit constructors are generated here, as the ROM's
@@ -105,7 +104,6 @@ namespace G2x {
 void SetBlendAlpha(volatile u16 *reg, int a, int b, int c, int d);
 }
 
-// @symbol _ZN11dScMgCard_c13InitResourcesEv
 /* Slot 0. Loads and decompresses the OBJ tiles and palettes for both
  * engines, sets blending, patches the OAM template list, spawns the two rows
  * of five card sprites and resets the shared counters. It ends with a
@@ -192,7 +190,6 @@ s32 dScMgCard_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN11dScMgCard_c10StartRoundEi
 /* Slot 18 resets the round: clear the selected-card counter and highlights,
  * restore the face weights, redeal both hands, and restart at state 1.
  * The inherited actor-style name is retained for the existing interface;
@@ -233,7 +230,6 @@ void dScMgCard_c::StartRound(int mode)
     mState = 1;
 }
 
-// @symbol _ZN11dScMgCard_c11CanEndStateEi
 /* Slot 19 advances the round-end sequence: show the comparison result,
  * settle the score, fly both hands off, and wait for the final timer.
  * Returns 1 when complete. The inherited actor-style name does not imply
@@ -310,7 +306,6 @@ int dScMgCard_c::CanEndState(int mode)
     return 0;
 }
 
-// @symbol _ZN11dScMgCard_c10OnDealDoneEv
 /* Slot 21 selects a tier from 1 to 4 according to mHudScore and passes it
  * to MgCoins_RaiseBet. The inherited name does not establish an actor
  * ground-pound event or the original name of this scene callback. */
@@ -329,7 +324,6 @@ void dScMgCard_c::OnDealDone() {
     MgCoins_RaiseBet(v);
 }
 
-// @symbol _ZN11dScMgCard_c11UpdateStateEv
 /* dScMgCard_c::UpdateState -- the round's own state machine, one long
  * switch on mState that Behavior drives every frame; the tail past the
  * switch Updates all ten cards, both hands, every frame. Steps 1-5 arm
@@ -654,7 +648,6 @@ void dScMgCard_c::UpdateState()
     sCardSwapRequested = 0;
 }
 
-// @symbol _ZN11dScMgCard_c8BehaviorEv
 /* Slot 6. mDealer is the 0x270-byte table this family of scenes shares;
  * Dealer_Update steps it. */
 s32 dScMgCard_c::Behavior()
@@ -666,7 +659,6 @@ s32 dScMgCard_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11dScMgCard_c6RenderEv
 /* dScMgCard_c::Render -- vtable slot 9.
  *
  * Attributed by tools/rtti_vtables.py --own dScMgCard_c, this class's own slot 9
@@ -761,7 +753,6 @@ s32 dScMgCard_c::Render()
     return 1;
 }
 
-// @symbol _ZN11dScMgCard_c16CleanupResourcesEv
 /* Slot 3. Only clears three ov006 globals; `this` is never read. */
 s32 dScMgCard_c::CleanupResources()
 {
@@ -771,7 +762,6 @@ s32 dScMgCard_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11dScMgCard_c11FillWeightsEi
 /* dScMgCard_c::FillWeights -- sets every one of the six card-face weights to
  * the same value: the deal code passes 5 ("all six faces equally likely"),
  * the win/lose branches pass 0 (the deck goes dead). Coined name; the ROM's
@@ -783,7 +773,6 @@ void dScMgCard_c::FillWeights(int v) {
     }
 }
 
-// @symbol _ZN11dScMgCard_c13DrawCardValueEv
 /* dScMgCard_c::DrawCardValue -- one weighted draw from the six-face deck:
  * roll the seeded RNG scaled by the weight total, then walk the weights
  * subtracting until the running sum goes negative -- that face is the draw,
@@ -814,7 +803,6 @@ int dScMgCard_c::DrawCardValue(void)
   return value;
 }
 
-// @symbol _ZN11dScMgCard_c11FindInStateEPK12dMgCardObj_ci
 /* dScMgCard_c::FindInState -- index of the first card in the hand sitting in
  * the given state, or -1 when no card is. Coined name; the ROM's symbol is
  * address-only. */
@@ -829,7 +817,6 @@ int dScMgCard_c::FindInState(const dMgCardObj_c *hand, int state)
     return -1;
 }
 
-// @symbol _ZN11dScMgCard_c12CountInStateEPK12dMgCardObj_ci
 /* dScMgCard_c::CountInState -- how many of the hand's five cards sit in the
  * given state. Coined name; the ROM's symbol is address-only. */
 int dScMgCard_c::CountInState(const dMgCardObj_c *hand, int state)
@@ -844,7 +831,6 @@ int dScMgCard_c::CountInState(const dMgCardObj_c *hand, int state)
     return count;
 }
 
-// @symbol _ZN11dScMgCard_c10AllInStateEPK12dMgCardObj_ci
 /* dScMgCard_c::AllInState -- true only when every card of the hand sits in
  * the given state. Coined name; the ROM's symbol is address-only. */
 int dScMgCard_c::AllInState(const dMgCardObj_c *hand, int state)
@@ -858,7 +844,6 @@ int dScMgCard_c::AllInState(const dMgCardObj_c *hand, int state)
     return 1;
 }
 
-// @symbol _ZN11dScMgCard_c9AllLiftedEPK12dMgCardObj_c
 /* dScMgCard_c::AllLifted -- true only when every card of the hand is raised
  * to the full 0x4000 lift. Coined name; the ROM's symbol is address-only. */
 int dScMgCard_c::AllLifted(const dMgCardObj_c *hand)
@@ -872,7 +857,6 @@ int dScMgCard_c::AllLifted(const dMgCardObj_c *hand)
     return 1;
 }
 
-// @symbol _ZN11dScMgCard_c12CompareHandsEPK12dMgCardObj_cS2_
 /* dScMgCard_c::CompareHands -- poker comparison of the two five-card hands:
  * histogram each hand's face counts, find each hand's strongest count and
  * its runner-up (preferring the higher face index on equal counts), then
@@ -967,7 +951,6 @@ int dScMgCard_c::CompareHands(const dMgCardObj_c *handA, const dMgCardObj_c *han
     return 0;
 }
 
-// @symbol _ZN11dScMgCard_c12EvaluateHandEPK12dMgCardObj_cPs
 /* dScMgCard_c::EvaluateHand -- score one hand on the poker scale (nothing,
  * one pair, two pair, three of a kind, full house, four, five), and when out
  * is non-null, name the faces of the winning combination into it. Coined
@@ -1033,7 +1016,6 @@ int dScMgCard_c::EvaluateHand(const dMgCardObj_c *hand, s16 *out)
     return result;
 }
 
-// @symbol _ZN11dScMgCard_c11MarkSinglesEP12dMgCardObj_c
 /* dScMgCard_c::MarkSingles -- stamp every card whose face appears exactly
  * once in the hand to state 4: the settle step for the cards left out of
  * the winning combination. Coined name; the ROM's symbol is address-only. */
@@ -1060,7 +1042,6 @@ void dScMgCard_c::MarkSingles(dMgCardObj_c *hand){
     }
 }
 
-// @symbol _ZN11dScMgCard_c11ArrangeHandEP12dMgCardObj_c
 /* dScMgCard_c::ArrangeHand -- the sort that pulls a scored hand together:
  * histogram the faces, decide the winning combination's two faces (the
  * stronger face first), then bubble the five cards by combination rank
@@ -1278,7 +1259,6 @@ int dScMgCard_c::ArrangeHand(dMgCardObj_c *hand)
   return 0;
 }
 
-// @symbol _ZN11dScMgCard_c10SettleHandEP12dMgCardObj_c
 /* dScMgCard_c::SettleHand -- the round's settle step: stamp all five cards
  * of one hand to state 9. Coined name; the ROM's symbol is address-only. */
 void dScMgCard_c::SettleHand(dMgCardObj_c *hand) {
@@ -1289,7 +1269,6 @@ void dScMgCard_c::SettleHand(dMgCardObj_c *hand) {
     }
 }
 
-// @symbol _ZN12dMgCardObj_c6DealInEPKi
 /* dMgCardObj_c::DealIn -- deal one fresh card in: park it at the {x, y} the
  * source pair names, then retarget the approach steps off GetOffscreenY's
  * start height through the Vec2_Sub/func_0203d680 transform pair (the same
@@ -1320,7 +1299,6 @@ void dMgCardObj_c::DealIn(const s32 *src)
     mValue = (unsigned char)dScMgCard_c::DrawCardValue();
 }
 
-// @symbol _ZN12dMgCardObj_c6RedealEv
 /* dMgCardObj_c::Redeal -- re-fly the card from its own target: the same
  * retarget off GetOffscreenY's start height as DealIn, but from the target
  * pair already on the card, and a wider reset -- the state, the raise
@@ -1346,7 +1324,6 @@ void dMgCardObj_c::Redeal()
     mValue = (unsigned char)dScMgCard_c::DrawCardValue();
 }
 
-// @symbol _ZN12dMgCardObj_c6UpdateEv
 /* dMgCardObj_c::Update -- vtable slot 1, the player's card motion state
  * machine. mState: 1 fly in from off-screen and settle (2, lift raising, on
  * both axes arriving -- the one card sound); 3 retreat a row (the touched
@@ -1463,7 +1440,6 @@ void dMgCardObj_c::Update()
     }
 }
 
-// @symbol _ZN12dMgCardObj_c6RenderEv
 /* dMgCardObj_c::Render -- vtable slot 0, the player's card. Same table and
  * same index math as the dealer's Render above; the temporaries are spelled
  * out (idx, then e) where the dealer's stay one, because the two bodies'
@@ -1479,7 +1455,6 @@ void dMgCardObj_c::Render()
     Hud_RenderSprite(sCardObjSprites[e], (mX >> 12) + 24, (mY >> 12) + 24, -1, -1);
 }
 
-// @symbol _ZN12dMgCardObj_c13GetOffscreenYEv
 /* dMgCardObj_c::GetOffscreenY -- vtable slot 2. The y the card starts flying
  * in from: 6 screens above the table in 1:4096 fixed point. DealIn reads it
  * through the virtual slot, so the dealer's override carries the same value. */
@@ -1488,7 +1463,6 @@ s32 dMgCardObj_c::GetOffscreenY()
     return -0x60000;
 }
 
-// @symbol _ZN11dScMgCard_c9RenderHudEv
 /* dScMgCard_c::RenderHud -- the hand-rank table and the hold prompt. States 4
  * through 0x10 stack six face sprites at x=0x14 from y=0xb0 down; the two
  * hands' highlight pairs (mPlayerHandFace/mPlayerHandFace2 for the player's hand,
@@ -1526,7 +1500,6 @@ void dScMgCard_c::RenderHud()
         Hud_RenderSprite(sCardHudSprites[1], 0x80, 0x58, -1, -1);
 }
 
-// @symbol _ZN12dMgCardObj_c7SetHomeEi
 /* dMgCardObj_c::SetHome -- aim the card at home slot n (the row pitch is
  * 0x28, the first slot sits at 0x2c) and put it into state 7, the fly-home
  * step. Coined name; the ROM's symbol is address-only. */
@@ -1536,7 +1509,6 @@ void dMgCardObj_c::SetHome(s32 n){
   mState = 7;
 }
 
-// @symbol _ZN12dMgCardObj_c6FlyOffEv
 /* dMgCardObj_c::FlyOff -- the end-of-round fly-away: home becomes the
  * off-screen left, the y step tracks the card's own height, and the
  * x step's frame count becomes the stagger -- one card leaves per frame,
@@ -1553,7 +1525,6 @@ void dMgCardObj_c::FlyOff(){
   mState = 0xa;
 }
 
-// @symbol _ZN17dMgDilarCardObj_c13GetOffscreenYEv
 /* dMgDilarCardObj_c::GetOffscreenY -- vtable slot 2, the same answer the base
  * gives: both hands' cards fly in from 6 screens above the table (-0x60000
  * in 1:4096 fixed point), and the override exists so the dealer's class
@@ -1563,7 +1534,6 @@ s32 dMgDilarCardObj_c::GetOffscreenY()
     return -0x60000;
 }
 
-// @symbol _ZN17dMgDilarCardObj_c6UpdateEv
 /* dMgDilarCardObj_c::Update -- vtable slot 1, the dealer's card motion.
  * Same states as the player's card (see dMgCardObj_c::Update below) minus
  * the touch handling -- the dealer's card is never touched -- with state 9
@@ -1634,7 +1604,6 @@ void dMgDilarCardObj_c::Update()
     ApproachLinear(mX, mHomeX, mXStep);
 }
 
-// @symbol _ZN17dMgDilarCardObj_c6RenderEv
 /* dMgDilarCardObj_c::Render -- vtable slot 0, the dealer's card face down.
  * The sprite bank table sCardFaceSprites is indexed by the card's face
  * (mValue + 1, the +1 skipping the card-back row) and its flip frame
@@ -1652,12 +1621,10 @@ void dMgDilarCardObj_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN17dMgDilarCardObj_cD1Ev
 /* The ROM's D1 sets this class's vptr, then the base's, with no call: the
  * base destructor below is inlined into it. */
 dMgDilarCardObj_c::~dMgDilarCardObj_c() {}
 
-// @symbol _ZN12dMgCardObj_cD1Ev
 /* Defined last so its D1 sits below the dealer card's, as in the ROM.
  * auto_inline lets the dealer card's destructor above inline this body even
  * though it comes later. Without it that D1 calls this class's D2 and is 0x24

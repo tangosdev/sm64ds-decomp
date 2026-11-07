@@ -20,7 +20,6 @@ extern void CTRDG_Init(void);
 extern void CARD_Init(void);
 extern void PM_Init(void);
 
-// @symbol OS_Init
 void OS_Init(void) {
     OS_InitArena();
     PXI_Init();

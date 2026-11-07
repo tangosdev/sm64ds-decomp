@@ -20,30 +20,22 @@
    address name. */
 dBgPc data_020a0cec;
 
-// @symbol _ZN7dBgW_KcC1Ev
-// @symbol _ZN7dBgW_KcC2Ev
 dBgW_Kc::dBgW_Kc() {
     kclFile = 0;
 }
 
-// @symbol _ZN7dBgW_KcD2Ev
-// @symbol _ZN7dBgW_KcD0Ev
-// @symbol _ZN7dBgW_KcD1Ev
 dBgW_Kc::~dBgW_Kc() {}
 
-// @symbol _ZN7dBgW_Kc17IsNearZeroDivisorEi
 /* True when a divisor is too close to zero to divide by (|value| <= 8). */
 bool dBgW_Kc::IsNearZeroDivisor(int value) {
     return value <= 8 && value >= -8;
 }
 
-// @symbol _ZN7dBgW_Kc12IsWallNormalEi
 /* True when a face normal's y lies strictly inside the wall band. */
 bool dBgW_Kc::IsWallNormal(Fix12i normalY) {
     return normalY < 0x600 && normalY > -0xccc;
 }
 
-// @symbol func_02039794
 
 /* Slope band of a face normal's y: 0 floor, 1 wall, 2 underside. */
 extern "C" int func_02039794(int normalY) {
@@ -56,7 +48,6 @@ extern "C" int func_02039794(int normalY) {
 
 /* The four header words of a fresh KCL file are file-relative offsets;
    rebase them into pointers. */
-// @symbol _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File
 void dBgW_Kc::UpdateFileOffsets(KCL_File &file) {
     file.positions = (s32(*)[3])((char *)&file + (int)file.positions);
     file.normals = (s16(*)[3])((char *)&file + (int)file.normals);
@@ -64,7 +55,6 @@ void dBgW_Kc::UpdateFileOffsets(KCL_File &file) {
     file.octree = (char *)&file + (int)file.octree;
 }
 
-// @symbol _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block
 void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock) {
     Reset();
     kclFile = file;
@@ -83,11 +73,9 @@ void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock) {
     tolerantWallEdges = false;
 }
 
-// @symbol func_020396dc
 /* A prism record's index in the file's triangle table (records are 0x10). */
 extern "C" unsigned func_020396dc(dBgW_Kc *self, KCL_Tri *tri) {
     return ((unsigned)tri - (unsigned)self->kclFile->tris) >> 4;
 }
 
-// @symbol _ZN7dBgW_Kc9Virtual08Ev
 void dBgW_Kc::Virtual08() {}

@@ -105,7 +105,6 @@ static inline int OwnerActorIDDiffers(fLiNdBa_c *node, unsigned int id) {
 /* List helpers keep address-named C entries. The sorting and process-list
  * descriptors retain local views; actor lookups use real actor-owned nodes. */
 
-// @symbol func_0204405c
 namespace Absorb0204405c {
 struct N {
     struct N *prev;
@@ -141,7 +140,6 @@ extern "C" int func_0204405c(void *list, void *nodep)
  * an fBase_c member (the four Process wrappers below 0x020433b8); all four
  * return int, which this traversal discards. Save the next node before
  * invoking a callback that may unlink its owner. */
-// @symbol func_02043fdc
 namespace Absorb02043fdc {
 typedef int (fBase_c::*ProcessCallback)();
 
@@ -169,7 +167,6 @@ extern "C" void *func_02043fdc(ProcessListDescriptor *list)
 }
 }
 
-// @symbol func_02043f98
 namespace Absorb02043f98 {
 extern "C" fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
 {
@@ -183,7 +180,6 @@ extern "C" fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
 }
 }
 
-// @symbol func_02043f4c
 namespace Absorb02043f4c {
 extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
                                     fLiNdBa_c *after)
@@ -198,7 +194,6 @@ extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
 }
 }
 
-// @symbol _ZN7fBase_cC2Ev
 fBase_c::fBase_c() : manager(this)
 {
     uniqueID = data_02099e70;
@@ -225,13 +220,11 @@ fBase_c::fBase_c() : manager(this)
 /* Manager destruction tears down renderNode before behaviorNode. The compiler
  * emits D2, D0, D1 in ROM order; the existing class operator delete returns
  * the object to the actor heap for D0. */
-// @symbol _ZN7fBase_cD1Ev
 fBase_c::~fBase_c()
 {
 }
 
 /* Run the guard, then the action when allowed, and always notify the after hook. */
-// @symbol _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE
 int fBase_c::Process(ProcessFunction action, BeforeProcessFunction before,
                      AfterProcessFunction after)
 {
@@ -251,14 +244,12 @@ int fBase_c::Process(ProcessFunction action, BeforeProcessFunction before,
 
 /* vtable slot 0. Default initialization succeeds without loading resources.
  * This key function emits metadata checked against canonical ROM storage. */
-// @symbol _ZN7fBase_c13InitResourcesEv
 int fBase_c::InitResources()
 {
     return 1;
 }
 
 /* vtable slot 1. Allow initialization by default. */
-// @symbol _ZN7fBase_c19BeforeInitResourcesEv
 bool fBase_c::BeforeInitResources()
 {
     return 1;
@@ -268,7 +259,6 @@ bool fBase_c::BeforeInitResources()
  * then either flag the actor as deferred (when the global at data_02099f24
  * reads 3) or link it into both the behaviour and render lists and mark it
  * alive. */
-// @symbol _ZN7fBase_c18AfterInitResourcesEj
 void fBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
@@ -284,14 +274,12 @@ void fBase_c::AfterInitResources(u32 vfSuccess)
 }
 
 /* vtable slot 3. Default cleanup succeeds without releasing resources. */
-// @symbol _ZN7fBase_c16CleanupResourcesEv
 s32 fBase_c::CleanupResources()
 {
     return 1;
 }
 
 /* vtable slot 4. Wait for pending lifecycle work and remaining scene children. */
-// @symbol _ZN7fBase_c22BeforeCleanupResourcesEv
 int fBase_c::BeforeCleanupResources()
 {
     int v = (int)lifecycleState;
@@ -303,7 +291,6 @@ int fBase_c::BeforeCleanupResources()
 /* On success, unlink the actor, release its heap and pending lifecycle work,
  * then call the virtual complete-object destructor (slot 16) and deallocate.
  * This function is enrolled with the rest of the production TU. */
-// @symbol _ZN7fBase_c21AfterCleanupResourcesEj
 void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
@@ -319,7 +306,6 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 }
 
 /* vtable slot 6. The default update succeeds without doing any work. */
-// @symbol _ZN7fBase_c8BehaviorEv
 s32 fBase_c::Behavior()
 {
     return 1;
@@ -327,7 +313,6 @@ s32 fBase_c::Behavior()
 
 /* vtable slot 7. Skips the tick once the actor is marked for death, or when
  * bit 1 of the spawn-flag byte is set. */
-// @symbol _ZN7fBase_c14BeforeBehaviorEv
 int fBase_c::BeforeBehavior()
 {
     if (shouldBeKilled != 0 || (pauseFlags & 2) != 0)
@@ -336,21 +321,18 @@ int fBase_c::BeforeBehavior()
 }
 
 /* vtable slot 8. Base does nothing; leaf classes override. */
-// @symbol _ZN7fBase_c13AfterBehaviorEj
 void fBase_c::AfterBehavior(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
 }
 
 /* vtable slot 9. The default render succeeds without drawing anything. */
-// @symbol _ZN7fBase_c6RenderEv
 s32 fBase_c::Render()
 {
     return 1;
 }
 
 /* vtable slot 10. The render twin of BeforeBehavior, on bit 3 instead of 1. */
-// @symbol _ZN7fBase_c12BeforeRenderEv
 int fBase_c::BeforeRender()
 {
     if (shouldBeKilled != 0 || (pauseFlags & 8) != 0)
@@ -359,7 +341,6 @@ int fBase_c::BeforeRender()
 }
 
 /* vtable slot 11. Base does nothing; leaf classes override. */
-// @symbol _ZN7fBase_c11AfterRenderEj
 void fBase_c::AfterRender(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
@@ -367,12 +348,10 @@ void fBase_c::AfterRender(u32 vfSuccess)
 
 /* vtable slot 12 (vtable+0x30), fired by MarkForDestruction. Base does
  * nothing; leaf classes override to release or notify. */
-// @symbol _ZN7fBase_c16OnPendingDestroyEv
 void fBase_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7fBase_c13func_02043880Ev
 /* Reconcile list membership, inherited pause flags and pending destruction.
  * Scene children link through SceneNode::next, and each node names its
  * actor owner. The process tree calls this through the ProcessFunction
@@ -445,7 +424,6 @@ int fBase_c::func_02043880() {
 
 /* Non-virtual. Idempotent, and a no-op once the actor is already dying;
  * otherwise sets the flag and fires slot 12. */
-// @symbol _ZN7fBase_c18MarkForDestructionEv
 void fBase_c::MarkForDestruction()
 {
     if (shouldBeKilled != 0)
@@ -457,7 +435,6 @@ void fBase_c::MarkForDestruction()
 }
 
 /* Return the parent scene node's actor, or null at the root. */
-// @symbol _ZN7fBase_c13func_02043810Ev
 fBase_c *fBase_c::func_02043810() {
     fBase_c::SceneNode *parent = manager.sceneNode.parent;
     if (parent)
@@ -473,7 +450,6 @@ fBase_c *fBase_c::func_02043810() {
  * `this->v15()` in the legacy shadow is slot 15, which the real class names
  * OnHeapCreated -- so this now reads as the virtual it is. The heap's
  * heapStart and heapSize are read as in the Heap note above. */
-// @symbol _ZN7fBase_c9Virtual34Ejj
 int fBase_c::Virtual34(u32 a, u32 b)
 {
     void *h = 0;
@@ -581,7 +557,6 @@ int fBase_c::Virtual34(u32 a, u32 b)
  *
  * Heap is reached through include/Heap.h's real methods, the same
  * non-virtual direct calls Virtual34 makes. */
-// @symbol _ZN7fBase_c9Virtual38Ejj
 int fBase_c::Virtual38(u32 a, u32 b)
 {
     if (heap != 0)
@@ -614,7 +589,6 @@ int fBase_c::Virtual38(u32 a, u32 b)
 
 /* vtable slot 15 (vtable+0x3c), fired by Virtual34/Virtual38 once the actor's
  * heap exists. The default hook accepts the heap. */
-// @symbol _ZN7fBase_c13OnHeapCreatedEv
 bool fBase_c::OnHeapCreated()
 {
     return 1;
@@ -622,7 +596,6 @@ bool fBase_c::OnHeapCreated()
 
 /* Actor-heap allocation, cleared before construction. Every `new` of a
  * process class lands here. */
-// @symbol _ZN7fBase_cnwEm
 void *fBase_c::operator new(size_t size) {
     void *p = Memory::Allocate(size, -4, data_020a0eac);
     if (!p)
@@ -635,7 +608,6 @@ void *fBase_c::operator new(size_t size) {
  * emission puts the lowest address last). Body as recovered. */
 
 /* The create entry func_02043098 calls this on each new process. */
-// @symbol _ZN7fBase_c13func_020433b8Ev
 void fBase_c::func_020433b8() {
     func_0204335c();
     if (shouldBeKilled != 0)
@@ -683,12 +655,10 @@ extern int (*data_020a4b58)(int actorID);
 extern u16 data_020a4b50;
 extern u8 data_020a4b4c;
 
-// @symbol _ZN7fBase_c13func_0204335cEv
 int fBase_c::func_0204335c() {
     return Process(data_02099ebc, data_02099ec4, data_02099e94);
 }
 
-// @symbol _ZN7fBase_c13func_020432e4Ev
 int fBase_c::func_020432e4() {
     /* The actor ID is read before Process runs and handed to the
      * func_0204302c hook on a result of 1. */
@@ -699,12 +669,10 @@ int fBase_c::func_020432e4() {
     return r;
 }
 
-// @symbol _ZN7fBase_c13func_02043288Ev
 int fBase_c::func_02043288() {
     return Process(data_02099ea4, data_02099eac, data_02099eb4);
 }
 
-// @symbol _ZN7fBase_c13func_0204322cEv
 int fBase_c::func_0204322c() {
     return Process(data_02099ecc, data_02099e74, data_02099e9c);
 }
@@ -717,7 +685,6 @@ extern fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
 
 /* Is any descendant still uncreated (aliveState 0)? d_scene.cpp waits on
    this before it moves on. */
-// @symbol _ZN7fBase_c13func_020431c4Ev
 int fBase_c::func_020431c4() {
     fBase_c::SceneNode *base = &manager.sceneNode;
     fBase_c::SceneNode *end = func_0203b358(base);
@@ -734,7 +701,6 @@ int fBase_c::func_020431c4() {
 }
 
 /* Stage the arguments fBase_c::fBase_c reads while the factory runs. */
-// @symbol func_02043180
 void func_02043180(int actorID, void *parentNode, u32 param1, int unk012) {
     data_020a4b60 = param1;
     data_020a4b54 = actorID;
@@ -744,7 +710,6 @@ void func_02043180(int actorID, void *parentNode, u32 param1, int unk012) {
 
 /* The create entry: ask the scene's hook, stage the constructor's
    arguments, run the profile's factory, then link the new process. */
-// @symbol func_02043098
 fBase_c *func_02043098(int actorID, void *parentNode, u32 param1, int unk012) {
     fBase_c *actor;
     data_020a4b50 = (u16)actorID;
@@ -767,21 +732,18 @@ fBase_c *func_02043098(int actorID, void *parentNode, u32 param1, int unk012) {
     return actor;
 }
 
-// @symbol func_02043060
 int func_02043060(int actorID) {
     if (data_020a4b58 == 0)
         return 2;
     return data_020a4b58(actorID);
 }
 
-// @symbol func_0204302c
 void func_0204302c(int actorID) {
     if (data_020a4b5c)
         data_020a4b5c(actorID);
 }
 
 /* Create a child of parent; none without a parent. */
-// @symbol func_02042ffc
 fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 param1, int unk012) {
     if (parent == 0)
         return 0;
@@ -789,7 +751,6 @@ fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 param1, int unk012) {
 }
 
 /* Create a process at the root of the scene tree. */
-// @symbol func_02042fe4
 int func_02042fe4(int actorID, u32 param1, int unk012) {
     return (int)func_02043098(actorID, 0, param1, unk012);
 }

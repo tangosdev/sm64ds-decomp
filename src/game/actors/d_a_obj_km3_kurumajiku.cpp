@@ -77,12 +77,10 @@ daObjKurumajiku_c::Resources gKm3KurumajikuResources = {
 /* KM3_KURUMA: the cart this axle drives. InitResourcesFrom spawns four. */
 enum { kCartActorId = 0x97 };
 
-// @symbol daObjKm3_Kurumajiku_c_classInit
 extern "C" daObjKm3_Kurumajiku_c *daObjKm3_Kurumajiku_c_classInit() {
     return new daObjKm3_Kurumajiku_c();
 }
 
-// @symbol g_profile_KM3_KURUMAJIKU
 extern "C" SpawnInfo<daObjKm3_Kurumajiku_c> g_profile_KM3_KURUMAJIKU = {
     daObjKm3_Kurumajiku_c_classInit,
     0x0098, /* KM3_KURUMAJIKU registry id 152 */
@@ -93,12 +91,10 @@ extern "C" SpawnInfo<daObjKm3_Kurumajiku_c> g_profile_KM3_KURUMAJIKU = {
     0x01000000,
     0};
 
-// @symbol _ZN21daObjKm3_Kurumajiku_c13InitResourcesEv
 s32 daObjKm3_Kurumajiku_c::InitResources() {
     return InitResourcesFrom(&gKm3KurumajikuResources, kCartActorId);
 }
 
-// @symbol _ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv
 s32 daObjKm3_Kurumajiku_c::CleanupResources() {
     return CleanupResourcesFrom(&gKm3KurumajikuResources);
 }

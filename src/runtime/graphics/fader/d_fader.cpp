@@ -48,16 +48,10 @@ void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 }
 
 #ifndef _MSC_VER
-// @symbol _ZN8dFader_cD0Ev
-// @symbol _ZN8dFader_cD1Ev
-// @symbol _ZN8dFader_cD2Ev
 dFader_c::~dFader_c()
 {
 }
 
-// @symbol _ZN15dFdBrightness_cD0Ev
-// @symbol _ZN15dFdBrightness_cD1Ev
-// @symbol _ZN15dFdBrightness_cD2Ev
 dFdBrightness_c::~dFdBrightness_c()
 {
 }
@@ -67,7 +61,6 @@ dFdBrightness_c::~dFdBrightness_c()
    and 0x400106c are MASTER_BRIGHT for the main and sub engines; the level is
    negated and rescaled from 20.12 into the register's 5-bit field. Past full
    black the backdrop palette is reloaded as well. */
-// @symbol _ZN15dFdBrightness_c11AdvanceFadeEv
 void dFdBrightness_c::AdvanceFade()
 {
     Fix12i before = currInterp;
@@ -91,7 +84,6 @@ void dFdBrightness_c::AdvanceFade()
 
 /* Fade out over `frames` frames: the same rate with the sign flipped.
    `extra` is not read. Callers still pass it (always 0). */
-// @symbol _ZN15dFdBrightness_c15SetBackwardTimeEjj
 int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
         speed = -(Fix12i)0x1000;
@@ -102,7 +94,6 @@ int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
 }
 
 /* Fade in over `frames` frames: speed = 1.0 / frames. 0 means "instant". */
-// @symbol _ZN15dFdBrightness_c14SetForwardTimeEjj
 int dFdBrightness_c::SetForwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
         speed = (Fix12i)0x1000;
@@ -112,13 +103,11 @@ int dFdBrightness_c::SetForwardTime(u32 frames, u32 extra) {
     return IsAtEnd();
 }
 
-// @symbol _ZN15dFdBrightness_c9IsAtStartEv
 int dFdBrightness_c::IsAtStart()
 {
     return currInterp == 0;
 }
 
-// @symbol _ZN15dFdBrightness_c7IsAtEndEv
 int dFdBrightness_c::IsAtEnd()
 {
     return currInterp == 0x1000;
@@ -127,7 +116,6 @@ int dFdBrightness_c::IsAtEnd()
 /* True while the fade is in motion: neither snapped to 0.0 nor to 1.0. Both
    calls go through the vtable (slots 5 and 6), which is how the ROM reaches
    them and how the slot assignment in dFader_c.h was established. */
-// @symbol _ZN15dFdBrightness_c20IsBetweenStartAndEndEv
 int dFdBrightness_c::IsBetweenStartAndEnd()
 {
     if (IsAtStart() == 0 && IsAtEnd() == 0)
@@ -136,14 +124,12 @@ int dFdBrightness_c::IsBetweenStartAndEnd()
 }
 
 /* Snaps the fade to its end: 1.0 in 20.12 fixed point. */
-// @symbol _ZN15dFdBrightness_c8SetToEndEv
 void dFdBrightness_c::SetToEnd()
 {
     currInterp = 0x1000;
 }
 
 /* Snaps the fade to its start: 0.0 in 20.12 fixed point. */
-// @symbol _ZN15dFdBrightness_c10SetToStartEv
 void dFdBrightness_c::SetToStart()
 {
     currInterp = 0;
@@ -151,7 +137,6 @@ void dFdBrightness_c::SetToStart()
 
 /* Step currInterp one frame toward its target. A positive speed fades toward
    1.0, a negative one toward 0.0; the helper takes a nonnegative step. */
-// @symbol _ZN8dFader_c13AdvanceInterpEv
 void dFader_c::AdvanceInterp()
 {
     Fix12i step = speed;
@@ -162,14 +147,10 @@ void dFader_c::AdvanceInterp()
 }
 
 #ifndef _MSC_VER
-// @symbol _ZN10dFdColor_cD0Ev
-// @symbol _ZN10dFdColor_cD1Ev
-// @symbol _ZN10dFdColor_cD2Ev
 dFdColor_c::~dFdColor_c()
 {
 }
 
-// @symbol _ZN10dFdColor_c11AdvanceFadeEv
 void dFdColor_c::AdvanceFade()
 {
     int old = currInterp;
@@ -194,7 +175,6 @@ void dFdColor_c::AdvanceFade()
    dFdColor_c's plus its field store, then this class's own, then
    dExtSimpleModel_c::dExtSimpleModel_c() at +0x10 -- all base ctors inline in their headers, which
    is why the whole chain flattens into this one body. */
-// @symbol _ZN9dFdWipe_cC1Ev
 dFdWipe_c::dFdWipe_c()
 {
 }
@@ -202,13 +182,10 @@ dFdWipe_c::dFdWipe_c()
 /* ~dFdWipe_c: store this class's vptr, destroy the dExtSimpleModel_c member (out of
    line), run the dFdColor_c sub-object destructor, and -- for D0 -- dFader_c's
    class operator delete inlined to Memory::operator_delete2. */
-// @symbol _ZN9dFdWipe_cD0Ev
-// @symbol _ZN9dFdWipe_cD1Ev
 dFdWipe_c::~dFdWipe_c()
 {
 }
 
-// @symbol _ZN9dFdWipe_c11AdvanceFadeEv
 void dFdWipe_c::AdvanceFade()
 {
     Fix12i old = currInterp;
@@ -249,7 +226,6 @@ void dFdWipe_c::AdvanceFade()
 /* This used to reach the model as `(char*)this + 0x10` with dExtSimpleModel_c declared
    nowhere. Going through the member instead is the same bytes and turns the
    offset into a checkable claim. */
-// @symbol _ZN9dFdWipe_c14LoadAndSetFileEt
 void dFdWipe_c::LoadAndSetFile(u16 ov0ID)
 {
     model.LoadAndSetFile(ov0ID, 0, -1);
@@ -257,13 +233,10 @@ void dFdWipe_c::LoadAndSetFile(u16 ov0ID)
 
 /* Host build has no dFdDummy_c structor coverage: port/hal/shims.cpp stands
    in for the fader-family destructors it exercises. */
-// @symbol _ZN10dFdDummy_cC1Ev
 dFdDummy_c::dFdDummy_c()
 {
 }
 
-// @symbol _ZN10dFdDummy_cD0Ev
-// @symbol _ZN10dFdDummy_cD1Ev
 dFdDummy_c::~dFdDummy_c()
 {
 }
@@ -272,7 +245,6 @@ dFdDummy_c::~dFdDummy_c()
 /* Vtable slot 2. The whole body is a tail call into the base chain's own
    AdvanceInterp -- `this' rides through in r0 untouched, which is exactly
    what the inherited implementation wants. */
-// @symbol _ZN10dFdDummy_c11AdvanceFadeEv
 void dFdDummy_c::AdvanceFade()
 {
     AdvanceInterp();
@@ -280,7 +252,6 @@ void dFdDummy_c::AdvanceFade()
 
 /* dFdDummy_c::SetBackwardTime -- writes speed = -0x1000, then a genuine
    virtual call through slot 5 (same inherited bodies as below). */
-// @symbol _ZN10dFdDummy_c15SetBackwardTimeEjj
 int dFdDummy_c::SetBackwardTime(u32, u32) {
     speed = -0x1000;
     return IsAtStart();
@@ -289,7 +260,6 @@ int dFdDummy_c::SetBackwardTime(u32, u32) {
 /* dFdDummy_c::SetForwardTime -- writes speed = 0x1000, then makes a genuine
    virtual call through slot 6 (dFdDummy_c overrides none of slots 5-9, so
    this lands on dFdColor_c/dFdBrightness_c's own inherited body). */
-// @symbol _ZN10dFdDummy_c14SetForwardTimeEjj
 int dFdDummy_c::SetForwardTime(u32, u32) {
     speed = 0x1000;
     return IsAtEnd();

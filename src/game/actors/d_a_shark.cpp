@@ -107,11 +107,8 @@ extern SharkModelFilePtr data_ov090_021345a4;
 extern SharkAnimationFilePtr data_ov090_021345ac;
 extern SharkStateTable data_ov090_021345cc;
 
-// @symbol _ZN9daShark_cD1Ev
-// @symbol _ZN9daShark_cD0Ev
 daShark_c::~daShark_c() {}
 
-// @symbol _ZN9daShark_c14CheckPlayerHitEv
 /* Step the hurt cylinder through its three offsets, then hurt the player
  * touching it unless the player is vanished. */
 void daShark_c::CheckPlayerHit() {
@@ -146,7 +143,6 @@ void daShark_c::CheckPlayerHit() {
     ((daPly_c *)hit)->Hurt(pos, 3, 0xc000, 1, 0, 1);
 }
 
-// @symbol _ZN9daShark_c9StateSwimEPS_
 /* Swim per-frame: the swim sound at the clip's first frame, the clip, then
  * the hit check. */
 int daShark_c::StateSwim(daShark_c *self) {
@@ -162,14 +158,12 @@ int daShark_c::StateSwim(daShark_c *self) {
     return 1;
 }
 
-// @symbol _ZN9daShark_c13InitStateSwimEPS_
 /* Swim enter: start the swim clip. */
 int daShark_c::InitStateSwim(daShark_c *self) {
     self->mAnmModel.SetAnim((BCA_File *)data_ov090_021345ac.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
-// @symbol _ZN9daShark_c8SetStateEPM9daShark_cFivE
 /* Install a state record (enter PMF, then per-frame PMF) and run its enter
  * routine, if it has one. */
 int daShark_c::SetState(StateFn *state) {
@@ -182,7 +176,6 @@ int daShark_c::SetState(StateFn *state) {
     return (this->*(*enter))();
 }
 
-// @symbol _ZN9daShark_c17UpdateModelMatrixEv
 /* Model matrix: position (>> 3, Vec3_Asr) and the X/Y/Z angles, built in
  * the scratch matrix and copied out. */
 void daShark_c::UpdateModelMatrix() {
@@ -194,23 +187,19 @@ void daShark_c::UpdateModelMatrix() {
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN9daShark_c16CleanupResourcesEv
 int daShark_c::CleanupResources() {
     data_ov090_021345a4.Release();
     data_ov090_021345ac.Release();
     return 1;
 }
 
-// @symbol _ZN9daShark_c16OnPendingDestroyEv
 void daShark_c::OnPendingDestroy() {}
 
-// @symbol _ZN9daShark_c6RenderEv
 int daShark_c::Render() {
     mAnmModel.Render((const Vector3 *)0);
     return 1;
 }
 
-// @symbol _ZN9daShark_c8BehaviorEv
 int daShark_c::Behavior() {
     DecIfAbove0_Short((u16 *)&mStateTimer);
     {
@@ -267,7 +256,6 @@ int daShark_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9daShark_c13InitResourcesEv
 int daShark_c::InitResources() {
     /* Each PathPtr constructs at its declaration. The first call is
      * before the cylinder init and the second is after it. */
@@ -296,7 +284,6 @@ int daShark_c::InitResources() {
     return 1;
 }
 
-// @symbol daShark_c_classInit
 extern "C" daShark_c *daShark_c_classInit() {
     return new daShark_c();
 }

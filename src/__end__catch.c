@@ -1,4 +1,3 @@
-// @symbol __end__catch
 // MSL C++ runtime catch-exit hook. mwccarm emits `bl __end__catch` itself at the end of
 // every catch block (the source never names it), so the link needs a DEFINITION under
 // that spelling. Proven by compiling a bare try/catch under the ROM CFLAGS and reading

@@ -1,4 +1,3 @@
-// @symbol func_020458a8
 /* recovered: shared common types */
 #include "common.h"
 /* func_020458a8 at 0x020458a8, size=0x38

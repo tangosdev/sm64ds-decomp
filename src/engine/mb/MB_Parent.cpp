@@ -152,21 +152,18 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid);
 void MBi_CommChangeParentStateCallbackOnly(u32 aid, int state, void *arg);
 void MBi_CommChangeParentState(u32 aid, int state, void *arg);
 
-// @symbol MB_CommSetParentStateCallback
 void MB_CommSetParentStateCallback(u32 callback) {
     u32 saved = IRQ::Disable();
     MB_WORK->mParentCallback = callback;
     IRQ::Restore(saved);
 }
 
-// @symbol MB_CommGetParentState
 int MB_CommGetParentState(u16 aid) {
     if (data_020a9db8 != 0 && IsChildAidValid(aid))
         return MB_WORK->mChildState[aid - 1];
     return 0;
 }
 
-// @symbol MB_CommGetChildUser
 void *MB_CommGetChildUser(u16 aid) {
     u32 saved = IRQ::Disable();
     if (data_020a9db8 != 0 && IsChildAidValid(aid)) {
@@ -178,7 +175,6 @@ void *MB_CommGetChildUser(u16 aid) {
     return 0;
 }
 
-// @symbol MB_CommGetChildrenNumber
 u8 MB_CommGetChildrenNumber(void) {
     if (data_020a9db8)
         return MB_WORK->mChildCount;
@@ -186,7 +182,6 @@ u8 MB_CommGetChildrenNumber(void) {
 }
 
 /* The child at aid can be booted once it has the whole download. */
-// @symbol MB_CommIsBootable
 int MB_CommIsBootable(u16 aid) {
     if (data_020a9db8 != 0 && IsChildAidValid(aid) &&
         MB_WORK->mChildState[aid - 1] == MB_COMM_PSTATE_SEND_COMPLETE)
@@ -197,7 +192,6 @@ int MB_CommIsBootable(u16 aid) {
 /* The application's answer to a child: 0 kick, 1 accept (both for an entry
  * request), 2 start sending, 3 boot. Stored for MBi_CommParentRecvDataPerChild
  * only while the child is in the state that answer is for. */
-// @symbol MB_CommResponseRequest
 int MB_CommResponseRequest(u16 aid, int ack) {
     int response;
     int state;
@@ -235,14 +229,12 @@ int MB_CommResponseRequest(u16 aid, int ack) {
     return 0;
 }
 
-// @symbol MBi_CommChangeParentState
 void MBi_CommChangeParentState(u32 aid, int state, void *arg) {
     if (IsChildAidValid(aid))
         MB_WORK->mChildState[aid - 1] = state;
     MBi_CommChangeParentStateCallbackOnly(aid, state, arg);
 }
 
-// @symbol MBi_CommChangeParentStateCallbackOnly
 void MBi_CommChangeParentStateCallbackOnly(u32 aid, int state, void *arg) {
     MBCommPStateCallback cb = (MBCommPStateCallback)MB_WORK->mParentCallback;
     if (cb)
@@ -250,7 +242,6 @@ void MBi_CommChangeParentStateCallbackOnly(u32 aid, int state, void *arg) {
 }
 
 /* The WM parent callback. */
-// @symbol MBi_CommParentCallback
 void MBi_CommParentCallback(int type, char *arg) {
     WmStartParentCallback *cb = (WmStartParentCallback *)arg;
 
@@ -419,7 +410,6 @@ void MBi_CommParentCallback(int type, char *arg) {
  * req is the local copy of the child's assembled entry request
  * (MBCommRequestData), filed into the per-child tables once func_02065de4
  * reports every piece in. */
-// @symbol MBi_CommParentRecvDataPerChild
 void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
     MBCommChildBlockHeader hd;
     MbChildRequest req;
@@ -566,7 +556,6 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
 
 /* An MP receive: clear each registered file's requested block, then pass
  * every child's nonempty packet on. */
-// @symbol MBi_CommParentRecvData
 void MBi_CommParentRecvData(char *arg) {
     u16 i;
     for (i = 0; i < 0x10; i++) {
@@ -585,7 +574,6 @@ void MBi_CommParentRecvData(char *arg) {
     }
 }
 
-// @symbol MBi_CommParentSendMsg
 int MBi_CommParentSendMsg(u8 type, u32 pollbmp) {
     MBCommParentBlockHeader hd;
     hd.type = type;
@@ -595,7 +583,6 @@ int MBi_CommParentSendMsg(u8 type, u32 pollbmp) {
 
 /* Send the download info of the next file (mod 16) that a child in
  * REQ_ACCEPTED has entered, to every such child of that file. */
-// @symbol MBi_CommParentSendDlFileInfo
 int MBi_CommParentSendDlFileInfo(void) {
     MBCommParentBlockHeader hd;
     u8 count[16];
@@ -652,7 +639,6 @@ int MBi_CommParentSendDlFileInfo(void) {
  * a named `g + 0x1000` base still rotated five registers in the three reads
  * before CpuCopy8; a struct field at 0x1525 makes that base a compiler temp
  * and the colouring falls into place. */
-// @symbol MBi_CommParentSendBlock
 int MBi_CommParentSendBlock(void) {
     unsigned int loopCount;
     u8 idxByte;
@@ -706,7 +692,6 @@ int MBi_CommParentSendBlock(void) {
  * thing, the first of: BOOT_REQUEST's message 5, CONNECTED's message 1,
  * MEMBER_FULL's message 6, KICKED's message 2, REQ_ACCEPTED's download info,
  * or a block. With nothing to send, message 0 goes to everyone. */
-// @symbol MBi_CommParentSendData
 void MBi_CommParentSendData(void) {
     u16 bmp[6];
     u16 i;
@@ -757,7 +742,6 @@ void MBi_CommParentSendData(void) {
  * back to that block. The file record is reached the ROM's way, as MB_FILE
  * reaches it: the work pointer stepped a whole MbParentFile per index, then
  * mFiles[0] from there. */
-// @symbol MBi_Calc_SendBlock
 void MBi_Calc_SendBlock(int fid) {
     unsigned short now;
     unsigned short req;
@@ -775,14 +759,12 @@ void MBi_Calc_SendBlock(int fid) {
     b->mFiles[0].mCurrentBlock = req;
 }
 
-// @symbol MBi_Calc_NextSendBlock
 u32 MBi_Calc_NextSendBlock(u32 now, u32 req) {
     if (req <= now)
         req = now;
     return req;
 }
 
-// @symbol IsChildAidValid
 int IsChildAidValid(u32 aid) {
     if (aid >= 1) {
         if (aid <= 0xf)
@@ -791,7 +773,6 @@ int IsChildAidValid(u32 aid) {
     return 0;
 }
 
-// @symbol MBi_CommCallParentError
 void MBi_CommCallParentError(u16 aid, u16 errcode) {
     MBErrorStatus e;
     e.errcode = errcode;

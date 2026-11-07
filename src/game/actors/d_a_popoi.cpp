@@ -142,13 +142,11 @@ static inline int IsNoControl(daPly_c *player) {
 }
 
 /* resolved: VT0 = _ZTV9daPopoi_c */
-// @symbol daPopoi_c_classInit
 extern "C" int *daPopoi_c_classInit(void)
 {
     return (int *)new daPopoi_c;
 }
 
-// @symbol _ZN9daPopoi_c13InitResourcesEv
 
 /* Loads the four files (data_ov077_02127c88 = file 0x40d, the model; 02127ca0 =
  * 0x40e, 02127c90 = 0x40f and 02127c98 = 0x410, the three animations, the way
@@ -189,7 +187,6 @@ int daPopoi_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN9daPopoi_c8BehaviorEv
 /* The state machine, as this member sees it. mState points at a record of two
  * pointer-to-member functions on this class: the ENTER handler at offset 0
  * (run once by func_ov077_02126d5c as the state is installed) and the UPDATE
@@ -271,7 +268,6 @@ int daPopoi_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daPopoi_c6RenderEv
 int daPopoi_c::Render()
 {
     /* Nothing below the water surface is drawn. */
@@ -283,7 +279,6 @@ int daPopoi_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daPopoi_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
@@ -293,7 +288,6 @@ void daPopoi_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daPopoi_c16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Releases the 4 shared file(s) InitResources claimed.
@@ -310,7 +304,6 @@ int daPopoi_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daPopoi_c19func_ov077_02126dacEv
 /* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngleY,
  * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set
  * to the actor's position >> 3. Called from Behavior after the position writeback. */
@@ -322,7 +315,6 @@ void daPopoi_c::func_ov077_02126dac()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN9daPopoi_c19func_ov077_02126d5cEP19daPopoi_StateRecord
 /* Install a state and run its entry action on the same frame.
  *
  * `next` is a state record (data_ov077_02127cd8..02127d18, see
@@ -341,7 +333,6 @@ int daPopoi_c::func_ov077_02126d5c(daPopoi_StateRecord *next)
     return (this->*mState->enter)();
 }
 
-// @symbol _ZN9daPopoi_c19func_ov077_02126cd4Ev
 /* Wander, ENTER handler (record data_ov077_02127ce8). Picks a random heading (one of
  * 16 multiples of 0x1000 = 22.5 degrees) as the target angle, a random duration of
  * 170..233 frames (0xaa + 0..63) in mStateTimer, sets the animation to normal
@@ -360,7 +351,6 @@ int daPopoi_c::func_ov077_02126cd4(){
 }
 
 
-// @symbol _ZN9daPopoi_c19func_ov077_02126ad0Ev
 
 /* Wander, UPDATE handler (record data_ov077_02127ce8). Each frame:
  *   - distance from the actor to its home position, and the movement sound
@@ -514,7 +504,6 @@ int daPopoi_c::func_ov077_02126930(){
  *   - more than 1500 units (0x5dc000) from home, or the timer at 0, or the ahead
  *     probe firing -> Pause (data_ov077_02127cf8).
  * Always returns 1. */
-// @symbol _ZN9daPopoi_c19func_ov077_0212679cEv
 int daPopoi_c::func_ov077_0212679c()
 {
     struct Vector3 pv;
@@ -572,7 +561,6 @@ int daPopoi_c::func_ov077_02126758(){
     return 1;
 }
 
-// @symbol _ZN9daPopoi_c19func_ov077_02126640Ev
 /* Grab, UPDATE handler (record data_ov077_02127cd8). Older note, kept as found:
  * "daTgz_c::Kill - recovered from vtable slot identity". That label does not fit:
  * this body is at 0x02126640, past the 0x0212624c end of daTgz_c's range (see
@@ -764,7 +752,6 @@ int daPopoi_c::func_ov077_02126300()
     return 0;
 }
 
-// @symbol _ZN9daPopoi_cD0Ev
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c
  * chain) then return the object to its heap via an inline operator delete.
  * Both variants are emitted from the single inline destructor in
@@ -773,7 +760,6 @@ int daPopoi_c::func_ov077_02126300()
 /* (no separate definition: the single ~daPopoi_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
 
-// @symbol _ZN9daPopoi_cD1Ev
 /* D1 is emitted from the inline destructor in daPopoi_c.h alongside D0
  * (class-form skill); this marker at D1's ROM ordinal keeps the
  * accounting naming it. Members are destroyed in reverse declaration

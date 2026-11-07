@@ -77,7 +77,6 @@ extern SaveBlock data_0209caa0;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjC0_Switch_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjC0_Switch_c through RTTI,
  * allocation size, vtable identity, and the C0_SWITCH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -96,7 +95,6 @@ extern "C" daObjC0_Switch_c *daObjC0_Switch_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjC0_Switch_c13InitResourcesEv
 /* daObjC0_Switch_c::InitResources -- vtable slot 0, ov012 0x02111370.
  *
  * mModel/mMeshCollider/mClsnMat/mAngleY are dBgActor_c's/dActor_c's own named
@@ -123,7 +121,6 @@ int daObjC0_Switch_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjC0_Switch_c8BehaviorEv
 s32 daObjC0_Switch_c::Behavior() {
     IsClsnInRange(0, 0);
     return 1;
@@ -131,7 +128,6 @@ s32 daObjC0_Switch_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjC0_Switch_c6RenderEv
 s32 daObjC0_Switch_c::Render() {
     mModel.Render(0);
     return 1;
@@ -139,7 +135,6 @@ s32 daObjC0_Switch_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjC0_Switch_c16CleanupResourcesEv
 s32 daObjC0_Switch_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov012_021124a8.Release();
@@ -149,7 +144,6 @@ s32 daObjC0_Switch_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjC0_Switch_c15OnGroundPoundedER8dActor_c
 /* daObjC0_Switch_c::OnGroundPounded -- vtable slot 21, ov012 0x0211123c.
  *
  * mPosY and mPressed are the same fields InitResources touches.
@@ -175,8 +169,6 @@ void daObjC0_Switch_c::OnGroundPounded(dActor_c &other) {
         }
     }
 }
-// @symbol _ZN16daObjC0_Switch_cD1Ev
-// @symbol _ZN16daObjC0_Switch_cD0Ev
 /* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- _ZN16daObjC0_Switch_cD1Ev 0x021111a0 size 0x44 and   */
 /* _ZN16daObjC0_Switch_cD0Ev 0x021111e4 size 0x58 -- are NOT written here.      */

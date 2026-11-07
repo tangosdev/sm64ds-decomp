@@ -96,7 +96,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-// @symbol daBrq_c_classInit
 extern "C" daBrq_c *daBrq_c_classInit() {
     return new daBrq_c();
 }
@@ -108,7 +107,6 @@ extern SharedFilePtr *data_ov070_021222e0[2];
 extern BTA_File data_ov070_021231f4;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-// @symbol _ZN7daBrq_c13InitResourcesEv
 int daBrq_c::InitResources() {
     BMD_File *bmd;
     bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov070_021235fc);
@@ -150,7 +148,6 @@ int daBrq_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c8BehaviorEv
 int daBrq_c::Behavior() {
     UpdateState();
     mCylinderOffset.y += data_ov070_0212365c.y;
@@ -161,7 +158,6 @@ int daBrq_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c6RenderEv
 int daBrq_c::Render() {
     mAnmModel.Render(0);
 
@@ -174,10 +170,8 @@ int daBrq_c::Render() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c16OnPendingDestroyEv
 void daBrq_c::OnPendingDestroy() {}
 
-// @symbol _ZN7daBrq_c16CleanupResourcesEv
 int daBrq_c::CleanupResources() {
     data_ov070_021235fc.Release();
     data_ov070_02123604.Release();
@@ -192,25 +186,21 @@ int daBrq_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c8SetStateEi
 void daBrq_c::SetState(s32 state) {
     mStateHandlers = &data_ov070_02123668[state];
     EnterState();
 }
 
-// @symbol _ZN7daBrq_c10EnterStateEv
 void daBrq_c::EnterState() {
     StateFn *handler = &mStateHandlers->enter;
     (this->**handler)();
 }
 
-// @symbol _ZN7daBrq_c11UpdateStateEv
 void daBrq_c::UpdateState() {
     StateFn *handler = &mStateHandlers->update;
     (this->**handler)();
 }
 
-// @symbol _ZN7daBrq_c18EnterCooldownStateEv
 s32 daBrq_c::EnterCooldownState() {
     mAnmModel.SetAnim((BCA_File *)data_ov070_0212360c.filePtr, 0x40000000, 0x1000, 0);
     mStateTimer = 0x3c;
@@ -218,7 +208,6 @@ s32 daBrq_c::EnterCooldownState() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c19UpdateCooldownStateEv
 s32 daBrq_c::UpdateCooldownState() {
     mAnmModel.Advance();
     unsigned char timeLeft = DecIfAbove0_Byte(&mStateTimer);
@@ -228,7 +217,6 @@ s32 daBrq_c::UpdateCooldownState() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c16EnterActiveStateEv
 s32 daBrq_c::EnterActiveState() {
     mAnmModel.SetAnim((BCA_File *)data_ov070_021235f4.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -246,7 +234,6 @@ s32 daBrq_c::EnterActiveState() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c17UpdateActiveStateEv
 s32 daBrq_c::UpdateActiveState() {
     ApproachLinear(mTurnSpeed, 1000, 20);
 
@@ -307,7 +294,6 @@ s32 daBrq_c::UpdateActiveState() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c18EnterDefeatedStateEv
 s32 daBrq_c::EnterDefeatedState() {
     Sound::PlayBank0(9, mCamSpacePos);
     mFlags &= ~1;
@@ -329,7 +315,6 @@ s32 daBrq_c::EnterDefeatedState() {
 /* The ROM calls the interworking veneer at 0x02038420, not the direct
  * dBgCh_Actr::UpdateDiscreteNoLava body at 0x02037024. */
 
-// @symbol _ZN7daBrq_c19UpdateDefeatedStateEv
 s32 daBrq_c::UpdateDefeatedState() {
     mAngleX = (s16)(mAngleX - 0x1000);
     mAnmModel.Advance();
@@ -343,7 +328,6 @@ s32 daBrq_c::UpdateDefeatedState() {
     return 1;
 }
 
-// @symbol _ZN7daBrq_c20UpdateModelTransformEv
 void daBrq_c::UpdateModelTransform() {
     int shadowDepth;
 
@@ -384,7 +368,6 @@ void daBrq_c::UpdateModelTransform() {
     DropShadowRadHeight(mShadowModel, mMat4x3, 0x5a000, shadowDepth, 0xf);
 }
 
-// @symbol _ZN7daBrq_c21HandlePlayerCollisionEv
 s32 daBrq_c::HandlePlayerCollision() {
     u32 id = mdCcAcPos_c.otherOwner;
     if (id == 0)
@@ -409,7 +392,5 @@ s32 daBrq_c::HandlePlayerCollision() {
     }
     return 1;
 }
-// @symbol _ZN7daBrq_cD1Ev
-// @symbol _ZN7daBrq_cD0Ev
 /* The inline destructor and InitResources key function emit the retail D1/D0
  * group without a retained D2 or forcing helper. */

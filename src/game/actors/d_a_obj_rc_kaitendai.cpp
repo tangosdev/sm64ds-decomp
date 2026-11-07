@@ -47,12 +47,10 @@ extern ResourceDescriptor data_ov036_02113b2c;
 extern struct CLPS_Block data_ov036_02112bc8;
 extern s16 data_ov036_02113b1c;
 
-// @symbol daObjRc_Kaitendai_c_classInit
 extern "C" daObjRc_Kaitendai_c *daObjRc_Kaitendai_c_classInit() {
     return new daObjRc_Kaitendai_c();
 }
 
-// @symbol _ZN19daObjRc_Kaitendai_c13InitResourcesEv
 s32 daObjRc_Kaitendai_c::InitResources() {
     s16 angle = data_ov036_02113b18;
     if ((param1 & 0xff) == 1)
@@ -60,7 +58,6 @@ s32 daObjRc_Kaitendai_c::InitResources() {
     return InitResourcesFrom(&data_ov036_02113b2c, angle);
 }
 
-// @symbol _ZN19daObjRc_Kaitendai_c16CleanupResourcesEv
 s32 daObjRc_Kaitendai_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov036_02113b2c);
 }

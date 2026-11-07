@@ -44,16 +44,12 @@ void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround); /* floor-result commit */
    the class header supplies the base step, the vtable store, the two typed
    member constructions, and the collision-heap delete. */
 
-// @symbol _ZN10dBgCh_ActrC1Ev
 dBgCh_Actr::dBgCh_Actr() {}
 
-// @symbol _ZN10dBgCh_ActrD0Ev
-// @symbol _ZN10dBgCh_ActrD1Ev
 dBgCh_Actr::~dBgCh_Actr()
 {
 }
 
-// @symbol _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_
 void dBgCh_Actr::Init(dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a, Vector3_16 *b) {
     mActor = actor;
     mRadius = radius;
@@ -64,7 +60,6 @@ void dBgCh_Actr::Init(dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 
     mScale = 0x1000;
 }
 
-// @symbol func_02037318
 /* Latch the sphere query's floor normal (the floor contact with the greatest
    Y, see dBgCh_SphCrr.h) into mGroundNormal on a grounded frame. Flag 0x100
    marks the latched normal valid; func_020371fc reads it. */
@@ -83,7 +78,6 @@ extern "C" void func_02037318(dBgCh_Actr *clsn) {
     clsn->mGroundNormal.z = src[2];
 }
 
-// @symbol func_020371fc
 /* The ground-snap step run once per landing: when the sphere query flagged a
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
@@ -118,7 +112,6 @@ extern "C" void func_020371fc(char *self)
     }
 }
 
-// @symbol func_020371b0
 /* Floor-result commit: hand the hit record to the actor, raise on-ground,
    and kill vertical speed unless limited movement is set. `wasOnGround` is
    the frame's ground state on entry, so the just-hit flag only fires on the
@@ -132,7 +125,6 @@ extern "C" void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround) {
         clsn->mActor->mVertSpeed = 0;
 }
 
-// @symbol _ZN10dBgCh_Actr20UpdateDiscreteNoLavaEv
 void dBgCh_Actr::UpdateDiscreteNoLava()
 {
     int onGround;
@@ -178,7 +170,6 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     SetLeftGroundFlag();
 }
 
-// @symbol _ZN10dBgCh_Actr22UpdateDiscreteNoLava_2Ev
 void dBgCh_Actr::UpdateDiscreteNoLava_2()
 {
     int onGround;
@@ -226,7 +217,6 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
    stays extern "C". */
 
 
-// @symbol func_02036acc
 extern "C" void func_02036acc(dBgCh_Actr *self) {
     bool hitFloor;
     bool hitWall;
@@ -354,7 +344,6 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
 
 
 
-// @symbol _ZN10dBgCh_Actr16UpdateContinuousEv
 void dBgCh_Actr::UpdateContinuous()
 {
     bool hitFloor;
@@ -483,7 +472,6 @@ void dBgCh_Actr::UpdateContinuous()
 
 
 
-// @symbol _ZN10dBgCh_Actr22UpdateContinuousNoLavaEv
 void dBgCh_Actr::UpdateContinuousNoLava()
 {
     bool hitFloor;
@@ -610,7 +598,6 @@ void dBgCh_Actr::UpdateContinuousNoLava()
 #define V3C(v, p) { s32 _x, _y, _z; _z = (p)->z; _y = (p)->y; _x = (p)->x; (v).x = _x; (v).y = _y; (v).z = _z; }
 
 
-// @symbol _ZN10dBgCh_Actr20UpdateExtraContinousEv
 /* The full three-result variant: raycast first for wall/floor/ceiling, then
    the sphere, then a follow-up raycast past the displacement. */
 void dBgCh_Actr::UpdateExtraContinous()
@@ -872,13 +859,11 @@ void dBgCh_Actr::UpdateExtraContinous()
 }
 
 
-// @symbol _ZN10dBgCh_Actr12Unk_0203589cEv
 void dBgCh_Actr::Unk_0203589c()
 {
     mSphereClsn.ResetQuery();
 }
 
-// @symbol func_02035860
 /* Copy a vector into the actor's current and previous position fields. */
 extern "C" void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
     dActor_c *base = self->mActor;
@@ -892,7 +877,6 @@ extern "C" void func_02035860(dBgCh_Actr *self, const Vector3 *src) {
     d2->z = src->z;
 }
 
-// @symbol _ZN10dBgCh_Actr19StartDetectingWaterEv
 /* Forwards to both sub-objects' dBgCh bases, the dBgCh_Lin at 0x134 first and
    the dBgCh_SphCrr at 0x20 second -- that is the ROM's order. */
 void dBgCh_Actr::StartDetectingWater()
@@ -901,7 +885,6 @@ void dBgCh_Actr::StartDetectingWater()
     ((dBgCh *)&mSphereClsn)->StartDetectingWater();
 }
 
-// @symbol _ZN10dBgCh_Actr18StopDetectingWaterEv
 /* Mirror of StartDetectingWater: the line sub-object first, then the sphere. */
 void dBgCh_Actr::StopDetectingWater()
 {
@@ -909,242 +892,200 @@ void dBgCh_Actr::StopDetectingWater()
     ((dBgCh *)&mSphereClsn)->StopDetectingWater();
 }
 
-// @symbol _ZN10dBgCh_Actr27StartIgnoringVanishSurfacesEv
 void dBgCh_Actr::StartIgnoringVanishSurfaces() {
     mRaycastLine.StartIgnoringVanishSurfaces();
     mSphereClsn.StartIgnoringVanishSurfaces();
 }
 
-// @symbol _ZN10dBgCh_Actr26StopIgnoringVanishSurfacesEv
 void dBgCh_Actr::StopIgnoringVanishSurfaces() {
     mRaycastLine.StopIgnoringVanishSurfaces();
     mSphereClsn.StopIgnoringVanishSurfaces();
 }
 
-// @symbol _ZN10dBgCh_Actr24StartIgnoringType14WallsEv
 void dBgCh_Actr::StartIgnoringType14Walls() {
     mRaycastLine.StartIgnoringType14Walls();
     mSphereClsn.StartIgnoringType14Walls();
 }
 
-// @symbol _ZN10dBgCh_Actr23StopIgnoringType14WallsEv
 void dBgCh_Actr::StopIgnoringType14Walls() {
     mRaycastLine.StopIgnoringType14Walls();
     mSphereClsn.StopIgnoringType14Walls();
 }
 
-// @symbol func_02035798
 extern "C" void func_02035798(dBgCh_Actr *self, Fix12i scale) {
     self->mScale = scale;
 }
 
-// @symbol _ZN10dBgCh_Actr10SetFlag200Ev
 void dBgCh_Actr::SetFlag200() {
     mFlags |= 0x200;
 }
 
-// @symbol _ZN10dBgCh_Actr12ClearFlag200Ev
 void dBgCh_Actr::ClearFlag200() {
     mFlags &= ~0x200;
 }
 
-// @symbol _ZN10dBgCh_Actr11TestFlag200Ev
 int dBgCh_Actr::TestFlag200() {
     return mFlags & 0x200;
 }
 
-// @symbol _ZN10dBgCh_Actr19ClearAllGroundFlagsEv
 void dBgCh_Actr::ClearAllGroundFlags()
 {
     mFlags &= ~0x70;
 }
 
-// @symbol _ZN10dBgCh_Actr20SetJustHitGroundFlagEv
 void dBgCh_Actr::SetJustHitGroundFlag() {
     mFlags |= 0x20;
 }
 
-// @symbol _ZN10dBgCh_Actr22ClearJustHitGroundFlagEv
 void dBgCh_Actr::ClearJustHitGroundFlag()
 {
     mFlags &= ~0x20;
 }
 
-// @symbol _ZNK10dBgCh_Actr13JustHitGroundEv
 /* Returns 0 or 0x20, the mask itself -- no normalisation. */
 s32 dBgCh_Actr::JustHitGround() const
 {
     return mFlags & 0x20;
 }
 
-// @symbol _ZN10dBgCh_Actr13SetGroundFlagEv
 void dBgCh_Actr::SetGroundFlag()
 {
     mFlags |= 0x10;
 }
 
-// @symbol _ZN10dBgCh_Actr15ClearGroundFlagEv
 void dBgCh_Actr::ClearGroundFlag()
 {
     mFlags &= ~0x10;
 }
 
-// @symbol _ZNK10dBgCh_Actr10IsOnGroundEv
 /* Returns 0 or 0x10, the mask itself -- no normalisation. */
 s32 dBgCh_Actr::IsOnGround() const
 {
     return mFlags & 0x10;
 }
 
-// @symbol _ZN10dBgCh_Actr17SetLeftGroundFlagEv
 void dBgCh_Actr::SetLeftGroundFlag() {
     mFlags |= 0x40;
 }
 
-// @symbol _ZN10dBgCh_Actr18TestLeftGroundFlagEv
 int dBgCh_Actr::TestLeftGroundFlag() {
     return mFlags & 0x40;
 }
 
-// @symbol _ZN10dBgCh_Actr13SetLimMovFlagEv
 void dBgCh_Actr::SetLimMovFlag()
 {
     mFlags |= 0x80;
 }
 
-// @symbol _ZN10dBgCh_Actr15ClearLimMovFlagEv
 void dBgCh_Actr::ClearLimMovFlag()
 {
     mFlags &= ~0x80;
 }
 
-// @symbol _ZNK10dBgCh_Actr13GetLimMovFlagEv
 /* The limited-movement flag: 0 or 0x80, the mask itself. */
 s32 dBgCh_Actr::GetLimMovFlag() const
 {
     return mFlags & 0x80;
 }
 
-// @symbol func_0203568c
 extern "C" void func_0203568c(int *p, int v)
 {
     p[6] = v;   /* mRadius */
 }
 
-// @symbol func_02035684
 extern "C" void func_02035684(int *p, int v)
 {
     p[7] = v;   /* mHeight */
 }
 
-// @symbol _ZN10dBgCh_Actr15GetSphereResultEv
 dBgPi *dBgCh_Actr::GetSphereResult() {
     return &mSphereClsn; /* its dBgPi base, at +0x10 */
 }
 
-// @symbol _ZNK10dBgCh_Actr14GetFloorResultEv
 dBgPi *dBgCh_Actr::GetFloorResult() const {
     return const_cast<dBgCh_SphCrr &>(mSphereClsn).GetFloorResult();
 }
 
-// @symbol _ZNK10dBgCh_Actr13GetWallResultEv
 dBgPi *dBgCh_Actr::GetWallResult() const {
     return const_cast<dBgCh_SphCrr &>(mSphereClsn).GetWallResult();
 }
 
-// @symbol func_0203564c
 extern "C" int func_0203564c(int p)
 {
     return (int)((dBgCh_Actr *)p)->mSphereClsn.GetUnderResult();
 }
 
-// @symbol func_02035644
 extern "C" void func_02035644(int *p, int v)
 {
     p[67] = v; /* mSphereClsn's wall-rejection half extent (its +0xec) */
 }
 
-// @symbol func_02035638
 extern "C" int func_02035638(unsigned char *p)
 {
     return p[144] & 16;   /* mSphereClsn.flags & 0x10 -- the ceiling bit */
 }
 
-// @symbol _ZNK10dBgCh_Actr8IsOnWallEv
 /* Returns 0 or 8, the mask itself -- no normalisation. */
 s32 dBgCh_Actr::IsOnWall() const
 {
     return mSphereClsn.flags & 0x8;
 }
 
-// @symbol _ZNK10dBgCh_Actr14GetResultFlag1Ev
 /* True when the sphere query found any collision at all: mClsnFlags & 1. */
 s32 dBgCh_Actr::GetResultFlag1() const
 {
     return mSphereClsn.flags & 0x1;
 }
 
-// @symbol _ZNK10dBgCh_Actr12TouchesWaterEv
 s32 dBgCh_Actr::TouchesWater() const
 {
     return SurfaceInfo_TestFlag0x20((int *)&mSphereClsn.surface);
 }
 
-// @symbol _ZN10dBgCh_Actr10SetFlag400Ev
 void dBgCh_Actr::SetFlag400() {
     mFlags |= 0x400;
 }
 
-// @symbol _ZN10dBgCh_Actr12ClearFlag400Ev
 void dBgCh_Actr::ClearFlag400() {
     mFlags &= ~0x400;
 }
 
-// @symbol _ZN10dBgCh_Actr11TestFlag400Ev
 int dBgCh_Actr::TestFlag400() {
     return mFlags & 0x400;
 }
 
-// @symbol _ZN10dBgCh_Actr12ClearFlag800Ev
 void dBgCh_Actr::ClearFlag800() {
     mFlags &= ~0x800;
 }
 
-// @symbol _ZN10dBgCh_Actr10SetFlag800Ev
 void dBgCh_Actr::SetFlag800() {
     mFlags |= 0x800;
 }
 
-// @symbol _ZN10dBgCh_Actr14IsFlag800ClearEv
 int dBgCh_Actr::IsFlag800Clear() {
     return (mFlags & 0x800) == 0;
 }
 
-// @symbol _ZN10dBgCh_Actr19SetNoUpdatePosYFlagEv
 void dBgCh_Actr::SetNoUpdatePosYFlag() {
     mFlags |= 0x1000;
 }
 
-// @symbol _ZNK10dBgCh_Actr16ShouldUpdatePosYEv
 /* The inverse of the no-update-pos-Y flag, normalised to 0/1. */
 s32 dBgCh_Actr::ShouldUpdatePosY() const
 {
     return (mFlags & 0x1000) == 0;
 }
 
-// @symbol _ZNK10dBgCh_Actr15ShouldUpdatePosEv
 /* The inverse of the no-update-pos flag, normalised to 0/1. */
 s32 dBgCh_Actr::ShouldUpdatePos() const
 {
     return (mFlags & 0x2000) == 0;
 }
 
-// @symbol _ZN10dBgCh_Actr17SetWaterTrackFlagEv
 void dBgCh_Actr::SetWaterTrackFlag() {
     mFlags |= 0x4000;
 }
 
-// @symbol _ZN10dBgCh_Actr21IsWaterTrackFlagClearEv
 int dBgCh_Actr::IsWaterTrackFlagClear() {
     return (mFlags & 0x4000) == 0;
 }

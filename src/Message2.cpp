@@ -142,21 +142,18 @@ static inline int IsCastleFallCutsceneRunning(void) {
     return data_0209f2d8 == 2;
 }
 
-// @symbol _ZN7Message7EndTalkEv
 void Message::EndTalk() {
     /* Restore music to 0x7f. Slower ramp than PrepareTalk. */
     Sound::ChangeMusicVolume(0x7f, 0x000064cc);
     data_0209d664 = 0;
 }
 
-// @symbol _ZN7Message11PrepareTalkEv
 void Message::PrepareTalk() {
     /* Duck the music to 0x40 before dialogue. EndTalk is the inverse. */
     Sound::ChangeMusicVolume(0x40, 0x0000c999);
     data_0209d664 = 1;
 }
 
-// @symbol _ZN7Message9AddChoiceEv
 /* Text code 2: marks an answer choice. Arg 0 sets the cursor row; 1..3 record
    the choice position and set the choice mode Update then drives. */
 void Message::AddChoice() {
@@ -197,7 +194,6 @@ void Message::AddChoice() {
 
 extern "C" {
 
-// @symbol func_0201aca4
 void func_0201aca4(void) {
 
     struct MsgTextChar {
@@ -246,7 +242,6 @@ void func_0201aca4(void) {
 }
 }
 
-// @symbol _ZN7Message11AddCharPairEv
 void Message::AddCharPair() {
     /* Text code 3. Calls AddChar twice with the font byte and the next byte.
        Index is data_0209d6f4 bytes [3] and [4], looked up in data_0208ee6c. */
@@ -266,7 +261,6 @@ void Message::AddCharPair() {
 
 extern "C" {
 
-// @symbol func_0201adfc
 void func_0201adfc(void) {
     int n;
     int i;
@@ -342,7 +336,6 @@ void func_0201adfc(void) {
     data_0209d6a0 += 3;
 }
 
-// @symbol func_0201b100
 void func_0201b100(int mode) {
     int base;
     int opcode;
@@ -435,7 +428,6 @@ void func_0201b100(int mode) {
  * per store the way the cartridge does, and CSE shares the two loads
  * (0x218 against 0x220). */
 #pragma opt_common_subs off
-// @symbol func_0201b388
 void func_0201b388(int a0) {
     int start;
     int *sl;
@@ -489,7 +481,6 @@ void func_0201b388(int a0) {
 #pragma pop
 }
 
-// @symbol _ZN7Message7AddCharEh
 void Message::AddChar(u8 c) {
     int i;
     int *ip;
@@ -534,7 +525,6 @@ void Message::AddChar(u8 c) {
 
 extern "C" {
 
-// @symbol func_0201b6f8
 void func_0201b6f8(int mode) {
     int i;
     u8 *p = data_0209d6f4;
@@ -565,7 +555,6 @@ void func_0201b6f8(int mode) {
 }
 }
 
-// @symbol _ZN7Message10LayoutLineEv
 /* Lays out the next text line: glyphs until 0xfd (line end) or 0xff (message
    end), 0xfe runs a text code. Then picks the next Update state. */
 void Message::LayoutLine() {
@@ -682,7 +671,6 @@ void Message::LayoutLine() {
     }
 }
 
-// @symbol _ZN7Message12UpdateWindowEv
 int Message::UpdateWindow() {
     if (data_0209d670 == 0) {
         if (gMsgBoxWinLeft > gMsgBoxLeft || gMsgBoxWinTop > gMsgBoxTop) {
@@ -784,7 +772,6 @@ int Message::UpdateWindow() {
     return 0;
 }
 
-// @symbol _ZN7Message6UpdateEv
 void Message::Update() {
     switch (data_0209d6bc) {
     case 1: {

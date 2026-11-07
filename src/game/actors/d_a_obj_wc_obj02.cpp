@@ -56,7 +56,6 @@ extern CLPS_Block data_ov029_0211302c;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjWc_Obj02_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: ArrowLift_Spawn. Attribution stays on
  * daObjWc_Obj02_c_classInit. */
@@ -70,7 +69,6 @@ extern "C" daObjWc_Obj02_c *daObjWc_Obj02_c_classInit() {
  * wants the last two. long_calls emits the pooled `ldr ip,[pc,#8]; bx ip`
  * absolute tail call. */
 #pragma long_calls on
-// @symbol _ZN15daObjWc_Obj02_c15StoodOnCallbackEPvPS_P8dActor_c
 void daObjWc_Obj02_c::StoodOnCallback(void *collider, daObjWc_Obj02_c *self, dActor_c *other) {
     self->OnStoodOn(other);
 }
@@ -80,7 +78,6 @@ void daObjWc_Obj02_c::StoodOnCallback(void *collider, daObjWc_Obj02_c *self, dAc
 /* -------------------------------------------------------------------------- */
 /* Arms mTriggered when the actor standing on the lift is the player (0xbf).
  * The unsigned char temporary is load-bearing. */
-// @symbol _ZN15daObjWc_Obj02_c9OnStoodOnEP8dActor_c
 void daObjWc_Obj02_c::OnStoodOn(dActor_c *other) {
     unsigned char ok = other->actorID == 0xbf;
     if (ok)
@@ -89,7 +86,6 @@ void daObjWc_Obj02_c::OnStoodOn(dActor_c *other) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj02_c13InitResourcesEv
 int daObjWc_Obj02_c::InitResources() {
     {
         BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_02114250);
@@ -115,7 +111,6 @@ int daObjWc_Obj02_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj02_c8BehaviorEv
 int daObjWc_Obj02_c::Behavior() {
     switch (mState) {
     case 0:
@@ -162,7 +157,6 @@ int daObjWc_Obj02_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj02_c6RenderEv
 int daObjWc_Obj02_c::Render() {
     mModel.Render(0);
     return 1;
@@ -170,7 +164,6 @@ int daObjWc_Obj02_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj02_c16CleanupResourcesEv
 int daObjWc_Obj02_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -179,8 +172,6 @@ int daObjWc_Obj02_c::CleanupResources() {
     data_ov029_02114248.Release();
     return 1;
 }
-// @symbol _ZN15daObjWc_Obj02_cD1Ev
-// @symbol _ZN15daObjWc_Obj02_cD0Ev
 /* daObjWc_Obj02_c's inline class-body destructor is instantiated by the
  * definitions above. mwccarm emits D1 and D0 into this object. */
 

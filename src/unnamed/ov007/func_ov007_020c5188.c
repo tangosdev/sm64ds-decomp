@@ -1,4 +1,3 @@
-// @symbol func_ov007_020c5188
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "Ov007Picker.h"

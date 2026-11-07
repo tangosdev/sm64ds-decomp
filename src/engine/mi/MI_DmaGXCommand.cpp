@@ -58,7 +58,6 @@ extern void MI_WaitDma(u32 dmaNo);
 void MIi_FIFOCallback(void);
 void MIi_DMACallback(void *arg);
 
-// @symbol MI_SendGXCommandAsync
 void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, MIDmaCallback callback,
                            void *arg) {
     if (!commandLength) {
@@ -98,7 +97,6 @@ void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, MIDmaC
     }
 }
 
-// @symbol MIi_FIFOCallback
 void MIi_FIFOCallback(void) {
     if (!MIi_GXDmaParams.length)
         return;
@@ -120,7 +118,6 @@ void MIi_FIFOCallback(void) {
     }
 }
 
-// @symbol MIi_DMACallback
 void MIi_DMACallback(void *arg) {
     IRQ::DisableIRQs(OS_IE_GXFIFO);
 

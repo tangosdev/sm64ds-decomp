@@ -33,12 +33,10 @@ enum {
     kWaterfallMistCourse21 = 0xeb
 };
 
-// @symbol daObjWaterfall_c_classInit
 extern "C" daObjWaterfall_c *daObjWaterfall_c_classInit() {
     return new daObjWaterfall_c();
 }
 
-// @symbol g_profile_WATERFALL
 extern "C" SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
     daObjWaterfall_c_classInit,
     0x00c5, /* WATERFALL registry id 197 */
@@ -49,7 +47,6 @@ extern "C" SpawnInfo<daObjWaterfall_c> g_profile_WATERFALL = {
     0x02000000,
     0};
 
-// @symbol _ZN16daObjWaterfall_c13InitResourcesEv
 s32 daObjWaterfall_c::InitResources() {
     mParticleID = kWaterfallMistDefault;
     switch (gCurrentSublevel) {
@@ -63,7 +60,6 @@ s32 daObjWaterfall_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjWaterfall_c8BehaviorEv
 s32 daObjWaterfall_c::Behavior() {
     mParticleHandle =
         Particle::System::New(mParticleHandle, mParticleID, mPosX, mPosY, mPosZ, 0, 0);

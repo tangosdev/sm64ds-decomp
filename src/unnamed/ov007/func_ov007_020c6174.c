@@ -1,4 +1,3 @@
-// @symbol func_ov007_020c6174
 #include "Ov007Picker.h"
 
 extern void func_ov007_020c7694(Ov007PointList *list, Vector3 *rest);

@@ -120,12 +120,10 @@ extern "C" SpawnInfo<daObjHatenaSwitch_c> g_profile_HATENA_SWITCH = {
     0,
 };
 
-// @symbol _ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_
 void daObjHatenaSwitch_c::AfterClsnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
     ((daObjHatenaSwitch_c *)owner)->HandleClsn(*other);
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c
 void daObjHatenaSwitch_c::HandleClsn(dActor_c &other) {
     if (!IsPlayerActor(&other) && !IsCrateActor(&other))
         return;
@@ -134,7 +132,6 @@ void daObjHatenaSwitch_c::HandleClsn(dActor_c &other) {
         mPressedThisFrame = 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c13InitResourcesEv
 s32 daObjHatenaSwitch_c::InitResources() {
     void *file;
 
@@ -170,7 +167,6 @@ s32 daObjHatenaSwitch_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c8BehaviorEv
 s32 daObjHatenaSwitch_c::Behavior() {
     if (mSoundDelay != 0) {
         if (DecIfAbove0_Short(&mSoundDelay) == 0)
@@ -265,13 +261,11 @@ s32 daObjHatenaSwitch_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c6RenderEv
 s32 daObjHatenaSwitch_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c16CleanupResourcesEv
 s32 daObjHatenaSwitch_c::CleanupResources() {
     if (mStaticMeshCollider.IsEnabled())
         mStaticMeshCollider.Disable();
@@ -284,7 +278,6 @@ s32 daObjHatenaSwitch_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c20UpdateModelTransformEv
 void daObjHatenaSwitch_c::UpdateModelTransform() {
     s32 shifted[4];
     Vec3_Asr((Vector3 *)&shifted, (Vector3 *)&mPosX, 3);
@@ -294,7 +287,6 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&mAnmModel.mat4x3;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv
 void daObjHatenaSwitch_c::UpdateClsnTransform() {
     *(Mtx43 *)&mClsnMat = *(Mtx43 *)&mAnmModel.mat4x3;
     mClsnMat.t.x = mPosX;
@@ -303,7 +295,6 @@ void daObjHatenaSwitch_c::UpdateClsnTransform() {
     mActiveMeshCollider->Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c15UpdateClsnStateEv
 s32 daObjHatenaSwitch_c::UpdateClsnState() {
     if (IsOffScreen(this)) {
         if (mActiveMeshCollider->IsEnabled())
@@ -316,12 +307,9 @@ s32 daObjHatenaSwitch_c::UpdateClsnState() {
     return 0;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c
 void daObjHatenaSwitch_c::OnGroundPounded(dActor_c &other) {
     mPressTimer = 0;
 }
-// @symbol _ZN19daObjHatenaSwitch_cD1Ev
-// @symbol _ZN19daObjHatenaSwitch_cD0Ev
 /* ROM ordinals 0/1 -- D1 at 0x020b4ed8 and D0 at 0x020b4f44 are emitted
  * naturally by the inline destructor and InitResources vtable instantiation. */
 

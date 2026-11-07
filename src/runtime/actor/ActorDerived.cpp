@@ -30,7 +30,6 @@ extern fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 a, int b);
 extern void func_02013f4c(void);
 }
 
-// @symbol func_02013f28
 /* Absorbed from the retired arm9 helper func_02013f28
  * (arm9 0x02013f28..0x02013f4c): fatal-error spin, IME off then call the
  * next entry forever. Defined first because this file emits in reverse
@@ -43,7 +42,6 @@ extern "C" void func_02013f28(void)
         func_02013f4c();
 }
 
-// @symbol _ZN7dBase_c18AfterInitResourcesEj
 void dBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess == 1)
@@ -51,12 +49,10 @@ void dBase_c::AfterInitResources(u32 vfSuccess)
     fBase_c::AfterInitResources(vfSuccess);
 }
 
-// @symbol _ZN7dBase_c5SpawnEjP7fBase_cii
 fBase_c *dBase_c::Spawn(u32 actorID, fBase_c *parent, int a, int b) {
     return func_02042ffc(actorID, parent, a, b);
 }
 
-// @symbol func_02013edc
 extern "C" int func_02013edc(int a, int b, int c) {
     return func_02042fe4(a, b, c);
 }

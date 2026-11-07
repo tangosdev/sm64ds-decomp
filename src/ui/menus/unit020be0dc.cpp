@@ -162,7 +162,6 @@ extern Ov007Model *func_ov007_020bc6d4(void *file, int flags);
 
 #define SPRITES data_ov007_02104bc0
 
-// @symbol func_ov007_020beb80
 /* Points the figure's particle system along bone 0's motion: on the frames
  * the model steps, refreshes the figure's yaw and remembered position; while
  * the model is shown and its animation is not finished, moves the system to
@@ -223,7 +222,6 @@ void func_ov007_020beb80(Ov007Figure *fig) {
     }
 }
 
-// @symbol func_ov007_020beaa0
 /* Builds figure `index` (0 the figure, 1 the second) for the work block's
  * figureIndex: makes the model from file 3, then hands func_ov007_020bc6b4
  * two animation files to bind to it -- the figure's own from
@@ -259,7 +257,6 @@ Ov007Figure *func_ov007_020beaa0(int index, int figureIndex) {
     return fig;
 }
 
-// @symbol func_ov007_020bea44
 /* Frees a figure built by func_ov007_020beaa0: releases its files (3, its
  * animation file, 0xe) and its model. It always releases 0xe, even when
  * func_ov007_020beaa0 loaded 0xf instead. */
@@ -274,7 +271,6 @@ void func_ov007_020bea44(Ov007Figure *fig) {
     func_ov007_020c3d1c(fig);
 }
 
-// @symbol func_ov007_020be9ac
 /* Poses a figure for the frame: hides its model while the main model plays
  * animation 1 or 2, and hides the second figure while figureIndex is 0;
  * then poses the model under viewMatrix, runs the figure's hook and
@@ -304,7 +300,6 @@ void func_ov007_020be9ac(Ov007Figure *fig, Ov007Model *owner, void *viewMatrix) 
     func_ov007_020beb80(fig);
 }
 
-// @symbol func_ov007_020be980
 /* Starts animation `anim` on the figure's model and shows it. */
 void func_ov007_020be980(Ov007Figure *fig, int anim, int a2) {
     func_ov007_020bc3dc(fig->model, anim, a2);
@@ -312,7 +307,6 @@ void func_ov007_020be980(Ov007Figure *fig, int anim, int a2) {
     fig->model->animTick = 1;
 }
 
-// @symbol func_ov007_020be964
 /* Holds the figure's bone animation if it is playing; returns its state. */
 int func_ov007_020be964(Ov007Figure *fig) {
     s32 *state = &fig->model->boneAnim->state;
@@ -328,7 +322,6 @@ static inline int BlendFx(int from, int to, int t) {
     return (int)(((s64)(0x1000 - t) * from + (s64)t * to) >> 12);
 }
 
-// @symbol func_ov007_020be8b8
 /* Fills the sixteen affine matrices with uniform scales: matrix i scales by
  * the reciprocal of a Q12 blend from 0x12c (i = 0) to 1 (i = 15). */
 void func_ov007_020be8b8(void) {
@@ -344,7 +337,6 @@ void func_ov007_020be8b8(void) {
     }
 }
 
-// @symbol func_ov007_020be850
 /* Picks a figure: none while the model is not ready; while the model's
  * bone animation is animation 0, the figure (or, from frame 0x7c on with
  * figureIndex 1, the second figure); otherwise the figure only in main
@@ -368,7 +360,6 @@ Ov007Figure *func_ov007_020be850(void) {
     return res;
 }
 
-// @symbol func_ov007_020be7a8
 /* func_0204dab4's callback: projects a particle at pos through camera 0 into
  * screen pixels, lifted by the figure's row (or 0x14b for camera preset
  * 4), with a full life scale. */
@@ -389,7 +380,6 @@ void func_ov007_020be7a8(void *pos, unsigned short *outX, unsigned short *outY, 
     *outScale = 0xfff;
 }
 
-// @symbol func_ov007_020be684
 /* Moves each item's node onto the particle it tracks: func_0204dab4 updates
  * the tracking records (claiming new ones at the extra node's priority while
  * that node is visible), then every item shows while its record holds a
@@ -422,7 +412,6 @@ void func_ov007_020be684(void *system, Ov007SpriteGroup *grp) {
     }
 }
 
-// @symbol func_ov007_020be50c
 /* Builds the sprite group (and its tracking records) at
  * data_ov007_02104bc0 in the sub OAM list: every item shows sprite bank 2's
  * animation 1 with an 8-pixel margin, the extra record animations 2 and 0
@@ -458,7 +447,6 @@ void func_ov007_020be50c(void) {
     func_ov007_020be8b8();
 }
 
-// @symbol func_ov007_020be47c
 void func_ov007_020be47c(void) {
     if (SPRITES == 0)
         return;
@@ -474,7 +462,6 @@ void func_ov007_020be47c(void) {
     SPRITES = 0;
 }
 
-// @symbol func_ov007_020be3bc
 /* Once func_ov007_020b7690 has particle systems 0 and 1, copies the sixteen
  * affine matrices into the sub screen's OAM buffer, Q12 down to Q8. */
 void func_ov007_020be3bc(void) {
@@ -499,7 +486,6 @@ static inline Matrix4x3 *Bone0(Ov007Figure *fig) {
     return fig->model->model->transforms;
 }
 
-// @symbol func_ov007_020be0dc
 /* One frame: pins the extra node to the shown figure's bone 0 on screen
  * (animation by the figure and its frame, size by the bone's tilt, OAM
  * priority by its depth), runs the figure's particle system through the
