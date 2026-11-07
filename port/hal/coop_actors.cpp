@@ -581,6 +581,15 @@ void apply_rec(int slot, Slot &s, Rx &x) {
     if (!force && !phase && err <= p.band && aerr <= 0x400) { ++g_st.in_band; return; }
     const bool write = force || phase || err > p.snap;
     if (!force && phase && (p.flags & kFSlave)) {            // slave() owns the pose; the counters are written here
+        if (g_lift_heading && is_simple_lift(p.id)) {        // COOPPLAT1: the slab's place, timers and heading are one state: write them together
+            const double gap = dist3(a, x.x, x.y, x.z);
+            CStat &c = g_cs[s.prof];
+            ++c.pin_n; c.pin_sum += gap; if (gap > c.pin_max) c.pin_max = gap; if (gap > 40.0) ++c.pin_big;
+            wr32(a, 0x5c, clampi(x.x, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
+            wr32(a, 0x60, clampi(x.y, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
+            wr32(a, 0x64, clampi(x.z, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
+            wr16(a, 0x8c, x.ax); wr16(a, 0x8e, x.ay); wr16(a, 0x90, x.az);
+        }
         for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
         fix_lift_heading(slot, a, p, x);
         ++g_st.applied_write; ++g_cs[s.prof].applied;
@@ -706,9 +715,10 @@ void slave(Slot &s, const Rx &x, unsigned now) {
     if (!x.valid || x.cls != p.id || x.nf != p.nf) return;
     const unsigned age = now - x.t;
     if (x.snap && age > 120u) return;                        // a snapshot pose is a starting point, not a live stream: the local copy, now in phase, runs on from it
-    // run after093, lane COOPPLAT1: a sliding slab is in phase (timers + heading) from the last record, so a record that has gone quiet
-    // (the owner in its exit fade, a stall) must not hold the copy in place while its own mMoveTimer runs out and turns it there
-    if (g_lift_heading && is_simple_lift(p.id) && age > 150u) return;
+    // run after093, lane COOPPLAT1: a sliding slab takes the owner's whole state at each record (apply_rec) and then runs on in phase, so it
+    // is never pinned: a pin to an extrapolated or stale pose would put it ahead of, or hold it against, its own timers, and it would
+    // keep that offset for the rest of the visit once the owner leaves
+    if (g_lift_heading && is_simple_lift(p.id)) return;
     if (age > (unsigned)kStaleMs) return;                    // the owner went quiet for good: let the local copy run (a still actor heartbeats every 1.5 s)
     char *a = s.a;
     if (skip_state(a, p)) return;
