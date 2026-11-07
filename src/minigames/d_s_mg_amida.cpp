@@ -508,8 +508,8 @@ void dScMgAmida_c::CheckHurryButton() {
     }
     if (pressed == 0)
         return;
-    int touchX = ((u8 (*)[4])gTouchX)[playerSlot][0];
-    int touchY = ((u8 (*)[4])gTouchY)[playerSlot][0];
+    int touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
+    int touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
     if (touchX < 0x60)
         return;
     if (touchX >= 0xa0)
@@ -544,8 +544,8 @@ void dScMgAmida_c::CheckEdgeBoost() {
     }
     playerSlot = gActivePlayerSlot;
     if (gTouchHeld[playerSlot * 4] != 0) {
-        touchX = ((u8 (*)[4])gTouchX)[playerSlot][0];
-        touchY = ((u8 (*)[4])gTouchY)[playerSlot][0];
+        touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
+        touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
         if ((touchX >= 0 && touchX < 0x10 && touchY >= 0x40 && touchY < 0x80) ||
             (touchX >= 0xf0 && touchX < 0x100 && touchY >= 0x40 && touchY < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -584,8 +584,8 @@ void dScMgAmida_c::HandlePen() {
     oldY = this->mPen.y;
 
     if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = ((u8 (*)[4])gTouchX)[gActivePlayerSlot][0];
-        int newY = ((u8 (*)[4])gTouchY)[gActivePlayerSlot][0];
+        int newX = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
+        int newY = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
         if (newX < 0)
             return;
         if (newX >= 0x100)

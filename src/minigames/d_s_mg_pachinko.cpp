@@ -2257,13 +2257,13 @@ void PachinkoBobOmb_StateWaitGrab(char *self, int i) {
     char *p;
     int dx, dy;
 
-    if (((u8 (*)[4])gTouchHeld)[idx][0] != 0) {
-        flag = ((u8 (*)[4])gTouchEdge)[idx][0] != 0;
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
+        flag = ((u8(*)[4])gTouchEdge)[idx][0] != 0;
     }
     if (flag != 0) {
         p = self + i * 0x38;
-        dx = (SHOT(p)->x >> 12) - ((u8 (*)[4])gTouchX)[idx][0];
-        dy = (SHOT(p)->y >> 12) - ((u8 (*)[4])gTouchY)[idx][0];
+        dx = (SHOT(p)->x >> 12) - ((u8(*)[4])gTouchX)[idx][0];
+        dy = (SHOT(p)->y >> 12) - ((u8(*)[4])gTouchY)[idx][0];
         SHOT(p)->state = 1;
         SHOT(p)->offX = dx << 12;
         SHOT(p)->offY = dy << 12;
@@ -2302,12 +2302,12 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
     s32 cy;
     u32 idx = gActivePlayerSlot;
 
-    if (((u8 (*)[4])gTouchHeld)[idx][0] != 0) {
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
         int off = i * 0x38;
         s32 vy, vx;
 
-        cx = ((u8 (*)[4])gTouchX)[idx][0];
-        cy = ((u8 (*)[4])gTouchY)[idx][0];
+        cx = ((u8(*)[4])gTouchX)[idx][0];
+        cy = ((u8(*)[4])gTouchY)[idx][0];
         *(s32 *)(c + SHOT_OFF(x) + off) = (cx << 12) + *(s32 *)(c + SHOT_OFF(offX) + off);
         *(s32 *)(c + SHOT_OFF(y) + off) = (cy << 12) + *(s32 *)(c + SHOT_OFF(offY) + off);
 
@@ -2324,8 +2324,10 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
             *py = 0x8000;
 
         {
-            s32 nx = (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - ((u8 (*)[4])gTouchX)[gActivePlayerSlot][0];
-            s32 ny = (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - ((u8 (*)[4])gTouchY)[gActivePlayerSlot][0];
+            s32 nx =
+                (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
+            s32 ny =
+                (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
 
             *(s32 *)(c + SHOT_OFF(offX) + off) = nx << 12;
             *(s32 *)(c + SHOT_OFF(offY) + off) = ny << 12;

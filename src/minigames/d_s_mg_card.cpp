@@ -409,8 +409,8 @@ void dScMgCard_c::UpdateState()
             ok = 1;
         if (ok != 0 && dScMgCard_c::AllLifted((const dMgCardObj_c *)mArray1) != 0 &&
             sCardSelectLocked == 0) {
-            v5 = ((u8 (*)[4])gTouchX)[gActivePlayerSlot][0];
-            v4 = ((u8 (*)[4])gTouchY)[gActivePlayerSlot][0];
+            v5 = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
+            v4 = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
             if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0) {
                 r = v5 - 0x80;
                 if (r < 0)
@@ -1441,8 +1441,8 @@ void dMgCardObj_c::Update()
             if (mLift != 0x4000)
                 return;
             {
-                int touchDeltaX = (int)((u8 (*)[4])gTouchX)[touchIndex][0] - (mX >> 12);
-                int touchDeltaY = (int)((u8 (*)[4])gTouchY)[touchIndex][0] - (mY >> 12);
+                int touchDeltaX = (int)((u8(*)[4])gTouchX)[touchIndex][0] - (mX >> 12);
+                int touchDeltaY = (int)((u8(*)[4])gTouchY)[touchIndex][0] - (mY >> 12);
                 if (touchDeltaX <= 7)
                     return;
                 if (touchDeltaX >= 0x29)

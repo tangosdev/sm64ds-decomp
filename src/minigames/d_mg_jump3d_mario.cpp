@@ -161,7 +161,6 @@ extern OamAttr *data_ov006_02134d1c;
 extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 
-
 extern Matrix4x3 data_020a0e68;
 extern short data_02082214[];
 extern fBase_c *data_0209f5c0;
@@ -498,18 +497,18 @@ void dMgJump3DMario_c::StateHold()
     u32 idx = gActivePlayerSlot;
     int flag = 0;
 
-    if (((u8 (*)[4])gTouchHeld)[idx][0] != 0) {
-        if (((u8 (*)[4])gTouchEdge)[idx][0] != 0) {
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
+        if (((u8(*)[4])gTouchEdge)[idx][0] != 0) {
             flag = 1;
         }
     }
     if (flag != 0) {
         /* Keep reusing `flag` here: reading the table straight into `b`
            costs 5 words (notes/experiments/jump3d-2711-statehold-flag-reuse.md). */
-        flag = ((u8 (*)[4])gTouchY)[idx][0];
+        flag = ((u8(*)[4])gTouchY)[idx][0];
         int b = flag;
         int x = mScreenY - 0x20;
-        int dz = mScreenX - ((u8 (*)[4])gTouchX)[idx][0];
+        int dz = mScreenX - ((u8(*)[4])gTouchX)[idx][0];
         if (dz < 0) {
             dz = -dz;
         }
@@ -603,13 +602,13 @@ void dMgJump3DMario_c::StateMove()
     {
         int flag = 0;
         u8 idx = gActivePlayerSlot;
-        if (((u8 (*)[4])gTouchHeld)[idx][0] != 0 && ((u8 (*)[4])gTouchEdge)[idx][0] != 0)
+        if (((u8(*)[4])gTouchHeld)[idx][0] != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0)
             flag = 1;
 
         if (flag != 0) {
             s16 y = mScreenY;
-            int ax = (int)((u8 (*)[4])gTouchX)[idx][0];
-            int az = (int)((u8 (*)[4])gTouchY)[idx][0];
+            int ax = (int)((u8(*)[4])gTouchX)[idx][0];
+            int az = (int)((u8(*)[4])gTouchY)[idx][0];
             int dx = (int)mScreenX - ax;
             int ym = (int)y - 0x20;
             int t = dx < 0 ? -dx : dx;
