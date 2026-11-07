@@ -5543,11 +5543,20 @@ static int pad_act(const XPad *pad, int action)
     return pad_mask_down(pad, g_pad[action]);
 }
 
+/* MOUSELOCK1: THE LEFT BUTTON IS A GAME ACTION ONLY IN PLAY. With left bound (MouseAttack = 1 and the like) the level loop decides once a
+   frame (mo_left_frame, beside the pointer lock) whether this frame is play or a pen moment (mo_pen_moment: menus, the pause, the save menu,
+   message windows, the Joining plate, a stacked window, every scene frame). In play left is the bound action and hal/sub_screen.cpp's
+   poll_touch does not see it (port_left_action_hook); in a pen moment it is the stylus and no action reads it. Nothing bound to left:
+   g_left_game stays 0 and nothing here or in poll_touch changes. g_left_game_hold keeps a press that began as play away from the stylus
+   until it is let go, so a punch held into the pause is not a touch on a plate. */
+static int g_left_game;
+static int g_left_game_hold;
 /* CAMPACK1: a mouse-button binding (settings.json MouseCam*; values are the Win32 VK of the button). */
 static int mouse_act(int action)
 {
     bindings_load();
     const int vk = host_setting_mouse(action);
+    if (vk == VK_LBUTTON && !g_left_game) return 0;     /* MOUSELOCK1: left is the stylus this frame */
     return vk && key_live(vk);     /* GetAsyncKeyState reads the mouse buttons by VK; SM64DS_HOST_KEY=<vk hex>@f0-f1 scripts one for a row */
 }
 /* MOUSEBIND1: the raw DS Start (0x08) and Select (0x04) bits from their mouse buttons, for the two places the keys' own bits are made */
@@ -5560,6 +5569,7 @@ static unsigned short mouse_start_select_raw(void)
 static void mouse_buttons_stale(void)
 {
     key_stale[2] = key_stale[4] = key_stale[5] = key_stale[6] = 1;
+    key_stale[VK_LBUTTON] = 1;      /* MOUSELOCK1: the left click on Back is not a fresh left-bound punch */
 }
 
 /* THE PAD'S HALF OF THE SAME GATE, and it was missing for as long as the
@@ -13396,27 +13406,93 @@ static void mo_capture_set(HWND h, int on)
    inside #ifndef PORT_ROM_CLEAN and this predicate is read unconditionally,
    one line below. */
 extern "C" int hal_save_menu_up(void);
+/* MOUSELOCK1: THE FRAMES WHERE THE POINTER IS A PEN. One list, read by the pointer lock (mo_capture_want) and by the left-button routing
+   (mo_left_frame), so the two can never disagree: wherever the lock lets go, a left click is the stylus again. Each term is a screen that
+   takes clicks or a moment a key is being chosen:
+     stacked          the bottom half of the window is a live touchscreen;
+     menu_on          the debug menu (Escape, the release), the settings page, the white door's picker;
+     save menu        the level-clear save menu's three touch boxes (hal/sub_screen.cpp, the predicate the screen swap reads);
+     one-screen menu  any live recipe (hal_menu_live): the new pause, the level clear, the fallback;
+     pause            the ROM's pause flag data_0209f2c4 (0 = playing; hal/menu_recipe_pause.cpp pause_variant reads the same byte), so the
+                      ROM's own plates on the corner panel are reachable with OneScreenMenus off too;
+     message window   data_0209d660, the ROM's message box (Stage::CheckInput reads it, see rom_ctrl_open): its choices are touch boxes;
+     Joining plate    its BACK is a click;
+     rebind / learn   a button is being chosen.
+   The scene path (title, file select, star select interlude, the online menus, minigames) never asks: scene_host_input_frame drops both. */
+static int mo_pen_moment(int stacked, const char **why)
+{
+    const char *w = 0;
+    if (stacked) w = "stacked window";
+    else if (menu_on) w = "menu or settings page";
+    else if (hal_save_menu_up()) w = "level-clear save menu";
+    else if (hal_menu_live()) w = "one-screen menu";
+    else if (*(const volatile unsigned char *)data_0209f2c4 != 0) w = "pause";
+    else if (data_0209d660 != 0) w = "message window";
+    else if (port_join_plate_up()) w = "Joining plate";
+    else if (g_rebind_capture) w = "rebind capture";
+    else if (g_padlearn) w = "pad layout learn";
+    if (why) *why = w;
+    return w != 0;
+}
+static const char *mo_lock_said = (const char *)1;     /* the reason last printed, so each change is one line */
 static int mo_capture_want(int selftest, int stacked)
 {
-    if (!mo_capture_opt) return 0;      /* the setting, and it is off by default */
-    if (selftest) return 0;             /* no player, no pointer */
-    if (stacked) return 0;              /* the bottom half is a touchscreen */
-    if (cam_mode == CAM_DS) return 0;   /* the mouse steers nothing there */
-    if (menu_on) return 0;              /* escape is the release */
-    /* THE LEVEL-CLEAR SAVE MENU IS A PEN MOMENT (hal/sub_screen.cpp's own
-       predicate, the same one the screen swap reads). While it is up the
-       bottom screen carries three touch boxes and nothing else answers them,
-       and a pointer that is pinned to the middle of the picture, invisible,
-       and fenced out of the corner panel cannot reach any of them. So the
-       pointer is handed back for those frames and taken again afterwards,
-       which is the same bargain the scene path and the stacked window get. */
-    if (hal_save_menu_up() || hal_menu_live()) return 0;
-    if (g_rebind_capture) return 0;     /* a key is being chosen */
-    if (g_padlearn) return 0;           /* a pad is being taught */
-    if (rb_replaying()) return 0;       /* a rewound window is being re-run */
+    const char *why = 0;
+    if (!mo_capture_opt) why = "setting off";             /* the setting (on by default since MOUSELOCK1) */
+    else if (selftest) why = "selftest";                  /* no player, no pointer */
+    else if (mo_pen_moment(stacked, &why)) {}             /* the pointer is a pen: see the list above */
+    else if (cam_mode == CAM_DS) why = "DS camera";       /* the mouse steers nothing there */
+    else if (rb_replaying()) why = "rewind replay";       /* a rewound window is being re-run */
+    /* one line each time the answer or its reason changes (focus is the separate term below, and mo_capture_set says when the pointer is
+       really taken); this is what the MOUSELOCK1 rows read, since a test window is never the foreground one */
+    const char *said = mo_lock_said;
+    if (why != said) {
+        mo_lock_said = why;
+        fprintf(stderr, "[mouse] lock %s (%s) f%d\n", why ? "let go" : "wanted", why ? why : "play", g_host_key_frame);
+    }
+    if (why) return 0;
     if (!hal_window_focused()) return 0;/* alt-tab hands it back */
     return 1;
 }
+/* MOUSELOCK1: the physical left button this frame, behind the same focus gate and test script key_live has */
+static int mo_left_down(void)
+{
+    if (host_key_script(VK_LBUTTON)) return 1;
+    return hal_window_focused() && W.GetAsyncKeyState_ && W.GetAsyncKeyState_(VK_LBUTTON) < 0;
+}
+static void mo_left_frame(int stacked)
+{
+    int bound = 0;
+    for (int i = 0; i < HOST_MOUSE_COUNT; ++i) bound |= host_setting_mouse(i) == VK_LBUTTON;
+    if (!bound && !g_left_game && !g_left_game_hold) return;      /* nothing on left: today's program */
+    const int game = bound && !mo_pen_moment(stacked, 0);
+    if (game && !g_left_game) key_stale[VK_LBUTTON] = 1;          /* a left still held from a menu click is not a fresh press */
+    if (game != g_left_game)
+        fprintf(stderr, "[mouse] left button is %s f%d\n", game ? "the bound action" : "the stylus", g_host_key_frame);
+    g_left_game = game;
+    const int down = mo_left_down();
+    if (!down) g_left_game_hold = 0;
+    else if (game) g_left_game_hold = 1;
+}
+/* the scene path: the mouse is the stylus there, and the lock lets go (the star select interlude and the title run here mid-session) */
+static void mo_scene_frame(HWND hwnd)
+{
+    mo_capture_set(hwnd, 0);
+    static const char scene_why[] = "scene";
+    if (mo_lock_said != scene_why) {
+        mo_lock_said = scene_why;
+        fprintf(stderr, "[mouse] lock let go (scene) f%d\n", g_host_key_frame);
+    }
+    if (g_left_game) fprintf(stderr, "[mouse] left button is the stylus (scene) f%d\n", g_host_key_frame);
+    g_left_game = 0;
+    if (g_left_game_hold && !mo_left_down()) g_left_game_hold = 0;
+}
+/* hal/sub_screen.cpp's two questions (null on targets without this file): is left a game action now, and is the pointer held now */
+extern "C" int (*port_left_action_hook)(void);
+extern "C" int (*port_pointer_held_hook)(void);
+static int mo_left_is_action(void) { return g_left_game || g_left_game_hold; }
+static int mo_pointer_held(void) { return mo_captured; }
+static struct MoSeat { MoSeat() { port_left_action_hook = mo_left_is_action; port_pointer_held_hook = mo_pointer_held; } } g_mo_seat;
 
 /* The player has chosen a window size, by dragging the border or by
    maximising, so nothing in this program may choose one for them afterwards.
@@ -15101,9 +15177,9 @@ static void rebind_capture_frame(int *pad_live, const XPad *pad)
         static unsigned mouse_prev = ~0u;
         unsigned mouse_fresh = 0;
         if (sl_capture_wants_mouse() && W.GetAsyncKeyState_ && hal_window_focused()) {
-            static const int MVK[4] = { 2, 4, 5, 6 };
+            static const int MVK[5] = { 2, 4, 5, 6, 1 };     /* MOUSELOCK1: left last (the lowest fresh bit wins) */
             unsigned mnow = 0;
-            for (int i = 0; i < 4; ++i) if (W.GetAsyncKeyState_(MVK[i]) < 0) mnow |= 1u << i;
+            for (int i = 0; i < 5; ++i) if (W.GetAsyncKeyState_(MVK[i]) < 0) mnow |= 1u << i;
             if (mouse_prev == ~0u) mouse_prev = mnow;
             mouse_fresh = mnow & ~mouse_prev;
             mouse_prev = mnow;
@@ -15111,7 +15187,7 @@ static void rebind_capture_frame(int *pad_live, const XPad *pad)
         if (mouse_fresh) {
             int i = 0;
             while (!(mouse_fresh & (1u << i))) ++i;
-            static const int MVK2[4] = { 2, 4, 5, 6 };
+            static const int MVK2[5] = { 2, 4, 5, 6, 1 };
             if (sl_capture_offer_mouse(MVK2[i])) {
                 done = 1;
                 char msg[96];
@@ -15448,6 +15524,7 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
         *focus_was = now;
     }
     g_host_key_frame = frame;
+    mo_scene_frame(hwnd);      /* MOUSELOCK1: the scene path is a pen moment: the lock lets go, left is the stylus */
     {
         static int fs_edge;
         fullscreen_boot(hwnd);
@@ -18937,6 +19014,7 @@ int main(void)
            does NOT have this line and must not: the mouse is the stylus there.
            See the MOUSE banner for the whole list. */
         mo_capture_set(hwnd, mo_capture_want(selftest, stacked));
+        mo_left_frame(stacked);     /* MOUSELOCK1: left bound to an action is that action in play, the stylus in a pen moment */
         /* the right stick's X, from the pad or from the selftest ramp:
            SM64DS_SELFTEST_STICK=<pct> holds it at pct% of full deflection
            from frame 20 (negative for the other way), and =0 ramps it from

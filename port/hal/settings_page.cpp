@@ -859,6 +859,7 @@ const char *id_name(int id, char *buf, int cap)
     if (id >= SL_MOUSE_BASE) {
         switch (sl_get(id)) {      /* CAMPACK1: the mouse buttons, by the Win32 VK the file stores */
         case 0: return "NONE";
+        case 1: return "LEFT";      /* MOUSELOCK1 */
         case 2: return "RIGHT";
         case 4: return "MIDDLE";
         case 5: return "BACK";
@@ -1431,7 +1432,7 @@ extern "C" int settings_page_frame(const SpInput *in)
         else {
             if (why && *why) note(why);
             const int mrow = sl_capture_wants_mouse();      /* CAMPACK1: a mouse row takes the right / middle / side buttons as its answer, only the left click backs out */
-            if (((held & SPK_CAP_CANCEL) && edge_only(9, held)) || l_edge || (r_edge && !mrow) || S.cap_frames > 900) {
+            if (((held & SPK_CAP_CANCEL) && edge_only(9, held)) || (l_edge && !mrow) || (r_edge && !mrow) || S.cap_frames > 900) {   /* MOUSELOCK1: a mouse row takes left too; Esc keeps the old one */
                 sl_capture_cancel();
                 S.cap_active = 0;
                 S.settle = 1; S.settle_n = 0;
@@ -2190,7 +2191,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
         const int camrow = S.cursor_shown && S.sel < n && rows[S.sel].t == R_BIND &&
                            (!strncmp(rows[S.sel].label, "Rotate camera", 13) || !strcmp(rows[S.sel].label, "Center camera"));
         const char *msg = S.note[0] ? S.note
-                          : (S.cap_active ? (S.cap_id < SL_PAD_BASE ? "Press a key. Esc keeps the old one." : S.cap_id >= SL_MOUSE_BASE ? "Press a mouse button. Left click keeps the old one." : "Press a button. BACK keeps the old one.")
+                          : (S.cap_active ? (S.cap_id < SL_PAD_BASE ? "Press a key. Esc keeps the old one." : S.cap_id >= SL_MOUSE_BASE ? "Press a mouse button. Esc keeps the old one." : "Press a button. BACK keeps the old one.")
                              : (camrow ? "In the pause, LB / RB and Q / E always slide the screens." : ""));
         const int fy = L.reset[1] + L.reset[3] / 2;
         if (msg[0]) {

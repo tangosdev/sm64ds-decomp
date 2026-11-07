@@ -61,7 +61,7 @@ static const SlInfo INFO[] = {
        row two places off, and Reset wrote those rows' wrong defaults) */
     { "PadPartyInvite", SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0001, 0, 1 },
     { "PadPartyLeave",  SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0002, 0, 1 },
-    /* mouse buttons, in HOST_MOUSE_ order (CAMPACK1): VK 0 none, 2 right, 4 middle, 5 X1, 6 X2 */
+    /* mouse buttons, in HOST_MOUSE_ order (CAMPACK1): VK 0 none, 1 left (MOUSELOCK1, not MouseCamHold), 2 right, 4 middle, 5 X1, 6 X2 */
     { "MouseCamHold",    SL_KIND_MOUSE, 0, 6, 2, 0, 1 },
     { "MouseCamCenter",  SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseCamLeft",    SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
@@ -90,7 +90,7 @@ static const SlInfo INFO[] = {
     { "InvertCameraY",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "CameraSensitivity",      SL_KIND_PERCENT, 10, 400, 100, 0, 1 },
     { "MouseSensitivity",       SL_KIND_PERCENT, 10, 400, 100, 0, 1 },
-    { "MouseCapture",           SL_KIND_BOOL,    0, 1, 0, 0, 1 },
+    { "MouseCapture",           SL_KIND_BOOL,    0, 1, 1, 0, 1 },   /* MOUSELOCK1: on by default */
     { "CameraStickZoom",        SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "Volume",                 SL_KIND_PERCENT, 0, 100, 50, 0, 1 },
     { "MinimapScale",           SL_KIND_PERCENT, 25, 400, 100, 0, 1 },
@@ -357,6 +357,11 @@ static int pad_reserved(int action, unsigned bit, const char **why)
 int sl_capture_offer_key(int vk)
 {
     if (g_cap_state != SL_CAP_WAITING) return 0;
+    /* MOUSELOCK1: a mouse row takes the left click as its answer now, so Escape is how it keeps the old button */
+    if (vk == 0x1b && g_cap_id >= SL_MOUSE_BASE && !g_cap_either) {
+        g_cap_state = SL_CAP_CANCELLED;
+        return 1;
+    }
     if (g_cap_id >= SL_PAD_BASE && !g_cap_either) return 0;   /* a pad or mouse row waits for its own device */
     if (vk == 0x1b) {
         g_cap_state = SL_CAP_CANCELLED;
@@ -382,7 +387,11 @@ int sl_capture_wants_mouse(void)
 int sl_capture_offer_mouse(int vk)
 {
     if (!sl_capture_wants_mouse()) return 0;
-    if (!(vk == 2 || (vk >= 4 && vk <= 6))) return 0;
+    if (!(vk == 1 || vk == 2 || (vk >= 4 && vk <= 6))) return 0;
+    if (vk == 1 && g_cap_id == SL_MOUSE_BASE + HOST_MOUSE_CAM_HOLD) {     /* MOUSELOCK1: left cannot be the look button */
+        snprintf(g_cap_refused, sizeof g_cap_refused, "Left click cannot be the look button");
+        return 0;
+    }
     host_setting_set_mouse(g_cap_id - SL_MOUSE_BASE, vk);
     g_cap_refused[0] = 0;
     g_cap_state = SL_CAP_BOUND;
