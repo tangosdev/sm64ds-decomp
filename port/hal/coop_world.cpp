@@ -467,16 +467,42 @@ void room_gone_note(const CoopKey &k, int slot, unsigned cls) {
     }
     if (g_room_gone_n < kRoomGoneMax) g_room_gone[g_room_gone_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, (uint16_t)cls};
 }
-// A seat other than mine with (level, act) loaded, from its fresh presence (a seat that dropped out goes stale and stops
+// Who still has a level. A seat has (level, act) while it is in it, and it keeps the level it came straight from while it
+// is in a course it reached from there (not one of the castle levels 1 to 5): the breaker who drops through the garden
+// grate into the course below, or goes through the freed cage into Big Boo's Haunt, still has the garden under him, so a
+// friend who walks in later finds it the way he left it. Walking out into the castle lets go of it. The level it came from
+// is matched by level alone: the act a console shows can move to the next one just before it leaves.
+bool castle_level(int level) { return level >= 1 && level <= 5; }
+bool seat_has(const CoopKey &cur, const CoopKey &prev, const CoopKey &k) {
+    return cur == k || (prev.valid() && prev.level == k.level && cur.valid() && cur.level != k.level && !castle_level(cur.level));
+}
+CoopKey g_pres_cur[kCoopSeats], g_pres_prev[kCoopSeats];   // every seat's level and the one before it, from presence
+CoopKey g_my_cur, g_my_prev;                                 // mine, from my own level changes
+// Every room_forget run: note each seat's level change (a new level, not a new act in the same level).
+void pres_track() {
+    for (int s = 0; s < kCoopSeats; ++s) {
+        if (s == g_my) continue;
+        HubPresence p; unsigned age = 0;
+        if (!hub_presence_get(s, &p, &age) || !p.in_level() || age >= kPresenceMs) continue;
+        const CoopKey k(p.level, p.act);
+        if (k.level != g_pres_cur[s].level) g_pres_prev[s] = g_pres_cur[s];
+        g_pres_cur[s] = k;
+    }
+}
+// A seat other than mine that has (level, act), from its fresh presence (a seat that dropped out goes stale and stops
 // counting), or -1.
 int room_seat_in(const CoopKey &k) {
     for (int s = 0; s < kCoopSeats; ++s) {
         if (s == g_my) continue;
         HubPresence p; unsigned age = 0;
-        if (hub_presence_get(s, &p, &age) && p.in_level() && age < kPresenceMs && p.level == k.level && p.act == k.act) return s;
+        if (!hub_presence_get(s, &p, &age) || !p.in_level() || age >= kPresenceMs) continue;
+        const CoopKey cur(p.level, p.act);
+        const CoopKey &prev = cur.level == g_pres_cur[s].level ? g_pres_prev[s] : g_pres_cur[s];
+        if (seat_has(cur, prev, k)) return s;
     }
     return -1;
 }
+bool i_have(const CoopKey &k) { return seat_has(g_my_cur, g_my_prev, k); }
 void room_gone_load(const CoopKey &k) {   // a new level visit: its broken blocks onto the group list
     for (int i = 0; i < g_room_gone_n; ++i) {
         const RoomGone &r = g_room_gone[i];
@@ -495,7 +521,8 @@ void room_gone_load(const CoopKey &k) {   // a new level visit: its broken block
 // and the next visit after it emptied starts the way the cartridge builds it. Every console judges it alone from what it
 // already has (its own level and every seat's presence), so a console that left earlier forgets too, a seat that drops out
 // stops counting when its presence goes stale, and nothing new goes on the wire. kRoomEmptyMs of nobody rides out a
-// presence packet or two going missing. A stale push cannot bring entries back: the list is only sent to a member joining a
+// presence packet or two going missing. "Has it loaded" includes the course a player dropped into from it (seat_has).
+// A stale push cannot bring entries back: the list is only sent to a member joining a
 // group, and a group has somebody in it.
 enum : unsigned { kRoomEmptyMs = 3000, kRoomEmptyMax = 16 };
 struct RoomEmpty { CoopKey k; unsigned since; };
@@ -508,6 +535,7 @@ void room_forget_key(const CoopKey &k) {
                          " the next visit starts whole wall=%lld\n", k.level, k.act, blocks, wall_ms());
 }
 void room_forget(unsigned now) {
+    pres_track();
     CoopKey keys[kRoomGoneMax]; int nk = 0;
     for (int i = 0; i < g_room_gone_n; ++i) {
         const CoopKey k(g_room_gone[i].level, g_room_gone[i].act);
@@ -518,10 +546,10 @@ void room_forget(unsigned now) {
     for (int i = 0; i < g_room_empty_n; ++i) {   // a level that has nothing left to forget, or has somebody again
         bool listed = false;
         for (int j = 0; j < nk && !listed; ++j) listed = keys[j] == g_room_empty[i].k;
-        if (!listed || g_room_empty[i].k == g_key || room_seat_in(g_room_empty[i].k) >= 0) g_room_empty[i--] = g_room_empty[--g_room_empty_n];
+        if (!listed || i_have(g_room_empty[i].k) || room_seat_in(g_room_empty[i].k) >= 0) g_room_empty[i--] = g_room_empty[--g_room_empty_n];
     }
     for (int j = 0; j < nk; ++j) {
-        if (keys[j] == g_key || room_seat_in(keys[j]) >= 0) continue;
+        if (i_have(keys[j]) || room_seat_in(keys[j]) >= 0) continue;
         int e = -1;
         for (int i = 0; i < g_room_empty_n && e < 0; ++i) if (g_room_empty[i].k == keys[j]) e = i;
         if (e < 0) { if (g_room_empty_n < (int)kRoomEmptyMax) g_room_empty[g_room_empty_n++] = {keys[j], now}; continue; }
@@ -978,6 +1006,8 @@ void join_group(const CoopKey &nk) {
     g_star_spawned = false;
     g_star_tries = 0; g_star_next = 0; g_star_base = g_st.star_collects;
     g_rejected = CoopKey();
+    if (nk.level != g_my_cur.level) g_my_prev = g_my_cur;   // Tango's rule: the level I came straight from
+    g_my_cur = nk;
     g_key = nk;
     g_part = part_of_level(nk.level);
     room_gone_load(nk);   // COOPSYNC1: blocks broken here earlier in this room
@@ -1393,6 +1423,8 @@ void tick_est(unsigned now) {
 void coop_world_session_reset() {
     g_room_gone_n = 0;   // COOPSYNC1: a new room starts with every block whole
     g_room_empty_n = 0;
+    for (int s = 0; s < kCoopSeats; ++s) g_pres_cur[s] = g_pres_prev[s] = CoopKey();
+    g_my_cur = g_my_prev = CoopKey();
     g_env_read = false;
     g_on = false;
     g_handlers = false;
