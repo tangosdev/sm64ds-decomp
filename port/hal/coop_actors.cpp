@@ -225,6 +225,8 @@ struct Rx {
 struct Job { bool on; int passes; unsigned next; int cursor; };
 
 bool g_env = false, g_log = false, g_act = true, g_snap_on = true, g_hyst = true, g_stale_on = true;
+bool g_lift_heading = true;  // SM64DS_COOP_LIFT_HEADING=0 is the MUST-FAIL control (run after093, lane COOPPLAT1): a sliding slab keeps its own heading
+unsigned g_lift_flips = 0;
 unsigned g_sample_every = 0;
 unsigned g_dump_at[4]; int g_ndump = 0;
 struct ForgeKnob { unsigned tick; char name[12]; bool done; };
@@ -261,6 +263,7 @@ void read_env() {
     g_env = true;
     auto flag = [](const char *n, bool dflt) { const char *e = std::getenv(n); return (e && *e) ? *e != '0' : dflt; };
     g_log = flag("SM64DS_COOP_MOVE_LOG", false);
+    g_lift_heading = flag("SM64DS_COOP_LIFT_HEADING", true);
     g_boss_own = flag("SM64DS_MOVERS_BOSSOWN", true);
     g_new_rows = flag("SM64DS_MOVERS_NEWROWS", true);
     g_hold_mips = flag("SM64DS_MOVERS_MIPSHOLD", true);
@@ -510,6 +513,46 @@ void ease_angle(char *a, int off, int16_t cur, int16_t want) {
     else if (e > 0x400) wr16(a, off, (int16_t)(cur + (int16_t)(want - cur) / 2));
 }
 
+// Run after093, lane COOPPLAT1. daObjSimpleLift_c (src/game/actors/d_a_obj_simple_lift.cpp, every sliding slab: classes 55 124
+// 138 146 147 154 155) slides along mPrevAngleY (+0x94, the heading dActor_c::UpdatePosWithHorzSpeedAndAng reads,
+// src/runtime/actor/d_actor.cpp:628) and Behavior turns that heading by 0x8000 each time mMoveTimer runs out. The record carries
+// the owner's pose and its two timers (+0x31c / +0x320) but not the heading, and a copy that spawned later has turned a different
+// number of times, so half the time the owner's timers land on a copy that slides the other way. The pin hides it while the owner
+// streams; once the owner leaves the copy runs free one whole leg off its track (a BFS square half inside the walkway).
+// The heading is not on the wire, but the record fixes it: the slab is on its way out (heading H0, InitResources:180) when its
+// distance from the spawn point is the travel length minus what the timer still has to run, and on its way back when that distance
+// is what the timer still has to run. The owner's record gives both numbers; the copy takes the matching heading.
+extern "C" { extern unsigned short data_ov091_02134504[]; extern unsigned short data_ov091_02134514[]; }
+bool is_simple_lift(unsigned id) {
+    return id == 55 || id == 124 || id == 138 || id == 146 || id == 147 || id == 154 || id == 155;
+}
+void fix_lift_heading(int slot, char *a, const Prof &p, const Rx &x) {
+    if (!g_lift_heading || !is_simple_lift(p.id) || p.nf < 2) return;
+    const unsigned variant = (unsigned)(uint8_t)a[0x322];
+    if (variant > 6) return;
+    const int speed = rd32(a, 0x98) >> 12;                                  // mHorzSpeed, 0xa000 = 10 units a frame (InitResources:185)
+    const int travel = (int)data_ov091_02134504[variant];
+    if (speed <= 0 || travel <= 0 || travel > 1000) return;
+    const int16_t angx = rd16(a, 0x8c), angy = rd16(a, 0x8e);
+    const int16_t h0 = (int16_t)(angx != 0 ? angy + angx : angy + (int16_t)data_ov091_02134514[variant]);   // InitResources:180-182
+    const double rad = (double)(uint16_t)h0 * (6.283185307179586 / 65536.0);
+    const double dx = std::sin(rad), dz = std::cos(rad);                     // X with the sine, Z with the cosine (the ROM table pair)
+    const double ox = (double)(x.x - rd32(a, 0x324)) / 4096.0, oz = (double)(x.z - rd32(a, 0x32c)) / 4096.0;   // from mBasePos
+    const double along = ox * dx + oz * dz;
+    const int timer = (int)(int16_t)(x.f[1] & 0xffffu);                       // the owner's mMoveTimer (+0x320, low half)
+    const double rest = (double)timer * speed, len = (double)travel * speed;
+    const double e_out = std::fabs(along - (len - rest)), e_back = std::fabs(along - rest);
+    if (std::fabs(e_out - e_back) < 2.0 * speed) return;                    // the middle of a leg: both fit, keep what we have
+    const int16_t want = (int16_t)(e_out < e_back ? h0 : h0 + (int16_t)0x8000);
+    const int16_t cur = rd16(a, 0x94);
+    if (cur == want) return;
+    wr16(a, 0x94, want);
+    ++g_lift_flips;
+    if (g_lift_flips <= 40)
+        std::fprintf(stderr, "[coopmove] lift heading: class %d slot %d had %04x, the owner's record (along %.0f of %.0f, timer %d) says %04x\n",
+                     (int)p.id, slot, (unsigned)(uint16_t)cur, along, len, timer, (unsigned)(uint16_t)want);
+}
+
 void apply_rec(int slot, Slot &s, Rx &x) {
     const Prof &p = g_prof[s.prof];
     char *a = s.a;
@@ -539,6 +582,7 @@ void apply_rec(int slot, Slot &s, Rx &x) {
     const bool write = force || phase || err > p.snap;
     if (!force && phase && (p.flags & kFSlave)) {            // slave() owns the pose; the counters are written here
         for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
+        fix_lift_heading(slot, a, p, x);
         ++g_st.applied_write; ++g_cs[s.prof].applied;
         s.lvalid = false;
         return;
@@ -549,6 +593,7 @@ void apply_rec(int slot, Slot &s, Rx &x) {
         wr32(a, 0x64, clampi(tz, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
         wr16(a, 0x8c, x.ax); wr16(a, 0x8e, x.ay); wr16(a, 0x90, x.az);
         for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
+        fix_lift_heading(slot, a, p, x);
         ++g_st.applied_write; ++g_cs[s.prof].applied;
         if (force) ++g_st.snap_applied;
     } else {
