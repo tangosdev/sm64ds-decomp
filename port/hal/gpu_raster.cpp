@@ -3994,6 +3994,11 @@ bool cp_ensure(int w, int h)
     if (g_comp2_rtv) { g_comp2_rtv->Release(); g_comp2_rtv = 0; }
     if (g_comp2_srv) { g_comp2_srv->Release(); g_comp2_srv = 0; }
     if (g_comp2_tex) { g_comp2_tex->Release(); g_comp2_tex = 0; }
+    /* the zero overlay, the glide's spare copy and its two top strips are made again below at the new size */
+    if (g_zov_srv) { g_zov_srv->Release(); g_zov_srv = 0; }
+    if (g_zov_tex) { g_zov_tex->Release(); g_zov_tex = 0; }
+    if (g_gl_tex) { g_gl_tex->Release(); g_gl_tex = 0; }
+    for (int k = 0; k < 2; ++k) { if (g_gl_top[k]) { g_gl_top[k]->Release(); g_gl_top[k] = 0; } g_gl_top_ok[k] = 0; }
     D3D11_TEXTURE2D_DESC d;
     memset(&d, 0, sizeof d);
     d.Width = (UINT)w;
@@ -4762,6 +4767,7 @@ void card_return()
     g_dep_stage = 0; g_dep_dsv = 0; g_col_srv = 0; g_id_srv = 0; g_fa_out = 0; g_fa_st = 0;
     g_fa_rtv = 0; g_fa_srv = 0; g_ov_tex = 0; g_comp_tex = 0; g_comp_stage = 0; g_bm_tex = 0;
     g_ov_srv = 0; g_comp_srv = 0; g_bm_srv = 0; g_zov_tex = 0; g_zov_srv = 0; g_comp_rtv = 0; g_gl_tex = 0;
+    g_gl_top[0] = g_gl_top[1] = 0; g_gl_top_ok[0] = g_gl_top_ok[1] = 0;
     g_comp2_tex = 0; g_comp2_srv = 0; g_comp2_rtv = 0; g_comp_cb = 0; g_ps_comp = 0; g_ov_rtv = 0;
     g_bm_rtv = 0; g_tw_wm_tex = 0; g_tw_up_tex = 0; g_tw_st_ov = 0; g_tw_st_bm = 0;
     g_tw_wm_srv = 0; g_tw_up_srv = 0; g_tw_inst_srv = 0; g_tw_inst_buf = 0; g_tw_cb = 0;
