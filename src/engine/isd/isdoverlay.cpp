@@ -40,22 +40,23 @@
 #include "CP15.h"
 #include "cstd.h"
 
-/* Both editors need these in force. mwccarm applies a pragma's final
- * state to the whole file, so they cover the four helpers as well, and
- * the helpers compile the same with them. optimize_for_size is the reason
- * func_0206d8c4 and func_0206d940 enter their loops at the test. */
+/* Both editors need these in force: measured, dropping the two opt offs
+ * resizes func_0206cf98 and func_0206d32c outright. mwccarm applies a
+ * pragma's final state to the whole file, so they cover the four helpers as
+ * well, and the helpers compile the same with them. optimize_for_size is the
+ * reason func_0206d8c4 and func_0206d940 enter their loops at the test. */
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
 #pragma optimize_for_size on
 
-/* LM is a plain pointer cast; LM2 passes an address through a 64-bit
- * integer. LM2 is a matching lever carried over from the shards. The original source almost
- * certainly wrote these updates as plain `+=` and `&=`. EB(t, n) is entry
- * n of table t, reached as entry 0 of a table based n entries further on,
- * which is the form the ROM's address arithmetic takes. */
-#define LM(x) ((int*)(x))
+/* The table updates below are plain `+=`, `-=` and `&=` on the fields; the
+ * (int *) casts they used to go through (LM / LM2, one of them laundering the
+ * address through a 64-bit integer) made no difference to the object and are
+ * gone. EB(t, n) is entry n of table t, reached as entry 0 of a table based n
+ * entries further on; that one is load-bearing -- spelling those updates
+ * `t->m_info[n]` instead costs func_0206cf98 ten words and resizes
+ * func_0206d32c, so it is the form the ROM's address arithmetic takes. */
 #define EB(t, n) ((struct OverlayTable *)((char *)(t) + ((n) << 4)))
-#define LM2(x) ((int*)(long long)(unsigned)(x))
 
 namespace IRQ {
 void SetFIQState(bool);
@@ -203,7 +204,7 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
     while (func_0206dab4(0x80, &pInfo->m_header.lock) != 0) {
     }
 
-    *LM(&pInfo->m_header.flags) |= 2;
+    pInfo->m_header.flags |= 2;
     addr64 = (u32)nVMA;
     if (addr64 + (u32)size > 0x100000000ULL) {
         size = (u32)(0x100000000ULL - addr64);
@@ -236,9 +237,9 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
                     if (!(pInfo->m_info[j].m_SIZE > (u32)nWrapSize)) {
                         cstd::__assert(&data_020868fc, (const char *)0x121, &data_0208698c, 1);
                     }
-                    *LM(&EB(pInfo, j)->m_info[0].m_VMA) += (u32)nWrapSize;
-                    *LM(&EB(pInfo, j)->m_info[0].romOffset) += (u32)nWrapSize;
-                    *LM(&EB(pInfo, j)->m_info[0].m_SIZE) -= (u32)nWrapSize;
+                    EB(pInfo, j)->m_info[0].m_VMA += (u32)nWrapSize;
+                    EB(pInfo, j)->m_info[0].romOffset += (u32)nWrapSize;
+                    EB(pInfo, j)->m_info[0].m_SIZE -= (u32)nWrapSize;
                     if (!(pInfo->m_info[j].m_SIZE != 0)) {
                         cstd::__assert(&data_020868fc, (const char *)0x127, &data_020869bc, 1);
                     }
@@ -269,9 +270,9 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
                     i = ni;
                     CopyInfo(&dstb->m_info[0], &srcb->m_info[0]);
                     dstb->m_info[0].m_SIZE = nVMA - dstb->m_info[0].m_VMA;
-                    *LM(&srcb->m_info[0].m_VMA) += dstb->m_info[0].m_SIZE;
-                    *LM(&srcb->m_info[0].romOffset) += dstb->m_info[0].m_SIZE;
-                    *LM(&srcb->m_info[0].m_SIZE) -= dstb->m_info[0].m_SIZE;
+                    srcb->m_info[0].m_VMA += dstb->m_info[0].m_SIZE;
+                    srcb->m_info[0].romOffset += dstb->m_info[0].m_SIZE;
+                    srcb->m_info[0].m_SIZE -= dstb->m_info[0].m_SIZE;
                 }
                 if (!(nVMA == pInfo->m_info[i].m_VMA)) {
                     cstd::__assert(&data_020868fc, (const char *)0x13c, &data_0208696c, 1);
@@ -296,16 +297,16 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
                                 cstd::__assert(&data_020868fc, (const char *)0x151, &data_0208698c,
                                                1);
                             }
-                            *LM(&EB(pInfo, k)->m_info[0].m_VMA) += (u32)nWrapSize;
-                            *LM(&EB(pInfo, k)->m_info[0].romOffset) += (u32)nWrapSize;
-                            *LM(&EB(pInfo, k)->m_info[0].m_SIZE) -= (u32)nWrapSize;
+                            EB(pInfo, k)->m_info[0].m_VMA += (u32)nWrapSize;
+                            EB(pInfo, k)->m_info[0].romOffset += (u32)nWrapSize;
+                            EB(pInfo, k)->m_info[0].m_SIZE -= (u32)nWrapSize;
                         }
                     }
                 } else {
                     found = 1;
-                    *LM(&EB(pInfo, i)->m_info[0].m_VMA) += size;
-                    *LM(&EB(pInfo, i)->m_info[0].romOffset) += size;
-                    *LM(&EB(pInfo, i)->m_info[0].m_SIZE) -= size;
+                    EB(pInfo, i)->m_info[0].m_VMA += size;
+                    EB(pInfo, i)->m_info[0].romOffset += size;
+                    EB(pInfo, i)->m_info[0].m_SIZE -= size;
                     func_0206d940(pInfo, i);
                     pInfo->m_info[i].m_VMA = nVMA;
                     pInfo->m_info[i].romOffset = lma;
@@ -324,7 +325,7 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
         pInfo->m_info[i].unused = 0;
     }
 
-    *LM2(&pInfo->m_header.flags) &= ~2;
+    pInfo->m_header.flags &= ~2;
     pInfo->m_header.lock = 0;
     func_0206d868(&state);
     return 1;
@@ -354,7 +355,7 @@ int func_0206cf98(int type, u32 nVMA, u32 size) {
     while (func_0206dab4(0x80, &pInfo->m_header.lock) != 0) {
     }
 
-    *LM(&pInfo->m_header.flags) |= 2;
+    pInfo->m_header.flags |= 2;
     addr64 = (u32)nVMA;
     if (addr64 + (u32)size > 0x100000000ULL) {
         size = (u32)(0x100000000ULL - addr64);
@@ -398,9 +399,9 @@ int func_0206cf98(int type, u32 nVMA, u32 size) {
             i = ni;
             CopyInfo(&dstb->m_info[0], &srcb->m_info[0]);
             dstb->m_info[0].m_SIZE = nVMA - dstb->m_info[0].m_VMA;
-            *LM(&srcb->m_info[0].m_VMA) += dstb->m_info[0].m_SIZE;
-            *LM(&srcb->m_info[0].romOffset) += dstb->m_info[0].m_SIZE;
-            *LM(&srcb->m_info[0].m_SIZE) -= dstb->m_info[0].m_SIZE;
+            srcb->m_info[0].m_VMA += dstb->m_info[0].m_SIZE;
+            srcb->m_info[0].romOffset += dstb->m_info[0].m_SIZE;
+            srcb->m_info[0].m_SIZE -= dstb->m_info[0].m_SIZE;
         }
 
         if (!(nVMA == pInfo->m_info[i].m_VMA)) {
@@ -417,26 +418,26 @@ int func_0206cf98(int type, u32 nVMA, u32 size) {
                     continue;
                 }
                 {
-                    long long nWrapSize = (long long)end - (long long)(u32)wa;
+                    long long nWrapSize = (long long)end - wa;
                     if (nWrapSize <= 0)
                         break;
                     if (!(wc > (u32)nWrapSize)) {
                         cstd::__assert(&data_020868fc, (const char *)0x1ca, &data_0208698c, 1);
                     }
-                    *LM(&EB(pInfo, i)->m_info[0].m_VMA) += (u32)nWrapSize;
-                    *LM(&EB(pInfo, i)->m_info[0].romOffset) += (u32)nWrapSize;
-                    *LM(&EB(pInfo, i)->m_info[0].m_SIZE) -= (u32)nWrapSize;
+                    EB(pInfo, i)->m_info[0].m_VMA += (u32)nWrapSize;
+                    EB(pInfo, i)->m_info[0].romOffset += (u32)nWrapSize;
+                    EB(pInfo, i)->m_info[0].m_SIZE -= (u32)nWrapSize;
                 }
             }
         } else {
             struct OverlayTable *eb = EB(pInfo, i);
-            *LM(&eb->m_info[0].m_VMA) += size;
-            *LM(&eb->m_info[0].romOffset) += size;
-            *LM(&eb->m_info[0].m_SIZE) -= size;
+            eb->m_info[0].m_VMA += size;
+            eb->m_info[0].romOffset += size;
+            eb->m_info[0].m_SIZE -= size;
         }
     }
 
-    *LM2(&pInfo->m_header.flags) &= ~2;
+    pInfo->m_header.flags &= ~2;
     pInfo->m_header.lock = 0;
     func_0206d868(&state);
     return 1;

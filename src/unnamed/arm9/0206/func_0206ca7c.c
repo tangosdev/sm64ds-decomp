@@ -7,7 +7,8 @@ struct Ring
     u16 tail;
 };
 
-
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
 
 /* Debug console byte sink, main-memory form: store val at the head of a
