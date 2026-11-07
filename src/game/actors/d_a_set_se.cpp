@@ -39,7 +39,7 @@ extern int data_ov002_02110aec;    /* WATERFALL_SOUNDS_DISABLED */
 extern int gCurrentMusicID;        /* current music ID */
 extern dCamera_c *data_0209f318;   /* CAMERA */
 extern s8 gCurrentSublevel;        /* LEVEL_ID */
-extern u8 data_0209f220;           /* STAR_ID */
+extern u8 gCurrentStarId;          /* STAR_ID */
 extern u8 data_0209f2d8;           /* CURRENT_GAMEMODE */
 extern SaveBlock data_0209caa0;    /* the live save block */
 extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
@@ -57,7 +57,7 @@ int daSetSE_c::InitResources()
 {
     int disabled;
 
-    if (gCurrentSublevel == 8 && (data_0209f220 == 1 || IsStarCollectedInLevel(8, 1) == 0))
+    if (gCurrentSublevel == 8 && (gCurrentStarId == 1 || IsStarCollectedInLevel(8, 1) == 0))
         return 0;
 
     /* Volatile keeps CW from materializing an extra base pointer for this

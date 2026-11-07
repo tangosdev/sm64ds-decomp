@@ -78,7 +78,7 @@ typedef char FileRow_size_must_be_0xc[sizeof(FileRow) == 0xc ? 1 : -1];
 extern FileRow data_ov102_0214e188[];
 extern FileRow data_ov102_0214e18c[];
 extern s8 gCurrentSublevel;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 extern u8 data_0209f2d8;
 
 /* local extern: no shared header declares it. */
@@ -192,7 +192,7 @@ int daObjSimpleBg_c::InitResources() {
     }
 
     if (IsBkTower(this) && gCurrentSublevel == 7) {
-        if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
+        if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
             if (mPosY >= 0xdac000)
                 return 0;
         }

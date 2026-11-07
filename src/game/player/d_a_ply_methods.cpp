@@ -113,8 +113,8 @@ extern s16 atan2_hold_Player_4(s32, s32);
 extern short atan2_hold_Player_8(int a, int b);
 extern int atan2_hold_Player_9(int x, int z);
 extern int gSubSoundID;
-extern signed char data_02092110;
-extern signed char data_02092120;
+extern signed char gNextSublevel;
+extern signed char gCurrentAreaId;
 extern signed char gLastCourseSublevel;
 extern u8 data_02092128[];
 extern int data_0209212c;
@@ -122,12 +122,12 @@ extern short gPlayerHealth[];
 extern int gSubVolume;
 extern Timer gRaceTimer;
 extern unsigned char data_0209d660;
-extern u8 data_0209f200;
+extern u8 gReturnEntranceId;
 extern u8 data_0209f20c;
 extern unsigned char data_0209f21c;
 extern u8 data_0209f250;
 extern u8 data_0209f254;
-extern u8 data_0209f264;
+extern u8 gCurrentEntranceId;
 extern unsigned char data_0209f28c;
 extern unsigned char gNewStarCollected;
 extern s16 data_0209f4a2[];
@@ -4624,17 +4624,17 @@ cont:
         r4val = 8;
         break;
     case 10:
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             r4val = 9;
         }
         break;
     case 14:
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             r4val = 10;
         }
         break;
     case 35:
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             r4val = 11;
             func_02012790(0x18);
         }
@@ -6466,7 +6466,7 @@ int daPly_c::St_LevelEnter_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     {
-        u8 c2 = data_0209f264;
+        u8 c2 = gCurrentEntranceId;
         if (gCurrentSublevel == 2) {
             if (c2 == 0 || (c2 == 0xe && gPrevReturnState != 1)) {
                 func_02012790(0x1d);
@@ -6999,14 +6999,14 @@ int daPly_c::func_ov002_020c8b78() {
 
 // @symbol _ZN7daPly_c19func_ov002_020c8cb0Ev
 int daPly_c::func_ov002_020c8cb0() {
-  if (this->FinishedAnim()) {
-    if (data_02092110 >= 0)
-      mIsOpeningBigDoor = 1;
-    func_ov002_020ca108();
-    mRootMotionMode = 0;
-    this->SetAnim(0x47, 0, 0x1000, 0);
-  }
-  return 0;
+    if (this->FinishedAnim()) {
+        if (gNextSublevel >= 0)
+            mIsOpeningBigDoor = 1;
+        func_ov002_020ca108();
+        mRootMotionMode = 0;
+        this->SetAnim(0x47, 0, 0x1000, 0);
+    }
+    return 0;
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c8d14Ev
@@ -7252,7 +7252,7 @@ int daPly_c::func_ov002_020c92fc() {
 // @symbol _ZN7daPly_c19func_ov002_020c94a4Ev
 extern "C" {
 int daPly_c::func_ov002_020c94a4() {
-    extern u8 data_0209211c;
+    extern u8 gReturnSublevel;
     unsigned short st;
 
     this->mVertSpeed = 0;
@@ -7266,8 +7266,8 @@ int daPly_c::func_ov002_020c94a4() {
         sub = mNoCtrlKind;
         if (sub == 0) {
             if (gCurrentSublevel == 0x21) {
-                data_0209211c = 4;
-                data_0209f200 = 7;
+                gReturnSublevel = 4;
+                gReturnEntranceId = 7;
             }
             ExitLevel();
             mStateStep = 6;
@@ -7277,24 +7277,24 @@ int daPly_c::func_ov002_020c94a4() {
         if (sub == 3) {
             switch (gCurrentSublevel) {
             case 0x24:
-                data_0209211c = 2;
-                data_0209f200 = 0xa;
+                gReturnSublevel = 2;
+                gReturnEntranceId = 0xa;
                 break;
             case 0x26:
-                data_0209211c = 4;
-                data_0209f200 = 9;
+                gReturnSublevel = 4;
+                gReturnEntranceId = 9;
                 break;
             case 0x2d:
-                data_0209211c = 0x32;
-                data_0209f200 = 3;
+                gReturnSublevel = 0x32;
+                gReturnEntranceId = 3;
                 break;
             case 0x2f:
-                data_0209211c = 3;
-                data_0209f200 = 0;
+                gReturnSublevel = 3;
+                gReturnEntranceId = 0;
                 break;
             case 0x31:
-                data_0209211c = 5;
-                data_0209f200 = 0xb;
+                gReturnSublevel = 5;
+                gReturnEntranceId = 0xb;
                 break;
             }
             ExitLevel();
@@ -7548,12 +7548,14 @@ void daPly_c::func_ov002_020c9c4c() {
 
 // @symbol _ZN7daPly_c19func_ov002_020c9cc0Ev
 void daPly_c::func_ov002_020c9cc0() {
-  mStateWaitTimer=3;
-  mStateStep=6;
-  mSkipGroundUpdate = 1;
-  mIsBodyClsnEnabled=0;
-  if(this->mVertSpeed>=0x14000) this->mVertSpeed=0x14000;
-  if(data_02092110==0x26 || data_02092110==0x12) mOpacity=0;
+    mStateWaitTimer = 3;
+    mStateStep = 6;
+    mSkipGroundUpdate = 1;
+    mIsBodyClsnEnabled = 0;
+    if (this->mVertSpeed >= 0x14000)
+        this->mVertSpeed = 0x14000;
+    if (gNextSublevel == 0x26 || gNextSublevel == 0x12)
+        mOpacity = 0;
 }
 
 // @symbol _ZN7daPly_c19func_ov002_020c9d1cEv
@@ -8162,7 +8164,7 @@ int func_ov002_020cac60(char *self)
 // @symbol _ZN7daPly_c18St_CameraZoom_MainEv
 /* recovered: named members + shared header, real C++ method
  *
- * The zoomed-in camera pose. Runs only while data_02092110 is negative. Losing
+ * The zoomed-in camera pose. Runs only while gNextSublevel is negative. Losing
  * the 0x4 state flag ends it: back to walking, the body model's animation
  * field at +0x50+8 is cleared, and the facing angle is latched. Landing, or
  * any of the 0x8f03 input bits, clears that flag.
@@ -8172,7 +8174,7 @@ int daPly_c::St_CameraZoom_Main() {
     extern void func_ov002_020cae10(void*);
     extern int func_ov002_020cac60(void*);
     extern unsigned short data_0209f49e;
-    if (data_02092110 < 0) {
+    if (gNextSublevel < 0) {
         if ((unsigned short)(mStateFlags & 4) == 0) {
             unsigned int id;
             this->ChangeState(data_ov002_0211013c);
@@ -21700,7 +21702,8 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     if (!ip) {
         if (gCurrentSublevel != 5)
             return;
-        if (data_02092120 != 3) return;
+        if (gCurrentAreaId != 3)
+            return;
     }
 
     if (ip) {
@@ -22414,7 +22417,7 @@ s32 daPly_c::InitResources() {
     extern s8 data_02092114;
     extern CAA0 data_0209caa0;
     extern u8 gPrevReturnState;
-    extern u8 data_0209211c;
+    extern u8 gReturnSublevel;
     /* The helpers below take void or char pointers, and this file's match
        depends on declaration and load order documented in the header comment
        above. One alias keeps every one of those decisions untouched. */
@@ -22526,8 +22529,8 @@ Ld0:
     rc.SetObjAndPos(pos, (dActor_c *)c);
     rc.StartDetectingWater();
     if (gCurrentSublevel == 0x1d) {
-        data_0209211c = 2;
-        data_0209f200 = 0xe;
+        gReturnSublevel = 2;
+        gReturnEntranceId = 0xe;
     }
     if (StartWithFarCamera() != 0) mUseFarCamera = 1;
     mPeakY = mPosY;

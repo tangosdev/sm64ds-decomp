@@ -159,7 +159,7 @@ extern void SetStarMarker(int i, dActor_c *actor, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern dActor_c *STAR_MARKERS[12];
 extern u8 data_0209f208;
-extern unsigned char data_0209f264;
+extern unsigned char gCurrentEntranceId;
 void GiveVsStars(int idx, int delta);
 void CollectStarInCurLevel(int i);
 int SublevelToLevel(int i);
@@ -194,7 +194,7 @@ extern SharedFilePtr data_ov002_0210d9a8;
 extern void func_ov002_020d718c(void *p);
 extern int data_ov002_0210aa0c[3];
 extern StateHandler data_ov002_021109d8[];
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 extern s32 data_0209cef0;
 extern s32 data_02092138;
 extern StarModelFilePtr data_ov002_0211094c;
@@ -320,7 +320,7 @@ s32 daStar_c::InitResources()
 
     b = (s32)(actorID == ACTOR_STAR);
     if (b != 0) {
-        if (data_0209f220 == (param1 & 0xf) || SublevelToLevel(gCurrentSublevel) > 0xe)
+        if (gCurrentStarId == (param1 & 0xf) || SublevelToLevel(gCurrentSublevel) > 0xe)
             mMarkerType = 2;
         else
             mMarkerType = 0;
@@ -441,13 +441,13 @@ s32 daStar_c::InitResources()
     if (sp != 0)
         ((daStarBase_c *)(sp))->LinkSilverStarAndStarMarker((char *)this);
     if (gCurrentSublevel == 8 && mStarID == 7) {
-        if (IsStarCollected(SublevelToLevel(8), 1) == 0 || data_0209f220 == 1) {
+        if (IsStarCollected(SublevelToLevel(8), 1) == 0 || gCurrentStarId == 1) {
             MarkForDestruction();
             return ret;
         }
     }
     if (gCurrentSublevel == 7 && mStarID == 2) {
-        if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
+        if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
             MarkForDestruction();
             return 0;
         }
@@ -1933,7 +1933,7 @@ void daStar_c::func_ov002_020e8e80(int a) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daStar_c19func_ov002_020e8dd8Ev
 /* Adds the star's map marker unless the level hides it: sublevel 5 hides star
- * id 5, and sublevel 0x16 shows star id 4 only once data_0209f264 is 4. Marker
+ * id 5, and sublevel 0x16 shows star id 4 only once gCurrentEntranceId is 4. Marker
  * type 0 is added only for kinds 2 and 4. */
 int daStar_c::func_ov002_020e8dd8() {
     signed char g1 = gCurrentSublevel;
@@ -1945,7 +1945,7 @@ int daStar_c::func_ov002_020e8dd8() {
     }
     if (g1 == 0x16) {
         if (mStarID == 4) {
-            if (data_0209f264 != 4) {
+            if (gCurrentEntranceId != 4) {
                 return;
             }
             AddStarMarker();

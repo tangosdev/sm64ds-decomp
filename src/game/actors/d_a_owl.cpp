@@ -150,7 +150,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 
 extern "C" {
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
+extern unsigned char gCurrentStarId;
 extern short data_02082214[];
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
@@ -679,7 +679,7 @@ int daOwl_c::InitResources()
     func_ov094_02136188(OWL_STATE_DORMANT);
 
     if (gCurrentSublevel == 7) {
-        if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
+        if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
             MarkForDestruction();
             return 0;
         }

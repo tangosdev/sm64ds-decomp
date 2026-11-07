@@ -33,7 +33,7 @@
 #include "daPly_c.h"
 
 extern signed char data_ov002_02110af0;
-extern signed char data_02092120;
+extern signed char gCurrentAreaId;
 extern void *data_ov002_02110af8;
 extern u8 data_0209f250;
 extern daPly_c *data_0209f394[];
@@ -175,7 +175,7 @@ int daMugenBGM_c::CleanupResources() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daMugenBGM_c12GetActiveFogEv
 Fog *daMugenBGM_c::GetActiveFog() {
-    if (data_ov002_02110af0 == data_02092120)
+    if (data_ov002_02110af0 == gCurrentAreaId)
         return (Fog *)data_ov002_02110af8;
     return 0;
 }

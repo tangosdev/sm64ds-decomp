@@ -117,7 +117,7 @@ void  func_ov102_0214b3b8(void *c);
 int   func_0200fc44(int a, Vector3 *pos, int flag);
 
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
+extern unsigned char gCurrentStarId;
 extern unsigned char data_0209f2d8;
 
 }
@@ -297,7 +297,7 @@ int daBmb_c::Behavior()
             }
 
             UpdatePos(&mdCc_c);
-            if (gCurrentSublevel == 6 && data_0209f220 == 3) {
+            if (gCurrentSublevel == 6 && gCurrentStarId == 3) {
                 if (mHorzSpeed == 0x5000) {
                     UpdateWMClsn(mWithMeshClsn, 3);
                 } else {

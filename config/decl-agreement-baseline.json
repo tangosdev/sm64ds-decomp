@@ -7299,7 +7299,7 @@
         "return:signed char"
       ]
     },
-    "data_0209211c": {
+    "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
         "return:unsigned char"
       ]
@@ -7859,7 +7859,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f220": {
+    "gCurrentStarId": {
       "src/runtime/actor/d_actor.cpp": [
         "return:unsigned char []"
       ]

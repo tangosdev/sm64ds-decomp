@@ -128,7 +128,7 @@ unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x,
                             const void *dir, void *callback);
 
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f264;
+extern unsigned char gCurrentEntranceId;
 /* Per-variant tables indexed by mVariant: death mode, hurt damage. */
 extern int data_ov063_0211e22c[];
 extern int data_ov063_0211e1ec[];
@@ -3512,10 +3512,10 @@ int daTrs_c::InitResources()
             MarkForDestruction();
             return 1;
         }
-        /* data_0209f264 is LAST_ENTRANCE_ID. When it is 0 the cage (mCarriedID
+        /* gCurrentEntranceId is LAST_ENTRANCE_ID. When it is 0 the cage (mCarriedID
            is T_BASKET here) is spawned at once, muted; if that Spawn succeeds
            this Boo is removed. */
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             spawned = dActor_c::Spawn(mCarriedID, 0, mPos, 0, mAreaIdx, -1);
             if (spawned != 0) {
                 ((daTBasket_c *)spawned)->mMuteSecretSound = 1;

@@ -39,9 +39,9 @@ int IsStarCollectedInLevel(signed char levelID, int starID);
 extern u8 data_0209f2c0;
 extern unsigned char data_0209f250;
 extern daPly_c *data_0209f394[];
-extern signed char data_02092110;
+extern signed char gNextSublevel;
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
+extern unsigned char gCurrentStarId;
 extern dCamera_c *data_0209f318;
 extern dFdColor_c data_0209f5e8;
 
@@ -62,7 +62,7 @@ extern "C" daChScene_c *daChScene_c_classInit() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11daChScene_c13InitResourcesEv
 s32 daChScene_c::InitResources() {
-    if (gCurrentSublevel == 8 && data_0209f220 != 1) {
+    if (gCurrentSublevel == 8 && gCurrentStarId != 1) {
         if (IsStarCollectedInLevel(8, 1) != 0)
             return 0;
     }
@@ -117,14 +117,14 @@ s32 daChScene_c::Behavior() {
         mHorzSpeed -= 0x20000;
         if (mHorzSpeed < -0x300000) {
             mHorzSpeed = -0x300000;
-            if (data_02092110 < 0) {
+            if (gNextSublevel < 0) {
                 LoadDestinationLevel();
                 dScene_c::SetAndStopColorFader();
                 data_0209f5e8.color = 0x7fff;
             }
         }
     } else {
-        if (data_02092110 < 0) {
+        if (gNextSublevel < 0) {
             if (player->IsStateEnteringLevel() == 0) {
                 MulVec3Mat4x3(&player->mPos, &mInvMat, &out2);
                 {
@@ -161,7 +161,7 @@ s32 daChScene_c::Behavior() {
                                         }
                                         if (o != 0) {
                                             func_02012790(0x16);
-                                        } else if (data_02092110 == 0xd) {
+                                        } else if (gNextSublevel == 0xd) {
                                             func_02012790(0x1e);
                                         } else {
                                             func_02012790(0x19);

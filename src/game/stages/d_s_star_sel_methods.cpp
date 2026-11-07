@@ -57,7 +57,7 @@ extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
-extern s8 data_02092110;
+extern s8 gNextSublevel;
 extern s16 data_02082214[];
 extern s32 data_020a0db0;
 extern SaveBlock data_0209caa0;
@@ -156,7 +156,7 @@ int dScStarSel_c::func_ov003_020adf50() {
 // TIMES and COIN sprites.
 void dScStarSel_c::func_ov003_020adfc8() {
     int x = 0xb8;
-    int lvl = SublevelToLevel(data_02092110);
+    int lvl = SublevelToLevel(gNextSublevel);
     int coin = SaveData::GetCoinRecord(lvl);
     func_ov003_020ae1a4(coin);
     int i;
@@ -177,7 +177,7 @@ void dScStarSel_c::func_ov003_020adfc8() {
 void dScStarSel_c::func_ov003_020ae0b0() {
     int x;
     int y;
-    if (SublevelToLevel(data_02092110) >= 0xf) {
+    if (SublevelToLevel(gNextSublevel) >= 0xf) {
         y = 0xa0;
         x = 0xb8;
     } else {
@@ -228,7 +228,7 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
 void dScStarSel_c::func_ov003_020ae238() {
     int x;
     int y;
-    if (SublevelToLevel(data_02092110) >= 0xf) {
+    if (SublevelToLevel(gNextSublevel) >= 0xf) {
         y = 0xa0;
         x = 0x50;
     } else {
@@ -403,11 +403,11 @@ s32 dScStarSel_c::Render() {
     func_ov003_020ae238();
     func_ov003_020ae0b0();
 
-    if (SublevelToLevel(data_02092110) < 0xf) {
+    if (SublevelToLevel(gNextSublevel) < 0xf) {
         u8 levelNum;
         s32 numX;
         func_ov003_020adfc8();
-        levelNum = SublevelToLevel(data_02092110) + 1;
+        levelNum = SublevelToLevel(gNextSublevel) + 1;
         if (levelNum <= 0xf) {
             if (levelNum >= 10) {
                 OAM::Render(0, OAM::NUMBERS[levelNum / 10], numX = 0x77, 0x7a, 8, -1, 0);
@@ -419,7 +419,7 @@ s32 dScStarSel_c::Render() {
         }
     }
 
-    if (SublevelToLevel(data_02092110) <= 0xe) {
+    if (SublevelToLevel(gNextSublevel) <= 0xe) {
         G3i::PerspectiveW_(data_02082214[0x16], data_02082214[0x17], 0x1555, 0x1000, 0x1388000,
                            0x1000, 1, 0);
         G3i::LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
@@ -434,7 +434,7 @@ s32 dScStarSel_c::Render() {
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (s16)(data_020a0db0 * 0x300));
                 Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, 0x1400, 0x1400, 0x1400);
             }
-            idx = (IsStarCollectedInLevel(data_02092110, i) == 0) ? 1 : 0;
+            idx = (IsStarCollectedInLevel(gNextSublevel, i) == 0) ? 1 : 0;
             plate = &models[idx];
             plate->mat4x3 = data_020a0e68;
             plate->Render(0);
@@ -565,7 +565,7 @@ s32 dScStarSel_c::Render() {
         }
 
         if (mStripMode <= 1 || data_0209caa0.file.mCharacter != 3) {
-            if (SublevelToLevel(data_02092110) <= 0xe) {
+            if (SublevelToLevel(gNextSublevel) <= 0xe) {
                 OAM::RenderSub((OamAttr *)&data_ov001_020abbb4, 0x80, (mPromptYOffset >> 8) + 0xa0);
             } else {
                 OAM::RenderSub((OamAttr *)&data_ov001_020abbf4, 0x80, (mPromptYOffset >> 8) + 0xa0);
@@ -617,18 +617,18 @@ s32 dScStarSel_c::Behavior() {
         DecIfAbove0_Byte(&mPlatePressTimer);
         DecIfAbove0_Byte(&mPickPressTimer);
         if (mExitDelay != 0 ||
-            (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
+            (SublevelToLevel(gNextSublevel) > 0xe && IsButtonInputValid() != 0)) {
             if (mExitDelay != 0) {
                 mExitDelay -= data_0208ee44;
             }
             if (mExitDelay == 0 ||
-                (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
+                (SublevelToLevel(gNextSublevel) > 0xe && IsButtonInputValid() != 0)) {
                 StartSceneFade(3, 0, 0);
                 data_0209f5e8.color = 0x7fff;
-                if (SublevelToLevel(data_02092110) <= 0xe) {
-                    data_0209f1f0 = mSelectedPlate + 1;
+                if (SublevelToLevel(gNextSublevel) <= 0xe) {
+                    gNextStarId = mSelectedPlate + 1;
                 } else {
-                    data_0209f1f0 = 1;
+                    gNextStarId = 1;
                 }
             }
         } else if (mCursorShown != 0 && IsButtonInputValid() != 0) {
@@ -653,7 +653,7 @@ s32 dScStarSel_c::Behavior() {
                 mExitDelay = 0x10;
                 func_02012790(data_0209caa0.file.mCharacter + 0x3c);
             }
-        } else if (SublevelToLevel(data_02092110) <= 0xe) {
+        } else if (SublevelToLevel(gNextSublevel) <= 0xe) {
             idx = gActivePlayerSlot;
             cur = mSelectedPlate;
             found = 0;
@@ -723,7 +723,7 @@ s32 dScStarSel_c::Behavior() {
             }
         }
 
-        if (SublevelToLevel(data_02092110) <= 0xe) {
+        if (SublevelToLevel(gNextSublevel) <= 0xe) {
             if (mCursorShown == 0) {
                 if (IsButtonInputValid() != 0 ||
                     (data_0209caa0.file.controllerMode == 0 &&
@@ -735,7 +735,7 @@ s32 dScStarSel_c::Behavior() {
                     } else {
                         mCursorShown = 2;
                     }
-                    if (SublevelToLevel(data_02092110) <= 0xe) {
+                    if (SublevelToLevel(gNextSublevel) <= 0xe) {
                         mCursorTarget = 0;
                     } else if (mStripMode > 1 && data_0209caa0.file.mCharacter == 3) {
                         mCursorTarget = 1;
@@ -934,7 +934,7 @@ s32 dScStarSel_c::InitResources() {
     LoadArchive(0);
     Enable3dEngines();
     Sound::LoadInitialGroup(3);
-    if (data_02092110 == 0x24 || data_02092110 == 0x26 || data_02092110 == 0x28) {
+    if (gNextSublevel == 0x24 || gNextSublevel == 0x26 || gNextSublevel == 0x28) {
         Sound::LoadAndSetMusic_Layer1(0x24);
         func_0201277c(0xB8);
     } else {
@@ -969,7 +969,7 @@ s32 dScStarSel_c::InitResources() {
     REG16(0x400000E) = (REG16(0x400000E) & 0x43) | 0x1700;
     REG16(0x400000E) &= ~0x40;
     LoadFont(0);
-    if (SublevelToLevel(data_02092110) >= 0xF) {
+    if (SublevelToLevel(gNextSublevel) >= 0xF) {
         REG16(0x400000C) = (REG16(0x400000C) & ~3) | 1;
         REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
         REG16(0x400000C) &= ~0x40;
@@ -1125,7 +1125,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     }
 
-    level = (u8)SublevelToLevel(data_02092110);
+    level = (u8)SublevelToLevel(gNextSublevel);
     if ((u32)level <= 0xE) {
         accB = 0;
         anyUnfilled = 0;
@@ -1182,9 +1182,9 @@ s32 dScStarSel_c::InitResources() {
         }
     }
 
-    if (SublevelToLevel(data_02092110) <= 0x14) {
-        Message::DisplayCourseNameForStarSelect((u32)(s16)SublevelToLevel(data_02092110));
-        if (SublevelToLevel(data_02092110) <= 0xE) {
+    if (SublevelToLevel(gNextSublevel) <= 0x14) {
+        Message::DisplayCourseNameForStarSelect((u32)(s16)SublevelToLevel(gNextSublevel));
+        if (SublevelToLevel(gNextSublevel) <= 0xE) {
             Message::DisplayStarNameForStarSelect(mSelectedPlate);
         }
         SetBg3Offset(0, -4);
@@ -1201,7 +1201,7 @@ s32 dScStarSel_c::InitResources() {
         charIdx += 1;
     } while (charIdx < 4);
 
-    if (SublevelToLevel(data_02092110) <= 0xE) {
+    if (SublevelToLevel(gNextSublevel) <= 0xE) {
         if ((mStripMode != 1) && (data_0209caa0.file.mCharacter == 3)) {
             mFaceY = 0x88;
             mBounceDelay = 0;

@@ -256,7 +256,7 @@ extern daPly_c *data_0209f394[];
 /* The current game mode. */
 extern unsigned char data_0209f2d8;
 /* The next-level id (signed byte). */
-extern signed char data_02092110;
+extern signed char gNextSublevel;
 /* The music and sub-channel volumes, both in Fix12 (0x7f000 = 127.0). */
 extern int gMusicVolume;
 extern int gSubVolume;
@@ -506,7 +506,7 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         }
     } else {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x18)) != 0) {
-            if (data_02092110 >= 0)
+            if (gNextSublevel >= 0)
                 mModel.speed = 0;
             data_0209f318->GoBehindPlayer(data_0209f250);
         }

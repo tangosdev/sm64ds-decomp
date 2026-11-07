@@ -1159,7 +1159,7 @@ int da1up_c::Behavior()
    point; gravity -2 units (-0x2000) and terminal velocity -50 units (-0x32000);
    the dBgCh_Actr (50 / 50 units) with its limited-movement flag. Finally, when
    LEVEL_ID (gCurrentSublevel) is 7 and the actor is at y = 3500 units (0xdac000),
-   z = 0, and either STAR_ID (data_0209f220) is 1 or star 1 is not collected in
+   z = 0, and either STAR_ID (gCurrentStarId) is 1 or star 1 is not collected in
    the current level, it calls MarkForDestruction and returns 0. */
 int da1up_c::InitResources()
 {
@@ -1167,7 +1167,7 @@ int da1up_c::InitResources()
     extern SharedFilePtr data_ov002_0210d9d8;
     extern SharedFilePtr data_ov002_0210da30;
     extern signed char gCurrentSublevel;
-    extern unsigned char data_0209f220;
+    extern unsigned char gCurrentStarId;
     extern unsigned char data_ov002_020ff040[];
     extern unsigned char data_ov002_020ff050[];
 
@@ -1238,7 +1238,7 @@ int da1up_c::InitResources()
     mParticleID = 0;
 
     if (gCurrentSublevel == 7 && mPosY == 0xdac000 && mPosZ == 0 &&
-        (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0)) {
+        (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0)) {
         MarkForDestruction();
         return 0;
     }

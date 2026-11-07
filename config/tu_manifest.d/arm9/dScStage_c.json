@@ -913,7 +913,7 @@
       "evidence": "u8. The next pause page: PS_Update copies it into sPauseState (0x0209f248) at the top of each frame; PS_Init and the page cases set it. Name from the blind melonDS round suite14 (10/10)."
     },
     {
-      "symbol": "data_0209f1f0",
+      "symbol": "gNextStarId",
       "address": "0x0209f1f0",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -941,7 +941,7 @@
       "evidence": "u8. Read here by dScStage_c::PS_Update. No reader outside this TU, so static."
     },
     {
-      "symbol": "data_0209f200",
+      "symbol": "gReturnEntranceId",
       "address": "0x0209f200",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -997,7 +997,7 @@
       "evidence": "u8. Read here by NumCoins, NumRedCoins, NumVsStarsObtained, ResetInput, SetTouchScreenDelay, dScStage_c::CheckCameraInput and 3 more. Read outside this TU by EndKuppaScript, LoadEntranceObjects, ResetKuppaScript, dActor_c::ClosestNonVanishPlayer, dActor_c::ClosestPlayer, daBtn_c::InitResources and 3 more (arm9, ov002, ov063, ov079, ov081), so global."
     },
     {
-      "symbol": "data_0209f220",
+      "symbol": "gCurrentStarId",
       "address": "0x0209f220",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1074,7 +1074,7 @@
       "evidence": "u8. The pause page shown: PS_Update switches on it, and PS_Render and RenderBouncingArrows test it. Name from the blind melonDS round suite14 (10/10)."
     },
     {
-      "symbol": "data_0209f24c",
+      "symbol": "sCheckpointEntranceId",
       "address": "0x0209f24c",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1116,14 +1116,14 @@
       "evidence": "u8. Read here by dScStage_c::LC_Update and dScStage_c::Render. No reader outside this TU, so static. Was gLevelClearCoinCount; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f264",
+      "symbol": "gCurrentEntranceId",
       "address": "0x0209f264",
       "size": "0x1",
       "binding": "STB_GLOBAL",
       "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by ShowCrashScreen, daPly_c::St_LevelEnter_Init, daPly_c::func_ov002_020c44c4, daStar_c::func_ov002_020e8dd8 and daTrs_c::InitResources (arm9, ov002, ov063), so global."
     },
     {
-      "symbol": "data_0209f268",
+      "symbol": "sNextEntranceId",
       "address": "0x0209f268",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -1137,7 +1137,7 @@
       "evidence": "u8. Read here by LoadLevel, SetNextLevel and dScStage_c::InitResources. No reader outside this TU, so static. Was gReturnState; the s prefix marks the static."
     },
     {
-      "symbol": "data_0209f270",
+      "symbol": "sCheckpointStarId",
       "address": "0x0209f270",
       "size": "0x1",
       "binding": "STB_GLOBAL",
@@ -2676,7 +2676,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f248"
     },
     {
-      "symbol": "data_0209f24c",
+      "symbol": "sCheckpointEntranceId",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f24c"
@@ -2700,7 +2700,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f260"
     },
     {
-      "symbol": "data_0209f268",
+      "symbol": "sNextEntranceId",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f268"
@@ -2712,7 +2712,7 @@
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f26c"
     },
     {
-      "symbol": "data_0209f270",
+      "symbol": "sCheckpointStarId",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "file-scope static; mwcc emits it local, and dsd cannot record a local symbol in symbols.txt, so the owned object is published global at 0x0209f270"

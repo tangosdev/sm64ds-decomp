@@ -112,7 +112,7 @@ extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
 extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
 extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */
 extern u8 data_0209d66c;               /* set to close the open message */
-extern s8 data_02092110;               /* NEXT_LEVEL_ID */
+extern s8 gNextSublevel;               /* NEXT_LEVEL_ID */
 extern PadData data_020a0e58[];        /* BUTTON_INPUT_ARR, one per player */
 extern dCamera_c *data_0209f318;       /* CAMERA */
 extern int data_ov002_02110aec;        /* WATERFALL_SOUNDS_DISABLED */
@@ -4725,7 +4725,7 @@ void KuppaScript::Process() {
         gKuppaScriptFrame = 0;
         return;
     }
-    if (finished != 0 && data_02092110 < 0) {
+    if (finished != 0 && gNextSublevel < 0) {
         KuppaScript::End();
         return;
     }

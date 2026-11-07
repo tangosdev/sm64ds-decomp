@@ -71,7 +71,7 @@ struct Event {
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 extern SaveBlock data_0209caa0;
 int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
@@ -104,7 +104,7 @@ extern dCamera_c *data_0209f318;
 extern u32 gNextActorUpdateMask;
 extern s32  data_0209d4b0;
 extern u8   data_0209f350[];
-extern s8   data_02092110;
+extern s8 gNextSublevel;
 extern u8   data_0209f204;
 extern u8   data_ov002_02111150;
 extern ControllerInput data_0209f498[];
@@ -195,7 +195,7 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
 // @symbol _ZN6dMap_c19UpdateLevelSpecificEv
 /* Per-sublevel touch-ups to the BG3 buffer that GetBG3CharPtr returns. Each
  * case writes rows of consecutive u16 tile numbers, and only when its
- * condition holds (cases 7 and 8 also need data_0209f220 >= 2): a star collected, an event bit, or a bit in data_0209caa0. */
+ * condition holds (cases 7 and 8 also need gCurrentStarId >= 2): a star collected, an event bit, or a bit in data_0209caa0. */
 void dMap_c::UpdateLevelSpecific()
 {
     int sublevel = gCurrentSublevel;
@@ -205,7 +205,8 @@ void dMap_c::UpdateLevelSpecific()
         u16 tile;
         int i;
         if (!IsStarCollected(SublevelToLevel(sublevel), 1)) return;
-        if (data_0209f220 < 2) return;
+        if (gCurrentStarId < 2)
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x734);
         tile = 0x39c;
         for (i = 0; i < 4; i++) {
@@ -223,7 +224,8 @@ void dMap_c::UpdateLevelSpecific()
         int i;
         u16* p;
         if (!IsStarCollected(SublevelToLevel(sublevel), 1)) return;
-        if (data_0209f220 < 2) return;
+        if (gCurrentStarId < 2)
+            return;
         p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x6ea);
         tile = 0x35c;
         for (i = 0; i < 6; i++) {
@@ -585,7 +587,8 @@ s32 dMap_c::Behavior()
 
     flagsOr = gGamePaused | data_0209f20c | gVsExitScreenActive;
     if ((u8)flagsOr) goto L200;
-    if (data_02092110 >= 0) goto L200;
+    if (gNextSublevel >= 0)
+        goto L200;
     if (data_0209f204 != 0) goto L200;
     if (data_ov002_02111150 != 0) goto L200;
     if (data_0209d660 != 0) goto L200;

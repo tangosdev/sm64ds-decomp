@@ -136,7 +136,7 @@ extern s16 data_02082214[];
 extern unsigned int gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern u8 data_0209f21c;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 extern signed char gCurrentSublevel;
 extern dCamera_c *data_0209f318;
 extern daPly_c *data_0209f394[];
@@ -393,7 +393,7 @@ int daBtn_c::InitResources()
         }
     }
 
-    if (mIsKing != 0 && gCurrentSublevel == 7 && data_0209f220 != 1 &&
+    if (mIsKing != 0 && gCurrentSublevel == 7 && gCurrentStarId != 1 &&
         IsStarCollectedInCurLevel(1) != 0) {
         MarkForDestruction();
         return 0;

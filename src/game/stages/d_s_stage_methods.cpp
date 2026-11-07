@@ -242,10 +242,21 @@ extern int data_020758c8[];
 extern unsigned char data_02075998[][7];
 extern s16 data_02082214[];
 extern u8 data_0208a0e0;
-extern s8 data_02092110;
-extern s8 data_02092118;
-extern s8 data_0209211c;
-extern s8 data_02092120;
+/* Where the stage goes next. Each destination is a sublevel, an entrance
+   and a star; the crash screen prints the current three as "StageNo",
+   "PlayerID" (the entrance) and "LayerNo" (the star), and gCurrentAreaId as
+   "RoomNo". LoadLevel and SetNextLevel fill the gNext* set; InitResources
+   moves it into the current set and resets gNextSublevel to -1, so a
+   non-negative gNextSublevel means a level change is pending. LoadLevel with
+   a return entrance records the sublevel being left as gReturnSublevel, and
+   SetNextLevel (the exit path) sends the player back there. The checkpoint
+   set keeps a destination reached from level 6, 7 or 0xb while a return is
+   set; a later LoadLevel with a return entrance into the same level
+   resumes at it. */
+extern s8 gNextSublevel;
+extern s8 gCheckpointSublevel;
+extern s8 gReturnSublevel;
+extern s8 gCurrentAreaId;
 extern u8 data_02092128[];
 extern int data_02092130;
 extern unsigned int data_02092134;
@@ -270,11 +281,11 @@ extern dGraph_c::callback_c *data_0209d4a8;
 /* The pause page to show next: PS_Update moves it into sPauseState at the
    top of each frame. */
 static u8 sNextPauseState;
-u8 data_0209f1f0;
+u8 gNextStarId;
 static u8 data_0209f1f4;
 u8 data_0209f1f8;
 static u8 data_0209f1fc;
-u8 data_0209f200;
+u8 gReturnEntranceId;
 u8 data_0209f204;
 u8 data_0209f208;
 u8 data_0209f20c;
@@ -285,7 +296,7 @@ static u8 data_0209f214;
 /* Set when the pause was opened with SELECT rather than START. */
 static u8 sPausedWithSelect;
 u8 data_0209f21c;
-u8 data_0209f220;
+u8 gCurrentStarId;
 u8 data_0209f224;
 u8 gCollectedStarId;
 static u8 sMenuWaitTimer;
@@ -309,16 +320,16 @@ static u8 data_0209f240;
 static u8 sMenuHighlightDelay;
 /* The pause page shown, the switch PS_Update runs. */
 static u8 sPauseState;
-static u8 data_0209f24c;
+static u8 sCheckpointEntranceId;
 u8 data_0209f250;
 u8 data_0209f254;
 static u8 data_0209f258;
 static u8 data_0209f25c;
 static u8 sLevelClearCoinCount;
-u8 data_0209f264;
-static u8 data_0209f268;
+u8 gCurrentEntranceId;
+static u8 sNextEntranceId;
 static u8 sReturnState;
-static u8 data_0209f270;
+static u8 sCheckpointStarId;
 u8 data_0209f274;
 static u8 data_0209f278;
 static u8 data_0209f27c;
@@ -3001,40 +3012,40 @@ extern "C" void SetNextLevel(int arg) {
 
     if (v == 0x22) {
         if (arg != 1) {
-            data_0209211c = 1;
-            data_0209f200 = 0xa;
+            gReturnSublevel = 1;
+            gReturnEntranceId = 0xa;
         }
     } else {
         p = data_02075638;
         for (i = 0; i < 8; i++) {
             if (v == p->level) {
-                data_0209211c = p->returnLevel;
-                data_0209f200 = p->entrance;
+                gReturnSublevel = p->returnLevel;
+                gReturnEntranceId = p->entrance;
                 break;
             }
             p++;
         }
     }
 
-    if (data_0209211c < 0 || SublevelToLevel(v) == 0x1d) {
-        data_02092110 = 1;
-        data_0209f268 = 0xd;
+    if (gReturnSublevel < 0 || SublevelToLevel(v) == 0x1d) {
+        gNextSublevel = 1;
+        sNextEntranceId = 0xd;
     } else {
-        data_02092110 = data_0209211c;
-        data_0209f268 = data_0209f200;
+        gNextSublevel = gReturnSublevel;
+        sNextEntranceId = gReturnEntranceId;
     }
 
-    data_0209211c = -1;
-    data_0209f1f0 = data_0209f220;
+    gReturnSublevel = -1;
+    gNextStarId = gCurrentStarId;
     SetNextStar();
     sReturnState = arg;
 }
 
 // @symbol SetNextStar
 extern "C" void SetNextStar(void) {
-    int level = SublevelToLevel(data_02092110);
+    int level = SublevelToLevel(gNextSublevel);
     int b;
-    if (data_0209f1f0 == 1)
+    if (gNextStarId == 1)
         return;
     b = (int)(data_0209f2d8 == 1);
     if (b != 0)
@@ -3045,7 +3056,7 @@ extern "C" void SetNextStar(void) {
         if (level == 0x13)
             return;
     }
-    data_0209f1f0 = 1;
+    gNextStarId = 1;
 }
 
 // @symbol DeathTable_ClearBit
@@ -3485,9 +3496,9 @@ extern "C" unsigned char IsAreaShowing(int idx) {
 
 // @symbol ChangeArea
 extern "C" void ChangeArea(int areaID) {
-    if (data_02092120 >= 0)
-        HideArea(data_02092120);
-    data_02092120 = (s8)areaID;
+    if (gCurrentAreaId >= 0)
+        HideArea(gCurrentAreaId);
+    gCurrentAreaId = (s8)areaID;
     ShowArea(areaID);
 }
 
@@ -3510,41 +3521,41 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
     int cur;
     int chk;
 
-    if (data_02092110 < 0) {
+    if (gNextSublevel < 0) {
         dScene_c::SetAndStopColorFader();
         data_0209f5e8.color = 0;
     }
-    data_02092110 = levelID;
-    data_0209f268 = entranceID;
+    gNextSublevel = levelID;
+    sNextEntranceId = entranceID;
     if (starID < 0)
-        data_0209f1f0 = data_0209f220;
+        gNextStarId = gCurrentStarId;
     else
-        data_0209f1f0 = (u8)starID;
+        gNextStarId = (u8)starID;
     SetNextStar();
     sReturnState = arg3;
     if (returnState >= 0) {
-        data_0209211c = gCurrentSublevel;
-        data_0209f200 = (u8)returnState;
-        chk = data_02092118;
+        gReturnSublevel = gCurrentSublevel;
+        gReturnEntranceId = (u8)returnState;
+        chk = gCheckpointSublevel;
         if (chk < 0)
             return;
-        cur = SublevelToLevel(data_02092110);
+        cur = SublevelToLevel(gNextSublevel);
         chk = SublevelToLevel(chk);
         if (cur != chk) {
-            data_02092118 = -1;
+            gCheckpointSublevel = -1;
             return;
         }
-        data_02092110 = data_02092118;
-        data_0209f268 = data_0209f24c;
-        data_0209f1f0 = data_0209f270;
+        gNextSublevel = gCheckpointSublevel;
+        sNextEntranceId = sCheckpointEntranceId;
+        gNextStarId = sCheckpointStarId;
     } else {
         cur = SublevelToLevel(gCurrentSublevel);
-        if (data_0209211c >= 0 && (cur == 6 || cur == 7 || cur == 0xb)) {
-            data_02092118 = data_02092110;
-            data_0209f24c = data_0209f268;
-            data_0209f270 = data_0209f1f0;
+        if (gReturnSublevel >= 0 && (cur == 6 || cur == 7 || cur == 0xb)) {
+            gCheckpointSublevel = gNextSublevel;
+            sCheckpointEntranceId = sNextEntranceId;
+            sCheckpointStarId = gNextStarId;
         } else {
-            data_02092118 = -1;
+            gCheckpointSublevel = -1;
         }
     }
 }
@@ -3552,8 +3563,8 @@ extern "C" void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 
 // @symbol LoadLevelNoReturn
 extern "C" void LoadLevelNoReturn(int levelID, u32 arg1, u32 arg2, u32 arg3) {
     LoadLevel(levelID, arg1, arg2, arg3, -1);
-    data_0209211c = -1;
-    data_02092118 = -1;
+    gReturnSublevel = -1;
+    gCheckpointSublevel = -1;
 }
 
 // @symbol SetPlayerGlobals
@@ -3659,7 +3670,7 @@ extern "C" int GetMinimapID(dActor_c *actor, int arg) {
     int val;
     struct MinimapChangeNode *node;
     if (idx < 0)
-        idx = data_02092120;
+        idx = gCurrentAreaId;
     g = (char *)data_0209f314;
     if (g != 0) {
         node = (MinimapChangeNode *)((StageArea *)g)[idx].mBlockList;
@@ -4200,7 +4211,7 @@ int dScStage_c::Behavior() {
             }
             if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
                 if (data_0209fc68 == 0) {
-                    if (data_02092110 < 0 && data_0209d4b0 == 0) {
+                    if (gNextSublevel < 0 && data_0209d4b0 == 0) {
                         if (gVsExitScreenActive == 0 && data_0209f290 == 0)
                             VE_Init();
                         else
@@ -4215,20 +4226,20 @@ int dScStage_c::Behavior() {
             }
         }
     }
-    if (data_02092110 >= 0) {
-        int lvl = SublevelToLevel(data_02092110);
+    if (gNextSublevel >= 0) {
+        int lvl = SublevelToLevel(gNextSublevel);
         int lvl2 = SublevelToLevel(gCurrentSublevel);
         int bb = (data_0209f2d8 == 2);
-        if (bb == 0 && lvl <= 0xe && lvl != lvl2 && data_02092118 < 0 &&
-            (data_02092110 != 0xc || data_0209f268 != 4)) {
+        if (bb == 0 && lvl <= 0xe && lvl != lvl2 && gCheckpointSublevel < 0 &&
+            (gNextSublevel != 0xc || sNextEntranceId != 4)) {
             dScene_c::SetSceneToSpawn(4, 0);
         } else {
             dScene_c::SetSceneToSpawn(3, 0);
         }
         if ((IsLevelInsideCastle(gCurrentSublevel) == 0 ||
-             IsLevelInsideCastle(data_02092110) == 0) &&
+             IsLevelInsideCastle(gNextSublevel) == 0) &&
             (IsLevelTinyHugeIslandOutside(gCurrentSublevel) == 0 ||
-             IsLevelTinyHugeIslandOutside(data_02092110) == 0)) {
+             IsLevelTinyHugeIslandOutside(gNextSublevel) == 0)) {
             int bb2 = (data_0209f2d8 == 2);
             if (bb2 == 0)
                 Sound::StopLoadedMusic_Layer1(0x3c);
@@ -4621,7 +4632,7 @@ int dScStage_c::CleanupResources() {
 // byte-identical whether or not an argument is passed, so no byte gate, linkcheck or
 // fdiff run could see the error.
 //
-// Passing data_0209f220 (already loaded and compared at +0x514/+0x520) keeps that value
+// Passing gCurrentStarId (already loaded and compared at +0x514/+0x520) keeps that value
 // live in r1 all the way to the call at +0x570. That blocks r1 for the `bank` web, so
 // bank is coloured r2 (`mov r2,#0x36` at +0x524, `ldrb r2,[r1,r2]` at +0x580) and the
 // join copy `mov r1,r2` at +0x584 becomes necessary -- all three residual words at once.
@@ -4676,9 +4687,9 @@ int dScStage_c::InitResources() {
         ResetInput();
         gGamePaused = 0;
 
-        int nextLevel = SublevelToLevel(data_02092110);
+        int nextLevel = SublevelToLevel(gNextSublevel);
         int previousLevel = SublevelToLevel(gCurrentSublevel);
-        u32 sublevelBit = ((u8)data_02092110 + 0xDC) & 0xFF;
+        u32 sublevelBit = ((u8)gNextSublevel + 0xDC) & 0xFF;
         int specialSublevel = 0;
         if (sublevelBit <= 0xD) {
             if ((1 << sublevelBit) & 0x2A15)
@@ -4723,14 +4734,14 @@ int dScStage_c::InitResources() {
         gPrevReturnState = sReturnState;
         if (gPrevReturnState == 1) {
             gLastCourseSublevel = gCurrentSublevel;
-            data_02092118 = -1;
+            gCheckpointSublevel = -1;
         }
 
         s8 previousSublevel = gCurrentSublevel;
-        gCurrentSublevel = data_02092110;
-        data_0209f264 = data_0209f268;
-        data_0209f220 = data_0209f1f0;
-        data_02092120 = -1;
+        gCurrentSublevel = gNextSublevel;
+        gCurrentEntranceId = sNextEntranceId;
+        gCurrentStarId = gNextStarId;
+        gCurrentAreaId = -1;
         data_0209f314 = (int)scene->mAreas;
         data_0209f32c = 0x80000000;
         data_0209f274 = 0;
@@ -4837,7 +4848,7 @@ int dScStage_c::InitResources() {
             s8 sublevel = gCurrentSublevel;
             int soundGroup = 0;
             u8 bank = 0x36;
-            if (data_0209f220 == 2) {
+            if (gCurrentStarId == 2) {
                 if (sublevel == 1 || sublevel == 0x33)
                     soundGroup = 0x2B;
                 else if (sublevel == 0x1D)
@@ -4849,7 +4860,7 @@ int dScStage_c::InitResources() {
             }
             if (soundGroup == 0) {
                 int idx = sublevel * 3;
-                soundGroup = GetSoundGroupID(sublevel, data_0209f220);
+                soundGroup = GetSoundGroupID(sublevel, gCurrentStarId);
                 bank = data_02075769[idx];
             }
             Sound::LoadGroupAndSetBank(soundGroup, bank);
@@ -4888,7 +4899,7 @@ int dScStage_c::InitResources() {
         data_0209f340 = (char *)data_02092208[gCurrentSublevel];
         scene->LoadModel();
         data_0208ee44 = 2;
-        dScStage_c::LoadClsnAndObjects(*(LVL_Overlay *)data_0209f340, data_0209f264,
+        dScStage_c::LoadClsnAndObjects(*(LVL_Overlay *)data_0209f340, gCurrentEntranceId,
                                        scene->mMeshCollider);
 
         int vsModeMusic = (data_0209f2d8 == 1) ? 1 : 0;
@@ -4939,7 +4950,7 @@ int dScStage_c::InitResources() {
         }
         dCc_c::listHead = 0;
         dExtShadowModel_c::CleanAll();
-        data_02092110 = -1;
+        gNextSublevel = -1;
 
         if (data_0209fc68 != 0) {
             scene->mWaitingForLoad = 1;

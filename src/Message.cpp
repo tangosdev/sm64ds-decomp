@@ -143,12 +143,12 @@ s32 data_0209d74c[0x3c0];
 extern u8 data_0208ee74[];
 extern u8 data_0208f074[];
 extern u8 data_0209f20c;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 extern u8 gCollectedStarId;
 extern u8 data_0209f2d8;
 extern SaveBlock data_0209caa0;
 extern s32 gRunningKuppaScript;
-extern s8 data_02092110;
+extern s8 gNextSublevel;
 extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
 
@@ -690,7 +690,7 @@ L_r4_else:
         data_0209d6b0 = 0;
         MultiStore_Int(sp8, data_0209d74c, 0xf00);
         data_0209d6b8 = 1;
-        if ((IsStarCollected(arg0, data_0209f220) != 0) || (data_0209f20c != 0)) {
+        if ((IsStarCollected(arg0, gCurrentStarId) != 0) || (data_0209f20c != 0)) {
             Message::AddChar(0xf0);
         } else {
             Message::AddChar(0xf1);
@@ -704,7 +704,7 @@ L_r4_else:
                 data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
             } else {
                 s32 off = arg0 * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f220];
+                data_0209d6f0 = (u8 *)&data_0209d708[off + gCurrentStarId];
             }
             var_r4 = 0x140;
         } else {
@@ -998,7 +998,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     u16* q;
     int i;
 
-    data_0209d6d4 = (short)(msg + (SublevelToLevel(data_02092110) * 7 + 0x1b4));
+    data_0209d6d4 = (short)(msg + (SublevelToLevel(gNextSublevel) * 7 + 0x1b4));
     data_0209d660 = 0;
     func_0201eaac();
 

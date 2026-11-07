@@ -1204,7 +1204,7 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
 /* ROM ordinal 31 -- dActor_c::TrackStar(unsigned int, unsigned int)
  * 0x0200ff94  size 0xb0 */
 extern "C" {
-extern u8 data_0209f220[]; /* the star index this mission was entered for */
+extern u8 gCurrentStarId[];        /* the star index this mission was entered for */
 extern s8 gCurrentSublevel[];      /* the current sublevel id */
 extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
 void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
@@ -1215,7 +1215,7 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
     s32 type = markerType;
 
     if (markerType == 2) {
-        if (starIdx != data_0209f220[0]) {
+        if (starIdx != gCurrentStarId[0]) {
             if (SublevelToLevel(gCurrentSublevel[0]) <= 0xe)
                 return -1;
         }

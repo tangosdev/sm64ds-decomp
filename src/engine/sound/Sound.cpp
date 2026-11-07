@@ -197,7 +197,7 @@ extern struct WatchdogAlarm data_0209d574;
 extern unsigned char data_0209f250;
 extern signed char gCurrentSublevel;
 extern void *data_0209f394[];
-extern signed char data_02092120;
+extern signed char gCurrentAreaId;
 extern const unsigned char data_02075250[8];
 extern unsigned char data_02075258[];
 
@@ -293,14 +293,14 @@ extern "C" int func_02013078(void)
     } else if (state == 9) {
         result = flag ? 1 : 2;
     } else if (state == 0x12) {
-        if (data_02092120 == 0)
+        if (gCurrentAreaId == 0)
             result = 1;
         else
             result = flag ? 0 : 2;
     } else if (state == 0xc) {
-        if (data_02092120 == 0)
+        if (gCurrentAreaId == 0)
             data_0209b48c = Sound_PlayIfNotActive(data_0209b48c, 3, 0x18d, 0);
-        result = (data_02092120 == 0) ? 4 : 3;
+        result = (gCurrentAreaId == 0) ? 4 : 3;
     } else if (state == 0xd) {
         result = (*(int *)(obj + 0x60) < (int)0xffe3e000) ? 5 : 6;
     } else if (state == 0x15) {

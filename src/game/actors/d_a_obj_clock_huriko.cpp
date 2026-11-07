@@ -57,7 +57,7 @@ struct ClockHurikoModelFilePtr : SharedFilePtr {
     ~ClockHurikoModelFilePtr();
 };
 
-extern signed char data_02092110;
+extern signed char gNextSublevel;
 extern ClockHurikoModelFilePtr data_ov013_02112280;
 
 /* -------------------------------------------------------------------------- */
@@ -90,14 +90,14 @@ s32 daObjClockHuriko_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18daObjClockHuriko_c8BehaviorEv
 /* daObjClockHuriko_c::Behavior -- vtable slot 6, ov013 0x021112a8. The
- * pendulum swings while the global at data_02092110 is not positive: the swing
+ * pendulum swings while gNextSublevel is not positive: the swing
  * speed reverses at each end of the arc, the angle integrates it, and the tick
  * sound plays as the speed passes +-0x10.
  *
  * The swing angle is dActor_c::mAngleZ. Its separately materialized pointer
  * below preserves the ROM's load/read-modify-write order under 2004/b56. */
 s32 daObjClockHuriko_c::Behavior() {
-    if (data_02092110 <= 0) {
+    if (gNextSublevel <= 0) {
         s16 *angleZ = &mAngleZ;
         /* The test reads the field instead of going through angleZ, and that is
            load-bearing under 2004/b56: the ROM tests the field directly

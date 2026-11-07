@@ -3,7 +3,7 @@
  *
  * Five states installed by func_ov016_02111bf0 (retreat init is the
  * BookSwitch_Spawn name from the spawn-table pass). InitResources keeps the
- * variant picked by data_0209f220 and stars 1/2 of sublevel 8: variant 2
+ * variant picked by gCurrentStarId and stars 1/2 of sublevel 8: variant 2
  * waits in the den, variant 1 carries a STAR (178), variant 0 swims the path.
  *
  * Text 0x021111a0..0x0211260c. Key function ~daMoray_c (out-of-line; D1/D0
@@ -91,7 +91,7 @@ extern daMoray_c::State data_ov016_02114dbc;
 extern "C" {
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
-extern unsigned char data_0209f220; /* entrance filter */
+extern unsigned char gCurrentStarId;        /* the selected star */
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
 
 int AngleDiff(int a, int b);
@@ -200,7 +200,7 @@ void daMoray_c::func_ov016_02111284()
 
     r4 = 0x52000;
 
-    if (data_0209f220 == 1 && this->mState != &data_ov016_02114dbc) {
+    if (gCurrentStarId == 1 && this->mState != &data_ov016_02114dbc) {
         r6 = 0x128000;
         r6 = -r6;
         vb.y = r6;
@@ -381,7 +381,7 @@ int daMoray_c::func_ov016_02111758()
     worldTarget.x = 0; worldTarget.y = 0; worldTarget.z = 0;
     unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 0x10;
     if (frame >= 0x15 && frame <= 0x3c) {
-        if (data_0209f220 == 1) {
+        if (gCurrentStarId == 1) {
             localOffset.z = 0x2bc000;
         } else {
             localOffset.z = 0x1f4000;
@@ -493,7 +493,7 @@ int daMoray_c::func_ov016_021119ec()
         playerPos.x = pos->x;
         playerPos.y = pos->y;
         playerPos.z = pos->z;
-        entrance = data_0209f220;
+        entrance = gCurrentStarId;
 
         thrHorz = 0x3e8000;
         thrAng = 0x3300;
@@ -724,7 +724,7 @@ s32 daMoray_c::Behavior()
     func_ov016_02111284();
     mdCcAcPos_c1.Clear();
     mdCcAcPos_c1.Update();
-    if (data_0209f220 == 1 && mState != &data_ov016_02114dbc) {
+    if (gCurrentStarId == 1 && mState != &data_ov016_02114dbc) {
         mdCcAcPos_c2.Clear();
         mdCcAcPos_c2.Update();
     }
@@ -785,7 +785,7 @@ s32 daMoray_c::InitResources()
     mStarUniqueID = 0;
     mBlendAnmModel.speed = 0x1000;
 
-    if (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0) {
+    if (gCurrentStarId == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0) {
         /* Entrance 1, or star 1 still uncollected: only variant 2. */
         if (mVariant == 2) {
             mHomePosY -= 0x80000;
@@ -797,7 +797,7 @@ s32 daMoray_c::InitResources()
         } else {
             return 0;
         }
-    } else if (data_0209f220 == 2 || IsStarCollected(SublevelToLevel(8), 2) == 0) {
+    } else if (gCurrentStarId == 2 || IsStarCollected(SublevelToLevel(8), 2) == 0) {
         /* Entrance 2, or star 2 still uncollected: only variant 1. */
         if (mVariant == 1) {
             /* Held (| 0x50). Behavior releases it with | 0x40. */

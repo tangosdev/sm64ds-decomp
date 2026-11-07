@@ -720,7 +720,7 @@ extern unsigned char data_02092114;
 extern unsigned char data_0209cad2[];
 extern unsigned char data_0209d464;
 extern unsigned char data_0209d674;
-extern unsigned char data_0209f1f0;
+extern unsigned char gNextStarId;
 extern unsigned char data_0209f28c;
 extern unsigned char gNewStarCollected;
 extern unsigned char data_0209fc50;

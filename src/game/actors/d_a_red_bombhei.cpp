@@ -115,7 +115,7 @@ extern "C" {
 /* -- globals -- */
 extern dCamera_c *data_0209f318;           /* the camera */
 extern s8 gCurrentSublevel;                /* current level */
-extern u8  data_0209f220;
+extern u8 gCurrentStarId;
 extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
 extern SaveBlock data_0209caa0;         /* the live save block */
@@ -207,7 +207,7 @@ s32 daRedBombhei_c::InitResources()
     }
 
     if (func_ov084_0212cac0() != 0 && gCurrentSublevel == 8 &&
-        (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0))
+        (gCurrentStarId == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0))
         return 0;
     return 1;
 }

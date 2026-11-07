@@ -1,7 +1,7 @@
 //cpp
 /* What stays:
  * - dBgW::SetClipRadius and func_020393d4 stay the arm9 dBgW hook names.
- *   data_02082214 is the sine table. data_0209f220 is the star index.
+ *   data_02082214 is the sine table. gCurrentStarId is the star index.
  * - data_ov016_021136dc, 021136e4 and 021149d4 are the overlay file
  *   and CLPS tables, indexed by mModelIndex. This TU does not own them.
  * - mBobAngle += 0xda is an s16 pun. The u16 member spelling fails.
@@ -47,7 +47,7 @@ extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 extern int IsStarCollected(int a, int b);
 extern short data_02082214[];
-extern unsigned char data_0209f220;
+extern unsigned char gCurrentStarId;
 }
 
 /* Actor 0x39 is the rocking hull, which uses model/collision index 0. */
@@ -91,7 +91,7 @@ int daObjKi_Fune_c::InitResources() {
     mMeshCollider.Enable(this);
     mSoundHandle = 0;
     unk_328 = 0;
-    if (data_0209f220 > 1 && IsStarCollected(SublevelToLevel(8), 1) != 0) {
+    if (gCurrentStarId > 1 && IsStarCollected(SublevelToLevel(8), 1) != 0) {
         if (mModelIndex != 0)
             return 0;
     } else if (mModelIndex == 0) {

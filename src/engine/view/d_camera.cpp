@@ -95,7 +95,7 @@ extern char data_020871ac;
 extern char data_020871d4;
 extern char data_02087404;
 extern u8 data_0208738c;
-extern s8 data_02092110;
+extern s8 gNextSublevel;
 extern s32 data_0209ee90[];
 extern u8 data_0209f1f8;
 extern u8 data_0209f20c;
@@ -740,7 +740,7 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
 
     if (j != data_0209f250)
         return;
-    if (data_02092110 >= 0)
+    if (gNextSublevel >= 0)
         return;
 
     mFlags &= 0xfffffaf7u;

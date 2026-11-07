@@ -43,7 +43,7 @@ extern SaveBlock data_0209caa0;
 extern fBase_c *data_0209f5c0;
 
 extern u8 data_0209f21c;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 extern u8 data_0209f250;
 extern u8 data_0209f2d8;
 extern dCamera_c *data_0209f318;
@@ -402,7 +402,7 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
  * Count is a u16 at offset 0 (unlike ObjSubTable's u8 at offset 1). Each entry
  * is the 8-byte ObjSubTable its loader takes; its byte 0 packs a star filter in
  * the top three bits and a handler index in the low five. The entry is skipped
- * unless the filter is 0 or equal to the selected star at data_0209f220. */
+ * unless the filter is 0 or equal to the selected star at gCurrentStarId. */
 // @symbol _Z11LoadObjectsRN11LVL_Overlay8ObjTableEaj
 void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ObjSubTable *entry = (LVL_Overlay::ObjSubTable *)table.entries;
@@ -410,7 +410,7 @@ void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
     for (tableIndex = 0; tableIndex < (int)table.count; tableIndex++) {
         u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
-        if (starFilter == 0 || starFilter == data_0209f220) {
+        if (starFilter == 0 || starFilter == gCurrentStarId) {
             void (*loader)(void *, s8, unsigned int) = data_ov002_0210cbb8[categoryAndStar & 0x1f];
             if (loader != 0)
                 loader(entry, areaID, param);
