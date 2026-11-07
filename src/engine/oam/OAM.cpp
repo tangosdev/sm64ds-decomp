@@ -39,6 +39,7 @@
 #include "types.h"
 #include "OAM.h"
 #include "OamAttr.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gxcommon.h"
 #include "OamAnimation.h"
 #include "CP15.h"
@@ -54,8 +55,7 @@ extern int data_0209e670;    /* sub-buffer fill counter */
 extern GXOamAttr data_0209e674[]; /* main OAM staging buffer: 128 x 8B */
 extern int data_0209e67c[];
 extern int data_0209e694[];
-extern GXOamAttr data_0209ea74[]; /* sub OAM staging buffer: 128 x 8B */
-extern s16 data_02082214[];      /* sin/cos table, indexed by (angle >> 4) * 2 */
+extern GXOamAttr data_0209ea74[];             /* sub OAM staging buffer: 128 x 8B */
 extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
 extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
@@ -178,8 +178,11 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
      * size (0x680-0x698 against 0x690): the pragmas stay for CSE recompute,
      * copy propagation and loop-invariant placement together, not for colour.
      * The 0x100 / 0x300 / 0 constants the prologue spills are the compiler's
-     * own hoist of the bare literals below. `attr_` is spelled OamAttr*
-     * for the call-site declarations; the body views it as GXOamAttr. */
+     * own hoist of the bare literals below. The sine table stays indexed
+     * by the hoisted sinIdx/cosIdx/mtxIdx: FX_SinIdx/FX_CosIdx at the use
+     * sites measured 0x64c-0x698, with or without the pragmas. `attr_` is
+     * spelled OamAttr* for the call-site declarations; the body views it as
+     * GXOamAttr. */
     GXOamAttr *attr = (GXOamAttr *)attr_;
     int priVal;
     int palVal;
@@ -441,10 +444,8 @@ OamAttr *OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio
         int sx;
         int c;
         int s;
-        int i;
-        i = (((u16)((s16)rot)) >> 4) * 2;
-        s = data_02082214[i];
-        c = data_02082214[i + 1];
+        s = FX_SinIdx((u16)(s16)rot >> 4);
+        c = FX_CosIdx((u16)(s16)rot >> 4);
         sy = y + (h >> 1);
         sx = x + (w >> 1);
         x = (((sx * c) - (sy * s)) >> 12) - (w >> 1);
@@ -487,9 +488,8 @@ OamAttr *OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio
     {
         u32 flags;
         if ((scale != 0x1000) || (rot != 0)) {
-            int i = (rot >> 4) * 2;
-            int s = data_02082214[i];
-            int c = data_02082214[i + 1];
+            int s = FX_SinIdx(rot >> 4);
+            int c = FX_CosIdx(rot >> 4);
             int cs = ((c * scale) + 0x800) >> 12;
             int ss = ((s * scale) + 0x800) >> 12;
             mtx.m00 = cs;
