@@ -2913,17 +2913,7 @@ int daPly_c::func_ov002_020c0fb4() {
             }
         }
         {
-            Vector3 pos;
-            int px;
-            int py;
-            int pz;
-            py = this->mPosY;
-            pz = this->mPosZ;
-            px = this->mPosX;
-            py = (py + 0x82000) & 0xFFFFFFFFFFFFFFFF;
-            pos.x = px;
-            pos.y = py;
-            pos.z = pz;
+            Vector3 pos(mPosX, mPosY + 0x82000, mPosZ);
             Spawn(0xb2, 0x42, pos, 0, this->mAreaId, -1);
         }
         break;
