@@ -494,7 +494,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
     V3Quint L;
     daPly_c *pl = ClosestNonVanishPlayer();
     if (pl != 0) {
-        *(V3A *)(int)(&L.pp) = *(V3A *)(int)(&pl->mPosX);
+        *(V3A *)(&L.pp) = *(V3A *)(&pl->mPosX);
         L.tgt = L.pp;
         mTargetAngle = Vec3_HorzAngle(&mPos, &L.tgt);
         ApproachAngle(&mPrevAngleY, mTargetAngle, 1, 0x500, 0x500);
@@ -525,7 +525,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
 
     if (mAnmModel.Finished() != 0) {
         if (pl != 0) {
-            s32 *dsrc = (s32 *)(int)(&pl->mPosX);
+            s32 *dsrc = (s32 *)(&pl->mPosX);
             L.d.x = dsrc[0];
             L.d.y = dsrc[1];
             L.d.z = dsrc[2];
@@ -640,7 +640,7 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
         return;
     }
     {
-        int b = (int)(((long long)(p->actorID == 0xbf)));
+        int b = (int)(p->actorID == 0xbf);
         if (b == 0) return;
     }
     if (p->mIsMetal == 1 || p->IsOnShell() == 1) {

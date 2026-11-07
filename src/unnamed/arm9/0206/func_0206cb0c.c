@@ -1,6 +1,8 @@
 #include "types.h"
 extern int func_0206cf7c(int arg0);
 
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
 /* Debug console byte sink, cartridge-slot form: store val in a 0x8000-byte
    ring at 0x09fd0000 (flag 0x2000 set) or 0x08fd0000, then rewrite the head

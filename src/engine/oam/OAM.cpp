@@ -30,9 +30,9 @@
  * - The two Fix12 Render overloads keep mangled `extern "C"` spellings
  *   (wall above); RenderSub's call sites keep them as one-declared
  *   callee.
- * - data_020755a0/data_020755ac stay `unsigned char[]` table externs --
- *   GetObjWidth/GetObjHeight read single bytes out of stride-4 slots and
- *   the double cast is load-bearing.
+ * - GetObjWidth/GetObjHeight read single bytes out of the stride-4
+ *   slots in data_020755a0/data_020755ac, and the double cast is
+ *   load-bearing.
  */
 
 #pragma defer_codegen off
@@ -87,8 +87,8 @@ extern int data_0209e67c[];
 extern int data_0209e694[];
 extern OamAttr data_0209ea74[];  /* sub OAM staging buffer: 128 x 8B */
 extern s16 data_02082214[];      /* sin/cos table, indexed by (angle >> 4) * 2 */
-extern unsigned char data_020755a0[];  /* OBJ width table, stride 4 */
-extern unsigned char data_020755ac[];  /* OBJ height table, stride 4 */
+extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
+extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
 extern "C" {
 void func_020566dc(const void *src, unsigned int offset, unsigned int count);

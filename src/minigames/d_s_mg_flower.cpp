@@ -59,7 +59,7 @@ typedef struct V2 {
     int x;
     int y;
 } V2;
-void Vec2_Sub(V2 *out, V2 *a, V2 *b);
+void Vec2_Sub(int *out, int *a, int *b);
 int Vec2_Len(V2 *p);
 void FreeGfxSlotsById(int a);
 void *Ov004_LoadFileByPath(void *arg);
@@ -320,7 +320,7 @@ s32 dScMgFlower_c::Behavior() {
                     if (mPetals[attachedIndex].active != 0 && mPetals[attachedIndex].held != 1 &&
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
-                        Vec2_Sub(&toCursor, (V2 *)&mPetals[attachedIndex].x, (V2 *)&mCursorX);
+                        Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].x, &mCursorX);
                         withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
@@ -341,7 +341,7 @@ s32 dScMgFlower_c::Behavior() {
                     for (freeIndex = 0; freeIndex < 0x16; freeIndex++) {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
-                            Vec2_Sub(&toCursor2, (V2 *)&mPetals[freeIndex].x, (V2 *)&mCursorX);
+                            Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].x, &mCursorX);
                             withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
@@ -359,7 +359,7 @@ s32 dScMgFlower_c::Behavior() {
         } else {
             newlyCounted = 0;
             if (gTouchHeld[playerSlot * 4] != 0) {
-                Vec2_Sub(&drag, (V2 *)&mCursorX, (V2 *)&mPrevCursorX);
+                Vec2_Sub(&drag.x, &mCursorX, &mPrevCursorX);
                 V2 *pos = (V2 *)&mPetals[mHeldPetal].x;
                 pos->x += drag.x;
                 pos->y += drag.y;

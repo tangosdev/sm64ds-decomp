@@ -41,8 +41,6 @@
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
 
-#define U64 0xFFFFFFFFFFFFFFFFLL
-
 /* Profile actor ids (symbols/profile_reconstruction_registry.json). */
 enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 
@@ -349,11 +347,11 @@ s32 daObjFallBlock_c::Behavior() {
         {
             /* Integer-cast address form: plain mAngleX / mAngleZ
                read-modify-writes shrink Behavior by 8 bytes. */
-            s16 t = *(s16 *)((int)&mAngleX & U64);
+            s16 t = *(s16 *)((int)&mAngleX);
             t = (s16)(t + mShakeX);
-            *(s16 *)((int)&mAngleX & U64) = t;
-            t = (s16)(*(s16 *)((int)&mAngleZ & U64) + mTiltVelZ);
-            *(s16 *)((int)&mAngleZ & U64) = t;
+            *(s16 *)((int)&mAngleX) = t;
+            t = (s16)(*(s16 *)((int)&mAngleZ) + mTiltVelZ);
+            *(s16 *)((int)&mAngleZ) = t;
             UpdatePos(0);
         }
         if (DecIfAbove0_Short(&mStateTimer) == 0) {

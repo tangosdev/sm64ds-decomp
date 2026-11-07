@@ -570,7 +570,8 @@ void dScMgCoin_c::DrawResultNumbers() {
 void dScMgCoin_c::Popup_UpdateAll() {
     char *raw = (char *)this;
     /* Strided through the scene pointer; the (int) cast is what makes the
-       timer read-modify-write use a fresh address. */
+       timer read-modify-write use a fresh address. The index's long long
+       round trip is load-bearing too (measured 2026-11-06). */
     int i;
     for (i = 0; i < 0x18; i++) {
         char *popup = raw + (int)((long long)i) * 0x10;

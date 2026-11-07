@@ -8,8 +8,13 @@
  *
  * Functions are written in reverse of ROM order; do not reorder.
  * `opt_loop_invariants off` above PaintSquare has no matching `on`, so it
- * applies to the whole file. TUBUILD CONFLICT comments are paired with
- * the manifest; leave them.
+ * applies to the whole file. Measured 2026-11-06: PaintSquare is the only
+ * function in the TU whose bytes move when invariants are hoisted, and the
+ * setting still cannot be narrowed to it -- this TU leaves codegen deferred,
+ * so mwccarm reads the state at the end of the file and an `on` placed after
+ * PaintSquare (or after the function following it) puts hoisting back for
+ * PaintSquare as well. TUBUILD CONFLICT comments are paired with the
+ * manifest; leave them.
  *
  * leftovers:
  * - The factory still builds the object by hand, so its offset stores
@@ -933,6 +938,8 @@ void dScMgTrampoline_c::InitBrush(int layer) {
     GX::LoadBGPltt(sTrmpBrushPltt, 0xe0, 0x20);
 }
 
+/* Kept for PaintSquare: see the file comment above for why it reaches the
+   whole TU instead of just that function. */
 #pragma opt_loop_invariants off
 
 // @symbol _ZN17dScMgTrampoline_c11PaintSquareEiiii

@@ -120,7 +120,11 @@ struct BMD_File {
     struct BMD_Palette *palettes;   /* 0x20 */
     u32 numMaterials;          /* 0x24 */
     struct BMD_Material *materials; /* 0x28 */
-    void *unk_2c;              /* 0x2c - fixed up on load */
+    /* 0x2c - fixed up on load. Maps a display list's matrix slot to a bone:
+       ModelComponents::func_0204488c and func_02044534 read it with ldrh,
+       indexed by the slot byte of a display-list record, and index
+       ModelComponents::transforms and bones with the result */
+    u16 *transformBoneMap;
     /* 0x30 - matrices past numBones in ModelComponents::transforms:
        func_02046564 sizes transforms as numBones + this, and func_02044dc4
        blends each one from bone matrices. Also guards the block below. */

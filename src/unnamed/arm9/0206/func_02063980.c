@@ -22,9 +22,9 @@ extern int func_02065bd0(void);
 extern int func_02064f54(u8 *dst, u16 a1, u8 a2, int a3, int a4);
 extern int func_0206470c(Sub *e);
 extern int func_02064bac(u8 *dst, u16 a1, u8 a2, u32 a3);
-extern int func_02064e18(u8 *dst, u16 a1, u8 a2, u32 a3, int a4);
-extern int func_02064cd8(u8 *dst, u16 a1, u8 a2, u32 a3, int a4);
-extern int func_02064a94(u8 *dst, u16 a1, u8 a2, u32 *a3, u8 a4);
+extern int func_02064e18(u8 *dst, u16 a1, u8 a2, u32 a3, u32 a4);
+extern int func_02064cd8(u8 *dst, u16 a1, u8 a2, u32 a3, u32 a4);
+extern int func_02064a94(u8 *dst, u16 a1, u8 a2, const void *a3, u8 a4);
 
 int func_02063980(S *s, u8 *dst)
 {

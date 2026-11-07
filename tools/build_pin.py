@@ -199,6 +199,92 @@ def verify(src, func, addr, size, label, strict=None, version=None):
     return True, version
 
 
+def verify_many(src, targets, strict=None, version=None, fp_targets=()):
+    """Does `src` reproduce EVERY function in `targets`? One compile, N comparisons.
+
+    `targets` is a sequence of `(func, addr, size, label)`. Returns `(ok, detail, fingerprint)`
+    with the same contract as verify(): False on the first function that fails, named, and no
+    path that returns True on a question it could not answer.
+
+    This exists because verify() answers for one symbol, and a caller that edits a
+    consolidated translation unit needs the answer for all of them. Asking verify() in a
+    loop recompiles the file once per symbol -- on a 600-function TU that is the whole
+    cost -- so the compile is hoisted out and only extract_func/compare run per target.
+
+    `fp_targets` are functions to byte-check and FINGERPRINT rather than
+    destination-check: the third return value is `((func, (dest, ...)), ...)`, each
+    function's relocation destinations in order. It exists for `__sinit_<file>`, whose
+    relocations name compiler-numbered locals (`@1633`) that only
+    `config/tu_manifest.d/**` maps, so a destination check against
+    `config/**/relocs.txt` fails even on an unmodified file. A caller compares a
+    candidate's fingerprint with the original's instead: equal means the numbering did
+    not move, different means the edit is byte-identical but would need the manifest
+    re-keyed -- which the real link gate reports WRONG, not NO-REPRO.
+    """
+    src = pathlib.Path(str(src))
+    targets = list(targets)
+    if not targets:
+        return False, "no target function(s) to verify", ()
+    if version is None:
+        version, why = compiler_for(src, targets[0][0])
+        if version is None:
+            return False, why, ()
+    obj = M.compile_c(src, version, flags_for(src))
+    if obj is None:
+        return False, f"does not compile under {version}", ()
+    if strict is not None:
+        RA, name_index, config_relocs, sym_index = strict
+    for func, addr, size, label in targets:
+        tgt = target_bytes(label, addr, size)
+        if tgt is None:
+            return False, f"no module binary for {label!r}", ()
+        if len(tgt) != size:
+            return False, f"ROM bytes for {func} are out of range for {label}", ()
+        code, relocs = M.extract_func(obj, func)
+        if code is None:
+            return False, f"{func} is not in the object {version} produced", ()
+        ok, ndiff = M.compare(tgt, code, relocs, verbose=False)
+        if not ok:
+            return False, f"{func}: {ndiff} word(s) differ under {version}", ()
+        if strict is None:
+            continue
+        try:
+            rows, missing = RA.check_destinations(obj, func, addr, size, label,
+                                                  name_index, config_relocs, sym_index)
+        except Exception as e:                                  # noqa: BLE001
+            rows, missing = None, f"reloc-destination check raised: {e}"
+        if rows is None:
+            return False, (f"{func}: bytes match under {version} but the "
+                           f"reloc-destination check could not run: {missing}"), ()
+        bad = [r for r in rows if r["verdict"] == "WRONG-DEST"]
+        if bad:
+            return False, (f"{func}: bytes match under {version} but {len(bad)} reloc "
+                           f"destination(s) are wrong "
+                           f"(first: {bad[0]['cand']} != {bad[0]['cfg']})"), ()
+    fp = []
+    for func, addr, size, label in fp_targets:
+        tgt = target_bytes(label, addr, size)
+        if tgt is None or len(tgt) != size:
+            return False, f"ROM bytes for {func} are out of range for {label}", ()
+        code, relocs = M.extract_func(obj, func)
+        if code is None:
+            return False, f"{func} is not in the object {version} produced", ()
+        ok, ndiff = M.compare(tgt, code, relocs, verbose=False)
+        if not ok:
+            return False, f"{func}: {ndiff} word(s) differ under {version}", ()
+        dests = ()
+        if strict is not None:
+            try:
+                rows, _ = RA.check_destinations(obj, func, addr, size, label,
+                                                name_index, config_relocs, sym_index)
+            except Exception:                                  # noqa: BLE001
+                rows = None
+            if rows is not None:
+                dests = tuple(r["cand"] for r in rows)
+        fp.append((func, dests))
+    return True, version, tuple(fp)
+
+
 def sweep_version(src, func, addr, size, label, versions_=None):
     """The first sweep member that reproduces `func`, or None. The OLD rule.
 

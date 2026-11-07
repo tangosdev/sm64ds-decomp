@@ -7391,15 +7391,15 @@
     },
     "arm9:0x02044534": {
       "author": "tangosdev",
-      "name": "func_02044534"
+      "name": "_ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3"
     },
     "arm9:0x0204488c": {
       "author": "andrewboudreau",
-      "name": "func_0204488c"
+      "name": "_ZN15ModelComponents13func_0204488cEiP7Vector3"
     },
     "arm9:0x02044b30": {
       "author": "andrewboudreau",
-      "name": "func_02044b30"
+      "name": "_ZN15ModelComponents13func_02044b30Ei"
     },
     "arm9:0x02044dc4": {
       "author": "andrewboudreau",
@@ -7423,7 +7423,7 @@
     },
     "arm9:0x02045074": {
       "author": "tangosdev",
-      "name": "func_02045074"
+      "name": "_ZN15ModelComponents13func_02045074EP8BMD_Bone"
     },
     "arm9:0x02045178": {
       "author": "tangosdev",
@@ -7439,7 +7439,7 @@
     },
     "arm9:0x020453c0": {
       "author": "aitddlabs",
-      "name": "func_020453c0"
+      "name": "_ZN15ModelComponents13func_020453c0EP8BMD_BoneP8BCA_Filei"
     },
     "arm9:0x0204547c": {
       "author": "tangosdev",
@@ -14363,7 +14363,7 @@
     },
     "ov002:0x020bd8ac": {
       "author": "tangosdev",
-      "name": "func_ov002_020bd8ac"
+      "name": "_ZN7daPly_c19func_ov002_020bd8acEv"
     },
     "ov002:0x020bd8c0": {
       "author": "tangosdev",
@@ -14475,7 +14475,7 @@
     },
     "ov002:0x020bec9c": {
       "author": "tangosdev",
-      "name": "func_ov002_020bec9c"
+      "name": "_ZN7daPly_c19func_ov002_020bec9cEjiit"
     },
     "ov002:0x020becc8": {
       "author": "tangosdev",
@@ -15215,7 +15215,7 @@
     },
     "ov002:0x020ca270": {
       "author": "tangosdev",
-      "name": "func_ov002_020ca270"
+      "name": "_ZN7daPly_c19func_ov002_020ca270Ev"
     },
     "ov002:0x020ca2ac": {
       "author": "tangosdev",
@@ -15603,7 +15603,7 @@
     },
     "ov002:0x020d0d2c": {
       "author": "tangosdev",
-      "name": "func_ov002_020d0d2c"
+      "name": "_ZN7daPly_c19func_ov002_020d0d2cEv"
     },
     "ov002:0x020d0d78": {
       "author": "tangosdev",
@@ -16683,7 +16683,7 @@
     },
     "ov002:0x020e4374": {
       "author": "tangosdev",
-      "name": "func_ov002_020e4374"
+      "name": "_ZN7daPly_c19func_ov002_020e4374EPiS0_"
     },
     "ov002:0x020e444c": {
       "author": "andrewboudreau",

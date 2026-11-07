@@ -84,7 +84,7 @@
    ]
   },
   "arm9:0x02044b30": {
-   "name": "func_02044b30",
+   "name": "_ZN15ModelComponents13func_02044b30Ei",
    "missing": [
     "@30"
    ]
@@ -117,7 +117,7 @@
    ]
   },
   "ov002:0x020f7d74": {
-   "name": "func_ov002_020f7d74",
+   "name": "_ZN8daDemo_c10RunCommandEPhii",
    "missing": [
     "_ZGVdata_ov002_0211104c$8",
     "data_ov002_0211104c$8"

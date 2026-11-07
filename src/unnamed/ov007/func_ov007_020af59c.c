@@ -5,7 +5,7 @@
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020b0244(void);
 extern void func_ov007_020b7d94(int kind);
-extern void func_ov007_020b43dc(void *self);
+extern void func_ov007_020b43dc(int kind);
 extern int func_ov007_020b79e4(void);
 extern int func_ov007_020b4438(void);
 extern void func_ov007_020c1d8c(int i);
@@ -42,7 +42,7 @@ void func_ov007_020af59c(void) {
                 WORK->selectedSlot = -1;
                 menu->stateWork = 1;
             } else {
-                func_ov007_020b43dc((void *)0xc);
+                func_ov007_020b43dc(0xc);
                 menu->stateWork = 2;
             }
             return;

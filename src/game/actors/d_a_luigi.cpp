@@ -102,7 +102,6 @@ unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPosY, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
-void func_ov002_020e4374(char *player, int *depth, int *radius);
 /* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
 int func_ov002_020e496c(daPly_c *player);
 
@@ -179,7 +178,7 @@ int daLuigi_c::Behavior() {
     if (mState->execute)
         (this->*mState->execute)(player);
     Matrix4x3_FromTranslation(&mShadowMatrix, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
-    func_ov002_020e4374((char *)player, &depth, &radius);
+    player->func_ov002_020e4374(&depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
     data_0209f318->mFramedActor = this;
@@ -210,7 +209,7 @@ int daLuigi_c::Render() {
     for (bone = 0; bone < file->numBones; bone++) {
         /* u64 round trip on the destination. A plain store swaps the copy
          * registers (8 words). */
-        *(Mtx43 *)(int)((long long)(int)dst) = *src;
+        *(Mtx43 *)((long long)(int)dst) = *src;
         src++;
         dst++;
     }

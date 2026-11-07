@@ -15,6 +15,8 @@ void func_0206ce90(u32 flags);
 void func_0206cb0c(void *c, int b);
 void func_0206ca7c(void *c, int b);
 
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
 
 /* The output callback func_0206ccd8 gives func_0206a928: send count bytes

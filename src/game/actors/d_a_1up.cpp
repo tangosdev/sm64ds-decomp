@@ -54,8 +54,7 @@
  *
  * `decl_common.h` IS DELIBERATELY NOT INCLUDED. Its claims on this TU
  * reduce to `func_ov002_020aefa4(char *)` -- redundant with this file's
- * own definition -- and `func_ov002_020d0d2c(void *)` and `Vec3_Asr`,
- * both already in the decl region above; the header's other ~1900
+ * own definition -- and `Vec3_Asr`, already in the decl region above; the header's other ~1900
  * catch-all spellings would only add overloading-conflict surface
  * against them. ov002/daPly_c and ov006/dScMgPanel_c, the two largest
  * promoted TUs, exclude it for the same reason.
@@ -189,7 +188,6 @@ enum {
 extern "C" {
 int Vec3_HorzLen(const Vector3*);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
-int func_ov002_020d0d2c(void*);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
 void Matrix4x3_FromRotationY(void*, int);
 void Matrix4x3_FromTranslation(void*, int, int, int);
@@ -323,15 +321,17 @@ void da1up_c::func_ov002_020af0c0() {
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;
-        /* The player's position is read through an int* laundered via
-           (void*)(int); reading p->mPosX/Y/Z directly here changes the bytes
-           (tried: it did not byte-match), so the launder stays. */
-        int* s = (int*)((void*)(int)&p->mPosX);
+        /* The player's position is read through an int * over a (void *) of
+           &p->mPosX; reading p->mPosX/Y/Z directly here changes the bytes
+           (tried: it did not byte-match), so that spelling stays. The (int)
+           round-trip that used to sit between the two casts did nothing and
+           is gone (#821). */
+        int *s = (int *)(void *)&p->mPosX;
         ppos.x = s[0];
         ppos.y = s[1];
         ppos.z = s[2];
         diff.x = ppos.x - mPosX;
-        if(func_ov002_020d0d2c(p) != 0)
+        if (p->func_ov002_020d0d2c() != 0)
             diff.y = ppos.y - mPosY - 0x50000;
         else
             diff.y = ppos.y - mPosY + 0x78000;

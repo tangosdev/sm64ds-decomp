@@ -340,13 +340,13 @@ int FSi_FindPathCommand(FSFile *p_dir) {
 
         if (find_dir != 0)
             return FS_RESULT_FAILURE;
-        FSi_CopyFileID((FSFileID *)p_dir->arg.findpath.result, &entry.file_id);
+        FSi_CopyFileID(p_dir->arg.findpath.result.file, &entry.file_id);
         return FS_RESULT_SUCCESS;
     }
 
     if (find_dir == 0)
         return FS_RESULT_FAILURE;
-    FSi_CopyDirPos((FSDirPos *)p_dir->arg.findpath.result, &p_dir->prop.dir.pos);
+    FSi_CopyDirPos(p_dir->arg.findpath.result.dir, &p_dir->prop.dir.pos);
     return FS_RESULT_SUCCESS;
 }
 
