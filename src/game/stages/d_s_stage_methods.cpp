@@ -513,7 +513,7 @@ void DeathTable_SetBit(s32 id);
 u32 DeathTable_GetBit(s32 id);
 void GiveVsStars(int idx, int delta);
 void ClearSpikeBomb(int idx);
-void SetStarMarker(int i, int v1, int v2);
+void SetStarMarker(int i, dActor_c *actor, int v2);
 void CollectStarInCurLevel(s32 starID);
 s32 IsStarCollectedInCurLevel(s32 starID);
 signed char NumRedCoins(void);
@@ -3249,8 +3249,8 @@ extern "C" int AddSpikeBomb(void *p) {
 }
 
 // @symbol SetStarMarker
-extern "C" void SetStarMarker(int i, int v1, int v2) {
-    STAR_MARKERS[i] = (dActor_c *)v1;
+extern "C" void SetStarMarker(int i, dActor_c *actor, int v2) {
+    STAR_MARKERS[i] = actor;
     gStarMarkerTypes[i] = v2;
 }
 
