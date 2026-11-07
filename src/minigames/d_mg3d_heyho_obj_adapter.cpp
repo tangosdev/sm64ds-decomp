@@ -28,8 +28,8 @@
      SeparateAll/SettleAll/AllIdle walks take or index a Heyho directly, and
      the VShape/Diagonal starters, CheckHitA/B, SeparateAll and the Chase, Leave
      and React motions hold Vector3 locals, as do the VShape and Diagonal
-     motions. The FlyIn/Regroup starters still keep a per-function Vec3, hence
-     their casts. Three partial views stay: Heyho_Update's Foo (it calls
+     motions. FlyIn/Regroup now use the member's Vector3 type directly.
+     Three partial views stay: Heyho_Update's Foo (it calls
      mMotion as a pointer to member, which Heyho.h spells as s32[2]),
      Heyho_Settle's ParticleSystemView and Heyho_LoadResources' fBaseView
      (this TU does not include Particle__System.h or fBase_c.h). CheckHitA's Obj is the adapter seen
@@ -121,7 +121,6 @@ extern "C" int Heyho_LoadResources(char *c) {
 /* ---- Heyho_StartMotionFlyIn ---- */
 namespace n020c6ca4 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
 typedef struct { int w[3]; } Blk3;
 typedef struct { int w[4]; } Blk4;
 typedef struct { int x, y, z, w; } Vec4;
@@ -143,17 +142,17 @@ void Heyho_StartMotionFlyIn(char *dst, char *src) {
     HEYHO(dst)->mMoveKind = HEYHO(src)->mMoveKind;
 
     if (*(volatile int *)&HEYHO(dst)->mGoal.x > 0) {
-        Vec3 *p = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *p = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)p, (Vector3 *)&sHeyho_StartMotionFlyIn_Right256, (Vector3 *)p);
+        AddVec3(p, &sHeyho_StartMotionFlyIn_Right256, p);
     } else {
-        Vec3 *q = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *q = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)q, (Vector3 *)&sHeyho_StartMotionFlyIn_Left256, (Vector3 *)q);
+        AddVec3(q, &sHeyho_StartMotionFlyIn_Left256, q);
     }
 
     HEYHO(dst)->mScale.x = 0x1400;
@@ -240,7 +239,6 @@ void Heyho_MotionFlyIn(char *c) {
 /* ---- Heyho_StartMotionRegroup ---- */
 namespace n020c68f4 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
 typedef struct { int w[3]; } Blk3;
 typedef struct { int w[4]; } Blk4;
 typedef struct { int x, y, z, w; } Vec4;
@@ -261,17 +259,17 @@ void Heyho_StartMotionRegroup(char *dst, char *src) {
     HEYHO(dst)->mMoveKind = HEYHO(src)->mMoveKind;
 
     if (*(volatile int *)&HEYHO(dst)->mGoal.x > 0) {
-        Vec3 *p = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *p = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)p, (Vector3 *)&sHeyho_StartMotionRegroup_Right256, (Vector3 *)p);
+        AddVec3(p, &sHeyho_StartMotionRegroup_Right256, p);
     } else {
-        Vec3 *q = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *q = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)q, (Vector3 *)&sHeyho_StartMotionRegroup_Left256, (Vector3 *)q);
+        AddVec3(q, &sHeyho_StartMotionRegroup_Left256, q);
     }
 
     HEYHO(dst)->mDelay = 8;
