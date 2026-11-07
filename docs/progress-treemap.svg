@@ -189,7 +189,7 @@ matched: yes</title></rect><rect x="135.50" y="41.88" width="16.09" height="4.50
 module: arm9
 addr: 0x0200762c
 size: 108 bytes
-matched: yes</title></rect><rect x="151.59" y="41.88" width="28.60" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007698
+matched: yes</title></rect><rect x="151.59" y="41.88" width="28.60" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneKeyDanceJumpCvar
 module: arm9
 addr: 0x02007698
 size: 192 bytes
@@ -201,7 +201,7 @@ matched: yes</title></rect><rect x="202.84" y="41.88" width="19.07" height="4.50
 module: arm9
 addr: 0x020077f0
 size: 128 bytes
-matched: yes</title></rect><rect x="221.90" y="41.88" width="12.51" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007870
+matched: yes</title></rect><rect x="221.90" y="41.88" width="12.51" height="4.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CutsceneDanceShakeFov
 module: arm9
 addr: 0x02007870
 size: 84 bytes
