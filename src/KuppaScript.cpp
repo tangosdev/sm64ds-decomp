@@ -28,7 +28,7 @@
  * star-camera table are this file's .data. A record that names another
  * script or a path holds its address, unaligned; an address is not a
  * constant byte, so the static initializer stores each one byte by byte at
- * boot. It also constructs data_0209b294, the fader this file drives.
+ * boot. It also constructs gKuppaScriptFader, the fader this file drives.
  *
  * mwccarm lays out a TU's .data and .bss objects by size: a heapsort over
  * the reversed definition order. The patched scripts below are defined in
@@ -70,11 +70,11 @@ enum KuppaScriptCommand {
     KS_SOUND_2 = 9,               /* Sound::Play2D(2, id) */
     KS_MESSAGE = 0xa,             /* open a message on the first frame, close it on the last */
     KS_LOAD_LEVEL = 0xb,          /* load a level, then resume a script there */
-    KS_WHITE_FADE_FORWARD = 0xc,  /* data_0209b294 from its start, 14 frames */
-    KS_WHITE_FADE_BACKWARD = 0xd, /* data_0209b294 from its end, 80 frames */
-    KS_BLACK_FADE_FORWARD = 0xe,  /* data_0209b294 from its start, 30 frames */
-    KS_BLACK_FADE_BACKWARD = 0xf, /* data_0209b294 from its end, 80 frames */
-    KS_SCENE_FADE = 0x10,         /* data_0209b294 handed to the scene's faders */
+    KS_WHITE_FADE_FORWARD = 0xc,  /* gKuppaScriptFader from its start, 14 frames */
+    KS_WHITE_FADE_BACKWARD = 0xd, /* gKuppaScriptFader from its end, 80 frames */
+    KS_BLACK_FADE_FORWARD = 0xe,  /* gKuppaScriptFader from its start, 30 frames */
+    KS_BLACK_FADE_BACKWARD = 0xf, /* gKuppaScriptFader from its end, 80 frames */
+    KS_SCENE_FADE = 0x10,         /* gKuppaScriptFader handed to the scene's faders */
     KS_WATERFALL_SOUNDS = 0x11,   /* re-enable the waterfall sounds */
     KS_DEMO_FIRST = 0x12          /* 0x12 and up: a daDemo_c, by param1 */
 };
@@ -4481,7 +4481,7 @@ u8 sCutsceneGrandStar[] = {7,
                            KS_PTR(sCutsceneGrandStarFly),
                            0};
 
-dFdColor_c data_0209b294; /* GLOBAL_FADER */
+dFdColor_c gKuppaScriptFader;
 
 /* CURRENT_GAMEMODE is 2 while the castle-fall cutscene runs:
  * ContinueKuppaScriptIfNecessary stores 2 only when it resumes
@@ -4697,32 +4697,32 @@ void ProcessKuppaScript() {
                 dScene_c::SetAndStopColorFader();
                 data_0209d4b0 = 0;
             } else if (command == KS_WHITE_FADE_FORWARD) {
-                dFdColor_c *f = &data_0209b294;
+                dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToStart();
                 f->color = 0x7fff;
                 f->SetForwardTime(0xe, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_WHITE_FADE_BACKWARD) {
-                dFdColor_c *f = &data_0209b294;
+                dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToEnd();
                 f->color = 0x7fff;
                 f->SetBackwardTime(0x50, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_BLACK_FADE_FORWARD) {
-                dFdColor_c *f = &data_0209b294;
+                dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToStart();
                 f->color = 0;
                 f->SetForwardTime(0x1e, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_BLACK_FADE_BACKWARD) {
-                dFdColor_c *f = &data_0209b294;
+                dFdColor_c *f = &gKuppaScriptFader;
                 gMainScreenLayers = DISPLAY_LAYER_OBJ;
                 f->SetToEnd();
                 f->color = 0;
                 f->SetBackwardTime(0x50, 0);
                 data_0209d4b0 = f;
             } else if (command == KS_SCENE_FADE) {
-                dFdColor_c *f = &data_0209b294;
+                dFdColor_c *f = &gKuppaScriptFader;
                 f->SetToEnd();
                 f->color = 0;
                 f->SetForwardTime(0x1e, 0);

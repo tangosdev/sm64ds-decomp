@@ -4519,7 +4519,7 @@ gKuppaScriptNumPlayers kind:bss addr:0x0209b270
 gKuppaScriptFrame kind:bss addr:0x0209b274
 @259 kind:bss addr:0x0209b278
 gKuppaScriptPlayerIDs kind:bss addr:0x0209b284
-data_0209b294 kind:bss addr:0x0209b294
+gKuppaScriptFader kind:bss addr:0x0209b294
 gDemoActorIDs kind:bss addr:0x0209b2a4
 data_0209b2e4 kind:bss addr:0x0209b2e4
 data_0209b2e8 kind:bss addr:0x0209b2e8
