@@ -81,7 +81,8 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
         if (e->name) e->name = REBASE(e->name);
     }
 
-    if (file.unk_2c) file.unk_2c = REBASE(file.unk_2c);
+    if (file.transformBoneMap)
+        file.transformBoneMap = (u16 *)REBASE(file.transformBoneMap);
     if (file.numWeightedMatrices == 0)
         return;
     if (file.skin)

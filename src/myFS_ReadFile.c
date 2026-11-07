@@ -13,21 +13,19 @@
 
 typedef struct FSFile FSFile;
 
-struct BC {
-    int x, y;
-};
-
 extern int func_0203d7d4(int);
 extern void OS_SleepThread(int);
 extern void *data_0209d3c0;
 extern int func_0205d644(void *out_file_id, const char *path);
 extern void Crash(void);
-extern int data_0208ecd8[];
+extern int data_0208ecd8[7];
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
 extern int data_0208ecc4;
 extern char data_0208ec74;
-int func_0205d568(int a, struct BC bc);
+/* NitroSDK FS_OpenFileFast. Its definition still reads the FSFileID as
+ * `int, ...`; SoundEngine.cpp declares it that way too. */
+int func_0205d568(FSFile *p_file, FSFileID id);
 extern int func_0205d518(void *file, const char *path);
 extern int data_0208eb8c[];
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
@@ -64,8 +62,8 @@ int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image
     return r;
 }
 
-int myFS_OpenFileFast(int a, int b, int c, ...) {
-    int r = func_0205d568(a, *(struct BC *)&b);
+int myFS_OpenFileFast(FSFile *p_file, FSFileID id) {
+    int r = func_0205d568(p_file, id);
     if (r == 0) {
         func_02018e68(&data_0208ec74);
         Crash();

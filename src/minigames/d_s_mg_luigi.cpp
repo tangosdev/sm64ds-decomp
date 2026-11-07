@@ -149,7 +149,7 @@ void Luigi_PrepareScanlines(void) {
     /* The (int) cast is what keeps this handler the same size. It is the
        only one of 24 launders this TU inherited from its shards that pays;
        do not re-add the other 23. */
-    *(int *)(((int)data_023c0000 + 0x3ff8)) |= 2;
+    *(int *)((int)data_023c0000 + 0x3ff8) |= 2;
     nextLine = REG_VCOUNT + 1;
     if (nextLine >= 0xc0) {
         Luigi_PushScanlineRecord();
@@ -194,7 +194,7 @@ void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
     for (scanline = 0; scanline < 0x60; scanline++) {
         if (0x60 - radius <= scanline) {
             int circleOffset = scanline - 0x60 + radius;
-            int halfWidth = cstd::sqrt((s64)(circleOffset * (radius * 2 - circleOffset)));
+            int halfWidth = cstd::sqrt((circleOffset * (radius * 2 - circleOffset)));
             int left = (mIris[0].x >> 12) - halfWidth;
             int right = halfWidth + (mIris[0].x >> 12);
             if (left < 0)
@@ -861,7 +861,7 @@ void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
 
     if (*started == 0) {
         u32 randomValue = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        u16 initialAngle = (u16)((((randomValue << 4) >> 15) << 12));
+        u16 initialAngle = (u16)(((randomValue << 4) >> 15) << 12);
 
         mMovePhase[pictureIndex] = initialAngle;
         *started += 1;
@@ -1533,7 +1533,7 @@ void dScMgLuigi_c::ChooseTarget() {
     if (t == 0xe || t == 0x10 || t == 0x11 || t == 0x13) {
         if (mWanted == 3) {
             mWanted =
-                (u8)((((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3)) >>
+                (u8)(((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
                      15);
         }
     }
@@ -1561,8 +1561,8 @@ void dScMgLuigi_c::ChooseBoard() {
                   0xf);
         if (pick + 0xa == mPrevBoard) {
             int step =
-                (int)((((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9) >>
-                       0xf)) +
+                (int)(((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9) >>
+                      0xf) +
                 1;
             pick += step;
             if (pick >= 0xa)

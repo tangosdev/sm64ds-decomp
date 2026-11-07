@@ -165,15 +165,6 @@ void Crate_SetState(daObjBlockS_c *c, int i);
 
 enum Bool { FALSE, TRUE };
 
-struct Sub {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void m5(int);
-};
-
 /* The state table: data_ov098_0213c878 holds one {enter, update} pair of
    member pointers per state, indexed by mState (the word at 0x560). The host
    struct is an opaque stand-in for daObjBlockS_c so the member-pointer calls
@@ -1213,10 +1204,8 @@ int daObjBlockS_c::CleanupResources()
 }
 
 // @symbol _ZN13daObjBlockS_c6RenderEv
-/* Draws the model through dExtSimpleModel_c's vtable slot 5 (Render) unless the crate is
- * in STATE_BROKEN or mFlags 0x40000 (a yoshi-mouth bit) is set. The call goes
- * through the local `Sub` shadow so it stays a virtual dispatch on the member
- * object. Always returns 1. */
+/* Draws the model through dExtSimpleModel_c::Render unless the crate is in
+ * STATE_BROKEN or mFlags 0x40000 (a yoshi-mouth bit) is set. Always returns 1. */
 int daObjBlockS_c::Render()
 {
     if (mState == STATE_BROKEN)
@@ -1226,8 +1215,7 @@ int daObjBlockS_c::Render()
         if (b)
             return 1;
     }
-    Sub *o = (Sub *)&mModel;
-    o->m5(0);
+    mModel.Render(0);
     return 1;
 }
 

@@ -1549,7 +1549,7 @@ void dScMgTeresa_c::UpdateRubbing() {
         int dist;
         d.x = mRubX - mRubPrevX;
         d.y = mRubY - mRubPrevY;
-        dist = cstd::sqrt((u64)((d.x) * (d.x) + (d.y) * (d.y)));
+        dist = cstd::sqrt(((d.x) * (d.x) + (d.y) * (d.y)));
         if (dist <= 3)
             close = 1;
         if (close == 0) {

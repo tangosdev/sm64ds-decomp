@@ -1,6 +1,6 @@
 extern int func_0203da9c(void);
 extern unsigned char GetPlayerFlagByte(int i, int p);
-extern void func_0203db3c(int i, unsigned char v);
+extern void func_0203db3c(int byte, int value);
 
 void WarpPlayer(int i, int val)
 {

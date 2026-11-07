@@ -47,7 +47,7 @@ extern unsigned char gMainScreenLayers;
 extern unsigned char data_0209e660;
 extern unsigned char data_0209f5f8;
 extern dGraph_c::callback_c *data_0209d4a8;
-extern unsigned int data_020a0db0;
+extern int data_020a0db0;
 extern int data_0208ee44;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 
@@ -68,8 +68,6 @@ void  DecompressLZ16(void *src, void *dst);
  * 16 bytes. Keep it wide. */
 u32 LoadCompressedFileAt(int fileID, void *target);
 void  Ov004_Deallocate(void *x);
-struct dCamera_c;
-void  Camera_UpdateMatrices(dCamera_c *camera);
 
 /* Defined below. */
 void D3D_InitDualScreen(void);
@@ -337,9 +335,9 @@ int dScMgD3DBase_c::OnGraphCallback2()
             mDrawSubScreen = 1;
         else
             mDrawSubScreen = 0;
-        int cameraAddress = (int)&mCameras[mDrawSubScreen];
-        sMgCurCamera = cameraAddress;
-        Camera_UpdateMatrices((dCamera_c *)cameraAddress);
+        MgCamera *camera = &mCameras[mDrawSubScreen];
+        sMgCurCamera = (int)camera;
+        Camera_UpdateMatrices(camera);
         if (mDrawSubScreen == 1) {
             D3D_CaptureToSub();
         } else {

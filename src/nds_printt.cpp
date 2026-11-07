@@ -5,10 +5,12 @@ extern "C" {
 
 extern void func_020147bc(unsigned short *p, int c);
 
+/* opt_common_subs stays off: the cartridge keeps the lower-case, upper-case and
+   default arms of the digit test as three separate `out = c` tails, and CSE
+   merges them (0xe0 against the ROM's 0xec). */
 #pragma opt_common_subs off
 
-void nds_printt(unsigned short *dest, char *str, int value)
-{
+void nds_printt(unsigned short *dest, const char *str, int value) {
     int len = cstd::strlen(str);
     char c;
     unsigned short *p = dest + len;

@@ -3,7 +3,7 @@
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* NitroSDK WBT (wireless block transfer): this raises a system callback for
- * the command a peer sent. `self` is the WBT work area; its system command
+ * the command a peer sent. `work` is the WBT work area; its system command
  * block (system_cmd, +0x138) is a WBTCommand, named here after the SDK's
  * fields, and `sel` is the peer's command type: 2 REQ_SYNC,
  * 8 REQ_GET_BLOCK_DONE, 10 REQ_USER_DATA, 12 SYSTEM_CALLBACK,
@@ -13,9 +13,7 @@ extern void CpuCopy8(const void *src, void *dst, unsigned int size);
  * The 0x68-byte per-peer record (peer[], +0x1d4) holds what func_02063ea8
  * parsed out of that peer's packet; its fields are named after the callback
  * fields they feed. The views are in private/arm9_wbt.h. */
-void func_02064554(int self, int sel, int idx, s16 a3)
-{
-    WBTWork *work = (WBTWork *)self;
+void func_02064554(WBTWork *work, int sel, int idx, s16 a3) {
     WBTPeerRecord *c = &work->peer[idx];
     WBTCommand *o = &work->system_cmd;
 

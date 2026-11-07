@@ -1,17 +1,17 @@
 // HOST REIMPLEMENTATION -- not byte-verified against the ROM.
 //
-// The matched src/engine/model/ModelComponents.cpp calls
-// the material bind as `func_02044b30(this)`: on the DS the material index
-// travels to the callee in r1, left there by the loop's own arithmetic -- a
-// register contract the byte-matched C never names (same class as
-// SharedFilePtr::Construct's r1 ride-through). On a host ABI that argument
-// must be passed, so this copy spells it out. Behavior is otherwise the
-// matched walk, line for line.
+// This copy was written while the matched src/engine/model/ModelComponents.cpp
+// called the material bind as `func_02044b30(this)`, leaving the material
+// index to ride through in r1. The matched TU now passes it
+// (`func_02044b30(idx)`, the same bytes), so this copy is a candidate for
+// retirement in favour of the matched Render. The three callees are
+// ModelComponents members there, and they are declared as members here.
+// Behavior is otherwise the matched walk, line for line.
 #include "types.h"
 
 extern "C" {
 extern u32 data_020a4bd4;
-extern int data_02082190;
+extern const int data_02082190[12];
 extern void *data_020a4bd0;
 
 struct Matrix4x3;
@@ -45,18 +45,17 @@ struct ModelComponents {
     ModuleEntry *modules;
 
     void Render(Matrix4x3 *mat, Vector3 *vec);
+    void func_02044534(int, Matrix4x3 *, Vector3 *);
+    void func_0204488c(int, Vector3 *);
+    void func_02044b30(int); /* material bind */
 };
-
-extern void func_02044b30(ModelComponents *self, int idx);   /* material bind */
-extern void func_02044534(ModelComponents *self, int idx, Matrix4x3 *mat, Vector3 *vec);
-extern void func_0204488c(ModelComponents *self, int idx, Vector3 *vec);
 }
 
 void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec)
 {
     data_020a4bd4 = 1u << (info->field0 + 12);
     if (!mat) {
-        data_020a4bd0 = &data_02082190;
+        data_020a4bd0 = (void *)data_02082190;
     } else {
         data_020a4bd0 = mat;
     }
@@ -68,16 +67,16 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec)
             for (int j = 0; j < node->innerCount; j++) {
                 u8 idx = node->arrA[j];
                 if (!((modules[idx].flags >> 31) & 1)) {
-                    func_02044b30(this, idx);
-                    func_02044534(this, node->arrB[j], mat, vec);
+                    func_02044b30(idx);
+                    func_02044534(node->arrB[j], mat, vec);
                 }
             }
         } else {
             for (int j = 0; j < node->innerCount; j++) {
                 u8 idx = node->arrA[j];
                 if (!(modules[idx].flags & 0x80000000)) {
-                    func_02044b30(this, idx);
-                    func_0204488c(this, node->arrB[j], vec);
+                    func_02044b30(idx);
+                    func_0204488c(node->arrB[j], vec);
                 }
             }
         }

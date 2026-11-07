@@ -57,6 +57,15 @@ u32 GetBG1ScrPtr(void);
 extern "C" {
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
+/* The message system's .bss, 0x0209d64c..0x0209e64c, defined here. mwcc
+   sorts a translation unit's .bss objects by ascending size, and this run
+   climbs without a drop from the u8 state through the 16-bit words, the
+   choice table, the words and pointers, to the two glyph buffers. Its
+   readers are this file, Message2.cpp, Message::SetTextGlobals, LoadFont and
+   Message::LoadText: the five tree files that tile .text 0x0201ab04..
+   0x0201fec8, one original translation unit. Every object below is reached
+   from more than one of them or from outside the run, so all stay global.
+   The address-named objects keep their address names. */
 /* The message box rectangle, set when a box opens (Message.cpp's layout code):
    gMsgBoxLeft/gMsgBoxTop are its final left and top edges and
    gMsgBoxCenterX/gMsgBoxCenterY its centre. The window registers (WIN0H/WIN0V)
@@ -66,55 +75,71 @@ extern u8 gSubScreenLayers;
    opening animation walks them out to gMsgBoxLeft/gMsgBoxTop. At runtime the
    next-page arrow sits at (2 * centre x - 6 - left, 2 * centre y + 2 - top),
    by the box's bottom-right corner. */
-extern u8 gMsgBoxWinTop;
-extern u8 gMsgBoxLeft;
-extern u8 data_0209d654;
-extern u8 gMsgBoxWinLeft;
-extern u8 data_0209d65c;
-extern u8 data_0209d660;
-extern u8 data_0209d664;
-extern u8 data_0209d668;
-extern u8 data_0209d66c;
-extern u8 data_0209d670;
-extern u8 data_0209d674;
-extern u8 data_0209d678;
-extern u8 data_0209d67c;
-extern u8 data_0209d680;
-extern u8 data_0209d684;
-extern u8 gMsgChoiceIndex;
-extern u8 data_0209d690;
-extern u8 data_0209d694;
-extern u8 data_0209d698;
-extern u8 data_0209d69c;
-extern u8 data_0209d6a4;
-extern u8 data_0209d6a8;
-extern u8 data_0209d6ac;
-extern u8 data_0209d6b0;
-extern u8 data_0209d6b4;
-extern u8 data_0209d6b8;
-extern u8 data_0209d6bc;
-extern u8 data_0209d6c0;
+u8 gMsgBoxWinTop;
+u8 gMsgBoxLeft;
+u8 data_0209d654;
+u8 gMsgBoxWinLeft;
+u8 data_0209d65c;
+u8 data_0209d660;
+u8 data_0209d664;
+u8 data_0209d668;
+u8 data_0209d66c;
+u8 data_0209d670;
+u8 data_0209d674;
+u8 data_0209d678;
+u8 data_0209d67c;
+u8 data_0209d680;
+u8 data_0209d684;
+/* The line a horizontal (mode 1) choice sits on (Message2.cpp). */
+u8 gMsgChoiceLine;
+u8 gMsgChoiceIndex;
+u8 data_0209d690;
+u8 data_0209d694;
+u8 data_0209d698;
+u8 data_0209d69c;
+u8 data_0209d6a0;
+u8 data_0209d6a4;
+u8 data_0209d6a8;
+u8 data_0209d6ac;
+u8 data_0209d6b0;
+u8 data_0209d6b4;
+u8 data_0209d6b8;
+u8 data_0209d6bc;
+u8 data_0209d6c0;
 /* The message box's style: the text colour mask (data_0208eecc[it]), which
    next-page arrow sprite is drawn, and the closing sound (0x21 or 5). The
    Display* entry points set it: 1 for a sign (black arrow), 0 for a character
    talking (white arrow). Under melonDS, flipping it on an open sign box turns
    the arrow white, and on a Toad's box turns it black. */
-extern u8 gMsgBoxStyle;
-extern u8 gMsgBoxCenterY;
-extern u8 gMsgBoxTop;
-extern u8 gMsgBoxCenterX;
-extern s16 data_0209d6d4;
-extern u16 data_0209d6e0;
-extern MessageEntry *data_0209d708;
-extern u8 *data_0209d6f0;
-extern int *data_0209d70c;
-extern int data_0209d6fc;
+u8 gMsgBoxStyle;
+u8 gMsgBoxCenterY;
+u8 gMsgBoxTop;
+u8 gMsgBoxCenterX;
+s16 data_0209d6d4;
+s16 data_0209d6d8;
+s16 data_0209d6dc;
+u16 data_0209d6e0;
+/* Where each choice's cursor goes, recorded by AddChoice (Message2.cpp). The
+   bound is the 4-byte slot the object occupies. */
+u8 gMsgChoicePositions[4];
+/* The message bank pointers Message::SetTextGlobals splits the loaded bank
+   into; MessageBank.h gives data_0209d6e8, data_0209d6ec, data_0209d6fc,
+   data_0209d708 and data_0209d70c readable aliases. */
+int data_0209d6e8;
+int data_0209d6ec;
+u8 *data_0209d6f0;
 /* byte-forced spelling: the cell is written twice back-to-back in
    DisplayCourseNameForStarSelect and both stores must emit, so it is
    volatile here; plurality decl elsewhere is u8 *. */
-extern volatile int data_0209d6f4;
-extern s32 data_0209d704;
-extern s32 data_0209d74c[];
+volatile int data_0209d6f4;
+int data_0209d6f8;
+int data_0209d6fc;
+int data_0209d700;
+s32 data_0209d704;
+MessageEntry *data_0209d708;
+int *data_0209d70c;
+u8 data_0209d710[0x3c];
+s32 data_0209d74c[0x3c0];
 extern u8 data_0208ee74[];
 extern u8 data_0208f074[];
 extern u8 data_0209f20c;
@@ -322,6 +347,10 @@ void Message::DisplayOptionsMenuText(s16 n) {
 }
 
 // @symbol LoadControllerModeText
+/* opt_common_subs stays off: each of the three rows recomputes (n + 7) / 8 for its
+ * loop bound the way the cartridge does, and CSE shares the divide instead
+ * (0x1e0 against 0x20c). Reading the count back from data_0209d6b0 for the second
+ * copy forces the reload but not the same schedule (0x210). */
 #pragma push
 #pragma opt_common_subs off
 extern "C" void LoadControllerModeText(int param0)

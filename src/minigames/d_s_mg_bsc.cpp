@@ -61,7 +61,6 @@ extern int RandomIntInternal(int *seed);
 extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 extern void FreeGfxSlotsById(int arg);
 extern void MgCoins_Reset(void);
-void Camera_InitDealerView(void *camera);
 void Hud_RenderSprite(void *sprite, int x, int y, int a3, int a4);
 void Mg_DrawCredits(void *scene, int a1, int a2, int a3);
 void Mg_DrawScoreTally(void *scene, int a1, int a2, int a3);
@@ -100,8 +99,7 @@ extern "C" void *dScMgBSC_c_classInit() {
 /* Slot 0, and the key function: the destructor is inline in the header, so
  * this is the first virtual defined out of line, and defining it here emits
  * the vtable and the D1 and D0 pair. The last call dispatches virtually
- * (mwcc does not devirtualize it). pad_4660 is the head of the camera
- * block, untyped in the header. */
+ * (mwcc does not devirtualize it). */
 s32 dScMgBSC_c::InitResources() {
     void *paletteData;
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
@@ -110,7 +108,7 @@ s32 dScMgBSC_c::InitResources() {
     paletteData = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);
     GXS::LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(paletteData);
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
     Mg_SetTopScreenYOffset(0x20);
@@ -137,7 +135,7 @@ s32 dScMgBSC_c::Behavior() {
 s32 dScMgBSC_c::Render() {
     int cardIndex;
 
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (mState >= STATE_WAIT_DEAL) {
         for (cardIndex = 0; cardIndex < 2; cardIndex++) {
             if (mCardFrame[cardIndex] < 3) {

@@ -898,7 +898,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
     if (mAnmModel.dExtFrameCtrl_c::WillHitFrame(kFireFrame) != 0) {
         *(V3h*)&vel = *(V3h*)&mAngleX;
         if (pl != 0) {
-            int *base = (int *)(int)M(&pl->mPosX);
+            int *base = (int *)M(&pl->mPosX);
             fp.x = base[0];
             fp.y = base[1];
             fp.z = base[2];

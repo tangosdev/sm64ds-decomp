@@ -223,8 +223,8 @@ void daGrock_c::HandleMeshCollision() {
             mRollSoundID = Sound::PlayLong(mRollSoundID, 3, 0x8a, mCamSpacePos, 0);
         }
         {
-            int *vx = (int *)(int)&mSpeedX;
-            int *vz = (int *)(int)&mSpeedZ;
+            int *vx = (int *)&mSpeedX;
+            int *vz = (int *)&mSpeedZ;
             *vx = *vx + normal.x * 5;
             *vz = *vz + normal.z * 5;
         }
@@ -288,7 +288,7 @@ int daGrock_c::Behavior() {
             s16 *roll;
 
             ApplyGravityAndMove();
-            roll = (s16 *)(int)&mAngleX;
+            roll = (s16 *)&mAngleX;
             *roll = (s16)(*roll + (mHorzSpeed >> 12) * 0x43);
             mAngleY = mPrevAngleY;
             HandleMeshCollision();
@@ -332,7 +332,7 @@ int daGrock_c::Behavior() {
         if (dist > 0x5dc000) {
             u32 threshold = (dist < 0x1770000) ? 0x70 : 0xe0;
             if (*(u16 *)&mStateTimer >= threshold) {
-                u8 *spawned = (u8 *)(int)&mSpawnCount;
+                u8 *spawned = (u8 *)&mSpawnCount;
                 Vector3_16 rot;
                 u32 rnd;
 
@@ -356,7 +356,7 @@ int daGrock_c::Behavior() {
             }
         }
         {
-            u16 *timer = (u16 *)(int)&mStateTimer;
+            u16 *timer = (u16 *)&mStateTimer;
             *timer = (u16)(*timer + 1);
         }
     }

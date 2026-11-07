@@ -67,7 +67,6 @@ extern int sMgCoinsBetPlaced;
 extern int func_0203d5dc(void *a, void *b);
 extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-void Camera_InitDealerView(void *p);
 void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void MgCoins_Draw(void);
 void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
@@ -121,7 +120,7 @@ s32 dScMgMCarlo_c::InitResources() {
     gSubScreenLayers = 0x18;
     *(unsigned short *)0x4000008 = (*(unsigned short *)0x4000008 & ~3) | 1;
     *(unsigned short *)0x400100a = *(unsigned short *)0x400100a & ~3;
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
     if (Dealer_Load((char *)&mDealer) == 0)
         return 0;
 
@@ -339,7 +338,7 @@ s32 dScMgMCarlo_c::Behavior() {
  * cards with a positive vertical movement step first, then those with a
  * zero step. mYStep is an absolute magnitude, not a direction. */
 s32 dScMgMCarlo_c::Render() {
-    Camera_InitDealerView(pad_4660);
+    Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
     Mg_DrawScoreTally((char *)this, 0xe0, 0x14, 1);

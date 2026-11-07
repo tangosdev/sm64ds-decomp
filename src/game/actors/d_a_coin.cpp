@@ -555,7 +555,7 @@ void daCoin_c::func_ov002_020b1ad4()
             speed <<= 1;
         mHorzSpeed = speed;
         mVertSpeed = 0x14000;
-        ((CoinFlagBits *)(int)&mCoinFlags)->bounces++;
+        ((CoinFlagBits *)&mCoinFlags)->bounces++;
         mWithMeshClsn.SetLimMovFlag();
         mDisappearTimer = 0x1c2;
     }
@@ -734,9 +734,9 @@ void daCoin_c::func_ov002_020b20b4()
     func_ov002_020b1008();
     if (((CoinFlagBits *)&mCoinFlags)->active) return;
     if (Event::GetBit(mSpawnFilter) == 0) return;
-    ((CoinFlagBits *)(int)&mCoinFlags)->active = 1;
+    ((CoinFlagBits *)&mCoinFlags)->active = 1;
     mBehaviorType = BEHAVIOR_RESTING;
-    *(u32 *)(int)&mdCc_c.flags &= ~1;
+    *(u32 *)&mdCc_c.flags &= ~1;
     found = dActor_c::FindWithActorID(0xa, 0);
     if (found) {
         mDisappearTimer = ((daObjBC_Switch_cView *)found)->mCoinTimerSeed;
