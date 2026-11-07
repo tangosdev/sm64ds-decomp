@@ -4526,8 +4526,8 @@ data_0209b2e8 kind:bss addr:0x0209b2e8
 data_0209b2ec kind:bss addr:0x0209b2ec
 data_0209b2ed kind:bss addr:0x0209b2ed
 data_0209b2f0 kind:bss addr:0x0209b2f0
-data_0209b2f4 kind:bss addr:0x0209b2f4
-data_0209b2f8 kind:bss addr:0x0209b2f8
+gTitleCursor kind:bss addr:0x0209b2f4
+gTitleListTop kind:bss addr:0x0209b2f8
 data_0209b2fc kind:bss addr:0x0209b2fc
 gMgSaveDirty kind:bss addr:0x0209b300
 gMgMenuPage kind:bss addr:0x0209b304

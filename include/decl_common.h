@@ -188,7 +188,7 @@ extern int data_0209212c;
 extern int data_02099368[];
 extern int data_02099edc;
 extern int data_02099fb0;
-extern int data_0209b2f8;
+extern int gTitleListTop;
 extern int data_0209b340[];
 extern int gMusicVolume;
 extern int gSubVolume;

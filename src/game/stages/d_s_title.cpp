@@ -1,10 +1,11 @@
 //cpp
 /* dScTitle_c -- the title / level-select screen, ov003.
  *
- * A 0x36-cell level-select grid with a cursor the
- * D-pad walks by row (+0x35) or column (+1), a confirm that either fades to
- * the picked level or hands off to one of the two special entries, and a
- * scrolling window that keeps the cursor on screen. Its startup use is not
+ * A 0x36-entry level list (sTitleLevelEntries) with a cursor, gTitleCursor,
+ * that D-pad up and down move one entry at a time, wrapping (up adds 0x35,
+ * which is -1 modulo 0x36), a confirm that either fades to the picked level
+ * or hands off to one of the two special entries, and a scrolling window,
+ * gTitleListTop, that keeps the cursor on screen. Its startup use is not
  * established by these consumers. 11 functions,
  * .text 0x020ad660..0x020addfc: the seven dScene_c slots every direct child
  * overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new virtual), the
@@ -43,6 +44,7 @@
 #include "G2.h"
 #include "GX.h"
 #include "OAM.h"
+#include "nitro/hw/registers.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
@@ -58,11 +60,11 @@ struct OamTmp {
  * functions call comes from decl_common.h or Sound.h and is deliberately
  * NOT repeated here. */
 extern "C" {
-/* The level-grid cursor index. RECONCILED: the three legacy sources spelt
+/* The level-list cursor index. RECONCILED: the three legacy sources spelt
  * it `int[]`, `int` and `u32`. `u32` is the one the bytes need, because
  * Behavior's `% 0x36` is an unsigned reduction; the array spelling was only
  * ever read at [0]. */
-extern u32 data_0209b2f4;
+extern u32 gTitleCursor;
 extern char data_0209e674[];
 extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
@@ -136,7 +138,7 @@ static inline int IsTouchStarted() {
     return started;
 }
 
-/* [10] 0x020adcbc -- prints one row of the level grid into the BG0 screen
+/* [10] 0x020adcbc -- prints one row of the level list into the BG0 screen
  * map at (row, col): the level number in two digits (a blank for a leading
  * zero), a blank, the level's name from sTitleLevelEntries, then blanks out
  * to column 0x1d. Called only from func_ov003_020ad6ec. Each tile goes
@@ -209,13 +211,13 @@ s32 dScTitle_c::InitResources() {
     GX::DisableAllBanks();
     GX::SetBankForBG(8);
     GX::SetBankForOBJ(1);
-    *(volatile u32 *)0x4000000 &= 0xffcfffef;
+    REG_DISPCNT &= 0xffcfffef;
     GX::SetGraphicsMode(1, 0, 0);
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     func_020233f4();
-    *(volatile u16 *)0x4000008 &= ~3;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x1f00;
-    *(volatile u16 *)0x4000008 &= ~0x40;
+    REG_BG0CNT &= ~3;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x1f00;
+    REG_BG0CNT &= ~0x40;
     GX::LoadBG0Char(data_0208a178, 0, 0x2000);
     GX::LoadBGPltt(data_0208c178, 0, 0x200);
     {
@@ -229,10 +231,10 @@ s32 dScTitle_c::InitResources() {
     GX::LoadOBJ(data_0208c378, 0, 0x2000);
     GX::LoadOBJPltt(data_0208c178, 0, 0x200);
     gMainScreenLayers = 0x11;
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1100;
+    REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1100;
     data_0208ee44 = 2;
     func_ov003_020ad6ec(this);
-    *(volatile u32 *)0x4000010 = 0;
+    REG_BG0OFS = 0;
     data_0209ee90[0x340] = 0;
     data_0209ee90[0x341] = 0;
     Sound::LoadInitialGroup(2);
@@ -248,16 +250,16 @@ s32 dScTitle_c::CleanupResources() {
 }
 
 /* [5] 0x020ad814 -- vtable slot 6. Level-select cursor update: on confirm
- * (or minigame-active flag) starts the scene fade / loads the picked level
- * from sTitleLevelEntries; otherwise moves the
- * cursor by row (+0x35) or column (+1) with repeat delay at mRepeatDelay,
+ * (A or START, or a new stylus touch) starts the scene fade / loads the
+ * picked level from sTitleLevelEntries; otherwise D-pad up or down moves the
+ * cursor one entry (up adds 0x35) with the repeat delay at mRepeatDelay,
  * wrapping the index modulo 0x36. */
 s32 dScTitle_c::Behavior() {
     if (gSceneFader->IsAtStart() && ((data_020a0e58[0].pressed & 9) | IsTouchStarted()) != 0) {
         u32 i;
         s8 t;
         func_02012790(1);
-        i = data_0209b2f4;
+        i = gTitleCursor;
         t = sTitleLevelEntries[i].levelID;
         if (t == -1 || IsTouchStarted()) {
             dScene_c::StartSceneFade(5, 0, 0);
@@ -279,20 +281,20 @@ s32 dScTitle_c::Behavior() {
             int h = data_020a0e58[0].pressed & 0x40;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
-                data_0209b2f4 += 0x35;
+                gTitleCursor += 0x35;
                 func_02012790(0);
             }
         } else if (v & 0x80) {
             int h = data_020a0e58[0].pressed & 0x80;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
-                data_0209b2f4 += 1;
+                gTitleCursor += 1;
                 func_02012790(0);
             }
         }
     }
 
-    data_0209b2f4 = data_0209b2f4 % 0x36;
+    gTitleCursor = gTitleCursor % 0x36;
     DecIfAbove0_Short(&mRepeatDelay);
     func_ov003_020ad6ec(this);
     return 1;
@@ -305,7 +307,7 @@ s32 dScTitle_c::Render() {
     OAM::EnableSubOAM(&tmp);
     {
         int idx = data_0209e664;
-        unsigned int v = ((data_0209b2f4 - data_0209b2f8 + 2) << 3) & 0xff;
+        unsigned int v = ((gTitleCursor - gTitleListTop + 2) << 3) & 0xff;
         char *p = data_0209e674 + (idx << 3);
         *(int *)p = v | 0x80000;
         *(short *)(p + 4) = 0;
@@ -317,27 +319,27 @@ s32 dScTitle_c::Render() {
  * so dScene_c's teardown has something to call. */
 void dScTitle_c::OnPendingDestroy() {}
 
-/* [2] 0x020ad6ec -- scrolls the level-grid window so the cursor stays on
- * screen: clamps the origin at data_0209b2f8, redraws the visible rows
+/* [2] 0x020ad6ec -- scrolls the level-list window so the cursor stays on
+ * screen: clamps the first shown entry, gTitleListTop, redraws the visible rows
  * through func_ov003_020adcbc, then repaints the caption. Written free here
  * as a reconstruction choice; see the file header. The parameter is unused
  * by the body, but both call sites load the receiver into r0.
  *
- * RECONCILED: decl_common.h already declares data_0209b2f8 `extern int`, so
+ * RECONCILED: decl_common.h already declares gTitleListTop `extern int`, so
  * the legacy `int[]` spelling is dropped in favour of the header's scalar
  * and the `[0]` subscripts became scalar accesses. */
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov003_020ad6ec(void *) {
-    int v = data_0209b2f4;
+    int v = gTitleCursor;
     int nv = v - 0xa;
-    data_0209b2f8 = nv;
+    gTitleListTop = nv;
     unsigned int t = (unsigned int)(v + 0xb);
     if (t > 0x36) {
-        data_0209b2f8 = nv - (t - 0x36);
+        gTitleListTop = nv - (t - 0x36);
     }
-    if (data_0209b2f8 < 0)
-        data_0209b2f8 = 0;
-    int s = data_0209b2f8;
+    if (gTitleListTop < 0)
+        gTitleListTop = 0;
+    int s = gTitleListTop;
     int cnt = 0x36 - s;
     int end = cnt + 2;
     if (end > 0x17)
