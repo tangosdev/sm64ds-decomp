@@ -146,7 +146,6 @@ void func_ov007_020b45b0(Ov007ItemView *view);
  * state requests for this item, then over `thresh` ticks pops (ids 3/4),
  * nudges sideways (ids 10/11) or squashes its sprite; when the ticks run out
  * it resets the scale and requests the item's next state. */
-// @symbol func_ov007_020b50e8
 void func_ov007_020b50e8(Ov007ItemView *view) {
     Ov007Item *st;
     u16 state;
@@ -389,7 +388,6 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
 
 /* The item's state-0 step: items 8, 0x14 and 0x17 are selected with the
  * B button (pressed this frame, not held) through func_ov007_020b45b0. */
-// @symbol func_ov007_020b5068
 void func_ov007_020b5068(Ov007ItemView *view) {
     u16 id = view->item->id;
     Ov007Pad *pad;
@@ -407,7 +405,6 @@ void func_ov007_020b5068(Ov007ItemView *view) {
     func_ov007_020b45b0(view);
 }
 
-// @symbol func_ov007_020b4c04
 Ov007ItemView *func_ov007_020b4c04(int arg0) {
     Ov007ItemView *view;
     Ov007Sprite *sprite;
@@ -514,7 +511,6 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
 
 /* Frees a view built by func_ov007_020b4c04: its slide tween, its item,
  * its sprite, then the view itself. */
-// @symbol func_ov007_020b4bd4
 void func_ov007_020b4bd4(Ov007ItemView *view) {
     func_ov007_020c9080(view->slideTween);
     func_ov007_020aea4c(view->item);
@@ -525,7 +521,6 @@ void func_ov007_020b4bd4(Ov007ItemView *view) {
 /* Resets the view's sprite to unit scale, full alpha and white, sizes it
  * for `camera` (func_ov007_020c43bc), puts it at the item's home point
  * and places it in the world (func_ov007_020c4388). */
-// @symbol func_ov007_020b4b5c
 void func_ov007_020b4b5c(Ov007ItemView *view, Ov007Camera *camera) {
     Ov007Sprite *o = view->sprite;
     o->scaleY = 0x1000;
@@ -613,7 +608,6 @@ static inline int elem_selectable(Ov007ItemView *elem) {
  * FREE at 0; the transform is written out longhand only to keep the four
  * edges reading alike.
  */
-// @symbol func_ov007_020b46b0
 void func_ov007_020b46b0(void *arg0, void *arg1) {
     Ov007ItemView *elem = (Ov007ItemView *)arg0;
     Ov007Touch *tp = (Ov007Touch *)arg1;
@@ -713,7 +707,6 @@ done:
 
 /* Selects the view's item (func_ov007_020b63e4) if it is selectable: the
  * same test as elem_selectable, written out. */
-// @symbol func_ov007_020b45b0
 void func_ov007_020b45b0(Ov007ItemView *view) {
     Ov007Item *p = view->item;
     int call_it = 0;
@@ -755,7 +748,6 @@ void func_ov007_020b45b0(Ov007ItemView *view) {
  * work is 0xff: requests func_ov007_020b58e4's state, ticks the item, runs
  * the state-0 or state-2 handler, then func_ov007_020b5bf0 while the item
  * is visible. */
-// @symbol func_ov007_020b44ec
 void func_ov007_020b44ec(Ov007ItemView *view) {
     Ov007Item *o = view->item;
     Ov007ItemLayout *p24 = o->layout;
@@ -793,7 +785,6 @@ void func_ov007_020b44ec(Ov007ItemView *view) {
  * since the last frame the sprite is re-placed for `camera`
  * (func_ov007_020c4388); while the item is visible the sprite is drawn
  * (func_ov007_020c421c). */
-// @symbol func_ov007_020b4464
 void func_ov007_020b4464(Ov007ItemView *view, Ov007Camera *camera) {
     int changed;
     if (view->item->visible == 0) {
@@ -813,7 +804,6 @@ void func_ov007_020b4464(Ov007ItemView *view, Ov007Camera *camera) {
 
 /* The choice word data_ov007_02103428, or 0 while func_ov007_020b79e4
  * returns nonzero. */
-// @symbol func_ov007_020b4438
 int func_ov007_020b4438(void) {
     if (func_ov007_020b79e4())
         return 0;
@@ -823,7 +813,6 @@ int func_ov007_020b4438(void) {
 /* Opens the 0x16 / 0x17 choice: sets the choice word to 1, requests state 3
  * on both items' views, then opens the message window for `kind` (9 or 0xc
  * at the callers) with func_ov007_020b7d94. */
-// @symbol func_ov007_020b43dc
 void func_ov007_020b43dc(int kind) {
     Ov007Work *work = WORK;
     data_ov007_02103428 = 1;
@@ -842,7 +831,6 @@ void func_ov007_020b43dc(int kind) {
 /* Builds number sprite `index` (Ov007Work's numberSprites): a frame of
  * texture 2 at the row's screen position, texel cell and size, parented to
  * item view 14's sprite for camera 1. */
-// @symbol func_ov007_020b42d8
 Ov007Sprite *func_ov007_020b42d8(int index) {
     Ov007Sprite *parent = WORK->itemViews[14]->sprite;
     Ov007Sprite *obj;
@@ -868,7 +856,6 @@ Ov007Sprite *func_ov007_020b42d8(int index) {
  * width from data_ov007_020d7610 and given the digit's texel cell, and
  * numberSprites[0] is drawn at the start of the run; a negative number draws
  * numberSprites[1] instead. Bracketed by a matrix push and pop. */
-// @symbol func_ov007_020b413c
 void func_ov007_020b413c(Ov007ItemView *view, int number) {
     Ov007Sprite *lead;
     Ov007Sprite *digit;

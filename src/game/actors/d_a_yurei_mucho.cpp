@@ -113,7 +113,6 @@ extern daYurei_Mucho_c::State data_ov065_0211d650;
 extern daYurei_Mucho_c::State data_ov065_0211d660;
 
 /* -------------------------------------------------------------------------- */
-// @symbol daYurei_Mucho_c_classInit
 /* The registry factory behind the YUREI_MUCHO / SNUFIT profile. `return new
    daYurei_Mucho_c()` MATCHES (size 0x50); the synthesized ctor stores
    `_ZTV15daYurei_Mucho_c + 2`. classInit is a reconstructed source-style
@@ -124,7 +123,6 @@ extern "C" daYurei_Mucho_c *daYurei_Mucho_c_classInit(void)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c13OnYoshiTryEatEv
 /* dActor_c vtable slot 18. */
 s32 daYurei_Mucho_c::OnYoshiTryEat()
 {
@@ -132,7 +130,6 @@ s32 daYurei_Mucho_c::OnYoshiTryEat()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c13OnTurnIntoEggER7daPly_c
 /* dActor_c vtable slot 19, confirmed by address: _ZTV15daYurei_Mucho_c
  * (0x0211cba4) + 0x4c -> 0x02116f14.
  *
@@ -145,7 +142,6 @@ void daYurei_Mucho_c::OnTurnIntoEgg(daPly_c &player) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c16OnAimedAtWithEggEv
 /* dActor_c vtable slot 29. */
 s32 daYurei_Mucho_c::OnAimedAtWithEgg()
 {
@@ -153,7 +149,6 @@ s32 daYurei_Mucho_c::OnAimedAtWithEgg()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c13InitResourcesEv
 /* Both Init methods are declared. The current dCcAc_c fixed-point aggregate
    arguments add 16 bytes here; dBgCh_Actr's scalar declaration emits a name
    absent from symbols.txt. Retain these ABI calls pending interface repair. */
@@ -179,7 +174,6 @@ int daYurei_Mucho_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c8BehaviorEv
 /* dActor_c vtable slot 6. */
 int daYurei_Mucho_c::Behavior()
 {
@@ -263,7 +257,6 @@ int daYurei_Mucho_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c6RenderEv
 /* dActor_c vtable slot 9. */
 int daYurei_Mucho_c::Render()
 {
@@ -274,14 +267,12 @@ int daYurei_Mucho_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c16OnPendingDestroyEv
 /* fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`. */
 void daYurei_Mucho_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c16CleanupResourcesEv
 /* dActor_c vtable slot 3. Releases the four files InitResources claimed.
  *
  * The body does not read the incoming object pointer or access instance
@@ -296,7 +287,6 @@ int daYurei_Mucho_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_0211696cEv
 /* Rebuilds the model matrix from the actor's position and Z/X/Y angles, then
    drops the shadow. Called three times from Behavior. */
 void daYurei_Mucho_c::func_ov065_0211696c()
@@ -331,7 +321,6 @@ void daYurei_Mucho_c::func_ov065_0211696c()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_0211691cEPNS_5StateE
 /* The state setter. Stores the State into mCurrentState, RE-READS it -- the ROM
    really does reload the field it has just written -- null-tests the entry hook
    at +0x00 and calls it through the object. Called eight times inside this run.
@@ -352,7 +341,6 @@ int daYurei_Mucho_c::func_ov065_0211691c(State *s)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_021168a8Ev
 /* State entry hook at 0x0211d670 +0x00: randomise the facing angle and the
    timer, then start the wait animation. The BCA file is read straight out of
    the SharedFilePtr's filePtr -- the ROM does `ldr r1,[r0,#4]` off the
@@ -366,7 +354,6 @@ int daYurei_Mucho_c::func_ov065_021168a8()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_02116744Ev
 /* State main hook at 0x0211d670 +0x08: drift, and switch to the attack state
    when a player comes close enough. */
 int daYurei_Mucho_c::func_ov065_02116744()
@@ -415,7 +402,6 @@ int daYurei_Mucho_c::func_ov065_02116744()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_0211672cEv
 /* State entry hook at 0x0211d680 +0x00: stop the actor dead. */
 int daYurei_Mucho_c::func_ov065_0211672c()
 {
@@ -426,7 +412,6 @@ int daYurei_Mucho_c::func_ov065_0211672c()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_021165d8Ev
 /* State main hook at 0x0211d680 +0x08: steer toward the nearest non-vanishing
    player.
 
@@ -473,7 +458,6 @@ int daYurei_Mucho_c::func_ov065_021165d8()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_02116588Ev
 /* State entry hook at 0x0211d650 +0x00: start the attack animation. As at
    ordinal 11, the BCA file is the SharedFilePtr's filePtr, read directly
    (`ldr r1,[r0,#4]` at 0x021165a4 off the literal at 0x021165d4). */
@@ -486,7 +470,6 @@ short daYurei_Mucho_c::func_ov065_02116588()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_02116364Ev
 /* State main hook at 0x0211d650 +0x08: aim, and spawn the projectile (profile
    0xe9) up to three times before returning to a wait state. */
 int daYurei_Mucho_c::func_ov065_02116364()
@@ -546,7 +529,6 @@ int daYurei_Mucho_c::func_ov065_02116364()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_02116328Ev
 /* State entry hook at 0x0211d660 +0x00: the bumped-from-below pop. */
 int daYurei_Mucho_c::func_ov065_02116328()
 {
@@ -561,7 +543,6 @@ int daYurei_Mucho_c::func_ov065_02116328()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_021162c0Ev
 /* State main hook at 0x0211d660 +0x08.
  *
  * CORRECTED HERE. The retired shard func_ov065_021162c0.c called `_ZN10daIwante_cD0Ev`, which is
@@ -580,7 +561,6 @@ int daYurei_Mucho_c::func_ov065_021162c0()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_02115ff0Ev
 /* The collision response, called once from Behavior. */
 void daYurei_Mucho_c::func_ov065_02115ff0()
 {
@@ -661,7 +641,6 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_c19func_ov065_02115f84Ev
 /* The death helper: poof, drop the coins, unregister. */
 void daYurei_Mucho_c::func_ov065_02115f84() {
     Vector3 v;
@@ -675,8 +654,6 @@ void daYurei_Mucho_c::func_ov065_02115f84() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daYurei_Mucho_cD1Ev
-// @symbol _ZN15daYurei_Mucho_cD0Ev
 /* No separate body lives here. The inline virtual destructor in the directly
  * included class header makes mwccarm emit retail's D1 then D0 pair without
  * the otherwise homeless D2 variant an out-of-line definition produces.

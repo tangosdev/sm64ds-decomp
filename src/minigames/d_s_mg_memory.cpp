@@ -115,8 +115,6 @@ extern u8 gSubScreenLayers;
  * whole file; defer_codegen off lets push/pop scope them to one function. */
 #pragma defer_codegen off
 
-// @symbol _ZN13dScMgMemory_cD1Ev
-// @symbol _ZN13dScMgMemory_cD0Ev
 /* Both D1 and D0 come from this one definition. */
 dScMgMemory_c::~dScMgMemory_c() {
     /* mDealer is destroyed automatically before the inherited scene. */
@@ -957,12 +955,10 @@ void dScMgMemory_c::SetupDifficulty() {
     }
 }
 
-// @symbol _ZN13dScMgMemory_c10OnDealDoneEv
 void dScMgMemory_c::OnDealDone() {
     MgCoins_PlaceBet(mMaxMisses);
 }
 
-// @symbol _ZN13dScMgMemory_c11CanEndStateEi
 int dScMgMemory_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
         if (Dealer_IsIdle(&mDealer) == 0)
@@ -973,7 +969,6 @@ int dScMgMemory_c::CanEndState(int /* mode */) {
     return mState == STATE_EXIT;
 }
 
-// @symbol _ZN13dScMgMemory_c10StartRoundEi
 /* Slot 18: restarts the game, with up to three misses allowed from the meter. */
 
 void dScMgMemory_c::StartRound(int /* arg */) {
@@ -992,7 +987,6 @@ void dScMgMemory_c::StartRound(int /* arg */) {
     mMaxMisses = (unsigned char)missLimit;
 }
 
-// @symbol _ZN13dScMgMemory_c6RenderEv
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
     Camera_InitDealerView(&mCamera);
@@ -1005,7 +999,6 @@ s32 dScMgMemory_c::Render() {
     return 1;
 }
 
-// @symbol _ZN13dScMgMemory_c8BehaviorEv
 /* Slot 6: runs the current state from the table, indexed by mState. */
 s32 dScMgMemory_c::Behavior() {
     (this->*sMemoryStateTable[mState])();
@@ -1014,7 +1007,6 @@ s32 dScMgMemory_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13dScMgMemory_c13InitResourcesEv
 /* Slot 0. */
 s32 dScMgMemory_c::InitResources() {
     void *tiles;
@@ -1046,7 +1038,6 @@ s32 dScMgMemory_c::InitResources() {
     return 1;
 }
 
-// @symbol dScMgMemory_c_classInit
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer. */
 extern "C" dScMgMemory_c *dScMgMemory_c_classInit() {

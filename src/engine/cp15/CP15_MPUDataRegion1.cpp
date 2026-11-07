@@ -1,5 +1,4 @@
 //cpp
-// @symbol _ZN4CP1514MPUDataRegion1Ej
 /* CP15::MPUDataRegion1(u32) at 0x020593ec -- write MPU data region 1 (c6,c1). The value packs base address, size and
  * enable, as init_cp15 (src/init_cp15.c) shows when it programs all eight regions.
  *

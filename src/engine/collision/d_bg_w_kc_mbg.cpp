@@ -59,16 +59,10 @@ dBgCh_Lin data_020a0d0c;
  * changing it.
  */
 
-// @symbol _ZN10dBgW_KcMbgC1Ev
-// @symbol _ZN10dBgW_KcMbgC2Ev
 dBgW_KcMbg::dBgW_KcMbg() {}
 
-// @symbol _ZN10dBgW_KcMbgD2Ev
-// @symbol _ZN10dBgW_KcMbgD0Ev
-// @symbol _ZN10dBgW_KcMbgD1Ev
 dBgW_KcMbg::~dBgW_KcMbg() {}
 
-// @symbol _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block
 /* The scratch aggregate holds two complete matrices and the local up axis.
  * Matrix words are copied through Mtx43; a Matrix4x3 assignment
  * scalarizes.
@@ -115,10 +109,8 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16
     self->filterByMoveDir = false;
 }
 
-// @symbol _ZN10dBgW_KcMbg9Virtual08Ev
 void dBgW_KcMbg::Virtual08() {}
 
-// @symbol _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s
 void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&invMat = *(Mtx43 *)&mat;
     InvMat4x3(&invMat, &invMat);
@@ -181,7 +173,6 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     }
 }
 
-// @symbol _ZN10dBgW_KcMbg9GetNormalEsR7Vector3
 void dBgW_KcMbg::GetNormal(s16 triID, Vector3 &res) {
     KCL_File *mesh = kclFile;
     u16 normalIndex = mesh->tris[triID].normalIdx;
@@ -193,7 +184,6 @@ void dBgW_KcMbg::GetNormal(s16 triID, Vector3 &res) {
     func_02039db8(this, &normal, &res);
 }
 
-// @symbol _ZN10dBgW_KcMbg17GetTriangleOriginEsR7Vector3
 void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
     KCL_File *mesh = kclFile;
     u16 positionIndex = mesh->tris[triID].posIdx;
@@ -205,22 +195,18 @@ void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
     LocalToWorldPosition(localOrigin, res);
 }
 
-// @symbol _ZN10dBgW_KcMbg20WorldToLocalPositionERK7Vector3RS0_
 void dBgW_KcMbg::WorldToLocalPosition(const Vector3 &position, Vector3 &result) {
     MulVec3Mat4x3((Vector3 *)&position, &invScaledMat, &result);
 }
 
-// @symbol _ZN10dBgW_KcMbg20LocalToWorldPositionERK7Vector3RS0_
 void dBgW_KcMbg::LocalToWorldPosition(const Vector3 &position, Vector3 &result) {
     MulVec3Mat4x3((Vector3 *)&position, &newScaledMat, &result);
 }
 
-// @symbol _ZN10dBgW_KcMbg21WorldToLocalDirectionERK7Vector3RS0_
 void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result) {
     MulVec3Mat4x3((Vector3 *)&direction, &invRotMat, &result);
 }
 
-// @symbol func_02039db8
 /* Transform a direction by mat, leaving out the translation. */
 extern "C" void func_02039db8(dBgW_KcMbg *collider, Vector3 *direction, Vector3 *result) {
     Matrix4x3 rotation;
@@ -231,7 +217,6 @@ extern "C" void func_02039db8(dBgW_KcMbg *collider, Vector3 *direction, Vector3 
     MulVec3Mat4x3(direction, &rotation, result);
 }
 
-// @symbol _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
     Vector3 localStart;
     Vector3 probePos;
@@ -265,7 +250,6 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
     return hit;
 }
 
-// @symbol _ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr
 
 int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
     Vector3 localCentre;
@@ -319,7 +303,6 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere) {
 }
 
 
-// @symbol _ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin
 int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
     Vector3 start;
     Vector3 end;
@@ -346,7 +329,6 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
     return hit;
 }
 
-// @symbol _ZN10dBgW_KcMbg12TransformPosERK7Vector3RS0_
 /* Out of the previous frame's space, into the current one. */
 int dBgW_KcMbg::TransformPos(const Vector3 &localCentre, Vector3 &res) {
     Vector3 localPos;
@@ -355,19 +337,16 @@ int dBgW_KcMbg::TransformPos(const Vector3 &localCentre, Vector3 &res) {
     return 1;
 }
 
-// @symbol _ZN10dBgW_KcMbg14GetAngularVelYEv
 s16 dBgW_KcMbg::GetAngularVelY() {
     return angVelY;
 }
 
-// @symbol _ZN10dBgW_KcMbg11GetVelocityER7Vector3
 void dBgW_KcMbg::GetVelocity(Vector3 &res) {
     res.x = velocity.x;
     res.y = velocity.y;
     res.z = velocity.z;
 }
 
-// @symbol func_020398fc
 /* Sets filterByMoveDir, which makes Transform aim dBgW_Kc's depth policy
  * along the collider's horizontal motion. Called by actor code (daIwante_c) once
  * the collider starts moving. Its address name and C linkage do not establish

@@ -67,13 +67,10 @@ int fdiv(int a, int b);
 
 #pragma defer_codegen off
 
-// @symbol _ZN14daObjEmmYuka_cD1Ev
-// @symbol _ZN14daObjEmmYuka_cD0Ev
 daObjEmmYuka_c::~daObjEmmYuka_c()
 {
 }
 
-// @symbol _ZN14daObjEmmYuka_c16CleanupResourcesEv
 int daObjEmmYuka_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
@@ -83,14 +80,12 @@ int daObjEmmYuka_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN14daObjEmmYuka_c6RenderEv
 int daObjEmmYuka_c::Render()
 {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjEmmYuka_c8BehaviorEv
 int daObjEmmYuka_c::Behavior()
 {
     /* VecFx32, not Vector3: its inline destructor comes out out-of-line
@@ -154,7 +149,6 @@ int daObjEmmYuka_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN14daObjEmmYuka_c13InitResourcesEv
 int daObjEmmYuka_c::InitResources()
 {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov052_021125a0.model), 1, -1);
@@ -174,7 +168,6 @@ int daObjEmmYuka_c::InitResources()
  * RTTI, allocation size, vtable identity, and the EMM_YUKA registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SquarePathLift_Spawn. */
-// @symbol daObjEmmYuka_c_classInit
 extern "C" daObjEmmYuka_c *daObjEmmYuka_c_classInit()
 {
     return new daObjEmmYuka_c();

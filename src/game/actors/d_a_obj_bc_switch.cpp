@@ -142,7 +142,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjBC_Switch_c_classInit
 /* Reconstructed source-style name: the ROM proves daObjBC_Switch_c and the
  * BC_SWITCH profile relationship; later EAD lineage supplies classInit.
  * Exact original SM64DS spelling is not preserved.
@@ -158,7 +157,6 @@ extern "C" daObjBC_Switch_c *daObjBC_Switch_c_classInit(void) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* The callback InitResources installs: drops the collider argument and
    forwards (switch, other). */
 void daObjBC_Switch_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *other) {
@@ -167,7 +165,6 @@ void daObjBC_Switch_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c 
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_c9OnStoodOnEP8dActor_c
 /* A player standing on the switch presses it once func_ov002_020dd8b8
    accepts the contact. */
 void daObjBC_Switch_c::OnStoodOn(dActor_c *other) {
@@ -179,7 +176,6 @@ void daObjBC_Switch_c::OnStoodOn(dActor_c *other) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * Loads the model and collision mesh, unpacks the spawn word, and computes how
@@ -252,7 +248,6 @@ int daObjBC_Switch_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
  * The switch's whole life, and none of it runs until mPressed says it has been
@@ -322,7 +317,6 @@ s32 daObjBC_Switch_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_c6RenderEv
 /* recovered: named members + shared header, real C++ method
  *
  * Draws the switch only while it is still above its stop. Behavior sinks mPosY
@@ -337,7 +331,6 @@ int daObjBC_Switch_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * Disables the collider if it is still enabled -- so a second cleanup is
@@ -353,7 +346,6 @@ int daObjBC_Switch_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is the DELETING destructor: destroy through this class and its bases --
@@ -376,7 +368,6 @@ int daObjBC_Switch_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjBC_Switch_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of

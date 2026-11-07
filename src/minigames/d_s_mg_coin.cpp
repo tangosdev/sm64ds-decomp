@@ -225,13 +225,10 @@ CoinPmfEntry sCoinBagStateTable[4] = {{pmf_dScMgCoin_c_Bag_StateIdle},
                                       {pmf_dScMgCoin_c_Bag_StateBounceDown}};
 }
 
-// @symbol _ZN11dScMgCoin_cD1Ev
-// @symbol _ZN11dScMgCoin_cD0Ev
 /* Nothing to destroy by hand: D1 stores the vptr and calls dScMgBase_c's
    D2, and D0 adds the delete. */
 dScMgCoin_c::~dScMgCoin_c() {}
 
-// @symbol _ZN11dScMgCoin_c8Bag_DrawEv
 /* The hand cursor while the stylus is down: the sine table entry for the
    scene's angle becomes a unit-scale 2x2 rotation matrix [cos, sin; -sin,
    cos] for the shared sprite call. The four matrix words are written
@@ -262,7 +259,6 @@ void dScMgCoin_c::Bag_Draw() {
 }
 #pragma pop
 
-// @symbol _ZN11dScMgCoin_c19Bag_StateBounceDownEi
 void dScMgCoin_c::Bag_StateBounceDown(int i) {
     BagView *scene = (BagView *)this;
     int height;
@@ -303,7 +299,6 @@ void dScMgCoin_c::Bag_StateBounceDown(int i) {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c15Bag_StateParkedEi
 void dScMgCoin_c::Bag_StateParked(int index) {
     BagView *scene = (BagView *)this;
     if (scene->bag[index].countdown != 0) {
@@ -317,7 +312,6 @@ void dScMgCoin_c::Bag_StateParked(int index) {
     this->SpawnBlocks();
 }
 
-// @symbol _ZN11dScMgCoin_c13Bag_StateRiseEi
 void dScMgCoin_c::Bag_StateRise(int index) {
     BagView *scene = (BagView *)this;
     scene->bag[index].y = scene->bag[index].y + scene->bag[index].vy;
@@ -331,7 +325,6 @@ void dScMgCoin_c::Bag_StateRise(int index) {
     this->SpawnBlocks();
 }
 
-// @symbol _ZN11dScMgCoin_c11Bag_ReleaseEv
 void dScMgCoin_c::Bag_Release() {
     dScMgCoin_c *scene = this;
     scene->mBouncer.state = 1;
@@ -340,10 +333,8 @@ void dScMgCoin_c::Bag_Release() {
     scene->mBouncer.vy = kKickVy;
 }
 
-// @symbol _ZN11dScMgCoin_c13Bag_StateIdleEv
 void dScMgCoin_c::Bag_StateIdle() {}
 
-// @symbol _ZN11dScMgCoin_c10Bag_UpdateEv
 /* Dispatch the moneybag while mBouncer.active is set. Not a vtable:
    the records live in sCoinBagStateTable. */
 void dScMgCoin_c::Bag_Update() {
@@ -354,7 +345,6 @@ void dScMgCoin_c::Bag_Update() {
     (this->*sCoinBagStateTable[state].pmf)(0);
 }
 
-// @symbol _ZN11dScMgCoin_c8Bag_ShowEv
 void dScMgCoin_c::Bag_Show() {
     dScMgCoin_c *scene = this;
     scene->mBouncer.active = 1;
@@ -366,14 +356,12 @@ void dScMgCoin_c::Bag_Show() {
     scene->mBouncer.y = kBagRestY;
 }
 
-// @symbol _ZN11dScMgCoin_c8Bag_HideEv
 void dScMgCoin_c::Bag_Hide() {
     dScMgCoin_c *scene = this;
     scene->mBouncer.active = 0;
     scene->mBouncer.shown = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c14Caption_FinishEv
 void dScMgCoin_c::Caption_Finish() {
     dScMgCoin_c *scene = this;
     scene->mCaption.state = 4;
@@ -382,7 +370,6 @@ void dScMgCoin_c::Caption_Finish() {
     scene->mCaptionLatch = 1;
 }
 
-// @symbol _ZN11dScMgCoin_c15Caption_TriggerEv
 void dScMgCoin_c::Caption_Trigger() {
     dScMgCoin_c *scene = this;
     if (scene->mCaptionLatch != 0)
@@ -399,7 +386,6 @@ void dScMgCoin_c::Caption_Trigger() {
     scene->mCaption.frameTime = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c12Caption_DrawEv
 void dScMgCoin_c::Caption_Draw() {
     dScMgCoin_c *scene = this;
 
@@ -410,7 +396,6 @@ void dScMgCoin_c::Caption_Draw() {
                         scene->mCaption.y >> 12, -1, -1);
 }
 
-// @symbol _ZN11dScMgCoin_c17Caption_StateLoopEi
 void dScMgCoin_c::Caption_StateLoop(int index) {
     CapView *scene = (CapView *)this;
     u16 *frameTime = &scene->cap[index].frameTime;
@@ -428,13 +413,11 @@ void dScMgCoin_c::Caption_StateLoop(int index) {
         scene->cap[index].sprite = sCoinCaptionLoopSprites[*frame];
 }
 
-// @symbol _ZN11dScMgCoin_c19Caption_StateHiddenEi
 void dScMgCoin_c::Caption_StateHidden(int index) {
     dScMgCoin_c *scene = this;
     (&scene->mCaption)[index].sprite = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c18Caption_StateBlinkEi
 void dScMgCoin_c::Caption_StateBlink(int index) {
     CapView *scene = (CapView *)this;
     u16 frameTime = scene->cap[index].frameTime;
@@ -459,7 +442,6 @@ void dScMgCoin_c::Caption_StateBlink(int index) {
     scene->cap[index].delay = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c20Caption_StateCountInEi
 void dScMgCoin_c::Caption_StateCountIn(int index) {
     CapView *scene = (CapView *)this;
 
@@ -489,7 +471,6 @@ void dScMgCoin_c::Caption_StateCountIn(int index) {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c18Caption_StateDelayEi
 void dScMgCoin_c::Caption_StateDelay(int index) {
     int raw = (int)this;
     CapView *scene = (CapView *)raw;
@@ -504,7 +485,6 @@ void dScMgCoin_c::Caption_StateDelay(int index) {
     ((CapView *)(unsigned long long)raw)->cap[index].frameTime = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c14Caption_UpdateEv
 /* Same dispatch as the moneybag, for the caption. */
 void dScMgCoin_c::Caption_Update() {
     if (this->mCaption.active == 0)
@@ -514,7 +494,6 @@ void dScMgCoin_c::Caption_Update() {
     (this->*sCoinCaptionStateTable[state].pmf)(0);
 }
 
-// @symbol _ZN11dScMgCoin_c12Caption_ShowEv
 void dScMgCoin_c::Caption_Show() {
     dScMgCoin_c *scene = this;
     scene->mCaption.active = 1;
@@ -528,14 +507,12 @@ void dScMgCoin_c::Caption_Show() {
     scene->mCaption.y = kCaptionY;
 }
 
-// @symbol _ZN11dScMgCoin_c13Caption_ResetEv
 void dScMgCoin_c::Caption_Reset() {
     dScMgCoin_c *scene = this;
     scene->mCaption.active = 0;
     scene->mCaption.visible = 1;
 }
 
-// @symbol _ZN11dScMgCoin_c16DrawResultPromptEv
 void dScMgCoin_c::DrawResultPrompt() {
     dScMgCoin_c *scene = this;
     if (scene->mPhase != kResultPhase)
@@ -550,7 +527,6 @@ void dScMgCoin_c::DrawResultPrompt() {
     Mg_DrawBlinkSprite(scene, 0xe0, 0xa0);
 }
 
-// @symbol _ZN11dScMgCoin_c17DrawResultNumbersEv
 void dScMgCoin_c::DrawResultNumbers() {
     dScMgCoin_c *scene = this;
     int i;
@@ -566,7 +542,6 @@ void dScMgCoin_c::DrawResultNumbers() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c15Popup_UpdateAllEv
 void dScMgCoin_c::Popup_UpdateAll() {
     char *raw = (char *)this;
     /* Strided through the scene pointer; the (int) cast is what makes the
@@ -584,7 +559,6 @@ void dScMgCoin_c::Popup_UpdateAll() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c11Popup_SpawnEi
 void dScMgCoin_c::Popup_Spawn(int index) {
     char *raw = (char *)this;
     /* Two strides, 0x18 and 0x10. The struct form keeps 0x18 alive
@@ -597,7 +571,6 @@ void dScMgCoin_c::Popup_Spawn(int index) {
     mPopups[index].timer = 0x18;
 }
 
-// @symbol _ZN11dScMgCoin_c15Sparkle_DrawAllEv
 void dScMgCoin_c::Sparkle_DrawAll() {
     SparkView *scene = (SparkView *)this;
 
@@ -612,7 +585,6 @@ void dScMgCoin_c::Sparkle_DrawAll() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c17Sparkle_UpdateAllEv
 void dScMgCoin_c::Sparkle_UpdateAll() {
     SparkView *scene = (SparkView *)this;
     int i;
@@ -636,7 +608,6 @@ void dScMgCoin_c::Sparkle_UpdateAll() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c13Sparkle_BurstEi
 void dScMgCoin_c::Sparkle_Burst(int coinIndex) {
     char *raw = (char *)this;
     /* Strided through the scene pointer. The active store stays raw: as a
@@ -663,7 +634,6 @@ void dScMgCoin_c::Sparkle_Burst(int coinIndex) {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c13Popup_DrawAllEv
 void dScMgCoin_c::Popup_DrawAll() {
     dScMgCoin_c *scene = this;
 
@@ -679,7 +649,6 @@ void dScMgCoin_c::Popup_DrawAll() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c15DrawScorePlayerEv
 void dScMgCoin_c::DrawScorePlayer() {
     dScMgCoin_c *scene = this;
 
@@ -695,7 +664,6 @@ void dScMgCoin_c::DrawScorePlayer() {
     Mg_DrawBigNumber(0x8c, 0x28, scene->mPlayerScore, 1, -1, 2, 0);
 }
 
-// @symbol _ZN11dScMgCoin_c14DrawScoreRivalEv
 void dScMgCoin_c::DrawScoreRival() {
     dScMgCoin_c *scene = this;
 
@@ -716,7 +684,6 @@ void dScMgCoin_c::DrawScoreRival() {
     Mg_DrawBigNumber(0x90, 0x60, count, 1, -1, 2, 0);
 }
 
-// @symbol _ZN11dScMgCoin_c12Score_UpdateEv
 void dScMgCoin_c::Score_Update() {
     dScMgCoin_c *scene = this;
     if (scene->mScore.running == 0)
@@ -736,7 +703,6 @@ void dScMgCoin_c::Score_Update() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c14DrawCoinValuesEv
 void dScMgCoin_c::DrawCoinValues() {
     dScMgCoin_c *scene = this;
     int i;
@@ -766,10 +732,8 @@ void dScMgCoin_c::DrawCoinValues() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c17Coin_StateSettledEv
 void dScMgCoin_c::Coin_StateSettled() {}
 
-// @symbol _ZN11dScMgCoin_c13Coin_StateHopEi
 void dScMgCoin_c::Coin_StateHop(int index) {
     CoinView *scene = (CoinView *)this;
 
@@ -789,7 +753,6 @@ void dScMgCoin_c::Coin_StateHop(int index) {
     this->KickBlockUnderCoin(index);
 }
 
-// @symbol _ZN11dScMgCoin_c19Coin_StateWaitTouchEi
 /* The touch test for one coin. In phase 2, with the stylus down and newly
    pressed, a touch within 0x10 of the coin takes it: a coin still worth
    something starts its hop, otherwise the round ends (phase 3, a 0x40 timer,
@@ -882,7 +845,6 @@ void dScMgCoin_c::Coin_StateWaitTouch(int idx) {
         mWonLast = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c14Coin_UpdateAllEv
 /* Runs each coin's state handler from sCoinCoinStateTable. */
 void dScMgCoin_c::Coin_UpdateAll() {
     int i;
@@ -892,7 +854,6 @@ void dScMgCoin_c::Coin_UpdateAll() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c11LayOutCoinsEv
 /* Lays the 24 coins out in three rows of eight and marks two coins in each
    row, picked at random, as keepEmpty. */
 void dScMgCoin_c::LayOutCoins() {
@@ -937,7 +898,6 @@ void dScMgCoin_c::LayOutCoins() {
     mCoins[b[2] + 0x10].keepEmpty = 1;
 }
 
-// @symbol _ZN11dScMgCoin_c18KickBlockUnderCoinEi
 /* Finds the first resting block (state 4) that belongs to coin id, kicks it
    up from under the coin (state 5) and plays the panned hop sound. */
 void dScMgCoin_c::KickBlockUnderCoin(int id) {
@@ -967,7 +927,6 @@ void dScMgCoin_c::KickBlockUnderCoin(int id) {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c10DrawBlocksEv
 /* Draws the 40 blocks on both screens. */
 void dScMgCoin_c::DrawBlocks() {
     dScMgCoin_c *self = this;
@@ -993,7 +952,6 @@ void dScMgCoin_c::DrawBlocks() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c17Block_StateFallInEi
 /* A block falling into place. The panned landing sound plays on the frame
    vy turns from rising to falling; once it passes its row it rests (state
    4), bumps the running total and bursts an effect. */
@@ -1048,10 +1006,8 @@ void dScMgCoin_c::Block_StateFallIn(int i) {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c18Block_StateRestingEv
 void dScMgCoin_c::Block_StateResting() {}
 
-// @symbol _ZN11dScMgCoin_c21Block_StateDropOnCoinEi
 /* A block dropping onto its coin's row. It stops at the row height from
    sCoinBlockDropRowY, takes the coin's x and rests (state 4). */
 void dScMgCoin_c::Block_StateDropOnCoin(int index) {
@@ -1078,7 +1034,6 @@ void dScMgCoin_c::Block_StateDropOnCoin(int index) {
     mBlocks[index].visible = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c17Block_StateWanderEi
 /* A block wandering along its row. When it reaches the row it picks a
    random direction, and over a coin of that row still worth at most two
    (five when IsAltVariant says so) it claims the coin, adds one to its value
@@ -1148,7 +1103,6 @@ void dScMgCoin_c::Block_StateWander(int i) {
 
 #undef LB
 
-// @symbol _ZN11dScMgCoin_c18Block_StateHopDownEi
 /* A block hopping down the stages. Each landing picks a new random vx and
    plays the panned hop; when its hops for a stage run out it moves down a
    stage, and past its own row it switches to state 2. */
@@ -1214,7 +1168,6 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c18Block_StateWaitingEi
 /* A block waiting to drop: counts its delay down, then starts it (state 1). */
 void dScMgCoin_c::Block_StateWaiting(int i) {
     unsigned short *p = (unsigned short *)&mBlocks[i].delay;
@@ -1228,7 +1181,6 @@ void dScMgCoin_c::Block_StateWaiting(int i) {
     mBlocks[i].hops = 1;
 }
 
-// @symbol _ZN11dScMgCoin_c18Block_ClampToWallsEi
 /* Keeps a block between x 8 and 0xf8, reversing vx at either wall. */
 void dScMgCoin_c::Block_ClampToWalls(int idx) {
     int *f60 = &mBlocks[idx].x;
@@ -1244,7 +1196,6 @@ void dScMgCoin_c::Block_ClampToWalls(int idx) {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c15Block_UpdateAllEv
 /* Runs every live block's state handler and animation. When none is left
    moving the scene goes to phase 2, the score starts running and the start
    sound plays. */
@@ -1269,7 +1220,6 @@ void dScMgCoin_c::Block_UpdateAll() {
     Sound::PlayBank2_2D(0x151);
 }
 
-// @symbol _ZN11dScMgCoin_c13Block_AnimateEi
 /* Steps one block's four-frame animation; sCoinBlockFrameTimes holds each
    frame's length. */
 void dScMgCoin_c::Block_Animate(int index) {
@@ -1281,7 +1231,6 @@ void dScMgCoin_c::Block_Animate(int index) {
     mBlocks[index].animTimer = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c11SpawnBlocksEv
 /* Parks the blocks above the top of the screen at random x with staggered
    delays, cycling their rows 3, 4, 5. Sixteen when IsAltVariant says so,
    otherwise forty. */
@@ -1307,7 +1256,6 @@ void dScMgCoin_c::SpawnBlocks() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c10ResetRoundEv
 /* Clears the blocks, coins, score, sparkles, popups and phase, then resets
    the caption and the moneybag. */
 void dScMgCoin_c::ResetRound() {
@@ -1378,7 +1326,6 @@ void dScMgCoin_c::ResetRound() {
     mClearedAll = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c17Phase_StateResultEv
 /* The result countdown. While the stylus is held it speeds to zero with a
    sound; otherwise it holds at 0x80. At zero the scene frees its graphics
    if it loaded them and starts the fade out. */
@@ -1410,7 +1357,6 @@ void dScMgCoin_c::Phase_StateResult() {
     mPromptEnabled = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c21Phase_StateScoreDelayEv
 /* Counts mCountdown down; at zero, re-arms the caption if the
    other player scored, then enters the result phase with 0xc0 frames. */
 void dScMgCoin_c::Phase_StateScoreDelay() {
@@ -1433,7 +1379,6 @@ void dScMgCoin_c::Phase_StateScoreDelay() {
     mPhase = 5;
 }
 
-// @symbol _ZN11dScMgCoin_c17Phase_StateSettleEv
 /* Phase 4 on the way to the result: runs the blocks, coins and sparkles,
    and once nothing moves counts mCountdown down, bringing in the caption or
    the other screen at 0x20, then hands the score over and sets phase 4. */
@@ -1482,7 +1427,6 @@ void dScMgCoin_c::Phase_StateSettle() {
     mPhase = 4;
 }
 
-// @symbol _ZN11dScMgCoin_c15Phase_StatePlayEv
 /* Phase 2, play: runs the blocks, coins and sparkles. Once every coin worth
    something has been touched the round ends (phase 3, 0x40 frames) and the
    win flag is set from the other score. */
@@ -1534,7 +1478,6 @@ void dScMgCoin_c::Phase_StatePlay() {
     }
 }
 
-// @symbol _ZN11dScMgCoin_c16Phase_StateIntroEv
 /* Phase 1: on the first frame, flags the scene and clears its timer, then
    runs the blocks. */
 void dScMgCoin_c::Phase_StateIntro() {
@@ -1546,10 +1489,8 @@ void dScMgCoin_c::Phase_StateIntro() {
     Block_UpdateAll();
 }
 
-// @symbol _ZN11dScMgCoin_c15Phase_StateIdleEv
 void dScMgCoin_c::Phase_StateIdle() {}
 
-// @symbol _ZN11dScMgCoin_c10StartRoundEi
 /* Slot 18. Starts the next round: counts a win if the last one was won,
    clears the scene, frees its graphics and lays the coins out again. It is
    void; the mov r0,#0 at the end is the source of the mPhase store. */
@@ -1572,7 +1513,6 @@ void dScMgCoin_c::StartRound(int arg) {
     self->mPhase = 0;
 }
 
-// @symbol _ZN11dScMgCoin_c6RenderEv
 int dScMgCoin_c::Render() {
     this->DrawScorePlayer();
     this->DrawScoreRival();
@@ -1587,7 +1527,6 @@ int dScMgCoin_c::Render() {
     return 1;
 }
 
-// @symbol _ZN11dScMgCoin_c8BehaviorEv
 /* Runs this phase's handler from sCoinPhaseStateTable, then the caption,
    the moneybag, the popups and the score. */
 
@@ -1601,7 +1540,6 @@ int dScMgCoin_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN11dScMgCoin_c13InitResourcesEv
 /* Loads and decompresses both screens' backgrounds, palettes and sprites,
    then sets up the first round. */
 int dScMgCoin_c::InitResources() {
@@ -1676,7 +1614,6 @@ inline dScMgCoin_c::dScMgCoin_c() {
  * allocation size, vtable identity, and the MG_COIN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgCoincentration_Spawn. */
-// @symbol dScMgCoin_c_classInit
 extern "C" void *dScMgCoin_c_classInit() {
     return new dScMgCoin_c;
 }

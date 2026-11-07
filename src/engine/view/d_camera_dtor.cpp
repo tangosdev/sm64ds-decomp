@@ -50,14 +50,11 @@ dCamera_c::~dCamera_c() {}
 #else
 #pragma defer_codegen off
 
-// @symbol _ZN9dCamera_cD1Ev
-// @symbol _ZN9dCamera_cD0Ev
 dCamera_c::~dCamera_c() {}
 #endif
 
 extern "C" {
 
-// @symbol func_020070e8
 void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget, short vertDiv,
                    short horzTarget, short horzDiv) {
     int dist;
@@ -73,7 +70,6 @@ void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarge
     Vec3fSetDistAndAngle(&cam->pos, trans, dist, vertAng, horzAng);
 }
 
-// @symbol StarDanceBoundYaw
 /* Super Mario 64's star_dance_bound_yaw, called for the same stars. Where
    the N64 clamps the camera's yaw to within yawMax of absYaw, this aims
    the orbit at absYaw once the camera strays further than that. */
@@ -82,7 +78,6 @@ void StarDanceBoundYaw(dCamera_c *cam, short ang, int threshold) {
         cam->mOrbitTargetYaw = ang;
 }
 
-// @symbol CutsceneGrandStarFlyAppCvars
 /* Script op, Super Mario 64's cutscene_grand_star_fly_app_cvars: turn
    savedLookAt and savedPos by the target player's yaw, close pos in on the
    first at a rising speed, and ease lookAt toward the second. */
@@ -109,4 +104,3 @@ int CutsceneGrandStarFlyAppCvars(dCamera_c *cam) {
 }
 
 /* The Vector3 destructor's body is the inline one in include/types.h. */
-// @symbol _ZN7Vector3D1Ev

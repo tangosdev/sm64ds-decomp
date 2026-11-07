@@ -50,14 +50,11 @@ extern SaveBlock data_0209caa0;
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN21daObjWlKoopaShutter_cD1Ev
-// @symbol _ZN21daObjWlKoopaShutter_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: its own vptr, then dBgActor_c's inlined, then dBgActor_c's
  * dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. */
 daObjWlKoopaShutter_c::~daObjWlKoopaShutter_c() {}
 
-// @symbol _ZN21daObjWlKoopaShutter_c16CleanupResourcesEv
 s32 daObjWlKoopaShutter_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -67,18 +64,15 @@ s32 daObjWlKoopaShutter_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN21daObjWlKoopaShutter_c6RenderEv
 s32 daObjWlKoopaShutter_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN21daObjWlKoopaShutter_c8BehaviorEv
 s32 daObjWlKoopaShutter_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN21daObjWlKoopaShutter_c13InitResourcesEv
 s32 daObjWlKoopaShutter_c::InitResources() {
     void *m = dExtSimpleModel_c::LoadFile(BowserShutter_ModelFile);
     mModel.SetFile((BMD_File *)m, 1, -1);
@@ -98,12 +92,10 @@ s32 daObjWlKoopaShutter_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WL_KOOPA_SHUTTER registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: BowserShutter_Spawn. */
-// @symbol daObjWlKoopaShutter_c_classInit
 extern "C" daObjWlKoopaShutter_c *daObjWlKoopaShutter_c_classInit() {
     return new daObjWlKoopaShutter_c();
 }
 
-// @symbol __sinit_d_a_obj_wl_koopa_shutter.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
 KoopaShutterModelFilePtr BowserShutter_ModelFile(ASSET_WL_KUPA_SHUTTER_BMD);    /* model */

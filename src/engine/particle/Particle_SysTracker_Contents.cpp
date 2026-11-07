@@ -20,7 +20,6 @@
 
 namespace Particle {
 
-// @symbol _ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE
 bool SysTracker::Contents::Entry::Initialise(
     u32 newUniqueID, u32 newDefinitionID, Vector3& position,
     const Vector3_16f *direction,
@@ -61,7 +60,6 @@ bool SysTracker::Contents::Entry::Initialise(
     return true;
 }
 
-// @symbol _ZN8Particle10SysTracker8Contents5Entry5ResetEv
 void SysTracker::Contents::Entry::Reset() {
     SystemDefinition::Data &data = *gParticleSysTracker->mManager->mDefinitions[definitionID].data;
     u32 *flagsAddress;
@@ -76,7 +74,6 @@ void SysTracker::Contents::Entry::Reset() {
     uniqueID = 0;
 }
 
-// @symbol _ZN8Particle10SysTracker8ContentsC1Ev
 SysTracker::Contents::Contents()
 {
     Entry* entry = mEntries;
@@ -93,7 +90,6 @@ SysTracker::Contents::Contents()
         mBuckets[i] = 0;
 }
 
-// @symbol _ZN8Particle10SysTracker8Contents6UpdateEv
 void SysTracker::Contents::Update()
 {
     Entry* entry = mEntries;
@@ -122,7 +118,6 @@ void SysTracker::Contents::Update()
     }
 }
 
-// @symbol _ZN8Particle10SysTracker8Contents5ClearEv
 void SysTracker::Contents::Clear()
 {
     Entry* entry = mEntries;
@@ -137,7 +132,6 @@ void SysTracker::Contents::Clear()
     }
 }
 
-// @symbol _ZNK8Particle10SysTracker8Contents8FindDataEj
 SysTracker::Contents::Entry *SysTracker::Contents::FindData(u32 uniqueID) const
 {
     if (uniqueID == 0)
@@ -152,7 +146,6 @@ SysTracker::Contents::Entry *SysTracker::Contents::FindData(u32 uniqueID) const
     return 0;
 }
 
-// @symbol _ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE
 u32 SysTracker::Contents::Create(
     u32 definitionID, Vector3& position, const Vector3_16f *direction,
     dPa_c::level_c::callback_c *callback)
@@ -179,7 +172,6 @@ u32 SysTracker::Contents::Create(
     return 0;
 }
 
-// @symbol _ZN8Particle10SysTracker8Contents4LinkERNS1_5EntryE
 void SysTracker::Contents::Link(Entry& entry)
 {
     int index = entry.uniqueID & 0xf;
@@ -194,7 +186,6 @@ void SysTracker::Contents::Link(Entry& entry)
     }
 }
 
-// @symbol _ZN8Particle10SysTracker8Contents6UnlinkERNS1_5EntryE
 void SysTracker::Contents::Unlink(Entry& entry)
 {
     Entry* prev = entry.prev;

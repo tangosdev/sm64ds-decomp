@@ -33,8 +33,6 @@ extern "C" {
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol _ZN13daObjSwdoor_cD0Ev
-// @symbol _ZN13daObjSwdoor_cD1Ev
 /* ROM ordinals 0 and 1 -- ov002 0x020bab0c (D0, 0x58) and 0x020bab64 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
  * inline body in include/daObjSwdoor_c.h, which the class's descendants need
@@ -63,7 +61,6 @@ void daObjSwdoor_c_EmitDestructor(daObjSwdoor_c *p) {
 /* 0x020baba8, size 0x48.
  * Teardown both leaves call: disable the collider if enabled, release the
  * descriptor's two files. */
-// @symbol _ZN13daObjSwdoor_c20CleanupResourcesFromEP18ResourceDescriptor
 s32 daObjSwdoor_c::CleanupResourcesFrom(ResourceDescriptor *descriptor) {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -73,7 +70,6 @@ s32 daObjSwdoor_c::CleanupResourcesFrom(ResourceDescriptor *descriptor) {
 }
 
 /* Vtable slot 9, ov002 0x020babf0. Key function. */
-// @symbol _ZN13daObjSwdoor_c6RenderEv
 s32 daObjSwdoor_c::Render() {
     mModel.Render(0);
     return 1;
@@ -87,7 +83,6 @@ s32 daObjSwdoor_c::Render() {
  *   1  turn mAngleY by 0x100 a frame (direction from mTurnDir) until the timer
  *      runs out, then set the 0x1 bit of mFlags again;
  *   2  done. */
-// @symbol _ZN13daObjSwdoor_c13UpdateShutterEv
 s32 daObjSwdoor_c::UpdateShutter() {
     switch (mState) {
     case 0:
@@ -126,7 +121,6 @@ s32 daObjSwdoor_c::UpdateShutter() {
  * into SetFile; then the stock UpdatePosAndAngs hook and Enable. The four
  * byte fields are set last: mTurnDir from bit 0 of param1, mEventBit from
  * bits 1..5, mState 0 and the start-up mTimer 5. */
-// @symbol _ZN13daObjSwdoor_c17InitResourcesFromEP18ResourceDescriptor
 s32 daObjSwdoor_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*descriptor->model), 1, -1);
     UpdateModelPosAndRotY();

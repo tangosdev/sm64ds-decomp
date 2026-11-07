@@ -66,7 +66,6 @@ int func_0206cf98(int a, u32 b, u32 c);
 int func_0205e904(s32 newVal);
 void Crash(void);
 
-// @symbol FS_ClearOverlayImage
 /* Invalidate the I- and D-cache over the overlay's whole region (image and
  * bss), then zero the bss after the image. */
 void FS_ClearOverlayImage(FSOverlayInfo *p_ovi) {
@@ -79,7 +78,6 @@ void FS_ClearOverlayImage(FSOverlayInfo *p_ovi) {
     func_0205a588((void *)(im_start + ram_size), 0, total_size - ram_size);
 }
 
-// @symbol FS_GetOverlayFileID
 /* The overlay's FSFileID: the ROM archive and the header's file_id. */
 FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi) {
     FSFileID ret;
@@ -88,7 +86,6 @@ FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi) {
     return ret;
 }
 
-// @symbol FSi_LoadOverlayInfoCore
 /* Pick the ARM9 or ARM7 overlay table region, bounds-check entry `id`,
  * open the table directly in the archive, read the 0x20-byte header, and
  * set the target. */
@@ -116,7 +113,6 @@ int FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, int target, int id, FSArchive 
     return 1;
 }
 
-// @symbol FS_LoadOverlayInfo
 /* While the ARM9 or ARM7 overlay table is in memory, copy entry `id` out of
  * it and set the target. Otherwise read it from the ROM through
  * FSi_LoadOverlayInfoCore, with the ROM archive and the ROM header's ARM9
@@ -138,7 +134,6 @@ int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, int target, int id) {
                                    ovt7->offset, ovt7->length);
 }
 
-// @symbol FSi_CompareDigest
 /* HMAC the image with the digest key and compare the 20-byte result with
  * spec_digest a word at a time. */
 int FSi_CompareDigest(char *spec_digest, void *src, int len) {
@@ -158,7 +153,6 @@ int FSi_CompareDigest(char *spec_digest, void *src, int len) {
     return i == 0x14;
 }
 
-// @symbol FS_StartOverlay
 /* Once an overlay's image is in RAM, a multiboot child (the halfword at
  * 0x027ffc40 reads 2) checks the digest of an overlay flagged authenticated
  * against its entry at data_0209a7ec. It clears the image and crashes when
@@ -204,7 +198,6 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
     }
 }
 
-// @symbol FS_EndOverlay
 /* An older revision than pret's: with interrupts disabled, unlink every
  * __global_destructor_chain entry whose destructor lies in the overlay's
  * image or whose object lies in its bss, run the ones unlinked, and repeat
@@ -279,13 +272,11 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
     }
 }
 
-// @symbol FS_UnloadOverlayImage
 int FS_UnloadOverlayImage(FSOverlayInfo *p_ovi) {
     FS_EndOverlay(p_ovi);
     return 1;
 }
 
-// @symbol FS_UnloadOverlay
 /* Read the overlay's FSOverlayInfo and unload its image. */
 int FS_UnloadOverlay(int target, int id) {
     FSOverlayInfo ovi;
@@ -294,7 +285,6 @@ int FS_UnloadOverlay(int target, int id) {
     return 1;
 }
 
-// @symbol func_0205db88
 /* Attach an in-memory overlay table for target, so FS_LoadOverlayInfo
  * reads entries from it. An ARM9 table is first checked against the
  * digest at data_0209a7d8, with func_0205e904(1) in effect

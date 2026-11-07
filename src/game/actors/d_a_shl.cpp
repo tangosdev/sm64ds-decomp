@@ -116,19 +116,16 @@ typedef void BgchInitAt_(void *self, dActor_c *owner, Fix12i radius, Fix12i heig
 
 /* func_ov102_0214c84c's positions are VecFx32: Vector3 members here emit
    an extra destructor function into this TU (measured). */
-// @symbol daShl_c_classInit
 extern "C" daShl_c *daShl_c_classInit()
 {
     return new daShl_c();
 }
 
-// @symbol _ZN7daShl_c13OnYoshiTryEatEv
 s32 daShl_c::OnYoshiTryEat()
 {
     return mModelIndex == 0 ? 6 : 5;
 }
 
-// @symbol _ZN7daShl_c13InitResourcesEv
 /* Builds the shell: model, shadow, both collision volumes, initial motion,
  * and the starting state. Any failure returns 0 and the spawn is abandoned.
  *
@@ -163,7 +160,6 @@ s32 daShl_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daShl_c8BehaviorEv
 /* One frame of the shell, in five stages: shared enemy pre-pass, Yoshi's
  * mouth, the despawn countdown, the state tick, then movement and terrain.
  */
@@ -243,7 +239,6 @@ s32 daShl_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daShl_c6RenderEv
 /* Draws the shell, unless it is hidden (flag 0x40000) or blinking: below
  * 0x2d the despawn countdown skips odd frames, so the shell flashes out
  * over its last 45 frames instead of vanishing. */
@@ -263,14 +258,12 @@ s32 daShl_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daShl_c16OnPendingDestroyEv
 /* Empty on purpose: the ROM body is a single `bx lr`, overriding whatever
    the base does on pending destroy with nothing. */
 void daShl_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7daShl_c16CleanupResourcesEv
 /* Releases the model file InitResources claimed, picked by the same index. */
 s32 daShl_c::CleanupResources()
 {
@@ -278,7 +271,6 @@ s32 daShl_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d1f8EP8ShlState
 /* Switch state: store the record, then run its `enter` if it has one. */
 int daShl_c::func_ov102_0214d1f8(ShlState *state)
 {
@@ -289,7 +281,6 @@ int daShl_c::func_ov102_0214d1f8(ShlState *state)
     return (this->*st->enter)();
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d1b8Ev
 /* Idle: enter. Stop sliding; the variant shell also stops falling and
    becomes grabbable. */
 int daShl_c::func_ov102_0214d1b8()
@@ -305,14 +296,12 @@ int daShl_c::func_ov102_0214d1b8()
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d1b0Ev
 /* The tick of a state that has nothing to do each frame. */
 int daShl_c::func_ov102_0214d1b0()
 {
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d148Ev
 /* Sliding: enter. Face mSpawnAngleY -- the kicker's heading, or the one
    Yoshi spat it along -- slide at 30.0, and arm the second cylinder. */
 int daShl_c::func_ov102_0214d148()
@@ -325,7 +314,6 @@ int daShl_c::func_ov102_0214d148()
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d114Ev
 /* Sliding: tick. Spin, and keep the second cylinder live. */
 int daShl_c::func_ov102_0214d114()
 {
@@ -335,7 +323,6 @@ int daShl_c::func_ov102_0214d114()
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d0bcEv
 /* Ridden: enter. The body cylinder is re-initialised with no extent. */
 int daShl_c::func_ov102_0214d0bc()
 {
@@ -345,7 +332,6 @@ int daShl_c::func_ov102_0214d0bc()
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d044Ev
 /* Ridden: tick. Follow the rider while he is still on the shell; once he
    is off, the shell breaks. */
 int daShl_c::func_ov102_0214d044()
@@ -371,7 +357,6 @@ int daShl_c::func_ov102_0214d044()
     }
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214d020Ev
 /* Held: enter. */
 int daShl_c::func_ov102_0214d020()
 {
@@ -380,7 +365,6 @@ int daShl_c::func_ov102_0214d020()
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214cfe4Ev
 /* Held: tick. Once the holder lets go (flag 0x100 clears), it breaks. */
 int daShl_c::func_ov102_0214cfe4()
 {
@@ -392,7 +376,6 @@ int daShl_c::func_ov102_0214cfe4()
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214cf98EP8dActor_c
 /* The player jumps on: remember him and switch to ridden. */
 int daShl_c::func_ov102_0214cf98(dActor_c *player)
 {
@@ -404,7 +387,6 @@ int daShl_c::func_ov102_0214cf98(dActor_c *player)
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214cf4cEP8dActor_c
 /* Kicked: take the kicker's heading and switch to the sliding state. */
 int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
 {
@@ -415,7 +397,6 @@ int daShl_c::func_ov102_0214cf4c(dActor_c *kicker)
     return 1;
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214ce60Ev
 /* dExtSimpleModel_c matrix and drop shadow. While carried (flag 0x4000) the model
    follows the carrier's hands; otherwise it sits at mPos turned by
    mAngleY. Flag 0x40000 (hidden) skips the shadow. */
@@ -440,7 +421,6 @@ void daShl_c::func_ov102_0214ce60()
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214cbecEv
 /* What touching the player does, read off the body cylinder's last hit.
    An invincible player (hit flag 0x10) smashes the shell. The variant
    shell only lets itself be picked up (0x1000) while idle. Otherwise
@@ -525,7 +505,6 @@ void daShl_c::func_ov102_0214cbec()
     func_ov102_0214cf98(player);
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214c84cEv
 /* dExtSimpleModel_c 0 only (Behavior gates it). While ridden, probe the ground from
    50.0 above the shell and pick the trail particles and the looping
    surface sound from what it finds; otherwise just the idle trail. Water
@@ -618,7 +597,6 @@ void daShl_c::func_ov102_0214c84c()
                                                 pos.trail.z, 0, 0);
 }
 
-// @symbol _ZN7daShl_c19func_ov102_0214c7fcEv
 /* Landed on a floor whose CLPS entry has bit 0x20 set: poof and go. Bit
    0x20 is water per CLPS.h, and this file agrees: InitResources turns on
    mMeshClsn.StartDetectingWater(), and func_ov102_0214c84c's probe calls
@@ -635,8 +613,6 @@ void daShl_c::func_ov102_0214c7fc()
     MarkForDestruction();
 }
 
-// @symbol _ZN7daShl_cD1Ev
-// @symbol _ZN7daShl_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
 

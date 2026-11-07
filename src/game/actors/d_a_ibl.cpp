@@ -135,15 +135,12 @@ IblKindHandler gIblKindHandlers[5] = {
     &daIbl_c::func_ov100_0214272c, &daIbl_c::func_ov100_021424c0,
 };
 
-// @symbol _ZN7daIbl_cD1Ev
-// @symbol _ZN7daIbl_cD0Ev
 /* D1 tears the members down in reverse declaration order, then the
  * dEnemyBase_c base. D0 is that teardown plus the base operator delete. */
 daIbl_c::~daIbl_c()
 {
 }
 
-// @symbol _ZN7daIbl_c16OnAimedAtWithEggEv
 /* Returns 0x82000 (130 units). func_ov100_02141fb0 adds it to the ball's Y
  * before KillByInvincibleChar. */
 s32 daIbl_c::OnAimedAtWithEgg()
@@ -151,7 +148,6 @@ s32 daIbl_c::OnAimedAtWithEgg()
     return 532480;
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_02141fb0Ev
 /* Contact check, shared by every handler. mdCcAc_c.otherOwner is the uniqueID
    of the actor that touched the ball; when that is a daPly_c (actor 191) who is
    not vanished (mIsVanish), mdCcAc_c.hitFlags decides what happens:
@@ -211,7 +207,6 @@ void daIbl_c::func_ov100_02141fb0()
     }
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_02142130Ev
 /* The wall and floor probe. mHitWall is cleared, the collision object is
    updated (sublevel 0x19 runs func_020383f0, every other sublevel
    func_02038414; both unidentified), and mHitWall is set when the ball touches
@@ -247,7 +242,6 @@ void daIbl_c::func_ov100_02142130()
     mVertSpeed = -(cstd::fdiv(s, mFloorNormalY) + 0x8000);
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_02142264Ev
 /* Per-frame model and shadow matrices. The model matrix is the identity with
    its translation set to mPos >> 3 (the ball's position in model units). It
    is copied to the shadow's matrix, whose Y translation is then replaced with
@@ -273,7 +267,6 @@ void daIbl_c::func_ov100_02142264()
                         k * mDrawScale.x, 0xf);
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_0214233cEv
 /* Path-node advance. mNextNodePos is the node the ball is heading for and
  * mPrevNodePos the one it last passed. Stores the atan2 heading to the node
  * in mHeadingToNode, then takes a 3-axis sign-dot of (node-prev) vs
@@ -386,7 +379,6 @@ int daIbl_c::func_ov100_0214233c()
     return 0;
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_021424c0Ev
 /* Kinds 2 and 4, the path followers. First the knock-away death that
  * KillByInvincibleChar starts: func_ov002_020ad660 (a sibling of
  * dEnemyBase_c's UpdateKillByInvincibleChar at 0x020ad838, same mDeathState 8
@@ -473,7 +465,6 @@ void daIbl_c::func_ov100_021424c0() {
     mdCcAc_c.Update();
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_0214272cEv
 /* Kind 3, the ball that has left its path. After the knock-away death step
    (see func_ov100_021424c0) and the contact check, it breaks up in a triple
    poof when it is below the kill height mKillY or the probe says it hit a
@@ -556,7 +547,6 @@ ground:
     mdCcAc_c.Update();
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_02142918Ev
 /* Kind 1, the free-rolling ball: after the knock-away death step and the
    contact check (a mDeathState of 8 ends the handler), it bounces off walls
    and rolls down slopes. A wall hit reflects the heading and rebuilds the
@@ -644,7 +634,6 @@ Lend: {
     mdCcAc_c.Update();
 }
 
-// @symbol _ZN7daIbl_c19func_ov100_02142b90Ev
 /* Kind 0, the spawner. mStateTimer is its countdown. When it is zero, and the
    spawner has fewer than 3 balls out in sublevel 6 or 6 elsewhere
    (mLiveBalls), it looks at the closest player: unless the ball it would
@@ -720,7 +709,6 @@ void daIbl_c::func_ov100_02142b90()
     }
 }
 
-// @symbol _ZN7daIbl_c16CleanupResourcesEv
 /* Gives a spawner's slot back: a ball made by a spawner holds it in
    mDispenser, and its count of balls out drops by one. Then the model file
    reference is released. */
@@ -736,7 +724,6 @@ int daIbl_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daIbl_c6RenderEv
 /* Draws the model with mDrawScale, except kind 0, the spawner, which has
    nothing to draw. */
 int daIbl_c::Render()
@@ -748,7 +735,6 @@ int daIbl_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daIbl_c8BehaviorEv
 /* Calls the pointer-to-member handler for this ball's kind from the table at
    gIblKindHandlers, on this actor. */
 int daIbl_c::Behavior()
@@ -767,7 +753,6 @@ int daIbl_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daIbl_c13InitResourcesEv
 /* Loads the model and shadow, sets gravity (-4 units/frame^2, mVertAccel
    -0x4000) and terminal velocity (-70 units/frame, -0x46000), picks the kind
    from param1's low nibble and sets up that kind. Distances and speeds below
@@ -894,7 +879,6 @@ end:
     return 1;
 }
 
-// @symbol daIbl_c_classInit
 /* return new constructs the ball and its members. */
 extern "C" daIbl_c *daIbl_c_classInit(void)
 {

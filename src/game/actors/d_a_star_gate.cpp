@@ -128,7 +128,6 @@ static inline int Abs(int v) {
     return v < 0 ? -v : v;
 }
 
-// @symbol daStarGate_c_classInit
 extern "C" daStarGate_c *daStarGate_c_classInit()
 {
     return new daStarGate_c();
@@ -136,7 +135,6 @@ extern "C" daStarGate_c *daStarGate_c_classInit()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c13InitResourcesEv
 int daStarGate_c::InitResources()
 {
     param1 = (u32)param1 >> 16;
@@ -155,7 +153,6 @@ int daStarGate_c::InitResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c8BehaviorEv
 int daStarGate_c::Behavior()
 {
     daPly_c *player = CalculateRelativePlayerPos();
@@ -166,7 +163,6 @@ int daStarGate_c::Behavior()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c6RenderEv
 int daStarGate_c::Render()
 {
     if (IsAreaShowing((s8)mAngleX) != 0 ||
@@ -189,14 +185,12 @@ int daStarGate_c::Render()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c16OnPendingDestroyEv
 void daStarGate_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c16CleanupResourcesEv
 int daStarGate_c::CleanupResources()
 {
     gObjStargateModelFile.Release();
@@ -205,7 +199,6 @@ int daStarGate_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c11ChangeStateEPNS_5StateEP7daPly_c
 bool daStarGate_c::ChangeState(State *nextState, daPly_c *player) {
     mState = nextState;
     if (mState->init == 0)
@@ -215,7 +208,6 @@ bool daStarGate_c::ChangeState(State *nextState, daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c26CalculateRelativePlayerPosEv
 daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
     VecFx32 tmp;
     daPly_c *player = data_0209f394[data_0209f250];
@@ -226,7 +218,6 @@ daPly_c *daStarGate_c::CalculateRelativePlayerPos() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c17IsInFrontOfPlayerEP7daPly_c
 bool daStarGate_c::IsInFrontOfPlayer(daPly_c *player) {
     int a;
     if (Abs(mScaleX) <= 0x82000 && Abs(mScaleY) <= 0x32000 && Abs(mScaleZ) <= 0x78000) {
@@ -242,7 +233,6 @@ bool daStarGate_c::IsInFrontOfPlayer(daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c11TryOpenDoorEP7daPly_c
 void daStarGate_c::TryOpenDoor(daPly_c *player) {
     int a;
     int z = mScaleZ;
@@ -255,7 +245,6 @@ void daStarGate_c::TryOpenDoor(daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c12St_Wait_MainEP7daPly_c
 bool daStarGate_c::St_Wait_Main(daPly_c *player) {
     daStarGateInfo *entry;
     int isSpecial, notEnoughStars, isMario, messageID;
@@ -307,7 +296,6 @@ bool daStarGate_c::St_Wait_Main(daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c23St_TalkingToPlayer_InitEP7daPly_c
 bool daStarGate_c::St_TalkingToPlayer_Init(daPly_c *) {
     func_02012694(0xb8, &mCamSpacePosX);
     func_ov100_02145070(0x87);
@@ -316,7 +304,6 @@ bool daStarGate_c::St_TalkingToPlayer_Init(daPly_c *) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c23St_TalkingToPlayer_MainEP7daPly_c
 bool daStarGate_c::St_TalkingToPlayer_Main(daPly_c *player) {
     func_ov100_02145014();
     if (player->GetTalkState() == -1) {
@@ -331,7 +318,6 @@ bool daStarGate_c::St_TalkingToPlayer_Main(daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c17St_Unlocking_InitEP7daPly_c
 bool daStarGate_c::St_Unlocking_Init(daPly_c *player) {
     player->OpenBigDoor();
     return true;
@@ -339,7 +325,6 @@ bool daStarGate_c::St_Unlocking_Init(daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c17St_Unlocking_MainEP7daPly_c
 bool daStarGate_c::St_Unlocking_Main(daPly_c *player) {
     if (!player->IsOpeningDoorWithStar()) {
         daStarGateInfo *entry = &data_ov100_02148390[param1];
@@ -352,7 +337,6 @@ bool daStarGate_c::St_Unlocking_Main(daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c17St_OpenClose_InitEP7daPly_c
 bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
     ShowArea((s8)mAngleX);
     ShowArea((s8)mAngleZ);
@@ -364,7 +348,6 @@ bool daStarGate_c::St_OpenClose_Init(daPly_c *) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c17St_OpenClose_MainEP7daPly_c
 bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
     int ready;
     VecFx32 vec;
@@ -409,7 +392,6 @@ bool daStarGate_c::St_OpenClose_Main(daPly_c *player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daStarGate_c18St_StayClosed_MainEP7daPly_c
 bool daStarGate_c::St_StayClosed_Main(daPly_c *player) {
     if (func_ov100_02144fcc(this, player))
         ChangeState(&ST_WAIT, player);

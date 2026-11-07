@@ -17,17 +17,14 @@
 extern SharedFilePtr data_ov002_0210d9e0;
 extern "C" void func_ov102_0214ad14(void *actor);
 
-// @symbol daESwitch_c_classInit
 extern "C" daESwitch_c *daESwitch_c_classInit() {
     return new daESwitch_c;
 }
 
-// @symbol daECreate_c_classInit
 extern "C" daECreate_c *daECreate_c_classInit() {
     return new daECreate_c;
 }
 
-// @symbol _ZN11daESwitch_c13InitResourcesEv
 int daESwitch_c::InitResources() {
     mdCcAc_c.Init(this, ((mAngleX + 1) * 100) << 12, ((mAngleY + 1) * 200) << 12, 2, 0x400000);
     mEventID = param1 & 0x1f;
@@ -41,7 +38,6 @@ int daESwitch_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN11daECreate_c13InitResourcesEv
 int daECreate_c::InitResources() {
     mActorToSpawn = 0xce;
     mEventBit = mAngleZ & 0x1f;
@@ -50,13 +46,11 @@ int daECreate_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN11daECreate_c16CleanupResourcesEv
 int daECreate_c::CleanupResources() {
     data_ov002_0210d9e0.Release();
     return 1;
 }
 
-// @symbol _ZN11daESwitch_c8BehaviorEv
 int daESwitch_c::Behavior() {
     if (mHoldTimer != 0) {
         --mHoldTimer;
@@ -78,7 +72,6 @@ int daESwitch_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN11daECreate_c8BehaviorEv
 int daECreate_c::Behavior() {
     if (Event::GetBit(mEventBit) && mPreviousEventBit == 0) {
         dActor_c *actor = dActor_c::Spawn(mActorToSpawn, 4, mPos, &mPrevAngle, mAreaId, -1);
@@ -89,7 +82,6 @@ int daECreate_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN11daESwitch_c16CleanupResourcesEv
 int daESwitch_c::CleanupResources() {
     Event::ClearBit(mEventID);
     return 1;

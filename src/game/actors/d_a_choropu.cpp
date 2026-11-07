@@ -108,19 +108,14 @@ extern SharedFilePtr *data_ov080_0212766c[];
 
 #pragma defer_codegen off
 
-// @symbol _ZN11daChoropu_cD1Ev
-// @symbol _ZN11daChoropu_cD0Ev
 daChoropu_c::~daChoropu_c()
 {
 }
 
-// @symbol _ZN14daChoro_Rock_cD1Ev
-// @symbol _ZN14daChoro_Rock_cD0Ev
 daChoro_Rock_c::~daChoro_Rock_c()
 {
 }
 
-// @symbol _ZN11daChoropu_c16OnAimedAtWithEggEv
 /* Returns the constant 0x28000 (40.0 read as a Fix12). What the caller does with it is
  * not recovered here. */
 s32 daChoropu_c::OnAimedAtWithEgg()
@@ -128,7 +123,6 @@ s32 daChoropu_c::OnAimedAtWithEgg()
     return 0x28000;
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02123860Ev
 /* State 5 (Leap) update handler (table row 5, data_ov080_02127f90).
  *
  * dExtFrameCtrl_c file 0x2d2 (data_ov080_021283e8). The collision cylinder's height follows
@@ -165,7 +159,6 @@ void daChoropu_c::func_ov080_02123860()
     func_ov080_02124360();
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02123924Ev
 /* State 4 (Wait) update handler (table row 4, data_ov080_02127f98).
  *
  * dExtFrameCtrl_c file 0x2d3 (data_ov080_021283d0). Plays the animation out and then
@@ -199,7 +192,6 @@ void daChoropu_c::func_ov080_02123924()
     }
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02123a34Ev
 /* State 3 (ThrowRock) update handler (table row 3, data_ov080_02127f80).
  *
  * dExtFrameCtrl_c file 0x2d5 (data_ov080_021283e0). When the animation steps across
@@ -279,7 +271,6 @@ void daChoropu_c::func_ov080_02123a34()
     }
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02123c24Ev
 /* State 2 (Emerge) update handler (table row 2, data_ov080_02127fa8).
  *
  * dExtFrameCtrl_c file 0x2d4 (data_ov080_021283d8). The collision cylinder's height is 0
@@ -375,7 +366,6 @@ void daChoropu_c::func_ov080_02123c24()
     }
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02123eccEv
 /* State 1 (Hidden) update handler (table row 1, data_ov080_02127f88).
  *
  * The mole is underground. Nothing happens unless the nearest daPly_c is within 1500
@@ -412,7 +402,6 @@ void daChoropu_c::func_ov080_02123ecc()
     func_ov080_02124360();
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02123fccEv
 /* State 0 (Setup) update handler (table row 0, data_ov080_02127fa0); the state
  * InitResources installs.
  *
@@ -447,7 +436,6 @@ void daChoropu_c::func_ov080_02123fcc()
     mState = daChoropu_ST_HIDDEN;
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02124088Ev
 /* The mole has been knocked back underground (called from func_ov080_02124208 on a
  * hit, a stomp, or contact while the daPly_c is Metal or Mega).
  *
@@ -532,7 +520,6 @@ void daChoropu_c::func_ov080_02124088()
     }
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02124208Ev
 /* Reacts to what touched the mole's collision cylinder this frame; run after the
  * state handler by Behavior. Does nothing without an otherOwner (mdCcAc_c.otherOwner
  * is the unique ID of whatever hit it) or when that actor cannot be found. With the
@@ -598,7 +585,6 @@ void daChoropu_c::func_ov080_02124208()
     }
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_02124360Ev
 /* Passes the turn to another mole of the group. A mole with mGroupMode == 0 returns
  * 0 and keeps its turn. Otherwise it clears its own mHasTurn and picks partners at
  * random (mPartnerIDs[r % mNumPartners]) until it finds one that still exists and does
@@ -625,7 +611,6 @@ void *daChoropu_c::func_ov080_02124360()
     }
 }
 
-// @symbol _ZN11daChoropu_c19func_ov080_021243d8Ev
 /* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngleY,
  * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set to
  * the actor's position >> 3. */
@@ -637,7 +622,6 @@ void daChoropu_c::func_ov080_021243d8()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol func_ov080_02124418
 /* Same as func_ov080_021243d8, for the rock's model (mModel.mat4x3). */
 extern "C" void func_ov080_02124418(daChoro_Rock_c *t)
 {
@@ -647,7 +631,6 @@ extern "C" void func_ov080_02124418(daChoro_Rock_c *t)
     t->mModel.mat4x3.m[11] = t->mPosZ >> 3;
 }
 
-// @symbol _ZN11daChoropu_c16CleanupResourcesEv
 /* Releases the shared model and animation files; never touches `this`: the model file
  * shared from ov002 (data_ov002_0210d9d8), the mole model (data_ov080_021283c0 = file
  * 0x2d1), the rock model (021283c8 = 0x2d6), then the four animation slots through
@@ -665,7 +648,6 @@ s32 daChoropu_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN14daChoro_Rock_c16CleanupResourcesEv
 /* Releases the rock model file (data_ov080_021283c8 = file 0x2d6). */
 s32 daChoro_Rock_c::CleanupResources()
 {
@@ -673,7 +655,6 @@ s32 daChoro_Rock_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11daChoropu_c6RenderEv
 /* Draws the mole's model (mAnmModel) with no scale argument. */
 s32 daChoropu_c::Render()
 {
@@ -682,7 +663,6 @@ s32 daChoropu_c::Render()
     return 1;
 }
 
-// @symbol _ZN14daChoro_Rock_c6RenderEv
 /* Draws the rock's model, scaled by (mScaleX, mScaleY, mScaleZ). */
 s32 daChoro_Rock_c::Render()
 {
@@ -691,7 +671,6 @@ s32 daChoro_Rock_c::Render()
     return 1;
 }
 
-// @symbol _ZN11daChoropu_c8BehaviorEv
 /* The mole's per-frame update (vtable slot 6): Luigi-vanish bookkeeping for the
  * cylinder, the current state's update handler through the state table, then
  * func_ov080_02124208 (react to whatever touched the cylinder), func_ov080_021243d8
@@ -707,7 +686,6 @@ s32 daChoropu_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN14daChoro_Rock_c8BehaviorEv
 /* The rock's per-frame update (vtable slot 6).
  *
  * If the daPly_c touches the rock (otherOwner found, hitFlags bit 0x400000) it is hurt
@@ -780,7 +758,6 @@ s32 daChoro_Rock_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11daChoropu_c13InitResourcesEv
 /* Loads the four animation files through data_ov080_0212766c, the ov002 shared model
  * file, the rock model and the mole model (data_ov080_021283c0, set on mAnmModel with
  * flags 1 and -1). Starts animation file 0x2d4 (data_ov080_021283d8) with flags 0, speed
@@ -812,7 +789,6 @@ s32 daChoropu_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN14daChoro_Rock_c13InitResourcesEv
 /* Fails (returns 0) if the rock model cannot be set. Otherwise: collision cylinder with
  * radius 30 units and height 30 units (0x1e000), flags 0x200004 (not decoded here) and
  * no vulnerability mask; mIsSmall = param1 & 1; the mesh collision object with both size
@@ -840,14 +816,12 @@ s32 daChoro_Rock_c::InitResources()
     return 1;
 }
 
-// @symbol daChoro_Rock_c_classInit
 /* Registry factory for the CHORO_ROCK profile. */
 extern "C" daChoro_Rock_c *daChoro_Rock_c_classInit()
 {
     return new daChoro_Rock_c();
 }
 
-// @symbol daChoropu_c_classInit
 /* Registry factory for the CHOROPU profile. */
 extern "C" daChoropu_c *daChoropu_c_classInit()
 {

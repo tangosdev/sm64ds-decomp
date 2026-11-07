@@ -96,8 +96,6 @@ static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-// @symbol _ZN16dPathLiftActor_cD0Ev
-// @symbol _ZN16dPathLiftActor_cD1Ev
 /* ROM ordinals 0 and 1 -- ov002 0x020ef320 (D0, 0x70) and 0x020ef390 (D1,
  * 0x5c). No source here: both destructor variants come from the ONE inline
  * body in include/PathLift.h, which the class's descendants need visible to
@@ -125,13 +123,11 @@ void dPathLiftActor_c_EmitDestructor(dPathLiftActor_c *p)
 }
 
 // 0x020ef3ec (0x4)
-// @symbol _ZN16dPathLiftActor_c9StateWaitEv
 void dPathLiftActor_c::StateWait()
 {
 }
 
 // 0x020ef3f0 (0x18)
-// @symbol _ZN16dPathLiftActor_c13StateWaitInitEv
 void dPathLiftActor_c::StateWaitInit()
 {
     mTriggerDelay = 24;
@@ -139,7 +135,6 @@ void dPathLiftActor_c::StateWaitInit()
 }
 
 // 0x020ef408 (0x174)
-// @symbol _ZN16dPathLiftActor_c9StateFallEv
 void dPathLiftActor_c::StateFall()
 {
     s32 raw;
@@ -179,7 +174,6 @@ void dPathLiftActor_c::StateFall()
 }
 
 // 0x020ef57c (0xf4)
-// @symbol _ZN16dPathLiftActor_c13StateFallInitEv
 void dPathLiftActor_c::StateFallInit() {
     if (IsActorID(this, 0x82)) {
         mVertAccel = -0x1000;
@@ -207,7 +201,6 @@ void dPathLiftActor_c::StateFallInit() {
 }
 
 // 0x020ef670 (0x3d4)
-// @symbol _ZN16dPathLiftActor_c9StatePathEv
 void dPathLiftActor_c::StatePath()
 {
     Vector3 destNode, srcNode, fromDest, segment, stepA, stepB;
@@ -321,14 +314,12 @@ void dPathLiftActor_c::StatePath()
 }
 
 // 0x020efa44 (0x10)
-// @symbol _ZN16dPathLiftActor_c13StatePathInitEv
 void dPathLiftActor_c::StatePathInit()
 {
     mWaitTimer = 300;
 }
 
 // 0x020efa54 (0x4c)
-// @symbol _ZN16dPathLiftActor_c8SetStateEi
 void dPathLiftActor_c::SetState(int state) {
     mState = state;
     int next = mState;
@@ -336,7 +327,6 @@ void dPathLiftActor_c::SetState(int state) {
 }
 
 // 0x020efaa0 (0x50)
-// @symbol _ZN16dPathLiftActor_c12BaseBehaviorEv
 void dPathLiftActor_c::BaseBehavior()
 {
     PathLiftState &state = data_ov002_0210af2c[mState];
@@ -345,7 +335,6 @@ void dPathLiftActor_c::BaseBehavior()
 }
 
 // 0x020efaf0 (0xec)
-// @symbol _ZN16dPathLiftActor_c17BaseInitResourcesEv
 void dPathLiftActor_c::BaseInitResources()
 {
     for (int i = 0; i < 3; i++)
@@ -368,7 +357,6 @@ void dPathLiftActor_c::BaseInitResources()
 }
 
 // 0x020efbdc (0x98)
-// @symbol _ZN16dPathLiftActor_c9ResetPathEv
 void dPathLiftActor_c::ResetPath()
 {
     mPosX = mInitialPos.x;
@@ -387,7 +375,6 @@ void dPathLiftActor_c::ResetPath()
 }
 
 // 0x020efc74 (0x80)
-// @symbol _ZN16dPathLiftActor_c16RenderPathModelsEv
 void dPathLiftActor_c::RenderPathModels()
 {
     if (Param12ModeIs1() == 0) return;
@@ -403,7 +390,6 @@ void dPathLiftActor_c::RenderPathModels()
 }
 
 // 0x020efcf4 (0x174)
-// @symbol _ZN16dPathLiftActor_c16UpdatePathModelsEv
 void dPathLiftActor_c::UpdatePathModels()
 {
     int idx;
@@ -461,31 +447,26 @@ void dPathLiftActor_c::UpdatePathModels()
 }
 
 // 0x020efe68 (0x14)
-// @symbol _ZNK16dPathLiftActor_c16HasNonzeroAngleZEv
 int dPathLiftActor_c::HasNonzeroAngleZ() const {
     return mAngleZ != 0;
 }
 
 // 0x020efe7c (0x20)
-// @symbol _ZNK16dPathLiftActor_c14Param10ModeIs1Ev
 int dPathLiftActor_c::Param10ModeIs1() const {
     return (unsigned char)((param1 >> 0xa) & 3) == 1;
 }
 
 // 0x020efe9c (0x20)
-// @symbol _ZNK16dPathLiftActor_c14Param12ModeIs1Ev
 int dPathLiftActor_c::Param12ModeIs1() const {
     return (unsigned char)((param1 >> 0xc) & 3) == 1;
 }
 
 // 0x020efebc (0x20)
-// @symbol _ZNK16dPathLiftActor_c14Param08ModeIs2Ev
 int dPathLiftActor_c::Param08ModeIs2() const {
     return (unsigned char)((param1 >> 8) & 3) == 2;
 }
 
 // 0x020efedc (0x28)
-// @symbol _ZNK16dPathLiftActor_c17Param08ModeIs1Or2Ev
 int dPathLiftActor_c::Param08ModeIs1Or2() const
 {
     unsigned char v = (param1 >> 8) & 3;
@@ -496,7 +477,6 @@ int dPathLiftActor_c::Param08ModeIs1Or2() const
 }
 
 // 0x020eff04 (0x14)
-// @symbol _ZNK16dPathLiftActor_c11IsUnk42cSetEv
 /* The byte local is load-bearing: without it the TU's compiler-numbered
    objects come out one short of the @851..@861 the manifest renames. */
 int dPathLiftActor_c::IsUnk42cSet() const {
@@ -505,7 +485,6 @@ int dPathLiftActor_c::IsUnk42cSet() const {
 }
 
 // 0x020eff18 (0x78)
-// @symbol _ZN16dPathLiftActor_c9AfterClsnEi
 void dPathLiftActor_c::AfterClsn(int)
 {
     if (Param08ModeIs1Or2() != 0 &&
@@ -519,7 +498,6 @@ void dPathLiftActor_c::AfterClsn(int)
 }
 
 // 0x020eff90 (0x28)
-// @symbol func_ov002_020eff90
 /* The mesh collider's stoodOnCallback: the actor that landed on the lift
    arrives as AfterClsn's word argument. */
 extern "C" void func_ov002_020eff90(dBgW *collider, dActor_c *lift, dActor_c *rider) {

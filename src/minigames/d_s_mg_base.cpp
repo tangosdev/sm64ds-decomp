@@ -123,7 +123,6 @@ int Mg_GetSaveTable(void *scene);
 extern OamAttr **sMgSpriteTables[];
 }
 
-// @symbol _ZN11dScMgBase_c12IsAltVariantEv
 /* dScMgBase_c::IsAltVariant - slot 35, the LAST slot of dScMgBase_c's own
    eighteen.  Twenty bytes, and the end of the 18-35 keystone range: with this
    declared the class emits its full 36-slot vtable from source and no table in
@@ -157,7 +156,6 @@ int dScMgBase_c::IsAltVariant()
     return (param1 & 0xff) != 0;
 }
 
-// @symbol GetGameLanguage
 namespace s20ad674 {
 extern "C" {
 s32 GetGameLanguage(void)
@@ -179,7 +177,6 @@ s32 GetGameLanguage(void)
 }
 }
 
-// @symbol Mg_GetLastRecordRank
 namespace s20ad6f4 {
 extern "C" {
 /* Returns mLastRecordRank: the index (0..4) at which Mg_RankSessionBest last
@@ -192,7 +189,6 @@ int Mg_GetLastRecordRank(dScMgBase_c *scene)
 }
 }
 
-// @symbol Mg_FindRecordRank
 namespace s20ad6fc {
 extern "C" {
 extern MgEntry gMgMenuRow;
@@ -218,7 +214,6 @@ int Mg_FindRecordRank(void *scene, int value)
 }
 }
 
-// @symbol Mg_SaveRecordPair
 namespace s20ad79c {
 extern "C" {
 extern MgEntry gMgMenuRow;
@@ -253,7 +248,6 @@ void Mg_SaveRecordPair(int first, int second) {
 }
 }
 
-// @symbol Mg_GetSavedRecord1
 namespace s20ad878 {
 extern "C" {
 /* Saved record 1 of the current scene, or 0 with no scene. */
@@ -265,7 +259,6 @@ int Mg_GetSavedRecord1(void) {
 }
 }
 
-// @symbol Mg_GetSavedRecord0
 namespace s20ad8b8 {
 extern "C" {
 extern MgEntry gMgMenuRow;
@@ -283,7 +276,6 @@ int Mg_GetSavedRecord0(void) {
 }
 }
 
-// @symbol Mg_CommitRecords
 namespace s20ad90c {
 extern "C" {
 extern void Mg_RankSessionBest(dScMgBase_c *scene);
@@ -296,7 +288,6 @@ void Mg_CommitRecords(void) {
 }
 }
 
-// @symbol Mg_RankSessionBest
 namespace s20ad940 {
 extern "C" {
 int Mg_GetSessionBest(void);
@@ -341,7 +332,6 @@ void Mg_RankSessionBest(dScMgBase_c *scene)
 }
 }
 
-// @symbol Mg_ClearNewRecordFlag
 namespace s20ada20 {
 extern "C" {
 /* Clears the new-record flag mNewRecord. */
@@ -354,7 +344,6 @@ void Mg_ClearNewRecordFlag(void) {
 }
 }
 
-// @symbol Mg_SetSessionBest
 namespace s20ada40 {
 extern "C" {
 extern MgEntry gMgMenuRow;
@@ -385,7 +374,6 @@ void Mg_SetSessionBest(int score)
 }
 }
 
-// @symbol Mg_GetSessionBest
 namespace s20adafc {
 extern "C" {
 /* The session best, mSessionBest; 0 with no scene. */
@@ -399,7 +387,6 @@ int Mg_GetSessionBest(void) {
 }
 }
 
-// @symbol Mg_SubmitScore
 namespace s20adb1c {
 extern "C" {
 extern int Mg_GetSessionBest(void);
@@ -430,7 +417,6 @@ void Mg_SubmitScore(int score) {
 }
 }
 
-// @symbol Mg_GetSubmittedScore
 namespace s20adbc0 {
 extern "C" {
 /* The submitted score, mSubmittedScore; 0 with no scene. */
@@ -444,7 +430,6 @@ int Mg_GetSubmittedScore(void) {
 }
 }
 
-// @symbol Mg_IsNewRecord
 namespace s20adbe0 {
 extern "C" {
 /* The new-record flag, mNewRecord; 0 with no scene. */
@@ -458,7 +443,6 @@ int Mg_IsNewRecord(void) {
 }
 }
 
-// @symbol Mg_SetTopRecord
 namespace s20adc00 {
 extern "C" {
 /* Sets the saved top record (mTopRecord); no-op with no scene. */
@@ -471,7 +455,6 @@ void Mg_SetTopRecord(int v) {
 }
 }
 
-// @symbol Mg_GetTopRecord
 namespace s20adc1c {
 extern "C" {
 /* The saved top record (mTopRecord); 0 with no scene. */
@@ -485,7 +468,6 @@ int Mg_GetTopRecord(void) {
 }
 }
 
-// @symbol Mg_GetSaveTable
 namespace s20adc3c {
 extern "C" {
 /* The scene's save-table id: byte 1 of param1. */
@@ -495,7 +477,6 @@ int Mg_GetSaveTable(void *scene) {
 }
 }
 
-// @symbol Mg_GetWorkBuffer
 namespace s20adc4c {
 extern "C" {
 extern int sMgWorkBuffer[];
@@ -503,7 +484,6 @@ int Mg_GetWorkBuffer(void) { return sMgWorkBuffer[0]; }
 }
 }
 
-// @symbol Ov004_Deallocate
 namespace s20adc5c {
 extern "C" {
 void Ov004_Deallocate(void *ptr)
@@ -513,7 +493,6 @@ void Ov004_Deallocate(void *ptr)
 }
 }
 
-// @symbol Ov004_LoadFile
 namespace s20adc68 {
 extern "C" {
 extern void *LoadFile(int handle);
@@ -523,7 +502,6 @@ void *Ov004_LoadFile(int id) {
 }
 }
 
-// @symbol Ov004_LoadFileByPath
 namespace s20adc74 {
 extern "C" {
 extern void *func_020182bc(const char *path);
@@ -535,7 +513,6 @@ void *Ov004_LoadFileByPath(const char *path)
 }
 }
 
-// @symbol _ZN4MgFx9DrawFlyToEv
 namespace s20adc80 {
 extern "C" {
 extern int GetGameLanguage(void);
@@ -550,7 +527,6 @@ void MgFx::DrawFlyTo() {
     s20adc80::Mg_RenderSpriteOnNoMtx(t[2], mPos[0] >> 0xc, mPos[1] >> 0xc, -1, -1);
 }
 
-// @symbol _ZN4MgFx11DrawSparkleEv
 namespace s20adcc8 {
 extern "C" {
 extern void Mg_RenderSpriteOnNoMtx(void *a0, int a1, int a2, int a3, int a4);
@@ -593,7 +569,6 @@ void MgFx::DrawSparkle() {
     }
 }
 
-// @symbol Mg_DrawFx
 namespace s20add88 {
 extern "C" {
 extern EntPMF sMgFxDrawTable[];
@@ -604,7 +579,6 @@ extern "C" void Mg_DrawFx(MgFx *c) {
 }
 }
 
-// @symbol _ZN4MgFx11UpdateFlyToEv
 namespace s20addcc {
 extern "C" {
 void Mg_GainCredits(int c);
@@ -641,7 +615,6 @@ void MgFx::UpdateFlyTo() {
     }
 }
 
-// @symbol _ZN4MgFx11UpdateDriftEv
 /* State 0's update: counts mTimer down, passes mVecA to func_0203d630 with
    0xff8, then adds mVecB into mVecA and mVecA into mPos. */
 void MgFx::UpdateDrift() {
@@ -653,7 +626,6 @@ void MgFx::UpdateDrift() {
     mPos[1] += mVecA[1];
 }
 
-// @symbol Mg_UpdateFx
 namespace s20adf2c {
 extern "C" {
 extern EntPMF sMgFxUpdateTable[];
@@ -664,7 +636,6 @@ extern "C" void Mg_UpdateFx(MgFx *c) {
 }
 }
 
-// @symbol Mg_InitFx
 namespace s20adf70 {
 extern "C" {
 /* Fills record `c`. mDuration starts equal to mTimer; either vector may
@@ -687,7 +658,6 @@ void Mg_InitFx(MgFx *e, short state, short timer, int *pos, int *vecA, int *vecB
 }
 }
 
-// @symbol Mg_SpawnFx
 namespace s20adfc4 {
 extern "C" {
 extern void Mg_InitFx(void *rec, char *state, short timer, short pos, int *vecA, int *vecB);
@@ -710,7 +680,6 @@ void Mg_SpawnFx(char *state, short timer, short pos, int *vecA, int *vecB, int *
 }
 }
 
-// @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback3 -- slot 3: calls the
    registered scene's OnGraphCallback3 (slot 25, +0x64) and reports handled. */
 int dScMgBase_c::graphCallback_c::GraphCallback3()
@@ -724,7 +693,6 @@ int dScMgBase_c::graphCallback_c::GraphCallback3()
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback2 -- slot 2.
  *
  * Unlike slots 0, 1 and 3, this one RETURNS the scene's OnGraphCallback2 (slot 24,
@@ -742,7 +710,6 @@ int dScMgBase_c::graphCallback_c::GraphCallback2()
     return p->OnGraphCallback2();
 }
 
-// @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback1 -- slot 1: calls the
    registered scene's OnGraphCallback1 (slot 22, +0x58) and reports handled. */
 int dScMgBase_c::graphCallback_c::GraphCallback1()
@@ -756,7 +723,6 @@ int dScMgBase_c::graphCallback_c::GraphCallback1()
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev
 /* dScMgBase_c::graphCallback_c::GraphCallback0 -- slot 0: calls the
    registered scene's OnGraphCallback0 (slot 23, +0x5c) and reports handled. */
 int dScMgBase_c::graphCallback_c::GraphCallback0()
@@ -770,19 +736,16 @@ int dScMgBase_c::graphCallback_c::GraphCallback0()
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c15graphCallback_cC1Ev
 /* graphCallback_c ctor -- the base callback_c vptr store, the derived vptr
    store, and mScene = 0 are the three writes the ROM body makes. */
 dScMgBase_c::graphCallback_c::graphCallback_c() : mScene(0) {}
 
-// @symbol _ZN11dScMgBase_c16OnGraphCallback3Ev
 /* dScMgBase_c::OnGraphCallback3 - slot 25: nonzero while the menu is closed. */
 int dScMgBase_c::OnGraphCallback3()
 {
     return mMenuOpen == 0;
 }
 
-// @symbol _ZN11dScMgBase_c16OnGraphCallback2Ev
 /* dScMgBase_c::OnGraphCallback2 - slot 24. When mMenuOpen differs from its latch
    mMenuScreenSaved, calls SaveScreenForMenu (slot 29) if the menu has opened or
    RestoreScreenFromMenu (slot 30) if it has closed, then latches it. */
@@ -801,21 +764,18 @@ done:
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c16OnGraphCallback1Ev
 /* dScMgBase_c::OnGraphCallback1 - slot 22 */
 int dScMgBase_c::OnGraphCallback1()
 {
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c16OnGraphCallback0Ev
 /* dScMgBase_c::OnGraphCallback0 - slot 23 */
 int dScMgBase_c::OnGraphCallback0()
 {
     return 1;
 }
 
-// @symbol Mg_GetScoringMode
 namespace s20ae1a8 {
 extern "C" {
 extern MgEntry gMgMenuRow;
@@ -829,7 +789,6 @@ int Mg_GetScoringMode(void) {
 }
 }
 
-// @symbol Mg_GetMusicMode
 namespace s20ae1cc {
 extern "C" {
 extern MgEntry gMgMenuRow;
@@ -846,7 +805,6 @@ int Mg_GetMusicMode(void) {
 }
 }
 
-// @symbol Mg_GetMusicTrack
 namespace s20ae1f0 {
 extern "C" {
 /* The scene's music track, mMusicTrack; 5 with no scene. */
@@ -858,7 +816,6 @@ int Mg_GetMusicTrack(void) {
 }
 }
 
-// @symbol Mg_RestoreMusic
 namespace s20ae20c {
 extern "C" {
 extern void d_s_mg_basePlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
@@ -879,7 +836,6 @@ void Mg_RestoreMusic(void)
 }
 }
 
-// @symbol Mg_PlayJingle
 namespace s20ae274 {
 extern "C" {
 extern int Mg_GetMusicMode(void);
@@ -896,7 +852,6 @@ void Mg_PlayJingle(void* id) {
 }
 }
 
-// @symbol Mg_StartMusic
 namespace s20ae2c8 {
 extern "C" {
 int Mg_GetMusicMode(void);
@@ -915,7 +870,6 @@ void Mg_StartMusic(void) {
 }
 }
 
-// @symbol Mg_InitMusic
 namespace s20ae330 {
 extern "C" {
 extern int Mg_GetMusicMode(void);
@@ -942,7 +896,6 @@ void Mg_InitMusic(void) {
 
 namespace s20ae3b4 {
 extern "C" {
-// @symbol _ZN11dScMgBase_c11PaintSquareEiiii
 /* dScMgBase_c::PaintSquare - slot 34.  THE BRUSH.
 
    Walks a `size` x `size` square centred on (cx, cy) and paints every cell
@@ -1070,7 +1023,6 @@ void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
     } while (oi < size);
 }
 
-// @symbol _ZN11dScMgBase_c11Mg_DrawLineEiiiiii
 /* dScMgBase_c::Mg_DrawLine (ov004 0x020ae5c4): a Bresenham line from (x0, y0)
  * to (x1, y1), plotted point by point through the virtual PaintSquare (slot 34).
  * A zero-length line plots once. Load-bearing codegen, measured:
@@ -1156,7 +1108,6 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
 // Kept: the cartridge reloads tbl[i] after the cursor-item loop; with CSE on it is reused.
 #pragma push
 #pragma opt_common_subs off
-// @symbol Mg_DrawMenu
 namespace s20ae858 {
 extern "C" {
 extern "C" {
@@ -1234,7 +1185,6 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
 }
 #pragma pop
 
-// @symbol Mg_DrawSpriteList
 namespace s20aea30 {
 extern "C" {
 /* Draws an OAM sprite list: calls Mg_DrawSpriteListEntry on each 8-byte
@@ -1256,7 +1206,6 @@ extern "C" void Mg_DrawSpriteList(void *self, void *actor, void *c2, void *c3)
 }
 }
 
-// @symbol Mg_DrawSpriteListEntry
 namespace s20aea78 {
 extern "C" {
 struct M { int _00, _01, _10, _11; };
@@ -1287,7 +1236,6 @@ struct MgMenuPickView {
     s16 pickDelay;      /* 0x4644 */
 };
 
-// @symbol Mg_UpdateMenu
 namespace s20aeb24 {
 extern "C" {
 extern void func_0203b958(short* o, short* a, short* b);
@@ -1413,7 +1361,6 @@ struct MgMenuSaveArea {
 
 namespace s20aeed8 {
 extern "C" {
-// @symbol _ZN11dScMgBase_c21RestoreScreenFromMenuEv
 /* dScMgBase_c::RestoreScreenFromMenu - slot 30.
 
    WHAT IT DOES, because the name says the opposite of both halves.  This is
@@ -1492,7 +1439,6 @@ void dScMgBase_c::RestoreScreenFromMenu() {
 
 namespace s20af04c {
 extern "C" {
-// @symbol _ZN11dScMgBase_c9CloseMenuEv
 /* dScMgBase_c::CloseMenu - slot 28.
 
    A hit from underneath closes the three-item overlay menu
@@ -1525,7 +1471,6 @@ int dScMgBase_c::CloseMenu()
 
 namespace s20af094 {
 extern "C" {
-// @symbol _ZN11dScMgBase_c17SaveScreenForMenuEv
 /* dScMgBase_c::SaveScreenForMenu - slot 29.
 
    The two buffers at +0x2228 and +0x4228 sit inside the header's pad_228;
@@ -1623,7 +1568,6 @@ int dScMgBase_c::SaveScreenForMenu() {
     }
 }
 
-// @symbol _ZN11dScMgBase_c8OpenMenuEv
 /* dScMgBase_c::OpenMenu - slot 27. Unless mMenuDisabled is set, opens
    the three-item overlay menu: items start at their slide-in positions,
    the prompt is disabled and nothing is highlighted. */
@@ -1643,7 +1587,6 @@ void dScMgBase_c::OpenMenu()
     mMenuCursorPhase = 0;
 }
 
-// @symbol Mg_InitBrush
 namespace s20af2f8 {
 extern "C" {
 extern void MultiStore16(unsigned short val, void *dst, int nbytes);
@@ -1766,7 +1709,6 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
 }
 }
 
-// @symbol Mg_CopySpriteList
 namespace s20af5e0 {
 extern "C" {
 typedef struct Item {
@@ -1829,7 +1771,6 @@ struct D3DBaseView : dScMgBase_c {
  * field is read. The OAM::Render overloads taking a Fix12<int> by value stay
  * mangled (see include/OAM.h). */
 
-// @symbol Hud_RenderSprite
 namespace s20af68c {
 extern "C" {
 extern "C" {
@@ -1852,7 +1793,6 @@ void Hud_RenderSprite(void *attr, int x, int y, int palette, int priority) {
 }
 }
 
-// @symbol Mg_RenderSubSpriteScaled
 namespace s20af770 {
 extern "C" {
 extern "C" {
@@ -1879,7 +1819,6 @@ extern "C" int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, 
 }
 }
 
-// @symbol Mg_RenderSubSpritePalMtx
 namespace s20af868 {
 extern "C" {
 void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5) {
@@ -1899,7 +1838,6 @@ void Mg_RenderSubSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5
 }
 }
 
-// @symbol Mg_RenderSubSpriteMtx
 namespace s20af948 {
 extern "C" {
 void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
@@ -1919,7 +1857,6 @@ void Mg_RenderSubSpriteMtx(void *a, int b, int c, void *m) {
 }
 }
 
-// @symbol RenderOamMainScreen
 namespace s20afa20 {
 extern "C" {
 extern "C" {
@@ -1943,7 +1880,6 @@ extern "C" void RenderOamMainScreen(OamAttr *oam, int x, int y, int palette, int
 }
 }
 
-// @symbol Mg_RenderMainSpriteScaled
 namespace s20afb20 {
 extern "C" {
 extern "C" {
@@ -1970,7 +1906,6 @@ extern "C" int Mg_RenderMainSpriteScaled(int a0, int a1, int a2, int a3, int a4,
 }
 }
 
-// @symbol Mg_RenderMainSpritePalMtx
 namespace s20afc18 {
 extern "C" {
 void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a5) {
@@ -1990,7 +1925,6 @@ void Mg_RenderMainSpritePalMtx(void *a0, int a1, int a2, int a3, int a4, void *a
 }
 }
 
-// @symbol DrawOamSprite
 namespace s20afcf8 {
 extern "C" {
 extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
@@ -2008,7 +1942,6 @@ extern "C" void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx) {
 }
 }
 
-// @symbol Mg_RenderSpriteBoth
 namespace s20afdd0 {
 extern "C" {
 extern "C" {
@@ -2037,7 +1970,6 @@ void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4) {
 }
 }
 
-// @symbol Mg_RenderSpriteBothScaled
 namespace s20aff38 {
 extern "C" {
 extern "C" {
@@ -2077,7 +2009,6 @@ extern "C" int Mg_RenderSpriteBothScaled(struct OamAttr *a0, int a1, int a2, int
 }
 }
 
-// @symbol RenderOamBothScreens
 namespace s20b0104 {
 extern "C" {
 extern int sMgTopScreenYOffset;
@@ -2103,7 +2034,6 @@ void RenderOamBothScreens(void *attr, int x, int y, int palette, int priority, v
 }
 }
 
-// @symbol Mg_RenderSpriteBothPalMtx
 namespace s20b023c {
 extern "C" {
 extern int sMgTopScreenYOffset;
@@ -2128,7 +2058,6 @@ void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4) {
 }
 }
 
-// @symbol Mg_RenderSpriteBothMtx
 namespace s20b0380 {
 extern "C" {
 extern int sMgTopScreenYOffset;
@@ -2153,7 +2082,6 @@ void Mg_RenderSpriteBothMtx(void *a0, int a1, int a2, void *a3) {
 }
 }
 
-// @symbol Mg_GetTopScreenYOffset
 namespace s20b04c0 {
 extern "C" {
 extern int sMgTopScreenYOffset;
@@ -2165,7 +2093,6 @@ int Mg_GetTopScreenYOffset(void) {
 }
 }
 
-// @symbol Mg_SetTopScreenYOffset
 namespace s20b04d0 {
 extern "C" {
 extern int sMgTopScreenYOffset;
@@ -2175,7 +2102,6 @@ void Mg_SetTopScreenYOffset(int v) {
 }
 }
 
-// @symbol _ZN11dScMgBase_c14GetDisplayModeEv
 /* dScMgBase_c::GetDisplayMode - slot 26: which display layout the scene
  * uses. BeforeInitResources turns the 3D engines on for any nonzero answer.
  *
@@ -2188,18 +2114,15 @@ int dScMgBase_c::GetDisplayMode()
     return 0;
 }
 
-// @symbol _ZN11dScMgBase_c16OnPendingDestroyEv
 void dScMgBase_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN11dScMgBase_c6RenderEv
 s32 dScMgBase_c::Render()
 {
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c12BeforeRenderEv
 /* Draws the menu instead of the scene while it is open. The two loops draw
  * the three banner records in two passes, those with mGfxSlot clear first. */
 int dScMgBase_c::BeforeRender()
@@ -2249,13 +2172,11 @@ int dScMgBase_c::BeforeRender()
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c8BehaviorEv
 s32 dScMgBase_c::Behavior()
 {
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c14BeforeBehaviorEv
 /* Handles input and the menu, runs the UI state controller and the shared
  * records, approaches mCreditsShown toward mCredits, and advances the 40-frame
  * counter. Returns 0 to stop the derived scene's behavior this frame. */
@@ -2327,7 +2248,6 @@ int dScMgBase_c::BeforeBehavior()
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c21AfterCleanupResourcesEj
 void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2) {
@@ -2349,7 +2269,6 @@ void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
     dScene_c::AfterCleanupResources(vfSuccess);
 }
 
-// @symbol _ZN11dScMgBase_c18AfterInitResourcesEj
 /* Finishes the display and font setup, then reports to dScene_c. */
 void dScMgBase_c::AfterInitResources(u32 vfSuccess)
 {
@@ -2359,7 +2278,6 @@ void dScMgBase_c::AfterInitResources(u32 vfSuccess)
     dScene_c::AfterInitResources(vfSuccess);
 }
 
-// @symbol _ZN11dScMgBase_c19BeforeInitResourcesEv
 namespace s20b0930 {
 extern "C" {
 /* local extern: decl_common.h declares this `(char *)`, but the definition
@@ -2402,7 +2320,6 @@ bool dScMgBase_c::BeforeInitResources()
     return 1;
 }
 
-// @symbol Mg_ResumeSharedState
 namespace s20b0a38 {
 extern "C" {
 /* Clears mStateController.mSuspended, so BeforeBehavior and BeforeRender
@@ -2416,7 +2333,6 @@ void Mg_ResumeSharedState(void)
 }
 }
 
-// @symbol Mg_SetSharedState
 namespace s20b0a54 {
 extern "C" {
 /* Sets the UI state controller's state and clears mRecordRevealTimer. The singleton
@@ -2432,7 +2348,6 @@ extern "C" void Mg_SetSharedState(s32 state)
 }
 }
 
-// @symbol FreeGfxSlotsById
 namespace s20b0aa0 {
 extern "C" {
 extern void Banner_Free(void *c);
@@ -2473,7 +2388,6 @@ void FreeGfxSlotsById(int arg)
 }
 }
 
-// @symbol Mg_CheckBannerButton
 namespace s20b0b1c {
 extern "C" {
 
@@ -2544,7 +2458,6 @@ int Mg_CheckBannerButton(int arg) {
 }
 }
 
-// @symbol Mg_ShowBanner
 namespace s20b0cac {
 extern "C" {
 extern struct MgBanner gMgBanners[];
@@ -2564,7 +2477,6 @@ void Mg_ShowBanner(int c, int a1, int a2, int a3, int arg5, short arg6) {
 }
 }
 
-// @symbol Mg_ResetOverlays
 namespace s20b0d30 {
 extern "C" {
 extern char sMgBannerGfxSlotUsed[];
@@ -2586,7 +2498,6 @@ void Mg_ResetOverlays(void) {
 }
 }
 
-// @symbol Mg_DrawBlinkSprite
 namespace s20b0d8c {
 extern "C" {
 extern s32 GetGameLanguage(void);
@@ -2605,7 +2516,6 @@ void Mg_DrawBlinkSprite(void *c, s32 arg1, s32 arg2)
 }
 }
 
-// @symbol Mg_DrawPrompt
 namespace s20b0de0 {
 extern "C" {
 s32 GetGameLanguage(void);
@@ -2636,7 +2546,6 @@ void Mg_DrawPrompt(char* c)
 }
 }
 
-// @symbol Mg_DrawTally
 namespace s20b0e84 {
 extern "C" {
 extern int GetGameLanguage(void);
@@ -2826,7 +2735,6 @@ extern "C" void Mg_DrawTally(dScMgBase_c *sl, int sb) {
 }
 }
 
-// @symbol Mg_DrawRecordTable
 namespace s20b14f0 {
 extern "C" {
 extern int Mg_GetLastRecordRank(void* self, int a);
@@ -2909,7 +2817,6 @@ neg:
 }
 }
 
-// @symbol Mg_DrawRecordRow
 namespace s20b1710 {
 extern "C" {
 extern int GetGameLanguage(void);
@@ -2983,7 +2890,6 @@ void Mg_DrawRecordRow(dScMgBase_c *scene, int x, int y, int val) {
 }
 }
 
-// @symbol Mg_DrawTopLeftCounter
 namespace s20b19f0 {
 extern "C" {
 s32 GetGameLanguage(void);
@@ -2998,7 +2904,6 @@ void Mg_DrawTopLeftCounter(int value) {
 }
 }
 
-// @symbol Mg_DrawTopRightCounter
 namespace s20b1a5c {
 extern "C" {
 s32 GetGameLanguage(void);
@@ -3021,7 +2926,6 @@ void Mg_DrawTopRightCounter(int a0, int a1){
 }
 }
 
-// @symbol Mg_GetLevel
 namespace s20b1aec {
 extern "C" {
 /* The scene's mLevel; 0 with no scene. */
@@ -3033,7 +2937,6 @@ int Mg_GetLevel(void) {
 }
 }
 
-// @symbol Mg_LoseCredits
 namespace s20b1b08 {
 extern "C" {
 extern void Mg_SubCredits(void *c, int val);
@@ -3046,7 +2949,6 @@ void Mg_LoseCredits(int amount) {
 }
 }
 
-// @symbol Mg_GainCredits
 namespace s20b1b40 {
 extern "C" {
 extern void Mg_AddCredits(void *c, s32 delta);
@@ -3059,7 +2961,6 @@ void Mg_GainCredits(int amount) {
 }
 }
 
-// @symbol Mg_SubCredits
 namespace s20b1b78 {
 extern "C" {
 /* mCredits -= val, clamped to 0..9999. */
@@ -3074,7 +2975,6 @@ void Mg_SubCredits(void* c, int val) {
 }
 }
 
-// @symbol Mg_AddCredits
 namespace s20b1ba0 {
 extern "C" {
 /* mCredits += delta, clamped to 0..9999. */
@@ -3089,7 +2989,6 @@ void Mg_AddCredits(void *c, s32 delta)
 }
 }
 
-// @symbol Mg_DrawCredits
 namespace s20b1bc8 {
 extern "C" {
 extern void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3);
@@ -3109,7 +3008,6 @@ void Mg_DrawCredits(char *a0, int a1, int a2, int a3)
 }
 }
 
-// @symbol Mg_RenderSpriteOnMtx
 namespace s20b1c68 {
 extern "C" {
 struct M { int _00, _01, _10, _11; };
@@ -3131,7 +3029,6 @@ void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5
 }
 }
 
-// @symbol Mg_RenderSpriteOn
 namespace s20b1cf0 {
 extern "C" {
 void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
@@ -3153,7 +3050,6 @@ void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int sel, int e) {
 }
 }
 
-// @symbol Mg_RenderSpriteOnNoMtx
 namespace s20b1d60 {
 extern "C" {
 extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
@@ -3173,7 +3069,6 @@ void Mg_RenderSpriteOnNoMtx(void* a0, int a1, int a2, int a3, int a4){
 }
 }
 
-// @symbol Mg_DrawCreditsIcon
 namespace s20b1de8 {
 extern "C" {
 extern int GetGameLanguage(void);
@@ -3188,7 +3083,6 @@ void Mg_DrawCreditsIcon(int r0, int r1, int r2, int r3) {
 }
 }
 
-// @symbol Mg_DrawScoreTally
 namespace s20b1e34 {
 extern "C" {
 extern void Mg_DrawTally(dScMgBase_c *sl, int sb);
@@ -3200,7 +3094,6 @@ void Mg_DrawScoreTally(void* a, int unused1, int unused2, int unused3) {
 }
 }
 
-// @symbol Mg_DrawTopCenterCounter
 namespace s20b1e44 {
 extern "C" {
 extern int GetGameLanguage(void);
@@ -3215,7 +3108,6 @@ void Mg_DrawTopCenterCounter(int arg) {
 }
 }
 
-// @symbol Mg_DrawNumber
 namespace s20b1ea4 {
 extern "C" {
 extern OamAttr *sMgDigitSprites[];
@@ -3297,7 +3189,6 @@ void Mg_DrawNumber(int x, int a1, int val, int a3, int a4, int mode, int fb) {
 }
 
 // Kept: without it the thousands counter moves from r0 to r3 (register colour only).
-// @symbol Mg_DrawNumberRotated
 #pragma push
 #pragma opt_propagation off
 namespace s20b2220 {
@@ -3366,7 +3257,6 @@ void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u1
 }
 #pragma pop
 
-// @symbol Mg_DrawBigNumber
 namespace s20b2444 {
 extern "C" {
 extern OamAttr *sMgDigitSprites[];
@@ -3414,7 +3304,6 @@ void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx)
 }
 }
 
-// @symbol Mg_DrawStockCounter
 namespace s20b2574 {
 extern "C" {
 extern int GetGameLanguage(void);
@@ -3445,7 +3334,6 @@ void Mg_DrawStockCounter(int arg0, int arg1)
 
 namespace s20b265c {
 extern "C" {
-// @symbol _ZN11dScMgBase_c11InitEnginesEv
 /* dScMgBase_c::InitEngines - slot 33.  The ROM names nothing here: InitEngines
    is the repo's no-name spelling after the +0x84 vtable offset, as fBase_c
    uses for Virtual34 and Virtual38.  See the slot-33 block in
@@ -3554,7 +3442,6 @@ void dScMgBase_c::InitEngines() {
 
 namespace s20b27f4 {
 extern "C" {
-// @symbol _ZN11dScMgBase_c16InitMainScreenBgEv
 // recovered name: dScMgBase_c_AfterClsn  -- WRONG, see below
 /* dScMgBase_c::InitMainScreenBg - slot 32.
 
@@ -3597,7 +3484,6 @@ void dScMgBase_c::InitMainScreenBg() {
 
 namespace s20b2880 {
 extern "C" {
-// @symbol _ZN11dScMgBase_c15InitSubScreenBgEv
 // recovered name: dScMgBase_c_Kill  -- WRONG, see below
 /* dScMgBase_c::InitSubScreenBg - slot 31.
 
@@ -3636,7 +3522,6 @@ int dScMgBase_c::InitSubScreenBg() {
     LoadCompressedFileAt(0x5b, G2S::GetBG1ScrPtr());
 }
 
-// @symbol Mg_ResetBgOffsets
 namespace s20b290c {
 extern "C" {
 /* Resets the scroll of all eight BG layers, main and sub, to (0, 0). */
@@ -3653,7 +3538,6 @@ void Mg_ResetBgOffsets(void) {
 }
 }
 
-// @symbol Mg_DisableAllBanks
 namespace s20b2980 {
 extern "C" {
 void Mg_DisableAllBanks(void) {
@@ -3662,13 +3546,11 @@ void Mg_DisableAllBanks(void) {
 }
 }
 
-// @symbol _ZN11dScMgBase_c10OnDealDoneEv
 /* dScMgBase_c::OnDealDone - slot 21. */
 void dScMgBase_c::OnDealDone()
 {
 }
 
-// @symbol _ZN11dScMgBase_c11OnNewRecordEv
 /* Slot 20: the shared results state calls it once while it shows a new
    record (dMgState_c, state 17). See dScMgBase_c.h. */
 /* The base does nothing: the ROM body is a single `bx lr`. */
@@ -3676,7 +3558,6 @@ void dScMgBase_c::OnNewRecord()
 {
 }
 
-// @symbol _ZN11dScMgBase_c11CanEndStateEi
 /* dScMgBase_c::CanEndState - vtable slot 19. Both the name and the signature are evidenced here: this
    body carries its own `recovered name:` above, and dScMgJump_c and
    dScMgBSC_c carry theirs. The parameter is an int, not dActor_c.h:132's
@@ -3686,7 +3567,6 @@ int dScMgBase_c::CanEndState(int /* mode */)
     return 1;
 }
 
-// @symbol _ZN11dScMgBase_c10StartRoundEi
 /* vtable slot 18. The name is NOT a `recovered name:` -- this body carried
    none. It comes from include/dActor_c.h:131 and from ov006/symbols.txt,
    which already named dScMgCoin_c's override of this slot. The signature,
@@ -3697,7 +3577,6 @@ void dScMgBase_c::StartRound(int arg)
 {
 }
 
-// @symbol Mg_CallStartRound
 namespace s20b29a0 {
 /* Calls the scene's StartRound (slot 18). Its callers, all in dMgState_c,
    pass the scene singleton and its mState, declaring the state as a
@@ -3719,7 +3598,6 @@ extern "C" void Mg_CallStartRound(dScMgBase_c *scene, void *state)
 
 namespace s20b2adc {
 extern "C" {
-// @symbol _ZN11dScMgBase_cC2Ev
 extern short sMgSceneKindByGame[];
 }
 }
@@ -3759,9 +3637,6 @@ dScMgBase_c::dScMgBase_c() : mRunDuringFade(0), unk_0c2(1) {
     Mg_SetTopRecord(func_02013580(Mg_GetSaveTable(this), 0));
 }
 
-// @symbol _ZN11dScMgBase_cD2Ev
-// @symbol _ZN11dScMgBase_cD0Ev
-// @symbol _ZN11dScMgBase_cD1Ev
 /* The destructor clears the shared minigame pointer; CodeWarrior supplies the
    vptr restores and the dScene_c teardown. This one out-of-line definition
    emits all three variants, D2 at 0x020b29c0, D0 at 0x020b2a18 and D1 at

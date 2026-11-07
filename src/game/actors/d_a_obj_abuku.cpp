@@ -44,7 +44,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjAbuku_c_classInit
 extern "C" daObjAbuku_c *daObjAbuku_c_classInit() {
     return new daObjAbuku_c();
 }
@@ -54,7 +53,6 @@ extern "C" SpawnInfo<daObjAbuku_c> g_profile_OBJ_ABUKU = {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daObjAbuku_c13InitResourcesEv
 int daObjAbuku_c::InitResources() {
     mdCcAc_c.Init(this, 0x96000, 0x96000, 0x100002, 0);
     mLifeTimer = 0x12c;
@@ -63,7 +61,6 @@ int daObjAbuku_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daObjAbuku_c8BehaviorEv
 int daObjAbuku_c::Behavior() {
     mSwayAngle += 0x400;
     int v = *(volatile unsigned short *)(&mSwayAngle);
@@ -94,7 +91,6 @@ int daObjAbuku_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daObjAbuku_c18IsNearWaterSurfaceEv
 /* Water probe cast down from 500 units above the bubble: it hits only once
    the surface is within that reach, and the bubble pops there. */
 int daObjAbuku_c::IsNearWaterSurface() {
@@ -119,7 +115,6 @@ int daObjAbuku_c::IsNearWaterSurface() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daObjAbuku_c3PopEv
 void daObjAbuku_c::Pop() {
     Sound::PlayBank3(0xb, mCamSpacePos);
     Particle::System::NewSimple(2, mPosX, mPosY, mPosZ);

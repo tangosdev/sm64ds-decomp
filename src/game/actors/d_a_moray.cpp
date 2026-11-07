@@ -152,8 +152,6 @@ int fdiv(int a, int b);
  * sizeof(Vector3). D0 then hands the object back through dActor_c's inline
  * operator delete. mwcc also emits D2, which the ROM does not have; the
  * manifest licenses it as deadstrip. */
-// @symbol _ZN9daMoray_cD1Ev
-// @symbol _ZN9daMoray_cD0Ev
 daMoray_c::~daMoray_c()
 {
 }
@@ -171,7 +169,6 @@ daMoray_c::~daMoray_c()
    Hurts the actor recorded in the first cylinder's otherOwner (set by the
    hit test since the previous Clear) when that actor is the PLAYER (actor
    191). Called from Behavior. */
-// @symbol _ZN9daMoray_c19func_ov016_02111284Ev
 void daMoray_c::func_ov016_02111284()
 {
     Vector3 va;
@@ -283,7 +280,6 @@ void daMoray_c::func_ov016_02111284()
 
 /* Retreat execute. When the timer set by the retreat init runs out, stops,
    turns back to the spawn angles and returns to den wait. */
-// @symbol _ZN9daMoray_c19func_ov016_02111534Ev
 int daMoray_c::func_ov016_02111534()
 {
     if (*(u16 *)&this->mStateTimer == 0) {
@@ -302,7 +298,6 @@ int daMoray_c::func_ov016_02111534()
 /* Retreat init: mStateTimer = 100 frames, mHorzSpeed = 0x14000 (20 units).
    Behavior counts the timer down each frame; daMoray_c::func_ov016_02111534 is the only
    state in this file that tests it for 0. */
-// @symbol _ZN9daMoray_c16BookSwitch_SpawnEv
 int daMoray_c::BookSwitch_Spawn()
 {
     this->mStateTimer = 100;
@@ -318,7 +313,6 @@ int daMoray_c::BookSwitch_Spawn()
    node it plays sound 0xfa and steps to the next node, wrapping to 0 past
    mPathNodeCount. Variant 1 arriving at node 0 instead steps to node 1 and
    enters the retreat state, without the sound. */
-// @symbol _ZN9daMoray_c19func_ov016_021115c0Ev
 int daMoray_c::func_ov016_021115c0()
 {
     PathPtr path;
@@ -360,7 +354,6 @@ int daMoray_c::func_ov016_021115c0()
 }
 
 /* Path-swim init: the looping swim animation. */
-// @symbol _ZN9daMoray_c19func_ov016_02111718Ev
 int daMoray_c::func_ov016_02111718()
 {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d30.filePtr, 8, 0, 0x1000, 0);
@@ -372,7 +365,6 @@ int daMoray_c::func_ov016_02111718()
    units) out, or 0x2bc000 (700 units) when the entrance filter is 1,
    at up to 0x14000 (20 units) per frame. When the animation finishes it
    stops and enters swim-out. */
-// @symbol _ZN9daMoray_c19func_ov016_02111758Ev
 int daMoray_c::func_ov016_02111758()
 {
     Vector3 localOffset;
@@ -402,7 +394,6 @@ int daMoray_c::func_ov016_02111758()
 }
 
 /* Lunge init: bite animation with flag bit 30, and the lunge sound. */
-// @symbol _ZN9daMoray_c19func_ov016_02111860Ev
 int daMoray_c::func_ov016_02111860()
 {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d20.filePtr, 8, 0x40000000, 0x1000,
@@ -414,7 +405,6 @@ int daMoray_c::func_ov016_02111860()
 /* Swim-out execute. Moves toward a point 0x76c000 (1900 units) from the home
    point along its facing at up to 0x14000 (20 units) per frame, and enters
    path-swim, with the sound, once within 20 units of it. */
-// @symbol _ZN9daMoray_c19func_ov016_021118b4Ev
 int daMoray_c::func_ov016_021118b4()
 {
     Vector3 localOffset;
@@ -437,7 +427,6 @@ int daMoray_c::func_ov016_021118b4()
 }
 
 /* Swim-out init: idle animation and the same sound. */
-// @symbol _ZN9daMoray_c19func_ov016_02111994Ev
 int daMoray_c::func_ov016_02111994()
 {
     this->unk_400 = 0;
@@ -463,7 +452,6 @@ int daMoray_c::func_ov016_02111994()
    after the respellings below, not inherited. */
 #pragma push
 #pragma opt_propagation off
-// @symbol _ZN9daMoray_c19func_ov016_021119ecEv
 int daMoray_c::func_ov016_021119ec()
 {
     daPly_c *player;
@@ -536,7 +524,6 @@ int daMoray_c::func_ov016_021119ec()
 #pragma pop
 
 /* Den-wait init: the idle animation. */
-// @symbol _ZN9daMoray_c19func_ov016_02111bacEv
 int daMoray_c::func_ov016_02111bac()
 {
     this->unk_400 = 0;
@@ -545,7 +532,6 @@ int daMoray_c::func_ov016_02111bac()
 }
 
 /* Installs a state and runs its init. */
-// @symbol _ZN9daMoray_c19func_ov016_02111bf0EPNS_5StateE
 int daMoray_c::func_ov016_02111bf0(State *state)
 {
     this->mState = state;
@@ -558,7 +544,6 @@ int daMoray_c::func_ov016_02111bf0(State *state)
 /* Poses the body: the model matrix from position and angles, then each
    segment's world position out of its bone transform, and the carried
    star's matrix off the jaw bone. */
-// @symbol _ZN9daMoray_c19func_ov016_02111c40Ev
 void daMoray_c::func_ov016_02111c40()
 {
     Vector3 localOffset;
@@ -645,7 +630,6 @@ void daMoray_c::func_ov016_02111c40()
     star->mCarryMatrix = &this->mStarMtx;
 }
 
-// @symbol _ZN9daMoray_c16CleanupResourcesEv
 s32 daMoray_c::CleanupResources()
 {
     data_ov016_02114d38.Release();
@@ -655,12 +639,10 @@ s32 daMoray_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daMoray_c16OnPendingDestroyEv
 void daMoray_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daMoray_c6RenderEv
 s32 daMoray_c::Render()
 {
     int i;
@@ -682,7 +664,6 @@ s32 daMoray_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daMoray_c8BehaviorEv
 s32 daMoray_c::Behavior()
 {
     dActor_c *star;
@@ -732,7 +713,6 @@ s32 daMoray_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daMoray_c13InitResourcesEv
 s32 daMoray_c::InitResources()
 {
     Vector3 node;
@@ -851,7 +831,6 @@ s32 daMoray_c::InitResources()
  * The implicit constructor builds the base, collision cylinders, background
  * checker, model animation, and seven segment positions in declaration order.
  * Vector3's empty default constructor is the array callback at 0x0203d384. */
-// @symbol daMoray_c_classInit
 extern "C" daMoray_c *daMoray_c_classInit()
 {
     return new daMoray_c;

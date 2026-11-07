@@ -1,16 +1,4 @@
 //cpp
-// @symbol func_0203ad84
-// @symbol _ZN7PathPtr6FromIDEj
-// @symbol _ZN7PathPtr12SetPathTableEP7PathDefi
-// @symbol _ZN7PathPtr12GetNodeTableEv
-// @symbol _ZN7PathPtr12SetNodeTableEPv
-// @symbol _ZNK7PathPtr7GetNodeER7Vector3j
-// @symbol _ZNK7PathPtr5LoopsEv
-// @symbol _ZNK7PathPtr13GetPullFactorEv
-// @symbol _ZNK7PathPtr9GetUnk004Ev
-// @symbol _ZNK7PathPtr8NumNodesEv
-// @symbol _ZN7PathPtr6SetDefEP7PathDef
-// @symbol _ZN7PathPtrC1Ev
 /* PathPtr -- a read cursor over one entry of the level's path table.
  *
  * FromID binds the handle to the id'th PathDef; the accessors read through
@@ -43,7 +31,6 @@ extern char data_020994d4[];
 extern char data_020a0d90[];
 }
 
-// @symbol func_0203ad84
 extern "C" void func_0203ad84(void) {
     func_02018434(data_020994d4, (int)data_020a0d90, 0x1f);
     data_020a0d90[0x1f] = 0;

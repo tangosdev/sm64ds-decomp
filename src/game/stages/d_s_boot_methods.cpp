@@ -66,7 +66,6 @@ enum BootMenuState {
 
 #define LADR(p) ((void *)(unsigned int)(p))
 
-// @symbol _ZN9dScBoot_c13InitResourcesEv
 /* dScBoot_c::InitResources -- vtable slot 0, arm9 0x02005a58.
  *
  * The very first thing the game draws. It hands the four VRAM banks to
@@ -147,7 +146,6 @@ s32 dScBoot_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN9dScBoot_c8BehaviorEv
 /* dScBoot_c::Behavior -- vtable slot 6.
  *
  * The boot menu's state machine, in mState: wait out the fade (0/7), watch
@@ -356,7 +354,6 @@ s32 dScBoot_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9dScBoot_c13func_02005348Ev
 /* Repaints two 16-by-4-tile buttons on the sub screen's BG1 map at +0x4c0.
  * They sit side by side in a 32-tile-wide map. The selected button uses
  * palette bank 2 when the flash timer is zero; all other tiles use bank 1. */
@@ -386,7 +383,6 @@ void dScBoot_c::func_02005348() {
     }
 }
 
-// @symbol func_02005324
 /* Absorbed from the retired arm9 helper func_02005324
  * (arm9 0x02005324..0x02005348): pre-talk camera backup plus event-flag
  * setup, returns 1. Defined last because this file emits .text in reverse

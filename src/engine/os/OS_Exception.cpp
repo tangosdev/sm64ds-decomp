@@ -38,7 +38,6 @@ void OSi_GetAndDisplayContext(void);
 void OSi_SetExContext(void);
 void OSi_DisplayExContext(void);
 
-// @symbol OS_InitException
 void OS_InitException(void) {
     u32 debugger = *(u32 *)HW_EXCEP_VECTOR_BUF_FOR_DEBUGGER;
     if (debugger >= 0x2600000 && debugger < 0x2800000)
@@ -58,7 +57,6 @@ void OS_InitException(void) {
     data_020a63a0 = 0;
 }
 
-// @symbol OS_SetUserExceptionHandler
 void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg) {
     data_020a63a0 = handler;
     data_020a63a4 = arg;
@@ -67,7 +65,6 @@ void OS_SetUserExceptionHandler(OSExceptionHandler handler, void *arg) {
 /* Run the debugger's handler if there is one. Otherwise save r0-r3, sp and
  * lr below the end of ITCM, record the context on an abort (mode 0x17) or an
  * undefined instruction (0x1b), and halt. */
-// @symbol OSi_ExceptionHandler
 asm void OSi_ExceptionHandler(void) {
     ldr ip, =data_020a63a8
     ldr ip, [ip]
@@ -104,7 +101,6 @@ Lspin2:
 
 /* Pushes lr alone and calls out with no stack pad, which mwccarm never
  * emits for C: the SDK writes this one as asm. */
-// @symbol OSi_GetAndDisplayContext
 asm void OSi_GetAndDisplayContext(void) {
     stmdb sp!, {lr}
     bl OSi_SetExContext
@@ -116,7 +112,6 @@ asm void OSi_GetAndDisplayContext(void) {
 /* Copy the faulting context into OSi_ExContext: the registers saved at ip,
  * r4-r11, the CP15 and exception-mode words, and the banked sp, lr and spsr
  * of the mode that faulted. */
-// @symbol OSi_SetExContext
 asm void OSi_SetExContext(void) {
     ldr r1, =data_020a63ac
     mrs r2, cpsr
@@ -157,7 +152,6 @@ asm void OSi_SetExContext(void) {
 
 /* Call the user's exception handler in system mode (0x9f) on the current
  * stack, with the protection unit on. */
-// @symbol OSi_DisplayExContext
 void OSi_DisplayExContext(void) {
     if (data_020a63a0 == 0)
         return;

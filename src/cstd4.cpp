@@ -20,14 +20,12 @@ extern "C" {
 // HAND-ASM PRIMITIVE: `swp` atomic swap has no C equivalent under mwccarm, so asm is the source.
 // Store value to *lock and return the word it held. The isdoverlay table
 // edits (func_0206cf98, func_0206d32c) spin on it with 0x80 to take a lock.
-// @symbol func_0206dab4
 asm u32 func_0206dab4(u32 value, void *lock) { swp r0, r0, [r1]; bx lr }
 }
 
 #pragma push
 #pragma defer_codegen off
 // HAND-ASM PRIMITIVE: compiler trap builtin; the asm block is the source.
-// @symbol _ZN4cstd14__builtin_trapEv
 namespace cstd {
 
 void __builtin_trap(void)
@@ -41,7 +39,6 @@ void __builtin_trap(void)
 extern "C" {
 #pragma push
 #pragma defer_codegen off
-// @symbol __exit
 extern int OS_TryLockMutex(void *p);
 extern void OS_LockMutex(void *p);
 extern void OS_UnlockMutex(void *p);
@@ -107,7 +104,6 @@ void __destroy_global_chain(void);
 /* MSL exit: unless abort is under way (__aborting),
    destroy the static objects (__destroy_global_chain) and call
    __stdio_exit once; then __exit(status). */
-// @symbol exit
 void exit(int status) {
     if (__aborting == 0) {
         __destroy_global_chain();
@@ -127,7 +123,6 @@ extern int __aborting;
 
 /* MSL abort: raise(SIGABRT), which is 1 here; set __aborting so exit skips
    the static destructors and __stdio_exit; then exit(EXIT_FAILURE). */
-// @symbol abort
 void abort(void) {
     raise(1);
     __aborting = 1;
@@ -144,7 +139,6 @@ void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags);
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206dc7c
 float func_0206dc7c(double a, double b, int op) {
     Pair u1, u2, out;
     u1.d = a;
@@ -156,7 +150,6 @@ float func_0206dc7c(double a, double b, int op) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206dcd4
 double func_0206dcd4(double a, double b, int op) {
     Pair u1, u2, out;
     u1.d = a;
@@ -168,7 +161,6 @@ double func_0206dcd4(double a, double b, int op) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206dd30
 float func_0206dd30(float a, float b, int op) {
     Pair u1, u2, out;
     u1.f = a;
@@ -180,7 +172,6 @@ float func_0206dd30(float a, float b, int op) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206dd7c
 double func_0206dd7c(double a, int op) {
     Pair u1, out;
     u1.d = a;
@@ -191,7 +182,6 @@ double func_0206dd7c(double a, int op) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206ddcc
 float func_0206ddcc(float a, int op) {
     Pair u1, out;
     u1.f = a;
@@ -229,7 +219,6 @@ typedef struct FpHandlerTable {
 } FpHandlerTable;
 extern void *func_02073238(void);
 
-// @symbol func_0206de14
 void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags)
 {
   FpHandlerTable *table = (FpHandlerTable *) func_02073238();
@@ -285,7 +274,6 @@ extern char data_0209a330[];
 typedef struct S6e06c S6e06c;
 int fflush(S6e06c *p);
 
-// @symbol __flush_all
 int __flush_all(void) {
     int result = 0;
     char *p = data_0209a330;
@@ -305,7 +293,6 @@ int __flush_all(void) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol _ZN4cstd3absEi
 namespace cstd {
 
 int abs(int x)
@@ -322,7 +309,6 @@ extern "C" {
 void __convert_from_newlines(int a, int *b);
 void __prep_buffer(char *self);
 typedef int (*Fn)(int, int, int *, int);
-// @symbol __flush_buffer
 /* MSL's buffer_io.c: __flush_buffer, __prep_buffer and
    __convert_from_newlines, statement for statement with Spirit Tracks'
    copy. In MSL's FILE terms: +0x00 handle, +0x18 position, +0x1c buffer,
@@ -364,7 +350,6 @@ int __flush_buffer(char *thiz, int *out)
 
 #pragma push
 #pragma defer_codegen off
-// @symbol __prep_buffer
 void __prep_buffer(char *self)
 {
     *(int *)(self + 0x24) = *(int *)(self + 0x1c);
@@ -377,7 +362,6 @@ void __prep_buffer(char *self)
 
 #pragma push
 #pragma defer_codegen off
-// @symbol __convert_from_newlines
 void __convert_from_newlines(int a, int *b)
 {
 }
@@ -409,7 +393,6 @@ typedef struct S6e06c {
    fflush(NULL) flushes every FILE through __flush_all; a FILE in error or
    closed fails; one open for reading succeeds; otherwise write out the
    buffer (__flush_buffer) and reset the state, position and length. */
-// @symbol fflush
 int fflush(S6e06c *p)
 {
     if (p == 0) {
@@ -449,7 +432,6 @@ int fflush(S6e06c *p)
 #pragma defer_codegen off
 int func_0206e218(int a, int b);
 
-// @symbol func_0206e184
 u32 func_0206e184(char *dst, u16 *src, u32 max)
 {
     u32 total = 0;
@@ -482,7 +464,6 @@ u32 func_0206e184(char *dst, u16 *src, u32 max)
 #pragma defer_codegen off
 extern void *data_0209a438[];
 
-// @symbol func_0206e218
 int func_0206e218(int a, int b) {
     void **p = (void **)data_0209a438[2];
     ((void (*)(int, int))p[1])(a, b);
@@ -491,7 +472,6 @@ int func_0206e218(int a, int b) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206e240
 int func_0206e240(unsigned char *p, unsigned char v) {
     if (p == 0) return 0;
     *p = v;
@@ -501,7 +481,6 @@ int func_0206e240(unsigned char *p, unsigned char v) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206e254
 int func_0206e254(unsigned short *dst, unsigned char *src, int flag) {
     if (src == 0) return 0;
     if (flag == 0) return -1;
@@ -513,7 +492,6 @@ int func_0206e254(unsigned short *dst, unsigned char *src, int flag) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206e28c
 int func_0206e28c(const u8* a, const u8* b, u32 n) {
     while (n != 0) {
         u8 ca = *a++;
@@ -530,7 +508,6 @@ int func_0206e28c(const u8* a, const u8* b, u32 n) {
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206e2cc
 u8 *func_0206e2cc(u8 *p, int c, unsigned int n)
 {
     u8 ch = (u8)c;
@@ -545,7 +522,6 @@ u8 *func_0206e2cc(u8 *p, int c, unsigned int n)
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206e2f8
 /* MSL memset: forwards all three args to __fill_mem (func_0206e330) and
  * returns the destination. The return is void *, the pointer the body hands
  * back in r0. */
@@ -555,7 +531,6 @@ void *func_0206e2f8(void *dst, int val, unsigned int n) { func_0206e330(dst, val
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206e310
 void *func_0206e310(void *dst, const void *src, unsigned int n)
 {
     unsigned char *d = (unsigned char *)dst;
@@ -619,7 +594,6 @@ extern char data_0209a5e8[];
 /* recovered: MSL memset/__fill_mem -- byte head, 32-byte unrolled block,
  * word tail, byte tail. The head and block loops share one counter, which is
  * what colours both into r3; opt_lifetimes off keeps the word counter separate. */
-// @symbol func_0206e330
 void func_0206e330(void *dst, int val, u32 n)
 {
     u8 *p = (u8 *)dst;
@@ -677,7 +651,6 @@ void func_0206e330(void *dst, int val, u32 n)
 #pragma push
 #pragma defer_codegen off
 struct Ctx { char *buf; unsigned int len; int z; };
-// @symbol func_0206e3dc
 unsigned int func_0206e3dc(char *buf, unsigned int len,
                            unsigned int fmtAddr, unsigned int val) {
     struct Ctx ctx;
@@ -702,7 +675,6 @@ unsigned int func_0206e3dc(char *buf, unsigned int len,
 
 #pragma push
 #pragma defer_codegen off
-// @symbol func_0206e450
 int func_0206e450(char *obj, const void *src, unsigned int n)
 {
     unsigned int off = *(unsigned int*)(obj + 8);
@@ -727,7 +699,6 @@ int func_0206e450(char *obj, const void *src, unsigned int n)
  * and emits the result through the caller's WriteProc, applying field width,
  * justification and fill. Returns the character count, or -1 if WriteProc fails.
  */
-// @symbol __pformatter
 int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProcArg,
                  const unsigned char *format_str, char *arg)
 {

@@ -51,12 +51,10 @@ extern CLPS_Block data_ov045_021124f0;
 extern "C" ResourceDescriptor data_ov045_02112fdc = {&data_ov045_02113220, &data_ov045_02113228,
                                                      &data_ov045_021124f0};
 
-// @symbol daObjKm2_Gura_c_classInit
 extern "C" daObjKm2_Gura_c *daObjKm2_Gura_c_classInit() {
     return new daObjKm2_Gura_c();
 }
 
-// @symbol g_profile_KM2_GURA
 extern "C" SpawnInfo<daObjKm2_Gura_c> g_profile_KM2_GURA = {
     daObjKm2_Gura_c_classInit,
     0x008d, /* KM2_GURA registry id 141 */
@@ -68,12 +66,10 @@ extern "C" SpawnInfo<daObjKm2_Gura_c> g_profile_KM2_GURA = {
     0,
 };
 
-// @symbol _ZN15daObjKm2_Gura_c13InitResourcesEv
 s32 daObjKm2_Gura_c::InitResources() {
     return InitResourcesFrom(&data_ov045_02112fdc);
 }
 
-// @symbol _ZN15daObjKm2_Gura_c16CleanupResourcesEv
 s32 daObjKm2_Gura_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov045_02112fdc);
 }

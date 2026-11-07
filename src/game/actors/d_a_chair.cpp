@@ -85,13 +85,11 @@ int AngleDiff(int a, int b);
 
 extern s16 data_02082214[];
 
-// @symbol daChair_c_classInit
 /* CHAIR registry factory. */
 extern "C" daChair_c *daChair_c_classInit(void) {
     return new daChair_c();
 }
 
-// @symbol _ZN9daChair_c13InitResourcesEv
 s32 daChair_c::InitResources() {
     BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov020_02114af0);
     mModel.SetFile(file, 1, -1);
@@ -109,7 +107,6 @@ s32 daChair_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN9daChair_c8BehaviorEv
 s32 daChair_c::Behavior() {
     func_0200f760(&mCylinder);
     switch (mState) {
@@ -133,19 +130,16 @@ s32 daChair_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9daChair_c6RenderEv
 s32 daChair_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN9daChair_c16CleanupResourcesEv
 s32 daChair_c::CleanupResources() {
     data_ov020_02114af0.Release();
     return 1;
 }
 
-// @symbol _ZN9daChair_c11UpdateModelEv
 void daChair_c::UpdateModel() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -157,7 +151,6 @@ void daChair_c::UpdateModel() {
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x32000, 0x1e000, 0xf);
 }
 
-// @symbol _ZN9daChair_c5BreakEv
 void daChair_c::Break() {
     Particle::System::NewSimple(0x25, mPosX, mPosY, mPosZ);
     Particle::System::NewSimple(0x26, mPosX, mPosY, mPosZ);
@@ -165,7 +158,6 @@ void daChair_c::Break() {
     MarkForDestruction();
 }
 
-// @symbol _ZN9daChair_c18ApproachStateValueEPsS0_isis
 int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target, s16 thresh, s32 accel, s16 mult) {
     short old = pos[0];
     pos[0] = old + vel[0];
@@ -184,7 +176,6 @@ int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target, s16 thresh, s3
     return 0;
 }
 
-// @symbol _ZN9daChair_c6State0Ev
 void daChair_c::State0() {
     dActor_c *piano;
 
@@ -205,7 +196,6 @@ void daChair_c::State0() {
     }
 }
 
-// @symbol _ZN9daChair_c6State1Ev
 void daChair_c::State1() {
     int targetPos[4];
     dActor_c *target;
@@ -282,7 +272,6 @@ void daChair_c::State1() {
     mStateTimer = 0;
 }
 
-// @symbol _ZN9daChair_c6State2Ev
 void daChair_c::State2() {
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     mStateTimer++;
@@ -369,7 +358,6 @@ void daChair_c::State2() {
     }
 }
 
-// @symbol _ZN9daChair_c6State3Ev
 void daChair_c::State3() {
     s16 *tracked = mTrackedAngle;
     int angle;

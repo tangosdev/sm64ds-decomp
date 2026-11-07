@@ -182,14 +182,11 @@ namespace Sound {
 void PlayBank2_2D(unsigned int id);
 }
 
-// @symbol _ZN15dScMgCurling2_cD1Ev
-// @symbol _ZN15dScMgCurling2_cD0Ev
 /* One out-of-line definition; with codegen not deferred it emits D1, then
  * D0, as in the ROM. The body is only the compiler-generated vtable store
  * and base destructor call. */
 dScMgCurling2_c::~dScMgCurling2_c() {}
 
-// @symbol _ZN15dScMgCurling2_c10DrawValuesEv
 /* Draw every live mValue. mode 1 and mode 2 pick the last argument. */
 void dScMgCurling2_c::DrawValues() {
     int i;
@@ -208,7 +205,6 @@ void dScMgCurling2_c::DrawValues() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c9AgeValuesEv
 /* Age mValue one frame: count lifetime down, apply yInc and decay it
  * by 0x40, and clear the entry when the lifetime expires. */
 void dScMgCurling2_c::AgeValues() {
@@ -227,7 +223,6 @@ void dScMgCurling2_c::AgeValues() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c10SpawnValueEii
 /* Take the first free mValue and place it midway between the two
  * stones. The number is (n+1)*10 when either stone is a target stone and
  * (n+1)*100 when neither is, where n is the combo counter, saturating at
@@ -273,7 +268,6 @@ void dScMgCurling2_c::SpawnValue(int stone, int other) {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c11ClearValuesEv
 /* Clear every collision value. */
 void dScMgCurling2_c::ClearValues() {
     int i;
@@ -283,7 +277,6 @@ void dScMgCurling2_c::ClearValues() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c10DrawPiecesEv
 /* Draw every piece whose drawEnable is set, as two stacked sprites
  * from sCurlingBitSprites. */
 void dScMgCurling2_c::DrawPieces() {
@@ -298,7 +291,6 @@ void dScMgCurling2_c::DrawPieces() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c13StepYRampDownEi
 /* countdown3, else ease yInc back toward 0x100, else clear yIndex. */
 void dScMgCurling2_c::StepYRampDown(int entry) {
     if (mPiece[entry].countdown3 != 0) {
@@ -316,7 +308,6 @@ void dScMgCurling2_c::StepYRampDown(int entry) {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c11StepYRampUpEi
 /* Ramp yInc up toward yTarget, then run countdown3 down. When it
  * expires, set yIndex to 2 and reseed the countdown. */
 void dScMgCurling2_c::StepYRampUp(int entry) {
@@ -341,7 +332,6 @@ void dScMgCurling2_c::StepYRampUp(int entry) {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c12StepYRestartEi
 /* Zero yInc, pick a fresh yTarget and countdown3, set yIndex to 1. */
 void dScMgCurling2_c::StepYRestart(int entry) {
     unsigned int rnd;
@@ -355,7 +345,6 @@ void dScMgCurling2_c::StepYRestart(int entry) {
     *(short *)&mPiece[entry].countdown3 = (unsigned char)rnd;
 }
 
-// @symbol _ZN15dScMgCurling2_c11StepXSettleEi
 /* Step the piece, hold while countdown is set (the hold decrements
  * countdown2, not countdown), then bleed xInc toward zero 8 a frame. */
 void dScMgCurling2_c::StepXSettle(int entry) {
@@ -387,7 +376,6 @@ void dScMgCurling2_c::StepXSettle(int entry) {
     mPiece[entry].xIndex = 0;
 }
 
-// @symbol _ZN15dScMgCurling2_c12StepXPushNegEi
 /* Step the piece, hold for countdown, push xInc down to a -0x300
  * floor (the store at the floor is +0x300), hold for countdown2, then
  * hand xIndex to 3. */
@@ -426,7 +414,6 @@ void dScMgCurling2_c::StepXPushNeg(int entry) {
                         0x20);
 }
 
-// @symbol _ZN15dScMgCurling2_c12StepXPushPosEi
 /* The mirror of StepXPushNeg: same shape, x increment pushed the
  * other way to a +0x300 ceiling. */
 void dScMgCurling2_c::StepXPushPos(int entry) {
@@ -464,7 +451,6 @@ void dScMgCurling2_c::StepXPushPos(int entry) {
         0xff;
 }
 
-// @symbol _ZN15dScMgCurling2_c9StepXPickEi
 /* Hold for countdown, then zero xInc, pick xIndex from
  * sCurling2StepXPicks and reseed both countdowns. */
 void dScMgCurling2_c::StepXPick(int entry) {
@@ -492,7 +478,6 @@ void dScMgCurling2_c::StepXPick(int entry) {
                                0x60);
 }
 
-// @symbol _ZN15dScMgCurling2_c9StepXAndYEi
 /* Run one piece's xIndex callback, then its yIndex callback.
  * yIndex is re-read through the pointer-to-member receiver. */
 void dScMgCurling2_c::StepXAndY(int entry) {
@@ -503,7 +488,6 @@ void dScMgCurling2_c::StepXAndY(int entry) {
     (self->*sCurling2StepYTable[k1])(entry);
 }
 
-// @symbol _ZN15dScMgCurling2_c15StepXSettleFastEi
 /* Step the piece, then bleed xInc toward zero 0x20 a frame. */
 void dScMgCurling2_c::StepXSettleFast(int entry) {
     /* x, xInc, y -- the ROM's load order, not a tidy one. */
@@ -525,7 +509,6 @@ void dScMgCurling2_c::StepXSettleFast(int entry) {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c16StepXPushNegFastEi
 /* As StepXPushNeg, 0x20 a frame and a -0x400 floor. The store at the
  * floor is +0x400, and xIndex goes to 3 with no new countdown. */
 void dScMgCurling2_c::StepXPushNegFast(int entry) {
@@ -555,7 +538,6 @@ void dScMgCurling2_c::StepXPushNegFast(int entry) {
     mPiece[entry].xIndex = 3;
 }
 
-// @symbol _ZN15dScMgCurling2_c16StepXPushPosFastEi
 /* The mirror of StepXPushNegFast, x increment pushed to a +0x400
  * ceiling. */
 void dScMgCurling2_c::StepXPushPosFast(int entry) {
@@ -594,7 +576,6 @@ void dScMgCurling2_c::StepXPushPosFast(int entry) {
     mPiece[entry].xIndex = 3;
 }
 
-// @symbol _ZN15dScMgCurling2_c13StepXPickFastEi
 /* Hold for countdown, then zero xInc, pick a fresh yInc and an xIndex
  * from sCurling2StepXFastPicks, and reseed both countdowns. */
 void dScMgCurling2_c::StepXPickFast(int entry) {
@@ -625,14 +606,12 @@ void dScMgCurling2_c::StepXPickFast(int entry) {
                          0xff);
 }
 
-// @symbol _ZN15dScMgCurling2_c9StepXOnlyEi
 /* Run one piece's sCurling2StepXFastTable callback, indexed by xIndex. */
 void dScMgCurling2_c::StepXOnly(int entry) {
     unsigned char idx = mPiece[entry].xIndex;
     (((C *)this)->*sCurling2StepXFastTable[idx])(entry);
 }
 
-// @symbol _ZN15dScMgCurling2_c12PickStepModeEi
 /* Pick modeIndex from sCurling2StepModes (1 on one roll in eight)
  * and clear xIndex. */
 void dScMgCurling2_c::PickStepMode(int entry) {
@@ -645,7 +624,6 @@ void dScMgCurling2_c::PickStepMode(int entry) {
     mPiece[entry].xIndex = 0;
 }
 
-// @symbol _ZN15dScMgCurling2_c10StepPiecesEv
 /* Step every piece whose updateEnable is set, and wrap the ones whose
  * y has passed 0xc8 back to a random x at y = -0x8000. */
 void dScMgCurling2_c::StepPieces() {
@@ -667,7 +645,6 @@ void dScMgCurling2_c::StepPieces() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c10SeedPiecesEv
 /* Clear every piece, then seed it: enabled, a random x, two sprite
  * indices (the second is the first plus one to four, modulo five) and a
  * y spread over the screen. The first x, the y at -0x8000 and the first
@@ -735,7 +712,6 @@ void dScMgCurling2_c::SeedPieces() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c9DrawMarksEv
 /* Draw the five score marks whose drawn flag is set, each with its
  * value as the caption.
  *
@@ -762,7 +738,6 @@ void dScMgCurling2_c::DrawMarks() {
 /* Age the five score marks: run the countdown down
  * and, on the frame it reaches zero, set the flag that DrawMarks draws on and
  * play sound 0x1bc. */
-// @symbol _ZN15dScMgCurling2_c8AgeMarksEv
 void dScMgCurling2_c::AgeMarks() {
     int i;
 
@@ -779,7 +754,6 @@ void dScMgCurling2_c::AgeMarks() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c10DrawCursorEv
 /* Draw the drag cursor at the mDragX/mDragY drag point,
  * offset up and left, while the mCursorVisible flag is set. */
 void dScMgCurling2_c::DrawCursor() {
@@ -809,7 +783,6 @@ void dScMgCurling2_c::DrawCursor() {
  * one, which the ROM does not do), and the touch records are read through
  * a `u8 *` cast, which keeps both stylus byte loads above the first store
  * as the ROM has them. */
-// @symbol _ZN15dScMgCurling2_c10DragUpdateEv
 void dScMgCurling2_c::DragUpdate() {
     u8 idx;
     int dx;
@@ -903,7 +876,6 @@ void dScMgCurling2_c::DragUpdate() {
     mCursorVisible = 1;
 }
 
-// @symbol _ZN15dScMgCurling2_c9DragBeginEv
 /* Begin a drag: latch the grab offset and the first angle. Entry 0 of
  * sCurling2DragTable; DragUpdate is entry 1. */
 void dScMgCurling2_c::DragBegin() {
@@ -944,7 +916,6 @@ void dScMgCurling2_c::DragBegin() {
     mSwingState = 0;
 }
 
-// @symbol _ZN15dScMgCurling2_c11DrawCounterEv
 /* Draw the counter at the bottom of the screen: a fixed
  * sprite, a language-dependent label out of sCurling2CounterSprites, and 5 minus
  * the thrown count, floored at zero. */
@@ -960,7 +931,6 @@ void dScMgCurling2_c::DrawCounter() {
     Mg_DrawBigNumber(0xf8, 0xb4, left, 0, 0, 0, 0);
 }
 
-// @symbol _ZN15dScMgCurling2_c10DrawStonesEv
 /* Draw each live, visible stone on both screens: the body
  * sprite, picked by the stone's target flag, and a shadow eight pixels down. */
 void dScMgCurling2_c::DrawStones() {
@@ -984,7 +954,6 @@ void dScMgCurling2_c::DrawStones() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c14SeparateStonesEi
 /* Stone separation. The two-player rink's twin of SeparateStones in
  * dScMgCurling_c: eleven stones at a 0x30 stride instead of five at 0x2c,
  * and after the bump sound the pushed pair gets a SpawnValue. Keep separate temporaries
@@ -1062,7 +1031,6 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
     }
 }
 
-// @symbol Curling2_ResolveStoneCollision
 /* Stone collision: find the first active stone within 0x18, excluding
  * waiting and dragged stones. Both velocities are rotated into the contact
  * frame, the normal components swapped, and the results become each stone's
@@ -1190,7 +1158,6 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c9StoneSpinEi
 /* Spin-rate update for the stone sprite: -cos(heading) * speed, scaled.
  * The stone is reached through this + i * 0x30 cast back to the class:
  * folding it through &mStone[i] changes the base rematerialization. */
@@ -1204,7 +1171,6 @@ void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     ((dScMgCurling2_c *)o)->mStone[0].spinVel = (short)((-velocityX) >> 2);
 }
 
-// @symbol _ZN15dScMgCurling2_c10StoneSteerEi
 /* Stone state 3: while the touch is down, the stone follows the stylus
  * plus grabX/grabY (x clamped to the rink); once it lifts, the
  * stone is armed again and, when the drag point is close, snaps above it. */
@@ -1242,13 +1208,11 @@ void dScMgCurling2_c::StoneSteer(int stoneIndex) {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c9StoneRestEi
 /* Stone state 2: run the shared collision step. */
 void dScMgCurling2_c::StoneRest(int i) {
     Curling2_ResolveStoneCollision(this, i);
 }
 
-// @symbol _ZN15dScMgCurling2_c10StoneSlideEi
 /* Stone state 1: integrate by speed at the heading, bounce off the rink
  * walls (the bounce flips the heading and plays 0x1d4), decay speed to a
  * stop, run the collision step and the spin update, then feed the rolling
@@ -1342,7 +1306,6 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
         func_02012468(mStone[stoneIndex].snd, 2, 0xe7, 7, p, w, func_020126e8(*pX), 0);
 }
 
-// @symbol _ZN15dScMgCurling2_c9StoneWaitEi
 /* Stone state 0: armed, waiting. While a drag is on (mDragState == 1) and
  * the drag point overlaps the stone, throw it at the latched angle and
  * power (clamped to the legal cone), mark it fast when the power is high,
@@ -1394,7 +1357,6 @@ void dScMgCurling2_c::StoneWait(int idx) {
     func_020126ac(0x1d3, 5, vol, 0, func_020126e8(mStone[idx].x));
 }
 
-// @symbol _ZN15dScMgCurling2_c9NextStoneEv
 /* Queue and deal the next stone: while spawning is set and the timer has
  * run out, activate stone[thrown] at the top of the rink, seed the house
  * stones on the first deal (the later deals play 0x1d7), then re-arm the
@@ -1442,7 +1404,6 @@ void dScMgCurling2_c::NextStone() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c10SeedStonesEv
 /* Place the six house stones (mStone[5]..mStone[10]) at their fixed
  * positions, already at rest. */
 void dScMgCurling2_c::SeedStones() {
@@ -1458,7 +1419,6 @@ void dScMgCurling2_c::SeedStones() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c15ClearStoneFlagsEv
 /* Clear the +0x2c flag on every stone. */
 void dScMgCurling2_c::ClearStoneFlags() {
     int i;
@@ -1467,11 +1427,9 @@ void dScMgCurling2_c::ClearStoneFlags() {
     }
 }
 
-// @symbol _ZN15dScMgCurling2_c4IdleEv
 /* Behavior state 4: terminal. */
 void dScMgCurling2_c::Idle() {}
 
-// @symbol _ZN15dScMgCurling2_c8EndRoundEv
 /* Behavior state 3: the last stone has settled. Wait out the state timer,
  * clear the round flags, hide the stones, drop the prompt, hand the scene
  * to Mg_SetSharedState and park in state 4. */
@@ -1500,7 +1458,6 @@ void dScMgCurling2_c::EndRound() {
     mCounterVisible = 0;
 }
 
-// @symbol _ZN15dScMgCurling2_c9NextThrowEv
 /* Behavior state 2, reached once every stone rests. Age the score marks,
  * then either go back to Play after dealing the next stone or -- with all
  * five thrown -- set gameOver, sound the horn and advance to EndRound. */
@@ -1531,7 +1488,6 @@ void dScMgCurling2_c::NextThrow() {
     NextStone();
 }
 
-// @symbol _ZN15dScMgCurling2_c4PlayEv
 /* Behavior state 1: one frame of play. Enable the prompt on the first
  * pass, tick the sound throttle, run the drag-state handler, then step
  * every live stone through its own state handler (prev position latched
@@ -1580,7 +1536,6 @@ void dScMgCurling2_c::Play() {
     mStateTimer = 0x40;
 }
 
-// @symbol _ZN15dScMgCurling2_c10BeginRoundEv
 /* Behavior state 0: (re)start a round -- full game reset, arm the spawn
  * slot, deal the first stone, then play. */
 void dScMgCurling2_c::BeginRound() {
@@ -1592,7 +1547,6 @@ void dScMgCurling2_c::BeginRound() {
     mState = 1;
 }
 
-// @symbol _ZN15dScMgCurling2_c6ScrollEv
 /* Pick the rink's scroll mode: 0xff in scrollIdx forces mode 0, otherwise
  * a random mode different from the current one. Apply the mode's BG2/BG0
  * offsets and set the BG0 flag in gMainScreenLayers unless the mode is 0. */
@@ -1628,13 +1582,11 @@ void dScMgCurling2_c::Scroll() {
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
 }
 
-// @symbol _ZN15dScMgCurling2_c11ResetScrollEv
 /* Mark the scroll mode unset so Scroll repicks it. */
 void dScMgCurling2_c::ResetScroll() {
     scrollIdx = 0xff;
 }
 
-// @symbol _ZN15dScMgCurling2_c9ResetGameEv
 /* Clear the stones, the score marks and every game variable back to a
  * fresh round, then clear the collision values. */
 void dScMgCurling2_c::ResetGame() {
@@ -1688,7 +1640,6 @@ void dScMgCurling2_c::ResetGame() {
     ClearValues();
 }
 
-// @symbol _ZN15dScMgCurling2_c10StartRoundEi
 /* Slot 18. Yoshi ate the puck: restart the round and re-arm the screen
  * blend and the frame counter. */
 void dScMgCurling2_c::StartRound(int /* arg */) {
@@ -1700,7 +1651,6 @@ void dScMgCurling2_c::StartRound(int /* arg */) {
     mTopRecord = Mg_GetTopRecord();
 }
 
-// @symbol _ZN15dScMgCurling2_c6RenderEv
 /* Slot 9. Per-frame draw: score marks, the throws counter, stones,
  * collision values, pieces and the drag cursor. */
 s32 dScMgCurling2_c::Render() {
@@ -1714,7 +1664,6 @@ s32 dScMgCurling2_c::Render() {
     return 1;
 }
 
-// @symbol _ZN15dScMgCurling2_c8BehaviorEv
 /* Slot 6. One state-handler call through sCurling2BehaviorTable, then the
  * falling pieces and the collision values. */
 s32 dScMgCurling2_c::Behavior() {
@@ -1725,7 +1674,6 @@ s32 dScMgCurling2_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15dScMgCurling2_c13InitResourcesEv
 /* Slot 0. Load the rink and stone graphics for both engines, decompress
  * the board layouts, set up the blends, then reset into the first round
  * with a 0x40 state delay. */

@@ -54,13 +54,10 @@ extern MipKeyPMF data_ov085_02130174;
 
 #pragma defer_codegen off
 
-// @symbol _ZN15daObj_Mip_Key_cD1Ev
-// @symbol _ZN15daObj_Mip_Key_cD0Ev
 
 daObj_Mip_Key_c::~daObj_Mip_Key_c() {}
 
 // End the conversation, restore control flags and retire the key.
-// @symbol _ZN15daObj_Mip_Key_c18FinishConversationEv
 
 void daObj_Mip_Key_c::FinishConversation() {
     Sound::PlaySub(0x28, 0x7f, 0, 0x7444, 0);
@@ -71,7 +68,6 @@ void daObj_Mip_Key_c::FinishConversation() {
 }
 
 // Carried update: follow the player and advance the save conversation.
-// @symbol _ZN15daObj_Mip_Key_c12StateCarriedEv
 
 int daObj_Mip_Key_c::StateCarried() {
     daObj_Mip_Key_c *self = this;
@@ -166,7 +162,6 @@ int daObj_Mip_Key_c::StateCarried() {
 }
 
 // Carried entry: stop moving and select the conversation.
-// @symbol _ZN15daObj_Mip_Key_c17StateCarriedEnterEv
 
 int daObj_Mip_Key_c::StateCarriedEnter() {
     daObj_Mip_Key_c *c = this;
@@ -195,7 +190,6 @@ int daObj_Mip_Key_c::StateCarriedEnter() {
 }
 
 // Loose update: turn toward the player and approach until caught.
-// @symbol _ZN15daObj_Mip_Key_c10StateLooseEv
 
 int daObj_Mip_Key_c::StateLoose() {
     daObj_Mip_Key_c *c = this;
@@ -243,7 +237,6 @@ int daObj_Mip_Key_c::StateLoose() {
 }
 
 // Loose entry: wait ten frames before chasing.
-// @symbol _ZN15daObj_Mip_Key_c15StateLooseEnterEv
 
 int daObj_Mip_Key_c::StateLooseEnter() {
     mStateTimer = 10;
@@ -252,7 +245,6 @@ int daObj_Mip_Key_c::StateLooseEnter() {
 }
 
 // Install a state and run its entry callback.
-// @symbol _ZN15daObj_Mip_Key_c11ChangeStateEP11MipKeyState
 
 int daObj_Mip_Key_c::ChangeState(MipKeyState *p) {
     mState = p;
@@ -262,7 +254,6 @@ int daObj_Mip_Key_c::ChangeState(MipKeyState *p) {
 }
 
 // Build the render matrix and place the cylinder shadow.
-// @symbol _ZN15daObj_Mip_Key_c20UpdateModelAndShadowEv
 
 void daObj_Mip_Key_c::UpdateModelAndShadow() {
     // Whole Matrix4x3 assignment emits six extra words under 2004/b56.
@@ -276,18 +267,15 @@ void daObj_Mip_Key_c::UpdateModelAndShadow() {
     DropShadowRadHeight(mShadowModel, mModel.mat4x3, 0x23000, 0x12c000, 0xf);
 }
 
-// @symbol _ZN15daObj_Mip_Key_c16CleanupResourcesEv
 
 int daObj_Mip_Key_c::CleanupResources() {
     data_ov085_021305d8.Release();
     return 1;
 }
 
-// @symbol _ZN15daObj_Mip_Key_c16OnPendingDestroyEv
 
 void daObj_Mip_Key_c::OnPendingDestroy() {}
 
-// @symbol _ZN15daObj_Mip_Key_c6RenderEv
 
 int daObj_Mip_Key_c::Render() {
     if (mState == &data_ov085_0213072c) {
@@ -298,7 +286,6 @@ int daObj_Mip_Key_c::Render() {
     return 1;
 }
 
-// @symbol _ZN15daObj_Mip_Key_c8BehaviorEv
 
 int daObj_Mip_Key_c::Behavior() {
     DecIfAbove0_Short((u16 *)&mStateTimer);
@@ -316,7 +303,6 @@ int daObj_Mip_Key_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObj_Mip_Key_c13InitResourcesEv
 
 int daObj_Mip_Key_c::InitResources() {
     void *f = dExtSimpleModel_c::LoadFile(data_ov085_021305d8);
@@ -332,7 +318,6 @@ int daObj_Mip_Key_c::InitResources() {
 
 // classInit is a lineage-supported project spelling; ROM RTTI proves the class.
 // The exact original factory spelling is unknown (old alias: RabbitKey_Spawn).
-// @symbol daObj_Mip_Key_c_classInit
 
 extern "C" daObj_Mip_Key_c *daObj_Mip_Key_c_classInit(void) {
     return new daObj_Mip_Key_c();
@@ -341,6 +326,5 @@ extern "C" daObj_Mip_Key_c *daObj_Mip_Key_c_classInit(void) {
 /* Static-init globals (was the handwritten __sinit_ov085_0212f9bc shard).
  * Each 16-byte state record takes its enter/execute PMFs from the .data
  * literals above. */
-// @symbol __sinit_d_a_obj_mip_key.cpp
 MipKeyState data_ov085_0213071c = {data_ov085_02130184, data_ov085_0213018c};
 MipKeyState data_ov085_0213072c = {data_ov085_0213017c, data_ov085_02130174};

@@ -75,7 +75,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-// @symbol daObjWc_Obj03_c_classInit
 /* Historical alias: WaterDiamond_Spawn -- this entry point carried the
  * project's coined class name until the ROM's RTTI name was adopted.
  * The ROM proves the class through RTTI (_ZTS15daObjWc_Obj03_c at
@@ -97,7 +96,6 @@ extern "C" daObjWc_Obj03_c *daObjWc_Obj03_c_classInit()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_c13InitResourcesEv
 int daObjWc_Obj03_c::InitResources()
 {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov029_02114270), 1, -1);
@@ -111,7 +109,6 @@ int daObjWc_Obj03_c::InitResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_c8BehaviorEv
 int daObjWc_Obj03_c::Behavior()
 {
     SetWaterID();
@@ -142,7 +139,6 @@ int daObjWc_Obj03_c::Behavior()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_c6RenderEv
 int daObjWc_Obj03_c::Render()
 {
     mModel.Render(0);
@@ -151,7 +147,6 @@ int daObjWc_Obj03_c::Render()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_c16CleanupResourcesEv
 /* daObjWc_Obj03_c::CleanupResources -- vtable slot 3. Releases the one shared
  * file the class holds; it never touches `this`, which is why the legacy C form
  * could declare itself nullary and still reproduce. */
@@ -163,7 +158,6 @@ int daObjWc_Obj03_c::CleanupResources()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_c20UpdateModelTransformEv
 void daObjWc_Obj03_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
@@ -174,7 +168,6 @@ void daObjWc_Obj03_c::UpdateModelTransform()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_c10SetWaterIDEv
 void daObjWc_Obj03_c::SetWaterID()
 {
   dActor_c *water;
@@ -195,7 +188,6 @@ void daObjWc_Obj03_c::SetWaterID()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_c19CheckClsnWithPlayerEv
 void daObjWc_Obj03_c::CheckClsnWithPlayer()
 {
     if (mActive != 0)
@@ -221,8 +213,6 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjWc_Obj03_cD1Ev
-// @symbol _ZN15daObjWc_Obj03_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in
  * include/daObjWc_Obj03_c.h and declared LAST. Two measurements force that:
  *   - out of line, mwcc emits D0 ahead of D1 and the cartridge has D1 first,

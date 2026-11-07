@@ -112,7 +112,6 @@ void func_020393c4(dBgW *collider, StoodOnCallback callback);
 void func_ov064_021192bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
-// @symbol daObjFl_Puzzle_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjFl_Puzzle_c through RTTI,
  * allocation size, vtable identity, and the FL_PUZZLE registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
@@ -126,7 +125,6 @@ extern "C" daObjFl_Puzzle_c *daObjFl_Puzzle_c_classInit(void) {
     return new daObjFl_Puzzle_c;
 }
 
-// @symbol daObjFl_Coin_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjFl_Coin_c through RTTI,
  * allocation size, vtable identity, and the FL_COIN registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
@@ -145,13 +143,11 @@ extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
  * two. long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol func_ov064_021192bc
 extern "C" void func_ov064_021192bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjFl_Puzzle_c *>(owner)->MarkTouchedByPlayer(other);
 }
 #pragma pop
 
-// @symbol _ZN16daObjFl_Puzzle_c19MarkTouchedByPlayerEP8dActor_c
 /* The player (actor 0xbf) touched the piece: raise mHadClsn. */
 void daObjFl_Puzzle_c::MarkTouchedByPlayer(dActor_c *other) {
     u8 isPlayer = other->actorID == 0xbf;
@@ -159,7 +155,6 @@ void daObjFl_Puzzle_c::MarkTouchedByPlayer(dActor_c *other) {
         mHadClsn = 1;
 }
 
-// @symbol _ZN14daObjFl_Coin_c13InitResourcesEv
 
 /* Clears the piece-flag byte, the phase and the live-coin count. */
 s32 daObjFl_Coin_c::InitResources() {
@@ -169,7 +164,6 @@ s32 daObjFl_Coin_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c13InitResourcesEv
 /* Picks the model and script from param1's low nibble (mType), loads the
  * model and the shared collision file, puts both matrices at the piece's
  * position, registers func_ov064_021192bc with the collider through
@@ -194,7 +188,6 @@ int daObjFl_Puzzle_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjFl_Coin_c8BehaviorEv
 /* Phase 0 waits for a frame where the flags are exactly both bits and the
  * player is within 1000 units (0x3e8000), then moves to phase 1 and stays there. */
 s32 daObjFl_Coin_c::Behavior() {
@@ -212,7 +205,6 @@ s32 daObjFl_Coin_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c8BehaviorEv
 /* Per frame: advance the step script if no step is running, run the current
  * state's handler from the table at 0x0211c904, tick the step timer (when the
  * manager is gone or has no live coins), rebuild the model matrix, and if
@@ -236,14 +228,12 @@ int daObjFl_Puzzle_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c6RenderEv
 /* Draws the model. */
 int daObjFl_Puzzle_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c16CleanupResourcesEv
 /* Disables the collider and releases this type's model file and the shared
  * collision file. */
 int daObjFl_Puzzle_c::CleanupResources() {
@@ -255,7 +245,6 @@ int daObjFl_Puzzle_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c17UpdateModelMatrixEv
 /* dExtSimpleModel_c matrix translation: the position (plus the shake offset on Y), each
  * axis shifted right by 3. */
 void daObjFl_Puzzle_c::UpdateModelMatrix() {
@@ -265,7 +254,6 @@ void daObjFl_Puzzle_c::UpdateModelMatrix() {
     Matrix4x3_FromTranslation(&mModel.mat4x3, x, y, z);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c16UpdateClsnMatrixEv
 /* Builds a translation at the position (shake offset added to Y) in the scratch
  * matrix at 0x020a0e68, copies it into mClsnMat, and hands it to the moving
  * mesh collider along with the Y angle. */
@@ -275,7 +263,6 @@ void daObjFl_Puzzle_c::UpdateClsnMatrix() {
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c17AdvanceStepScriptEv
 /* Step script driver. While mHadClsn is set, writes FLCOIN_FLAG_PLAYER_TOUCHED into the
  * manager's flags. If no step is running, takes the next script byte as mState,
  * and when the byte after it is -1 rewinds the script and ORs
@@ -316,7 +303,6 @@ void daObjFl_Puzzle_c::AdvanceStepScript() {
     mStepTimer = 0;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c14ShakeThenSlideEiii
 /* Shared move handler. dx/dz are the X/Z distance per tick (fix12) and
  * slideTicks the number of sliding ticks. Ticks 0..0x13 only shake (Y offset 0 on even ticks,
  * -0x6000 = -6 units on odd). Tick 0x14 clears the offset and plays sound
@@ -354,7 +340,6 @@ void daObjFl_Puzzle_c::ShakeThenSlide(int dx, int dz, int slideTicks) {
     }
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c9StateInitEv
 /* PIECE_STATE_INIT. Finds the FL_COIN manager; if there is one, remembers its
  * unique ID, sets the manager's Y to this piece's Y (X and Z are read and
  * written back unchanged), ends the step and advances mState to WAIT. With no
@@ -380,7 +365,6 @@ void daObjFl_Puzzle_c::StateInit() {
     MarkForDestruction();
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c9StateWaitEv
 /* PIECE_STATE_WAIT. Once, when the manager reaches phase 1, spawns this piece's
  * coin. Ends the step once the timer has reached 0x18 (24). */
 void daObjFl_Puzzle_c::StateWait() {
@@ -398,31 +382,26 @@ void daObjFl_Puzzle_c::StateWait() {
         mStepActive = 0;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c13StateMoveNegXEv
 /* PIECE_STATE_MOVE_NEG_X: 120 units (0x78000) per tick toward -X, 4 ticks. */
 void daObjFl_Puzzle_c::StateMoveNegX() {
     ShakeThenSlide(-0x78000, 0, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c13StateMovePosXEv
 /* PIECE_STATE_MOVE_POS_X: 120 units per tick toward +X, 4 ticks. */
 void daObjFl_Puzzle_c::StateMovePosX() {
     ShakeThenSlide(0x78000, 0, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c13StateMoveNegZEv
 /* PIECE_STATE_MOVE_NEG_Z: 120 units per tick toward -Z, 4 ticks. */
 void daObjFl_Puzzle_c::StateMoveNegZ() {
     ShakeThenSlide(0, -0x78000, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c13StateMovePosZEv
 /* PIECE_STATE_MOVE_POS_Z: 120 units per tick toward +Z, 4 ticks. */
 void daObjFl_Puzzle_c::StateMovePosZ() {
     ShakeThenSlide(0, 0x78000, 4);
 }
 
-// @symbol _ZN16daObjFl_Puzzle_c9SpawnCoinEv
 /* Spawns a COIN (0x120, spawn param 2) at this piece's position with the
  * piece's mAreaId and death-table ID -1. If it spawned and this piece
  * has a manager ID, finds the manager, stores its unique ID in the coin's
@@ -441,7 +420,6 @@ void daObjFl_Puzzle_c::SpawnCoin() {
     found->mLiveCoinCount += 1;
 }
 
-// @symbol _ZN16daObjFl_Puzzle_cD0Ev
 /* A delete expression forces the compiler-spelled deleting destructor. */
 #ifndef _MSC_VER
 void daObjFl_Puzzle_c_EmitDeletingDestructor(daObjFl_Puzzle_c *piece) {
@@ -449,7 +427,6 @@ void daObjFl_Puzzle_c_EmitDeletingDestructor(daObjFl_Puzzle_c *piece) {
 }
 #endif
 
-// @symbol _ZN16daObjFl_Puzzle_cD1Ev
 /* Force mwccarm to emit the class-body destructor as a genuine C++ D1. */
 void daObjFl_Puzzle_c_EmitDestructor(daObjFl_Puzzle_c *piece) {
     piece->~daObjFl_Puzzle_c();
@@ -465,7 +442,6 @@ void daObjFl_Coin_c_EmitDestructor(daObjFl_Coin_c *coin) {
     coin->~daObjFl_Coin_c();
 }
 
-// @symbol __sinit_d_a_obj_fl_coin.cpp
 /* The retail initializer constructs the fourteen model handles in file ID
  * order, then the collision handle, then fills the six-entry state table. */
 FlCoinModelFilePtr gFl1400ModelFile(ASSET_FL_14_00_BMD);

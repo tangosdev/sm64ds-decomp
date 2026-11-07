@@ -97,22 +97,18 @@ int RandomIntInternal(int *state);
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjCtMecha10_c_classInit_CT_MECHA10
 extern "C" daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA10() {
     return new daObjCtMecha10_c();
 }
 
-// @symbol daObjCtMecha10_c_classInit_CT_MECHA12L
 extern "C" daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA12L() {
     return new daObjCtMecha10_c();
 }
 
-// @symbol daObjCtMecha10_c_classInit_CT_MECHA12S
 extern "C" daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA12S() {
     return new daObjCtMecha10_c();
 }
 
-// @symbol _ZN16daObjCtMecha10_c13InitResourcesEv
 /* The cog that carries Mario (CT_MECHA10, actor 0x77) is the only one with a
    collision mesh; the other two profiles are scenery and load a model alone.
    Either way the dwell and the step magnitude come out of the same two tables,
@@ -148,7 +144,6 @@ int daObjCtMecha10_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha10_c8BehaviorEv
 /* Clock setting 3 stops the cog: hold position and leave. Otherwise turn
    toward the target, and once there and the dwell has run out, advance the
    target one step and re-seed the dwell. Setting 2 also re-rolls the dwell
@@ -190,13 +185,11 @@ int daObjCtMecha10_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha10_c6RenderEv
 int daObjCtMecha10_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha10_c16CleanupResourcesEv
 /* Give back exactly what InitResources took: the carrying cog frees its
    collider and both of its files, each decorative gear its one model. */
 int daObjCtMecha10_c::CleanupResources() {

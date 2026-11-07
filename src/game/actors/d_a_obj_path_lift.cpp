@@ -62,12 +62,10 @@ struct PathLiftCollisionFilePtr : SharedFilePtr {
 extern PathLiftModelFile data_ov100_02148a54;
 extern PathLiftCollisionFilePtr data_ov100_02148a5c;
 
-// @symbol daObjPathLift_c_classInit
 extern "C" daObjPathLift_c *daObjPathLift_c_classInit() {
     return new daObjPathLift_c();
 }
 
-// @symbol _ZN15daObjPathLift_c13InitResourcesEv
 int daObjPathLift_c::InitResources() {
     Vector3 pos;
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0);
@@ -101,7 +99,6 @@ int daObjPathLift_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c8BehaviorEv
 int daObjPathLift_c::Behavior() {
     UpdatePathModels();
     BaseBehavior();
@@ -126,7 +123,6 @@ int daObjPathLift_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c6RenderEv
 int daObjPathLift_c::Render() {
     unsigned short h = mWaitTimer;
     if (h < 0x5a) {
@@ -138,7 +134,6 @@ int daObjPathLift_c::Render() {
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c16CleanupResourcesEv
 int daObjPathLift_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -149,7 +144,6 @@ int daObjPathLift_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c17UpdateModelMatrixEv
 int daObjPathLift_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, 0);
     mModel.mat4x3.t.x = mPosX >> 3;
@@ -159,7 +153,6 @@ int daObjPathLift_c::UpdateModelMatrix() {
     return z;
 }
 
-// @symbol _ZN15daObjPathLift_c12UpdateShadowEv
 void daObjPathLift_c::UpdateShadow() {
     int scaleZ;
     int yOff;
@@ -199,8 +192,6 @@ void daObjPathLift_c::UpdateShadow() {
                            0xf);
     }
 }
-// @symbol _ZN15daObjPathLift_cD1Ev
-// @symbol _ZN15daObjPathLift_cD0Ev
 /* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- the destructor group.                              */
 /* Both come from the `~daObjPathLift_c() {}` in the header: the compiler     */

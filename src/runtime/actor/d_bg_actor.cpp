@@ -114,7 +114,6 @@ struct ClsnHitCopy {
     dBgW *collider;
 };
 
-// @symbol func_ov002_020ef2a4
 extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnGround()) {
         dBgPi *hit = clsn->GetFloorResult();
@@ -129,7 +128,6 @@ extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-// @symbol func_ov002_020ef228
 extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, int otherArg) {
     dActor_c *other = (dActor_c *)otherArg;
     if (clsn->IsOnWall()) {
@@ -145,7 +143,6 @@ extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, int otherArg) {
     return 0;
 }
 
-// @symbol func_ov002_020ef070
 extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     Vector3 start, end;
     ClsnHitCopy hit;
@@ -204,7 +201,6 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     return 0;
 }
 
-// @symbol func_ov002_020eeeb8
 extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     Vector3 start, end;
     ClsnHitCopy hit;
@@ -270,7 +266,6 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     return 0;
 }
 
-// @symbol func_ov002_020eee3c
 extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
     dActor_c *other = (dActor_c *)otherArg;
@@ -287,7 +282,6 @@ extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     return 0;
 }
 
-// @symbol func_ov002_020eedc0
 extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
@@ -302,7 +296,6 @@ extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-// @symbol func_ov002_020eed24
 extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
@@ -319,7 +312,6 @@ extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     return 0;
 }
 
-// @symbol func_ov002_020eeca8
 extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
     if (func_02035638(clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
@@ -343,7 +335,6 @@ extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
  * boundaries. */
 typedef struct { int w[2]; } ClsnHitHead;
 
-// @symbol func_ov002_020eea84
 extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
     struct ClsnHitCopy hit;
     Vector3 hurtFrom;
@@ -405,7 +396,6 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
 
 /* Base step, vptr store, then mModel and mMeshCollider in declaration order:
  * the compiler's own sequence, so the body is empty. */
-// @symbol _ZN10dBgActor_cC2Ev
 dBgActor_c::dBgActor_c()
 {
 }
@@ -413,7 +403,6 @@ dBgActor_c::dBgActor_c()
 /* Same enable/disable-by-distance as IsClsnInRange, except an off-screen actor
  * (mFlags & 8) always drops its collider, and radius 0 unconditionally enables
  * instead of falling back to the clip volume. */
-// @symbol _ZN10dBgActor_c21IsClsnInRangeOnScreenEii
 int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
     int offScreen = (mFlags & 8) != 0;
     if (offScreen) {
@@ -449,7 +438,6 @@ int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
 /* Keeps the mesh collider in the world only while the closest player is within
  * radius of (pos + yOffset). Zero radius falls back to the clip volume
  * (mClipRadius, shifted into fix12); zero yOffset to mClipOffsetY. */
-// @symbol _ZN10dBgActor_c13IsClsnInRangeEii
 int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
     Vector3 center;
     center.x = mPosX;
@@ -475,7 +463,6 @@ int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
 
 /* Rebuilds the model matrix from the yaw and drops the position into its
  * translation row at 1/8 scale, the model-space unit. */
-// @symbol _ZN10dBgActor_c21UpdateModelPosAndRotYEv
 void dBgActor_c::UpdateModelPosAndRotY()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
@@ -486,7 +473,6 @@ void dBgActor_c::UpdateModelPosAndRotY()
 
 /* The collider follows the model: copy its matrix, overwrite the translation
  * row (m[9..11]) with the actor position, and hand it to the collider. */
-// @symbol _ZN10dBgActor_c19UpdateClsnPosAndRotEv
 void dBgActor_c::UpdateClsnPosAndRot()
 {
     mClsnMat = mModel.mat4x3;
@@ -501,7 +487,6 @@ void dBgActor_c::UpdateClsnPosAndRot()
  * the per-frame angle steps, integrate, and Kill() when the fuse runs out.
  * Callers (pushblock, signpost, ski lift, Bill Blaster) pass the X step and a
  * model-pivot height; nonzero return means "still flying". */
-// @symbol _ZN10dBgActor_c20UpdateKillByMegaCharEsssi
 int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, Fix12i pivotY) {
     Vector3 probe;
     Vector3 rayEnd;
@@ -537,7 +522,6 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, F
 
 /* The mega-knockback model matrix: actor position at 1/8 scale, rotated about
  * a pivot pivotY above it (translate up, rotate, translate back). */
-// @symbol func_ov002_020ee5d0
 extern "C" {
 void func_ov002_020ee5d0(dBgActor_c *self, int pivotY)
 {
@@ -559,7 +543,6 @@ void func_ov002_020ee5d0(dBgActor_c *self, int pivotY)
  * types.h), so it is non-POD, and a whole-object assignment compiles to an
  * ldm/stm pair -- four instructions where the ROM has six. Three field
  * stores are what the cartridge does. */
-// @symbol _ZN10dBgActor_c4KillEv
 void dBgActor_c::Kill()
 {
     Vector3 pos;
@@ -582,7 +565,6 @@ void dBgActor_c::Kill()
 /* Mega Mario's shockwave hits: shake the ground, arm the knockback flight
  * (20 u/frame away from the player, 30 up, gravity 2, 30-frame fuse), and
  * take the mesh collider out of the world. */
-// @symbol _ZN10dBgActor_c14KillByMegaCharER7daPly_c
 void dBgActor_c::KillByMegaChar(daPly_c &player) {
     Vector3 v;
     v.x = mPosX;
@@ -603,5 +585,3 @@ void dBgActor_c::KillByMegaChar(daPly_c &player) {
 /* Nothing forces D0/D1 here: this TU defines Kill (slot 31), the class's key
  * function, so the vtable is emitted here and drags both destructor variants
  * with it. */
-// @symbol _ZN10dBgActor_cD0Ev
-// @symbol _ZN10dBgActor_cD1Ev

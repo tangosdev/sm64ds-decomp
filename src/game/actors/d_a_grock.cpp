@@ -100,18 +100,14 @@ extern GrockModelFilePtr data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
  * then dEnemyBase_c::~dEnemyBase_c. D0 adds dEnemyBase_c's operator delete. */
-// @symbol _ZN9daGrock_cD1Ev
-// @symbol _ZN9daGrock_cD0Ev
 daGrock_c::~daGrock_c() {}
 
-// @symbol _ZN9daGrock_c16OnAimedAtWithEggEv
 s32 daGrock_c::OnAimedAtWithEgg() {
     return 0;
 }
 
 /* Retire the marker and spawn the star. Still rocks pass spawn mode 2;
  * rolling rocks pass 4. No star (index 0xff) does nothing. */
-// @symbol _ZN9daGrock_c9SpawnStarEv
 void daGrock_c::SpawnStar() {
     if (mStarID == 0xff)
         return;
@@ -124,7 +120,6 @@ void daGrock_c::SpawnStar() {
 
 /* Shift the position down 3, build the scratch matrix, keep the unrotated
  * copy in pad_188 for the shadow, then rotate it into the model. */
-// @symbol _ZN9daGrock_c20UpdateModelTransformEv
 void daGrock_c::UpdateModelTransform() {
     int shifted[3];
 
@@ -139,7 +134,6 @@ void daGrock_c::UpdateModelTransform() {
 /* Cylinder hit. Mega always breaks the rock. Punch/kick/breakdance/slide
  * (0x3c0) breaks it only for character 2 (Wario; SaveData's unlock bit 2)
  * and otherwise just plays the bonk. A still rock never hurts the player. */
-// @symbol _ZN9daGrock_c17HandleCylinderHitEv
 void daGrock_c::HandleCylinderHit() {
     dActor_c *other;
     u32 hit;
@@ -194,7 +188,6 @@ void daGrock_c::HandleCylinderHit() {
 
 /* Floor: bounce, dust, and steer the lateral velocity along the normal,
  * then cap it. Wall: reflect the heading when the approach is steep. */
-// @symbol _ZN9daGrock_c19HandleMeshCollisionEv
 void daGrock_c::HandleMeshCollision() {
     Vec3 normal;
     Vec3 pos;
@@ -252,7 +245,6 @@ void daGrock_c::HandleMeshCollision() {
 }
 
 /* Gravity, clamped at the terminal velocity, then step by the velocity. */
-// @symbol _ZN9daGrock_c19ApplyGravityAndMoveEv
 void daGrock_c::ApplyGravityAndMove() {
     int sum = mVertSpeed + mVertAccel;
     int clamped = mTerminalVelocity;
@@ -263,20 +255,17 @@ void daGrock_c::ApplyGravityAndMove() {
     AddVec3(&mPos, (Vector3 *)&mSpeedX, &mPos);
 }
 
-// @symbol _ZN9daGrock_c16CleanupResourcesEv
 int daGrock_c::CleanupResources() {
     data_ov021_02114a50.Release();
     return 1;
 }
 
-// @symbol _ZN9daGrock_c6RenderEv
 int daGrock_c::Render() {
     if (mType >= kGrockRolling)
         mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN9daGrock_c8BehaviorEv
 int daGrock_c::Behavior() {
     if (mType >= kGrockRolling) {
         func_0200f760(&mdCcAcPos_c);
@@ -363,7 +352,6 @@ int daGrock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9daGrock_c13InitResourcesEv
 int daGrock_c::InitResources() {
 
     mType = (u8)(param1 & 0xf);
@@ -422,7 +410,6 @@ int daGrock_c::InitResources() {
  * allocation size, vtable identity, and the GORO_ROCK registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: RollingRock_Spawn. */
-// @symbol daGrock_c_classInit
 extern "C" daGrock_c *daGrock_c_classInit() {
     return new daGrock_c();
 }

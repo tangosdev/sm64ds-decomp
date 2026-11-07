@@ -67,7 +67,6 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjPushblock_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjPushblock_c through RTTI,
  * allocation size, vtable identity, and the PUSHBLOCK registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -82,7 +81,6 @@ extern "C" daObjPushblock_c *daObjPushblock_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjPushblock_c13InitResourcesEv
 /* recovered: vtable identified, shared common types, declarations from a shared header
  *
  * daObjPushblock_c::InitResources -- vtable slot 0, ov002 0x020b8fe0. Attributed by
@@ -125,7 +123,6 @@ int daObjPushblock_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjPushblock_c8BehaviorEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header
  *
  * daObjPushblock_c::Behavior -- vtable slot 6, ov002 0x020b8dd4. Attributed by the
@@ -204,7 +201,6 @@ int daObjPushblock_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjPushblock_c6RenderEv
 /* daObjPushblock_c::Render -- vtable slot 9, ov002 0x020b8dac. Attributed by the
  * vtable: _ZTV16daObjPushblock_c carries this address at slot 9, where
  * _ZTV10dBgActor_c carries fBase_c's generic 0x02043af0.
@@ -220,7 +216,6 @@ int daObjPushblock_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjPushblock_c16CleanupResourcesEv
 /* recovered: real C++ method */
 /* daObjPushblock_c::CleanupResources() -- takes the block's dBgW collision out of the
  * world if it is still registered, then gives back the two shared files. */
@@ -235,7 +230,6 @@ int daObjPushblock_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjPushblock_c8OnPushedER8dActor_c
 /* recovered: named members + real C++ method */
 /* daObjPushblock_c::OnPushed(dActor_c &) -- slot 25. Takes the pusher's facing as its
  * own slide direction and picks the speed from the pusher's character id:
@@ -277,7 +271,6 @@ int daObjPushblock_c::OnPushed(dActor_c &other) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjPushblock_c15OnHitByMegaCharER7daPly_c
 /* daObjPushblock_c::OnHitByMegaChar -- vtable slot 27, ov002 0x020b8d14. Attributed by
  * the vtable: _ZTV16daObjPushblock_c carries 0x020b8d14 at slot 27 -- vtable + 0x6c --
  * where _ZTV10dBgActor_c carries dActor_c's generic 0x02010124. Confirmed with
@@ -294,7 +287,6 @@ void daObjPushblock_c::OnHitByMegaChar(daPly_c &player) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjPushblock_c4KillEv
 /* daObjPushblock_c::Kill() -- vtable slot 31, ov002 0x020b8c9c. Attributed by the
  * vtable: _ZTV16daObjPushblock_c carries this address at slot 31 -- vtable + 0x7c --
  * where _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv, and slot 30 carries

@@ -37,7 +37,6 @@ void func_01ffd9d4(void);
 
 namespace IRQ {
 
-// @symbol _ZN3IRQ20UserInterruptHandlerEv
 // OS_IrqHandler: dispatch the lowest pending interrupt.
 asm void UserInterruptHandler(void)
 {
@@ -68,7 +67,6 @@ _loop:
 
 extern "C" {
 
-// @symbol func_01ffd9d4
 // OS_IrqHandler_ThreadSwitch: wake waiters, then switch threads if asked.
 asm void func_01ffd9d4(void)
 {

@@ -32,7 +32,6 @@ void func_ov001_020ab3f0(void *);
 
 extern int data_0208ee44;
 
-// @symbol func_ov001_020ab5b0
 /* Place an icon: store its touch kind, centre and half extents, clear
  * mPressTimer, mOn and mPenInside, arm it at once when the kind is
  * touchable (the latch Behavior applies), and set the press reload to
@@ -53,7 +52,6 @@ extern "C" void func_ov001_020ab5b0(char *p, int kind, short x, short y, short h
     icon->mPressTime = 10;
 }
 
-// @symbol _ZN9dThIcon_c8BehaviorEv
 void dThIcon_c::Behavior() {
     if (mPressTimer <= 0)
         return;
@@ -71,10 +69,8 @@ void dThIcon_c::Behavior() {
         mReady = 1;
 }
 
-// @symbol _ZN9dThIcon_c6RenderEv
 void dThIcon_c::Render() {}
 
-// @symbol TouchArea_Update
 /* Test player `player`'s pen (the local player when negative) against the
  * icon's box. Fires per mTouchKind: 1 on a touch that begins inside, 2 when
  * the pen enters. Records whether the pen is inside for the next frame. */
@@ -108,7 +104,6 @@ extern "C" int TouchArea_Update(char *c, int player) {
     return ret;
 }
 
-// @symbol _ZN9dThIcon_c6SelectEv
 /* Light the icon a menu has just picked: an unlit icon simply turns on, a
  * lit one plays the press pulse. The lowest address in this unit. */
 void dThIcon_c::Select() {

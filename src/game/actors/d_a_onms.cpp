@@ -126,15 +126,12 @@ extern char data_ov092_02132294;
 extern struct Matrix4x3 data_020a0e68;
 }
 
-// @symbol _ZN8daOnms_cD1Ev
-// @symbol _ZN8daOnms_cD0Ev
 /* D1 tears down dCcAcPos_c, dBgCh_Actr and the inline dBgActor_c base.
    D0 is that teardown plus the actor-heap free. */
 daOnms_c::~daOnms_c()
 {
 }
 
-// @symbol _ZN8daOnms_c9StateSinkEv
 /* State 8: sink, then go once 0x3e8000 below the rest height. */
 void daOnms_c::StateSink()
 {
@@ -143,7 +140,6 @@ void daOnms_c::StateSink()
         MarkForDestruction();
 }
 
-// @symbol _ZN8daOnms_c11StateBounceEv
 /* State 7: tumble until the box lands, then shake the ground. */
 int daOnms_c::StateBounce()
 {
@@ -199,7 +195,6 @@ int daOnms_c::StateBounce()
     return 0;
 }
 
-// @symbol _ZN8daOnms_c12StateKnockedEv
 /* State 6: fly and tumble after a hit. A wall destroys the box. Surface
    type 9 (CLPS w0 >> 19) sinks it, collision kind 8 (CLPS w0 & 31) bounces
    it, and any other floor breaks it. */
@@ -275,7 +270,6 @@ void daOnms_c::StateKnocked()
     mPlayerActor = 0;
 }
 
-// @symbol func_ov092_021313b0
 /* Path mode: step to the next path node and pick the roll that heads for it. */
 extern "C" void func_ov092_021313b0(void *t)
 {
@@ -298,7 +292,6 @@ extern "C" void func_ov092_021313b0(void *t)
     else self->mMoveDir = kDirRollPosZ;
 }
 
-// @symbol _ZN8daOnms_c8NextMoveEv
 void daOnms_c::NextMove()
 {
     if (mMoveKind == kMoveAlongPath) {
@@ -319,7 +312,6 @@ void daOnms_c::NextMove()
     mOrientBits |= (mPrevAngleZ >> 0xa) & 0x30;
 }
 
-// @symbol _ZN8daOnms_c19func_ov092_02131578Ev
 /* State 1: sit still, take the next move after 0x14 frames, watch for a hit. */
 void daOnms_c::func_ov092_02131578()
 {
@@ -329,7 +321,6 @@ void daOnms_c::func_ov092_02131578()
     CheckPlayerHit();
 }
 
-// @symbol _ZN8daOnms_c9StateLandEv
 /* State 0: a roll has ended. Shake the ground on the first frame, then wait. */
 void daOnms_c::StateLand()
 {
@@ -344,31 +335,26 @@ void daOnms_c::StateLand()
     func_ov092_02131578();
 }
 
-// @symbol _ZN8daOnms_c13StateRollPosXEv
 void daOnms_c::StateRollPosX()
 {
     Roll(0, 0x3e800, 0, -0x800);
 }
 
-// @symbol _ZN8daOnms_c13StateRollNegXEv
 void daOnms_c::StateRollNegX()
 {
     Roll(0, -0x3e800, 0, 0x800);
 }
 
-// @symbol _ZN8daOnms_c13StateRollNegZEv
 void daOnms_c::StateRollNegZ()
 {
     Roll(-0x3e800, 0, -0x800, 0);
 }
 
-// @symbol _ZN8daOnms_c13StateRollPosZEv
 void daOnms_c::StateRollPosZ()
 {
     Roll(0x3e800, 0, 0x800, 0);
 }
 
-// @symbol _ZN8daOnms_c4RollEiiis
 /* One frame of an eight-frame roll: hop along the sine table, step, and
    turn the face sBankAxis says is leading. The table is an s8 index from
    &mAngleX; a negative index subtracts `bank` from that angle instead. */
@@ -430,7 +416,6 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
     mRollDone = 1;
 }
 
-// @symbol _ZN8daOnms_c6LaunchEP8dActor_cj
 /* A player punched (how 0), kicked (1) or bumped the box from below (2).
    Only a flat side (orient bits 0..3 clear) and a player whose param1 low
    bits are 2 can launch it. */
@@ -458,7 +443,6 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     mdCcAcPos_c.radius = 0x1a9000;
 }
 
-// @symbol _ZN8daOnms_c14CheckPlayerHitEv
 void daOnms_c::CheckPlayerHit()
 {
     unsigned int id = mdCcAcPos_c.otherOwner;
@@ -481,7 +465,6 @@ void daOnms_c::CheckPlayerHit()
     mPlayerActor = o;
 }
 
-// @symbol func_ov092_02131a88
 /* Copy the model matrix over the collider and put the actor position in
    the translation row (flat Matrix4x3 words 9..11), then Transform. */
 extern "C" void func_ov092_02131a88(char *c)
@@ -495,7 +478,6 @@ extern "C" void func_ov092_02131a88(char *c)
     self->mMeshCollider.Transform(self->mClsnMat, self->mAngleY);
 }
 
-// @symbol _ZN8daOnms_c14UpdateModelMtxEv
 void daOnms_c::UpdateModelMtx()
 {
     if (mTumbling != 0) {
@@ -512,7 +494,6 @@ void daOnms_c::UpdateModelMtx()
     }
 }
 
-// @symbol _ZN8daOnms_c16CleanupResourcesEv
 int daOnms_c::CleanupResources()
 {
     gOnimasuModelFile.Release();
@@ -522,14 +503,12 @@ int daOnms_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN8daOnms_c6RenderEv
 int daOnms_c::Render()
 {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN8daOnms_c8BehaviorEv
 int daOnms_c::Behavior()
 {
     mTumbling = 1;
@@ -564,7 +543,6 @@ int daOnms_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daOnms_c13InitResourcesEv
 int daOnms_c::InitResources()
 {
     void *f;
@@ -623,7 +601,6 @@ int daOnms_c::InitResources()
     return 1;
 }
 
-// @symbol daOnms_c_classInit
 extern "C" daOnms_c *daOnms_c_classInit()
 {
     return new daOnms_c();

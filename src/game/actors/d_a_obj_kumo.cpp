@@ -52,7 +52,6 @@ extern int data_ov039_021118e0;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjKumo_c_classInit
 /* Every instruction the cartridge has here falls out of the one `new`.
    0x02111380 loads 0x124 -- the class's own size -- into the header's inline
    operator new; the implicit ctor calls dActor_c's C2, stores this class's
@@ -64,7 +63,6 @@ extern "C" daObjKumo_c *daObjKumo_c_classInit(void) {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjKumo_c13InitResourcesEv
 int daObjKumo_c::InitResources() {
     void *f = dExtSimpleModel_c::LoadFile(gOV039ObjKumoModelFile);
     mModel.SetFile((BMD_File *)f, 1, 2);
@@ -75,7 +73,6 @@ int daObjKumo_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjKumo_c8BehaviorEv
 int daObjKumo_c::Behavior() {
     int d = Vec3_Dist(&mCamSpacePos, &mPos);
     int rank = 1;
@@ -96,7 +93,6 @@ int daObjKumo_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjKumo_c6RenderEv
 int daObjKumo_c::Render() {
     mModel.Render(0);
     return 1;
@@ -104,7 +100,6 @@ int daObjKumo_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjKumo_c16CleanupResourcesEv
 int daObjKumo_c::CleanupResources() {
     gOV039ObjKumoModelFile.Release();
     return 1;
@@ -112,7 +107,6 @@ int daObjKumo_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjKumo_c17UpdateModelMatrixEv
 void daObjKumo_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.t.x = mPosX >> 3;
@@ -122,8 +116,6 @@ void daObjKumo_c::UpdateModelMatrix() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjKumo_cD1Ev
-// @symbol _ZN11daObjKumo_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjKumo_c() {}` in the header is
    the whole source of both variants: from an inline body mwcc emits D1 and
    then D0 -- the cartridge's own order -- and no D2. Writing the body out of

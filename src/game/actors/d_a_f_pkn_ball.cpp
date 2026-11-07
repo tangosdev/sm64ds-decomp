@@ -70,14 +70,11 @@ int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags);
 void func_02012694(unsigned int, const Vector3 *);
 }
 
-// @symbol _ZN12daFPknBall_cD1Ev
-// @symbol _ZN12daFPknBall_cD0Ev
 /* D1: own vptr, then the members in reverse declaration order (dExtShadowModel_c,
  * dBgCh_Actr, dCcAc_c), then dEnemyBase_c's destructor. D0 is the same body
  * plus the inherited operator delete; it has no source of its own. */
 daFPknBall_c::~daFPknBall_c() {}
 
-// @symbol _ZN12daFPknBall_c11TryDropCoinEv
 /* Roll 0..9; on 0..3 spawn a coin (actor 288) at the ball's position and zero
  * its velocity words. Called when a variant-4 ball ends by range or water. */
 void daFPknBall_c::TryDropCoin() {
@@ -92,7 +89,6 @@ void daFPknBall_c::TryDropCoin() {
     }
 }
 
-// @symbol _ZN12daFPknBall_c11TryDropItemEv
 /* Death drop of a variant-0 ball. Rolls 0..9. On 4..9, gives up if any
  * FPAKUN_BALL already exists. Otherwise, if the closest player's param1 is 3
  * and the actor 279 has not yet handed one out, spawns a cap (actor 269) for a
@@ -140,7 +136,6 @@ void daFPknBall_c::TryDropItem() {
     }
 }
 
-// @symbol _ZN12daFPknBall_c13UpdateVisualsEv
 /* Per-frame visuals: refresh the two trail particles at the ball's position
  * (x mirrored when mMirrored is set), move the shadow matrix to that
  * position >> 3, and draw the drop shadow. */
@@ -178,12 +173,10 @@ void daFPknBall_c::UpdateVisuals() {
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x28000, 0x64000, 0xf);
 }
 
-// @symbol _ZN12daFPknBall_c6RenderEv
 int daFPknBall_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12daFPknBall_c8BehaviorEv
 /* _ZN12daFPknBall_c8BehaviorEv at 0x020f8c94.
  *
  * Order of business: with the first Yoshi-mouth flag set only the visuals run;
@@ -368,7 +361,6 @@ int daFPknBall_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daFPknBall_c13InitResourcesEv
 int daFPknBall_c::InitResources() {
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -391,7 +383,6 @@ int daFPknBall_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12daFPknBall_c13OnYoshiTryEatEv
 s32 daFPknBall_c::OnYoshiTryEat() {
     unsigned char b = mVariant;
     if (b != VARIANT_DROPS_ITEM && b != VARIANT_COIN_DROP)
@@ -400,7 +391,6 @@ s32 daFPknBall_c::OnYoshiTryEat() {
 }
 
 /* FPAKUN_BALL registry factory. */
-// @symbol daFPknBall_c_classInit
 extern "C" daFPknBall_c *daFPknBall_c_classInit() {
     return new daFPknBall_c();
 }

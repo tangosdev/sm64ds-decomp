@@ -36,7 +36,6 @@ void MulVec3Mat3x3(const Vector3* in, const Matrix3x3* matrix, Vector3* out);
 
 namespace Particle {
 
-// @symbol _ZN8Particle12Acceleration4FuncERNS_10EffectDataEPcR7Vector3
 void Acceleration::Func(EffectData& effect, char*, Vector3& velocity)
 {
     velocity.x += effect.acceleration.x;
@@ -44,7 +43,6 @@ void Acceleration::Func(EffectData& effect, char*, Vector3& velocity)
     velocity.z += effect.acceleration.z;
 }
 
-// @symbol _ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3
 void Jitter::Func(EffectData& effect, char* particle, Vector3& velocity)
 {
     Element& state = *(Element*)particle;
@@ -74,7 +72,6 @@ void Jitter::Func(EffectData& effect, char* particle, Vector3& velocity)
     velocity.z += (amp * r - (amp << 8)) >> 8;
 }
 
-// @symbol _ZN8Particle8Converge4FuncERNS_10EffectDataEPcR7Vector3
 void Converge::Func(EffectData& effect, char* particle,
                     Vector3& acceleration)
 {
@@ -88,7 +85,6 @@ void Converge::Func(EffectData& effect, char* particle,
         * ((effect.converge.targetZ - state.offset.z) - state.velocity.z) >> 12;
 }
 
-// @symbol _ZN8Particle4Turn4FuncERNS_10EffectDataEPcR7Vector3
 void Turn::Func(EffectData& effect, char* particle, Vector3&)
 {
     Element& state = *(Element*)particle;
@@ -114,7 +110,6 @@ void Turn::Func(EffectData& effect, char* particle, Vector3&)
     MulVec3Mat3x3(&state.offset, &matrix, &state.offset);
 }
 
-// @symbol _ZN8Particle10LimitPlane4FuncERNS_10EffectDataEPcR7Vector3
 void LimitPlane::Func(EffectData& effect, char* particle, Vector3&)
 {
     Element& state = *(Element*)particle;
@@ -160,7 +155,6 @@ void LimitPlane::Func(EffectData& effect, char* particle, Vector3&)
     }
 }
 
-// @symbol _ZN8Particle14RadiusConverge4FuncERNS_10EffectDataEPcR7Vector3
 void RadiusConverge::Func(EffectData& effect, char* particle, Vector3&)
 {
     Element& state = *(Element*)particle;

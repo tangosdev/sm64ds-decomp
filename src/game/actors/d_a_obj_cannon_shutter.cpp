@@ -71,7 +71,6 @@ extern CannonShutterClsnFilePtr data_ov002_0210e124;  /* the KCL collision mesh 
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjCannonShutter_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjCannonShutter_c through
  * RTTI, allocation size, vtable identity, and the CANNON_SHUTTER registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
@@ -102,7 +101,6 @@ extern "C" SpawnInfo<daObjCannonShutter_c> g_profile_CANNON_SHUTTER = {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjCannonShutter_c13InitResourcesEv
 int daObjCannonShutter_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210e12c), 1, -1);
     UpdateModelPosAndRotY();
@@ -124,7 +122,6 @@ int daObjCannonShutter_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjCannonShutter_c8BehaviorEv
 int daObjCannonShutter_c::Behavior() {
     if (mCannonOpen != 0) {
         if (ClosestPlayer()->mIsMega != 0) {
@@ -181,7 +178,6 @@ int daObjCannonShutter_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjCannonShutter_c6RenderEv
 int daObjCannonShutter_c::Render() {
     if (gCurrentSublevel == 6 && data_0209f220 == 1 && (int)(param1 & 0xff) == 1)
         return 1;
@@ -193,7 +189,6 @@ int daObjCannonShutter_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjCannonShutter_c16CleanupResourcesEv
 int daObjCannonShutter_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -205,7 +200,6 @@ int daObjCannonShutter_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjCannonShutter_c12StartOpeningEv
 /* Called from ov084's daRedBombhei_c cutscene: plays sound 0x47 and sets
    mOpening, which Behavior turns into the slide-down-then-forward motion. */
 void daObjCannonShutter_c::StartOpening() {
@@ -215,8 +209,6 @@ void daObjCannonShutter_c::StartOpening() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjCannonShutter_cD1Ev
-// @symbol _ZN20daObjCannonShutter_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjCannonShutter_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no D2. */

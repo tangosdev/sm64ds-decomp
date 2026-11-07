@@ -1,5 +1,4 @@
 #include "types.h"
-// @symbol func_ov007_020c5fc8
 /* recovered: shared common types */
 #include "common.h"
 #include "Ov007StrokePath.h"

@@ -54,7 +54,6 @@ void OSi_AlarmHandler(void);
 void OSi_InsertAlarm(OSAlarm *alarm, u64 fire);
 void OSi_ArrangeTimer(void);
 
-// @symbol OSi_SetTimer
 void OSi_SetTimer(OSAlarm *alarm) {
     long long tick;
     long long delta;
@@ -74,7 +73,6 @@ void OSi_SetTimer(OSAlarm *alarm) {
     IRQ::EnableIRQs(OS_IE_TIMER1);
 }
 
-// @symbol OS_InitAlarm
 void OS_InitAlarm(void) {
     if (data_020a6440 != 0)
         return;
@@ -85,18 +83,15 @@ void OS_InitAlarm(void) {
     IRQ::DisableIRQs(OS_IE_TIMER1);
 }
 
-// @symbol OS_IsAlarmAvailable
 int OS_IsAlarmAvailable(void) {
     return data_020a6440;
 }
 
-// @symbol OS_CreateAlarm
 void OS_CreateAlarm(OSAlarm *alarm) {
     alarm->handler = 0;
     alarm->tag = 0;
 }
 
-// @symbol OSi_InsertAlarm
 void OSi_InsertAlarm(OSAlarm *alarm, u64 fire) {
     OSAlarm *next;
 
@@ -142,7 +137,6 @@ void OSi_InsertAlarm(OSAlarm *alarm, u64 fire) {
     OSi_SetTimer(alarm);
 }
 
-// @symbol OS_SetAlarm
 void OS_SetAlarm(OSAlarm *alarm, long long tick, OSAlarmHandler handler, void *arg) {
     u32 saved;
     if (alarm == 0 || alarm->handler != 0)
@@ -155,7 +149,6 @@ void OS_SetAlarm(OSAlarm *alarm, long long tick, OSAlarmHandler handler, void *a
     IRQ::Restore(saved);
 }
 
-// @symbol OS_CancelAlarm
 void OS_CancelAlarm(OSAlarm *alarm) {
     u32 saved = IRQ::Disable();
     OSAlarm *next;
@@ -182,7 +175,6 @@ void OS_CancelAlarm(OSAlarm *alarm) {
 
 /* The timer 1 IRQ entry. It pushes lr alone and calls out with no stack pad,
  * which mwccarm never emits for C: the SDK writes this one as asm. */
-// @symbol OSi_AlarmHandler
 asm void OSi_AlarmHandler(void) {
     stmdb sp!, {lr}
     bl OSi_ArrangeTimer
@@ -190,7 +182,6 @@ asm void OSi_AlarmHandler(void) {
     bx lr
 }
 
-// @symbol OSi_ArrangeTimer
 void OSi_ArrangeTimer(void) {
     OSAlarm *alarm;
     OSAlarmHandler handler;

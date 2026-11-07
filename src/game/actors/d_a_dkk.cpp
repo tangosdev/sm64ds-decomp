@@ -57,13 +57,11 @@ typedef char DkkClsnFileHandler_size_must_be_8[sizeof(DkkClsnFileHandler) == 8 ?
 /* decl_common.h declares data_ov025_02113814; Sound.h declares
  * func_0201267c. */
 
-// @symbol daDkk_c_classInit
 /* DONKAKU factory. The `new` is the whole body. */
 extern "C" daDkk_c *daDkk_c_classInit() {
     return new daDkk_c();
 }
 
-// @symbol _ZN7daDkk_c13InitResourcesEv
 /* Stores the file table, then either starts already airborne or raycasts
  * up for the ceiling and lowers mRiseY, the top of the rise, under it. */
 int daDkk_c::InitResources() {
@@ -98,7 +96,6 @@ int daDkk_c::InitResources() {
     return r;
 }
 
-// @symbol _ZN7daDkk_c8BehaviorEv
 /* Eight states, then the shared model and collision update. */
 int daDkk_c::Behavior() {
     switch (mState) {
@@ -135,7 +132,6 @@ int daDkk_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN7daDkk_c9StateFallEv
 /* mState 5, the fall. Integrates the drop, and on reaching the stored ground
  * height snaps to it, shakes the camera, spawns the impact particle and hands
  * over to state 6. */
@@ -164,7 +160,6 @@ void daDkk_c::StateFall() {
     func_0201267c(0xc7, &mCamSpacePos);
 }
 
-// @symbol _ZN7daDkk_c14StateLandPauseEv
 /* mState 6, the pause after landing. Counts mTimer down; at zero it either
  * starts the next fall (state 5) or, on the fourth pass, turns to face the
  * opposite way (state 7). */
@@ -182,7 +177,6 @@ void daDkk_c::StateLandPause() {
     mTurnTargetAngle = (s16)(mAngleY + 0x8000);
 }
 
-// @symbol _ZN7daDkk_c9StateTurnEv
 /* mState 7, the turn. Steps mAngleY toward mTurnTargetAngle; once
  * ApproachLinear reports it has arrived, copies it into mPrevAngleY, clears the
  * landing counter and goes back to state 6. */
@@ -197,15 +191,12 @@ int daDkk_c::StateTurn() {
     return 0x28;
 }
 
-// @symbol _ZN7daDkk_c16OnAimedAtWithEggEv
 /* Egg-aim height, 206 units. The return is added to the egg's Y. */
 int daDkk_c::OnAimedAtWithEgg() {
     return 0xce000;
 }
 
 /* D1 and D0 come from the inline destructor in daDkk_c.h. */
-// @symbol _ZN7daDkk_cD1Ev
-// @symbol _ZN7daDkk_cD0Ev
 
 /* Retail construction order: model 0x2dc, then collision 0x2dd.
  * mwcc emits __sinit_d_a_dkk.cpp. */

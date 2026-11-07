@@ -37,7 +37,6 @@ extern TdFutaClsnFileHandle data_ov032_02113acc;
 extern TdFutaModelFilePtr data_ov032_02113ad4;
 extern CLPS_Block data_ov032_02112f98;
 
-// @symbol daObjTdFuta_c_classInit
 /* Every instruction the cartridge has here falls out of the one `new`.
  * 0x0211266c loads 0x320 -- the class's own size -- into the header's leaf
  * operator new; the following call is dBgActor_c's C2 and the store lays
@@ -49,7 +48,6 @@ extern "C" daObjTdFuta_c *daObjTdFuta_c_classInit() {
     return new daObjTdFuta_c();
 }
 
-// @symbol _ZN13daObjTdFuta_c13InitResourcesEv
 s32 daObjTdFuta_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov032_02113ad4), 1, -1);
     UpdateModelPosAndRotY();
@@ -61,19 +59,16 @@ s32 daObjTdFuta_c::InitResources() {
     return Event::GetBit(0xe) == 0;
 }
 
-// @symbol _ZN13daObjTdFuta_c8BehaviorEv
 s32 daObjTdFuta_c::Behavior() {
     IsClsnInRange(0, 0);
     return 1;
 }
 
-// @symbol _ZN13daObjTdFuta_c6RenderEv
 s32 daObjTdFuta_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjTdFuta_c16CleanupResourcesEv
 s32 daObjTdFuta_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -83,8 +78,6 @@ s32 daObjTdFuta_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjTdFuta_cD1Ev
-// @symbol _ZN13daObjTdFuta_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in
  * include/daObjTdFuta_c.h and declared LAST. Two measurements force that:
  *   - out of line, mwcc emits D0 ahead of D1 and the cartridge has D1 first,
