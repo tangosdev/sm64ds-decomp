@@ -60,8 +60,7 @@ enum daObjKi_Hasira_c_AssetId { ASSET_KI_HASIRA_BMD = 0x063d, ASSET_KI_HASIRA_KC
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "math/MtxStack.h"
-
-typedef long long s64;
+#include "nitro/fx/fx_trig.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -86,8 +85,6 @@ extern char data_ov016_02113cac[];
 extern "C" {
 /* The camera the shake request goes to (arm9). */
 extern dCamera_c *data_0209f318;
-/* The sin/cos table: (sin, cos) pairs of s16 indexed by angle >> 4. */
-extern s16 data_02082214[];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -121,10 +118,7 @@ s32 daObjKi_Hasira_c::InitResources() {
 // @symbol _ZN16daObjKi_Hasira_c8BehaviorEv
 s32 daObjKi_Hasira_c::Behavior() {
     Vector3 targetPos;
-    /* volatile on purpose: the cartridge stores each crash coordinate as soon
-       as it is known, then stores x, y and z again once the offsets are in,
-       and reads them back for dustPos. Without it the early stores fold away. */
-    volatile Vector3 crashPos;
+    Vector3 crashPos;
     Vector3 dustPos;
 
     /* Nothing happens while the pillar is off screen (mFlags 0x08). Written
@@ -135,10 +129,8 @@ s32 daObjKi_Hasira_c::Behavior() {
 
     daPly_c *target = mTarget;
     if (target != 0) {
-        s32 *p = &target->mPosX;
-        targetPos.x = p[0];
-        targetPos.y = p[1];
-        targetPos.z = p[2];
+        const Vector3 &p = target->mPos;
+        targetPos = p;
     }
 
     switch (mState) {
@@ -169,30 +161,12 @@ s32 daObjKi_Hasira_c::Behavior() {
 
         if (mAngleX > 0x3900) {
             /* The crash point: 900 units out along the facing, 150 up. */
-            int x = mPosX;
-            s16 *sinCos = data_02082214;
-            crashPos.x = x;
-            int y = mPosY;
-            crashPos.y = y;
-            int z = mPosZ;
-            int reach = 0x384000;
-            crashPos.z = z;
-            u16 yaw = mAngleY;
-            int round = 0x800;
-            y = y + 0x96000;
-            s16 sin = sinCos[(yaw >> 4) << 1];
-            unsigned particleID = 0x107;
-            x = x + (int)(((s64)sin * (s64)reach + round) >> 12);
-            crashPos.x = x;
-            yaw = mAngleY;
-            s16 cos = sinCos[((yaw >> 4) << 1) + 1];
-            z = z + (int)(((s64)cos * (s64)reach + round) >> 12);
-            crashPos.y = y;
-            crashPos.z = z;
-            Particle::System::NewSimple(particleID, x, y, z);
-            dustPos.x = crashPos.x;
-            dustPos.y = crashPos.y;
-            dustPos.z = crashPos.z;
+            crashPos = mPos;
+            crashPos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x384000);
+            crashPos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x384000);
+            crashPos.y += 0x96000;
+            Particle::System::NewSimple(0x107, crashPos.x, crashPos.y, crashPos.z);
+            dustPos = crashPos;
             LandingDustAt(dustPos, true);
             data_0209f318->func_0200d8c8(&mPos, 0x5dc000);
             Sound::PlayBank3(0x41, mCamSpacePos);
