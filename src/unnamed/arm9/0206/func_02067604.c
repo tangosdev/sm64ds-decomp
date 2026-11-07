@@ -1,6 +1,6 @@
 #include "private/arm9_a9db8_mb_parent.h"
 extern int func_0206736c(unsigned int idx, unsigned int addr, unsigned int size);
-extern void *data_020a9db8;
+extern char *data_020a9db8;
 
 /* NitroSDK MBi_MakeBlockInfoTable(table, mdfi): lay the three segments out as
  * consecutive mBlockSize-byte blocks, refusing a segment func_0206736c
