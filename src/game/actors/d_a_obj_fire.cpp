@@ -14,7 +14,7 @@
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S.
  *
- * Particle::System::NewBlueFire / NewRedFire are the arm9 blue/red flame
+ * Particle::System::NewBlueFlame / NewRedFlame are the arm9 blue/red flame
  * particle wrappers (effects 0x117 / 0x118). The names are descriptive;
  * the ROM has none.
  */
@@ -116,9 +116,9 @@ int daObjFire_c::Behavior() {
     mFlags &= ~0xc0000;
 
     if (IsBlueFlame(this))
-        Particle::System::NewBlueFire(pos.x, pos.y, pos.z);
+        Particle::System::NewBlueFlame(pos.x, pos.y, pos.z);
     else
-        Particle::System::NewRedFire(pos.x, pos.y, pos.z);
+        Particle::System::NewRedFlame(pos.x, pos.y, pos.z);
 
     if (IsBeingEaten(this)) {
         mDisappearTimer = 0x1e;

@@ -7832,7 +7832,7 @@
         "return:char []"
       ]
     },
-    "data_0209ee74": {
+    "gParticleControl": {
       "include/Particle__System.h": [
         "return:dPa_c *"
       ]

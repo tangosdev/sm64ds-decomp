@@ -89,8 +89,10 @@ struct Manager {
     u16 mNumTextures;               /* 0x26 */
     u16 mNumSystems;                /* 0x28 - size of the System pool */
     u16 mNumParticles;              /* 0x2a - size of the particle pool */
-    u16 unk_02c;                    /* 0x2c */
-    u16 unk_02e;                    /* 0x2e */
+    /* The polygon-ID range each new system's particles cycle through
+       (System::polygonIDs); dPa_c::Initialise passes 0x1a..0x3e. */
+    u16 mMinPolygonID; /* 0x2c */
+    u16 mMaxPolygonID; /* 0x2e */
     /* Base POLYGON_ATTR bits the draw routines OR into each polygon;
        dPa_c::Initialise sets 0x8000. */
     u32 mPolygonAttr; /* 0x30 */

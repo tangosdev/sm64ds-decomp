@@ -150,14 +150,20 @@ Done (branch `names/particle-dpa-level`):
   from). The casts in the wrappers and at the call sites went with it.
 - The `Particle.cpp` wrappers and the `dPa_c` callback bank they feed are
   named for what each one passes: the fixed-effect ones for their effect
-  (`NewSplash`, `NewBubble`, `NewRedFire`, `NewFlamethrowerRedA`, ...,
-  `MegaRunningDustAt`, members `mSplashSystemID`/`mSplashCallback`, ...),
+  (`NewSplash`, `NewBubble`, `NewRedFlame`, `NewFlamethrowerRedA`, ...,
+  `MegaRunningSlidingDustAt`, members `mSplashSystemID`/`mSplashCallback`, ...),
   the caller-effect ones for their ROM-RTTI callback class
   (`NewCheckWater`, `NewCheckWaterRipple`, `NewFitWater`, `NewCheckYogan`,
   `NewCleanParticle`). They were `func_020226fc`..`func_02022d44` and
   `NewUnkCallback818`. The table is in notes/system-provenance.md. These are
   descriptive, not recovered: TP's equivalents are `dPa_control_c::set*`
   members, not names we can borrow one for one.
+- Shared with #5063, which named part of the same code in parallel: its
+  `NewRedFlame` / `NewBlueFlame` / `MegaRunningSlidingDustAt`, the
+  `System::PolygonIDs` bitfield, the particle heap and VRAM cursor globals
+  (`sParticleHeap*`, `sParticle*VramCursor`), and its global pointer, which
+  became `gParticleControl` (was `data_0209ee74`, `gParticleSysTracker` in
+  #5063) once the class was `dPa_c`.
 
 Weaker (TP/TWW naming only; no structural proof of the name):
 

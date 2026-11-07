@@ -24,7 +24,8 @@ the name does not overclaim.
 > name and offset.
 
 There is one current instance and its address lives in the global
-`data_0209ee74`: `_ZN5dPa_cC1Ev` writes it, `_ZN5dPa_cD1Ev` clears it, and
+`gParticleControl` (0x0209ee74, was `data_0209ee74`; named after TP's
+`dPa_control_c`): `_ZN5dPa_cC1Ev` writes it, `_ZN5dPa_cD1Ev` clears it, and
 every particle helper reaches the object through it. The evidence is spread
 over eleven files, none of which is a method of the class.
 
@@ -59,7 +60,7 @@ takes the unique ID from the caller instead:
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x810 | `mWeatherCallback` | `_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj` builds `data_0209ee74 + 0x810` and passes it as the callback. |
+| 0x810 | `mWeatherCallback` | `_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj` builds `gParticleControl + 0x810` and passes it as the callback. |
 | 0x814 | `mWeatherCallbackCount` | The same function writes its `numWeatherEffectsNow` argument to `callback + 4`, which is this byte; the constructor seeds it `1`. It is a member of the 0x810 object, not an independent field. |
 | 0x818 | `mCleanParticleCallback` | `System::NewCleanParticle` (was `NewUnkCallback818`) passes it. Nothing names the effect; the member and the wrapper take the name of the ROM-RTTI class constructed there, `cleanParticleCallback_c`. |
 
@@ -94,11 +95,11 @@ callbacks (no id slot) for their ROM-RTTI class.
 
 | Slot | Members | Wrapper (was) | Effect |
 | --- | --- | --- | --- |
-| 0x75c/0x760 | `mMegaRunningDust{SystemID,Callback}` | `Particle::MegaRunningDustAt` (`func_02022b04`) | 0x61 |
+| 0x75c/0x760 | `mMegaRunningSlidingDust{SystemID,Callback}` | `Particle::MegaRunningSlidingDustAt` (`func_02022b04`) | 0x61 |
 | 0x774/0x778 | `mSplash{SystemID,Callback}` | `System::NewSplash` (`func_02022a4c`) | 0xdf |
 | 0x780/0x784 | `mBubble{SystemID,Callback}` | `System::NewBubble` (`func_020229f0`) | 0xc4 |
-| 0x798/0x79c | `mRedFire{SystemID,Callback}` | `System::NewRedFire` (`func_0202293c`) | 0x118 |
-| 0x7a4/0x7a8 | `mBlueFire{SystemID,Callback}` | `System::NewBlueFire` (`func_020228dc`) | 0x117 |
+| 0x798/0x79c | `mRedFlame{SystemID,Callback}` | `System::NewRedFlame` (`func_0202293c`) | 0x118 |
+| 0x7a4/0x7a8 | `mBlueFlame{SystemID,Callback}` | `System::NewBlueFlame` (`func_020228dc`) | 0x117 |
 | 0x7b0/0x7b4 | `mFlamethrowerRedA{SystemID,Callback}` | `System::NewFlamethrowerRedA` (`func_02022864`) | 0x51 |
 | 0x7c0/0x7c4 | `mFlamethrowerRedB{SystemID,Callback}` | `System::NewFlamethrowerRedB` (`func_020227ec`) | 0x52 |
 | 0x7d0/0x7d4 | `mFlamethrowerBlueA{SystemID,Callback}` | `System::NewFlamethrowerBlueA` (`func_02022774`) | 0x4f |
@@ -122,7 +123,7 @@ until separate evidence supports its historical type name.
 
 ### Shadow structs collapsed onto the header
 
-`data_0209ee74` was declared six different ways across the tree — `char*`,
+`gParticleControl` (then `data_0209ee74`) was declared six different ways across the tree — `char*`,
 `void*`, and three private one-off structs (`ParticleSysTracker` twice, with
 different fields, and `SomeGlobal`). All but one now declare it
 `struct Particle *` and reach members by name; every one was re-verified
@@ -132,7 +133,7 @@ byte-identical. The one-time exception was the simple callback's
 kept a local shadow. That no longer holds: the function is now
 `src/engine/particle/d_pa.cpp`,
 a real `dPa_c::level_c::simpleCallback_c` method that opens no namespace,
-includes `Particle__System.h`, and reaches `data_0209ee74->mManager` by name.
+includes `Particle__System.h`, and reaches `gParticleControl->mManager` by name.
 
 The old hand-written constructor was typed `struct Particle *self`
 and reached the callback's own `s16` as `&self->unk_004`. That was never a

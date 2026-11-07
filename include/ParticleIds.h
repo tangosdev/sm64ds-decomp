@@ -130,7 +130,7 @@ enum ParticleId {
     kPtclMegaGrowB             = 0x05e, /* daPly_c::func_ov002_020c8d14 */
     kPtclMegaGrowStartA        = 0x05f, /* daPly_c::func_ov002_020c9a04 */
     kPtclMegaGrowStartB        = 0x060, /* daPly_c::func_ov002_020c9a04 */
-    kPtclMegaRunningDust       = 0x061, /* Particle::MegaRunningDustAt */
+    kPtclMegaRunningDust       = 0x061, /* Particle::MegaRunningSlidingDustAt */
     kPtclHeavyStepRipple       = 0x062, /* daPly_c::func_ov002_020bf5e0 */
     kPtclHeavyStep             = 0x063, /* daPly_c::func_ov002_020bf5e0 */
     kPtclHeavyStepWater        = 0x064, /* daPly_c::func_ov002_020bf5e0 */
@@ -275,8 +275,8 @@ enum ParticleId {
     kPtclStarSparkle           = 0x114, /* daStar_c::func_ov002_020e7f2c */
     kPtclStarCollectA          = 0x115, /* daStar_c::func_ov002_020e8098 */
     kPtclStarCollectB          = 0x116, /* daStar_c::func_ov002_020e8098 */
-    kPtclObjBlueFire           = 0x117, /* Particle::System::NewBlueFire */
-    kPtclObjRedFire            = 0x118, /* Particle::System::NewRedFire */
+    kPtclObjBlueFire           = 0x117, /* Particle::System::NewBlueFlame */
+    kPtclObjRedFire            = 0x118, /* Particle::System::NewRedFlame */
     kPtclBooCageFall           = 0x119, /* daTBasket_c::Behavior */
     kPtclSnowmanRiseA          = 0x11a, /* daSnowman_c::func_ov081_02124f7c */
     kPtclSnowmanRiseB          = 0x11b, /* daSnowman_c::func_ov081_02124f7c */

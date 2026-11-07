@@ -167,7 +167,7 @@ struct dPa_c {
     /* dPa_c itself: the scene's particle owner. Every scene that shows
      * particles embeds one (dScStage_c +0x50, dEntObj_c +0x50,
      * dScMgSingle3DBase_c +0x471c, dScMgD3DBase_c +0x47e4); the constructor
-     * makes it the current one (data_0209ee74) and the destructor clears it.
+     * makes it the current one (gParticleControl) and the destructor clears it.
      *
      * The name is the ROM's scope, not a guess: this object holds the
      * level_c at +0x8 and, from +0x750, the bank of level_c callbacks the
@@ -209,8 +209,8 @@ struct dPa_c {
      * the constructor raises from 3.0 to 75.0. */
     s32 mRunningSlidingDustSystemID;                               /* 0x750 */
     level_c::simpleCallback_c mRunningSlidingDustCallback;         /* 0x754 */
-    s32 mMegaRunningDustSystemID;                                  /* 0x75c */
-    level_c::simpleCallback_c mMegaRunningDustCallback;            /* 0x760 */
+    s32 mMegaRunningSlidingDustSystemID;                                  /* 0x75c */
+    level_c::simpleCallback_c mMegaRunningSlidingDustCallback;            /* 0x760 */
     s32 mBigSplashSystemID;                                        /* 0x768 */
     level_c::splashCallback_c mBigSplashCallback;                  /* 0x76c */
     s32 mSplashSystemID;                                           /* 0x774 */
@@ -220,10 +220,10 @@ struct dPa_c {
     level_c::bubbleCallback_c mBubbleCallback;                     /* 0x784 */
     s32 mRippleSystemID;                                           /* 0x78c */
     level_c::fitWaterSimpleCallback_c mRippleCallback;             /* 0x790 */
-    s32 mRedFireSystemID;                                          /* 0x798 */
-    level_c::simpleCallback_c mRedFireCallback;                    /* 0x79c */
-    s32 mBlueFireSystemID;                                         /* 0x7a4 */
-    level_c::simpleCallback_c mBlueFireCallback;                   /* 0x7a8 */
+    s32 mRedFlameSystemID;                                          /* 0x798 */
+    level_c::simpleCallback_c mRedFlameCallback;                    /* 0x79c */
+    s32 mBlueFlameSystemID;                                         /* 0x7a4 */
+    level_c::simpleCallback_c mBlueFlameCallback;                   /* 0x7a8 */
     s32 mFlamethrowerRedASystemID;                                 /* 0x7b0 */
     level_c::scaleCallback_c mFlamethrowerRedACallback;            /* 0x7b4 */
     s32 mFlamethrowerRedBSystemID;                                 /* 0x7c0 */

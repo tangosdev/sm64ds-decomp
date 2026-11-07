@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x020226d4..0x020233d4, 31 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "TOP EDGE: src/unnamed/arm9/0202/func_020226d0.c (0x020226d0..0x020226d4) ends exactly where the run begins -- a four-byte helper with no Particle affinity. BOTTOM EDGE: src/GetActorDebugName.c (0x020233d4..0x020233f0) begins exactly where the run ends and belongs to the actor-debug name table, not the particle engine.",
-    "FAMILY COMPLETE: every member of the run either is a real Particle:: member (SysTracker lifecycle, Texture allocators, System::FromUniqueID, RenderAll, SetSelfDestructFlag), carries a Particle:: mangled symbol as an extern \"C\" identifier (System::New and its fixed-effect-id wrappers, RunningSlidingDustAt, NewSimple), or is an address-named System::New call wrapper touching the same data_0209ee74 singleton / callback bank. func_02023178 is the bump allocator Initialise hands to the manager."
+    "FAMILY COMPLETE: every member of the run either is a real Particle:: member (SysTracker lifecycle, Texture allocators, System::FromUniqueID, RenderAll, SetSelfDestructFlag), carries a Particle:: mangled symbol as an extern \"C\" identifier (System::New and its fixed-effect-id wrappers, RunningSlidingDustAt, NewSimple), or is an address-named System::New call wrapper touching the same gParticleControl singleton / callback bank. func_02023178 is the bump allocator Initialise hands to the manager."
   ],
   "sections": [
     {
@@ -54,14 +54,14 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8Particle6System11NewBlueFireEiii",
+      "symbol": "_ZN8Particle6System12NewBlueFlameEiii",
       "address": "0x020228dc",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0202/func_020228dc.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8Particle6System10NewRedFireEiii",
+      "symbol": "_ZN8Particle6System11NewRedFlameEiii",
       "address": "0x0202293c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202293c.c",
@@ -96,7 +96,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8Particle17MegaRunningDustAtEiii",
+      "symbol": "_ZN8Particle24MegaRunningSlidingDustAtEiii",
       "address": "0x02022b04",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0202/func_02022b04.c",
@@ -259,9 +259,9 @@
   ],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
-    "SysTracker is the single particle-engine owner living in the global at data_0209ee74: mContents (a 0x748-byte registry), the 0x750..0x81c callback bank, mManager, and the resource-file pointer. The constructor emits the callback-bank member construction and vptr writes before its field writes; C2/D2 variants are emitted and deadstripped.",
+    "SysTracker is the single particle-engine owner living in the global at gParticleControl: mContents (a 0x748-byte registry), the 0x750..0x81c callback bank, mManager, and the resource-file pointer. The constructor emits the callback-bank member construction and vptr writes before its field writes; C2/D2 variants are emitted and deadstripped.",
     "System::New is the front door every wrapper reaches: it resolves uniqueID through Contents::FindData, refreshes the entry's System position/direction and fires the entry callback's SpawnParticles virtual, or falls through to Contents::Create. The seven fixed-effect-id wrappers (RunningSlidingDust, simple callbacks at 0x75c/0x774/0x780/0x798/0x7a4/0x7b0/0x7c0/0x7d0/0x7e0 slots, big splash, ripple, weather, callback_818, and the 0x7f0..0x808 bank) stay extern \"C\" under their ROM identifiers.",
-    "func_02023178 is the bump allocator Initialise passes to the manager factory func_0204a4c8 (whose first parameter is char*(*)(int)); it advances data_0209ee78.",
+    "func_02023178 is the bump allocator Initialise passes to the manager factory func_0204a4c8 (whose first parameter is char*(*)(int)); it advances sParticleHeapCursor.",
     "mwccarm emits .text in reverse source order in this TU, so definitions run ROM-descending in the file; the manifest function list stays ROM-ascending."
   ],
   "verification": {

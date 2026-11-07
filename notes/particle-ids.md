@@ -112,7 +112,7 @@ were traced by hand (the site column cites them).
 | 0x05e | `kPtclMegaGrowB` | high | `src/game/player/d_a_ply_methods.cpp:7048` | Same Mega growth step, on anim frame 2 (see 0x5d). | circle rim, even steps; billboard; life 37f; emitter 1f; #ffff29 |
 | 0x05f | `kPtclMegaGrowStartA` | medium | `src/game/player/d_a_ply_methods.cpp:7480` | func_ov002_020c9a04 sets step 17 (the Mega growth) and spawns 0x5f 40 units up. | circle rim, even steps; billboard; life 44f; emitter 1f; #ffff29 |
 | 0x060 | `kPtclMegaGrowStartB` | medium | `src/game/player/d_a_ply_methods.cpp:7483` | func_ov002_020c9a04, at scaled body height (see 0x5f). | circle rim, even steps; billboard; life 30f; emitter 6f; #ffb47b |
-| 0x061 | `kPtclMegaRunningDust` | high | `src/engine/particle/Particle.cpp:348` | MegaRunningDustAt: the player spawns it for Mega where everyone else gets RunningSlidingDustAt (0xda). | circle rim, random; billboard; life 20f; forever; #ffffff |
+| 0x061 | `kPtclMegaRunningDust` | high | `src/engine/particle/Particle.cpp:348` | MegaRunningSlidingDustAt: the player spawns it for Mega where everyone else gets RunningSlidingDustAt (0xda). | circle rim, random; billboard; life 20f; forever; #ffffff |
 | 0x062 | `kPtclHeavyStepRipple` | medium | `src/game/player/d_a_ply_methods.cpp:2207` | daPly_c::func_ov002_020bf5e0 (Mega/metal footfall, sound 0xd0) in shallow water, checkWaterRipple wrapper. | circle rim, random; billboard; life 30f; emitter 1f; #ffffff |
 | 0x063 | `kPtclHeavyStep` | medium | `src/game/player/d_a_ply_methods.cpp:2201` | func_ov002_020bf5e0 heavy footfall 64 units ahead on dry ground. | circle rim, even steps; billboard; life 15f; emitter 1f; #ffffff |
 | 0x064 | `kPtclHeavyStepWater` | medium | `src/game/player/d_a_ply_methods.cpp:2199` | func_ov002_020bf5e0 heavy footfall in shallow water or under water. | circle rim, even steps; billboard; life 15f; emitter 1f; #e6ffff |
@@ -280,8 +280,8 @@ were traced by hand (the site column cites them).
 | 0x114 | `kPtclStarSparkle` | medium | `src/game/actors/d_a_star.cpp:2489` | daStar_c keeps it until mSparkleTimer runs out. | volume (per-axis rand); billboard; life 20f; forever; #ffffd5 |
 | 0x115 | `kPtclStarCollectA` | medium | `src/game/actors/d_a_star.cpp:2432` | daStar_c 'collection effects' with 0x116. | volume (per-axis rand); billboard; life 45f; forever; #ffffd5 |
 | 0x116 | `kPtclStarCollectB` | medium | `src/game/actors/d_a_star.cpp:2434` | Second member with 0x115. | volume (per-axis rand); billboard; life 45f; forever; #ffffd5 |
-| 0x117 | `kPtclObjBlueFire` | high | `src/engine/particle/Particle.cpp:415` | System::NewBlueFire, the OBJ_BLUE_FIRE flame (IsBlueFlame in d_a_obj_fire.cpp). | point; billboard; life 8f; forever; #ffffff |
-| 0x118 | `kPtclObjRedFire` | high | `src/engine/particle/Particle.cpp:405` | System::NewRedFire, the OBJ_RED_FIRE flame. | point; billboard; life 8f; forever; #ffffff |
+| 0x117 | `kPtclObjBlueFire` | high | `src/engine/particle/Particle.cpp:415` | System::NewBlueFlame, the OBJ_BLUE_FIRE flame (IsBlueFlame in d_a_obj_fire.cpp). | point; billboard; life 8f; forever; #ffffff |
+| 0x118 | `kPtclObjRedFire` | high | `src/engine/particle/Particle.cpp:405` | System::NewRedFlame, the OBJ_RED_FIRE flame. | point; billboard; life 8f; forever; #ffffff |
 | 0x119 | `kPtclBooCageFall` | medium | `src/game/actors/d_a_trs.cpp:3328` | T_BASKET (Boo cage) Behavior renews it while not on the ground. | sphere surface; billboard; life 10f; forever; #ff6a9c |
 | 0x11a | `kPtclSnowmanRiseA` | medium | `src/game/actors/d_a_snowman.cpp:662` | daSnowman_c rising out of the snow, with 0x11b. | disc (per-axis rand); billboard; life 29f; emitter 3f; #ffffff |
 | 0x11b | `kPtclSnowmanRiseB` | medium | `src/game/actors/d_a_snowman.cpp:665` | Second member with 0x11a. | circle rim, even steps; billboard; life 21f; emitter 1f; #ffffff |

@@ -442,8 +442,8 @@ void daKrb_c::func_ov084_02129498() {
  * type (CLPS bits 19..23, CLPS::GetSurfaceType) is read. The Goomba is treated as
  * lost (coin and removal, and a respawn at mHomePos when it has a cap or is
  * REWARD_SILVER_STAR_IF_CURRENT) if the type is 1, 4, 5 or 0x13, or if it is
- * 6..9 (daPly_c.h calls those the quicksand tiers) while the collision kind
- * (CLPS bits 0..4, CLPS::func_02037e84) is 8. */
+ * 6..9 (daPly_c.h calls those the quicksand tiers) while the sound type
+ * (CLPS bits 0..4, CLPS::GetSoundType) is 8. */
 void daKrb_c::func_ov084_021294d0() {
     daKrb_c *goomba = this;
     char obj[0x28];
@@ -471,7 +471,7 @@ void daKrb_c::func_ov084_021294d0() {
     int surfaceType;
     {
         /* obj + 4 is &((dBgPi *)obj)->surface; that spelling here or in the
-         * func_02037e84 receiver below adds an instruction, so both stay. */
+         * GetSoundType receiver below adds an instruction, so both stay. */
         char *surface = obj + 4;
         int clpsLo = ((dBgPi *)floorResult)->surface.clps.w0;
         int clpsHi = ((dBgPi *)floorResult)->surface.clps.w1;
@@ -492,7 +492,7 @@ void daKrb_c::func_ov084_021294d0() {
         ((dBgPi *)obj)->collider = ((dBgPi *)floorResult)->collider;
         surfaceType = ((SurfaceInfo *)surface)->clps.GetSurfaceType();
     }
-    if (((const CLPS *)(obj + 4))->func_02037e84() == 8) {
+    if (((const CLPS *)(obj + 4))->GetSoundType() == 8) {
         if (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)
             goto action;
     }

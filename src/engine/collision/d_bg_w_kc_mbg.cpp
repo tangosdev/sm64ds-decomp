@@ -21,7 +21,6 @@
 extern "C" {
 /* This TU's own free helpers, defined below the members that call them. */
 void func_020398fc(dBgW_KcMbg *self);
-void func_02039db8(dBgW_KcMbg *collider, Vector3 *v, Vector3 *res);
 
 /* Shared math workers.
    local extern: no header in include/ declares them. */
@@ -181,7 +180,7 @@ void dBgW_KcMbg::GetNormal(s16 triID, Vector3 &res) {
     normal.x = packedNormal[0] << 2;
     normal.y = packedNormal[1] << 2;
     normal.z = packedNormal[2] << 2;
-    func_02039db8(this, &normal, &res);
+    LocalToWorldDirection(normal, res);
 }
 
 void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
@@ -208,13 +207,13 @@ void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result
 }
 
 /* Transform a direction by mat, leaving out the translation. */
-extern "C" void func_02039db8(dBgW_KcMbg *collider, Vector3 *direction, Vector3 *result) {
+void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result) {
     Matrix4x3 rotation;
-    *(Mtx43 *)&rotation = *(Mtx43 *)&collider->mat;
+    *(Mtx43 *)&rotation = *(Mtx43 *)&mat;
     rotation.t.x = 0;
     rotation.t.y = 0;
     rotation.t.z = 0;
-    MulVec3Mat4x3(direction, &rotation, result);
+    MulVec3Mat4x3((Vector3 *)&direction, &rotation, &result);
 }
 
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {

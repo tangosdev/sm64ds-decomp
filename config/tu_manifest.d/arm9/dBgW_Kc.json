@@ -65,7 +65,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_02039794",
+      "symbol": "_ZN7dBgW_Kc15ClassifyNormalYEi",
       "address": "0x02039794",
       "size": "0x00000024",
       "legacy_source": "src/func_02039794.c",
@@ -141,7 +141,7 @@
   "notes": [
     "Cartridge RTTI names the class dBgW_Kc (_ZTS7dBgW_Kc at arm9 0x020993bc, _ZTI at 0x020993c8, vtable address point at 0x020993dc). The licensed run is .text 0x020396d8..0x020398fc (12 functions): the Virtual08 stub, the prism-index helper, SetFile, UpdateFileOffsets, the three slope/divisor guards and the five lifecycle variants -- one TU the way the original engine file was almost certainly shaped.",
     "Deferred codegen emits D2,D0,D1 for the destructor and C1,C2 for the constructor in that fixed order, and plain members in reverse source order, so the promoted file defines ctor and dtor first and then walks the ROM run backwards. All five lifecycle variants are cartridge-retained here: derived classes dBgW_KcMbg and dBgW_KcMbgSclY construct through C2/D2.",
-    "func_020396dc and the three func_020397* guards keep their func_ names. They are free workers called by raw address -- the guards by actor-collision TUs and the class's own ITCM overrides, the prism-index helper only inside this collider family -- not vtable slots, so there is no honest member name to give them.",
+    "func_020396dc keeps its func_ name: a free worker the class's own ITCM overrides call by raw address, not a vtable slot. The three normal-Y/divisor guards at 0x02039794..0x020397dc are now the static KCL predicates ClassifyNormalY, IsWallNormal and IsNearZeroDivisor.",
     "The DetectClsn triple, the GetNormal/GetTriangleOrigin/GetSurfaceInfo slots and the GetUnkOctreeY/GetOctreeOriginY const members are ITCM-resident (0x01ffb07c..0x01ffd97c) and live in the sibling TU src/engine/collision/d_bg_w_kc_itcm.cpp under config/arm9/itcm/ -- the same class, split the way the cartridge splits it.",
     "Static initializer folded: data_020a0cec, the dBgPc the ITCM DetectClsn overrides fill per triangle, is now defined in this TU (it was built by the handwritten src/unnamed/arm9/0207/__sinit_02074fe4.c and declared only in d_bg_w_kc_itcm.cpp). mwcc emits __sinit_d_bg_w_kc.cpp, its .ctor word and the registration node; all of it plus the object's .bss is byte- and relocation-identical to retail. The node is renamed from the emitted @101 back to its configured data_020a0ce0, because every @NNN this file can emit is already defined in another module.",
     "Collision property member calls replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (21 sections, 43 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."

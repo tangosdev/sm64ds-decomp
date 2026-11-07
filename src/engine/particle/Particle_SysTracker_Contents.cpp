@@ -17,9 +17,7 @@
  *   single |= on the field DIFFs cleanup.
  * - execute widens mStatus == 1 to an int before testing it. A plain
  *   if on emitter->mStatus DIFFs execute.
- * - system->flags.unk_000, unk_006 and unk_00c stay the bitfield
- *   names on Particle::System.
- * - data_0209ee74 is the global tracker. This TU does not own it.
+ * - gParticleControl is the global dPa_c. This TU does not own it.
  */
 #include "Particle__System.h"
 
@@ -29,14 +27,14 @@ bool dPa_c::level_c::emitter_c::entry(
     callback_c *callback)
 {
     Particle::SystemDefinition::Data& data =
-        *data_0209ee74->mManager->mDefinitions[nameId].data;
+        *gParticleControl->mManager->mDefinitions[nameId].data;
     data.flags &= ~0x4000;
-    mEmitter = data_0209ee74->mManager->AddSystem(nameId, position);
+    mEmitter = gParticleControl->mManager->AddSystem(nameId, position);
     if (mEmitter == 0)
         return false;
     if (nameId == 0x52 || nameId == 0x50) {
-        if (mEmitter->flags.unk_000 <= 5 && mEmitter->flags.unk_006 >= 5)
-            mEmitter->flags.unk_00c = 5;
+        if (mEmitter->polygonIDs.min <= 5 && mEmitter->polygonIDs.max >= 5)
+            mEmitter->polygonIDs.current = 5;
     }
     mSavedCallbackValue = data.callbackValue;
     data.callbackValue = 0;
@@ -60,7 +58,7 @@ bool dPa_c::level_c::emitter_c::entry(
 void dPa_c::level_c::emitter_c::cleanup()
 {
     Particle::SystemDefinition::Data& data =
-        *data_0209ee74->mManager->mDefinitions[mNameId].data;
+        *gParticleControl->mManager->mDefinitions[mNameId].data;
     u32 *flagsAddress;
     u32 flags;
     data.callbackValue = mSavedCallbackValue;

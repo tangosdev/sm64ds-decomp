@@ -11,7 +11,7 @@
  *
  * Note: the particle call is Particle::System::NewCheckYogan, an arm9
  * wrapper around Particle::System::New that passes dPa_c's
- * checkYoganCallback_c (data_0209ee74+0x808).
+ * checkYoganCallback_c (gParticleControl+0x808).
  */
 
 #include "daObjLava_c.h"
@@ -45,7 +45,8 @@ s32 daObjLava_c::Behavior() {
      * is what taking the position as a Vector3 does; three separate member
      * loads off the daPly_c pointer keep the 0x5c/0x60/0x64 offsets instead. */
     Vector3 *pos = &ClosestPlayer()->mPos;
-    mEffectHandle = Particle::System::NewCheckYogan(mEffectHandle, kLavaBubbleEffect, pos->x, pos->y, pos->z, 0);
+    mEffectHandle = Particle::System::NewCheckYogan(mEffectHandle, kLavaBubbleEffect, pos->x,
+                                                    pos->y, pos->z, 0);
     return 1;
 }
 
