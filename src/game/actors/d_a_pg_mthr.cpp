@@ -406,22 +406,6 @@ void daPgMthr_c::func_ov018_02111d28()
 }
 
 extern "C" {
-/* dBgPi is 0x28. The copy below is not dBgPi::CopyTo: `b ? a : a` is the
-   load that matches, and a real dBgPi local would run the constructor.
-   A view of dBgPi past its vptr, flattened: nesting the real SurfaceInfo
-   (whose Vector3 has a constructor) renumbers every @NNN in this file. */
-struct dBgPiRawBody {
-    int clpsW0, clpsW1;            /* surface.clps.w0/w1 */
-    int normalX, normalY, normalZ; /* surface.normal */
-    unsigned short triangleID, colliderIdx;
-    int clsnID, owner, collider;
-};
-struct dBgPiRaw {
-    void *vt;
-    struct dBgPiRawBody info;
-};
-extern int data_02099368[];
-
 void func_ov018_02111bf0(void *cv, void *wv)
 {
     daPgMthr_c *self = (daPgMthr_c *)cv;
@@ -438,30 +422,9 @@ void func_ov018_02111bf0(void *cv, void *wv)
         }
     }
     if (w->IsOnWall() != 0) {
-        struct dBgPiRaw *src = (struct dBgPiRaw *)w->GetWallResult();
-        struct dBgPiRaw cr;
+        dBgPi wall(*w->GetWallResult());
         Vector3 wn;
-        struct dBgPiRawBody *dst = &cr.info;
-        int a = src->info.clpsW0;
-        int b = src->info.clpsW1;
-        /* `= a` DIFFs. The tautology is the load. */
-        dst->clpsW0 = b ? a : a;
-        dst->clpsW1 = b;
-        int t = src->info.normalX;
-        void *vt = (void *)data_02099368;
-        dst->normalX = t;
-        t = src->info.normalY;
-        dst->normalY = t;
-        t = src->info.normalZ;
-        dst->normalZ = t;
-        cr.vt = vt;
-        cr.info.triangleID = src->info.triangleID;
-        cr.info.colliderIdx = src->info.colliderIdx;
-        cr.info.clsnID = src->info.clsnID;
-        cr.info.owner = src->info.owner;
-        cr.info.collider = src->info.collider;
-        ((SurfaceInfo *)dst)->CopyNormalTo(wn);
-        ((dBgPi *)&cr)->dBgPi::~dBgPi();
+        wall.surface.CopyNormalTo(wn);
     }
 }
 }
