@@ -409,7 +409,7 @@ struct CoopSwallowWire {                   // 8 B
     uint16_t cls;                          // actor class id, 0..1023
 };
 static_assert(sizeof(CoopSwallowWire) == 8, "swallow wire is 8 bytes");
-enum : int { kKrbCapId = 0x113, kKrbReward = 0x464, kKrbHome = 0x41c, kMouthObj = 0x360, kEggs = 0x588, kSwOutMax = 8 };
+enum : int { kKrbCapId = 0x113, kKrbReward = 0x464, kKrbHome = 0x41c, kMouthObj = 0x360, kEggs = 0x588, kSwOutMax = 32 };
 struct SwOut { uint16_t slot, cls; uint8_t sent; unsigned next; };
 SwOut g_sw_out[kSwOutMax]; int g_sw_n = 0;
 char *g_mouth = nullptr; int g_mouth_cls = 0, g_mouth_slot = -1, g_mouth_eggs = 0;
@@ -432,6 +432,25 @@ int eggs_of(const char *body) {
     return n;
 }
 bool going(const char *a) { return *(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2; }
+
+// Breakable blocks (run after093, lane COOPSYNC1). daObjBlockL_c::Kill (src/game/actors/d_a_obj_block_l.cpp:270-341) is the
+// one break path of the brick block (15), the big brick block (16), the black brick block (17) and the Whomp's Fortress
+// tower wall (46): coins / star / poof, then MarkForDestruction only, no death bit. So a block broken on one console stayed
+// whole and solid on every other one (the castle garden block over the grate into the secret course). The console where a
+// placed block goes away with no bit tells the group with the swallow message (same 8 bytes; older builds already apply it
+// as MarkForDestruction), every friend removes his copy, and every member keeps the slot on a list for this (level, act):
+// a copy that stands up later (a friend who enters after the break) is removed as soon as it is there, and a member who
+// joins the group is sent the list again. The coins and the star stay the breaker's. The 0x13 switch block (19) only flags
+// itself broken and comes back from its switch: not watched.
+bool breakable_block(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 || cls == 46; }
+enum : int { kGoneMax = 32, kGonePushes = 4 };
+struct Gone { uint16_t slot, cls; };
+Gone g_gone[kGoneMax]; int g_gone_n = 0;
+unsigned g_gone_push_at = 0; int g_gone_push_left = 0;
+void gone_note(int slot, unsigned cls) {
+    for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) return;
+    if (g_gone_n < kGoneMax) g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls};
+}
 
 // Every est frame, after step 1 took this frame's bits: what is in my mouth, and how a mouthful left it.
 void watch_swallow(unsigned now) {
@@ -496,7 +515,7 @@ void send_swallows(unsigned now) {
 // death table never carries it either. Watch those Goombas while my body stands in the level; one that goes away with no
 // bit, not in my mouth and not removed here by a friend's message, is told to the group like a swallow. A level teardown
 // marks dozens of placed actors in one frame: that frame (more than kCapMass slotted actors gone) sends nothing.
-enum : int { kCapMax = 24, kCapMass = 4 };
+enum : int { kCapMax = 64, kCapMass = 4 };
 struct CapW { char *a; uint16_t slot, cls; };
 CapW g_cap[kCapMax]; int g_cap_n = 0; unsigned g_cap_frame = 0; int g_cap_slotted = -1;
 uint16_t g_sw_applied[kSwOutMax]; int g_sw_applied_n = 0;   // slots a friend's message removed here: never echoed
@@ -505,14 +524,15 @@ bool capped_goomba(const char *a) {
     if (!is_goomba(cls)) return false;
     return (*(const unsigned char *)(a + kKrbCapId) & 0xf) < 6 || *(const unsigned char *)(a + kKrbReward) == 2;
 }
-void cap_reset() { g_cap_n = 0; g_cap_slotted = -1; g_sw_applied_n = 0; }
+void cap_reset() { g_cap_n = 0; g_cap_slotted = -1; g_sw_applied_n = 0; g_gone_n = 0; g_gone_push_left = 0; }
 void watch_capped(unsigned now) {
     CapW cur[kCapMax]; int n = 0, slotted = 0;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
         const short slot = *(const short *)(a + 0xce);
         if (slot < 0 || slot >= kCoopSlots || going(a) || is_player_ptr(a)) continue;
         ++slotted;
-        if (n < kCapMax && capped_goomba(a)) cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c)};
+        if (n < kCapMax && (capped_goomba(a) || breakable_block(*(const unsigned short *)(a + 0x0c))))
+            cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c)};
     }
     const bool fresh = g_cap_slotted >= 0 && g_cap_frame + 1 == g_est_frames;
     const bool mass = fresh && g_cap_slotted - slotted > kCapMass;
@@ -527,7 +547,9 @@ void watch_capped(unsigned now) {
         for (int k = 0; k < g_sw_applied_n && !skip; ++k) skip = g_sw_applied[k] == o.slot;
         for (int k = 0; k < g_sw_n && !skip; ++k) skip = g_sw_out[k].slot == o.slot;
         if (!skip && g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {o.slot, o.cls, 0, now};
-        std::fprintf(stderr, "[coop] capped watch: class %u slot %d went away here %s wall=%lld\n", (unsigned)o.cls, slot,
+        if (!bit && breakable_block(o.cls)) gone_note(slot, o.cls);
+        std::fprintf(stderr, "[coop] %s watch: class %u slot %d went away here %s wall=%lld\n",
+                     breakable_block(o.cls) ? "block" : "capped", (unsigned)o.cls, slot,
                      bit ? "with a death bit (the death table carries it)" : skip ? "(swallow or a friend's message: not told again)"
                                                                            : "with no death bit: told the group",
                      wall_ms());
@@ -544,6 +566,7 @@ void watch_capped(unsigned now) {
 // home and RespawnIfHasCap leaves the dormant replacement there; func_ov084_02129498 removes it (MarkForDestruction for a
 // capped one, KillAndTrackInDeathTable otherwise). Any other class: MarkForDestruction, what every OnTurnIntoEgg ends in.
 void apply_swallow(int seat, int slot, unsigned cls) {
+    if (breakable_block(cls)) gone_note(slot, cls);   // kept on the list even with no copy standing yet (a joiner's objects)
     char *a = live_slot(cls, slot);
     if (!a || going(a) || is_player_ptr(a)) {
         if (g_log) std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d, no live copy here\n", seat, cls, slot);
@@ -564,6 +587,36 @@ void apply_swallow(int seat, int slot, unsigned cls) {
     std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d removed here the way his console removed it (no death bit) wall=%lld\n",
                  seat, cls, slot, wall_ms());
     if (g_log) g_sw_census_at = g_est_frames + 900;
+}
+
+// COOPSYNC1: a block on the group's broken list that stands here (it spawned after the break: I entered later, or the
+// message came before my objects) goes the same way. Every 10 est frames; a block never respawns inside one level visit.
+void gone_apply() {
+    for (int i = 0; i < g_gone_n; ++i) {
+        char *a = live_slot(g_gone[i].cls, g_gone[i].slot);
+        if (!a || going(a) || is_player_ptr(a)) continue;
+        _ZN7fBase_c18MarkForDestructionEv(a);
+        if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = g_gone[i].slot;
+        else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = g_gone[i].slot; }
+        std::fprintf(stderr, "[coop] block list: class %u slot %d broken in this group, removed here wall=%lld\n",
+                     (unsigned)g_gone[i].cls, (int)g_gone[i].slot, wall_ms());
+    }
+}
+
+// COOPSYNC1: a member joined my group: send him the broken list (the swallow message once per block, kGonePushes rounds
+// 700 ms apart from 300 ms after he showed up, so one round lands after his objects stand). A repeat finds no copy.
+void gone_push(unsigned now) {
+    if (g_gone_push_left <= 0 || g_gone_n == 0 || (int)(now - g_gone_push_at) < 0) return;
+    if (g_grp.others() == 0) { g_gone_push_left = 0; return; }
+    for (int i = 0; i < g_gone_n; ++i) {
+        CoopSwallowWire w; std::memset(&w, 0, sizeof w);
+        w.key = wire_key(g_key); w.slot = g_gone[i].slot; w.cls = g_gone[i].cls;
+        send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, (int)sizeof w);
+    }
+    if (g_log) std::fprintf(stderr, "[coop] block list: %d broken block(s) sent to the group (round %d)\n", g_gone_n,
+                            kGonePushes - g_gone_push_left + 1);
+    --g_gone_push_left;
+    g_gone_push_at = now + 700u;
 }
 
 // ---------------------------------------------------------------------------
@@ -1136,8 +1189,10 @@ void tick_est(unsigned now) {
         }
         // 1b. how a mouthful left my Yoshi's mouth (TONGUE3), and the swallows the death table cannot carry
         watch_swallow(now);
+        if (g_gone_n && (g_est_frames % 10) == 0) gone_apply();
         watch_capped(now);
         send_swallows(now);
+        gone_push(now);
         // 2. announce them (three tries each: now, +120 ms, +360 ms)
         unsigned char buf[sizeof(CoopDeltaWire) + 2 * kCoopMaxDelta];
         uint16_t slots[kCoopMaxDelta]; int idx[kCoopMaxDelta]; int n = 0;
@@ -1383,6 +1438,7 @@ extern "C" void port_coop_world_frame(void) {
         g_grp.update(now);
         const unsigned m = g_grp.member_mask();
         const unsigned gone = g_prev_members & ~m;
+        if ((m & ~g_prev_members) && g_gone_n) { g_gone_push_at = now + 300u; g_gone_push_left = kGonePushes; }   // COOPSYNC1
         g_prev_members = m;
         for (int sdx = 0; gone && sdx < 16; ++sdx)
             if ((gone >> sdx) & 1u)
