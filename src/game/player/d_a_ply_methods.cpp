@@ -627,8 +627,6 @@ static inline int (daPly_c::*PlayerPmf_St_Crouch_Main())() {
     return &daPly_c::St_Crouch_Main;
 }
 
-
-
 /* The player states: init, main and cleanup handlers, declared once.
    data_ov002_02110244 stays local: decl_common.h declares it as char at
    file scope. */
