@@ -229,11 +229,11 @@ matched: yes</title></rect><rect x="21.86" y="46.39" width="14.93" height="5.57"
 module: arm9
 addr: 0x02007b98
 size: 124 bytes
-matched: yes</title></rect><rect x="36.79" y="46.39" width="16.37" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007c14
+matched: yes</title></rect><rect x="36.79" y="46.39" width="16.37" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Vec3fSetDistAndAngle
 module: arm9
 addr: 0x02007c14
 size: 136 bytes
-matched: yes</title></rect><rect x="53.16" y="46.39" width="9.63" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007c9c
+matched: yes</title></rect><rect x="53.16" y="46.39" width="9.63" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Vec3fGetDistAndAngle
 module: arm9
 addr: 0x02007c9c
 size: 80 bytes
@@ -241,7 +241,7 @@ matched: yes</title></rect><rect x="62.79" y="46.39" width="3.85" height="5.57" 
 module: arm9
 addr: 0x02007cec
 size: 32 bytes
-matched: yes</title></rect><rect x="66.65" y="46.39" width="9.15" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02007d0c
+matched: yes</title></rect><rect x="66.65" y="46.39" width="9.15" height="5.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>ApproachVec3fAsymptotic
 module: arm9
 addr: 0x02007d0c
 size: 76 bytes
