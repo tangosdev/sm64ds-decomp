@@ -30,6 +30,7 @@ enum dScMgCup_c_AssetId {
 #include "types.h"
 #include "decl_common.h"
 #include "OamAttr.h"
+#include "nitro/gx/gxcommon.h"
 #include "SpawnInfo.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
@@ -287,25 +288,24 @@ extern "C" void Cup_PlayAnimSound(char *raw, int anim, int frame, int cup) {
 }
 
 extern "C" void Cup_DrawOamList(int scene, void *list, int x, int y, int scale, int cupContent) {
-    OamAttr *entry;
+    GXOamAttr *entry;
     int content;
     int screenX;
     int screenY;
 
-    entry = (OamAttr *)list;
+    entry = (GXOamAttr *)list;
     screenX = x >> 12;
     screenY = y >> 12;
     content = cupContent;
     scale = func_02053200(scale);
 
     for (;;) {
-        int spriteEntry = Mg_RenderSubSpriteScaled((int)entry, screenX, screenY, -1, -1, scale, 0);
-        if (spriteEntry != 0) {
+        GXOamAttr *oam =
+            (GXOamAttr *)Mg_RenderSubSpriteScaled((int)entry, screenX, screenY, -1, -1, scale, 0);
+        if (oam != 0) {
             if (content == 2) {
-                /* Loaded as one word; the shifts keep attr2 bits 12..15, the palette. */
-                if ((unsigned)(*(int *)((char *)entry + 4) << 0x10) >> 0x1c == 3) {
-                    int *attributes = (int *)(spriteEntry + 4);
-                    *attributes = (*attributes & ~0xf000) | 0x4000;
+                if (entry->cParam == 3) {
+                    oam->cParam = 4;
                 }
             }
         }
