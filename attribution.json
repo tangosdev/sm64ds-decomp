@@ -8010,7 +8010,7 @@
     "src/engine/collision/d_bg_w_kc.cpp#_ZN7dBgW_KcD1Ev": "tangosdev",
     "src/engine/collision/d_bg_w_kc.cpp#_ZN7dBgW_KcD2Ev": "tangosdev",
     "src/engine/collision/d_bg_w_kc.cpp#func_020396dc": "tangosdev",
-    "src/engine/collision/d_bg_w_kc.cpp#func_02039794": "tangosdev",
+    "src/engine/collision/d_bg_w_kc.cpp#_ZN7dBgW_Kc15ClassifyNormalYEi": "tangosdev",
     "src/engine/collision/d_bg_w_kc.cpp#func_020397b8": "tangosdev",
     "src/engine/collision/d_bg_w_kc.cpp#func_020397dc": "tangosdev",
     "src/engine/collision/d_bg_w_kc_itcm.cpp#_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr": "andrewboudreau",

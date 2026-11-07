@@ -21,6 +21,7 @@
 #include "common.h"
 #include "dBgCh_Actr.h"
 #include "dBgCh_Gnd.h"
+#include "dBgW_Kc.h"
 #include "dActor_c.h"
 #include "daPly_c.h"
 
@@ -31,7 +32,6 @@ extern "C" {
 int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
 void func_02038234(int a, int b);
 void func_02038324(void *arg, int b, int c, int d);
-int  func_02039794(int x);
 int  SurfaceInfo_TestFlag0x20(int *p);
 
 /* This TU's own workers, defined below. */
@@ -267,7 +267,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         newEnd.x = newStart.x;
         newEnd.y = newStart.y - height;
         newEnd.z = newStart.z;
-        band = func_02039794(normal.y);
+        band = dBgW_Kc::ClassifyNormalY(normal.y);
         if (band == 1) {
             hitWall = true;
             self->mRaycastLine.CopyTo(wallHit);
@@ -280,7 +280,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
             Vector3 clsnPos2 = self->mRaycastLine.GetClsnPos();
             Vector3 normal2;
             self->mRaycastLine.surface.CopyNormalTo(normal2);
-            if (func_02039794(normal2.y) == 0) {
+            if (dBgW_Kc::ClassifyNormalY(normal2.y) == 0) {
                 hitFloor = true;
                 self->mRaycastLine.CopyTo(floorHit);
             }
@@ -395,7 +395,7 @@ void dBgCh_Actr::UpdateContinuous()
         newEnd.x = newStart.x;
         newEnd.y = newStart.y - height;
         newEnd.z = newStart.z;
-        band = func_02039794(normal.y);
+        band = dBgW_Kc::ClassifyNormalY(normal.y);
         if (band == 1) {
             hitWall = true;
             mRaycastLine.CopyTo(wallHit);
@@ -408,7 +408,7 @@ void dBgCh_Actr::UpdateContinuous()
             Vector3 clsnPos2 = mRaycastLine.GetClsnPos();
             Vector3 normal2;
             mRaycastLine.surface.CopyNormalTo(normal2);
-            if (func_02039794(normal2.y) == 0) {
+            if (dBgW_Kc::ClassifyNormalY(normal2.y) == 0) {
                 hitFloor = true;
                 mRaycastLine.CopyTo(floorHit);
             }
@@ -520,7 +520,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         newEnd.x = newStart.x;
         newEnd.y = newStart.y - height;
         newEnd.z = newStart.z;
-        band = func_02039794(normal.y);
+        band = dBgW_Kc::ClassifyNormalY(normal.y);
         if (band == 1) {
             hitWall = true;
             mRaycastLine.CopyTo(wallHit);
@@ -530,7 +530,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
             Vector3 clsnPos2 = mRaycastLine.GetClsnPos();
             Vector3 normal2;
             mRaycastLine.surface.CopyNormalTo(normal2);
-            if (func_02039794(normal2.y) == 0) {
+            if (dBgW_Kc::ClassifyNormalY(normal2.y) == 0) {
                 hitFloor = true;
                 mRaycastLine.CopyTo(floorHit);
             }
@@ -645,7 +645,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         if (mRaycastLine.DetectClsn()) {
             Vector3 hitNormal;
             mRaycastLine.surface.CopyNormalTo(hitNormal);
-            s32 band = func_02039794(hitNormal.y);
+            s32 band = dBgW_Kc::ClassifyNormalY(hitNormal.y);
             if (band == 1) {
                 hitWall = true;
                 mRaycastLine.CopyTo(wallHit);
@@ -672,7 +672,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                 Vector3 floorPos = mRaycastLine.GetClsnPos();
                 Vector3 floorNormal;
                 mRaycastLine.surface.CopyNormalTo(floorNormal);
-                if (func_02039794(floorNormal.y) == 0) {
+                if (dBgW_Kc::ClassifyNormalY(floorNormal.y) == 0) {
                     hitFloor = true;
                     mRaycastLine.CopyTo(floorHit);
                 }
@@ -796,7 +796,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                         pos->x = hit->x + (normal->x >> 2);
                         pos->y = hit->y + (normal->y >> 2);
                         pos->z = hit->z + (normal->z >> 2);
-                        s32 band = func_02039794(normal->y);
+                        s32 band = dBgW_Kc::ClassifyNormalY(normal->y);
                         if (band == 1 && !(mSphereClsn.flags & 8)) {
                             const dBgPi &lineHit = mRaycastLine;
                             mSphereClsn.flags |= 8;
