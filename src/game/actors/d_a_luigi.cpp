@@ -102,7 +102,6 @@ unsigned int func_0201277c(unsigned int soundID);
 
 /* Depth from mModelOffsetY, mPosY, mSinkDepth and mGroundY; radius from that,
  * mIsBalloon, mIsMega and mScaleY. The definition takes char *. */
-void func_ov002_020e4374(char *player, int *depth, int *radius);
 /* Returns mBodyModels[GetBodyModelID(mBodyModelId, 1)] as int. */
 int func_ov002_020e496c(daPly_c *player);
 
@@ -119,12 +118,10 @@ void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
  * allocation size, vtable identity, and the LUIGI registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MirrorLuigi_Spawn. */
-// @symbol daLuigi_c_classInit
 extern "C" daLuigi_c *daLuigi_c_classInit() {
     return new daLuigi_c();
 }
 
-// @symbol _ZN9daLuigi_c13InitResourcesEv
 int daLuigi_c::InitResources() {
     VecFx32 t;
 
@@ -162,7 +159,6 @@ int daLuigi_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c8BehaviorEv
 int daLuigi_c::Behavior() {
     int depth, radius;
     daPly_c *player;
@@ -179,14 +175,13 @@ int daLuigi_c::Behavior() {
     if (mState->execute)
         (this->*mState->execute)(player);
     Matrix4x3_FromTranslation(&mShadowMatrix, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
-    func_ov002_020e4374((char *)player, &depth, &radius);
+    player->func_ov002_020e4374(&depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
     data_0209f318->mFramedActor = this;
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c6RenderEv
 int daLuigi_c::Render() {
     daPly_c *player;
     dExtSimpleModel_c *body;
@@ -235,10 +230,8 @@ int daLuigi_c::Render() {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c16OnPendingDestroyEv
 void daLuigi_c::OnPendingDestroy() {}
 
-// @symbol _ZN9daLuigi_c16CleanupResourcesEv
 int daLuigi_c::CleanupResources() {
     data_ov002_0210ebb8.Release();
     data_ov002_0210eb20.Release();
@@ -246,7 +239,6 @@ int daLuigi_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c
 int daLuigi_c::SetState(daLuigiState *state, daPly_c *player) {
     mState = state;
     if (mState->enter == 0)
@@ -254,12 +246,10 @@ int daLuigi_c::SetState(daLuigiState *state, daPly_c *player) {
     return (this->*mState->enter)(player);
 }
 
-// @symbol _ZN9daLuigi_c11EnterMirrorEP7daPly_c
 int daLuigi_c::EnterMirror(daPly_c *player) {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c13ExecuteMirrorEP7daPly_c
 int daLuigi_c::ExecuteMirror(daPly_c *player) {
     /* One base, read x then z then y. Direct mPosX / mPosZ / mPosY
      * differ (same size). */
@@ -275,7 +265,6 @@ int daLuigi_c::ExecuteMirror(daPly_c *player) {
     return 1;
 }
 
-// @symbol func_ov055_02111264
 /* One candidate caller, ov063 0x02118004, relocates to ov027 or ov055, so
  * the owner is unknown. */
 extern "C" void func_ov055_02111264(void) {

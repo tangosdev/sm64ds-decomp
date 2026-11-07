@@ -158,13 +158,10 @@ static inline int IsPlayer(dActor_c *a) {
     return a->actorID == kPlayerId;
 }
 
-// @symbol _ZN11daSnowman_cD1Ev
-// @symbol _ZN11daSnowman_cD0Ev
 daSnowman_c::~daSnowman_c()
 {
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124134Ev
 /* Drops the snowball and flings the cap. Kind 2 also plants a kind-3
    watcher at home. */
 void daSnowman_c::func_ov081_02124134()
@@ -202,7 +199,6 @@ void daSnowman_c::func_ov081_02124134()
     }
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_0212423cEi
 /* Turns toward the closest visible player at the rate row idx gives. With
    idx 1 it also leans back while the player stays off to one side, and
    after 40 frames of that topples over. */
@@ -266,7 +262,6 @@ void daSnowman_c::func_ov081_0212423c(int idx)
     this->mAngleY = this->mPrevAngleY;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_021243ccEv
 /* Reacts to whatever the collision cylinder touched this frame. */
 void daSnowman_c::func_ov081_021243cc()
 {
@@ -328,7 +323,6 @@ void daSnowman_c::func_ov081_021243cc()
     func_ov081_02124134();
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_021245e8Ev
 /* Distance to the closest player; leaves that player's index behind. */
 int daSnowman_c::func_ov081_021245e8()
 {
@@ -360,7 +354,6 @@ int daSnowman_c::func_ov081_021245e8()
     return min;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_021246a0Ev
 /* State "melt", execute: shrink and sink, then pay out coins and die. */
 int daSnowman_c::func_ov081_021246a0()
 {
@@ -387,7 +380,6 @@ int daSnowman_c::func_ov081_021246a0()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_0212479cEv
 /* State "melt", enter. */
 int daSnowman_c::func_ov081_0212479c()
 {
@@ -418,7 +410,6 @@ int daSnowman_c::func_ov081_0212479c()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124894Ev
 /* State "spin and fall", execute. */
 int daSnowman_c::func_ov081_02124894()
 {
@@ -446,7 +437,6 @@ int daSnowman_c::func_ov081_02124894()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_0212498cEv
 /* State "spin and fall", enter. */
 int daSnowman_c::func_ov081_0212498c()
 {
@@ -465,7 +455,6 @@ int daSnowman_c::func_ov081_0212498c()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_021249f4Ev
 /* State "sink", execute. */
 int daSnowman_c::func_ov081_021249f4()
 {
@@ -494,7 +483,6 @@ int daSnowman_c::func_ov081_021249f4()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124b08Ev
 /* State "sink", enter. */
 int daSnowman_c::func_ov081_02124b08()
 {
@@ -514,7 +502,6 @@ int daSnowman_c::func_ov081_02124b08()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124b98Ev
 /* State "throw", execute: lets go on frame 10, aimed at the closest player. */
 int daSnowman_c::func_ov081_02124b98()
 {
@@ -563,7 +550,6 @@ int daSnowman_c::func_ov081_02124b98()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124d14Ev
 /* State "throw", enter. */
 int daSnowman_c::func_ov081_02124d14()
 {
@@ -571,7 +557,6 @@ int daSnowman_c::func_ov081_02124d14()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124d50Ev
 /* State "make a snowball", execute. */
 int daSnowman_c::func_ov081_02124d50()
 {
@@ -594,7 +579,6 @@ int daSnowman_c::func_ov081_02124d50()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124dfcEv
 /* State "make a snowball", enter: spawns it in the hand. */
 int daSnowman_c::func_ov081_02124dfc()
 {
@@ -606,7 +590,6 @@ int daSnowman_c::func_ov081_02124dfc()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124e64Ev
 /* State "face the player", execute. */
 int daSnowman_c::func_ov081_02124e64()
 {
@@ -618,7 +601,6 @@ int daSnowman_c::func_ov081_02124e64()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124ec0Ev
 /* State "face the player", enter. */
 int daSnowman_c::func_ov081_02124ec0()
 {
@@ -631,7 +613,6 @@ int daSnowman_c::func_ov081_02124ec0()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124f20Ev
 /* State "rise", execute. */
 int daSnowman_c::func_ov081_02124f20()
 {
@@ -647,7 +628,6 @@ int daSnowman_c::func_ov081_02124f20()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02124f7cEv
 /* State "rise", enter. */
 int daSnowman_c::func_ov081_02124f7c()
 {
@@ -667,7 +647,6 @@ int daSnowman_c::func_ov081_02124f7c()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02125038Ev
 /* State "wait buried", execute: rise when a player comes near. */
 int daSnowman_c::func_ov081_02125038()
 {
@@ -676,7 +655,6 @@ int daSnowman_c::func_ov081_02125038()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02125068Ev
 /* State "wait buried", enter. */
 int daSnowman_c::func_ov081_02125068()
 {
@@ -690,7 +668,6 @@ int daSnowman_c::func_ov081_02125068()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_021250c8Ev
 /* State "hop to a node", execute. */
 int daSnowman_c::func_ov081_021250c8()
 {
@@ -724,14 +701,12 @@ int daSnowman_c::func_ov081_021250c8()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02125200Ev
 /* State "hop to a node", enter: nothing to do. */
 int daSnowman_c::func_ov081_02125200()
 {
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02125208Ev
 /* State "walk the path", execute. */
 int daSnowman_c::func_ov081_02125208()
 {
@@ -772,7 +747,6 @@ int daSnowman_c::func_ov081_02125208()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_0212538cEv
 /* State "walk the path", enter: step onto the next node when close enough. */
 int daSnowman_c::func_ov081_0212538c()
 {
@@ -802,7 +776,6 @@ int daSnowman_c::func_ov081_0212538c()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_02125488EPNS_5StateE
 /* Enters a state: records it, then runs its enter handler if it has one. */
 int daSnowman_c::func_ov081_02125488(State *state)
 {
@@ -812,7 +785,6 @@ int daSnowman_c::func_ov081_02125488(State *state)
     return (this->*this->mState->enter)();
 }
 
-// @symbol _ZN11daSnowman_c19func_ov081_021254d8Ev
 /* Poses the model, then carries the cap on bone 5 and the snowball on
    bone 3, and drops the shadow while standing on the path. */
 void daSnowman_c::func_ov081_021254d8()
@@ -886,7 +858,6 @@ void daSnowman_c::func_ov081_021254d8()
     DropShadowRadHeight(this->mShadowModel, this->mShadowMatrix, 0x78000, 0xc8000, 0xf);
 }
 
-// @symbol _ZN11daSnowman_c16CleanupResourcesEv
 int daSnowman_c::CleanupResources()
 {
     data_ov081_02128d90.Release();
@@ -899,12 +870,10 @@ int daSnowman_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c16OnPendingDestroyEv
 void daSnowman_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN11daSnowman_c6RenderEv
 int daSnowman_c::Render()
 {
     int s = mType;
@@ -919,7 +888,6 @@ int daSnowman_c::Render()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c8BehaviorEv
 int daSnowman_c::Behavior()
 {
     daPly_c *p;
@@ -997,7 +965,6 @@ int daSnowman_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c13InitResourcesEv
 int daSnowman_c::InitResources()
 {
     Vector3 v;
@@ -1083,13 +1050,11 @@ int daSnowman_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN11daSnowman_c16OnAimedAtWithEggEv
 /* Slot 29. Callers add this to the actor's Y before the egg-aim particles. */
 s32 daSnowman_c::OnAimedAtWithEgg() {
     return 0x98000;
 }
 
-// @symbol daSnowman_c_classInit
 extern "C" daSnowman_c *daSnowman_c_classInit()
 {
     return new daSnowman_c();

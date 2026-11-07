@@ -1,5 +1,6 @@
 #include "types.h"
 #include "nitro/spi/pm.h"
+#include "private/watchdog_alarm.h"
 
 enum { false, true };
 
@@ -25,7 +26,7 @@ extern unsigned char func_0201a9ec(void *p);
 extern void func_02030838(void);
 extern void func_0201a4bc(void);
 extern void func_020132d8(void);
-extern char data_0209d574[];
+extern struct WatchdogAlarm data_0209d574;
 extern u8 data_0209d4f0;
 extern int data_0209d514;
 extern u8 data_0209f2d8;
@@ -168,7 +169,7 @@ void func_020199a4(void) {
     int sl = 0xb4;
     if (data_0209d4ec == 7)
         data_0209d4ec = 0;
-    func_0201a9ec(data_0209d574);
+    func_0201a9ec(&data_0209d574);
     for (;;) {
         int b = (int)(data_0209f2d8 == 1) ? 0 : 1;
         if (b == 0)

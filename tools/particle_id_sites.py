@@ -12,7 +12,7 @@ include/ParticleIds.h or a same-file `NAME = 0x..` / `#define NAME 0x..` /
 and joins the result with the SPA table from tools/spa_dump.py.
 
 For every ID it reports the call count, where it is called (file:line and the
-nearest preceding `// @symbol`), any source name already given to it, and the
+enclosing definition's linker symbol), any source name already given to it, and the
 definition's flags / texture / records.  IDs in the table that no
 `NewSimple` literal reaches are listed separately.
 
@@ -35,6 +35,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import spa_dump  # noqa: E402
+import def_locate as DL  # noqa: E402
 
 # (regex for the callee, index of the effect-ID argument, label).  NewSimple takes
 # the ID first; System::New and the callback wrappers take (uniqueID, effectID, ...).
@@ -119,6 +120,21 @@ def scan(root):
             for ln in text.splitlines(True):
                 lines_start.append(lines_start[-1] + len(ln))
             symbols = [(m.start(), m.group(1)) for m in SYMBOL.finditer(text)]
+            # the enclosing definition's linker symbol -- what "nearest
+            # preceding // @symbol" reported, resolved structurally so it
+            # survives the markers' removal.
+            try:
+                rel = os.path.relpath(path, root).replace("\\", "/")
+                if not rel.startswith("src"):
+                    rel = "src/" + rel
+                bound = DL.bind(rel, text)[0]
+            except Exception:
+                bound = {}
+            spans = []   # (def_start, def_end, symbol)
+            for sym, d in bound.items():
+                if not d.is_object:
+                    spans.append((d.start, d.end, sym))
+            spans.sort()
             import bisect
             for rx, idx, label in ENTRY:
                 for m in rx.finditer(text):
@@ -135,10 +151,22 @@ def scan(root):
                     else:
                         continue  # variable / declaration / definition
                     n = bisect.bisect_right(lines_start, m.start())
-                    k = bisect.bisect_right([p0 for p0, _ in symbols], m.start()) - 1
+                    owner = None
+                    k = bisect.bisect_right([s0 for s0, _, _ in spans],
+                                            m.start()) - 1
+                    while k >= 0:
+                        if m.start() < spans[k][1]:
+                            owner = spans[k][2]
+                            break
+                        k -= 1
+                    if owner is None and symbols:
+                        k = bisect.bisect_right(
+                            [p0 for p0, _ in symbols], m.start()) - 1
+                        if k >= 0:
+                            owner = symbols[k][1]
                     sites.append({"id": val, "name": name, "comment": comment, "via": label,
                                   "file": os.path.relpath(path, root).replace("\\", "/"),
-                                  "line": n, "symbol": symbols[k][1] if k >= 0 else None})
+                                  "line": n, "symbol": owner})
     return sites
 
 

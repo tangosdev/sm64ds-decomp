@@ -132,12 +132,10 @@ inline daFish_c::daFish_c() {
     func_0203b9b4(&mSeed, 1);
 }
 
-// @symbol daFish_c_classInit
 extern "C" daFish_c *daFish_c_classInit() {
     return new daFish_c();
 }
 
-// @symbol _ZN8daFish_c13InitResourcesEv
 s32 daFish_c::InitResources() {
     u8 modelIndex;
     dExtFrameCtrl_c::LoadFile(data_ov100_021489cc);
@@ -160,7 +158,6 @@ s32 daFish_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN8daFish_c8BehaviorEv
 s32 daFish_c::Behavior() {
     Vector3 shiftedPos;
     daFish_c *spawner;
@@ -185,17 +182,14 @@ s32 daFish_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN8daFish_c6RenderEv
 s32 daFish_c::Render() {
     if (mIsSpawner == 0)
         mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN8daFish_c16OnPendingDestroyEv
 void daFish_c::OnPendingDestroy() {}
 
-// @symbol _ZN8daFish_c16CleanupResourcesEv
 s32 daFish_c::CleanupResources() {
     daFish_c *spawner;
     data_ov100_021489cc.Release();
@@ -206,7 +200,6 @@ s32 daFish_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN8daFish_c18StateWaitForPlayerEv
 /* Spawner state 0: wait for the player, then spawn the school. The legacy
    one-function source needed `#pragma opt_loop_invariants off`; the whole
    TU matches without it. */
@@ -279,7 +272,6 @@ void daFish_c::StateWaitForPlayer() {
     this->mState = 1;
 }
 
-// @symbol _ZN8daFish_c19StateWaitPlayerAwayEv
 /* Spawner state 1: wait for the player to go beyond 6000.0. */
 int daFish_c::StateWaitPlayerAway() {
     if (this->ClosestPlayer()) {
@@ -291,14 +283,12 @@ int daFish_c::StateWaitPlayerAway() {
     return 2;
 }
 
-// @symbol _ZN8daFish_c19StateWaitSchoolGoneEv
 /* Spawner state 2: wait for the last fish to be gone. */
 void daFish_c::StateWaitSchoolGone() {
     if (this->mNumFish == 0)
         this->mState = 0;
 }
 
-// @symbol _ZN8daFish_c9StateIdleEv
 /* Fish state 3: idle, turning to face the player; flee once it is close. */
 void daFish_c::StateIdle() {
     Vector3 d;
@@ -337,7 +327,6 @@ void daFish_c::StateIdle() {
     }
 }
 
-// @symbol _ZN8daFish_c9StateFleeEv
 /* Fish state 4: flee from the player until far enough away. */
 void daFish_c::StateFlee() {
     daPly_c *pl;
@@ -366,7 +355,6 @@ void daFish_c::StateFlee() {
     func_0201267c(kFleeSound, &this->mCamSpacePos);
 }
 
-// @symbol _ZN8daFish_c11StateWanderEv
 /* Fish state 5: wander until the timer runs out or it strays too far. */
 void daFish_c::StateWander() {
     Vector3 v;
@@ -382,7 +370,6 @@ void daFish_c::StateWander() {
     this->mState = 6;
 }
 
-// @symbol _ZN8daFish_c14StateTurnAboutEv
 /* Fish state 6: turn about, then wander again once back in range. */
 void daFish_c::StateTurnAbout() {
     Vector3 v;
@@ -402,13 +389,11 @@ void daFish_c::StateTurnAbout() {
     this->mState = 5;
 }
 
-// @symbol _ZN8daFish_c13IsSpawnerIdleEv
 /* Is the spawner back in its idle wait? Its fish leave when it is. */
 int daFish_c::IsSpawnerIdle() {
     return this->mState == 2;
 }
 
-// @symbol _ZN8daFish_c15InitFromSpawnerEj
 /* Set up a fish its spawner has just created. */
 void daFish_c::InitFromSpawner(u32 spawnerID) {
     this->mVertAccel = 0;
@@ -440,7 +425,6 @@ void daFish_c::InitFromSpawner(u32 spawnerID) {
     }
 }
 
-// @symbol _ZN8daFish_c10OnFishGoneEv
 /* A fish is gone: one fewer for its spawner. */
 void daFish_c::OnFishGone() {
     if (this->mNumFish != 0) {
@@ -448,8 +432,6 @@ void daFish_c::OnFishGone() {
     }
 }
 
-// @symbol _ZN8daFish_cD1Ev
-// @symbol _ZN8daFish_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
 

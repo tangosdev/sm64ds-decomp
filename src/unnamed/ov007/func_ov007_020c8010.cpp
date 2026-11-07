@@ -4,7 +4,7 @@
 
 extern "C" {
 
-int LenVec3(void *);
+int LenVec3(const Vector3 *);
 
 /* Links two followers: once both have a target, dir is the vector between
  * them and length its length. */

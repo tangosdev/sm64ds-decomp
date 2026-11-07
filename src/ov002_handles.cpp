@@ -59,7 +59,6 @@ Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-// @symbol func_ov002_020ad660
 extern "C" int func_ov002_020ad660(void *enemy, void *clsnArg, void *modelArg, int flags) {
     dEnemyBase_c *c = (dEnemyBase_c *)enemy;
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;

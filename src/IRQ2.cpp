@@ -36,7 +36,6 @@ extern u8 data_0209d4dc;
 }
 
 // 0x0201a534 (0x98)
-// @symbol _ZN3IRQ13VBlankHandlerEv
 namespace IRQ {
 
 void VBlankHandler(void) {
@@ -55,7 +54,6 @@ void VBlankHandler(void) {
 }
 
 // 0x0201a4e4 (0x50)
-// @symbol func_0201a4e4
 extern "C" void func_0201a4e4(void)
 {
     data_0209d4fc = 0;
@@ -65,14 +63,12 @@ extern "C" void func_0201a4e4(void)
 }
 
 // 0x0201a4d0 (0x14)
-// @symbol func_0201a4d0
 /* Sleep until the next VBlank. */
 extern "C" void func_0201a4d0(void) {
     OS_SleepThread(&data_0209d4fc);
 }
 
 // 0x0201a4bc (0x14)
-// @symbol func_0201a4bc
 /* The main loops' frame wait (func_020197b8 and func_020199a4 raise
  * data_0209d4f0 around it). */
 extern "C" void func_0201a4bc(void) {

@@ -46,13 +46,11 @@ extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
 
 extern "C" int IsStarCollectedInLevel(s8 levelID, int starID);
 
-// @symbol daSetSE_c_classInit
 extern "C" daSetSE_c *daSetSE_c_classInit()
 {
     return new daSetSE_c();
 }
 
-// @symbol _ZN9daSetSE_c13InitResourcesEv
 int daSetSE_c::InitResources()
 {
     int disabled;
@@ -79,7 +77,6 @@ int daSetSE_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN9daSetSE_c8BehaviorEv
 int daSetSE_c::Behavior()
 {
     u32 effect;
@@ -103,18 +100,15 @@ int daSetSE_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daSetSE_c6RenderEv
 int daSetSE_c::Render()
 {
     return 1;
 }
 
-// @symbol _ZN9daSetSE_c16OnPendingDestroyEv
 void daSetSE_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daSetSE_c16CleanupResourcesEv
 int daSetSE_c::CleanupResources()
 {
     return 1;

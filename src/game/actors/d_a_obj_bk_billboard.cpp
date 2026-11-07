@@ -34,12 +34,10 @@ struct BkBillboardModelFilePtr : SharedFilePtr {
 
 extern BkBillboardModelFilePtr gBkBillbordModelFile;
 
-// @symbol daObjBkBillboard_c_classInit
 extern "C" daObjBkBillboard_c *daObjBkBillboard_c_classInit() {
     return new daObjBkBillboard_c();
 }
 
-// @symbol _ZN18daObjBkBillboard_c13InitResourcesEv
 s32 daObjBkBillboard_c::InitResources() {
     void *file = dExtSimpleModel_c::LoadFile(gBkBillbordModelFile);
     mModel.SetFile((BMD_File *)file, 1, -1);
@@ -47,19 +45,16 @@ s32 daObjBkBillboard_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjBkBillboard_c6RenderEv
 s32 daObjBkBillboard_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daObjBkBillboard_c16CleanupResourcesEv
 s32 daObjBkBillboard_c::CleanupResources() {
     gBkBillbordModelFile.Release();
     return 1;
 }
 
-// @symbol _ZN18daObjBkBillboard_c17UpdateModelMatrixEv
 void daObjBkBillboard_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.t.x = mPosX >> 3;
@@ -67,8 +62,6 @@ void daObjBkBillboard_c::UpdateModelMatrix() {
     mModel.mat4x3.t.z = mPosZ >> 3;
 }
 
-// @symbol _ZN18daObjBkBillboard_cD1Ev
-// @symbol _ZN18daObjBkBillboard_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjBkBillboard_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no D2. Writing the body

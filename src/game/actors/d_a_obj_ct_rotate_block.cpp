@@ -89,11 +89,8 @@ extern u8 data_0209f2c0;
 
 #pragma defer_codegen off
 
-// @symbol _ZN20daObjCtRotateBlock_cD1Ev
-// @symbol _ZN20daObjCtRotateBlock_cD0Ev
 daObjCtRotateBlock_c::~daObjCtRotateBlock_c() {}
 
-// @symbol _ZN20daObjCtRotateBlock_c12UpdateShadowEv
 void daObjCtRotateBlock_c::UpdateShadow() {
     int d, b;
     int bval = mFloorY;
@@ -122,7 +119,6 @@ void daObjCtRotateBlock_c::UpdateShadow() {
     }
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c10UpdateClsnEv
 void daObjCtRotateBlock_c::UpdateClsn() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPosX;
@@ -131,7 +127,6 @@ void daObjCtRotateBlock_c::UpdateClsn() {
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c11UpdateModelEv
 void daObjCtRotateBlock_c::UpdateModel() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -143,7 +138,6 @@ void daObjCtRotateBlock_c::UpdateModel() {
     mRotatingModel.mat4x3.m[11] = mModel.mat4x3.m[11];
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c16CleanupResourcesEv
 int daObjCtRotateBlock_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -153,7 +147,6 @@ int daObjCtRotateBlock_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c6RenderEv
 int daObjCtRotateBlock_c::Render() {
     int flags;
     int b;
@@ -167,7 +160,6 @@ int daObjCtRotateBlock_c::Render() {
     return 1;
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c8BehaviorEv
 int daObjCtRotateBlock_c::Behavior() {
     if (data_0209f2c0 != 3) {
         switch (mState) {
@@ -208,7 +200,6 @@ int daObjCtRotateBlock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c13InitResourcesEv
 int daObjCtRotateBlock_c::InitResources() {
     u16 id = actorID;
 
@@ -296,12 +287,10 @@ int daObjCtRotateBlock_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjCtRotateBlock_c_classInit_CT_MECHA02
 extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA02() {
     return new daObjCtRotateBlock_c();
 }
 
-// @symbol daObjCtRotateBlock_c_classInit_CT_MECHA01
 extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01() {
     return new daObjCtRotateBlock_c();
 }

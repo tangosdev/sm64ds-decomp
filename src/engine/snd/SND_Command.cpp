@@ -78,7 +78,6 @@ void InitPXI(void);
 void RequestCommandProc(void);
 SNDCommand *AllocCommand(void);
 
-// @symbol SND_CommandInit
 void SND_CommandInit(void) {
     int i;
     SNDCommand *cmd;
@@ -112,7 +111,6 @@ void SND_CommandInit(void) {
     SND_FlushCommand(SND_CMD_FLAG_BLOCK);
 }
 
-// @symbol SND_RecvCommandReply
 const SNDCommand *SND_RecvCommandReply(u32 flags) {
     SNDCommand *queueRead;
     SNDCommand *cur;
@@ -147,7 +145,6 @@ const SNDCommand *SND_RecvCommandReply(u32 flags) {
     return queueRead;
 }
 
-// @symbol SND_AllocCommand
 SNDCommand *SND_AllocCommand(u32 flags) {
     SNDCommand *cmd;
 
@@ -181,7 +178,6 @@ SNDCommand *SND_AllocCommand(u32 flags) {
     return cmd;
 }
 
-// @symbol SND_PushCommand
 void SND_PushCommand(SNDCommand *cmd) {
     if (data_020a6490 == 0) {
         data_020a6490 = cmd;
@@ -194,7 +190,6 @@ void SND_PushCommand(SNDCommand *cmd) {
     cmd->next = 0;
 }
 
-// @symbol SND_FlushCommand
 int SND_FlushCommand(u32 flags) {
     if (data_020a648c == 0)
         return 1;
@@ -229,7 +224,6 @@ int SND_FlushCommand(u32 flags) {
     return 1;
 }
 
-// @symbol SND_WaitForCommandProc
 void SND_WaitForCommandProc(u32 tag) {
     if (SND_IsFinishedCommandTag(tag))
         return;
@@ -250,7 +244,6 @@ void SND_WaitForCommandProc(u32 tag) {
     } while (SND_IsFinishedCommandTag(tag) == 0);
 }
 
-// @symbol SND_GetCurrentCommandTag
 u32 SND_GetCurrentCommandTag(void) {
     u32 retval;
     if (data_020a648c == 0)
@@ -260,7 +253,6 @@ u32 SND_GetCurrentCommandTag(void) {
     return retval;
 }
 
-// @symbol SND_IsFinishedCommandTag
 int SND_IsFinishedCommandTag(u32 tag) {
     if (tag > data_020a6488)
         return tag - data_020a6488 >= 0x80000000;
@@ -268,7 +260,6 @@ int SND_IsFinishedCommandTag(u32 tag) {
         return data_020a6488 - tag < 0x80000000;
 }
 
-// @symbol SND_CountFreeCommand
 s32 SND_CountFreeCommand(void) {
     s32 count = 0;
     for (SNDCommand *cmd = data_020a6484; cmd != 0; cmd = cmd->next)
@@ -276,7 +267,6 @@ s32 SND_CountFreeCommand(void) {
     return count;
 }
 
-// @symbol SND_CountReservedCommand
 s32 SND_CountReservedCommand(void) {
     s32 count = 0;
     for (SNDCommand *cmd = data_020a648c; cmd != 0; cmd = cmd->next)
@@ -284,19 +274,16 @@ s32 SND_CountReservedCommand(void) {
     return count;
 }
 
-// @symbol SND_CountWaitingCommand
 s32 SND_CountWaitingCommand(void) {
     return SND_CMD_COUNT - SND_CountFreeCommand() - SND_CountReservedCommand();
 }
 
-// @symbol PxiFifoCallback
 void PxiFifoCallback(int tag, u32 data, int err) {
     u32 saved = IRQ::Disable();
     SNDi_CallAlarmHandler((s32)data);
     IRQ::Restore(saved);
 }
 
-// @symbol InitPXI
 void InitPXI(void) {
     PXI_SetFifoRecvCallback(PXI_FIFO_TAG_SOUND, (void *)PxiFifoCallback);
 
@@ -311,13 +298,11 @@ void InitPXI(void) {
     } while (!PXI_IsCallbackReady(PXI_FIFO_TAG_SOUND, PXI_PROC_ARM7));
 }
 
-// @symbol RequestCommandProc
 void RequestCommandProc(void) {
     while (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, 0, 0) < 0) {
     }
 }
 
-// @symbol AllocCommand
 SNDCommand *AllocCommand(void) {
     SNDCommand *retval = data_020a6484;
     if (retval == 0)

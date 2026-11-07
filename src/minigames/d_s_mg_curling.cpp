@@ -182,10 +182,7 @@ namespace Sound {
 u32 PlayBank2_2D(u32 id);
 }
 
-// @symbol _ZN14dScMgCurling_cD1Ev
-// @symbol _ZN14dScMgCurling_cD0Ev
 dScMgCurling_c::~dScMgCurling_c() {}
-// @symbol _ZN14dScMgCurling_c11Bit_DrawAllEv
 /* Draws the falling bits. The functions after this one are the bits'
  * states: each field is 0x24 * index past its base offset. */
 void dScMgCurling_c::Bit_DrawAll() {
@@ -200,7 +197,6 @@ void dScMgCurling_c::Bit_DrawAll() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c21Bit_StateFallSlowDownEi
 void dScMgCurling_c::Bit_StateFallSlowDown(int index) {
     if (mBit[index].wait2 != 0) {
         short *p = (short *)&mBit[index].wait2;
@@ -217,7 +213,6 @@ void dScMgCurling_c::Bit_StateFallSlowDown(int index) {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c20Bit_StateFallSpeedUpEi
 void dScMgCurling_c::Bit_StateFallSpeedUp(int index) {
     if (mBit[index].vyCap > mBit[index].vy) {
         mBit[index].vy += 0x10;
@@ -240,7 +235,6 @@ void dScMgCurling_c::Bit_StateFallSpeedUp(int index) {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c18Bit_StateFallStartEi
 void dScMgCurling_c::Bit_StateFallStart(int index) {
     unsigned int roll;
     mBit[index].vy = 0;
@@ -252,7 +246,6 @@ void dScMgCurling_c::Bit_StateFallStart(int index) {
     (s16 &)mBit[index].wait2 = (unsigned char)roll;
 }
 
-// @symbol _ZN14dScMgCurling_c19BitA_StateDriftStopEi
 void dScMgCurling_c::BitA_StateDriftStop(int index) {
     mBit[index].x = mBit[index].x + mBit[index].vx;
     mBit[index].y = mBit[index].y + mBit[index].vy;
@@ -277,7 +270,6 @@ void dScMgCurling_c::BitA_StateDriftStop(int index) {
     mBit[index].state = 0;
 }
 
-// @symbol _ZN14dScMgCurling_c19BitA_StateDriftLeftEi
 void dScMgCurling_c::BitA_StateDriftLeft(int index) {
     unsigned short timer;
 
@@ -313,7 +305,6 @@ void dScMgCurling_c::BitA_StateDriftLeft(int index) {
                         0x20);
 }
 
-// @symbol _ZN14dScMgCurling_c20BitA_StateDriftRightEi
 void dScMgCurling_c::BitA_StateDriftRight(int index) {
     unsigned short timer;
 
@@ -349,7 +340,6 @@ void dScMgCurling_c::BitA_StateDriftRight(int index) {
         0xff;
 }
 
-// @symbol _ZN14dScMgCurling_c15BitA_StatePauseEi
 void dScMgCurling_c::BitA_StatePause(int index) {
     if (mBit[index].wait != 0) {
         mBit[index].wait = mBit[index].wait - 1;
@@ -375,7 +365,6 @@ void dScMgCurling_c::BitA_StatePause(int index) {
                                0x60);
 }
 
-// @symbol _ZN14dScMgCurling_c12Bit_RunKindAEi
 void dScMgCurling_c::Bit_RunKindA(int index) {
     C *self = (C *)this;
     unsigned char state = mBit[index].state;
@@ -384,7 +373,6 @@ void dScMgCurling_c::Bit_RunKindA(int index) {
     (self->*sCurlingBitStateTable[state2])(index);
 }
 
-// @symbol _ZN14dScMgCurling_c19BitB_StateDriftStopEi
 void dScMgCurling_c::BitB_StateDriftStop(int index) {
     int *x = &mBit[index].x;
     int *vx = &mBit[index].vx;
@@ -404,7 +392,6 @@ void dScMgCurling_c::BitB_StateDriftStop(int index) {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c19BitB_StateDriftLeftEi
 void dScMgCurling_c::BitB_StateDriftLeft(int index) {
     int off = index * 0x24;
 
@@ -444,7 +431,6 @@ void dScMgCurling_c::BitB_StateDriftLeft(int index) {
 
 #pragma push
 #pragma inline_depth(0)
-// @symbol _ZN14dScMgCurling_c20BitB_StateDriftRightEi
 void dScMgCurling_c::BitB_StateDriftRight(int index) {
     int off = index * 0x24;
 
@@ -483,7 +469,6 @@ void dScMgCurling_c::BitB_StateDriftRight(int index) {
 #pragma pop
 }
 
-// @symbol _ZN14dScMgCurling_c15BitB_StatePauseEi
 void dScMgCurling_c::BitB_StatePause(int idx) {
     unsigned short wait;
     short left;
@@ -507,13 +492,11 @@ void dScMgCurling_c::BitB_StatePause(int idx) {
     (s16 &)mBit[idx].timer = (unsigned char)(((roll * 0x30) >> 15) + 0x30);
 }
 
-// @symbol _ZN14dScMgCurling_c12Bit_RunKindBEi
 void dScMgCurling_c::Bit_RunKindB(int idx) {
     unsigned char state = mBit[idx].state;
     (((C *)this)->*sCurlingBitBStateTable[state].pmf)(idx);
 }
 
-// @symbol _ZN14dScMgCurling_c12Bit_PickKindEi
 void dScMgCurling_c::Bit_PickKind(int idx) {
     unsigned roll = (unsigned)RandomIntInternal(&data_0209d4b8.value);
     int k = 0;
@@ -524,7 +507,6 @@ void dScMgCurling_c::Bit_PickKind(int idx) {
     mBit[idx].state = 0;
 }
 
-// @symbol _ZN14dScMgCurling_c13Bit_UpdateAllEv
 void dScMgCurling_c::Bit_UpdateAll() {
     int i;
     for (i = 0; i < 0x32; i++) {
@@ -544,7 +526,6 @@ void dScMgCurling_c::Bit_UpdateAll() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c11Bit_InitAllEv
 void dScMgCurling_c::Bit_InitAll() {
     int i;
     char *bit;
@@ -613,7 +594,6 @@ void dScMgCurling_c::Bit_InitAll() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c13Popup_DrawAllEv
 void dScMgCurling_c::Popup_DrawAll() {
     int i;
     for (i = 0; i < 5; i++) {
@@ -627,7 +607,6 @@ void dScMgCurling_c::Popup_DrawAll() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c15Popup_UpdateAllEv
 void dScMgCurling_c::Popup_UpdateAll() {
     int i;
     for (i = 0; i < 5; i++) {
@@ -643,7 +622,6 @@ void dScMgCurling_c::Popup_UpdateAll() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c11ScoreStonesEv
 void dScMgCurling_c::ScoreStones() {
     int slot = 0;
     int i, j;
@@ -688,7 +666,6 @@ void dScMgCurling_c::ScoreStones() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c13DrawAimMarkerEv
 /* Draws a sprite at the aimed stone's position (mAimX/mAimY) once the
  * stylus handler has set mAimShown. */
 void dScMgCurling_c::DrawAimMarker() {
@@ -699,7 +676,6 @@ void dScMgCurling_c::DrawAimMarker() {
     Mg_RenderSpriteBoth(sCurlingAimMarkerSprites, (x >> 12) - 0x20, (y >> 12) - 8, -1, 0);
 }
 
-// @symbol _ZN14dScMgCurling_c9Aim_SwingEv
 /* Stylus handler for the stone being aimed. While the stylus is down, the
  * touch point plus the grab offset becomes the new position, clamped to the
  * 0x20000..0xe0000 by 0x94000..0xb8000 box; a move under two units is undone.
@@ -828,7 +804,6 @@ void dScMgCurling_c::Aim_Swing() {
     mAimShown = 1;
 }
 
-// @symbol _ZN14dScMgCurling_c13Aim_WaitTouchEv
 void dScMgCurling_c::Aim_WaitTouch() {
     int idx;
     int touching = 0;
@@ -861,7 +836,6 @@ void dScMgCurling_c::Aim_WaitTouch() {
     mSwingState = 0;
 }
 
-// @symbol _ZN14dScMgCurling_c14DrawStonesLeftEv
 void dScMgCurling_c::DrawStonesLeft() {
     int x, y;
     int i;
@@ -890,7 +864,6 @@ void dScMgCurling_c::DrawStonesLeft() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c14SeparateStonesEi
 /* Stone separation. Stone idx has just moved: the first other active stone
  * within 24 units is pushed out to 26 units along the line between them,
  * then that stone gets the same check once against the rest (with a bump
@@ -969,7 +942,6 @@ void dScMgCurling_c::SeparateStones(int stoneIndex) {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c21ResolveStoneCollisionEi
 /* Stone idx has just moved, so find the first other stone it overlaps and
  * resolve the collision. The two exchange their velocity components along
  * the line between their centres and keep the components across it; the
@@ -1108,7 +1080,6 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c12SetStoneSpinEi
 /* Sets stone i's spin from the x component of its velocity:
  * -(cos(angle) * speed) / 4. */
 void dScMgCurling_c::SetStoneSpin(int stoneIndex) {
@@ -1120,7 +1091,6 @@ void dScMgCurling_c::SetStoneSpin(int stoneIndex) {
     mStone[stoneIndex].spin = (short)((-velocityX) >> 2);
 }
 
-// @symbol _ZN14dScMgCurling_c10Stone_DragEi
 /* Stone i while it is being dragged. With the stylus down the stone
  * follows the touch point plus the grab offset (grabX/grabY), its x kept
  * between 0xe and 0xf2 units, and the offset is recomputed; with the stylus
@@ -1157,13 +1127,11 @@ void dScMgCurling_c::Stone_Drag(int stoneIndex) {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c13Stone_CollideEi
 /* A tail-call veneer to ResolveStoneCollision. */
 void dScMgCurling_c::Stone_Collide(int idx) {
     ResolveStoneCollision(idx);
 }
 
-// @symbol _ZN14dScMgCurling_c11Stone_SlideEi
 /* Stone idx while it slides. Moves it by its velocity, adds the spin to
  * the angle, bounces it off the four walls (with a sound), then takes
  * friction off the speed: a base of speed/512 (at least 0x1c), more in the
@@ -1278,7 +1246,6 @@ void dScMgCurling_c::Stone_Slide(int stoneIndex) {
         func_02012468(mStone[stoneIndex].slideSnd, 2, 0xe7, 7, p, w, func_020126e8(*pX), 0);
 }
 
-// @symbol _ZN14dScMgCurling_c17Stone_WaitReleaseEi
 /* Releases stone idx if the aimed stone (mAimX/mAimY) overlaps it: it takes
  * the aim angle (mSwingAng, clamped to the lower half turn) and the swing
  * speed (mSwingSpeed), is flagged fast above 0x3800, and starts sliding. The aim is
@@ -1330,7 +1297,6 @@ void dScMgCurling_c::Stone_WaitRelease(int idx) {
     func_020126ac(0x1d3, 5, vol, 0, func_020126e8(mStone[idx].x));
 }
 
-// @symbol _ZN14dScMgCurling_c17BringOutNextStoneEv
 /* Brings out the next stone once the mStoneDelay delay has run down: it starts
  * active at (0x80000, 0x80000), the stone count mThrown goes up (with a
  * sound from the second stone on), and the aim point resets. */
@@ -1364,11 +1330,9 @@ void dScMgCurling_c::BringOutNextStone() {
     mAimShown = 1;
 }
 
-// @symbol _ZN14dScMgCurling_c10Scene_IdleEv
 /* The scene's idle state. */
 void dScMgCurling_c::Scene_Idle() {}
 
-// @symbol _ZN14dScMgCurling_c9Scene_EndEv
 /* The scene's end state. After the mStateDelay delay it asks the base whether
  * the game is over, moves to state 4 with the base's own end state, and
  * clears the stones' visible flags. */
@@ -1395,7 +1359,6 @@ void dScMgCurling_c::Scene_End() {
     }
 }
 
-// @symbol _ZN14dScMgCurling_c11Scene_ScoreEv
 /* The scoring state. Runs the popup countdowns, then after the mStateDelay
  * delay either starts the next stone (state 1) or, once all five have been
  * thrown, ends the round (state 3) with the popups' points summed into the
@@ -1437,7 +1400,6 @@ void dScMgCurling_c::Scene_Score() {
     BringOutNextStone();
 }
 
-// @symbol _ZN14dScMgCurling_c10Scene_PlayEv
 /* The playing state. After the mStateDelay delay it shows the HUD once, runs
  * the aim state (mStylusHeld) through its table, then every active stone's own
  * state through the other table, remembering the last position of each.
@@ -1486,7 +1448,6 @@ void dScMgCurling_c::Scene_Play() {
     mStateDelay = 0xc0;
 }
 
-// @symbol _ZN14dScMgCurling_c16Scene_StartRoundEv
 /* Starts a round: clears the stones, brings out the first one and enters
  * the aiming state. */
 void dScMgCurling_c::Scene_StartRound() {
@@ -1497,7 +1458,6 @@ void dScMgCurling_c::Scene_StartRound() {
     mState = 1;
 }
 
-// @symbol _ZN14dScMgCurling_c9PickHouseEv
 /* Picks the house (mHouse): a fresh random one of three that differs from
  * the last, or the first one when the slot still holds its 0xff reset.
  * The house centre comes from sCurlingHouseSpots and its background from
@@ -1529,13 +1489,11 @@ void dScMgCurling_c::PickHouse() {
     Deallocate(file);
 }
 
-// @symbol _ZN14dScMgCurling_c10ResetHouseEv
 /* Marks the house as not chosen yet. */
 void dScMgCurling_c::ResetHouse() {
     mHouse = 255;
 }
 
-// @symbol _ZN14dScMgCurling_c11ClearStonesEv
 /* Zeroes the five stones, the five score popups and the aim fields, and
  * resets the score. */
 void dScMgCurling_c::ClearStones() {
@@ -1583,7 +1541,6 @@ void dScMgCurling_c::ClearStones() {
     Mg_SubmitScore(0);
 }
 
-// @symbol _ZN14dScMgCurling_c10StartRoundEi
 /* Slot 18, one of dScMgBase_c's own undeclared slots; the inherited label
  * is the tree-wide mislabel and this is not a destructor. Restarts the
  * scene: state 0, the stones cleared, a house picked, the blend set up
@@ -1597,7 +1554,6 @@ void dScMgCurling_c::StartRound(int /* arg */) {
     mTopRecord = Mg_GetTopRecord();
 }
 
-// @symbol _ZN14dScMgCurling_c6RenderEv
 /* Slot 9. The base's frame, then the popups, the stones, the aim sprite
  * and the falling bits. */
 s32 dScMgCurling_c::Render() {
@@ -1609,7 +1565,6 @@ s32 dScMgCurling_c::Render() {
     return 1;
 }
 
-// @symbol _ZN14dScMgCurling_c8BehaviorEv
 /* Slot 6. The scene state through its table, then the falling bits. The
  * table's receiver C stays incomplete. */
 s32 dScMgCurling_c::Behavior() {
@@ -1620,7 +1575,6 @@ s32 dScMgCurling_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14dScMgCurling_c13InitResourcesEv
 /* Slot 0. Loads the board and the stone graphics for both screens, the
  * palettes and the house, then starts the first round with a 0x40 delay. */
 s32 dScMgCurling_c::InitResources() {
@@ -1694,7 +1648,6 @@ s32 dScMgCurling_c::InitResources() {
  * allocation size, and vtable identity; later EAD lineage supplies the
  * classInit spelling prior. Exact original SM64DS spelling is not preserved.
  * Historical project alias: MgShuffleShell_Spawn. */
-// @symbol dScMgCurling_c_classInit
 extern "C" void *dScMgCurling_c_classInit() {
     return new dScMgCurling_c;
 }

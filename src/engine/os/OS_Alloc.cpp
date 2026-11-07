@@ -47,7 +47,6 @@ extern "C" {
 extern OSHeapInfo *OSiHeapInfo[];
 
 /* Push cell onto the front of list. */
-// @symbol DLAddFront
 Cell *DLAddFront(Cell *list, Cell *cell) {
     cell->next = list;
     cell->prev = 0;
@@ -57,7 +56,6 @@ Cell *DLAddFront(Cell *list, Cell *cell) {
 }
 
 /* Unlink cell from list; return the new head. */
-// @symbol DLExtract
 Cell *DLExtract(Cell *list, Cell *cell) {
     if (cell->next != 0)
         cell->next->prev = cell->prev;
@@ -69,7 +67,6 @@ Cell *DLExtract(Cell *list, Cell *cell) {
 
 /* Insert inserted into the address-ordered list original, merging it with
  * the neighbours it touches; return the new head. */
-// @symbol DLInsert
 Cell *DLInsert(Cell *original, Cell *inserted) {
     Cell *prevCell = 0;
     Cell *nextCell = original;
@@ -107,7 +104,6 @@ Cell *DLInsert(Cell *original, Cell *inserted) {
 /* First fit on the heap's free list (heap < 0: the current heap). A
  * remainder under MINOBJSIZE goes with the block; a larger one is split off
  * and stays free. */
-// @symbol OS_AllocFromHeap
 void *OS_AllocFromHeap(int id, int heap, u32 size) {
     OSHeapInfo *heapInfo;
     HeapDesc *hd;
@@ -164,7 +160,6 @@ void *OS_AllocFromHeap(int id, int heap, u32 size) {
     return (char *)cell + HEADERSIZE;
 }
 
-// @symbol OS_FreeToHeap
 void OS_FreeToHeap(int id, int heap, void *ptr) {
     OSHeapInfo *heapInfo;
     HeapDesc *hd;
@@ -186,7 +181,6 @@ void OS_FreeToHeap(int id, int heap, void *ptr) {
 
 /* Lay out arena id's OSHeapInfo and maxHeaps empty heap descriptors at
  * arenaStart; return the 32-aligned start of the memory after them. */
-// @symbol OS_InitAlloc
 void *OS_InitAlloc(int id, void *arenaStart, void *arenaEnd, int maxHeaps) {
     OSHeapInfo *heapInfo;
     u32 arraySize;

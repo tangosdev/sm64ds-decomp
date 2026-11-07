@@ -88,6 +88,7 @@
 #include "daCoin_c.h"
 #include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
+#include "LevelRng.h"
 #include "dClipper.h"
 #include "nitro/fx/fx.h"
 #include "daObjNumber_c.h"
@@ -129,8 +130,6 @@ ActorList data_0209b468;
 
 /* Constructor first in source so reverse emission puts C1/C2 above the
    destructor. Both variants are this one body. */
-// @symbol _ZN8dActor_cC1Ev
-// @symbol _ZN8dActor_cC2Ev
 dActor_c::dActor_c() : mActorListNode(this) {
     func_0203b244(&data_0209b468, &mActorListNode);
     {
@@ -175,25 +174,19 @@ dActor_c::dActor_c() : mActorListNode(this) {
     /* Unreachable. Vector3s's empty destructor inlines at a direct call, but
        an array cleanup has to pass its address to __cxa_vec_cleanup, so mwcc
        emits the out-of-line Vector3s::~Vector3s() (D1) in the constructor's helper slot, between C1 and
-       C2. -O4 deletes the cleanup itself: both variants stay 0x148. The marker
-       names that emitted symbol; its body is the inline destructor in
-       include/types.h. */
-    // @symbol _ZN8Vector3sD1Ev
+       C2. -O4 deletes the cleanup itself: both variants stay 0x148. The body
+       is the inline destructor in include/types.h. */
     if (0) {
         Vector3s tmp[2];
         (void)tmp;
     }
 }
 
-// @symbol _ZN8dActor_cD2Ev
-// @symbol _ZN8dActor_cD0Ev
-// @symbol _ZN8dActor_cD1Ev
 dActor_c::~dActor_c() {
     func_0203b27c((int)&data_0209b468, (int)&mActorListNode);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19BeforeInitResourcesEv
 /* ROM ordinal 90 -- dActor_c::BeforeInitResources()
  * 0x02011268  size 0x60 */
 bool dActor_c::BeforeInitResources()
@@ -210,7 +203,6 @@ bool dActor_c::BeforeInitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c18AfterInitResourcesEj
 /* ROM ordinal 89 -- dActor_c::AfterInitResources(unsigned int)
  * 0x02011244  size 0x24 */
 void dActor_c::AfterInitResources(u32 vfSuccess)
@@ -225,7 +217,6 @@ void dActor_c::AfterInitResources(u32 vfSuccess)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c22BeforeCleanupResourcesEv
 /* ROM ordinal 88 -- dActor_c::BeforeCleanupResources()
  * 0x02011220  size 0x24 */
 int dActor_c::BeforeCleanupResources()
@@ -236,7 +227,6 @@ int dActor_c::BeforeCleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c21AfterCleanupResourcesEj
 /* ROM ordinal 87 -- dActor_c::AfterCleanupResources(unsigned int)
  * 0x02011214  size 0xc */
 void dActor_c::AfterCleanupResources(u32 vfSuccess)
@@ -245,7 +235,6 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c14BeforeBehaviorEv
 /* ROM ordinal 86 -- dActor_c::BeforeBehavior()
  * 0x02010fd4  size 0x240 */
 extern "C" {
@@ -318,7 +307,6 @@ int dActor_c::BeforeBehavior()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13AfterBehaviorEj
 /* ROM ordinal 85 -- dActor_c::AfterBehavior(unsigned int)
  * 0x02010fc8  size 0xc */
 void dActor_c::AfterBehavior(u32 vfSuccess)
@@ -327,7 +315,6 @@ void dActor_c::AfterBehavior(u32 vfSuccess)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c12BeforeRenderEv
 /* ROM ordinal 84 -- dActor_c::BeforeRender()
  * 0x02010f78  size 0x50 */
 int dActor_c::BeforeRender()
@@ -344,7 +331,6 @@ int dActor_c::BeforeRender()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11AfterRenderEj
 /* ROM ordinal 83 -- dActor_c::AfterRender(unsigned int)
  * 0x02010f6c  size 0xc */
 void dActor_c::AfterRender(u32 vfSuccess)
@@ -353,7 +339,6 @@ void dActor_c::AfterRender(u32 vfSuccess)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c10FindWithIDEj
 /* ROM ordinal 82 -- dActor_c::FindWithID(unsigned int)
  * 0x02010f3c  size 0x30 */
 extern "C" {
@@ -369,7 +354,6 @@ dActor_c *dActor_c::FindWithID(u32 id)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15FindWithActorIDEjPS_
 /* ROM ordinal 81 -- dActor_c::FindWithActorID(unsigned int, dActor_c *)
  * 0x02010ef0  size 0x4c */
 /* func_02043f4c really takes and returns fLiNdBa_c * (ActorBase.cpp), but
@@ -387,7 +371,6 @@ dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c4NextEPKS_
 /* ROM ordinal 80 -- dActor_c::Next(dActor_c const *)
  * 0x02010ecc  size 0x24 */
 dActor_c *dActor_c::Next(const dActor_c *after)
@@ -403,7 +386,6 @@ dActor_c *dActor_c::Next(const dActor_c *after)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_02010e78
 /* ROM ordinal 79 -- func_02010e78
  * 0x02010e78  size 0x54 */
 extern "C" {
@@ -422,7 +404,6 @@ extern "C" void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 area
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
 /* ROM ordinal 78 -- dActor_c::Spawn(unsigned int, unsigned int, Vector3 const &, Vector3_16 const *, signed char, short)
  * 0x02010e2c  size 0x4c */
 extern "C" {
@@ -437,7 +418,6 @@ dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c9SetRangesEiiii
 /* ROM ordinal 77 -- dActor_c::SetRanges(int, int, int, int)
  * 0x02010e08  size 0x24 */
 /* The three ranges are stored at 1/8 scale, the scale BeforeBehavior projects
@@ -451,7 +431,6 @@ void dActor_c::SetRanges(Fix12i clipOffsetY, Fix12i clipRadius, Fix12i clipDista
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13func_02010da4Ev
 /* ROM ordinal 76 -- dActor_c::func_02010da4()
  * 0x02010da4  size 0x64 */
 /* Clamps each axis of mPos to +-32000.0, the edge of the world. */
@@ -475,7 +454,6 @@ void dActor_c::func_02010da4() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c
 /* ROM ordinal 75 -- dActor_c::UpdatePosWithOnlySpeed(dCc_c *)
  * 0x02010d40  size 0x64 */
 extern "C" {
@@ -493,7 +471,6 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv
 /* ROM ordinal 74 -- dActor_c::UpdatePosWithHorzSpeedAndAng()
  * 0x02010c5c  size 0xe4 */
 extern "C" {
@@ -540,7 +517,6 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c9UpdatePosEP5dCc_c
 /* ROM ordinal 73 -- dActor_c::UpdatePos(dCc_c *)
  * 0x02010c30  size 0x2c */
 void dActor_c::UpdatePos(dCc_c *clsn)
@@ -550,7 +526,6 @@ void dActor_c::UpdatePos(dCc_c *clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19DropShadowRadHeightER17dExtShadowModel_cR9Matrix4x3iih
 /* ROM ordinal 72 -- dActor_c::DropShadowRadHeight(dExtShadowModel_c &, Matrix4x3 &, int, int, unsigned char)
  * 0x02010be8  size 0x48 */
 void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i radius,
@@ -561,7 +536,6 @@ void dActor_c::DropShadowRadHeight(dExtShadowModel_c &shadow, Matrix4x3 &matrix,
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c18DropShadowScaleXYZER17dExtShadowModel_cR9Matrix4x3iiih
 /* ROM ordinal 71 -- dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &, Matrix4x3 &, int, int, int, unsigned char)
  * 0x02010b9c  size 0x4c */
 void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, Fix12i scaleX,
@@ -572,7 +546,6 @@ void dActor_c::DropShadowScaleXYZ(dExtShadowModel_c &shadow, Matrix4x3 &matrix, 
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13ClosestPlayerEv
 /* ROM ordinal 70 -- dActor_c::ClosestPlayer()
  * 0x02010ad8  size 0xc4 */
 extern "C" {
@@ -605,7 +578,6 @@ daPly_c *dActor_c::ClosestPlayer() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c22ClosestNonVanishPlayerEv
 /* ROM ordinal 69 -- dActor_c::ClosestNonVanishPlayer()
  * 0x02010a08  size 0xd0 */
 daPly_c *dActor_c::ClosestNonVanishPlayer() {
@@ -634,7 +606,6 @@ daPly_c *dActor_c::ClosestNonVanishPlayer() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13DistToCPlayerEv
 /* ROM ordinal 68 -- dActor_c::DistToCPlayer()
  * 0x020109e4  size 0x24 */
 s32 dActor_c::DistToCPlayer()
@@ -644,7 +615,6 @@ s32 dActor_c::DistToCPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c18HorzAngleToCPlayerEv
 /* ROM ordinal 67 -- dActor_c::HorzAngleToCPlayer()
  * 0x020109b8  size 0x2c */
 s16 dActor_c::HorzAngleToCPlayer()
@@ -654,7 +624,6 @@ s16 dActor_c::HorzAngleToCPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c23HorzAngleToCPlayerOrAngEv
 /* ROM ordinal 66 -- dActor_c::HorzAngleToCPlayerOrAng()
  * 0x0201097c  size 0x3c */
 s16 dActor_c::HorzAngleToCPlayerOrAng()
@@ -670,7 +639,6 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c14FarthestPlayerEv
 /* ROM ordinal 65 -- dActor_c::FarthestPlayer()
  * 0x02010958  size 0x24 */
 daPly_c *dActor_c::FarthestPlayer() {
@@ -679,7 +647,6 @@ daPly_c *dActor_c::FarthestPlayer() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c18HorzAngleToFPlayerEv
 /* ROM ordinal 64 -- dActor_c::HorzAngleToFPlayer()
  * 0x0201092c  size 0x2c */
 s16 dActor_c::HorzAngleToFPlayer()
@@ -689,7 +656,6 @@ s16 dActor_c::HorzAngleToFPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c18ClosestWithActorIDEj
 /* ROM ordinal 63 -- dActor_c::ClosestWithActorID(unsigned int)
  * 0x020108c4  size 0x68 */
 dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
@@ -715,7 +681,6 @@ dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_02010844
 /* ROM ordinal 62 -- func_02010844
  * 0x02010844  size 0x80 */
 extern "C" {
@@ -736,9 +701,7 @@ extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
 /* -------------------------------------------------------------------------- */
 extern "C" {
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650[];
 }
-// @symbol _ZN8dActor_c10SpawnCoinsERK7Vector3iis
 /* ROM ordinal 61 -- dActor_c::SpawnCoins(Vector3 const &, int, int, short)
  * 0x02010714  size 0x130 */
 /* count is SIGNED, although every local extern of this symbol and the old
@@ -773,10 +736,10 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
 
         if (actor != 0) {
             do {
-                ang = (s32)(((u32)RandomIntInternal(data_0209e650) >> 16) << 27) >> 16;
+                ang = (s32)(((u32)RandomIntInternal(&data_0209e650.value) >> 16) << 27) >> 16;
             } while (ang == prev);
 
-            r = (u32)RandomIntInternal(data_0209e650);
+            r = (u32)RandomIntInternal(&data_0209e650.value);
             r >>= 16;
 
             actor->mPrevAngleX = 0;
@@ -790,7 +753,6 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, Fix12i spread, s16 angl
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15GivePlayerCoinsER7daPly_chj
 /* ROM ordinal 60 -- dActor_c::GivePlayerCoins(daPly_c &, unsigned char, unsigned int)
  * 0x0201061c  size 0xf8 */
 extern "C" {
@@ -835,7 +797,6 @@ void dActor_c::GivePlayerCoins(daPly_c &player, u8 count, u32 coinKind) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_020105cc
 /* ROM ordinal 59 -- func_020105cc
  * 0x020105cc  size 0x50 */
 extern "C" void func_020105cc(dActor_c *actor, u32 flags) {
@@ -850,7 +811,6 @@ extern "C" void func_020105cc(dActor_c *actor, u32 flags) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR7daPly_c
 /* ROM ordinal 58 -- dActor_c::JumpedOnByPlayer(dCc_c &, daPly_c &)
  * 0x0201054c  size 0x80 */
 int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
@@ -872,7 +832,6 @@ int dActor_c::JumpedOnByPlayer(dCc_c &clsn, daPly_c &player) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c24BumpedUnderneathByPlayerER7daPly_c
 /* ROM ordinal 57 -- dActor_c::BumpedUnderneathByPlayer(daPly_c &)
  * 0x02010518  size 0x34 */
 int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
@@ -884,7 +843,6 @@ int dActor_c::BumpedUnderneathByPlayer(daPly_c &player) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15IsPlayerInRangeEi
 /* ROM ordinal 56 -- dActor_c::IsPlayerInRange(int)
  * 0x020104dc  size 0x3c */
 bool dActor_c::IsPlayerInRange(s32 maxDist)
@@ -895,7 +853,6 @@ bool dActor_c::IsPlayerInRange(s32 maxDist)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15IsPlayerInRangeEiiii
 /* ROM ordinal 55 -- dActor_c::IsPlayerInRange(int, int, int, int)
  * 0x02010498  size 0x44 */
 bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDist) {
@@ -908,7 +865,6 @@ bool dActor_c::IsPlayerInRange(Fix12i posX, Fix12i posY, Fix12i posZ, s32 maxDis
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15IsPlayerInRangeERK7Vector3i
 /* ROM ordinal 54 -- dActor_c::IsPlayerInRange(Vector3 const &, int)
  * 0x0201045c  size 0x3c */
 bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
@@ -919,7 +875,6 @@ bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c12ReflectAngleEiis
 /* ROM ordinal 53 -- dActor_c::ReflectAngle(int, int, short)
  * 0x02010428  size 0x34 */
 /* Mirrors angToReflect, turned around, about the normal's heading. */
@@ -930,7 +885,6 @@ s16 dActor_c::ReflectAngle(Fix12i normalX, Fix12i normalZ, s16 angToReflect) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c14GetSubtractionEss
 /* ROM ordinal 52 -- dActor_c::GetSubtraction(short, short)
  * 0x020103f4  size 0x34 */
 /* The magnitude of the shortest turn from angle a to angle b. */
@@ -945,7 +899,6 @@ int dActor_c::GetSubtraction(short a, short b)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c7FindEggER5dCc_c
 /* ROM ordinal 51 -- dActor_c::FindEgg(dCc_c &)
  * 0x020103b4  size 0x40 */
 dActor_c *dActor_c::FindEgg(dCc_c &clsn)
@@ -962,7 +915,6 @@ dActor_c *dActor_c::FindEgg(dCc_c &clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c18FindExplosionActorER5dCc_c
 /* ROM ordinal 50 -- dActor_c::FindExplosionActor(dCc_c &)
  * 0x02010374  size 0x40 */
 dActor_c *dActor_c::FindExplosionActor(dCc_c &clsn)
@@ -979,7 +931,6 @@ dActor_c *dActor_c::FindExplosionActor(dCc_c &clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13func_02010304EP5dCc_c
 /* ROM ordinal 49 -- dActor_c::func_02010304(dCc_c *)
  * 0x02010304  size 0x70 */
 /* Returns the player behind `clsn`'s last hit if that hit carried hitFlags
@@ -997,7 +948,6 @@ daPly_c *dActor_c::func_02010304(dCc_c *clsn) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_16iij
 /* ROM ordinal 48 -- dActor_c::SpawnFireball(Vector3 const &, Vector3_16 const *, int, int, unsigned int)
  * 0x020102b0  size 0x54 */
 /* Spawns actor 0xfe, daFPknBall_c (the fire piranha plant's fireball), with
@@ -1015,7 +965,6 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11UpdateCarryER7daPly_cRK7Vector3
 /* ROM ordinal 47 -- dActor_c::UpdateCarry(daPly_c &, Vector3 const &)
  * 0x02010180  size 0x130 */
 extern "C" {
@@ -1055,7 +1004,6 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c10EarthquakeERK7Vector3i
 /* ROM ordinal 46 -- dActor_c::Earthquake(Vector3 const &, int)
  * 0x02010168  size 0x18 */
 extern "C" {
@@ -1067,7 +1015,6 @@ void dActor_c::Earthquake(const Vector3 &pos, Fix12i magnitude) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13OnYoshiTryEatEv
 /* ROM ordinal 45 -- dActor_c::OnYoshiTryEat()
  * 0x02010160  size 0x8 */
 int dActor_c::OnYoshiTryEat()
@@ -1076,7 +1023,6 @@ int dActor_c::OnYoshiTryEat()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13OnTurnIntoEggER7daPly_c
 /* ROM ordinal 44 -- dActor_c::OnTurnIntoEgg(daPly_c &)
  * 0x02010154  size 0xc */
 void dActor_c::OnTurnIntoEgg(daPly_c &player) {
@@ -1084,7 +1030,6 @@ void dActor_c::OnTurnIntoEgg(daPly_c &player) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c9Virtual50Ev
 /* ROM ordinal 43 -- dActor_c::Virtual50()
  * 0x0201014c  size 0x8 */
 int dActor_c::Virtual50()
@@ -1093,7 +1038,6 @@ int dActor_c::Virtual50()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15OnGroundPoundedERS_
 /* ROM ordinal 42 -- dActor_c::OnGroundPounded(dActor_c &)
  * 0x02010148  size 0x4 */
 void dActor_c::OnGroundPounded(dActor_c &pounder)
@@ -1101,7 +1045,6 @@ void dActor_c::OnGroundPounded(dActor_c &pounder)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11OnAttacked1ERS_
 /* ROM ordinal 41 -- dActor_c::OnAttacked1(dActor_c &)
  * 0x02010144  size 0x4 */
 int dActor_c::OnAttacked1(dActor_c &attacker)
@@ -1109,7 +1052,6 @@ int dActor_c::OnAttacked1(dActor_c &attacker)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11OnAttacked2ERS_
 /* ROM ordinal 40 -- dActor_c::OnAttacked2(dActor_c &)
  * 0x02010140  size 0x4 */
 int dActor_c::OnAttacked2(dActor_c &attacker)
@@ -1117,7 +1059,6 @@ int dActor_c::OnAttacked2(dActor_c &attacker)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c8OnKickedERS_
 /* ROM ordinal 39 -- dActor_c::OnKicked(dActor_c &)
  * 0x0201013c  size 0x4 */
 void dActor_c::OnKicked(dActor_c &kicker)
@@ -1125,7 +1066,6 @@ void dActor_c::OnKicked(dActor_c &kicker)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c8OnPushedERS_
 /* ROM ordinal 38 -- dActor_c::OnPushed(dActor_c &)
  * 0x02010138  size 0x4 */
 int dActor_c::OnPushed(dActor_c &pusher)
@@ -1133,7 +1073,6 @@ int dActor_c::OnPushed(dActor_c &pusher)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c24OnHitByCannonBlastedCharERS_
 /* ROM ordinal 37 -- dActor_c::OnHitByCannonBlastedChar(dActor_c &)
  * 0x02010134  size 0x4 */
 int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
@@ -1141,13 +1080,11 @@ int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15OnHitByMegaCharER7daPly_c
 /* ROM ordinal 36 -- dActor_c::OnHitByMegaChar(daPly_c &)
  * 0x02010130  size 0x4 */
 void dActor_c::OnHitByMegaChar(daPly_c &player) {}
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19OnHitFromUnderneathERS_
 /* ROM ordinal 35 -- dActor_c::OnHitFromUnderneath(dActor_c &)
  * 0x0201012c  size 0x4 */
 int dActor_c::OnHitFromUnderneath(dActor_c &attacker)
@@ -1155,7 +1092,6 @@ int dActor_c::OnHitFromUnderneath(dActor_c &attacker)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c16OnAimedAtWithEggEv
 /* ROM ordinal 34 -- dActor_c::OnAimedAtWithEgg()
  * 0x02010124  size 0x8 */
 int dActor_c::OnAimedAtWithEgg()
@@ -1164,7 +1100,6 @@ int dActor_c::OnAimedAtWithEgg()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
 /* ROM ordinal 33 -- dActor_c::OnAimedAtWithEggReturnVec()
  * 0x020100dc  size 0x48 */
 Vector3 dActor_c::OnAimedAtWithEggReturnVec()
@@ -1178,7 +1113,6 @@ Vector3 dActor_c::OnAimedAtWithEggReturnVec()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_
 /* ROM ordinal 32 -- dActor_c::SpawnNumber(Vector3 const &, unsigned int, bool, unsigned short, dActor_c *)
  * 0x02010044  size 0x98 */
 /* Spawns actor 0x14a, daObjNumber_c, the number that pops up over an actor. */
@@ -1200,7 +1134,6 @@ dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibbl
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c9TrackStarEjj
 /* ROM ordinal 31 -- dActor_c::TrackStar(unsigned int, unsigned int)
  * 0x0200ff94  size 0xb0 */
 extern "C" {
@@ -1234,7 +1167,6 @@ s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11UntrackStarERa
 /* ROM ordinal 30 -- dActor_c::UntrackStar(signed char &)
  * 0x0200ff60  size 0x34 */
 void dActor_c::UntrackStar(s8 &starID)
@@ -1248,7 +1180,6 @@ void dActor_c::UntrackStar(s8 &starID)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h
 /* ROM ordinal 29 -- dActor_c::UntrackAndSpawnStar(signed char &, unsigned int, Vector3 const &, unsigned char)
  * 0x0200ff14  size 0x4c */
 dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
@@ -1261,7 +1192,6 @@ dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c17GetWaterHeightWDWEv
 /* ROM ordinal 28 -- dActor_c::GetWaterHeightWDW()
  * 0x0200fec8  size 0x4c */
 extern "C" {
@@ -1283,7 +1213,6 @@ s32 dActor_c::GetWaterHeightWDW()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c17LoadBlueCoinModelEv
 /* ROM ordinal 27 -- dActor_c::LoadBlueCoinModel()
  * 0x0200fe9c  size 0x2c */
 extern "C" {
@@ -1296,7 +1225,6 @@ void dActor_c::LoadBlueCoinModel() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19UnloadBlueCoinModelEv
 /* ROM ordinal 26 -- dActor_c::UnloadBlueCoinModel()
  * 0x0200fe70  size 0x2c */
 void dActor_c::UnloadBlueCoinModel() {
@@ -1305,7 +1233,6 @@ void dActor_c::UnloadBlueCoinModel() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c8PoofDustEv
 /* ROM ordinal 25 -- dActor_c::PoofDust()
  * 0x0200fe3c  size 0x34 */
 void dActor_c::PoofDust()
@@ -1318,7 +1245,6 @@ void dActor_c::PoofDust()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c10PoofDustAtERK7Vector3
 /* ROM ordinal 24 -- dActor_c::PoofDustAt(Vector3 const &)
  * 0x0200fdfc  size 0x40 */
 void dActor_c::PoofDustAt(const Vector3 &pos)
@@ -1328,7 +1254,6 @@ void dActor_c::PoofDustAt(const Vector3 &pos)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c14TriplePoofDustEv
 /* ROM ordinal 23 -- dActor_c::TriplePoofDust()
  * 0x0200fdc8  size 0x34 */
 void dActor_c::TriplePoofDust()
@@ -1341,7 +1266,6 @@ void dActor_c::TriplePoofDust()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c16TriplePoofDustAtERK7Vector3
 /* ROM ordinal 22 -- dActor_c::TriplePoofDustAt(Vector3 const &)
  * 0x0200fd74  size 0x54 */
 void dActor_c::TriplePoofDustAt(const Vector3 &pos)
@@ -1352,7 +1276,6 @@ void dActor_c::TriplePoofDustAt(const Vector3 &pos)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13SmallPoofDustEv
 /* ROM ordinal 21 -- dActor_c::SmallPoofDust()
  * 0x0200fd40  size 0x34 */
 void dActor_c::SmallPoofDust()
@@ -1365,7 +1288,6 @@ void dActor_c::SmallPoofDust()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19DisappearPoofDustAtERK7Vector3
 /* ROM ordinal 20 -- dActor_c::DisappearPoofDustAt(Vector3 const &)
  * 0x0200fd04  size 0x3c */
 void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
@@ -1375,7 +1297,6 @@ void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13func_0200fcccEi
 /* ROM ordinal 19 -- dActor_c::func_0200fccc(int)
  * 0x0200fccc  size 0x38 */
 extern "C" {
@@ -1391,7 +1312,6 @@ int dActor_c::func_0200fccc(int doRaycast) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_0200fc44
 /* ROM ordinal 18 -- func_0200fc44
  * 0x0200fc44  size 0x88 */
 /* Particle 0xb3 25.0 above pos, optionally first dropping pos onto the
@@ -1409,7 +1329,6 @@ extern "C" int func_0200fc44(int actor, Vector3 *pos, int doRaycast) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c11LandingDustEb
 /* ROM ordinal 17 -- dActor_c::LandingDust(bool)
  * 0x0200fc0c  size 0x38 */
 void dActor_c::LandingDust(bool doRaycast)
@@ -1422,7 +1341,6 @@ void dActor_c::LandingDust(bool doRaycast)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c17HugeLandingDustAtER7Vector3b
 /* ROM ordinal 16 -- dActor_c::HugeLandingDustAt(Vector3 &, bool)
  * 0x0200fb84  size 0x88 */
 /* Particle 0xb2 40.0 above pos, optionally first dropping pos onto the
@@ -1440,7 +1358,6 @@ void dActor_c::HugeLandingDustAt(Vector3 &pos, bool doRaycast) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c15HugeLandingDustEb
 /* ROM ordinal 15 -- dActor_c::HugeLandingDust(bool)
  * 0x0200fb4c  size 0x38 */
 void dActor_c::HugeLandingDust(bool doRaycast)
@@ -1453,7 +1370,6 @@ void dActor_c::HugeLandingDust(bool doRaycast)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13LandingDustAtER7Vector3b
 /* ROM ordinal 14 -- dActor_c::LandingDustAt(Vector3 &, bool)
  * 0x0200fac4  size 0x88 */
 /* As HugeLandingDustAt, with particle 0xb1 raised 90.0. */
@@ -1470,7 +1386,6 @@ void dActor_c::LandingDustAt(Vector3 &pos, bool doRaycast) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_0200fa8c
 /* ROM ordinal 13 -- func_0200fa8c
  * 0x0200fa8c  size 0x38 */
 extern "C" {
@@ -1487,7 +1402,6 @@ extern "C" void func_0200fa8c(void *actorp, int doRaycast) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_0200fa04
 /* ROM ordinal 12 -- func_0200fa04
  * 0x0200fa04  size 0x88 */
 /* As func_0200fc44, with particle 0x1b raised 120.0 instead of 25.0. */
@@ -1504,7 +1418,6 @@ extern "C" void *func_0200fa04(int actor, Vector3 *pos, int doRaycast) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c18GetBitInDeathTableEv
 /* ROM ordinal 11 -- dActor_c::GetBitInDeathTable()
  * 0x0200f9f4  size 0x10 */
 extern "C" {
@@ -1516,7 +1429,6 @@ int dActor_c::GetBitInDeathTable()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c17TrackInDeathTableEv
 /* ROM ordinal 10 -- dActor_c::TrackInDeathTable()
  * 0x0200f9e4  size 0x10 */
 extern "C" {
@@ -1528,7 +1440,6 @@ void dActor_c::TrackInDeathTable()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19UntrackInDeathTableEv
 /* ROM ordinal 9 -- dActor_c::UntrackInDeathTable()
  * 0x0200f9d4  size 0x10 */
 extern "C" {
@@ -1540,7 +1451,6 @@ void dActor_c::UntrackInDeathTable()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c24KillAndTrackInDeathTableEv
 /* ROM ordinal 8 -- dActor_c::KillAndTrackInDeathTable()
  * 0x0200f9b8  size 0x1c */
 void dActor_c::KillAndTrackInDeathTable()
@@ -1550,7 +1460,6 @@ void dActor_c::KillAndTrackInDeathTable()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13SpawnSoundObjEj
 /* ROM ordinal 7 -- dActor_c::SpawnSoundObj(unsigned int)
  * 0x0200f97c  size 0x3c */
 dActor_c *dActor_c::SpawnSoundObj(u32 soundObjParam) {
@@ -1558,7 +1467,6 @@ dActor_c *dActor_c::SpawnSoundObj(u32 soundObjParam) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN5Sound15PlaySecretSoundEP8dActor_cPt
 /* ROM ordinal 6 -- Sound::PlaySecretSound(dActor_c *, unsigned short *)
  * 0x0200f8f8  size 0x84 */
 extern "C" {
@@ -1581,7 +1489,6 @@ int PlaySecretSound(dActor_c *actor, u16 *counter) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt
 /* ROM ordinal 5 -- Sound::PlaySmallSecretSound(dActor_c *, unsigned short *)
  * 0x0200f874  size 0x84 */
 namespace Sound {
@@ -1598,7 +1505,6 @@ int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_0200f7f0
 /* ROM ordinal 4 -- func_0200f7f0
  * 0x0200f7f0  size 0x84 */
 extern "C" int func_0200f7f0(dActor_c *actor, u16 *counter) {
@@ -1612,7 +1518,6 @@ extern "C" int func_0200f7f0(dActor_c *actor, u16 *counter) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c
 /* ROM ordinal 3 -- dActor_c::MakeVanishLuigiWork(dCc_c &)
  * 0x0200f7a8  size 0x48 */
 void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
@@ -1630,7 +1535,6 @@ void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c13func_0200f760EP5dCc_c
 /* ROM ordinal 2 -- dActor_c::func_0200f760(dCc_c *)
  * 0x0200f760  size 0x48 */
 /* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
@@ -1647,7 +1551,6 @@ void dActor_c::func_0200f760(dCc_c *clsn) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c22IsTooFarAwayFromPlayerEi
 /* ROM ordinal 1 -- dActor_c::IsTooFarAwayFromPlayer(int)
  * 0x0200f70c  size 0x54 */
 /* True only while the actor is off screen (mFlags 0x08), nothing forces it to
@@ -1664,7 +1567,6 @@ int dActor_c::IsTooFarAwayFromPlayer(Fix12i threshold) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b
 /* ROM ordinal 0 -- dActor_c::DetectRaycastClsn(Vector3 &, Vector3 &, bool)
  * 0x0200f658  size 0xb4 */
 extern "C" Vector3 *func_02037dc4(SurfaceInfo *surface);

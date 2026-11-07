@@ -150,14 +150,11 @@ enum {
     kDeathPtcl1 = 0x13b
 };
 
-// @symbol _ZN8daEykn_cD1Ev
-// @symbol _ZN8daEykn_cD0Ev
 daEykn_c::~daEykn_c()
 {
 }
 
 
-// @symbol _ZN8daEykn_c14UpdateCirclingEv
 /* Accumulates the yaw the eye turns while following a player around it in one
  * direction. Turning the other way, or too slowly, for 0x2e frames starts the
  * count again. Returns 1 once the count passes 0x17fff: the eye is dizzy. */
@@ -207,7 +204,6 @@ int daEykn_c::UpdateCircling()
 }
 
 
-// @symbol _ZN8daEykn_c13UpdateEyeAnimEv
 /* Steps the eye's texture animation through two identical blinks: steps 1-3
  * and steps 4-6 each play the gEyknCloseTextureSequenceFile sequence, then the
  * gEyknOpenTextureSequenceFile sequence. Step 7 resets to 0 and returns 1, one call
@@ -252,7 +248,6 @@ int daEykn_c::UpdateEyeAnim()
 }
 
 
-// @symbol _ZN8daEykn_c12ResetEyeAnimEv
 void daEykn_c::ResetEyeAnim()
 {
     mTextureSequence.SetFile(*(BTP_File *)gEyknCloseTextureSequenceFile.filePtr, 0, 0x1000, 0);
@@ -263,7 +258,6 @@ void daEykn_c::ResetEyeAnim()
 }
 
 
-// @symbol _ZN8daEykn_c12StartEyeAnimEv
 /* Starts the blink that ends in a shot. Returns 0 if one is already running. */
 int daEykn_c::StartEyeAnim()
 {
@@ -276,7 +270,6 @@ int daEykn_c::StartEyeAnim()
 }
 
 
-// @symbol _ZN8daEykn_c13LookForPlayerEv
 /* Watches for the closest visible player within range, inside the eye's
  * field of view and with a clear line of sight, and starts the attack. */
 void daEykn_c::LookForPlayer()
@@ -303,7 +296,6 @@ void daEykn_c::LookForPlayer()
 }
 
 
-// @symbol _ZN8daEykn_c12CheckAttacksEv
 /* An egg (actor 9) or an explosion kills the eye. A player (actor 0xbf)
  * touching it is hurt, unless hit flag 0x40000 is set, which kills the eye
  * with particle systems kDeathPtcl0 and kDeathPtcl1 attached. */
@@ -350,7 +342,6 @@ idCheck:
 }
 
 
-// @symbol _ZN8daEykn_c20UpdateModelTransformEv
 void daEykn_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
@@ -364,7 +355,6 @@ void daEykn_c::UpdateModelTransform()
 }
 
 
-// @symbol _ZN8daEykn_c11St_Die_MainEv
 /* State 2 exec: spin with a wobble, play the death animation, shrink to scale
  * 0xa4, then despawn, spawning actor 0x122 (small one) or releasing the star
  * (big one). */
@@ -478,7 +468,6 @@ int daEykn_c::St_Die_Main()
 }
 
 
-// @symbol _ZN8daEykn_c11St_Die_InitEv
 /* State 2 init: spin on in the direction of the last turn. */
 int daEykn_c::St_Die_Init()
 {
@@ -503,7 +492,6 @@ int daEykn_c::St_Die_Init()
 }
 
 
-// @symbol _ZN8daEykn_c14St_Attack_MainEv
 /* State 1 exec: turn toward the target, blink and fire a bullet (actor 0x108)
  * each time the blink reaches step 7, and fall back to waiting when the target
  * leaves range, vanishes or goes behind terrain. The three aim points
@@ -644,7 +632,6 @@ int daEykn_c::St_Attack_Main()
 }
 
 
-// @symbol _ZN8daEykn_c14St_Attack_InitEv
 int daEykn_c::St_Attack_Init()
 {
     unk_212 = 0xf0;
@@ -656,7 +643,6 @@ int daEykn_c::St_Attack_Init()
 }
 
 
-// @symbol _ZN8daEykn_c12St_Wait_MainEv
 /* State 0 exec: level out, keep turning, and look for a player. */
 int daEykn_c::St_Wait_Main()
 {
@@ -668,7 +654,6 @@ int daEykn_c::St_Wait_Main()
 }
 
 
-// @symbol _ZN8daEykn_c12St_Wait_InitEv
 /* State 0 init: drift on in the direction of the last turn. */
 int daEykn_c::St_Wait_Init()
 {
@@ -682,21 +667,18 @@ int daEykn_c::St_Wait_Init()
 }
 
 
-// @symbol _ZN8daEykn_c8RunStateEv
 void daEykn_c::RunState()
 {
     (this->*mState->exec)();
 }
 
 
-// @symbol _ZN8daEykn_c12RunStateInitEv
 void daEykn_c::RunStateInit()
 {
     (this->*mState->init)();
 }
 
 
-// @symbol _ZN8daEykn_c8SetStateEi
 void daEykn_c::SetState(int state)
 {
     mState = &gEyknStates[state];
@@ -704,7 +686,6 @@ void daEykn_c::SetState(int state)
 }
 
 
-// @symbol _ZN8daEykn_c16CleanupResourcesEv
 s32 daEykn_c::CleanupResources()
 {
     UnloadBlueCoinModel();
@@ -718,7 +699,6 @@ s32 daEykn_c::CleanupResources()
 }
 
 
-// @symbol _ZN8daEykn_c16OnPendingDestroyEv
 /* daEykn_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
 void daEykn_c::OnPendingDestroy()
@@ -726,7 +706,6 @@ void daEykn_c::OnPendingDestroy()
 }
 
 
-// @symbol _ZN8daEykn_c6RenderEv
 int daEykn_c::Render()
 {
     mTextureSequence.Update(mAnmModel.data);
@@ -736,7 +715,6 @@ int daEykn_c::Render()
 }
 
 
-// @symbol _ZN8daEykn_c8BehaviorEv
 int daEykn_c::Behavior()
 {
     RunState();
@@ -748,7 +726,6 @@ int daEykn_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daEykn_c13InitResourcesEv
 s32 daEykn_c::InitResources()
 {
     BMD_File *bmd;
@@ -832,13 +809,11 @@ s32 daEykn_c::InitResources()
     return 1;
 }
 
-// @symbol daEykn_c_classInit_EYEKUN_BOSS
 extern "C" daEykn_c *daEykn_c_classInit_EYEKUN_BOSS()
 {
     return new daEykn_c();
 }
 
-// @symbol daEykn_c_classInit_EYEKUN
 extern "C" daEykn_c *daEykn_c_classInit_EYEKUN()
 {
     return new daEykn_c();

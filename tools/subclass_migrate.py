@@ -455,7 +455,6 @@ def main():
             saved[d1c] = d1c.read_text(errors="replace")
             d1c.unlink()
         d1.write_text(f"""//cpp
-// @symbol _ZN{len(cls)}{cls}D1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of

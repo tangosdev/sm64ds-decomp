@@ -35,36 +35,30 @@
 #include "daTrsTrap_c.h"
 #include "dBgW.h"
 
-// @symbol daTrsTrap_c_classInit_KAIDAN
 extern "C" daTrsTrap_c *daTrsTrap_c_classInit_KAIDAN(void)
 {
     return new daTrsTrap_c();
 }
 
-// @symbol daTrsTrap_c_classInit_BOOKSHELF
 extern "C" daTrsTrap_c *daTrsTrap_c_classInit_BOOKSHELF(void)
 {
     return new daTrsTrap_c();
 }
 
-// @symbol daTrsTrap_c_classInit_MERRYGOROUND
 extern "C" daTrsTrap_c *daTrsTrap_c_classInit_MERRYGOROUND(void)
 {
     return new daTrsTrap_c();
 }
 
-// @symbol daTrsTrap_c_classInit_TERESAPIT
 extern "C" daTrsTrap_c *daTrsTrap_c_classInit_TERESAPIT(void)
 {
     return new daTrsTrap_c();
 }
 
-// @symbol _ZN11daTrsTrap_c15OnMeshClsnTouchEP4dBgWP8dActor_cS3_
 void daTrsTrap_c::OnMeshClsnTouch(dBgW *clsn, dActor_c *self, dActor_c *actor) {
     static_cast<daTrsTrap_c *>(self)->LatchStandingActor(actor);
 }
 
-// @symbol _ZN11daTrsTrap_c18LatchStandingActorEP8dActor_c
 void daTrsTrap_c::LatchStandingActor(dActor_c *actor) {
     int isPlayer = actor->actorID == 0xbf;
     if (isPlayer)

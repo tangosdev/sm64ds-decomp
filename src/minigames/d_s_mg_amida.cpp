@@ -81,12 +81,14 @@ enum dScMgAmida_c_AssetId {
     ASSET_D_2D_MG_OPTION_S_NCG_BIN = 0x00df
 };
 
+#include "PlayerInput.h"
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "G2.h"
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "dScMgAmida_c.h"
+#include "Vector2Math.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
@@ -101,7 +103,6 @@ extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void MultiCopyHalf(void *dst, void *src, int nbytes);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern int RandomIntInternal(int *seed);
-extern int Vec2_Len(int *v);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -121,16 +122,6 @@ extern void *dScMgAmida_c_classInit(void);
 extern s16 data_02082214[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8 gActivePlayerSlot;
-// local extern: see above.
-extern u8 gTouchHeld[];
-// local extern: see above.
-extern u8 gTouchEdge[];
-// local extern: see above.
-extern u8 gTouchX[][4];
-// local extern: see above.
-extern u8 gTouchY[][4];
 extern int sAmidaPatternSpeedUp[];
 extern s32 data_0208ee44;
 extern char sAmidaPatterns[];
@@ -200,8 +191,6 @@ extern AmidaRenderPeriods sAmidaRenderPeriods;
 
 #pragma defer_codegen off
 
-// @symbol _ZN12dScMgAmida_cD1Ev
-// @symbol _ZN12dScMgAmida_cD0Ev
 /* Empty: the compiler tears the four member arrays down in reverse
    declaration order through __cxa_vec_cleanup -- the 0x80 pieces (with
    dScMgAmida_c_Piece's destructor), then the lane velocities, the lane
@@ -210,11 +199,9 @@ extern AmidaRenderPeriods sAmidaRenderPeriods;
    adds the delete. */
 dScMgAmida_c::~dScMgAmida_c() {}
 
-// @symbol _ZN18dScMgAmida_c_PieceD1Ev
 /* dScMgAmida_c_Piece's empty inline destructor (dScMgAmida_c.h), emitted
    here, after the class destructor that first uses it. */
 
-// @symbol _ZN12dScMgAmida_c12IsAltVariantEv
 /* Slot 35, the family's only override of it. The base asks whether the low
    byte of fBase_c::param1 is nonzero; this asks whether it is exactly 1.
    Nothing in this class calls it; the callers are in dScMgCoin_c,
@@ -223,7 +210,6 @@ int dScMgAmida_c::IsAltVariant() {
     return (param1 & 0xff) == 1;
 }
 
-// @symbol _ZN12dScMgAmida_c10IsVariant2Ev
 /* Slot 36, this class's own: whether the low byte of param1 (the menu
    entry's sceneParam) is 2. The Rec Room lists Amida twice, and its second
    entry (row 24) passes 2 (notes/minigames/runtime-checks.md, IsAltVariant),
@@ -233,7 +219,6 @@ int dScMgAmida_c::IsVariant2() {
     return (((int)param1) & 0xff) == 2;
 }
 
-// @symbol _ZN12dScMgAmida_c15InitSubScreenBgEv
 /* Slot 31: the sub screen's BG1 set up for this game. Same shape as the
    base's, with 4 for the BG1CNT base bits and this class's own language
    table. Not a Kill; see the slot-31 block in include/dScMgBase_c.h. */
@@ -252,7 +237,6 @@ int dScMgAmida_c::InitSubScreenBg() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S::GetBG1ScrPtr());
 }
 
-// @symbol _ZN12dScMgAmida_c12ShuffleGoalsEi
 /* Refills and shuffles mLaneResult. When IsVariant2() holds, the entries
    come from the pattern index, are copied to mLaneWants, and the table is
    reshuffled until it differs somewhere from that copy as seen through
@@ -347,7 +331,6 @@ void dScMgAmida_c::ShuffleGoals(int arg1) {
 }
 #pragma pop
 
-// @symbol _ZN12dScMgAmida_c11ClearStrokeEv
 void dScMgAmida_c::ClearStroke() {
     int row = 0;
     int col;
@@ -367,7 +350,6 @@ void dScMgAmida_c::ClearStroke() {
     mLineStartSet = 0;
 }
 
-// @symbol _ZN12dScMgAmida_c11PaintSquareEiiii
 /* Slot 34 probes or paints the ladder grid. Its first coordinate is the
    horizontal lane position; the grid is stored by x, then by y + 0xc0.
    In probe mode, a diagonal also tests the two adjacent cells so it cannot
@@ -502,7 +484,6 @@ void dScMgAmida_c::PaintSquare(int brushX, int brushY, int colour, int /* size *
     (mStrokeGrid + brushX * 0x158)[gridY] = mLineCount;
 }
 
-// @symbol _ZN12dScMgAmida_c16CheckHurryButtonEv
 void dScMgAmida_c::CheckHurryButton() {
     if (IsVariant2() == 0)
         return;
@@ -517,8 +498,8 @@ void dScMgAmida_c::CheckHurryButton() {
     }
     if (pressed == 0)
         return;
-    int touchX = gTouchX[playerSlot][0];
-    int touchY = gTouchY[playerSlot][0];
+    int touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
+    int touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
     if (touchX < 0x60)
         return;
     if (touchX >= 0xa0)
@@ -531,7 +512,6 @@ void dScMgAmida_c::CheckHurryButton() {
     Sound::PlayBank2_2D(0x151);
 }
 
-// @symbol _ZN12dScMgAmida_c14CheckEdgeBoostEv
 void dScMgAmida_c::CheckEdgeBoost() {
     int playerSlot;
     int pressed;
@@ -553,8 +533,8 @@ void dScMgAmida_c::CheckEdgeBoost() {
     }
     playerSlot = gActivePlayerSlot;
     if (gTouchHeld[playerSlot * 4] != 0) {
-        touchX = gTouchX[playerSlot][0];
-        touchY = gTouchY[playerSlot][0];
+        touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
+        touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
         if ((touchX >= 0 && touchX < 0x10 && touchY >= 0x40 && touchY < 0x80) ||
             (touchX >= 0xf0 && touchX < 0x100 && touchY >= 0x40 && touchY < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -575,7 +555,6 @@ void dScMgAmida_c::CheckEdgeBoost() {
     }
 }
 
-// @symbol _ZN12dScMgAmida_c9HandlePenEv
 /* The pen handler: follows the stylus while it is down, and on release
    turns the stroke into a rung between two neighbouring lanes, probed with
    ProbeRung before it is painted. Point's special members are
@@ -593,8 +572,8 @@ void dScMgAmida_c::HandlePen() {
     oldY = this->mPen.y;
 
     if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = gTouchX[gActivePlayerSlot][0];
-        int newY = gTouchY[gActivePlayerSlot][0];
+        int newX = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
+        int newY = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
         if (newX < 0)
             return;
         if (newX >= 0x100)
@@ -832,7 +811,6 @@ void dScMgAmida_c::HandlePen() {
     }
 }
 
-// @symbol _ZN12dScMgAmida_c9ProbeRungENS_5PointES0_
 /* Probes the rung from p1 to p2 without painting it: slot 34 runs in probe
    mode over the line and reports whether any cell it crosses is taken. */
 int dScMgAmida_c::ProbeRung(Point p1, Point p2) {
@@ -848,7 +826,6 @@ int dScMgAmida_c::ProbeRung(Point p1, Point p2) {
     return this->mProbeHit;
 }
 
-// @symbol _ZN12dScMgAmida_c10StepWalkerEii
 int dScMgAmida_c::StepWalker(int walker, int dir) {
     int gridX, gridY;
     u8 lineMark;
@@ -924,7 +901,6 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
     }
 }
 
-// @symbol _ZN12dScMgAmida_c11StepWalkersEv
 /* The per-step routine Behavior runs mScrollAccum / 16 times a frame:
    counts down mWalkerDelay, then steps each walker along the drawn lines
    with StepWalker; once every walker is in (mWalkersDone reaches
@@ -1307,7 +1283,6 @@ void dScMgAmida_c::StepWalkers() {
 }
 #pragma pop
 
-// @symbol Amida_RestoreBgChars
 extern "C" void Amida_RestoreBgChars(void *) {
     char *mainChars = (char *)func_02054efc();
     MultiCopyHalf((char *)func_02054efc() + 0xc000, mainChars, 0x6000);
@@ -1315,7 +1290,6 @@ extern "C" void Amida_RestoreBgChars(void *) {
     MultiCopyHalf((char *)G2S::GetBG0CharPtr() + 0x6000, subChars, 0x6000);
 }
 
-// @symbol Amida_SaveBgChars
 /* The scene pointer its caller passes is never read. */
 extern "C" void Amida_SaveBgChars(void *) {
     char *mainChars = (char *)func_02054efc() + 0xc000;
@@ -1324,7 +1298,6 @@ extern "C" void Amida_SaveBgChars(void *) {
     MultiCopyHalf(G2S::GetBG0CharPtr(), subChars, 0x6000);
 }
 
-// @symbol _ZN12dScMgAmida_c11InitWalkersEv
 void dScMgAmida_c::InitWalkers() {
     int i;
     int j;
@@ -1463,7 +1436,6 @@ void dScMgAmida_c::InitWalkers() {
     this->mRoundTimer = 0;
 }
 
-// @symbol _ZN12dScMgAmida_c10SetupRoundEv
 void dScMgAmida_c::SetupRound() {
     char *raw = (char *)this;
     int level;
@@ -1760,7 +1732,6 @@ void dScMgAmida_c::SetupRound() {
     }
 }
 
-// @symbol _ZN12dScMgAmida_c11RenderBoardEv
 /* This bracket is SetupRound's. mwcc reads opt_strength_reduction for
    SetupRound only after its closing brace, so a pop right after SetupRound
    undoes it; RenderBoard compiles the same either way. Without it SetupRound
@@ -1829,7 +1800,6 @@ void dScMgAmida_c::RenderBoard() {
 }
 #pragma pop
 
-// @symbol _ZN12dScMgAmida_c14RenderBoardAltEv
 void dScMgAmida_c::RenderBoardAlt() {
     int noPalette = -1;
     int i;
@@ -1848,7 +1818,6 @@ void dScMgAmida_c::RenderBoardAlt() {
         Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 0x78, noPalette, 0);
     }
 }
-// @symbol _ZN12dScMgAmida_c6RenderEv
 s32 dScMgAmida_c::Render() {
     mBgScrollPhase += 0xc0;
     {
@@ -1901,7 +1870,6 @@ s32 dScMgAmida_c::Render() {
     }
 }
 
-// @symbol _ZN12dScMgAmida_c8BehaviorEv
 s32 dScMgAmida_c::Behavior() {
     char *raw = (char *)this;
     int piece;
@@ -2042,7 +2010,7 @@ s32 dScMgAmida_c::Behavior() {
             if (PIECE_AT(piecePtr)->active != 0) {
                 IAP(piecePtr, PIECE_OFF(posX)) += IP(piecePtr, PIECE_OFF(velX));
                 IAP(piecePtr, PIECE_OFF(posY)) += IP(piecePtr, PIECE_OFF(velY));
-                speed = Vec2_Len(vel) * 7 / 8;
+                speed = Vec2_Len((const Vector2 *)vel) * 7 / 8;
                 if (func_0203d434(vel) != 0)
                     func_0203d630(vel, speed);
                 IAP(piecePtr, PIECE_OFF(timer)) = IAP(piecePtr, PIECE_OFF(timer)) + 1;
@@ -2095,7 +2063,6 @@ s32 dScMgAmida_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12dScMgAmida_c10StartRoundEi
 /* Slot 18: counts a win (arg 0) or resets the score, then sets up the next board. */
 void dScMgAmida_c::StartRound(int arg) {
     if (arg == 0) {
@@ -2116,7 +2083,6 @@ final:
     SetupRound();
 }
 
-// @symbol _ZN12dScMgAmida_c13InitResourcesEv
 s32 dScMgAmida_c::InitResources() {
     volatile u16 zeroMain;
     volatile u16 zeroSub;
@@ -2241,7 +2207,6 @@ s32 dScMgAmida_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12dScMgAmida_c21AfterCleanupResourcesEj
 /* Returns before the base call too when vfSuccess != 2, as the ROM does. */
 void dScMgAmida_c::AfterCleanupResources(u32 vfSuccess) {
     if (vfSuccess != 2)
@@ -2251,7 +2216,6 @@ void dScMgAmida_c::AfterCleanupResources(u32 vfSuccess) {
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
 
-// @symbol dScMgAmida_c_classInit
 /* `new` inlines the implicit constructor: dScMgBase_c's C2, this class's
    vptr, then the four member arrays in declaration order through
    __cxa_vec_ctor -- the cells, lane positions and lane velocities with
@@ -2260,7 +2224,6 @@ extern "C" void *dScMgAmida_c_classInit(void) {
     return new dScMgAmida_c;
 }
 
-// @symbol _ZN18dScMgAmida_c_PieceC1Ev
 /* dScMgAmida_c_Piece's empty inline constructor (dScMgAmida_c.h), emitted
    here, after the factory that first uses it. */
 

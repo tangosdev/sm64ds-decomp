@@ -82,7 +82,6 @@ extern Ov007Transition *func_ov007_020c8b10(void);
 
 #define FADE data_ov007_02104bd8
 
-// @symbol func_ov007_020bfcec
 void func_ov007_020bfcec(void) {
     void *file;
 
@@ -97,7 +96,6 @@ void func_ov007_020bfcec(void) {
     FADE->onEnd = 0;
 }
 
-// @symbol func_ov007_020bfc54
 void func_ov007_020bfc54(void) {
     func_ov007_020b3edc(0x24);
 
@@ -118,7 +116,6 @@ void func_ov007_020bfc54(void) {
     data_ov007_02104bd8 = 0;
 }
 
-// @symbol func_ov007_020bfbdc
 /* Turns the model to face the screen and puts it 0x1064 in front of the
  * camera: the point (0, 0, -0x1064) taken back through the inverse of the
  * camera's view matrix. */
@@ -139,7 +136,6 @@ void func_ov007_020bfbdc(void *self) {
     MulVec3Mat4x3(&vec, &mat, &model->pos);
 }
 
-// @symbol func_ov007_020bfaf0
 /* While the model is visible, scales it in x and z to fill the camera's view
  * at its fovy, then updates it under the camera's view matrix and renders
  * it. */
@@ -159,7 +155,6 @@ void func_ov007_020bfaf0(Ov007Camera *cam) {
     func_ov007_020bbff0(model);
 }
 
-// @symbol RequestScreenFade
 /* Queues fade kind `kind` (1..9, see func_ov007_020bf790) with flags and
  * the end callback onEnd (0 for none); func_ov007_020bf690 starts it on its
  * next run. */
@@ -169,7 +164,6 @@ void RequestScreenFade(int kind, int flags, void (*onEnd)(void)) {
     FADE->onEnd = onEnd;
 }
 
-// @symbol func_ov007_020bf790
 /* Starts the queued fade: loads kind `request` (1..9) into the transition,
  * shows or hides the model by flag 1 (with sound 0x30 / 0x31 by flag 2),
  * and runs the transition forwards (flag 2) or backwards on the screens the
@@ -309,7 +303,6 @@ void func_ov007_020bf790(void) {
     FADE->transition->onEnd = FADE->onEnd;
 }
 
-// @symbol func_ov007_020bf690
 /* One frame: starts a queued fade, runs the transition, and while flag 1 is
  * set scales the model in x and z by the transition's progress; when the
  * transition holds at its end it hides the model, clears flag 1 and, for a

@@ -47,7 +47,6 @@ typedef char DonketuAnimFileHandle_size_must_be_8[sizeof(DonketuAnimFileHandle) 
 extern s16 data_02082214[]; /* sine/cosine table, (angle >> 4) pairs */
 
 /* Factory for the BOSS_DONKETU profile. Written first so it emits last. */
-// @symbol daBDonketu_c_classInit
 extern "C" daBDonketu_c *daBDonketu_c_classInit() {
     return new daBDonketu_c();
 }
@@ -56,7 +55,6 @@ extern "C" daBDonketu_c *daBDonketu_c_classInit() {
  * Bullies: they are spawned here, each told this actor's uniqueID, and
  * mNumBulliesKilled starts at 0. Any other setting starts it at 0xff, which
  * skips the small-Bully phase in Behavior. */
-// @symbol _ZN12daBDonketu_c13InitResourcesEv
 int daBDonketu_c::InitResources() {
     int result;
 
@@ -119,7 +117,6 @@ int daBDonketu_c::InitResources() {
 /* mNumBulliesKilled below 3: nothing to do. At 3 (all three small Bullies
  * dead) the boss drops in under gravity, and increments the count when it
  * lands. From 4 on, the shared daOts_c behavior runs. */
-// @symbol _ZN12daBDonketu_c8BehaviorEv
 int daBDonketu_c::Behavior() {
     u8 killed = mNumBulliesKilled;
     if (killed >= 4) {
@@ -153,7 +150,6 @@ int daBDonketu_c::Behavior() {
 }
 
 /* Drawn once the small Bullies are dead. */
-// @symbol _ZN12daBDonketu_c6RenderEv
 int daBDonketu_c::Render() {
     if (mNumBulliesKilled >= 3)
         mAnmModel.Render(0);
@@ -162,7 +158,6 @@ int daBDonketu_c::Render() {
 
 /* Once func_ov064_0211616c reports nonzero: poof dust, and spawn the star
  * (0x40 | mStarID) 100 units above the actor. */
-// @symbol _ZN12daBDonketu_c16UpdateDeathStateEv
 void daBDonketu_c::UpdateDeathState() {
     int result = func_ov064_0211616c();
     if (result == 0)
@@ -177,7 +172,6 @@ void daBDonketu_c::UpdateDeathState() {
 }
 
 /* Charge timer, then run. Key function: the inline destructor emits no vtable. */
-// @symbol _ZN12daBDonketu_c14UpdateRunStateEv
 int daBDonketu_c::UpdateRunState() {
     if ((u16)mStateTimer < 0xa) {
         mHorzSpeed = 0;

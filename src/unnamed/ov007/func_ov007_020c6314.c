@@ -1,4 +1,3 @@
-// @symbol func_ov007_020c6314
 #include "Ov007Picker.h"
 
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);

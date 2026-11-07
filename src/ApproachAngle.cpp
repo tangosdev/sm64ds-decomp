@@ -13,7 +13,6 @@
 /* The host smoke build has no divider. These two call __aeabi_idiv. */
 extern "C" int __aeabi_idiv(int a, int b);
 
-// @symbol ApproachAngle
 extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep)
 {
     int diff;
@@ -37,7 +36,6 @@ extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, in
     return target - *cur;
 }
 
-// @symbol _Z11UpdateAngleRssis
 void UpdateAngle(short &angle, short target, int divisor, short maxStep) {
     short step = (short)(__aeabi_idiv((short)(target - angle), divisor));
     if (step > maxStep) {
@@ -52,7 +50,6 @@ void UpdateAngle(short &angle, short target, int divisor, short maxStep) {
 }
 #endif
 
-// @symbol _Z15ApproachLinear2Riii
 int ApproachLinear2(int &ref, int target, int step)
 {
     unsigned char *p = (unsigned char *)&ref;
@@ -74,7 +71,6 @@ int ApproachLinear2(int &ref, int target, int step)
     return 0;
 }
 
-// @symbol _Z15ApproachLinear2Rsss
 int ApproachLinear2(short &x, short target, short step)
 {
     if (step != 0) {
@@ -90,7 +86,6 @@ int ApproachLinear2(short &x, short target, short step)
     return 0;
 }
 
-// @symbol _Z14ApproachLinearRiii
 int ApproachLinear(int &ref, int target, int step)
 {
     if (step != 0) {
@@ -107,7 +102,6 @@ int ApproachLinear(int &ref, int target, int step)
     return 0;
 }
 
-// @symbol _Z14ApproachLinearRsss
 bool ApproachLinear(short &x, short target, short step)
 {
     if (step != 0) {

@@ -20,14 +20,12 @@ extern "C" {
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 }
 
-// @symbol _ZN7dBgW_Kc17SetDepthDirMinDotEi
 
 /* Stores dBgW_Kc::depthDirMinDot (+0x44), the sphere query's face-dot threshold. */
 void dBgW_Kc::SetDepthDirMinDot(Fix12i value) {
     depthDirMinDot = value;
 }
 
-// @symbol _ZN7dBgW_Kc21SetEdgeToleranceShiftEi
 
 /* Stores dBgW_Kc::edgeToleranceShift (+0x48), clamped at 0. */
 void dBgW_Kc::SetEdgeToleranceShift(int value) {
@@ -36,17 +34,12 @@ void dBgW_Kc::SetEdgeToleranceShift(int value) {
     edgeToleranceShift = value;
 }
 
-// @symbol _ZN4dBgWC2Ev
 dBgW::dBgW() {
     Reset();
 }
 
-// @symbol _ZN4dBgWD2Ev
-// @symbol _ZN4dBgWD0Ev
-// @symbol _ZN4dBgWD1Ev
 dBgW::~dBgW() {}
 
-// @symbol _ZN4dBgW5ResetEv
 void dBgW::Reset() {
     owner = 0;
     ownerUniqueID = -1;
@@ -57,10 +50,8 @@ void dBgW::Reset() {
     clipOffsetY = 0;
 }
 
-// @symbol _ZN4dBgW9Virtual08Ev
 void dBgW::Virtual08() {}
 
-// @symbol _ZN4dBgW8SetActorEP8dActor_c
 
 /* Binds the collider to its owning actor, or clears the binding. */
 void dBgW::SetActor(dActor_c *actor) {
@@ -73,7 +64,6 @@ void dBgW::SetActor(dActor_c *actor) {
     }
 }
 
-// @symbol _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b
 bool dBgCh::ShouldPassThroughImpl(void *unused, const CLPS &surfaceProperties, const dBgCh &query,
                                   bool checkType14) {
     /* Each special surface asks whether the query detects its kind, through
@@ -121,131 +111,109 @@ bool dBgCh::ShouldPassThroughImpl(void *unused, const CLPS &surfaceProperties, c
     return false;
 }
 
-// @symbol _ZN4dBgW10DetectClsnER9dBgCh_Gnd
 int dBgW::DetectClsn(dBgCh_Gnd &ray) {
     return 0;
 }
 
-// @symbol _ZN4dBgW10DetectClsnER9dBgCh_Lin
 int dBgW::DetectClsn(dBgCh_Lin &ray) {
     return 0;
 }
 
-// @symbol _ZN4dBgW10DetectClsnER12dBgCh_SphCrr
 int dBgW::DetectClsn(dBgCh_SphCrr &sphere) {
     return 0;
 }
 
-// @symbol _ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_
 void dBgW::BeforeClsn(dBgPi &res, dActor_c *actor, Vector3 &pos, Vector3_16 *motionAng,
                       Vector3_16 *ang) {
     beforeClsnCallback(*this, actor, res, pos, motionAng, ang);
 }
 
-// @symbol _ZN4dBgW12TransformPosERK7Vector3RS0_
 int dBgW::TransformPos(const Vector3 &pos, Vector3 &res) {
     return 0;
 }
 
-// @symbol _ZN4dBgW14GetAngularVelYEv
 s16 dBgW::GetAngularVelY() {
     return 0;
 }
 
-// @symbol _ZN4dBgW11GetVelocityER7Vector3
 void dBgW::GetVelocity(Vector3 &res) {
     res.z = 0;
     res.y = res.z;
     res.x = res.y;
 }
 
-// @symbol _ZNK4dBgW12GetSlotIndexEv
 int dBgW::GetSlotIndex() const {
     return slotIdx;
 }
 
-// @symbol _ZN4dBgW12SetSlotIndexEi
 void dBgW::SetSlotIndex(int slot) {
     slotIdx = slot;
 }
 
-// @symbol _ZN4dBgW14ClearSlotIndexEv
 void dBgW::ClearSlotIndex() {
     slotIdx = 0x18;
 }
 
-// @symbol _ZN4dBgW9IsEnabledEv
 int dBgW::IsEnabled() {
     return slotIdx != 0x18;
 }
 
-// @symbol func_020393d4
 
 /* Sets beforeClsnCallback (+0x18). */
 extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback) {
     collider->beforeClsnCallback = callback;
 }
 
-// @symbol _ZNK4dBgW21GetBeforeClsnCallbackEv
 
 /* Reads beforeClsnCallback (+0x18). */
 BeforeClsnCallback dBgW::GetBeforeClsnCallback() const {
     return beforeClsnCallback;
 }
 
-// @symbol func_020393c4
 
 /* Sets stoodOnCallback (+0x1c). */
 extern "C" void func_020393c4(dBgW *collider, StoodOnCallback callback) {
     collider->stoodOnCallback = callback;
 }
 
-// @symbol _ZNK4dBgW18GetStoodOnCallbackEv
 
 /* Reads stoodOnCallback (+0x1c). */
 StoodOnCallback dBgW::GetStoodOnCallback() const {
     return stoodOnCallback;
 }
 
-// @symbol _ZNK4dBgW8GetActorEv
 dActor_c *dBgW::GetActor() const {
     return owner;
 }
 
-// @symbol _ZNK4dBgW16GetActorUniqueIDEv
 s32 dBgW::GetActorUniqueID() const {
     return ownerUniqueID;
 }
 
-// @symbol _ZN4dBgW13SetClipRadiusEi
 
 /* Sets clipRadius (+0x0c). */
 void dBgW::SetClipRadius(Fix12i radius) {
     clipRadius = radius;
 }
 
-// @symbol _ZNK4dBgW13GetClipRadiusEv
 
 /* Reads clipRadius (+0x0c). */
 Fix12i dBgW::GetClipRadius() const {
     return clipRadius;
 }
 
-// @symbol _ZN4dBgW14SetClipOffsetYEi
 
 /* Sets clipOffsetY (+0x10). */
 void dBgW::SetClipOffsetY(Fix12i offsetY) {
     clipOffsetY = offsetY;
 }
 
-// @symbol _ZNK4dBgW14GetClipOffsetYEv
 
 /* Reads clipOffsetY (+0x10). */
 Fix12i dBgW::GetClipOffsetY() const {
     return clipOffsetY;
 }
 
-// @symbol _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_
 void dBgW::UpdatePosWithTransform(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Vector3 &pos,
                                   Vector3_16 *motionAng, Vector3_16 *ang) {
     Vector3 prevPos;
@@ -257,7 +225,6 @@ void dBgW::UpdatePosWithTransform(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, V
         return;
 }
 
-// @symbol _ZN4dBgW25UpdateAngsWithAngularVelYERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_
 void dBgW::UpdateAngsWithAngularVelY(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Vector3 &pos,
                                      Vector3_16 *motionAng, Vector3_16 *ang) {
     int angularVelocityY = clsn.GetAngularVelY();
@@ -267,14 +234,12 @@ void dBgW::UpdateAngsWithAngularVelY(dBgW &clsn, dActor_c *clsnActor, dBgPi &res
         motionAng->y += angularVelocityY;
 }
 
-// @symbol _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_
 void dBgW::UpdatePosAndAngs(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Vector3 &pos,
                             Vector3_16 *motionAng, Vector3_16 *ang) {
     UpdatePosWithTransform(clsn, clsnActor, res, pos, motionAng, ang);
     UpdateAngsWithAngularVelY(clsn, clsnActor, res, pos, motionAng, ang);
 }
 
-// @symbol _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_
 void dBgW::UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Vector3 &pos,
                                  Vector3_16 *motionAng, Vector3_16 *ang) {
     Vector3 velocity;
@@ -284,24 +249,20 @@ void dBgW::UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor, dBgPi &res, Ve
     pos.z += velocity.z;
 }
 
-// @symbol func_02039218
 extern "C" void func_02039218(void) {
     int slot;
     for (slot = 0; slot < 0x18; slot++)
         data_020a0c80[slot] = 0;
 }
 
-// @symbol _ZN10dScStage_c18ResetMeshCollidersEv
 void dScStage_c::ResetMeshColliders() {
     int slot;
     for (slot = 0; slot < 0x18; slot++)
         data_020a0c80[slot] = 0;
 }
 
-// @symbol func_020391f0
 extern "C" void func_020391f0(void) {}
 
-// @symbol _ZN4dBgW6EnableEP8dActor_c
 int dBgW::Enable(dActor_c *actor) {
     for (s32 slot = 0; slot < 0x18; slot++) {
         if (data_020a0c80[slot] == 0) {
@@ -314,7 +275,6 @@ int dBgW::Enable(dActor_c *actor) {
     return 0;
 }
 
-// @symbol _ZN4dBgW7DisableEv
 int dBgW::Disable() {
     int slot = GetSlotIndex();
     if (slot != 0x18) {

@@ -1,35 +1,4 @@
 //cpp
-// @symbol _ZN8Particle19SetSelfDestructFlagEj
-// @symbol _ZN8Particle6System20NewFlamethrowerBlueBEiiiss
-// @symbol _ZN8Particle6System20NewFlamethrowerBlueAEiiiss
-// @symbol _ZN8Particle6System19NewFlamethrowerRedBEiiiss
-// @symbol _ZN8Particle6System19NewFlamethrowerRedAEiiiss
-// @symbol _ZN8Particle6System11NewBlueFireEiii
-// @symbol _ZN8Particle6System10NewRedFireEiii
-// @symbol _ZN8Particle6System9NewRippleEiii
-// @symbol _ZN8Particle6System9NewBubbleEiii
-// @symbol _ZN8Particle6System9NewSplashEiii
-// @symbol _ZN8Particle6System12NewBigSplashEiii
-// @symbol _ZN8Particle17MegaRunningDustAtEiii
-// @symbol _ZN8Particle20RunningSlidingDustAtEiii
-// @symbol _ZN8Particle6System16NewCleanParticleEjjiiiPK11Vector3_16f
-// @symbol _ZN8Particle6System10NewWeatherEjjiiiPK11Vector3_16fh
-// @symbol _ZN8Particle6System13NewCheckYoganEjjiiiPK11Vector3_16f
-// @symbol _ZN8Particle6System17NewFitWaterRaisedEjjiiiPK11Vector3_16f
-// @symbol _ZN8Particle6System11NewFitWaterEjjiiiPK11Vector3_16f
-// @symbol _ZN8Particle6System19NewCheckWaterRippleEjjiiiPK11Vector3_16f
-// @symbol _ZN8Particle6System13NewCheckWaterEjjiiiPK11Vector3_16f
-// @symbol _ZN8Particle6System3NewEjjiiiPK11Vector3_16fPN5dPa_c7level_c10callback_cE
-// @symbol _ZN8Particle6System12FromUniqueIDEj
-// @symbol _ZN8Particle6System9NewSimpleEjiii
-// @symbol _ZN8Particle9RenderAllEv
-// @symbol _ZN5dPa_c6UpdateEv
-// @symbol _ZN5dPa_c10InitialiseEv
-// @symbol _ZN8Particle7Texture12AllocPalVramEjb
-// @symbol _ZN8Particle7Texture12AllocTexVramEjb
-// @symbol func_02023178
-// @symbol _ZN5dPa_cD1Ev
-// @symbol _ZN5dPa_cC1Ev
 /* engine/particle/Particle.cpp -- Particle TU (arm9 0x020226d4..0x020233d4)
  *
  * The singleton particle engine's core translation unit: dPa_c's lifecycle
@@ -65,7 +34,6 @@ extern u32 data_0209ee84;
 extern u32 data_0209ee8c;
 extern signed char gCurrentSublevel;
 
-// @symbol _ZN5dPa_cC1Ev
 dPa_c::dPa_c()
 {
     data_0209ee74 = this;
@@ -83,7 +51,6 @@ dPa_c::dPa_c()
     mFitWaterRaisedCallback.waterOffset = 0x4b000;
 }
 
-// @symbol _ZN5dPa_cD1Ev
 dPa_c::~dPa_c()
 {
     if (data_0209ee80 != 0) {
@@ -99,7 +66,6 @@ dPa_c::~dPa_c()
 
 extern "C" {
 
-// @symbol func_02023178
 char *func_02023178(int size) {
     char *block = (char *)data_0209ee78;
     data_0209ee78 = block + size;
@@ -109,7 +75,6 @@ char *func_02023178(int size) {
 
 namespace Particle {
 
-// @symbol _ZN8Particle7Texture12AllocTexVramEjb
 u32 Texture::AllocTexVram(u32 size, bool isTexel4x4)
 {
     if (isTexel4x4) {
@@ -121,7 +86,6 @@ u32 Texture::AllocTexVram(u32 size, bool isTexel4x4)
     return dExtSimpleModel_c::GetVramOffset(size);
 }
 
-// @symbol _ZN8Particle7Texture12AllocPalVramEjb
 u32 Texture::AllocPalVram(u32 size, bool fromLowAddress)
 {
     if (fromLowAddress) {
@@ -139,7 +103,6 @@ u32 Texture::AllocPalVram(u32 size, bool fromLowAddress)
 
 }
 
-// @symbol _ZN5dPa_c10InitialiseEv
 void dPa_c::Initialise()
 {
     signed char v = gCurrentSublevel;
@@ -201,7 +164,6 @@ void dPa_c::Initialise()
     }
 }
 
-// @symbol _ZN5dPa_c6UpdateEv
 void dPa_c::Update()
 {
     mLevel.execute();
@@ -210,7 +172,6 @@ void dPa_c::Update()
 
 namespace Particle {
 
-// @symbol _ZN8Particle9RenderAllEv
 void RenderAll()
 {
     dPa_c *particle = data_0209ee74;
@@ -220,7 +181,6 @@ void RenderAll()
     func_02049ee8(particle->mManager, &data_0209b3ec);
 }
 
-// @symbol _ZN8Particle6System9NewSimpleEjiii
 void *System::NewSimple(u32 uniqueID, Fix12i x, Fix12i y, Fix12i z) {
     Vector3 pos;
     pos.x = x >> 3;
@@ -229,7 +189,6 @@ void *System::NewSimple(u32 uniqueID, Fix12i x, Fix12i y, Fix12i z) {
     return data_0209ee74->mManager->AddSystem(uniqueID, pos);
 }
 
-// @symbol _ZN8Particle6System12FromUniqueIDEj
 System *System::FromUniqueID(u32 uniqueID)
 {
     dPa_c::level_c::emitter_c *emitter =
@@ -240,7 +199,6 @@ System *System::FromUniqueID(u32 uniqueID)
 /* A live uniqueID moves its system to the new position (and direction, when
  * one is given) and re-runs the callback's SpawnParticles; anything else
  * starts a fresh system of definitionID. */
-// @symbol _ZN8Particle6System3NewEjjiiiPK11Vector3_16fPN5dPa_c7level_c10callback_cE
 int System::New(u32 uniqueID, u32 definitionID, Fix12i x, Fix12i y, Fix12i z,
                 const Vector3_16f *dir, dPa_c::level_c::callback_c *callback) {
     dPa_c::level_c::emitter_c *found;
@@ -278,7 +236,6 @@ int System::New(u32 uniqueID, u32 definitionID, Fix12i x, Fix12i y, Fix12i z,
 
 namespace Particle {
 
-// @symbol _ZN8Particle6System13NewCheckWaterEjjiiiPK11Vector3_16f
 u32 System::NewCheckWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                           const Vector3_16f *dir)
 {
@@ -286,7 +243,6 @@ u32 System::NewCheckWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i
                &data_0209ee74->mCheckWaterCallback);
 }
 
-// @symbol _ZN8Particle6System19NewCheckWaterRippleEjjiiiPK11Vector3_16f
 u32 System::NewCheckWaterRipple(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                                 const Vector3_16f *dir)
 {
@@ -294,7 +250,6 @@ u32 System::NewCheckWaterRipple(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, 
                &data_0209ee74->mCheckWaterRippleCallback);
 }
 
-// @symbol _ZN8Particle6System11NewFitWaterEjjiiiPK11Vector3_16f
 u32 System::NewFitWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                         const Vector3_16f *dir)
 {
@@ -302,7 +257,6 @@ u32 System::NewFitWater(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z
                &data_0209ee74->mFitWaterCallback);
 }
 
-// @symbol _ZN8Particle6System17NewFitWaterRaisedEjjiiiPK11Vector3_16f
 u32 System::NewFitWaterRaised(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                               const Vector3_16f *dir)
 {
@@ -310,7 +264,6 @@ u32 System::NewFitWaterRaised(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fi
                &data_0209ee74->mFitWaterRaisedCallback);
 }
 
-// @symbol _ZN8Particle6System13NewCheckYoganEjjiiiPK11Vector3_16f
 u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                           const Vector3_16f *dir)
 {
@@ -321,7 +274,6 @@ u32 System::NewCheckYogan(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i
 
 namespace Particle {
 
-// @symbol _ZN8Particle6System10NewWeatherEjjiiiPK11Vector3_16fh
 u32 System::NewWeather(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                        const Vector3_16f *dir, u8 numWeatherEffectsNow) {
     dPa_c::level_c::clipCallback_c *callback = &data_0209ee74->mWeatherCallback;
@@ -329,13 +281,11 @@ u32 System::NewWeather(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
     return New(uniqueID, effectID, x, y, z, dir, callback);
 }
 
-// @symbol _ZN8Particle6System16NewCleanParticleEjjiiiPK11Vector3_16f
 u32 System::NewCleanParticle(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
                               const Vector3_16f *dir) {
     return New(uniqueID, effectID, x, y, z, dir, &data_0209ee74->mCleanParticleCallback);
 }
 
-// @symbol _ZN8Particle20RunningSlidingDustAtEiii
 void RunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
     data_0209ee74->mRunningSlidingDustSystemID =
         System::New(data_0209ee74->mRunningSlidingDustSystemID, kPtclRunningDust, x, y, z, 0,
@@ -346,7 +296,6 @@ void RunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
 
 namespace Particle {
 
-// @symbol _ZN8Particle17MegaRunningDustAtEiii
 void MegaRunningDustAt(Fix12i x, Fix12i y, Fix12i z)
 {
     data_0209ee74->mMegaRunningDustSystemID =
@@ -357,7 +306,6 @@ void MegaRunningDustAt(Fix12i x, Fix12i y, Fix12i z)
 
 namespace Particle {
 
-// @symbol _ZN8Particle6System12NewBigSplashEiii
 void System::NewBigSplash(Fix12i x, Fix12i y, Fix12i z) {
     data_0209ee74->mBigSplashSystemID = New(data_0209ee74->mBigSplashSystemID, kPtclBigSplash, x, y, z, 0,
                                             &data_0209ee74->mBigSplashCallback);
@@ -367,7 +315,6 @@ void System::NewBigSplash(Fix12i x, Fix12i y, Fix12i z) {
 
 namespace Particle {
 
-// @symbol _ZN8Particle6System9NewSplashEiii
 u32 System::NewSplash(Fix12i x, Fix12i y, Fix12i z)
 {
     dPa_c *particle = data_0209ee74;
@@ -377,7 +324,6 @@ u32 System::NewSplash(Fix12i x, Fix12i y, Fix12i z)
     return result;
 }
 
-// @symbol _ZN8Particle6System9NewBubbleEiii
 u32 System::NewBubble(Fix12i x, Fix12i y, Fix12i z)
 {
     dPa_c *particle = data_0209ee74;
@@ -390,7 +336,6 @@ u32 System::NewBubble(Fix12i x, Fix12i y, Fix12i z)
 
 namespace Particle {
 
-// @symbol _ZN8Particle6System9NewRippleEiii
 u32 System::NewRipple(Fix12i x, Fix12i y, Fix12i z) {
     dPa_c *particle = data_0209ee74;
     u32 result =
@@ -403,7 +348,6 @@ u32 System::NewRipple(Fix12i x, Fix12i y, Fix12i z) {
 
 namespace Particle {
 
-// @symbol _ZN8Particle6System10NewRedFireEiii
 u32 System::NewRedFire(Fix12i x, Fix12i y, Fix12i z)
 {
     dPa_c *particle = data_0209ee74;
@@ -413,7 +357,6 @@ u32 System::NewRedFire(Fix12i x, Fix12i y, Fix12i z)
     return result;
 }
 
-// @symbol _ZN8Particle6System11NewBlueFireEiii
 u32 System::NewBlueFire(Fix12i x, Fix12i y, Fix12i z)
 {
     dPa_c *particle = data_0209ee74;
@@ -423,7 +366,6 @@ u32 System::NewBlueFire(Fix12i x, Fix12i y, Fix12i z)
     return result;
 }
 
-// @symbol _ZN8Particle6System19NewFlamethrowerRedAEiiiss
 void System::NewFlamethrowerRedA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
     data_0209ee74->mFlamethrowerRedACallback.scale = scale;
     data_0209ee74->mFlamethrowerRedACallback.velocity = velocity;
@@ -432,7 +374,6 @@ void System::NewFlamethrowerRedA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 ve
             &data_0209ee74->mFlamethrowerRedACallback);
 }
 
-// @symbol _ZN8Particle6System19NewFlamethrowerRedBEiiiss
 void System::NewFlamethrowerRedB(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
     data_0209ee74->mFlamethrowerRedBCallback.scale = scale;
     data_0209ee74->mFlamethrowerRedBCallback.velocity = velocity;
@@ -441,7 +382,6 @@ void System::NewFlamethrowerRedB(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 ve
             &data_0209ee74->mFlamethrowerRedBCallback);
 }
 
-// @symbol _ZN8Particle6System20NewFlamethrowerBlueAEiiiss
 void System::NewFlamethrowerBlueA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
     data_0209ee74->mFlamethrowerBlueACallback.scale = scale;
     data_0209ee74->mFlamethrowerBlueACallback.velocity = velocity;
@@ -450,7 +390,6 @@ void System::NewFlamethrowerBlueA(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 v
             &data_0209ee74->mFlamethrowerBlueACallback);
 }
 
-// @symbol _ZN8Particle6System20NewFlamethrowerBlueBEiiiss
 void System::NewFlamethrowerBlueB(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
     data_0209ee74->mFlamethrowerBlueBCallback.scale = scale;
     data_0209ee74->mFlamethrowerBlueBCallback.velocity = velocity;
@@ -462,7 +401,6 @@ void System::NewFlamethrowerBlueB(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 v
 
 namespace Particle {
 
-// @symbol _ZN8Particle19SetSelfDestructFlagEj
 void SetSelfDestructFlag(u32 definitionID)
 {
     data_0209ee74->mManager->mDefinitions[definitionID].data->flags |= 0x4000;

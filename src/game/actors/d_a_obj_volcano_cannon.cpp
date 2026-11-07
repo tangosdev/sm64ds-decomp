@@ -48,14 +48,11 @@ static inline int IsOffScreen(dActor_c *actor) {
 
 #pragma defer_codegen off
 
-// @symbol _ZN21daObj_volcanoCannon_cD1Ev
-// @symbol _ZN21daObj_volcanoCannon_cD0Ev
 /* One out-of-line definition; D1 and D0 in cartridge order. The body is
  * empty: vptr store, dCcAc_c member teardown and base chain from the
  * class layout; D0's deallocation is the inline operator delete. */
 daObj_volcanoCannon_c::~daObj_volcanoCannon_c() {}
 
-// @symbol func_ov022_02112654
 /* Burns Mario (actor type 0xbf) if the actor the flame's cylinder last hit
  * is Mario, then retires itself. */
 extern "C" void func_ov022_02112654(daObj_volcanoCannon_c *c) {
@@ -71,7 +68,6 @@ extern "C" void func_ov022_02112654(daObj_volcanoCannon_c *c) {
     c->MarkForDestruction();
 }
 
-// @symbol func_ov022_021126ac
 /* The state's behavior handler, bound through data_ov022_02114424.
  * The flame dies once it falls below mKillPosY or mKillTimer runs out. */
 extern "C" int func_ov022_021126ac(daObj_volcanoCannon_c *c) {
@@ -90,7 +86,6 @@ extern "C" int func_ov022_021126ac(daObj_volcanoCannon_c *c) {
     return 1;
 }
 
-// @symbol func_ov022_02112710
 /* The state's init handler, bound through data_ov022_0211442c.
  * Launches the flame: a 0x3c kill timer, a random heading, and randomised
  * horizontal and vertical speed in 12-bit fixed point, under a -4.0 gravity. */
@@ -106,7 +101,6 @@ extern "C" int func_ov022_02112710(daObj_volcanoCannon_c *c) {
     return 1;
 }
 
-// @symbol _ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE
 /* The state record contains two pointer-to-member callbacks; the
  * transition stores the record and runs its init. */
 int daObj_volcanoCannon_c::ChangeState(State *state) {
@@ -116,7 +110,6 @@ int daObj_volcanoCannon_c::ChangeState(State *state) {
     return (this->*mState->init)();
 }
 
-// @symbol _ZN21daObj_volcanoCannon_c16CleanupResourcesEv
 /* Vtable slot 3. Hands its slot back to the daObjFl_Ring_c that spawned
  * it, by decrementing the ring's live-flame count.
  * mSpawner is null for a flame that was never registered. */
@@ -126,7 +119,6 @@ int daObj_volcanoCannon_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN21daObj_volcanoCannon_c8BehaviorEv
 int daObj_volcanoCannon_c::Behavior() {
     DecIfAbove0_Short(&mKillTimer);
     if (mState->behavior != 0)
@@ -141,7 +133,6 @@ int daObj_volcanoCannon_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN21daObj_volcanoCannon_c13InitResourcesEv
 int daObj_volcanoCannon_c::InitResources() {
     mTerminalVelocity = -0xc8000;
     mCylinderClsn.Init(this, 0x1e000, 0x1e000, 0x200002, 0);
@@ -149,7 +140,6 @@ int daObj_volcanoCannon_c::InitResources() {
     return 1;
 }
 
-// @symbol daObj_volcanoCannon_c_classInit
 extern "C" daObj_volcanoCannon_c *daObj_volcanoCannon_c_classInit(void) {
     return new daObj_volcanoCannon_c;
 }

@@ -44,12 +44,10 @@ struct Km1KurumaCollisionFilePtr : SharedFilePtr {
 
 extern daObjKuruma_c::Resources data_ov043_02112418;
 
-// @symbol daObjKm1_Kuruma_c_classInit
 extern "C" daObjKm1_Kuruma_c *daObjKm1_Kuruma_c_classInit() {
     return new daObjKm1_Kuruma_c();
 }
 
-// @symbol g_profile_KM1_KURUMA
 extern "C" SpawnInfo<daObjKm1_Kuruma_c> g_profile_KM1_KURUMA = {
     daObjKm1_Kuruma_c_classInit,
     0x0088, /* KM1_KURUMA registry id 136 */
@@ -60,12 +58,10 @@ extern "C" SpawnInfo<daObjKm1_Kuruma_c> g_profile_KM1_KURUMA = {
     0x01000000,
     0};
 
-// @symbol _ZN17daObjKm1_Kuruma_c13InitResourcesEv
 s32 daObjKm1_Kuruma_c::InitResources() {
     return InitResourcesFrom(&data_ov043_02112418);
 }
 
-// @symbol _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv
 s32 daObjKm1_Kuruma_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov043_02112418);
 }

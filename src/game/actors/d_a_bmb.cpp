@@ -143,7 +143,6 @@ extern unsigned char data_0209f2d8;
 
 extern "C" {
 
-// @symbol daBmb_c_classInit
 daBmb_c *daBmb_c_classInit(void)
 {
     return new daBmb_c();
@@ -151,7 +150,6 @@ daBmb_c *daBmb_c_classInit(void)
 
 }
 
-// @symbol g_profile_BOMBHEI
 extern "C" SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
     daBmb_c_classInit,
     0x00ce, /* BOMBHEI registry id 206 */
@@ -168,7 +166,6 @@ extern "C" SpawnInfo<daBmb_c> g_profile_BOMBHEI = {
  * declares, so this TU owns _ZTV7daBmb_c, _ZTI7daBmb_c and _ZTS7daBmb_c.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c13OnYoshiTryEatEv
 s32 daBmb_c::OnYoshiTryEat() {
     /* 263 == 0x107, dEnemyBase_c's own byte at that offset. */
     return mEatenByYoshi == 0;
@@ -182,7 +179,6 @@ s32 daBmb_c::OnYoshiTryEat() {
  * mCoinType clear -- 4 also starts clear, and everything else starts live.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c13InitResourcesEv
 int daBmb_c::InitResources()
 {
     BMD_File* bmd;
@@ -240,7 +236,6 @@ int daBmb_c::InitResources()
  * Vtable slot 6.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c8BehaviorEv
 int daBmb_c::Behavior()
 {
     int flag;
@@ -356,7 +351,6 @@ int daBmb_c::Behavior()
  * Vtable slot 9.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c6RenderEv
 int daBmb_c::Render()
 {
     int result = 1;
@@ -375,7 +369,6 @@ int daBmb_c::Render()
  * touches no field of its own.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c16CleanupResourcesEv
 int daBmb_c::CleanupResources()
 {
     data_ov002_0210d9e0.Release();
@@ -390,7 +383,6 @@ int daBmb_c::CleanupResources()
  * mTurnTimer 0x200, gravity on, no carrier.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214c0b8Ev
 void daBmb_c::func_ov102_0214c0b8() {
     mState = 0;
     if (mVariant == 1)
@@ -414,7 +406,6 @@ void daBmb_c::func_ov102_0214c0b8() {
  * Vector3 views; no owning Vector3 temporaries are introduced.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c6State0Ev
 void daBmb_c::State0() {
     DecIfAbove0_Short(&mTurnTimer);
     if (mVariant != 1) {
@@ -460,7 +451,6 @@ void daBmb_c::State0() {
 
 extern "C" {
 
-// @symbol func_ov102_0214beb4
 void func_ov102_0214beb4(void *cv)
 {
     extern int data_0209e650;
@@ -494,7 +484,6 @@ void func_ov102_0214beb4(void *cv)
  * hands off to func_ov102_0214c0b8.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c6State1Ev
 void daBmb_c::State1() {
     if (mChasePlayer == 0) {
         mAnmModel.speed = 0x800;
@@ -516,7 +505,6 @@ void daBmb_c::State1() {
  * through the file-scope three-argument prototype, the definition's own.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214bd90Ev
 void daBmb_c::func_ov102_0214bd90(){
   if (mWithMeshClsn.JustHitGround()) {
     struct Vector3 v;
@@ -540,7 +528,6 @@ void daBmb_c::func_ov102_0214bd90(){
 
 extern "C" {
 
-// @symbol func_ov102_0214bd20
 void func_ov102_0214bd20(char *c) {
     daBmb_c *self = (daBmb_c *)c;
 
@@ -563,7 +550,6 @@ void func_ov102_0214bd20(char *c) {
  * to func_ov102_0214c0b8.  Always advances the animation.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c6State3Ev
 void daBmb_c::State3()
 {
     /* Nothing names these two mFlags bits yet, so they keep neutral names rather
@@ -609,7 +595,6 @@ typedef struct { int v[4]; } Quad;
 extern "C" Quad data_ov102_0214e514 = {{0x28000, 0x28000, 0x50000, 0x28000}};
 extern "C" Quad data_ov102_0214e524 = {{0xa000, 0xa000, 0x1a000, 0xa000}};
 
-// @symbol func_ov102_0214bc20
 void func_ov102_0214bc20(char *c) {
     daBmb_c *self = (daBmb_c *)c;
 
@@ -636,7 +621,6 @@ void func_ov102_0214bc20(char *c) {
  * it calls func_ov102_0214b384(4) and zeroes the forward speed.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c6State4Ev
 int daBmb_c::State4() {
     if (mWithMeshClsn.IsOnGround() == 0) {
         int r = mWithMeshClsn.IsOnWall();
@@ -651,7 +635,6 @@ int daBmb_c::State4() {
    lands in r1 and the function no longer matches. */
 extern "C" {
 
-// @symbol func_ov102_0214baa0
 void func_ov102_0214baa0(char *raw)
 {
     extern void func_0203568c(int *value, int target);
@@ -717,7 +700,6 @@ void func_ov102_0214baa0(char *raw)
  * 0x10000001 and turns rendering back on.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c6State5Ev
 void daBmb_c::State5()
 {
     if (DistToCPlayer() < 0x7d0000)
@@ -735,7 +717,6 @@ void daBmb_c::State5()
 /* ==========================================================================
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214b988Ev
 void daBmb_c::func_ov102_0214b988() {
     daPly_c *pl;
     struct Vector3 v;
@@ -764,7 +745,6 @@ void daBmb_c::func_ov102_0214b988() {
  * C-only and were dropped; the plain `&&` MATCHES.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214b53cEv
 void daBmb_c::func_ov102_0214b53c() {
     extern Matrix4x3 data_020a0e68;
     extern s16 data_02082214[];
@@ -907,7 +887,6 @@ void daBmb_c::func_ov102_0214b53c() {
 /* ==========================================================================
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c12UpdateShadowEv
 void daBmb_c::UpdateShadow() {
     int v;
     int b = (mFlags & 0x40000) != 0;
@@ -945,7 +924,6 @@ void daBmb_c::UpdateShadow() {
 
 extern "C" {
 
-// @symbol func_ov102_0214b3f0
 void func_ov102_0214b3f0(void *c, int a1) {
     extern void func_ov102_0214bd20(void *c);
     daBmb_c *self = (daBmb_c *)c;
@@ -967,7 +945,6 @@ do_call:
 
 extern "C" {
 
-// @symbol func_ov102_0214b3b8
 void func_ov102_0214b3b8(void *c)
 {
     extern void func_ov102_0214bc20(void *c);
@@ -989,7 +966,6 @@ void func_ov102_0214b3b8(void *c)
 
 extern "C" {
 
-// @symbol func_ov102_0214b384
 void func_ov102_0214b384(void *arg0, unsigned int arg1) {
     daBmb_c *self = (daBmb_c *)arg0;
     unsigned int cur = self->mFuse;
@@ -1009,7 +985,6 @@ void func_ov102_0214b384(void *arg0, unsigned int arg1) {
  * hands the frame to the hit reactions (func_ov102_0214b128).
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c10UpdateFuseEv
 int daBmb_c::UpdateFuse() {
     if (DecIfAbove0_Short(&mFuse)) {
         mFuseSound = Sound::PlayLong(mFuseSound, 3, 0x188, mCamSpacePos, 0);
@@ -1050,7 +1025,6 @@ int daBmb_c::UpdateFuse() {
 /* ==========================================================================
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214b128Ev
 void daBmb_c::func_ov102_0214b128() {
     int t;
     if (FindEgg(mdCc_c) || (mdCc_c.hitFlags & 0x20000)) {
@@ -1086,7 +1060,6 @@ void daBmb_c::func_ov102_0214b128() {
 /* ==========================================================================
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214b03cEv
 void daBmb_c::func_ov102_0214b03c() {
     if (mState < 2 && mAnmModel.file == (BCA_File *)gBmbWalkAnimFile.filePtr) {
         if (mAnmModel.WillHitFrame(0) != 0 || mAnmModel.WillHitFrame(0x10) != 0) {
@@ -1123,7 +1096,6 @@ void daBmb_c::func_ov102_0214b03c() {
 
 extern "C" {
 
-// @symbol func_ov102_0214ae1c
 void func_ov102_0214ae1c(void *cv) {
     extern void d_a_bmbNewSimpleHold(unsigned int id, int x, int y, int z);
 
@@ -1187,7 +1159,6 @@ void func_ov102_0214ae1c(void *cv) {
  * Vtable slot 19.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c13OnTurnIntoEggER7daPly_c
 void daBmb_c::OnTurnIntoEgg(daPly_c &player) {
     if (mCoinType == 1) {
         Sound::PlayBank3(0x11, mCamSpacePos);
@@ -1200,7 +1171,6 @@ void daBmb_c::OnTurnIntoEgg(daPly_c &player) {
 /* ==========================================================================
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214ad40Ev
 void daBmb_c::func_ov102_0214ad40() {
     if ((unsigned char)(mVariant + 0xfe) > 1)
         return;
@@ -1227,7 +1197,6 @@ void daBmb_c::func_ov102_0214ad40() {
 
 extern "C" {
 
-// @symbol func_ov102_0214ad14
 void func_ov102_0214ad14(void *c)
 {
     daBmb_c *self = (daBmb_c *)c;
@@ -1242,7 +1211,6 @@ void func_ov102_0214ad14(void *c)
 /* ==========================================================================
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214ab1cEv
 int daBmb_c::func_ov102_0214ab1c() {
     daPly_c *player;
 
@@ -1326,7 +1294,6 @@ ret0:
 /* ==========================================================================
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c19func_ov102_0214aa18Ev
 int daBmb_c::func_ov102_0214aa18() {
     if (mVariant == 2) {
         if (*(int *)((char *)&mClipResult + 4) != 0) {
@@ -1363,7 +1330,6 @@ int daBmb_c::func_ov102_0214aa18() {
  * the header's inline destructor body.  Nothing is written for them here.
  * ======================================================================== */
 
-// @symbol _ZN7daBmb_c16OnAimedAtWithEggEv
 s32 daBmb_c::OnAimedAtWithEgg() {
     return 0x32000;
 }

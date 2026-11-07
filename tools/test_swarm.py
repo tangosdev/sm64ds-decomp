@@ -48,7 +48,7 @@ class NativeDeletingDestructorTests(unittest.TestCase):
         self.write_header("Fish", "struct Fish : dActor_c { virtual ~Fish(); };\n")
         source = S.native_deleting_dtor("_ZN4FishD0Ev")
         self.assertIsNotNone(source)
-        self.assertTrue(source.startswith("//cpp\n// @symbol _ZN4FishD0Ev\n"))
+        self.assertTrue(source.startswith("//cpp\n#include"))
         self.assertIn('#include "Fish.h"', source)
         self.assertIn("Fish::~Fish()", source)
         self.assertNotIn('extern "C"', source)

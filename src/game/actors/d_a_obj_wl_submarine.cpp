@@ -50,14 +50,11 @@ extern SaveBlock data_0209caa0;
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN18daObjWlSubmarine_cD1Ev
-// @symbol _ZN18daObjWlSubmarine_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: its own vptr, then dBgActor_c's inlined, then dBgActor_c's
  * dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. */
 daObjWlSubmarine_c::~daObjWlSubmarine_c() {}
 
-// @symbol _ZN18daObjWlSubmarine_c16CleanupResourcesEv
 s32 daObjWlSubmarine_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -67,13 +64,11 @@ s32 daObjWlSubmarine_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjWlSubmarine_c6RenderEv
 s32 daObjWlSubmarine_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daObjWlSubmarine_c13InitResourcesEv
 s32 daObjWlSubmarine_c::InitResources() {
     void *m = dExtSimpleModel_c::LoadFile(Submarine_ModelFile);
     mModel.SetFile((BMD_File *)m, 1, -1);
@@ -93,12 +88,10 @@ s32 daObjWlSubmarine_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WL_SUBMARINE registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: Submarine_Spawn. */
-// @symbol daObjWlSubmarine_c_classInit
 extern "C" daObjWlSubmarine_c *daObjWlSubmarine_c_classInit() {
     return new daObjWlSubmarine_c();
 }
 
-// @symbol __sinit_d_a_obj_wl_submarine.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
 SubmarineModelFilePtr Submarine_ModelFile(ASSET_WL_SUBMARINE_BMD);    /* model */

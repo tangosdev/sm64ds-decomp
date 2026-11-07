@@ -35,7 +35,6 @@ extern vu16 OSi_IsResetOccurred;
 
 void OSi_CommonCallback(int tag, u32 data, int err);
 
-// @symbol OS_InitReset
 void OS_InitReset(void) {
     if (OSi_IsInitReset != 0)
         return;
@@ -46,7 +45,6 @@ void OS_InitReset(void) {
     PXI_SetFifoRecvCallback(PXI_FIFO_TAG_OS, (void *)OSi_CommonCallback);
 }
 
-// @symbol OSi_CommonCallback
 void OSi_CommonCallback(int tag, u32 data, int err) {
     u16 command = (u16)((data & OS_PXI_COMMAND_MASK) >> OS_PXI_COMMAND_SHIFT);
     if (command == OS_PXI_COMMAND_RESET) {
@@ -59,7 +57,6 @@ void OSi_CommonCallback(int tag, u32 data, int err) {
 /* Sends one OS command to the ARM7, retrying until the FIFO takes it.
  * OS_ResetSystem (ITCM, src/OSi_ReloadRomData.cpp) calls it with
  * OS_PXI_COMMAND_RESET. */
-// @symbol OSi_SendToPxi
 void OSi_SendToPxi(u16 data) {
     while (PXI_SendWordByFifo(PXI_FIFO_TAG_OS, (u32)data << 8, 0))
         ;

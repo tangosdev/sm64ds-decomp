@@ -54,19 +54,16 @@ struct DonketuAnimationFileHandle : SharedFilePtr {
 };
 
 /* DONKETU factory. Written first so it emits last. */
-// @symbol daDonketu_c_classInit
 extern "C" daDonketu_c *daDonketu_c_classInit() {
     return new daDonketu_c();
 }
 
-// @symbol _ZN11daDonketu_c13InitResourcesEv
 int daDonketu_c::InitResources() {
     mBigBullyID = 0;
     mFileTable = (int)&data_ov064_0211b834;
     InitResourcesCommon();
 }
 
-// @symbol _ZN11daDonketu_c8BehaviorEv
 /* 0 runs the shared worker, 1 is already handled, 2 drops a coin (actor
  * 0x120, subtype 2) and bumps the Big Bully's kill count. The same drop is
  * written again in UpdateDeathState. The coin faces mPrevAngleY + 0x8000
@@ -110,7 +107,6 @@ int daDonketu_c::Behavior() {
     return BehaviorCommon();
 }
 
-// @symbol _ZN11daDonketu_c16UpdateDeathStateEv
 /* The state-4 half of the same drop Behavior does for the invincible-char kill.
  * func_ov064_0211616c is the shared daOts_c death-animation step: it returns 0
  * while the bully is still falling apart, and the coin goes out on the frame it
@@ -145,7 +141,6 @@ void daDonketu_c::UpdateDeathState() {
     }
 }
 
-// @symbol _ZN11daDonketu_c14UpdateRunStateEv
 /* Below ten ticks the bully stands still and plays the wind-up through the
  * shared daOts_c stepper; from ten on it charges at 0xf000 and the cycle timer
  * wraps at 0x2c. The Big Bully's override is the same shape with a faster charge
@@ -171,7 +166,6 @@ int daDonketu_c::UpdateRunState() {
     return value;
 }
 
-// @symbol _ZN11daDonketu_c13PlayStepSoundEv
 /* Frames 4 and 7 of the walk cycle are the two footfalls. */
 void daDonketu_c::PlayStepSound() {
     if (mAnmModel.WillHitFrame(4) == 0) {
@@ -181,22 +175,18 @@ void daDonketu_c::PlayStepSound() {
     func_0201267c(0xca, &mCamSpacePos);
 }
 
-// @symbol _ZN11daDonketu_c12PlayHitSoundEv
 void daDonketu_c::PlayHitSound() {
     func_0201267c(0xcb, &mCamSpacePos);
 }
 
-// @symbol _ZN11daDonketu_c17PlayShellHitSoundEv
 void daDonketu_c::PlayShellHitSound() {
     func_0201267c(0xc9, &mCamSpacePos);
 }
 
-// @symbol _ZN11daDonketu_c14PlayDeathSoundEv
 void daDonketu_c::PlayDeathSound() {
     func_0201267c(0xc8, &mCamSpacePos);
 }
 
-// @symbol __sinit_d_a_donketu.cpp
 /* The small Bully's model and animation handles, in the sinit call order the
  * data_ov064_0211b834 file table repeats. */
 DonketuModelFilePtr gDonketuModelFile(ASSET_DONKETU_BMD);

@@ -52,12 +52,9 @@ void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 
 extern SharedFilePtr data_ov002_0210da10; /* the ring's BMD */
 
-// @symbol _ZN14daWater_Ring_cD1Ev
-// @symbol _ZN14daWater_Ring_cD0Ev
 daWater_Ring_c::~daWater_Ring_c() {}
 
 /* Checks whether the player swam through the ring this frame. */
-// @symbol _ZN14daWater_Ring_c15CheckPlayerPassEv
 void daWater_Ring_c::CheckPlayerPass() {
     Vector3 otherPos;
     Vector3 offset;
@@ -97,7 +94,6 @@ void daWater_Ring_c::CheckPlayerPass() {
 }
 
 /* Fading out: grows and fades until it is gone. */
-// @symbol _ZN14daWater_Ring_c11StatePassedEv
 int daWater_Ring_c::StatePassed() {
     mOpacity -= 2;
     if (mOpacity < 2)
@@ -111,7 +107,6 @@ int daWater_Ring_c::StatePassed() {
 }
 
 /* Init of the passed state: tells the spawner which ring was hit. */
-// @symbol _ZN14daWater_Ring_c15InitStatePassedEv
 int daWater_Ring_c::InitStatePassed() {
     mOpacity = 0x1f;
     mStateTimer = 0x64;
@@ -132,7 +127,6 @@ int daWater_Ring_c::InitStatePassed() {
 }
 
 /* Main of the active state: wobbles, spins and waits for the player. */
-// @symbol _ZN14daWater_Ring_c11StateActiveEv
 int daWater_Ring_c::StateActive() {
     int spd;
     CheckPlayerPass();
@@ -164,7 +158,6 @@ int daWater_Ring_c::StateActive() {
 }
 
 /* Init of the active state. */
-// @symbol _ZN14daWater_Ring_c15InitStateActiveEv
 s32 daWater_Ring_c::InitStateActive() {
     mStateTimer = 0xc8;
     s32 angle = HorzAngleToCPlayer();
@@ -173,7 +166,6 @@ s32 daWater_Ring_c::InitStateActive() {
 }
 
 /* Installs a state and runs its init. */
-// @symbol _ZN14daWater_Ring_c8SetStateEPKNS_5StateE
 int daWater_Ring_c::SetState(const State *state) {
     mState = state;
     const State *installed = mState;
@@ -183,7 +175,6 @@ int daWater_Ring_c::SetState(const State *state) {
 }
 
 /* Poses the model: position, rotation and opacity. */
-// @symbol _ZN14daWater_Ring_c11UpdateModelEv
 void daWater_Ring_c::UpdateModel() {
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
@@ -193,23 +184,19 @@ void daWater_Ring_c::UpdateModel() {
     mModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN14daWater_Ring_c16CleanupResourcesEv
 int daWater_Ring_c::CleanupResources() {
     data_ov002_0210da10.Release();
     return 1;
 }
 
-// @symbol _ZN14daWater_Ring_c16OnPendingDestroyEv
 void daWater_Ring_c::OnPendingDestroy() {}
 
-// @symbol _ZN14daWater_Ring_c6RenderEv
 int daWater_Ring_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(&mScale);
     return 1;
 }
 
-// @symbol _ZN14daWater_Ring_c8BehaviorEv
 int daWater_Ring_c::Behavior() {
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     if (mState->execute)
@@ -225,7 +212,6 @@ int daWater_Ring_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daWater_Ring_c13InitResourcesEv
 int daWater_Ring_c::InitResources() {
     BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
     if (mModel.SetFile(f, 1, -1) == 0)
@@ -260,7 +246,6 @@ int daWater_Ring_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_RING registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: WaterRing_Spawn. */
-// @symbol daWater_Ring_c_classInit
 extern "C" daWater_Ring_c *daWater_Ring_c_classInit() {
     return new daWater_Ring_c();
 }

@@ -26,6 +26,7 @@
  */
 #pragma defer_codegen off
 #include "common.h"
+#include "PlayerInput.h"
 #include "nitro/hw/registers.h"
 #include "SpawnInfo.h"
 #include "dScStarSel_c.h"
@@ -50,16 +51,7 @@ extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
 extern unsigned short sStarSelectDecimalDivisors[];
 extern unsigned char NumStars(void);
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern unsigned char gActivePlayerSlot;
-// local extern: see above.
-extern unsigned char gTouchHeld[][4];
-// local extern: see above.
-extern unsigned char gTouchEdge[][4];
-// local extern: see above.
-extern unsigned char gTouchX[][4];
-// local extern: see above.
-extern unsigned char gTouchY[][4];
+
 extern int data_0208ee44;
 extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
@@ -93,19 +85,16 @@ extern u8 data_ov001_020abbf4;
 
 void CopyToViewMat(const Matrix4x3 *);
 
-// @symbol _ZN12dScStarSel_cD1Ev
 // ROM 0x020addfc, size 0x58; vtable slot 16. Written first so D1 and D0 are
 // emitted first, as in the cartridge. The body is empty: tearing down the
 // dExtSimpleModel_c pair (__cxa_vec_cleanup) and the base destructors is all
 // compiler-generated.
 dScStarSel_c::~dScStarSel_c() {}
 
-// @symbol _ZN12dScStarSel_cD0Ev
 // ROM 0x020ade54, size 0x6c; vtable slot 17. The deleting destructor has no
 // source of its own: mwccarm emits it from the definition above, directly
 // after D1, ending with dScene_c's inline operator delete.
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020adec0Ej
 // ROM 0x020adec0, size 0x90. The inverse of func_ov003_020adf50: maps a
 // character index to its strip slot, or 0 when it has none.
 int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
@@ -134,7 +123,6 @@ int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
     return 0;
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020adf50Ev
 // ROM 0x020adf50, size 0x78. Maps the strip slot mCharCursor to a character
 // index: through sStarSelectCharacterOrder when mStripMode is 4, otherwise the
 // mCharCursor-th unlocked character when mStripMode is 2 or more; else 0.
@@ -158,7 +146,6 @@ int dScStarSel_c::func_ov003_020adf50() {
     return 0;
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020adfc8Ev
 // ROM 0x020adfc8, size 0xe8. Draws the coin record of the current level
 // (SaveData::GetCoinRecord) as three digits drawn right to left, then the
 // TIMES and COIN sprites.
@@ -179,7 +166,6 @@ void dScStarSel_c::func_ov003_020adfc8() {
     OAM::Render(0, &OAM::COIN, x - 0x10, 0x4c, -1, -1, 0);
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae0b0Ev
 // ROM 0x020ae0b0, size 0xf4. Draws the power-star count: NumStars() as three
 // digits, drawn right to left, then the TIMES and POWER_STAR sprites.
 void dScStarSel_c::func_ov003_020ae0b0() {
@@ -208,7 +194,6 @@ void dScStarSel_c::func_ov003_020ae0b0() {
     OAM::Render(0, &OAM::POWER_STAR, x - 0x10, y + 8, -1, -1, 0);
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae1a4Ei
 // ROM 0x020ae1a4, size 0x94. Splits value into three decimal digits in
 // mDigits[0..2], dividing by sStarSelectDecimalDivisors[i] in turn; leading
 // zeros are stored as -1 (blank) except the last digit.
@@ -230,7 +215,6 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
     }
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae238Ev
 // ROM 0x020ae238, size 0x120. Draws the life counter: the LIFE_ICONS entry for
 // mLifeIcon, the TIMES sprite, and the three digits of gNumLives.
 void dScStarSel_c::func_ov003_020ae238() {
@@ -260,7 +244,6 @@ void dScStarSel_c::func_ov003_020ae238() {
     }
 }
 
-// @symbol _ZN12dScStarSel_c19func_ov003_020ae358Ev
 // ROM 0x020ae358, size 0x398. Per-frame selection handling: record hit
 // tests and the D-pad.
 //
@@ -282,7 +265,7 @@ void dScStarSel_c::func_ov003_020ae238() {
 // or 8 depending on the active player's pressed word.
 //
 // Codegen note: the stride belongs in the TYPE, and the INDEX is what gets named.
-// The 4-byte records are declared `[][4]` so each read refolds its own scale
+// The 4-byte records are viewed as `[][4]` so each read refolds its own scale
 // (`add r2, r4, r1, lsl #2`); flattening gTouchX/gTouchY to a bare `[]` with an
 // explicit `* 4` costs 17 words, and the same is true of the PadData records. The last
 // six words were a register transposition between the `c + i` and record-row
@@ -294,12 +277,12 @@ void dScStarSel_c::func_ov003_020ae358() {
     int idx = gActivePlayerSlot;
     int valid = 0;
     int i;
-    if (gTouchHeld[idx][0] != 0) {
-        valid = gTouchEdge[idx][0] != 0;
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
+        valid = ((u8(*)[4])gTouchEdge)[idx][0] != 0;
     }
     if (valid != 0) {
-        if ((((unsigned char)(gTouchX[idx][0] - 0x58)) < 0x50) &&
-            (((unsigned char)((gTouchY[idx][0] - mFaceY) + 0x28)) < 0x50)) {
+        if ((((unsigned char)(((u8(*)[4])gTouchX)[idx][0] - 0x58)) < 0x50) &&
+            (((unsigned char)((((u8(*)[4])gTouchY)[idx][0] - mFaceY) + 0x28)) < 0x50)) {
             mCursorTarget = 2;
             mPickedChar = 3;
             mPickPressTimer = (unsigned char)(data_0208ee44 * 6);
@@ -317,9 +300,10 @@ void dScStarSel_c::func_ov003_020ae358() {
         for (i = 0; i < 3; i++) {
             if (SaveData::IsCharacterUnlocked(i) != 0) {
                 int ri = gActivePlayerSlot;
-                if (((unsigned short)((gTouchHeld[gActivePlayerSlot][2] - mCharX[i]) + 0x18)) <
-                    0x30) {
-                    if (((unsigned short)((gTouchHeld[ri][3] - mCharY[i]) + 0x18)) < 0x2b) {
+                if (((unsigned short)((((u8(*)[4])gTouchHeld)[gActivePlayerSlot][2] - mCharX[i]) +
+                                      0x18)) < 0x30) {
+                    if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 0x18)) <
+                        0x2b) {
                         mCursorTarget = 1;
                         mCharCursor = (unsigned char)func_ov003_020adec0(i);
                         data_02092128[0] = (unsigned char)i;
@@ -383,11 +367,9 @@ void dScStarSel_c::func_ov003_020ae358() {
     mCharRepeatTimer = 0;
 }
 
-// @symbol _ZN12dScStarSel_c16OnPendingDestroyEv
 // ROM 0x020ae6f0, size 0x4; vtable slot 12. Empty override.
 void dScStarSel_c::OnPendingDestroy() {}
 
-// @symbol _ZN12dScStarSel_c6RenderEv
 // ROM 0x020ae6f4, size 0x944; vtable slot 9. Draws the whole screen: level
 // number, the star plates, the character strip, the cursor and the bottom sprite.
 //
@@ -582,7 +564,6 @@ s32 dScStarSel_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12dScStarSel_c8BehaviorEv
 // ROM 0x020af038, size 0x834; vtable slot 6.
 //
 // The stylus-hit loop reads the touch record as one 4-byte row of gTouchHeld (the
@@ -664,17 +645,17 @@ s32 dScStarSel_c::Behavior() {
             idx = gActivePlayerSlot;
             cur = mSelectedPlate;
             found = 0;
-            val = gTouchHeld[idx][0];
+            val = ((u8(*)[4])gTouchHeld)[idx][0];
             if (val != 0) {
                 num = mPlateCount;
                 i = 0;
                 if (num > 0) {
-                    rec = gTouchHeld[idx];
+                    rec = ((u8(*)[4])gTouchHeld)[idx];
                     tx = rec[2];
                     do {
-                        if ((u8)(tx - mPlateX[i] + 8) < 0x10 && gTouchHeld[idx][3] < 0x28 &&
-                            ((mPlateMask >> i) & 1)) {
-                            hit = (val != 0 && gTouchEdge[idx][0] != 0);
+                        if ((u8)(tx - mPlateX[i] + 8) < 0x10 &&
+                            ((u8(*)[4])gTouchHeld)[idx][3] < 0x28 && ((mPlateMask >> i) & 1)) {
+                            hit = (val != 0 && ((u8(*)[4])gTouchEdge)[idx][0] != 0);
                             if (hit != 0 || cur != i) {
                                 mPlatePressTimer = data_0208ee44 * 3;
                             }
@@ -838,7 +819,6 @@ s32 dScStarSel_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12dScStarSel_c16CleanupResourcesEv
 // ROM 0x020af86c, size 0x34; vtable slot 3.
 s32 dScStarSel_c::CleanupResources() {
     CleanCommonModelDataArr();
@@ -883,7 +863,6 @@ enum ZN12dScStarSel_c13InitResourcesEv_AssetId {
     ASSET_D_2D_CMN_ICON_S_NCG_BIN = 0x0270
 };
 
-// @symbol _ZN12dScStarSel_c13InitResourcesEv
 /* recovered: real C++ method over include/dScStarSel_c.h -- vtable slot 0.
  *
  * Loads the star-select screen: sound group, VRAM banks, the two dExtSimpleModel_c members
@@ -1265,7 +1244,6 @@ s32 dScStarSel_c::InitResources() {
     return 1;
 }
 
-// @symbol dScStarSel_c_classInit
 /* Reconstructed source-style name: SM64DS proves dScStarSel_c through RTTI,
  * allocation size, vtable identity, and the STAR_SELECT registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

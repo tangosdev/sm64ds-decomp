@@ -73,7 +73,6 @@ void MultiStore_Int(int val, int *dst, int len);
 // GX_Init: power the display engines, reset the VRAM state, and clear both
 // engines' 2D registers. The ROM spills each zero of the CPU path to its own
 // stack slot and reloads it for the call; the volatile locals reproduce that.
-// @symbol func_02053c40
 void func_02053c40(void) {
     REG_POWCNT1 |= POWCNT_DISPLAY_SWAP;
     REG_POWCNT1 = (u16)((REG_POWCNT1 & ~POWCNT_ALL_ENGINES) | POWCNT_ALL_ENGINES);
@@ -108,7 +107,6 @@ void func_02053c40(void) {
 }
 
 // GX_HBlankIntr: returns the previous enable bit.
-// @symbol func_02053c10
 int func_02053c10(int enable) {
     int old = REG_DISPSTAT & DISPSTAT_HBLANK_IRQ;
     if (enable)
@@ -119,7 +117,6 @@ int func_02053c10(int enable) {
 }
 
 // GX_VBlankIntr: returns the previous enable bit.
-// @symbol func_02053be0
 int func_02053be0(int enable) {
     int old = REG_DISPSTAT & DISPSTAT_VBLANK_IRQ;
     if (enable)
@@ -130,7 +127,6 @@ int func_02053be0(int enable) {
 }
 
 // GX_DispOff
-// @symbol func_02053b98
 void func_02053b98(void) {
     u32 cnt = REG_DISPCNT;
     data_02099fcc = 0;
@@ -142,7 +138,6 @@ void func_02053b98(void) {
 
 namespace GX {
 
-// @symbol _ZN2GX6DispOnEv
 void DispOn() {
     data_02099fcc = 1;
     if (data_020a6084 != 0)
@@ -152,7 +147,6 @@ void DispOn() {
         REG_DISPCNT |= DISPMODE_GRAPHICS << DISPCNT_MODE_SHIFT;
 }
 
-// @symbol _ZN2GX15SetGraphicsModeEiii
 void SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
     u32 cnt = REG_DISPCNT;
     data_020a6084 = (u16)dispMode;
@@ -169,7 +163,6 @@ void SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
 
 namespace GXS {
 
-// @symbol _ZN3GXS15SetGraphicsModeEi
 void SetGraphicsMode(int bgMode) {
     REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~DISPCNT_BGMODE_MASK) | bgMode;
 }
@@ -180,7 +173,6 @@ extern "C" {
 
 // GXx_SetMasterBrightness_: reg is either engine's MASTER_BRIGHT. Positive
 // levels fade up toward white, negative ones down toward black.
-// @symbol func_02053a90
 void func_02053a90(u16 *reg, int brightness) {
     if (brightness == 0)
         *reg = 0;

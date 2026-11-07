@@ -77,12 +77,10 @@ int PlaySmallSecretSound(dActor_c *actor, u16 *counter);
  * fBase_c::operator new(unsigned long) keeps the allocation on
  * _ZN7fBase_cnwEm; without it the call relocates to the unavailable global
  * `_Znwm`. */
-// @symbol daObjC1Hikari_c_classInit
 extern "C" daObjC1Hikari_c *daObjC1Hikari_c_classInit() {
     return new daObjC1Hikari_c();
 }
 
-// @symbol _ZN15daObjC1Hikari_c13InitResourcesEv
 int daObjC1Hikari_c::InitResources() {
     dExtSimpleModel_c::LoadFile(gC1HikariModelFile);
     if (NumStars() < 0xe)
@@ -95,7 +93,6 @@ int daObjC1Hikari_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjC1Hikari_c8BehaviorEv
 int daObjC1Hikari_c::Behavior() {
     VecFx32 vIn, vMid, vRes;
     VecFx32 hv;
@@ -171,19 +168,16 @@ int daObjC1Hikari_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObjC1Hikari_c6RenderEv
 int daObjC1Hikari_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN15daObjC1Hikari_c16CleanupResourcesEv
 int daObjC1Hikari_c::CleanupResources() {
     gC1HikariModelFile.Release();
     return 1;
 }
 
-// @symbol _ZN15daObjC1Hikari_c20UpdateModelTransformEv
 void daObjC1Hikari_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.t.x = mPosX >> 3;
@@ -194,5 +188,4 @@ void daObjC1Hikari_c::UpdateModelTransform() {
 /* The initializer constructs the model handle with file ID 1453 and
  * registers its destructor; the registration node is a compiler
  * temporary. */
-// @symbol __sinit_d_a_obj_c1_hikari.cpp
 C1HikariModelFilePtr gC1HikariModelFile(ASSET_C1_HIKARI_BMD);

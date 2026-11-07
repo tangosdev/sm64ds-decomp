@@ -11967,6 +11967,9 @@
       ]
     },
     "data_ov075_0211d71c": {
+      "include/decl_common.h": [
+        "return:void *"
+      ],
       "src/_ZN10dScEntry_c17EnterCourseSelectEv.cpp": [
         "return:int"
       ],
@@ -11993,6 +11996,9 @@
       ]
     },
     "data_ov075_0211d930": {
+      "include/decl_common.h": [
+        "return:int"
+      ],
       "src/unnamed/ov075/func_ov075_02119dc4.cpp": [
         "return:int []"
       ]
@@ -12523,6 +12529,9 @@
       ]
     },
     "data_ov085_02130830": {
+      "include/decl_common.h": [
+        "return:int []"
+      ],
       "src/game/actors/d_a_c_jugem.cpp": [
         "return:daC_Jugem_c::StateFn []"
       ],

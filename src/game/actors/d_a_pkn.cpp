@@ -117,7 +117,6 @@ int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
  * six member C1s in declaration order.
  * ======================================================================== */
 
-// @symbol daPkn_c_classInit
 extern "C" daPkn_c *daPkn_c_classInit()
 {
     return new daPkn_c();
@@ -137,7 +136,6 @@ SpawnInfo<daPkn_c> g_profile_PAKUN = {
 };
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c13InitResourcesEv
 /*
  * Unlike daFPkn_c's, this one checks its loads: a failed SetFile on either
  * model returns 0.
@@ -208,7 +206,6 @@ int daPkn_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c8BehaviorEv
 int daPkn_c::Behavior()
 {
     int r;
@@ -262,7 +259,6 @@ int daPkn_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c6RenderEv
 /*
  * The bubble is drawn only while the idle animation (data_ov084_02130df4)
  * is playing.
@@ -278,7 +274,6 @@ int daPkn_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16OnPendingDestroyEv
 /*
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
@@ -287,7 +282,6 @@ void daPkn_c::OnPendingDestroy()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16CleanupResourcesEv
 int daPkn_c::CleanupResources()
 {
     int i;
@@ -300,7 +294,6 @@ int daPkn_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateWaitEv
 void daPkn_c::StateWait()
 {
     mScaleX = 0x1000;
@@ -315,7 +308,6 @@ void daPkn_c::StateWait()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c10StateSleepEv
 void daPkn_c::StateSleep()
 {
     mClsnEnabled = 1;
@@ -342,7 +334,6 @@ void daPkn_c::StateSleep()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateBiteEv
 void daPkn_c::StateBite()
 {
     dActor_c *actor;
@@ -475,7 +466,6 @@ void daPkn_c::StateBite()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateWakeEv
 void daPkn_c::StateWake()
 {
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
@@ -489,7 +479,6 @@ void daPkn_c::StateWake()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateDozeEv
 void daPkn_c::StateDoze()
 {
     mClsnEnabled = 1;
@@ -508,7 +497,6 @@ void daPkn_c::StateDoze()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c8StateDieEv
 void daPkn_c::StateDie()
 {
     Vector3 pos;
@@ -533,7 +521,6 @@ void daPkn_c::StateDie()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c11StateShrinkEv
 void daPkn_c::StateShrink()
 {
     int scale;
@@ -567,7 +554,6 @@ void daPkn_c::StateShrink()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateGoneEv
 void daPkn_c::StateGone()
 {
     mClsnEnabled = 0;
@@ -579,7 +565,6 @@ void daPkn_c::StateGone()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c11StateRegrowEv
 void daPkn_c::StateRegrow()
 {
     int v;
@@ -599,7 +584,6 @@ void daPkn_c::StateRegrow()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c18TrackClosestPlayerEv
 /* Tracks the closest player: its distance, the yaw toward it and whether it
    is airborne. */
 void daPkn_c::TrackClosestPlayer()
@@ -623,7 +607,6 @@ void daPkn_c::TrackClosestPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16PlayerMovingFastEv
 /* Is the closest player moving fast enough to wake the plant? */
 int daPkn_c::PlayerMovingFast()
 {
@@ -634,7 +617,6 @@ int daPkn_c::PlayerMovingFast()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9CheckHitsEv
 /* The collision check the idle states share: returns 1 when a hit killed
    the plant. t and u hold the actor-type compares as ints; testing
    `type == 0xbf` directly changes the code. */
@@ -726,7 +708,6 @@ int daPkn_c::CheckHits()
     return 0;
 }
 
-// @symbol _ZN7daPkn_c10UpdatePoseEv
 /* Poses both models and places the head cylinder and the sleep bubble. The
    bone sum into ang[1] is never read. */
 void daPkn_c::UpdatePose()
@@ -800,7 +781,6 @@ void daPkn_c::UpdatePose()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16OnAimedAtWithEggEv
 /* Vtable slot 29. */
 s32 daPkn_c::OnAimedAtWithEgg()
 {
@@ -808,7 +788,6 @@ s32 daPkn_c::OnAimedAtWithEgg()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c10EnterLungeEi
 /* Enters state 2 with the lunge animation at `frame`. */
 void daPkn_c::EnterLunge(int frame)
 {
@@ -818,7 +797,6 @@ void daPkn_c::EnterLunge(int frame)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c3DieEv
 /* Kills the plant: death animation and state 5. */
 void daPkn_c::Die()
 {

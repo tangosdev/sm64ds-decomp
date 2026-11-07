@@ -1,4 +1,3 @@
-// @symbol func_0206a928
 /* recovered: debug printf formatter core. DFA-table % parser (state table data_0209a0a0,
    8 states x 9 character classes; class table data_0209a130), 64-byte chunked output
    through the stream callback at +0x10, conversions b c d i s u o x X f e E g G; %f %e %g

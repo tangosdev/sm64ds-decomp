@@ -53,13 +53,11 @@ int func_ov100_02144f84(void);
 /* -------------------------------------------------------------------------- */
 /* Factory: `return new` inherits fBase_c::operator new. */
 /* -------------------------------------------------------------------------- */
-// @symbol daMugenBGM_c_classInit
 extern "C" daMugenBGM_c *daMugenBGM_c_classInit(void) {
     return new daMugenBGM_c;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daMugenBGM_c13InitResourcesEv
 int daMugenBGM_c::InitResources() {
     void *p;
     /* The param1 mask reads through a const view of `this`: `param1 &= 0xf`
@@ -83,7 +81,6 @@ int daMugenBGM_c::InitResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daMugenBGM_c8BehaviorEv
 int daMugenBGM_c::Behavior() {
     int vol;
     int flag;
@@ -157,23 +154,19 @@ int daMugenBGM_c::Behavior() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daMugenBGM_c6RenderEv
 int daMugenBGM_c::Render() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daMugenBGM_c16OnPendingDestroyEv
 void daMugenBGM_c::OnPendingDestroy() {}
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daMugenBGM_c16CleanupResourcesEv
 int daMugenBGM_c::CleanupResources() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daMugenBGM_c12GetActiveFogEv
 Fog *daMugenBGM_c::GetActiveFog() {
     if (data_ov002_02110af0 == data_02092120)
         return (Fog *)data_ov002_02110af8;
@@ -181,8 +174,6 @@ Fog *daMugenBGM_c::GetActiveFog() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daMugenBGM_cD1Ev
-// @symbol _ZN12daMugenBGM_cD0Ev
 /* Both destructors come from the inline `~daMugenBGM_c() {}` in
  * include/daMugenBGM_c.h; the `new daMugenBGM_c` in the factory instantiates
  * them. An out-of-line definition here emits D0 before D1 (the cartridge has

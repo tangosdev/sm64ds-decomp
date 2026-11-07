@@ -74,7 +74,6 @@ enum {
     kFullDrop = 0x1f4000
 };
 
-// @symbol daObjDpBrock_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjDpBrock_c through RTTI,
  * allocation size, vtable identity and the DP_BROCK registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
@@ -88,7 +87,6 @@ extern "C" daObjDpBrock_c *daObjDpBrock_c_classInit() {
     return new daObjDpBrock_c();
 }
 
-// @symbol _ZN14daObjDpBrock_c13InitResourcesEv
 int daObjDpBrock_c::InitResources() {
     mStepModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov025_02113ab8), 1, -1);
     UpdateStepModelPosAndRotY();
@@ -119,7 +117,6 @@ int daObjDpBrock_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjDpBrock_c8BehaviorEv
 int daObjDpBrock_c::Behavior() {
     switch (mState) {
     case kSinking:
@@ -145,13 +142,11 @@ int daObjDpBrock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjDpBrock_c6RenderEv
 int daObjDpBrock_c::Render() {
     mStepModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjDpBrock_c16CleanupResourcesEv
 int daObjDpBrock_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov025_02113ab8.Release();
@@ -159,7 +154,6 @@ int daObjDpBrock_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjDpBrock_c25UpdateStepModelPosAndRotYEv
 /* Puts the block's own model on the actor: heading from mAngleY, and the
  * position scaled down by 8 into model space. dBgActor_c's
  * UpdateModelPosAndRotY does the same for the inherited model. */
@@ -170,7 +164,6 @@ void daObjDpBrock_c::UpdateStepModelPosAndRotY() {
     mStepModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN14daObjDpBrock_c23UpdateStepClsnPosAndRotEv
 /* Moves the collider with the block: rotation from mAngleY, translation
  * from the actor position, then dBgW_KcMbg::Transform. dBgActor_c's
  * UpdateClsnPosAndRot does the same for the inherited collider. */
@@ -186,8 +179,6 @@ void daObjDpBrock_c::UpdateStepClsnPosAndRot() {
  * daObjDpBrock_c.h defines ~daObjDpBrock_c() in the class body, and that
  * alone makes mwccarm emit the pair last, in the cartridge's D1-then-D0
  * order, with no D2. */
-// @symbol _ZN14daObjDpBrock_cD1Ev
-// @symbol _ZN14daObjDpBrock_cD0Ev
 
 /* Source order is construction order: model file 1503, collision file 1504.
  * __sinit_d_a_obj_dp_brock.cpp emits both constructions and registers the

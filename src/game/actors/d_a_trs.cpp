@@ -21,7 +21,7 @@
  * a D2 the cartridge has no home for.
  *
  * The func_ov063_* helpers are methods now (daTrs_c, one on daTBasket_c):
- * r0 is the object, and their @symbol comments carry the member mangle.
+ * r0 is the object, so each one is a member of that class.
  * func_ov063_02118f24 stays free (C linkage): its receiver is the
  * ICON_TERESA marker, not the Boo. func_ov063_0211a0a8 is pure math.
  *
@@ -181,7 +181,7 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-extern int LenVec3(VecFx32 *v);
+extern int LenVec3(const Vector3 *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
@@ -244,30 +244,22 @@ struct Frame {
    anonymous typedef (measured). */
 typedef struct { u16 lo8 : 8; u16 mirrored : 1; u16 hi7 : 7; } FlagW;
 
-// @symbol _ZN7daTrs_cD1Ev
-// @symbol _ZN7daTrs_cD0Ev
 daTrs_c::~daTrs_c()
 {
 }
 
-// @symbol _ZN11daTBasket_cD1Ev
-// @symbol _ZN11daTBasket_cD0Ev
 daTBasket_c::~daTBasket_c()
 {
 }
 
-// @symbol _ZN11daTrsIcon_cD1Ev
-// @symbol _ZN11daTrsIcon_cD0Ev
 daTrsIcon_c::~daTrsIcon_c()
 {
 }
 
-// @symbol _ZN7daTrs_c16OnAimedAtWithEggEv
 int daTrs_c::OnAimedAtWithEgg() {
     return mdCcAcPos_c.height / 2;
 }
 
-// @symbol _ZN7daTrs_c19func_ov063_021160d4Ev
 void daTrs_c::func_ov063_021160d4() {
 
     int *p;
@@ -286,7 +278,6 @@ void daTrs_c::func_ov063_021160d4() {
     *p += this->mClsnZBias;
 }
 
-// @symbol _ZN7daTrs_c19func_ov063_02116190Ev
 int daTrs_c::func_ov063_02116190() {
 
     int vec[3];
@@ -308,7 +299,6 @@ int daTrs_c::func_ov063_02116190() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02116244Ev
 void daTrs_c::func_ov063_02116244() {
 
     if (this->mBooDefeatCount < 5) return;
@@ -320,7 +310,6 @@ void daTrs_c::func_ov063_02116244() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_021162c8Ev
 void daTrs_c::func_ov063_021162c8() {
 
     if (this->mBooFlags.hitByParam3Player) {
@@ -350,7 +339,6 @@ void daTrs_c::func_ov063_021162c8() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_021163d0Ev
 unsigned char daTrs_c::func_ov063_021163d0() {
 
     unsigned int id = this->mCachedActorID;
@@ -361,7 +349,6 @@ unsigned char daTrs_c::func_ov063_021163d0() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211640cEv
 void daTrs_c::func_ov063_0211640c() {
 
     struct Vector3 pos, t1, t2;
@@ -423,7 +410,6 @@ void daTrs_c::func_ov063_0211640c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_021166acEv
 void daTrs_c::func_ov063_021166ac() {
 
     daTrs_c *t = (daTrs_c *)this;
@@ -503,7 +489,6 @@ void daTrs_c::func_ov063_021166ac() {
 }
 
 
-// @symbol _ZN11daTBasket_c19func_ov063_021169c4Ev
 void daTBasket_c::func_ov063_021169c4() {
 
     Matrix4x3_FromTranslation(&this->mModel.mat4x3, this->mPosX>>3, this->mPosY>>3, this->mPosZ>>3);
@@ -514,7 +499,6 @@ void daTBasket_c::func_ov063_021169c4() {
 /* Behavior handler for variant 4 (needs 15 stars): the scripted-path Boo.
    Hidden until canAppear, then waits for the player within 0x3e8000, flies
    a fixed path and fades. */
-// @symbol _ZN7daTrs_c19func_ov063_02116a1cEv
 void daTrs_c::func_ov063_02116a1c() {
     VecFx32 v;
     int a;
@@ -577,7 +561,6 @@ void daTrs_c::func_ov063_02116a1c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02116bf0Ev
 void daTrs_c::func_ov063_02116bf0() {
 
 }
@@ -585,7 +568,6 @@ void daTrs_c::func_ov063_02116bf0() {
 
 /* Behavior handler for variant 3: spawns TERESA children (param 0xfff1)
    while fewer than two are alive, five at most. */
-// @symbol _ZN7daTrs_c19func_ov063_02116bf4Ev
 void daTrs_c::func_ov063_02116bf4() {
 
         unsigned short *ip = (unsigned short *)&this->mBooFlags;
@@ -634,7 +616,6 @@ void daTrs_c::func_ov063_02116bf4() {
 
 
 /* Behavior handler for variant 5: the Boo carrying the cage (T_BASKET). */
-// @symbol _ZN7daTrs_c19func_ov063_02116d38Ev
 void daTrs_c::func_ov063_02116d38() {
 
     switch(this->mState){
@@ -648,7 +629,6 @@ void daTrs_c::func_ov063_02116d38() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02116d98Ev
 void daTrs_c::func_ov063_02116d98() {
     if (func_ov063_0211a564(0x28)) {
         this->mState = 1;
@@ -656,7 +636,6 @@ void daTrs_c::func_ov063_02116d98() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02116dbcEv
 void daTrs_c::func_ov063_02116dbc() {
 
     if (func_ov063_0211a3d0() == 0) return;
@@ -665,7 +644,6 @@ void daTrs_c::func_ov063_02116dbc() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02116df0Ev
 void daTrs_c::func_ov063_02116df0() {
     if (func_ov063_0211a634(0x14)) {
         this->mState = 1;
@@ -673,7 +651,6 @@ void daTrs_c::func_ov063_02116df0() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02116e14Ev
 void daTrs_c::func_ov063_02116e14() {
 
     this->mBooFlags.hitByParam3Player = 0;
@@ -709,7 +686,6 @@ void daTrs_c::func_ov063_02116e14() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02116f48Ev
 int daTrs_c::func_ov063_02116f48() {
 
     this->mBigBooID = 0;
@@ -734,7 +710,6 @@ int daTrs_c::func_ov063_02116f48() {
 /* Behavior handler for variant 0xb: the scripted-path Boo. Hidden until
    canAppear, then waits for the player within 0x258000, flies a fixed path
    (hopping in state 4), then vanishes (opacity 0, hidden). */
-// @symbol _ZN7daTrs_c19func_ov063_02116facEv
 void daTrs_c::func_ov063_02116fac() {
 
     struct Frame fr;
@@ -833,7 +808,6 @@ void daTrs_c::func_ov063_02116fac() {
 #undef L8
 
 /* Behavior handler for variant 0xf: the Big Boo that leaves the OBJ_KEY. */
-// @symbol _ZN7daTrs_c19func_ov063_021172a8Ev
 void daTrs_c::func_ov063_021172a8() {
     switch (this->mState) {
     case 0: func_ov063_02118914(); break;
@@ -857,7 +831,6 @@ void daTrs_c::func_ov063_021172a8() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02117364Ev
 void daTrs_c::func_ov063_02117364() {
 
     volatile VecFx32 pos;
@@ -919,7 +892,6 @@ void daTrs_c::func_ov063_02117364() {
 
 #undef New
 
-// @symbol _ZN7daTrs_c19func_ov063_02117650Ev
 void daTrs_c::func_ov063_02117650() {
 
     struct Vector3 ppos;
@@ -958,7 +930,6 @@ void daTrs_c::func_ov063_02117650() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211776cEv
 void daTrs_c::func_ov063_0211776c() {
 
   func_ov063_0211adfc();
@@ -970,7 +941,6 @@ void daTrs_c::func_ov063_0211776c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_021177b0Ev
 void daTrs_c::func_ov063_021177b0() {
 
     if (*(u16 *)&this->mStateTimer == 0) {
@@ -1084,7 +1054,6 @@ void daTrs_c::func_ov063_021177b0() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02117b0cEv
 void daTrs_c::func_ov063_02117b0c() {
 
     int v[3];
@@ -1150,7 +1119,6 @@ void daTrs_c::func_ov063_02117b0c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02117cdcEv
 void daTrs_c::func_ov063_02117cdc() {
 
     s16 v[3];
@@ -1190,7 +1158,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w[0] = src->x;
         w[1] = src->y;
         w[2] = src->z;
-        if (LenVec3((VecFx32 *)w) >= 0x12c000) {
+        if (LenVec3((const Vector3 *)w) >= 0x12c000) {
             return;
         }
         if (this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1) == 0) {
@@ -1399,7 +1367,6 @@ void daTrs_c::func_ov063_02117cdc() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118458Ev
 void daTrs_c::func_ov063_02118458() {
     int r4 = func_ov063_0211a0dc();
 
@@ -1467,7 +1434,6 @@ void daTrs_c::func_ov063_02118458() {
     func_02012694(0x152, &this->mCamSpacePos);
 }
 
-// @symbol _ZN7daTrs_c19func_ov063_0211873cEv
 void daTrs_c::func_ov063_0211873c() {
 
     short a;
@@ -1527,7 +1493,6 @@ void daTrs_c::func_ov063_0211873c() {
     this->mHorzSpeed = 0;
 }
 
-// @symbol _ZN7daTrs_c19func_ov063_02118914Ev
 void daTrs_c::func_ov063_02118914() {
 
     int zero = 0;
@@ -1559,7 +1524,6 @@ void daTrs_c::func_ov063_02118914() {
 
 
 /* Behavior handler for variants 0xc/0xd/0xe: the Big Boo. */
-// @symbol _ZN7daTrs_c19func_ov063_021189f4Ev
 void daTrs_c::func_ov063_021189f4() {
 
     if (this->mSoundCount != 0) {
@@ -1604,7 +1568,6 @@ void daTrs_c::func_ov063_021189f4() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118b2cEv
 void daTrs_c::func_ov063_02118b2c() {
     mHorzSpeed = 0x5000;
     int r = func_ov063_0211a0dc();
@@ -1622,7 +1585,6 @@ void daTrs_c::func_ov063_02118b2c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118b98Ev
 void daTrs_c::func_ov063_02118b98() {
 
     u16 v;
@@ -1674,7 +1636,6 @@ special:
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118cd8Ev
 void daTrs_c::func_ov063_02118cd8() {
 
     if (*(u16 *)&this->mStateTimer == 0) {
@@ -1706,7 +1667,6 @@ void daTrs_c::func_ov063_02118cd8() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118ddcEv
 void daTrs_c::func_ov063_02118ddc() {
 
   struct Vector3 v;
@@ -1723,7 +1683,6 @@ void daTrs_c::func_ov063_02118ddc() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118e5cEv
 void daTrs_c::func_ov063_02118e5c() {
 
     func_ov063_02118eac();
@@ -1739,14 +1698,12 @@ void daTrs_c::func_ov063_02118e5c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118ea0Ev
 void daTrs_c::func_ov063_02118ea0() {
 
     func_ov063_02118eac();
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118eacEv
 void daTrs_c::func_ov063_02118eac() {
 
     Vector3 v;
@@ -1771,21 +1728,18 @@ void daTrs_c::func_ov063_02118eac() {
 }
 
 
-// @symbol func_ov063_02118f24
 extern "C" void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos)
 {
     unsigned int val = 4;
     icon->UntrackAndSpawnStar(icon->mTrackStarID, icon->mStarID, pos, val);
 }
 
-// @symbol _ZN7daTrs_c19func_ov063_02118f50Ev
 void daTrs_c::func_ov063_02118f50() {
 
   if(func_ov063_0211a634(0x14)) this->mState=1;
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02118f74Ev
 void daTrs_c::func_ov063_02118f74() {
 
     short a2;
@@ -1832,7 +1786,6 @@ void daTrs_c::func_ov063_02118f74() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119074Ev
 void daTrs_c::func_ov063_02119074() {
 
     volatile int dummy[2];
@@ -1903,7 +1856,6 @@ void daTrs_c::func_ov063_02119074() {
 
 
 /* Behavior handler for variant 8. */
-// @symbol _ZN7daTrs_c19func_ov063_02119274Ev
 void daTrs_c::func_ov063_02119274() {
 
     switch(this->mState){
@@ -1918,7 +1870,6 @@ void daTrs_c::func_ov063_02119274() {
 
 
 /* Behavior handler for variants 0/1/2/6/9/10: the chasing Boo. */
-// @symbol _ZN7daTrs_c19func_ov063_021192d4Ev
 void daTrs_c::func_ov063_021192d4() {
 
   switch(this->mState){
@@ -1934,7 +1885,6 @@ void daTrs_c::func_ov063_021192d4() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211934cEv
 void daTrs_c::func_ov063_0211934c() {
 
     void *r4;
@@ -2090,7 +2040,6 @@ void daTrs_c::func_ov063_0211934c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211975cEv
 void daTrs_c::func_ov063_0211975c() {
 
     if (!func_ov063_0211a3d0()) return;
@@ -2130,14 +2079,12 @@ void daTrs_c::func_ov063_0211975c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119870Ev
 void daTrs_c::func_ov063_02119870() {
 
   if(func_ov063_0211a634(0x14)) this->mState=1;
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119894Ev
 void daTrs_c::func_ov063_02119894() {
 
     this->mBooFlags.hitByParam3Player = 0;
@@ -2158,7 +2105,6 @@ void daTrs_c::func_ov063_02119894() {
 
 
 #define M(p) (p)
-// @symbol _ZN7daTrs_c19func_ov063_02119960Ev
 void daTrs_c::func_ov063_02119960() {
 
     unsigned short *p = (unsigned short *)M(&this->mBooFlags);
@@ -2178,14 +2124,12 @@ void daTrs_c::func_ov063_02119960() {
 
 #undef M
 
-// @symbol _ZN7daTrs_c19func_ov063_02119a2cEv
 void daTrs_c::func_ov063_02119a2c() {
 
   if(func_ov063_0211a564(0x28)) this->mState=1;
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119a50Ev
 void daTrs_c::func_ov063_02119a50() {
 
     this->mBooFlags.hitByParam3Player = 0;
@@ -2200,7 +2144,6 @@ void daTrs_c::func_ov063_02119a50() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119ab0Ev
 void daTrs_c::func_ov063_02119ab0() {
 
     if (!this->mBooFlags.carrying)
@@ -2218,7 +2161,6 @@ void daTrs_c::func_ov063_02119ab0() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119b1cEv
 void daTrs_c::func_ov063_02119b1c() {
 
     int r4 = func_ov063_0211a0dc();
@@ -2232,7 +2174,6 @@ void daTrs_c::func_ov063_02119b1c() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119b84Ev
 void daTrs_c::func_ov063_02119b84() {
 
     func_ov063_0211adfc();
@@ -2242,7 +2183,6 @@ void daTrs_c::func_ov063_02119b84() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119bb0Ev
 void daTrs_c::func_ov063_02119bb0() {
 
     if (this->mDeathMode == 2) this->unk_5a8 = 0xa;
@@ -2257,7 +2197,6 @@ void daTrs_c::func_ov063_02119bb0() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119c18Ej
 void daTrs_c::func_ov063_02119c18(unsigned int id) {
 
     void* r = (void*)this->mCachedActorID;
@@ -2271,7 +2210,6 @@ void daTrs_c::func_ov063_02119c18(unsigned int id) {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119c58Ev
 void daTrs_c::func_ov063_02119c58() {
 
     unsigned int id;
@@ -2290,7 +2228,6 @@ void daTrs_c::func_ov063_02119c58() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119cc0Eisi
 void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
 
     if (func_ov063_0211a8a4() == 0) goto reset;
@@ -2330,7 +2267,6 @@ reset:
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_02119e38Eisi
 void daTrs_c::func_ov063_02119e38(int a1, short a2, int a3) {
 
   int thresh;
@@ -2398,7 +2334,6 @@ void daTrs_c::func_ov063_02119e38(int a1, short a2, int a3) {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a030Eii
 void daTrs_c::func_ov063_0211a030(int a, int b) {
 
     int h = b >> 1;
@@ -2412,7 +2347,6 @@ void daTrs_c::func_ov063_0211a030(int a, int b) {
 }
 
 
-// @symbol func_ov063_0211a0a8
 extern "C" int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4) {
     int diff = a1 - a2;
     if (diff > 0) {
@@ -2425,7 +2359,6 @@ extern "C" int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4) {
     }
 }
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a0dcEv
 int daTrs_c::func_ov063_0211a0dc() {
 
     dActor_c *actor;
@@ -2544,7 +2477,6 @@ ret0:
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a3d0Ev
 int daTrs_c::func_ov063_0211a3d0() {
 
     VecFx32 v, w;
@@ -2602,7 +2534,6 @@ fall:
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a564Ei
 int daTrs_c::func_ov063_0211a564(int arg1) {
 
     func_ov063_0211adfc();
@@ -2629,7 +2560,6 @@ ret0:
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a634Ei
 int daTrs_c::func_ov063_0211a634(int arg) {
 
     unsigned int idx;
@@ -2654,7 +2584,6 @@ done:
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a6f0Ev
 void daTrs_c::func_ov063_0211a6f0() {
 
     this->mPrevAngleY = this->mPreKnockbackAngleY;
@@ -2662,7 +2591,6 @@ void daTrs_c::func_ov063_0211a6f0() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a718Ev
 void daTrs_c::func_ov063_0211a718() {
 
     int a;
@@ -2675,7 +2603,6 @@ void daTrs_c::func_ov063_0211a718() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a76cEii
 void daTrs_c::func_ov063_0211a76c(int cond, int val) {
 
     int ip = *(u16 *)&this->mStateTimer + 1;
@@ -2701,7 +2628,6 @@ void daTrs_c::func_ov063_0211a76c(int cond, int val) {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a810Ei
 void daTrs_c::func_ov063_0211a810(int cond) {
 
     int *f = (int *)&this->mdCcAcPos_c.flags;
@@ -2730,7 +2656,6 @@ void daTrs_c::func_ov063_0211a810(int cond) {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a8a4Ev
 int daTrs_c::func_ov063_0211a8a4() {
 
     dActor_c *a = (dActor_c*)this;
@@ -2756,13 +2681,11 @@ int daTrs_c::func_ov063_0211a8a4() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a960Ev
 void daTrs_c::func_ov063_0211a960() {
 
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211a964Ei
 void daTrs_c::func_ov063_0211a964(int arg1) {
 
     int t;
@@ -2783,7 +2706,6 @@ void daTrs_c::func_ov063_0211a964(int arg1) {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211aa34Ev
 void daTrs_c::func_ov063_0211aa34() {
 
     u8 cur = this->mOpacity;
@@ -2826,7 +2748,6 @@ void daTrs_c::func_ov063_0211aa34() {
 /* Behavior handler for variant 7: spawns three TERESA (param 0xfff6, random
    yaw) at fixed offsets and removes itself; below 15 stars it only removes
    itself. */
-// @symbol _ZN7daTrs_c19func_ov063_0211ab68Ev
 void daTrs_c::func_ov063_0211ab68() {
 
     VecFx32 pos;
@@ -2860,7 +2781,6 @@ void daTrs_c::func_ov063_0211ab68() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211ad00Ev
 int daTrs_c::func_ov063_0211ad00() {
 
     int r4;
@@ -2885,7 +2805,6 @@ int daTrs_c::func_ov063_0211ad00() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211adb4Ev
 int daTrs_c::func_ov063_0211adb4() {
 
     unsigned char v = this->mVariant;
@@ -2896,7 +2815,6 @@ int daTrs_c::func_ov063_0211adb4() {
 }
 
 
-// @symbol _ZN7daTrs_c19func_ov063_0211adfcEv
 void daTrs_c::func_ov063_0211adfc() {
 
     this->mHorzSpeed = 0;
@@ -2906,14 +2824,12 @@ void daTrs_c::func_ov063_0211adfc() {
 }
 
 
-// @symbol _ZN11daTBasket_c16CleanupResourcesEv
 int daTBasket_c::CleanupResources()
 {
     data_ov063_0211edec.Release();
     return 1;
 }
 
-// @symbol _ZN7daTrs_c16CleanupResourcesEv
 int daTrs_c::CleanupResources()
 {
     int b;
@@ -2955,12 +2871,10 @@ int daTrs_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daTrs_c16OnPendingDestroyEv
 void daTrs_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7daTrs_c6RenderEv
 int daTrs_c::Render()
 {
     int b = (int)((mFlags & 0x40000) != 0);
@@ -2998,14 +2912,12 @@ int daTrs_c::Render()
     return 1;
 }
 
-// @symbol _ZN11daTBasket_c6RenderEv
 int daTBasket_c::Render()
 {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN7daTrs_c8BehaviorEv
 int daTrs_c::Behavior()
 {
     Vector3 pv;
@@ -3294,7 +3206,6 @@ block_39:
 }
 
 
-// @symbol _ZN11daTBasket_c8BehaviorEv
 int daTBasket_c::Behavior()
 {
     int onGround = 0;
@@ -3337,7 +3248,6 @@ int daTBasket_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daTrs_c13InitResourcesEv
 
 int daTrs_c::InitResources()
 {
@@ -3576,7 +3486,6 @@ int daTrs_c::InitResources()
 }
 
 
-// @symbol _ZN11daTBasket_c13InitResourcesEv
 int daTBasket_c::InitResources()
 {
     BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov063_0211edec);
@@ -3595,7 +3504,6 @@ int daTBasket_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN11daTrsIcon_c13InitResourcesEv
 int daTrsIcon_c::InitResources()
 {
     mStarID = (param1 >> 8) & 0xf;
@@ -3604,7 +3512,6 @@ int daTrsIcon_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daTrs_c13OnYoshiTryEatEv
 int daTrs_c::OnYoshiTryEat() {
     unsigned short v = actorID;
     int r;
@@ -3613,25 +3520,21 @@ int daTrs_c::OnYoshiTryEat() {
     return r;
 }
 
-// @symbol daTrsIcon_c_classInit
 extern "C" daTrsIcon_c *daTrsIcon_c_classInit()
 {
     return new daTrsIcon_c();
 }
 
-// @symbol daTBasket_c_classInit
 extern "C" daTBasket_c *daTBasket_c_classInit()
 {
     return new daTBasket_c();
 }
 
-// @symbol daTrs_c_classInit_BOSS_TERESA
 extern "C" daTrs_c *daTrs_c_classInit_BOSS_TERESA()
 {
     return new daTrs_c();
 }
 
-// @symbol daTrs_c_classInit_TERESA
 extern "C" daTrs_c *daTrs_c_classInit_TERESA()
 {
     return new daTrs_c();

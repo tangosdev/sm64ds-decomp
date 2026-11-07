@@ -64,7 +64,6 @@ extern CLPS_Block data_ov012_02111c90;
 extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
-// @symbol daObjC0Water_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: BasementWater_Spawn.
  *
@@ -78,7 +77,6 @@ extern "C" daObjC0Water_c *daObjC0Water_c_classInit() {
     return new daObjC0Water_c();
 }
 
-// @symbol _ZN14daObjC0Water_c13InitResourcesEv
 int daObjC0Water_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov012_021124d0);
     dBgW_Kc::LoadFile(data_ov012_021124c8);
@@ -97,7 +95,6 @@ int daObjC0Water_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjC0Water_c8BehaviorEv
 int daObjC0Water_c::Behavior() {
     if (mWasJustDrained != 0)
         Sound::PlaySecretSound(this, &mSoundTimer);
@@ -120,14 +117,12 @@ int daObjC0Water_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjC0Water_c6RenderEv
 int daObjC0Water_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjC0Water_c16CleanupResourcesEv
 int daObjC0Water_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -140,6 +135,5 @@ int daObjC0Water_c::CleanupResources() {
 /* Source order is construction order: model file 1451, collision file 1452.
  * __sinit_d_a_obj_c0_water.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-// @symbol __sinit_d_a_obj_c0_water.cpp
 C0WaterModelFilePtr data_ov012_021124d0(1451);
 C0WaterCollisionFilePtr data_ov012_021124c8(1452);

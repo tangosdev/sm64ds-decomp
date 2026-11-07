@@ -179,7 +179,7 @@ extern void func_02011cfc(void);
 }
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *out);
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
@@ -201,9 +201,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z)
  * D0 at 0x02123740 / 0x02123798, the two lowest addresses in the run. */
 daBombking_c::~daBombking_c() {}
 
-// @symbol _ZN12daBombking_cD1Ev
-// @symbol _ZN12daBombking_cD0Ev
-// @symbol _ZN12daBombking_c19func_ov078_02123804Ev
 
 int daBombking_c::func_ov078_02123804()
 {
@@ -217,7 +214,6 @@ int daBombking_c::func_ov078_02123804()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123864Ev
 
 void daBombking_c::func_ov078_02123864() {
     int i = 0;
@@ -232,7 +228,6 @@ void daBombking_c::func_ov078_02123864() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021238acEv
 
 int daBombking_c::func_ov078_021238ac()
 {
@@ -281,7 +276,6 @@ int daBombking_c::func_ov078_021238ac()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123a3cEv
 
 int daBombking_c::func_ov078_02123a3c()
 {
@@ -296,7 +290,6 @@ int daBombking_c::func_ov078_02123a3c()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123aa0Ev
 
 int daBombking_c::func_ov078_02123aa0()
 {
@@ -326,7 +319,6 @@ int daBombking_c::func_ov078_02123aa0()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123bc4Ev
 /* This caller retains the reconstructed SetAnim ABI declaration above.
    The callee's Fix12 definition experiment in notes/mwccarm-codegen.md 6az
    does not establish that a typed call here would fail to match. */
@@ -340,7 +332,6 @@ int daBombking_c::func_ov078_02123bc4()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123c20Ev
 
 
 int daBombking_c::func_ov078_02123c20()
@@ -372,7 +363,6 @@ int daBombking_c::func_ov078_02123c20()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123cf0Ev
 struct BCA_File;
 
 int daBombking_c::func_ov078_02123cf0()
@@ -384,7 +374,6 @@ int daBombking_c::func_ov078_02123cf0()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123d3cEv
 
 int daBombking_c::func_ov078_02123d3c()
 {
@@ -435,7 +424,6 @@ int daBombking_c::func_ov078_02123d3c()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123eb8Ev
 int daBombking_c::func_ov078_02123eb8()
 {
     mVertAccel = -0x2000;
@@ -446,7 +434,6 @@ int daBombking_c::func_ov078_02123eb8()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123f1cEv
 int daBombking_c::func_ov078_02123f1c()
 {
     if (func_ov078_02123804() != 1) {
@@ -469,7 +456,6 @@ L6c:
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02123fb4Ev
 
 int daBombking_c::func_ov078_02123fb4()
 {
@@ -480,7 +466,6 @@ int daBombking_c::func_ov078_02123fb4()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124000Ev
 
 int daBombking_c::func_ov078_02124000()
 {
@@ -494,7 +479,6 @@ int daBombking_c::func_ov078_02124000()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124060Ev
 
 int daBombking_c::func_ov078_02124060()
 {
@@ -505,7 +489,6 @@ int daBombking_c::func_ov078_02124060()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021240a0Ev
 int daBombking_c::func_ov078_021240a0() {
     short msg;
 
@@ -586,7 +569,6 @@ int daBombking_c::func_ov078_021240a0() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021243c0Ev
 
 int daBombking_c::func_ov078_021243c0()
 {
@@ -607,7 +589,6 @@ int daBombking_c::func_ov078_021243c0()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124470Ev
 
 int daBombking_c::func_ov078_02124470()
 {
@@ -621,7 +602,6 @@ int daBombking_c::func_ov078_02124470()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021244d0Ev
 
 int daBombking_c::func_ov078_021244d0()
 {
@@ -633,7 +613,6 @@ int daBombking_c::func_ov078_021244d0()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124520Ev
 
 int daBombking_c::func_ov078_02124520()
 {
@@ -712,7 +691,6 @@ int daBombking_c::func_ov078_02124520()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124778Ev
 
 int daBombking_c::func_ov078_02124778()
 {
@@ -723,7 +701,6 @@ int daBombking_c::func_ov078_02124778()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021247bcEv
 
 int daBombking_c::func_ov078_021247bc()
 {
@@ -827,7 +804,6 @@ int daBombking_c::func_ov078_021247bc()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124b40Ev
 
 int daBombking_c::func_ov078_02124b40()
 {
@@ -847,7 +823,6 @@ int daBombking_c::func_ov078_02124b40()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124bc4Ev
 
 int daBombking_c::func_ov078_02124bc4()
 {
@@ -874,7 +849,6 @@ int daBombking_c::func_ov078_02124bc4()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124c94Ev
 
 int daBombking_c::func_ov078_02124c94()
 {
@@ -891,7 +865,6 @@ int daBombking_c::func_ov078_02124c94()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124cf4Ev
 int daBombking_c::func_ov078_02124cf4()
 {
     if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
@@ -935,7 +908,6 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124e9cEv
 
 int daBombking_c::func_ov078_02124e9c()
 {
@@ -954,7 +926,6 @@ int daBombking_c::func_ov078_02124e9c()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02124f28Ev
 
 
 
@@ -1028,7 +999,6 @@ done:
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021250d0Ev
 
 int daBombking_c::func_ov078_021250d0()
 {
@@ -1041,7 +1011,6 @@ int daBombking_c::func_ov078_021250d0()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021250f8Ev
 
 int daBombking_c::func_ov078_021250f8()
 {
@@ -1117,7 +1086,6 @@ int daBombking_c::func_ov078_021250f8()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125350Ev
 
 int daBombking_c::func_ov078_02125350()
 {
@@ -1148,7 +1116,6 @@ int daBombking_c::func_ov078_02125350()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125448Ev
 
 int daBombking_c::func_ov078_02125448()
 {
@@ -1252,7 +1219,6 @@ int daBombking_c::func_ov078_02125448()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125734Ev
 
 int daBombking_c::func_ov078_02125734()
 {
@@ -1265,7 +1231,6 @@ int daBombking_c::func_ov078_02125734()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125790Ev
 int daBombking_c::func_ov078_02125790()
 {
     Vector3 s;
@@ -1302,7 +1267,6 @@ int daBombking_c::func_ov078_02125790()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021258e4Ev
 
 int daBombking_c::func_ov078_021258e4()
 {
@@ -1318,7 +1282,6 @@ int daBombking_c::func_ov078_021258e4()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125950Ev
 int daBombking_c::func_ov078_02125950()
 {
     daPly_c *target = this->mTalkingPlayer;
@@ -1341,7 +1304,6 @@ int daBombking_c::func_ov078_02125950()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021259e4Ev
 
 int daBombking_c::func_ov078_021259e4()
 {
@@ -1350,7 +1312,6 @@ int daBombking_c::func_ov078_021259e4()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_021259ecEv
 
 int daBombking_c::func_ov078_021259ec()
 {
@@ -1419,7 +1380,6 @@ int daBombking_c::func_ov078_021259ec()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125bc8Ev
 int daBombking_c::func_ov078_02125bc8() {
     this->mHorzSpeed = 0;
     this->mAnimSpeed = 1;
@@ -1430,13 +1390,11 @@ int daBombking_c::func_ov078_02125bc8() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125c24Ei
 void daBombking_c::func_ov078_02125c24(int strength) {
     data_0209f318->func_0200d8c8(&mPos, strength);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19KingBobOmb_SetStateEPv
 int daBombking_c::KingBobOmb_SetState(void *pv) {
     mState = (PMF *)pv;
     PMF *q = mState;
@@ -1445,7 +1403,6 @@ int daBombking_c::KingBobOmb_SetState(void *pv) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125c98Ev
 void daBombking_c::func_ov078_02125c98() {
   int h = mPosY;
   if (this->mWithMeshClsn.IsOnGround() == 0) {
@@ -1474,7 +1431,6 @@ void daBombking_c::func_ov078_02125c98() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125de0Ev
 void daBombking_c::func_ov078_02125de0()
 {
     struct Vector3 lv;
@@ -1522,7 +1478,6 @@ void daBombking_c::func_ov078_02125de0()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c19func_ov078_02125f8cEv
 
 
 void daBombking_c::func_ov078_02125f8c(){
@@ -1535,7 +1490,6 @@ void daBombking_c::func_ov078_02125f8c(){
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c16CleanupResourcesEv
 int daBombking_c::CleanupResources()
 {
     gBombkingModelFile.Release();
@@ -1555,13 +1509,11 @@ int daBombking_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c16OnPendingDestroyEv
 void daBombking_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c6RenderEv
 int daBombking_c::Render()
 {
     void *held = mHeldActor;
@@ -1579,7 +1531,6 @@ int daBombking_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c8BehaviorEv
 
 
 extern "C" {
@@ -1664,7 +1615,6 @@ int daBombking_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c13InitResourcesEv
 /* SharedFilePtr's complete declaration is included above. The file handles
    below still use their existing ROM-backed data declarations. */
 int daBombking_c::InitResources()
@@ -1727,21 +1677,18 @@ int daBombking_c::InitResources()
 
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daBombking_c16OnAimedAtWithEggEv
 /* Egg-aim query. Returns the fixed distance the slot stores. */
 s32 daBombking_c::OnAimedAtWithEgg() {
     return 1024000;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol daBombking_c_classInit
 /* Registry factory for the BOMBKING profile. */
 extern "C" daBombking_c *daBombking_c_classInit(void)
 {
     return new daBombking_c();
 }
 
-// @symbol g_profile_BOMBKING
 extern "C" SpawnInfo<daBombking_c> g_profile_BOMBKING = {
     daBombking_c_classInit,
     0x00bd, /* BOMBKING registry id 189 */

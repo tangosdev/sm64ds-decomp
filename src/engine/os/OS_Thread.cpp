@@ -86,7 +86,6 @@ extern short data_023c0000[]; /* HW_DTCM */
 OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callback);
 void OSi_IdleThreadProc(void *unused);
 
-// @symbol OSi_GetUnusedThreadId
 s32 OSi_GetUnusedThreadId(void) {
     int i;
     for (i = 0; i < OS_THREAD_MAX_NUM; i++) {
@@ -97,7 +96,6 @@ s32 OSi_GetUnusedThreadId(void) {
     return -1;
 }
 
-// @symbol OSi_InsertThreadToList
 void OSi_InsertThreadToList(OSThread *thread) {
     OSThread *t = data_020a6134.list;
     OSThread *pre = 0;
@@ -116,7 +114,6 @@ void OSi_InsertThreadToList(OSThread *thread) {
     }
 }
 
-// @symbol OSi_RemoveThreadFromList
 void OSi_RemoveThreadFromList(OSThread *thread) {
     OSThread *t = data_020a6134.list;
     OSThread *pre = 0;
@@ -133,7 +130,6 @@ void OSi_RemoveThreadFromList(OSThread *thread) {
     }
 }
 
-// @symbol OS_InitThread
 void OS_InitThread(void) {
     int i;
     u32 stackLo;
@@ -188,7 +184,6 @@ void OS_InitThread(void) {
     data_020a6188.state = OS_THREAD_STATE_READY;
 }
 
-// @symbol OS_CreateThread
 void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *stack, u32 stackSize,
                      u32 prio) {
     u32 enabled = IRQ::Disable();
@@ -228,7 +223,6 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     IRQ::Restore(enabled);
 }
 
-// @symbol OS_ExitThread
 void OS_ExitThread(void) {
     OSThread *currentThread;
 
@@ -242,7 +236,6 @@ void OS_ExitThread(void) {
     OS_RescheduleThread();
 }
 
-// @symbol OS_JoinThread
 void OS_JoinThread(OSThread *thread) {
     u32 enabled = IRQ::Disable();
     if (thread->state != OS_THREAD_STATE_TERMINATED) {
@@ -251,12 +244,10 @@ void OS_JoinThread(OSThread *thread) {
     IRQ::Restore(enabled);
 }
 
-// @symbol OS_IsThreadTerminated
 BOOL OS_IsThreadTerminated(const OSThread *thread) {
     return thread->state == OS_THREAD_STATE_TERMINATED;
 }
 
-// @symbol OS_SleepThread
 void OS_SleepThread(u16 *queue) {
     u32 enabled = IRQ::Disable();
     OSThread *currentThread = *data_020a612c;
@@ -268,7 +259,6 @@ void OS_SleepThread(u16 *queue) {
     IRQ::Restore(enabled);
 }
 
-// @symbol OS_WakeupThread
 void OS_WakeupThread(u16 *queue) {
     u32 enabled = IRQ::Disable();
     u32 mask = *queue;
@@ -285,7 +275,6 @@ void OS_WakeupThread(u16 *queue) {
     IRQ::Restore(enabled);
 }
 
-// @symbol OS_WakeupThreadDirect
 void OS_WakeupThreadDirect(OSThread *thread) {
     u32 enabled = IRQ::Disable();
     thread->state = OS_THREAD_STATE_READY;
@@ -293,7 +282,6 @@ void OS_WakeupThreadDirect(OSThread *thread) {
     IRQ::Restore(enabled);
 }
 
-// @symbol OS_SelectThread
 OSThread *OS_SelectThread(void) {
     OSThread *thread = data_020a6134.list;
     while (thread != 0 && thread->state != OS_THREAD_STATE_READY) {
@@ -302,7 +290,6 @@ OSThread *OS_SelectThread(void) {
     return thread;
 }
 
-// @symbol OS_RescheduleThread
 void OS_RescheduleThread(void) {
     OSThread *currentThread;
     OSThread *nextThread;
@@ -331,13 +318,11 @@ void OS_RescheduleThread(void) {
     ARMRestoreContext(&nextThread->context);
 }
 
-// @symbol OS_SetThreadStackWarningOffset
 void OS_SetThreadStackWarningOffset(OSThread *thread, u32 offset) {
     thread->stackWarningOffset = offset;
     *(u32 *)(thread->stackTop + thread->stackWarningOffset) = OSi_STACK_CHECKNUM_WARN;
 }
 
-// @symbol OS_SetThreadPriority
 BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
     OSThread *t = data_020a6134.list;
     OSThread *pre = 0;
@@ -368,12 +353,10 @@ BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
     return TRUE;
 }
 
-// @symbol OS_GetThreadPriority
 u32 OS_GetThreadPriority(const OSThread *thread) {
     return thread->priority;
 }
 
-// @symbol OS_SetSwitchThreadCallback
 OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callback) {
     u32 enabled = IRQ::Disable();
     OSSwitchThreadCallback prev = data_020a6134.switchCallback;
@@ -382,7 +365,6 @@ OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callbac
     return prev;
 }
 
-// @symbol OSi_IdleThreadProc
 void OSi_IdleThreadProc(void *unused) {
 #pragma unused(unused)
     IRQ::Enable();

@@ -238,7 +238,6 @@ extern dMgState_c::Callback pmf_dMgState_c_ResultsNewRecord_Enter;
 extern dMgState_c::Callback pmf_dMgState_c_GameOver_Enter;
 extern dMgState_c::Callback pmf_dMgState_c_Finished_Enter;
 
-// @symbol Mg_ResetBannerLayout
 extern "C" void Mg_ResetBannerLayout(void) {
     sMgClearBannerX = 0x80;
     sMgRecordBannerX = 0x80;
@@ -270,10 +269,8 @@ extern "C" void Mg_ResetBannerLayout(void) {
     sMgScoreDigitsY = 0x80;
 }
 
-// @symbol _ZN10dMgState_cC1Ev
 dMgState_c::dMgState_c() : mState(-1), mTimer(0), unk_020(0), mSuspended(0) {}
 
-// @symbol _ZN10dMgState_c8SetStateEi
 void dMgState_c::SetState(s32 state) {
     static Callback sEnterTable[20] = {
         pmf_dMgState_c_RoundClear_Enter,       /*  0: RoundClear_Enter */
@@ -305,7 +302,6 @@ void dMgState_c::SetState(s32 state) {
         (this->*mEnter)();
 }
 
-// @symbol _ZN10dMgState_c8BehaviorEv
 void dMgState_c::Behavior() {
     if (mState == -1)
         return;
@@ -315,7 +311,6 @@ void dMgState_c::Behavior() {
     (this->*mBehavior)();
 }
 
-// @symbol _ZN10dMgState_c6RenderEv
 void dMgState_c::Render() {
     if (mState == -1)
         return;
@@ -324,7 +319,6 @@ void dMgState_c::Render() {
     (this->*mRender)();
 }
 
-// @symbol _ZN10dMgState_c16RoundClear_EnterEv
 void dMgState_c::RoundClear_Enter() {
     int prevId, id;
     mTimer = 0xb4;
@@ -339,7 +333,6 @@ void dMgState_c::RoundClear_Enter() {
     mBehavior = pmf_dMgState_c_RoundClear_Update;
 }
 
-// @symbol _ZN10dMgState_c17RoundClear_UpdateEv
 void dMgState_c::RoundClear_Update() {
     dScMgBase_c *scene = gMgScene;
     if (data_0209f5bc->IsAtEnd()) {
@@ -365,13 +358,11 @@ void dMgState_c::RoundClear_Update() {
     }
 }
 
-// @symbol _ZN10dMgState_c15NextRound_EnterEv
 void dMgState_c::NextRound_Enter() {
     mTimer = 15;
     mBehavior = pmf_dMgState_c_NextRound_Update;
 }
 
-// @symbol _ZN10dMgState_c16NextRound_UpdateEv
 void dMgState_c::NextRound_Update() {
     if (data_0209f5bc->IsAtEnd() != 0) {
         dScMgBase_c *scene = gMgScene;
@@ -395,7 +386,6 @@ void dMgState_c::NextRound_Update() {
     }
 }
 
-// @symbol _ZN10dMgState_c18RoundBanner5_EnterEv
 void dMgState_c::RoundBanner5_Enter() {
     mTimer = 0xb4;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
@@ -403,7 +393,6 @@ void dMgState_c::RoundBanner5_Enter() {
     mBehavior = pmf_dMgState_c_RoundBanner5_Update;
 }
 
-// @symbol _ZN10dMgState_c19RoundBanner5_UpdateEv
 void dMgState_c::RoundBanner5_Update() {
     if (data_0209f5bc->IsAtEnd()) {
         dScMgBase_c *scene = gMgScene;
@@ -428,7 +417,6 @@ void dMgState_c::RoundBanner5_Update() {
     }
 }
 
-// @symbol _ZN10dMgState_c17RetryPrompt_EnterEv
 void dMgState_c::RetryPrompt_Enter() {
     int prevId, id;
     mTimer = 0x3c;
@@ -443,7 +431,6 @@ void dMgState_c::RetryPrompt_Enter() {
     mBehavior = pmf_dMgState_c_RetryPrompt_Update;
 }
 
-// @symbol _ZN10dMgState_c18RetryPrompt_UpdateEv
 void dMgState_c ::RetryPrompt_Update() {
     dFdBrightness_c *fader;
     if (Mg_CheckBannerButton(0)) {
@@ -468,7 +455,6 @@ void dMgState_c ::RetryPrompt_Update() {
     Mg_ShowBanner(2, sMgQuitX, sMgQuitY, -1, -1, 0xd);
 }
 
-// @symbol _ZN10dMgState_c18UpdateRetryFadeOutEv
 void dMgState_c::UpdateRetryFadeOut() {
     if (data_0209f5bc->IsAtEnd() == 0)
         return;
@@ -486,7 +472,6 @@ void dMgState_c::UpdateRetryFadeOut() {
     mSuspended = 0;
 }
 
-// @symbol _ZN10dMgState_c9Win_EnterEv
 void dMgState_c::Win_Enter() {
     int prevId, id;
     mTimer = 0x78;
@@ -501,7 +486,6 @@ void dMgState_c::Win_Enter() {
     mBehavior = pmf_dMgState_c_Win_Update;
 }
 
-// @symbol _ZN10dMgState_c10Win_UpdateEv
 void dMgState_c::Win_Update() {
     if (mTimer > 0x64)
         return;
@@ -522,7 +506,6 @@ void dMgState_c::Win_Update() {
     mSuspended = 0;
 }
 
-// @symbol _ZN10dMgState_c10Lose_EnterEv
 void dMgState_c::Lose_Enter() {
     mTimer = 0x78;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
@@ -530,7 +513,6 @@ void dMgState_c::Lose_Enter() {
     mBehavior = pmf_dMgState_c_Lose_Update;
 }
 
-// @symbol _ZN10dMgState_c11Lose_UpdateEv
 void dMgState_c::Lose_Update() {
     int state = mTimer;
     if (state > 0x64)
@@ -570,7 +552,6 @@ void dMgState_c::Lose_Update() {
     }
 }
 
-// @symbol _ZN10dMgState_c20UpdateGameOverToMenuEv
 void dMgState_c::UpdateGameOverToMenu() {
     dFdBrightness_c *fader;
     int v = mTimer;
@@ -590,7 +571,6 @@ void dMgState_c::UpdateGameOverToMenu() {
     func_02012dd0((void *)0x3c);
 }
 
-// @symbol _ZN10dMgState_c16LoseResume_EnterEv
 void dMgState_c::LoseResume_Enter() {
     mTimer = 0x78;
     Mg_ShowBanner(0xa, sMgLoseBannerX, sMgLoseBannerY, -1, -1, 0xd);
@@ -598,7 +578,6 @@ void dMgState_c::LoseResume_Enter() {
     mBehavior = pmf_dMgState_c_LoseResume_Update;
 }
 
-// @symbol _ZN10dMgState_c17LoseResume_UpdateEv
 void dMgState_c::LoseResume_Update() {
     int v = mTimer;
     if (v > 0x64)
@@ -612,7 +591,6 @@ void dMgState_c::LoseResume_Update() {
     sMgCoinsDeltaShown = 0;
 }
 
-// @symbol _ZN10dMgState_c17UpdateAfterHiddenEv
 void dMgState_c::UpdateAfterHidden() {
     dScMgBase_c *g = gMgScene;
     int cond = g ? g->mCredits : 0;
@@ -641,20 +619,17 @@ void dMgState_c::UpdateAfterHidden() {
     mSuspended = 0;
 }
 
-// @symbol _ZN10dMgState_c10Draw_EnterEv
 void dMgState_c::Draw_Enter() {
     mTimer = 0x78;
     Mg_ShowBanner(0xb, sMgDrawBannerX, sMgDrawBannerY, -1, -1, 0xd);
     mBehavior = pmf_dMgState_c_UpdateWaitThenResume;
 }
 
-// @symbol _ZN10dMgState_c9Tie_EnterEv
 void dMgState_c::Tie_Enter() {
     mTimer = 0;
     mBehavior = pmf_dMgState_c_UpdateWaitThenResume_2;
 }
 
-// @symbol _ZN10dMgState_c20UpdateWaitThenResumeEv
 void dMgState_c::UpdateWaitThenResume() {
     dScMgBase_c *scene;
     if (mTimer != 0)
@@ -672,7 +647,6 @@ void dMgState_c::UpdateWaitThenResume() {
     mSuspended = 0;
 }
 
-// @symbol _ZN10dMgState_c19RoundClearTop_EnterEv
 void dMgState_c::RoundClearTop_Enter() {
     int id;
     mTimer = 0xb4;
@@ -686,7 +660,6 @@ void dMgState_c::RoundClearTop_Enter() {
     mBehavior = pmf_dMgState_c_RoundClearTop_Update;
 }
 
-// @symbol _ZN10dMgState_c20RoundClearTop_UpdateEv
 void dMgState_c::RoundClearTop_Update() {
     if (mTimer != 0)
         return;
@@ -705,7 +678,6 @@ void dMgState_c::RoundClearTop_Update() {
     mSuspended = 0;
 }
 
-// @symbol _ZN10dMgState_c18RetryPromptB_EnterEv
 void dMgState_c::RetryPromptB_Enter() {
     mTimer = 0xb4;
     Mg_PlayJingle((void *)3);
@@ -713,7 +685,6 @@ void dMgState_c::RetryPromptB_Enter() {
     mBehavior = pmf_dMgState_c_RetryPromptB_Update;
 }
 
-// @symbol _ZN10dMgState_c19RetryPromptB_UpdateEv
 void dMgState_c ::RetryPromptB_Update() {
     dFdBrightness_c *fader;
     if (Mg_CheckBannerButton(0)) {
@@ -738,7 +709,6 @@ void dMgState_c ::RetryPromptB_Update() {
     Mg_ShowBanner(1, sMgQuitX, sMgQuitY, -1, -1, 0xd);
 }
 
-// @symbol _ZN10dMgState_c20ScoreThenRound_EnterEv
 void dMgState_c::ScoreThenRound_Enter() {
     mTimer = 0xb4;
     Mg_PlayJingle((void *)1);
@@ -746,7 +716,6 @@ void dMgState_c::ScoreThenRound_Enter() {
     mRender = pmf_dMgState_c_DrawScore;
 }
 
-// @symbol _ZN10dMgState_c21ScoreThenRound_UpdateEv
 void dMgState_c::ScoreThenRound_Update() {
     if (data_0209f5bc->IsAtEnd()) {
         dScMgBase_c *scene = gMgScene;
@@ -771,18 +740,15 @@ void dMgState_c::ScoreThenRound_Update() {
     }
 }
 
-// @symbol _ZN10dMgState_c21RetryPromptWide_EnterEv
 void dMgState_c::RetryPromptWide_Enter() {
     RetryPromptWideB_Enter();
 }
 
-// @symbol _ZN10dMgState_c22RetryPromptWideB_EnterEv
 void dMgState_c::RetryPromptWideB_Enter() {
     mTimer = 10;
     mBehavior = pmf_dMgState_c_UpdateRetryPrompt;
 }
 
-// @symbol _ZN10dMgState_c17UpdateRetryPromptEv
 void dMgState_c::UpdateRetryPrompt() {
     if (mTimer == 0) {
         if (Mg_CheckBannerButton(0) != 0) {
@@ -807,7 +773,6 @@ void dMgState_c::UpdateRetryPrompt() {
     mTimer = 0;
 }
 
-// @symbol _ZN10dMgState_c21DigitsThenRound_EnterEv
 void dMgState_c::DigitsThenRound_Enter() {
     mTimer = 0xb4;
     Mg_ShowBanner(5, sMgRecordBannerX, sMgRecordBannerY, -1, -1, 0xd);
@@ -816,7 +781,6 @@ void dMgState_c::DigitsThenRound_Enter() {
     mRender = pmf_dMgState_c_DrawScoreDigits;
 }
 
-// @symbol _ZN10dMgState_c20UpdateFadeThenResumeEv
 void dMgState_c::UpdateFadeThenResume() {
     if (data_0209f5bc->IsAtEnd()) {
         dScMgBase_c *scene = gMgScene;
@@ -841,7 +805,6 @@ void dMgState_c::UpdateFadeThenResume() {
     }
 }
 
-// @symbol _ZN10dMgState_c22BannerEThenRound_EnterEv
 void dMgState_c::BannerEThenRound_Enter() {
     mTimer = 0x3c;
     Mg_ShowBanner(0xe, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
@@ -849,7 +812,6 @@ void dMgState_c::BannerEThenRound_Enter() {
     mBehavior = pmf_dMgState_c_UpdateFadeThenResume_2;
 }
 
-// @symbol _ZN10dMgState_c13Results_EnterEv
 void dMgState_c::Results_Enter() {
     if (Mg_IsNewRecord()) {
         ResultsNewRecord_Enter();
@@ -862,7 +824,6 @@ void dMgState_c::Results_Enter() {
     Mg_CommitRecords();
 }
 
-// @symbol _ZN10dMgState_c14Results_UpdateEv
 void dMgState_c::Results_Update() {
     int ok;
     unsigned char idx;
@@ -884,7 +845,6 @@ void dMgState_c::Results_Update() {
     RetryPromptWide_Enter();
 }
 
-// @symbol _ZN10dMgState_c22ResultsNewRecord_EnterEv
 void dMgState_c::ResultsNewRecord_Enter() {
     Mg_ShowBanner(7, 0x80, 0x14, -1, -1, 0xd);
     mTimer = 0x12c;
@@ -893,7 +853,6 @@ void dMgState_c::ResultsNewRecord_Enter() {
     Mg_CommitRecords();
 }
 
-// @symbol _ZN10dMgState_c23ResultsNewRecord_UpdateEv
 void dMgState_c::ResultsNewRecord_Update() {
     int idx;
     int flag;
@@ -940,7 +899,6 @@ void dMgState_c::ResultsNewRecord_Update() {
     Mg_PlayJingle((void *)1);
 }
 
-// @symbol _ZN10dMgState_c14GameOver_EnterEv
 void dMgState_c::GameOver_Enter() {
     mTimer = 0xb4;
     Mg_ShowBanner(8, sMgMainBannerX, sMgMainBannerY, -1, -1, 0xd);
@@ -948,7 +906,6 @@ void dMgState_c::GameOver_Enter() {
     mBehavior = pmf_dMgState_c_GameOver_Update;
 }
 
-// @symbol _ZN10dMgState_c15GameOver_UpdateEv
 void dMgState_c::GameOver_Update() {
     int x = mTimer;
     dScMgBase_c *g = gMgScene;
@@ -974,7 +931,6 @@ void dMgState_c::GameOver_Update() {
     Results_Enter();
 }
 
-// @symbol _ZN10dMgState_c14Finished_EnterEv
 void dMgState_c::Finished_Enter() {
     int prevId, id;
     mTimer = 0xb4;
@@ -989,7 +945,6 @@ void dMgState_c::Finished_Enter() {
     mBehavior = pmf_dMgState_c_Finished_Update;
 }
 
-// @symbol _ZN10dMgState_c15Finished_UpdateEv
 void dMgState_c::Finished_Update() {
     int x = mTimer;
     dScMgBase_c *g = gMgScene;
@@ -1015,7 +970,6 @@ void dMgState_c::Finished_Update() {
     Results_Enter();
 }
 
-// @symbol _ZN10dMgState_c9DrawScoreEv
 void dMgState_c::DrawScore() {
     int r;
     if (gMgScene == 0)
@@ -1024,7 +978,6 @@ void dMgState_c::DrawScore() {
     Mg_DrawBigNumber(sMgScoreX, sMgScoreY, r, -1, -1, 0, 0);
 }
 
-// @symbol _ZN10dMgState_c15DrawScoreDigitsEv
 void dMgState_c::DrawScoreDigits() {
     unsigned int r;
     int idx;
@@ -1050,7 +1003,6 @@ void dMgState_c::DrawScoreDigits() {
                           sMgScoreDigitsY, 0);
 }
 
-// @symbol _ZN10dMgState_c15DrawRecordTableEv
 void dMgState_c::DrawRecordTable() {
     void *g = gMgScene;
     if (g == 0)
@@ -1061,7 +1013,6 @@ void dMgState_c::DrawRecordTable() {
     Mg_DrawBlinkSprite(g, 0xe0, 0xa0);
 }
 
-// @symbol Mg_PlaceBannersOnTopScreen
 extern "C" void Mg_PlaceBannersOnTopScreen(void) {
     int v1 = -0x1c - Mg_GetTopScreenYOffset();
     sMgWinBannerX = 0x80;
@@ -1082,18 +1033,15 @@ extern "C" void Mg_PlaceBannersOnTopScreen(void) {
     }
 }
 
-// @symbol Mg_ResetRecordBannerPos
 extern "C" void Mg_ResetRecordBannerPos(void) {
     sMgResultsBannerX = 0x80;
     sMgResultsBannerY = -0x1c;
 }
 
-// @symbol Mg_SetPerfectBanner
 extern "C" void Mg_SetPerfectBanner(void) {
     Mg_SetNextBanner(6);
 }
 
-// @symbol Mg_SetNextBanner
 extern "C" void Mg_SetNextBanner(int v) {
     sMgNextBanner = v;
 }

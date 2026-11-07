@@ -23,7 +23,6 @@
  */
 #include "Particle__System.h"
 
-// @symbol _ZN5dPa_c7level_c9emitter_c5entryEjjR7Vector3PK11Vector3_16fPNS0_10callback_cE
 bool dPa_c::level_c::emitter_c::entry(
     u32 id, u32 nameId, Vector3& position,
     const Vector3_16f *direction,
@@ -58,7 +57,6 @@ bool dPa_c::level_c::emitter_c::entry(
     return true;
 }
 
-// @symbol _ZN5dPa_c7level_c9emitter_c7cleanupEv
 void dPa_c::level_c::emitter_c::cleanup()
 {
     Particle::SystemDefinition::Data& data =
@@ -74,7 +72,6 @@ void dPa_c::level_c::emitter_c::cleanup()
     mId = 0;
 }
 
-// @symbol _ZN5dPa_c7level_cC1Ev
 dPa_c::level_c::level_c()
 {
     emitter_c* emitter = mEmitter;
@@ -89,7 +86,6 @@ dPa_c::level_c::level_c()
         mTable[i] = 0;
 }
 
-// @symbol _ZN5dPa_c7level_c7executeEv
 void dPa_c::level_c::execute()
 {
     emitter_c* emitter = mEmitter;
@@ -114,7 +110,6 @@ void dPa_c::level_c::execute()
     }
 }
 
-// @symbol _ZN5dPa_c7level_c7cleanupEv
 void dPa_c::level_c::cleanup()
 {
     emitter_c* emitter = mEmitter;
@@ -128,7 +123,6 @@ void dPa_c::level_c::cleanup()
     }
 }
 
-// @symbol _ZN5dPa_c7level_c3getEj
 dPa_c::level_c::emitter_c *dPa_c::level_c::get(u32 id)
 {
     if (id == 0)
@@ -142,7 +136,6 @@ dPa_c::level_c::emitter_c *dPa_c::level_c::get(u32 id)
     return 0;
 }
 
-// @symbol _ZN5dPa_c7level_c5entryEjR7Vector3PK11Vector3_16fPNS0_10callback_cE
 u32 dPa_c::level_c::entry(
     u32 nameId, Vector3& position, const Vector3_16f *direction,
     callback_c *callback)
@@ -164,7 +157,6 @@ u32 dPa_c::level_c::entry(
     return 0;
 }
 
-// @symbol _ZN5dPa_c7level_c8addTableEPNS0_9emitter_cE
 void dPa_c::level_c::addTable(emitter_c *emitter)
 {
     int index = emitter->mId & 0xf;
@@ -178,7 +170,6 @@ void dPa_c::level_c::addTable(emitter_c *emitter)
     }
 }
 
-// @symbol _ZN5dPa_c7level_c8cutTableEPNS0_9emitter_cE
 void dPa_c::level_c::cutTable(emitter_c *emitter)
 {
     emitter_c* pre = emitter->mPre;

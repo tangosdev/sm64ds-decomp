@@ -52,12 +52,10 @@ struct EmmLogCollisionFilePtr : SharedFilePtr {
 extern short data_02082214[];
 extern daObjEmmLog_c_Resources data_ov052_021124d4;
 
-// @symbol daObjEmmLog_c_classInit
 extern "C" daObjEmmLog_c *daObjEmmLog_c_classInit() {
     return new daObjEmmLog_c();
 }
 
-// @symbol _ZN13daObjEmmLog_c13InitResourcesEv
 s32 daObjEmmLog_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov052_021124d4.model), 1, -1);
     UpdateModelPosAndRotY();
@@ -77,7 +75,6 @@ s32 daObjEmmLog_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_c8BehaviorEv
 s32 daObjEmmLog_c::Behavior() {
     mMeshCollider.SetClipRadius(0x600000);
 
@@ -94,13 +91,11 @@ s32 daObjEmmLog_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_c6RenderEv
 s32 daObjEmmLog_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_c16CleanupResourcesEv
 s32 daObjEmmLog_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -109,8 +104,6 @@ s32 daObjEmmLog_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_cD1Ev
-// @symbol _ZN13daObjEmmLog_cD0Ev
 /* Both destructors are emitted from the INLINE `~daObjEmmLog_c() {}` in
  * include/daObjEmmLog_c.h -- there is deliberately no body here. */
 

@@ -42,7 +42,6 @@
 extern int data_020a4d34;
 extern "C" NestedHeapIterator data_020a4d38;
 
-// @symbol _ZN18NestedHeapIterator19RecursiveFindNestedEPv
 /* The walk: for the first node whose [mStart, mEnd) contains addr, recurse
  * into that node's own child list before falling back to the node itself. */
 void *NestedHeapIterator::RecursiveFindNested(void *addr)
@@ -59,7 +58,6 @@ void *NestedHeapIterator::RecursiveFindNested(void *addr)
     return (void *)0;
 }
 
-// @symbol _ZN18NestedHeapIterator10FindNestedEPv
 /* The public entry over RecursiveFindNested: start from the root iterator and
  * hand back the innermost iterator that owns `addr', or the root itself. */
 NestedHeapIterator *NestedHeapIterator::FindNested(void *addr)
@@ -72,7 +70,6 @@ NestedHeapIterator *NestedHeapIterator::FindNested(void *addr)
     return root;
 }
 
-// @symbol func_0204df54
 /* Shared allocator initializer -- not a constructor: its final AddLast call
  * leaves the iterator count in r0, where a constructor restores `this'. The
  * callers pass the last argument as u32 while the body reads it as u16. */
@@ -98,7 +95,6 @@ extern "C" void func_0204df54(HeapAllocator* self, u32 magic, void* start,
     NestedHeapIterator::FindNested(self)->AddLast(self);
 }
 
-// @symbol _ZN13HeapAllocator6RemoveEv
 /* Remove self from whichever iterator owns it. */
 void HeapAllocator::Remove()
 {
@@ -106,13 +102,11 @@ void HeapAllocator::Remove()
     iter->Remove(this);
 }
 
-// @symbol _ZN18NestedHeapIteratorC1Ej
 NestedHeapIterator::NestedHeapIterator(u32 linkOffset)
     : mFirst(0), mLast(0), mCount(0), mLinkOffset(linkOffset)
 {
 }
 
-// @symbol _ZN18NestedHeapIterator4InitEP13HeapAllocator
 /* Empty list: link the node to itself and make it both ends. */
 void NestedHeapIterator::Init(HeapAllocator * a_)
 {
@@ -126,7 +120,6 @@ void NestedHeapIterator::Init(HeapAllocator * a_)
     mCount += 1;
 }
 
-// @symbol _ZN18NestedHeapIterator7AddLastEP13HeapAllocator
 void NestedHeapIterator::AddLast(HeapAllocator * a_)
 {
     char * a = (char *)a_;
@@ -148,7 +141,6 @@ void NestedHeapIterator::AddLast(HeapAllocator * a_)
     }
 }
 
-// @symbol _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator
 void NestedHeapIterator::AddFirst(HeapAllocator * a_)
 {
     char* a = (char*)a_;
@@ -167,7 +159,6 @@ void NestedHeapIterator::AddFirst(HeapAllocator * a_)
     mCount += 1;
 }
 
-// @symbol _ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_
 /* Splice `node_' in immediately before `at_'. A null `at_' means append and
  * `at_' being the head means prepend, so both ends delegate; only the middle
  * case does the four-pointer relink. */
@@ -193,7 +184,6 @@ void NestedHeapIterator::AddAt(HeapAllocator *at_, HeapAllocator *node_)
     }
 }
 
-// @symbol _ZN18NestedHeapIterator6RemoveEP13HeapAllocator
 void NestedHeapIterator::Remove(HeapAllocator * node_)
 {
     void* node = (void*)node_;
@@ -217,7 +207,6 @@ void NestedHeapIterator::Remove(HeapAllocator * node_)
     mCount -= 1;
 }
 
-// @symbol _ZN18NestedHeapIterator4NextEP13HeapAllocator
 int NestedHeapIterator::Next(HeapAllocator * h_)
 {
     char* h = (char*)h_;
@@ -228,7 +217,6 @@ int NestedHeapIterator::Next(HeapAllocator * h_)
     return *(int *)(h + off + 4);
 }
 
-// @symbol _ZN18NestedHeapIterator8PreviousEP13HeapAllocator
 int NestedHeapIterator::Previous(HeapAllocator * h_)
 {
     char* h = (char*)h_;

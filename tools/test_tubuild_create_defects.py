@@ -99,8 +99,12 @@ class PromotedMemberFragmentTest(unittest.TestCase):
         self.assertIn("A::Two", self.TU)
 
     def test_an_unsliceable_member_refuses_rather_than_guessing(self):
+        # The symbol owns no definition in this TU (it is not enrolled
+        # either) -- there is nothing to slice, so the slicer must refuse
+        # rather than return a neighbour's text.
         fragment, owned = self.frag(["_ZN1A3OneEv", "_ZN1A3TwoEv"],
-                                    text="void A::One() {}\nvoid A::Two() {}\n")
+                                    text="void A::One() {}\nvoid A::Two() {}\n",
+                                    name="_ZN1A3ThreeEv")
         self.assertIsNone(fragment)
         self.assertEqual(owned, 2)
 

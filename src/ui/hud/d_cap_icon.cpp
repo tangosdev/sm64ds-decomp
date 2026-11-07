@@ -43,7 +43,6 @@ extern void func_ov001_020aa6cc(int character);
 
 }
 
-// @symbol _ZN10dCapIcon_c6UnlinkEv
 void dCapIcon_c::Unlink()
 {
     if (((u32)mFlags << 29) >> 31)
@@ -80,7 +79,6 @@ void dCapIcon_c::Unlink()
         --gCapIconCounts[mCharacter];
 }
 
-// @symbol _ZN10dCapIcon_c19func_ov001_020ab228EPciih
 void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
                                     unsigned char a5)
 {
@@ -111,7 +109,6 @@ void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
  * absorbed helper below is defined first so reverse emission puts it
  * highest (0x020ab3f0). */
 
-// @symbol func_ov001_020ab3f0
 extern "C" void func_ov001_020ab3f0(void *r0) {
     /* The dThIcon_c press pulse (callers pass &mIcons[i]). */
     dThIcon_c *icon = (dThIcon_c *)r0;
@@ -124,7 +121,6 @@ extern "C" void func_ov001_020ab3f0(void *r0) {
     icon->mPressTimer = icon->mPressTime;
 }
 
-// @symbol _ZN10dCapIcon_cC1Ev
 dCapIcon_c::dCapIcon_c()
 {
     mPrev = 0;
@@ -132,14 +128,11 @@ dCapIcon_c::dCapIcon_c()
     mFlags |= 4;
 }
 
-// @symbol _ZN10dCapIcon_cD1Ev
-// @symbol _ZN10dCapIcon_cD0Ev
 dCapIcon_c::~dCapIcon_c()
 {
     Unlink();
 }
 
-// @symbol func_ov001_020ab2e4
 extern "C" void func_ov001_020ab2e4(void)
 {
     int i;

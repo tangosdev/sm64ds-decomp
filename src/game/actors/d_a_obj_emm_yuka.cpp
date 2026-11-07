@@ -55,8 +55,8 @@ void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
                                   s16 angleY, CLPS_Block *clps);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(void *v);
-void Vec3_MulScalar(void *out, void *v, int s);
+int LenVec3(const Vector3 *v);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 }
@@ -67,13 +67,10 @@ int fdiv(int a, int b);
 
 #pragma defer_codegen off
 
-// @symbol _ZN14daObjEmmYuka_cD1Ev
-// @symbol _ZN14daObjEmmYuka_cD0Ev
 daObjEmmYuka_c::~daObjEmmYuka_c()
 {
 }
 
-// @symbol _ZN14daObjEmmYuka_c16CleanupResourcesEv
 int daObjEmmYuka_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
@@ -83,14 +80,12 @@ int daObjEmmYuka_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN14daObjEmmYuka_c6RenderEv
 int daObjEmmYuka_c::Render()
 {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjEmmYuka_c8BehaviorEv
 int daObjEmmYuka_c::Behavior()
 {
     /* VecFx32, not Vector3: its inline destructor comes out out-of-line
@@ -120,13 +115,13 @@ int daObjEmmYuka_c::Behavior()
     }
     mPath.GetNode(*(Vector3 *)&prev, mNodeIndex);
     Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&mPosX, (const Vector3 *)&prev);
-    len = LenVec3(&diff);
+    len = LenVec3((const Vector3 *)&diff);
     if (len == 0 || len <= mHorzSpeed) {
-        Vec3_MulScalar(&scaled1, &diff, cstd::fdiv(mHorzSpeed, len));
+        Vec3_MulScalar((Vector3 *)&scaled1, (const Vector3 *)&diff, cstd::fdiv(mHorzSpeed, len));
         SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled1, (Vector3 *)&mPosX);
         looped = 1;
     } else {
-        Vec3_MulScalar(&scaled2, &diff, cstd::fdiv(mHorzSpeed, len));
+        Vec3_MulScalar((Vector3 *)&scaled2, (const Vector3 *)&diff, cstd::fdiv(mHorzSpeed, len));
         SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled2, (Vector3 *)&mPosX);
     }
     if (looped) {
@@ -154,7 +149,6 @@ int daObjEmmYuka_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN14daObjEmmYuka_c13InitResourcesEv
 int daObjEmmYuka_c::InitResources()
 {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov052_021125a0.model), 1, -1);
@@ -174,7 +168,6 @@ int daObjEmmYuka_c::InitResources()
  * RTTI, allocation size, vtable identity, and the EMM_YUKA registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: SquarePathLift_Spawn. */
-// @symbol daObjEmmYuka_c_classInit
 extern "C" daObjEmmYuka_c *daObjEmmYuka_c_classInit()
 {
     return new daObjEmmYuka_c();

@@ -94,12 +94,47 @@ def _read_type(s, i, subs):
         ty = BUILTIN[c]
         # Per Itanium ABI: builtin types are NOT substitution candidates
         return ty, i + 1
-    if c in "PROK":                                  # pointer / ref / rvalue-ref / const wrapper
+    if c in "PROKV":                          # pointer / ref / cv-qualifier wrappers
         inner, j = _read_type(s, i + 1, subs)
-        suf = {"P": " *", "R": " &", "O": " &&", "K": " const"}[c]
-        ty = (inner or "T") + suf
+        suf = {"P": " *", "R": " &", "O": " &&", "K": " const",
+               "V": " volatile"}[c]
+        if inner and "(@)" in inner:
+            ty = inner.replace("(@)", {"P": "(*)", "R": "(&)",
+                                       "O": "(&&)"}.get(c, "(*)"))
+        else:
+            ty = (inner or "T") + suf
         subs.append(ty)
         return ty, j
+    if c == "M":                                     # pointer-to-member: M<class><type>
+        cls, j = _read_type(s, i + 1, subs)
+        mty, j = _read_type(s, j, subs)
+        if mty and "(@)" in mty:
+            ty = mty.replace("(@)", f"({cls}::*)")
+        else:
+            ty = f"{mty or 'T'} {cls}::*"
+        subs.append(ty)
+        return ty, j
+    if c == "F":                                     # function type: F[Y]<ret><args>E
+        j = i + 1
+        if j < len(s) and s[j] == "Y":
+            j += 1
+        ret, j = _read_type(s, j, subs)
+        params = []
+        while j < len(s) and s[j] != "E":
+            p, j = _read_type(s, j, subs)
+            if p is None:
+                break
+            params.append(p)
+        if j < len(s):
+            j += 1
+        if params == ["void"]:
+            params = []
+        return f"{ret or 'void'} (@)({', '.join(params)})", j
+    if c == "C":                                     # const member-fn qualifier
+        inner, j = _read_type(s, i + 1, subs)
+        if inner and "(@)" in inner:
+            return inner + " const", j
+        return (inner or "T") + " const", j
     if c == "S":                                     # substitution
         return _read_substitution(s, i, subs)
     if c.isdigit():                                  # length-prefixed name (a class type)
@@ -239,7 +274,7 @@ def demangle(sym):
             i += 2
             conv_type, i = _read_type(body, i, subs)
             parts.append(f"operator {conv_type}")
-        elif nested and body[i] == "S":
+        elif body[i] == "S":
             sub_type, i = _read_substitution(body, i, subs)
             parts.append(sub_type)
         elif not nested:
@@ -275,7 +310,9 @@ def demangle(sym):
 
     qualified = "::".join(p for p in parts if p not in ("ctor", "dtor")) or method
     if (ctor or dtor):
-        qualified = (klass + "::" + method) if klass else method
+        # parts[-1] is the variant marker; everything before it is the owner
+        # path, so a nested `std::type_info` does not collapse to `type_info`.
+        qualified = "::".join([*parts[:-1], method])
 
     result = {
         "qualified": qualified, "class": klass, "method": method,
