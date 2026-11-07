@@ -44,6 +44,7 @@
 #include "MWCPlusLib.h"
 #include "LevelRng.h"
 #include "MgCamera.h"
+#include "math/Quaternion.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -65,7 +66,7 @@ void CopyToViewMat(const Matrix4x3 *);
 extern "C" {
 void MulVec3Mat4x3(void *, void *, void *);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
-void Matrix4x3_FromQuaternion(void *, void *);
+void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
 void MulVec3Mat3x3(void *, void *, void *);
 void MulMat4x3Mat4x3(void *, void *, void *);
 void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
@@ -674,7 +675,7 @@ extern struct Vector3 sPetalUpAxis;
 extern struct Matrix4x3 data_020a0e68;
 void FallingPetal_UpdateMatrix(char *c) {
     struct Matrix4x3 sp;
-    Matrix4x3_FromQuaternion(PETAL(c)->mRot, &sp);
+    Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(PETAL(c)->mRot), &sp);
     MulVec3Mat3x3(&sPetalUpAxis, &sp, &PETAL(c)->mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, PETAL(c)->mPos.x, PETAL(c)->mPos.y, PETAL(c)->mPos.z);
     MulMat4x3Mat4x3(&sp, &data_020a0e68, &data_020a0e68);
