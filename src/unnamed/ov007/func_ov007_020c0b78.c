@@ -4,11 +4,13 @@
  */
 #include "Ov007OamNode.h"
 
+/* One OAM entry: attr0..attr2 and the affine parameter word. */
 struct E8 {
-    int a, b;
+    unsigned short attr0, attr1, attr2, attr3;
 };
 
-extern void func_ov007_020c0eb0(struct E8 *, unsigned short *, int, int, int, int, int, int);
+extern void func_ov007_020c0eb0(unsigned short *dst, unsigned short *src, int xoff, int yoff,
+                                unsigned char prio, int flip, int mosaic, int affineIdx);
 extern void func_ov007_020c0d70(Ov007OamNode *node, Ov007CellAnim *anim);
 extern int func_ov007_020c0b78(struct E8 *oam, Ov007OamNode *node, int x, int y, int shownIn,
                                unsigned char priorityIn, int mosaicIn, int slot);
@@ -47,7 +49,7 @@ int func_ov007_020c0b78(struct E8 *oam, Ov007OamNode *node, int x, int y, int sh
                 int i;
                 Ov007Cell *cell = anim->frames[node->frame];
                 for (i = 0; i < cell->count; i++) {
-                    func_ov007_020c0eb0(&oam[slot], &cell->oam[i].attr0,
+                    func_ov007_020c0eb0(&oam[slot].attr0, &cell->oam[i].attr0,
                                         (screenX >> 12) + anim->offsetX,
                                         (screenY >> 12) + anim->offsetY, priority, node->flip,
                                         mosaic, node->affineIndex);

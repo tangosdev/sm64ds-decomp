@@ -175,7 +175,7 @@ extern short data_02082214[];   /* SINE_TABLE: {sin, cos} pairs in fix12, indexe
 /* Play2D(3, id): a sound with no position. */
 extern unsigned int func_0201277c(unsigned int id);
 extern signed char gCurrentSublevel; /* LEVEL_ID */
-extern s8 gShowRaceTimer;           /* nonzero: dMeter_c draws the race timer */
+extern u8 gShowRaceTimer;            /* nonzero: dMeter_c draws the race timer */
 extern bool d_a_r_nkPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 extern void func_02012694(u32 a, void *b);
 extern u8 data_0209d684;            /* MESSAGE_RESULT: which answer the player picked (1 or 2) */

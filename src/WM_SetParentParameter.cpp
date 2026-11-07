@@ -12,13 +12,13 @@ extern int WmCheckParentParameter(void *o);
  * without a buffer and MP sizes that, with the key-sharing overhead, pass
  * 0x200 bytes; then flush the parameter block (and the game info) and send
  * the command. */
-int WM_SetParentParameter(void *callback, char *o) {
-    WmParentParam *param = (WmParentParam *)o;
+int WM_SetParentParameter(void *callback, WmParentParam *param) {
     int r;
     u16 ksFlag;
     r = WM_CheckStateEx(1, 2);
     if (r != 0) return r;
-    if (o == 0) return 6;
+    if (param == 0)
+        return 6;
     if (param->userGameInfoLength != 0) {
         if (param->userGameInfo == 0)
             return 6;
@@ -27,13 +27,13 @@ int WM_SetParentParameter(void *callback, char *o) {
     if (param->parentMaxSize + (ksFlag != 0 ? 0x2a : 0) > 0x200 ||
         param->childMaxSize + (ksFlag != 0 ? 6 : 0) > 0x200)
         return 6;
-    WmCheckParentParameter(o);
+    WmCheckParentParameter(param);
     WM_SetCallbackTable(7, callback);
-    CP15::FlushDataCache((u32)o, sizeof(WmParentParam));
+    CP15::FlushDataCache((u32)param, sizeof(WmParentParam));
     if (param->userGameInfoLength != 0) {
         CP15::FlushDataCache((u32)param->userGameInfo, param->userGameInfoLength);
     }
-    r = WM_SendCommand(7, 1, o);
+    r = WM_SendCommand(7, 1, param);
     if (r == 0) return 2;
     return r;
 }

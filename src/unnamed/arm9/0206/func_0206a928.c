@@ -17,7 +17,15 @@
     else \
         *(u16 *)(a) = (*(u16 *)(a) & 0xff00) | ((v) & 0xff)
 
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
+/* opt_common_subs stays off: measured with tools/prepush_linkcheck.py, which is the
+   only gate in the tree that can judge this file -- build_pin.verify (and so
+   tools/delaunder.py) compares exactly the 0x1360 config/arm9/symbols.txt records for
+   the symbol, and the formatter compiles to 0x1364 because of the literal-pool word
+   noted above, so those two call the file non-reproducing either way. Under the
+   delink-sized comparison it reproduces with the pragma and is NO-REPRO without it. */
 #pragma opt_common_subs off
 
 typedef void (*WriteFn)(void *self, const char *buf, int len);

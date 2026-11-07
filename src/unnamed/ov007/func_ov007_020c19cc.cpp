@@ -7,7 +7,7 @@ extern void Matrix3x3_SetRotationZ(int *m, int s, int c);
 extern void func_0205532c(int *a, int *v);
 extern s16 data_02082214[];
 
-void func_ov007_020c19cc(int count, Vector3 *pts, s16 half, int t) {
+void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
     int z;
     int nh;
     u32 vy_pos;
@@ -25,7 +25,7 @@ void func_ov007_020c19cc(int count, Vector3 *pts, s16 half, int t) {
     int mtx[9];
     Vector3 *pos;
 
-    z = (int)half << 16;
+    z = half << 16;
     z >>= 16;
     nh = -z;
     vy_pos = (u32)(u16)z << 16;

@@ -21,8 +21,13 @@ enum d_s_mg_trampoline2_AssetId {
  * so Mario can bounce through the shapes that drop in.
  *
  * Functions are in reverse ROM order; do not reorder.
- * opt_loop_invariants is off for the whole file. TUBUILD CONFLICT lines
- * stay; the manifest pairs them.
+ * opt_loop_invariants is off for the whole file. Measured 2026-11-06:
+ * PaintSquare is the only function in the TU whose bytes move when
+ * invariants are hoisted, and the setting still cannot be narrowed to it --
+ * this TU leaves codegen deferred, so mwccarm reads the state at the end of
+ * the file and an `on` placed after PaintSquare (or after the function
+ * following it) puts hoisting back for PaintSquare as well. TUBUILD CONFLICT
+ * lines stay; the manifest pairs them.
  *
  * leftovers:
  * - 0x7acc has no matched read.
@@ -170,7 +175,6 @@ extern short sTrmpStartTouchX;
 extern struct P2 pmf_dScMgTrampoline2_c_StateIntro;
 extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
-extern void Camera_UpdateMatrices(void *cam);
 extern u8 gMainScreenLayers;
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -328,21 +332,21 @@ s32 dScMgTrampoline2_c::InitResources() {
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082414);
-    this->mCameras[0].mEyeX = 0;
-    this->mCameras[0].mEyeY = -0x64000;
-    this->mCameras[0].mEyeZ = 0;
-    this->mCameras[0].mTargetX = 0;
-    this->mCameras[0].mTargetY = 0;
-    this->mCameras[0].mTargetZ = fov;
-    this->mCameras[0].mAngle = 0x400;
+    this->mCameras[0].mLookAt.x = 0;
+    this->mCameras[0].mLookAt.y = -0x64000;
+    this->mCameras[0].mLookAt.z = 0;
+    this->mCameras[0].mPos.x = 0;
+    this->mCameras[0].mPos.y = 0;
+    this->mCameras[0].mPos.z = fov;
+    this->mCameras[0].mFovAngle = 0x400;
     Camera_UpdateMatrices(&mCameras[0]);
-    this->mCameras[1].mEyeX = 0;
-    this->mCameras[1].mEyeY = 0x82000;
-    this->mCameras[1].mEyeZ = 0;
-    this->mCameras[1].mTargetX = 0;
-    this->mCameras[1].mTargetY = 0;
-    this->mCameras[1].mTargetZ = fov;
-    this->mCameras[1].mAngle = 0x400;
+    this->mCameras[1].mLookAt.x = 0;
+    this->mCameras[1].mLookAt.y = 0x82000;
+    this->mCameras[1].mLookAt.z = 0;
+    this->mCameras[1].mPos.x = 0;
+    this->mCameras[1].mPos.y = 0;
+    this->mCameras[1].mPos.z = fov;
+    this->mCameras[1].mFovAngle = 0x400;
     Camera_UpdateMatrices(&mCameras[1]);
     if (Trmp2Mario_InitPool(mMarios, 5) == 0)
         return 0;
@@ -796,8 +800,7 @@ void dScMgTrampoline2_c::SpawnWave() {
                     continue;
                 }
 
-                if ((savedOccupancy = (int)(volatile int)occupancy,
-                     (savedOccupancy & rightBit) != 0)) {
+                if ((savedOccupancy = (int)occupancy, (savedOccupancy & rightBit) != 0)) {
                     kinds[i] = kind;
                     faces[i] = 8;
                     occupancy |= Trmp2_OccupancyBits(column, 1);

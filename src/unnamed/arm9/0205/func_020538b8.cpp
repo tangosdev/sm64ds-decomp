@@ -4,7 +4,7 @@
 
 extern "C" {
 
-extern s16 data_02086214[];
+extern const s16 data_02086214[128];
 
 void func_02053a8c(void) {}
 

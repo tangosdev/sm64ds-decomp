@@ -230,7 +230,7 @@ struct dCamera_c : dView_c {
     /* Shake amplitudes. Render adds mRollShake times the sine of
        mRollShakePhase to the roll, and mFovShake times the cosine of
        mFovShakePhase to the field of view; Behavior decays both.
-       func_0200d89c sets mRollShake to 0x180; func_0200d8ac raises mFovShake
+       func_0200d89c sets mRollShake to 0x180; SetFovShake raises mFovShake
        and sets its decay step and phase step together. */
     s16 mRollShake; /* 0x18c */
     s16 mFovShake;  /* 0x18e */
@@ -342,8 +342,17 @@ struct dCamera_c : dView_c {
     void func_0200cbe0();
     void func_0200cce4();
     void func_0200cf40();
+    void func_0200ca14(unsigned char, int);
+    void func_0200d064(unsigned char);
+    int func_0200d0ac(unsigned int);
+    void func_0200d1e4();
+    void func_0200d4b0(unsigned int, int);
+    void func_0200d858(const Vector3 *);
     void func_0200d89c();
+    void func_0200d8c8(const Vector3 *, int);
     void func_0200d954(short);
+    /* Super Mario 64's set_fov_shake. */
+    void SetFovShake(int, int, int);
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -209,11 +209,6 @@
         "return:void"
       ]
     },
-    "Camera_UpdateMatrices": {
-      "src/minigames/d_s_mg_roulette_methods.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "Copy36Bytes": {
       "src/unnamed/arm9/0204/func_0204b460.c": [
         "param:#1 int *"
@@ -256,10 +251,6 @@
       ],
       "src/unnamed/arm9/0204/func_02040014.c": [
         "param:#3 int"
-      ],
-      "src/unnamed/arm9/0206/func_0206062c.cpp": [
-        "param:#1 int",
-        "param:#2 int"
       ],
       "src/unnamed/arm9/0206/func_02063ea8.c": [
         "param:#1 int",
@@ -339,12 +330,6 @@
         "param:#3 EntryMeshVec *"
       ]
     },
-    "DMAStartTransfer": {
-      "src/MI_SendGXCommand.c": [
-        "param:#2 void *",
-        "param:#3 void *"
-      ]
-    },
     "DecIfAbove0_Byte": {
       "src/game/actors/d_a_gmch.cpp": [
         "return:int"
@@ -357,14 +342,8 @@
       ]
     },
     "DecIfAbove0_Short": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_obj_ct_mecha11.cpp": [
         "param:#1 char *",
-        "return:int"
-      ],
-      "src/game/actors/d_a_obj_hatena_block.cpp": [
         "return:int"
       ],
       "src/game/actors/d_a_obj_sl_ice_block.cpp": [
@@ -391,9 +370,6 @@
         "param:#1 int"
       ],
       "src/game/stages/d_s_mb.cpp": [
-        "param:#1 int"
-      ],
-      "src/minigames/d_s_mg_flower.cpp": [
         "param:#1 int"
       ],
       "src/ui/hud/d_meter.cpp": [
@@ -448,11 +424,9 @@
         "return:void"
       ],
       "src/unnamed/arm9/0201/func_02018934.cpp": [
-        "param:#1 int *",
         "return:void"
       ],
       "src/engine/mb/MB_GameInfo.c": [
-        "param:#1 int *",
         "return:void"
       ]
     },
@@ -461,7 +435,6 @@
         "param:#1 char *"
       ],
       "src/engine/mb/MB_GameInfo.c": [
-        "param:#1 int *",
         "return:void"
       ],
       "src/engine/sound/SoundEngine.cpp": [
@@ -681,13 +654,6 @@
         "param:#1 int"
       ]
     },
-    "LoadLevel": {
-      "src/game/actors/d_a_ch_scene.cpp": [
-        "param:#1 signed char",
-        "param:#2 unsigned char",
-        "param:#3 signed char"
-      ]
-    },
     "Math_Function_0203b0fc": {
       "src/engine/view/d_camera.cpp": [
         "param:#1 int",
@@ -709,12 +675,6 @@
         "return:void"
       ]
     },
-    "Matrix3x3_FromQuaternion": {
-      "src/Matrix4x3_FromQuaternion.c": [
-        "param:#1 const Quaternion *",
-        "param:#2 Matrix3x3 *"
-      ]
-    },
     "Matrix3x3_LoadIdentity": {
       "src/unnamed/ov007/func_ov007_020c42f8.c": [
         "param:#1 Mat3 *"
@@ -730,9 +690,6 @@
     },
     "Matrix4x3_ApplyInPlaceToRotationX": {
       "src/game/actors/d_a_bombking.cpp": [
-        "param:#2 int"
-      ],
-      "src/game/actors/d_a_king_donketu.cpp": [
         "param:#2 int"
       ],
       "src/game/actors/d_a_popoi.cpp": [
@@ -774,9 +731,6 @@
       ]
     },
     "Matrix4x3_ApplyInPlaceToRotationY": {
-      "src/game/actors/d_a_obj_key.cpp": [
-        "param:#2 int"
-      ],
       "src/game/actors/d_a_pkn.cpp": [
         "param:#1 PknMtx43 *"
       ],
@@ -1049,25 +1003,12 @@
         "param:#2 const void *"
       ]
     },
-    "MultiCopyHalf": {
-      "src/unnamed/ov007/func_ov007_020c0638.c": [
-        "param:#1 char *"
-      ]
-    },
     "MultiCopy_Int": {
       "src/unnamed/arm9/0206/func_02065730.c": [
         "param:#1 const void *"
       ],
       "src/unnamed/arm9/0206/func_02065788.c": [
         "param:#1 const void *"
-      ]
-    },
-    "MultiStore16": {
-      "src/ResetCrashScreen.cpp": [
-        "param:#2 volatile void *"
-      ],
-      "src/minigames/d_s_mg_snowball.cpp": [
-        "param:#1 int"
       ]
     },
     "NormalizeVec3": {
@@ -1150,11 +1091,6 @@
     "NumVsStarsObtained": {
       "src/game/actors/d_a_star.cpp": [
         "return:int"
-      ]
-    },
-    "OSReadROMArea": {
-      "src/OSi_ReloadRomData.cpp": [
-        "param:#2 unsigned int"
       ]
     },
     "OS_SleepThread": {
@@ -2135,11 +2071,6 @@
       ]
     },
     "Vec2_Sub": {
-      "src/minigames/d_s_mg_flower.cpp": [
-        "param:#1 V2 *",
-        "param:#2 V2 *",
-        "param:#3 V2 *"
-      ],
       "src/minigames/d_s_mg_hanachan_methods.cpp": [
         "param:#1 V2 *",
         "param:#2 V2 *",
@@ -2349,10 +2280,6 @@
         "param:#1 const void *",
         "param:#2 const void *"
       ],
-      "src/game/actors/d_a_owl.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
-      ],
       "src/game/actors/d_a_trs.cpp": [
         "param:#1 const void *",
         "param:#2 const void *"
@@ -2364,7 +2291,6 @@
     },
     "Vec3_DivScalarInPlace": {
       "src/ui/hud/d_map.cpp": [
-        "param:#1 Vector3 *",
         "return:void"
       ]
     },
@@ -2540,9 +2466,6 @@
       "src/Vec3_ApproachHorz.cpp": [
         "param:#1 Vec3_Fix12 *",
         "param:#2 const Vec3_Fix12 *"
-      ],
-      "src/engine/view/d_camera.cpp": [
-        "param:#2 const void *"
       ],
       "src/game/actors/d_a_demo.cpp": [
         "param:#1 VecFx32 *",
@@ -2728,10 +2651,6 @@
       "src/game/actors/d_a_shark.cpp": [
         "param:#1 Vector3 *",
         "param:#2 Vector3 *"
-      ],
-      "src/game/actors/d_a_wanwan.cpp": [
-        "param:#1 const void *",
-        "param:#2 const void *"
       ],
       "src/minigames/unit020bfec0.cpp": [
         "param:#1 const void *",
@@ -7280,11 +7199,6 @@
         "param:#1 struct dBgCh_Actr *"
       ]
     },
-    "data_02082158": {
-      "src/unnamed/arm9/0204/func_02041d28.cpp": [
-        "return:int"
-      ]
-    },
     "data_02082214": {
       "src/unnamed/ov075/func_ov075_021194e4.cpp": [
         "return:S4 []"
@@ -7301,11 +7215,6 @@
     "data_02086214": {
       "src/unnamed/arm9/0205/func_020538b8.cpp": [
         "return:short []"
-      ]
-    },
-    "data_0208685c": {
-      "src/unnamed/arm9/0206/func_020678a4.c": [
-        "return:int []"
       ]
     },
     "data_02086b58": {
@@ -7398,14 +7307,6 @@
     "data_02092128": {
       "src/game/stages/LevelObjects.cpp": [
         "return:unsigned char []"
-      ],
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:unsigned char"
-      ]
-    },
-    "data_02092134": {
-      "src/game/stages/d_s_stage_methods.cpp": [
-        "return:unsigned int"
       ]
     },
     "data_02092768": {
@@ -7424,11 +7325,6 @@
         "return:int"
       ],
       "src/unnamed/ov002/func_ov002_020ef070.cpp": [
-        "return:int"
-      ]
-    },
-    "data_02099e20": {
-      "src/unnamed/arm9/0203/func_0203f9d4.c": [
         "return:int"
       ]
     },
@@ -7554,11 +7450,6 @@
         "return:void *"
       ]
     },
-    "data_0209d3bc": {
-      "src/ShowCrashScreen.cpp": [
-        "return:int"
-      ]
-    },
     "gSubScreenLayers": {
       "src/minigames/d_s_mg_smartball.cpp": [
         "return:unsigned char []"
@@ -7570,11 +7461,6 @@
     "data_0209d4a8": {
       "src/unnamed/arm9/0201/func_02019390.cpp": [
         "return:Obj *"
-      ]
-    },
-    "data_0209d4ac": {
-      "src/unnamed/arm9/0201/func_02019440.cpp": [
-        "return:int"
       ]
     },
     "data_0209d4b0": {
@@ -7964,20 +7850,12 @@
       "src/engine/view/d_camera.cpp": [
         "return:int []"
       ],
-      "src/game/stages/d_s_title.cpp": [
-        "return:unsigned char []"
-      ],
       "src/unnamed/arm9/0201/func_020197b8.cpp": [
         "return:unsigned char []"
       ]
     },
     "data_0209f208": {
       "src/game/actors/d_a_krb.cpp": [
-        "return:unsigned char []"
-      ]
-    },
-    "data_0209f21c": {
-      "src/game/actors/d_a_snowman.cpp": [
         "return:unsigned char []"
       ]
     },
@@ -8005,17 +7883,11 @@
       ]
     },
     "gNumLives": {
-      "src/game/stages/d_s_star_sel_methods.cpp": [
-        "return:signed char []"
-      ],
       "src/ui/hud/d_meter.cpp": [
         "return:signed char"
       ]
     },
     "gCurrentSublevel": {
-      "src/game/actors/d_a_brq.cpp": [
-        "return:signed char []"
-      ],
       "src/runtime/actor/d_actor.cpp": [
         "return:signed char []"
       ]
@@ -8082,9 +7954,6 @@
       "src/unnamed/ov002/func_ov002_020dd908.c": [
         "return:char * []"
       ],
-      "src/KuppaScript.cpp": [
-        "return:dActor_c * []"
-      ],
       "src/engine/sound/Sound.cpp": [
         "return:void * []"
       ],
@@ -8094,7 +7963,6 @@
     },
     "data_0209f3a4": {
       "src/ui/hud/d_map.cpp": [
-        "return:int []",
         "return:Obj * []"
       ]
     },
@@ -8259,17 +8127,11 @@
       ],
       "src/minigames/unit020bfec0.cpp": [
         "return:void *"
-      ],
-      "src/ui/hud/d_map.cpp": [
-        "return:VtblOwner *"
       ]
     },
     "data_0209f5c0": {
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "return:GObj *"
-      ],
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "return:void *"
       ]
     },
     "data_0209f5d0": {
@@ -8304,9 +8166,6 @@
     "data_0209fc68": {
       "src/_ZN10dScEntry_c17EnterMatchLoadingEv.cpp": [
         "return:int *"
-      ],
-      "src/unnamed/arm9/0203/func_0203083c.cpp": [
-        "return:void *"
       ]
     },
     "data_020a0c68": {
@@ -8361,28 +8220,9 @@
         "return:char []"
       ]
     },
-    "data_020a0d90": {
-      "src/game/stages/d_s_title.cpp": [
-        "return:int []"
-      ]
-    },
     "data_020a0db0": {
       "src/game/actors/d_a_demo.cpp": [
         "return:unsigned int"
-      ],
-      "src/minigames/d_s_mg_d3d_base.cpp": [
-        "return:unsigned int"
-      ],
-      "src/minigames/d_s_mg_single3d_base.cpp": [
-        "return:unsigned int"
-      ],
-      "src/ui/hud/d_map.cpp": [
-        "return:unsigned int"
-      ]
-    },
-    "data_020a0df8": {
-      "src/unnamed/arm9/0203/func_0203bbc0.c": [
-        "return:void *"
       ]
     },
     "data_020a0e5a": {
@@ -8480,25 +8320,7 @@
         "return:Vector3_16"
       ]
     },
-    "data_020a0f04": {
-      "src/unnamed/arm9/0203/func_0203da2c.c": [
-        "return:char []"
-      ]
-    },
-    "data_020a0f34": {
-      "src/unnamed/arm9/0203/func_0203f8a4.c": [
-        "return:short"
-      ]
-    },
-    "data_020a0f38": {
-      "src/unnamed/arm9/0204/func_0204175c.cpp": [
-        "return:unsigned int"
-      ]
-    },
     "data_020a0f44": {
-      "src/unnamed/arm9/0203/func_0203fbc4.c": [
-        "return:int"
-      ],
       "src/unnamed/arm9/0204/func_02040638.c": [
         "return:ObjWithField0a *"
       ],
@@ -8521,29 +8343,14 @@
         "return:void *"
       ]
     },
-    "data_020a0f80": {
-      "src/unnamed/arm9/0204/func_020406b4.c": [
-        "return:unsigned short *"
-      ]
-    },
     "data_020a0f90": {
       "src/unnamed/arm9/0203/func_0203f650.c": [
         "return:void (*)(short *)"
       ]
     },
-    "data_020a0f94": {
-      "src/unnamed/arm9/0204/func_02040724.c": [
-        "return:unsigned int"
-      ]
-    },
     "data_020a0fa0": {
       "src/unnamed/arm9/0204/func_02040014.c": [
         "return:unsigned short [][]"
-      ]
-    },
-    "data_020a0fb8": {
-      "src/unnamed/arm9/0203/func_0203e9a8.c": [
-        "return:char []"
       ]
     },
     "data_020a1040": {
@@ -8552,11 +8359,6 @@
       ],
       "src/unnamed/arm9/0203/func_0203ea5c.c": [
         "return:Rec"
-      ]
-    },
-    "data_020a1064": {
-      "src/unnamed/arm9/0204/func_02040638.c": [
-        "return:void *"
       ]
     },
     "data_020a10a4": {
@@ -8618,16 +8420,6 @@
         "return:unsigned int"
       ]
     },
-    "data_020a4c70": {
-      "src/unnamed/arm9/0204/func_02049c48.cpp": [
-        "return:unsigned short []"
-      ]
-    },
-    "data_020a6088": {
-      "src/unnamed/arm9/0205/func_02053d9c.c": [
-        "return:unsigned short []"
-      ]
-    },
     "data_020a6134": {
       "src/unnamed/arm9/0207/func_0207037c.c": [
         "return:char * []"
@@ -8655,21 +8447,6 @@
         "return:int *"
       ]
     },
-    "data_020a94c4": {
-      "src/unnamed/arm9/0206/func_02065be0.c": [
-        "return:char []"
-      ]
-    },
-    "data_020a94c8": {
-      "src/unnamed/arm9/0206/func_02065bd0.c": [
-        "return:short"
-      ]
-    },
-    "data_020a94cc": {
-      "src/unnamed/arm9/0206/func_02065bc0.c": [
-        "return:short"
-      ]
-    },
     "data_020a9570": {
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
         "return:int"
@@ -8679,9 +8456,6 @@
       ]
     },
     "data_020a9db8": {
-      "src/unnamed/arm9/0206/func_02067604.c": [
-        "return:void *"
-      ],
       "src/unnamed/arm9/0206/func_02067928.cpp": [
         "return:void *"
       ]
@@ -8788,11 +8562,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020e5948.c": [
         "return:int []"
-      ]
-    },
-    "data_ov002_0210da58": {
-      "src/game/actors/d_a_obj_hatena_block.cpp": [
-        "return:char []"
       ]
     },
     "data_ov002_0210ddd0": {
@@ -9727,9 +9496,6 @@
       ]
     },
     "data_ov002_0211094c": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_star.cpp": [
         "return:StarModelFilePtr"
       ],
@@ -9789,9 +9555,6 @@
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
         "return:unsigned char"
-      ],
-      "src/game/actors/d_a_r_nk.cpp": [
-        "return:signed char"
       ]
     },
     "data_ov003_020b1704": {
@@ -12793,9 +12556,6 @@
       ]
     },
     "data_ov089_02132c50": {
-      "src/game/actors/d_a_door.cpp": [
-        "return:int"
-      ],
       "src/game/actors/d_a_kpa.cpp": [
         "return:SharedFilePtr"
       ],
@@ -13163,7 +12923,7 @@
         "param:#7 int"
       ]
     },
-    "func_02007c9c": {
+    "Vec3fGetDistAndAngle": {
       "src/engine/view/d_camera.cpp": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"
@@ -13180,7 +12940,7 @@
         "param:#2 const Vector3 *"
       ]
     },
-    "func_02007d0c": {
+    "ApproachVec3fAsymptotic": {
       "src/engine/view/d_camera.cpp": [
         "param:#2 Vec3 *",
         "param:#2 Vector3 *",
@@ -13228,14 +12988,6 @@
     "func_0200d438": {
       "src/unnamed/ov002/func_ov002_020df300.c": [
         "param:#1 int"
-      ]
-    },
-    "func_0200d8c8": {
-      "src/_ZN7daPly_c19St_GroundPound_MainEv.cpp": [
-        "param:#2 const void *"
-      ],
-      "src/runtime/actor/d_actor.cpp": [
-        "arity:2"
       ]
     },
     "func_0200fa04": {
@@ -14898,29 +14650,8 @@
         "param:#1 unsigned short"
       ]
     },
-    "func_0201834c": {
-      "src/unnamed/arm9/0201/func_020182bc.c": [
-        "param:#1 int *"
-      ]
-    },
-    "func_020184e0": {
-      "src/unnamed/arm9/0201/func_02018474.c": [
-        "param:#1 int *"
-      ]
-    },
     "func_02018568": {
       "src/unnamed/arm9/0201/func_0201834c.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_020185c0": {
-      "src/SharedFilePtr.cpp": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0201/func_0201818c.cpp": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/arm9/0201/func_02018270.c": [
         "param:#1 void *"
       ]
     },
@@ -14929,28 +14660,8 @@
         "param:#2 int"
       ]
     },
-    "myFS_ReadFile": {
-      "src/unnamed/arm9/0201/func_02018934.cpp": [
-        "param:#1 int *"
-      ]
-    },
-    "myFS_OpenFileFast": {
-      "src/unnamed/arm9/0201/func_020182bc.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0201/func_02018474.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0201/func_020185c0.c": [
-        "arity:2"
-      ],
-      "src/unnamed/arm9/0201/func_02018b64.c": [
-        "arity:2"
-      ]
-    },
     "myFS_ConvertPathToFileID": {
       "src/unnamed/arm9/0201/func_020189f0.c": [
-        "param:#2 int",
         "return:void"
       ]
     },
@@ -15006,9 +14717,6 @@
         "param:#1 char *",
         "param:#2 unsigned char",
         "return:unsigned char"
-      ],
-      "src/runtime/filesystem/InitializeAssetHandleTable.c": [
-        "param:#1 int *"
       ]
     },
     "func_0201a9ec": {
@@ -15021,7 +14729,6 @@
     },
     "func_0201a9fc": {
       "src/runtime/filesystem/InitializeAssetHandleTable.c": [
-        "param:#1 int *",
         "return:int"
       ]
     },
@@ -15069,36 +14776,6 @@
     "func_02022cbc": {
       "src/game/actors/d_a_mip.cpp": [
         "param:#6 const void *"
-      ]
-    },
-    "func_0202af80": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b044": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b060": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b090": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b0c4": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_0202b0e0": {
-      "src/game/stages/LevelObjects.cpp": [
-        "param:#1 LVL_Overlay::StandardEntry *"
       ]
     },
     "func_02033464": {
@@ -15422,11 +15099,6 @@
         "return:short"
       ]
     },
-    "func_0203b20c": {
-      "src/func_0203b2ec.c": [
-        "param:#1 N *"
-      ]
-    },
     "func_0203b244": {
       "src/_ZN8dActor_cC1Ev.cpp": [
         "return:void"
@@ -15556,11 +15228,6 @@
     "func_0203dad4": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:unsigned int"
-      ]
-    },
-    "func_0203db3c": {
-      "src/WarpPlayer.c": [
-        "param:#2 unsigned char"
       ]
     },
     "func_0203f604": {
@@ -15760,11 +15427,6 @@
         "return:void"
       ]
     },
-    "func_020497a0": {
-      "src/unnamed/arm9/0204/func_02049ba8.c": [
-        "param:#4 Ctx *"
-      ]
-    },
     "func_02049cd8": {
       "src/engine/sound/Sound.cpp": [
         "param:#2 int"
@@ -15819,36 +15481,6 @@
       "src/unnamed/arm9/0204/func_0204be40.c": [
         "param:#1 unsigned char",
         "param:#2 unsigned char"
-      ]
-    },
-    "func_0204d0b8": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d104": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d150": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d1b4": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d294": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
-      ]
-    },
-    "func_0204d440": {
-      "src/unnamed/arm9/0204/func_0204a730.c": [
-        "param:#3 unsigned int"
       ]
     },
     "func_0204d8e8": {
@@ -15996,7 +15628,6 @@
     },
     "OS_ReceiveMessage": {
       "src/WM_SendCommand.cpp": [
-        "param:#2 void * *",
         "return:void"
       ],
       "src/engine/sound/SoundEngine.cpp": [
@@ -16005,20 +15636,13 @@
     },
     "OS_SendMessage": {
       "src/WM_SendCommand.cpp": [
-        "param:#2 void *",
         "return:void"
-      ],
-      "src/WM_Init.cpp": [
-        "param:#2 void *"
       ],
       "src/engine/sound/SoundEngine.cpp": [
         "param:#2 void *"
       ]
     },
     "OS_InitMessageQueue": {
-      "src/WM_Init.cpp": [
-        "param:#2 int *"
-      ],
       "src/engine/sound/SoundEngine.cpp": [
         "param:#2 void * *"
       ]
@@ -16106,12 +15730,6 @@
         "param:#1 struct Node *"
       ]
     },
-    "FSi_FindPath": {
-      "src/unnamed/arm9/0205/func_0205d644.c": [
-        "param:#2 const char *",
-        "param:#3 void *"
-      ]
-    },
     "FS_LoadArchive": {
       "src/engine/sound/SoundEngine.cpp": [
         "param:#7 int (*)(FSArchive *, void *, unsigned int, unsigned int)",
@@ -16139,8 +15757,6 @@
     },
     "func_0205e6e4": {
       "src/DGT_Hash2CalcHmac.c": [
-        "param:#1 unsigned int *",
-        "param:#2 const unsigned char *",
         "return:void"
       ]
     },
@@ -16157,11 +15773,6 @@
         "param:#9 int"
       ]
     },
-    "TP_RequestAutoSamplingStartAsync": {
-      "src/unnamed/arm9/0203/func_0203bbc0.c": [
-        "param:#3 void *"
-      ]
-    },
     "TP_GetUserInfo": {
       "src/unnamed/arm9/0203/func_0203bbc0.c": [
         "param:#1 void *",
@@ -16171,12 +15782,6 @@
     "CARD_GetBackupTotalSize": {
       "src/engine/save/SaveData2.cpp": [
         "return:unsigned int"
-      ]
-    },
-    "func_02060558": {
-      "src/engine/save/SaveData2.cpp": [
-        "param:#4 int",
-        "param:#5 int"
       ]
     },
     "func_0206071c": {
@@ -16250,16 +15855,6 @@
         "arity:4"
       ]
     },
-    "func_02064554": {
-      "src/unnamed/arm9/0206/func_02063bc4.c": [
-        "param:#1 void *",
-        "param:#4 int"
-      ],
-      "src/unnamed/arm9/0206/func_02063ea8.c": [
-        "param:#1 void *",
-        "param:#4 int"
-      ]
-    },
     "func_0206470c": {
       "src/unnamed/arm9/0206/func_02063980.c": [
         "param:#1 Sub *"
@@ -16270,42 +15865,15 @@
         "param:#3 void *"
       ]
     },
-    "func_02064a28": {
-      "src/unnamed/arm9/0206/func_02063d3c.c": [
-        "param:#2 unsigned short",
-        "param:#3 unsigned char"
-      ]
-    },
-    "func_02064a94": {
-      "src/unnamed/arm9/0206/func_02063980.c": [
-        "param:#4 unsigned int *"
-      ]
-    },
-    "func_02064b2c": {
-      "src/unnamed/arm9/0206/func_02063da0.c": [
-        "param:#2 unsigned short"
-      ]
-    },
     "func_02064c2c": {
       "src/unnamed/arm9/0206/func_02063ae4.c": [
         "param:#2 int",
         "param:#3 int"
       ]
     },
-    "func_02064cd8": {
-      "src/unnamed/arm9/0206/func_02063980.c": [
-        "param:#5 int"
-      ]
-    },
     "func_02064d6c": {
       "src/unnamed/arm9/0206/func_02063bc4.c": [
-        "param:#2 int",
-        "param:#3 int"
-      ]
-    },
-    "func_02064e18": {
-      "src/unnamed/arm9/0206/func_02063980.c": [
-        "param:#5 int"
+        "param:#2 int"
       ]
     },
     "func_02064fe8": {
@@ -16578,18 +16146,6 @@
       ],
       "src/_fsub.c": [
         "return:int"
-      ]
-    },
-    "__cxa_vec_delete": {
-      "include/decl_common.h": [
-        "param:#1 void *",
-        "param:#4 void (*)(void *)"
-      ]
-    },
-    "func_02073300": {
-      "src/__cxa_vec_delete.c": [
-        "param:#1 int",
-        "param:#4 int"
       ]
     },
     "__cxa_vec_new": {
@@ -16887,11 +16443,6 @@
         "return:void *"
       ]
     },
-    "Ov004_LoadFileByPath": {
-      "src/minigames/d_s_mg_curling.cpp": [
-        "return:char *"
-      ]
-    },
     "Mg_InitFx": {
       "src/minigames/d_s_mg_base.cpp": [
         "param:#2 char *",
@@ -16934,8 +16485,7 @@
         "return:void"
       ],
       "src/minigames/d_s_mg_slots.cpp": [
-        "param:#1 void *",
-        "return:void"
+        "param:#1 void *"
       ]
     },
     "Mg_RenderMainSpriteScaled": {
@@ -16956,7 +16506,6 @@
     },
     "Mg_RenderSpriteBothScaled": {
       "src/minigames/d_s_mg_pachinko2.cpp": [
-        "param:#1 int",
         "return:void"
       ]
     },
@@ -17029,17 +16578,6 @@
         "arity:1"
       ]
     },
-    "Camera_InitDealerView": {
-      "src/minigames/d_s_mg_memory.cpp": [
-        "param:#1 char *"
-      ],
-      "src/minigames/d_s_mg_memory2.cpp": [
-        "param:#1 char *"
-      ],
-      "src/minigames/d_s_mg_roulette_methods.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "Dealer_Update": {
       "src/minigames/d_s_mg_memory.cpp": [
         "return:int"
@@ -17060,11 +16598,6 @@
     },
     "Mascot_Draw": {
       "include/decl_common.h": [
-        "param:#1 char *"
-      ]
-    },
-    "Camera_InitPresenterView": {
-      "src/minigames/d_s_mg_cup.cpp": [
         "param:#1 char *"
       ]
     },
@@ -17284,19 +16817,6 @@
         "arity:1"
       ]
     },
-    "func_ov007_020aea6c": {
-      "src/unnamed/ov007/func_ov007_020ade58.c": [
-        "param:#1 int"
-      ],
-      "src/ui/menus/unit020b413c.cpp": [
-        "param:#1 int"
-      ]
-    },
-    "func_ov007_020b2e64": {
-      "src/ui/menus/unit020b6eb4.cpp": [
-        "param:#1 unsigned short *"
-      ]
-    },
     "func_ov007_020b6eb4": {
       "src/game/stages/d_s_dsmt.cpp": [
         "arity:1",
@@ -17306,11 +16826,6 @@
     "func_ov007_020b7040": {
       "include/decl_common.h": [
         "arity:1"
-      ]
-    },
-    "func_ov007_020b7d94": {
-      "src/ui/menus/unit020b413c.cpp": [
-        "param:#1 void *"
       ]
     },
     "func_ov007_020bce70": {
@@ -17330,27 +16845,12 @@
     },
     "func_ov007_020c0eb0": {
       "src/unnamed/ov007/func_ov007_020c0b78.c": [
-        "param:#1 E8 *",
-        "param:#5 int",
         "return:int"
       ]
     },
     "func_ov007_020c184c": {
       "src/unnamed/ov007/func_ov007_020c1814.c": [
         "return:int"
-      ]
-    },
-    "func_ov007_020c19cc": {
-      "src/unnamed/ov007/func_ov007_020c4dfc.c": [
-        "param:#3 int"
-      ],
-      "src/unnamed/ov007/func_ov007_020c4f50.c": [
-        "param:#3 int"
-      ]
-    },
-    "func_ov007_020c1db0": {
-      "src/ui/menus/unit020b6eb4.cpp": [
-        "param:#2 unsigned short *"
       ]
     },
     "func_ov007_020c2b9c": {
@@ -17375,11 +16875,6 @@
         "param:#1 short *"
       ]
     },
-    "func_ov007_020c3be0": {
-      "src/ui/menus/unit020b8f50.cpp": [
-        "return:int"
-      ]
-    },
     "func_ov007_020c3d1c": {
       "src/unnamed/ov007/func_ov007_020c937c.c": [
         "arity:0",
@@ -17389,11 +16884,6 @@
     "func_ov007_020c3df4": {
       "src/unnamed/ov007/func_ov007_020c9388.c": [
         "return:void *"
-      ]
-    },
-    "func_ov007_020c4e98": {
-      "src/ui/menus/unit020b8f50.cpp": [
-        "param:#6 int"
       ]
     },
     "func_ov007_020c7694": {
@@ -17627,11 +17117,6 @@
         "param:#2 const char *"
       ]
     },
-    "nds_printt": {
-      "src/ShowCrashScreen.cpp": [
-        "param:#2 const char *"
-      ]
-    },
     "_ZN5dBgPi9RecordHitEsP11SurfaceInfo": {
       "src/engine/collision/d_bg_ch_sph_crr.cpp": [
         "param:#2 int"
@@ -17758,20 +17243,9 @@
         "return:CLPS_Block"
       ]
     },
-    "func_02020028": {
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "param:#2 unsigned char"
-      ]
-    },
     "func_020201f0": {
       "src/game/stages/d_s_entry_methods.cpp": [
         "return:int"
-      ]
-    },
-    "func_02020820": {
-      "src/game/stages/d_s_entry_methods.cpp": [
-        "param:#5 int",
-        "param:#6 int"
       ]
     },
     "FindDemoActor": {
@@ -17795,11 +17269,6 @@
         "return:unsigned char *"
       ]
     },
-    "gSavedKuppaScript": {
-      "src/engine/view/d_view.cpp": [
-        "return:int"
-      ]
-    },
     "func_02048a1c": {
       "src/engine/sound/Sound.cpp": [
         "param:#1 int *"
@@ -17818,21 +17287,9 @@
         "param:#1 Obj *"
       ]
     },
-    "func_02060484": {
-      "src/engine/save/SaveData2.cpp": [
-        "param:#1 int",
-        "param:#4 int",
-        "param:#5 int"
-      ]
-    },
     "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev": {
       "src/game/actors/d_a_demo.cpp": [
         "arity:0"
-      ]
-    },
-    "func_02065d5c": {
-      "src/engine/mb/MB_Parent.cpp": [
-        "param:#1 MBCommParentBlockHeader *"
       ]
     },
     "func_02067f2c": {
@@ -17848,16 +17305,6 @@
     "WM_SetMPDataToPortEx": {
       "src/WM_SetMPDataToPort.c": [
         "param:#5 int"
-      ]
-    },
-    "WM_SetParentParameter": {
-      "src/unnamed/arm9/0203/func_0203fbc4.c": [
-        "param:#2 int"
-      ]
-    },
-    "WM_StartConnect": {
-      "src/unnamed/arm9/0203/func_0203fb5c.c": [
-        "param:#3 int"
       ]
     },
     "WmCheckParentParameter": {

@@ -119,10 +119,10 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     u8 mMeter[4][0x18];       /* 0x52ac -- strips for payouts 12, 6, 3, 2 */
     RouletteBoard mBoard;     /* 0x530c */
     s32   unk_53e0;        /* 0x53e0 -- reset to 0x100; not read in this TU */
-    s16   mCameraPreset;     /* 0x53e4 -- Render copies row n of the camera
+    s16 mCameraPreset;     /* 0x53e4 -- Render copies row n of the camera
                                 tables (data_ov006_0213e34c / _0213e370 at stride
                                 0xc, and _0213e2e0 for the angle) into
-                                mCameraEye/mCameraTarget/mCameraAngle, then calls
+                                mCamera's mPos/mLookAt/mFovAngle, then calls
                                 Camera_UpdateMatrices. 0 leaves the camera alone */
     s16   mPhase;            /* 0x53e6 -- 1 deals the racers out, 2 runs the
                                 countdown and reads the board, 3 pays out per

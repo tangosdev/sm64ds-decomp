@@ -258,6 +258,9 @@ int dScMgAmida_c::InitSubScreenBg() {
    reshuffled until it differs somewhere from that copy as seen through
    mLanePerm; otherwise the first arg1 entries (at most 4) are 1 and
    the rest 0, shuffled once. */
+/* Kept: measured 2026-11-06, ShuffleGoals is the only function this bracket
+   reaches, and its size changes with strength reduction on -- the swap loops'
+   `this + (i << 2) + off` addressing is what the setting binds. */
 #pragma push
 #pragma opt_strength_reduction off
 void dScMgAmida_c::ShuffleGoals(int arg1) {
@@ -931,6 +934,8 @@ int dScMgAmida_c::StepWalker(int walker, int dir) {
    `reachedGoal == 1` if/else. That keeps the two arms in different blocks, so
    mwccarm keeps the ROM's branch there instead of predicating it
    (notes/mwccarm-codegen.md 6cn). */
+/* Both kept: measured 2026-11-06, StepWalkers is the only function this
+   bracket reaches and its size changes when EITHER setting goes back on. */
 #pragma push
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off

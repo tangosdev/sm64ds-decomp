@@ -87,7 +87,9 @@ struct SPS {
 };
 
 #define AT(p, o) ((void *)(int)((char *)(p) + (o)))
-#define LNDR(e) ((int)((long long)(e)))
+/* An int cast of an address, to keep mwcc from folding it into its use. The
+   long long round trip this went through was measured free on 2026-11-06. */
+#define LNDR(e) ((int)(e))
 #define C1 ((char*)(void*)(int)(c))
 #define C2 ((char*)(void*)(int)(C1))
 #define ATS(off) AT(C1,off)
@@ -114,13 +116,12 @@ extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int 
 extern void func_02012718(int a, int b);
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
 extern s16 data_02082214[];
-extern void Camera_UpdateMatrices(void *self);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
-extern void MultiStore16(int val, char *dst, int n);
+extern void MultiStore16(unsigned short value, void *dst, int count);
 extern u16 sSnowballCourseTiles[];
 extern int RandomIntInternal(int *seed);
 extern void Mg_SetTopScreenYOffset(int);
@@ -676,25 +677,24 @@ void Snowball_UpdateCamera(char *scene) {
     int t = cstd::fdiv(0xc0000, data_02082314);
     Vector3 v;
     int x, y;
-    /* pad_4660 is the head of the base's 0xbc camera (dScMgSingle3DBase_c.h). */
     if (self->mScreensSwapped == 0) {
-        self->mCameraEyeX = 0;
-        self->mCameraEyeY = 0xd0000;
-        self->mCameraEyeZ = 0;
-        self->mCameraTargetX = 0;
-        self->mCameraTargetY = 0;
-        self->mCameraTargetZ = t;
-        self->mCameraAngle = 0x200;
-        Camera_UpdateMatrices((char *)self->pad_4660);
+        self->mCamera.mLookAt.x = 0;
+        self->mCamera.mLookAt.y = 0xd0000;
+        self->mCamera.mLookAt.z = 0;
+        self->mCamera.mPos.x = 0;
+        self->mCamera.mPos.y = 0;
+        self->mCamera.mPos.z = t;
+        self->mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&self->mCamera);
     } else {
-        self->mCameraEyeX = 0;
-        self->mCameraEyeY = -0x60000;
-        self->mCameraEyeZ = 0;
-        self->mCameraTargetX = 0;
-        self->mCameraTargetY = 0;
-        self->mCameraTargetZ = t;
-        self->mCameraAngle = 0x200;
-        Camera_UpdateMatrices((char *)self->pad_4660);
+        self->mCamera.mLookAt.x = 0;
+        self->mCamera.mLookAt.y = -0x60000;
+        self->mCamera.mLookAt.z = 0;
+        self->mCamera.mPos.x = 0;
+        self->mCamera.mPos.y = 0;
+        self->mCamera.mPos.z = t;
+        self->mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&self->mCamera);
     }
     y = self->mScrollY - self->mPosY + 0x110000;
     x = self->mPosX - 0x80000;
@@ -1481,7 +1481,7 @@ s32 dScMgSnowball_c::Render() {
  * touch screen and grows the ball, 2 and 3 are the crash, 4 is the melt and
  * 5 is over.
  *
- * The address macros and the `AT` and `LNDR` launders stop mwcc from sharing
+ * The address macros and the `AT` and `LNDR` int casts stop mwcc from sharing
  * field addresses across calls, which the ROM does not do; keep them. */
 s32 dScMgSnowball_c::Behavior() {
     char *c = (char *)this;
@@ -1592,7 +1592,7 @@ s32 dScMgSnowball_c::Behavior() {
             mBallSize = 0x37000;
         Vec2_Sub(s.b, (int *)AT(C1, SNOW_OFF(mPosX)), &mSoundPosX);
         gate = (Vec2_Len(s.b) >= 0x30000) ? 1 : 0;
-        if ((int)((long long)gate) != 0) {
+        if (gate != 0) {
             mSoundPosX = mPosX;
             mSoundPosY = mPosY;
             if (mBallSize < 0x10000)

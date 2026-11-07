@@ -58,7 +58,7 @@ void Mg_ResetOverlays(void);
 void FreeGfxSlotsById(int id);
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
-extern u32 data_020a0db0;
+extern s32 data_020a0db0;
 extern int sMgTopScreenYOffset;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 extern int sSingle3DCommonNcgByLanguage[];
