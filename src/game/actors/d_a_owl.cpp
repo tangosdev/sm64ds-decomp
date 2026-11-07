@@ -163,7 +163,8 @@ int Vec3_Dist(const Vector3 *, const Vector3 *);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 unsigned int RandomIntInternal(void *seed);
-void MulVec3Mat4x3(void *dst, void *mat, void *src);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(VecFx32 *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
@@ -400,7 +401,7 @@ int daOwl_c::func_ov094_02135c28()
     ApproachLinear(mPosY, mAnchor.y + result, 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    MulVec3Mat4x3(&buf, &data_020a0e68, &mSpeedX);
+    MulVec3Mat4x3((Vector3 *)&buf, &data_020a0e68, (Vector3 *)&mSpeedX);
     return 1;
 }
 
@@ -484,7 +485,7 @@ int daOwl_c::func_ov094_02136024()
             d.y = 0;
             d.z = 0x320000;
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MulVec3Mat4x3(&d, &data_020a0e68, &mAnchor);
+            MulVec3Mat4x3((Vector3 *)&d, &data_020a0e68, &mAnchor);
             {
                 int *px = &mAnchor.x;
                 int *py = &mAnchor.y;
