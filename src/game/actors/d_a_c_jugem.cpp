@@ -28,8 +28,11 @@ comment leftovers:
  *   - Matrix copies go through the flat Mtx43: math/Matrix.h's Matrix4x3
  *     is the one this file sees, and assigning it is not the ROM's block
  *     copy (the object grows by 0x30 bytes).
- *   - CamPose and the VecFx32 locals are the same kind of non-POD dodge:
- *     a Vector3 local would emit its vague-linkage destructor.
+ *   - Position locals are Vector3. Several are written and never read
+ *     (StateIntroMain's pos, StateApproachInit's look/pos); Vector3's
+ *     declared destructor is what keeps those stores and frame slots.
+ *     StateHiddenMain's copy of the player position is the exception: the
+ *     ROM block-copies it (ldm/stm), which only a POD VecFx32 produces.
  *   - unk_2e0 is written once (StateApproachInit) and never read.
  *   - mAuxCounter is per-state scratch: the approach turn rate in
  *     StateApproachMain, the bob phase in StateBobMain, a play-once flag
@@ -65,10 +68,11 @@ enum daC_Jugem_c_AssetId {
  * ROM resource-family functions, aliased in the manifest. JugemVec3's plain
  * overload builds the first vector with ordinary stores; the (int, int,
  * long) overload builds the second through a volatile lvalue, exactly as
- * retail. Both share the one declared-not-defined destructor (never
- * ~Vector3: a Vector3 here would instantiate its vague-linkage D1 into this
- * TU, which deliberately avoids it); the destructor alias points at the
- * ROM's canonical copy. */
+ * retail. Both share the one declared-not-defined destructor, aliased to
+ * the ROM's canonical ~Vector3. Plain `Vector3(x, y, z)` globals were
+ * measured (#821): the first reproduces, but the second hoists its zero x
+ * ahead of the address load and __sinit stops matching, so JugemVec3 stays
+ * until the second vector's real shape is known. */
 struct JugemModelFile : SharedFilePtr {
     JugemModelFile(u32 fileID);
     ~JugemModelFile();
@@ -179,9 +183,6 @@ extern daC_Jugem_c::StateFn data_ov085_02130274;
 
 }
 
-/* The intro camera pose StateIntroMain sweeps from. */
-struct CamPose { s32 lx, ly, lz, px, py, pz; };
-
 #pragma defer_codegen off
 
 // @symbol _ZN11daC_Jugem_cD1Ev
@@ -199,18 +200,18 @@ daC_Jugem_c::~daC_Jugem_c()
    wait in StateHidden. */
 int daC_Jugem_c::StateIntroMain() {
     dCamera_c *cam = data_0209f318;
-    CamPose r;
+    Vector3 look, pos;
     cam->SetFlag_3();
-    r.lx = -0x4b0000;
-    r.ly = 0x19f000;
-    r.lz = 0x1a90000;
-    r.px = -0x4b0000;
-    r.py = 0x250000;
-    r.pz = 0x1d4c000;
-    ApproachLinear(*(Vector3 *)&mCamLookX, *(Vector3 *)&r, 0x70000);
-    cam->SetLookAt(*(Vector3 *)&mCamLookX);
-    cam->SetPos(*(Vector3 *)&mCamPosX);
-    ::Vec3_Dist((const Vector3 *)&mCamLookX, (const Vector3 *)&r);
+    look.x = -0x4b0000;
+    look.y = 0x19f000;
+    look.z = 0x1a90000;
+    pos.x = -0x4b0000;
+    pos.y = 0x250000;
+    pos.z = 0x1d4c000;
+    ApproachLinear(mCamLook, look, 0x70000);
+    cam->SetLookAt(mCamLook);
+    cam->SetPos(mCamPos);
+    ::Vec3_Dist(&mCamLook, &look);
     mTimer++;
     if (mTimer > 0x64) {
         if (Sound::PlaySub(0x4b, 0x7f, 0, 0x7222, false) != 0) {
@@ -246,8 +247,7 @@ int daC_Jugem_c::StateIntroInit()
    to start the intro sweep. */
 int daC_Jugem_c::StateApproachMain()
 {
-    /* NitroSDK VecFx32, not Vector3: the ROM emits no scope-exit cleanup here. */
-    VecFx32 v[3];
+    Vector3 v[3];
     dCamera_c *cam;
     int spd;
     int len;
@@ -255,13 +255,10 @@ int daC_Jugem_c::StateApproachMain()
     cam = data_0209f318;
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    ApproachLinear(mAngleY,
-                   ::Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&data_ov085_0213084c),
-                   0x200);
-    ApproachLinear(mAngleX, Vec3_VertAngle(&mPosX, &data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
+    ApproachLinear(mAngleX, Vec3_VertAngle(&mPos, &data_ov085_0213084c), 0x200);
     ApproachLinear(mHorzSpeed, 0x28000, 0x2000);
-    ApproachLinear(mPrevAngleY,
-                   ::Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&data_ov085_0213084c),
+    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c),
                    (s16)mAuxCounter);
     mAngleY = mPrevAngleY;
     mAuxCounter += 5;
@@ -274,11 +271,11 @@ int daC_Jugem_c::StateApproachMain()
     v[1].y = 0x115000;
     v[1].z = 0x1d15000;
     spd = mHorzSpeed >> 1;
-    ApproachLinear(*(Vector3 *)&mCamLookX, mPos, spd);
-    ApproachLinear(*(Vector3 *)&mCamPosX, *(Vector3 *)&v[1], spd);
-    cam->SetLookAt(*(Vector3 *)&mCamLookX);
-    cam->SetPos(*(Vector3 *)&mCamPosX);
-    Vec3_Sub((Vector3 *)&v[2], (const Vector3 *)&mPosX, (const Vector3 *)&data_ov085_0213084c);
+    ApproachLinear(mCamLook, mPos, spd);
+    ApproachLinear(mCamPos, v[1], spd);
+    cam->SetLookAt(mCamLook);
+    cam->SetPos(mCamPos);
+    Vec3_Sub(&v[2], &mPos, (const Vector3 *)&data_ov085_0213084c);
     len = LenVec3(&v[2]);
     if (len == 0 || len < 0x7d0000)
         SetState(data_ov085_021307a0);
@@ -288,9 +285,7 @@ int daC_Jugem_c::StateApproachMain()
 // @symbol _ZN11daC_Jugem_c17StateApproachInitEv
 int daC_Jugem_c::StateApproachInit()
 {
-    volatile VecFx32 look, pos;
-    (void)&look;
-    (void)&pos;
+    Vector3 look, pos;
     dCamera_c *cam;
     mHorzSpeed = 0;
     mTimer = 0;
@@ -298,14 +293,14 @@ int daC_Jugem_c::StateApproachInit()
     unk_2e0 = 0;
     cam = data_0209f318;
     cam->SetFlag_3();
-    mCamLookX = 0xffc67000;
-    mCamLookY = 0x6ea000;
-    mCamLookZ = 0x1212000;
-    mCamPosX = 0xffb65000;
-    mCamPosY = 0x1d5000;
-    mCamPosZ = 0x17fc000;
-    cam->SetLookAt(*(Vector3 *)&mCamLookX);
-    cam->SetPos(*(Vector3 *)&mCamPosX);
+    mCamLook.x = -0x399000;
+    mCamLook.y = 0x6ea000;
+    mCamLook.z = 0x1212000;
+    mCamPos.x = -0x49b000;
+    mCamPos.y = 0x1d5000;
+    mCamPos.z = 0x17fc000;
+    cam->SetLookAt(mCamLook);
+    cam->SetPos(mCamPos);
     mAuxCounter = 0xa0;
     mPosX = data_ov085_02130840.x;
     mPosY = data_ov085_02130840.y;
@@ -328,7 +323,7 @@ int daC_Jugem_c::StateBobMain()
         int v = (short)mAuxCounter;
         int idx = (int)((unsigned int)(v << 16) >> 16) >> 4;
         short e = data_02082214[idx * 2];
-        ApproachLinear(mPosY, FX_MUL(e, 0x1a000) + mTargetY, 0x10000000);
+        ApproachLinear(mPosY, FX_MUL(e, 0x1a000) + mTarget.y, 0x10000000);
     }
 
     if (mTimer == 0x32) {
@@ -355,16 +350,16 @@ int daC_Jugem_c::StateBobMain()
 // @symbol _ZN11daC_Jugem_c12StateBobInitEv
 int daC_Jugem_c::StateBobInit()
 {
-    VecFx32 look, pos;
+    Vector3 look, pos;
     dCamera_c *cam;
     mTimer = 0;
     mAuxCounter = 0;
     mPosX = -0x5a0000;
     mPosY = 0x2c0000;
     mPosZ = 0x1c6f000;
-    mTargetX = mPosX;
-    mTargetY = mPosY;
-    mTargetZ = mPosZ;
+    mTarget.x = mPosX;
+    mTarget.y = mPosY;
+    mTarget.z = mPosZ;
     cam = data_0209f318;
     cam->SetFlag_3();
     look.x = -0x304000;
@@ -373,8 +368,8 @@ int daC_Jugem_c::StateBobInit()
     pos.x = -0x540000;
     pos.y = 0xe1000;
     pos.z = 0x19e4000;
-    cam->SetLookAt(*(Vector3 *)&look);
-    cam->SetPos(*(Vector3 *)&pos);
+    cam->SetLookAt(look);
+    cam->SetPos(pos);
     mHorzSpeed = 0;
     return 1;
 }
@@ -461,7 +456,7 @@ int daC_Jugem_c::StateTurnMain()
 // @symbol _ZN11daC_Jugem_c13StateTurnInitEv
 int daC_Jugem_c::StateTurnInit()
 {
-    VecFx32 look, pos;
+    Vector3 look, pos;
     dCamera_c *cam;
     mTimer = 0;
     mTalkPlayer = 0;
@@ -474,8 +469,8 @@ int daC_Jugem_c::StateTurnInit()
     pos.x = 0xffa54000;
     pos.y = 0x1f4000;
     pos.z = 0x1ccf000;
-    cam->SetLookAt(*(Vector3 *)&look);
-    cam->SetPos(*(Vector3 *)&pos);
+    cam->SetLookAt(look);
+    cam->SetPos(pos);
     return 1;
 }
 
@@ -522,13 +517,12 @@ int daC_Jugem_c::StateArriveMain()
 // @symbol _ZN11daC_Jugem_c15StateArriveInitEv
 int daC_Jugem_c::StateArriveInit()
 {
-    /* NitroSDK VecFx32, not Vector3: the ROM emits no scope-exit cleanup here. */
-    VecFx32 look, pos;
+    Vector3 look, pos;
     dCamera_c *cam;
     daPly_c *player;
-    mTargetX = -0x5a0000;
-    mTargetY = 0x1c0000;
-    mTargetZ = 0x1a66000;
+    mTarget.x = -0x5a0000;
+    mTarget.y = 0x1c0000;
+    mTarget.z = 0x1a66000;
     player = ClosestPlayer();
     if (player) {
         mSavedAngleY = player->mAngleY;
@@ -542,12 +536,12 @@ int daC_Jugem_c::StateArriveInit()
     pos.x = 0xffb18000;
     pos.y = 0x18c000;
     pos.z = 0x1a89000;
-    cam->SetLookAt(*(Vector3 *)&look);
-    cam->SetPos(*(Vector3 *)&pos);
+    cam->SetLookAt(look);
+    cam->SetPos(pos);
     mStateTimer = 0x79;
-    mPosX = mTargetX;
-    mPosY = mTargetY;
-    mPosZ = mTargetZ;
+    mPosX = mTarget.x;
+    mPosY = mTarget.y;
+    mPosZ = mTarget.z;
     mTalkPlayer = 0;
     return 1;
 }
@@ -555,16 +549,13 @@ int daC_Jugem_c::StateArriveInit()
 // @symbol _ZN11daC_Jugem_c14StateLeaveMainEv
 /* Fly to the target point; when the countdown ends and the talk is over,
    mark for destruction. */
-int daC_Jugem_c::StateLeaveMain()
-{
-    ApproachLinear(mPrevAngleY,
-                   ::Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mTargetX), 0x800);
+int daC_Jugem_c::StateLeaveMain() {
+    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &mTarget), 0x800);
     ApproachLinear(mAngleY, mPrevAngleY, 0x800);
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
-    if (AngleDiff(mPrevAngleY,
-                  ::Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mTargetX)) < 0x2000) {
-        Vec3_ApproachHorz(&mPosX, &mTargetX, 0x1e000);
-        ApproachLinear(mPosY, mTargetY, 0x1e000);
+    if (AngleDiff(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &mTarget)) < 0x2000) {
+        Vec3_ApproachHorz(&mPos, &mTarget, 0x1e000);
+        ApproachLinear(mPosY, mTarget.y, 0x1e000);
     }
     if (*(unsigned short *)&mStateTimer == 0) {
         if (Sound::PlaySub(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
@@ -634,9 +625,8 @@ int daC_Jugem_c::StateTalkInit()
    start the talk. */
 int daC_Jugem_c::StateFlyToPlayerMain()
 {
-    /* NitroSDK VecFx32, not Vector3: the ROM emits no scope-exit cleanup here. */
-    VecFx32 in;
-    VecFx32 out;
+    Vector3 in;
+    Vector3 out;
     daPly_c *p;
 
     p = ClosestPlayer();
@@ -667,12 +657,11 @@ int daC_Jugem_c::StateFlyToPlayerMain()
     out.y += p->mPosY + 0x70000;
     out.z += p->mPosZ;
 
-    ApproachLinear(mPos, *(Vector3 *)&out, 0x14000);
-    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&out),
-                   0x800);
+    ApproachLinear(mPos, out, 0x14000);
+    ApproachLinear(mPrevAngleY, ::Vec3_HorzAngle(&mPos, &out), 0x800);
     mAngleY = mPrevAngleY;
 
-    if (::Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&out) < 0x14000) {
+    if (::Vec3_Dist(&mPos, &out) < 0x14000) {
         mTalkPlayer = p;
         SetState(data_ov085_02130810);
     }
@@ -705,9 +694,9 @@ int daC_Jugem_c::StateHiddenMain()
             *(VecFx32 *)&mPosX = v;
             mPosX -= 0x3e8000;
             mPosY = p->mGroundY + 0x3e8000;
-            mTargetX = mPosX;
-            mTargetY = mPosY;
-            mTargetZ = mPosZ;
+            mTarget.x = mPosX;
+            mTarget.y = mPosY;
+            mTarget.z = mPosZ;
             mHidden = 0;
             SetState(data_ov085_02130800);
         }
@@ -726,8 +715,7 @@ int daC_Jugem_c::StateHiddenInit()
    the player, one sound trigger behind it. */
 int daC_Jugem_c::StateHoverMain()
 {
-    /* NitroSDK VecFx32, not Vector3: the ROM emits no scope-exit cleanup here. */
-    VecFx32 in, out, plpos;
+    Vector3 in, out, plpos;
     dCamera_c *cam;
     Vector3 *src;
     daPly_c *p;
@@ -753,9 +741,8 @@ int daC_Jugem_c::StateHoverMain()
     }
     mPosY = plpos.y;
     mPosZ = plpos.z;
-    in.z = ::Vec3_HorzDist((const Vector3 *)&plpos, (const Vector3 *)&mPosX);
-    Matrix4x3_FromRotationY(&data_020a0e68,
-                            ::Vec3_HorzAngle((const Vector3 *)&plpos, (const Vector3 *)&mPosX));
+    in.z = ::Vec3_HorzDist(&plpos, &mPos);
+    Matrix4x3_FromRotationY(&data_020a0e68, ::Vec3_HorzAngle(&plpos, &mPos));
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
     mPosX += out.x;
     if (gCurrentSublevel == 0x2f) {
@@ -791,8 +778,8 @@ int daC_Jugem_c::SetState(StateFn *record)
 /* The single blob shadow, used by the cutscene variant. */
 void daC_Jugem_c::UpdateShadow()
 {
-    VecFx32 v;
-    Vec3_Asr((Vector3 *)&v, (Vector3 *)&mPosX, 3);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -806,17 +793,17 @@ void daC_Jugem_c::UpdateShadow()
    projected ahead of the player. */
 void daC_Jugem_c::UpdateShadowPlayer()
 {
-    VecFx32 p;
-    VecFx32 z1;
-    VecFx32 off;
-    VecFx32 pp;
-    VecFx32 t;
+    Vector3 p;
+    Vector3 z1;
+    Vector3 off;
+    Vector3 pp;
+    Vector3 t;
     daPly_c *pl;
     int p1, p2;
     signed char lvl;
-    VecFx32 *ps;
+    Vector3 *ps;
 
-    Vec3_Asr((Vector3 *)&t, (Vector3 *)&mPosX, 3);
+    Vec3_Asr(&t, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel1.mat4x3 = *(Mtx43 *)&data_020a0e68;
@@ -842,7 +829,7 @@ void daC_Jugem_c::UpdateShadowPlayer()
     off.x = 0;
     off.y = 0;
     off.z = 0;
-    ps = (VecFx32 *)&pl->mPosX;
+    ps = &pl->mPos;
     pp.x = ps->x;
     pp.y = ps->y;
     pp.z = ps->z;
@@ -854,9 +841,9 @@ void daC_Jugem_c::UpdateShadowPlayer()
     p.y = pp.y;
     p.z = pp.z;
 
-    z1.z = ::Vec3_HorzDist((const Vector3 *)&pp, (const Vector3 *)&p);
+    z1.z = ::Vec3_HorzDist(&pp, &p);
     {
-        short ang = ::Vec3_HorzAngle((const Vector3 *)&pp, (const Vector3 *)&p);
+        short ang = ::Vec3_HorzAngle(&pp, &p);
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
     }
     MulVec3Mat4x3(&z1, &data_020a0e68, &off);
