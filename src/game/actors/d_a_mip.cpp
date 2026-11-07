@@ -81,7 +81,7 @@ int   SurfaceInfo_TestFlag0x20(void *);
 /* maths and the still-unnamed helpers */
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
-s32   LenVec3(const void *);
+int LenVec3(const Vector3 *);
 int   AngleDiff(int, int);
 void  Matrix4x3_FromTranslation(void *, int, int, int);
 void  Matrix4x3_FromRotationY(void *, int);
@@ -816,7 +816,7 @@ int daMip_c::StateFleeMain() {
         s32 y = mPosY;
         node.y = y;
         Vec3_Sub((::Vector3 *)&delta, (const ::Vector3 *)&mPos, (const ::Vector3 *)&node);
-        len = LenVec3(&delta);
+        len = LenVec3((const Vector3 *)&delta);
     }
     if ((len == 0) || (len <= lim)) {
         mPosX = node.x;

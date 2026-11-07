@@ -166,7 +166,7 @@ unsigned int RandomIntInternal(void *seed);
 /* local extern: no shared math header declares MulVec3Mat4x3. */
 void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(VecFx32 *v);
+int LenVec3(const Vector3 *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int IsStarCollectedInCurLevel(int);
 unsigned short DecIfAbove0_Short(void *);
@@ -477,7 +477,7 @@ int daOwl_c::func_ov094_02136024()
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
         Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
-        if (LenVec3(&d) < 0x28000) {
+        if (LenVec3((const Vector3 *)&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;
             d.z = mPosZ;
