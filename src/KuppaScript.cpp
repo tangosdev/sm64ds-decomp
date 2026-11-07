@@ -14,14 +14,14 @@
  *   +4  s16  last frame, unaligned; negative means "until the script ends"
  *   +6  ...  the command's arguments, unaligned
  *
- * Every frame ProcessKuppaScript walks the whole running script and runs
+ * Every frame Process walks the whole running script and runs
  * each record whose window holds gKuppaScriptFrame. A record keeps the
  * script alive while it is still to come or open-ended; once none does,
  * and no level load is pending, the script ends.
  *
  * Commands 0..3 drive a player (the command is the character) through
  * daPly_c's own command table; 4 drives the camera's; 0x12 and up drive a
- * daDemo_c cutscene actor whose param1 is the command. ProcessKuppaScript
+ * daDemo_c cutscene actor whose param1 is the command. Process
  * handles the rest itself.
  *
  * The scripts, the camera paths their camera records name and the
@@ -46,6 +46,7 @@
 
 #pragma defer_codegen off
 #include "types.h"
+#include "KuppaScript.h"
 #include "nitro/hw/registers.h"
 #include "dActor_c.h"
 #include "dFdColor_c.h"
@@ -80,27 +81,6 @@ enum KuppaScriptCommand {
 };
 
 extern "C" {
-/* This file's functions. Other files bind them by these C names. */
-int RunDemoCommand(u8 *command, int first, int last);
-dActor_c *SpawnDemoActor(u32 param1);
-dActor_c *FindDemoActor(u32 param1);
-int RunPlayerCommand(u8 *command, int first, int last);
-dActor_c *SpawnScriptPlayer(u32 character);
-dActor_c *FindScriptPlayer(u32 character);
-s32 ReadUnalignedSignedInt(u8 *p);
-u32 ReadUnalignedInt(u8 *p);
-s16 ReadUnalignedShort(u8 *p);
-u16 ReadUnalignedUshort(u8 *p);
-void EndKuppaScript();
-void ProcessKuppaScript();
-int IsDanceRotateCutsceneRunning();
-void StartDanceCutscene(s32 setting);
-void StartEndingCutscene();
-void StartIntroCutscene();
-int RunKuppaScript(u8 *script);
-int ContinueKuppaScriptIfNecessary();
-void ResetKuppaScript();
-
 /* The camera's command dispatcher. */
 int func_02008550(dCamera_c *camera, u8 *command, int first, int last);
 void func_0201f32c(int messageID);
@@ -115,7 +95,7 @@ u8 GetStarCameraSetting(s32 star);
 
 /* Script state. */
 extern u8 *gRunningKuppaScript;
-extern u8 *gSavedKuppaScript; /* resumed by ContinueKuppaScriptIfNecessary */
+extern u8 *gSavedKuppaScript; /* resumed by ContinueIfNecessary */
 u16 gKuppaScriptFrame;
 u8 gKuppaScriptNumPlayers;
 u32 gKuppaScriptPlayerIDs[4];
@@ -4483,8 +4463,8 @@ u8 sCutsceneGrandStar[] = {7,
 dFdColor_c gKuppaScriptFader;
 
 /* CURRENT_GAMEMODE is 2 while the castle-fall cutscene runs:
- * ContinueKuppaScriptIfNecessary stores 2 only when it resumes
- * sCutsceneEndingMarioFall, and EndKuppaScript clears it once no
+ * ContinueIfNecessary stores 2 only when it resumes
+ * sCutsceneEndingMarioFall, and End clears it once no
  * script is left to resume. */
 static inline int IsCastleFallCutsceneRunning() {
     return data_0209f2d8 == 2;
@@ -4499,7 +4479,7 @@ static inline int IsTouchJustBegun(u32 slot) {
 /* Shaped like RunPlayerCommand, but the demo dispatcher returns nothing, so the
  * success path falls off the end: the ROM loads 0 only on the spawn-failed
  * return, and nothing reads the result. */
-int RunDemoCommand(u8 *command, int first, int last) {
+int KuppaScript::RunDemoCommand(u8 *command, int first, int last) {
     dActor_c *demo = FindDemoActor(command[1]);
     if (demo == 0) {
         demo = SpawnDemoActor(command[1]);
@@ -4512,7 +4492,7 @@ int RunDemoCommand(u8 *command, int first, int last) {
 /* Spawns daDemo_c (actor 0x160) into the first free slot of gDemoActorIDs.
  * Spawn takes its position by reference; the ROM passes null for both
  * position and rotation. */
-dActor_c *SpawnDemoActor(u32 param1) {
+dActor_c *KuppaScript::SpawnDemoActor(u32 param1) {
     u32 *slot = gDemoActorIDs;
     int i;
     for (i = 0; i < 16; i++, slot++) {
@@ -4526,7 +4506,7 @@ dActor_c *SpawnDemoActor(u32 param1) {
     return 0;
 }
 
-dActor_c *FindDemoActor(u32 param1) {
+dActor_c *KuppaScript::FindDemoActor(u32 param1) {
     u32 *id = gDemoActorIDs;
     int i;
     for (i = 0; i < 16; i++, id++) {
@@ -4537,7 +4517,7 @@ dActor_c *FindDemoActor(u32 param1) {
     return 0;
 }
 
-int RunPlayerCommand(u8 *command, int first, int last) {
+int KuppaScript::RunPlayerCommand(u8 *command, int first, int last) {
     dActor_c *player = FindScriptPlayer(command[1]);
     if (player == 0) {
         player = SpawnScriptPlayer(command[1]);
@@ -4551,7 +4531,7 @@ int RunPlayerCommand(u8 *command, int first, int last) {
  * has not spawned. param1 carries the character twice (bits 0..2 and 3..5),
  * the player number at bit 6, and the spawn flags at bit 8. In the castle-fall
  * scene only unlocked characters are spawned. */
-dActor_c *SpawnScriptPlayer(u32 character) {
+dActor_c *KuppaScript::SpawnScriptPlayer(u32 character) {
     int flags;
     dActor_c *player;
     if (gKuppaScriptPlayerIDs[character] != 0)
@@ -4574,7 +4554,7 @@ dActor_c *SpawnScriptPlayer(u32 character) {
 
 /* The active player if it is that character, else the one the script
  * spawned. */
-dActor_c *FindScriptPlayer(u32 character) {
+dActor_c *KuppaScript::FindScriptPlayer(u32 character) {
     dActor_c *player = data_0209f394[data_0209f250];
     if (character == player->param1)
         return player;
@@ -4599,10 +4579,10 @@ u16 ReadUnalignedUshort(u8 *p) {
 }
 
 /* Undoes what the script set up: the scene-specific sound state, every
- * player and daDemo_c it spawned, and the actor-update flag RunKuppaScript
+ * player and daDemo_c it spawned, and the actor-update flag Run
  * raised. The castle-fall scene's game mode is cleared unless a script is
  * waiting to resume. */
-void EndKuppaScript() {
+void KuppaScript::End() {
     u32 *id;
     int i;
     u8 *script = gRunningKuppaScript;
@@ -4643,7 +4623,7 @@ void EndKuppaScript() {
         data_0209f2d8 = 0;
 }
 
-void ProcessKuppaScript() {
+void KuppaScript::Process() {
     u8 *s = gRunningKuppaScript;
     u8 *next;
     int finished;
@@ -4731,9 +4711,9 @@ void ProcessKuppaScript() {
             } else if (command == KS_CAMERA) {
                 func_02008550(data_0209f318, s, first, last);
             } else if (command <= KS_PLAYER_LAST) {
-                RunPlayerCommand(s, first, last);
+                KuppaScript::RunPlayerCommand(s, first, last);
             } else if (command >= KS_DEMO_FIRST) {
-                RunDemoCommand(s, first, last);
+                KuppaScript::RunDemoCommand(s, first, last);
             }
             if (last >= 0)
                 finished = 0;
@@ -4746,7 +4726,7 @@ void ProcessKuppaScript() {
         return;
     }
     if (finished != 0 && data_02092110 < 0) {
-        EndKuppaScript();
+        KuppaScript::End();
         return;
     }
     gKuppaScriptFrame++;
@@ -4756,31 +4736,31 @@ void ProcessKuppaScript() {
 
 /* daPly_c::St_NoControl_Main stops turning the player to face the camera
  * while the rotate dance runs. */
-int IsDanceRotateCutsceneRunning() {
+int KuppaScript::IsDanceRotateCutsceneRunning() {
     return gRunningKuppaScript == sCutsceneDanceRotate;
 }
 
 /* A negative setting means "the collected star's own": GetStarCameraSetting
  * reads it from the level's per-star nibbles. */
-void StartDanceCutscene(s32 setting) {
+void KuppaScript::StartDanceCutscene(s32 setting) {
     if (setting < 0)
         setting = GetStarCameraSetting(data_0209f224);
-    RunKuppaScript(sDanceCutsceneTable[setting]);
+    KuppaScript::Run(sDanceCutsceneTable[setting]);
 }
 
 /* daPly_c::St_EndingFly_Main starts it once the take-off animation ends. */
-void StartEndingCutscene() {
-    RunKuppaScript(sCutsceneGrandStar);
+void KuppaScript::StartEndingCutscene() {
+    KuppaScript::Run(sCutsceneGrandStar);
 }
 
-void StartIntroCutscene() {
+void KuppaScript::StartIntroCutscene() {
     Sound::LoadInitialGroup(0x25);
-    RunKuppaScript(sCutsceneIntroPeachLetter);
+    KuppaScript::Run(sCutsceneIntroPeachLetter);
 }
 
 /* Starts a script unless one is running. Outside the castle-fall scene the
  * actor-update flag 0x20000000 is raised for its length. */
-int RunKuppaScript(u8 *script) {
+int KuppaScript::Run(u8 *script) {
     if (gRunningKuppaScript != 0)
         return 0;
 
@@ -4788,12 +4768,12 @@ int RunKuppaScript(u8 *script) {
     gRunningKuppaScript = script;
     if (!IsCastleFallCutsceneRunning())
         gNextActorUpdateMask |= 0x20000000;
-    ProcessKuppaScript();
+    KuppaScript::Process();
     return 1;
 }
 
 /* Runs the script a KS_LOAD_LEVEL command saved, once the new level is up. */
-int ContinueKuppaScriptIfNecessary() {
+int KuppaScript::ContinueIfNecessary() {
     u8 *saved = gSavedKuppaScript;
     if (saved == 0)
         return 0;
@@ -4807,12 +4787,12 @@ int ContinueKuppaScriptIfNecessary() {
         DisableSoundPlayersForCredits();
     }
     gRunningKuppaScript = 0;
-    RunKuppaScript(gSavedKuppaScript);
+    KuppaScript::Run(gSavedKuppaScript);
     gSavedKuppaScript = 0;
     return 1;
 }
 
-void ResetKuppaScript() {
+void KuppaScript::Reset() {
     int i;
 
     for (i = 0; i < 4; i++)

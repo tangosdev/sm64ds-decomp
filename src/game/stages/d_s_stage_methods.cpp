@@ -42,6 +42,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a };
 
+#include "KuppaScript.h"
 #include "types.h"
 #include "G2.h"
 #include "private/controller_input.h"
@@ -4113,7 +4114,6 @@ int dScStage_c::Render() {
 
 // @symbol _ZN10dScStage_c8BehaviorEv
 extern "C" {
-void ProcessKuppaScript();
 void func_02032f54();
 void func_020199a4();
 void func_02019a58();
@@ -4137,7 +4137,7 @@ int dScStage_c::Behavior() {
         sPauseInputLockout -= 1;
     if (gGamePaused == 2 && sMenuWaitTimer == 0)
         PS_Cleanup();
-    ProcessKuppaScript();
+    KuppaScript::Process();
     if (data_0209f5bc->IsAtStart() == 0) {
         dExtShadowModel_c::CleanAll();
         return 1;
@@ -4522,7 +4522,6 @@ extern "C" void ResetInput(void) {
  * state and unloads the level overlays/archive. Returns 1.
  */
 extern "C" {
-void EndKuppaScript(void);
 void UnloadArchive(int);
 }
 
@@ -4543,7 +4542,7 @@ int dScStage_c::CleanupResources() {
         if (!atEnd)
             Sound::ResetPlayerVoiceGroup();
     }
-    EndKuppaScript();
+    KuppaScript::End();
     data_0209d4a8 = 0;
 
     {
@@ -4647,7 +4646,6 @@ int LoadArchive(int idx);
 void Initialise3dGraphics(int arg);
 void InitialiseVramGlobals(void);
 void func_02039218(void);
-void ResetKuppaScript(void);
 int GetSoundGroupID(int level, int mode);
 void LoadDebugFont(void);
 int IsLevelInsideCastle(int level);
@@ -4793,7 +4791,7 @@ int dScStage_c::InitResources() {
         data_0209d4a8 = (dGraph_c::callback_c *)&data_0209f3c4;
         gNextActorUpdateMask = 0;
         func_02039218();
-        ResetKuppaScript();
+        KuppaScript::Reset();
 
         int vsModeTimers = (data_0209f2d8 == 1) ? 1 : 0;
         if (vsModeTimers != 0) {

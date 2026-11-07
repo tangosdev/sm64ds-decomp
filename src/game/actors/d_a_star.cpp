@@ -46,6 +46,7 @@
  *
  */
 
+#include "KuppaScript.h"
 #include "Particle__System.h"
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -174,7 +175,6 @@ extern u8 *data_0209f344;
 extern "C" {
 extern int func_ov002_020c6e14(void*);
 extern u8 data_0209d660;
-extern void EndKuppaScript(void);
 extern s8 gNumStageStars[];
 extern signed char gNumStageStars[];
 extern int NumVsStarsObtained(void);
@@ -1369,7 +1369,7 @@ LA:
             mState = STATE_SAVE_MESSAGE;
             mSeqTimer = 0;
             mPlayer->mFlags &= ~CUTSCENE_FLAG;
-            EndKuppaScript();
+            KuppaScript::End();
         }
         mAnmModel1.Advance();
         func_ov002_020e8098();

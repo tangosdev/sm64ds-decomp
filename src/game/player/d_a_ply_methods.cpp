@@ -57,6 +57,7 @@
 
 #pragma defer_codegen off
 
+#include "KuppaScript.h"
 #include "types.h"
 #include "ParticleIds.h"
 #include "common.h"
@@ -229,7 +230,6 @@ extern u16 gKuppaScriptFrame;
 extern s32 gRunningKuppaScript;
 extern void HitDeathPlane(int arg);
 extern unsigned char IsPlayerWarping(int a0);
-extern int IsDanceRotateCutsceneRunning(void);
 extern void KillPlayer(void);
 extern void LoadKeyModels(int idx);
 extern void LoadSilverStarAndNumber(void);
@@ -252,10 +252,6 @@ extern void PlayerPlayLongHold_bfa74(u32 handle, u32 bank, u32 id, const void *p
 extern void PlayerPlayLongHold_deadpit(u32 a, u32 b, u32 c, void *, u32 d);
 extern void PlayerPlayLongHold_electro(u32 a, u32 b, u32 c, Vector3 *v, u32 d);
 extern void PlayerPlayLongHold_swing(u32 h, u32 a, u32 b, void *v, u32 d);
-extern unsigned int ReadUnalignedInt(unsigned char *p);
-extern s16 ReadUnalignedShort(u8 *p);
-extern u16 ReadUnalignedUshort(u8 *p);
-extern void StartEndingCutscene(void);
 extern int SublevelToLevel(int);
 extern int SurfaceInfo_TestFlag0x20(void *);
 extern void Vec3_MulScalar(Vector3 *, const Vector3 *, int s);
@@ -4226,7 +4222,7 @@ void daPly_c::JumboStarCutsceneFalling() {
     }
   } else {
     if (this->FinishedAnim()){
-        StartEndingCutscene();
+        KuppaScript::StartEndingCutscene();
         AdvanceCutsceneStep();
         this->SetAnim(0xc0, 0x40000000, 0x1000, 0);
         mRootMotionMode = 3;
@@ -6631,13 +6627,12 @@ void daPly_c::func_ov002_020c7ff8() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_NoControl_Cleanup() {
-    extern int EndKuppaScript(void);
   int v=0x1000;
   if(mIsMega) v=0x3000;
   mScaleX=v;
   mScaleY=v;
   mScaleZ=v;
-  if(mNoCtrlKind==0x11) EndKuppaScript();
+  if(mNoCtrlKind==0x11) KuppaScript::End();
   return 1;
 }
 }
@@ -6648,7 +6643,7 @@ int daPly_c::St_NoControl_Cleanup() {
 int daPly_c::St_NoControl_Main() {
     u8 mode = mNoCtrlKind;
     if (mode == 0 || mode == 1 || (mode == 0x11 && mStateStep != 0x18)) {
-        if (IsDanceRotateCutsceneRunning() == 0) {
+        if (KuppaScript::IsDanceRotateCutsceneRunning() == 0) {
             mAngleY = GetAngleToCamera(mPlayerNo);
             mPrevAngleY = mAngleY;
         }
