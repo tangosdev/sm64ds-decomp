@@ -83,8 +83,7 @@
  *   FromUniqueID is followed by a store at sys+0x44, which is still pad_042
  *   on Particle::System.
  * - Vec3_* / Matrix4x3_* have no shared header this TU
- *   can include alone. data_02082214 is the sine table func_ov073_0211f494
- *   indexes. data_0209f318, data_020a0e68 and data_0209e650 are arm9
+ *   can include alone. data_0209f318, data_020a0e68 and data_0209e650 are arm9
  *   globals. data_ov002_0210da30 is ov002's; Cleanup only Releases it.
  *   g_profile_KING_DONKETU is outside this TU.
  * - Behavior's opt_propagation off is a push/pop around that function.
@@ -128,6 +127,7 @@ enum daKing_Donketu_c_AssetId {
 #include "dCamera_c.h"
 #include "dBgCh_Lin.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
@@ -233,12 +233,10 @@ extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
 extern dCamera_c *data_0209f318;
 extern struct Matrix4x3 data_020a0e68;
-/* Vec3_Sub is not declared by math/CalcLib.h; the shared implementation uses
-   Vector3, while this function keeps POD locals to avoid Vector3 construction. */
+/* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
-extern short data_02082214[];
 
 extern u16 DecIfAbove0_Short(void* p);
 extern void func_02012694(unsigned int a, void *b);
@@ -399,59 +397,38 @@ spawn:
     Particle::System::NewSimple(0x89, pv.x, pv.y, pv.z);
 }
 
-/* Particles 0x84 and 0x85 on the surface of a's collision sphere,
-   in the direction of b. The sphere's centre is a's mPos raised by its
+/* Particles 0x84 and 0x85 on the surface of this actor's collision sphere,
+   in the direction of b. The sphere's centre is mPos raised by
    mdCcAcPos_c.height; the aim point is b's mPos raised 70.0 (0x46000). The
-   two atan2 results give a heading and an elevation; shifted right by 4 they
-   index data_02082214, which holds a sine at [2i] and a cosine at [2i+1]
-   (Fix12), and the radius times those gives the offset from the centre. Within
-   this file both arguments are always the boss. */
+   two atan2 results give a yaw and a pitch, and the radius times their sines
+   and cosines gives the offset from the centre. Within this file b is always
+   the boss itself. The ROM copies the difference vector once more before
+   reading it (`dir = diff`) and holds &b->mPos across the copy of mPos
+   (`target`); both are needed for the bytes. */
 // @symbol _ZN16daKing_Donketu_c19func_ov073_0211f494EPv
 void daKing_Donketu_c::func_ov073_0211f494(void *pb)
 {
-    daKing_Donketu_c *a = this;
     dActor_c *b = (dActor_c *)pb;
-    VecFx32 t, p, q, d;
-    int ay, ax, vx, tmp, sin_ax, cos_ax, sin_ay, cos_ay, rx, ry, rz;
-    int y0;
-    int *bp = &b->mPosX;
+    Vector3 dir, pos, aim, diff;
+    s16 yaw, pitch;
+    fx32 radius, horz;
 
-    p.x = a->mPosX;
-    y0 = a->mPosY;
-    p.y = y0;
-    {
-        VecFx32 *pq = &q;
-        int zval = a->mPosZ;
-        VecFx32 *pp = &p;
-        pp->z = zval;
-        pq->x = bp[0];
-        pq->y = bp[1];
-        pq->z = bp[2];
-        {
-            int qy = pq->y + 0x46000;
-            int h = a->mdCcAcPos_c.height;
-            vx = a->mdCcAcPos_c.radius;
-            pp->y = y0 + h;
-            pq->y = qy;
-            Vec3_Sub((Vector3 *)&d, (const Vector3 *)pq, (const Vector3 *)pp);
-        }
-    }
-    t.x = d.x; t.y = d.y; t.z = d.z;
-    ay = cstd::atan2(t.x, t.z);
-    ax = cstd::atan2(t.y, Vec3_HorzLen((const Vector3 *)&t));
-    ax = (int)((unsigned short)ax >> 4);
-    ay = (int)((unsigned short)ay >> 4);
-    cos_ax = data_02082214[ax * 2 + 1];
-    sin_ax = data_02082214[ax * 2];
-    tmp = FX_MUL(vx, cos_ax);
-    ry = FX_MUL(vx, sin_ax);
-    sin_ay = data_02082214[ay * 2];
-    cos_ay = data_02082214[ay * 2 + 1];
-    rx = FX_MUL(tmp, sin_ay);
-    rz = FX_MUL(tmp, cos_ay);
-    p.x += rx; p.y += ry; p.z += rz;
-    Particle::System::NewSimple(0x84, p.x, p.y, p.z);
-    Particle::System::NewSimple(0x85, p.x, p.y, p.z);
+    const Vector3 &target = b->mPos;
+    pos = mPos;
+    aim = target;
+    radius = mdCcAcPos_c.radius;
+    pos.y += mdCcAcPos_c.height;
+    aim.y += 0x46000;
+    Vec3_Sub(&diff, &aim, &pos);
+    dir = diff;
+    yaw = cstd::atan2(dir.x, dir.z);
+    pitch = cstd::atan2(dir.y, Vec3_HorzLen(&dir));
+    horz = FX_MUL(radius, FX_CosIdx((u16)pitch >> 4));
+    pos.x += FX_MUL(horz, FX_SinIdx((u16)yaw >> 4));
+    pos.y += FX_MUL(radius, FX_SinIdx((u16)pitch >> 4));
+    pos.z += FX_MUL(horz, FX_CosIdx((u16)yaw >> 4));
+    Particle::System::NewSimple(0x84, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0x85, pos.x, pos.y, pos.z);
 }
 
 /* Collision step, called from Behavior in the chase states (..3360, ..3390)
@@ -1227,7 +1204,7 @@ int daKing_Donketu_c::func_ov073_021208e4() {
    saved miss position (mEdgePos) along mAngleY + 0x8000, at 20.0 (0x14000)
    a frame; mAngleY becomes the angle to mSpawnPos, mPrevAngleY that + 0x8000.
    mStateScratch advances 0x500 a frame and mAngleX approaches mStateParam times
-   the sine of it (data_02082214, Fix12) by 0x400. Then,
+   the sine of it (Fix12) by 0x400. Then,
    when func_ov073_0211f61c returns nonzero (the boss took a hit or, in this
    state, hurt the player) the state becomes ..33f0. */
 // @symbol _ZN16daKing_Donketu_c19func_ov073_02120910Ev
@@ -1269,10 +1246,8 @@ int daKing_Donketu_c::func_ov073_02120910()
     c->mAngleY = Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mSpawnPosX);
     c->mPrevAngleY = c->mAngleY + 0x8000;
     c->mStateScratch += 0x500;
-    ApproachLinear(
-        c->mAngleX,
-        FX_MUL(c->mStateParam, data_02082214[((unsigned short)(short)c->mStateScratch >> 4) * 2]),
-        0x400);
+    ApproachLinear(c->mAngleX, FX_MUL(c->mStateParam, FX_SinIdx((u16)(s16)c->mStateScratch >> 4)),
+                   0x400);
     if (c->func_ov073_0211f61c()) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_021233f0);
     }
