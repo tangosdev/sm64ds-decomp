@@ -40,12 +40,10 @@ extern int data_0209a040; /* OSi_ConsoleTypeCache, initialised to -1 */
 int OSi_GetDeviceType(void);
 int OSi_IsRunOnDebugger(void);
 
-// @symbol OS_IsRunOnEmulator
 int OS_IsRunOnEmulator(void) {
     return 0;
 }
 
-// @symbol OS_GetConsoleType
 int OS_GetConsoleType(void) {
     if (data_0209a040 == (int)OSi_CONSOLE_NOT_DETECT) {
         int type = OSi_GetDeviceType();
@@ -64,7 +62,6 @@ int OS_GetConsoleType(void) {
     return data_0209a040;
 }
 
-// @symbol OSi_GetDeviceType
 int OSi_GetDeviceType(void) {
     int result;
     int checked = 0;
@@ -98,7 +95,6 @@ int OSi_GetDeviceType(void) {
     return result;
 }
 
-// @symbol OSi_IsRunOnDebugger
 int OSi_IsRunOnDebugger(void) {
     u32 checkAddress;
     if (*(volatile u16 *)HW_CHECK_DEBUGGER_SW == 0)

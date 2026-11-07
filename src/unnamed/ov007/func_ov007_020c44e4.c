@@ -1,5 +1,4 @@
 #include "types.h"
-// @symbol func_ov007_020c44e4
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */

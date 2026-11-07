@@ -1,5 +1,4 @@
 //cpp
-// @symbol _ZN15dExtAnmTexPat_c17UpdateFileOffsetsER8BTP_File
 /* dExtAnmTexPat_c::UpdateFileOffsets -- the BTP load-time fixup, arm9
  * 0x020468a0..0x020469ac. Every record table is stored file-relative; this
  * walks the header in order, rebasing each table pointer and the name word

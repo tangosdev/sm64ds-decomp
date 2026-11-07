@@ -85,7 +85,6 @@ int func_ov002_020f02c8(int sel) {
  * p1..p2, with p0 and p3 as the outer control points. The weights are
  * u^3/6, (3t^3 - 6t^2 + 4)/6, (-3t^3 + 3t^2 + 3t + 1)/6 and t^3/6 with
  * u = 1 - t, computed in fx16. Four equal points return p0 as is. */
-// @symbol func_ov002_020effb8
 void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2, Vector3 *p3) {
     s32 halfT3, rest;
     s32 t16, u, u16;

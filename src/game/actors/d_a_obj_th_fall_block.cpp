@@ -28,23 +28,18 @@ enum d_a_obj_th_fall_block_AssetId { ASSET_TH_DOWN_B_BMD = 0x06b9, ASSET_TH_DOWN
 
 extern ResourceDescriptor data_ov063_0211eb10;
 
-// @symbol daObjTh_Fall_Block_c_classInit
 extern "C" daObjTh_Fall_Block_c *daObjTh_Fall_Block_c_classInit() {
     return new daObjTh_Fall_Block_c();
 }
 
-// @symbol _ZN20daObjTh_Fall_Block_c13InitResourcesEv
 s32 daObjTh_Fall_Block_c::InitResources() {
     return InitResourcesFrom(&data_ov063_0211eb10);
 }
 
-// @symbol _ZN20daObjTh_Fall_Block_c16CleanupResourcesEv
 s32 daObjTh_Fall_Block_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov063_0211eb10);
 }
 
-// @symbol _ZN20daObjTh_Fall_Block_cD1Ev
-// @symbol _ZN20daObjTh_Fall_Block_cD0Ev
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
@@ -60,7 +55,6 @@ struct ThFallBlockCollisionFilePtr : SharedFilePtr {
     ~ThFallBlockCollisionFilePtr();
 };
 
-// @symbol __sinit_d_a_obj_th_fall_block.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
 ThFallBlockModelFilePtr gThDownBModelFile(ASSET_TH_DOWN_B_BMD);         /* model */

@@ -39,7 +39,6 @@ extern "C" {
 /* optimize_for_size is this library's own build setting, not a matching lever:
    the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
-// @symbol func_0206ce20
 void func_0206ce20(struct CardBusState* s){
   unsigned short v = REG_EXMEMCNT;
   s->exmemcnt = v;
@@ -55,7 +54,6 @@ void func_0206ce20(struct CardBusState* s){
 
 extern "C" {
 #pragma optimize_for_size on
-// @symbol func_0206cd9c
 void func_0206cd9c(struct CardBusState *s)
 {
     volatile unsigned short scratch;
@@ -83,7 +81,6 @@ namespace cstd {
 
 void __builtin_trap();
 
-// @symbol _ZN4cstd8__assertEPKcS1_S1_i
 // Assertion failure path for the game's cstd helpers: with a nonzero `line`
 // print through the data_020868a0 format and trap forever; with zero, print
 // through data_020868d4 and return.
@@ -105,7 +102,6 @@ void __assert(const char* file, const char* expr, const char* func, int line)
  * through func_0206a928 with a print-argument struct and the func_0206cbc0
  * console callback. The print struct stays function-local. Lowest address
  * in the TU, so it goes last for reverse-source emission. */
-// @symbol func_0206ccd8
 extern "C" void func_0206ccd8(int fmt, ...)
 {
     struct S { int f0, f1, f2, f3; void *cb; };

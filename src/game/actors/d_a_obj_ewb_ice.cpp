@@ -151,17 +151,13 @@ extern char data_ov073_021231c0[];
 extern char data_ov073_021231c4[];
 extern daObjEwbIce_State data_ov073_021234a0;
 
-// @symbol _ZN13daObjEwbIce_cD1Ev
-// @symbol _ZN13daObjEwbIce_cD0Ev
 daObjEwbIce_c::~daObjEwbIce_c() {}
 
-// @symbol _ZN13daObjEwbIce_c19StateSettled_UpdateEv
 /* Update after the splash. Nothing left to do. */
 int daObjEwbIce_c::StateSettled_Update() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c18StateSettled_EnterEv
 /* Enter the settled state: ice-splash particles under the piece, then bank-3 sound 0x172. */
 int daObjEwbIce_c::StateSettled_Enter() {
     Vector3 pos;
@@ -184,7 +180,6 @@ int daObjEwbIce_c::StateSettled_Enter() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c17StateArena_UpdateEv
 /* Arena update. Wobble mAngleX while the timer runs; then drop onto the datum. */
 int daObjEwbIce_c::StateArena_Update() {
     mWobbleAmp = kWobbleAmp;
@@ -221,7 +216,6 @@ done:
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c16StateArena_EnterEv
 /* Arena enter: a short timer, then fall no faster than 200 units/frame. */
 int daObjEwbIce_c::StateArena_Enter() {
     mTimer = kArenaFrames;
@@ -229,7 +223,6 @@ int daObjEwbIce_c::StateArena_Enter() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c16StateSink_UpdateEv
 /* Big/small update. Hold still, creak, tilt, then destroy at the datum. */
 int daObjEwbIce_c::StateSink_Update() {
     UpdatePos(0);
@@ -249,7 +242,6 @@ int daObjEwbIce_c::StateSink_Update() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c15StateSink_EnterEv
 /* Big/small enter: long timer, accel and terminal both -20 units/frame. */
 int daObjEwbIce_c::StateSink_Enter() {
     int neg = -kSinkSpeed;
@@ -259,7 +251,6 @@ int daObjEwbIce_c::StateSink_Enter() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c18StateReport_UpdateEv
 /* Initial update. The frame the timer reads 1, tell Chief Chilly where this piece is. */
 int daObjEwbIce_c::StateReport_Update() {
     if (DecIfAbove0_Short(&mTimer) == 1) {
@@ -292,13 +283,11 @@ int daObjEwbIce_c::StateReport_Update() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c17StateReport_EnterEv
 /* Enter the initial state. The report timer was armed in InitResources. */
 int daObjEwbIce_c::StateReport_Enter() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c8SetStateEP17daObjEwbIce_State
 /* Installs a state record and runs its enter function, if it has one. */
 int daObjEwbIce_c::SetState(daObjEwbIce_State *state) {
     mState = state;
@@ -307,7 +296,6 @@ int daObjEwbIce_c::SetState(daObjEwbIce_State *state) {
     return (this->*(mState->enter))();
 }
 
-// @symbol _ZN13daObjEwbIce_c4KillEv
 void daObjEwbIce_c::Kill() {
     Vector3 pos;
     Vector3 dust;
@@ -322,7 +310,6 @@ void daObjEwbIce_c::Kill() {
     Sound::PlayBank3(0x41, mCamSpacePos);
 }
 
-// @symbol _ZN13daObjEwbIce_c16CleanupResourcesEv
 int daObjEwbIce_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -331,13 +318,11 @@ int daObjEwbIce_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c6RenderEv
 int daObjEwbIce_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c8BehaviorEv
 int daObjEwbIce_c::Behavior() {
     if (mState->update != 0)
         (this->*(mState->update))();
@@ -349,7 +334,6 @@ int daObjEwbIce_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c13InitResourcesEv
 int daObjEwbIce_c::InitResources() {
     BMD_File *bmd;
     KCL_File *kcl;
@@ -402,7 +386,6 @@ int daObjEwbIce_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjEwbIce_c9OnStoodOnEP8dActor_c
 /* Chief Chilly (actor 0xda) stood on a piece that is still in its initial
  * state: post the piece's spawn index to his waypoint cursor, and when it is
  * the waypoint he is after, move the piece on -- the arena (variant 0) and
@@ -428,13 +411,11 @@ void daObjEwbIce_c::OnStoodOn(dActor_c *other) {
  * long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol _ZN13daObjEwbIce_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
 void daObjEwbIce_c::StoodOnCallback(dBgW *collider, daObjEwbIce_c *ice, dActor_c *other) {
     ice->OnStoodOn(other);
 }
 #pragma pop
 
-// @symbol daObjEwbIce_c_classInit_EWB_ICE_C
 /* Reconstructed source-style name: SM64DS proves daObjEwbIce_c through RTTI,
  * allocation size, vtable identity, and the EWB_ICE_C registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -447,7 +428,6 @@ extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_C(void) {
     return new daObjEwbIce_c;
 }
 
-// @symbol daObjEwbIce_c_classInit_EWB_ICE_B
 /* Reconstructed source-style name: SM64DS proves daObjEwbIce_c through RTTI,
  * allocation size, vtable identity, and the EWB_ICE_B registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -456,7 +436,6 @@ extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_B(void) {
     return new daObjEwbIce_c;
 }
 
-// @symbol daObjEwbIce_c_classInit_EWB_ICE_A
 /* Reconstructed source-style name: SM64DS proves daObjEwbIce_c through RTTI,
  * allocation size, vtable identity, and the EWB_ICE_A registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -471,7 +450,6 @@ extern "C" daObjEwbIce_c *daObjEwbIce_c_classInit_EWB_ICE_A(void) {
  * handles (files 0x5e8, 0x5ea, 0x5ec), then the four state records in
  * 234b0, 234c0, 234d0, 234a0 order, each copied from two PMF literals in
  * .data. */
-// @symbol __sinit_d_a_obj_ewb_ice.cpp
 EwbIceModelFileHandle gEwbIceAModelFile(ASSET_EWB_ICE_A_BMD);
 EwbIceModelFileHandle gEwbIceBModelFile(ASSET_EWB_ICE_B_BMD);
 EwbIceModelFileHandle gEwbIceCModelFile(ASSET_EWB_ICE_C_BMD);

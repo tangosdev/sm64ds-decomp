@@ -108,7 +108,6 @@ void Vec3_Asr(void *dst, void *src, int n);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjRc_Hane_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjRc_Hane_c through RTTI,
    allocation size, vtable identity, and the RC_HANE registry profile; later
    EAD lineage supplies classInit. Exact original spelling is not preserved.
@@ -124,7 +123,6 @@ extern "C" daObjRc_Hane_c *daObjRc_Hane_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c13InitResourcesEv
 s32 daObjRc_Hane_c::InitResources() {
     BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov036_02114070);
     mModel.SetFile(file, 1, -1);
@@ -152,7 +150,6 @@ s32 daObjRc_Hane_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c8BehaviorEv
 s32 daObjRc_Hane_c::Behavior() {
     /* mFrame << 10 wraps the frame counter into a full 16-bit turn, and >> 4
        brings it back to the table's entries -- the round trip through s16 is
@@ -197,7 +194,6 @@ s32 daObjRc_Hane_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c6RenderEv
 s32 daObjRc_Hane_c::Render() {
     mModel.Render(0);
     return 1;
@@ -205,7 +201,6 @@ s32 daObjRc_Hane_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c20UpdateModelTransformEv
 /* This class's private "put the model where the actor is" helper, and the
  * reason the rocking is visible at all: it composes the actor's position and
  * three angles into the global scratch matrix, then copies the result into
@@ -228,7 +223,6 @@ void daObjRc_Hane_c::UpdateModelTransform() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c16CleanupResourcesEv
 s32 daObjRc_Hane_c::CleanupResources() {
     data_ov036_02114070.Release();
     return 1;
@@ -236,8 +230,6 @@ s32 daObjRc_Hane_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_cD1Ev
-// @symbol _ZN14daObjRc_Hane_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in
  * include/daObjRc_Hane_c.h and declared FIRST. Two measurements force that:
  *   - out of line, mwcc emits D0 ahead of D1 and the cartridge has D1 first,

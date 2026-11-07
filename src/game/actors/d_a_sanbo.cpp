@@ -100,20 +100,17 @@ extern daSanbo_c::StateFunc data_ov096_02137b48[];
 /* Both profiles construct this class. The synthesized ctor stores
  * `_ZTV9daSanbo_c + 2`; do not restate a file-local `extern _ZTV`. */
 
-// @symbol daSanbo_c_classInit_SANBO
 extern "C" daSanbo_c *daSanbo_c_classInit_SANBO(void)
 {
     return new daSanbo_c();
 }
 
-// @symbol daSanbo_c_classInit_SANBO_BODY
 /* Same class, SANBO_BODY profile (actor id 0xf1). */
 extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
 {
     return new daSanbo_c();
 }
 
-// @symbol _ZN9daSanbo_c13OnTurnIntoEggER7daPly_c
 /* Only the head pays out a coin. Every piece then destroys itself. */
 void daSanbo_c::OnTurnIntoEgg(daPly_c &player) {
     int flag = (actorID == SANBO_HEAD);
@@ -122,7 +119,6 @@ void daSanbo_c::OnTurnIntoEgg(daPly_c &player) {
     MarkForDestruction();
 }
 
-// @symbol _ZN9daSanbo_c13InitResourcesEv
 int daSanbo_c::InitResources()
 {
     int t;
@@ -186,7 +182,6 @@ int daSanbo_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c8BehaviorEv
 int daSanbo_c::Behavior()
 {
     int s = mState;
@@ -200,7 +195,6 @@ int daSanbo_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c6RenderEv
 int daSanbo_c::Render()
 {
     unsigned int f = mFlags;
@@ -211,7 +205,6 @@ int daSanbo_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c16OnPendingDestroyEv
 void daSanbo_c::OnPendingDestroy()
 {
     int isBody = *(unsigned short *)((char *)&actorID);
@@ -225,7 +218,6 @@ void daSanbo_c::OnPendingDestroy()
     } while (p);
 }
 
-// @symbol _ZN9daSanbo_c16CleanupResourcesEv
 int daSanbo_c::CleanupResources() {
     int id = actorID;
     int a = (id == SANBO_HEAD);
@@ -242,27 +234,23 @@ int daSanbo_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02136928Ei
 void daSanbo_c::func_ov096_02136928(int a) {
     mStateFunctions = data_ov096_02137b48 + (a << 1);
     func_ov096_021368f0();
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021368f0Ev
 void daSanbo_c::func_ov096_021368f0()
 {
     daSanbo_c::StateFunc *p = mStateFunctions;
     (this->**p)();
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021368b4Ev
 void daSanbo_c::func_ov096_021368b4()
 {
     daSanbo_c::StateFunc *p = mStateFunctions + 1;
     (this->**p)();
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021368a4Ev
 int daSanbo_c::func_ov096_021368a4()
 {
     mState = 0;
@@ -280,7 +268,6 @@ unsigned d_a_sanboNewUnkCallback818Hold(unsigned a, unsigned b, int x, int y, in
                                         const Vector3_16f *dir);
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02136754Ev
 /* A segment tracks the one in front of it while that piece is still small. */
 int daSanbo_c::func_ov096_02136754()
 {
@@ -334,7 +321,6 @@ int daSanbo_c::func_ov096_02136754()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_0213670cEv
 /* mInstantSprout on the head picks a zero delay or a 90-frame one. */
 int daSanbo_c::func_ov096_0213670c() {
     daSanbo_c *head = func_ov096_021357b4();
@@ -355,7 +341,6 @@ int daSanbo_c::func_ov096_0213670c() {
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021365d4Ev
 /* Grow this segment, then sprout the next one when the timer expires. */
 int daSanbo_c::func_ov096_021365d4()
 {
@@ -394,7 +379,6 @@ int daSanbo_c::func_ov096_021365d4()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02136534Ev
 int daSanbo_c::func_ov096_02136534()
 {
     int head = (actorID == SANBO_HEAD);
@@ -413,7 +397,6 @@ int daSanbo_c::func_ov096_02136534()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02136434Ev
 int daSanbo_c::func_ov096_02136434()
 {
     struct Vector3 pos;
@@ -446,7 +429,6 @@ int daSanbo_c::func_ov096_02136434()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_0213640cEv
 int daSanbo_c::func_ov096_0213640c()
 {
 
@@ -456,7 +438,6 @@ int daSanbo_c::func_ov096_0213640c()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021363c4Ev
 int daSanbo_c::func_ov096_021363c4()
 {
     int flags = mFlags;
@@ -470,14 +451,12 @@ int daSanbo_c::func_ov096_021363c4()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021363b4Ev
 int daSanbo_c::func_ov096_021363b4()
 {
     mState = 4;
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02136264Ev
 /* Follow the segment ahead. Once its scale reaches full size, settle. */
 int daSanbo_c::func_ov096_02136264()
 {
@@ -522,7 +501,6 @@ int daSanbo_c::func_ov096_02136264()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02136134Ev
 int daSanbo_c::func_ov096_02136134()
 {
     int head = (actorID == SANBO_HEAD);
@@ -546,7 +524,6 @@ int daSanbo_c::func_ov096_02136134()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021360c4Ev
 int daSanbo_c::func_ov096_021360c4()
 {
     int head = (actorID == SANBO_HEAD) ? 1 : 0;
@@ -560,7 +537,6 @@ int daSanbo_c::func_ov096_021360c4()
     return 1;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02135efcEv
 void daSanbo_c::func_ov096_02135efc()
 {
     struct Vector3 cam;
@@ -602,7 +578,6 @@ void daSanbo_c::func_ov096_02135efc()
     }
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02135e2cEP10dBgCh_Actr
 void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
 {
     int n0[3];
@@ -627,7 +602,6 @@ void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
 #include "decl_Actor.h"
 #include "decl_Player.h"
 
-// @symbol _ZN9daSanbo_c19func_ov096_02135948Ev
 void daSanbo_c::func_ov096_02135948()
 {
     unsigned int hitId;
@@ -772,7 +746,6 @@ void daSanbo_c::func_ov096_02135948()
     }
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021358c8Ev
 void daSanbo_c::func_ov096_021358c8()
 {
     daPly_c *player = ClosestNonVanishPlayer();
@@ -797,7 +770,6 @@ void daSanbo_c::func_ov096_021358c8()
     mPrevAngleY = (short)(mAngleY + turn);
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02135878Ei
 int daSanbo_c::func_ov096_02135878(int x)
 {
     if (x > 0x190000)
@@ -808,7 +780,6 @@ int daSanbo_c::func_ov096_02135878(int x)
     return (short)r;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_0213585cEv
 void daSanbo_c::func_ov096_0213585c()
 {
 
@@ -816,7 +787,6 @@ void daSanbo_c::func_ov096_0213585c()
     MarkForDestruction();
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02135838Ev
 int daSanbo_c::func_ov096_02135838()
 {
     daSanbo_c *seg = mPrevSegment;
@@ -831,7 +801,6 @@ int daSanbo_c::func_ov096_02135838()
     return count;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_02135800Ev
 void daSanbo_c::func_ov096_02135800()
 {
     daSanbo_c *next;
@@ -848,7 +817,6 @@ void daSanbo_c::func_ov096_02135800()
         next->mPrevSegment = mPrevSegment;
 }
 
-// @symbol _ZN9daSanbo_c19func_ov096_021357b4Ev
 daSanbo_c *daSanbo_c::func_ov096_021357b4()
 {
     daSanbo_c *prev = mPrevSegment;
@@ -864,14 +832,12 @@ daSanbo_c *daSanbo_c::func_ov096_021357b4()
     return 0;
 }
 
-// @symbol _ZN9daSanbo_c16OnAimedAtWithEggEv
 /* Constant height used by the segment particles and the head's shadow. */
 int daSanbo_c::OnAimedAtWithEgg()
 {
     return 245760;
 }
 
-// @symbol _ZN9daSanbo_c13OnYoshiTryEatEv
 /* Returns a constant. The body ignores `this`. */
 int daSanbo_c::OnYoshiTryEat()
 {
@@ -881,7 +847,6 @@ int daSanbo_c::OnYoshiTryEat()
 /* D1 and D0 come from the inline destructor in include/daSanbo_c.h.
  * An out-of-line body here would emit D2 and put D0 below D1. */
 
-// @symbol __sinit_d_a_sanbo.cpp
 SanboModelFilePtr gSanboHeadModelFile(ASSET_SANBO_HEAD_BMD);   /* head model */
 SanboModelFilePtr gSanboBodyModelFile(ASSET_SANBO_BODY_BMD);   /* segment model */
 

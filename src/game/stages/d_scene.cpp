@@ -95,7 +95,6 @@ extern dFdBrightness_c *data_0209d4ac;
 dFdColor_c data_0209f5e8;
 dFdBrightness_c data_0209f5d0;
 
-// @symbol _ZN8dScene_c22ResetHardwareRegistersEv
 void dScene_c::ResetHardwareRegisters()
 {
     Matrix2x2 m;
@@ -199,7 +198,6 @@ void dScene_c::ResetHardwareRegisters()
 }
 
 namespace GX {
-// @symbol _ZN2GX15DisableAllBanksEv
 /* Hand every VRAM user's banks back to the LCDC, in the SDK's own order. */
 void DisableAllBanks() {
     DisableBankForLCDC();
@@ -218,7 +216,6 @@ void DisableAllBanks() {
 }
 }
 
-// @symbol _ZN10dScStage_c12SetVramBanksEv
 void dScStage_c::SetVramBanks() {
     GX::DisableAllBanks();
     GX::SetBankForTex(3);
@@ -230,7 +227,6 @@ void dScStage_c::SetVramBanks() {
     GX::SetBankForSubOBJ(0x100);
 }
 
-// @symbol _ZN8dScene_c20Initialise3dGraphicsEv
 void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
@@ -243,7 +239,6 @@ void dScene_c::Initialise3dGraphics()
     ::Initialise3dGraphics(0);
 }
 
-// @symbol _ZN8dScene_c19ResetFadersAndSoundEv
 bool dScene_c::ResetFadersAndSound()
 {
     data_0209f5c0 = this;
@@ -255,7 +250,6 @@ bool dScene_c::ResetFadersAndSound()
     return 1;
 }
 
-// @symbol _ZN8dScene_c19BeforeInitResourcesEv
 bool dScene_c::BeforeInitResources()
 {
     if (!ResetFadersAndSound())
@@ -264,13 +258,11 @@ bool dScene_c::BeforeInitResources()
     return true;
 }
 
-// @symbol _ZN8dScene_c18AfterInitResourcesEj
 void dScene_c::AfterInitResources(u32 vfSuccess)
 {
     dBase_c::AfterInitResources(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c22BeforeCleanupResourcesEv
 int dScene_c::BeforeCleanupResources()
 {
     if (!fBase_c::BeforeCleanupResources())
@@ -279,7 +271,6 @@ int dScene_c::BeforeCleanupResources()
     return 1;
 }
 
-// @symbol _ZN8dScene_c21AfterCleanupResourcesEj
 void dScene_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2)
@@ -287,7 +278,6 @@ void dScene_c::AfterCleanupResources(u32 vfSuccess)
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c14BeforeBehaviorEv
 int dScene_c::BeforeBehavior()
 {
     if (!fBase_c::BeforeBehavior())
@@ -334,25 +324,21 @@ int dScene_c::BeforeBehavior()
     }
 }
 
-// @symbol _ZN8dScene_c13AfterBehaviorEj
 void dScene_c::AfterBehavior(u32 vfSuccess)
 {
     fBase_c::AfterBehavior(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c12BeforeRenderEv
 int dScene_c::BeforeRender()
 {
     return fBase_c::BeforeRender() != 0;
 }
 
-// @symbol _ZN8dScene_c11AfterRenderEj
 void dScene_c::AfterRender(u32 vfSuccess)
 {
     fBase_c::AfterRender(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c15SetSceneToSpawnEjj
 int dScene_c::SetSceneToSpawn(u32 sceneID, u32 param)
 {
     if (sceneID != data_02092664) {
@@ -363,14 +349,12 @@ int dScene_c::SetSceneToSpawn(u32 sceneID, u32 param)
     return 0;
 }
 
-// @symbol _ZN8dScene_c14StartSceneFadeEjjt
 void dScene_c::StartSceneFade(u32 sceneID, u32 param, u16 fadeColor)
 {
     if (SetSceneToSpawn(sceneID, param))
         data_0209f5e8.color = fadeColor;
 }
 
-// @symbol _ZN8dScene_c18PrepareToSpawnBootEv
 void dScene_c::PrepareToSpawnBoot()
 {
     if (func_0203d9b4())
@@ -380,7 +364,6 @@ void dScene_c::PrepareToSpawnBoot()
     data_02092660 = 0;
 }
 
-// @symbol _ZN8dScene_c16SpawnIfNecessaryEv
 int dScene_c::SpawnIfNecessary()
 {
     u16 sceneID;
@@ -396,7 +379,6 @@ int dScene_c::SpawnIfNecessary()
     }
 }
 
-// @symbol _ZN8dScene_c9SetFadersEP15dFdBrightness_c
 void dScene_c::SetFaders(dFdBrightness_c *fader)
 {
     if (data_0209f5bc) {
@@ -410,7 +392,6 @@ void dScene_c::SetFaders(dFdBrightness_c *fader)
     data_0209d4ac = fader;
 }
 
-// @symbol _ZN8dScene_c20SetAndStopColorFaderEv
 void dScene_c::SetAndStopColorFader()
 {
     SetFaders(&data_0209f5e8);

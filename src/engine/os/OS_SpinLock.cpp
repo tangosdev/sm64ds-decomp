@@ -32,7 +32,6 @@ extern u32 data_020a6124; // OS_InitLock's isInitialized
 // ARM7 to clear its extension field, marks every ARM9 lock ID free, clears the
 // shared lock words, hands the card and cartridge buses to the ARM7, and leaves
 // the init word held by ID 0x7f.
-// @symbol OS_InitLock
 void OS_InitLock(void)
 {
     OSLockWord *lockp;
@@ -67,7 +66,6 @@ void OS_InitLock(void)
     (void)OS_TryLockByWord(0x7f, lockp, 0);
 }
 
-// @symbol OSi_DoLockByWord
 s32 OSi_DoLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u32 disableFiq)
 {
     s32 lastLockFlag;
@@ -79,13 +77,11 @@ s32 OSi_DoLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u32
     return lastLockFlag;
 }
 
-// @symbol OS_TryLockByWord
 s32 OS_TryLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void))
 {
     return OSi_DoLockByWord(lockID, lockp, ctrlFuncp, 0);
 }
 
-// @symbol OSi_DoUnlockByWord
 s32 OSi_DoUnlockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u32 disableFiq)
 {
     u32 lastIntrMode;
@@ -111,13 +107,11 @@ s32 OSi_DoUnlockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u
     return 0;
 }
 
-// @symbol OS_UnlockByWord
 s32 OS_UnlockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void))
 {
     return OSi_DoUnlockByWord(lockID, lockp, ctrlFuncp, 0);
 }
 
-// @symbol OSi_DoTryLockByWord
 s32 OSi_DoTryLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u32 disableFiq)
 {
     u32 lastIntrMode = disableFiq ? IRQ::DisableAll() : IRQ::Disable();
@@ -140,63 +134,53 @@ s32 OSi_DoTryLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), 
     return lastLockFlag;
 }
 
-// @symbol OS_UnlockCartridge
 s32 OS_UnlockCartridge(u16 lockID)
 {
     return OSi_DoUnlockByWord(lockID, (OSLockWord *)HW_CTRDG_LOCK_BUF, OSi_FreeCartridgeBus, 1);
 }
 
-// @symbol OS_TryLockCartridge
 s32 OS_TryLockCartridge(u16 lockID)
 {
     return OSi_DoTryLockByWord(lockID, (OSLockWord *)HW_CTRDG_LOCK_BUF, OSi_AllocateCartridgeBus, 1);
 }
 
 // EXMEMCNT bit 7 gives the GBA slot to the ARM7 when set, to the ARM9 when clear.
-// @symbol OSi_AllocateCartridgeBus
 void OSi_AllocateCartridgeBus(void)
 {
     REG_EXMEMCNT &= ~0x80;
 }
 
-// @symbol OSi_FreeCartridgeBus
 void OSi_FreeCartridgeBus(void)
 {
     REG_EXMEMCNT |= 0x80;
 }
 
-// @symbol OS_TryLockCard
 s32 OS_TryLockCard(u16 lockID)
 {
     return OS_TryLockByWord(lockID, (OSLockWord *)HW_CARD_LOCK_BUF, OSi_AllocateCardBus);
 }
 
-// @symbol OS_UnlockCard
 s32 OS_UnlockCard(u16 lockID)
 {
     return OS_UnlockByWord(lockID, (OSLockWord *)HW_CARD_LOCK_BUF, OSi_FreeCardBus);
 }
 
 // EXMEMCNT bit 11 does the same for the DS card slot.
-// @symbol OSi_AllocateCardBus
 void OSi_AllocateCardBus(void)
 {
     REG_EXMEMCNT &= ~0x800;
 }
 
-// @symbol OSi_FreeCardBus
 void OSi_FreeCardBus(void)
 {
     REG_EXMEMCNT |= 0x800;
 }
 
-// @symbol OS_ReadOwnerOfLockWord
 u16 OS_ReadOwnerOfLockWord(OSLockWord *lock)
 {
     return lock->ownerID;
 }
 
-// @symbol OSi_WaitByLoop
 void OSi_WaitByLoop(void)
 {
     OS_SpinWait(0x1000);
@@ -204,7 +188,6 @@ void OSi_WaitByLoop(void)
 
 // The SDK's misspelled-name compatibility entry. A compiled forwarder would
 // route the address through ip; the SDK writes this one as asm through r1.
-// @symbol OS_UnLockCartridge
 asm s32 OS_UnLockCartridge(u16 lockID)
 {
     ldr r1, =OS_UnlockCartridge
@@ -213,7 +196,6 @@ asm s32 OS_UnLockCartridge(u16 lockID)
 
 // Takes the lowest free ID from the two masks at HW_LOCK_ID_FLAG_MAIN:
 // 0x40 + bit for the first word, 0x60 + bit for the second, -3 if none is left.
-// @symbol OS_GetLockID
 asm s32 OS_GetLockID(void)
 {
     ldr r3, =HW_LOCK_ID_FLAG_MAIN
@@ -239,7 +221,6 @@ found:
     bx lr
 }
 
-// @symbol OS_ReleaseLockID
 asm void OS_ReleaseLockID(u16 lockID)
 {
     ldr r3, =HW_LOCK_ID_FLAG_MAIN

@@ -98,17 +98,14 @@ void func_01ffb07c(dBgW_Kc *self, const Vector3 *v);
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S
 extern "C" daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S() {
     return new daObjBk_Dossunbar_c();
 }
 
-// @symbol daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L
 extern "C" daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L() {
     return new daObjBk_Dossunbar_c();
 }
 
-// @symbol _ZN19daObjBk_Dossunbar_c13InitResourcesEv
 s32 daObjBk_Dossunbar_c::InitResources() {
     /* The ROM materialises the 0/1 test before choosing the store. */
     if (IsBigBar(this))
@@ -146,7 +143,6 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjBk_Dossunbar_c8BehaviorEv
 s32 daObjBk_Dossunbar_c::Behavior() {
     (this->*(data_ov015_021149ec[mState].handler))();
     UpdateModelPosAndRotY();
@@ -155,13 +151,11 @@ s32 daObjBk_Dossunbar_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN19daObjBk_Dossunbar_c6RenderEv
 s32 daObjBk_Dossunbar_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN19daObjBk_Dossunbar_c16CleanupResourcesEv
 s32 daObjBk_Dossunbar_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -171,7 +165,6 @@ s32 daObjBk_Dossunbar_c::CleanupResources() {
 }
 
 /* Install mState and run that state's enter function. */
-// @symbol _ZN19daObjBk_Dossunbar_c11ChangeStateEi
 void daObjBk_Dossunbar_c::ChangeState(int idx) {
     VtEntry *e = (VtEntry *)((char *)data_ov015_02114a24 + (idx << 3));
     int f1 = e->field1;
@@ -186,13 +179,11 @@ void daObjBk_Dossunbar_c::ChangeState(int idx) {
 }
 
 /* State 0 enter: wait at the out position. */
-// @symbol _ZN19daObjBk_Dossunbar_c12EnterWaitOutEv
 void daObjBk_Dossunbar_c::EnterWaitOut() {
     mStateTimer = 20;
 }
 
 /* State 0 body. */
-// @symbol _ZN19daObjBk_Dossunbar_c14ExecuteWaitOutEv
 void daObjBk_Dossunbar_c::ExecuteWaitOut() {
     mStateTimer -= 1;
     if (mStateTimer > 0)
@@ -201,14 +192,12 @@ void daObjBk_Dossunbar_c::ExecuteWaitOut() {
 }
 
 /* State 1 enter. */
-// @symbol _ZN19daObjBk_Dossunbar_c14EnterEaseToMidEv
 void daObjBk_Dossunbar_c::EnterEaseToMid() {
     mStateTimer = 10;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 
 /* State 1 body: ease X towards home minus 0x168000, then wait-mid. */
-// @symbol _ZN19daObjBk_Dossunbar_c16ExecuteEaseToMidEv
 void daObjBk_Dossunbar_c::ExecuteEaseToMid() {
     Math_Function_0203b0fc(&mPosX, mHomePosX - 0x168000, 0x800, 0x46000);
     mStateTimer -= 1;
@@ -219,13 +208,11 @@ void daObjBk_Dossunbar_c::ExecuteEaseToMid() {
 }
 
 /* State 2 enter. */
-// @symbol _ZN19daObjBk_Dossunbar_c12EnterWaitMidEv
 void daObjBk_Dossunbar_c::EnterWaitMid() {
     mStateTimer = 5;
 }
 
 /* State 2 body: small bar -> return-ease, large bar -> return-coast. */
-// @symbol _ZN19daObjBk_Dossunbar_c14ExecuteWaitMidEv
 void daObjBk_Dossunbar_c::ExecuteWaitMid() {
     mStateTimer -= 1;
     if (mStateTimer > 0)
@@ -237,14 +224,12 @@ void daObjBk_Dossunbar_c::ExecuteWaitMid() {
 }
 
 /* State 3 enter. */
-// @symbol _ZN19daObjBk_Dossunbar_c13EnterEaseHomeEv
 void daObjBk_Dossunbar_c::EnterEaseHome() {
     mStateTimer = 0x18;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 
 /* State 3 body: ease X back to home, then wait-home. */
-// @symbol _ZN19daObjBk_Dossunbar_c15ExecuteEaseHomeEv
 void daObjBk_Dossunbar_c::ExecuteEaseHome() {
     Math_Function_0203b14c(&mPosX, mHomePosX, 0x800, 0xb4000, 0x28000);
     mStateTimer -= 1;
@@ -256,14 +241,12 @@ void daObjBk_Dossunbar_c::ExecuteEaseHome() {
 
 /* State 4 enter: X speed rather than a timer. mSpeedX is dActor_c's
    velocity X (with mVertSpeed / mSpeedZ). */
-// @symbol _ZN19daObjBk_Dossunbar_c14EnterCoastHomeEv
 void daObjBk_Dossunbar_c::EnterCoastHome() {
     mSpeedX = 0xf000;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 
 /* State 4 body: coast until X reaches home, then wait-home. */
-// @symbol _ZN19daObjBk_Dossunbar_c16ExecuteCoastHomeEv
 void daObjBk_Dossunbar_c::ExecuteCoastHome() {
     UpdatePosWithOnlySpeed(0);
     if (mPosX < mHomePosX)
@@ -273,13 +256,11 @@ void daObjBk_Dossunbar_c::ExecuteCoastHome() {
 }
 
 /* State 5 enter -- InitResources starts the cycle here. */
-// @symbol _ZN19daObjBk_Dossunbar_c13EnterWaitHomeEv
 void daObjBk_Dossunbar_c::EnterWaitHome() {
     mStateTimer = 10;
 }
 
 /* State 5 body. */
-// @symbol _ZN19daObjBk_Dossunbar_c15ExecuteWaitHomeEv
 void daObjBk_Dossunbar_c::ExecuteWaitHome() {
     mStateTimer -= 1;
     if (mStateTimer > 0)
@@ -288,14 +269,12 @@ void daObjBk_Dossunbar_c::ExecuteWaitHome() {
 }
 
 /* State 6 enter: X speed toward the out position. */
-// @symbol _ZN19daObjBk_Dossunbar_c14EnterTravelOutEv
 void daObjBk_Dossunbar_c::EnterTravelOut() {
     mSpeedX = -0x14000;
     Sound::PlayBank3(0xc3, mCamSpacePos);
 }
 
 /* State 6 body: travel until X is 0x1ea000 below home, then wait-out. */
-// @symbol _ZN19daObjBk_Dossunbar_c16ExecuteTravelOutEv
 void daObjBk_Dossunbar_c::ExecuteTravelOut() {
     UpdatePosWithOnlySpeed(0);
     int v = mHomePosX + (int)0xffe16000;
@@ -305,13 +284,11 @@ void daObjBk_Dossunbar_c::ExecuteTravelOut() {
     ChangeState(0);
 }
 
-// @symbol _ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER7daPly_c
 void daObjBk_Dossunbar_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     Kill();
 }
 
-// @symbol _ZN19daObjBk_Dossunbar_c4KillEv
 void daObjBk_Dossunbar_c::Kill() {
     Vector3 pos;
     Vector3 dustPos;

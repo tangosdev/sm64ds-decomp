@@ -68,9 +68,8 @@ def _marked_member_fragment(text, symbol, path=None):
     Members are found structurally by ``tools/def_locate.py``: the file's
     owned linker symbols (per delinks/symbols.txt, ``srcpath.symbols_for``)
     demangle to signatures that are matched against parsed definitions. The
-    fragment runs from the member's definition line to the next bound
-    definition's line -- the same extent the ``// @symbol`` marker convention
-    sliced, since a marker always sat immediately above its definition.
+    fragment is that member plus the namespace or extern "C" block it was
+    parsed in, so a slice compiled on its own still emits the same symbol.
 
     ``path`` is required for symbol lookup; a caller that only has text can
     keep the markers-era helper by passing it via ``srcpath.path_for``.

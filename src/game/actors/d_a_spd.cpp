@@ -113,7 +113,6 @@ struct ScuttlebugAnimFileHandle : SharedFilePtr {
  * copies the pointers from .data. InitResources feeds the model to
  * dExtSimpleModel_c::LoadFile and the animation to dExtFrameCtrl_c::LoadFile.
  * ------------------------------------------------------------------------ */
-// @symbol __sinit_d_a_spd.cpp
 ScuttlebugModelFilePtr   data_ov071_02122f80(ASSET_SPIDER_BMD);   /* model */
 ScuttlebugAnimFileHandle gSpiderWalkAnimationFile(ASSET_SPIDER_WALK_BCA);   /* anim  */
 
@@ -148,7 +147,6 @@ PMF data_ov071_02122fa8[18] = {
     data_ov071_02122ba8, data_ov071_02122ba0, data_ov071_02122b98,
 };
 
-// @symbol daSpd_c_classInit
 extern "C" daSpd_c *daSpd_c_classInit(void) {
     return new daSpd_c();
 }
@@ -156,7 +154,6 @@ extern "C" daSpd_c *daSpd_c_classInit(void) {
 /* Pays the player mCoinCount coins (a cap coin if Yoshi is wearing the cap,
  * an egg coin otherwise). A child (param1 != 0) resets; the original dies. */
 
-// @symbol _ZN7daSpd_c13OnTurnIntoEggER7daPly_c
 void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
     volatile int force_stack;
     void *p = &player;
@@ -178,7 +175,6 @@ void daSpd_c::OnTurnIntoEgg(daPly_c &player) {
     }
 }
 
-// @symbol _ZN7daSpd_c13InitResourcesEv
 int daSpd_c::InitResources() {
     void *mf = dExtSimpleModel_c::LoadFile(data_ov071_02122f80);
     ((dExtModel_c *)(&mAnmModel))->SetFile((BMD_File *)mf, 1, -1);
@@ -212,7 +208,6 @@ int daSpd_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c8BehaviorEv
 int daSpd_c::Behavior() {
     DecIfAbove0_Short((char *)&mTimer);
     func_ov071_02120278();
@@ -225,7 +220,6 @@ int daSpd_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c6RenderEv
 int daSpd_c::Render() {
     int flag = (mFlags & 0x40000) ? 1 : 0;
     if (flag) goto ret;
@@ -241,12 +235,10 @@ call:
 
 /* Empty: the override exists only to occupy vtable slot 12. */
 
-// @symbol _ZN7daSpd_c16OnPendingDestroyEv
 void daSpd_c::OnPendingDestroy() {}
 
 /* Releases the two shared files. Never touches `this`. */
 
-// @symbol _ZN7daSpd_c16CleanupResourcesEv
 int daSpd_c::CleanupResources() {
     data_ov071_02122f80.Release();
     gSpiderWalkAnimationFile.Release();
@@ -255,13 +247,11 @@ int daSpd_c::CleanupResources() {
 
 /* Points mStateRow at one row of the table and tail-calls its entry handler. */
 
-// @symbol _ZN7daSpd_c8SetStateEi
 void daSpd_c::SetState(int idx) {
     mStateRow = (ScuttlebugStateRow *)data_ov071_02122fa8 + idx;
     func_ov071_021202b4();
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_021202b4Ev
 void daSpd_c::func_ov071_021202b4() {
     PMF *p = (PMF *)mStateRow;
     (this->**p)();
@@ -269,13 +259,11 @@ void daSpd_c::func_ov071_021202b4() {
 
 /* Call the state's per-frame handler, one slot further into the row. */
 
-// @symbol _ZN7daSpd_c19func_ov071_02120278Ev
 void daSpd_c::func_ov071_02120278() {
     PMF *p = (PMF *)mStateRow + 1;
     (this->**p)();
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_02120200Ev
 int daSpd_c::func_ov071_02120200() {
     int *p = (int *)&mFlags;
     int z;
@@ -298,14 +286,12 @@ int daSpd_c::func_ov071_02120200() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_021201b4Ev
 int daSpd_c::func_ov071_021201b4() {
     if (mTimer) return 1;
     if (DistToCPlayer() < 0x5dc000) SetState(1);
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_02120130Ev
 int daSpd_c::func_ov071_02120130() {
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x3e000;
@@ -319,7 +305,6 @@ int daSpd_c::func_ov071_02120130() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_02120028Ev
 int daSpd_c::func_ov071_02120028() {
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
@@ -344,7 +329,6 @@ int daSpd_c::func_ov071_02120028() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211ff84Ev
 int daSpd_c::func_ov071_0211ff84() {
     if (Vec3_Dist(&mPos, (Vector3 *)&mAnchorX) > 0x5dc000) {
         SetState(5);
@@ -359,7 +343,6 @@ int daSpd_c::func_ov071_0211ff84() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fee4Ev
 int daSpd_c::func_ov071_0211fee4() {
     mAngleY = (short)(mAngleY + 0x2bc);
     mPrevAngleY = mAngleY;
@@ -377,7 +360,6 @@ int daSpd_c::func_ov071_0211fee4() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fe38Ev
 int daSpd_c::func_ov071_0211fe38() {
     int *p3a0 = &mLeapDist;
     mVertAccel = -0x2000;
@@ -395,7 +377,6 @@ int daSpd_c::func_ov071_0211fe38() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fd58Ev
 int daSpd_c::func_ov071_0211fd58() {
     mAnmModel.Advance();
     int *p = &mLeapDist;
@@ -418,7 +399,6 @@ int daSpd_c::func_ov071_0211fd58() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fcd4Ev
 int daSpd_c::func_ov071_0211fcd4() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -431,7 +411,6 @@ int daSpd_c::func_ov071_0211fcd4() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fc60Ev
 int daSpd_c::func_ov071_0211fc60() {
     mAnmModel.Advance();
     if (mWithMeshClsn.IsOnGround()) {
@@ -446,7 +425,6 @@ int daSpd_c::func_ov071_0211fc60() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fbf4Ev
 int daSpd_c::func_ov071_0211fbf4() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -457,7 +435,6 @@ int daSpd_c::func_ov071_0211fbf4() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fb24Ev
 int daSpd_c::func_ov071_0211fb24() {
     short ang = Vec3_HorzAngle(&mPos, (Vector3 *)&mAnchorX);
     ApproachLinear(mAngleY, ang, 0x2bc);
@@ -477,14 +454,12 @@ int daSpd_c::func_ov071_0211fb24() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fb0cEv
 int daSpd_c::func_ov071_0211fb0c() {
     mHorzSpeed = 0;
     mState = 6;
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211fa54Ev
 int daSpd_c::func_ov071_0211fa54() {
     int b0 = (int)((mFlags & 0x40000) != 0);
     if (b0 != 0) {
@@ -516,7 +491,6 @@ done:
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f8d0Ev
 int daSpd_c::func_ov071_0211f8d0() {
     mFlags &= 0xfff7fffe;
     mHorzSpeed = mParent->mHorzSpeed + 0x7000;
@@ -535,7 +509,6 @@ int daSpd_c::func_ov071_0211f8d0() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f7d4Ev
 int daSpd_c::func_ov071_0211f7d4() {
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     mAngleX = mAngleX + 0x1000;
@@ -564,7 +537,6 @@ int daSpd_c::func_ov071_0211f7d4() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f6f8Ev
 int daSpd_c::func_ov071_0211f6f8() {
     Sound::PlayBank0(9, mCamSpacePos);
     mFlags &= ~1;
@@ -581,7 +553,6 @@ int daSpd_c::func_ov071_0211f6f8() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f694Ev
 int daSpd_c::func_ov071_0211f694() {
     mAngleX = mAngleX - 0x1000;
     mAnmModel.Advance();
@@ -592,7 +563,6 @@ int daSpd_c::func_ov071_0211f694() {
     return 1;
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f524Ev
 void daSpd_c::func_ov071_0211f524() {
     int b = (int)((mFlags & 0x40000) != 0);
     if (b) {
@@ -623,7 +593,6 @@ void daSpd_c::func_ov071_0211f524() {
     DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, 0xa0000, dh, 0xf);
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f498Ev
 void daSpd_c::func_ov071_0211f498() {
     Vector3 v;
     v.x = mPosX;
@@ -640,7 +609,6 @@ void daSpd_c::func_ov071_0211f498() {
     ((fBase_c *)this)->MarkForDestruction();
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f29cEv
 void daSpd_c::func_ov071_0211f29c() {
     daPly_c *hitPlayer;
     int b;
@@ -705,7 +673,6 @@ void daSpd_c::func_ov071_0211f29c() {
     }
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f148EP10dBgCh_Actr
 void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
     Vector3 pos;
     Vector3 normal;
@@ -744,7 +711,6 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
     }
 }
 
-// @symbol _ZN7daSpd_c19func_ov071_0211f0b4Ev
 void daSpd_c::func_ov071_0211f0b4() {
     dActor_c *p;
     Fix12i d;
@@ -763,7 +729,6 @@ void daSpd_c::func_ov071_0211f0b4() {
 
 /* Vtable slot 29. Ignores `this` and returns a constant. */
 
-// @symbol _ZN7daSpd_c16OnAimedAtWithEggEv
 int daSpd_c::OnAimedAtWithEgg() {
     return 204800;
 }
@@ -771,7 +736,6 @@ int daSpd_c::OnAimedAtWithEgg() {
 /* Vtable slot 18. First non-inline virtual, so this is the key function:
  * the vtable is emitted with it and externalized (see the banner). */
 
-// @symbol _ZN7daSpd_c13OnYoshiTryEatEv
 int daSpd_c::OnYoshiTryEat() {
     return 6;
 }

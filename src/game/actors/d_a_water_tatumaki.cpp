@@ -118,14 +118,11 @@ extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void KillPlayer(void);
 }
 
-// @symbol _ZN18daWater_Tatumaki_cD1Ev
 daWater_Tatumaki_c::~daWater_Tatumaki_c() {}
 
-// @symbol _ZN18daWater_Tatumaki_cD0Ev
 /* D0 is emitted from the destructor above. #pragma defer_codegen off puts
    D1 then D0, which is the cartridge order. The trailing D2 has no ROM home. */
 
-// @symbol _ZN18daWater_Tatumaki_c9StateDragEv
 /* Drag, each frame: orbit the player around the funnel and sink them. Below
    the centre, kill them once. */
 int daWater_Tatumaki_c::StateDrag() {
@@ -179,7 +176,6 @@ int daWater_Tatumaki_c::StateDrag() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c13InitStateDragEv
 /* Drag, on entry: start the orbit where the player is standing. */
 int daWater_Tatumaki_c::InitStateDrag() {
     daPly_c *player = this->ClosestPlayer();
@@ -202,7 +198,6 @@ int daWater_Tatumaki_c::InitStateDrag() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c9StateSpinEv
 /* Spin, each frame: catch a player who has reached the centre, otherwise
    draw a non-metal player inward. The pull is stronger when they are closer. */
 int daWater_Tatumaki_c::StateSpin() {
@@ -262,13 +257,11 @@ int daWater_Tatumaki_c::StateSpin() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c13InitStateSpinEv
 /* Spin, on entry: nothing to set up. */
 int daWater_Tatumaki_c::InitStateSpin() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c8SetStateEPKNS_5StateE
 /* Install a state and run its enter half, if it has one. */
 int daWater_Tatumaki_c::SetState(const State *state) {
     mState = state;
@@ -278,7 +271,6 @@ int daWater_Tatumaki_c::SetState(const State *state) {
     return (this->*s->enter)();
 }
 
-// @symbol _ZN18daWater_Tatumaki_c17UpdateModelMatrixEv
 /* Rebuild the model matrix from the position and angles. */
 void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vector3 pos;
@@ -289,24 +281,20 @@ void daWater_Tatumaki_c::UpdateModelMatrix() {
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c16CleanupResourcesEv
 int daWater_Tatumaki_c::CleanupResources() {
     gWaterTatumakiModelFile.Release();
     gWaterTatumakiAnimationFile.Release();
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c16OnPendingDestroyEv
 void daWater_Tatumaki_c::OnPendingDestroy() {}
 
-// @symbol _ZN18daWater_Tatumaki_c6RenderEv
 int daWater_Tatumaki_c::Render() {
     mTextureTransformer.Update(mAnmModel.data);
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c8BehaviorEv
 int daWater_Tatumaki_c::Behavior() {
     DecIfAbove0_Short((u16 *)&mStateTimer);
     if (mState->execute != 0) {
@@ -328,7 +316,6 @@ int daWater_Tatumaki_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c13InitResourcesEv
 int daWater_Tatumaki_c::InitResources() {
     BMD_File *model = (BMD_File *)dExtSimpleModel_c::LoadFile(gWaterTatumakiModelFile);
     mAnmModel.SetFile(model, 1, -1);
@@ -356,7 +343,6 @@ int daWater_Tatumaki_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_TATUMAKI registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: Whirlpool_Spawn. */
-// @symbol daWater_Tatumaki_c_classInit
 extern "C" daWater_Tatumaki_c *daWater_Tatumaki_c_classInit() {
     return new daWater_Tatumaki_c();
 }

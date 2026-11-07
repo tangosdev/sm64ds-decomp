@@ -76,19 +76,15 @@ extern u8 data_0209d660;
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN13daObjCloset_cD1Ev
-// @symbol _ZN13daObjCloset_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: one vtable store, the five dCcAcPos_c members in reverse,
  * then ~dActor_c. */
 daObjCloset_c::~daObjCloset_c() {}
 
-// @symbol _ZN13daObjCloset_c16CleanupResourcesEv
 s32 daObjCloset_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjCloset_c8BehaviorEv
 s32 daObjCloset_c::Behavior() {
     Vector3 selfPos, frontPos, playerPos;
     Vector3 actorPos;
@@ -198,7 +194,6 @@ s32 daObjCloset_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjCloset_c13InitResourcesEv
 s32 daObjCloset_c::InitResources() {
     int i;
     dCcAcPos_c *collider = mColliders;
@@ -209,7 +204,6 @@ s32 daObjCloset_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjCloset_c_classInit
 extern "C" daObjCloset_c *daObjCloset_c_classInit() {
     return new daObjCloset_c();
 }

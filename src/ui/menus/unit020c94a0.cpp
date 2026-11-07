@@ -63,7 +63,6 @@ extern char *data_ov007_02104c24;        /* DAT1 payload */
 /* Every section but INF1 and DAT1 is skipped. name is the bank's
  * diagnostic name (func_ov007_020b8548 loads it into r2); retail never reads
  * it. Sections the bank lacks keep their previous pointers. */
-// @symbol func_ov007_020c951c
 void func_ov007_020c951c(int unused, MessageBank *bank, const char *name) {
     u32 sectionIndex;
     char *section = (char *)bank;
@@ -89,7 +88,6 @@ void func_ov007_020c951c(int unused, MessageBank *bank, const char *name) {
     }
 }
 
-// @symbol func_ov007_020c94e4
 void func_ov007_020c94e4(void) {
     data_ov007_02104c20 = 0;
     data_ov007_02104c1c = 0;
@@ -100,7 +98,6 @@ void func_ov007_020c94e4(void) {
 /* Each INF1 entry starts with the message's offset into DAT1. The index is
  * narrowed to 16 bits before the multiply; the first argument is unused but
  * every caller passes it. */
-// @symbol func_ov007_020c94a0
 int func_ov007_020c94a0(int unused, unsigned int messageIndex) {
     unsigned short entryStrideBits = data_ov007_02104c1c->entryStrideBits;
     unsigned int entryBitOffset = (unsigned int)(entryStrideBits * (messageIndex & 0xffff));

@@ -59,12 +59,10 @@ enum {
     kSmokeParticle = 0x90,
 };
 
-// @symbol daKlr_c_classInit
 extern "C" daKlr_c *daKlr_c_classInit() {
     return new daKlr_c();
 }
 
-// @symbol _ZN7daKlr_c13InitResourcesEv
 s32 daKlr_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov079_02128300);
     dExtSimpleModel_c::LoadFile(data_ov079_021282f0);
@@ -88,7 +86,6 @@ s32 daKlr_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN7daKlr_c8BehaviorEv
 s32 daKlr_c::Behavior() {
     int flags;
     u32 which;
@@ -157,21 +154,18 @@ s32 daKlr_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN7daKlr_c6RenderEv
 s32 daKlr_c::Render() {
     mModel.Render(0);
     mModel2.Render(0);
     return 1;
 }
 
-// @symbol _ZN7daKlr_c16CleanupResourcesEv
 s32 daKlr_c::CleanupResources() {
     data_ov079_02128300.Release();
     data_ov079_021282f0.Release();
     return 1;
 }
 
-// @symbol _ZN7daKlr_c8StateFlyEv
 /* State 0: wait in the barrel, shiver, then fly. */
 void daKlr_c::StateFly() {
     Vector3 nose;
@@ -227,7 +221,6 @@ void daKlr_c::StateFly() {
     this->MarkForDestruction();
 }
 
-// @symbol _ZN7daKlr_c13StateShotDownEv
 /* State 1: shot down -- pitch over and climb, then burst after 90 frames. */
 void daKlr_c::StateShotDown() {
     if ((u16)this->mStateTimer == 0) {
@@ -243,7 +236,6 @@ void daKlr_c::StateShotDown() {
     this->MarkForDestruction();
 }
 
-// @symbol _ZN7daKlr_c20UpdateModelAndShadowEv
 /* Pose both models from the actor and drop the shadow under them. */
 void daKlr_c::UpdateModelAndShadow() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
@@ -256,13 +248,10 @@ void daKlr_c::UpdateModelAndShadow() {
     DropShadowRadHeight(mShadow, mModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
-// @symbol _ZN7daKlr_c16OnAimedAtWithEggEv
 int daKlr_c::OnAimedAtWithEgg() {
     return 0;
 }
 
-// @symbol _ZN7daKlr_cD1Ev
-// @symbol _ZN7daKlr_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
 

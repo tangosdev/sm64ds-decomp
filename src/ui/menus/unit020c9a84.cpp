@@ -81,7 +81,6 @@ struct SwingSideRows {
  * with x/y springs (mode 2) and its first point pinned, and two pairs of
  * side points with a link each, for func_ov007_020c9d90 to tie to the
  * mesh. */
-// @symbol func_ov007_020ca010
 Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
     Ov007Swing *swing;
     int n;
@@ -128,7 +127,6 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
 /* Frees the swing: its side points (func_ov007_020c8440) and links
  * (func_ov007_020c8098), the chain (func_ov007_020c78dc), the chain's
  * positions and the swing itself. */
-// @symbol func_ov007_020c9fa0
 void func_ov007_020c9fa0(Ov007Swing *self) {
     int i;
     for (i = 0; i < 2; i++) {
@@ -144,7 +142,6 @@ void func_ov007_020c9fa0(Ov007Swing *self) {
 
 /* Places the swing at pos: the anchor there, the x side pair w apart along
  * x and the y side pair h apart along y, both centred on it. */
-// @symbol func_ov007_020c9f10
 void func_ov007_020c9f10(Ov007Swing *self, Vector3 *pos, int w, int h) {
     CopyVec3(&self->yPointPos[1], pos);
     CopyVec3(&self->yPointPos[0], &self->yPointPos[1]);
@@ -162,7 +159,6 @@ void func_ov007_020c9f10(Ov007Swing *self, Vector3 *pos, int w, int h) {
  * bound with that mesh point held at restZ, so its rest offset is taken
  * against the flat mesh. A mesh point's row is taken as its index / rows,
  * not index / columns, as the ROM has it. */
-// @symbol func_ov007_020c9d90
 void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
     int count;
     int i;
@@ -205,7 +201,6 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
 /* One simulation step: the side points spring along z, the chain's pinned
  * first point follows the mesh normal under it, then the chain springs and
  * integrates. shift is the integration step's shift. */
-// @symbol func_ov007_020c9c24
 void func_ov007_020c9c24(Ov007Swing *self, int shift) {
     int i;
     Vector3_16 *normal;
@@ -267,7 +262,6 @@ static inline int CapFraction(int size, u16 cap) {
  * half turn less one. Its size over maxRot, held to [0, 1], is eased out
  * as t (2 - t), and the rotation is that share of maxRot with the tilt's
  * sign. */
-// @symbol func_ov007_020c9a84
 void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY) {
     Vector3 span;
     int angleX, angleY;

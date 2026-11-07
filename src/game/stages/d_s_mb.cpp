@@ -68,10 +68,8 @@ dScMB_c::graphCallback_c data_020a0c68;
 
 #pragma defer_codegen off
 
-// @symbol _ZN7dScMB_cD1Ev
 dScMB_c::~dScMB_c() {}
 
-// @symbol func_02034b1c
 /* The untyped parameter pair is measured, not sloppy: spelling `c` as
    dScMB_c::graphCallback_c * (or `owner` as dScMB_c *, with `this` at the one
    call site) moves this function's bytes. The casts stay. */
@@ -85,7 +83,6 @@ void func_02034b1c(void *c, int owner) {
     callback->mUnusedFlag = 0;
 }
 
-// @symbol _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev
 int dScMB_c::graphCallback_c::GraphCallback3() {
     if (mOwner != 0) {
         ((dScMB_c *)mOwner)->func_02034d34();
@@ -147,17 +144,14 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
     return 1;
 }
 
-// @symbol _ZN7dScMB_c15graphCallback_c14GraphCallback2Ev
 int dScMB_c::graphCallback_c::GraphCallback2() {
     return 0;
 }
 
-// @symbol _ZN7dScMB_c15graphCallback_c14GraphCallback0Ev
 int dScMB_c::graphCallback_c::GraphCallback0() {
     return 0;
 }
 
-// @symbol _ZN7dScMB_c13func_02034d34Ev
 // Its sole caller ignores the result; AdvanceFade itself returns void.
 void dScMB_c::func_02034d34() {
     if (fader.IsAtStart())
@@ -165,19 +159,16 @@ void dScMB_c::func_02034d34() {
     fader.AdvanceFade();
 }
 
-// @symbol _ZN7dScMB_c16CleanupResourcesEv
 s32 dScMB_c::CleanupResources() {
     data_0209d4a8 = 0;
     dScene_c::SetAndStopColorFader();
     return 1;
 }
 
-// @symbol _ZN7dScMB_c6RenderEv
 s32 dScMB_c::Render() {
     return 1;
 }
 
-// @symbol _ZN7dScMB_c8BehaviorEv
 s32 dScMB_c::Behavior() {
     switch (mStep) {
     case 0:
@@ -243,7 +234,6 @@ s32 dScMB_c::Behavior() {
     return 1;
 }
 
-// @symbol func_02034fbc
 void func_02034fbc(int unused) {
     void *h;
 
@@ -264,7 +254,6 @@ void func_02034fbc(int unused) {
     ((mHeap::Heap_t *)data_020a0c5c)->SetDefault();
 }
 
-// @symbol _ZN7dScMB_c13InitResourcesEv
 s32 dScMB_c::InitResources() {
     volatile u16 fillMain;
     volatile u16 fillSub;
@@ -321,7 +310,6 @@ s32 dScMB_c::InitResources() {
     return 1;
 }
 
-// @symbol dScMB_c_classInit
 extern "C" void *dScMB_c_classInit(void) {
     return new dScMB_c;
 }

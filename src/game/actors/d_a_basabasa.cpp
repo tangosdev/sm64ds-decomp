@@ -75,14 +75,11 @@ extern daBasabasa_c::State data_ov065_0211d6f0; /* return */
 extern daBasabasa_c::State data_ov065_0211d700; /* perch */
 extern daBasabasa_c::State data_ov065_0211d710; /* drop */
 
-// @symbol _ZN12daBasabasa_cD1Ev
-// @symbol _ZN12daBasabasa_cD0Ev
 /* The compiler writes the whole body: the vtable store, the dExtShadowModel_c, both
  * dExtAnmModel_c, the dBgCh_Actr and the dCcAc_c in reverse declaration order,
  * then dEnemyBase_c::~dEnemyBase_c. */
 daBasabasa_c::~daBasabasa_c() {}
 
-// @symbol _ZN12daBasabasa_c10CheckTouchEv
 /* Reacts to whatever the collision cylinder touched this frame. */
 void daBasabasa_c::CheckTouch() {
     daPly_c *p;
@@ -178,7 +175,6 @@ void daBasabasa_c::CheckTouch() {
     SetState(&data_ov065_0211d6f0);
 }
 
-// @symbol _ZN12daBasabasa_c13ExecuteReturnEv
 int daBasabasa_c::ExecuteReturn() {
     Vector3 v;
     v.x = 0;
@@ -220,7 +216,6 @@ int daBasabasa_c::ExecuteReturn() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c11EnterReturnEv
 int daBasabasa_c::EnterReturn() {
     unsigned int r;
     r = RandomIntInternal(&data_0209e650.value);
@@ -233,7 +228,6 @@ int daBasabasa_c::EnterReturn() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c12ExecuteChaseEv
 int daBasabasa_c::ExecuteChase() {
     Vector3 v;
     v.x = 0;
@@ -253,7 +247,6 @@ int daBasabasa_c::ExecuteChase() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c10EnterChaseEv
 int daBasabasa_c::EnterChase() {
     mVertAccel = 0;
     mIsFlying = 1;
@@ -265,7 +258,6 @@ int daBasabasa_c::EnterChase() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c11ExecuteDropEv
 int daBasabasa_c::ExecuteDrop() {
     int floorY, posY;
     daPly_c *p;
@@ -282,7 +274,6 @@ int daBasabasa_c::ExecuteDrop() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c9EnterDropEv
 int daBasabasa_c::EnterDrop() {
     mVertAccel = -0x1000;
     mTerminalVelocity = -0xa000;
@@ -297,7 +288,6 @@ int daBasabasa_c::EnterDrop() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c12ExecutePerchEv
 int daBasabasa_c::ExecutePerch() {
     daPly_c *p = ClosestNonVanishPlayer();
     if (p) {
@@ -315,7 +305,6 @@ int daBasabasa_c::ExecutePerch() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c10EnterPerchEv
 int daBasabasa_c::EnterPerch() {
     mFlags = 3;
     mIsFlying = 0;
@@ -324,7 +313,6 @@ int daBasabasa_c::EnterPerch() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c8SetStateEPNS_5StateE
 int daBasabasa_c::SetState(State *state) {
     mCurrentState = state;
     if (mCurrentState->enter == 0)
@@ -332,7 +320,6 @@ int daBasabasa_c::SetState(State *state) {
     return (this->*mCurrentState->enter)();
 }
 
-// @symbol _ZN12daBasabasa_c20UpdateModelTransformEv
 /* Places both models and the drop shadow at the current position. */
 void daBasabasa_c::UpdateModelTransform() {
     Vector3 v;
@@ -349,7 +336,6 @@ void daBasabasa_c::UpdateModelTransform() {
     DropShadowRadHeight(mShadowModel, mShadowMatrix, 0x32000, 0x258000, 0xf);
 }
 
-// @symbol _ZN12daBasabasa_c16CleanupResourcesEv
 /* Releases the four files InitResources claimed. */
 int daBasabasa_c::CleanupResources() {
     data_ov065_0211d698.Release();
@@ -359,10 +345,8 @@ int daBasabasa_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c16OnPendingDestroyEv
 void daBasabasa_c::OnPendingDestroy() {}
 
-// @symbol _ZN12daBasabasa_c6RenderEv
 int daBasabasa_c::Render() {
     /* Through an int: testing mFlags in the `if` compiles differently. */
     int flag = (mFlags & 0x40000) != 0;
@@ -376,7 +360,6 @@ int daBasabasa_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c8BehaviorEv
 int daBasabasa_c::Behavior() {
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
@@ -441,7 +424,6 @@ int daBasabasa_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c13InitResourcesEv
 /* Both dExtAnmModel_c are loaded here, the other half of the evidence that 0x300
  * and 0x364 are two members. */
 int daBasabasa_c::InitResources() {
@@ -467,23 +449,19 @@ int daBasabasa_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12daBasabasa_c16OnAimedAtWithEggEv
 s32 daBasabasa_c::OnAimedAtWithEgg() {
     return 0;
 }
 
-// @symbol _ZN12daBasabasa_c13OnTurnIntoEggER7daPly_c
 void daBasabasa_c::OnTurnIntoEgg(daPly_c &player) {
     GivePlayerCoins(player, (unsigned char)(mExtraCoinCount + 1), 0);
     KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN12daBasabasa_c13OnYoshiTryEatEv
 s32 daBasabasa_c::OnYoshiTryEat() {
     return 4;
 }
 
-// @symbol daBasabasa_c_classInit
 extern "C" daBasabasa_c *daBasabasa_c_classInit() {
     return new daBasabasa_c();
 }

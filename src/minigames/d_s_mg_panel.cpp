@@ -95,20 +95,17 @@ void Mg_DrawBigNumber(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 typedef void (dScMgPanel_c::*PanelStateFn)();
 typedef void (dScMgPanel_c::*PanelStateFnI)(int);
 
-// @symbol _ZN12dScMgPanel_cD1Ev
 /* The complete-object destructor (D1).  Nothing this class owns needs
    destroying, so the whole 0x24 bytes are the compiler's own-vtable write and
    the tail call into ~dScMgBase_c -- the same empty body dScMgCurling_c has. */
 dScMgPanel_c::~dScMgPanel_c() {}
 
-// @symbol _ZN12dScMgPanel_cD0Ev
 /* dScMgPanel_c::~dScMgPanel_c (D0, deleting destructor).  There is no second
    definition to write: mwcc emits D0 from the ONE definition above, and
    dScMgBase_c's own operator delete covers the deallocation.  Under
    `#pragma defer_codegen off` the variants come out D1, D0, D2, which is the
    cartridge order; the trailing D2 is homeless and is deadstripped. */
 
-// @symbol _ZN12dScMgPanel_c16Particle_DrawAllEv
 /* Draw the live particles: 64 slots of 0x18 bytes, sprite chosen by the
    slot's kind byte and positioned from its Fix12 x/y. */
 void dScMgPanel_c::Particle_DrawAll() {
@@ -122,7 +119,6 @@ void dScMgPanel_c::Particle_DrawAll() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c18Particle_UpdateAllEv
 /* Advance the 64 particles one frame: gravity on the free ones, a spin/fade
    counter on all of them, and retire a slot once its counter runs out. */
 void dScMgPanel_c::Particle_UpdateAll() {
@@ -150,7 +146,6 @@ void dScMgPanel_c::Particle_UpdateAll() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c14Particle_SpawnEiii
 /* Spawn one particle in the first free slot, at (x, y).  `mode` picks the
    fixed-drift variant over the random one. */
 void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
@@ -182,7 +177,6 @@ void dScMgPanel_c::Particle_Spawn(int x, int y, int mode) {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c17Particle_ClearAllEv
 /* Retire every particle in the 64-slot pool. */
 void dScMgPanel_c::Particle_ClearAll() {
     int i;
@@ -192,7 +186,6 @@ void dScMgPanel_c::Particle_ClearAll() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c13Scroll_UpdateEv
 void dScMgPanel_c::Scroll_Update() {
     int x;
     int y;
@@ -261,7 +254,6 @@ void dScMgPanel_c::Scroll_Update() {
     SetSubBg2Offset(x, y);
 }
 
-// @symbol _ZN12dScMgPanel_c12Scroll_StartEv
 void dScMgPanel_c::Scroll_Start() {
     mScroll.on = 1;
     mScroll.x = 0;
@@ -274,14 +266,12 @@ void dScMgPanel_c::Scroll_Start() {
     Sound::PlayBank2_2D(0x1fd);
 }
 
-// @symbol _ZN12dScMgPanel_c11Scroll_StopEv
 void dScMgPanel_c::Scroll_Stop() {
     mScroll.on = 0;
     SetBg2Offset(0, 0);
     SetSubBg2Offset(0, 0);
 }
 
-// @symbol _ZN12dScMgPanel_c18EnableOverlayLayerEv
 void dScMgPanel_c::EnableOverlayLayer() {
     extern u8 gSubScreenLayers[];
     if (mShake[0].state != 0)
@@ -291,7 +281,6 @@ void dScMgPanel_c::EnableOverlayLayer() {
     gSubScreenLayers[0] |= 1;
 }
 
-// @symbol _ZN12dScMgPanel_c18Shake_StateLoseTryEi
 void dScMgPanel_c::Shake_StateLoseTry(int index) {
     extern u8 gSubScreenLayers;
     extern int data_ov006_0212ed00[];
@@ -311,7 +300,6 @@ void dScMgPanel_c::Shake_StateLoseTry(int index) {
     SetSubBg0Offset(0, mShake[index].offset);
 }
 
-// @symbol _ZN12dScMgPanel_c16Shake_StateShakeEi
 extern "C" {
 void SetSubBg0Offset(int a, int b);
 }
@@ -329,10 +317,8 @@ void dScMgPanel_c::Shake_StateShake(int index) {
     SetSubBg0Offset(0, mShake[index].offset);
 }
 
-// @symbol _ZN12dScMgPanel_c15Shake_StateIdleEi
 void dScMgPanel_c::Shake_StateIdle(int index) {}
 
-// @symbol _ZN12dScMgPanel_c12Shake_UpdateEv
 void dScMgPanel_c::Shake_Update() {
     extern PanelStateFnI sPanelShakeStateTable[];
     if (mShake[0].active == 0)
@@ -341,7 +327,6 @@ void dScMgPanel_c::Shake_Update() {
     (this->*sPanelShakeStateTable[state])(0);
 }
 
-// @symbol _ZN12dScMgPanel_c11Shake_StartEv
 void dScMgPanel_c::Shake_Start() {
     mShake[0].active = 1;
     mShake[0].unk_00 = 0;
@@ -350,12 +335,10 @@ void dScMgPanel_c::Shake_Start() {
     mShake[0].state = 0;
 }
 
-// @symbol _ZN12dScMgPanel_c10Shake_StopEv
 void dScMgPanel_c::Shake_Stop() {
     mShake[0].active = 0;
 }
 
-// @symbol _ZN12dScMgPanel_c11Banner_DrawEv
 void dScMgPanel_c::Banner_Draw() {
     extern void *sPanelBannerSprites[];
     if (mBanner.visible == 0)
@@ -363,10 +346,8 @@ void dScMgPanel_c::Banner_Draw() {
     Mg_RenderSubSpriteMtx(sPanelBannerSprites[0], mBanner.x >> 12, mBanner.y >> 12, 0);
 }
 
-// @symbol _ZN12dScMgPanel_c16Banner_StateIdleEv
 void dScMgPanel_c::Banner_StateIdle() {}
 
-// @symbol _ZN12dScMgPanel_c18Banner_StateSettleEv
 void dScMgPanel_c::Banner_StateSettle() {
     u16 *p = &mBanner.hold;
     *p = *p + 1;
@@ -380,7 +361,6 @@ void dScMgPanel_c::Banner_StateSettle() {
     mBanner.state = 2;
 }
 
-// @symbol _ZN12dScMgPanel_c17Banner_StatePopUpEv
 void dScMgPanel_c::Banner_StatePopUp() {
     u16 *h = &mBanner.hold;
     *h = *h + 1;
@@ -394,7 +374,6 @@ void dScMgPanel_c::Banner_StatePopUp() {
     mBanner.state = 1;
 }
 
-// @symbol _ZN12dScMgPanel_c13Banner_UpdateEv
 void dScMgPanel_c::Banner_Update() {
     extern PanelStateFn sPanelBannerStateTable[];
     if (mBanner.active == 0)
@@ -409,7 +388,6 @@ void dScMgPanel_c::Banner_Update() {
     (this->*sPanelBannerStateTable[mBanner.state])();
 }
 
-// @symbol _ZN12dScMgPanel_c11Banner_ShowEi
 void dScMgPanel_c::Banner_Show(int i) {
     mBanner.active = 1;
     mBanner.visible = 1;
@@ -420,7 +398,6 @@ void dScMgPanel_c::Banner_Show(int i) {
     mBanner.state = 0;
 }
 
-// @symbol _ZN12dScMgPanel_c10DrawCursorEv
 void dScMgPanel_c::DrawCursor() {
     extern void *sPanelCursorSprites[];
     if (mCreditsOn == 0)
@@ -428,7 +405,6 @@ void dScMgPanel_c::DrawCursor() {
     Hud_RenderSprite(sPanelCursorSprites[mCredits], 0xf0, 0x24, -1, -1);
 }
 
-// @symbol _ZN12dScMgPanel_c7DrawHudEv
 void dScMgPanel_c::DrawHud() {
     extern void *sPanelHudSprites[];
     extern void *data_ov006_02136de8[];
@@ -449,12 +425,10 @@ void dScMgPanel_c::DrawHud() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c16ReloadSlideDelayEv
 void dScMgPanel_c::ReloadSlideDelay() {
     mSlideLeft = mFlipCount;
 }
 
-// @symbol _ZN12dScMgPanel_c14TickSlideDelayEv
 // If mSlideLeft (self+0x4677) is set, decrement it: the ROM's predicated
 // ldrbne/subne/strbne tail.
 void dScMgPanel_c::TickSlideDelay() {
@@ -462,20 +436,16 @@ void dScMgPanel_c::TickSlideDelay() {
         mSlideLeft -= 1;
 }
 
-// @symbol _ZN12dScMgPanel_c14ClearSlideFlagEv
 void dScMgPanel_c::ClearSlideFlag() {
     mSlideFlag = 0;
 }
 
-// @symbol _ZN12dScMgPanel_c12SetSlideFlagEv
 void dScMgPanel_c::SetSlideFlag() {
     mSlideFlag = 1;
 }
 
-// @symbol _ZN12dScMgPanel_c19IntroCard_StateDoneEv
 void dScMgPanel_c::IntroCard_StateDone() {}
 
-// @symbol _ZN12dScMgPanel_c23IntroCard_StateSlideOutEv
 void dScMgPanel_c::IntroCard_StateSlideOut() {
     mSlide += mSlideVel;
     mSlideVel -= 0x400;
@@ -498,7 +468,6 @@ void dScMgPanel_c::IntroCard_StateSlideOut() {
     Sound::PlayBank2_2D(0x1fb);
 }
 
-// @symbol _ZN12dScMgPanel_c19IntroCard_StateHoldEv
 void dScMgPanel_c::IntroCard_StateHold() {
     if (mHold != 0) {
         u16 *p = &mHold;
@@ -511,7 +480,6 @@ void dScMgPanel_c::IntroCard_StateHold() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c22IntroCard_StateSlideInEv
 void dScMgPanel_c::IntroCard_StateSlideIn() {
     mSlide += mSlideVel;
     mSlideVel -= 0x400;
@@ -522,7 +490,6 @@ void dScMgPanel_c::IntroCard_StateSlideIn() {
     mHold = 0x80;
 }
 
-// @symbol _ZN12dScMgPanel_c20IntroCard_StateStartEv
 void dScMgPanel_c::IntroCard_StateStart() {
     mSlide = 0x110000;
     mSlideY = 0x60000;
@@ -531,7 +498,6 @@ void dScMgPanel_c::IntroCard_StateStart() {
     mSlideStep = 1;
 }
 
-// @symbol _ZN12dScMgPanel_c16IntroCard_UpdateEv
 void dScMgPanel_c::IntroCard_Update() {
     extern PanelStateFn sPanelIntroCardStateTable[];
     if (!mSlideOn)
@@ -539,14 +505,12 @@ void dScMgPanel_c::IntroCard_Update() {
     (this->*sPanelIntroCardStateTable[mSlideStep])();
 }
 
-// @symbol _ZN12dScMgPanel_c15IntroCard_StartEv
 void dScMgPanel_c::IntroCard_Start() {
     mSlideOn = 1;
     mSlideStep = 0;
     mSlideLeft = 0;
 }
 
-// @symbol _ZN12dScMgPanel_c15StartSolveCheckEv
 void dScMgPanel_c::StartSolveCheck() {
     if (mBusy != 0)
         return;
@@ -569,7 +533,6 @@ void dScMgPanel_c::StartSolveCheck() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c24Answer_StateFlipSolutionEv
 void dScMgPanel_c::Answer_StateFlipSolution() {
     int index;
     int w;
@@ -628,7 +591,6 @@ void dScMgPanel_c::Answer_StateFlipSolution() {
     mReplayStep++;
 }
 
-// @symbol _ZN12dScMgPanel_c24Answer_StateFindSolutionEv
 
 void dScMgPanel_c::Answer_StateFindSolution() {
     extern u8 *sPanelPuzzles[];
@@ -716,7 +678,6 @@ void dScMgPanel_c::Answer_StateFindSolution() {
     mReplayStep = 0;
 }
 
-// @symbol _ZN12dScMgPanel_c22Answer_StateResetBoardEv
 void dScMgPanel_c::Answer_StateResetBoard() {
     if (mDelay != 0) {
         mDelay--;
@@ -736,7 +697,6 @@ void dScMgPanel_c::Answer_StateResetBoard() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c22Answer_StateWaitButtonEv
 extern "C" {
 typedef struct WarpEntry_730 {
     u8 a;
@@ -785,7 +745,6 @@ void dScMgPanel_c::Answer_StateWaitButton() {
     mDelay = 0x20;
 }
 
-// @symbol _ZN12dScMgPanel_c13Answer_UpdateEv
 void dScMgPanel_c ::Answer_Update() {
     extern PanelStateFn sPanelAnswerStateTable[];
     if (IsAltVariant() != 0)
@@ -794,7 +753,6 @@ void dScMgPanel_c ::Answer_Update() {
     Banner_Update();
 }
 
-// @symbol _ZN12dScMgPanel_c11UpdateMovesEv
 void dScMgPanel_c::UpdateMoves() {
     if (mDelay != 0) {
         mDelay--;
@@ -869,7 +827,6 @@ void dScMgPanel_c::UpdateMoves() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c10DrawPanelsEv
 void dScMgPanel_c::DrawPanels() {
     extern OamAttr *sPanelSprites[];
     extern u8 sPanelFlipFrameSprites[];
@@ -914,7 +871,6 @@ void dScMgPanel_c::DrawPanels() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c12CountMatchesEv
 void dScMgPanel_c::CountMatches() {
     int i;
 
@@ -926,7 +882,6 @@ void dScMgPanel_c::CountMatches() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c13CountFlippingEv
 void dScMgPanel_c::CountFlipping() {
     int cnt;
     int i;
@@ -948,7 +903,6 @@ void dScMgPanel_c::CountFlipping() {
     mResultTimer = 0x40;
 }
 
-// @symbol _ZN12dScMgPanel_c11CheckSolvedEv
 void dScMgPanel_c::CheckSolved() {
     int found;
     int i;
@@ -971,7 +925,6 @@ void dScMgPanel_c::CheckSolved() {
     Sound::PlayBank2_2D(0x1cd);
 }
 
-// @symbol _ZN12dScMgPanel_c11UpdateTouchEv
 /* Accept a new touch within 16 pixels of a panel centre, flip its clipped
    3x3 neighbourhood, and record the move. */
 void dScMgPanel_c::UpdateTouch() {
@@ -1054,7 +1007,6 @@ void dScMgPanel_c::UpdateTouch() {
     } while (++i < n);
 }
 
-// @symbol _ZN12dScMgPanel_c13ShowAllPanelsEv
 /* Show every panel (intro end). */
 void dScMgPanel_c::ShowAllPanels() {
     int i;
@@ -1063,7 +1015,6 @@ void dScMgPanel_c::ShowAllPanels() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c6FlipAtEi
 /* Flip the faces in the 3x3 neighbourhood centred on panel `idx`, clipped at
    the board edges.  The same walk appears in Answer_StateFlipSolution,
    UpdateMoves and UpdateTouch; only this one touches the face
@@ -1092,7 +1043,6 @@ void dScMgPanel_c::FlipAt(int index) {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c10DealPuzzleEv
 /* Layout pass: reads the panel layout (x and y from the layout tables,
    face from the face table picked by IsAltVariant), draws mFlips random picks
    through FlipAt, and retries the whole thing until
@@ -1166,7 +1116,6 @@ void dScMgPanel_c::DealPuzzle() {
     } while (HasDuplicateRows() == 0 || mismatch == 0);
 }
 
-// @symbol _ZN12dScMgPanel_c14ScramblePanelsEv
 /* The 15-bit random draw, used a dozen times below. */
 #define PANEL_RAND ((((u32)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)
 
@@ -1230,7 +1179,6 @@ void dScMgPanel_c::ScramblePanels() {
 }
 #undef PANEL_RAND
 
-// @symbol _ZN12dScMgPanel_c16HasDuplicateRowsEv
 int dScMgPanel_c::HasDuplicateRows() {
     int i, bad, j;
 
@@ -1261,7 +1209,6 @@ int dScMgPanel_c::HasDuplicateRows() {
     return 1;
 }
 
-// @symbol _ZN12dScMgPanel_c9ClearGridEv
 void dScMgPanel_c::ClearGrid() {
     int i, j;
     for (i = 0; i < 5; i++) {
@@ -1271,7 +1218,6 @@ void dScMgPanel_c::ClearGrid() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c10ResetRoundEv
 /* Clear the whole board back to its start-of-round state: the 36 parallel
    panel arrays, the state word, the pick list (0xff = no pick) and the
    cursor, then hand off to the three subsystem resets. */
@@ -1327,7 +1273,6 @@ void dScMgPanel_c::ResetRound() {
     Particle_ClearAll();
 }
 
-// @symbol _ZN12dScMgPanel_c14Panel_StartAllEv
 void dScMgPanel_c::Panel_StartAll() {
     int i;
     for (i = 0; i < mWidth; i++) {
@@ -1335,7 +1280,6 @@ void dScMgPanel_c::Panel_StartAll() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c15Panel_StateFallEi
 void dScMgPanel_c::Panel_StateFall(int index) {
     int old = mY[index];
     mY[index] = old + 0x10000;
@@ -1377,7 +1321,6 @@ void dScMgPanel_c::Panel_StateFall(int index) {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c16Panel_StateBlinkEi
 void dScMgPanel_c::Panel_StateBlink(int idx) {
     mAnimTimer[idx]++;
     if ((mAnimTimer[idx] >> 3) & 1) {
@@ -1392,7 +1335,6 @@ void dScMgPanel_c::Panel_StateBlink(int idx) {
     mVisible[idx] = 1;
 }
 
-// @symbol _ZN12dScMgPanel_c15Panel_StateFlipEi
 /*
  * Per-panel flip tick for one panel (index).
  * Bumps mBusy.  If the panel's mFlipDelay is running, count it down and
@@ -1422,12 +1364,10 @@ void dScMgPanel_c::Panel_StateFlip(int index) {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c15Panel_StateIdleEi
 void dScMgPanel_c::Panel_StateIdle(int index) {
     mFastFlip[index] = 0;
 }
 
-// @symbol _ZN12dScMgPanel_c19Scene_StateGameOverEv
 void dScMgPanel_c::Scene_StateGameOver() {
     extern PanelStateFnI sPanelPanelStateTable[];
     int i;
@@ -1446,7 +1386,6 @@ void dScMgPanel_c::Scene_StateGameOver() {
     ClearSlideFlag();
 }
 
-// @symbol _ZN12dScMgPanel_c17Scene_StateResultEv
 void dScMgPanel_c::Scene_StateResult() {
     extern PanelStateFnI sPanelPanelStateTable[];
     // local extern: see above.
@@ -1511,7 +1450,6 @@ void dScMgPanel_c::Scene_StateResult() {
     mScrollFrames++;
 }
 
-// @symbol _ZN12dScMgPanel_c21Scene_StateShowAnswerEv
 void dScMgPanel_c::Scene_StateShowAnswer() {
     extern PanelStateFnI sPanelPanelStateTable[];
     int i;
@@ -1522,7 +1460,6 @@ void dScMgPanel_c::Scene_StateShowAnswer() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c17Scene_StateRewindEv
 void dScMgPanel_c::Scene_StateRewind() {
     extern PanelStateFnI sPanelPanelStateTable[];
     int i;
@@ -1534,7 +1471,6 @@ void dScMgPanel_c::Scene_StateRewind() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c21Scene_StateShowMissesEv
 void dScMgPanel_c::Scene_StateShowMisses() {
     extern PanelStateFnI sPanelPanelStateTable[];
     u8 index;
@@ -1556,7 +1492,6 @@ void dScMgPanel_c::Scene_StateShowMisses() {
     }
 }
 
-// @symbol _ZN12dScMgPanel_c15Scene_StatePlayEv
 void dScMgPanel_c::Scene_StatePlay() {
     extern PanelStateFnI sPanelPanelStateTable[];
     int i;
@@ -1571,7 +1506,6 @@ void dScMgPanel_c::Scene_StatePlay() {
     StartSolveCheck();
 }
 
-// @symbol _ZN12dScMgPanel_c16Scene_StateIntroEv
 void dScMgPanel_c::Scene_StateIntro() {
     if (mIntro == 0) {
         IntroCard_Update();
@@ -1588,7 +1522,6 @@ void dScMgPanel_c::Scene_StateIntro() {
         mState = 2;
 }
 
-// @symbol _ZN12dScMgPanel_c15Scene_StateInitEv
 void dScMgPanel_c::Scene_StateInit() {
     IntroCard_Start();
     mState = 1;
@@ -1622,7 +1555,6 @@ extern void Mg_DrawScoreTally(void *a, int b, int c, int d);
 
 } /* extern "C" */
 
-// @symbol _ZN12dScMgPanel_c10StartRoundEi
 /* Vtable slot 18, an override of dScMgBase_c::StartRound(int).  The
    signature has to repeat the base declaration exactly or mwcc appends a new
    slot instead of overriding it. */
@@ -1660,7 +1592,6 @@ void dScMgPanel_c::StartRound(int flag) {
     gSubScreenLayers &= ~1;
 }
 
-// @symbol _ZN12dScMgPanel_c6RenderEv
 /* Vtable slot 9. */
 s32 dScMgPanel_c::Render() {
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
@@ -1672,7 +1603,6 @@ s32 dScMgPanel_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12dScMgPanel_c8BehaviorEv
 /* Vtable slot 6.  One frame of the current state, dispatched through the
    descriptor pair at sPanelSceneStateTable. */
 s32 dScMgPanel_c::Behavior() {
@@ -1683,7 +1613,6 @@ s32 dScMgPanel_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12dScMgPanel_c13InitResourcesEv
 /* Vtable slot 0.  Brings up both screens' backgrounds, loads the panel and
    message graphics for the owner's language, then resets the board. */
 
@@ -1818,7 +1747,6 @@ s32 dScMgPanel_c::InitResources() {
  * allocation size, vtable identity, and the MG_PANEL registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MgPuzzlePanelPuzzlePanic_Spawn. */
-// @symbol dScMgPanel_c_classInit
 extern "C" dScMgPanel_c *dScMgPanel_c_classInit() {
     return new dScMgPanel_c;
 }

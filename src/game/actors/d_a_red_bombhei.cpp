@@ -153,7 +153,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == kPlayerActorID;
 }
 
-// @symbol daRedBombhei_c_classInit
 extern "C" daRedBombhei_c *daRedBombhei_c_classInit()
 {
     return new daRedBombhei_c();
@@ -172,7 +171,6 @@ SpawnInfo<daRedBombhei_c> g_profile_RED_BOMBHEI = {
     0x01000000                /* farDistance */
 };
 
-// @symbol _ZN14daRedBombhei_c13InitResourcesEv
 s32 daRedBombhei_c::InitResources()
 {
     Vector3 pos;
@@ -212,7 +210,6 @@ s32 daRedBombhei_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN14daRedBombhei_c8BehaviorEv
 /* Runs the state, keeps turning toward a player within 300.0, and plays
    sound 0xd7 at the start of each animation loop. */
 s32 daRedBombhei_c::Behavior()
@@ -238,14 +235,12 @@ s32 daRedBombhei_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN14daRedBombhei_c6RenderEv
 s32 daRedBombhei_c::Render()
 {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daRedBombhei_c16CleanupResourcesEv
 s32 daRedBombhei_c::CleanupResources()
 {
     gRedBombheiModelFile.Release();
@@ -253,7 +248,6 @@ s32 daRedBombhei_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212ce50Ev
 /* Places the model and drops the shadow under the body. */
 void daRedBombhei_c::func_ov084_0212ce50()
 {
@@ -268,7 +262,6 @@ void daRedBombhei_c::func_ov084_0212ce50()
     DropShadowRadHeight(this->mShadowModel, this->mShadowMat, 0x64000, 0x32000, 0xf);
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212cda0EP7Vector3S1_
 /* Moves the camera point *cur one step toward target, easing the distance
    between them down toward zero. Returns 1 once it has arrived. */
 int daRedBombhei_c::func_ov084_0212cda0(Vector3 *cur, Vector3 *target)
@@ -293,7 +286,6 @@ int daRedBombhei_c::func_ov084_0212cda0(Vector3 *cur, Vector3 *target)
     return remaining == 0;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212ccb4Ev
 /* Cutscene step 3: pan the camera back to where it was before the cutscene.
    Returns 1 once both points have arrived. */
 int daRedBombhei_c::func_ov084_0212ccb4()
@@ -325,7 +317,6 @@ int daRedBombhei_c::func_ov084_0212ccb4()
     return 0;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212cae0Ev
 /* Cutscene step 1: pan the camera over to the cannon shutter -- looking at a
    point 128.0 up and 10.0 behind it from 512.0 up and 200.0 in front. Returns 1
    once both points have arrived. */
@@ -384,7 +375,6 @@ int daRedBombhei_c::func_ov084_0212cae0()
     return lookAtDone != 0 && posDone != 0;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212cac0Ev
 /* Is this the buddy that opens the cannon? */
 int daRedBombhei_c::func_ov084_0212cac0()
 {
@@ -396,14 +386,12 @@ int daRedBombhei_c::func_ov084_0212cac0()
     return result;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212caa8Ev
 /* Is this the red-coin tutor? */
 int daRedBombhei_c::func_ov084_0212caa8()
 {
     return (this->mAngleX & 0xff) == kVariantRedCoins;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212ca60Ev
 /* Was this buddy placed for one character only? */
 int daRedBombhei_c::func_ov084_0212ca60()
 {
@@ -421,7 +409,6 @@ int daRedBombhei_c::func_ov084_0212ca60()
     return result;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c9f0Eih
 /* Opens message msgID on the talking player's screen, with the talk sound. */
 void daRedBombhei_c::func_ov084_0212c9f0(int msgID, u8 msgFlag) {
     daPly_c *player = this->mTalkPlayer;
@@ -436,14 +423,12 @@ void daRedBombhei_c::func_ov084_0212c9f0(int msgID, u8 msgFlag) {
     player->ShowMessage(*this, (s16)msgID, &pos, msgFlag, 0);
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c9a8Ev
 void daRedBombhei_c::func_ov084_0212c9a8()
 {
     int j = this->mState;
     (this->*data_ov084_02130dc4[j].update)();
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c960Ei
 void daRedBombhei_c::func_ov084_0212c960(int state)
 {
     this->mState = state;
@@ -451,7 +436,6 @@ void daRedBombhei_c::func_ov084_0212c960(int state)
     (this->*data_ov084_02130dc4[j].enter)();
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c92cEv
 void daRedBombhei_c::func_ov084_0212c92c()
 {
     unsigned int flags = 0;
@@ -459,7 +443,6 @@ void daRedBombhei_c::func_ov084_0212c92c()
     this->mAnmModel.SetAnim((BCA_File *)file, 0, 0x1000, flags);
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c8b0Ev
 /* State 0 update: start talking when a player walks into the talk cylinder. */
 void daRedBombhei_c::func_ov084_0212c8b0()
 {
@@ -477,7 +460,6 @@ void daRedBombhei_c::func_ov084_0212c8b0()
     func_ov084_0212c960(kStateTalk);
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c89cEv
 /* State 1 enter. */
 void daRedBombhei_c::func_ov084_0212c89c()
 {
@@ -485,7 +467,6 @@ void daRedBombhei_c::func_ov084_0212c89c()
     this->mPrevMsgPageState = 0;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c508Ev
 /* State 1 update: turn to the player, open the right message, and track the
    message box to light the hint arrow on the pages that point somewhere. */
 void daRedBombhei_c::func_ov084_0212c508()
@@ -610,7 +591,6 @@ void daRedBombhei_c::func_ov084_0212c508()
     this->mPrevMsgPageState = data_0209d6bc;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c4a0Ev
 /* State 2 enter: find this level's closed cannon shutter. */
 void daRedBombhei_c::func_ov084_0212c4a0()
 {
@@ -627,7 +607,6 @@ void daRedBombhei_c::func_ov084_0212c4a0()
     this->mCutsceneStep = 0;
 }
 
-// @symbol _ZN14daRedBombhei_c19func_ov084_0212c1a0Ev
 /* State 2 update: the cannon-opening cutscene, one step at a time. */
 void daRedBombhei_c::func_ov084_0212c1a0()
 {
@@ -726,7 +705,5 @@ void daRedBombhei_c::func_ov084_0212c1a0()
     }
 }
 
-// @symbol _ZN14daRedBombhei_cD1Ev
-// @symbol _ZN14daRedBombhei_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */

@@ -52,7 +52,6 @@ extern IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile;
 
 extern CLPS_Block data_ov002_0210d754;
 
-// @symbol daObjIceBoard_c_classInit
 /* Every instruction the cartridge has here falls out of the one `new`.
  * 0x02112a48 loads 0x320 -- the class's own size -- into the header's leaf
  * operator new; 0x02112a58 calls dBgActor_c's C2 and the store at 0x02112a64
@@ -64,7 +63,6 @@ extern "C" daObjIceBoard_c *daObjIceBoard_c_classInit() {
     return new daObjIceBoard_c();
 }
 
-// @symbol _ZN15daObjIceBoard_c13InitResourcesEv
 int daObjIceBoard_c::InitResources() {
     void *modelFile = dExtSimpleModel_c::LoadFile(daObjIceBoard_c_ModelFile);
     mModel.SetFile((BMD_File *)modelFile, 1, -1);
@@ -77,20 +75,17 @@ int daObjIceBoard_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjIceBoard_c8BehaviorEv
 int daObjIceBoard_c::Behavior() {
     if (!mMeshCollider.IsEnabled())
         mMeshCollider.Enable(this);
     return 1;
 }
 
-// @symbol _ZN15daObjIceBoard_c6RenderEv
 int daObjIceBoard_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN15daObjIceBoard_c16CleanupResourcesEv
 int daObjIceBoard_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -100,7 +95,6 @@ int daObjIceBoard_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjIceBoard_c15OnGroundPoundedER8dActor_c
 /* daObjIceBoard_c::OnGroundPounded -- vtable slot 21, ov018 0x021128e0.
  *
  * param1 is the player's character id; 2 is Wario. The trailing unqualified
@@ -113,7 +107,6 @@ void daObjIceBoard_c::OnGroundPounded(dActor_c &other) {
     Kill();
 }
 
-// @symbol _ZN15daObjIceBoard_c4KillEv
 /* daObjIceBoard_c::Kill() at ov018 0x02112880, 0x60 bytes -- vtable slot 31.
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV15daObjIceBoard_c (ov018 0x02113b34) carries
@@ -140,7 +133,6 @@ void daObjIceBoard_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN15daObjIceBoard_c15OnHitByMegaCharER7daPly_c
 /* daObjIceBoard_c::OnHitByMegaChar -- vtable slot 27, ov018 0x02112858.
  *
  * daPly_c::IncMegaKillCount is a real method, and the trailing unqualified
@@ -150,8 +142,6 @@ void daObjIceBoard_c::OnHitByMegaChar(daPly_c &player) {
     Kill();
 }
 
-// @symbol _ZN15daObjIceBoard_cD1Ev
-// @symbol _ZN15daObjIceBoard_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in
  * include/daObjIceBoard_c.h and declared LAST. Two measurements force that:
  *   - out of line, mwcc emits D0 ahead of D1 and the cartridge has D1 first,

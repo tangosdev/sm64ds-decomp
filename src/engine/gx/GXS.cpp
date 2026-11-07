@@ -67,7 +67,6 @@ extern void *func_02054efc(void);
 namespace GX {
 
 // Loads BG palette data to main-screen (GX) palette VRAM at 0x05000000.
-// @symbol _ZN2GX10LoadBGPlttEPKvjj
 void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
@@ -82,7 +81,6 @@ void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
 namespace GXS {
 
 // Loads BG palette data to sub-screen (GXS) palette VRAM at 0x05000400.
-// @symbol _ZN3GXS10LoadBGPlttEPKvjj
 void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
@@ -97,7 +95,6 @@ void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
 namespace GX {
 
 // Loads OBJ palette data to main screen (GX) palette VRAM at 0x05000200.
-// @symbol _ZN2GX11LoadOBJPlttEPKvjj
 void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
@@ -112,7 +109,6 @@ void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
 namespace GXS {
 
 // Loads OBJ palette data to sub-screen (GXS) palette VRAM at 0x05000600.
-// @symbol _ZN3GXS11LoadOBJPlttEPKvjj
 void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
@@ -128,7 +124,6 @@ extern "C" {
 
 // Copies count words from src to VRAM address (0x07000000 + offset) -- the
 // main-engine OAM block (ARM9 view). DMA channel if assigned, else CPU copy.
-// @symbol func_020566dc
 void func_020566dc(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
@@ -140,7 +135,6 @@ void func_020566dc(const void *src, unsigned int offset, unsigned int count) {
 
 // Copies count words from src to VRAM address (0x07000400 + offset) -- the
 // sub-engine OAM block (ARM9 view). DMA channel if assigned, else CPU copy.
-// @symbol func_02056674
 void func_02056674(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
@@ -156,7 +150,6 @@ namespace GX {
 
 // Copies count words from src to VRAM address (0x6400000 + offset) -- main
 // OBJ VRAM.
-// @symbol _ZN2GX7LoadOBJEPKvjj
 void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     unsigned int base = (unsigned int)G2::GetOBJCharPtr();
@@ -173,7 +166,6 @@ extern "C" {
 
 // Copies count words from src to VRAM address (0x6600000 + offset) -- sub
 // OBJ VRAM. GX::LoadOBJ's sub-engine twin.
-// @symbol func_020565b4
 void func_020565b4(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     unsigned int base = (unsigned int)G2S::GetOBJCharPtr();
@@ -185,7 +177,6 @@ void func_020565b4(const void *src, unsigned int offset, unsigned int count) {
 }
 
 // Loads BG0 screen data to the main-engine plane (G2::GetBG0ScrPtr).
-// @symbol func_02056554
 void func_02056554(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG0ScrPtr();
     int ch = data_02099fd0;
@@ -197,7 +188,6 @@ void func_02056554(const void *src, int offset, int count) {
 }
 
 // Loads BG0 screen data to the sub-engine plane (G2S::GetBG0ScrPtr).
-// @symbol func_020564f4
 void func_020564f4(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG0ScrPtr();
     int ch = data_02099fd0;
@@ -209,7 +199,6 @@ void func_020564f4(const void *src, int offset, int count) {
 }
 
 // Loads BG1 screen data to the main-engine plane (G2::GetBG1ScrPtr).
-// @symbol func_02056494
 void func_02056494(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG1ScrPtr();
     int ch = data_02099fd0;
@@ -221,7 +210,6 @@ void func_02056494(const void *src, int offset, int count) {
 }
 
 // Loads BG1 screen data to the sub-engine plane (G2S::GetBG1ScrPtr).
-// @symbol func_02056434
 void func_02056434(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG1ScrPtr();
     int ch = data_02099fd0;
@@ -233,7 +221,6 @@ void func_02056434(const void *src, int offset, int count) {
 }
 
 // Loads BG2 screen data to the main-engine plane (G2::GetBG2ScrPtr).
-// @symbol func_020563d4
 void func_020563d4(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
@@ -247,7 +234,6 @@ void func_020563d4(const void *src, u32 offset, u32 count) {
 }
 
 // Loads BG2 screen data to the sub-engine plane (G2S::GetBG2ScrPtr).
-// @symbol func_02056374
 void func_02056374(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
@@ -261,7 +247,6 @@ void func_02056374(const void *src, u32 offset, u32 count) {
 }
 
 // Loads BG3 screen data to the main-engine plane (G2::GetBG3ScrPtr).
-// @symbol func_02056314
 void func_02056314(const void *src, u32 offset, u32 count) {
     void *bgPtr = G2::GetBG3ScrPtr();
     s32 ch = data_02099fd0;
@@ -273,7 +258,6 @@ void func_02056314(const void *src, u32 offset, u32 count) {
 }
 
 // Loads BG3 screen data to the sub-engine plane (G2S::GetBG3ScrPtr).
-// @symbol func_020562b4
 void func_020562b4(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
@@ -291,7 +275,6 @@ void func_020562b4(const void *src, u32 offset, u32 count) {
 namespace GX {
 
 // Loads character data into MAIN BG0 VRAM (G2::GetBG0CharPtr, 0x2054efc).
-// @symbol _ZN2GX11LoadBG0CharEPKvjj
 void LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = func_02054efc();
     unsigned int channel = data_02099fd0;
@@ -307,7 +290,6 @@ void LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
 namespace GXS {
 
 // Loads BG0 character data into SUB BG0 VRAM (G2S::GetBG0CharPtr).
-// @symbol _ZN3GXS11LoadBG0CharEPKvjj
 void LoadBG0Char(const void *src, u32 offset, u32 size) {
     void *charPtr = (void *)G2S::GetBG0CharPtr();
     if (data_02099fd0 != (u32)-1)
@@ -321,7 +303,6 @@ void LoadBG0Char(const void *src, u32 offset, u32 size) {
 namespace GX {
 
 // Loads character data into MAIN BG1 VRAM (G2::GetBG1CharPtr, 0x2054ea8).
-// @symbol _ZN2GX11LoadBG1CharEPKvjj
 void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = func_02054ea8();
     unsigned int channel = data_02099fd0;
@@ -337,7 +318,6 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
 namespace GXS {
 
 // Loads BG1 character data into SUB BG1 VRAM (G2S::GetBG1CharPtr).
-// @symbol _ZN3GXS11LoadBG1CharEPKvjj
 void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)G2S::GetBG1CharPtr();
     unsigned int channel = data_02099fd0;
@@ -353,7 +333,6 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
 extern "C" {
 
 // Loads BG2 char data into MAIN BG2 VRAM (G2::GetBG2CharPtr).
-// @symbol func_020560d4
 void func_020560d4(const void *src, u32 offset, u32 size) {
     void *charPtr = G2::GetBG2CharPtr();
     if (data_02099fd0 != (u32)-1)
@@ -363,7 +342,6 @@ void func_020560d4(const void *src, u32 offset, u32 size) {
 }
 
 // Loads BG2 char data into SUB BG2 VRAM (G2S::GetBG2CharPtr).
-// @symbol func_02056074
 void func_02056074(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)G2S::GetBG2CharPtr();
     unsigned int channel = data_02099fd0;
@@ -375,7 +353,6 @@ void func_02056074(const void *src, unsigned int offset, unsigned int count) {
 }
 
 // Loads BG3 char data into MAIN BG3 VRAM (0x2054d88 getter).
-// @symbol func_02056014
 void func_02056014(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)func_02054d88();
     unsigned int channel = data_02099fd0;
@@ -387,7 +364,6 @@ void func_02056014(const void *src, unsigned int offset, unsigned int count) {
 }
 
 // Loads BG3 char data into SUB BG3 VRAM (G2S::GetBG3CharPtr).
-// @symbol func_02055fb4
 void func_02055fb4(const void *src, u32 offset, u32 size) {
     void *charPtr = (void *)G2S::GetBG3CharPtr();
     if (data_02099fd0 != (u32)-1)
@@ -400,14 +376,12 @@ void func_02055fb4(const void *src, u32 offset, u32 size) {
 
 namespace GXS {
 
-// @symbol _ZN3GXS18BeginLoadBGExtPlttEv
 // Clears the sub-engine BG ext-palette enable bit and unmaps the bank back to
 // LCDC (GX::ResetBankForSubBGExtPltt); the result is held for EndLoadBGExtPltt.
 void BeginLoadBGExtPltt() {
     data_020a60a4 = GX::ResetBankForSubBGExtPltt();
 }
 
-// @symbol _ZN3GXS13LoadBGExtPlttEPKvjj
 void LoadBGExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     u32 dmaId = data_02099fd0;
     if (dmaId != (u32)-1) {
@@ -417,7 +391,6 @@ void LoadBGExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     }
 }
 
-// @symbol _ZN3GXS16EndLoadBGExtPlttEv
 void EndLoadBGExtPltt() {
     u32 dmaId = data_02099fd0;
     if (dmaId != (u32)-1) {
@@ -427,14 +400,12 @@ void EndLoadBGExtPltt() {
     data_020a60a4 = 0;
 }
 
-// @symbol _ZN3GXS19BeginLoadOBJExtPlttEv
 // The OBJ counterpart (GX::ResetBankForSubOBJExtPltt); the result is held for
 // EndLoadOBJExtPltt.
 void BeginLoadOBJExtPltt() {
     data_020a60a8 = GX::ResetBankForSubOBJExtPltt();
 }
 
-// @symbol _ZN3GXS14LoadOBJExtPlttEPKvjj
 void LoadOBJExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     u32 dmaId = data_02099fd0;
     if (dmaId != (u32)-1) {
@@ -444,7 +415,6 @@ void LoadOBJExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     }
 }
 
-// @symbol _ZN3GXS17EndLoadOBJExtPlttEv
 void EndLoadOBJExtPltt() {
     u32 dmaId = data_02099fd0;
     if (dmaId != (u32)-1) {

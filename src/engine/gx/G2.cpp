@@ -27,7 +27,6 @@
 
 namespace G2 {
 
-// @symbol _ZN2G212GetBG0ScrPtrEv
 void *GetBG0ScrPtr(void) {
     int off = ((*(volatile unsigned short *)0x4000008) & 0x1f00) >> 8;
     unsigned int sbase = (*(volatile unsigned int *)0x4000000) & 0x38000000;
@@ -38,7 +37,6 @@ void *GetBG0ScrPtr(void) {
 
 namespace G2S {
 
-// @symbol _ZN3G2S12GetBG0ScrPtrEv
 void *GetBG0ScrPtr(void) {
     int v = *(volatile unsigned short *)0x4001008;
     return (void *)((((v & 0x1f00) >> 8) << 0xb) + 0x6200000);
@@ -48,7 +46,6 @@ void *GetBG0ScrPtr(void) {
 
 namespace G2 {
 
-// @symbol _ZN2G212GetBG1ScrPtrEv
 void *GetBG1ScrPtr(void) {
     int off = ((*(volatile unsigned short *)0x400000a) & 0x1f00) >> 8;
     unsigned int sbase = (*(volatile unsigned int *)0x4000000) & 0x38000000;
@@ -59,7 +56,6 @@ void *GetBG1ScrPtr(void) {
 
 namespace G2S {
 
-// @symbol _ZN3G2S12GetBG1ScrPtrEv
 void *GetBG1ScrPtr(void) {
     int v = *(volatile unsigned short *)0x400100a;
     return (void *)((((v & 0x1f00) >> 8) << 0xb) + 0x6200000);
@@ -69,7 +65,6 @@ void *GetBG1ScrPtr(void) {
 
 namespace G2 {
 
-// @symbol _ZN2G212GetBG2ScrPtrEv
 /* Mode 6 (large bitmap) returns the engine's VRAM base itself; mode 7 and
  * anything else returns null. */
 void *GetBG2ScrPtr(void) {
@@ -99,7 +94,6 @@ void *GetBG2ScrPtr(void) {
 
 namespace G2S {
 
-// @symbol _ZN3G2S12GetBG2ScrPtrEv
 void *GetBG2ScrPtr(void) {
     int m = *(volatile int *)0x4001000 & 7;
     unsigned int v = *(volatile unsigned short *)0x400100c;
@@ -126,7 +120,6 @@ void *GetBG2ScrPtr(void) {
 
 namespace G2 {
 
-// @symbol _ZN2G212GetBG3ScrPtrEv
 void *GetBG3ScrPtr() {
     unsigned int mode = *(volatile unsigned int *)0x4000000 & 7;
     unsigned short bg3cnt = *(volatile unsigned short *)0x400000e;
@@ -154,7 +147,6 @@ void *GetBG3ScrPtr() {
 
 namespace G2S {
 
-// @symbol _ZN3G2S12GetBG3ScrPtrEv
 void *GetBG3ScrPtr(void) {
     int m = *(volatile int *)0x4001000 & 7;
     unsigned int v = *(volatile unsigned short *)0x400100e;
@@ -179,7 +171,6 @@ void *GetBG3ScrPtr(void) {
 
 } // namespace G2S
 
-// @symbol func_02054efc
 /* G2's BG0 character base. */
 extern "C" void *func_02054efc(void) {
     int off = ((*(volatile unsigned short *)0x4000008) & 0x3c) >> 2;
@@ -189,7 +180,6 @@ extern "C" void *func_02054efc(void) {
 
 namespace G2S {
 
-// @symbol _ZN3G2S13GetBG0CharPtrEv
 void *GetBG0CharPtr(void) {
     int v = *(volatile unsigned short *)0x4001008;
     return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
@@ -197,7 +187,6 @@ void *GetBG0CharPtr(void) {
 
 } // namespace G2S
 
-// @symbol func_02054ea8
 /* G2's BG1 character base. */
 extern "C" void *func_02054ea8(void) {
     int off = ((*(volatile unsigned short *)0x400000a) & 0x3c) >> 2;
@@ -207,7 +196,6 @@ extern "C" void *func_02054ea8(void) {
 
 namespace G2S {
 
-// @symbol _ZN3G2S13GetBG1CharPtrEv
 void *GetBG1CharPtr(void) {
     int v = *(volatile unsigned short *)0x400100a;
     return (void *)((((v & 0x3c) >> 2) << 0xe) + 0x6200000);
@@ -217,7 +205,6 @@ void *GetBG1CharPtr(void) {
 
 namespace G2 {
 
-// @symbol _ZN2G213GetBG2CharPtrEv
 void *GetBG2CharPtr(void) {
     int mode = *(volatile unsigned int *)0x4000000 & 7;
     unsigned int bg2cnt = *(volatile unsigned short *)0x400000c;
@@ -232,7 +219,6 @@ void *GetBG2CharPtr(void) {
 
 namespace G2S {
 
-// @symbol _ZN3G2S13GetBG2CharPtrEv
 void *GetBG2CharPtr(void) {
     int v1 = *(volatile int *)0x4001000;
     unsigned short v2 = *(volatile unsigned short *)0x400100c;
@@ -243,7 +229,6 @@ void *GetBG2CharPtr(void) {
 
 } // namespace G2S
 
-// @symbol func_02054d88
 /* G2's BG3 character base. */
 extern "C" int func_02054d88(void) {
     unsigned int mode = *(volatile unsigned int *)0x4000000 & 7;
@@ -258,7 +243,6 @@ extern "C" int func_02054d88(void) {
 
 namespace G2S {
 
-// @symbol _ZN3G2S13GetBG3CharPtrEv
 void *GetBG3CharPtr(void) {
     int cfg = *(volatile int *)0x4001000;
     unsigned int v = *(volatile unsigned short *)0x400100e;

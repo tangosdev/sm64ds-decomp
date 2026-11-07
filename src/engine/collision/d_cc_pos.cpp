@@ -29,14 +29,12 @@ extern "C" {
 extern unsigned short data_0208e500;
 }
 
-// @symbol _ZN8dCcPos_cC1Ev
 /* pos is left uninitialised: the body is empty and the compiler emits the
    dCc_c base step and the vptr store from the class declaration alone. */
 dCcPos_c::dCcPos_c()
 {
 }
 
-// @symbol _ZN8dCcPos_cD1Ev
 /* Empty body: the vtable store and the dCc_c subobject call are what
    `struct dCcPos_c : dCc_c` and `virtual ~dCcPos_c()` already mean; the
    one member is a Vector3, which has no destructor. D0 adds the class
@@ -45,14 +43,12 @@ dCcPos_c::~dCcPos_c()
 {
 }
 
-// @symbol _ZN8dCcPos_c6GetPosEv
 /* The whole body is the reference itself -- `add r0, r0, #0x30'. */
 Vector3 &dCcPos_c::GetPos()
 {
     return pos;
 }
 
-// @symbol _ZN8dCcPos_c10GetOwnerIDEv
 /* A positional cylinder has no owning dActor_c: constant 0 where
    dCcAc_c's slot reads through its owner pointer. */
 u32 dCcPos_c::GetOwnerID()
@@ -60,7 +56,6 @@ u32 dCcPos_c::GetOwnerID()
     return 0;
 }
 
-// @symbol _ZN8dCcPos_c4InitERK7Vector3iijj
 /* Scalar Fix12i: a by-value Fix12<int> is the class type wall 6az homes
    on the stack. The reference is the same address the pointer spelling
    passed. */
@@ -76,7 +71,6 @@ void dCcPos_c::Init(const Vector3 &pos, Fix12i radius, Fix12i height, u32 flags,
  * nds_printt.cpp, which keep their own matching extern declarations and call
  * sites; only the definition moves. Body as recovered. */
 
-// @symbol func_020147bc
 extern "C" void func_020147bc(unsigned short *dst, int glyph)
 {
     *dst = (unsigned short)(data_0208e500 + glyph);

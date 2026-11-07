@@ -208,7 +208,6 @@ void func_ov064_021163c0(daOts_c *c);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19InitResourcesCommonEv
 /* recovered: named members + shared header, real C++ method
  *
  * Shared InitResources body. daOts_c leaves slot 0 pure virtual; all three
@@ -262,7 +261,6 @@ int daOts_c::InitResourcesCommon()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c14BehaviorCommonEv
 /* recovered: named members + shared header, real C++ method
  *
  * Shared Behavior body. daOts_c leaves slot 6 pure virtual; all three
@@ -340,7 +338,6 @@ int daOts_c::BehaviorCommon()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c6RenderEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 9
  *
  * WAS _ZN11daDonketu_c6RenderEv, and misattributed: slot 9 holds 0x02116cf0 in daOts_c,
@@ -357,7 +354,6 @@ int daOts_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 3
  *
  * WAS _ZN11daDonketu_c16CleanupResourcesEv, and that was a misattribution, not a
@@ -384,7 +380,6 @@ int daOts_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116bacEv
 /* Rebuilds the two matrices every frame: the model matrix (a rotation about Y
  * by mAngleY, translated to mPos plus the model's Y offset) and the drop-shadow
  * matrix (the same rotation, translated to mPos), then drops the shadow. The
@@ -411,7 +406,6 @@ void daOts_c::func_ov064_02116bac(){
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116754Ev
 /* The hit reaction: what the actor does when its collider is touched. Does
  * nothing in STATE_KNOCKED_BACK, or unless the other collider's owner is the
  * player. The cases, in the order tried:
@@ -564,7 +558,6 @@ void daOts_c::func_ov064_02116754()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_021166f0Ev
 /* STATE_RETURN_HOME's steering: records the angle to mHomePos in Tail::mHomeAngle
  * and turns mPrevAngleY toward it by up to 0x140 a frame (about 1.8 degrees).
  * Returns whether the player is within 800 units of mHomePos. */
@@ -580,7 +573,6 @@ int daOts_c::func_ov064_021166f0()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_021165d8Ev
 /* The movement step shared by the states that move (all but STATE_DYING and
  * STATE_REMOVE). Moves the actor (UpdatePos, no collider). If IsGoingOffCliff
  * fires (down = config->cliffDown, slope limit 0x2888 = about 57 degrees, water
@@ -622,14 +614,12 @@ void daOts_c::func_ov064_021165d8()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c14UpdateRunStateEv
 /* Slot 31, called from STATE_CHASE. Empty here; every child overrides it. */
 int daOts_c::UpdateRunState()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116560Ev
 /* STATE_CHASE's body: runs the child's UpdateRunState, then, unless the player is
  * within 1000 units of mHomePos (measured at the actor's own height), drops back
  * to STATE_RETURN_HOME and restarts the walk animation. The caller ignores the
@@ -643,7 +633,6 @@ void daOts_c::func_ov064_02116560() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116460Ev
 /* STATE_KNOCKED_BACK's body. While mHorzSpeed is still being slowed to zero
  * (by Tail::mHorzDecel a frame) the state timer is held at 0. Once it has
  * stopped the actor hops: while fewer than two hops are done, each frame on the
@@ -704,14 +693,12 @@ extern "C" void func_ov064_021163c0(daOts_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c16UpdateDeathStateEv
 /* Slot 32, called from STATE_DYING. Empty here; every child overrides it. */
 void daOts_c::UpdateDeathState()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c13PlayStepSoundEv
 /* Slot 33. Plays the footstep sound on frames 4 and 7 of the animation. */
 void daOts_c::PlayStepSound()
 {
@@ -723,7 +710,6 @@ void daOts_c::PlayStepSound()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c12PlayHitSoundEv
 /* Slot 34. Called when the actor is struck or enters STATE_KNOCKED_BACK. */
 void daOts_c::PlayHitSound()
 {
@@ -731,14 +717,12 @@ void daOts_c::PlayHitSound()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c17PlayShellHitSoundEv
 /* Slot 35, called after the shell and player-hurt reactions. Empty here. */
 void daOts_c::PlayShellHitSound()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c14PlayDeathSoundEv
 /* Slot 36. Called when the actor enters STATE_DYING. */
 void daOts_c::PlayDeathSound()
 {
@@ -746,7 +730,6 @@ void daOts_c::PlayDeathSound()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116220Ev
 /* The floor probe, run at the end of every movement step. Casts a ground
  * collision query from 150 units above the actor's (mPos + model Y offset), and
  * if it finds a floor records its height in Tail::mFloorY. When the actor is no
@@ -790,7 +773,6 @@ void daOts_c::func_ov064_02116220() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_0211616cEv
 /* The death animation's tick, called by the children's UpdateDeathState. Once the
  * state timer exceeds 30 it marks the actor for destruction and returns 1. Until
  * then it sinks mPosY by 5 units a frame and keeps two particle systems alive
@@ -813,7 +795,6 @@ int daOts_c::func_ov064_0211616c() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116110Es
 /* Turns mPrevAngleY toward the closest player by up to `step` a call. Returns 1
  * once it has reached that angle, else 0 (also 0 when there is no player). The
  * children's UpdateRunState use it to face the player. */
@@ -827,7 +808,6 @@ int daOts_c::func_ov064_02116110(short step){
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02115f98EPc
 /* Spawns particle effect kParticleHit where a hit reaction is aimed. `a1` is the
  * player. Aims from this actor's position (raised by the model Y offset) at the
  * player's position plus 70 units up, and places the effect that far along the
@@ -900,7 +880,6 @@ void daOts_c::func_ov064_02115f98(char* a1)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c16OnAimedAtWithEggEv
 /* Slot 29. The height (a fix12 amount added to pos.y) the egg aims at:
  * config->eggAimHeight, or 20 units when there is no config block. */
 int daOts_c::OnAimedAtWithEgg()
@@ -914,7 +893,6 @@ int daOts_c::OnAimedAtWithEgg()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_cD0Ev
 /* recovered: real C++ deleting destructor, defined inline in the header
  *
  * ~daOts_c is defined in the class body -- the three classes derived from it
@@ -930,7 +908,6 @@ int daOts_c::OnAimedAtWithEgg()
  */
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_cD1Ev
 /* recovered: real C++ destructor, defined inline in the header
  *
  * The body the key function forces out is the class's own layout evidence: the

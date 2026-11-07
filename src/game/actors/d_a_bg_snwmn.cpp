@@ -50,7 +50,6 @@ extern Vector3 data_ov072_02122c70;
 
 /* Reconstructed source-style names. SM64DS directly preserves the class RTTI,
  * BIG_SNOWMAN ID, descriptor relationship, and factory behavior. */
-// @symbol daBgSnwmn_c_classInit
 extern "C" daBgSnwmn_c *daBgSnwmn_c_classInit() {
     return new daBgSnwmn_c();
 }
@@ -58,7 +57,6 @@ extern "C" daBgSnwmn_c *daBgSnwmn_c_classInit() {
 extern "C" SpawnInfo<daBgSnwmn_c> g_profile_BIG_SNOWMAN = {
     daBgSnwmn_c_classInit, 0x0110, 0x0083, 3, 1, 0x0012c000, 0x01000000, 0x00001000};
 
-// @symbol _ZN11daBgSnwmn_c13InitResourcesEv
 s32 daBgSnwmn_c::InitResources() {
     Vector3 pos;
     void *model;
@@ -104,7 +102,6 @@ s32 daBgSnwmn_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN11daBgSnwmn_c8BehaviorEv
 s32 daBgSnwmn_c::Behavior() {
     mTexSeq.Advance();
     mCylClsn.SetPosRelativeToActor(data_ov072_02122c70);
@@ -113,7 +110,6 @@ s32 daBgSnwmn_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN11daBgSnwmn_c6RenderEv
 s32 daBgSnwmn_c::Render() {
     mTexSeq.Update(mModel1.data);
     mModel1.Render(&mScale);
@@ -121,10 +117,8 @@ s32 daBgSnwmn_c::Render() {
     return 1;
 }
 
-// @symbol _ZN11daBgSnwmn_c16OnPendingDestroyEv
 void daBgSnwmn_c::OnPendingDestroy() {}
 
-// @symbol _ZN11daBgSnwmn_c16CleanupResourcesEv
 s32 daBgSnwmn_c::CleanupResources() {
     gdaBgSnwmnBigSnowmanHeadModelFile.Release();
     gdaBgSnwmnBigSnowmanBodyModelFile.Release();
@@ -132,7 +126,6 @@ s32 daBgSnwmn_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN11daBgSnwmn_c20UpdateModelTransformEv
 void daBgSnwmn_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel1.mat4x3, mAngleY);
     mModel1.mat4x3.t.x = mPosX >> 3;

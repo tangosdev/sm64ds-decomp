@@ -15,7 +15,6 @@ extern "C" {
 typedef struct Vec3Words {
     Fix12i w[3];
 } Vec3Words;
-// @symbol func_ov007_020b0da0
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */

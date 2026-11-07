@@ -132,7 +132,6 @@ void func_02055998(int *n);
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 }
 
-// @symbol _ZN15ModelComponents13func_020453c0EP8BMD_BoneP8BCA_Filei
 /* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
  * bone's pose with func_0204547c (which stays out) from the model's
  * animation, or from the bone's own override once one is met, ORs in the
@@ -155,7 +154,6 @@ void ModelComponents::func_020453c0(BMD_Bone *fileBone, BCA_File *file, int fram
         func_020453c0((BMD_Bone *)((char *)node + (node[6] << 6)), (BCA_File *)anim, frame);
 }
 
-// @symbol _ZN15ModelComponents11UpdateBonesEP8BCA_Filei
 /* ModelComponents::UpdateBones(BCA_File*, int) at 0x02045394 -- apply a bone
  * animation frame. Forwards to func_020453c0 with this, the BMD bone table
  * (modelFile->bones), the BCA file, and the frame index. */
@@ -164,7 +162,6 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
     func_020453c0(modelFile->bones, file, frame);
 }
 
-// @symbol func_0204531c
 extern "C" {
 void func_0204531c(char *self, int arg)
 {
@@ -192,7 +189,6 @@ void func_0204531c(char *self, int arg)
 }
 }
 
-// @symbol func_02045178
 extern "C" {
 void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
     s16 *t = data_02082214;
@@ -225,7 +221,6 @@ void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
 }
 }
 
-// @symbol _ZN15ModelComponents13func_02045074EP8BMD_Bone
 void ModelComponents::func_02045074(BMD_Bone *fileBone) {
     struct Node *n = (struct Node *)fileBone;
     int m[12];
@@ -245,7 +240,6 @@ void ModelComponents::func_02045074(BMD_Bone *fileBone) {
         func_02045074((BMD_Bone *)((char *)n + n->fc * 0x40));
 }
 
-// @symbol _ZN15ModelComponents21UpdateVertsUsingBonesEv
 /* ModelComponents::UpdateVertsUsingBones() at 0x0204504c -- reset the per-bone
  * transform array to identity, then rebuild vertex positions from the BMD
  * bone list via func_02045074. The bones pointer passed to the helper is
@@ -256,7 +250,6 @@ void ModelComponents::UpdateVertsUsingBones()
     func_02045074(modelFile->bones);
 }
 
-// @symbol func_02044f74
 extern "C" {
 void func_02044f74(void *g, struct Node *n)
 {
@@ -279,7 +272,6 @@ void func_02044f74(void *g, struct Node *n)
 }
 }
 
-// @symbol func_02044efc
 extern "C" {
 void func_02044efc(BMD_File *self) {
     if (!self->numWeightedMatrices)
@@ -304,7 +296,6 @@ void func_02044efc(BMD_File *self) {
 }
 }
 
-// @symbol func_02044e50
 extern "C" {
 void func_02044e50(ModelComponents *self, int count, int base, int *out) {
     int i;
@@ -322,7 +313,6 @@ void func_02044e50(ModelComponents *self, int count, int base, int *out) {
 }
 }
 
-// @symbol func_02044dc4
 extern "C" {
 void func_02044dc4(ModelComponents *self) {
     unsigned int i;
@@ -338,7 +328,6 @@ void func_02044dc4(ModelComponents *self) {
 }
 }
 
-// @symbol _ZN15ModelComponents13func_02044b30Ei
 void ModelComponents::func_02044b30(int idx) {
     char *m = (char *)materials + idx * 0x30;
     int mtx3;
@@ -427,7 +416,6 @@ void ModelComponents::func_02044b30(int idx) {
   }
 }
 
-// @symbol _ZN15ModelComponents13func_0204488cEiP7Vector3
 
 struct Part {
     int count;
@@ -524,7 +512,6 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
     }
 }
 
-// @symbol _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
 void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     int i;
     struct MeshEntry* e;
@@ -657,7 +644,6 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     } while (i < cnt);
 }
 
-// @symbol _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3
 void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
     data_020a4bd4 = 1u << (modelFile->scaleShift + 12);
     if (!mat) {

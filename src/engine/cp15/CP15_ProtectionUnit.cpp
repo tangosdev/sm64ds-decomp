@@ -7,7 +7,6 @@
 
 namespace CP15 {
 
-// @symbol _ZN4CP159EnableMPUEv
 asm void EnableMPU(void)
 {
     mrc p15, 0, r0, c1, c0, 0
@@ -16,7 +15,6 @@ asm void EnableMPU(void)
     bx lr
 }
 
-// @symbol _ZN4CP1510DisableMPUEv
 asm void DisableMPU(void)
 {
     mrc p15, 0, r0, c1, c0, 0

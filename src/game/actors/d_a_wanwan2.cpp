@@ -189,8 +189,6 @@ extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daWanwan2_cD1Ev
-// @symbol _ZN11daWanwan2_cD0Ev
 /* The compiler emits the whole body.
  *
  * One vtable store and ten teardowns, every one a consequence of
@@ -205,7 +203,6 @@ daWanwan2_c::~daWanwan2_c()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_02143370
 /* The floor probe: a vertical line from 10 units above the chomp (0xa000) to
    184 units below it (0xb8000). Returns 1 on a hit. */
 extern "C" int func_ov100_02143370(char *self)
@@ -236,7 +233,6 @@ extern "C" int func_ov100_02143370(char *self)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_0214344c
 /* Contact. Moves the collision body to the chomp (the offset in
    data_ov100_02148008 is {0, -0xa0000, 0}, i.e. -160 units in Y), then looks
    at the actor whose uniqueID is in mdCcAcPos_c.otherOwner, if it still
@@ -305,7 +301,6 @@ extern "C" void func_ov100_0214344c(daWanwan2_c *self)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_021435e8
 /* The actor kept at the chain's last link (mLinkPos[5]). While
    mChainEndActorID is 0 it is spawned (once Spawn succeeds): SILVER_STAR (0xb3) normally, or
    when data_0209f2d8 is 1 a STAR (0xb2, param mSpawnParam | 0x30) plus a
@@ -367,7 +362,6 @@ extern "C" void func_ov100_021435e8(daWanwan2_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_021437d4
 /* The chain. It is anchored 250 units (0xfa000) behind the chomp along its
    rotation (data_020a0e68, MATRIX_SCRATCH_PAPER in symbols/verified.tsv, is
    built from mAngleX/Y/Z). The anchor is kept in a local; it is also written
@@ -468,7 +462,6 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_02143aa4
 /* The walking state's execute member (data_ov100_02147ff8, copied into
    data_ov100_021486f4.execute): advance the walk animation at full speed,
    then step the chain, the contact check and the chain-end actor. Formerly
@@ -486,7 +479,6 @@ extern "C" int func_ov100_02143aa4(daWanwan2_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_02143ae0
 /* The walking state's enter member (data_ov100_02148000): start the walk
    animation from data_ov100_021486ac. Was a C source. */
 extern "C" int func_ov100_02143ae0(daWanwan2_c *c)
@@ -496,7 +488,6 @@ extern "C" int func_ov100_02143ae0(daWanwan2_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_02143b18
 /* Enter a state: store the pair in mStatePair (+0x668) and call its enter
    member, if it has one. */
 extern "C" int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
@@ -508,7 +499,6 @@ extern "C" int func_ov100_02143b18(ChompPmfSelf *c, ChompState *p)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov100_02143b68
 /* The per-frame matrices: the body model's rotation (from mAngleX/Y/Z) and
    position (mPos >> 3), its drop shadow (radius 350 units, depth 500 units,
    opacity 0xf), then for each of the six links an identity matrix at the
@@ -551,7 +541,6 @@ extern "C" void func_ov100_02143b68(char *self)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daWanwan2_c16CleanupResourcesEv
 /* Releases the five shared files InitResources loaded and unloads the silver
    star and number resources. */
 int daWanwan2_c::CleanupResources()
@@ -566,13 +555,11 @@ int daWanwan2_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daWanwan2_c16OnPendingDestroyEv
 void daWanwan2_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daWanwan2_c6RenderEv
 /* The body is drawn with the actor's own scale (mScaleX/Y/Z) and five of
    the six link models are drawn. */
 int daWanwan2_c::Render()
@@ -584,7 +571,6 @@ int daWanwan2_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daWanwan2_c8BehaviorEv
 /* While mHaltTimer is nonzero after its count-down (set to 90 by contact, so
    89 frames) the state's execute member is not run, the chomp's scale eases
    back to 1.0 (0x500 a frame), its horizontal speed is 0, and when the floor
@@ -707,7 +693,6 @@ int daWanwan2_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daWanwan2_c13InitResourcesEv
 /* Loads the files (data_ov100_021486bc is the body model, loaded into
    mAnmModel; data_ov100_021486a4 the link model, set on each mModels[i];
    data_ov100_021486ac the walk animation the enter member plays;
@@ -816,7 +801,6 @@ int daWanwan2_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daWanwan2_c16OnAimedAtWithEggEv
 /* recovered from vtable slot identity (slot 29); historical alias
    UnchainedChomp_OnAimedAtWithEgg. Returns 0. */
 s32 daWanwan2_c::OnAimedAtWithEgg()
@@ -825,7 +809,6 @@ s32 daWanwan2_c::OnAimedAtWithEgg()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol daWanwan2_c_classInit
 /* Reconstructed source-style name: SM64DS proves daWanwan2_c through RTTI,
  * allocation size, vtable identity, and the WANWAN2 registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

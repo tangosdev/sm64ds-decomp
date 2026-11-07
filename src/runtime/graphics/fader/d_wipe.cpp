@@ -36,7 +36,6 @@ extern volatile u32 data_0209f60c;   /* table index the CPU fills */
 extern u8           data_0209f648[]; /* two 0x300-byte scanline tables */
 extern short        data_023c0000[];
 
-// @symbol _ZN7dWipe_cC1Ev
 dWipe_c::dWipe_c() : dFdColor_c(0)
 {
     func_0202ed14();
@@ -44,7 +43,6 @@ dWipe_c::dWipe_c() : dFdColor_c(0)
 
 /* The destructor's one real obligation: if the per-scanline capture is still
    armed, cancel it before the object goes away. */
-// @symbol _ZN7dWipe_cD1Ev
 dWipe_c::~dWipe_c()
 {
     if (needsCleanup == 1)
@@ -54,7 +52,6 @@ dWipe_c::~dWipe_c()
 /* Disarm the capture: mask IME, drop the HBlank IRQ handler, clear both
    engines' blend windows, and if a type change was stashed mid-transition,
    commit it now. */
-// @symbol _ZN7dWipe_c13func_0202fb30Ev
 void dWipe_c::func_0202fb30()
 {
     u16 ime = *(volatile u16 *)0x4000208;
@@ -77,7 +74,6 @@ void dWipe_c::func_0202fb30()
 
 /* Opening half of a wipe. Type 1 is the plain colour fade and the base owns
    it. `extra` is forwarded and not read; callers pass 0. */
-// @symbol _ZN7dWipe_c15SetBackwardTimeEjj
 int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
     dWipe_c *self = this;
     s32 type = self->type;
@@ -150,7 +146,6 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
    it. Loads the wipe's palette on both engines, arms the blend registers,
    then hands the per-scanline work to the HBlank IRQ with IME briefly masked
    around the install. */
-// @symbol _ZN7dWipe_c14SetForwardTimeEjj
 int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
     if (state == 0 || state == 2) {
         int t;
@@ -216,7 +211,6 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 /* Arm the blend path: BLDCNT windows on both engines, capture enabled in
    DISPCNT, then fill both table slots back to back so the next flip lands on
    a finished image. */
-// @symbol _ZN7dWipe_c13func_0202f58cEv
 void dWipe_c::func_0202f58c()
 {
     unk_00e = 1;
@@ -255,7 +249,6 @@ void dWipe_c::func_0202f58c()
    halfway mark and hands over to state 2, state 3 runs it back down to zero
    and pins the blend brightness on both engines before settling in state 4.
    States 0/2/4 are resting and return early. */
-// @symbol _ZN7dWipe_c11AdvanceFadeEv
 void dWipe_c::AdvanceFade()
 {
     if (type == 1) {
@@ -300,7 +293,6 @@ void dWipe_c::AdvanceFade()
 
 /* Latch the staged table into the IRQ-visible index and seed both engines'
    first line from it. */
-// @symbol func_0202f3a4
 extern "C" void func_0202f3a4(void)
 {
     data_0209f608 = data_0209f60c;
@@ -312,7 +304,6 @@ extern "C" void func_0202f3a4(void)
 /* The HBlank handler, installed for IRQ bit 2 while a wipe runs. Past the
    last visible line it only refreshes the table index; on a visible line it
    copies that scanline's 4-byte entry into both engines' blend windows. */
-// @symbol func_0202f2c4
 extern "C" void func_0202f2c4(void)
 {
     int line;
@@ -336,7 +327,6 @@ extern "C" void func_0202f2c4(void)
     data_0209f5fc = 0;
 }
 
-// @symbol _ZN7dWipe_c13func_0202f290Ev
 void dWipe_c::func_0202f290()
 {
     if (type == 2)
@@ -351,7 +341,6 @@ void dWipe_c::func_0202f290()
    0x100-complements, stepped by 2^32/wipeInterp; then flush the pair. The
    fill value goes through a stack slot in the ROM (as MI_CpuFill32's does in
    OS_CreateThread), hence the volatile. */
-// @symbol _ZN7dWipe_c13func_0202efa0Ev
 void dWipe_c::func_0202efa0()
 {
     volatile int fill;
@@ -448,7 +437,6 @@ void dWipe_c::func_0202efa0()
 
 /* The type-2 table: a circular mask. Lines inside the radius get a
    square-root blended edge, the second half mirrors the first. */
-// @symbol _ZN7dWipe_c13func_0202ee94Ev
 void dWipe_c::func_0202ee94()
 {
     int idx;
@@ -498,7 +486,6 @@ void dWipe_c::func_0202ee94()
 /* Vtable slot 5. Type 1 is the plain brightness fade, which the base answers.
    Otherwise a wipe is "at start" whenever its state machine is idle, or its
    own ramp has not passed the halfway mark. */
-// @symbol _ZN7dWipe_c9IsAtStartEv
 int dWipe_c::IsAtStart()
 {
     if (type == 1)
@@ -508,7 +495,6 @@ int dWipe_c::IsAtStart()
 
 /* Vtable slot 6. Mirror of IsAtStart: an idle state machine counts as
    finished, and otherwise the wipe is done once its ramp has run to zero. */
-// @symbol _ZN7dWipe_c7IsAtEndEv
 int dWipe_c::IsAtEnd()
 {
     if (type == 1)
@@ -520,7 +506,6 @@ int dWipe_c::IsAtEnd()
    qualified call -- an unqualified one would dispatch through this object's
    own vptr and land back here. Otherwise the answer composes this object's
    own slots 5 and 6, which stay virtual dispatches. */
-// @symbol _ZN7dWipe_c20IsBetweenStartAndEndEv
 int dWipe_c::IsBetweenStartAndEnd()
 {
     if (type == 1)
@@ -541,7 +526,6 @@ dWipe_c data_0209f61c;
 
 /* Scene-side wipe reset: cancel a live capture, then return the singleton to
    its idle state. */
-// @symbol func_0202ed48
 extern "C" void func_0202ed48(void)
 {
     if (data_0209f61c.needsCleanup == 1)
@@ -549,7 +533,6 @@ extern "C" void func_0202ed48(void)
     data_0209f61c.func_0202ed14();
 }
 
-// @symbol _ZN7dWipe_c13func_0202ed14Ev
 void dWipe_c::func_0202ed14()
 {
     needsCleanup = 0;
@@ -566,14 +549,12 @@ void dWipe_c::func_0202ed14()
 /* Vtable slot 8. A pure veneer to the base: the wipe has no end state of its
    own. The qualified call keeps it a direct `bl` instead of a virtual
    dispatch back into this same slot. */
-// @symbol _ZN7dWipe_c8SetToEndEv
 void dWipe_c::SetToEnd()
 {
     dFdBrightness_c::SetToEnd();
 }
 
 /* Vtable slot 9, same shape as slot 8. */
-// @symbol _ZN7dWipe_c10SetToStartEv
 void dWipe_c::SetToStart()
 {
     dFdBrightness_c::SetToStart();
@@ -582,7 +563,6 @@ void dWipe_c::SetToStart()
 /* Request a new wipe `type`. A mid-transition request is stashed into
    pendingType/typePending and committed by func_0202fb30 when the current leg ends;
    outside a transition it lands directly. */
-// @symbol _ZN7dWipe_c13func_0202ec9cEi
 int dWipe_c::func_0202ec9c(int arg)
 {
     if (arg == type) {

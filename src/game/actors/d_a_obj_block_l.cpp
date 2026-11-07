@@ -83,8 +83,6 @@ static inline int IsActorID(dActor_c *actor, int id) {
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN13daObjBlockL_cD1Ev
-// @symbol _ZN13daObjBlockL_cD0Ev
 /* ONE definition, TWO ROM functions. Two vtable stores and three destructor
  * calls, every one a consequence of `struct daObjBlockL_c : dBgActor_c`: its
  * own vptr, then dBgActor_c's -- inlined, because dBgActor_c's destructor is
@@ -96,7 +94,6 @@ static inline int IsActorID(dActor_c *actor, int id) {
  * first at 0x020b35a0 and D0 at 0x020b35e4.
  */
 daObjBlockL_c::~daObjBlockL_c() {}
-// @symbol _ZN13daObjBlockL_c17NotifyLinkedActorEv
 /* Called from Kill. Follows mLinkedActor: clears a byte on the mega
    character (actor 0x121), or arms mActionPending on the item tag
    (actors 0x141..0x144) so the tag dispatches its stored action. */
@@ -122,14 +119,12 @@ void daObjBlockL_c::NotifyLinkedActor() {
     }
 }
 
-// @symbol _ZN13daObjBlockL_c16HasNonzeroAngleXEv
 /* Both callers are daObjBlockL_c methods in this TU. The field at 0x8c is the
    inherited dActor_c::mAngleX; no external state participates. */
 bool daObjBlockL_c::HasNonzeroAngleX() {
     return mAngleX != 0;
 }
 
-// @symbol _ZN13daObjBlockL_c15OnHitByMegaCharER7daPly_c
 /* Vtable slot 27. player.IncMegaKillCount() then this class's own Kill
  * (slot 31) through an unqualified virtual call. */
 void daObjBlockL_c::OnHitByMegaChar(daPly_c &player) {
@@ -137,7 +132,6 @@ void daObjBlockL_c::OnHitByMegaChar(daPly_c &player) {
     Kill();
 }
 
-// @symbol _ZN13daObjBlockL_c8OnKickedER8dActor_c
 /* Vtable slot 24. `void`, NOT `int`: with two locals and two early returns,
  * mwcc allocates registers differently for `int` vs `void` even though the
  * ROM sets no r0 either way. Every other slot in this file (21/22/23/27)
@@ -162,7 +156,6 @@ void daObjBlockL_c::OnKicked(dActor_c &other) {
     }
 }
 
-// @symbol _ZN13daObjBlockL_c11OnAttacked2ER8dActor_c
 /* Vtable slot 23. Both branches call this class's own Kill (slot 31)
  * through an unqualified virtual call. */
 int daObjBlockL_c::OnAttacked2(dActor_c &other) {
@@ -175,7 +168,6 @@ int daObjBlockL_c::OnAttacked2(dActor_c &other) {
     Kill();
 }
 
-// @symbol _ZN13daObjBlockL_c11OnAttacked1ER8dActor_c
 /* Vtable slot 22; `other` is never read. The single call is this class's
  * own Kill (slot 31) through an unqualified virtual call. */
 int daObjBlockL_c::OnAttacked1(dActor_c &other) {
@@ -184,7 +176,6 @@ int daObjBlockL_c::OnAttacked1(dActor_c &other) {
     Kill();
 }
 
-// @symbol _ZN13daObjBlockL_c15OnGroundPoundedER8dActor_c
 /* Vtable slot 21. Both branches call this class's own Kill (slot 31)
  * through an unqualified virtual call. Neither branch sets r0, so the bare
  * `return;` in this `void` override compiles to the same bytes as the ROM's
@@ -201,7 +192,6 @@ void daObjBlockL_c::OnGroundPounded(dActor_c &other) {
     }
 }
 
-// @symbol _ZN13daObjBlockL_c4KillEv
 /* daObjBlockL_c::Kill() -- vtable slot 31, the one virtual dBgActor_c adds.
  *
  * ONE CLASS, FIVE ACTOR IDS, which is why this function is a switchboard rather
@@ -306,7 +296,6 @@ void daObjBlockL_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN13daObjBlockL_c16CleanupResourcesEv
 int daObjBlockL_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -315,7 +304,6 @@ int daObjBlockL_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjBlockL_c6RenderEv
 int daObjBlockL_c::Render() {
     if (IsActorID(this, 0x13)) {
         if (!(Event::GetBit(mEventID) != 0 && mBroken == 0)) {
@@ -339,7 +327,6 @@ int daObjBlockL_c::Render() {
     return 1;
 }
 
-// @symbol _ZN13daObjBlockL_c8BehaviorEv
 /* Clip bounds use the out-of-line dBgW property setters.
    IsClsnInRangeOnScreen takes its Fix12 arguments as Fix12i. */
 int daObjBlockL_c::Behavior() {
@@ -378,7 +365,6 @@ int daObjBlockL_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjBlockL_c13InitResourcesEv
 /* daObjBlockL_c::InitResources -- one class, six actor IDs. mVariant selects the
  * row of the three 0xc-stride resource tables (model, collision, CLPS) that this
  * block loads; the collision scale then varies again by ID -- 0x1800 for 0x10,
@@ -481,27 +467,22 @@ int daObjBlockL_c::InitResources() {
  * supplies classInit. Exact original spellings are not preserved.
  * Historical aliases: FortressTowerWall_Spawn, BlackBrickBlock_Spawn,
  * BrickBlockSwitchActivated_Spawn, BigBrickBlock_Spawn, BrickBlock_Spawn. */
-// @symbol daObjBlockL_c_classInit_BK_FUTA
 extern "C" daObjBlockL_c *daObjBlockL_c_classInit_BK_FUTA() {
     return new daObjBlockL_c();
 }
 
-// @symbol daObjBlockL_c_classInit_BLOCK_LL
 extern "C" daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_LL() {
     return new daObjBlockL_c();
 }
 
-// @symbol daObjBlockL_c_classInit_SW_BLOCK_L
 extern "C" daObjBlockL_c *daObjBlockL_c_classInit_SW_BLOCK_L() {
     return new daObjBlockL_c();
 }
 
-// @symbol daObjBlockL_c_classInit_DP_BLOCK_L
 extern "C" daObjBlockL_c *daObjBlockL_c_classInit_DP_BLOCK_L() {
     return new daObjBlockL_c();
 }
 
-// @symbol daObjBlockL_c_classInit_BLOCK_L
 extern "C" daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_L() {
     return new daObjBlockL_c();
 }

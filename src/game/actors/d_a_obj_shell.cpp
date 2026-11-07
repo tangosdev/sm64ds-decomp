@@ -79,7 +79,6 @@ extern ShellAnimationFilePtr data_ov064_0211c9bc;
 extern ShellModelFilePtr data_ov064_0211c9c4;
 extern ShellAnimationFilePtr data_ov064_0211c9cc;
 
-// @symbol daObjShell_c_classInit
 /* Reconstructed source-style name: the cartridge proves daObjShell_c through
  * RTTI, allocation size and vtable identity, and the OBJ_SHELL profile at
  * 0x0211c5a4 takes this function's address as its factory slot; later EAD
@@ -103,7 +102,6 @@ extern "C" daObjShell_c *daObjShell_c_classInit() {
     return new daObjShell_c();
 }
 
-// @symbol _ZN12daObjShell_c13InitResourcesEv
 /* Both animations are loaded, then the model; the clam starts on the idle
  * animation at 0x0211c9bc. The cylinder is 0x64000 in both radius and height.
  */
@@ -119,7 +117,6 @@ int daObjShell_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c8BehaviorEv
 /* The clam's two-state open/shut cycle. State 0 is shut: on animation frame
  * 0x19 it plays sound 0x27, puffs particle 0x10c above itself, arms a
  * 10-frame counter and CLEARS the collision bit; otherwise, once the state
@@ -216,13 +213,11 @@ int daObjShell_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c6RenderEv
 int daObjShell_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c16CleanupResourcesEv
 /* Three releases, all of this overlay's own handles, and they are the same
  * three InitResources loads: the model at 0211c9c4 and the two animations at
  * 0211c9cc (the lunge) and 0211c9bc (the idle) that Behavior switches
@@ -236,7 +231,6 @@ int daObjShell_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c20UpdateModelTransformEv
 /* Rebuilds the model's world matrix from the actor's facing angle and its
  * position, the position scaled down by 8 the way every dExtAnmModel_c actor in
  * this overlay does it. InitResources calls it once, at spawn. Named after

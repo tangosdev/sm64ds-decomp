@@ -50,12 +50,10 @@ extern UkishimaCollisionFilePtr gKm2UkishimaCollisionFile; /* KCL, file 1644 */
 /* 20.12; InitResourcesFrom writes this to mBobAmplitude. */
 enum { kBobAmplitude = 0xf50 };
 
-// @symbol daObjKm2_Ukishima_c_classInit
 extern "C" daObjKm2_Ukishima_c *daObjKm2_Ukishima_c_classInit() {
     return new daObjKm2_Ukishima_c();
 }
 
-// @symbol g_profile_KM2_UKISHIMA
 extern "C" SpawnInfo<daObjKm2_Ukishima_c> g_profile_KM2_UKISHIMA = {
     daObjKm2_Ukishima_c_classInit,
     0x0091, /* KM2_UKISHIMA registry id 145 */
@@ -66,12 +64,10 @@ extern "C" SpawnInfo<daObjKm2_Ukishima_c> g_profile_KM2_UKISHIMA = {
     0x02000000,
     0};
 
-// @symbol _ZN19daObjKm2_Ukishima_c13InitResourcesEv
 s32 daObjKm2_Ukishima_c::InitResources() {
     return InitResourcesFrom(&data_ov045_02112f08, kBobAmplitude);
 }
 
-// @symbol _ZN19daObjKm2_Ukishima_c16CleanupResourcesEv
 s32 daObjKm2_Ukishima_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov045_02112f08);
 }
