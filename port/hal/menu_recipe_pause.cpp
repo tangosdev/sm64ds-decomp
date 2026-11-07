@@ -1127,6 +1127,9 @@ extern "C" int menu_pause_rom_fallback(void) { return 0; }      /* PAUSEFULL1: w
 extern "C" int menu_pause_active(void) { return g_last_variant != 0; }
 /* 1 while a 4:3 pause slide is in flight: the host stylus / click and the Backspace back key are eaten by their seam (hal/sub_screen.cpp) */
 extern "C" int menu_pause_slide_busy(void) { return slide_busy() || rom_career_eats(); }   /* CAREER1: and the two-screen Career page in view */
+/* CAREERLOCK1: 1 while the pause is slid off its main page (the tracker or the Career page in view, one screen or two) or a slide is
+   running: the plates are not on screen, so hal/settings_page_hooks.cpp arms no Options press (A there only slides back) */
+extern "C" int menu_pause_slid_away(void) { return off_main() || slide_busy() || rom_career_eats(); }
 
 /* CAREER1: THE CAREER PAGE WITH OneScreenMenus OFF. The ROM's own pause is on two screens there (its plates on the touch screen) and no recipe is
    up, so the page is the host's: the Career sheet slides over the upper screen the way it slides in the one-screen pause (the same Slide, a

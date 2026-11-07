@@ -37,6 +37,7 @@ unsigned int func_02012790(unsigned int snd);   /* the common sound call */
 int port_title_elem_boxes(int *slot, int *id, int *x0, int *y0, int *x1, int *y1, int max);
 int port_title_page_state(int *top, int *elem, int *req);
 void port_host_keys_clear(unsigned short mask);   /* hal/scene_boot.cpp */
+int menu_pause_slid_away(void);                   /* CAREERLOCK1: hal/menu_recipe_pause.cpp */
 }
 
 namespace {
@@ -50,6 +51,9 @@ int armed_target()
     const int scene = port_scene_live_id();
     if ((scene == 3 || scene == -1) && data_0209f2c4 && !data_0209f20c) {
         const unsigned st = data_0209f248;
+        /* CAREERLOCK1: not while the pause is slid to the tracker or the Career page, or sliding: the Options plate is off screen, the
+           ROM's chosen plate can still be it, and A there opened the settings page the player never picked (it slides back instead) */
+        if (menu_pause_slid_away()) return TGT_NONE;
         if ((st == 1 || st == 3) && data_0209f300 == 0 && data_0209f22c == 0 && data_0209f244 == 0) return TGT_PAUSE;
         return TGT_NONE;
     }
