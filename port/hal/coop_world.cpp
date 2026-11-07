@@ -513,10 +513,12 @@ void watch_swallow(unsigned now) {
 
 // Three tries each (now, +120 ms, +360 ms), like the owner's deltas: a repeat finds no copy left and does nothing.
 void send_swallows(unsigned now) {
-    if (g_grp.others() == 0) { g_sw_n = 0; return; }
+    // Alone in the level: a broken block still goes out, so a friend on another level files it for a later visit (COOPSYNC1).
+    const bool alone = g_grp.others() == 0;
     int k = 0;
     for (int i = 0; i < g_sw_n; ++i) {
         SwOut &o = g_sw_out[i];
+        if (alone && !breakable_block(o.cls)) continue;
         if ((int)(now - o.next) >= 0) {
             CoopSwallowWire w; std::memset(&w, 0, sizeof w);
             w.key = wire_key(g_key); w.slot = o.slot; w.cls = o.cls;
