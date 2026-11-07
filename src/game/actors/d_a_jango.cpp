@@ -174,7 +174,8 @@ typedef struct { int x, y, z; } Vector3;
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
-extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern Matrix4x3 data_020a0e68;
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
