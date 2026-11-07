@@ -117,6 +117,32 @@ class Isolate(unittest.TestCase):
         self._assert_rename_preserves_object(raw, {"x": "descriptive_import"},
                                            False, growth=True)
 
+    def test_undefined_alias_may_join_an_existing_import(self):
+        raw = self.build('extern "C" { extern int x; extern int canon; '
+                         'int read_two() { return x + canon; } }').read_bytes()
+        out = self._assert_rename_preserves_object(raw, {"x": "canon"}, False,
+                                                 growth=True)
+        import io
+        from elftools.elf.elffile import ELFFile
+        imports = [s for s in ELFFile(io.BytesIO(out)).get_section_by_name(".symtab")
+                   .iter_symbols() if s.name == "canon"]
+        self.assertEqual(len(imports), 2)
+        self.assertTrue(all(s["st_shndx"] == "SHN_UNDEF" for s in imports))
+
+    def test_undefined_alias_onto_a_definition_is_still_refused(self):
+        raw = self.build('extern "C" { extern int x; int canon = 3; '
+                         'int read_two() { return x + canon; } }').read_bytes()
+        out, plan = OI.rename_symbols(raw, {"x": "canon"}, False)
+        self.assertIsNone(out)
+        self.assertIn("already exists in object", plan["error"])
+
+    def test_defined_rename_onto_an_import_is_still_refused(self):
+        raw = self.build('extern "C" { int x = 3; extern int canon; '
+                         'int read_two() { return x + canon; } }').read_bytes()
+        out, plan = OI.rename_symbols(raw, {"x": "canon"}, True)
+        self.assertIsNone(out)
+        self.assertIn("already exists in object", plan["error"])
+
     def test_mixed_length_simultaneous_swap_and_chain(self):
         raw = self.build('extern "C" { int x = 7; int second = 11; '
                          'int read_pair() { return x - second; } }').read_bytes()
