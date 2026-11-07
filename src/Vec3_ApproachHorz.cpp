@@ -6,7 +6,8 @@
  *   Vec3_HorzLen, Vec3_Equal and Vec3_MulScalar take Vector3; the local POD
  *   Vector3 keeps those calls on their declared interface without adding
  *   types.h Vector3 lifetimes. Vec3_ApproachHorz's own parameters are
- *   still the Vec3 view, hence its casts on out and a.
+ *   use the local POD Vector3 spelling too, which agrees with the actors'
+ *   public Vector3 declaration without adding a Vector3 lifetime here.
  */
 #include "math/Approach.h"
 
@@ -49,11 +50,11 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
 }
 
 // @symbol Vec3_ApproachHorz
-extern "C" int Vec3_ApproachHorz(struct Vec3 *out, struct Vec3 *a, int maxStep) {
+extern "C" int Vec3_ApproachHorz(struct Vector3 *out, struct Vector3 *a, int maxStep) {
     struct Vector3 diff;
     struct Vector3 scaled;
     int len;
-    Vec3_Sub(&diff, (const struct Vector3 *)out, (const struct Vector3 *)a);
+    Vec3_Sub(&diff, out, a);
     diff.y = 0;
     len = Vec3_HorzLen(&diff);
     if (maxStep != 0) {
@@ -65,7 +66,7 @@ extern "C" int Vec3_ApproachHorz(struct Vec3 *out, struct Vec3 *a, int maxStep) 
         {
             int s = cstd::fdiv(maxStep, len);
             Vec3_MulScalar(&scaled, &diff, s);
-            SubVec3((Vector3 *)out, &scaled, (Vector3 *)out);
+            SubVec3(out, &scaled, out);
         }
     } else {
         if (len == 0) return 1;
