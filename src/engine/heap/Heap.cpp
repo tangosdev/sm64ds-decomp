@@ -69,7 +69,7 @@ extern "C" {
 
     unsigned int OS_GetArenaLo(s32 arena);
     unsigned int OS_GetArenaHi(s32 arena);
-    int OS_InitAlloc(s32 arena, int lo, int hi, int maxHeaps);
+    void *OS_InitAlloc(s32 arena, void *lo, void *hi, int maxHeaps);
     void OS_SetArenaLo(s32 arena, unsigned int lo);
     void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
 }
@@ -180,7 +180,7 @@ Heap_t* Heap_t::SetupRootHeap()
     int lo = OS_GetArenaLo(ROOT_HEAP_ARENA_ID);
     int hi = OS_GetArenaHi(ROOT_HEAP_ARENA_ID);
 
-    lo = OS_InitAlloc(ROOT_HEAP_ARENA_ID, lo, hi, 4);
+    lo = (int)OS_InitAlloc(ROOT_HEAP_ARENA_ID, (void *)lo, (void *)hi, 4);
     OS_SetArenaLo(ROOT_HEAP_ARENA_ID, lo);
 
     int top = OS_GetArenaHi(ROOT_HEAP_ARENA_ID);
