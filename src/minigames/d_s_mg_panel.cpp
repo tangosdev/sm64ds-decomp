@@ -591,7 +591,6 @@ void dScMgPanel_c::Answer_StateFlipSolution() {
     mReplayStep++;
 }
 
-
 void dScMgPanel_c::Answer_StateFindSolution() {
     extern u8 *sPanelPuzzles[];
     extern u8 *sPanelPuzzlesAlt[];
