@@ -2027,7 +2027,7 @@
     },
     "arm9:0x0201559c": {
       "author": "andrewboudreau",
-      "name": "_ZN8dClipper13Func_0201559CEv"
+      "name": "_ZN8dClipper19UpdateFrustumPlanesEv"
     },
     "arm9:0x020156dc": {
       "author": "andrewboudreau",
