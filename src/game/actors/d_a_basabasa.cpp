@@ -59,7 +59,7 @@ struct BasabasaAnimationFileHandle : SharedFilePtr {
 extern "C" {
 void func_ov002_020aea30(void *self, void *actor, void *collision);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, void *out);
+void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 }
 
@@ -213,7 +213,7 @@ int daBasabasa_c::ExecuteReturn() {
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 0xa, 0x200, 0x100);
     v.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&v, &data_020a0e68, &mSpeedX);
+    MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
     if ((u16)mStateTimer == 0) {
         SetState(&data_ov065_0211d6f0);
     }
@@ -245,7 +245,7 @@ int daBasabasa_c::ExecuteChase() {
     v.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MulVec3Mat4x3(&v, &data_020a0e68, &mSpeedX);
+    MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
     if (Vec3_Dist(&mPos, (Vector3 *)&mHomePosX) > 0x5dc000 || (u16)mStateTimer == 0) {
         mPerchTimer = 0;
         SetState(&data_ov065_0211d6f0);

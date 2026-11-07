@@ -84,14 +84,14 @@ int   SurfaceInfo_TestFlag0x20(void *);
 /* maths and the still-unnamed helpers */
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
-s32   LenVec3(const void *);
+int LenVec3(const Vector3 *);
 int   AngleDiff(int, int);
 void  Matrix4x3_FromTranslation(void *, int, int, int);
 void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
 void  MulMat4x3Mat4x3(void *, void *, void *);
 void  MulMat3x3Mat3x3(void *, void *, void *);
-void MulVec3Mat4x3(const void *, const void *, void *);
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
 int func_02013890(int, int);
 void func_02013944(void);
@@ -806,7 +806,7 @@ int daMip_c::StateFleeMain() {
         s32 y = mPosY;
         node.y = y;
         Vec3_Sub((::Vector3 *)&delta, (const ::Vector3 *)&mPos, (const ::Vector3 *)&node);
-        len = LenVec3(&delta);
+        len = LenVec3((const Vector3 *)&delta);
     }
     if ((len == 0) || (len <= lim)) {
         mPosX = node.x;
@@ -1111,7 +1111,7 @@ void daMip_c::UpdateMirrorShadow()
     v.z = Vec3_HorzDist((const Vector3 *)&c->v5c, (const Vector3 *)&vd);
     Matrix4x3_FromRotationY(&data_020a0e68,
                             Vec3_HorzAngle((const Vector3 *)&c->v5c, (const Vector3 *)&vd));
-    MulVec3Mat4x3(&v, &data_020a0e68, &res);
+    MulVec3Mat4x3((Vector3 *)&v, (Matrix4x3 *)&data_020a0e68, (Vector3 *)&res);
     {
         int t;
         vd.x = vd.x + res.x;

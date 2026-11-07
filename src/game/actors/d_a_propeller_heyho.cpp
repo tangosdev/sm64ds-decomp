@@ -436,10 +436,11 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 // local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
-extern short Vec3_VertAngle(void *a, void *b);
+extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(void *in, void *m, void *out);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern Matrix4x3 data_020a0e68;
@@ -473,7 +474,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     }
     ApproachAngle(&c->mPrevAngleY, c->mTargetAngY, 0xa, 0x200, 0x100);
 
-    ApproachLinear(c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &c->mHomePos), 0x100);
+    ApproachLinear(c->mPrevAngleX, Vec3_VertAngle((const Vector3 *)&c->mPosX, &c->mHomePos), 0x100);
 
     ApproachAngle(&c->mPrevAngleZ,
                   (c->mPrevAngleY - c->mTargetAngY) / 2,
@@ -482,7 +483,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     in[2] = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
-    MulVec3Mat4x3(in, &data_020a0e68, out);
+    MulVec3Mat4x3((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
 
     ApproachLinear(c->mSpeedX, out[0], 0x1000);
     ApproachLinear(c->mVertSpeed, out[1], 0x800);
@@ -526,10 +527,11 @@ extern "C" {
 
 // local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
 extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-extern short Vec3_VertAngle(void *v1, void *v0);
+extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(void *a, void *m, void *out);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* local extern: see the named CalcLib-signature exception above. */
 extern int RandomIntInternal(int *seed);
@@ -598,7 +600,8 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vd.x = vb.x;
     vd.y = vb.y;
     vd.z = vb.z;
-    ApproachAngle(&c->mPrevAngleX, Vec3_VertAngle(&c->mPosX, &vd), 1, 0x500, 0x500);
+    ApproachAngle(&c->mPrevAngleX, Vec3_VertAngle((const Vector3 *)&c->mPosX, &vd), 1, 0x500,
+                  0x500);
 
     ApproachAngle(&c->mPrevAngleZ,
                   (c->mPrevAngleY - c->mTargetAngY) / 2,
@@ -607,7 +610,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vin.z = 0xf000;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
-    MulVec3Mat4x3(&vin, &data_020a0e68, &c->mSpeedX);
+    MulVec3Mat4x3(&vin, &data_020a0e68, (Vector3 *)&c->mSpeedX);
 
     if (Vec3_Dist(&c->mPos, &c->mHomePos) > kHomeLeashDist) {
         FlyGuy_ChangeState(c, &data_ov070_0212359c);
@@ -670,12 +673,13 @@ extern s32 data_0209f32c;
 extern Matrix4x3 data_020a0e68;
 
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
-extern short Vec3_VertAngle(void* v1, void* v0);
+extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern u16 DecIfAbove0_Short(u16* p);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, s16 angX);
-extern void MulVec3Mat4x3(void* v, void* m, void* res);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 // @symbol _ZN19daPropeller_Heyho_c19func_ov070_0211f6e0Ev
@@ -781,7 +785,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
         aim.y = ty;
         aim.z = tz;
     }
-    vAngle = Vec3_VertAngle(&mPosX, &aim);
+    vAngle = Vec3_VertAngle((const Vector3 *)&mPosX, &aim);
     ApproachAngle(&mPrevAngleX, vAngle, 0xa, 0x200, 0x100);
 
     v.z = 0x11000;
@@ -797,7 +801,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MulVec3Mat4x3(&v, &data_020a0e68, &mSpeedX);
+    MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
 
     return 1;
 }
@@ -859,7 +863,7 @@ extern "C" int func_ov070_0211f5f0(daPropeller_Heyho_c *c) {
 extern "C" {
 // local extern: CalcLib.h conflicts with this TU's retained opaque Vec3_VertAngle declaration.
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-short Vec3_VertAngle(void* a, void* b);
+short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int a, void *p);
 int FlyGuy_ChangeState(daPropeller_Heyho_c* c, daPropeller_Heyho_c::State* p);
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
@@ -902,7 +906,7 @@ int daPropeller_Heyho_c::func_ov070_0211f48c() {
             fp.x = base[0];
             fp.y = base[1];
             fp.z = base[2];
-            vel.x = Vec3_VertAngle(&mPosX, &fp);
+            vel.x = Vec3_VertAngle((const Vector3 *)&mPosX, &fp);
         }
         SpawnFireball(*(const Vector3 *)&mPosX, &vel, 0x1e000, 0xa000, 1);
         func_02012694(kSndFireSpit, &mCamSpacePosX);

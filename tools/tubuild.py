@@ -830,7 +830,7 @@ def _promoted_member_fragment(path, text, name):
     if len(owned) <= 1:
         return None
     import tiers as TI
-    return TI._marked_member_fragment(text, name), len(owned)
+    return TI._marked_member_fragment(text, name, path), len(owned)
 
 
 def assemble_shadow_source(tu_id, ord_rows, parsed):

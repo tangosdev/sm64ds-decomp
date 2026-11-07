@@ -127,7 +127,7 @@ extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *data_0209f5bc;
 extern int sTrmp2TouchBlocked;
-int TrmpLine_Create(u16 *a, u16 *b);
+int TrmpLine_Create(s16 *a, s16 *b);
 extern void Mg_CommitRecords(void);
 void func_0203cd80(int *m, short angle);
 int GetGameLanguage(void);
@@ -976,7 +976,7 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
             buf[2] = mTouchStartY;
             buf[3] = mTouchX;
             buf[4] = mTouchY;
-            if (TrmpLine_Create(&buf[1], &buf[3])) {
+            if (TrmpLine_Create((s16 *)&buf[1], (s16 *)&buf[3])) {
                 func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);

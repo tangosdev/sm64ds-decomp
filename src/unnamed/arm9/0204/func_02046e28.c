@@ -16,8 +16,7 @@ extern void Crash(void);
    diffuse and ambient into diffAmb (with bit 15, set vertex colour),
    specular and emission into specEmi, and the alpha into polygon
    attribute bits 16-20. A material index of 0xffff crashes. */
-void func_02046e28(struct Model *model, struct MatAnimData *anim, short frame)
-{
+void func_02046e28(struct Model *model, struct MatAnimData *anim, unsigned short frame) {
     u32 zero[1];
     u16 sel[2];
     int i;

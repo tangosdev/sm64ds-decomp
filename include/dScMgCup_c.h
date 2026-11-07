@@ -9,8 +9,9 @@
 #define DSCMGCUP_C_H
 #include "dScMgSingle3DBase_c.h"
 #include "Presenter.h"
+#include "MWCPlusLib.h"
 
-extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int stride, dtor_t dtor);
 extern "C" void CupFx_ElemDtor(void);
 extern "C" void NullDestructor_0203d47c(void);
 

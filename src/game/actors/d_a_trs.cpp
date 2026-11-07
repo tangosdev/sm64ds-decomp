@@ -180,7 +180,7 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-extern int LenVec3(VecFx32 *v);
+extern int LenVec3(const Vector3 *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
@@ -1172,7 +1172,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w[0] = src->x;
         w[1] = src->y;
         w[2] = src->z;
-        if (LenVec3((VecFx32 *)w) >= 0x12c000) {
+        if (LenVec3((const Vector3 *)w) >= 0x12c000) {
             return;
         }
         if (this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1) == 0) {

@@ -4,6 +4,8 @@
 #include "IRQ.h"
 #include "private/fs_views.h"
 
+typedef struct FSFile FSFile;
+
 extern "C" {
 
 extern char data_02099e6c[]; /* "rom" */
@@ -13,7 +15,7 @@ extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern void OS_SleepThread(unsigned short *self);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
-extern int FS_ReadFile(char *a, char *b, int c);
+extern int FS_ReadFile(FSFile *file, void *dst, int len);
 extern void func_02041d28(char *base, void *node, int d);
 extern int FS_CloseFile(char *self);
 extern void func_02041a94(FileShareParentArea *area, FileShareNode *node);
@@ -59,7 +61,7 @@ void func_02042254(void) {
                 char *ptr = (char *)node->mPages;
                 for (; i < 3; i++) {
                     node->mPageOffset[i] = val;
-                    FS_ReadFile((char *)node->mFile, ptr, 0x400);
+                    FS_ReadFile((struct FSFile *)node->mFile, ptr, 0x400);
                     val += 0x400;
                     ptr += 0x400;
                 }

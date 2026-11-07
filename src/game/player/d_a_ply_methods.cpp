@@ -22155,7 +22155,13 @@ s32 daPly_c::InitResources() {
     void LoadSilverStarAndNumber(void);
     void func_02013a00(void);
     int StartWithFarCamera(void);
-    /* local extern: the registrar takes this D1 by address, which C++ cannot spell. */
+    /* local extern: `new Vector3[50]` elides both structor args to 0 because
+       types.h's ctor/dtor are inline-empty; the ROM passes them, so the
+       __cxa_vec_new call is spelled by hand. The two callees cannot be renamed
+       to readable aliases: enroll.candidates() enrolls the defining file for
+       every symbols.txt row at its address, so a second name at a compiled
+       function's address fails its isolate (one emitted def only), and
+       _ZN7Vector3D1Ev's emitted name is compiler-mangled besides. */
     void *_ZN7Vector3D1Ev(void *object);
     void func_0203d384(void);
     extern u8 data_0209f2d8;

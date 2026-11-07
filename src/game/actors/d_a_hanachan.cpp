@@ -107,7 +107,8 @@ extern int RandomIntInternal(int *seed);
 extern int data_ov034_02114488[];
 extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void MulVec3Mat4x3(void *in, void *m, void *out);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 // local extern: no shared header declares Vec3_Add.
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
@@ -1155,7 +1156,7 @@ int daHanachan_c::InitResources()
             vb[1] = zeroC;
             vb[2] = zeroC;
             Matrix4x3_FromRotationY(&data_020a0e68, mSegmentRot[0].y);
-            MulVec3Mat4x3(va, &data_020a0e68, vb);
+            MulVec3Mat4x3((Vector3 *)va, &data_020a0e68, (Vector3 *)vb);
             prev = i - 1;
             Vec3_Add((Vector3 *)out, &mSegmentPos[prev], (const Vector3 *)vb);
             ((daHanachan_c *)posRow)->mSegmentPos[0].x = out[0];

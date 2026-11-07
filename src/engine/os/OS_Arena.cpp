@@ -158,7 +158,7 @@ void OS_SetArenaLo(int id, unsigned int newLo) {
 }
 
 // @symbol OS_AllocFromArenaLo
-unsigned int OS_AllocFromArenaLo(int id, unsigned int size, unsigned int align) {
+void *OS_AllocFromArenaLo(int id, unsigned int size, unsigned int align) {
     unsigned int ptr = OS_GetArenaLo(id);
     unsigned int arenaLo, arenaHi;
     if (ptr == 0)
@@ -169,7 +169,7 @@ unsigned int OS_AllocFromArenaLo(int id, unsigned int size, unsigned int align) 
     if (arenaHi > OS_GetArenaHi(id))
         return 0;
     OS_SetArenaLo(id, arenaHi);
-    return arenaLo;
+    return (void *)arenaLo;
 }
 
 } // extern "C"

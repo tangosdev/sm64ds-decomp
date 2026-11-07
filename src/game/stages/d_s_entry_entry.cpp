@@ -31,7 +31,7 @@ extern "C" {
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
 int InvMat4x3(const Matrix4x3 *, Matrix4x3 *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
-void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
+void CrossVec3(const Vector3 *, const Vector3 *, Vector3 *);
 void NormalizeVec3(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
@@ -194,7 +194,7 @@ void EntryMesh::CalcNormals() {
                 SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
                         (Vector3 *)&ei);
 
-            CrossVec3(&ej, &ei, &n);
+            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
             NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);

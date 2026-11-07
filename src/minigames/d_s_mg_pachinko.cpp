@@ -43,6 +43,7 @@
 #pragma defer_codegen off
 
 #include "types.h"
+#include "PlayerInput.h"
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx.h"
 #include "dScMgPachinko_c.h"
@@ -169,16 +170,7 @@ extern void func_020564f4(const void *src, int offset, int count);
 extern unsigned char gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s16   data_02082214[];
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8    gActivePlayerSlot;
-// local extern: see above.
-extern u8    gTouchHeld[][4];
-// local extern: see above.
-extern u8    gTouchEdge[][4];
-// local extern: see above.
-extern u8    gTouchX[][4];
-// local extern: see above.
-extern u8    gTouchY[][4];
+
 extern void *sPachinkoDecoSprite;
 extern unsigned char sPachinkoPipeRiseStartFrames[];
 extern unsigned char sPachinkoPipeSinkStartFrames[];
@@ -2026,11 +2018,11 @@ void PachinkoBobOmb_StateWaitGrab(char *raw, int i) {
     int grabbed = 0;
     int dx, dy;
 
-    if (gTouchHeld[slot][0] != 0)
-        grabbed = gTouchEdge[slot][0] != 0;
+    if (((u8(*)[4])gTouchHeld)[slot][0] != 0)
+        grabbed = ((u8(*)[4])gTouchEdge)[slot][0] != 0;
     if (grabbed != 0) {
-        dx = (self->mShot[i].x >> 12) - gTouchX[slot][0];
-        dy = (self->mShot[i].y >> 12) - gTouchY[slot][0];
+        dx = (self->mShot[i].x >> 12) - ((u8(*)[4])gTouchX)[slot][0];
+        dy = (self->mShot[i].y >> 12) - ((u8(*)[4])gTouchY)[slot][0];
         self->mShot[i].state = 1;
         self->mShot[i].offX = dx << 12;
         self->mShot[i].offY = dy << 12;
@@ -2069,12 +2061,12 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
     s32 cy;
     u32 idx = gActivePlayerSlot;
 
-    if (gTouchHeld[idx][0] != 0) {
+    if (((u8(*)[4])gTouchHeld)[idx][0] != 0) {
         int off = i * 0x38;
         s32 vy, vx;
 
-        cx = gTouchX[idx][0];
-        cy = gTouchY[idx][0];
+        cx = ((u8(*)[4])gTouchX)[idx][0];
+        cy = ((u8(*)[4])gTouchY)[idx][0];
         *(s32 *)(c + SHOT_OFF(x) + off) = (cx << 12) + *(s32 *)(c + SHOT_OFF(offX) + off);
         *(s32 *)(c + SHOT_OFF(y) + off) = (cy << 12) + *(s32 *)(c + SHOT_OFF(offY) + off);
 
@@ -2091,8 +2083,10 @@ void PachinkoBobOmb_StateAim(dScMgPachinko_c *self, int i) {
             *py = 0x8000;
 
         {
-            s32 nx = (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - gTouchX[gActivePlayerSlot][0];
-            s32 ny = (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - gTouchY[gActivePlayerSlot][0];
+            s32 nx =
+                (*(s32 *)(c + SHOT_OFF(x) + off) >> 12) - ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
+            s32 ny =
+                (*(s32 *)(c + SHOT_OFF(y) + off) >> 12) - ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
 
             *(s32 *)(c + SHOT_OFF(offX) + off) = nx << 12;
             *(s32 *)(c + SHOT_OFF(offY) + off) = ny << 12;

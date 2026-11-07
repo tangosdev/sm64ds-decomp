@@ -79,9 +79,9 @@
   "compiler_only_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@37",
+      "from": "@38",
       "to": "@17",
-      "evidence": "mwcc numbers the registration node @37, which ov065 already defines. @17 is unused and the same length."
+      "evidence": "mwcc numbers the registration node @38 after Vec2_Len adopts the shared Vector2 pointer type; ov081 already defines @38. @17 is unused and the same length."
     }
   ],
   "undefined_symbol_aliases": [

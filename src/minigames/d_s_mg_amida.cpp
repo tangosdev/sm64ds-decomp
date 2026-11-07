@@ -81,12 +81,14 @@ enum dScMgAmida_c_AssetId {
     ASSET_D_2D_MG_OPTION_S_NCG_BIN = 0x00df
 };
 
+#include "PlayerInput.h"
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "G2.h"
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "dScMgAmida_c.h"
+#include "Vector2Math.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
@@ -101,7 +103,6 @@ extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void MultiCopyHalf(void *dst, void *src, int nbytes);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern int RandomIntInternal(int *seed);
-extern int Vec2_Len(int *v);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -121,16 +122,6 @@ extern void *dScMgAmida_c_classInit(void);
 extern s16 data_02082214[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8 gActivePlayerSlot;
-// local extern: see above.
-extern u8 gTouchHeld[];
-// local extern: see above.
-extern u8 gTouchEdge[];
-// local extern: see above.
-extern u8 gTouchX[][4];
-// local extern: see above.
-extern u8 gTouchY[][4];
 extern int sAmidaPatternSpeedUp[];
 extern s32 data_0208ee44;
 extern char sAmidaPatterns[];
@@ -517,8 +508,8 @@ void dScMgAmida_c::CheckHurryButton() {
     }
     if (pressed == 0)
         return;
-    int touchX = gTouchX[playerSlot][0];
-    int touchY = gTouchY[playerSlot][0];
+    int touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
+    int touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
     if (touchX < 0x60)
         return;
     if (touchX >= 0xa0)
@@ -553,8 +544,8 @@ void dScMgAmida_c::CheckEdgeBoost() {
     }
     playerSlot = gActivePlayerSlot;
     if (gTouchHeld[playerSlot * 4] != 0) {
-        touchX = gTouchX[playerSlot][0];
-        touchY = gTouchY[playerSlot][0];
+        touchX = ((u8(*)[4])gTouchX)[playerSlot][0];
+        touchY = ((u8(*)[4])gTouchY)[playerSlot][0];
         if ((touchX >= 0 && touchX < 0x10 && touchY >= 0x40 && touchY < 0x80) ||
             (touchX >= 0xf0 && touchX < 0x100 && touchY >= 0x40 && touchY < 0x80)) {
             if (mEdgeBoostCount >= 5) {
@@ -593,8 +584,8 @@ void dScMgAmida_c::HandlePen() {
     oldY = this->mPen.y;
 
     if (gTouchHeld[gActivePlayerSlot * 4] != 0) {
-        int newX = gTouchX[gActivePlayerSlot][0];
-        int newY = gTouchY[gActivePlayerSlot][0];
+        int newX = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
+        int newY = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
         if (newX < 0)
             return;
         if (newX >= 0x100)
@@ -2042,7 +2033,7 @@ s32 dScMgAmida_c::Behavior() {
             if (PIECE_AT(piecePtr)->active != 0) {
                 IAP(piecePtr, PIECE_OFF(posX)) += IP(piecePtr, PIECE_OFF(velX));
                 IAP(piecePtr, PIECE_OFF(posY)) += IP(piecePtr, PIECE_OFF(velY));
-                speed = Vec2_Len(vel) * 7 / 8;
+                speed = Vec2_Len((const Vector2 *)vel) * 7 / 8;
                 if (func_0203d434(vel) != 0)
                     func_0203d630(vel, speed);
                 IAP(piecePtr, PIECE_OFF(timer)) = IAP(piecePtr, PIECE_OFF(timer)) + 1;

@@ -8,7 +8,7 @@ extern int func_02063da0(WBTWork *work, int aid, int a, int b);
 extern int func_02063bc4(WBTWork *work, int aid, int a, int b);
 extern int func_02063980(WBTWork *work, int a, int b);
 extern int func_02063718(WBTWork *work, int a, int b);
-extern int func_02064fe8(int a, int x, int z);
+extern int func_02064fe8(void *dst, unsigned short b, char c);
 
 extern int data_0209a070;
 
@@ -57,5 +57,5 @@ int func_02065538(int a, int b)
         }
     } while (i != data_0209a070);
 
-    return func_02064fe8(a, 0xfffe, 0);
+    return func_02064fe8((void *)a, 0xfffe, 0);
 }

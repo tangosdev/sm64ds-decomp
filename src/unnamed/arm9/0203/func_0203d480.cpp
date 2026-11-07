@@ -4,17 +4,16 @@
  * then copies the result to an output array.
  */
 #include "cstd.h"
+#include "Vector2Math.h"
 
 extern "C" {
 
 typedef int Fix12i;
 
-extern Fix12i Vec2_Len(Fix12i *vec2); /* sqrt(vec2[0]^2 + vec2[1]^2): 0x0203d614 */
-
 void func_0203d480(Fix12i *out, Fix12i *in)
 {
     Fix12i mag;
-    mag = Vec2_Len(in);
+    mag = Vec2_Len((const Vector2 *)in);
     in[0] = cstd::fdiv(in[0], mag);
     in[1] = cstd::fdiv(in[1], mag);
     out[0] = in[0];

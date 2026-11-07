@@ -160,7 +160,7 @@ extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern const unsigned char sTrmpBrushPltt[];
 extern dFdBrightness_c *data_0209f5bc;
 extern int sTrmpTouchBlocked;
-int TrmpLine_Create(Vec2s *a, Vec2s *b);
+int TrmpLine_Create(s16 *a, s16 *b);
 
 void SetBg2Offset(int a, int b);
 int Mg_GetTopScreenYOffset(void);
@@ -871,7 +871,7 @@ int dScMgTrampoline_c::OnGraphCallback0() {
             v1.y = mTouchStartY;
             v2.x = mTouchX;
             v2.y = mTouchY;
-            if (TrmpLine_Create(&v1, &v2)) {
+            if (TrmpLine_Create(&v1.x, &v2.x)) {
                 func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);

@@ -104,7 +104,7 @@ extern s16 data_02082214[];
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(void *clsn, void *callback);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* D1 stores this vtable, then dBgActor_c's (inlined), then destroys
@@ -280,7 +280,7 @@ int daObjSeesaw_c::InitResources() {
      * veneer into OnStoodOn below. Both are calls in the ROM; the
      * bodies are a single word store. */
     func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
     return 1;
 }
 

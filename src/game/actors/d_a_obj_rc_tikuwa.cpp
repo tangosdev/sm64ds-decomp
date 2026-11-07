@@ -64,7 +64,7 @@ extern TikuwaCollisionFilePtr gRcTikuwaCollisionFile;
 /* local extern: no shared header declares these. */
 extern "C" {
 void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *bgw, void *fn);
+void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 // @symbol _ZN16daObjRc_Tikuwa_cD1Ev
@@ -148,7 +148,7 @@ s32 daObjRc_Tikuwa_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)data_ov036_02112b48);
     func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);
     mTerminalVelocity = -0x1e000;
     mVertAccel = ~0x198;
