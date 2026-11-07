@@ -434,7 +434,8 @@ int eggs_of(const char *body) {
 bool going(const char *a) { return *(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2; }
 
 // Breakable blocks (run after093, lane COOPSYNC1). daObjBlockL_c::Kill (src/game/actors/d_a_obj_block_l.cpp:270-341) is the
-// one break path of the brick block (15), the big brick block (16), the black brick block (17) and the Whomp's Fortress
+// one break path of the brick block (15), the big brick block (16), the black brick block (17, which is also the star block:
+// a star inside when its param's low byte is not 0xff) and the Whomp's Fortress
 // tower wall (46): coins / star / poof, then MarkForDestruction only, no death bit. So a block broken on one console stayed
 // whole and solid on every other one (the castle garden block over the grate into the secret course). The console where a
 // placed block goes away with no bit tells the group with the swallow message (same 8 bytes; older builds already apply it
@@ -444,12 +445,19 @@ bool going(const char *a) { return *(const unsigned char *)(a + 0x0f) || *(const
 // itself broken and comes back from its switch: not watched.
 bool breakable_block(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 || cls == 46; }
 enum : int { kGoneMax = 32, kGonePushes = 4 };
-struct Gone { uint16_t slot, cls; };
+struct Gone { uint16_t slot, cls; bool room; };   // room: came from the room list at the start of this visit
 Gone g_gone[kGoneMax]; int g_gone_n = 0;
 unsigned g_gone_push_at = 0; int g_gone_push_left = 0;
-void gone_note(int slot, unsigned cls) {
-    for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) return;
-    if (g_gone_n < kGoneMax) g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls};
+void gone_note(int slot, unsigned cls, bool room = false) {
+    for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) { if (!room) g_gone[i].room = false; return; }
+    if (g_gone_n < kGoneMax) g_gone[g_gone_n++] = {(uint16_t)slot, (uint16_t)cls, room};
+}
+// A block with something inside (the star block's star, a tag linked at +0x328: a silver star, a mushroom, a shell) comes back
+// on the next visit on the cartridge, and so does its item: only blocks with nothing inside stay on the room list.
+bool block_holds_item(const char *a) {
+    const unsigned cls = *(const unsigned short *)(a + 0x0c);
+    if (cls == 17 && *(const unsigned char *)(a + 0x08) != 0xff) return true;
+    return *(void *const *)(a + 0x328) != nullptr;
 }
 // The ROOM keeps them too, per (level, act), for the whole coop session: the breaker usually drops straight through the
 // hole he opened, so by the time his friend walks in nobody is left in the level to tell him. Every console stores every
@@ -464,10 +472,16 @@ void room_gone_note(const CoopKey &k, int slot, unsigned cls) {
     }
     if (g_room_gone_n < kRoomGoneMax) g_room_gone[g_room_gone_n++] = {(int16_t)k.level, (uint8_t)k.act, (uint16_t)slot, (uint16_t)cls};
 }
+void room_gone_drop(const CoopKey &k, int slot, unsigned cls) {
+    for (int i = 0; i < g_room_gone_n; ++i) {
+        const RoomGone &r = g_room_gone[i];
+        if (r.level == k.level && r.act == (uint8_t)k.act && r.slot == slot && r.cls == cls) { g_room_gone[i] = g_room_gone[--g_room_gone_n]; return; }
+    }
+}
 void room_gone_load(const CoopKey &k) {   // a new level visit: its broken blocks onto the group list
     for (int i = 0; i < g_room_gone_n; ++i) {
         const RoomGone &r = g_room_gone[i];
-        if (r.level == k.level && r.act == (uint8_t)k.act) gone_note(r.slot, r.cls);
+        if (r.level == k.level && r.act == (uint8_t)k.act) gone_note(r.slot, r.cls, true);
     }
     if (g_gone_n && g_log) std::fprintf(stderr, "[coop] block list: level %d act %d starts with %d broken block(s) from the room\n", k.level, k.act, g_gone_n);
 }
@@ -538,7 +552,7 @@ void send_swallows(unsigned now) {
 // bit, not in my mouth and not removed here by a friend's message, is told to the group like a swallow. A level teardown
 // marks dozens of placed actors in one frame: that frame (more than kCapMass slotted actors gone) sends nothing.
 enum : int { kCapMax = 64, kCapMass = 4 };
-struct CapW { char *a; uint16_t slot, cls; };
+struct CapW { char *a; uint16_t slot, cls; bool held; };
 CapW g_cap[kCapMax]; int g_cap_n = 0; unsigned g_cap_frame = 0; int g_cap_slotted = -1;
 uint16_t g_sw_applied[kSwOutMax]; int g_sw_applied_n = 0;   // slots a friend's message removed here: never echoed
 bool capped_goomba(const char *a) {
@@ -554,7 +568,8 @@ void watch_capped(unsigned now) {
         if (slot < 0 || slot >= kCoopSlots || going(a) || is_player_ptr(a)) continue;
         ++slotted;
         if (n < kCapMax && (capped_goomba(a) || breakable_block(*(const unsigned short *)(a + 0x0c))))
-            cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c)};
+            cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c),
+                        breakable_block(*(const unsigned short *)(a + 0x0c)) && block_holds_item(a)};
     }
     const bool fresh = g_cap_slotted >= 0 && g_cap_frame + 1 == g_est_frames;
     const bool mass = fresh && g_cap_slotted - slotted > kCapMass;
@@ -569,7 +584,7 @@ void watch_capped(unsigned now) {
         for (int k = 0; k < g_sw_applied_n && !skip; ++k) skip = g_sw_applied[k] == o.slot;
         for (int k = 0; k < g_sw_n && !skip; ++k) skip = g_sw_out[k].slot == o.slot;
         if (!skip && g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {o.slot, o.cls, 0, now};
-        if (!bit && breakable_block(o.cls)) { gone_note(slot, o.cls); room_gone_note(g_key, slot, o.cls); }
+        if (!bit && breakable_block(o.cls)) { gone_note(slot, o.cls); if (!o.held) room_gone_note(g_key, slot, o.cls); }
         std::fprintf(stderr, "[coop] %s watch: class %u slot %d went away here %s wall=%lld\n",
                      breakable_block(o.cls) ? "block" : "capped", (unsigned)o.cls, slot,
                      bit ? "with a death bit (the death table carries it)" : skip ? "(swallow or a friend's message: not told again)"
@@ -588,8 +603,11 @@ void watch_capped(unsigned now) {
 // home and RespawnIfHasCap leaves the dormant replacement there; func_ov084_02129498 removes it (MarkForDestruction for a
 // capped one, KillAndTrackInDeathTable otherwise). Any other class: MarkForDestruction, what every OnTurnIntoEgg ends in.
 void apply_swallow(int seat, int slot, unsigned cls) {
-    if (breakable_block(cls)) { gone_note(slot, cls); room_gone_note(g_key, slot, cls); }   // kept even with no copy standing yet
     char *a = live_slot(cls, slot);
+    if (breakable_block(cls)) {   // kept even with no copy standing yet; the room list only for a block with nothing inside
+        gone_note(slot, cls);
+        if (!a || !block_holds_item(a)) room_gone_note(g_key, slot, cls);
+    }
     if (!a || going(a) || is_player_ptr(a)) {
         if (g_log) std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d, no live copy here\n", seat, cls, slot);
         return;
@@ -617,6 +635,13 @@ void gone_apply() {
     for (int i = 0; i < g_gone_n; ++i) {
         char *a = live_slot(g_gone[i].cls, g_gone[i].slot);
         if (!a || going(a) || is_player_ptr(a)) continue;
+        if (g_gone[i].room && block_holds_item(a)) {   // heard from another level: it holds an item, so it is back this visit
+            std::fprintf(stderr, "[coop] block list: class %u slot %d holds an item, back this visit as on the cartridge wall=%lld\n",
+                         (unsigned)g_gone[i].cls, (int)g_gone[i].slot, wall_ms());
+            room_gone_drop(g_key, (int)g_gone[i].slot, (unsigned)g_gone[i].cls);
+            g_gone[i--] = g_gone[--g_gone_n];
+            continue;
+        }
         _ZN7fBase_c18MarkForDestructionEv(a);
         if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = g_gone[i].slot;
         else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = g_gone[i].slot; }
