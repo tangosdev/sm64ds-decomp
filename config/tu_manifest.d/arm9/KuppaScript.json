@@ -2295,9 +2295,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@649",
+      "from": "@633",
       "to": "@259",
-      "evidence": "the compiler emits @649, which ov002 already defines as a global, so the pin is the unused @259"
+      "evidence": "the compiler emits @633, which ov002 already defines as a global, so the pin is the unused @259"
     }
   ],
   "relocations": [
