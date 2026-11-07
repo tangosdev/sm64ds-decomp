@@ -52,6 +52,7 @@
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
 enum {
@@ -113,7 +114,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern signed char gCurrentSublevel;
 extern int data_02092138;
-extern s16 data_02082214[];
 
 /* The model handle reaches its file through this wrapper's constructor and
  * destructor veneers; the manifest maps each to the retail destination.
@@ -515,15 +515,9 @@ void daIbl_c::func_ov100_0214272c()
 
 ground:
     if (mWithMeshClsn.IsOnGround()) {
-        int *pa4;
-        int *pac;
-
-        pa4 = &mSpeedX;
-        pac = &mSpeedZ;
-
-        *pa4 = *pa4 + mFloorNormalX * 3;
-        *pac = *pac + mFloorNormalZ * 3;
-        mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
+        mSpeedX += mFloorNormalX * 3;
+        mSpeedZ += mFloorNormalZ * 3;
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
 
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
 
@@ -590,32 +584,21 @@ void daIbl_c::func_ov100_02142918()
     func_ov100_02142130();
 
     if (mHitWall != 0) {
-        int ang;
         mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
-        ang = *(u16 *)&mPrevAngleY;
-        mSpeedX = FX_MUL(mHorzSpeed, data_02082214[(ang >> 4) << 1]);
-        ang = *(u16 *)&mPrevAngleY;
-        mSpeedZ = FX_MUL(mHorzSpeed, data_02082214[((ang >> 4) << 1) + 1]);
-        {
-            int *pa4 = &mSpeedX;
-            int *pac = &mSpeedZ;
-            *pa4 = *pa4 - mWallNormalX * 3;
-            *pac = *pac - mWallNormalZ * 3;
-            mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
-        }
+        mSpeedX = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleY >> 4));
+        mSpeedZ = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleY >> 4));
+        mSpeedX -= mWallNormalX * 3;
+        mSpeedZ -= mWallNormalZ * 3;
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
         goto Lend;
     }
 
     if (mWithMeshClsn.IsOnGround() == 0)
         goto Lend;
 
-    {
-        int *pa4 = &mSpeedX;
-        int *pac = &mSpeedZ;
-        *pa4 = *pa4 + mFloorNormalX * 3;
-        *pac = *pac + mFloorNormalZ * 3;
-        mHorzSpeed = Vec3_HorzLen((const Vector3 *)pa4);
-    }
+    mSpeedX += mFloorNormalX * 3;
+    mSpeedZ += mFloorNormalZ * 3;
+    mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
     if (mFloorNormalY == 0x1000 && mHorzSpeed > 0x1c000) {
         mHorzSpeed = 0x1c000;
         mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
