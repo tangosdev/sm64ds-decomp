@@ -97,8 +97,6 @@ void  GiveCoins(int who, int count);
 int   SurfaceInfo_TestFlag0x20(int *si);
 /* 0x0203b0e8. Not declared in math/CalcLib.h (a shared header); callers spell it int, int. */
 int AngleDiff(int, int);
-/* local extern: no header declares it; spelled as d_actor.cpp defines it. */
-void *func_02010304(dActor_c *target, dCc_c *clsn);
 /* The out-of-line stores of mWithMeshClsn's radius and height. */
 void func_0203568c(int *value, int target);
 void func_02035684(int *value, int target);
@@ -1060,7 +1058,7 @@ void daBmb_c::func_ov102_0214b128() {
         mHorzSpeed = 0;
         return;
     }
-    t = (int)func_02010304(this, &mdCc_c);
+    t = (int)func_02010304(&mdCc_c);
     if (t) {
         func_ov102_0214b3f0(this, t);
         return;

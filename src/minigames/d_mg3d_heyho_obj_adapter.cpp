@@ -28,8 +28,8 @@
      SeparateAll/SettleAll/AllIdle walks take or index a Heyho directly, and
      the VShape/Diagonal starters, CheckHitA/B, SeparateAll and the Chase, Leave
      and React motions hold Vector3 locals, as do the VShape and Diagonal
-     motions. The FlyIn/Regroup starters still keep a per-function Vec3, hence
-     their casts. Three partial views stay: Heyho_Update's Foo (it calls
+     motions. FlyIn/Regroup now use the member's Vector3 type directly.
+     Three partial views stay: Heyho_Update's Foo (it calls
      mMotion as a pointer to member, which Heyho.h spells as s32[2]),
      Heyho_Settle's ParticleSystemView and Heyho_LoadResources' fBaseView
      (this TU does not include Particle__System.h or fBase_c.h). CheckHitA's Obj is the adapter seen
@@ -121,7 +121,6 @@ extern "C" int Heyho_LoadResources(char *c) {
 /* ---- Heyho_StartMotionFlyIn ---- */
 namespace n020c6ca4 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
 typedef struct { int w[3]; } Blk3;
 typedef struct { int w[4]; } Blk4;
 typedef struct { int x, y, z, w; } Vec4;
@@ -143,17 +142,17 @@ void Heyho_StartMotionFlyIn(char *dst, char *src) {
     HEYHO(dst)->mMoveKind = HEYHO(src)->mMoveKind;
 
     if (*(volatile int *)&HEYHO(dst)->mGoal.x > 0) {
-        Vec3 *p = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *p = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)p, (Vector3 *)&sHeyho_StartMotionFlyIn_Right256, (Vector3 *)p);
+        AddVec3(p, &sHeyho_StartMotionFlyIn_Right256, p);
     } else {
-        Vec3 *q = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *q = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)q, (Vector3 *)&sHeyho_StartMotionFlyIn_Left256, (Vector3 *)q);
+        AddVec3(q, &sHeyho_StartMotionFlyIn_Left256, q);
     }
 
     HEYHO(dst)->mScale.x = 0x1400;
@@ -240,7 +239,6 @@ void Heyho_MotionFlyIn(char *c) {
 /* ---- Heyho_StartMotionRegroup ---- */
 namespace n020c68f4 {
 extern "C" {
-typedef struct { int x, y, z; } Vec3;
 typedef struct { int w[3]; } Blk3;
 typedef struct { int w[4]; } Blk4;
 typedef struct { int x, y, z, w; } Vec4;
@@ -261,17 +259,17 @@ void Heyho_StartMotionRegroup(char *dst, char *src) {
     HEYHO(dst)->mMoveKind = HEYHO(src)->mMoveKind;
 
     if (*(volatile int *)&HEYHO(dst)->mGoal.x > 0) {
-        Vec3 *p = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *p = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)p, (Vector3 *)&sHeyho_StartMotionRegroup_Right256, (Vector3 *)p);
+        AddVec3(p, &sHeyho_StartMotionRegroup_Right256, p);
     } else {
-        Vec3 *q = (Vec3 *)&HEYHO(dst)->mPos;
+        Vector3 *q = &HEYHO(dst)->mPos;
         HEYHO(dst)->mPos.x = HEYHO(dst)->mGoal.x;
         HEYHO(dst)->mPos.y = HEYHO(dst)->mGoal.y;
         HEYHO(dst)->mPos.z = HEYHO(dst)->mGoal.z;
-        AddVec3((Vector3 *)q, (Vector3 *)&sHeyho_StartMotionRegroup_Left256, (Vector3 *)q);
+        AddVec3(q, &sHeyho_StartMotionRegroup_Left256, q);
     }
 
     HEYHO(dst)->mDelay = 8;
@@ -1197,12 +1195,6 @@ void Heyho_StartMotionChase(char *c) {
 /* ---- Heyho_MotionChase ---- */
 namespace n020c4fa4 {
 
-struct VB {
-    virtual int *m0();
-    virtual int *m1();
-    virtual int m2();
-};
-
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
@@ -1217,7 +1209,7 @@ extern char *sJumpAdapters[];
 }
 
 extern "C" void Heyho_MotionChase(char *c) {
-    VB *best;
+    dMg3DHeyhoObjAdapter_c *best;
     Vector3 bp;
     Vector3 op;
     Vector3 delta;
@@ -1255,13 +1247,13 @@ extern "C" void Heyho_MotionChase(char *c) {
         best = 0;
         bm = 0x20000;
         for (i = 0; i < 3; i++) {
-            if (((VB *)sJumpAdapters[i])->m2() != 0) {
+            if (((dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i])->IsLaunched() != 0) {
                 int *v;
                 int dot;
-                v = ((VB *)sJumpAdapters[i])->m0();
+                v = (int *)((dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i])->GetPos();
                 op.x = v[0]; op.y = v[1]; op.z = v[2];
                 Vec3_Sub(&delta, &HEYHO(c)->mPos, &op);
-                v = ((VB *)sJumpAdapters[i])->m1();
+                v = (int *)((dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i])->GetVelocity();
                 nrm.x = v[0]; nrm.y = v[1]; nrm.z = v[2];
                 if (NormalizeVec3IfNonZero(&nrm) != 0) {
                     dot = DotVec3(&nrm, &delta);
@@ -1272,7 +1264,7 @@ extern "C" void Heyho_MotionChase(char *c) {
                         cand.x = proj.x; cand.y = proj.y; cand.z = proj.z;
                         d = Vec3_Dist(&HEYHO(c)->mPos, &cand);
                         if (d < bm) {
-                            best = (VB *)sJumpAdapters[i];
+                            best = (dMg3DHeyhoObjAdapter_c *)sJumpAdapters[i];
                             bp = cand;
                             bm = d;
                         }
@@ -1701,7 +1693,7 @@ int Heyho_IsChasing(Heyho *a) {
     if (neq != 0) {
         int flag = 1;
         int neq2 = flag;
-        UID *q = (UID *)(int)((long long)(unsigned int)a->mMotion);
+        UID *q = (UID *)(int)((unsigned int)a->mMotion);
         UID *c2 = (UID *)(int)(&pmf_Heyho_MotionChase_2);
         if (q->low == c2->low) {
             if (q->high == c2->high || a->mMotion[0] == 0)
@@ -1886,6 +1878,9 @@ void Heyho_SeparateAll(void)
             ai = &oi->mVel;
             for (j = t + 1; j < sHeyhoCount; j++) {
                 if (Heyho_IsChasing(&((Heyho *)sHeyhos)[j]) != 0) {
+                    /* The long long widening is load-bearing (measured 2026-11-06):
+                       dropping it alone costs Heyho_SeparateAll 15 words. The one
+                       on a->mMotion above was free and is gone. */
                     oj = (Heyho *)((long long)(int)&((Heyho *)sHeyhos)[j]);
                     pj = &oj->mPos;
                     Vec3_Sub(&v1, pi, pj);

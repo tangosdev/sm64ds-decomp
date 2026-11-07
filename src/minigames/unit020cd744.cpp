@@ -1153,6 +1153,9 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint,
         for (column = 0; column < 4; column++) {
             Vector3 delta;
             SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, &delta);
+            /* The long long widening is load-bearing (measured 2026-11-06).
+               tools/delaunder.py accepts its removal because it byte-checks only
+               one function of this TU; the per-function gate reports NO-REPRO. */
             int halfLength = (long long)(TRMPLINE(sl)->mHalfWidth);
             int distance = LenVec3(&delta);
             int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);
@@ -1236,11 +1239,7 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
 namespace s020cf2fc {
 typedef volatile unsigned int vu32;
 
-typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} Vec3;
+typedef TrmpLine::Vtx Vec3;
 
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 data_0209b3ec;
@@ -1488,9 +1487,7 @@ extern "C" void TrmpLine_SetStateSettle(char *p) {
 }
 
 namespace s020cfa44 {
-typedef struct {
-    int x, y, z;
-} Vec3;
+typedef TrmpLine::Vtx Vec3;
 
 extern "C" {
 extern s16 data_02082214[];

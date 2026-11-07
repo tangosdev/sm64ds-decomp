@@ -232,8 +232,9 @@ An export that is empty, truncated, or left over from a previous run makes every
 ERROR on BOTH sides, which classifies as `pre-existing`, exits 0, and prints "Safe to
 merge". That is the hollow green this whole tool exists to prevent, arriving through
 its own front door. So `export_tree` asserts three things before handing the
-directory back: the tree names at least EXPORT_FLOOR files (main carries ~12,770, and
-anything under a few thousand is not this repository); the index the export carries
+directory back: the tree names at least EXPORT_FLOOR files (main carries ~3,900 since the
+translation-unit consolidations, and anything under a couple of thousand is not this
+repository); the index the export carries
 enumerates exactly the tree's path set; and every one of those paths is on disk. A
 short export is a TOOL ERROR, exit 2, not a gate verdict.
 
@@ -324,10 +325,11 @@ GATE_TIMEOUT = 900
 # `git ls-files` can hand back 500+ headers and Windows caps a command line at 32k.
 HEADER_BATCH = 120
 
-# An export smaller than this is not this repository. main carries ~12,770 tracked
-# files; the floor is deliberately far below that, because the failure this guards
-# against is a truncated or empty export, not a tree that legitimately shrank.
-EXPORT_FLOOR = 4000
+# An export smaller than this is not this repository. main carried ~12,770 tracked
+# files before the translation-unit consolidations and ~3,900 after them; the floor is
+# deliberately far below that, because the failure this guards against is a truncated
+# or empty export, not a tree that legitimately shrank.
+EXPORT_FLOOR = 2000
 
 # How old `origin/main` may be before the run says so out loud.
 BASE_STALE_HOURS = 12
@@ -725,7 +727,7 @@ def verify_export(repo, tree_sha, dest, floor=EXPORT_FLOOR):
         raise RuntimeError(
             f"export {tree_sha[:12]}: EXPORT TOO SMALL -- the tree names "
             f"{len(expected)} file(s), under the {floor} floor. This repository "
-            f"carries ~12,770. Refusing to run gates over it: every gate would error "
+            f"carries ~3,900. Refusing to run gates over it: every gate would error "
             f"on both sides and the run would report 'pre-existing' and exit 0.")
 
     indexed = subprocess.run(["git", "-C", str(dest), "ls-files", "-z"],

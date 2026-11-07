@@ -203,7 +203,7 @@ extern unsigned char data_0209f250;
 extern signed char gCurrentSublevel;
 extern void *data_0209f394[];
 extern signed char data_02092120;
-extern unsigned char data_02075250[];
+extern const unsigned char data_02075250[8];
 extern unsigned char data_02075258[];
 
 }

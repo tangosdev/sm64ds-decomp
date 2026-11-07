@@ -2,9 +2,11 @@
 
 #include "private/fs_views.h"
 
-extern void FS_InitFile(int *s);
+typedef struct FSFile FSFile;
+
+extern void FS_InitFile(FSFile *p_file);
 extern void func_02018598(FSFileID *c, int arg);
-extern int myFS_OpenFileFast(int a, FSFileID v);
+extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int LoadArchive(int idx);
 extern void Crash(void);
 extern int func_0204eda4(int file, char *archive, unsigned int index);
@@ -13,10 +15,10 @@ extern int func_0204eda4(int file, char *archive, unsigned int index);
    in the ROM archive (func_02018598 builds the FSFileID); higher ids are
    opened inside the archive whose range holds them, mounting it first if
    needed (and recording it in data_0208eb54). Any failure is fatal. */
-int func_020185c0(int file, unsigned int id) {
+int func_020185c0(FSFile *file, unsigned int id) {
     int result = 0;
 
-    FS_InitFile((int *)file);
+    FS_InitFile(file);
 
     if (id < 0x8000) {
         FSFileID arg;
@@ -38,7 +40,7 @@ int func_020185c0(int file, unsigned int id) {
                         return 0;
                     }
                 }
-                result = func_0204eda4(file, e->archive, id - e->firstFileId);
+                result = func_0204eda4((int)file, e->archive, id - e->firstFileId);
                 break;
             }
             i++;

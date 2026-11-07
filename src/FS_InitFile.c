@@ -1,10 +1,8 @@
 #include "private/fs_views.h"
 
-/* The callers pass the file as int *; the parameter keeps that spelling. */
-void FS_InitFile(int *s)
-{
-    struct FSFile *p_file = (struct FSFile *)s;
+typedef struct FSFile FSFile;
 
+void FS_InitFile(FSFile *p_file) {
     p_file->link.prev = 0;
     p_file->link.next = p_file->link.prev;
     p_file->queue = 0;

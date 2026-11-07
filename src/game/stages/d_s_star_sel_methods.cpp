@@ -69,8 +69,8 @@ extern s8 data_02092110;
 extern s16 data_02082214[];
 extern s32 data_020a0db0;
 extern SaveBlock data_0209caa0;
-extern u8 data_02092128;
-extern signed char gNumLives[];
+extern u8 data_02092128[];
+extern signed char gNumLives;
 extern u8 data_ov001_020ab938;
 extern u8 data_ov001_020ab940;
 extern void *data_ov001_020abb18[];
@@ -232,7 +232,7 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
 
 // @symbol _ZN12dScStarSel_c19func_ov003_020ae238Ev
 // ROM 0x020ae238, size 0x120. Draws the life counter: the LIFE_ICONS entry for
-// mLifeIcon, the TIMES sprite, and the three digits of gNumLives[0].
+// mLifeIcon, the TIMES sprite, and the three digits of gNumLives.
 void dScStarSel_c::func_ov003_020ae238() {
     int x;
     int y;
@@ -245,7 +245,7 @@ void dScStarSel_c::func_ov003_020ae238() {
     }
     OAM::Render(0, OAM::LIFE_ICONS[mLifeIcon], x, y + 8, -1, -1, 0x1000, 0x1000, 0, -1);
     OAM::Render(0, &OAM::TIMES, x + 0x10, y + 8, -1, -1, 0);
-    func_ov003_020ae1a4((unsigned short)gNumLives[0]);
+    func_ov003_020ae1a4((unsigned short)gNumLives);
     {
         int i = 0;
         x += 0x18;
@@ -322,7 +322,7 @@ void dScStarSel_c::func_ov003_020ae358() {
                     if (((unsigned short)((gTouchHeld[ri][3] - mCharY[i]) + 0x18)) < 0x2b) {
                         mCursorTarget = 1;
                         mCharCursor = (unsigned char)func_ov003_020adec0(i);
-                        data_02092128 = (unsigned char)i;
+                        data_02092128[0] = (unsigned char)i;
                         data_02092114 = (unsigned char)i;
                         mPickedChar = (unsigned char)i;
                         mPickPressTimer = (unsigned char)(data_0208ee44 * 3);
@@ -646,7 +646,7 @@ s32 dScStarSel_c::Behavior() {
             } else if (mAnimMode == 0) {
                 if (val == 1) {
                     num = func_ov003_020adf50();
-                    data_02092128 = num;
+                    data_02092128[0] = num;
                     data_02092114 = num;
                     mPickedChar = num;
                     mPickPressTimer = data_0208ee44 * 3;
@@ -1072,7 +1072,7 @@ s32 dScStarSel_c::InitResources() {
     file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_NCL_BIN);
     GXS::LoadOBJPltt(file, 0, 0x200);
     Deallocate(file);
-    data_02092128 = data_0209caa0.file.mCharacter;
+    data_02092128[0] = data_0209caa0.file.mCharacter;
     switch (data_0209caa0.file.mCharacter) {
     case 0:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCG_BIN);

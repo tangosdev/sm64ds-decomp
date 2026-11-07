@@ -24,7 +24,7 @@
 extern "C" {
 extern void *data_020a4b68;
 extern int data_02099f24;
-extern int data_02082178[];
+extern const int data_02082178[6];
 extern void *func_02043fdc(void *list);
 }
 

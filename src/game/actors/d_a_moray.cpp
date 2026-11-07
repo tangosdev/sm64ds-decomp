@@ -456,6 +456,11 @@ int daMoray_c::func_ov016_02111994()
    horizontal limit to 0x495000 (1173 units), tightens the height limit to
    0x6ee000 (1774 units), and also lunges when the player is within
    0x224000 (548 units) of a point 0x64000 (100 units) ahead of home. */
+/* KEEPER, MEASURED (#821). Three crutches hold this body and each is load-bearing
+   on its own, measured against the cartridge's 0x1c0: without the propagation
+   bracket it is 0x1bc, with `thrVert = 0x800000` folded into one store 0x1b8, with
+   the `zero` local replaced by literal 0s 0x1bc, and with all three 0x1b0. Re-tried
+   after the respellings below, not inherited. */
 #pragma push
 #pragma opt_propagation off
 // @symbol _ZN9daMoray_c19func_ov016_021119ecEv

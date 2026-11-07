@@ -1,6 +1,6 @@
 #include "Ov007BgLayer.h"
 extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern void MultiCopyHalf(char *src, char *dst, int nbytes);
+extern void MultiCopyHalf(const void *src, void *dst, int nbytes);
 
 /* Rebuilds the layer's screen scrolled to pixel (x, y): fills it with tile,
  * copies the overlapping part of source in at the tile offset and keeps the

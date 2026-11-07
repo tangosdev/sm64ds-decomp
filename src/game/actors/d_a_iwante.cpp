@@ -352,7 +352,6 @@ extern void Vec3_Asr(void *d, void *s, int sh);
 extern int Vec3_HorzDist(const void *a, const void *b);
 // local extern: CalcLib.h conflicts with this TU's opaque Vec3_Dist, Vec3_Asr, and Vec3_HorzDist prototypes.
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern void func_0200d8c8(void *cam, void *v, int strength);
 extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
@@ -719,7 +718,7 @@ int daIwante_c::func_ov066_02116a68() {
 }
 
 // @symbol _ZN10daIwante_c19func_ov066_02116ac4Ei
-/* Landing effect. Calls func_0200d8c8 with the camera (data_0209f318), the hand's
+/* Landing effect. Calls dCamera_c::func_0200d8c8 on the camera (data_0209f318) with the hand's
  * position and `strength` (every caller in this file passes 0x7d0000 = 2000.0). Then, with
  * mPosX/Z temporarily moved by 0x80000 (128.0) (X by -128.0 for hand 1, +128.0
  * otherwise; Z by +128.0), it spawns the huge landing dust at that shifted spot
@@ -729,7 +728,7 @@ void daIwante_c::func_ov066_02116ac4(int strength) {
     /* Saved through stack slots; non-volatile locals make this 24 bytes
        shorter. */
     volatile int s0, s1, s2;
-    func_0200d8c8(data_0209f318, &mPosX, strength);
+    data_0209f318->func_0200d8c8(&mPos, strength);
     s0 = mPosX;
     s1 = mPosY;
     s2 = mPosZ;

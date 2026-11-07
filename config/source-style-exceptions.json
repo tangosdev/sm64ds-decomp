@@ -1192,6 +1192,454 @@
       "count": 2,
       "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. No header declares IRQ. Follow-up: give IRQ a header once its primitives are reconstructed as C++.",
       "evidence": "arm9/isdoverlay 6/6 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from src/unnamed/arm9/0206/func_0206d868.cpp on main, which this fold absorbs, with its `local extern:` note"
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a78Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a88Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d70Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f30f8Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f32e4Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3310Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f335cEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f340cEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f35e4Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3740Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f378cEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d38Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d98Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3de4Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4710Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4d70Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5010Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5328Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f55b4Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f562cEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5678Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f569cEi",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f57c0Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5848Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5894Ei",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEv",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b80Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b84Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b88Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEv",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b98Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c40Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c88Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5d34Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e18Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev",
+      "count": 5,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev",
+      "count": 5,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev",
+      "count": 5,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev",
+      "count": 5,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0Ev",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
+    },
+    {
+      "path": "src/game/actors/d_a_demo.cpp",
+      "rule": "handspelled-member",
+      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEv",
+      "count": 2,
+      "reason": "These addresses are stored as int descriptor words in the data_ov002_0210b6*/0210b7* static initializers (the StaffRoll state descriptor table). Spelling them &StaffRoll::f yields an 8-byte pointer-to-member that cannot initialize an int field and moves the record out of .data into __sinit under 2004/b56, so the emitted member symbol is named by an extern and stored by int cast. Each name occurs once as its descriptor-address extern and again per record use.",
+      "evidence": "ov002/daDemo_c linkcheck 147 VERIFIED, 0 blocking; merged object byte-identical to the pre-format object across all 592 sections; PMF-typed aggregate measured and rejected (section moves .data -> .init/__sinit). Sibling: src/minigames/d_s_mg_trampoline.cpp P2 records spell the same idiom on main."
     }
   ]
 }

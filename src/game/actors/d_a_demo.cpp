@@ -8,7 +8,7 @@
  * RunDemoCommand: the command byte is used as a param1. FindDemoActor looks
  * for a live actor with that param1 among the 16 IDs at gDemoActorIDs; if
  * none, SpawnDemoActor spawns actor 0x160 with that param1 into a free slot.
- * func_ov002_020f7d74 then calls entry s[6] of the 24-entry daDemo_c::*
+ * daDemo_c::RunCommand then calls entry s[6] of the 24-entry daDemo_c::*
  * table data_ov002_0211104c with (s + 7, start, end). Handlers that compare
  * a frame against gKuppaScriptFrame are acting on the record's first or last
  * frame.
@@ -66,8 +66,8 @@
  *   func_ov002_020f27e8 and the OAM tail family return a callee's r0 by
  *   falling off the end; the callees are declared int so the passthrough
  *   is spelled.
- *   func_ov002_020f7d74, the dispatcher, stays extern "C" and free: its
- *   caller RunDemoCommand (src/KuppaScript.cpp) binds it by that name.
+ *   daDemo_c::RunCommand, the dispatcher RunDemoCommand (src/KuppaScript.cpp)
+ *   calls, is a member: it takes the actor in r0 like any other.
  *   func_ov002_020f26d4 is a ldr/bx veneer that tail-calls
  *   func_ov002_020f2630 through a raw void(*)(void); a member pointer
  *   cannot spell that cast, so both stay free.
@@ -149,11 +149,11 @@ typedef signed short s16;
 
 /* shadow struct 'OamEnt' */
 struct OamEnt {
-    s16 x;        /* 0 */
-    s16 y;        /* 2 */
-    s16 ang;      /* 4 */
-    s16 pad;      /* 6 */
-    int enabled;  /* 8 */
+    s16 x;       /* 0 */
+    s16 y;       /* 2 */
+    s16 ang;     /* 4 */
+    s16 pad;     /* 6 */
+    int enabled; /* 8 */
 };
 
 /* shadow struct 'ParticleCallback' */
@@ -164,14 +164,18 @@ typedef void (StaffRoll::*PMF)(int);
 /* pointer-to-member taking no args (dispatch tables at 02110f34/02110f9c) */
 typedef void (StaffRoll::*PMF0)();
 
-/* pointer-to-member taking (cmd, a2, a3) — func_ov002_020f7d74's table */
-typedef void (daDemo_c::*PMF3)(unsigned char*, int, int);
+/* pointer-to-member taking (cmd, a2, a3) — RunCommand's table */
+typedef void (daDemo_c::*PMF3)(unsigned char *, int, int);
 
 typedef void (StaffRoll::*PMF37)(int);
-struct Entry37 { PMF37 pmf; };
+struct Entry37 {
+    PMF37 pmf;
+};
 
 typedef void (StaffRoll::*PMF2dd4)(int);
-struct Entry2dd4 { PMF2dd4 pmf; };
+struct Entry2dd4 {
+    PMF2dd4 pmf;
+};
 
 /* Eight-byte {code, 0} descriptor words. The flat int-pair initializer is
    what keeps the record in .data; the state tables below read each entry
@@ -187,15 +191,14 @@ union W {
 };
 
 /* shadow struct 'Ent' */
-struct Ent
-{
-  int out0;
-  int out4;
-  char pad8[8];
-  int vx;
-  char pad14[0x1a];
-  u16 angle;
-  char pad30[0x1c];
+struct Ent {
+    int out0;
+    int out4;
+    char pad8[8];
+    int vx;
+    char pad14[0x1a];
+    u16 angle;
+    char pad30[0x1c];
 };
 
 /* shadow struct 'BMD_File' */
@@ -382,7 +385,7 @@ extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
    as the void * this file has always declared (the tree's declarations
    disagree); 23f0 casts at the one use. */
-extern void* data_0209f5bc;
+extern void *data_0209f5bc;
 extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern int func_ov002_020f2630(daDemo_c *self);
@@ -394,11 +397,11 @@ extern int data_ov002_02100140[];
 extern int GetOwnerLanguage(void);
 extern void OamRender10_d_a_demo(int a, struct OamAttr *attr, int x, int y, int e, int f, int g,
                                  int h, int i, int j);
-extern struct OamAttr* data_ov002_0210b988[];
+extern struct OamAttr *data_ov002_0210b988[];
 extern void func_0201ef50(unsigned char v);
 extern void func_0201f108(void);
-extern struct OamAttr* data_ov002_0210bba0[];
-extern int* data_ov002_0210b97c[];
+extern struct OamAttr *data_ov002_0210bba0[];
+extern int *data_ov002_0210b97c[];
 extern void SetSubBg2Offset(int a, int b);
 extern PMF data_ov002_02110e24[];
 extern PMF data_ov002_02110e9c[];
@@ -431,29 +434,29 @@ extern PMF0 data_ov002_02110f9c[];
 extern void SetSubBg3Offset(int a, int b);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void Deallocate(void* p);
-extern void func_02056434(const void* src, int offset, int count);
-extern void func_020562b4(const void* src, u32 offset, u32 count);
-extern void func_02056374(const void* src, u32 offset, u32 count);
+extern void Deallocate(void *p);
+extern void func_02056434(const void *src, int offset, int count);
+extern void func_020562b4(const void *src, u32 offset, u32 count);
+extern void func_02056374(const void *src, u32 offset, u32 count);
 /* local extern dropped: decl_common.h declares func_ov002_020f6514(unsigned char*, void*, unsigned char) */
 extern unsigned int ReadUnalignedInt(unsigned char *p);
-extern void func_02012694(unsigned int, void*);
+extern void func_02012694(unsigned int, void *);
 extern short ReadUnalignedShort(unsigned char *p);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern int* Vec3_LslInPlace(int *v, int sh);
+extern int *Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *data_0209f318;
 extern int data_ov002_0210b614;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
-extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
+extern s16 Vec3_VertAngle(const struct Vector3 *v1, const struct Vector3 *v0);
 extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
 extern void func_0201f138(void);
 extern void func_0201ef38(void);
-extern void Math_Function_0203b0fc(int* p, int target, int scale, int max);
+extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(VecFx32 *out, const VecFx32 *in, int scale);
 extern void Vec3_Add(VecFx32 *out, VecFx32 *a, VecFx32 *b);
@@ -474,62 +477,153 @@ extern PMF3 data_ov002_0210b620;
 extern PMF3 data_ov002_0210b640;
 extern PMF3 data_ov002_0210b628;
 extern PMF3 data_ov002_0210b648;
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f2a78Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f2a88Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f2d70Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f30f8Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f32e4Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f3310Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f335cEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f340cEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f35e4Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f3740Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f378cEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f3d38Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f3d98Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f3de4Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f4710Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f4d70Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5010Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5328Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f55b4Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f562cEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5678Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f569cEi(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f57c0Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5848Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5894Ei(StaffRoll *, int); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEv(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5b80Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5b84Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5b88Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEv(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5b98Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5c40Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5c88Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5d34Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5e18Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0Ev(StaffRoll *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEv(StaffRoll *); /* local extern: descriptor address */
+/* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f2a78Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f2a88Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f2d70Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f30f8Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f32e4Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f3310Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f335cEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f340cEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f35e4Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f3740Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f378cEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f3d38Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f3d98Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f3de4Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f4710Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f4d70Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5010Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5328Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f55b4Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f562cEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5678Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f569cEi(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f57c0Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5848Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5894Ei(StaffRoll *,
+                                              int); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEv(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5b80Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5b84Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5b88Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEv(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5b98Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5c40Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5c88Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5d34Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5e18Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEv(StaffRoll *); /* local extern: descriptor address */
 extern W data_ov002_0210b678;
 extern W data_ov002_0210b708;
 extern W data_ov002_0210b750;
@@ -628,9 +722,7 @@ int data_ov002_02110ddc[3];
 }
 
 // @symbol _ZN8daDemo_cD1Ev
-daDemo_c::~daDemo_c()
-{
-}
+daDemo_c::~daDemo_c() {}
 
 // @symbol _ZN8daDemo_cD0Ev
 /* the D0 deleting destructor this file is enrolled for emits from the
@@ -648,8 +740,7 @@ daDemo_c::~daDemo_c()
  * mask into bits 8..12 of 0x4001000, sets the blend to (0, 0x28, 0xc, 4),
  * advances the state and gives the three sprite slots delays 0x10/0x20/0x30. */
 
-void daDemo_c::func_ov002_020f1fcc()
-{
+void daDemo_c::func_ov002_020f1fcc() {
     int i, v;
     if (mScroll->fadeLevel == 0)
         return;
@@ -712,15 +803,15 @@ void daDemo_c::func_ov002_020f20f4() {
  * zero on an idle slot, RNG bit 0 picks x -0x40 moving right or x 0x140 moving
  * left, and y is (rng >> 16) % 48 + 0x30 * slot. Does nothing in state 6. */
 
-void daDemo_c::func_ov002_020f2210()
-{
+void daDemo_c::func_ov002_020f2210() {
     int i;
     int base;
     u8 state;
     state = mScroll->state;
     /* The redundant `state >= 3` is compiled into the ROM: `state > 5` alone
        builds 8 bytes short. */
-    if (state >= 3 && state > 5) return;
+    if (state >= 3 && state > 5)
+        return;
     i = 0;
     base = 0;
     for (; i < 3; i++) {
@@ -751,8 +842,7 @@ void daDemo_c::func_ov002_020f2210()
 // @symbol _ZN8daDemo_c19func_ov002_020f2340Ev
 /* Draw the two centre sprites at x 0x80. */
 
-void daDemo_c::func_ov002_020f2340()
-{
+void daDemo_c::func_ov002_020f2340() {
     OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[0]);
     OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[1]);
 }
@@ -764,8 +854,7 @@ void daDemo_c::func_ov002_020f2340()
 /* Scroll the two sub-screen BG layers in opposite directions (bg1 x down
  * one, bg0 x up one) and write both offsets to the hardware. */
 
-void daDemo_c::func_ov002_020f237c()
-{
+void daDemo_c::func_ov002_020f237c() {
     mScroll->bg1X -= 1;
     mScroll->bg0X += 1;
     SetSubBg0Offset(mScroll->bg0X, mScroll->bg0Y);
@@ -778,8 +867,7 @@ void daDemo_c::func_ov002_020f237c()
 // @symbol _ZN8daDemo_c19func_ov002_020f23d0Ev
 /* CleanupResources for param1 0x2f: free the scroll block. */
 
-int daDemo_c::func_ov002_020f23d0()
-{
+int daDemo_c::func_ov002_020f23d0() {
     Memory::operator_delete2(this->mScroll);
     return 1;
 }
@@ -806,8 +894,7 @@ int daDemo_c::func_ov002_020f23d0()
  *   6  nothing
  * Every state then runs 2340, 2210 and 20f4. */
 
-int daDemo_c::func_ov002_020f23f0()
-{
+int daDemo_c::func_ov002_020f23f0() {
     switch (mScroll->state) {
     case 0:
         if (((dFdBrightness_c *)data_0209f5bc)->IsAtStart() != 0) {
@@ -880,8 +967,8 @@ int daDemo_c::func_ov002_020f23f0()
 /* ROM ordinal 9 -- func_ov002_020f2630, 0x020f2630, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020f2630
-extern "C" {  /* stays free: func_ov002_020f26d4 tail-calls it through a raw void(*)(void) */
-int func_ov002_020f2630(daDemo_c *self){
+extern "C" { /* stays free: func_ov002_020f26d4 tail-calls it through a raw void(*)(void) */
+int func_ov002_020f2630(daDemo_c *self) {
     self->mScroll = (daDemo_c::ScrollState *)::operator new(0x36);
     self->mScroll->bg0X = 0x30;
     self->mScroll->bg0Y = 0x20;
@@ -902,8 +989,7 @@ int func_ov002_020f2630(daDemo_c *self){
 // @symbol _ZN8daDemo_c19func_ov002_020f26c4EPh
 /* Script handler (table entry 23): mCue = p[0], the value 23f0 waits on. */
 
-int daDemo_c::func_ov002_020f26c4(unsigned char *src)
-{
+int daDemo_c::func_ov002_020f26c4(unsigned char *src) {
     this->mCue = src[0];
     return 1;
 }
@@ -915,7 +1001,7 @@ int daDemo_c::func_ov002_020f26c4(unsigned char *src)
 /* func_ov002_020f26d4 @ 0x20f26d4 (ov002) -- tail-call veneer to func_ov002_020f2630 (0x20f2630).
  * ldr ip, [pc]; bx ip; .word 0x20f2630
  */
-extern "C" {  /* ldr/bx veneer: a member pointer cannot spell the void(*)(void) cast */
+extern "C" { /* ldr/bx veneer: a member pointer cannot spell the void(*)(void) cast */
 void func_ov002_020f26d4(void) {
     ((void (*)(void))func_ov002_020f2630)();
 }
@@ -954,9 +1040,9 @@ void StaffRoll::func_ov002_020f26e0() {
 void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4) {
     this->kira.unk308 = p3;
     this->kira.unk30c = p4;
-    this->kiraParticle = Particle::System::New(
-        this->kiraParticle, 0x3e, p1 << 12, p2 << 12, 0, 0,
-        (Particle::Callback *)((struct ParticleCallback *)&this->kira));
+    this->kiraParticle =
+        Particle::System::New(this->kiraParticle, 0x3e, p1 << 12, p2 << 12, 0, 0,
+                              (Particle::Callback *)((struct ParticleCallback *)&this->kira));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -970,8 +1056,7 @@ int StaffRoll::func_ov002_020f27e8() {
     this->burstTimer += 1;
 
     if (this->burstDefParam != 0x1000) {
-        if (this->burstTimer ==
-            data_ov002_02100140[this->burstPeriods & 3]) {
+        if (this->burstTimer == data_ov002_02100140[this->burstPeriods & 3]) {
             this->burstDefParam += 0x199;
             if (this->burstDefParam >= 0x1000)
                 this->burstDefParam = 0x1000;
@@ -988,8 +1073,8 @@ int StaffRoll::func_ov002_020f27e8() {
         }
     }
 
-    func_ov002_020f2790(0x80,0x60,this->burstDefParam,this->burstSysParam);
-    func_ov002_020f2790(0x80,0x60,this->burstDefParam,this->burstSysParam);
+    func_ov002_020f2790(0x80, 0x60, this->burstDefParam, this->burstSysParam);
+    func_ov002_020f2790(0x80, 0x60, this->burstDefParam, this->burstSysParam);
 
     if (this->burstTimer >= 0x1e) {
         this->burstTimer = 0;
@@ -1035,9 +1120,12 @@ int StaffRoll::func_ov002_020f2990() {
     x = this->endX >> 0xc;
     y = this->endY >> 0xc;
     idx = 0;
-    if (GetOwnerLanguage() == 3) idx = 1;
-    else if (GetOwnerLanguage() == 2 || GetOwnerLanguage() == 5) idx = 2;
-    else if (GetOwnerLanguage() == 4) idx = 3;
+    if (GetOwnerLanguage() == 3)
+        idx = 1;
+    else if (GetOwnerLanguage() == 2 || GetOwnerLanguage() == 5)
+        idx = 2;
+    else if (GetOwnerLanguage() == 4)
+        idx = 3;
 
     OAM::Render(0, data_ov002_0210b988[idx], x, y, -1, 1, 0x1000, 0x1000, 0, -1);
 }
@@ -1201,8 +1289,10 @@ void StaffRoll::func_ov002_020f2dd4() {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
 void StaffRoll::StartCredit(int n) {
-    if (n == 0) return;
-    if (n == 0x15) return;
+    if (n == 0)
+        return;
+    if (n == 0x15)
+        return;
     credit[0].active = 1;
     credit[0].step = 0;
     credit[0].timer = 0;
@@ -1232,11 +1322,10 @@ void StaffRoll::func_ov002_020f2eac() {
     StaffRoll *p = this;
     for (i = 0; i < 5; i++) {
         if (p->dolls[0].visible != 0) {
-            OAM::RenderSub(data_ov002_0210bba0[p->dolls[0].frame],
-                           p->dolls[0].x >> 12, p->dolls[0].y >> 12,
-                           -1, p->dolls[0].priority);
+            OAM::RenderSub(data_ov002_0210bba0[p->dolls[0].frame], p->dolls[0].x >> 12,
+                           p->dolls[0].y >> 12, -1, p->dolls[0].priority);
         }
-        p = (StaffRoll *)((char *)p + 0x14);
+        p = (StaffRoll *)((Doll *)p + 1);
     }
 }
 
@@ -1253,7 +1342,7 @@ void StaffRoll::func_ov002_020f2f18(int a, int b) {
             c->dolls[0].y -= b;
         }
         i++;
-        c = (StaffRoll *)((char *)c + 0x14);
+        c = (StaffRoll *)((Doll *)c + 1);
     } while (i < 5);
 }
 
@@ -1268,7 +1357,7 @@ void StaffRoll::func_ov002_020f2f64() {
         if (self->dolls[0].active != 0) {
             self->dolls[0].frame++;
         }
-        self = (StaffRoll *)((char *)self + 0x14);
+        self = (StaffRoll *)((Doll *)self + 1);
     }
 }
 
@@ -1280,7 +1369,8 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
     StaffRoll *sl = this;
     int i;
     int idx = func_ov002_020f5a94() - 2;
-    if (idx < 0) idx = 0;
+    if (idx < 0)
+        idx = 0;
     for (i = 0; i < count + 1; i++) {
         int ok = 0;
         if (i == 0 || i == 1 || i == 4) {
@@ -1293,7 +1383,7 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
                 ok++;
         }
         if (ok) {
-            int* p;
+            int *p;
             sl->dolls[0].active = 1;
             sl->dolls[0].visible = 1;
             p = data_ov002_0210b97c[idx];
@@ -1302,7 +1392,7 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
             sl->dolls[0].priority = (u8)p[i * 4 + 2];
             sl->dolls[0].frame = (u8)p[i * 4 + 3];
         }
-        sl = (StaffRoll *)((char *)sl + 0x14);
+        sl = (StaffRoll *)((Doll *)sl + 1);
     }
 }
 
@@ -1311,12 +1401,12 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f30d4Ev
 void StaffRoll::func_ov002_020f30d4() {
-    StaffRoll * p = this;
+    StaffRoll *p = this;
     int i;
     for (i = 0; i < 5; i++) {
         p->dolls[0].active = 0;
         p->dolls[0].visible = 0;
-        p = (StaffRoll *)((char *)p + 0x14);
+        p = (StaffRoll *)((Doll *)p + 1);
     }
 }
 
@@ -1336,15 +1426,21 @@ void StaffRoll::func_ov002_020f30f8(int i) {
         return;
     }
 
-    *(int *)((char *)this + WINDOW_OFF(left) + idx) -= *(int *)((char *)this + WINDOW_OFF(stepX) + idx);
-    *(int *)((char *)this + WINDOW_OFF(top) + idx) -= *(int *)((char *)this + WINDOW_OFF(stepY) + idx);
-    *(int *)((char *)this + WINDOW_OFF(right) + idx) += *(int *)((char *)this + WINDOW_OFF(stepX) + idx);
-    *(int *)((char *)this + WINDOW_OFF(bottom) + idx) += *(int *)((char *)this + WINDOW_OFF(stepY) + idx);
+    *(int *)((char *)this + WINDOW_OFF(left) + idx) -=
+        *(int *)((char *)this + WINDOW_OFF(stepX) + idx);
+    *(int *)((char *)this + WINDOW_OFF(top) + idx) -=
+        *(int *)((char *)this + WINDOW_OFF(stepY) + idx);
+    *(int *)((char *)this + WINDOW_OFF(right) + idx) +=
+        *(int *)((char *)this + WINDOW_OFF(stepX) + idx);
+    *(int *)((char *)this + WINDOW_OFF(bottom) + idx) +=
+        *(int *)((char *)this + WINDOW_OFF(stepY) + idx);
 
     oldA = *(int *)((char *)this + WINDOW_OFF(bgX) + idx);
     oldB = *(int *)((char *)this + WINDOW_OFF(bgY) + idx);
-    *(int *)((char *)this + WINDOW_OFF(bgX) + idx) = oldA + *(int *)((char *)this + WINDOW_OFF(stepX) + idx);
-    *(int *)((char *)this + WINDOW_OFF(bgY) + idx) += *(int *)((char *)this + WINDOW_OFF(stepY) + idx);
+    *(int *)((char *)this + WINDOW_OFF(bgX) + idx) =
+        oldA + *(int *)((char *)this + WINDOW_OFF(stepX) + idx);
+    *(int *)((char *)this + WINDOW_OFF(bgY) + idx) +=
+        *(int *)((char *)this + WINDOW_OFF(stepY) + idx);
 
     if (*(int *)((char *)this + WINDOW_OFF(bgX) + idx) >= 0)
         *(int *)((char *)this + WINDOW_OFF(bgX) + idx) = 0;
@@ -1364,7 +1460,7 @@ void StaffRoll::func_ov002_020f30f8(int i) {
         *(int *)((char *)this + WINDOW_OFF(bgY) + idx) = 0;
 
     cc = *(int *)((char *)this + WINDOW_OFF(bgX) + idx) - oldA;
-    func_ov002_020f2f18(cc,*(int *)((char *)this + WINDOW_OFF(bgY) + idx) - oldB);
+    func_ov002_020f2f18(cc, *(int *)((char *)this + WINDOW_OFF(bgY) + idx) - oldB);
 
     ee = *(int *)((char *)this + WINDOW_OFF(right) + idx) >> 12;
     ff = *(int *)((char *)this + WINDOW_OFF(bottom) + idx) >> 12;
@@ -1490,16 +1586,25 @@ void StaffRoll::func_ov002_020f35e4(int i) {
     *(int *)((char *)this + WINDOW_OFF(top) + off) = 0x66000;
     *(int *)((char *)this + WINDOW_OFF(right) + off) = 0xe0000;
     *(int *)((char *)this + WINDOW_OFF(bottom) + off) = 0x66000;
-    *((volatile unsigned int *) 0x4001000) = ((*((volatile unsigned int *) 0x4001000)) & (~0xe000)) | 0x4000;
-    *((volatile unsigned short *) 0x4001048) = (unsigned short) (((((*((volatile unsigned short *) 0x4001048)) & (~0x3f00)) | 0x1700) & 0xFFFFFFFFFFFFFFFFull) | 0x2000);
-    *((volatile unsigned short *) 0x400104a) = (unsigned short) (((((*((volatile unsigned short *) 0x400104a)) & (~0x3f)) | 0x11) & 0xFFFFFFFFFFFFFFFFull) | 0x20);
+    *((volatile unsigned int *)0x4001000) =
+        ((*((volatile unsigned int *)0x4001000)) & (~0xe000)) | 0x4000;
+    *((volatile unsigned short *)0x4001048) =
+        (unsigned short)(((((*((volatile unsigned short *)0x4001048)) & (~0x3f00)) | 0x1700) &
+                          0xFFFFFFFFFFFFFFFFull) |
+                         0x2000);
+    *((volatile unsigned short *)0x400104a) =
+        (unsigned short)(((((*((volatile unsigned short *)0x400104a)) & (~0x3f)) | 0x11) &
+                          0xFFFFFFFFFFFFFFFFull) |
+                         0x20);
     {
         int a = *(int *)((char *)this + WINDOW_OFF(left) + off) >> 12;
         int d = *(int *)((char *)this + WINDOW_OFF(right) + off) >> 12;
         int e = *(int *)((char *)this + WINDOW_OFF(bottom) + off) >> 12;
         int b = *(int *)((char *)this + WINDOW_OFF(top) + off) >> 12;
-        *((volatile unsigned short *) 0x4001042) = (unsigned short) (((a << 8) & 0xff00) | (d & 0xff));
-        *((volatile unsigned short *) 0x4001046) = (unsigned short) (((b << 8) & 0xff00) | (e & 0xff));
+        *((volatile unsigned short *)0x4001042) =
+            (unsigned short)(((a << 8) & 0xff00) | (d & 0xff));
+        *((volatile unsigned short *)0x4001046) =
+            (unsigned short)(((b << 8) & 0xff00) | (e & 0xff));
     }
     *(int *)((char *)this + WINDOW_OFF(bgX) + off) = -0x60000;
     *(int *)((char *)this + WINDOW_OFF(bgY) + off) = -0x38000;
@@ -1611,13 +1716,12 @@ void StaffRoll::func_ov002_020f396c() {
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3978Ev
 extern void *data_ov002_0210b998[];
 void StaffRoll::func_ov002_020f3978() {
-    Star * c = this->stars;
+    Star *c = this->stars;
     int i;
     for (i = 0; i < 4; i++) {
         if (c->visible) {
-            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i],
-                        c->x >> 0xc, c->y >> 0xc,
-                        -1, 1, 0);
+            OAM::Render(true, (OamAttr *)data_ov002_0210b998[i], c->x >> 0xc, c->y >> 0xc, -1, 1,
+                        0);
         }
         c++;
     }
@@ -1732,7 +1836,8 @@ void StaffRoll::func_ov002_020f3ba0(int i) {
 void StaffRoll::func_ov002_020f3d38(int i) {
     int off = i * 0x4c;
     if (*(u16 *)((char *)this + STAR_OFF(delay) + off) != 0) {
-        *(u16 *)((char *)this + STAR_OFF(delay) + off) = *(u16 *)((char *)this + STAR_OFF(delay) + off) - 1;
+        *(u16 *)((char *)this + STAR_OFF(delay) + off) =
+            *(u16 *)((char *)this + STAR_OFF(delay) + off) - 1;
         return;
     }
     *(s32 *)((char *)this + STAR_OFF(x) + off) = -0x10000;
@@ -1759,7 +1864,7 @@ void StaffRoll::func_ov002_020f3d98(int idx) {
 /* Per-slot update of one 0x4c-byte cutscene record. func_ov002_020f5a94
  * takes c so r0 stays live through the orbit path to the call. */
 void StaffRoll::func_ov002_020f3de4(int i) {
-    char * c = (char *)this;
+    char *c = (char *)this;
     int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
@@ -1993,7 +2098,8 @@ void StaffRoll::func_ov002_020f43cc(int i) {
         }
         px = (char *)this + off;
         if (*(int *)((char *)this + STAR_OFF(speed) + off) <= -0x2000)
-            *(int *)((char *)this + STAR_OFF(speed) + off) = *(int *)((char *)this + STAR_OFF(speed) + off) + 0x120;
+            *(int *)((char *)this + STAR_OFF(speed) + off) =
+                *(int *)((char *)this + STAR_OFF(speed) + off) + 0x120;
         {
             s = (char *)this + idx * 0x4c;
             int dx = (((Star *)s)->targetX - ((Star *)px)->x) >> 12;
@@ -2097,8 +2203,10 @@ void StaffRoll::func_ov002_020f4710(int i) {
             *(s32 *)((char *)this + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(u16 *)((char *)this + STAR_OFF(heading) + off) -= *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
-        *(s32 *)((char *)this + STAR_OFF(orbitTravel) + off) += *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
+        *(u16 *)((char *)this + STAR_OFF(heading) + off) -=
+            *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
+        *(s32 *)((char *)this + STAR_OFF(orbitTravel) + off) +=
+            *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
 
         if (this->stars[0].phase != 0) {
             *(u16 *)((char *)this + STAR_OFF(angSpeed) + off) += 8;
@@ -2108,7 +2216,8 @@ void StaffRoll::func_ov002_020f4710(int i) {
                 *(u16 *)((char *)this + STAR_OFF(angSpeed) + off) = 0x200;
         }
 
-        if ((u32) * (s32 *)((char *)this + STAR_OFF(orbitTravel) + off) < (u32)data_ov002_02100100[i])
+        if ((u32) * (s32 *)((char *)this + STAR_OFF(orbitTravel) + off) <
+            (u32)data_ov002_02100100[i])
             return;
         if (this->holdOrbit != 0)
             return;
@@ -2201,10 +2310,15 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
         }
 
         if (*(int *)((char *)this + STAR_OFF(speed) + off) <= -0x2000)
-            *(int *)((char *)this + STAR_OFF(speed) + off) = *(int *)((char *)this + STAR_OFF(speed) + off) + 0x120;
+            *(int *)((char *)this + STAR_OFF(speed) + off) =
+                *(int *)((char *)this + STAR_OFF(speed) + off) + 0x120;
 
-        dx = (*(int *)((char *)this + STAR_OFF(targetX) + off) - *(int *)((char *)this + STAR_OFF(x) + off)) >> 12;
-        dy = (*(int *)((char *)this + STAR_OFF(targetY) + off) - *(int *)((char *)this + STAR_OFF(y) + off)) >> 12;
+        dx = (*(int *)((char *)this + STAR_OFF(targetX) + off) -
+              *(int *)((char *)this + STAR_OFF(x) + off)) >>
+             12;
+        dy = (*(int *)((char *)this + STAR_OFF(targetY) + off) -
+              *(int *)((char *)this + STAR_OFF(y) + off)) >>
+             12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
             *(unsigned char *)((char *)this + STAR_OFF(phase) + off) += 1;
@@ -2253,7 +2367,8 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
 
     *(unsigned short *)((char *)this + STAR_OFF(heading) + off) -=
         *(unsigned short *)((char *)this + STAR_OFF(angSpeed) + off);
-    *(int *)((char *)this + STAR_OFF(orbitTravel) + off) += *(unsigned short *)((char *)this + STAR_OFF(angSpeed) + off);
+    *(int *)((char *)this + STAR_OFF(orbitTravel) + off) +=
+        *(unsigned short *)((char *)this + STAR_OFF(angSpeed) + off);
 
     if (i != func_ov002_020f5a94() - 1)
         return;
@@ -2310,8 +2425,10 @@ void StaffRoll::func_ov002_020f4d70(int i) {
             *(int *)((char *)this + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(u16 *)((char *)this + STAR_OFF(heading) + off) += *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
-        *(s32 *)((char *)this + STAR_OFF(orbitTravel) + off) += *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
+        *(u16 *)((char *)this + STAR_OFF(heading) + off) +=
+            *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
+        *(s32 *)((char *)this + STAR_OFF(orbitTravel) + off) +=
+            *(u16 *)((char *)this + STAR_OFF(angSpeed) + off);
 
         if (this->stars[0].phase != 0) {
             *(u16 *)((char *)this + STAR_OFF(angSpeed) + off) += 8;
@@ -2323,7 +2440,8 @@ void StaffRoll::func_ov002_020f4d70(int i) {
             }
         }
 
-        if ((u32) * (s32 *)((char *)this + STAR_OFF(orbitTravel) + off) < (u32)data_ov002_021000e0[i])
+        if ((u32) * (s32 *)((char *)this + STAR_OFF(orbitTravel) + off) <
+            (u32)data_ov002_021000e0[i])
             return;
 
         if (this->holdOrbit != 0)
@@ -2410,10 +2528,15 @@ void StaffRoll::func_ov002_020f5010(int i) {
         }
 
         if (*(int *)((char *)this + STAR_OFF(speed) + off) >= 0x2000)
-            *(int *)((char *)this + STAR_OFF(speed) + off) = *(int *)((char *)this + STAR_OFF(speed) + off) - 0x120;
+            *(int *)((char *)this + STAR_OFF(speed) + off) =
+                *(int *)((char *)this + STAR_OFF(speed) + off) - 0x120;
 
-        dx = (*(int *)((char *)this + STAR_OFF(targetX) + off) - *(int *)((char *)this + STAR_OFF(x) + off)) >> 12;
-        dy = (*(int *)((char *)this + STAR_OFF(targetY) + off) - *(int *)((char *)this + STAR_OFF(y) + off)) >> 12;
+        dx = (*(int *)((char *)this + STAR_OFF(targetX) + off) -
+              *(int *)((char *)this + STAR_OFF(x) + off)) >>
+             12;
+        dy = (*(int *)((char *)this + STAR_OFF(targetY) + off) -
+              *(int *)((char *)this + STAR_OFF(y) + off)) >>
+             12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
             *(unsigned char *)((char *)this + STAR_OFF(phase) + off) += 1;
@@ -2462,7 +2585,8 @@ void StaffRoll::func_ov002_020f5010(int i) {
 
     *(unsigned short *)((char *)this + STAR_OFF(heading) + off) +=
         *(unsigned short *)((char *)this + STAR_OFF(angSpeed) + off);
-    *(int *)((char *)this + STAR_OFF(orbitTravel) + off) += *(unsigned short *)((char *)this + STAR_OFF(angSpeed) + off);
+    *(int *)((char *)this + STAR_OFF(orbitTravel) + off) +=
+        *(unsigned short *)((char *)this + STAR_OFF(angSpeed) + off);
 
     if (i != func_ov002_020f5a94() - 1)
         return;
@@ -2610,7 +2734,7 @@ void StaffRoll::func_ov002_020f5678(int i) {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f569cEi
 void StaffRoll::func_ov002_020f569c(int i) {
-    char *p = (char*)this;
+    char *p = (char *)this;
     int ax;
     int by;
     int tx;
@@ -2657,8 +2781,7 @@ void StaffRoll::func_ov002_020f569c(int i) {
     ax = *(int *)(p + STAR_OFF(x) + idx) >> 12;
     by = *(int *)(p + STAR_OFF(y) + idx) >> 12;
 
-    if (ax == tx && by == ty)
-    {
+    if (ax == tx && by == ty) {
         *(unsigned char *)(p + STAR_OFF(step) + idx) =
             *(unsigned char *)(p + STAR_OFF(step) + idx) + 1;
     }
@@ -2701,7 +2824,8 @@ void StaffRoll::func_ov002_020f5894(int i) {
     int off;
     unsigned short *p34;
     short s2c;
-    if (i != 0) return;
+    if (i != 0)
+        return;
     off = i * 0x4c;
     p34 = (unsigned short *)((char *)this + STAR_OFF(kiraTimer) + off);
     *p34 = *p34 + 1;
@@ -2724,7 +2848,8 @@ void StaffRoll::func_ov002_020f5894(int i) {
             }
         }
     }
-    if (*p34 < 0x1e) return;
+    if (*p34 < 0x1e)
+        return;
     *p34 = 0;
     {
         unsigned short *p3e = (unsigned short *)((char *)this + STAR_OFF(kiraPeriods) + off);
@@ -2756,7 +2881,7 @@ void StaffRoll::func_ov002_020f5990() {
             continue;
         if (i != this->kiraStar)
             continue;
-        func_ov002_020f2790((s16)(s->x >> 12),(s16)(s->y >> 12),s->kiraDefParam,s->kiraSysParam);
+        func_ov002_020f2790((s16)(s->x >> 12), (s16)(s->y >> 12), s->kiraDefParam, s->kiraSysParam);
     }
 }
 
@@ -2765,7 +2890,7 @@ void StaffRoll::func_ov002_020f5990() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5a6cEv
 void StaffRoll::func_ov002_020f5a6c() {
-    Star * p = this->stars;
+    Star *p = this->stars;
     int i;
     for (i = 0; i < 4; i++) {
         p->active = 0;
@@ -2824,29 +2949,25 @@ void StaffRoll::func_ov002_020f5b24() {
 /* ROM ordinal 74 -- func_ov002_020f5b7c, 0x020f5b7c, size 0x4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEv
-void StaffRoll::func_ov002_020f5b7c() {
-}
+void StaffRoll::func_ov002_020f5b7c() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 75 -- func_ov002_020f5b80, 0x020f5b80, size 0x4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b80Ev
-void StaffRoll::func_ov002_020f5b80() {
-}
+void StaffRoll::func_ov002_020f5b80() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 76 -- func_ov002_020f5b84, 0x020f5b84, size 0x4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b84Ev
-void StaffRoll::func_ov002_020f5b84() {
-}
+void StaffRoll::func_ov002_020f5b84() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 77 -- func_ov002_020f5b88, 0x020f5b88, size 0x4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b88Ev
-void StaffRoll::func_ov002_020f5b88() {
-}
+void StaffRoll::func_ov002_020f5b88() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 78 -- func_ov002_020f5b8c, 0x020f5b8c, size 0xc */
@@ -2878,7 +2999,7 @@ void StaffRoll::func_ov002_020f5b98() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv
 void StaffRoll::func_ov002_020f5bcc() {
-    Star * p = this->stars;
+    Star *p = this->stars;
     int i;
     for (i = 0; i < 4; i++) {
         if (p->active)
@@ -2963,7 +3084,8 @@ void StaffRoll::func_ov002_020f5d34() {
     int i = 0;
     Star *e;
     int v;
-    if (n <= 0) goto done;
+    if (n <= 0)
+        goto done;
     e = this->stars;
     v = 0;
     do {
@@ -2998,7 +3120,7 @@ done:
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5dd8Ei
 extern PMF0 data_ov002_02110f34[];
 void StaffRoll::func_ov002_020f5dd8(int idx) {
-  (this->*data_ov002_02110f34[idx])();
+    (this->*data_ov002_02110f34[idx])();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3059,19 +3181,25 @@ void StaffRoll::func_ov002_020f5eb8() {
 /* ROM ordinal 93 -- func_ov002_020f5ed8, 0x020f5ed8, size 0xc */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8Ev
-void StaffRoll::func_ov002_020f5ed8() { func_ov002_020f3828(); }
+void StaffRoll::func_ov002_020f5ed8() {
+    func_ov002_020f3828();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 94 -- func_ov002_020f5ee4, 0x020f5ee4, size 0xc */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4Ev
-void StaffRoll::func_ov002_020f5ee4() { func_ov002_020f3828(); }
+void StaffRoll::func_ov002_020f5ee4() {
+    func_ov002_020f3828();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 95 -- func_ov002_020f5ef0, 0x020f5ef0, size 0xc */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0Ev
-void StaffRoll::func_ov002_020f5ef0() { func_ov002_020f3954(); }
+void StaffRoll::func_ov002_020f5ef0() {
+    func_ov002_020f3954();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 96 -- func_ov002_020f5efc, 0x020f5efc, size 0x10 */
@@ -3120,10 +3248,10 @@ int StaffRoll::func_ov002_020f5f8c() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5fb8Ev
 int StaffRoll::func_ov002_020f5fb8() {
-  func_ov002_020f5990();
-  func_ov002_020f37a0();
-  func_ov002_020f2dd4();
-  return func_ov002_020f27e8();
+    func_ov002_020f5990();
+    func_ov002_020f37a0();
+    func_ov002_020f2dd4();
+    return func_ov002_020f27e8();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3143,19 +3271,19 @@ void StaffRoll::func_ov002_020f5fe4() {
     gSubScreenLayers &= ~0x1f;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCG_BIN);
-    DecompressLZ16(f, (void*)0x6400000);
+    DecompressLZ16(f, (void *)0x6400000);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCL_BIN);
     GX::LoadOBJPltt(f, 0, 0x200);
     Deallocate(f);
 
-    *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3);
-    *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & 0x43) | 0x1100;
-    *(volatile u16*)0x4001008 = (*(volatile u16*)0x4001008 & ~3);
-    *(volatile u16*)0x4001008 = (*(volatile u16*)0x4001008 & 0x43) | 0xe08;
-    *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & ~3) | 2;
-    *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & 0x43) | 0x800;
+    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3);
+    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1100;
+    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3);
+    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0xe08;
+    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & ~3) | 2;
+    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0x800;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCG_BIN);
     DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
@@ -3170,8 +3298,8 @@ void StaffRoll::func_ov002_020f5fe4() {
     func_02056434(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0xc90;
+    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 2;
+    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0xc90;
 
     if (GetOwnerLanguage() == 5) {
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_S_NCG_BIN);
@@ -3201,8 +3329,8 @@ void StaffRoll::func_ov002_020f5fe4() {
     func_020562b4(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
-    *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0xa90;
+    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
+    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0xa90;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK2_NSC_BIN);
     func_02056374(f, 0, 0x800);
@@ -3213,7 +3341,7 @@ void StaffRoll::func_ov002_020f5fe4() {
     {
         void *f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCL_BIN);
-        DecompressLZ16(f6, (void*)0x6600000);
+        DecompressLZ16(f6, (void *)0x6600000);
         GXS::LoadOBJPltt(r5, 0, 0x200);
         Deallocate(f6);
         Deallocate(r5);
@@ -3235,8 +3363,7 @@ void StaffRoll::func_ov002_020f5fe4() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f63a0Ev
 
-int daDemo_c::func_ov002_020f63a0()
-{
+int daDemo_c::func_ov002_020f63a0() {
     this->mStaffRoll->func_ov002_020f5f60();
     if (this->mStaffRoll != 0) {
         Memory::operator_delete2(this->mStaffRoll);
@@ -3250,8 +3377,7 @@ int daDemo_c::func_ov002_020f63a0()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f63d4Ev
 
-int daDemo_c::func_ov002_020f63d4()
-{
+int daDemo_c::func_ov002_020f63d4() {
     this->mStaffRoll->func_ov002_020f5fb8();
     this->mStaffRoll->func_ov002_020f5f8c();
     return 1;
@@ -3262,8 +3388,7 @@ int daDemo_c::func_ov002_020f63d4()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f63f8EPh
 
-int daDemo_c::func_ov002_020f63f8(unsigned char *src)
-{
+int daDemo_c::func_ov002_020f63f8(unsigned char *src) {
     this->mCue = *src;
     this->mStaffRoll->func_ov002_020f5dd8((int)this->mCue);
     return 1;
@@ -3274,8 +3399,7 @@ int daDemo_c::func_ov002_020f63f8(unsigned char *src)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6424Ev
 
-int daDemo_c::func_ov002_020f6424()
-{
+int daDemo_c::func_ov002_020f6424() {
     this->mStaffRoll->func_ov002_020f5f0c((int)this->mCue);
     return 1;
 }
@@ -3285,8 +3409,7 @@ int daDemo_c::func_ov002_020f6424()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6448EPh
 
-int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
-{
+int daDemo_c::func_ov002_020f6448(unsigned char *arg1) {
     StaffRoll *p;
     this->mCue = *arg1;
     p = new StaffRoll;
@@ -3302,8 +3425,7 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPc
 
-void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
-{
+void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4) {
     Advance();
     if (!Finished())
         return;
@@ -3318,8 +3440,7 @@ void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPvh
 
-void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
-{
+void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg) {
     u8 *e;
     int v;
     mAnimEntry = arg;
@@ -3329,9 +3450,11 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
     {
         dExtAnmTexPat_c *ts = mTexSeq;
         s8 idx;
-        if (ts == 0) return;
+        if (ts == 0)
+            return;
         idx = (s8)e[1];
-        if (idx < 0) return;
+        if (idx < 0)
+            return;
         ts->SetFile(*(BTP_File *)mTexSeqFiles[idx]->filePtr, v, 0x1000, 0);
     }
 }
@@ -3341,8 +3464,7 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f65b8Ev
 
-void daDemo_c::anmModel_c::func_ov002_020f65b8()
-{
+void daDemo_c::anmModel_c::func_ov002_020f65b8() {
     if (mTexSeq == 0)
         return;
     mTexSeq->Update(data);
@@ -3363,8 +3485,8 @@ void daDemo_c::anmModel_c::func_ov002_020f65ec() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f6618EP13SharedFilePtriPS2_ihS3_i
 int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
-                        int arg5, unsigned char texByte, SharedFilePtr **texs, int tsData)
-{
+                                              int arg5, unsigned char texByte, SharedFilePtr **texs,
+                                              int tsData) {
     char *self = (char *)this;
     int i;
     mModelFile = mdl;
@@ -3417,8 +3539,7 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
  * bases (0x70..0x83), so declaring them leaves the array at 0x64; deleting
  * mTexSeq is the dExtAnmTexPat_c's own virtual D0, which is the slot-1 call
  * the ROM makes. */
-daDemo_c::anmModel_c::~anmModel_c()
-{
+daDemo_c::anmModel_c::~anmModel_c() {
     SharedFilePtr *file;
     int i;
 
@@ -3445,8 +3566,7 @@ daDemo_c::anmModel_c::~anmModel_c()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c13simpleModel_c19func_ov002_020f6960EP13SharedFilePtri
 
-int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
-{
+int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n) {
     mFile = fp;
     BMD_File *f = (BMD_File *)dExtSimpleModel_c::LoadFile(*mFile);
     return ((dExtModel_c *)this)->SetFile(f, 1, n) != 0 ? 1 : 0;
@@ -3478,8 +3598,7 @@ int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
  * D0, which is not the cartridge's order. Deferred, its D2/D0/D1 flush at
  * the next definition and land D0 below D1. */
 #pragma defer_codegen on
-daDemo_c::simpleModel_c::~simpleModel_c()
-{
+daDemo_c::simpleModel_c::~simpleModel_c() {
     SharedFilePtr *file = mFile;
     if (file != 0) {
         file->Release();
@@ -3503,8 +3622,7 @@ daDemo_c::param_c::param_c() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6a9cEv
 
-int daDemo_c::func_ov002_020f6a9c()
-{
+int daDemo_c::func_ov002_020f6a9c() {
     MarkForDestruction();
     return 1;
 }
@@ -3514,8 +3632,7 @@ int daDemo_c::func_ov002_020f6a9c()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6ab8EPh
 
-int daDemo_c::func_ov002_020f6ab8(unsigned char *p)
-{
+int daDemo_c::func_ov002_020f6ab8(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     Sound::Play(1, id, mCamSpacePos);
     return 1;
@@ -3526,8 +3643,7 @@ int daDemo_c::func_ov002_020f6ab8(unsigned char *p)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6ae4EPh
 
-int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
-{
+int daDemo_c::func_ov002_020f6ae4(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, id, mCamSpacePos, 0);
     return 1;
@@ -3538,8 +3654,7 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6b28EPh
 
-int daDemo_c::func_ov002_020f6b28(unsigned char *p)
-{
+int daDemo_c::func_ov002_020f6b28(unsigned char *p) {
     unsigned int v = ReadUnalignedInt(p);
     func_02012694(v, &mCamSpacePosX);
     return 1;
@@ -3554,8 +3669,7 @@ int daDemo_c::func_ov002_020f6b28(unsigned char *p)
  * horizontal speed. The legacy per-function file recorded its match under
  * mwccarm 1.2/sp2p3; this TU builds under the 2004/b56 pin. */
 
-int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
-{
+int daDemo_c::func_ov002_020f6b4c(unsigned char *p) {
     Vector3 target;
     int y, z;
     z = ReadUnalignedShort(p + 4) << 12;
@@ -3574,8 +3688,7 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6bc0EPh
 
-s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
-{
+s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data) {
     s32 x, y, z;
     z = ReadUnalignedShort(data + 4) << 12;
     y = ReadUnalignedShort(data + 2) << 12;
@@ -3593,8 +3706,7 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6c24EPh
 
-int daDemo_c::func_ov002_020f6c24(unsigned char *src)
-{
+int daDemo_c::func_ov002_020f6c24(unsigned char *src) {
     this->mOpacity = src[0];
     return 1;
 }
@@ -3604,8 +3716,7 @@ int daDemo_c::func_ov002_020f6c24(unsigned char *src)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f6c34EPh
 
-int daDemo_c::func_ov002_020f6c34(unsigned char *src)
-{
+int daDemo_c::func_ov002_020f6c34(unsigned char *src) {
     unsigned char v = *src;
     ((anmModel_c *)this->mAnmModel)->func_ov002_020f6514((u8 *)&data_ov002_0210bc88, v);
     return 1;
@@ -3614,52 +3725,48 @@ int daDemo_c::func_ov002_020f6c34(unsigned char *src)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 126 -- func_ov002_020f6c60, 0x020f6c60, size 0x1e8 */
 /* -------------------------------------------------------------------------- */
-inline unsigned int inline_fn(unsigned int arg0)
-{
-  return arg0;
+inline unsigned int inline_fn(unsigned int arg0) {
+    return arg0;
 }
 
 // @symbol _ZN8daDemo_c19func_ov002_020f6c60EPvii
-int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
-{
-  u8 *flag = (u8 *) arg1;
-  VecFx32 v;
-  if (arg2 == gKuppaScriptFrame) {
-      if ((*flag) != 0) {
-          int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
-          int m = FX_MUL(r, 0xa000);
-          this->mMagnitude = m + 0x19000;
-      }
-      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)data_0209f318)->pos, (Vector3 *)&this->mPosX);
-      if (arg2 > 0x2bc) {
-          this->mPosY -= 0x96000;
-      }
-      if (arg2 != data_ov002_0210b614) {
-          func_0201267c(0x6a, &this->mCamSpacePos);
-          data_ov002_0210b614 = arg2;
-      }
-  }
-  if (arg3 == gKuppaScriptFrame) {
-      this->mOpacity = 0;
-      return 1;
-  }
-  this->mOpacity = 0x1f;
-  if ((*flag) == 0)
-  {
-      /* First call stores the look-at point and registers ~Vector3(). */
-      static __attribute__((aligned(8))) Vector3 sLookTarget(0xffdd6000, 0xbe4000, 0x2ae000);
-      func_ov002_020f6f48(&sLookTarget, 0x20);
-  }
-  else
-  {
-    MulVec3Mat4x3((Vector3*)&data_ov002_0210b958, (Matrix4x3*)&data_0209b41c, (Vector3*)&v);
-    Vec3_LslInPlace((int*)&v, 3);
-    func_ov002_020f6f48((Vector3*)&v, 8);
-  }
-  this->mPrevAngleX = this->mAngleX;
-  this->mPrevAngleY = this->mAngleY;
-  this->mPrevAngleZ = this->mAngleZ;
-  return 1;
+int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3) {
+    u8 *flag = (u8 *)arg1;
+    VecFx32 v;
+    if (arg2 == gKuppaScriptFrame) {
+        if ((*flag) != 0) {
+            int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
+            int m = FX_MUL(r, 0xa000);
+            this->mMagnitude = m + 0x19000;
+        }
+        AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)data_0209f318)->pos,
+                (Vector3 *)&this->mPosX);
+        if (arg2 > 0x2bc) {
+            this->mPosY -= 0x96000;
+        }
+        if (arg2 != data_ov002_0210b614) {
+            func_0201267c(0x6a, &this->mCamSpacePos);
+            data_ov002_0210b614 = arg2;
+        }
+    }
+    if (arg3 == gKuppaScriptFrame) {
+        this->mOpacity = 0;
+        return 1;
+    }
+    this->mOpacity = 0x1f;
+    if ((*flag) == 0) {
+        /* First call stores the look-at point and registers ~Vector3(). */
+        static __attribute__((aligned(8))) Vector3 sLookTarget(0xffdd6000, 0xbe4000, 0x2ae000);
+        func_ov002_020f6f48(&sLookTarget, 0x20);
+    } else {
+        MulVec3Mat4x3((Vector3 *)&data_ov002_0210b958, (Matrix4x3 *)&data_0209b41c, (Vector3 *)&v);
+        Vec3_LslInPlace((int *)&v, 3);
+        func_ov002_020f6f48((Vector3 *)&v, 8);
+    }
+    this->mPrevAngleX = this->mAngleX;
+    this->mPrevAngleY = this->mAngleY;
+    this->mPrevAngleZ = this->mAngleZ;
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3671,8 +3778,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
  * the animation's currFrame set from a random draw scaled by
  * numFramesAndFlags. */
 
-int daDemo_c::func_ov002_020f6e48(unsigned char *p)
-{
+int daDemo_c::func_ov002_020f6e48(unsigned char *p) {
     int b;
     int c0;
     int d;
@@ -3717,8 +3823,7 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
  * mSpeedZ to mMagnitude times rotation elements 6..8 of the animated model's
  * matrix. */
 
-void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
-{
+void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt) {
     Matrix4x3 *m;
     ApproachAngle(&this->mAngleX, Vec3_VertAngle((&this->mPos), v), amt, 0x4000, 0);
     ApproachAngle(&this->mAngleY, Vec3_HorzAngle((&this->mPos), v), amt, 0x4000, 0);
@@ -3734,8 +3839,7 @@ void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
 // @symbol _ZN8daDemo_c19func_ov002_020f7020Ev
 /* Script handler 9: clear mFlags bit 0x2. */
 
-int daDemo_c::func_ov002_020f7020()
-{
+int daDemo_c::func_ov002_020f7020() {
     this->mFlags &= ~0x2;
     return 1;
 }
@@ -3745,8 +3849,7 @@ int daDemo_c::func_ov002_020f7020()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7038Eii
 
-int daDemo_c::func_ov002_020f7038(int a, int arg)
-{
+int daDemo_c::func_ov002_020f7038(int a, int arg) {
     if (arg == gKuppaScriptFrame) {
         mParticleID[0] = 0;
         mParticleID[1] = 0;
@@ -3788,8 +3891,7 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f71c4Eii
 
-int daDemo_c::func_ov002_020f71c4(int a, int arg)
-{
+int daDemo_c::func_ov002_020f71c4(int a, int arg) {
     if (arg == 0) {
         if (arg == gKuppaScriptFrame) {
             this->mMagnitude = 0x10000;
@@ -3817,13 +3919,12 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f72bcEv
 
-int daDemo_c::func_ov002_020f72bc()
-{
-    *((u32*)&this->mScaleX) = 0x3000;
-    *((u32*)&this->mScaleY) = 0x3000;
-    *((u32*)&this->mScaleZ) = 0x3000;
+int daDemo_c::func_ov002_020f72bc() {
+    *((u32 *)&this->mScaleX) = 0x3000;
+    *((u32 *)&this->mScaleY) = 0x3000;
+    *((u32 *)&this->mScaleZ) = 0x3000;
     {
-        s16* p = &this->mAngleY;
+        s16 *p = &this->mAngleY;
         *p = *p + 0x400;
     }
     this->mOpacity = 0x1f;
@@ -3845,8 +3946,7 @@ int daDemo_c::func_ov002_020f72bc()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7384EPhi
 
-int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
-{
+int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val) {
     if (*flag != 0) {
         if (val == gKuppaScriptFrame)
             func_02012790(0x17);
@@ -3872,8 +3972,7 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
  * in[1] << 8 (func_0201ef38 is called when it arrives at 0 with in[1]
  * non-zero) and drives mOpacity and the blend registers at 0x4000050. */
 
-int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
-{
+int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel) {
     unsigned char *self = (unsigned char *)this;
     int a = in[0] << 12;
     int b = in[1] << 8;
@@ -3898,7 +3997,8 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         unsigned char r = *(unsigned char *)(&this->mOpacity);
         if (r != 0 || a != 0) {
             t = (r * 0xa00) >> 12;
-            if (t > 0x10) t = 0x10;
+            if (t > 0x10)
+                t = 0x10;
             G2x::SetBlendAlpha((volatile u16 *)0x4000050, 8, 1, t, 0x10 - t);
         }
     }
@@ -3917,8 +4017,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
  * test. mPos = that vector times INV_VIEW_MATRIX_ASR_3, then << 3; mMagnitude
  * approaches arg1[0] << 12 by arg1[1] << 8 and drives mOpacity. */
 
-int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
-{
+int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2) {
     int a = arg1[0];
     int b = arg1[1];
     int f1 = a << 0xc;
@@ -3974,8 +4073,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7780EPvi
 
-int daDemo_c::func_ov002_020f7780(void *unused, int mode)
-{
+int daDemo_c::func_ov002_020f7780(void *unused, int mode) {
     dCamera_c *cam = (dCamera_c *)data_0209f318;
 
     if (mode == gKuppaScriptFrame) {
@@ -4061,8 +4159,7 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f79c0EPvi
 
-int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
-{
+int daDemo_c::func_ov002_020f79c0(void *unused, int mode) {
 
     if (mode == gKuppaScriptFrame) {
         this->mMagnitude = 0x578000;
@@ -4125,8 +4222,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN8daDemo_c19func_ov002_020f7bb8EPht
 
-int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
-{
+int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id) {
     Vector3 v0, v1;
     int src[3];
     Fix12i dist;
@@ -4181,11 +4277,10 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 139 -- func_ov002_020f7d74, 0x020f7d74, size 0x2b4 */
+/* ROM ordinal 139 -- daDemo_c::RunCommand, 0x020f7d74, size 0x2b4 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f7d74
-extern "C" void func_ov002_020f7d74(daDemo_c* self, unsigned char* p, int a2, int a3)
-{
+// @symbol _ZN8daDemo_c10RunCommandEPhii
+void daDemo_c::RunCommand(unsigned char *p, int a2, int a3) {
     if ((data_ov002_02110b00 & 1) == 0) {
         data_ov002_02110b00 |= 1;
         data_ov002_0211104c[0] = data_ov002_0210b708.pmf3;
@@ -4213,12 +4308,11 @@ extern "C" void func_ov002_020f7d74(daDemo_c* self, unsigned char* p, int a2, in
         data_ov002_0211104c[22] = data_ov002_0210b8d0.pmf3;
         data_ov002_0211104c[23] = data_ov002_0210b8c8.pmf3;
     }
-    (self->*data_ov002_0211104c[p[6]])(p + 7, a2, a3);
+    (this->*data_ov002_0211104c[p[6]])(p + 7, a2, a3);
 }
 
 // @symbol _ZN8daDemo_c16CleanupResourcesEv
-int daDemo_c::CleanupResources()
-{
+int daDemo_c::CleanupResources() {
     int r1 = param1;
     if (r1 == 0x2e)
         return func_ov002_020f63a0();
@@ -4235,9 +4329,7 @@ int daDemo_c::CleanupResources()
 // @symbol _ZN8daDemo_c16OnPendingDestroyEv
 /* daDemo_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
-void daDemo_c::OnPendingDestroy()
-{
-}
+void daDemo_c::OnPendingDestroy() {}
 
 // @symbol _ZN8daDemo_c6RenderEv
 int daDemo_c::Render() {
@@ -4283,8 +4375,7 @@ int daDemo_c::Render() {
 }
 
 // @symbol _ZN8daDemo_c8BehaviorEv
-int daDemo_c::Behavior()
-{
+int daDemo_c::Behavior() {
     Vector3 v;
     VecFx32 asr;
     int new_var2;
@@ -4368,8 +4459,7 @@ struct DemoTexSeqFile : SharedFilePtr {
  * class vptr and, for anmModel_c, the dExtFrameCtrl_c base's secondary vptr
  * at +0x50. The model base sits at offset 0, so storing the result in
  * mModel/mAnmModel needs no null test. */
-int daDemo_c::InitResources()
-{
+int daDemo_c::InitResources() {
     int t;
 
     if (param1 == 0x12) {
@@ -4401,20 +4491,29 @@ int daDemo_c::InitResources()
         }
     } else if (param1 >= 0x14 && param1 <= 0x16) {
         this->mModel = new simpleModel_c;
-        if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b70, -1) == 0) return 0;
+        if (this->mModel == 0)
+            return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b70, -1) == 0)
+            return 0;
     } else if (param1 == 0x17) {
         this->mModel = new simpleModel_c;
-        if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b50, 0x19) == 0) return 0;
+        if (this->mModel == 0)
+            return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b50, 0x19) == 0)
+            return 0;
     } else if (param1 == 0x18) {
         this->mModel = new simpleModel_c;
-        if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960((SharedFilePtr*)&data_ov002_0211094c, -1) == 0) return 0;
+        if (this->mModel == 0)
+            return 0;
+        if (((simpleModel_c *)this->mModel)
+                ->func_ov002_020f6960((SharedFilePtr *)&data_ov002_0211094c, -1) == 0)
+            return 0;
     } else if (param1 == 0x19) {
         this->mModel = new simpleModel_c;
-        if (this->mModel == 0) return 0;
-        if (((simpleModel_c*)this->mModel)->func_ov002_020f6960(&data_ov002_02110b78, 0x13) == 0) return 0;
+        if (this->mModel == 0)
+            return 0;
+        if (((simpleModel_c *)this->mModel)->func_ov002_020f6960(&data_ov002_02110b78, 0x13) == 0)
+            return 0;
     } else if (param1 >= 0x1A && param1 <= 0x2D) {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
@@ -4439,8 +4538,7 @@ int daDemo_c::InitResources()
  * `new daDemo_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x104), dActor_c's base constructor, then the vptr
  * store. */
-extern "C" daDemo_c *daDemo_c_classInit(void)
-{
+extern "C" daDemo_c *daDemo_c_classInit(void) {
     return new daDemo_c;
 }
 
@@ -4460,25 +4558,54 @@ extern "C" {
    a __sinit copy (data_ov002_0210b678 left .data and @4347 disappeared).
    The mangled spellings name the members' symbols so the word carries the
    address. */
-extern int _ZN8daDemo_c19func_ov002_020f79c0EPvi(daDemo_c *, void *, int); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f7bb8EPht(daDemo_c *, unsigned char *, unsigned short); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6b28EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f71c4Eii(daDemo_c *, int, int); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f26c4EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f63f8EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6448EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
+extern int _ZN8daDemo_c19func_ov002_020f79c0EPvi(daDemo_c *, void *,
+                                                 int); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f7bb8EPht(daDemo_c *, unsigned char *,
+                                      unsigned short); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6b28EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int _ZN8daDemo_c19func_ov002_020f71c4Eii(daDemo_c *, int,
+                                                int); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f26c4EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f63f8EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6448EPh(daDemo_c *,
+                                     unsigned char *);      /* local extern: descriptor address */
 extern int _ZN8daDemo_c19func_ov002_020f6a9cEv(daDemo_c *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6ab8EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6ae4EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f7038Eii(daDemo_c *, int, int); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6b4cEPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6bc0EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6c24EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6c34EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6c60EPvii(daDemo_c *, void *, int, int); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6e48EPh(daDemo_c *, unsigned char *); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6ab8EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6ae4EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int _ZN8daDemo_c19func_ov002_020f7038Eii(daDemo_c *, int,
+                                                int); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6b4cEPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6bc0EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6c24EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6c34EPh(daDemo_c *,
+                                     unsigned char *); /* local extern: descriptor address */
+extern int _ZN8daDemo_c19func_ov002_020f6c60EPvii(daDemo_c *, void *, int,
+                                                  int); /* local extern: descriptor address */
+extern int
+_ZN8daDemo_c19func_ov002_020f6e48EPh(daDemo_c *,
+                                     unsigned char *);      /* local extern: descriptor address */
 extern int _ZN8daDemo_c19func_ov002_020f7020Ev(daDemo_c *); /* local extern: descriptor address */
-extern void _ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev(StaffRoll *); /* local extern: descriptor address */
+extern void
+_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev(StaffRoll *); /* local extern: descriptor address */
 
 int data_ov002_0210b658[2] = {(int)0x81f020f0, (int)0xffff0100};
 int data_ov002_0210b6e8[2] = {(int)0x81f020f0, (int)0xffff0118};
@@ -4636,14 +4763,12 @@ PMF data_ov002_02110eec[9] = {
     data_ov002_0210b8b0.pmf, data_ov002_0210b728.pmf, data_ov002_0210b890.pmf};
 PMF data_ov002_02110e34[3] = {data_ov002_0210b810.pmf, data_ov002_0210b6d8.pmf,
                               data_ov002_0210b800.pmf};
-Entry37 data_ov002_02110e4c[3] = {{data_ov002_0210b7d8.pmf37},
-                                  {data_ov002_0210b7d0.pmf37},
-                                  {data_ov002_0210b6c0.pmf37}};
+Entry37 data_ov002_02110e4c[3] = {
+    {data_ov002_0210b7d8.pmf37}, {data_ov002_0210b7d0.pmf37}, {data_ov002_0210b6c0.pmf37}};
 PMF data_ov002_02110e9c[4] = {data_ov002_0210b6b0.pmf, data_ov002_0210b7b0.pmf,
                               data_ov002_0210b7a0.pmf, data_ov002_0210b798.pmf};
 PMF data_ov002_02110e24[2] = {data_ov002_0210b770.pmf, data_ov002_0210b760.pmf};
-Entry2dd4 data_ov002_02110ebc[6] = {
-    {data_ov002_0210b790.pmf2dd4}, {data_ov002_0210b878.pmf2dd4},
-    {data_ov002_0210b870.pmf2dd4}, {data_ov002_0210b6f8.pmf2dd4},
-    {data_ov002_0210b6f0.pmf2dd4}, {data_ov002_0210b6e0.pmf2dd4}};
+Entry2dd4 data_ov002_02110ebc[6] = {{data_ov002_0210b790.pmf2dd4}, {data_ov002_0210b878.pmf2dd4},
+                                    {data_ov002_0210b870.pmf2dd4}, {data_ov002_0210b6f8.pmf2dd4},
+                                    {data_ov002_0210b6f0.pmf2dd4}, {data_ov002_0210b6e0.pmf2dd4}};
 }

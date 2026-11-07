@@ -20,9 +20,6 @@
  *   cards through EspAt5000 and FlashSync keeps the raw this+0x5034.
  * - Ent_8e10 stands in for a card sprite's part record; RenderCards walks
  *   the list until f6 is 0xffff.
- * - Obj_777c is a vtable shim so AnimSet::Render can virtual-call the
- *   dExtAnmModel_c method that takes a void* argument; naming the real slot
- *   needs the dExtAnmModel_c vtable recovered.
  * - dMg3DEspModel_c's unk_000..unk_008 are set by its constructor
  *   (0x8c000, 0x8c000, 0) and read nowhere in this unit, so they stay
  *   unnamed.
@@ -98,7 +95,6 @@ int func_020179b4(void* r0, void* r1, int r2);
 s16 atan2_hold_d_mg3d_esp_anim_set_1(s32 y, s32 x);
 int RandomIntInternal(int *seed);
 void FreeGfxSlotsById(int a);
-void Camera_UpdateMatrices(void* self);
 int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 void Mg_RenderSubSpriteMtx(void* a, int b, int c, void* m);
 void Mg_DrawScoreTally(void *c, int a, int b, int d);
@@ -150,13 +146,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
 
-struct Obj_777c {
-    void* vt;
-    virtual void v0(); virtual void v1(); virtual void v2();
-    virtual void v3(); virtual void v4();
-    virtual void m(void* arg);
-};
-
 // @symbol _ZN17dMg3DEspAnimSet_c6RenderEv
 void dMg3DEspAnimSet_c::Render()
 {
@@ -174,7 +163,7 @@ void dMg3DEspAnimSet_c::Render()
         if (mActive[i] != 0) {
             ((dExtAnmModel_c *)r5)->mat4x3 = data_020a0e68;
             ((dExtAnmMaterial_c *)r4)->Update(*(ModelComponents *)(r5 + 8));
-            ((Obj_777c*)r5)->m(zero);
+            ((dExtAnmModel_c *)r5)->Render((const Vector3 *)zero);
         }
         i++;
         r5 += 0x64;
@@ -1417,14 +1406,14 @@ s32 dScMg3DEsp_c::Render()
     RenderCards();
     RenderRows();
     RenderSlots();
-    mCameraEyeX = 0;
-    mCameraEyeY = 0xd0000;
-    mCameraEyeZ = 0x40000;
-    mCameraTargetX = 0xffed3000;
-    mCameraTargetY = 0xe0000;
-    mCameraTargetZ = 0x40000;
-    mCameraAngle = 0xc00;
-    Camera_UpdateMatrices(pad_4660);
+    mCamera.mLookAt.x = 0;
+    mCamera.mLookAt.y = 0xd0000;
+    mCamera.mLookAt.z = 0x40000;
+    mCamera.mPos.x = 0xffed3000;
+    mCamera.mPos.y = 0xe0000;
+    mCamera.mPos.z = 0x40000;
+    mCamera.mFovAngle = 0xc00;
+    Camera_UpdateMatrices(&mCamera);
     /* dExtSimpleModel_c::data, at +8. Naming the member makes mwcc add the 8 in a separate instruction. */
     mTextureTransformer.Update(mModel1.data);
     mModel1.Render(0);
@@ -1466,14 +1455,14 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x4000008 = (*(volatile unsigned short*)0x4000008 & ~3) | 1;
     Mg_SetTopScreenYOffset(0x10);
 
-    mCameraEyeX = 0;
-    mCameraEyeY = 0xd0000;
-    mCameraEyeZ = 0x40000;
-    mCameraTargetX = 0xffed3000;
-    mCameraTargetY = 0xe0000;
-    mCameraTargetZ = 0x40000;
-    mCameraAngle = 0xc00;
-    Camera_UpdateMatrices(pad_4660); /* the camera block starts at 0x4660 */
+    mCamera.mLookAt.x = 0;
+    mCamera.mLookAt.y = 0xd0000;
+    mCamera.mLookAt.z = 0x40000;
+    mCamera.mPos.x = 0xffed3000;
+    mCamera.mPos.y = 0xe0000;
+    mCamera.mPos.z = 0x40000;
+    mCamera.mFovAngle = 0xc00;
+    Camera_UpdateMatrices(&mCamera);
 
     if (func_020179b4(&gEspIrieModelFile, &mModel1, 1) == 0)
         return 0;

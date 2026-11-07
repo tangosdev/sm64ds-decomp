@@ -151,9 +151,6 @@ struct BCA_File;
    6ay, the struct-copy lever). */
 struct SwoopPositionWords { int w[3]; };
 
-/* shadow struct 'Base' */
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
-
 /* TUBUILD CONFLICT -- alternate body of typedef 'Vector3', from the legacy file for func_ov062_0211b51c, NOT applied:
 typedef struct { int x, y, z; } Vector3;
 */
@@ -177,7 +174,8 @@ typedef struct { int x, y, z; } Vector3;
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
-extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern Matrix4x3 data_020a0e68;
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
@@ -511,13 +509,10 @@ int daJango_c::Behavior()
 }
 
 // @symbol _ZN9daJango_c6RenderEv
-/* Draws the model through slot 5 of dExtBlendAnmModel_c's vtable (Render, with a null
-   scale). The call goes through a vtable-shaped view so it dispatches
-   through the table instead of being resolved at compile time. */
+/* Draws the model through dExtBlendAnmModel_c::Render with a null scale. */
 int daJango_c::Render()
 {
-    Base *b = (Base *)&mBlendAnmModel;
-    b->m(0);
+    mBlendAnmModel.Render(0);
     return 1;
 }
 

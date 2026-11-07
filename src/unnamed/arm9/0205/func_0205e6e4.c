@@ -1,19 +1,13 @@
 #include "types.h"
 #include "SHA1Context.h"
 
-/* The parameter keeps its old struct Obj tag, as does the
- * func_0205e3d4 extern: retyping either changes a declaration the
- * declaration-agreement baseline already records. */
-struct Obj;
-
-extern void func_0205e3d4(struct Obj*);
+extern void func_0205e3d4(SHA1Context *context);
 
 /* RFC 3174 SHA1Input(context, message_array, length): 0 (shaSuccess),
  * 1 (shaNull) without a context or message, 3 (shaStateError) after the
  * result was computed, or the stored error. func_0205e3d4 is
  * SHA1ProcessMessageBlock. */
-int func_0205e6e4(struct Obj *obj, u8 *p, int count) {
-    SHA1Context *context = (SHA1Context *)obj;
+int func_0205e6e4(SHA1Context *context, const u8 *p, int count) {
     if (count == 0)
         return 0;
     if (context == 0 || p == 0)
@@ -33,7 +27,7 @@ int func_0205e6e4(struct Obj *obj, u8 *p, int count) {
                 context->Corrupted = 1;
         }
         if (context->Message_Block_Index == 0x40)
-            func_0205e3d4(obj);
+            func_0205e3d4(context);
         p++;
     }
     return 0;

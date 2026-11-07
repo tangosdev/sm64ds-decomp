@@ -1,24 +1,27 @@
 struct N {
-    struct N *f0;
-    struct N *f4;
+    struct N *prev;
+    struct N *next;
+};
+struct L {
+    struct N *head;
+    struct N *tail;
 };
 
-extern int func_0203b20c(struct N *l, struct N *n);
+extern int func_0203b20c(struct L *l, struct N *n);
 
-int func_0203b2ec(struct N *l, struct N *p, struct N *n)
-{
+int func_0203b2ec(struct L *l, struct N *p, struct N *n) {
     struct N *t;
     if (n == 0)
         return func_0203b20c(l, p);
     if (p != 0) {
-        p->f4 = n->f4;
-        p->f0 = n;
-        n->f4 = p;
-        t = p->f4;
+        p->next = n->next;
+        p->prev = n;
+        n->next = p;
+        t = p->next;
         if (t != 0)
-            t->f0 = p;
+            t->prev = p;
         else
-            l->f4 = p;
+            l->tail = p;
     } else {
         return 0;
     }

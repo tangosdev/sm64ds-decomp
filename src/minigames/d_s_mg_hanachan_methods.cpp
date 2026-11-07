@@ -210,7 +210,7 @@ extern void *sHanaWigglerTargetSprites[];
 extern void *sHanaWigglerFieldSprites[];
 extern void OamRender8_d_s_mg_hanachan(int b, void *attr, int x, int y, int a, int c, int f, int g);
 
-extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, int h);
+extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];
@@ -935,7 +935,11 @@ extern "C" void Wiggler_Move(char *c) {
         w->seg[1].x += v[0];
         w->seg[1].y += v[1];
         if (w->busy != 0) {
-            /* long long cast: a plain w->flash -= 1 reloads the field. */
+            /* The cast pair keeps the field in a register: a plain w->flash -= 1
+               reloads it, and without the pair Wiggler_Move moves. Dropping only
+               the (long long) keeps every byte but renumbers a compiler-local
+               symbol Wiggler_StartBounce relocates against (@1645 -> @1647), so
+               it would need a manifest re-key; measured 2026-11-06. */
             *(short *)(long long)(int)&w->flash = *(short *)(long long)(int)&w->flash - 1;
             if (w->flash == 0) {
                 Wiggler_SetCruiseSpeed(c);

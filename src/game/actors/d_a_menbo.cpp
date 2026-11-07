@@ -20,7 +20,13 @@
  *
  * common.h is included first so Matrix4x3 is the flat twelve words the two
  * matrix copies were matched under. defer_codegen is off, so the bodies are
- * ROM-ascending. opt_strength_reduction stays off for the file.
+ * ROM-ascending. No optimization pragma: the file used to compile with
+ * opt_strength_reduction off for the sake of func_ov090_02130f94 alone, whose
+ * ripple loop carried a hand-reduced `idx += 3` accumulator. Written as the
+ * real `for (i = 0; i < 4; ++i)` with the bone index spelled `6 + i * 3`, the
+ * loop reproduces with strength reduction on and the other 24 functions never
+ * needed it (measured: with the pragma gone and the accumulator kept, that one
+ * function is 0x124 against the ROM's 0x120).
  *
  * deslop leftovers:
  * - func_ov090_02131ac4: `mStateTimer == 0` is ldrsh. The ROM is ldrh, one
@@ -44,7 +50,6 @@
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 
-#pragma opt_strength_reduction off
 
 struct BMD_File;
 struct BCA_File;
@@ -161,7 +166,6 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
     daMenbo_c *c;
     int i;
     Matrix4x3 *src;
-    int idx;
     unsigned int id;
 
     c = c_;
@@ -169,18 +173,16 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         return;
 
     src = &c->mAnmModel.mat4x3;
-    i = 0;
-    idx = 6;
     zero = 0;
     sh = 3;
     id = 0xea;
-    for (; i < 4; ++i) {
+    for (i = 0; i < 4; ++i) {
         Vector3 v;
         Vector3 r;
 
         data_020a0e68 = *src;
-        MulMat4x3Mat4x3((const Matrix4x3 *)c->mAnmModel.data.transforms + idx, &data_020a0e68,
-                        &data_020a0e68);
+        MulMat4x3Mat4x3((const Matrix4x3 *)c->mAnmModel.data.transforms + (6 + i * 3),
+                        &data_020a0e68, &data_020a0e68);
         v.x = *(int *)((char *)&data_020a0e68 + 0x24);
         v.y = *(int *)((char *)&data_020a0e68 + 0x28);
         v.z = *(int *)((char *)&data_020a0e68 + 0x2c);
@@ -192,7 +194,6 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         c->mRippleParticles[i] =
             Particle::System::New(c->mRippleParticles[i], id, v.x, v.y, r.z,
                                   (const Vector3_16f *)(zero), (Particle::Callback *)(zero));
-        idx += 3;
     }
 }
 
@@ -830,7 +831,7 @@ int daMenbo_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    mWithMeshClsn.Init((dActor_c *)(int)this, 0xc8000, 0, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)this, 0xc8000, 0, 0, 0);
     mWithMeshClsn.SetNoUpdatePosYFlag();
 
     mCoinType = 1;

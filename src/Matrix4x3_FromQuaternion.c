@@ -1,8 +1,5 @@
 #include "math/Matrix.h"
-
-struct Quaternion {
-    Fix12i x, y, z, w;
-};
+#include "math/Quaternion.h"
 
 extern void Matrix3x3_FromQuaternion(
     const struct Quaternion *q,

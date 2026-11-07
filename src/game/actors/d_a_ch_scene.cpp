@@ -27,9 +27,9 @@
 #include "math/MtxStack.h"
 
 extern "C" {
-/* local extern: these four have no shared header yet. LoadLevel keeps this
-   TU's narrow spelling; the definition's wider one is a codegen change. */
-void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u32 d, s8 e);
+/* local extern: these four have no shared header yet. LoadLevel takes the
+   definition's wide spelling; the caller narrows the packed bytes itself. */
+void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState);
 void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 int InvMat4x3(const Matrix4x3 *in, Matrix4x3 *out);
 void StartExitFaderWipe(int);

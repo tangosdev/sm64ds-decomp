@@ -213,7 +213,8 @@ extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
 extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
+/* local extern: math/MtxStack.h clashes with this TU's void * matrix externs. */
+extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
 /* local extern: named parameters keep this TU's compiler-numbered aliases. */
 extern void SubVec3(Vector3 *d, Vector3 *a, Vector3 *b);
@@ -258,9 +259,9 @@ void daObjKey_c::func_ov089_02130fb4(Vector3 *target, int height)
     if (dy < 0)
         dy = -dy;
     {
-        int s0 = cstd::sqrt((unsigned long long)(long long)height);
-        int s1 = cstd::sqrt((unsigned long long)(long long)(height + dy));
-        int s2 = cstd::sqrt((unsigned long long)(long long)height);
+        int s0 = cstd::sqrt((long long)height);
+        int s1 = cstd::sqrt(height + dy);
+        int s2 = cstd::sqrt((long long)height);
         dy = (s0 * JUMP_FRAMES) / (s1 + s2);
     }
     {

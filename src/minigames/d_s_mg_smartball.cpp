@@ -369,11 +369,13 @@ static inline void CallObjectConstruct(cMgSmartball_object_c *c, char *a1, int a
 #define N LAUNDER_C
 #define FX(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 #define LP(e) ((int *)(e))
+/* The signed/unsigned pair of fixed-point multiplies. FIX_MUL_SU's inner (s64)
+   is load-bearing (measured 2026-11-06); the one FIX_MUL_US used to carry on
+   its right operand was not, and is gone. */
 #define FIX_MUL_SU(a, b) \
     ((int)(((s64)((u64)(s64)(a) * (b)) + 0x800) >> 12))
 #define FIX_MUL_US(a, b) \
-    ((int)(((s64)((a) * (u64)(s64)(b)) + 0x800) >> 12))
-
+    ((int)(((s64)((a) * (u64)(b)) + 0x800) >> 12))
 
 // @symbol _ZN16dScMgSmartball_cD1Ev
 // @symbol _ZN16dScMgSmartball_cD0Ev
@@ -1518,7 +1520,8 @@ void cMgSmartball_slot_c::UpdateSpin() {
  * loop, over the same three mReelOffset[i] pairs, draws a stack of four more
  * sprites per element with descending y. Kept identical to the pre-migration
  * source, including the `if (1) {}` no-op, the
- * (x - 0x18) & 0xFFFFFFFFFFFFFFFF mask, and the goto-based second loop --
+ * (x - 0x18) & 0xFFFFFFFFFFFFFFFF mask (measured load-bearing 2026-11-06:
+ * without it Update moves 17 words), and the goto-based second loop --
  * only the raw offset accesses became real member access. */
 inline int inline_fn(int arg0, int arg1) {
     return arg0 + arg1;
@@ -3016,6 +3019,8 @@ block2:
 }
 
 // @symbol SmartballBall_UpdatePhysics
+/* Kept: measured 2026-11-06, UpdatePhysics is the only function this bracket
+   reaches, and with strength reduction on its body changes (53 words). */
 #pragma push
 #pragma opt_strength_reduction off
 /* The equal-arm owner selection below preserves mwccarm's address rematerialization. */
@@ -4486,7 +4491,6 @@ void dScMgSmartball_c::KickGate(int idx) {
             } while (i < mPropellerCount);
         }
     }
-    idx = (int)(((long long)idx));
     mGateLampTimer[idx] = 0x14;
 }
 
@@ -4649,9 +4653,11 @@ void dScMgSmartball_c::CollideBalls() {
  *    f(p,c,j,&tmp)). By-value V2 in C mode splits across r3/[sp] with
  *    dynamic sp adjustment, which pins a frame pointer the ROM lacks.
  *    operator new result flows through p into the slot store (no separate r var).
- *  - u64-mask laundering on the two mpKinokos spawn slot stores -> pooled
- *    0x46bc + str r0,[r1,rK]! writeback (also the 9th live value that pulls
- *    fp into the push set; frame 0x124 with 9 saved regs).
+ *  - The two mpKinokos spawn slot stores go through a `void **slot` taken off a
+ *    `(dScMgSmartball_c *)(c + j * 4)` view -> pooled 0x46bc + str r0,[r1,rK]!
+ *    writeback (also the 9th live value that pulls fp into the push set; frame
+ *    0x124 with 9 saved regs). The u64 mask an earlier draft laundered them
+ *    through is gone and was not needed for it.
  *  - BOTH vtable stores in every teardown site are volatile ints: forces
  *    the per-loop pool reload of the shared base vtable (0213ed10) that
  *    mwccarm otherwise CSEs function-wide, and pins the preamble emission
@@ -5414,6 +5420,8 @@ void dScMgSmartball_c::SpawnObjects() {
 #pragma pop
 
 // @symbol _ZN16dScMgSmartball_c6RenderEv
+/* Both kept: measured 2026-11-06, Render is the only function this bracket
+   reaches, and its size changes when the two settings go back on. */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -5422,7 +5430,8 @@ void dScMgSmartball_c::SpawnObjects() {
 //  - block-scope pcnt2 for loop G -> val@sp+0x14
 //  - int *slot[2] with early slot[0]=0, slot[1]=loopG pcnt, slot[0]=loop2 pmode
 //    forces spill order pmode@0x18 before pcnt2@0x1c
-// Loop2 digit-count still uses inner u64 mask form for pooled ldr form.
+// Loop2's digit count reaches the same pooled ldr without the inner u64 mask an
+// earlier draft used; the mask is gone.
 //
 /* dScMgSmartball_c::Render -- vtable slot 9: the third of the three slots
  * where this class's table differs from dScMgBase_c's.
@@ -5780,6 +5789,8 @@ s32 dScMgSmartball_c::Render() {
 #pragma pop
 
 // @symbol _ZN16dScMgSmartball_c8BehaviorEv
+/* Kept: measured 2026-11-06, Behavior is the only function this bracket
+   reaches, and its size changes with strength reduction on. */
 #pragma push
 #pragma opt_strength_reduction off
 /* dScMgSmartball_c::Behavior -- vtable slot 6.
@@ -5796,10 +5807,11 @@ s32 dScMgSmartball_c::Render() {
  * three fields Flower's and MCarlo's own Behaviors arm, which is why
  * include/dScMgBase_c.h names 0xc0/0xc3/0xc4.
  *
- * THE `(long long)(int)` CASTS ARE LAUNDERS. They force the address through a wider
- * temporary so mwccarm re-materialises it instead of strength-reducing the loop, and
- * the pragma below is there for the same reason: neither is a spelling that can be
- * simplified without changing bytes.
+ * THE `(int)` CASTS ON THE SLOT ADDRESSES ARE LOAD-BEARING. They force the address
+ * through a temporary so mwccarm re-materialises it instead of strength-reducing the
+ * loop, and the pragma below is there for the same reason: neither is a spelling that
+ * can be simplified without changing bytes. The `(long long)` each one used to widen
+ * through first was measured free on 2026-11-06 and is gone.
  *
  * WAS A C99 FILE, so the declarations move inside `extern "C"`; in C++ they would
  * mangle and resolve to nothing. The `extern` on the four variables is load-bearing
@@ -5824,31 +5836,31 @@ s32 dScMgSmartball_c::Behavior() {
         (**(VFunc **)o)(o);
 
         for (i = 0; i < mBallCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpBalls));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpBalls));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mKinokoCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpKinokos));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpKinokos));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mAnaCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpAnas));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpAnas));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mPropellerCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPropellers));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpPropellers));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mDokanCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpDokans));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpDokans));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mPakkunCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpPakkuns));
             (**(VFunc **)o)(o);
         }
         for (i = 0; i < mPushSwitchCount; i++) {
-            o = *(char **)(((long long)(int)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches));
+            o = *(char **)(((int)((dScMgSmartball_c *)(c + i * 4))->mpPushSwitches));
             (**(VFunc **)o)(o);
         }
 
@@ -6228,6 +6240,8 @@ s32 dScMgSmartball_c::InitResources() {
 }
 
 // @symbol _ZN16dScMgSmartball_c21AfterCleanupResourcesEj
+/* Kept: measured 2026-11-06, AfterCleanupResources is the only function this
+   bracket reaches, and its size changes with strength reduction on. */
 #pragma push
 #pragma opt_strength_reduction off
 /* dScMgSmartball_c::AfterCleanupResources -- vtable slot 5.

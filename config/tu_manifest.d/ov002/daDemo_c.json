@@ -1013,7 +1013,7 @@
       "ordinal": 138
     },
     {
-      "symbol": "func_ov002_020f7d74",
+      "symbol": "_ZN8daDemo_c10RunCommandEPhii",
       "address": "0x020f7d74",
       "size": "0x000002b4",
       "legacy_source": "src/func_ov002_020f7d74.cpp",
@@ -2382,7 +2382,7 @@
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov002_020f2210 and the one that held func_ov002_020f6b4c; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov002_020f237c and the one that held func_ov002_020f6bc0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov002_020f237c and the one that held func_ov002_020f6f48; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vec3') differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vec3') differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov002_020f237c and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov002_020f3310 and the one that held func_ov002_020f7d74; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov002_020f2210 and the one that held _ZN8daDemo_c16CleanupResourcesEv; kept the first, the other is commented out for review",
@@ -2416,39 +2416,36 @@
         "_ZN8daDemo_cD2Ev"
       ],
       "droppedSections": [
-        79,
-        80,
-        266,
-        267,
-        268,
-        275,
-        276,
-        283,
-        284,
-        285,
-        349,
-        350,
-        353,
-        354,
-        358,
-        359,
-        360,
-        361,
-        362,
-        363,
-        364,
-        365,
-        366,
-        367,
-        368,
-        369,
-        370
+        11,
+        12,
+        198,
+        199,
+        200,
+        207,
+        208,
+        215,
+        216,
+        217,
+        281,
+        282,
+        545,
+        546,
+        550,
+        551,
+        552,
+        553,
+        554,
+        555,
+        556,
+        557,
+        558,
+        559,
+        560
       ],
       "data": [
         "_ZTV8daDemo_c",
         "_ZTVN8daDemo_c10anmModel_cE",
         "_ZTVN8daDemo_c13simpleModel_cE",
-        "_ZTIN8daDemo_c7param_cE",
         "_ZTSN8daDemo_c7param_cE",
         "_ZTIN8daDemo_c10anmModel_cE",
         "_ZTSN8daDemo_c10anmModel_cE",
@@ -2458,7 +2455,6 @@
       "dataExternalized": [
         "_ZTIN8daDemo_c10anmModel_cE",
         "_ZTIN8daDemo_c13simpleModel_cE",
-        "_ZTIN8daDemo_c7param_cE",
         "_ZTSN8daDemo_c10anmModel_cE",
         "_ZTSN8daDemo_c13simpleModel_cE",
         "_ZTSN8daDemo_c7param_cE",
@@ -2481,7 +2477,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 61 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -6547,7 +6543,7 @@
       "source": "0x0210b650",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEv",
+      "symbol": "func_ov002_020f5b8c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b8c"
@@ -6557,7 +6553,7 @@
       "source": "0x0210b660",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev",
+      "symbol": "func_ov002_020f5e58",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -6567,7 +6563,7 @@
       "source": "0x0210b668",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5894Ei",
+      "symbol": "func_ov002_020f5894",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5894"
@@ -6577,7 +6573,7 @@
       "source": "0x0210b670",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev",
+      "symbol": "func_ov002_020f5e58",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -6597,7 +6593,7 @@
       "source": "0x0210b680",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c40Ev",
+      "symbol": "func_ov002_020f5c40",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5c40"
@@ -6607,7 +6603,7 @@
       "source": "0x0210b688",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev",
+      "symbol": "func_ov002_020f5e98",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -6617,7 +6613,7 @@
       "source": "0x0210b690",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0Ev",
+      "symbol": "func_ov002_020f5ef0",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5ef0"
@@ -6627,7 +6623,7 @@
       "source": "0x0210b698",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev",
+      "symbol": "func_ov002_020f5e98",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -6637,7 +6633,7 @@
       "source": "0x0210b6a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4Ev",
+      "symbol": "func_ov002_020f5ee4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5ee4"
@@ -6647,7 +6643,7 @@
       "source": "0x0210b6b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f35e4Ei",
+      "symbol": "func_ov002_020f35e4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f35e4"
@@ -6657,7 +6653,7 @@
       "source": "0x0210b6b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0Ev",
+      "symbol": "func_ov002_020f5cd0",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5cd0"
@@ -6667,7 +6663,7 @@
       "source": "0x0210b6c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3310Ei",
+      "symbol": "func_ov002_020f3310",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3310"
@@ -6677,7 +6673,7 @@
       "source": "0x0210b6c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv",
+      "symbol": "func_ov002_020f5bcc",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5bcc"
@@ -6687,7 +6683,7 @@
       "source": "0x0210b6d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b98Ev",
+      "symbol": "func_ov002_020f5b98",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b98"
@@ -6697,7 +6693,7 @@
       "source": "0x0210b6d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0Ei",
+      "symbol": "func_ov002_020f3ba0",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3ba0"
@@ -6707,7 +6703,7 @@
       "source": "0x0210b6e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a78Ei",
+      "symbol": "func_ov002_020f2a78",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2a78"
@@ -6717,7 +6713,7 @@
       "source": "0x0210b6f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a88Ei",
+      "symbol": "func_ov002_020f2a88",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2a88"
@@ -6727,7 +6723,7 @@
       "source": "0x0210b6f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEi",
+      "symbol": "func_ov002_020f2aec",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2aec"
@@ -6737,7 +6733,7 @@
       "source": "0x0210b700",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d98Ei",
+      "symbol": "func_ov002_020f3d98",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3d98"
@@ -6757,7 +6753,7 @@
       "source": "0x0210b710",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5328Ei",
+      "symbol": "func_ov002_020f5328",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5328"
@@ -6767,7 +6763,7 @@
       "source": "0x0210b718",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEv",
+      "symbol": "func_ov002_020f5efc",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5efc"
@@ -6777,7 +6773,7 @@
       "source": "0x0210b720",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4Ev",
+      "symbol": "func_ov002_020f5bf4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5bf4"
@@ -6787,7 +6783,7 @@
       "source": "0x0210b728",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEi",
+      "symbol": "func_ov002_020f40fc",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f40fc"
@@ -6797,7 +6793,7 @@
       "source": "0x0210b730",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4710Ei",
+      "symbol": "func_ov002_020f4710",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f4710"
@@ -6807,7 +6803,7 @@
       "source": "0x0210b738",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEi",
+      "symbol": "func_ov002_020f4a2c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f4a2c"
@@ -6817,7 +6813,7 @@
       "source": "0x0210b740",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4d70Ei",
+      "symbol": "func_ov002_020f4d70",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f4d70"
@@ -6827,7 +6823,7 @@
       "source": "0x0210b748",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5010Ei",
+      "symbol": "func_ov002_020f5010",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5010"
@@ -6847,7 +6843,7 @@
       "source": "0x0210b758",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f55b4Ei",
+      "symbol": "func_ov002_020f55b4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f55b4"
@@ -6857,7 +6853,7 @@
       "source": "0x0210b760",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f30f8Ei",
+      "symbol": "func_ov002_020f30f8",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f30f8"
@@ -6867,7 +6863,7 @@
       "source": "0x0210b770",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f32e4Ei",
+      "symbol": "func_ov002_020f32e4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f32e4"
@@ -6877,7 +6873,7 @@
       "source": "0x0210b778",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5678Ei",
+      "symbol": "func_ov002_020f5678",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5678"
@@ -6887,7 +6883,7 @@
       "source": "0x0210b780",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f569cEi",
+      "symbol": "func_ov002_020f569c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f569c"
@@ -6897,7 +6893,7 @@
       "source": "0x0210b788",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f57c0Ei",
+      "symbol": "func_ov002_020f57c0",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f57c0"
@@ -6907,7 +6903,7 @@
       "source": "0x0210b790",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d70Ei",
+      "symbol": "func_ov002_020f2d70",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2d70"
@@ -6917,7 +6913,7 @@
       "source": "0x0210b798",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f335cEi",
+      "symbol": "func_ov002_020f335c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f335c"
@@ -6927,7 +6923,7 @@
       "source": "0x0210b7a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f340cEi",
+      "symbol": "func_ov002_020f340c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f340c"
@@ -6937,7 +6933,7 @@
       "source": "0x0210b7a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5848Ei",
+      "symbol": "func_ov002_020f5848",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5848"
@@ -6947,7 +6943,7 @@
       "source": "0x0210b7b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEi",
+      "symbol": "func_ov002_020f34bc",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f34bc"
@@ -6967,7 +6963,7 @@
       "source": "0x0210b7c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEv",
+      "symbol": "func_ov002_020f5b7c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b7c"
@@ -6977,7 +6973,7 @@
       "source": "0x0210b7c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b88Ev",
+      "symbol": "func_ov002_020f5b88",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b88"
@@ -6987,7 +6983,7 @@
       "source": "0x0210b7d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3740Ei",
+      "symbol": "func_ov002_020f3740",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3740"
@@ -6997,7 +6993,7 @@
       "source": "0x0210b7d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f378cEi",
+      "symbol": "func_ov002_020f378c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f378c"
@@ -7007,7 +7003,7 @@
       "source": "0x0210b7e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev",
+      "symbol": "func_ov002_020f5e38",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7017,7 +7013,7 @@
       "source": "0x0210b7e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c88Ev",
+      "symbol": "func_ov002_020f5c88",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5c88"
@@ -7027,7 +7023,7 @@
       "source": "0x0210b7f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8Ev",
+      "symbol": "func_ov002_020f5eb8",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5eb8"
@@ -7037,7 +7033,7 @@
       "source": "0x0210b7f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5d34Ev",
+      "symbol": "func_ov002_020f5d34",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5d34"
@@ -7047,7 +7043,7 @@
       "source": "0x0210b800",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8Ei",
+      "symbol": "func_ov002_020f3ae8",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3ae8"
@@ -7057,7 +7053,7 @@
       "source": "0x0210b808",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev",
+      "symbol": "func_ov002_020f5e38",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7067,7 +7063,7 @@
       "source": "0x0210b810",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d38Ei",
+      "symbol": "func_ov002_020f3d38",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3d38"
@@ -7077,7 +7073,7 @@
       "source": "0x0210b818",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b84Ev",
+      "symbol": "func_ov002_020f5b84",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b84"
@@ -7087,7 +7083,7 @@
       "source": "0x0210b820",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b80Ev",
+      "symbol": "func_ov002_020f5b80",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b80"
@@ -7097,7 +7093,7 @@
       "source": "0x0210b828",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev",
+      "symbol": "func_ov002_020f5e38",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7107,7 +7103,7 @@
       "source": "0x0210b830",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev",
+      "symbol": "func_ov002_020f5e98",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -7117,7 +7113,7 @@
       "source": "0x0210b838",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e18Ev",
+      "symbol": "func_ov002_020f5e18",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e18"
@@ -7127,7 +7123,7 @@
       "source": "0x0210b840",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev",
+      "symbol": "func_ov002_020f5e78",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7137,7 +7133,7 @@
       "source": "0x0210b848",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f562cEi",
+      "symbol": "func_ov002_020f562c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f562c"
@@ -7147,7 +7143,7 @@
       "source": "0x0210b850",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8Ev",
+      "symbol": "func_ov002_020f5ed8",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5ed8"
@@ -7157,7 +7153,7 @@
       "source": "0x0210b858",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev",
+      "symbol": "func_ov002_020f5e58",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -7167,7 +7163,7 @@
       "source": "0x0210b860",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev",
+      "symbol": "func_ov002_020f5e78",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7177,7 +7173,7 @@
       "source": "0x0210b870",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4Ei",
+      "symbol": "func_ov002_020f2bf4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2bf4"
@@ -7187,7 +7183,7 @@
       "source": "0x0210b878",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEi",
+      "symbol": "func_ov002_020f2d0c",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2d0c"
@@ -7197,7 +7193,7 @@
       "source": "0x0210b880",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev",
+      "symbol": "func_ov002_020f5e78",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7207,7 +7203,7 @@
       "source": "0x0210b890",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3de4Ei",
+      "symbol": "func_ov002_020f3de4",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3de4"
@@ -7217,7 +7213,7 @@
       "source": "0x0210b898",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev",
+      "symbol": "func_ov002_020f5e98",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -7227,7 +7223,7 @@
       "source": "0x0210b8a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev",
+      "symbol": "func_ov002_020f5e78",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7237,7 +7233,7 @@
       "source": "0x0210b8a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev",
+      "symbol": "func_ov002_020f5e38",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7247,7 +7243,7 @@
       "source": "0x0210b8b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEi",
+      "symbol": "func_ov002_020f43cc",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f43cc"
@@ -7257,7 +7253,7 @@
       "source": "0x0210b8b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev",
+      "symbol": "func_ov002_020f5e58",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -7475,234 +7471,234 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLookTarget$3687",
+      "from": "_ZGVsLookTarget$3690",
       "to": "_ZGVsLookTarget$3570",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsLookTarget$3586 to _ZGVsLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3584 to _ZGVsLookTarget$3663 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsLookTarget$3586 to _ZGVsLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3584 to _ZGVsLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3663 to _ZGVsLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "@3690",
+      "from": "@3693",
       "to": "@3573",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3589 to @3587 when the opt pragma was removed (#821). Re-keyed from @3587 to @3666 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3589 to @3587 when the opt pragma was removed (#821). Re-keyed from @3587 to @3666 when the opt pragma was removed (#821). Re-keyed from @3666 to @3668 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "sLookTarget$3687",
+      "from": "sLookTarget$3690",
       "to": "sLookTarget$3570",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sLookTarget$3586 to sLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3584 to sLookTarget$3663 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sLookTarget$3586 to sLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3584 to sLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3663 to sLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "_ZGVsViewStart$3863",
+      "from": "_ZGVsViewStart$3866",
       "to": "_ZGVsViewStart$3746",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewStart$3762 to _ZGVsViewStart$3760 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3760 to _ZGVsViewStart$3839 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewStart$3762 to _ZGVsViewStart$3760 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3760 to _ZGVsViewStart$3839 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3839 to _ZGVsViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "@3866",
+      "from": "@3869",
       "to": "@3749",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3765 to @3763 when the opt pragma was removed (#821). Re-keyed from @3763 to @3842 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3765 to @3763 when the opt pragma was removed (#821). Re-keyed from @3763 to @3842 when the opt pragma was removed (#821). Re-keyed from @3842 to @3844 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "sViewStart$3863",
+      "from": "sViewStart$3866",
       "to": "sViewStart$3746",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewStart$3762 to sViewStart$3760 when the opt pragma was removed (#821). Re-keyed from sViewStart$3760 to sViewStart$3839 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewStart$3762 to sViewStart$3760 when the opt pragma was removed (#821). Re-keyed from sViewStart$3760 to sViewStart$3839 when the opt pragma was removed (#821). Re-keyed from sViewStart$3839 to sViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "_ZGVsViewEnd$3867",
+      "from": "_ZGVsViewEnd$3870",
       "to": "_ZGVsViewEnd$3750",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewEnd$3766 to _ZGVsViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3764 to _ZGVsViewEnd$3843 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewEnd$3766 to _ZGVsViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3764 to _ZGVsViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3843 to _ZGVsViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "@3870",
+      "from": "@3873",
       "to": "@3753",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3769 to @3767 when the opt pragma was removed (#821). Re-keyed from @3767 to @3846 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3769 to @3767 when the opt pragma was removed (#821). Re-keyed from @3767 to @3846 when the opt pragma was removed (#821). Re-keyed from @3846 to @3848 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "sViewEnd$3867",
+      "from": "sViewEnd$3870",
       "to": "sViewEnd$3750",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewEnd$3766 to sViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3764 to sViewEnd$3843 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewEnd$3766 to sViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3764 to sViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3843 to sViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "_ZGVsViewIdle$3871",
+      "from": "_ZGVsViewIdle$3874",
       "to": "_ZGVsViewIdle$3754",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewIdle$3770 to _ZGVsViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3768 to _ZGVsViewIdle$3847 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewIdle$3770 to _ZGVsViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3768 to _ZGVsViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3847 to _ZGVsViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "@3874",
+      "from": "@3877",
       "to": "@3757",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3773 to @3771 when the opt pragma was removed (#821). Re-keyed from @3771 to @3850 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3773 to @3771 when the opt pragma was removed (#821). Re-keyed from @3771 to @3850 when the opt pragma was removed (#821). Re-keyed from @3850 to @3852 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
-      "from": "sViewIdle$3871",
+      "from": "sViewIdle$3874",
       "to": "sViewIdle$3754",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewIdle$3770 to sViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3768 to sViewIdle$3847 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4449",
-      "to": "@4355",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4373 to @4371 when the opt pragma was removed (#821). Re-keyed from @4371 to @4450 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4450",
-      "to": "@4356",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4374 to @4372 when the opt pragma was removed (#821). Re-keyed from @4372 to @4451 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4451",
-      "to": "@4357",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4375 to @4373 when the opt pragma was removed (#821). Re-keyed from @4373 to @4452 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4452",
-      "to": "@4358",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4376 to @4374 when the opt pragma was removed (#821). Re-keyed from @4374 to @4453 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4453",
-      "to": "@4359",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4377 to @4375 when the opt pragma was removed (#821). Re-keyed from @4375 to @4454 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4454",
-      "to": "@4360",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4378 to @4376 when the opt pragma was removed (#821). Re-keyed from @4376 to @4455 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4455",
-      "to": "@4361",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4379 to @4377 when the opt pragma was removed (#821). Re-keyed from @4377 to @4456 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4456",
-      "to": "@4362",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4380 to @4378 when the opt pragma was removed (#821). Re-keyed from @4378 to @4457 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4457",
-      "to": "@4363",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4381 to @4379 when the opt pragma was removed (#821). Re-keyed from @4379 to @4458 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4458",
-      "to": "@4364",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4382 to @4380 when the opt pragma was removed (#821). Re-keyed from @4380 to @4459 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4459",
-      "to": "@4365",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4383 to @4381 when the opt pragma was removed (#821). Re-keyed from @4381 to @4460 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4460",
-      "to": "@4366",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4384 to @4382 when the opt pragma was removed (#821). Re-keyed from @4382 to @4461 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4461",
-      "to": "@4367",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4385 to @4383 when the opt pragma was removed (#821). Re-keyed from @4383 to @4462 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4462",
-      "to": "@4368",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4386 to @4384 when the opt pragma was removed (#821). Re-keyed from @4384 to @4463 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4463",
-      "to": "@4369",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4387 to @4385 when the opt pragma was removed (#821). Re-keyed from @4385 to @4464 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4464",
-      "to": "@4370",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4388 to @4386 when the opt pragma was removed (#821). Re-keyed from @4386 to @4465 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4465",
-      "to": "@4371",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4389 to @4387 when the opt pragma was removed (#821). Re-keyed from @4387 to @4466 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4466",
-      "to": "@4372",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4390 to @4388 when the opt pragma was removed (#821). Re-keyed from @4388 to @4467 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4467",
-      "to": "@4373",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4391 to @4389 when the opt pragma was removed (#821). Re-keyed from @4389 to @4468 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4468",
-      "to": "@4374",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4392 to @4390 when the opt pragma was removed (#821). Re-keyed from @4390 to @4469 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4469",
-      "to": "@4375",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4393 to @4391 when the opt pragma was removed (#821). Re-keyed from @4391 to @4470 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4470",
-      "to": "@4376",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4394 to @4392 when the opt pragma was removed (#821). Re-keyed from @4392 to @4471 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4471",
-      "to": "@4377",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4395 to @4393 when the opt pragma was removed (#821). Re-keyed from @4393 to @4472 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4472",
-      "to": "@4378",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4396 to @4394 when the opt pragma was removed (#821). Re-keyed from @4394 to @4473 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
-    },
-    {
-      "from": "@4473",
-      "to": "@4379",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4397 to @4395 when the opt pragma was removed (#821). Re-keyed from @4395 to @4474 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewIdle$3770 to sViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3768 to sViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3847 to sViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4474",
-      "to": "@4380",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4398 to @4396 when the opt pragma was removed (#821). Re-keyed from @4396 to @4475 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4377",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4373 to @4371 when the opt pragma was removed (#821). Re-keyed from @4371 to @4450 when the opt pragma was removed (#821). Re-keyed from @4450 to @4425 when the local M48 copy struct was retired (#4570). Re-keyed from @4425 to @4427 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4475",
-      "to": "@4381",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4399 to @4397 when the opt pragma was removed (#821). Re-keyed from @4397 to @4476 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4378",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4374 to @4372 when the opt pragma was removed (#821). Re-keyed from @4372 to @4451 when the opt pragma was removed (#821). Re-keyed from @4451 to @4426 when the local M48 copy struct was retired (#4570). Re-keyed from @4426 to @4428 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4476",
-      "to": "@4382",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4400 to @4398 when the opt pragma was removed (#821). Re-keyed from @4398 to @4477 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4379",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4375 to @4373 when the opt pragma was removed (#821). Re-keyed from @4373 to @4452 when the opt pragma was removed (#821). Re-keyed from @4452 to @4427 when the local M48 copy struct was retired (#4570). Re-keyed from @4427 to @4429 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4477",
-      "to": "@4383",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4401 to @4399 when the opt pragma was removed (#821). Re-keyed from @4399 to @4478 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4380",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4376 to @4374 when the opt pragma was removed (#821). Re-keyed from @4374 to @4453 when the opt pragma was removed (#821). Re-keyed from @4453 to @4428 when the local M48 copy struct was retired (#4570). Re-keyed from @4428 to @4430 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4478",
-      "to": "@4384",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4402 to @4400 when the opt pragma was removed (#821). Re-keyed from @4400 to @4479 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4381",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4377 to @4375 when the opt pragma was removed (#821). Re-keyed from @4375 to @4454 when the opt pragma was removed (#821). Re-keyed from @4454 to @4429 when the local M48 copy struct was retired (#4570). Re-keyed from @4429 to @4431 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4479",
-      "to": "@4385",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4403 to @4401 when the opt pragma was removed (#821). Re-keyed from @4401 to @4480 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4382",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4378 to @4376 when the opt pragma was removed (#821). Re-keyed from @4376 to @4455 when the opt pragma was removed (#821). Re-keyed from @4455 to @4430 when the local M48 copy struct was retired (#4570). Re-keyed from @4430 to @4432 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4480",
-      "to": "@4386",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4404 to @4402 when the opt pragma was removed (#821). Re-keyed from @4402 to @4481 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4383",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4379 to @4377 when the opt pragma was removed (#821). Re-keyed from @4377 to @4456 when the opt pragma was removed (#821). Re-keyed from @4456 to @4431 when the local M48 copy struct was retired (#4570). Re-keyed from @4431 to @4433 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4481",
-      "to": "@4387",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4405 to @4403 when the opt pragma was removed (#821). Re-keyed from @4403 to @4482 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "to": "@4384",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4380 to @4378 when the opt pragma was removed (#821). Re-keyed from @4378 to @4457 when the opt pragma was removed (#821). Re-keyed from @4457 to @4432 when the local M48 copy struct was retired (#4570). Re-keyed from @4432 to @4434 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     },
     {
       "from": "@4482",
+      "to": "@4385",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4381 to @4379 when the opt pragma was removed (#821). Re-keyed from @4379 to @4458 when the opt pragma was removed (#821). Re-keyed from @4458 to @4433 when the local M48 copy struct was retired (#4570). Re-keyed from @4433 to @4435 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4483",
+      "to": "@4386",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4382 to @4380 when the opt pragma was removed (#821). Re-keyed from @4380 to @4459 when the opt pragma was removed (#821). Re-keyed from @4459 to @4434 when the local M48 copy struct was retired (#4570). Re-keyed from @4434 to @4436 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4484",
+      "to": "@4387",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4383 to @4381 when the opt pragma was removed (#821). Re-keyed from @4381 to @4460 when the opt pragma was removed (#821). Re-keyed from @4460 to @4435 when the local M48 copy struct was retired (#4570). Re-keyed from @4435 to @4437 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4485",
       "to": "@4388",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4406 to @4404 when the opt pragma was removed (#821). Re-keyed from @4404 to @4483 when the opt pragma was removed (#821). Re-keyed when the StaffRoll member conversions renumbered the emitted local counter (a member definition numbers one more internal symbol than a free one)."
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4384 to @4382 when the opt pragma was removed (#821). Re-keyed from @4382 to @4461 when the opt pragma was removed (#821). Re-keyed from @4461 to @4436 when the local M48 copy struct was retired (#4570). Re-keyed from @4436 to @4438 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4464",
+      "to": "@4367",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4385 to @4383 when the opt pragma was removed (#821). Re-keyed from @4383 to @4462 when the opt pragma was removed (#821). Re-keyed from @4462 to @4437 when the local M48 copy struct was retired (#4570). Re-keyed from @4437 to @4439 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4465",
+      "to": "@4368",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4386 to @4384 when the opt pragma was removed (#821). Re-keyed from @4384 to @4463 when the opt pragma was removed (#821). Re-keyed from @4463 to @4438 when the local M48 copy struct was retired (#4570). Re-keyed from @4438 to @4440 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4466",
+      "to": "@4369",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4387 to @4385 when the opt pragma was removed (#821). Re-keyed from @4385 to @4464 when the opt pragma was removed (#821). Re-keyed from @4464 to @4439 when the local M48 copy struct was retired (#4570). Re-keyed from @4439 to @4441 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4467",
+      "to": "@4370",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4388 to @4386 when the opt pragma was removed (#821). Re-keyed from @4386 to @4465 when the opt pragma was removed (#821). Re-keyed from @4465 to @4440 when the local M48 copy struct was retired (#4570). Re-keyed from @4440 to @4442 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4468",
+      "to": "@4371",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4389 to @4387 when the opt pragma was removed (#821). Re-keyed from @4387 to @4466 when the opt pragma was removed (#821). Re-keyed from @4466 to @4441 when the local M48 copy struct was retired (#4570). Re-keyed from @4441 to @4443 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4469",
+      "to": "@4372",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4390 to @4388 when the opt pragma was removed (#821). Re-keyed from @4388 to @4467 when the opt pragma was removed (#821). Re-keyed from @4467 to @4442 when the local M48 copy struct was retired (#4570). Re-keyed from @4442 to @4444 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4470",
+      "to": "@4373",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4391 to @4389 when the opt pragma was removed (#821). Re-keyed from @4389 to @4468 when the opt pragma was removed (#821). Re-keyed from @4468 to @4443 when the local M48 copy struct was retired (#4570). Re-keyed from @4443 to @4445 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4471",
+      "to": "@4374",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4392 to @4390 when the opt pragma was removed (#821). Re-keyed from @4390 to @4469 when the opt pragma was removed (#821). Re-keyed from @4469 to @4444 when the local M48 copy struct was retired (#4570). Re-keyed from @4444 to @4446 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4472",
+      "to": "@4375",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4393 to @4391 when the opt pragma was removed (#821). Re-keyed from @4391 to @4470 when the opt pragma was removed (#821). Re-keyed from @4470 to @4445 when the local M48 copy struct was retired (#4570). Re-keyed from @4445 to @4447 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4473",
+      "to": "@4376",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4394 to @4392 when the opt pragma was removed (#821). Re-keyed from @4392 to @4471 when the opt pragma was removed (#821). Re-keyed from @4471 to @4446 when the local M48 copy struct was retired (#4570). Re-keyed from @4446 to @4448 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4452",
+      "to": "@4355",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4395 to @4393 when the opt pragma was removed (#821). Re-keyed from @4393 to @4472 when the opt pragma was removed (#821). Re-keyed from @4472 to @4447 when the local M48 copy struct was retired (#4570). Re-keyed from @4447 to @4449 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4453",
+      "to": "@4356",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4396 to @4394 when the opt pragma was removed (#821). Re-keyed from @4394 to @4473 when the opt pragma was removed (#821). Re-keyed from @4473 to @4448 when the local M48 copy struct was retired (#4570). Re-keyed from @4448 to @4450 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4454",
+      "to": "@4357",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4397 to @4395 when the opt pragma was removed (#821). Re-keyed from @4395 to @4474 when the opt pragma was removed (#821). Re-keyed from @4474 to @4449 when the local M48 copy struct was retired (#4570). Re-keyed from @4449 to @4451 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4455",
+      "to": "@4358",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4398 to @4396 when the opt pragma was removed (#821). Re-keyed from @4396 to @4475 when the opt pragma was removed (#821). Re-keyed from @4475 to @4450 when the local M48 copy struct was retired (#4570). Re-keyed from @4450 to @4452 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4456",
+      "to": "@4359",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4399 to @4397 when the opt pragma was removed (#821). Re-keyed from @4397 to @4476 when the opt pragma was removed (#821). Re-keyed from @4476 to @4451 when the local M48 copy struct was retired (#4570). Re-keyed from @4451 to @4453 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4457",
+      "to": "@4360",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4400 to @4398 when the opt pragma was removed (#821). Re-keyed from @4398 to @4477 when the opt pragma was removed (#821). Re-keyed from @4477 to @4452 when the local M48 copy struct was retired (#4570). Re-keyed from @4452 to @4454 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4458",
+      "to": "@4361",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4401 to @4399 when the opt pragma was removed (#821). Re-keyed from @4399 to @4478 when the opt pragma was removed (#821). Re-keyed from @4478 to @4453 when the local M48 copy struct was retired (#4570). Re-keyed from @4453 to @4455 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4459",
+      "to": "@4362",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4402 to @4400 when the opt pragma was removed (#821). Re-keyed from @4400 to @4479 when the opt pragma was removed (#821). Re-keyed from @4479 to @4454 when the local M48 copy struct was retired (#4570). Re-keyed from @4454 to @4456 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4460",
+      "to": "@4363",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4403 to @4401 when the opt pragma was removed (#821). Re-keyed from @4401 to @4480 when the opt pragma was removed (#821). Re-keyed from @4480 to @4455 when the local M48 copy struct was retired (#4570). Re-keyed from @4455 to @4457 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4461",
+      "to": "@4364",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4404 to @4402 when the opt pragma was removed (#821). Re-keyed from @4402 to @4481 when the opt pragma was removed (#821). Re-keyed from @4481 to @4456 when the local M48 copy struct was retired (#4570). Re-keyed from @4456 to @4458 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4462",
+      "to": "@4365",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4405 to @4403 when the opt pragma was removed (#821). Re-keyed from @4403 to @4482 when the opt pragma was removed (#821). Re-keyed from @4482 to @4457 when the local M48 copy struct was retired (#4570). Re-keyed from @4457 to @4459 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
+    },
+    {
+      "from": "@4463",
+      "to": "@4366",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4406 to @4404 when the opt pragma was removed (#821). Re-keyed from @4404 to @4483 when the opt pragma was removed (#821). Re-keyed from @4483 to @4458 when the local M48 copy struct was retired (#4570). Re-keyed from @4458 to @4460 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07."
     }
   ],
   "init": [

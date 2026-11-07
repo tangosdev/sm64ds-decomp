@@ -16,8 +16,6 @@
  * leftovers:
  * - Behavior keeps its goto structure, and InitResources keeps one; the
  *   labels are named for the offset in the ROM function (L274 is +0x274).
- * - Vtbl/VtblOwner stay a file-local slice: the object data_0209f5bc points
- *   at is reached through vtable slot 5 alone (dMeter_c cuts the same slice).
  * - The camera's follow word is mTargetPlayer in dCamera_c.h, a dActor_c *;
  *   this TU reads it as the object the map follows.
  * - The player-list copy keeps an (int) launder on &o->mPos: the ROM
@@ -39,6 +37,7 @@
 #include "daPly_c.h"
 #include "dActor_c.h"
 #include "dCamera_c.h"
+#include "dFdBrightness_c.h"
 #include "SaveData.h"
 #include "OAM.h"
 #include "G2x.h"
@@ -64,10 +63,6 @@
 struct Event {
     static int GetBit(unsigned int bit);
 };
-
-struct Vtbl { s32 (*f[8])(void *); };
-
-struct VtblOwner { Vtbl *vt; };
 
 /* An icon is drawn when it lies within 16 pixels of the 256x192 screen. */
 #define ICON_X_VISIBLE(x) ((u16)((x) + 0x10) < 0x120)
@@ -103,8 +98,8 @@ extern u8 gMapCapIconCharacters[];
 extern void *data_ov002_0210cac8[];
 extern void *data_ov002_0210c748[];
 extern u8 data_0209d660;
-extern u32 data_020a0db0;
-extern VtblOwner *data_0209f5bc;
+extern s32 data_020a0db0;
+extern dFdBrightness_c *data_0209f5bc;
 extern dCamera_c *data_0209f318;
 extern u32 gNextActorUpdateMask;
 extern s32  data_0209d4b0;
@@ -118,13 +113,13 @@ extern u8   data_ov002_0211114c;
 extern u8   data_ov002_02111144;
 extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
-extern int data_0209f3a4[];
+extern void *data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
-int *Vec3_DivScalarInPlace(Vector3 *v, int s);
+Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s);
 void Vec3_MulScalarInPlace(Vector3 *v, int s);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, short ang, const Vector3 *t);
 }
@@ -576,7 +571,8 @@ s32 dMap_c::Behavior()
     player = data_0209f394[data_0209f250];
     focus = 0;
 
-    if (data_0209f5bc->vt->f[5](data_0209f5bc) == 0) goto L274;
+    if (data_0209f5bc->IsAtStart() == 0)
+        goto L274;
     if (gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)
         goto L274;
     if (data_0209d4b0 != 0) goto L274;

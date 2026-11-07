@@ -32,6 +32,12 @@
 #include "dBgActor_c.h"
 #include "dExtShadowModel_c.h"
 
+/* Three words, one per variant. Copied onto the stack and indexed by
+   mVariant. */
+struct VariantWords {
+    s32 v[3];
+};
+
 struct daObjRotateUpdownLift_c : dBgActor_c {
     /* Named by the class's own destructor calling dExtShadowModel_c's D1 at +0x320
        -- a relocation the ROM build checks. Was a u8 marker. */

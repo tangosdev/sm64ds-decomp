@@ -118,7 +118,6 @@ unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
 void MulMat4x3Mat4x3(void *a, void *b, void *dst);
-void func_0200f760(void *thiz, void *cyl);
 u8 IsAreaShowing(int idx);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
@@ -729,8 +728,8 @@ int daTrs_c::func_ov063_02116f48() {
 /* L16(this, 0x5d4) is &mBooFlags and L8(this, 0x5cc) is &mState, spelled as
    integer arithmetic. Either member spelling keeps the bytes but lowers
    every @NNN in the TU by two (measured, each one alone). */
-#define L16(c, off) ((u16*)(((int)(c) + (off))))
-#define L8(c, off) ((u8*)(((int)(c) + (off))))
+#define L16(c, off) ((u16*)((int)(c) + (off)))
+#define L8(c, off) ((u8*)((int)(c) + (off)))
 /* Behavior handler for variant 0xb: the scripted-path Boo. Hidden until
    canAppear, then waits for the player within 0x258000, flies a fixed path
    (hopping in state 4), then vanishes (opacity 0, hidden). */
@@ -2161,7 +2160,7 @@ void daTrs_c::func_ov063_02119894() {
 // @symbol _ZN7daTrs_c19func_ov063_02119960Ev
 void daTrs_c::func_ov063_02119960() {
 
-    unsigned short *p = (unsigned short *)(int)M(&this->mBooFlags);
+    unsigned short *p = (unsigned short *)M(&this->mBooFlags);
     *p &= ~TRS_FLAG_HIT_BY_PARAM3_PLAYER;
     if (*(u16 *)&this->mStateTimer == 0) {
         int r0 = RandomIntInternal(&data_0209e650.value);
@@ -2963,7 +2962,7 @@ void daTrs_c::OnPendingDestroy()
 // @symbol _ZN7daTrs_c6RenderEv
 int daTrs_c::Render()
 {
-    int b = (int)(((mFlags & 0x40000) != 0));
+    int b = (int)((mFlags & 0x40000) != 0);
     if (b != 0)
         return 1;
 
@@ -3026,7 +3025,7 @@ int daTrs_c::Behavior()
     int d1;
     int v;
 
-    func_0200f760(this, &mdCcAcPos_c);
+    func_0200f760(&mdCcAcPos_c);
     if (mSpawnedActorID != 0) {
         mFoundActor = dActor_c::FindWithID(mSpawnedActorID);
         q = (char *)mFoundActor;

@@ -5,7 +5,7 @@
 
 extern "C" {
 
-#define LS(a) (*(short*)(((long long)(int)(a))))
+#define LS(a) (*(short*)(a))
 
 extern void func_ov007_020bc968(Ov007Model *m, void *other);
 extern void func_ov007_020bc894(Ov007Model *m);

@@ -120,8 +120,7 @@ s32 func_02053130(s32 x)
         while (REG_SQRTCNT & SQRT_CONTROL_BUSY)
             ;
 
-        return (s32)((quotient * (s64)REG_SQRT_RESULT + (s64)0x200 * (s64)(1LL << 32)) >>
-                     (32 + 10));
+        return (s32)((quotient * (s64)REG_SQRT_RESULT + (s64)0x200 * (1LL << 32)) >> (32 + 10));
     }
 
     return 0;

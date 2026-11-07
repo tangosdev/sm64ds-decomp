@@ -19,7 +19,7 @@ extern u32 data_020a60b4;  // texture-palette bank selector (BeginLoadTexPltt re
 extern u32 data_020a60b8;  // texture bank selector (BeginLoadTex result)
 extern u32 data_020a60bc;  // texture upload window: secondary bank base
 extern u32 data_020a60c0;  // texture upload window: top of the base window
-extern u16 data_02086314[];
+extern const u16 data_02086314[8];
 extern u16 data_02086324[];
 extern u16 data_02086326[];
 extern u16 data_02086328[];

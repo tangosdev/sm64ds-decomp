@@ -98,7 +98,7 @@ void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
     mFlashFrames = 0;
     mFlags = 0;
     {
-        unsigned char *p1b = (unsigned char *)(int)&mFlags;
+        unsigned char *p1b = (unsigned char *)&mFlags;
         *p1b = (*p1b & ~1) | (a5 & 1);
     }
     if (a5 != 0 || a3 == 3)

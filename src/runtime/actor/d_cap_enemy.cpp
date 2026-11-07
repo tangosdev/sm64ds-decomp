@@ -26,6 +26,21 @@
  *    self->dEnemyBase_c::~dEnemyBase_c() emits D1 where the
  *    chain needs D2; and an out-of-line ~dCapEnemy_c() emits the extra
  *    STB_GLOBAL D1 that isolation will not deadstrip.
+ *
+ * Re-measured for #821, because these two are the last hand-spelled mangled
+ * symbols in the tree and the language-mode metric counts them. A real
+ * `dCapEnemy_c::~dCapEnemy_c() {}` here does byte-reproduce BOTH ov002
+ * variants -- 0x020aedbc and 0x020aedf4 come out MATCH, and
+ * prepush_linkcheck passes, because that gate only looks at the functions
+ * the manifest declares. The object it leaves behind is the problem:
+ * `tubuild.py verify ov002/dCapEnemy_c` reports 12 unlicensed symbols and
+ * refuses the promotion. Defining the destructor out of line makes it this
+ * TU's key function, so mwccarm emits _ZTV11dCapEnemy_c (0x84, STB_GLOBAL)
+ * and the whole RTTI chain here, and emits a third variant
+ * _ZN11dCapEnemy_cD1Ev (0x38, STB_GLOBAL) that duplicates the homed arm9
+ * copy at 0x0200651c. Neither is vague linkage, so neither deadstrips. The
+ * hand-spelled pair below is not laziness; it is the only spelling that
+ * emits exactly the two functions ov002 owns.
  */
 #include "dCapEnemy_c.h"
 #include "decl_common.h"

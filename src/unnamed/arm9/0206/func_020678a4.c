@@ -3,7 +3,7 @@
 #include "private/arm9_a9db8_mb_parent.h"
 extern void func_020676e0(void *in, void *tbl, void *dst, void *recvCursor);
 extern void CpuCopy8(const void *src, void *dst, u32 size);
-extern int data_0208685c[];
+extern u32 data_0208685c[];
 
 /* NitroSDK MB_DownloadFileInfo, the start of MbParentFile.mHeader: the
  * MbDownloadFileInfoHeader fields (as that type names them), then
@@ -24,7 +24,7 @@ typedef struct MB_DownloadFileInfo {
 void func_020678a4(int *out, int *in, void *authCode) {
     int recvCursor;
     MbSegmentInfo *seg;
-    int *t;
+    u32 *t;
     int i;
     MB_DownloadFileInfo *info = (MB_DownloadFileInfo *)out;
     RomHeaderView *rom = (RomHeaderView *)in;

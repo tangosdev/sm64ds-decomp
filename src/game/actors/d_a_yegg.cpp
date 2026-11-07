@@ -187,7 +187,6 @@ extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int 
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 extern int func_ov002_020cf700(void *g);
-extern int func_ov002_020d0d2c(void *g);
 }
 
 // @symbol _ZN8daYegg_cD1Ev
@@ -775,7 +774,7 @@ void daYegg_c::func_ov002_020ed0d4()
         MulVec3Mat4x3(&in, &data_020a0e68, &out);
 
         if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
-            func_ov002_020d0d2c(mPlayer) != 0) {
+            mPlayer->func_ov002_020d0d2c() != 0) {
             if (mWithMeshClsn.IsOnGround() != 0) {
                 mGoalAngleX = mPlayer->mAngleX;
                 mGoalAngleZ = mPlayer->mAngleZ;
@@ -1050,7 +1049,7 @@ void daYegg_c::func_ov002_020ed7f8()
     mShadowMtx[11] = mPosZ >> 3;
     b = (mFlags & 0x40000) ? 1 : 0;
     if (b == 0 && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
-        !func_ov002_020d0d2c(mPlayer)) {
+        !mPlayer->func_ov002_020d0d2c()) {
         if (func_ov002_020ec654() == 0) {
             DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMtx, r4, r5 + 0x28000, 0xf);
         } else {

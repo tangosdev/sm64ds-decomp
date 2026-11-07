@@ -573,7 +573,7 @@ int daOnms_c::InitResources()
     f = dExtSimpleModel_c::LoadFile(gOnimasuModelFile);
     mModel.SetFile((BMD_File *)f, 1, -1);
 
-    mWithMeshClsn.Init((dActor_c *)(int)this, 0xfa000, 0, 0, 0);
+    mWithMeshClsn.Init((dActor_c *)this, 0xfa000, 0, 0, 0);
     mWithMeshClsn.SetLimMovFlag();
 
     mMoveKind = param1 & 3;

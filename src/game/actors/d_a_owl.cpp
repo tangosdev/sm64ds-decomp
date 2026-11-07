@@ -158,9 +158,9 @@ void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *
 int func_ov002_020df7f4(void *c);
 void func_02012694(unsigned int a, void *pos);
 int ApproachAngle(short *p, short target, int a, int b, int c);
-int Vec3_Dist(const void *a, const void *b);
-// local extern: CalcLib.h conflicts with the retained opaque Vec3_Dist prototype.
-short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+// local extern: math/CalcLib.h declares these, but its int RandomIntInternal(int *) conflicts with the unsigned prototype below.
+int Vec3_Dist(const Vector3 *, const Vector3 *);
+short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 unsigned int RandomIntInternal(void *seed);
 void MulVec3Mat4x3(void *dst, void *mat, void *src);
@@ -241,13 +241,13 @@ int daOwl_c::func_ov094_021358b4()
             mSpeedX = 0;
             mVertSpeed = 0;
             mSpeedZ = 0;
-            mPosX = mAnchorX;
-            mPosY = mAnchorY;
-            mPosZ = mAnchorZ;
+            mPosX = mAnchor.x;
+            mPosY = mAnchor.y;
+            mPosZ = mAnchor.z;
             mPosY += 0x64000;
         }
     } else {
-        ApproachLinear(mPos, *(Vector3 *)&mAnchorX, 0x2000);
+        ApproachLinear(mPos, mAnchor, 0x2000);
         if (mOpacity < OPACITY_MAX) {
             mOpacity++;
         } else {
@@ -373,9 +373,9 @@ int daOwl_c::func_ov094_02135c28()
         }
     }
 
-    if (Vec3_Dist(&mPosX, &mAnchorX) > 0x190000) {
+    if (Vec3_Dist(&mPos, &mAnchor) > 0x190000) {
         mStateTimer = 0x32;
-        mWanderAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
+        mWanderAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
     } else if (OWL_TIMER(this) == 0) {
         mWanderAngleY = (s16)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 12);
         mStateTimer = (s16)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
@@ -397,7 +397,7 @@ int daOwl_c::func_ov094_02135c28()
     idx = ((u16)(short)ang >> 4) * 2;
     tbl = data_02082214[idx];
     result = FX_MUL(tbl, 0x64000);
-    ApproachLinear(mPosY, mAnchorY + result, 0x3000);
+    ApproachLinear(mPosY, mAnchor.y + result, 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
     MulVec3Mat4x3(&buf, &data_020a0e68, &mSpeedX);
@@ -484,16 +484,16 @@ int daOwl_c::func_ov094_02136024()
             d.y = 0;
             d.z = 0x320000;
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MulVec3Mat4x3(&d, &data_020a0e68, (VecFx32 *)&mAnchorX);
+            MulVec3Mat4x3(&d, &data_020a0e68, &mAnchor);
             {
-                int *px = &mAnchorX;
-                int *py = &mAnchorY;
-                int *pz = &mAnchorZ;
+                int *px = &mAnchor.x;
+                int *py = &mAnchor.y;
+                int *pz = &mAnchor.z;
                 *px = *px + mPosX;
                 *py = *py + mPosY;
                 *pz = *pz + mPosZ;
             }
-            mPrevAngleY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mAnchorX);
+            mPrevAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
             mAngleY = mPrevAngleY;
             func_ov094_02136188(OWL_STATE_HOVER);
         }

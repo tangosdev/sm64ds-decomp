@@ -3,7 +3,7 @@
 /* NitroSDK SND_util.c SND_CalcChannelVolume, as in pret's pokediamond: turn
  * decibels (-723..0) into a channel volume, the volume byte low and the
  * data shift (0..3) above it. */
-extern const u8 data_02086484[]; /* sVolumeTable */
+extern const u8 data_02086484[724]; /* sVolumeTable */
 
 u16 SND_CalcChannelVolume(s32 x) {
     u8 resultLo;

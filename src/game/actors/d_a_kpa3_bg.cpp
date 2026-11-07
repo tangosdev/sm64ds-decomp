@@ -32,7 +32,24 @@
  * leftovers:
  * - The three handlers keep their address names.
  * - func_ov060_02117db8 parses as C (cplusplus off): the same body as
- *   C++ DIFFs. It reaches the members through a struct daKpa3Bg_c *.
+ *   C++ DIFFs. Re-measured for #821, because this is the last hand-spelled
+ *   mangled method in the tree and the language-mode metric counts it.
+ *   `#pragma cplusplus off` is what forces the hand-spelling -- C has no
+ *   member syntax -- so the question is only whether the pragma is needed,
+ *   and it is. With the identical body and only the language mode changed
+ *   (an extern "C" free function under the mangled name, nothing else
+ *   touched), 89 of the 202 words differ, and the real member
+ *   `void daKpa3Bg_c::func_ov060_02117db8()` differs in the same 89. The
+ *   shape is right throughout -- instruction for instruction the same
+ *   schedule -- but the C++ frontend keeps one more value live: it saves
+ *   seven callee-saved registers against the cartridge's six, reserves
+ *   0x4c of stack against 0x48, and holds `this` in r6 where the ROM holds
+ *   it in r8, which renames registers through the whole body. Six
+ *   respellings of the locals were tried against that (dropping the yimm
+ *   staging, initialising it at its declaration, declaring it first,
+ *   `state` as int, `saved` non-volatile, `saved` declared last): every one
+ *   is still 89 words or worse, so it is the frontend's allocation order
+ *   and not the spelling. It reaches the members through a struct daKpa3Bg_c *.
  *   Earthquake, PoofDustAt and MarkForDestruction go through
  *   kpaCallEarthquake, kpaCallPoof and kpaCallDestroy. A member call in
  *   the C body DIFFs; the bridges inline to the same calls.
@@ -62,7 +79,7 @@ extern "C" {
 
 int *Vec3_AsrInPlace(VecFx32 *v, int n);
 /* Unnamed on purpose: see the @NNN note in the banner. */
-void MulVec3Mat4x3(VecFx32 *, void *, void *);
+void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
 void func_02012694(unsigned int, void *);
 int CopyTexPalFromLevelModel(void *);
 
@@ -295,7 +312,7 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         v[2] = (s16)data_02082214[(ang >> 4) * 2 + 1] * (s16)0x366 +
                (data_ov060_02119564[self->mVariant].z << 12);
         Vec3_AsrInPlace((VecFx32 *)v, 3);
-        MulVec3Mat4x3((VecFx32 *)v, &data_0209b3ec, &self->mCamSpacePosX);
+        MulVec3Mat4x3((Vector3 *)v, &data_0209b3ec, &self->mCamSpacePos);
         func_02012694(0xbc, &self->mCamSpacePosX);
         self->mCamSpacePosX = saved[0];
         self->mCamSpacePosY = saved[1];

@@ -1,11 +1,4 @@
-typedef struct Ctx {
-    int kind;
-    void (*fn)(void *, void *, unsigned int, int, int);
-    int arg;
-} Ctx;
-
-extern void func_020499bc(short *left, short *right, unsigned int len, Ctx *ctx);
-extern void func_020497a0(short *left, short *right, unsigned int len, Ctx *ctx);
+#include "CaptureEffect.h"
 
 /* The sound-capture effect callback. func_02049cd8 passes it to
    func_020507e0 (StartEffect-shaped: buffer, size, format, 32000 Hz,
@@ -14,7 +7,7 @@ extern void func_020497a0(short *left, short *right, unsigned int len, Ctx *ctx)
    optional user callback runs first, then the built-in effect for ctx->kind:
    0 none, 1 func_020499bc, 2 func_020497a0. func_02049c48 switches the kind,
    and Sound.cpp's func_02011d5c calls it with the same 0/1/2 value. */
-void func_02049ba8(void *left, void *right, unsigned int len, int format, Ctx *ctx) {
+void func_02049ba8(void *left, void *right, unsigned int len, int format, CaptureEffect *ctx) {
     if (ctx->fn)
         ctx->fn(left, right, len, format, ctx->arg);
     switch (ctx->kind) {
