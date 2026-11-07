@@ -19,6 +19,7 @@
 #include "dFdColor_c.h"
 #include "G2x.h"
 #include "GX.h"
+#include "nitro/hw/registers.h"
 
 namespace GX {
 void SetGraphicsMode(int a, int b, int c);
@@ -102,98 +103,98 @@ void dScene_c::ResetHardwareRegisters()
 
     *(Matrix2x2Words *)&m = *(Matrix2x2Words *)&data_02092668;
 
-    *(volatile u16*)0x4000304 |= 0x8000;
-    *(volatile u16*)0x4000304 = (*(volatile u16*)0x4000304 & 0xfffffdf1) | 0x20e;
-    *(volatile u16*)0x4000304 |= 1;
+    REG_POWCNT1 |= 0x8000;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    REG_POWCNT1 |= 1;
 
     GX::DisableAllBanks();
     func_02053c10(0);
     func_02053be0(1);
     GX::SetGraphicsMode(1, 0, 0);
 
-    *(volatile u32*)0x4000000 &= ~0x1f00;
-    *(volatile u32*)0x4000000 &= ~0xe000;
-    *(volatile u32*)0x4000000 &= ~0x38000000;
-    *(volatile u32*)0x4000000 &= ~0x7000000;
-    *(volatile u32*)0x4000000 &= 0xffcfffef;
-    *(volatile u32*)0x4000000 &= 0xffbfff9f;
-    *(volatile u32*)0x4000000 &= ~0x800000;
-    *(volatile u32*)0x4000064 = 0x80000000;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT &= ~0xe000;
+    REG_DISPCNT &= ~0x38000000;
+    REG_DISPCNT &= ~0x7000000;
+    REG_DISPCNT &= 0xffcfffef;
+    REG_DISPCNT &= 0xffbfff9f;
+    REG_DISPCNT &= ~0x800000;
+    REG_DISPCAPCNT = 0x80000000;
 
-    *(volatile u16*)0x4000008 &= 0x43;
-    *(volatile u16*)0x400000a &= 0x43;
-    *(volatile u16*)0x400000c &= 0x43;
-    *(volatile u16*)0x400000e &= 0x43;
-    *(volatile u16*)0x4000008 &= ~0x40;
-    *(volatile u16*)0x400000a &= ~0x40;
-    *(volatile u16*)0x400000c &= ~0x40;
-    *(volatile u16*)0x400000e &= ~0x40;
-    *(volatile u16*)0x4000008 &= ~3;
-    *(volatile u16*)0x400000a &= ~3;
-    *(volatile u16*)0x400000c &= ~3;
-    *(volatile u16*)0x400000e &= ~3;
+    REG_BG0CNT &= 0x43;
+    REG_BG1CNT &= 0x43;
+    REG_BG2CNT &= 0x43;
+    REG_BG3CNT &= 0x43;
+    REG_BG0CNT &= ~0x40;
+    REG_BG1CNT &= ~0x40;
+    REG_BG2CNT &= ~0x40;
+    REG_BG3CNT &= ~0x40;
+    REG_BG0CNT &= ~3;
+    REG_BG1CNT &= ~3;
+    REG_BG2CNT &= ~3;
+    REG_BG3CNT &= ~3;
 
-    *(volatile u32*)0x4000010 = 0;
-    *(volatile u32*)0x4000014 = 0;
-    *(volatile u32*)0x4000018 = 0;
-    *(volatile u32*)0x400001c = 0;
+    REG_BG0OFS = 0;
+    REG_BG1OFS = 0;
+    REG_BG2OFS = 0;
+    REG_BG3OFS = 0;
 
-    G2x::SetBGyAffine((volatile u16 *)0x4000020, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine((volatile u16 *)0x4000030, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_BG2PA, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_BG3PA, &m, 0, 0, 0, 0);
 
-    *(volatile u16*)0x4000048 &= ~0x3f;
-    *(volatile u16*)0x4000048 &= ~0x3f00;
-    *(volatile u16*)0x400004a &= ~0x3f;
-    *(volatile u16*)0x400004a &= ~0x3f00;
+    REG_WININ &= ~0x3f;
+    REG_WININ &= ~0x3f00;
+    REG_WINOUT &= ~0x3f;
+    REG_WINOUT &= ~0x3f00;
 
-    *(volatile u16*)0x4000040 = 0;
-    *(volatile u16*)0x4000044 = 0;
-    *(volatile u16*)0x4000042 = 0;
-    *(volatile u16*)0x4000046 = 0;
-    *(volatile u8*)0x400004c = 0;
-    *(volatile u8*)0x400004d = 0;
+    REG_WIN0H = 0;
+    REG_WIN0V = 0;
+    REG_WIN1H = 0;
+    REG_WIN1V = 0;
+    REG_MOSAIC_BG = 0;
+    REG_MOSAIC_OBJ = 0;
 
     func_02053a90((u16*)0x400006c, 0);
     GXS::SetGraphicsMode(0);
 
-    *(volatile u32*)0x4001000 &= ~0x1f00;
-    *(volatile u32*)0x4001000 &= ~0xe000;
-    *(volatile u32*)0x4001000 &= 0xffcfffef;
-    *(volatile u32*)0x4001000 &= 0xffbfff9f;
-    *(volatile u32*)0x4001000 &= ~0x800000;
+    REG_DISPCNT_SUB &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0xe000;
+    REG_DISPCNT_SUB &= 0xffcfffef;
+    REG_DISPCNT_SUB &= 0xffbfff9f;
+    REG_DISPCNT_SUB &= ~0x800000;
 
-    *(volatile u16*)0x4001008 &= 0x43;
-    *(volatile u16*)0x400100a &= 0x43;
-    *(volatile u16*)0x400100c &= 0x43;
-    *(volatile u16*)0x400100e &= 0x43;
-    *(volatile u16*)0x4001008 &= ~0x40;
-    *(volatile u16*)0x400100a &= ~0x40;
-    *(volatile u16*)0x400100c &= ~0x40;
-    *(volatile u16*)0x400100e &= ~0x40;
-    *(volatile u16*)0x4001008 &= ~3;
-    *(volatile u16*)0x400100a &= ~3;
-    *(volatile u16*)0x400100c &= ~3;
-    *(volatile u16*)0x400100e &= ~3;
+    REG_DB_BG0CNT &= 0x43;
+    REG_DB_BG1CNT &= 0x43;
+    REG_DB_BG2CNT &= 0x43;
+    REG_DB_BG3CNT &= 0x43;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG1CNT &= ~0x40;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG3CNT &= ~0x40;
+    REG_DB_BG0CNT &= ~3;
+    REG_DB_BG1CNT &= ~3;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG3CNT &= ~3;
 
-    *(volatile u32*)0x4001010 = 0;
-    *(volatile u32*)0x4001014 = 0;
-    *(volatile u32*)0x4001018 = 0;
-    *(volatile u32*)0x400101c = 0;
+    REG_DB_BG0OFS = 0;
+    REG_DB_BG1OFS = 0;
+    REG_DB_BG2OFS = 0;
+    REG_DB_BG3OFS = 0;
 
-    G2x::SetBGyAffine((volatile u16 *)0x4001020, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine((volatile u16 *)0x4001030, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
 
-    *(volatile u16*)0x4001048 &= ~0x3f;
-    *(volatile u16*)0x4001048 &= ~0x3f00;
-    *(volatile u16*)0x400104a &= ~0x3f;
-    *(volatile u16*)0x400104a &= ~0x3f00;
+    REG_DB_WININ &= ~0x3f;
+    REG_DB_WININ &= ~0x3f00;
+    REG_DB_WINOUT &= ~0x3f;
+    REG_DB_WINOUT &= ~0x3f00;
 
-    *(volatile u16*)0x4001040 = 0;
-    *(volatile u16*)0x4001044 = 0;
-    *(volatile u16*)0x4001042 = 0;
-    *(volatile u16*)0x4001046 = 0;
-    *(volatile u8*)0x400104c = 0;
-    *(volatile u8*)0x400104d = 0;
+    REG_DB_WIN0H = 0;
+    REG_DB_WIN0V = 0;
+    REG_DB_WIN1H = 0;
+    REG_DB_WIN1V = 0;
+    REG_DB_MOSAIC_BG = 0;
+    REG_DB_MOSAIC_OBJ = 0;
 
     func_02053a90((u16*)0x400106c, 0);
 }
@@ -236,10 +237,10 @@ void dScene_c::Initialise3dGraphics()
     ResetHardwareRegisters();
     func_0205583c();
     GX::SetGraphicsMode(1, 0, 1);
-    *(volatile u32 *)0x40004c8 = 0x296a5800;
-    *(volatile u32 *)0x40004cc = 0x7fff;
-    *(volatile u32 *)0x40004c0 = 0x7fff;
-    *(volatile u32 *)0x40004c4 = 0;
+    REG_LIGHT_VECTOR = 0x296a5800;
+    REG_LIGHT_COLOR = 0x7fff;
+    REG_DIF_AMB = 0x7fff;
+    REG_SPE_EMI = 0;
     ::Initialise3dGraphics(0);
 }
 

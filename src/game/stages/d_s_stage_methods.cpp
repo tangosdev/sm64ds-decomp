@@ -2845,8 +2845,7 @@ int IsButtonInputValid(void) {
    blx r1` with r0 = the callback object. The matrix at +0x4 stays zero until
    UpdateMinimap; the static initializer does not seed it. */
 int dScStage_c::graphCallback_c::GraphCallback2() {
-    G2x::SetBGyAffine((volatile unsigned short *)REG_DB_BG3PA, &matrix, originX, originY, targetX,
-                      targetY);
+    G2x::SetBGyAffine(&REG_DB_BG3PA, &matrix, originX, originY, targetX, targetY);
     return 1;
 }
 
