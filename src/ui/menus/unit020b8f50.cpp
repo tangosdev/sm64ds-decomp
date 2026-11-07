@@ -99,16 +99,14 @@ extern int func_ov007_020bdeb0(int a);
 extern void func_ov007_020bfe4c(Ov007Camera *cam, int x, int y, int z, void *out);
 extern int func_ov007_020c1da0(int i);
 extern int func_ov007_020c3ba8(int);
-extern int func_ov007_020c3be0(int t, int a, int b);
+extern unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020c3d1c(void *);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
 extern int func_ov007_020c5014(void *, int);
 extern void func_ov007_020c510c(char *c);
-/* local extern: the definition takes a5 as unsigned short; an int here
- * keeps this caller from truncating func_ov007_020c3be0's result, which the
- * ROM does not do. */
-extern void func_ov007_020c4e98(void *c, int a1, int a2, int a3, int a4, int a5, int a6);
+extern void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4, unsigned short a5,
+                                int a6);
 extern void func_ov007_020c5188(void *, int);
 extern void func_ov007_020c5490(char *obj, int *m);
 extern void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);

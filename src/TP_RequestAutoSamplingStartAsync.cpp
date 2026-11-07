@@ -11,12 +11,12 @@ int PXI_SendWordByFifo(unsigned int a, unsigned int c, unsigned int b);
 
 
 extern "C" void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned int frequency,
-                                                 int samplingBufs, unsigned int bufSize) {
+                                                 TPData *samplingBufs, unsigned int bufSize) {
     unsigned int i;
     unsigned int irq;
     int ok;
 
-    data_020a80cc.mSamplingBufs = (TPData *)samplingBufs;
+    data_020a80cc.mSamplingBufs = samplingBufs;
     data_020a80cc.mIndex = 0;
     data_020a80cc.mFrequency = (u16)frequency;
     data_020a80cc.mBufSize = (u16)bufSize;
