@@ -114,7 +114,7 @@ int *Vec3_LslInPlace(int *v, int sh);
 void  func_ov102_0214b3b8(void *c);
 /* Real definitions: func_0201267c and func_0200fc44 (arm9).
    The methods call through these so the names stay unmangled. */
-int   func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
+int func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
 
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f220;
