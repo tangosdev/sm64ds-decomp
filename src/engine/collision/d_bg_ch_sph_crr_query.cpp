@@ -681,13 +681,13 @@ extern "C" void func_02037e9c(CLPS *clps) {
     clps->w1 = 0xff;
 }
 
-// @symbol _ZNK4CLPS13func_02037e90Ev
-int CLPS::func_02037e90() const {
+// @symbol _ZNK4CLPS9GetPathIDEv
+int CLPS::GetPathID() const {
     return w1 & 0xff;
 }
 
-// @symbol _ZNK4CLPS13func_02037e84Ev
-int CLPS::func_02037e84() const {
+// @symbol _ZNK4CLPS12GetSoundTypeEv
+int CLPS::GetSoundType() const {
     return w0 & 0x1f;
 }
 
@@ -696,8 +696,8 @@ extern "C" int SurfaceInfo_TestFlag0x20(int *p) {
     return p[0] & 0x20;
 }
 
-// @symbol _ZNK4CLPS13func_02037e68Ev
-int CLPS::func_02037e68() const {
+// @symbol _ZNK4CLPS9GetViewIDEv
+int CLPS::GetViewID() const {
     return (w0 >> 6) & 0x3f;
 }
 
@@ -706,8 +706,8 @@ int CLPS::GetFloorClass() const {
     return (w0 >> 12) & 0x7;
 }
 
-// @symbol _ZNK4CLPS13func_02037e48Ev
-int CLPS::func_02037e48() const {
+// @symbol _ZNK4CLPS17GetCameraBehaviorEv
+int CLPS::GetCameraBehavior() const {
     return (w0 >> 15) & 0xf;
 }
 

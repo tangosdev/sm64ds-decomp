@@ -70,7 +70,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e48Ev",
+      "symbol": "_ZNK4CLPS17GetCameraBehaviorEv",
       "address": "0x02037e48",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e48.c",
@@ -84,7 +84,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e68Ev",
+      "symbol": "_ZNK4CLPS9GetViewIDEv",
       "address": "0x02037e68",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e68.c",
@@ -98,14 +98,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e84Ev",
+      "symbol": "_ZNK4CLPS12GetSoundTypeEv",
       "address": "0x02037e84",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e84.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e90Ev",
+      "symbol": "_ZNK4CLPS9GetPathIDEv",
       "address": "0x02037e90",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e90.c",

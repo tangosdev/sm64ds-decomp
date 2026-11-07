@@ -5387,7 +5387,7 @@
     },
     "arm9:0x02037e48": {
       "author": "tangosdev",
-      "name": "_ZNK4CLPS13func_02037e48Ev"
+      "name": "_ZNK4CLPS17GetCameraBehaviorEv"
     },
     "arm9:0x02037e58": {
       "author": "tangosdev",
@@ -5395,7 +5395,7 @@
     },
     "arm9:0x02037e68": {
       "author": "tangosdev",
-      "name": "_ZNK4CLPS13func_02037e68Ev"
+      "name": "_ZNK4CLPS9GetViewIDEv"
     },
     "arm9:0x02037e78": {
       "author": "tangosdev",
@@ -5403,11 +5403,11 @@
     },
     "arm9:0x02037e84": {
       "author": "tangosdev",
-      "name": "_ZNK4CLPS13func_02037e84Ev"
+      "name": "_ZNK4CLPS12GetSoundTypeEv"
     },
     "arm9:0x02037e90": {
       "author": "tangosdev",
-      "name": "_ZNK4CLPS13func_02037e90Ev"
+      "name": "_ZNK4CLPS9GetPathIDEv"
     },
     "arm9:0x02037e9c": {
       "author": "tangosdev",
