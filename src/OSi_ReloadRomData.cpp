@@ -6,10 +6,10 @@
 extern "C" {
 
 #define ROM_HEADER_ARM9_ROM_OFFSET (*(u32 *)0x027FFE20)
-#define ROM_HEADER_ARM9_RAM_ADDR   (*(u32 *)0x027FFE28)
+#define ROM_HEADER_ARM9_RAM_ADDR   (*(u8 **)0x027FFE28)
 #define ROM_HEADER_ARM9_SIZE       (*(u32 *)0x027FFE2C)
 #define ROM_HEADER_ARM7_ROM_OFFSET (*(u32 *)0x027FFE30)
-#define ROM_HEADER_ARM7_RAM_ADDR   (*(u32 *)0x027FFE38)
+#define ROM_HEADER_ARM7_RAM_ADDR   (*(void **)0x027FFE38)
 #define ROM_HEADER_ARM7_SIZE       (*(u32 *)0x027FFE3C)
 #define ROM_SECURE_AREA_END 0x8000
 
@@ -18,7 +18,7 @@ extern void OSi_SendToPxi(u16 data);
 extern void OSi_ReloadRomData(void);
 extern void OSi_DoBoot(void);
 extern vu16 OSi_IsResetOccurred;
-extern void OSReadROMArea(u32 romOffset, u32 dest, s32 size);
+extern void OSReadROMArea(u32 romOffset, void *dest, s32 size);
 
 /* OS_ResetSystem at 0x01ffdd98 (ITCM) -- NitroSDK soft reset, with OSi_DoResetSystem
  * inlined. Identified against pret/pokediamond's OS_reset.c, whose OS_ResetSystem and
@@ -67,7 +67,7 @@ void OS_ResetSystem(u32 resetArg) {
  */
 void OSi_ReloadRomData(void) {
     u32 romOffset = ROM_HEADER_ARM9_ROM_OFFSET;
-    u32 dest = ROM_HEADER_ARM9_RAM_ADDR;
+    u8 *dest = ROM_HEADER_ARM9_RAM_ADDR;
     u32 size = ROM_HEADER_ARM9_SIZE;
 
     OS_TryLockCard((u16)OS_GetLockID());

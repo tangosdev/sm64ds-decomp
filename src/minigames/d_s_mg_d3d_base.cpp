@@ -47,7 +47,7 @@ extern unsigned char gMainScreenLayers;
 extern unsigned char data_0209e660;
 extern unsigned char data_0209f5f8;
 extern dGraph_c::callback_c *data_0209d4a8;
-extern unsigned int data_020a0db0;
+extern int data_020a0db0;
 extern int data_0208ee44;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 

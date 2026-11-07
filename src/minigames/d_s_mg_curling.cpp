@@ -105,7 +105,7 @@ extern void Mg_SetSharedState(int state);
 extern void Mg_SubmitScore(int score);
 extern int Mg_GetTopRecord(void);
 extern void Mg_DrawTopLeftCounter(int self);
-extern char *Ov004_LoadFileByPath(void *p);
+extern void *Ov004_LoadFileByPath(const char *path);
 extern void Mg_SetTopScreenYOffset(int a);
 
 extern void DecompressLZ16(const void *src, void *dst);
@@ -1624,8 +1624,8 @@ s32 dScMgCurling_c::Behavior() {
 /* Slot 0. Loads the board and the stone graphics for both screens, the
  * palettes and the house, then starts the first round with a 0x40 delay. */
 s32 dScMgCurling_c::InitResources() {
-    char *a = Ov004_LoadFileByPath(&sCurlingMgDirPath);
-    char *b = Ov004_LoadFileByPath(&sCurlingBgCurling2NcgPath);
+    void *a = Ov004_LoadFileByPath(&sCurlingMgDirPath);
+    void *b = Ov004_LoadFileByPath(&sCurlingBgCurling2NcgPath);
     void *f;
 
     if (a == 0 || b == 0)

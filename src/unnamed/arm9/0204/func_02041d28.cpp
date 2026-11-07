@@ -7,7 +7,7 @@ extern "C" {
 extern int func_020658c0(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02041b24(FileShareParentArea *area, FileShareNode *node);
 
-extern int data_02082158;
+extern char data_02082158[];
 
 /* A node has finished loading (func_02042254). The children that asked for it
    while it was loading become owed a reply. If no child holds it yet, it is
@@ -29,7 +29,7 @@ void func_02041d28(char *r7, FileShareNode *node, int) {
         if (node->mRefCount <= 0) {
             unsigned int diff = FILE_SHARE_EXTENT(node)->bottom - FILE_SHARE_EXTENT(node)->top;
             int fileId = node->mFileId;
-            func_020658c0(node->mRegion, fileId, &data_02082158,
+            func_020658c0(node->mRegion, fileId, data_02082158,
                           (diff <= 0x400) ? (int)node->mPages[0] : 0, diff, 0);
             func_02041b24((FileShareParentArea *)r7, node);
         }

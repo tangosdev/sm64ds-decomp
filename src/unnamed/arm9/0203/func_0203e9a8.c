@@ -1,6 +1,6 @@
 #include "types.h"
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern char data_020a0fb8[];
+extern u8 data_020a0fb8[];
 extern int data_020a0f70;
 
 /* The parent state callback func_0203e20c installs
