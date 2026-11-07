@@ -11,7 +11,7 @@
  * dBgCh_Actr::SetWaterTrackFlag is the call
  * that ORs 0x4000 into dBgCh_Actr::mFlags; inlining the or deletes the call.
  * func_02012694 plays bank 3 at mCamSpacePos. It is not Sound::PlayBank3
- * (that body is 0x02012664). func_0200d8c8 shakes the camera.
+ * (that body is 0x02012664). dCamera_c::func_0200d8c8 shakes the camera.
  * func_ov002_020db54c launches the grabbed player; func_ov002_020db5f4
  * starts the hold state. func_ov102_0214b384 arms a bob-omb fuse;
  * func_ov102_0214ad14 makes it chase. GetHealth in func_ov078_02123f1c is
@@ -186,7 +186,6 @@ extern void func_0200fa8c(void *c, int a);
 extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_0200d8c8(void* cam, void* v, int strength);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
@@ -1432,7 +1431,7 @@ int daBombking_c::func_ov078_02125bc8() {
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daBombking_c19func_ov078_02125c24Ei
 void daBombking_c::func_ov078_02125c24(int strength) {
-    func_0200d8c8(data_0209f318, &this->mPosX, strength);
+    data_0209f318->func_0200d8c8(&mPos, strength);
 }
 
 /* -------------------------------------------------------------------------- */

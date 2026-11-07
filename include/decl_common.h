@@ -824,9 +824,6 @@ extern void MI_SendGXCommand(int, int, int);
 extern void Vec3fSetDistAndAngle(struct Vector3 *, const struct Vector3 *, int, short, short);
 extern void Vec3fGetDistAndAngle(const struct Vector3 *, const struct Vector3 *, int *, short *,
                                  short *);
-extern void func_0200ca14(void*, unsigned char, int);
-extern void func_0200d1e4(char*);
-extern void func_0200d858(void*, const struct Vector3*);
 extern void func_0200f13c(void);
 extern void func_0200f220(void);
 extern void func_0200f2cc(void);

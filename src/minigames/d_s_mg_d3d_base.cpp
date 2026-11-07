@@ -68,8 +68,6 @@ void  DecompressLZ16(void *src, void *dst);
  * 16 bytes. Keep it wide. */
 u32 LoadCompressedFileAt(int fileID, void *target);
 void  Ov004_Deallocate(void *x);
-struct dCamera_c;
-void  Camera_UpdateMatrices(dCamera_c *camera);
 
 /* Defined below. */
 void D3D_InitDualScreen(void);
@@ -337,9 +335,9 @@ int dScMgD3DBase_c::OnGraphCallback2()
             mDrawSubScreen = 1;
         else
             mDrawSubScreen = 0;
-        int cameraAddress = (int)&mCameras[mDrawSubScreen];
-        sMgCurCamera = cameraAddress;
-        Camera_UpdateMatrices((dCamera_c *)cameraAddress);
+        MgCamera *camera = &mCameras[mDrawSubScreen];
+        sMgCurCamera = (int)camera;
+        Camera_UpdateMatrices(camera);
         if (mDrawSubScreen == 1) {
             D3D_CaptureToSub();
         } else {

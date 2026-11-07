@@ -139,10 +139,6 @@ extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationZ(void *m, int angle);
 extern void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
-
-/* A sibling inside this TU whose file-local decl spelling decl_common.h does
-   not already pin. */
-extern int func_0200d0ac(int a, unsigned int b);
 }
 
 /* Opaque camera-side records used by the older handlers. Ground and line
@@ -247,7 +243,7 @@ int dCamera_c::InitResources()
     ChangeState((State *)&data_0209b008);
     func_0200cf40();
     if (StartWithFarCamera() != 0)
-        func_0200d0ac((int)this, data_0209f250);
+        func_0200d0ac(data_0209f250);
     return this->Render();
 }
 
@@ -528,48 +524,58 @@ void dCamera_c::func_0200d954(short arg) {
     mInvCosFov = func_02053200(data_02082214[j + 1]);
     data_0209f43c.Func_020156DC(mAspect, arg, mNear, mFar);
 }
+}
 
-// @symbol func_0200d8c8
-/* Ground-pound jitter: if the target point is within range, raise mShakeY
- * to strength/distance scaled by 0x9000, clamped to 0xc000. */
-void func_0200d8c8(struct dCamera_c *cam, const struct Vector3 *v, int strength) {
+// @symbol _ZN9dCamera_c13func_0200d8c8EPK7Vector3i
+/* Shake from a point (landings, bonks, ground pounds, boss steps): if the
+ * point is within strength of pos, raise mShakeY to strength/distance scaled
+ * by 0x9000, clamped to 0xc000.
+ * Super Mario 64's set_pitch_shake_from_point is the likely counterpart: a
+ * shake from a point that only reaches the camera within a maximum distance,
+ * and only ever raises the current shake. The bodies differ, so the address
+ * name stays. Here strength is that distance and the amount grows as the
+ * point comes closer; there is no magnitude, decay or phase step, and the
+ * shake is mShakeY's vertical offset rather than a pitch magnitude. */
+void dCamera_c::func_0200d8c8(const Vector3 *v, int strength) {
     Fix12i dist;
     Fix12i offset;
 
-    dist = Vec3_Dist(&cam->pos, v);
+    dist = Vec3_Dist(&pos, v);
     if (strength <= dist)
         return;
 
     offset = FX_MUL(cstd::fdiv(strength, dist), 0x9000);
 
-    if (offset <= cam->mShakeY)
+    if (offset <= mShakeY)
         return;
 
     if (offset > 0xc000)
         offset = 0xc000;
 
-    cam->mShakeY = offset;
+    mShakeY = offset;
 }
 
-// @symbol SetFovShake
-/* Super Mario 64's set_fov_shake: a shake only replaces a weaker one. The
-   N64 keeps its shake in the global sFOVState; here it is the camera's. */
-void SetFovShake(char *c, int amplitude, int decay, int phaseStep) {
+// @symbol _ZN9dCamera_c11SetFovShakeEiii
+/* Super Mario 64's set_fov_shake: a stronger shake replaces the current one
+ * together with its decay and phase step; a weaker one is ignored. */
+void dCamera_c::SetFovShake(int amplitude, int decay, int shakeSpeed) {
     short ip;
 
-    struct dCamera_c *cam = (struct dCamera_c *)c;
-    ip = cam->mFovShake;
+    ip = mFovShake;
     if (amplitude > ip) {
-        cam->mFovShake = (short)amplitude;
-        cam->mFovShakeDecay = (short)decay;
-        cam->mFovShakePhaseStep = (short)phaseStep;
+        mFovShake = (short)amplitude;
+        mFovShakeDecay = (short)decay;
+        mFovShakePhaseStep = (short)shakeSpeed;
     }
 }
 
 // @symbol _ZN9dCamera_c13func_0200d89cEv
+/* Starts the roll shake (mRollShake 0x180). Super Mario 64's
+ * set_camera_roll_shake is the candidate, but that takes a magnitude, decay
+ * and phase step and only raises the shake; this one sets a fixed magnitude
+ * unconditionally, so the address name stays. */
 void dCamera_c::func_0200d89c() {
     mRollShake = 384;
-}
 }
 
 // @symbol _ZNK9dCamera_c12IsUnderwaterEv
@@ -580,14 +586,14 @@ int dCamera_c::IsUnderwater() const
     return mFlags & 1;
 }
 
-extern "C" {
-// @symbol func_0200d858
-void func_0200d858(void *self, const struct Vector3 *offset)
-{
-    struct dCamera_c *cam = (struct dCamera_c *)self;
-    AddVec3(&cam->lookAt, (void *)offset, &cam->lookAt);
-    AddVec3(&cam->pos, (void *)offset, &cam->pos);
-}
+// @symbol _ZN9dCamera_c13func_0200d858EPK7Vector3
+/* Moves lookAt and pos by the same offset. Its one caller is the endless
+ * stairs warp, where Super Mario 64 calls warp_camera; that also moves
+ * Lakitu's goal and transition points and Mario's water level, so the
+ * address name stays. */
+void dCamera_c::func_0200d858(const Vector3 *offset) {
+    AddVec3(&lookAt, (void *)offset, &lookAt);
+    AddVec3(&pos, (void *)offset, &pos);
 }
 
 // @symbol _ZN9dCamera_c13func_0200d81cEi
@@ -689,22 +695,19 @@ void dCamera_c::func_0200d508(unsigned char playerID) {
         return;
     ChangeState((dCamera_c::State *)&data_0209b0a8);
 }
-extern "C" {
 
-// @symbol func_0200d4b0
-void func_0200d4b0(char* self, unsigned int playerID, int arg2)
-{
+// @symbol _ZN9dCamera_c13func_0200d4b0Eji
+void dCamera_c::func_0200d4b0(unsigned int playerID, int arg2) {
     unsigned char tmp = data_0209f250;
     if (playerID == tmp)
     {
         volatile int dummy;
         struct dActor_c *other;
-        ((struct dCamera_c *)self)->mOrbitTargetYaw = ((struct dCamera_c *)self)->mAngleY;
-        other = ((struct dCamera_c *)self)->mTargetPlayer;
+        mOrbitTargetYaw = mAngleY;
+        other = mTargetPlayer;
         other->mFlags |= 0x20000000;
         StartDanceCutscene(arg2);
     }
-}
 }
 
 // @symbol _ZN9dCamera_c13func_0200d474Eh
@@ -754,12 +757,9 @@ void dCamera_c::GoBehindPlayer(unsigned int j)
     ChangeState((State *)&data_0209b0e8);
 }
 
-extern "C" {
-// @symbol func_0200d1e4
-void func_0200d1e4(char *self)
-{
-    struct dCamera_c *cam = (struct dCamera_c *)self;
-    struct dActor_c *info = cam->mTargetPlayer;
+// @symbol _ZN9dCamera_c13func_0200d1e4Ev
+void dCamera_c::func_0200d1e4() {
+    struct dActor_c *info = mTargetPlayer;
     Vector3 *base = &info->mPos;
     int v1;
     unsigned int r0;
@@ -771,44 +771,43 @@ void func_0200d1e4(char *self)
     unsigned int r0b;
     s32 temp2[3];
 
-    cam->mTargetPos.x = base->x;
-    cam->mTargetPos.y = base->y;
-    cam->mTargetPos.z = base->z;
+    mTargetPos.x = base->x;
+    mTargetPos.y = base->y;
+    mTargetPos.z = base->z;
 
-    v1 = cam->mMode->lookAtDist;
-    r0 = cam->func_020093f4(v1);
+    v1 = mMode->lookAtDist;
+    r0 = func_020093f4(v1);
 
     temp1[0] = data_02086f2c.x;
     temp1[1] = data_02086f2c.y;
     temp1[2] = r0;
     data_02086f2c.z = r0;
 
-    angle = cam->mTargetPlayer->mAngleY;
-    Vec3_RotateYAndTranslate(&cam->lookAt, &cam->mTargetPos, angle, temp1);
+    angle = mTargetPlayer->mAngleY;
+    Vec3_RotateYAndTranslate(&lookAt, &mTargetPos, angle, temp1);
 
-    v2 = cam->mMode->lookAtHeight;
-    dResult = cam->func_020093d4(v2);
-    cam->lookAt.y += dResult;
+    v2 = mMode->lookAtHeight;
+    dResult = func_020093d4(v2);
+    lookAt.y += dResult;
 
-    v3 = cam->mMode->posDist;
-    r0b = cam->func_020093f4(v3);
+    v3 = mMode->posDist;
+    r0b = func_020093f4(v3);
 
     data_02086f14[2] = r0b;
     temp2[0] = data_02086f14[0];
     temp2[1] = data_02086f14[1];
     temp2[2] = r0b;
 
-    angle = cam->mTargetPlayer->mAngleY;
-    Vec3_RotateYAndTranslate(&cam->pos, &cam->lookAt, angle, temp2);
+    angle = mTargetPlayer->mAngleY;
+    Vec3_RotateYAndTranslate(&pos, &lookAt, angle, temp2);
 
-    cam->pos.y += (int)(dResult - 0x8b000);
+    pos.y += (int)(dResult - 0x8b000);
 
-    cam->mLookAtOffset.x = 0;
-    cam->mLookAtOffset.y = 0xc3f9d;
-    cam->mLookAtOffset.z = 0;
+    mLookAtOffset.x = 0;
+    mLookAtOffset.y = 0xc3f9d;
+    mLookAtOffset.z = 0;
 
-    ChangeArea(cam->mTargetPlayer->mAreaId);
-}
+    ChangeArea(mTargetPlayer->mAreaId);
 }
 
 // @symbol _ZN9dCamera_c10LookAtExitER8dActor_c
@@ -840,32 +839,30 @@ void dCamera_c::func_0200d10c(unsigned char playerID) {
     ChangeState((dCamera_c::State *)&data_0209b128);
 }
 
-extern "C" {
-// @symbol func_0200d0ac
-int func_0200d0ac(int a, unsigned int b) {
-    if (b == data_0209f250) {
-        unsigned short v = ((struct dCamera_c *)a)->mAreaMode->flags;
+// @symbol _ZN9dCamera_c13func_0200d0acEj
+int dCamera_c::func_0200d0ac(unsigned int playerID) {
+    if (playerID == data_0209f250) {
+        unsigned short v = mAreaMode->flags;
         if (v & 1) {
             return 0;
         }
-        ((struct dCamera_c *)a)->mFlags |= 2u;
+        mFlags |= 2u;
         func_02012790(7);
     }
     return 1;
 }
 
-// @symbol func_0200d064
-void func_0200d064(void *param_1, unsigned char param_2) {
+// @symbol _ZN9dCamera_c13func_0200d064Eh
+void dCamera_c::func_0200d064(unsigned char playerID) {
     unsigned char tmp = data_0209f250;
-    if (param_2 == tmp) {
+    if (playerID == tmp) {
         volatile int dummy;
-        unsigned int *addr = &((struct dCamera_c *)param_1)->mFlags;
+        unsigned int *addr = &mFlags;
         unsigned int val = *addr;
         val &= ~2u;
         *addr = val;
         func_02012790(6);
     }
-}
 }
 
 // @symbol _ZN9dCamera_c9SetFlag_3Ev
@@ -1120,19 +1117,16 @@ int dCamera_c::func_0200ca50() {
     return r5;
 }
 
-#pragma cplusplus off
-// @symbol func_0200ca14
-void func_0200ca14(void *r0, unsigned char r1, int r2)
-{
-    if (r1 != (unsigned int)data_0209f250)
+// @symbol _ZN9dCamera_c13func_0200ca14Ehi
+void dCamera_c::func_0200ca14(unsigned char playerID, int r2) {
+    if (playerID != (unsigned int)data_0209f250)
         return;
 
     if (r2 == 0)
-        ((struct dCamera_c *)r0)->mFlags |= 0x20000;
+        mFlags |= 0x20000;
     else
-        ((struct dCamera_c *)r0)->mFlags |= 0x10000;
+        mFlags |= 0x10000;
 }
-#pragma cplusplus on
 
 // @symbol _ZN9dCamera_c13func_0200c9e0EPiS0_
 void dCamera_c::func_0200c9e0(s32 *r1, s32 *r2) {
@@ -3895,7 +3889,7 @@ int func_02007870(dCamera_c *cam, u8 *data) {
     int v1 = (int)ReadUnalignedShort(data);
     int v2 = (int)ReadUnalignedShort(data + 2);
     int v3 = (int)ReadUnalignedShort(data + 4);
-    SetFovShake((char *)cam, v1, v2, v3);
+    cam->SetFovShake(v1, v2, v3);
     return 1;
 }
 

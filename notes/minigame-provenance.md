@@ -150,24 +150,23 @@ on the offset: this class's D1 and D0 both destroy it
 initialises it, BeforeBehavior updates it conditionally. Its type is the one
 shared definition in include/Particle__SysTracker.h, which dScStage_c.h also uses.
 
-**0x4700..0x4718** (seven fields) were split out of the former `pad_4660[0xbc]`:
+**0x4660..0x471c** is one `MgCamera` (include/MgCamera.h), named `mCamera`.
 dScMgRoulette_c's Render (_ZN15dScMgRoulette_c6RenderEv, in src/minigames/d_s_mg_roulette_methods.cpp) and dScMg3DEsp_c's Render
-(_ZN12dScMg3DEsp_c6RenderEv, in src/minigames/d_mg3d_esp_anim_set.cpp) both write those exact offsets, so they belong to
-this class, not either leaf. The camera angle at 0x4718 comes from
-Camera_UpdateMatrices (see the camera section below); 0x471a..0x471b has no
-matched access and stays padding.
+(_ZN12dScMg3DEsp_c6RenderEv, in src/minigames/d_mg3d_esp_anim_set.cpp) both write 0x4700, 0x470c and 0x4718
+and then pass the head of the block to Camera_UpdateMatrices, so the camera belongs to
+this class, not either leaf. See the camera section below for the type.
 
-**Their comments deliberately avoid the usual `/* 0xNN */` style.**
+**Its comment deliberately avoids the usual `/* 0xNN */` style.**
 tools/check_header_offsets.py's `DATA_SIZE` precompute walks a struct's commented
 fields by regex to find where a derived class's fields start, and that regex
-cannot parse the namespaced `Particle::SysTracker mSysTracker` a few lines down
--- it silently stops at the last field it CAN parse. Before these seven fields
-existed nothing in the struct matched the regex at all, so every dependent
-derived header correctly fell back to the asserted `sizeof`. Giving the seven
-the usual hex-comment style made the regex succeed partway and stop there,
-undercounting every derived class's field offsets by nearly the whole SysTracker
-member -- measured on dScMgRoulette_c.h, 22/22 fields "mismatched" by exactly
-that delta. **Do not restyle those seven comments.**
+cannot parse the namespaced `Particle::SysTracker mSysTracker` on the next line
+-- it silently stops at the last field it CAN parse. When nothing in the struct
+matches the regex, every dependent derived header correctly falls back to the
+asserted `sizeof`. Giving the camera fields the usual hex-comment style made
+the regex succeed partway and stop there, undercounting every derived class's
+field offsets by nearly the whole SysTracker member -- measured on
+dScMgRoulette_c.h, 22/22 fields "mismatched" by exactly that delta. **Do not
+restyle the `offset 0x4660` comment.**
 
 **The destructor must stay defined inline.** Same fix and reason as
 `dScene_c.h`'s note: 13 direct children each inline this destructor's vptr store
@@ -558,46 +557,59 @@ banner-blink logic).
 ## The minigame camera, and the base fields it explains
 
 `Camera_UpdateMatrices` (in `src/minigames/unit020bfec0.cpp`) is the [ov006](../config/arm9/overlays/ov006/symbols.txt) routine every 3D minigame scene
-calls once a frame, and the local struct it already carries is the whole story:
+calls once a frame. The 0xbc-byte record it works on is `MgCamera`, defined once
+in `include/MgCamera.h`:
 
 ```cpp
-struct dCamera_c {           /* 0xbc */
-    Matrix4x3 viewMat;    /* 0x00 */
-    char      pad30[0x30];
-    Matrix4x3 projMat;    /* 0x60 */
-    char      pad90[0x10];
-    Vector3   eye;        /* 0xa0 */
-    Vector3   target;     /* 0xac */
-    short     angle;      /* 0xb8 */
+struct MgCamera {
+    MgCamera() {}
+    MtxFx43 mViewMtx;    /* 0x00 */
+    u8 pad_30[0x30];     /* 0x30 */
+    fx32 mProjMtx[4][4]; /* 0x60 */
+    VecFx32 mLookAt;     /* 0xa0 */
+    VecFx32 mPos;        /* 0xac */
+    s16 mFovAngle;       /* 0xb8 */
+    u8 pad_ba[0x2];      /* 0xba */
 };
 ```
 
-It computes the view direction as `eye - target`, so which vector is which is
-settled rather than assumed. (This is NOT `include/dCamera_c.h`'s `dCamera_c`, the
-0x1a8-byte gameplay camera whose `lookAt`/`pos` sit at 0x80/0x8c. Two different
-types, one English word.)
+**The name is coined.** The ROM has no typeinfo, vtable or out-of-line member
+for it, so nothing carries a name. It is NOT `include/dCamera_c.h`'s `dCamera_c`,
+the 0x1a8-byte gameplay camera whose `lookAt`/`pos` sit at 0x80/0x8c. Two
+different types, one English word; the per-file `struct dCamera_c` shadows that
+used to describe this record are retired.
 
-**dScMgSingle3DBase_c** embeds one at 0x4660. Three readings agree:
+**Which vector is which comes from `G3i::LookAt_`.** Camera_UpdateMatrices passes
++0xac as LookAt_'s camera position and +0xa0 as its target, so 0xac is `mPos`
+and 0xa0 is `mLookAt`. The earlier shadow had them the other way round (it called
+0xa0 the eye). The same routine passes +0x60 to `PerspectiveW_`, which writes all
+sixteen words of `mProjMtx`, and +0x00 to LookAt_ as the output and to
+`CopyToViewMat`, so `mViewMtx` is the view matrix. `Camera_ProjectToScreen`
+transforms by +0x00 as well. +0xb8 is read with `ldrsh`, and `>>4` of it indexes
+the sine/cosine table and feeds `dClipper::Func_020156DC`, so it is a field-of-view
+angle. 0x30..0x5f and 0xba..0xbb have no matched access and stay padding.
+
+**The members are SDK types, and the constructor is real.** The tree's `Vector3`
+declares a constructor and destructor, and `Matrix4x3` contains a `Vector3`.
+Either one gives MgCamera a non-trivial destructor, and the D3D scenes' array then
+emits `__cxa_vec_cleanup` and an out-of-line constructor, which the ROM does not
+have. `VecFx32` and `MtxFx43` from `nitro/fx/fx.h` are POD. The four D3D
+factories each run an empty loop that steps 0xbc twice. That loop is what an array
+of a class with an empty inline constructor and no destructor compiles to, so
+MgCamera has one. Camera_UpdateMatrices still casts to `Vector3 *` and
+`Matrix4x3 *` where its callees are declared with the game types.
+
+**dScMgSingle3DBase_c** embeds one at 0x4660 (`mCamera`). Three readings agree:
 `dScMgRoulette_c::Render` and `dScMg3DEsp_c::Render` both call
-`Camera_UpdateMatrices(this + 0x4660)` immediately after writing 0x4700,
+`Camera_UpdateMatrices` on the base's camera immediately after writing 0x4700,
 0x470c and 0x4718, which are +0xa0, +0xac and +0xb8 of that object; and
-`0x4660 + 0xbc = 0x471c`, exactly where `mSysTracker` begins. So the seven
-fields the previous round split out of `pad_4660` are that camera's `eye`,
-`target` and `angle`, and they are named `mCameraEyeX/Y/Z`,
-`mCameraTargetX/Y/Z` and `mCameraAngle`.
+`0x4660 + 0xbc = 0x471c`, exactly where `mSysTracker` begins. The scenes pass
+`&mCamera` to the Camera_* routines.
 
-**dScMgD3DBase_c** embeds two, at 0x466c and 0x4728. Its header had already
-established the 0xbc stride from all four factories' construction loops and
-noticed that 0x470c..0x4724 and 0x47c8..0x47e0 are "the SAME seven offsets
-within each element"; `dScMgJump_c::InitResources` names the two element bases
-outright by calling `Camera_UpdateMatrices(this + 0x466c)` and
-`Camera_UpdateMatrices(this + 0x4728)`. The fourteen fields become
-`mCamera0EyeX/Y/Z`, `mCamera0TargetX/Y/Z`, `mCamera0Angle` and the same six
-plus one for camera 1.
-
-Both blocks stay flat scalars rather than becoming a real `Vector3` or a real
-`dCamera_c[2]`, for the reason dScMgD3DBase_c.h already gives: eight files spell
-them this way, and typing them is its own change with its own blast radius.
+**dScMgD3DBase_c** embeds two, at 0x466c and 0x4728 (`mCameras[2]`, main screen
+then sub screen). All four factories' construction loops give the 0xbc stride,
+and `dScMgJump_c::InitResources` names the two element bases outright by calling
+`Camera_UpdateMatrices` on 0x466c and on 0x4728.
 
 ## dScMgBase_c field names
 
@@ -624,7 +636,7 @@ kind, but nothing in scope increments it), 0x0b8, 0x0c8, 0x0f0, 0x05c,
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x53d6 | `mSelectedTile` | Render draws the cursor sprite at [sRouletteTiles](../config/arm9/overlays/ov006/symbols.txt)`[n]` / [_02142ab8](../config/arm9/overlays/ov006/symbols.txt)`[n]` (the tile coordinate tables, stride 8); Behavior hands the same value to `RouletteRacer_GetPayout` (part of:[d_s_mg_roulette_methods.cpp](../src/minigames/d_s_mg_roulette_methods.cpp), func 21 used to assemble TU) once per racer to score the board. |
-| 0x53e4 | `mCameraPreset` | Render copies row `n` of [data_ov006_0213e34c](../config/arm9/overlays/ov006/symbols.txt) and [_0213e370](../config/arm9/overlays/ov006/symbols.txt) (stride 0xc) into the base's `mCameraTarget` and `mCameraEye`, takes the angle from [data_ov006_0213e2e0](../config/arm9/overlays/ov006/symbols.txt) + n*2, and then calls `Camera_UpdateMatrices`. 0 leaves the camera alone. Behavior sets it to 1 as the deal starts and clears it at the end. |
+| 0x53e4 | `mCameraPreset` | Render copies row `n` of [data_ov006_0213e34c](../config/arm9/overlays/ov006/symbols.txt) and [_0213e370](../config/arm9/overlays/ov006/symbols.txt) (stride 0xc) into the base camera's `mPos` and `mLookAt`, takes the angle from [data_ov006_0213e2e0](../config/arm9/overlays/ov006/symbols.txt) + n*2, and then calls `Camera_UpdateMatrices`. 0 leaves the camera alone. Behavior sets it to 1 as the deal starts and clears it at the end. |
 | 0x53e6 | `mPhase` | Behavior's `switch`: 1 deals the racers out one at a time, 2 runs the countdown and reads the board, 3 pays out per landed tile, 4 announces win/lose/draw. _ZN15dScMgRoulette_c10StartRoundEi (in src/minigames/d_s_mg_roulette_methods.cpp) starts it at 1. |
 | 0x53e8 | `mPhaseTimer` | Counted down in every phase and reloaded on each transition (8, 0x258, 1, 0x5a); Render also renders the countdown digits from it while `mPhase == 2`. |
 | 0x53f2 | `mScore` | Phase 3 sums each racer's payout into it and phase 4 compares it against `mTargetScore` to pick the win, lose or draw banner. Zeroed by the reset. |
