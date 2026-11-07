@@ -65,7 +65,7 @@ void Vec2_Sub(int* out, int* a, int* b);
 int  func_0203d5dc(void* a, void* b);
 void Mg_CommitRecords(void);
 void Mg_SubmitScore(int score);
-void LoadCard2SubBg3(void* c);
+void LoadCard2SubBg3(void *);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);
 void Dealer_Draw(void* t);

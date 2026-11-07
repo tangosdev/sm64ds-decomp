@@ -89,7 +89,7 @@ extern void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *co
 extern void MgCoins_Reset(void);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern void LoadCard2SubBg3(char *);
+extern void LoadCard2SubBg3(void *);
 extern void *LoadFile(int);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, void *);
