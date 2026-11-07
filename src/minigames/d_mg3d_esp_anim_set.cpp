@@ -20,9 +20,6 @@
  *   cards through EspAt5000 and FlashSync keeps the raw this+0x5034.
  * - Ent_8e10 stands in for a card sprite's part record; RenderCards walks
  *   the list until f6 is 0xffff.
- * - Obj_777c is a vtable shim so AnimSet::Render can virtual-call the
- *   dExtAnmModel_c method that takes a void* argument; naming the real slot
- *   needs the dExtAnmModel_c vtable recovered.
  * - dMg3DEspModel_c's unk_000..unk_008 are set by its constructor
  *   (0x8c000, 0x8c000, 0) and read nowhere in this unit, so they stay
  *   unnamed.
@@ -149,13 +146,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
 
-struct Obj_777c {
-    void* vt;
-    virtual void v0(); virtual void v1(); virtual void v2();
-    virtual void v3(); virtual void v4();
-    virtual void m(void* arg);
-};
-
 // @symbol _ZN17dMg3DEspAnimSet_c6RenderEv
 void dMg3DEspAnimSet_c::Render()
 {
@@ -173,7 +163,7 @@ void dMg3DEspAnimSet_c::Render()
         if (mActive[i] != 0) {
             ((dExtAnmModel_c *)r5)->mat4x3 = data_020a0e68;
             ((dExtAnmMaterial_c *)r4)->Update(*(ModelComponents *)(r5 + 8));
-            ((Obj_777c*)r5)->m(zero);
+            ((dExtAnmModel_c *)r5)->Render((const Vector3 *)zero);
         }
         i++;
         r5 += 0x64;
