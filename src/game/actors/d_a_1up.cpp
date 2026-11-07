@@ -215,8 +215,8 @@ da1up_c::~da1up_c()
 // @symbol _ZN7da1up_c19func_ov002_020aeee4Ev
 /* Trail effect: asks Particle::System::New for one effect at the mushroom's
    position, 30 units (0x1e000) above it. The effect id is 0x108 for the Mega
-   Mushroom (actorID 277) and 0 for the 1-Up. The previous frame's handle is read
-   back through a volatile pointer and the new one stored in mParticleID. While
+   Mushroom (actorID 277) and 0 for the 1-Up. The previous frame's handle is passed
+   back in and the new one stored in mParticleID. While
    the actor is off screen (mFlags bit 3) it only runs when CURRENT_GAMEMODE
    (data_0209f2d8) is 1. */
 void da1up_c::func_ov002_020aeee4() {
@@ -232,14 +232,9 @@ void da1up_c::func_ov002_020aeee4() {
         if (t3 == false) return;
     }
 
-    Vector3 pos;
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    Vector3 pos = mPos;
     pos.y += 0x1e000;
-    volatile Vector3* vp = &pos;
-    mParticleID = Particle::System::New(*(volatile unsigned int *)&mParticleID, effectID, vp->x,
-                                        vp->y, pos.z, 0, 0);
+    mParticleID = Particle::System::New(mParticleID, effectID, pos.x, pos.y, pos.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -907,16 +902,14 @@ void da1up_c::func_ov002_020afc68() {
    (-0x4000) and goes to state 1. State 1: func_ov002_020afc68. State 2: the
    expiry countdown (30 frames, then 40 blinking, then removed). Every frame ends with the touch check and the trail effect. */
 void da1up_c::func_ov002_020afd10() {
-
-    volatile Fix12i v[3];
-
     if (mState != 0) {
-        v[0] = mSpeedX;
-        v[1] = mVertSpeed;
-        v[2] = mSpeedZ;
+        Vector3 speed;
+        speed.x = mSpeedX;
+        speed.y = mVertSpeed;
+        speed.z = mSpeedZ;
         func_ov002_020aefb8();
-        mSpeedX = v[0];
-        mSpeedZ = v[2];
+        mSpeedX = speed.x;
+        mSpeedZ = speed.z;
     }
 
     switch (mState) {
