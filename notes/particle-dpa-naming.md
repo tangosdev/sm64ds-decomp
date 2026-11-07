@@ -62,6 +62,73 @@ our 0x02021a04 run almost line for line:
 under the id `entry()` returned; that is exactly what `System::New(uniqueID, ...)`
 callers do.
 
+## Kept-alive vs fire-and-forget effects
+
+There are two ways to spawn an effect:
+
+- **Level emitter, `System::New(uniqueID, effect, x, y, z, dir, callback)`.**
+  The caller stores the returned id and passes it back every frame. A live id
+  makes `New` set `mStatus = 1` (the `FromUniqueID` hit in
+  `src/engine/particle/Particle.cpp`). Once per frame, `level_c::execute()`
+  clears `mStatus` on every slot that was renewed and cuts every slot that was
+  not. A cut runs `cutTable` -> `emitter_c::cleanup`, which restores the
+  definition's callback word, sets bit 0 of the emitter's `callbackFlags` and
+  frees the slot. The effect lasts as long as the actor keeps asking, and stops
+  the first frame it does not. Examples: waterfall mist, Bullet Bill smoke, the
+  1-Up trail, the tornado, weather.
+- **Fire-and-forget, `NewSimple(effect, x, y, z)`.** Goes straight to
+  `Particle::Manager::AddSystem` with no slot. The effect runs for the lifetime
+  its definition carries and ends by itself. Examples: break puffs, the item
+  vanish sparkle, landing dust.
+
+The ROM's SPA table agrees. Each definition has an emitter lifetime, where 0
+means "emit forever" (`tools/spa_dump.py`, `emitterLifetime`). The table below
+crosses that lifetime with the spawn style of every literal effect id that
+`tools/particle_id_sites.py` finds in `src/`. "System::New" includes the
+`New*` callback wrappers.
+
+| ROM emitter lifetime | Spawned with | IDs |
+|---|---|---|
+| forever (140 in the table) | `System::New` only | 94 |
+| timed (181 in the table) | `NewSimple` only | 134 |
+| timed | `System::New` only | 28 |
+| timed | both | 4 |
+
+No forever effect is ever passed to `NewSimple`: an untracked emitter with no
+end would never stop. The other 46 forever ids have no literal site, so they
+are probably reached through computed ids.
+
+The 32 timed ids that go through `System::New` are not kept alive in practice.
+26 of them have a 1-frame emitter: one-burst hits and sparks (`kPtclAttackHit*`,
+`kPtclWarioAttackHit*`, `kPtclTongueHit*`, `kPtclCannonShot*`,
+`kPtclMgSnowballHit*`). Five go through a water callback wrapper
+(`kPtclMegaWaterEntry*`, `kPtclMegaSplash`, `kPtclHeavyStepRipple`,
+`kPtclShallowWaterLand`). `NewSimple` has no direction or callback parameter,
+which is the likely reason these use `New`, but that has not been checked
+call by call.
+
+The per-id lifetime ("forever" / "emitter Nf") is the last column of
+`notes/particle-ids.md`.
+
+Open: what `callbackFlags` bit 0 does to the emitter. The likely reading is
+"stop emitting and let the live particles fade" rather than "delete now". That
+is a reading of the code and has not been watched in melonDS, so don't name the
+bit until it has.
+
+Reproduce the counts (cwd = repo root):
+
+```python
+import sys, collections; sys.path.insert(0, 'tools')
+import spa_dump as S, particle_id_sites as P
+t = S.parse(open('extracted/arm9_dec.bin', 'rb').read())
+forever = {d['id']: d['decoded']['emitterLifetime'] == 0 for d in t['definitions']}
+by = collections.defaultdict(set)
+for s in P.scan('src'):
+    by[s['id']].add('simple' if s['via'] == 'NewSimple' else 'tracked')
+print(collections.Counter(('forever' if forever[i] else 'timed', '+'.join(sorted(v)))
+                          for i, v in by.items() if i in forever))
+```
+
 ## Renames, by evidence tier
 
 Done (branch `names/particle-dpa-level`):
