@@ -301,15 +301,15 @@ int daRedBombhei_c::func_ov084_0212ccb4()
     dCamera_c *cam = data_0209f318;
     int posDone;
     Vector3 lookAt;
-    Vector3 *camLookAt = &cam->lookAt;
-    Vector3 *camPos = &cam->pos;
     Vector3 pos;
-    lookAt.x = camLookAt->x;
-    lookAt.y = camLookAt->y;
-    lookAt.z = camLookAt->z;
-    pos.x = camPos->x;
-    pos.y = camPos->y;
-    pos.z = camPos->z;
+    {
+        const Vector3 &l = cam->lookAt;
+        lookAt = l;
+    }
+    {
+        const Vector3 &p = cam->pos;
+        pos = p;
+    }
     int lookAtDone = func_ov084_0212cda0(&lookAt, &this->mSavedCamLookAt);
     posDone = func_ov084_0212cda0(&pos, &this->mSavedCamPos);
     if ((this->mAngleX & 0xff) == kVariantCannonCut) {
@@ -340,52 +340,32 @@ int daRedBombhei_c::func_ov084_0212cae0()
     if (id != 0) {
         shutter = dActor_c::FindWithID(id);
         if (shutter != 0) {
-            lookAtDone = 0;
-            targetLookAt.x = lookAtDone;
+            targetLookAt.x = 0;
             targetLookAt.y = 0x80000;
             targetLookAt.z = -0xa000;
-            targetPos.x = lookAtDone;
+            targetPos.x = 0;
             targetPos.y = 0x200000;
             targetPos.z = 0xc8000;
-            offset.x = lookAtDone;
-            offset.y = lookAtDone;
-            offset.z = lookAtDone;
+            offset.x = 0;
+            offset.y = 0;
+            offset.z = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, shutter->mAngleY);
             MulVec3Mat4x3(&targetLookAt, &data_020a0e68, &offset);
             Vec3_Add(&sum, &shutter->mPos, &offset);
-            {
-                int dx = sum.x;
-                int dy = sum.y;
-                int z = lookAtDone;
-                *(volatile int *)&offset.x = z;
-                *(volatile int *)&targetLookAt.x = dx;
-                offset.y = z;
-                *(volatile int *)&targetLookAt.y = dy;
-                int dz = *(volatile int *)&sum.z;
-                offset.z = z;
-                targetLookAt.z = dz;
-            }
+            targetLookAt = sum;
+            offset.x = 0;
+            offset.y = 0;
+            offset.z = 0;
             MulVec3Mat4x3(&targetPos, &data_020a0e68, &offset);
             Vec3_Add(&sum2, &shutter->mPos, &offset);
+            targetPos = sum2;
             {
-                int ey = sum2.y;
-                int ex = sum2.x;
-                targetPos.y = ey;
-                int ez = sum2.z;
-                targetPos.x = ez ? ex : ex;
-                targetPos.z = ez;
+                const Vector3 &l = cam->lookAt;
+                lookAt = l;
             }
             {
-                int *camLookAt = (int *)(unsigned)&cam->lookAt;
-                lookAt.x = camLookAt[0];
-                {
-                    int *camPos = (int *)(unsigned)&cam->pos;
-                    lookAt.y = camLookAt[1];
-                    lookAt.z = camLookAt[2];
-                    pos.x = camPos[0];
-                    pos.y = camPos[1];
-                    pos.z = camPos[2];
-                }
+                const Vector3 &p = cam->pos;
+                pos = p;
             }
             lookAtDone = func_ov084_0212cda0(&lookAt, &targetLookAt);
             posDone = func_ov084_0212cda0(&pos, &targetPos);
