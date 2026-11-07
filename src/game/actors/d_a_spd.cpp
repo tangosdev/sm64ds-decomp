@@ -11,8 +11,8 @@
  * deslop leftovers:
  *  - The 25 state handlers/helpers keep func_ov071_* address names as member
  *    names; no original names are recovered. SetState was Scuttlebug_SetState.
- *  - Mtx43 stays plain words rather than Matrix4x3. The position
- *    temporaries are Vector3 (measured: same object as the old POD twin).
+ *  - The position temporaries are Vector3 (measured: same object as the old
+ *    POD twin).
  *  - The extern "C" preamble is hand-spelt: Fix12<int>/Vector3 parameters
  *    are written as plain words where the true types break the register
  *    convention, and the spelled mangled calls stay where the member
@@ -48,7 +48,6 @@ enum Scuttlebug_AssetId {
 
 /* Flat 0x30-byte matrix block, as func_ov071_0211f524 and the scratch matrix
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
-#include "private/mtx43.h"
 
 typedef void (daSpd_c::*PMF)();
 
@@ -83,7 +82,7 @@ typedef void BgchInitAt_(void *self, dActor_c *actor, int radius, int height, Ve
                          Vector3_16 *b);
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern Mtx43     data_020a0e68;           /* scratch matrix        */
+extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
 extern s16       data_02082214[];         /* sin/cos table         */
 
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
@@ -671,13 +670,13 @@ void daSpd_c::func_ov071_0211f524() {
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 
     if (mAngleX != 0) {
-        data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
+        data_020a0e68 = mAnmModel.mat4x3;
         int y1 = OnAimedAtWithEgg() >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
         int y2 = (-OnAimedAtWithEgg()) >> 3;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
+        mAnmModel.mat4x3 = data_020a0e68;
     }
 
     mShadowMtx[9] = mPosX >> 3;
