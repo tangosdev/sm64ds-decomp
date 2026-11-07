@@ -1568,7 +1568,8 @@ s32 dScMgSnowball_c::Behavior() {
             q = v * 0x2710 / mBallSize;
             mRollAngle += (u16)q;
             m = cstd::atan2(mVelX, mVelY);
-            ApproachLinear(mHeadingAngle, (short)m, (short)(Vec2_Len((const Vector2 *)&mVelX) / 16));
+            ApproachLinear(mHeadingAngle, (short)m,
+                           (short)(Vec2_Len((const Vector2 *)&mVelX) / 16));
         }
 
         if (mAllWater == 1 || mTimeLeft <= 0) {
