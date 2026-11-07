@@ -233,14 +233,14 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                 four BG offsets */
     s32   mTouchX;          /* 0xab70 -- last stylus sample */
     s32   mTouchY;          /* 0xab74 */
-    s16   mRollAngle;       /* 0xab78 -- += speed * 0x2710 / mBallSize */
+    s16 mRollAngle;         /* 0xab78 -- += speed * 0x2710 / mBallSize */
     s16 mAngleY;            /* 0xab7a -- Snowball_UpdateCamera's Y rotation of
                                 the ball, after Z (mHeadingAngle) and X
                                 (mRollAngle); ResetScene zeroes it */
-    s16   mHeadingAngle;    /* 0xab7c -- atan2 of the velocity */
-    s16   mPrevRollAngle;   /* 0xab7e -- Behavior copies 0xab78..0xab7c here */
+    s16 mHeadingAngle;      /* 0xab7c -- atan2 of the velocity */
+    s16 mPrevRollAngle;     /* 0xab7e -- Behavior copies 0xab78..0xab7c here */
     s16 mPrevAngleY;        /* 0xab80 -- Behavior's copy of mAngleY */
-    s16   mPrevHeadingAngle;/* 0xab82 */
+    s16 mPrevHeadingAngle;  /* 0xab82 */
     s32   mSpinAxis[3];     /* 0xab84 -- Vector3, seeded (0, 0x1000, 0) */
     s32   mSpinQuat[4];     /* 0xab90 -- Quaternion_FromVector3 of mSpinAxis */
     s32 mBallSize;          /* 0xaba0 -- grows with downhill (-Y) travel (see

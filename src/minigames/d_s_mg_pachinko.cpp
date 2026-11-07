@@ -325,14 +325,12 @@ dScMgPachinko_c::~dScMgPachinko_c()
 extern "C" {  /* .c-derived members: C linkage for everything below */
 
 // @symbol PachinkoDeco_DrawAll
-void PachinkoDeco_DrawAll(char *raw)
-{
+void PachinkoDeco_DrawAll(char *raw) {
     dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
     for (int i = 0; i < 3; i++) {
         if (self->mRow[i].visible != 0) {
             OAM::Render(false, (OamAttr *)sPachinkoDecoSprite, self->mRow[i].x >> 12,
-                        self->mRow[i].y >> 12, -1, -1, 0x1000, 0x1000,
-                        self->mRow[i].angle, -1);
+                        self->mRow[i].y >> 12, -1, -1, 0x1000, 0x1000, self->mRow[i].angle, -1);
         }
     }
 }
@@ -380,8 +378,7 @@ void PachinkoDeco_ShowAll(char *raw) {
 }
 
 // @symbol PachinkoDeco_HideAll
-void PachinkoDeco_HideAll(char *raw)
-{
+void PachinkoDeco_HideAll(char *raw) {
     dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
     int i;
     for (i = 0; i < 3; i++) {
@@ -435,8 +432,10 @@ void PachinkoBg_StateRiseIn(char *raw, int i) {
 
     self->mBg[i].x += self->mBg[i].vx;
     self->mBg[i].y += self->mBg[i].vy;
-    if (self->mBg[i].vx <= -0x2000) self->mBg[i].vx -= 0x100;
-    if (self->mBg[i].vy <= -0xc00) self->mBg[i].vy += 0x40;
+    if (self->mBg[i].vx <= -0x2000)
+        self->mBg[i].vx -= 0x100;
+    if (self->mBg[i].vy <= -0xc00)
+        self->mBg[i].vy += 0x40;
     x = self->mBg[i].x >> 12;
     y = self->mBg[i].y >> 12;
     if (y <= 0) {
@@ -510,8 +509,7 @@ void PachinkoTarget_DrawAll(char *raw)
     for (i = 0; i < 4; i++) {
         if (self->mTarget[i].visible != 0) {
             Mg_RenderSpriteBoth((void *)sPachinkoTargetSprites[self->mTarget[i].sprite],
-                                self->mTarget[i].x >> 0xc,
-                                self->mTarget[i].y >> 0xc, -1, 1);
+                                self->mTarget[i].x >> 0xc, self->mTarget[i].y >> 0xc, -1, 1);
         }
     }
 }
@@ -543,12 +541,13 @@ void PachinkoTarget_HideAll(char *raw)
 
 // @symbol PachinkoFlyer_Draw
 void PachinkoFlyer_Draw(char* raw){
-  dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
-  if (self->mFlyer[0].visible == 0) return;
-  int x = self->mFlyer[0].x;
-  int y = self->mFlyer[0].y;
-  Mg_RenderSpriteBoth((void *)sPachinkoFlyerSprites[self->mFlyer[0].facing], x >> 0xc,
-                      y >> 0xc, -1, -1);
+    dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
+    if (self->mFlyer[0].visible == 0)
+        return;
+    int x = self->mFlyer[0].x;
+    int y = self->mFlyer[0].y;
+    Mg_RenderSpriteBoth((void *)sPachinkoFlyerSprites[self->mFlyer[0].facing], x >> 0xc, y >> 0xc,
+                        -1, -1);
 }
 
 // @symbol PachinkoFlyer_CheckHits
@@ -923,7 +922,8 @@ void Pachinko_ClearAimLine(char* raw)
     if (dx > 6) return;
     if (dy < -6) return;
     if (dy > 6) return;
-    if (self->mShot[shotNo - 1].state != 2) return;
+    if (self->mShot[shotNo - 1].state != 2)
+        return;
 
     self->mAimShot = 0;
     {
@@ -941,8 +941,7 @@ void Pachinko_ClearAimLine(char* raw)
    4-byte line inside the tile, x the tile column and the nibble. The scene
    argument is never read.
    opt_loop_invariants stays off: the ROM keeps j on the stack and every spelling without these staged locals is a word short (0x7c of 0x80). */
-void Pachinko_PlotSubBg2Pixels(void *scene, int x, int y, int colour)
-{
+void Pachinko_PlotSubBg2Pixels(void *scene, int x, int y, int colour) {
     int i, j, py, line, tileY, lineOfs, rowTile, xb, x0;
     u32 *bp;
     x0 = x;
@@ -1483,7 +1482,8 @@ void PachinkoBall_AimAtTarget(char *base, int i) {
 // @symbol PachinkoBall_CheckFall
 void PachinkoBall_CheckFall(char *thiz, int idx) {
     dScMgPachinko_c *self = (dScMgPachinko_c *)thiz;
-    if (self->mBall[idx].fallPlayed != 0) return;
+    if (self->mBall[idx].fallPlayed != 0)
+        return;
     if ((self->mBall[idx].y >> 0xc) < -0xf2)
         return;
     self->mBall[idx].fallPlayed++;
@@ -1612,7 +1612,8 @@ void PachinkoBall_StateDrift(char *o, int i) {
     if (self->mBall[i].started == 0) {
         self->mBall[i].started++;
         if (self->mWaveLevel > 0xc)
-            self->mBall[i].velY = ((PACHINKO_RAND(8)) << 7) + 0xb80 + ((self->mWaveLevel - 0xc) << 7);
+            self->mBall[i].velY =
+                ((PACHINKO_RAND(8)) << 7) + 0xb80 + ((self->mWaveLevel - 0xc) << 7);
         else
             self->mBall[i].velY = self->mWaveLevel * 0xa0 + (((PACHINKO_RAND(8)) << 7) + 0x400);
         if (PACHINKO_RAND(2) != 0) {
@@ -1970,8 +1971,7 @@ void Pachinko_SpawnWave(dScMgPachinko_c *self)
 }
 
 // @symbol PachinkoBobOmb_ClearAll
-void PachinkoBobOmb_ClearAll(char *raw)
-{
+void PachinkoBobOmb_ClearAll(char *raw) {
     dScMgPachinko_c *self = (dScMgPachinko_c *)raw;
     int i;
     for (i = 0; i < 0x30; i++) {

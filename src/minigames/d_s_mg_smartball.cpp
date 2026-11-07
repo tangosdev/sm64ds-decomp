@@ -4324,7 +4324,8 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 *(int *)&((dScMgSmartball_c *)(c + j * 8))->mDustPos[4] = v.y;
                 *(int *)((dScMgSmartball_c *)(c + j * 8))->mDustPos += origin[0];
                 *(int *)&((dScMgSmartball_c *)(c + j * 8))->mDustPos[4] += origin[1];
-                *(int *)((dScMgSmartball_c *)(c + j * 8))->mDustVel = FX_MUL(sinB, FX_MUL(sa, 0x4000));
+                *(int *)((dScMgSmartball_c *)(c + j * 8))->mDustVel =
+                    FX_MUL(sinB, FX_MUL(sa, 0x4000));
                 *(int *)&((dScMgSmartball_c *)(c + j * 8))->mDustVel[4] =
                     FX_MUL(sinB, FX_MUL(cosA, 0x4000));
                 mDustAge[j] = 0;

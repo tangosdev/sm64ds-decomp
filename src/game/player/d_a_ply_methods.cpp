@@ -14883,7 +14883,8 @@ int daPly_c::St_YoshiPower_Main() {
             int z = 0;
             mUseAltBodyModel = z;
             if (mUseAltBodyModel == 0) {
-                dExtFrameCtrl_c &anim6 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, z)];
+                dExtFrameCtrl_c &anim6 =
+                    *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, z)];
                 /* The u16 startFrame takes the whole frame, currFrame >> 12;
                    its narrowing folds into the ROM's lsl #4 / lsr #16. */
                 ((dExtAnmModel_c *)mModels.mHeadModels[3])
@@ -17555,16 +17556,15 @@ L14c:
         goto L18c;
     this->ChangeState(data_ov002_021101b4);
 
-L18c:
-    {
-        dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
-        u32 w = anim.currFrame;
-        if ((u16)(w >> 12) < 4)
-            goto L1d8;
-        func_ov002_020dbaec(this);
-        mAttackClsn.Clear();
-        mAttackClsn.Update();
-    }
+L18c: {
+    dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+    u32 w = anim.currFrame;
+    if ((u16)(w >> 12) < 4)
+        goto L1d8;
+    func_ov002_020dbaec(this);
+    mAttackClsn.Clear();
+    mAttackClsn.Update();
+}
 
 L1d8:
     Player_AdvanceAnims(this);

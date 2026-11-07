@@ -54,7 +54,7 @@ struct dEnemyBase_c : dActor_c {
     /* dCapEnemy_c's dormant replacement keeps its mFlags here:
        RespawnIfHasCap copies the new actor's mFlags in when it marks it
        dormant, and GetCapState restores them when the cap is released. */
-    u32 mDormantFlags;            /* 0x0f4 */
+    u32 mDormantFlags; /* 0x0f4 */
     /* Particle-system uniqueIDs for the death state that falls until it lands
        (EnemyDeathC::func_ov002_020ae4cc): each frame the stored ID is passed
        back into System::New (effect 0x13a) and System::NewUnkCallback818

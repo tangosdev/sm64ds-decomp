@@ -504,8 +504,7 @@ void dScMgCoin_c::DrawResultNumbers() {
     }
     for (i = 0; i < kPopupCount; i++) {
         if (mPopups[i].flag != 0) {
-            Mg_DrawBigNumber(mPopups[i].x >> 12, mPopups[i].y >> 12,
-                             mPopups[i].value, 0, -1, 0, 0);
+            Mg_DrawBigNumber(mPopups[i].x >> 12, mPopups[i].y >> 12, mPopups[i].value, 0, -1, 0, 0);
         }
     }
 }
