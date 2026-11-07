@@ -16,7 +16,7 @@
  *
  * deslop leftovers:
  * - The scene's cards, rows and slots are the header's Card, Row and Slot
- *   arrays, indexed by element; FlashSync keeps the raw this+0x5034.
+ *   arrays, indexed by element.
  * - Ent_8e10 stands in for a card sprite's part record; RenderCards walks
  *   the list until f6 is 0xffff.
  * - dMg3DEspModel_c's unk_000..unk_008 are set by its constructor
@@ -149,67 +149,42 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 // @symbol _ZN17dMg3DEspAnimSet_c6RenderEv
 void dMg3DEspAnimSet_c::Render()
 {
-    char *c = (char *)this;
     int i;
-    char *r5;
-    char *r4;
-    void *zero;
     Matrix4x3_FromTranslation(&data_020a0e68, 0x8c000, 0x80000, 0x40000);
-    r5 = c;
-    r4 = (char *)mMaterialChangers;
-    i = 0;
-    zero = (void*)i;
-    do {
+    for (i = 0; i < 3; i++) {
         if (mActive[i] != 0) {
-            ((dExtAnmModel_c *)r5)->mat4x3 = data_020a0e68;
-            ((dExtAnmMaterial_c *)r4)->Update(*(ModelComponents *)(r5 + 8));
-            ((dExtAnmModel_c *)r5)->Render((const Vector3 *)zero);
+            mModels[i].mat4x3 = data_020a0e68;
+            mMaterialChangers[i].Update(mModels[i].data);
+            mModels[i].Render(0);
         }
-        i++;
-        r5 += 0x64;
-        r4 += 0x14;
-    } while (i < 3);
+    }
 }
 
 // @symbol _ZN17dMg3DEspAnimSet_c8BehaviorEv
 void dMg3DEspAnimSet_c::Behavior() {
-    char *self = (char *)this;
-    int sb = 0;
+    int start = 0;
+    int i;
     if (mRepeats != 0) {
         if (ApproachLinear2(mPhase, 0, 1)) {
             mPhase = mPeriod;
-            sb = 1;
+            start = 1;
             if (mRepeats > 0) {
                 mRepeats -= 1;
             }
         }
     }
-    {
-        int zero = 0;
-        int i;
-        char *a = self;
-        char *b = (char *)mMaterialChangers;
-        /* cc steps by one dExtAnmMaterial_c: mMaterialChangers[i] grows
-           Behavior from 0xf8 to 0xfc bytes. */
-        char *cc = self;
-        for (i = 0; i < 3; i++) {
-            if (mActive[i] != 0) {
-                ((dExtAnmModel_c *)a)->Advance();
-                ((dExtAnmMaterial_c *)b)->Advance();
-                if (((dExtAnmModel_c *)a)->Finished()) {
-                    mActive[i] = 0;
-                }
-            } else {
-                if (sb == 1) {
-                    mActive[i] = 1;
-                    ((dExtAnmModel_c *)a)->currFrame = zero;
-                    sb = zero;
-                    ((dMg3DEspAnimSet_c *)cc)->mMaterialChangers[0].currFrame = zero;
-                }
+    for (i = 0; i < 3; i++) {
+        if (mActive[i] != 0) {
+            mModels[i].Advance();
+            mMaterialChangers[i].Advance();
+            if (mModels[i].Finished()) {
+                mActive[i] = 0;
             }
-            a += 0x64;
-            b += 0x14;
-            cc += 0x14;
+        } else if (start == 1) {
+            mActive[i] = 1;
+            mModels[i].currFrame = 0;
+            start = 0;
+            mMaterialChangers[i].currFrame = 0;
         }
     }
 }
@@ -244,30 +219,19 @@ void dMg3DEspAnimSet_c::SetSpeed(s32 v)
 // @symbol _ZN17dMg3DEspAnimSet_c13InitResourcesEv
 void dMg3DEspAnimSet_c::InitResources()
 {
-    char *o = (char *)this;
-    int bca;
-    int m1 = -1;
-    int z1 = 0;
-    int z2 = 0;
-    int bmd;
+    BMD_File *bmd;
+    BCA_File *bca;
     int i;
-    char *w;
-    char *w2;
     mSpeed = 0x800;
-    bmd = (int)dExtSimpleModel_c::LoadFile(gEspHamonModelFile);
-    bca = (int)dExtFrameCtrl_c::LoadFile(gEspHamonAnimFile);
-    dExtAnmMaterial_c::Prepare(*(BMD_File *)bmd, *(BMA_File *)&sEsp3DMaterialAnim);
-    w = o;
-    w2 = (char *)mMaterialChangers;
+    bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gEspHamonModelFile);
+    bca = (BCA_File *)dExtFrameCtrl_c::LoadFile(gEspHamonAnimFile);
+    dExtAnmMaterial_c::Prepare(*bmd, *(BMA_File *)&sEsp3DMaterialAnim);
     for (i = 0; i < 3; i++) {
-        ((dExtModel_c *)w)->SetFile((BMD_File *)bmd, 1, m1);
-        ((dExtAnmModel_c *)w)->SetAnim((BCA_File *)bca, 0x40000000, mSpeed, z1);
-        ((dExtAnmMaterial_c *)w2)
-            ->SetFile(*(BMA_File *)&sEsp3DMaterialAnim, 0x40000000, mSpeed, z2);
-        ((dExtSimpleModel_c *)w)->SetPolygonID((i + 1) & 0xff);
+        mModels[i].SetFile(bmd, 1, -1);
+        mModels[i].SetAnim(bca, 0x40000000, mSpeed, 0);
+        mMaterialChangers[i].SetFile(*(BMA_File *)&sEsp3DMaterialAnim, 0x40000000, mSpeed, 0);
+        mModels[i].SetPolygonID((i + 1) & 0xff);
         mActive[i] = 0;
-        w += 0x64;
-        w2 += 0x14;
     }
     mRepeats = 0;
     mPhase = 0;
@@ -430,7 +394,6 @@ void dMg3DEspModel_c::Reset()
 // @symbol _ZN15dMg3DEspModel_c13InitResourcesEv
 int dMg3DEspModel_c::InitResources()
 {
-    char* c = (char*)this;
     if (func_020179b4(&gEspCardModelFile, (char *)&mAnmModel, 1) == 0)
         return 0;
     dExtAnmTexPat_c::LoadFile(gEspCardTexSeqFile);
@@ -515,9 +478,8 @@ extern "C" dScMg3DEsp_cState pmf_dScMg3DEsp_c_FlashQuick;
 // @symbol _ZN12dScMg3DEsp_c10DrawBannerEv
 void dScMg3DEsp_c::DrawBanner()
 {
-    char *c = (char*)this;
     if (mDone != 0)
-        Mg_DrawScoreTally(c, 0xe0, 0x14, 1);
+        Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 }
 
 /* Early-out once mFlashStep is set; otherwise set the embedded model's
@@ -531,46 +493,28 @@ void dScMg3DEsp_c::FlashQuick() {
 }
 
 // @symbol _ZN12dScMg3DEsp_c9FlashSyncEv
-void dScMg3DEsp_c::FlashSync()
-{
-    char* c = (char*)this;
-    u8 state = mFlashStep;
-    if (state == 0) {
-        u8 *p = &mFlashStep;
+void dScMg3DEsp_c::FlashSync() {
+    if (mFlashStep == 0) {
         mEspModel.mPolygonID = 0x1e;
-        (*p)++;
+        mFlashStep++;
         return;
     }
-    if (state != 1)
+    if (mFlashStep != 1)
         return;
-    /* c + 0x5034 is mEspModel's mAnmModel frame control
-       (0x4fd8 + 0xc + 0x50). The ROM pool-loads 0x5034 as one constant;
-       spelling it as that member grows FlashSync from 0xb4 to 0xb8 bytes. */
-    if (((dExtFrameCtrl_c *)(c + 0x5034))->WillHitFrame(0)) {
-        u8 *p = &mFlashBeats;
-        (*p)++;
-    }
+    if (mEspModel.mAnmModel.WillHitFrame(0))
+        mFlashBeats++;
     if (mFlashBeats < 1)
         return;
-    {
-        u8 *p = &mFlashStep;
-        (*p)++;
-    }
+    mFlashStep++;
     mEspModel.mPolygonID = 0x1f;
 }
 
 // @symbol _ZN12dScMg3DEsp_c9FlashOnceEv
 void dScMg3DEsp_c::FlashOnce() {
-    unsigned char *p;
-    unsigned char k;
-
-    if (mFlashStep != 0) {
+    if (mFlashStep != 0)
         return;
-    }
-    p = &mFlashStep;
-    *p = (unsigned char)(*p + 1);
-    k = 0x1f;
-    mEspModel.mPolygonID = k;
+    mFlashStep += 1;
+    mEspModel.mPolygonID = 0x1f;
 }
 
 // @symbol _ZN12dScMg3DEsp_c11UpdateFlashEv
