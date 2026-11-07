@@ -31,8 +31,6 @@ extern "C" {
 int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
 void func_02038234(int a, int b);
 void func_02038324(void *arg, int b, int c, int d);
-int  func_0203842c(char *self);
-int  func_0203859c(void *obj);
 int  func_02039794(int x);
 int  SurfaceInfo_TestFlag0x20(int *p);
 
@@ -200,7 +198,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     if (pos->y - actor->mPrevPosY > 0) {
         mSphereClsn.flags |= 0x20;
     }
-    if (mSphereClsn.func_02038a38()) {
+    if (mSphereClsn.DetectClsnSlot0()) {
         disp = &mSphereClsn.disp;
         if (mSphereClsn.flags & 4) {
             func_020371b0(this, onGround);
@@ -221,10 +219,9 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
 }
 
 /* func_02036acc is UpdateContinuous's free twin: the same wall/floor probing
-   sequence but taking the query by raw pointer and running the func_0203842c/
-   func_02038824 detection variants. The ROM keeps its unmangled name, so it
-   stays extern "C". */
-
+   sequence but taking the query by raw pointer and running the
+   DetectClsnExceptSlot0 variants, which skip the stage mesh in collider slot 0.
+   The ROM keeps its unmangled name, so it stays extern "C". */
 
 // @symbol func_02036acc
 extern "C" void func_02036acc(dBgCh_Actr *self) {
@@ -269,7 +266,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         lineEnd.z = tz;
     }
     self->mRaycastLine.SetObjAndLine(lineStart, lineEnd, self->mActor);
-    if (func_0203842c((char *)&self->mRaycastLine)) {
+    if (self->mRaycastLine.DetectClsnExceptSlot0()) {
         int band;
         Vector3 clsnPos = self->mRaycastLine.GetClsnPos();
         Vector3 normal, newStart, newEnd;
@@ -289,7 +286,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
             self->mRaycastLine.CopyTo(floorHit);
         }
         self->mRaycastLine.SetObjAndLine(newStart, newEnd, self->mActor);
-        if (func_0203842c((char *)&self->mRaycastLine)) {
+        if (self->mRaycastLine.DetectClsnExceptSlot0()) {
             Vector3 clsnPos2 = self->mRaycastLine.GetClsnPos();
             Vector3 normal2;
             self->mRaycastLine.surface.CopyNormalTo(normal2);
@@ -337,7 +334,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         self->mSphereClsn.flags |= 1;
         (dBgPi &)self->mSphereClsn = wallHit;
     }
-    if (self->mSphereClsn.func_02038824()) {
+    if (self->mSphereClsn.DetectClsnExceptSlot0()) {
         Vector3 *disp = &self->mSphereClsn.disp;
         if ((self->mSphereClsn.flags & 4) && !floorCommitted)
             func_020371b0(self, onGround);
@@ -524,7 +521,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         lineEnd.z = tz;
     }
     mRaycastLine.SetObjAndLine(lineStart, lineEnd, mActor);
-    if (func_0203859c(&mRaycastLine)) {
+    if (mRaycastLine.DetectClsnSlot0()) {
         int band;
         Vector3 clsnPos = mRaycastLine.GetClsnPos();
         Vector3 normal, newStart, newEnd;
@@ -541,7 +538,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
             mRaycastLine.CopyTo(wallHit);
         }
         mRaycastLine.SetObjAndLine(newStart, newEnd, mActor);
-        if (func_0203859c(&mRaycastLine)) {
+        if (mRaycastLine.DetectClsnSlot0()) {
             Vector3 clsnPos2 = mRaycastLine.GetClsnPos();
             Vector3 normal2;
             mRaycastLine.surface.CopyNormalTo(normal2);
@@ -587,7 +584,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         mSphereClsn.flags |= 1;
         (dBgPi &)mSphereClsn = wallHit;
     }
-    if (mSphereClsn.func_02038a38()) {
+    if (mSphereClsn.DetectClsnSlot0()) {
         Vector3 *disp = &mSphereClsn.disp;
         if ((mSphereClsn.flags & 4) && !floorCommitted)
             func_020371b0(this, onGround);
@@ -645,7 +642,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         V3C(prevFoot, prev)
         mRaycastLine.SetObjAndLine(prevFoot, start, mActor);
 
-        if (func_0203859c(&mRaycastLine)) {
+        if (mRaycastLine.DetectClsnSlot0()) {
             start = mRaycastLine.GetClsnPos();
             Vector3 normal;
             mRaycastLine.surface.CopyNormalTo(normal);
@@ -856,7 +853,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                 Vector3 newCentre;
                 V3D(newCentre, pos, height)
                 mRaycastLine.SetObjAndLine(prevCentre, newCentre, mActor);
-                if (func_0203859c(&mRaycastLine)) {
+                if (mRaycastLine.DetectClsnSlot0()) {
                     Vector3 *hit = &mRaycastLine.lineEnd;
                     Vector3 *normal = (Vector3 *)func_02037dc4((int)&mRaycastLine.surface);
                     pos->x = hit->x + (normal->x >> 2);

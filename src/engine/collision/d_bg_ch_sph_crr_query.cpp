@@ -184,10 +184,11 @@ int dBgCh_SphCrr::DetectClsn()
     return result;
 }
 
-// @symbol _ZN12dBgCh_SphCrr13func_02038a38Ev
-int dBgCh_SphCrr::func_02038a38()
-{
-    /* same scan against slot 0 only */
+// @symbol _ZN12dBgCh_SphCrr15DetectClsnSlot0Ev
+/* DetectClsn against collider slot 0 only: the stage mesh, which
+   dScStage_c::LoadClsnAndObjects registers first and without an owner.
+   Inferred name, after dBgCh_Gnd::DetectClsnSlot0. */
+int dBgCh_SphCrr::DetectClsnSlot0() {
     dBgW *o = data_020a0c80[0];
     int result = 0;
     int hits;
@@ -205,10 +206,10 @@ int dBgCh_SphCrr::func_02038a38()
     return result;
 }
 
-// @symbol _ZN12dBgCh_SphCrr13func_02038824Ev
-int dBgCh_SphCrr::func_02038824()
-{
-    /* the full-table scan variant: colliders 1..0x17 only */
+// @symbol _ZN12dBgCh_SphCrr21DetectClsnExceptSlot0Ev
+/* DetectClsn without its slot-0 head: the actor-owned colliders in slots
+   1..0x17, never the stage mesh. Inferred name. */
+int dBgCh_SphCrr::DetectClsnExceptSlot0() {
     int reach = ((dM3dGSph &)*this).radius + 0x1000;
     int result = 0;
     int zero = 0;
@@ -216,7 +217,8 @@ int dBgCh_SphCrr::func_02038824()
     int i;
     for (i = 1; i < 0x18; i++) {
         dBgW *o = data_020a0c80[i];
-        if (o == 0) continue;
+        if (o == 0)
+            continue;
         dActor_c *owner = o->GetActor();
         if (IsOwnedBy(owner))
             continue;
@@ -238,10 +240,12 @@ int dBgCh_SphCrr::func_02038824()
             } else {
                 ownerPos.y = ownerPos.y + o->GetClipOffsetY();
             }
-            if (Vec3_Dist((const Vector3 *)pos, &ownerPos) > clipDist + reach) continue;
+            if (Vec3_Dist((const Vector3 *)pos, &ownerPos) > clipDist + reach)
+                continue;
         }
         int hits = o->DetectClsn(*this);
-        if (hits == 0) continue;
+        if (hits == 0)
+            continue;
         dBgPi::SetCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
         if (hits & 1)
             SetFloorCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
@@ -319,19 +323,18 @@ bool dBgCh_Lin::DetectClsn()
     return result;
 }
 
-// @symbol func_0203859c
-/* Slot-0-only line scan: shared with the full scan above, kept under its
-   address name. */
-extern "C" int func_0203859c(void *obj)
-{
+// @symbol _ZN9dBgCh_Lin15DetectClsnSlot0Ev
+/* The line scan against collider slot 0 only, the stage mesh; the
+   dBgCh_SphCrr and dBgCh_Gnd scans have the same split. Inferred name. */
+int dBgCh_Lin::DetectClsnSlot0() {
     dBgW *e = data_020a0c80[0];
     int result = 0;
     if (e != 0) {
-        if (!((dBgCh_Lin *)obj)->IsOwnedBy(((dBgW *)e)->GetActor())) {
-            if (e->DetectClsn(*(dBgCh_Lin *)obj) != 0) {
-                int a = ((dBgW *)e)->GetActorUniqueID();
-                dActor_c *owner = ((dBgW *)e)->GetActor();
-                ((dBgPi &)*(dBgCh_Lin *)obj).SetCollider(0, a, owner, e);
+        if (!IsOwnedBy(e->GetActor())) {
+            if (e->DetectClsn(*this) != 0) {
+                int a = e->GetActorUniqueID();
+                dActor_c *owner = e->GetActor();
+                dBgPi::SetCollider(0, a, owner, e);
                 result = 1;
             }
         }
@@ -339,11 +342,10 @@ extern "C" int func_0203859c(void *obj)
     return result;
 }
 
-// @symbol func_0203842c
-/* Full-table line scan without the slot-0 head: shared with the member
-   scans above, kept under its address name. */
-extern "C" int func_0203842c(char *self)
-{
+// @symbol _ZN9dBgCh_Lin21DetectClsnExceptSlot0Ev
+/* DetectClsn without its slot-0 head: the actor-owned colliders in slots
+   1..0x17 only. Inferred name. */
+int dBgCh_Lin::DetectClsnExceptSlot0() {
     int result = 0;
     int i;
     dBgW *o;
@@ -352,14 +354,15 @@ extern "C" int func_0203842c(char *self)
     Vector3 *base;
     int threshold;
 
-    dM3dGSph &sphere = ((dBgCh_Lin *)self)->mBoundSphere;
+    dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
     threshold = sphere.radius;
     for (i = 1; i < 0x18; i++) {
         o = data_020a0c80[i];
-        if (o == 0) continue;
+        if (o == 0)
+            continue;
         info = o->GetActor();
-        if (((dBgCh_Lin *)self)->IsOwnedBy(info))
+        if (IsOwnedBy(info))
             continue;
         if (info != 0) {
             int active = (info->mFlags & 2) ? 1 : 0;
@@ -383,10 +386,9 @@ extern "C" int func_0203842c(char *self)
             }
         }
         {
-            int mask = o->DetectClsn(*(dBgCh_Lin *)self);
+            int mask = o->DetectClsn(*this);
             if (mask != 0) {
-                ((dBgPi &)*(dBgCh_Lin *)self)
-                    .SetCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
+                dBgPi::SetCollider(i, o->GetActorUniqueID(), o->GetActor(), o);
                 result = 1;
             }
         }

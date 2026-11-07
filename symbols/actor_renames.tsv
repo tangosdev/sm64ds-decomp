@@ -8046,3 +8046,7 @@ arm9	0x02037e48	_ZNK4CLPS13func_02037e48Ev	_ZNK4CLPS17GetCameraBehaviorEv	CLPS (
 arm9	0x02037e68	_ZNK4CLPS13func_02037e68Ev	_ZNK4CLPS9GetViewIDEv	CLPS (w0 >> 6) & 0x3f: dCamera_c passes it to GetViewObj, with 0x3f as no view
 arm9	0x02037e84	_ZNK4CLPS13func_02037e84Ev	_ZNK4CLPS12GetSoundTypeEv	CLPS w0 & 0x1f: a sound-table offset (daPly_c plays 0xe2 + it, daShl_c 0xf2 + it)
 arm9	0x02037e90	_ZNK4CLPS13func_02037e90Ev	_ZNK4CLPS9GetPathIDEv	CLPS w1 & 0xff: daPly_c hands it to PathPtr::FromID for the current push, with 0xff as no path
+arm9	0x0203842c	func_0203842c	_ZN9dBgCh_Lin21DetectClsnExceptSlot0Ev	extern "C" free function -> dBgCh_Lin member (r0 is the line query at every caller); DetectClsn without its slot-0 head: collider slots 1..0x17 only, never the stage mesh
+arm9	0x0203859c	func_0203859c	_ZN9dBgCh_Lin15DetectClsnSlot0Ev	extern "C" free function -> dBgCh_Lin member (r0 is the line query at every caller); scans collider slot 0 only (the stage mesh, registered first and ownerless by dScStage_c::LoadClsnAndObjects); name after dBgCh_Gnd::DetectClsnSlot0
+arm9	0x02038824	_ZN12dBgCh_SphCrr13func_02038824Ev	_ZN12dBgCh_SphCrr21DetectClsnExceptSlot0Ev	DetectClsn without its slot-0 head: collider slots 1..0x17 only, never the stage mesh
+arm9	0x02038a38	_ZN12dBgCh_SphCrr13func_02038a38Ev	_ZN12dBgCh_SphCrr15DetectClsnSlot0Ev	scans collider slot 0 only (the stage mesh, registered first and ownerless by dScStage_c::LoadClsnAndObjects); name after dBgCh_Gnd::DetectClsnSlot0

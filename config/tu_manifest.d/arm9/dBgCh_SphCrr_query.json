@@ -364,14 +364,14 @@
       "ordinal": 48
     },
     {
-      "symbol": "func_0203842c",
+      "symbol": "_ZN9dBgCh_Lin21DetectClsnExceptSlot0Ev",
       "address": "0x0203842c",
       "size": "0x00000170",
       "legacy_source": "src/unnamed/arm9/0203/func_0203842c.cpp",
       "ordinal": 49
     },
     {
-      "symbol": "func_0203859c",
+      "symbol": "_ZN9dBgCh_Lin15DetectClsnSlot0Ev",
       "address": "0x0203859c",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0203/func_0203859c.cpp",
@@ -385,14 +385,14 @@
       "ordinal": 51
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13func_02038824Ev",
+      "symbol": "_ZN12dBgCh_SphCrr21DetectClsnExceptSlot0Ev",
       "address": "0x02038824",
       "size": "0x00000214",
       "legacy_source": "src/func_02038824.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13func_02038a38Ev",
+      "symbol": "_ZN12dBgCh_SphCrr15DetectClsnSlot0Ev",
       "address": "0x02038a38",
       "size": "0x00000140",
       "legacy_source": "src/func_02038a38.cpp",

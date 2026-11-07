@@ -5555,11 +5555,11 @@
     },
     "arm9:0x0203842c": {
       "author": "andrewboudreau",
-      "name": "func_0203842c"
+      "name": "_ZN9dBgCh_Lin21DetectClsnExceptSlot0Ev"
     },
     "arm9:0x0203859c": {
       "author": "andrewboudreau",
-      "name": "func_0203859c"
+      "name": "_ZN9dBgCh_Lin15DetectClsnSlot0Ev"
     },
     "arm9:0x02038638": {
       "author": "ruspecial",
@@ -5567,11 +5567,11 @@
     },
     "arm9:0x02038824": {
       "author": "tangosdev",
-      "name": "_ZN12dBgCh_SphCrr13func_02038824Ev"
+      "name": "_ZN12dBgCh_SphCrr21DetectClsnExceptSlot0Ev"
     },
     "arm9:0x02038a38": {
       "author": "andrewboudreau",
-      "name": "_ZN12dBgCh_SphCrr13func_02038a38Ev"
+      "name": "_ZN12dBgCh_SphCrr15DetectClsnSlot0Ev"
     },
     "arm9:0x02038b78": {
       "author": "andrewboudreau",
