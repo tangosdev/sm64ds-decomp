@@ -57,7 +57,7 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                 func_020647fc(&recv->pkt_bmp, work->cmd.u.get.recv_data_size, recv->blockinfo_bits,
                               work->cmd.u.get.recv_buf_table[i]);
         }
-        if (((WBTCommand *)((long long)(unsigned int)&work->queued_cmd))->command == 4)
+        if (((WBTCommand *)((unsigned int)&work->queued_cmd))->command == 4)
             ret = func_02064e18(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         else
@@ -73,7 +73,7 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                 func_020647fc(&recv->pkt_bmp, work->cmd.u.get.recv_data_size,
                               work->cmd.u.get.pkt_bmp_table[i], work->cmd.u.get.recv_buf_table[i]);
         }
-        if (((WBTCommand *)((long long)(unsigned int)&work->queued_cmd))->command == 4)
+        if (((WBTCommand *)((unsigned int)&work->queued_cmd))->command == 4)
             ret = func_02064e18(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                                 work->cmd.u.get.block_id, 0);
         else
@@ -87,6 +87,6 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                             work->cmd.u.user_data.data, work->cmd.u.user_data.size);
         break;
     }
-    ((WBTCommand *)((long long)(unsigned int)&work->queued_cmd))->command = 0;
+    ((WBTCommand *)((unsigned int)&work->queued_cmd))->command = 0;
     return ret;
 }

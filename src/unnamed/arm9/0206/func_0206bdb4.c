@@ -7,6 +7,8 @@
     else \
         *(u16 *)(a) = (*(u16 *)(a) & 0xff00) | ((v) & 0xff)
 
+/* optimize_for_size is this library's own build setting, not a matching lever:
+   the ISD debug console and its soft-float helpers were shipped size-optimized. */
 #pragma optimize_for_size on
 
 extern int func_0206c90c(u64 d);

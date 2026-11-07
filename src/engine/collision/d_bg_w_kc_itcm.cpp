@@ -3,8 +3,10 @@
  * #pragma exceptions off stays: DetectClsn's pool word and four zero-init
  * stores change when exceptions are left on. SQRT_RESULT is a const s32*;
  * a volatile read coalesces the three hypotenuses into the spill pool.
- * DetectClsn(dBgCh_SphCrr&) keeps the volatile round-trip on rsc so the
- * radius lands at sp+0x104; spelled inline, the compiler recomputes it.
+ * DetectClsn(dBgCh_SphCrr&) keeps the `rsc = (s32)rsc;` self-assignment so the
+ * radius lands at sp+0x104; spelled inline, the compiler recomputes it. The
+ * cast no longer goes through `volatile`: casting a prvalue to a cv-qualified
+ * scalar discards the qualifier, and the plain cast reproduces the ROM.
  * Its region dispatch keeps its gotos: the ROM shares each vertex block
  * between the two edges that meet at it and branches to the shared blocks
  * (see the comment above the dispatch). EDGE_FILTER keeps the
@@ -212,7 +214,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
             dh = (d) >> 4;                                                         \
             fh = faceDot >> 4;                                                     \
             axisDot = DotVec3(&sn, (const Vector3 *)&upAxis);                       \
-            SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);               \
+            SqrtStart((s64)fh * fh + (s64)dh * dh, zval, k1);                 \
             hypv = SQRT_RESULT;                                                    \
             if (IsNearZeroDivisor(hypv))                                               \
                 continue;                                                          \
@@ -521,21 +523,22 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     c = &sphere.centre;   /* the dM3dGSph base sub-object's centre, at 0x3c */
     f = kclFile;
     {
-        /* Per-site (const Vector3 *) casts, ABOVE the rad6/origin declarations,
-           in x, y, z statement order.  The cast expression is its own CSE class:
-           it stops the `add r0,fp,#0x3c` result being consumed by the first read
-           (the ROM never reads through that add -- f's load clobbers it first)
-           and lets y and z share one pointer reload while x takes its own.  The
-           ROM's y-before-x LOAD order is scheduler freedom, not source order.
-           Win conditions, from a 2,520-variant positional sweep: x,y,z statement
-           order, reads above BOTH rad6 and origin, rad6 declared before origin,
-           and at least two of the three reads cast-spelled.  This is what closes
-           prologue indices 2..17, and it is qualifier-honest -- the volatile
-           pointee is no longer read bare here.
+        /* Per-site (const Vector3 *) casts on the y and z reads, ABOVE the
+           rad6/origin declarations, in x, y, z statement order.  The cast
+           expression is its own CSE class: it stops the `add r0,fp,#0x3c` result
+           being consumed by the first read (the ROM never reads through that add
+           -- f's load clobbers it first) and lets y and z share one pointer
+           reload while x takes its own.  The ROM's y-before-x LOAD order is
+           scheduler freedom, not source order.  Win conditions, from a
+           2,520-variant positional sweep: x,y,z statement order, reads above
+           BOTH rad6 and origin, rad6 declared before origin, and at least two of
+           the three reads cast-spelled.  Exactly two is enough -- x reads `c`
+           bare, as a genuine volatile read, and only y and z strip the qualifier.
+           This is what closes prologue indices 2..17.
 
            No re-bind here any more, and do not re-add one: a second definition
            of `c` demotes it into the pool and undoes the slot fix below. */
-        rawX = ((const Vector3 *)c)->x >> 6;
+        rawX = c->x >> 6;
         rawY = ((const Vector3 *)c)->y >> 6;
         rawZ = ((const Vector3 *)c)->z >> 6;
         s32 rad6 = sphere.radius >> 6;
@@ -565,7 +568,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 
     rsc = sphere.radius << 4;
     /* Demotes rsc into the temp pool at sp+0x104. An inline spelling recomputes it. */
-    rsc = (s32)(volatile s32)rsc;
+    rsc = (s32)rsc;
 
     hiPX = loPX = 0;
     hiPY = loPY = 0;

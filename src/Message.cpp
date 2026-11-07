@@ -347,6 +347,10 @@ void Message::DisplayOptionsMenuText(s16 n) {
 }
 
 // @symbol LoadControllerModeText
+/* opt_common_subs stays off: each of the three rows recomputes (n + 7) / 8 for its
+ * loop bound the way the cartridge does, and CSE shares the divide instead
+ * (0x1e0 against 0x20c). Reading the count back from data_0209d6b0 for the second
+ * copy forces the reload but not the same schedule (0x210). */
 #pragma push
 #pragma opt_common_subs off
 extern "C" void LoadControllerModeText(int param0)
