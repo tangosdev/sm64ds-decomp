@@ -959,7 +959,7 @@ Landing effect for the variant-2 fight (nothing happens for the other variants):
 dActor_c::Earthquake at his position with the Fix12 argument 0x7d0000 (2000.0,
 the same value daKirai_c passes when a bomb goes off) and a FIRERING actor
 (0x119) spawned at his position. */
-void daKpa_c::SpawnShockwave(){
+void daKpa_c::SpawnShockwave() {
     struct Vector3 v;
     if (this->mVariantID != 2) return;
     v.x = this->mPosX;
@@ -978,7 +978,7 @@ hit (dBgCh_Actr::JustHitGround), add one to the u16 counter passed in (every
 caller passes the address of mStepCounter) and, while that counter is still
 below 4, spawn landing dust at his position and play sound 0xbd at his
 camera-space position. */
-void daKpa_c::BounceEffects(char* counter){
+void daKpa_c::BounceEffects(char *counter) {
     if (this->mWithMeshClsn.JustHitGround() == 0) return;
     *(unsigned short*)counter = *(unsigned short*)counter + 1;
     if (*(unsigned short*)counter >= 4) return;
@@ -1024,7 +1024,7 @@ by his own Y. 4) Unless mDropsShadow is 0, probe the floor with a dBgCh_Gnd from
 0x32000 (50 units) above him (floor height clsnY, or his own Y if there is
 none), build the shadow matrix there and call DropShadowRadHeight with radius
 0x140000 (320) and height 0x64000 (100). */
-void daKpa_c::UpdateModelMatrix(){
+void daKpa_c::UpdateModelMatrix() {
     char pad[8];
     Matrix4x3 saved;
     Vector3 pos;
@@ -1096,7 +1096,7 @@ First animation of the turn / intro sequence: play animation 0x13 once; when it
 reaches its last frame, set mHorzSpeed to 0x3000 (3.0) and return 1, otherwise
 return 0. The sequence continues with 0x11 looping (SetAnimSlowGait) and ends
 with 0x12 (SetAnimLookDownStopWalk); the intro and turn handlers use it. */
-int daKpa_c::SetAnimLookUpAndWalk(){
+int daKpa_c::SetAnimLookUpAndWalk() {
     InitAnimation(0x13, 0x40000000);
     int r = Bowser_IsAnimAtLastFrame();
     if (r != 0) {
@@ -1112,7 +1112,7 @@ int daKpa_c::SetAnimLookUpAndWalk(){
 /*
 Play animation 0x11 looping with mHorzSpeed 0x3000 (3.0); return whether it is at
 its last frame. */
-int daKpa_c::SetAnimSlowGait(){
+int daKpa_c::SetAnimSlowGait() {
     InitAnimation(0x11, 0);
     this->mHorzSpeed = 0x3000;
     return Bowser_IsAnimAtLastFrame();
@@ -1124,7 +1124,7 @@ int daKpa_c::SetAnimSlowGait(){
 /*
 Play animation 0x12 once with mHorzSpeed 0; return whether it is at its last
 frame. */
-int daKpa_c::SetAnimLookDownStopWalk(){
+int daKpa_c::SetAnimLookDownStopWalk() {
     InitAnimation(0x12, 0x40000000);
     this->mHorzSpeed = 0;
     return Bowser_IsAnimAtLastFrame();
@@ -1143,7 +1143,7 @@ by 0xc8, Y + 0xc8000); when that succeeds, advance and play sound 0xb7. Step 2:
 when GetTalkState() returns -1, go to BOWSER_STATE_JUMP for variant 1 and
 BOWSER_STATE_IDLE otherwise, advance, set mCutsceneStep to 4 and run
 UpdateIntroCamera once (its step 4 clears bit 0x8 of Camera::mFlags). */
-void daKpa_c::RunIntroTalk(){
+void daKpa_c::RunIntroTalk() {
     daPly_c *player = this->mTargetPlayer;
     if (player == 0)
     {
@@ -1234,7 +1234,7 @@ void daKpa_c::RunIntroTalk(){
 State BOWSER_STATE_INTRO_WAIT (5): run the intro camera (UpdateIntroCamera),
 stand still on the idle animation (0x10) and run the conversation
 (RunIntroTalk), whose step 0 moves him to BOWSER_STATE_INTRO. */
-void daKpa_c::ActWait(){
+void daKpa_c::ActWait() {
     UpdateIntroCamera();
     this->mHorzSpeed = 0;
     InitAnimation(BOWSER_ANIM_IDLE, 0);
@@ -1251,17 +1251,19 @@ Steps 1 and 2: SetAnimSlowGait (animation 0x11 looping); each completed loop
 advances the step, and variant 2 advances it by two (from step 1 it skips step 2). Step 3:
 SetAnimLookDownStopWalk (animation 0x12); when it returns 1, switch to the idle
 animation and advance. Later steps: the conversation (RunIntroTalk). */
-void daKpa_c::ActIntroWalk(){
+void daKpa_c::ActIntroWalk() {
     u8 step;
     UpdateIntroCamera();
     step = this->mStep;
     if (step == 0) {
-        if (SetAnimLookUpAndWalk() == 0) return;
+        if (SetAnimLookUpAndWalk() == 0)
+            return;
         this->mStep++;
         return;
     }
     if (step <= 2) {
-        if (SetAnimSlowGait() == 0) return;
+        if (SetAnimSlowGait() == 0)
+            return;
         this->mStep++;
         if (this->mVariantID == 2) {
             this->mStep++;
@@ -1269,7 +1271,8 @@ void daKpa_c::ActIntroWalk(){
         return;
     }
     if (step == 3) {
-        if (SetAnimLookDownStopWalk() == 0) return;
+        if (SetAnimLookDownStopWalk() == 0)
+            return;
         InitAnimation(BOWSER_ANIM_IDLE, 0);
         this->mStep++;
         return;
@@ -1288,7 +1291,7 @@ BOWSER_STATE_TURN_TO_TARGET; then set the toggle and reset mAnimSpeed to 0x1000
 (1.0). With mPickToggle set: clear it; unless mSkipIdleRoll is set (then clear
 that and turn), one draw in ten (random >> 16, modulo 10, equal to 0) picks
 BOWSER_STATE_PLAY_ANIM_0F, otherwise BOWSER_STATE_TURN_TO_TARGET. */
-void daKpa_c::BitdwActions(){
+void daKpa_c::BitdwActions() {
     if (this->mPickToggle == 0) {
         if (this->mCondFlags & BOWSER_COND_FACING_TARGET) {
             if (this->mDistToTarget < 0x5dc000)
@@ -1329,7 +1332,7 @@ if the daPly_c is farther away, BOWSER_STATE_CHARGE, upgraded to
 BOWSER_STATE_JUMP on a draw below 5 when mDistToCenter is between 0x1f4000 (500
 units) and 0x5dc000 (1500 units). Every path except the cleared-toggle one sets
 the toggle. */
-void daKpa_c::BitfsActions(){
+void daKpa_c::BitfsActions() {
     unsigned int m;
 
     if (this->mPickToggle != 0)
@@ -1383,7 +1386,7 @@ BOWSER_STATE_FIRE_BREATH, else BOWSER_STATE_ANIM_CHAIN (mFireTimer is cleared an
 mAnimSpeed set to 0x1000 on all three); with the daPly_c farther away a draw below
 5 picks BOWSER_STATE_JUMP, else BOWSER_STATE_CHARGE. If he does not face the
 target, BOWSER_STATE_TURN_TO_TARGET. */
-void daKpa_c::BitsActionList(){
+void daKpa_c::BitsActionList() {
     dActor_c *a = this;
     if (this->mCondFlags & BOWSER_COND_FACING_TARGET) {
         if (a->DistToCPlayer() < 0x3e8000) {
@@ -1411,7 +1414,7 @@ void daKpa_c::BitsActionList(){
 /* -------------------------------------------------------------------------- */
 /*
 Pick BOWSER_STATE_JUMP (the choice for variants with mChooseJumpOnly set). */
-void daKpa_c::SetActBigJump(){
+void daKpa_c::SetActBigJump() {
     this->mState = BOWSER_STATE_JUMP;
 }
 
@@ -1423,7 +1426,7 @@ Idle pick for variant 2, called from ActDefault. With mPickToggle 0:
 BitsActionList, or SetActBigJump when mChooseJumpOnly is set, then set
 the toggle. With the toggle set: clear it and go to
 BOWSER_STATE_TURN_TO_TARGET. */
-void daKpa_c::BitsActions(){
+void daKpa_c::BitsActions() {
     if (this->mPickToggle == 0)
     {
         if (this->mChooseJumpOnly == 0)
@@ -1449,7 +1452,7 @@ Fall catch for the variant-2 jumps: if he is moving down (mVertSpeed < 0) and
 mPosY is below mHomePosY - 0x12c000 (300 units below the arena level), put him
 at X = Z = 0, 0x7d0000 (2000 units) above the arena level, with both speeds
 zeroed. */
-void daKpa_c::ResetFallenOffStage(){
+void daKpa_c::ResetFallenOffStage() {
     int vy = this->mVertSpeed;
     if (vy >= 0) return;
     int thresh = this->mHomePosY - 0x12c000;
@@ -1468,7 +1471,7 @@ void daKpa_c::ResetFallenOffStage(){
 /*
 State BOWSER_STATE_WAIT_ANIM_END (0x12): back to BOWSER_STATE_IDLE once the
 animation is at its last frame. */
-void daKpa_c::ActIdle(){
+void daKpa_c::ActIdle() {
     int done = Bowser_IsAnimAtLastFrame();
     if (done) {
         this->mState = BOWSER_STATE_IDLE;
@@ -1483,15 +1486,18 @@ State BOWSER_STATE_IDLE (0): clear unk_422, play the idle animation (0x10), zero
 mSpinSpeed and both speeds, then let the variant pick the next state:
 BitdwActions (variant 0), BitfsActions (variant 1) or
 BitsActions (variant 2; variant 3 was folded into 0 at init). */
-void daKpa_c::ActDefault(){
+void daKpa_c::ActDefault() {
     this->unk_422 = 0;
     InitAnimation(BOWSER_ANIM_IDLE, 0);
     this->mSpinSpeed = 0;
     this->mHorzSpeed = 0;
     this->mVertSpeed = 0;
-    if (this->mVariantID == 0) BitdwActions();
-    else if (this->mVariantID == 1) BitfsActions();
-    else BitsActions();
+    if (this->mVariantID == 0)
+        BitdwActions();
+    else if (this->mVariantID == 1)
+        BitfsActions();
+    else
+        BitsActions();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1505,7 +1511,7 @@ frame 8 is crossed. At the last frame of an animation: after animation 8
 start animation 7, after animation 7 (data_ov060_0211ac70) go back to
 BOWSER_STATE_IDLE, and after any other animation (the one playing when the state
 is entered) start animation 8; the three are started with 0x40000000 (play once). */
-void daKpa_c::ActBreathFire(){
+void daKpa_c::ActBreathFire() {
     this->mHorzSpeed = 0;
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac20.filePtr) {
         if (this->mAnmModel.WillHitFrame(8)) {
@@ -1543,7 +1549,7 @@ and nothing else happens; otherwise, once the angle difference measured before
 this frame's turn is under 0x2000 (45 degrees), restart the animation, advance
 the step and clear the counter. Later: SetAnimLookDownStopWalk
 (animation 0x12), then BOWSER_STATE_IDLE when it returns 1. */
-void daKpa_c::ActWalkToMario(){
+void daKpa_c::ActWalkToMario() {
     int r4;
     short step;
 
@@ -1565,12 +1571,14 @@ void daKpa_c::ActWalkToMario(){
 
     if (this->mStep == 0) {
         this->mStepCounter = 0;
-        if (SetAnimLookUpAndWalk() == 0) return;
+        if (SetAnimLookUpAndWalk() == 0)
+            return;
         (this->mStep)++;
         return;
     }
     if (this->mStep <= 2) {
-        if (SetAnimSlowGait() == 0) return;
+        if (SetAnimSlowGait() == 0)
+            return;
         (this->mStepCounter)++;
         if (this->mCondFlags & BOWSER_COND_BREATHING) {
             if (this->mStepCounter < 5) return;
@@ -1601,7 +1609,7 @@ the target is more than 0x1f4000 (500 units) away, or when the floor collider
 says he is off the ground (position restored to mLastGroundPos, speed 0). Step 2:
 speed 0, target opacity 0xff; when fully visible, return to BOWSER_STATE_IDLE and
 switch the body collider back on. */
-void daKpa_c::ActTeleport(){
+void daKpa_c::ActTeleport() {
     this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
     switch (this->mStep)
     {
@@ -1686,7 +1694,7 @@ frame number is 0xf..0x13; mFireTimer counts the frames in that window.
 BOWSER_COND_BREATHING is set every call. At the last frame of an animation, by
 mStep: 0 starts animation 0x16 (once) with sound 0xb5, 1 starts 0x15 (looping),
 2 starts 0x17 (once), 3 goes to BOWSER_STATE_IDLE and clears the flag. */
-void daKpa_c::ActSpitFireIntoSky(){
+void daKpa_c::ActSpitFireIntoSky() {
     int new_var2;
     s32 v134 = (s32)this->mAnmModel.file;
     if ((v134 == (int)data_ov060_0211acd8.filePtr) ||
@@ -1786,7 +1794,7 @@ frame of step 2. */
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-void daKpa_c::ActHitMine(){
+void daKpa_c::ActHitMine() {
     if (this->mTimer == 0) {
         this->mHorzSpeed = -0x1c000;
         this->mVertSpeed = 0x50000;
@@ -1834,7 +1842,7 @@ void daKpa_c::ActHitMine(){
 /*
 Jump wind-up: play animation 0xb once; return 1 when the animation will cross
 frame 0x20 on this advance, otherwise 0. */
-int daKpa_c::SetAnimJump(){
+int daKpa_c::SetAnimJump() {
     InitAnimation(0xb, 0x40000000);
     int r = this->mAnmModel.WillHitFrame(0x20);
     if (r != 0) return 1;
@@ -1850,7 +1858,7 @@ speeds, call func_0200fa04 with his position, play animation 0xc once, play soun
 0xb6; for variant 0 also call func_ov002_020c56f0 with the target daPly_c and
 (mDistToTarget >= 0x352000, 850 units) when that daPly_c is not in the air; return
 1. Otherwise return 0. */
-int daKpa_c::BowserLand(){
+int daKpa_c::BowserLand() {
     struct Vector3 v;
     int b;
     if(this->mWithMeshClsn.IsOnGround()){
@@ -1878,7 +1886,7 @@ int daKpa_c::BowserLand(){
 /*
 Variant 2 only, and only while BOWSER_COND_RECOVERING is set: when mDistToCenter
 is above 0x3e8000 (1000 units) set mHorzSpeed to 0x1e000 (30.0). */
-void daKpa_c::ShortSecondHop(){
+void daKpa_c::ShortSecondHop() {
     if (this->mVariantID != 2) return;
     if (!(this->mCondFlags & BOWSER_COND_RECOVERING)) return;
     if (this->mDistToCenter > 0x3e8000) {
@@ -1902,12 +1910,13 @@ BOWSER_COND_RECOVERING, zeroes both speeds, puts him at mLastGroundPosY, advance
 runs SpawnShockwave and, for variant 1, goes to BOWSER_STATE_ARENA_TILT and
 records the KOOPA2BG actor's uniqueID in mArenaBgUniqueID. Step 2: at the last
 frame, BOWSER_STATE_IDLE. */
-void daKpa_c::ActBigJump(){
+void daKpa_c::ActBigJump() {
     unsigned char st = this->mStep;
     int vec[3];
 
     if (st == 0) {
-        if (SetAnimJump() == 0) return;
+        if (SetAnimJump() == 0)
+            return;
         if (this->mVariantID == 2 && (this->mCondFlags & BOWSER_COND_RECOVERING)) {
             this->mVertSpeed = 0x28000;
         } else {
@@ -1968,17 +1977,19 @@ State BOWSER_STATE_HOP (0x11). Step 0: wind-up (SetAnimJump); then
 mVertSpeed 0x32000 (50.0), mHorzSpeed 0x19000 (25.0), mStepCounter 0, sound 0xb1,
 advance. Step 1: advance once BowserLand reports the landing. Step 2:
 BOWSER_STATE_IDLE at the last frame. */
-void daKpa_c::ActQuickJump(){
+void daKpa_c::ActQuickJump() {
     unsigned char k = this->mStep;
     if (k == 0) {
-        if (!SetAnimJump()) return;
+        if (!SetAnimJump())
+            return;
         this->mVertSpeed = 0x32000;
         this->mHorzSpeed = 0x19000;
         this->mStepCounter = 0;
         this->mStep++;
         func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
     } else if (k == 1) {
-        if (!BowserLand()) return;
+        if (!BowserLand())
+            return;
         this->mStep++;
     } else {
         if (Bowser_IsAnimAtLastFrame()) this->mState = BOWSER_STATE_IDLE;
@@ -1992,7 +2003,7 @@ void daKpa_c::ActQuickJump(){
 State BOWSER_STATE_PLAY_ANIM_1B (0xa): mHorzSpeed 0, clear mStepCounter on the
 first frame, play animation 0x1b once, then BOWSER_STATE_TURN_IN_PLACE at its last
 frame. */
-void daKpa_c::ActHitEdge(){
+void daKpa_c::ActHitEdge() {
     this->mHorzSpeed = 0;
     if (this->mTimer == 0) {
         this->mStepCounter = 0;
@@ -2017,7 +2028,7 @@ plus 0xe8 (232) units out along mAngleY and 0x58000 (88 units) up, with sound
 0x122. At the last frame of an animation: if it was animation 0x14, count the
 shot in mStep and go to BOWSER_STATE_IDLE once mStep reaches mFireballShots;
 otherwise start animation 0x14; then restart the animation from frame 0. */
-void daKpa_c::ActSpitFireOntoFloor(){
+void daKpa_c::ActSpitFireOntoFloor() {
     int new_var;
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
@@ -2092,7 +2103,7 @@ Turn in place for the caller's frame count: by mStep, play animation 0x13 once,
 then 0x12 once (each step ends at the animation's last frame), then the idle
 animation; mHorzSpeed 0 and mAngleY += turnStep every call. Returns 1 once mTimer is
 at least minFrames (an unsigned halfword), else 0. */
-int daKpa_c::TurnOnTimer(unsigned short minFrames, int turnStep){
+int daKpa_c::TurnOnTimer(unsigned short minFrames, int turnStep) {
     int done;
     unsigned char step = this->mStep;
     if (step == 0) {
@@ -2123,7 +2134,7 @@ int daKpa_c::TurnOnTimer(unsigned short minFrames, int turnStep){
 State BOWSER_STATE_TURN_IN_PLACE (0xb): TurnOnTimer with 0x3e frames and
 0x200 (2.8 degrees) per frame, about 177 degrees in all (63 calls, mTimer 0 to
 0x3e); BOWSER_STATE_IDLE when it returns 1. */
-void daKpa_c::ActTurnFromEdge(){
+void daKpa_c::ActTurnFromEdge() {
     int r0 = TurnOnTimer(0x3e, 0x200);
     if (r0 != 0) {
         this->mState = BOWSER_STATE_IDLE;
@@ -2148,7 +2159,7 @@ animation, sets mTimer to 0xa (variant 2) or 0x1e and returns to
 BOWSER_STATE_IDLE once mStepCounter has passed it. If the floor collider says he
 has left the ground, he goes to BOWSER_STATE_PLAY_ANIM_1B at mLastGroundPos with
 speed 0. */
-void daKpa_c::ActChargeMario(){
+void daKpa_c::ActChargeMario() {
     if (this->mTimer == 0)
         this->mHorzSpeed = 0;
 
@@ -2219,7 +2230,7 @@ that his position is close enough (IsInTriggerRange), set it off
 (Explode) and return 1, otherwise return 0. */
 // CheckHitMine at 0x02113d20
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov060).
-int daKpa_c::CheckHitMine(){
+int daKpa_c::CheckHitMine() {
     Vector3 v;
     dActor_c *closest = this->ClosestWithActorID(BOWSER_ACTOR_KIRAI);
     if (closest) {
@@ -2250,7 +2261,7 @@ clear mBounceOnLand, advance and play animation 0xd once. Step 1: BOWSER_STATE_I
 at the last frame. Every frame, if CheckHitMine reports a bomb hit, mHealth
 drops by one: BOWSER_STATE_DEFEATED at 0 or below, BOWSER_STATE_HURT_HOP
 otherwise. */
-void daKpa_c::ActThrown(){
+void daKpa_c::ActThrown() {
     if (this->mTimer < 2) {
         this->mStepCounter = 0;
     }
@@ -2318,7 +2329,7 @@ opacity 0; once mOpacity is 0, zero both speeds, put him 0x3e8000 (1000 units)
 below mHomePosY and, if he is 0xed8000 (3800 units) or more from the origin,
 pull X and Z back to the circle of radius 0xed8 (3800) in his direction from the
 origin. */
-void daKpa_c::SetGoalInvisible(){
+void daKpa_c::SetGoalInvisible() {
     this->mTargetOpacity = 0;
     if (this->mOpacity != 0) return;
     this->mHorzSpeed = 0;
@@ -2360,7 +2371,7 @@ into BOWSER_STATE_JUMP with mAnimSpeed 0x4000 (4.0) and normal gravity -0x2000
 when it did, and send variant 1 into BOWSER_STATE_ARENA_TILT (recording the
 KOOPA2BG actor); ResetFallenOffStage runs every frame of the step. Step 3: at the
 last frame, BOWSER_STATE_IDLE, BOWSER_COND_RECOVERING cleared, gravity -0x2000. */
-void daKpa_c::ActJumpOntoStage(){
+void daKpa_c::ActJumpOntoStage() {
     Vector3 pos;
     int hit;
     int ground;
@@ -2472,7 +2483,7 @@ void daKpa_c::ActJumpOntoStage(){
 /*
 State BOWSER_STATE_PLAY_ANIM_0F (3): play animation 0xf looping until its last
 frame, then BOWSER_STATE_IDLE. */
-void daKpa_c::ActDance(){
+void daKpa_c::ActDance() {
     InitAnimation(0xf, 0);
     if (Bowser_IsAnimAtLastFrame() != 0) {
         this->mState = BOWSER_STATE_IDLE;
@@ -2488,7 +2499,7 @@ actor (0x11b, parameter 7) 0xa0000 (160 units) above him. Other variants:
 particles 0xad and 0xae 50 units above him, an OBJ_KEY actor (0x11a, parameter =
 variant) at his position that receives his mSpinSpeed (daObjKey_c::mSpinSpeed),
 and sound 0xbb. */
-void daKpa_c::SpawnCollectable(){
+void daKpa_c::SpawnCollectable() {
     volatile Vector3 base;
     int px, py, pz;
     px = this->mPosX;
@@ -2528,7 +2539,7 @@ mVertSpeed 0x50000 (80.0), gravity -0x2000 (-2.0), mAngleY = angle to the centre
 + 0x8000 (so the negative speed carries him toward the centre), clear
 mStepCounter, advance, widen the body collider's radius to 0xb4000 (180 units)
 and play sound 0xb1. */
-void daKpa_c::FlyBackDead(){
+void daKpa_c::FlyBackDead() {
     InitAnimation(0, 0x40000000);
     if (this->mVariantID == 2)
         this->mHorzSpeed = -0x1c000;
@@ -2552,7 +2563,7 @@ helper on mStepCounter; on a fresh ground hit it starts animation 5 once when th
 current animation is animation 0 (data_ov060_0211ac88 is entry 0 of the
 animation table) and halves mHorzSpeed; once on the ground without a fresh hit
 it zeroes the speed and advances. LoopLayDownAnimation runs every call. */
-void daKpa_c::DeadBounce(){
+void daKpa_c::DeadBounce() {
     this->unk_422 = 1;
     BounceEffects((char *)&this->mStepCounter);
     if (this->mWithMeshClsn.JustHitGround()) {
@@ -2580,7 +2591,7 @@ animation table), a target daPly_c exists, he is within 0x258000 (600 units)
 horizontally and the daPly_c's facing differs from the angle to the daPly_c by
 more than 0x6000 (135 degrees), that is, he is looking toward Bowser; otherwise
 0. mStepCounter is cleared on every call. */
-int daKpa_c::DeadWaitForMario(){
+int daKpa_c::DeadWaitForMario() {
     int r = 0;
     LoopLayDownAnimation();
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac60.filePtr) {
@@ -2614,7 +2625,7 @@ frame; after that mScaleY shrinks by 0x29, he rises at 0xa000 (10.0) and gravity
 is 0. The result is 1 once mScaleY is below 0x800 (0.5). mAngleY advances by
 mSpinSpeed, mOpacity drops by 2 while above 2, and until done the looping sound
 0xba plays (mSoundHandle is reset when the sound ID changes). */
-int daKpa_c::DeadTwirlUp(){
+int daKpa_c::DeadTwirlUp() {
     int done = 0;
     volatile Vector3 pos;
     int ytmp;
@@ -2668,7 +2679,7 @@ int daKpa_c::DeadTwirlUp(){
 /*
 Park him after the defeat: X and Z set to 0 (Y kept), scale 0, both speeds and
 gravity 0, no shadow, body collider switched off. */
-void daKpa_c::DeadHide(){
+void daKpa_c::DeadHide() {
     int y = this->mPosY;
 
     this->mPosX = 0;
@@ -2697,7 +2708,7 @@ and advance. Step 1: once GetTalkState() is 0, show message 0xcd (variant 0) or
 0xcf at his position; advance on success. Step 2: when GetTalkState() returns -1,
 move to the next phase, advance, play animation 4 once, stop the loaded music
 layer (0x3c) and set the music volume (0x7f, 0x7222). */
-int daKpa_c::DeadDefaultStageEnding(){
+int daKpa_c::DeadDefaultStageEnding() {
     int ret = 0;
     u16 outer = this->mStepCounter;
 
@@ -2760,7 +2771,7 @@ GetTalkState() returns -1, stop the loaded music layer (0x3c), run SpawnCollecta
 to the next phase, advance and play animation 4 once. After the conversation: while
 mOpacity is above 4 it drops by 4 per frame with particle 0x99 50 units above him;
 then DeadHide runs and this returns 1. */
-int daKpa_c::DeadFinalStageEnding(){
+int daKpa_c::DeadFinalStageEnding() {
     int ret = 0;
     unsigned short mode = this->mStepCounter;
     volatile int v[4];
@@ -2827,22 +2838,29 @@ DeadBounce (airborne until landed). 2: DeadWaitForMario; when it
 returns 1, clear mStepCounter and go to step 0xa for variant 2, else step 3. 3:
 DeadDefaultStageEnding, advancing when it returns 1. 0xa: DeadFinalStageEnding,
 advancing to 0xb when it returns 1. 0xb: nothing. */
-void daKpa_c::ActDead(){
+void daKpa_c::ActDead() {
     switch (this->mStep) {
-    case 0: FlyBackDead(); break;
-    case 1: DeadBounce(); break;
+    case 0:
+        FlyBackDead();
+        break;
+    case 1:
+        DeadBounce();
+        break;
     case 2:
-        if (DeadWaitForMario() == 0) break;
+        if (DeadWaitForMario() == 0)
+            break;
         this->mStepCounter = 0;
         if (this->mVariantID == 2) { this->mStep = 0xa; break; }
         this->mStep++;
         break;
     case 3:
-        if (DeadDefaultStageEnding() == 0) break;
+        if (DeadDefaultStageEnding() == 0)
+            break;
         this->mStep++;
         break;
     case 10:
-        if (DeadFinalStageEnding() != 0) this->mStep++;
+        if (DeadFinalStageEnding() != 0)
+            this->mStep++;
         break;
     case 11: break;
     }
@@ -2856,7 +2874,7 @@ Tilt the arena: find the KOOPA2BG actor by mArenaBgUniqueID (nothing if it is
 gone) and set its mAngleXSpeed to tiltSpeed * cos and its mAngleZSpeed to
 -(tiltSpeed * sin) of the angle mAngleToCenter + 0x8000 (the opposite of the direction to the
 centre), both Fix12 products shifted back down by 12. */
-void daKpa_c::TiltPlatform(int tiltSpeed){
+void daKpa_c::TiltPlatform(int tiltSpeed) {
     daKpa2Bg_c *arena = (daKpa2Bg_c *)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (arena == 0)
         return;
@@ -2884,7 +2902,7 @@ angles, and mVertSpeed. */
 /* p is volatile so the walk reloads the sentinel for each test -- lifetimes
  * on would keep p[2] in a register and skip the ROM's second load, and the
  * flag and the computed value are split so the flag keeps r6. */
-void daKpa_c::ActTiltLavaPlatform(){
+void daKpa_c::ActTiltLavaPlatform() {
     daKpa2Bg_c* found; int i; int flag; volatile short* p;
     this->mVertSpeed = this->mTerminalVelocity;
     found = (daKpa2Bg_c*)dActor_c::FindWithID(this->mArenaBgUniqueID);
@@ -2932,7 +2950,7 @@ void daKpa_c::ActTiltLavaPlatform(){
 True when he has fallen 0x3e8000 (1000 units) below mHomePosY while not already
 in BOWSER_STATE_RECOVER or BOWSER_STATE_ARENA_TILT. (The result of the
 IsOnGround call is discarded.) */
-int daKpa_c::CheckFallenOffStage(){
+int daKpa_c::CheckFallenOffStage() {
     int state = this->mState;
     if (state != BOWSER_STATE_RECOVER && state != BOWSER_STATE_ARENA_TILT) {
         if (this->mPosY < this->mHomePosY - 0x3e8000) return 1;
@@ -2963,7 +2981,7 @@ For the states whose byte is 1 in data_ov060_02119268 (0, 3, 7..0xb, 0xe..0x10,
 moved 8 units toward the centre (the sin/cos table entry shifted left 3), else
 mLastGroundPos is refreshed. Finally, CheckFallenOffStage sends him to
 BOWSER_STATE_RECOVER. */
-void daKpa_c::FreeUpdate(){
+void daKpa_c::FreeUpdate() {
     this->mHoldStep = 0;
     u32 id;
     if (this->mState != BOWSER_STATE_DEFEATED && (id = this->mdCcAcPos_c.otherOwner) != 0) {
@@ -3057,7 +3075,7 @@ grabbed daPly_c's mAngleYSpeed, mAngleX = -|mSwingSpeed| (used directly as an an
 mAngleY = the daPly_c's mAngleY, and his position is the daPly_c's plus 0xa0 (160)
 units out along the daPly_c's facing (X and Z) and 0x18000 (24 units) up minus
 160 * sin(mAngleX) (Y). */
-void daKpa_c::HeldUpdate(){
+void daKpa_c::HeldUpdate() {
     int v;
     short a;
     int i;
@@ -3119,7 +3137,7 @@ when v is above 0x2d; mHorzSpeed = v * cos(mAngleX) and mVertSpeed =
 -v * sin(mAngleX) (table entries at mAngleX >> 4). The tail (by mTailUniqueID) goes
 to BOWSER_TAIL_COOLDOWN with mTimer 0; mAngleX, mTimer and mStep are cleared and
 the floor collider's ground flag is cleared. */
-void daKpa_c::ThrownDroppedUpdate(){
+void daKpa_c::ThrownDroppedUpdate() {
     int v, nv;
     daKpaTail_c *tail;
 
@@ -3163,7 +3181,7 @@ Bowser_CondFlag) from the four tests. Run the handler for mHoldState through the
 table at data_ov060_0211aeb4 (0: FreeUpdate, 1: HeldUpdate, 2
 and 3: ThrownDroppedUpdate). Unless he is defeated, move mOpacity toward
 mTargetOpacity by 0x14 (20) per frame, clamping at 0xff and 0. */
-void daKpa_c::BowserLoop(){
+void daKpa_c::BowserLoop() {
     Vector3 zero;
     zero.x = 0;
     zero.y = 0;
@@ -3221,7 +3239,7 @@ Fight-start values, called from InitResources: mPickToggle 1, fully opaque, vari
 3 treated as 0, mHealth from the byte table at data_ov060_02119264 (1, 1, 3 in the
 ROM, indexed by variant), state BOWSER_STATE_INTRO_WAIT, no hold, and unk_420 and
 unk_422 cleared. */
-void daKpa_c::InitFightState(){
+void daKpa_c::InitFightState() {
     this->mPickToggle = 1;
     this->mOpacity = 0xff;
     this->mTargetOpacity = 0xff;
@@ -3239,7 +3257,7 @@ void daKpa_c::InitFightState(){
 /*
 Called when the tail lets go of a daPly_c: set mBounceOnLand (FreeUpdate
 then bounces him when he next hits the ground) and forget the grabbed daPly_c. */
-void daKpa_c::OnTailReleased(){
+void daKpa_c::OnTailReleased() {
     this->mBounceOnLand = 1;
     this->mGrabbedPlayer = 0;
 }
@@ -3250,7 +3268,7 @@ void daKpa_c::OnTailReleased(){
 /*
 Body collider switch: a non-zero argument clears the disabled bit (dCc_c flags
 bit 0) of mdCcAcPos_c, zero sets it. */
-void daKpa_c::SetTangible(int enable){
+void daKpa_c::SetTangible(int enable) {
     if (enable)
         this->mdCcAcPos_c.flags &= ~BOWSER_CC_DISABLED;
     else
@@ -3263,7 +3281,7 @@ void daKpa_c::SetTangible(int enable){
 /*
 When the current animation has finished and is animation 5 (data_ov060_0211acd0
 is entry 5 of the animation table), start animation 3 (looping). */
-void daKpa_c::LoopLayDownAnimation(){
+void daKpa_c::LoopLayDownAnimation() {
     int finished = this->mAnmModel.Finished();
     if (!finished) return;
     if ((int)this->mAnmModel.file != (int)data_ov060_0211acd0.filePtr)
@@ -3291,7 +3309,7 @@ the look-at returns non-zero. Step 3: ease the look-at, by 0xa000 (10.0) per
 axis, to a point 0xc0 (192) units ahead along mAngleY and 0xfa000 (250 units) up;
 return 1 when func_020092c4 returns non-zero. Step 4: clear bit 0x8 of
 Camera::mFlags. */
-int daKpa_c::UpdateIntroCamera(){
+int daKpa_c::UpdateIntroCamera() {
     dCamera_c *cam = data_0209f318;
     daPly_c *player = this->ClosestPlayer();
     struct Vector3 sp;
@@ -3393,7 +3411,7 @@ dExtFrameCtrl_c::WillHitFrame), so 0x40000000 reads as play-once and 0 as loopin
 Texture pattern by idx: 1 uses data_ov060_0211ac40, 2 acb8 and 0xa ac30 (all
 with texture-sequence flags 0x40000000); 3 and 5 use ac10, 0xe uses abf0, and
 every other idx (0 included) uses ac28 (these three with flags 0). */
-void daKpa_c::InitAnimation(int idx, int animFlags){
+void daKpa_c::InitAnimation(int idx, int animFlags) {
     int a;  /* deliberately never assigned: it is animFlags, still in r2 (see above) */
     this->mAnmModel.SetAnim((BCA_File *)(data_ov060_021192dc[idx]->filePtr), a, 0x1000, 0);
     switch (idx) {
@@ -3446,7 +3464,7 @@ Row number for the mouth fire in daKpaFire_c, or -1. While animation 8 plays
 (data_ov060_0211ac20 is entry 8 of the animation table) the row is the whole
 frame number minus 0x31 from frame 0x31 on; while animation 6 plays
 (data_ov060_0211ac68) it is the frame number plus 0xb; otherwise -1. */
-int daKpa_c::GetMouthFireRow(){
+int daKpa_c::GetMouthFireRow() {
     int anim = (int)this->mAnmModel.file;
     if (anim == (int)data_ov060_0211ac20.filePtr) {
         unsigned int frame = ((unsigned int)this->mAnmModel.currFrame << 4) >> 0x10;
@@ -3473,7 +3491,7 @@ mFootfallLatch remembers that the previous frame was in a window, so the effect
 fires only on entering one: huge landing dust at the chosen foot point, sound
 0xb0 at his camera-space position and dActor_c::Earthquake at his position with
 the Fix12 argument 0x320000 (800.0). */
-void daKpa_c::UpdateFootfalls(){
+void daKpa_c::UpdateFootfalls() {
     /* (unsigned short)(u32 >> 12) forces ROM prologue load order
        (mAnmModel.currFrame at 0x12c into r0, then mFootfallLatch at 0x446 into r1)
        + lsl#4/lsr#16 extract. */
@@ -3585,33 +3603,33 @@ KpaTexSequenceFilePtr data_ov060_0211ac30(ASSET_KOOPA_HOLD_BTP);
 
 /* Indexed by mHoldState (Bowser_HoldState). */
 PmfEnt data_ov060_0211aeb4[4] = {
-    {&daKpa_c::FreeUpdate},    /* BOWSER_HOLD_NONE */
-    {&daKpa_c::HeldUpdate},    /* BOWSER_HOLD_HELD */
-    {&daKpa_c::ThrownDroppedUpdate},    /* BOWSER_HOLD_RELEASE_NOW */
-    {&daKpa_c::ThrownDroppedUpdate}     /* BOWSER_HOLD_RELEASE_AFTER_ANIM */
+    {&daKpa_c::FreeUpdate},          /* BOWSER_HOLD_NONE */
+    {&daKpa_c::HeldUpdate},          /* BOWSER_HOLD_HELD */
+    {&daKpa_c::ThrownDroppedUpdate}, /* BOWSER_HOLD_RELEASE_NOW */
+    {&daKpa_c::ThrownDroppedUpdate}  /* BOWSER_HOLD_RELEASE_AFTER_ANIM */
 };
 /* Indexed by mState (Bowser_State). */
 PmfEnt data_ov060_0211aed4[20] = {
-    {&daKpa_c::ActDefault},    /* BOWSER_STATE_IDLE */
-    {&daKpa_c::ActThrown},    /* BOWSER_STATE_THROWN */
-    {&daKpa_c::ActJumpOntoStage},    /* BOWSER_STATE_RECOVER */
-    {&daKpa_c::ActDance},    /* BOWSER_STATE_PLAY_ANIM_0F */
-    {&daKpa_c::ActDead},    /* BOWSER_STATE_DEFEATED */
-    {&daKpa_c::ActWait},    /* BOWSER_STATE_INTRO_WAIT */
-    {&daKpa_c::ActIntroWalk},    /* BOWSER_STATE_INTRO */
-    {&daKpa_c::ActChargeMario},    /* BOWSER_STATE_CHARGE */
-    {&daKpa_c::ActSpitFireIntoSky},    /* BOWSER_STATE_FIRE_BREATH */
-    {&daKpa_c::ActSpitFireOntoFloor},    /* BOWSER_STATE_FIREBALLS */
-    {&daKpa_c::ActHitEdge},    /* BOWSER_STATE_PLAY_ANIM_1B */
-    {&daKpa_c::ActTurnFromEdge},    /* BOWSER_STATE_TURN_IN_PLACE */
-    {&daKpa_c::ActHitMine},    /* BOWSER_STATE_HURT_HOP */
-    {&daKpa_c::ActBigJump},    /* BOWSER_STATE_JUMP */
-    {&daKpa_c::ActWalkToMario},    /* BOWSER_STATE_TURN_TO_TARGET */
-    {&daKpa_c::ActBreathFire},    /* BOWSER_STATE_ANIM_CHAIN */
-    {&daKpa_c::ActTeleport},    /* BOWSER_STATE_VANISH_DASH */
-    {&daKpa_c::ActQuickJump},    /* BOWSER_STATE_HOP */
-    {&daKpa_c::ActIdle},    /* BOWSER_STATE_WAIT_ANIM_END */
-    {&daKpa_c::ActTiltLavaPlatform}     /* BOWSER_STATE_ARENA_TILT */
+    {&daKpa_c::ActDefault},           /* BOWSER_STATE_IDLE */
+    {&daKpa_c::ActThrown},            /* BOWSER_STATE_THROWN */
+    {&daKpa_c::ActJumpOntoStage},     /* BOWSER_STATE_RECOVER */
+    {&daKpa_c::ActDance},             /* BOWSER_STATE_PLAY_ANIM_0F */
+    {&daKpa_c::ActDead},              /* BOWSER_STATE_DEFEATED */
+    {&daKpa_c::ActWait},              /* BOWSER_STATE_INTRO_WAIT */
+    {&daKpa_c::ActIntroWalk},         /* BOWSER_STATE_INTRO */
+    {&daKpa_c::ActChargeMario},       /* BOWSER_STATE_CHARGE */
+    {&daKpa_c::ActSpitFireIntoSky},   /* BOWSER_STATE_FIRE_BREATH */
+    {&daKpa_c::ActSpitFireOntoFloor}, /* BOWSER_STATE_FIREBALLS */
+    {&daKpa_c::ActHitEdge},           /* BOWSER_STATE_PLAY_ANIM_1B */
+    {&daKpa_c::ActTurnFromEdge},      /* BOWSER_STATE_TURN_IN_PLACE */
+    {&daKpa_c::ActHitMine},           /* BOWSER_STATE_HURT_HOP */
+    {&daKpa_c::ActBigJump},           /* BOWSER_STATE_JUMP */
+    {&daKpa_c::ActWalkToMario},       /* BOWSER_STATE_TURN_TO_TARGET */
+    {&daKpa_c::ActBreathFire},        /* BOWSER_STATE_ANIM_CHAIN */
+    {&daKpa_c::ActTeleport},          /* BOWSER_STATE_VANISH_DASH */
+    {&daKpa_c::ActQuickJump},         /* BOWSER_STATE_HOP */
+    {&daKpa_c::ActIdle},              /* BOWSER_STATE_WAIT_ANIM_END */
+    {&daKpa_c::ActTiltLavaPlatform}   /* BOWSER_STATE_ARENA_TILT */
 };
 /* Indexed by the tail's mState (BowserTail_State). */
 KpaTailState data_ov060_0211ae9c[3] = {

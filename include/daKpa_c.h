@@ -110,7 +110,7 @@ struct daKpa_c : dActor_c {
     s32 mHoldState;           /* 0x410 -- see Bowser_HoldState in d_a_kpa.cpp */
     u8  mVariantID;            /* 0x414 -- param1 & 3: which of the three fights; 3 is treated as 0 */
     u8  mPickToggle;          /* 0x415 -- alternates between "choose an action" and "turn to face the target" */
-    u8  mChooseJumpOnly;      /* 0x416 -- param1 bit 2; when set, the variant-2 idle pick chooses the jump state instead of calling BitsActionList */
+    u8 mChooseJumpOnly; /* 0x416 -- param1 bit 2; when set, the variant-2 idle pick chooses the jump state instead of calling BitsActionList */
     u8  pad_417[0x1];
     u32 mCondFlags;           /* 0x418 -- see Bowser_CondFlag in d_a_kpa.cpp */
     u8  mOpacity;            /* 0x41c -- 0..255, walked toward mTargetOpacity by 20 per frame */
@@ -120,7 +120,7 @@ struct daKpa_c : dActor_c {
     u16 unk_420;              /* 0x420 -- zeroed at init, never read in d_a_kpa.cpp */
     u8  unk_422;              /* 0x422 -- set to 1 during the hurt hop and the defeat launch and cleared to 0 in the idle state; never read in d_a_kpa.cpp */
     u8  mStep;                /* 0x423 -- step within the current state; reset on every state change */
-    u8  mTalkStep;            /* 0x424 -- step of the intro conversation (RunIntroTalk) */
+    u8 mTalkStep;             /* 0x424 -- step of the intro conversation (RunIntroTalk) */
     u8  mHoldStep;            /* 0x425 -- step of the held handler (mHoldState 1) */
     u8  mDropsShadow;            /* 0x426 */
     u8  mBounceOnLand;            /* 0x427 */
@@ -214,7 +214,7 @@ struct daKpa_c : dActor_c {
     int SetAnimLookUpAndWalk();
     void UpdateModelMatrix();
     bool Bowser_IsAnimAtLastFrame();
-    void BounceEffects(char* counter);
+    void BounceEffects(char *counter);
     void SpawnShockwave();
 };
 
