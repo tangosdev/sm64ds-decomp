@@ -54,14 +54,14 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_020228dc",
+      "symbol": "_ZN8Particle6System12NewBlueFlameEiii",
       "address": "0x020228dc",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0202/func_020228dc.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_0202293c",
+      "symbol": "_ZN8Particle6System11NewRedFlameEiii",
       "address": "0x0202293c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_0202293c.c",

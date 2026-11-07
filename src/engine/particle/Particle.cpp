@@ -44,8 +44,8 @@ SysTracker::SysTracker()
     mSystemID_774 = 0;
     mBubbleSystemID = 0;
     mRippleSystemID = 0;
-    mSystemID_798 = 0;
-    mSystemID_7a4 = 0;
+    mRedFlameSystemID = 0;
+    mBlueFlameSystemID = 0;
     mSystemID_7b0 = 0;
     mSystemID_7c0 = 0;
     mCallback_800.waterOffset = 0x4b000;
@@ -333,27 +333,28 @@ u32 System::NewRipple(Fix12i x, Fix12i y, Fix12i z) {
     return result;
 }
 
+/* daObjFire_c's RED_FLAME. Effect 0x118 is kPtclFlame's red-orange
+   flipbook (textures 14..21) as a continuous emitter. */
+u32 System::NewRedFlame(Fix12i x, Fix12i y, Fix12i z) {
+    SysTracker *tracker = gParticleSysTracker;
+    u32 result =
+        New(tracker->mRedFlameSystemID, 0x118, x, y, z, 0, (Callback *)&tracker->mRedFlameCallback);
+    gParticleSysTracker->mRedFlameSystemID = result;
+    return result;
+}
+
+/* daObjFire_c's BLUE_FLAME (actor 0x13d): effect 0x117, NewRedFlame's
+   emitter on the other flame flipbook (textures 6..13). */
+u32 System::NewBlueFlame(Fix12i x, Fix12i y, Fix12i z) {
+    SysTracker *tracker = gParticleSysTracker;
+    u32 result = New(tracker->mBlueFlameSystemID, 0x117, x, y, z, 0,
+                     (Callback *)&tracker->mBlueFlameCallback);
+    gParticleSysTracker->mBlueFlameSystemID = result;
+    return result;
+}
 }
 
 extern "C" {
-
-u32 func_0202293c(Fix12i x, Fix12i y, Fix12i z)
-{
-    Particle::SysTracker *tracker = gParticleSysTracker;
-    u32 result = Particle::System::New(tracker->mSystemID_798, 0x118, x, y, z, 0,
-                                       (Particle::Callback *)&tracker->mCallback_79c);
-    gParticleSysTracker->mSystemID_798 = result;
-    return result;
-}
-
-u32 func_020228dc(Fix12i x, Fix12i y, Fix12i z)
-{
-    Particle::SysTracker *tracker = gParticleSysTracker;
-    u32 result = Particle::System::New(tracker->mSystemID_7a4, 0x117, x, y, z, 0,
-                                       (Particle::Callback *)&tracker->mCallback_7a8);
-    gParticleSysTracker->mSystemID_7a4 = result;
-    return result;
-}
 
 void func_02022864(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity) {
     gParticleSysTracker->mCallback_7b4.scale = scale;

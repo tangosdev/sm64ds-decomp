@@ -129,10 +129,10 @@ struct SysTracker {
     dPa_c::level_c::bubbleCallback_c mBubbleCallback; /* 0x784 */
     s32 mRippleSystemID;    /* 0x78c */
     dPa_c::level_c::fitWaterSimpleCallback_c mRippleCallback; /* 0x790 */
-    s32 mSystemID_798;      /* 0x798 */
-    dPa_c::level_c::simpleCallback_c mCallback_79c; /* 0x79c */
-    s32 mSystemID_7a4;      /* 0x7a4 */
-    dPa_c::level_c::simpleCallback_c mCallback_7a8; /* 0x7a8 */
+    s32 mRedFlameSystemID;                                    /* 0x798 */
+    dPa_c::level_c::simpleCallback_c mRedFlameCallback;       /* 0x79c */
+    s32 mBlueFlameSystemID;                                   /* 0x7a4 */
+    dPa_c::level_c::simpleCallback_c mBlueFlameCallback;      /* 0x7a8 */
     s32 mSystemID_7b0;      /* 0x7b0 */
     dPa_c::level_c::scaleCallback_c mCallback_7b4; /* 0x7b4 */
     s32 mSystemID_7c0;      /* 0x7c0 */

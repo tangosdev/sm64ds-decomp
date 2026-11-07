@@ -745,8 +745,6 @@ extern unsigned int data_020a4be4;
 extern unsigned int sD3DSubScreenBgByLanguage[];
 extern unsigned int sD3DCommonNcgByLanguage[];
 extern unsigned int sD3DOptionNcgByLanguage[];
-extern unsigned int func_020228dc(int, int, int);
-extern unsigned int func_0202293c(int, int, int);
 extern unsigned int func_02022d00(unsigned int, unsigned int, Fix12i, Fix12i, Fix12i, void*);
 extern unsigned int func_02022d44(unsigned int, unsigned int, int, int, int, void*);
 extern unsigned short gKuppaScriptFrame;
