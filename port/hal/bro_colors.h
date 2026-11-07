@@ -31,6 +31,7 @@ struct Picks {
 enum { kMaxMat = 64 };
 struct Stamp {
     char *rec[2];
+    const unsigned char *hdr[2];    // the model's BMD_File, for restamp
     unsigned n[2];
     int old[2][kMaxMat];
     int now[2][kMaxMat];
@@ -43,6 +44,11 @@ bool any(const Picks &p);
 // Point the materials of model `mdl` (slot k = 0 body, 1 head) at recoloured copies. Nothing changes
 // (st.n[k] = 0) when no palette of the model has a picked category.
 void stamp_model(Stamp &st, int k, char *mdl, const Picks &p);
+
+// Stamp again every material of a stamped model whose base moved since the stamp (BROSTAMP1: a texture
+// sequence's Update between the body's draw and its mirror draw writes the cartridge base back on the
+// materials it drives, the eyes' blink on every head). The moved base becomes the one unstamp restores.
+void restamp(Stamp &st, const Picks &p);
 
 // Put back every base stamp_model changed that still holds the stamped value (a texture sequence that
 // moved a base during the draw keeps its own value).

@@ -1739,6 +1739,48 @@ static void ghost_unstamp(GhostPalStamp &st)
             *(int *)(st.rec[k] + i * 0x30 + 0x20) = st.old[k][i];
 }
 
+/* BROSTAMP1: THE MIRROR DRAWS THE SAME STAMPED MODELS. Player::Render
+   (src/game/player/Player.cpp, Player::Render) draws a model, then runs its
+   TextureSequence::Update calls, then the mirror copy func_ov002_020e3e00:
+   a second Model::Render of the same model, reflected (level 5 area 3, the
+   castle's mirror room; level 0x2f, the King Boo arena). The Update is
+   func_02046bbc (src/unnamed/arm9/0204/func_02046bbc.c), which writes every
+   material its BTP drives back to the file's own texture words (+0x1c) and
+   palette base (+0x20): the eyes' blink on every head, and Luigi's vanish
+   sequence on his body and his cap head. So between the real draw and the
+   reflection those materials lost the picks this draw stamped, and the
+   reflected Yoshi's eyelids (the blink's material) showed the cartridge
+   green on a body in the player's colours. The ROM's own per-player stamp
+   (VS, Yoshi, the unk_61c loop at the top of Player::Render) runs before
+   the draw and has no mirror room to meet. Stamped again here, just before
+   each mirror draw, on whatever the Update moved; the moved base is what
+   the unstamp puts back, so the material is left as the Update set it, as
+   it is on the cartridge. Nothing moved, no pick, no mirror: nothing
+   changes. */
+static void ghost_restamp(GhostPalStamp &st, int pal)
+{
+    for (int k = 0; k < 2; ++k)
+        for (unsigned i = 0; i < st.n[k]; ++i) {
+            int *pb = (int *)(st.rec[k] + i * 0x30 + 0x20);
+            if (*pb == pal) continue;
+            st.old[k][i] = *pb;
+            *pb = pal;
+        }
+}
+struct MirrorStamp {
+    GhostPalStamp *gst;              /* this draw's ghost / own Yoshi row stamp, or 0 */
+    int pal;
+    port::bro::Stamp *bst;           /* this draw's bro stamp, or 0 */
+    port::bro::Picks bp;
+};
+static MirrorStamp g_mirror_stamp;
+static void mirror_restamp()
+{
+    MirrorStamp &m = g_mirror_stamp;
+    if (m.gst && m.pal >= 0) ghost_restamp(*m.gst, m.pal);
+    if (m.bst) port::bro::restamp(*m.bst, m.bp);
+}
+
 /* GHOSTCHAR1: SM64DS_GHOST_DRAW_PROBE=<stride>. What a hub ghost's draw really
    has, for the black-shading field report (F7): once per <stride> draws of a
    ghost, its character, the palette row it is stamped with and that row's
@@ -1941,9 +1983,18 @@ void hal_render_player_world(void *player)
             const unsigned hid = _ZN6Player19func_ov002_020becf4Eii(c, *(unsigned char *)(c + 0x6db), 1);
             if (hid != 8 && hid != 9)
                 port::bro::stamp_model(bst, 1, ((char **)(c + 0x154))[hid], bp);
+            g_mirror_stamp.bst = &bst;
+            g_mirror_stamp.bp = bp;
         }
     }
+    if (pal >= 0) {
+        g_mirror_stamp.gst = &st;
+        g_mirror_stamp.pal = pal;
+    }
     hal_render_player_world_body(player);
+    g_mirror_stamp.gst = 0;
+    g_mirror_stamp.bst = 0;
+    g_mirror_stamp.pal = -1;
     port::bro::unstamp(bst);
     if (pal >= 0) ghost_unstamp(st);
     if (player != data_0209f394[data_0209f250] && slot >= 0 && slot < kPortBodySlots &&
@@ -2206,6 +2257,7 @@ static void hal_render_player_world_body(void *player)
         if (hsink_on()) ntr::gx_polygons(hsink_t1);
         hal_player_texseq_body(c);
         /* the mirror, src/_ZN6Player6RenderEv.cpp:81 (see the head's call) */
+        mirror_restamp();               /* BROSTAMP1: the texseq above moved stamped bases */
         func_ov002_020e3e00(ma, c + 0x80, *(const unsigned char *)(c + 0x6f5));
     }
 
@@ -2238,6 +2290,7 @@ static void hal_render_player_world_body(void *player)
                model's matrix after. It is linked (port/slice_hostgen4.txt)
                and this copy never called it, so the player had no
                reflection in either mirror. */
+            mirror_restamp();           /* BROSTAMP1: the blink above moved the eyes' base */
             func_ov002_020e3e00(head, c + 0x80, *(const unsigned char *)(c + 0x6f5));
             /* THE LAST STATEMENT OF THE ROM'S HEAD BLOCK,
                src/_ZN6Player6RenderEv.cpp:129-131:
