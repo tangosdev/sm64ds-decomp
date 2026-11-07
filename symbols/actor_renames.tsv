@@ -8057,3 +8057,4 @@ arm9	0x0209ee80	data_0209ee80	sParticleHeapBase	particle bump-heap base: SysTrac
 arm9	0x0209ee84	data_0209ee84	sParticlePalVramLowCursor	particle low palette-VRAM cursor: Texture::AllocPalVram(fromLowAddress) returns it and advances it by the 8-aligned size; storage unchanged
 arm9	0x0209ee88	data_0209ee88	sParticleTex4x4VramCursor	particle 4x4-texel VRAM cursor: Texture::AllocTexVram(isTexel4x4) returns it and advances it by size; storage unchanged
 arm9	0x0209ee8c	data_0209ee8c	sParticlePalVramHighCursor	particle high palette-VRAM cursor: Texture::AllocPalVram allocates downward from it by the 16-aligned size; storage unchanged
+arm9	0x02022b04	func_02022b04	_ZN8Particle24MegaRunningSlidingDustAtEiii	extern "C" wrapper -> Particle:: free function beside RunningSlidingDustAt: daPly_c calls it instead of RunningSlidingDustAt at all five sites when mIsMega is set, and effect 0x61 is 0xda's dust at twice the emitter radius (spa_dump)

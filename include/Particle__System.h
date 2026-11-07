@@ -116,6 +116,7 @@ struct System {
 };
 
 void RunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
+void MegaRunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */

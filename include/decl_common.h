@@ -852,7 +852,6 @@ extern void func_0201fc88(s16);
 extern void func_02020388(int);
 extern void func_02022260(int *, short *, short *, int *);
 extern u32 func_02022a4c(s32, s32, s32);
-extern void func_02022b04(Fix12i, Fix12i, Fix12i);
 extern void func_020233f4(void);
 extern void func_02023544(void);
 extern void func_0202a850(int, int);

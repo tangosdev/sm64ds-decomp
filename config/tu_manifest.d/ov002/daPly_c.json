@@ -12771,79 +12771,79 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4528",
+      "from": "_ZGVsLevelIntroOff$4525",
       "to": "_ZGVsLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "@4531",
+      "from": "@4528",
       "to": "@4427",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "sLevelIntroOff$4528",
+      "from": "sLevelIntroOff$4525",
       "to": "sLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsTalkOff$4746",
+      "from": "_ZGVsTalkOff$4743",
       "to": "_ZGVsTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "@4749",
+      "from": "@4746",
       "to": "@4651",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "sTalkOff$4746",
+      "from": "sTalkOff$4743",
       "to": "sTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsAnchorOff$6300",
+      "from": "_ZGVsAnchorOff$6297",
       "to": "_ZGVsAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "@6303",
+      "from": "@6300",
       "to": "@6226",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "sAnchorOff$6300",
+      "from": "sAnchorOff$6297",
       "to": "sAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsDoorMsgOff$6328",
+      "from": "_ZGVsDoorMsgOff$6325",
       "to": "_ZGVsDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "@6331",
+      "from": "@6328",
       "to": "@6254",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "sDoorMsgOff$6328",
+      "from": "sDoorMsgOff$6325",
       "to": "sDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsStarDoorOff$6978",
+      "from": "_ZGVsStarDoorOff$6975",
       "to": "_ZGVsStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "@6981",
+      "from": "@6978",
       "to": "@6920",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     },
     {
-      "from": "sStarDoorOff$6978",
+      "from": "sStarDoorOff$6975",
       "to": "sStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members."
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object)."
     }
   ],
   "relocations": [

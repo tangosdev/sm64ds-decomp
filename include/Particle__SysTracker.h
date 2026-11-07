@@ -40,7 +40,8 @@
  *   * Particle::System::New(uniqueID, effectID, x, y, z, dir, callback) is
  *     called as New(*(u32*)(base+N), effect, ..., base+N+4) and its result is
  *     stored back into *(u32*)(base+N) -- so slot N is the ID and N+4 is the
- *     Callback. RunningSlidingDustAt uses 0x750/0x754, System::NewBigSplash
+ *     Callback. RunningSlidingDustAt uses 0x750/0x754,
+ *     MegaRunningSlidingDustAt 0x75c/0x760, System::NewBigSplash
  *     uses 0x768/0x76c, System::NewRipple uses 0x78c/0x790.
  *   * The constructor zeroes exactly ten s32s in the tail -- 0x750, 0x75c,
  *     0x768, 0x774, 0x780, 0x78c, 0x798, 0x7a4, 0x7b0, 0x7c0 -- and no
@@ -118,8 +119,8 @@ struct SysTracker {
     /* --- callback bank --- */
     s32 mRunningSlidingDustSystemID;  /* 0x750 */
     dPa_c::level_c::simpleCallback_c mRunningSlidingDustCallback; /* 0x754 */
-    s32 mSystemID_75c;      /* 0x75c */
-    dPa_c::level_c::simpleCallback_c mCallback_760; /* 0x760 */
+    s32 mMegaRunningSlidingDustSystemID;                          /* 0x75c */
+    dPa_c::level_c::simpleCallback_c mMegaRunningSlidingDustCallback; /* 0x760 */
     s32 mBigSplashSystemID; /* 0x768 */
     dPa_c::level_c::splashCallback_c mBigSplashCallback; /* 0x76c */
     s32 mSystemID_774;      /* 0x774 */

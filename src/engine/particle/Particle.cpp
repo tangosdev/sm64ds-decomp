@@ -10,7 +10,7 @@
 // @symbol func_020229f0
 // @symbol func_02022a4c
 // @symbol _ZN8Particle6System12NewBigSplashEiii
-// @symbol func_02022b04
+// @symbol _ZN8Particle24MegaRunningSlidingDustAtEiii
 // @symbol _ZN8Particle20RunningSlidingDustAtEiii
 // @symbol _ZN8Particle6System17NewUnkCallback818EjjiiiPK11Vector3_16f
 // @symbol _ZN8Particle6System10NewWeatherEjjiiiPK11Vector3_16fh
@@ -71,7 +71,7 @@ SysTracker::SysTracker()
     gParticleSysTracker = this;
     mManager = 0;
     mRunningSlidingDustSystemID = 0;
-    mSystemID_75c = 0;
+    mMegaRunningSlidingDustSystemID = 0;
     mBigSplashSystemID = 0;
     mSystemID_774 = 0;
     mBubbleSystemID = 0;
@@ -336,20 +336,15 @@ void RunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
                     (Callback *)&gParticleSysTracker->mRunningSlidingDustCallback);
 }
 
+// @symbol _ZN8Particle24MegaRunningSlidingDustAtEiii
+/* RunningSlidingDustAt for Mega Mario: daPly_c calls this instead whenever
+   mIsMega is set. Effect 0x61 is effect 0xda's dust (same texture, shape,
+   lifetime and animation) at twice the emitter radius. */
+void MegaRunningSlidingDustAt(Fix12i x, Fix12i y, Fix12i z) {
+    gParticleSysTracker->mMegaRunningSlidingDustSystemID =
+        System::New(gParticleSysTracker->mMegaRunningSlidingDustSystemID, 0x61, x, y, z, 0,
+                    (Callback *)&gParticleSysTracker->mMegaRunningSlidingDustCallback);
 }
-
-extern "C" {
-
-// @symbol func_02022b04
-void func_02022b04(Fix12i x, Fix12i y, Fix12i z)
-{
-    gParticleSysTracker->mSystemID_75c =
-        Particle::System::New(gParticleSysTracker->mSystemID_75c, 0x61, x, y, z, 0,
-                              (Particle::Callback *)&gParticleSysTracker->mCallback_760);
-}
-}
-
-namespace Particle {
 
 // @symbol _ZN8Particle6System12NewBigSplashEiii
 void System::NewBigSplash(Fix12i x, Fix12i y, Fix12i z) {

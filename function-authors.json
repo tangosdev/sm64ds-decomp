@@ -3763,7 +3763,7 @@
     },
     "arm9:0x02022b04": {
       "author": "tangosdev",
-      "name": "func_02022b04"
+      "name": "_ZN8Particle24MegaRunningSlidingDustAtEiii"
     },
     "arm9:0x02022b58": {
       "author": "tangosdev",

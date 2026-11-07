@@ -371,7 +371,6 @@ extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int AngleDiff(int a, int b);
 extern struct S18a data_0209f4a4[];
 extern u32 func_02022a4c(Fix12i x, Fix12i y, Fix12i z);
-extern void func_02022b04(Fix12i x, Fix12i y, Fix12i z);
 extern u32 func_02022cbc(int uniqueID, int effectID, s32 x, s32 y, s32 z, int dir);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir);
 extern int func_ov002_020d1164(void *c);
@@ -2248,7 +2247,7 @@ void daPly_c::func_ov002_020bf88c() {
     if (gSubSoundID == 0x2e)
         return;
     if (mIsMega)
-        func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
+        Particle::MegaRunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
     else
         Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
 }
@@ -2264,7 +2263,7 @@ void daPly_c::func_ov002_020bf90c() {
         return;
 
     if (mIsMega != 0)
-        func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
+        Particle::MegaRunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
     else
         Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
 
@@ -11227,8 +11226,8 @@ int daPly_c::St_WallSlide_Main() {
         this->ChangeState(data_ov002_0211013c);
     } else {
         if ((*((unsigned char *)((char *)&mIsMega))) != 0) {
-            func_02022b04(*((int *)((char *)&mPosX)), *((int *)((char *)&mPosY)),
-                          *((int *)((char *)&mPosZ)));
+            Particle::MegaRunningSlidingDustAt(
+                *((int *)((char *)&mPosX)), *((int *)((char *)&mPosY)), *((int *)((char *)&mPosZ)));
         } else {
             Particle::RunningSlidingDustAt(*((int *)((char *)&mPosX)), *((int *)((char *)&mPosY)),
                                            *((int *)((char *)&mPosZ)));
@@ -13074,7 +13073,7 @@ void daPly_c::func_ov002_020d45c0() {
             if (*(u8*)((char*)data_0209f4ac + gActivePlayerSlot * 0x18) != 0
                 || (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x800)) {
                 if (mIsMega != 0)
-                    func_02022b04(mPosX, mPosY, mPosZ);
+                    Particle::MegaRunningSlidingDustAt(mPosX, mPosY, mPosZ);
                 else
                     Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
             }
@@ -13086,7 +13085,7 @@ void daPly_c::func_ov002_020d45c0() {
     if (mStateArg != 0) {
         if (mStateWaitTimer != 0) {
             if (mIsMega != 0)
-                func_02022b04(mPosX, mPosY, mPosZ);
+                Particle::MegaRunningSlidingDustAt(mPosX, mPosY, mPosZ);
             else
                 Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
         }

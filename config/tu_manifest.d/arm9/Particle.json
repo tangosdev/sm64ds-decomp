@@ -96,7 +96,7 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_02022b04",
+      "symbol": "_ZN8Particle24MegaRunningSlidingDustAtEiii",
       "address": "0x02022b04",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0202/func_02022b04.c",
