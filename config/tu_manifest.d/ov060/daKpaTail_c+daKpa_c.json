@@ -68,413 +68,413 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02111a28Ev",
+      "symbol": "_ZN7daKpa_c15UpdateFootfallsEv",
       "address": "0x02111a28",
       "size": "0x00000240",
       "legacy_source": "src/func_ov060_02111a28.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02111c68Ev",
+      "symbol": "_ZN7daKpa_c15GetMouthFireRowEv",
       "address": "0x02111c68",
       "size": "0x00000058",
       "legacy_source": "src/func_ov060_02111c68.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02111cc0Eii",
+      "symbol": "_ZN7daKpa_c13InitAnimationEii",
       "address": "0x02111cc0",
       "size": "0x00000248",
       "legacy_source": "src/func_ov060_02111cc0.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02111f08Ev",
+      "symbol": "_ZN7daKpa_c17UpdateIntroCameraEv",
       "address": "0x02111f08",
       "size": "0x00000448",
       "legacy_source": "src/func_ov060_02111f08.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112350Ev",
+      "symbol": "_ZN7daKpa_c20LoopLayDownAnimationEv",
       "address": "0x02112350",
       "size": "0x00000050",
       "legacy_source": "src/func_ov060_02112350.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021123a0Ei",
+      "symbol": "_ZN7daKpa_c11SetTangibleEi",
       "address": "0x021123a0",
       "size": "0x00000028",
       "legacy_source": "src/func_ov060_021123a0.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021123c8Ev",
+      "symbol": "_ZN7daKpa_c14OnTailReleasedEv",
       "address": "0x021123c8",
       "size": "0x00000014",
       "legacy_source": "src/func_ov060_021123c8.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021123dcEv",
+      "symbol": "_ZN7daKpa_c14InitFightStateEv",
       "address": "0x021123dc",
       "size": "0x00000058",
       "legacy_source": "src/func_ov060_021123dc.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112434Ev",
+      "symbol": "_ZN7daKpa_c10BowserLoopEv",
       "address": "0x02112434",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov060_02112434.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021125f0Ev",
+      "symbol": "_ZN7daKpa_c19ThrownDroppedUpdateEv",
       "address": "0x021125f0",
       "size": "0x00000134",
       "legacy_source": "src/func_ov060_021125f0.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112724Ev",
+      "symbol": "_ZN7daKpa_c10HeldUpdateEv",
       "address": "0x02112724",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov060_02112724.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021128c0Ev",
+      "symbol": "_ZN7daKpa_c10FreeUpdateEv",
       "address": "0x021128c0",
       "size": "0x000002e8",
       "legacy_source": "src/func_ov060_021128c0.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112ba8Ev",
+      "symbol": "_ZN7daKpa_c19CheckFallenOffStageEv",
       "address": "0x02112ba8",
       "size": "0x00000054",
       "legacy_source": "src/func_ov060_02112ba8.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112bfcEv",
+      "symbol": "_ZN7daKpa_c19ActTiltLavaPlatformEv",
       "address": "0x02112bfc",
       "size": "0x0000014c",
       "legacy_source": "src/func_ov060_02112bfc.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112d48Ei",
+      "symbol": "_ZN7daKpa_c12TiltPlatformEi",
       "address": "0x02112d48",
       "size": "0x00000094",
       "legacy_source": "src/func_ov060_02112d48.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112ddcEv",
+      "symbol": "_ZN7daKpa_c7ActDeadEv",
       "address": "0x02112ddc",
       "size": "0x00000104",
       "legacy_source": "src/func_ov060_02112ddc.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02112ee0Ev",
+      "symbol": "_ZN7daKpa_c20DeadFinalStageEndingEv",
       "address": "0x02112ee0",
       "size": "0x000001e0",
       "legacy_source": "src/func_ov060_02112ee0.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021130c0Ev",
+      "symbol": "_ZN7daKpa_c22DeadDefaultStageEndingEv",
       "address": "0x021130c0",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov060_021130c0.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113260Ev",
+      "symbol": "_ZN7daKpa_c8DeadHideEv",
       "address": "0x02113260",
       "size": "0x00000044",
       "legacy_source": "src/func_ov060_02113260.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021132a4Ev",
+      "symbol": "_ZN7daKpa_c11DeadTwirlUpEv",
       "address": "0x021132a4",
       "size": "0x00000160",
       "legacy_source": "src/func_ov060_021132a4.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113404Ev",
+      "symbol": "_ZN7daKpa_c16DeadWaitForMarioEv",
       "address": "0x02113404",
       "size": "0x000000a8",
       "legacy_source": "src/func_ov060_02113404.c",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021134acEv",
+      "symbol": "_ZN7daKpa_c10DeadBounceEv",
       "address": "0x021134ac",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov060_021134ac.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113564Ev",
+      "symbol": "_ZN7daKpa_c11FlyBackDeadEv",
       "address": "0x02113564",
       "size": "0x00000098",
       "legacy_source": "src/func_ov060_02113564.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021135fcEv",
+      "symbol": "_ZN7daKpa_c16SpawnCollectableEv",
       "address": "0x021135fc",
       "size": "0x00000114",
       "legacy_source": "src/func_ov060_021135fc.c",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113710Ev",
+      "symbol": "_ZN7daKpa_c8ActDanceEv",
       "address": "0x02113710",
       "size": "0x00000030",
       "legacy_source": "src/func_ov060_02113710.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113740Ev",
+      "symbol": "_ZN7daKpa_c16ActJumpOntoStageEv",
       "address": "0x02113740",
       "size": "0x00000354",
       "legacy_source": "src/func_ov060_02113740.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113a94Ev",
+      "symbol": "_ZN7daKpa_c16SetGoalInvisibleEv",
       "address": "0x02113a94",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov060_02113a94.c",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113b5cEv",
+      "symbol": "_ZN7daKpa_c9ActThrownEv",
       "address": "0x02113b5c",
       "size": "0x000001c4",
       "legacy_source": "src/func_ov060_02113b5c.cpp",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113d20Ev",
+      "symbol": "_ZN7daKpa_c12CheckHitMineEv",
       "address": "0x02113d20",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov060_02113d20.cpp",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113d8cEv",
+      "symbol": "_ZN7daKpa_c14ActChargeMarioEv",
       "address": "0x02113d8c",
       "size": "0x00000240",
       "legacy_source": "src/func_ov060_02113d8c.cpp",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113fccEv",
+      "symbol": "_ZN7daKpa_c15ActTurnFromEdgeEv",
       "address": "0x02113fcc",
       "size": "0x00000028",
       "legacy_source": "src/func_ov060_02113fcc.c",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02113ff4Eti",
+      "symbol": "_ZN7daKpa_c11TurnOnTimerEti",
       "address": "0x02113ff4",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov060_02113ff4.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021140c0Ev",
+      "symbol": "_ZN7daKpa_c20ActSpitFireOntoFloorEv",
       "address": "0x021140c0",
       "size": "0x000001f4",
       "legacy_source": "src/func_ov060_021140c0.c",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021142b4Ev",
+      "symbol": "_ZN7daKpa_c10ActHitEdgeEv",
       "address": "0x021142b4",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov060_021142b4.c",
       "ordinal": 37
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02114300Ev",
+      "symbol": "_ZN7daKpa_c12ActQuickJumpEv",
       "address": "0x02114300",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov060_02114300.c",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021143b8Ev",
+      "symbol": "_ZN7daKpa_c10ActBigJumpEv",
       "address": "0x021143b8",
       "size": "0x000001f0",
       "legacy_source": "src/func_ov060_021143b8.c",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021145a8Ev",
+      "symbol": "_ZN7daKpa_c14ShortSecondHopEv",
       "address": "0x021145a8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov060_021145a8.c",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021145d4Ev",
+      "symbol": "_ZN7daKpa_c10BowserLandEv",
       "address": "0x021145d4",
       "size": "0x000000c8",
       "legacy_source": "src/func_ov060_021145d4.c",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_0211469cEv",
+      "symbol": "_ZN7daKpa_c11SetAnimJumpEv",
       "address": "0x0211469c",
       "size": "0x00000034",
       "legacy_source": "src/func_ov060_0211469c.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021146d0Ev",
+      "symbol": "_ZN7daKpa_c10ActHitMineEv",
       "address": "0x021146d0",
       "size": "0x00000188",
       "legacy_source": "src/func_ov060_021146d0.c",
       "ordinal": 43
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02114858Ev",
+      "symbol": "_ZN7daKpa_c18ActSpitFireIntoSkyEv",
       "address": "0x02114858",
       "size": "0x00000308",
       "legacy_source": "src/func_ov060_02114858.c",
       "ordinal": 44
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02114b60Ev",
+      "symbol": "_ZN7daKpa_c11ActTeleportEv",
       "address": "0x02114b60",
       "size": "0x000001a8",
       "legacy_source": "src/func_ov060_02114b60.c",
       "ordinal": 45
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02114d08Ev",
+      "symbol": "_ZN7daKpa_c14ActWalkToMarioEv",
       "address": "0x02114d08",
       "size": "0x00000194",
       "legacy_source": "src/func_ov060_02114d08.c",
       "ordinal": 46
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02114e9cEv",
+      "symbol": "_ZN7daKpa_c13ActBreathFireEv",
       "address": "0x02114e9c",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov060_02114e9c.cpp",
       "ordinal": 47
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02114f88Ev",
+      "symbol": "_ZN7daKpa_c10ActDefaultEv",
       "address": "0x02114f88",
       "size": "0x00000070",
       "legacy_source": "src/func_ov060_02114f88.c",
       "ordinal": 48
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02114ff8Ev",
+      "symbol": "_ZN7daKpa_c7ActIdleEv",
       "address": "0x02114ff8",
       "size": "0x00000020",
       "legacy_source": "src/func_ov060_02114ff8.c",
       "ordinal": 49
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115018Ev",
+      "symbol": "_ZN7daKpa_c19ResetFallenOffStageEv",
       "address": "0x02115018",
       "size": "0x00000048",
       "legacy_source": "src/func_ov060_02115018.c",
       "ordinal": 50
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115060Ev",
+      "symbol": "_ZN7daKpa_c11BitsActionsEv",
       "address": "0x02115060",
       "size": "0x00000064",
       "legacy_source": "src/func_ov060_02115060.c",
       "ordinal": 51
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021150c4Ev",
+      "symbol": "_ZN7daKpa_c13SetActBigJumpEv",
       "address": "0x021150c4",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov060_021150c4.c",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021150d0Ev",
+      "symbol": "_ZN7daKpa_c14BitsActionListEv",
       "address": "0x021150d0",
       "size": "0x00000104",
       "legacy_source": "src/func_ov060_021150d0.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021151d4Ev",
+      "symbol": "_ZN7daKpa_c12BitfsActionsEv",
       "address": "0x021151d4",
       "size": "0x00000140",
       "legacy_source": "src/func_ov060_021151d4.c",
       "ordinal": 54
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115314Ev",
+      "symbol": "_ZN7daKpa_c12BitdwActionsEv",
       "address": "0x02115314",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov060_02115314.c",
       "ordinal": 55
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021153f8Ev",
+      "symbol": "_ZN7daKpa_c12ActIntroWalkEv",
       "address": "0x021153f8",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov060_021153f8.c",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021154e8Ev",
+      "symbol": "_ZN7daKpa_c7ActWaitEv",
       "address": "0x021154e8",
       "size": "0x00000030",
       "legacy_source": "src/func_ov060_021154e8.c",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115518Ev",
+      "symbol": "_ZN7daKpa_c12RunIntroTalkEv",
       "address": "0x02115518",
       "size": "0x000001d4",
       "legacy_source": "src/func_ov060_02115518.c",
       "ordinal": 58
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_021156ecEv",
+      "symbol": "_ZN7daKpa_c23SetAnimLookDownStopWalkEv",
       "address": "0x021156ec",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov060_021156ec.c",
       "ordinal": 59
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115718Ev",
+      "symbol": "_ZN7daKpa_c15SetAnimSlowGaitEv",
       "address": "0x02115718",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov060_02115718.c",
       "ordinal": 60
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115744Ev",
+      "symbol": "_ZN7daKpa_c20SetAnimLookUpAndWalkEv",
       "address": "0x02115744",
       "size": "0x00000038",
       "legacy_source": "src/func_ov060_02115744.c",
       "ordinal": 61
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_0211577cEv",
+      "symbol": "_ZN7daKpa_c17UpdateModelMatrixEv",
       "address": "0x0211577c",
       "size": "0x000002b4",
       "legacy_source": "src/func_ov060_0211577c.c",
@@ -488,14 +488,14 @@
       "ordinal": 63
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115a84EPc",
+      "symbol": "_ZN7daKpa_c13BounceEffectsEPc",
       "address": "0x02115a84",
       "size": "0x00000088",
       "legacy_source": "src/func_ov060_02115a84.cpp",
       "ordinal": 64
     },
     {
-      "symbol": "_ZN7daKpa_c19func_ov060_02115b0cEv",
+      "symbol": "_ZN7daKpa_c14SpawnShockwaveEv",
       "address": "0x02115b0c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov060_02115b0c.c",
@@ -613,84 +613,84 @@
       "address": "0x211a4e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113710Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c8ActDanceEv"
     },
     {
       "symbol": "@3123",
       "address": "0x211a4f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02112ddcEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c7ActDeadEv"
     },
     {
       "symbol": "@3137",
       "address": "0x211a4f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114ff8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c7ActIdleEv"
     },
     {
       "symbol": "@3124",
       "address": "0x211a500",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021154e8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c7ActWaitEv"
     },
     {
       "symbol": "@3131",
       "address": "0x211a508",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021146d0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c10ActHitMineEv"
     },
     {
       "symbol": "@3116",
       "address": "0x211a510",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02112724Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c10HeldUpdateEv"
     },
     {
       "symbol": "@3117",
       "address": "0x211a518",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021125f0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19ThrownDroppedUpdateEv"
     },
     {
       "symbol": "@3118",
       "address": "0x211a520",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021125f0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19ThrownDroppedUpdateEv"
     },
     {
       "symbol": "@3132",
       "address": "0x211a528",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021143b8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c10ActBigJumpEv"
     },
     {
       "symbol": "@3130",
       "address": "0x211a530",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113fccEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c15ActTurnFromEdgeEv"
     },
     {
       "symbol": "@3121",
       "address": "0x211a538",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113740Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c16ActJumpOntoStageEv"
     },
     {
       "symbol": "@3125",
       "address": "0x211a540",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021153f8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c12ActIntroWalkEv"
     },
     {
       "symbol": "@3141",
@@ -718,84 +718,84 @@
       "address": "0x211a560",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113b5cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c9ActThrownEv"
     },
     {
       "symbol": "@3119",
       "address": "0x211a568",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114f88Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c10ActDefaultEv"
     },
     {
       "symbol": "@3138",
       "address": "0x211a570",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02112bfcEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19ActTiltLavaPlatformEv"
     },
     {
       "symbol": "@3115",
       "address": "0x211a578",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021128c0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c10FreeUpdateEv"
     },
     {
       "symbol": "@3136",
       "address": "0x211a580",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114300Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c12ActQuickJumpEv"
     },
     {
       "symbol": "@3135",
       "address": "0x211a588",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114b60Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c11ActTeleportEv"
     },
     {
       "symbol": "@3134",
       "address": "0x211a590",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114e9cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c13ActBreathFireEv"
     },
     {
       "symbol": "@3133",
       "address": "0x211a598",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114d08Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c14ActWalkToMarioEv"
     },
     {
       "symbol": "@3128",
       "address": "0x211a5a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021140c0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c20ActSpitFireOntoFloorEv"
     },
     {
       "symbol": "@3129",
       "address": "0x211a5a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_021142b4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c10ActHitEdgeEv"
     },
     {
       "symbol": "@3127",
       "address": "0x211a5b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02114858Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c18ActSpitFireIntoSkyEv"
     },
     {
       "symbol": "@3126",
       "address": "0x211a5b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c19func_ov060_02113d8cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKpa_c14ActChargeMarioEv"
     }
   ],
   "bss": [
@@ -2725,7 +2725,7 @@
       "source": "0x211a4e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02113710Ev",
+      "symbol": "_ZN7daKpa_c8ActDanceEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2113710"
@@ -2735,7 +2735,7 @@
       "source": "0x211a4f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02112ddcEv",
+      "symbol": "_ZN7daKpa_c7ActDeadEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2112ddc"
@@ -2745,7 +2745,7 @@
       "source": "0x211a4f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02114ff8Ev",
+      "symbol": "_ZN7daKpa_c7ActIdleEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2114ff8"
@@ -2755,7 +2755,7 @@
       "source": "0x211a500",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021154e8Ev",
+      "symbol": "_ZN7daKpa_c7ActWaitEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21154e8"
@@ -2765,7 +2765,7 @@
       "source": "0x211a508",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021146d0Ev",
+      "symbol": "_ZN7daKpa_c10ActHitMineEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21146d0"
@@ -2775,7 +2775,7 @@
       "source": "0x211a510",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02112724Ev",
+      "symbol": "_ZN7daKpa_c10HeldUpdateEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2112724"
@@ -2785,7 +2785,7 @@
       "source": "0x211a518",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021125f0Ev",
+      "symbol": "_ZN7daKpa_c19ThrownDroppedUpdateEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21125f0"
@@ -2795,7 +2795,7 @@
       "source": "0x211a520",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021125f0Ev",
+      "symbol": "_ZN7daKpa_c19ThrownDroppedUpdateEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21125f0"
@@ -2805,7 +2805,7 @@
       "source": "0x211a528",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021143b8Ev",
+      "symbol": "_ZN7daKpa_c10ActBigJumpEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21143b8"
@@ -2815,7 +2815,7 @@
       "source": "0x211a530",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02113fccEv",
+      "symbol": "_ZN7daKpa_c15ActTurnFromEdgeEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2113fcc"
@@ -2825,7 +2825,7 @@
       "source": "0x211a538",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02113740Ev",
+      "symbol": "_ZN7daKpa_c16ActJumpOntoStageEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2113740"
@@ -2835,7 +2835,7 @@
       "source": "0x211a540",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021153f8Ev",
+      "symbol": "_ZN7daKpa_c12ActIntroWalkEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21153f8"
@@ -2875,7 +2875,7 @@
       "source": "0x211a560",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02113b5cEv",
+      "symbol": "_ZN7daKpa_c9ActThrownEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2113b5c"
@@ -2885,7 +2885,7 @@
       "source": "0x211a568",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02114f88Ev",
+      "symbol": "_ZN7daKpa_c10ActDefaultEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2114f88"
@@ -2895,7 +2895,7 @@
       "source": "0x211a570",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02112bfcEv",
+      "symbol": "_ZN7daKpa_c19ActTiltLavaPlatformEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2112bfc"
@@ -2905,7 +2905,7 @@
       "source": "0x211a578",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021128c0Ev",
+      "symbol": "_ZN7daKpa_c10FreeUpdateEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21128c0"
@@ -2915,7 +2915,7 @@
       "source": "0x211a580",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02114300Ev",
+      "symbol": "_ZN7daKpa_c12ActQuickJumpEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2114300"
@@ -2925,7 +2925,7 @@
       "source": "0x211a588",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02114b60Ev",
+      "symbol": "_ZN7daKpa_c11ActTeleportEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2114b60"
@@ -2935,7 +2935,7 @@
       "source": "0x211a590",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02114e9cEv",
+      "symbol": "_ZN7daKpa_c13ActBreathFireEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2114e9c"
@@ -2945,7 +2945,7 @@
       "source": "0x211a598",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02114d08Ev",
+      "symbol": "_ZN7daKpa_c14ActWalkToMarioEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2114d08"
@@ -2955,7 +2955,7 @@
       "source": "0x211a5a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021140c0Ev",
+      "symbol": "_ZN7daKpa_c20ActSpitFireOntoFloorEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21140c0"
@@ -2965,7 +2965,7 @@
       "source": "0x211a5a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_021142b4Ev",
+      "symbol": "_ZN7daKpa_c10ActHitEdgeEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x21142b4"
@@ -2975,7 +2975,7 @@
       "source": "0x211a5b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02114858Ev",
+      "symbol": "_ZN7daKpa_c18ActSpitFireIntoSkyEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2114858"
@@ -2985,7 +2985,7 @@
       "source": "0x211a5b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKpa_c19func_ov060_02113d8cEv",
+      "symbol": "_ZN7daKpa_c14ActChargeMarioEv",
       "addend": 0,
       "target_module": "ov060",
       "target_address": "0x2113d8c"
