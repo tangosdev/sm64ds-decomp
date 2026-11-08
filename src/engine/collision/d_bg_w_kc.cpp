@@ -38,7 +38,7 @@ bool dBgW_Kc::IsWallNormal(Fix12i normalY) {
 
 
 /* Slope band of a face normal's y: 0 floor, 1 wall, 2 underside. */
-extern "C" int func_02039794(int normalY) {
+int dBgW_Kc::ClassifyNormalY(int normalY) {
     if (normalY > 0x600)
         return 0;
     if (normalY > -0xccc)

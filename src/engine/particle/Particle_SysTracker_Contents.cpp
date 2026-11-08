@@ -13,9 +13,7 @@
  *   single |= on the field DIFFs Reset.
  * - Update widens active == 1 to an int before testing it. A plain
  *   if on entry->active DIFFs Update.
- * - system->flags.unk_000, unk_006 and unk_00c stay the bitfield
- *   names on Particle::System.
- * - data_0209ee74 is the global tracker. This TU does not own it.
+ * - gParticleSysTracker is the global tracker. This TU does not own it.
  */
 
 #include "Particle__System.h"
@@ -28,16 +26,16 @@ bool SysTracker::Contents::Entry::Initialise(
     dPa_c::level_c::callback_c *newCallback)
 {
     SystemDefinition::Data& data =
-        *data_0209ee74->mManager->mDefinitions[newDefinitionID].data;
+        *gParticleSysTracker->mManager->mDefinitions[newDefinitionID].data;
 
     data.flags &= ~0x4000;
-    system = data_0209ee74->mManager->AddSystem(newDefinitionID, position);
+    system = gParticleSysTracker->mManager->AddSystem(newDefinitionID, position);
     if (system == 0)
         return false;
 
     if (newDefinitionID == 0x52 || newDefinitionID == 0x50) {
-        if (system->flags.unk_000 <= 5 && system->flags.unk_006 >= 5)
-            system->flags.unk_00c = 5;
+        if (system->polygonIDs.min <= 5 && system->polygonIDs.max >= 5)
+            system->polygonIDs.current = 5;
     }
 
     savedValue = data.callbackValue;
@@ -62,10 +60,8 @@ bool SysTracker::Contents::Entry::Initialise(
     return true;
 }
 
-void SysTracker::Contents::Entry::Reset()
-{
-    SystemDefinition::Data& data =
-        *data_0209ee74->mManager->mDefinitions[definitionID].data;
+void SysTracker::Contents::Entry::Reset() {
+    SystemDefinition::Data &data = *gParticleSysTracker->mManager->mDefinitions[definitionID].data;
     u32 *flagsAddress;
     u32 flags;
 
