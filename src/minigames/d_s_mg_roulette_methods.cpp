@@ -193,7 +193,9 @@ extern int sRouletteResultIndex;
 char *sRouletteStrips[4];
 void *sRouletteLandedRacer;
 extern int data_020a0db0;
-extern s32 data_ov006_0212ed24[];
+/* The first of the two blink frames in sRouletteStripSprites for each strip's
+   marker: {0, 2, 6, 8} for strips 0..3. A horizontal pair adds 2. */
+extern s32 sRouletteStripSpriteBase[];
 extern void *sRouletteStripSprites[];
 extern void *sRouletteTextSpritesByLanguage[];
 extern int sRoulettePayoutMultipliers[];
@@ -211,17 +213,17 @@ static inline int Roulette_IsQuadTile(int tile) {
 }
 
 extern short sRouletteSlowStops[];
-extern short data_ov006_0212ed34[];
+/* The single number (0..0xb) under each of the twelve stops in
+   sRouletteSlowStops, in wheel order. */
+extern short sRouletteStopTiles[12];
 extern struct Pair pmf_RouletteBoard_StateSlow;
 extern struct Pair2W pmf_RouletteBoard_StateSpin;
 extern int sRouletteTileBounds[];
 extern int sRouletteRowEdgesY[];
-extern short data_ov006_0212edb8[];
-extern short data_ov006_0212edba[];
-extern short data_ov006_0212ed88[];
-extern short data_ov006_0212ed8a[];
-extern short data_ov006_0212ed8c[];
-extern short data_ov006_0212ed8e[];
+/* The numbers each pair tile (0xc..0x1c) and each group-of-four tile
+   (0x1d..0x22) covers. */
+extern short sRoulettePairNumbers[17][2];
+extern short sRouletteQuadNumbers[6][4];
 extern s32 sMgCoinRiseFrames;
 extern u16 gMgCoinsStatus;
 extern u8 gMainScreenLayers;
@@ -1039,18 +1041,16 @@ int RouletteRacer_GetPayout(short *racer, int tile) {
     } else {
         inRange = Roulette_IsPairTile(landed);
         if (inRange != 0) {
-            inRange = (landed - 0xc) << 2;
-            if (tile == *(short *)((char *)data_ov006_0212edb8 + inRange) ||
-                tile == *(short *)((char *)data_ov006_0212edba + inRange))
+            if (tile == sRoulettePairNumbers[landed - 0xc][0] ||
+                tile == sRoulettePairNumbers[landed - 0xc][1])
                 payout = 6;
         } else {
             inRange = Roulette_IsQuadTile(landed);
             if (inRange != 0) {
-                inRange = (landed - 0x1d) << 3;
-                if (tile == *(short *)((char *)data_ov006_0212ed88 + inRange) ||
-                    tile == *(short *)((char *)data_ov006_0212ed8a + inRange) ||
-                    tile == *(short *)((char *)data_ov006_0212ed8c + inRange) ||
-                    tile == *(short *)((char *)data_ov006_0212ed8e + inRange))
+                if (tile == sRouletteQuadNumbers[landed - 0x1d][0] ||
+                    tile == sRouletteQuadNumbers[landed - 0x1d][1] ||
+                    tile == sRouletteQuadNumbers[landed - 0x1d][2] ||
+                    tile == sRouletteQuadNumbers[landed - 0x1d][3])
                     payout = 3;
             } else if ((landed == 0x23 && tile < 6) || (landed == 0x24 && tile >= 6)) {
                 payout = 2;
@@ -1321,7 +1321,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
             break;
     }
 
-    board->mStopTile = data_ov006_0212ed34[idx];
+    board->mStopTile = sRouletteStopTiles[idx];
 
     extra = 0;
     if (board->mBallRadius < 0x2000) {
@@ -1449,7 +1449,7 @@ void RouletteStrip_DrawRacers(void **strip) {
         obj->priority = 0;
         r0 = ((RouletteStrip *)strip)->payoutIndex;
         m = obj->tile;
-        idx = data_ov006_0212ed24[r0];
+        idx = sRouletteStripSpriteBase[r0];
         if (data_020a0db0 & 8)
             idx++;
         if (m >= 0xc && m <= 0x13)

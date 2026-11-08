@@ -86,7 +86,7 @@ struct RouletteBoard {
     s16 mAngleStep;            /* 0xc6 -- mOrbitAngle's step this frame */
     s16 mBoardSpin;            /* 0xc8 -- mBoardAngle's step, -0x200 */
     s16 mStopTile;             /* 0xca -- the tile under the ball
-                                  (data_ov006_0212ed34); phase 3 scores against it */
+                                  (sRouletteStopTiles); phase 3 scores against it */
     s16 mRollSound;            /* 0xcc -- 0 quiet; 1 on the rim (sound 0x157); 2 off
                                   the rim, in the bowl (0x158). Phase 1 sets 1 once
                                   the dealer is done; striking a stop plays 0x159
