@@ -1,6 +1,19 @@
 #ifndef PRIVATE_MB_VIEWS_H
 #define PRIVATE_MB_VIEWS_H
 
+/* The 0x16-byte player record sent by the multiboot parent. The 2004 ROM
+ * reads the name length at +1 and ten UTF-16 code units from +2; the later
+ * NitroSDK names the record MBUserInfo. The upper nibble is written here but
+ * its meaning in this SDK revision is not established. */
+typedef struct MBUserInfo {
+    unsigned char favoriteColor : 4;
+    unsigned char unknown_04 : 4;
+    unsigned char nameLength;
+    unsigned short name[10];
+} MBUserInfo;
+
+typedef char MBUserInfo_size_must_be_0x16[sizeof(MBUserInfo) == 0x16 ? 1 : -1];
+
 /* The NitroSDK multiboot game record (MBGameInfo, 0x4b8 bytes) as the ROM's
  * code reads it: built by MBi_MakeGameInfo, chained by MB_AddGameInfo and
  * sent by the beacon state machine (src/engine/mb/MB_GameInfo.c); the
@@ -10,7 +23,7 @@
  * include it without types.h. */
 typedef struct MBGameInfoFixed {
     char icon[0x220];           /* 0x000 -- MBIconInfo: palette, then char data */
-    char parent[0x16];          /* 0x220 -- MBUserInfo */
+    MBUserInfo parent;          /* 0x220 -- one MBUserInfo */
     unsigned char maxPlayerNum; /* 0x236 */
     unsigned char pad_237;
     unsigned short gameName[0x30];         /* 0x238 */
@@ -22,7 +35,7 @@ typedef struct MBGameInfoVolatile {
     unsigned char pad_359;
     unsigned short nowPlayerFlag;         /* 0x35a -- bit 0 is the parent */
     unsigned short changePlayerFlag;      /* 0x35c */
-    char member[15][0x16];                /* 0x35e -- MBUserInfo per child */
+    MBUserInfo member[15];                /* 0x35e -- one MBUserInfo per child */
     unsigned short broadcastedPlayerFlag; /* 0x4a8 -- bit i+1 set as child i is sent */
 } MBGameInfoVolatile;
 
