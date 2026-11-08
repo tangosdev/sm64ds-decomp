@@ -42059,67 +42059,67 @@
     },
     "ov084:0x0212c1a0": {
       "author": "ruspecial",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c1a0Ev"
+      "name": "_ZN14daRedBombhei_c19UpdateCannonOpeningEv"
     },
     "ov084:0x0212c4a0": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c4a0Ev"
+      "name": "_ZN14daRedBombhei_c18EnterCannonOpeningEv"
     },
     "ov084:0x0212c508": {
       "author": "lunavyqo",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c508Ev"
+      "name": "_ZN14daRedBombhei_c10UpdateTalkEv"
     },
     "ov084:0x0212c89c": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c89cEv"
+      "name": "_ZN14daRedBombhei_c9EnterTalkEv"
     },
     "ov084:0x0212c8b0": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c8b0Ev"
+      "name": "_ZN14daRedBombhei_c10UpdateIdleEv"
     },
     "ov084:0x0212c92c": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c92cEv"
+      "name": "_ZN14daRedBombhei_c9EnterIdleEv"
     },
     "ov084:0x0212c960": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c960Ei"
+      "name": "_ZN14daRedBombhei_c11ChangeStateEi"
     },
     "ov084:0x0212c9a8": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c9a8Ev"
+      "name": "_ZN14daRedBombhei_c11UpdateStateEv"
     },
     "ov084:0x0212c9f0": {
       "author": "andrewboudreau",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212c9f0Eij"
+      "name": "_ZN14daRedBombhei_c15ShowTalkMessageEih"
     },
     "ov084:0x0212ca60": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212ca60Ev"
+      "name": "_ZN14daRedBombhei_c19IsCharacterSpecificEv"
     },
     "ov084:0x0212caa8": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212caa8Ev"
+      "name": "_ZN14daRedBombhei_c13IsRedCoinRoleEv"
     },
     "ov084:0x0212cac0": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212cac0Ev"
+      "name": "_ZN14daRedBombhei_c12IsCannonRoleEv"
     },
     "ov084:0x0212cae0": {
       "author": "lunavyqo",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212cae0Ev"
+      "name": "_ZN14daRedBombhei_c18PanCameraToShutterEv"
     },
     "ov084:0x0212ccb4": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212ccb4Ev"
+      "name": "_ZN14daRedBombhei_c13PanCameraBackEv"
     },
     "ov084:0x0212cda0": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212cda0EP7Vector3S1_"
+      "name": "_ZN14daRedBombhei_c15StepCameraPointEP7Vector3S1_"
     },
     "ov084:0x0212ce50": {
       "author": "tangosdev",
-      "name": "_ZN14daRedBombhei_c19func_ov084_0212ce50Ev"
+      "name": "_ZN14daRedBombhei_c20UpdateModelTransformEv"
     },
     "ov084:0x0212cf10": {
       "author": "tangosdev",
