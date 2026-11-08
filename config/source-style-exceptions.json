@@ -306,6 +306,14 @@
       "evidence": "df88a655 Roulette slider render dExtModel_c/Sub at+0x60; notes/experiments/scene-physics3955-review.md; full106/106 ROM proof at005807df4f and independent prepared-object verification."
     },
     {
+      "path": "src/minigames/d_s_mg_roulette_methods.cpp",
+      "rule": "unknown-field",
+      "match": "unk_53f4",
+      "count": 1,
+      "reason": "Behavior's phase 3 clears scene+0x53f4 through the existing dScMgRoulette_c member instead of the retired raw-offset H(0x53f4) macro. This store is the only access to the field anywhere in the tree, so it has no reader to name it from; include/dScMgRoulette_c.h keeps it unk_53f4 ('cleared when the payout is posted'). Rename it if a reader turns up.",
+      "evidence": "main d_s_mg_roulette_methods.cpp Behavior `H(0x53f4) = 0`; include/dScMgRoulette_c.h line 141 `s16 unk_53f4; /* 0x53f4 */`; tubuild verify ov006/dScMgRoulette_c 40/40 TEXT-VERIFIED and rombuild 106/106 on fakematch/821-batch55-roulette-1108."
+    },
+    {
       "path": "include/cMgSmartball_wing_c.h",
       "rule": "unknown-field",
       "match": "unk_032",
