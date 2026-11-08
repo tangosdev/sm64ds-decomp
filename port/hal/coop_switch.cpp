@@ -42,6 +42,8 @@ int _ZN6Player13TryTalkToDoorEh(void *player, unsigned char a);
 int _ZN6Player16TryTalkToKeyDoorEv(void *player);
 void _ZN6Player11OpenBigDoorEv(void *player);
 int _ZN8daDoor_c19func_ov100_021453d8EPvi(void *door, void *node, int arg);   // set a Door's node and run its enter half
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);   // dBgActor_c: model matrix from mAngleY + the place (src/runtime/actor/d_bg_actor.cpp)
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);     // dBgActor_c: the mesh collider follows the model
 }
 
 namespace port {
@@ -569,6 +571,28 @@ bool apply_entry(int kind, int slot, int cls, int state, int value) {
     if (!t.valid || t.actor != a) { t.actor = a; t.cls = (unsigned short)cls; t.last = w->read(a); t.valid = true; }
     apply_to(t, a, w, state, value);
     return true;
+}
+
+// PUSH_BLOCK (192) placed by the friend's push. Its pose row (coop_actor_profiles.inc) writes the place, but the block's own
+// Behavior rebuilds its model matrix and collider only while it is being pushed (mHorzSpeed != 0, src/game/actors/
+// d_a_obj_pushblock.cpp), so a copy moved by the row kept drawing and colliding at the old spot. When the model's translation
+// (dBgActor_c mModel.mat4x3 m[9..11] at +0x114, the place >> 3 as UpdateModelPosAndRotY stores it) no longer matches the place,
+// run the same two calls the block's Behavior runs after a push. A block the local player pushes is already refreshed by its
+// Behavior and is left alone.
+unsigned g_pb_refresh = 0;
+void pushblock_follow() {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (a_cls(a) != 192 || a_dead(a)) continue;
+        const int *pos = (const int *)(a + 0x5c);
+        const int *mt = (const int *)(a + 0x114);
+        if (mt[0] == (pos[0] >> 3) && mt[1] == (pos[1] >> 3) && mt[2] == (pos[2] >> 3)) continue;
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(a);
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(a);
+        if (g_log && g_pb_refresh < 20)
+            std::fprintf(stderr, "[coopsw] push block slot=%d follows its synced place %d,%d,%d (model was at %d,%d,%d) wall=%lld\n", (int)a_slot(a),
+                         pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, mt[0] >> 9, mt[1] >> 9, mt[2] >> 9, wall_ms());
+        ++g_pb_refresh;
+    }
 }
 
 void scan_objects(unsigned now) {
@@ -1113,6 +1137,8 @@ void on_frame(unsigned now) {
         local_word_changes(now);
     }
     if (g_frames >= 3) scan_objects(now);
+    static const bool pb_follow = [] { const char *e = std::getenv("SM64DS_COOP_PUSHBLOCK_FOLLOW"); return !(e && *e == '0'); }();
+    if (g_frames >= 3 && pb_follow) pushblock_follow();   // SM64DS_COOP_PUSHBLOCK_FOLLOW=0 is the control: the stale model
     if (g_frames >= 3 && (g_frames % 15u) == 0) drain_pending(now);
 
     // proof setters (they do what a ROM setter does)

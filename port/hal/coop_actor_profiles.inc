@@ -123,3 +123,5 @@ ROW(194, "CRATE",               100, 16, 250, 2, 0)
 // (193 CRAZED_CRATE has no row: it hops at random and the pose pin made it WORSE, p95 31 vs 29 units at SSL and 44 vs 27 at LLL, MOVERS9 rows)
 ROW(96,  "ARROW_LIFT",          100, 8, 150, 2, 0)
 ROW(72,  "TILTING_PLATFORM_LLL", 100, 8, 150, 2, 0)
+// COOPROWS1: the push block (192) only moves while pushed, so its place is its whole state (hal/coop_switch.cpp redraws it).
+ROW(192, "PUSH_BLOCK",          100, 8, 150, 2, 0)
