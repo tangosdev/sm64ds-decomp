@@ -182,8 +182,7 @@ void *System::NewSimple(u32 uniqueID, Fix12i x, Fix12i y, Fix12i z) {
     return gParticleControl->mManager->AddSystem(uniqueID, pos);
 }
 
-System *System::FromUniqueID(u32 uniqueID)
-{
+System *System::FromUniqueID(u32 uniqueID) {
     dPa_c::level_c::emitter_c *emitter = gParticleControl->mLevel.get(uniqueID);
     return emitter->mEmitter;
 }
