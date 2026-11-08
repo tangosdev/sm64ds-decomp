@@ -10459,7 +10459,7 @@
     },
     "arm9:0x0205d4a0": {
       "author": "ruspecial",
-      "name": "func_0205d4a0"
+      "name": "FS_GetPathName"
     },
     "arm9:0x0205d4cc": {
       "author": "lplaat",
@@ -10531,7 +10531,7 @@
     },
     "arm9:0x0205db88": {
       "author": "tangosdev",
-      "name": "func_0205db88"
+      "name": "FS_AttachOverlayTable"
     },
     "arm9:0x0205dc0c": {
       "author": "andrewboudreau",

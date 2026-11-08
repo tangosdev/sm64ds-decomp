@@ -8,7 +8,7 @@
  * FS_StartOverlay checks a multiboot child's image against its digest,
  * decompresses it and runs its static initializers. FS_EndOverlay runs the
  * destructors the overlay registered, and FS_UnloadOverlay reads the entry
- * and does that. func_0205db88 attaches an in-memory table.
+ * and does that. FS_AttachOverlayTable attaches an in-memory table.
  *
  * The first nine are pret's pokediamond FS_overlay.c functions, in its
  * order. mwccarm emits them in reverse, so FS_UnloadOverlay, pret's last,
@@ -46,7 +46,7 @@ extern CARDRomRegion data_020a806c;    /* fsi_ovt7 */
 extern FSArchive data_020a8074;        /* fsi_arc_rom */
 extern void *data_0209a04c;            /* fsi_digest_key_ptr */
 extern int data_0209a050;              /* fsi_digest_key_len */
-/* The 20-byte digest func_0205db88 checks an attached table against, then
+/* The 20-byte digest FS_AttachOverlayTable checks an attached table against, then
    one 20-byte digest per overlay up to data_0209aff8. */
 extern char data_0209a7d8[];
 extern char data_0209a7ec[];
@@ -291,7 +291,7 @@ int FS_UnloadOverlay(int target, int id) {
  * around the check, and a mismatch crashes. Then ptr and size go into the
  * target's region with interrupts disabled. pret's FS_overlay.c has no
  * function like it, so it keeps its address name. */
-void func_0205db88(int target, void *ptr, u32 size) {
+void FS_AttachOverlayTable(int target, void *ptr, u32 size) {
     CARDRomRegion *pr;
     if (target == 0) {
         pr = &data_020a8064;
