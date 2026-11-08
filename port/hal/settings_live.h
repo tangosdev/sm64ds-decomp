@@ -67,6 +67,7 @@ enum SlId {
     SL_SKIP_OPENING,            /* bool: SkipOpening; off by default (SKIPINTRO1) */
     SL_MINIGAME_HIRES,          /* bool: MinigameHiRes, the minigames' 2D at render scale (MGHIRES1); off by default */
     SL_MINIGAME_UPSCALE,        /* bool: MinigameUpscale, the pixel-art upscaler on the minigames' 2D (MGHIRES1); off by default */
+    SL_RENDER_SCALE,            /* int: RenderScale 0..8, host rows per DS row (0 the default); not live, read at boot (RESSCALE1) */
     SL_COUNT
 };
 
