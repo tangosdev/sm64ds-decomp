@@ -36303,7 +36303,7 @@
     },
     "ov063:0x0211c684": {
       "author": "tangosdev",
-      "name": "_ZN11daTrsTrap_c19func_ov063_0211c684Ev"
+      "name": "_ZN11daTrsTrap_c20UpdateModelTransformEv"
     },
     "ov063:0x0211c6f8": {
       "author": "tangosdev",
@@ -36315,15 +36315,15 @@
     },
     "ov063:0x0211c7b0": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c7b0"
+      "name": "_ZN11daTrsTrap_c18UpdateMerryGoRoundEv"
     },
     "ov063:0x0211c82c": {
       "author": "andrewboudreau",
-      "name": "_ZN11daTrsTrap_c19func_ov063_0211c82cEv"
+      "name": "_ZN11daTrsTrap_c18UpdateOccupiedFlagEv"
     },
     "ov063:0x0211c89c": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c89c"
+      "name": "_ZN11daTrsTrap_c15UpdateBookshelfEv"
     },
     "ov063:0x0211cae8": {
       "author": "tangosdev",
@@ -36331,11 +36331,11 @@
     },
     "ov063:0x0211cb54": {
       "author": "tangosdev",
-      "name": "func_ov063_0211cb54"
+      "name": "_ZN11daTrsTrap_c17UpdateTiltingTrapEv"
     },
     "ov063:0x0211cc18": {
       "author": "tangosdev",
-      "name": "func_ov063_0211cc18"
+      "name": "_ZN11daTrsTrap_c15UpdateStaircaseEv"
     },
     "ov063:0x0211cdec": {
       "author": "tangosdev",
