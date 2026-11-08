@@ -28067,31 +28067,31 @@
     },
     "ov007:0x020b3190": {
       "author": "tangosdev",
-      "name": "func_ov007_020b3190"
+      "name": "Cursor_UpdateParked"
     },
     "ov007:0x020b3360": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b3360"
+      "name": "Cursor_UpdateState"
     },
     "ov007:0x020b3708": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b3708"
+      "name": "Cursor_NextState"
     },
     "ov007:0x020b3c54": {
       "author": "ruspecial",
-      "name": "func_ov007_020b3c54"
+      "name": "Cursor_UpdateMode"
     },
     "ov007:0x020b3d30": {
       "author": "tangosdev",
-      "name": "func_ov007_020b3d30"
+      "name": "Cursor_SetSpriteMode"
     },
     "ov007:0x020b3e04": {
       "author": "tangosdev",
-      "name": "func_ov007_020b3e04"
+      "name": "Cursor_GetModeOffset"
     },
     "ov007:0x020b3e84": {
       "author": "tangosdev",
-      "name": "func_ov007_020b3e84"
+      "name": "Cursor_TouchItem"
     },
     "ov007:0x020b3edc": {
       "author": "tangosdev",
