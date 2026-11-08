@@ -26,6 +26,8 @@ extern "C" {
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;
 extern short data_02092144[];
+// Player::State objects (ov002 bss, the order of hal/vs_arena.cpp kStateObjects): St_BurnLava (11), St_DeadHit (12), St_DeadPit (13).
+extern unsigned char data_ov002_021100f4[], data_ov002_0211010c[], data_ov002_02110124[];
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 }
 
@@ -225,6 +227,7 @@ struct Rx {
 struct Job { bool on; int passes; unsigned next; int cursor; };
 
 bool g_env = false, g_log = false, g_act = true, g_snap_on = true, g_hyst = true, g_stale_on = true;
+bool g_dead_guard = true;     // COOPPUZZLE1: SM64DS_COOP_DEAD_GUARD=0 is the control (a dying body claims by distance, as before)
 bool g_rider_own = true;      // COOPROWS1: SM64DS_COOP_SEESAW_RIDER=0 is the control (nearest to the pivot owns the plank, as before)
 bool g_lift_heading = true;  // SM64DS_COOP_LIFT_HEADING=0 is the MUST-FAIL control (run after093, lane COOPPLAT1): a sliding slab keeps its own heading
 unsigned g_lift_flips = 0;
@@ -274,6 +277,7 @@ void read_env() {
     g_god = flag("SM64DS_COOP_MOVE_GOD", false);
     g_hyst = flag("SM64DS_COOP_MOVE_HYST", true);
     g_stale_on = flag("SM64DS_COOP_MOVE_STALE", true);
+    g_dead_guard = flag("SM64DS_COOP_DEAD_GUARD", true);
     g_rider_own = flag("SM64DS_COOP_SEESAW_RIDER", true);
     if (const char *ld = std::getenv("SM64DS_COOP_MOVE_LEAD")) g_lead_ms = std::atoi(ld);
     if (const char *s = std::getenv("SM64DS_COOP_MOVE_SAMPLE")) g_sample_every = (unsigned)std::strtoul(s, nullptr, 0);
@@ -757,8 +761,17 @@ void slave(Slot &s, const Rx &x, unsigned now) {
 // callback and clears it as the last statement of Behavior (src/game/actors/d_a_obj_seesaw.cpp), so it is set here only when a body
 // of THIS console stood on the plank this frame (a friend's body is parked away between draws). Nearest-to-the-pivot handed the plank
 // to a friend standing by the axle, whose pin then erased the rider's own tilt. SM64DS_COOP_SEESAW_RIDER=0 is the control.
+// COOPPUZZLE1: a dead or dying body claims nothing. My own player bouncing in lava (St_BurnLava), dying (St_DeadHit,
+// St_DeadPit) sends the farthest claim, so a friend takes the object outright and keeps it. Without it his claim
+// swung across the 1.75x band with every lava bounce and the owner flipped each dwell, both consoles pinned to the other's old
+// record and the plank froze (BFS 143, COOPROWS2 kba2). Airborne or falling is NOT dying: a rider hopping keeps the plank.
+bool local_body_dying(const char *pl) {
+    const void *st = *(const void *const *)(pl + 0x370);  // Player::mState
+    return st == data_ov002_021100f4 || st == data_ov002_0211010c || st == data_ov002_02110124;
+}
 unsigned claim_cd(const char *pl, const Slot &s) {
     const Prof &p = g_prof[s.prof];
+    if (g_dead_guard && local_body_dying(pl)) return 65535;
     if (g_rider_own && (p.id == 39 || p.id == 128 || p.id == 133 || p.id == 143 || p.id == 149 || p.id == 150) && p.size >= 0x327 &&
         *(const unsigned char *)(s.a + 0x326) != 0)
         return 0;
@@ -770,6 +783,13 @@ void process(unsigned now) {
     char *pl = local_player();
     if (!pl) return;
     refill(now);
+    {
+        static bool dying_was = false;
+        const bool dying = g_dead_guard && local_body_dying(pl);
+        if (g_log && dying != dying_was)
+            std::fprintf(stderr, "[coopmove] my body %s wall=%lld\n", dying ? "is dying: it claims nothing" : "claims again", wall_ms());
+        dying_was = dying;
+    }
     unsigned char recs[kPayloadMax]; int nrec = 0, bytes = 0;
     struct Due { int slot; unsigned age; };
     Due due[kSlots]; int ndue = 0;
