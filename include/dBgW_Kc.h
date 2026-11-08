@@ -150,6 +150,9 @@ struct dBgW_Kc : dBgW {
     static bool IsNearZeroDivisor(int);
     /* Line-query wall filter: -0xccc < normalY < 0x600 (strict). */
     static bool IsWallNormal(Fix12i);
+    /* Face class from a normal's y: 0 floor (> 0x600), 1 wall (> -0xccc),
+       2 underside. Inferred name, beside the other two KCL predicates. */
+    static int ClassifyNormalY(int);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
