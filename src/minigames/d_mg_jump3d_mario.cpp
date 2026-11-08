@@ -49,6 +49,7 @@
 #include "fBase_c.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
 
@@ -162,7 +163,6 @@ extern Vector3 sJump3DMarioScale;
 extern char sJump3DRoundLayouts[];
 
 extern Matrix4x3 data_020a0e68;
-extern short data_02082214[];
 extern fBase_c *data_0209f5c0;
 
 }  /* extern "C" */
@@ -398,7 +398,6 @@ void dMgJump3DMario_c::Draw()
     short screen[2];
     int scaleX;
     int scaleY;
-    int angle;
     int wave;
     Mtx mtx;
 
@@ -408,13 +407,11 @@ void dMgJump3DMario_c::Draw()
     if (data_ov006_02140400 != 0) {
         Camera_ProjectToScreen16(sMgCurCamera, &mPos, screen);
 
-        angle = sJump3DSpinAngle;
-        wave = data_02082214[(angle >> 4) * 2];
+        wave = FX_SinIdx(sJump3DSpinAngle >> 4);
         screen[1] = screen[1] - (((wave << 2) + 0x30000) >> 12);
         scaleX = func_02053200((wave >> 2) + 0x1000);
 
-        angle = sJump3DSpinAngle;
-        scaleY = -func_02053200((data_02082214[(angle >> 4) * 2 + 1] >> 2) + 0x1000);
+        scaleY = -func_02053200((FX_CosIdx(sJump3DSpinAngle >> 4) >> 2) + 0x1000);
 
         /* Zero it through `int *`: writing mtx.a..mtx.d instead costs 11 words
            (notes/experiments/jump3d-2711-mtx-intptr-zeroing.md). */
