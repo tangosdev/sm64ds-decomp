@@ -2,15 +2,14 @@
 /* dCapIcon_c -- the cap-icon list node and its per-character lists, ov001.
  * .text 0x020ab110..0x020ab41c.
  *
- * RTTI names dCapIcon_c. This TU owns Unlink, the link helper, the list
- * reset, the constructor, and the destructor pair.
+ * RTTI names dCapIcon_c. This TU owns Unlink, Link, the list reset, the
+ * constructor, and the destructor pair.
  *
- * `#pragma defer_codegen` is positional and load-bearing. The link helper
- * re-issues the list-head load across the store that follows it; CSE on
- * folds that. Every other member needs CSE on. Deferred codegen reads
+ * `#pragma defer_codegen` is positional and load-bearing. Link re-issues
+ * the list-head load across the store that follows it; CSE on folds that. Every other member needs CSE on. Deferred codegen reads
  * optimisation pragmas at end of file, last-wins, so the parse-time half
- * (Unlink, link) is generated with the opt_common_subs bracket bound to
- * the link helper alone, then defer_codegen on restores default for the
+ * (Unlink, Link) is generated with the opt_common_subs bracket bound to
+ * Link alone, then defer_codegen on restores default for the
  * deferred half (ctor, dtor, reset) in reverse source order. Do not
  * flatten the split.
  *
@@ -18,9 +17,8 @@
  * Leftover: func_ov001_020ab2e4 stays the linker name. The image preserves
  *   no original mangled table; an existing label is not a barrier to a
  *   member -- a migration renames source and config together.
- *   func_ov001_020ab228 is a dCapIcon_c method; the address is the method
- *   name. Callers are outside this TU.
- * Leftover: func_ov001_020aa6b0 / func_ov001_020aa6cc are other TUs.
+ * Leftover: CapIconMgr_SetMapIconShown and func_ov001_020aa6cc are
+ *   CapIconMgr's; this TU declares them locally.
  * Leftover: owner uniqueID is fBase_c::uniqueID at +4; this TU keeps
  *   the +4 load.
  * Shared list state is declared in CapIconMgr.h and defined by the manager.
@@ -36,9 +34,7 @@ extern "C" {
 
 extern int data_0209f3e8[];
 
-
-
-extern void func_ov001_020aa6b0(int *icon, int value);
+extern void CapIconMgr_SetMapIconShown(int *icon, int value);
 extern void func_ov001_020aa6cc(int character);
 
 }
@@ -50,7 +46,7 @@ void dCapIcon_c::Unlink()
 
     if (mSlot != -1) {
         if ((dActor_c *)data_0209f3e8[mSlot] == mOwner) {
-            func_ov001_020aa6b0((int *)this, 0);
+            CapIconMgr_SetMapIconShown((int *)this, 0);
             data_0209f3e8[mSlot] = 0;
             func_ov001_020aa6cc(mCharacter);
         }
@@ -64,7 +60,7 @@ void dCapIcon_c::Unlink()
     if (mNext)
         mNext->mPrev = mPrev;
 
-    func_ov001_020aa6b0((int *)this, 0);
+    CapIconMgr_SetMapIconShown((int *)this, 0);
     mOwner = 0;
     mOwnerUniqueID = 0;
     mPrev = 0;
@@ -79,28 +75,32 @@ void dCapIcon_c::Unlink()
         --gCapIconCounts[mCharacter];
 }
 
-void dCapIcon_c::func_ov001_020ab228(char *a1, int idx, int a3,
-                                    unsigned char a5)
-{
-    mCharacter = (unsigned char)idx;
-    mOwner = (dActor_c *)a1;
-    mOwnerUniqueID = *(u32 *)(a1 + 4);
-    mIconKind = (unsigned char)a3;
-    mNext = gCapIconListHeads[idx];
-    if (gCapIconListHeads[idx])
-        gCapIconListHeads[idx]->mPrev = this;
-    gCapIconListHeads[idx] = this;
-    gCapIconCounts[idx]++;
-    if (a3 == 3)
-        gCapIconRequestFlags[idx] |= 8;
+/* Name coined from the body and its six callers (daDossy_c, daObjMarioCap_c,
+ * dCapEnemy_c): the inverse of Unlink. It records the owner and its unique
+ * ID, pushes this node onto the head of character's list, bumps the list's
+ * count, keeps iconKind (kind 3 raises request flag 8) and the bank bit in
+ * mFlags bit 0, and clears the list's dispatch state for a bank or kind-3
+ * cap. */
+void dCapIcon_c::Link(char *owner, int character, int iconKind, unsigned char bank) {
+    mCharacter = (unsigned char)character;
+    mOwner = (dActor_c *)owner;
+    mOwnerUniqueID = *(u32 *)(owner + 4);
+    mIconKind = (unsigned char)iconKind;
+    mNext = gCapIconListHeads[character];
+    if (gCapIconListHeads[character])
+        gCapIconListHeads[character]->mPrev = this;
+    gCapIconListHeads[character] = this;
+    gCapIconCounts[character]++;
+    if (iconKind == 3)
+        gCapIconRequestFlags[character] |= 8;
     mFlashFrames = 0;
     mFlags = 0;
     {
         unsigned char *p1b = (unsigned char *)&mFlags;
-        *p1b = (*p1b & ~1) | (a5 & 1);
+        *p1b = (*p1b & ~1) | (bank & 1);
     }
-    if (a5 != 0 || a3 == 3)
-        func_ov001_020aa6cc(idx);
+    if (bank != 0 || iconKind == 3)
+        func_ov001_020aa6cc(character);
     mSlot = -1;
 }
 #pragma defer_codegen on

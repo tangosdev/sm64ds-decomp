@@ -94,7 +94,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
     }
 
     *(int *)(&mFlags) &= ~1;
-    mCapIcon.func_ov001_020ab228((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
+    mCapIcon.Link((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28();
     if (result != 0) {
@@ -183,7 +183,7 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
         mEatingPlayer = 0;
         if (mCapBank == 0) {
             idx = mCapId & 7;
-            mCapIcon.func_ov001_020ab228((char *)this, idx, 0, 0);
+            mCapIcon.Link((char *)this, idx, 0, 0);
         }
         return 1;
     }

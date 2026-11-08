@@ -12531,11 +12531,11 @@
     },
     "ov001:0x020aa420": {
       "author": "lunavyqo",
-      "name": "func_ov001_020aa420"
+      "name": "CapIconMgr_DispatchVs"
     },
     "ov001:0x020aa6b0": {
       "author": "tangosdev",
-      "name": "func_ov001_020aa6b0"
+      "name": "CapIconMgr_SetMapIconShown"
     },
     "ov001:0x020aa6cc": {
       "author": "tangosdev",
@@ -12543,7 +12543,7 @@
     },
     "ov001:0x020aa6e4": {
       "author": "tangosdev",
-      "name": "func_ov001_020aa6e4"
+      "name": "CapIconMgr_Commit"
     },
     "ov001:0x020aa79c": {
       "author": "tangosdev",
@@ -12551,23 +12551,23 @@
     },
     "ov001:0x020aa7b8": {
       "author": "tangosdev",
-      "name": "func_ov001_020aa7b8"
+      "name": "CapIconMgr_ShouldCommitVs"
     },
     "ov001:0x020aa858": {
       "author": "tangosdev",
-      "name": "func_ov001_020aa858"
+      "name": "CapIconMgr_ShouldCommit"
     },
     "ov001:0x020aa960": {
       "author": "tangosdev",
-      "name": "func_ov001_020aa960"
+      "name": "CapIconMgr_ShouldDispatch"
     },
     "ov001:0x020aaa54": {
       "author": "lunavyqo",
-      "name": "func_ov001_020aaa54"
+      "name": "CapIconMgr_Dispatch"
     },
     "ov001:0x020aadac": {
       "author": "lunavyqo",
-      "name": "func_ov001_020aadac"
+      "name": "CapIconMgr_DispatchNoCap"
     },
     "ov001:0x020aaf40": {
       "author": "tangosdev",
@@ -12579,7 +12579,7 @@
     },
     "ov001:0x020ab228": {
       "author": "tangosdev",
-      "name": "_ZN10dCapIcon_c19func_ov001_020ab228EPciih"
+      "name": "_ZN10dCapIcon_c4LinkEPciih"
     },
     "ov001:0x020ab2e4": {
       "author": "tangosdev",
@@ -29239,7 +29239,7 @@
     },
     "ov007:0x020c3d40": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3d40"
+      "name": "MenuMem_AllocClear"
     },
     "ov007:0x020c3df4": {
       "author": "tangosdev",
@@ -29251,19 +29251,19 @@
     },
     "ov007:0x020c3e2c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3e2c"
+      "name": "MenuMem_SetFreeHook"
     },
     "ov007:0x020c3e3c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3e3c"
+      "name": "MenuMem_SetAllocHook"
     },
     "ov007:0x020c3e4c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3e4c"
+      "name": "MenuMem_DefaultFree"
     },
     "ov007:0x020c3e64": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3e64"
+      "name": "MenuMem_DefaultAlloc"
     },
     "ov007:0x020c3e7c": {
       "author": "tangosdev",
