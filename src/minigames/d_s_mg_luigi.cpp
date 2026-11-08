@@ -539,7 +539,8 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
         Sound::PlayBank2_2D(0x1b9);
     if (curtainIndex == 0) {
         if (mCurtain[curtainIndex].count <= 0x35) {
-            mCurtain[curtainIndex].sound = Sound_PlayIfNotActive(mCurtain[curtainIndex].sound, 2, 0x1b8, 0);
+            mCurtain[curtainIndex].sound =
+                Sound_PlayIfNotActive(mCurtain[curtainIndex].sound, 2, 0x1b8, 0);
         }
     }
     if (mCurtain[curtainIndex].delay != 0) {
@@ -1420,8 +1421,7 @@ void dScMgLuigi_c::ChooseTarget() {
         choiceOffset = 0xa;
     }
 
-    mWanted = (sLuigiWantedPicks + choiceOffset)
-        [LUIGI_RAND(10)];
+    mWanted = (sLuigiWantedPicks + choiceOffset)[LUIGI_RAND(10)];
 
     t = mBoard;
     if (t == 9) {
