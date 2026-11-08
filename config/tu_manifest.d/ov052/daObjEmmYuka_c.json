@@ -610,12 +610,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@486",
+      "from": "@484",
       "to": "@481",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @495 now; licensed under the existing pin @481 Re-keyed from @487 to @486 when Behavior's function-local POD Vec was respelled as VecFx32 (#4570)."
     },
     {
-      "from": "@487",
+      "from": "@485",
       "to": "@482",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @496 now; licensed under the existing pin @482 Re-keyed from @488 to @487 when Behavior's function-local POD Vec was respelled as VecFx32 (#4570)."
     }

@@ -804,72 +804,72 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@552",
+      "from": "@550",
       "to": "@983",
       "evidence": "compiler-local __register_global_object node; @554 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@553",
+      "from": "@551",
       "to": "@949",
       "evidence": "compiler-local __register_global_object node; @555 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@554",
+      "from": "@552",
       "to": "@894",
       "evidence": "compiler-local __register_global_object node; @556 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@555",
+      "from": "@553",
       "to": "@890",
       "evidence": "compiler-local __register_global_object node; @557 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@556",
+      "from": "@554",
       "to": "@885",
       "evidence": "compiler-local __register_global_object node; @558 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@557",
+      "from": "@555",
       "to": "@881",
       "evidence": "compiler-local __register_global_object node; @559 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@558",
+      "from": "@556",
       "to": "@877",
       "evidence": "compiler-local __register_global_object node; @560 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@559",
+      "from": "@557",
       "to": "@866",
       "evidence": "compiler-local __register_global_object node; @561 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@560",
+      "from": "@558",
       "to": "@862",
       "evidence": "compiler-local __register_global_object node; @562 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@561",
+      "from": "@559",
       "to": "@816",
       "evidence": "compiler-local __register_global_object node; @563 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@562",
+      "from": "@560",
       "to": "@810",
       "evidence": "compiler-local __register_global_object node; @564 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@563",
+      "from": "@561",
       "to": "@806",
       "evidence": "compiler-local __register_global_object node; @565 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@564",
+      "from": "@562",
       "to": "@799",
       "evidence": "compiler-local __register_global_object node; @566 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length"
     },
     {
-      "from": "@551",
+      "from": "@549",
       "to": "@553",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @567 now; licensed under the existing pin @553"
     }

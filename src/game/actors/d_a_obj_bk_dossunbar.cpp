@@ -22,7 +22,7 @@
  *   sinit file IDs 0x58b / 0x58c / 0x58d / 0x58e. The registry profiles
  *   g_profile_BK_DOSSUNBAR_L / _S remain outside the owned ranges.
  * - func_01ffb0a4 / func_01ffb07c are MeshCollider ITCM
- *   (flag 0x35 / vec at +0x38). func_020393d4 stores the BeforeClsn
+ *   (flag 0x35 / vec at +0x38). dBgW::SetBeforeClsnCallback stores the BeforeClsn
  *   callback; 020396d0 and Math_Function_0203b0fc / 0203b14c names
  *   belong with those callees.
  */
@@ -95,7 +95,6 @@ void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 int Math_Function_0203b14c(int *p, int target, int scale, int max, int extra);
 void func_01ffb0a4(dBgW_Kc *self);
 void func_01ffb07c(dBgW_Kc *self, const Vector3 *v);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern "C" daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S() {
@@ -126,7 +125,7 @@ s32 daObjBk_Dossunbar_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)((int)kclFile), *(const Matrix4x3 *)(&mClsnMat), 0x1000,
                               mAngleY,
                               *(CLPS_Block *)(*(void **)((char *)&data_ov015_0211453c + j)));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
     int tmp[3];
     tmp[0] = 0x1000;

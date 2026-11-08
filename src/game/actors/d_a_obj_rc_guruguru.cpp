@@ -15,8 +15,6 @@
  * the highest-address ROM function is written FIRST here. Do not reorder.
  *
  * Notes:
- * - func_020393d4 stores dBgW::UpdatePosAndAngs on mMeshCollider; dBgW.h
- *   has no setter.
  * - data_ov036_02113d78 is a three-word overlay table (BMD 0x021140ac,
  *   KCL 0x021140b4, CLPS 0x02112ac8). Naming the three targets directly
  *   builds a different literal pool and moves every call site. This TU
@@ -34,10 +32,6 @@ enum d_a_obj_rc_guruguru_AssetId { ASSET_RC_GURUGURU_BMD = 0x06a4, ASSET_RC_GURU
 /* [0] the BMD's SharedFilePtr (0x021140ac), [1] the KCL's (0x021140b4),
    [2] the CLPS block dBgW_KcMbg::SetFile is handed (0x02112ac8). */
 extern void *data_ov036_02113d78[];
-
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-}
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. This int-returning predicate is what makes the ROM
@@ -77,7 +71,7 @@ s32 daObjRc_Guruguru_c::InitResources() {
 
     /* The mesh follows the actor's position AND angles -- this platform turns,
        so the collision has to turn with it. */
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     /* The default spin is clockwise at 0x80 units of yaw a frame; a level
        author overrides both rate and direction through the spawn's mAngleZ. */
