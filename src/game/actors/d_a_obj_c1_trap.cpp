@@ -16,7 +16,6 @@
  *   unrelated helper to this TU
  * - InitResources adds to mAngleY through a pointer local (plain
  *   `mAngleY += 0x8000` CSE/size-DIFFs)
- * - func_020393c4 stores dBgW+0x1c (no setter)
  * - data_ov010_02112d08 / 02112d00 are this file's resource handles;
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
  *   data_ov010_021122f8 is CLPS
@@ -68,11 +67,6 @@ extern CLPS_Block data_ov010_021122f8;
 extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
 extern TrapStateRec data_ov010_02112d28;
-
-/* local extern: the dBgW callback setter. */
-extern "C" {
-extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
 
 /* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
  * allocation size, vtable identity, and the C1_TRAP registry profile;
@@ -194,7 +188,7 @@ int daObjC1_Trap_c::InitResources() {
     UpdateCollisionTransform();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000,
                           mAngleY, data_ov010_021122f8);
-    func_020393c4(&mMeshCollider, func_ov010_02111984);
+    mMeshCollider.SetStoodOnCallback(func_ov010_02111984);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;
     mState = 0;

@@ -7,8 +7,6 @@
  *
  * Notes:
  * - SetFile's scale here is 0x199.
- * - func_020393d4 is a 4-byte store into dBgW+0x18. This TU stores
- *   dBgW::UpdatePosWithVelocity there; naming belongs with dBgW in arm9.
  * - Abstract class: no factory, no g_profile row.
  */
 
@@ -17,11 +15,6 @@
 #include "daObjKuruma_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
-
-/* local extern: no shared header declares it. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-}
 
 /* ROM ordinals 0 and 1 -- ov002 0x020b6814 (D0, 0x58) and 0x020b686c (D1,
  * 0x44). No source here: both destructor variants come from the ONE inline
@@ -80,6 +73,6 @@ int daObjKuruma_c::InitResourcesFrom(Resources *resources) {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*resources->collision), mClsnMat, 0x199,
                           mAngleY, *resources->clps);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     return 1;
 }

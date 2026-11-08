@@ -10,8 +10,6 @@
  * are pure virtual; the five leaves call these). Nothing in the ROM names
  * them.
  *
- * What stays: func_020393d4 is a 4-byte store into dBgW+0x18. This TU stores
- *   dBgW::UpdatePosAndAngs there; naming belongs with dBgW in arm9.
  * What stays: Behavior keeps `s16 *p = &mPrevAngleY` -- compound assignment
  *   recomputes the address and size-DIFFs (0x50 vs 0x54).
  * What stays: abstract class -- no factory, no g_profile row (S14).
@@ -24,9 +22,6 @@
 #include "dBgW.h"
 
 #include "ResourceDescriptor.h"
-
-/* local extern: no shared header declares it. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* ROM ordinals 0 and 1 -- ov002 0x020b660c (D0, 0x58) and 0x020b6664 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
@@ -92,7 +87,7 @@ int daObjKaitendai_c::InitResourcesFrom(ResourceDescriptor *descriptor, s16 angl
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x199,
                           mAngleY, *descriptor->clps);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPrevAngleZ = angle;
     y = mAngleZ;
     if (y != 0) {

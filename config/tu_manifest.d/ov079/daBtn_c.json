@@ -1975,82 +1975,82 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@740",
+      "from": "@736",
       "to": "@686",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@741",
+      "from": "@737",
       "to": "@687",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@742",
+      "from": "@738",
       "to": "@688",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@743",
+      "from": "@739",
       "to": "@689",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@744",
+      "from": "@740",
       "to": "@640",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@745",
+      "from": "@741",
       "to": "@691",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@746",
+      "from": "@742",
       "to": "@641",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@747",
+      "from": "@743",
       "to": "@693",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@748",
+      "from": "@744",
       "to": "@694",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@749",
+      "from": "@745",
       "to": "@695",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@750",
+      "from": "@746",
       "to": "@642",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@751",
+      "from": "@747",
       "to": "@697",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@752",
+      "from": "@748",
       "to": "@698",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@753",
+      "from": "@749",
       "to": "@699",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@754",
+      "from": "@750",
       "to": "@643",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     },
     {
-      "from": "@755",
+      "from": "@751",
       "to": "@644",
       "evidence": "Compiler-local resource-handle registration node. The current production object emits this source name after the shared CalcLib declarations replace the named local prototypes; the existing destination alias is retained by registration order and checked by the full TU link, relocation, and ROM byte gates."
     }

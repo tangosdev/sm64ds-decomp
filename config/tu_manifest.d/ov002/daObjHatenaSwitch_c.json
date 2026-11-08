@@ -1319,22 +1319,22 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@872",
+      "from": "@870",
       "to": "@756",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @875 to @872 when the press particles' position became a Vector3 local (#821)."
     },
     {
-      "from": "@873",
+      "from": "@871",
       "to": "@757",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @876 to @873 when the press particles' position became a Vector3 local (#821)."
     },
     {
-      "from": "@874",
+      "from": "@872",
       "to": "@758",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @877 to @874 when the press particles' position became a Vector3 local (#821)."
     },
     {
-      "from": "@875",
+      "from": "@873",
       "to": "@759",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @878 to @875 when the press particles' position became a Vector3 local (#821)."
     }
