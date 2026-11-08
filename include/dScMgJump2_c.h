@@ -6,7 +6,7 @@
  * The allocation lives in `dScMgJump2_c_classInit` (ov006:0x020efaf0, renamed from
  * the mangled `_ZN8PathLift17BaseInitResourcesEv`, which was neither a PathLift
  * method nor a BaseInitResources): its body is `operator new(0x5a78)`,
- * dScMgBase_c's constructor, dScMgD3DBase_c's vtable, mSysTracker, then THIS
+ * dScMgBase_c's constructor, dScMgD3DBase_c's vtable, mParticle, then THIS
  * class's vtable and every member below. A real `PathLift` class does exist --
  * in ov002, `_ZN8PathLiftD1Ev` and friends at 0x020ef320..0x020eff18 -- so the
  * old name was matched across an OVERLAY BOUNDARY at a near-identical address,

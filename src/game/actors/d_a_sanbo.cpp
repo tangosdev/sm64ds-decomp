@@ -28,7 +28,7 @@
  *   - func_02038414 is the veneer onto
  *   dBgCh_Actr::UpdateDiscreteNoLava_2 (UpdateKnockback,
  *   UpdateMegaKill, UpdateFloorAndWalls).
- *   - Particle::System::New, NewUnkCallback818, NewSimple,
+ *   - Particle::System::New, NewCleanParticle, NewSimple,
  *   RunningSlidingDustAt and daPly_c::Hurt take Fix12 by value
  *   (UpdateKnockback, HandleAttacks, EnterMegaKill,
  *   UpdateLeader).
@@ -60,6 +60,7 @@ enum daSanbo_c_AssetId {
 #include "decl_common.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
@@ -259,8 +260,8 @@ namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
 extern "C" {
 void d_a_sanboRunningSlidingDustAtHold(int x, int y, int z);
 unsigned d_a_sanboNewHold(unsigned a, unsigned b, int x, int y, int z, const void *dir, void *cb);
-unsigned d_a_sanboNewUnkCallback818Hold(unsigned a, unsigned b, int x, int y, int z,
-                                        const Vector3_16f *dir);
+unsigned d_a_sanboNewCleanParticleHold(unsigned a, unsigned b, int x, int y, int z,
+                                       const Vector3_16f *dir);
 }
 
 /* A segment tracks the one in front of it while that piece is still small. */
@@ -403,8 +404,9 @@ int daSanbo_c::UpdateKnockback() {
         ((int *)&pos)[0] = x;
         ((int *)&pos)[1] = y;
         ((int *)&pos)[2] = z;
-        mParticle0 = Particle::System::New(mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
-        mParticle1 = Particle::System::NewUnkCallback818(mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
+        mParticle0 = Particle::System::New(mParticle0, kPtclDeathA, pos.x, pos.y, pos.z, 0, 0);
+        mParticle1 =
+            Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
         p0 = Particle::System::FromUniqueID(mParticle0);
         p1 = Particle::System::FromUniqueID(mParticle1);
         if (p0)
@@ -500,8 +502,8 @@ int daSanbo_c::EnterMegaKill() {
     mVertSpeed = 0x28000;
     mHorzSpeed = 0xa000;
     mTimer = 0x2d;
-    Particle::System::NewSimple(0x43, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
-    Particle::System::NewSimple(0x44, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + OnAimedAtWithEgg(), mPosZ);
     mState = 5;
     return 1;
 }
@@ -661,9 +663,9 @@ void daSanbo_c::HandleAttacks() {
             ((int *)&pos)[0] = x;
             ((int *)&pos)[1] = y;
             ((int *)&pos)[2] = z;
-            mParticle0 = Particle::System::New(mParticle0, 0x13a, pos.x, pos.y, pos.z, 0, 0);
+            mParticle0 = Particle::System::New(mParticle0, kPtclDeathA, pos.x, pos.y, pos.z, 0, 0);
             mParticle1 =
-                Particle::System::NewUnkCallback818(mParticle1, 0x13b, pos.x, pos.y, pos.z, 0);
+                Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
             Sound::PlayBank0(9, mCamSpacePos);
             mHitActor = player;
             ChangeState(2);

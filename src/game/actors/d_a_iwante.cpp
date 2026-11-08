@@ -93,6 +93,7 @@ enum Eyerok_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
@@ -795,8 +796,8 @@ int daIwante_c::HandDefeatExecute() {
         mHorzSpeed = 0;
     }
     if (mBlendAnmModel.Finished() != 0) {
-        Particle::System::NewSimple(0x7c, mPosX, mPosY, mPosZ);
-        Particle::System::NewSimple(0x7d, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(kPtclEyerokDefeatA, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(kPtclEyerokDefeatB, mPosX, mPosY, mPosZ);
         {
             VecFx32 v;
             v.x = mPosX;

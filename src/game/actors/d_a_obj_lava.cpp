@@ -9,8 +9,9 @@
  * daObjLava_c_classInit is reconstructed (RTTI daObjLava_c, LAVA
  * registry). Retail does not store that spelling.
  *
- * The particle call is Particle::System::NewCheckYogan, System::New with
- * the tracker's checkYoganCallback_c (SysTracker::mCheckYoganCallback, +0x808).
+ * Note: the particle call is Particle::System::NewCheckYogan, an arm9
+ * wrapper around Particle::System::New that passes dPa_c's
+ * checkYoganCallback_c (gParticleControl+0x808).
  */
 
 #include "daObjLava_c.h"

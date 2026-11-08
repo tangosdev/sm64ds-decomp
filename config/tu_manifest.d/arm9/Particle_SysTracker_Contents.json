@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/particle/Particle_SysTracker_Contents.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x02021a04..0x02021e40: nine functions tile the span exactly with no hole and no tail (recomputed from config/arm9/symbols.txt), and every one carries the _ZN8Particle10SysTracker8Contents* label -- the live-system registry nested class Contents and its Entry from include/Particle__SysTracker.h. Both neighbours are different classes: _ZN3OAM12EnableSubOAMEv ends at 0x02021a04 below and _ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb begins at 0x02021e40 above, so the boundary is a label change on both edges. The outer SysTracker members (Update/Initialise/C1/D1) live in the 0x02022f20..0x020233d4 band and are deliberately out of scope -- the linker places one object's .text contiguously, so the Contents run is its own TU.",
+  "boundary_evidence": "Contiguous .text span 0x02021a04..0x02021e40: nine functions tile the span exactly with no hole and no tail (recomputed from config/arm9/symbols.txt), and every one carries the _ZN5dPa_c7level_c* label -- the level-emitter registry dPa_c::level_c and its emitter_c from include/dPa_c.h (formerly the coined Particle::SysTracker::Contents/Entry). Both neighbours are different classes: _ZN3OAM12EnableSubOAMEv ends at 0x02021a04 below and _ZN5dPa_c7level_c23cleanParticleCallback_c8OnUpdateERN8Particle6SystemEb begins at 0x02021e40 above, so the boundary is a label change on both edges. The outer SysTracker members (Update/Initialise/C1/D1) live in the 0x02022f20..0x020233d4 band and are deliberately out of scope -- the linker places one object's .text contiguously, so the level_c run is its own TU.",
   "sections": [
     {
       "name": ".text",
@@ -15,72 +15,72 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN8Particle10SysTracker8Contents6UnlinkERNS1_5EntryE",
+      "symbol": "_ZN5dPa_c7level_c8cutTableEPNS0_9emitter_cE",
       "address": "0x02021a04",
       "size": "0x44",
       "ordinal": 0,
-      "legacy_source": "src/_ZN8Particle10SysTracker8Contents6UnlinkERNS1_5EntryE.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c8cutTableEPNS0_9emitter_cE.cpp"
     },
     {
-      "symbol": "_ZN8Particle10SysTracker8Contents4LinkERNS1_5EntryE",
+      "symbol": "_ZN5dPa_c7level_c8addTableEPNS0_9emitter_cE",
       "address": "0x02021a48",
       "size": "0x2c",
       "ordinal": 1,
-      "legacy_source": "src/_ZN8Particle10SysTracker8Contents4LinkERNS1_5EntryE.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c8addTableEPNS0_9emitter_cE.cpp"
     },
     {
-      "symbol": "_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE",
+      "symbol": "_ZN5dPa_c7level_c5entryEjR7Vector3PK11Vector3_16fPNS0_10callback_cE",
       "address": "0x02021a74",
       "size": "0xe4",
       "ordinal": 2,
-      "legacy_source": "src/_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c5entryEjR7Vector3PK11Vector3_16fPNS0_10callback_cE.cpp"
     },
     {
-      "symbol": "_ZNK8Particle10SysTracker8Contents8FindDataEj",
+      "symbol": "_ZN5dPa_c7level_c3getEj",
       "address": "0x02021b58",
       "size": "0x40",
       "ordinal": 3,
-      "legacy_source": "src/_ZNK8Particle10SysTracker8Contents8FindDataEj.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c3getEj.cpp"
     },
     {
-      "symbol": "_ZN8Particle10SysTracker8Contents5ClearEv",
+      "symbol": "_ZN5dPa_c7level_c7cleanupEv",
       "address": "0x02021b98",
       "size": "0x54",
       "ordinal": 4,
-      "legacy_source": "src/_ZN8Particle10SysTracker8Contents5ClearEv.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c7cleanupEv.cpp"
     },
     {
-      "symbol": "_ZN8Particle10SysTracker8Contents6UpdateEv",
+      "symbol": "_ZN5dPa_c7level_c7executeEv",
       "address": "0x02021bec",
       "size": "0xa4",
       "ordinal": 5,
-      "legacy_source": "src/_ZN8Particle10SysTracker8Contents6UpdateEv.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c7executeEv.cpp"
     },
     {
-      "symbol": "_ZN8Particle10SysTracker8ContentsC1Ev",
+      "symbol": "_ZN5dPa_c7level_cC1Ev",
       "address": "0x02021c90",
       "size": "0x44",
       "ordinal": 6,
-      "legacy_source": "src/_ZN8Particle10SysTracker8ContentsC1Ev.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_cC1Ev.cpp"
     },
     {
-      "symbol": "_ZN8Particle10SysTracker8Contents5Entry5ResetEv",
+      "symbol": "_ZN5dPa_c7level_c9emitter_c7cleanupEv",
       "address": "0x02021cd4",
       "size": "0x48",
       "ordinal": 7,
-      "legacy_source": "src/_ZN8Particle10SysTracker8Contents5Entry5ResetEv.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c9emitter_c7cleanupEv.cpp"
     },
     {
-      "symbol": "_ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE",
+      "symbol": "_ZN5dPa_c7level_c9emitter_c5entryEjjR7Vector3PK11Vector3_16fPNS0_10callback_cE",
       "address": "0x02021d1c",
       "size": "0x124",
       "ordinal": 8,
-      "legacy_source": "src/_ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE.cpp"
+      "legacy_source": "src/_ZN5dPa_c7level_c9emitter_c5entryEjjR7Vector3PK11Vector3_16fPNS0_10callback_cE.cpp"
     }
   ],
   "compiler_only_output": [
     {
-      "symbol": "_ZN8Particle10SysTracker8ContentsC2Ev",
+      "symbol": "_ZN5dPa_c7level_cC2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it."
     }
@@ -95,10 +95,10 @@
     "functions_declared": 9,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN8Particle10SysTracker8ContentsC2Ev"
+        "_ZN5dPa_c7level_cC2Ev"
       ],
       "deadstripped": [
-        "_ZN8Particle10SysTracker8ContentsC2Ev"
+        "_ZN5dPa_c7level_cC2Ev"
       ],
       "droppedSections": [
         16

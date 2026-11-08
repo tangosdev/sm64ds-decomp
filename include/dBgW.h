@@ -97,7 +97,7 @@ struct dBgW {
     u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
     BeforeClsnCallback beforeClsnCallback; /* 0x18 */
-    /* Run by func_02038234 when an actor commits a floor hit on this collider
+    /* Run by dBgS_RideCallBack when an actor commits a floor hit on this collider
        (dBgCh_Actr's floor-result path), as (collider, owner, actor). */
     StoodOnCallback stoodOnCallback; /* 0x1c */
 

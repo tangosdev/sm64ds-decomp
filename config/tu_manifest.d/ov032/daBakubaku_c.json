@@ -1763,67 +1763,67 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@816",
+      "from": "@872",
       "to": "@834",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@817",
+      "from": "@873",
       "to": "@836",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@818",
+      "from": "@874",
       "to": "@838",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@820",
+      "from": "@876",
       "to": "@840",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@822",
+      "from": "@878",
       "to": "@842",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@824",
+      "from": "@880",
       "to": "@844",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@826",
+      "from": "@882",
       "to": "@846",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@828",
+      "from": "@884",
       "to": "@847",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@830",
+      "from": "@886",
       "to": "@33",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@832",
+      "from": "@888",
       "to": "@34",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@834",
+      "from": "@890",
       "to": "@35",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@836",
+      "from": "@892",
       "to": "@36",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@838",
+      "from": "@894",
       "to": "@37",
       "evidence": "Compiler-generated input name after the ten native local vectors. Exact section, symbol and typed-reference correspondence to the accepted baseline is established by these 13 temporary-name mappings; canonical output names and descriptor contents remain unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

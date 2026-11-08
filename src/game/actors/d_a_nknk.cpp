@@ -208,7 +208,7 @@ int daNknk_c::InitResources()
     mStateTimer = 0;
     mWalkState = 0;
     mState = 1;
-    func_ov062_02117994(0);
+    SetAnimByIndex(0);
 
     mCliffState = 0;
     mInvincibleTimer = 0;
@@ -242,12 +242,12 @@ int daNknk_c::Behavior()
         *pb0 = *pb0 & ~0x10000000;
         if (SpawnParticlesIfHitOtherObj(mdCc_c) != 0) {
             PoofDust();
-            func_ov062_021179e4();
+            SpawnBlueCoin();
             KillAndTrackInDeathTable();
         }
         if (mEatenByYoshi != 0)
-            func_ov062_02117570();
-        func_ov062_02118334();
+            KillOnWaterFloor();
+        UpdateModelMatrixAndShadow();
         mdCc_c.Clear();
         if (mEatenByYoshi != 0 && mSpitOutTimer == 0)
             mdCc_c.Update();
@@ -273,7 +273,7 @@ int daNknk_c::Behavior()
                 mLandingDustTimer -= 1;
             *pb0 = *pb0 | 0x10000000;
         }
-        func_ov062_02118258(0x3e8000);
+        UpdateClosestPlayer(0x3e8000);
 
         if (mState != 0)
             mAnmModel.Advance();
@@ -318,7 +318,7 @@ int daNknk_c::Behavior()
         }
 
         UpdateWMClsn(mWithMeshClsn, 0);
-        func_ov062_02117570();
+        KillOnWaterFloor();
         mdCc_c.Clear();
         if (mDeathState == 0) {
             if (mInvincibleTimer == 0) {
@@ -331,7 +331,7 @@ int daNknk_c::Behavior()
         UpdateDeath(mWithMeshClsn);
     }
 
-    func_ov062_02118334();
+    UpdateModelMatrixAndShadow();
     return 1;
 }
 
@@ -386,7 +386,7 @@ void daNknk_c::func_ov062_02118de8()
     if (mAnimIndex == 2) {
         if (mAnmModel.Finished() == 0)
             return;
-        func_ov062_02117994(4);
+        SetAnimByIndex(4);
         return;
     }
     if (mAnmModel.WillHitFrame((unsigned short)(mAnmModel.GetFrameCount() - 1)) != 0) {
@@ -396,7 +396,7 @@ void daNknk_c::func_ov062_02118de8()
         func_ov062_02118058();
         return;
     }
-    func_ov062_02117994(0);
+    SetAnimByIndex(0);
     if (mKoopaVariant == 1)
         mState = 5;
     else
@@ -423,26 +423,32 @@ void daNknk_c::func_ov062_02118cdc()
         ApproachLinear(mPrevAngleY, mTargetAngle, 0x200);
     }
     if (mAnimIndex == 1) {
-        func_ov062_02117724(2, 8, 0x13, 0x19);
+        SpawnFootstepDust(2, 8, 0x13, 0x19);
     }
     switch (mWalkState) {
-    case 0: func_ov062_021181a0(); break;
-    case 1: func_ov062_0211811c(); break;
-    case 2: func_ov062_021180d4(); break;
+    case 0:
+        UpdateWalkStart();
+        break;
+    case 1:
+        UpdateWalk();
+        break;
+    case 2:
+        UpdateWalkEnd();
+        break;
     }
     func_ov062_02118058();
 }
 
 void daNknk_c::func_ov062_02118b4c() {
     if (mAnimIndex == 3)
-        func_ov062_02117724(2, 5, 8, 0xb);
+        SpawnFootstepDust(2, 5, 8, 0xb);
 
     if (mModelIndex != 0) {
-        if ((u16)mStateTimer > 0x1e && func_ov062_02117b60() > 0x320000) {
+        if ((u16)mStateTimer > 0x1e && DistToClosestPlayer() > 0x320000) {
             if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
                 return;
             mState = 1;
-            func_ov062_02117994(2);
+            SetAnimByIndex(2);
             return;
         }
         ApproachLinear(mPrevAngleY, mAimAngle, 0x400);
@@ -459,7 +465,7 @@ void daNknk_c::func_ov062_02118b4c() {
         if (ApproachLinear(mHorzSpeed, 0, 0x1000) == 0)
             return;
         mState = 1;
-        func_ov062_02117994(2);
+        SetAnimByIndex(2);
         return;
     }
     ApproachLinear(mPrevAngleY, (s16)(mAimAngle + 0x8000), 0x400);
@@ -476,7 +482,7 @@ void daNknk_c::func_ov062_02118a50()
             wall->surface.CopyNormalTo(*(Vector3*)&mWallNormalX);
             mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
         }
-        func_ov062_02118004(0x4cc);
+        SlideToStop(0x4cc);
         return;
     }
 
@@ -486,19 +492,20 @@ void daNknk_c::func_ov062_02118a50()
             *p = (u16)(*p - 1);
             if (mTimer != 0)
                 return;
-            func_ov062_02117994(8); return;
+            SetAnimByIndex(8);
+            return;
         }
     }
 
     if (mAnmModel.WillHitFrame(0x1e) != 0)
-        func_ov062_021175c0();
+        SpawnLandingDust();
     if (mAnmModel.Finished() == 0)
         return;
     mState = 1;
-    func_ov062_02117994(2);
+    SetAnimByIndex(2);
 }
 
-void daNknk_c::func_ov062_02118a00() {
+void daNknk_c::WaitUntilGrounded() {
     int gr = mWithMeshClsn.IsOnGround();
     if (gr == 0) return;
     int v = mKoopaVariant;
@@ -507,8 +514,8 @@ void daNknk_c::func_ov062_02118a00() {
     } else {
         mState = 2;
     }
-    func_ov062_02117994(0);
-    func_ov062_021175c0();
+    SetAnimByIndex(0);
+    SpawnLandingDust();
 }
 
 void daNknk_c::func_ov062_02118718()
@@ -517,7 +524,7 @@ void daNknk_c::func_ov062_02118718()
     dActor_c *other;
 
     if (mAnimIndex == 3)
-        func_ov062_02117724(2, 5, 8, 0xb);
+        SpawnFootstepDust(2, 5, 8, 0xb);
 
     if (mTurning) {
         mTurning =
@@ -526,7 +533,7 @@ void daNknk_c::func_ov062_02118718()
         if (mPlayerDist >= 0x61a8000)
             mTargetAngle = mAimAngle;
 
-        other = func_ov062_02117b9c();
+        other = FindNearestShell();
         if (other) {
             dist = Vec3_Dist(&mPos, &other->mPos);
             mTargetAngle = Vec3_HorzAngle(&mPos, &other->mPos);
@@ -574,7 +581,7 @@ void daNknk_c::func_ov062_02118718()
     mState = 2;
     mHorzSpeed += mHorzSpeed / 5;
     mVertSpeed = dist / 30;
-    func_ov062_02117994(6);
+    SetAnimByIndex(6);
     mTimer = 0x14;
 }
 
@@ -601,7 +608,7 @@ void daNknk_c::func_ov062_02118588()
         return;
     }
     if (mHorzSpeed != 0) {
-        func_ov062_02118004(0x800);
+        SlideToStop(0x800);
         return;
     }
 
@@ -611,22 +618,22 @@ void daNknk_c::func_ov062_02118588()
             *q = (u16)(*q - 1);
             if (mTimer != 0)
                 return;
-            func_ov062_02117994(8);
+            SetAnimByIndex(8);
             return;
         }
     }
 
     if (mAnmModel.WillHitFrame(0x1e) != 0)
-        func_ov062_021175c0();
+        SpawnLandingDust();
     if (mAnmModel.Finished() == 0)
         return;
     if (mModelIndex != 0) {
         mState = 5;
-        func_ov062_02117994(0);
+        SetAnimByIndex(0);
         return;
     }
     mState = 1;
-    func_ov062_02117994(3);
+    SetAnimByIndex(3);
 }
 
 void daNknk_c::func_ov062_021183e0()
@@ -635,14 +642,14 @@ void daNknk_c::func_ov062_021183e0()
     dActor_c *other;
 
     if (mAnmModel.Finished())
-        func_ov062_02117994(1);
+        SetAnimByIndex(1);
 
     if (mTurning) {
         mTurning = (ApproachLinear(mPrevAngleY, mTargetAngle, 0x200) ^ 1) != 0;
     } else {
         if (mPlayerDist >= 0x61a8000)
             mTargetAngle = mAimAngle;
-        other = func_ov062_02117b9c();
+        other = FindNearestShell();
         if (other) {
             dist = Vec3_Dist(&mPos, &other->mPos);
             if (dist < 0xc8000)
@@ -657,7 +664,7 @@ void daNknk_c::func_ov062_021183e0()
         mState = 2;
         mHorzSpeed = 0x18000;
         mVertSpeed = dist / 30;
-        func_ov062_02117994(6);
+        SetAnimByIndex(6);
         mTimer = 0x14;
         return;
     }
@@ -670,8 +677,7 @@ void daNknk_c::func_ov062_021183e0()
     func_ov062_02118058();
 }
 
-void daNknk_c::func_ov062_02118334()
-{
+void daNknk_c::UpdateModelMatrixAndShadow() {
     short *angleY;
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
@@ -691,8 +697,7 @@ void daNknk_c::func_ov062_02118334()
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
-void daNknk_c::func_ov062_02118258(int lim)
-{
+void daNknk_c::UpdateClosestPlayer(int lim) {
     mClosestPlayer = ClosestPlayer();
 
     if (mClosestPlayer == 0 || Vec3_Dist(&mPos, &mHomePos) > lim) {
@@ -713,7 +718,7 @@ void daNknk_c::func_ov062_02118258(int lim)
     }
 }
 
-void daNknk_c::func_ov062_021181a0() {
+void daNknk_c::UpdateWalkStart() {
     if (mKoopaVariant == 2) {
         ApproachLinear(mHorzSpeed, 0x2000, 0x4cc);
     } else {
@@ -726,10 +731,10 @@ void daNknk_c::func_ov062_021181a0() {
         *p = (u16)(*p + 1);
     }
     mTimer = (u16)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) % 70 + 30);
-    func_ov062_02117994(1);
+    SetAnimByIndex(1);
 }
 
-void daNknk_c::func_ov062_0211811c() {
+void daNknk_c::UpdateWalk() {
     if (mTimer != 0) {
         u16 *p = &mTimer;
         *p = (u16)(*p - 1);
@@ -741,15 +746,15 @@ void daNknk_c::func_ov062_0211811c() {
         u16 *q = &mWalkState;
         *q = (u16)(*q + 1);
     }
-    func_ov062_02117994(2);
+    SetAnimByIndex(2);
 }
 
-void daNknk_c::func_ov062_021180d4() {
+void daNknk_c::UpdateWalkEnd() {
     ApproachLinear(mHorzSpeed, 0, 0x1000);
     int done = mAnmModel.Finished();
     if (!done) return;
     mState = 1;
-    func_ov062_02117994(4);
+    SetAnimByIndex(4);
 }
 
 void daNknk_c::func_ov062_02118058() {
@@ -766,14 +771,14 @@ void daNknk_c::func_ov062_02118058() {
         mState = 1;
     else
         mState = 3;
-    func_ov062_02117994(3);
+    SetAnimByIndex(3);
 }
 
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-void daNknk_c::func_ov062_02118004(int a1) {
+void daNknk_c::SlideToStop(int a1) {
     int r = mWithMeshClsn.IsOnGround();
     if (r == 0) return;
     ApproachLinear(mHorzSpeed, 0, a1);
@@ -810,7 +815,7 @@ void daNknk_c::func_ov062_02117c98()
     }
     if (flags & 0x22400) {
         if (mKoopaVariant == 0) {
-            func_ov062_02117bf4();
+            DropShell();
             return;
         }
         mDeathState = 5;
@@ -822,7 +827,7 @@ void daNknk_c::func_ov062_02117c98()
         turnAround = 1;
     } else if (flags & 0x447e0) {
         if (mKoopaVariant == 0) {
-            func_ov062_02117bf4();
+            DropShell();
             if (flags & 0x3c0)
                 mPrevAngleY = found->mAngleY;
         } else {
@@ -856,7 +861,7 @@ void daNknk_c::func_ov062_02117c98()
             goto tail;
         if (player->mIsMetal != 0) {
             if (mKoopaVariant == 0) {
-                func_ov062_02117bf4();
+                DropShell();
                 goto tail;
             }
             mDeathState = 6;
@@ -876,7 +881,7 @@ void daNknk_c::func_ov062_02117c98()
         }
         if (JumpedOnByPlayer(mdCc_c, *player)) {
             if (mKoopaVariant == 0) {
-                func_ov062_02117bf4();
+                DropShell();
             } else {
                 mDeathState = 1;
                 func_ov002_020aea30(this, found, 0);
@@ -903,10 +908,10 @@ void daNknk_c::func_ov062_02117c98()
             if (pw < 0xf000)
                 pw = 0xf000;
             player->Hurt(*(Vector3 *)&L.hv, 0, pw, 1, 0, 1);
-            func_ov062_02117b48();
+            BounceOffHurtPlayer();
             if (mKoopaVariant == 2) {
                 PoofDust();
-                func_ov062_021179e4();
+                SpawnBlueCoin();
                 KillAndTrackInDeathTable();
             }
         }
@@ -918,12 +923,12 @@ tail:
         mAngleY = (u16)(mPrevAngleY + 0x8000);
 }
 
-void daNknk_c::func_ov062_02117bf4(){
+void daNknk_c::DropShell() {
     func_0201267c(0xed, &mCamSpacePos);
     mKoopaVariant = 1;
     mState = 3;
     mHorzSpeed = 0x14000;
-    func_ov062_02117994(7);
+    SetAnimByIndex(7);
     {
         Vector3 v;
         int z = mPosZ;
@@ -937,7 +942,7 @@ void daNknk_c::func_ov062_02117bf4(){
     func_0201267c(1, &mCamSpacePos);
 }
 
-dActor_c *daNknk_c::func_ov062_02117b9c() {
+dActor_c *daNknk_c::FindNearestShell() {
     dActor_c *found = 0;
     dActor_c *best = 0;
     Fix12i bestDist = 0x7FFFFFFF;
@@ -953,15 +958,13 @@ dActor_c *daNknk_c::func_ov062_02117b9c() {
     return best;
 }
 
-int daNknk_c::func_ov062_02117b60()
-{
+int daNknk_c::DistToClosestPlayer() {
     daPly_c *target = mClosestPlayer;
     if (!target) return 0x61a8000;
     return Vec3_Dist(&mPos, &target->mPos);
 }
 
-void daNknk_c::func_ov062_02117b48()
-{
+void daNknk_c::BounceOffHurtPlayer() {
     mState = 0;
     mVertSpeed = 81920;
     mHorzSpeed = 0;
@@ -969,7 +972,9 @@ void daNknk_c::func_ov062_02117b48()
 
 void daNknk_c::func_ov062_02117acc(){
   switch(mState){
-  case 0: func_ov062_02118a00(); break;
+  case 0:
+      WaitUntilGrounded();
+      break;
   case 1: func_ov062_02118de8(); break;
   case 2: func_ov062_02118cdc(); break;
   case 3: func_ov062_02118b4c(); break;
@@ -980,7 +985,9 @@ void daNknk_c::func_ov062_02117acc(){
 void daNknk_c::func_ov062_02117a3c()
 {
     switch (mState) {
-    case 0: func_ov062_02118a00(); break;
+    case 0:
+        WaitUntilGrounded();
+        break;
     case 1: func_ov062_02118718(); break;
     case 2: func_ov062_02118588(); break;
     case 3: func_ov062_02118588(); break;
@@ -989,7 +996,7 @@ void daNknk_c::func_ov062_02117a3c()
     }
 }
 
-void daNknk_c::func_ov062_021179e4() {
+void daNknk_c::SpawnBlueCoin() {
     int x = mPosX;
     int z = mPosZ;
     int y = mPosY + 0x78000;
@@ -1000,14 +1007,16 @@ void daNknk_c::func_ov062_021179e4() {
     dActor_c::Spawn(0x122, 2, pos, 0, mAreaId, -1);
 }
 
-void daNknk_c::func_ov062_02117994(int idx) {
+void daNknk_c::SetAnimByIndex(int idx) {
     mAnmModel.SetAnim((BCA_File *)data_ov062_0211cee8[idx]->filePtr, data_ov062_0211cf0c[idx],
                       mAnimSpeed, 0);
     mAnimIndex = (u8)idx;
 }
 
 // 6f: keep constant live / flip coloring
-void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4) /* uxth vs a1-a3: ROM compares h<=a4 after a halfword arg */
+void daNknk_c::SpawnFootstepDust(
+    unsigned int a1, unsigned int a2, unsigned int a3,
+    unsigned short a4) /* uxth vs a1-a3: ROM compares h<=a4 after a halfword arg */
 {
     unsigned int h = (unsigned int)(mAnmModel.currFrame << 4) >> 16;
     if ((h >= a1 && h <= a2) || (h >= a3 && h <= a4)) {
@@ -1035,7 +1044,7 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
             pos.x += k * FX_SinIdx(idx);
             pos.z += k * FX_CosIdx(idx);
         }
-        uid = Particle::System::New(0, 0xf9, pos.x, pos.y, pos.z, 0, 0);
+        uid = Particle::System::New(0, kPtclFootstepDust, pos.x, pos.y, pos.z, 0, 0);
         Particle::SetSelfDestructFlag(0xf9);
         if (uid == 0) return;
         ps = Particle::System::FromUniqueID(uid);
@@ -1050,8 +1059,7 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
     }
 }
 
-void daNknk_c::func_ov062_021175c0()
-{
+void daNknk_c::SpawnLandingDust() {
     volatile Vector3 pos;
     int t;
     u32 spawned;
@@ -1075,7 +1083,7 @@ void daNknk_c::func_ov062_021175c0()
 
         spawned = Particle::System::New(0, kPtclLandingDust, pos.x, pos.y, zArg,
                                         (const Vector3_16f *)((void *)0),
-                                        (Particle::Callback *)((void *)0));
+                                        (dPa_c::level_c::callback_c *)((void *)0));
     }
 
     Particle::SetSelfDestructFlag(kPtclLandingDust);
@@ -1102,7 +1110,7 @@ void daNknk_c::func_ov062_021175c0()
 }
 
 /* Standing on a water floor: drop a coin and die. */
-void daNknk_c::func_ov062_02117570() {
+void daNknk_c::KillOnWaterFloor() {
     if (!mWithMeshClsn.IsOnGround()) return;
     dBgPi *floor = mWithMeshClsn.GetFloorResult();
     if (!SurfaceInfo_TestFlag0x20((int *)&floor->surface)) return;

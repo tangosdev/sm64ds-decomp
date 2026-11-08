@@ -224,7 +224,7 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 | --- | --- | --- |
 | 0x110 | `mCapBank` | `AddCap` in `src/runtime/actor/d_cap_enemy_arm9.cpp` sets it to 1 when the six-way cap selector is `>= 3` and to 0 otherwise. `ReleaseCap` in that file picks marker bit 3 vs bit 7 of `mCapId` by it, and `GetCapEatenOffIt` re-binds the model only for bank 0. |
 | 0x111 | `mIsDormant` | `RespawnIfHasCap` in `src/runtime/actor/d_cap_enemy_arm9.cpp` sets it to 1 on the *replacement* actor it spawns; `AddCap` clears it. `GetCapState` returns 2 while it is clear (the ordinary enemy path), and while it is set returns 0 — or, once the cap's release bit is up, clears it, restores `mFlags` from field 0xf4, and returns 1. `daKrb_c::Render`, in `src/game/actors/d_a_krb.cpp`, draws nothing while it is set, and `daKrb_c::Behavior` treats `GetCapState() == 1` as the wake-up (poof dust + flag). |
-| 0x112 | `mHadBank1Cap` | `AddCap` latches it to 1 the first time it selects bank 1 and never clears it; it is passed as the fourth argument of [func_ov001_020ab228](../src/ui/hud/d_cap_icon.cpp), the cap-icon setup. |
+| 0x112 | `mHadBank1Cap` | `AddCap` latches it to 1 the first time it selects bank 1 and never clears it; it is passed as the fourth argument of [dCapIcon_c::Link](../src/ui/hud/d_cap_icon.cpp), the cap-icon setup. |
 
 ---
 

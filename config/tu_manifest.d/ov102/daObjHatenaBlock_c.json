@@ -59,87 +59,87 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149078Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c12IsHitBlockedEv",
       "address": "0x02149078",
       "size": "0x00000088",
-      "legacy_source": "src/func_ov102_02149078.c",
+      "legacy_source": "src/IsHitBlocked.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149100EP7Vector3ijs",
+      "symbol": "_ZN18daObjHatenaBlock_c14SpawnCoinSprayEP7Vector3ijs",
       "address": "0x02149100",
       "size": "0x00000120",
-      "legacy_source": "src/func_ov102_02149100.c",
+      "legacy_source": "src/SpawnCoinSpray.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149220Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c16SpawnPrizeBobOmbEv",
       "address": "0x02149220",
       "size": "0x00000068",
-      "legacy_source": "src/func_ov102_02149220.cpp",
+      "legacy_source": "src/SpawnPrizeBobOmb.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "address": "0x02149288",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov102_02149288.cpp",
+      "legacy_source": "src/SpawnPrizePowerUpItem.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021492d4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c17SpawnPrizeFeatherEv",
       "address": "0x021492d4",
       "size": "0x000000b0",
-      "legacy_source": "src/func_ov102_021492d4.c",
+      "legacy_source": "src/SpawnPrizeFeather.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149384Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeShellEv",
       "address": "0x02149384",
       "size": "0x00000058",
-      "legacy_source": "src/func_ov102_02149384.cpp",
+      "legacy_source": "src/SpawnPrizeShell.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021493dcEv",
+      "symbol": "_ZN18daObjHatenaBlock_c23SpawnPrizeScaleUpKinokoEv",
       "address": "0x021493dc",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov102_021493dc.cpp",
+      "legacy_source": "src/SpawnPrizeScaleUpKinoko.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149428Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c13SpawnPrize1UpEv",
       "address": "0x02149428",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov102_02149428.c",
+      "legacy_source": "src/SpawnPrize1Up.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149478Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c14SpawnPrizeStarEv",
       "address": "0x02149478",
       "size": "0x00000054",
-      "legacy_source": "src/func_ov102_02149478.c",
+      "legacy_source": "src/SpawnPrizeStar.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021494ccEv",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeCoinsEv",
       "address": "0x021494cc",
       "size": "0x00000070",
-      "legacy_source": "src/func_ov102_021494cc.c",
+      "legacy_source": "src/SpawnPrizeCoins.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_0214953cEii",
+      "symbol": "_ZN18daObjHatenaBlock_c18SpawnPrizeMarioCapEii",
       "address": "0x0214953c",
       "size": "0x000000d4",
-      "legacy_source": "src/func_ov102_0214953c.c",
+      "legacy_source": "src/SpawnPrizeMarioCap.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149610Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c9GetFloorYEv",
       "address": "0x02149610",
       "size": "0x00000074",
-      "legacy_source": "src/func_ov102_02149610.cpp",
+      "legacy_source": "src/GetFloorY.cpp",
       "ordinal": 13
     },
     {
@@ -185,80 +185,80 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149878Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c12UpdatePoppedEv",
       "address": "0x02149878",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov102_02149878.c",
+      "legacy_source": "src/UpdatePopped.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021498c4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c11EnterPoppedEv",
       "address": "0x021498c4",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov102_021498c4.c",
+      "legacy_source": "src/EnterPopped.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021498e0Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c14UpdateBouncingEv",
       "address": "0x021498e0",
       "size": "0x00000398",
-      "legacy_source": "src/func_ov102_021498e0.cpp",
+      "legacy_source": "src/UpdateBouncing.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149c78Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c13EnterBouncingEv",
       "address": "0x02149c78",
       "size": "0x00000054",
-      "legacy_source": "src/func_ov102_02149c78.c",
+      "legacy_source": "src/EnterBouncing.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149cccEv",
+      "symbol": "_ZN18daObjHatenaBlock_c10UpdateIdleEv",
       "address": "0x02149ccc",
       "size": "0x000000b4",
-      "legacy_source": "src/func_ov102_02149ccc.cpp",
+      "legacy_source": "src/UpdateIdle.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149d80Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c9EnterIdleEv",
       "address": "0x02149d80",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov102_02149d80.c",
+      "legacy_source": "src/EnterIdle.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149da8Ei",
+      "symbol": "_ZN18daObjHatenaBlock_c11ChangeStateEi",
       "address": "0x02149da8",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov102_02149da8.cpp",
+      "legacy_source": "src/ChangeState.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149df0Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c15CallStateUpdateEv",
       "address": "0x02149df0",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov102_02149df0.cpp",
+      "legacy_source": "src/CallStateUpdate.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149e38Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c18UpdateMeshColliderEv",
       "address": "0x02149e38",
       "size": "0x0000006c",
-      "legacy_source": "src/func_ov102_02149e38.cpp",
+      "legacy_source": "src/UpdateMeshCollider.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149ea4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c16UpdateDropShadowEv",
       "address": "0x02149ea4",
       "size": "0x0000014c",
-      "legacy_source": "src/func_ov102_02149ea4.c",
+      "legacy_source": "src/UpdateDropShadow.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149ff0Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c17UpdateModelMatrixEv",
       "address": "0x02149ff0",
       "size": "0x0000009c",
-      "legacy_source": "src/func_ov102_02149ff0.c",
+      "legacy_source": "src/UpdateModelMatrix.c",
       "ordinal": 30
     },
     {
@@ -2230,7 +2230,7 @@
       "source": "0x214e378",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021494ccEv",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeCoinsEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21494cc"
@@ -2240,7 +2240,7 @@
       "source": "0x214e388",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021494ccEv",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeCoinsEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21494cc"
@@ -2250,7 +2250,7 @@
       "source": "0x214e3a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021498c4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c11EnterPoppedEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21498c4"
@@ -2260,7 +2260,7 @@
       "source": "0x214e380",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021494ccEv",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeCoinsEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21494cc"
@@ -2270,7 +2270,7 @@
       "source": "0x214e2c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2280,7 +2280,7 @@
       "source": "0x214e398",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149878Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c12UpdatePoppedEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149878"
@@ -2290,7 +2290,7 @@
       "source": "0x214e2f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2300,7 +2300,7 @@
       "source": "0x214e268",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149c78Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c13EnterBouncingEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149c78"
@@ -2310,7 +2310,7 @@
       "source": "0x214e258",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021498e0Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c14UpdateBouncingEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21498e0"
@@ -2320,7 +2320,7 @@
       "source": "0x214e2a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021492d4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c17SpawnPrizeFeatherEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21492d4"
@@ -2330,7 +2330,7 @@
       "source": "0x214e298",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021493dcEv",
+      "symbol": "_ZN18daObjHatenaBlock_c23SpawnPrizeScaleUpKinokoEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21493dc"
@@ -2340,7 +2340,7 @@
       "source": "0x214e260",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149cccEv",
+      "symbol": "_ZN18daObjHatenaBlock_c10UpdateIdleEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149ccc"
@@ -2350,7 +2350,7 @@
       "source": "0x214e278",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149d80Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c9EnterIdleEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149d80"
@@ -2360,7 +2360,7 @@
       "source": "0x214e300",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021492d4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c17SpawnPrizeFeatherEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21492d4"
@@ -2370,7 +2370,7 @@
       "source": "0x214e308",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021492d4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c17SpawnPrizeFeatherEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21492d4"
@@ -2380,7 +2380,7 @@
       "source": "0x214e310",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021492d4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c17SpawnPrizeFeatherEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21492d4"
@@ -2390,7 +2390,7 @@
       "source": "0x214e270",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021493dcEv",
+      "symbol": "_ZN18daObjHatenaBlock_c23SpawnPrizeScaleUpKinokoEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21493dc"
@@ -2400,7 +2400,7 @@
       "source": "0x214e328",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2410,7 +2410,7 @@
       "source": "0x214e2e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2420,7 +2420,7 @@
       "source": "0x214e2b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2430,7 +2430,7 @@
       "source": "0x214e2c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149220Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c16SpawnPrizeBobOmbEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149220"
@@ -2440,7 +2440,7 @@
       "source": "0x214e2d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2450,7 +2450,7 @@
       "source": "0x214e2d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2460,7 +2460,7 @@
       "source": "0x214e390",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2470,7 +2470,7 @@
       "source": "0x214e2b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021493dcEv",
+      "symbol": "_ZN18daObjHatenaBlock_c23SpawnPrizeScaleUpKinokoEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21493dc"
@@ -2480,7 +2480,7 @@
       "source": "0x214e2a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021493dcEv",
+      "symbol": "_ZN18daObjHatenaBlock_c23SpawnPrizeScaleUpKinokoEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21493dc"
@@ -2490,7 +2490,7 @@
       "source": "0x214e2f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2500,7 +2500,7 @@
       "source": "0x214e2e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149288Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c21SpawnPrizePowerUpItemEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149288"
@@ -2510,7 +2510,7 @@
       "source": "0x214e290",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021492d4Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c17SpawnPrizeFeatherEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21492d4"
@@ -2520,7 +2520,7 @@
       "source": "0x214e318",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149384Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeShellEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149384"
@@ -2530,7 +2530,7 @@
       "source": "0x214e280",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149384Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeShellEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149384"
@@ -2540,7 +2540,7 @@
       "source": "0x214e330",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149384Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeShellEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149384"
@@ -2550,7 +2550,7 @@
       "source": "0x214e338",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149384Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeShellEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149384"
@@ -2560,7 +2560,7 @@
       "source": "0x214e288",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149428Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c13SpawnPrize1UpEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149428"
@@ -2570,7 +2570,7 @@
       "source": "0x214e320",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149428Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c13SpawnPrize1UpEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149428"
@@ -2580,7 +2580,7 @@
       "source": "0x214e340",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149428Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c13SpawnPrize1UpEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149428"
@@ -2590,7 +2590,7 @@
       "source": "0x214e348",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149428Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c13SpawnPrize1UpEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149428"
@@ -2600,7 +2600,7 @@
       "source": "0x214e350",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149478Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c14SpawnPrizeStarEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149478"
@@ -2610,7 +2610,7 @@
       "source": "0x214e358",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149478Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c14SpawnPrizeStarEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149478"
@@ -2620,7 +2620,7 @@
       "source": "0x214e360",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149478Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c14SpawnPrizeStarEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149478"
@@ -2630,7 +2630,7 @@
       "source": "0x214e368",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_02149478Ev",
+      "symbol": "_ZN18daObjHatenaBlock_c14SpawnPrizeStarEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x2149478"
@@ -2640,7 +2640,7 @@
       "source": "0x214e370",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN18daObjHatenaBlock_c19func_ov102_021494ccEv",
+      "symbol": "_ZN18daObjHatenaBlock_c15SpawnPrizeCoinsEv",
       "addend": 0,
       "target_module": "overlay(102)",
       "target_address": "0x21494cc"

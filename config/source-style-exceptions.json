@@ -342,7 +342,7 @@
       "rule": "unknown-field",
       "match": "unk_006",
       "count": 1,
-      "reason": "AddSystem stores Manager::unk_02e through the existing 6-bit Flags member. The shared header name stays unknown; Contents::Entry::Initialise compares the same field. Follow-up: rename it together with unk_000 and unk_00c.",
+      "reason": "AddSystem stores Manager::unk_02e through the existing 6-bit Flags member. The shared header name stays unknown; dPa_c::level_c::emitter_c::entry compares the same field. Follow-up: rename it together with unk_000 and unk_00c.",
       "evidence": "include/Particle__System.h Flags unk_006:6; src/engine/particle/Particle_SysTracker_Contents.cpp. mwccarm 2004/b56 match.py: AddSystem at 0x02049e0c size 0xdc MATCH."
     },
     {
@@ -351,7 +351,7 @@
       "match": "unk_00c",
       "count": 1,
       "reason": "AddSystem copies flags.unk_000 into the existing 6-bit Flags member. The shared header name stays unknown. Follow-up: rename it together with unk_000 and unk_006.",
-      "evidence": "include/Particle__System.h Flags unk_00c:6; Contents::Entry::Initialise writes the same field. mwccarm 2004/b56 match.py: AddSystem at 0x02049e0c size 0xdc MATCH."
+      "evidence": "include/Particle__System.h Flags unk_00c:6; dPa_c::level_c::emitter_c::entry writes the same field. mwccarm 2004/b56 match.py: AddSystem at 0x02049e0c size 0xdc MATCH."
     },
     {
       "path": "src/engine/particle/Particle_Manager.cpp",

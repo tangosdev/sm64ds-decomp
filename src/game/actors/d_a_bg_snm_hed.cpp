@@ -21,6 +21,7 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 
 struct BMD_File;
@@ -126,8 +127,8 @@ int daBgSnmHed_c::State2() {
             pos.z = mPosZ;
             Earthquake(pos, 0x5dc000);
             func_0201267c(0x115, &mCamSpacePos);
-            Particle::System::NewSimple(0x10f, mPosX, mPosY, mPosZ);
-            Particle::System::NewSimple(0x110, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclBigSnowmanHeadLandA, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclBigSnowmanHeadLandB, mPosX, mPosY, mPosZ);
             Sound::PlaySub(0x20, 0x14, 0x7f, 0x15666, 0);
             mSubstate++;
         }

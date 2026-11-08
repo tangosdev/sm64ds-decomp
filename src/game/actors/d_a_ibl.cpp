@@ -13,9 +13,10 @@
  * at 0x0214316c.
  */
 /* leftovers:
- * - The eight helpers stay func_ov100_02141fb0 .. 02142b90. Behavior
- *   reads gIblKindHandlers by hand, through two-word records, rather
- *   than calling a pointer-to-member.
+ * - The eight helpers' names (CheckContact through SpawnerBehavior) are
+ *   coined from their bodies and gIblKindHandlers' kind order, not
+ *   recovered. Behavior reads gIblKindHandlers by hand, through two-word
+ *   records, rather than calling a pointer-to-member.
  * - daPly_c::Hurt stays mangled: it takes Fix12<int> by value. The local
  *   Hurt declaration agrees with the current scalar definition.
  * - The spawner copies daPly_c position through a byte view of the whole object
@@ -131,8 +132,8 @@ typedef void (daIbl_c::*IblKindHandler)();
 IblModelFile data_ov100_02148668(0x9c00);
 
 IblKindHandler gIblKindHandlers[5] = {
-    &daIbl_c::func_ov100_02142b90, &daIbl_c::func_ov100_02142918, &daIbl_c::func_ov100_021424c0,
-    &daIbl_c::func_ov100_0214272c, &daIbl_c::func_ov100_021424c0,
+    &daIbl_c::SpawnerBehavior, &daIbl_c::FreeRollBehavior, &daIbl_c::PathBehavior,
+    &daIbl_c::RollOffBehavior, &daIbl_c::PathBehavior,
 };
 
 /* D1 tears the members down in reverse declaration order, then the
@@ -141,7 +142,7 @@ daIbl_c::~daIbl_c()
 {
 }
 
-/* Returns 0x82000 (130 units). func_ov100_02141fb0 adds it to the ball's Y
+/* Returns 0x82000 (130 units). CheckContact adds it to the ball's Y
  * before KillByInvincibleChar. */
 s32 daIbl_c::OnAimedAtWithEgg()
 {
@@ -162,8 +163,7 @@ s32 daIbl_c::OnAimedAtWithEgg()
        sound); any other character only gets the not-broken sound;
      - any other contact hurts the daPly_c (daPly_c::Hurt, given the ball's
        position). */
-void daIbl_c::func_ov100_02141fb0()
-{
+void daIbl_c::CheckContact() {
     daPly_c *a;
     u32 fl;
     u32 id = mdCcAc_c.otherOwner;
@@ -217,8 +217,7 @@ void daIbl_c::func_ov100_02141fb0()
    the floor normal's Y is non-zero, sets mVertSpeed to -(slope + 8
    units/frame), where slope = (n.x * vel.x + n.z * vel.z) / n.y, so the ball
    keeps to the slope. */
-void daIbl_c::func_ov100_02142130()
-{
+void daIbl_c::UpdateWallAndFloor() {
     mHitWall = 0;
     if (gCurrentSublevel == 0x19)
         func_020383f0(&mWithMeshClsn);
@@ -250,8 +249,7 @@ void daIbl_c::func_ov100_02142130()
    depth 90 units * scale on the ground (0x32 + 0x28) or 450 units * scale in
    the air (0x32 + 0x190), and opacity 0xf. "Scale" is mDrawScale.x, 0x1000
    being 1.0. */
-void daIbl_c::func_ov100_02142264()
-{
+void daIbl_c::UpdateModelMatrix() {
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&IDENTITY_MATRIX4X3;
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
@@ -281,8 +279,7 @@ void daIbl_c::func_ov100_02142264()
  *    dest colors land on r1/r3 like the ROM; mul uses those names accordingly.
  *  - u64-launder materializes pidx between the first path-node load and store.
  */
-int daIbl_c::func_ov100_0214233c()
-{
+int daIbl_c::AdvancePath() {
     int px = mNextNodePosX;
     int ax = mPosX;
     int prevx = mPrevNodePosX;
@@ -386,7 +383,7 @@ int daIbl_c::func_ov100_0214233c()
  * the flags 3 passed here it also spawns the coin and calls
  * KillAndTrackInDeathTable itself before returning 2) and, on 2, the ball
  * puffs (a Particle) and plays the break sound. Then the contact check, and with mDeathState 8 the handler
- * is done. Otherwise func_ov100_0214233c advances along the path and the
+ * is done. Otherwise AdvancePath advances along the path and the
  * heading mPrevAngleY turns toward mHeadingToNode by at most 0x800 (11.25
  * degrees) a frame. When the path index wraps (-1) the ball becomes kind 3
  * and, if it is on the ground, has its vertical speed zeroed and is lifted 15
@@ -399,7 +396,7 @@ int daIbl_c::func_ov100_0214233c()
  * 4 ramps toward it by 0x400 (0.25 units/frame) a frame, and kind 2 adds
  * the floor normal's X and Z to its velocity. Last comes the collision
  * update. */
-void daIbl_c::func_ov100_021424c0() {
+void daIbl_c::PathBehavior() {
     int r;
     int vy;
 
@@ -413,11 +410,11 @@ void daIbl_c::func_ov100_021424c0() {
         return;
     }
 
-    func_ov100_02141fb0();
+    CheckContact();
     if (mDeathState == daIbl_DEATH_KNOCKED)
         return;
 
-    r = func_ov100_0214233c();
+    r = AdvancePath();
     ApproachLinear(mPrevAngleY, mHeadingToNode, 0x800);
 
     if (r == -1) {
@@ -427,12 +424,12 @@ void daIbl_c::func_ov100_021424c0() {
             mVertSpeed = 0;
             mPosY += 0xf000;
         } else {
-            func_ov100_02142130();
+            UpdateWallAndFloor();
         }
     } else {
         int had = (mHitWall != 0);
         vy = mVertSpeed;
-        func_ov100_02142130();
+        UpdateWallAndFloor();
         if (mHitWall != 0 && had == 0) {
             mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
             mRollSoundHandle = 0;
@@ -460,13 +457,13 @@ void daIbl_c::func_ov100_021424c0() {
     }
 
     UpdatePos(0);
-    func_ov100_02142264();
+    UpdateModelMatrix();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
 }
 
 /* Kind 3, the ball that has left its path. After the knock-away death step
-   (see func_ov100_021424c0) and the contact check, it breaks up in a triple
+   (see PathBehavior) and the contact check, it breaks up in a triple
    poof when it is below the kill height mKillY or the probe says it hit a
    wall. Otherwise, on the ground it adds three times the floor normal's X and Z
    to its velocity (so it rolls downhill), points its heading along that
@@ -475,8 +472,7 @@ void daIbl_c::func_ov100_021424c0() {
    -8 units/frame, replaces it with 1.5 times its magnitude; in a roll it
    plays the rolling sound. Vertical speed falls by gravity down
    to the terminal velocity, then the position updates from speed alone. */
-void daIbl_c::func_ov100_0214272c()
-{
+void daIbl_c::RollOffBehavior() {
     int r;
 
     MakeVanishLuigiWork(mdCcAc_c);
@@ -490,8 +486,8 @@ void daIbl_c::func_ov100_0214272c()
         return;
     }
 
-    func_ov100_02141fb0();
-    func_ov100_02142130();
+    CheckContact();
+    UpdateWallAndFloor();
 
     if (mPosY < mKillY || mHitWall != 0) {
         /* The volatile read of mPosY is measured, not style: with a plain
@@ -535,7 +531,7 @@ void daIbl_c::func_ov100_0214272c()
     }
 
     UpdatePosWithOnlySpeed(0);
-    func_ov100_02142264();
+    UpdateModelMatrix();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
 }
@@ -554,8 +550,7 @@ void daIbl_c::func_ov100_0214272c()
    identity"); no vtable holds it -- its only reference is the
    pointer-to-member constant at 0x02147f18 that seeds entry 1 of
    Behavior's table. */
-void daIbl_c::func_ov100_02142918()
-{
+void daIbl_c::FreeRollBehavior() {
     int r;
     MakeVanishLuigiWork(mdCcAc_c);
     r = func_ov002_020ad660(this, &mWithMeshClsn, &mModel, 3);
@@ -567,10 +562,10 @@ void daIbl_c::func_ov100_02142918()
         return;
     }
 
-    func_ov100_02141fb0();
+    CheckContact();
     if (mDeathState == daIbl_DEATH_KNOCKED)
         return;
-    func_ov100_02142130();
+    UpdateWallAndFloor();
 
     if (mHitWall != 0) {
         mPrevAngleY = ReflectAngle(mWallNormalX, mWallNormalZ, mPrevAngleY);
@@ -606,7 +601,7 @@ void daIbl_c::func_ov100_02142918()
         mVertSpeed = lim;
     }
     UpdatePosWithOnlySpeed(0);
-    func_ov100_02142264();
+    UpdateModelMatrix();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
 }
@@ -624,8 +619,7 @@ void daIbl_c::func_ov100_02142918()
    nibble) is the spawner's second nibble, and (param1 & 0xf) != 4 is the test
    for "the spawned ball is not kind 4". The new ball stores the spawner in
    mDispenser, and mLiveBalls counts it. */
-void daIbl_c::func_ov100_02142b90()
-{
+void daIbl_c::SpawnerBehavior() {
     Vector3 pos;
     u16 *timer = (u16 *)&mStateTimer;
     daPly_c *pl;
@@ -772,7 +766,7 @@ int daIbl_c::InitResources()
             mPathNodeIndex += 1;
             mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
         }
-        func_ov100_0214233c();
+        AdvancePath();
         mPrevAngleY = mHeadingToNode;
         mKillY = *(int *)&data_02092138;
         d = *(signed char *)&gCurrentSublevel;

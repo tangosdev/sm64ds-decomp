@@ -65,7 +65,7 @@ void LoadBGPltt(const void *, unsigned int, unsigned int);
 
 extern "C" {
 void func_020308b4(void);
-void func_020551f0(void *s, int v);
+void G2x_ChangeBlendBrightness_(volatile unsigned short *reg, int brightness);
 extern int data_0209fc68;
 
 void Enable3dEngines(void);
@@ -554,7 +554,10 @@ void dScEntry_c::StartMatch() {
     data_02092778 = 1;
 }
 
-int dScEntry_c::func_ov075_02116ce4() {
+/* ArePlayersReady's twin for the rematch handshake (coined name): every
+ * joined player must show the rematch ready bit (link settings byte 2,
+ * bit 4) that EnterRematchSync raises through func_020201c0. */
+int dScEntry_c::ArePlayersReadyForRematch() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209fc5c[i]) {
@@ -1050,7 +1053,7 @@ void dScEntry_c::UpdateRematchSync() {
     }
     if (func_0203d9b4() == 0)
         return;
-    if (func_ov075_02116ce4() == 0)
+    if (ArePlayersReadyForRematch() == 0)
         return;
     func_02020124();
 }
@@ -1879,7 +1882,7 @@ void dScEntry_c::UpdateStepFadeOut() {
     if (mFadeTick & 1)
         return;
     ++mFadeBrightness;
-    func_020551f0((void *)0x4001050, mFadeBrightness);
+    G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
     if (mFadeBrightness < 16)
         return;
     mIsFading = 1;
@@ -2031,7 +2034,7 @@ s32 dScEntry_c::Behavior() {
         mFadeTick++;
         if ((mFadeTick & 1) == 0) {
             mFadeBrightness--;
-            func_020551f0((void *)0x4001050, mFadeBrightness);
+            G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
             if (mFadeBrightness == 0) {
                 *(u16 *)0x4001050 = 0;
                 mFadeBrightness = 0;

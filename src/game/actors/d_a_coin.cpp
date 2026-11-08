@@ -43,6 +43,7 @@
 #include "Sound.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -750,7 +751,7 @@ s32 daCoin_c::CleanupResources()
         }
     }
     if (mDisappearTimer != 0) return 1;
-    Particle::System::NewSimple(0xd2, mPosX, mPosY + 0x28000, mPosZ);
+    Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY + 0x28000, mPosZ);
     return 1;
 }
 

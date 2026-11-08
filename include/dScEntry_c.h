@@ -69,7 +69,7 @@ struct dScEntry_c : dScene_c {
     s32 InitResultResources();
     s32 InitEntryResources();
     void LeaveSettings();
-    int func_ov075_02116ce4();
+    int ArePlayersReadyForRematch();
     void ResetMatchRecords();
     void UpdateSettingsSync();
     void EnterSettingsSync();

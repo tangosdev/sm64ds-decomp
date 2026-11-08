@@ -41,6 +41,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -793,7 +794,8 @@ void daBmb_c::func_ov102_0214b53c() {
         p = d;
         int haveMtx3 = (int)((mFlags & 0x4000) != 0);
         if (haveMtx3 != 0) {
-            mCarryParticle = Particle::System::New(mCarryParticle, 0x13, p.x, p.y, p.z, 0, 0);
+            mCarryParticle =
+                Particle::System::New(mCarryParticle, kPtclBobOmbCarried, p.x, p.y, p.z, 0, 0);
         }
         if (mFuse != 0) {
             int haveShadow = (int)((mFlags & 0x40000) != 0);
@@ -832,7 +834,8 @@ void daBmb_c::func_ov102_0214b53c() {
                     }
                 }
             }
-            mFuseParticle = Particle::System::New(mFuseParticle, 0x19, p.x, p.y, p.z, 0, 0);
+            mFuseParticle =
+                Particle::System::New(mFuseParticle, kPtclBobOmbFuse, p.x, p.y, p.z, 0, 0);
         }
     }
     UpdateShadow();
@@ -1066,11 +1069,11 @@ void func_ov102_0214ae1c(void *cv) {
     }
     func_0201267c(0x10c, &self->mCamSpacePos);
     v.y = self->mPosY + 0x64000;
-    Particle::System::NewSimple(0x14, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x15, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x16, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x17, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x18, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclBobOmbExplodeA, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclBobOmbExplodeB, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclBobOmbExplodeC, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclBobOmbExplodeD, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclBobOmbExplodeE, v.x, v.y, v.z);
     func_ov002_020ef228(&self->mWithMeshClsn, self);
     if (self->mCarrier) {
         Vector3 w;

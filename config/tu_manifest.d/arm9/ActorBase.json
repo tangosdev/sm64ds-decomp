@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED: one unit 0x20049f0..0x20707a4 with 2984 functions and 73 class labels, because the module's class address-spans interleave and cluster() unions them all. There is no tu_map boundary here and no `tubuild.py create` candidate id; every line below is hand-derived and independently checkable.",
     "THE TU'S CONTIGUOUS RUN IS 0x02042fe4..0x020440e8, 41 functions, tiling that span exactly with no hole and no overlap (recomputed from config/arm9/symbols.txt). The class's named run starts at func_020433b8 (0x020433b8). The eleven functions below it were folded in 2026-10-28 (next line). The lower bound is func_02042fe4. Below it, func_02042f68 (0x02042f68..0x02042fe4) copies an eight-byte name after a func_0203da3c mode check and touches no fBase_c state; SaveData::SaveDataToCart ends at 0x02042f68. The upper bound is 0x020440e8, which is the first byte of _ZN11fLiNdBaPr_cD1Ev, another class.",
-    "no foreign code inside the run: config/arm9/symbols.txt lists exactly 41 function symbols in [0x02042fe4,0x020440e8) -- 31 with the _ZN7fBase_c prefix plus ten func_ names (23 and eighteen before eight address-named helpers became fBase_c members). The eleven below func_020433b8 are fBase_c's creation and processing glue, tied to this TU by data and calls. func_02043180 stores the four globals data_020a4b60/b54/b48/b64 that fBase_c::fBase_c reads as param1, actorID, unk_012 and the parent scene node. func_02043098, the create entry, stages them, calls the profile factory through data_020a4bb8 (the table fBase_c::fBase_c reads priorities from) and then func_020433b8. func_02042fe4 and func_02042ffc create at the root and under a parent's manager.sceneNode; ActorDerived.cpp calls both. func_0204302c and func_02043060 run the scene's create hooks. func_020431c4 walks manager.sceneNode's subtree for an uncreated child, which d_scene.cpp polls. func_0204322c, func_02043288, func_020432e4 and func_0204335c each run the nonvirtual fBase_c::Process (0x02043c88, in this TU) with a triple of fBase_c member-function pointers, and func_020433b8 calls func_0204335c. That is the layout of NSMBW's f_base.cpp: fBase_make, createChild/createRoot, commonPack and its four create/execute/delete/draw wrappers, and checkChildProcessCreateState. Both func_02043810 and func_02043880 are ENCLOSED by named members.",
+    "no foreign code inside the run: config/arm9/symbols.txt lists exactly 41 function symbols in [0x02042fe4,0x020440e8) -- 35 with the _ZN7fBase_c prefix plus six func_ names (23 and eighteen before eight address-named helpers became fBase_c members, 31 and ten before setTmpCtData, fBase_make, createChild and createRoot did). The eleven below func_020433b8 are fBase_c's creation and processing glue, tied to this TU by data and calls. func_02043180 stores the four globals data_020a4b60/b54/b48/b64 that fBase_c::fBase_c reads as param1, actorID, mGroupType and the parent scene node. func_02043098, the create entry, stages them, calls the profile factory through data_020a4bb8 (the table fBase_c::fBase_c reads priorities from) and then func_020433b8. func_02042fe4 and func_02042ffc create at the root and under a parent's manager.sceneNode; ActorDerived.cpp calls both. func_0204302c and func_02043060 run the scene's create hooks. func_020431c4 walks manager.sceneNode's subtree for an uncreated child, which d_scene.cpp polls. func_0204322c, func_02043288, func_020432e4 and func_0204335c each run the nonvirtual fBase_c::Process (0x02043c88, in this TU) with a triple of fBase_c member-function pointers, and func_020433b8 calls func_0204335c. That is the layout of NSMBW's f_base.cpp: fBase_make, createChild/createRoot, commonPack and its four create/execute/delete/draw wrappers, and checkChildProcessCreateState. Both func_02043810 and func_02043880 are ENCLOSED by named members.",
     "the run is the class's WHOLE run, bar one nested-class outlier: grep of every config/**/symbols.txt in the image finds 25 _ZN7fBase_c* function symbols, 23 of them here and 2 elsewhere -- _ZN7fBase_c9SceneNode5ResetEv (0x0203b4ac) and _ZN7fBase_c9SceneNodeC1Ev (0x0203b4c4). Those two are the NESTED class ActorBase::SceneNode, not ActorBase, they are 0x8000 bytes away, and they sit immediately below _ZN4cstd5atan2E5Fix12IiES1_ inside the 0x0203b2xx-0x0203b4xx stretch that holds the very list primitives this run calls (func_0203b20c, func_0203b244, func_0203b27c, func_0203b3c0). They are a different TU and are deliberately NOT claimed here; see notes.",
     "DESTRUCTOR-VARIANT ORDER CORROBORATES THE SOURCE FORM. mwcc emits an out-of-line destructor definition as the fixed group D2,D0,D1 (notes/tu-reconstruction-pilot-report.md sec 3). This class has exactly that in the ROM -- 0x02043d48 D2, 0x02043d78 D0, 0x02043dbc D1, contiguous -- so the three were emitted together from one object, which is only possible if they shared a TU. Contrast ActorDerived, whose destructor is defined INLINE in the header: its vague-linkage copies come out D1-then-D0 with no D2 (0x02013e80, 0x02013ea4). Two classes, two source forms, both readable straight off the cartridge.",
     "Native InitResources is the key function. Its exact emitted RTTI, type name and complete vtable are verified and externalized through three standard deadstrip-data policies to existing canonical ROM storage; no new owned data or enrollment.",
@@ -24,14 +24,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_02042fe4",
+      "symbol": "_ZN7fBase_c10createRootEiji",
       "address": "0x02042fe4",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0204/func_02042fe4.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_02042ffc",
+      "symbol": "_ZN7fBase_c11createChildEjPS_ji",
       "address": "0x02042ffc",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0204/func_02042ffc.c",
@@ -52,56 +52,56 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_02043098",
+      "symbol": "_ZN7fBase_c10fBase_makeEiPvji",
       "address": "0x02043098",
       "size": "0x000000e8",
       "legacy_source": "src/unnamed/arm9/0204/func_02043098.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_02043180",
+      "symbol": "_ZN7fBase_c12setTmpCtDataEiPvji",
       "address": "0x02043180",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0204/func_02043180.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN7fBase_c13func_020431c4Ev",
+      "symbol": "_ZN7fBase_c28checkChildProcessCreateStateEv",
       "address": "0x020431c4",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/arm9/0204/func_020431c4.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN7fBase_c13func_0204322cEv",
+      "symbol": "_ZN7fBase_c8drawPackEv",
       "address": "0x0204322c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0204/func_0204322c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7fBase_c13func_02043288Ev",
+      "symbol": "_ZN7fBase_c11executePackEv",
       "address": "0x02043288",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0204/func_02043288.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN7fBase_c13func_020432e4Ev",
+      "symbol": "_ZN7fBase_c10deletePackEv",
       "address": "0x020432e4",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0204/func_020432e4.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN7fBase_c13func_0204335cEv",
+      "symbol": "_ZN7fBase_c10createPackEv",
       "address": "0x0204335c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0204/func_0204335c.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN7fBase_c13func_020433b8Ev",
+      "symbol": "_ZN7fBase_c9runCreateEv",
       "address": "0x020433b8",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0204/func_020433b8.c",
@@ -136,7 +136,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN7fBase_c13func_02043810Ev",
+      "symbol": "_ZN7fBase_c16getConnectParentEv",
       "address": "0x02043810",
       "size": "0x00000014",
       "legacy_source": "src/func_02043810.c",
@@ -150,7 +150,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "_ZN7fBase_c13func_02043880Ev",
+      "symbol": "_ZN7fBase_c11connectProcEv",
       "address": "0x02043880",
       "size": "0x00000240",
       "legacy_source": "src/func_02043880.c",

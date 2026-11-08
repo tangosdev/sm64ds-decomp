@@ -954,7 +954,7 @@ s32 dScMgCup_c::InitResources() {
     return 1;
 }
 /* The constructor is inline, so the factory below holds it: the base
-   constructors, mSysTracker and mModel are the compiler's, then the two
+   constructors, mParticle and mModel are the compiler's, then the two
    arrays of element records. */
 inline dScMgCup_c::dScMgCup_c() {
     __cxa_vec_ctor(mFx, 0x20, 0x18, (void *)Cup_Nothing, (void *)CupFx_ElemDtor);

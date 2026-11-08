@@ -19,11 +19,8 @@
 #include "types.h"
 #include "Decimal.h"
 
-extern int func_01ff9d40(double, double);
-extern double func_01ff8e10(double, double);
 extern double frexp(double, int *);
 extern double ldexp(double, int);
-extern unsigned long long func_01ff859c(double);
 
 extern unsigned char data_0209a628[];
 extern unsigned char data_0209a658[];
@@ -378,7 +375,7 @@ void __num2dec_internal(char *out, double x) {
     int cls;
     int cls2;
 
-    if (func_01ff9d40(0.0, v) != 0) {
+    if (v == 0.0) {
         out[0] = neg;
         *(short *)(out + 2) = 0;
         out[4] = 1;
@@ -437,7 +434,7 @@ void __num2dec_internal(char *out, double x) {
         int *mp;
 
         if (neg)
-            x = func_01ff8e10(0.0, v);
+            x = -v;
         m = frexp(x, &e);
         mm = m;
         mp = (int *)&mm;
@@ -447,7 +444,7 @@ void __num2dec_internal(char *out, double x) {
             nbits = func_02071708(mp[1] | 0x100000) + 0x20;
         k = 0x35 - nbits;
         __two_exp((Decimal *)big, e - k);
-        __ull2dec((Decimal *)dec, func_01ff859c(ldexp(m, k)));
+        __ull2dec((Decimal *)dec, (unsigned long long)ldexp(m, k));
         __timesdec((Decimal *)out, (Decimal *)dec, (Decimal *)big);
         out[0] = neg;
     }

@@ -50,35 +50,35 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117570Ev",
+      "symbol": "_ZN8daNknk_c16KillOnWaterFloorEv",
       "address": "0x02117570",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_02117570.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021175c0Ev",
+      "symbol": "_ZN8daNknk_c16SpawnLandingDustEv",
       "address": "0x021175c0",
       "size": "0x00000164",
       "legacy_source": "src/func_ov062_021175c0.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117724Ejjjt",
+      "symbol": "_ZN8daNknk_c17SpawnFootstepDustEjjjt",
       "address": "0x02117724",
       "size": "0x00000270",
       "legacy_source": "src/func_ov062_02117724.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117994Ei",
+      "symbol": "_ZN8daNknk_c14SetAnimByIndexEi",
       "address": "0x02117994",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_02117994.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021179e4Ev",
+      "symbol": "_ZN8daNknk_c13SpawnBlueCoinEv",
       "address": "0x021179e4",
       "size": "0x00000058",
       "legacy_source": "src/func_ov062_021179e4.cpp",
@@ -99,28 +99,28 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117b48Ev",
+      "symbol": "_ZN8daNknk_c19BounceOffHurtPlayerEv",
       "address": "0x02117b48",
       "size": "0x00000018",
       "legacy_source": "src/func_ov062_02117b48.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117b60Ev",
+      "symbol": "_ZN8daNknk_c19DistToClosestPlayerEv",
       "address": "0x02117b60",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov062_02117b60.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117b9cEv",
+      "symbol": "_ZN8daNknk_c16FindNearestShellEv",
       "address": "0x02117b9c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov062_02117b9c.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117bf4Ev",
+      "symbol": "_ZN8daNknk_c9DropShellEv",
       "address": "0x02117bf4",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov062_02117bf4.cpp",
@@ -134,7 +134,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118004Ei",
+      "symbol": "_ZN8daNknk_c11SlideToStopEi",
       "address": "0x02118004",
       "size": "0x00000054",
       "legacy_source": "src/func_ov062_02118004.cpp",
@@ -148,35 +148,35 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021180d4Ev",
+      "symbol": "_ZN8daNknk_c13UpdateWalkEndEv",
       "address": "0x021180d4",
       "size": "0x00000048",
       "legacy_source": "src/func_ov062_021180d4.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_0211811cEv",
+      "symbol": "_ZN8daNknk_c10UpdateWalkEv",
       "address": "0x0211811c",
       "size": "0x00000084",
       "legacy_source": "src/func_ov062_0211811c.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021181a0Ev",
+      "symbol": "_ZN8daNknk_c15UpdateWalkStartEv",
       "address": "0x021181a0",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov062_021181a0.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118258Ei",
+      "symbol": "_ZN8daNknk_c19UpdateClosestPlayerEi",
       "address": "0x02118258",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov062_02118258.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118334Ev",
+      "symbol": "_ZN8daNknk_c26UpdateModelMatrixAndShadowEv",
       "address": "0x02118334",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov062_02118334.c",
@@ -204,7 +204,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118a00Ev",
+      "symbol": "_ZN8daNknk_c17WaitUntilGroundedEv",
       "address": "0x02118a00",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_02118a00.cpp",

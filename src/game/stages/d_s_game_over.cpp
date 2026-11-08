@@ -15,12 +15,12 @@
  * reverse source order. Do not reorder.
  *
  * deslop leftovers:
- * - func_ov003_020b060c and func_ov003_020b0730 are non-virtual methods.
- *   The address stays the method name.
+ * - UpdateIntro (0x020b060c) and UpdateButtonPalettes (0x020b0730) are
+ *   non-virtual methods under coined names.
  * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
  *   Fix12<int> overloads (codegen wall, pinned in
  *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S::GetBG1ScrPtr
- *   comes from G2.h as `void *` and 0730 casts it to u16* for its pointer
+ *   comes from G2.h as `void *` and UpdateButtonPalettes casts it to u16* for its pointer
  *   arithmetic (typing ergonomics, not a codegen wall -- see
  *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * - gSceneFader, the dFdBrightness_c dScene_c::SetFaders installed, gates
@@ -100,7 +100,7 @@ extern int data_0208ee44;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern u8 data_0209f204;
-/* u16* spelling for 0730's `p += ...` and 16-bit stores, no cast needed.
+/* u16* spelling for UpdateButtonPalettes' `p += ...` and 16-bit stores, no cast needed.
  * Ergonomics, not a constraint: the void* form compiles to identical bytes
  * at both consumers (see notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * Init passes the result to DecompressLZ16's void* param either way. */
@@ -263,7 +263,7 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     func_0201cebc(0x27d);
-    func_ov003_020b0730(1);
+    UpdateButtonPalettes(1);
 
     mCursorState = 0;
     mSelection = 0;
@@ -300,7 +300,7 @@ s32 dScGameOver_c::CleanupResources() {
  * is in. */
 s32 dScGameOver_c::Behavior() {
     if (gSceneFader->IsAtStart() != 0) {
-        func_ov003_020b060c();
+        UpdateIntro();
 
         if (mIntroPhase < 2)
             return 1;
@@ -317,7 +317,7 @@ s32 dScGameOver_c::Behavior() {
                 if (mSelection == 0)
                     mFlashTimer = (unsigned char)(data_0208ee44 << 3);
                 mSelection = 0;
-                func_ov003_020b0730(0);
+                UpdateButtonPalettes(0);
                 mCommitTimer = (unsigned char)(data_0208ee44 << 4);
                 func_02012790(0x9a);
                 mCursorState = 1;
@@ -330,7 +330,7 @@ s32 dScGameOver_c::Behavior() {
                 if (mSelection == 1)
                     mFlashTimer = (unsigned char)(data_0208ee44 << 3);
                 mSelection = 1;
-                func_ov003_020b0730(0);
+                UpdateButtonPalettes(0);
                 mCommitTimer = (unsigned char)(data_0208ee44 << 4);
                 func_02012790(0x9b);
                 mCursorState = 1;
@@ -341,7 +341,7 @@ s32 dScGameOver_c::Behavior() {
             if (mFlashTimer != 0) {
                 mFlashTimer -= data_0208ee44;
                 if (mFlashTimer == 0)
-                    func_ov003_020b0730(0);
+                    UpdateButtonPalettes(0);
             }
             if (mCommitTimer != 0) {
                 mCommitTimer -= data_0208ee44;
@@ -379,17 +379,17 @@ void dScGameOver_c::OnPendingDestroy() {}
 
 /* [3] 0x020b0730 -- repaints the sub-screen BG1 palette bank over the two
  * yes/no boxes: two 0x20-by-4 rectangles whose screen-map origins come from
- * sGameOverPromptTileOffsets. `arg` non-zero forces both back to the unselected
+ * sGameOverPromptTileOffsets. `unselectAll` non-zero forces both back to the unselected
  * bank; zero picks the highlighted bank for whichever box mSelection names,
  * and only while the mFlashTimer has run out. */
-void dScGameOver_c::func_ov003_020b0730(int arg) {
+void dScGameOver_c::UpdateButtonPalettes(int unselectAll) {
     int i;
     for (i = 0; i < 2; i++) {
         unsigned int v;
         int j;
         unsigned short *p = (unsigned short *)G2S::GetBG1ScrPtr();
         p += sGameOverPromptTileOffsets[i];
-        if (arg) {
+        if (unselectAll) {
             v = 0x1000;
         } else {
             unsigned int w;
@@ -418,7 +418,7 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
  * out one more mGlyphDelay tick, then reaches phase 2, which is what unblocks
  * Behavior's cursor FSM and Render's bouncing arrows, and enables the two
  * BG layers the prompt lives on. */
-void dScGameOver_c::func_ov003_020b060c() {
+void dScGameOver_c::UpdateIntro() {
     unsigned char s = this->mIntroPhase;
     int i;
     int ip;

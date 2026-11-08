@@ -102,7 +102,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        see the file banner for the four rounds that settled the form. Its body's
        two explicit calls are the ROM's own order -- the 0x51f8 object, then
        mPetals -- the reverse of the factory's construction order. Everything
-       after them in the emitted body (the own-vtable store, mSysTracker's
+       after them in the emitted body (the own-vtable store, mParticle's
        destruction and the chain to ~dScMgBase_c) is the compiler's own inlining
        of dScMgSingle3DBase_c's already-inline destructor. */
     virtual ~dScMgFlower_c();
