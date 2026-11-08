@@ -100,6 +100,11 @@ enum dScMgBomroom_c_AssetId {
    generator, scaled (the PACHINKO_RAND of d_s_mg_pachinko.cpp). */
 #define BOMROOM_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
 
+/* The state tables' entry types: the round and round-end states take no
+   argument, the per-slot and per-bomb states take the slot. */
+typedef void (dScMgBomroom_c::*PMF)(int);
+typedef void (dScMgBomroom_c::*PMFv)();
+
 /* Stores the scene's level, held to 9998. The ROM stores the new value and
    reloads it for the clamp, the shape of an inline setter on the base
    (d_s_mg_amida.cpp and d_mg3d_esp_anim_set.cpp keep the same clamp, the
@@ -327,13 +332,11 @@ void dScMgBomroom_c::TopDoor_StateShut(int index) {
 }
 
 
-typedef void (dScMgBomroom_c::*PMF)(int);
-struct PMFEntry { PMF pmf; };
-extern "C" PMFEntry sBomroomTopDoorStateTable[];
+extern "C" PMF sBomroomTopDoorStateTable[];
 void dScMgBomroom_c::TopDoor_Update() {
     if (!mTopDoor.gate)
         return;
-    (this->*(sBomroomTopDoorStateTable[mTopDoor.state].pmf))(0);
+    (this->*sBomroomTopDoorStateTable[mTopDoor.state])(0);
 }
 
 
@@ -409,7 +412,6 @@ void dScMgBomroom_c::PenGate_StateShut(int index) {
 }
 
 
-typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomPenGateStateTable[];
 void dScMgBomroom_c::PenGate_UpdateAll() {
     for (int slot = 0; slot < 2; slot++) {
@@ -517,7 +519,6 @@ void dScMgBomroom_c::HatchPanel_StateIdle(int index) {
 }
 
 
-typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomHatchPanelStateTable[];
 void dScMgBomroom_c::HatchPanel_UpdateAll() {
     for (int slot = 0; slot < 2; slot++) {
@@ -1133,10 +1134,10 @@ void dScMgBomroom_c::BombMarch_ToGate(int index) {
 /* Runs the bomb's current handler: its substate indexes the
  * pointer-to-member table sBomroomBombMarchTable. */
 
-extern "C" PMFEntry sBomroomBombMarchTable[];
+extern "C" PMF sBomroomBombMarchTable[];
 void dScMgBomroom_c::Bomb_StateMarch(int index) {
     unsigned char state = mBombs[index].substate;
-    (this->*(sBomroomBombMarchTable[state].pmf))(index);
+    (this->*sBomroomBombMarchTable[state])(index);
 }
 
 /* Roaming step: advance x/y along the angle at speed (sine table, Fix12),
@@ -1333,7 +1334,6 @@ void dScMgBomroom_c::Bomb_StateWaiting(int i) {
  * then every live bomb runs its state handler from the pointer-to-member
  * table sBomroomBombStateTable, indexed by its state, and Bomb_Animate. */
 
-typedef void (dScMgBomroom_c::*PMF)(int);
 extern PMF sBomroomBombStateTable[];
 void dScMgBomroom_c::UpdateBombs() {
     if (gTouchHeld[gActivePlayerSlot * 4] == 0)
@@ -1763,22 +1763,11 @@ void dScMgBomroom_c::Round_StateGameOver() {
 }
 
 /* Runs the mSubState sub-state through the pointer-to-member table
- * sBomroomRoundEndTable, decoded by hand (a function word, then a
- * this-adjust whose low bit marks a virtual call), then the three
- * per-frame passes. */
+ * sBomroomRoundEndTable, then the three per-frame passes. */
 
-typedef void (dScMgBomroom_c::*PMFv)();
 extern "C" PMFv sBomroomRoundEndTable[];
 void dScMgBomroom_c::Round_StateEnd() {
-    unsigned char * c = (unsigned char *)this;
-    int idx = mSubState;
-    int *e = (int *)&sBomroomRoundEndTable[idx];
-    int off = e[1];
-    void *obj = c + (off >> 1);
-    void (*f)(void *);
-    if (off & 1) f = (void (*)(void *))(*(int *)(*(int *)obj + e[0]));
-    else f = (void (*)(void *))e[0];
-    f(obj);
+    (this->*sBomroomRoundEndTable[mSubState])();
     HatchPanel_UpdateAll();
     PenGate_UpdateAll();
     TopDoor_Update();
@@ -1859,7 +1848,6 @@ s32 dScMgBomroom_c::Render()
 /* Waits out mDispatchDelay, then runs the round state mSceneState from
  * the pointer-to-member table sBomroomRoundStateTable and steps the sprite
  * records and the BG2 offset. */
-typedef void (dScMgBomroom_c::*PMFv)();
 extern "C" PMFv sBomroomRoundStateTable[];
 s32 dScMgBomroom_c::Behavior()
 {
@@ -2031,10 +2019,10 @@ PMF sBomroomBombStateTable[7] = {
     pmf_dScMgBomroom_c_Bomb_StateExploding, pmf_dScMgBomroom_c_Bomb_StateInPen,
     pmf_dScMgBomroom_c_Bomb_StateMarch,
 };
-extern "C" PMFEntry sBomroomBombMarchTable[5] = {
-    {pmf_dScMgBomroom_c_BombMarch_ToGate},    {pmf_dScMgBomroom_c_BombMarch_Exit},
-    {pmf_dScMgBomroom_c_BombMarch_Offscreen}, {pmf_dScMgBomroom_c_BombMarch_ToLine},
-    {pmf_dScMgBomroom_c_BombMarch_LinedUp},
+extern "C" PMF sBomroomBombMarchTable[5] = {
+    pmf_dScMgBomroom_c_BombMarch_ToGate,    pmf_dScMgBomroom_c_BombMarch_Exit,
+    pmf_dScMgBomroom_c_BombMarch_Offscreen, pmf_dScMgBomroom_c_BombMarch_ToLine,
+    pmf_dScMgBomroom_c_BombMarch_LinedUp,
 };
 extern "C" PMF sBomroomHatchPanelStateTable[4] = {
     pmf_dScMgBomroom_c_HatchPanel_StateIdle,
@@ -2048,9 +2036,9 @@ extern "C" PMF sBomroomPenGateStateTable[4] = {
     pmf_dScMgBomroom_c_PenGate_StateHold,
     pmf_dScMgBomroom_c_PenGate_StateClosing,
 };
-extern "C" PMFEntry sBomroomTopDoorStateTable[4] = {
-    {pmf_dScMgBomroom_c_TopDoor_StateShut},
-    {pmf_dScMgBomroom_c_TopDoor_StateOpening},
-    {pmf_dScMgBomroom_c_TopDoor_StateOpen},
-    {pmf_dScMgBomroom_c_TopDoor_StateClosing},
+extern "C" PMF sBomroomTopDoorStateTable[4] = {
+    pmf_dScMgBomroom_c_TopDoor_StateShut,
+    pmf_dScMgBomroom_c_TopDoor_StateOpening,
+    pmf_dScMgBomroom_c_TopDoor_StateOpen,
+    pmf_dScMgBomroom_c_TopDoor_StateClosing,
 };
