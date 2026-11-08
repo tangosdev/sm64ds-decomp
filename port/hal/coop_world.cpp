@@ -393,9 +393,7 @@ bool count_boo(const char *a) {
 // A Boo in its hit states (3 fade, 4, 5 talk: d_a_trs.cpp func_ov063_021162c8 and on) is being beaten on this console
 // by the cartridge's own code, which counts it.
 bool boo_beaten_here(const char *a) { const unsigned st = *(const unsigned char *)(a + kBooState); return st >= 3 && st <= 5; }
-char *big_boo_of(const char *a) {
-    const unsigned id = *(const unsigned *)(a + kBooBig);
-    if (id) return (char *)_ZN8dActor_c10FindWithIDEj(id);
+char *lobby_big_boo() {
     for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {   // func_ov063_02119c58's pick
         if (*(const unsigned short *)(b + 0x0c) != 210) continue;
         const unsigned char v = *(const unsigned char *)(b + kBooVar);
@@ -403,12 +401,38 @@ char *big_boo_of(const char *a) {
     }
     return nullptr;
 }
+char *big_boo_of(const char *a) {
+    const unsigned id = *(const unsigned *)(a + kBooBig);
+    return id ? (char *)_ZN8dActor_c10FindWithIDEj(id) : lobby_big_boo();
+}
+// A lobby Boo is counted once per console and visit, whoever beat it: the set holds the slots already counted here (my own
+// kills, which the cartridge counts, and the friends' kills boo_credit added). A friend's console can be missing a lobby
+// Boo's copy altogether (seen on a launcher-path guest: 2 of the 6 stood), so a friend's kill with no copy here counts on
+// the Big Boo directly; a copy that stands later is then only removed.
+uint16_t g_boo_counted[16]; int g_boo_counted_n = 0;
+bool boo_counted(int slot) {
+    for (int i = 0; i < g_boo_counted_n; ++i) if (g_boo_counted[i] == (uint16_t)slot) return true;
+    return false;
+}
+void boo_mark(int slot) { if (!boo_counted(slot) && g_boo_counted_n < 16) g_boo_counted[g_boo_counted_n++] = (uint16_t)slot; }
+bool boo_credit_nocopy(int slot, int seat, const char *why) {
+    char *big = lobby_big_boo();
+    if (!big) return false;
+    int &cnt = *(int *)(big + kBooCount);
+    ++cnt;
+    reinterpret_cast<::daTrs_c *>(big)->func_ov063_02116244();
+    boo_mark(slot);
+    std::fprintf(stderr, "[coop] boo: seat %d's Boo slot %d (no copy here) counted for the Big Boo here (%s): count %d wall=%lld\n", seat, slot,
+                 why, cnt, wall_ms());
+    return true;
+}
 bool boo_credit(const char *a, int seat, const char *why) {
     char *big = big_boo_of(a);
     if (!big || *(const unsigned short *)(big + 0x0c) != 210) return false;
     int &cnt = *(int *)(big + kBooCount);
     ++cnt;
     reinterpret_cast<::daTrs_c *>(big)->func_ov063_02116244();
+    boo_mark(*(const short *)(a + 0xce));
     std::fprintf(stderr, "[coop] boo: seat %d's Boo slot %d (variant %u) counted for the Big Boo here (%s): count %d wall=%lld\n", seat,
                  (int)*(const short *)(a + 0xce), (unsigned)*(const unsigned char *)(a + kBooVar), why, cnt, wall_ms());
     return true;
@@ -741,12 +765,19 @@ void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
     char *a = live_slot(cls, slot);
     if (boo_beaten) {   // COOPBOO2: a Boo the friend beat (no death bit): count it here, then remove my copy
         gone_note(slot, cls); room_gone_note(g_key, slot, cls);
-        if (!a || going(a) || is_player_ptr(a)) {
-            std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, no live copy here (counted when it stands) wall=%lld\n", seat, slot, wall_ms());
+        const bool live = a && !going(a) && !is_player_ptr(a);
+        if (live && boo_beaten_here(a)) {   // both hit it: this console's own defeat counts it once
+            boo_mark(slot);
+            std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, it is beaten here too (counted once) wall=%lld\n", seat, slot, wall_ms());
             return;
         }
-        if (boo_beaten_here(a)) {   // both hit it: this console's own defeat counts it once
-            std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, it is beaten here too (counted once) wall=%lld\n", seat, slot, wall_ms());
+        if (boo_counted(slot)) {   // a repeat of the message, or a copy that stood after the count: remove it only
+            if (live) _ZN7fBase_c18MarkForDestructionEv(a);
+            return;
+        }
+        if (!live) {   // no copy here: count it on the Big Boo now, or (no Big Boo yet) gone_apply does
+            if (!boo_credit_nocopy(slot, seat, "his kill"))
+                std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, no copy and no Big Boo here yet wall=%lld\n", seat, slot, wall_ms());
             return;
         }
         if (count_boo(a) && !boo_credit(a, seat, "his kill")) return;   // no Big Boo yet: gone_apply counts it once it stands
@@ -783,9 +814,16 @@ unsigned g_boo_visit = 0;   // COOPBOO2: est frames of this visit (boo_reset cle
 void gone_apply() {
     for (int i = 0; i < g_gone_n; ++i) {
         char *a = live_slot(g_gone[i].cls, g_gone[i].slot);
+        if (g_gone[i].cls == 209 && !boo_counted(g_gone[i].slot) && (!a || going(a)) && g_boo_visit >= 60)
+            boo_credit_nocopy(g_gone[i].slot, -1, "beaten earlier");   // no copy stands here: count it once the Big Boo stands
         if (!a || going(a) || is_player_ptr(a)) continue;
         if (g_gone[i].cls == 209) {   // COOPBOO2: a lobby Boo a friend beat earlier in this visit: count it, then remove it
             if (boo_beaten_here(a)) continue;   // its own defeat runs on this console (my kill): the cartridge counts it
+            if (boo_counted(g_gone[i].slot)) {
+                _ZN7fBase_c18MarkForDestructionEv(a);
+                std::fprintf(stderr, "[coop] boo: slot %d already counted here, its copy removed wall=%lld\n", (int)g_gone[i].slot, wall_ms());
+                continue;
+            }
             if (!count_boo(a) || !boo_credit(a, -1, "beaten earlier")) { if (g_boo_visit < 300) continue; }   // wait up to 5 s for the Big Boo
             _ZN7fBase_c18MarkForDestructionEv(a);
             std::fprintf(stderr, "[coop] boo: slot %d beaten in this group, removed here wall=%lld\n", (int)g_gone[i].slot, wall_ms());
@@ -915,7 +953,7 @@ void cage_apply_remote(int seat, int slot, const int *pos, int area) {
 // MarkForDestruction with no death bit. Tell the group once (the 12-byte Boo form of the swallow message, which an older build ignores),
 // and keep it on the group and room lists so a member who comes in later counts it too.
 uint16_t g_boo_told[16]; int g_boo_told_n = 0;
-void boo_reset() { g_boo_told_n = 0; g_boo_visit = 0; }
+void boo_reset() { g_boo_told_n = 0; g_boo_visit = 0; g_boo_counted_n = 0; }
 void watch_boos(unsigned now) {
     ++g_boo_visit;
     const int me = (int)data_0209f250;
@@ -930,6 +968,7 @@ void watch_boos(unsigned now) {
         for (int i = 0; i < g_boo_told_n && !told; ++i) told = g_boo_told[i] == (uint16_t)slot;
         if (told) continue;
         if (g_boo_told_n < 16) g_boo_told[g_boo_told_n++] = (uint16_t)slot;
+        boo_mark(slot);
         gone_note(slot, 209); room_gone_note(g_key, slot, 209);
         if (g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {(uint16_t)slot, 209, 0, now, 1};
         const char *big = big_boo_of(a);
