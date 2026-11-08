@@ -5,7 +5,7 @@
 
 /* C views of the particle code's records, shared by the particle draw routines
  * (func_0204b028 .. func_0204be40), the child spawn (func_0204c304) and the
- * particle animation callbacks (func_0204d104 .. func_0204d440). Each view
+ * particle animation callbacks (SPLAnim_ChildScale .. SPLAnim_Scale). Each view
  * names the fields those files read. Unread bytes stay padding.
  *
  * The SPL field names here (such as dbbScale, textureTileCountS/T,
@@ -14,10 +14,10 @@
 
 /* The animation records a definition points at. Each animation callback
  * defines the one it reads. */
-struct ScaleAnim; /* func_0204d440 */
-struct ColorRamp; /* func_0204d294 */
-struct AlphaAnim; /* func_0204d1b4 */
-struct TexAnim;   /* func_0204d150 */
+struct ScaleAnim; /* SPLAnim_Scale */
+struct ColorRamp; /* SPLAnim_Color */
+struct AlphaAnim; /* SPLAnim_Alpha */
+struct TexAnim;   /* SPLAnim_Texture */
 
 /* The particle definition's header (func_0204a730's PtclData; SPL's
  * SPLResourceHeader). */

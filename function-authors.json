@@ -7895,27 +7895,27 @@
     },
     "arm9:0x0204d0b8": {
       "author": "ruspecial",
-      "name": "func_0204d0b8"
+      "name": "SPLAnim_ChildAlpha"
     },
     "arm9:0x0204d104": {
       "author": "tangosdev",
-      "name": "func_0204d104"
+      "name": "SPLAnim_ChildScale"
     },
     "arm9:0x0204d150": {
       "author": "tangosdev",
-      "name": "func_0204d150"
+      "name": "SPLAnim_Texture"
     },
     "arm9:0x0204d1b4": {
       "author": "ruspecial",
-      "name": "func_0204d1b4"
+      "name": "SPLAnim_Alpha"
     },
     "arm9:0x0204d294": {
       "author": "tangosdev",
-      "name": "func_0204d294"
+      "name": "SPLAnim_Color"
     },
     "arm9:0x0204d440": {
       "author": "tangosdev",
-      "name": "func_0204d440"
+      "name": "SPLAnim_Scale"
     },
     "arm9:0x0204d4d0": {
       "author": "ruspecial",
