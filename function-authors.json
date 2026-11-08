@@ -12579,7 +12579,7 @@
     },
     "ov001:0x020ab228": {
       "author": "tangosdev",
-      "name": "_ZN10dCapIcon_c19func_ov001_020ab228EPciih"
+      "name": "_ZN10dCapIcon_c4LinkEPciih"
     },
     "ov001:0x020ab2e4": {
       "author": "tangosdev",
