@@ -10,7 +10,7 @@
  *
  * Field names below are from this TU's reads. mKoopaVariant is 0 while
  * the Koopa still has its shell, 1 after the shell is popped
- * (func_ov062_02117bf4), back to 0 when it touches a SHELL (actor 0x11d)
+ * (DropShell), back to 0 when it touches a SHELL (actor 0x11d)
  * in state 2, and 2 for the small Koopa. mHomePos is the spawn point the
  * leash is measured from. mSafePos is the last spot that was not a
  * cliff edge. mAimAngle faces the closest player, or home when that
@@ -80,29 +80,29 @@ struct daNknk_c : dEnemyBase_c {
      * sinit do not reference any of them, so these spellings only matter
      * to this file and symbols.txt.
      */
-    void func_ov062_02117570();
-    void func_ov062_021175c0();
-    void func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4);
-    void func_ov062_02117994(int idx);
-    void func_ov062_021179e4();
+    void KillOnWaterFloor();
+    void SpawnLandingDust();
+    void SpawnFootstepDust(unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4);
+    void SetAnimByIndex(int idx);
+    void SpawnBlueCoin();
     void func_ov062_02117a3c();
     void func_ov062_02117acc();
-    void func_ov062_02117b48();
-    int  func_ov062_02117b60();
-    dActor_c *func_ov062_02117b9c(); /* nearest SHELL (actor 0x11d), or 0 */
-    void func_ov062_02117bf4();
+    void BounceOffHurtPlayer();
+    int  DistToClosestPlayer();
+    dActor_c *FindNearestShell(); /* nearest SHELL (actor 0x11d), or 0 */
+    void DropShell();
     void func_ov062_02117c98();
-    void func_ov062_02118004(int limit);
+    void SlideToStop(int limit);
     void func_ov062_02118058();
-    void func_ov062_021180d4();
-    void func_ov062_0211811c();
-    void func_ov062_021181a0();
-    void func_ov062_02118258(int lim);
-    void func_ov062_02118334();
+    void UpdateWalkEnd();
+    void UpdateWalk();
+    void UpdateWalkStart();
+    void UpdateClosestPlayer(int lim);
+    void UpdateModelMatrixAndShadow();
     void func_ov062_021183e0();
     void func_ov062_02118588();
     void func_ov062_02118718();
-    void func_ov062_02118a00();
+    void WaitUntilGrounded();
     void func_ov062_02118a50();
     void func_ov062_02118b4c();
     void func_ov062_02118cdc();
