@@ -25,6 +25,7 @@ struct G3X {
     static void InitTable(void);
     static int GetMtxStackLevelPV(int *);
     static int GetMtxStackLevelPJ(int *);
+    static void SetHOffset(int);
 #endif
 };
 

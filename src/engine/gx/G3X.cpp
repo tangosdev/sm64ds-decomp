@@ -3,9 +3,9 @@
  * SDK's gx_g3x.c), arm9 .text 0x02055454..0x02055998.
  *
  * mwccarm emits .text in reverse source order, so the file reads top-down
- * from G3X_Init (func_0205583c) at the top of the run. G3X_Init,
- * G3X_SetToonTable and G3X_SetHOffset keep their address names, with the
- * SDK name in each comment: their callers name them that way. The file's
+ * from G3X_Init (func_0205583c) at the top of the run. G3X_Init and
+ * G3X_SetToonTable keep their address names, with the SDK name in each
+ * comment: their callers name them that way. The file's
  * last function, the asm FIFO flush GXi_NopClearFifo128_ (0x020553c0),
  * stays its own source: port/tools/hostgen.py skips any file that holds an
  * asm block, and the port hostgens this one.
@@ -36,7 +36,6 @@ void DMASyncFillTransfer(unsigned int channel, void *dst, unsigned int data,
                          unsigned int size);
 void MultiStore_Int(int val, int *dst, int len);
 void GXi_NopClearFifo128_(unsigned addr);
-void func_02055454(int v);
 void func_020555a4(void *dst);
 void func_0205583c(void);
 }
@@ -198,7 +197,7 @@ int G3X::GetMtxStackLevelPJ(int *out) {
 }
 
 // G3X_SetHOffset: the 3D layer's horizontal offset (BG0HOFS).
-extern "C" void func_02055454(int v) {
+void G3X::SetHOffset(int v) {
     REG_BG0OFS = v;
 }
 

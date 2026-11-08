@@ -9179,7 +9179,7 @@
     },
     "arm9:0x02055454": {
       "author": "tangosdev",
-      "name": "func_02055454"
+      "name": "_ZN3G3X10SetHOffsetEi"
     },
     "arm9:0x02055464": {
       "author": "tangosdev",
