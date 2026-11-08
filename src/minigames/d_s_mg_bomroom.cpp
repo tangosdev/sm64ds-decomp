@@ -24,10 +24,13 @@
 // leftovers: SpawnBombs reaches its bomb's color through a bomb pointer
 // stepped by j * 0x40 and cast back to the scene, ((dScMgBomroom_c *)
 // bomb)->mBombs[0].color, and adds the offset of mBombs[0].active to
-// this + j * 0x40.
-// CountSortedBombs bumps mLevel through a volatile store. Bomb_StateInPen
-// keeps the sine-table value as the first factor (inline reads flip smull
-// order).
+// this + j * 0x40. Its color roll stays unrolled from BOMROOM_RAND(2):
+// rolling first and computing the color pointer after is the ROM's order;
+// mBombs[j].color = BOMROOM_RAND(2), the macro through the same pointer, or
+// the roll into rnd first all reshuffle the hoisted-constant stack slots
+// (+0x4..+0x10 bytes).
+// The roaming steps read the table into a block-scoped fx16 before FX_MUL:
+// FX_CosIdx inside the FX_MUL argument swaps the table and speed registers.
 
 #include "dScMgBomroom_c.h"
 #include "nitro/hw/registers.h"
@@ -39,11 +42,13 @@
 #include "Sound.h"
 #include "G2x.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "G2.h"
+#include "PlayerInput.h"
 
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
-extern int sBomroomPenGateSprites[];
+extern OamAttr *sBomroomPenGateSprites[];
 extern int sBomroomPenGateX[];
 extern int sBomroomPenGateY[];
 extern OamAttr *sBomroomHatchPanelSprites[];
@@ -54,8 +59,6 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern unsigned char *sBomroomBombFrameTimes[];
 extern unsigned char sBomroomBombFrameCounts[];
-extern s16 data_02082214[];
-extern s16 atan2_hold_d_s_mg_bomroom_1(int y, int x);
 extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
 extern unsigned char *sBomroomBombLitSprites[];
@@ -67,10 +70,6 @@ extern void *sBomroomMarkerLitSprites[];
 extern int sBomroomMarkerY[];
 extern int Mg_GetSubmittedScore(void);
 extern int RandomIntInternal(int *seed);
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8 gTouchX[];
-// local extern: see above.
-extern u8 gTouchY[];
 extern u16 sBomroomSpawnDelays[];
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -80,6 +79,40 @@ extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void func_02056554(const void *src, int offset, int count);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
+}
+
+/* Runtime asset handles resolved through the overlay 0 file table; the names
+   are the ROM's MG/ file names (tools/asset_catalog.py resolve). */
+enum dScMgBomroom_c_AssetId {
+    ASSET_D_2D_BLUE_SHADOW_NSC_BIN = 0x0002,
+    ASSET_D_2D_ELEVATOR_NSC_BIN = 0x0003,
+    ASSET_D_2D_LIGHT_UP_NSC_BIN = 0x0007,
+    ASSET_D_2D_MG_BG_BOMROOM_DOWN_NSC_BIN = 0x0022,
+    ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN = 0x0023,
+    ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN = 0x0024,
+    ASSET_D_2D_MG_BG_BOMROOM_UP_NSC_BIN = 0x0025,
+    ASSET_D_2D_MG_BOMROOM_NCG_BIN = 0x00b5,
+    ASSET_D_2D_MG_BOMROOM_NCL_BIN = 0x00b6,
+};
+
+/* A random integer in [0, n): the top 15 bits of the minigames' shared
+   generator, scaled (the PACHINKO_RAND of d_s_mg_pachinko.cpp). */
+#define BOMROOM_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
+
+/* The state tables' entry types: the round and round-end states take no
+   argument, the per-slot and per-bomb states take the slot. */
+typedef void (dScMgBomroom_c::*PMF)(int);
+typedef void (dScMgBomroom_c::*PMFv)();
+
+/* Stores the scene's level, held to 9998. The ROM stores the new value and
+   reloads it for the clamp, the shape of an inline setter on the base
+   (d_s_mg_amida.cpp and d_mg3d_esp_anim_set.cpp keep the same clamp, the
+   latter even after a store of 0); taking a dScMgBomroom_c * instead adds
+   two words. */
+static inline void SetSceneLevel(dScMgBase_c *scene, u32 level) {
+    scene->mLevel = level;
+    if (scene->mLevel > 9998)
+        scene->mLevel = 9998;
 }
 
 #pragma defer_codegen off
@@ -165,11 +198,10 @@ void dScMgBomroom_c::UpdateBg2Lift() {
 
 
 void dScMgBomroom_c::ResetBg2Lift() {
-    int zero = 0;
-    mBg2Y = zero;
-    mBg2State = zero;
-    mBg2Hold = zero;
-    SetBg2Offset(zero, zero);
+    mBg2Y = 0;
+    mBg2State = 0;
+    mBg2Hold = 0;
+    SetBg2Offset(0, 0);
 }
 
 /* Draws the two mMarkers sprite records that are active. */
@@ -181,11 +213,11 @@ void dScMgBomroom_c::Marker_DrawAll() {
             int xv = mMarkers[i].x;
             int yv = mMarkers[i].y;
             int idx = mMarkers[i].idx;
-            int a1 = xv >> 12;
-            int a2 = yv >> 12;
+            int sx = xv >> 12;
+            int sy = yv >> 12;
             Hud_RenderSprite((i != 0) ? sBomroomMarkerLitSprites[idx]
                                       : sBomroomMarkerPlainSprites[idx],
-                             a1, a2, -1, 1);
+                             sx, sy, -1, 1);
         }
     }
 }
@@ -299,14 +331,11 @@ void dScMgBomroom_c::TopDoor_StateShut(int index) {
     (&mTopDoor)[index].timer = 0;
 }
 
-
-typedef void (dScMgBomroom_c::*PMF)(int);
-struct PMFEntry { PMF pmf; };
-extern "C" PMFEntry sBomroomTopDoorStateTable[];
+extern "C" PMF sBomroomTopDoorStateTable[];
 void dScMgBomroom_c::TopDoor_Update() {
     if (!mTopDoor.gate)
         return;
-    (this->*(sBomroomTopDoorStateTable[mTopDoor.state].pmf))(0);
+    (this->*sBomroomTopDoorStateTable[mTopDoor.state])(0);
 }
 
 
@@ -334,7 +363,7 @@ void dScMgBomroom_c::PenGate_DrawAll() {
         int yv = mPenGates[i].y >> 12;
         int k = mPenGates[i].level;
         if (i != 0) k += 5;
-        Hud_RenderSprite((void *)sBomroomPenGateSprites[k], xv, yv, -1, -1);
+        Hud_RenderSprite(sBomroomPenGateSprites[k], xv, yv, -1, -1);
     }
 }
 
@@ -382,7 +411,6 @@ void dScMgBomroom_c::PenGate_StateShut(int index) {
 }
 
 
-typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomPenGateStateTable[];
 void dScMgBomroom_c::PenGate_UpdateAll() {
     for (int slot = 0; slot < 2; slot++) {
@@ -396,7 +424,6 @@ void dScMgBomroom_c::PenGate_UpdateAll() {
 
 
 void dScMgBomroom_c::PenGate_ShowAll() {
-    void * p = (void *)this;
     int i;
     for (i = 0; i < 2; i++) {
         mPenGates[i].gate = 1;
@@ -475,8 +502,7 @@ void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
     if (index == 0) {
         u8 level = mHatchPanels[index].level;
         if (level == 2 || level == 4) {
-            int *offsetY = &mMarkers[0].y;
-            *offsetY += 0x8000;
+            mMarkers[0].y += 0x8000;
         }
     }
     if (mHatchPanels[index].level == 3 && index == 1)
@@ -492,7 +518,6 @@ void dScMgBomroom_c::HatchPanel_StateIdle(int index) {
 }
 
 
-typedef void (dScMgBomroom_c::*PMF)(int);
 extern "C" PMF sBomroomHatchPanelStateTable[];
 void dScMgBomroom_c::HatchPanel_UpdateAll() {
     for (int slot = 0; slot < 2; slot++) {
@@ -506,7 +531,6 @@ void dScMgBomroom_c::HatchPanel_UpdateAll() {
 
 
 void dScMgBomroom_c::HatchPanel_ShowAll() {
-    void * p = (void *)this;
     int i;
     for (i = 0; i < 2; i++) {
         mHatchPanels[i].gate = 1;
@@ -564,10 +588,7 @@ void dScMgBomroom_c::CountSortedBombs() {
         mSubState = 0;
         mBlastPen = 0;
         mWinColor = 0;
-        /* Both stores go through volatile: a plain mLevel store makes the
-           function 8 bytes longer. */
-        *(volatile u32 *)&mLevel = mLevel + 1;
-        if (mLevel > 0x270e) mLevel = 0x270e;
+        SetSceneLevel(this, mLevel + 1);
         mFusesFrozen = 1;
         Sound::PlayBank2_2D(0x1e6);
     } else if (colored >= 0x28) {
@@ -575,8 +596,7 @@ void dScMgBomroom_c::CountSortedBombs() {
         mSubState = 0;
         mBlastPen = 0;
         mWinColor = 1;
-        *(volatile u32 *)&mLevel = mLevel + 1;
-        if (mLevel > 0x270e) mLevel = 0x270e;
+        SetSceneLevel(this, mLevel + 1);
         mFusesFrozen = 1;
         Sound::PlayBank2_2D(0x1e6);
     }
@@ -642,14 +662,14 @@ void dScMgBomroom_c::Bomb_Animate(int index) {
         if (type != 3 && mBombs[index].state != 2 && (type != 0 || mBombs[index].state != 5)) {
             if (mBombs[index].active == 1 && mSceneState != 3) {
                 if (mBombs[index].color != 0) {
-                    func_02012718((int)0x1d9, mBombs[index].x);
+                    func_02012718(0x1d9, mBombs[index].x);
                 } else {
-                    func_02012718((int)0x1da, mBombs[index].x);
+                    func_02012718(0x1da, mBombs[index].x);
                 }
             }
         }
         if (type == 3 && frame == 1) {
-            func_02012718((int)0x1e1, mBombs[index].x);
+            func_02012718(0x1e1, mBombs[index].x);
         }
     }
 
@@ -681,7 +701,7 @@ void dScMgBomroom_c::Bomb_CheckSorted(int index) {
         mBombs[index].frame = 0;
         mBombs[index].counter = 0;
         mBombs[index].speed = 0x999;
-        func_02012718((int)0x1dc, mBombs[index].x);
+        func_02012718(0x1dc, mBombs[index].x);
     } else {
         if (x >= 0x40) return;
         if (y <= 0x40) return;
@@ -691,7 +711,7 @@ void dScMgBomroom_c::Bomb_CheckSorted(int index) {
         mBombs[index].frame = 0;
         mBombs[index].counter = 0;
         mBombs[index].speed = 0x999;
-        func_02012718((int)0x1dc, mBombs[index].x);
+        func_02012718(0x1dc, mBombs[index].x);
     }
 }
 
@@ -738,22 +758,17 @@ void dScMgBomroom_c::Bomb_CheckWrongPen(int index) {
  * down of it, while nothing is held (mHeldColor is 0xff). grabX/grabY keep the
  * stylus-minus-bomb offset. */
 
-typedef struct { u8 f0, f1, f2, f3; } Tab;
-// local extern: see above.
-extern u8 gActivePlayerSlot;
-// local extern: see above.
-extern Tab gTouchHeld[];
-
 void dScMgBomroom_c::Bomb_CheckGrab(int index) {
-    u8 touch = gActivePlayerSlot;
-    int touching = 0;
+    u8 slot = gActivePlayerSlot;
+    int touchBegan = 0;
     int dx, dy;
-    if (gTouchHeld[touch].f0 != 0)
-        touching = gTouchHeld[touch].f1 != 0;
-    if (touching == 0) return;
+    if (gTouchHeld[slot * 4] != 0)
+        touchBegan = gTouchEdge[slot * 4] != 0;
+    if (touchBegan == 0)
+        return;
     if (mHeldColor != 0xff) return;
-    dx = gTouchHeld[touch].f2 - (mBombs[index].x >> 0xc);
-    dy = gTouchHeld[touch].f3 - (mBombs[index].y >> 0xc);
+    dx = gTouchX[slot * 4] - (mBombs[index].x >> 0xc);
+    dy = gTouchY[slot * 4] - (mBombs[index].y >> 0xc);
     if (dx > 0xc) return;
     if (dx < -0xc) return;
     if (dy > 0xf) return;
@@ -764,13 +779,12 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     mBombs[index].grabX = dx << 0xc;
     mBombs[index].grabY = dy << 0xc;
     mBombs[index].overPen = 0;
-    func_02012718((int)0x1d2, mBombs[index].x);
+    func_02012718(0x1d2, mBombs[index].x);
 }
 
 
 void dScMgBomroom_c::Bomb_PushApart(int index) {
-    char* raw = (char*)this;
-    int x, y, py, dx, dy1, ang, i2, a, dy2, sy, px;
+    int x, y, py, dx, dy1, ang, a, dy2, sy, px;
 
     x = mBombs[index].x >> 12;
     y = mBombs[index].y >> 12;
@@ -834,15 +848,14 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
             }
             cstd::sqrt((sy * sy + dy2 * dy2));
             ang = (u16)cstd::atan2(dy2, sy);
-            i2 = (ang >> 4) * 2;
-            mBombs[index].x = (0xC0 - FX_MUL(data_02082214[i2 + 1], 0xF)) << 12;
+            mBombs[index].x = (0xC0 - FX_MUL(FX_CosIdx(ang >> 4), 0xF)) << 12;
             if (py >= 0x60) {
-                mBombs[index].y = (0x80 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+                mBombs[index].y = (0x80 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
             } else {
-                mBombs[index].y = (0x40 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+                mBombs[index].y = (0x40 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
             }
             a = mBombs[index].angle;
-            if (data_02082214[(a >> 4) * 2 + 1] > 0) {
+            if (FX_CosIdx(a >> 4) > 0) {
                 mBombs[index].angle = 0x8000 - a;
             } else {
                 mBombs[index].angle = 0 - a;
@@ -898,15 +911,14 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
     }
     cstd::sqrt((dy2 * dy2 + sy * sy));
     ang = (u16)cstd::atan2(sy, dy2);
-    i2 = (ang >> 4) * 2;
-    mBombs[index].x = (0x40 - FX_MUL(data_02082214[i2 + 1], 0xF)) << 12;
+    mBombs[index].x = (0x40 - FX_MUL(FX_CosIdx(ang >> 4), 0xF)) << 12;
     if (py >= 0x60) {
-        mBombs[index].y = (0x80 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+        mBombs[index].y = (0x80 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
     } else {
-        mBombs[index].y = (0x40 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+        mBombs[index].y = (0x40 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
     }
     a = mBombs[index].angle;
-    if (data_02082214[(a >> 4) * 2 + 1] < 0) {
+    if (FX_CosIdx(a >> 4) < 0) {
         mBombs[index].angle = 0x8000 - a;
     } else {
         mBombs[index].angle = 0 - a;
@@ -921,27 +933,30 @@ void dScMgBomroom_c::DrawBombs() {
         if (mBombs[i].visible == 0)
             continue;
         {
-            int b694 = mBombs[i].type;
+            int type = mBombs[i].type;
             int palette = 1;
-            int b695, b696;
+            int frame, color;
             unsigned char sprite;
-            int b697;
-            int f664;
+            int state;
+            int fy;
             int x, y;
-            if (b694 == 3) palette = 0;
-            b696 = mBombs[i].color;
-            b695 = mBombs[i].frame;
-            if (b696 != 0) {
-                sprite = sBomroomBombLitSprites[b694][b695];
+            if (type == 3)
+                palette = 0;
+            color = mBombs[i].color;
+            frame = mBombs[i].frame;
+            if (color != 0) {
+                sprite = sBomroomBombLitSprites[type][frame];
             } else {
-                sprite = sBomroomBombSprites[b694][b695];
+                sprite = sBomroomBombSprites[type][frame];
             }
-            b697 = mBombs[i].state;
+            state = mBombs[i].state;
             x = mBombs[i].x >> 12;
-            f664 = mBombs[i].y;
-            y = f664 >> 12;
-            if (b697 == 6) {
-                if (mBombs[i].substate == 4) { y = (f664 - mBg2Y) >> 12; }
+            fy = mBombs[i].y;
+            y = fy >> 12;
+            if (state == 6) {
+                if (mBombs[i].substate == 4) {
+                    y = (fy - mBg2Y) >> 12;
+                }
             }
             Mg_RenderSpriteBoth(sBomroomBombsSprites[sprite], x, y, -1, palette);
         }
@@ -951,49 +966,56 @@ void dScMgBomroom_c::DrawBombs() {
 
 
 void dScMgBomroom_c::CheckColorComplete() {
-    int ca = 0;
-    int cb = 0;
-    int cc = 0;
+    int nColored = 0;
+    int nPlain = 0;
+    int nLined = 0;
     int i;
 
     for (i = 0; i < 0x70; i++) {
         if (mBombs[i].active != 0) {
             if (mBlastPen == 1) {
                 if (mBombs[i].color != 0) {
-                    int v;
-                    int q;
+                    int col;
+                    int row;
                     mBombs[i].substate = 3;
-                    v = ca;
-                    q = 0;
-                    mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                    while (v >= 5) { v -= 5; q++; }
-                    mBombs[i].lineSlot = (unsigned char)(q * 10 + v);
-                    ca++;
-                    cc++;
+                    col = nColored;
+                    row = 0;
+                    mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                    while (col >= 5) {
+                        col -= 5;
+                        row++;
+                    }
+                    mBombs[i].lineSlot = (unsigned char)(row * 10 + col);
+                    nColored++;
+                    nLined++;
                 } else {
-                    int v;
-                    int q;
-                    mBombs[i].lineSlot = (unsigned char)cb;
+                    int col;
+                    int row;
+                    /* The ROM keeps this store, overwritten below. */
+                    mBombs[i].lineSlot = (unsigned char)nPlain;
                     mBombs[i].substate = 3;
-                    v = cb;
-                    mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                    q = 0;
-                    while (v >= 5) { v -= 5; q++; }
-                    mBombs[i].lineSlot = (unsigned char)(q * 10 + v + 5);
-                    cb++;
-                    cc++;
+                    col = nPlain;
+                    mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                    row = 0;
+                    while (col >= 5) {
+                        col -= 5;
+                        row++;
+                    }
+                    mBombs[i].lineSlot = (unsigned char)(row * 10 + col + 5);
+                    nPlain++;
+                    nLined++;
                 }
             } else if (mBlastPen != 0) {
-                mBombs[i].lineSlot = (unsigned char)cc;
+                mBombs[i].lineSlot = (unsigned char)nLined;
                 mBombs[i].substate = 3;
-                mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                cc++;
+                mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                nLined++;
             } else {
                 if (mWinColor == mBombs[i].color && mBombs[i].state == 6) {
-                    mBombs[i].lineSlot = (unsigned char)cc;
+                    mBombs[i].lineSlot = (unsigned char)nLined;
                     mBombs[i].substate = 3;
-                    mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                    cc++;
+                    mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                    nLined++;
                 }
             }
         }
@@ -1006,7 +1028,6 @@ void dScMgBomroom_c::BombMarch_LinedUp() {}
 
 
 void dScMgBomroom_c::BombMarch_ToLine(int index) {
-    int off = index << 6;
     if (mBombs[index].marchDelay != 0) {
         mBombs[index].marchDelay -= 1;
         if ((s16)mBombs[index].marchDelay < 0)
@@ -1018,17 +1039,16 @@ void dScMgBomroom_c::BombMarch_ToLine(int index) {
         int row = 0;
         int curX, curY, targetY, targetX;
         while (slot >= 10) { slot -= 10; row++; }
-        off = row * 20;
         targetX = slot * 16 + 0x38;
-        targetY = off - 0xC0;
+        targetY = row * 20 - 0xC0;
         curX = mBombs[index].x >> 12;
         curY = mBombs[index].y >> 12;
         if (targetX == curX && targetY == curY) {
             mBombs[index].substate = 4;
             if (mBombs[index].color != 0)
-                func_02012718((int)0x1d9, mBombs[index].x);
+                func_02012718(0x1d9, mBombs[index].x);
             else
-                func_02012718((int)0x1da, mBombs[index].x);
+                func_02012718(0x1da, mBombs[index].x);
             return;
         }
         if (targetY != curY) {
@@ -1056,12 +1076,12 @@ void dScMgBomroom_c::BombMarch_Offscreen() {}
 void dScMgBomroom_c::BombMarch_Exit(int index) {
     int color, x;
     {
-        s16 sine = data_02082214[((mBombs[index].angle) >> 4) * 2 + 1];
-        mBombs[index].x += FX_MUL(sine, mBombs[index].speed);
+        fx16 cos = FX_CosIdx(mBombs[index].angle >> 4);
+        mBombs[index].x += FX_MUL(cos, mBombs[index].speed);
     }
     {
-        s16 sine = data_02082214[((mBombs[index].angle) >> 4) * 2];
-        mBombs[index].y += FX_MUL(sine, mBombs[index].speed);
+        fx16 sin = FX_SinIdx(mBombs[index].angle >> 4);
+        mBombs[index].y += FX_MUL(sin, mBombs[index].speed);
     }
     color = mBombs[index].color;
     x = mBombs[index].x >> 12;
@@ -1094,21 +1114,12 @@ void dScMgBomroom_c::BombMarch_ToGate(int index) {
     mBombs[index].angle = cstd::atan2(ty, tx);
 
     {
-        s16 sine = data_02082214[
-            ((mBombs[index].angle >> 4) * 2) + 1];
-
-        mBombs[index].x +=
-            (int)(((s64)sine *
-                   mBombs[index].speed + 0x800) >> 12);
+        fx16 cos = FX_CosIdx(mBombs[index].angle >> 4);
+        mBombs[index].x += FX_MUL(cos, mBombs[index].speed);
     }
-
     {
-        s16 sine = data_02082214[
-            (mBombs[index].angle >> 4) * 2];
-
-        mBombs[index].y +=
-            (int)(((s64)sine *
-                   mBombs[index].speed + 0x800) >> 12);
+        fx16 sin = FX_SinIdx(mBombs[index].angle >> 4);
+        mBombs[index].y += FX_MUL(sin, mBombs[index].speed);
     }
 
     color = mBombs[index].color;
@@ -1131,10 +1142,10 @@ void dScMgBomroom_c::BombMarch_ToGate(int index) {
 /* Runs the bomb's current handler: its substate indexes the
  * pointer-to-member table sBomroomBombMarchTable. */
 
-extern "C" PMFEntry sBomroomBombMarchTable[];
+extern "C" PMF sBomroomBombMarchTable[];
 void dScMgBomroom_c::Bomb_StateMarch(int index) {
     unsigned char state = mBombs[index].substate;
-    (this->*(sBomroomBombMarchTable[state].pmf))(index);
+    (this->*sBomroomBombMarchTable[state])(index);
 }
 
 /* Roaming step: advance x/y along the angle at speed (sine table, Fix12),
@@ -1144,47 +1155,48 @@ void dScMgBomroom_c::Bomb_StateMarch(int index) {
  * pinned just inside the wall. */
 
 void dScMgBomroom_c::Bomb_StateInPen(int idx) {
-    dScMgBomroom_c * self = (dScMgBomroom_c *)this;
     int xv;
     int yv;
-    s16 sinv;
-    s16 cosv;
 
-    sinv = data_02082214[(self->mBombs[idx].angle >> 4) * 2 + 1];
-    self->mBombs[idx].x += FX_MUL(sinv, self->mBombs[idx].speed);
-    cosv = data_02082214[(self->mBombs[idx].angle >> 4) * 2];
-    self->mBombs[idx].y += FX_MUL(cosv, self->mBombs[idx].speed);
-    xv = self->mBombs[idx].x >> 12;
-    yv = self->mBombs[idx].y >> 12;
-    if (self->mBombs[idx].color != 0) {
+    {
+        fx16 cos = FX_CosIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].x += FX_MUL(cos, mBombs[idx].speed);
+    }
+    {
+        fx16 sin = FX_SinIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].y += FX_MUL(sin, mBombs[idx].speed);
+    }
+    xv = mBombs[idx].x >> 12;
+    yv = mBombs[idx].y >> 12;
+    if (mBombs[idx].color != 0) {
         if (xv + 0xc > 0x100) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0xf4000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0xf4000;
         } else if (xv - 0xc < 0xc0) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0xcc000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0xcc000;
         }
         if (yv + 0xc > 0x80) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x74000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x74000;
         } else if (yv - 0xc < 0x40) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x4c000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x4c000;
         }
     } else {
         if (xv + 0xc > 0x40) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0x34000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0x34000;
         } else if (xv - 0xc < 0) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0xc000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0xc000;
         }
         if (yv + 0xc > 0x80) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x74000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x74000;
         } else if (yv - 0xc < 0x40) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x4c000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x4c000;
         }
     }
 }
@@ -1230,8 +1242,8 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
         u8 was;
         int t = gActivePlayerSlot;
 
-        mBombs[idx].x = (gTouchX[t << 2] << 12) - mBombs[idx].grabX;
-        mBombs[idx].y = (gTouchY[t << 2] << 12) - mBombs[idx].grabY;
+        mBombs[idx].x = (gTouchX[t * 4] << 12) - mBombs[idx].grabX;
+        mBombs[idx].y = (gTouchY[t * 4] << 12) - mBombs[idx].grabY;
         cx = old_x >> 12;
         cy = old_y >> 12;
 
@@ -1239,8 +1251,8 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
 
         {
             int t2 = gActivePlayerSlot;
-            mBombs[idx].x = (gTouchX[t2 << 2] << 12) - mBombs[idx].grabX;
-            mBombs[idx].y = (gTouchY[t2 << 2] << 12) - mBombs[idx].grabY;
+            mBombs[idx].x = (gTouchX[t2 * 4] << 12) - mBombs[idx].grabX;
+            mBombs[idx].y = (gTouchY[t2 * 4] << 12) - mBombs[idx].grabY;
         }
 
         was = mBombs[idx].overPen;
@@ -1275,8 +1287,6 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
  * to state 4 and OnBombExploded takes over. */
 
 void dScMgBomroom_c::Bomb_StateWalk(int idx) {
-    int t;
-
     if (mBombs[idx].fuse != 0) {
         if (mFusesFrozen == 0) {
             mBombs[idx].fuse--;
@@ -1303,10 +1313,14 @@ void dScMgBomroom_c::Bomb_StateWalk(int idx) {
         return;
     }
 
-    t = data_02082214[((int)mBombs[idx].angle >> 4) * 2 + 1];
-    mBombs[idx].x += FX_MUL(t, mBombs[idx].speed);
-    t = data_02082214[((int)mBombs[idx].angle >> 4) * 2];
-    mBombs[idx].y += FX_MUL(t, mBombs[idx].speed);
+    {
+        fx16 cos = FX_CosIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].x += FX_MUL(cos, mBombs[idx].speed);
+    }
+    {
+        fx16 sin = FX_SinIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].y += FX_MUL(sin, mBombs[idx].speed);
+    }
     Bomb_PushApart(idx);
     Bomb_CheckGrab(idx);
     mBombs[idx].prevX = mBombs[idx].x;
@@ -1316,8 +1330,7 @@ void dScMgBomroom_c::Bomb_StateWalk(int idx) {
 
 void dScMgBomroom_c::Bomb_StateWaiting(int i) {
     if (mBombs[i].marchDelay != 0) {
-        unsigned short *h = &mBombs[i].marchDelay;
-        *h = *h - 1;
+        mBombs[i].marchDelay--;
     } else {
         mBombs[i].visible = 1;
         mBombs[i].type = 1;
@@ -1329,10 +1342,9 @@ void dScMgBomroom_c::Bomb_StateWaiting(int i) {
  * then every live bomb runs its state handler from the pointer-to-member
  * table sBomroomBombStateTable, indexed by its state, and Bomb_Animate. */
 
-typedef void (dScMgBomroom_c::*PMF)(int);
 extern PMF sBomroomBombStateTable[];
 void dScMgBomroom_c::UpdateBombs() {
-    if (*(u8 *)(gTouchHeld + gActivePlayerSlot) == 0)
+    if (gTouchHeld[gActivePlayerSlot * 4] == 0)
         mHeldColor = 0xff;
     int i;
     for (i = 0; i < 0x70; i++) {
@@ -1471,8 +1483,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         HatchPanel_Activate(0);
                     }
                     if (sb <= 1) {
-                        rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                        mBombs[j].angle = (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
+                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
                         mBombs[j].y = 0;
                     } else if (flag != 0) {
                         if (flag == 1) {
@@ -1488,9 +1499,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0x2800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                            mBombs[j].angle =
-                                (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
+                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
                         }
                         mBombs[j].y = 0;
                         HatchPanel_Activate(0);
@@ -1498,9 +1507,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0xa800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                            mBombs[j].angle =
-                                (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0xa000;
+                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0xa000;
                         }
                         mBombs[j].y = 0xb8000;
                         HatchPanel_Activate(1);
@@ -1610,10 +1617,8 @@ void dScMgBomroom_c::RoundEnd_Finish() {
 
 
 void dScMgBomroom_c::RoundEnd_Tally() {
-    char * self = (char *)this;
     int found;
     int j;
-    u8 (*arr)[0x40] = (u8 (*)[0x40])self;
 
     UpdateBombs();
 
@@ -1661,11 +1666,8 @@ void dScMgBomroom_c::RoundEnd_Tally() {
 
 
 int dScMgBomroom_c::AnyBombMarching() {
-    char * c = (char *)this;
     int i;
-    unsigned char (*arr)[0x40];
     i = 0;
-    arr = (unsigned char (*)[0x40])c;
     do {
         if (mBombs[i].active == 1 && mBombs[i].state == 6)
             return 1;
@@ -1769,22 +1771,11 @@ void dScMgBomroom_c::Round_StateGameOver() {
 }
 
 /* Runs the mSubState sub-state through the pointer-to-member table
- * sBomroomRoundEndTable, decoded by hand (a function word, then a
- * this-adjust whose low bit marks a virtual call), then the three
- * per-frame passes. */
+ * sBomroomRoundEndTable, then the three per-frame passes. */
 
-typedef void (dScMgBomroom_c::*PMFv)();
 extern "C" PMFv sBomroomRoundEndTable[];
 void dScMgBomroom_c::Round_StateEnd() {
-    unsigned char * c = (unsigned char *)this;
-    int idx = mSubState;
-    int *e = (int *)&sBomroomRoundEndTable[idx];
-    int off = e[1];
-    void *obj = c + (off >> 1);
-    void (*f)(void *);
-    if (off & 1) f = (void (*)(void *))(*(int *)(*(int *)obj + e[0]));
-    else f = (void (*)(void *))e[0];
-    f(obj);
+    (this->*sBomroomRoundEndTable[mSubState])();
     HatchPanel_UpdateAll();
     PenGate_UpdateAll();
     TopDoor_Update();
@@ -1792,7 +1783,6 @@ void dScMgBomroom_c::Round_StateEnd() {
 
 
 void dScMgBomroom_c::Round_StatePlay() {
-    void * c = (void *)this;
     HatchPanel_UpdateAll();
     SpawnBombs();
     UpdateBombs();
@@ -1866,13 +1856,11 @@ s32 dScMgBomroom_c::Render()
 /* Waits out mDispatchDelay, then runs the round state mSceneState from
  * the pointer-to-member table sBomroomRoundStateTable and steps the sprite
  * records and the BG2 offset. */
-typedef void (dScMgBomroom_c::*PMFv)();
 extern "C" PMFv sBomroomRoundStateTable[];
 s32 dScMgBomroom_c::Behavior()
 {
     if (mDispatchDelay != 0) {
-        unsigned short *t = &mDispatchDelay;
-        *t = *t - 1;
+        mDispatchDelay--;
         if ((s16)mDispatchDelay <= 0)
             mDispatchDelay = 0;
     } else {
@@ -1899,15 +1887,15 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
-    f = LoadFile(0x23);
+    f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
     DecompressLZ16(f, (void *)(func_02054d88() + 0x4000));
     Deallocate(f);
 
-    f = LoadFile(0x24);
+    f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);
     GX::LoadBGPltt(f, 0x180, 0x80);
     Deallocate(f);
 
-    f = LoadFile(0x25);
+    f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_UP_NSC_BIN);
     func_02056314(f, 0, 0x800);
     Deallocate(f);
 
@@ -1915,7 +1903,7 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
 
-    f = LoadFile(3);
+    f = LoadFile(ASSET_D_2D_ELEVATOR_NSC_BIN);
     b = (char *)G2::GetBG2ScrPtr();
     fill = 0xf23f;
     MultiStore16(fill, b, 0x1000);
@@ -1926,35 +1914,35 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG0CNT = REG_BG0CNT & ~3;
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5610;
 
-    f = LoadFile(2);
+    f = LoadFile(ASSET_D_2D_BLUE_SHADOW_NSC_BIN);
     func_02056554(f, 0, 0x800);
     Deallocate(f);
 
-    f = LoadFile(7);
+    f = LoadFile(ASSET_D_2D_LIGHT_UP_NSC_BIN);
     func_02056554(f, 0x800, 0x800);
     Deallocate(f);
 
     G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
 
-    arc = LoadFile(0xb5);
-    f = LoadFile(0xb6);
+    arc = LoadFile(ASSET_D_2D_MG_BOMROOM_NCG_BIN);
+    f = LoadFile(ASSET_D_2D_MG_BOMROOM_NCL_BIN);
     DecompressLZ16(arc, (void *)0x6400000);
     GX::LoadOBJPltt(f, 0, 0x100);
 
-    gSubScreenLayers |= 8;
+    gSubScreenLayers |= DISPLAY_LAYER_BG3;
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
     REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x210;
 
     {
-        void *f7 = LoadFile(0x23);
+        void *f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
         DecompressLZ16(f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
         Deallocate(f7);
 
-        f7 = LoadFile(0x24);
+        f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);
         GXS::LoadBGPltt(f7, 0x180, 0x80);
         Deallocate(f7);
 
-        f7 = LoadFile(0x22);
+        f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_DOWN_NSC_BIN);
         func_020562b4(f7, 0, 0x800);
         Deallocate(f7);
 
@@ -2039,10 +2027,10 @@ PMF sBomroomBombStateTable[7] = {
     pmf_dScMgBomroom_c_Bomb_StateExploding, pmf_dScMgBomroom_c_Bomb_StateInPen,
     pmf_dScMgBomroom_c_Bomb_StateMarch,
 };
-extern "C" PMFEntry sBomroomBombMarchTable[5] = {
-    {pmf_dScMgBomroom_c_BombMarch_ToGate},    {pmf_dScMgBomroom_c_BombMarch_Exit},
-    {pmf_dScMgBomroom_c_BombMarch_Offscreen}, {pmf_dScMgBomroom_c_BombMarch_ToLine},
-    {pmf_dScMgBomroom_c_BombMarch_LinedUp},
+extern "C" PMF sBomroomBombMarchTable[5] = {
+    pmf_dScMgBomroom_c_BombMarch_ToGate,    pmf_dScMgBomroom_c_BombMarch_Exit,
+    pmf_dScMgBomroom_c_BombMarch_Offscreen, pmf_dScMgBomroom_c_BombMarch_ToLine,
+    pmf_dScMgBomroom_c_BombMarch_LinedUp,
 };
 extern "C" PMF sBomroomHatchPanelStateTable[4] = {
     pmf_dScMgBomroom_c_HatchPanel_StateIdle,
@@ -2056,9 +2044,9 @@ extern "C" PMF sBomroomPenGateStateTable[4] = {
     pmf_dScMgBomroom_c_PenGate_StateHold,
     pmf_dScMgBomroom_c_PenGate_StateClosing,
 };
-extern "C" PMFEntry sBomroomTopDoorStateTable[4] = {
-    {pmf_dScMgBomroom_c_TopDoor_StateShut},
-    {pmf_dScMgBomroom_c_TopDoor_StateOpening},
-    {pmf_dScMgBomroom_c_TopDoor_StateOpen},
-    {pmf_dScMgBomroom_c_TopDoor_StateClosing},
+extern "C" PMF sBomroomTopDoorStateTable[4] = {
+    pmf_dScMgBomroom_c_TopDoor_StateShut,
+    pmf_dScMgBomroom_c_TopDoor_StateOpening,
+    pmf_dScMgBomroom_c_TopDoor_StateOpen,
+    pmf_dScMgBomroom_c_TopDoor_StateClosing,
 };
