@@ -417,7 +417,8 @@ void run_forge() {
 //                                        session-one "save" of a save / quit / reload row)
 //   SM64DS_KEYDOOR_AT=<frame>:<variant>  from that frame, in the castle interior (level 2), list the doors (class 353)
 //                                        once, then stand my player on the door of that variant (param1, the
-//                                        door table index: 7 + key index for a key door) facing it for 20 frames,
+//                                        door table index: 7 + key index for a key door) facing it for 20 frames
+//                                        (three times, 300 frames apart: an unrelated message on screen holds the door),
 //                                        the box daDoor_c::func_ov100_021452e4 tests; then log flags1, the door's
 //                                        state record (+0x140, as a step from the closed state's record) and my
 //                                        position every 30 frames for 900 frames.
@@ -459,11 +460,11 @@ void run_keydoor() {
     }
     char *d = g_kd_door;
     ++g_kd_t;
-    if (g_kd_t <= 20) {
+    if (g_kd_t % 300 <= 20 && g_kd_t % 300 >= 1) {   // three tries (t 1, 301, 601): a message on screen holds the door
         for (int j = 0; j < 3; ++j) ((int *)(pl + 0x5c))[j] = ((const int *)(d + 0x5c))[j];
         *(short *)(pl + 0x8e) = (short)(*(const short *)(d + 0x8e) + 0x8000);
     }
-    if (g_kd_t <= 3 || g_kd_t == 21 || g_kd_t % 30 == 0) {
+    if (g_kd_t % 300 <= 3 || g_kd_t % 300 == 21 || g_kd_t % 30 == 0) {
         unsigned f1 = 0; std::memcpy(&f1, data_0209caa0 + 4, 4);
         const long step = ((const char *)*(void *const *)(d + 0x140) - (const char *)g_kd_closed) / 16;
         const int *q = (const int *)(pl + 0x5c);
