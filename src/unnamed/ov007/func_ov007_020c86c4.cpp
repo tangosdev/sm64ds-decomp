@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "G2x.h"
+#include "nitro/hw/registers.h"
 #include "Ov007Transition.h"
 
 extern "C" {
@@ -23,66 +24,65 @@ void func_ov007_020c86c4(Ov007Transition *tr) {
         s32 mask = tr->planes;
         if (tr->screens & 1) {
             if (mask & 1)
-                *(volatile u16 *)0x4000008 |= 0x40;
+                REG_BG0CNT |= BG_CONTROL_MOSAIC;
             else
-                *(volatile u16 *)0x4000008 &= ~0x40;
+                REG_BG0CNT &= ~BG_CONTROL_MOSAIC;
             if (mask & 2)
-                *(volatile u16 *)0x400000a |= 0x40;
+                REG_BG1CNT |= BG_CONTROL_MOSAIC;
             else
-                *(volatile u16 *)0x400000a &= ~0x40;
+                REG_BG1CNT &= ~BG_CONTROL_MOSAIC;
             if (mask & 4)
-                *(volatile u16 *)0x400000c |= 0x40;
+                REG_BG2CNT |= BG_CONTROL_MOSAIC;
             else
-                *(volatile u16 *)0x400000c &= ~0x40;
+                REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
             if (mask & 8)
-                *(volatile u16 *)0x400000e |= 0x40;
+                REG_BG3CNT |= BG_CONTROL_MOSAIC;
             else
-                *(volatile u16 *)0x400000e &= ~0x40;
+                REG_BG3CNT &= ~BG_CONTROL_MOSAIC;
         }
         if (!(tr->screens & 2))
             return;
         if (mask & 1)
-            *(volatile u16 *)0x4001008 |= 0x40;
+            REG_DB_BG0CNT |= BG_CONTROL_MOSAIC;
         else
-            *(volatile u16 *)0x4001008 &= ~0x40;
+            REG_DB_BG0CNT &= ~BG_CONTROL_MOSAIC;
         if (mask & 2)
-            *(volatile u16 *)0x400100a |= 0x40;
+            REG_DB_BG1CNT |= BG_CONTROL_MOSAIC;
         else
-            *(volatile u16 *)0x400100a &= ~0x40;
+            REG_DB_BG1CNT &= ~BG_CONTROL_MOSAIC;
         if (mask & 4)
-            *(volatile u16 *)0x400100c |= 0x40;
+            REG_DB_BG2CNT |= BG_CONTROL_MOSAIC;
         else
-            *(volatile u16 *)0x400100c &= ~0x40;
+            REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
         if (mask & 8)
-            *(volatile u16 *)0x400100e |= 0x40;
+            REG_DB_BG3CNT |= BG_CONTROL_MOSAIC;
         else
-            *(volatile u16 *)0x400100e &= ~0x40;
+            REG_DB_BG3CNT &= ~BG_CONTROL_MOSAIC;
         return;
     }
 
     case 2:
     case 3:
         if (tr->screens & 1) {
-            G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, tr->planes,
-                               tr->fx.alpha.planes2,
+            G2x::SetBlendAlpha(&REG_BLDCNT, tr->planes, tr->fx.alpha.planes2,
                                tr->reversed ? tr->fx.alpha.evaTo : tr->fx.alpha.evaFrom,
                                tr->reversed ? tr->fx.alpha.evbTo : tr->fx.alpha.evbFrom);
         }
         if (!(tr->screens & 2))
             return;
-        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, tr->planes, tr->fx.alpha.planes2,
+        G2x::SetBlendAlpha(&REG_DB_BLDCNT, tr->planes, tr->fx.alpha.planes2,
                            tr->reversed ? tr->fx.alpha.evaTo : tr->fx.alpha.evaFrom,
                            tr->reversed ? tr->fx.alpha.evbTo : tr->fx.alpha.evbFrom);
         return;
 
     case 4:
         if (tr->screens & 1) {
-            G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, tr->planes,
+            G2x::SetBlendBrightness(&REG_BLDCNT, tr->planes,
                                     tr->reversed ? tr->fx.brightness.to : tr->fx.brightness.from);
         }
         if (!(tr->screens & 2))
             return;
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, tr->planes,
+        G2x::SetBlendBrightness(&REG_DB_BLDCNT, tr->planes,
                                 tr->reversed ? tr->fx.brightness.to : tr->fx.brightness.from);
         return;
     }

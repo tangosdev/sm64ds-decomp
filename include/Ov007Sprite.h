@@ -68,7 +68,7 @@ void func_ov007_020c42f8(Ov007Sprite *sprite);
 void func_ov007_020c421c(Ov007Sprite *sprite);
 void func_ov007_020c41dc(Ov007Sprite *base, Ov007Sprite *sprite, struct Ov007Camera *camera);
 void func_ov007_020c4128(Ov007Sprite *parent, Ov007Sprite *child, struct Ov007Camera *camera);
-void func_ov007_020c4684(Ov007Sprite *sprite, int color, int alpha, int polygonId, int flags,
+void func_ov007_020c4684(Ov007Sprite *sprite, u16 color, int alpha, int polygonId, int flags,
                          s16 *vec);
 
 #ifdef __cplusplus
