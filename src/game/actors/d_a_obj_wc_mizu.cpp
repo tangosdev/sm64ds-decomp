@@ -98,6 +98,9 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 
 extern WcMizuModelFilePtr daObjWc_Obj07_c_ModelFile;
 extern WcMizuCollisionFilePtr daObjWc_Obj07_c_ClsnFile;
+#ifdef _MSC_VER
+extern int data_0209fc68; /* the session word: nonzero in a port multiplayer session (host-only use in Behavior) */
+#endif
 extern int data_ov029_02112b2c[];
 extern BTA_File data_ov029_02112fb8;
 extern CLPS_Block data_ov029_02112fec;
@@ -220,8 +223,11 @@ int daObjWc_Mizu_c::Behavior()
      * is thrown out of the swim on the next frame, over and over, and under
      * the surface the game thinks he is dry (no air meter). mAreaId is -1
      * here only while this water's area is showing (set just above), so
-     * only the shown water speaks, as in one-player play. */
-    if (mAreaId < 0)
+     * only the shown water speaks, as in one-player play.
+     * One-player play (data_0209fc68 == 0) keeps the cartridge exactly:
+     * there a water whose area has just gone hidden still runs and writes
+     * once on that frame, before BeforeBehavior puts it to sleep. */
+    if (mAreaId < 0 || data_0209fc68 == 0)
 #endif
     data_0209f32c = mWaterHeight;
     func_ov029_021122b4(this);
