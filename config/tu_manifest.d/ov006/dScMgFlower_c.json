@@ -116,6 +116,14 @@
       "reason": "Four-byte `bx lr` for the nested dScMgFlower_c::Vec2's empty destructor, emitted as vague linkage because the type has a user-declared destructor (which is load-bearing -- it is what keeps _ZN13dScMgFlower_c10DealPetalsEv's swap temp an 8-byte stack home; see include/dScMgFlower_c.h). No caller survives: mwccarm inlines the empty body at the one use site, _ZN13dScMgFlower_c10DealPetalsEv reproduces its 0x310 cartridge bytes with clean relocation destinations, and no ROM symbol of this spelling exists in any module's symbols.txt. Homeless, so a plain deadstrip."
     },
     {
+      "symbol": "_ZN7Vector2D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_symbol": "NullDestructor_0203d47c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0203d47c",
+      "reason": "The Vector2 locals in dScMgFlower_c::Behavior reproduce all eleven licensed TU functions unchanged; mwccarm also emits this 4-byte vague-linkage copy of Vector2's empty destructor. It is the same body as the ARM9 NullDestructor_0203d47c at 0x0203d47c, as established for other Vector2-using TUs, and no relocation from this module targets the duplicate."
+    },
+    {
       "symbol": "_ZN19dScMgSingle3DBase_cD2Ev",
       "disposition": "deadstrip",
       "reason": "Base-object destructor of dScMgSingle3DBase_c, emitted as vague linkage once the folded factory's `new dScMgFlower_c` expands the inline constructor chain (the same byproduct ov006/dScMgMemory2_c licenses for its own `new`). dScMgFlower_c's D1/D0 inline the base destructor rather than chain to it, the factory reproduces its 0x94 cartridge bytes with clean relocation destinations, and no module's symbols.txt gives _ZN19dScMgSingle3DBase_cD2Ev a home. Homeless and unreferenced, so a plain deadstrip."

@@ -36,6 +36,7 @@
 #include "Sound.h"
 #include "G2x.h"
 #include "PlayerInput.h"
+#include "Vector2.h"
 #include "Vector2Math.h"
 #include "G2.h"
 #include "CP15.h"
@@ -55,7 +56,7 @@ extern void Mg_SetTopScreenYOffset(int n);
 extern s16 data_02082214[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
-/* Plain screen-space vectors used at the scalar C ABI boundary. */
+/* The dragged petal's two adjacent fixed-point coordinates. */
 typedef struct V2 {
     int x;
     int y;
@@ -260,9 +261,9 @@ s32 dScMgFlower_c::Behavior() {
     int releaseIndex;
     int playerSlot;
     int newlyCounted;
-    V2 toCursor;
-    V2 toCursor2;
-    V2 drag;
+    Vector2 toCursor;
+    Vector2 toCursor2;
+    Vector2 drag;
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -315,7 +316,7 @@ s32 dScMgFlower_c::Behavior() {
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
                         Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].x, &mCursorX);
-                        withinGrabRadius = Vec2_Len((const Vector2 *)&toCursor) < 0x18000 ? 1 : 0;
+                        withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
                             mPetals[attachedIndex].held = 1;
@@ -336,8 +337,7 @@ s32 dScMgFlower_c::Behavior() {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
                             Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].x, &mCursorX);
-                            withinGrabRadius2 =
-                                Vec2_Len((const Vector2 *)&toCursor2) < 0x18000 ? 1 : 0;
+                            withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
                                 mPetals[freeIndex].driftX = 0;
