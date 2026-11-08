@@ -25,9 +25,9 @@
 // stepped by j * 0x40 and cast back to the scene, ((dScMgBomroom_c *)
 // bomb)->mBombs[0].color, and adds the offset of mBombs[0].active to
 // this + j * 0x40.
-// CountSortedBombs bumps mLevel through a volatile store. Bomb_StateInPen
-// keeps the sine-table value as the first factor (inline reads flip smull
-// order).
+// CountSortedBombs bumps mLevel through a volatile store.
+// The roaming steps read the table into a block-scoped fx16 before FX_MUL:
+// FX_CosIdx inside the FX_MUL argument swaps the table and speed registers.
 
 #include "dScMgBomroom_c.h"
 #include "nitro/hw/registers.h"
@@ -39,6 +39,7 @@
 #include "Sound.h"
 #include "G2x.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "G2.h"
 #include "PlayerInput.h"
 
@@ -55,7 +56,6 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern unsigned char *sBomroomBombFrameTimes[];
 extern unsigned char sBomroomBombFrameCounts[];
-extern s16 data_02082214[];
 extern s16 atan2_hold_d_s_mg_bomroom_1(int y, int x);
 extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
@@ -760,8 +760,7 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
 
 
 void dScMgBomroom_c::Bomb_PushApart(int index) {
-    char* raw = (char*)this;
-    int x, y, py, dx, dy1, ang, i2, a, dy2, sy, px;
+    int x, y, py, dx, dy1, ang, a, dy2, sy, px;
 
     x = mBombs[index].x >> 12;
     y = mBombs[index].y >> 12;
@@ -825,15 +824,14 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
             }
             cstd::sqrt((sy * sy + dy2 * dy2));
             ang = (u16)cstd::atan2(dy2, sy);
-            i2 = (ang >> 4) * 2;
-            mBombs[index].x = (0xC0 - FX_MUL(data_02082214[i2 + 1], 0xF)) << 12;
+            mBombs[index].x = (0xC0 - FX_MUL(FX_CosIdx(ang >> 4), 0xF)) << 12;
             if (py >= 0x60) {
-                mBombs[index].y = (0x80 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+                mBombs[index].y = (0x80 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
             } else {
-                mBombs[index].y = (0x40 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+                mBombs[index].y = (0x40 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
             }
             a = mBombs[index].angle;
-            if (data_02082214[(a >> 4) * 2 + 1] > 0) {
+            if (FX_CosIdx(a >> 4) > 0) {
                 mBombs[index].angle = 0x8000 - a;
             } else {
                 mBombs[index].angle = 0 - a;
@@ -889,15 +887,14 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
     }
     cstd::sqrt((dy2 * dy2 + sy * sy));
     ang = (u16)cstd::atan2(sy, dy2);
-    i2 = (ang >> 4) * 2;
-    mBombs[index].x = (0x40 - FX_MUL(data_02082214[i2 + 1], 0xF)) << 12;
+    mBombs[index].x = (0x40 - FX_MUL(FX_CosIdx(ang >> 4), 0xF)) << 12;
     if (py >= 0x60) {
-        mBombs[index].y = (0x80 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+        mBombs[index].y = (0x80 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
     } else {
-        mBombs[index].y = (0x40 - FX_MUL(data_02082214[i2], 0xF)) << 12;
+        mBombs[index].y = (0x40 - FX_MUL(FX_SinIdx(ang >> 4), 0xF)) << 12;
     }
     a = mBombs[index].angle;
-    if (data_02082214[(a >> 4) * 2 + 1] < 0) {
+    if (FX_CosIdx(a >> 4) < 0) {
         mBombs[index].angle = 0x8000 - a;
     } else {
         mBombs[index].angle = 0 - a;
@@ -1047,12 +1044,12 @@ void dScMgBomroom_c::BombMarch_Offscreen() {}
 void dScMgBomroom_c::BombMarch_Exit(int index) {
     int color, x;
     {
-        s16 sine = data_02082214[((mBombs[index].angle) >> 4) * 2 + 1];
-        mBombs[index].x += FX_MUL(sine, mBombs[index].speed);
+        fx16 cos = FX_CosIdx(mBombs[index].angle >> 4);
+        mBombs[index].x += FX_MUL(cos, mBombs[index].speed);
     }
     {
-        s16 sine = data_02082214[((mBombs[index].angle) >> 4) * 2];
-        mBombs[index].y += FX_MUL(sine, mBombs[index].speed);
+        fx16 sin = FX_SinIdx(mBombs[index].angle >> 4);
+        mBombs[index].y += FX_MUL(sin, mBombs[index].speed);
     }
     color = mBombs[index].color;
     x = mBombs[index].x >> 12;
@@ -1085,21 +1082,12 @@ void dScMgBomroom_c::BombMarch_ToGate(int index) {
     mBombs[index].angle = cstd::atan2(ty, tx);
 
     {
-        s16 sine = data_02082214[
-            ((mBombs[index].angle >> 4) * 2) + 1];
-
-        mBombs[index].x +=
-            (int)(((s64)sine *
-                   mBombs[index].speed + 0x800) >> 12);
+        fx16 cos = FX_CosIdx(mBombs[index].angle >> 4);
+        mBombs[index].x += FX_MUL(cos, mBombs[index].speed);
     }
-
     {
-        s16 sine = data_02082214[
-            (mBombs[index].angle >> 4) * 2];
-
-        mBombs[index].y +=
-            (int)(((s64)sine *
-                   mBombs[index].speed + 0x800) >> 12);
+        fx16 sin = FX_SinIdx(mBombs[index].angle >> 4);
+        mBombs[index].y += FX_MUL(sin, mBombs[index].speed);
     }
 
     color = mBombs[index].color;
@@ -1135,47 +1123,48 @@ void dScMgBomroom_c::Bomb_StateMarch(int index) {
  * pinned just inside the wall. */
 
 void dScMgBomroom_c::Bomb_StateInPen(int idx) {
-    dScMgBomroom_c * self = (dScMgBomroom_c *)this;
     int xv;
     int yv;
-    s16 sinv;
-    s16 cosv;
 
-    sinv = data_02082214[(self->mBombs[idx].angle >> 4) * 2 + 1];
-    self->mBombs[idx].x += FX_MUL(sinv, self->mBombs[idx].speed);
-    cosv = data_02082214[(self->mBombs[idx].angle >> 4) * 2];
-    self->mBombs[idx].y += FX_MUL(cosv, self->mBombs[idx].speed);
-    xv = self->mBombs[idx].x >> 12;
-    yv = self->mBombs[idx].y >> 12;
-    if (self->mBombs[idx].color != 0) {
+    {
+        fx16 cos = FX_CosIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].x += FX_MUL(cos, mBombs[idx].speed);
+    }
+    {
+        fx16 sin = FX_SinIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].y += FX_MUL(sin, mBombs[idx].speed);
+    }
+    xv = mBombs[idx].x >> 12;
+    yv = mBombs[idx].y >> 12;
+    if (mBombs[idx].color != 0) {
         if (xv + 0xc > 0x100) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0xf4000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0xf4000;
         } else if (xv - 0xc < 0xc0) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0xcc000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0xcc000;
         }
         if (yv + 0xc > 0x80) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x74000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x74000;
         } else if (yv - 0xc < 0x40) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x4c000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x4c000;
         }
     } else {
         if (xv + 0xc > 0x40) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0x34000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0x34000;
         } else if (xv - 0xc < 0) {
-            self->mBombs[idx].angle = 0x8000 - self->mBombs[idx].angle;
-            self->mBombs[idx].x = 0xc000;
+            mBombs[idx].angle = 0x8000 - mBombs[idx].angle;
+            mBombs[idx].x = 0xc000;
         }
         if (yv + 0xc > 0x80) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x74000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x74000;
         } else if (yv - 0xc < 0x40) {
-            self->mBombs[idx].angle = -self->mBombs[idx].angle;
-            self->mBombs[idx].y = 0x4c000;
+            mBombs[idx].angle = -mBombs[idx].angle;
+            mBombs[idx].y = 0x4c000;
         }
     }
 }
@@ -1266,8 +1255,6 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
  * to state 4 and OnBombExploded takes over. */
 
 void dScMgBomroom_c::Bomb_StateWalk(int idx) {
-    int t;
-
     if (mBombs[idx].fuse != 0) {
         if (mFusesFrozen == 0) {
             mBombs[idx].fuse--;
@@ -1294,10 +1281,14 @@ void dScMgBomroom_c::Bomb_StateWalk(int idx) {
         return;
     }
 
-    t = data_02082214[((int)mBombs[idx].angle >> 4) * 2 + 1];
-    mBombs[idx].x += FX_MUL(t, mBombs[idx].speed);
-    t = data_02082214[((int)mBombs[idx].angle >> 4) * 2];
-    mBombs[idx].y += FX_MUL(t, mBombs[idx].speed);
+    {
+        fx16 cos = FX_CosIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].x += FX_MUL(cos, mBombs[idx].speed);
+    }
+    {
+        fx16 sin = FX_SinIdx(mBombs[idx].angle >> 4);
+        mBombs[idx].y += FX_MUL(sin, mBombs[idx].speed);
+    }
     Bomb_PushApart(idx);
     Bomb_CheckGrab(idx);
     mBombs[idx].prevX = mBombs[idx].x;
