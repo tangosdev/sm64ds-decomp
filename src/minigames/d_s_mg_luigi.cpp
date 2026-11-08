@@ -464,33 +464,29 @@ void dScMgLuigi_c::DrawCurtains() {
 }
 
 void dScMgLuigi_c::CurtainStateSlow(int curtainIndex) {
-    int *velocity;
-    int *position;
     int screenX;
     mCurtain[curtainIndex].count = mCurtain[curtainIndex].count + 1;
     if (mCurtain[curtainIndex].count == 0x1a)
         Sound::PlayBank2_2D(0x1b9);
-    velocity = &mCurtain[curtainIndex].velX;
-    position = &mCurtain[curtainIndex].x;
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
     if (curtainIndex == 0) {
-        *velocity = *velocity - 0x140;
+        mCurtain[curtainIndex].velX -= 0x140;
         if (screenX < 0x80)
             return;
-        if (*velocity <= 0)
+        if (mCurtain[curtainIndex].velX <= 0)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
         FreeGfxSlotsById(0xd);
     } else {
-        *velocity = *velocity + 0x140;
+        mCurtain[curtainIndex].velX += 0x140;
         if (screenX > 0x80)
             return;
-        if (*velocity >= 0)
+        if (mCurtain[curtainIndex].velX >= 0)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
     }
@@ -499,17 +495,15 @@ void dScMgLuigi_c::CurtainStateSlow(int curtainIndex) {
 /* The tests on i inside the arm that already tested i stay. Folding them
    drops code this compiler still emits. */
 void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
-    int *velocity = &mCurtain[curtainIndex].velX;
-    int *position = &mCurtain[curtainIndex].x;
     int screenX;
 
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
 
     if (curtainIndex == 0) {
-        *velocity += 0x140;
-        if (screenX >= 0x80 && *velocity > 0) {
-            *position = 0x80000;
+        mCurtain[curtainIndex].velX += 0x140;
+        if (screenX >= 0x80 && mCurtain[curtainIndex].velX > 0) {
+            mCurtain[curtainIndex].x = 0x80000;
             mCurtain[curtainIndex].active = 0;
             mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
             if (curtainIndex == 0)
@@ -521,9 +515,9 @@ void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
         mCurtain[curtainIndex].sound =
             Sound_PlayIfNotActive(mCurtain[curtainIndex].sound, 2, 0x1b8, 0);
     } else {
-        *velocity -= 0x140;
-        if (screenX <= 0x80 && *velocity < 0) {
-            *position = 0x80000;
+        mCurtain[curtainIndex].velX -= 0x140;
+        if (screenX <= 0x80 && mCurtain[curtainIndex].velX < 0) {
+            mCurtain[curtainIndex].x = 0x80000;
             mCurtain[curtainIndex].active = 0;
             mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
             if (curtainIndex != 0)
@@ -539,16 +533,13 @@ void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
 }
 
 void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
-    int *velocity;
-    int *position;
     int screenX;
     mCurtain[curtainIndex].count = mCurtain[curtainIndex].count + 1;
     if (mCurtain[curtainIndex].count == 0x35)
         Sound::PlayBank2_2D(0x1b9);
     if (curtainIndex == 0) {
         if (mCurtain[curtainIndex].count <= 0x35) {
-            int *sound = &mCurtain[curtainIndex].sound;
-            *sound = Sound_PlayIfNotActive(*sound, 2, 0x1b8, 0);
+            mCurtain[curtainIndex].sound = Sound_PlayIfNotActive(mCurtain[curtainIndex].sound, 2, 0x1b8, 0);
         }
     }
     if (mCurtain[curtainIndex].delay != 0) {
@@ -557,15 +548,13 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
             mCurtain[curtainIndex].delay = 0;
         return;
     }
-    velocity = &mCurtain[curtainIndex].velX;
-    position = &mCurtain[curtainIndex].x;
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
     if (curtainIndex == 0) {
-        *velocity = *velocity + 0x140;
+        mCurtain[curtainIndex].velX += 0x140;
         if (screenX > 0x80)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
         FreeGfxSlotsById(0x1d);
@@ -575,10 +564,10 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
         mPromptBlinkCount = 1;
         mPromptBlinkTimer = 0;
     } else {
-        *velocity = *velocity - 0x140;
+        mCurtain[curtainIndex].velX -= 0x140;
         if (screenX < 0x80)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
         FreeGfxSlotsById(0x1d);
@@ -591,26 +580,24 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
 }
 
 void dScMgLuigi_c::CurtainStateBounce(int curtainIndex) {
-    int *velocity = &mCurtain[curtainIndex].velX;
-    int *position = &mCurtain[curtainIndex].x;
     int screenX;
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
     if (curtainIndex == 0) {
-        *velocity -= 0x100;
+        mCurtain[curtainIndex].velX -= 0x100;
         if (screenX >= 0x140) {
-            *position = 0x140000;
+            mCurtain[curtainIndex].x = 0x140000;
             mCurtain[curtainIndex].phase++;
             mCurtain[curtainIndex].delay = 0x10;
-            *velocity = -0x6000;
+            mCurtain[curtainIndex].velX = -0x6000;
         }
     } else {
-        *velocity += 0x100;
+        mCurtain[curtainIndex].velX += 0x100;
         if (screenX <= -0x40) {
-            *position = -0x40000;
+            mCurtain[curtainIndex].x = -0x40000;
             mCurtain[curtainIndex].phase++;
             mCurtain[curtainIndex].delay = 0x10;
-            *velocity = 0x6000;
+            mCurtain[curtainIndex].velX = 0x6000;
         }
     }
     if (curtainIndex == 0) {
@@ -833,13 +820,9 @@ void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
 
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     extern int sLuigiBounceSpeeds[];
-    u8 *started = &mStarted[pictureIndex];
-
-    if (*started == 0) {
-        u16 initialAngle = (u16)(LUIGI_RAND(16) << 12);
-
-        mMovePhase[pictureIndex] = initialAngle;
-        *started += 1;
+    if (mStarted[pictureIndex] == 0) {
+        mMovePhase[pictureIndex] = LUIGI_RAND(16) << 12;
+        mStarted[pictureIndex]++;
         return;
     }
 
@@ -923,8 +906,7 @@ void dScMgLuigi_c::MovePictureSway(int idx) {
 void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
     extern int sLuigiDriftRandomSpeed[];
     if (mStarted[pictureIndex] == 0) {
-        u16 initialAngle = (u16)(LUIGI_RAND(16) << 12);
-        mMovePhase[pictureIndex] = initialAngle;
+        mMovePhase[pictureIndex] = LUIGI_RAND(16) << 12;
         mStarted[pictureIndex]++;
         return;
     }
