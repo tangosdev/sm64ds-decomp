@@ -3,6 +3,7 @@
 #include "ui_art.h"
 #include "settings_live.h"
 #include "host_settings.h"
+#include "gpu_raster.h"
 #include "ui_text.h"
 #include "menu_hostimg.h"
 #include "menu_compose.h"
@@ -720,7 +721,7 @@ const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "DISPLAY", "CONTROLS", "SOUN
 
 /* DISPLAY is built per call: the Frame rate row is there only when this build's settings_live has a FrameRate row (another lane makes it
    live; until then it stays a launcher setting and the note says so) */
-Row g_disp_rows[12];
+Row g_disp_rows[14];
 int g_disp_n;
 const Row *display_rows(int *n)
 {
@@ -731,6 +732,10 @@ const Row *display_rows(int *n)
         static const int RES_VALS[] = { 0, 1, 2, 3, 4, 6, 8 };
         g_disp_rows[k++] = Row{ R_CHOICE, "Resolution", SL_RENDER_SCALE, -1, 0, RES_LABELS, 7, RES_VALS };
         g_disp_rows[k++] = Row{ R_NOTE, "Applies after a restart.", -1, -1, 0, 0, 0 };
+        /* RESSCALE1 round 2: on the processor renderer 6x and up miss the frame budget (27.6 to 57 ms at L18), so say so; hidden
+           while the card renderer is drawing (port_gpu_raster_active: setting on and no fallback), shown again if it falls back */
+        if (!port_gpu_raster_active())
+            g_disp_rows[k++] = Row{ R_NOTE, "1080p and up need the graphics card.", -1, -1, 0, 0, 0 };
     }
     g_disp_rows[k++] = Row{ R_CHECK, "Minigame screen gap", SL_MINIGAME_GAP, -1, 0, 0, 0 };
     g_disp_rows[k++] = Row{ R_CHOICE, "Gap look", SL_GAP_LOOK, -1, 0, GAPLOOK_LABELS, 3 };
