@@ -14,7 +14,6 @@
  * names them.
  *
  * Clip bounds use the out-of-line dBgW::SetClipRadius member.
- * What stays: sine table data_02082214 (arm9).
  * What stays: Behavior bumps mBobPhase through ctr, then reads it back as
  *   *(unsigned short *)&mBobPhase -- the reload the ROM does after the
  *   store.
@@ -33,12 +32,12 @@
 #include "math/CalcLib.h"
 #include "cstd.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* local extern: no shared header declares these. */
 extern "C" {
 extern s8 gCurrentSublevel;   /* current stage id */
 extern int data_0209f32c;     /* the stage water's global height (written by d_a_obj_wc_mizu) */
-extern short data_02082214[]; /* sin/cos table */
 
 int SurfaceInfo_TestFlag0x20(int *p);
 
@@ -153,8 +152,7 @@ int daObjFloatBoard_c::Behavior() {
     int dist;
     short atanRes;
     short angleDiff;
-    int j;
-    short s, co, tv;
+    short s, co;
     short val1, val2;
 
     mMeshCollider.SetClipRadius(0x300000);
@@ -164,9 +162,7 @@ int daObjFloatBoard_c::Behavior() {
             short *ctr = &mBobPhase;
             short cval = *ctr;
             *ctr = (short)(cval + 0xa00);
-            j = (*(unsigned short *)&mBobPhase >> 4) * 2;
-            tv = data_02082214[j];
-            mBobOffset = 10 * tv;
+            mBobOffset = 10 * FX_SinIdx(*(unsigned short *)&mBobPhase >> 4);
         }
 
         if (mRider == 0) {
@@ -183,9 +179,8 @@ int daObjFloatBoard_c::Behavior() {
             dist = Vec3_HorzDist(&mPos, &tpos) >> 0xc;
             atanRes = cstd::atan2(mPosX - tpos.x, mPosZ - tpos.z);
             angleDiff = atanRes - mAngleY;
-            j = ((u16)angleDiff >> 4) * 2;
-            s = data_02082214[j];
-            co = data_02082214[j + 1];
+            s = FX_SinIdx((u16)angleDiff >> 4);
+            co = FX_CosIdx((u16)angleDiff >> 4);
             val1 = (short)((-dist * co) / 2200);
             val2 = (short)((dist * s) / 1500);
         }

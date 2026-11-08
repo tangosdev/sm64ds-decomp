@@ -13113,11 +13113,6 @@
         "param:#2 int"
       ]
     },
-    "func_02016ff4": {
-      "src/_ZN17dExtSimpleModel_c14LoadAndSetFileEtii.cpp": [
-        "param:#1 dExtSimpleModel_c *"
-      ]
-    },
     "func_02017060": {
       "src/unnamed/arm9/0201/func_02016ff4.cpp": [
         "return:int"

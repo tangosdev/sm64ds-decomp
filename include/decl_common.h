@@ -849,7 +849,6 @@ extern void func_02030aa4(int);
 extern void Message_DrawCenteredLineVS(int, int);
 extern void func_02034b1c(void *, void *);
 extern void func_02035550(void*);
-extern void func_020371b0(void*, int);
 extern void func_020371fc(char*);
 extern void func_02038414(void*);
 extern void func_020398fc(void*);
@@ -1119,8 +1118,6 @@ extern void func_ov062_02116edc(void*);
 extern void func_ov062_02119800(void*);
 extern void func_ov062_02119954(void*);
 extern void func_ov062_0211aac0(void*);
-extern void func_ov063_0211c684(char*);
-extern void func_ov063_0211c82c(char*);
 
 extern void func_ov065_02115ff0(char*);
 extern void func_ov065_0211696c(char*);

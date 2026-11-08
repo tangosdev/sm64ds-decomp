@@ -38,6 +38,7 @@
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* ROM symbols with no header of their own. Spelled to agree with their
  * definitions (const Vector3 * Vec3 pairs, void * rotation target); the two
@@ -91,7 +92,6 @@ int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
 int func_0203564c(int clsn);   /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
-extern short data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 }
 
 /* Is this actor of the given kind? An int-returning inline: the ROM
@@ -149,8 +149,8 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     int reach = 0x64;
     if (mover->param1 == 2)
         reach = 0x82;
-    end.x += reach * data_02082214[((u16)mover->mAngleY >> 4) << 1];
-    end.z += reach * data_02082214[(((u16)mover->mAngleY >> 4) << 1) + 1];
+    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
 
     line.SetObjAndLine(start, end, mover);
     if (line.DetectClsn()) {
@@ -190,8 +190,8 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     if (mover->param1 == 2)
         reach = 0x82;
 
-    end.x += reach * data_02082214[((u16)mover->mAngleY >> 4) << 1];
-    end.z += reach * data_02082214[(((u16)mover->mAngleY >> 4) << 1) + 1];
+    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
 
     line.SetObjAndLine(start, end, mover);
 
