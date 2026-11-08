@@ -593,8 +593,8 @@ void dScMgPachinko2_c::Spark_Spawn(int x, int y) {
             mHitFx[i].y = y;
             mHitFx[i].active = 1;
             mHitFx[i].timer = 0;
-            mHitFx[i].unk_08 = 0;
-            mHitFx[i].unk_0c = 0;
+            mHitFx[i].vx = 0;
+            mHitFx[i].vy = 0;
             mHitFx[i].visible = 1;
             mHitFx[i].frame = 0;
             return;

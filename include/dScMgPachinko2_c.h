@@ -96,8 +96,8 @@ struct dScMgPachinko2_Paddle {
 struct dScMgPachinko2_HitFx {
     s32 x; /* +0x00 */
     s32 y; /* +0x04 */
-    s32 unk_08; /* Spark_Spawn zeroes this and unk_0c; nothing reads them */
-    s32 unk_0c;
+    s32 vx; /* +0x08 -- Spark_Spawn zeroes vx and vy; nothing reads them */
+    s32 vy; /* +0x0c */
     u16 timer; /* +0x10 */
     u8 pad_12[0x2];
     u8 visible; /* +0x14 */
@@ -130,7 +130,8 @@ struct dScMgPachinko2_Cup {
     s32 x;  /* +0x00 -- Fix12 */
     s32 y;  /* +0x04 */
     s32 vx; /* +0x08 */
-    s32 unk_0c; /* no function in the TU touches it */
+    s32 vy; /* +0x0c -- the y twin of vx, as in the twin scene's pipe
+               record; cups only slide in x and nothing touches it */
     u16 timer; /* +0x10 */
     u8 pad_12[0x2];
     u8 active;   /* +0x14 */
