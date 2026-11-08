@@ -35799,63 +35799,63 @@
     },
     "ov062:0x0211b2fc": {
       "author": "tangosdev",
-      "name": "func_ov062_0211b2fc"
+      "name": "_ZN9daJango_c20UpdateCircleVelocityEv"
     },
     "ov062:0x0211b3ac": {
       "author": "lunavyqo",
-      "name": "func_ov062_0211b3ac"
+      "name": "_ZN9daJango_c12ChangeTargetEv"
     },
     "ov062:0x0211b51c": {
       "author": "lunavyqo",
-      "name": "func_ov062_0211b51c"
+      "name": "_ZN9daJango_c17HandleCylinderHitEv"
     },
     "ov062:0x0211b800": {
       "author": "tangosdev",
-      "name": "func_ov062_0211b800"
+      "name": "_ZN9daJango_c15UpdateRiseStateEv"
     },
     "ov062:0x0211b880": {
       "author": "tangosdev",
-      "name": "func_ov062_0211b880"
+      "name": "_ZN9daJango_c14EnterRiseStateEv"
     },
     "ov062:0x0211b8d8": {
       "author": "tangosdev",
-      "name": "func_ov062_0211b8d8"
+      "name": "_ZN9daJango_c15UpdateHurtStateEv"
     },
     "ov062:0x0211b930": {
       "author": "tangosdev",
-      "name": "func_ov062_0211b930"
+      "name": "_ZN9daJango_c14EnterHurtStateEv"
     },
     "ov062:0x0211ba84": {
       "author": "lunavyqo",
-      "name": "func_ov062_0211ba84"
+      "name": "_ZN9daJango_c16UpdateSwoopStateEv"
     },
     "ov062:0x0211bc54": {
       "author": "tangosdev",
-      "name": "func_ov062_0211bc54"
+      "name": "_ZN9daJango_c15EnterSwoopStateEv"
     },
     "ov062:0x0211bd10": {
       "author": "lunavyqo",
-      "name": "func_ov062_0211bd10"
+      "name": "_ZN9daJango_c17UpdateCircleStateEv"
     },
     "ov062:0x0211c218": {
       "author": "tangosdev",
-      "name": "func_ov062_0211c218"
+      "name": "_ZN9daJango_c16EnterCircleStateEv"
     },
     "ov062:0x0211c2f4": {
       "author": "tangosdev",
-      "name": "func_ov062_0211c2f4"
+      "name": "_ZN9daJango_c18UpdateFlyPathStateEv"
     },
     "ov062:0x0211c594": {
       "author": "andrewboudreau",
-      "name": "func_ov062_0211c594"
+      "name": "_ZN9daJango_c17EnterFlyPathStateEv"
     },
     "ov062:0x0211c658": {
       "author": "tangosdev",
-      "name": "func_ov062_0211c658"
+      "name": "_ZN9daJango_c11ChangeStateEPv"
     },
     "ov062:0x0211c6a8": {
       "author": "tangosdev",
-      "name": "func_ov062_0211c6a8"
+      "name": "_ZN9daJango_c20UpdateModelAndShadowEv"
     },
     "ov062:0x0211c8b0": {
       "author": "tangosdev",
