@@ -454,10 +454,8 @@ s32 dScMgRoulette_c::Render() {
             if (mPhase < 8) {
                 if (data_020a0db0 & 8) {
                     s16 idx = mBoard.mStopTile;
-                    Hud_RenderSprite((void *)data_ov006_02138c18,
-                                     sRouletteTiles[idx].x >> 12,
-                                     sRouletteTiles[idx].y >> 12,
-                                     -1, 1);
+                    Hud_RenderSprite((void *)data_ov006_02138c18, sRouletteTiles[idx].x >> 12,
+                                     sRouletteTiles[idx].y >> 12, -1, 1);
                 }
             }
         }
@@ -794,8 +792,7 @@ void RouletteRacer_Update(RouletteRacer *racer) {
             if (type != 0x25) {
                 type = racer->tile;
                 if (Roulette_IsPairTile(type) || Roulette_IsQuadTile(type))
-                    RouletteRacer_SetVelocityToward(
-                        racer, &sRouletteTiles[type].x, 0x100);
+                    RouletteRacer_SetVelocityToward(racer, &sRouletteTiles[type].x, 0x100);
                 else
                     RouletteRacer_MoveToTile(racer, type);
                 Sound::PlayBank2_2D(0x15e);
@@ -1163,11 +1160,9 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     spinAbs = board->mSpinSpeed - 0x140;
     if (spinAbs < 0)
         spinAbs = -spinAbs;
-    pull = cstd::fdiv(FX_MUL(spinAbs, spinAbs), board->mBallRadius) -
-           0xc00;
+    pull = cstd::fdiv(FX_MUL(spinAbs, spinAbs), board->mBallRadius) - 0xc00;
 
-    board->mAngleStep = cstd::fdiv(FX_MUL(board->mSpinSpeed, 0x500),
-                                   board->mBallRadius);
+    board->mAngleStep = cstd::fdiv(FX_MUL(board->mSpinSpeed, 0x500), board->mBallRadius);
 
     board->mOrbitAngle += board->mAngleStep;
 
