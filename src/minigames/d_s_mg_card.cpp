@@ -592,8 +592,7 @@ void dScMgCard_c::UpdateState()
                 g = gMgScene;
                 if (g != 0) {
                     if (g->mHudScore < 0x270f) {
-                        int *fld = &g->mHudScore;
-                        *fld = *fld + 1;
+                        g->mHudScore++;
                     }
                     a1 = g->mHudScore;
                     if (a1 > g->mBestHudScore)
