@@ -7769,11 +7769,11 @@ matched: yes</title></rect><rect x="5.00" y="632.09" width="34.67" height="10.45
 module: arm9
 addr: 0x0204b244
 size: 540 bytes
-matched: yes</title></rect><rect x="39.67" y="632.09" width="61.38" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204b460
+matched: yes</title></rect><rect x="39.67" y="632.09" width="61.38" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_Child_DirectionalBillboard
 module: arm9
 addr: 0x0204b460
 size: 956 bytes
-matched: yes</title></rect><rect x="101.06" y="632.09" width="61.38" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204b81c
+matched: yes</title></rect><rect x="101.06" y="632.09" width="61.38" height="10.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLDraw_DirectionalBillboard
 module: arm9
 addr: 0x0204b81c
 size: 956 bytes
