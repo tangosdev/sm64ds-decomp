@@ -56,8 +56,7 @@ extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *self);
 
 void func_ov007_020c15ec(Ov007Texture *tex);
-void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize,
-                         u32 *plttSize);
+void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize, u32 *plttSize);
 
 /* Resets both regions to start at 0: the texture region's end from the
  * texture VRAM banks GX::GetBankForTex reports (one 0x20000-byte bank per
@@ -140,8 +139,7 @@ int func_ov007_020c17f4(void) {
 /* Texel and palette byte sizes of a width x height texture of format fmt
  * with colorCount palette colours; the direct formats (0, 5 and 7) are
  * given none. */
-void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize,
-                         u32 *plttSize) {
+void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize, u32 *plttSize) {
     switch (fmt) {
     case 0:
         *texSize = 0;
@@ -184,7 +182,7 @@ void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSi
  * (8 << sizeS) by (8 << sizeT), with an optional palette of plttColorCount
  * colours at plttSrc. */
 Ov007Texture *Texture_Create(int fmt, int texSrc, int sizeS, int sizeT, int plttSrc,
-                                  unsigned short plttColorCount) {
+                             unsigned short plttColorCount) {
     Ov007Texture *tex = (Ov007Texture *)func_ov007_020c3df4(0, sizeof(Ov007Texture));
     int width = 8 << sizeS;
     int height = 8 << sizeT;

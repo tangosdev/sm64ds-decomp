@@ -12,8 +12,8 @@ void *func_ov007_020b2308(void *fileData, int index) {
     unsigned flags = texture->flags;
     BMD_Palette *palette = &file->palettes[index];
     return Texture_Create((flags << 3) >> 29, reinterpret_cast<int>(texture->data),
-                               (flags << 9) >> 29, (flags << 6) >> 29,
-                               reinterpret_cast<int>(palette->data),
-                               static_cast<unsigned short>(static_cast<int>(palette->size) / 2));
+                          (flags << 9) >> 29, (flags << 6) >> 29,
+                          reinterpret_cast<int>(palette->data),
+                          static_cast<unsigned short>(static_cast<int>(palette->size) / 2));
 }
 }
