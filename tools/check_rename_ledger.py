@@ -63,7 +63,11 @@ WAS_RE = re.compile(r" \(was [^)]*\)$")
 
 
 def symbols_path(repo, module):
+    # The TCM autoloads (itcm, dtcm) keep their symbols under config/arm9/, the
+    # same layout tools/modules.py reads; without that spelling every mangled
+    # itcm row was "skipped" and the check exited 1 on a correct ledger.
     for rel in ("config/arm9/overlays/%s/symbols.txt" % module,
+                "config/arm9/%s/symbols.txt" % module,
                 "config/%s/symbols.txt" % module):
         p = os.path.join(repo, rel)
         if os.path.exists(p):
