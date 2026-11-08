@@ -58,6 +58,9 @@ enum : uint8_t {
 enum : uint8_t {
     kWorldDeathDelta = 0x01,  // slot ids newly dead
     kWorldDeathFull  = 0x02,  // the whole 512-bit part, idempotent
+    // 0x03 is coop_world.cpp's swallow message (kWorldSwallowGone)
+    kWorldCoinCount  = 0x04,  // COOPCOUNT1: my level coin count + "100-coin star is out" (an old build drops it as unknown)
+    kWorldSecret     = 0x05,  // COOPCOUNT1: I took this secret coin (class 329); an old build drops it as unknown
     kWorldLast       = 0x7f,
 };
 
@@ -135,6 +138,24 @@ struct CoopFullWire {
     CoopKeyWire key;
     uint32_t words[kCoopWords];
 };
+
+// COIN_COUNT payload, 8 B (COOPCOUNT1). Every member of a group sends it at 1 Hz and when its count changes, the owner
+// also right after a joiner's snapshot; a receiver takes the larger of its own count and the group's.
+struct CoopCoinWire {
+    CoopKeyWire key;
+    uint16_t count;          // the sender's level coin counter, 0..255 (the ROM clamps it at 0xff)
+    uint8_t  flags;          // bit 0: the sender's 100-coin star is out (event bit 0x1f)
+    uint8_t  reserved;       // 0
+};
+
+// SECRET payload, 8 B (COOPCOUNT1). A secret coin (daSCoin_c, class 329) the sender collected: its placed slot and
+// the group leader's collected count right after it on the sender (1..5, for the log; the receiver counts its own).
+struct CoopSecretWire {
+    CoopKeyWire key;
+    uint16_t slot;           // 0..511
+    uint8_t  count;          // 1..5
+    uint8_t  reserved;       // 0
+};
 #pragma pack(pop)
 
 static_assert(sizeof(CoopKeyWire) == 4, "key is 4 bytes");
@@ -145,6 +166,8 @@ static_assert(sizeof(CoopAckWire) == 12, "ack is 12 bytes");
 static_assert(sizeof(CoopOwnerWire) == 8, "owner change is 8 bytes");
 static_assert(sizeof(CoopDeltaWire) == 8, "delta head is 8 bytes");
 static_assert(sizeof(CoopFullWire) == 68, "full is 68 bytes");
+static_assert(sizeof(CoopCoinWire) == 8, "coin count is 8 bytes");
+static_assert(sizeof(CoopSecretWire) == 8, "secret is 8 bytes");
 
 // ---------------------------------------------------------------------------
 // Validators. Each takes the PAYLOAD (after the 12-byte head) and its length,
@@ -205,6 +228,16 @@ inline bool coop_full_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(CoopFullWire)) return false;
     CoopFullWire w; std::memcpy(&w, p, sizeof w);
     return coop_key_ok(w.key);
+}
+inline bool coop_coin_validate(const void *p, int len) {
+    if (!p || len != (int)sizeof(CoopCoinWire)) return false;
+    CoopCoinWire w; std::memcpy(&w, p, sizeof w);
+    return coop_key_ok(w.key) && w.count <= 0xff && w.flags <= 1 && w.reserved == 0;
+}
+inline bool coop_secret_validate(const void *p, int len) {
+    if (!p || len != (int)sizeof(CoopSecretWire)) return false;
+    CoopSecretWire w; std::memcpy(&w, p, sizeof w);
+    return coop_key_ok(w.key) && w.slot < kCoopSlots && w.count >= 1 && w.count <= 5 && w.reserved == 0;
 }
 
 // ---------------------------------------------------------------------------

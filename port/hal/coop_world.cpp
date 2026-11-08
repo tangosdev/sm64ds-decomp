@@ -49,6 +49,8 @@ void *port_debug_spawn(unsigned id, unsigned param);
 char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void *STAR_MARKERS[12];          // 0x0209f40c: the actors showing a star glint on the minimap
+int _ZN5Event6GetBitEj(unsigned bit);
+void _ZN5Event6SetBitEj(unsigned bit);
 void _ZN8dActor_c11UntrackStarERa(void *self, signed char &starID);
 void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 void func_ov084_02129498(void *goomba);
@@ -65,7 +67,8 @@ namespace {
 enum : unsigned {
     kHelloMs      = 1000,
     kFullMs       = 1000,
-    kEnterWaitMs  = 400,     // no answer in this long = first in
+    kEnterWaitMs  = 400,     // no answer in this long = first in (nobody established here, or a fast link)
+    kEnterWaitCap = 1500,    // COOPCOUNT1: the longest wait, for an established member on a slow link
     kEnterResend  = 120,
     kSnapResend   = 250,
     kSnapGiveUpMs = 5000,
@@ -308,6 +311,7 @@ void send_full(unsigned now) {
     if (send_kind(kHubTagCoopWorld, kWorldDeathFull, &w, sizeof w)) { ++g_st.sent_full; g_full_t = now; }
 }
 
+void send_coin_count(unsigned now);   // COOPCOUNT1, below
 void serve_snapshot(int seat, const Job &j) {
     if (g_part < 0) return;
     unsigned char buf[sizeof(CoopSnapWire) + kCoopSnapChunkMax];
@@ -323,6 +327,7 @@ void serve_snapshot(int seat, const Job &j) {
         std::memcpy(buf + sizeof h, reinterpret_cast<const unsigned char *>(t) + n * clen, (size_t)clen);
         if (send_kind(kHubTagCoopCtl, kCtlSnapPart, buf, (int)sizeof h + clen)) ++g_st.sent_snap;
     }
+    send_coin_count(comms_hub_now_ms());   // COOPCOUNT1: the joiner takes the level's coin count with the snapshot
 }
 
 // ---------------------------------------------------------------------------
@@ -1159,6 +1164,172 @@ void watch_cage(unsigned now) {
 }
 
 // ---------------------------------------------------------------------------
+// COOPCOUNT1 (run after093; audit G16 G17 G09). The level coin count and the secret coins, for every player.
+//
+// Coin count. The death-bit credit above shares a placed coin a friend took while my copy stands. It misses coins a friend
+// took before I came in (they never spawn here) and coins that fall out of enemies (slot -1, never in a death bit). So
+// every member of a group also tells its counter (kWorldCoinCount: at 1 Hz, when it changes, and the owner right after a
+// joiner's snapshot) and every console takes max(mine, the group's), the way coopdx shares its level count. The raise is
+// quiet: it never calls the ROM's 100-coin check (func_ov002_020b18f0), so the 100-coin star still comes from the console
+// whose OWN pickup crosses 100 and is announced from there (coop_spawn.cpp). The message carries that console's "100-coin
+// star is out" event bit (0x1f), so a console raised past 100 by the group never makes a second star at its next pickup.
+// SM64DS_COOP_COINCOUNT=0 turns it off (must-fail control); SM64DS_COOP_COINS=0 turns off both.
+//
+// Secret coins (daSCoin_c, class 329, src/game/actors/d_a_s_coin.cpp:203-223). The five secrets' count lives in the
+// group leader coin on each console and a collect ends in MarkForDestruction with no death bit, so a friend's secrets
+// stayed on my screen and my count did not move. The console whose player collects one (its leader's count rises) tells
+// the group the slot (kWorldSecret); every other console does to its copy what Collect does there, without the jingle and
+// the number: the leader's mCollectedCount + 1, the coin's touch collider off, and the coin gone. Only the console whose
+// player takes the fifth runs its 30-frame timer and spawns the star (SpawnStar, at the STARBASE marker); that star is a
+// runtime spawn, so coop_spawn announces it and every other console gets that one copy (measured: a timer on every console
+// made one star each, and each announced its own). The group keeps the taken secrets for this visit and sends them to a
+// member who joins (like the broken blocks), who applies them as his coins stand up.
+// ---------------------------------------------------------------------------
+bool coin_count_off() {
+    static const bool off = [] { const char *e = std::getenv("SM64DS_COOP_COINCOUNT"); return e && *e == '0'; }();
+    return off;
+}
+int g_coin_group = 0;            // the highest count a member of my group told me for this (level, act)
+bool g_coin_star = false;        // a member's 100-coin star is out
+unsigned g_coin_sent_t = 0; int g_coin_sent_v = -1, g_coin_seen_v = -1;
+unsigned long long g_coin_sends = 0, g_coin_recvs = 0, g_coin_raises = 0;
+void coin_reset() { g_coin_group = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1; }
+int my_coin_count() {
+    const int me = (int)data_0209f250;
+    return (me >= 0 && me < 4) ? (int)data_0209f358[me] : 0;
+}
+void send_coin_count(unsigned now) {
+    if (coins_off() || coin_count_off() || !g_key.valid()) return;
+    CoopCoinWire w; std::memset(&w, 0, sizeof w);
+    w.key = wire_key(g_key);
+    int c = my_coin_count(); if (c < 0) c = 0; if (c > 0xff) c = 0xff;
+    w.count = (uint16_t)c;
+    w.flags = _ZN5Event6GetBitEj(0x1f) ? 1 : 0;
+    if (send_kind(kHubTagCoopWorld, kWorldCoinCount, &w, (int)sizeof w)) { g_coin_sent_t = now; g_coin_sent_v = c; ++g_coin_sends; }
+}
+// After the death delta of this frame went out (so a friend credits the placed coin before he hears the new count).
+void coin_tick(unsigned now) {
+    if (coins_off() || coin_count_off() || !g_sync) return;
+    const int me = (int)data_0209f250;
+    if (me < 0 || me > 3) return;
+    if (g_coin_star && !_ZN5Event6GetBitEj(0x1f)) {
+        _ZN5Event6SetBitEj(0x1f);
+        std::fprintf(stderr, "[coop] coin count: a friend's 100-coin star is out: event bit 0x1f set here wall=%lld\n", wall_ms());
+    }
+    if (g_coin_group > (int)data_0209f358[me]) {
+        std::fprintf(stderr, "[coop] coin count: the group has %d, mine was %d: took %d wall=%lld\n", g_coin_group,
+                     (int)data_0209f358[me], g_coin_group, wall_ms());
+        data_0209f358[me] = (short)g_coin_group;
+        ++g_coin_raises;
+    }
+    const int c = my_coin_count();
+    if (g_log && c != g_coin_seen_v) {
+        std::fprintf(stderr, "[coop] coin count now %d (est %u) wall=%lld\n", c, g_est_frames, wall_ms());
+        g_coin_seen_v = c;
+    }
+    if (g_grp.others() > 0 && ((unsigned)(now - g_coin_sent_t) >= kFullMs || (c != g_coin_sent_v && (unsigned)(now - g_coin_sent_t) >= 250u)))
+        send_coin_count(now);
+}
+
+enum : int { kSecretCls = 329, kScLeaderUid = 0x108, kScRole = 0x10f, kScCount = 0x110,
+             kScClsnFlags = 0xd4 + 0x18, kSecMax = 16 };
+struct SecTaken { uint16_t slot; bool here; };
+SecTaken g_sec[kSecMax]; int g_sec_n = 0;
+int g_sec_count = 0;                     // the leader's count as last seen here
+short g_sec_prev[kSecMax]; int g_sec_prev_n = 0;
+unsigned g_sec_push_at = 0; int g_sec_push_left = 0;
+void sec_reset() { g_sec_n = 0; g_sec_count = 0; g_sec_prev_n = 0; g_sec_push_left = 0; }
+SecTaken *sec_find(int slot) { for (int i = 0; i < g_sec_n; ++i) if (g_sec[i].slot == slot) return &g_sec[i]; return nullptr; }
+SecTaken *sec_note(int slot, bool here) {
+    SecTaken *t = sec_find(slot);
+    if (!t && g_sec_n < kSecMax) { t = &g_sec[g_sec_n++]; t->slot = (uint16_t)slot; t->here = false; }
+    if (t && here) t->here = true;
+    return t;
+}
+char *sec_leader() {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (*(const unsigned short *)(a + 0x0c) == kSecretCls && !going(a) && *(const unsigned char *)(a + kScRole) == 1) return a;
+    return nullptr;
+}
+void sec_send(int slot, int count) {
+    CoopSecretWire w; std::memset(&w, 0, sizeof w);
+    w.key = wire_key(g_key); w.slot = (uint16_t)slot; w.count = (uint8_t)count;
+    send_kind(kHubTagCoopWorld, kWorldSecret, &w, (int)sizeof w);
+}
+// Collect's effect on my copy of the coin in `slot`, without its jingle and number. False when it cannot run yet.
+bool sec_apply(int slot, int seat) {
+    char *a = live_slot(kSecretCls, slot);
+    if (!a || going(a)) return false;
+    if (*(const unsigned *)(a + kScClsnFlags) & 1u) return true;          // already collected here
+    char *ld = (char *)_ZN8dActor_c10FindWithIDEj(*(const unsigned *)(a + kScLeaderUid));
+    if (!ld || *(const unsigned short *)(ld + 0x0c) != kSecretCls) ld = sec_leader();
+    if (!ld) return false;                                                 // the group has no leader yet (first frame)
+    unsigned char &cnt = *(unsigned char *)(ld + kScCount);
+    if (cnt >= 5) return true;
+    ++cnt;
+    *(unsigned *)(a + kScClsnFlags) |= 1u;
+    // The fifth taken elsewhere: no star timer here. The collector's console spawns the star and coop_spawn announces it
+    // (it is a runtime star, not linked to a placed marker), so every console gets that one star and none makes its own.
+    // A leader at 5 removes itself in its Behavior.
+    if (*(const unsigned char *)(a + kScRole) == 2) _ZN7fBase_c18MarkForDestructionEv(a);
+    g_sec_count = cnt;
+    std::fprintf(stderr, "[coop] secret: slot %d taken by seat %d, removed here; leader count now %d%s wall=%lld\n", slot, seat,
+                 (int)cnt, cnt == 5 ? " (the fifth: the collector's console makes the star)" : "", wall_ms());
+    return true;
+}
+void watch_secrets(unsigned now) {
+    short live[kSecMax]; int nl = 0; char *ld = nullptr;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != kSecretCls) continue;
+        const short s = *(const short *)(a + 0xce);
+        if (s < 0 || s >= kCoopSlots) continue;
+        if (!going(a) && nl < kSecMax) live[nl++] = s;
+        if (!going(a) && *(const unsigned char *)(a + kScRole) == 1) ld = a;
+    }
+    const int L = ld ? (int)*(const unsigned char *)(ld + kScCount) : g_sec_count;
+    if (L > g_sec_count) {
+        // my player's collect(s): the coin whose collider Collect switched off, else a coin that was here last frame
+        int n = L - g_sec_count;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && n > 0; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != kSecretCls) continue;
+            const short s = *(const short *)(a + 0xce);
+            if (s < 0 || s >= kCoopSlots || !(*(const unsigned *)(a + kScClsnFlags) & 1u)) continue;
+            const SecTaken *t = sec_find(s);
+            if (t && t->here) continue;
+            sec_note(s, true); --n;
+            if (g_grp.others() > 0) sec_send(s, L);
+            std::fprintf(stderr, "[coop] secret: I took slot %d (leader count %d): told the group wall=%lld\n", (int)s, L, wall_ms());
+        }
+        for (int i = 0; i < g_sec_prev_n && n > 0; ++i) {
+            const short s = g_sec_prev[i];
+            bool still = false;
+            for (int j = 0; j < nl; ++j) if (live[j] == s) still = true;
+            const SecTaken *t = sec_find(s);
+            if (still || (t && t->here)) continue;
+            sec_note(s, true); --n;
+            if (g_grp.others() > 0) sec_send(s, L);
+            std::fprintf(stderr, "[coop] secret: I took slot %d (leader count %d, gone this frame): told the group wall=%lld\n", (int)s, L,
+                         wall_ms());
+        }
+        g_sec_count = L;
+    }
+    std::memcpy(g_sec_prev, live, sizeof(short) * (size_t)nl); g_sec_prev_n = nl;
+    // what the group took that stands here (I came in later, or the message came before my coins)
+    if ((g_est_frames % 10) == 0)
+        for (int i = 0; i < g_sec_n; ++i)
+            if (!g_sec[i].here && sec_apply(g_sec[i].slot, -1)) g_sec[i].here = true;
+    // a member joined: send him the taken ones, kGonePushes rounds 700 ms apart
+    if (g_sec_push_left > 0 && g_sec_n && (int)(now - g_sec_push_at) >= 0) {
+        if (g_grp.others() == 0) { g_sec_push_left = 0; return; }
+        for (int i = 0; i < g_sec_n; ++i) sec_send(g_sec[i].slot, g_sec_count > 0 ? (g_sec_count > 5 ? 5 : g_sec_count) : 1);
+        if (g_log) std::fprintf(stderr, "[coop] secret: %d taken secret(s) sent to the group (round %d)\n", g_sec_n,
+                                kGonePushes - g_sec_push_left + 1);
+        --g_sec_push_left;
+        g_sec_push_at = now + 700u;
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Handlers.
 // ---------------------------------------------------------------------------
 bool seat_ok(int seat) {
@@ -1328,6 +1499,38 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         apply_swallow(seat, (int)w.slot, (unsigned)w.cls);
         return;
     }
+    if (sub == kWorldCoinCount) {   // COOPCOUNT1
+        if (!coop_coin_validate(p, pl)) { ++g_st.drop_bad; return; }
+        CoopCoinWire w; std::memcpy(&w, p, sizeof w);
+        key_from_wire(w.key, &k);
+        if (!for_me(k)) { ++g_st.drop_group; return; }
+        g_heard[seat] = comms_hub_now_ms() | 1u;
+        if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
+        ++g_coin_recvs;
+        if (coins_off() || coin_count_off()) return;
+        if ((int)w.count > g_coin_group) {
+            if (g_log) std::fprintf(stderr, "[coop] coin count from seat %d: %d%s wall=%lld\n", seat, (int)w.count,
+                                    (w.flags & 1) ? " (its 100-coin star is out)" : "", wall_ms());
+            g_coin_group = (int)w.count;
+        }
+        if (w.flags & 1) g_coin_star = true;
+        return;
+    }
+    if (sub == kWorldSecret) {      // COOPCOUNT1
+        if (!coop_secret_validate(p, pl)) { ++g_st.drop_bad; return; }
+        CoopSecretWire w; std::memcpy(&w, p, sizeof w);
+        key_from_wire(w.key, &k);
+        if (!for_me(k)) { ++g_st.drop_group; return; }
+        g_heard[seat] = comms_hub_now_ms() | 1u;
+        if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
+        SecTaken *t = sec_note((int)w.slot, false);
+        if (t && !t->here) {
+            if (sec_apply((int)w.slot, seat)) t->here = true;
+            else if (g_log) std::fprintf(stderr, "[coop] secret: slot %d taken by seat %d (its count %d), no copy here yet: kept\n",
+                                         (int)w.slot, seat, (int)w.count);
+        }
+        return;
+    }
     if (sub == kWorldDeathFull) {
         if (!coop_full_validate(p, pl)) { ++g_st.drop_bad; return; }
         CoopFullWire w; std::memcpy(&w, p, sizeof w);
@@ -1443,6 +1646,7 @@ void join_group(const CoopKey &nk) {
     g_grp.leave();
     g_out_n = 0;
     g_sw_n = 0; g_mouth = nullptr; g_mouth_slot = -1; g_sw_census_at = 0; cap_reset();
+    coin_reset(); sec_reset();   // COOPCOUNT1
     std::memset(g_remote, 0, sizeof g_remote);
     std::memset(g_sticky, 0, sizeof g_sticky);
     std::memset(g_star_seen, 0, sizeof g_star_seen);
@@ -1477,11 +1681,28 @@ void join_group(const CoopKey &nk) {
     const int peers = g_grp.others();
     int hint = -1;
     if (peers > 0) {
+        // COOPCOUNT1 (audit G18): the answer needs one round trip and the owner's next frame. 400 ms was too short on a slow
+        // link: the joiner started the level from a blank state and the 1 Hz full bitmap tore things down a second later.
+        // Wait twice the slowest member's measured round trip plus 300 ms, at least 400 ms; while a member says it holds the
+        // group's state (established), wait up to the cap. A fast answer ends the wait at once either way.
+        int rtt = -1;
+        const unsigned mm = g_grp.member_mask();
+        for (int s2 = 0; s2 < kCoopMaxSeats; ++s2) {
+            HubSeatInfo si;
+            if (((mm >> s2) & 1u) && comms_hub_seat_info(s2, &si) && si.rtt_ms > rtt) rtt = si.rtt_ms;
+        }
+        unsigned wait_ms = kEnterWaitMs;
+        if (rtt >= 0 && (unsigned)(2 * rtt + 300) > wait_ms) wait_ms = (unsigned)(2 * rtt + 300);
+        if (g_grp.established_count() > 0) wait_ms = kEnterWaitCap;
+        if (wait_ms > kEnterWaitCap) wait_ms = kEnterWaitCap;
+        if (const char *fw = std::getenv("SM64DS_COOP_ENTERWAIT")) { const int v = std::atoi(fw); if (v > 0 && v <= 5000) wait_ms = (unsigned)v; }   // proof knob
+        if (g_log) std::fprintf(stderr, "[coop] joining level %d act %d: waiting up to %u ms for the snapshot (rtt %d ms, %d established)\n",
+                                nk.level, nk.act, wait_ms, rtt, g_grp.established_count());
         g_snap_waiting = true;
         const unsigned t0 = comms_hub_now_ms();
         unsigned last_send = 0;
         send_enter(); last_send = t0;
-        while ((unsigned)(comms_hub_now_ms() - t0) < kEnterWaitMs && !g_snap_done) {
+        while ((unsigned)(comms_hub_now_ms() - t0) < wait_ms && !g_snap_done) {
             ::Sleep(2);
             comms_hub_pump();
             const unsigned n2 = comms_hub_now_ms();
@@ -1504,7 +1725,7 @@ void join_group(const CoopKey &nk) {
         } else {
             ++g_st.snap_timeouts;
             std::fprintf(stderr, "[coop] joined level %d act %d: no snapshot in %d ms, first in\n",
-                         nk.level, nk.act, (int)kEnterWaitMs);
+                         nk.level, nk.act, (int)wait_ms);
         }
     } else {
         ++g_st.first_in;
@@ -1798,6 +2019,7 @@ void tick_est(unsigned now) {
         if (g_grp.others() == 0) k = 0;      // nobody to tell: the owner-less table is the whole truth
         g_out_n = k;
     }
+    if (g_sync) { coin_tick(now); watch_secrets(now); }   // COOPCOUNT1
     // 3. hello, owner full resend, owner announcement
     if ((unsigned)(now - g_hello_t) >= kHelloMs) send_hello(now);
     g_grp.update(now);
@@ -1909,6 +2131,7 @@ void coop_world_session_reset() {
     g_last_bits_hash = 0;
     g_out_n = 0;
     g_sw_n = 0; g_mouth = nullptr; g_mouth_slot = -1; g_sw_census_at = 0; cap_reset();
+    coin_reset(); sec_reset();   // COOPCOUNT1
     g_snap_waiting = false;
     g_snap_done = false;
     g_snap_total = 0;
@@ -2028,6 +2251,8 @@ extern "C" void port_coop_world_frame(void) {
         const unsigned m = g_grp.member_mask();
         const unsigned gone = g_prev_members & ~m;
         if ((m & ~g_prev_members) && g_gone_n) { g_gone_push_at = now + 300u; g_gone_push_left = kGonePushes; }   // COOPSYNC1
+        if ((m & ~g_prev_members) && g_sec_n) { g_sec_push_at = now + 300u; g_sec_push_left = kGonePushes; }       // COOPCOUNT1
+        if (m & ~g_prev_members) g_coin_sent_t = now - kFullMs;                                                   // COOPCOUNT1: tell my count
         if ((m & ~g_prev_members) && g_cage.free) { g_cage_send_at = now + 300u; g_cage_send_left = kGonePushes; g_cage_send_gap = 700u; }   // COOPBOO1
         g_prev_members = m;
         for (int sdx = 0; gone && sdx < 16; ++sdx)
