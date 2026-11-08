@@ -192,7 +192,7 @@ void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
 }
 
 extern "C" {
-extern char data_023c0000[]; /* DTCM; the IRQ check word sits at +0x3ff8 */
+extern short data_023c0000[]; /* HW_DTCM; the IRQ check word sits at +0x3ff8 */
 }
 
 /* NitroSDK's OS_SetIrqCheckFlag: tells OS_WaitIrq the interrupt was taken. */
