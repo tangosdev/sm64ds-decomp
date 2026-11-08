@@ -1,7 +1,7 @@
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
 
-extern int func_ov007_020c3ce4(void);
+extern int MenuMem_GetMaxAllocSize(void);
 extern int func_ov007_020c5db0(void *c);
 
 /* Loads a whole drawing into the picker as count committed strokes: resets
@@ -12,7 +12,7 @@ extern int func_ov007_020c5db0(void *c);
 void func_ov007_020c6784(Ov007Picker *self, int count, const int *pointCounts, const void *xCoords,
                          const void *yCoords, const int *const *progressThresholds, int mode) {
     int i;
-    func_ov007_020c3ce4();
+    MenuMem_GetMaxAllocSize();
     func_ov007_020c6724(self, 1);
     /* Each mode interprets the coordinate-pointer tables in its own format. */
     for (i = 0; i < count; i++) {
@@ -32,5 +32,5 @@ void func_ov007_020c6784(Ov007Picker *self, int count, const int *pointCounts, c
     }
     self->groupCount = count;
     self->totalPoints = func_ov007_020c5db0(self);
-    func_ov007_020c3ce4();
+    MenuMem_GetMaxAllocSize();
 }

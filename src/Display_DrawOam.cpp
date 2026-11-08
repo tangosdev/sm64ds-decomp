@@ -12,7 +12,7 @@ extern void func_ov007_020be3bc(void);
  * (func_ov007_020be0dc), clears each buffer to hidden entries, draws its
  * node list into it, copies in the affine matrices (func_ov007_020be3bc)
  * and flushes both from the data cache. */
-void func_ov007_020bc9c8(Ov007Display *d) {
+void Display_DrawOam(Ov007Display *d) {
     func_ov007_020be0dc();
     DMASyncFillTransfer(3, d->oamMain, 0xc0, 0x400);
     DMASyncFillTransfer(3, d->oamSub, 0xc0, 0x400);

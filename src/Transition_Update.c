@@ -3,8 +3,8 @@
 extern void func_ov007_020c86c4(Ov007Transition *tr);
 extern void func_ov007_020c897c(Ov007Transition *tr);
 extern void func_ov007_020c8970(Ov007Transition *tr);
-extern void func_ov007_020c8688(Ov007Transition *tr, int v);
-extern void func_ov007_020c86a8(Ov007Transition *tr, int v);
+extern void Transition_StartBackward(Ov007Transition *tr, int v);
+extern void Transition_StartForward(Ov007Transition *tr, int v);
 extern void func_ov007_020c8c88(Ov007Transition *tr, int t);
 extern void func_ov007_020c8bc8(Ov007Transition *tr, int t);
 extern void func_ov007_020c8b34(Ov007Transition *tr, int t);
@@ -14,7 +14,7 @@ extern void func_ov007_020c8b34(Ov007Transition *tr, int t);
  * restarts by endAction and calls onEnd; after a stop or hold it clears
  * onEnd unless the callback installed a new one. The eased value (curve,
  * flipped when reversed) goes to the effect's applier. */
-void func_ov007_020c8498(Ov007Transition *tr) {
+void Transition_Update(Ov007Transition *tr) {
     int eased = 0;
     void (*onEnd)(void);
 
@@ -41,15 +41,15 @@ void func_ov007_020c8498(Ov007Transition *tr) {
                 break;
             case 2:
                 if (tr->reversed == 1)
-                    func_ov007_020c8688(tr, tr->screens);
+                    Transition_StartBackward(tr, tr->screens);
                 else
-                    func_ov007_020c86a8(tr, tr->screens);
+                    Transition_StartForward(tr, tr->screens);
                 break;
             case 3:
                 if (tr->reversed == 1)
-                    func_ov007_020c86a8(tr, tr->screens);
+                    Transition_StartForward(tr, tr->screens);
                 else
-                    func_ov007_020c8688(tr, tr->screens);
+                    Transition_StartBackward(tr, tr->screens);
                 break;
             }
 

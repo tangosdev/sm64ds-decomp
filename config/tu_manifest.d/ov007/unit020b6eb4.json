@@ -7,9 +7,9 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous run 0x020b6eb4..0x020b72a0, 5 functions, all byte-matched from the one unit source. It is exactly the gap build/tu_map.json leaves between its unattributed ov007 units 0x020ad660..0x020b6eb4 and 0x020b72a0..0x020cc028.",
-    "data window: the bss word data_ov007_02103430 (clear while an entry point runs, set once it is done) is referenced by these five functions and nothing else in the overlay.",
+    "data window: the bss word sFrameReady (clear while an entry point runs, set once it is done) is referenced by these five functions and nothing else in the overlay.",
     "module shape: the menu's five entry points, all called from dScDSMT_c (src/game/stages/d_s_dsmt.cpp): bring-up (func_ov007_020b7138), per-frame logic (020b7090), per-frame draw (020b7040), per-frame display work (020b6eb4) and teardown (020b6f4c).",
-    "start edge (high): func_ov007_020b6d40, the previous function, is one of the bring-up's builders and does not touch 0x02103430. End edge (high): func_ov007_020b72a0 is the display hook func_ov007_020b6eb4 calls and opens the next tu_map unit."
+    "start edge (high): func_ov007_020b6d40, the previous function, is one of the bring-up's builders and does not touch 0x02103430. End edge (high): Display_Upload is the display hook func_ov007_020b6eb4 calls and opens the next tu_map unit."
   ],
   "sections": [
     {
@@ -58,7 +58,7 @@
   "data": [],
   "bss": [],
   "notes": [
-    "Text only: data_ov007_02103430 and the work-block pointer stay ROM-owned and are reached by extern, as the one-function sources did.",
+    "Text only: sFrameReady and the work-block pointer stay ROM-owned and are reached by extern, as the one-function sources did.",
     "Folded from 5 sources (3 C, 2 C++) that each declared a private view of the work block; the unit reads it through include/Ov007Work.h, which now names the two words these functions give meaning to (frameCount at 0x000, choiceReady at 0x014). The bring-up's argument record is typed as Ov007MenuHooks."
   ],
   "verification": {

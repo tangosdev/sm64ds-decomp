@@ -28203,7 +28203,7 @@
     },
     "ov007:0x020b68e8": {
       "author": "tangosdev",
-      "name": "func_ov007_020b68e8"
+      "name": "Work_Create"
     },
     "ov007:0x020b693c": {
       "author": "tangosdev",
@@ -28255,7 +28255,7 @@
     },
     "ov007:0x020b72a0": {
       "author": "tangosdev",
-      "name": "func_ov007_020b72a0"
+      "name": "Display_Upload"
     },
     "ov007:0x020b72d8": {
       "author": "tangosdev",
@@ -28607,7 +28607,7 @@
     },
     "ov007:0x020bc9c8": {
       "author": "tangosdev",
-      "name": "func_ov007_020bc9c8"
+      "name": "Display_DrawOam"
     },
     "ov007:0x020bca40": {
       "author": "tangosdev",
@@ -28639,23 +28639,23 @@
     },
     "ov007:0x020bd4e8": {
       "author": "tangosdev",
-      "name": "func_ov007_020bd4e8"
+      "name": "MenuGfx_StartCapture"
     },
     "ov007:0x020bd500": {
       "author": "tangosdev",
-      "name": "func_ov007_020bd500"
+      "name": "MenuGfx_InitSubEngine"
     },
     "ov007:0x020bd5a8": {
       "author": "tangosdev",
-      "name": "func_ov007_020bd5a8"
+      "name": "MenuGfx_InitMainEngine"
     },
     "ov007:0x020bd648": {
       "author": "tangosdev",
-      "name": "func_ov007_020bd648"
+      "name": "MenuGfx_SetBgMode"
     },
     "ov007:0x020bd960": {
       "author": "tangosdev",
-      "name": "func_ov007_020bd960"
+      "name": "MenuGfx_ResetVram"
     },
     "ov007:0x020bd9e4": {
       "author": "tangosdev",
@@ -28687,15 +28687,15 @@
     },
     "ov007:0x020bdebc": {
       "author": "tangosdev",
-      "name": "func_ov007_020bdebc"
+      "name": "MenuSound_UpdateLoops"
     },
     "ov007:0x020bdf60": {
       "author": "tangosdev",
-      "name": "func_ov007_020bdf60"
+      "name": "MenuSound_Destroy"
     },
     "ov007:0x020be00c": {
       "author": "tangosdev",
-      "name": "func_ov007_020be00c"
+      "name": "MenuSound_Create"
     },
     "ov007:0x020be098": {
       "author": "tangosdev",
@@ -28787,11 +28787,11 @@
     },
     "ov007:0x020bf690": {
       "author": "tangosdev",
-      "name": "func_ov007_020bf690"
+      "name": "ScreenFade_Update"
     },
     "ov007:0x020bf790": {
       "author": "tangosdev",
-      "name": "func_ov007_020bf790"
+      "name": "ScreenFade_Start"
     },
     "ov007:0x020bfacc": {
       "author": "tangosdev",
@@ -28799,7 +28799,7 @@
     },
     "ov007:0x020bfaf0": {
       "author": "tangosdev",
-      "name": "func_ov007_020bfaf0"
+      "name": "ScreenFade_Draw"
     },
     "ov007:0x020bfbdc": {
       "author": "tangosdev",
@@ -28807,11 +28807,11 @@
     },
     "ov007:0x020bfc54": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020bfc54"
+      "name": "ScreenFade_Destroy"
     },
     "ov007:0x020bfcec": {
       "author": "tangosdev",
-      "name": "func_ov007_020bfcec"
+      "name": "ScreenFade_Create"
     },
     "ov007:0x020bfd70": {
       "author": "tangosdev",
@@ -29063,7 +29063,7 @@
     },
     "ov007:0x020c20b8": {
       "author": "lunavyqo",
-      "name": "func_ov007_020c20b8"
+      "name": "Pad_Update"
     },
     "ov007:0x020c22a0": {
       "author": "tangosdev",
@@ -29231,7 +29231,7 @@
     },
     "ov007:0x020c3ce4": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3ce4"
+      "name": "MenuMem_GetMaxAllocSize"
     },
     "ov007:0x020c3d1c": {
       "author": "andrewboudreau",
@@ -29247,7 +29247,7 @@
     },
     "ov007:0x020c3e1c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c3e1c"
+      "name": "MenuMem_SetMaxAllocSizeHook"
     },
     "ov007:0x020c3e2c": {
       "author": "tangosdev",
@@ -29591,15 +29591,15 @@
     },
     "ov007:0x020c8498": {
       "author": "aitddlabs",
-      "name": "func_ov007_020c8498"
+      "name": "Transition_Update"
     },
     "ov007:0x020c8688": {
       "author": "ruspecial",
-      "name": "func_ov007_020c8688"
+      "name": "Transition_StartBackward"
     },
     "ov007:0x020c86a8": {
       "author": "tangosdev",
-      "name": "func_ov007_020c86a8"
+      "name": "Transition_StartForward"
     },
     "ov007:0x020c86c4": {
       "author": "tangosdev",
@@ -29619,11 +29619,11 @@
     },
     "ov007:0x020c8b04": {
       "author": "tangosdev",
-      "name": "func_ov007_020c8b04"
+      "name": "Transition_Destroy"
     },
     "ov007:0x020c8b10": {
       "author": "tangosdev",
-      "name": "func_ov007_020c8b10"
+      "name": "Transition_Create"
     },
     "ov007:0x020c8b34": {
       "author": "tangosdev",
