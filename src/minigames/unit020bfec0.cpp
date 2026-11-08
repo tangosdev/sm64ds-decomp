@@ -745,13 +745,18 @@ int Presenter_Load(char *c) {
     func_02016b24(&PRESENTER(c)->mFace, 2);
 
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mWaitTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mMistakeTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
+                             *(BTP_File *)PRESENTER(c)->mMistakeTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mWinTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mLoseTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mLoseStartTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mLoseEndTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mSmileTexSeq.filePtr);
-    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mSurprisedTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
+                             *(BTP_File *)PRESENTER(c)->mLoseStartTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
+                             *(BTP_File *)PRESENTER(c)->mLoseEndTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
+                             *(BTP_File *)PRESENTER(c)->mSmileTexSeq.filePtr);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
+                             *(BTP_File *)PRESENTER(c)->mSurprisedTexSeq.filePtr);
 
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterIdleTexAnim);
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)faceFile, *(BTA_File *)sPresenterMissTexAnim);
@@ -883,13 +888,13 @@ extern "C" void Presenter_Draw(char *c) {
 
     REG_LIGHT_COLOR = 0x7fff;
     REG_LIGHT_VECTOR = (((short)keyLight[0] >> 3) & 0x3ff) |
-                                 ((((short)keyLight[1] >> 3) & 0x3ff) << 10) |
-                                 ((((short)keyLight[2] >> 3) & 0x3ff) << 20);
+                       ((((short)keyLight[1] >> 3) & 0x3ff) << 10) |
+                       ((((short)keyLight[2] >> 3) & 0x3ff) << 20);
     components = (char *)&PRESENTER(c)->mFace.data;
     REG_LIGHT_COLOR = 0x4000294b;
     REG_LIGHT_VECTOR = (((short)fillLight[0] >> 3) & 0x3ff) |
-                                 ((((short)fillLight[1] >> 3) & 0x3ff) << 10) |
-                                 ((((short)fillLight[2] >> 3) & 0x3ff) << 20) | 0x40000000;
+                       ((((short)fillLight[1] >> 3) & 0x3ff) << 10) |
+                       ((((short)fillLight[2] >> 3) & 0x3ff) << 20) | 0x40000000;
 
     /* materials is mFace's material table (ModelComponents +0x4, 0x30-byte records);
        0x104..0x138 are +0x14/+0x18 of materials 5 and 6, which BMD_Material
@@ -1020,8 +1025,8 @@ void Presenter_PlayMatch(void *c) {
        pmf_Presenter_StateWin straight through c costs the function its bytes
        (measured 2026-11-08). */
     state = (long long *)c;
-    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mWinTexSeq.filePtr, 0x40000000,
-                                  0x800, 0);
+    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mWinTexSeq.filePtr, 0x40000000, 0x800,
+                                  0);
     PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
     next = pmf_Presenter_StateWin;
     *state = next;
@@ -1082,9 +1087,9 @@ void Presenter_PlayCheer(void *c) {
         func_02012174(0, 3);
     }
     PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mSurprisedAnim.filePtr, 8, 0x40000000,
-                                 0x800, 0);
+                                0x800, 0);
     PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mSurprisedTexSeq.filePtr, 0x40000000,
-                                   0x800, 0);
+                                  0x800, 0);
     PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     *((long long *)c) = pmf_Presenter_StateSurprisedThenSmile;
 }
@@ -1153,9 +1158,9 @@ void Presenter_PlayCheerLoop(void *c) {
         func_02012174(0, 3);
     }
     PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mSurprisedAnim.filePtr, 8, 0x40000000,
-                                 0x800, 0);
+                                0x800, 0);
     PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mSurprisedTexSeq.filePtr, 0x40000000,
-                                   0x800, 0);
+                                  0x800, 0);
     PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     /* The u64 identity mask is load-bearing (measured 2026-11-06); removing it
        costs the function its bytes. */
