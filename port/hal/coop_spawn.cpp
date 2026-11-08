@@ -80,7 +80,7 @@ enum : int { kNetMax = 24, kLnkMax = 8, kInMax = 48, kBlkOutMax = 16, kAckMax = 
 bool g_env = false, g_log = false, g_census_log = false;
 struct Off { bool block, red, spawn, gone, snap; } g_off = {};
 // TOTALS9 must-fail switches (SM64DS_TOTALS_OFF=redlocal,guard,coinstar): the same build with the r3 behaviour back.
-struct TOff { bool redlocal, guard, coinstar, keyview; } g_toff = {};
+struct TOff { bool redlocal, guard, coinstar, keyview, stardup; } g_toff = {};
 CoopSpawnStats g_st = {};
 bool g_registered = false;
 int g_my = -1;
@@ -178,7 +178,8 @@ void read_env() {
         g_toff.redlocal = std::strstr(o, "redlocal") != nullptr;
         g_toff.guard = std::strstr(o, "guard") != nullptr;
         g_toff.coinstar = std::strstr(o, "coinstar") != nullptr;
-        g_toff.keyview = std::strstr(o, "keyview") != nullptr;      // SMALLS9B control: the old behaviour (a watcher builds the key copy)
+        g_toff.keyview = std::strstr(o, "keyview") != nullptr;
+        g_toff.stardup = std::strstr(o, "stardup") != nullptr;      // COOPCOUNT2 control: two consoles' copies of one star both stand      // SMALLS9B control: the old behaviour (a watcher builds the key copy)
     }
     if (const char *o = std::getenv("SM64DS_SPAWN_OFF")) {
         g_off.block = std::strstr(o, "block") != nullptr;
@@ -369,6 +370,23 @@ bool register_local(char *a, int cls, unsigned param, const int pos[3], int area
             if (a) kill_quiet(a);
             if (g_log) std::fprintf(stderr, "[coopspawn] reward: seat %d's announced cls=%d is already here, my native copy removed wall=%lld\n", (int)o->origin, cls, wall_ms());
             return false;
+        }
+    }
+    // COOPCOUNT2: the same star number already came from a friend (his announce beat my native spawn): the lower seat's copy stays
+    // (see apply_spawn). A lower seat's copy here: mine goes unannounced. A higher seat's: his copy goes and mine is announced.
+    if (!g_toff.stardup && cls == 178 && a) {
+        for (Net &o : g_net) {
+            if (!o.used || o.gone || !o.remote || o.cls != 178 || (o.param & 0xff) != (param & 0xff) || !o.a || a_dead(o.a)) continue;
+            if (o.origin < g_my) {
+                kill_quiet(a);
+                if (g_log) std::fprintf(stderr, "[coopspawn] star dup: my native star %u is seat %d's (the lower seat, id %d/%d): mine removed, not announced wall=%lld\n",
+                                        param & 0xff, (int)o.origin, (int)o.origin, (int)o.counter, wall_ms());
+                return false;
+            }
+            if (g_log) std::fprintf(stderr, "[coopspawn] star dup: my native star %u is also seat %d's (id %d/%d): his copy removed here, mine stays wall=%lld\n",
+                                    param & 0xff, (int)o.origin, (int)o.origin, (int)o.counter, wall_ms());
+            kill_quiet(o.a);
+            break;
         }
     }
     Net *n = net_alloc();
@@ -765,6 +783,27 @@ void apply_spawn(int seat, const SpSpawnWire &w, unsigned now) {
             ++g_st.spawn_dup;
             if (g_log) std::fprintf(stderr, "[coopspawn] reward: seat %d's announced cls=%d (id %d/%d) is my native copy's alias wall=%lld\n", seat, (int)w.cls, (int)w.origin, (int)w.counter, wall_ms());
             return;
+        }
+    }
+    // COOPCOUNT2: ONE copy of a star per star number. Two consoles can make the same runtime star inside one message delay (two
+    // counters crossing 100 in the same frame, the same last secret coin taken on both, the fifth secret settled on two consoles):
+    // each announces its own. Every console keeps the copy of the LOWER origin seat and removes the other (a native one I made goes
+    // too; scan then tells the group it is gone, so a third console drops its copy of it). A copy already being taken stays.
+    if (!g_toff.stardup && w.cls == 178) {
+        for (Net &o : g_net) {
+            if (!o.used || o.gone || o.cls != 178 || (o.param & 0xff) != (w.param & 0xff) || o.origin == w.origin || !o.a || a_dead(o.a)) continue;
+            const bool taking = *(const unsigned *)(o.a + 0x440) == 5u && is_player_ptr(*(void *const *)(o.a + 0x438));
+            if (o.origin < w.origin || taking) {
+                ack_add(w.origin, w.counter, now);
+                ++g_st.spawn_dup;
+                if (g_log) std::fprintf(stderr, "[coopspawn] star dup: seat %d's star %u (id %d/%d) is seat %d's star %s: not built here wall=%lld\n", seat,
+                                        w.param & 0xff, (int)w.origin, (int)w.counter, (int)o.origin, taking ? "being taken" : "(the lower seat)", wall_ms());
+                return;
+            }
+            if (g_log) std::fprintf(stderr, "[coopspawn] star dup: seat %d's star %u (id %d/%d) is the lower seat's: my copy of seat %d's (id %d/%d) removed wall=%lld\n",
+                                    seat, w.param & 0xff, (int)w.origin, (int)w.counter, (int)o.origin, (int)o.origin, (int)o.counter, wall_ms());
+            kill_quiet(o.a);
+            break;
         }
     }
     Net *n = net_alloc();

@@ -157,6 +157,9 @@ unsigned g_star_frame = 0, g_star_next = 0; int g_star_tries = 0; unsigned long 
 bool g_star_done = true, g_star_spawned = false;   // SM64DS_COOP_STAR=<est frame>: the local player touches a PowerStar
 unsigned g_goto_frame = 0; int g_goto_id = -1; bool g_goto_done = false; int g_goto_tries = 0; int g_goto_dy = 0;
 int g_goto_max = 6;   // COOPCOUNT1: SM64DS_COOP_GOTO's optional 4th field, how many tries (default 6)
+// COOPCOUNT2 proof knob SM64DS_COOP_GOTO_AFTER=N: the goto waits until this console's secret leader count is at least N, so a row
+// can place a take right after a friend's take arrives (est frames start well before a joiner is in the group). Inert unless set.
+int g_goto_after = 0;
 unsigned g_place_frame = 0; int g_place_xyz[3] = {0, 0, 0}; bool g_place_on = false;   // SM64DS_COOP_PLACE (run after093, lane SEESAW1)
 int g_place_level = -1;   // SM64DS_COOP_PLACE ...:L, only in level L (run after093, lane WHOMPBACK1)
 int g_trace_id = -1; unsigned g_trace_every = 5; int g_trace_off = -1;   // SM64DS_COOP_TRACE (run after093, lane SEESAW1)
@@ -217,6 +220,7 @@ void read_env() {
         unsigned f = 0;
         if (std::sscanf(st, "%u", &f) == 1 && f > 0) { g_star_frame = f; g_star_done = false; }
     }
+    if (const char *g = std::getenv("SM64DS_COOP_GOTO_AFTER")) g_goto_after = std::atoi(g);
     if (const char *g = std::getenv("SM64DS_COOP_GOTO")) {
         unsigned f = 0; int id = 0;
         int dy = 0, tries = 6;   // F:class[:dy[:tries]]  dy units above the actor: the player drops onto it (a stomp)
@@ -356,6 +360,9 @@ bool coins_off() { static const bool off = [] { const char *e = std::getenv("SM6
 // console as well as on the one whose pickup crossed it).
 bool coins_native() { static const bool n = [] { const char *e = std::getenv("SM64DS_COOP_COINS"); return e && !std::strcmp(e, "native"); }(); return n; }
 unsigned long long g_coin_credits = 0, g_coin_total = 0;
+// COOPCOUNT2: coins a raise to the group's count already gave me, not yet matched by a friend's death bit (see coin_tick).
+int g_coin_unpaid = 0;
+unsigned long long g_coin_paid = 0;
 void credit_remote_coins(int w, unsigned fresh) {
     if (coins_off() || !g_sync) return;
     const int me = (int)data_0209f250;
@@ -368,13 +375,23 @@ void credit_remote_coins(int w, unsigned fresh) {
         if (*(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2) continue;      // already going
         const int ty = *(const int *)(a + 0x3a0);
         const int v = ty == 1 ? 2 : ty == 2 ? 5 : 1;
-        int n = (int)data_0209f358[me] + v;
+        // COOPCOUNT2: a raise that came first already counted this coin (its count message beat its death bit, or the death bit was
+        // lost and came back in the 1 Hz full bitmap): it pays off that raise instead of adding again.
+        const int paid = coins_native() ? 0 : (v < g_coin_unpaid ? v : g_coin_unpaid);
+        if (paid > 0) {
+            g_coin_unpaid -= paid; g_coin_paid += (unsigned)paid;
+            if (g_log)
+                std::fprintf(stderr, "[coop] coin credit cls=%u slot=%d type=%d paid %d of a raise (owed now %d) count=%d wall=%lld\n", cls,
+                             (int)slot, ty, paid, g_coin_unpaid, (int)data_0209f358[me] + v - paid, wall_ms());
+            if (paid == v) continue;
+        }
+        int n = (int)data_0209f358[me] + v - paid;
         if (n > 0xff) n = 0xff;
         if (coins_native()) { GiveCoins(me, v); n = (int)data_0209f358[me]; }
         else data_0209f358[me] = (short)n;
         ++g_coin_credits; g_coin_total += (unsigned)v;
         if (g_log)
-            std::fprintf(stderr, "[coop] coin credit cls=%u slot=%d type=%d +%d count=%d wall=%lld\n", cls, (int)slot, ty, v, n, wall_ms());
+            std::fprintf(stderr, "[coop] coin credit cls=%u slot=%d type=%d +%d count=%d wall=%lld\n", cls, (int)slot, ty, v - paid, n, wall_ms());
     }
 }
 
@@ -1205,7 +1222,7 @@ int g_coin_group = 0;            // the highest count a member of my group told 
 bool g_coin_star = false;        // a member's 100-coin star is out
 unsigned g_coin_sent_t = 0; int g_coin_sent_v = -1, g_coin_seen_v = -1;
 unsigned long long g_coin_sends = 0, g_coin_recvs = 0, g_coin_raises = 0;
-void coin_reset() { g_coin_group = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1; }
+void coin_reset() { g_coin_group = 0; g_coin_unpaid = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1; }
 int my_coin_count() {
     const int me = (int)data_0209f250;
     return (me >= 0 && me < 4) ? (int)data_0209f358[me] : 0;
@@ -1231,6 +1248,7 @@ void coin_tick(unsigned now) {
     if (g_coin_group > (int)data_0209f358[me]) {
         std::fprintf(stderr, "[coop] coin count: the group has %d, mine was %d: took %d wall=%lld\n", g_coin_group,
                      (int)data_0209f358[me], g_coin_group, wall_ms());
+        g_coin_unpaid += g_coin_group - (int)data_0209f358[me];   // COOPCOUNT2: owed to the death bits still on their way
         data_0209f358[me] = (short)g_coin_group;
         ++g_coin_raises;
     }
@@ -1243,18 +1261,21 @@ void coin_tick(unsigned now) {
         send_coin_count(now);
 }
 
-enum : int { kSecretCls = 329, kScLeaderUid = 0x108, kScRole = 0x10f, kScCount = 0x110,
+enum : int { kSecretCls = 329, kScLeaderUid = 0x108, kScRole = 0x10f, kScCount = 0x110, kScTimer = 0x113,
              kScClsnFlags = 0xd4 + 0x18, kSecMax = 16 };
-struct SecTaken { uint16_t slot; bool here; };
+// COOPCOUNT2: mine = my player took it (I resend it once a second); seat / cnt = who took it and the leader count his console saw at the
+// take (cnt 0: not known yet), for the rule below when two takes reach five together.
+struct SecTaken { uint16_t slot; bool here; bool mine; int8_t seat; uint8_t cnt; };
 SecTaken g_sec[kSecMax]; int g_sec_n = 0;
 int g_sec_count = 0;                     // the leader's count as last seen here
 short g_sec_prev[kSecMax]; int g_sec_prev_n = 0;
 unsigned g_sec_push_at = 0; int g_sec_push_left = 0;
-void sec_reset() { g_sec_n = 0; g_sec_count = 0; g_sec_prev_n = 0; g_sec_push_left = 0; }
+unsigned g_sec_resend_t = 0;
+void sec_reset() { g_sec_n = 0; g_sec_count = 0; g_sec_prev_n = 0; g_sec_push_left = 0; g_sec_resend_t = 0; }
 SecTaken *sec_find(int slot) { for (int i = 0; i < g_sec_n; ++i) if (g_sec[i].slot == slot) return &g_sec[i]; return nullptr; }
 SecTaken *sec_note(int slot, bool here) {
     SecTaken *t = sec_find(slot);
-    if (!t && g_sec_n < kSecMax) { t = &g_sec[g_sec_n++]; t->slot = (uint16_t)slot; t->here = false; }
+    if (!t && g_sec_n < kSecMax) { t = &g_sec[g_sec_n++]; t->slot = (uint16_t)slot; t->here = false; t->mine = false; t->seat = -1; t->cnt = 0; }
     if (t && here) t->here = true;
     return t;
 }
@@ -1268,8 +1289,10 @@ void sec_send(int slot, int count) {
     w.key = wire_key(g_key); w.slot = (uint16_t)slot; w.count = (uint8_t)count;
     send_kind(kHubTagCoopWorld, kWorldSecret, &w, (int)sizeof w);
 }
-// Collect's effect on my copy of the coin in `slot`, without its jingle and number. False when it cannot run yet.
-bool sec_apply(int slot, int seat) {
+bool sec_took_any() { for (int i = 0; i < g_sec_n; ++i) if (g_sec[i].mine) return true; return false; }
+// Collect's effect on my copy of the coin in `slot`, without its jingle and number. False when it cannot run yet. `their` is the leader
+// count the taker's console saw at the take (0: not known).
+bool sec_apply(int slot, int seat, int their) {
     char *a = live_slot(kSecretCls, slot);
     if (!a || going(a)) return false;
     if (*(const unsigned *)(a + kScClsnFlags) & 1u) return true;          // already collected here
@@ -1283,10 +1306,17 @@ bool sec_apply(int slot, int seat) {
     // The fifth taken elsewhere: no star timer here. The collector's console spawns the star and coop_spawn announces it
     // (it is a runtime star, not linked to a placed marker), so every console gets that one star and none makes its own.
     // A leader at 5 removes itself in its Behavior.
-    if (*(const unsigned char *)(a + kScRole) == 2) _ZN7fBase_c18MarkForDestructionEv(a);
+    // COOPCOUNT2: unless that console never saw five. Two takes inside one message delay (the 4th and the 5th, or a lost message
+    // and a take) leave each taker at four after his own take, so neither Collect started the timer. Then the lower seat of two
+    // takers starts Collect's 30-frame timer on this coin (d_a_s_coin.cpp: the fifth's mDeathTimer = 0x1e, Behavior spawns the
+    // star at 0), the higher seat does not: every console of the pair reaches five here, and exactly one of them makes the star.
+    const bool make = cnt == 5 && their > 0 && their < 5 && seat > g_my && sec_took_any();
+    if (make) *(unsigned char *)(a + kScTimer) = 0x1e;
+    else if (*(const unsigned char *)(a + kScRole) == 2) _ZN7fBase_c18MarkForDestructionEv(a);
     g_sec_count = cnt;
-    std::fprintf(stderr, "[coop] secret: slot %d taken by seat %d, removed here; leader count now %d%s wall=%lld\n", slot, seat,
-                 (int)cnt, cnt == 5 ? " (the fifth: the collector's console makes the star)" : "", wall_ms());
+    std::fprintf(stderr, "[coop] secret: slot %d taken by seat %d (its count %d), removed here; leader count now %d%s wall=%lld\n", slot,
+                 seat, their, (int)cnt, make ? " (the fifth, no console saw five on its own take: I am the lower taker, I make the star)"
+                 : cnt == 5 ? " (the fifth: the collector's console makes the star)" : "", wall_ms());
     return true;
 }
 void watch_secrets(unsigned now) {
@@ -1308,7 +1338,8 @@ void watch_secrets(unsigned now) {
             if (s < 0 || s >= kCoopSlots || !(*(const unsigned *)(a + kScClsnFlags) & 1u)) continue;
             const SecTaken *t = sec_find(s);
             if (t && t->here) continue;
-            sec_note(s, true); --n;
+            if (SecTaken *m = sec_note(s, true)) { m->mine = true; m->seat = (int8_t)g_my; m->cnt = (uint8_t)L; }
+            --n;
             if (g_grp.others() > 0) sec_send(s, L);
             std::fprintf(stderr, "[coop] secret: I took slot %d (leader count %d): told the group wall=%lld\n", (int)s, L, wall_ms());
         }
@@ -1318,7 +1349,8 @@ void watch_secrets(unsigned now) {
             for (int j = 0; j < nl; ++j) if (live[j] == s) still = true;
             const SecTaken *t = sec_find(s);
             if (still || (t && t->here)) continue;
-            sec_note(s, true); --n;
+            if (SecTaken *m = sec_note(s, true)) { m->mine = true; m->seat = (int8_t)g_my; m->cnt = (uint8_t)L; }
+            --n;
             if (g_grp.others() > 0) sec_send(s, L);
             std::fprintf(stderr, "[coop] secret: I took slot %d (leader count %d, gone this frame): told the group wall=%lld\n", (int)s, L,
                          wall_ms());
@@ -1329,7 +1361,13 @@ void watch_secrets(unsigned now) {
     // what the group took that stands here (I came in later, or the message came before my coins)
     if ((g_est_frames % 10) == 0)
         for (int i = 0; i < g_sec_n; ++i)
-            if (!g_sec[i].here && sec_apply(g_sec[i].slot, -1)) g_sec[i].here = true;
+            if (!g_sec[i].here && sec_apply(g_sec[i].slot, g_sec[i].seat, g_sec[i].cnt)) g_sec[i].here = true;
+    // COOPCOUNT2: my own takes again once a second while friends are here, so a lost "took a secret" heals (a repeat is a no-op
+    // on a console that has it: the coin's collider flag is already set, or the slot is already noted as here)
+    if (g_grp.others() > 0 && (unsigned)(now - g_sec_resend_t) >= kFullMs) {
+        g_sec_resend_t = now;
+        for (int i = 0; i < g_sec_n; ++i) if (g_sec[i].mine) sec_send(g_sec[i].slot, g_sec[i].cnt);
+    }
     // a member joined: send him the taken ones, kGonePushes rounds 700 ms apart
     if (g_sec_push_left > 0 && g_sec_n && (int)(now - g_sec_push_at) >= 0) {
         if (g_grp.others() == 0) { g_sec_push_left = 0; return; }
@@ -1646,8 +1684,9 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         g_heard[seat] = comms_hub_now_ms() | 1u;
         if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
         SecTaken *t = sec_note((int)w.slot, false);
+        if (t && t->seat < 0) { t->seat = (int8_t)seat; t->cnt = w.count; }
         if (t && !t->here) {
-            if (sec_apply((int)w.slot, seat)) t->here = true;
+            if (sec_apply((int)w.slot, t->seat, t->cnt)) t->here = true;
             else if (g_log) std::fprintf(stderr, "[coop] secret: slot %d taken by seat %d (its count %d), no copy here yet: kept\n",
                                          (int)w.slot, seat, (int)w.count);
         }
@@ -2172,7 +2211,8 @@ void tick_est(unsigned now) {
     const bool knobs_on = coop_boot_ticking();     // not during a new file's opening or a boot barrier
     for (int i = 0; knobs_on && i < g_nkill; ++i)
         if (!g_kill[i].done && g_est_frames >= g_kill[i].frame) { g_kill[i].done = true; knob_kill(g_kill[i]); }
-    if (g_goto_id >= 0 && g_goto_tries < g_goto_max && g_est_frames >= g_goto_frame + 90u * (unsigned)g_goto_tries) knob_goto(g_goto_id, g_goto_tries++);
+    if (g_goto_id >= 0 && g_goto_tries < g_goto_max && g_est_frames >= g_goto_frame + 90u * (unsigned)g_goto_tries &&
+        g_sec_count >= g_goto_after) knob_goto(g_goto_id, g_goto_tries++);
     if (knobs_on && !g_star_done && g_est_frames >= g_star_frame) knob_star();
     if (knobs_on && g_place_on && g_est_frames >= g_place_frame && (g_place_level < 0 || (int)data_0209f2f8 == g_place_level)) {
         g_place_on = false;
