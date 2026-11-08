@@ -13051,47 +13051,47 @@
     },
     "ov002:0x020b1008": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1008Ev"
+      "name": "_ZN8daCoin_c11LinkToBlockEv"
     },
     "ov002:0x020b10a0": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b10a0Ev"
+      "name": "_ZN8daCoin_c15KillIfCollectedEv"
     },
     "ov002:0x020b10e4": {
       "author": "aitddlabs",
-      "name": "_ZN8daCoin_c19func_ov002_020b10e4Ev"
+      "name": "_ZN8daCoin_c10ProbeFloorEv"
     },
     "ov002:0x020b12ec": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b12ecEv"
+      "name": "_ZN8daCoin_c17CheckInYoshiMouthEv"
     },
     "ov002:0x020b1328": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1328Ev"
+      "name": "_ZN8daCoin_c14FindStarMarkerEv"
     },
     "ov002:0x020b1384": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1384Ev"
+      "name": "_ZN8daCoin_c13BounceOffWallEv"
     },
     "ov002:0x020b13e0": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b13e0Ev"
+      "name": "_ZN8daCoin_c4StepEv"
     },
     "ov002:0x020b14d8": {
       "author": "andrewboudreau",
-      "name": "_ZN8daCoin_c19func_ov002_020b14d8Ev"
+      "name": "_ZN8daCoin_c17UpdateModelMatrixEv"
     },
     "ov002:0x020b1674": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1674EP6Player"
+      "name": "_ZN8daCoin_c15CollectBlueCoinEP7daPly_c"
     },
     "ov002:0x020b16c4": {
       "author": "ruspecial",
-      "name": "_ZN8daCoin_c19func_ov002_020b16c4EP6Player"
+      "name": "_ZN8daCoin_c14CollectRedCoinEP7daPly_c"
     },
     "ov002:0x020b1884": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1884EP6Player"
+      "name": "_ZN8daCoin_c17CollectYellowCoinEP7daPly_c"
     },
     "ov002:0x020b18f0": {
       "author": "lunavyqo",
@@ -13099,35 +13099,35 @@
     },
     "ov002:0x020b19dc": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b19dcEv"
+      "name": "_ZN8daCoin_c14CheckPlayerHitEv"
     },
     "ov002:0x020b1a60": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1a60Ev"
+      "name": "_ZN8daCoin_c17StateFollowTargetEv"
     },
     "ov002:0x020b1ad4": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1ad4Ev"
+      "name": "_ZN8daCoin_c21StateLaunchNearPlayerEv"
     },
     "ov002:0x020b1bfc": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b1bfcEv"
+      "name": "_ZN8daCoin_c23StateSlideAwayFromMarioEv"
     },
     "ov002:0x020b1cc0": {
       "author": "ruspecial",
-      "name": "_ZN8daCoin_c19func_ov002_020b1cc0Ev"
+      "name": "_ZN8daCoin_c11StateBounceEv"
     },
     "ov002:0x020b2070": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b2070Ev"
+      "name": "_ZN8daCoin_c9StateRestEv"
     },
     "ov002:0x020b20b4": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b20b4Ev"
+      "name": "_ZN8daCoin_c9StateIdleEv"
     },
     "ov002:0x020b2150": {
       "author": "tangosdev",
-      "name": "_ZN8daCoin_c19func_ov002_020b2150Ev"
+      "name": "_ZN8daCoin_c9StateDropEv"
     },
     "ov002:0x020b2198": {
       "author": "lunavyqo",

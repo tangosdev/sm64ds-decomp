@@ -73,7 +73,7 @@ struct daCoin_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;            /* 0x1ac */
     Matrix4x3 mShadowMat;        /* 0x368 */
     s32 mFloorPosY;            /* 0x398 */
-    /* Read only by func_ov002_020b1a60, which copies that actor's position
+    /* Read only by StateFollowTarget, which copies that actor's position
        (raised by 0xc8000) into the coin every frame. Written by
        dActor_c::GivePlayerCoins, which points it at the player it pays. */
     dActor_c *mFollowTarget;            /* 0x39c */
@@ -94,7 +94,7 @@ struct daCoin_c : dActor_c {
        gates Render entirely; Behavior tests bits 0 and 1. InitResources'
        three masked stores keep a `*(u8 *)((int)&mCoinFlags)` launder. */
     u8  mCoinFlags;            /* 0x3ae */
-    /* Set to 1 by func_ov002_020b1008 once it has looked for a BLOCK_L
+    /* Set to 1 by LinkToBlock once it has looked for a BLOCK_L
        actor near a red coin, so the search runs one time. */
     u8  mBlockScanned;            /* 0x3af */
     u8  mInBrickBlock;            /* 0x3b0 */
@@ -110,26 +110,27 @@ struct daCoin_c : dActor_c {
 
     /* Per-frame helpers and the nine state handlers the behavior table
      * (data_ov002_0210dc70) dispatches through. The ROM names no symbol for
-     * them; the address stays in the identifier. */
-    void func_ov002_020b1008();
-    int func_ov002_020b10a0();
-    void func_ov002_020b10e4();
-    int func_ov002_020b12ec();
-    daStarBase_c *func_ov002_020b1328();
-    void func_ov002_020b1384();
-    void func_ov002_020b13e0();
-    void func_ov002_020b14d8();
-    void func_ov002_020b1674(daPly_c *player);
-    void func_ov002_020b16c4(daPly_c *player);
-    void func_ov002_020b1884(daPly_c *player);
-    int func_ov002_020b19dc();
-    void func_ov002_020b1a60();
-    void func_ov002_020b1ad4();
-    void func_ov002_020b1bfc();
-    void func_ov002_020b1cc0();
-    void func_ov002_020b2070();
-    void func_ov002_020b20b4();
-    void func_ov002_020b2150();
+     * them: Step and StateSlideAwayFromMario follow the N64 coin_step and
+     * blue_coin_sliding_away_from_mario, the rest are coined or in-tree. */
+    void LinkToBlock();
+    int KillIfCollected();
+    void ProbeFloor();
+    int CheckInYoshiMouth();
+    daStarBase_c *FindStarMarker();
+    void BounceOffWall();
+    void Step();
+    void UpdateModelMatrix();
+    void CollectBlueCoin(daPly_c *player);
+    void CollectRedCoin(daPly_c *player);
+    void CollectYellowCoin(daPly_c *player);
+    int CheckPlayerHit();
+    void StateFollowTarget();
+    void StateLaunchNearPlayer();
+    void StateSlideAwayFromMario();
+    void StateBounce();
+    void StateRest();
+    void StateIdle();
+    void StateDrop();
 };
 
 #ifndef SM64DS_PLATFORM_PC
