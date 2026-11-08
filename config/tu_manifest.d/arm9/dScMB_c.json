@@ -106,7 +106,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "func_02034fbc",
+      "symbol": "LoadMultiBootResources",
       "address": "0x02034fbc",
       "size": "0x000000b0",
       "legacy_source": "src/func_02034fbc.c",

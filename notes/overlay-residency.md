@@ -216,7 +216,7 @@ independently. Where exactly one candidate is unflagged:
 
 - `_ZN24daPropeller_Heyho_Fire_c13InitResourcesEv` `0x0211d610` -> **[ov065](../config/arm9/overlays/ov065/symbols.txt)** ([ov075](../config/arm9/overlays/ov075/symbols.txt)'s is flagged)
 - `func_0201a458` `0x0211d9c0` -> **[ov065](../config/arm9/overlays/ov065/symbols.txt)**; `0x02140d80` -> **[ov100](../config/arm9/overlays/ov100/symbols.txt)** (which is what
-  `func_02034fbc` loads immediately before calling it)
+  `LoadMultiBootResources` loads immediately before calling it)
 - `func_02029408` `0x020bd828` -> **[ov002](../config/arm9/overlays/ov002/symbols.txt)** `_ZN7daPly_c8CanPauseEv`**
 
 That is weaker than residency and is deliberately **not** wired into the tool. It
@@ -230,7 +230,7 @@ structure problem, not a lookup.
 
 ## 10. A misnaming found on the way
 
-`overlay_64` and `overlay_66` in [src/func_ov007_020cc2cc.c](../config/arm9/overlays/ov007/symbols.txt) and `dScEntry_c::EnterQuit` in [src/game/stages/d_s_entry_methods.cpp](../src/game/stages/d_s_entry_methods.cpp) are **overlay ids 100 and 102**: the literals in the ROM are `0x64` and `0x66` and whoever named them wrote the hex digits as decimal. `func_02034fbc` in [src/game/stages/d_s_mb.cpp](../src/game/stages/d_s_mb.cpp) now names `overlay_100` and `overlay_102`.
+`overlay_64` and `overlay_66` in [src/func_ov007_020cc2cc.c](../config/arm9/overlays/ov007/symbols.txt) and `dScEntry_c::EnterQuit` in [src/game/stages/d_s_entry_methods.cpp](../src/game/stages/d_s_entry_methods.cpp) are **overlay ids 100 and 102**: the literals in the ROM are `0x64` and `0x66` and whoever named them wrote the hex digits as decimal. `LoadMultiBootResources` in [src/game/stages/d_s_mb.cpp](../src/game/stages/d_s_mb.cpp) now names `overlay_100` and `overlay_102`.
 `overlay_75` next to them is genuine decimal 75 (`0x4b`), so the convention is not
 even consistent. Taken literally, [ov064](../config/arm9/overlays/ov064/symbols.txt) and [ov066](../config/arm9/overlays/ov066/symbols.txt) overlap and `LoadOverlay` would `Crash()`; [ov100](../config/arm9/overlays/ov100/symbols.txt) and [ov102](../config/arm9/overlays/ov102/symbols.txt) do not. Renaming them is a separate, easy change.
 

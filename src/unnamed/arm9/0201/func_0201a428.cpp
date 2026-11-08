@@ -4,7 +4,7 @@
 extern "C" {
 
 /* func_0201a458 -- create the root heap over 0x0211d9c0..0x02140d80, store it in
- * data_0209d524 and return it, like func_0201a3e4. Both callers (func_02034fbc in
+ * data_0209d524 and return it, like func_0201a3e4. Both callers (LoadMultiBootResources in
  * d_s_mb.cpp and dScDSMT_c's result-6 path) use the returned heap, then load
  * overlays 100 and 102, and 0x02140d80 is where ov100 is
  * loaded, so the heap ends at OV100_TEXT_START. 0x0211d9c0 is where ov075 ends
