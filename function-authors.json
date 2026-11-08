@@ -18823,31 +18823,31 @@
     },
     "ov003:0x020adec0": {
       "author": "tangosdev",
-      "name": "func_ov003_020adec0"
+      "name": "_ZN12dScStarSel_c16GetCharacterSlotEj"
     },
     "ov003:0x020adf50": {
       "author": "tangosdev",
-      "name": "func_ov003_020adf50"
+      "name": "_ZN12dScStarSel_c18GetCursorCharacterEv"
     },
     "ov003:0x020adfc8": {
       "author": "tangosdev",
-      "name": "func_ov003_020adfc8"
+      "name": "_ZN12dScStarSel_c15RenderCoinScoreEv"
     },
     "ov003:0x020ae0b0": {
       "author": "andrewboudreau",
-      "name": "func_ov003_020ae0b0"
+      "name": "_ZN12dScStarSel_c15RenderStarCountEv"
     },
     "ov003:0x020ae1a4": {
       "author": "andrewboudreau",
-      "name": "func_ov003_020ae1a4"
+      "name": "_ZN12dScStarSel_c15CalculateDigitsEi"
     },
     "ov003:0x020ae238": {
       "author": "tangosdev",
-      "name": "func_ov003_020ae238"
+      "name": "_ZN12dScStarSel_c15RenderLifeCountEv"
     },
     "ov003:0x020ae358": {
       "author": "tangosdev",
-      "name": "func_ov003_020ae358"
+      "name": "_ZN12dScStarSel_c21UpdateCharacterSelectEv"
     },
     "ov003:0x020ae6f0": {
       "author": "tangosdev",

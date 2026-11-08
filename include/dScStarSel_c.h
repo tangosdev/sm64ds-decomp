@@ -20,10 +20,10 @@
  * shared "construct N elements of size S" helper, __cxa_vec_ctor(p+0x64, 2,
  * 0x50, dExtSimpleModel_c::dExtSimpleModel_c, dExtSimpleModel_c::~dExtSimpleModel_c) -- two dExtSimpleModel_c objects (include/dExtSimpleModel_c.h,
  * itself confirmed sizeof(dExtSimpleModel_c) == 0x50) back to back at 0x064..0x104.
- * The matching destructor (func_ov003_020addfc / _020ade54) tears the same
+ * The matching destructor (D1 0x020addfc / D0 0x020ade54) tears the same
  * range down with __cxa_vec_cleanup(p+0x64, 2, 0x50, dExtSimpleModel_c::~dExtSimpleModel_c) before
  * calling fBase_c's D2 -- two independent witnesses agreeing on both count
- * and stride. InitResources (func_ov003_020af8a0) confirms the same two
+ * and stride. InitResources (0x020af8a0) confirms the same two
  * offsets from the other side: it calls dExtSimpleModel_c::LoadAndSetFile at arg0+0x64
  * and arg0+0xB4 (0x64 + 0x50), i.e. models[0] and models[1].
  *
@@ -37,9 +37,9 @@
  * VTABLE ORDER follows dScene_c's (unchanged slot indices; dScStarSel_c
  * adds no new virtual). The destructor pair is at slots 16/17, same
  * convention as dScEntry_c and every other fBase_c-family class
- * (dScene_c.h/dScEntry_c.h): func_ov003_020addfc (D1) tears down the dExtSimpleModel_c
+ * (dScene_c.h/dScEntry_c.h): D1 (0x020addfc) tears down the dExtSimpleModel_c
  * pair then writes dScene_c's/dBase_c's vptrs before fBase_c::~fBase_c;
- * func_ov003_020ade54 (D0) does the same then calls
+ * D0 (0x020ade54) does the same then calls
  * Memory::Deallocate(this, GAME_HEAP_PTR) -- dScStarSel_c declares no
  * operator delete of its own, so this finds dScene_c's inline copy on its
  * immediate base, same as dScEntry_c.
@@ -95,7 +95,7 @@ struct dScStarSel_c : dScene_c {
     /* x of plate i's number and its bottom-screen star icon. Runtime (EU,
        blinded 12/12); the 3D stars are centred by index and do not follow it. */
     u8 mPlateX[7]; /* 0x11a */
-    s8 mDigits[3]; /* 0x121 -- func_ov003_020ae1a4's digits, -1 = blank */
+    s8 mDigits[3]; /* 0x121 -- CalculateDigits's output, -1 = blank */
     u8 mCharX[3];  /* 0x124 -- per character, in the strip */
     u8 pad_127;
     u8 mCharY[3]; /* 0x128 */
@@ -143,16 +143,17 @@ struct dScStarSel_c : dScene_c {
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
 
-    /* Non-virtual. The address is the method name; no new vtable slot. Every
-       inbound call in the class's run passes this, and every access in each
-       body is a this-relative field of this class. */
-    s32  func_ov003_020adec0(u32 chr);
-    s32  func_ov003_020adf50();
-    void func_ov003_020adfc8();
-    void func_ov003_020ae0b0();
-    void func_ov003_020ae1a4(s32 value);
-    void func_ov003_020ae238();
-    void func_ov003_020ae358();
+    /* Non-virtual; no new vtable slot. Every inbound call in the class's run
+       passes this, and every access in each body is a this-relative field of
+       this class. The names are coined from the bodies; the three counters and
+       the digit splitter follow dMeter_c's Render*Count and CalculateDigits. */
+    s32 GetCharacterSlot(u32 chr);   /* 0x020adec0 */
+    s32 GetCursorCharacter();        /* 0x020adf50 */
+    void RenderCoinScore();          /* 0x020adfc8 */
+    void RenderStarCount();          /* 0x020ae0b0 */
+    void CalculateDigits(s32 value); /* 0x020ae1a4 */
+    void RenderLifeCount();          /* 0x020ae238 */
+    void UpdateCharacterSelect();    /* 0x020ae358 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

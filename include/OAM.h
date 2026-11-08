@@ -92,6 +92,16 @@ struct OAM {
     static OamAttr SMALL_STAR_EMPTY;
     static OamAttr TINY_STAR;
     static OamAttr BOUNCING_ARROW;
+    /* The star-select screen's sub-screen sprites (dScStarSel_c::Render). The
+       PLAYER_SELECT_ faces draw the d_2d_player_select_<name>_8bit graphics that
+       InitResources loads for the same character; the pointers mark the
+       highlighted star (down) and the character strip or face (right). */
+    static OamAttr PLAYER_SELECT_MARIO;
+    static OamAttr PLAYER_SELECT_LUIGI;
+    static OamAttr PLAYER_SELECT_WARIO;
+    static OamAttr PLAYER_SELECT_YOSHI;
+    static OamAttr POINTER_DOWN;
+    static OamAttr POINTER_RIGHT;
     static OamAttr ARROW_POINTING_LEFT;
     static OamAttr ARROW_POINTING_RIGHT;
     static OamAttr SMALL_ARROW_POINTING_LEFT;

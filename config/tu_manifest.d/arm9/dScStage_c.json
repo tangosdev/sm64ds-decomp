@@ -1372,7 +1372,7 @@
       "address": "0x0209f2f4",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "s8. Read here by GiveLives, HitDeathPlane, KillPlayer and SetPlayerGlobals. Read outside this TU by dMeter_c::RenderLifeCount and dScStarSel_c::func_ov003_020ae238 (ov002, ov003), so global."
+      "evidence": "s8. Read here by GiveLives, HitDeathPlane, KillPlayer and SetPlayerGlobals. Read outside this TU by dMeter_c::RenderLifeCount and dScStarSel_c::RenderLifeCount (ov002, ov003), so global."
     },
     {
       "symbol": "gCurrentSublevel",
