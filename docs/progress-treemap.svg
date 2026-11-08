@@ -5077,7 +5077,7 @@ matched: yes</title></rect><rect x="272.90" y="444.53" width="17.66" height="15.
 module: arm9
 addr: 0x02037024
 size: 396 bytes
-matched: yes</title></rect><rect x="290.56" y="444.53" width="3.39" height="15.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10dBgCh_Actr13func_020371b0Ei
+matched: yes</title></rect><rect x="290.56" y="444.53" width="3.39" height="15.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10dBgCh_Actr14CommitFloorHitEi
 module: arm9
 addr: 0x020371b0
 size: 76 bytes
@@ -5445,15 +5445,15 @@ matched: yes</title></rect><rect x="165.03" y="465.93" width="3.64" height="2.21
 module: arm9
 addr: 0x02038228
 size: 12 bytes
-matched: yes</title></rect><rect x="168.67" y="465.93" width="30.31" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02038234
+matched: yes</title></rect><rect x="168.67" y="465.93" width="30.31" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>dBgS_RideCallBack
 module: arm9
 addr: 0x02038234
 size: 100 bytes
-matched: yes</title></rect><rect x="198.97" y="465.93" width="42.43" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02038298
+matched: yes</title></rect><rect x="198.97" y="465.93" width="42.43" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>dBgS_ChkPolySafe
 module: arm9
 addr: 0x02038298
 size: 140 bytes
-matched: yes</title></rect><rect x="241.41" y="465.93" width="58.19" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02038324
+matched: yes</title></rect><rect x="241.41" y="465.93" width="58.19" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>dBgS_MoveBgCrrPos
 module: arm9
 addr: 0x02038324
 size: 192 bytes
