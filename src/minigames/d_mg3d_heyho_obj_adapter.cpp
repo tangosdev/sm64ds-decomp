@@ -39,6 +39,7 @@
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "SharedFilePtr.h"
 #include "dMgJump3DMario_c.h"
 #include "Heyho.h"
@@ -79,10 +80,10 @@ Heyho::~Heyho() {
 struct BMD_File; struct BCA_File;
 extern HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile;
 extern HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile;
-/* data_0209f5c0 is the current scene. This TU does not include
+/* gCurrentScene is the running scene. This TU does not include
  * include/fBase_c.h, so fBaseView reads it up to actorID. */
 struct fBase_c;
-extern fBase_c *data_0209f5c0;
+extern fBase_c *gCurrentScene;
 struct fBaseView {
     u8 pad_00[0xc];
     u16 actorID; /* 0x0c */
@@ -104,7 +105,7 @@ extern "C" int Heyho_LoadResources(char *c) {
     HEYHO(c)->mAnmModel.SetAnim(a, 0, 0x800, 0);
     func_02016acc(&HEYHO(c)->mAnmModel, 1u);
     func_02016b24(&HEYHO(c)->mAnmModel, 2);
-    int b = (((fBaseView *)data_0209f5c0)->actorID == 0x175);
+    int b = (((fBaseView *)gCurrentScene)->actorID == 0x175);
     if (b != 0) {
         func_02016a14((char *)&HEYHO(c)->mAnmModel, 0x7fff);
         func_02016a04((char *)&HEYHO(c)->mAnmModel, 0x7d40);
@@ -489,7 +490,6 @@ void Heyho_StartMotionHover(char *p) {
 /* ---- Heyho_MotionHover ---- */
 namespace n020c6378 {
 extern "C" {
-extern s16 data_02082214[];
 extern void Heyho_CheckHitB(void* this_);
 
 void Heyho_MotionHover(int this_) {
@@ -498,12 +498,12 @@ void Heyho_MotionHover(int this_) {
        +0xac field addresses (the cartridge re-issues ldrh r2,[r0,#0xea] /
        ldr r1,[r0,#0xac]). With typed member reads it no longer changes the
        code (reading through HEYHO(this_) with `ro` still declared is
-       byte-identical), but dropping the `ro` local renumbers the TU's @NNN
-       labels (@1351 -> @1349), so it stays. */
+       byte-identical), but dropping the `ro` local shifts the TU's two
+       trailing .bss compiler labels down by one, so it stays. */
     const Heyho *ro = (const Heyho *)this_;
     HEYHO(this_)->mPhase += 0x200;
     HEYHO(this_)->mVel.x = 0;
-    HEYHO(this_)->mVel.y = data_02082214[((u16)ro->mPhase >> 4) * 2] >> 3;
+    HEYHO(this_)->mVel.y = FX_SinIdx((u16)ro->mPhase >> 4) >> 3;
     HEYHO(this_)->mPos.y += ro->mVel.y;
     Heyho_CheckHitB((void*)this_);
 }
@@ -532,14 +532,13 @@ extern "C" {
 /* local extern: helper namespaces in this TU retain differing legacy spellings. */
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Heyho_CheckHitB(void* c);
-extern short data_02082214[];
 
 void Heyho_MotionPatrolBob(char *c) {
     int v, w;
     HEYHO(c)->mPhase += 0x200;
     {
         int a = (unsigned short)HEYHO(c)->mPhase >> 4;
-        HEYHO(c)->mVel.y = data_02082214[a * 2] >> 3;
+        HEYHO(c)->mVel.y = FX_SinIdx(a) >> 3;
     }
     AddVec3(&HEYHO(c)->mPos, &HEYHO(c)->mVel, &HEYHO(c)->mPos);
     v = HEYHO(c)->mVel.x;
@@ -1336,20 +1335,16 @@ namespace n020c4e8c {
 extern "C" {
 int D3D_PlaySeAtX(int a, int b);
 void Heyho_Settle(char* c);
-extern short data_02082214[];
 
 void Heyho_MotionHitSpin(char *c) {
     if (HEYHO(c)->mPhase < 0x4000) {
         short *p = &HEYHO(c)->mPhase;
-        short* tbl = data_02082214;
-        int ang, idx, idx1, r0;
+        int ang, r0;
         *p = *p + 0x400;
         ang = (unsigned short)HEYHO(c)->mPhase >> 4;
-        idx = ang * 2;
-        idx1 = idx + 1;
-        r0 = FX_MUL((tbl[idx] >> 1) + 0x1000, 0x1400);
+        r0 = FX_MUL((FX_SinIdx(ang) >> 1) + 0x1000, 0x1400);
         HEYHO(c)->mScale.x = r0;
-        HEYHO(c)->mScale.y = FX_MUL((tbl[idx1] >> 1) + 0x800, 0x1400);
+        HEYHO(c)->mScale.y = FX_MUL((FX_CosIdx(ang) >> 1) + 0x800, 0x1400);
         HEYHO(c)->mScale.z = r0;
         return;
     }

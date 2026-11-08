@@ -584,8 +584,8 @@ extern "C" void TrmpItem_ReflectOffLine(char *item, Obj *jumper) {
     }
 
     {
-        int maxYVelocity = sTrmp2RiseSpeedMax[0];
-        int minYVelocity = sTrmp2FallSpeed[0];
+        int maxYVelocity = sTrmp2RiseSpeedMax;
+        int minYVelocity = sTrmp2FallSpeed;
         int y = velocity->y;
         if (y >= minYVelocity) {
             if (y <= maxYVelocity)

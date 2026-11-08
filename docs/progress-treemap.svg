@@ -1957,7 +1957,7 @@ matched: yes</title></rect><rect x="91.43" y="162.45" width="4.53" height="8.88"
 module: arm9
 addr: 0x02015560
 size: 60 bytes
-matched: yes</title></rect><rect x="95.97" y="162.45" width="24.18" height="8.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dClipper13Func_0201559CEv
+matched: yes</title></rect><rect x="95.97" y="162.45" width="24.18" height="8.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dClipper19UpdateFrustumPlanesEv
 module: arm9
 addr: 0x0201559c
 size: 320 bytes
@@ -2389,7 +2389,7 @@ matched: yes</title></rect><rect x="182.63" y="177.14" width="5.75" height="3.73
 module: arm9
 addr: 0x02016fd4
 size: 32 bytes
-matched: yes</title></rect><rect x="188.38" y="177.14" width="19.42" height="3.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02016ff4
+matched: yes</title></rect><rect x="188.38" y="177.14" width="19.42" height="3.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11dExtModel_c13func_02016ff4EP8BMD_Fileii
 module: arm9
 addr: 0x02016ff4
 size: 108 bytes
@@ -5077,7 +5077,7 @@ matched: yes</title></rect><rect x="272.90" y="444.53" width="17.66" height="15.
 module: arm9
 addr: 0x02037024
 size: 396 bytes
-matched: yes</title></rect><rect x="290.56" y="444.53" width="3.39" height="15.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020371b0
+matched: yes</title></rect><rect x="290.56" y="444.53" width="3.39" height="15.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10dBgCh_Actr13func_020371b0Ei
 module: arm9
 addr: 0x020371b0
 size: 76 bytes
@@ -5577,7 +5577,7 @@ matched: yes</title></rect><rect x="224.21" y="475.61" width="3.81" height="1.41
 module: arm9
 addr: 0x020393bc
 size: 8 bytes
-matched: yes</title></rect><rect x="228.02" y="475.61" width="3.81" height="1.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020393c4
+matched: yes</title></rect><rect x="228.02" y="475.61" width="3.81" height="1.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4dBgW18SetStoodOnCallbackEPFvPS_P8dActor_cS2_E
 module: arm9
 addr: 0x020393c4
 size: 8 bytes
@@ -5585,7 +5585,7 @@ matched: yes</title></rect><rect x="231.83" y="475.61" width="3.81" height="1.41
 module: arm9
 addr: 0x020393cc
 size: 8 bytes
-matched: yes</title></rect><rect x="235.64" y="475.61" width="3.81" height="1.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020393d4
+matched: yes</title></rect><rect x="235.64" y="475.61" width="3.81" height="1.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4dBgW21SetBeforeClsnCallbackEPFvRS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_E
 module: arm9
 addr: 0x020393d4
 size: 8 bytes
@@ -36037,7 +36037,7 @@ matched: yes</title></rect><rect x="1524.36" y="395.72" width="6.41" height="6.0
 module: ov063
 addr: 0x0211c638
 size: 76 bytes
-matched: yes</title></rect><rect x="1530.77" y="337.25" width="13.90" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov063_0211c684
+matched: yes</title></rect><rect x="1530.77" y="337.25" width="13.90" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_c19func_ov063_0211c684Ev
 module: ov063
 addr: 0x0211c684
 size: 116 bytes
@@ -36053,7 +36053,7 @@ matched: yes</title></rect><rect x="1566.72" y="337.25" width="14.86" height="4.
 module: ov063
 addr: 0x0211c7b0
 size: 124 bytes
-matched: yes</title></rect><rect x="1581.58" y="337.25" width="13.42" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov063_0211c82c
+matched: yes</title></rect><rect x="1581.58" y="337.25" width="13.42" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_c19func_ov063_0211c82cEv
 module: ov063
 addr: 0x0211c82c
 size: 112 bytes

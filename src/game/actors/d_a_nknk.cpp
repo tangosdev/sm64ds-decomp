@@ -62,6 +62,7 @@ enum d_a_nknk_AssetId {
 #include "Particle__Manager.h"
 #include "dBgPi.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -89,7 +90,6 @@ struct NknkAnimationFileHandle : SharedFilePtr {
 extern "C" {
 extern int d_a_nknkNewHold(u32 uniqueID, u32 effectID, s32 x, s32 y, s32 z, const void *dir,
                            void *callback);
-extern s16 data_02082214[];         /* SINE_TABLE: sin, cos pairs */
 extern NknkAnimationFileHandle *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];
 /* The called scalar definition takes u16 startFrame. The unused dExtAnmModel_c
@@ -1027,23 +1027,13 @@ void daNknk_c::func_ov062_02117724(unsigned int a1, unsigned int a2, unsigned in
         k = iscb ? 0xf : 0xa;
         pos.y = pos.y + (k << 12);
         if (h <= a2) {
-            int i2, i1, v, w;
             idx = (unsigned short)ang >> 4;
-            i2 = idx * 2;
-            i1 = i2 + 1;
-            v = data_02082214[i2];
-            v = pos.x - k * v;
-            w = data_02082214[i1];
-            w = pos.z - k * w;
-            pos.x = v;
-            pos.z = w;
+            pos.x -= k * FX_SinIdx(idx);
+            pos.z -= k * FX_CosIdx(idx);
         } else {
-            int i2, i1, ev, ew;
             idx = (unsigned short)ang >> 4;
-            i2 = idx * 2;
-            i1 = i2 + 1;
-            pos.x = k * data_02082214[i2] + pos.x;
-            pos.z = k * data_02082214[i1] + pos.z;
+            pos.x += k * FX_SinIdx(idx);
+            pos.z += k * FX_CosIdx(idx);
         }
         uid = Particle::System::New(0, 0xf9, pos.x, pos.y, pos.z, 0, 0);
         Particle::SetSelfDestructFlag(0xf9);

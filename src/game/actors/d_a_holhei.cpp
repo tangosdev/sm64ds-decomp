@@ -57,7 +57,7 @@ extern int daHolhei_c_ChangeState(daHolhei_c *self, HolheiState *p);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_ov002_020db54c(void *self, int a, int b, short c);
 extern int data_02092138;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 int ApproachAngle(short *angle, short target, int a, int b,
                   int c); /* local extern: named parameters preserve @NNN */
 short Vec3_HorzAngle(const Vector3 *v0,
@@ -606,7 +606,7 @@ int daHolhei_c::func_ov062_021163b0() {
         TriplePoofDust();
         KillAndTrackInDeathTable();
         func_02012694(0x125, &mCamSpacePosX);
-        data_0209f318->func_0200d8c8(&mPos, 0x7d0000);
+        gCamera->func_0200d8c8(&mPos, 0x7d0000);
         v[0].x = mPosX;
         v[0].y = mPosY;
         v[0].z = mPosZ;

@@ -905,7 +905,7 @@ int daMky_c::EnterState5() {
 int daMky_c::func_ov030_02113324()
 {
 
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     extern unsigned char data_0209d684;
 
     this->mAngleY = this->mPlayer->mAngleY;
@@ -939,7 +939,7 @@ int daMky_c::func_ov030_02113324()
             if (this->mPlayer->StartTalk(*this, 1) != 0) {
                 Vector3 camPos;
                 {
-                    Vector3 *src = &data_0209f318->pos;
+                    Vector3 *src = &gCamera->pos;
                     camPos.x = src->x;
                     camPos.y = src->y;
                     camPos.z = src->z;
@@ -1018,7 +1018,7 @@ int daMky_c::func_ov030_021136b0()
 
     /* The arm9 symbols.txt row spells this Vector3_16 (not Vector3s) — a wrong mangling here left the reloc BLIND and broke mwldarm. */
 
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     int msg;
     s16 a = this->mPlayer->mAngleY;
     this->mAngleY = a;
@@ -1063,7 +1063,7 @@ int daMky_c::func_ov030_021136b0()
         {
             u8 fl = this->mHasSpawnedCap;
             msg = fl ? 0xbe : 0xbf;
-            dCamera_c *camBase = data_0209f318;
+            dCamera_c *camBase = gCamera;
             Vector3 *src = &camBase->pos;
             camPos.x = src->x;
             camPos.y = src->y;

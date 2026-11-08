@@ -98,8 +98,8 @@
  *     the caps and contents.
  *   data_02082214 -- NitroSDK FX_SinCosTable_; the bounce squash indexes it
  *     by mBounceAng.
- *   data_0209caa0 / 0209f2d8 / 0209f2f8 / 0209f32c / 0209f318 / 0209e650 /
- *     020a0edc -- arm9 globals.
+ *   data_0209caa0, gGameMode, gCurrentSublevel, data_0209f32c, gCamera,
+ *     data_0209e650, data_020a0edc -- arm9 globals.
  *
  * deslop leftovers:
  * - func_ov102_02149684 stays free: it writes the prize point into a
@@ -184,8 +184,8 @@ extern "C" {
 
 extern signed char gCurrentSublevel;
 extern int data_0209f32c;
-extern unsigned char data_0209f2d8;
-extern dCamera_c *data_0209f318;
+extern unsigned char gGameMode;
+extern dCamera_c *gCamera;
 extern char data_020a0edc[];
 extern SaveBlock data_0209caa0;
 extern s16 data_02082214[];
@@ -453,7 +453,7 @@ end:
  *     with 0x8c000 (140 units) and 0x46000 (70 units).
  *  4. In any state but IDLE keep the collider disabled and return.
  *  5. In IDLE: a HATENA_BLOCK with SAVE_FLAGS1_BIT31 clear just advances its
- *     animation with the collider off. Otherwise, when data_0209f2d8
+ *     animation with the collider off. Otherwise, when gGameMode
  *     (CURRENT_GAMEMODE in symbols/verified.tsv) is 1, the collider is
  *     enabled and that is all. Otherwise dBgActor_c::IsClsnInRange is asked
  *     with (0x460000, 0x46000) in level 0x1c, else (0x118000, 0x46000); a
@@ -487,7 +487,7 @@ int daObjHatenaBlock_c::Behavior()
         }
     }
     {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(gGameMode == 1);
         if (b != 0) {
             if (mMeshCollider.IsEnabled() == 0) {
                 mMeshCollider.Enable(this);
@@ -630,7 +630,7 @@ void daObjHatenaBlock_c::func_ov102_02149ff0()
 /* The drop shadow and the clip volume, both sized by the drop to the floor.
  *
  * mFloorY is refreshed (func_ov102_02149610) unless mFlags bit 8 (dActor_c's
- * off-screen bit) is set and data_0209f2d8 is not 1. height = mPosY - mFloorY,
+ * off-screen bit) is set and gGameMode is not 1. height = mPosY - mFloorY,
  * at least 0x1000 (1 unit).
  *   horizontal shadow scale = 0xb4000 (180 units) - height * 0x180 / 0x1000
  *                   (about 0.094 * height), at least 0xa000 (10 units), then
@@ -649,7 +649,7 @@ void daObjHatenaBlock_c::func_ov102_02149ea4()
 
     b0 = (mFlags & 8) ? 1 : 0;
     if (b0 != 0) {
-        b1 = (*(volatile unsigned char *)&data_0209f2d8 == 1) ? 1 : 0;
+        b1 = (*(volatile unsigned char *)&gGameMode == 1) ? 1 : 0;
         if (b1 == 0) goto skipcall;
     }
     mFloorY = func_ov102_02149610();
@@ -997,7 +997,7 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
     o = dActor_c::Spawn(
         ACTOR_OBJ_MARIO_CAP, (unsigned int)(p2 | (p1 << 8)), f.pos, 0, mAreaId, -1);
     if (o == 0) return;
-    g = data_0209f318;
+    g = gCamera;
     f.vel[0] = 0;
     f.vel[1] = 0x11000;
     f.vel[2] = 0;
@@ -1067,21 +1067,21 @@ void daObjHatenaBlock_c::func_ov102_02149384() {
 
 /* FEATHER prize: spawns a FEATHER at the prize point with rotation taken
    from the three u16 words at data_020a0edc, except Y: the block's own
-   mAngleY when data_0209f2d8 (CURRENT_GAMEMODE) is 1, else the camera's
+   mAngleY when gGameMode (CURRENT_GAMEMODE) is 1, else the camera's
    mAngleY + 0x4000. */
 void daObjHatenaBlock_c::func_ov102_021492d4() {
-  struct Vector3 pos;
-  struct Vector3_16 rot;
-  func_ov102_02149684((int*)&pos, this);
-  rot.x = *(u16*)(data_020a0edc);
-  rot.y = *(u16*)(data_020a0edc+2);
-  rot.z = *(u16*)(data_020a0edc+4);
-  if ((int)(*(unsigned char*)(&data_0209f2d8) == 1) != 0) {
-    rot.y = mAngleY;
-  } else {
-      rot.y = data_0209f318->mAngleY + 0x4000;
-  }
-  dActor_c::Spawn(ACTOR_FEATHER, 0, pos, &rot, mAreaId, -1);
+    struct Vector3 pos;
+    struct Vector3_16 rot;
+    func_ov102_02149684((int *)&pos, this);
+    rot.x = *(u16 *)(data_020a0edc);
+    rot.y = *(u16 *)(data_020a0edc + 2);
+    rot.z = *(u16 *)(data_020a0edc + 4);
+    if ((int)(*(unsigned char *)(&gGameMode) == 1) != 0) {
+        rot.y = mAngleY;
+    } else {
+        rot.y = gCamera->mAngleY + 0x4000;
+    }
+    dActor_c::Spawn(ACTOR_FEATHER, 0, pos, &rot, mAreaId, -1);
 }
 
 /* POWER_UP_ITEM prize: spawns a POWER_UP_ITEM (param 0) at the prize point. */

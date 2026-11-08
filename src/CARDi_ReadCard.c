@@ -49,7 +49,7 @@ void CARDi_ReadCard(CARDRomStat *p) {
             }
         } while (ctrl & CARD_START);
 
-        if (dst == (u32 *)*(volatile u32 *)&cardi_common.dst) {
+        if (dst == (u32 *)c->dst) {
             cardi_common.src += CARD_ROM_PAGE_SIZE;
             cardi_common.dst += CARD_ROM_PAGE_SIZE;
             cardi_common.len -= CARD_ROM_PAGE_SIZE;

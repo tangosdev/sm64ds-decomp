@@ -20,8 +20,8 @@
  *   assigning a Vector3 sizes it 0x50 against 0x48.
  * - data_ov013_021116ac (per-hand speeds) and data_ov013_021116b0 (model
  *   handles) keep linker names: this TU reads them; it does not own that
- *   .data. data_02092110 / data_0209f2c0 are arm9's level id and clock
- *   setting. The two factories stay CLOCK_SHORT / CLOCK_LONG, because one
+ *   .data. gNextSublevel (the pending level, -1 when none) and data_0209f2c0
+ *   (the clock setting) are arm9's. The two factories stay CLOCK_SHORT / CLOCK_LONG, because one
  *   C name cannot cover both.
  * - Matrix4x3_FromRotationZXYExt and IsAreaShowing stay local externs;
  *   no shared header owns them.
@@ -44,7 +44,7 @@ extern "C" {
 u8 IsAreaShowing(int areaId);
 }
 
-extern s8 data_02092110; /* current level id; hands advance while it is not positive */
+extern s8 gNextSublevel; /* hands advance while it is not positive */
 extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
 extern s16 data_ov013_021116ac[];
 extern SharedFilePtr *data_ov013_021116b0[];
@@ -119,7 +119,7 @@ int daObjClock_c::InitResources() {
  * stopped quadrants sizes it 0xf8. mAngleZ = mAngleZ + step sizes it 0xfc.
  * Testing mHandIndex before IsAreaShowing is 5 words off. */
 int daObjClock_c::Behavior() {
-    if (data_02092110 <= 0) {
+    if (gNextSublevel <= 0) {
         mAngleZ += data_ov013_021116ac[mHandIndex];
     } else if (IsAreaShowing(mAreaId) && mHandIndex == 0) {
         u16 angle = -mAngleZ;

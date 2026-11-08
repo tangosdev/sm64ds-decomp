@@ -14,8 +14,6 @@
  * tools/rombuild.py refuses the object outright when the emitted order and the
  * ROM's disagree.
  *
- * What stays: func_020393d4 is a 4-byte store into dBgW+0x18
- *   (beforeClsnCallback). This TU calls it; naming belongs with dBgW in arm9.
  * What stays: data_ov043_021125e0 / 021125e8 are this overlay's KCL/BMD
  *   handles. data_ov043_02111c00 is the CLPS block in overlay .data this
  *   TU does not own.
@@ -56,11 +54,10 @@ extern Km1UkishimaClsnFilePtr data_ov043_021125e0;  /* the KCL  */
 extern Km1UkishimaModelFilePtr data_ov043_021125e8; /* the BMD  */
 extern CLPS_Block data_ov043_02111c00;              /* the CLPS block SetFile is handed */
 
-/* local extern: DecIfAbove0_Byte (arm9 0x0203add4) and func_020393d4 have
- * no shared header; every caller declares them locally. */
+/* local extern: DecIfAbove0_Byte (arm9 0x0203add4) has no shared header;
+ * every caller declares it locally. */
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -89,7 +86,7 @@ s32 daObjKm1_Ukishima_c::InitResources() {
 
     /* The mesh moves with the actor's velocity rather than its transform --
        the island slides, it does not carry a rotating platform's matrix. */
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
     mPrevAngleY = mAngleY;
     mHorzSpeed = 0xa000;

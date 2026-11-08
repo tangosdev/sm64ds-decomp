@@ -10,8 +10,8 @@
  *
  * Notes:
  * - The data homes keep their linker names.
- * - func_020393d4 stores dBgW::UpdatePosWithVelocity as the collider's
- *   callback; dBgW.h has no setter.
+ * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosWithVelocity as the collider's
+ *   callback.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -26,9 +26,6 @@ enum daObjSlIceBlock_c_AssetId { ASSET_SL_ICE_BROCK_BMD = 0x06b1, ASSET_SL_ICE_B
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-}
 extern char data_ov027_02113108[];
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
@@ -130,7 +127,7 @@ int daObjSlIceBlock_c::InitResources() {
         UpdateClsnPosAndRot();
         mMeshCollider.SetFile((KCL_File *)data_ov027_02113be0.filePtr, mClsnMat, 0x1000, mAngleY,
                               *(CLPS_Block *)data_ov027_02113108);
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
         mMeshCollider.edgeContacts = false;
         mMeshCollider.Enable(this);
         mHorzSpeed = 0x2d000;

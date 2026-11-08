@@ -1346,7 +1346,7 @@
       "source": "0x0211c320",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d71c",
+      "symbol": "sEntryGraphCallback",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211d71c"
@@ -3745,7 +3745,7 @@
       "evidence": "destructor-registration node the static initializer passes to __register_global_object for one EntryPair"
     },
     {
-      "symbol": "data_ov075_0211d71c",
+      "symbol": "sEntryGraphCallback",
       "address": "0x0211d71c",
       "size": "0x00000010",
       "binding": "STB_GLOBAL",

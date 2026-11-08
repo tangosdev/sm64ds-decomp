@@ -34,6 +34,7 @@ enum dScMgCup_c_AssetId {
 #include "SpawnInfo.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 
 /* sCupRoundTable: swap count, then two speed-row nibbles.
@@ -113,7 +114,6 @@ extern void FreeGfxSlotsById(int arg);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void CupFx_MoveForCup(char *p, int key, int a, int b);
 extern int CupFx_Spawn(char *c, int a, int b, int d, signed char e);
-extern short data_02082214[];
 struct CupShuffleOffset {
     s8 x, y;
 };
@@ -565,15 +565,14 @@ void dScMgCup_c::StateShuffle() {
 
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        int cosine = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
+        int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
         mCup[slot].x = mMidX - FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCup[slot].y =
-            mMidY - (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+        mCup[slot].y = mMidY - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
@@ -586,15 +585,14 @@ void dScMgCup_c::StateShuffle() {
 
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        int cosine = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
+        int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
         mCup[slot].x = mMidX + FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCup[slot].y =
-            mMidY + (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+        mCup[slot].y = mMidY + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
