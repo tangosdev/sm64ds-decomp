@@ -6,10 +6,10 @@
  *
  *   func_02049018  a position's distance from the origin (y counted
  *                  twice), through the hardware square-root unit
- *   func_02048fd4  load the near/far audible range for a sound mode
+ *   SetSoundRange  load the near/far audible range for a sound mode
  *   func_02048f34  store the owner, clear the voice slots, select mode 0
  *   func_02048f24..func_02048eb4
- *                  eight tail-call thunks into func_02048fd4, r0 = 1..7, 0
+ *                  eight tail-call thunks into SetSoundRange, r0 = 1..7, 0
  *   func_02048e94 / e74 / e54
  *                  set the slot-9 voice count back to four
  *   func_02048d80, func_02048c30, func_02048af4, func_02048908,
@@ -82,16 +82,16 @@ int func_02049018(Vector3 *v) {
     return *(volatile int *)0x40002b4;
 }
 
-/* Copies pair i (i in 0..8) from data_020821c0 into the near/far range. */
-void func_02048fd4(int i) {
+/* Copies pair mode (0..8) from data_020821c0 into the near/far range. */
+void SetSoundRange(int mode) {
     volatile u32 *tbl;
     int j;
-    if (i < 0)
+    if (mode < 0)
         return;
-    if (i > 8)
+    if (mode > 8)
         return;
     tbl = (volatile u32 *)data_020821c0;
-    j = i * 2;
+    j = mode * 2;
     data_02099fa8 = tbl[j];
     j++;
     data_02099fac = tbl[j];
@@ -107,46 +107,46 @@ void func_02048f34(int *owner) {
     for (i = 0; i < 2; i++)
         func_0204f94c(&data_020a4bf8[i]);
     func_0204f94c(&data_020a4bf0);
-    func_02048fd4(0);
+    SetSoundRange(0);
 }
 
 void func_02048f24(void) {
-    func_02048fd4(1);
+    SetSoundRange(1);
 }
 
 void func_02048f14(void) {
-    func_02048fd4(2);
+    SetSoundRange(2);
 }
 
 void func_02048f04(void) {
-    func_02048fd4(3);
+    SetSoundRange(3);
 }
 
 void func_02048ef4(void) {
-    func_02048fd4(4);
+    SetSoundRange(4);
 }
 }
 
 namespace Sound {
 
 void Func_02048ee4() {
-    func_02048fd4(5);
+    SetSoundRange(5);
 }
 
 }
 
 extern "C" void func_02048ed4(void) {
-    func_02048fd4(6);
+    SetSoundRange(6);
 }
 
 namespace Sound {
 
 void Func_02048ec4() {
-    func_02048fd4(7);
+    SetSoundRange(7);
 }
 
 void Func_02048eb4() {
-    func_02048fd4(0);
+    SetSoundRange(0);
 }
 
 }
@@ -169,29 +169,29 @@ void func_02048e54(void) {
 }
 
 void func_02048d80(NNSSndHandle *handle, Vector3 *p) {
-    int s = p->x >> 12;
-    int hi = data_02099fac;
-    int lo = data_02099fa8;
-    int r1;
-    int cur;
+    int pan = p->x >> 12;
+    int farRange = data_02099fac;
+    int nearRange = data_02099fa8;
+    int volume;
+    int dist;
     if (handle == 0)
         return;
     if (handle->player == 0)
         return;
-    cur = func_02049018(p);
-    if ((unsigned)cur >= (unsigned)hi)
+    dist = func_02049018(p);
+    if ((unsigned)dist >= (unsigned)farRange)
         return;
-    if ((unsigned)lo > (unsigned)cur)
-        r1 = 0x7f;
+    if ((unsigned)nearRange > (unsigned)dist)
+        volume = 0x7f;
     else
-        r1 = (hi - cur) * 0x7f / (hi - lo);
-    NNS_SndPlayerSetVolume(handle, r1);
-    s = s / 2;
-    if (s > 0x3f)
-        s = 0x3f;
-    else if (s < -0x40)
-        s = -0x40;
-    NNS_SndPlayerSetTrackPan(handle, data_02099fa4, s);
+        volume = (farRange - dist) * 0x7f / (farRange - nearRange);
+    NNS_SndPlayerSetVolume(handle, volume);
+    pan = pan / 2;
+    if (pan > 0x3f)
+        pan = 0x3f;
+    else if (pan < -0x40)
+        pan = -0x40;
+    NNS_SndPlayerSetTrackPan(handle, data_02099fa4, pan);
 }
 
 void func_02048c30(NNSSndHandle *handle, Vector3 *p, int q) {
@@ -452,67 +452,67 @@ void *func_02048720(Vector3 *v, int kind, int id) {
     return 0;
 }
 
-void func_020485f0(NNSSndHandle *handle, Vector3 *a) {
-    int r5 = a->x >> 12;
-    unsigned int x;
-    u16 r4;
-    int v;
+void func_020485f0(NNSSndHandle *handle, Vector3 *pos) {
+    int pan = pos->x >> 12;
+    unsigned int dist;
+    u16 id;
+    int volume;
     if (handle == 0)
         return;
     if (handle->player == 0)
         return;
-    x = func_02049018(a);
-    r4 = handle->player->seqArcIndex;
-    if (r4 == 0x81) {
-        if (x > 0x4b0)
-            v = 0;
-        else if (x <= 0x64)
-            v = 0x7f;
+    dist = func_02049018(pos);
+    id = handle->player->seqArcIndex;
+    if (id == 0x81) {
+        if (dist > 0x4b0)
+            volume = 0;
+        else if (dist <= 0x64)
+            volume = 0x7f;
         else
-            v = (int)(0x4b0 - x) * 0x7f / 1100;
+            volume = (int)(0x4b0 - dist) * 0x7f / 1100;
     } else {
-        if (x >= 0x8bc)
-            v = 0;
-        else if (x < 0x3e8)
-            v = 0x7f;
+        if (dist >= 0x8bc)
+            volume = 0;
+        else if (dist < 0x3e8)
+            volume = 0x7f;
         else
-            v = (int)(0x8bc - x) * 0x7f / 1236;
+            volume = (int)(0x8bc - dist) * 0x7f / 1236;
     }
-    NNS_SndPlayerSetVolume(handle, v);
-    r5 = r5 >> 4;
-    if (r5 > 0x3f)
-        r5 = 0x3f;
-    else if (r5 < -0x40)
-        r5 = -0x40;
-    if (r4 == 0x103) {
-        NNS_SndPlayerSetTrackPan(handle, 1, r5);
+    NNS_SndPlayerSetVolume(handle, volume);
+    pan = pan >> 4;
+    if (pan > 0x3f)
+        pan = 0x3f;
+    else if (pan < -0x40)
+        pan = -0x40;
+    if (id == 0x103) {
+        NNS_SndPlayerSetTrackPan(handle, 1, pan);
     } else {
-        NNS_SndPlayerSetTrackPan(handle, data_02099fa4, r5);
+        NNS_SndPlayerSetTrackPan(handle, data_02099fa4, pan);
     }
 }
 
-void func_02048528(NNSSndHandle *handle, Vector3 *a) {
-    int r4 = a->x >> 12;
-    unsigned int x;
-    int v;
+void func_02048528(NNSSndHandle *handle, Vector3 *pos) {
+    int pan = pos->x >> 12;
+    unsigned int dist;
+    int volume;
     if (handle == 0)
         return;
     if (handle->player == 0)
         return;
-    x = func_02049018(a);
-    if (x >= 0x1f4) {
-        v = 0x1e;
-    } else if (x < 0x14) {
-        v = 0x7f;
+    dist = func_02049018(pos);
+    if (dist >= 0x1f4) {
+        volume = 0x1e;
+    } else if (dist < 0x14) {
+        volume = 0x7f;
     } else {
-        v = (int)(0x1f4 - x) * 0x61 / 0x1e0 + 0x1e;
+        volume = (int)(0x1f4 - dist) * 0x61 / 0x1e0 + 0x1e;
     }
-    NNS_SndPlayerSetVolume(handle, v);
-    r4 = r4 >> 2;
-    if (r4 > 0x3f)
-        r4 = 0x3f;
-    else if (r4 < -0x40)
-        r4 = -0x40;
-    NNS_SndPlayerSetTrackPan(handle, data_02099fa4, r4);
+    NNS_SndPlayerSetVolume(handle, volume);
+    pan = pan >> 2;
+    if (pan > 0x3f)
+        pan = 0x3f;
+    else if (pan < -0x40)
+        pan = -0x40;
+    NNS_SndPlayerSetTrackPan(handle, data_02099fa4, pan);
 }
 }

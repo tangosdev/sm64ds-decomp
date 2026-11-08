@@ -7735,7 +7735,7 @@
     },
     "arm9:0x02048fd4": {
       "author": "ruspecial",
-      "name": "func_02048fd4"
+      "name": "SetSoundRange"
     },
     "arm9:0x02049018": {
       "author": "tangosdev",
