@@ -83,6 +83,20 @@ extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
+/* Runtime asset handles resolved through the overlay 0 file table; the names
+   are the ROM's MG/ file names (tools/asset_catalog.py resolve). */
+enum dScMgBomroom_c_AssetId {
+    ASSET_D_2D_BLUE_SHADOW_NSC_BIN = 0x0002,
+    ASSET_D_2D_ELEVATOR_NSC_BIN = 0x0003,
+    ASSET_D_2D_LIGHT_UP_NSC_BIN = 0x0007,
+    ASSET_D_2D_MG_BG_BOMROOM_DOWN_NSC_BIN = 0x0022,
+    ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN = 0x0023,
+    ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN = 0x0024,
+    ASSET_D_2D_MG_BG_BOMROOM_UP_NSC_BIN = 0x0025,
+    ASSET_D_2D_MG_BOMROOM_NCG_BIN = 0x00b5,
+    ASSET_D_2D_MG_BOMROOM_NCL_BIN = 0x00b6,
+};
+
 /* A random integer in [0, n): the top 15 bits of the minigames' shared
    generator, scaled (the PACHINKO_RAND of d_s_mg_pachinko.cpp). */
 #define BOMROOM_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
@@ -1884,15 +1898,15 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
-    f = LoadFile(0x23);
+    f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
     DecompressLZ16(f, (void *)(func_02054d88() + 0x4000));
     Deallocate(f);
 
-    f = LoadFile(0x24);
+    f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);
     GX::LoadBGPltt(f, 0x180, 0x80);
     Deallocate(f);
 
-    f = LoadFile(0x25);
+    f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_UP_NSC_BIN);
     func_02056314(f, 0, 0x800);
     Deallocate(f);
 
@@ -1900,7 +1914,7 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
 
-    f = LoadFile(3);
+    f = LoadFile(ASSET_D_2D_ELEVATOR_NSC_BIN);
     b = (char *)G2::GetBG2ScrPtr();
     fill = 0xf23f;
     MultiStore16(fill, b, 0x1000);
@@ -1911,35 +1925,35 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG0CNT = REG_BG0CNT & ~3;
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5610;
 
-    f = LoadFile(2);
+    f = LoadFile(ASSET_D_2D_BLUE_SHADOW_NSC_BIN);
     func_02056554(f, 0, 0x800);
     Deallocate(f);
 
-    f = LoadFile(7);
+    f = LoadFile(ASSET_D_2D_LIGHT_UP_NSC_BIN);
     func_02056554(f, 0x800, 0x800);
     Deallocate(f);
 
     G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
 
-    arc = LoadFile(0xb5);
-    f = LoadFile(0xb6);
+    arc = LoadFile(ASSET_D_2D_MG_BOMROOM_NCG_BIN);
+    f = LoadFile(ASSET_D_2D_MG_BOMROOM_NCL_BIN);
     DecompressLZ16(arc, (void *)0x6400000);
     GX::LoadOBJPltt(f, 0, 0x100);
 
-    gSubScreenLayers |= 8;
+    gSubScreenLayers |= DISPLAY_LAYER_BG3;
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
     REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x210;
 
     {
-        void *f7 = LoadFile(0x23);
+        void *f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
         DecompressLZ16(f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
         Deallocate(f7);
 
-        f7 = LoadFile(0x24);
+        f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);
         GXS::LoadBGPltt(f7, 0x180, 0x80);
         Deallocate(f7);
 
-        f7 = LoadFile(0x22);
+        f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_DOWN_NSC_BIN);
         func_020562b4(f7, 0, 0x800);
         Deallocate(f7);
 
