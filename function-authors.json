@@ -37175,51 +37175,51 @@
     },
     "ov065:0x02115f84": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_02115f84Ev"
+      "name": "_ZN15daYurei_Mucho_c13KillWithCoinsEv"
     },
     "ov065:0x02115ff0": {
       "author": "lunavyqo",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_02115ff0Ev"
+      "name": "_ZN15daYurei_Mucho_c15HandleCollisionEv"
     },
     "ov065:0x021162c0": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_021162c0Ev"
+      "name": "_ZN15daYurei_Mucho_c12UpdateBumpedEv"
     },
     "ov065:0x02116328": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_02116328Ev"
+      "name": "_ZN15daYurei_Mucho_c11EnterBumpedEv"
     },
     "ov065:0x02116364": {
       "author": "lunavyqo",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_02116364Ev"
+      "name": "_ZN15daYurei_Mucho_c11UpdateShootEv"
     },
     "ov065:0x02116588": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_02116588Ev"
+      "name": "_ZN15daYurei_Mucho_c10EnterShootEv"
     },
     "ov065:0x021165d8": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_021165d8Ev"
+      "name": "_ZN15daYurei_Mucho_c11UpdateChaseEv"
     },
     "ov065:0x0211672c": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_0211672cEv"
+      "name": "_ZN15daYurei_Mucho_c10EnterChaseEv"
     },
     "ov065:0x02116744": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_02116744Ev"
+      "name": "_ZN15daYurei_Mucho_c10UpdateIdleEv"
     },
     "ov065:0x021168a8": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_021168a8Ev"
+      "name": "_ZN15daYurei_Mucho_c9EnterIdleEv"
     },
     "ov065:0x0211691c": {
       "author": "tangosdev",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_0211691cEPNS_5StateE"
+      "name": "_ZN15daYurei_Mucho_c11ChangeStateEPNS_5StateE"
     },
     "ov065:0x0211696c": {
       "author": "lunavyqo",
-      "name": "_ZN15daYurei_Mucho_c19func_ov065_0211696cEv"
+      "name": "_ZN15daYurei_Mucho_c20UpdateModelTransformEv"
     },
     "ov065:0x02116ae8": {
       "author": "tangosdev",
