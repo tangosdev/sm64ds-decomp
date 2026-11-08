@@ -861,7 +861,7 @@ extern void func_0202ae74(void);
 extern void func_0203083c(void);
 extern void func_02030aa4(int);
 extern void Message_DrawCenteredLineVS(int, int);
-extern void func_02034b1c(void*, int);
+extern void func_02034b1c(void *, void *);
 extern void func_02035550(void*);
 extern void func_020371b0(void*, int);
 extern void func_020371fc(char*);
