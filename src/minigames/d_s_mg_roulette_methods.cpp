@@ -259,48 +259,45 @@ void RouletteStrip_Draw(short *a0, int a1);
    palette, and the shared OBJ tiles and palettes for both engines. Then
    sets up the camera, the dealer and the board and starts the first round. */
 s32 dScMgRoulette_c::InitResources() {
-    void *bgChars, *bgMap, *f6, *f5;
+    void *bgChars, *bgMap, *file, *pltt;
 
     Mg_SetTopScreenYOffset(0x20);
 
-    *(volatile u16 *)0x0400100c = (*(volatile u16 *)0x0400100c & 0x43) | 0x404;
-    *(volatile u16 *)0x04001008 = (*(volatile u16 *)0x04001008 & 0x43) | 0x504;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x404;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x504;
 
     bgChars = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NCG_BIN);
     bgMap = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NSC_BIN);
-    f6 = LoadFile(ASSET_D_2D_YAKU_NSC_BIN);
-    f5 = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NCL_BIN);
+    file = LoadFile(ASSET_D_2D_YAKU_NSC_BIN);
+    pltt = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NCL_BIN);
     DecompressLZ16(bgChars, G2S::GetBG2CharPtr());
     DecompressLZ16(bgMap, G2S::GetBG2ScrPtr());
-    DecompressLZ16(f6, G2S::GetBG0ScrPtr());
-    GXS::LoadBGPltt(f5, 0x1a0, 0x60);
+    DecompressLZ16(file, G2S::GetBG0ScrPtr());
+    GXS::LoadBGPltt(pltt, 0x1a0, 0x60);
     Deallocate(bgChars);
     Deallocate(bgMap);
-    Deallocate(f6);
-    Deallocate(f5);
+    Deallocate(file);
+    Deallocate(pltt);
 
-    {
-        volatile u16 *a = (volatile u16 *)0x04001008;
-        *a = *a & ~0x40;
-        *(volatile u16 *)0x0400100c = *(volatile u16 *)0x0400100c & ~0x40;
-        SetSubBg0Offset(0, 0);
-        SetSubBg2Offset(0, 0);
-        *a = (*a & ~3) | 2;
-        *(volatile u16 *)0x0400100c = (*(volatile u16 *)0x0400100c & ~3) | 2;
-    }
+    REG_DB_BG0CNT = REG_DB_BG0CNT & ~0x40;
+    REG_DB_BG2CNT = REG_DB_BG2CNT & ~0x40;
+    SetSubBg0Offset(0, 0);
+    SetSubBg2Offset(0, 0);
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 2;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
 
-    f6 = LoadFile(ASSET_D_2D_MG_ROULETTE_NCG_BIN);
-    f5 = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
-    DecompressLZ16(f6, (void *)0x6400000);
-    DecompressLZ16(f6, (void *)0x6600000);
-    GX::LoadOBJPltt(f5, 0, 0x100);
-    GXS::LoadOBJPltt(f5, 0, 0x100);
-    Deallocate(f6);
-    Deallocate(f5);
+    file = LoadFile(ASSET_D_2D_MG_ROULETTE_NCG_BIN);
+    pltt = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
+    DecompressLZ16(file, (void *)0x6400000);
+    DecompressLZ16(file, (void *)0x6600000);
+    GX::LoadOBJPltt(pltt, 0, 0x100);
+    GXS::LoadOBJPltt(pltt, 0, 0x100);
+    Deallocate(file);
+    Deallocate(pltt);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    gSubScreenLayers = 0x15;
-    *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
+    gSubScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_OBJ;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
 
     Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
