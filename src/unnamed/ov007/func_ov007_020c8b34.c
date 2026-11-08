@@ -1,8 +1,8 @@
 #include "Ov007Transition.h"
 
 typedef long long s64;
-/* The SDK's G2x_ChangeBlendBrightness_ (src/engine/gx/G2x.cpp). */
-extern void func_020551f0(volatile unsigned short *reg, int v);
+/* src/engine/gx/G2x.cpp */
+extern void G2x_ChangeBlendBrightness_(volatile unsigned short *reg, int v);
 inline int inline_fn(int arg0) {
     return arg0;
 }
@@ -27,9 +27,9 @@ void func_ov007_020c8b34(Ov007Transition *tr, int t) {
     }
     if (tr->screens & 1) {
         new_var2 = 0x4000050;
-        func_020551f0((volatile unsigned short *)new_var2, v);
+        G2x_ChangeBlendBrightness_((volatile unsigned short *)new_var2, v);
     }
     if (tr->screens & 2) {
-        func_020551f0((volatile unsigned short *)0x4001050, v);
+        G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, v);
     }
 }

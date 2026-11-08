@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x02034a78..0x02035354, 13 function(s), gapless in config/arm9/delinks.txt, every entry complete.",
-    "The run is one class. D1/D0, graphCallback_c, CleanupResources, Render, Behavior and InitResources are dScMB_c. func_02034b1c initializes the global graphCallback_c this TU registers. func_02034d34 is a dScMB_c method called from GraphCallback3. func_02034fbc is the free loader Behavior schedules. dScMB_c_classInit abuts InitResources and stores _ZTV7dScMB_c.",
+    "The run is one class. D1/D0, graphCallback_c, CleanupResources, Render, Behavior and InitResources are dScMB_c. func_02034b1c initializes the global graphCallback_c this TU registers. UpdateFader (0x02034d34, coined from its body: step the scene's dFdColor_c unless IsAtStart) is a dScMB_c method called from GraphCallback3. func_02034fbc is the free loader Behavior schedules. dScMB_c_classInit abuts InitResources and stores _ZTV7dScMB_c.",
     "The neighbour after the factory, func_02035354, compares list nodes and is not a member of this class. It is not included.",
     "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU.",
     "static initializer: __sinit_02074fb8 (.init 0x02074fb8..0x02074fe4, .ctor word 0x02086b94) builds only sMBGraphCallback, a dScMB_c::graphCallback_c whose derived vtable _ZTVN7dScMB_c15graphCallback_cE (0x02094390) holds this TU's GraphCallback0/2/3. Its only arm9 reader is dScMB_c::InitResources, in this run. arm9 .init and .ctor run in .text TU order: the previous initializer 0x02074f80 is d_wipe.cpp's (below this TU, 0x02034a78..0x02035354), and the next, 0x02074fe4, builds a dBgPc object for a collision TU above it."
@@ -78,7 +78,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN7dScMB_c13func_02034d34Ev",
+      "symbol": "_ZN7dScMB_c11UpdateFaderEv",
       "address": "0x02034d34",
       "size": "0x0000003c",
       "legacy_source": "src/func_02034d34.cpp",

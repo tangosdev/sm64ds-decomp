@@ -119,7 +119,7 @@
     },
     "arm9:0x02005348": {
       "author": "tangosdev",
-      "name": "_ZN9dScBoot_c13func_02005348Ev"
+      "name": "_ZN9dScBoot_c20UpdateButtonPalettesEv"
     },
     "arm9:0x02005418": {
       "author": "andrewboudreau",
@@ -4827,7 +4827,7 @@
     },
     "arm9:0x02034d34": {
       "author": "tangosdev",
-      "name": "_ZN7dScMB_c13func_02034d34Ev"
+      "name": "_ZN7dScMB_c11UpdateFaderEv"
     },
     "arm9:0x02034d70": {
       "author": "andrewboudreau",
@@ -9143,7 +9143,7 @@
     },
     "arm9:0x020551f0": {
       "author": "tangosdev",
-      "name": "func_020551f0"
+      "name": "G2x_ChangeBlendBrightness_"
     },
     "arm9:0x02055238": {
       "author": "tangosdev",
@@ -18883,11 +18883,11 @@
     },
     "ov003:0x020b060c": {
       "author": "github-actions[bot]",
-      "name": "_ZN13dScGameOver_c19func_ov003_020b060cEv"
+      "name": "_ZN13dScGameOver_c11UpdateIntroEv"
     },
     "ov003:0x020b0730": {
       "author": "github-actions[bot]",
-      "name": "_ZN13dScGameOver_c19func_ov003_020b0730Ei"
+      "name": "_ZN13dScGameOver_c20UpdateButtonPalettesEi"
     },
     "ov003:0x020b0810": {
       "author": "tangosdev",
@@ -39911,7 +39911,7 @@
     },
     "ov075:0x02116ce4": {
       "author": "tangosdev",
-      "name": "func_ov075_02116ce4"
+      "name": "_ZN10dScEntry_c25ArePlayersReadyForRematchEv"
     },
     "ov075:0x02116d40": {
       "author": "tangosdev",
