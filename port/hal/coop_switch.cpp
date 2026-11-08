@@ -34,6 +34,7 @@ int _ZN11daObjTbox_c10InitState0Ev(void *c);       // Entry[0].enter: the model 
 int _ZN11daObjTbox_c10InitState1Ev(void *c);       // Entry[1].enter: the opening
 void _ZN11daObjPile_c19func_ov091_021334b8Ei(char *c, int flag);         // Stump: one pound (flag 0) or the whole post (flag 1)
 void _ZN7fBase_c18MarkForDestructionEv(void *self);    // COOPPUZZLE1: a book the receiver's shelf can no longer lead
+void ChangeArea(int areaID);                         // COOPPUZZLE1 proof knob: what a door does at the end of its swing
 extern signed char data_ov100_02148204[];            // door table, 16 bytes a variant: +8 stars, +9 key id, +0xa save bit
 extern signed char data_ov100_02148390[];            // star gate table, 6 bytes a variant: +0 stars, +1 save bit
 extern char data_ov100_021488d4[];                   // Door node: the star-door unlock (func_ov100_02144bf4)
@@ -1099,6 +1100,38 @@ void knob_press(PressKnob &k) {
         }
         std::fprintf(stderr, "[coopsw-knob] press cls=%d slot=%d (candidate %d of %d) param=%d order=%d did=%d wall=%lld\n", k.cls, (int)a_slot(a), k.nth % n, n,
                      rd_i32(a, 8), k.cls == 13 ? rd_u8(a, 0x172) : 0, (int)did, wall_ms());
+        return;
+    }
+    if (k.cls == 213 || k.cls == 86 || k.cls == 158) {
+        // COOPPUZZLE1 proof knobs. 213: the book of param1 == nth takes a hit (what daBook_c's READY state does when
+        // func_ov020_021115ac reports an attack: collider on, STATE_SWITCH_PUSH; the book's own PUSH state then checks the
+        // order and calls the shelf). 86: the nth tag (placed slots sorted) is touched (what its Behavior does when a body
+        // stands in its cylinder: the top it names counts one, the tag goes). For 86, nth is the tag's placed slot. 158: the
+        // shelf's room is entered (what a door does at the end of its swing: ChangeArea to the far side's area), so a
+        // placed player stands in a room that shows.
+        char *a = nullptr;
+        for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {
+            if (a_cls(b) != k.cls || a_dead(b)) continue;
+            if (k.cls == 213 && (rd_i32(b, 8) & 7) == k.nth) a = b;
+            if (k.cls == 86 && a_slot(b) == k.nth) a = b;
+            if (k.cls == 158 && rd_i32(b, 0x140) == 2) a = b;
+        }
+        if (!a) { std::fprintf(stderr, "[coopsw-knob] press cls=%d nth=%d: no live actor\n", k.cls, k.nth); return; }
+        bool did = false;
+        if (k.cls == 213) {
+            did = rd_i32(a, 0x424) == 8;
+            if (did) { *(unsigned *)(a + 0x234) |= 1u; *(int *)(a + 0x424) = 9; }
+        } else if (k.cls == 158) {
+            ChangeArea((signed char)rd_u8(a, 0x158));
+            did = true;
+        } else {
+            const unsigned tid = (unsigned)rd_i32(a, 0x108);
+            for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b))
+                if (a_cls(b) == 85 && !a_dead(b) && (unsigned)rd_i32(b, 4) == tid) { ++*(unsigned char *)(b + 0x3b6); did = true; break; }
+            _ZN7fBase_c18MarkForDestructionEv(a);
+        }
+        std::fprintf(stderr, "[coopsw-knob] press cls=%d slot=%d nth=%d state=%d did=%d wall=%lld\n", k.cls, (int)a_slot(a), k.nth,
+                     k.cls == 213 ? rd_i32(a, 0x424) : 0, (int)did, wall_ms());
         return;
     }
     const Watch *w = find_watch(k.cls);
