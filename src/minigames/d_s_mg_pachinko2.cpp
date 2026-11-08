@@ -617,6 +617,8 @@ void dScMgPachinko2_c::DrawTopRecord() {
 
 void dScMgPachinko2_c::StartRoundEnd(int a) {
     char *dst;
+    /* volatile: the ROM spills the fill value to the stack and reloads it;
+       a literal 0 or a plain local is 8 bytes shorter (known unsolved). */
     volatile unsigned short v;
     mPhase = 3;
     mEndTimer = 0x40;
@@ -1429,6 +1431,8 @@ void dScMgPachinko2_c::Paddle_ClearAll() {
 }
 
 void dScMgPachinko2_c::CheckCountdownEnd() {
+    /* volatile: the ROM spills the fill value to the stack and reloads it;
+       a literal 0 or a plain local is 8 bytes shorter (known unsolved). */
     volatile unsigned short v;
     char *dst;
     if (mCountdown != 0)
@@ -1470,6 +1474,8 @@ void dScMgPachinko2_c::UpdateCountdown() {
 }
 
 void dScMgPachinko2_c::ClearAimLine() {
+    /* volatile: the ROM spills the fill value to the stack and reloads it;
+       a literal 0 or a plain local is 8 bytes shorter (known unsolved). */
     volatile unsigned short tmp;
     int n = mHeldBall;
     int dx, dy;
@@ -1534,7 +1540,7 @@ void dScMgPachinko2_c::DrawAimLine() {
     int idx;
     int pivot[2];
     int rightPivotX;
-    volatile unsigned short tmp;
+    volatile unsigned short tmp; /* fill value; see StartRoundEnd */
     int cx;
     int cy;
     int dx;
