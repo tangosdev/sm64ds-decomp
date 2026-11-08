@@ -123,7 +123,8 @@ struct B72 {
 typedef dScMgHanachan_c::Wiggler Wiggler;
 
 /* Nothing uses this shim: InitResources reaches slot 18 as StartRound and
-   0xa8/0xac as dScMgBase_c's mCredits/mCreditsShown, which is the same
+   0xa8/0xac as dScMgBase_c's mCredits/mCreditsShown (the names its two
+   fields carry here), which is the same
    dispatch and the same bytes.  The DECLARATION still has to stay.  mwccarm
    numbers the TU's compiler-local symbols in declaration order, and the 35
    native pointer-to-member constants this file emits land on the @NNNN names
@@ -152,8 +153,8 @@ struct SelfV {
     virtual void v17();
     virtual void v18(int a);
     char pad[0xa4];
-    int unkA8;
-    int unkAC;
+    int mCredits;
+    int mCreditsShown;
 };
 
 
@@ -1435,6 +1436,8 @@ void Wiggler_StartPathA(Obj *self, int n) {
         for (; i < 5; i++) {
             int bx = base.x;
             self->seg[i].x = bx;
+            /* Kept volatile: a plain base.y read DIFFs Wiggler_StartPathA
+               (measured 2026-11-08). */
             self->seg[i].y = *(volatile int *)&base.y;
             if (self->aim < 0)
                 self->seg[i].x += delta;
@@ -2117,18 +2120,18 @@ void dScMgHanachan_c::StartRound(int state) {
 }
 
 s32 dScMgHanachan_c::InitResources() {
-    void *a;
-    void *b;
+    void *ncg;
+    void *ncl;
 
     Hana_LoadBackground();
-    a = LoadFile(ASSET_D_2D_MG_HANA_SAGASE_NCG_BIN);
-    b = LoadFile(ASSET_D_2D_MG_HANA_SAGASE_NCL_BIN);
-    DecompressLZ16(a, (void *)0x6400000);
-    DecompressLZ16(a, (void *)0x6600000);
-    GXS::LoadOBJPltt(b, 0, 0xc0);
-    GX::LoadOBJPltt(b, 0, 0xc0);
-    Deallocate(a);
-    Deallocate(b);
+    ncg = LoadFile(ASSET_D_2D_MG_HANA_SAGASE_NCG_BIN);
+    ncl = LoadFile(ASSET_D_2D_MG_HANA_SAGASE_NCL_BIN);
+    DecompressLZ16(ncg, (void *)0x6400000);
+    DecompressLZ16(ncg, (void *)0x6600000);
+    GXS::LoadOBJPltt(ncl, 0, 0xc0);
+    GX::LoadOBJPltt(ncl, 0, 0xc0);
+    Deallocate(ncg);
+    Deallocate(ncl);
     mCredits = data_ov006_0213c954;
     mCreditsShown = mCredits;
     Mg_SetTopScreenYOffset(0x20);
@@ -2150,37 +2153,31 @@ s32 dScMgHanachan_c::InitResources() {
 
 extern "C" {
 void Hana_LoadBackground(void) {
-    void *r6 = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCG_BIN);
-    void *r5 = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NSC_BIN);
-    void *r4 = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCL_BIN);
-    {
-        volatile unsigned short *m = (volatile unsigned short *)0x400000e;
-        *m = (*m & ~3) | 1;
-        *m = (*m & 0x43) | 0x614;
-    }
-    DecompressLZ16(r6, (void *)func_02054d88());
-    func_02056314(r5, 0, 0x800);
-    GX::LoadBGPltt((const void *)r4, 0x60, 0x1a0);
+    void *ncg = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCG_BIN);
+    void *nsc = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NSC_BIN);
+    void *ncl = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCL_BIN);
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x614;
+    DecompressLZ16(ncg, (void *)func_02054d88());
+    func_02056314(nsc, 0, 0x800);
+    GX::LoadBGPltt(ncl, 0x60, 0x1a0);
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    Deallocate(r6);
-    Deallocate(r5);
-    Deallocate(r4);
+    Deallocate(ncg);
+    Deallocate(nsc);
+    Deallocate(ncl);
 
-    r6 = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NCG_BIN);
-    r5 = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NSC_BIN);
-    r4 = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NCL_BIN);
-    {
-        volatile unsigned short *m = (volatile unsigned short *)0x400100e;
-        *m = (*m & ~3) | 2;
-        *m = (*m & 0x43) | 0x614;
-    }
-    DecompressLZ16(r6, G2S::GetBG3CharPtr());
-    func_020562b4(r5, 0, 0x800);
-    GXS::LoadBGPltt((const void *)r4, 0x60, 0x1a0);
+    ncg = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NCG_BIN);
+    nsc = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NSC_BIN);
+    ncl = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NCL_BIN);
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x614;
+    DecompressLZ16(ncg, G2S::GetBG3CharPtr());
+    func_020562b4(nsc, 0, 0x800);
+    GXS::LoadBGPltt(ncl, 0x60, 0x1a0);
     gSubScreenLayers |= 8;
-    Deallocate(r6);
-    Deallocate(r5);
-    Deallocate(r4);
+    Deallocate(ncg);
+    Deallocate(nsc);
+    Deallocate(ncl);
 }
 
 /* The OamAttr* table OAM::Render indexes: the five scalar attributes, the
