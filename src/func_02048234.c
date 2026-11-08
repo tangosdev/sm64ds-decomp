@@ -1,20 +1,17 @@
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 typedef long long s64;
-typedef signed short s16;
-
-extern s16 data_02082214[];
 
 void func_02048234(int *out, int sa, int sb, int sc, unsigned short ax, unsigned short ay, unsigned short az, int tx, int ty, int tz) {
-    s16 *t = data_02082214;
     int ia = ax >> 4;
     int ib = ay >> 4;
     int ic = az >> 4;
-    int a0 = t[ia * 2];
-    int a1 = t[ia * 2 + 1];
-    int b0 = t[ib * 2];
-    int b1 = t[ib * 2 + 1];
-    int c0 = t[ic * 2];
-    int c1 = t[ic * 2 + 1];
+    int a0 = FX_SinIdx(ia);
+    int a1 = FX_CosIdx(ia);
+    int b0 = FX_SinIdx(ib);
+    int b1 = FX_CosIdx(ib);
+    int c0 = FX_SinIdx(ic);
+    int c1 = FX_CosIdx(ic);
     int p00 = (int)(((s64)a0 * c0) >> 12);
     int p11 = (int)(((s64)a1 * c1) >> 12);
     int p01 = (int)(((s64)a0 * c1) >> 12);
