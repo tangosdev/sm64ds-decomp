@@ -39,7 +39,7 @@ struct dScMgLuigi_Curtain {
     Fix12i y;    /* +0x04 parked at 0x60 */
     Fix12i velX; /* +0x08 */
     s32 sound;   /* +0x0c handle handed back by Sound_PlayIfNotActive */
-    s16 delay;   /* +0x10 waits out before the panel moves */
+    u16 delay;   /* +0x10 waits out before the panel moves; the clamp reads it signed */
     u16 count;   /* +0x12 ticks up to the whoosh */
     u8 active;   /* +0x14 CurtainsDone still has work */
     u8 shown;    /* +0x15 DrawCurtains */
@@ -57,7 +57,7 @@ struct dScMgLuigi_Reward {
     Fix12i y;    /* +0x04 */
     Fix12i velY; /* +0x08 starts negative and keeps accelerating up */
     u8 pad_c[3];
-    u8 timer;  /* +0x0f */
+    u8 timer;  /* +0x0f the clamp after the countdown reads it as s16, like the other timers */
     u8 active; /* +0x10 UpdateReward */
     u8 phase;  /* +0x11 0 rising, 1 holding, then the spark count */
     u8 sparks; /* +0x12 how many +1s ticks are left */
@@ -189,12 +189,13 @@ struct dScMgLuigi_c : dScMgBase_c {
     u16 mIconOn;         /* 0x5164 -- draw the caught picture while set */
     s16 mIconX;          /* 0x5166 */
     s16 mIconY;          /* 0x5168 */
-    s16 mCatchWait;      /* 0x516a -- frames to hold the catch */
+    u16 mCatchWait;      /* 0x516a -- frames to hold the catch; the stop test reads it signed */
     s16 unk_516c;        /* 0x516c -- set to 10 as play starts; no read here */
     s16 unk_516e;        /* 0x516e -- cleared as play starts; no read here */
     u8 pad_5170[2];
-    s16 mTime;       /* 0x5172 -- seconds left; misses take 10, a
-                                reward spark gives 1 back, capped at 50 */
+    u16 mTime;       /* 0x5172 -- seconds left; misses take 10, a
+                                reward spark gives 1 back, capped at 50;
+                                the zero clamps read it signed */
     u16 mBoard;      /* 0x5174 -- which layout and mover set */
     u16 mPrevBoard;  /* 0x5176 -- last board, so the next one differs */
     u8 mGrid[13][9]; /* 0x5178 -- cells already used while placing */

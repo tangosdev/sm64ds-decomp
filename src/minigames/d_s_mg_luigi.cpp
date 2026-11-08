@@ -8,14 +8,12 @@
  *
  * Keep source order.
  *
- * Three places only match through a stepped base:
+ * Two places only match through a stepped base:
  * RestartPicture steps by idx (direct mShown[idx] and friends change the
- * code), the grid cell in PlaceNextPicture steps by col * 9 + row (direct
- * &mGrid[col][row] changes it), and TickPictureFlash keeps its blink and
- * shown base pointers (one spelling of the blink timer collapses the two
- * exits). Each spells the member through the stepped base. InitResources
- * and ChooseTarget still copy tiles through a volatile u16; a plain local
- * is shorter.
+ * code), and the grid cell in PlaceNextPicture steps by col * 9 + row (direct
+ * &mGrid[col][row] changes it). Each spells the member through the stepped
+ * base. InitResources and ChooseTarget still copy tiles through a volatile
+ * u16; a plain local is shorter.
  *
  * The measurements behind the source forms of MovePictureSway,
  * MovePictureDriftRandom, PlaceBoardLayout and PlaceNextPicture (for one,
@@ -49,11 +47,71 @@ enum dScMgLuigi_c_AssetId {
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
 
+/* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
+#define LUIGI_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
+
 typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
 typedef void (dScMgLuigi_c::*LuigiStateHandler)();
 
-/* Same spelling the matched IRQ::EnableIRQs / IRQ::DisableIRQs shards use. */
-#define IME (*(volatile u16 *)0x04000208)
+/* The HBlank interrupt the iris runs on (NitroSDK's OS_IE_H_BLANK). */
+#define OS_IE_H_BLANK 0x2
+
+/* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
+   previous master enable. */
+static inline int OS_DisableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 0;
+    return prep;
+}
+
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
+
+/* NitroSDK's window helpers (gx/gx.h, gx/g2.h) and the masks they take. */
+#define GX_WNDMASK_NONE 0x0
+#define GX_WNDMASK_W0 0x1
+#define GX_WNDMASK_OW 0x4
+
+#define GX_WND_PLANEMASK_BG2 0x04
+#define GX_WND_PLANEMASK_BG3 0x08
+#define GX_WND_PLANEMASK_OBJ 0x10
+
+static inline void GX_SetVisibleWnd(int window) {
+    REG_DISPCNT = (u32)((REG_DISPCNT & ~0xe000) | (window << 13));
+}
+
+static inline void GXS_SetVisibleWnd(int window) {
+    REG_DISPCNT_SUB = (u32)((REG_DISPCNT_SUB & ~0xe000) | (window << 13));
+}
+
+static inline void G2_SetWnd0InsidePlane(int wnd, int effect) {
+    u32 tmp = ((REG_WININ & ~0x3f) | (u32)wnd);
+    if (effect)
+        tmp |= 0x20;
+    REG_WININ = (u16)tmp;
+}
+
+static inline void G2_SetWndOutsidePlane(int wnd, int effect) {
+    u32 tmp = ((REG_WINOUT & ~0x3f) | (u32)wnd);
+    if (effect)
+        tmp |= 0x20;
+    REG_WINOUT = (u16)tmp;
+}
+
+static inline void G2_SetWndOBJInsidePlane(int wnd, int effect) {
+    u32 tmp = ((REG_WINOUT & ~0x3f00) | ((u32)wnd << 8));
+    if (effect)
+        tmp |= 0x20 << 8;
+    REG_WINOUT = (u16)tmp;
+}
+
+static inline void G2_SetWnd0Position(int x1, int y1, int x2, int y2) {
+    REG_WIN0H = (u16)(((x1 << 8) & 0xff00) | (x2 & 0xff));
+    REG_WIN0V = (u16)(((y1 << 8) & 0xff00) | (y2 & 0xff));
+}
 
 /* Scanline window record pushed to the iris hardware. */
 struct IrisScanlineTable {
@@ -120,39 +178,42 @@ dScMgLuigi_c::~dScMgLuigi_c() {}
 
 /* The base cleanup returns void; call it, don't return it. */
 void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
-    if (vfSuccess == 2 && IRQ::GetIRQHandler(2) == Luigi_PrepareScanlines) {
-        u16 ime;
-        do {
-            ime = IME;
-            IME = 0;
-        } while (ime != 0);
-        IRQ::DisableIRQs(2);
-        func_02053c10(0);
-        IRQ::SetIRQHandler(2, 0);
-        ime = IME;
-        IME = 1;
+    if (vfSuccess == 2 && IRQ::GetIRQHandler(OS_IE_H_BLANK) == Luigi_PrepareScanlines) {
+        /* The ROM reads IME back until it comes back clear, so this is a
+           loop, not the save/restore pair IrisStop uses. */
+        while (OS_DisableIrq() != 0) {
+        }
+        IRQ::DisableIRQs(OS_IE_H_BLANK);
+        func_02053c10(0); /* GX_HBlankIntr(FALSE) */
+        IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+        OS_EnableIrq();
     }
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
 
-/* IRQ 2's handler uses the void(*)() callback installed by StartIris.
+extern "C" {
+extern short data_023c0000[]; /* HW_DTCM; the IRQ check word sits at +0x3ff8 */
+}
+
+/* NitroSDK's OS_SetIrqCheckFlag: tells OS_WaitIrq the interrupt was taken. */
+static inline void OS_SetIrqCheckFlag(int intr) {
+    *(volatile u32 *)((u32)data_023c0000 + 0x3ff8) |= (u32)intr;
+}
+
+/* The HBlank handler (OS_IE_H_BLANK) StartIris installs as a void(*)() callback.
  * It accesses shared scanline state and remains a free function. */
 extern "C" {
 void Luigi_PrepareScanlines(void) {
-    extern char data_023c0000[];
     extern int data_0209f608;
     extern int data_0209f648[][192];
     extern void MultiCopy_Int(int *src, int *dst, int byteCount);
     int nextLine;
-    /* The (int) cast is what keeps this handler the same size. It is the
-       only one of 24 launders this TU inherited from its shards that pays;
-       do not re-add the other 23. */
-    *(int *)((int)data_023c0000 + 0x3ff8) |= 2;
+    OS_SetIrqCheckFlag(OS_IE_H_BLANK);
     nextLine = REG_VCOUNT + 1;
     if (nextLine >= 0xc0) {
         Luigi_PushScanlineRecord();
     } else if (nextLine <= 0xc0) {
-        if (*(volatile u16 *)0x04000004 & 2) {
+        if (REG_DISPSTAT & DISPSTAT_HBLANK) {
             MultiCopy_Int(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
         }
     }
@@ -218,21 +279,17 @@ extern "C" {
 extern unsigned char gSubScreenLayers;
 }
 void dScMgLuigi_c::IrisStop(int idx) {
-    volatile unsigned short *ime = &IME;
-    unsigned short saved;
+    int enabled;
     mIris[idx].active = 0;
-    saved = *ime;
-    *ime = 0;
-    IRQ::DisableIRQs(2);
+    enabled = OS_DisableIrq();
+    IRQ::DisableIRQs(OS_IE_H_BLANK);
     func_02053c10(0);
-    IRQ::SetIRQHandler(2, 0);
-    if (saved != 0) {
-        *ime;
-        *ime = 1;
-    }
-    REG_DISPCNT &= ~0xe000;
-    REG_DISPCNT_SUB &= ~0xe000;
-    gSubScreenLayers |= 4;
+    IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+    if (enabled != 0)
+        OS_EnableIrq();
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
+    gSubScreenLayers |= DISPLAY_LAYER_BG2;
 }
 
 extern "C" {
@@ -263,7 +320,7 @@ void dScMgLuigi_c::UpdateIris() {
 void dScMgLuigi_c::StartIris() {
     extern unsigned int data_0209f608;
     extern unsigned char data_0209d460;
-    unsigned short saved;
+    int enabled;
     mIris[0].active = 1;
     mIris[0].x = 0x80000;
     mIris[0].y = 0x60000;
@@ -277,28 +334,18 @@ void dScMgLuigi_c::StartIris() {
     BuildIrisTable(0);
 
     data_0209f608 = 0;
-    saved = IME;
-    IME = 0;
-    IRQ::SetIRQHandler(2, Luigi_PrepareScanlines);
+    enabled = OS_DisableIrq();
+    IRQ::SetIRQHandler(OS_IE_H_BLANK, Luigi_PrepareScanlines);
 
-    REG_DISPCNT = (REG_DISPCNT & ~0xe000) | 0x2000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0);
     data_0209d460 = 1;
-    {
-        unsigned int v = *(volatile unsigned short *)0x04000048;
-        v = (v & ~0x3f) | 0x18;
-        v = v | 0x20;
-        *(volatile unsigned short *)0x04000048 = v;
-    }
-    *(volatile unsigned short *)0x0400004a =
-        (*(volatile unsigned short *)0x0400004a & ~0x3f) | 0x14;
-    *(volatile unsigned short *)0x04000040 = 0;
-    *(volatile unsigned short *)0x04000044 = 0xc0;
-    IRQ::EnableIRQs(2);
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ, 1);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_OBJ, 0);
+    G2_SetWnd0Position(0, 0, 0, 0xc0);
+    IRQ::EnableIRQs(OS_IE_H_BLANK);
     func_02053c10(1);
-    if (saved != 0) {
-        IME;
-        IME = 1;
-    }
+    if (enabled != 0)
+        OS_EnableIrq();
 }
 
 void dScMgLuigi_c::DrawReward() {
@@ -333,10 +380,8 @@ void dScMgLuigi_c::UpdateReward() {
         mReward.y += mReward.velY;
         mReward.velY -= 0x100;
         if (mReward.timer != 0) {
-            int remainingTicks;
             mReward.timer--;
-            remainingTicks = mReward.timer;
-            if (remainingTicks < 0)
+            if ((s16)mReward.timer < 0)
                 mReward.timer = 0;
             return;
         }
@@ -347,22 +392,20 @@ void dScMgLuigi_c::UpdateReward() {
 
     if (mReward.phase == 1) {
         if (mReward.timer != 0) {
-            int remainingTicks;
             mReward.timer--;
-            remainingTicks = mReward.timer;
-            if (remainingTicks < 0)
+            if ((s16)mReward.timer < 0)
                 mReward.timer = 0;
             return;
         }
         mReward.shown = 0;
         mReward.phase += 1;
         {
-            char *g = (char *)gMgScene;
-            if (g != 0) {
-                if (((dScMgBase_c *)g)->mHudScore < 0x270f)
-                    ((dScMgBase_c *)g)->mHudScore += 1;
-                if (((dScMgBase_c *)g)->mHudScore > ((dScMgBase_c *)g)->mBestHudScore)
-                    ((dScMgBase_c *)g)->mBestHudScore = ((dScMgBase_c *)g)->mHudScore;
+            dScMgBase_c *scene = gMgScene;
+            if (scene != 0) {
+                if (scene->mHudScore < 0x270f)
+                    scene->mHudScore += 1;
+                if (scene->mHudScore > scene->mBestHudScore)
+                    scene->mBestHudScore = scene->mHudScore;
             }
         }
         Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
@@ -376,9 +419,9 @@ void dScMgLuigi_c::UpdateReward() {
         Sound::PlayBank2_2D(0x1bc);
         mReward.timer = 0;
         mReward.sparks -= 1;
-        *(u16 *)&mTime += 1;
-        if (*(u16 *)&mTime >= 0x32) {
-            *(u16 *)&mTime = 0x32;
+        mTime += 1;
+        if (mTime >= 0x32) {
+            mTime = 0x32;
             mTimeTick = 0;
         }
         return;
@@ -399,55 +442,51 @@ void dScMgLuigi_c::StartReward(int pictureIndex) {
 }
 
 void dScMgLuigi_c::DrawCurtains() {
-    extern char *sLuigiCurtainSprite;
+    extern OamAttr *sLuigiCurtainSprite;
     int curtainIndex;
     for (curtainIndex = 0; curtainIndex < 2; curtainIndex++) {
         if (mCurtain[curtainIndex].shown != 0) {
             int x = mCurtain[curtainIndex].x >> 0xc;
             int y = mCurtain[curtainIndex].y >> 0xc;
-            char *entry = sLuigiCurtainSprite;
+            OamAttr *entry = sLuigiCurtainSprite;
             for (;;) {
                 GXOamAttr *oam =
                     (GXOamAttr *)Mg_RenderMainSpriteScaled((int)entry, x, y, -1, 1, 0x1000, 0);
                 if (oam != 0) {
                     G2_SetOBJMode(oam, GX_OAM_MODE_OBJWND, oam->cParam);
                 }
-                if (((OamAttr *)entry)->attr3 == 0xffff)
+                if (entry->attr3 == 0xffff)
                     break;
-                entry += 8;
+                entry++;
             }
         }
     }
 }
 
 void dScMgLuigi_c::CurtainStateSlow(int curtainIndex) {
-    int *velocity;
-    int *position;
     int screenX;
     mCurtain[curtainIndex].count = mCurtain[curtainIndex].count + 1;
     if (mCurtain[curtainIndex].count == 0x1a)
         Sound::PlayBank2_2D(0x1b9);
-    velocity = &mCurtain[curtainIndex].velX;
-    position = &mCurtain[curtainIndex].x;
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
     if (curtainIndex == 0) {
-        *velocity = *velocity - 0x140;
+        mCurtain[curtainIndex].velX -= 0x140;
         if (screenX < 0x80)
             return;
-        if (*velocity <= 0)
+        if (mCurtain[curtainIndex].velX <= 0)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
         FreeGfxSlotsById(0xd);
     } else {
-        *velocity = *velocity + 0x140;
+        mCurtain[curtainIndex].velX += 0x140;
         if (screenX > 0x80)
             return;
-        if (*velocity >= 0)
+        if (mCurtain[curtainIndex].velX >= 0)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
     }
@@ -456,17 +495,15 @@ void dScMgLuigi_c::CurtainStateSlow(int curtainIndex) {
 /* The tests on i inside the arm that already tested i stay. Folding them
    drops code this compiler still emits. */
 void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
-    int *velocity = &mCurtain[curtainIndex].velX;
-    int *position = &mCurtain[curtainIndex].x;
     int screenX;
 
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
 
     if (curtainIndex == 0) {
-        *velocity += 0x140;
-        if (screenX >= 0x80 && *velocity > 0) {
-            *position = 0x80000;
+        mCurtain[curtainIndex].velX += 0x140;
+        if (screenX >= 0x80 && mCurtain[curtainIndex].velX > 0) {
+            mCurtain[curtainIndex].x = 0x80000;
             mCurtain[curtainIndex].active = 0;
             mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
             if (curtainIndex == 0)
@@ -478,9 +515,9 @@ void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
         mCurtain[curtainIndex].sound =
             Sound_PlayIfNotActive(mCurtain[curtainIndex].sound, 2, 0x1b8, 0);
     } else {
-        *velocity -= 0x140;
-        if (screenX <= 0x80 && *velocity < 0) {
-            *position = 0x80000;
+        mCurtain[curtainIndex].velX -= 0x140;
+        if (screenX <= 0x80 && mCurtain[curtainIndex].velX < 0) {
+            mCurtain[curtainIndex].x = 0x80000;
             mCurtain[curtainIndex].active = 0;
             mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
             if (curtainIndex != 0)
@@ -496,36 +533,29 @@ void dScMgLuigi_c::CurtainStateFast(int curtainIndex) {
 }
 
 void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
-    int *velocity;
-    int *position;
     int screenX;
     mCurtain[curtainIndex].count = mCurtain[curtainIndex].count + 1;
     if (mCurtain[curtainIndex].count == 0x35)
         Sound::PlayBank2_2D(0x1b9);
     if (curtainIndex == 0) {
         if (mCurtain[curtainIndex].count <= 0x35) {
-            int *sound = &mCurtain[curtainIndex].sound;
-            *sound = Sound_PlayIfNotActive(*sound, 2, 0x1b8, 0);
+            mCurtain[curtainIndex].sound =
+                Sound_PlayIfNotActive(mCurtain[curtainIndex].sound, 2, 0x1b8, 0);
         }
     }
-    {
-        unsigned short *delay = (unsigned short *)&mCurtain[curtainIndex].delay;
-        if (*delay != 0) {
-            *delay = *delay - 1;
-            if ((short)*delay < 0)
-                *delay = 0;
-            return;
-        }
+    if (mCurtain[curtainIndex].delay != 0) {
+        mCurtain[curtainIndex].delay--;
+        if ((s16)mCurtain[curtainIndex].delay < 0)
+            mCurtain[curtainIndex].delay = 0;
+        return;
     }
-    velocity = &mCurtain[curtainIndex].velX;
-    position = &mCurtain[curtainIndex].x;
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
     if (curtainIndex == 0) {
-        *velocity = *velocity + 0x140;
+        mCurtain[curtainIndex].velX += 0x140;
         if (screenX > 0x80)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
         FreeGfxSlotsById(0x1d);
@@ -535,10 +565,10 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
         mPromptBlinkCount = 1;
         mPromptBlinkTimer = 0;
     } else {
-        *velocity = *velocity - 0x140;
+        mCurtain[curtainIndex].velX -= 0x140;
         if (screenX < 0x80)
             return;
-        *position = 0x80000;
+        mCurtain[curtainIndex].x = 0x80000;
         mCurtain[curtainIndex].active = 0;
         mCurtain[curtainIndex].phase = CURTAIN_BOUNCE;
         FreeGfxSlotsById(0x1d);
@@ -551,26 +581,24 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
 }
 
 void dScMgLuigi_c::CurtainStateBounce(int curtainIndex) {
-    int *velocity = &mCurtain[curtainIndex].velX;
-    int *position = &mCurtain[curtainIndex].x;
     int screenX;
-    *position = *position + *velocity;
-    screenX = *position >> 12;
+    mCurtain[curtainIndex].x += mCurtain[curtainIndex].velX;
+    screenX = mCurtain[curtainIndex].x >> 12;
     if (curtainIndex == 0) {
-        *velocity -= 0x100;
+        mCurtain[curtainIndex].velX -= 0x100;
         if (screenX >= 0x140) {
-            *position = 0x140000;
+            mCurtain[curtainIndex].x = 0x140000;
             mCurtain[curtainIndex].phase++;
             mCurtain[curtainIndex].delay = 0x10;
-            *velocity = -0x6000;
+            mCurtain[curtainIndex].velX = -0x6000;
         }
     } else {
-        *velocity += 0x100;
+        mCurtain[curtainIndex].velX += 0x100;
         if (screenX <= -0x40) {
-            *position = -0x40000;
+            mCurtain[curtainIndex].x = -0x40000;
             mCurtain[curtainIndex].phase++;
             mCurtain[curtainIndex].delay = 0x10;
-            *velocity = 0x6000;
+            mCurtain[curtainIndex].velX = 0x6000;
         }
     }
     if (curtainIndex == 0) {
@@ -587,27 +615,18 @@ void dScMgLuigi_c::CurtainUpdate(int i) {
 void dScMgLuigi_c::CurtainStart(int curtainIndex) {
     extern unsigned char data_0209d460;
     extern int sLuigiCurtainX[];
-    unsigned short delay;
-    int windowMask;
     int roundInSet;
 
-    delay = *(unsigned short *)&mCurtain[curtainIndex].delay;
-    if (delay != 0) {
-        mCurtain[curtainIndex].delay = delay - 1;
-        if (mCurtain[curtainIndex].delay < 0)
+    if (mCurtain[curtainIndex].delay != 0) {
+        mCurtain[curtainIndex].delay--;
+        if ((s16)mCurtain[curtainIndex].delay < 0)
             mCurtain[curtainIndex].delay = 0;
         return;
     }
 
-    windowMask = *(unsigned short *)0x0400004a;
-    windowMask &= ~0x3f00;
-    windowMask |= 0x1800;
-    windowMask &= ~0x2000;
-    windowMask |= 0x2000;
-    *(unsigned short *)0x0400004a = windowMask;
-    windowMask = (*(unsigned short *)0x0400004a & ~0x3f) | 0x14;
-    *(unsigned short *)0x0400004a = windowMask;
-    *(volatile int *)0x04000000 = (*(volatile int *)0x04000000 & ~0xe000) | 0x8000;
+    G2_SetWndOBJInsidePlane(GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ, 1);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_OBJ, 0);
+    GX_SetVisibleWnd(GX_WNDMASK_OW);
     data_0209d460 = 4;
 
     mCurtain[curtainIndex].x = sLuigiCurtainX[curtainIndex] << 12;
@@ -665,25 +684,19 @@ void dScMgLuigi_c::DrawTimer() {
         return;
     language = GetGameLanguage();
     DrawOamSprite(sLuigiTextSpritesByLanguage[language][3], 0x80, 0x10, 0);
-    Mg_DrawNumberRotated(0x80, 0x28, static_cast<u16>(mTime), 1, -1, 0x800, 0);
+    Mg_DrawNumberRotated(0x80, 0x28, mTime, 1, -1, 0x800, 0);
 }
 
 void dScMgLuigi_c::TickTimer() {
-    if (*(u16 *)&mTime != 0) {
-        {
-            u8 *tick = &mTimeTick;
-            *tick = *tick + 1;
-        }
+    if (mTime != 0) {
+        mTimeTick++;
         if (mTimeTick < 0x3c)
             return;
         mTimeTick = 0;
-        {
-            u16 *seconds = (u16 *)&mTime;
-            *seconds = *seconds - 1;
-        }
-        if (mTime <= 0)
+        mTime--;
+        if ((s16)mTime <= 0)
             mTime = 0;
-        if (*(u16 *)&mTime <= 2) {
+        if (mTime <= 2) {
             Sound::PlayBank2_2D(0xa6);
             return;
         }
@@ -775,8 +788,8 @@ void dScMgLuigi_c::AddPenalty(int pictureIndex) {
         mPenalty[penaltyIndex].y = mPosY[pictureIndex];
         mPenalty[penaltyIndex].velY = 0x1100;
         mPenalty[penaltyIndex].phase = 0;
-        *(u16 *)&mTime -= 0xa;
-        if (mTime < 0)
+        mTime -= 0xa;
+        if ((s16)mTime < 0)
             mTime = 0;
         return;
     }
@@ -791,45 +804,26 @@ void dScMgLuigi_c::DrawWantedIcon() {
 }
 
 void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
-    char *blinkBase = (char *)mBlink;
-    int byteOffset = pictureIndex * 2;
-    unsigned short timer = *(unsigned short *)(blinkBase + byteOffset);
-    unsigned char *shown;
-
-    *(short *)(blinkBase + byteOffset) = (short)(timer - 1);
-
-    if ((short)mBlink[pictureIndex] < 0)
+    mBlink[pictureIndex]--;
+    if ((s16)mBlink[pictureIndex] < 0)
         mBlink[pictureIndex] = 0;
 
-    /* Two exits, not one if/else: folding them changes the code. */
-    if ((((unsigned short)mBlink[pictureIndex] >> 2) & 1) != 0) {
-        char *shownBase = (char *)mShown;
-        shownBase[pictureIndex] = 0;
-        shown = (unsigned char *)(shownBase + pictureIndex);
-        goto after_flag;
-    }
-    {
-        char *shownBase = (char *)mShown;
-        shownBase[pictureIndex] = 1;
-        shown = (unsigned char *)(shownBase + pictureIndex);
-    }
-after_flag:
+    if ((mBlink[pictureIndex] >> 2) & 1)
+        mShown[pictureIndex] = 0;
+    else
+        mShown[pictureIndex] = 1;
+
     if (mBlink[pictureIndex] != 0)
         return;
     mKind[pictureIndex] = 0;
-    *shown = 1;
+    mShown[pictureIndex] = 1;
 }
 
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     extern int sLuigiBounceSpeeds[];
-    u8 *started = &mStarted[pictureIndex];
-
-    if (*started == 0) {
-        u32 randomValue = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        u16 initialAngle = (u16)(((randomValue << 4) >> 15) << 12);
-
-        mMovePhase[pictureIndex] = initialAngle;
-        *started += 1;
+    if (mStarted[pictureIndex] == 0) {
+        mMovePhase[pictureIndex] = LUIGI_RAND(16) << 12;
+        mStarted[pictureIndex]++;
         return;
     }
 
@@ -913,10 +907,7 @@ void dScMgLuigi_c::MovePictureSway(int idx) {
 void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
     extern int sLuigiDriftRandomSpeed[];
     if (mStarted[pictureIndex] == 0) {
-        unsigned int randomValue =
-            ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        unsigned short initialAngle = (unsigned short)(((randomValue << 4) >> 15) << 12);
-        mMovePhase[pictureIndex] = initialAngle;
+        mMovePhase[pictureIndex] = LUIGI_RAND(16) << 12;
         mStarted[pictureIndex]++;
         return;
     }
@@ -1047,12 +1038,12 @@ void dScMgLuigi_c::StopPicture(int idx) {
 
 void dScMgLuigi_c::RestartPicture(int idx) {
     unsigned char *self = (unsigned char *)this;
-    extern unsigned char data_ov006_0213ceac[];
+    extern unsigned char sLuigiBoardMovers[];
     unsigned short board = mBoard;
     self += idx;
     ((dScMgLuigi_c *)self)->mShown[0] = 1;
     ((dScMgLuigi_c *)self)->mStarted[0] = 0;
-    ((dScMgLuigi_c *)self)->mKind[0] = data_ov006_0213ceac[board] + 1;
+    ((dScMgLuigi_c *)self)->mKind[0] = sLuigiBoardMovers[board] + 1;
 }
 
 void dScMgLuigi_c::UpdatePictures() {
@@ -1077,7 +1068,7 @@ void dScMgLuigi_c::BeginCatch(int found) {
     while (roundInSet >= 5)
         roundInSet -= 5;
     if (roundInSet != 4)
-        *(unsigned short *)&mCatchWait += 8;
+        mCatchWait += 8;
     if (found == 0)
         mCatchWait = 0x80;
     mFound = (unsigned char)found;
@@ -1146,7 +1137,7 @@ void dScMgLuigi_c::CheckTouch() {
                     mFound = 0;
                     mKind[pictureIndex] = PICTURE_FLASH;
                     mBlink[pictureIndex] = 0x40;
-                    if (*(u16 *)&mTime != 0) {
+                    if (mTime != 0) {
                         int targetIndex = mTarget;
                         int targetOffsetX = (mPosX[targetIndex - 1] >> 12) - 0x80;
                         int pan = (targetOffsetX * 0x30) >> 7;
@@ -1278,9 +1269,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
     }
 
     for (i = 0; i < 8; i++)
-        mColDir[i] = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15;
+        mColDir[i] = LUIGI_RAND(2);
     for (i = 0; i < 6; i++)
-        mRowDir[i] = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15;
+        mRowDir[i] = LUIGI_RAND(2);
     mFilled++;
 }
 
@@ -1296,7 +1287,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     int col;
     int row;
     int attempts;
-    int randomValue;
+    int randomValue; /* LUIGI_RAND(4) for the first roll: PlaceNextPicture 49 words off */
 
     if (mFilled != 0)
         return;
@@ -1315,8 +1306,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     {
         u8 *character = &mCharacter[pictureIndex];
         if (mWanted == mCharacter[pictureIndex]) {
-            randomValue = RandomIntInternal(&data_0209d4b8.value);
-            *character += ((((u32)randomValue >> 16) & 0x7fff) * 3 >> 15) + 1;
+            *character += LUIGI_RAND(3) + 1;
             *character &= 3;
         }
     }
@@ -1325,14 +1315,14 @@ void dScMgLuigi_c::PlaceNextPicture() {
         int jitterX;
         int jitterY;
         do {
-            col = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 13 >> 15;
-            row = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15;
+            col = LUIGI_RAND(13);
+            row = LUIGI_RAND(9);
         } while (col >= 6 && col <= 10 && row >= 4 && row <= 8);
 
         jitterY = -2;
         jitterX = jitterY;
-        jitterX += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
-        jitterY += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
+        jitterX += LUIGI_RAND(5);
+        jitterY += LUIGI_RAND(5);
 
         if (sLuigiBoardFlags[boardIndex] != 0) {
             mPosX[0] = (col * 20 + (jitterX + 8)) << 12;
@@ -1366,8 +1356,8 @@ void dScMgLuigi_c::PlaceNextPicture() {
                     row = 0;
             }
         } else {
-            col = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 13 >> 15;
-            row = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15;
+            col = LUIGI_RAND(13);
+            row = LUIGI_RAND(9);
         }
         cell = ((dScMgLuigi_c *)((char *)this + col * 9 + row))->mGrid[0];
         if (*cell == 0) {
@@ -1375,8 +1365,8 @@ void dScMgLuigi_c::PlaceNextPicture() {
             int jitterY;
             jitterY = -2;
             jitterX = jitterY;
-            jitterX += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
-            jitterY += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
+            jitterX += LUIGI_RAND(5);
+            jitterY += LUIGI_RAND(5);
             mPosX[pictureIndex] = (col * 20 + (jitterX + 8)) << 12;
             mPosY[pictureIndex] = (row * 20 + (jitterY + 16)) << 12;
             *cell = 1;
@@ -1405,14 +1395,10 @@ void dScMgLuigi_c::PlaceNextPicture() {
     if (mFilled == 0)
         return;
 
-    mLevelPhase[0] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
-    mLevelPhase[1] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
-    mLevelPhase[2] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
-    mLevelPhase[3] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
+    mLevelPhase[0] = LUIGI_RAND(16) << 12;
+    mLevelPhase[1] = LUIGI_RAND(16) << 12;
+    mLevelPhase[2] = LUIGI_RAND(16) << 12;
+    mLevelPhase[3] = LUIGI_RAND(16) << 12;
 }
 
 void dScMgLuigi_c::ChooseTarget() {
@@ -1435,8 +1421,7 @@ void dScMgLuigi_c::ChooseTarget() {
         choiceOffset = 0xa;
     }
 
-    mWanted = (sLuigiWantedPicks + choiceOffset)
-        [((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xa) >> 15];
+    mWanted = (sLuigiWantedPicks + choiceOffset)[LUIGI_RAND(10)];
 
     t = mBoard;
     if (t == 9) {
@@ -1444,9 +1429,7 @@ void dScMgLuigi_c::ChooseTarget() {
     }
     if (t == 0xe || t == 0x10 || t == 0x11 || t == 0x13) {
         if (mWanted == 3) {
-            mWanted =
-                (u8)(((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
-                     15);
+            mWanted = (u8)LUIGI_RAND(3);
         }
     }
 
@@ -1467,14 +1450,9 @@ void dScMgLuigi_c::ChooseBoard() {
     mPrevBoard = mBoard;
     boardIndex = mLevel;
     if (boardIndex >= 0x14) {
-        int pick =
-            (int)(((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xa) >>
-                  0xf);
+        int pick = LUIGI_RAND(10);
         if (pick + 0xa == mPrevBoard) {
-            int step =
-                (int)(((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9) >>
-                      0xf) +
-                1;
+            int step = LUIGI_RAND(9) + 1;
             pick += step;
             if (pick >= 0xa)
                 pick -= 0xa;
@@ -1570,14 +1548,14 @@ void dScMgLuigi_c::StateCatch() {
             mShown[pictureIndex] = 0;
     }
 
-    if (*(unsigned short *)&mCatchWait == 0)
+    if (mCatchWait == 0)
         return;
-    *(unsigned short *)&mIconOn = 1;
-    *(unsigned short *)&mCatchWait -= 1;
-    if (mCatchWait > 0)
+    mIconOn = 1;
+    mCatchWait -= 1;
+    if ((s16)mCatchWait > 0)
         return;
-    *(unsigned short *)&mCatchWait = 0;
-    *(unsigned short *)&mIconOn = 0;
+    mCatchWait = 0;
+    mIconOn = 0;
 
     if (mFound != 0) {
         int roundInSet = mLevel;
@@ -1652,31 +1630,25 @@ extern int sMgResultsBannerX;
 extern int sMgResultsBannerY;
 }
 
-/* Same signature as dScMgBase_c::StartRound, or this stops overriding it.
-   mLevel is re-read through an int* so the compare is not folded away. */
+/* Same signature as dScMgBase_c::StartRound, or this stops overriding it. */
 void dScMgLuigi_c::StartRound(int mode) {
-    char *p;
-    int *level;
-
     if (mFound != 0) {
         mClears += 1;
-        level = (int *)&mLevel;
-        *level += 1;
-        if ((unsigned int)*(int *)&mLevel > 0x270e)
-            *(int *)&mLevel = 0x270e;
+        mLevel += 1;
+        if (mLevel > 0x270e)
+            mLevel = 0x270e;
     }
 
     if (mode == 0x12) {
         mTime = 0xa;
-        *(int *)&mLevel = 0;
-        if ((unsigned int)*(int *)&mLevel > 0x270e)
-            *(int *)&mLevel = 0x270e;
+        mLevel = 0;
+        if (mLevel > 0x270e)
+            mLevel = 0x270e;
 
         if (gMgScene != 0)
             gMgScene->mHudScore = 0;
 
-        p = (char *)gMgScene;
-        Mg_SubmitScore(p != 0 ? ((dScMgBase_c *)p)->mHudScore : 0);
+        Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
     }
 
     FreeGfxSlotsById(0x1d);
@@ -1685,7 +1657,7 @@ void dScMgLuigi_c::StartRound(int mode) {
 
     mState = STATE_SETUP;
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    gSubScreenLayers &= ~4;
+    gSubScreenLayers &= ~DISPLAY_LAYER_BG2;
 
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
 }
@@ -1722,8 +1694,8 @@ s32 dScMgLuigi_c::InitResources() {
         return 0;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x0400000e = (*(volatile u16 *)0x0400000e & ~3) | 2;
-    *(volatile u16 *)0x0400000e = (*(volatile u16 *)0x0400000e & 0x43) | 0x1218;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1218;
 
     DecompressLZ16(arc, (void *)func_02054d88());
 
@@ -1736,10 +1708,10 @@ s32 dScMgLuigi_c::InitResources() {
     Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    *(volatile u16 *)0x0400000c &= ~3;
-    *(volatile u16 *)0x0400000c &= ~0x40;
-    *(volatile u32 *)0x04000018 = 0;
-    *(volatile u16 *)0x0400000c = (*(volatile u16 *)0x0400000c & 0x43) | 0x1410;
+    REG_BG2CNT &= ~3;
+    REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
+    REG_BG2OFS = 0;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1410;
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
     DecompressLZ16(fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
@@ -1758,10 +1730,10 @@ s32 dScMgLuigi_c::InitResources() {
     DecompressLZ16(objectTiles, (void *)0x6400000);
     GX::LoadOBJPltt(fileData, 0, 0x100);
 
-    *(volatile u16 *)0x0400100c &= ~3;
-    *(volatile u16 *)0x0400100c &= ~0x40;
-    *(volatile u32 *)0x04001018 = 0;
-    *(volatile u16 *)0x0400100c = (*(volatile u16 *)0x0400100c & 0x43) | 0x1210;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
+    REG_DB_BG2OFS = 0;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1210;
 
     {
         void *subFileData;
@@ -1777,9 +1749,9 @@ s32 dScMgLuigi_c::InitResources() {
         func_02056374(subFileData, 0, 0x800);
         Deallocate(subFileData);
 
-        gSubScreenLayers |= 8;
-        *(volatile u16 *)0x0400100e &= ~3;
-        *(volatile u16 *)0x0400100e = (*(volatile u16 *)0x0400100e & 0x43) | 0x1410;
+        gSubScreenLayers |= DISPLAY_LAYER_BG3;
+        REG_DB_BG3CNT &= ~3;
+        REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1410;
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
         screenMap = G2S::GetBG3ScrPtr();
