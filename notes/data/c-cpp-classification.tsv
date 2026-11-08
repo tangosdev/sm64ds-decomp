@@ -2455,7 +2455,7 @@ src/unnamed/arm9/0205/func_020551f0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_0205532c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02055388.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_020553a4.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_020553c0.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
+src/GXi_NopClearFifo128_.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/unnamed/arm9/0205/func_02055454.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02055464.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02055490.c	PURE-C	arm9				1		None		-

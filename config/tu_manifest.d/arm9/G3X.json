@@ -6,9 +6,9 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "The Nitro SDK's gx_g3x.c, 0x020553c0..0x02055998, less its first function: 13 functions from 0x02055454. pret/pokediamond's arm9/lib/NitroSDK/src/GX_g3x.c, compiled with its own pinned mwccarm 1.2/sp2p3, emits 17: GXi_NopClearFifo128_ 0x94, G3X_SetHOffset 0x10, G3X_GetBoxTestResult 0x28, G3X_GetMtxStackLevelPJ 0x2c, G3X_GetMtxStackLevelPV 0x2c, G3X_InitTable 0xa8, G3X_SetClearColor 0x30, G3X_SetFogTable 0x14, G3X_SetEdgeColorTable 0x18, G3X_GetVectorMtx 0x48, G3X_GetClipMtx 0x48, G3X_SetFog 0x54, G3X_ResetMtxStack_2 0xac, G3X_InitMtxStack 0xb0, G3X_ClearFifo 0x34, G3X_ResetMtxStack 0x88, G3X_Init 0x15c. Thirteen land in that order: func_020553c0, func_02055454, func_02055464, func_02055490, func_020554bc (0xb8, drift), SetClearColor, SetFogTable, SetFog, func_02055624, func_020556d0, func_02055780, func_020557b4, func_0205583c, all at pret's sizes except InitTable. GetBoxTestResult, SetEdgeColorTable, GetVectorMtx and GetClipMtx are absent because nothing in this game calls them.",
+    "The Nitro SDK's gx_g3x.c, 0x020553c0..0x02055998, less its first function: 13 functions from 0x02055454. pret/pokediamond's arm9/lib/NitroSDK/src/GX_g3x.c, compiled with its own pinned mwccarm 1.2/sp2p3, emits 17: GXi_NopClearFifo128_ 0x94, G3X_SetHOffset 0x10, G3X_GetBoxTestResult 0x28, G3X_GetMtxStackLevelPJ 0x2c, G3X_GetMtxStackLevelPV 0x2c, G3X_InitTable 0xa8, G3X_SetClearColor 0x30, G3X_SetFogTable 0x14, G3X_SetEdgeColorTable 0x18, G3X_GetVectorMtx 0x48, G3X_GetClipMtx 0x48, G3X_SetFog 0x54, G3X_ResetMtxStack_2 0xac, G3X_InitMtxStack 0xb0, G3X_ClearFifo 0x34, G3X_ResetMtxStack 0x88, G3X_Init 0x15c. Thirteen land in that order: GXi_NopClearFifo128_, func_02055454, GetMtxStackLevelPJ, GetMtxStackLevelPV, InitTable (0xb8, drift), SetClearColor, SetFogTable, SetFog, ResetMtxStack, InitMtxStack, ClearFifo, Reset, func_0205583c, all at pret's sizes except InitTable. pret calls the 0x88 function G3X_ResetMtxStack and the 0xac one G3X_ResetMtxStack_2; ntrtwl/NitroSDK's gx_g3x.c names them G3X_Reset (the one that also resets PolygonAttr, TexImageParam and TexPlttBase after G3X_ResetMtxStack) and G3X_ResetMtxStack, and the members take the SDK names. GetBoxTestResult, SetEdgeColorTable, GetVectorMtx and GetClipMtx are absent because nothing in this game calls them.",
     "func_020555a4 (0x18, between SetClearColor and SetFogTable) is G3X_SetToonTable: it copies 0x40 bytes to TOON_TABLE 0x4000380. pret's file doesn't have it (Pokemon doesn't link it), so its slot is the one place the order can't be checked against pret.",
-    "BOTTOM EDGE: func_020553c0 (0x020553c0..0x02055454) is GXi_NopClearFifo128_, gx_g3x.c's first function, an asm function in pret too. It stays its own source (src/unnamed/arm9/0205/func_020553c0.c) only because port/tools/hostgen.py skips any file holding an asm block, and the port hostgens this file for func_02055780. Below it, func_020553a4 is the last of three 0x1c matrix-command wrappers that begin with Geometry_MatrixMultiply3x3 at 0x0205536c; none of them is in GX_g3x.c.",
+    "BOTTOM EDGE: GXi_NopClearFifo128_ (0x020553c0..0x02055454) is gx_g3x.c's first function by address, an asm function in pret too. It stays its own source (src/GXi_NopClearFifo128_.c) only because port/tools/hostgen.py skips any file holding an asm block, and the port hostgens this file for G3X::ClearFifo. Below it, func_020553a4 is the last of three 0x1c matrix-command wrappers that begin with Geometry_MatrixMultiply3x3 at 0x0205536c; none of them is in GX_g3x.c.",
     "TOP EDGE: func_02055998 at 0x02055998 begins arm9/G3i (src/engine/gx/G3i.cpp).",
     "No lifecycle or RTTI: G3X has no instance state and no virtuals."
   ],
@@ -28,21 +28,21 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_02055464",
+      "symbol": "_ZN3G3X18GetMtxStackLevelPJEPi",
       "address": "0x02055464",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_02055464.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_02055490",
+      "symbol": "_ZN3G3X18GetMtxStackLevelPVEPi",
       "address": "0x02055490",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0205/func_02055490.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_020554bc",
+      "symbol": "_ZN3G3X9InitTableEv",
       "address": "0x020554bc",
       "size": "0x000000b8",
       "legacy_source": "src/func_020554bc.c",
@@ -77,28 +77,28 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_02055624",
+      "symbol": "_ZN3G3X13ResetMtxStackEv",
       "address": "0x02055624",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0205/func_02055624.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_020556d0",
+      "symbol": "_ZN3G3X12InitMtxStackEv",
       "address": "0x020556d0",
       "size": "0x000000b0",
       "legacy_source": "src/unnamed/arm9/0205/func_020556d0.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_02055780",
+      "symbol": "_ZN3G3X9ClearFifoEv",
       "address": "0x02055780",
       "size": "0x00000034",
       "legacy_source": "src/func_02055780.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_020557b4",
+      "symbol": "_ZN3G3X5ResetEv",
       "address": "0x020557b4",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0205/func_020557b4.c",
@@ -119,8 +119,8 @@
   "externalized_output": [],
   "notes": [
     "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main, so there was no candidate id to create from.",
-    "The address-named members keep their linker names with C linkage; their SDK names, from pret's GX_g3x.c, are in source comments.",
-    "PC port: smoke_gx hostgens func_02055780 by symbol, which emits this whole file; everything else is under #ifndef _MSC_VER because the rest calls SDK code the host build doesn't link. port/ntr/runtime.cpp supplies func_020553c0."
+    "G3X_Init (func_0205583c), G3X_SetToonTable (func_020555a4) and G3X_SetHOffset (func_02055454) keep their linker names with C linkage, with their SDK names in source comments; the other members are G3X:: statics under the SDK names.",
+    "PC port: smoke_gx hostgens G3X::ClearFifo (_ZN3G3X9ClearFifoEv) by symbol, which emits this whole file; everything else is under #ifndef _MSC_VER because the rest calls SDK code the host build doesn't link. port/ntr/runtime.cpp supplies GXi_NopClearFifo128_."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

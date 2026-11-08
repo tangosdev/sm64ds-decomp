@@ -21,9 +21,10 @@
 #include "ntr/mmio.h"
 #include "ntr/ppu.h"
 
+#include "G3X.h"
+
 extern "C" {
 void MI_SendGXCommandAsync(int ch, int src, int size, void (*cb)(int), int arg);
-void func_02055780(void);           /* the game's FIFO flush + busy wait */
 extern int MIi_GXDmaParams[8];     /* [0] = pump busy flag */
 }
 
@@ -112,7 +113,7 @@ static void submit_via_game(const ntr::BmdModel &m)
         CHECK(MIi_GXDmaParams[0] == 0); /* the pump drained and cleared busy */
     }
     ntr::gx_bind_texture(nullptr, 0, 0);
-    func_02055780();                    /* the game's FIFO flush (128 NOPs) */
+    G3X::ClearFifo();                   /* the game's FIFO flush (128 NOPs) */
 }
 
 int main(void)
