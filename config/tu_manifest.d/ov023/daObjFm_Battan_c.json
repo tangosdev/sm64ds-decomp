@@ -1007,14 +1007,14 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@439",
+      "from": "@447",
       "to": "@359",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @439 to @447 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
     },
     {
-      "from": "@440",
+      "from": "@448",
       "to": "@360",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @440 to @448 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
     }
   ]
 }

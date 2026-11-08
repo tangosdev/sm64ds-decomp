@@ -77,8 +77,6 @@
  * NO PRAGMAS. None of the nine legacy sources carried one.
  *
  * Notes:
- * - func_020393c4 (d_bg_w.cpp, no header) stores StoodOnCallback as
- *   mMeshCollider's stood-on callback.
  * - data_ov002_0210d6f4 CLPS handle: this TU claims .text only.
  * - InitResources 0x32a: named mCoinTimerSeed CSE's the field address.
  *   Keep (u16*)(c+0x300)[0x15] / ((int)c+0x32a).
@@ -130,7 +128,6 @@ extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
 extern "C" {
 extern u8 IsAreaShowing(s32 idx);
 extern u16 DecIfAbove0_Short(u16 *p);
-extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 extern int func_ov002_020dd8b8(void *c);
 }
 
@@ -222,7 +219,7 @@ int daObjBC_Switch_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)kcl, *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(&data_ov002_0210d6f4));
 
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     mPressed = 0;
 

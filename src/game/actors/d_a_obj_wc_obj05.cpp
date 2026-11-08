@@ -13,7 +13,7 @@
  * The destructor is inline in include/daObjWc_Obj05_c.h (D1 then D0, no D2).
  *
  * What stays:
- * - func_020393d4 / func_020393c4 / dBgW::SetClipRadius: InitResources stores
+ * - dBgW::SetBeforeClsnCallback / dBgW::SetStoodOnCallback / dBgW::SetClipRadius: InitResources stores
  *   dBgW::UpdatePosWithTransform and &StoodOnCallback on mMeshCollider;
  *   Behavior clips at 0x250000 through the dBgW property member.
  * - gWcObj05ModelFile / 02114284 are this TU's BMD/KCL file handles;
@@ -43,12 +43,6 @@ struct WcObj05CollisionFilePtr : SharedFilePtr {
     WcObj05CollisionFilePtr(u32 fileID);
     ~WcObj05CollisionFilePtr();
 };
-
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
 
 extern WcObj05ModelFilePtr gWcObj05ModelFile;
 extern WcObj05CollisionFilePtr gWcObj05CollisionFile;
@@ -93,8 +87,8 @@ s32 daObjWc_Obj05_c::InitResources() {
     UpdateClsnPosAndRot();
     KCL_File *mc = (KCL_File *)dBgW_Kc::LoadFile(gWcObj05CollisionFile);
     mMeshCollider.SetFile(mc, mClsnMat, 0x1000, mAngleY, data_ov029_0211306c);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mPrevPlayerOnTop = 0;
     mPlayerOnTop = mPrevPlayerOnTop;
     mDwellTimer = 0;

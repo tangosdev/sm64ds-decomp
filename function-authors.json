@@ -2027,7 +2027,7 @@
     },
     "arm9:0x0201559c": {
       "author": "andrewboudreau",
-      "name": "_ZN8dClipper13Func_0201559CEv"
+      "name": "_ZN8dClipper19UpdateFrustumPlanesEv"
     },
     "arm9:0x020156dc": {
       "author": "andrewboudreau",
@@ -2459,7 +2459,7 @@
     },
     "arm9:0x02016ff4": {
       "author": "tangosdev",
-      "name": "func_02016ff4"
+      "name": "_ZN11dExtModel_c13func_02016ff4EP8BMD_Fileii"
     },
     "arm9:0x02017060": {
       "author": "tangosdev",
@@ -5151,7 +5151,7 @@
     },
     "arm9:0x020371b0": {
       "author": "tangosdev",
-      "name": "func_020371b0"
+      "name": "_ZN10dBgCh_Actr13func_020371b0Ei"
     },
     "arm9:0x020371fc": {
       "author": "tangosdev",
@@ -5651,7 +5651,7 @@
     },
     "arm9:0x020393c4": {
       "author": "tangosdev",
-      "name": "func_020393c4"
+      "name": "_ZN4dBgW18SetStoodOnCallbackEPFvPS_P8dActor_cS2_E"
     },
     "arm9:0x020393cc": {
       "author": "tangosdev",
@@ -5659,7 +5659,7 @@
     },
     "arm9:0x020393d4": {
       "author": "tangosdev",
-      "name": "func_020393d4"
+      "name": "_ZN4dBgW21SetBeforeClsnCallbackEPFvRS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_E"
     },
     "arm9:0x020393dc": {
       "author": "andrewboudreau",
@@ -36303,7 +36303,7 @@
     },
     "ov063:0x0211c684": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c684"
+      "name": "_ZN11daTrsTrap_c19func_ov063_0211c684Ev"
     },
     "ov063:0x0211c6f8": {
       "author": "tangosdev",
@@ -36319,7 +36319,7 @@
     },
     "ov063:0x0211c82c": {
       "author": "andrewboudreau",
-      "name": "func_ov063_0211c82c"
+      "name": "_ZN11daTrsTrap_c19func_ov063_0211c82cEv"
     },
     "ov063:0x0211c89c": {
       "author": "tangosdev",

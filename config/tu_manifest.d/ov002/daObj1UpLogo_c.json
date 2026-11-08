@@ -648,14 +648,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@511",
+      "from": "@516",
       "to": "@383",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @399 now; licensed under the existing pin @383 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @399 now; licensed under the existing pin @383 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now | Re-keyed @511 -> @516 (measured, both .bss size 0xc in the same order) when the pop particle moved into the by-reference SpawnPopParticle inline (#821)."
     },
     {
-      "from": "@512",
+      "from": "@517",
       "to": "@384",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @384 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @384 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now | Re-keyed @512 -> @517 (measured, both .bss size 0xc in the same order) when the pop particle moved into the by-reference SpawnPopParticle inline (#821)."
     }
   ]
 }

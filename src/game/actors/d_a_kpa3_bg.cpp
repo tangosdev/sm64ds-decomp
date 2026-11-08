@@ -57,8 +57,8 @@
  *   mCamSpacePos, restored afterwards.
  * - dBgW_KcMbg::SetFile is called through its mangled name, with the
  *   Fix12<int> argument passed as a raw int.
- * - func_020393d4 stores dBgW::UpdatePosWithTransform.
- *   func_020393c4 stores the touch veneer func_ov060_021183f4.
+ * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosWithTransform.
+ *   dBgW::SetStoodOnCallback stores the touch veneer func_ov060_021183f4.
  * - data_ov060_02119564 is the ten-row (x, z, angle) table. Its pool
  *   words point at row 0's x, z and angle; the delinker named each of
  *   those (02119564 / 02119568 / 0211956c), and the struct fields' base
@@ -103,8 +103,6 @@ extern int data_0208e738;
 /* Three parameter names dropped: kpaCallDestroy took those @NNN slots. */
 extern void hold_d_a_kpa3_bg(void *, KCL_File *, const Matrix4x3 &, int fix, short sh,
                              CLPS_Block &b);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
 
@@ -137,7 +135,7 @@ extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
     return new daKpa3Bg_c;
 }
 
-/* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
+/* dBgW callback veneer, armed by dBgW::SetStoodOnCallback in InitResources. Drops the
    collider and forwards the platform and the touching actor into
    func_ov060_021183cc. */
 extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other) {
@@ -167,8 +165,8 @@ s32 daKpa3Bg_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
                               mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &func_ov060_021183f4);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&func_ov060_021183f4);
     mMeshCollider.Enable(this);
     mKoopaUniqueId = 0;
     mTouchedKoopa = 0;

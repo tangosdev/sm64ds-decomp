@@ -14,6 +14,7 @@
  * come after __arraydtor as on the cartridge (D1 0x020c8dcc, C1 0x020c8dd0).
  */
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 
 /* One puff sprite: position, velocity, a swaying spread that shrinks by
@@ -40,7 +41,6 @@ int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 }
 
-extern short data_02082214[];
 extern void **sPuffSprites[];
 
 int sPuffNextIndex;
@@ -115,7 +115,7 @@ void Puff_Draw(Puff *entry) {
         int language = GetGameLanguage();
         sprite = sPuffSprites[language][entry->mIndex];
     }
-    sine = data_02082214[((unsigned short)entry->mAngle >> 4) * 2];
+    sine = FX_SinIdx((unsigned short)entry->mAngle >> 4);
     offsetX = FX_MUL(entry->mSpread, sine);
     drawX = entry->x + offsetX;
     Hud_RenderSprite(sprite, drawX >> 12, entry->y >> 12, -1, -1);

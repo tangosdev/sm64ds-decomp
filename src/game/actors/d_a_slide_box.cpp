@@ -40,7 +40,7 @@
  * - InitResources: SetFile(Fix12<int> by value) grows the function
  *   0xdc to 0xe8. The int extern is the call that matches.
  * - InitResources: storing beforeClsnCallback directly shrinks the
- *   function 0xdc to 0xd8. The ROM calls func_020393d4, the store.
+ *   function 0xdc to 0xd8. The ROM calls dBgW::SetBeforeClsnCallback, the store.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -55,6 +55,7 @@ enum daSlide_Box_c_AssetId {
 #include "Sound.h"
 #include "dBgPi.h"
 #include "dBgCh_Actr.h"
+#include "nitro/fx/fx_trig.h"
 
 namespace cstd {
 int fdiv(int a, int b);
@@ -81,12 +82,10 @@ extern "C" {
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
 extern int data_ov016_02113bac[];
-extern short data_02082214[];
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
 extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
                                void *clps);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* Radius and height passed to dBgCh_Actr::Init, 20.0 in 20.12. */
@@ -131,10 +130,6 @@ enum {
     kStateRide = 2
 };
 
-/* data_02082214 is sin, cos pairs. (u16)angle >> 4 selects the pair.
- * Angle 0 is (0, 4096): the first short is sine, the second cosine. */
-#define Sine(angle) (data_02082214[((u16)(angle) >> 4) * 2])
-#define Cosine(angle) (data_02082214[((u16)(angle) >> 4) * 2 + 1])
 #define FixMul(a, b) ((int)(((long long)(a) * (b) + kFixRound) >> 12))
 
 #define ModelFile gKiSlideBoxModelFile
@@ -205,15 +200,15 @@ int daSlide_Box_c::Behavior()
         mAngleY = shipAngles[1];
         mAngleZ = shipAngles[2];
         mPrevAngleY = mAngleY;
-        mHorzSpeed = Sine(mAngleX) * kSlideScale;
+        mHorzSpeed = FX_SinIdx((u16)mAngleX >> 4) * kSlideScale;
         mHorzPos += mHorzSpeed;
         spd = mHorzPos;
         if (spd >= kHorzPosMax)
             mHorzPos = kHorzPosMax;
         else if (spd < kHorzPosMin)
             mHorzPos = kHorzPosMin;
-        mPosX = mBasePos.x + FixMul(mHorzPos, Sine(mAngleY));
-        mPosZ = mBasePos.z + FixMul(mHorzPos, Cosine(mAngleY));
+        mPosX = mBasePos.x + FixMul(mHorzPos, FX_SinIdx((u16)mAngleY >> 4));
+        mPosZ = mBasePos.z + FixMul(mHorzPos, FX_CosIdx((u16)mAngleY >> 4));
         mHorzSpeed = 0;
         UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -255,7 +250,7 @@ int daSlide_Box_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(clsnFile), *(const Matrix4x3 *)(&mClsnMat), kMeshScale,
                               mAngleY, *(CLPS_Block *)(data_ov016_02113bac));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mWithMeshClsn.Init((dActor_c *)this, kClsnRadius, kClsnRadius, 0, 0);
     mVertAccel = kGravity;
     mTerminalVelocity = kTerminalVelocity;

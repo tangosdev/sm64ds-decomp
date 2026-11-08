@@ -103,6 +103,7 @@
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "Particle__System.h"
 #include "math/CalcLib.h"
@@ -200,7 +201,6 @@ struct BullyResourceConfig {
 /* ROM symbols with no header of their own. `extern` on every data declaration:
  * without it the block form defines rather than declares. */
 extern "C" {
-extern s16 data_02082214[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_ots_1(int a, int b);
 
@@ -813,10 +813,9 @@ int daOts_c::func_ov064_02116110(short step){
  * player's position plus 70 units up, and places the effect that far along the
  * direction: config->cylinderRadius from the actor. The direction is split into
  * elevation (angV) and heading (angH) with atan2, and the sine/cosine come from
- * data_02082214 (s16 pairs, one per 16 angle units, 12-bit fixed point; element
- * 0 of a pair is the sine and element 1 the cosine, which is the assignment the
- * geometry here needs: the heading's sine scales the x offset, its cosine the z
- * offset, and the elevation's sine the y offset). */
+ * the SDK table through FX_SinIdx/FX_CosIdx at angle >> 4: the heading's sine
+ * scales the x offset, its cosine the z offset, and the elevation's sine the
+ * y offset. */
 void daOts_c::func_ov064_02115f98(char* a1)
 {
     int scratch[3];
@@ -862,10 +861,10 @@ void daOts_c::func_ov064_02115f98(char* a1)
     idxV = (int)((u16)angV >> 4);
     idxH = (int)((u16)angH >> 4);
 
-    cosV = data_02082214[idxV * 2 + 1];
-    sinV = data_02082214[idxV * 2];
-    cosH = data_02082214[idxH * 2 + 1];
-    sinH = data_02082214[idxH * 2];
+    cosV = FX_CosIdx(idxV);
+    sinV = FX_SinIdx(idxV);
+    cosH = FX_CosIdx(idxH);
+    sinH = FX_SinIdx(idxH);
 
     lenfix = FX_MUL(scale, cosV);
     ycomp = FX_MUL(scale, sinV);

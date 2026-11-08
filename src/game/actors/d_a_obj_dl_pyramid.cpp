@@ -48,9 +48,6 @@ struct CLPS_Block;
 extern s16 data_02082214[];            /* sine/cosine table, interleaved */
 extern CLPS_Block data_ov024_021129f0; /* the collision CLPS block */
 
-/* local extern: the dBgW callback store; no shared header. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-
 /* The retail static initializer constructs these two 8-byte resource handles
  * in source order (model 1501, then collision 1502) and lets the C++ runtime
  * register their destructors. InitResources loads the model through the first
@@ -224,7 +221,7 @@ int daObjDlPyramid_c::InitResources() {
     UpdateClsnMatrix();
     void *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mHomePosX = mPosX;
     mHomePosY = mPosY;

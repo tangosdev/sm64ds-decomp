@@ -140,11 +140,13 @@ struct dBgW {
     Fix12i GetClipRadius() const;
     void SetClipOffsetY(Fix12i);
     Fix12i GetClipOffsetY() const;
+    void SetBeforeClsnCallback(BeforeClsnCallback);
     BeforeClsnCallback GetBeforeClsnCallback() const;
+    void SetStoodOnCallback(StoodOnCallback);
     StoodOnCallback GetStoodOnCallback() const;
 
     /* --- static: the stock BeforeClsn callbacks. Call sites take their
-       addresses and store them via func_020393d4; BeforeClsn invokes the
+       addresses and store them via SetBeforeClsnCallback; BeforeClsn invokes the
        stored one as (collider, actor, res, pos, motionAng, ang). They
        update POS from the collider's motion; the dBgPi rides along
        untouched. --- */

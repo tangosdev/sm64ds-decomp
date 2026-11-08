@@ -1,6 +1,6 @@
 //cpp
-/* The callback setters and CLPS water/toxic tests still use free-function
- * interfaces. The enabled-collider table is shared with the query scans. */
+/* The CLPS water/toxic tests still use free-function interfaces. The
+ * enabled-collider table is shared with the query scans. */
 /* dBgW: root of the KCL collider family. Type name 0x02099370, typeinfo
  * 0x02099378, vtable 0x02099388, 13 slots. This TU also defines
  * dScStage_c::ResetMeshColliders and dBgCh::ShouldPassThroughImpl.
@@ -160,8 +160,8 @@ int dBgW::IsEnabled() {
 
 
 /* Sets beforeClsnCallback (+0x18). */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback) {
-    collider->beforeClsnCallback = callback;
+void dBgW::SetBeforeClsnCallback(BeforeClsnCallback callback) {
+    beforeClsnCallback = callback;
 }
 
 
@@ -172,8 +172,8 @@ BeforeClsnCallback dBgW::GetBeforeClsnCallback() const {
 
 
 /* Sets stoodOnCallback (+0x1c). */
-extern "C" void func_020393c4(dBgW *collider, StoodOnCallback callback) {
-    collider->stoodOnCallback = callback;
+void dBgW::SetStoodOnCallback(StoodOnCallback callback) {
+    stoodOnCallback = callback;
 }
 
 
