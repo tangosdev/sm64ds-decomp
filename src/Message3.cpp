@@ -533,8 +533,8 @@ extern "C" void func_020319fc(int n) {
             rem = col & 7;
             dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 0x10]) | dst[wordIdx];
             if (rem != 0)
-                *(u32 *)((char *)&dst[wordIdx] + 0x20) =
-                    *(u32 *)((char *)data_0209283c + (rem << 2)) &
+                (dst + wordIdx)[8] =
+                    data_0209283c[rem] &
                     *(u32 *)((char *)data_0209fd5c + ((i + j * 0x10) << 2));
             col = (col + data_0209fd20[j]) & 0xff;
         }
@@ -707,7 +707,7 @@ void Message::LayoutLineVS() {
         case 0xfe: {
             u8 idx = p[2];
             data_0209fd18 = idx;
-            (*(void (**)(void))((char *)data_02092830 + (idx << 2) - 4))();
+            (*(data_02092830 + idx - 1))();
             p = data_0209fd0c;
             data_0209fd0c = p + p[1];
             break;
@@ -1236,7 +1236,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
     volatile int liC;
     u32 t;
     char *d;
-    volatile u16 *base;
+    u16 *base;
     u32 x;
     int i;
     int n;
@@ -1284,7 +1284,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
             li8 = 0;
             MultiStore_Int(li8, dst, 0x300);
         }
-        base = (volatile u16 *)((u32)G2S::GetBG0ScrPtr() + ((t + (data_0209fc7c >> 3)) << 1));
+        base = (u16 *)((u32)G2S::GetBG0ScrPtr() + ((t + (data_0209fc7c >> 3)) << 1));
         {
             u32 ch = data_0209fc78;
             x = ch + 0x200;
@@ -1329,7 +1329,7 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
             liC = 0;
             MultiStore_Int(liC, dst, 0x300);
         }
-        base = (volatile u16 *)((char *)G2::GetBG3ScrPtr() + ((arg0 + (data_0209fc7c >> 3)) << 1));
+        base = (u16 *)((char *)G2::GetBG3ScrPtr() + ((arg0 + (data_0209fc7c >> 3)) << 1));
         {
             u32 ch = data_0209fc78;
             x = ch + 0x200;
@@ -1378,12 +1378,11 @@ extern "C" void func_020338b0(int a, int b, short c, int d) {
     int p, s;
     volatile int li0, li1;
     volatile unsigned short ls0, ls1;
-    int zero = 0;
     data_0209fce8 = c;
-    data_0209fc9c = zero;
+    data_0209fc9c = 0;
     func_02034504();
     data_0209fc94 = 1;
-    data_0209fc78 = zero;
+    data_0209fc78 = 0;
     if (d >= 0)
         data_0209fc84 = d;
     switch (data_0209fce8) {
