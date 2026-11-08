@@ -14,7 +14,7 @@ Usage (melonDS running with GdbEnabled=1, GdbPortARM9=3333, JIT_Enable=0, a
 savestate loaded so the game is actually executing):
 
   python tools/trace/gdb_harness.py --duration 20
-  python tools/trace/gdb_harness.py --names func_02043288,func_02058568
+  python tools/trace/gdb_harness.py --names func_02043288,OS_InitContext
   python tools/trace/gdb_harness.py --negative 0x02043288   # canary-reject test
 """
 import argparse
@@ -33,7 +33,7 @@ MAIN_RAM = (0x02000000, 0x02400000)
 # Default ground-truth targets: small always-resident arm9 funcs from nearmiss DB.
 DEFAULT_NAMES = [
     "func_02043288", "func_0204335c", "func_0204322c",
-    "func_02058568", "DMASyncFillTransfer", "func_0206e3dc",
+    "OS_InitContext", "DMASyncFillTransfer", "func_0206e3dc",
 ]
 
 
