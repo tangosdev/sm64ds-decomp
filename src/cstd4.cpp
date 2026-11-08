@@ -590,17 +590,17 @@ extern char data_0209a5e8[];
 
 #pragma push
 #pragma defer_codegen off
-#pragma opt_lifetimes off
 /* recovered: MSL memset/__fill_mem -- byte head, 32-byte unrolled block,
- * word tail, byte tail. The head and block loops share one counter, which is
- * what colours both into r3; opt_lifetimes off keeps the word counter separate. */
+ * word tail, byte tail. As in MSL, one counter serves every loop and the
+ * word loops run on their own `u32 *` cursor. */
 void func_0206e330(void *dst, int val, u32 n)
 {
     u8 *p = (u8 *)dst;
     u32 c = (u32)val & 0xff;
 
     if (n >= 0x20) {
-        u32 k, w;
+        u32 k;
+        u32 *lp;
 
         k = (u32)(-(int)p) & 3;
         if (k != 0) {
@@ -614,28 +614,28 @@ void func_0206e330(void *dst, int val, u32 n)
             c |= (c << 24) | (c << 16) | (c << 8);
         }
 
+        lp = (u32 *)p;
         k = n >> 5;
         if (k != 0) {
             do {
-                ((u32 *)p)[0] = c;
-                ((u32 *)p)[1] = c;
-                ((u32 *)p)[2] = c;
-                ((u32 *)p)[3] = c;
-                ((u32 *)p)[4] = c;
-                ((u32 *)p)[5] = c;
-                ((u32 *)p)[6] = c;
-                ((u32 *)p)[7] = c;
-                p += 0x20;
+                *lp++ = c;
+                *lp++ = c;
+                *lp++ = c;
+                *lp++ = c;
+                *lp++ = c;
+                *lp++ = c;
+                *lp++ = c;
+                *lp++ = c;
             } while (--k);
         }
 
-        w = (n & 0x1f) >> 2;
-        if (w != 0) {
+        k = (n & 0x1f) >> 2;
+        if (k != 0) {
             do {
-                *(u32 *)p = c;
-                p += 4;
-            } while (--w);
+                *lp++ = c;
+            } while (--k);
         }
+        p = (u8 *)lp;
 
         n &= 3;
     }

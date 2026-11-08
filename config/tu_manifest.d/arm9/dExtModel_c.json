@@ -1060,7 +1060,7 @@
       "ordinal": 102
     },
     {
-      "symbol": "func_02016ff4",
+      "symbol": "_ZN11dExtModel_c13func_02016ff4EP8BMD_Fileii",
       "address": "0x02016ff4",
       "size": "0x0000006c",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
