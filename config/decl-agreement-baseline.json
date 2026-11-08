@@ -16223,22 +16223,6 @@
         "return:void"
       ]
     },
-    "func_ov002_020d8a50": {
-      "src/_ZN7daPly_c17St_PunchKick_MainEv.cpp": [
-        "param:#2 unsigned int"
-      ],
-      "src/_ZN7daPly_c17St_SweepKick_MainEv.cpp": [
-        "return:int"
-      ]
-    },
-    "func_ov002_020d8d10": {
-      "include/decl_common.h": [
-        "param:#1 char *"
-      ],
-      "src/unnamed/ov002/func_ov002_020d8854.cpp": [
-        "param:#1 char *"
-      ]
-    },
     "func_ov002_020d93ac": {
       "src/_ZN7daPly_c12St_Hurt_InitEv.cpp": [
         "return:void"

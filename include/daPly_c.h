@@ -1272,6 +1272,8 @@ struct daPly_c : dActor_c {
     int func_ov002_020cb354();
     int func_ov002_020cb400();
     void func_ov002_020cb474();
+    int func_ov002_020cbea8();
+    int func_ov002_020cc01c();
     void func_ov002_020cc05c(unsigned short);
     void func_ov002_020cc660(int);
     void func_ov002_020cd218(int, int *, int *);
@@ -1332,7 +1334,13 @@ struct daPly_c : dActor_c {
     void func_ov002_020d8118();
     void func_ov002_020d8158();
     int func_ov002_020d82f0();
+    int func_ov002_020d8360(daPly_c *, unsigned int);
+    int func_ov002_020d853c(dActor_c *);
     int func_ov002_020d869c();
+    void func_ov002_020d8854();
+    int func_ov002_020d8944(daPly_c *, daPly_c *);
+    void func_ov002_020d8a50(int);
+    void func_ov002_020d8d10(Vector3 *);
     void func_ov002_020d91b8(int);
     int func_ov002_020d91e0(int, int);
     void func_ov002_020d9a4c();
@@ -1345,7 +1353,10 @@ struct daPly_c : dActor_c {
     void func_ov002_020db8bc(unsigned char);
     void func_ov002_020dba0c();
     void func_ov002_020dbaec();
+    void func_ov002_020dbbc0();
     void func_ov002_020dbc94();
+    void func_ov002_020dbd94();
+    void func_ov002_020dbe70();
     void func_ov002_020dbf4c();
     void func_ov002_020dc020();
     void func_ov002_020dc174(const Vector3 *, Fix12i, Fix12i, u32, u32);
@@ -1354,6 +1365,8 @@ struct daPly_c : dActor_c {
     int func_ov002_020dd2f4();
     void func_ov002_020dd5ec();
     int func_ov002_020dd824();
+    void func_ov002_020dd8f4();
+    void func_ov002_020dd908();
     int func_ov002_020dde74();
     void func_ov002_020de3d0(short *, short *);
     void func_ov002_020de968();

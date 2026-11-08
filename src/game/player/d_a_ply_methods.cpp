@@ -347,7 +347,6 @@ extern SharedFilePtr data_ov002_0210eca8;
 extern SharedFilePtr data_ov002_0210ecb8;
 extern s16 func_02010844(void *actor, Vector3 *v, s16 angle);
 extern u32 func_02022c80(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void *dir);
-extern int func_ov002_020cc01c(char *c);
 extern void func_ov002_020d7430(daPly_c &player);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern void func_ov002_020e6b74(void *model, int *saved);
@@ -370,9 +369,6 @@ extern u32 func_02022a4c(Fix12i x, Fix12i y, Fix12i z);
 extern u32 func_02022cbc(int uniqueID, int effectID, s32 x, s32 y, s32 z, int dir);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir);
 extern void func_ov002_020db54c(void *self, int a, int b, short c);
-extern void func_ov002_020dbbc0(char *c);
-extern void func_ov002_020dbd94(char *c);
-extern void func_ov002_020dbe70(char *c);
 extern void func_ov002_020dc09c(char *c);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
@@ -8054,7 +8050,6 @@ extern "C" {
 int daPly_c::St_Climb_Main() {
     extern void Vec3_RotateYAndTranslate(void*, void*, s16 angle, void*);
     extern void ApproachAngle(void*, s16 target, s32 divisor, s32 band, s32 maxStep);
-    extern int func_ov002_020cbea8(void*);
     extern void* data_0209f318;
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
@@ -8239,7 +8234,7 @@ tail: {
         s32* p688 = &this->mAttachOffsetY;
         *p688 += mVertSpeed;
     }
-    if (func_ov002_020cbea8(this)) {
+    if (func_ov002_020cbea8()) {
         return 1;
     }
     {
@@ -8304,43 +8299,44 @@ int daPly_c::St_Climb_Init() {
 
 #define LA(p) ((int)(p))
 extern "C" {
-int func_ov002_020cbea8(char *c)
-{
-    daPly_c *self = (daPly_c *)c;
-    char *o;
+int daPly_c::func_ov002_020cbea8() {
+    daPly_c *o;
     int amt;
     int b;
     int ca8;
     int *p;
     int t;
 
-    if (self->mdCcAcPos_c.otherOwner == 0) return 0;
-    if ((self->mdCcAcPos_c.hitFlags & 0x400000) == 0)
+    if (mdCcAcPos_c.otherOwner == 0)
         return 0;
-    o = (char *)dActor_c::FindWithID(self->mdCcAcPos_c.otherOwner);
-    if (o == 0 || o == c) return 0;
-    b = (int)(((dActor_c *)o)->actorID == 0xbf);
+    if ((mdCcAcPos_c.hitFlags & 0x400000) == 0)
+        return 0;
+    o = (daPly_c *)dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+    if (o == 0 || o == this)
+        return 0;
+    b = (int)(o->actorID == 0xbf);
     if (b == 0) return 0;
-    if ((int)self->mClimbClsn == 0 || (int)((daPly_c *)o)->mClimbClsn == 0)
+    if ((int)mClimbClsn == 0 || (int)o->mClimbClsn == 0)
         return 0;
-    if (func_ov002_020cc01c(c) != 0 || func_ov002_020cc01c(o) != 0) return 1;
-    ca8 = self->mVertSpeed;
-    amt = self->mdCcAcPos_c.pushback.y;
-    if (ca8 == 0 || ((daPly_c *)o)->mVertSpeed == 0)
+    if (func_ov002_020cc01c() != 0 || o->func_ov002_020cc01c() != 0)
+        return 1;
+    ca8 = mVertSpeed;
+    amt = mdCcAcPos_c.pushback.y;
+    if (ca8 == 0 || o->mVertSpeed == 0)
         amt = amt * 2;
     if (ca8 != 0) {
-        p = &self->mAttachOffsetY;
+        p = &mAttachOffsetY;
         *p += amt * 2;
-        self->mAngleYSpeed = 0;
-        self->mVertSpeed = 0;
+        mAngleYSpeed = 0;
+        mVertSpeed = 0;
     }
-    if (((daPly_c *)o)->mVertSpeed != 0) {
-        p = (int *)LA(&((daPly_c *)o)->mAttachOffsetY);
+    if (o->mVertSpeed != 0) {
+        p = (int *)LA(&o->mAttachOffsetY);
         *p -= amt * 2;
-        ((daPly_c *)o)->mAngleYSpeed = 0;
-        t = ((daPly_c *)o)->mSpeedZ;
-        ((daPly_c *)o)->mVertSpeed = 0;
-        ((daPly_c *)o)->mSpeedZ = t;
+        o->mAngleYSpeed = 0;
+        t = o->mSpeedZ;
+        o->mVertSpeed = 0;
+        o->mSpeedZ = t;
     }
     return 0;
 }
@@ -8348,12 +8344,10 @@ int func_ov002_020cbea8(char *c)
 #undef LA
 
 extern "C" {
-int func_ov002_020cc01c(char* c){
-    daPly_c *self = (daPly_c *)c;
-
-    if (self->mWalkTimer == 0)
+int daPly_c::func_ov002_020cc01c() {
+    if (mWalkTimer == 0)
         return 0;
-    self->ChangeState(data_ov002_021101b4);
+    ChangeState(data_ov002_021101b4);
     return 1;
 }
 }
@@ -14448,36 +14442,29 @@ ret1:
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
 extern "C" {
-int func_ov002_020d8360(void *self, void *other, unsigned int flags)
-{
-    extern int func_ov002_020d853c(char *c, char *o);
-    extern int func_ov002_020d8944(void *self, char *enemy, char *v1);
+int daPly_c::func_ov002_020d8360(daPly_c *other, unsigned int flags) {
     extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
-    extern void func_ov002_020d8d10(void *self, Vector3 *pos);
-    char *c = (char *)self;
-    daPly_c *player = (daPly_c *)c;
-    char *o = (char *)other;
 
     {
-        int r = player->func_ov002_020d82f0();
+        int r = func_ov002_020d82f0();
         if (!r) return r;
     }
 
     {
-        unsigned char t = ((daPly_c *)o)->mAttackClashed;
+        unsigned char t = other->mAttackClashed;
         if (t) return t;
     }
 
-    if (func_ov002_020d853c(c, o) == 0) {
-        unsigned int m = player->mdCcAcPos_c.hitFlags & 0x3c0;
+    if (func_ov002_020d853c(other) == 0) {
+        unsigned int m = mdCcAcPos_c.hitFlags & 0x3c0;
         if (m == 0) return m;
 
         {
-            int r = func_ov002_020d8944(c, o, c);
+            int r = func_ov002_020d8944(other, this);
             if (r != 0) {
                 r = 1;
-                ((daPly_c *)o)->mAttackClashed = r;
-                player->mAttackClashed = r;
+                other->mAttackClashed = r;
+                mAttackClashed = r;
             }
             return r;
         }
@@ -14486,48 +14473,48 @@ int func_ov002_020d8360(void *self, void *other, unsigned int flags)
     {
         int flag = flags & 0x380;
         if (flag != 0) {
-            player->mIsAirborne = 1;
-            player->mLandSoundPlayed = 0;
+            mIsAirborne = 1;
+            mLandSoundPlayed = 0;
         }
         {
             Vector3 out, tr, v, cp;
-            int *p = &((dActor_c *)o)->mPosX;
+            int *p = &other->mPosX;
             v.x = p[0];
             v.y = p[1];
             v.z = p[2];
             {
-                int hr = ((daPly_c *)c)->Hurt(v, 1, 0, 0, (((dActor_c *)o)->param1 + 1) & 0xff, 1);
+                int hr = Hurt(v, 1, 0, 0, (other->param1 + 1) & 0xff, 1);
                 if (!hr) return hr;
             }
             tr.x = 0;
             tr.y = 0x50000;
             tr.z = 0x64000;
-            Vec3_RotateYAndTranslate((int *)&out, &player->mPosX, player->mAngleY, (int *)&tr);
+            Vec3_RotateYAndTranslate((int *)&out, &mPosX, mAngleY, (int *)&tr);
             cp.x = out.x;
             cp.y = out.y;
             cp.z = out.z;
-            func_ov002_020d8d10(c, &cp);
+            func_ov002_020d8d10(&cp);
         }
-        func_020105cc(c, flags);
+        func_020105cc(this, flags);
         {
-            unsigned char b6f9 = player->mIsMetal;
-            unsigned short idx = (unsigned short)(player->param1 + (((dActor_c *)o)->param1 << 2));
+            unsigned char b6f9 = mIsMetal;
+            unsigned short idx = (unsigned short)(param1 + (other->param1 << 2));
             int t98;
             if (b6f9 != 0) idx = 0x11;
             t98 = data_ov002_020ff29c[idx] << 3;
-            player->mHorzSpeed = t98;
-            player->mIsAirborne = 1;
-            player->mLandSoundPlayed = 0;
+            mHorzSpeed = t98;
+            mIsAirborne = 1;
+            mLandSoundPlayed = 0;
             if (flag != 0) {
-                player->mVertSpeed = t98 + 0x20000;
+                mVertSpeed = t98 + 0x20000;
                 {
-                    int *hp = (int *)(int)(&player->mHorzSpeed);
+                    int *hp = (int *)(int)(&mHorzSpeed);
                     int half = *hp >> 1;
                     *hp = half;
                     return half;
                 }
             }
-            player->mVertSpeed = 0x18000;
+            mVertSpeed = 0x18000;
             return 0x18000;
         }
     }
@@ -14535,18 +14522,16 @@ int func_ov002_020d8360(void *self, void *other, unsigned int flags)
 }
 
 extern "C" {
-int func_ov002_020d853c(daPly_c *player, char *o) {
+int daPly_c::func_ov002_020d853c(dActor_c *o) {
     extern short Vec3_HorzAngle(const void *v0, const void *v1);
-    if (player->IsState(data_ov002_02110574)) {
-        int j = (player->mPunchKickStep << 1) & 0xff;
-        dExtFrameCtrl_c &anim =
-            *player->mModels.mBodyModels[player->GetBodyModelID(player->param1 & 0xff, 0)];
+    if (IsState(data_ov002_02110574)) {
+        int j = (mPunchKickStep << 1) & 0xff;
+        dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
         int v = anim.currFrame;
         int k = (unsigned short)(v >> 12);
         if (k < data_ov002_0210a5dc[j] || k > data_ov002_0210a5dc[j + 1])
             return 1;
-        if (AngleDiff(Vec3_HorzAngle(&player->mPos, &((dActor_c *)o)->mPos), player->mAngleY) <
-            0x4000)
+        if (AngleDiff(Vec3_HorzAngle(&mPos, &o->mPos), mAngleY) < 0x4000)
             return 0;
     }
     return 1;
@@ -14598,7 +14583,7 @@ int daPly_c::func_ov002_020d869c() {
             return 0;
         f2 = flags & ~0x1000u;
         if (f2 != 0)
-            func_ov002_020d8360(this, r6, f2);
+            func_ov002_020d8360((daPly_c *)r6, f2);
     } else {
         if (mIsNoControl != 0)
             return 0;
@@ -14637,24 +14622,21 @@ void func_ov002_020d8838(char *self)
 
 /* recovered: shared common types */
 extern "C" {
-void func_ov002_020d8854(char *self) {
+void daPly_c::func_ov002_020d8854() {
     extern void Vec3_RotateYAndTranslate(Vector3 * out, Vector3 * in, int ang, Vector3 *tr);
-    extern int func_ov002_020d8944(char *a, char *b, char *other);
-    extern void func_ov002_020d8d10(char *self, Vector3 *v);
-    daPly_c *p = (daPly_c *)self;
-    char *other = (char *)dActor_c::FindWithID(p->mAttackClsn.otherOwner);
+    daPly_c *other = (daPly_c *)dActor_c::FindWithID(mAttackClsn.otherOwner);
     if (other == 0)
         return;
     {
-        int b = (int)(((dActor_c *)other)->actorID == 0xbf);
+        int b = (int)(other->actorID == 0xbf);
         if (b != 0) {
-            if (((daPly_c *)other)->mPlayerNo <= p->mPlayerNo)
+            if (other->mPlayerNo <= mPlayerNo)
                 return;
-            if ((p->mAttackClsn.hitFlags & 0x3c0) == 0)
+            if ((mAttackClsn.hitFlags & 0x3c0) == 0)
                 return;
-            if (func_ov002_020d8944(self, self, other) != 0) {
-                ((daPly_c *)other)->mAttackClashed = 1;
-                p->mAttackClashed = 1;
+            if (func_ov002_020d8944(this, other) != 0) {
+                other->mAttackClashed = 1;
+                mAttackClashed = 1;
             }
             return;
         }
@@ -14666,9 +14648,9 @@ void func_ov002_020d8854(char *self) {
         tr.x = 0;
         tr.y = 0x50000;
         tr.z = 0x64000;
-        Vec3_RotateYAndTranslate(&out, (Vector3 *)(&p->mPosX), p->mAngleY, &tr);
+        Vec3_RotateYAndTranslate(&out, (Vector3 *)(&mPosX), mAngleY, &tr);
         cp = out;
-        func_ov002_020d8d10(self, &cp);
+        func_ov002_020d8d10(&cp);
     }
 }
 }
@@ -14680,13 +14662,12 @@ struct PVec8944 {
     ~PVec8944() {}
 };
 extern "C" {
-int func_ov002_020d8944(void *self, daPly_c *enemy, daPly_c *v1) {
+int daPly_c::func_ov002_020d8944(daPly_c *enemy, daPly_c *v1) {
     s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     int AngleDiff(int a, int b);
     void Vec3_Add(Vector3 * out, const Vector3 *a, const Vector3 *b);
     void Vec3_Asr(Vector3 * d, Vector3 * s, int sh);
     void PlayerNewSimpleHold12(unsigned int id, int x, int y, int z);
-    extern int func_ov002_020d8944(void *self, char *enemy, char *v1);
     PVec8944 p;
     Vector3 sum;
     Vector3 asr;
@@ -14722,72 +14703,74 @@ int func_ov002_020d8944(void *self, daPly_c *enemy, daPly_c *v1) {
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 extern "C" {
-void func_ov002_020d8a50(char* self, int which)
-{
-    daPly_c *player = (daPly_c *)self;
-    extern void func_ov002_020d8d10(char *, Vector3 *);
+void daPly_c::func_ov002_020d8a50(int which) {
     int flag = 1;
     u32 i2 = (u8)(which << 1);
     dExtAnmModel_c *model;
     int frame;
 
-    dExtFrameCtrl_c &anim =
-        *player->mModels.mBodyModels[((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0)];
+    dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
     frame = (u16)(anim.currFrame >> 12);
     if (frame < data_ov002_0210a5cc[i2] || frame > data_ov002_0210a5cc[i2 + 1]) {
         flag = 0;
-        player->mAttackClsn.Clear();
+        mAttackClsn.Clear();
     }
 
-    if ((u8)player->mAttackClashed != 0)
+    if ((u8)mAttackClashed != 0)
         return;
 
     switch (which) {
     case 0:
-        player->func_ov002_020dbf4c();
+        func_ov002_020dbf4c();
         break;
-    case 1: func_ov002_020dbe70(self); break;
-    case 2: func_ov002_020dbd94(self); break;
-    case 3: func_ov002_020dbbc0(self); break;
+    case 1:
+        func_ov002_020dbe70();
+        break;
+    case 2:
+        func_ov002_020dbd94();
+        break;
+    case 3:
+        func_ov002_020dbbc0();
+        break;
     }
 
-    if (player->mAttackClsn.otherOwner != 0) {
-        player->mHorzSpeed = 0xa000;
-        player->mPrevAngleY = player->mAngleY + 0x8000;
-        func_ov002_020d8854(self);
+    if (mAttackClsn.otherOwner != 0) {
+        mHorzSpeed = 0xa000;
+        mPrevAngleY = mAngleY + 0x8000;
+        func_ov002_020d8854();
     }
 
-    player->mAttackClsn.Clear();
+    mAttackClsn.Clear();
     if (flag == 1)
-        player->mAttackClsn.Update();
+        mAttackClsn.Update();
 
-    model =
-        player->mModels.mBodyModels[((daPly_c *)self)->GetBodyModelID(player->param1 & 0xff, 0)];
+    model = mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
     if (!model->WillHitFrame(data_ov002_0210a5cc[i2]))
         return;
 
+    /* func_ov002_020ef070/020eeeb8 (d_bg_actor.cpp) take the mover as char *. */
     switch (which) {
     case 0:
     case 1:
-        func_ov002_020ef070(&player->mMeshClsn, self);
+        func_ov002_020ef070(&mMeshClsn, (char *)this);
         break;
     case 2:
     case 3:
-        func_ov002_020eeeb8(&player->mMeshClsn, self);
+        func_ov002_020eeeb8(&mMeshClsn, (char *)this);
         break;
     }
 
     {
-        u16 t = player->mStateFlags & 0x20;
+        u16 t = mStateFlags & 0x20;
         if (t == 0)
             return;
     }
 
-    player->mStateFlags &= ~0x20;
-    Sound::PlayBank0(0xb5, player->mCamSpacePos);
+    mStateFlags &= ~0x20;
+    Sound::PlayBank0(0xb5, mCamSpacePos);
 
     {
-        u16 ang = (u16)player->mAngleY;
+        u16 ang = (u16)mAngleY;
         dBgCh_Lin ray;
         Vector3 v1;
         Vector3 v2;
@@ -14795,23 +14778,23 @@ void func_ov002_020d8a50(char* self, int which)
         int idx;
 
         idx = ang >> 4;
-        v1.x = player->mPosX;
-        v1.y = player->mPosY;
-        v1.z = player->mPosZ;
+        v1.x = mPosX;
+        v1.y = mPosY;
+        v1.z = mPosZ;
         v1.y += 0x32000;
         v2.x = v1.x;
         v2.y = v1.y;
         v2.z = v1.z;
         v2.x += data_02082214[idx * 2] * 0x64;
         v2.z += data_02082214[idx * 2 + 1] * 0x64;
-        ray.SetObjAndLine(v1, v2, (dActor_c *)self);
+        ray.SetObjAndLine(v1, v2, this);
         if (ray.DetectClsn()) {
             ray.surface.CopyNormalTo(normal);
             if (normal.y == 0) {
-                player->mHorzSpeed = 0xa000;
-                player->mPrevAngleY = player->mAngleY + 0x8000;
+                mHorzSpeed = 0xa000;
+                mPrevAngleY = mAngleY + 0x8000;
                 ::Vector3 clsnPos = ray.GetClsnPos();
-                func_ov002_020d8d10(self, &clsnPos);
+                func_ov002_020d8d10(&clsnPos);
             }
         }
     }
@@ -14823,19 +14806,18 @@ void func_ov002_020d8a50(char* self, int which)
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
-struct Self { char pad0[8]; int state; char pad2[0x82]; s16 angle; };
 extern "C" {
-void func_ov002_020d8d10(struct Self *self, Vector3 *pos) {
+void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
     struct Callback;
     extern u32 PlayerNewHold13(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     Vector3_16 vec;
 
-    vec.x = data_02082214[((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2];
+    vec.x = data_02082214[((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2];
     vec.y = 0;
-    vec.z = data_02082214[(((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2) + 1];
+    vec.z = data_02082214[(((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2) + 1];
 
-    if (self->state != 2) {
+    if (param1 != 2) {
         Particle::System::New(0, 0xbf, pos->x, pos->y, pos->z, (const Vector3_16f *)(&vec), 0);
         Particle::System::New(0, 0xc0, pos->x, pos->y, pos->z, 0, 0);
     } else {
@@ -16458,8 +16440,7 @@ void daPly_c::func_ov002_020dbaec() {
 }
 
 extern "C" {
-void func_ov002_020dbbc0(char *c) {
-    daPly_c *player = (daPly_c *)c;
+void daPly_c::func_ov002_020dbbc0() {
     extern unsigned char data_0209f2d8;
     Vector3 v;
     int r2, r3;
@@ -16470,14 +16451,14 @@ void func_ov002_020dbbc0(char *c) {
         v.y = 0;
         v.z = 0x78000;
         r3 = 0x50000;
-    } else if (player->mIsMega == 0) {
+    } else if (mIsMega == 0) {
         r2 = 0x78000;
         v.z = 0x78000;
         r3 = 0x50000;
         v.x = 0;
         v.y = 0;
         r2 = r3;
-        if (player->param1 == 2) {
+        if (param1 == 2) {
             v.z = 0xa0000;
             r2 = 0x78000;
         }
@@ -16488,7 +16469,7 @@ void func_ov002_020dbbc0(char *c) {
         r3 = 0x100000;
         r2 = 0xc0000;
     }
-    player->func_ov002_020dc174(&v, r2, r3, 0x100, 0);
+    func_ov002_020dc174(&v, r2, r3, 0x100, 0);
 }
 }
 
@@ -16520,8 +16501,7 @@ void daPly_c::func_ov002_020dbc94() {
 }
 
 extern "C" {
-void func_ov002_020dbd94(char *c) {
-    daPly_c *player = (daPly_c *)c;
+void daPly_c::func_ov002_020dbd94() {
     extern unsigned char data_0209f2d8;
     Vector3 v;
     int r2, r3;
@@ -16532,13 +16512,13 @@ void func_ov002_020dbd94(char *c) {
         v.z = 0x64000;
         r3 = 0xbe000;
         r2 = 0x78000;
-    } else if (player->mIsMega == 0) {
+    } else if (mIsMega == 0) {
         v.x = 0;
         v.y = 0xa000;
         v.z = 0x64000;
         r2 = 0x50000;
         r3 = 0xbe000;
-        if (player->param1 == 2) {
+        if (param1 == 2) {
             v.z = 0x8c000;
             r2 = 0x78000;
         }
@@ -16549,13 +16529,12 @@ void func_ov002_020dbd94(char *c) {
         r3 = 0x200000;
         r2 = 0x90000;
     }
-    player->func_ov002_020dc174(&v, r2, r3, 0x80, 0xc0);
+    func_ov002_020dc174(&v, r2, r3, 0x80, 0xc0);
 }
 }
 
 extern "C" {
-void func_ov002_020dbe70(char *c) {
-    daPly_c *player = (daPly_c *)c;
+void daPly_c::func_ov002_020dbe70() {
     extern unsigned char data_0209f2d8;
     Vector3 v;
     int r2, r3;
@@ -16566,13 +16545,13 @@ void func_ov002_020dbe70(char *c) {
         v.z = 0x5a000;
         r3 = 0x82000;
         r2 = 0x64000;
-    } else if (player->mIsMega == 0) {
+    } else if (mIsMega == 0) {
         v.x = 0;
         v.y = 0xa000;
         v.z = 0x5a000;
         r2 = 0x46000;
         r3 = 0x82000;
-        if (player->param1 == 2) {
+        if (param1 == 2) {
             v.z = 0x78000;
             r2 = 0x64000;
         }
@@ -16583,7 +16562,7 @@ void func_ov002_020dbe70(char *c) {
         r3 = 0x140000;
         r2 = 0xa0000;
     }
-    player->func_ov002_020dc174(&v, r2, r3, 0x40, 0xc0);
+    func_ov002_020dc174(&v, r2, r3, 0x40, 0xc0);
 }
 }
 
@@ -16796,11 +16775,10 @@ int daPly_c::St_SlideKick_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_SweepKick_Main() {
-    extern int func_ov002_020d8a50(void*,int);
     extern unsigned short data_0209f49e[];
     if (*(unsigned short *)((char *)data_0209f49e + gActivePlayerSlot * 0x18) & 2)
         this->ChangeState(data_ov002_0211019c);
-    func_ov002_020d8a50(((void *)this), 3);
+    func_ov002_020d8a50(3);
     if (this->FinishedAnim()) {
         *(char *)((char *)&mStateStep) = 1;
         this->ChangeState(data_ov002_021104e4);
@@ -17263,7 +17241,6 @@ int daPly_c::func_ov002_020dd2f4() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_PunchKick_Main() {
-    extern void func_ov002_020d8a50(void* c, u32 a);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     u16 st = mStateTimer;
@@ -17284,7 +17261,7 @@ int daPly_c::St_PunchKick_Main() {
             }
         }
 
-        func_ov002_020d8a50(this, mPunchKickStep);
+        func_ov002_020d8a50(mPunchKickStep);
 
         if (mIsAirborne != 0)
             goto end;
@@ -17438,15 +17415,15 @@ int func_ov002_020dd8b8(daPly_c *player) {
 }
 
 extern "C" {
-void func_ov002_020dd8f4(daPly_c *player) {
-    ((daPly_c *)player)->ChangeState(data_ov002_021101b4);
+void daPly_c::func_ov002_020dd8f4() {
+    ChangeState(data_ov002_021101b4);
 }
 }
 
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
 extern "C" {
-void func_ov002_020dd908(char *sb) {
+void daPly_c::func_ov002_020dd908() {
     extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
     extern unsigned char data_0209f2d8;
     extern char *data_0209f394[];
@@ -17466,10 +17443,10 @@ void func_ov002_020dd908(char *sb) {
         v.x = p[0];
         v.y = p[1];
         v.z = p[2];
-        v.y = ((dActor_c *)sb)->mPosY;
-        if (Vec3_Dist(&((dActor_c *)sb)->mPos, &v) >= 0x12c000)
+        v.y = mPosY;
+        if (Vec3_Dist(&mPos, &v) >= 0x12c000)
             continue;
-        func_ov002_020dd8f4(player);
+        player->func_ov002_020dd8f4();
     }
 }
 }
@@ -17494,7 +17471,6 @@ int daPly_c::St_GroundPound_Cleanup() {
 extern "C" {
 int daPly_c::St_GroundPound_Main() {
     void func_ov002_020ef2a4(void* c, void* arg);
-    void func_ov002_020dd908(void* sb);
     void PlayerNewSimpleHold14(unsigned int id, int x, int y, int z);
     extern dCamera_c *data_0209f318;
     extern char data_0209f4a0[];
@@ -17540,7 +17516,7 @@ int daPly_c::St_GroundPound_Main() {
             if (mIsAirborne == 0) {
                 if (func_ov002_020e2c84() == 2)
                     return 1;
-                func_ov002_020dd908(this);
+                func_ov002_020dd908();
                 if (mIsMega != 0) {
                     Sound::PlayBank0(0xd3, mCamSpacePos);
                 } else {
