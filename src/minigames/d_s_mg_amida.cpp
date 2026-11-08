@@ -1567,7 +1567,8 @@ void dScMgAmida_c::SetupRound() {
             int remaining = 3;
             do {
                 int idx =
-                    ((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xb) >> 15;
+                    ((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xb) >>
+                    15;
                 if (skip[idx] == 0) {
                     remaining--;
                     skip[idx] = 1;
@@ -1781,8 +1782,7 @@ void dScMgAmida_c::RenderBoard() {
                 }
             }
             *(T13 *)frames = *(T13 *)sAmidaBoardAnimationFrames;
-            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames[mLaneFlashFrame[i]]], y, 0xb8,
-                                -1, 0);
+            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames[mLaneFlashFrame[i]]], y, 0xb8, -1, 0);
         }
     }
     {

@@ -676,7 +676,8 @@ void dScMgTrampoline_c::UpdateTouchInput() {
 
     slot = gActivePlayerSlot;
     if (TOUCH_REC(gTouchHeld)[slot][0] != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[slot][0], TOUCH_REC(gTouchY)[slot][0], 2, 4);
+        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[slot][0], TOUCH_REC(gTouchY)[slot][0], 2,
+                    4);
         slot = gActivePlayerSlot;
         mTouchX = TOUCH_REC(gTouchX)[slot][0];
         mTouchY = TOUCH_REC(gTouchY)[slot][0];
@@ -930,7 +931,8 @@ void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
                             return;
                         }
 
-                        addr = (int *)((char *)charBase + ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
+                        addr =
+                            (int *)((char *)charBase + ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
 
                         MultiCopy_Int(addr, sTrmpBrushWord, 4);
                         /* Kept as `-1 ^`: the `~` spelling DIFFs here (measured 2026-11-08). */
