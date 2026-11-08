@@ -22,7 +22,7 @@ struct daPly_c;
  *
  * Tail fields are named from this TU's own writes: InitResources seeds the
  * path and TrackStar slot; the state table at 0x370 is the PMF pair
- * func_ov019_021122dc installs; the race helpers write the checkpoint /
+ * SetState installs; the race helpers write the checkpoint /
  * finish / cheat bytes.
  */
 
@@ -48,7 +48,7 @@ struct daPgRcer_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;         /* 0x1a8 */
     PathPtr mPath;                    /* 0x364 */
     s32 mPathNodeIndex;               /* 0x36c */
-    daPgRcerState *mStateDesc;        /* 0x370 -- func_ov019_021122dc */
+    daPgRcerState *mStateDesc;        /* 0x370 -- SetState */
     s32 mAction;                      /* 0x374 -- state index 0..5 */
     daPly_c *mTalkPlayer;             /* 0x378 */
     s32 mFallAccum;                   /* 0x37c -- |player vertSpeed| while airborne */
@@ -75,26 +75,31 @@ struct daPgRcer_c : dActor_c {
     virtual int Render();             /* slot 9 */
     virtual void OnPendingDestroy();  /* slot 12 */
 
-    int func_ov019_0211127c(Vector3 *pos, unsigned int nodeIndex);
-    void func_ov019_021112b8();
-    int func_ov019_0211131c();
-    void func_ov019_021113b0();
-    void func_ov019_021114ec();
-    int func_ov019_02111558();
-    int func_ov019_02111754();
-    int func_ov019_021117a8();
-    int func_ov019_02111904();
-    int func_ov019_0211197c();
-    int func_ov019_02111d58();
-    int func_ov019_02111dec();
-    int func_ov019_02111f54();
-    int func_ov019_02111fec();
-    int func_ov019_0211213c();
-    int func_ov019_02112168();
-    int func_ov019_021121f8();
-    void func_ov019_02112268();
-    void func_ov019_021122a4();
-    void func_ov019_021122dc(int state);
+    int GetTargetSpeed(int playerLead);                      /* 0x02111254 */
+    int IsNearPathNode(Vector3 *pos, unsigned int nodeIndex); /* 0x0211127c */
+    void CheckFallCheat();                                   /* 0x021112b8 */
+    int FollowPath();                                        /* 0x0211131c */
+    void AdvancePathNode();                                  /* 0x021113b0 */
+    int UpdateFloorAndWalls(dBgCh_Actr *clsn);               /* 0x0211140c */
+    void UpdateModelMatrix();                                /* 0x021114ec */
+
+    /* The six states, after N64 racing_penguin_act_*; InitStateX runs once
+       from SetState, StateX every frame from CallStateBehavior. */
+    int StateShowFinalText();      /* 0x02111558 */
+    int InitStateShowFinalText();  /* 0x02111754 */
+    int StateFinishRace();         /* 0x021117a8 */
+    int InitStateFinishRace();     /* 0x02111904 */
+    int StateRace();               /* 0x0211197c */
+    int InitStateRace();           /* 0x02111d58 */
+    int StatePrepareForRace();     /* 0x02111dec */
+    int InitStatePrepareForRace(); /* 0x02111f54 */
+    int StateShowInitText();       /* 0x02111fec */
+    int InitStateShowInitText();   /* 0x0211213c */
+    int StateWaitForMario();       /* 0x02112168 */
+    int InitStateWaitForMario();   /* 0x021121f8 */
+    void CallStateBehavior();      /* 0x02112268 */
+    void CallStateInit();          /* 0x021122a4 */
+    void SetState(int state);      /* 0x021122dc */
 };
 
 #ifndef SM64DS_PLATFORM_PC
