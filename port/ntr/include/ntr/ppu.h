@@ -60,8 +60,19 @@ constexpr int SCREEN_H = 384;
    addresses (port/tools/battery.py's note on hosted-global layout). One
    allocation, every run, means two runs of one binary at two scales are
    comparable. */
-constexpr int SCREEN_W = 1368;
-constexpr int SCREEN_H = 768;
+/* RESSCALE1 (run after093): the tier grew to 2736x1536 so RenderScale 5..8
+   (960, 1152, 1344 and 1536 rows) have somewhere to draw. Same rule as the
+   1368x768 note above: the height is 8 * 192, the width is that height's
+   16:9 partner (1536 * 16/9 is 2730.67) rounded up to a multiple of 8, a
+   wider aspect pins the width and brings the height down. The per-pixel
+   raster buffers and the BMP packing buffer are on the heap (gx.cpp,
+   ppu.cpp) and the image is based at 0x10000000 (CMakeLists.txt /BASE), so
+   the 0x02000000 ceiling the note above describes no longer binds; what the
+   bigger tier costs is address space, measured in out/RESSCALE1. The per-frame
+   clears follow the ACTIVE extent, so a run at the default scale does not
+   clear the rows it never draws. */
+constexpr int SCREEN_W = 2736;
+constexpr int SCREEN_H = 1536;
 #elif defined(NTR_WIDE169)
 /* THE FIRST NON-4:3 TIER: 16:9 widescreen, 1024x576. Unlike NTR_HIRES/HIRES2
    -- both 4:3, sharper but not wider -- this is a genuinely wider frame. The

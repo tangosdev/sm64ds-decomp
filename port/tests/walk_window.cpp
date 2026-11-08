@@ -18432,7 +18432,10 @@ int main(void)
         }
     }
 
-    static ntr::Framebuffer fb;
+    /* RESSCALE1: on the heap, zeroed (a 16.8 MB static at the 2736x1536 tier ran the image past dsstate_guard's 0x12000000) */
+    ntr::Framebuffer *const fb_heap = static_cast<ntr::Framebuffer *>(std::calloc(1, sizeof(ntr::Framebuffer)));
+    if (!fb_heap) { fprintf(stderr, "FATAL: the level framebuffer could not be allocated.\n"); fflush(stderr); return 3; }
+    ntr::Framebuffer &fb = *fb_heap;
     port_level_fb_ptr = &fb;   /* COOPSPAWN9: hal/coop_boot.cpp's proof pictures (SM64DS_COOPSPAWN_SHOT) write the level loop's top screen */
     /* THE PRESENT PATH IS ARMED HERE and not a line earlier: present() draws
        whatever these point at, and until the frame loop has rasterised once

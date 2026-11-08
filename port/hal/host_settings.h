@@ -918,7 +918,8 @@ int host_setting_set_minigame_upscale(int on);
    a wide one), so a settings.json written before this key existed, and a
    file that will not parse, both read as the shipped picture. Absent,
    unparseable and negative all read as 0; a positive value is CLAMPED into
-   1..4, the Aspect rule, so 9 is 4 and not an error. 1 is the DS's own
+   1..8 (RESSCALE1; 1..4 before), the Aspect rule, so 9 is 8 and not an
+   error. 5 is 960 rows, 6 is 1152, 7 is 1344 and 8 is 1536. 1 is the DS's own
    256x192 and is a real choice, which is why it is not folded into 0.
    BOOT-LATCHED: the size is threaded into the framebuffer at boot and a
    mid-run change would be a reallocation nobody tests. SM64DS_RENDER_SCALE
@@ -943,6 +944,10 @@ int host_setting_set_minigame_upscale(int on);
    All three are read once and latched, like Aspect and FrameRate, and the
    launcher's rows promise a restart. */
 int host_setting_render_scale(void);
+/* RESSCALE1: the in-game Settings row. The saved value for the NEXT boot (the running picture stays latched): the value the
+   page last set, else host_setting_render_scale(). The setter sanitises (0..8) and writes RenderScale to settings.json. */
+int host_setting_render_scale_saved(void);
+int host_setting_set_render_scale(int n);
 int host_setting_hd_textures(void);
 const char *host_setting_hd_textures_dir(void);
 int host_setting_smooth_models(void);

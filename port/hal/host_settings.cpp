@@ -1382,19 +1382,18 @@ int g_frame_rate_touched = 0;
 
      RenderScale   not a positive number -> 0, the explicit default sentinel:
                    the multiplier the port picks today. Covers absent,
-                   unparseable, 0 itself and negatives. 1..4 are themselves.
-                   Above 4 clamps to 4 rather than being refused, the Aspect
+                   unparseable, 0 itself and negatives. 1..8 are themselves.
+                   Above 8 clamps to 8 rather than being refused, the Aspect
                    rule: a number that is a picture beats an error. The
-                   ceiling is 4 because 4 x 192 is 768 and 4 x 256 is 1024,
-                   which is the largest tier the render path has ever been
-                   compiled at (ntr/ppu.h's NTR_HIRES), so it is the largest
-                   one with any evidence behind it.
+                   ceiling is 8 because 8 x 192 is 1536, the height of the
+                   NTR_WIDE_RT allocation (ntr/ppu.h; RESSCALE1 raised it
+                   from 4 and 768).
      SmoothModels  the same, clamped into 0..3, which is the range the
                    subdivision itself is defined over (ntr/smooth.h). */
 int render_scale_sanitise(int n)
 {
     if (n <= 0) return 0;
-    if (n > 4) return 4;
+    if (n > 8) return 8;            /* RESSCALE1: 8 x 192 = 1536 rows, the NTR_WIDE_RT tier's height (ntr/ppu.h) */
     return n;
 }
 
@@ -4211,6 +4210,23 @@ extern "C" int host_setting_render_scale(void)
     if (env >= 0) return env;
     load_once();
     return g_render_scale;
+}
+
+/* RESSCALE1: the in-game Settings row. Boot-latched like the launcher's row: the setter writes the key for the next boot and
+   leaves the running picture (ntr::render_scale, latched at boot) and host_setting_render_scale alone, so the logs that report
+   this run's scale stay true. The page reads the saved value back so the row shows what was picked. */
+static int g_render_scale_saved = -1;   /* <0: nothing picked on the page this run */
+extern "C" int host_setting_render_scale_saved(void)
+{
+    return g_render_scale_saved >= 0 ? g_render_scale_saved : host_setting_render_scale();
+}
+extern "C" int host_setting_set_render_scale(int n)
+{
+    load_once();
+    n = render_scale_sanitise(n);
+    g_render_scale_saved = n;
+    queue_int("RenderScale", n);
+    return 1;
 }
 
 /* ---- THE IMPROVED MINIMAP'S TWO GETTERS ------------------------------------
