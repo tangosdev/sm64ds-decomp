@@ -79,6 +79,7 @@ struct daPgRcer_c : dActor_c {
     void func_ov019_021112b8();
     int func_ov019_0211131c();
     void func_ov019_021113b0();
+    void func_ov019_021114ec();
     int func_ov019_02111558();
     int func_ov019_02111754();
     int func_ov019_021117a8();

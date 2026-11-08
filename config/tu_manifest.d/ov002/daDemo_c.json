@@ -166,7 +166,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_ov002_020f2a48",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a48Ev",
       "address": "0x020f2a48",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f2a48.c",
@@ -257,7 +257,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "func_ov002_020f2f64",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2f64Ev",
       "address": "0x020f2f64",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020f2f64.c",

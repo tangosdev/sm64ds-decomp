@@ -95,7 +95,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_ov019_021114ec",
+      "symbol": "_ZN10daPgRcer_c19func_ov019_021114ecEv",
       "address": "0x021114ec",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov019_021114ec.cpp",
@@ -1043,129 +1043,129 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@555",
+      "from": "@554",
       "to": "data_ov019_021134dc",
-      "evidence": "compiler temp mapped to 0x021134dc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021134dc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
+    },
+    {
+      "from": "@555",
+      "to": "data_ov019_021134f4",
+      "evidence": "compiler temp mapped to 0x021134f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@556",
-      "to": "data_ov019_021134f4",
-      "evidence": "compiler temp mapped to 0x021134f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113500",
+      "evidence": "compiler temp mapped to 0x02113500 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@557",
-      "to": "data_ov019_02113500",
-      "evidence": "compiler temp mapped to 0x02113500 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_0211350c",
+      "evidence": "compiler temp mapped to 0x0211350c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@558",
-      "to": "data_ov019_0211350c",
-      "evidence": "compiler temp mapped to 0x0211350c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113524",
+      "evidence": "compiler temp mapped to 0x02113524 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@559",
-      "to": "data_ov019_02113524",
-      "evidence": "compiler temp mapped to 0x02113524 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113530",
+      "evidence": "compiler temp mapped to 0x02113530 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@560",
-      "to": "data_ov019_02113530",
-      "evidence": "compiler temp mapped to 0x02113530 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113548",
+      "evidence": "compiler temp mapped to 0x02113548 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@561",
-      "to": "data_ov019_02113548",
-      "evidence": "compiler temp mapped to 0x02113548 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113554",
+      "evidence": "compiler temp mapped to 0x02113554 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@562",
-      "to": "data_ov019_02113554",
-      "evidence": "compiler temp mapped to 0x02113554 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113560",
+      "evidence": "compiler temp mapped to 0x02113560 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@563",
-      "to": "data_ov019_02113560",
-      "evidence": "compiler temp mapped to 0x02113560 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_021134b8",
+      "evidence": "compiler temp mapped to 0x021134b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@564",
-      "to": "data_ov019_021134b8",
-      "evidence": "compiler temp mapped to 0x021134b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@565",
       "to": "data_ov019_021134c4",
-      "evidence": "compiler temp mapped to 0x021134c4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021134c4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@567",
+      "from": "@566",
       "to": "data_ov019_021132b8",
-      "evidence": "compiler temp mapped to 0x021132b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@569",
+      "from": "@568",
       "to": "data_ov019_02113280",
-      "evidence": "compiler temp mapped to 0x02113280 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113280 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@571",
+      "from": "@570",
       "to": "data_ov019_021132a8",
-      "evidence": "compiler temp mapped to 0x021132a8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132a8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@573",
+      "from": "@572",
       "to": "data_ov019_021132b0",
-      "evidence": "compiler temp mapped to 0x021132b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@575",
+      "from": "@574",
       "to": "data_ov019_02113278",
-      "evidence": "compiler temp mapped to 0x02113278 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113278 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@577",
+      "from": "@576",
       "to": "data_ov019_02113290",
-      "evidence": "compiler temp mapped to 0x02113290 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113290 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@579",
+      "from": "@578",
       "to": "data_ov019_021132c0",
-      "evidence": "compiler temp mapped to 0x021132c0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132c0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@581",
+      "from": "@580",
       "to": "data_ov019_021132a0",
-      "evidence": "compiler temp mapped to 0x021132a0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132a0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@583",
+      "from": "@582",
       "to": "data_ov019_02113288",
-      "evidence": "compiler temp mapped to 0x02113288 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113288 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@585",
+      "from": "@584",
       "to": "data_ov019_02113298",
-      "evidence": "compiler temp mapped to 0x02113298 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113298 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
-      "from": "@587",
+      "from": "@586",
       "to": "data_ov019_02113270",
-      "evidence": "compiler temp mapped to 0x02113270 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113270 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
+    },
+    {
+      "from": "@588",
+      "to": "data_ov019_021132c8",
+      "evidence": "compiler temp mapped to 0x021132c8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@589",
-      "to": "data_ov019_021132c8",
-      "evidence": "compiler temp mapped to 0x021132c8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_021134d0",
+      "evidence": "compiler temp mapped to 0x021134d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     },
     {
       "from": "@590",
-      "to": "data_ov019_021134d0",
-      "evidence": "compiler temp mapped to 0x021134d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@591",
       "to": "data_ov019_02113518",
-      "evidence": "compiler temp mapped to 0x02113518 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113518 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects)"
     }
   ],
   "symbol_binding_rewrites": [

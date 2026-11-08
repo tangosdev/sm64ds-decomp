@@ -91,7 +91,6 @@ extern "C" {
 void  func_ov102_0214ae1c(void *self);
 void  func_ov102_0214b384(void *self, unsigned int level);
 void  func_ov102_0214baa0(char *self);
-void  func_ov102_0214beb4(void *self);
 
 /* -- other modules -- */
 void  GiveCoins(int who, int count);
@@ -108,11 +107,6 @@ int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
-/* Hoisted out of four member bodies.  A class member function may not sit in a
-   block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
-   own extern "C" declarations the way the free members below do -- these have to
-   be file-scope, and they are spelled to agree with every other user in the TU. */
-void  func_ov102_0214b3b8(void *c);
 /* Real definitions: func_0201267c and func_0200fc44 (arm9).
    The methods call through these so the names stay unmangled. */
 int func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
@@ -309,7 +303,7 @@ int daBmb_c::Behavior()
                     return 1;
                 }
                 if (mWithMeshClsn.IsOnWall() && mState == 0) {
-                    func_ov102_0214beb4(this);
+                    func_ov102_0214beb4();
                 }
             }
         }
@@ -425,7 +419,7 @@ void daBmb_c::State0() {
                     if (mTurnTimer == 0 ||
                         Vec3_Dist(&mPos, (const Vector3 *)&mHomePosX) >= 0x500000) {
                         mHorzSpeed = 0x5000;
-                        func_ov102_0214beb4(this);
+                        func_ov102_0214beb4();
                     }
                 }
             }
@@ -451,28 +445,23 @@ void daBmb_c::State0() {
 
 extern "C" {
 
-void func_ov102_0214beb4(void *cv)
-{
+void daBmb_c::func_ov102_0214beb4() {
     extern int data_0209e650;
 
-    daBmb_c *self = (daBmb_c *)cv;
-
-    self->mState = 1;
-    self->mTurnCount += 1;
-    daPly_c *o = self->mChasePlayer;
+    mState = 1;
+    mTurnCount += 1;
+    daPly_c *o = mChasePlayer;
     if (o == 0) {
-        *(short *)&self->mTargetAngY =
-            Vec3_HorzAngle((const Vector3 *)&self->mPosX, (const Vector3 *)&self->mHomePosX);
-        if (Vec3_Dist((const Vector3 *)&self->mPosX, (const Vector3 *)&self->mHomePosX) >= 0x500000)
+        *(short *)&mTargetAngY =
+            Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX);
+        if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX) >= 0x500000)
             return;
         unsigned int r = RandomIntInternal(&data_0209e650);
-        *(short *)&self->mTargetAngY += (short)(r >> 0x10);
+        *(short *)&mTargetAngY += (short)(r >> 0x10);
         return;
     }
-    *(short *)&self->mTargetAngY =
-        Vec3_HorzAngle((const Vector3 *)&self->mPosX, (const Vector3 *)&o->mPosX);
+    *(short *)&mTargetAngY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&o->mPosX);
 }
-
 }
 
 /* ==========================================================================
@@ -517,7 +506,7 @@ void daBmb_c::func_ov102_0214bd90(){
     if (mChasePlayer == 0) {
       mHorzSpeed = 0x5000;
     }
-    func_ov102_0214beb4(this);
+    func_ov102_0214beb4();
   } else {
     State1();
   }
@@ -563,7 +552,7 @@ void daBmb_c::State3()
     int flag0x400 = (int) ((flags & 0x400) != 0);
     if (flag0x400)
     {
-        func_ov102_0214b3b8(this);
+        func_ov102_0214b3b8();
     }
     else
     {
@@ -890,18 +879,17 @@ void daBmb_c::UpdateShadow() {
 
 extern "C" {
 
-void func_ov102_0214b3f0(void *c, int a1) {
+void daBmb_c::func_ov102_0214b3f0(int a1) {
     extern void func_ov102_0214bd20(void *c);
-    daBmb_c *self = (daBmb_c *)c;
 
-    unsigned int v = self->mState - 3;
+    unsigned int v = mState - 3;
     if (v <= 1u) return;
-    unsigned short h = self->mFuse;
+    unsigned short h = mFuse;
     if (h > 4u) goto do_call;
     if (h != 0u) return;
 do_call:
-    self->mCarrier = (daPly_c *)a1;
-    func_ov102_0214bd20(c);
+    mCarrier = (daPly_c *)a1;
+    func_ov102_0214bd20(this);
 }
 
 }
@@ -911,17 +899,15 @@ do_call:
 
 extern "C" {
 
-void func_ov102_0214b3b8(void *c)
-{
+void daBmb_c::func_ov102_0214b3b8() {
     extern void func_ov102_0214bc20(void *c);
-    daBmb_c *self = (daBmb_c *)c;
 
-    if (self->mState != 3) return;
-    func_ov102_0214bc20(c);
-    self->mPrevAngleY = self->mCarrier->mAngleY;
-    self->mCarrier = 0;
+    if (mState != 3)
+        return;
+    func_ov102_0214bc20(this);
+    mPrevAngleY = mCarrier->mAngleY;
+    mCarrier = 0;
 }
-
 }
 
 /* ==========================================================================
@@ -1001,7 +987,7 @@ void daBmb_c::func_ov102_0214b128() {
     }
     t = (int)func_02010304(&mdCc_c);
     if (t) {
-        func_ov102_0214b3f0(this, t);
+        func_ov102_0214b3f0(t);
         return;
     }
     t = mdCc_c.hitFlags;
