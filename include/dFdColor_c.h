@@ -35,7 +35,7 @@ struct dFdColor_c : dFdBrightness_c {
        writes it is dScene_c::StartSceneFade in src/game/stages/d_scene.cpp, whose parameter is
        the fade colour -- which is also the name the upstream reference header
        gives this field, so it is named for that now. */
-    u16 color;          /* 0x0c */
+    u16 color; /* 0x0c */
 
     /* Inline, and it owns exactly one store. In _ZN9dFdWipe_cC1Ev the
        `strh r2, [r4,#0xc]` that zeroes this field comes after this class's own
