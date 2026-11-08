@@ -66,42 +66,42 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN7fBase_c13func_020431c4Ev",
+      "symbol": "_ZN7fBase_c28checkChildProcessCreateStateEv",
       "address": "0x020431c4",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/arm9/0204/func_020431c4.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN7fBase_c13func_0204322cEv",
+      "symbol": "_ZN7fBase_c8drawPackEv",
       "address": "0x0204322c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0204/func_0204322c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7fBase_c13func_02043288Ev",
+      "symbol": "_ZN7fBase_c11executePackEv",
       "address": "0x02043288",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0204/func_02043288.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN7fBase_c13func_020432e4Ev",
+      "symbol": "_ZN7fBase_c10deletePackEv",
       "address": "0x020432e4",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0204/func_020432e4.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN7fBase_c13func_0204335cEv",
+      "symbol": "_ZN7fBase_c10createPackEv",
       "address": "0x0204335c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0204/func_0204335c.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN7fBase_c13func_020433b8Ev",
+      "symbol": "_ZN7fBase_c9runCreateEv",
       "address": "0x020433b8",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0204/func_020433b8.c",
@@ -136,7 +136,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN7fBase_c13func_02043810Ev",
+      "symbol": "_ZN7fBase_c16getConnectParentEv",
       "address": "0x02043810",
       "size": "0x00000014",
       "legacy_source": "src/func_02043810.c",
@@ -150,7 +150,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "_ZN7fBase_c13func_02043880Ev",
+      "symbol": "_ZN7fBase_c11connectProcEv",
       "address": "0x02043880",
       "size": "0x00000240",
       "legacy_source": "src/func_02043880.c",
