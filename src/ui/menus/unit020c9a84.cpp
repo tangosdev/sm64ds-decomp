@@ -35,7 +35,8 @@ extern "C" {
 
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *p);
-extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist, int *outDist);
+extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist,
+                               int *outDist);
 extern void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
 extern void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
 extern void func_ov007_020c7804(Ov007PointList *list);
