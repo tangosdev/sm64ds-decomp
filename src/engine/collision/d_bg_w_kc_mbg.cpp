@@ -31,14 +31,6 @@ int LenVec3(const Vector3 *v);
 void NormalizeVec3(const Vector3 *src, Vector3 *dst);
 int func_02053200(int v);
 
-/* dBgW_Kc's ITCM depth-policy setters and d_bg_w.cpp's threshold setter, run
-   on `this` through base inheritance.
-   local extern: no header in include/ declares them. */
-void func_01ffb0a4(dBgW_Kc *self);
-void func_01ffb07c(dBgW_Kc *self, const Vector3 *v);
-void func_01ffb0b0(dBgW_Kc *self);
-void func_01ffb0bc(dBgW_Kc *self);
-
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
    local extern: no header in include/ declares them. */
@@ -160,15 +152,15 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     GetVelocity(*(Vector3 *)&moveDir);
     moveDir.y = 0;
     if (LenVec3((Vector3 *)&moveDir) != 0) {
-        func_01ffb0a4(this);
+        SetDepthByDir();
         NormalizeVec3((Vector3 *)&moveDir, (Vector3 *)&moveDir);
         VecFx32 localDir;
         WorldToLocalDirection(*(Vector3 *)&moveDir, *(Vector3 *)&localDir);
-        func_01ffb07c(this, (Vector3 *)&localDir);
+        SetDepthDir((Vector3 *)&localDir);
         SetDepthDirMinDot(0xe66);
-        func_01ffb0b0(this);
+        ClearShallowOnly();
     } else {
-        func_01ffb0bc(this);
+        SetShallowOnly();
     }
 }
 

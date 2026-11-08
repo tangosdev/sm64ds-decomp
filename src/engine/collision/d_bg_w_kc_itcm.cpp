@@ -1243,35 +1243,29 @@ Fix12i dBgW_Kc::GetUnkOctreeY() const
     return (kclFile->origin.y << 6) + (~kclFile->yMask << 12);
 }
 
-extern "C" KCL_File *func_01ffb0c8(dBgW_Kc *self)
-{
-    return self->kclFile;
+KCL_File *dBgW_Kc::GetFile() const {
+    return kclFile;
 }
 
-extern "C" void func_01ffb0bc(dBgW_Kc *self)
-{
-    self->shallowOnly = true;
+void dBgW_Kc::SetShallowOnly() {
+    shallowOnly = true;
 }
 
-extern "C" void func_01ffb0b0(dBgW_Kc *self)
-{
-    self->shallowOnly = false;
+void dBgW_Kc::ClearShallowOnly() {
+    shallowOnly = false;
 }
 
-extern "C" void func_01ffb0a4(dBgW_Kc *self)
-{
-    self->depthByDir = true;
+void dBgW_Kc::SetDepthByDir() {
+    depthByDir = true;
 }
 
-extern "C" void func_01ffb098(dBgW_Kc *self)
-{
-    self->depthByDir = false;
+void dBgW_Kc::ClearDepthByDir() {
+    depthByDir = false;
 }
 
 /* Copies the depth direction memberwise: three separate word loads and stores. */
-extern "C" void func_01ffb07c(dBgW_Kc *self, const Vector3 *v)
-{
-    self->depthDir.x = v->x;
-    self->depthDir.y = v->y;
-    self->depthDir.z = v->z;
+void dBgW_Kc::SetDepthDir(const Vector3 *v) {
+    depthDir.x = v->x;
+    depthDir.y = v->y;
+    depthDir.z = v->z;
 }

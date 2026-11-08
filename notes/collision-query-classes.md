@@ -497,9 +497,9 @@ ldrb r0,[sl,#0x35]        this->unk_35
 ```
 
 Those are the `MeshCollider` bytes at 0x34/0x35 and the `Vector3` at 0x38 — and their
-set/clear accessors were among **the original eleven ITCM matches**: `func_01ffb098` /
-`func_01ffb0a4` clear and set 0x35, `func_01ffb0b0` / `func_01ffb0bc` clear and set 0x34, and
-`func_01ffb07c` writes the 0x38 vector, which `SetFile` seeds to the unit X vector.
+set/clear accessors were among **the original eleven ITCM matches**: `ClearDepthByDir` /
+`SetDepthByDir` clear and set 0x35, `ClearShallowOnly` / `SetShallowOnly` clear and set 0x34, and
+`SetDepthDir` writes the 0x38 vector, which `SetFile` seeds to the unit X vector.
 
 Those five were matched a batch ago as bare one-line accessors with no known purpose.
 **This is the purpose.** They are a normal filter on the face test — a face-angle cutoff

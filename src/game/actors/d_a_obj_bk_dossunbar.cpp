@@ -21,8 +21,8 @@
  *   ResourceDescriptor[2] size-DIFF Init and changes reloc destinations.
  *   sinit file IDs 0x58b / 0x58c / 0x58d / 0x58e. The registry profiles
  *   g_profile_BK_DOSSUNBAR_L / _S remain outside the owned ranges.
- * - func_01ffb0a4 / func_01ffb07c are MeshCollider ITCM
- *   (flag 0x35 / vec at +0x38). dBgW::SetBeforeClsnCallback stores the BeforeClsn
+ * - dBgW_Kc::SetDepthByDir / SetDepthDir are the mesh collider's ITCM
+ *   depth policy (flag +0x35 / vec at +0x38). dBgW::SetBeforeClsnCallback stores the BeforeClsn
  *   callback; 020396d0 and Math_Function_0203b0fc / 0203b14c names
  *   belong with those callees.
  */
@@ -94,8 +94,6 @@ extern CLPS_Block *data_ov015_0211453c;
 extern "C" {
 void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 int Math_Function_0203b14c(int *p, int target, int scale, int max, int extra);
-void func_01ffb0a4(dBgW_Kc *self);
-void func_01ffb07c(dBgW_Kc *self, const Vector3 *v);
 }
 
 extern "C" daObjBk_Dossunbar_c *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S() {
@@ -132,8 +130,8 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     tmp[0] = 0x1000;
     tmp[1] = 0;
     tmp[2] = 0;
-    func_01ffb0a4(&mMeshCollider);
-    func_01ffb07c(&mMeshCollider, (const Vector3 *)tmp);
+    mMeshCollider.SetDepthByDir();
+    mMeshCollider.SetDepthDir((const Vector3 *)tmp);
     mMeshCollider.SetDepthDirMinDot(0xccd);
 
     mHomePosX = mPosX;

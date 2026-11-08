@@ -12435,27 +12435,27 @@
     },
     "itcm:0x01ffb07c": {
       "author": "andrewboudreau",
-      "name": "func_01ffb07c"
+      "name": "_ZN7dBgW_Kc11SetDepthDirEPK7Vector3"
     },
     "itcm:0x01ffb098": {
       "author": "andrewboudreau",
-      "name": "func_01ffb098"
+      "name": "_ZN7dBgW_Kc15ClearDepthByDirEv"
     },
     "itcm:0x01ffb0a4": {
       "author": "andrewboudreau",
-      "name": "func_01ffb0a4"
+      "name": "_ZN7dBgW_Kc13SetDepthByDirEv"
     },
     "itcm:0x01ffb0b0": {
       "author": "andrewboudreau",
-      "name": "func_01ffb0b0"
+      "name": "_ZN7dBgW_Kc16ClearShallowOnlyEv"
     },
     "itcm:0x01ffb0bc": {
       "author": "andrewboudreau",
-      "name": "func_01ffb0bc"
+      "name": "_ZN7dBgW_Kc14SetShallowOnlyEv"
     },
     "itcm:0x01ffb0c8": {
       "author": "andrewboudreau",
-      "name": "func_01ffb0c8"
+      "name": "_ZNK7dBgW_Kc7GetFileEv"
     },
     "itcm:0x01ffb0d0": {
       "author": "andrewboudreau",

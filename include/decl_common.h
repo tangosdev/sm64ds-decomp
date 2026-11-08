@@ -440,7 +440,6 @@ extern int data_ov100_02148710;
 extern int data_ov100_02148718;
 extern int data_ov100_0214871c;
 extern int data_ov100_02148720;
-extern void func_01ffb07c(void*, void*);
 extern int func_02007cec(void*, const struct Vector3*, int);
 extern int GetLanguageIndex(void);
 extern int func_02013890(int, int);
@@ -799,10 +798,6 @@ extern void WarpPlayer(int, int);
 extern void data_ov007_020cd72c(void*);
 extern void data_ov052_02111e84(void*);
 extern void data_ov054_02111238(void*);
-extern void func_01ffb098(void*);
-extern void func_01ffb0b0(void*);
-extern void func_01ffb0bc(void*);
-extern struct KCL_File *func_01ffb0c8(struct dBgW_Kc *);
 extern void MI_SendGXCommand(unsigned int, const void *, unsigned int);
 /* func_02005348 removed: it is the member dScBoot_c::func_02005348(), declared in include/dScBoot_c.h */
 extern void Vec3fSetDistAndAngle(struct Vector3 *, const struct Vector3 *, int, short, short);
