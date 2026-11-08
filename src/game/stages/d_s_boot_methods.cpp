@@ -196,7 +196,9 @@ s32 dScBoot_c::Behavior() {
                 *(u16 *)LADR(&mFadeTimer) -= frameStep;
                 if (mFadeTimer == 0) {
                     StartSceneFade(func_0203da3c() != 0 ? 6 : 1, 0, 0);
-                } else if (mState == STATE_BOOT_WAIT && keysHeld == (PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_X | PAD_BUTTON_Y | PAD_BUTTON_L | PAD_BUTTON_R)) {
+                } else if (mState == STATE_BOOT_WAIT &&
+                           keysHeld == (PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_X | PAD_BUTTON_Y |
+                                        PAD_BUTTON_L | PAD_BUTTON_R)) {
                     u16 langFileID;
                     void *palette;
 
@@ -240,7 +242,8 @@ s32 dScBoot_c::Behavior() {
             if (touchDown != 0 && gTouchEdge[playerSlot * 4] != 0) {
                 touchStarted = 1;
             }
-            if (touchStarted != 0 || (keysPressed & (PAD_BUTTON_A | PAD_BUTTON_START | PAD_KEY_LEFT | PAD_KEY_RIGHT))) {
+            if (touchStarted != 0 ||
+                (keysPressed & (PAD_BUTTON_A | PAD_BUTTON_START | PAD_KEY_LEFT | PAD_KEY_RIGHT))) {
                 int leftTouchStarted;
 
                 if (touchDown != 0 && gTouchEdge[playerSlot * 4] != 0) {
@@ -363,10 +366,10 @@ s32 dScBoot_c::Behavior() {
 void dScBoot_c::UpdateButtonPalettes() {
     int button;
     for (button = 0; button < 2; button++) {
-        u16 (*rows)[0x20];
+        u16(*rows)[0x20];
         int column;
         u16 paletteBits = (button == mSelectedButton && mButtonFlashTimer == 0) ? 0x2000 : 0x1000;
-        rows = (u16 (*)[0x20])((u16 *)G2S::GetBG1ScrPtr() + 19 * 0x20 + button * 0x10);
+        rows = (u16(*)[0x20])((u16 *)G2S::GetBG1ScrPtr() + 19 * 0x20 + button * 0x10);
         for (column = 0; column < 0x10; column++) {
             rows[0][column] = paletteBits + (rows[0][column] & 0x3ff);
             rows[1][column] = paletteBits + (rows[1][column] & 0x3ff);
