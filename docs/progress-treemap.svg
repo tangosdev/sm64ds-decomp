@@ -11133,31 +11133,31 @@ matched: yes</title></rect><rect x="109.96" y="839.45" width="5.86" height="11.8
 module: arm9
 addr: 0x02064fe8
 size: 104 bytes
-matched: yes</title></rect><rect x="109.96" y="851.35" width="5.86" height="9.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02065050
+matched: yes</title></rect><rect x="109.96" y="851.35" width="5.86" height="9.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_MpChildRecvHook
 module: arm9
 addr: 0x02065050
 size: 80 bytes
-matched: yes</title></rect><rect x="109.96" y="860.50" width="5.86" height="6.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020650a0
+matched: yes</title></rect><rect x="109.96" y="860.50" width="5.86" height="6.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_MpChildSendHook
 module: arm9
 addr: 0x020650a0
 size: 56 bytes
-matched: yes</title></rect><rect x="109.96" y="866.90" width="5.86" height="10.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020650d8
+matched: yes</title></rect><rect x="109.96" y="866.90" width="5.86" height="10.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_MpParentRecvHook
 module: arm9
 addr: 0x020650d8
 size: 96 bytes
-matched: yes</title></rect><rect x="109.96" y="877.88" width="5.86" height="6.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02065138
+matched: yes</title></rect><rect x="109.96" y="877.88" width="5.86" height="6.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_MpParentSendHook
 module: arm9
 addr: 0x02065138
 size: 56 bytes
-matched: yes</title></rect><rect x="109.96" y="884.29" width="5.86" height="22.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02065170
+matched: yes</title></rect><rect x="109.96" y="884.29" width="5.86" height="22.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_End
 module: arm9
 addr: 0x02065170
 size: 196 bytes
-matched: yes</title></rect><rect x="109.96" y="906.70" width="5.86" height="22.87" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02065234
+matched: yes</title></rect><rect x="109.96" y="906.70" width="5.86" height="22.87" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_InitChild
 module: arm9
 addr: 0x02065234
 size: 200 bytes
-matched: yes</title></rect><rect x="109.96" y="929.58" width="5.86" height="23.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020652fc
+matched: yes</title></rect><rect x="109.96" y="929.58" width="5.86" height="23.79" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_InitParent
 module: arm9
 addr: 0x020652fc
 size: 208 bytes
@@ -11193,7 +11193,7 @@ matched: yes</title></rect><rect x="181.33" y="786.38" width="4.34" height="6.80
 module: arm9
 addr: 0x020657d0
 size: 44 bytes
-matched: yes</title></rect><rect x="185.67" y="786.38" width="19.34" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020657fc
+matched: yes</title></rect><rect x="185.67" y="786.38" width="19.34" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_UnregisterBlock
 module: arm9
 addr: 0x020657fc
 size: 196 bytes
@@ -11205,15 +11205,15 @@ matched: yes</title></rect><rect x="222.37" y="786.38" width="4.74" height="6.80
 module: arm9
 addr: 0x02065970
 size: 48 bytes
-matched: yes</title></rect><rect x="227.11" y="786.38" width="8.68" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020659a0
+matched: yes</title></rect><rect x="227.11" y="786.38" width="8.68" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_SetPacketSize
 module: arm9
 addr: 0x020659a0
 size: 88 bytes
-matched: yes</title></rect><rect x="235.79" y="786.38" width="8.29" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020659f8
+matched: yes</title></rect><rect x="235.79" y="786.38" width="8.29" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_CalcPacketbitmapSize
 module: arm9
 addr: 0x020659f8
 size: 84 bytes
-matched: yes</title></rect><rect x="244.07" y="786.38" width="3.95" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02065a4c
+matched: yes</title></rect><rect x="244.07" y="786.38" width="3.95" height="6.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>WBT_AidbitmapToAid
 module: arm9
 addr: 0x02065a4c
 size: 40 bytes
