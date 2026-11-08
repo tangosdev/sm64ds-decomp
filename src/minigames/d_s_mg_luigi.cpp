@@ -333,10 +333,8 @@ void dScMgLuigi_c::UpdateReward() {
         mReward.y += mReward.velY;
         mReward.velY -= 0x100;
         if (mReward.timer != 0) {
-            int remainingTicks;
             mReward.timer--;
-            remainingTicks = mReward.timer;
-            if (remainingTicks < 0)
+            if ((s16)mReward.timer < 0)
                 mReward.timer = 0;
             return;
         }
@@ -347,10 +345,8 @@ void dScMgLuigi_c::UpdateReward() {
 
     if (mReward.phase == 1) {
         if (mReward.timer != 0) {
-            int remainingTicks;
             mReward.timer--;
-            remainingTicks = mReward.timer;
-            if (remainingTicks < 0)
+            if ((s16)mReward.timer < 0)
                 mReward.timer = 0;
             return;
         }
@@ -376,9 +372,9 @@ void dScMgLuigi_c::UpdateReward() {
         Sound::PlayBank2_2D(0x1bc);
         mReward.timer = 0;
         mReward.sparks -= 1;
-        *(u16 *)&mTime += 1;
-        if (*(u16 *)&mTime >= 0x32) {
-            *(u16 *)&mTime = 0x32;
+        mTime += 1;
+        if (mTime >= 0x32) {
+            mTime = 0x32;
             mTimeTick = 0;
         }
         return;
@@ -508,14 +504,11 @@ void dScMgLuigi_c::CurtainStateHold(int curtainIndex) {
             *sound = Sound_PlayIfNotActive(*sound, 2, 0x1b8, 0);
         }
     }
-    {
-        unsigned short *delay = (unsigned short *)&mCurtain[curtainIndex].delay;
-        if (*delay != 0) {
-            *delay = *delay - 1;
-            if ((short)*delay < 0)
-                *delay = 0;
-            return;
-        }
+    if (mCurtain[curtainIndex].delay != 0) {
+        mCurtain[curtainIndex].delay--;
+        if ((s16)mCurtain[curtainIndex].delay < 0)
+            mCurtain[curtainIndex].delay = 0;
+        return;
     }
     velocity = &mCurtain[curtainIndex].velX;
     position = &mCurtain[curtainIndex].x;
@@ -587,14 +580,12 @@ void dScMgLuigi_c::CurtainUpdate(int i) {
 void dScMgLuigi_c::CurtainStart(int curtainIndex) {
     extern unsigned char data_0209d460;
     extern int sLuigiCurtainX[];
-    unsigned short delay;
     int windowMask;
     int roundInSet;
 
-    delay = *(unsigned short *)&mCurtain[curtainIndex].delay;
-    if (delay != 0) {
-        mCurtain[curtainIndex].delay = delay - 1;
-        if (mCurtain[curtainIndex].delay < 0)
+    if (mCurtain[curtainIndex].delay != 0) {
+        mCurtain[curtainIndex].delay--;
+        if ((s16)mCurtain[curtainIndex].delay < 0)
             mCurtain[curtainIndex].delay = 0;
         return;
     }
@@ -665,25 +656,19 @@ void dScMgLuigi_c::DrawTimer() {
         return;
     language = GetGameLanguage();
     DrawOamSprite(sLuigiTextSpritesByLanguage[language][3], 0x80, 0x10, 0);
-    Mg_DrawNumberRotated(0x80, 0x28, static_cast<u16>(mTime), 1, -1, 0x800, 0);
+    Mg_DrawNumberRotated(0x80, 0x28, mTime, 1, -1, 0x800, 0);
 }
 
 void dScMgLuigi_c::TickTimer() {
-    if (*(u16 *)&mTime != 0) {
-        {
-            u8 *tick = &mTimeTick;
-            *tick = *tick + 1;
-        }
+    if (mTime != 0) {
+        mTimeTick++;
         if (mTimeTick < 0x3c)
             return;
         mTimeTick = 0;
-        {
-            u16 *seconds = (u16 *)&mTime;
-            *seconds = *seconds - 1;
-        }
-        if (mTime <= 0)
+        mTime--;
+        if ((s16)mTime <= 0)
             mTime = 0;
-        if (*(u16 *)&mTime <= 2) {
+        if (mTime <= 2) {
             Sound::PlayBank2_2D(0xa6);
             return;
         }
@@ -775,8 +760,8 @@ void dScMgLuigi_c::AddPenalty(int pictureIndex) {
         mPenalty[penaltyIndex].y = mPosY[pictureIndex];
         mPenalty[penaltyIndex].velY = 0x1100;
         mPenalty[penaltyIndex].phase = 0;
-        *(u16 *)&mTime -= 0xa;
-        if (mTime < 0)
+        mTime -= 0xa;
+        if ((s16)mTime < 0)
             mTime = 0;
         return;
     }
@@ -1077,7 +1062,7 @@ void dScMgLuigi_c::BeginCatch(int found) {
     while (roundInSet >= 5)
         roundInSet -= 5;
     if (roundInSet != 4)
-        *(unsigned short *)&mCatchWait += 8;
+        mCatchWait += 8;
     if (found == 0)
         mCatchWait = 0x80;
     mFound = (unsigned char)found;
@@ -1146,7 +1131,7 @@ void dScMgLuigi_c::CheckTouch() {
                     mFound = 0;
                     mKind[pictureIndex] = PICTURE_FLASH;
                     mBlink[pictureIndex] = 0x40;
-                    if (*(u16 *)&mTime != 0) {
+                    if (mTime != 0) {
                         int targetIndex = mTarget;
                         int targetOffsetX = (mPosX[targetIndex - 1] >> 12) - 0x80;
                         int pan = (targetOffsetX * 0x30) >> 7;
@@ -1570,14 +1555,14 @@ void dScMgLuigi_c::StateCatch() {
             mShown[pictureIndex] = 0;
     }
 
-    if (*(unsigned short *)&mCatchWait == 0)
+    if (mCatchWait == 0)
         return;
-    *(unsigned short *)&mIconOn = 1;
-    *(unsigned short *)&mCatchWait -= 1;
-    if (mCatchWait > 0)
+    mIconOn = 1;
+    mCatchWait -= 1;
+    if ((s16)mCatchWait > 0)
         return;
-    *(unsigned short *)&mCatchWait = 0;
-    *(unsigned short *)&mIconOn = 0;
+    mCatchWait = 0;
+    mIconOn = 0;
 
     if (mFound != 0) {
         int roundInSet = mLevel;
