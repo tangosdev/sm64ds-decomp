@@ -11,9 +11,12 @@ struct ColorRamp {
     u16 flags;
 };
 
-/* age is the particle's animation time, 0..255 (func_0204a730 passes its
- * life rate, or its loop time when the ramp loops). */
-void func_0204d294(ParticleElement *ptcl, PtclDef *data, int age) {
+/* The colour animation callback: the start colour, then a ramp to the
+ * definition's base colour and on to the end colour, stepped or interpolated
+ * by flags bit 2. The name is pret's SPL coinage, not a ROM or SDK symbol.
+ * age is the particle's animation time, 0..255 (func_0204a730 passes its life
+ * rate, or its loop time when the ramp loops). */
+void SPLAnim_Color(ParticleElement *ptcl, PtclDef *data, int age) {
     PtclData *header = data->data;
     struct ColorRamp *ramp = data->colorAnim;
     u8 stop1 = ramp->stop1;

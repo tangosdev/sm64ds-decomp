@@ -79,63 +79,63 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211f154Ev",
+      "symbol": "_ZN12daKuriKing_c19SetDefeatTalkCameraEv",
       "address": "0x0211f154",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov074_0211f154.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211f244Ev",
+      "symbol": "_ZN12daKuriKing_c18LaunchVanishCopiesEv",
       "address": "0x0211f244",
       "size": "0x00000100",
       "legacy_source": "src/func_ov074_0211f244.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211f344Eh",
+      "symbol": "_ZN12daKuriKing_c26SetOtherCopiesShouldRenderEh",
       "address": "0x0211f344",
       "size": "0x00000048",
       "legacy_source": "src/func_ov074_0211f344.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211f38cEv",
+      "symbol": "_ZN12daKuriKing_c15SpawnVanishCopyEv",
       "address": "0x0211f38c",
       "size": "0x0000022c",
       "legacy_source": "src/func_ov074_0211f38c.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211f5b8Ev",
+      "symbol": "_ZN12daKuriKing_c12UpdateDefeatEv",
       "address": "0x0211f5b8",
       "size": "0x00000450",
       "legacy_source": "src/func_ov074_0211f5b8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fa08Ev",
+      "symbol": "_ZN12daKuriKing_c11EnterDefeatEv",
       "address": "0x0211fa08",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov074_0211fa08.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fa74Ev",
+      "symbol": "_ZN12daKuriKing_c17UpdateScaleChangeEv",
       "address": "0x0211fa74",
       "size": "0x00000110",
       "legacy_source": "src/func_ov074_0211fa74.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fb84Ev",
+      "symbol": "_ZN12daKuriKing_c16EnterScaleChangeEv",
       "address": "0x0211fb84",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov074_0211fb84.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fbd0Ev",
+      "symbol": "_ZN12daKuriKing_c19UpdateMegaKnockbackEv",
       "address": "0x0211fbd0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov074_0211fbd0.c",
@@ -149,28 +149,28 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fc38Ev",
+      "symbol": "_ZN12daKuriKing_c15UpdateKnockbackEv",
       "address": "0x0211fc38",
       "size": "0x00000110",
       "legacy_source": "src/func_ov074_0211fc38.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fd48Ev",
+      "symbol": "_ZN12daKuriKing_c14EnterKnockbackEv",
       "address": "0x0211fd48",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov074_0211fd48.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fd74Ev",
+      "symbol": "_ZN12daKuriKing_c19UpdateSummonGoombasEv",
       "address": "0x0211fd74",
       "size": "0x00000238",
       "legacy_source": "src/func_ov074_0211fd74.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211ffacEv",
+      "symbol": "_ZN12daKuriKing_c18EnterSummonGoombasEv",
       "address": "0x0211ffac",
       "size": "0x00000020",
       "legacy_source": "src/func_ov074_0211ffac.c",
@@ -191,21 +191,21 @@
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120080Ev",
+      "symbol": "_ZN12daKuriKing_c10UpdateWalkEv",
       "address": "0x02120080",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov074_02120080.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212016cEv",
+      "symbol": "_ZN12daKuriKing_c9EnterWalkEv",
       "address": "0x0212016c",
       "size": "0x00000020",
       "legacy_source": "src/func_ov074_0212016c.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212018cEv",
+      "symbol": "_ZN12daKuriKing_c18UpdateIntroTalkEndEv",
       "address": "0x0212018c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov074_0212018c.cpp",
@@ -219,7 +219,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021201f0Ev",
+      "symbol": "_ZN12daKuriKing_c15UpdateIntroTalkEv",
       "address": "0x021201f0",
       "size": "0x000001f0",
       "legacy_source": "src/func_ov074_021201f0.c",
@@ -233,49 +233,49 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021203e4Ei",
+      "symbol": "_ZN12daKuriKing_c11ChangeStateEi",
       "address": "0x021203e4",
       "size": "0x00000048",
       "legacy_source": "src/func_ov074_021203e4.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212042cEv",
+      "symbol": "_ZN12daKuriKing_c11UpdateStateEv",
       "address": "0x0212042c",
       "size": "0x00000048",
       "legacy_source": "src/func_ov074_0212042c.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120474Ev",
+      "symbol": "_ZN12daKuriKing_c22AdvanceMaterialChangerEv",
       "address": "0x02120474",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov074_02120474.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021204c0Ev",
+      "symbol": "_ZN12daKuriKing_c19StepScaleTransitionEv",
       "address": "0x021204c0",
       "size": "0x00000208",
       "legacy_source": "src/func_ov074_021204c0.c",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021206c8Ev",
+      "symbol": "_ZN12daKuriKing_c11StopWalkingEv",
       "address": "0x021206c8",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov074_021206c8.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021207b8Ev",
+      "symbol": "_ZN12daKuriKing_c16FinishTurnAroundEv",
       "address": "0x021207b8",
       "size": "0x00000050",
       "legacy_source": "src/func_ov074_021207b8.c",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120808Ev",
+      "symbol": "_ZN12daKuriKing_c18TurnIfPlayerBehindEv",
       "address": "0x02120808",
       "size": "0x00000074",
       "legacy_source": "src/func_ov074_02120808.cpp",
@@ -289,28 +289,28 @@
       "ordinal": 32
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120b24Ev",
+      "symbol": "_ZN12daKuriKing_c17CalcWalkAnimSpeedEv",
       "address": "0x02120b24",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov074_02120b24.c",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120b90Ev",
+      "symbol": "_ZN12daKuriKing_c18UpdateMaxWalkSpeedEv",
       "address": "0x02120b90",
       "size": "0x00000028",
       "legacy_source": "src/func_ov074_02120b90.c",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120bb8EP8dActor_cP10dCcAcPos_ci",
+      "symbol": "_ZN12daKuriKing_c17SpawnHitParticlesEP8dActor_cP10dCcAcPos_ci",
       "address": "0x02120bb8",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov074_02120bb8.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120d74Ev",
+      "symbol": "_ZN12daKuriKing_c18HandleCylinderHitsEv",
       "address": "0x02120d74",
       "size": "0x000004fc",
       "legacy_source": "src/func_ov074_02120d74.c",
@@ -324,49 +324,49 @@
       "ordinal": 37
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02121300Ev",
+      "symbol": "_ZN12daKuriKing_c16UpdateBodyMatrixEv",
       "address": "0x02121300",
       "size": "0x00000080",
       "legacy_source": "src/func_ov074_02121300.cpp",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02121380Ev",
+      "symbol": "_ZN12daKuriKing_c27UpdateCylindersAndFootstepsEv",
       "address": "0x02121380",
       "size": "0x00000374",
       "legacy_source": "src/func_ov074_02121380.c",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021216f4Ev",
+      "symbol": "_ZN12daKuriKing_c13WalkAlongRingEv",
       "address": "0x021216f4",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov074_021216f4.c",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02121800Ev",
+      "symbol": "_ZN12daKuriKing_c13UpdateShadowsEv",
       "address": "0x02121800",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov074_02121800.c",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212195cEv",
+      "symbol": "_ZN12daKuriKing_c17UpdateModelMatrixEv",
       "address": "0x0212195c",
       "size": "0x00000040",
       "legacy_source": "src/func_ov074_0212195c.c",
       "ordinal": 42
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212199cEv",
+      "symbol": "_ZN12daKuriKing_c15UpdateAnimationEv",
       "address": "0x0212199c",
       "size": "0x00000084",
       "legacy_source": "src/func_ov074_0212199c.c",
       "ordinal": 43
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02121a20Ei",
+      "symbol": "_ZN12daKuriKing_c13IsAnimPlayingEi",
       "address": "0x02121a20",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov074_02121a20.c",
@@ -408,28 +408,28 @@
       "ordinal": 49
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212229cEv",
+      "symbol": "_ZN12daKuriKing_c22CleanupVanishResourcesEv",
       "address": "0x0212229c",
       "size": "0x00000044",
       "legacy_source": "src/func_ov074_0212229c.c",
       "ordinal": 50
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021222e0Ev",
+      "symbol": "_ZN12daKuriKing_c12RenderVanishEv",
       "address": "0x021222e0",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov074_021222e0.cpp",
       "ordinal": 51
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021223bcEv",
+      "symbol": "_ZN12daKuriKing_c14BehaviorVanishEv",
       "address": "0x021223bc",
       "size": "0x00000278",
       "legacy_source": "src/func_ov074_021223bc.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02122634Ev",
+      "symbol": "_ZN12daKuriKing_c19InitVanishResourcesEv",
       "address": "0x02122634",
       "size": "0x00000130",
       "legacy_source": "src/func_ov074_02122634.cpp",
@@ -1983,7 +1983,7 @@
       "source": "0x02122d84",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fd48Ev",
+      "symbol": "_ZN12daKuriKing_c14EnterKnockbackEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fd48"
@@ -1993,7 +1993,7 @@
       "source": "0x02122d8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211ffacEv",
+      "symbol": "_ZN12daKuriKing_c18EnterSummonGoombasEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211ffac"
@@ -2003,7 +2003,7 @@
       "source": "0x02122d94",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_02120080Ev",
+      "symbol": "_ZN12daKuriKing_c10UpdateWalkEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x02120080"
@@ -2033,7 +2033,7 @@
       "source": "0x02122dac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fc38Ev",
+      "symbol": "_ZN12daKuriKing_c15UpdateKnockbackEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fc38"
@@ -2043,7 +2043,7 @@
       "source": "0x02122db4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fa08Ev",
+      "symbol": "_ZN12daKuriKing_c11EnterDefeatEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fa08"
@@ -2063,7 +2063,7 @@
       "source": "0x02122dc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212018cEv",
+      "symbol": "_ZN12daKuriKing_c18UpdateIntroTalkEndEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0212018c"
@@ -2073,7 +2073,7 @@
       "source": "0x02122dcc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fd74Ev",
+      "symbol": "_ZN12daKuriKing_c19UpdateSummonGoombasEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fd74"
@@ -2083,7 +2083,7 @@
       "source": "0x02122dd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0212016cEv",
+      "symbol": "_ZN12daKuriKing_c9EnterWalkEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0212016c"
@@ -2093,7 +2093,7 @@
       "source": "0x02122ddc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fbd0Ev",
+      "symbol": "_ZN12daKuriKing_c19UpdateMegaKnockbackEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fbd0"
@@ -2103,7 +2103,7 @@
       "source": "0x02122de4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_021201f0Ev",
+      "symbol": "_ZN12daKuriKing_c15UpdateIntroTalkEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x021201f0"
@@ -2123,7 +2123,7 @@
       "source": "0x02122df4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211f5b8Ev",
+      "symbol": "_ZN12daKuriKing_c12UpdateDefeatEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211f5b8"
@@ -2143,7 +2143,7 @@
       "source": "0x02122e14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fa74Ev",
+      "symbol": "_ZN12daKuriKing_c17UpdateScaleChangeEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fa74"
@@ -2153,7 +2153,7 @@
       "source": "0x02122e1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daKuriKing_c19func_ov074_0211fb84Ev",
+      "symbol": "_ZN12daKuriKing_c16EnterScaleChangeEv",
       "addend": 0,
       "target_module": "ov074",
       "target_address": "0x0211fb84"

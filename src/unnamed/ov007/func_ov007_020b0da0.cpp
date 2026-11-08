@@ -20,9 +20,9 @@ typedef struct Vec3Words {
 /* recovered: shared common types */
 #include "common.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Ov007Work.h"
 #include "Ov007Figure.h"
-extern short data_02082214[];
 
 extern void Matrix4x3_LoadIdentity(void *mat);
 
@@ -93,7 +93,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
 
             {
                 int angle1 = (u16)((var_r4 * 0xffff) >> 12);
-                out.y = data_02082214[(angle1 >> 4) * 2] >> 2;
+                out.y = FX_SinIdx(angle1 >> 4) >> 2;
             }
 
             {
@@ -111,9 +111,9 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
 
                 {
                     int angleA = (u16)(((var_r8 * 2 + 0x800) * 0xffff) >> 12);
-                    int valA = data_02082214[(angleA >> 4) * 2];
+                    int valA = FX_SinIdx(angleA >> 4);
                     int angleB = (u16)((var_r8 * 0xffff) >> 12);
-                    int valB = data_02082214[(angleB >> 4) * 2];
+                    int valB = FX_SinIdx(angleB >> 4);
 
                     int valBhalf = (valB + 0x2000) / 2;
                     int term = FX_MUL(valA, 0x82);

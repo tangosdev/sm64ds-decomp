@@ -40,6 +40,7 @@
 #include "dClipper.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
 #include "Sound.h"
 #include "G3X.h"
@@ -110,7 +111,6 @@ void func_020167a4(dExtAnmModel_c *model);
 extern Matrix4x3 data_020a0e68;
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
-extern short data_02082214[]; /* sine/cosine table, interleaved */
 extern short data_02082614[];
 extern u8 data_0209fc5c[];
 extern signed char data_0209fc64[];
@@ -337,9 +337,9 @@ void UnknownVsPlayer::func_ov075_02114560() {
         mAnimState = ANIM_NONE;
     }
 
-    mPosition.x += FX_MUL(mSpeed, data_02082214[((unsigned short)mAngleY >> 4) * 2]);
+    mPosition.x += FX_MUL(mSpeed, FX_SinIdx((unsigned short)mAngleY >> 4));
     mPosition.y += mVertSpeed;
-    mPosition.z += FX_MUL(mSpeed, data_02082214[((unsigned short)mAngleY >> 4) * 2 + 1]);
+    mPosition.z += FX_MUL(mSpeed, FX_CosIdx((unsigned short)mAngleY >> 4));
 
     if (mPosition.y < 0) {
         mPosition.y = 0;

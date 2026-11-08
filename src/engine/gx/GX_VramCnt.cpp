@@ -13,10 +13,11 @@
  * user holds. Every bank not held by a user stays mapped to the LCDC, so a
  * setter first gives its old banks back to lcdc, takes its new ones out,
  * then remaps whatever lcdc now holds. The block itself and its clearing
- * (func_02053d9c) live in the file below this one.
+ * (src/GX_InitGXState.c) live in the file below this one.
  *
- * Callers reach the address-named members under C linkage; those keep their
- * ROM names here.
+ * GX_SetBankForBGExtPltt (func_02054748) and GX_SetBankForLCDC
+ * (func_02054430) keep their address names under C linkage: their callers
+ * name them that way.
  */
 
 #include "types.h"
@@ -567,9 +568,9 @@ int GetBankForSubOBJ(void) {
 extern "C" {
 
 /* The size in bytes of a set of banks: A-D are 128 KiB, E 64 KiB, F, G
- * and I 16 KiB, H 32 KiB. The SDK's static GX_GetSizeOfX_; of its
- * GX_GetSizeOf* wrappers this game links only Tex and TexPltt (below). */
-int func_02053e4c(int mask) {
+ * and I 16 KiB, H 32 KiB. Of the SDK's GX_GetSizeOf* wrappers this game
+ * links only Tex and TexPltt (below). */
+int GX_GetSizeOfX_(int mask) {
     int size = 0;
     if (mask & 0x001)
         size += 0x20000;
@@ -592,14 +593,16 @@ int func_02053e4c(int mask) {
     return size;
 }
 
-// GX_GetSizeOfTex
-int func_02053e34(void) {
-    return func_02053e4c(data_020a6088.tex);
-}
-
-// GX_GetSizeOfTexPltt
-int func_02053e1c(void) {
-    return func_02053e4c(data_020a6088.texPltt);
-}
-
 } // extern "C"
+
+namespace GX {
+
+int GetSizeOfTex(void) {
+    return GX_GetSizeOfX_(data_020a6088.tex);
+}
+
+int GetSizeOfTexPltt(void) {
+    return GX_GetSizeOfX_(data_020a6088.texPltt);
+}
+
+} // namespace GX

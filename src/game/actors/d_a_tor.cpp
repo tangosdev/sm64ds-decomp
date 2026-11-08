@@ -33,6 +33,7 @@ enum daTor_c_AssetId {
 #include "Sound.h"
 #include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -45,7 +46,6 @@ enum daTor_c_AssetId {
  * as ambiguous between ten level overlays; tools/overlay_residency.py settles
  * it to ov024, the only level whose tables load ov096. */
 extern int data_ov024_02112968[];
-extern s16 data_02082214[]; /* shared sin/cos lookup table */
 
 /* The tornado's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -80,7 +80,7 @@ daTor_c::~daTor_c()
 void daTor_c::UpdateSpin(s32 scale)
 {
     u16 idx = (u16)mSpinPhase;
-    s16 wave = data_02082214[(idx >> 4) * 2 + 1];
+    s16 wave = FX_CosIdx(idx >> 4);
     s32 radiusScale = (wave + 0x1000) >> 1;
     s32 frameScale = FX_MUL(scale, 0x666);
     s32 radius = FX_MUL(radiusScale, 0x4cc);
@@ -88,7 +88,7 @@ void daTor_c::UpdateSpin(s32 scale)
     mScaleX = FX_MUL(radius, frameScale);
 
     u16 idx2 = (u16)mSpinPhase;
-    s16 wave2 = data_02082214[(idx2 >> 4) * 2 + 1];
+    s16 wave2 = FX_CosIdx(idx2 >> 4);
     s32 heightScale = ((0x1000 - wave2) >> 2) + 0x800;
     mScaleY = FX_MUL(heightScale, frameScale);
 

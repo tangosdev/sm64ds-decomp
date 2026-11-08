@@ -17,8 +17,8 @@
  * once the player is more than 100 units away.
  *
  * STATES. mState (daObjHatenaBlock_c::State) indexes the {enter, update}
- * table at data_ov102_0214e890: func_ov102_02149da8 enters a state,
- * func_ov102_02149df0 (top of Behavior) runs its update:
+ * table at data_ov102_0214e890: ChangeState enters a state,
+ * CallStateUpdate (top of Behavior) runs its update:
  *   IDLE      enter 02149d80  update 02149ccc  (mega-player check)
  *   BOUNCING  enter 02149c78  update 021498e0  (squash, then the prize)
  *   POPPED    enter 021498c4  update 02149878  (300-frame wait)
@@ -35,7 +35,7 @@
  * DO NOT "TIDY" THESE -- each one is load-bearing:
  *
  *   common.h must be included first. Otherwise dExtSimpleModel_c.h's nested Matrix4x3
- *   wins and func_ov102_02149e38 / 02149ff0 change size (0x18 / 0x1c).
+ *   wins and UpdateMeshCollider / 02149ff0 change size (0x18 / 0x1c).
  *
  *   The destructor stays inline; out of line, mwccarm emits D0 before D1.
  *
@@ -58,15 +58,15 @@
  *   (a) Fix12<int> passed by value (notes/mwccarm-codegen.md 6az). A
  *       method call homes the argument and the bytes move: dExtAnmModel_c::SetAnim and
  *       dBgW_KcMbg::SetFile (InitResources), dBgActor_c::IsClsnInRange
- *       (Behavior), dActor_c::DropShadowScaleXYZ (func_ov102_02149ea4),
+ *       (Behavior), dActor_c::DropShadowScaleXYZ (UpdateDropShadow),
  *       Particle::System::NewSimple (also absent from Particle.h).
  *
  *   (b) No usable declaration: dActor_c::Earthquake is not on dActor_c.h
- *       (func_ov102_02149c78).
+ *       (EnterBouncing).
  *
  * Known limits:
- *   The func_ov102_* helpers keep their linker names -- no semantic names
- *   are known. All take the block as arg0 and are declared as members on
+ *   The helpers carry role names (symbols/actor_renames.tsv records the evidence for each);
+ *   func_ov102_02149684 keeps its address. All take the block as arg0 and are declared as members on
  *   daObjHatenaBlock_c except func_ov102_02149684, which takes it as arg1
  *   (the out-param is arg0) and stays free. The state and prize tables use
  *   native daObjHatenaBlock_c member pointers. All observed callers discard
@@ -91,7 +91,7 @@
  *
  * NOT OWNED BY THIS TU (named where they live, not here):
  *   func_ov102_0214ad14 / 0214b384 -- daBmb_c helpers, called by
- *     func_ov102_02149220 on the Bob-omb it spawns.
+ *     SpawnPrizeBobOmb on the Bob-omb it spawns.
  *   daSCoin_c::Collect -- ov002; the bounce end calls it on a held
  *     SECRET_COIN (actorID 0x149).
  *   data_ov002_0210d9* / da40 / d954 -- ov002 BMD/CLPS handles loaded for
@@ -178,7 +178,7 @@ enum {
    the tree; this class only tests it. While it is CLEAR, an actor 20
    (HATENA_BLOCK) is drawn as the animated model (mAnmModel), Behavior only
    advances that animation (while IDLE) and keeps the collider off, and the mega-player
-   trigger (func_ov102_02149ccc) does not run for it. */
+   trigger (UpdateIdle) does not run for it. */
 enum { SAVE_FLAGS1_BIT31 = 0x80000000 };
 
 extern "C" {
@@ -263,31 +263,31 @@ HatenaBlockClsnFileHandle data_ov102_0214e7d0(0x800d); /* KCL */
    update} rows, the per-content spawner grid (eight rows of four columns,
    each column pair copied from one record), then the VS rows. */
 Entry data_ov102_0214e890[3] = {
-    {&daObjHatenaBlock_c::func_ov102_02149d80, &daObjHatenaBlock_c::func_ov102_02149ccc},
-    {&daObjHatenaBlock_c::func_ov102_02149c78, &daObjHatenaBlock_c::func_ov102_021498e0},
-    {&daObjHatenaBlock_c::func_ov102_021498c4, &daObjHatenaBlock_c::func_ov102_02149878},
+    {&daObjHatenaBlock_c::EnterIdle, &daObjHatenaBlock_c::UpdateIdle},
+    {&daObjHatenaBlock_c::EnterBouncing, &daObjHatenaBlock_c::UpdateBouncing},
+    {&daObjHatenaBlock_c::EnterPopped, &daObjHatenaBlock_c::UpdatePopped},
 };
 PMF data_ov102_0214e8c0[8][4] = {
-    {&daObjHatenaBlock_c::func_ov102_021494cc, &daObjHatenaBlock_c::func_ov102_021494cc,
-     &daObjHatenaBlock_c::func_ov102_021494cc, &daObjHatenaBlock_c::func_ov102_021494cc},
-    {&daObjHatenaBlock_c::func_ov102_02149478, &daObjHatenaBlock_c::func_ov102_02149478,
-     &daObjHatenaBlock_c::func_ov102_02149478, &daObjHatenaBlock_c::func_ov102_02149478},
-    {&daObjHatenaBlock_c::func_ov102_02149428, &daObjHatenaBlock_c::func_ov102_02149428,
-     &daObjHatenaBlock_c::func_ov102_02149428, &daObjHatenaBlock_c::func_ov102_02149428},
-    {&daObjHatenaBlock_c::func_ov102_02149384, &daObjHatenaBlock_c::func_ov102_02149384,
-     &daObjHatenaBlock_c::func_ov102_02149384, &daObjHatenaBlock_c::func_ov102_02149384},
-    {&daObjHatenaBlock_c::func_ov102_021493dc, &daObjHatenaBlock_c::func_ov102_021493dc,
-     &daObjHatenaBlock_c::func_ov102_021493dc, &daObjHatenaBlock_c::func_ov102_021493dc},
-    {&daObjHatenaBlock_c::func_ov102_021492d4, &daObjHatenaBlock_c::func_ov102_02149288,
-     &daObjHatenaBlock_c::func_ov102_02149288, &daObjHatenaBlock_c::func_ov102_02149288},
-    {&daObjHatenaBlock_c::func_ov102_02149288, &daObjHatenaBlock_c::func_ov102_02149288,
-     &daObjHatenaBlock_c::func_ov102_02149288, &daObjHatenaBlock_c::func_ov102_02149288},
-    {&daObjHatenaBlock_c::func_ov102_02149220, &daObjHatenaBlock_c::func_ov102_02149288,
-     &daObjHatenaBlock_c::func_ov102_02149288, &daObjHatenaBlock_c::func_ov102_02149288},
+    {&daObjHatenaBlock_c::SpawnPrizeCoins, &daObjHatenaBlock_c::SpawnPrizeCoins,
+     &daObjHatenaBlock_c::SpawnPrizeCoins, &daObjHatenaBlock_c::SpawnPrizeCoins},
+    {&daObjHatenaBlock_c::SpawnPrizeStar, &daObjHatenaBlock_c::SpawnPrizeStar,
+     &daObjHatenaBlock_c::SpawnPrizeStar, &daObjHatenaBlock_c::SpawnPrizeStar},
+    {&daObjHatenaBlock_c::SpawnPrize1Up, &daObjHatenaBlock_c::SpawnPrize1Up,
+     &daObjHatenaBlock_c::SpawnPrize1Up, &daObjHatenaBlock_c::SpawnPrize1Up},
+    {&daObjHatenaBlock_c::SpawnPrizeShell, &daObjHatenaBlock_c::SpawnPrizeShell,
+     &daObjHatenaBlock_c::SpawnPrizeShell, &daObjHatenaBlock_c::SpawnPrizeShell},
+    {&daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko, &daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko,
+     &daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko, &daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko},
+    {&daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizePowerUpItem,
+     &daObjHatenaBlock_c::SpawnPrizePowerUpItem, &daObjHatenaBlock_c::SpawnPrizePowerUpItem},
+    {&daObjHatenaBlock_c::SpawnPrizePowerUpItem, &daObjHatenaBlock_c::SpawnPrizePowerUpItem,
+     &daObjHatenaBlock_c::SpawnPrizePowerUpItem, &daObjHatenaBlock_c::SpawnPrizePowerUpItem},
+    {&daObjHatenaBlock_c::SpawnPrizeBobOmb, &daObjHatenaBlock_c::SpawnPrizePowerUpItem,
+     &daObjHatenaBlock_c::SpawnPrizePowerUpItem, &daObjHatenaBlock_c::SpawnPrizePowerUpItem},
 };
 PMF data_ov102_0214e870[1][4] = {
-    {&daObjHatenaBlock_c::func_ov102_021492d4, &daObjHatenaBlock_c::func_ov102_021492d4,
-     &daObjHatenaBlock_c::func_ov102_021492d4, &daObjHatenaBlock_c::func_ov102_021492d4},
+    {&daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizeFeather,
+     &daObjHatenaBlock_c::SpawnPrizeFeather, &daObjHatenaBlock_c::SpawnPrizeFeather},
 };
 
 extern "C" daObjHatenaBlock_c *daObjHatenaBlock_c_classInit_VS_ITEM_BLOCK()
@@ -372,13 +372,13 @@ int daObjHatenaBlock_c::InitResources()
 
     mModel.SetFile((BMD_File *)modelFile, 1, -1);
     mShadowModel.InitCuboid();
-    func_ov102_02149da8(STATE_IDLE);
+    ChangeState(STATE_IDLE);
     mTerminalVelocity = -0x3c000;   /* -60 units */
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    func_ov102_02149ff0();
-    func_ov102_02149e38();
+    UpdateModelMatrix();
+    UpdateMeshCollider();
     mShadowMat = mModel.mat4x3;
     {
         void *kcl = dBgW_Kc::LoadFile(data_ov102_0214e7d0);
@@ -447,7 +447,7 @@ end:
 }
 
 /* Per frame:
- *  1. Run the state's update routine (func_ov102_02149df0).
+ *  1. Run the state's update routine (CallStateUpdate).
  *  2. Unless POPPED: move (UpdatePos), clamp mPosY up to mHomePosY, rebuild
  *     the model matrix and the shadow / clip volume.
  *  3. Poke two words of the mesh collider (dBgW::SetClipRadius / dBgW::SetClipOffsetY)
@@ -458,16 +458,16 @@ end:
  *     (CURRENT_GAMEMODE in symbols/verified.tsv) is 1, the collider is
  *     enabled and that is all. Otherwise dBgActor_c::IsClsnInRange is asked
  *     with (0x460000, 0x46000) in level 0x1c, else (0x118000, 0x46000); a
- *     non-zero answer refreshes the collider (func_ov102_02149e38). The
+ *     non-zero answer refreshes the collider (UpdateMeshCollider). The
  *     meaning of its two arguments is not recovered here. Always returns 1. */
 int daObjHatenaBlock_c::Behavior()
 {
-    func_ov102_02149df0();
+    CallStateUpdate();
     if (mState != STATE_POPPED) {
         UpdatePos(0);
         if (mPosY <= mHomePosY) mPosY = mHomePosY;
-        func_ov102_02149ff0();
-        func_ov102_02149ea4();
+        UpdateModelMatrix();
+        UpdateDropShadow();
     }
     mMeshCollider.SetClipRadius(0x8c000);
     mMeshCollider.SetClipOffsetY(0x46000);
@@ -498,12 +498,12 @@ int daObjHatenaBlock_c::Behavior()
     }
     if (gCurrentSublevel == 0x1c) { /* LEVEL_ID 0x1c */
         if (IsClsnInRange(0x460000, 0x46000) != 0) {
-            func_ov102_02149e38();
+            UpdateMeshCollider();
         }
         goto end;
     }
     if (IsClsnInRange(0x118000, 0x46000) != 0) {
-        func_ov102_02149e38();
+        UpdateMeshCollider();
     }
 end:
     return 1;
@@ -614,8 +614,7 @@ int daObjHatenaBlock_c::CleanupResources()
 /* Rebuilds the model matrix: a Y rotation by mAngleY, with the translation
    set to (mPosX, mPosY + mBounceYOffs, mPosZ) >> 3. A HATENA_BLOCK with
    SAVE_FLAGS1_BIT31 clear then copies the matrix into mAnmModel as well. */
-void daObjHatenaBlock_c::func_ov102_02149ff0()
-{
+void daObjHatenaBlock_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = (mPosY + mBounceYOffs) >> 3;
@@ -630,7 +629,7 @@ void daObjHatenaBlock_c::func_ov102_02149ff0()
 
 /* The drop shadow and the clip volume, both sized by the drop to the floor.
  *
- * mFloorY is refreshed (func_ov102_02149610) unless mFlags bit 8 (dActor_c's
+ * mFloorY is refreshed (GetFloorY) unless mFlags bit 8 (dActor_c's
  * off-screen bit) is set and gGameMode is not 1. height = mPosY - mFloorY,
  * at least 0x1000 (1 unit).
  *   horizontal shadow scale = 0xb4000 (180 units) - height * 0x180 / 0x1000
@@ -643,8 +642,7 @@ void daObjHatenaBlock_c::func_ov102_02149ff0()
  * (mPosX, mPosY - 0x20000 (32 units), mPosZ) >> 3. The drop-shadow call is
  * (shadow, matrix, scale X = horizontal, scale Y, scale Z = horizontal) with
  * opacity 0xf. */
-void daObjHatenaBlock_c::func_ov102_02149ea4()
-{
+void daObjHatenaBlock_c::UpdateDropShadow() {
     int shadowScale, height, paddedHeight;
     int b0, b1;
 
@@ -653,7 +651,7 @@ void daObjHatenaBlock_c::func_ov102_02149ea4()
         b1 = (*(volatile unsigned char *)&gGameMode == 1) ? 1 : 0;
         if (b1 == 0) goto skipcall;
     }
-    mFloorY = func_ov102_02149610();
+    mFloorY = GetFloorY();
 skipcall:
     height = mPosY - mFloorY;
     if (height <= 0x1000) height = 0x1000;
@@ -675,7 +673,7 @@ skipcall:
 /* Puts the mesh collider where the model is: the model matrix with the
    translation overwritten by (mPosX, mPosY + mBounceYOffs, mPosZ) (not
    shifted), and heading mAngleY. */
-void daObjHatenaBlock_c::func_ov102_02149e38(){
+void daObjHatenaBlock_c::UpdateMeshCollider() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPosX;
     mClsnMat.m[10] = mPosY + mBounceYOffs;
@@ -684,14 +682,14 @@ void daObjHatenaBlock_c::func_ov102_02149e38(){
 }
 
 /* Runs the update routine (column 1) of mState's row in the state table. */
-void daObjHatenaBlock_c::func_ov102_02149df0() {
+void daObjHatenaBlock_c::CallStateUpdate() {
     int j = mState;
     (this->*data_ov102_0214e890[j].pmf[1])();
 }
 
 /* Enters state i: stores it in mState, then runs that row's enter routine
    (column 0). */
-void daObjHatenaBlock_c::func_ov102_02149da8(int i) {
+void daObjHatenaBlock_c::ChangeState(int i) {
     mState = i;
     int j = mState;
     (this->*data_ov102_0214e890[j].pmf[0])();
@@ -699,7 +697,7 @@ void daObjHatenaBlock_c::func_ov102_02149da8(int i) {
 
 /* STATE_IDLE enter routine: no bounce offset, unit scale, vertical
    acceleration -0x8000 (-8 units). */
-void daObjHatenaBlock_c::func_ov102_02149d80() {
+void daObjHatenaBlock_c::EnterIdle() {
     mBounceYOffs = 0;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
@@ -712,8 +710,7 @@ void daObjHatenaBlock_c::func_ov102_02149d80() {
    (daPly_c::mIsMega), less than 0xc8000 (200 units) away horizontally and
    below the block (mPosY is greater than the player's), treats it as a hit
    by a mega character: virtual OnHitByMegaChar. */
-void daObjHatenaBlock_c::func_ov102_02149ccc()
-{
+void daObjHatenaBlock_c::UpdateIdle() {
     daPly_c *player;
     if (!(data_0209caa0.file.flags1 & SAVE_FLAGS1_BIT31)) {
         int b = (int)(actorID == ACTOR_HATENA_BLOCK);
@@ -733,8 +730,7 @@ void daObjHatenaBlock_c::func_ov102_02149ccc()
 /* STATE_BOUNCING enter routine: an Earthquake at the block's position
    (argument 0x5dc000, 1500 units), then the bounce begins: mBounceAng =
    0x4000 (a quarter turn) and mBounceTimer = 7 frames. */
-void daObjHatenaBlock_c::func_ov102_02149c78()
-{
+void daObjHatenaBlock_c::EnterBouncing() {
     s32 vec[3];
     vec[0] = mPosX;
     vec[1] = mPosY;
@@ -772,14 +768,13 @@ void daObjHatenaBlock_c::func_ov102_02149c78()
  *      HATENA_BLOCK   the same row/column of data_ov102_0214e8c0, unless
  *                     SaveData::HasPlayerLostCap() is non-zero and LEVEL_ID
  *                     is not 0x1f; then it spawns a BOMBHEI
- *                     (func_ov102_02149220) instead
- *      CAP_BLOCK_M/L/W  an OBJ_MARIO_CAP (func_ov102_0214953c) for character
+ *                     (SpawnPrizeBobOmb) instead
+ *      CAP_BLOCK_M/L/W  an OBJ_MARIO_CAP (SpawnPrizeMarioCap) for character
  *                     0 / 1 / 2 when HasPlayerLostCap() is 0; otherwise a
  *                     BOMBHEI
  *  - enters STATE_POPPED.
  * The `ch >= 4` tests below cannot fire: ch was clamped to 3 above. */
-void daObjHatenaBlock_c::func_ov102_021498e0()
-{
+void daObjHatenaBlock_c::UpdateBouncing() {
     daObjHatenaBlock_c *self = this;
     Vector3 pos;
     int ch;
@@ -852,28 +847,34 @@ void daObjHatenaBlock_c::func_ov102_021498e0()
             if (ch >= 4) ch = 0;
             (self->*tbl[content][ch])();
         } else {
-            func_ov102_02149220();
+            SpawnPrizeBobOmb();
         }
         break;
     case 3:     /* CAP_BLOCK_M: character 0 */
-        if (SaveData::HasPlayerLostCap() == 0) func_ov102_0214953c(0, 0x12);
-        else func_ov102_02149220();
+        if (SaveData::HasPlayerLostCap() == 0)
+            SpawnPrizeMarioCap(0, 0x12);
+        else
+            SpawnPrizeBobOmb();
         break;
     case 5:     /* CAP_BLOCK_L: character 1 */
-        if (SaveData::HasPlayerLostCap() == 0) func_ov102_0214953c(1, 0x12);
-        else func_ov102_02149220();
+        if (SaveData::HasPlayerLostCap() == 0)
+            SpawnPrizeMarioCap(1, 0x12);
+        else
+            SpawnPrizeBobOmb();
         break;
     case 4:     /* CAP_BLOCK_W: character 2 */
-        if (SaveData::HasPlayerLostCap() == 0) func_ov102_0214953c(2, 0x12);
-        else func_ov102_02149220();
+        if (SaveData::HasPlayerLostCap() == 0)
+            SpawnPrizeMarioCap(2, 0x12);
+        else
+            SpawnPrizeBobOmb();
         break;
     }
-    func_ov102_02149da8(STATE_POPPED);
+    ChangeState(STATE_POPPED);
 }
 
 /* STATE_POPPED enter routine: mBounceTimer = 0x12c (300 frames) and vertical
    acceleration -0x8000 (-8 units). */
-void daObjHatenaBlock_c::func_ov102_021498c4() {
+void daObjHatenaBlock_c::EnterPopped() {
     mBounceTimer = 0x12c;
     mVertAccel = -0x8000;
 }
@@ -882,26 +883,26 @@ void daObjHatenaBlock_c::func_ov102_021498c4() {
    the closest player is 0x64000 (100 units) away or less, returns
    without changing state; farther than that, the block re-enters STATE_IDLE.
    The state dispatcher does not consume a return value. */
-void daObjHatenaBlock_c::func_ov102_02149878() {
+void daObjHatenaBlock_c::UpdatePopped() {
     int r = DecIfAbove0_Short(&mBounceTimer);
     if (r != 0)
         return;
     r = DistToCPlayer();
     if (r <= 0x64000)
         return;
-    func_ov102_02149da8(STATE_IDLE);
+    ChangeState(STATE_IDLE);
 }
 
-/* Ground-pounded: ignored while BOUNCING or when func_ov102_02149078 says
+/* Ground-pounded: ignored while BOUNCING or when IsHitBlocked says
    the block cannot be hit; otherwise records the pounder's param1 and starts
    the bounce. */
 void daObjHatenaBlock_c::OnGroundPounded(dActor_c &other)
 {
     if (mState == STATE_BOUNCING) return;
-    int r = func_ov102_02149078();
+    int r = IsHitBlocked();
     if (r != 0) return;
     mHitterParam = other.param1;
-    func_ov102_02149da8(STATE_BOUNCING);
+    ChangeState(STATE_BOUNCING);
 }
 
 /* Attacked: the same accept test and bounce start as OnGroundPounded (declared
@@ -910,10 +911,10 @@ int daObjHatenaBlock_c::OnAttacked1(dActor_c &other)
 {
     int v = mState;
     if (v != STATE_BOUNCING) {
-        if (!func_ov102_02149078()) {
+        if (!IsHitBlocked()) {
             int val = other.param1;
             mHitterParam = val;
-            func_ov102_02149da8(STATE_BOUNCING);
+            ChangeState(STATE_BOUNCING);
         }
     }
 }
@@ -922,10 +923,10 @@ int daObjHatenaBlock_c::OnAttacked1(dActor_c &other)
 void daObjHatenaBlock_c::OnKicked(dActor_c &other)
 {
     if (mState == STATE_BOUNCING) return;
-    int r = func_ov102_02149078();
+    int r = IsHitBlocked();
     if (r != 0) return;
     mHitterParam = other.param1;
-    func_ov102_02149da8(STATE_BOUNCING);
+    ChangeState(STATE_BOUNCING);
 }
 
 /* Hit by a mega player: the same accept test as OnGroundPounded; when
@@ -933,10 +934,11 @@ void daObjHatenaBlock_c::OnKicked(dActor_c &other)
    param1 and starts the bounce. */
 void daObjHatenaBlock_c::OnHitByMegaChar(daPly_c &player) {
     if (mState == STATE_BOUNCING) return;
-    if (func_ov102_02149078() != 0) return;
+    if (IsHitBlocked() != 0)
+        return;
     player.IncMegaKillCount();
     mHitterParam = player.param1;
-    func_ov102_02149da8(STATE_BOUNCING);
+    ChangeState(STATE_BOUNCING);
 }
 
 /* Hit from underneath: unless already BOUNCING, first sets mVertAccel to
@@ -948,9 +950,9 @@ int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
     if (mState != STATE_BOUNCING) {
         mVertAccel = -0x8000;
         mVertSpeed = 0x1e000;
-        if (!func_ov102_02149078()) {
+        if (!IsHitBlocked()) {
             mHitterParam = other.param1;
-            func_ov102_02149da8(STATE_BOUNCING);
+            ChangeState(STATE_BOUNCING);
         }
     }
 }
@@ -970,14 +972,15 @@ void func_ov102_02149684(int* dst, daObjHatenaBlock_c* src){
 /* Floor height under the block: a ground raycast (dBgCh_Gnd) from 0x28000 (40
    units) above the block, with probe height 0x3e8000 (1000 units). Returns
    the hit height, or mPosY when nothing is hit. */
-int daObjHatenaBlock_c::func_ov102_02149610(){
-  V3 pos(mPosX, mPosY + 0x28000, mPosZ);
-  dBgCh_Gnd rg;
-  rg.SetObjAndPos(*(Vector3*)&pos, 0);
-  rg.mProbeHeight = 0x3e8000;
-  int r = mPosY;
-  if (rg.DetectClsn()) r = rg.clsnY;
-  return r;
+int daObjHatenaBlock_c::GetFloorY() {
+    V3 pos(mPosX, mPosY + 0x28000, mPosZ);
+    dBgCh_Gnd rg;
+    rg.SetObjAndPos(*(Vector3 *)&pos, 0);
+    rg.mProbeHeight = 0x3e8000;
+    int r = mPosY;
+    if (rg.DetectClsn())
+        r = rg.clsnY;
+    return r;
 }
 
 struct HbSpawnFrame { Vector3 pos; int vel[3]; };
@@ -988,8 +991,7 @@ struct HbSpawnFrame { Vector3 pos; int vel[3]; };
    0x8000, truncated to 16 bits) in its mPrevAngleY, speed 0x3320 (about 3.2
    units) in mHorzSpeed, and a velocity vector (0, 0x11000, 0) in
    mSpeedX / mVertSpeed / mSpeedZ (0x11000 = 17 units up). */
-void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
-{
+void daObjHatenaBlock_c::SpawnPrizeMarioCap(int p1, int p2) {
     HbSpawnFrame f;
     int rnd;
     dActor_c* o;
@@ -1016,40 +1018,43 @@ void daObjHatenaBlock_c::func_ov102_0214953c(int p1, int p2)
 }
 
 /* CONTENT_COINS prize: count = param1 bits 8..15 (0xff reads as 1); sprays
-   that many coins from the prize point (func_ov102_02149100, speed 0x1800 =
+   that many coins from the prize point (SpawnCoinSpray, speed 0x1800 =
    1.5 units, base angle 0), then KillAndTrackInDeathTable. */
-void daObjHatenaBlock_c::func_ov102_021494cc(){
-  int s[3];
-  func_ov102_02149684(s, this);
-  int count = (param1 >> 8) & 0xff;
-  if(count == 0xff) count = 1;
-  int w[3];
-  w[0] = s[0]; w[1] = s[1]; w[2] = s[2];
-  func_ov102_02149100((Vector3 *)w, count, 0x1800, 0);
-  KillAndTrackInDeathTable();
+void daObjHatenaBlock_c::SpawnPrizeCoins() {
+    int s[3];
+    func_ov102_02149684(s, this);
+    int count = (param1 >> 8) & 0xff;
+    if (count == 0xff)
+        count = 1;
+    int w[3];
+    w[0] = s[0];
+    w[1] = s[1];
+    w[2] = s[2];
+    SpawnCoinSpray((Vector3 *)w, count, 0x1800, 0);
+    KillAndTrackInDeathTable();
 }
 
 /* CONTENT_STAR prize: spawns a STAR at the prize point with param mStarId |
    0x40 (the 0x40 bit is not interpreted here), then MarkForDestruction. */
-void daObjHatenaBlock_c::func_ov102_02149478(){
-  char local[12];
-  func_ov102_02149684((int *)local, this);
-  dActor_c::Spawn(ACTOR_STAR, mStarId|0x40, *(Vector3 *)local, 0, mAreaId, -1);
-  MarkForDestruction();
+void daObjHatenaBlock_c::SpawnPrizeStar() {
+    char local[12];
+    func_ov102_02149684((int *)local, this);
+    dActor_c::Spawn(ACTOR_STAR, mStarId | 0x40, *(Vector3 *)local, 0, mAreaId, -1);
+    MarkForDestruction();
 }
 
 /* CONTENT_ONEUP prize: spawns a ONEUPKINOKO at the prize point, then
    KillAndTrackInDeathTable. */
-void daObjHatenaBlock_c::func_ov102_02149428(){
-  struct Vector3 pos;
-  func_ov102_02149684((int *)&pos, this);
-  dActor_c::Spawn(ACTOR_ONEUPKINOKO, 0, pos, 0, mAreaId, -1);
-  KillAndTrackInDeathTable();
+void daObjHatenaBlock_c::SpawnPrize1Up() {
+    struct Vector3 pos;
+    func_ov102_02149684((int *)&pos, this);
+    dActor_c::Spawn(ACTOR_ONEUPKINOKO, 0, pos, 0, mAreaId, -1);
+    KillAndTrackInDeathTable();
 }
 
 /* CONTENT_SCALEUP_KINOKO prize: spawns a SCALEUP_KINOKO at the prize point.
    Does not kill the block. */
-void daObjHatenaBlock_c::func_ov102_021493dc() {
+void daObjHatenaBlock_c::SpawnPrizeScaleUpKinoko() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);
     signed char cc = mAreaId;
@@ -1058,7 +1063,7 @@ void daObjHatenaBlock_c::func_ov102_021493dc() {
 
 /* CONTENT_SHELL prize: spawns a SHELL at the prize point and, if it spawned,
    sets the new shell's mDespawnTimer to 0xb4 (180). */
-void daObjHatenaBlock_c::func_ov102_02149384() {
+void daObjHatenaBlock_c::SpawnPrizeShell() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);
     void *a = dActor_c::Spawn(ACTOR_SHELL, 0, v, 0, mAreaId, -1);
@@ -1070,7 +1075,7 @@ void daObjHatenaBlock_c::func_ov102_02149384() {
    from the three u16 words at data_020a0edc, except Y: the block's own
    mAngleY when gGameMode (CURRENT_GAMEMODE) is 1, else the camera's
    mAngleY + 0x4000. */
-void daObjHatenaBlock_c::func_ov102_021492d4() {
+void daObjHatenaBlock_c::SpawnPrizeFeather() {
     struct Vector3 pos;
     struct Vector3_16 rot;
     func_ov102_02149684((int *)&pos, this);
@@ -1086,7 +1091,7 @@ void daObjHatenaBlock_c::func_ov102_021492d4() {
 }
 
 /* POWER_UP_ITEM prize: spawns a POWER_UP_ITEM (param 0) at the prize point. */
-void daObjHatenaBlock_c::func_ov102_02149288(){
+void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);
     dActor_c::Spawn(ACTOR_POWER_UP_ITEM, 0u, v, 0, mAreaId, -1);
@@ -1097,7 +1102,7 @@ void daObjHatenaBlock_c::func_ov102_02149288(){
    target) and func_ov102_0214b384(a, 0x3c) (daBmb_c.h: only shortens the
    fuse). Callers discard the result of that helper. */
 extern "C" void func_ov102_0214b384(void *, unsigned int);
-void daObjHatenaBlock_c::func_ov102_02149220() {
+void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);
     void *a = dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
@@ -1113,8 +1118,7 @@ void daObjHatenaBlock_c::func_ov102_02149220() {
    while it equals the previous coin's dir. The speed (initially the caller's
    `speed`) is scaled by (random % 50 + 100) / 100 for each coin, and the
    scaled value carries over to the next coin. */
-void daObjHatenaBlock_c::func_ov102_02149100(Vector3 *pos, int n, unsigned int speed, short baseAngle)
-{
+void daObjHatenaBlock_c::SpawnCoinSpray(Vector3 *pos, int n, unsigned int speed, short baseAngle) {
     dActor_c *a;
     int dir;
     unsigned int rnd;
@@ -1150,8 +1154,7 @@ void daObjHatenaBlock_c::func_ov102_02149100(Vector3 *pos, int n, unsigned int s
    there) when the closest player's mIsUnderwater is non-zero; otherwise 0.
    The levels are LEVEL_ID values (gCurrentSublevel); 0x15 is Wet-Dry World per
    dActor_c::GetWaterHeightWDW, the tree does not name 0x21. */
-int daObjHatenaBlock_c::func_ov102_02149078()
-{
+int daObjHatenaBlock_c::IsHitBlocked() {
     if (gCurrentSublevel == 0x15) {
         if ((int)(mHomePosY - 0x32000) <= data_0209f32c)
             return 1;

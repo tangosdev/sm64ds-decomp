@@ -29,8 +29,6 @@ extern u32 data_020a4be4;
 extern u32 data_020a4be8;
 void Crash();
 
-int func_02053e34(void);
-int func_02053e1c(void);
 }
 
 #define REBASE(p) ((char *)(p) + base)
@@ -439,13 +437,13 @@ extern "C" void func_02045d9c(void)
 
 extern "C" void InitialiseVramGlobals(void)
 {
-    int r = func_02053e34();
+    int r = GX::GetSizeOfTex();
     data_020a4be4 = 0;
     data_020a4bc8 = 0;
     data_020a4be0 = 0x20000;
     data_020a4be8 = 0x20000;
     data_020a4bdc = r;
-    data_020a4bd8 = func_02053e1c();
+    data_020a4bd8 = GX::GetSizeOfTexPltt();
     data_020a4bcc = 0;
 }
 

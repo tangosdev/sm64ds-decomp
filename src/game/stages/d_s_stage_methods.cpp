@@ -55,6 +55,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "Sound.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "daPly_c.h"
 #include "G2x.h"
 #include "nitro/hw/registers.h"
@@ -239,7 +240,6 @@ extern s8 data_0207576a[];
 extern OvTbl data_02075804[];
 extern int data_020758c8[];
 extern unsigned char data_02075998[][7];
-extern s16 data_02082214[];
 extern u8 data_0208a0e0;
 /* Where the stage goes next. Each destination is a sublevel, an entrance
    and a star; the crash screen prints the current three as "StageNo",
@@ -4331,8 +4331,8 @@ void dScStage_c::CheckInput() {
             control->ang = data_020756b0[directionButtons >> 4];
             if (directionButtons != 0) {
                 control->mag = 0x1000;
-                control->nx = data_02082214[((u16)control->ang >> 4) * 2];
-                control->ny = data_02082214[((u16)control->ang >> 4) * 2 + 1];
+                control->nx = FX_SinIdx((u16)control->ang >> 4);
+                control->ny = FX_CosIdx((u16)control->ang >> 4);
             } else {
                 control->mag = 0;
                 control->nx = 0;

@@ -64,12 +64,12 @@ extern void SDK_IRQ_STACKSIZE(void);
 
 /* local extern: no header declares these yet. Their SDK names:
  * ARMProcessorMode is OS_GetProcMode, ARMSaveContext OS_SaveContext,
- * ARMRestoreContext OS_LoadContext, func_02058568 OS_InitContext
+ * ARMRestoreContext OS_LoadContext
  * and MultiStore_Int MIi_CpuClear32; OSi_UnlockAllMutex is src/engine/os/OS_Mutex.cpp. */
 extern int ARMProcessorMode(void);
 extern int ARMSaveContext(void *ctx);
 extern void ARMRestoreContext(void *ctx);
-extern void func_02058568(void *ctx, unsigned int pc, unsigned int sp);
+extern void OS_InitContext(void *ctx, unsigned int pc, unsigned int sp);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void OSi_UnlockAllMutex(OSThread *thread);
 
@@ -207,7 +207,7 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     *(u32 *)thread->stackTop = OSi_STACK_CHECKNUM_TOP;
     thread->joinQueue = 0;
 
-    func_02058568(&thread->context, (u32)func, (u32)stack - 4);
+    OS_InitContext(&thread->context, (u32)func, (u32)stack - 4);
     thread->context.r[0] = (u32)arg;
     thread->context.lr = (u32)OS_ExitThread;
 

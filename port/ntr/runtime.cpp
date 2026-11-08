@@ -119,7 +119,7 @@ extern "C" void Copy48BytesFixed(const void *src, void *dst) {
 
 // The FIFO flush primitive: 32 no-writeback stmia of four zeroed registers,
 // 128 NOP command words that push any partially-packed command through.
-extern "C" void func_020553c0(unsigned addr) {
+extern "C" void GXi_NopClearFifo128_(unsigned addr) {
     if (addr == 0x04000400u)
         for (int i = 0; i < 128; ++i) ntr::gx_write_fifo(0);
 }

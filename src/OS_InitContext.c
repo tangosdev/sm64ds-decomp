@@ -22,7 +22,7 @@
 // u32 vs pointer parameters, a dead 4th/5th argument to occupy r3, `&end[-0x40]`, embedded
 // assignments, a named ternary temp, void* parameters. Dropping the later use of pc+4 does
 // color it r1, which localises the residual to that one live range.
-asm void func_02058568(void *ctx, unsigned int pc, unsigned int sp)
+asm void OS_InitContext(void *context, unsigned int newpc, unsigned int newsp)
 {
     add r1, r1, #4
     str r1, [r0, #0x40]

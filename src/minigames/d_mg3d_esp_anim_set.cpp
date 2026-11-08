@@ -35,6 +35,7 @@
 #include "GX.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g2_oam.h"
 #include "SharedFilePtr.h"
 #include "dScMg3DEsp_c.h"
@@ -118,7 +119,6 @@ extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Intro;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Wait;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle_3;
 extern void *sEsp3DTextureAnim;
-extern s16 data_02082214[];
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 extern int sMgClearBannerX;
@@ -798,11 +798,10 @@ void dScMg3DEsp_c::RenderCards() {
 
 void dScMg3DEsp_c::CardSeek(int i) {
     u16 timer;
-    s16 tv1;
-    s16 tv2;
+    s16 cosine;
+    s16 sine;
     int speed2;
     int speed1;
-    int angle1;
 
     timer = mCards[i].mTimer;
     if (timer != 0) {
@@ -814,14 +813,12 @@ void dScMg3DEsp_c::CardSeek(int i) {
     }
 
     speed1 = mCards[i].mSpeed;
-    angle1 = mCards[i].mAngle;
-    angle1 >>= 4;
-    tv1 = data_02082214[(angle1 << 1) + 1];
-    mCards[i].mX += FX_MUL(tv1, speed1);
+    cosine = FX_CosIdx(mCards[i].mAngle >> 4);
+    mCards[i].mX += FX_MUL(cosine, speed1);
 
-    tv2 = data_02082214[(mCards[i].mAngle >> 4) << 1];
+    sine = FX_SinIdx(mCards[i].mAngle >> 4);
     speed2 = mCards[i].mSpeed;
-    mCards[i].mY += FX_MUL(tv2, speed2);
+    mCards[i].mY += FX_MUL(sine, speed2);
     mCards[i].mSpeed += 0x300;
 
     {
