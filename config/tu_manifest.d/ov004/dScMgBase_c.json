@@ -1675,32 +1675,32 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@336",
-      "to": "@315",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @324) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @330) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index."
-    },
-    {
-      "from": "@338",
-      "to": "@317",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @326) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @332) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index."
-    },
-    {
-      "from": "@340",
-      "to": "@319",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @328) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @334) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index."
-    },
-    {
-      "from": "@342",
-      "to": "@321",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @330) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @336) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index."
-    },
-    {
       "from": "@344",
-      "to": "@323",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @332) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @338) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index."
+      "to": "@315",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @324) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @330) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @336 to @344 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
     },
     {
-      "from": "__arraydtor$335",
+      "from": "@346",
+      "to": "@317",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @326) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @332) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @338 to @346 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+    },
+    {
+      "from": "@348",
+      "to": "@319",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @328) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @334) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @340 to @348 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+    },
+    {
+      "from": "@350",
+      "to": "@321",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @330) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @336) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @342 to @350 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+    },
+    {
+      "from": "@352",
+      "to": "@323",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @332) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @338) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @344 to @352 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+    },
+    {
+      "from": "__arraydtor$343",
       "to": "__arraydtor$328",
       "owned_function": {
         "module": "ov004",

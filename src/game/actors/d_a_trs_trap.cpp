@@ -40,8 +40,6 @@
  * deslop leftovers:
  * - dBgW_KcMbg::SetFile keeps its mangled TU-local spelling: its signature
  *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
- * - func_020393d4/func_020393c4 install the before-collision and stood-on words;
- *   dBgW carries no setter, and dBgW.h itself blesses this spelling.
  * - The ROM re-reads the loaded KCL from filePtr rather than keeping
  *   dBgW_Kc::LoadFile's return.
  * - The dispatch table is a pointer-to-member of daTrsTrap_c itself. An
@@ -50,10 +48,11 @@
  *   false here -- under 2004/b56 the real class gives byte-identical bodies
  *   and relocation records.
  * - The four state bodies are members under their func_ov063_* names (the
- *   dispatch table's PMF records need member functions); the matrix refreshes,
- *   the settle step, the merry-go-round occupancy test and the book-switch
- *   callback keep the C linkage they matched with as separate files; they
- *   take the daTrsTrap_c and read its members.
+ *   dispatch table's PMF records need member functions), and so are the model
+ *   matrix refresh and the merry-go-round occupancy test. The collision
+ *   matrix refresh, the settle step and the book-switch callback keep the C
+ *   linkage they matched with as separate files; they take the daTrsTrap_c
+ *   and read its members.
  * - The trapdoor state adds mAngVelX to mAngleX with a plain `+=`. An
  *   earlier draft spelled it through a `(long long)(int)&mAngleX` launder on
  *   the claim that the member form changes codegen; re-measured for #821, it
@@ -129,14 +128,9 @@ struct TrsTrapCollisionFilePtr : SharedFilePtr {
  * The one file-scope extern "C" region.
  * ------------------------------------------------------------------------ */
 extern "C" {
-/* This TU's matrix/collision refresh and the occupancy test, called before
-   their definitions; the mesh callback lives in the factory unit. */
-void func_ov063_0211c684(char *p);
+/* This TU's collision refresh; the mesh callback lives in the factory unit. */
 void func_ov063_0211c6f8(daTrsTrap_c *c);
-void func_ov063_0211c82c(char *p);
 /* dBgW callback-word stores (see above). */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
 extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
@@ -169,15 +163,13 @@ daTrsTrap_c::~daTrsTrap_c()
 }
 
 /* The model matrix: position (>> 3) and the three angles, into
-   mModel.mat4x3 at 0xf0. Called from Behavior. Takes char *, as
-   decl_common.h declares it. */
-extern "C" void func_ov063_0211c684(char *p) {
-    daTrsTrap_c *c = (daTrsTrap_c *)p;
+   mModel.mat4x3 at 0xf0. Called from Behavior. */
+void daTrsTrap_c::func_ov063_0211c684() {
     int v[3];
-    Vec3_Asr(v, &c->mPosX, 3);
+    Vec3_Asr(v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* The collision matrix mClsnMat from position and angles, then the moving
@@ -210,23 +202,22 @@ void daTrsTrap_c::func_ov063_0211c7b0()
     mAngVelY = 0x80;
     t = &mAngleY;
     *t = (short)(*t + mAngVelY);
-    func_ov063_0211c82c((char *)this);
+    func_ov063_0211c82c();
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8f, mCamSpacePos, 0);
 }
 
 /* Merry-go-round occupancy. The first call only latches mInitLatch; after
    that mOccupiedFlag is set while a rider stands on the mesh or the area is
-   showing. Takes char *, as decl_common.h declares it. */
-extern "C" void func_ov063_0211c82c(char *p) {
-    daTrsTrap_c *c = (daTrsTrap_c *)p;
-    if (c->mInitLatch == 0) {
-        c->mInitLatch += 1;
+   showing. */
+void daTrsTrap_c::func_ov063_0211c82c() {
+    if (mInitLatch == 0) {
+        mInitLatch += 1;
         return;
     }
-    if (c->mStandingActor != 0 || IsAreaShowing(c->mAreaId)) {
-        c->mOccupiedFlag = 1;
+    if (mStandingActor != 0 || IsAreaShowing(mAreaId)) {
+        mOccupiedFlag = 1;
     } else {
-        c->mOccupiedFlag = 0;
+        mOccupiedFlag = 0;
     }
 }
 
@@ -433,7 +424,7 @@ int daTrsTrap_c::Behavior()
     if (before != mState) {
         mStateTimer = 0;
     }
-    func_ov063_0211c684((char *)this);
+    func_ov063_0211c684();
     func_ov063_0211c6f8(this);
     mStandingActor = 0;
     return 1;
@@ -528,8 +519,8 @@ int daTrsTrap_c::InitResources()
         }
     }
 
-    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
-    func_020393c4(&mMovingMeshCollider, &daTrsTrap_c::OnMeshClsnTouch);
+    mMovingMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
+    mMovingMeshCollider.SetStoodOnCallback(&daTrsTrap_c::OnMeshClsnTouch);
     mMovingMeshCollider.Enable(this);
 
     if (mIndex == 2) {

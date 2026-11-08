@@ -55,7 +55,7 @@ extern PadData data_020a0e58[];
 int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
-extern s8 data_02092110;
+extern s8 gNextSublevel;
 extern s32 data_020a0db0;
 extern SaveBlock data_0209caa0;
 extern u8 data_02092128[];
@@ -148,7 +148,7 @@ int dScStarSel_c::func_ov003_020adf50() {
 // TIMES and COIN sprites.
 void dScStarSel_c::func_ov003_020adfc8() {
     int x = 0xb8;
-    int lvl = SublevelToLevel(data_02092110);
+    int lvl = SublevelToLevel(gNextSublevel);
     int coin = SaveData::GetCoinRecord(lvl);
     func_ov003_020ae1a4(coin);
     int i;
@@ -168,7 +168,7 @@ void dScStarSel_c::func_ov003_020adfc8() {
 void dScStarSel_c::func_ov003_020ae0b0() {
     int x;
     int y;
-    if (SublevelToLevel(data_02092110) >= 0xf) {
+    if (SublevelToLevel(gNextSublevel) >= 0xf) {
         y = 0xa0;
         x = 0xb8;
     } else {
@@ -217,7 +217,7 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
 void dScStarSel_c::func_ov003_020ae238() {
     int x;
     int y;
-    if (SublevelToLevel(data_02092110) >= 0xf) {
+    if (SublevelToLevel(gNextSublevel) >= 0xf) {
         y = 0xa0;
         x = 0x50;
     } else {
@@ -389,11 +389,11 @@ s32 dScStarSel_c::Render() {
     func_ov003_020ae238();
     func_ov003_020ae0b0();
 
-    if (SublevelToLevel(data_02092110) < 0xf) {
+    if (SublevelToLevel(gNextSublevel) < 0xf) {
         u8 levelNum;
         s32 numX;
         func_ov003_020adfc8();
-        levelNum = SublevelToLevel(data_02092110) + 1;
+        levelNum = SublevelToLevel(gNextSublevel) + 1;
         if (levelNum <= 0xf) {
             if (levelNum >= 10) {
                 OAM::Render(0, OAM::NUMBERS[levelNum / 10], numX = 0x77, 0x7a, 8, -1, 0);
@@ -405,7 +405,7 @@ s32 dScStarSel_c::Render() {
         }
     }
 
-    if (SublevelToLevel(data_02092110) <= 0xe) {
+    if (SublevelToLevel(gNextSublevel) <= 0xe) {
         G3i::PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
         G3i::LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
                      (const Vector3 *)&data_ov003_020b1344, true, &mtx);
@@ -419,7 +419,7 @@ s32 dScStarSel_c::Render() {
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, (s16)(data_020a0db0 * 0x300));
                 Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, 0x1400, 0x1400, 0x1400);
             }
-            idx = (IsStarCollectedInLevel(data_02092110, i) == 0) ? 1 : 0;
+            idx = (IsStarCollectedInLevel(gNextSublevel, i) == 0) ? 1 : 0;
             plate = &models[idx];
             plate->mat4x3 = data_020a0e68;
             plate->Render(0);
@@ -551,7 +551,7 @@ s32 dScStarSel_c::Render() {
         }
 
         if (mStripMode <= 1 || data_0209caa0.file.mCharacter != 3) {
-            if (SublevelToLevel(data_02092110) <= 0xe) {
+            if (SublevelToLevel(gNextSublevel) <= 0xe) {
                 OAM::RenderSub((OamAttr *)&data_ov001_020abbb4, 0x80, (mPromptYOffset >> 8) + 0xa0);
             } else {
                 OAM::RenderSub((OamAttr *)&data_ov001_020abbf4, 0x80, (mPromptYOffset >> 8) + 0xa0);
@@ -582,8 +582,8 @@ extern "C" {
 u8 DecIfAbove0_Byte(u8 *p);
 u16 DecIfAbove0_Short(u16 *p);
 
-extern dFdBrightness_c *data_0209f5bc;
-extern dFdColor_c data_0209f5e8;
+extern dFdBrightness_c *gSceneFader;
+extern dFdColor_c gSceneColorFader;
 }
 
 s32 dScStarSel_c::Behavior() {
@@ -598,22 +598,22 @@ s32 dScStarSel_c::Behavior() {
     u8 val;
     unsigned char idx;
 
-    if (data_0209f5bc->IsAtStart() != 0) {
+    if (gSceneFader->IsAtStart() != 0) {
         DecIfAbove0_Byte(&mPlatePressTimer);
         DecIfAbove0_Byte(&mPickPressTimer);
         if (mExitDelay != 0 ||
-            (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
+            (SublevelToLevel(gNextSublevel) > 0xe && IsButtonInputValid() != 0)) {
             if (mExitDelay != 0) {
                 mExitDelay -= data_0208ee44;
             }
             if (mExitDelay == 0 ||
-                (SublevelToLevel(data_02092110) > 0xe && IsButtonInputValid() != 0)) {
+                (SublevelToLevel(gNextSublevel) > 0xe && IsButtonInputValid() != 0)) {
                 StartSceneFade(3, 0, 0);
-                data_0209f5e8.color = 0x7fff;
-                if (SublevelToLevel(data_02092110) <= 0xe) {
-                    data_0209f1f0 = mSelectedPlate + 1;
+                gSceneColorFader.color = 0x7fff;
+                if (SublevelToLevel(gNextSublevel) <= 0xe) {
+                    gNextStarId = mSelectedPlate + 1;
                 } else {
-                    data_0209f1f0 = 1;
+                    gNextStarId = 1;
                 }
             }
         } else if (mCursorShown != 0 && IsButtonInputValid() != 0) {
@@ -638,7 +638,7 @@ s32 dScStarSel_c::Behavior() {
                 mExitDelay = 0x10;
                 func_02012790(data_0209caa0.file.mCharacter + 0x3c);
             }
-        } else if (SublevelToLevel(data_02092110) <= 0xe) {
+        } else if (SublevelToLevel(gNextSublevel) <= 0xe) {
             idx = gActivePlayerSlot;
             cur = mSelectedPlate;
             found = 0;
@@ -708,7 +708,7 @@ s32 dScStarSel_c::Behavior() {
             }
         }
 
-        if (SublevelToLevel(data_02092110) <= 0xe) {
+        if (SublevelToLevel(gNextSublevel) <= 0xe) {
             if (mCursorShown == 0) {
                 if (IsButtonInputValid() != 0 ||
                     (data_0209caa0.file.controllerMode == 0 &&
@@ -720,7 +720,7 @@ s32 dScStarSel_c::Behavior() {
                     } else {
                         mCursorShown = 2;
                     }
-                    if (SublevelToLevel(data_02092110) <= 0xe) {
+                    if (SublevelToLevel(gNextSublevel) <= 0xe) {
                         mCursorTarget = 0;
                     } else if (mStripMode > 1 && data_0209caa0.file.mCharacter == 3) {
                         mCursorTarget = 1;
@@ -884,9 +884,6 @@ extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
-#define REG16(a) (*(vu16 *)(a))
-#define REG32(a) (*(vu32 *)(a))
-
 s32 dScStarSel_c::InitResources() {
     void *file;
     s32 loopI;
@@ -917,13 +914,13 @@ s32 dScStarSel_c::InitResources() {
     LoadArchive(0);
     Enable3dEngines();
     Sound::LoadInitialGroup(3);
-    if (data_02092110 == 0x24 || data_02092110 == 0x26 || data_02092110 == 0x28) {
+    if (gNextSublevel == 0x24 || gNextSublevel == 0x26 || gNextSublevel == 0x28) {
         Sound::LoadAndSetMusic_Layer1(0x24);
         func_0201277c(0xB8);
     } else {
         Sound::LoadAndSetMusic_Layer1(0x16);
     }
-    REG16(0x4000304) |= 0x8000;
+    REG_POWCNT1 |= 0x8000;
     ::Initialise3dGraphics(0);
     G3X::SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
     GX::DisableAllBanks();
@@ -934,28 +931,28 @@ s32 dScStarSel_c::InitResources() {
     GX::SetBankForSubBG(0x80);
     GX::SetBankForSubOBJ(8);
     GX::SetBankForSubOBJExtPltt(0x100);
-    REG32(0x4000000) &= 0xFFCFFFEF;
-    REG32(0x4001000) &= 0xFFCFFFEF;
+    REG_DISPCNT &= 0xFFCFFFEF;
+    REG_DISPCNT_SUB &= 0xFFCFFFEF;
     GX::SetGraphicsMode(1, 0, 1);
     GXS::SetGraphicsMode(0);
-    REG32(0x4000000) = (REG32(0x4000000) & ~0x38000000) | 0x08000000;
-    REG16(0x4000304) = (REG16(0x4000304) & 0xFFFFFDF1) | 0x20E;
+    REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x08000000;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
     GX::DispOn();
-    REG32(0x4001000) |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);
-    REG16(0x4000008) = (REG16(0x4000008) & ~3) | 2;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
-    REG16(0x400000E) &= ~3;
-    REG16(0x400000E) = (REG16(0x400000E) & 0x43) | 0x1700;
-    REG16(0x400000E) &= ~0x40;
+    REG_BG3CNT &= ~3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1700;
+    REG_BG3CNT &= ~0x40;
     LoadFont(0);
-    if (SublevelToLevel(data_02092110) >= 0xF) {
-        REG16(0x400000C) = (REG16(0x400000C) & ~3) | 1;
-        REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
-        REG16(0x400000C) &= ~0x40;
+    if (SublevelToLevel(gNextSublevel) >= 0xF) {
+        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
+        REG_BG2CNT &= ~0x40;
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
         DecompressLZ16(file, G2::GetBG2CharPtr());
         Deallocate(file);
@@ -970,9 +967,9 @@ s32 dScStarSel_c::InitResources() {
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     } else {
-        REG16(0x400000C) = (REG16(0x400000C) & ~3) | 1;
-        REG16(0x400000C) = (REG16(0x400000C) & 0x43) | 0x1610;
-        REG16(0x400000C) &= ~0x40;
+        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
+        REG_BG2CNT &= ~0x40;
         if (GetOwnerLanguage() == 5) {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_S_NCG_BIN);
         } else if (GetOwnerLanguage() == 4) {
@@ -994,7 +991,7 @@ s32 dScStarSel_c::InitResources() {
         Deallocate(file);
         SetBg2Offset(0, -4);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
-        GXS::LoadBGPltt(&data_ov003_020b1698, 0, 2);
+        GXS::LoadBGPltt(&sStarSelectSubBackdropColor, 0, 2);
     }
     if (GetOwnerLanguage() == 5) {
         file = LoadFile(ASSET_D_2D_CMN_ICON_S_NCG_BIN);
@@ -1108,7 +1105,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     }
 
-    level = (u8)SublevelToLevel(data_02092110);
+    level = (u8)SublevelToLevel(gNextSublevel);
     if ((u32)level <= 0xE) {
         accB = 0;
         anyUnfilled = 0;
@@ -1165,9 +1162,9 @@ s32 dScStarSel_c::InitResources() {
         }
     }
 
-    if (SublevelToLevel(data_02092110) <= 0x14) {
-        Message::DisplayCourseNameForStarSelect((u32)(s16)SublevelToLevel(data_02092110));
-        if (SublevelToLevel(data_02092110) <= 0xE) {
+    if (SublevelToLevel(gNextSublevel) <= 0x14) {
+        Message::DisplayCourseNameForStarSelect((u32)(s16)SublevelToLevel(gNextSublevel));
+        if (SublevelToLevel(gNextSublevel) <= 0xE) {
             Message::DisplayStarNameForStarSelect(mSelectedPlate);
         }
         SetBg3Offset(0, -4);
@@ -1184,7 +1181,7 @@ s32 dScStarSel_c::InitResources() {
         charIdx += 1;
     } while (charIdx < 4);
 
-    if (SublevelToLevel(data_02092110) <= 0xE) {
+    if (SublevelToLevel(gNextSublevel) <= 0xE) {
         if ((mStripMode != 1) && (data_0209caa0.file.mCharacter == 3)) {
             mFaceY = 0x88;
             mBounceDelay = 0;
@@ -1194,22 +1191,22 @@ s32 dScStarSel_c::InitResources() {
         }
         charCount = mStripMode;
         charCountM1 = charCount - 1;
-        tabR5 = data_ov003_020b16a8[charCountM1];
-        tabSL = data_ov003_020b16a0[charCountM1];
+        tabR5 = sStarSelectCharXStart[charCountM1];
+        tabSL = sStarSelectCharYStart[charCountM1];
         if ((u32)charCount > 1U) {
             varFp = 0;
             varR6 = 0;
-            tabSB = data_ov003_020b16a4[charCountM1];
+            tabSB = sStarSelectCharSpriteStart[charCountM1];
             idx8 = (charCount - 2) * 4;
             if (charCountM1 > 0) {
-                tablePtr = &data_ov003_020b16c8[idx8];
+                tablePtr = &sStarSelectCharYStep[idx8];
                 do {
                     if (SaveData::IsCharacterUnlocked(varR6) != 0) {
                         mCharX[varR6] = tabR5;
                         mCharY[varR6] = tabSL;
                         mCharSprite[varR6] = tabSB;
                         varFp += 1;
-                        tabR5 = (u8)(tabR5 + data_ov003_020b16e4[idx8]);
+                        tabR5 = (u8)(tabR5 + sStarSelectCharXStep[idx8]);
                         tabSL = (u8)(tabSL + *tablePtr);
                         tabSB = (u8)(tabSB + 1);
                         tablePtr += 1;
@@ -1234,8 +1231,8 @@ s32 dScStarSel_c::InitResources() {
     mBounceDelay = 0x78;
     mAnimFlip = 0;
     gSubScreenLayers = 0x10;
-    REG32(0x4000000) = (REG32(0x4000000) & ~0x1F00) | (gMainScreenLayers << 8);
-    REG32(0x4001000) = (REG32(0x4001000) & ~0x1F00) | 0x1000;
+    REG_DISPCNT = (REG_DISPCNT & ~0x1F00) | (gMainScreenLayers << 8);
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1F00) | 0x1000;
     mLifeIcon = data_0209caa0.file.mCharacter;
     data_0208ee44 = 1;
     return 1;
@@ -1250,22 +1247,23 @@ extern "C" dScStarSel_c *dScStarSel_c_classInit(void) {
 }
 
 extern "C" {
-/* Inferred role: background palette entry; existing address label retained. */
-u16 data_ov003_020b1698 = 32767;
+/* Sub-screen BG palette entry 0, the backdrop colour (0x7fff, white):
+   InitResources loads these two bytes with GXS::LoadBGPltt(.., 0, 2). */
+u16 sStarSelectSubBackdropColor = 32767;
 /* The inverse lookup visits three entries; mode 4 bounds the cursor to 0..2. */
 u8 sStarSelectCharacterOrder[3] = {1, 0, 2};
-/* Inferred role: initial icon y position by unlocked count; existing address label retained. */
-u8 data_ov003_020b16a0[4] = {0, 72, 72, 72};
-/* Inferred role: initial icon sprite index by unlocked count; existing address label retained. */
-u8 data_ov003_020b16a4[4] = {0, 0, 1, 0};
-/* Inferred role: initial icon x position by unlocked count; existing address label retained. */
-u8 data_ov003_020b16a8[4] = {0, 128, 92, 128};
+/* The character strip's layout, indexed by the unlocked count minus one.
+   With two or more characters unlocked, InitResources gives the first of
+   them its mCharY, mCharSprite and mCharX from these three tables. */
+u8 sStarSelectCharYStart[4] = {0, 72, 72, 72};
+u8 sStarSelectCharSpriteStart[4] = {0, 0, 1, 0};
+u8 sStarSelectCharXStart[4] = {0, 128, 92, 128};
 /* Divisors for the hundreds, tens and units digits. */
 u16 sStarSelectDecimalDivisors[3] = {100, 10, 1};
-/* Inferred role: icon y position steps for two, three and four unlocked characters; existing address label retained. */
-/* Four-slot strides are observed; unused slots do not prove original bounds. */
-s8 data_ov003_020b16c8[12] = {0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0};
-/* Inferred role: icon x position steps for two, three and four unlocked characters; existing address label retained. */
-s16 data_ov003_020b16e4[12] = {0, 0, 0, 0, 72, 0, 0, 0, -68, 136, 0, 0};
+/* Each later unlocked character's mCharY and mCharX step, four entries per
+   unlocked count of two, three and four. Four-slot strides are observed;
+   unused slots do not prove original bounds. */
+s8 sStarSelectCharYStep[12] = {0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0};
+s16 sStarSelectCharXStep[12] = {0, 0, 0, 0, 72, 0, 0, 0, -68, 136, 0, 0};
 BaseSpawnInfo<dScStarSel_c> g_profile_STAR_SELECT = {dScStarSel_c_classInit, 4, 7};
 }

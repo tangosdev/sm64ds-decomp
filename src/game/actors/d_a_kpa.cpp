@@ -299,7 +299,7 @@ struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
 extern int func_020092c4(void*, void*, void*);
@@ -470,7 +470,7 @@ typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2
 /* TUBUILD CONFLICT -- alternate declaration of func_ov060_021123a0, from the legacy file for func_ov060_02115d68, NOT applied: extern "C" void func_ov060_021123a0(void *a, int b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern char* data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern char* gCamera; */
 
 /* TUBUILD CONFLICT -- alternate declaration of func_ov060_02111cc0, from the legacy file for _ZN7daKpa_c13InitResourcesEv, NOT applied: extern void func_ov060_02111cc0(void *c, int a, int b); */
 }
@@ -709,7 +709,7 @@ int daKpa_c::Behavior()
     mAnmModel.speed = mAnimSpeed;
     mAnmModel.Advance();
     func_ov060_0211577c();
-    data_0209f318->mFramedActor = this;
+    gCamera->mFramedActor = this;
     mdCcAcPos_c.Clear();
     Vector3 v;
     v.z = 0x50000;
@@ -3231,7 +3231,7 @@ axis, to a point 0xc0 (192) units ahead along mAngleY and 0xfa000 (250 units) up
 return 1 when func_020092c4 returns non-zero. Step 4: clear bit 0x8 of
 Camera::mFlags. */
 int daKpa_c::func_ov060_02111f08(){
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     daPly_c *player = this->ClosestPlayer();
     struct Vector3 sp;
     struct Vector3* pv;

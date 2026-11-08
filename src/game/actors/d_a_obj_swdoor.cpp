@@ -13,8 +13,6 @@
  * by UpdateShutter; the leaves' own methods never name them.
  *
  * Notes:
- * - func_020393d4 is a 4-byte store into the dBgW at +0x18; dBgW.h has no
- *   setter.
  * - Abstract class: no factory and no g_profile row.
  */
 
@@ -28,10 +26,6 @@
 #include "math/CalcLib.h"
 
 #include "ResourceDescriptor.h"
-
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-}
 
 /* ROM ordinals 0 and 1 -- ov002 0x020bab0c (D0, 0x58) and 0x020bab64 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
@@ -127,7 +121,7 @@ s32 daObjSwdoor_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
                           mAngleY, *descriptor->clps);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mTurnDir = param1 & 1;
     mEventBit = (param1 >> 1) & 0x1f;

@@ -396,7 +396,7 @@ extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
    as the void * this file has always declared (the tree's declarations
    disagree); 23f0 casts at the one use. */
-extern void* data_0209f5bc;
+extern void *gSceneFader;
 extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern int func_ov002_020f2630(daDemo_c *self);
@@ -488,7 +488,7 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
-extern char *data_0209f318;
+extern char *gCamera;
 extern int data_ov002_0210b614;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -504,8 +504,8 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
-extern unsigned char data_0209f250;
-extern void *data_0209f394[];
+extern unsigned char gLocalPlayerId;
+extern void *gPlayers[];
 /* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
@@ -545,7 +545,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z)
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern char data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of gSubScreenLayers, from the legacy file for func_ov002_020f23f0, NOT applied: extern u8 gSubScreenLayers; */
@@ -594,13 +594,13 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7538, NOT applied: extern int _Z14ApproachLinearRiii(int* dst, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7538, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7780, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7780, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7780, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f7780, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7780, NOT applied: extern short Vec3_HorzAngle(const int *v0, const int *v1); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f79c0, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f79c0, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov002_020f79c0, NOT applied: extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of AddVec3, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
@@ -767,7 +767,7 @@ int daDemo_c::func_ov002_020f23d0()
 /* ROM ordinal 8 -- func_ov002_020f23f0, 0x020f23f0, size 0x240 */
 /* -------------------------------------------------------------------------- */
 /* Behavior for param1 0x2f: the scroll block's seven states.
- *   0  each frame the scene fader (data_0209f5bc) reports IsAtStart,
+ *   0  each frame the scene fader (gSceneFader) reports IsAtStart,
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
  *      centerSpriteY[0] reaches 8 (it starts at -8)
  *   1  wait for mCue == 3 (written by script handler 26c4), then set
@@ -788,7 +788,7 @@ int daDemo_c::func_ov002_020f23f0()
 {
     switch (mScroll->state) {
     case 0:
-        if (((dFdBrightness_c *)data_0209f5bc)->IsAtStart() != 0) {
+        if (((dFdBrightness_c *)gSceneFader)->IsAtStart() != 0) {
             mScroll->centerSpriteY[0]++;
             mScroll->centerSpriteY[1]--;
             if (mScroll->centerSpriteY[0] == 8) {
@@ -3695,7 +3695,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
           int m = FX_MUL(r, 0xa000);
           this->mMagnitude = m + 0x19000;
       }
-      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)data_0209f318)->pos, (Vector3 *)&this->mPosX);
+      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
       if (arg2 > 0x2bc) {
           this->mPosY -= 0x96000;
       }
@@ -4031,7 +4031,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = (dCamera_c *)gCamera;
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
@@ -4046,9 +4046,9 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             v[1] = *(int *)((char *)data_ov002_0210b970 + 4);
             v[2] = *(int *)((char *)data_ov002_0210b970 + 8);
 
-            idx = *(volatile unsigned char *)&data_0209f250;
+            idx = *(volatile unsigned char *)&gLocalPlayerId;
             {
-                short ang = ((dActor_c *)data_0209f394[idx])->mAngleY;
+                short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
                 Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (short)(ang + 0x8000), v);
             }
@@ -4205,7 +4205,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     this->mOpacity = 0x1f;
-    cam = (dCamera_c *)data_0209f318;
+    cam = (dCamera_c *)gCamera;
 
     AddVec3((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
     dist = Vec3_Dist(&v0, &cam->pos);
@@ -4414,7 +4414,7 @@ int daDemo_c::InitResources()
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
             return 0;
-        t = (*(volatile unsigned char *)&data_0209f2d8 == 2);
+        t = (*(volatile unsigned char *)&gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
                     ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110b98, 1,

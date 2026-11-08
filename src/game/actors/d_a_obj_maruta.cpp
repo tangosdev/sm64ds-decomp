@@ -19,9 +19,6 @@
  *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward
  *   InitResources, Behavior and CleanupResources into them, so naming them
  *   means converting both leaves in the same change.
- * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW+0x18 / +0x1c.
- *   This TU stores dBgW::UpdatePosWithVelocity and StoodOnCallback there;
- *   dBgW.h has no setter.
  * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub, LenVec3 and AngleDiff are arm9 C helpers no header declares yet.
  * - (Vector3 *)&mRestPosX / &mHitPosX: the class stores those triples as
@@ -52,9 +49,6 @@ void func_02012694(unsigned int a, void *b);
 int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
-
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
@@ -247,8 +241,8 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     ((dBgW_KcMbg *)(&self->mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), *(&self->mClsnMat),
                               0x1000, self->mAngleY, *(arg->clps));
-    func_020393d4(&self->mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&self->mMeshCollider, &daObjMaruta_c::StoodOnCallback);
+    self->mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    self->mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
     self->mRestPosZ = self->mPosZ;

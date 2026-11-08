@@ -89,6 +89,12 @@ s32 daObj1UpLogo_c::Render() {
     return 1;
 }
 
+/* Takes the position by reference, so the call re-reads mPos.y from memory
+ * instead of reusing the value Behavior() just added into it. */
+static inline void SpawnPopParticle(const Vector3 &pos) {
+    Particle::System::NewSimple(kPopParticle, pos.x, pos.y, pos.z);
+}
+
 s32 daObj1UpLogo_c::Behavior() {
     Vector3 pos;
 
@@ -110,8 +116,7 @@ s32 daObj1UpLogo_c::Behavior() {
         break;
     case 1:
         if (mPosY < mStartPos.y) {
-            /* Volatile: a plain mPosY read is folded into the add above. */
-            Particle::System::NewSimple(kPopParticle, mPosX, *(volatile s32 *)&mPosY, mPosZ);
+            SpawnPopParticle(mPos);
             MarkForDestruction();
         }
         break;

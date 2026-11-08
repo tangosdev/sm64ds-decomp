@@ -130,6 +130,7 @@ struct dBgCh_Actr : dBgCh {
     void UpdateExtraContinous();  /* sic -- the ROM name is missing a 'u' */
     void UpdateDiscreteNoLava();
     void UpdateDiscreteNoLava_2();
+    void func_020371b0(s32); /* floor-result commit (0x020371b0) */
     void Unk_0203589c(); /* mSphereClsn.ResetQuery() */
 
     /* Flag helpers and the result accessor. Coined names: the ROM carries none

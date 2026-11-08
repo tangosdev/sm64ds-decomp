@@ -24,7 +24,7 @@
 
 // What stays, and why (each measured; the noted form size-DIFFs or breaks
 // the build):
-// mMeshCollider.beforeClsnCallback goes through func_020393d4 (direct member
+// mMeshCollider.beforeClsnCallback goes through dBgW::SetBeforeClsnCallback (direct member
 // store does not compile; the C-cast store shrinks InitResources).
 // mClsnMat2 and mStepModel.mat4x3 stay flat s32 m[12] (.t does not compile;
 // Vector3 overlays and address temps move bytes in both updates).
@@ -58,10 +58,6 @@ extern BrockModelFilePtr data_ov025_02113ab8;
 extern BrockCollisionFilePtr data_ov025_02113ab0;
 extern CLPS_Block data_ov025_02112ce8;
 
-/* local extern: stores the before-collision callback; the definition is C
-   and has no shared header. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-
 /* mState values, how long each lasts, and the 20.12 step.
  * kVertStep is 5.0 per frame. A full drop is that times
  * kFramesPerState; phase 1 starts at half of it. */
@@ -93,7 +89,7 @@ int daObjDpBrock_c::InitResources() {
     UpdateStepClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113ab0), mClsnMat2, 0x1000,
                           mAngleY, data_ov025_02112ce8);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     int phase = param1 & 3;
     mVertSpeed = -kVertStep;

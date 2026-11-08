@@ -121,7 +121,6 @@ daBtfly_c::~daBtfly_c()
 
 void daBtfly_c::State7()
 {
-    char *c = (char *)this; /* unused, but removing it renumbers the @NNN labels */
     int hasContact;
     int v;
 
@@ -155,36 +154,27 @@ void daBtfly_c::State7()
         int noId = (mdCcAcPos_c.otherOwner == 0);
         hasContact = (noId == 0);
     }
-    if (hasContact == 0) {
-        if (mWithMeshClsn.IsOnWall() == 0) {
-            if (mWithMeshClsn.IsOnGround() == 0) {
-                /* mClsnFlags & 0x10. No accessor; IsOnGround is mFlags & 0x10. */
-                if (func_02035638((u8 *)&mWithMeshClsn) == 0) {
-                    if (mStateTimer <= 0x9d)
-                        goto cylinder_only;
+    /* mClsnFlags & 0x10 is func_02035638. No accessor; IsOnGround is mFlags & 0x10. */
+    if (hasContact || mWithMeshClsn.IsOnWall() || mWithMeshClsn.IsOnGround() ||
+        func_02035638((u8 *)&mWithMeshClsn) || mStateTimer > 0x9d) {
+        if (hasContact != 0) {
+            dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+            if (hit != 0) {
+                int isPlayer = (hit->actorID == 0xbf);
+                if (isPlayer != 0) {
+                    Vector3 pos;
+                    pos.x = mPosX;
+                    pos.y = mPosY;
+                    pos.z = mPosZ;
+                    ((daPly_c *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
                 }
             }
         }
+
+        TriplePoofDust();
+        MarkForDestruction();
     }
 
-    if (hasContact != 0) {
-        dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
-        if (hit != 0) {
-            int isPlayer = (hit->actorID == 0xbf);
-            if (isPlayer != 0) {
-                Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
-                ((daPly_c *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
-            }
-        }
-    }
-
-    TriplePoofDust();
-    MarkForDestruction();
-
-cylinder_only:
     mdCcAcPos_c.Clear();
     {
         Vector3 off;
@@ -274,17 +264,14 @@ void daBtfly_c::State4()
             int mask = typ & 0x30;
             struct AngleTriple { u16 w[3]; };
             AngleTriple rot;
-            int two = 2;
-            int three = 3;
-            i = 1;
             rot = *(AngleTriple *)&mPrevAngleX;
-            for (; i < 3; i++) {
+            for (i = 1; i < 3; i++) {
                 if (i == sb)
                     sel = 1;
                 else if (mask == 0x20)
-                    sel = two;
+                    sel = 2;
                 else
-                    sel = three;
+                    sel = 3;
                 rot.w[1] =
                     (s16)((s16)rot.w[1] +
                           (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10));
@@ -408,22 +395,18 @@ void daBtfly_c::State0()
     int i;
     n = (param1 & 0xf) - 1;
     rot = *(AngleTriple *)&mPrevAngleX;
-    i = 0;
-    if (n > 0) {
-        do {
-            Vector3 pos;
-            int r;
-            r = RandomIntInternal(&data_0209e650.value);
-            pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosX;
-            r = RandomIntInternal(&data_0209e650.value);
-            pos.y = mPosY + ((int)((unsigned int)r % 40) << 13);
-            r = RandomIntInternal(&data_0209e650.value);
-            pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosZ;
-            r = RandomIntInternal(&data_0209e650.value);
-            rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
-            dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
-            i++;
-        } while (i < n);
+    for (i = 0; i < n; i++) {
+        Vector3 pos;
+        int r;
+        r = RandomIntInternal(&data_0209e650.value);
+        pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosX;
+        r = RandomIntInternal(&data_0209e650.value);
+        pos.y = mPosY + ((int)((unsigned int)r % 40) << 13);
+        r = RandomIntInternal(&data_0209e650.value);
+        pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosZ;
+        r = RandomIntInternal(&data_0209e650.value);
+        rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
+        dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
     }
     mState = 1;
 }

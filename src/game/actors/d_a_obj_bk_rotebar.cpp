@@ -13,8 +13,6 @@
  * inline dtor in daObjBk_Rotebar_c.h declared first emits D1 then D0, no D2.
  *
  * Notes:
- * - dBgW::SetClipRadius / func_020393d4 are 4-byte stores into dBgW+0x0c and
- *   dBgW+0x18 (beforeClsnCallback), defined in d_bg_w.cpp; the callback setter remains local.
  * - data_ov015_02114a84 / 02114a8c are this overlay's KCL/BMD handles.
  * - data_ov015_02113654 is the CLPS block in overlay .data this TU does
  *   not own.
@@ -51,7 +49,6 @@ extern CLPS_Block data_ov015_02113654;
 /* arm9 C helpers with no shared header. */
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern "C" daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
@@ -67,7 +64,7 @@ s32 daObjBk_Rotebar_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(&data_ov015_02113654));
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     mPauseTimer = 0x3c;
     return 1;

@@ -36,9 +36,6 @@
  *   symbol.
  * - func_ov077_021256b4 and func_ov077_02125830: carrier->mPosX/Y/Z is -4
  *   (0x17c->0x178, 0xac->0xa8). The ROM keeps add #0x5c then [0]/[4]/[8].
- * - decl_common.h already declares func_ov077_02124ce4, 02124eb0 and
- *   021250a8 as void* and 02125304 as char*. daTgz_c* is illegal
- *   overloading, so those four cast.
  */
 #include "decl_common.h"
 #include "ParticleIds.h"
@@ -112,8 +109,10 @@ void func_ov077_02125290(daTgz_c *self);
 void func_ov077_02125e20(daTgz_c *self);
 void func_ov077_02125e5c(daTgz_c *self);
 void func_ov077_02125e94(daTgz_c *self, int state);
-/* decl_common.h already declares these four as void* / char*. A second
- * extern "C" prototype with daTgz_c* is illegal overloading. */
+int func_ov077_02124ce4(daTgz_c *self);
+void func_ov077_02124eb0(daTgz_c *self);
+void func_ov077_021250a8(daTgz_c *self);
+void func_ov077_02125304(daTgz_c *self);
 
 int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
@@ -177,9 +176,7 @@ extern "C" int func_ov077_02124c28(daTgz_c *self)
 }
 
 /* Is the Spiny below the cached water surface? */
-extern "C" int func_ov077_02124ce4(void *vc)
-{
-    daTgz_c *self = (daTgz_c *)vc;
+extern "C" int func_ov077_02124ce4(daTgz_c *self) {
     int waterY = self->mWaterY;
     if (waterY == 0)
         return 0;
@@ -236,9 +233,7 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
 
 /* Hit response while walking or spinning. Egg and the knock-up destroy or
  * launch; a shell / metal / attack hit in state 1 starts the chase. */
-extern "C" void func_ov077_02124eb0(void *vc)
-{
-    daTgz_c *self = (daTgz_c *)vc;
+extern "C" void func_ov077_02124eb0(daTgz_c *self) {
     daPly_c *player;
     int b;
 
@@ -307,9 +302,7 @@ extern "C" void func_ov077_02124eb0(void *vc)
 
 /* Hit response during the thrown spin. Mega turns it to face away and
  * knocks it up; fire is ignored; anything else hurts the player. */
-extern "C" void func_ov077_021250a8(void *vc)
-{
-    daTgz_c *self = (daTgz_c *)vc;
+extern "C" void func_ov077_021250a8(daTgz_c *self) {
     unsigned int id = self->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
@@ -375,9 +368,7 @@ extern "C" void func_ov077_02125290(daTgz_c *self)
     m->m[11] = self->mPosZ >> 3;
 }
 
-extern "C" void func_ov077_02125304(char *vc)
-{
-    daTgz_c *self = (daTgz_c *)vc;
+extern "C" void func_ov077_02125304(daTgz_c *self) {
     int b = (int)((self->mFlags & 0x40000) != 0);
     if (b != 0)
         return;
@@ -784,7 +775,7 @@ int daTgz_c::Behavior()
     func_ov077_02124c28(this);
     func_ov077_02125e20(this);
     MakeVanishLuigiWork(mdCcAc_c);
-    func_ov077_02125304((char *)this);
+    func_ov077_02125304(this);
     if (gCurrentSublevel == 0x1c && mPosY <= -0x1600000) {
         PoofDust();
         func_02012694(0xc4, &mCamSpacePos);
@@ -813,7 +804,7 @@ int daTgz_c::InitResources()
     mDespawnTimer = 0x2c;
     func_ov077_02125e94(this, 0);
     *(Matrix4x3 *)mShadowMatrix = IDENTITY_MATRIX4X3;
-    func_ov077_02125304((char *)this);
+    func_ov077_02125304(this);
     return 1;
 }
 

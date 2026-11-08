@@ -14,8 +14,6 @@
 // - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange take Fix12<int> by
 //   value, so they stay mangled; a member call homes the argument and
 //   changes the ROM ABI.
-// - func_020393d4 is the 4-byte store of the collision callback into
-//   dBgW's slot; naming belongs with dBgW in arm9.
 // - This TU emits its own __sinit for the file handles below, which the
 //   manifest does not license. The handles stay: nothing else defines
 //   their BSS or .init range.
@@ -44,7 +42,6 @@ extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void hold_d_a_obj_ewm_ice_block(dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale,
                                        short angle, void *clps);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 #pragma defer_codegen off
@@ -151,7 +148,7 @@ int daObjEwmIceBlock_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*data_ov056_02113314[1])),
                               *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov056_02113314[2]));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;
     mHorzSpeed = 0xa000;

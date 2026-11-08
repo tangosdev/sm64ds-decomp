@@ -33,8 +33,7 @@
  *   ("( expected"). The free call with two ints matches.
  * - Render: one Vector3 local then one Matrix4x3_FromTranslation
  *   size-DIFF 0x8c->0xa4.
- * - func_020393d4 and func_020393c4 store the mesh's two callback slots.
- *   data_02082214 stays the unnamed sine table.
+ * - data_02082214 stays the unnamed sine table.
  * - The two file handles live after InitResources; the compiler's
  *   __sinit_d_a_dp_lift.cpp constructs them at overlay load. Their wrapper
  *   names are local -- the constructors are the ROM resource-family
@@ -73,12 +72,6 @@ extern DpLiftCollisionFilePtr data_ov025_02113ad8;
 extern CLPS_Block data_ov025_02112d08;
 
 extern s16 data_02082214[];
-
-/* arm9 C helpers with no shared header: they store dBgW's two callback words. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
 
 daDpLift_c::~daDpLift_c() {}
 
@@ -163,8 +156,8 @@ s32 daDpLift_c::InitResources() {
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113ad8);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov025_02112d08);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     /* Ten markers under the lift, each 0x1cc000 lower than the last.
        The walk is a copy of this; see Leftover. */

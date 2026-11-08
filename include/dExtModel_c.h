@@ -111,7 +111,7 @@ struct ModelComponents {
     BMD_Material *materials;    /* 0x04 - 0x30-byte records, flags at +0x24 */
     ModelBone *bones;           /* 0x08 - one per BMD_File bone */
     Matrix4x3 *transforms;      /* 0x0c - one per bone */
-    void *unk_10;               /* 0x10 */
+    Matrix4x3 *blendTransforms; /* 0x10 - mBlendBuffer, func_0204531c's blend target */
 
     void UpdateVertsUsingBones();               /* 0x02044dcc */
     void UpdateBones(BCA_File *file, int frame);
@@ -192,6 +192,9 @@ struct dExtModel_c {
        flows straight out. Callers corroborate: daShl_c::InitResources tests
        the result and bails on 0. */
     int SetFile(BMD_File *file, int a, int b);       /* dispatches DoSetFile */
+    /* SetFile's loading twin (0x02016ff4): rebases the file's offsets, runs
+       DoSetFile, and on success shrinks the file to its reported size. */
+    int func_02016ff4(BMD_File *, int, int);
     /* Retail callers pass two scalar words. The second is unused here;
        its unsigned type/name are reconstructed, not recovered source spelling.
        See notes/experiments/applyopacity-api-0920.md. */
@@ -230,7 +233,7 @@ struct ModelComponents {
     struct BMD_Material *materials;    /* 0x04 */
     struct ModelBone *bones;           /* 0x08 */
     struct Matrix4x3 *transforms;      /* 0x0c */
-    void *unk_10;                      /* 0x10 */
+    struct Matrix4x3 *blendTransforms; /* 0x10 */
 };
 
 struct dExtModel_c {
