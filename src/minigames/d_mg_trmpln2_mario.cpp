@@ -248,10 +248,10 @@ extern "C" void Trmp2Mario_Update(char *o) {
 // ---- Trmp2Mario_ApplyGravity
 namespace ns_020c9024 {
 extern "C" {
-extern int sTrmp2FallSpeed[];
+extern int sTrmp2FallSpeed;
 void AddVec3(void *dst, void *a, void *b);
 void Trmp2Mario_ApplyGravity(char *o) {
-    ApproachLinear(MARIO2(o)->mVel.y, sTrmp2FallSpeed[0], MARIO2(o)->mGravityStep);
+    ApproachLinear(MARIO2(o)->mVel.y, sTrmp2FallSpeed, MARIO2(o)->mGravityStep);
     AddVec3(&MARIO2(o)->mPos, &MARIO2(o)->mVel, &MARIO2(o)->mPos);
 }
 }
@@ -3207,7 +3207,7 @@ TrmpGoal data_ov006_021407a8(0x30000, 0x100000, 0);
 TrmpGoal data_ov006_021407b4(0x50000, 0x100000, 0);
 
 extern "C" {
-int sTrmp2FallSpeed[1] = {data_ov006_0212e010};
+int sTrmp2FallSpeed = data_ov006_0212e010;
 int sTrmp2GravityStep = data_ov006_0212e00c;
 int data_ov006_0214053c = data_ov006_0212e018;
 int sTrmpSpeedScale = data_ov006_0212e014;
