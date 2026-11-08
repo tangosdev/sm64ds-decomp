@@ -1503,6 +1503,7 @@ struct PalPatch {
     char name[64];      /* the spec's palette name */
     const u8 *colors;   /* count*2 bytes into g_pal_blob, LE, any alignment */
     int said;           /* each record reports once, patched or refused */
+    unsigned twin_said; /* same, once per balloon twin file (BALLOON_TWIN) */
 };
 
 u8 *g_pal_blob;
@@ -1737,6 +1738,122 @@ const char *palette_try(const struct PalPatch *p, u8 *d, u32 size)
     return 0;
 }
 
+/* ---- BALLOON MARIO WEARS MARIO'S COLORS ----------------------------------
+   The power flower's balloon Mario is drawn from three files of his own,
+   data/player/b_mario_body.bmd, b_mario_head_cap.bmd and b_mario_all.bmd,
+   not from mario_model.bmd and mario_head_cap.bmd. Their palettes are the
+   regular files' palettes under the same names, byte for byte on the
+   cartridge: b_mario_body's and b_mario_all's mario_body_pl are
+   mario_model.bmd's mario_body_pl (336 colors), b_mario_head_cap's and
+   b_mario_all's mario_head_pl are mario_head_cap.bmd's (256 colors), and
+   b_mario_all's mario_eye_1_pl is mario_head_cap.bmd's (96 colors).
+   b_mario_head_cap's mario_eye_0_pl is in no regular Mario file, so nothing
+   reaches it this way. A palette mod authored against regular Mario
+   therefore names only the regular files, and without this the balloon
+   kept the cartridge's red and blue whatever Mario wore.
+
+   So a record aimed at a regular file in the table below is applied to its
+   balloon twin as well, through palette_try with every rule it has: the
+   palette is found by its own name in the twin and the color count must
+   match exactly. A palette the twin does not have is no twin and is
+   skipped in silence (mario_head_cap's other eyes, say). A record in the
+   same set that names the balloon file itself, for the same palette, wins:
+   the authored answer beats the copy. The twin is CLAIMED for the card with
+   its source (mod_claims), because the patched cartridge range is built from
+   the claimed ids alone: an unclaimed twin is served straight off the
+   cartridge and never reaches the filter. */
+const char *const BALLOON_TWIN[][2] = {
+    { "data/player/mario_model.bmd",    "data/player/b_mario_body.bmd" },
+    { "data/player/mario_model.bmd",    "data/player/b_mario_all.bmd" },
+    { "data/player/mario_head_cap.bmd", "data/player/b_mario_head_cap.bmd" },
+    { "data/player/mario_head_cap.bmd", "data/player/b_mario_all.bmd" },
+};
+enum { BALLOON_TWINS = sizeof BALLOON_TWIN / sizeof BALLOON_TWIN[0] };
+unsigned g_bt_id[BALLOON_TWINS][2];
+int g_bt_state;
+
+/* 1 when the served BMD has a palette of exactly this name. */
+int palette_has_name(const u8 *d, u32 size, const char *name)
+{
+    u32 npal, palo;
+    if (size < 0x3c)
+        return 0;
+    npal = rd32(d, 0x1c);
+    palo = rd32(d, 0x20);
+    if (npal > 64 || palo > size || npal * 0x10 > size - palo)
+        return 0;
+    for (u32 i = 0; i < npal; ++i) {
+        u32 nm = rd32(d + palo + i * 0x10, 0);
+        if (nm < size && str_at_is(d, size, nm, name))
+            return 1;
+    }
+    return 0;
+}
+
+void balloon_twin_ids(void)
+{
+    if (g_bt_state)
+        return;
+    g_bt_state = 1;
+    for (int t = 0; t < BALLOON_TWINS; ++t)
+        for (int k = 0; k < 2; ++k)
+            g_bt_id[t][k] = resolve_file_by_name(BALLOON_TWIN[t][k]);
+}
+
+/* Claim every balloon twin whose regular file a record of recs[0..n) names. */
+void balloon_twin_claims(const struct PalPatch *recs, unsigned n,
+                         void (*claim)(unsigned fileID))
+{
+    balloon_twin_ids();
+    for (int t = 0; t < BALLOON_TWINS; ++t) {
+        if (!g_bt_id[t][0] || !g_bt_id[t][1])
+            continue;
+        for (unsigned i = 0; i < n; ++i)
+            if (recs[i].file_id == g_bt_id[t][0]) {
+                claim(g_bt_id[t][1]);
+                break;
+            }
+    }
+}
+
+/* Apply the records of recs[0..n) aimed at a regular Mario file to the
+   served file when it is that file's balloon twin. `label` heads the log. */
+void balloon_twins(struct PalPatch *recs, unsigned n, unsigned fileID,
+                   u8 *d, u32 size, const char *label)
+{
+    balloon_twin_ids();
+    for (int t = 0; t < BALLOON_TWINS; ++t) {
+        if (!g_bt_id[t][0] || !g_bt_id[t][1] || g_bt_id[t][1] != fileID)
+            continue;
+        for (unsigned i = 0; i < n; ++i) {
+            struct PalPatch *p = &recs[i];
+            const char *why;
+            int own = 0;
+            if (p->file_id != g_bt_id[t][0] ||
+                !palette_has_name(d, size, p->name))
+                continue;
+            for (unsigned j = 0; j < n && !own; ++j)
+                own = recs[j].file_id == fileID &&
+                      strcmp(recs[j].name, p->name) == 0;
+            if (own)
+                continue;
+            why = palette_try(p, d, size);
+            if (p->twin_said & (1u << t))
+                continue;
+            p->twin_said |= 1u << t;
+            if (why)
+                fprintf(stderr, "[mods] %s: %s '%s' for balloon Mario's %s "
+                                "REFUSED: %s; served as the ROM has it\n",
+                        label, p->path, p->name, BALLOON_TWIN[t][1], why);
+            else
+                fprintf(stderr, "[mods] %s: %s '%s' recolored on balloon "
+                                "Mario's %s too, %u colors\n",
+                        label, p->path, p->name, BALLOON_TWIN[t][1],
+                        p->count);
+        }
+    }
+}
+
 u32 palette_filter(unsigned fileID, u8 **data, u32 size)
 {
     /* The four per-character keys replace this one entirely; pc_load says so
@@ -1766,6 +1883,11 @@ u32 palette_filter(unsigned fileID, u8 **data, u32 size)
                             "%u colors\n",
                     palette_combo(), p->path, p->name, p->count);
     }
+    {
+        char label[32];
+        snprintf(label, sizeof label, "CustomPalette %d", palette_combo());
+        balloon_twins(g_pal_patch, g_pal_npatch, fileID, *data, size, label);
+    }
     return size;
 }
 
@@ -1785,11 +1907,15 @@ u32 palette_filter(unsigned fileID, u8 **data, u32 size)
 
    WHICH FILES ARE "THAT CHARACTER'S" is the table PC_FILES below and nothing
    else: body, head with cap, head without cap, plus for Luigi the two
-   texture-swap files that drive his body and capped head. Ownership is
+   texture-swap files that drive his body and capped head, and for Mario the
+   three balloon files the power flower draws him from (b_mario_body.bmd,
+   b_mario_head_cap.bmd, b_mario_all.bmd). Balloon Mario IS Mario: a Mario
+   palette reaches his balloon files through BALLOON MARIO WEARS MARIO'S
+   COLORS above, and a .pal may also name a balloon file itself. Ownership is
    decided on the RESOLVED FILE ID, never on the spelling of a path, because
    a suffix test cannot tell data/player/mario_head_cap.bmd from
-   data/player/b_mario_head_cap.bmd and a mod that quietly recolored balloon
-   Mario when asked for Mario would be a bug nobody could see. A record whose
+   data/player/b_mario_head_cap.bmd, and the two are different files with
+   palettes of their own. A record whose
    file resolves to somebody else's is dropped in silence at load; a record
    whose file is not in the dump AT ALL is said out loud, because that one is
    always either a typo or a dump problem.
@@ -1859,7 +1985,7 @@ u32 palette_filter(unsigned fileID, u8 **data, u32 size)
    Yoshi change, and it is the one thing the four built-ins are free of. */
 
 enum { PC_MARIO = 0, PC_LUIGI = 1, PC_WARIO = 2, PC_YOSHI = 3,
-       PC_COUNT = 4, PC_MAX_FILES = 5 };
+       PC_COUNT = 4, PC_MAX_FILES = 6 };
 
 const char *const PC_KEY[PC_COUNT] = {
     "PaletteMario", "PaletteLuigi", "PaletteWario", "PaletteYoshi",
@@ -1874,18 +2000,21 @@ const char *const PC_WHO[PC_COUNT] = { "Mario", "Luigi", "Wario", "Yoshi" };
 const char *const PC_FILES[PC_COUNT][PC_MAX_FILES] = {
     { "data/player/mario_model.bmd",
       "data/player/mario_head_cap.bmd",
-      "data/player/mario_head_nocap.bmd", 0, 0 },
+      "data/player/mario_head_nocap.bmd",
+      "data/player/b_mario_body.bmd",
+      "data/player/b_mario_head_cap.bmd",
+      "data/player/b_mario_all.bmd" },
     { "data/player/luigi_model.bmd",
       "data/player/luigi_head_cap.bmd",
       "data/player/luigi_head_nocap.bmd",
       "data/player/L_tx_bodytrans.btp",
-      "data/player/L_tx_headtrans.btp" },
+      "data/player/L_tx_headtrans.btp", 0 },
     { "data/player/wario_model.bmd",
       "data/player/wario_head_cap.bmd",
-      "data/player/wario_head_nocap.bmd", 0, 0 },
+      "data/player/wario_head_nocap.bmd", 0, 0, 0 },
     { "data/player/yoshi_model.bmd",
       "data/player/yoshi_head.bmd",
-      "data/player/yoshi_head_fill.bmd", 0, 0 },
+      "data/player/yoshi_head_fill.bmd", 0, 0, 0 },
 };
 
 const char *const YOSHI_BODY = "data/player/yoshi_model.bmd";
@@ -1912,14 +2041,16 @@ int g_pc_state;             /* 0 not tried, 1 loaded */
    first, through palette_open_named), or "Custom".
 
    CUSTOM is the player's own colours, `<who>_hat` `<who>_overalls`
-   `<who>_shoes` for the bros and `yoshi_body`, "RRGGBB". They land on
+   `<who>_shoes` for the bros and `yoshi_body` `yoshi_shoes`, "RRGGBB". They land on
    exactly the palette entries an online pick lands on, with the same
    arithmetic: the bros through the category table hal/vs_char_groups.h and
    vspal::char_recolor_palette, group by group in the table's order, as
    hal/bro_colors.cpp's copy_for recolours a body's palette copy; Yoshi
    through vspal::vs_group_pick on the body group of row 0, as an online
-   Yoshi's own row is built (vs_palette_row, body only: the shoes stay the
-   cartridge's). A colour equal to the cartridge's own tone of that part (to
+   Yoshi's own row is built (vs_palette_row: vs_group_pick on the body
+   group, then on the shoe group, both from row 0). A package older than the
+   shoes setting has no `yoshi_shoes` key, so the shoes stay the cartridge's,
+   as they always did. A colour equal to the cartridge's own tone of that part (to
    the DS's 5 bits a channel) is no pick, as it is online, so Custom with
    the default colours serves the ROM's palettes untouched.
 
@@ -1943,7 +2074,7 @@ const char *const CP_PART_KEY[PC_COUNT][3] = {
     { "mario_hat", "mario_overalls", "mario_shoes" },
     { "luigi_hat", "luigi_overalls", "luigi_shoes" },
     { "wario_hat", "wario_overalls", "wario_shoes" },
-    { "yoshi_body", 0, 0 },
+    { "yoshi_body", "yoshi_shoes", 0 },
 };
 
 void cp_mod_read(void)
@@ -2033,10 +2164,29 @@ int pc_name_is_plain(const char *v)
 
 /* Build Yoshi's three records for VS row `row` out of the ROM's own body
    palette. 1 on success; 0 leaves Yoshi on the ROM and sets *why.
-   character-palettes' Custom passes `body_pick` (0xRRGGBB, else -1): the
-   row is then row 0 with its body group recoloured the way an online pick
-   recolours it (vs_classic_alias, then vs_group_pick on the body group). */
-int pc_build_yoshi(int row, long body_pick, const char **why)
+   character-palettes' Custom passes `body_pick` and `shoe_pick` (0xRRGGBB,
+   else -1): the row is then row 0 with its body group and its shoe group
+   recoloured the way an online pick recolours them (vs_palette_row:
+   vs_classic_alias, then vs_group_pick on the body group and on the shoe
+   group, each reading row 0). A part whose colour is the cartridge's own
+   drawn shade is no pick and keeps row 0's words, so Custom with both
+   defaults serves the ROM untouched. */
+static int pc_yoshi_part_pick(const u8 *pal, long rgb, int main_idx,
+                              vspal::u8 alias[3])
+{
+    vspal::u8 pk[3];
+    u16 m;
+    if (rgb < 0)
+        return 0;
+    pk[0] = (vspal::u8)(rgb >> 16);
+    pk[1] = (vspal::u8)(rgb >> 8);
+    pk[2] = (vspal::u8)rgb;
+    vspal::vs_classic_alias(pk, alias);
+    memcpy(&m, pal + main_idx * 2, 2);
+    return (vspal::rgb_word(alias, m) & 0x7fff) != (m & 0x7fff);
+}
+
+int pc_build_yoshi(int row, long body_pick, long shoe_pick, const char **why)
 {
     static const u16 kCount[3] = { 64, 16, 16 };
     static const u32 kOff[3] = { 0, 128, 160 };
@@ -2058,20 +2208,17 @@ int pc_build_yoshi(int row, long body_pick, const char **why)
         free(body);
         return 0;
     }
-    if (body_pick >= 0) {
-        /* a Custom body the cartridge's own drawn green is no pick */
-        vspal::u8 pk[3], al[3];
-        u16 m;
-        pk[0] = (vspal::u8)(body_pick >> 16);
-        pk[1] = (vspal::u8)(body_pick >> 8);
-        pk[2] = (vspal::u8)body_pick;
-        vspal::vs_classic_alias(pk, al);
-        memcpy(&m, body + dp + vspal::kBodyMain * 2, 2);
-        if ((vspal::rgb_word(al, m) & 0x7fff) == (m & 0x7fff)) {
-            free(body);
-            *why = "the body colour is the cartridge's own";
-            return 2;
-        }
+    vspal::u8 body_al[3], shoe_al[3];
+    const int custom = body_pick >= 0 || shoe_pick >= 0;
+    const int body_on = pc_yoshi_part_pick(body + dp, body_pick,
+                                           vspal::kBodyMain, body_al);
+    const int shoe_on = pc_yoshi_part_pick(body + dp, shoe_pick,
+                                           vspal::kShoeMain, shoe_al);
+    if (custom && !body_on && !shoe_on) {
+        /* Custom colours the cartridge's own drawn green and orange: no pick */
+        free(body);
+        *why = "the body and shoe colours are the cartridge's own";
+        return 2;
     }
     *why = "out of host memory";
     syn = (u8 *)malloc(64 * 2 + 16 * 2 + 16 * 2);
@@ -2085,17 +2232,16 @@ int pc_build_yoshi(int row, long body_pick, const char **why)
     /* the body keeps rows 1..3 exactly as authored and only row 0 moves;
        each head file gets the chosen row on its own, 16 colors, in place */
     memcpy(syn, body + dp, 128);
-    if (body_pick >= 0) {
+    if (custom) {
         u16 r0[16], out[16];
-        vspal::u8 pick[3], alias[3];
         memcpy(r0, body + dp, 32);
         memcpy(out, r0, 32);
-        pick[0] = (vspal::u8)(body_pick >> 16);
-        pick[1] = (vspal::u8)(body_pick >> 8);
-        pick[2] = (vspal::u8)body_pick;
-        vspal::vs_classic_alias(pick, alias);
-        vspal::vs_group_pick(r0, vspal::kBodyIdx, 4, vspal::kBodyMain, alias,
-                             out);
+        if (body_on)
+            vspal::vs_group_pick(r0, vspal::kBodyIdx, 4, vspal::kBodyMain,
+                                 body_al, out);
+        if (shoe_on)
+            vspal::vs_group_pick(r0, vspal::kShoeIdx, 2, vspal::kShoeMain,
+                                 shoe_al, out);
         memcpy(syn, out, 32);
         memcpy(syn + 128, out, 32);
         memcpy(syn + 160, out, 32);
@@ -2265,16 +2411,24 @@ void pc_custom(int c)
         return;
     }
     if (c == PC_YOSHI)
-        got = pc_build_yoshi(0, g_cpm.rgb[c][0], &why);
+        got = pc_build_yoshi(0, g_cpm.rgb[c][0], g_cpm.rgb[c][1], &why);
     else
         got = pc_build_bro(c, &why);
     if (got == 1) {
         g_pc[c].active = 1;
-        if (c == PC_YOSHI)
-            fprintf(stderr, "[mods] %s Custom: body %06lX, %u record(s)\n",
-                    CP_LOG_KEY[c], (unsigned long)g_cpm.rgb[c][0],
+        if (c == PC_YOSHI) {
+            /* an older package has no yoshi_shoes: say "ROM", not FFFFFF */
+            char sh[8];
+            if (g_cpm.rgb[c][1] >= 0)
+                snprintf(sh, sizeof sh, "%06lX",
+                         (unsigned long)(g_cpm.rgb[c][1] & 0xFFFFFF));
+            else
+                snprintf(sh, sizeof sh, "ROM");
+            fprintf(stderr, "[mods] %s Custom: body %06lX shoes %s, %u "
+                            "record(s)\n", CP_LOG_KEY[c],
+                    (unsigned long)(g_cpm.rgb[c][0] & 0xFFFFFF), sh,
                     g_pc[c].npatch);
-        else
+        } else
             fprintf(stderr, "[mods] %s Custom: hat %06lX overalls %06lX "
                             "shoes %06lX, %u record(s)\n", CP_LOG_KEY[c],
                     (unsigned long)(g_cpm.rgb[c][0] & 0xFFFFFF),
@@ -2342,7 +2496,7 @@ void pc_load(void)
 
         if (c == PC_YOSHI && row >= 0) {
             const char *why = "?";
-            if (pc_build_yoshi(row, -1, &why) == 1) {
+            if (pc_build_yoshi(row, -1, -1, &why) == 1) {
                 g_pc[c].active = 1;
                 fprintf(stderr, "[mods] %s %s: %u record(s) "
                                 "from the game's own four-player colors "
@@ -2424,6 +2578,9 @@ u32 character_palette_filter(unsigned fileID, u8 **data, u32 size)
                 fprintf(stderr, "[mods] %s: %s '%s' recolored, %u colors\n",
                         g_pc_label[c], p->path, p->name, p->count);
         }
+        if (c == PC_MARIO)
+            balloon_twins(g_pc[c].patch, g_pc[c].npatch, fileID, *data, size,
+                          g_pc_label[c]);
     }
     return size;
 }
@@ -3359,18 +3516,23 @@ void mod_claims(void (*claim)(unsigned fileID))
     }
     if (!pc_any() && palette_combo()) {
         palette_load();
-        if (g_pal_state > 0)
+        if (g_pal_state > 0) {
             for (i = 0; i < g_pal_npatch; ++i)
                 if (g_pal_patch[i].file_id)
                     claim(g_pal_patch[i].file_id);
+            balloon_twin_claims(g_pal_patch, g_pal_npatch, claim);
+        }
     }
     if (pc_any()) {
         pc_load();
         for (int c = 0; c < PC_COUNT; ++c)
-            if (g_pc[c].active)
+            if (g_pc[c].active) {
                 for (i = 0; i < g_pc[c].npatch; ++i)
                     if (g_pc[c].patch[i].file_id)
                         claim(g_pc[c].patch[i].file_id);
+                if (c == PC_MARIO)
+                    balloon_twin_claims(g_pc[c].patch, g_pc[c].npatch, claim);
+            }
     }
     if (getenv("SM64DS_VS_CHAR_COLORS")) {
         vcc_load();
