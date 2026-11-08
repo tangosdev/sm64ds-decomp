@@ -4,8 +4,7 @@
 namespace GXS {
 void SetGraphicsMode(int a);
 }
-extern "C" void MenuGfx_InitSubEngine(void)
-{
+extern "C" void MenuGfx_InitSubEngine(void) {
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(0x100);
     GXS::SetGraphicsMode(0);

@@ -1,8 +1,7 @@
 //cpp
 #include "GX.h"
 
-extern "C" void MenuGfx_InitMainEngine(void)
-{
+extern "C" void MenuGfx_InitMainEngine(void) {
     GX::SetBankForTex(3);
     GX::SetBankForTexPltt(0x20);
     GX::SetBankForOBJ(0x40);
