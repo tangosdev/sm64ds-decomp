@@ -4066,7 +4066,7 @@
     "src/ui/hud/d_cap_icon.cpp#_ZN10dCapIcon_cC1Ev": "andrewboudreau",
     "src/game/stages/d_s_title.cpp#_ZN10dScTitle_cD1Ev": "tangosdev",
     "src/game/stages/d_s_title.cpp#_ZN10dScTitle_cD0Ev": "tangosdev",
-    "src/game/stages/d_s_title.cpp#func_ov003_020ad6ec": "tangosdev",
+    "src/game/stages/d_s_title.cpp#TitleScrollLevelList": "tangosdev",
     "src/game/stages/d_s_title.cpp#_ZN10dScTitle_c16OnPendingDestroyEv": "tangosdev",
     "src/game/stages/d_s_title.cpp#_ZN10dScTitle_c6RenderEv": "tangosdev",
     "src/game/stages/d_s_title.cpp#_ZN10dScTitle_c8BehaviorEv": "ruspecial",
