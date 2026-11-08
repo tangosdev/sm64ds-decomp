@@ -43,7 +43,7 @@ struct daBook_c : dEnemyBase_c {
     dExtSimpleModel_c mModel;                                 /* 0x174 */
     dExtShadowModel_c                  mShadowModel;          /* 0x1c4 */
     /* Drop-shadow matrix: InitResources copies IDENTITY_MATRIX4X3 here and
-       func_ov020_0211216c writes the position, divided by 8, into its
+       UpdateModelMatrix writes the position, divided by 8, into its
        translation row before handing it to DropShadowRadHeight. */
     Matrix4x3                    mShadowMat;            /* 0x1ec */
     dCcAcPos_c    mdCcAcPos_c; /* 0x21c */
@@ -52,8 +52,8 @@ struct daBook_c : dEnemyBase_c {
        dActor_c::FindWithID. Nothing in this file writes it after the zero
        InitResources stores, so the owner is another actor. */
     u32                          mLinkedActorID;        /* 0x418 */
-    /* The player that touched or hit this book. func_ov020_021115ac stores it;
-       func_ov020_02111340 and the player-damage paths read it back. */
+    /* The player that touched or hit this book. GetHitType stores it;
+       SpawnShootBook and the player-damage paths read it back. */
     daPly_c *mTouchedPlayer;                            /* 0x41c */
     s32                          mKind;                 /* 0x420 -- Kind */
     s32                          mState;                /* 0x424 -- State */
@@ -67,7 +67,7 @@ struct daBook_c : dEnemyBase_c {
     /* Cylinder offset handed to dCcAcPos_c::Init and SetPosRelativeToActor. */
     Vector3                      mClsnOffset;           /* 0x438 */
     /* Direction from the book to the closest player, as of the last
-       func_ov020_021112b0. Pitch and yaw are atan2 results; roll is the
+       AimAtPlayer. Pitch and yaw are atan2 results; roll is the
        constant 0x4000 the wind-up turns toward. */
     s16                          mAimPitch;             /* 0x444 */
     s16                          mAimYaw;               /* 0x446 */
@@ -77,7 +77,7 @@ struct daBook_c : dEnemyBase_c {
        through the wind-up. It is copied into mScaleX/Y/Z and sizes the collider. */
     s32                          mUniformScale;         /* 0x44c */
     /* Nonzero once the animated model is in use: Render draws mAnmModel
-       instead of mModel, and func_ov020_0211216c builds the matrix in it. */
+       instead of mModel, and UpdateModelMatrix builds the matrix in it. */
     u8 mUsesAnmModel; /* 0x450 */
     u8  pad_451[0x3];
 
@@ -93,22 +93,23 @@ struct daBook_c : dEnemyBase_c {
     int InitResources();
     int Render();
 
-    /* State handlers and helpers, in ROM order. They keep their ROM-address
-       names: no EAD name survives for any of them. */
-    void func_ov020_021112b0();   /* aims the book at the closest player */
-    void func_ov020_02111340();   /* wrong push: fires a SHOOT_BOOK beside the shelf */
-    int  func_ov020_02111418();   /* acts on the func_ov020_021115ac result; 1 = book gone */
-    int  func_ov020_021115ac();   /* reads the collider, returns a HIT_ result */
-    void func_ov020_0211174c();   /* KIND_SWITCH_BOOK state machine */
-    void func_ov020_021119dc();   /* STATE_YOSHI_SKID */
-    void func_ov020_02111aa8();   /* STATE_SPAWNED */
-    void func_ov020_02111b28();   /* STATE_FLY */
-    void func_ov020_02111c30();   /* STATE_WIND_UP */
-    void func_ov020_02111ee0();   /* STATE_TILT_BACK */
-    void func_ov020_02111fc4();   /* STATE_WAIT */
-    void func_ov020_02112080();   /* KIND_FLYING_BOOK state machine */
-    void func_ov020_02112110();   /* drops the coin, puffs, removes the actor */
-    void func_ov020_0211216c();   /* rebuilds the model matrix and the drop shadow */
+    /* State handlers and helpers, in ROM order. No EAD name survives for
+       any of them: StateX follows the State enum, CheckAttacks and Die the
+       N64 bookend's obj_check_attacks and obj_die_if_health_non_positive. */
+    void AimAtPlayer();   /* aims the book at the closest player */
+    void SpawnShootBook();   /* wrong push: fires a SHOOT_BOOK beside the shelf */
+    int  CheckAttacks();   /* acts on the GetHitType result; 1 = book gone */
+    int  GetHitType();   /* reads the collider, returns a HIT_ result */
+    void UpdateSwitchBook();   /* KIND_SWITCH_BOOK state machine */
+    void StateYoshiSkid();   /* STATE_YOSHI_SKID */
+    void StateSpawned();   /* STATE_SPAWNED */
+    void StateFly();   /* STATE_FLY */
+    void StateWindUp();   /* STATE_WIND_UP */
+    void StateTiltBack();   /* STATE_TILT_BACK */
+    void StateWait();   /* STATE_WAIT */
+    void UpdateFlyingBook();   /* KIND_FLYING_BOOK state machine */
+    void Die();   /* drops the coin, puffs, removes the actor */
+    void UpdateModelMatrix();   /* rebuilds the model matrix and the drop shadow */
 
     /* Which of the two behaviours the profile selected; InitResources sets it
        from actorID and Behavior switches on it. */

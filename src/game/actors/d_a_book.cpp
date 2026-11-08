@@ -28,7 +28,9 @@
  * not a dBgCh_Actr method; the call is dBgCh_Actr_UpdateContinuous_Veneer,
  * not UpdateContinuous. data_ov020_02114aa0 and 02114ab8 are model handles,
  * 02114aa8 and 02114ab0 animation handles; filePtr is the loaded file.
- * State helpers keep address names. The ROM records no English name for them.
+ * The ROM records no English name for the state helpers. StateX follows the
+ * header's State enum; CheckAttacks and Die follow the N64 bookend's
+ * obj_check_attacks and obj_die_if_health_non_positive; the rest are coined.
  */
 
 #include "common.h"
@@ -67,7 +69,7 @@ enum {
     kSfxTakeOff = 0x166     /* a book starts to move */
 };
 
-/* What func_ov020_021115ac found when it looked at the collider. */
+/* What GetHitType found when it looked at the collider. */
 enum {
     HIT_NONE = 0,
     HIT_ATTACKED = 1,       /* hit by an attack, or bumped from below */
@@ -151,7 +153,7 @@ daBookGen_c::~daBookGen_c()
 
 /* Points the book at the closest player: mAimYaw and mAimPitch are the angles
  * from the book to the player, mAimRoll a constant quarter turn. */
-void daBook_c::func_ov020_021112b0()
+void daBook_c::AimAtPlayer()
 {
     daPly_c *player = ClosestPlayer();
     if (!player)
@@ -171,7 +173,7 @@ void daBook_c::func_ov020_021112b0()
 /* BOOK_SWITCH, wrong book pushed: fires a SHOOT_BOOK from beside the partner,
  * 250 units to its -x or +x side (one random bit picks it), 65 units up,
  * at the touching player's depth and turned a quarter turn to cross it. */
-void daBook_c::func_ov020_02111340()
+void daBook_c::SpawnShootBook()
 {
     int bit = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
     if (mTouchedPlayer == 0)
@@ -209,19 +211,19 @@ void daBook_c::func_ov020_02111340()
     }
 }
 
-/* What a flying book does about whatever func_ov020_021115ac found. Returns 1
+/* What a flying book does about whatever GetHitType found. Returns 1
  * when the book is gone. The first count handed to daPly_c::Hurt is 0 for a
  * metal player, 2 for KILLER_BOOK and 1 otherwise; touching the player also
  * clears mCoinType, so no blue coin drops. */
-int daBook_c::func_ov020_02111418()
+int daBook_c::CheckAttacks()
 {
-    int r = func_ov020_021115ac();
-    if (r == HIT_ATTACKED) { func_ov020_02112110(); return 1; }
+    int r = GetHitType();
+    if (r == HIT_ATTACKED) { Die(); return 1; }
     if (r == HIT_METAL_PLAYER) {
         Vector3 v;
         v.x = mPosX; v.y = mPosY; v.z = mPosZ;
         mTouchedPlayer->Hurt(v, 0, 0xc000, 1, 0, 1);
-        func_ov020_02112110();
+        Die();
         return 1;
     }
     if (r == HIT_TOUCHED_PLAYER) {
@@ -236,12 +238,12 @@ int daBook_c::func_ov020_02111418()
             mTouchedPlayer->Hurt(v, 1, 0xc000, 1, 0, 1);
         }
         mCoinType = 0;
-        func_ov020_02112110();
+        Die();
         return 1;
     }
     if (r != HIT_STOMPED) return 0;
     mTouchedPlayer->Bounce(0x28000);
-    func_ov020_02112110();
+    Die();
     return 1;
 }
 
@@ -251,7 +253,7 @@ int daBook_c::func_ov020_02111418()
  * only when nothing else applied. mTouchedPlayer is set as soon as a player is known to be
  * involved. The ROM reserves a 12-byte frame it never touches; two
  * address-taken volatile locals reserve it with no emitted code. */
-int daBook_c::func_ov020_021115ac()
+int daBook_c::GetHitType()
 {
     u32 id;
     daPly_c *found;
@@ -323,7 +325,7 @@ int daBook_c::func_ov020_021115ac()
  * daTrsTrap_c bookshelf: the low three bits of its mBookFlags record which
  * books have been pushed, bit 3 is the puzzle armed, and its mState is the
  * verdict (2 slides the shelf away, 3 removes it). */
-void daBook_c::func_ov020_0211174c()
+void daBook_c::UpdateSwitchBook()
 {
     daTrsTrap_c *partner;
 
@@ -360,7 +362,7 @@ void daBook_c::func_ov020_0211174c()
     {
         /* an attack or a metal-player touch turns the collider on (clears
          * flags bit 0) and starts the push */
-        if (func_ov020_021115ac() <= 0)
+        if (GetHitType() <= 0)
             return;
         mState = STATE_SWITCH_PUSH;
         mdCcAcPos_c.flags |= 1;
@@ -377,7 +379,7 @@ void daBook_c::func_ov020_0211174c()
         {
             int idx = param1;
             if ((partner->mBookFlags & 7) != data_ov020_02114828[idx])
-                func_ov020_02111340();
+                SpawnShootBook();
         }
         mTouchedPlayer = 0;
         func_ov063_0211cae8(partner, (1u << param1) & 0xff);
@@ -418,7 +420,7 @@ void daBook_c::func_ov020_0211174c()
  * second argument in word 6 of mWithMeshClsn (the radius, as daBgSnmBdy_c
  * reads it): 100 units on every skid frame, back to Init's 50 when the skid
  * ends. */
-void daBook_c::func_ov020_021119dc()
+void daBook_c::StateYoshiSkid()
 {
     func_0203568c((int *)&mWithMeshClsn, 0x64000);
     if (mSpitOutTimer != 0) {
@@ -441,7 +443,7 @@ void daBook_c::func_ov020_021119dc()
 
 /* STATE_SPAWNED: a SHOOT_BOOK's first three frames. It never drops a coin;
  * on the third frame it becomes STATE_FLY at full speed with the collider on. */
-void daBook_c::func_ov020_02111aa8()
+void daBook_c::StateSpawned()
 {
     mCoinType = 0;
     STATE_TIMER++;
@@ -458,17 +460,17 @@ void daBook_c::func_ov020_02111aa8()
 /* STATE_FLY: moves by the velocity in mSpeedX/mVertSpeed/mSpeedZ and is gone
  * when it hits the player, the ground, or a wall that faces it (the wall's
  * normal more than a quarter turn from the book's heading). */
-void daBook_c::func_ov020_02111b28() {
+void daBook_c::StateFly() {
     if (mUsesAnmModel != 0) {
         mAnmModel.Advance();
     }
     AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
-    if (func_ov020_02111418() != 0)
+    if (CheckAttacks() != 0)
         return;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnGround() != 0) {
         mCoinType = 0;
-        func_ov020_02112110();
+        Die();
         func_0201267c(kSfxImpact, &mCamSpacePos);
         return;
     }
@@ -483,7 +485,7 @@ void daBook_c::func_ov020_02111b28() {
             return;
     }
     mCoinType = 0;
-    func_ov020_02112110();
+    Die();
     func_0201267c(kSfxImpact, &mCamSpacePos);
 }
 
@@ -492,9 +494,9 @@ void daBook_c::func_ov020_02111b28() {
  * it rolls, from 0x13 it swells toward 1.5 times size, growing the collider
  * with it. When the animation finishes it switches to the flight animation,
  * aims one last time and launches along that direction at kFlightSpeed. */
-void daBook_c::func_ov020_02111c30()
+void daBook_c::StateWindUp()
 {
-    if (func_ov020_02111418())
+    if (CheckAttacks())
         return;
 
     mAnmModel.Advance();
@@ -508,7 +510,7 @@ void daBook_c::func_ov020_02111c30()
         mAnmModel.SetAnim((BCA_File *)data_ov020_02114ab0.filePtr, 0, 0x1000, 0);
         mState = STATE_FLY;
         mHorzSpeed = 0;
-        func_ov020_021112b0();
+        AimAtPlayer();
 
         mPrevAngleX = -mAimPitch;
         mAngleX = mPrevAngleX;
@@ -529,7 +531,7 @@ void daBook_c::func_ov020_02111c30()
     if (STATE_TIMER < 5)
         return;
 
-    func_ov020_021112b0();
+    AimAtPlayer();
     ApproachLinear(mAngleY, mAimYaw, 0x7d0);
     ApproachLinear(mAngleX, -mAimPitch, 0x7d0);
 
@@ -557,9 +559,9 @@ void daBook_c::func_ov020_02111c30()
 /* STATE_TILT_BACK: tips the book back by 45 degrees, then switches mAnmModel
  * to the animated model, starts its animation, lifts the book 50 units and
  * moves the collider down 25. */
-void daBook_c::func_ov020_02111ee0()
+void daBook_c::StateTiltBack()
 {
-    int r = func_ov020_02111418();
+    int r = CheckAttacks();
     if (r)
         return;
     if (ApproachLinear(mAngleX, -0x2000, 0x200)) {
@@ -584,7 +586,7 @@ void daBook_c::func_ov020_02111ee0()
 /* STATE_WAIT (KILLER_BOOK): when the closest player is within 400 units and
  * within 0x3000 (67.5 degrees) of the book's heading, starts tilting back and
  * switches its collider on. */
-void daBook_c::func_ov020_02111fc4()
+void daBook_c::StateWait()
 {
     Vector3 v;
     daPly_c *p = ClosestPlayer();
@@ -611,22 +613,22 @@ void daBook_c::func_ov020_02111fc4()
 }
 
 /* The flying books' state machine; mState 6..10 belong to
- * func_ov020_0211174c. */
-void daBook_c::func_ov020_02112080()
+ * UpdateSwitchBook. */
+void daBook_c::UpdateFlyingBook()
 {
     switch (mState) {
-    case STATE_WAIT: func_ov020_02111fc4(); break;
-    case STATE_TILT_BACK: func_ov020_02111ee0(); break;
-    case STATE_WIND_UP: func_ov020_02111c30(); break;
-    case STATE_FLY: func_ov020_02111b28(); break;
-    case STATE_SPAWNED: func_ov020_02111aa8(); break;
-    case STATE_YOSHI_SKID: func_ov020_021119dc(); break;
+    case STATE_WAIT: StateWait(); break;
+    case STATE_TILT_BACK: StateTiltBack(); break;
+    case STATE_WIND_UP: StateWindUp(); break;
+    case STATE_FLY: StateFly(); break;
+    case STATE_SPAWNED: StateSpawned(); break;
+    case STATE_YOSHI_SKID: StateYoshiSkid(); break;
     }
 }
 
 /* The end of a book: drops a blue coin if mCoinType is set, puffs smoke and
  * removes the actor. */
-void daBook_c::func_ov020_02112110() {
+void daBook_c::Die() {
     if (mCoinType) {
         int param = mAreaId;
         dActor_c::Spawn(kBlueCoinActorId, 2, mPos, 0, param, -1);
@@ -639,7 +641,7 @@ void daBook_c::func_ov020_02112110() {
  * matrices are in eighths of a unit, so position >> 3), in the animated model
  * once it is in use. KILLER_BOOK also places its drop shadow, which sits at
  * the home height. */
-void daBook_c::func_ov020_0211216c()
+void daBook_c::UpdateModelMatrix()
 {
     Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, mAngleX, mAngleY, mAngleZ);
@@ -701,18 +703,18 @@ int daBook_c::Behavior()
             mVertSpeed = 0;
             mHorzSpeed = 0x8000;
         }
-        func_ov020_0211216c();
+        UpdateModelMatrix();
         return 1;
     }
     switch (mKind) {
     case KIND_FLYING_BOOK:
-        func_ov020_02112080();
+        UpdateFlyingBook();
         break;
     case KIND_SWITCH_BOOK:
-        func_ov020_0211174c();
+        UpdateSwitchBook();
         break;
     }
-    func_ov020_0211216c();
+    UpdateModelMatrix();
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.SetPosRelativeToActor(mClsnOffset);
     mdCcAcPos_c.Update();

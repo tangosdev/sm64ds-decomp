@@ -65,98 +65,98 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_021112b0Ev",
+      "symbol": "_ZN8daBook_c11AimAtPlayerEv",
       "address": "0x021112b0",
       "size": "0x00000090",
       "legacy_source": "src/func_ov020_021112b0.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02111340Ev",
+      "symbol": "_ZN8daBook_c14SpawnShootBookEv",
       "address": "0x02111340",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov020_02111340.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02111418Ev",
+      "symbol": "_ZN8daBook_c12CheckAttacksEv",
       "address": "0x02111418",
       "size": "0x00000194",
       "legacy_source": "src/func_ov020_02111418.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_021115acEv",
+      "symbol": "_ZN8daBook_c10GetHitTypeEv",
       "address": "0x021115ac",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov020_021115ac.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_0211174cEv",
+      "symbol": "_ZN8daBook_c16UpdateSwitchBookEv",
       "address": "0x0211174c",
       "size": "0x00000290",
       "legacy_source": "src/func_ov020_0211174c.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_021119dcEv",
+      "symbol": "_ZN8daBook_c14StateYoshiSkidEv",
       "address": "0x021119dc",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov020_021119dc.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02111aa8Ev",
+      "symbol": "_ZN8daBook_c12StateSpawnedEv",
       "address": "0x02111aa8",
       "size": "0x00000080",
       "legacy_source": "src/func_ov020_02111aa8.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02111b28Ev",
+      "symbol": "_ZN8daBook_c8StateFlyEv",
       "address": "0x02111b28",
       "size": "0x00000108",
       "legacy_source": "src/func_ov020_02111b28.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02111c30Ev",
+      "symbol": "_ZN8daBook_c11StateWindUpEv",
       "address": "0x02111c30",
       "size": "0x000002b0",
       "legacy_source": "src/func_ov020_02111c30.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02111ee0Ev",
+      "symbol": "_ZN8daBook_c13StateTiltBackEv",
       "address": "0x02111ee0",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov020_02111ee0.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02111fc4Ev",
+      "symbol": "_ZN8daBook_c9StateWaitEv",
       "address": "0x02111fc4",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov020_02111fc4.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02112080Ev",
+      "symbol": "_ZN8daBook_c16UpdateFlyingBookEv",
       "address": "0x02112080",
       "size": "0x00000090",
       "legacy_source": "src/func_ov020_02112080.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_02112110Ev",
+      "symbol": "_ZN8daBook_c3DieEv",
       "address": "0x02112110",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov020_02112110.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN8daBook_c19func_ov020_0211216cEv",
+      "symbol": "_ZN8daBook_c17UpdateModelMatrixEv",
       "address": "0x0211216c",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov020_0211216c.cpp",
@@ -624,7 +624,8 @@
     "Reconstructed source-style factory symbol daBookGen_c_classInit: class identity is ROM-proven by RTTI/allocation/vtable and profile identity by literal ROM ID BOOK_GENERATOR; classInit spelling is later-EAD lineage reconstruction. Historical alias: BookShotSpawner_Spawn.",
     "classInit fold: the four registry factories daBook_c_classInit_BOOK_SWITCH (0x021127f4, 0x5c), daBookGen_c_classInit (0x02112850, 0x30), daBook_c_classInit_KILLER_BOOK (0x02112880, 0x5c) and daBook_c_classInit_SHOOT_BOOK (0x021128dc, 0x5c) abut each other with no gap at the unit's high end, ending where daChair_c (src/game/actors/d_a_chair.cpp) begins at 0x02112938. Neither class declares a constructor, so each factory is a plain `return new`.",
     "Deslop+re-home (src/game/actors/d_a_book.cpp -> src/game/actors/d_a_book.cpp): the fourteen func_ov020_0211* helpers are daBook_c methods now (_ZN8daBook_c19func_ov020_0211xxxxEv in symbols.txt; address kept as the method name, no EAD name survives). The BOOK_SWITCH partner is typed daTrsTrap_c: PARTNER_BOOKS/PARTNER_PHASE offset reads became mBookFlags/mState member accesses, and the dExtFrameCtrl_c-base macro gave way to mModelAnim.Advance()/Finished() through the real dExtFrameCtrl_c subobject at +0x160. Verified: 31/31 MATCH.",
-    "Collision property member calls replace local helper declarations. Reconciled 4 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (58 sections, 293 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 4 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (58 sections, 293 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "#821 batch 37: the fourteen helpers are named. The six state handlers take the header's State enum (StateWait, StateTiltBack, StateWindUp, StateFly, StateSpawned, StateYoshiSkid); CheckAttacks (02111418) and Die (02112110) follow the N64 bookend's obj_check_attacks and obj_die_if_health_non_positive; UpdateModelMatrix (0211216c) is the in-tree spelling; AimAtPlayer, SpawnShootBook, GetHitType, UpdateSwitchBook and UpdateFlyingBook are coined from the bodies, with N64 flying_bookend_switch.inc.c analogs recorded in symbols/actor_renames.tsv."
   ],
   "compiler_only_output": [
     {

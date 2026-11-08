@@ -31499,59 +31499,59 @@
     },
     "ov020:0x021112b0": {
       "author": "ruspecial",
-      "name": "_ZN8daBook_c19func_ov020_021112b0Ev"
+      "name": "_ZN8daBook_c11AimAtPlayerEv"
     },
     "ov020:0x02111340": {
       "author": "ruspecial",
-      "name": "_ZN8daBook_c19func_ov020_02111340Ev"
+      "name": "_ZN8daBook_c14SpawnShootBookEv"
     },
     "ov020:0x02111418": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_02111418Ev"
+      "name": "_ZN8daBook_c12CheckAttacksEv"
     },
     "ov020:0x021115ac": {
       "author": "ruspecial",
-      "name": "_ZN8daBook_c19func_ov020_021115acEv"
+      "name": "_ZN8daBook_c10GetHitTypeEv"
     },
     "ov020:0x0211174c": {
       "author": "ruspecial",
-      "name": "_ZN8daBook_c19func_ov020_0211174cEv"
+      "name": "_ZN8daBook_c16UpdateSwitchBookEv"
     },
     "ov020:0x021119dc": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_021119dcEv"
+      "name": "_ZN8daBook_c14StateYoshiSkidEv"
     },
     "ov020:0x02111aa8": {
       "author": "lunavyqo",
-      "name": "_ZN8daBook_c19func_ov020_02111aa8Ev"
+      "name": "_ZN8daBook_c12StateSpawnedEv"
     },
     "ov020:0x02111b28": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_02111b28Ev"
+      "name": "_ZN8daBook_c8StateFlyEv"
     },
     "ov020:0x02111c30": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_02111c30Ev"
+      "name": "_ZN8daBook_c11StateWindUpEv"
     },
     "ov020:0x02111ee0": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_02111ee0Ev"
+      "name": "_ZN8daBook_c13StateTiltBackEv"
     },
     "ov020:0x02111fc4": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_02111fc4Ev"
+      "name": "_ZN8daBook_c9StateWaitEv"
     },
     "ov020:0x02112080": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_02112080Ev"
+      "name": "_ZN8daBook_c16UpdateFlyingBookEv"
     },
     "ov020:0x02112110": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_02112110Ev"
+      "name": "_ZN8daBook_c3DieEv"
     },
     "ov020:0x0211216c": {
       "author": "tangosdev",
-      "name": "_ZN8daBook_c19func_ov020_0211216cEv"
+      "name": "_ZN8daBook_c17UpdateModelMatrixEv"
     },
     "ov020:0x02112244": {
       "author": "tangosdev",
