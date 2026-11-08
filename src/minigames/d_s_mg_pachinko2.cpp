@@ -1493,22 +1493,16 @@ void dScMgPachinko2_c::DrawCountdown() {
 }
 
 void dScMgPachinko2_c::UpdateCountdown() {
-    unsigned char *q;
-    unsigned short *h;
-    unsigned short t;
     if (mCountdown == 0)
         return;
-    q = &mCountdownTick;
-    *q += 1;
+    mCountdownTick++;
     if (mCountdownTick < 0x3c)
         return;
     mCountdownTick = 0;
-    h = &mCountdown;
-    *h -= 1;
-    t = mCountdown;
-    if (t > 0xa)
+    mCountdown--;
+    if (mCountdown > 0xa)
         Sound::PlayBank2_2D(0xa8);
-    else if (t > 3)
+    else if (mCountdown > 3)
         Sound::PlayBank2_2D(0xa7);
     else
         Sound::PlayBank2_2D(0xa6);
@@ -1789,10 +1783,7 @@ void dScMgPachinko2_c::StartCountdown() {
     mCountdown = 0x1e;
     mCountdownTick = 0;
     mCountdownShown = 1;
-    {
-        unsigned char *p = &mCountdownArmed;
-        *p += 1;
-    }
+    mCountdownArmed++;
 }
 
 void dScMgPachinko2_c::Ball_StateWaitGrab(int arg1) {
@@ -2123,11 +2114,9 @@ void dScMgPachinko2_c::Ball_StateScored(int i) {
 
 void dScMgPachinko2_c::UpdateNextBall() {
     int i;
-    unsigned short *q;
     if (mNextBallDelay == 0)
         return;
-    q = &mNextBallDelay;
-    *q = *q - 1;
+    mNextBallDelay--;
     if ((short)mNextBallDelay > 0)
         return;
     mNextBallDelay = 0;

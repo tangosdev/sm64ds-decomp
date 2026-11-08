@@ -70,7 +70,7 @@ void dPa_c::level_c::simpleCallback_c::SpawnParticles(
 {
     system.callbackFlags |= 2;
     system.callbackValue = value;
-    func_02049d60(data_0209ee74->mManager, &system);
+    func_02049d60(gParticleSysTracker->mManager, &system);
 }
 
 int dPa_c::level_c::simpleCallback_c::OnUpdate(

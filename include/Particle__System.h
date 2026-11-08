@@ -38,11 +38,15 @@ struct ParticleList {
 };
 
 struct System {
-    struct Flags {
-        u32 unk_000 : 6;
-        u32 unk_006 : 6;
-        u32 unk_00c : 6;
-        u32 unused  : 14;
+    /* The polygon IDs the system's particles cycle through, one per drawn
+       particle: the draw routines put `current` into POLYGON_ATTR bits
+       24-29 and wrap it from max back to min. AddSystem seeds min and max
+       from the manager. */
+    struct PolygonIDs {
+        u32 min : 6;
+        u32 max : 6;
+        u32 current : 6;
+        u32 unused : 14;
     };
 
     /* The manager's free/active list link: func_0204d958/func_0204d9a0
@@ -97,14 +101,17 @@ struct System {
     /* func_0204a730 calls it each update when set; func_0204ae2c clears it. */
     void (*callback)(void *); /* 0x68 */
     u8 pad_06c[0x08];
-    Flags flags;                   /* 0x74 */
+    PolygonIDs polygonIDs; /* 0x74 */
 
     static System *FromUniqueID(u32 uniqueID);
     /* Unnamed parameters: a name here numbers @NNN in every includer. */
     static void *NewSimple(u32, Fix12i, Fix12i, Fix12i);
     static int New(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *, Callback *);
     static u32 NewRipple(Fix12i, Fix12i, Fix12i);
+    static u32 NewRedFlame(Fix12i, Fix12i, Fix12i);
+    static u32 NewBlueFlame(Fix12i, Fix12i, Fix12i);
     static void NewBigSplash(Fix12i, Fix12i, Fix12i);
+    static u32 NewCheckYogan(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
     static u32 NewUnkCallback818(u32, u32, Fix12i, Fix12i, Fix12i, const Vector3_16f *);
     /* Last parameter is u8. unsigned int shrinks a caller and reloads the
        argument as a word; the matched body loads a byte. */
@@ -112,6 +119,7 @@ struct System {
 };
 
 void RunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
+void MegaRunningSlidingDustAt(Fix12i, Fix12i, Fix12i);
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
@@ -120,6 +128,6 @@ typedef char System_size_must_be_0x78[sizeof(System) == 0x78 ? 1 : -1];
 
 }
 
-extern "C" Particle::SysTracker *data_0209ee74;
+extern "C" Particle::SysTracker *gParticleSysTracker;
 
 #endif

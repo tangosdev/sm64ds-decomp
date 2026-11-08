@@ -235,7 +235,7 @@ void daOnms_c::StateKnocked()
         mHorzSpeed = 0;
         mVertSpeed = 0;
         func_02012694(0x178, CamPos(this));
-    } else if (floor->surface.clps.func_02037e84() == 8) {
+    } else if (floor->surface.clps.GetSoundType() == 8) {
         /* The player's position is read through p: reading o->mPosX
            directly changes the code. */
         dActor_c *o;

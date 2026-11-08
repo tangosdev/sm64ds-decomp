@@ -370,7 +370,6 @@ extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int AngleDiff(int a, int b);
 extern struct S18a data_0209f4a4[];
 extern u32 func_02022a4c(Fix12i x, Fix12i y, Fix12i z);
-extern void func_02022b04(Fix12i x, Fix12i y, Fix12i z);
 extern u32 func_02022cbc(int uniqueID, int effectID, s32 x, s32 y, s32 z, int dir);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir);
 extern int func_ov002_020d1164(void *c);
@@ -2156,7 +2155,7 @@ void daPly_c::func_ov002_020bf88c() {
     if (gSubSoundID == 0x2e)
         return;
     if (mIsMega)
-        func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
+        Particle::MegaRunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
     else
         Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
 }
@@ -2171,7 +2170,7 @@ void daPly_c::func_ov002_020bf90c() {
         return;
 
     if (mIsMega != 0)
-        func_02022b04(this->mPosX, this->mPosY, this->mPosZ);
+        Particle::MegaRunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
     else
         Particle::RunningSlidingDustAt(this->mPosX, this->mPosY, this->mPosZ);
 
@@ -2228,12 +2227,12 @@ int daPly_c::func_ov002_020bfa74() {
     s32 scale;
 
     if (mSurfaceType != 0xb) return 0;
-    if (mClpsWord1Lo != 0xff) {
+    if (mFloorPathID != 0xff) {
         PathPtr path;
         Vector3_16f dir;
         Vector3 nodes[2];
         Vector3 vel;
-        path.FromID(mClpsWord1Lo);
+        path.FromID(mFloorPathID);
         n = path.NumNodes();
         for (i = 0; i < n; i++) {
             path.GetNode(nodes[i], i);
@@ -2367,7 +2366,7 @@ int daPly_c::func_ov002_020c0108(int p1) {
     if (this->mSurfaceType == 0xb)
         return 0;
 
-    if (mClpsWord1Lo != 0xff) {
+    if (mFloorPathID != 0xff) {
         s32 s;
         s32 iX, iY;
         s32 w;
@@ -2378,7 +2377,7 @@ int daPly_c::func_ov002_020c0108(int p1) {
         Vector3 nodes[3];
         PathPtr path;
 
-        path.FromID(mClpsWord1Lo);
+        path.FromID(mFloorPathID);
         numNodes = path.NumNodes();
 
         for (i = 0; i < numNodes; i++) {
@@ -3003,11 +3002,11 @@ void daPly_c::func_ov002_020c14b8() {
 
 void daPly_c::SetFloorSurfaceInfo(const dBgPi &hit) {
     Vector3 v;
-    mClpsWord1Lo = hit.surface.clps.func_02037e90();
+    mFloorPathID = hit.surface.clps.GetPathID();
     mSurfaceType = hit.surface.clps.GetSurfaceType();
-    mClpsBits15_18 = hit.surface.clps.func_02037e48();
-    mClpsBits6_11 = hit.surface.clps.func_02037e68();
-    mGroundSoundType = hit.surface.clps.func_02037e84();
+    mFloorCameraBehavior = hit.surface.clps.GetCameraBehavior();
+    mFloorViewID = hit.surface.clps.GetViewID();
+    mGroundSoundType = hit.surface.clps.GetSoundType();
     if (mFloorClass == 1)
         return;
     mFloorClass = hit.surface.clps.GetFloorClass();
@@ -9865,7 +9864,7 @@ int func_ov002_020cf20c(char* c) {
         if (line.surface.clps.GetSurfaceType() == 3) {
             ::Vector3 clsnPos = line.GetClsnPos();
             dCamera_c *cam = data_0209f318;
-            int t = line.surface.clps.func_02037e48();
+            int t = line.surface.clps.GetCameraBehavior();
             cam->func_0200ca14(self->mPlayerNo, t);
             int ret = clsnPos.y;
             return ret;
@@ -10720,8 +10719,8 @@ int daPly_c::St_WallSlide_Main() {
         this->ChangeState(data_ov002_0211013c);
     } else {
         if ((*((unsigned char *)((char *)&mIsMega))) != 0) {
-            func_02022b04(*((int *)((char *)&mPosX)), *((int *)((char *)&mPosY)),
-                          *((int *)((char *)&mPosZ)));
+            Particle::MegaRunningSlidingDustAt(
+                *((int *)((char *)&mPosX)), *((int *)((char *)&mPosY)), *((int *)((char *)&mPosZ)));
         } else {
             Particle::RunningSlidingDustAt(*((int *)((char *)&mPosX)), *((int *)((char *)&mPosY)),
                                            *((int *)((char *)&mPosZ)));
@@ -12523,7 +12522,7 @@ void daPly_c::func_ov002_020d45c0() {
             if (*(u8*)((char*)data_0209f4ac + gActivePlayerSlot * 0x18) != 0
                 || (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x800)) {
                 if (mIsMega != 0)
-                    func_02022b04(mPosX, mPosY, mPosZ);
+                    Particle::MegaRunningSlidingDustAt(mPosX, mPosY, mPosZ);
                 else
                     Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
             }
@@ -12535,7 +12534,7 @@ void daPly_c::func_ov002_020d45c0() {
     if (mStateArg != 0) {
         if (mStateWaitTimer != 0) {
             if (mIsMega != 0)
-                func_02022b04(mPosX, mPosY, mPosZ);
+                Particle::MegaRunningSlidingDustAt(mPosX, mPosY, mPosZ);
             else
                 Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
         }
@@ -17920,7 +17919,7 @@ int func_ov002_020de328(daPly_c *player) {
 }
 
 extern "C" {
-int func_ov002_020de33c(daPly_c *c, int a) {
+int func_ov002_020de33c(daPly_c *c, void *actor) {
     daPly_c *player = (daPly_c *)c;
     if (player->mIsNoControl == 0 && !((daPly_c *)c)->IsState(data_ov002_021102bc) &&
         !((daPly_c *)c)->IsState(data_ov002_02110484)) {
@@ -17928,7 +17927,7 @@ int func_ov002_020de33c(daPly_c *c, int a) {
     }
     return 0;
 ok:
-    player->mAttachedActor = a;
+    player->mAttachedActor = (s32)actor;
     ((daPly_c *)c)->ChangeState(data_ov002_021102bc);
     return 1;
 }
@@ -21641,7 +21640,7 @@ Ld0:
     mWaterSurfaceY = 0x80000000;
     mToxicSurfaceY = 0x80000000;
     mOpacity = 0x1f;
-    mClpsWord1Lo = 0xff;
+    mFloorPathID = 0xff;
     *(s16*)&mPrevAreaId = mAreaId;
     f254 = data_0209f254;
     if (f254 != 0) {

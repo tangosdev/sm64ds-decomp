@@ -75,26 +75,23 @@ void dWipe_c::func_0202fb30()
 /* Opening half of a wipe. Type 1 is the plain colour fade and the base owns
    it. `extra` is forwarded and not read; callers pass 0. */
 int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
-    dWipe_c *self = this;
-    s32 type = self->type;
-    s32 state;
-
     if (type == 1)
         return dFdBrightness_c::SetBackwardTime(frames, extra);
 
-    state = self->state;
     if (state == 0 || state == 4) {
+        int t;
+
         if (frames == 0) {
-            self->wipeSpeed = 0x200000;
-            self->wipeAccel = 0;
+            wipeSpeed = 0x200000;
+            wipeAccel = 0;
         } else {
-            type = (type == 0) ? 0x2d : 0x3c;
-            self->wipeSpeed = 0x200000 / type;
-            self->wipeAccel = (self->wipeSpeed << 1) / type;
-            self->wipeSpeed = 0;
+            t = (type == 0) ? 0x2d : 0x3c;
+            wipeSpeed = 0x200000 / t;
+            wipeAccel = (wipeSpeed << 1) / t;
+            wipeSpeed = 0;
         }
 
-        if (self->type == 2) {
+        if (type == 2) {
             CP15::FlushAndInvalidateDataCache((u32)data_0209f604, 2);
             GX::LoadBGPltt(data_0209f604, 0, 2);
             GXS::LoadBGPltt(data_0209f604, 0, 2);
@@ -104,7 +101,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
             GXS::LoadBGPltt(data_020926cc, 0, 2);
         }
 
-        self->wipeInterp = 0;
+        wipeInterp = 0;
 
         *(volatile u16 *)0x4000040 = 0x7f7f;
         *(volatile u16 *)0x4000044 = 0xc0;
@@ -115,8 +112,8 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
         *(volatile u16 *)0x4001042 = 0x8080;
         *(volatile u16 *)0x4001046 = 0xc0;
 
-        self->state = 1;
-        self->func_0202f58c();
+        state = 1;
+        func_0202f58c();
 
         {
             u16 ime = *(volatile u16 *)0x4000208;
@@ -131,13 +128,13 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
             }
         }
 
-        self->needsCleanup = 1;
+        needsCleanup = 1;
         return 0;
     }
 
     if (state == 2)
         return 1;
-    self->state = 1;
+    state = 1;
     return 0;
 }
 

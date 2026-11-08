@@ -545,23 +545,23 @@ void daShl_c::func_ov102_0214c84c()
                 mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
                 mParticleHandle_3d0 = Particle::System::New(mParticleHandle_3d0, 0xe3, pos.trail.x,
                                                             pos.trail.y, pos.trail.z, 0, 0);
-                if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
+                if (mSoundID != ground.surface.clps.GetSoundType() + 0xf2)
                     mSoundHandle = 0;
-                mSoundID = ground.surface.clps.func_02037e84() + 0xf2;
+                mSoundID = ground.surface.clps.GetSoundType() + 0xf2;
                 mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
                 return;
             }
             if (ground.surface.clps.GetSurfaceType() == 1) {
-                if (ground.surface.clps.func_02037e84() == 7) {
+                if (ground.surface.clps.GetSoundType() == 7) {
                     pos.trail.y = ground.clsnY + 0x3c000;
                     mParticleHandle_3d4 = 0;
                     mParticleHandle_3c8 = mParticleHandle_3d4;
                     mParticleHandle_3cc = func_02022d00(mParticleHandle_3cc, 0xe2, pos.trail.x, pos.trail.y, pos.trail.z, 0);
                     mParticleHandle_3d0 = Particle::System::New(
                         mParticleHandle_3d0, 0xe3, pos.trail.x, pos.trail.y, pos.trail.z, 0, 0);
-                    if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
+                    if (mSoundID != ground.surface.clps.GetSoundType() + 0xf2)
                         mSoundHandle = 0;
-                    mSoundID = ground.surface.clps.func_02037e84() + 0xf2;
+                    mSoundID = ground.surface.clps.GetSoundType() + 0xf2;
                     mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
                 } else {
                     pos.trail.y = ground.clsnY + 0xa000;
@@ -577,9 +577,9 @@ void daShl_c::func_ov102_0214c84c()
                 }
                 return;
             }
-            if (mSoundID != ground.surface.clps.func_02037e84() + 0xf2)
+            if (mSoundID != ground.surface.clps.GetSoundType() + 0xf2)
                 mSoundHandle = 0;
-            mSoundID = ground.surface.clps.func_02037e84() + 0xf2;
+            mSoundID = ground.surface.clps.GetSoundType() + 0xf2;
             mSoundHandle = Sound::PlayLong(mSoundHandle, 0, mSoundID, mCamSpacePos, 0);
         }
         else

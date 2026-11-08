@@ -25,9 +25,6 @@ extern "C" {
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void NormalizeVec3(const Vector3 *src, Vector3 *dst);
 int func_02053200(int v);
-/* local extern: dBgW_KcMbg's direction rotate, a free function of
-   d_bg_w_kc_mbg.cpp that no header declares. */
-void func_02039db8(dBgW_KcMbg *self, Vector3 *v, Vector3 *res);
 
 /* local extern: no header in include/ declares these three. */
 extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
@@ -229,5 +226,5 @@ void dBgW_KcMbgSclY::GetNormal(s16 triID, Vector3 &res) {
     verticalScale = scaleY;
     normal.z = FX_MUL(normal.z, verticalScale);
     NormalizeVec3(&normal, &normal);
-    func_02039db8(this, &normal, &res);
+    LocalToWorldDirection(normal, res);
 }
