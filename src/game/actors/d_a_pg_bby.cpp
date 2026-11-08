@@ -140,29 +140,25 @@ s32 daPgBby_c::CleanupResources()
 }
 
 /* Switch to state `state` and run its enter step. */
-void daPgBby_c::ChangeState(int state)
-{
+void daPgBby_c::ChangeState(int state) {
     mState = &gPenguinBabyStates[state];
     CallStateEnter();
 }
 
 /* Run the current state's enter step. */
-void daPgBby_c::CallStateEnter()
-{
+void daPgBby_c::CallStateEnter() {
     StateFunc *step = &mState->enter;
     (this->**step)();
 }
 
 /* Run the current state's per-frame update step. */
-void daPgBby_c::CallStateUpdate()
-{
+void daPgBby_c::CallStateUpdate() {
     StateFunc *step = &mState->update;
     (this->**step)();
 }
 
 /* State 0, enter. */
-int daPgBby_c::StateKeepDistanceEnter()
-{
+int daPgBby_c::StateKeepDistanceEnter() {
     mSubState = 0;
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyWaitAnimationFile.filePtr, 0, 0x1000, 0);
     mStateId = 0;
@@ -171,8 +167,7 @@ int daPgBby_c::StateKeepDistanceEnter()
 
 /* State 0, update: keep a comfortable distance from the closest player,
    walking away when it comes near and back when it wanders off. */
-int daPgBby_c::StateKeepDistanceUpdate()
-{
+int daPgBby_c::StateKeepDistanceUpdate() {
     daPly_c *player;
     int dist;
     short angle;
@@ -237,8 +232,7 @@ int daPgBby_c::StateKeepDistanceUpdate()
 }
 
 /* State 1, enter: a hop. */
-int daPgBby_c::StateDiveEnter()
-{
+int daPgBby_c::StateDiveEnter() {
     mHorzSpeed = 0x19000;
     mVertSpeed = 0xc000;
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyDiveAnimationFile.filePtr, 0x40000000, 0x1000, 0);
@@ -248,8 +242,7 @@ int daPgBby_c::StateDiveEnter()
 }
 
 /* State 1, update. */
-int daPgBby_c::StateDiveUpdate()
-{
+int daPgBby_c::StateDiveUpdate() {
     switch (mSubState) {
     case 0:
         if (mAnmModel.Finished()) {
@@ -284,8 +277,7 @@ int daPgBby_c::StateDiveUpdate()
 }
 
 /* State 2, enter: picked up. */
-int daPgBby_c::StateHeldEnter()
-{
+int daPgBby_c::StateHeldEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyWaitAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mStateId = 2;
@@ -294,8 +286,7 @@ int daPgBby_c::StateHeldEnter()
 
 /* State 2, update: face where the carrier faces; once no longer held, drop
    to the ground under the carrier and return to state 0. */
-int daPgBby_c::StateHeldUpdate()
-{
+int daPgBby_c::StateHeldUpdate() {
     mAngleY = mCarrier->mAngleY;
     mPrevAngleY = mAngleY;
     u32 flags = mFlags;
@@ -332,8 +323,7 @@ animate:
 }
 
 /* State 3, enter. */
-int daPgBby_c::StateWalkToMotherEnter()
-{
+int daPgBby_c::StateWalkToMotherEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mHorzSpeed = 0x5000;
@@ -343,8 +333,7 @@ int daPgBby_c::StateWalkToMotherEnter()
 
 /* State 3, update: walk to the mother, keeping between 0xc8 and 0xdc
    units from her. */
-int daPgBby_c::StateWalkToMotherUpdate()
-{
+int daPgBby_c::StateWalkToMotherUpdate() {
     int dist = Vec3_Dist(&mPos, &mMother->mPos);
     short tgt = mAngleY;
     if (dist > 0xdc000) {
@@ -524,8 +513,7 @@ int daPgBby_c::func_ov072_021212c0()
 
 /* Place the model: in the carrier's hands (one of four carry offsets) or at
    the actor, then size the drop shadow by the height above the ground. */
-void daPgBby_c::UpdateModelAndShadow()
-{
+void daPgBby_c::UpdateModelAndShadow() {
     int idx;
     Matrix4x3 *carry;
     Vector3 v;
@@ -576,8 +564,7 @@ void daPgBby_c::UpdateModelAndShadow()
 }
 
 /* Wall/floor pass: on a slope, turn horizontal motion into vertical speed. */
-void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn)
-{
+void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
     int b = (int)((mFlags & 0x4000) != 0);
@@ -598,8 +585,7 @@ void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn)
 
 /* Refuse a step onto ground more than 0x1.9 away from the current height:
    put the actor back where it was last frame. */
-int daPgBby_c::GuardStepHeight()
-{
+int daPgBby_c::GuardStepHeight() {
     Vector3 v;
 
     if (mWithMeshClsn.IsOnGround()) {
@@ -650,15 +636,14 @@ int daPgBby_c::func_ov072_02120e50()
 }
 
 /* A diving player nearby startles it into state 1. */
-void daPgBby_c::CheckDive()
-{
+void daPgBby_c::CheckDive() {
     daPly_c *player = ClosestPlayer();
-    if (player->IsDiving()) ChangeState(1);
+    if (player->IsDiving())
+        ChangeState(1);
 }
 
 /* Within 0x190 of the mother: state 3. */
-void daPgBby_c::CheckNearMother()
-{
+void daPgBby_c::CheckNearMother() {
     dActor_c *mother = mMother;
     if (mother == 0)
         return;
@@ -669,8 +654,7 @@ void daPgBby_c::CheckNearMother()
 
 /* Respawn: fallen far below the level, or far from home with the timer
    run out, and off screen -- go back to the spawn position. */
-void daPgBby_c::CheckRespawn()
-{
+void daPgBby_c::CheckRespawn() {
     Vector3 out;
     Vector3 tmp;
     if (mStateId == 3) return;

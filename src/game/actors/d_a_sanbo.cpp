@@ -239,24 +239,20 @@ void daSanbo_c::ChangeState(int a) {
     CallStateEnter();
 }
 
-void daSanbo_c::CallStateEnter()
-{
+void daSanbo_c::CallStateEnter() {
     daSanbo_c::StateFunc *p = mStateFunctions;
     (this->**p)();
 }
 
-void daSanbo_c::CallStateUpdate()
-{
+void daSanbo_c::CallStateUpdate() {
     daSanbo_c::StateFunc *p = mStateFunctions + 1;
     (this->**p)();
 }
 
-int daSanbo_c::EnterStacked()
-{
+int daSanbo_c::EnterStacked() {
     mState = 0;
     return 1;
 }
-
 
 namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
 
@@ -269,8 +265,7 @@ unsigned d_a_sanboNewUnkCallback818Hold(unsigned a, unsigned b, int x, int y, in
 }
 
 /* A segment tracks the one in front of it while that piece is still small. */
-int daSanbo_c::UpdateStackedBody()
-{
+int daSanbo_c::UpdateStackedBody() {
     daSanbo_c *next = mNextSegment;
 
     if (!next) {
@@ -342,8 +337,7 @@ int daSanbo_c::EnterLeader() {
 }
 
 /* Grow this segment, then sprout the next one when the timer expires. */
-int daSanbo_c::UpdateLeader()
-{
+int daSanbo_c::UpdateLeader() {
     int scale = mScaleX;
     int copied;
 
@@ -379,8 +373,7 @@ int daSanbo_c::UpdateLeader()
     return 1;
 }
 
-int daSanbo_c::EnterKnockback()
-{
+int daSanbo_c::EnterKnockback() {
     int head = (actorID == SANBO_HEAD);
 
     if (head != 0) {
@@ -397,8 +390,7 @@ int daSanbo_c::EnterKnockback()
     return 1;
 }
 
-int daSanbo_c::UpdateKnockback()
-{
+int daSanbo_c::UpdateKnockback() {
     struct Vector3 pos;
     Particle::System *p0;
     Particle::System *p1;
@@ -429,8 +421,7 @@ int daSanbo_c::UpdateKnockback()
     return 1;
 }
 
-int daSanbo_c::EnterInMouth()
-{
+int daSanbo_c::EnterInMouth() {
 
     UnlinkSegment();
     mHorzSpeed = 0;
@@ -438,8 +429,7 @@ int daSanbo_c::EnterInMouth()
     return 1;
 }
 
-int daSanbo_c::UpdateInMouth()
-{
+int daSanbo_c::UpdateInMouth() {
     int flags = mFlags;
     int held = (flags & 0x20000) ? 1 : 0;
 
@@ -451,15 +441,13 @@ int daSanbo_c::UpdateInMouth()
     return 1;
 }
 
-int daSanbo_c::EnterStackedGrowing()
-{
+int daSanbo_c::EnterStackedGrowing() {
     mState = 4;
     return 1;
 }
 
 /* Follow the segment ahead. Once its scale reaches full size, settle. */
-int daSanbo_c::UpdateStackedOnGrowingBody()
-{
+int daSanbo_c::UpdateStackedOnGrowingBody() {
     daSanbo_c *next = mNextSegment;
 
     if (!next) {
@@ -501,8 +489,7 @@ int daSanbo_c::UpdateStackedOnGrowingBody()
     return 1;
 }
 
-int daSanbo_c::EnterMegaKill()
-{
+int daSanbo_c::EnterMegaKill() {
     int head = (actorID == SANBO_HEAD);
     int rnd;
 
@@ -524,8 +511,7 @@ int daSanbo_c::EnterMegaKill()
     return 1;
 }
 
-int daSanbo_c::UpdateMegaKill()
-{
+int daSanbo_c::UpdateMegaKill() {
     int head = (actorID == SANBO_HEAD) ? 1 : 0;
 
     if (head != 0)
@@ -537,8 +523,7 @@ int daSanbo_c::UpdateMegaKill()
     return 1;
 }
 
-void daSanbo_c::UpdateModelAndShadow()
-{
+void daSanbo_c::UpdateModelAndShadow() {
     struct Vector3 cam;
     int head;
 
@@ -578,8 +563,7 @@ void daSanbo_c::UpdateModelAndShadow()
     }
 }
 
-void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn)
-{
+void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     int n0[3];
     int n1[3];
 
@@ -602,8 +586,7 @@ void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn)
 #include "decl_Actor.h"
 #include "decl_Player.h"
 
-void daSanbo_c::HandleAttacks()
-{
+void daSanbo_c::HandleAttacks() {
     unsigned int hitId;
     dActor_c *other;
     int radius;
@@ -746,8 +729,7 @@ void daSanbo_c::HandleAttacks()
     }
 }
 
-void daSanbo_c::UpdateWanderYaw()
-{
+void daSanbo_c::UpdateWanderYaw() {
     daPly_c *player = ClosestNonVanishPlayer();
     void *target;
     int dist;
@@ -770,8 +752,7 @@ void daSanbo_c::UpdateWanderYaw()
     mPrevAngleY = (short)(mAngleY + turn);
 }
 
-int daSanbo_c::CalcShyAwayAngle(int x)
-{
+int daSanbo_c::CalcShyAwayAngle(int x) {
     if (x > 0x190000)
         return 0;
     int rate = cstd::fdiv(0x4000, 0xc8000);
@@ -780,15 +761,13 @@ int daSanbo_c::CalcShyAwayAngle(int x)
     return (short)r;
 }
 
-void daSanbo_c::PoofAndDestroy()
-{
+void daSanbo_c::PoofAndDestroy() {
 
     PoofDust();
     MarkForDestruction();
 }
 
-int daSanbo_c::GetSegmentIndex()
-{
+int daSanbo_c::GetSegmentIndex() {
     daSanbo_c *seg = mPrevSegment;
     int count = 0;
 
@@ -801,8 +780,7 @@ int daSanbo_c::GetSegmentIndex()
     return count;
 }
 
-void daSanbo_c::UnlinkSegment()
-{
+void daSanbo_c::UnlinkSegment() {
     daSanbo_c *next;
     daSanbo_c *prev;
     int head = (actorID == SANBO_HEAD);
@@ -817,8 +795,7 @@ void daSanbo_c::UnlinkSegment()
         next->mPrevSegment = mPrevSegment;
 }
 
-daSanbo_c *daSanbo_c::GetHead()
-{
+daSanbo_c *daSanbo_c::GetHead() {
     daSanbo_c *prev = mPrevSegment;
 
     if (prev == 0)
@@ -855,12 +832,12 @@ SanboModelFilePtr gSanboBodyModelFile(ASSET_SANBO_BODY_BMD);   /* segment model 
  * numbers and address-named helpers are retained reconstruction identities. */
 
 daSanbo_c::StateFunc data_ov096_02137b48[12] = {
-    &daSanbo_c::EnterStacked, &daSanbo_c::UpdateStackedBody, /* state 0 */
-    &daSanbo_c::EnterLeader, &daSanbo_c::UpdateLeader, /* state 1 */
-    &daSanbo_c::EnterKnockback, &daSanbo_c::UpdateKnockback, /* state 2 */
-    &daSanbo_c::EnterInMouth, &daSanbo_c::UpdateInMouth, /* state 3 */
+    &daSanbo_c::EnterStacked,        &daSanbo_c::UpdateStackedBody,          /* state 0 */
+    &daSanbo_c::EnterLeader,         &daSanbo_c::UpdateLeader,               /* state 1 */
+    &daSanbo_c::EnterKnockback,      &daSanbo_c::UpdateKnockback,            /* state 2 */
+    &daSanbo_c::EnterInMouth,        &daSanbo_c::UpdateInMouth,              /* state 3 */
     &daSanbo_c::EnterStackedGrowing, &daSanbo_c::UpdateStackedOnGrowingBody, /* state 4 */
-    &daSanbo_c::EnterMegaKill, &daSanbo_c::UpdateMegaKill, /* state 5 */
+    &daSanbo_c::EnterMegaKill,       &daSanbo_c::UpdateMegaKill,             /* state 5 */
 };
 SpawnInfo<daSanbo_c> g_profile_SANBO = {
     daSanbo_c_classInit_SANBO, 0xf0, 0x5f, 0x10000002, 0x1f4000, 0x1f4000, 0x1000000, 0x1000000};

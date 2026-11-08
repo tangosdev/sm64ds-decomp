@@ -72,28 +72,28 @@ struct daPgBby_c : dActor_c {
     u16 mRespawnTimer;              /* 0x36c */
     u8  mSubState;                  /* 0x36e */
 
-    void CheckRespawn();             /* respawn check */
-    void CheckNearMother();             /* near the mother: state 3 */
-    void CheckDive();             /* a diving player: state 1 */
+    void CheckRespawn();                    /* respawn check */
+    void CheckNearMother();                 /* near the mother: state 3 */
+    void CheckDive();                       /* a diving player: state 1 */
     int  func_ov072_02120e50();             /* touched: state 4 or 2 */
-    int  GuardStepHeight();             /* step-height guard */
+    int GuardStepHeight();                  /* step-height guard */
     void UpdateFloorAndWalls(dBgCh_Actr *clsn); /* slope/wall pass */
-    void UpdateModelAndShadow();             /* place the model, size the shadow */
+    void UpdateModelAndShadow();                /* place the model, size the shadow */
     int  func_ov072_021212c0();             /* state 5, update */
     int  func_ov072_02121368();             /* state 5, enter */
     int  func_ov072_021214dc();             /* state 4, update */
     int  func_ov072_02121640();             /* state 4, enter */
-    int  StateWalkToMotherUpdate();             /* state 3, update */
-    int  StateWalkToMotherEnter();             /* state 3, enter */
-    int  StateHeldUpdate();             /* state 2, update */
-    int  StateHeldEnter();             /* state 2, enter */
-    int  StateDiveUpdate();             /* state 1, update */
-    int  StateDiveEnter();             /* state 1, enter */
-    int  StateKeepDistanceUpdate();             /* state 0, update */
-    int  StateKeepDistanceEnter();             /* state 0, enter */
-    void CallStateUpdate();             /* run the update step */
-    void CallStateEnter();             /* run the enter step */
-    void ChangeState(int state);    /* switch state, run enter */
+    int StateWalkToMotherUpdate();          /* state 3, update */
+    int StateWalkToMotherEnter();           /* state 3, enter */
+    int StateHeldUpdate();                  /* state 2, update */
+    int StateHeldEnter();                   /* state 2, enter */
+    int StateDiveUpdate();                  /* state 1, update */
+    int StateDiveEnter();                   /* state 1, enter */
+    int StateKeepDistanceUpdate();          /* state 0, update */
+    int StateKeepDistanceEnter();           /* state 0, enter */
+    void CallStateUpdate();                 /* run the update step */
+    void CallStateEnter();                  /* run the enter step */
+    void ChangeState(int state);            /* switch state, run enter */
 
     virtual s32  InitResources();               /* slot  0 */
     virtual s32  CleanupResources();            /* slot  3 */

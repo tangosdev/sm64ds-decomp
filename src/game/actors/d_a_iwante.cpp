@@ -121,9 +121,9 @@ enum {
  * number). Patterns 4..9 are named by number only; what each one does is
  * described at its hand handler. */
 enum {
-    PHASE_DORMANT = 1,   /* initial; Render draws only the body, not the hands */
-    PHASE_RISE = 2,      /* the hands wait for this, then come up (HandRiseExecute) */
-    PHASE_REST = 3,      /* hands sit at rest; the body is choosing the next pattern */
+    PHASE_DORMANT = 1, /* initial; Render draws only the body, not the hands */
+    PHASE_RISE = 2,    /* the hands wait for this, then come up (HandRiseExecute) */
+    PHASE_REST = 3,    /* hands sit at rest; the body is choosing the next pattern */
     PATTERN_4 = 4,
     PATTERN_5 = 5,
     PATTERN_6 = 6,
@@ -154,13 +154,14 @@ enum {
 /* Positional sound effects passed to func_02012694 (id, camera-space
  * position), named only by where this file plays them. */
 enum {
-    SE_ANIM_FRAME_0 = 0x140,    /* a hand's animation is on its first whole frame */
-    SE_HAND_HIT = 0x141,        /* a hand took a hit and survived */
-    SE_HAND_DEFEATED = 0x142,   /* a hand took its last hit */
-    SE_LANDING = 0x143,         /* dust-and-shake after a landing (PoundGround) */
-    SE_START_MOVING = 0x144,    /* a hand starts moving to a new target (also at the arming frame in pattern 9 and when the rise starts) */
-    SE_TALK_STARTED = 0x145,    /* the talk message was shown */
-    SE_DEFEAT_POOF = 0x146      /* a defeated hand is removed in a puff of dust */
+    SE_ANIM_FRAME_0 = 0x140,  /* a hand's animation is on its first whole frame */
+    SE_HAND_HIT = 0x141,      /* a hand took a hit and survived */
+    SE_HAND_DEFEATED = 0x142, /* a hand took its last hit */
+    SE_LANDING = 0x143,       /* dust-and-shake after a landing (PoundGround) */
+    SE_START_MOVING =
+        0x144, /* a hand starts moving to a new target (also at the arming frame in pattern 9 and when the rise starts) */
+    SE_TALK_STARTED = 0x145, /* the talk message was shown */
+    SE_DEFEAT_POOF = 0x146   /* a defeated hand is removed in a puff of dust */
 };
 
 /* Message ids for daPly_c::ShowMessage in BodyTalkExecute: 0xb8 is used
@@ -677,12 +678,30 @@ int daIwante_c::FollowPhase() {
     }
     if ((unsigned char)(m + 0xfc) <= 5
         && mState == &data_ov066_0211b06c) {
-        if (m == PATTERN_4) { SetState(&data_ov066_0211b08c); return data_ov066_0211ae04; }
-        if (m == PATTERN_5) { SetState(&data_ov066_0211b0bc); return data_ov066_0211ae04; }
-        if (m == PATTERN_6) { SetState(&data_ov066_0211b0ec); return data_ov066_0211ae04; }
-        if (m == PATTERN_7) { SetState(&data_ov066_0211afec); return data_ov066_0211ae04; }
-        if (m == PATTERN_8) { SetState(&data_ov066_0211b01c); return data_ov066_0211ae04; }
-        if (m == PATTERN_9) { SetState(&data_ov066_0211b04c); return data_ov066_0211ae04; }
+        if (m == PATTERN_4) {
+            SetState(&data_ov066_0211b08c);
+            return data_ov066_0211ae04;
+        }
+        if (m == PATTERN_5) {
+            SetState(&data_ov066_0211b0bc);
+            return data_ov066_0211ae04;
+        }
+        if (m == PATTERN_6) {
+            SetState(&data_ov066_0211b0ec);
+            return data_ov066_0211ae04;
+        }
+        if (m == PATTERN_7) {
+            SetState(&data_ov066_0211afec);
+            return data_ov066_0211ae04;
+        }
+        if (m == PATTERN_8) {
+            SetState(&data_ov066_0211b01c);
+            return data_ov066_0211ae04;
+        }
+        if (m == PATTERN_9) {
+            SetState(&data_ov066_0211b04c);
+            return data_ov066_0211ae04;
+        }
     }
     return 0;
 }
@@ -1818,7 +1837,8 @@ int daIwante_c::BodyPattern9Enter() {
  * 1: hand 1), resets mPickCount and enters the pattern-running state
  * (data_ov066_0211b03c). */
 int daIwante_c::BodyPattern8Execute() {
-    if (WaitForHandsReady() == 0) return 1;
+    if (WaitForHandsReady() == 0)
+        return 1;
     if ((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x1f) & 1) == 0)
         data_ov066_0211ae0c = PART_HAND_2;
     else

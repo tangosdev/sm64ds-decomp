@@ -168,8 +168,9 @@ enum {
 
 /* Particle effect ids handed to Particle::System::New / NewSimple. */
 enum {
-    PTCL_SCALEUP_KINOKO_TRAIL = 0x108, /* the effect UpdateTrailEffect starts for actorID 277 ("trail" is this file's word for it) */
-    PTCL_TYPE_11_12_CLEANUP   = 0xd2   /* started by CleanupResources for types 11 and 12 */
+    PTCL_SCALEUP_KINOKO_TRAIL =
+        0x108, /* the effect UpdateTrailEffect starts for actorID 277 ("trail" is this file's word for it) */
+    PTCL_TYPE_11_12_CLEANUP = 0xd2 /* started by CleanupResources for types 11 and 12 */
 };
 
 /* The only two intra-TU calls that run UPWARD in ROM address order, so the only
@@ -364,10 +365,11 @@ daPly_c *da1up_c::GetTouchingPlayer() {
    byte-neutral here and stops the call from handing the callee whatever r1
    happens to hold on a host ABI. */
 int da1up_c::UpdateShown(int range) {
-  mShown=(char)IsPlayerInRange(range);
-  unsigned char v=mShown;
-  if(v==0) return v;
-  return ((int (*)(void*))func_ov002_020aefa4)((void*)this);
+    mShown = (char)IsPlayerInRange(range);
+    unsigned char v = mShown;
+    if (v == 0)
+        return v;
+    return ((int (*)(void *))func_ov002_020aefa4)((void *)this);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -377,15 +379,16 @@ int da1up_c::UpdateShown(int range) {
    (visible on odd frames); from mStateFrames == n + 0x28 on the actor is removed
    (KillAndTrackInDeathTable) and 1 is returned. Returns 0 otherwise. */
 int da1up_c::UpdateExpiryCountdown(int n) {
-  int v = mStateFrames;
-  if(v < n) return 0;
-  if(v < n + 0x28){
-    mBlinkOn = (v & 1) != 0;
-  } else {
-    KillAndTrackInDeathTable();
-    return 1;
-  }
-  return 0;
+    int v = mStateFrames;
+    if (v < n)
+        return 0;
+    if (v < n + 0x28) {
+        mBlinkOn = (v & 1) != 0;
+    } else {
+        KillAndTrackInDeathTable();
+        return 1;
+    }
+    return 0;
 }
 
 /* The first of the two file-scope `extern "C"` regions. Ordinal 9 is a class
@@ -700,8 +703,7 @@ void da1up_c::UpdateTriggerFor7() {
    player (SteerTowardPlayer) under physics. */
 void da1up_c::UpdateHiddenChase() {
 
-  switch (mState)
-  {
+    switch (mState) {
     case 0:
       mShown = 0;
       if (mUnlockCount != 0)
@@ -716,23 +718,23 @@ void da1up_c::UpdateHiddenChase() {
       return;
 
     case 1:
-      SteerTowardPlayer();
-      UpdatePhysics();
-      return;
-
-    case 3:
-      UpdatePhysics();
-      if (*(unsigned short *)&mStateTimer > 0x11)
-        UpdateTrailEffect();
-      UpdateLaunchArc();
-      if (*(unsigned short *)&mStateTimer != 0x25)
+        SteerTowardPlayer();
+        UpdatePhysics();
         return;
 
-      mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
-      mState = 1;
-      mVertAccel = 0;
-      mHorzSpeed = 0xa000;
-      return;
+    case 3:
+        UpdatePhysics();
+        if (*(unsigned short *)&mStateTimer > 0x11)
+            UpdateTrailEffect();
+        UpdateLaunchArc();
+        if (*(unsigned short *)&mStateTimer != 0x25)
+            return;
+
+        mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
+        mState = 1;
+        mVertAccel = 0;
+        mHorzSpeed = 0xa000;
+        return;
   }
 }
 
@@ -839,8 +841,8 @@ void da1up_c::UpdateWaitThenFaceAway() {
 /* Dispatch-table index 3 (MUSHROOM_STATIONARY). Only the touch check and the
    3000-unit range check; no physics and no state. */
 int da1up_c::UpdateStationary() {
-  CollectOnTouch();
-  return UpdateShown(0xbb8);
+    CollectOnTouch();
+    return UpdateShown(0xbb8);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1064,9 +1066,9 @@ int da1up_c::Render()
 int da1up_c::Behavior()
 {
   if(UpdateYoshiEat(mWithMeshClsn) != 0){
-    UpdateModelAndShadow();
-    mdCcAc_c.Clear();
-    return 1;
+      UpdateModelAndShadow();
+      mdCcAc_c.Clear();
+      return 1;
   }
   mEatingPlayer = 0;
   {
@@ -1214,18 +1216,18 @@ extern "C" da1up_c *da1up_c_classInit_ONEUPKINOKO()
    materializes for the PMF constants are numbered clear of the anonymous
    objects earlier TUs already pinned (@NNN is a shared namespace). */
 PMF data_ov002_0210dc00[14] = {
-    &da1up_c::UpdatePopOutDrift,      /*  0 MUSHROOM_POP_OUT_DRIFT */
-    &da1up_c::UpdatePopOutFlee,      /*  1 MUSHROOM_POP_OUT_FLEE */
-    &da1up_c::UpdateWaitThenAccelerate,      /*  2 MUSHROOM_WAIT_THEN_ACCELERATE */
-    (PMF)&da1up_c::UpdateStationary, /*  3 MUSHROOM_STATIONARY */
-    &da1up_c::UpdateWaitThenFaceAway,      /*  4 MUSHROOM_WAIT_THEN_FACE_AWAY */
-    &da1up_c::UpdateHiddenFlee,      /*  5 MUSHROOM_HIDDEN_FLEE */
-    &da1up_c::UpdateTriggerFor5,      /*  6 MUSHROOM_TRIGGER_FOR_5 */
-    &da1up_c::UpdateHiddenChase,      /*  7 MUSHROOM_HIDDEN_CHASE */
-    &da1up_c::UpdateTriggerFor7,      /*  8 MUSHROOM_TRIGGER_FOR_7 */
-    &da1up_c::UpdateSpawner,      /*  9 MUSHROOM_SPAWNER */
-    &da1up_c::UpdateRiseThenPopOut,      /* 10 MUSHROOM_RISE_THEN_POP_OUT */
-    &da1up_c::UpdateSpinTriggerFor5,      /* 11 MUSHROOM_SPIN_TRIGGER_FOR_5 */
-    &da1up_c::UpdateSpinTriggerFor7,      /* 12 MUSHROOM_SPIN_TRIGGER_FOR_7 */
-    &da1up_c::UpdateFallThenWait,      /* 13 MUSHROOM_FALL_THEN_WAIT */
+    &da1up_c::UpdatePopOutDrift,        /*  0 MUSHROOM_POP_OUT_DRIFT */
+    &da1up_c::UpdatePopOutFlee,         /*  1 MUSHROOM_POP_OUT_FLEE */
+    &da1up_c::UpdateWaitThenAccelerate, /*  2 MUSHROOM_WAIT_THEN_ACCELERATE */
+    (PMF)&da1up_c::UpdateStationary,    /*  3 MUSHROOM_STATIONARY */
+    &da1up_c::UpdateWaitThenFaceAway,   /*  4 MUSHROOM_WAIT_THEN_FACE_AWAY */
+    &da1up_c::UpdateHiddenFlee,         /*  5 MUSHROOM_HIDDEN_FLEE */
+    &da1up_c::UpdateTriggerFor5,        /*  6 MUSHROOM_TRIGGER_FOR_5 */
+    &da1up_c::UpdateHiddenChase,        /*  7 MUSHROOM_HIDDEN_CHASE */
+    &da1up_c::UpdateTriggerFor7,        /*  8 MUSHROOM_TRIGGER_FOR_7 */
+    &da1up_c::UpdateSpawner,            /*  9 MUSHROOM_SPAWNER */
+    &da1up_c::UpdateRiseThenPopOut,     /* 10 MUSHROOM_RISE_THEN_POP_OUT */
+    &da1up_c::UpdateSpinTriggerFor5,    /* 11 MUSHROOM_SPIN_TRIGGER_FOR_5 */
+    &da1up_c::UpdateSpinTriggerFor7,    /* 12 MUSHROOM_SPIN_TRIGGER_FOR_7 */
+    &da1up_c::UpdateFallThenWait,       /* 13 MUSHROOM_FALL_THEN_WAIT */
 };

@@ -132,8 +132,7 @@ s32 daMky_c::OnYoshiTryEat()
     return 7;
 }
 
-void daMky_c::ReturnToPerch()
-{
+void daMky_c::ReturnToPerch() {
 
     extern dClipper data_0209f43c;
     extern Matrix4x3 data_0209b3ec;
@@ -172,8 +171,7 @@ void daMky_c::ReturnToPerch()
         }
     }
 }
-void daMky_c::PlayRunFootstepSound()
-{
+void daMky_c::PlayRunFootstepSound() {
     extern int gMonkeyRunAnimationFile[];
     if (!IsPlayingAnim(this, gMonkeyRunAnimationFile))
         return;
@@ -181,8 +179,7 @@ void daMky_c::PlayRunFootstepSound()
     if (v == 0xa || v == 0xc)
         func_0201267c(0xea, &this->mCamSpacePos);
 }
-void daMky_c::PlayIdleSounds()
-{
+void daMky_c::PlayIdleSounds() {
     extern int data_ov030_02115cf0[];
     extern int gMonkeyWait2AnimationFile[];
     extern int gMonkeyWait3AnimationFile[];
@@ -202,8 +199,7 @@ void daMky_c::PlayIdleSounds()
             func_0201267c(0xe9, &this->mCamSpacePos);
     }
 }
-int daMky_c::CycleIdleAnimation()
-{
+int daMky_c::CycleIdleAnimation() {
     extern int data_ov030_02115cf0[];
     extern int gMonkeyWait2AnimationFile[];
     extern int gMonkeyWait3AnimationFile[];
@@ -227,8 +223,7 @@ int daMky_c::CycleIdleAnimation()
     }
     return 0;
 }
-int daMky_c::FollowPath()
-{
+int daMky_c::FollowPath() {
     typedef short s16;
 
   struct Vector3 v;
@@ -251,8 +246,7 @@ int daMky_c::FollowPath()
   }
   return 0;
 }
-int daMky_c::HandleContact()
-{
+int daMky_c::HandleContact() {
     daPly_c *player;
 
     if (IsBeingEaten(this) && this->mState != 2) {
@@ -298,8 +292,7 @@ int daMky_c::HandleContact()
     }
     return 1;
 }
-int daMky_c::UpdateSafePos()
-{
+int daMky_c::UpdateSafePos() {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         dBgCh_Gnd rg;
         Vector3 v;
@@ -324,11 +317,9 @@ int daMky_c::UpdateSafePos()
     }
     return 0;
 }
-int daMky_c::RevertOffLedge()
-{
+int daMky_c::RevertOffLedge() {
 
-
-    #define ABS(x) ((x) < 0 ? -(x) : (x))
+#define ABS(x) ((x) < 0 ? -(x) : (x))
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -373,8 +364,7 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         static_cast<const dBgPi *>(w->GetWallResult())->surface.CopyNormalTo(wn);
     }
 }
-void daMky_c::UpdateModelAndCap()
-{
+void daMky_c::UpdateModelAndCap() {
     /* from include/decl_common.h:255, which this TU does not include. */
     extern char data_ov030_02115ddc[];
 
@@ -471,7 +461,7 @@ int daMky_c::func_ov030_02112400()
     CycleIdleAnimation();
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
     this->UpdatePos(&this->mdCcAc_c);
-    UpdateFloorAndWalls((dBgCh_Actr*)(&this->mWithMeshClsn));
+    UpdateFloorAndWalls((dBgCh_Actr *)(&this->mWithMeshClsn));
     HandleContact();
     this->mdCcAc_c.Clear();
     this->mdCcAc_c.Update();
@@ -1380,16 +1370,13 @@ int daMky_c::EnterState0()
     return 1;
 }
 
-void daMky_c::CallStateUpdate()
-{
+void daMky_c::CallStateUpdate() {
     (this->*mStateDesc->update)();
 }
-void daMky_c::CallStateEnter()
-{
+void daMky_c::CallStateEnter() {
     (this->*mStateDesc->enter)();
 }
-void daMky_c::ChangeState(int idx)
-{
+void daMky_c::ChangeState(int idx) {
     extern StateFunctions data_ov030_02115e0c[];
 
     this->mStateDesc = &data_ov030_02115e0c[idx];

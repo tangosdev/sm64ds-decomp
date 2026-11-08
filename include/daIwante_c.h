@@ -176,59 +176,59 @@ struct daIwante_c : dBgActor_c {
     /* The state handlers the descriptors' pointer-to-member pairs name
        (enter at +0, run at +8), plus the helpers they call. The original
        names are not recovered; the addresses stand in. */
-    int  CheckAttacked();    /* hand hit check (hurt/defeat) */
-    void SetRestHitVolume();    /* arm a hand's hit volume */
-    void SetPoundHitVolume();    /* disarm a hand's hit volume */
-    void UpdateTexturePattern();    /* texture-pattern swap tick */
-    void BeginVulnerable();    /* arm hit volume once anim started */
-    void EndVulnerable();    /* hand becomes vulnerable */
-    void SetLoweredPose();    /* common state cleanup on exit */
-    int  WaitForHandsReady();    /* body: wait for both hands to report in */
-    int  FollowPhase();    /* hand: follow the phase into a state */
-    int  GetPlayerDepthBand();    /* closest player's depth band (mPosZ) */
-    void PoundGround(int strength); /* landing dust + shake */
-    int  ClampToArena();    /* keep a hand inside the arena */
-    int  HandDefeatExecute();    /* defeat run (hand) */
-    int  HandDefeatEnter();    /* defeat enter (hand) */
-    int  HandPattern9Execute();    /* pattern 9 run (hand) */
-    int  HandPattern9Enter();    /* pattern 9 enter (hand) */
-    int  HandPattern8Execute();    /* pattern 8 run (hand) */
-    int  HandPattern8Enter();    /* pattern 8 enter (hand) */
-    int  HandPattern7Execute();    /* pattern 7 run (hand) */
-    int  HandPattern7Enter();    /* pattern 7 enter (hand) */
-    int  HandPattern6Execute();    /* pattern 6 run (hand) */
-    int  HandPattern6Enter();    /* pattern 6 enter (hand) */
-    int  HandPattern5Execute();    /* pattern 5 run (hand) */
-    int  HandPattern5Enter();    /* pattern 5 enter (hand) */
-    int  HandPattern4Execute();    /* pattern 4 run (hand) */
-    int  HandPattern4Enter();    /* pattern 4 enter (hand) */
-    int  HandWaitingExecute();    /* waiting run (hand) */
-    int  HandWaitingEnter();    /* waiting enter (hand) */
-    int  HandRiseExecute();    /* rise run (hand) */
-    int  HandRiseEnter();    /* rise enter (hand) */
-    int  BodyPatternRunningExecute();    /* pattern-running run (body) */
-    int  BodyPatternRunningEnter();    /* pattern-running enter (body) */
-    s32  BodyPattern9Execute();    /* pattern 9 run (body) */
-    int  BodyPattern9Enter();    /* pattern 9 enter (body) */
-    int  BodyPattern8Execute();    /* pattern 8 run (body) */
-    int  BodyPattern8Enter();    /* pattern 8 enter (body) */
-    s32  BodyPattern7Execute();    /* pattern 7 run (body) */
-    int  BodyPattern7Enter();    /* pattern 7 enter (body) */
-    s32  BodyPattern6Execute();    /* pattern 6 run (body) */
-    int  BodyPattern6Enter();    /* pattern 6 enter (body) */
-    s32  BodyPattern5Execute();    /* pattern 5 run (body) */
-    int  BodyPattern5Enter();    /* pattern 5 enter (body) */
-    int  BodyPattern4Execute();    /* pattern 4 run (body) */
-    int  BodyPattern4Enter();    /* pattern 4 enter (body) */
-    int  BodyDecisionExecute();    /* decision run (body) */
-    int  BodyDecisionEnter();    /* decision enter (body) */
-    int  BodyTalkExecute();    /* talk run (body) */
-    int  BodyTalkEnter();    /* talk enter (body) */
-    int  BodyDormantExecute();    /* dormant run (body) */
-    int  BodyDormantEnter();    /* dormant enter (body; does nothing) */
-    int  SetState(void *pv); /* install a state descriptor */
+    int CheckAttacked();             /* hand hit check (hurt/defeat) */
+    void SetRestHitVolume();         /* arm a hand's hit volume */
+    void SetPoundHitVolume();        /* disarm a hand's hit volume */
+    void UpdateTexturePattern();     /* texture-pattern swap tick */
+    void BeginVulnerable();          /* arm hit volume once anim started */
+    void EndVulnerable();            /* hand becomes vulnerable */
+    void SetLoweredPose();           /* common state cleanup on exit */
+    int WaitForHandsReady();         /* body: wait for both hands to report in */
+    int FollowPhase();               /* hand: follow the phase into a state */
+    int GetPlayerDepthBand();        /* closest player's depth band (mPosZ) */
+    void PoundGround(int strength);  /* landing dust + shake */
+    int ClampToArena();              /* keep a hand inside the arena */
+    int HandDefeatExecute();         /* defeat run (hand) */
+    int HandDefeatEnter();           /* defeat enter (hand) */
+    int HandPattern9Execute();       /* pattern 9 run (hand) */
+    int HandPattern9Enter();         /* pattern 9 enter (hand) */
+    int HandPattern8Execute();       /* pattern 8 run (hand) */
+    int HandPattern8Enter();         /* pattern 8 enter (hand) */
+    int HandPattern7Execute();       /* pattern 7 run (hand) */
+    int HandPattern7Enter();         /* pattern 7 enter (hand) */
+    int HandPattern6Execute();       /* pattern 6 run (hand) */
+    int HandPattern6Enter();         /* pattern 6 enter (hand) */
+    int HandPattern5Execute();       /* pattern 5 run (hand) */
+    int HandPattern5Enter();         /* pattern 5 enter (hand) */
+    int HandPattern4Execute();       /* pattern 4 run (hand) */
+    int HandPattern4Enter();         /* pattern 4 enter (hand) */
+    int HandWaitingExecute();        /* waiting run (hand) */
+    int HandWaitingEnter();          /* waiting enter (hand) */
+    int HandRiseExecute();           /* rise run (hand) */
+    int HandRiseEnter();             /* rise enter (hand) */
+    int BodyPatternRunningExecute(); /* pattern-running run (body) */
+    int BodyPatternRunningEnter();   /* pattern-running enter (body) */
+    s32 BodyPattern9Execute();       /* pattern 9 run (body) */
+    int BodyPattern9Enter();         /* pattern 9 enter (body) */
+    int BodyPattern8Execute();       /* pattern 8 run (body) */
+    int BodyPattern8Enter();         /* pattern 8 enter (body) */
+    s32 BodyPattern7Execute();       /* pattern 7 run (body) */
+    int BodyPattern7Enter();         /* pattern 7 enter (body) */
+    s32 BodyPattern6Execute();       /* pattern 6 run (body) */
+    int BodyPattern6Enter();         /* pattern 6 enter (body) */
+    s32 BodyPattern5Execute();       /* pattern 5 run (body) */
+    int BodyPattern5Enter();         /* pattern 5 enter (body) */
+    int BodyPattern4Execute();       /* pattern 4 run (body) */
+    int BodyPattern4Enter();         /* pattern 4 enter (body) */
+    int BodyDecisionExecute();       /* decision run (body) */
+    int BodyDecisionEnter();         /* decision enter (body) */
+    int BodyTalkExecute();           /* talk run (body) */
+    int BodyTalkEnter();             /* talk enter (body) */
+    int BodyDormantExecute();        /* dormant run (body) */
+    int BodyDormantEnter();          /* dormant enter (body; does nothing) */
+    int SetState(void *pv);          /* install a state descriptor */
     void UpdateCollisionMatrix();    /* refresh the collision matrix */
-    void UpdateModelMatrices();    /* refresh the model matrices */
+    void UpdateModelMatrices();      /* refresh the model matrices */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -138,7 +138,7 @@ struct daMky_c : dActor_c {
     int HandleContact();
     int UpdateSafePos();
     int RevertOffLedge();
-    void UpdateFloorAndWalls(dBgCh_Actr* w);
+    void UpdateFloorAndWalls(dBgCh_Actr *w);
     void UpdateModelAndCap();
     int func_ov030_021122b0();
     int func_ov030_02112400();

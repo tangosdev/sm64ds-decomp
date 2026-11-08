@@ -146,28 +146,28 @@ struct da1up_c : dEnemyBase_c {
     void UpdatePhysics();
     void SteerTowardPlayer();
     daPly_c *GetTouchingPlayer();
-    int  UpdateShown(int range);
-    int  UpdateExpiryCountdown(int n);
+    int UpdateShown(int range);
+    int UpdateExpiryCountdown(int n);
     void CollectOnTouch();
     void UpdateLaunchArc();
     void UpdateModelAndShadow();
     void UnlockTargetAndRemove(int target, daPly_c *player);
-    void UpdateFallThenWait();   /* dispatch 13 */
+    void UpdateFallThenWait();     /* dispatch 13 */
     void UpdateRiseThenPopOut();   /* dispatch 10 */
-    void UpdateSpawner();   /* dispatch  9 */
-    void UpdateSpinTriggerFor7();   /* dispatch 12 */
-    void UpdateTriggerFor7();   /* dispatch  8 */
-    void UpdateHiddenChase();   /* dispatch  7 */
-    void UpdateSpinTriggerFor5();   /* dispatch 11 */
-    void UpdateTriggerFor5();   /* dispatch  6 */
-    void UpdateHiddenFlee();   /* dispatch  5 */
-    void UpdateWaitThenFaceAway();   /* dispatch  4 */
-    int  UpdateStationary();   /* dispatch  3 */
+    void UpdateSpawner();          /* dispatch  9 */
+    void UpdateSpinTriggerFor7();  /* dispatch 12 */
+    void UpdateTriggerFor7();      /* dispatch  8 */
+    void UpdateHiddenChase();      /* dispatch  7 */
+    void UpdateSpinTriggerFor5();  /* dispatch 11 */
+    void UpdateTriggerFor5();      /* dispatch  6 */
+    void UpdateHiddenFlee();       /* dispatch  5 */
+    void UpdateWaitThenFaceAway(); /* dispatch  4 */
+    int UpdateStationary();        /* dispatch  3 */
     void AccelerateOnGround();
-    void UpdateWaitThenAccelerate();   /* dispatch  2 */
+    void UpdateWaitThenAccelerate(); /* dispatch  2 */
     void WalkAwayFromPlayer();
-    void UpdatePopOutFlee();   /* dispatch  1 */
-    void UpdatePopOutDrift();   /* dispatch  0 */
+    void UpdatePopOutFlee();  /* dispatch  1 */
+    void UpdatePopOutDrift(); /* dispatch  0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
