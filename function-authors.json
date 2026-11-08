@@ -8775,7 +8775,7 @@
     },
     "arm9:0x02052ec8": {
       "author": "tangosdev",
-      "name": "func_02052ec8"
+      "name": "MTX_Identity44_"
     },
     "arm9:0x02052ef4": {
       "author": "tangosdev",
@@ -8791,11 +8791,11 @@
     },
     "arm9:0x02052fdc": {
       "author": "tangosdev",
-      "name": "func_02052fdc"
+      "name": "FX_GetSqrtResult"
     },
     "arm9:0x02053008": {
       "author": "tangosdev",
-      "name": "func_02053008"
+      "name": "FX_SqrtAsync"
     },
     "arm9:0x02053090": {
       "author": "tangosdev",
@@ -8811,7 +8811,7 @@
     },
     "arm9:0x02053130": {
       "author": "tangosdev",
-      "name": "func_02053130"
+      "name": "FX_InvSqrt"
     },
     "arm9:0x020531a4": {
       "author": "tangosdev",
@@ -8847,7 +8847,7 @@
     },
     "arm9:0x02053644": {
       "author": "andrewboudreau",
-      "name": "func_02053644"
+      "name": "VEC_Fx16Mag"
     },
     "arm9:0x020536e4": {
       "author": "tangosdev",

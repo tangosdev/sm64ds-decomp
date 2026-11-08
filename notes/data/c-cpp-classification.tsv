@@ -2399,7 +2399,7 @@ src/unnamed/arm9/0205/func_020527e8.c	PURE-C					0		None		NONMATCHING-draft;not-
 src/unnamed/arm9/0205/func_02052800.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/unnamed/arm9/0205/func_02052820.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/unnamed/arm9/0205/func_0205283c.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
-src/unnamed/arm9/0205/func_02052ec8.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
+src/MTX_Identity44_.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02052fdc.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053008.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053130.c	WEAK-refs-only	arm9				1		None		-
@@ -2408,7 +2408,7 @@ src/func_02053200.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053274.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053320.c	PURE-C	arm9				1		None		-
 src/func_02053380.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_02053644.c	PURE-C	arm9				1		None		-
+src/VEC_Fx16Mag.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_020538b8.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053a8c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053a90.c	PURE-C	arm9				1		None		-

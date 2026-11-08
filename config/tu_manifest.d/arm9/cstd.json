@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x02052ef4..0x02053320, 14 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "BOTTOM EDGE: InvMat4x3.c (0x02052b34..0x02052ec8) ends exactly where the run begins -- an unrelated matrix helper. TOP EDGE: func_02053320.c (0x02053320..0x02053380) begins exactly where the run ends and stays a one-function source.",
-    "NAMESPACE-LOCAL COMPLETE: the run is every cstd division/square-root-unit wrapper in this span (mod/div/fdiv/ldiv, the fdiv_async/fdiv_result and reciprocal_async/ldiv_result async pairs, and the func_02052fdc/func_02053008/func_02053130/func_020531a4/func_02053200 helpers that drive the same DIV/SQRT registers). No other cstd run belongs to this job."
+    "NAMESPACE-LOCAL COMPLETE: the run is every cstd division/square-root-unit wrapper in this span (mod/div/fdiv/ldiv, the fdiv_async/fdiv_result and reciprocal_async/ldiv_result async pairs, and the FX_GetSqrtResult/FX_SqrtAsync/FX_InvSqrt/func_020531a4/func_02053200 helpers that drive the same DIV/SQRT registers). No other cstd run belongs to this job."
   ],
   "sections": [
     {
@@ -40,14 +40,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_02052fdc",
+      "symbol": "FX_GetSqrtResult",
       "address": "0x02052fdc",
       "size": "0x0000002c",
       "legacy_source": "src/func_02052fdc.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_02053008",
+      "symbol": "FX_SqrtAsync",
       "address": "0x02053008",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/arm9/0205/func_02053008.c",
@@ -75,7 +75,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_02053130",
+      "symbol": "FX_InvSqrt",
       "address": "0x02053130",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0205/func_02053130.c",
