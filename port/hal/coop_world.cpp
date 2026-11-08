@@ -996,8 +996,10 @@ void watch_boos(unsigned now) {
 // reads as punched by my player, so the cartridge's own hit and defeat path runs (the talk, the count, the Big Boo).
 // Once none of them stands, my player waits 400 units from the Big Boo the small Boos report to (it only shows itself to a
 // player within 742 units, func_ov063_0211ad00), with its room shown, so its coming out is on this console's pictures.
-struct BooHitKnob { unsigned at; int n; short slot[8]; };
-BooHitKnob g_boohit = {0, 0, {}};
+// SM64DS_COOP_BOOHIT_ALL=1 (COOPBOO3): every listed Boo that chases is punched in the same frame, not only the first, so
+// two of them are beaten together (the second waits for its talk behind the first one's message box).
+struct BooHitKnob { unsigned at; int n; short slot[8]; bool all; };
+BooHitKnob g_boohit = {0, 0, {}, false};
 void boohit_knob() {
     static const bool parsed = [] {
         if (const char *e = std::getenv("SM64DS_COOP_BOOHIT")) {
@@ -1012,6 +1014,8 @@ void boohit_knob() {
                 }
             }
         }
+        const char *all = std::getenv("SM64DS_COOP_BOOHIT_ALL");
+        g_boohit.all = all && *all && *all != '0';
         return true;
     }();
     (void)parsed;
@@ -1019,6 +1023,13 @@ void boohit_knob() {
     const int me = (int)data_0209f250;
     char *body = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
     if (!body) return;
+    if (g_boohit.all)
+        for (int i = 0; i < g_boohit.n; ++i) {
+            char *b = live_slot(209u, g_boohit.slot[i]);
+            if (!b || going(b) || *(const unsigned char *)(b + kBooState) != 1) continue;
+            *(unsigned *)(b + 0x184 + 0x20) |= 0x40u;
+            *(unsigned *)(b + 0x184 + 0x24) = *(const unsigned *)(body + 0x04);
+        }
     for (int i = 0; i < g_boohit.n; ++i) {
         char *b = live_slot(209u, g_boohit.slot[i]);
         if (!b || going(b) || *(const unsigned char *)(b + kBooState) >= 3) continue;
