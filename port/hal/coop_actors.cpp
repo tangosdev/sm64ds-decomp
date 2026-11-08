@@ -772,7 +772,7 @@ bool local_body_dying(const char *pl) {
 unsigned claim_cd(const char *pl, const Slot &s) {
     const Prof &p = g_prof[s.prof];
     if (g_dead_guard && local_body_dying(pl)) return 65535;
-    if (g_rider_own && (p.id == 39 || p.id == 128 || p.id == 133 || p.id == 143 || p.id == 149 || p.id == 150) && p.size >= 0x327 &&
+    if (g_rider_own && (p.id == 39 || p.id == 28 || p.id == 128 || p.id == 133 || p.id == 143 || p.id == 149 || p.id == 150) && p.size >= 0x327 &&
         *(const unsigned char *)(s.a + 0x326) != 0)
         return 0;
     // COOPRIDE1: the same rule for the two BFS movers that move only under a rider. The elevator (140) sets mStoodOn +0x326 and

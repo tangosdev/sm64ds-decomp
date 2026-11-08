@@ -35,6 +35,10 @@ int _ZN11daObjTbox_c10InitState1Ev(void *c);       // Entry[1].enter: the openin
 void _ZN11daObjPile_c19func_ov091_021334b8Ei(char *c, int flag);         // Stump: one pound (flag 0) or the whole post (flag 1)
 void _ZN7fBase_c18MarkForDestructionEv(void *self);    // COOPPUZZLE1: a book the receiver's shelf can no longer lead
 void ChangeArea(int areaID);                         // COOPPUZZLE1 proof knob: what a door does at the end of its swing
+// COOPRIDE1 (G40): the spike bomb's own steps, forwarded at the end of this file (daKirai_c, src/game/actors/d_a_kirai.cpp).
+void coopsw_kirai_explode(void *bomb);               // func_ov060_021185c4: Bowser's hit: particles, quake, sound, disarm
+void coopsw_kirai_disarm(void *bomb);                // func_ov060_021184bc: give up the slot, stop colliding, state 3
+void coopsw_kirai_rearm(void *bomb);                 // func_ov060_021186d8: full size and opacity, state 0, take a slot
 extern signed char data_ov100_02148204[];            // door table, 16 bytes a variant: +8 stars, +9 key id, +0xa save bit
 extern signed char data_ov100_02148390[];            // star gate table, 6 bytes a variant: +0 stars, +1 save bit
 extern char data_ov100_021488d4[];                   // Door node: the star-door unlock (func_ov100_02144bf4)
@@ -452,6 +456,20 @@ bool apply_door_idx(int cls, int idx, int state) {
     *save_flags() |= bit;
     return true;
 }
+// COOPRIDE1 (G40): SPIKE_BOMB (284, daKirai_c), mStateIndex +0x170: 0 armed, 1 / 2 going off, 3 spent. A bomb went off only on the
+// console whose Bowser (or player) touched it, and once every sibling was spent each console re-armed the bomb nearest ITS own
+// player. Shared as a field: 0 armed, 1 not armed. A friend's 1 sets an armed bomb off with Bowser's own step; a friend's 0
+// re-arms a spent one (one still going off is disarmed first). The re-arm choice belongs to the lowest seat in the room: a
+// higher seat's own re-arm is undone in scan_objects and never sent, and the lowest seat's choice arrives as a field.
+int r_kirai(const char *a) { return rd_i32(a, 0x170) == 0 ? 0 : 1; }
+bool ap_kirai(char *a, int, int value) {
+    const int st = rd_i32(a, 0x170);
+    if (value != 0) { if (st != 0) return false; coopsw_kirai_explode(a); return true; }
+    if (st == 0) return false;
+    if (st != 3) coopsw_kirai_disarm(a);
+    coopsw_kirai_rearm(a);
+    return true;
+}
 bool ap_door(char *, int, int) { return false; }      // never reached: apply_entry takes door classes by index
 bool ap_gate(char *, int, int) { return false; }
 const Watch kWatch[] = {
@@ -470,6 +488,7 @@ const Watch kWatch[] = {
     {27,  kSwKindField, "STUMP",        r_stump,  ap_stump},
     {158, kSwKindField, "BOOKSHELF",    r_shelf,  ap_shelf},
     {85,  kSwKindField, "PYRAMID_TOP",  r_top,    ap_top},
+    {284, kSwKindField, "SPIKE_BOMB",   r_kirai,  ap_kirai},
     {353, kSwKindKick,  "DOOR",         r_door,   ap_door},
     {354, kSwKindKick,  "STAR_DOOR",    r_gate,   ap_gate},
 };
@@ -499,6 +518,8 @@ char *find_actor(int slot, int cls) {
 // ---------------------------------------------------------------------------
 CoopKeyWire wkey() { CoopKeyWire k; k.level = (uint16_t)g_lvl; k.act = (uint8_t)g_act; k.reserved = 0; return k; }
 bool others_here() { return (coop_group_member_mask() & ~(1u << g_my)) != 0; }
+int lowest_here() { const unsigned m = coop_group_member_mask() | (1u << g_my); for (int i = 0; i < 32; ++i) if ((m >> i) & 1u) return i; return g_my; }
+int g_kirai_undo = 0;
 
 bool send_world(int sub, const void *p, int n) { return coop_send_world(sub, p, n); }
 bool send_ctl(int sub, const void *p, int n) { return coop_send_ctl(sub, p, n); }
@@ -784,6 +805,12 @@ void scan_objects(unsigned now) {
             continue;
         }
         if (cur == t.last) continue;
+        if (cls == 284 && cur == 0 && t.last != 0 && lowest_here() < g_my) {   // G40: a re-arm is the lowest seat's choice
+            coopsw_kirai_disarm(a);
+            if (g_log && g_kirai_undo++ < 20)
+                std::fprintf(stderr, "[coopsw] spike bomb slot=%d re-armed here: undone, seat %d picks wall=%lld\n", (int)slot, lowest_here(), wall_ms());
+            continue;
+        }
         const int prev = t.last;
         t.last = cur;
         if (w->kind == kSwKindField) { queue_obj(kSwKindField, slot, cls, 0, cur, now); t.mine_on = true; t.mine_at = now; continue; }
@@ -1383,3 +1410,9 @@ struct Reg {
 CoopSwitchStats coop_switch_stats() { return g_st; }
 
 }  // namespace port
+
+// COOPRIDE1 (G40): flat faces of the spike bomb's member steps for the field above (the bodies are the matched TU's).
+#include "daKirai_c.h"
+extern "C" void coopsw_kirai_explode(void *bomb) { ((daKirai_c *)bomb)->func_ov060_021185c4(); }
+extern "C" void coopsw_kirai_disarm(void *bomb) { ((daKirai_c *)bomb)->func_ov060_021184bc(); }
+extern "C" void coopsw_kirai_rearm(void *bomb) { ((daKirai_c *)bomb)->func_ov060_021186d8(); }
