@@ -775,6 +775,11 @@ unsigned claim_cd(const char *pl, const Slot &s) {
     if (g_rider_own && (p.id == 39 || p.id == 128 || p.id == 133 || p.id == 143 || p.id == 149 || p.id == 150) && p.size >= 0x327 &&
         *(const unsigned char *)(s.a + 0x326) != 0)
         return 0;
+    // COOPRIDE1: the same rule for the two BFS movers that move only under a rider. The elevator (140) sets mStoodOn +0x326 and
+    // the tilting platform (141) mBumped +0x34c from their mesh callbacks; each Behavior reads and clears its flag.
+    if (g_rider_own && ((p.id == 140 && p.size >= 0x327 && *(const unsigned char *)(s.a + 0x326) != 0) ||
+                        (p.id == 141 && p.size >= 0x34d && *(const unsigned char *)(s.a + 0x34c) != 0)))
+        return 0;
     return (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
 }
 
