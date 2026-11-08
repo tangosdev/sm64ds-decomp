@@ -74,9 +74,10 @@ struct dScMB_c : dScene_c {
     virtual s32 Behavior();         /* slot  6 */
     virtual s32 Render();           /* slot  9 */
 
-    /* Not virtual. The global graph callback calls this on mOwner.
-       The address stays the name. */
-    void func_02034d34();
+    /* Not virtual. The global graph callback calls this on mOwner every
+       frame: it steps the scene's own fader unless the fade is at its
+       start. The name is coined from that body. */
+    void UpdateFader();
 };
 
 /* The GLOBAL callback object InitResources registers (sMBGraphCallback), not a

@@ -4827,7 +4827,7 @@
     },
     "arm9:0x02034d34": {
       "author": "tangosdev",
-      "name": "_ZN7dScMB_c13func_02034d34Ev"
+      "name": "_ZN7dScMB_c11UpdateFaderEv"
     },
     "arm9:0x02034d70": {
       "author": "andrewboudreau",

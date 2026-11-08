@@ -85,7 +85,7 @@ void func_02034b1c(void *c, void *owner) {
 
 int dScMB_c::graphCallback_c::GraphCallback3() {
     if (mOwner != 0) {
-        ((dScMB_c *)mOwner)->func_02034d34();
+        ((dScMB_c *)mOwner)->UpdateFader();
     }
     OAM::Reset();
 
@@ -153,7 +153,7 @@ int dScMB_c::graphCallback_c::GraphCallback0() {
 }
 
 // Its sole caller ignores the result; AdvanceFade itself returns void.
-void dScMB_c::func_02034d34() {
+void dScMB_c::UpdateFader() {
     if (fader.IsAtStart())
         return;
     fader.AdvanceFade();
