@@ -60,7 +60,7 @@
  *   handlers use mFlags bit 0x80000 and the 0x20000 / 0x40000 bits (nothing
  *   in this file sets 0x80000); mSlideSoundHandle rests on PlayLong's id
  *   0x93 being played with the sliding-dust particle, and that id has no name.
- * Leftover: func_ov098_02138818 clamps its table index to 4 although the two copied
+ * Leftover: EnterThrown clamps its table index to 4 although the two copied
  *   tables hold four words.
  * Leftover: the slide step compares mClsnYOffsetTarget with 0xa0, which the values
  *   stored there never equal.
@@ -192,7 +192,7 @@ extern BlockSModelFilePtr gBrokenBlockSModelFile;
 extern BlockSCollisionFilePtr gBrokenBlockSCollisionFile;
 
 /* Throw speeds (20.12) for the four character weights: horizontal and
-   vertical, copied by value in func_ov098_02138818. */
+   vertical, copied by value in EnterThrown. */
 struct BlockSW4 { u32 w[4]; };
 BlockSW4 data_ov098_0213c4e0 = {{0x28000, 0x28000, 0x50000, 0x1e000}};
 BlockSW4 data_ov098_0213c4f0 = {{0x14000, 0x14000, 0x14000, 0xf000}};
@@ -212,9 +212,9 @@ daObjBlockS_c::~daObjBlockS_c()
  * and collider transform. Once the crate is off screen (mFlags 0x8) and more
  * than 2000 units (0x7d0000) from the closest player, it respawns as
  * STATE_IDLE. Returns before touching the cylinders in that case. */
-void daObjBlockS_c::func_ov098_0213814c()
+void daObjBlockS_c::UpdateBroken()
 {
-    func_ov098_02138ce0();
+    ResetToHome();
     unsigned b = (unsigned)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (b != 0 && DistToCPlayer() > 0x7d0000) {
         Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
@@ -222,8 +222,8 @@ void daObjBlockS_c::func_ov098_0213814c()
     }
     mdCcAcPos_c1.Clear();
     mdCcAcPos_c2.Clear();
-    func_ov098_02139850();
-    func_ov098_021397c8();
+    UpdateModelMatrix();
+    UpdateMeshCollider();
     if (((dBgW *)&mMeshCollider)->IsEnabled())
         ((dBgW *)&mMeshCollider)->Disable();
 }
@@ -232,13 +232,13 @@ void daObjBlockS_c::func_ov098_0213814c()
  * and refreshes the model matrix and collider transform. Clears mFlags bits
  * 0x20000 / 0x40000 / 0x80000 (the two yoshi-mouth bits and 0x80000, which
  * STATE_IN_MOUTH treats as "spit it out"). */
-void daObjBlockS_c::func_ov098_021381e8()
+void daObjBlockS_c::EnterBroken()
 {
     if (((dBgW *)&mMeshCollider)->IsEnabled())
         ((dBgW *)&mMeshCollider)->Disable();
-    func_ov098_02138ce0();
-    func_ov098_02139850();
-    func_ov098_021397c8();
+    ResetToHome();
+    UpdateModelMatrix();
+    UpdateMeshCollider();
     mFlags &= ~(ACTOR_FLAG_YOSHI_MOUTH_A | ACTOR_FLAG_YOSHI_MOUTH_B | 0x80000);
 }
 
@@ -247,7 +247,7 @@ void daObjBlockS_c::func_ov098_021381e8()
  * STATE_BOUNCING. While 0x20000 is clear and mEatingPlayer is set, the crate
  * copies that player's position. Then clears the first cylinder, refreshes
  * the model matrix and keeps the collider disabled. */
-void daObjBlockS_c::func_ov098_02138238()
+void daObjBlockS_c::UpdateInMouth()
 {
     unsigned int flags = mFlags;
     int t1;
@@ -287,7 +287,7 @@ void daObjBlockS_c::func_ov098_02138238()
     }
 
     mdCcAcPos_c1.Clear();
-    func_ov098_02139850();
+    UpdateModelMatrix();
     if (!((dBgW *)&mMeshCollider)->IsEnabled()) return;
     ((dBgW *)&mMeshCollider)->Disable();
 }
@@ -295,7 +295,7 @@ void daObjBlockS_c::func_ov098_02138238()
 /* STATE_IN_MOUTH, enter. Drops the sink offset and its target to 0, stops
  * the horizontal motion and clears dCc_c flags bit 0x2000 on the first
  * cylinder (the bit the thrown / spit-out enters set). */
-void daObjBlockS_c::func_ov098_02138318()
+void daObjBlockS_c::EnterInMouth()
 {
     mClsnYOffsetTarget = 0;
     mClsnYOffset = 0;
@@ -312,7 +312,7 @@ void daObjBlockS_c::func_ov098_02138318()
  * rest of the frame is the shared tail: slide step, hit handling, wall test,
  * water kill, cylinders, model matrix, and the shadow while airborne and
  * the collider transform while the collider is in range on screen. */
-void daObjBlockS_c::func_ov098_02138344()
+void daObjBlockS_c::UpdateBouncing()
 {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -326,20 +326,20 @@ void daObjBlockS_c::func_ov098_02138344()
     if (mHorzSpeed == 0 && mBounceCount == 0) {
         Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
     }
-    func_ov098_02139228();
-    func_ov098_02138e6c();
-    func_ov098_021390ec();
-    if (func_ov098_02138bb8() != 0) {
+    UpdateFloorContact();
+    HandleHits();
+    HandleWallHit();
+    if (IsOnWaterFloor() != 0) {
         Kill();
     }
     mdCcAcPos_c1.Clear();
     mdCcAcPos_c1.Update();
-    func_ov098_02139850();
+    UpdateModelMatrix();
     if (mWithMeshClsn.IsOnGround() == 0) {
-        func_ov098_021396a4();
+        UpdateDropShadow();
     }
     if (IsClsnInRangeOnScreen(0, 0) != 0) {
-        func_ov098_021397c8();
+        UpdateMeshCollider();
     }
 }
 
@@ -347,7 +347,7 @@ void daObjBlockS_c::func_ov098_02138344()
  * bit 0x80000, starts mBounceCount at 3 (vertical speed 30 units, horizontal
  * speed 15 units to begin with) and forgets mEatingPlayer and
  * mHoldingPlayer. Clears dCc_c flags bit 0x2000 on the first cylinder. */
-void daObjBlockS_c::func_ov098_02138484()
+void daObjBlockS_c::EnterBouncing()
 {
     mClsnYOffsetTarget = 0;
     mClsnYOffset = 0;
@@ -366,25 +366,25 @@ void daObjBlockS_c::func_ov098_02138484()
  * (0x555) and run the shared tail (hit handling, wall test, water kill,
  * cylinders, model matrix, shadow while airborne). The collider is kept
  * disabled throughout. */
-void daObjBlockS_c::func_ov098_021384fc()
+void daObjBlockS_c::UpdateSpitOut()
 {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    if (func_ov098_02139228()) {
+    if (UpdateFloorContact()) {
         Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
         return;
     }
     ApproachLinear(mHorzSpeed, 0, 0x555);
-    func_ov098_02138e6c();
-    func_ov098_021390ec();
-    if (func_ov098_02138bb8()) {
+    HandleHits();
+    HandleWallHit();
+    if (IsOnWaterFloor()) {
         Kill();
     }
     mdCcAcPos_c1.Clear();
     mdCcAcPos_c1.Update();
-    func_ov098_02139850();
+    UpdateModelMatrix();
     if (!mWithMeshClsn.IsOnGround()) {
-        func_ov098_021396a4();
+        UpdateDropShadow();
     }
     if (((dBgW *)&mMeshCollider)->IsEnabled()) {
         ((dBgW *)&mMeshCollider)->Disable();
@@ -400,7 +400,7 @@ void daObjBlockS_c::func_ov098_021384fc()
  * 0x80000, launches it with horizontal speed 30 units (0x1e000) and vertical
  * speed 15 units (0xf000), hands mEatingPlayer over to mPrevHolder and sets
  * dCc_c flags bit 0x2000 on the first cylinder. */
-void daObjBlockS_c::func_ov098_021385e0()
+void daObjBlockS_c::EnterSpitOut()
 {
     daPly_c *obj;
     short angle;
@@ -446,25 +446,25 @@ void daObjBlockS_c::func_ov098_021385e0()
  * slide step and go to STATE_IDLE as soon as that reports the crate on the
  * ground; otherwise ease the horizontal speed down by 1/3 unit per frame
  * (0x555) and run the shared tail. The collider is kept disabled. */
-void daObjBlockS_c::func_ov098_02138734()
+void daObjBlockS_c::UpdateThrown()
 {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    if (func_ov098_02139228()) {
+    if (UpdateFloorContact()) {
         Crate_SetState(this, daObjBlockS_c::STATE_IDLE);
         return;
     }
     ApproachLinear(mHorzSpeed, 0, 0x555);
-    func_ov098_02138e6c();
-    func_ov098_021390ec();
-    if (func_ov098_02138bb8()) {
+    HandleHits();
+    HandleWallHit();
+    if (IsOnWaterFloor()) {
         Kill();
     }
     mdCcAcPos_c1.Clear();
     mdCcAcPos_c1.Update();
-    func_ov098_02139850();
+    UpdateModelMatrix();
     if (!mWithMeshClsn.IsOnGround()) {
-        func_ov098_021396a4();
+        UpdateDropShadow();
     }
     if (((dBgW *)&mMeshCollider)->IsEnabled()) {
         ((dBgW *)&mMeshCollider)->Disable();
@@ -479,7 +479,7 @@ void daObjBlockS_c::func_ov098_02138734()
  * data_ov098_0213c4f0 (vertical speed: 20, 20, 20, 15 units); an index of 4
  * would read one word past each copy. mHoldingPlayer moves to mPrevHolder
  * and is cleared, and dCc_c flags bit 0x2000 is set on the first cylinder. */
-void daObjBlockS_c::func_ov098_02138818()
+void daObjBlockS_c::EnterThrown()
 {
     BlockSW4 arr1;
     BlockSW4 arr2;
@@ -515,7 +515,7 @@ void daObjBlockS_c::func_ov098_02138818()
  * goes back to STATE_IDLE. Clears the
  * first cylinder, refreshes the model matrix and the shadow, and keeps the
  * collider disabled. */
-void daObjBlockS_c::func_ov098_021388bc()
+void daObjBlockS_c::UpdateCarried()
 {
     int flags;
     bool t;
@@ -549,8 +549,8 @@ void daObjBlockS_c::func_ov098_021388bc()
     }
 
     mdCcAcPos_c1.Clear();
-    func_ov098_02139850();
-    func_ov098_021396a4();
+    UpdateModelMatrix();
+    UpdateDropShadow();
     if (((dBgW *)&mMeshCollider)->IsEnabled()) {
         ((dBgW *)&mMeshCollider)->Disable();
     }
@@ -558,7 +558,7 @@ void daObjBlockS_c::func_ov098_021388bc()
 
 /* STATE_CARRIED, enter. Stops the horizontal motion, clears dCc_c flags bit
  * 0x2000 on the first cylinder and zeroes the sink offset and target. */
-void daObjBlockS_c::func_ov098_021389cc()
+void daObjBlockS_c::EnterCarried()
 {
     mHorzSpeed = 0;
     mdCcAcPos_c1.flags &= ~0x2000;
@@ -573,7 +573,7 @@ void daObjBlockS_c::func_ov098_021389cc()
  * actors. Updates both cylinders, the model matrix and
  * the shadow (while airborne), and refreshes the collider transform when
  * IsClsnInRangeOnScreen accepts the arguments (0x600000, 0). */
-void daObjBlockS_c::func_ov098_021389f8()
+void daObjBlockS_c::UpdateIdle()
 {
     int flag = (mFlags & ACTOR_FLAG_OFF_SCREEN) != 0;
     if (flag) {
@@ -585,28 +585,28 @@ void daObjBlockS_c::func_ov098_021389f8()
     }
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    func_ov098_02139228();
-    func_ov098_02138e6c();
-    func_ov098_021390ec();
-    if (func_ov098_02138bb8() || func_ov098_02138bfc()) {
+    UpdateFloorContact();
+    HandleHits();
+    HandleWallHit();
+    if (IsOnWaterFloor() || func_ov098_02138bfc()) {
         Kill();
     }
     mdCcAcPos_c1.Clear();
     mdCcAcPos_c1.Update();
     mdCcAcPos_c2.Clear();
     mdCcAcPos_c2.Update();
-    func_ov098_02139850();
+    UpdateModelMatrix();
     if (!mWithMeshClsn.IsOnGround()) {
-        func_ov098_021396a4();
+        UpdateDropShadow();
     }
     if (!IsClsnInRangeOnScreen(0x600000, 0)) {
         return;
     }
-    func_ov098_021397c8();
+    UpdateMeshCollider();
 }
 
 /* STATE_IDLE, enter. Forgets mHoldingPlayer and mEatingPlayer. */
-void daObjBlockS_c::func_ov098_02138b18()
+void daObjBlockS_c::EnterIdle()
 {
     mHoldingPlayer = 0;
     BLOCKS_EATING_PLAYER(this) = 0;
@@ -624,7 +624,7 @@ extern "C" void Crate_SetState(daObjBlockS_c *self, int i)
 
 /* Runs the update member of the current state's row (called once a frame
  * from the end of Behavior). */
-void daObjBlockS_c::func_ov098_02138b70()
+void daObjBlockS_c::CallStateUpdate()
 {
     BlockSStateHost *c = (BlockSStateHost *)this;
     int j = c->idx;
@@ -634,7 +634,7 @@ void daObjBlockS_c::func_ov098_02138b70()
 /* Returns 1 when the crate is on the ground and the floor's CLPS entry has
  * the water bit set (include/CLPS.h, `w0 & 0x20`); the callers kill the
  * crate on it. */
-int daObjBlockS_c::func_ov098_02138bb8()
+int daObjBlockS_c::IsOnWaterFloor()
 {
     if (mWithMeshClsn.IsOnGround()) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)))
@@ -679,9 +679,9 @@ int daObjBlockS_c::func_ov098_02138bfc()
  *   cylinder 1, radius 60 (0x3c000), height 110 (0x6e000), flags 0x200002,
  *     vulnFlags 0x4d390 -- the bits dCc_c.h labels mega / kick / breakdance /
  *     slide kick / grab / explosion / yoshi tongue / fire, which is what
- *     func_ov098_02138e6c reacts to;
+ *     HandleHits reacts to;
  *   cylinder 2, radius 60, height 30 (0x1e000), flags 0x800004, no vulnFlags. */
-void daObjBlockS_c::func_ov098_02138ce0()
+void daObjBlockS_c::ResetToHome()
 {
     struct Vector3 zero, a1, a2;
 
@@ -718,7 +718,7 @@ void daObjBlockS_c::func_ov098_02138ce0()
 
 /* Pays out three coins at the crate's position (spread argument 15 units, 0xf000;
  * angle 0), the first time only: mCoinsPaid guards it. */
-void daObjBlockS_c::func_ov098_02138e08()
+void daObjBlockS_c::SpawnBreakCoins()
 {
     int v[3];
     if (mCoinsPaid == 1) return;
@@ -745,7 +745,7 @@ void daObjBlockS_c::func_ov098_02138e08()
  *   otherwise, in STATE_THROWN, a hit on any player other than mPrevHolder
  *   calls daPly_c::Hurt with the crate's position, 1, 0xc000 (12 units),
  *   1, 0, 1; what those arguments select is not recovered here. */
-void daObjBlockS_c::func_ov098_02138e6c()
+void daObjBlockS_c::HandleHits()
 {
     daPly_c *a;
     u32 fl;
@@ -825,7 +825,7 @@ void daObjBlockS_c::Kill()
     Vector3 vec;
     Vector3 vec2;
     int x, y, z;
-    func_ov098_02138e08();
+    SpawnBreakCoins();
     x = mPosX;
     y = mPosY + 0x28000;
     z = mPosZ;
@@ -850,7 +850,7 @@ void daObjBlockS_c::Kill()
  * is killed if it is faster than 20 units per frame (0x14000), and
  * if not mPrevAngleY is reflected off the wall's normal (ReflectAngle on the
  * normal's x and z). */
-void daObjBlockS_c::func_ov098_021390ec()
+void daObjBlockS_c::HandleWallHit()
 {
     if (DecIfAbove0_Byte(&mWallCooldown) != 0)
         return;
@@ -916,7 +916,7 @@ void daObjBlockS_c::func_ov098_021390ec()
  * with 0xa0 is true for every value this file stores there). Finally mAngleX / mAngleZ ease (a quarter of the
  * difference, at most 0x1000 per call) toward the angles func_02010844 gives
  * for the floor normal, the crate's yaw and the yaw minus a quarter turn. */
-int daObjBlockS_c::func_ov098_02139228()
+int daObjBlockS_c::UpdateFloorContact()
 {
     void *fr;
     int n;
@@ -1040,7 +1040,7 @@ int daObjBlockS_c::func_ov098_02139228()
  * mShadowModel, that scale twice and h + 40 units (0x28000) in between,
  * and 0xf last (the opacity argument in include/dActor_c.h; the ScaleXYZ in
  * the method name suggests the three before it are per-axis scales). */
-void daObjBlockS_c::func_ov098_021396a4()
+void daObjBlockS_c::UpdateDropShadow()
 {
     struct Vector3 v;
     int r5;
@@ -1071,7 +1071,7 @@ void daObjBlockS_c::func_ov098_021396a4()
  * into mClsnMat, overwrites its translation row with the crate's position
  * lowered by mClsnYOffset, and hands it and mAngleY to dBgW_KcMbg::Transform
  * on mMeshCollider. */
-void daObjBlockS_c::func_ov098_021397c8()
+void daObjBlockS_c::UpdateMeshCollider()
 {
     Vector3 pos = mPos;
     pos.y -= mClsnYOffset;
@@ -1096,7 +1096,7 @@ void daObjBlockS_c::func_ov098_021397c8()
  * translation row at its position lowered by mClsnYOffset (>> 3), zeroes
  * mCarryOffset, and clears mFlags bit 0x4000000 while the crate is on the
  * ground. */
-void daObjBlockS_c::func_ov098_02139850()
+void daObjBlockS_c::UpdateModelMatrix()
 {
     daPly_c *obj = mHoldingPlayer;
     int b;
@@ -1230,7 +1230,7 @@ int daObjBlockS_c::Behavior()
                 Particle::System::NewUnkCallback818(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
             goto done;
         }
-        func_ov098_02138e08();
+        SpawnBreakCoins();
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x28000;
@@ -1256,7 +1256,7 @@ done:
     mdCcAcPos_c2.pos.x = t.x;
     mdCcAcPos_c2.pos.y = t.y;
     mdCcAcPos_c2.pos.z = t.z;
-    func_ov098_02138b70();
+    CallStateUpdate();
     return 1;
 }
 
@@ -1296,7 +1296,7 @@ int daObjBlockS_c::InitResources()
     /* dBgActor_c's own generic 0xd0..0xd4 pad (include/dBgActor_c.h), not a
        daObjBlockS_c field -- reached by raw offset as mEatingPlayer. */
     BLOCKS_EATING_PLAYER(this) = 0;
-    func_ov098_02138ce0();
+    ResetToHome();
     return 1;
 }
 
