@@ -5,7 +5,9 @@
  * entry stage. Each figure runs two pointer-to-member state tables, one for
  * movement (UnknownVsPlayer::mMoveState) and one for animation (mAnimState).
  * The state handlers and the scene's own bookkeeping are members of the two
- * classes; the ROM keeps no names for them, so they keep address spellings.
+ * classes; the ROM keeps no names for them, so their names are coined from
+ * what each body does. The state handlers take Move/Anim plus the name of
+ * the MovementState/AnimationState index the table files them under.
  *
  * The class name is the ROM's own: _ZTS9dEntObj_c at 0x0211c648, with
  * _ZTI9dEntObj_c at 0x0211c66c and the vtable _ZTV9dEntObj_c at 0x0211c6a0.
@@ -22,14 +24,14 @@
  *    the real member types, mwccarm homes the register arguments and the
  *    callers grow. G3i::PerspectiveW_ is the Fix12i method.
  *  - LAUNDER((char*)) stays on the mModel.data / mAnimation.data /
- *    mModel.mat4x3 alias reads in func_ov075_02114be4 -- the plain member
+ *    mModel.mat4x3 alias reads in Render -- the plain member
  *    read changes which value-numbering class mwcc folds them into.
  *  - The Matrix4x3 copies go through the flat Mtx43; assigning Matrix4x3
  *    itself grows .text by 0x6c bytes.
  *  - Behavior's mFellOffThisFrame probe keeps the second `walk` induction variable
  *    alongside `player`: folding it into `player->mFellOffThisFrame` drops a
  *    register and rewrites the whole function.
- *  - func_ov075_0211524c's row*16/playerNo*4 byte form stays: the
+ *  - GetExitX's row*16/playerNo*4 byte form stays: the
  *    int[]-indexed spelling emits a different addressing pair.
  */
 
@@ -162,21 +164,21 @@ extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -2048
 /* A pointer-to-member row: the two per-figure state tables are arrays of
  * these. __sinit_ov075_0211b5e0 fills them, which fixes each index:
  *
- *   data_ov075_0211d56c, movement (mMoveState):
- *     0 none, 1 func_ov075_021147d4, 2 func_ov075_0211478c,
- *     3 func_ov075_0211473c, 4 none, 5 func_ov075_02114560, 6 none,
- *     7 func_ov075_021143e4, 8 func_ov075_02114390, 9 func_ov075_02114300
- *   data_ov075_0211d53c, animation (mAnimState):
- *     0 none, 1 func_ov075_0211427c, 2 func_ov075_02114218,
- *     3 func_ov075_021141b8, 4 func_ov075_021140e4, 5 func_ov075_02114010
+ *   sVsPlayerMoveStates, movement (mMoveState):
+ *     0 none, 1 MoveToSlot, 2 MoveWaitForExit,
+ *     3 MoveTurnToExit, 4 none, 5 MoveRunOffStage, 6 none,
+ *     7 MoveChoosePose, 8 MoveWaitForPoseSound, 9 MovePoseParticles
+ *   sVsPlayerAnimStates, animation (mAnimState):
+ *     0 none, 1 AnimWalkSounds, 2 AnimWaitForNext,
+ *     3 AnimWaitForIdle, 4 AnimSlowGait, 5 AnimFastGait
  *
- * "none" rows point at the empty func_ov075_02114890 / func_ov075_021142fc. */
+ * "none" rows point at the empty MoveNone / AnimNone. */
 typedef void (UnknownVsPlayer::*UnknownVsPlayerState)();
 struct UnknownVsPlayerStateRow {
     UnknownVsPlayerState state;
 };
-extern "C" UnknownVsPlayerStateRow data_ov075_0211d56c[];
-extern "C" UnknownVsPlayerStateRow data_ov075_0211d53c[];
+extern "C" UnknownVsPlayerStateRow sVsPlayerMoveStates[];
+extern "C" UnknownVsPlayerStateRow sVsPlayerAnimStates[];
 
 #define LAUNDER(x) ((char*)(x))
 
@@ -198,7 +200,7 @@ UnknownVsPlayer::~UnknownVsPlayer() {}
 /* Animation state 5, the fast gait. Below half speed it drops back to the
  * state-4 gait; the playback rate follows the speed, and frames 4 and 0x22
  * (the footfalls) play a step sound at the figure's screen position. */
-void UnknownVsPlayer::func_ov075_02114010() {
+void UnknownVsPlayer::AnimFastGait() {
     if (mSpeed < mMaxSpeed / 2) {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d424.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_SLOW_GAIT;
@@ -215,7 +217,7 @@ void UnknownVsPlayer::func_ov075_02114010() {
 
 /* Animation state 4, the slow gait: the mirror of state 5, switching up to
  * it at half speed. */
-void UnknownVsPlayer::func_ov075_021140e4() {
+void UnknownVsPlayer::AnimSlowGait() {
     if (mSpeed >= mMaxSpeed / 2) {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d42c.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_FAST_GAIT;
@@ -232,7 +234,7 @@ void UnknownVsPlayer::func_ov075_021140e4() {
 
 /* Animation state 3: once the current animation finishes, switch to the
  * one in data_ov075_0211d3ec and drop to state 0. */
-void UnknownVsPlayer::func_ov075_021141b8() {
+void UnknownVsPlayer::AnimWaitForIdle() {
     if (!mModel.Finished())
         return;
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d3ec.filePtr, 4, 0, 0x1000, 0);
@@ -241,7 +243,7 @@ void UnknownVsPlayer::func_ov075_021141b8() {
 
 /* Animation state 2: once the current one-shot finishes, start the next one
  * and hand over to state 3. */
-void UnknownVsPlayer::func_ov075_02114218() {
+void UnknownVsPlayer::AnimWaitForNext() {
     if (!mModel.Finished())
         return;
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d3a4.filePtr, 4, 0x40000000, 0x1000, 0);
@@ -249,7 +251,7 @@ void UnknownVsPlayer::func_ov075_02114218() {
 }
 
 /* Animation state 1: step sounds on frames 4 and 0x22 while walking. */
-void UnknownVsPlayer::func_ov075_0211427c() {
+void UnknownVsPlayer::AnimWalkSounds() {
     Vector3 screenPos;
     if (!mModel.WillHitFrame(4)) {
         if (mModel.WillHitFrame(0x22) == 0)
@@ -259,13 +261,13 @@ void UnknownVsPlayer::func_ov075_0211427c() {
     func_0201251c(0, 0x20, &screenPos, mSpeed);
 }
 
-void UnknownVsPlayer::func_ov075_021142fc() {}
+void UnknownVsPlayer::AnimNone() {}
 
 /* Movement state 9: until the figure is past x = 0x1c2000, keep its
  * particle effect on bone 15. The bone's translation is carried into the
  * scene by the model matrix, then scaled back up by 8 (the render matrices
  * hold positions >> 3). */
-void UnknownVsPlayer::func_ov075_02114300() {
+void UnknownVsPlayer::MovePoseParticles() {
     if (mPosition.x >= 0x1c2000)
         return;
     Vector3 pos;
@@ -281,7 +283,7 @@ void UnknownVsPlayer::func_ov075_02114300() {
 /* Movement state 8: frame 0x14 of the animation comes round twice; the
  * first pass only arms the flag, the second plays the player's sound
  * 0x1c and stops. */
-void UnknownVsPlayer::func_ov075_02114390() {
+void UnknownVsPlayer::MoveWaitForPoseSound() {
     if (!mModel.WillHitFrame(0x14))
         return;
     if (mInAir == 0) {
@@ -297,7 +299,7 @@ void UnknownVsPlayer::func_ov075_02114390() {
  * time from a shared random pattern (refilled from data_ov075_0211b524 when
  * it runs out) and go to state 9. The texture sequence starts at a
  * random frame. */
-void UnknownVsPlayer::func_ov075_021143e4() {
+void UnknownVsPlayer::MoveChoosePose() {
     BTP_File *textureFile;
     if (data_ov075_0211d380 < 0) {
         data_ov075_0211d380 =
@@ -329,7 +331,7 @@ void UnknownVsPlayer::func_ov075_021143e4() {
  * gravity once in the air. Crossing z = -0x30c000 sets the fell-off flags
  * and plays the fall sound; crossing z = -0x3e8000 parks it in state 6.
  * The vertical position is clamped at zero independently. */
-void UnknownVsPlayer::func_ov075_02114560() {
+void UnknownVsPlayer::MoveRunOffStage() {
     if (mPosition.z < sVsPlayerTakeoffZ[mPlayerNo] && mInAir == 0) {
         mVertSpeed = 0x2a000;
         mInAir = 1;
@@ -373,7 +375,7 @@ void UnknownVsPlayer::func_ov075_02114560() {
 
 /* Movement state 3: turn toward the exit at the player's turn rate, then
  * hand over to state 4. */
-void UnknownVsPlayer::func_ov075_0211473c() {
+void UnknownVsPlayer::MoveTurnToExit() {
     s16 angle = Vec3_HorzAngle(&mPosition, &mExitPos);
     unsigned char playerNo = mPlayerNo;
     short step = data_ov075_0211b52c[playerNo];
@@ -385,7 +387,7 @@ void UnknownVsPlayer::func_ov075_0211473c() {
 
 /* Movement state 2: wait out mWaitTimer, then face forward and turn toward
  * the exit (state 3) in the slow gait. */
-void UnknownVsPlayer::func_ov075_0211478c() {
+void UnknownVsPlayer::MoveWaitForExit() {
     int waiting = DecIfAbove0_Byte(&mWaitTimer);
     if (waiting)
         return;
@@ -396,7 +398,7 @@ void UnknownVsPlayer::func_ov075_0211478c() {
 
 /* Movement state 1: turn toward the target slot, walk there along x without
  * overshooting, turn back to face the camera, and go idle. */
-void UnknownVsPlayer::func_ov075_021147d4() {
+void UnknownVsPlayer::MoveToSlot() {
     if (mPosition.x != mTargetPos.x) {
         short angle = Vec3_HorzAngle(&mPosition, &mTargetPos);
         if (ApproachLinear(mAngleY, angle, 0x800) == 0)
@@ -413,13 +415,13 @@ void UnknownVsPlayer::func_ov075_021147d4() {
     }
     if (ApproachLinear(mAngleY, 0, 0x800) == 0)
         return;
-    func_ov075_02114a6c();
+    StartIdle();
 }
 
-void UnknownVsPlayer::func_ov075_02114890() {}
+void UnknownVsPlayer::MoveNone() {}
 
 /* Start the run off the stage (movement state 5) from a standstill. */
-void UnknownVsPlayer::func_ov075_02114894() {
+void UnknownVsPlayer::StartRunOffStage() {
     mSpeed = 0;
     mVertSpeed = 0;
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d424.filePtr, 4, 0, 0x1000, 0);
@@ -429,13 +431,13 @@ void UnknownVsPlayer::func_ov075_02114894() {
 }
 
 /* Waiting at the exit (movement state 4)? */
-int UnknownVsPlayer::func_ov075_021148f0() {
+int UnknownVsPlayer::IsAtExit() {
     return mMoveState == MOVE_AT_EXIT;
 }
 
 /* Send the figure toward the exit at x = exitX after a short random wait
  * (movement state 2). */
-void UnknownVsPlayer::func_ov075_02114904(int exitX) {
+void UnknownVsPlayer::GoToExit(int exitX) {
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d384.filePtr, 8, 0x40000000, 0x1000, 0);
     mWaitTimer = (((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10) + 0x1e) & 0xf;
     mExitPos.x = exitX;
@@ -446,14 +448,14 @@ void UnknownVsPlayer::func_ov075_02114904(int exitX) {
 }
 
 /* The selected figure's one-shot, followed by animation state 3. */
-int UnknownVsPlayer::func_ov075_02114988() {
+int UnknownVsPlayer::PlaySelectAnim() {
     mModel.SetAnim(*(BCA_File *)data_ov075_0211d3a4.filePtr, 8, 0x40000000, 0x1000, 0);
     mAnimState = ANIM_WAIT_FOR_IDLE;
     return 3;
 }
 
 /* Walk to a new slot at x = targetX (movement state 1). */
-void UnknownVsPlayer::func_ov075_021149d0(int targetX) {
+void UnknownVsPlayer::WalkToSlot(int targetX) {
     if (mTargetPos.x == targetX)
         return;
     mTargetPos.x = targetX;
@@ -468,12 +470,12 @@ void UnknownVsPlayer::func_ov075_021149d0(int targetX) {
 }
 
 /* Idle (movement state 0)? */
-int UnknownVsPlayer::func_ov075_02114a58() {
+int UnknownVsPlayer::IsIdle() {
     return mMoveState == MOVE_IDLE;
 }
 
 /* Go idle in the player's own standing animation. */
-int UnknownVsPlayer::func_ov075_02114a6c() {
+int UnknownVsPlayer::StartIdle() {
     unsigned char playerNo = mPlayerNo;
     mModel.SetAnim(*(BCA_File *)(data_ov075_0211c678[playerNo][1]), 4, 0, 0x1000, 0);
     mModel.speed = 0x1000;
@@ -486,7 +488,7 @@ int UnknownVsPlayer::func_ov075_02114a6c() {
  * the eye pulls back with it; once it has dropped away (state 6) the eye
  * rises and eases toward the target's depth, and the target follows the
  * eye's height. Returns nonzero when the view needs rebuilding. */
-int UnknownVsPlayer::func_ov075_02114ac4(Vector3 *at, Vector3 *pos) {
+int UnknownVsPlayer::UpdateCamera(Vector3 *at, Vector3 *pos) {
     int state = mMoveState;
     if (state == MOVE_RUN_OFF_STAGE) {
         int back = cstd::fdiv(mPosition.z, 0x19000);
@@ -503,7 +505,7 @@ int UnknownVsPlayer::func_ov075_02114ac4(Vector3 *at, Vector3 *pos) {
 
 /* Put the model's bone translations back to the file's rest pose: bone 0,
  * then bones 2 onward (bone 1 keeps whatever the animation gave it). */
-void UnknownVsPlayer::func_ov075_02114b60() {
+void UnknownVsPlayer::RestoreBoneTranslations() {
     ModelComponents *components = &mModel.data;
     ModelBone *destination;
     BMD_File *file = components->modelFile;
@@ -528,12 +530,12 @@ void UnknownVsPlayer::func_ov075_02114b60() {
 /* Draw one figure: restore its bone translations, pose it, push the palette
  * value into every material and draw the body; then the second model takes
  * the body's matrix and is drawn with the texture sequence applied. */
-void UnknownVsPlayer::func_ov075_02114be4() {
+void UnknownVsPlayer::Render() {
     BMD_File *file;
     BMD_Material *mat;
 
     func_020167a4(&mModel);
-    func_ov075_02114b60();
+    RestoreBoneTranslations();
     func_0204531c((char *)&mModel.data, mModel.blendWeight);
 
     {
@@ -570,13 +572,13 @@ void UnknownVsPlayer::func_ov075_02114be4() {
 /* One figure's frame: run its movement state, rebuild the model matrix from
  * position and heading, run its animation state, then advance both
  * animations and place the shadow. */
-void UnknownVsPlayer::func_ov075_02114cd8() {
+void UnknownVsPlayer::Behavior() {
     mFellOffThisFrame = 0;
-    (this->*data_ov075_0211d56c[mMoveState].state)();
+    (this->*sVsPlayerMoveStates[mMoveState].state)();
     Matrix4x3_FromTranslation(&data_020a0e68, mPosition.x >> 3, mPosition.y >> 3, mPosition.z >> 3);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    (this->*data_ov075_0211d53c[mAnimState].state)();
+    (this->*sVsPlayerAnimStates[mAnimState].state)();
     mModel.Advance();
     mTextureSequence.Advance();
     mShadow.InitModel(&mModel.mat4x3, 0x50000, 0x1f4000, 0x50000, 0xf);
@@ -586,7 +588,7 @@ void UnknownVsPlayer::func_ov075_02114cd8() {
  * animation for this kind of entry scene, the texture sequence at a random
  * frame, the shadow and the start position. Kinds 0 and 2 start idle; the
  * others start in movement state 7. */
-int UnknownVsPlayer::func_ov075_02114ddc(unsigned char kind, unsigned char playerNo, int x) {
+int UnknownVsPlayer::Init(unsigned char kind, unsigned char playerNo, int x) {
     BTP_File *textureFile;
 
     mModel.SetFile((BMD_File *)data_ov075_0211d404.filePtr, 1, 1);
@@ -636,8 +638,8 @@ void dEntObj_c::func_ov075_02114fa8() {
     UnknownVsPlayer *player = mPlayers;
     for (i = 0; i < 4; i++) {
         if (*present != 0) {
-            int x = func_ov075_0211524c(i);
-            player->func_ov075_02114904(x);
+            int x = GetExitX(i);
+            player->GoToExit(x);
         }
         present++;
         player++;
@@ -661,7 +663,7 @@ void dEntObj_c::func_ov075_0211505c() {
     if (mAnimActive == 0)
         return;
     localPlayer = func_0203da9c();
-    mPlayers[localPlayer].func_ov075_02114a6c();
+    mPlayers[localPlayer].StartIdle();
     mAnimActive = 0;
 }
 
@@ -674,14 +676,14 @@ int dEntObj_c::func_ov075_02115098(int playerNo) {
     int i;
     UnknownVsPlayer *player = mPlayers;
     for (i = 0; i < 4; i++) {
-        if (player->func_ov075_02114a58() == 0)
+        if (player->IsIdle() == 0)
             return 0;
         player++;
     }
     int localPlayer = func_0203da9c();
     if (playerNo == localPlayer) {
-        mPlayers[playerNo].func_ov075_02114988();
-        func_ov075_021151b4(playerNo);
+        mPlayers[playerNo].PlaySelectAnim();
+        SetMarkerPosition(playerNo);
         mAnimActive = 1;
     }
     return 1;
@@ -694,7 +696,7 @@ void dEntObj_c::func_ov075_02115134() {
     UnknownVsPlayer *player = mPlayers;
     u8 playerCount, previousCount;
     for (i = 0; i < 4; i++) {
-        player->func_ov075_021149d0(func_ov075_02115290(i));
+        player->WalkToSlot(GetStandingX(i));
         player++;
     }
     playerCount = data_0209fc50;
@@ -707,7 +709,7 @@ void dEntObj_c::func_ov075_02115134() {
 }
 
 /* Put the selection model over player playerNo's figure, 0x32 units up. */
-void dEntObj_c::func_ov075_021151b4(int playerNo) {
+void dEntObj_c::SetMarkerPosition(int playerNo) {
     UnknownVsPlayer *player = mPlayers + playerNo;
     Vector3 *position = &player->mPosition;
     Vector3 markerPosition, renderPosition;
@@ -724,7 +726,7 @@ void dEntObj_c::func_ov075_021151b4(int playerNo) {
 /* The exit x for player slot playerNo, from the row for the current player
  * count. This path widens the column-map byte unsigned, unlike the standing
  * table lookup below. Preserve that spelling and its ineffective negative check. */
-int dEntObj_c::func_ov075_0211524c(int playerNo) {
+int dEntObj_c::GetExitX(int playerNo) {
     unsigned int count = data_0209fc50;
     int row;
     if (count <= 1) {
@@ -740,7 +742,7 @@ int dEntObj_c::func_ov075_0211524c(int playerNo) {
 
 /* The standing x for player slot playerNo, laid out the same way as the
  * exit table above. Here the signed column-map value -1 selects column 3. */
-int dEntObj_c::func_ov075_02115290(int playerNo) {
+int dEntObj_c::GetStandingX(int playerNo) {
     int count = data_0209fc50;
     int row;
     if ((unsigned int)count <= 1) {
@@ -755,7 +757,7 @@ int dEntObj_c::func_ov075_02115290(int playerNo) {
 }
 
 /* Rebuild the projection and the view from the camera eye and target. */
-void dEntObj_c::func_ov075_021152d4() {
+void dEntObj_c::SetCamera() {
     Matrix4x3 view;
     G3i::PerspectiveW_(data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000,
                        true, (Matrix4x3 *)0);
@@ -805,7 +807,7 @@ int dEntObj_c::Render() {
     int i = 0;
     UnknownVsPlayer *player = mPlayers;
     do {
-        player->func_ov075_02114be4();
+        player->Render();
         i++;
         player++;
     } while (i < 4);
@@ -830,7 +832,7 @@ int dEntObj_c::Behavior() {
         allAtExit = 1;
         i = 0;
         for (; i < 4; i++, player++, walk += sizeof(UnknownVsPlayer), present += 1) {
-            player->func_ov075_02114cd8();
+            player->Behavior();
             if (((dEntObj_c *)walk)->mPlayers[0].mFellOffThisFrame) {
                 Vector3 *playerPosition = &player->mPosition;
                 Vector3 position;
@@ -840,7 +842,7 @@ int dEntObj_c::Behavior() {
                 mMesh.TouchAt(&position);
             }
             if (*present) {
-                if (player->func_ov075_021148f0() == 0)
+                if (player->IsAtExit() == 0)
                     allAtExit = 0;
             }
         }
@@ -851,20 +853,20 @@ int dEntObj_c::Behavior() {
             UnknownVsPlayer *player2 = mPlayers;
             for (; j < 4; j++) {
                 if (*present2)
-                    player2->func_ov075_02114894();
+                    player2->StartRunOffStage();
                 present2 += 1;
                 player2++;
             }
             mState = STATE_RUN_OFF_STAGE;
         }
         if (mState != STATE_IDLE) {
-            if (mPlayers[mFocusedPlayer].func_ov075_02114ac4((Vector3 *)&mCamTargetX,
-                                                             (Vector3 *)&mCamPosX) != 0)
-                func_ov075_021152d4();
+            if (mPlayers[mFocusedPlayer].UpdateCamera((Vector3 *)&mCamTargetX,
+                                                      (Vector3 *)&mCamPosX) != 0)
+                SetCamera();
         }
         if (mAnimActive) {
             int localPlayer = func_0203da9c();
-            func_ov075_021151b4(localPlayer);
+            SetMarkerPosition(localPlayer);
             mAnmModel.Advance();
         }
         mMesh.Behavior();
@@ -930,8 +932,8 @@ int dEntObj_c::InitResources() {
     i = 0;
     do {
         kind = param1;
-        int slotX = func_ov075_02115290(i);
-        if (!player->func_ov075_02114ddc(kind, i, slotX))
+        int slotX = GetStandingX(i);
+        if (!player->Init(kind, i, slotX))
             return 0;
         i++;
         player++;
@@ -952,7 +954,7 @@ int dEntObj_c::InitResources() {
     mCamPosZ = 0x50000;
     mCamTargetZ = -0x8000;
 
-    func_ov075_021152d4();
+    SetCamera();
 
     mSuspended = 0;
     mState = STATE_IDLE;
@@ -1021,15 +1023,20 @@ extern "C" BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
    six animation handlers for mAnimState; the unused indices point at the
    empty handlers. mwcc cannot link-time-initialize pointer-to-member
    records, so the initializer copies the descriptor records in. */
-extern "C" UnknownVsPlayerStateRow data_ov075_0211d56c[10] = {
-    {&UnknownVsPlayer::func_ov075_02114890}, {&UnknownVsPlayer::func_ov075_021147d4},
-    {&UnknownVsPlayer::func_ov075_0211478c}, {&UnknownVsPlayer::func_ov075_0211473c},
-    {&UnknownVsPlayer::func_ov075_02114890}, {&UnknownVsPlayer::func_ov075_02114560},
-    {&UnknownVsPlayer::func_ov075_02114890}, {&UnknownVsPlayer::func_ov075_021143e4},
-    {&UnknownVsPlayer::func_ov075_02114390}, {&UnknownVsPlayer::func_ov075_02114300},
+extern "C" UnknownVsPlayerStateRow sVsPlayerMoveStates[10] = {
+    {&UnknownVsPlayer::MoveNone},
+    {&UnknownVsPlayer::MoveToSlot},
+    {&UnknownVsPlayer::MoveWaitForExit},
+    {&UnknownVsPlayer::MoveTurnToExit},
+    {&UnknownVsPlayer::MoveNone},
+    {&UnknownVsPlayer::MoveRunOffStage},
+    {&UnknownVsPlayer::MoveNone},
+    {&UnknownVsPlayer::MoveChoosePose},
+    {&UnknownVsPlayer::MoveWaitForPoseSound},
+    {&UnknownVsPlayer::MovePoseParticles},
 };
-extern "C" UnknownVsPlayerStateRow data_ov075_0211d53c[6] = {
-    {&UnknownVsPlayer::func_ov075_021142fc}, {&UnknownVsPlayer::func_ov075_0211427c},
-    {&UnknownVsPlayer::func_ov075_02114218}, {&UnknownVsPlayer::func_ov075_021141b8},
-    {&UnknownVsPlayer::func_ov075_021140e4}, {&UnknownVsPlayer::func_ov075_02114010},
+extern "C" UnknownVsPlayerStateRow sVsPlayerAnimStates[6] = {
+    {&UnknownVsPlayer::AnimNone},        {&UnknownVsPlayer::AnimWalkSounds},
+    {&UnknownVsPlayer::AnimWaitForNext}, {&UnknownVsPlayer::AnimWaitForIdle},
+    {&UnknownVsPlayer::AnimSlowGait},    {&UnknownVsPlayer::AnimFastGait},
 };

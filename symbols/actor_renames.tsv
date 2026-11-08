@@ -3035,39 +3035,69 @@ ov074	0x02122eb8	data_ov074_02122eb8	_ZTV12daKuriKing_c	vtable alloc=0x610
 ov075	0x02113ee0	func_ov075_02113ee0	_ZN9dEntObj_cD1Ev	vtable slot 16
 ov075	0x02113f54	func_ov075_02113f54	_ZN9dEntObj_cD0Ev	vtable slot 17
 ov075	0x02114010	func_ov075_02114010	_ZN15UnknownVsPlayer19func_ov075_02114010Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114010	_ZN15UnknownVsPlayer19func_ov075_02114010Ev	_ZN15UnknownVsPlayer12AnimFastGaitEv	coined from the body: animation-table index 5 (ANIM_FAST_GAIT); drops to the slow gait below half speed, playback rate follows mSpeed, step sound on frames 4 and 0x22
 ov075	0x021140e4	func_ov075_021140e4	_ZN15UnknownVsPlayer19func_ov075_021140e4Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x021140e4	_ZN15UnknownVsPlayer19func_ov075_021140e4Ev	_ZN15UnknownVsPlayer12AnimSlowGaitEv	coined from the body: animation-table index 4 (ANIM_SLOW_GAIT); switches up to the fast gait at half speed, playback rate follows mSpeed, step sound on frames 4 and 0x22
 ov075	0x021141b8	func_ov075_021141b8	_ZN15UnknownVsPlayer19func_ov075_021141b8Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x021141b8	_ZN15UnknownVsPlayer19func_ov075_021141b8Ev	_ZN15UnknownVsPlayer15AnimWaitForIdleEv	coined from the body: animation-table index 3 (ANIM_WAIT_FOR_IDLE); when the one-shot finishes, sets the idle animation and drops to ANIM_NONE
 ov075	0x02114218	func_ov075_02114218	_ZN15UnknownVsPlayer19func_ov075_02114218Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114218	_ZN15UnknownVsPlayer19func_ov075_02114218Ev	_ZN15UnknownVsPlayer15AnimWaitForNextEv	coined from the body: animation-table index 2 (ANIM_WAIT_FOR_NEXT); when the one-shot finishes, starts the next one and hands over to ANIM_WAIT_FOR_IDLE
 ov075	0x0211427c	func_ov075_0211427c	_ZN15UnknownVsPlayer19func_ov075_0211427cEv	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x0211427c	_ZN15UnknownVsPlayer19func_ov075_0211427cEv	_ZN15UnknownVsPlayer14AnimWalkSoundsEv	coined from the body: animation-table index 1 (ANIM_WALK_SOUNDS); only plays the step sound on frames 4 and 0x22
 ov075	0x021142fc	func_ov075_021142fc	_ZN15UnknownVsPlayer19func_ov075_021142fcEv	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x021142fc	_ZN15UnknownVsPlayer19func_ov075_021142fcEv	_ZN15UnknownVsPlayer8AnimNoneEv	coined from the body: empty handler at animation-table index 0 (ANIM_NONE)
 ov075	0x02114300	func_ov075_02114300	_ZN15UnknownVsPlayer19func_ov075_02114300Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114300	_ZN15UnknownVsPlayer19func_ov075_02114300Ev	_ZN15UnknownVsPlayer17MovePoseParticlesEv	coined from the body: movement-table index 9 (MOVE_POSE_PARTICLES); keeps particle effect 0x140 on bone 15 until x passes 0x1c2000
 ov075	0x02114390	func_ov075_02114390	_ZN15UnknownVsPlayer19func_ov075_02114390Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114390	_ZN15UnknownVsPlayer19func_ov075_02114390Ev	_ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv	coined from the body: movement-table index 8 (MOVE_WAIT_FOR_POSE_SOUND); on the second pass of frame 0x14 plays the player's sound 0x1c and goes idle
 ov075	0x021143e4	func_ov075_021143e4	_ZN15UnknownVsPlayer19func_ov075_021143e4Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x021143e4	_ZN15UnknownVsPlayer19func_ov075_021143e4Ev	_ZN15UnknownVsPlayer14MoveChoosePoseEv	coined from the body: movement-table index 7 (MOVE_CHOOSE_POSE); picks the pose animation (fixed or two random bits) and the texture-sequence start frame, then state 8 or 9
 ov075	0x02114560	func_ov075_02114560	_ZN15UnknownVsPlayer19func_ov075_02114560Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114560	_ZN15UnknownVsPlayer19func_ov075_02114560Ev	_ZN15UnknownVsPlayer15MoveRunOffStageEv	coined from the body: movement-table index 5 (MOVE_RUN_OFF_STAGE); jumps at the take-off line, walks along mAngleY under gravity, plays the fall sound at z -0x30c000, parks in MOVE_FINISHED at -0x3e8000
 ov075	0x0211473c	func_ov075_0211473c	_ZN15UnknownVsPlayer19func_ov075_0211473cEv	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x0211473c	_ZN15UnknownVsPlayer19func_ov075_0211473cEv	_ZN15UnknownVsPlayer14MoveTurnToExitEv	coined from the body: movement-table index 3 (MOVE_TURN_TO_EXIT); turns toward mExitPos at the player's turn step, then MOVE_AT_EXIT
 ov075	0x0211478c	func_ov075_0211478c	_ZN15UnknownVsPlayer19func_ov075_0211478cEv	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x0211478c	_ZN15UnknownVsPlayer19func_ov075_0211478cEv	_ZN15UnknownVsPlayer15MoveWaitForExitEv	coined from the body: movement-table index 2 (MOVE_WAIT_FOR_EXIT); counts down mWaitTimer, then faces forward and enters MOVE_TURN_TO_EXIT
 ov075	0x021147d4	func_ov075_021147d4	_ZN15UnknownVsPlayer19func_ov075_021147d4Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x021147d4	_ZN15UnknownVsPlayer19func_ov075_021147d4Ev	_ZN15UnknownVsPlayer10MoveToSlotEv	coined from the body: movement-table index 1 (MOVE_TO_SLOT); turns toward mTargetPos, walks along x without overshooting, turns back and calls StartIdle
 ov075	0x02114890	func_ov075_02114890	_ZN15UnknownVsPlayer19func_ov075_02114890Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114890	_ZN15UnknownVsPlayer19func_ov075_02114890Ev	_ZN15UnknownVsPlayer8MoveNoneEv	coined from the body: empty handler at movement-table indices 0, 4 and 6
 ov075	0x02114894	func_ov075_02114894	_ZN15UnknownVsPlayer19func_ov075_02114894Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114894	_ZN15UnknownVsPlayer19func_ov075_02114894Ev	_ZN15UnknownVsPlayer16StartRunOffStageEv	coined from the body: zeroes both speeds, sets the slow-gait animation and enters MOVE_RUN_OFF_STAGE; dEntObj_c::Behavior calls it once every present figure is at its exit
 ov075	0x021148f0	func_ov075_021148f0	_ZN15UnknownVsPlayer19func_ov075_021148f0Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x021148f0	_ZN15UnknownVsPlayer19func_ov075_021148f0Ev	_ZN15UnknownVsPlayer8IsAtExitEv	coined from the body: returns mMoveState == MOVE_AT_EXIT
 ov075	0x02114904	func_ov075_02114904	_ZN15UnknownVsPlayer19func_ov075_02114904Ei	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114904	_ZN15UnknownVsPlayer19func_ov075_02114904Ei	_ZN15UnknownVsPlayer8GoToExitEi	coined from the body: sets mExitPos to (exitX, 0, -0x3e8000), a random mWaitTimer and enters MOVE_WAIT_FOR_EXIT; dEntObj_c passes the per-player exit x
 ov075	0x02114988	func_ov075_02114988	_ZN15UnknownVsPlayer19func_ov075_02114988Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114988	_ZN15UnknownVsPlayer19func_ov075_02114988Ev	_ZN15UnknownVsPlayer14PlaySelectAnimEv	coined from the body: plays the selection one-shot (8, 0x40000000) and enters ANIM_WAIT_FOR_IDLE; dEntObj_c calls it only on this console's player's figure
 ov075	0x021149d0	func_ov075_021149d0	_ZN15UnknownVsPlayer19func_ov075_021149d0Ei	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x021149d0	_ZN15UnknownVsPlayer19func_ov075_021149d0Ei	_ZN15UnknownVsPlayer10WalkToSlotEi	coined from the body: sets mTargetPos.x, a signed walk speed of 0x8000 and enters MOVE_TO_SLOT / ANIM_WALK_SOUNDS
 ov075	0x02114a58	func_ov075_02114a58	_ZN15UnknownVsPlayer19func_ov075_02114a58Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114a58	_ZN15UnknownVsPlayer19func_ov075_02114a58Ev	_ZN15UnknownVsPlayer6IsIdleEv	coined from the body: returns mMoveState == MOVE_IDLE
 ov075	0x02114a6c	func_ov075_02114a6c	_ZN15UnknownVsPlayer19func_ov075_02114a6cEv	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114a6c	_ZN15UnknownVsPlayer19func_ov075_02114a6cEv	_ZN15UnknownVsPlayer9StartIdleEv	coined from the body: sets the player's standing animation and enters MOVE_IDLE / ANIM_NONE
 ov075	0x02114ac4	func_ov075_02114ac4	_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114ac4	_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_	_ZN15UnknownVsPlayer12UpdateCameraEP7Vector3S1_	coined from the body: moves the camera eye and target with the focused figure in MOVE_RUN_OFF_STAGE / MOVE_FINISHED; nonzero return makes dEntObj_c::Behavior rebuild the view
 ov075	0x02114b60	func_ov075_02114b60	_ZN15UnknownVsPlayer19func_ov075_02114b60Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114b60	_ZN15UnknownVsPlayer19func_ov075_02114b60Ev	_ZN15UnknownVsPlayer23RestoreBoneTranslationsEv	coined from the body: copies the BMD file's bone translations back onto the model's bones (bone 0, then 2 onward)
 ov075	0x02114be4	func_ov075_02114be4	_ZN15UnknownVsPlayer19func_ov075_02114be4Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114be4	_ZN15UnknownVsPlayer19func_ov075_02114be4Ev	_ZN15UnknownVsPlayer6RenderEv	coined from the body and the in-tree Render convention: draws the figure's body and second model with the material colour and texture sequence; dEntObj_c::Render calls it for each figure
 ov075	0x02114cd8	func_ov075_02114cd8	_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114cd8	_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev	_ZN15UnknownVsPlayer8BehaviorEv	coined from the body and the in-tree Behavior convention: one frame -- movement state, model matrix, animation state, both animators, shadow; dEntObj_c::Behavior calls it for each figure
 ov075	0x02114ddc	func_ov075_02114ddc	_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi	methodized UnknownVsPlayer helper; PMF state-table member; first param was the figure
+ov075	0x02114ddc	_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi	_ZN15UnknownVsPlayer4InitEhhi	coined from the body: sets up both models, the pose animation, the texture sequence, the shadow and the start position for a player slot; dEntObj_c::InitResources calls it per figure and fails on 0
 ov075	0x02114fa8	func_ov075_02114fa8	_ZN9dEntObj_c19func_ov075_02114fa8Ev	methodized dEntObj_c helper; first param was the actor
 ov075	0x0211505c	func_ov075_0211505c	_ZN9dEntObj_c19func_ov075_0211505cEv	methodized dEntObj_c helper; first param was the actor
 ov075	0x02115098	func_ov075_02115098	_ZN9dEntObj_c19func_ov075_02115098Ei	methodized dEntObj_c helper; first param was the actor
 ov075	0x02115134	func_ov075_02115134	_ZN9dEntObj_c19func_ov075_02115134Ev	methodized dEntObj_c helper; first param was the actor
 ov075	0x021151b4	func_ov075_021151b4	_ZN9dEntObj_c19func_ov075_021151b4Ei	methodized dEntObj_c helper; first param was the actor
+ov075	0x021151b4	_ZN9dEntObj_c19func_ov075_021151b4Ei	_ZN9dEntObj_c17SetMarkerPositionEi	coined from the body: places mAnmModel (the selection marker) 0x32000 above the given player's figure
 ov075	0x0211524c	func_ov075_0211524c	_ZN9dEntObj_c19func_ov075_0211524cEi	methodized dEntObj_c helper; first param was the actor
+ov075	0x0211524c	_ZN9dEntObj_c19func_ov075_0211524cEi	_ZN9dEntObj_c8GetExitXEi	coined from the body: reads sVsPlayerExitX by player-count row and player column
 ov075	0x02115290	func_ov075_02115290	_ZN9dEntObj_c19func_ov075_02115290Ei	methodized dEntObj_c helper; first param was the actor
+ov075	0x02115290	_ZN9dEntObj_c19func_ov075_02115290Ei	_ZN9dEntObj_c12GetStandingXEi	coined from the body: reads sVsPlayerStandingX by player-count row and player column
 ov075	0x021152d4	func_ov075_021152d4	_ZN9dEntObj_c19func_ov075_021152d4Ev	methodized dEntObj_c helper; first param was the actor
+ov075	0x021152d4	_ZN9dEntObj_c19func_ov075_021152d4Ev	_ZN9dEntObj_c9SetCameraEv	coined from the body: sets the perspective projection and the LookAt view from mCamPos/mCamTarget
 ov075	0x02115388	func_ov075_02115388	_ZN9dEntObj_c16CleanupResourcesEv	vtable slot 3
 ov075	0x021154cc	func_ov075_021154cc	_ZN9dEntObj_c6RenderEv	vtable slot 9
 ov075	0x0211555c	func_ov075_0211555c	_ZN9dEntObj_c8BehaviorEv	vtable slot 6
@@ -3081,6 +3111,8 @@ ov075	0x0211c610	UnknownVsEntry_SpawnInfo	g_profile_ENTRY_OBJECT	reconstructed p
 ov075	0x0211c6a0	data_ov075_0211c6a0	_ZTV9dEntObj_c	vtable alloc=?
 ov075	0x0211c788	data_ov075_0211c788	g_profile_RESULT	reconstructed profile global; literal ROM ID RESULT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov075	0x0211c880	data_ov075_0211c880	g_profile_ENTRY	reconstructed profile global; literal ROM ID ENTRY+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov075	0x0211d53c	data_ov075_0211d53c	sVsPlayerAnimStates	coined from the body: UnknownVsPlayer animation dispatch table, six pointer-to-member rows indexed by mAnimState (AnimNone..AnimFastGait), filled by the TU initializer; sVsPlayer prefix follows the TU's sVsPlayer* tables
+ov075	0x0211d56c	data_ov075_0211d56c	sVsPlayerMoveStates	coined from the body: UnknownVsPlayer movement dispatch table, ten pointer-to-member rows indexed by mMoveState (MoveNone..MovePoseParticles), filled by the TU initializer; sVsPlayer prefix follows the TU's sVsPlayer* tables
 ov077	0x02123740	func_ov077_02123740	_ZN7daJgm_cD1Ev	vtable slot 16
 ov077	0x02123798	func_ov077_02123798	_ZN7daJgm_cD0Ev	vtable slot 17
 ov077	0x021247a8	func_ov077_021247a8	_ZN7daJgm_c16CleanupResourcesEv	vtable slot 3

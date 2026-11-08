@@ -66,182 +66,182 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114010Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimFastGaitEv",
       "address": "0x02114010",
       "size": "0x000000d4",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114010Ev.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021140e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimSlowGaitEv",
       "address": "0x021140e4",
       "size": "0x000000d4",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021140e4Ev.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021141b8Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForIdleEv",
       "address": "0x021141b8",
       "size": "0x00000060",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021141b8Ev.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114218Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForNextEv",
       "address": "0x02114218",
       "size": "0x00000064",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114218Ev.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211427cEv",
+      "symbol": "_ZN15UnknownVsPlayer14AnimWalkSoundsEv",
       "address": "0x0211427c",
       "size": "0x00000080",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211427cEv.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021142fcEv",
+      "symbol": "_ZN15UnknownVsPlayer8AnimNoneEv",
       "address": "0x021142fc",
       "size": "0x00000004",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021142fcEv.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114300Ev",
+      "symbol": "_ZN15UnknownVsPlayer17MovePoseParticlesEv",
       "address": "0x02114300",
       "size": "0x00000090",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114300Ev.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114390Ev",
+      "symbol": "_ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv",
       "address": "0x02114390",
       "size": "0x00000054",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114390Ev.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021143e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer14MoveChoosePoseEv",
       "address": "0x021143e4",
       "size": "0x0000017c",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021143e4Ev.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114560Ev",
+      "symbol": "_ZN15UnknownVsPlayer15MoveRunOffStageEv",
       "address": "0x02114560",
       "size": "0x000001dc",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114560Ev.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211473cEv",
+      "symbol": "_ZN15UnknownVsPlayer14MoveTurnToExitEv",
       "address": "0x0211473c",
       "size": "0x00000050",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211473cEv.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211478cEv",
+      "symbol": "_ZN15UnknownVsPlayer15MoveWaitForExitEv",
       "address": "0x0211478c",
       "size": "0x00000048",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211478cEv.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021147d4Ev",
+      "symbol": "_ZN15UnknownVsPlayer10MoveToSlotEv",
       "address": "0x021147d4",
       "size": "0x000000bc",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021147d4Ev.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "address": "0x02114890",
       "size": "0x00000004",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114890Ev.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114894Ev",
+      "symbol": "_ZN15UnknownVsPlayer16StartRunOffStageEv",
       "address": "0x02114894",
       "size": "0x0000005c",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114894Ev.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021148f0Ev",
+      "symbol": "_ZN15UnknownVsPlayer8IsAtExitEv",
       "address": "0x021148f0",
       "size": "0x00000014",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021148f0Ev.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114904Ei",
+      "symbol": "_ZN15UnknownVsPlayer8GoToExitEi",
       "address": "0x02114904",
       "size": "0x00000084",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114904Ei.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114988Ev",
+      "symbol": "_ZN15UnknownVsPlayer14PlaySelectAnimEv",
       "address": "0x02114988",
       "size": "0x00000048",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114988Ev.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021149d0Ei",
+      "symbol": "_ZN15UnknownVsPlayer10WalkToSlotEi",
       "address": "0x021149d0",
       "size": "0x00000088",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021149d0Ei.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114a58Ev",
+      "symbol": "_ZN15UnknownVsPlayer6IsIdleEv",
       "address": "0x02114a58",
       "size": "0x00000014",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114a58Ev.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114a6cEv",
+      "symbol": "_ZN15UnknownVsPlayer9StartIdleEv",
       "address": "0x02114a6c",
       "size": "0x00000058",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114a6cEv.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_",
+      "symbol": "_ZN15UnknownVsPlayer12UpdateCameraEP7Vector3S1_",
       "address": "0x02114ac4",
       "size": "0x0000009c",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114b60Ev",
+      "symbol": "_ZN15UnknownVsPlayer23RestoreBoneTranslationsEv",
       "address": "0x02114b60",
       "size": "0x00000084",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114b60Ev.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114be4Ev",
+      "symbol": "_ZN15UnknownVsPlayer6RenderEv",
       "address": "0x02114be4",
       "size": "0x000000f4",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114be4Ev.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev",
+      "symbol": "_ZN15UnknownVsPlayer8BehaviorEv",
       "address": "0x02114cd8",
       "size": "0x00000104",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi",
+      "symbol": "_ZN15UnknownVsPlayer4InitEhhi",
       "address": "0x02114ddc",
       "size": "0x000001cc",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi.cpp",
@@ -276,28 +276,28 @@
       "ordinal": 32
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_021151b4Ei",
+      "symbol": "_ZN9dEntObj_c17SetMarkerPositionEi",
       "address": "0x021151b4",
       "size": "0x00000098",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_021151b4Ei.c",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_0211524cEi",
+      "symbol": "_ZN9dEntObj_c8GetExitXEi",
       "address": "0x0211524c",
       "size": "0x00000044",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_0211524cEi.c",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_02115290Ei",
+      "symbol": "_ZN9dEntObj_c12GetStandingXEi",
       "address": "0x02115290",
       "size": "0x00000044",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_02115290Ei.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_021152d4Ev",
+      "symbol": "_ZN9dEntObj_c9SetCameraEv",
       "address": "0x021152d4",
       "size": "0x000000b4",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_021152d4Ev.cpp",
@@ -352,70 +352,70 @@
       "address": "0x0211c5c0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021147d4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer10MoveToSlotEv"
     },
     {
       "symbol": "@1040",
       "address": "0x0211c5c8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114300Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer17MovePoseParticlesEv"
     },
     {
       "symbol": "@1077",
       "address": "0x0211c5d0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114890Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8MoveNoneEv"
     },
     {
       "symbol": "@1038",
       "address": "0x0211c5d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021143e4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14MoveChoosePoseEv"
     },
     {
       "symbol": "@1039",
       "address": "0x0211c5e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114390Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv"
     },
     {
       "symbol": "@1035",
       "address": "0x0211c5e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114890Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8MoveNoneEv"
     },
     {
       "symbol": "@1026",
       "address": "0x0211c5f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021141b8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15AnimWaitForIdleEv"
     },
     {
       "symbol": "@1042",
       "address": "0x0211c5f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114218Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15AnimWaitForNextEv"
     },
     {
       "symbol": "@1068",
       "address": "0x0211c600",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_0211427cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14AnimWalkSoundsEv"
     },
     {
       "symbol": "@1041",
       "address": "0x0211c608",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021142fcEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8AnimNoneEv"
     },
     {
       "symbol": "g_profile_ENTRY_OBJECT",
@@ -429,42 +429,42 @@
       "address": "0x0211c618",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_0211478cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15MoveWaitForExitEv"
     },
     {
       "symbol": "@1036",
       "address": "0x0211c620",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114560Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15MoveRunOffStageEv"
     },
     {
       "symbol": "@1031",
       "address": "0x0211c628",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114010Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer12AnimFastGaitEv"
     },
     {
       "symbol": "@1037",
       "address": "0x0211c630",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114890Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8MoveNoneEv"
     },
     {
       "symbol": "@1029",
       "address": "0x0211c638",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021140e4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer12AnimSlowGaitEv"
     },
     {
       "symbol": "@1034",
       "address": "0x0211c640",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_0211473cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14MoveTurnToExitEv"
     }
   ],
   "bss": [
@@ -777,14 +777,14 @@
       "evidence": "compiler-generated destructor-registration node for data_ov075_0211d39c"
     },
     {
-      "symbol": "data_ov075_0211d53c",
+      "symbol": "sVsPlayerAnimStates",
       "address": "0x0211d53c",
       "size": "0x30",
       "binding": "STB_GLOBAL",
       "evidence": "UnknownVsPlayer animation dispatch table: six pointer-to-member rows indexed by mAnimState, populated by the initializer"
     },
     {
-      "symbol": "data_ov075_0211d56c",
+      "symbol": "sVsPlayerMoveStates",
       "address": "0x0211d56c",
       "size": "0x50",
       "binding": "STB_GLOBAL",
@@ -1392,12 +1392,12 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Vector3 four-byte destructor, vague linkage from the Vector3 locals in _ZN15UnknownVsPlayer19func_ov075_02114300Ev and _ZN9dEntObj_c19func_ov075_021151b4Ei. The cartridge owns the one copy at arm9:0x020072c0."
+      "reason": "Vector3 four-byte destructor, vague linkage from the Vector3 locals in _ZN15UnknownVsPlayer17MovePoseParticlesEv and _ZN9dEntObj_c17SetMarkerPositionEi. The cartridge owns the one copy at arm9:0x020072c0."
     },
     {
       "symbol": "_ZN9Matrix4x3D1Ev",
       "disposition": "deadstrip",
-      "reason": "Matrix4x3 vague-linkage destructor from the view-matrix local in _ZN9dEntObj_c19func_ov075_021152d4Ev. No configured ROM symbol of that name exists in any module and no surviving reference reaches it."
+      "reason": "Matrix4x3 vague-linkage destructor from the view-matrix local in _ZN9dEntObj_c9SetCameraEv. No configured ROM symbol of that name exists in any module and no surviving reference reaches it."
     },
     {
       "symbol": "_ZTV9dEntObj_c",
@@ -2867,7 +2867,7 @@
       "source": "0x0211bab8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d56c",
+      "symbol": "sVsPlayerMoveStates",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211d56c"
@@ -2977,7 +2977,7 @@
       "source": "0x0211bae4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d53c",
+      "symbol": "sVsPlayerAnimStates",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211d53c"
@@ -3057,7 +3057,7 @@
       "source": "0x0211c5c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021147d4Ev",
+      "symbol": "_ZN15UnknownVsPlayer10MoveToSlotEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021147d4"
@@ -3067,7 +3067,7 @@
       "source": "0x0211c5c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114300Ev",
+      "symbol": "_ZN15UnknownVsPlayer17MovePoseParticlesEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114300"
@@ -3077,7 +3077,7 @@
       "source": "0x0211c5d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114890"
@@ -3087,7 +3087,7 @@
       "source": "0x0211c5d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021143e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer14MoveChoosePoseEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021143e4"
@@ -3097,7 +3097,7 @@
       "source": "0x0211c5e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114390Ev",
+      "symbol": "_ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114390"
@@ -3107,7 +3107,7 @@
       "source": "0x0211c5e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114890"
@@ -3117,7 +3117,7 @@
       "source": "0x0211c5f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021141b8Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForIdleEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021141b8"
@@ -3127,7 +3127,7 @@
       "source": "0x0211c5f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114218Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForNextEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114218"
@@ -3137,7 +3137,7 @@
       "source": "0x0211c600",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211427cEv",
+      "symbol": "_ZN15UnknownVsPlayer14AnimWalkSoundsEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211427c"
@@ -3147,7 +3147,7 @@
       "source": "0x0211c608",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021142fcEv",
+      "symbol": "_ZN15UnknownVsPlayer8AnimNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021142fc"
@@ -3157,7 +3157,7 @@
       "source": "0x0211c618",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211478cEv",
+      "symbol": "_ZN15UnknownVsPlayer15MoveWaitForExitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211478c"
@@ -3167,7 +3167,7 @@
       "source": "0x0211c620",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114560Ev",
+      "symbol": "_ZN15UnknownVsPlayer15MoveRunOffStageEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114560"
@@ -3177,7 +3177,7 @@
       "source": "0x0211c628",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114010Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimFastGaitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114010"
@@ -3187,7 +3187,7 @@
       "source": "0x0211c630",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114890"
@@ -3197,7 +3197,7 @@
       "source": "0x0211c638",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021140e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimSlowGaitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021140e4"
@@ -3207,7 +3207,7 @@
       "source": "0x0211c640",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211473cEv",
+      "symbol": "_ZN15UnknownVsPlayer14MoveTurnToExitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211473c"

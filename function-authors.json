@@ -39671,107 +39671,107 @@
     },
     "ov075:0x02114010": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114010Ev"
+      "name": "_ZN15UnknownVsPlayer12AnimFastGaitEv"
     },
     "ov075:0x021140e4": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_021140e4Ev"
+      "name": "_ZN15UnknownVsPlayer12AnimSlowGaitEv"
     },
     "ov075:0x021141b8": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_021141b8Ev"
+      "name": "_ZN15UnknownVsPlayer15AnimWaitForIdleEv"
     },
     "ov075:0x02114218": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114218Ev"
+      "name": "_ZN15UnknownVsPlayer15AnimWaitForNextEv"
     },
     "ov075:0x0211427c": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_0211427cEv"
+      "name": "_ZN15UnknownVsPlayer14AnimWalkSoundsEv"
     },
     "ov075:0x021142fc": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_021142fcEv"
+      "name": "_ZN15UnknownVsPlayer8AnimNoneEv"
     },
     "ov075:0x02114300": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114300Ev"
+      "name": "_ZN15UnknownVsPlayer17MovePoseParticlesEv"
     },
     "ov075:0x02114390": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114390Ev"
+      "name": "_ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv"
     },
     "ov075:0x021143e4": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_021143e4Ev"
+      "name": "_ZN15UnknownVsPlayer14MoveChoosePoseEv"
     },
     "ov075:0x02114560": {
       "author": "lunavyqo",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114560Ev"
+      "name": "_ZN15UnknownVsPlayer15MoveRunOffStageEv"
     },
     "ov075:0x0211473c": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_0211473cEv"
+      "name": "_ZN15UnknownVsPlayer14MoveTurnToExitEv"
     },
     "ov075:0x0211478c": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_0211478cEv"
+      "name": "_ZN15UnknownVsPlayer15MoveWaitForExitEv"
     },
     "ov075:0x021147d4": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_021147d4Ev"
+      "name": "_ZN15UnknownVsPlayer10MoveToSlotEv"
     },
     "ov075:0x02114890": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev"
+      "name": "_ZN15UnknownVsPlayer8MoveNoneEv"
     },
     "ov075:0x02114894": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114894Ev"
+      "name": "_ZN15UnknownVsPlayer16StartRunOffStageEv"
     },
     "ov075:0x021148f0": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_021148f0Ev"
+      "name": "_ZN15UnknownVsPlayer8IsAtExitEv"
     },
     "ov075:0x02114904": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114904Ei"
+      "name": "_ZN15UnknownVsPlayer8GoToExitEi"
     },
     "ov075:0x02114988": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114988Ev"
+      "name": "_ZN15UnknownVsPlayer14PlaySelectAnimEv"
     },
     "ov075:0x021149d0": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_021149d0Ei"
+      "name": "_ZN15UnknownVsPlayer10WalkToSlotEi"
     },
     "ov075:0x02114a58": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114a58Ev"
+      "name": "_ZN15UnknownVsPlayer6IsIdleEv"
     },
     "ov075:0x02114a6c": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114a6cEv"
+      "name": "_ZN15UnknownVsPlayer9StartIdleEv"
     },
     "ov075:0x02114ac4": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_"
+      "name": "_ZN15UnknownVsPlayer12UpdateCameraEP7Vector3S1_"
     },
     "ov075:0x02114b60": {
       "author": "ruspecial",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114b60Ev"
+      "name": "_ZN15UnknownVsPlayer23RestoreBoneTranslationsEv"
     },
     "ov075:0x02114be4": {
       "author": "ruspecial",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114be4Ev"
+      "name": "_ZN15UnknownVsPlayer6RenderEv"
     },
     "ov075:0x02114cd8": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev"
+      "name": "_ZN15UnknownVsPlayer8BehaviorEv"
     },
     "ov075:0x02114ddc": {
       "author": "tangosdev",
-      "name": "_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi"
+      "name": "_ZN15UnknownVsPlayer4InitEhhi"
     },
     "ov075:0x02114fa8": {
       "author": "tangosdev",
@@ -39791,19 +39791,19 @@
     },
     "ov075:0x021151b4": {
       "author": "tangosdev",
-      "name": "_ZN9dEntObj_c19func_ov075_021151b4Ei"
+      "name": "_ZN9dEntObj_c17SetMarkerPositionEi"
     },
     "ov075:0x0211524c": {
       "author": "tangosdev",
-      "name": "_ZN9dEntObj_c19func_ov075_0211524cEi"
+      "name": "_ZN9dEntObj_c8GetExitXEi"
     },
     "ov075:0x02115290": {
       "author": "tangosdev",
-      "name": "_ZN9dEntObj_c19func_ov075_02115290Ei"
+      "name": "_ZN9dEntObj_c12GetStandingXEi"
     },
     "ov075:0x021152d4": {
       "author": "tangosdev",
-      "name": "_ZN9dEntObj_c19func_ov075_021152d4Ev"
+      "name": "_ZN9dEntObj_c9SetCameraEv"
     },
     "ov075:0x02115388": {
       "author": "tangosdev",
