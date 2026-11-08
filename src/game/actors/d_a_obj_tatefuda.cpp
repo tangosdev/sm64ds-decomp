@@ -133,9 +133,7 @@ extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern char *func_ov002_020e496c(daPly_c *p);
 extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
-extern int data_ov002_020ff0d4[];
-extern int data_ov002_020ff0d8[];
-extern int data_ov002_020ff0dc[];
+extern Vector3 data_ov002_020ff0d4[];
 extern void func_02012694(unsigned int a, void *b);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
@@ -229,7 +227,7 @@ int daObjTatefuda_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
-    mdCcAc_c.Init((dActor_c *)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
+    mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 
     mPoundsLeft = 2;
     mHomePosX = mPosX;
@@ -241,7 +239,7 @@ int daObjTatefuda_c::InitResources()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
-    mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
+    mWithMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     return 1;
@@ -989,8 +987,9 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
  * approaches data_ov002_020ff0d0[r4] by 0x1000 per call;
  * the sign copies the holder's Y angle (into mAngleY and mPrevAngleY); the
  * matrix is built from a translation, a pivot offset of 0x8c00 up and back, the
- * sign's rotation (Matrix4x3_ApplyInPlaceToRotationXYZExt), and a per-pose offset taken from the three tables at
- * data_ov002_020ff0d4/d8/dc (12 bytes per pose). The position is that
+ * sign's rotation (Matrix4x3_ApplyInPlaceToRotationXYZExt), and a per-pose offset from the
+ * two-entry Vector3 table at data_ov002_020ff0d4 (the ROM's pool holds
+ * its .x/.y/.z addresses 0d4/0d8/0dc). The position is that
  * matrix's translation shifted left 3 (matrix units are position >> 3) and
  * the matrix itself is stored into mModel at 0xf0. */
 void AttachToHolder(struct daObjTatefuda_c *self)
@@ -1010,9 +1009,9 @@ void AttachToHolder(struct daObjTatefuda_c *self)
 
     ApproachLinear(self->mAngleX, data_ov002_020ff0d0[r4], 0x1000);
 
-    ((int *)&v)[0] = 0;
-    ((int *)&v)[1] = 0;
-    ((int *)&v)[2] = 0;
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
     MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
@@ -1026,7 +1025,7 @@ void AttachToHolder(struct daObjTatefuda_c *self)
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, self->mAngleX, self->mAngleY, self->mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, *(int *)((char *)data_ov002_020ff0d4 + r4 * 0xc), *(int *)((char *)data_ov002_020ff0d8 + r4 * 0xc), *(int *)((char *)data_ov002_020ff0dc + r4 * 0xc));
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x, data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
 
     self->mPosX = data_020a0e68.t.x;
     self->mPosY = data_020a0e68.t.y;
