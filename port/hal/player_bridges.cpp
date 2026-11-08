@@ -1739,6 +1739,60 @@ static void ghost_unstamp(GhostPalStamp &st)
             *(int *)(st.rec[k] + i * 0x30 + 0x20) = st.old[k][i];
 }
 
+/* BROSTAMP1: THE MIRROR DRAWS THE SAME STAMPED MODELS. Player::Render
+   (src/game/player/Player.cpp, Player::Render) draws a model, then runs its
+   TextureSequence::Update calls, then the mirror copy func_ov002_020e3e00:
+   a second Model::Render of the same model, reflected (level 5 area 3, the
+   castle's mirror room; level 0x2f, the King Boo arena). The Update is
+   func_02046bbc (src/unnamed/arm9/0204/func_02046bbc.c), which writes every
+   material its BTP drives back to the file's own texture words (+0x1c) and
+   palette base (+0x20): the eyes' blink on every head, and Luigi's vanish
+   sequence on his body and his cap head. So between the real draw and the
+   reflection those materials lost the picks this draw stamped, and the
+   reflected Yoshi's eyelids (the blink's material) showed the cartridge
+   green on a body in the player's colours. The ROM's own per-player stamp
+   (VS, Yoshi, the unk_61c loop at the top of Player::Render) runs before
+   the draw and has no mirror room to meet. Stamped again here, just before
+   each mirror draw, on whatever the Update moved; the moved base is what
+   the unstamp puts back, so the material is left as the Update set it, as
+   it is on the cartridge. Nothing moved, no pick, no mirror: nothing
+   changes. */
+static void ghost_restamp(GhostPalStamp &st, int pal)
+{
+    for (int k = 0; k < 2; ++k)
+        for (unsigned i = 0; i < st.n[k]; ++i) {
+            int *pb = (int *)(st.rec[k] + i * 0x30 + 0x20);
+            if (*pb == pal) continue;
+            st.old[k][i] = *pb;
+            *pb = pal;
+        }
+}
+struct MirrorStamp {
+    GhostPalStamp *gst;              /* this draw's ghost / own Yoshi row stamp, or 0 */
+    int pal;
+    port::bro::Stamp *bst;           /* this draw's bro stamp, or 0 */
+    port::bro::Picks bp;
+};
+static MirrorStamp g_mirror_stamp;
+static void mirror_restamp()
+{
+    MirrorStamp &m = g_mirror_stamp;
+    if (m.gst && m.pal >= 0) ghost_restamp(*m.gst, m.pal);
+    if (m.bst) port::bro::restamp(*m.bst, m.bp);
+}
+
+/* BROSTAMP1: THE BALLOON IS THE BODY WHILE IT IS UP. With mIsBalloon
+   (+0x6fd) on, the body draw is the inline balloon model at +0xf0
+   (hal_render_player_world_body's balloon arm, src/game/player/Player.cpp
+   Player::Render's else arm), not mBodyModels[GetBodyModelID], so the
+   stamps go on it. It shares the body's palette names (mario_body_pl ...),
+   so the picks find it the same way. */
+static char *stamp_body_model(char *c, unsigned id)
+{
+    if (*(const unsigned char *)(c + 0x6fd) != 0) return c + 0xf0;
+    return (char *)((ModelAnim **)(c + 0xdc))[id];
+}
+
 /* GHOSTCHAR1: SM64DS_GHOST_DRAW_PROBE=<stride>. What a hub ghost's draw really
    has, for the black-shading field report (F7): once per <stride> draws of a
    ghost, its character, the palette row it is stamped with and that row's
@@ -1920,7 +1974,7 @@ void hal_render_player_world(void *player)
         char *c = (char *)player;
         const unsigned id =
             _ZNK6Player14GetBodyModelIDEjb(c, *(int *)(c + 8) & 0xff, 0);
-        ghost_stamp_one(st, 0, (char *)((ModelAnim **)(c + 0xdc))[id], pal);
+        ghost_stamp_one(st, 0, stamp_body_model(c, id), pal);
         const unsigned hid =
             _ZN6Player19func_ov002_020becf4Eii(c, *(unsigned char *)(c + 0x6db), 1);
         if (hid != 8 && hid != 9)
@@ -1937,13 +1991,22 @@ void hal_render_player_world(void *player)
         port::bro::Picks bp;
         if (chr < 3 && port_bro_picks_for_body(player, &bp) && port::bro::any(bp)) {
             const unsigned id = _ZNK6Player14GetBodyModelIDEjb(c, chr, 0);
-            port::bro::stamp_model(bst, 0, (char *)((ModelAnim **)(c + 0xdc))[id], bp);
+            port::bro::stamp_model(bst, 0, stamp_body_model(c, id), bp);
             const unsigned hid = _ZN6Player19func_ov002_020becf4Eii(c, *(unsigned char *)(c + 0x6db), 1);
             if (hid != 8 && hid != 9)
                 port::bro::stamp_model(bst, 1, ((char **)(c + 0x154))[hid], bp);
+            g_mirror_stamp.bst = &bst;
+            g_mirror_stamp.bp = bp;
         }
     }
+    if (pal >= 0) {
+        g_mirror_stamp.gst = &st;
+        g_mirror_stamp.pal = pal;
+    }
     hal_render_player_world_body(player);
+    g_mirror_stamp.gst = 0;
+    g_mirror_stamp.bst = 0;
+    g_mirror_stamp.pal = -1;
     port::bro::unstamp(bst);
     if (pal >= 0) ghost_unstamp(st);
     if (player != data_0209f394[data_0209f250] && slot >= 0 && slot < kPortBodySlots &&
@@ -2206,6 +2269,7 @@ static void hal_render_player_world_body(void *player)
         if (hsink_on()) ntr::gx_polygons(hsink_t1);
         hal_player_texseq_body(c);
         /* the mirror, src/_ZN6Player6RenderEv.cpp:81 (see the head's call) */
+        mirror_restamp();               /* BROSTAMP1: the texseq above moved stamped bases */
         func_ov002_020e3e00(ma, c + 0x80, *(const unsigned char *)(c + 0x6f5));
     }
 
@@ -2238,6 +2302,7 @@ static void hal_render_player_world_body(void *player)
                model's matrix after. It is linked (port/slice_hostgen4.txt)
                and this copy never called it, so the player had no
                reflection in either mirror. */
+            mirror_restamp();           /* BROSTAMP1: the blink above moved the eyes' base */
             func_ov002_020e3e00(head, c + 0x80, *(const unsigned char *)(c + 0x6f5));
             /* THE LAST STATEMENT OF THE ROM'S HEAD BLOCK,
                src/_ZN6Player6RenderEv.cpp:129-131:
@@ -3160,6 +3225,7 @@ static void port_legacy_set_character(void *player, unsigned ch)
 
    SM64DS_SWAP_LEGACY=1 forces the old InitResources rebuild for an A/B. */
 extern "C" unsigned char data_0209cad2[];   /* save block; [0x0f] is caa0[0x41] */
+extern "C" unsigned char data_02092128[];   /* per-player character, the spawn's f1 (hal/actor_vtables.cpp) */
 extern "C" int data_0209b478[];             /* voice-group byte (hal/actor_vtables.cpp) */
 extern "C" void func_ov002_020e6330(void *self);   /* src/func_ov002_020e6330.c */
 extern "C" void func_ov002_020e6350(char *self);   /* src/func_ov002_020e6350.c */
@@ -3184,6 +3250,23 @@ extern "C" void port_player_set_character(void *player, unsigned ch)
     unsigned char *const save_chr = &data_0209cad2[0x0f];  /* data_0209caa0[0x41] */
     const unsigned char keep_save = *save_chr;
     const unsigned char keep_voice = *(unsigned char *)data_0209b478;
+    /* THE PER-PLAYER TABLE IS THE THIRD THING SetRealCharacter WRITES
+       (src/game/player/Player.cpp:1226, data_02092128[mPlayerNo] = param1),
+       and for a remote body it has to be kept exactly like the save byte.
+       The spawn loop (src/game/stages/LevelObjects.cpp:203-208) packs body i
+       as f2 = the save byte (mCharacter, the same for every body) and
+       f1 = data_02092128[i] (param1, the look), and outside the castle
+       Player::InitResources keeps param1 = f1 (Player.cpp:27022-27037). Left
+       at the friend's character, the table built that friend's body at the
+       next level load half as the friend (param1) and half as me
+       (mCharacter). The cartridge's cap rule (dCapEnemy_c::
+       DestroyIfCapNotNeeded) then threw away any enemy wearing my cap whose
+       nearest body at load was that one: a Luigi console lost 4 of the 6
+       lobby Boos in Big Boo's Haunt. Kept, every body comes up with
+       param1 == mCharacter, as the ROM's own loop builds one player, and the
+       friend's look is put back by the ghost swap as before. */
+    const int tbl_slot = remote ? (int)(*((unsigned char *)player + 0x6d8) & 0x3f) : -1;
+    const unsigned char keep_tbl = remote ? data_02092128[tbl_slot] : 0;
 
     int rc = port_door_swap((char *)player, (int)(ch & 3));
     /* the door path can decline (no player, already that character); the codes
@@ -3200,6 +3283,7 @@ extern "C" void port_player_set_character(void *player, unsigned ch)
         if (leak < 0) leak = std::getenv("SM64DS_GHOSTCHAR_LEAK") ? 1 : 0;
         if (!leak) {
             *save_chr = keep_save;
+            data_02092128[tbl_slot] = keep_tbl;
             *(unsigned char *)data_0209b478 = keep_voice;
             if (localp && *(void **)(localp + 0xdc)) {
                 func_ov002_020e6330(localp);
@@ -3207,11 +3291,12 @@ extern "C" void port_player_set_character(void *player, unsigned ch)
             }
         }
         std::fprintf(stderr, "[chr] ghost swap on slot %d to %u: save character"
-                             " %u -> %u (%s), local body %u\n",
+                             " %u -> %u (%s), local body %u, table[%d] %u\n",
                      player ? (int)*((unsigned char *)player + 0x6d8) : -1,
                      (unsigned)(ch & 3), (unsigned)keep_save,
                      (unsigned)*save_chr, leak ? "LEAK knob on" : "kept",
-                     localp ? (unsigned)(*(unsigned *)(localp + 8) & 0xff) : 99u);
+                     localp ? (unsigned)(*(unsigned *)(localp + 8) & 0xff) : 99u,
+                     tbl_slot, (unsigned)data_02092128[tbl_slot]);
     }
 }
 

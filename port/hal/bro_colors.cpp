@@ -169,9 +169,33 @@ bool any(const Picks &p)
     return false;
 }
 
+// point material i's base (*pb) at its recoloured copy when its palette has a pick; true when it did.
+// dst caches copy_for per palette j for one walk (0xFFFFFFFF: not asked yet).
+static bool stamp_base(int *pb, const unsigned char *hdr, unsigned *dst, const Picks &p)
+{
+    unsigned np = 0, pals = 0;
+    std::memcpy(&np, hdr + 0x1c, 4);                 /* numPalettes */
+    std::memcpy(&pals, hdr + 0x20, 4);               /* palettes: name, data, size, vramOffset */
+    const unsigned at = (unsigned)*pb * 16u;
+    for (unsigned j = 0; j < np; ++j) {
+        const unsigned char *pr = (const unsigned char *)(size_t)(pals + j * 0x10);
+        unsigned nmp = 0, size = 0, voff = 0;
+        std::memcpy(&nmp, pr + 0, 4);
+        std::memcpy(&size, pr + 8, 4);
+        std::memcpy(&voff, pr + 0xc, 4);
+        if (at < voff || at >= voff + size) continue;
+        if (dst[j] == 0xFFFFFFFFu) dst[j] = copy_for((const char *)(size_t)nmp, voff, size, p);
+        if (!dst[j]) return false;
+        *pb += (int)((dst[j] - voff) / 16u);
+        return true;
+    }
+    return false;
+}
+
 void stamp_model(Stamp &st, int k, char *mdl, const Picks &p)
 {
     st.rec[k] = 0;
+    st.hdr[k] = 0;
     st.n[k] = 0;
     if (!mdl) return;
     const int *mc = (const int *)(mdl + 8);           /* ModelComponents at +0x8 */
@@ -186,34 +210,34 @@ void stamp_model(Stamp &st, int k, char *mdl, const Picks &p)
     reset_if_dropped();
     unsigned dst[16];
     for (unsigned j = 0; j < np; ++j) dst[j] = 0xFFFFFFFFu;
-    bool any_hit = false;
     for (unsigned i = 0; i < nm; ++i) {
         int *pb = (int *)(rec + i * 0x30 + 0x20);
         st.old[k][i] = *pb;
+        st.hit[k][i] = stamp_base(pb, hdr, dst, p) ? 1 : 0;
         st.now[k][i] = *pb;
-        st.hit[k][i] = 0;
-        const unsigned at = (unsigned)*pb * 16u;
-        for (unsigned j = 0; j < np; ++j) {
-            const unsigned char *pr = (const unsigned char *)(size_t)(pals + j * 0x10);
-            unsigned nmp = 0, size = 0, voff = 0;
-            std::memcpy(&nmp, pr + 0, 4);
-            std::memcpy(&size, pr + 8, 4);
-            std::memcpy(&voff, pr + 0xc, 4);
-            if (at < voff || at >= voff + size) continue;
-            if (dst[j] == 0xFFFFFFFFu) dst[j] = copy_for((const char *)(size_t)nmp, voff, size, p);
-            if (dst[j]) {
-                const int nb = *pb + (int)((dst[j] - voff) / 16u);
-                *pb = nb;
-                st.now[k][i] = nb;
-                st.hit[k][i] = 1;
-                any_hit = true;
-            }
-            break;
+    }
+    /* kept with no hit too: a texture sequence can move a material onto a picked palette before the mirror draw */
+    st.rec[k] = rec;
+    st.hdr[k] = hdr;
+    st.n[k] = nm;
+}
+
+void restamp(Stamp &st, const Picks &p)
+{
+    for (int k = 0; k < 2; ++k) {
+        if (!st.rec[k] || !st.hdr[k]) continue;
+        unsigned np = 0;
+        std::memcpy(&np, st.hdr[k] + 0x1c, 4);
+        unsigned dst[16];
+        for (unsigned j = 0; j < np && j < 16; ++j) dst[j] = 0xFFFFFFFFu;
+        for (unsigned i = 0; i < st.n[k]; ++i) {
+            int *pb = (int *)(st.rec[k] + i * 0x30 + 0x20);
+            if (*pb == st.now[k][i]) continue;           /* still what this draw stamped (or left) */
+            st.old[k][i] = *pb;
+            st.hit[k][i] = stamp_base(pb, st.hdr[k], dst, p) ? 1 : 0;
+            st.now[k][i] = *pb;
         }
     }
-    if (!any_hit) return;
-    st.rec[k] = rec;
-    st.n[k] = nm;
 }
 
 void unstamp(Stamp &st)
