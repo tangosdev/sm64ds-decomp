@@ -60,6 +60,13 @@ ROW(54,  "MOVING_BAR_SMALL",    100, 8, 150, 3, 2, {0x330, 4, 0, 6}, {0x334, 4, 
 ROW(73,  "LAVA_BRIDGE",         100, 8, 150, 2, 0)
 ROW(77,  "LAVA_SEESAW",         100, 8, 150, 2, 0)
 ROW(39,  "SEESAW_BOB",          100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})   // the tilt is mAngleX (pose) plus mAngleXSpeed, the s16 Behavior / the stood-on callback integrate (src/game/actors/d_a_obj_seesaw.cpp)
+// COOPROWS1: the other daObjSeesaw_c variants (one body, one Behavior, the same mAngleXSpeed at 0x324 as 39). The rider's console
+// is nearest, so it owns the plank and its tilt reaches the friend whose copy never feels the rider's weight.
+ROW(133, "SEESAW_BITDW",        100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(143, "SEESAW_SIDE_BFS",     100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(149, "SEESAW_BITS",         100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(150, "SEESAW_SIDE_BITS",    100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(128, "SEESAW_RR",           100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
 ROW(81,  "ROTATING_FIREBAR",    100, 8, 150, 2, 0)
 ROW(88,  "PYRAMID_LIFT",        100, 8, 150, 2, 0)
 ROW(124, "SLIDING_PLATFORM_RR", 100, 8, 150, 3, 2, {0x31c, 4, 0, 0x00ffffff}, {0x320, 4, 0, 0x0007ffff})
