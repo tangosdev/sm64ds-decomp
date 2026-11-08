@@ -1316,6 +1316,7 @@ void panel_extents(int *l, int *t, int *r, int *b)
 /* MOUSELOCK1: seated by tests/walk_window.cpp (null on every other target). port_pointer_held_hook: 1 while the window holds the pointer
    this frame; port_left_action_hook: 1 while a left button bound to a game action is that action (poll_touch then leaves it alone). */
 extern "C" { int (*port_pointer_held_hook)(void) = 0; int (*port_left_action_hook)(void) = 0; }
+extern "C" { int (*port_panel_key_hook)(void) = 0; }   /* MOUSELOCK1: the frame loop's read of the panel key (M), null = the raw key */
 int handle_rect(int *hx, int *hy, int *hs, int h)
 {
     (void)h;
@@ -3383,7 +3384,7 @@ void hal_sub_screen_init_hw(void *hwnd, int zoom)
     }
     OAM::Reset();
 
-    std::printf("[sub] panel %s (TAB toggles, SM64DS_SUB_PANEL=0 to start "
+    std::printf("[sub] panel %s (M toggles, SM64DS_SUB_PANEL=0 to start "
                 "off)\n", g_on ? "on" : "off");
     if (armed) {
         std::printf("[sub] hw bring-up was already armed; re-armed idempotently"
@@ -3616,12 +3617,22 @@ void hal_sub_screen_frame_begin(void)
        it (poll_touch is gated on g_on) would be a way to lose a minigame by
        leaning on the keyboard. The window size is fixed at creation for the
        same reason, so there is nothing for a toggle to fall back to. */
+    /* MOUSELOCK1 round 2: the key is M now (Tango: Tab is "bring up the mouse"). With the frame loop's hook seated, the key is its
+       key_live read of M (focus gate, stale latch, chat, rebind capture and the M-bound-to-an-action rule all live there); without it,
+       the raw key under the focus latch above. */
     static int tab_was;
     if (GetAsyncKeyState_ && !g_headless && !hal_sub_screen_stacked()) {
-        if (!hal_window_focused()) {
+        if (port_panel_key_hook) {
+            const int k = port_panel_key_hook();
+            if (k && !tab_was) {
+                g_on = !g_on;
+                std::fprintf(stderr, "[sub] panel %s (M)\n", g_on ? "on" : "off");
+            }
+            tab_was = k;
+        } else if (!hal_window_focused()) {
             tab_was = 1;
         } else {
-            const int tab = (GetAsyncKeyState_(VK_TAB) & 0x8000) != 0;
+            const int tab = (GetAsyncKeyState_('M') & 0x8000) != 0;
             if (tab && !tab_was) g_on = !g_on;
             tab_was = tab;
         }
