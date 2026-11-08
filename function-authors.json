@@ -11215,31 +11215,31 @@
     },
     "arm9:0x02065050": {
       "author": "tangosdev",
-      "name": "func_02065050"
+      "name": "WBT_MpChildRecvHook"
     },
     "arm9:0x020650a0": {
       "author": "tangosdev",
-      "name": "func_020650a0"
+      "name": "WBT_MpChildSendHook"
     },
     "arm9:0x020650d8": {
       "author": "tangosdev",
-      "name": "func_020650d8"
+      "name": "WBT_MpParentRecvHook"
     },
     "arm9:0x02065138": {
       "author": "tangosdev",
-      "name": "func_02065138"
+      "name": "WBT_MpParentSendHook"
     },
     "arm9:0x02065170": {
       "author": "tangosdev",
-      "name": "func_02065170"
+      "name": "WBT_End"
     },
     "arm9:0x02065234": {
       "author": "tangosdev",
-      "name": "func_02065234"
+      "name": "WBT_InitChild"
     },
     "arm9:0x020652fc": {
       "author": "tangosdev",
-      "name": "func_020652fc"
+      "name": "WBT_InitParent"
     },
     "arm9:0x020653cc": {
       "author": "tangosdev",
@@ -11275,7 +11275,7 @@
     },
     "arm9:0x020657fc": {
       "author": "tangosdev",
-      "name": "func_020657fc"
+      "name": "WBT_UnregisterBlock"
     },
     "arm9:0x020658c0": {
       "author": "tangosdev",
@@ -11287,15 +11287,15 @@
     },
     "arm9:0x020659a0": {
       "author": "tangosdev",
-      "name": "func_020659a0"
+      "name": "WBT_SetPacketSize"
     },
     "arm9:0x020659f8": {
       "author": "tangosdev",
-      "name": "func_020659f8"
+      "name": "WBT_CalcPacketbitmapSize"
     },
     "arm9:0x02065a4c": {
       "author": "tangosdev",
-      "name": "func_02065a4c"
+      "name": "WBT_AidbitmapToAid"
     },
     "arm9:0x02065a74": {
       "author": "tangosdev",

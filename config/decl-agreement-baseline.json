@@ -4140,10 +4140,10 @@
       "src/WM_SetIndCallback.cpp": [
         "return:int"
       ],
-      "src/unnamed/arm9/0206/func_02065170.cpp": [
+      "src/WBT_End.cpp": [
         "return:int"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:int"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
@@ -4186,16 +4186,16 @@
         "param:#1 int",
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02065170.cpp": [
+      "src/WBT_End.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02065234.cpp": [
+      "src/WBT_InitChild.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020652fc.cpp": [
+      "src/WBT_InitParent.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0206/func_020658c0.cpp": [
@@ -15882,7 +15882,7 @@
         "param:#3 int"
       ]
     },
-    "func_020650a0": {
+    "WBT_MpChildSendHook": {
       "src/unnamed/arm9/0204/func_02041930.c": [
         "return:int"
       ]
@@ -15891,7 +15891,7 @@
       "src/unnamed/arm9/0206/func_02064888.c": [
         "return:Node *"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:int *"
       ]
     },
@@ -15908,10 +15908,10 @@
       ]
     },
     "func_02065b94": {
-      "src/unnamed/arm9/0206/func_02065234.cpp": [
+      "src/WBT_InitChild.cpp": [
         "return:char *"
       ],
-      "src/unnamed/arm9/0206/func_020652fc.cpp": [
+      "src/WBT_InitParent.cpp": [
         "return:char *"
       ]
     },

@@ -2,15 +2,15 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/wm_views.h"
 extern void func_02041930(void);
-extern void func_020650d8(int data, int length, int aid);
-extern void func_02065050(int data, int length);
+extern void WBT_MpParentRecvHook(int data, int length, int aid);
+extern void WBT_MpChildRecvHook(int data, int length);
 
 /* The file-sharing port receive callback. Once the work block is up
  * (mState): CONNECTED (7) lets the parent resend (func_02041930) unless a
  * send is in flight; DISCONNECTED (9) drops the child from the parent's
  * mConnectedBitmap; PORT_RECV (0x15) marks the sender connected and hands
- * its packet to the parent's handler (func_020650d8), or on a child to
- * func_02065050. The argument is a NitroSDK WMPortRecvCallback
+ * its packet to the parent's handler (WBT_MpParentRecvHook), or on a child to
+ * WBT_MpChildRecvHook. The argument is a NitroSDK WMPortRecvCallback
  * (private/wm_views.h). */
 void func_020417d0(char *p)
 {
@@ -40,9 +40,9 @@ void func_020417d0(char *p)
         if (g->mIsParent != 0) {
             u32 aid = cb->aid;
             base->mConnectedBitmap |= (1 << aid);
-            func_020650d8(data, length, aid);
+            WBT_MpParentRecvHook(data, length, aid);
         } else {
-            func_02065050(data, length);
+            WBT_MpChildRecvHook(data, length);
         }
         return;
     }
