@@ -49,6 +49,9 @@ enum dScMgLuigi_c_AssetId {
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
 
+/* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
+#define LUIGI_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
+
 typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
 typedef void (dScMgLuigi_c::*LuigiStateHandler)();
 
@@ -849,8 +852,7 @@ void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     u8 *started = &mStarted[pictureIndex];
 
     if (*started == 0) {
-        u32 randomValue = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        u16 initialAngle = (u16)(((randomValue << 4) >> 15) << 12);
+        u16 initialAngle = (u16)(LUIGI_RAND(16) << 12);
 
         mMovePhase[pictureIndex] = initialAngle;
         *started += 1;
@@ -937,9 +939,7 @@ void dScMgLuigi_c::MovePictureSway(int idx) {
 void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
     extern int sLuigiDriftRandomSpeed[];
     if (mStarted[pictureIndex] == 0) {
-        unsigned int randomValue =
-            ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        unsigned short initialAngle = (unsigned short)(((randomValue << 4) >> 15) << 12);
+        u16 initialAngle = (u16)(LUIGI_RAND(16) << 12);
         mMovePhase[pictureIndex] = initialAngle;
         mStarted[pictureIndex]++;
         return;
@@ -1302,9 +1302,9 @@ void dScMgLuigi_c::PlaceBoardLayout() {
     }
 
     for (i = 0; i < 8; i++)
-        mColDir[i] = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15;
+        mColDir[i] = LUIGI_RAND(2);
     for (i = 0; i < 6; i++)
-        mRowDir[i] = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 2 >> 15;
+        mRowDir[i] = LUIGI_RAND(2);
     mFilled++;
 }
 
@@ -1320,7 +1320,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     int col;
     int row;
     int attempts;
-    int randomValue;
+    int randomValue; /* LUIGI_RAND(4) for the first roll: PlaceNextPicture 49 words off */
 
     if (mFilled != 0)
         return;
@@ -1339,8 +1339,7 @@ void dScMgLuigi_c::PlaceNextPicture() {
     {
         u8 *character = &mCharacter[pictureIndex];
         if (mWanted == mCharacter[pictureIndex]) {
-            randomValue = RandomIntInternal(&data_0209d4b8.value);
-            *character += ((((u32)randomValue >> 16) & 0x7fff) * 3 >> 15) + 1;
+            *character += LUIGI_RAND(3) + 1;
             *character &= 3;
         }
     }
@@ -1349,14 +1348,14 @@ void dScMgLuigi_c::PlaceNextPicture() {
         int jitterX;
         int jitterY;
         do {
-            col = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 13 >> 15;
-            row = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15;
+            col = LUIGI_RAND(13);
+            row = LUIGI_RAND(9);
         } while (col >= 6 && col <= 10 && row >= 4 && row <= 8);
 
         jitterY = -2;
         jitterX = jitterY;
-        jitterX += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
-        jitterY += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
+        jitterX += LUIGI_RAND(5);
+        jitterY += LUIGI_RAND(5);
 
         if (sLuigiBoardFlags[boardIndex] != 0) {
             mPosX[0] = (col * 20 + (jitterX + 8)) << 12;
@@ -1390,8 +1389,8 @@ void dScMgLuigi_c::PlaceNextPicture() {
                     row = 0;
             }
         } else {
-            col = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 13 >> 15;
-            row = (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15;
+            col = LUIGI_RAND(13);
+            row = LUIGI_RAND(9);
         }
         cell = ((dScMgLuigi_c *)((char *)this + col * 9 + row))->mGrid[0];
         if (*cell == 0) {
@@ -1399,8 +1398,8 @@ void dScMgLuigi_c::PlaceNextPicture() {
             int jitterY;
             jitterY = -2;
             jitterX = jitterY;
-            jitterX += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
-            jitterY += (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5 >> 15;
+            jitterX += LUIGI_RAND(5);
+            jitterY += LUIGI_RAND(5);
             mPosX[pictureIndex] = (col * 20 + (jitterX + 8)) << 12;
             mPosY[pictureIndex] = (row * 20 + (jitterY + 16)) << 12;
             *cell = 1;
@@ -1429,14 +1428,10 @@ void dScMgLuigi_c::PlaceNextPicture() {
     if (mFilled == 0)
         return;
 
-    mLevelPhase[0] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
-    mLevelPhase[1] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
-    mLevelPhase[2] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
-    mLevelPhase[3] = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 16 >> 15)
-                     << 12;
+    mLevelPhase[0] = LUIGI_RAND(16) << 12;
+    mLevelPhase[1] = LUIGI_RAND(16) << 12;
+    mLevelPhase[2] = LUIGI_RAND(16) << 12;
+    mLevelPhase[3] = LUIGI_RAND(16) << 12;
 }
 
 void dScMgLuigi_c::ChooseTarget() {
@@ -1460,7 +1455,7 @@ void dScMgLuigi_c::ChooseTarget() {
     }
 
     mWanted = (sLuigiWantedPicks + choiceOffset)
-        [((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xa) >> 15];
+        [LUIGI_RAND(10)];
 
     t = mBoard;
     if (t == 9) {
@@ -1468,9 +1463,7 @@ void dScMgLuigi_c::ChooseTarget() {
     }
     if (t == 0xe || t == 0x10 || t == 0x11 || t == 0x13) {
         if (mWanted == 3) {
-            mWanted =
-                (u8)(((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
-                     15);
+            mWanted = (u8)LUIGI_RAND(3);
         }
     }
 
@@ -1491,14 +1484,9 @@ void dScMgLuigi_c::ChooseBoard() {
     mPrevBoard = mBoard;
     boardIndex = mLevel;
     if (boardIndex >= 0x14) {
-        int pick =
-            (int)(((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xa) >>
-                  0xf);
+        int pick = LUIGI_RAND(10);
         if (pick + 0xa == mPrevBoard) {
-            int step =
-                (int)(((((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9) >>
-                      0xf) +
-                1;
+            int step = LUIGI_RAND(9) + 1;
             pick += step;
             if (pick >= 0xa)
                 pick -= 0xa;
