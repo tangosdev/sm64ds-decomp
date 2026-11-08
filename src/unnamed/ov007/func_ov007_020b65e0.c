@@ -10,7 +10,7 @@ extern void func_ov007_020c3d1c(void *p);
 extern void func_ov007_020c1620(void *tex);
 extern void func_ov007_020b3edc(int a);
 extern void func_ov007_020c9460(void *p);
-extern void func_ov007_020b4bd4(struct Ov007ItemView *view);
+extern void ItemView_Destroy(struct Ov007ItemView *view);
 extern void func_ov007_020b6cd0(void);
 extern void func_ov007_020b283c(void);
 extern void PickerScene_Destroy(void);
@@ -93,7 +93,7 @@ void func_ov007_020b65e0(void)
 
     for (i = 0; i < 0x18; i++) {
         if (WORK->itemViews[i] != 0) {
-            func_ov007_020b4bd4(WORK->itemViews[i]);
+            ItemView_Destroy(WORK->itemViews[i]);
             WORK->itemViews[i] = 0;
         }
     }

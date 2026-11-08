@@ -28115,7 +28115,7 @@
     },
     "ov007:0x020b42d8": {
       "author": "ruspecial",
-      "name": "func_ov007_020b42d8"
+      "name": "NumberSprite_Create"
     },
     "ov007:0x020b43dc": {
       "author": "tangosdev",
@@ -28131,35 +28131,35 @@
     },
     "ov007:0x020b44ec": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b44ec"
+      "name": "ItemView_Update"
     },
     "ov007:0x020b45b0": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b45b0"
+      "name": "ItemView_TryChoose"
     },
     "ov007:0x020b46b0": {
       "author": "tangosdev",
-      "name": "func_ov007_020b46b0"
+      "name": "ItemView_HandleTouch"
     },
     "ov007:0x020b4b5c": {
       "author": "tangosdev",
-      "name": "func_ov007_020b4b5c"
+      "name": "ItemView_ResetSprite"
     },
     "ov007:0x020b4bd4": {
       "author": "tangosdev",
-      "name": "func_ov007_020b4bd4"
+      "name": "ItemView_Destroy"
     },
     "ov007:0x020b4c04": {
       "author": "tangosdev",
-      "name": "func_ov007_020b4c04"
+      "name": "ItemView_Create"
     },
     "ov007:0x020b5068": {
       "author": "tangosdev",
-      "name": "func_ov007_020b5068"
+      "name": "ItemView_UpdateIdle"
     },
     "ov007:0x020b50e8": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b50e8"
+      "name": "ItemView_UpdateChosen"
     },
     "ov007:0x020b58e4": {
       "author": "tangosdev",
