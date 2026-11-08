@@ -10,24 +10,24 @@
  * CapIconMgr_DispatchNoCap when the local player has no cap, or the main
  * dispatcher CapIconMgr_Dispatch. CapIconMgr_ShouldDispatch gates one
  * character's list, CapIconMgr_ShouldCommit and CapIconMgr_ShouldCommitVs
- * decide whether the picked node is committed, func_ov001_020aa79c is the
- * in-flight test, CapIconMgr_Commit the commit (sound + 60-frame flash),
- * CapIconMgr_SetMapIconShown sets a node's map-icon byte and
- * func_ov001_020aa6cc clears a list's in-flight bits.
+ * decide whether the picked node is committed, CapIconMgr_IsDispatched
+ * tests a list's dispatch bits (0 and 1), CapIconMgr_Commit the commit
+ * (sound + 60-frame flash), CapIconMgr_SetMapIconShown sets a node's
+ * map-icon byte and CapIconMgr_ClearDispatched clears a list's dispatch
+ * bits so the list is dispatched again.
  *
  * The CapIconMgr_* names are coined from the bodies and their callers; the
  * cartridge records no names for this module, and nothing in the SDK or
  * NSMBW lineage matches it. They keep C linkage.
  *
  * deslop leftovers:
- * - func_ov001_020aaf40, func_ov001_020aa79c and func_ov001_020aa6cc stay
- *   linker names: the tick's caller sits in a file another branch holds,
- *   and the two one-line dispatch-bit helpers have no settled meaning.
+ * - func_ov001_020aaf40 stays a linker name: its caller sits in a file
+ *   another branch holds.
  * - gPlayers and data_0209f3e8 are arm9 globals this TU does not own;
  *   the player array's type remains outside this reconstruction.
- * - CapIconMgr_DispatchVs tests mFlags bits 0 and 3 as bitfields; a mask
- *   test on the u8 shrinks the body by 8 bytes. The int* walks in
- *   CapIconMgr_DispatchNoCap are kept as the shard bodies wrote them.
+ * - CapIconMgr_Dispatch and CapIconMgr_DispatchVs read mFlags bits 0, 1
+ *   and 3 through the CapIconFlags view below; a mask test on the u8
+ *   changes the code (8 bytes shorter in CapIconMgr_DispatchVs).
  */
 
 #include "types.h"
@@ -57,13 +57,14 @@ extern int func_02029600(int x);
 extern int SublevelToLevel(int i);
 
 void CapIconMgr_DispatchVs(void);
-void CapIconMgr_SetMapIconShown(int *node, int value);
-void func_ov001_020aa6cc(int character);
-void CapIconMgr_Commit(int idx, unsigned r1, int *obj);
-int func_ov001_020aa79c(int x);
-int CapIconMgr_ShouldCommitVs(void *self, char *a);
-int CapIconMgr_ShouldCommit(int self, char *a, int b, int d);
-int CapIconMgr_ShouldDispatch(int x, char *arg);
+void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
+void CapIconMgr_ClearDispatched(int character);
+void CapIconMgr_Commit(int character, unsigned iconKind, dCapIcon_c *icon);
+int CapIconMgr_IsDispatched(int character);
+int CapIconMgr_ShouldCommitVs(int character, dCapIcon_c *best);
+int CapIconMgr_ShouldCommit(int character, dCapIcon_c *best, int requestState, int realSeen,
+                            int bankSeen);
+int CapIconMgr_ShouldDispatch(int character, daPly_c *player);
 void CapIconMgr_Dispatch(void);
 void CapIconMgr_DispatchNoCap(void);
 void func_ov001_020aaf40(void);
@@ -74,29 +75,38 @@ static inline int IsVsMode(void) {
     return gGameMode == 1;
 }
 
+/* dCapIcon_c::mFlags, read bit by bit (see include/CapIcon.h). */
+typedef struct {
+    unsigned char bank : 1;
+    unsigned char real : 1;
+    unsigned char unlinked : 1;
+    unsigned char skipped : 1;
+    unsigned char : 4;
+} CapIconFlags;
+
 /* Definitions emit in reverse source order. */
 
 void func_ov001_020aaf40(void)
 {
-    int j;
+    int character;
     int i;
 
     if (gCapIconFlashTimer != 0) {
         gCapIconFlashTimer -= 1;
         for (i = 0; i < 3; i++) {
-            char *node = (char *)gCapIconListHeads[i];
+            dCapIcon_c *node = gCapIconListHeads[i];
             while (node) {
-                if (((dCapIcon_c *)node)->mSlot != -1 && ((dCapIcon_c *)node)->mFlashFrames != 0) {
-                    int v;
-                    ((dCapIcon_c *)node)->mFlashFrames -= 1;
-                    v = ((dCapIcon_c *)node)->mFlashFrames;
-                    if (v == 0) {
-                        CapIconMgr_SetMapIconShown((int *)node, 1);
-                    } else if (v % 10 == 0) {
-                        CapIconMgr_SetMapIconShown((int *)node, ((v / 10) & 1) == 0 ? 1 : 0);
+                if (node->mSlot != -1 && node->mFlashFrames != 0) {
+                    int frames;
+                    node->mFlashFrames -= 1;
+                    frames = node->mFlashFrames;
+                    if (frames == 0) {
+                        CapIconMgr_SetMapIconShown(node, 1);
+                    } else if (frames % 10 == 0) {
+                        CapIconMgr_SetMapIconShown(node, ((frames / 10) & 1) == 0 ? 1 : 0);
                     }
                 }
-                node = (char *)((dCapIcon_c *)node)->mNext;
+                node = node->mNext;
             }
         }
         if (gCapIconFlashTimer == 0)
@@ -109,159 +119,141 @@ void func_ov001_020aaf40(void)
     }
 
     {
-        daPly_c *pl = gPlayers[0];
-        if (pl->HasNoCap() && !pl->IsCollectingCap()) {
+        daPly_c *player = gPlayers[0];
+        if (player->HasNoCap() && !player->IsCollectingCap()) {
             CapIconMgr_DispatchNoCap();
             gCapIconDispatchLocked = 1;
             return;
         }
-        for (j = 0; j < 3; j++) {
-            if (gCapIconDispatchFlags[j] & 2)
-                gCapIconDispatchFlags[j] &= ~3;
+        for (character = 0; character < 3; character++) {
+            if (gCapIconDispatchFlags[character] & 2)
+                gCapIconDispatchFlags[character] &= ~3;
         }
         CapIconMgr_Dispatch();
         gCapIconDispatchLocked = 0;
     }
 }
 
-#define LAUNDER_U8_PTR(p) ((unsigned char*)(p))
-
 void CapIconMgr_DispatchNoCap(void) {
-    char *fp = (char *)gPlayers[0];
-    int* sl;
-    unsigned i1, i2;
+    daPly_c *player = gPlayers[0];
+    dCapIcon_c *node;
+    u8 character;
+    u8 i;
 
-    for (i1 = 0; i1 < 3; i1 = (i1 + 1) & 0xff) {
-        if (gCapIconDispatchFlags[i1] & 2)
+    for (character = 0; character < 3; character++) {
+        if (gCapIconDispatchFlags[character] & 2)
             continue;
-        func_ov001_020aa6cc(i1);
-        sl = (int *)gCapIconListHeads[i1];
-        while (sl != 0) {
-            unsigned char *fl = LAUNDER_U8_PTR(&((dCapIcon_c *)sl)->mFlags);
-            *fl &= ~2;
-            if (((dCapIcon_c *)sl)->mSlot != -1) {
-                CapIconMgr_SetMapIconShown(sl, 0);
-                data_0209f3e8[((dCapIcon_c *)sl)->mSlot] = 0;
+        CapIconMgr_ClearDispatched(character);
+        node = gCapIconListHeads[character];
+        while (node != 0) {
+            node->mFlags &= ~2;
+            if (node->mSlot != -1) {
+                CapIconMgr_SetMapIconShown(node, 0);
+                data_0209f3e8[node->mSlot] = 0;
             }
-            sl = (int *)((dCapIcon_c *)sl)->mNext;
+            node = node->mNext;
         }
-        if (i1 != ((daPly_c *)fp)->mCharacter) {
-            gCapIconDispatchFlags[i1] |= 2;
+        if (character != player->mCharacter) {
+            gCapIconDispatchFlags[character] |= 2;
         }
     }
 
-    for (i2 = 0; i2 < 3; i2 = (i2 + 1) & 0xff) {
-        unsigned char* flags;
-        int* o;
-        flags = &gCapIconDispatchFlags[i2];
-        if (*flags & 2) continue;
-        o = (int *)gCapIconListHeads[i2];
-        if (o == 0) continue;
-        do {
-            void *fw = dActor_c::FindWithID(((dCapIcon_c *)o)->mOwnerUniqueID);
-            if (fw != 0 || fw != ((dCapIcon_c *)o)->mOwner) {
-                if (((dCapIcon_c *)o)->mIconKind == 4) {
-                    unsigned char *fl = LAUNDER_U8_PTR(&((dCapIcon_c *)o)->mFlags);
-                    *fl |= 2;
-                    ((dCapIcon_c *)o)->mSlot = func_0202a8e0((int)((dCapIcon_c *)o)->mOwner,
-                                                             ((dCapIcon_c *)o)->mCharacter);
-                    CapIconMgr_SetMapIconShown(o, 1);
-                    CapIconMgr_Commit(i2, ((dCapIcon_c *)o)->mIconKind, 0);
-                    *flags |= 2;
+    for (i = 0; i < 3; i++) {
+        u8 *dispatchFlags = &gCapIconDispatchFlags[i];
+        if (*dispatchFlags & 2)
+            continue;
+        node = gCapIconListHeads[i];
+        while (node != 0) {
+            void *found = dActor_c::FindWithID(node->mOwnerUniqueID);
+            if (found != 0 || found != node->mOwner) {
+                if (node->mIconKind == 4) {
+                    node->mFlags |= 2;
+                    node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
+                    CapIconMgr_SetMapIconShown(node, 1);
+                    CapIconMgr_Commit(i, node->mIconKind, 0);
+                    *dispatchFlags |= 2;
                 }
             } else {
-                ((dCapIcon_c *)o)->Unlink();
+                node->Unlink();
             }
-            o = (int *)((dCapIcon_c *)o)->mNext;
-        } while (o != 0);
+            node = node->mNext;
+        }
     }
 }
 
 void CapIconMgr_Dispatch(void) {
-    unsigned sp4;
-    int typ;
-    int spc;
+    unsigned bankKind;
+    int requestState;
+    int bankHadSlot;
     daPly_c *player = gPlayers[0];
-    int zero = 0;
-    int three = 3;
-    void* z1 = 0;
-    void* z2 = 0;
-    void* z3 = 0;
-    dCapIcon_c* sl;
-    dCapIcon_c* sb;
-    unsigned r8;
-    int r7;
-    unsigned r6;
-    int fp;
-    u8* flagp;
+    dCapIcon_c *node;
+    dCapIcon_c *best;
+    unsigned maxKind;
+    int bankSeen;
+    u8 character;
+    int realSeen;
+    u8 *requestFlags;
 
     if (player->IsCollectingCap() != 0) {
-        unsigned i = 0;
-        do {
-            u8 v = gCapIconRequestFlags[i];
-            if (v & 0x40)
+        u8 i;
+        for (i = 0; i < 3; i++) {
+            if (gCapIconRequestFlags[i] & 0x40)
                 gCapIconRequestFlags[i] |= 0x80;
-            i = (i + 1) & 0xff;
-        } while (i < 3);
+        }
     }
 
-    r6 = 0;
-    do {
-        u8 tb = gCapIconRequestFlags[r6] & 3;
-        r8 = zero;
-        spc = zero;
-        typ = tb;
-        sb = (dCapIcon_c*)zero;
-        r7 = zero;
-        flagp = &gCapIconRequestFlags[r6];
-        fp = zero;
+    for (character = 0; character < 3; character++) {
+        u8 state = gCapIconRequestFlags[character] & 3;
+        maxKind = 0;
+        bankHadSlot = 0;
+        requestState = state;
+        best = 0;
+        bankSeen = 0;
+        requestFlags = &gCapIconRequestFlags[character];
+        realSeen = 0;
 
-        if (CapIconMgr_ShouldDispatch(r6, (char *)player) != 0) {
-            sl = gCapIconListHeads[r6];
-            while (sl != 0) {
-                void* found = dActor_c::FindWithID(sl->mOwnerUniqueID);
-                if (found != 0 || found != sl->mOwner) {
-                    int b1b = sl->mFlags;
-                    int bit0 = (unsigned)(b1b << 0x1f) >> 0x1f;
-                    if (bit0 == 0 && (unsigned)(b1b << 0x1e) >> 0x1f) {
-                        fp = 1;
-                        r8 = sl->mIconKind;
+        if (CapIconMgr_ShouldDispatch(character, player) != 0) {
+            node = gCapIconListHeads[character];
+            while (node != 0) {
+                void *found = dActor_c::FindWithID(node->mOwnerUniqueID);
+                if (found != 0 || found != node->mOwner) {
+                    CapIconFlags *flags = (CapIconFlags *)&node->mFlags;
+                    if (!flags->bank && flags->real) {
+                        realSeen = 1;
+                        maxKind = node->mIconKind;
                     } else {
-                        int t = *flagp;
-                        if ((t & 0x30) || sl->mIconKind >= 2) {
-                            if (bit0) {
-                                if (sl->mSlot == -1) {
-                                    sl->mSlot = func_0202a8e0((int)sl->mOwner, sl->mCharacter);
-                                    sl->mFlags |= 2;
-                                    CapIconMgr_SetMapIconShown((int *)sl, 1);
+                        int request = *requestFlags;
+                        if ((request & 0x30) || node->mIconKind >= 2) {
+                            if (flags->bank) {
+                                if (node->mSlot == -1) {
+                                    node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
+                                    node->mFlags |= 2;
+                                    CapIconMgr_SetMapIconShown(node, 1);
                                 } else {
-                                    spc = 1;
+                                    bankHadSlot = 1;
                                 }
-                                r7 = 1;
-                                sp4 = sl->mIconKind;
-                                if ((*flagp & 3) == 0)
-                                    *flagp |= 1;
-                                if (sl->mIconKind >= 2)
-                                    *flagp |= 0x20;
+                                bankSeen = 1;
+                                bankKind = node->mIconKind;
+                                if ((*requestFlags & 3) == 0)
+                                    *requestFlags |= 1;
+                                if (node->mIconKind >= 2)
+                                    *requestFlags |= 0x20;
                             } else {
-                                if (sl->mIconKind != 0) {
-                                    if (r8 < sl->mIconKind) {
-                                        r8 = sl->mIconKind;
-                                        sb = sl;
+                                if (node->mIconKind != 0) {
+                                    if (maxKind < node->mIconKind) {
+                                        maxKind = node->mIconKind;
+                                        best = node;
                                     }
-                                    if ((t & 3) == 0)
-                                        *flagp |= 1;
-                                    if (sl->mIconKind >= 2)
-                                        *flagp |= 0x20;
+                                    if ((request & 3) == 0)
+                                        *requestFlags |= 1;
+                                    if (node->mIconKind >= 2)
+                                        *requestFlags |= 0x20;
                                 } else {
-                                    if ((t & 3) == 1 && r8 == 0) {
-                                        /* volatile is load-bearing: a plain sl->mFlags read DIFFs. */
-                                        if ((unsigned)(((volatile dCapIcon_c *)sl)->mFlags
-                                                       << 0x1c) >>
-                                            0x1f) {
-                                            sb = sl;
+                                    if ((request & 3) == 1 && maxKind == 0) {
+                                        if (((CapIconFlags *)&node->mFlags)->skipped) {
+                                            best = node;
                                         } else {
-                                            sl->mFlags |= 8;
+                                            node->mFlags |= 8;
                                         }
                                     }
                                 }
@@ -269,247 +261,226 @@ void CapIconMgr_Dispatch(void) {
                         }
                     }
                 } else {
-                    sl->Unlink();
+                    node->Unlink();
                 }
-                sl = sl->mNext;
+                node = node->mNext;
             }
 
-            /* The ROM's caller passes a fifth argument the callee ignores
-             * (the shards' extern declared five). The cast preserves the
-             * pushed r7; the definition takes four. */
-            if (((int (*)(int, void *, int, int, int))CapIconMgr_ShouldCommit)(r6, sb, typ, fp,
-                                                                               r7) != 0) {
-                sb->mFlags |= 2;
-                sb->mSlot = func_0202a8e0((int)sb->mOwner, sb->mCharacter);
-                CapIconMgr_SetMapIconShown((int *)sb, 1);
-                CapIconMgr_Commit(r6, sb->mIconKind, (int *)sb);
+            if (CapIconMgr_ShouldCommit(character, best, requestState, realSeen, bankSeen) != 0) {
+                best->mFlags |= 2;
+                best->mSlot = func_0202a8e0((int)best->mOwner, best->mCharacter);
+                CapIconMgr_SetMapIconShown(best, 1);
+                CapIconMgr_Commit(character, best->mIconKind, best);
             } else {
-                if (r7 != 0 && (player->IsCollectingCap() != 0 || (*flagp & 0x40) != 0)) {
-                    if (spc != 0) {
-                        CapIconMgr_Commit(r6, three, (int *)z1);
+                if (bankSeen != 0 &&
+                    (player->IsCollectingCap() != 0 || (*requestFlags & 0x40) != 0)) {
+                    if (bankHadSlot != 0) {
+                        CapIconMgr_Commit(character, 3, 0);
                     } else {
-                        CapIconMgr_Commit(r6, sp4, (int *)z2);
+                        CapIconMgr_Commit(character, bankKind, 0);
                     }
                 } else {
-                    if (fp != 0) {
-                        CapIconMgr_Commit(r6, three, (int *)z3);
+                    if (realSeen != 0) {
+                        CapIconMgr_Commit(character, 3, 0);
                     }
                 }
             }
         }
 
-        if ((*flagp & 3) == 0) {
-            int lvl = SublevelToLevel(gCurrentSublevel);
-            if ((unsigned)(lvl - 0xf) <= 2) *flagp |= 1;
-            else *flagp |= 2;
+        if ((*requestFlags & 3) == 0) {
+            int level = SublevelToLevel(gCurrentSublevel);
+            if ((unsigned)(level - 0xf) <= 2) *requestFlags |= 1;
+            else *requestFlags |= 2;
         }
-
-        r6 = (r6 + 1) & 0xff;
-    } while (r6 < 3);
+    }
 }
 
-int CapIconMgr_ShouldDispatch(int x, char *arg) {
-    if ((gCapIconRequestFlags[x] & 0xc0) == 0xc0)
-        gCapIconRequestFlags[x] &= ~0x40;
-    unsigned char v = gCapIconRequestFlags[x];
-    if (v & 8) {
-        gCapIconRequestFlags[x] = v & ~8;
+int CapIconMgr_ShouldDispatch(int character, daPly_c *player) {
+    if ((gCapIconRequestFlags[character] & 0xc0) == 0xc0)
+        gCapIconRequestFlags[character] &= ~0x40;
+    unsigned char request = gCapIconRequestFlags[character];
+    if (request & 8) {
+        gCapIconRequestFlags[character] = request & ~8;
         return 1;
     }
-    if (gCapIconCounts[x] == 0)
+    if (gCapIconCounts[character] == 0)
         return 0;
-    if (v & 0x40)
+    if (request & 0x40)
         return 0;
-    if (x == ((daPly_c *)arg)->mCharacter)
+    if (character == player->mCharacter)
         return 0;
-    if (func_ov001_020aa79c(x))
+    if (CapIconMgr_IsDispatched(character))
         return 0;
-    if ((gCapIconRequestFlags[x] & 3) == 2)
+    if ((gCapIconRequestFlags[character] & 3) == 2)
         return 0;
-    if (!((daPly_c *)arg)->IsCollectingCap() && x == *(int *)(arg + 8) &&
-        (gCapIconRequestFlags[x] & 3))
+    if (!player->IsCollectingCap() && character == player->param1 &&
+        (gCapIconRequestFlags[character] & 3))
         return 0;
     return 1;
 }
 
-int CapIconMgr_ShouldCommit(int self, char *a, int b, int d) {
-    if (b == 0 && self == data_02092114) {
-        gCapIconRequestFlags[self] |= 0x40;
-        gCapIconDispatchFlags[self] |= 0x80;
+/* The fifth parameter is passed by the caller and never read. */
+int CapIconMgr_ShouldCommit(int character, dCapIcon_c *best, int requestState, int realSeen,
+                            int bankSeen) {
+    if (requestState == 0 && character == data_02092114) {
+        gCapIconRequestFlags[character] |= 0x40;
+        gCapIconDispatchFlags[character] |= 0x80;
         return 0;
     }
-    if (a == 0) return 0;
-    unsigned char k = ((dCapIcon_c *)a)->mIconKind;
-    if (k >= 3) return 1;
-    if (d != 0) return 0;
-    void *p = gPlayers[0];
-    if (k != 4) {
-        if (((daPly_c *)p)->IsCollectingCap())
+    if (best == 0) return 0;
+    unsigned char kind = best->mIconKind;
+    if (kind >= 3) return 1;
+    if (realSeen != 0) return 0;
+    daPly_c *player = gPlayers[0];
+    if (kind != 4) {
+        if (player->IsCollectingCap())
             return 0;
     }
-    if (!((daPly_c *)p)->IsCollectingCap()) {
-        if (self == *(int*)((char*)p+8)) return 0;
+    if (!player->IsCollectingCap()) {
+        if (character == player->param1) return 0;
     }
     return 1;
 }
 
-int CapIconMgr_ShouldCommitVs(void *self, char *a) {
-    if (a == 0) return 0;
-    if (((dCapIcon_c *)a)->mIconKind == 3)
+int CapIconMgr_ShouldCommitVs(int character, dCapIcon_c *best) {
+    if (best == 0) return 0;
+    if (best->mIconKind == 3)
         return 1;
     int i = 0;
-    for (i = 0; i < ((unsigned char *)&data_0208a0e0)[0]; i++) {
-        void *p = gPlayers[i];
-        if (p == 0) continue;
-        if (((daPly_c *)p)->IsCollectingCap())
+    for (i = 0; i < data_0208a0e0; i++) {
+        daPly_c *player = gPlayers[i];
+        if (player == 0) continue;
+        if (player->IsCollectingCap())
             return 0;
-        if (self == *(void**)((char*)p+8)) return 0;
+        if (character == player->param1) return 0;
     }
     return 1;
 }
 
-int func_ov001_020aa79c(int x) {
-    return (((unsigned char *)gCapIconDispatchFlags)[x] & 3) != 0;
+int CapIconMgr_IsDispatched(int character) {
+    return (gCapIconDispatchFlags[character] & 3) != 0;
 }
 
-void CapIconMgr_Commit(int idx, unsigned r1, int *obj) {
-    gCapIconDispatchFlags[idx] |= 1;
-    if ((gCapIconDispatchFlags[idx] & 0x80) && gCapIconDispatchLocked == 0) {
-        if (obj == 0)
+void CapIconMgr_Commit(int character, unsigned iconKind, dCapIcon_c *icon) {
+    gCapIconDispatchFlags[character] |= 1;
+    if ((gCapIconDispatchFlags[character] & 0x80) && gCapIconDispatchLocked == 0) {
+        if (icon == 0)
             return;
-        if (r1 >= 3)
+        if (iconKind >= 3)
             return;
-        if (func_02029600(obj[1]) == 0)
+        if (func_02029600((int)icon->mOwner) == 0)
             return;
         gShowTouchScreenArrows = 1;
         func_02012790(0x24);
-        ((dCapIcon_c *)obj)->mFlashFrames = 0x3c;
-        gCapIconFlashTimer = ((dCapIcon_c *)obj)->mFlashFrames;
+        icon->mFlashFrames = 0x3c;
+        gCapIconFlashTimer = icon->mFlashFrames;
         return;
     }
-    gCapIconDispatchFlags[idx] |= 0x80;
+    gCapIconDispatchFlags[character] |= 0x80;
 }
 
-void func_ov001_020aa6cc(int r0) {
-    ((unsigned char *)gCapIconDispatchFlags)[r0] &= ~3;
+void CapIconMgr_ClearDispatched(int character) {
+    gCapIconDispatchFlags[character] &= ~3;
 }
 
-void CapIconMgr_SetMapIconShown(int *r0, int r1) {
-    int r2 = r0[5];
-    if (r2 != -1) {
-        gMapCapIconShown[r2] = (unsigned char)r1;
+void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown) {
+    int slot = icon->mSlot;
+    if (slot != -1) {
+        gMapCapIconShown[slot] = shown;
     }
 }
 
 void CapIconMgr_DispatchVs(void) {
-    /* dCapIcon_c::mFlags, read bit by bit */
-    typedef struct {
-        unsigned char bank : 1;
-        unsigned char : 2;
-        unsigned char skipped : 1;
-        unsigned char : 4;
-    } CapIconFlags;
-
     daPly_c *player;
     dCapIcon_c *best;
-    int handled;
-    u8 *flagByte;
-    u8 reqFlag;
+    int bankSeen;
+    u8 *requestFlags;
+    u8 request;
     dCapIcon_c *node;
-    u8 maxPriority;
-    int spC;
-    int sp10;
-    unsigned char i;
+    u8 maxKind;
+    u8 character;
     void *found;
-    u8 cnt;
+    u8 numPlayers;
     int idx;
 
-    maxPriority = 0;
-    i = 0;
-    spC = 0;
-    sp10 = 0;
-
-    for (; i < 3; i++) {
+    maxKind = 0;
+    for (character = 0; character < 3; character++) {
         best = 0;
-        node = gCapIconListHeads[i];
-        handled = (int)best;
-        flagByte = &gCapIconRequestFlags[i];
-        reqFlag = gCapIconRequestFlags[i];
+        node = gCapIconListHeads[character];
+        bankSeen = 0;
+        requestFlags = &gCapIconRequestFlags[character];
+        request = gCapIconRequestFlags[character];
 
-        if (reqFlag == 0) {
-            if (node != 0) {
-                do {
-                    node->mFlags &= ~2;
-                    if (node->mIconKind == 1) {
-                        *flagByte = 1;
-                    }
-                    node = node->mNext;
-                } while (node != 0);
-            }
-            if (*flagByte == 0) {
-                *flagByte = 2;
-            } else {
-                *flagByte = 1;
-            }
-        }
-
-        node = *(dCapIcon_c *volatile *)&gCapIconListHeads[i];
-
-        if (func_ov001_020aa79c(i) != 0) continue;
-        if (*flagByte == 2) continue;
-        if (gCapIconCounts[i] == 0)
-            continue;
-
-        if (node != 0) {
-            do {
-                found = dActor_c::FindWithID(node->mOwnerUniqueID);
-                if (found != 0 || (int)found != (int)node->mOwner) {
-                    if (((CapIconFlags *)&node->mFlags)->bank) {
-                        if (node->mSlot == -1) {
-                            node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
-                            node->mFlags |= 2;
-                            CapIconMgr_SetMapIconShown((int *)node, 1);
-                        }
-                        handled = 1;
-                        maxPriority = node->mIconKind;
-                    } else if (node->mIconKind != 0) {
-                        if (maxPriority < node->mIconKind) {
-                            maxPriority = node->mIconKind;
-                            best = node;
-                        }
-                    } else if (maxPriority == 0) {
-                        if (((CapIconFlags *)&node->mFlags)->skipped) {
-                            best = node;
-                        } else {
-                            node->mFlags |= 8;
-                        }
-                    }
-                } else {
-                    node->Unlink();
+        if (request == 0) {
+            while (node != 0) {
+                node->mFlags &= ~2;
+                if (node->mIconKind == 1) {
+                    *requestFlags = 1;
                 }
                 node = node->mNext;
-            } while (node != 0);
+            }
+            if (*requestFlags == 0) {
+                *requestFlags = 2;
+            } else {
+                *requestFlags = 1;
+            }
         }
 
-        if (CapIconMgr_ShouldCommitVs((void *)i, (char *)best) != 0) {
+        node = gCapIconListHeads[character];
+
+        if (CapIconMgr_IsDispatched(character) != 0) continue;
+        if (*requestFlags == 2) continue;
+        if (gCapIconCounts[character] == 0)
+            continue;
+
+        while (node != 0) {
+            found = dActor_c::FindWithID(node->mOwnerUniqueID);
+            if (found != 0 || found != node->mOwner) {
+                if (((CapIconFlags *)&node->mFlags)->bank) {
+                    if (node->mSlot == -1) {
+                        node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
+                        node->mFlags |= 2;
+                        CapIconMgr_SetMapIconShown(node, 1);
+                    }
+                    bankSeen = 1;
+                    maxKind = node->mIconKind;
+                } else if (node->mIconKind != 0) {
+                    if (maxKind < node->mIconKind) {
+                        maxKind = node->mIconKind;
+                        best = node;
+                    }
+                } else if (maxKind == 0) {
+                    if (((CapIconFlags *)&node->mFlags)->skipped) {
+                        best = node;
+                    } else {
+                        node->mFlags |= 8;
+                    }
+                }
+            } else {
+                node->Unlink();
+            }
+            node = node->mNext;
+        }
+
+        if (CapIconMgr_ShouldCommitVs(character, best) != 0) {
             best->mFlags |= 2;
             best->mSlot = func_0202a8e0((int)best->mOwner, best->mCharacter);
-            CapIconMgr_SetMapIconShown((int *)best, 1);
-            CapIconMgr_Commit(i, best->mIconKind, (int *)best);
+            CapIconMgr_SetMapIconShown(best, 1);
+            CapIconMgr_Commit(character, best->mIconKind, best);
             continue;
         }
 
-        if (handled == 0) continue;
+        if (bankSeen == 0) continue;
 
-        cnt = data_0208a0e0;
-        for (idx = spC; idx < cnt; idx++) {
+        numPlayers = data_0208a0e0;
+        for (idx = 0; idx < numPlayers; idx++) {
             player = gPlayers[idx];
-            if (i == player->param1)
+            if (character == player->param1)
                 break;
             player = 0;
         }
         if (player != 0 && player->IsCollectingCap() != 0) {
-            CapIconMgr_Commit(i, maxPriority, (int *)sp10);
+            CapIconMgr_Commit(character, maxKind, 0);
         }
     }
 }

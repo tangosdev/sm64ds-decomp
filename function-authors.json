@@ -12539,7 +12539,7 @@
     },
     "ov001:0x020aa6cc": {
       "author": "tangosdev",
-      "name": "func_ov001_020aa6cc"
+      "name": "CapIconMgr_ClearDispatched"
     },
     "ov001:0x020aa6e4": {
       "author": "tangosdev",
@@ -12547,7 +12547,7 @@
     },
     "ov001:0x020aa79c": {
       "author": "tangosdev",
-      "name": "func_ov001_020aa79c"
+      "name": "CapIconMgr_IsDispatched"
     },
     "ov001:0x020aa7b8": {
       "author": "tangosdev",
