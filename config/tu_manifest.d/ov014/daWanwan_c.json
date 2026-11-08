@@ -56,98 +56,98 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov014_02111484",
+      "symbol": "_ZN10daWanwan_c20StateGiantDamageMainEv",
       "address": "0x02111484",
       "size": "0x00000054",
       "legacy_source": "src/func_ov014_02111484.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov014_021114d8",
+      "symbol": "_ZN10daWanwan_c20StateGiantDamageInitEv",
       "address": "0x021114d8",
       "size": "0x00000034",
       "legacy_source": "src/func_ov014_021114d8.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov014_0211150c",
+      "symbol": "_ZN10daWanwan_c19StateBombDamageMainEv",
       "address": "0x0211150c",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov014_0211150c.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov014_021115c0",
+      "symbol": "_ZN10daWanwan_c19StateBombDamageInitEv",
       "address": "0x021115c0",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov014_021115c0.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov014_021115ec",
+      "symbol": "_ZN10daWanwan_c19StateEscapeDemoMainEv",
       "address": "0x021115ec",
       "size": "0x00000480",
       "legacy_source": "src/func_ov014_021115ec.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov014_02111a6c",
+      "symbol": "_ZN10daWanwan_c19StateEscapeDemoInitEv",
       "address": "0x02111a6c",
       "size": "0x00000084",
       "legacy_source": "src/func_ov014_02111a6c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov014_02111af0",
+      "symbol": "_ZN10daWanwan_c15StateAttackMainEv",
       "address": "0x02111af0",
       "size": "0x00000080",
       "legacy_source": "src/func_ov014_02111af0.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov014_02111b70",
+      "symbol": "_ZN10daWanwan_c15StateAttackInitEv",
       "address": "0x02111b70",
       "size": "0x00000138",
       "legacy_source": "src/func_ov014_02111b70.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov014_02111ca8",
+      "symbol": "_ZN10daWanwan_c13StateWalkMainEv",
       "address": "0x02111ca8",
       "size": "0x0000011c",
       "legacy_source": "src/func_ov014_02111ca8.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov014_02111dc4",
+      "symbol": "_ZN10daWanwan_c13StateWalkInitEv",
       "address": "0x02111dc4",
       "size": "0x00000050",
       "legacy_source": "src/func_ov014_02111dc4.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov014_02111e14",
+      "symbol": "_ZN10daWanwan_c13StateWaitMainEv",
       "address": "0x02111e14",
       "size": "0x00000060",
       "legacy_source": "src/func_ov014_02111e14.c",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov014_02111e74",
+      "symbol": "_ZN10daWanwan_c13StateWaitInitEv",
       "address": "0x02111e74",
       "size": "0x00000048",
       "legacy_source": "src/func_ov014_02111e74.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN10daWanwan_c19func_ov014_02111ebcEi",
+      "symbol": "_ZN10daWanwan_c8SetStateEi",
       "address": "0x02111ebc",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov014_02111ebc.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN10daWanwan_c19func_ov014_02111f08Ev",
+      "symbol": "_ZN10daWanwan_c11UpdateStateEv",
       "address": "0x02111f08",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov014_02111f08.cpp",
@@ -161,49 +161,49 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_ov014_02111fb8",
+      "symbol": "_ZN10daWanwan_c18PlayLandingEffectsEv",
       "address": "0x02111fb8",
       "size": "0x00000028",
       "legacy_source": "src/func_ov014_02111fb8.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN10daWanwan_c19func_ov014_02111fe0Ev",
+      "symbol": "_ZN10daWanwan_c15RestrictToChainEv",
       "address": "0x02111fe0",
       "size": "0x00000134",
       "legacy_source": "src/func_ov014_02111fe0.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN10daWanwan_c19func_ov014_02112114Ev",
+      "symbol": "_ZN10daWanwan_c17HandleCylinderHitEv",
       "address": "0x02112114",
       "size": "0x000001c8",
       "legacy_source": "src/func_ov014_02112114.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov014_021122dc",
+      "symbol": "_ZN10daWanwan_c14PinChainToHeadEv",
       "address": "0x021122dc",
       "size": "0x00000090",
       "legacy_source": "src/func_ov014_021122dc.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov014_0211236c",
+      "symbol": "_ZN10daWanwan_c15CapChainToPivotEv",
       "address": "0x0211236c",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov014_0211236c.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN10daWanwan_c19func_ov014_0211250cEv",
+      "symbol": "_ZN10daWanwan_c19UpdateChainSegmentsEv",
       "address": "0x0211250c",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov014_0211250c.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov014_02112788",
+      "symbol": "_ZN10daWanwan_c20UpdateModelTransformEv",
       "address": "0x02112788",
       "size": "0x000001c4",
       "legacy_source": "src/func_ov014_02112788.c",
@@ -779,7 +779,8 @@
     "Reconstructed source-style factory symbol daWanwan_c_classInit: class identity is ROM-proven by RTTI/allocation/vtable and profile identity by literal ROM ID WANWAN; classInit spelling is later-EAD lineage reconstruction. Historical alias: ChainChomp_Spawn.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry in this tree shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b and the symbol-error inventory match every other intact entry, and the proved tuRanges equal this entry's section claims).",
     "Actor cleanup b16: the fence-break call is fence->Break() (daObjWanwanShutter_c::Break, formerly func_ov014_02112ea8); byte-identical, @NNN re-keyed.",
-    "Collision property member calls replace local helper declarations. Reconciled 4 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (53 sections, 288 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 4 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (53 sections, 288 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "#821 batch 35: the twelve state handlers are members named for the ROM state-name strings (StateWaitInit/Main, StateWalk*, StateAttack*, StateEscapeDemo*, StateBombDamage*, StateGiantDamage*), driven by SetState (02111ebc) and UpdateState (02111f08); the helpers are PlayLandingEffects, RestrictToChain, HandleCylinderHit, UpdateChainSegments, CapChainToPivot, PinChainToHead and UpdateModelTransform. Byte-identical; @NNN re-keyed by -7 (-4 for the four removed named-parameter free-helper externs, -3 for moving the Vec3_ApproachHorz local extern to file scope)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1127,24 +1128,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1148",
+      "from": "@1141",
       "to": "@1165",
-      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1166 to @1120; the complete identical initializer and ABS32 edge at +0x184 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1165 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source)"
+      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1166 to @1120; the complete identical initializer and ABS32 edge at +0x184 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1165 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage"
     },
     {
-      "from": "@1149",
+      "from": "@1142",
       "to": "@1166",
-      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1167 to @1121; the complete identical initializer and ABS32 edge at +0x190 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1166 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source)"
+      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1167 to @1121; the complete identical initializer and ABS32 edge at +0x190 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1166 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage"
     },
     {
-      "from": "@1150",
+      "from": "@1143",
       "to": "@1167",
-      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1168 to @1122; the complete identical initializer and ABS32 edge at +0x1a0 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1167 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source)"
+      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1168 to @1122; the complete identical initializer and ABS32 edge at +0x1a0 identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1167 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage"
     },
     {
-      "from": "@1151",
+      "from": "@1144",
       "to": "@1168",
-      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1169 to @1123; the complete identical initializer and ABS32 edge at +0x1ac identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1168 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source)"
+      "evidence": "The readability pass (typed daWanwan_c parameters replacing char*/void* aliases, removed block-scope declarations and index locals, the WanwanState stand-in replaced by daWanwan_c) changes raw @1169 to @1123; the complete identical initializer and ABS32 edge at +0x1ac identify the same 12-byte, alignment-4 NOBITS registration node. Canonical @1168 and its retail address are unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | re-keyed by __sinit relocation-site order after the daObjWanwanShutter_c::Break conversion removed a local declaration and shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) | re-keyed by whole-object identity after the decl-agreement pass dropped the call3_267c namespace declaration of func_0201267c (three named parameters) for Sound.h's two-argument one: every raw @N moves to @N-3 and the object is byte-identical once renamed back | re-keyed when func_ov014_02111fe0, 02112114 and 0211250c became daWanwan_c members, every raw @N moved to @N-3 (measured: verify reported @1148..@1151 as EXTRA .bss and @1152 as a 0-symbol rename source) | re-keyed by __sinit relocation-site order after batch 35 of #821 turned the four extern \"C\" free helpers (each declared with a named daWanwan_c *c parameter) and the twelve state handlers into members, lowering the per-TU @NNN uniquifier by 4 | re-keyed again by -3 (by __sinit relocation-site order) when the Vec3_ApproachHorz local extern moved from StateEscapeDemoMain's block scope into the file-scope extern \"C\" block to keep its C linkage"
     }
   ]
 }

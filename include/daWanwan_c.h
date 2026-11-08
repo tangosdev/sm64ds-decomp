@@ -18,14 +18,14 @@ struct daWanwan_c : dEnemyBase_c {
     dExtShadowModel_c mShadowModel;                        /* 0x1b4 */
     dExtSimpleModel_c mLinkModels[7];                      /* 0x1dc */
     dExtShadowModel_c mLinkShadows[7];                     /* 0x40c */
-    /* InitResources copies the chomp position into every link. 0211250c then
-       walks [1..6]; [0] is the head, written from the actor position each frame. */
+    /* InitResources copies the chomp position into every link. UpdateChainSegments
+       then walks [1..6]; [0] is the head, written from the actor position each frame. */
     Vector3 mLinkPos[7];                                   /* 0x524 */
-    /* 0211250c adds the stored value into the link step, then replaces it with
-       the scaled movement. [0] is constructed and that loop never touches it. */
+    /* UpdateChainSegments adds the stored value into the link step, then replaces it
+       with the scaled movement. [0] is constructed and that loop never touches it. */
     Vector3 mLinkDelta[7];                                 /* 0x578 */
     u8  pad_5cc[4];
-    /* 0211250c, one floor per link [1..6]. Raised to mSpawnPosY + 0x28000. */
+    /* UpdateChainSegments, one floor per link [1..6]. Raised to mSpawnPosY + 0x28000. */
     s32 mLinkFloorY[6];                                    /* 0x5d0 */
     u8  pad_5e8[4];
     /* InitResources copies the position here, then adds 0xc8000 to the live
@@ -33,17 +33,17 @@ struct daWanwan_c : dEnemyBase_c {
     s32 mSpawnPosX;         /* 0x5ec */
     s32 mSpawnPosY;         /* 0x5f0 */
     s32 mSpawnPosZ;         /* 0x5f4 */
-    s32 mChainExtension;    /* 0x5f8 -- leash slack; 02111fe0 uses it * 7 */
+    s32 mChainExtension;    /* 0x5f8 -- leash slack; RestrictToChain uses it * 7 */
     u16 mActionTimer;       /* 0x5fc -- DecIfAbove0_Short */
     u16 mSecretSound;       /* 0x5fe -- Sound::PlaySecretSound counter */
     s16 unk_600;            /* 0x600 -- idle lunge and release enter store 0; unread */
     s16 mTargetAngY;        /* 0x602 -- idle faces this; HorzAngleToCPlayer writes it */
-    u8  mReleaseStep;       /* 0x604 -- release cutscene step, 021115ec */
-    u8  mChainBroken;       /* 0x605 -- 02111f54 writes 1; Behavior skips the leash */
+    u8 mReleaseStep;        /* 0x604 -- release cutscene step, StateEscapeDemoMain */
+    u8 mChainBroken;        /* 0x605 -- TryStartReleaseCutscene sets it; Behavior skips the leash */
     u8  pad_606[2];
     s32 mStumpUniqueID;     /* 0x608 -- STUMP (0x1b) spawned by InitResources */
     s32 mFenceUniqueID;     /* 0x60c -- CHAIN_CHOMP_FENCE (0x29), found by Behavior */
-    s32 mState;             /* 0x610 -- index into data_ov014_0211476c */
+    s32 mState;             /* 0x610 -- index into data_ov014_0211476c; SetState stores it */
     u8  pad_614[4];
     s32 mReleaseSpeed;      /* 0x618 -- release step 6 approach speed */
     u8  mIsOnGround;        /* 0x61c -- set when mPosY was clamped to the rest height */
@@ -60,13 +60,33 @@ struct daWanwan_c : dEnemyBase_c {
     int CleanupResources();
     int InitResources();
     int Render();
-    void func_ov014_02111ebc(int i);
+
+    /* The six Init/Main state pairs, named for the ROM strings in the state
+       table's name column, and the state-table driver. */
+    void StateWaitInit();
+    void StateWaitMain();
+    void StateWalkInit();
+    void StateWalkMain();
+    void StateAttackInit();
+    int StateAttackMain();
+    void StateEscapeDemoInit();
+    void StateEscapeDemoMain();
+    void StateBombDamageInit();
+    int StateBombDamageMain();
+    void StateGiantDamageInit();
+    void StateGiantDamageMain();
+    void SetState(int i);
+    void UpdateState();
+
     /* Starts the release cutscene once the stump is spent and the player accepts the lock. */
     int TryStartReleaseCutscene();
-    void func_ov014_02111f08();
-    void func_ov014_02111fe0();
-    void func_ov014_02112114();
-    void func_ov014_0211250c();
+    void PlayLandingEffects();
+    void RestrictToChain();
+    void HandleCylinderHit();
+    void UpdateChainSegments();
+    void CapChainToPivot();
+    void PinChainToHead();
+    void UpdateModelTransform();
 };
 
 #ifndef SM64DS_PLATFORM_PC

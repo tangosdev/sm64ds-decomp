@@ -30403,59 +30403,59 @@
     },
     "ov014:0x02111484": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111484"
+      "name": "_ZN10daWanwan_c20StateGiantDamageMainEv"
     },
     "ov014:0x021114d8": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_021114d8"
+      "name": "_ZN10daWanwan_c20StateGiantDamageInitEv"
     },
     "ov014:0x0211150c": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_0211150c"
+      "name": "_ZN10daWanwan_c19StateBombDamageMainEv"
     },
     "ov014:0x021115c0": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_021115c0"
+      "name": "_ZN10daWanwan_c19StateBombDamageInitEv"
     },
     "ov014:0x021115ec": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_021115ec"
+      "name": "_ZN10daWanwan_c19StateEscapeDemoMainEv"
     },
     "ov014:0x02111a6c": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111a6c"
+      "name": "_ZN10daWanwan_c19StateEscapeDemoInitEv"
     },
     "ov014:0x02111af0": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111af0"
+      "name": "_ZN10daWanwan_c15StateAttackMainEv"
     },
     "ov014:0x02111b70": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111b70"
+      "name": "_ZN10daWanwan_c15StateAttackInitEv"
     },
     "ov014:0x02111ca8": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111ca8"
+      "name": "_ZN10daWanwan_c13StateWalkMainEv"
     },
     "ov014:0x02111dc4": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111dc4"
+      "name": "_ZN10daWanwan_c13StateWalkInitEv"
     },
     "ov014:0x02111e14": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111e14"
+      "name": "_ZN10daWanwan_c13StateWaitMainEv"
     },
     "ov014:0x02111e74": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111e74"
+      "name": "_ZN10daWanwan_c13StateWaitInitEv"
     },
     "ov014:0x02111ebc": {
       "author": "github-actions[bot]",
-      "name": "_ZN10daWanwan_c19func_ov014_02111ebcEi"
+      "name": "_ZN10daWanwan_c8SetStateEi"
     },
     "ov014:0x02111f08": {
       "author": "github-actions[bot]",
-      "name": "_ZN10daWanwan_c19func_ov014_02111f08Ev"
+      "name": "_ZN10daWanwan_c11UpdateStateEv"
     },
     "ov014:0x02111f54": {
       "author": "github-actions[bot]",
@@ -30463,31 +30463,31 @@
     },
     "ov014:0x02111fb8": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02111fb8"
+      "name": "_ZN10daWanwan_c18PlayLandingEffectsEv"
     },
     "ov014:0x02111fe0": {
       "author": "github-actions[bot]",
-      "name": "_ZN10daWanwan_c19func_ov014_02111fe0Ev"
+      "name": "_ZN10daWanwan_c15RestrictToChainEv"
     },
     "ov014:0x02112114": {
       "author": "github-actions[bot]",
-      "name": "_ZN10daWanwan_c19func_ov014_02112114Ev"
+      "name": "_ZN10daWanwan_c17HandleCylinderHitEv"
     },
     "ov014:0x021122dc": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_021122dc"
+      "name": "_ZN10daWanwan_c14PinChainToHeadEv"
     },
     "ov014:0x0211236c": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_0211236c"
+      "name": "_ZN10daWanwan_c15CapChainToPivotEv"
     },
     "ov014:0x0211250c": {
       "author": "github-actions[bot]",
-      "name": "_ZN10daWanwan_c19func_ov014_0211250cEv"
+      "name": "_ZN10daWanwan_c19UpdateChainSegmentsEv"
     },
     "ov014:0x02112788": {
       "author": "github-actions[bot]",
-      "name": "func_ov014_02112788"
+      "name": "_ZN10daWanwan_c20UpdateModelTransformEv"
     },
     "ov014:0x0211294c": {
       "author": "github-actions[bot]",
