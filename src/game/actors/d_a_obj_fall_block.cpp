@@ -104,7 +104,7 @@ void daObjFallBlock_c::LinkGroup() {
 }
 
 /* unk_440 is daStar_c's state index into data_ov002_021109d8.
-   Slot 4 is func_ov002_020ea420. Reaching it clears mSuppressed so
+   Slot 4 is StateIdle. Reaching it clears mSuppressed so
    this FL_KUZURE block renders and runs. A missing star destroys it. */
 void daObjFallBlock_c::PollLinkedStar() {
     dActor_c *a = dActor_c::FindWithID((unsigned int)mLinkedStarID);

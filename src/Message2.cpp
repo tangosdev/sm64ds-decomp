@@ -114,7 +114,6 @@ extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-extern int __aeabi_idiv(int, int);
 }
 extern "C" {
 void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int h, int i, int j);
@@ -227,7 +226,7 @@ void func_0201aca4(void) {
             break;
         }
         for (i = 0; i < 3; i++) {
-            int q = __aeabi_idiv(num, data_0208ee64[i]);
+            int q = num / data_0208ee64[i];
             if (q != 0 || leading != 0 || i == 2) {
                 Message::AddChar(data_0208ee74[q]);
                 leading = 1;

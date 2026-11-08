@@ -11,9 +11,11 @@
  * What stays: Vec3_ApproachHorz / AngleDiff have no shared header.
  * What stays: daPly_c::func_ov002_020bec9c, the player's SetAnim wrapper,
  *   is still named by address. Naming belongs to the daPly_c TU.
- * What stays: data_02082214 is the shared arm9 sine table.
- * What stays: the (s16)mMessageID / (u16 *)&mAngleY casts are
- *   load-bearing (sign-extends / zero-extends the halfword load).
+ * What stays: the (s16)param1 cast on the message ID is load-bearing
+ *   (it sign-extends the halfword).
+ * What stays: Behavior copies the player's position through a scoped
+ *   `const Vector3 &`. The ROM holds that base pointer, and a plain
+ *   `tpos = tgt->mPos` is a word short.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -23,6 +25,7 @@ enum daObjKanban_c_AssetId { ASSET_OBJ_KANBAN_BMD = 0x0474 };
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 
@@ -45,7 +48,6 @@ extern Vector3 data_ov085_0212f29c;
 extern "C" {
 extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
 extern int AngleDiff(int a, int b);
-extern s16 data_02082214[];
 
 /* the player side of the conversation */
 }
@@ -74,22 +76,13 @@ int daObjKanban_c::Behavior() {
     Vector3 mine, pos, tpos;
 
     if (tgt != 0) {
-        mine.x = mPosX;
-        mine.y = mPosY;
-        mine.z = mPosZ;
-
-        pos.x = mPosX;
-        pos.y = mPosY;
-        pos.z = mPosZ;
-
-        pos.x += FX_MUL(data_02082214[(*(u16 *)&mAngleY >> 4) << 1], 0x5a000);
-        pos.z += FX_MUL(data_02082214[((*(u16 *)&mAngleY >> 4) << 1) + 1], 0x5a000);
-
+        mine = mPos;
+        pos = mPos;
+        pos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
+        pos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
         {
-            int *p = (int *)&tgt->mPosX;
-            tpos.x = p[0];
-            tpos.y = p[1];
-            tpos.z = p[2];
+            const Vector3 &plyPos = tgt->mPos;
+            tpos = plyPos;
         }
 
         switch (tgt->GetTalkState()) {
@@ -129,23 +122,20 @@ int daObjKanban_c::Behavior() {
             break;
         }
     } else {
-        void *other;
+        dActor_c *other;
         Vector3 opos;
         int isPlayer;
-        int *pO;
 
         if ((mdCcAcPos_c.hitFlags & 0x8000000) != 0) {
             other = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
             if (other != 0) {
-                isPlayer = (((dActor_c *)other)->actorID == 0xbf);
+                isPlayer = (other->actorID == 0xbf);
                 if (isPlayer != 0) {
-                    pO = (int *)&((dActor_c *)other)->mPosX;
-                    opos.x = pO[0];
-                    opos.y = pO[1];
-                    opos.z = pO[2];
+                    const Vector3 &plyPos = other->mPos;
+                    opos = plyPos;
                     if (AngleDiff(Vec3_HorzAngle(&mPos, &opos), mAngleY) < 0x4000) {
-                        if (((daPly_c *)other)->StartTalk(*this, 0))
-                            mTalkingPlayer = (daPly_c *)other;
+                        if (static_cast<daPly_c *>(other)->StartTalk(*this, 0))
+                            mTalkingPlayer = static_cast<daPly_c *>(other);
                     }
                 }
             }

@@ -74,21 +74,23 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov058-daObjCloset_c/daObjCloset_c.o (gitignored)",
+    "object": "build/tu/ov058-daObjCloset_c/d_a_obj_closet.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 6,
     "functions_declared": 6,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN13daObjCloset_cD2Ev"
+        "_ZN13daObjCloset_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN13daObjCloset_cD2Ev"
+        "_ZN13daObjCloset_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         9,
         10,
-        18,
+        14,
         19,
         20,
         21,
@@ -101,7 +103,8 @@
         28,
         29,
         30,
-        31
+        31,
+        32
       ],
       "data": [
         "_ZTI13daObjCloset_c",
@@ -124,7 +127,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV13daObjCloset_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -202,6 +206,13 @@
       "symbol": "_ZN13daObjCloset_cD2Ev",
       "disposition": "deadstrip",
       "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior's five position locals are Vector3 (#821: they replaced volatile VecFx32 launders), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ]
 }

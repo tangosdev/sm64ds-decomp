@@ -210,7 +210,7 @@ int daObjSwitch_c::Behavior()
         func_ov002_020ba4d8(0);
         a = dActor_c::FindWithID(mTargetActorID);
         if (a != 0) {
-            static_cast<daStar_c *>(a)->func_ov002_020e6d88();
+            static_cast<daStar_c *>(a)->ResetAppearance();
         }
     }
 
@@ -356,7 +356,7 @@ void daObjSwitch_c::func_ov002_020ba2d0()
     if ((int)(actorID == 0xc) != 0) {
         dActor_c *p = mTargetActor;
         if (p != 0) {
-            static_cast<daStar_c *>(p)->func_ov002_020e7104(1);
+            static_cast<daStar_c *>(p)->SetSwitchState(1);
             mAreaId = -1;
         }
     } else {
@@ -415,7 +415,7 @@ void daObjSwitch_c::func_ov002_020ba0f8()
         if (b) {
             dActor_c *p = mTargetActor;
             if (p != 0 && static_cast<daStar_c *>(p)->mPlayer == 0) {
-                static_cast<daStar_c *>(p)->func_ov002_020e7104(0);
+                static_cast<daStar_c *>(p)->SetSwitchState(0);
             }
             mAreaId = mHomeAreaId;
         } else {

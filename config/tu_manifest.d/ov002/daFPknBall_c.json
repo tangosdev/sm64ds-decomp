@@ -179,27 +179,36 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Root type-name string 7fBase_c. Cartridge copy arm9:0x02086e60."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior's dust and spark positions and UpdateVisuals' trail and shadow positions are Vector3 (#821: they replaced POD VecFx32 locals and a volatile launder), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov002-daFPknBall_c/daFPknBall_c.o (gitignored)",
+    "object": "build/tu/ov002-daFPknBall_c/d_a_f_pkn_ball.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 10,
     "functions_declared": 10,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN12daFPknBall_cD2Ev"
+        "_ZN12daFPknBall_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN12daFPknBall_cD2Ev"
+        "_ZN12daFPknBall_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         9,
         10,
-        25,
+        17,
         26,
         27,
         28,
@@ -215,7 +224,8 @@
         38,
         39,
         40,
-        41
+        41,
+        42
       ],
       "data": [
         "_ZTV12daFPknBall_c",
@@ -242,7 +252,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV12daFPknBall_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

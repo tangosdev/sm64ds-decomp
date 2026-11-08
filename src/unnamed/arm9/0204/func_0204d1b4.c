@@ -1,6 +1,5 @@
 #include "types.h"
 #include "private/spl_particle_views.h"
-extern int __aeabi_idiv(int a, int b);
 extern u32 data_020a4d30;
 
 /* The particle's 0x40 halfword (SPL's visibility): the base alpha in bits 0-4,
@@ -42,7 +41,7 @@ void func_0204d1b4(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
         int start = anim->alpha.start;
         int mid = anim->alpha.mid;
         int diff = mid - start;
-        int step = __aeabi_idiv(lifeRate * diff, in);
+        int step = lifeRate * diff / in;
         value = step + start;
     } else if (lifeRate < out) {
         value = anim->alpha.mid;
@@ -50,7 +49,7 @@ void func_0204d1b4(struct ParticleAlphaView *ptcl, PtclDef *def, int lifeRate) {
         int mid = anim->alpha.mid;
         int end = anim->alpha.end;
         int diff = end - mid;
-        int step = __aeabi_idiv((lifeRate - 0xff) * diff, 0xff - out);
+        int step = (lifeRate - 0xff) * diff / (0xff - out);
         value = step + end;
     }
     u16 *visibility = &ptcl->visibility;

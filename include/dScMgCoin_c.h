@@ -66,7 +66,7 @@ struct dScMgCoin_Block {
     s32 y;         /* 0x04 */
     s32 vx;        /* 0x08 */
     s32 vy;        /* 0x0c */
-    s16 delay;     /* 0x10 */
+    u16 delay;     /* 0x10 counts down; Block_StateWaiting clamps it at a signed 0 */
     u16 animTimer; /* 0x12 ticks in the current animation frame */
     u8 row;        /* 0x14 the stage it stops on */
     u8 state;      /* 0x15 */
@@ -213,8 +213,8 @@ struct dScMgCoin_c : dScMgBase_c {
     dScMgCoin_Score mScore;            /* 0x4d08 */
     dScMgCoin_Sparkle mSparkles[0x20]; /* 0x4d14 */
     dScMgCoin_Popup mPopups[24];       /* 0x5014 */
-    dScMgCoin_Caption mCaption;        /* 0x5194 */
-    dScMgCoin_Bouncer mBouncer;        /* 0x51a8 */
+    dScMgCoin_Caption mCaption[1];     /* 0x5194 */
+    dScMgCoin_Bouncer mBouncer[1];     /* 0x51a8 */
     s32 mSeed;                         /* 0x51c4 set to 1 at construction, never read here */
     s32 mPhase;                        /* 0x51c8 5 is the result */
     s32 mCountdown;                    /* 0x51cc */

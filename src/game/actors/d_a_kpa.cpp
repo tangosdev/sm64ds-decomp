@@ -30,13 +30,11 @@
  *    their names keep the ROM addresses for tooling, the state tables' PMF
  *    and vtable-slot records resolve through symbols.txt.
  *  - Spellings kept because the bytes depend on them (most are noted at the
- *    function): the daKpaTail_c::Behavior pointer bump to +0x5c and its volatile
- *    array; the mOpacity += / -= 0x14 form; the angle-copy pointer in
+ *    function): the mOpacity += / -= 0x14 form; the angle-copy pointer in
  *    func_ov060_02115d68; the overwritten first pos[] stores in
  *    func_ov060_02115518; the (unsigned short) and *(u16 *)& angle reads; the
  *    new_var temp and the `dp != 0 && this != 0` barrier in
- *    func_ov060_021140c0; the new_var2 temp in func_ov060_02114858; the volatile locals in func_ov060_021135fc,
- *    func_ov060_021132a4, func_ov060_02112ee0 and func_ov060_02112bfc; the gotos
+ *    func_ov060_021140c0; the volatile walk pointer in func_ov060_02112bfc; the gotos
  *    in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset reads; and the
  *    `obj` copy of this in Bowser_IsAnimAtLastFrame.
  *  - Callees known only by address, whose purpose this file does not establish:
@@ -133,6 +131,7 @@ enum daKpa_c_AssetId {
 #include "Sound.h"
 #include "Message.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
@@ -301,7 +300,6 @@ struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
 extern dCamera_c *data_0209f318;
-extern short data_02082214[];
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
 extern int func_020092c4(void*, void*, void*);
@@ -655,32 +653,21 @@ int daKpa_c::InitResources()
 /*
 Per frame: find Bowser by mBowserUniqueID (return 1 if he is gone), put the tail
 0x8c (140) units behind him -- his position plus 0x8c times the table entry for
-mPrevAngleY + 0x8000, Y copied as is -- run func_ov060_02115b84, return 1. */
-/*
- * data_02082214 is a sin/cos table indexed by angle>>4, two shorts per entry.
- *
- * THE POINTER BUMP AND THE volatile ARE LOAD-BEARING, both measured. Reading
- * the position the obvious way -- `a->mPosX` and so on -- does not reproduce the
- * ROM; reusing `a` as a pointer to mPos and loading the three words off it does.
- * A separate `Vector3 *` local instead of reusing `a` moves this function's
- * bytes and renumbers every @NNN after it.
- */
+mPrevAngleY + 0x8000, Y copied as is -- run func_ov060_02115b84, return 1.
+   The copy goes through a held `const Vector3 &`; `pos = a->mPos` directly is
+   a word short (0xb4 vs 0xb8). */
 int daKpaTail_c::Behavior()
 {
     dActor_c* a = dActor_c::FindWithID(mBowserUniqueID);
     if (!a) return 1;
 
-    int ang = a->mPrevAngleY;
-    a = (dActor_c *)&a->mPos;
-    int x = ((Vector3 *)a)->x;
-    volatile int v[3];
-    v[0] = x;
-    v[1] = ((Vector3 *)a)->y;
-    v[2] = ((Vector3 *)a)->z;
-    int j = 2 * (((unsigned short)(short)(ang + 0x8000)) >> 4);
-    mPosX = (short)data_02082214[j] * 0x8c + x;
-    mPosY = v[1];
-    mPosZ = (short)data_02082214[j + 1] * 0x8c + v[2];
+    s16 ang = a->mPrevAngleY + 0x8000;
+    Vector3 pos;
+    const Vector3 &p = a->mPos;
+    pos = p;
+    mPosX = pos.x + FX_SinIdx((u16)ang >> 4) * 0x8c;
+    mPosY = pos.y;
+    mPosZ = pos.z + FX_CosIdx((u16)ang >> 4) * 0x8c;
 
     func_ov060_02115b84();
     return 1;
@@ -966,7 +953,7 @@ void daKpa_c::func_ov060_02115b0c(){
     v.y = this->mPosY;
     v.z = this->mPosZ;
     Earthquake(v, 0x7d0000);
-    dActor_c::Spawn(BOWSER_ACTOR_FIRERING, 0, *((struct Vector3*)(&this->mPosX)), 0, this->mAreaId, -1);
+    dActor_c::Spawn(BOWSER_ACTOR_FIRERING, 0, mPos, 0, this->mAreaId, -1);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -987,7 +974,7 @@ void daKpa_c::func_ov060_02115a84(char* counter){
     v.y = this->mPosY;
     v.z = this->mPosZ;
     this->LandingDustAt(v, 0);
-    func_02012694(BOWSER_SND_LAND_SOFT, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(BOWSER_SND_LAND_SOFT, &mCamSpacePos);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1205,7 +1192,7 @@ void daKpa_c::func_ov060_02115518(){
                 }
             }
             this->mTalkStep++;
-            func_02012694(BOWSER_SND_TALK_START, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_TALK_START, &mCamSpacePos);
             return;
 
         case 2:
@@ -1509,7 +1496,7 @@ void daKpa_c::func_ov060_02114e9c(){
     this->mHorzSpeed = 0;
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac20.filePtr) {
         if (this->mAnmModel.WillHitFrame(8)) {
-            func_02012694(BOWSER_SND_B5, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_B5, &mCamSpacePos);
         }
     }
     if (Bowser_IsAnimAtLastFrame() == 0) return;
@@ -1610,7 +1597,7 @@ void daKpa_c::func_ov060_02114b60(){
             this->mStepCounter = 0x1e;
             if ((this->mTimer) == 0)
             {
-                func_02012694(BOWSER_SND_VANISH, (const Vector3 *)(&this->mCamSpacePosX));
+                func_02012694(BOWSER_SND_VANISH, &mCamSpacePos);
             }
             if ((this->mOpacity) != 0)
             {
@@ -1687,52 +1674,28 @@ BOWSER_COND_BREATHING is set every call. At the last frame of an animation, by
 mStep: 0 starts animation 0x16 (once) with sound 0xb5, 1 starts 0x15 (looping),
 2 starts 0x17 (once), 3 goes to BOWSER_STATE_IDLE and clears the flag. */
 void daKpa_c::func_ov060_02114858(){
-    int new_var2;
-    s32 v134 = (s32)this->mAnmModel.file;
-    if ((v134 == (int)data_ov060_0211acd8.filePtr) ||
-        ((v134 == (int)data_ov060_0211acf0.filePtr) &&
-         ((((u32)(((u32)(this->mAnmModel.currFrame)) << 4)) >> 16) > 0x2a))) {
-        s32 v12c = this->mAnmModel.currFrame;
-        s32 v450 = *(volatile s32 *)&this->mSoundID;
-        s32 r4 = ((u32) (v12c << 4)) >> 16;
-        if (v450 != 0x180)
-        {
-            this->mSoundHandle = 0;
-        }
-        this->mSoundID = BOWSER_SND_FIRE_LOOP;
-        this->mSoundHandle =
-            Sound::PlayLong(this->mSoundHandle, 3, this->mSoundID, this->mCamSpacePos, 0);
-        u16 t = this->mFireTimer;
-        if ((t % 5) == 0)
-        {
-            s32 pos[3];
-            pos[0] = this->mPosX;
-            pos[1] = this->mPosY;
-            pos[2] = this->mPosZ;
-            {
-                s32 y = pos[1];
-                u16 ang = this->mPrevAngleY;
-                s16 *tbl = data_02082214;
-                s16 sx = tbl[(ang >> 4) * 2];
-                new_var2 = (sx * 0xc8) + pos[0];
-                pos[1] = y + 0xb4000;
-                pos[0] = new_var2;
-                ang = this->mPrevAngleY;
-                pos[2] = (tbl[((ang >> 4) * 2) + 1] * 0xc8) + pos[2];
-            }
-            if ((r4 >= 0xf) && (r4 < 0x14))
-            {
-                s32 rnd = RandomIntInternal(&data_0209e650.value);
-                u32 hi = ((u32) rnd) >> 16;
-                u32 m = hi % 10u;
-                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 0x11, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
-            }
-            else
-            {
-                s32 rnd = RandomIntInternal(&data_0209e650.value);
-                u32 hi = ((u32) rnd) >> 16;
-                u32 m = hi % 10u;
-                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 1, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
+    if (mAnmModel.file == data_ov060_0211acd8.filePtr ||
+        (mAnmModel.file == data_ov060_0211acf0.filePtr &&
+         (u16)((u32)mAnmModel.currFrame >> 12) > 0x2a)) {
+        int frame = (u16)((u32)mAnmModel.currFrame >> 12);
+        if (mSoundID != 0x180)
+            mSoundHandle = 0;
+        mSoundID = BOWSER_SND_FIRE_LOOP;
+        mSoundHandle = Sound::PlayLong(mSoundHandle, 3, mSoundID, mCamSpacePos, 0);
+        if (mFireTimer % 5 == 0) {
+            Vector3 pos = mPos;
+            pos.x += FX_SinIdx((u16)mPrevAngleY >> 4) * 0xc8;
+            pos.y += 0xb4000;
+            pos.z += FX_CosIdx((u16)mPrevAngleY >> 4) * 0xc8;
+            if (frame >= 0xf && frame < 0x14) {
+                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE,
+                                ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 |
+                                    0x11,
+                                pos, &mPrevAngle, mAreaId, -1);
+            } else {
+                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE,
+                                ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 | 1,
+                                pos, &mPrevAngle, mAreaId, -1);
             }
         }
         this->mFireTimer++;
@@ -1746,7 +1709,7 @@ void daKpa_c::func_ov060_02114858(){
     {
         case 0:
             func_ov060_02111cc0(0x16, 0x40000000);
-            func_02012694(BOWSER_SND_B5, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_B5, &mCamSpacePos);
             this->mStep++;
             return;
 
@@ -1793,7 +1756,7 @@ void daKpa_c::func_ov060_021146d0(){
         this->mAngleY = this->mAngleToCenter + 0x8000;
         this->unk_422 = 1;
         this->mAngleX = -0xc00;
-        func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
     } else {
         if ((u16)this->mAngleX > 0xc00) {
             this->mAngleX -= 0xc00;
@@ -1861,7 +1824,7 @@ int daKpa_c::func_ov060_021145d4(){
         v.z = this->mPosZ;
         func_0200fa04(this, &v, 0);
         func_ov060_02111cc0(0xc, 0x40000000);
-        func_02012694(BOWSER_SND_LAND, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LAND, &mCamSpacePos);
         if(this->mVariantID == 0){
             b = (this->mDistToTarget >= 0x352000);
             if (!this->mTargetPlayer->IsInAir())
@@ -1913,7 +1876,7 @@ void daKpa_c::func_ov060_021143b8(){
         } else {
             this->mVertSpeed = 0x32000;
         }
-        func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
         this->mStepCounter = 0;
         this->mHorzSpeed = 0;
         func_ov060_021145a8();
@@ -1976,7 +1939,7 @@ void daKpa_c::func_ov060_02114300(){
         this->mHorzSpeed = 0x19000;
         this->mStepCounter = 0;
         this->mStep++;
-        func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
     } else if (k == 1) {
         if (!func_ov060_021145d4()) return;
         this->mStep++;
@@ -2068,7 +2031,7 @@ void daKpa_c::func_ov060_021140c0(){
             dir[0] = 0x1000;
             grav = 0xa000;
             SpawnFireball(pos, (const Vector3_16 *)dp, 0x1e000, grav, 0);
-            func_02012694(BOWSER_SND_FIREBALL, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_FIREBALL, &mCamSpacePos);
         }
     }
     if (Bowser_IsAnimAtLastFrame() != 0) {
@@ -2324,14 +2287,15 @@ void daKpa_c::func_ov060_02113a94(){
     this->mHorzSpeed = 0;
     this->mVertSpeed = 0;
     this->mPosY = this->mHomePosY - 0x3e8000;
-    if (Vec3_HorzLen((Vector3*)(&this->mPosX)) < 0xed8000) return;
+    if (Vec3_HorzLen(&mPos) < 0xed8000)
+        return;
     {
         Vector3 zero;
         int a;
         zero.x = 0;
         zero.y = 0;
         zero.z = 0;
-        a = (int)(unsigned short)Vec3_HorzAngle(&zero, (Vector3*)(&this->mPosX)) >> 4;
+        a = (int)(unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
         this->mPosX = (short)data_02082214[a * 2] * (short)0xed8;
         this->mPosZ = (short)data_02082214[a * 2 + 1] * (short)0xed8;
     }
@@ -2408,7 +2372,7 @@ void daKpa_c::func_ov060_02113740(){
             this->mAngleY = this->mAngleToCenter;
             this->mPrevAngleY = this->mAngleY;
             this->mVertSpeed = 0x28000;
-            func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
             this->mVertAccel = 0;
             this->mTargetOpacity = 0xff;
             this->mStepCounter = 0;
@@ -2489,32 +2453,22 @@ particles 0xad and 0xae 50 units above him, an OBJ_KEY actor (0x11a, parameter =
 variant) at his position that receives his mSpinSpeed (daObjKey_c::mSpinSpeed),
 and sound 0xbb. */
 void daKpa_c::func_ov060_021135fc(){
-    volatile Vector3 base;
-    int px, py, pz;
-    px = this->mPosX;
-    base.x = px;
-    py = this->mPosY;
-    base.y = py;
-    pz = this->mPosZ;
-    base.z = pz;
-    py = py + 0x32000;
-    base.y = py;
+    Vector3 base = mPos;
+    base.y += 0x32000;
 
-    this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
+    mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
 
-    if (this->mVariantID == 2) {
-        Vector3 pos;
-        pos.x = this->mPosX;
-        pos.y = this->mPosY;
-        pos.z = this->mPosZ;
-        pos.y = pos.y + 0xa0000;
-        dActor_c::Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, this->mAreaId, -1);
+    if (mVariantID == 2) {
+        Vector3 pos = mPos;
+        pos.y += 0xa0000;
+        dActor_c::Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, mAreaId, -1);
     } else {
         Particle::System::NewSimple(0xad, base.x, base.y, base.z);
         Particle::System::NewSimple(0xae, base.x, base.y, base.z);
-        void *spawned = dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, this->mVariantID, *((Vector3*)(&this->mPosX)), 0, this->mAreaId, -1);
-        ((daObjKey_c *)spawned)->mSpinSpeed = this->mSpinSpeed;
-        func_02012694(BOWSER_SND_DEFEATED, (Vector3*)(&this->mCamSpacePosX));
+        daObjKey_c *key =
+            (daObjKey_c *)dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, mVariantID, mPos, 0, mAreaId, -1);
+        key->mSpinSpeed = mSpinSpeed;
+        func_02012694(BOWSER_SND_DEFEATED, &mCamSpacePos);
     }
 }
 
@@ -2540,7 +2494,7 @@ void daKpa_c::func_ov060_02113564(){
     this->mStepCounter = 0;
     this->mStep += 1;
     this->mdCcAcPos_c.radius = 0xb4000;
-    func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2593,7 +2547,7 @@ int daKpa_c::func_ov060_02113404(){
             v.y = targetPos[1];
             v.z = targetPos[2];
             ang = this->mTargetPlayer->mAngleY;
-            if (Vec3_HorzDist((struct Vector3*)(&this->mPosX), &v) < 0x258000) {
+            if (Vec3_HorzDist(&mPos, &v) < 0x258000) {
                 if (this->GetSubtraction(ang, this->mAngleToTarget) > 0x6000) r = 1;
             }
         }
@@ -2616,19 +2570,10 @@ mSpinSpeed, mOpacity drops by 2 while above 2, and until done the looping sound
 0xba plays (mSoundHandle is reset when the sound ID changes). */
 int daKpa_c::func_ov060_021132a4(){
     int done = 0;
-    volatile Vector3 pos;
-    int ytmp;
-    int z;
+    Vector3 pos = mPos;
+    pos.y += 0x32000;
 
-    pos.x = this->mPosX;
-    ytmp = this->mPosY;
-    pos.y = ytmp;
-    z = this->mPosZ;
-    pos.z = z;
-    pos.y = ytmp + 0x32000;
-
-    this->mParticleHandle = (int)Particle::System::New(*(volatile int *)&this->mParticleHandle,
-                                                       0x99, pos.x, pos.y, z, 0, 0);
+    mParticleHandle = (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
 
     if (this->mScaleX < 0xccc) {
         this->mSpinSpeed += 0x80;
@@ -2721,8 +2666,7 @@ int daKpa_c::func_ov060_021130c0(){
         case 1:
             if (this->mTargetPlayer->GetTalkState() == 0) {
                 int msg = (this->mVariantID == 0) ? 0xcd : 0xcf;
-                if (this->mTargetPlayer->ShowMessage(
-                        *this, msg, reinterpret_cast<const Vector3 *>(&this->mPosX), 0, 2))
+                if (this->mTargetPlayer->ShowMessage(*this, msg, &mPos, 0, 2))
                     this->mTalkStep++;
             }
             break;
@@ -2763,7 +2707,7 @@ then func_ov060_02113260 runs and this returns 1. */
 int daKpa_c::func_ov060_02112ee0(){
     int ret = 0;
     unsigned short mode = this->mStepCounter;
-    volatile int v[4];
+    Vector3 pos;
 
     if (mode <= 1) {
         if (mode == 0) {
@@ -2780,8 +2724,7 @@ int daKpa_c::func_ov060_02112ee0(){
         case 1:
             if (this->mTargetPlayer->GetTalkState() == 0) {
                 unsigned m = (NumStars() != 0x96) ? 0xd1 : 0xd2;
-                if (this->mTargetPlayer->ShowMessage(
-                        *this, m, reinterpret_cast<const Vector3 *>(&this->mPosX), 0, 2)) {
+                if (this->mTargetPlayer->ShowMessage(*this, m, &mPos, 0, 2)) {
                     this->mTalkStep++;
                     Message::PrepareTalk();
                 }
@@ -2801,14 +2744,10 @@ int daKpa_c::func_ov060_02112ee0(){
     } else {
         if (this->mOpacity > 4) {
             this->mOpacity -= 4;
-            int y, z;
-            v[0] = this->mPosX;
-            v[1] = y = this->mPosY;
-            v[2] = z = this->mPosZ;
-            v[1] = y + 0x32000;
-
-            *(void **)(&this->mParticleHandle) = (void *)Particle::System::New(
-                *(volatile unsigned *)&this->mParticleHandle, 0x99, v[0], v[1], z, 0, 0);
+            pos = mPos;
+            pos.y += 0x32000;
+            mParticleHandle =
+                (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
         } else {
             func_ov060_02113260();
             ret = 1;
@@ -3069,7 +3008,7 @@ void daKpa_c::func_ov060_02112724(){
     switch (this->mHoldStep) {
     case 0:
         this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
-        func_02012694(BOWSER_SND_GRABBED, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_GRABBED, &mCamSpacePos);
         this->mState = BOWSER_STATE_THROWN;
         func_ov060_02111cc0(0xa, 0);
         this->mAnimSpeed = 0x1000;
@@ -3316,8 +3255,8 @@ int daKpa_c::func_ov060_02111f08(){
         this->mCamLookAtX = sp.x;
         this->mCamLookAtY = sp.y;
         this->mCamLookAtZ = sp.z;
-        dist = Vec3_HorzDist((struct Vector3*)(&this->mPosX), &sp);
-        k = (unsigned short)(short)(Vec3_HorzAngle((struct Vector3*)(&this->mPosX), &sp) - 0x2000) >> 4;
+        dist = Vec3_HorzDist(&mPos, &sp);
+        k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x2000) >> 4;
         v = FX_MUL(dist, 0xA00);
         this->mCamPosX = this->mPosX + FX_MUL(v, data_02082214[k * 2]);
         this->mCamPosY = this->mPosY + 0xc8000;
@@ -3339,11 +3278,11 @@ int daKpa_c::func_ov060_02111f08(){
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;
-        dist = Vec3_HorzDist((struct Vector3*)(&this->mPosX), &sp);
+        dist = Vec3_HorzDist(&mPos, &sp);
         d = FX_MUL(dist, 0x600);
         if (d < 0x1f4000)
             d = 0x1f4000;
-        k = (unsigned short)(short)(Vec3_HorzAngle((struct Vector3*)(&this->mPosX), &sp) - 0x1000) >> 4;
+        k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x1000) >> 4;
         sp.x = this->mPosX + FX_MUL(d, data_02082214[k * 2]);
         sp.z = this->mPosZ + FX_MUL(d, data_02082214[k * 2 + 1]);
         ApproachLinear(this->mCamPosX, sp.x, 0x4000);
