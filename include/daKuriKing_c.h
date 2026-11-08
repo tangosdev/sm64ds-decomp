@@ -48,12 +48,12 @@ struct daKuriKing_c : dEnemyBase_c {
     dCcAcPos_c mdCc_cs[4];  /* 0x110 */
     dExtAnmModel_c mAnmModel;                     /* 0x210 */
     dExtShadowModel_c mShadowModels[3];           /* 0x274 */
-    /* One drop-shadow matrix per foot. func_ov074_02121800 sets each to the
+    /* One drop-shadow matrix per foot. UpdateShadows sets each to the
        identity with that foot's mCylClsnPos x/z and mPosY (>> 3) as translation
-       and hands it to DropShadowRadHeight; func_ov074_021223bc uses [0] alone.
+       and hands it to DropShadowRadHeight; BehaviorVanish uses [0] alone.
        Raw words rather than Matrix4x3: see d_a_kuri_king.cpp's deslop notes. */
     s32 mShadowMatrices[3][12]; /* 0x2ec */
-    /* Body transform. func_ov074_02121300 builds it from mPos >> 3, mAngleY and
+    /* Body transform. UpdateBodyMatrix builds it from mPos >> 3, mAngleY and
        mScale; func_ov074_02121270 composes a bone's transform with it to get
        that bone's world position. */
     s32 mBodyMatrix[12];                          /* 0x37c */
@@ -87,7 +87,7 @@ struct daKuriKing_c : dEnemyBase_c {
     u16 mTimer;                               /* 0x5fc */
     u8  mLeftFootSteppedOnGround;            /* 0x5fe */
     u8  mRightFootSteppedOnGround;            /* 0x5ff */
-    /* Foot-edge latches, set in func_ov074_02121380 while a foot cylinder's
+    /* Foot-edge latches, set in UpdateCylindersAndFootsteps while a foot cylinder's
        ground test reads below the body. */
     u8  mFoot2Latch;                          /* 0x600 */
     u8  mFoot1Latch;                          /* 0x601 */
@@ -99,12 +99,12 @@ struct daKuriKing_c : dEnemyBase_c {
     u8  pad_606;
     /* Remaining shrink steps. Starts at 3, and the last step is the one <= 1. */
     u8  mScaleSteps;                          /* 0x607 */
-    /* Set on death. func_ov074_02121800 skips the drop shadows while it is set. */
+    /* Set on death. UpdateShadows skips the drop shadows while it is set. */
     u8  mNoShadow;                            /* 0x608 */
-    /* Set when a mini is thrown. func_ov074_021223bc returns immediately while it is 0. */
+    /* Set when a mini is thrown. BehaviorVanish returns immediately while it is 0. */
     u8  mLaunched;                            /* 0x609 */
     u8  mShouldRender;            /* 0x60a */
-    /* Latched once func_ov074_0211f38c reports the wave has all spawned. */
+    /* Latched once SpawnVanishCopy reports the wave has all spawned. */
     u8  mWaveFinished;                        /* 0x60b */
     /* Layer-3 music one-shot during the intro talk. */
     u8  mMusicStarted;                        /* 0x60c */
@@ -127,48 +127,48 @@ struct daKuriKing_c : dEnemyBase_c {
 
     /* The class's ordinary methods, under the ROM's only surviving spellings:
        their addresses. The state handlers are the records __sinit copies into
-       data_ov074_021230f8; func_ov074_021203e4 runs the enter side. */
-    void func_ov074_0211f154();
-    void func_ov074_0211f244();
-    void func_ov074_0211f344(u8 value);
-    int  func_ov074_0211f38c();
-    void func_ov074_0211f5b8();
-    void func_ov074_0211fa08();
-    void func_ov074_0211fa74();
-    void func_ov074_0211fb84();
-    int  func_ov074_0211fbd0();
+       data_ov074_021230f8; ChangeState runs the enter side. */
+    void SetDefeatTalkCamera();
+    void LaunchVanishCopies();
+    void SetOtherCopiesShouldRender(u8 value);
+    int SpawnVanishCopy();
+    void UpdateDefeat();
+    void EnterDefeat();
+    void UpdateScaleChange();
+    void EnterScaleChange();
+    int UpdateMegaKnockback();
     void func_ov074_0211fc34();
-    void func_ov074_0211fc38();
-    void func_ov074_0211fd48();
-    void func_ov074_0211fd74();
-    void func_ov074_0211ffac();
+    void UpdateKnockback();
+    void EnterKnockback();
+    void UpdateSummonGoombas();
+    void EnterSummonGoombas();
     void func_ov074_0211ffcc();
-    void func_ov074_02120080();
-    void func_ov074_0212016c();
-    void func_ov074_0212018c();
-    void func_ov074_021201f0();
-    int  func_ov074_021203e4(int i);
-    void func_ov074_0212042c();
-    int  func_ov074_02120474();
-    int  func_ov074_021204c0();
-    int  func_ov074_021206c8();
-    int  func_ov074_021207b8();
-    void func_ov074_02120808();
-    int  func_ov074_02120b24();
-    void func_ov074_02120b90();
-    void func_ov074_02120bb8(dActor_c *other, dCcAcPos_c *clsn, int mode);
-    void func_ov074_02120d74();
-    void func_ov074_02121300();
-    void func_ov074_02121380();
-    int  func_ov074_021216f4();
-    void func_ov074_02121800();
-    void func_ov074_0212195c();
-    void func_ov074_0212199c();
-    int  func_ov074_02121a20(int idx);
-    int  func_ov074_0212229c();
-    int  func_ov074_021222e0();
-    int  func_ov074_021223bc();
-    int  func_ov074_02122634();
+    void UpdateWalk();
+    void EnterWalk();
+    void UpdateIntroTalkEnd();
+    void UpdateIntroTalk();
+    int ChangeState(int i);
+    void UpdateState();
+    int AdvanceMaterialChanger();
+    int StepScaleTransition();
+    int StopWalking();
+    int FinishTurnAround();
+    void TurnIfPlayerBehind();
+    int CalcWalkAnimSpeed();
+    void UpdateMaxWalkSpeed();
+    void SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode);
+    void HandleCylinderHits();
+    void UpdateBodyMatrix();
+    void UpdateCylindersAndFootsteps();
+    int WalkAlongRing();
+    void UpdateShadows();
+    void UpdateModelMatrix();
+    void UpdateAnimation();
+    int IsAnimPlaying(int idx);
+    int CleanupVanishResources();
+    int RenderVanish();
+    int BehaviorVanish();
+    int InitVanishResources();
 };
 
 #ifndef SM64DS_PLATFORM_PC
