@@ -693,11 +693,9 @@ int daIwante_c::func_ov066_021168ec() {
  * (-2896.0) if Z is below that, else 0 if Z is at or above -0xa68000 (-2664.0),
  * else -0xa68000. The decision state tests for the first two values. */
 int daIwante_c::func_ov066_02116a68() {
-    /* Unused; sizes the frame to the ROM's 12 bytes (sub sp,#0xc). */
-    volatile int dummy[3];
-    (void)dummy;
     daPly_c *p = ClosestPlayer();
-    int dist = p->mPosZ;
+    Vector3 playerPos = p->mPos;
+    int dist = playerPos.z;
     int lo = (int)0xff3ae000;
     if (dist < lo) return lo;
     int lo2 = -(int)0xb50000;
@@ -714,13 +712,8 @@ int daIwante_c::func_ov066_02116a68() {
  * and plays SE_LANDING at the object's own cached camera-space position
  * (mCamSpacePosX, which the shift does not change), and restores the position. */
 void daIwante_c::func_ov066_02116ac4(int strength) {
-    /* Saved through stack slots; non-volatile locals make this 24 bytes
-       shorter. */
-    volatile int s0, s1, s2;
     data_0209f318->func_0200d8c8(&mPos, strength);
-    s0 = mPosX;
-    s1 = mPosY;
-    s2 = mPosZ;
+    Vector3 saved = mPos;
     if (mPartIdx == PART_HAND_1)
         mPosX -= 0x80000;
     else
@@ -728,9 +721,7 @@ void daIwante_c::func_ov066_02116ac4(int strength) {
     mPosZ += 0x80000;
     HugeLandingDust(true);
     func_02012694(SE_LANDING, &mCamSpacePosX);
-    mPosX = s0;
-    mPosY = s1;
-    mPosZ = s2;
+    mPos = saved;
 }
 
 /* Keep a hand inside the arena. Bounds on mPosX (the values are in units and
@@ -2610,15 +2601,13 @@ extern unsigned char data_ov066_0211ae08;
 
 extern "C" void func_ov066_0211a2e4(void *a, int b)
 {
-    /* Unused; sizes the frame to the ROM's 12 bytes (sub sp,#0xc). */
-    volatile int dummy[3];
-    (void)dummy;
     daPly_c *p;
     if (data_ov066_0211ae04 != PHASE_DORMANT) return;
     if (b == 0) return;
     p = ((dActor_c *)a)->ClosestPlayer();
     if (p == 0) return;
-    if (p->mPosZ < (int)0xff387000) {
+    Vector3 playerPos = p->mPos;
+    if (playerPos.z < (int)0xff387000) {
         data_ov066_0211ae08++;
     }
 }

@@ -1074,16 +1074,12 @@ void daObjBlockS_c::func_ov098_021396a4()
  * on mMeshCollider. */
 void daObjBlockS_c::func_ov098_021397c8()
 {
-    volatile int tmp[3];
-    tmp[0] = mPosX;
-    int origY = mPosY;
-    tmp[1] = origY;
-    tmp[2] = mPosZ;
-    tmp[1] = origY - mClsnYOffset;
+    Vector3 pos = mPos;
+    pos.y -= mClsnYOffset;
     mClsnMat = mModel.mat4x3;
-    mClsnMat.m[9] = tmp[0];
-    mClsnMat.m[10] = tmp[1];
-    mClsnMat.m[11] = tmp[2];
+    mClsnMat.m[9] = pos.x;
+    mClsnMat.m[10] = pos.y;
+    mClsnMat.m[11] = pos.z;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
@@ -1137,24 +1133,20 @@ void daObjBlockS_c::func_ov098_02139850()
     }
     return;
 
-other:
-    {
-        volatile int tmp[3];
-        tmp[0] = mPosX;
-        tmp[1] = mPosY;
-        tmp[2] = mPosZ;
-        tmp[1] = mPosY - mClsnYOffset;
-        Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
-        mModel.mat4x3.m[9] = tmp[0] >> 3;
-        mModel.mat4x3.m[10] = tmp[1] >> 3;
-        mModel.mat4x3.m[11] = tmp[2] >> 3;
-        mCarryOffsetX = 0;
-        mCarryOffsetY = 0;
-        mCarryOffsetZ = 0;
-        if (mWithMeshClsn.IsOnGround() != 0) {
-            mFlags &= ~0x4000000;
-        }
+other: {
+    Vector3 pos = mPos;
+    pos.y -= mClsnYOffset;
+    Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = pos.x >> 3;
+    mModel.mat4x3.m[10] = pos.y >> 3;
+    mModel.mat4x3.m[11] = pos.z >> 3;
+    mCarryOffsetX = 0;
+    mCarryOffsetY = 0;
+    mCarryOffsetZ = 0;
+    if (mWithMeshClsn.IsOnGround() != 0) {
+        mFlags &= ~0x4000000;
     }
+}
 }
 
 /* Disables the collider, then releases the model and collision files

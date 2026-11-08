@@ -19,10 +19,13 @@
  *   retyped to BMD_File for numMaterials.
  * - UpdateMirrorShadow keeps its Obj overlay. Spelling the position
  *   and a Mtx43* at pad_3e8 moves 34 words.
- * - StateSaveTalkMain and StateCaughtMain write the player's mStateFlags
- *   through a u16 pointer. The direct member form changes the size.
- *   StateIdleMain updates mTargetAngY through a pointer, and
- *   Behavior increments mEatenTimer through (long long)(int)&.
+ * - The read-modify-writes of the player's mStateFlags, mTargetAngY and
+ *   mEatenTimer are compound assignments (`|=`, `+=`, `++`). An earlier draft
+ *   spelled them through pointer locals and a (long long)(int)& launder
+ *   because the expanded `x = x | y` form changes the size; the compound form
+ *   reproduces (#821).
+ * - StateIdleMain still reads mStateTimer as `*(u16 *)&`: the ROM loads it
+ *   with ldrh, and dEnemyBase_c declares it s16.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daMip_c_AssetId {
@@ -310,10 +313,7 @@ int daMip_c::StateSaveTalkMain()
                 mActionStep++;
             } else if (gb == 2) {
                 func_02012790(0x98);
-                {
-                    unsigned short *hp = &player->mStateFlags;
-                    *hp &= ~0x800;
-                }
+                player->mStateFlags &= ~0x800;
                 Message::EndTalk();
                 SetState(&data_ov085_021306bc);
             }
@@ -321,8 +321,7 @@ int daMip_c::StateSaveTalkMain()
         break;
     case 2:
         if (data_0209d660 == 0) {
-            unsigned short *hp = &player->mStateFlags;
-            *hp &= ~0x800;
+            player->mStateFlags &= ~0x800;
             Message::EndTalk();
             SetState(&data_ov085_021306bc);
         }
@@ -658,17 +657,11 @@ int daMip_c::StateCaughtMain()
             }
             func_02012790(0xa);
             mTalkState = 0;
-            {
-                u16 *pf = &pl->mStateFlags;
-                *pf = (u16)(*pf | 0x800);
-            }
+            pl->mStateFlags |= 0x800;
         }
     } else {
         if (mTalkState == 2) {
-            {
-                u16 *pf = &pl->mStateFlags;
-                *pf = (u16)(*pf & ~0x800);
-            }
+            pl->mStateFlags &= ~0x800;
             mTalkState = 0;
         }
         if (mIsGlowing == 0) {
@@ -682,10 +675,7 @@ int daMip_c::StateCaughtMain()
     if (mIsGlowing == 0 || SaveData::NumGlowingRabbitsFound() == 8) {
         SetState(&data_ov085_021306bc);
     } else {
-        {
-            u16 *pf = &pl->mStateFlags;
-            *pf = (u16)(*pf | 0x800);
-        }
+        pl->mStateFlags |= 0x800;
         mSaveTalkPlayer = pl;
         SetState(&data_ov085_0213068c);
     }
@@ -984,10 +974,7 @@ int daMip_c::StateIdleMain()
 
     if (mActionStep == 0 && *(u16 *)&mStateTimer == 0) {
         mTargetAngY = Vec3_HorzAngle(&mPos, (const Vector3 *)&mIdlePosX);
-        {
-            s16 *ang = &mTargetAngY;
-            *ang = *ang + (0x1800 - ((r & 3) << 12));
-        }
+        mTargetAngY += 0x1800 - ((r & 3) << 12);
         mAnmModel.SetAnim((BCA_File *)data_ov085_021305c8.filePtr, 0x40000000, 0x1000, 0);
         mActionStep = 1;
     }
@@ -1218,9 +1205,7 @@ void daMip_c::RenderMirrorImage()
  * The block before Advance calls MipStatePair::b, the record's second
  * pointer-to-member, on the daMip_cSelf shadow. mState stays an s32: the four
  * comparisons above identify the states by address. `c` is the char* this.
- *
- * mEatenTimer's increment is a byte update through (long long)(int)&mEatenTimer.
- * `mEatenTimer = mEatenTimer + 1` shrinks Behavior from 0x5cc to 0x5c0. */
+ * */
 int daMip_c::Behavior()
 {
     /* A LOCAL COORDINATE TRIPLE, NOT A Vector3 OBJECT. Vector3 declares a
@@ -1332,7 +1317,7 @@ int daMip_c::Behavior()
                 mdCcAc_c.Update();
         }
         if (mEatenByYoshi == 1) {
-            *(u8 *)((long long)(int)&mEatenTimer) = *(u8 *)((long long)(int)&mEatenTimer) + 1;
+            mEatenTimer++;
             if (mEatenTimer > 0x96) {
                 mEatenByYoshi = 0;
                 mEatenTimer = 0;

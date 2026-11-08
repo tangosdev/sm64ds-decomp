@@ -15,9 +15,8 @@
 // What stays, and why:
 // - Vec3_Asr, func_02012694 and func_ov002_020ad660 have no shared header,
 //   so they keep a local extern "C" block.
-// - Behavior's position copies use the SDK's POD VecFx32. types.h's
-//   Vector3 is not a POD.
-// - The Bool enum and the volatile sparkPos stay. Behavior needs both.
+// - Behavior tests the two Yoshi-mouth flags and the hitter's actor ID
+//   through int flag locals. Tested inline, the branches change shape.
 // - TryDropItem writes a byte at +0x42b on actor 279 so a second
 //   cap is not dropped. Nothing here names that field.
 // - mStateTimer is incremented through a u16 cast. The ROM loads it unsigned.
@@ -37,8 +36,6 @@
 #include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
-
-enum Bool { FALSE, TRUE };
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
 enum {
@@ -141,18 +138,13 @@ void daFPknBall_c::TryDropItem() {
  * (x mirrored when mMirrored is set), move the shadow matrix to that
  * position >> 3, and draw the drop shadow. */
 void daFPknBall_c::UpdateVisuals() {
-    VecFx32 pos;
-    VecFx32 shadowPos;
+    Vector3 pos;
+    Vector3 shadowPos;
 
-    {
-        s32 x = mPosX;
-        pos.x = x;
-        pos.y = mPosY;
-        pos.z = mPosZ;
-        if (mMirrored != 0)
-            pos.x = x * (u32)-1;
-    }
-    pos.y = pos.y + data_ov002_02100320[mVariant];
+    pos = mPos;
+    if (mMirrored != 0)
+        pos.x *= -1;
+    pos.y += data_ov002_02100320[mVariant];
 
     mTrailEffect = Particle::System::NewCleanParticle(mTrailEffect, data_ov002_02100334[mVariant],
                                                       pos.x, pos.y, pos.z, 0);
@@ -160,15 +152,10 @@ void daFPknBall_c::UpdateVisuals() {
     mSparkEffect = (void *)Particle::System::New((u32)mSparkEffect, data_ov002_02100348[mVariant],
                                                  pos.x, pos.y, pos.z, 0, 0);
 
-    {
-        s32 x = mPosX;
-        pos.x = x;
-        pos.y = mPosY;
-        pos.z = mPosZ;
-        if (mMirrored != 0)
-            pos.x = x * (u32)-1;
-    }
-    Vec3_Asr((Vector3 *)&shadowPos, (Vector3 *)&pos, 3);
+    pos = mPos;
+    if (mMirrored != 0)
+        pos.x *= -1;
+    Vec3_Asr(&shadowPos, &pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shadowPos.x, shadowPos.y, shadowPos.z);
     mShadowMat = data_020a0e68;
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x28000, 0x64000, 0xf);
@@ -186,15 +173,13 @@ int daFPknBall_c::Render() {
  * player unless the variant is 3), handle whatever hit the collider, steer,
  * move, and die on range, wall or water.
  *
- * The SDK's POD VecFx32 stands in for types.h's Vector3, which is not a
- * POD: a struct copy of it scalarises differently, and this function needs the
- * POD's. The choice is per function and has to be measured (see the note in
- * d_enemy_base.cpp, where the real Vector3 costs nothing).
+ * Each dust puff copies its position once more before the call (dustArgN):
+ * passing dustPosN straight to DisappearPoofDustAt is 0x3c bytes short.
  */
 int daFPknBall_c::Behavior() {
-    VecFx32 dustPos1;
-    volatile VecFx32 sparkPos;
-    VecFx32 dustPos2, dustPos3, dustArg1, dustArg2, dustArg3;
+    Vector3 dustPos1;
+    Vector3 sparkPos;
+    Vector3 dustPos2, dustPos3, dustArg1, dustArg2, dustArg3;
     int flags;
     int clsnResult;
     void *hitActor;
@@ -203,33 +188,27 @@ int daFPknBall_c::Behavior() {
 
     flags = mFlags;
     {
-        enum Bool b = (enum Bool)((flags & MFLAG_YOSHI_MOUTH_A) != 0);
-        if (b != FALSE) {
+        int b = (flags & MFLAG_YOSHI_MOUTH_A) != 0;
+        if (b) {
             UpdateVisuals();
             return 1;
         }
     }
     {
-        enum Bool b = (enum Bool)((flags & MFLAG_YOSHI_MOUTH_B) != 0);
-        if (b != FALSE) {
+        int b = (flags & MFLAG_YOSHI_MOUTH_B) != 0;
+        if (b)
             return 1;
-        }
     }
 
     clsnResult = func_ov002_020ad660(this, &mWithMeshClsn, 0, 2);
     if (clsnResult != 0) {
         if (clsnResult == 2) {
-            int x = mPosX;
-            dustPos1.x = x;
-            dustPos1.y = mPosY;
-            dustPos1.z = mPosZ;
+            dustPos1 = mPos;
             if (mMirrored != 0)
-                dustPos1.x = x * (u32)-1;
+                dustPos1.x *= -1;
             dustPos1.y += 0x50000;
-            ((int *)&dustArg1)[0] = ((int *)&dustPos1)[0];
-            ((int *)&dustArg1)[1] = ((int *)&dustPos1)[1];
-            ((int *)&dustArg1)[2] = ((int *)&dustPos1)[2];
-            DisappearPoofDustAt(*(Vector3 *)&dustArg1);
+            dustArg1 = dustPos1;
+            DisappearPoofDustAt(dustArg1);
         } else {
             UpdateVisuals();
         }
@@ -262,43 +241,26 @@ int daFPknBall_c::Behavior() {
                     mVertAccel = -0x2000;
                     mTerminalVelocity = -0x32000;
                     Sound::PlayBank0(9, mCamSpacePos);
-                    sparkPos.x = mPosX;
-                    sparkPos.y = mPosY;
-                    sparkPos.z = mPosZ;
-                    {
-                        int aimHeight = OnAimedAtWithEgg();
-                        int px, py, pz;
-                        py = sparkPos.y;
-                        px = sparkPos.x;
-                        py = py + aimHeight;
-                        pz = sparkPos.z;
-                        sparkPos.y = py;
-                        Particle::System::NewSimple(kPtclKnockAwayA, px, py, pz);
-                    }
-                    Particle::System::NewSimple(kPtclKnockAwayB, sparkPos.x, sparkPos.y,
-                                                sparkPos.z);
+                    sparkPos = mPos;
+                    sparkPos.y += OnAimedAtWithEgg();
+                    Particle::System::NewSimple(kPtclKnockAwayA, sparkPos.x, sparkPos.y, sparkPos.z);
+                    Particle::System::NewSimple(kPtclKnockAwayB, sparkPos.x, sparkPos.y, sparkPos.z);
                     UpdateVisuals();
                     mdCcAc_c.Clear();
                     return 1;
                 }
                 {
-                    enum Bool hitPlayer =
-                        (enum Bool)(((daPly_c *)hitActor)->actorID == ACTOR_PLAYER);
-                    if (hitPlayer != FALSE && ((daPly_c *)hitActor)->mIsMetal == 0 &&
+                    int hitPlayer = ((daPly_c *)hitActor)->actorID == ACTOR_PLAYER;
+                    if (hitPlayer && ((daPly_c *)hitActor)->mIsMetal == 0 &&
                         ((daPly_c *)hitActor)->mIsVanish == 0) {
                         ((daPly_c *)hitActor)->Burn();
                         {
-                            int x = mPosX;
-                            dustPos2.x = x;
-                            dustPos2.y = mPosY;
-                            dustPos2.z = mPosZ;
+                            dustPos2 = mPos;
                             if (mMirrored != 0)
-                                dustPos2.x = x * (u32)-1;
+                                dustPos2.x *= -1;
                             dustPos2.y += 0x50000;
-                            ((int *)&dustArg2)[0] = ((int *)&dustPos2)[0];
-                            ((int *)&dustArg2)[1] = ((int *)&dustPos2)[1];
-                            ((int *)&dustArg2)[2] = ((int *)&dustPos2)[2];
-                            DisappearPoofDustAt(*(Vector3 *)&dustArg2);
+                            dustArg2 = dustPos2;
+                            DisappearPoofDustAt(dustArg2);
                         }
                         if (mVariant == VARIANT_COIN_DROP)
                             func_02012694(0x157, &mCamSpacePos);
@@ -340,17 +302,12 @@ int daFPknBall_c::Behavior() {
             TryDropCoin();
         }
         {
-            int x = mPosX;
-            dustPos3.x = x;
-            dustPos3.y = mPosY;
-            dustPos3.z = mPosZ;
+            dustPos3 = mPos;
             if (mMirrored != 0)
-                dustPos3.x = x * (u32)-1;
+                dustPos3.x *= -1;
             dustPos3.y += 0x50000;
-            ((int *)&dustArg3)[0] = ((int *)&dustPos3)[0];
-            ((int *)&dustArg3)[1] = ((int *)&dustPos3)[1];
-            ((int *)&dustArg3)[2] = ((int *)&dustPos3)[2];
-            DisappearPoofDustAt(*(Vector3 *)&dustArg3);
+            dustArg3 = dustPos3;
+            DisappearPoofDustAt(dustArg3);
         }
         if (mVariant == VARIANT_COIN_DROP)
             func_02012694(0x157, &mCamSpacePos);

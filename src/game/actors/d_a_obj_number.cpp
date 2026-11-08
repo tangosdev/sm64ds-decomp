@@ -14,11 +14,9 @@
  * - data_ov002_0210d9a8 / 0210d9e8 / 0210da08 / 0210da28: this TU
  *   consumes the four handles; overlay .bss owns them. symbols.txt has
  *   no recovered name, so they are not coined.
- * - VecFx32: a local Vector3 would emit vague-linkage ~Vector3.
- * - volatile mPosY / pos.z: a plain field read CSE's with the add/store
- *   above it (Particle::System::NewSimple and FromTranslation).
- * - The owner's position is read through a VecFx32 overlay of its
- *   mPosX/Y/Z; reading the three fields directly DIFFs Behavior.
+ * - volatile mPosY in Behavior's landing puff: a plain field read
+ *   CSE's with the add and store above it (likely the Fix12<int> class
+ *   wall; mPosY, mPos.y and Vector3 copies are all 4 bytes off).
  * - Render's star walk keeps the `for (;;)` with a break: a `while`
  *   on the FindWithActorID result DIFFs.
  * - SetOwner is a non-virtual member returning this: the only caller,
@@ -98,7 +96,7 @@ s32 daObjNumber_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 s32 daObjNumber_c::Behavior() {
-    VecFx32 pos;
+    Vector3 pos;
 
     if (mDelay != 0)
         return 1;
@@ -125,25 +123,18 @@ s32 daObjNumber_c::Behavior() {
         break;
     }
 
-    pos.x = mPosX;
-    pos.y = mPosY;
-    pos.z = mPosZ;
+    pos = mPos;
     if (mOwnerUniqueID != 0) {
         dActor_c *other = FindWithID(mOwnerUniqueID);
         if (other != 0) {
-            /* VecFx32 overlay of the owner's mPosX/Y/Z; a Vector3
-               would emit ~Vector3. */
-            VecFx32 *op = (VecFx32 *)&other->mPosX;
-            s32 oy;
-            pos.x = op->x;
-            pos.y = oy = op->y;
-            pos.z = op->z;
-            pos.y = oy + (mFollowOffsetY + (mPosY - mStartPosY));
+            {
+                const Vector3 &op = other->mPos;
+                pos = op;
+            }
+            pos.y += mFollowOffsetY + (mPosY - mStartPosY);
         }
     }
-    /* volatile pos.z: a plain `pos.z >> 3` CSE's with the stores above. */
-    Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3,
-                              (*(volatile int *)&pos.z) >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3, pos.z >> 3);
     return 1;
 }
 

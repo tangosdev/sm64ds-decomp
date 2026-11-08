@@ -224,18 +224,10 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 mActiveMeshCollider = &mMovingMeshCollider;
                 data_0209caa0.file.flags1 |= 0x80000000;
                 {
-                    volatile VecFx32 position;
-                    s32 y = mPosY + 0x64000;
-                    s32 z = mPosZ;
-                    s32 x = mPosX;
-                    position.x = x;
-                    position.y = y;
-                    position.z = z;
-                    Particle::System::NewSimple(kPtclHatenaSwitchPressA, x, y, z);
-                    Particle::System::NewSimple(kPtclHatenaSwitchPressB, position.x, position.y,
-                                                position.z);
-                    Particle::System::NewSimple(kPtclHatenaSwitchPressC, position.x, position.y,
-                                                position.z);
+                    Vector3 position(mPosX, mPosY + 0x64000, mPosZ);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressA, position.x, position.y, position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressB, position.x, position.y, position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressC, position.x, position.y, position.z);
                 }
                 Particle::System::NewSimple(kPtclHatenaSwitchPressD, mPosX, mPosY, mPosZ);
                 mTalking = 1;

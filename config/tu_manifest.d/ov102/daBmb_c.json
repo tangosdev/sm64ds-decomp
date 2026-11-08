@@ -1371,34 +1371,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@638",
+      "from": "@646",
       "to": "data_ov102_0214e9d0",
-      "evidence": "compiler temp mapped to 0x0214e9d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@639",
-      "to": "data_ov102_0214e9dc",
-      "evidence": "compiler temp mapped to 0x0214e9dc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@641",
-      "to": "data_ov102_0214ea0c",
-      "evidence": "compiler temp mapped to 0x0214ea0c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@644",
-      "to": "data_ov102_0214e9f4",
-      "evidence": "compiler temp mapped to 0x0214e9f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x0214e9d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @638 to @646 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@647",
-      "to": "data_ov102_0214ea00",
-      "evidence": "compiler temp mapped to 0x0214ea00 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov102_0214e9dc",
+      "evidence": "compiler temp mapped to 0x0214e9dc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @639 to @647 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
     },
     {
-      "from": "@650",
+      "from": "@649",
+      "to": "data_ov102_0214ea0c",
+      "evidence": "compiler temp mapped to 0x0214ea0c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @641 to @649 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@652",
+      "to": "data_ov102_0214e9f4",
+      "evidence": "compiler temp mapped to 0x0214e9f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @644 to @652 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@655",
+      "to": "data_ov102_0214ea00",
+      "evidence": "compiler temp mapped to 0x0214ea00 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @647 to @655 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@658",
       "to": "data_ov102_0214e9e8",
-      "evidence": "compiler temp mapped to 0x0214e9e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x0214e9e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @650 to @658 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
     }
   ],
   "symbol_binding_rewrites": [

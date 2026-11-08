@@ -194,8 +194,7 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
     }
 }
 
-/* Contact response, in the order the tests run. A volatile read of the
- * cylinder offset keeps that copy as three loads. */
+/* Contact response, in the order the tests run. */
 void func_ov090_021310b4(daMenbo_c *c)
 {
     short hv[3];
@@ -204,15 +203,7 @@ void func_ov090_021310b4(daMenbo_c *c)
     Vector3 hurt;
     int flags;
     dActor_c *p;
-    int x, y, z;
-    volatile Vector3 *src = &data_ov090_0213412c;
-
-    x = src->x;
-    y = src->y;
-    z = src->z;
-    sv.z = z;
-    sv.x = x;
-    sv.y = y;
+    sv = data_ov090_0213412c;
     c->mdCcAcPos_c.SetPosRelativeToActor(sv);
 
     if (c->mdCcAcPos_c.otherOwner == 0) return;
@@ -800,9 +791,7 @@ int daMenbo_c::InitResources()
 
     mTerminalVelocity = -0x3c000;
 
-    v.x = data_ov090_0213412c.x;
-    v.y = data_ov090_0213412c.y;
-    v.z = data_ov090_0213412c.z;
+    v = data_ov090_0213412c;
     mdCcAcPos_c.Init(this, v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
 
     mAngleY = mPrevAngleY;

@@ -8,9 +8,9 @@
 /* Notes: the state tables at 0x0211c7b8 and 0x0211c7c8 are filled from
  * this file's static initializer, which copies the four pointer-to-member
  * constants at 0x0211be90..0x0211beb0; those .data words are not claimed by
- * this TU, so the tables stay {ptr, adj} pairs. ExecuteFountain stores the
- * spawn words y, z, x through a volatile array; a plain Vector3 lets the
- * compiler reorder those stores.
+ * this TU, so the tables stay {ptr, adj} pairs. ExecuteFountain's spawn
+ * point is a constructed Vector3: the constructor's arguments are what put
+ * the stores in y, z, x order.
  */
 
 #include "daBbl_c.h"
@@ -181,23 +181,10 @@ int daBbl_c::EnterFountain() {
  * 0xd6 -- the bubble that actually jumps -- 120.0 above this one, and start
  * the wait over. This is what makes the fixed flame a flame fountain. */
 int daBbl_c::ExecuteFountain() {
-    int spawnY;
-    int spawnZ;
-
     if ((u16)mStateTimer == 0) {
-        volatile int spawnPos[3];
-
         mStateTimer = 0xb4;
-        int y = mPosY;
-        int z = mPosZ;
-        spawnY = 0x78000;
-        spawnY = y + spawnY;
-        spawnZ = z;
-        int x = mPosX;
-        spawnPos[1] = spawnY;
-        spawnPos[2] = spawnZ;
-        spawnPos[0] = x;
-        dActor_c::Spawn(0xd6, 0, *(const Vector3 *)spawnPos, &mPrevAngle, mAreaId, -1);
+        Vector3 spawnPos(mPosX, mPosY + 0x78000, mPosZ);
+        dActor_c::Spawn(0xd6, 0, spawnPos, &mPrevAngle, mAreaId, -1);
     }
     return 1;
 }

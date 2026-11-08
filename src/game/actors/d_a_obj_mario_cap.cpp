@@ -74,9 +74,8 @@
  *   The PMF stand-ins (CapStateSelf / CapStateRec / CapEnterSelf). A PMF on
  *   the real dEnemyBase_c makes mwccarm ICE rather than give a diagnostic.
  *
- *   FX_MUL's 64-bit product in Slide's 20.12 multiplies and the
- *   (unsigned long long)&vulnFlags or-into-vulnFlags in InitSlide
- *   are the matching forms; plain member addressing does not match.
+ *   FX_MUL's 64-bit product in Slide's 20.12 multiplies is the matching
+ *   form; plain member addressing does not match.
  *
  *   CheckTouch's angle copy keeps `a = b ? a : a` through a Vector3_16.
  *
@@ -913,9 +912,6 @@ int daObjMarioCap_c::Fall() {
 int daObjMarioCap_c::InitSlide()
 {
     int state;
-    int* p;
-    int val;
-    int ret;
 
     state = mType;
     if (state == 5 || state == 7 || state == 9) {
@@ -936,13 +932,8 @@ int daObjMarioCap_c::InitSlide()
         mStartTimer = CAP_TIMER(this);
     }
 
-    /* (unsigned long long) is the MATCH form; mdCcAc_c.vulnFlags |= DIFFs. */
-    p = (int *)((unsigned long long)&mdCcAc_c.vulnFlags);
-    val = *p;
-    ret = 1;
-    val |= 0x8000;
-    *p = val;
-    return ret;
+    mdCcAc_c.vulnFlags |= 0x8000;
+    return 1;
 }
 
 /* df34's per-frame function. Types 4, 6, 8, 16 and 17 just run the touch

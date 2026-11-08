@@ -83,8 +83,7 @@
  *   FromUniqueID is followed by a store at sys+0x44, which is still pad_042
  *   on Particle::System.
  * - Vec3_* / Matrix4x3_* have no shared header this TU
- *   can include alone. data_02082214 is the sine table func_ov073_0211f494
- *   indexes. data_0209f318, data_020a0e68 and data_0209e650 are arm9
+ *   can include alone. data_0209f318, data_020a0e68 and data_0209e650 are arm9
  *   globals. data_ov002_0210da30 is ov002's; Cleanup only Releases it.
  *   g_profile_KING_DONKETU is outside this TU.
  * - Behavior's opt_propagation off is a push/pop around that function.
@@ -92,10 +91,13 @@
  *   swaps two registers. Those functions also ldrh mStateTimer and
  *   mAngleX/Y/Z through unsigned short; a plain s16 read is ldrsh.
  * - s16* behind mPrevAngleY in func_ov073_0211f61c and 02120d80, the
- *   const s32* walk of mPosX, mFootPos[i] in the dust loops, and
- *   *(void**)&mState in func_ov073_0211f2c0 stay. The direct member forms
- *   change addressing. data_020a0e68's translation words stay a char*
- *   walk; .m[9..11] changes bytes.
+ *   const s32* walk of mPosX, and mFootPos[i] in the dust loops stay. The
+ *   direct member forms change addressing.
+ * - func_ov073_0211f2c0's six Vector3 locals are declared up front in
+ *   frame order (bone, spawn, offset, rotated, shifted, dust). Declared
+ *   inside the state branch, offset/rotated land above shifted/dust in the
+ *   frame. Vector3's user-declared dtor is what keeps the dead stores
+ *   (bonePos = shifted, the zeroed offset.z before the -230.0 store).
  * - mEdgePos, mLandedWaypoint, mEdgeRecovered, mStateParam and mFootPos are
  *   named from their readers in this TU and d_a_obj_ewb_ice.cpp.
  *   The hit masks in func_ov073_0211f61c stay literals (0x10000 is not in
@@ -129,6 +131,7 @@ enum daKing_Donketu_c_AssetId {
 #include "dCamera_c.h"
 #include "dBgCh_Lin.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "cstd.h"
 #include "math/Approach.h"
@@ -234,12 +237,10 @@ extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
 extern dCamera_c *data_0209f318;
 extern struct Matrix4x3 data_020a0e68;
-/* Vec3_Sub is not declared by math/CalcLib.h; the shared implementation uses
-   Vector3, while this function keeps POD locals to avoid Vector3 construction. */
+/* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_king_donketu_1(Fix12i y, Fix12i x);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
-extern short data_02082214[];
 
 extern u16 DecIfAbove0_Short(void* p);
 extern void func_02012694(unsigned int a, void *b);
@@ -311,143 +312,76 @@ void daKing_Donketu_c::func_ov073_0211f144() {
    when the state is ..33c0 or ..33f0. */
 void daKing_Donketu_c::func_ov073_0211f2c0(int strength)
 {
-    daKing_Donketu_c *c = this;
-    VecFx32 src;
-    volatile VecFx32 pv;
-    VecFx32 *new_var;
-    VecFx32 in;
-    VecFx32 res;
-    VecFx32 out;
-    VecFx32 dv;
-    int ty;
-    int tx;
-    int tz;
-    int x;
-    int y;
-    int z;
-    data_0209f318->func_0200d8c8(&c->mPos, strength);
-    data_020a0e68 = c->mBlendAnmModel.mat4x3;
-    MulMat4x3Mat4x3(&c->mBlendAnmModel.data.transforms[c->mStepBoneIdx], &data_020a0e68,
-                    &data_020a0e68);
-    c->mStepBoneIdx ^= 1;
-    ty = *((int *)(((char *)(&data_020a0e68)) + 0x28));
-    tx = *((int *)(((char *)(&data_020a0e68)) + 0x24));
-    src.y = ty;
-    tz = *((int *)(((char *)(&data_020a0e68)) + 0x2c));
-    src.z = tz;
-    src.x = tx;
-    Vec3_Lsl(&out, &src, 3);
-    x = out.x;
-    y = out.y;
-    z = out.z;
-    src.x = x;
-    src.y = y;
-    src.z = z;
-    if (*(void **)&c->mState == (&data_ov073_02123360)) {
-        dv.x = x;
-        dv.y = y;
-        dv.z = z;
-        c->HugeLandingDustAt(*(Vector3 *)&dv, 1);
+    Vector3 bonePos;
+    Vector3 pos;
+    Vector3 offset;
+    Vector3 rotated;
+    Vector3 shifted;
+    Vector3 dustPos;
+
+    data_0209f318->func_0200d8c8(&mPos, strength);
+    data_020a0e68 = mBlendAnmModel.mat4x3;
+    MulMat4x3Mat4x3(&mBlendAnmModel.data.transforms[mStepBoneIdx], &data_020a0e68, &data_020a0e68);
+    mStepBoneIdx ^= 1;
+    bonePos.x = data_020a0e68.m[9];
+    bonePos.y = data_020a0e68.m[10];
+    bonePos.z = data_020a0e68.m[11];
+    Vec3_Lsl(&shifted, &bonePos, 3);
+    bonePos = shifted;
+    if (mState == &data_ov073_02123360) {
+        dustPos = bonePos;
+        HugeLandingDustAt(dustPos, 1);
         return;
     }
-    pv.x = c->mPosX;
-    pv.y = c->mPosY;
-    pv.z = c->mPosZ;
-    {
-        void *anim = c->mState;
-        if (anim == (&data_ov073_021233c0)) {
-            goto do_mtx;
-        }
-        if (anim != (&data_ov073_021233f0)) {
-            goto spawn;
-        }
+    pos = mPos;
+    if (mState == &data_ov073_021233c0 || mState == &data_ov073_021233f0) {
+        offset.x = 0;
+        offset.y = 0;
+        offset.z = 0;
+        offset.z = -0xe6000;
+        rotated.x = 0;
+        rotated.y = 0;
+        rotated.z = 0;
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
+        MulVec3Mat4x3(&offset, &data_020a0e68, &rotated);
+        pos.x += rotated.x;
+        pos.z += rotated.z;
     }
-do_mtx:
-    in.z = 0;
-
-    in.z = -0xe6000;
-    in.x = 0;
-    in.y = 0;
-    res.x = 0;
-    res.y = 0;
-    res.z = 0;
-    new_var = &res;
-    Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
-    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&res);
-
-    {
-        int px = pv.x;
-        int rx = (*new_var).x;
-        px = px + rx;
-        rx = px;
-        int pz = pv.z;
-        int rz = res.z;
-        {
-            int t = pz + rz;
-            rz = t;
-        }
-        pv.x = rx;
-        pv.z = rz;
-    }
-
-spawn:
-    Particle::System::NewSimple(kPtclChiefChillyStepA, pv.x, pv.y, pv.z);
-
-    Particle::System::NewSimple(kPtclChiefChillyStepB, pv.x, pv.y, pv.z);
+    Particle::System::NewSimple(kPtclChiefChillyStepA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclChiefChillyStepB, pos.x, pos.y, pos.z);
 }
 
-/* Particles 0x84 and 0x85 on the surface of a's collision sphere,
-   in the direction of b. The sphere's centre is a's mPos raised by its
+/* Particles 0x84 and 0x85 on the surface of this actor's collision sphere,
+   in the direction of b. The sphere's centre is mPos raised by
    mdCcAcPos_c.height; the aim point is b's mPos raised 70.0 (0x46000). The
-   two atan2 results give a heading and an elevation; shifted right by 4 they
-   index data_02082214, which holds a sine at [2i] and a cosine at [2i+1]
-   (Fix12), and the radius times those gives the offset from the centre. Within
-   this file both arguments are always the boss. */
+   two atan2 results give a yaw and a pitch, and the radius times their sines
+   and cosines gives the offset from the centre. Within this file b is always
+   the boss itself. The ROM copies the difference vector once more before
+   reading it (`dir = diff`) and holds &b->mPos across the copy of mPos
+   (`target`); both are needed for the bytes. */
 void daKing_Donketu_c::func_ov073_0211f494(void *pb)
 {
-    daKing_Donketu_c *a = this;
     dActor_c *b = (dActor_c *)pb;
-    VecFx32 t, p, q, d;
-    int ay, ax, vx, tmp, sin_ax, cos_ax, sin_ay, cos_ay, rx, ry, rz;
-    int y0;
-    int *bp = &b->mPosX;
+    Vector3 dir, pos, aim, diff;
+    s16 yaw, pitch;
+    fx32 radius, horz;
 
-    p.x = a->mPosX;
-    y0 = a->mPosY;
-    p.y = y0;
-    {
-        VecFx32 *pq = &q;
-        int zval = a->mPosZ;
-        VecFx32 *pp = &p;
-        pp->z = zval;
-        pq->x = bp[0];
-        pq->y = bp[1];
-        pq->z = bp[2];
-        {
-            int qy = pq->y + 0x46000;
-            int h = a->mdCcAcPos_c.height;
-            vx = a->mdCcAcPos_c.radius;
-            pp->y = y0 + h;
-            pq->y = qy;
-            Vec3_Sub((Vector3 *)&d, (const Vector3 *)pq, (const Vector3 *)pp);
-        }
-    }
-    t.x = d.x; t.y = d.y; t.z = d.z;
-    ay = cstd::atan2(t.x, t.z);
-    ax = cstd::atan2(t.y, Vec3_HorzLen((const Vector3 *)&t));
-    ax = (int)((unsigned short)ax >> 4);
-    ay = (int)((unsigned short)ay >> 4);
-    cos_ax = data_02082214[ax * 2 + 1];
-    sin_ax = data_02082214[ax * 2];
-    tmp = FX_MUL(vx, cos_ax);
-    ry = FX_MUL(vx, sin_ax);
-    sin_ay = data_02082214[ay * 2];
-    cos_ay = data_02082214[ay * 2 + 1];
-    rx = FX_MUL(tmp, sin_ay);
-    rz = FX_MUL(tmp, cos_ay);
-    p.x += rx; p.y += ry; p.z += rz;
-    Particle::System::NewSimple(kPtclChiefChillyHitA, p.x, p.y, p.z);
-    Particle::System::NewSimple(kPtclChiefChillyHitB, p.x, p.y, p.z);
+    const Vector3 &target = b->mPos;
+    pos = mPos;
+    aim = target;
+    radius = mdCcAcPos_c.radius;
+    pos.y += mdCcAcPos_c.height;
+    aim.y += 0x46000;
+    Vec3_Sub(&diff, &aim, &pos);
+    dir = diff;
+    yaw = cstd::atan2(dir.x, dir.z);
+    pitch = cstd::atan2(dir.y, Vec3_HorzLen(&dir));
+    horz = FX_MUL(radius, FX_CosIdx((u16)pitch >> 4));
+    pos.x += FX_MUL(horz, FX_SinIdx((u16)yaw >> 4));
+    pos.y += FX_MUL(radius, FX_SinIdx((u16)pitch >> 4));
+    pos.z += FX_MUL(horz, FX_CosIdx((u16)yaw >> 4));
+    Particle::System::NewSimple(kPtclChiefChillyHitA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclChiefChillyHitB, pos.x, pos.y, pos.z);
 }
 
 /* Collision step, called from Behavior in the chase states (..3360, ..3390)
@@ -1204,7 +1138,7 @@ int daKing_Donketu_c::func_ov073_021208e4() {
    saved miss position (mEdgePos) along mAngleY + 0x8000, at 20.0 (0x14000)
    a frame; mAngleY becomes the angle to mSpawnPos, mPrevAngleY that + 0x8000.
    mStateScratch advances 0x500 a frame and mAngleX approaches mStateParam times
-   the sine of it (data_02082214, Fix12) by 0x400. Then,
+   the sine of it (Fix12) by 0x400. Then,
    when func_ov073_0211f61c returns nonzero (the boss took a hit or, in this
    state, hurt the player) the state becomes ..33f0. */
 int daKing_Donketu_c::func_ov073_02120910()
@@ -1245,10 +1179,8 @@ int daKing_Donketu_c::func_ov073_02120910()
     c->mAngleY = Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mSpawnPosX);
     c->mPrevAngleY = c->mAngleY + 0x8000;
     c->mStateScratch += 0x500;
-    ApproachLinear(
-        c->mAngleX,
-        FX_MUL(c->mStateParam, data_02082214[((unsigned short)(short)c->mStateScratch >> 4) * 2]),
-        0x400);
+    ApproachLinear(c->mAngleX, FX_MUL(c->mStateParam, FX_SinIdx((u16)(s16)c->mStateScratch >> 4)),
+                   0x400);
     if (c->func_ov073_0211f61c()) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_021233f0);
     }
