@@ -565,7 +565,8 @@ void dExtSimpleModel_c::LoadTexAndPal(BMD_File &file) {
     for (i = 0; i < file.numPalettes; i++) {
         p = &file.palettes[i];
         sz = p->size;
-        if (data_020a4bcc + sz > data_020a4bd8) Crash();
+        if (data_020a4bcc + sz > data_020a4bd8)
+            Crash();
         if (sz <= 8) {
             GX::LoadTexPltt(p->data, data_020a4bcc, sz);
             p->vramOffset = data_020a4bcc;

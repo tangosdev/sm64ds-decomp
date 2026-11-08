@@ -200,12 +200,16 @@ void daPicGate_c::func_ov080_021265ec()
             v->y = y;
             v->z = 0;
             v->normal = kFlatNormal;
-            if (col == this->mCols - 2) x = ((u8)(this->param1 & 0xf) + 1) * kCell;
-            else x += ((u8)(this->param1 & 0xf) + 1) * kCell / (this->mCols - 1);
+            if (col == this->mCols - 2)
+                x = ((u8)(this->param1 & 0xf) + 1) * kCell;
+            else
+                x += ((u8)(this->param1 & 0xf) + 1) * kCell / (this->mCols - 1);
         }
         x = 0;
-        if (row == this->mRows - 2) y = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
-        else y += ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell / (this->mRows - 1);
+        if (row == this->mRows - 2)
+            y = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
+        else
+            y += ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell / (this->mRows - 1);
     }
     this->PlaceCorners();
     {
