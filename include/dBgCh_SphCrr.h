@@ -138,8 +138,9 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     void SetQueryFlags(u8 flags_);
     /* Inferred: clear flags, hit records, displacement and floor normal. */
     void ResetQuery();
-    int  func_02038824();
-    int  func_02038a38();
+    /* Inferred names: DetectClsn split at collider slot 0, the stage mesh. */
+    int DetectClsnExceptSlot0();
+    int DetectClsnSlot0();
 };
 
 /* SIZE PINNED AT 0x110 by dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&): the ROM gives

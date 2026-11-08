@@ -125,6 +125,9 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
     void ResetResult();
     void SetObjAndLine(const Vector3 &start, const Vector3 &end, dActor_c *actor);
     bool DetectClsn();
+    /* Inferred names: DetectClsn split at collider slot 0, the stage mesh. */
+    int DetectClsnExceptSlot0();
+    int DetectClsnSlot0();
 };
 
 /* The standalone stack object in dActor_c::DetectRaycastClsn pins both

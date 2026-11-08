@@ -1116,8 +1116,8 @@ int dCamera_c::func_0200c66c(void *pos_, int *out2_, int *out1_, int *arg5_) {
     }
 
     if (obj != 0 && gCurrentSublevel != 0x1c) {
-        col1 = obj->mClpsBits15_18 & 0xff;
-        col2 = obj->mClpsBits6_11 & 0xff;
+        col1 = obj->mFloorCameraBehavior & 0xff;
+        col2 = obj->mFloorViewID & 0xff;
         hval = res;
     } else {
         dBgCh_Lin line;
@@ -1147,8 +1147,8 @@ int dCamera_c::func_0200c66c(void *pos_, int *out2_, int *out1_, int *arg5_) {
             col2 = 0x3f;
         } else {
             hval = ground.clsnY;
-            col1 = ((const CLPS *)&ground.surface)->func_02037e48() & 0xff;
-            col2 = ((const CLPS *)&ground.surface)->func_02037e68() & 0xff;
+            col1 = ((const CLPS *)&ground.surface)->GetCameraBehavior() & 0xff;
+            col2 = ((const CLPS *)&ground.surface)->GetViewID() & 0xff;
         }
     }
 

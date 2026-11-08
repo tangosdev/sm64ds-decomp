@@ -23,7 +23,8 @@ the name does not overclaim.
 
 The struct is spelled `Particle` in `Particle.h` for historical
 reasons; the ROM's mangled names call it `Particle::SysTracker`. There is one
-instance and its address lives in the global `data_0209ee74`:
+instance and its address lives in the global `gParticleSysTracker`
+(0x0209ee74, formerly `data_0209ee74`):
 `_ZN8Particle10SysTrackerC1Ev` writes it, `_ZN8Particle10SysTrackerD1Ev`
 clears it, and every free function in the namespace reaches the object through
 it. That is what makes this a system class: the evidence is spread over eleven
@@ -60,9 +61,9 @@ takes the unique ID from the caller instead:
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x810 | `mWeatherCallback` | `_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj` builds `data_0209ee74 + 0x810` and passes it as the callback. |
+| 0x810 | `mWeatherCallback` | `_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj` builds `gParticleSysTracker + 0x810` and passes it as the callback. |
 | 0x814 | `mWeatherCallbackCount` | The same function writes its `numWeatherEffectsNow` argument to `callback + 4`, which is this byte; the constructor seeds it `1`. It is a member of the 0x810 object, not an independent field. |
-| 0x818 | `mCallback_818` | `_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f` passes it. Nothing names the effect, so the field does not claim one. |
+| 0x818 | `mCleanParticleCallback` | `_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f` passes it. Its type is the bank's only `dPa_c::level_c::cleanParticleCallback_c` (RTTI), so the field takes the class name; nothing names the effect. |
 
 The remaining slots are named only as far as the evidence goes. Two structural
 facts carry them:
@@ -109,7 +110,7 @@ byte-identical. The one-time exception was the simple callback's
 kept a local shadow. That no longer holds: the function is now
 `src/engine/particle/d_pa.cpp`,
 a real `dPa_c::level_c::simpleCallback_c` method that opens no namespace,
-includes `Particle__System.h`, and reaches `data_0209ee74->mManager` by name.
+includes `Particle__System.h`, and reaches `gParticleSysTracker->mManager` by name.
 
 The old hand-written constructor was typed `struct Particle *self`
 and reached the callback's own `s16` as `&self->unk_004`. That was never a
