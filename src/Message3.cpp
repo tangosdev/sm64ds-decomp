@@ -19,6 +19,11 @@
  *   spells that byte plain, and the other functions in this file read it plain.
  * - data_0209f4a4 is s16[] in decl_common.h. func_020326ac indexes it with a
  *   byte stride, so the cast stays at that use.
+ * - LayoutLineVS keeps the char-cast handler call: data_02092830[idx - 1]()
+ *   subtracts first, a 6-word DIFF.
+ * - func_020319fc keeps the char-cast spill-over store and data_0209fd5c read:
+ *   dst[wordIdx + 8] grows the function by 4 bytes, and also indexing
+ *   data_0209fd5c shrinks it by 8.
  * - SetTextGlobalsVS keeps the r2/r3 temps. One expression reorders the load
  *   of *(r2 + 4) against the store of r3.
  * - Address-named helpers stay address-named.
@@ -533,7 +538,7 @@ extern "C" void func_020319fc(int n) {
             rem = col & 7;
             dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 0x10]) | dst[wordIdx];
             if (rem != 0)
-                (dst + wordIdx)[8] =
+                *(u32 *)((char *)&dst[wordIdx] + 0x20) =
                     data_0209283c[rem] & *(u32 *)((char *)data_0209fd5c + ((i + j * 0x10) << 2));
             col = (col + data_0209fd20[j]) & 0xff;
         }
@@ -706,7 +711,7 @@ void Message::LayoutLineVS() {
         case 0xfe: {
             u8 idx = p[2];
             data_0209fd18 = idx;
-            (*(data_02092830 + idx - 1))();
+            (*(void (**)(void))((char *)data_02092830 + (idx << 2) - 4))();
             p = data_0209fd0c;
             data_0209fd0c = p + p[1];
             break;
