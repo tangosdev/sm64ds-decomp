@@ -1490,8 +1490,8 @@ extern "C" void func_020508a0(void)
     g->f4c = v;
 }
 
-extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5, void *a6)
-{
+extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, void *a5,
+                             void *a6) {
     volatile int z;
     func_02050798();
     if (data_020a5634.f0 != 0)
@@ -1499,8 +1499,10 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
     z = 0;
     MultiStore_Int(z, (int *)a0, a1);
     CP15::FlushAndInvalidateDataCache((unsigned int)a0, a1);
-    return ((int(*)(int a0, int a1, int a2, int a3, int s0, int s1, int s2, int s3, int s4, int s5, int s6, int s7, int s8, int s9, int s10))func_020503a4)(1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1,
-                         a2, 0, 0, 1, a3, 0x7f, 0, 0x7f, a4, (int)a5, (int)a6);
+    return ((int (*)(int a0, int a1, int a2, int a3, int s0, int s1, int s2, int s3, int s4, int s5,
+                     int s6, int s7, int s8, int s9, int s10))func_020503a4)(
+        1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1, a2, 0, 0, 1, a3, 0x7f, 0, 0x7f, a4, (int)a5,
+        (int)a6);
 }
 
 extern "C" void func_02050798(void){
