@@ -56,14 +56,14 @@
       },
       "method": {
         "draft": 0,
-        "migrated": 6281,
+        "migrated": 6291,
         "unmigrated": 1
       }
     },
     "cpp_still_handspelled": 3,
     "mangled_c": 0,
-    "mangled_cpp": 7239,
-    "mangled_total": 7239,
+    "mangled_cpp": 7249,
+    "mangled_total": 7249,
     "nonmatching_drafts": 0,
     "unmigrated_total": 3
   },
