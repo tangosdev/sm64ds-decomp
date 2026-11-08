@@ -225,6 +225,7 @@ struct Rx {
 struct Job { bool on; int passes; unsigned next; int cursor; };
 
 bool g_env = false, g_log = false, g_act = true, g_snap_on = true, g_hyst = true, g_stale_on = true;
+bool g_rider_own = true;      // COOPROWS1: SM64DS_COOP_SEESAW_RIDER=0 is the control (nearest to the pivot owns the plank, as before)
 bool g_lift_heading = true;  // SM64DS_COOP_LIFT_HEADING=0 is the MUST-FAIL control (run after093, lane COOPPLAT1): a sliding slab keeps its own heading
 unsigned g_lift_flips = 0;
 unsigned g_sample_every = 0;
@@ -273,6 +274,7 @@ void read_env() {
     g_god = flag("SM64DS_COOP_MOVE_GOD", false);
     g_hyst = flag("SM64DS_COOP_MOVE_HYST", true);
     g_stale_on = flag("SM64DS_COOP_MOVE_STALE", true);
+    g_rider_own = flag("SM64DS_COOP_SEESAW_RIDER", true);
     if (const char *ld = std::getenv("SM64DS_COOP_MOVE_LEAD")) g_lead_ms = std::atoi(ld);
     if (const char *s = std::getenv("SM64DS_COOP_MOVE_SAMPLE")) g_sample_every = (unsigned)std::strtoul(s, nullptr, 0);
     if (const char *d = std::getenv("SM64DS_COOP_MOVE_DUMP")) {
@@ -750,6 +752,19 @@ void slave(Slot &s, const Rx &x, unsigned now) {
     ++g_cs[s.prof].slaved;
 }
 
+// The claim distance this console uses and sends for a slot: how far its player is from the actor.
+// COOPROWS1: the rider owns a seesaw. daObjSeesaw_c (39, 128, 133, 143, 149, 150) sets mPoundedThisFrame (+0x326) in its stood-on
+// callback and clears it as the last statement of Behavior (src/game/actors/d_a_obj_seesaw.cpp), so it is set here only when a body
+// of THIS console stood on the plank this frame (a friend's body is parked away between draws). Nearest-to-the-pivot handed the plank
+// to a friend standing by the axle, whose pin then erased the rider's own tilt. SM64DS_COOP_SEESAW_RIDER=0 is the control.
+unsigned claim_cd(const char *pl, const Slot &s) {
+    const Prof &p = g_prof[s.prof];
+    if (g_rider_own && (p.id == 39 || p.id == 128 || p.id == 133 || p.id == 143 || p.id == 149 || p.id == 150) && p.size >= 0x327 &&
+        *(const unsigned char *)(s.a + 0x326) != 0)
+        return 0;
+    return (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+}
+
 // Ownership, apply, publish: one pass over the slots that exist here.
 void process(unsigned now) {
     char *pl = local_player();
@@ -763,7 +778,7 @@ void process(unsigned now) {
         if (!s.a) continue;
         const Prof &p = g_prof[s.prof];
         if (p.flags & kFSampleOnly) continue;          // the control: seen and sampled, never owned, applied, pinned or published
-        const unsigned my_cd = (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+        const unsigned my_cd = claim_cd(pl, s);
         // 1. who owns this actor
         int best = -1; unsigned best_cd = 0xffffffffu; unsigned cur_cd = 0xffffffffu; bool cur_fresh = false;
         for (int q = 0; q < kSeats; ++q) {
@@ -826,7 +841,7 @@ void process(unsigned now) {
         int first = i;
         while (i < ndue && nrec < kMoverMaxRecs && bytes + rec_bytes(g_slot[due[i].slot].prof) + (int)sizeof(MoverBatchHead) <= kPayloadMax) {
             Slot &s = g_slot[due[i].slot];
-            const unsigned my_cd = (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+            const unsigned my_cd = claim_cd(pl, s);
             bytes += fill_rec(recs + bytes, due[i].slot, s, my_cd, false);
             ++nrec; ++i;
         }
@@ -861,7 +876,7 @@ void process(unsigned now) {
                 if (mine && bytes + rec_bytes(s.prof) + (int)sizeof(MoverBatchHead) > kPayloadMax) break;
                 ++j.cursor;
                 if (!mine) continue;
-                const unsigned my_cd = (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+                const unsigned my_cd = claim_cd(pl, s);
                 bytes += fill_rec(recs + bytes, slot, s, my_cd, frozen_state(s.a));
                 ++nrec;
             }
