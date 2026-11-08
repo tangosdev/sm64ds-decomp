@@ -212,7 +212,7 @@ int MBi_IsSendEnabled(void) {
  * MBi_EndCommon, starts the parent with WMi_StartParentEx and keeps the child
  * bitmap from each callback's aid; this one calls the WM functions itself,
  * refreshes the bitmap through WM_ReadStatus and decides on starting MP from
- * the status (+0x10) instead of mpStarted; mStartMpBusy is the SDK's
+ * the status's mp_flag instead of mpStarted; mStartMpBusy is the SDK's
  * start_mp_busy. */
 void func_02069994(char *arg0) {
     WmCallback *cb = (WmCallback *)arg0;
@@ -259,9 +259,7 @@ void func_02069994(char *arg0) {
                 MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
                 WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
                 WM_WORK->userCallback(0, arg0);
-                /* WmStatus +0x10: a BOOL WM_ReadStatus fills in; which SDK
-                   field it is isn't pinned down here, so it stays raw */
-                if (*(int *)(data_020a9db4 + 0x1428) == 0) {
+                if (WM_WORK->status.mp_flag == 0) {
                     MbParentWork *mb = MB_WORK;
                     if (mb->mStartMpBusy == 0) {
                         int v = 1;
@@ -660,11 +658,12 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
     MultiStore_Int(fill_i, (int *)base1, sizeof(WmWork));
     fill_s = 0;
     MultiStore16(fill_s, base2, 0x1340);
-    /* 0x1e30 and 0x1e38 sit in WmWork.pad_1e2e: nothing else in this file
-     reads them back (and the two copies overlap), so they stay raw */
+    /* The user's name and L"multiboot" (MB_Init's static game-name pointer,
+     stepped as it is read); 10 halfwords overrun the 8-byte uname into
+     gname, which the second copy then overwrites */
     {
         int i = 0;
-        u16 *dst = (u16 *)(base1 + 0x1e30);
+        u16 *dst = (u16 *)((WmWork *)base1)->uname;
         u16 *rp = a1;
         u16 v;
         do {
@@ -677,7 +676,7 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
         } while (i < 0xa);
     }
     {
-        u16 *dst = (u16 *)(base1 + 0x1e38);
+        u16 *dst = (u16 *)((WmWork *)base1)->gname;
         int j = 0;
         do {
             u16 *ptr = data_0209a084;
@@ -752,7 +751,7 @@ int func_02068d08(void) {
     base->mpStarted = 0;
     WM_WORK->childBitmap = 0;
     WM_WORK->resetting = 0;
-    *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e2e: no reader here */
+    *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e48: no reader here */
     MBi_SetMaxScanTime(0xa);
     do {
         ret = WM_Initialize((int)WM_WORK->wmSysBuf, (void *)WM_WORK->stateCallback, data_020a9db0);

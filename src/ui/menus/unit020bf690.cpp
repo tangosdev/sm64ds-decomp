@@ -37,6 +37,7 @@
 #include "common.h"
 #include "cstd.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "G2x.h"
 #include "Ov007Camera.h"
 #include "Ov007Transition.h"
@@ -59,7 +60,6 @@ typedef struct Ov007Fade {
 typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 
 extern Ov007Fade *data_ov007_02104bd8;
-extern const short data_02082214[];
 
 extern void InitialiseVramGlobals(void);
 extern int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
@@ -143,11 +143,11 @@ void func_ov007_020bfaf0(Ov007Camera *cam) {
     Ov007Model *model = FADE->model;
     if (model->visible == 0)
         return;
-    unsigned int idx = cam->fovy >> 4;
-    Fix12i t1 = FX_MUL(data_02082214[idx * 2], 0x1064);
+    int idx = cam->fovy >> 4;
+    Fix12i t1 = FX_MUL(FX_SinIdx(idx), 0x1064);
     Fix12i base = model->scale.x * 0xd800 + 0x12c000;
     Fix12i t2 = FX_MUL(base, t1);
-    int denom = (short)data_02082214[idx * 2 + 1] * 0x60;
+    int denom = FX_CosIdx(idx) * 0x60;
     Fix12i d = cstd::fdiv(t2, denom);
     model->scale.z = cstd::fdiv(d, 0x5000);
     model->scale.x = model->scale.z;

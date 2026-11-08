@@ -98,15 +98,10 @@ s32 daObjDorifu_c::Render() {
  * The three collider calls are spelled as methods: dBgW_KcMbg inherits
  * IsEnabled, Enable and Disable from dBgW, which declares them. A bare
  * `extern int _ZN4dBgW9IsEnabledEv(void *)` was emitted verbatim from C but
- * would be mangled a SECOND time from C++, which this file is.
- *
- * The `(int)` launder on &mActivePlank is load-bearing: without it mwcc
- * common-subexpressions the field address across the DecIfAbove0_Byte call and
- * emits one instruction fewer than the ROM has. */
+ * would be mangled a SECOND time from C++, which this file is. */
 s32 daObjDorifu_c::Behavior() {
     int i;
     dBgW_KcMbg *clsn;
-    unsigned char *plankPtr;
 
     switch (mState) {
     case STATE_AWAIT_EVENT_SET:
@@ -115,8 +110,7 @@ s32 daObjDorifu_c::Behavior() {
         break;
     case STATE_STEP_DOWN:
         if (DecIfAbove0_Byte(&mStepTimer) == 0) {
-            plankPtr = (unsigned char *)(int)&mActivePlank;
-            *plankPtr = *plankPtr - 1;
+            mActivePlank--;
             mStepTimer = 2;
         }
         if (mActivePlank == 0) {
@@ -130,8 +124,7 @@ s32 daObjDorifu_c::Behavior() {
         break;
     case STATE_STEP_UP:
         if (DecIfAbove0_Byte(&mStepTimer) == 0) {
-            plankPtr = (unsigned char *)(int)&mActivePlank;
-            *plankPtr = *plankPtr + 1;
+            mActivePlank++;
             mStepTimer = 2;
         }
         if (mActivePlank >= 4) {

@@ -9,15 +9,11 @@ typedef struct
 
 extern void func_0205e3d4(HashCtx* c);
 
-#define CNT (*(int*)(int)((char*)c + 0x1c))
-
 void func_0205e280(HashCtx* c)
 {
     if (c->count > 0x37)
     {
-        int n = c->count;
-        CNT++;
-        c->buf[n] = 0x80;
+        c->buf[c->count++] = 0x80;
         while (c->count < 0x40)
         {
             c->buf[c->count++] = 0;
@@ -30,9 +26,7 @@ void func_0205e280(HashCtx* c)
     }
     else
     {
-        int n = c->count;
-        CNT++;
-        c->buf[n] = 0x80;
+        c->buf[c->count++] = 0x80;
         while (c->count < 0x38)
         {
             c->buf[c->count++] = 0;

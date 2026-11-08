@@ -57,6 +57,7 @@ enum daBtfly_c_AssetId {
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
@@ -98,7 +99,6 @@ void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 int RandomIntInternal(int *seed);
-extern s16 data_02082214[]; /* sin/cos; index (u16 angle >> 4) * 2 */
 extern Matrix4x3 data_020a0e68; /* scratch matrix */
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
@@ -130,7 +130,7 @@ void daBtfly_c::State7()
         int ang = mFlutterPhase;
         ang = (unsigned short)(short)ang;
         int idx = ang >> 4;
-        v = FX_MUL((int)data_02082214[(idx << 1) + 1], 0xa3);
+        v = FX_MUL(FX_CosIdx(idx), 0xa3);
         if (v > 0) {
             v = FX_MUL(v, 0x4800);
             *(u16 *)L(&mFlutterPhase) += 0x2710;
@@ -306,10 +306,8 @@ void daBtfly_c::State3()
     {
         int *p = &mPosY;
         *p = *p -
-             (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
-              (short)data_02082214[((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 +
-                                   1] *
-                  (short)20 / 4);
+             (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
+              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4);
     }
 
     mStateTimer = mStateTimer + 1;
@@ -364,9 +362,8 @@ void daBtfly_c::State2()
 
         UpdatePos(0);
 
-        mPosY -= (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
-                  data_02082214[((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 + 1] *
-                      20 / 4);
+        mPosY -= (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
+                  FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 20 / 4);
         mStateTimer++;
         if (mStateTimer > 100)
             mStateTimer = 0;
@@ -447,16 +444,14 @@ int daBtfly_c::Behavior()
 
         {
             int s = mHorzSpeed;
-            int idx = ((unsigned short)mPrevAngleX >> 4) << 1;
-            int velY = FX_MUL(-(int)data_02082214[idx], s);
-            mVertSpeed = velY;
-            int horiz = FX_MUL((int)data_02082214[idx + 1], s);
-            int idx2 = ((unsigned short)mPrevAngleY >> 4) << 1;
-            int velX = FX_MUL(horiz, (int)data_02082214[idx2]);
-            mSpeedX = velX;
-            int idx3 = (((unsigned short)mPrevAngleY >> 4) << 1) + 1;
-            int velZ = FX_MUL(horiz, (int)data_02082214[idx3]);
-            mSpeedZ = velZ;
+            int pitch = (unsigned short)mPrevAngleX >> 4;
+            mVertSpeed = FX_MUL(-FX_SinIdx(pitch), s);
+            int horiz = FX_MUL(FX_CosIdx(pitch), s);
+            int yaw = (unsigned short)mPrevAngleY >> 4;
+            mSpeedX = FX_MUL(horiz, FX_SinIdx(yaw));
+            /* The ROM recomputes the yaw index here; FX_CosIdx(yaw) is two
+             * words short. */
+            mSpeedZ = FX_MUL(horiz, FX_CosIdx((unsigned short)mPrevAngleY >> 4));
         }
         UpdatePosWithOnlySpeed(0);
         mStateTimer++;

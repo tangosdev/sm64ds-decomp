@@ -24,6 +24,7 @@
 #include "dExtAnmTexSRT_c.h"
 #include "daPly_c.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "daManta_c.h"
@@ -40,7 +41,6 @@ extern int (daWater_Ring_c::*data_ov064_0211c3c8)();
 extern int (daWater_Ring_c::*data_ov064_0211c3c0)();
 extern int (daWater_Ring_c::*data_ov064_0211c3b8)();
 extern Vector3 data_ov064_0211c3d0; /* the collider offset */
-extern s16 data_02082214[];         /* sine/cosine table */
 extern char data_ov002_0210d6dc[];  /* the ring's BTA */
 
 /* local extern: no shared header declares these. */
@@ -140,8 +140,7 @@ int daWater_Ring_c::StateActive() {
     mWobblePhase += 0x1000;
     {
         s16 phase = mWobblePhase;
-        int idx = ((u16)phase >> 4) * 2;
-        int wobble = (int)((((s64)data_02082214[idx] << 10) + 0x800) >> 12);
+        int wobble = FX_MUL(FX_SinIdx((u16)phase >> 4), 0x400);
         int target = wobble + mScaleBase;
         ApproachLinear(mScaleBase, 0x2000, spd);
         ApproachLinear(mScaleX, target, spd);
@@ -149,8 +148,7 @@ int daWater_Ring_c::StateActive() {
     mSpinPhase += 0x800;
     {
         s16 phase = mSpinPhase;
-        int idx = ((u16)phase >> 4) * 2;
-        mPrevAngleX += (int)((((s64)data_02082214[idx] << 8) + 0x800) >> 12);
+        mPrevAngleX += FX_MUL(FX_SinIdx((u16)phase >> 4), 0x100);
     }
     mScaleZ = mScaleX;
     mScaleY = mScaleZ;

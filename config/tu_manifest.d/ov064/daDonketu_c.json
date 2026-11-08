@@ -641,29 +641,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@551",
+      "from": "@550",
       "to": "@69",
-      "evidence": "emitted destructor-registration node name collides with the configured @527 on ov080 on main; @69 is unused everywhere and shorter than the original"
+      "evidence": "emitted destructor-registration node name collides with the configured @527 on ov080 on main; @69 is unused everywhere and shorter than the original; Re-keyed from @551 to @550 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
+    },
+    {
+      "from": "@551",
+      "to": "@70",
+      "evidence": "emitted destructor-registration node name collides with the configured @528 on ov080 on main; @70 is unused everywhere and shorter than the original; Re-keyed from @552 to @551 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
     },
     {
       "from": "@552",
-      "to": "@70",
-      "evidence": "emitted destructor-registration node name collides with the configured @528 on ov080 on main; @70 is unused everywhere and shorter than the original"
+      "to": "@71",
+      "evidence": "emitted destructor-registration node name collides with the configured @529 on ov080 on main; @71 is unused everywhere and shorter than the original; Re-keyed from @553 to @552 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
     },
     {
       "from": "@553",
-      "to": "@71",
-      "evidence": "emitted destructor-registration node name collides with the configured @529 on ov080 on main; @71 is unused everywhere and shorter than the original"
+      "to": "@75",
+      "evidence": "emitted destructor-registration node name collides with the configured @530 on ov080 on main; @75 is unused everywhere and shorter than the original; Re-keyed from @554 to @553 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
     },
     {
       "from": "@554",
-      "to": "@75",
-      "evidence": "emitted destructor-registration node name collides with the configured @530 on ov080 on main; @75 is unused everywhere and shorter than the original"
-    },
-    {
-      "from": "@555",
       "to": "@76",
-      "evidence": "emitted destructor-registration node name collides with the configured @531 on ov080 on main; @76 is unused everywhere and shorter than the original"
+      "evidence": "emitted destructor-registration node name collides with the configured @531 on ov080 on main; @76 is unused everywhere and shorter than the original; Re-keyed from @555 to @554 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
     }
   ],
   "relocations": [

@@ -1,12 +1,12 @@
 //cpp
 #include "types.h"
+#include "GX.h"
 #include "CP15.h"
 #include "Ov007BgLayer.h"
 
 extern "C" {
 
 extern void func_02056554(const void *src, int offset, int count);
-extern void func_02056494(const void *src, int offset, int count);
 extern void func_020563d4(const void *src, u32 offset, u32 count);
 extern void func_02056314(void *dst, u32 offset, u32 len);
 extern void func_020564f4(const void *src, int offset, int count);
@@ -34,7 +34,7 @@ void func_ov007_020c076c(Ov007BgLayer *layer, int engines) {
                 func_02056554(layer->screen, layer->screenOffset, size);
                 break;
             case 1:
-                func_02056494(layer->screen, layer->screenOffset, size);
+                GX::LoadBG1Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 2:
                 func_020563d4(layer->screen, layer->screenOffset, size);

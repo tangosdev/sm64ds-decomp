@@ -52,7 +52,9 @@ typedef struct {
  * holds. Don't realign it to the public header. */
 
 typedef struct {
-    unsigned char pad_000[0x17e];
+    unsigned char pad_000[0x10];
+    int mp_flag; /* 0x010 -- 1 once MP has started (private/wm_views.h's WMStatus) */
+    unsigned char pad_014[0x16a];
     unsigned short child_bitmap; /* 0x17e */
     unsigned char pad_180[0x880];
 } WmStatus; /* WMStatus, WM_ReadStatus's buffer */
@@ -100,6 +102,11 @@ typedef struct WmStartConnectCallback {
  *   aid             WMStartConnectCallback.aid on CONNECTED
  *   scanContinue    cleared by func_02068a74; scanning stops when 0
  *   scanNextChannel when set, changeScanChannel steps WMScanParam.channel
+ *   uname, gname    MB_Init (func_02068e4c) copies the MBUserInfo name and
+ *                   its static L"multiboot" (data_0209a084, stepped as it is
+ *                   read) into them; its loops run up to 10 and 16 halfwords,
+ *                   so the user name can overrun into gname
+ *   status.mp_flag  MBi_ParentCallback starts MP on CONNECTED while it is 0
  * child_bitmap's offset inside WMStatus (+0x17e) is from this code, not the SDK. */
 typedef struct {
     unsigned char wmSysBuf[0x1300];    /* 0x0000 */
@@ -123,7 +130,10 @@ typedef struct {
     unsigned short mpStarted;          /* 0x1e28 */
     unsigned short childBitmap;        /* 0x1e2a */
     unsigned short mpContinuous;       /* 0x1e2c */
-    unsigned char pad_1e2e[0xb2];      /* 0x1e2e */
+    unsigned char pad_1e2e[2];         /* 0x1e2e */
+    unsigned char uname[8];            /* 0x1e30 */
+    unsigned char gname[16];           /* 0x1e38 */
+    unsigned char pad_1e48[0x98];      /* 0x1e48 */
     unsigned short parentCount;        /* 0x1ee0 */
     unsigned short aid;                /* 0x1ee2 */
     int scanContinue;                  /* 0x1ee4 */
