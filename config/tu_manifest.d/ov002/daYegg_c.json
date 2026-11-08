@@ -54,21 +54,21 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec610Ev",
+      "symbol": "_ZN8daYegg_c13HasStarPayoutEv",
       "address": "0x020ec610",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020ec610.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec628Ev",
+      "symbol": "_ZN8daYegg_c17HasBlueCoinPayoutEv",
       "address": "0x020ec628",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020ec628.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec640Ev",
+      "symbol": "_ZN8daYegg_c18GetCoinPayoutCountEv",
       "address": "0x020ec640",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020ec640.c",
@@ -82,91 +82,91 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec670Ei",
+      "symbol": "_ZN8daYegg_c13HandleWallHitEi",
       "address": "0x020ec670",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov002_020ec670.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec728Ev",
+      "symbol": "_ZN8daYegg_c6PayOutEv",
       "address": "0x020ec728",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov002_020ec728.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec80cEPviis",
+      "symbol": "_ZN8daYegg_c14SpawnBlueCoinsEPviis",
       "address": "0x020ec80c",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov002_020ec80c.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec938Ev",
+      "symbol": "_ZN8daYegg_c11ExecuteDropEv",
       "address": "0x020ec938",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020ec938.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec978Ev",
+      "symbol": "_ZN8daYegg_c9EnterDropEv",
       "address": "0x020ec978",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020ec978.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec9c4Ev",
+      "symbol": "_ZN8daYegg_c13ExecuteWobbleEv",
       "address": "0x020ec9c4",
       "size": "0x00000110",
       "legacy_source": "src/func_ov002_020ec9c4.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecad4Ev",
+      "symbol": "_ZN8daYegg_c11EnterWobbleEv",
       "address": "0x020ecad4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020ecad4.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecb0cEv",
+      "symbol": "_ZN8daYegg_c12SeekStraightEv",
       "address": "0x020ecb0c",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov002_020ecb0c.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecd18Ev",
+      "symbol": "_ZN8daYegg_c10SeekHomingEv",
       "address": "0x020ecd18",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov002_020ecd18.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecf94Ev",
+      "symbol": "_ZN8daYegg_c11ExecuteSeekEv",
       "address": "0x020ecf94",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020ecf94.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecfc8Ev",
+      "symbol": "_ZN8daYegg_c9EnterSeekEv",
       "address": "0x020ecfc8",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov002_020ecfc8.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed0d4Ev",
+      "symbol": "_ZN8daYegg_c19ExecuteFollowPlayerEv",
       "address": "0x020ed0d4",
       "size": "0x000004dc",
       "legacy_source": "src/func_ov002_020ed0d4.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed5b0Ev",
+      "symbol": "_ZN8daYegg_c17EnterFollowPlayerEv",
       "address": "0x020ed5b0",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020ed5b0.c",
@@ -180,42 +180,42 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed684Ev",
+      "symbol": "_ZN8daYegg_c8RunStateEv",
       "address": "0x020ed684",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020ed684.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed6ccEv",
+      "symbol": "_ZN8daYegg_c9IsStalledEv",
       "address": "0x020ed6cc",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020ed6cc.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed738Ev",
+      "symbol": "_ZN8daYegg_c10UpdateTiltEv",
       "address": "0x020ed738",
       "size": "0x000000c0",
       "legacy_source": "src/func_ov002_020ed738.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed7f8Ev",
+      "symbol": "_ZN8daYegg_c12UpdateShadowEv",
       "address": "0x020ed7f8",
       "size": "0x000001a0",
       "legacy_source": "src/func_ov002_020ed7f8.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed998Ev",
+      "symbol": "_ZN8daYegg_c17UpdateModelMatrixEv",
       "address": "0x020ed998",
       "size": "0x000001a4",
       "legacy_source": "src/func_ov002_020ed998.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020edb3cEii",
+      "symbol": "_ZN8daYegg_c10FindTargetEii",
       "address": "0x020edb3c",
       "size": "0x00000168",
       "legacy_source": "src/func_ov002_020edb3c.cpp",
@@ -229,7 +229,7 @@
       "ordinal": 26
     },
     {
-      "symbol": "_ZN8daYegg_c19func_ov002_020eddc4Ev",
+      "symbol": "_ZN8daYegg_c17HandleCylinderHitEv",
       "address": "0x020eddc4",
       "size": "0x00000190",
       "legacy_source": "src/func_ov002_020eddc4.c",
@@ -344,7 +344,8 @@
     "daYegg_c_classInit is written as `return new daYegg_c;`: the implicit constructor reproduces the loose file's fBase_c::operator new(0x42c), dEnemyBase_c base constructor, vptr store and the four member constructors byte for byte.",
     "func_ov002_020ec670 is the one complete=False shard in the run; it matches inside the TU like the others.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Collision property member calls replace local helper declarations. Reconciled 8 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (57 sections, 292 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 8 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (57 sections, 292 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "#821 batch 37: twenty-three of the twenty-four helpers are named. The state hooks take the header's daYegg_State names in the EnterX/ExecuteX spelling of daBasabasa_c and daBbl_c (FollowPlayer, Seek, Wobble, Drop), RunState (daEykn_c), UpdateShadow, UpdateModelMatrix and HandleCylinderHit are in-tree spellings, and the rest are coined from the bodies and their existing comments. func_ov002_020ec654 (the variant bit) keeps its address; func_ov002_020ed63c and func_ov002_020edca4 stay free extern \"C\" functions that d_a_ply_methods.cpp calls. Member renames only: no @NNN moved."
   ],
   "compiler_only_output": [
     {
@@ -807,7 +808,7 @@
       "source": "0x0210ad38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed0d4Ev",
+      "symbol": "_ZN8daYegg_c19ExecuteFollowPlayerEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ed0d4"
@@ -817,7 +818,7 @@
       "source": "0x0210ad40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec938Ev",
+      "symbol": "_ZN8daYegg_c11ExecuteDropEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ec938"
@@ -827,7 +828,7 @@
       "source": "0x0210ad48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec978Ev",
+      "symbol": "_ZN8daYegg_c9EnterDropEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ec978"
@@ -837,7 +838,7 @@
       "source": "0x0210ad50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ec9c4Ev",
+      "symbol": "_ZN8daYegg_c13ExecuteWobbleEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ec9c4"
@@ -847,7 +848,7 @@
       "source": "0x0210ad58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecfc8Ev",
+      "symbol": "_ZN8daYegg_c9EnterSeekEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ecfc8"
@@ -857,7 +858,7 @@
       "source": "0x0210ad60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ed5b0Ev",
+      "symbol": "_ZN8daYegg_c17EnterFollowPlayerEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ed5b0"
@@ -867,7 +868,7 @@
       "source": "0x0210ad68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecf94Ev",
+      "symbol": "_ZN8daYegg_c11ExecuteSeekEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ecf94"
@@ -877,7 +878,7 @@
       "source": "0x0210ad70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daYegg_c19func_ov002_020ecad4Ev",
+      "symbol": "_ZN8daYegg_c11EnterWobbleEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ecad4"

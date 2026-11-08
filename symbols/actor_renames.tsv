@@ -247,6 +247,29 @@ ov002	0x020ec534	func_ov002_020ec534	daWarpkun_c_Spawn	spawnfunc
 ov002	0x020ec534	daWarpkun_c_Spawn	daWarpkun_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020ec56c	func_ov002_020ec56c	_ZN8daYegg_cD1Ev	vtable slot 16 (was _ZN8YoshiEggD1Ev)
 ov002	0x020ec5b4	func_ov002_020ec5b4	_ZN8daYegg_cD0Ev	vtable slot 17 (was _ZN8YoshiEggD0Ev)
+ov002	0x020ec610	_ZN8daYegg_c19func_ov002_020ec610Ev	_ZN8daYegg_c13HasStarPayoutEv	coined from the body: mParamHigh bit 7, nonzero when the burst pays out the tracked star
+ov002	0x020ec628	_ZN8daYegg_c19func_ov002_020ec628Ev	_ZN8daYegg_c17HasBlueCoinPayoutEv	coined from the body: mParamHigh bit 6, nonzero when the burst pays a blue coin
+ov002	0x020ec640	_ZN8daYegg_c19func_ov002_020ec640Ev	_ZN8daYegg_c18GetCoinPayoutCountEv	coined from the body: mParamHigh bits 2-5, the coin count PayOut spawns
+ov002	0x020ec670	_ZN8daYegg_c19func_ov002_020ec670Ei	_ZN8daYegg_c13HandleWallHitEi	coined from the body: looks up the actor owning the wall the egg hit (GetSphereResult) and pokes a DOSUN or hands the egg to a BATAN/BATANKING
+ov002	0x020ec728	_ZN8daYegg_c19func_ov002_020ec728Ev	_ZN8daYegg_c6PayOutEv	coined from the body: once per mPayoutIdx slot spawns GetCoinPayoutCount coins and, if HasBlueCoinPayout, a blue coin 40 units above the egg
+ov002	0x020ec80c	_ZN8daYegg_c19func_ov002_020ec80cEPviis	_ZN8daYegg_c14SpawnBlueCoinsEPviis	coined from the body: spawns count BLUE_COIN actors at *b with spread headings and randomised speed
+ov002	0x020ec938	_ZN8daYegg_c19func_ov002_020ec938Ev	_ZN8daYegg_c11ExecuteDropEv	daYegg_STATE_DROP (3) execute hook: move, burst on the ground; EnterX/ExecuteX spelling of daBasabasa_c/daBbl_c for an enter-then-execute PMF pair, state name from the header's daYegg_State enum
+ov002	0x020ec978	_ZN8daYegg_c19func_ov002_020ec978Ev	_ZN8daYegg_c9EnterDropEv	daYegg_STATE_DROP (3) enter hook: idle animation, no horizontal speed, gravity -0x2000
+ov002	0x020ec9c4	_ZN8daYegg_c19func_ov002_020ec9c4Ev	_ZN8daYegg_c13ExecuteWobbleEv	daYegg_STATE_WOBBLE (2) execute hook: tilt from the player's answer, damped back to level
+ov002	0x020ecad4	_ZN8daYegg_c19func_ov002_020ecad4Ev	_ZN8daYegg_c11EnterWobbleEv	daYegg_STATE_WOBBLE (2) enter hook: no horizontal speed, idle animation
+ov002	0x020ecb0c	_ZN8daYegg_c19func_ov002_020ecb0cEv	_ZN8daYegg_c12SeekStraightEv	coined from the body: the SEEK execute body for the variant func_ov002_020ec654 calls nonzero; flies on its heading with the trail particle and sound, bursting on a wall or stall
+ov002	0x020ecd18	_ZN8daYegg_c19func_ov002_020ecd18Ev	_ZN8daYegg_c10SeekHomingEv	coined from the body: the SEEK execute body for the other variant; steps toward the target's position (vtable slot 30) and bursts or pays out on arrival
+ov002	0x020ecf94	_ZN8daYegg_c19func_ov002_020ecf94Ev	_ZN8daYegg_c11ExecuteSeekEv	daYegg_STATE_SEEK (1) execute hook: picks SeekStraight or SeekHoming by variant
+ov002	0x020ecfc8	_ZN8daYegg_c19func_ov002_020ecfc8Ev	_ZN8daYegg_c9EnterSeekEv	daYegg_STATE_SEEK (1) enter hook: clears the target, moving animation, speed 100 units, FindTarget
+ov002	0x020ed0d4	_ZN8daYegg_c19func_ov002_020ed0d4Ev	_ZN8daYegg_c19ExecuteFollowPlayerEv	daYegg_STATE_FOLLOW_PLAYER (0) execute hook: eases toward the hold point behind mPlayer
+ov002	0x020ed5b0	_ZN8daYegg_c19func_ov002_020ed5b0Ev	_ZN8daYegg_c17EnterFollowPlayerEv	daYegg_STATE_FOLLOW_PLAYER (0) enter hook: snaps to mPlayer's position and angles
+ov002	0x020ed684	_ZN8daYegg_c19func_ov002_020ed684Ev	_ZN8daYegg_c8RunStateEv	runs the current state's execute hook from data_ov002_02110a5c; in-tree daEykn_c::RunState spelling
+ov002	0x020ed6cc	_ZN8daYegg_c19func_ov002_020ed6ccEv	_ZN8daYegg_c9IsStalledEv	coined from the body (its comment calls it the stall detector): 1 once the egg has moved under 50 units for 15 calls in a row
+ov002	0x020ed738	_ZN8daYegg_c19func_ov002_020ed738Ev	_ZN8daYegg_c10UpdateTiltEv	coined from the body: eases mAngleX/mAngleZ toward the floor slope or the player's tilt
+ov002	0x020ed7f8	_ZN8daYegg_c19func_ov002_020ed7f8Ev	_ZN8daYegg_c12UpdateShadowEv	drop shadow from a floor probe, cylinder or cuboid by variant; in-tree UpdateShadow spelling
+ov002	0x020ed998	_ZN8daYegg_c19func_ov002_020ed998Ev	_ZN8daYegg_c17UpdateModelMatrixEv	model matrix from the player's carry matrix while daYegg_FLAG_ATTACHED, else from the egg's pose; in-tree UpdateModelMatrix spelling
+ov002	0x020edb3c	_ZN8daYegg_c19func_ov002_020edb3cEii	_ZN8daYegg_c10FindTargetEii	coined from the body: nearest untargeted actor with profile bit 0x10000000 within range, recorded in mTargetedIds and mTargetId
+ov002	0x020eddc4	_ZN8daYegg_c19func_ov002_020eddc4Ev	_ZN8daYegg_c17HandleCylinderHitEv	contact handling from mdCcAc_c.otherOwner: a foreign player, a burst actor or the sought target; in-tree HandleCylinderHit spelling (daGrock_c, daHuwa_c, daHyuhyu_c)
 ov002	0x020edf54	func_ov002_020edf54	_ZN8daYegg_c16CleanupResourcesEv	vtable slot 3 (was _ZN8YoshiEgg16CleanupResourcesEv)
 ov002	0x020edf98	func_ov002_020edf98	_ZN8daYegg_c6RenderEv	vtable slot 9 (was _ZN8YoshiEgg6RenderEv)
 ov002	0x020ee010	func_ov002_020ee010	_ZN8daYegg_c8BehaviorEv	vtable slot 6 (was _ZN8YoshiEgg8BehaviorEv)

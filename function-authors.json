@@ -17183,15 +17183,15 @@
     },
     "ov002:0x020ec610": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec610Ev"
+      "name": "_ZN8daYegg_c13HasStarPayoutEv"
     },
     "ov002:0x020ec628": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec628Ev"
+      "name": "_ZN8daYegg_c17HasBlueCoinPayoutEv"
     },
     "ov002:0x020ec640": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec640Ev"
+      "name": "_ZN8daYegg_c18GetCoinPayoutCountEv"
     },
     "ov002:0x020ec654": {
       "author": "tangosdev",
@@ -17199,55 +17199,55 @@
     },
     "ov002:0x020ec670": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec670Ei"
+      "name": "_ZN8daYegg_c13HandleWallHitEi"
     },
     "ov002:0x020ec728": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec728Ev"
+      "name": "_ZN8daYegg_c6PayOutEv"
     },
     "ov002:0x020ec80c": {
       "author": "andrewboudreau",
-      "name": "_ZN8daYegg_c19func_ov002_020ec80cEPviis"
+      "name": "_ZN8daYegg_c14SpawnBlueCoinsEPviis"
     },
     "ov002:0x020ec938": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec938Ev"
+      "name": "_ZN8daYegg_c11ExecuteDropEv"
     },
     "ov002:0x020ec978": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec978Ev"
+      "name": "_ZN8daYegg_c9EnterDropEv"
     },
     "ov002:0x020ec9c4": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ec9c4Ev"
+      "name": "_ZN8daYegg_c13ExecuteWobbleEv"
     },
     "ov002:0x020ecad4": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ecad4Ev"
+      "name": "_ZN8daYegg_c11EnterWobbleEv"
     },
     "ov002:0x020ecb0c": {
       "author": "lunavyqo",
-      "name": "_ZN8daYegg_c19func_ov002_020ecb0cEv"
+      "name": "_ZN8daYegg_c12SeekStraightEv"
     },
     "ov002:0x020ecd18": {
       "author": "ruspecial",
-      "name": "_ZN8daYegg_c19func_ov002_020ecd18Ev"
+      "name": "_ZN8daYegg_c10SeekHomingEv"
     },
     "ov002:0x020ecf94": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ecf94Ev"
+      "name": "_ZN8daYegg_c11ExecuteSeekEv"
     },
     "ov002:0x020ecfc8": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ecfc8Ev"
+      "name": "_ZN8daYegg_c9EnterSeekEv"
     },
     "ov002:0x020ed0d4": {
       "author": "andrewboudreau",
-      "name": "_ZN8daYegg_c19func_ov002_020ed0d4Ev"
+      "name": "_ZN8daYegg_c19ExecuteFollowPlayerEv"
     },
     "ov002:0x020ed5b0": {
       "author": "ruspecial",
-      "name": "_ZN8daYegg_c19func_ov002_020ed5b0Ev"
+      "name": "_ZN8daYegg_c17EnterFollowPlayerEv"
     },
     "ov002:0x020ed63c": {
       "author": "tangosdev",
@@ -17255,27 +17255,27 @@
     },
     "ov002:0x020ed684": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ed684Ev"
+      "name": "_ZN8daYegg_c8RunStateEv"
     },
     "ov002:0x020ed6cc": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ed6ccEv"
+      "name": "_ZN8daYegg_c9IsStalledEv"
     },
     "ov002:0x020ed738": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ed738Ev"
+      "name": "_ZN8daYegg_c10UpdateTiltEv"
     },
     "ov002:0x020ed7f8": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ed7f8Ev"
+      "name": "_ZN8daYegg_c12UpdateShadowEv"
     },
     "ov002:0x020ed998": {
       "author": "tangosdev",
-      "name": "_ZN8daYegg_c19func_ov002_020ed998Ev"
+      "name": "_ZN8daYegg_c17UpdateModelMatrixEv"
     },
     "ov002:0x020edb3c": {
       "author": "andrewboudreau",
-      "name": "_ZN8daYegg_c19func_ov002_020edb3cEii"
+      "name": "_ZN8daYegg_c10FindTargetEii"
     },
     "ov002:0x020edca4": {
       "author": "tangosdev",
@@ -17283,7 +17283,7 @@
     },
     "ov002:0x020eddc4": {
       "author": "andrewboudreau",
-      "name": "_ZN8daYegg_c19func_ov002_020eddc4Ev"
+      "name": "_ZN8daYegg_c17HandleCylinderHitEv"
     },
     "ov002:0x020edf54": {
       "author": "tangosdev",
