@@ -39855,19 +39855,19 @@
     },
     "ov075:0x02115e8c": {
       "author": "tangosdev",
-      "name": "func_ov075_02115e8c"
+      "name": "_ZN10dScEntry_c6icon_c5PlaceEiiss"
     },
     "ov075:0x0211601c": {
       "author": "tangosdev",
-      "name": "func_ov075_0211601c"
+      "name": "_ZN10dScEntry_c15graphCallback_c4InitEPS_i"
     },
     "ov075:0x02116028": {
       "author": "tangosdev",
-      "name": "func_ov075_02116028"
+      "name": "_ZN10dScEntry_c15graphCallback_c16SetBg2ScreenBaseEi"
     },
     "ov075:0x02116030": {
       "author": "tangosdev",
-      "name": "func_ov075_02116030"
+      "name": "_ZN10dScEntry_c15graphCallback_c14QueueBg2ScreenEPv"
     },
     "ov075:0x02116040": {
       "author": "tangosdev",
@@ -39879,15 +39879,15 @@
     },
     "ov075:0x021160dc": {
       "author": "tangosdev",
-      "name": "func_ov075_021160dc"
+      "name": "_ZN10dScEntry_c11RenderIconsEv"
     },
     "ov075:0x02116128": {
       "author": "andrewboudreau",
-      "name": "func_ov075_02116128"
+      "name": "_ZN10dScEntry_c20SetSlotBorderPaletteEii"
     },
     "ov075:0x0211621c": {
       "author": "tangosdev",
-      "name": "func_ov075_0211621c"
+      "name": "_ZN10dScEntry_c18RenderPlayerScoresEv"
     },
     "ov075:0x021165b0": {
       "author": "lunavyqo",
@@ -40059,39 +40059,39 @@
     },
     "ov075:0x02119640": {
       "author": "tangosdev",
-      "name": "func_ov075_02119640"
+      "name": "_ZN10dScEntry_c18UpdateSessionStartEv"
     },
     "ov075:0x021196d0": {
       "author": "tangosdev",
-      "name": "func_ov075_021196d0"
+      "name": "_ZN10dScEntry_c17EnterSessionStartEv"
     },
     "ov075:0x0211977c": {
       "author": "tangosdev",
-      "name": "func_ov075_0211977c"
+      "name": "_ZN10dScEntry_c15UpdateSoloStartEv"
     },
     "ov075:0x021197dc": {
       "author": "tangosdev",
-      "name": "func_ov075_021197dc"
+      "name": "_ZN10dScEntry_c14EnterSoloStartEv"
     },
     "ov075:0x021197e8": {
       "author": "tangosdev",
-      "name": "func_ov075_021197e8"
+      "name": "_ZN10dScEntry_c17UpdateSoloConfirmEv"
     },
     "ov075:0x02119918": {
       "author": "tangosdev",
-      "name": "func_ov075_02119918"
+      "name": "_ZN10dScEntry_c16EnterSoloConfirmEv"
     },
     "ov075:0x021199d8": {
       "author": "tangosdev",
-      "name": "func_ov075_021199d8"
+      "name": "_ZN10dScEntry_c17RenderRecruitTextEv"
     },
     "ov075:0x02119b34": {
       "author": "tangosdev",
-      "name": "func_ov075_02119b34"
+      "name": "_ZN10dScEntry_c13UpdateRecruitEv"
     },
     "ov075:0x02119c38": {
       "author": "tangosdev",
-      "name": "func_ov075_02119c38"
+      "name": "_ZN10dScEntry_c12EnterRecruitEv"
     },
     "ov075:0x02119cc0": {
       "author": "ruspecial",
