@@ -114,8 +114,12 @@
 
 struct M { int _00, _01, _10, _11; };
 struct SlotCharNos { int v[3]; };
+/* The banner files: 29 graphics, loaded together. An MgBanner whose mFileIndex
+   is MG_BANNER_FILE_NUM shows nothing. */
+#define MG_BANNER_FILE_NUM 29
+
 struct Entry { int file; int *sprites; };
-struct EntryTable { Entry e[29]; };
+struct EntryTable { Entry e[MG_BANNER_FILE_NUM]; };
 struct OamAttr;
 
 
@@ -237,7 +241,7 @@ extern int *sMgMsgFiveCardSpritesByLanguage[];
 
 extern "C" void Mg_FreeBannerFiles(void) {
     int i;
-    for (i = 0; i < 0x1d; i++) {
+    for (i = 0; i < MG_BANNER_FILE_NUM; i++) {
         Deallocate(sMgBannerFiles[i]);
         sMgBannerFiles[i] = 0;
     }
@@ -315,20 +319,19 @@ extern "C" void Mg_LoadBannerFiles(void)
     entries.e[28].file = sMgMsgFiveCardNcgByLanguage[GetGameLanguage()];
     entries.e[28].sprites = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
 
-    for (i = 0; i < 29; i++) {
+    for (i = 0; i < MG_BANNER_FILE_NUM; i++) {
         sMgBannerFiles[i] = LoadFile(entries.e[i].file);
         sMgBannerSprites[i] = *entries.e[i].sprites;
     }
 }
 
 extern "C" void Banner_Free(MgBanner *e) {
-    e->mFileIndex = 0x1d;
-    s16 idx = e->mGfxSlot;
-    sMgBannerGfxSlotUsed[idx] = 0;
+    e->mFileIndex = MG_BANNER_FILE_NUM;
+    sMgBannerGfxSlotUsed[e->mGfxSlot] = 0;
 }
 
 extern "C" void Banner_Draw(MgBanner *e) {
-    if (e->mFileIndex == 0x1d) return;
+    if (e->mFileIndex == MG_BANNER_FILE_NUM) return;
     if (e->mRender != 0) {
         (e->*(e->mRender))();
         return;
@@ -337,7 +340,7 @@ extern "C" void Banner_Draw(MgBanner *e) {
 }
 
 extern "C" void Banner_Update(MgBanner *e) {
-    if (e->mFileIndex == 0x1d) return;
+    if (e->mFileIndex == MG_BANNER_FILE_NUM) return;
     if (e->mBehavior == 0) return;
     (e->*(e->mBehavior))();
 }
@@ -428,7 +431,7 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
 
     {
         SlotCharNos charNo = sMgBannerGfxSlotCharNo;
-        e->mOamCount = (short)Mg_CopySpriteList(
+        e->mOamCount = Mg_CopySpriteList(
             sMgBannerSprites[e->mFileIndex],
             e->mOam,
             charNo.v[e->mGfxSlot],
@@ -635,7 +638,7 @@ extern "C" void Banner_UpdateFall(MgBanner *e) {
 
 extern "C" void Banner_SetupFall(MgBanner *e) {
     e->mTimer = 0;
-    e->mTimerEnd = 81920;
+    e->mTimerEnd = 0x14000;
     e->mY = 96;
 }
 
@@ -737,13 +740,13 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
 
 extern "C" void Banner_UpdatePopSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 98304;
+        e->mTimer = 0x18000;
     }
 }
 
 extern "C" void Banner_SetupPopSpin(MgBanner *e) {
     e->mTimer = 0;
-    e->mTimerEnd = 159744;
+    e->mTimerEnd = 0x27000;
 }
 
 extern "C" int Banner_IsPressFinished(MgBanner *e) {
@@ -937,7 +940,7 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
 
 extern "C" void Banner_UpdateZoom(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 122880;
+        e->mTimer = 0x1e000;
     }
 }
 
@@ -1001,7 +1004,7 @@ extern "C" void Banner_SetupSlideFromTop(MgBanner *e) {
 }
 
 MgBanner::MgBanner() {
-    mFileIndex = 29;
+    mFileIndex = MG_BANNER_FILE_NUM;
 }
 
 /* __sinit_ov004_020b955c sources: the member-pointer records the three
@@ -1041,7 +1044,7 @@ MgBanner gMgBanners[3];
 }
 
 extern "C" {
-int sMgBannerSprites[29] = {sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
+int sMgBannerSprites[MG_BANNER_FILE_NUM] = {sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
                             sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,
                             sMgMsgGoalSpritesEnglish,      sMgMsgHiScoreSpritesEnglish,
                             sMgMsgPerfectSpritesEnglish,   sMgMsgResultHiScoreSpritesEnglish,
@@ -1073,5 +1076,5 @@ ElemFn sBannerDrawTable[13] = {
     pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA,
     pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, data_02086b58, pmf_Banner_DrawLevelNumber
 };
-void *sMgBannerFiles[29];
+void *sMgBannerFiles[MG_BANNER_FILE_NUM];
 }
