@@ -19,7 +19,7 @@ struct Out {
     u8 segment_no;            /* 0xc */
 };
 
-int func_02067530(struct Out *o, char *in, u32 val, char *tbl) {
+int MBi_get_blockinfo(struct Out *o, char *in, u32 val, char *tbl) {
     MB_BlockInfoTable *table = (MB_BlockInfoTable *)in;
     MbDownloadFileInfoHeader *dlinfo = (MbDownloadFileInfoHeader *)tbl;
     int i;

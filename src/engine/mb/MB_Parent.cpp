@@ -81,9 +81,9 @@ typedef struct MBErrorStatus {
     u16 errcode;
 } MBErrorStatus;
 
-/* NitroSDK MBCommParentBlockHeader, the header func_02065d5c
- * (MBi_MakeParentSendBuffer) packs in front of a parent packet: the type
- * byte, then for a block (type 4) its file and block number. */
+/* NitroSDK MBCommParentBlockHeader, the header MBi_MakeParentSendBuffer
+ * packs in front of a parent packet: the type byte, then for a block
+ * (type 4) its file and block number. */
 typedef struct MBCommParentBlockHeader {
     u8 type;
     u8 pad1[1];
@@ -91,8 +91,8 @@ typedef struct MBCommParentBlockHeader {
     u16 seqno;
 } MBCommParentBlockHeader;
 
-/* NitroSDK MB_BlockInfo, one block's place as func_02067530
- * (pmd-sky's MBi_Get_BlockInfo) gives it. The tag is that file's. */
+/* NitroSDK MB_BlockInfo, one block's place as MBi_get_blockinfo gives
+ * it. The tag is that file's. */
 struct Out {
     int child_recv_buff_addr; /* 0x0 */
     u32 size;                 /* 0x4 */
@@ -128,10 +128,10 @@ extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void CpuCopy8(const void *src, void *dst, u32 size);
 extern void func_0205a588(void *dst, u8 val, u32 size);
 extern char *WM_ReadMPData(char *buf, unsigned int aid);
-extern u8 *func_02065c2c(u8 *src, u8 *dst);
-extern u8 *func_02065d5c(MBCommParentBlockHeader *hdr, u8 *buf);
+extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
+extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
 extern int func_02065de4(u8 *hdr, int aid);
-extern int func_02067530(struct Out *bi, char *table, u32 block, char *dlinfo);
+extern int MBi_get_blockinfo(struct Out *bi, char *table, u32 block, char *dlinfo);
 /* local extern: defined void, but it hands back func_020688fc's result,
    which the senders here return. */
 extern int func_02067f2c(u32 size, u32 pollbmp, u32 buf);
@@ -428,7 +428,7 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
     u8 *cp;
     u32 i;
 
-    func_02065c2c((u8 *)((WMMpRecvData *)arg)->cdata, (u8 *)&hd);
+    MBi_SetRecvBufferFromChild((u8 *)((WMMpRecvData *)arg)->cdata, (u8 *)&hd);
     if (aid == 0)
         return;
     if (aid > 0xf)
@@ -577,7 +577,7 @@ void MBi_CommParentRecvData(char *arg) {
 int MBi_CommParentSendMsg(u8 type, u32 pollbmp) {
     MBCommParentBlockHeader hd;
     hd.type = type;
-    func_02065d5c(&hd, (u8 *)data_020a9db8);
+    MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
     return func_02067f2c(6, pollbmp, (u32)data_020a9db8);
 }
 
@@ -626,7 +626,7 @@ int MBi_CommParentSendDlFileInfo(void) {
 
     hd.type = 3;
     hd.fid = found;
-    ret = func_02065d5c(&hd, (u8 *)data_020a9db8);
+    ret = MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
     if (ret != 0)
         CpuCopy8(MB_WORK->mFiles[found].mHeader, ret, 0xe4);
 
@@ -668,9 +668,9 @@ int MBi_CommParentSendBlock(void) {
     MBi_Calc_SendBlock(idxByte);
 
     idxByte = MB_WORK->mCurrentFile;
-    if (func_02067530(&bi, (char *)MB_WORK->mFiles[idxByte].mBlockTable,
-                      MB_WORK->mFiles[idxByte].mCurrentBlock,
-                      (char *)MB_WORK->mFiles[idxByte].mHeader) == 0) {
+    if (MBi_get_blockinfo(&bi, (char *)MB_WORK->mFiles[idxByte].mBlockTable,
+                          MB_WORK->mFiles[idxByte].mCurrentBlock,
+                          (char *)MB_WORK->mFiles[idxByte].mHeader) == 0) {
         return 0x15;
     }
 
@@ -682,7 +682,7 @@ int MBi_CommParentSendBlock(void) {
         hd.seqno = g->mFiles[g->mCurrentFile].mCurrentBlock;
     }
 
-    CpuCopy8((void *)bi.offset, func_02065d5c(&hd, (u8 *)data_020a9db8), bi.size);
+    CpuCopy8((void *)bi.offset, MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8), bi.size);
 
     idxByte = MB_WORK->mCurrentFile;
     return func_02067f2c(bi.size + 6, MB_WORK->mFiles[idxByte].mChildBitmap, (u32)data_020a9db8);

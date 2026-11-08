@@ -1,5 +1,5 @@
 /* Empty. func_0201a054 calls it during boot, between PXI_Init and
-   func_02013e64. */
+   ClearSaveBlock. */
 void func_0203d740(void) {}
 
 /* Vector3s's empty constructor, which daHanachan_c's factory passes to

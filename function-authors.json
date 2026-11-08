@@ -1671,7 +1671,7 @@
     },
     "arm9:0x0201361c": {
       "author": "tangosdev",
-      "name": "func_0201361c"
+      "name": "UnlockMinigame"
     },
     "arm9:0x02013638": {
       "author": "tangosdev",
@@ -1731,7 +1731,7 @@
     },
     "arm9:0x02013868": {
       "author": "ruspecial",
-      "name": "func_02013868"
+      "name": "CollectMinigameKey"
     },
     "arm9:0x02013890": {
       "author": "tangosdev",
@@ -1759,7 +1759,7 @@
     },
     "arm9:0x020139b8": {
       "author": "tangosdev",
-      "name": "func_020139b8"
+      "name": "ClearCapHeldByToad"
     },
     "arm9:0x02013a00": {
       "author": "tangosdev",
@@ -1827,7 +1827,7 @@
     },
     "arm9:0x02013e64": {
       "author": "ruspecial",
-      "name": "func_02013e64"
+      "name": "ClearSaveBlock"
     },
     "arm9:0x02013e80": {
       "author": "tangosdev",
@@ -7735,7 +7735,7 @@
     },
     "arm9:0x02048fd4": {
       "author": "ruspecial",
-      "name": "func_02048fd4"
+      "name": "SetSoundRange"
     },
     "arm9:0x02049018": {
       "author": "tangosdev",
@@ -11359,11 +11359,11 @@
     },
     "arm9:0x02065c2c": {
       "author": "lunavyqo",
-      "name": "func_02065c2c"
+      "name": "MBi_SetRecvBufferFromChild"
     },
     "arm9:0x02065d5c": {
       "author": "ruspecial",
-      "name": "func_02065d5c"
+      "name": "MBi_MakeParentSendBuffer"
     },
     "arm9:0x02065de4": {
       "author": "lunavyqo",
@@ -11459,7 +11459,7 @@
     },
     "arm9:0x02067530": {
       "author": "tangosdev",
-      "name": "func_02067530"
+      "name": "MBi_get_blockinfo"
     },
     "arm9:0x02067604": {
       "author": "andrewboudreau",
