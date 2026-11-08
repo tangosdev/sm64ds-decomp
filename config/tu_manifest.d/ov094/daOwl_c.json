@@ -54,98 +54,98 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_021357a4Ev",
+      "symbol": "_ZN7daOwl_c14TryPickUpRiderEv",
       "address": "0x021357a4",
       "size": "0x00000110",
       "legacy_source": "src/func_ov094_021357a4.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_021358b4Ev",
+      "symbol": "_ZN7daOwl_c12UpdateReturnEv",
       "address": "0x021358b4",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov094_021358b4.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_0213598cEv",
+      "symbol": "_ZN7daOwl_c11EnterReturnEv",
       "address": "0x0213598c",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov094_0213598c.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_021359d8Ev",
+      "symbol": "_ZN7daOwl_c14UpdateCarryingEv",
       "address": "0x021359d8",
       "size": "0x000001fc",
       "legacy_source": "src/func_ov094_021359d8.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02135bd4Ev",
+      "symbol": "_ZN7daOwl_c13EnterCarryingEv",
       "address": "0x02135bd4",
       "size": "0x00000054",
       "legacy_source": "src/func_ov094_02135bd4.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02135c28Ev",
+      "symbol": "_ZN7daOwl_c11UpdateHoverEv",
       "address": "0x02135c28",
       "size": "0x0000023c",
       "legacy_source": "src/func_ov094_02135c28.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02135e64Ev",
+      "symbol": "_ZN7daOwl_c10EnterHoverEv",
       "address": "0x02135e64",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov094_02135e64.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02135ee0Ev",
+      "symbol": "_ZN7daOwl_c10UpdateTalkEv",
       "address": "0x02135ee0",
       "size": "0x00000100",
       "legacy_source": "src/func_ov094_02135ee0.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02135fe0Ev",
+      "symbol": "_ZN7daOwl_c9EnterTalkEv",
       "address": "0x02135fe0",
       "size": "0x00000044",
       "legacy_source": "src/func_ov094_02135fe0.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02136024Ev",
+      "symbol": "_ZN7daOwl_c13UpdateDormantEv",
       "address": "0x02136024",
       "size": "0x0000012c",
       "legacy_source": "src/func_ov094_02136024.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02136150Ev",
+      "symbol": "_ZN7daOwl_c12EnterDormantEv",
       "address": "0x02136150",
       "size": "0x00000038",
       "legacy_source": "src/func_ov094_02136150.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_02136188EPNS_5StateE",
+      "symbol": "_ZN7daOwl_c11ChangeStateEPNS_5StateE",
       "address": "0x02136188",
       "size": "0x00000050",
       "legacy_source": "src/func_ov094_02136188.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_021361d8Ev",
+      "symbol": "_ZN7daOwl_c20UpdateModelTransformEv",
       "address": "0x021361d8",
       "size": "0x00000108",
       "legacy_source": "src/func_ov094_021361d8.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN7daOwl_c19func_ov094_021362e0Ev",
+      "symbol": "_ZN7daOwl_c17FollowRiderMatrixEv",
       "address": "0x021362e0",
       "size": "0x00000100",
       "legacy_source": "src/func_ov094_021362e0.c",
@@ -207,70 +207,70 @@
       "address": "0x021369c0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02135c28Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c11UpdateHoverEv"
     },
     {
       "symbol": "@924",
       "address": "0x021369c8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02136024Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c13UpdateDormantEv"
     },
     {
       "symbol": "@900",
       "address": "0x021369d0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02135bd4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c13EnterCarryingEv"
     },
     {
       "symbol": "@934",
       "address": "0x021369d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02135e64Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c10EnterHoverEv"
     },
     {
       "symbol": "@922",
       "address": "0x021369e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02136150Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c12EnterDormantEv"
     },
     {
       "symbol": "@901",
       "address": "0x021369e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_021358b4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c12UpdateReturnEv"
     },
     {
       "symbol": "@902",
       "address": "0x021369f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_0213598cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c11EnterReturnEv"
     },
     {
       "symbol": "@928",
       "address": "0x021369f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02135fe0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c9EnterTalkEv"
     },
     {
       "symbol": "@210",
       "address": "0x02136a00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_02135ee0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c10UpdateTalkEv"
     },
     {
       "symbol": "@903",
       "address": "0x02136a08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c19func_ov094_021359d8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daOwl_c14UpdateCarryingEv"
     }
   ],
   "bss": [
@@ -335,35 +335,35 @@
       "address": "0x02136b30",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "return state, enter func_ov094_0213598c and main func_ov094_021358b4"
+      "evidence": "return state, enter EnterReturn and main UpdateReturn"
     },
     {
       "symbol": "data_ov094_02136b40",
       "address": "0x02136b40",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "dormant state, enter func_ov094_02136150 and main func_ov094_02136024"
+      "evidence": "dormant state, enter EnterDormant and main UpdateDormant"
     },
     {
       "symbol": "data_ov094_02136b50",
       "address": "0x02136b50",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "talk state, enter func_ov094_02135fe0 and main func_ov094_02135ee0"
+      "evidence": "talk state, enter EnterTalk and main UpdateTalk"
     },
     {
       "symbol": "data_ov094_02136b60",
       "address": "0x02136b60",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "hover state, enter func_ov094_02135e64 and main func_ov094_02135c28"
+      "evidence": "hover state, enter EnterHover and main UpdateHover"
     },
     {
       "symbol": "data_ov094_02136b70",
       "address": "0x02136b70",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "carry state, enter func_ov094_02135bd4 and main func_ov094_021359d8"
+      "evidence": "carry state, enter EnterCarrying and main UpdateCarrying"
     }
   ],
   "notes": [
@@ -712,7 +712,7 @@
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",
-      "reason": "func_ov094_02135ee0 destroys local Vector3 values. The empty destructor is vague linkage; the cartridge copy is arm9 0x020072c0.",
+      "reason": "UpdateTalk destroys local Vector3 values. The empty destructor is vague linkage; the cartridge copy is arm9 0x020072c0.",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0"
     },
@@ -1287,7 +1287,7 @@
       "source": "0x021369c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_02135c28Ev",
+      "symbol": "_ZN7daOwl_c11UpdateHoverEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02135c28"
@@ -1297,7 +1297,7 @@
       "source": "0x021369c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_02136024Ev",
+      "symbol": "_ZN7daOwl_c13UpdateDormantEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02136024"
@@ -1307,7 +1307,7 @@
       "source": "0x021369d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_02135bd4Ev",
+      "symbol": "_ZN7daOwl_c13EnterCarryingEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02135bd4"
@@ -1317,7 +1317,7 @@
       "source": "0x021369d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_02135e64Ev",
+      "symbol": "_ZN7daOwl_c10EnterHoverEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02135e64"
@@ -1327,7 +1327,7 @@
       "source": "0x021369e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_02136150Ev",
+      "symbol": "_ZN7daOwl_c12EnterDormantEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02136150"
@@ -1337,7 +1337,7 @@
       "source": "0x021369e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_021358b4Ev",
+      "symbol": "_ZN7daOwl_c12UpdateReturnEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x021358b4"
@@ -1347,7 +1347,7 @@
       "source": "0x021369f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_0213598cEv",
+      "symbol": "_ZN7daOwl_c11EnterReturnEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x0213598c"
@@ -1357,7 +1357,7 @@
       "source": "0x021369f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_02135fe0Ev",
+      "symbol": "_ZN7daOwl_c9EnterTalkEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02135fe0"
@@ -1367,7 +1367,7 @@
       "source": "0x02136a00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_02135ee0Ev",
+      "symbol": "_ZN7daOwl_c10UpdateTalkEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x02135ee0"
@@ -1377,7 +1377,7 @@
       "source": "0x02136a08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daOwl_c19func_ov094_021359d8Ev",
+      "symbol": "_ZN7daOwl_c14UpdateCarryingEv",
       "addend": 0,
       "target_module": "ov094",
       "target_address": "0x021359d8"
@@ -1387,72 +1387,72 @@
     {
       "from": "@959",
       "to": "@915",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @958 to @959 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @958 to @959 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@960",
       "to": "@916",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @959 to @960 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @959 to @960 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@961",
       "to": "@917",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @960 to @961 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @960 to @961 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@962",
       "to": "@918",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @961 to @962 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @961 to @962 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@966",
       "to": "@922",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @965 to @966 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @965 to @966 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@968",
       "to": "@924",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @967 to @968 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @967 to @968 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@972",
       "to": "@928",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @971 to @972 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @971 to @972 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@974",
       "to": "@210",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @973 to @974 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @973 to @974 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@978",
       "to": "@934",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @977 to @978 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @977 to @978 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@980",
       "to": "@936",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @979 to @980 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @979 to @980 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@984",
       "to": "@900",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @983 to @984 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @983 to @984 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@986",
       "to": "@903",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @985 to @986 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @985 to @986 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@990",
       "to": "@902",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @989 to @990 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @989 to @990 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     },
     {
       "from": "@992",
       "to": "@901",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @991 to @992 when func_ov094_021362e0 builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @991 to @992 when FollowRiderMatrix builds a zeroed Vector3 instead of a VecFx32 with a volatile store; the Vector3 constructor call draws one more compiler number."
     }
   ]
 }

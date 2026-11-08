@@ -43723,59 +43723,59 @@
     },
     "ov094:0x021357a4": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_021357a4Ev"
+      "name": "_ZN7daOwl_c14TryPickUpRiderEv"
     },
     "ov094:0x021358b4": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_021358b4Ev"
+      "name": "_ZN7daOwl_c12UpdateReturnEv"
     },
     "ov094:0x0213598c": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_0213598cEv"
+      "name": "_ZN7daOwl_c11EnterReturnEv"
     },
     "ov094:0x021359d8": {
       "author": "lunavyqo",
-      "name": "_ZN7daOwl_c19func_ov094_021359d8Ev"
+      "name": "_ZN7daOwl_c14UpdateCarryingEv"
     },
     "ov094:0x02135bd4": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_02135bd4Ev"
+      "name": "_ZN7daOwl_c13EnterCarryingEv"
     },
     "ov094:0x02135c28": {
       "author": "andrewboudreau",
-      "name": "_ZN7daOwl_c19func_ov094_02135c28Ev"
+      "name": "_ZN7daOwl_c11UpdateHoverEv"
     },
     "ov094:0x02135e64": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_02135e64Ev"
+      "name": "_ZN7daOwl_c10EnterHoverEv"
     },
     "ov094:0x02135ee0": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_02135ee0Ev"
+      "name": "_ZN7daOwl_c10UpdateTalkEv"
     },
     "ov094:0x02135fe0": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_02135fe0Ev"
+      "name": "_ZN7daOwl_c9EnterTalkEv"
     },
     "ov094:0x02136024": {
       "author": "lunavyqo",
-      "name": "_ZN7daOwl_c19func_ov094_02136024Ev"
+      "name": "_ZN7daOwl_c13UpdateDormantEv"
     },
     "ov094:0x02136150": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_02136150Ev"
+      "name": "_ZN7daOwl_c12EnterDormantEv"
     },
     "ov094:0x02136188": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_02136188EPNS_5StateE"
+      "name": "_ZN7daOwl_c11ChangeStateEPNS_5StateE"
     },
     "ov094:0x021361d8": {
       "author": "tangosdev",
-      "name": "_ZN7daOwl_c19func_ov094_021361d8Ev"
+      "name": "_ZN7daOwl_c20UpdateModelTransformEv"
     },
     "ov094:0x021362e0": {
       "author": "lunavyqo",
-      "name": "_ZN7daOwl_c19func_ov094_021362e0Ev"
+      "name": "_ZN7daOwl_c17FollowRiderMatrixEv"
     },
     "ov094:0x021363e0": {
       "author": "tangosdev",
