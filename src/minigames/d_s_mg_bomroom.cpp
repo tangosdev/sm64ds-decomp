@@ -24,7 +24,11 @@
 // leftovers: SpawnBombs reaches its bomb's color through a bomb pointer
 // stepped by j * 0x40 and cast back to the scene, ((dScMgBomroom_c *)
 // bomb)->mBombs[0].color, and adds the offset of mBombs[0].active to
-// this + j * 0x40.
+// this + j * 0x40. Its color roll stays unrolled from BOMROOM_RAND(2):
+// rolling first and computing the color pointer after is the ROM's order;
+// mBombs[j].color = BOMROOM_RAND(2), the macro through the same pointer, or
+// the roll into rnd first all reshuffle the hoisted-constant stack slots
+// (+0x4..+0x10 bytes).
 // CountSortedBombs bumps mLevel through a volatile store.
 // The roaming steps read the table into a block-scoped fx16 before FX_MUL:
 // FX_CosIdx inside the FX_MUL argument swaps the table and speed registers.
@@ -78,6 +82,10 @@ extern void func_02056554(const void *src, int offset, int count);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
+
+/* A random integer in [0, n): the top 15 bits of the minigames' shared
+   generator, scaled (the PACHINKO_RAND of d_s_mg_pachinko.cpp). */
+#define BOMROOM_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
 
 #pragma defer_codegen off
 
@@ -1453,8 +1461,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         HatchPanel_Activate(0);
                     }
                     if (sb <= 1) {
-                        rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                        mBombs[j].angle = (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
+                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
                         mBombs[j].y = 0;
                     } else if (flag != 0) {
                         if (flag == 1) {
@@ -1470,9 +1477,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0x2800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                            mBombs[j].angle =
-                                (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0x2000;
+                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
                         }
                         mBombs[j].y = 0;
                         HatchPanel_Activate(0);
@@ -1480,9 +1485,7 @@ void dScMgBomroom_c::SpawnBombs() {
                         if (step != 0) {
                             mBombs[j].angle = (step * (i >> 1)) + 0xa800;
                         } else {
-                            rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                            mBombs[j].angle =
-                                (((((rnd >> 16) & 0x7fff) << 2) >> 15) << 12) + 0xa000;
+                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0xa000;
                         }
                         mBombs[j].y = 0xb8000;
                         HatchPanel_Activate(1);
