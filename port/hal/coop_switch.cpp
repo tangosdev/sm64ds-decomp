@@ -58,6 +58,7 @@ long long wall_ms() {
 
 enum : unsigned {
     kResendMs      = 100,      // each change goes out 3 times: now, +100, +200
+    kHoldMs        = 10000,    // COOPPUZZLE2: how long a field change waits for somebody to be listed
     kWordOwnerMs   = 1000,
     kWordGuestMs   = 3000,
     kSettleFrames  = 20,       // frames after the objects exist before the word is trusted as ours
@@ -81,6 +82,9 @@ bool     g_have_key = false;
 int      g_lvl = -1, g_act = 0;
 unsigned g_gen = 0;             // bumped at every level latch
 unsigned g_frames = 0;          // frames since the group was established and the player existed
+unsigned g_now = 0;             // COOPPUZZLE2: the clock of the last on_frame (a remote apply runs before this frame's on_frame)
+bool g_keep_local = true;       // COOPPUZZLE2: SM64DS_SW_KEEP_LOCAL=0 is the control (a remote apply swallows an unsent local change)
+bool g_hold_field = true;       // COOPPUZZLE2: SM64DS_SW_HOLD_FIELD=0 is the control (a field change with nobody listed is dropped)
 bool     g_new_level = true;
 bool     g_armed = false;
 bool     g_have_globals = false;
@@ -96,7 +100,7 @@ PendBit g_pb[kSwBits];
 // object state: trackers by slot, outgoing messages, pending states from the owner
 struct Trk { void *actor; unsigned short cls; int last; bool valid; };
 Trk g_trk[kSwSlots];
-struct ObjOut { bool on; uint8_t kind; uint16_t slot, cls; uint8_t state; int32_t value; uint16_t seq; int sent; unsigned next; };
+struct ObjOut { bool on; uint8_t kind; uint16_t slot, cls; uint8_t state; int32_t value; uint16_t seq; int sent; unsigned next; unsigned born; };
 ObjOut g_oo[kObjOutMax];
 uint16_t g_seq = 0;
 uint16_t g_lastseq[kCoopMaxSeats][kSwSlots];
@@ -133,6 +137,8 @@ void read_env() {
     g_env = true;
     const char *l = std::getenv("SM64DS_COOP_LOG");
     g_log = l && *l && *l != '0';
+    if (const char *k = std::getenv("SM64DS_SW_KEEP_LOCAL")) g_keep_local = *k != '0';
+    if (const char *h = std::getenv("SM64DS_SW_HOLD_FIELD")) g_hold_field = *h != '0';
     if (const char *o = std::getenv("SM64DS_SW_OFF")) {
         g_off.word = std::strstr(o, "word") != nullptr;
         g_off.press = std::strstr(o, "press") != nullptr;
@@ -534,14 +540,19 @@ void queue_obj(int kind, int slot, int cls, int state, int value, unsigned now) 
         if (!g_oo[i].on && free_i < 0) free_i = i;
     }
     if (free_i < 0) free_i = 0;
-    g_oo[free_i] = {true, (uint8_t)kind, (uint16_t)slot, (uint16_t)cls, (uint8_t)state, (int32_t)value, g_seq, 0, now};
+    g_oo[free_i] = {true, (uint8_t)kind, (uint16_t)slot, (uint16_t)cls, (uint8_t)state, (int32_t)value, g_seq, 0, now, now};
 }
 
 void send_objs(unsigned now) {
     for (int i = 0; i < kObjOutMax; ++i) {
         ObjOut &o = g_oo[i];
         if (!o.on || (int)(now - o.next) < 0) continue;
-        if (!others_here()) { o.on = false; continue; }
+        if (!others_here()) {
+            // COOPPUZZLE2: a field value is a state, not an event: one made while nobody is listed yet (the first moments of a
+            // level) waits up to kHoldMs for the friend instead of being lost. Press and kick still go.
+            if (g_hold_field && o.kind == kSwKindField && (unsigned)(now - o.born) < (unsigned)kHoldMs) { o.next = now + kResendMs; continue; }
+            o.on = false; continue;
+        }
         SwObjWire w; std::memset(&w, 0, sizeof w);
         w.key = wkey(); w.slot = o.slot; w.cls = o.cls; w.state = o.state; w.seq = o.seq; w.value = o.value;
         const int sub = o.kind == kSwKindPress ? kSwWorldPress : o.kind == kSwKindKick ? kSwWorldKick : kSwWorldField;
@@ -654,6 +665,19 @@ void settle_word() {
 // Object states (press / kick / field).
 // ---------------------------------------------------------------------------
 void apply_to(Trk &t, char *a, const Watch *w, int state, int value) {
+    // COOPPUZZLE2: remote messages are applied after the actors ran and before this frame's scan, so a field this console
+    // changed in the same frame is already in the read below; taking it as t.last would swallow it and it was never sent
+    // (a pyramid tag touched here in the frame the friend's touch arrived: his top stuck at 3). Send it first. The
+    // receivers merge (the pyramid ORs the gone masks, the shelf takes the bits), so the order is safe.
+    if (g_keep_local && w->kind == kSwKindField && t.valid && t.actor == a) {
+        const int pre = w->read(a);
+        if (pre != t.last) {
+            const int slot = (int)(&t - g_trk);
+            t.last = pre;
+            queue_obj(kSwKindField, slot, (int)t.cls, 0, pre, g_now);
+            if (g_log) std::fprintf(stderr, "[coopsw] keep local %s slot=%d value=%d before a remote %d wall=%lld\n", w->name, slot, pre, value, wall_ms());
+        }
+    }
     if (w->apply(a, state, value)) {
         t.last = w->read(a);
         if (w->kind == kSwKindPress) ++g_st.press_applied; else if (w->kind == kSwKindKick) ++g_st.kick_applied; else ++g_st.field_applied;
@@ -1245,6 +1269,7 @@ void register_handlers() {
 }
 
 void on_frame(unsigned now) {
+    g_now = now;
     read_env();
     if (!coop_world_active()) return;
     register_handlers();
