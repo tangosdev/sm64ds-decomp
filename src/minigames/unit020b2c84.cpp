@@ -111,13 +111,20 @@
 #include "MgBanner.h"
 
 struct M { int _00, _01, _10, _11; };
-struct SlotCharNos { int v[3]; };
+struct SlotCharNos {
+    int v[3];
+};
 /* The banner files: 29 graphics, loaded together. An MgBanner whose mFileIndex
    is MG_BANNER_FILE_NUM shows nothing. */
 #define MG_BANNER_FILE_NUM 29
 
-struct Entry { int file; int *sprites; };
-struct EntryTable { Entry e[MG_BANNER_FILE_NUM]; };
+struct Entry {
+    int file;
+    int *sprites;
+};
+struct EntryTable {
+    Entry e[MG_BANNER_FILE_NUM];
+};
 struct OamAttr;
 
 
@@ -326,7 +333,8 @@ extern "C" void Banner_Free(MgBanner *e) {
 }
 
 extern "C" void Banner_Draw(MgBanner *e) {
-    if (e->mFileIndex == MG_BANNER_FILE_NUM) return;
+    if (e->mFileIndex == MG_BANNER_FILE_NUM)
+        return;
     if (e->mRender != 0) {
         (e->*(e->mRender))();
         return;
@@ -335,7 +343,8 @@ extern "C" void Banner_Draw(MgBanner *e) {
 }
 
 extern "C" void Banner_Update(MgBanner *e) {
-    if (e->mFileIndex == MG_BANNER_FILE_NUM) return;
+    if (e->mFileIndex == MG_BANNER_FILE_NUM)
+        return;
     if (e->mBehavior == 0) return;
     (e->*(e->mBehavior))();
 }
@@ -426,11 +435,8 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
 
     {
         SlotCharNos charNo = sMgBannerGfxSlotCharNo;
-        e->mOamCount = Mg_CopySpriteList(
-            sMgBannerSprites[e->mFileIndex],
-            e->mOam,
-            charNo.v[e->mGfxSlot],
-            e->mFileIndex);
+        e->mOamCount = Mg_CopySpriteList(sMgBannerSprites[e->mFileIndex], e->mOam,
+                                         charNo.v[e->mGfxSlot], e->mFileIndex);
     }
 
     if (sBannerSetupTable[e->mStyle])
@@ -494,8 +500,7 @@ extern "C" void Banner_DrawSpin(MgBanner *e) {
         m._11 = fc;
         m._01 = fs;
         m._10 = -fs;
-        Mg_RenderSpriteOnMtx(oam, e->mX, e->mY,
-                            e->mScreen, e->mPriority, &m);
+        Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
         angle = (u16)(angle + 0x4000);
         flag = oam->attr3;
         oam++;
@@ -546,8 +551,7 @@ extern "C" void Banner_DrawWave(MgBanner *e) {
             M m = {0};
             m._00 = v;
             m._11 = v;
-            Mg_RenderSpriteOnMtx(oam, e->mX, e->mY,
-                                e->mScreen, e->mPriority, &m);
+            Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
         }
         t += 0x1000;
         flag = oam->attr3;
@@ -656,8 +660,7 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
                 m._00 = v;
                 m._11 = v;
                 do {
-                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m);
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
                     flag = oam->attr3;
                     oam++;
                 } while (flag != 0xffff);
@@ -675,8 +678,7 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
                 m2._11 = fc;
                 m2._01 = fs;
                 m2._10 = -fs;
-                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY,
-                                    e->mScreen, e->mPriority, &m2);
+                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
                 flag = oam->attr3;
                 oam++;
@@ -704,8 +706,7 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
                 m._00 = v;
                 m._11 = v;
                 do {
-                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m);
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
                     flag = oam->attr3;
                     oam++;
                 } while (flag != 0xffff);
@@ -723,8 +724,7 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
                 m2._11 = fc;
                 m2._01 = fs;
                 m2._10 = -fs;
-                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY,
-                                    e->mScreen, e->mPriority, &m2);
+                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
                 flag = oam->attr3;
                 oam++;
@@ -761,9 +761,7 @@ extern "C" void Banner_DrawPressed(MgBanner *e) {
     m._00 = v;
     m._11 = v;
     do {
-        Mg_RenderSpriteOnMtx(oam,
-            e->mX, e->mY,
-            e->mScreen, e->mPriority, &m);
+        Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
         flag = oam->attr3;
         oam++;
     } while (flag != 0xffff);
@@ -1007,14 +1005,20 @@ MgBanner::MgBanner() {
    sBannerUpdateTable, render sBannerDrawTable), and the words the
    29-entry file-id table copies. */
 extern "C" {
-extern ElemFn data_02086b58;  /* __ptmf_null's address: the null member pointer */
-extern ElemFn pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom, pmf_Banner_SetupSlideFromLeft, pmf_Banner_SetupSlideFromRight;
-extern ElemFn pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom, pmf_Banner_SetupZoomBurst_2;
-extern ElemFn pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop, pmf_Banner_SetupNone;
-extern ElemFn pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom, pmf_Banner_UpdateSlideFromLeft, pmf_Banner_UpdateSlideFromRight;
-extern ElemFn pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3, pmf_Banner_UpdateZoom;
+extern ElemFn data_02086b58; /* __ptmf_null's address: the null member pointer */
+extern ElemFn pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom,
+    pmf_Banner_SetupSlideFromLeft, pmf_Banner_SetupSlideFromRight;
+extern ElemFn pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom,
+    pmf_Banner_SetupZoomBurst_2;
+extern ElemFn pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop,
+    pmf_Banner_SetupNone;
+extern ElemFn pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom,
+    pmf_Banner_UpdateSlideFromLeft, pmf_Banner_UpdateSlideFromRight;
+extern ElemFn pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3,
+    pmf_Banner_UpdateZoom;
 extern ElemFn pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop;
-extern ElemFn pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA;
+extern ElemFn pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2,
+    pmf_Banner_DrawZoomA;
 extern ElemFn pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, pmf_Banner_DrawLevelNumber;
 extern int sMgMsgRetrySpritesEnglish, sMgMsgQuitSpritesEnglish, sMgMsgLevelClearSpritesEnglish;
 extern int sMgMsgGoalSpritesEnglish, sMgMsgHiScoreSpritesEnglish, sMgMsgPerfectSpritesEnglish,
@@ -1039,37 +1043,60 @@ MgBanner gMgBanners[3];
 }
 
 extern "C" {
-int sMgBannerSprites[MG_BANNER_FILE_NUM] = {sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
-                            sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,
-                            sMgMsgGoalSpritesEnglish,      sMgMsgHiScoreSpritesEnglish,
-                            sMgMsgPerfectSpritesEnglish,   sMgMsgResultHiScoreSpritesEnglish,
-                            sMgMsgGameOverSpritesEnglish,  sMgMsgYouWinSpritesEnglish,
-                            sMgMsgTooBadSpritesEnglish,    sMgMsgDrawSpritesEnglish,
-                            sMgMsgStartSpritesEnglish,     sMgMsgLevelSpritesEnglish,
-                            sMgMsgTimeOverSpritesEnglish,  sMgMsgWhereSpritesEnglish,
-                            sMgMsgLikeSpritesEnglish,      sMgMsgHateSpritesEnglish,
-                            sMgMsgLoveSpritesEnglish,      sMgMsgDislikeSpritesEnglish,
-                            sMgMsgEsperSpritesEnglish,     sMgMsgSuperEsperSpritesEnglish,
-                            sMgMsgNoPairSpritesEnglish,    sMgMsgOnePairSpritesEnglish,
-                            sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
-                            sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
-                            sMgMsgFiveCardSpritesEnglish};
-ElemFn sBannerSetupTable[13] = {
-    data_02086b58, pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom, pmf_Banner_SetupSlideFromLeft,
-    pmf_Banner_SetupSlideFromRight, pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom,
-    pmf_Banner_SetupZoomBurst_2, pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop,
-    pmf_Banner_SetupNone
-};
-ElemFn sBannerUpdateTable[13] = {
-    data_02086b58, pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom, pmf_Banner_UpdateSlideFromLeft,
-    pmf_Banner_UpdateSlideFromRight, pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3,
-    pmf_Banner_UpdateZoom, pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop,
-    data_02086b58
-};
-ElemFn sBannerDrawTable[13] = {
-    data_02086b58, data_02086b58, data_02086b58, data_02086b58, data_02086b58,
-    pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA,
-    pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, data_02086b58, pmf_Banner_DrawLevelNumber
-};
+int sMgBannerSprites[MG_BANNER_FILE_NUM] = {
+    sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
+    sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,
+    sMgMsgGoalSpritesEnglish,      sMgMsgHiScoreSpritesEnglish,
+    sMgMsgPerfectSpritesEnglish,   sMgMsgResultHiScoreSpritesEnglish,
+    sMgMsgGameOverSpritesEnglish,  sMgMsgYouWinSpritesEnglish,
+    sMgMsgTooBadSpritesEnglish,    sMgMsgDrawSpritesEnglish,
+    sMgMsgStartSpritesEnglish,     sMgMsgLevelSpritesEnglish,
+    sMgMsgTimeOverSpritesEnglish,  sMgMsgWhereSpritesEnglish,
+    sMgMsgLikeSpritesEnglish,      sMgMsgHateSpritesEnglish,
+    sMgMsgLoveSpritesEnglish,      sMgMsgDislikeSpritesEnglish,
+    sMgMsgEsperSpritesEnglish,     sMgMsgSuperEsperSpritesEnglish,
+    sMgMsgNoPairSpritesEnglish,    sMgMsgOnePairSpritesEnglish,
+    sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
+    sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
+    sMgMsgFiveCardSpritesEnglish};
+ElemFn sBannerSetupTable[13] = {data_02086b58,
+                                pmf_Banner_SetupSlideFromTop,
+                                pmf_Banner_SetupSlideFromBottom,
+                                pmf_Banner_SetupSlideFromLeft,
+                                pmf_Banner_SetupSlideFromRight,
+                                pmf_Banner_SetupZoomBurst,
+                                pmf_Banner_SetupPopSpin,
+                                pmf_Banner_SetupZoom,
+                                pmf_Banner_SetupZoomBurst_2,
+                                pmf_Banner_SetupPopSpin_2,
+                                pmf_Banner_SetupFall,
+                                pmf_Banner_SetupDrop,
+                                pmf_Banner_SetupNone};
+ElemFn sBannerUpdateTable[13] = {data_02086b58,
+                                 pmf_Banner_UpdateSlideFromTop,
+                                 pmf_Banner_UpdateSlideFromBottom,
+                                 pmf_Banner_UpdateSlideFromLeft,
+                                 pmf_Banner_UpdateSlideFromRight,
+                                 pmf_Banner_UpdateZoom_2,
+                                 pmf_Banner_UpdatePopSpin_2,
+                                 pmf_Banner_UpdateZoom_3,
+                                 pmf_Banner_UpdateZoom,
+                                 pmf_Banner_UpdatePopSpin,
+                                 pmf_Banner_UpdateFall,
+                                 pmf_Banner_UpdateDrop,
+                                 data_02086b58};
+ElemFn sBannerDrawTable[13] = {data_02086b58,
+                               data_02086b58,
+                               data_02086b58,
+                               data_02086b58,
+                               data_02086b58,
+                               pmf_Banner_DrawZoomB,
+                               pmf_Banner_DrawPopSpinB,
+                               pmf_Banner_DrawZoomB_2,
+                               pmf_Banner_DrawZoomA,
+                               pmf_Banner_DrawPopSpinA,
+                               pmf_Banner_DrawSqueeze,
+                               data_02086b58,
+                               pmf_Banner_DrawLevelNumber};
 void *sMgBannerFiles[MG_BANNER_FILE_NUM];
 }
