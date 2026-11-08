@@ -56,6 +56,7 @@ enum dScMgCoin_c_AssetId {
 #include "dScMgCoin_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "GX.h"
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
@@ -110,7 +111,6 @@ extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern void Mg_DrawBigNumber(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern const int sCoinSparkleSpawnOffsets[];
 extern const u16 sCoinSparkleAngles[];
-extern s16 data_02082214[];
 extern int sCoinPopupSprites;
 extern const int sCoinPopupY[];
 extern OamAttr **sCoinScorePlayerSprites[];
@@ -215,7 +215,10 @@ dScMgCoin_c::~dScMgCoin_c() {}
    straight into vec[], in slot order, after the icon index is read. A named
    rx/ry pair leaves the two 64-bit products in the wrong order or the sine
    base in the wrong register, and reading the icon index any later costs
-   fifteen words. The pragma is part of that match. */
+   fifteen words. The pragma is part of that match. The table stays
+   hand-indexed here: through FX_CosIdx / FX_SinIdx the two products take
+   swapped registers (21 DIFF in every declaration order of vec, the icon
+   index and fx16 or int locals, with or without the pragma). */
 #pragma push
 #pragma opt_propagation off
 void dScMgCoin_c::Bag_Draw() {
@@ -547,10 +550,8 @@ void dScMgCoin_c::Sparkle_Burst(int coinIndex) {
             mSparkles[i].x = mCoins[coinIndex].x + (sCoinSparkleSpawnOffsets[i * 2] << 12);
             mSparkles[i].y = mCoins[coinIndex].y + (sCoinSparkleSpawnOffsets[i * 2 + 1] << 12);
             {
-                u16 ang = sCoinSparkleAngles[i];
-                int sine = (ang >> 4) * 2;
-                mSparkles[i].vx = FX_MUL(data_02082214[sine + 1], 0x2000);
-                mSparkles[i].vy = FX_MUL(data_02082214[sine], 0x2000);
+                mSparkles[i].vx = FX_MUL(FX_CosIdx(sCoinSparkleAngles[i] >> 4), 0x2000);
+                mSparkles[i].vy = FX_MUL(FX_SinIdx(sCoinSparkleAngles[i] >> 4), 0x2000);
             }
             mSparkles[i].life = 0x18;
         }

@@ -55,8 +55,8 @@
  * - InitResources keeps two launders: the volatile pun on mVsTimer in the
  *   gCurrentSublevel == 0x2B branch (a plain member store emits different code)
  *   and the `idx ? table : table` conditional over a (void* volatile*) cast of
- *   data_0209f394 (folding it changes where the player-health read lands).
- * - data_0209f2d8 is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
+ *   gPlayers (folding it changes where the player-health read lands).
+ * - gGameMode is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
  *   dMap_c draws its VS icons for.
  */
 
@@ -107,13 +107,13 @@ extern struct OamAttr data_ov002_0210c6c0;
 extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
                                 int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
-extern unsigned char data_0209f250;
+extern unsigned char gLocalPlayerId;
 extern unsigned char gMeterCounterSlideState;
 extern signed char gNumLives;
 struct OamAttr;
-extern daPly_c *data_0209f394[];
+extern daPly_c *gPlayers[];
 extern u8 gZoomButtonActiveTimer;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
 extern u32 gNextActorUpdateMask;
@@ -122,7 +122,7 @@ extern signed char gNumStageStars[];
 /* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
 * so can never be the module this reaches. */
 extern int data_ov001_020abac8[];
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern unsigned char gPrevReturnState;
 extern unsigned char gNewStarCollected;
 extern unsigned char gLevelClearStep;
@@ -159,7 +159,7 @@ extern struct OamAttr data_ov002_0210d4f0;
 extern struct OamAttr data_ov002_0210c690;
 extern SaveBlock data_0209caa0;
 extern unsigned char gShowTouchScreenArrows;
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *handle);
@@ -169,7 +169,7 @@ void func_0203da4c(void);
 /* Mode 1 is versus mode. This int-returning predicate is what makes the ROM
    materialize 0/1 before testing it. */
 static inline int IsVsMode(void) {
-    return data_0209f2d8 == 1;
+    return gGameMode == 1;
 }
 
 /* 0 on the off frames of the blink after a new star is collected
@@ -323,10 +323,10 @@ int dMeter_c::InitResources() {
     data_ov002_02111188 = 0xB4;
     gShowRaceTimer = 0;
     {
-        u8 idx = *(volatile u8 *)&data_0209f250;
-        gMeterShownHealth[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
-                                                 : (void *volatile *)data_0209f394)[idx]))
-                                   ->GetHealth();
+        u8 idx = *(volatile u8 *)&gLocalPlayerId;
+        gMeterShownHealth[0] =
+            ((daPly_c *)((idx ? (void *volatile *)gPlayers : (void *volatile *)gPlayers)[idx]))
+                ->GetHealth();
     }
     if (gMeterShownHealth[0] == 8) {
         mHealthMeterY = -0x18;
@@ -385,7 +385,7 @@ int dMeter_c::Behavior() {
     int vs;
 
     /* vs is computed only once the first test passes and is reused below. */
-    if (data_0209f5bc->IsAtStart() == 0 ||
+    if (gSceneFader->IsAtStart() == 0 ||
         ((vs = IsVsMode()) == 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {
@@ -540,8 +540,8 @@ s32 dMeter_c::CleanupResources() {
 
 /* ROM ordinal 13 -- dMeter_c::UpdateHealthMeter(), 0x020fd218, size 0x3bc */
 void dMeter_c::UpdateHealthMeter() {
-    int chr = data_0209f250;
-    daPly_c *player = data_0209f394[chr];
+    int chr = gLocalPlayerId;
+    daPly_c *player = gPlayers[chr];
     unsigned int health = (gPlayerHealth[chr] >> 8) & 0xff;
     if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) != 0)
         return;
@@ -662,7 +662,7 @@ void dMeter_c::UpdateHealthMeter() {
 
 /* ROM ordinal 12 -- dMeter_c::RenderHealthMeter(), 0x020fcfec, size 0x22c */
 void dMeter_c::RenderHealthMeter() {
-    if (data_0209f394[data_0209f250]->IsInsideOfCannon())
+    if (gPlayers[gLocalPlayerId]->IsInsideOfCannon())
         return;
 
     if (GetOwnerLanguage() == 5) {
@@ -790,7 +790,7 @@ void dMeter_c::RenderVsTimer() {
 void dMeter_c::RenderCoinCount() {
     if (IsVsMode()) {
         int sb = 0xf0;
-        CalculateDigits(gNumCoins[data_0209f250]);
+        CalculateDigits(gNumCoins[gLocalPlayerId]);
         for (int i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -805,7 +805,7 @@ void dMeter_c::RenderCoinCount() {
             return;
         int i;
         int sb = 0xf0;
-        CalculateDigits(gNumCoins[data_0209f250]);
+        CalculateDigits(gNumCoins[gLocalPlayerId]);
         for (i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -821,7 +821,7 @@ void dMeter_c::RenderCoinCount() {
 /* ROM ordinal 8 -- dMeter_c::RenderRedCoins(), 0x020fc77c, size 0xa0 */
 /* Draws one sprite per red coin collected so far, stepping 0xb across from
  * x=0x10. Both the count (gNumRedCoins) and the row selector (gNumStageStars)
- * are indexed by the same data_0209f250.
+ * are indexed by the same gLocalPlayerId.
  *
  * That row selector is the interesting bit: it is the SAME byte
  * dMeter_c::RenderSilverStars reads as its star COUNT. Non-zero there means silver
@@ -836,7 +836,7 @@ void dMeter_c::RenderCoinCount() {
  * passed. Byte-free.
  */
 void dMeter_c::RenderRedCoins() {
-    int idx = data_0209f250;
+    int idx = gLocalPlayerId;
     int flag = gNumStageStars[idx];
     int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
@@ -853,7 +853,7 @@ void dMeter_c::RenderRedCoins() {
  * Three paths, and what differs between them is only WHICH count is shown and
  * on WHICH screen:
  *
- *   data_0209f2d8 == 1   a per-slot count out of gNumStageStars, main screen
+ *   gGameMode == 1       a per-slot count out of gNumStageStars, main screen
  *   the middle path      NumStars(), main screen, but only while
  *                        gMeterCounterSlideState has the counter sliding onto,
  *                        resting on or sliding off the main screen, and suppressed
@@ -873,7 +873,7 @@ void dMeter_c::RenderStarCount() {
     int i;
 
     if (IsVsMode()) {
-        CalculateDigits((unsigned short)gNumStageStars[data_0209f250]);
+        CalculateDigits((unsigned short)gNumStageStars[gLocalPlayerId]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
                 OAM::Render(false, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
@@ -919,7 +919,7 @@ void dMeter_c::RenderStarCount() {
 /* ROM ordinal 6 -- dMeter_c::RenderSilverStars(), 0x020fc3c4, size 0x94 */
 /* Draws one sprite per silver star collected, in a row starting at x=0x10 and
  * stepping 0x11 across at y=0xa. The count comes from gNumStageStars indexed by
- * data_0209f250 -- the same byte dMeter_c::RenderRedCoins reads, where a non-zero
+ * gLocalPlayerId -- the same byte dMeter_c::RenderRedCoins reads, where a non-zero
  * value instead pushes the red-coin row from y=0xa down to y=0x1c. So this row
  * and that one share a slot, and the red coins move when silver stars occupy it.
  *
@@ -930,7 +930,7 @@ void dMeter_c::RenderStarCount() {
  */
 void dMeter_c::RenderSilverStars() {
     int sl = 0;
-    unsigned short n = (unsigned short)(short)gNumStageStars[data_0209f250];
+    unsigned short n = (unsigned short)(short)gNumStageStars[gLocalPlayerId];
     int sb;
     if (sl < n) {
         sb = 0x10;
@@ -948,7 +948,7 @@ void dMeter_c::RenderSilverStars() {
 void dMeter_c::RenderCameraButtons() {
     int idx = gActivePlayerSlot;
     u8 mode = data_0209f498[idx].mode;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)
@@ -1010,8 +1010,8 @@ void dMeter_c::RenderCameraButtons() {
 
 /* ROM ordinal 4 -- dMeter_c::RenderLifeCount(), 0x020fbe38, size 0x214 */
 void dMeter_c::RenderLifeCount() {
-    unsigned char idx = data_0209f250;
-    daPly_c *player = data_0209f394[idx];
+    unsigned char idx = gLocalPlayerId;
+    daPly_c *player = gPlayers[idx];
     unsigned char state = gMeterCounterSlideState;
 
     if (state >= 3 && state < 6) {

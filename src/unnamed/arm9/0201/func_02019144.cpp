@@ -6,7 +6,7 @@ extern "C" {
 
 typedef volatile unsigned int vu32;
 
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 extern short gBg0HOffset;
@@ -29,7 +29,7 @@ extern short gSubBg3VOffset;
 void func_02055454(int v);
 
 /* The VBlank IRQ's display commit (IRQ2.cpp). The scene's GraphCallback2
-   (data_0209d4a8) can skip it by returning 0. Otherwise flush and load
+   (gGraphCallback) can skip it by returning 0. Otherwise flush and load
    OAM, put the layer enables (DISPCNT bits 8-12) from gMainScreenLayers on
    the main screen and gSubScreenLayers on the sub screen, and write both
    screens' BG scroll registers from their shadow words (each H/V pair is
@@ -38,7 +38,7 @@ void func_02055454(int v);
    G3X_SetHOffset (func_02055454) instead. */
 void func_02019144(void)
 {
-    dGraph_c::callback_c *callback = data_0209d4a8;
+    dGraph_c::callback_c *callback = gGraphCallback;
     if (callback != 0) {
         if (callback->GraphCallback2() == 0)
             return;

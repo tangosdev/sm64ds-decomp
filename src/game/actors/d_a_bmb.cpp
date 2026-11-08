@@ -118,9 +118,8 @@ void  func_ov102_0214b3b8(void *c);
 int func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
 
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
-extern unsigned char data_0209f2d8;
-
+extern unsigned char gCurrentStarId;
+extern unsigned char gGameMode;
 }
 
 /* ==========================================================================
@@ -293,7 +292,7 @@ int daBmb_c::Behavior()
             }
 
             UpdatePos(&mdCc_c);
-            if (gCurrentSublevel == 6 && data_0209f220 == 3) {
+            if (gCurrentSublevel == 6 && gCurrentStarId == 3) {
                 if (mHorzSpeed == 0x5000) {
                     UpdateWMClsn(mWithMeshClsn, 3);
                 } else {
@@ -696,7 +695,7 @@ void func_ov102_0214baa0(char *raw)
  * mState arm 5 (COINED NAME -- ov102 carries this address and no identifier;
  * func_ov102_0214b03c switching on mState is what proves the index): the dormant arm, which func_ov102_0214baa0 puts the actor into after clearing
  * mShouldRender: once the camera player is at least 0x7d0000 away -- or the actor is
- * off-camera and data_0209f2d8 is 1 -- it runs func_ov102_0214c0b8, sets mFlags
+ * off-camera and gGameMode is 1 -- it runs func_ov102_0214c0b8, sets mFlags
  * 0x10000001 and turns rendering back on.
  * ======================================================================== */
 
@@ -705,7 +704,7 @@ void daBmb_c::State5()
     if (DistToCPlayer() < 0x7d0000)
         return;
     if ((mFlags & 8) == 0) {
-        int b = (data_0209f2d8 == 1);
+        int b = (gGameMode == 1);
         if (b == 0)
             return;
     }
