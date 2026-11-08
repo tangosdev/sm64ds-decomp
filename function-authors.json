@@ -44627,35 +44627,35 @@
     },
     "ov100:0x02141fb0": {
       "author": "tangosdev",
-      "name": "func_ov100_02141fb0"
+      "name": "_ZN7daIbl_c12CheckContactEv"
     },
     "ov100:0x02142130": {
       "author": "tangosdev",
-      "name": "func_ov100_02142130"
+      "name": "_ZN7daIbl_c18UpdateWallAndFloorEv"
     },
     "ov100:0x02142264": {
       "author": "tangosdev",
-      "name": "func_ov100_02142264"
+      "name": "_ZN7daIbl_c17UpdateModelMatrixEv"
     },
     "ov100:0x0214233c": {
       "author": "lunavyqo",
-      "name": "func_ov100_0214233c"
+      "name": "_ZN7daIbl_c11AdvancePathEv"
     },
     "ov100:0x021424c0": {
       "author": "ruspecial",
-      "name": "func_ov100_021424c0"
+      "name": "_ZN7daIbl_c12PathBehaviorEv"
     },
     "ov100:0x0214272c": {
       "author": "tangosdev",
-      "name": "func_ov100_0214272c"
+      "name": "_ZN7daIbl_c15RollOffBehaviorEv"
     },
     "ov100:0x02142918": {
       "author": "tangosdev",
-      "name": "func_ov100_02142918"
+      "name": "_ZN7daIbl_c16FreeRollBehaviorEv"
     },
     "ov100:0x02142b90": {
       "author": "tangosdev",
-      "name": "func_ov100_02142b90"
+      "name": "_ZN7daIbl_c15SpawnerBehaviorEv"
     },
     "ov100:0x02142d1c": {
       "author": "andrewboudreau",
