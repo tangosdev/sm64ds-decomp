@@ -93,11 +93,11 @@ OamAttr *sMgSparkleSprites[16];
 
 extern "C" {
 extern void *sMgWorkBuffer;
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 void Mg_UpdateMenu(char *c);
 void Banner_Update(MgBanner *e);
 void Mg_UpdateFx(MgFx *c);
-extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
+extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern unsigned short data_020a0e5a[];
 extern int data_0208ee44;
 extern void Mg_CommitRecords(void);
@@ -2187,7 +2187,7 @@ int dScMgBase_c::BeforeBehavior()
     if (dScene_c::BeforeBehavior() == 0)
         return 0;
 
-    if (data_0209f5bc->IsAtStart()) {
+    if (gSceneFader->IsAtStart()) {
         mode = gActivePlayerSlot;
         flags = data_020a0e5a[mode * 2];
         if ((flags & 8) || (flags & 4) || (flags & 1) || (flags & 2)) {
@@ -2234,7 +2234,7 @@ int dScMgBase_c::BeforeBehavior()
     }
 
     if (mRunDuringFade == 0) {
-        if (data_0209f5bc->IsAtStart() == 0)
+        if (gSceneFader->IsAtStart() == 0)
             return 0;
     }
 
@@ -2252,7 +2252,7 @@ void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
     if (vfSuccess == 2) {
         if (gMgMenuRow.ownRecords == 0)
             Mg_CommitRecords();
-        data_0209d4a8 = 0;
+        gGraphCallback = 0;
         sMgGraphCallback.mScene = 0;
         FreeGfxSlotsById(0x1d);
         if (sMgWorkBuffer != 0) {
@@ -3342,7 +3342,7 @@ extern "C" {
    GetGameLanguage into sMgStockCounterFiles) is decompressed into BOTH engines'
    BG char VRAM at 0x06404000 and 0x06604000, OBJ palette file 0xc3 is loaded
    into both, and the scene object is published into the global registry --
-   sMgGraphCallback.mScene = this, then data_0209d4a8 points at that registry.
+   sMgGraphCallback.mScene = this, then gGraphCallback points at that registry.
    The object fields it touches are its own: +0x68 cleared and +0x6c set to -1.
 
    WHEN IT RUNS.  First out of dScMgBase_c::BeforeInitResources
@@ -3373,7 +3373,7 @@ extern int sMgTopScreenYOffset;
 extern u8 gMainScreenLayers;
 extern int sMgStockCounterFiles[];
 extern u8 gSubScreenLayers;
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
 }
@@ -3386,7 +3386,7 @@ void dScMgBase_c::InitEngines() {
     using s20b265c::data_0208ee44;
     using s20b265c::gSubScreenLayers;
     using s20b265c::gMainScreenLayers;
-    using s20b265c::data_0209d4a8;
+    using s20b265c::gGraphCallback;
     using s20b265c::sMgStockCounterFiles;
     using s20b265c::sMgTopScreenYOffset;
     using s20b265c::Ov004_LoadFile;
@@ -3429,7 +3429,7 @@ void dScMgBase_c::InitEngines() {
     Ov004_Deallocate(p);
     gSubScreenLayers = 0x10;
     sMgGraphCallback.mScene = this;
-    data_0209d4a8 = &sMgGraphCallback;
+    gGraphCallback = &sMgGraphCallback;
     Mg_ResetOverlays();
     FreeGfxSlotsById(0x1d);
     data_0208ee44 = 1;

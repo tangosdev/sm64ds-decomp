@@ -96,13 +96,13 @@ void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s32 data_0208ee44;
 
 /* The scene manager Behavior polls through its slot 5. */
-extern "C" dFdBrightness_c *data_0209f5bc;
+extern "C" dFdBrightness_c *gSceneFader;
 
 #include "dEntObj_c.h"
 #include "OAM.h"
@@ -129,7 +129,7 @@ void func_ov075_02116028(dScEntry_c::graphCallback_c *, int);
 /* The entry scene's one global graph callback, ov075 .bss 0x0211d71c. The
    generated decl_common.h catch-all declares that storage `void *`, so its real
    type is spelled once here instead of at each of the eighteen call sites. */
-#define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&data_ov075_0211d71c)
+#define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&sEntryGraphCallback)
 
 extern "C" {
 void func_020338b0(int, int, short, int);
@@ -174,7 +174,7 @@ u8 func_020200b8(void);
 void func_02020078(u32 flags);
 void func_0202029c(u32 idx);
 extern s8 data_ov075_0211c6ec[];
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern u8 data_0209b2e4;
 }
 
@@ -218,7 +218,7 @@ extern int data_ov075_0211cc4c;
 extern int data_ov075_0211cc54;
 extern int data_ov075_0211cc5c;
 extern void *data_0208a0e4[];
-extern fBase_c *data_0209f5c0;
+extern fBase_c *gCurrentScene;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
@@ -408,8 +408,8 @@ s32 dScEntry_c::InitResultResources() {
     char *sub;
     int n;
 
-    *(volatile u16 *)0x400000a = (u16)((*(volatile u16 *)0x400000a & 0x43) | 0x208);
-    *(volatile u16 *)0x400000a = (u16)(*(volatile u16 *)0x400000a & ~0x40);
+    REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
+    REG_BG1CNT = (u16)(REG_BG1CNT & ~0x40);
 
     LoadCompressedFileAt(0x8413, G2::GetBG2CharPtr());
     tmp = LoadFile(0x8414);
@@ -444,7 +444,7 @@ s32 dScEntry_c::InitResultResources() {
     GX::LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
-    *(volatile u16 *)0x400000a = (u16)((*(volatile u16 *)0x400000a & ~3) | 2);
+    REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
     SetBg1Offset(0, 0);
     sub = (char *)0x6600000;
     LoadCompressedFileAt(0x8402, sub);
@@ -488,7 +488,7 @@ s32 dScEntry_c::InitResultResources() {
     }
 
     SetSteps(&data_ov075_0211d7e0);
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, 1, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, gCurrentScene, 1, 0);
     return 1;
 }
 
@@ -534,7 +534,7 @@ s32 dScEntry_c::InitEntryResources() {
         mode = 2;
     }
 
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, mode, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, gCurrentScene, mode, 0);
     return 1;
 }
 
@@ -1403,7 +1403,7 @@ void dScEntry_c::LoadCourseResources(int course) {
     }
     LoadArchive(selectedArchive);
     previousHeap->SetDefault();
-    data_0209f2d8 = 1;
+    gGameMode = 1;
     func_0202deac(data_ov075_0211c6ec[course]);
 }
 
@@ -1887,7 +1887,7 @@ void dScEntry_c::UpdateStepFadeOut() {
 }
 
 void dScEntry_c::EnterStepFadeOut() {
-    *(volatile u16 *)0x4000050 = 0;
+    REG_BLDCNT = 0;
     G2x::SetBlendBrightness((volatile u16 *)0x4001050, 0x1d, 0);
     mFadeBrightness = 0;
     mFadeTick = 0;
@@ -1939,7 +1939,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         if (mDisconnectHideMask)
             mRenderStep = 0;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
-        *(volatile u16 *)0x4001050 = 0;
+        REG_DB_BLDCNT = 0;
         Sound::StopLoadedMusic_Layer1(4);
         func_02012790(0x123);
         mEntObj->mSuspended = 1;
@@ -2007,7 +2007,7 @@ s32 dScEntry_c::CleanupResources() {
         Deallocate(data_0209b2e8);
         data_0209b2e8 = (void *)0;
     }
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     Sound::UnsetPlayerVoiceGroup();
     CleanCommonModelDataArr();
     return 1;
@@ -2040,7 +2040,7 @@ s32 dScEntry_c::Behavior() {
         }
     }
 
-    if (data_0209f5bc->IsAtStart() == 0 || mIsFading != 0)
+    if (gSceneFader->IsAtStart() == 0 || mIsFading != 0)
         return 1;
 
     if (data_0209fc68 != 0) {
@@ -2141,7 +2141,7 @@ s32 dScEntry_c::InitResources() {
     }
 
     func_ov075_0211601c(ENTRY_GRAPH_CALLBACK, this, 1);
-    data_0209d4a8 = ENTRY_GRAPH_CALLBACK;
+    gGraphCallback = ENTRY_GRAPH_CALLBACK;
     Sound::LoadInitialGroup(0x2b);
 
     {

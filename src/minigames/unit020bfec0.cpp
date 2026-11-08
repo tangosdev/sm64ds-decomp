@@ -946,10 +946,10 @@ int Presenter_IsAnimDone(void *a) {
 
 namespace s020c2924 {
 extern "C" {
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 void Presenter_ResetPose(char *c) {
     Presenter_PlayIdle(c);
-    if (data_0209f5bc->IsAtEnd() == 0)
+    if (gSceneFader->IsAtEnd() == 0)
         return;
     PRESENTER(c)->mSway[1] = 0;
     PRESENTER(c)->mSway[0] = PRESENTER(c)->mSway[1];
@@ -966,7 +966,7 @@ void Presenter_ResetPose(char *c) {
 namespace s020c2848 {
 extern "C" {
 extern char sPresenterIdleTexAnim[];
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 struct P2 {
     void *a;
     void *b;
@@ -977,7 +977,7 @@ extern P2 pmf_Presenter_StateIdle_2;
 extern "C" void Presenter_PlayIdle(char *c) {
     if (PRESENTER(c)->mFace.file != (BCA_File *)PRESENTER(c)->mWaitAnim.filePtr) {
         int blendFrames = 0;
-        if (data_0209f5bc->IsAtEnd() == 0) {
+        if (gSceneFader->IsAtEnd() == 0) {
             if (PRESENTER(c)->mFace.Finished() == 0 ||
                 PRESENTER(c)->mFace.file == (BCA_File *)PRESENTER(c)->mSurprisedAnim.filePtr) {
                 blendFrames = 8;

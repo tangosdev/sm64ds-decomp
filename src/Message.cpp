@@ -143,12 +143,12 @@ s32 data_0209d74c[0x3c0];
 extern u8 data_0208ee74[];
 extern u8 data_0208f074[];
 extern u8 data_0209f20c;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 extern u8 gCollectedStarId;
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern SaveBlock data_0209caa0;
 extern s32 gRunningKuppaScript;
-extern s8 data_02092110;
+extern s8 gNextSublevel;
 extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
 
@@ -677,7 +677,7 @@ L_r4_else:
         data_0209d6b0 = 0;
         MultiStore_Int(sp8, data_0209d74c, 0xf00);
         data_0209d6b8 = 1;
-        if ((IsStarCollected(arg0, data_0209f220) != 0) || (data_0209f20c != 0)) {
+        if ((IsStarCollected(arg0, gCurrentStarId) != 0) || (data_0209f20c != 0)) {
             Message::AddChar(0xf0);
         } else {
             Message::AddChar(0xf1);
@@ -691,7 +691,7 @@ L_r4_else:
                 data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
             } else {
                 s32 off = arg0 * 7 + 0x1b3;
-                data_0209d6f0 = (u8 *)&data_0209d708[off + data_0209f220];
+                data_0209d6f0 = (u8 *)&data_0209d708[off + gCurrentStarId];
             }
             var_r4 = 0x140;
         } else {
@@ -978,7 +978,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     u16* q;
     int i;
 
-    data_0209d6d4 = (short)(msg + (SublevelToLevel(data_02092110) * 7 + 0x1b4));
+    data_0209d6d4 = (short)(msg + (SublevelToLevel(gNextSublevel) * 7 + 0x1b4));
     data_0209d660 = 0;
     func_0201eaac();
 
@@ -1375,7 +1375,7 @@ extern "C" void func_0201f32c(int arg0)
     } else {
         u32 b0;
         gMsgBoxStyle = 0;
-        b0 = (data_0209f2d8 == 2);
+        b0 = (gGameMode == 2);
         if (b0 == 0) {
             func_02012790(4);
         }
@@ -1390,7 +1390,7 @@ extern "C" void func_0201f32c(int arg0)
     }
     data_0209d6a8 = (u8)((entry->width + 7) / 8);
 
-    f2d8_val = data_0209f2d8;
+    f2d8_val = gGameMode;
     {
         u32 b1 = (f2d8_val == 0);
         if (b1 != 0 && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
@@ -1473,7 +1473,7 @@ extern "C" void func_0201f32c(int arg0)
         }
         var_r8 = (char *)G2::GetBG3ScrPtr() + 0x42;
         {
-            u32 b4 = (data_0209f2d8 == 2);
+            u32 b4 = (gGameMode == 2);
             if (b4 != 0) {
                 SetBg3Offset(0 - gMsgBoxLeft, 8 - gMsgBoxTop);
             } else {
@@ -1557,7 +1557,7 @@ extern "C" int func_0201fb4c(void)
     short v;
     unsigned int b;
     if (data_0209d664 != 0) goto no;
-    b = (data_0209f2d8 == 2);
+    b = (gGameMode == 2);
     if (b != 0) goto no;
     v = data_0209d6d4;
     if (v == 0xcc) goto no;

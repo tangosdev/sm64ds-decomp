@@ -17,8 +17,8 @@
  * deslop leftovers:
  * - Symbols stay func_ov001_020aa* linker names: the cartridge records no
  *   mangled names for this module and callers cross TU boundaries.
- * - data_0209f394 / data_0209f3e8 keep linker names; their ownership and
- *   the player array's type remain outside this reconstruction.
+ * - gPlayers and data_0209f3e8 are arm9 globals this TU does not own;
+ *   the player array's type remains outside this reconstruction.
  * - func_ov001_020aa420 tests mFlags bits 0 and 3 as bitfields; a mask
  *   test on the u8 shrinks the body by 8 bytes. The int* walks in
  *   func_ov001_020aadac are kept as the shard bodies wrote them.
@@ -39,9 +39,9 @@ extern signed char data_02092114;
 extern int data_0209f3e8[];
 /* The daPly_c*[] array. The shards disagreed scalar-vs-array; the array
  * spelling gives the same ldr for both uses ([0] = first element). */
-extern daPly_c *data_0209f394[];
+extern daPly_c *gPlayers[];
 extern unsigned char gShowTouchScreenArrows;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
 
 /* local extern: func_0202a8e0's first parameter is an address the callers
@@ -62,10 +62,10 @@ void func_ov001_020aaa54(void);
 void func_ov001_020aadac(void);
 void func_ov001_020aaf40(void);
 
-/* data_0209f2d8 is 1 in versus mode. This int-returning predicate is what
+/* gGameMode is 1 in versus mode. This int-returning predicate is what
  * makes the ROM materialize 0/1 before testing it. */
 static inline int IsVsMode(void) {
-    return data_0209f2d8 == 1;
+    return gGameMode == 1;
 }
 
 /* Definitions emit in reverse source order. */
@@ -103,7 +103,7 @@ void func_ov001_020aaf40(void)
     }
 
     {
-        daPly_c *pl = data_0209f394[0];
+        daPly_c *pl = gPlayers[0];
         if (pl->HasNoCap() && !pl->IsCollectingCap()) {
             func_ov001_020aadac();
             gCapIconDispatchLocked = 1;
@@ -121,7 +121,7 @@ void func_ov001_020aaf40(void)
 #define LAUNDER_U8_PTR(p) ((unsigned char*)(p))
 
 void func_ov001_020aadac(void) {
-    char* fp = (char *)data_0209f394[0];
+    char *fp = (char *)gPlayers[0];
     int* sl;
     unsigned i1, i2;
 
@@ -176,7 +176,7 @@ void func_ov001_020aaa54(void)
     unsigned sp4;
     int typ;
     int spc;
-    daPly_c *player = data_0209f394[0];
+    daPly_c *player = gPlayers[0];
     int zero = 0;
     int three = 3;
     void* z1 = 0;
@@ -337,7 +337,7 @@ int func_ov001_020aa858(int self, char* a, int b, int d)
     unsigned char k = ((dCapIcon_c *)a)->mIconKind;
     if (k >= 3) return 1;
     if (d != 0) return 0;
-    void* p = data_0209f394[0];
+    void *p = gPlayers[0];
     if (k != 4) {
         if (((daPly_c *)p)->IsCollectingCap())
             return 0;
@@ -355,7 +355,7 @@ int func_ov001_020aa7b8(void* self, char* a)
         return 1;
     int i = 0;
     for (i = 0; i < ((unsigned char *)&data_0208a0e0)[0]; i++) {
-        void* p = data_0209f394[i];
+        void *p = gPlayers[i];
         if (p == 0) continue;
         if (((daPly_c *)p)->IsCollectingCap())
             return 0;
@@ -499,7 +499,7 @@ void func_ov001_020aa420(void) {
 
         cnt = data_0208a0e0;
         for (idx = spC; idx < cnt; idx++) {
-            player = data_0209f394[idx];
+            player = gPlayers[idx];
             if (i == player->param1)
                 break;
             player = 0;

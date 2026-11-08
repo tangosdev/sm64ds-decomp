@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "The soft reset TU: func_0202345c, func_02023498 and func_02023544, .text 0x0202345c..0x02023598, gapless in config/arm9/delinks.txt between func_0202341c and d_s_boot.cpp (dScBoot_c_classInit at 0x02023598).",
-    "arm9 .bss follows .text TU order, and each TU's data objects are ALIGNALL(4) slots sorted by ascending size (notes/mwccarm-codegen.md 6dg), so a size drop marks a TU boundary. 0x0209f1d8..0x0209f1e8 is u8, u8, u8, then a 4-byte pointer. Below it, data_0209ee90 is the 0x348-byte Particle object (a drop to 1 byte at 0x0209f1d8). Above it, data_0209f1e8 is a u8 again (a drop from 4 to 1), d_s_boot's dScBoot_c task handle; the stage TU's run follows it.",
+    "arm9 .bss follows .text TU order, and each TU's data objects are ALIGNALL(4) slots sorted by ascending size (notes/mwccarm-codegen.md 6dg), so a size drop marks a TU boundary. 0x0209f1d8..0x0209f1e8 is u8, u8, u8, then a 4-byte pointer. Below it, data_0209ee90 is the 0x348-byte Particle object (a drop to 1 byte at 0x0209f1d8). Above it, sBootJobDone is a u8 again (a drop from 4 to 1), d_s_boot's dScBoot_c task handle; the stage TU's run follows it.",
     "Readers (config/arm9/relocs.txt and the overlay relocs): 0x0209f1dc is loaded only by func_02023498 (0x02023538), so it is file-local. 0x0209f1d8 is also loaded by the lid-close handler func_02019ac4 (0x02019dd4), func_02030a38 (0x02030a68), func_02030aa4 (0x02030b54) and ov005's MiniGm_SaveIfDirty and dScMiniGm_c::InitResources (0x020bffc4, 0x020c21dc). 0x0209f1e0 by dScene_c::BeforeBehavior (0x0202e5b0) and ov007's dScDSMT_c::InitResources (0x020cc5c8). 0x0209f1e4 by dScene_c::BeforeBehavior (0x0202e5b8) and ResetFadersAndSound (0x0202e6c4). Those three stay global.",
     "Separate objects, not one struct: every reader reaches each at +0 of its own address (its own literal-pool word, none at an offset from a shared base), and a struct of three u8 would pack them into bytes 0..2 of one word, where the ROM gives each a 4-aligned slot."
   ],
@@ -92,7 +92,7 @@
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
     "The four objects are defined here instead of declared extern. The names are coined from what the code does with them (no ROM symbol); the address names data_0209f1d8/dc/e0/e4 are renamed in config/arm9/symbols.txt and at every declaration.",
-    "data_0209f1e8 is left out. It is a u8 behind the size drop and its only readers are dScBoot_c::Behavior and InitResources (0x020059fc, 0x02005d90), so it belongs to the d_s_boot TU.",
+    "sBootJobDone is left out. It is a u8 behind the size drop and its only readers are dScBoot_c::Behavior and InitResources (0x020059fc, 0x02005d90), so it belongs to the d_s_boot TU.",
     "Definition order is pending, combo held, disabled, fader. mwcc gives each object its own .bss section and emits the three u8 in reverse definition order ahead of the pointer, so the raw object already has retail's order (disabled, held, pending, fader); nontextSectionOrder records original == desired and no reorder is applied."
   ],
   "production_mode": "intact-object",

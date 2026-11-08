@@ -84,7 +84,7 @@ extern char data_ov016_02113cac[];
 /* local extern: no shared header declares these. */
 extern "C" {
 /* The camera the shake request goes to (arm9). */
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -165,7 +165,7 @@ s32 daObjKi_Hasira_c::Behavior() {
             Particle::System::NewSimple(0x107, crashPos.x, crashPos.y, crashPos.z);
             dustPos = crashPos;
             LandingDustAt(dustPos, true);
-            data_0209f318->func_0200d8c8(&mPos, 0x5dc000);
+            gCamera->func_0200d8c8(&mPos, 0x5dc000);
             Sound::PlayBank3(0x41, mCamSpacePos);
             MarkForDestruction();
         }

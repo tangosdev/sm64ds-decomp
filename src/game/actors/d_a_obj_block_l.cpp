@@ -15,9 +15,8 @@
  *   header owns that 0xc-stride row yet (ClpsRow is private/clps_row.h).
  * - linkedActor + 0x3b0 is an unnamed byte on the mega character
  *   (actor 0x121); no header names it.
- * - gCurrentSublevel reads as the level ID and data_0209f220 as a star
- *   flag (same pattern in the daObjBk_Botaosi_c TU); neither has a
- *   shared home.
+ * - gCurrentSublevel (the level) and gCurrentStarId (the selected star)
+ *   have no shared home (same pattern in the daObjBk_Botaosi_c TU).
  * - IsStarCollectedInCurLevel is a shared coined helper; naming
  *   belongs at its definition.
  */
@@ -63,7 +62,7 @@ extern BigBrickBlockFileRow data_ov002_02108ab4[];
 extern Vector3 data_ov002_021089e0;
 extern ClpsRow data_ov002_02108ab8[]; /* CLPS blocks,       0xc stride */
 extern s8 gCurrentSublevel;           /* current level */
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 
 /* local extern: dBgW setters and a coined star helper with no shared header. */
 extern "C" {
@@ -376,7 +375,7 @@ int daObjBlockL_c::Behavior() {
  *
  * The two tail cases return 0 -- refuse to spawn: a 0x11 block whose star is
  * already taken when the player is entering level 1, and a 0x2e block above
- * y 0xdac000 in level 7 until star 1 is collected (or when data_0209f220 is 1).
+ * y 0xdac000 in level 7 until star 1 is collected (or when gCurrentStarId is 1).
  *
  * Each actorID test after the switch re-reads actorID through IsActorID; the
  * switch's own copy is not reused, and folding them changes the compare shape.
@@ -452,7 +451,7 @@ int daObjBlockL_c::InitResources() {
     }
 
     if (IsActorID(this, 0x2e) && gCurrentSublevel == 7) {
-        if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
+        if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
             if (mPosY >= 0xdac000)
                 return 0;
         }
