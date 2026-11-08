@@ -279,9 +279,10 @@ void pp_tracker(const Surf &sf, const PauseGeo &g, const PauseFacts *f)
     }
 }
 
-/* CAREER1: THE CAREER PAGE. The tracker's sheet and title plank, then one row per save file: the file, its playtime and its clear time ("--"
-   until the file has beaten the final Bowser). The file being played has the pointer beside it. The rest of the sheet is left for what comes
-   later (achievements): nothing is drawn there. */
+/* CAREER1: THE CAREER PAGE. The tracker's sheet and title plank, then the row of the save file being played: the file, its playtime and its
+   clear time ("--" until the file has beaten the final Bowser). CAREERLOCK1: only that file (it was one row per file with a pointer beside the
+   one being played, which read as a list to pick from; nothing picks here). The rest of the sheet is left for what comes later (achievements):
+   nothing is drawn there. */
 void pp_hms(uint32_t sec, char *out, int cap)
 {
     snprintf(out, (size_t)cap, "%u:%02u:%02u", sec / 3600, sec / 60 % 60, sec % 60);
@@ -311,20 +312,16 @@ void pp_career(const Surf &sf, const PauseGeo &g, const PauseFacts *f, int pin_t
     int yy = y + (int)((110 + 20 + 48) * sc + 0.5);
     const int rowh = (int)(64 * sc + 0.5);
     const int lx = x + (int)(110 * sc);
-    for (int i = 0; i < 3; ++i) {
+    {   /* CAREERLOCK1: the file being played, and no other (none known: its row with "--") */
+        const int i = f->career_cur >= 0 && f->career_cur < 3 ? f->career_cur : -1;
         const int cy = yy + rowh / 2;
-        const int has = (f->career_has >> i) & 1, clr = (f->career_has >> (3 + i)) & 1;
+        const int has = i >= 0 && ((f->career_has >> i) & 1), clr = i >= 0 && ((f->career_has >> (3 + i)) & 1);
         const uint32_t col = has ? PP_BROWN : PP_FADED;
         char name[12], play[24], clear[24];
-        snprintf(name, sizeof name, "File %c", 'A' + i);
+        if (i >= 0) snprintf(name, sizeof name, "File %c", 'A' + i); else snprintf(name, sizeof name, "File");
         if (has) pp_hms(f->career_play[i], play, sizeof play); else snprintf(play, sizeof play, "--");
         if (clr) pp_hms(f->career_clear[i], clear, sizeof clear); else snprintf(clear, sizeof clear, "--");
         const float ne = (float)(33 * sc), ve = (float)(34 * sc);
-        if (i == f->career_cur) {
-            const int ah = (int)(rowh * 0.5 + 0.5), aw = (int)(ah * 24.0 / 34.0 + 0.5);
-            const Piece *ap = arrow_right_piece(aw, ah);
-            if (ap) blit(sf, ap->px, ap->w, ap->h, lx - aw - (int)(16 * sc), cy - ah / 2, 255, 0, 0, 0);
-        }
         ui_text_draw(&sf, (float)lx, cy + ui_text_cap_height(ne) * 0.5f, name, ne, col, 255, 0);
         ui_text_draw(&sf, c1 - ui_text_width(play, ve), cy + ui_text_cap_height(ve) * 0.5f, play, ve, col, 255, 0);
         ui_text_draw(&sf, c2 - ui_text_width(clear, ve), cy + ui_text_cap_height(ve) * 0.5f, clear, ve, clr ? PP_BROWN : PP_FADED, 255, 0);

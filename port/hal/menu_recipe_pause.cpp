@@ -999,8 +999,15 @@ extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int m
        quarter second) LB / RB slid the 4:3 pause to the tracker and the page then opened behind it */
     const int open = settings_page_open() || settings_page_pending();
     unsigned left = edge & (1u | 4u), right = edge & (2u | 8u);       /* LB / Q, RB / E */
-    if (open) { left &= 4u; right &= 8u; }                             /* the settings page's own tabs take LB / RB */
-    if (open && g_wide_now) left = right = 0;                          /* the wide settings column does not slide */
+    /* CAREERLOCK1: while the settings page is up or asked for, nothing slides the pause (LB / RB are the page's own tabs, Q / E and the
+       edge tabs do nothing, at 4:3 as on the wide layout). The page takes input only on the main page at rest (publish_embed), so at 4:3
+       Q / E used to slide it out of sight with the planks and every key then went to a page that saw nothing: the Career page or the
+       tracker in view, the game paused, no way out with the pad. A page up or asked for while the planks are slid away is brought back
+       into view, so it always opens where the player can use it. */
+    if (open) {
+        left = right = 0;
+        if (off_main() && !slide_busy()) slide_home();
+    }
     int act = 0;
     if (left || right) { act = right ? 1 : -1; }
     /* the edge tabs: shown on the main pages (both layouts since CAREER1), hidden while the settings panel is up and in view */
@@ -1025,7 +1032,7 @@ extern "C" int menu_pause_input(unsigned keys, int mvalid, int mx, int my, int m
        the next page comes in from the left; LB, Q and the left tab the mirror, to the page before). 4:3 rings three pages (the planks, the
        tracker, the Career page: RB from the planks is the tracker, as it was), the wide layout two (the main page and the Career page). A press
        while a slide is still running is dropped (slide_busy), not remembered. */
-    if (act && slide_busy()) act = 0;
+    if (act && (slide_busy() || open)) act = 0;          /* CAREERLOCK1: the settings page up: no slide (above) */
     if (act) {
         static const int ring[3] = { PAUSE_PG_MAIN, PAUSE_PG_TRACKER, PAUSE_PG_CAREER };
         static const int ring_w[2] = { PAUSE_PG_MAIN, PAUSE_PG_CAREER };
@@ -1120,6 +1127,9 @@ extern "C" int menu_pause_rom_fallback(void) { return 0; }      /* PAUSEFULL1: w
 extern "C" int menu_pause_active(void) { return g_last_variant != 0; }
 /* 1 while a 4:3 pause slide is in flight: the host stylus / click and the Backspace back key are eaten by their seam (hal/sub_screen.cpp) */
 extern "C" int menu_pause_slide_busy(void) { return slide_busy() || rom_career_eats(); }   /* CAREER1: and the two-screen Career page in view */
+/* CAREERLOCK1: 1 while the pause is slid off its main page (the tracker or the Career page in view, one screen or two) or a slide is
+   running: the plates are not on screen, so hal/settings_page_hooks.cpp arms no Options press (A there only slides back) */
+extern "C" int menu_pause_slid_away(void) { return off_main() || slide_busy() || rom_career_eats(); }
 
 /* CAREER1: THE CAREER PAGE WITH OneScreenMenus OFF. The ROM's own pause is on two screens there (its plates on the touch screen) and no recipe is
    up, so the page is the host's: the Career sheet slides over the upper screen the way it slides in the one-screen pause (the same Slide, a
@@ -1134,7 +1144,7 @@ int g_rc_hover = -1, g_rc_press = -1;
 
 int rom_career_allowed(void)
 {
-    if (hal_menu_live() || g_last_variant != 0 || !menu_pause_pad_ok() || GetOwnerLanguage() > 1 || settings_page_open()) return 0;
+    if (hal_menu_live() || g_last_variant != 0 || !menu_pause_pad_ok() || GetOwnerLanguage() > 1 || settings_page_open() || settings_page_pending()) return 0;   /* CAREERLOCK1: and asked for */
     const unsigned st = data_0209f248;
     return (st == 1 || st == 3) && pause_cursor_live();
 }
