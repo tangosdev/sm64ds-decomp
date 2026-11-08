@@ -7959,7 +7959,7 @@
     "src/engine/collision/d_bg_ch_actr.cpp#_ZN10dBgCh_Actr20UpdateExtraContinousEv": "tangosdev",
     "src/engine/collision/d_bg_ch_actr.cpp#_ZN10dBgCh_Actr22UpdateContinuousNoLavaEv": "andrewboudreau",
     "src/engine/collision/d_bg_ch_actr.cpp#_ZN10dBgCh_Actr16UpdateContinuousEv": "mitch.cairns",
-    "src/engine/collision/d_bg_ch_actr.cpp#func_02036acc": "andrewboudreau",
+    "src/engine/collision/d_bg_ch_actr.cpp#_ZN10dBgCh_Actr27UpdateContinuousExceptSlot0Ev": "andrewboudreau",
     "src/engine/collision/d_bg_ch_actr.cpp#_ZN10dBgCh_Actr22UpdateDiscreteNoLava_2Ev": "andrew",
     "src/engine/collision/d_bg_ch_actr.cpp#_ZN10dBgCh_Actr20UpdateDiscreteNoLavaEv": "ruspecial",
     "src/engine/collision/d_bg_ch_actr.cpp#_ZN10dBgCh_Actr14CommitFloorHitEi": "tangosdev",

@@ -5139,7 +5139,7 @@
     },
     "arm9:0x02036acc": {
       "author": "andrewboudreau",
-      "name": "func_02036acc"
+      "name": "_ZN10dBgCh_Actr27UpdateContinuousExceptSlot0Ev"
     },
     "arm9:0x02036ee4": {
       "author": "andrewboudreau",
@@ -5367,7 +5367,7 @@
     },
     "arm9:0x02037de8": {
       "author": "tangosdev",
-      "name": "func_02037de8"
+      "name": "_ZN11SurfaceInfo8CopyFromERKS_"
     },
     "arm9:0x02037e14": {
       "author": "tangosdev",
@@ -5411,7 +5411,7 @@
     },
     "arm9:0x02037e9c": {
       "author": "tangosdev",
-      "name": "func_02037e9c"
+      "name": "_ZN4CLPS10SetDefaultEv"
     },
     "arm9:0x02037eb0": {
       "author": "tangosdev",
