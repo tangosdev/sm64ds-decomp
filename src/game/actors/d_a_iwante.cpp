@@ -334,7 +334,7 @@ extern CLPS_Block data_ov025_02112cc8;
 extern CLPS_Block data_ov025_02112d48;
 
 /* ---- arm9 data ---- */
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern Matrix4x3 data_020a0e68;
 
 /* ---- arm9 helpers (unmangled ROM names) ---- */
@@ -702,14 +702,14 @@ int daIwante_c::func_ov066_02116a68() {
     return hi;
 }
 
-/* Landing effect. Calls dCamera_c::func_0200d8c8 on the camera (data_0209f318) with the hand's
+/* Landing effect. Calls dCamera_c::func_0200d8c8 on the camera (gCamera) with the hand's
  * position and `strength` (every caller in this file passes 0x7d0000 = 2000.0). Then, with
  * mPosX/Z temporarily moved by 0x80000 (128.0) (X by -128.0 for hand 1, +128.0
  * otherwise; Z by +128.0), it spawns the huge landing dust at that shifted spot
  * and plays SE_LANDING at the object's own cached camera-space position
  * (mCamSpacePosX, which the shift does not change), and restores the position. */
 void daIwante_c::func_ov066_02116ac4(int strength) {
-    data_0209f318->func_0200d8c8(&mPos, strength);
+    gCamera->func_0200d8c8(&mPos, strength);
     Vector3 saved = mPos;
     if (mPartIdx == PART_HAND_1)
         mPosX -= 0x80000;
@@ -2067,7 +2067,7 @@ int daIwante_c::func_ov066_0211903c() {
 
     if (mTimer2) return 1;
 
-    cam = data_0209f318;
+    cam = gCamera;
     if (mSubState == 0) {
         cam->SetFlag_3();
         mTalkPlayer = ClosestPlayer();

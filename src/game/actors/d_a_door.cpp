@@ -250,13 +250,13 @@ extern daDoor_StatePmf data_ov100_02148144;
 
 extern SaveBlock data_0209caa0; /* the live save block (include/SaveBlock.h) */
 /* The camera, and the player array indexed by the current player id. */
-extern dCamera_c *data_0209f318;
-extern unsigned char data_0209f250;
-extern daPly_c *data_0209f394[];
+extern dCamera_c *gCamera;
+extern unsigned char gLocalPlayerId;
+extern daPly_c *gPlayers[];
 /* The current game mode. */
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 /* The next-level id (signed byte). */
-extern signed char data_02092110;
+extern signed char gNextSublevel;
 /* The music and sub-channel volumes, both in Fix12 (0x7f000 = 127.0). */
 extern int gMusicVolume;
 extern int gSubVolume;
@@ -482,13 +482,13 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         arg1->mAreaId = t;
         ChangeArea(t);
         {
-            u32 *p = &data_0209f318->mFlags;
+            u32 *p = &gCamera->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
         }
         func_02012694(param1 == DOOR_ALT_SOUND ? SND_SWING_END_ALT : SND_SWING_END, &mCamSpacePosX);
     } else if (mKeyModelIdx != 0) {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x1c)) != 0) {
-            u32 *p = &data_0209f318->mFlags;
+            u32 *p = &gCamera->mFlags;
             *p &= ~DOOR_CAMERA_FLAGS;
             if (param1 != DOOR_LAST_KEY_MODEL) {
                 Sound::PlayCharVoice(data_0209caa0.file.mCharacter, 0x21, mCamSpacePos);
@@ -498,9 +498,9 @@ int daDoor_c::func_ov100_02144730(daPly_c *arg1) {
         }
     } else {
         if (mModel.WillHitFrame((u16)(mModel.GetFrameCount() - 0x18)) != 0) {
-            if (data_02092110 >= 0)
+            if (gNextSublevel >= 0)
                 mModel.speed = 0;
-            data_0209f318->GoBehindPlayer(data_0209f250);
+            gCamera->GoBehindPlayer(gLocalPlayerId);
         }
     }
     return 1;
@@ -533,7 +533,7 @@ int daDoor_c::func_ov100_02144950(daPly_c *pl, int unused) {
     mModel.currFrame = 0;
     ShowArea((signed char)mAngleX);
     ShowArea((signed char)mAngleZ);
-    data_0209f318->mFlags |= DOOR_CAMERA_FLAGS;
+    gCamera->mFlags |= DOOR_CAMERA_FLAGS;
     func_02012694((param1 == DOOR_ALT_SOUND) ? SND_SWING_START_ALT : SND_SWING_START,
                   &mCamSpacePosX);
     mTimer = 0;
@@ -919,10 +919,10 @@ fail:
 /* The player's position in the door's frame (the offset from the door,
    rotated by minus mAngleY), stored into the door's
    mScaleX/Y/Z, which a door does not use as a scale; returns the player
-   (data_0209f394[data_0209f250], the current one). Was a C source. */
+   (gPlayers[gLocalPlayerId], the current one). Was a C source. */
 daPly_c *daDoor_c::func_ov100_02145370() {
     VecFx32 v;
-    daPly_c *r5 = data_0209f394[data_0209f250];
+    daPly_c *r5 = gPlayers[gLocalPlayerId];
     Vec3_Sub((Vector3 *)&v, (const Vector3 *)&r5->mPosX, (const Vector3 *)&mPosX);
     Vec3_RotateYAndTranslate(&mScaleX, &data_020a0ebc, (short)(-mAngleY), &v);
     return r5;
@@ -1079,7 +1079,7 @@ s32 daDoor_c::InitResources() {
     mModel.SetFile((BMD_File *)f, 1, 1);
 
     /* Only in game mode 0: pick the key-model file (mKeyFile) and load it. */
-    b = data_0209f2d8;
+    b = gGameMode;
     b = b == 0;
     if (b != 0) {
         if (e->starsNeeded > 0) {
@@ -1125,9 +1125,9 @@ s32 daDoor_c::InitResources() {
         mSpeedX = x;
         mVertSpeed = w;
         {
-            unsigned char bi = data_0209f250;
+            unsigned char bi = gLocalPlayerId;
             mSpeedZ = z;
-            r4 = (int)data_0209f394[bi];
+            r4 = (int)gPlayers[bi];
         }
     }
     func_ov100_02145370();

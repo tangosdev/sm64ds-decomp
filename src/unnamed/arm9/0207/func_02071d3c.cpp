@@ -16,6 +16,12 @@ struct S6  { int v[6]; };
 struct S7  { int v[7]; };
 struct S21 { int v[21]; };
 
+/* selfArg: seven words, then the 21 words the walk copies whole. */
+struct ThrowFrame {
+    struct S7 head;
+    struct S21 rest;
+};
+
 struct S72d90 {
     struct S6  p0;
     struct S7  p1;
@@ -69,7 +75,7 @@ u8 *func_02071d3c(void *selfArg, void *srcArg, int *flag) {
     buf.p1.v[5] = self[5];
     buf.p1.v[6] = self[6];
 
-    buf.p2 = *(struct S21 *)((char *)self + 0x1c);
+    buf.p2 = ((struct ThrowFrame *)self)->rest;
 
     state = func_02072d90((struct ActionWalk *)&buf);
 

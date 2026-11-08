@@ -255,7 +255,7 @@ int daPgMthr_c::func_ov018_02112234()
     near = ClosestPlayer();
     func_ov018_02111a48((char *)near);
     UpdatePos(&mdCcAc_c);
-    func_ov018_02111bf0((char *)this, &mWithMeshClsn);
+    func_ov018_02111bf0(&mWithMeshClsn);
     if (mGaveStar == 0 && mHoldingBaby == 0) {
         unsigned int frame = ((unsigned int)mAnmModel.currFrame << 4) >> 16;
         if (frame == 0x10 || frame == 0x25)
@@ -355,7 +355,7 @@ int daPgMthr_c::func_ov018_02111e28()
     ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
     mPrevAngleY = mAngleY;
     UpdatePos(&mdCcAc_c);
-    func_ov018_02111bf0((char *)this, &mWithMeshClsn);
+    func_ov018_02111bf0(&mWithMeshClsn);
     func_ov018_02111a48((char *)mPlayer);
     unsigned int frame = ((unsigned int)mAnmModel.currFrame << 4) >> 0x10;
     if (frame == 9 || frame == 0x15)
@@ -391,11 +391,7 @@ void daPgMthr_c::func_ov018_02111d28()
     }
 }
 
-extern "C" {
-void func_ov018_02111bf0(void *cv, void *wv)
-{
-    daPgMthr_c *self = (daPgMthr_c *)cv;
-    dBgCh_Actr *w = (dBgCh_Actr *)wv;
+void daPgMthr_c::func_ov018_02111bf0(dBgCh_Actr *w) {
     /* ROM calls the veneer at 0x02038420, not UpdateDiscreteNoLava. */
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (w->IsOnGround() != 0) {
@@ -403,8 +399,8 @@ void func_ov018_02111bf0(void *cv, void *wv)
         dBgPi *floor = w->GetFloorResult();
         floor->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = FX_MUL(n.x, self->mSpeedX) + FX_MUL(n.z, self->mSpeedZ);
-            self->mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
+            int s = FX_MUL(n.x, mSpeedX) + FX_MUL(n.z, mSpeedZ);
+            mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
@@ -412,7 +408,6 @@ void func_ov018_02111bf0(void *cv, void *wv)
         Vector3 wn;
         wall.surface.CopyNormalTo(wn);
     }
-}
 }
 
 void daPgMthr_c::func_ov018_02111b3c()

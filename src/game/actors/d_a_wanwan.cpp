@@ -68,12 +68,9 @@ extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
-extern dCamera_c *data_0209f318; /* CAMERA */
+extern dCamera_c *gCamera;  /* CAMERA */
 
 void func_ov014_02111fb8(daWanwan_c *c);
-void func_ov014_02112114(daWanwan_c *c);
-void func_ov014_02111fe0(daWanwan_c *c);
-void func_ov014_0211250c(daWanwan_c *c);
 void func_ov014_0211236c(daWanwan_c *c);
 void func_ov014_021122dc(daWanwan_c *c);
 void func_ov014_02112788(daWanwan_c *c);
@@ -205,10 +202,10 @@ int daWanwan_c::Behavior() {
     }
     func_ov014_02111f08();
     UpdatePos(&mdCcAcPos_c);
-    func_ov014_02112114(this);
+    func_ov014_02112114();
     if (mChainBroken == 0)
-        func_ov014_02111fe0(this);
-    func_ov014_0211250c(this);
+        func_ov014_02111fe0();
+    func_ov014_0211250c();
     if (mChainBroken == 0) {
         func_ov014_0211236c(this);
         func_ov014_021122dc(this);
@@ -300,8 +297,7 @@ void func_ov014_02112788(daWanwan_c *c) {
 }
 
 /* Forward chain: head at the actor, then links 1..6, carrying mLinkDelta. */
-extern "C" {
-void func_ov014_0211250c(daWanwan_c *c) {
+void daWanwan_c::func_ov014_0211250c() {
     int yoff;
     Vector3 dvec;
     Vector3 head;
@@ -329,15 +325,15 @@ void func_ov014_0211250c(daWanwan_c *c) {
     head.z = -kRestLift;
 
     /* setup order is load-bearing: seg before state so add/cmp schedule matches */
-    seg = &c->mLinkPos[1];
-    dst = &c->mLinkDelta[1];
-    state = c->mState;
-    bound = c->mLinkFloorY;
+    seg = &mLinkPos[1];
+    dst = &mLinkDelta[1];
+    state = mState;
+    bound = mLinkFloorY;
     scale = 0xb68;
     yoff = -0x5000;
 
     if (state == 2 || state == 4) {
-        if (c->mChainBroken == 0) {
+        if (mChainBroken == 0) {
             scale += 0x7800;
             yoff = 0;
         } else {
@@ -345,17 +341,17 @@ void func_ov014_0211250c(daWanwan_c *c) {
         }
     }
 
-    Matrix4x3_FromRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
+    Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, (const Vector3 *)&c->mPosX, &rotated);
+    Vec3_Add(&tmp, (const Vector3 *)&mPosX, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
     saved.z = tmp.z;
-    c->mLinkPos[0].x = tmp.x;
-    c->mLinkPos[0].y = saved.y;
-    c->mLinkPos[0].z = saved.z;
+    mLinkPos[0].x = tmp.x;
+    mLinkPos[0].y = saved.y;
+    mLinkPos[0].z = saved.z;
 
-    head.z = c->mChainExtension;
+    head.z = mChainExtension;
     head.x = 0;
     head.y = 0;
     rotated.x = 0;
@@ -397,13 +393,12 @@ void func_ov014_0211250c(daWanwan_c *c) {
         dst->y = mul.y;
         dst->z = mul.z;
 
-        if (*bound <= c->mSpawnPosY)
-            *bound = c->mSpawnPosY + 0x28000;
+        if (*bound <= mSpawnPosY)
+            *bound = mSpawnPosY + 0x28000;
 
         seg++;
         dst++;
     }
-}
 }
 
 /* Backward chain, from the stump end (link 6) toward the head. */
@@ -508,15 +503,14 @@ void func_ov014_021122dc(daWanwan_c *c) {
 /* Hit response. Egg (actor 9, hit 0x2000) pops the scale into state 0.
  * Explosion (0x4000) and a Bob-omb (0xce) go to state 4. A mega hit from
  * the player (0xbf, hit 0x10) starts the bite (state 5) and hurts when facing. */
-extern "C" {
-void func_ov014_02112114(daWanwan_c *c) {
+void daWanwan_c::func_ov014_02112114() {
     dActor_c *other;
     unsigned id;
     int ang;
 
-    if ((unsigned)(c->mState - 3) <= 1)
+    if ((unsigned)(mState - 3) <= 1)
         return;
-    id = c->mdCcAcPos_c.otherOwner;
+    id = mdCcAcPos_c.otherOwner;
     if (id == 0)
         return;
     other = dActor_c::FindWithID(id);
@@ -527,74 +521,71 @@ void func_ov014_02112114(daWanwan_c *c) {
        against 0 (moveq/movne/cmp). A plain `==` drops those three
        instructions, 12 bytes shorter per test. */
     if ((int)(other->actorID == kYoshiEggId) != 0) {
-        if (c->mdCcAcPos_c.hitFlags & 0x2000) {
-            c->mScaleX = 0x2000;
-            c->mScaleY = c->mScaleX;
-            c->mScaleZ = c->mScaleY;
-            c->func_ov014_02111ebc(0);
+        if (mdCcAcPos_c.hitFlags & 0x2000) {
+            mScaleX = 0x2000;
+            mScaleY = mScaleX;
+            mScaleZ = mScaleY;
+            func_ov014_02111ebc(0);
             return;
         }
     }
 
-    if (c->mdCcAcPos_c.hitFlags & 0x4000) {
-        c->mScaleX = 0x2000;
-        c->mScaleY = c->mScaleX;
-        c->mScaleZ = c->mScaleY;
-        c->func_ov014_02111ebc(4);
+    if (mdCcAcPos_c.hitFlags & 0x4000) {
+        mScaleX = 0x2000;
+        mScaleY = mScaleX;
+        mScaleZ = mScaleY;
+        func_ov014_02111ebc(4);
         return;
     }
 
     if ((int)(other->actorID == kPlayerActorId) != 0) {
-        ang = Vec3_HorzAngle(&c->mPos, &other->mPos);
-        if (c->mdCcAcPos_c.hitFlags & 0x10) {
-            c->func_ov014_02111ebc(5);
-            c->mPrevAngleY = other->mAngleY;
+        ang = Vec3_HorzAngle(&mPos, &other->mPos);
+        if (mdCcAcPos_c.hitFlags & 0x10) {
+            func_ov014_02111ebc(5);
+            mPrevAngleY = other->mAngleY;
         }
-        if (AngleDiff(ang, c->mAngleY) < 0x4000) {
+        if (AngleDiff(ang, mAngleY) < 0x4000) {
             Vector3 v;
-            v.x = c->mPosX;
-            v.y = c->mPosY;
-            v.z = c->mPosZ;
+            v.x = mPosX;
+            v.y = mPosY;
+            v.z = mPosZ;
             ((daPly_c *)other)->Hurt(v, 3, 0xc000, 1, 0, 1);
         }
     }
 
-    if (c->mState == 4)
+    if (mState == 4)
         return;
     if ((int)(other->actorID == kBobOmbActorId) != 0) {
         func_ov102_0214ae1c(other);
-        c->func_ov014_02111ebc(4);
+        func_ov014_02111ebc(4);
     }
-}
 }
 
 /* Pull the chomp back inside chainExtension * 7 + 200 of the spawn point.
  * A fully extended lunge (state 2, extension 0x64000) also kills both speeds. */
-extern "C" {
-void func_ov014_02111fe0(daWanwan_c *c) {
+void daWanwan_c::func_ov014_02111fe0() {
     Vector3 v;
     Vector3 out;
     int len;
     int lim;
-    Vec3_Sub(&v, &c->mPos, (const Vector3 *)&c->mSpawnPosX);
+    Vec3_Sub(&v, &mPos, (const Vector3 *)&mSpawnPosX);
     len = LenVec3(&v);
-    lim = c->mChainExtension * 7 + kRestLift;
+    lim = mChainExtension * 7 + kRestLift;
     if (len <= lim)
         return;
     v.x = FX_MUL(v.x, cstd::fdiv(lim, len));
     v.y = FX_MUL(v.y, cstd::fdiv(lim, len));
     v.z = FX_MUL(v.z, cstd::fdiv(lim, len));
-    Vec3_Add(&out, (Vector3 *)&c->mSpawnPosX, &v);
-    c->mPosX = out.x;
-    c->mPosY = out.y;
-    c->mPosZ = out.z;
-    if (c->mState != 2)
+    Vec3_Add(&out, (Vector3 *)&mSpawnPosX, &v);
+    mPosX = out.x;
+    mPosY = out.y;
+    mPosZ = out.z;
+    if (mState != 2)
         return;
-    if (c->mChainExtension == kChainMax) {
-        c->mHorzSpeed = 0;
-        c->mVertSpeed = 0;
+    if (mChainExtension == kChainMax) {
+        mHorzSpeed = 0;
+        mVertSpeed = 0;
     }
-}
 }
 
 /* Landing one-shot. Sound 0x39 at camera-space position, then the dust. */
@@ -820,7 +811,7 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self) {
         partnerPos.z = src[2];
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
-    camera = data_0209f318;
+    camera = gCamera;
     angleToPlayer = self->HorzAngleToCPlayer();
     angleToAnchor = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mSpawnPosX);
     /* Steps 0-6 make the chomp the camera's mFocusActor. */

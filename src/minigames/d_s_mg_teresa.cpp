@@ -36,7 +36,7 @@
  */
 
 // leftovers:
-// - Reveal_Start clears mReveal's byte 0x1b (unk_1b) by offset: nothing in
+// - Reveal_Start clears mReveal[0].unk_1b (byte 0x1b): nothing in
 //   this TU reads it, so it has no name.
 // - Boo_StateFadeAway and CountRubbedTiles flip a Boo's heading as
 //   `mHeading = mHeading + 0x8000`; `+=` is a word longer in FadeAway
@@ -439,7 +439,7 @@ void dScMgTeresa_c::BigBoo_Start()
     mBigBoo[0].frame = 8;
     mBigBoo[0].moveRight = 0;
     mBigBoo[0].done = 0;
-    G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 0, 0xc, 0xc, 0x10);
+    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xc, 0xc, 0x10);
 }
 
 
@@ -618,7 +618,6 @@ void dScMgTeresa_c::Reveal_Update()
 
 void dScMgTeresa_c::Reveal_Start()
 {
-    char *raw = (char *)this;
     mReveal[0].x = 0xa0000;
     mReveal[0].y = 0x60000;
     mReveal[0].active = 1;
@@ -628,8 +627,8 @@ void dScMgTeresa_c::Reveal_Start()
     mReveal[0].angle = 0;
     mReveal[0].frameTimer = 0;
     mReveal[0].timer = 0;
-    /* mReveal[0].unk_1b: written only here, read nowhere in this TU */
-    *(char *)(raw + 0x4bbb) = 0;
+    /* written only here, read nowhere in this TU */
+    mReveal[0].unk_1b = 0;
     mReveal[0].frame = 0;
     mReveal[0].phase = 0;
 }
@@ -1120,7 +1119,7 @@ void dScMgTeresa_c::Boo_StateFadeAway(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == mLastSettledBoo) {
-        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 4, 0x10 - mBoos[i].mFade, 0x10);
+        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 0x10 - mBoos[i].mFade, 0x10);
     }
     if (mBoos[i].mFade >= 0x10) {
         mBoos[i].mInPlay = 0;
@@ -1166,8 +1165,7 @@ void dScMgTeresa_c::Boo_StateFadeIn(int i) {
     mBoos[i].mTimer = 0;
 
     if (i == mLastSettledBoo) {
-        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 1,
-            mBoos[i].mFade, 0x10);
+        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 1, mBoos[i].mFade, 0x10);
     }
 
     if (mBoos[i].mFade < 0x10)
@@ -1235,7 +1233,7 @@ void dScMgTeresa_c::Boo_StateFadeOut(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == 0)
-        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 1, 0x10 - mBoos[i].mFade, 0x10);
+        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 1, 0x10 - mBoos[i].mFade, 0x10);
     if (mBoos[i].mFade < 0x10)
         return;
     mBoos[i].mFade = 0;
@@ -1692,6 +1690,9 @@ void dScMgTeresa_c::OnNewRecord()
    signature must repeat the base declaration exactly, or mwcc appends a slot
    instead of overriding. */
 void dScMgTeresa_c::StartRound(int reset) {
+    /* volatile: the cartridge stores the fill value to the stack and reloads
+       it (strh/ldrh [sp]) before MultiStore16. Plain locals, by-value and
+       by-reference wrappers all fold the constant; no other spelling found. */
     volatile unsigned short val;
     if (reset == 0) {
         /* `const` on the read is load-bearing: without it mwcc CSEs the +0xbc
@@ -1752,27 +1753,28 @@ s32 dScMgTeresa_c::Behavior()
 /* Vtable slot 0. */
 s32 dScMgTeresa_c::InitResources()
 {
-    char *self = (char *)this;
     void *f1;
     void *f2;
     void *t;
+    /* volatile: each fill value round-trips through the stack before
+       MultiStore16, as in StartRound. */
     volatile u16 fa;
     volatile u16 fb;
     volatile u16 fc;
-    *((volatile u16 *) 0x400000c) &= ~3;
-    *((volatile u16 *) 0x400000c) &= ~0x40;
+    REG_BG2CNT &= ~3;
+    REG_BG2CNT &= ~0x40;
     *((volatile u32 *) 0x4000018) = 0;
-    *((volatile u16 *) 0x400000c) = ((*((volatile u16 *) 0x400000c)) & 0x43) | 0x1210;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1210;
     {
         void *p = G2::GetBG2ScrPtr();
         fa = 0x5300;
         MultiStore16(fa, p, 0x800);
     }
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *((volatile u16 *) 0x400000e) = (*((volatile u16 *) 0x400000e)) & (~3);
-    *((volatile u16 *) 0x400000e) &= ~0x40;
+    REG_BG3CNT = REG_BG3CNT & ~3;
+    REG_BG3CNT &= ~0x40;
     *((volatile u32 *) 0x400001c) = 0;
-    *((volatile u16 *) 0x400000e) = ((*((volatile u16 *) 0x400000e)) & 0x43) | 0x9310;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x9310;
     t = LoadFile(0x9b);
     DecompressLZ16(t, G2::GetBG2CharPtr());
     Deallocate(t);
@@ -1789,26 +1791,26 @@ s32 dScMgTeresa_c::InitResources()
     f2 = LoadFile(0x102);
     DecompressLZ16(f1, (void *) 0x6400000);
     GX::LoadOBJPltt(f2, 0, 0x100);
-    *((volatile u16 *) 0x4001008) = ((*((volatile u16 *) 0x4001008)) & 0x43) | 0x218;
-    *((volatile u16 *) 0x4001008) &= ~0x40;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x218;
+    REG_DB_BG0CNT &= ~0x40;
     *((volatile u32 *) 0x4001010) = 0;
-    *((volatile u16 *) 0x4001008) &= ~3;
+    REG_DB_BG0CNT &= ~3;
     {
         void *p = G2S::GetBG0ScrPtr();
         fb = 0;
         MultiStore16(fb, p, 0x800);
     }
-    Mg_InitBrush(self, 0, 0, 0);
+    Mg_InitBrush((char *)this, 0, 0, 0);
     {
         void *p = (char *)G2S::GetBG0CharPtr();
         fc = 0x1111;
         MultiStore16(fc, p, 0x6000);
     }
     gSubScreenLayers |= 4;
-    *((volatile u16 *) 0x400100c) = ((*((volatile u16 *) 0x400100c)) & (~3)) | 1;
-    *((volatile u16 *) 0x400100c) &= ~0x40;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
+    REG_DB_BG2CNT &= ~0x40;
     *((volatile u32 *) 0x4001018) = 0;
-    *((volatile u16 *) 0x400100c) = ((*((volatile u16 *) 0x400100c)) & 0x43) | 0x408;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x408;
     t = LoadFile(0x9f);
     DecompressLZ16(t, G2S::GetBG2CharPtr());
     Deallocate(t);

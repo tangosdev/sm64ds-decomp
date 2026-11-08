@@ -46,7 +46,6 @@ extern void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, voi
 
 int func_ov019_02111254(void *unused, int playerLead);
 int func_ov019_0211140c(daPgRcer_c *self, dBgCh_Actr *clsn);
-void func_ov019_021114ec(daPgRcer_c *self);
 
 }
 
@@ -163,7 +162,7 @@ int daPgRcer_c::InitResources()
     mPathNodeIndex = 0;
     mPath.GetNode(mPos, mPathNodeIndex);
     func_ov019_021113b0();
-    func_ov019_021114ec(this);
+    func_ov019_021114ec();
     return 1;
 }
 
@@ -174,7 +173,7 @@ int daPgRcer_c::Behavior()
     mTextureSequence.Advance();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
-    func_ov019_021114ec(this);
+    func_ov019_021114ec();
     return 1;
 }
 
@@ -585,16 +584,15 @@ int daPgRcer_c::func_ov019_02111558() {
     return 1;
 }
 
-extern "C" {
-
-void func_ov019_021114ec(daPgRcer_c *self)
-{
-    Matrix4x3_FromRotationY(&self->mAnmModel.mat4x3, self->mAngleY);
-    self->mAnmModel.mat4x3.t.x = self->mPosX >> 3;
-    self->mAnmModel.mat4x3.t.y = self->mPosY >> 3;
-    self->mAnmModel.mat4x3.t.z = self->mPosZ >> 3;
-    self->DropShadowRadHeight(self->mShadowModel, self->mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
+void daPgRcer_c::func_ov019_021114ec() {
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    mAnmModel.mat4x3.t.x = mPosX >> 3;
+    mAnmModel.mat4x3.t.y = mPosY >> 3;
+    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
 }
+
+extern "C" {
 
 int func_ov019_0211140c(daPgRcer_c *self, dBgCh_Actr *clsn)
 {
