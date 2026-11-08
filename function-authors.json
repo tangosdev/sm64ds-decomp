@@ -8911,7 +8911,7 @@
     },
     "arm9:0x02053d9c": {
       "author": "tangosdev",
-      "name": "func_02053d9c"
+      "name": "GX_InitGXState"
     },
     "arm9:0x02053e1c": {
       "author": "tangosdev",

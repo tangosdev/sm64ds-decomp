@@ -13,7 +13,7 @@
  * user holds. Every bank not held by a user stays mapped to the LCDC, so a
  * setter first gives its old banks back to lcdc, takes its new ones out,
  * then remaps whatever lcdc now holds. The block itself and its clearing
- * (func_02053d9c) live in the file below this one.
+ * (src/GX_InitGXState.c) live in the file below this one.
  *
  * GX_SetBankForBGExtPltt (func_02054748) and GX_SetBankForLCDC
  * (func_02054430) keep their address names under C linkage: their callers

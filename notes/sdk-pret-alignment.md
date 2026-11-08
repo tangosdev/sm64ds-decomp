@@ -81,7 +81,7 @@ check against, and they don't.
 | CTRDG_proc.s (asm only) | 0x0206a600..0x0206a928 | 5 of 6, in the same address order as pret's asm: CTRDGi_CallbackForInitModuleInfo and CTRDG_Init statement for statement, the other three older versions of CTRDG_TerminateForPulledOut, CTRDGi_PulledOutCallback and CTRDGi_InitModuleInfo; CTRDGi_CallbackForSetPhi absent, and the .bss is pret's in pret's order without the two words only it and isOnTerminate use: folded as arm9/CTRDG_Proc |
 
 The single-function SDK files sit between these runs: GX_state.c's GX_InitGXState
-is func_02053d9c (0x80), and MI_swap.c's MI_SwapWord is src/MI_SwapWord.c (0x0205a74c).
+is src/GX_InitGXState.c (0x02053d9c, 0x80), and MI_swap.c's MI_SwapWord is src/MI_SwapWord.c (0x0205a74c).
 OS_init.c's OS_Init is src/OS_Init.cpp (0x02058c84). It makes pret's calls in pret's order, which names
 each callee: PXI_init.c's PXI_Init (src/PXI_Init.c, 0x0205b858), MI_wram.c's MI_SetWramBank
 (src/MI_SetWramBank.c), OS_valarm.c's OS_InitVAlarm (src/OS_InitVAlarm.cpp), OS_reset.c's

@@ -1,8 +1,7 @@
 #include "private/gx_state.h"
 
-/* NitroSDK GX_InitGXState: no user holds a VRAM bank, and every bank is off. */
-void func_02053d9c(void)
-{
+/* NitroSDK gx_state.c: no user holds a VRAM bank, and every bank is off. */
+void GX_InitGXState(void) {
     data_020a6088.lcdc = 0;
     data_020a6088.bg = 0;
     data_020a6088.obj = 0;

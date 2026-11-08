@@ -2416,7 +2416,7 @@ src/unnamed/arm9/0205/func_02053b98.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053be0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053c10.c	PURE-C	arm9				1		None		-
 src/func_02053c40.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_02053d9c.c	PURE-C	arm9				1		None		-
+src/GX_InitGXState.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053e1c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053e34.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053e4c.c	PURE-C	arm9				1		None		-
