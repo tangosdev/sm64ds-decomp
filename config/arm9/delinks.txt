@@ -2209,7 +2209,7 @@ src/InvMat4x3.cpp:
     complete
     .text start:0x02052b34 end:0x02052ec8
 
-src/unnamed/arm9/0205/func_02052ec8.c:
+src/MTX_Identity44_.c:
     complete
     .text start:0x02052ec8 end:0x02052ef4
 
@@ -2225,7 +2225,7 @@ src/NormalizeVec3.c:
     complete
     .text start:0x020534ec end:0x02053644
 
-src/unnamed/arm9/0205/func_02053644.c:
+src/VEC_Fx16Mag.c:
     complete
     .text start:0x02053644 end:0x020536e4
 

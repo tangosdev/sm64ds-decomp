@@ -13077,7 +13077,7 @@
     "src/unnamed/arm9/0205/func_02053320.c",
     "src/func_02053380.c",
     "src/NormalizeVec3.c",
-    "src/unnamed/arm9/0205/func_02053644.c",
+    "src/VEC_Fx16Mag.c",
     "src/LenVec3.c",
     "src/CrossVec3.c",
     "src/DotVec3.c",

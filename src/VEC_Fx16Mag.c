@@ -1,7 +1,6 @@
 typedef short s16;
 
-int func_02053644(s16 *v)
-{
+int VEC_Fx16Mag(s16 *v) {
     unsigned long long sq = (v[0] * v[0]);
     sq += (v[1] * v[1]);
     sq += (v[2] * v[2]);

@@ -3,7 +3,7 @@
 #include "cstd.h"
 #include "Ov007Camera.h"
 extern "C" void Matrix4x3_LoadIdentity(void *m);
-extern "C" void func_02052ec8(void *p);
+extern "C" void MTX_Identity44_(void *p);
 
 /* Resets a camera: eye at z 1.0 looking at the origin, y up, a 30-degree
  * fovy, 4:3 aspect, near 1.0 and far 400.0, the whole 256x192 screen as the
@@ -34,7 +34,7 @@ extern "C" void func_ov007_020c0128(Ov007Camera *cam) {
     cam->wordCC = 0x1000;
     cam->wordD0 = 0xc00;
     Matrix4x3_LoadIdentity(&cam->viewMatrix);
-    func_02052ec8(cam->projMatrix);
+    MTX_Identity44_(cam->projMatrix);
     cam->scaleW = 0x1000;
     cam->word00 = 0;
     cam->tweening = 0;
