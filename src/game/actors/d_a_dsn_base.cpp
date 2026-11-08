@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* Actor IDs this TU compares. No header vocabulary exists (cleaned callers
@@ -200,7 +201,7 @@ void daDsnBase_c::StateSlam() {
         dustPos.y = mPosY;
         dustPos.z = mPosZ;
         dustPos.y = dustPos.y + 0x3c000;
-        Particle::System::NewSimple(0x2e, dustPos.x, dustPos.y, dustPos.z);
+        Particle::System::NewSimple(kPtclGrindelLanding, dustPos.x, dustPos.y, dustPos.z);
     }
     quakePos.x = mPosX;
     quakePos.y = mPosY;

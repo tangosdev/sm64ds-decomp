@@ -30,6 +30,7 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 #include "math/MtxStack.h"
 
@@ -108,7 +109,7 @@ void daBttBk_c::HandleCollision() {
     v.x = x;
     v.y = y;
     v.z = z;
-    Particle::System::NewSimple(6, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclBattaBlockBreak, v.x, v.y, v.z);
     v2.x = v.x;
     v2.y = v.y;
     v2.z = v.z;
@@ -234,7 +235,7 @@ int daBttBk_c::StateCarriedMain() {
             vec2.y = vec.y;
             vec2.z = vec.z;
             PoofDustAt(vec2);
-            Particle::System::NewSimple(6, vec.x, vec.y, vec.z);
+            Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
 
             {
                 int ybase = mPosY;
@@ -382,7 +383,7 @@ void daBttBk_c::OnTurnIntoEgg(daPly_c &player) {
     vec2.y = vec.y;
     vec2.z = vec.z;
     PoofDustAt(vec2);
-    Particle::System::NewSimple(6, vec.x, vec.y, vec.z);
+    Particle::System::NewSimple(kPtclBattaBlockBreak, vec.x, vec.y, vec.z);
     Sound::PlayBank3(0x41, mCamSpacePos);
     MarkForDestruction();
 }

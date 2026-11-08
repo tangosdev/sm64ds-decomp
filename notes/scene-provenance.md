@@ -166,7 +166,7 @@ not the same as the last field the object has. The trailing `pad_9c0[0x8]` and t
 `tools/check_header_offsets.py` walks them from `dScene_c`'s asserted 0x50.
 
 **`Particle::SysTracker`, embedded at `dScStage_c+0x50`.** Not its own header yet:
-`Particle.h` (since retired, #4626) and `include/Particle__SysTracker.h` were two *separate*
+`Particle.h` (since retired, #4626) and `Particle__SysTracker.h` (since folded into `include/dPa_c.h`) were two *separate*
 `gen_header.py` shadows of this same class. `src/engine/particle/Particle.cpp` writes
 fields through `struct Particle *self` up to `unk_818`, while
 `src/engine/particle/Particle.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
@@ -179,7 +179,7 @@ two real headers because neither `dScStage_c` source file includes them and a me
 own blast radius across every file that already casts through one shadow or the other.
 
 Its destructor is declared, never defined: `src/engine/particle/Particle.cpp`
-already supplies `_ZN8Particle10SysTrackerD1Ev` as an `extern "C"` free function; the
+already supplies `_ZN5dPa_cD1Ev` as an `extern "C"` free function; the
 declaration only lets `dScStage_c`'s implicit destructor find it by name. Not virtual —
 `dtor_variant_audit.py` established `Particle::SysTracker` has no RTTI record and no
 `_ZTV`, so it is not polymorphic and must not gain a vtable pointer.

@@ -10,10 +10,10 @@ struct SceneRelated;
 struct LVL_Overlay;
 struct dExtAnmTexSRT_c;
 
-/* Particle::SysTracker, embedded at dScStage_c+0x50. The one definition lives in
- * include/Particle__SysTracker.h; see notes/scene-provenance.md and
+/* dPa_c, embedded at dScStage_c+0x50. The one definition lives in
+ * include/dPa_c.h; see notes/scene-provenance.md and
  * notes/system-provenance.md for the field evidence. */
-#include "Particle__SysTracker.h"
+#include "dPa_c.h"
 #include "Matrix2x2.h"
 #include "dGraph_c.h"
 
@@ -65,7 +65,7 @@ void LoadMinimapChangeObject(int, Fix12i, s8);
 struct dScStage_c : dScene_c {
     class graphCallback_c;
 
-    Particle::SysTracker mSysTracker;  /* 0x050 */
+    dPa_c mParticle;                   /* 0x050 */
     dExtSimpleModel_c mModel;          /* 0x86c */
     StageArea mAreas[8];               /* 0x8bc - dExtSimpleModel_c ends here, and dBgW_Kc
                                            does not start until 0x91c */

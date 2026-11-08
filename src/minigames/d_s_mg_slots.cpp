@@ -877,7 +877,7 @@ s32 dScMgSlot3_c::InitResources() {
 }
 
 /* The constructor is inline, so the factory below holds it: the base
-   constructors, mSysTracker and mMascot are the compiler's. */
+   constructors, mParticle and mMascot are the compiler's. */
 inline dScMgSlot3_c::dScMgSlot3_c() {}
 
 /* Reconstructed source-style name: SM64DS proves dScMgSlot3_c through RTTI,

@@ -49,6 +49,7 @@ enum daGrock_c_AssetId { ASSET_CV_GORO_ROCK_BMD = 0x05d4 };
 #include "dBgCh_Actr.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "cstd.h"
@@ -141,7 +142,7 @@ void daGrock_c::HandleCylinderHit() {
         func_02012694(0x17a, &mCamSpacePos);
         ((daPly_c *)other)->IncMegaKillCount();
         TriplePoofDust();
-        Particle::System::NewSimple(0x67, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(kPtclBigSteelieBreak, mPosX, mPosY, mPosZ);
         SpawnStar();
         MarkForDestruction();
         return;
@@ -158,7 +159,7 @@ void daGrock_c::HandleCylinderHit() {
             func_02012694(0x17a, &mCamSpacePos);
             MarkForDestruction();
             TriplePoofDust();
-            Particle::System::NewSimple(0x67, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclBigSteelieBreak, mPosX, mPosY, mPosZ);
             SpawnStar();
             return;
         }
@@ -199,11 +200,11 @@ void daGrock_c::HandleMeshCollision() {
             if (mVertSpeed < (mVertAccel << 1) && normal.y >= 0xc00)
                 mVertSpeed = -mVertSpeed * 6 / 10;
             pos.y += 0x3c000;
-            Particle::System::NewSimple(0x68, pos.x, pos.y, pos.z);
+            Particle::System::NewSimple(kPtclBigSteelieBounce, pos.x, pos.y, pos.z);
             func_0201267c(0x48, &mCamSpacePos);
         } else {
-            mDustParticleID =
-                (int)Particle::System::New(mDustParticleID, 0x69, pos.x, pos.y, pos.z, 0, 0);
+            mDustParticleID = (int)Particle::System::New(mDustParticleID, kPtclBigSteelieRollDust,
+                                                         pos.x, pos.y, pos.z, 0, 0);
             mRollSoundID = Sound::PlayLong(mRollSoundID, 3, 0x8a, mCamSpacePos, 0);
         }
         mSpeedX += normal.x * 5;
@@ -299,7 +300,7 @@ int daGrock_c::Behavior() {
                 }
                 UntrackStar(mTrackStarID);
                 TriplePoofDust();
-                Particle::System::NewSimple(0x67, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclBigSteelieBreak, mPosX, mPosY, mPosZ);
                 func_02012694(0x17a, &mCamSpacePos);
             }
         }

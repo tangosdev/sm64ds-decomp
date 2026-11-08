@@ -4,7 +4,7 @@
 #include "types.h"
 
 /* The particle resource file's header, as far as its readers use it.
- * Particle::SysTracker::Initialise (Particle.cpp) checks the first four
+ * dPa_c::Initialise (Particle.cpp) checks the first four
  * bytes against the data_0208f668 magic to tell a raw file from an
  * LZ-compressed one. func_0204a17c (Particle_Manager.cpp) reads the
  * counts; its definition records start right after this header and the

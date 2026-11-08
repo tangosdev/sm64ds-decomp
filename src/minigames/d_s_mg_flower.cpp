@@ -559,7 +559,7 @@ s32 dScMgFlower_c::InitResources() {
 /* The body is empty: the compiler builds the petal table (through
  * __cxa_vec_ctor with Petal's own constructor and destructor), then mFace;
  * ~dScMgFlower_c() above tears them down in the reverse order. Everything
- * before them (dScMgBase_c's C2, dScMgSingle3DBase_c's vptr and mSysTracker,
+ * before them (dScMgBase_c's C2, dScMgSingle3DBase_c's vptr and mParticle,
  * then this class's own vptr) is the compiler's inlining of the base
  * constructors. */
 inline dScMgFlower_c::dScMgFlower_c() {}

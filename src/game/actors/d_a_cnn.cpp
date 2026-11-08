@@ -61,6 +61,7 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 typedef void (daCnn_c::*State)();
@@ -330,9 +331,9 @@ void daCnn_c::StateFire() {
         rot.x = (u16)data_02082214[((u16)mPrevAngleY >> 4) * 2];
         rot.z = (u16)data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1];
 
-        Particle::System::New(0, 7, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
+        Particle::System::New(0, kPtclCannonShotA, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
                               (const Vector3_16f *)(&rot), 0);
-        Particle::System::New(0, 8, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
+        Particle::System::New(0, kPtclCannonShotB, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
                               (const Vector3_16f *)(&rot), 0);
 
         Sound::PlayBank3(0xd4, mCamSpacePos);

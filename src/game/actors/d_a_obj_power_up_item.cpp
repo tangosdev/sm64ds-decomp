@@ -49,7 +49,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
-
+#include "ParticleIds.h"
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
  * (pmf[1]) and a name literal. */
@@ -134,8 +134,9 @@ void daObjPowerUpItem_c::StateResting()
         ((int*)&pos)[0] = x;
         ((int*)&pos)[1] = y;
         ((int*)&pos)[2] = z;
-        mEffectHandle = (u32)Particle::System::New(mEffectHandle, 0x104, ((int *)&pos)[0],
-                                                   ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);
+        mEffectHandle =
+            (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerResting, ((int *)&pos)[0],
+                                       ((int *)&pos)[1], ((int *)&pos)[2], 0, 0);
     }
 }
 
@@ -192,7 +193,8 @@ void daObjPowerUpItem_c::BeginOpening()
     ((int *)&pos)[0] = x;
     ((int *)&pos)[1] = y;
     ((int *)&pos)[2] = z;
-    Particle::System::NewSimple(0x102, ((int *)&pos)[0], ((int *)&pos)[1], ((int *)&pos)[2]);
+    Particle::System::NewSimple(kPtclPowerFlowerOpen, ((int *)&pos)[0], ((int *)&pos)[1],
+                                ((int *)&pos)[2]);
     func_02012694(0x7d, &mCamSpacePos);
     mEffectHandle = 0;
     mAngleY = gCamera->mAngleY;
@@ -216,7 +218,8 @@ void daObjPowerUpItem_c::StateLaunched()
     int gy;
     int diff;
 
-    mEffectHandle = (u32)Particle::System::New(mEffectHandle, 0x103, mPosX, mPosY, mPosZ, 0, 0);
+    mEffectHandle = (u32)Particle::System::New(mEffectHandle, kPtclPowerFlowerLaunched, mPosX,
+                                               mPosY, mPosZ, 0, 0);
 
     a = mVertSpeed;
     mag = (a < 0) ? -a : a;

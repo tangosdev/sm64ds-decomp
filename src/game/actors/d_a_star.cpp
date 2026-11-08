@@ -49,6 +49,7 @@
  */
 
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daStar_c_AssetId {
@@ -2354,7 +2355,7 @@ void daStar_c::UpdateTrailEffect() {
     v.z = mPosZ;
     v.y += 0xd000;
     *(void **)&mParticle[0] = (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0],
-                                                            0x113, v.x, v.y, v.z, 0, 0);
+                                                            kPtclStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2381,9 +2382,9 @@ void daStar_c::SpawnCollectEffects() {
     vc.z = FX_MUL(vc.z, mScaleZ);
     AddVec3(&vc, &mPos, &vc);
     *(void **)&mParticle[0] =
-        (void *)Particle::System::New(mParticle[0], 0x115, vc.x, vc.y, vc.z, 0, 0);
+        (void *)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
     *(void **)&mParticle[1] =
-        (void *)Particle::System::New(mParticle[1], 0x116, vc.x, vc.y, vc.z, 0, 0);
+        (void *)Particle::System::New(mParticle[1], kPtclStarCollectB, vc.x, vc.y, vc.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2402,14 +2403,15 @@ void daStar_c::SpawnPoseEffects() {
     if (!mAnmModel1.Finished() && (u32)((*(u32 *)&mAnmModel1.currFrame << 4) >> 0x10) >= 2 &&
         *(int *)((char *)obj + 0xc) != 0) {
         func_ov002_020e8244(&v1, this);
-        mParticle[0] = (u32)Particle::System::New(mParticle[0], 0x2f, v1.x, v1.y, v1.z, 0, 0);
+        mParticle[0] =
+            (u32)Particle::System::New(mParticle[0], kPtclStarPose, v1.x, v1.y, v1.z, 0, 0);
         return;
     }
 
     if (!mAnmModel1.WillHitFrame(0x75))
         return;
     func_ov002_020e8244(&v2, this);
-    Particle::System::NewSimple(0x30, v2.x, v2.y, v2.z);
+    Particle::System::NewSimple(kPtclStarPoseEnd, v2.x, v2.y, v2.z);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2436,7 +2438,8 @@ void daStar_c::UpdateSparkleEffect() {
         zvar = zraw;
         y = yadj;
     }
-    mParticle[2] = (u32)Particle::System::New(*(volatile u32 *)&mParticle[2], 0x114, x, y, z, 0, 0);
+    mParticle[2] =
+        (u32)Particle::System::New(*(volatile u32 *)&mParticle[2], kPtclStarSparkle, x, y, z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2448,7 +2451,8 @@ void daStar_c::UpdateSilverTrailEffect() {
     int b = (actorID == ACTOR_SILVER_STAR);
     if (b == 0) return;
     func_ov002_020e8244(&v, this);
-    mParticle[3] = (int)Particle::System::New(mParticle[3], 0x10e, v.x, v.y, v.z, 0, 0);
+    mParticle[3] =
+        (int)Particle::System::New(mParticle[3], kPtclSilverStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2507,9 +2511,9 @@ void daStarBase_c::Collect()
         mBits.visible = 0;
     }
     mdCcAcPos_c.Clear();
-    Particle::System::NewSimple(0x12c, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0x12d, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0x12e, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclStarMarkerCollectA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclStarMarkerCollectB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclStarMarkerCollectC, mPosX, mPosY, mPosZ);
 }
 
 /* -------------------------------------------------------------------------- */

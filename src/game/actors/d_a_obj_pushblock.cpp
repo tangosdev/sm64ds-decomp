@@ -39,6 +39,7 @@ enum daObjPushblock_c_AssetId {
 #include "decl_Platform.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
@@ -303,7 +304,7 @@ void daObjPushblock_c::Kill() {
     vec.y = mPosY;
     vec.z = mPosZ;
     vec.y += 0x96000;
-    Particle::System::NewSimple(0x48, vec.x, vec.y, vec.z);
+    Particle::System::NewSimple(kPtclStoneBlockBreak, vec.x, vec.y, vec.z);
     vec2.x = vec.x;
     vec2.y = vec.y;
     vec2.z = vec.z;

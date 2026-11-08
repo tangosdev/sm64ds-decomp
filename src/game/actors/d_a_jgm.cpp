@@ -66,6 +66,7 @@ enum d_a_jgm_AssetId {
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
@@ -469,9 +470,9 @@ s32 daJgm_c::EnterFallState()
     mAnmModel.speed = 0x4000;
     {
         int aimHeight = OnAimedAtWithEgg();
-        Particle::System::NewSimple(0x43, mPosX, mPosY + aimHeight, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + aimHeight, mPosZ);
         int aimHeightAgain = OnAimedAtWithEgg();
-        Particle::System::NewSimple(0x44, mPosX, mPosY + aimHeightAgain, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + aimHeightAgain, mPosZ);
     }
     mState = 4;
     return 1;

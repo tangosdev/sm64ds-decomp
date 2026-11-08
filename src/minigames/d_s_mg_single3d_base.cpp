@@ -122,7 +122,7 @@ void dScMgSingle3DBase_c::InitEngines()
 void dScMgSingle3DBase_c::AfterInitResources(u32 vfSuccess)
 {
     dScMgBase_c::AfterInitResources(vfSuccess);
-    mSysTracker.Initialise();
+    mParticle.Initialise();
 }
 
 /* Slot 7 steps the particle tracker only when the global update flag is set. */
@@ -131,7 +131,7 @@ int dScMgSingle3DBase_c::BeforeBehavior()
     if (dScMgBase_c::BeforeBehavior() == 0)
         return 0;
     if (data_020a0db0 & 1)
-        mSysTracker.Update();
+        mParticle.Update();
     return 1;
 }
 

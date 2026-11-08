@@ -38,7 +38,7 @@ struct daEyBm_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x13c */
     Matrix4x3 mMatrix;              /* 0x2f8 */
     /* Two particle handles, effects 0x46 and 0x47, both fed back into
-       Particle::System::NewUnkCallback818 every Render. mLifeTimer starts at
+       Particle::System::NewCleanParticle every Render. mLifeTimer starts at
        0x96 (150 frames) and is counted down by Behavior. */
     u32 mParticle1; /* 0x328 */
     u32 mParticle2; /* 0x32c */
