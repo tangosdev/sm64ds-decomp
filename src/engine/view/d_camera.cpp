@@ -144,7 +144,10 @@ extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
 /* Opaque camera-side records used by the older handlers. Ground and line
    queries use the real dBgCh_Gnd and dBgCh_Lin classes above. The remaining
    records are typedef'd for the cplusplus-off regions. */
-typedef struct dBgCh_LinHit { char pad[0x14]; char surf[0x64]; } dBgCh_LinHit;   /* UpdateRadialCamera's variant */
+typedef struct dBgCh_LinHit {
+    char pad[0x14];
+    char surf[0x64];
+} dBgCh_LinHit; /* UpdateRadialCamera's variant */
 typedef struct Entry3 { int a, b, c; } Entry3;                      /* data_02086f58 rows */
 extern Entry3 data_02086f58[];
 /* The 0x28-byte mode record dCamera_c::mMode and mAreaMode point at, entry N
@@ -2504,8 +2507,8 @@ s32 dCamera_c::func_02009e70() {
                             r7h = sb;
                             if (sb < r6)
                                 r7h = r6;
-                            r7h = r7h +
-                                  ScaleHeightByFov((r6 - sp04) + ((mFlags & 2) ? 0x1e8000 : 0x138000));
+                            r7h = r7h + ScaleHeightByFov((r6 - sp04) +
+                                                         ((mFlags & 2) ? 0x1e8000 : 0x138000));
                             if (sp1c->flags & 0x80) {
                                 if (pos.y > (s32)r7h)
                                     r7h = pos.y;
