@@ -63,6 +63,5 @@ void func_02046e28(struct Model *model, struct MatAnimData *anim, unsigned short
         mat->polyAttr &= 0xffe0ffffU;
         c = (u32)anim->values[e->comp[12].base + sel[e->comp[12].which]];
         mat->polyAttr |= c << 16;
-
     }
 }
