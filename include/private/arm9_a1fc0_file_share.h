@@ -141,7 +141,12 @@ typedef struct FileShareChildArea {
     /* 0x080 -- a WBTPacketBitmapTable, WBT_GetBlock's last table: func_02041224
      * points entry 0 at mRecvWork */
     int mPacketBitmapTable[0x10];
-    unsigned char pad_0c0[0xbb0];
+    /* 0x0c0 -- the sixteen 0x28-byte WBTBlockInfo mBlockInfoTable points at
+     * (func_02040c34) */
+    unsigned char mBlockInfo[0x10][0x28];
+    /* 0x340 -- func_02040bb0's WM_ReadStatus copy of the WM status block
+     * (a WMStatus, 0x930 bytes); it reads the aid */
+    unsigned char mStatus[0x930];
     /* 0xc70 -- func_02041224 allocates it (about four bytes per packet of
      * mMaxReadSize); func_02040aa4 frees it */
     int mRecvWork;

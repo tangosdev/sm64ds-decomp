@@ -11,8 +11,11 @@
  *   section per function in reverse source order. Do not reorder (the
  *   destructor D0/D1/D2 group is the only exception).
  *
- *   UpdateRunState reads its timer as `*(u16 *)&mStateTimer`: the member
- *   is s16 and the ROM compares unsigned (blo, not blt).
+ *   UpdateRunState reads its timer unsigned: the member is s16 and the ROM
+ *   compares with blo, not blt, so the guard and the wrap convert it to u16.
+ *   The wind-up arm keeps a u16 pointer to the timer, whose address the
+ *   cartridge leaves in r0 as the return value; with plain member access
+ *   the compiler moves the address out of r0 (5 words differ).
  *
  * Notes:
  * - The TU is one `complete` delinks span claiming .text only, so the
@@ -135,11 +138,11 @@ void daIDonketu_c::UpdateDeathState() {
  * charge: hold still while the wind-up plays out over the first ten frames, then
  * run at 0x14000. The pointer returned from the first arm is the cartridge's own
  * shape, not a meaningful value -- r0 is simply left holding the timer address.
- * mStateTimer is s16 in dEnemyBase_c.h: a named halfword compare is signed
- * (blt) where the ROM's first arm is unsigned (blo), so the u16* addressing
- * stays. */
+ * mStateTimer is s16 in dEnemyBase_c.h and the ROM compares it unsigned
+ * (blo), hence the u16 conversions; the u16* in the first arm stays for the
+ * address it leaves in r0. */
 int daIDonketu_c::UpdateRunState() {
-    if (*(u16 *)&mStateTimer < 0xa) {
+    if ((u16)mStateTimer < 0xa) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
@@ -150,13 +153,12 @@ int daIDonketu_c::UpdateRunState() {
         return (int)timer;
     }
     mHorzSpeed = 0x14000;
-    u16 *timer = (u16 *)&mStateTimer;
-    u32 value = *timer;
-    if (value > 0x23) {
-        value = 0;
-        *timer = 0;
+    u16 timer = mStateTimer;
+    if (timer > 0x23) {
+        timer = 0;
+        mStateTimer = 0;
     }
-    return value;
+    return timer;
 }
 /* D1/D0 emit from the header's inline destructor: written out-of-line here
  * it would produce D0 before D1 and a homeless D2. The empty body still

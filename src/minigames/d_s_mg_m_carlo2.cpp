@@ -372,22 +372,20 @@ void dMgMCarlo2CardObj_c::FlipAway(int order) {
 int dMgMCarlo2CardObj_c::IsPairWith(dMgMCarlo2CardObj_c *other)
 {
     int mine, theirs, dx, dy;
-    if (other->mFace != mFace)
-        goto fail;
-    theirs = other->mSlot;
-    mine = mSlot;
-    dx = mine % 5 - theirs % 5;
-    dy = mine / 5 - theirs / 5;
-    if (dx < 0)
-        dx = -dx;
-    if (dx >= 2)
-        goto fail;
-    if (dy < 0)
-        dy = -dy;
-    if (dy >= 2)
-        goto fail;
-    return 1;
-fail:
+    if (other->mFace == mFace) {
+        theirs = other->mSlot;
+        mine = mSlot;
+        dx = mine % 5 - theirs % 5;
+        dy = mine / 5 - theirs / 5;
+        if (dx < 0)
+            dx = -dx;
+        if (dx < 2) {
+            if (dy < 0)
+                dy = -dy;
+            if (dy < 2)
+                return 1;
+        }
+    }
     return 0;
 }
 
@@ -400,20 +398,21 @@ int dMgMCarlo2CardObj_c::HitTest()
 
     if (sMCarlo2PickAllowed == 0)
         return 0;
-    if (dScMgMCarlo2_c::BoardBusy() != 0) goto fail;
-
-    idx = gActivePlayerSlot;
-    off = idx * 4;
-    touching = 0;
-    if (gTouchHeld[off]) {
-        if (gTouchEdge[off]) touching = 1;
+    if (dScMgMCarlo2_c::BoardBusy() == 0) {
+        idx = gActivePlayerSlot;
+        off = idx * 4;
+        touching = 0;
+        if (gTouchHeld[off]) {
+            if (gTouchEdge[off])
+                touching = 1;
+        }
+        if (touching != 0) {
+            dx = gTouchX[idx * 4] - (mX >> 12);
+            dy = gTouchY[idx * 4] - (mY >> 12);
+            if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31)
+                return 1;
+        }
     }
-    if (touching == 0) goto fail;
-
-    dx = gTouchX[idx * 4] - (mX >> 12);
-    dy = gTouchY[idx * 4] - (mY >> 12);
-    if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31) return 1;
-fail:
     return 0;
 }
 

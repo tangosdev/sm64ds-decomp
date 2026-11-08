@@ -65,6 +65,7 @@
 #include "dExtModel_c.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "nitro/gx/g3imm.h"
@@ -145,7 +146,6 @@ void func_02048234(int *out, int sa, int sb, int sc, int ax, int ay, int az, int
 void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
-extern s16 data_02082214[];
 void func_020527e8(Mtx43 *m, int x, int y, int z);
 void NormalizeVec3(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
@@ -218,16 +218,12 @@ void func_0204531c(char *self, int arg)
 
 extern "C" {
 void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
-    s16 *t = data_02082214;
-    int ia = ax >> 4;
-    int ib = ay >> 4;
-    int ic = az >> 4;
-    int a0 = t[ia * 2];
-    int a1 = t[ia * 2 + 1];
-    int b0 = t[ib * 2];
-    int b1 = t[ib * 2 + 1];
-    int c0 = t[ic * 2];
-    int c1 = t[ic * 2 + 1];
+    int a0 = FX_SinIdx(ax >> 4);
+    int a1 = FX_CosIdx(ax >> 4);
+    int b0 = FX_SinIdx(ay >> 4);
+    int b1 = FX_CosIdx(ay >> 4);
+    int c0 = FX_SinIdx(az >> 4);
+    int c1 = FX_CosIdx(az >> 4);
     int p00 = (int)(((s64)a0 * c0) >> 12);
     int p11 = (int)(((s64)a1 * c1) >> 12);
     int p01 = (int)(((s64)a0 * c1) >> 12);
@@ -379,8 +375,8 @@ void ModelComponents::func_02044b30(int idx) {
         u32 textureId = *(volatile const u32 *)&mat.textureId;
         const BMD_Texture &tex = modelFile->textures[textureId];
         int angle = (u16)(mat.texRotation << 4) >> 4;
-        s16 sin = data_02082214[angle * 2];
-        s16 cos = data_02082214[angle * 2 + 1];
+        s16 sin = FX_SinIdx(angle);
+        s16 cos = FX_CosIdx(angle);
         int sSin = (int)(((s64)mat.texScaleS * sin) >> 12);
         int sCos = (int)(((s64)mat.texScaleS * cos) >> 12);
         int tSin = (int)(((s64)mat.texScaleT * sin) >> 12);
