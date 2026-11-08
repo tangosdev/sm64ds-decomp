@@ -49,6 +49,7 @@
 #include "SharedFilePtr.h"
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
 #include "math/MtxStack.h"
 
@@ -98,7 +99,6 @@ unsigned int func_02045a50(const void *src, unsigned int size);
 }
 
 extern Matrix4x3 data_0209b3ec;
-extern short data_02082214[];
 extern char data_ov080_021277a8[];
 extern SharedFilePtr *data_ov080_0212775c[];
 extern unsigned char data_ov080_02128688[];
@@ -321,14 +321,14 @@ void daPicGate_c::func_ov080_02125af0()
 
 /* RippleHeight: the wave height at a cell, from the phase the wave clock
  * has reached (func_ov080_02125d08) scaled down linearly over the wave's
- * run, looked up in the quarter-wave sine table data_02082214. */
+ * run, through FX_SinIdx of the phase. */
 s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
 {
     unsigned short r4 = mWaveTimer;
     const WaveParams *wave;
-    int r5res, r4res, sum, idx;
+    int r5res, r4res, sum;
     Fix12i f;
-    short tv;
+    fx16 tv;
 
     if (r4 == 0)
         return 0;
@@ -353,8 +353,7 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
     if (sum < 0)
         sum = 0;
 
-    idx = (unsigned short)r5res >> 4;
-    tv = *(short *)((char *)data_02082214 + (idx << 2));
+    tv = FX_SinIdx((unsigned short)r5res >> 4);
     return FX_MUL(tv, sum);
 }
 
