@@ -26,7 +26,6 @@
  *   Vec3_Sub, LenVec3 and AngleDiff are arm9 C helpers no header declares yet.
  * - (Vector3 *)&mRestPosX / &mHitPosX: the class stores those triples as
  *   scalars (issue #2566).
- * - The sine table keeps its arm9 linker name, data_02082214.
  * - Abstract class: the leaves own classInit.
  * - common.h comes first so UpdateModelTransform's Matrix4x3 translation
  *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
@@ -42,6 +41,7 @@
 #include "Sound.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
 #include "ResourceDescriptor.h"
@@ -60,7 +60,6 @@ int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 }
-extern s16 data_02082214[];
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */
@@ -281,20 +280,8 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
         mHitTimer = 0x78;
 
         half = mHorzSpeed >> 1;
-
-        {
-            int idx = ((u16)mAngleY) >> 4;
-            int sc = data_02082214[idx * 2];
-            int v = position->x;
-            position->x = v + FX_MUL(half, sc);
-        }
-
-        {
-            int idx = ((u16)mAngleY) >> 4;
-            int sc = data_02082214[idx * 2 + 1];
-            int v = position->z;
-            position->z = v + FX_MUL(half, sc);
-        }
+        position->x += FX_MUL(half, FX_SinIdx((u16)mAngleY >> 4));
+        position->z += FX_MUL(half, FX_CosIdx((u16)mAngleY >> 4));
     }
 }
 
