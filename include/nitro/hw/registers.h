@@ -56,9 +56,8 @@
 
 /* DISPSTAT bit 1 is the HBlank flag; VCOUNT is the line being drawn. */
 #define REG_DISPSTAT (*(volatile u16 *)0x04000004)
-#define REG_VCOUNT (*(volatile u16 *)0x04000006)
-
 #define DISPSTAT_HBLANK (1u << 1)
+#define REG_VCOUNT (*(volatile u16 *)0x04000006)
 
 /* BG0HOFS is 0x04000010 and BG0VOFS 0x04000012; the ROM sets the pair with one
    32-bit store, so this is typed to match that access rather than split in two. */
