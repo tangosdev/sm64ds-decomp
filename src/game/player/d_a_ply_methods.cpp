@@ -2108,8 +2108,8 @@ void daPly_c::func_ov002_020bf800(Vector3_16f v) {
     int zv = mPosZ - v.z * 0x2bc;
     int yv = mPosY - v.y * 0x2bc;
     Fix12v a(xv), b(yv), d(zv);
-    mParticle1 = Particle::System::New(mParticle1, kPtclCurrentFlow, *(int *)&a, *(int *)&b, *(int *)&d,
-                                       (const Vector3_16f *)(&v), 0);
+    mParticle1 = Particle::System::New(mParticle1, kPtclCurrentFlow, *(int *)&a, *(int *)&b,
+                                       *(int *)&d, (const Vector3_16f *)(&v), 0);
 }
 
 void daPly_c::func_ov002_020bf88c() {
@@ -4151,8 +4151,8 @@ int daPly_c::St_Respawn_Main() {
  */
 extern "C" {
 int daPly_c::St_Respawn_Init() {
-    extern void func_02035860(void*, void*);
-    extern char* gCamera;
+    extern void func_02035860(void *, void *);
+    extern char *gCamera;
     DisableInteraction();
     mPosX = mSpawnPosX;
     mPosY = mSpawnPosY;
@@ -5223,7 +5223,7 @@ int daPly_c::St_DeadHit_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DeadHit_Init() {
-    extern char* gCamera;
+    extern char *gCamera;
     DisableInteraction();
     mIsBodyClsnEnabled = 0;
     int idx = mStateStep & 1;
@@ -5684,7 +5684,7 @@ int daPly_c::St_Teleport_Init() {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
 int daPly_c::func_ov002_020c6e14() {
-    extern void* gCamera[];
+    extern void *gCamera[];
     int idx;
 
     if (gNewStarCollected != 0) {
@@ -7816,8 +7816,10 @@ void daPly_c::func_ov002_020cae10() {
     }
     ang = (short)((mAngleY - GetAngleToCamera(mPlayerNo)) + 0x8000);
     r8 = ang;
-    if (r8 < (int)0xffffd556) r8 = (int)0xffffd556;
-    if (r8 > 0x2aaa) r8 = 0x2aaa;
+    if (r8 < (int)0xffffd556)
+        r8 = (int)0xffffd556;
+    if (r8 > 0x2aaa)
+        r8 = 0x2aaa;
     mHeadRot[1] = (short)FX_MUL(r8, 0xc00);
     mHeadRot[2] = (short)FX_MUL(r4, 0xc00);
     mHeadRotMode = 2;
@@ -8063,9 +8065,9 @@ int daPly_c::St_Climb_Cleanup() {
  */
 extern "C" {
 int daPly_c::St_Climb_Main() {
-    extern void Vec3_RotateYAndTranslate(void*, void*, s16 angle, void*);
-    extern void ApproachAngle(void*, s16 target, s32 divisor, s32 band, s32 maxStep);
-    extern void* gCamera;
+    extern void Vec3_RotateYAndTranslate(void *, void *, s16 angle, void *);
+    extern void ApproachAngle(void *, s16 target, s32 divisor, s32 band, s32 maxStep);
+    extern void *gCamera;
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     extern u8 data_0209f4ac[];
@@ -11373,9 +11375,9 @@ int daPly_c::St_Wait_Cleanup() {
 extern "C" {
 int daPly_c::St_Wait_Main() {
 
-    extern void func_ov002_020bcdf0(void*);
-    extern void func_ov002_020d2e74(void*);
-    extern void* gCamera;
+    extern void func_ov002_020bcdf0(void *);
+    extern void func_ov002_020d2e74(void *);
+    extern void *gCamera;
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
     extern unsigned char gGameMode;
@@ -14851,7 +14853,8 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
     vec.z = data_02082214[(((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2) + 1];
 
     if (param1 != 2) {
-        Particle::System::New(0, kPtclAttackHitA, pos->x, pos->y, pos->z, (const Vector3_16f *)(&vec), 0);
+        Particle::System::New(0, kPtclAttackHitA, pos->x, pos->y, pos->z,
+                              (const Vector3_16f *)(&vec), 0);
         Particle::System::New(0, kPtclAttackHitB, pos->x, pos->y, pos->z, 0, 0);
     } else {
         Particle::System::New(0, kPtclWarioAttackHitA, pos->x, pos->y, pos->z,
@@ -18256,7 +18259,7 @@ int func_ov002_020df300(char* p) {
 extern "C" {
 int daPly_c::TryEnterCannonState() {
     struct dCamera_c {};
-    extern dCamera_c* gCamera;
+    extern dCamera_c *gCamera;
     if (mIsNoControl != 0 || func_ov002_020e0478() != 0 || IsState(data_ov002_0210ffec) != 0) {
         return 0;
     }
