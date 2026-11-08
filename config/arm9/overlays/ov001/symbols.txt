@@ -90,10 +90,10 @@ data_ov001_020abb00 kind:data(any) addr:0x020abb00
 data_ov001_020abb08 kind:data(any) addr:0x020abb08
 data_ov001_020abb10 kind:data(any) addr:0x020abb10
 data_ov001_020abb18 kind:data(any) addr:0x020abb18 ambiguous
-data_ov001_020abb34 kind:data(any) addr:0x020abb34 ambiguous
-data_ov001_020abb54 kind:data(any) addr:0x020abb54 ambiguous
-data_ov001_020abb74 kind:data(any) addr:0x020abb74 ambiguous
-data_ov001_020abb94 kind:data(any) addr:0x020abb94 ambiguous
+_ZN3OAM19PLAYER_SELECT_MARIOE kind:data(any) addr:0x020abb34 ambiguous
+_ZN3OAM19PLAYER_SELECT_LUIGIE kind:data(any) addr:0x020abb54 ambiguous
+_ZN3OAM19PLAYER_SELECT_WARIOE kind:data(any) addr:0x020abb74 ambiguous
+_ZN3OAM19PLAYER_SELECT_YOSHIE kind:data(any) addr:0x020abb94 ambiguous
 data_ov001_020abbb4 kind:data(any) addr:0x020abbb4 ambiguous
 data_ov001_020abbf4 kind:data(any) addr:0x020abbf4 ambiguous
 data_ov001_020abc34 kind:data(any) addr:0x020abc34
@@ -106,8 +106,8 @@ data_ov001_020abc94 kind:data(any) addr:0x020abc94
 data_ov001_020abcb4 kind:data(any) addr:0x020abcb4 ambiguous
 data_ov001_020abcd8 kind:data(any) addr:0x020abcd8
 data_ov001_020abd18 kind:data(any) addr:0x020abd18
-data_ov001_020abd78 kind:data(any) addr:0x020abd78 ambiguous
-data_ov001_020abd80 kind:data(any) addr:0x020abd80 ambiguous
+_ZN3OAM12POINTER_DOWNE kind:data(any) addr:0x020abd78 ambiguous
+_ZN3OAM13POINTER_RIGHTE kind:data(any) addr:0x020abd80 ambiguous
 _ZN3OAM14BOUNCING_ARROWE kind:data(any) addr:0x020abd88 ambiguous
 data_ov001_020abd98 kind:data(any) addr:0x020abd98 ambiguous
 data_ov001_020abda8 kind:data(any) addr:0x020abda8

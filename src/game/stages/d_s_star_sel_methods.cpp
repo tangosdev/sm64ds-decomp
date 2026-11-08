@@ -6,20 +6,13 @@
  *   0x020ade54. The extra D2 is unreferenced and dropped at link.
  *   It is the key function, so this file emits the vtable. The
  *   native vtable, typeinfo and profile now own their complete data range.
- * - opt_strength_reduction off is file-global. Without it Render
- *   grows by 0x10 bytes.
  * - common.h stays before dScStarSel_c.h. The other order grows
  *   Render by 0x18 bytes.
- * - opt_loop_invariants off binds InitResources alone, between a
- *   push and a pop. Without it the star-row loop hoists its +0x23 step.
- * - The seven helpers stay func_ov003_*. Every caller is in this
- *   class, and the bodies only touch this object's fields.
+ * - The seven helpers carry coined names (GetCharacterSlot through
+ *   UpdateCharacterSelect). Every caller is in this class, and the
+ *   bodies only touch this object's fields.
  * - data_020a0e58 is PadData[], so the 4-byte record stride is in the
- *   type. A flat u16[i*2] form costs func_ov003_020ae358 seventeen words.
- * - InitResources keeps one offset spelling: bitsPtr, its second view of
- *   mPlateMask, is built as `(u8 *)this` plus 0x131 in two steps.
- *   `bitsPtr = &mPlateMask` moves the add past the spills and swaps
- *   r5/r6 (10 words).
+ *   type. A flat u16[i*2] form costs UpdateCharacterSelect seventeen words.
  *
  * dScStarSel_c, the star-select screen. ov003 .text
  * 0x020addfc..0x020b0580. Base is dScene_c.
@@ -63,12 +56,6 @@ extern signed char gNumLives;
 extern u8 data_ov001_020ab938;
 extern u8 data_ov001_020ab940;
 extern void *data_ov001_020abb18[];
-extern u8 data_ov001_020abd78;
-extern u8 data_ov001_020abd80;
-extern u8 data_ov001_020abb34;
-extern u8 data_ov001_020abb54;
-extern u8 data_ov001_020abb74;
-extern u8 data_ov001_020abb94;
 extern void *data_ov001_020abcb4[];
 extern u8 data_ov001_020abbb4;
 extern u8 data_ov001_020abbf4;
@@ -92,9 +79,9 @@ dScStarSel_c::~dScStarSel_c() {}
 // source of its own: mwccarm emits it from the definition above, directly
 // after D1, ending with dScene_c's inline operator delete.
 
-// ROM 0x020adec0, size 0x90. The inverse of func_ov003_020adf50: maps a
+// ROM 0x020adec0, size 0x90. The inverse of GetCursorCharacter: maps a
 // character index to its strip slot, or 0 when it has none.
-int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
+int dScStarSel_c::GetCharacterSlot(unsigned int chr) {
     unsigned char mode = mStripMode;
     if (mode == 4) {
         unsigned char *p = sStarSelectCharacterOrder;
@@ -123,7 +110,7 @@ int dScStarSel_c::func_ov003_020adec0(unsigned int chr) {
 // ROM 0x020adf50, size 0x78. Maps the strip slot mCharCursor to a character
 // index: through sStarSelectCharacterOrder when mStripMode is 4, otherwise the
 // mCharCursor-th unlocked character when mStripMode is 2 or more; else 0.
-int dScStarSel_c::func_ov003_020adf50() {
+int dScStarSel_c::GetCursorCharacter() {
     unsigned char mode = mStripMode;
     if (mode == 4) {
         return sStarSelectCharacterOrder[mCharCursor];
@@ -146,11 +133,11 @@ int dScStarSel_c::func_ov003_020adf50() {
 // ROM 0x020adfc8, size 0xe8. Draws the coin record of the current level
 // (SaveData::GetCoinRecord) as three digits drawn right to left, then the
 // TIMES and COIN sprites.
-void dScStarSel_c::func_ov003_020adfc8() {
+void dScStarSel_c::RenderCoinScore() {
     int x = 0xb8;
     int lvl = SublevelToLevel(gNextSublevel);
     int coin = SaveData::GetCoinRecord(lvl);
-    func_ov003_020ae1a4(coin);
+    CalculateDigits(coin);
     int i;
     for (i = 2; i >= 0; i--) {
         signed char d = mDigits[i];
@@ -165,7 +152,7 @@ void dScStarSel_c::func_ov003_020adfc8() {
 
 // ROM 0x020ae0b0, size 0xf4. Draws the power-star count: NumStars() as three
 // digits, drawn right to left, then the TIMES and POWER_STAR sprites.
-void dScStarSel_c::func_ov003_020ae0b0() {
+void dScStarSel_c::RenderStarCount() {
     int x;
     int y;
     if (SublevelToLevel(gNextSublevel) >= 0xf) {
@@ -175,7 +162,7 @@ void dScStarSel_c::func_ov003_020ae0b0() {
         y = 0xac;
         x = 0xf4;
     }
-    func_ov003_020ae1a4(NumStars());
+    CalculateDigits(NumStars());
     {
         int i = 2;
         do {
@@ -194,19 +181,17 @@ void dScStarSel_c::func_ov003_020ae0b0() {
 // ROM 0x020ae1a4, size 0x94. Splits value into three decimal digits in
 // mDigits[0..2], dividing by sStarSelectDecimalDivisors[i] in turn; leading
 // zeros are stored as -1 (blank) except the last digit.
-void dScStarSel_c::func_ov003_020ae1a4(int value) {
+void dScStarSel_c::CalculateDigits(int value) {
     int found = 0;
-    int one = 1;
-    int blank = -1;
     int i;
     for (i = 0; i < 3; i++) {
         unsigned short place = sStarSelectDecimalDivisors[i];
         int digit = value / place;
         if (digit == 0 && found == 0 && i != 2) {
-            mDigits[i] = (char)blank;
+            mDigits[i] = -1;
         } else {
-            found = one;
-            mDigits[i] = (char)digit;
+            found = 1;
+            mDigits[i] = digit;
         }
         value = (unsigned short)(value % place);
     }
@@ -214,7 +199,7 @@ void dScStarSel_c::func_ov003_020ae1a4(int value) {
 
 // ROM 0x020ae238, size 0x120. Draws the life counter: the LIFE_ICONS entry for
 // mLifeIcon, the TIMES sprite, and the three digits of gNumLives.
-void dScStarSel_c::func_ov003_020ae238() {
+void dScStarSel_c::RenderLifeCount() {
     int x;
     int y;
     if (SublevelToLevel(gNextSublevel) >= 0xf) {
@@ -226,7 +211,7 @@ void dScStarSel_c::func_ov003_020ae238() {
     }
     OAM::Render(0, OAM::LIFE_ICONS[mLifeIcon], x, y + 8, -1, -1, 0x1000, 0x1000, 0, -1);
     OAM::Render(0, &OAM::TIMES, x + 0x10, y + 8, -1, -1, 0);
-    func_ov003_020ae1a4((unsigned short)gNumLives);
+    CalculateDigits((unsigned short)gNumLives);
     {
         int i = 0;
         x += 0x18;
@@ -270,7 +255,7 @@ void dScStarSel_c::func_ov003_020ae238() {
 // record read instead of naming the row POINTER: a named row pointer welds both
 // reads onto one address temp and inverts the r2/r3 assignment, while the named
 // index leaves each read to fold its own scale and hands the row temp r2.
-void dScStarSel_c::func_ov003_020ae358() {
+void dScStarSel_c::UpdateCharacterSelect() {
     int idx = gActivePlayerSlot;
     int valid = 0;
     int i;
@@ -302,7 +287,7 @@ void dScStarSel_c::func_ov003_020ae358() {
                     if (((unsigned short)((((u8(*)[4])gTouchHeld)[ri][3] - mCharY[i]) + 0x18)) <
                         0x2b) {
                         mCursorTarget = 1;
-                        mCharCursor = (unsigned char)func_ov003_020adec0(i);
+                        mCharCursor = (unsigned char)GetCharacterSlot(i);
                         data_02092128[0] = (unsigned char)i;
                         data_02092114 = (unsigned char)i;
                         mPickedChar = (unsigned char)i;
@@ -386,13 +371,13 @@ s32 dScStarSel_c::Render() {
     s32 pressY;
     Matrix4x3 mtx;
 
-    func_ov003_020ae238();
-    func_ov003_020ae0b0();
+    RenderLifeCount();
+    RenderStarCount();
 
     if (SublevelToLevel(gNextSublevel) < 0xf) {
         u8 levelNum;
         s32 numX;
-        func_ov003_020adfc8();
+        RenderCoinScore();
         levelNum = SublevelToLevel(gNextSublevel) + 1;
         if (levelNum <= 0xf) {
             if (levelNum >= 10) {
@@ -439,13 +424,13 @@ s32 dScStarSel_c::Render() {
 
         if (mCursorShown != 0) {
             if (mCursorTarget == 0) {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abd78, mPlateX[mSelectedPlate], 6);
+                OAM::RenderSub(&OAM::POINTER_DOWN, mPlateX[mSelectedPlate], 6);
             } else if (mCursorTarget == 1) {
-                int slot = func_ov003_020adf50();
-                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, mCharX[slot] - 0x24,
+                int slot = GetCursorCharacter();
+                OAM::RenderSub(&OAM::POINTER_RIGHT, mCharX[slot] - 0x24,
                                mCharY[slot] - 8);
             } else {
-                OAM::RenderSub((OamAttr *)&data_ov001_020abd80, 0x50, mFaceY + 8);
+                OAM::RenderSub(&OAM::POINTER_RIGHT, 0x50, mFaceY + 8);
             }
         }
 
@@ -497,19 +482,19 @@ s32 dScStarSel_c::Render() {
 
         switch (data_0209caa0.file.mCharacter) {
         case 0:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb34, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_MARIO, 0x80, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 1:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb54, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_LUIGI, 0x80, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 2:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb74, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_WARIO, 0x80, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             break;
         case 3:
-            OAM::Render(1, (OamAttr *)&data_ov001_020abb94, 0x80, mFaceY, -1, -1, mFaceScaleX,
+            OAM::Render(1, &OAM::PLAYER_SELECT_YOSHI, 0x80, mFaceY, -1, -1, mFaceScaleX,
                         mFaceScaleY, (u16)mFaceAngle, -1);
             for (i = 0; i < 3; i++) {
                 pressY = 0;
@@ -518,7 +503,7 @@ s32 dScStarSel_c::Render() {
                 }
                 if (SaveData::IsCharacterUnlocked(i) != 0) {
                     if (mAnimMode == 2) {
-                        if (i == func_ov003_020adf50()) {
+                        if (i == GetCursorCharacter()) {
                             if (mAnimFlip == 0) {
                                 OAM::Render(1, (OamAttr *)data_ov001_020abcb4[i + 3], mCharX[i],
                                             mCharY[i], -1, -1, mIconScaleX, mIconScaleY, 0, -1);
@@ -575,8 +560,8 @@ s32 dScStarSel_c::Render() {
 // flag in the second, `num` the picked character and then the plate count. The
 // register allocator orders webs by where their variable is first assigned, so the
 // sharing is what puts the plate count in r0 and the slot index in r2 at the loop;
-// as four fresh locals they colour the other way round. The file's
-// opt_strength_reduction off keeps the frame at 0x834 (with it on, r8 is pushed).
+// as four fresh locals they colour the other way round (re-measured: 8 words differ;
+// splitting `val` alone still leaves 6).
 
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *p);
@@ -623,7 +608,7 @@ s32 dScStarSel_c::Behavior() {
                 func_02012790(0x12e);
             } else if (mAnimMode == 0) {
                 if (val == 1) {
-                    num = func_ov003_020adf50();
+                    num = GetCursorCharacter();
                     data_02092128[0] = num;
                     data_02092114 = num;
                     mPickedChar = num;
@@ -704,7 +689,7 @@ s32 dScStarSel_c::Behavior() {
                 mPlatePressTimer = data_0208ee44 * 3;
             }
             if (mAnimMode == 0) {
-                func_ov003_020ae358();
+                UpdateCharacterSelect();
             }
         }
 
@@ -886,29 +871,25 @@ extern u8 gSubScreenLayers;
 
 s32 dScStarSel_c::InitResources() {
     void *file;
-    s32 loopI;
-    u8 accB;
-    s32 anyUnfilled;
-    u8 bitPos;
+    s32 starNo;
+    u8 collected;
+    s32 anyMissing;
+    u8 plate;
     u32 totalStars;
     u8 level;
-    s32 sp8;
-    s32 spC;
-    s32 varOne;
-    u8 *bitsPtr;
-    u8 tmpU8;
-    u8 colorVal;
-    s32 idx2;
-    s32 charIdx;
-    u8 charCount;
-    s32 charCountM1;
-    u8 tabSL;
-    u8 tabSB;
-    s32 varFp;
-    s32 idx8;
-    s8 *tablePtr;
-    s32 varR6;
-    u8 tabR5;
+    u8 count;
+    u8 plateX;
+    s32 i;
+    s32 chr;
+    u8 unlocked;
+    s32 row;
+    u8 charY;
+    u8 charSprite;
+    s32 placed;
+    s32 stepIdx;
+    s8 *yStep;
+    s32 nextChr;
+    u8 charX;
 
     LoadTextNarcs();
     LoadArchive(0);
@@ -1008,9 +989,9 @@ s32 dScStarSel_c::InitResources() {
     Deallocate(file);
     file = LoadFile(ASSET_D_2D_BTM_ICON_NCG_BIN);
     {
-        char *a5 = (char *)0x06400000;
-        a5 += 0x2000;
-        DecompressLZ16(file, a5);
+        char *dst = (char *)0x06400000;
+        dst += 0x2000;
+        DecompressLZ16(file, dst);
     }
     Deallocate(file);
     if (GetOwnerLanguage() == 5) {
@@ -1050,9 +1031,9 @@ s32 dScStarSel_c::InitResources() {
     case 0:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCG_BIN);
         {
-            char *a6 = (char *)0x06600000;
-            a6 += 0x4000;
-            DecompressLZ16(file, a6);
+            char *dst = (char *)0x06600000;
+            dst += 0x4000;
+            DecompressLZ16(file, dst);
         }
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCL_BIN);
@@ -1064,9 +1045,9 @@ s32 dScStarSel_c::InitResources() {
     case 1:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCG_BIN);
         {
-            char *a6 = (char *)0x06600000;
-            a6 += 0x4000;
-            DecompressLZ16(file, a6);
+            char *dst = (char *)0x06600000;
+            dst += 0x4000;
+            DecompressLZ16(file, dst);
         }
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCL_BIN);
@@ -1078,9 +1059,9 @@ s32 dScStarSel_c::InitResources() {
     case 2:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCG_BIN);
         {
-            char *a6 = (char *)0x06600000;
-            a6 += 0x4000;
-            DecompressLZ16(file, a6);
+            char *dst = (char *)0x06600000;
+            dst += 0x4000;
+            DecompressLZ16(file, dst);
         }
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCL_BIN);
@@ -1092,9 +1073,9 @@ s32 dScStarSel_c::InitResources() {
     case 3:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCG_BIN);
         {
-            char *a6 = (char *)0x06600000;
-            a6 += 0x4000;
-            DecompressLZ16(file, a6);
+            char *dst = (char *)0x06600000;
+            dst += 0x4000;
+            DecompressLZ16(file, dst);
         }
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCL_BIN);
@@ -1107,58 +1088,52 @@ s32 dScStarSel_c::InitResources() {
 
     level = (u8)SublevelToLevel(gNextSublevel);
     if ((u32)level <= 0xE) {
-        accB = 0;
-        anyUnfilled = 0;
-        bitPos = 0;
+        collected = 0;
+        anyMissing = 0;
+        plate = 0;
         totalStars = CountStarsCollectedInLevelToDisplay(level);
         if (IsStarCollected(level, 0) != 0) {
             totalStars = (u32)(u8)(totalStars - 1);
         }
         mSelectedPlate = 0xFF;
         mPlateMask = 0;
-        loopI = 1;
-        if ((u32)accB < totalStars) {
-            sp8 = 1;
-            spC = 1;
-            varOne = 1;
-            /* &mPlateMask, built in two steps (see the leftovers note). */
-            bitsPtr = (u8 *)this;
-            bitsPtr += 0x131;
+        starNo = 1;
+        if ((u32)collected < totalStars) {
             do {
-                if (IsStarCollected(level, loopI) != 0) {
-                    mPlateMask |= (u8)(varOne << bitPos);
-                    accB += 1;
+                if (IsStarCollected(level, starNo) != 0) {
+                    mPlateMask |= (u8)(1 << plate);
+                    collected += 1;
                 } else {
                     if (mSelectedPlate == 0xFF) {
-                        mSelectedPlate = bitPos;
-                        *bitsPtr |= (u8)(sp8 << bitPos);
+                        mSelectedPlate = plate;
+                        mPlateMask |= (u8)(1 << plate);
                     }
-                    anyUnfilled = spC;
+                    anyMissing = 1;
                 }
-                bitPos += 1;
-                loopI += 1;
-            } while ((u32)accB < totalStars);
+                plate += 1;
+                starNo += 1;
+            } while ((u32)collected < totalStars);
         }
-        mPlateCount = bitPos;
-        if ((anyUnfilled == 0) && (totalStars != 7)) {
+        mPlateCount = plate;
+        if ((anyMissing == 0) && (totalStars != 7)) {
             mPlateCount += 1;
             if (mSelectedPlate == 0xFF) {
-                mSelectedPlate = bitPos;
-                mPlateMask |= (u8)(1 << bitPos);
+                mSelectedPlate = plate;
+                mPlateMask |= (u8)(1 << plate);
             }
         }
         if (mSelectedPlate == 0xFF) {
             mSelectedPlate = 0;
         }
-        tmpU8 = mPlateCount;
-        if (tmpU8 & 1)
-            colorVal = 0x80;
+        count = mPlateCount;
+        if (count & 1)
+            plateX = 0x80;
         else
-            colorVal = 0x92;
-        colorVal -= ((s32)tmpU8 >> 1) * 0x23;
-        for (idx2 = 0; idx2 < (s32)mPlateCount; idx2++) {
-            mPlateX[idx2] = colorVal;
-            colorVal += 0x23;
+            plateX = 0x92;
+        plateX -= ((s32)count >> 1) * 0x23;
+        for (i = 0; i < (s32)mPlateCount; i++) {
+            mPlateX[i] = plateX;
+            plateX += 0x23;
         }
     }
 
@@ -1172,14 +1147,14 @@ s32 dScStarSel_c::InitResources() {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
     }
 
-    charIdx = 0;
+    chr = 0;
     mStripMode = 0;
     do {
-        if (SaveData::IsCharacterUnlocked(charIdx) != 0) {
+        if (SaveData::IsCharacterUnlocked(chr) != 0) {
             mStripMode++;
         }
-        charIdx += 1;
-    } while (charIdx < 4);
+        chr += 1;
+    } while (chr < 4);
 
     if (SublevelToLevel(gNextSublevel) <= 0xE) {
         if ((mStripMode != 1) && (data_0209caa0.file.mCharacter == 3)) {
@@ -1189,31 +1164,31 @@ s32 dScStarSel_c::InitResources() {
             mFaceY = 0x60;
             mBounceDelay = 0;
         }
-        charCount = mStripMode;
-        charCountM1 = charCount - 1;
-        tabR5 = sStarSelectCharXStart[charCountM1];
-        tabSL = sStarSelectCharYStart[charCountM1];
-        if ((u32)charCount > 1U) {
-            varFp = 0;
-            varR6 = 0;
-            tabSB = sStarSelectCharSpriteStart[charCountM1];
-            idx8 = (charCount - 2) * 4;
-            if (charCountM1 > 0) {
-                tablePtr = &sStarSelectCharYStep[idx8];
+        unlocked = mStripMode;
+        row = unlocked - 1;
+        charX = sStarSelectCharXStart[row];
+        charY = sStarSelectCharYStart[row];
+        if ((u32)unlocked > 1U) {
+            placed = 0;
+            nextChr = 0;
+            charSprite = sStarSelectCharSpriteStart[row];
+            stepIdx = (unlocked - 2) * 4;
+            if (row > 0) {
+                yStep = &sStarSelectCharYStep[stepIdx];
                 do {
-                    if (SaveData::IsCharacterUnlocked(varR6) != 0) {
-                        mCharX[varR6] = tabR5;
-                        mCharY[varR6] = tabSL;
-                        mCharSprite[varR6] = tabSB;
-                        varFp += 1;
-                        tabR5 = (u8)(tabR5 + sStarSelectCharXStep[idx8]);
-                        tabSL = (u8)(tabSL + *tablePtr);
-                        tabSB = (u8)(tabSB + 1);
-                        tablePtr += 1;
-                        idx8 += 1;
+                    if (SaveData::IsCharacterUnlocked(nextChr) != 0) {
+                        mCharX[nextChr] = charX;
+                        mCharY[nextChr] = charY;
+                        mCharSprite[nextChr] = charSprite;
+                        placed += 1;
+                        charX = (u8)(charX + sStarSelectCharXStep[stepIdx]);
+                        charY = (u8)(charY + *yStep);
+                        charSprite = (u8)(charSprite + 1);
+                        yStep += 1;
+                        stepIdx += 1;
                     }
-                    varR6 += 1;
-                } while (varFp < (s32)(mStripMode - 1));
+                    nextChr += 1;
+                } while (placed < (s32)(mStripMode - 1));
             }
         }
     }
