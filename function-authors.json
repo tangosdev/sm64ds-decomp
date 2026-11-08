@@ -2287,7 +2287,7 @@
     },
     "arm9:0x020165c4": {
       "author": "tangosdev",
-      "name": "func_020165c4"
+      "name": "_ZN19dExtBlendAnmModel_c15InitBlendBufferEPc"
     },
     "arm9:0x02016604": {
       "author": "tangosdev",
@@ -2443,7 +2443,7 @@
     },
     "arm9:0x02016e70": {
       "author": "tangosdev",
-      "name": "func_02016e70"
+      "name": "GetCommonModelComponents"
     },
     "arm9:0x02016f08": {
       "author": "tangosdev",
@@ -2459,11 +2459,11 @@
     },
     "arm9:0x02016ff4": {
       "author": "tangosdev",
-      "name": "_ZN11dExtModel_c13func_02016ff4EP8BMD_Fileii"
+      "name": "_ZN11dExtModel_c13SetLoadedFileEP8BMD_Fileii"
     },
     "arm9:0x02017060": {
       "author": "tangosdev",
-      "name": "func_02017060"
+      "name": "TrimModelFile"
     },
     "arm9:0x020170b8": {
       "author": "andrewboudreau",

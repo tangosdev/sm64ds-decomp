@@ -103,7 +103,7 @@ typedef char ModelBone_size_must_be_0x34[sizeof(struct ModelBone) == 0x34 ? 1 : 
 #ifdef __cplusplus
 
 /* 0x14 bytes, at +0x8 of a dExtSimpleModel_c (embedded) or behind +0x8 of a dExtCommonModel_c
-   or dExtShadowModel_c (pointer to a pool entry from func_02016e70). The runtime
+   or dExtShadowModel_c (pointer to a pool entry from GetCommonModelComponents). The runtime
    view of a loaded model: built from the BMD file by func_020462d0,
    rendered by 0x020443c8. */
 struct ModelComponents {
@@ -192,9 +192,10 @@ struct dExtModel_c {
        flows straight out. Callers corroborate: daShl_c::InitResources tests
        the result and bails on 0. */
     int SetFile(BMD_File *file, int a, int b);       /* dispatches DoSetFile */
-    /* SetFile's loading twin (0x02016ff4): rebases the file's offsets, runs
-       DoSetFile, and on success shrinks the file to its reported size. */
-    int func_02016ff4(BMD_File *, int, int);
+    /* SetFile's loading twin (0x02016ff4; coined name): rebases the file's
+       offsets, runs DoSetFile, and on success shrinks the file to its
+       reported size. */
+    int SetLoadedFile(BMD_File *, int, int);
     /* Retail callers pass two scalar words. The second is unused here;
        its unsigned type/name are reconstructed, not recovered source spelling.
        See notes/experiments/applyopacity-api-0920.md. */
