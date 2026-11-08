@@ -37,6 +37,7 @@
 #include "MgBanner.h"
 #include "Sound.h"
 #include "types.h"
+#include "nitro/fx/fx_trig.h"
 #include "dEnemyBase_c.h"
 #include "PlayerInput.h"
 #include "CP15.h"
@@ -1116,15 +1117,14 @@ void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
 extern int *sMgMenuItem0SpritesByLanguage[];
 extern int *sMgMenuItem1SpritesByLanguage[];
 extern int *sMgMenuItem2SpritesByLanguage[];
-extern s16 data_02082214[];
 extern OamAttr *data_ov006_021346bc;
 
 /* Draws the three-item overlay menu: each item's per-language sprite list
    at its mMenuItemNX/Y, followed by data_ov006_021346bc at the same spot.
    The highlighted item (mMenuCursor) goes through a matrix whose diagonal
-   is func_02053200 of a pulse that mMenuCursorPhase drives through the
-   sin/cos table data_02082214. Nothing is drawn while
-   mTouchOptions.Draw() returns nonzero. */
+   is func_02053200 of a pulse that mMenuCursorPhase drives through
+   FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
+   nonzero. */
 extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
 {
     int extra[3];
@@ -1150,8 +1150,7 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
             s16 *pos;
             u16 v;
             int *pbuf = buf;
-            int scale =
-                func_02053200((int)((((s64)data_02082214[idx * 2] << 11) + 0x800) >> 12) + 0x1000);
+            int scale = func_02053200(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
             {
                 volatile int *vp = pbuf;
@@ -3190,7 +3189,6 @@ extern "C" {
    the products written out in the body it lands in ip or r3. */
 struct M { int _00, _01, _10, _11; };
 extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
-extern s16 data_02082214[];
 extern OamAttr *sMgDigitSprites[];
 
 static inline int FX_Mul(int v1, int v2)
@@ -3206,9 +3204,6 @@ static inline void MTX_Rot22(struct M *p, int sinVal, int cosVal)
     p->_10 = -sinVal;
     p->_11 = cosVal;
 }
-
-static inline s16 FX_SinIdx(int idx) { return data_02082214[idx << 1]; }
-static inline s16 FX_CosIdx(int idx) { return data_02082214[(idx << 1) + 1]; }
 
 void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u16 angle)
 {

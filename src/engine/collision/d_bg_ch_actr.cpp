@@ -10,8 +10,9 @@
  * so the ctor and dtor are defined first and the plain functions land in
  * reverse definition order. The func_0203* workers inside the run are its
  * unnamed mFlags plumbing, sub-object accessors, and step helpers; the ROM
- * gives them no member name, so they stay extern "C" free functions taking
- * the object by raw pointer. */
+ * gives them no member name, so they keep address names. func_020371b0, the
+ * floor-result commit, is a member; the rest stay extern "C" free functions
+ * taking the object by raw pointer. */
 // leftovers: the checker-family helpers stay local
 // externs (no non-generated header declares them). The func_0203* workers keep
 // address names (no member evidence names them); five of them keep raw-pointer
@@ -33,9 +34,6 @@ int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
 void func_02038234(int a, int b);
 void func_02038324(void *arg, int b, int c, int d);
 int  SurfaceInfo_TestFlag0x20(int *p);
-
-/* This TU's own workers, defined below. */
-void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround); /* floor-result commit */
 }
 
 /* Lifecycle first; the group emits at the run's tail. Both bodies are empty:
@@ -114,13 +112,13 @@ extern "C" void func_020371fc(char *self)
    and kill vertical speed unless limited movement is set. `wasOnGround` is
    the frame's ground state on entry, so the just-hit flag only fires on the
    transition. */
-extern "C" void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround) {
+void dBgCh_Actr::func_020371b0(s32 wasOnGround) {
     if (wasOnGround == 0)
-        clsn->SetJustHitGroundFlag();
-    func_02038234((int)clsn->GetFloorResult(), (int)clsn->mActor);
-    clsn->SetGroundFlag();
-    if (clsn->GetLimMovFlag() == 0)
-        clsn->mActor->mVertSpeed = 0;
+        SetJustHitGroundFlag();
+    func_02038234((int)GetFloorResult(), (int)mActor);
+    SetGroundFlag();
+    if (GetLimMovFlag() == 0)
+        mActor->mVertSpeed = 0;
 }
 
 void dBgCh_Actr::UpdateDiscreteNoLava()
@@ -151,7 +149,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     if (mSphereClsn.DetectClsn()) {
         disp = &mSphereClsn.disp;
         if (mSphereClsn.flags & 4) {
-            func_020371b0(this, onGround);
+            func_020371b0(onGround);
         }
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
@@ -192,7 +190,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     if (mSphereClsn.DetectClsnSlot0()) {
         disp = &mSphereClsn.disp;
         if (mSphereClsn.flags & 4) {
-            func_020371b0(this, onGround);
+            func_020371b0(onGround);
         }
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
@@ -315,7 +313,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         self->mSphereClsn.SetFloorResult(floorHit);
         self->mSphereClsn.flags |= 1;
         (dBgPi &)self->mSphereClsn = floorHit;
-        func_020371b0(self, onGround);
+        self->func_020371b0(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -327,7 +325,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
     if (self->mSphereClsn.DetectClsnExceptSlot0()) {
         Vector3 *disp = &self->mSphereClsn.disp;
         if ((self->mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(self, onGround);
+            self->func_020371b0(onGround);
         if (self->ShouldUpdatePos()) {
             pos->x += disp->x;
             if (self->ShouldUpdatePosY())
@@ -443,7 +441,7 @@ void dBgCh_Actr::UpdateContinuous()
         mSphereClsn.SetFloorResult(floorHit);
         mSphereClsn.flags |= 1;
         (dBgPi &)mSphereClsn = floorHit;
-        func_020371b0(this, onGround);
+        func_020371b0(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -455,7 +453,7 @@ void dBgCh_Actr::UpdateContinuous()
     if (mSphereClsn.DetectClsn()) {
         Vector3 *disp = &mSphereClsn.disp;
         if ((mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(this, onGround);
+            func_020371b0(onGround);
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
             if (ShouldUpdatePosY())
@@ -563,7 +561,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         mSphereClsn.SetFloorResult(floorHit);
         mSphereClsn.flags |= 1;
         (dBgPi &)mSphereClsn = floorHit;
-        func_020371b0(this, onGround);
+        func_020371b0(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -575,7 +573,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     if (mSphereClsn.DetectClsnSlot0()) {
         Vector3 *disp = &mSphereClsn.disp;
         if ((mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(this, onGround);
+            func_020371b0(onGround);
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
             if (ShouldUpdatePosY())
@@ -738,7 +736,7 @@ void dBgCh_Actr::UpdateExtraContinous()
             mSphereClsn.SetFloorResult(floorHit);
             mSphereClsn.flags |= 1;
             (dBgPi &)mSphereClsn = floorHit;
-            func_020371b0(this, wasOnGround);
+            func_020371b0(wasOnGround);
             floorCommitted = true;
         }
         if (hitWall) {
@@ -757,7 +755,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         if (mSphereClsn.DetectClsn()) {
             Vector3 *disp = &mSphereClsn.disp;
             if ((mSphereClsn.flags & 4) && !floorCommitted) {
-                func_020371b0(this, wasOnGround);
+                func_020371b0(wasOnGround);
                 floorCommitted = true;
             }
             pos->x = pos->x + disp->x;
@@ -810,7 +808,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                             mSphereClsn.flags |= 1;
                             (dBgPi &)mSphereClsn = lineHit;
                             if (!floorCommitted)
-                                func_020371b0(this, wasOnGround);
+                                func_020371b0(wasOnGround);
                         } else if (band == 2 && !(mSphereClsn.flags & 0x10)) {
                             const dBgPi &lineHit = mRaycastLine;
                             mSphereClsn.flags |= 0x10;
