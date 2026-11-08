@@ -217,7 +217,7 @@ s32 daDgr_c::Behavior() {
             loc[2] = along * kDustReach + mPosZ;
             mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
-                                                   (Particle::Callback *)((void *)0));
+                                                   (dPa_c::level_c::callback_c *)((void *)0));
         }
         {
             s32 along;
@@ -228,7 +228,7 @@ s32 daDgr_c::Behavior() {
             loc[2] = mPosZ - along * kDustReach;
             mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
-                                                   (Particle::Callback *)((void *)0));
+                                                   (dPa_c::level_c::callback_c *)((void *)0));
         }
     }
 

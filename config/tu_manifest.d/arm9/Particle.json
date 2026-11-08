@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x020226d4..0x020233d4, 31 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "TOP EDGE: src/unnamed/arm9/0202/func_020226d0.c (0x020226d0..0x020226d4) ends exactly where the run begins -- a four-byte helper with no Particle affinity. BOTTOM EDGE: src/GetActorDebugName.c (0x020233d4..0x020233f0) begins exactly where the run ends and belongs to the actor-debug name table, not the particle engine.",
-    "FAMILY COMPLETE: every member of the run either is a real Particle:: member (SysTracker lifecycle, Texture allocators, System::FromUniqueID, RenderAll, SetSelfDestructFlag), carries a Particle:: mangled symbol as an extern \"C\" identifier (System::New and its fixed-effect-id wrappers, RunningSlidingDustAt, NewSimple), or is an address-named System::New call wrapper touching the same gParticleSysTracker singleton / callback bank. func_02023178 is the bump allocator Initialise hands to the manager."
+    "FAMILY COMPLETE: every member of the run either is a real Particle:: member (SysTracker lifecycle, Texture allocators, System::FromUniqueID, RenderAll, SetSelfDestructFlag), carries a Particle:: mangled symbol as an extern \"C\" identifier (System::New and its fixed-effect-id wrappers, RunningSlidingDustAt, NewSimple), or is an address-named System::New call wrapper touching the same gParticleControl singleton / callback bank. func_02023178 is the bump allocator Initialise hands to the manager."
   ],
   "sections": [
     {
@@ -26,28 +26,28 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_020226fc",
+      "symbol": "_ZN8Particle6System20NewFlamethrowerBlueBEiiiss",
       "address": "0x020226fc",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_020226fc.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_02022774",
+      "symbol": "_ZN8Particle6System20NewFlamethrowerBlueAEiiiss",
       "address": "0x02022774",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_02022774.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_020227ec",
+      "symbol": "_ZN8Particle6System19NewFlamethrowerRedBEiiiss",
       "address": "0x020227ec",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_020227ec.c",
       "ordinal": 3
     },
     {
-      "symbol": "func_02022864",
+      "symbol": "_ZN8Particle6System19NewFlamethrowerRedAEiiiss",
       "address": "0x02022864",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0202/func_02022864.c",
@@ -75,14 +75,14 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_020229f0",
+      "symbol": "_ZN8Particle6System9NewBubbleEiii",
       "address": "0x020229f0",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_020229f0.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_02022a4c",
+      "symbol": "_ZN8Particle6System9NewSplashEiii",
       "address": "0x02022a4c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0202/func_02022a4c.c",
@@ -110,7 +110,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN8Particle6System17NewUnkCallback818EjjiiiPK11Vector3_16f",
+      "symbol": "_ZN8Particle6System16NewCleanParticleEjjiiiPK11Vector3_16f",
       "address": "0x02022bb4",
       "size": "0x00000044",
       "legacy_source": "src/_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f.c",
@@ -131,35 +131,35 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_02022c80",
+      "symbol": "_ZN8Particle6System17NewFitWaterRaisedEjjiiiPK11Vector3_16f",
       "address": "0x02022c80",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0202/func_02022c80.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_02022cbc",
+      "symbol": "_ZN8Particle6System11NewFitWaterEjjiiiPK11Vector3_16f",
       "address": "0x02022cbc",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0202/func_02022cbc.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_02022d00",
+      "symbol": "_ZN8Particle6System19NewCheckWaterRippleEjjiiiPK11Vector3_16f",
       "address": "0x02022d00",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0202/func_02022d00.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_02022d44",
+      "symbol": "_ZN8Particle6System13NewCheckWaterEjjiiiPK11Vector3_16f",
       "address": "0x02022d44",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0202/func_02022d44.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8Particle6System3NewEjjiiiPK11Vector3_16fPNS_8CallbackE",
+      "symbol": "_ZN8Particle6System3NewEjjiiiPK11Vector3_16fPN5dPa_c7level_c10callback_cE",
       "address": "0x02022d80",
       "size": "0x000000e8",
       "legacy_source": "src/_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE.c",
@@ -187,17 +187,17 @@
       "ordinal": 23
     },
     {
-      "symbol": "_ZN8Particle10SysTracker6UpdateEv",
+      "symbol": "_ZN5dPa_c6UpdateEv",
       "address": "0x02022f20",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN8Particle10SysTracker6UpdateEv.cpp",
+      "legacy_source": "src/_ZN5dPa_c6UpdateEv.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8Particle10SysTracker10InitialiseEv",
+      "symbol": "_ZN5dPa_c10InitialiseEv",
       "address": "0x02022f40",
       "size": "0x000001ac",
-      "legacy_source": "src/_ZN8Particle10SysTracker10InitialiseEv.cpp",
+      "legacy_source": "src/_ZN5dPa_c10InitialiseEv.cpp",
       "ordinal": 25
     },
     {
@@ -222,17 +222,17 @@
       "ordinal": 28
     },
     {
-      "symbol": "_ZN8Particle10SysTrackerD1Ev",
+      "symbol": "_ZN5dPa_cD1Ev",
       "address": "0x02023194",
       "size": "0x00000070",
-      "legacy_source": "src/_ZN8Particle10SysTrackerD1Ev.cpp",
+      "legacy_source": "src/_ZN5dPa_cD1Ev.cpp",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN8Particle10SysTrackerC1Ev",
+      "symbol": "_ZN5dPa_cC1Ev",
       "address": "0x02023204",
       "size": "0x000001d0",
-      "legacy_source": "src/_ZN8Particle10SysTrackerC1Ev.cpp",
+      "legacy_source": "src/_ZN5dPa_cC1Ev.cpp",
       "ordinal": 30
     }
   ],
@@ -240,12 +240,12 @@
   "bss": [],
   "compiler_only_output": [
     {
-      "symbol": "_ZN8Particle10SysTrackerC2Ev",
+      "symbol": "_ZN5dPa_cC2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-subobject constructor beside C1; the cartridge homes only C1 for this class (SysTracker is never constructed as a base subobject), so the emitted C2 section is dropped unenrolled"
     },
     {
-      "symbol": "_ZN8Particle10SysTrackerD2Ev",
+      "symbol": "_ZN5dPa_cD2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-subobject destructor beside D1; the cartridge homes only D1 for this class, so the emitted D2 section is dropped unenrolled"
     },
@@ -259,7 +259,7 @@
   ],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
-    "SysTracker is the single particle-engine owner living in the global at gParticleSysTracker: mContents (a 0x748-byte registry), the 0x750..0x81c callback bank, mManager, and the resource-file pointer. The constructor emits the callback-bank member construction and vptr writes before its field writes; C2/D2 variants are emitted and deadstripped.",
+    "SysTracker is the single particle-engine owner living in the global at gParticleControl: mContents (a 0x748-byte registry), the 0x750..0x81c callback bank, mManager, and the resource-file pointer. The constructor emits the callback-bank member construction and vptr writes before its field writes; C2/D2 variants are emitted and deadstripped.",
     "System::New is the front door every wrapper reaches: it resolves uniqueID through Contents::FindData, refreshes the entry's System position/direction and fires the entry callback's SpawnParticles virtual, or falls through to Contents::Create. The seven fixed-effect-id wrappers (RunningSlidingDust, simple callbacks at 0x75c/0x774/0x780/0x798/0x7a4/0x7b0/0x7c0/0x7d0/0x7e0 slots, big splash, ripple, weather, callback_818, and the 0x7f0..0x808 bank) stay extern \"C\" under their ROM identifiers.",
     "func_02023178 is the bump allocator Initialise passes to the manager factory func_0204a4c8 (whose first parameter is char*(*)(int)); it advances sParticleHeapCursor.",
     "mwccarm emits .text in reverse source order in this TU, so definitions run ROM-descending in the file; the manifest function list stays ROM-ascending."
@@ -274,14 +274,14 @@
     "functions_declared": 31,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN8Particle10SysTrackerC2Ev",
-        "_ZN8Particle10SysTrackerD2Ev",
+        "_ZN5dPa_cC2Ev",
+        "_ZN5dPa_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
         "_ZN7Vector3D1Ev",
-        "_ZN8Particle10SysTrackerC2Ev",
-        "_ZN8Particle10SysTrackerD2Ev"
+        "_ZN5dPa_cC2Ev",
+        "_ZN5dPa_cD2Ev"
       ],
       "droppedSections": [
         51,

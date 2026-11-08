@@ -31,11 +31,11 @@ typedef unsigned char u8;
 typedef signed short s16;
 typedef signed int s32;
 
-extern int func_02065a4c(int x);
+extern int WBT_AidbitmapToAid(int x);
 extern FileShareNode *func_02041ce0(void *area, int offset, int size);
 extern FileShareNode *func_02041c64(void *area, int offset, int size);
 extern FileShareNode *func_02041c2c(void *area, int blockId);
-extern struct WBTBlockInfoList *func_020657fc(int key);
+extern struct WBTBlockInfoList *WBT_UnregisterBlock(int key);
 extern void func_02041ae8(void *base, void *node);
 extern void func_020423c8(void);
 extern void func_0204175c(void);
@@ -69,7 +69,7 @@ void func_020412f0(char *thiz)
     WBTPrepareSendDataCallback *n;
     WBTCommand *cmd = (WBTCommand *)thiz;
 
-    sb = func_02065a4c(cmd->peer_bmp);
+    sb = WBT_AidbitmapToAid(cmd->peer_bmp);
     if (cmd->command != 0xc)
         return;
 
@@ -142,7 +142,7 @@ void func_020412f0(char *thiz)
                 p->mRefCount -= 1;
                 if (p->mRefCount <= 0) {
                     p->mWaitingChildren = 0;
-                    func_020657fc(m->w1);
+                    WBT_UnregisterBlock(m->w1);
                     func_02041ae8(base, p);
                     func_020423c8();
                 }

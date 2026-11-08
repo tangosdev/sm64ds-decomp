@@ -80,6 +80,12 @@ struct OAM {
     static OamAttr *MM_VS_PLAYER_ICONS_S[];
     static OamAttr *MM_STAR_MARKERS[];
     static OamAttr *MM_STAR_KEYS[];
+    /* HEALTH_METER_0..8, indexed by the health shown. */
+    static OamAttr *HEALTH_METERS[];
+    /* The minimap cap icons, indexed by the cap's character (0 M, 1 L,
+       2 W); dMap_c::Render picks the VS set when gGameMode is 1. */
+    static OamAttr *MM_CAP_ICONS[];
+    static OamAttr *MM_VS_CAP_ICONS[];
     static OamAttr TIMES;
     static OamAttr COIN;
     static OamAttr POWER_STAR;
@@ -95,8 +101,34 @@ struct OAM {
     static OamAttr VS_NEW_STAR_APPEARED;
     static OamAttr VS_TIME;
     static OamAttr VS_TIME_UP;
+    /* dMeter_c::RenderVsTimer's translations of VS_TIME and VS_TIME_UP,
+       picked by GetOwnerLanguage(): 2 French, 3 German, 4 Italian,
+       5 Spanish (NitroSDK OS_LANGUAGE_* order). */
+    static OamAttr VS_TIME_FR;
+    static OamAttr VS_TIME_DE;
+    static OamAttr VS_TIME_IT;
+    static OamAttr VS_TIME_ES;
+    static OamAttr VS_TIME_UP_FR;
+    static OamAttr VS_TIME_UP_DE;
+    static OamAttr VS_TIME_UP_IT;
+    static OamAttr VS_TIME_UP_ES;
     static OamAttr TIME;
+    /* dMeter_c::RenderTimeTimer's "TIME" caption for French, Italian and
+       Spanish (GetOwnerLanguage() 2, 4, 5). */
+    static OamAttr TIME_FR_IT_ES;
     static OamAttr MINUTES;
+    /* The seconds mark after the race timer's seconds digits. */
+    static OamAttr SECONDS;
+    /* One collected red coin in the top-screen HUD row. */
+    static OamAttr RED_COIN;
+    /* The health meter's background, drawn with HEALTH_METERS[n]. */
+    static OamAttr HEALTH_METER_BG;
+    /* dMeter_c::RenderHealthMeter's Spanish (GetOwnerLanguage() 5) and
+       French/Italian (2, 4) health meters and backgrounds. */
+    static OamAttr *HEALTH_METERS_ES[];
+    static OamAttr *HEALTH_METERS_FR_IT[];
+    static OamAttr HEALTH_METER_BG_ES;
+    static OamAttr HEALTH_METER_BG_FR_IT;
     static OamAttr MM_SMALL_STAR;
     static OamAttr MM_ARROW;
     static OamAttr MM_RED_COIN;

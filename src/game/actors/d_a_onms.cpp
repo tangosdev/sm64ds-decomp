@@ -47,6 +47,7 @@ enum daOnms_c_AssetId {
 
 #include "daOnms_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Sound.h"
@@ -256,7 +257,7 @@ void daOnms_c::StateKnocked()
         dActor_c *o;
         int *p;
         TriplePoofDust();
-        Particle::System::NewSimple(0xfa, mPosX, mPosY, mPosZ);
+        Particle::System::NewSimple(kPtclTumbleBoxBreak, mPosX, mPosY, mPosZ);
         MarkForDestruction();
         o = mPlayerActor;
         p = &o->mPosX;

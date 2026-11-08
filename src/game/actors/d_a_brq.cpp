@@ -37,6 +37,7 @@
 #include "math/Approach.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "dBgCh_Gnd.h"
 #include "daPly_c.h"
 #include "math/MtxStack.h"
@@ -306,8 +307,8 @@ s32 daBrq_c::EnterDefeatedState() {
     mVertSpeed = 0x28000;
     mStateTimer = 0x2d;
     mAnmModel.SetAnim((BCA_File *)data_ov070_0212360c.filePtr, 0x40000000, 0x1000, 0);
-    Particle::System::NewSimple(0x43, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0x44, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY, mPosZ);
     mState = 2;
     return 1;
 }

@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "One contiguous run of the 2D engines' BG base-address getters, 0x02054d38..0x020551f0: for each of BG0..BG3 the screen-base and character-base getter of the main engine (G2) and the sub engine (G2S), sixteen functions with no gaps.",
     "Each G2S getter sits directly below its G2 twin (BG0 screen at the top through BG3 character at the bottom), the pairing the Nitro SDK's gx_bgcnt source file uses.",
-    "Vram__Map (0x02054c80..0x02054d38) below is a VRAM-bank mapper and func_020551f0 above has a different shape; neither calls into or is called by the getter set.",
+    "Vram__Map (0x02054c80..0x02054d38) below is a VRAM-bank mapper and G2x_ChangeBlendBrightness_ (0x020551f0) above has a different shape; neither calls into or is called by the getter set.",
     "No data, bss or RTTI: the getters read fixed I/O registers and return computed addresses, so nothing but the sixteen functions emits."
   ],
   "sections": [

@@ -78,6 +78,7 @@
 
 #include "daYegg_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -497,8 +498,8 @@ void daYegg_c::func_ov002_020ecb0c()
                 rot.x = FX_SinIdx((u16)mAngleY >> 4);
                 rot.y = 0;
                 rot.z = FX_CosIdx((u16)mAngleY >> 4);
-                mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, pos.x, pos.y, pos.z,
-                                                        (const Vector3_16f *)&rot, 0);
+                mParticleHandle = Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, pos.x,
+                                                        pos.y, pos.z, (const Vector3_16f *)&rot, 0);
                 mSoundHandle =
                     Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
                 flag = 1;
@@ -1152,10 +1153,10 @@ void func_ov002_020edca4(daYegg_c* self)
         }
     }
 
-    Particle::System::NewSimple(0x3f, self->mPosX, self->mPosY, self->mPosZ);
-    Particle::System::NewSimple(0x40, self->mPosX, self->mPosY, self->mPosZ);
-    Particle::System::NewSimple(0x41, self->mPosX, self->mPosY, self->mPosZ);
-    Particle::System::NewSimple(0x42, self->mPosX, self->mPosY, self->mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakA, self->mPosX, self->mPosY, self->mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakB, self->mPosX, self->mPosY, self->mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakC, self->mPosX, self->mPosY, self->mPosZ);
+    Particle::System::NewSimple(kPtclYoshiEggBreakD, self->mPosX, self->mPosY, self->mPosZ);
     self->MarkForDestruction();
     Sound::PlayCharVoice(0, 0x103, self->mCamSpacePos);
 

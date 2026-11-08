@@ -1,205 +1,168 @@
 //cpp
-/* Particle::SysTracker::Contents, arm9 .text 0x02021a04..0x02021e40.
+/* dPa_c::level_c, arm9 .text 0x02021a04..0x02021e40.
  *
- * The live-system registry: 64 entries and 16 buckets, hashed by
- * uniqueID & 0xf. Entry::Initialise and Entry::Reset set one node up
- * and tear it down. Contents walks the pool, creates a system and
- * links or unlinks the node.
+ * The level-emitter registry: 64 emitter_c slots chained in 16 hash
+ * buckets by id & 0xf. emitter_c::entry and emitter_c::cleanup set one
+ * slot up and tear it down. level_c walks the slots, creates a system and
+ * adds it to or cuts it from the table.
+ *
+ * Names: `dPa_c::level_c` is ROM RTTI (the callback classes are nested in
+ * it). The member names follow Twilight Princess's dPa_control_c::level_c,
+ * whose routines are this algorithm; see include/dPa_c.h.
  *
  * leftovers:
- * - Entry::Initialise copies system into a local before writing the
- *   direction. Writing through the member directly DIFFs Initialise.
- * - Entry::Reset clears callbackFlags bit 0 and then sets it. A
- *   single |= on the field DIFFs Reset.
- * - Update widens active == 1 to an int before testing it. A plain
- *   if on entry->active DIFFs Update.
- * - gParticleSysTracker is the global tracker. This TU does not own it.
+ * - emitter_c::entry copies mEmitter into a local before writing the
+ *   direction. Writing through the member directly DIFFs entry.
+ * - emitter_c::cleanup clears callbackFlags bit 0 and then sets it. A
+ *   single |= on the field DIFFs cleanup.
+ * - execute widens mStatus == 1 to an int before testing it. A plain
+ *   if on emitter->mStatus DIFFs execute.
+ * - gParticleControl is the global dPa_c. This TU does not own it.
  */
-
 #include "Particle__System.h"
 
-namespace Particle {
-
-bool SysTracker::Contents::Entry::Initialise(
-    u32 newUniqueID, u32 newDefinitionID, Vector3& position,
-    const Vector3_16f *direction,
-    dPa_c::level_c::callback_c *newCallback)
-{
-    SystemDefinition::Data& data =
-        *gParticleSysTracker->mManager->mDefinitions[newDefinitionID].data;
-
+bool dPa_c::level_c::emitter_c::entry(u32 id, u32 nameId, Vector3 &position,
+                                      const Vector3_16f *direction, callback_c *callback) {
+    Particle::SystemDefinition::Data &data = *gParticleControl->mManager->mDefinitions[nameId].data;
     data.flags &= ~0x4000;
-    system = gParticleSysTracker->mManager->AddSystem(newDefinitionID, position);
-    if (system == 0)
+    mEmitter = gParticleControl->mManager->AddSystem(nameId, position);
+    if (mEmitter == 0)
         return false;
-
-    if (newDefinitionID == 0x52 || newDefinitionID == 0x50) {
-        if (system->polygonIDs.min <= 5 && system->polygonIDs.max >= 5)
-            system->polygonIDs.current = 5;
+    if (nameId == 0x52 || nameId == 0x50) {
+        if (mEmitter->polygonIDs.min <= 5 && mEmitter->polygonIDs.max >= 5)
+            mEmitter->polygonIDs.current = 5;
     }
-
-    savedValue = data.callbackValue;
+    mSavedCallbackValue = data.callbackValue;
     data.callbackValue = 0;
-
     if (direction != 0) {
-        System *createdSystem = system;
+        Particle::System *createdSystem = mEmitter;
         createdSystem->direction.x = direction->x;
         createdSystem->direction.y = direction->y;
         createdSystem->direction.z = direction->z;
     }
-
-    if (newCallback != 0)
-        newCallback->SpawnParticles(*system);
-
-    uniqueID = newUniqueID;
-    definitionID = newDefinitionID;
-    active = 1;
-    callback = newCallback;
-    prev = 0;
-    next = 0;
+    if (callback != 0)
+        callback->SpawnParticles(*mEmitter);
+    mId = id;
+    mNameId = nameId;
+    mStatus = 1;
+    mCallback = callback;
+    mPre = 0;
+    mNext = 0;
     return true;
 }
 
-void SysTracker::Contents::Entry::Reset() {
-    SystemDefinition::Data &data = *gParticleSysTracker->mManager->mDefinitions[definitionID].data;
+void dPa_c::level_c::emitter_c::cleanup() {
+    Particle::SystemDefinition::Data &data =
+        *gParticleControl->mManager->mDefinitions[mNameId].data;
     u32 *flagsAddress;
     u32 flags;
-
-    data.callbackValue = savedValue;
-    flagsAddress = &system->callbackFlags;
+    data.callbackValue = mSavedCallbackValue;
+    flagsAddress = &mEmitter->callbackFlags;
     flags = *flagsAddress;
     flags &= ~1;
     flags |= 1;
     *flagsAddress = flags;
-    uniqueID = 0;
+    mId = 0;
 }
 
-SysTracker::Contents::Contents()
-{
-    Entry* entry = mEntries;
+dPa_c::level_c::level_c() {
+    emitter_c *emitter = mEmitter;
     int i;
-
     do {
-        entry->uniqueID = 0;
-        entry++;
-    } while (entry != &mEntries[0x40]);
-
-    mLastUniqueID = 0;
-    mCurrentIndex = 0;
+        emitter->mId = 0;
+        emitter++;
+    } while (emitter != &mEmitter[0x40]);
+    mLastId = 0;
+    mFreeNo = 0;
     for (i = 0; i < 0x10; i++)
-        mBuckets[i] = 0;
+        mTable[i] = 0;
 }
 
-void SysTracker::Contents::Update()
-{
-    Entry* entry = mEntries;
+void dPa_c::level_c::execute() {
+    emitter_c *emitter = mEmitter;
     int i;
-
-    for (i = 0; i < 0x40; i++, entry++) {
-        if (entry->uniqueID == 0)
+    for (i = 0; i < 0x40; i++, emitter++) {
+        if (emitter->mId == 0)
             continue;
-
-        if (entry->callback != 0) {
-            bool callbackActive = entry->active == 1;
-            if (entry->callback->OnUpdate(*entry->system, callbackActive))
-                entry->active = 1;
+        if (emitter->mCallback != 0) {
+            bool callbackActive = emitter->mStatus == 1;
+            if (emitter->mCallback->OnUpdate(*emitter->mEmitter, callbackActive))
+                emitter->mStatus = 1;
         }
-
         {
-            int isActive = (int)(entry->active == 1);
+            int isActive = (int)(emitter->mStatus == 1);
             if (isActive != 0) {
-                entry->active = 0;
+                emitter->mStatus = 0;
                 continue;
             }
         }
-
-        Unlink(*entry);
-        mCurrentIndex = i;
+        cutTable(emitter);
+        mFreeNo = i;
     }
 }
 
-void SysTracker::Contents::Clear()
-{
-    Entry* entry = mEntries;
+void dPa_c::level_c::cleanup() {
+    emitter_c *emitter = mEmitter;
     int i;
-
-    for (i = 0; i < 0x40; i++, entry++) {
-        if (entry->uniqueID != 0) {
-            entry->active = 0;
-            Unlink(*entry);
-            mCurrentIndex = i;
+    for (i = 0; i < 0x40; i++, emitter++) {
+        if (emitter->mId != 0) {
+            emitter->mStatus = 0;
+            cutTable(emitter);
+            mFreeNo = i;
         }
     }
 }
 
-SysTracker::Contents::Entry *SysTracker::Contents::FindData(u32 uniqueID) const
-{
-    if (uniqueID == 0)
+dPa_c::level_c::emitter_c *dPa_c::level_c::get(u32 id) {
+    if (id == 0)
         return 0;
-
-    Entry *entry = mBuckets[uniqueID & 0xf];
-    while (entry) {
-        if (uniqueID == entry->uniqueID)
-            return entry;
-        entry = entry->next;
+    emitter_c *emitter = mTable[id & 0xf];
+    while (emitter) {
+        if (id == emitter->mId)
+            return emitter;
+        emitter = emitter->mNext;
     }
     return 0;
 }
 
-u32 SysTracker::Contents::Create(
-    u32 definitionID, Vector3& position, const Vector3_16f *direction,
-    dPa_c::level_c::callback_c *callback)
-{
+u32 dPa_c::level_c::entry(u32 nameId, Vector3 &position, const Vector3_16f *direction,
+                          callback_c *callback) {
     int i;
-
     for (i = 0; i < 0x40; i++) {
-        if (mEntries[mCurrentIndex].uniqueID == 0) {
-            ++mLastUniqueID;
-            if (mLastUniqueID == 0)
-                ++mLastUniqueID;
-
-            if (!mEntries[mCurrentIndex].Initialise(mLastUniqueID, definitionID, position,
-                                                    direction, callback))
+        if (mEmitter[mFreeNo].mId == 0) {
+            ++mLastId;
+            if (mLastId == 0)
+                ++mLastId;
+            if (!mEmitter[mFreeNo].entry(mLastId, nameId, position, direction, callback))
                 return 0;
-
-            Link(mEntries[mCurrentIndex]);
-            return mLastUniqueID;
+            addTable(&mEmitter[mFreeNo]);
+            return mLastId;
         }
-
-        mCurrentIndex = (mCurrentIndex + 1) % 0x40;
+        mFreeNo = (mFreeNo + 1) % 0x40;
     }
-
     return 0;
 }
 
-void SysTracker::Contents::Link(Entry& entry)
-{
-    int index = entry.uniqueID & 0xf;
-    Entry* head = mBuckets[index];
-
+void dPa_c::level_c::addTable(emitter_c *emitter) {
+    int index = emitter->mId & 0xf;
+    emitter_c *head = mTable[index];
     if (head == 0) {
-        mBuckets[index] = &entry;
+        mTable[index] = emitter;
     } else {
-        head->prev = &entry;
-        entry.next = mBuckets[index];
-        mBuckets[index] = &entry;
+        head->mPre = emitter;
+        emitter->mNext = mTable[index];
+        mTable[index] = emitter;
     }
 }
 
-void SysTracker::Contents::Unlink(Entry& entry)
-{
-    Entry* prev = entry.prev;
-    Entry* next = entry.next;
-
-    if (prev == 0)
-        mBuckets[entry.uniqueID & 0xf] = next;
+void dPa_c::level_c::cutTable(emitter_c *emitter) {
+    emitter_c *pre = emitter->mPre;
+    emitter_c *next = emitter->mNext;
+    if (pre == 0)
+        mTable[emitter->mId & 0xf] = next;
     else
-        prev->next = next;
-
+        pre->mNext = next;
     if (next != 0)
-        next->prev = prev;
-
-    entry.Reset();
+        next->mPre = pre;
+    emitter->cleanup();
 }
-
-} // namespace Particle

@@ -57,6 +57,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "decl_Platform.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
@@ -174,7 +175,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
 // 0x02131070 (0x8c)
 void daObjRotateUpdownLift_c::Kill()
 {
-    Particle::System::NewSimple(0xbb, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclUpdownLiftBreak, mPosX, mPosY, mPosZ);
     /* memberwise stores: the (x,y,z) ctor form batches the loads */
     Vector3 v;
     v.x = mPosX;

@@ -210,10 +210,10 @@
       ]
     },
     "Copy36Bytes": {
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 int *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 int *"
       ]
     },
@@ -314,12 +314,12 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
         "param:#3 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
         "param:#3 Vec3 *"
@@ -950,11 +950,11 @@
         "param:#2 const Matrix3x3 *",
         "param:#3 Vector3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 int *",
         "param:#2 int *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 int *",
         "param:#2 int *"
       ]
@@ -1036,11 +1036,11 @@
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
@@ -4135,10 +4135,10 @@
       "src/WM_SetIndCallback.cpp": [
         "return:int"
       ],
-      "src/unnamed/arm9/0206/func_02065170.cpp": [
+      "src/WBT_End.cpp": [
         "return:int"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:int"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
@@ -4181,16 +4181,16 @@
         "param:#1 int",
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02065170.cpp": [
+      "src/WBT_End.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02065234.cpp": [
+      "src/WBT_InitChild.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020652fc.cpp": [
+      "src/WBT_InitParent.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0206/func_020658c0.cpp": [
@@ -6044,7 +6044,7 @@
         "return:void *"
       ]
     },
-    "_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE": {
+    "_ZN5dPa_c7level_c5entryEjR7Vector3PK11Vector3_16fPNS0_10callback_cE": {
       "src/engine/particle/Particle.cpp": [
         "param:#3 void *",
         "param:#4 const void *",
@@ -7104,7 +7104,7 @@
         "param:#2 Vector3 &"
       ]
     },
-    "_ZNK8Particle10SysTracker8Contents8FindDataEj": {
+    "_ZN5dPa_c7level_c3getEj": {
       "src/engine/particle/Particle.cpp": [
         "return:System *"
       ]
@@ -7827,9 +7827,9 @@
         "return:char []"
       ]
     },
-    "gParticleSysTracker": {
+    "gParticleControl": {
       "include/Particle__System.h": [
-        "return:Particle::SysTracker *"
+        "return:dPa_c *"
       ]
     },
     "data_0209ee90": {
@@ -15455,11 +15455,11 @@
       ]
     },
     "func_0204c24c": {
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 unsigned char",
         "param:#2 unsigned char"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 unsigned char",
         "param:#2 unsigned char"
       ],
@@ -15877,7 +15877,7 @@
         "param:#3 int"
       ]
     },
-    "func_020650a0": {
+    "WBT_MpChildSendHook": {
       "src/unnamed/arm9/0204/func_02041930.c": [
         "return:int"
       ]
@@ -15886,7 +15886,7 @@
       "src/unnamed/arm9/0206/func_02064888.c": [
         "return:Node *"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:int *"
       ]
     },
@@ -15903,10 +15903,10 @@
       ]
     },
     "func_02065b94": {
-      "src/unnamed/arm9/0206/func_02065234.cpp": [
+      "src/WBT_InitChild.cpp": [
         "return:char *"
       ],
-      "src/unnamed/arm9/0206/func_020652fc.cpp": [
+      "src/WBT_InitParent.cpp": [
         "return:char *"
       ]
     },

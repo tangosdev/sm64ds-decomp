@@ -1,6 +1,7 @@
 #include "types.h"
 #include "nitro/os/thread.h"
 #include "private/player_input_record.h"
+#include "private/mb_views.h"
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void func_0205a588(void *dst, unsigned char c, unsigned int n);
 extern void func_02042778(void);
@@ -21,19 +22,13 @@ extern void OS_GetMacAddress(void *p);
    link mode 3 and from data_020a10a4 otherwise. Off a download-play child
    this fills in entry 0 of both from the owner settings; data_020a10fe and
    data_020a10a6 are those entries' nickName fields. */
-typedef struct {
-    u8 favoriteColor : 4;
-    u8 hi : 4;
-    u8 nickNameLength;
-} Profile;
-
 extern u8 data_020a0ef0;
 extern u8 data_020a1064[];
 extern u8 data_020a0fec[];
 extern u8 data_020a0fb8[];
 extern u8 data_020a0fa0[];
-extern Profile data_020a10fc;
-extern Profile data_020a10a4;
+extern MBUserInfo data_020a10fc[4];
+extern MBUserInfo data_020a10a4[4];
 extern u8 data_020a0f08;
 extern u16 data_020a0f1c;
 extern u16 data_020a0f30;
@@ -77,8 +72,8 @@ void func_0203db64(void *arg0, void *arg1) {
     func_0205a588(&data_020a1040, 0, 0x24);
     func_0205a588(data_020a0fb8, 0, 0x18);
     func_0205a588(data_020a0fa0, 0, 0x18);
-    func_0205a588(&data_020a10fc, 0, 0x58);
-    func_0205a588(&data_020a10a4, 0, 0x58);
+    func_0205a588(data_020a10fc, 0, 0x58);
+    func_0205a588(data_020a10a4, 0, 0x58);
     func_0205a588(data_020a1154, 0, 0x90);
     data_020a0f08 = 0;
     data_020a0f1c = 0;
@@ -152,13 +147,13 @@ void func_0203db64(void *arg0, void *arg1) {
         }
     } else {
         OS_GetOwnerInfo(&buf);
-        func_0205a588(&data_020a10fc, 0, 0x16);
-        data_020a10fc.favoriteColor = buf.favoriteColor;
-        data_020a10fc.nickNameLength = buf.nickNameLength;
-        data_020a10a4.favoriteColor = data_020a10fc.favoriteColor;
-        data_020a10fc.hi = 0;
-        data_020a10a4.hi = data_020a10fc.hi;
-        data_020a10a4.nickNameLength = data_020a10fc.nickNameLength;
+        func_0205a588(&data_020a10fc[0], 0, 0x16);
+        data_020a10fc[0].favoriteColor = buf.favoriteColor;
+        data_020a10fc[0].nameLength = buf.nickNameLength;
+        data_020a10a4[0].favoriteColor = data_020a10fc[0].favoriteColor;
+        data_020a10fc[0].unknown_04 = 0;
+        data_020a10a4[0].unknown_04 = data_020a10fc[0].unknown_04;
+        data_020a10a4[0].nameLength = data_020a10fc[0].nameLength;
         CpuCopy8(buf.nickName, data_020a10fe, buf.nickNameLength * 2);
         CpuCopy8(buf.nickName, data_020a10a6, buf.nickNameLength * 2);
         data_020a0f00 = buf.language;

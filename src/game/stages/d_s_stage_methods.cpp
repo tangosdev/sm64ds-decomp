@@ -63,7 +63,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "Event.h"
 #include "dExtSimpleModel_c.h"
 #include "dCamera_c.h"
-#include "Particle__SysTracker.h"
+#include "dPa_c.h"
 #include "Fog.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
@@ -602,7 +602,7 @@ void SetMusic(u32 player, u32 music);
 #pragma defer_codegen off
 
 /* Destroy through dScStage_c's own three fields -- dBgW_Kc at 0x91c, dExtSimpleModel_c at
- * 0x86c, Particle::SysTracker at 0x50 -- in reverse declaration order, then
+ * 0x86c, dPa_c at 0x50 -- in reverse declaration order, then
  * dScene_c (now inline-defined in dScene_c.h, so its vptr store and dBase_c's
  * inline in turn), then fBase_c's subobject destructor, called rather than
  * inlined because fBase_c's is not. The deleting variant destroys the same
@@ -3967,7 +3967,7 @@ int dScStage_c::Render() {
             if (area->mShowing != 0 && area->mTransformer != 0)
                 area->mTransformer->Advance();
         }
-        mSysTracker.Update();
+        mParticle.Update();
     }
     func_020391f0();
     RenderFog();
@@ -4830,7 +4830,7 @@ int dScStage_c::InitResources() {
         scene->LoadTextureTransformers();
         scene->LoadSkybox();
         data_0209cef0 = 1;
-        scene->mSysTracker.Initialise();
+        scene->mParticle.Initialise();
 
         u8 f2fc = gPrevReturnState;
         gVsExitScreenActive = 0;
@@ -5139,7 +5139,7 @@ void LoadOrUnloadObjectOverlays(void (*fn)(int), int idx) {
 /* The STAGE registry factory. Every instruction falls out of the one `new`:
  * fBase_c::operator new(sizeof(dScStage_c)), fBase_c's C2, the inlined
  * dBase_c and dScene_c vptr stores and pauseFlags ORs, this class's vptr,
- * then the out-of-line constructors of mSysTracker, mModel and
+ * then the out-of-line constructors of mParticle, mModel and
  * mMeshCollider in member order. The null check is `new`'s own.
  * Reconstructed source-style name (later EAD lineage supplies classInit);
  * historical alias Stage_Spawn. */

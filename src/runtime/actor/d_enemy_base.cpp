@@ -56,6 +56,7 @@
  */
 #include "dEnemyBase_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "decl_dBgPi.h"
@@ -422,8 +423,8 @@ extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
 extern "C" {
 extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);
-extern u32 d_enemy_baseNewUnkCallback818Hold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
-                                             Fix12i z, const Vector3_16f *dir);
+extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
+                                            Fix12i z, const Vector3_16f *dir);
 }
 
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
@@ -451,11 +452,11 @@ int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
         return 1;
     }
     mDeathParticleID0 =
-        (u32)Particle::System::New(mDeathParticleID0, 0x13a, *(int *)((char *)v + 0),
+        (u32)Particle::System::New(mDeathParticleID0, kPtclDeathA, *(int *)((char *)v + 0),
                                    *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0, 0);
     mDeathParticleID1 =
-        Particle::System::NewUnkCallback818(mDeathParticleID1, 0x13b, *(int *)((char *)v + 0),
-                                            *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
+        Particle::System::NewCleanParticle(mDeathParticleID1, kPtclDeathB, *(int *)((char *)v + 0),
+                                           *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
     return 0;
 }
 
@@ -732,10 +733,11 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         dst.y += 0x46000;
     }
 
-    Particle::System::New(0, 0x43, dst.x, dst.y, dst.z, 0, 0);
-    Particle::System::New(0, 0x44, dst.x, dst.y, dst.z, 0, 0);
-    Particle::System::New(0, 0xbf, dst.x, dst.y, dst.z, (const Vector3_16f *)(dirvec), 0);
-    Particle::System::New(0, 0xc0, dst.x, dst.y, dst.z, 0, 0);
+    Particle::System::New(0, kPtclKnockAwayA, dst.x, dst.y, dst.z, 0, 0);
+    Particle::System::New(0, kPtclKnockAwayB, dst.x, dst.y, dst.z, 0, 0);
+    Particle::System::New(0, kPtclAttackHitA, dst.x, dst.y, dst.z, (const Vector3_16f *)(dirvec),
+                          0);
+    Particle::System::New(0, kPtclAttackHitB, dst.x, dst.y, dst.z, 0, 0);
 }
 
 /* What happens when a mega/invincible Mario runs an enemy over. The enemy is
@@ -763,8 +765,8 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
     Sound::PlayBank0(9, mCamSpacePos);
     Vector3 pos = mPos;
     pos.y += OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x43, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x44, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclKnockAwayA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclKnockAwayB, pos.x, pos.y, pos.z);
     player.IncMegaKillCount();
 }
 

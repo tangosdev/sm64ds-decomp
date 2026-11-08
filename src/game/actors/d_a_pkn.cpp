@@ -26,6 +26,7 @@
 
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPkn_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
@@ -316,8 +317,8 @@ void daPkn_c::StateSleep()
         mAnmModel.SetAnim((BCA_File *)data_ov084_02130e0c.filePtr, 0x40000000, 0x1000, 0);
         mState = 3;
         func_02012694(0x175, &mCamSpacePosX);
-        Particle::System::NewSimple(0xfe, mBubblePos.x, mBubblePos.y, mBubblePos.z);
-        Particle::System::NewSimple(0xff, mBubblePos.x, mBubblePos.y, mBubblePos.z);
+        Particle::System::NewSimple(kPtclPiranhaWakeA, mBubblePos.x, mBubblePos.y, mBubblePos.z);
+        Particle::System::NewSimple(kPtclPiranhaWakeB, mBubblePos.x, mBubblePos.y, mBubblePos.z);
         return;
     }
     mLoopSoundHandle = Sound::PlayLong(mLoopSoundHandle, 3, 0x174, mCamSpacePos, 0);
@@ -508,8 +509,8 @@ void daPkn_c::StateDie()
         pos.x += data_ov084_0213030c[(u16)mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
         pos.z += data_ov084_0213030c[(u16)mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
         pos.y += data_ov084_02130334[(u16)mStateTimer] << 12;
-        mParticleHandle =
-            (s32)Particle::System::New(mParticleHandle, 0xfb, pos.x, pos.y, pos.z, 0, 0);
+        mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
+                                                     pos.y, pos.z, 0, 0);
     }
     if (mAnmModel.Finished() == 0)
         return;
@@ -530,10 +531,10 @@ void daPkn_c::StateShrink()
         scale = 0x1000;
     }
 
-    mParticleHandle =
-        (s32)Particle::System::New(mParticleHandle, 0xfc, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
-    mParticleHandle2 =
-        (s32)Particle::System::New(mParticleHandle2, 0xfd, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPosX,
+                                                 mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle2 = (s32)Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX,
+                                                  mPosY + 0x1e000, mPosZ, 0, 0);
 
     if (scale > 0) {
         scale = scale - 0xa3;

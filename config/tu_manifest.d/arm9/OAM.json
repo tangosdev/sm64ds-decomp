@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "CONTIGUOUS AND EXHAUSTIVE: 0x02020820..0x02021a04 is covered by this single src/engine/oam/OAM.cpp complete entry with no gap and no overlap; bounded below by src/unnamed/arm9/0202/func_02020768.c (ends 0x02020820) and above by Particle::SysTracker::Contents::Unlink (starts 0x02021a04).",
+    "CONTIGUOUS AND EXHAUSTIVE: 0x02020820..0x02021a04 is covered by this single src/engine/oam/OAM.cpp complete entry with no gap and no overlap; bounded below by src/unnamed/arm9/0202/func_02020768.c (ends 0x02020820) and above by dPa_c::level_c::cutTable (starts 0x02021a04).",
     "SINGLE CLASS: every function in the range is an OAM member (include/OAM.h). OAM is not polymorphic -- no RTTI/vtable/ctor/dtor -- so no key-function partition applies."
   ],
   "sections": [
