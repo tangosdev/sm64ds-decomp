@@ -186,19 +186,15 @@ void func_ov007_020b2998(void) {
  * the load used data_ov007_020ccc68[0]. */
 void func_ov007_020b283c(void) {
     int figureIndex;
-    /* 64-bit only for the register allocation: the ROM keeps set in its
-     * own register as a copy of figureIndex, and every int spelling tried
-     * (if/else, ?:, re-reading the work block, a work-block local) merges
-     * the two. */
-    long long set;
+    int set;
     int stage;
     int i;
 
     if (WORK->modelReady == 0)
         return;
     figureIndex = WORK->figureIndex;
-    set = figureIndex;
     stage = WORK->strokeStage[figureIndex];
+    set = figureIndex;
     if (figureIndex == 0 && stage == 0)
         set = 2;
     func_ov007_020b3edc(data_ov007_020ccc48[figureIndex]);
