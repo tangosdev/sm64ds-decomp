@@ -23644,18 +23644,24 @@ int main(void)
                 /* SM64DS_SWITCH=<0..3> drives the cap-block character change
                    from a headless run, at frame 90, so the live path has a
                    regression probe instead of only being reachable by hand
-                   through the F5 row. */
+                   through the F5 row. SM64DS_SWITCH=<0..3>@<frame> (TEST ONLY,
+                   run after093 lane CHARSWAP1) makes the same door swap once,
+                   on the first frame from <frame> on with a friend's body in
+                   the level (data_0209f394[1]): the character door taken after
+                   the friends are in, for the online rows. */
                 {
-                    static int sw = -2;
+                    static int sw = -2, sw_at = 90, sw_friend = 0;
                     if (sw == -2) {
                         const char *s = getenv("SM64DS_SWITCH");
                         sw = s ? atoi(s) : -1;
+                        if (s && strchr(s, '@')) { sw_at = atoi(strchr(s, '@') + 1); sw_friend = 1; }
                     }
-                    if (sw >= 0 && frame == 90) {
-                        fprintf(stderr, "[char] SM64DS_SWITCH becoming %s\n",
-                                CHAR_NAME[sw & 3]);
+                    if (sw >= 0 && (sw_friend ? frame >= sw_at && data_0209f394[1] != 0 : frame == 90)) {
+                        fprintf(stderr, "[char] SM64DS_SWITCH becoming %s at frame %d (save character %u)\n",
+                                CHAR_NAME[sw & 3], frame, (unsigned)data_0209cad2[0x0f]);
                         port_player_set_character(c, sw);
                         g_character = g_character_pending = sw & 3;
+                        if (sw_friend) sw = -1;
                     }
                 }
                 /* SM64DS_VS_CHARS: the game side of VS character selection. Each
