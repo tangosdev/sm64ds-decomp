@@ -81,7 +81,10 @@ enum { kFlightSpeed = 0x32000 };
 
 /* dEnemyBase_c declares mStateTimer as an s16, but every use here reads it as
  * an unsigned halfword (ldrh); a signed read is ldrsh and misses by a word.
- * Member-context pun, valid inside the daBook_c methods only. */
+ * Member-context pun, valid inside the daBook_c methods only.
+ * Measured: (u16)mStateTimer value conversions (the popoi treatment) leave
+ * one word in each of the three users with mStateTimer++ (its reload is
+ * ldrsh), and five with mStateTimer = (u16)mStateTimer + 1. */
 #define STATE_TIMER (*(u16 *)&mStateTimer)
 
 extern "C" {
