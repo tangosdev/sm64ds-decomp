@@ -350,7 +350,7 @@ registered for atexit teardown via `func_020731dc(obj, D1, dso-handle)`. There i
 
 **Members.** `dFdColor_c`'s own dsize (vptr + currInterp + speed + color) is 0xe; its
 `sizeof` of 0x10 leaves a 2-byte tail-padding gap at 0xe..0xf that the Itanium ABI lets
-a derived class reuse, and `dWipe_c`'s constructor helper (`func_0202ed14`) does: it
+a derived class reuse, and `dWipe_c`'s constructor helper (`Reset`) does: it
 writes single bytes at both 0xe and 0xf before touching anything past 0x10. Real,
 newly-added storage starts at 0x10.
 

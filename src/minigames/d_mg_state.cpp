@@ -444,7 +444,7 @@ void dMgState_c ::RetryPrompt_Update() {
         if (fader->IsBetweenStartAndEnd())
             return;
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(2);
+        data_0209f61c.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -566,7 +566,7 @@ void dMgState_c::UpdateGameOverToMenu() {
     if (fader->IsBetweenStartAndEnd() != 0)
         return;
     dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.func_0202ec9c(2);
+    data_0209f61c.SetType(2);
     dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void *)0x3c);
 }
@@ -698,7 +698,7 @@ void dMgState_c ::RetryPromptB_Update() {
         if (fader->IsBetweenStartAndEnd())
             return;
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(2);
+        data_0209f61c.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -763,7 +763,7 @@ void dMgState_c::UpdateRetryPrompt() {
         if (data_0209f5bc->IsBetweenStartAndEnd() != 0)
             return;
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(2);
+        data_0209f61c.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;

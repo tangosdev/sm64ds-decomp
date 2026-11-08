@@ -4467,7 +4467,7 @@
     },
     "arm9:0x0202ec9c": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202ec9cEi"
+      "name": "_ZN7dWipe_c7SetTypeEi"
     },
     "arm9:0x0202ecfc": {
       "author": "tangosdev",
@@ -4479,11 +4479,11 @@
     },
     "arm9:0x0202ed14": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202ed14Ev"
+      "name": "_ZN7dWipe_c5ResetEv"
     },
     "arm9:0x0202ed48": {
       "author": "tangosdev",
-      "name": "func_0202ed48"
+      "name": "Wipe_Reset"
     },
     "arm9:0x0202ed7c": {
       "author": "tangosdev",
@@ -4499,23 +4499,23 @@
     },
     "arm9:0x0202ee94": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202ee94Ev"
+      "name": "_ZN7dWipe_c16BuildCircleTableEv"
     },
     "arm9:0x0202efa0": {
       "author": "aitddlabs",
-      "name": "_ZN7dWipe_c13func_0202efa0Ev"
+      "name": "_ZN7dWipe_c14BuildStarTableEv"
     },
     "arm9:0x0202f290": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202f290Ev"
+      "name": "_ZN7dWipe_c10BuildTableEv"
     },
     "arm9:0x0202f2c4": {
       "author": "tangosdev",
-      "name": "func_0202f2c4"
+      "name": "Wipe_HBlankHandler"
     },
     "arm9:0x0202f3a4": {
       "author": "tangosdev",
-      "name": "func_0202f3a4"
+      "name": "Wipe_LatchTable"
     },
     "arm9:0x0202f428": {
       "author": "ruspecial",
@@ -4523,7 +4523,7 @@
     },
     "arm9:0x0202f58c": {
       "author": "andrewboudreau",
-      "name": "_ZN7dWipe_c13func_0202f58cEv"
+      "name": "_ZN7dWipe_c13EnableWindowsEv"
     },
     "arm9:0x0202f708": {
       "author": "tangosdev",
@@ -4535,7 +4535,7 @@
     },
     "arm9:0x0202fb30": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202fb30Ev"
+      "name": "_ZN7dWipe_c14DisableWindowsEv"
     },
     "arm9:0x0202fbc8": {
       "author": "tangosdev",
