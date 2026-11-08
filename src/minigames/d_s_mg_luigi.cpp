@@ -8,14 +8,12 @@
  *
  * Keep source order.
  *
- * Three places only match through a stepped base:
+ * Two places only match through a stepped base:
  * RestartPicture steps by idx (direct mShown[idx] and friends change the
- * code), the grid cell in PlaceNextPicture steps by col * 9 + row (direct
- * &mGrid[col][row] changes it), and TickPictureFlash keeps its blink and
- * shown base pointers (one spelling of the blink timer collapses the two
- * exits). Each spells the member through the stepped base. InitResources
- * and ChooseTarget still copy tiles through a volatile u16; a plain local
- * is shorter.
+ * code), and the grid cell in PlaceNextPicture steps by col * 9 + row (direct
+ * &mGrid[col][row] changes it). Each spells the member through the stepped
+ * base. InitResources and ChooseTarget still copy tiles through a volatile
+ * u16; a plain local is shorter.
  *
  * The measurements behind the source forms of MovePictureSway,
  * MovePictureDriftRandom, PlaceBoardLayout and PlaceNextPicture (for one,
@@ -818,33 +816,19 @@ void dScMgLuigi_c::DrawWantedIcon() {
 }
 
 void dScMgLuigi_c::TickPictureFlash(int pictureIndex) {
-    char *blinkBase = (char *)mBlink;
-    int byteOffset = pictureIndex * 2;
-    unsigned short timer = *(unsigned short *)(blinkBase + byteOffset);
-    unsigned char *shown;
-
-    *(short *)(blinkBase + byteOffset) = (short)(timer - 1);
-
-    if ((short)mBlink[pictureIndex] < 0)
+    mBlink[pictureIndex]--;
+    if ((s16)mBlink[pictureIndex] < 0)
         mBlink[pictureIndex] = 0;
 
-    /* Two exits, not one if/else: folding them changes the code. */
-    if ((((unsigned short)mBlink[pictureIndex] >> 2) & 1) != 0) {
-        char *shownBase = (char *)mShown;
-        shownBase[pictureIndex] = 0;
-        shown = (unsigned char *)(shownBase + pictureIndex);
-        goto after_flag;
-    }
-    {
-        char *shownBase = (char *)mShown;
-        shownBase[pictureIndex] = 1;
-        shown = (unsigned char *)(shownBase + pictureIndex);
-    }
-after_flag:
+    if ((mBlink[pictureIndex] >> 2) & 1)
+        mShown[pictureIndex] = 0;
+    else
+        mShown[pictureIndex] = 1;
+
     if (mBlink[pictureIndex] != 0)
         return;
     mKind[pictureIndex] = 0;
-    *shown = 1;
+    mShown[pictureIndex] = 1;
 }
 
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
