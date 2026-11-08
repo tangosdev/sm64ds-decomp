@@ -88,6 +88,7 @@ enum dScMgHanachan_c_AssetId {
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -205,7 +206,6 @@ extern void Wiggler_StartPathC(Wiggler *c, int param);
 extern void Hana_SpawnWigglers(char *self, int arg1, int arg2);
 extern void Hana_LoadBackground(void);
 
-extern short data_02082214[];
 extern void *sWigglerSprites[];
 extern void *sHanaWigglerTargetSprites[];
 extern void *sHanaWigglerFieldSprites[];
@@ -582,14 +582,13 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
         func_0203d388((int *)&va, -0x4000);
         if (self->bloom == 0) {
             if (i == 0) {
-                rot += data_02082214[((u16)ang >> 4) * 2] >> 1;
+                rot += FX_SinIdx((u16)ang >> 4) >> 1;
             } else {
-                s32 v = data_02082214[((u16)ang >> 4) * 2];
-                rot += (s16)(((s64)v * (0x1800 - B) + 0x800) >> 12);
+                s32 v = FX_SinIdx((u16)ang >> 4);
+                rot += (s16)FX_MUL(v, 0x1800 - B);
             }
         }
-        func_0203d680((Vector2 *)&vout, (const Vector2 *)&va,
-                      data_02082214[((u16)(ang * 2) >> 4) * 2]);
+        func_0203d680((Vector2 *)&vout, (const Vector2 *)&va, FX_SinIdx((u16)(ang * 2) >> 4));
         pos.x = pos.x + vout.x;
         pos.y = pos.y + vout.y;
         res = Wiggler_GetFrame((char *)self, i);
@@ -607,7 +606,7 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
                     vb.y = vb.y + pos.y;
                     OAM::Render(
                         0, (OamAttr *)sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12, -1, -1,
-                        func_02053200((data_02082214[((u16)ang >> 4) * 2] >> 2) + 0xc00), (u16)rot);
+                        func_02053200((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
                 }
             }
         }
@@ -653,10 +652,10 @@ void Wiggler_DrawField(void *arg) {
 
         if (((Wiggler *)raw)->bloom == 0) {
             if (i == 0) {
-                rot = (short)(rot + (data_02082214[((unsigned short)ang >> 4) * 2] >> 1));
+                rot = (short)(rot + (FX_SinIdx((unsigned short)ang >> 4) >> 1));
             } else {
-                int sinv = data_02082214[((unsigned short)ang >> 4) * 2];
-                rot = (short)(rot + (short)(((long long)sinv * (0x1800 - t.B) + 0x800) >> 12));
+                int sinv = FX_SinIdx((unsigned short)ang >> 4);
+                rot = (short)(rot + (short)FX_MUL(sinv, 0x1800 - t.B));
             }
         }
 
@@ -664,7 +663,7 @@ void Wiggler_DrawField(void *arg) {
             rot = (short)(rot & 0xfc00);
         }
         func_0203d680((Vector2 *)&s.vout, (const Vector2 *)&s.va,
-                      data_02082214[((unsigned short)(ang << 1) >> 4) * 2]);
+                      FX_SinIdx((unsigned short)(ang << 1) >> 4));
         s.pos.x += s.vout.x;
         s.pos.y += s.vout.y;
 
@@ -689,8 +688,7 @@ void Wiggler_DrawField(void *arg) {
                 if (fp2 != 0)
                     scale = 0x1000;
                 else
-                    scale =
-                        func_02053200((data_02082214[((unsigned short)ang >> 4) * 2] >> 2) + 0xc00);
+                    scale = func_02053200((FX_SinIdx((unsigned short)ang >> 4) >> 2) + 0xc00);
                 OAM::Render(1, (OamAttr *)sHanaWigglerTargetSprites[fp2], s.vb.x >> 12,
                             s.vb.y >> 12, -1, -1, scale, t.urot);
             } else if (((Wiggler *)raw)->state == &Wiggler::StateWait) {
