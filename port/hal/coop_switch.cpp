@@ -59,6 +59,7 @@ long long wall_ms() {
 enum : unsigned {
     kResendMs      = 100,      // each change goes out 3 times: now, +100, +200
     kHoldMs        = 10000,    // COOPPUZZLE2: how long a field change waits for somebody to be listed
+    kTieMs         = 500,      // COOPPUZZLE3: a single-value field change this young still wins a tie against a higher seat
     kWordOwnerMs   = 1000,
     kWordGuestMs   = 3000,
     kSettleFrames  = 20,       // frames after the objects exist before the word is trusted as ours
@@ -98,7 +99,7 @@ struct PendBit { bool on; uint8_t val; unsigned stamp; int sent; unsigned next; 
 PendBit g_pb[kSwBits];
 
 // object state: trackers by slot, outgoing messages, pending states from the owner
-struct Trk { void *actor; unsigned short cls; int last; bool valid; };
+struct Trk { void *actor; unsigned short cls; int last; bool valid; bool mine_on; unsigned mine_at; };   // mine_*: my last field send
 Trk g_trk[kSwSlots];
 struct ObjOut { bool on; uint8_t kind; uint16_t slot, cls; uint8_t state; int32_t value; uint16_t seq; int sent; unsigned next; unsigned born; };
 ObjOut g_oo[kObjOutMax];
@@ -664,22 +665,47 @@ void settle_word() {
 // ---------------------------------------------------------------------------
 // Object states (press / kick / field).
 // ---------------------------------------------------------------------------
-void apply_to(Trk &t, char *a, const Watch *w, int state, int value) {
+// COOPPUZZLE3: the fields whose changes add up. The pyramid top ORs the gone masks and the stump only lowers its pound
+// counter, so a receiver can take a remote value on top of its own in either order. The others hold one value each (the
+// WDW water target, the bookshelf's book bits and state, a chest's open state): the last write wins, so two writes that
+// cross must be settled by a fixed rule or each console ends with the other's choice.
+bool field_adds(int cls) { return cls == 85 || cls == 27; }
+
+void apply_to(Trk &t, char *a, const Watch *w, int state, int value, int seat) {
     // COOPPUZZLE2: remote messages are applied after the actors ran and before this frame's scan, so a field this console
     // changed in the same frame is already in the read below; taking it as t.last would swallow it and it was never sent
-    // (a pyramid tag touched here in the frame the friend's touch arrived: his top stuck at 3). Send it first. The
-    // receivers merge (the pyramid ORs the gone masks, the shelf takes the bits), so the order is safe.
+    // (a pyramid tag touched here in the frame the friend's touch arrived: his top stuck at 3). For a field that adds up,
+    // send it first and then take the remote one: both consoles end with both changes.
+    // COOPPUZZLE3: for a single-value field the lower seat wins. My unsent change, or one I sent less than kTieMs ago,
+    // beats a higher seat's value: I keep it and send it (again), and the friend takes it because it comes from a lower
+    // seat. A lower seat's value is taken and my unsent change is dropped. One choice is lost; both screens agree.
+    // S-PZ3: a change in the first half second of a level is taken as the start value; no known puzzle is close enough to a start spot to hit it.
     if (g_keep_local && w->kind == kSwKindField && t.valid && t.actor == a) {
         const int pre = w->read(a);
-        if (pre != t.last) {
-            const int slot = (int)(&t - g_trk);
-            t.last = pre;
-            queue_obj(kSwKindField, slot, (int)t.cls, 0, pre, g_now);
-            if (g_log) std::fprintf(stderr, "[coopsw] keep local %s slot=%d value=%d before a remote %d wall=%lld\n", w->name, slot, pre, value, wall_ms());
+        const int slot = (int)(&t - g_trk);
+        if (field_adds(t.cls)) {
+            if (pre != t.last) {
+                t.last = pre;
+                queue_obj(kSwKindField, slot, (int)t.cls, 0, pre, g_now);
+                if (g_log) std::fprintf(stderr, "[coopsw] keep local %s slot=%d value=%d before a remote %d wall=%lld\n", w->name, slot, pre, value, wall_ms());
+            }
+        } else if (seat >= 0 && seat != g_my && pre != value) {
+            const bool unsent = pre != t.last;
+            const bool young = !unsent && t.mine_on && (unsigned)(g_now - t.mine_at) < (unsigned)kTieMs;
+            if ((unsent || young) && g_my < seat) {
+                t.last = pre;
+                queue_obj(kSwKindField, slot, (int)t.cls, 0, pre, g_now);
+                if (unsent) { t.mine_on = true; t.mine_at = g_now; }
+                if (g_log) std::fprintf(stderr, "[coopsw] tie %s slot=%d mine=%d (%s) beats seat %d value=%d wall=%lld\n", w->name, slot, pre,
+                                        unsent ? "unsent" : "young", seat, value, wall_ms());
+                return;
+            }
+            if (unsent && g_log) std::fprintf(stderr, "[coopsw] tie %s slot=%d mine=%d loses to seat %d value=%d wall=%lld\n", w->name, slot, pre, seat, value, wall_ms());
         }
     }
     if (w->apply(a, state, value)) {
         t.last = w->read(a);
+        t.mine_on = false;
         if (w->kind == kSwKindPress) ++g_st.press_applied; else if (w->kind == kSwKindKick) ++g_st.kick_applied; else ++g_st.field_applied;
         if (g_log)
             std::fprintf(stderr, "[coopsw] apply %s slot=%d cls=%d state=%d value=%d wall=%lld\n", w->name,
@@ -688,7 +714,8 @@ void apply_to(Trk &t, char *a, const Watch *w, int state, int value) {
 }
 
 // Returns true when the actor was found (the entry is done, whatever its state).
-bool apply_entry(int kind, int slot, int cls, int state, int value) {
+// seat: the sender of a live message, or -1 for a snapshot or a pending entry (applied as is).
+bool apply_entry(int kind, int slot, int cls, int state, int value, int seat) {
     const Watch *w = find_watch(cls);
     if (!w || w->kind != kind) { ++g_st.drop_class; return true; }
     if (is_door_cls(cls)) {           // by table index: the door needs no actor, and no Player is ever involved
@@ -701,8 +728,8 @@ bool apply_entry(int kind, int slot, int cls, int state, int value) {
     char *a = find_actor(slot, cls);
     if (!a) return false;
     Trk &t = g_trk[slot];
-    if (!t.valid || t.actor != a) { t.actor = a; t.cls = (unsigned short)cls; t.last = w->read(a); t.valid = true; }
-    apply_to(t, a, w, state, value);
+    if (!t.valid || t.actor != a) { t.actor = a; t.cls = (unsigned short)cls; t.last = w->read(a); t.valid = true; t.mine_on = false; }
+    apply_to(t, a, w, state, value, seat);
     return true;
 }
 
@@ -742,7 +769,7 @@ void scan_objects(unsigned now) {
         const int cur = w->read(a);
         Trk &t = g_trk[slot];
         if (!t.valid || t.actor != a || t.cls != cls) {
-            t.actor = a; t.cls = cls; t.last = cur; t.valid = true;
+            t.actor = a; t.cls = cls; t.last = cur; t.valid = true; t.mine_on = false;
             if (g_log && (cls == 13 || cls == 27 || cls == 158 || cls == 353 || cls == 354)) {
                 const int *p = (const int *)(a + 0x5c);
                 std::fprintf(stderr, "[coopsw] track %s slot=%d aslot=%d uid=%u cls=%d param=%d pos=%d,%d,%d read=%d node=%p unlocking=%p wall=%lld\n", w->name,
@@ -759,7 +786,7 @@ void scan_objects(unsigned now) {
         if (cur == t.last) continue;
         const int prev = t.last;
         t.last = cur;
-        if (w->kind == kSwKindField) { queue_obj(kSwKindField, slot, cls, 0, cur, now); continue; }
+        if (w->kind == kSwKindField) { queue_obj(kSwKindField, slot, cls, 0, cur, now); t.mine_on = true; t.mine_at = now; continue; }
         if (prev == 0 && cur != 0)
             queue_obj(w->kind, is_door_cls(cls) ? door_wire_idx(a) : slot, cls, w->kind == kSwKindPress ? 1 : (cur > 3 ? 3 : cur), 0, now);
     }
@@ -769,7 +796,7 @@ void drain_pending(unsigned) {
     for (Pend &p : g_pend) {
         if (!p.on) continue;
         if (g_frames - p.born > kStatesAge) { p.on = false; continue; }
-        if (apply_entry(p.kind, p.slot, p.cls, p.state, p.value)) { p.on = false; ++g_st.states_applied; }
+        if (apply_entry(p.kind, p.slot, p.cls, p.state, p.value, -1)) { p.on = false; ++g_st.states_applied; }
     }
 }
 
@@ -901,7 +928,7 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
                          kind == kSwKindPress ? "press" : kind == kSwKindKick ? "kick" : "field", seat,
                          (int)w.slot, (int)w.cls, (int)w.state, (int)w.value, wall_ms());
         // The actor may not exist yet (still loading): keep it as a pending state.
-        if (!apply_entry(kind, w.slot, w.cls, kind == kSwKindField ? 0 : w.state, w.value)) {
+        if (!apply_entry(kind, w.slot, w.cls, kind == kSwKindField ? 0 : w.state, w.value, seat)) {
             SwStateEntry e = {w.slot, w.cls, (uint8_t)kind, kind == kSwKindField ? (uint8_t)0 : w.state, w.value};
             put_pending(e);
         }
