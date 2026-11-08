@@ -356,16 +356,16 @@ struct daPly_c : dActor_c {
      * triangle in the collision data rather than derived from a surface ID.
      * NOTE the latch at 0x020c1738: if mFloorClass is already 1 the function
      * returns early, refreshing neither the class nor the floor normal. */
-    s32 mFloorClass;    /* 0x658  CLPS bits 12-14, getter CLPS::GetFloorClass */
-    s32 mClpsBits15_18; /* 0x65c  CLPS bits 15-18, getter CLPS::func_02037e48 */
-    s32 mClpsBits6_11;  /* 0x660  CLPS bits 6-11, getter CLPS::func_02037e68 */
+    s32 mFloorClass;          /* 0x658  CLPS bits 12-14, getter CLPS::GetFloorClass */
+    s32 mFloorCameraBehavior; /* 0x65c  CLPS bits 15-18, getter CLPS::GetCameraBehavior */
+    s32 mFloorViewID;         /* 0x660  CLPS bits 6-11, getter CLPS::GetViewID */
     s32 mSurfaceType; /* 0x664  CLPS bits 19-23, getter CLPS::GetSurfaceType; values 6..9 are the quicksand tiers */
     /* mSurfaceType as func_ov002_020c14b8's floor probe left it (0 on a
        miss), kept beside mProbedGroundY. func_ov002_020c0fb4 tests it == 1,
        the lava floor: within 0x2000 of mProbedGroundY it starts St_BurnLava. */
     s32 mProbedSurfaceType;          /* 0x668 */
-    s32 mGroundSoundType;            /* 0x66c  CLPS bits 0-4, getter CLPS::func_02037e84 */
-    s32 mClpsWord1Lo;                /* 0x670  CLPS word1 bits 0-7, getter CLPS::func_02037e90 */
+    s32 mGroundSoundType;            /* 0x66c  CLPS bits 0-4, getter CLPS::GetSoundType */
+    s32 mFloorPathID;                /* 0x670  CLPS word1 bits 0-7, getter CLPS::GetPathID */
     s32 mHurtDamage;            /* 0x674 */
     /* Two music layers over the level music, both Sound::SetMusic ids.
        StartPowerupMusic(id) starts a power-up's music in mPowerupMusic

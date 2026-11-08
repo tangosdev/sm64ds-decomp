@@ -497,7 +497,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-dWipe_c/dWipe_c.o (gitignored)",
+    "object": "build/tu/arm9-dWipe_c/d_wipe.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 21,
     "functions_declared": 21,
@@ -518,12 +518,12 @@
         10,
         11,
         12,
-        15,
         16,
-        53,
-        54,
-        61,
-        62
+        17,
+        55,
+        56,
+        63,
+        64
       ],
       "data": [
         "_ZTI8dFader_c",
@@ -540,12 +540,13 @@
         "_ZTS10dFdColor_c",
         "_ZTS15dFdBrightness_c",
         "_ZTS8dFader_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -714,9 +715,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@333",
+      "from": "@331",
       "to": "@261",
-      "evidence": "the compiler emits @334, which ov033 daObjTtWater_c already defines as a global (config/arm9/overlays/ov033/symbols.txt @334 kind:bss addr:0x021124f8), so the pin is the unused @261. It was @333 until dWipe_c::SetForwardTime gained its second parameter; @333 is an ov033 global too, so the collision argument is unchanged. Re-keyed from @334 to @333 when the opt pragma was removed and func_0202efa0's pixel pointer became a struct index (#821); @333 is the ov033 global noted above, so the pin stands."
+      "evidence": "the compiler emits @334, which ov033 daObjTtWater_c already defines as a global (config/arm9/overlays/ov033/symbols.txt @334 kind:bss addr:0x021124f8), so the pin is the unused @261. It was @333 until dWipe_c::SetForwardTime gained its second parameter; @333 is an ov033 global too, so the collision argument is unchanged. Re-keyed from @334 to @333 when the opt pragma was removed and func_0202efa0's pixel pointer became a struct index (#821); @333 is the ov033 global noted above, so the pin stands. Re-keyed from @333 to @331, measured by prepush_linkcheck, when SetBackwardTime dropped its self alias (#821); the pin stays @261 because arm9 already defines @331 at 0x0209f5dc."
     }
   ]
 }
