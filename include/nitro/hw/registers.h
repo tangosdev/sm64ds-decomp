@@ -106,6 +106,18 @@
 #define REG_LIGHT_VECTOR (*(volatile u32 *)0x040004c8)
 #define REG_LIGHT_COLOR  (*(volatile u32 *)0x040004cc)
 
+/* 3D geometry commands: matrix stack, polygon setup and the vertex list. The
+   texture-parameter pair (0x040004a8, 0x040004ac) is in nitro/gx/g3imm.h. */
+#define REG_MTX_MODE     (*(volatile u32 *)0x04000440)
+#define REG_MTX_IDENTITY (*(volatile u32 *)0x04000454)
+#define REG_MTX_SCALE    (*(volatile u32 *)0x0400046c)
+#define REG_NORMAL       (*(volatile u32 *)0x04000484)
+#define REG_TEXCOORD     (*(volatile u32 *)0x04000488)
+#define REG_VTX_16       (*(volatile u32 *)0x0400048c)
+#define REG_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
+#define REG_BEGIN_VTXS   (*(volatile u32 *)0x04000500)
+#define REG_END_VTXS     (*(volatile u32 *)0x04000504)
+
 /* Timer 0. The counter and the control word share an address: reads see the live
    count, writes set the reload value. */
 #define REG_TM0CNT_L (*(volatile u16 *)0x04000100)
