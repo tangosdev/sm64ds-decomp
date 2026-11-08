@@ -20,8 +20,6 @@
  * into dBgW's slot.
  *
  * What stays:
- * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW's
- *   callback slots; naming belongs with dBgW in arm9.
  * - The named local in OnStoodOn is load-bearing -- folded
  *   into the `if`, mwcc emits 0x14 and the cartridge's is 0x20.
  */
@@ -60,12 +58,6 @@ typedef char TikuwaCollisionFilePtr_size_must_be_8[sizeof(TikuwaCollisionFilePtr
 
 extern TikuwaModelFilePtr gRcTikuwaModelFile;
 extern TikuwaCollisionFilePtr gRcTikuwaCollisionFile;
-
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
 
 daObjRc_Tikuwa_c::~daObjRc_Tikuwa_c() {}
 
@@ -140,8 +132,8 @@ s32 daObjRc_Tikuwa_c::InitResources() {
     void *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)data_ov036_02112b48);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);
     mTerminalVelocity = -0x1e000;
     mVertAccel = ~0x198;

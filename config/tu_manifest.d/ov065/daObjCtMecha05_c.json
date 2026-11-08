@@ -500,12 +500,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@571",
+      "from": "@569",
       "to": "@637",
       "evidence": "mwcc numbers this registration node @517 per TU and the fleet already defines a global @517, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     },
     {
-      "from": "@572",
+      "from": "@570",
       "to": "@634",
       "evidence": "mwcc numbers this registration node @518 per TU and the fleet already defines a global @518, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
     }

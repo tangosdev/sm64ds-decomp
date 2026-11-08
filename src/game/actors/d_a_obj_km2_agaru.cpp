@@ -1,7 +1,5 @@
 //cpp
 /* What stays:
- * - func_020393d4 and func_020393c4 install dBgW's two callback words.
- *   dBgW has no setter for them.
  * - data_ov045_02113180 and 02113188 are this TU's KCL and BMD handles.
  *   data_ov045_021125d0, the CLPS block, stays overlay data.
  *
@@ -43,12 +41,6 @@ CLPS_Block data_ov045_021125d0 = {
     0x53504c43, 0x00020008, 0x00000fc0, 0x000000ff, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
 };
 
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
-
 enum {
     kPlayerActorID = 0xbf,
     kWaitFrames = 20,
@@ -78,8 +70,8 @@ s32 daObjKm2_Agaru_c::InitResources() {
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov045_02113180);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov045_021125d0);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     mWaitTimer = 0;
     mState = 0;

@@ -345,33 +345,26 @@ void daBook_c::func_ov020_0211174c()
     {
         /* waits out mStateTimer, then slides back 4 units a frame until it
          * is 40 units behind its home position */
-        u16 *ctr = &STATE_TIMER;
-        s32 *z;
-        u32 *fl;
-        if (*ctr != 0) {
-            *ctr -= 1;
+        if (STATE_TIMER != 0) {
+            STATE_TIMER -= 1;
             return;
         }
-        z = &mPosZ;
-        *z -= 0x4000;
+        mPosZ -= 0x4000;
         if (mHomePosZ - mPosZ < 0x28000)
             return;
         mPosZ = mHomePosZ - 0x28000;
-        fl = &mdCcAcPos_c.flags;
         mState = STATE_SWITCH_READY;
-        *fl &= ~1;
+        mdCcAcPos_c.flags &= ~1;
         return;
     }
     case STATE_SWITCH_READY:
     {
         /* an attack or a metal-player touch turns the collider on (clears
          * flags bit 0) and starts the push */
-        u32 *fl;
         if (func_ov020_021115ac() <= 0)
             return;
-        fl = &mdCcAcPos_c.flags;
         mState = STATE_SWITCH_PUSH;
-        *fl |= 1;
+        mdCcAcPos_c.flags |= 1;
         Sound::PlayBank0(kSfxSwitchPush, mCamSpacePos);
         return;
     }
@@ -379,8 +372,7 @@ void daBook_c::func_ov020_0211174c()
     {
         /* slides forward 10 units a frame; once home, checks the push order
          * and tells the partner this book was pushed */
-        s32 *z = &mPosZ;
-        *z += 0xa000;
+        mPosZ += 0xa000;
         if (mPosZ < mHomePosZ)
             return;
         {
@@ -399,15 +391,13 @@ void daBook_c::func_ov020_0211174c()
         /* if the partner cleared this book's bit, retract and try again;
          * phase 2 sends the book off along +x until x reaches -1500 units,
          * phase 3 removes it at once */
-        s32 *x;
         if ((partner->mBookFlags & (1 << param1)) == 0) {
             mState = STATE_SWITCH_RETRACT;
             mStateTimer = 0xa;
             return;
         }
         if (partner->mState == 2) {
-            x = &mPosX;
-            *x += 0x5000;
+            mPosX += 0x5000;
             if (mPosX < -0x5dc000)
                 return;
             MarkForDestruction();
@@ -433,15 +423,11 @@ void daBook_c::func_ov020_021119dc()
 {
     func_0203568c((int *)&mWithMeshClsn, 0x64000);
     if (mSpitOutTimer != 0) {
-        unsigned short *p = &mSpitOutTimer;
-        *p = (unsigned short)(*p - 1);
-        if (mSpitOutTimer != 0) {
-            u32 *q = &mdCcAcPos_c.flags;
-            *q = *q | 1;
-        } else {
-            u32 *q = &mdCcAcPos_c.flags;
-            *q = *q & ~1;
-        }
+        mSpitOutTimer--;
+        if (mSpitOutTimer != 0)
+            mdCcAcPos_c.flags |= 1;
+        else
+            mdCcAcPos_c.flags &= ~1;
     }
     ApproachLinear(mVertSpeed, 0, 0x800);
     ApproachLinear(mHorzSpeed, 0, 0x800);
@@ -461,16 +447,10 @@ void daBook_c::func_ov020_02111aa8()
     mCoinType = 0;
     STATE_TIMER++;
     if (STATE_TIMER >= 3) {
-        int *bf;
-        int t;
-        int sid;
         mState = STATE_FLY;
         mHorzSpeed = kFlightSpeed;
-        bf = (int *)&mdCcAcPos_c.flags;
-        t = *bf;
-        sid = kSfxTakeOff;
-        *bf = t & ~1;
-        func_0201267c(sid, &mCamSpacePos);
+        mdCcAcPos_c.flags &= ~1;
+        func_0201267c(kSfxTakeOff, &mCamSpacePos);
     }
     ApproachLinear(mHorzSpeed, kFlightSpeed, 0x1000);
     UpdatePos(0);
@@ -497,8 +477,8 @@ void daBook_c::func_ov020_02111b28() {
         return;
     {
         Vector3 normal;
-        void *w = mWithMeshClsn.GetWallResult();
-        ((SurfaceInfo *)((char *)w + 4))->CopyNormalTo(normal);
+        dBgPi *w = mWithMeshClsn.GetWallResult();
+        w->surface.CopyNormalTo(normal);
         short angle = cstd::atan2(normal.x, normal.z);
         if (GetSubtraction(mPrevAngleY, angle) <= 0x4000)
             return;

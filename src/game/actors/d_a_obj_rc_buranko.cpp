@@ -33,9 +33,6 @@
  *
  * UpdateModelMatrix is a coined name; the ROM records none.
  *
- * What stays: func_020393d4 is a 4-byte store into dBgW+0x18
- *   (beforeClsnCallback). This TU stores dBgW::UpdatePosWithTransform;
- *   dBgW.h has no setter.
  * What stays: Matrix4x3_FromRotationXYZExt has no shared header; declared
  *   locally like every other caller.
  * What stays: data_ov036_02114020 / 02114028 are this overlay's KCL/BMD
@@ -92,11 +89,6 @@ CLPS_Block data_ov036_02112b68 = {
 };
 u32 data_ov036_02112b84 = 0xffffffff;
 
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-}
-
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* Reconstructed source-style name: SM64DS proves daObjRcBuranko_c through
@@ -123,7 +115,7 @@ int daObjRcBuranko_c::InitResources() {
 
     /* A rider is carried by the collider's whole transform, not by a position
        and a pair of angles: the platform tilts underfoot as it swings. */
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     return 1;
 }

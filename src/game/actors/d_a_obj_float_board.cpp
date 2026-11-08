@@ -44,8 +44,6 @@ int SurfaceInfo_TestFlag0x20(int *p);
 
 /* Stores into the mesh collider's two callback slots (+0x1c / +0x18 of the
    embedded dBgW; the +0x0c store is dBgW::SetClipRadius). */
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* ROM ordinals 0 and 1 -- ov002 0x020b5a18 (D0, 0x58) and 0x020b5a70 (D1,
@@ -230,8 +228,8 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     UpdateClsnPosAndRot();
     kcl = (KCL_File *)dBgW_Kc::LoadFile(*fp->collision);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     mSinkOffset = 0;
     mBobOffset = 0;

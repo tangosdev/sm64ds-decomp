@@ -393,15 +393,13 @@ void dScMgCurling_c::BitB_StateDriftStop(int index) {
 }
 
 void dScMgCurling_c::BitB_StateDriftLeft(int index) {
-    int off = index * 0x24;
-
     mBit[index].x += mBit[index].vx;
     mBit[index].y += mBit[index].vy;
 
     u16 *wait = &mBit[index].wait;
     if (*wait != 0) {
         *wait = *wait - 1;
-        s16 left = *(s16 *)wait;
+        s16 left = (s16)*wait;
         if (left < 0) {
             *wait = 0;
         }
@@ -419,7 +417,7 @@ void dScMgCurling_c::BitB_StateDriftLeft(int index) {
     u16 *timer = &mBit[index].timer;
     if (*timer != 0) {
         *timer = *timer - 1;
-        s16 left = *(s16 *)timer;
+        s16 left = (s16)*timer;
         if (left < 0) {
             *timer = 0;
         }
@@ -432,15 +430,13 @@ void dScMgCurling_c::BitB_StateDriftLeft(int index) {
 #pragma push
 #pragma inline_depth(0)
 void dScMgCurling_c::BitB_StateDriftRight(int index) {
-    int off = index * 0x24;
-
     mBit[index].x += mBit[index].vx;
     mBit[index].y += mBit[index].vy;
 
     unsigned short *wait = &mBit[index].wait;
     if (*wait != 0) {
         *wait = *wait - 1;
-        short left = *(short *)wait;
+        short left = (short)*wait;
         if (left < 0) {
             *wait = 0;
         }
@@ -458,7 +454,7 @@ void dScMgCurling_c::BitB_StateDriftRight(int index) {
     unsigned short *timer = &mBit[index].timer;
     if (*timer != 0) {
         *timer = *timer - 1;
-        short left = *(short *)timer;
+        short left = (short)*timer;
         if (left < 0) {
             *timer = 0;
         }
@@ -700,6 +696,8 @@ void dScMgCurling_c::Aim_Swing() {
         int dy2, dy;
 
         int i4 = idx * 4;
+        /* gTouchX is already u8[]; dropping these two casts changes 12
+           words of Aim_Swing. */
         u8 *pa = (u8 *)gTouchX;
         u8 *pb = (u8 *)gTouchY;
         u8 bx = pa[i4];
@@ -789,9 +787,9 @@ void dScMgCurling_c::Aim_Swing() {
             int px = mAimX;
             int py = mAimY;
             int j = gActivePlayerSlot;
-            u8 jx = ((u8 *)gTouchX)[j * 4];
+            u8 jx = gTouchX[j * 4];
             int ax = (px >> 12) - jx;
-            u8 jy = ((u8 *)gTouchY)[j * 4];
+            u8 jy = gTouchY[j * 4];
             int ay = (py >> 12) - jy;
             mGrabX = ax << 12;
             mGrabY = ay << 12;
@@ -818,8 +816,8 @@ void dScMgCurling_c::Aim_WaitTouch() {
     if (touching == 0) {
         return;
     }
-    x = (mAimX >> 0xc) - ((u8 *)gTouchX)[idx * 4];
-    y = (mAimY >> 0xc) - ((u8 *)gTouchY)[idx * 4];
+    x = (mAimX >> 0xc) - gTouchX[idx * 4];
+    y = (mAimY >> 0xc) - gTouchY[idx * 4];
     mGrabX = x << 0xc;
     mGrabY = y << 0xc;
     mStylusHeld = 1;

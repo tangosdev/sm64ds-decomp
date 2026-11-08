@@ -13,9 +13,8 @@
 // What stays, and why (each measured; simplifying changes the emitted bytes):
 // dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange are
 // header member calls whose headers spell Fix12 as Fix12i, a plain s32
-// (6az). func_020393c4 / dBgW::GetStoodOnCallback
-// store/load dBgW+0x1c -- the ROM's own call, not an inlineable assignment
-// (no setter).
+// (6az). dBgW::SetStoodOnCallback / dBgW::GetStoodOnCallback
+// store/load dBgW+0x1c -- the ROM's own call, not an inlineable assignment.
 // common.h first: UpdateShadow writes mShadowMat.m[9..11] on the flat 12-word
 // spelling. InitResources keeps its two-store animationFiles[2] stack array,
 // the variant reloads, MoveActorOnBelt's &mPosX-derived pointer chain and flat
@@ -77,12 +76,6 @@ extern CLPS_Block *data_ov065_0211d19c[][3];
 extern u8 data_0209f2c0;
 extern int data_ov065_0211c0b8[]; /* per-clock-setting belt speeds */
 extern s16 data_02082214[];       /* sin/cos pair per (angle >> 4) index */
-
-/* local extern: the dBgW+0x1c callback store/load; no shared
- * header. */
-extern "C" {
-extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
 
 /* mFlags 0x08 is the framework's off-screen bit (dActor_c.h bit table). */
 static inline int IsOffScreen(dActor_c *actor) {
@@ -169,7 +162,7 @@ int daObjCtMecha04_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY,
                           *data_ov065_0211d19c[variant][0]);
 
-    func_020393c4(&mMeshCollider, &daObjCtMecha04_c::AfterClsnCallback);
+    mMeshCollider.SetStoodOnCallback(&daObjCtMecha04_c::AfterClsnCallback);
 
     mTargetBeltSpeed = data_ov065_0211c0b8[data_0209f2c0];
     mBeltSpeed = mTargetBeltSpeed;
@@ -195,12 +188,12 @@ int daObjCtMecha04_c::InitResources() {
 
 int daObjCtMecha04_c::Behavior() {
     if (data_0209f2c0 == CLOCK_SETTING_STOPPED) {
-        func_020393c4(&mMeshCollider, 0);
+        mMeshCollider.SetStoodOnCallback(0);
         IsClsnInRange(0, 0);
     } else {
         if (!IsOffScreen(this)) {
             if (!mMeshCollider.GetStoodOnCallback()) {
-                func_020393c4(&mMeshCollider, &daObjCtMecha04_c::AfterClsnCallback);
+                mMeshCollider.SetStoodOnCallback(&daObjCtMecha04_c::AfterClsnCallback);
             }
 
             if (data_0209f2c0 == CLOCK_SETTING_RANDOM) {

@@ -165,7 +165,7 @@ extern const u8 sSoundPop00Dirs[3] = {0, 0, 1};
  * are retained; their original grouping is unknown. */
 extern const u8 sSoundPopSpawnKinds[5] = {0, 1, 2, 2, 1};
 extern void Presenter_PlayMatch(void *c);
-extern void Presenter_PlayMiss(char *c);
+extern void Presenter_PlayMiss(void *c);
 extern int sSoundRowLengthAlt[];
 extern int sSoundRowLength[];
 extern int sSoundScrollRowLengthAlt[];
@@ -173,7 +173,7 @@ extern int sSoundScrollRowLength[];
 /* Note frames use indices 0 through 6. The final stored timing value in each
  * array is retained without asserting its original purpose or declared bound. */
 extern const u16 sSoundNoteClosingTimes[8] = {2, 2, 3, 4, 4, 4, 4, 4};
-void Presenter_PlayCheerLoop(char *p);
+void Presenter_PlayCheerLoop(void *p);
 unsigned int func_02012174(u32 bank, u32 id);
 extern const u16 sSoundNoteOpeningTimes[8] = {2, 2, 3, 4, 4, 4, 6, 4};
 /* Parallel playback selectors and sound IDs retain all 42 stored entries.
@@ -199,7 +199,7 @@ u16 sSoundNotePositions8[16] = {32, 32,  96, 32,  160, 32,  224, 32,
 u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
                                  32, 112, 80, 112, 128, 112, 176, 112, 224, 112};
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
-extern void Presenter_ResetPose(char *c);
+extern void Presenter_ResetPose(void *c);
 extern void Presenter_PlayCheer(void *c);
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
@@ -339,7 +339,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(objPltt);
 
     Camera_InitPresenterView(&mCamera);
-    if (Presenter_Load((void *)&mTable) == 0)
+    if (Presenter_Load(&mTable) == 0)
         return 0;
 
     mTable.mQuiet = 1;
@@ -357,12 +357,8 @@ s32 dScMgSound_c::InitResources() {
 /* One frame of the round, by mState: 0 starts; 1 plays the round while
    mIntroTimer controls the prompt; 2 waits for the result, then celebrates
    a win or advances to 3 for the loss delay. Wins increment the HUD score
-   up to 9999.
-   The `(int)` casts on the three countdown decrements are needed: without
-   them the address folds into the decrement and the function comes out
-   short. */
+   up to 9999. */
 s32 dScMgSound_c::Behavior() {
-    char *raw = (char *)this;
 
     switch (mState) {
     case 0:
@@ -370,7 +366,7 @@ s32 dScMgSound_c::Behavior() {
         break;
     case 1:
         if (mIntroTimer != 0) {
-            (*(u16 *)(int)&mIntroTimer)--;
+            mIntroTimer--;
             if (mIntroTimer == 0) {
                 FreeGfxSlotsById(0x1d);
                 if (mPromptBlinkCount == 0) {
@@ -389,11 +385,11 @@ s32 dScMgSound_c::Behavior() {
         UpdateNotes();
         UpdatePops();
         if (mResultTimer != 0) {
-            (*(u16 *)(int)&mResultTimer)--;
+            mResultTimer--;
             if (mResultTimer == 0) {
                 if (mTries != 0) {
                     mTable.mQuiet = 0;
-                    Presenter_PlayCheer((char *)&mTable);
+                    Presenter_PlayCheer(&mTable);
                     if (mTries == 3)
                         Mg_SetPerfectBanner();
                     Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
@@ -425,8 +421,8 @@ s32 dScMgSound_c::Behavior() {
         UpdateNotes();
         UpdatePops();
         if (mResultTimer != 0) {
-            (*(u16 *)(int)&mResultTimer)--;
-            if (*(s16 *)&mResultTimer <= 0) {
+            mResultTimer--;
+            if ((s16)mResultTimer <= 0) {
                 mTable.mQuiet = 0;
                 Presenter_PlayLose((char *)&mTable);
                 Mg_SetSharedState(MG_STATE_GAME_OVER);
@@ -443,9 +439,7 @@ s32 dScMgSound_c::Behavior() {
 
 /* Draws the HUD and each of the scene's layers, then the table. */
 s32 dScMgSound_c::Render() {
-    char *raw = (char *)this;
-
-    Mg_DrawScoreTally(raw, 0xe0, 0x14, 1);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
     DrawPops();
     DrawNotes();
     DrawTries();
@@ -456,12 +450,8 @@ s32 dScMgSound_c::Render() {
 }
 
 /* Starts a round. With mode 0 the streak at 0xbc goes up (capped at 9998);
-   otherwise it and the scene's total are cleared.
-   `raw` must stay a `char *`: laundering `this` through an int puts the large
-   offsets in the literal pool and the function grows by 0x10. */
+   otherwise it and the scene's total are cleared. */
 void dScMgSound_c::StartRound(int mode) {
-    char *raw = (char *)this;
-
     dScMgBase_c *active;
     int total;
 
@@ -502,7 +492,7 @@ void dScMgSound_c::StartRound(int mode) {
 
 /* Slot 20, OnNewRecord: plays the table model's win animation. */
 void dScMgSound_c::OnNewRecord() {
-    Presenter_PlayCheer((char *)&mTable);
+    Presenter_PlayCheer(&mTable);
 }
 
 void dScMgSound_c::ResetRound() {
@@ -568,7 +558,7 @@ void dScMgSound_c::ResetRound() {
     mTouchCount = 0;
     mResultTimer = 0;
 
-    Presenter_ResetPose((char *)&mTable);
+    Presenter_ResetPose(&mTable);
 }
 
 /* Choose distinct pitches, make one pair of each, then deal the pairs
@@ -796,7 +786,7 @@ void dScMgSound_c::Note_StateOpening(int idx) {
     }
 
     if (mTouchCount == 1)
-        Presenter_PlayCheerLoop((char *)&mTable);
+        Presenter_PlayCheerLoop(&mTable);
 }
 
 void dScMgSound_c::Note_StateOpen(int slot) {
@@ -925,7 +915,7 @@ void dScMgSound_c::CheckPair() {
         func_02012790(0xe);
         mTries--;
         func_02012790(0x12f);
-        Presenter_PlayMiss((char *)&mTable);
+        Presenter_PlayMiss(&mTable);
     }
     mQueue[1] = 0;
     mQueue[0] = mQueue[1];
@@ -1586,11 +1576,11 @@ void dScMgSound_c::UpdateWinSpriteA() {
         return;
     if (mSpriteA.frame >= 2)
         return;
-    (*(u16 *)(int)&mSpriteA.timer)++;
+    mSpriteA.timer++;
     if (mSpriteA.timer < sSoundWinSpriteATimes[mSpriteA.frame])
         return;
     mSpriteA.timer = 0;
-    (*(u8 *)(int)&mSpriteA.frame)++;
+    mSpriteA.frame++;
 }
 
 void dScMgSound_c::DrawWinSpriteA() {
@@ -1611,11 +1601,11 @@ void dScMgSound_c::UpdateWinSpriteB() {
         return;
     if (mSpriteB.frame >= 3)
         return;
-    (*(u16 *)(int)&mSpriteB.timer) += 1;
+    mSpriteB.timer += 1;
     if (mSpriteB.timer < sSoundWinSpriteBTimes[mSpriteB.frame])
         return;
     mSpriteB.timer = 0;
-    (*(u8 *)(int)&mSpriteB.frame) += 1;
+    mSpriteB.frame += 1;
 }
 
 void dScMgSound_c::DrawWinSpriteB() {
