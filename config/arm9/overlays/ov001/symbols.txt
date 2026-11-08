@@ -1,8 +1,8 @@
 CapIconMgr_DispatchVs kind:function(arm,size=0x290) addr:0x020aa420
 CapIconMgr_SetMapIconShown kind:function(arm,size=0x1c) addr:0x020aa6b0
-func_ov001_020aa6cc kind:function(arm,size=0x18) addr:0x020aa6cc
+CapIconMgr_ClearDispatched kind:function(arm,size=0x18) addr:0x020aa6cc
 CapIconMgr_Commit kind:function(arm,size=0xb8) addr:0x020aa6e4
-func_ov001_020aa79c kind:function(arm,size=0x1c) addr:0x020aa79c
+CapIconMgr_IsDispatched kind:function(arm,size=0x1c) addr:0x020aa79c
 CapIconMgr_ShouldCommitVs kind:function(arm,size=0xa0) addr:0x020aa7b8
 CapIconMgr_ShouldCommit kind:function(arm,size=0x108) addr:0x020aa858
 CapIconMgr_ShouldDispatch kind:function(arm,size=0xf4) addr:0x020aa960

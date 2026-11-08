@@ -39,7 +39,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov001_020aa6cc",
+      "symbol": "CapIconMgr_ClearDispatched",
       "address": "0x020aa6cc",
       "size": "0x00000018",
       "legacy_source": "src/func_ov001_020aa6cc.c",
@@ -53,7 +53,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov001_020aa79c",
+      "symbol": "CapIconMgr_IsDispatched",
       "address": "0x020aa79c",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov001_020aa79c.c",
