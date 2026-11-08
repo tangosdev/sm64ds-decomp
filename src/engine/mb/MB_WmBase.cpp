@@ -74,6 +74,10 @@ extern u16 *data_0209a084;
  * a byte pointer (MB_Parent.cpp's MB_WORK). */
 #define MB_WORK ((MbParentWork *)data_020a9db8)
 
+/* nitro/math.h's round-up, which MB_Init uses to align the caller's work
+ * buffer to a cache line before carving it. */
+#define MATH_ROUNDUP(x, base) (((x) + ((base) - 1)) & ~((base) - 1))
+
 /* WMScanParam (data_020a9dc0), WM_StartScan's argument; changeScanChannel steps
  * its channel through the allowed-channel mask. */
 typedef struct {
@@ -651,8 +655,8 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
     if ((data_020a9db8 != 0) && (MB_WORK->mIsMbInitialized != 0)) {
         return 2;
     }
-    base1 = (char *)(((u32)work + 0x1f) & (~0x1f));
-    base2 = (char *)(((int)base1 + sizeof(WmWork) + 0x1f) & (~0x1f));
+    base1 = (char *)MATH_ROUNDUP((u32)work, 32);
+    base2 = (char *)MATH_ROUNDUP((int)base1 + sizeof(WmWork), 32);
     irq = IRQ::Disable();
     fill_i = 0;
     data_020a9db0 = (u16)dma;

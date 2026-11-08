@@ -38,7 +38,8 @@ extern u8 MB_CommGetChildrenNumber(void);
 extern void func_0203f9d4(int a0, int a1);
 extern void func_0203e978(struct ChannelReply *reply);
 extern int OS_GetTickLo(void);
-extern int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma);
+extern int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid,
+                         int dma);
 extern int func_02068dc8(int a, int b, int c);
 extern void MB_CommSetParentStateCallback(u32 val);
 extern void func_0203e9a8(u32 a0, int sel, int a2);
