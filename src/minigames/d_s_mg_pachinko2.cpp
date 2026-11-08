@@ -92,7 +92,6 @@ extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_02012718(int, int);
-extern s16 atan2_hold_d_s_mg_pachinko2_1(s32 y, s32 x);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *);
 extern void DecompressLZ16(void *src, void *dst);
@@ -800,9 +799,11 @@ void dScMgPachinko2_c ::Paddle_StateGather(int i) {
         int deltaX = 0x80 - (mPaddles[i].x >> 12);
         int currentY = mPaddles[i].y;
 
-        /* This expression preserves the pinned compiler's instruction order. */
+        /* Kept: the self-select orders the rsb for deltaX before the y
+           subtract. Six plain spellings (no temporaries, deltaY first or
+           last, x/y temporaries) all swap those two words. */
         currentY = deltaX ? currentY : currentY;
-        mPaddles[i].angle = (s16)cstd::atan2(targetY - (currentY >> 12), deltaX);
+        mPaddles[i].angle = cstd::atan2(targetY - (currentY >> 12), deltaX);
 
         {
             fx16 c = FX_CosIdx((u16)mPaddles[i].angle >> 4);
@@ -2138,7 +2139,9 @@ void dScMgPachinko2_c::ResetRound() {
    placeholder borrowed from dActor_c by slot index. */
 void dScMgPachinko2_c::StartRound(int n) {
     /* Reading through `ro` keeps mwcc from holding &mLevel in a register,
-       which costs a word. */
+       which costs a word: plain mLevel++ and mLevel = mLevel + 1 both build
+       add r2, r4, #0xbc and come out 4 bytes long. The twin
+       (d_s_mg_pachinko.cpp) keeps the same read. */
     const dScMgPachinko2_c *ro = this;
 
     mPhase = 0;
