@@ -14,7 +14,7 @@
  *   slot 2  0x02016144  DoSetFile(char *, int, int)
  *
  * Three slots, so unlike dExtSimpleModel_c its Render is NON-virtual. DoSetFile takes
- * its components from the shared pool via func_02016e70 instead of building
+ * its components from the shared pool via GetCommonModelComponents instead of building
  * them in place, which is the whole difference from dExtSimpleModel_c.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- the
@@ -34,7 +34,7 @@
  */
 
 struct dExtCommonModel_c : dExtModel_c {
-    ModelComponents *data;     /* 0x08 - pool entry from func_02016e70 */
+    ModelComponents *data;     /* 0x08 - pool entry from GetCommonModelComponents */
     Matrix4x3 mat4x3;          /* 0x0c */
 
     /* DECLARED, NEVER DEFINED HERE -- same reasoning as dExtSimpleModel_c (include/dExtSimpleModel_c.h)
@@ -60,7 +60,7 @@ struct dExtCommonModel_c : dExtModel_c {
     /* --- non-virtual --- */
     void Render(const Vector3 *scale);
     void SetPolygonID(u32 id);
-    void Func_020160AC(u32 flags);   /* ORs flags into every material */
+    void Func_020160AC(u32 flags); /* ORs flags into every material */
 };
 
 #ifndef SM64DS_PLATFORM_PC

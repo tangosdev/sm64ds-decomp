@@ -101,6 +101,7 @@ enum daKuriKing_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
@@ -498,8 +499,8 @@ void daKuriKing_c::UpdateDefeat() {
         vzero.y = this->mPosY;
         vzero.z = this->mPosZ;
         vzero.y = vzero.y + 0x190000;
-        Particle::System::NewSimple(0x91, vzero.x, vzero.y, vzero.z);
-        Particle::System::NewSimple(0x92, vzero.x, vzero.y, vzero.z);
+        Particle::System::NewSimple(kPtclGoombossVanishA, vzero.x, vzero.y, vzero.z);
+        Particle::System::NewSimple(kPtclGoombossVanishB, vzero.x, vzero.y, vzero.z);
         func_02012694(0x15f, &this->mCamSpacePosX);
         SetOtherCopiesShouldRender(1);
         LaunchVanishCopies();
@@ -921,7 +922,8 @@ int daKuriKing_c::StepScaleTransition() {
             v.y = this->mPosY;
             v.z = this->mPosZ;
             v.y += FX_MUL(this->mCurrentScale, (long long)0x190000);
-            Particle::System::NewSimple(0xb1, ((int *)&v)[0], ((int *)&v)[1], ((int *)&v)[2]);
+            Particle::System::NewSimple(kPtclHugeLandingDust, ((int *)&v)[0], ((int *)&v)[1],
+                                        ((int *)&v)[2]);
         }
     }
     k = ((u16)this->mScalePhase >> 4) * 2;
@@ -1122,11 +1124,11 @@ void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode
 
     switch (mode) {
     case 0:
-        Particle::System::NewSimple(0xf6, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclEnemyHit, dst.x, dst.y, dst.z);
         break;
     case 1:
-        Particle::System::NewSimple(0x43, dst.x, dst.y, dst.z);
-        Particle::System::NewSimple(0x44, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclKnockAwayA, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclKnockAwayB, dst.x, dst.y, dst.z);
         break;
     }
 }

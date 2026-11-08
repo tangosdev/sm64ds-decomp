@@ -57,7 +57,7 @@ struct dEnemyBase_c : dActor_c {
     u32 mDormantFlags; /* 0x0f4 */
     /* Particle-system uniqueIDs for the death state that falls until it lands
        (EnemyDeathC::func_ov002_020ae4cc): each frame the stored ID is passed
-       back into System::New (effect 0x13a) and System::NewUnkCallback818
+       back into System::New (effect 0x13a) and System::NewCleanParticle
        (effect 0x13b) and the returned ID is stored again. daEykn_c and
        daPropeller_Heyho_c spawn the same 0x13a/0x13b pair when defeated. */
     u32 mDeathParticleID0; /* 0x0f8 */

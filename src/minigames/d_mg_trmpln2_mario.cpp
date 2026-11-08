@@ -45,6 +45,7 @@
 // 0 (BounceOffLineA, EnterBounce), and no reader gives it a role.
 
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #pragma defer_codegen off
 #include "types.h"
 #include "nitro/fx/fx.h"
@@ -236,9 +237,9 @@ extern "C" void Trmp2Mario_Update(char *o) {
     Fix12 v = FX_MUL(MARIO2(o)->mBounceVy, 0xb4b);
     if (MARIO2(o)->mVel.y > v) {
         if (MARIO2(o)->mAnmModel.file == sTrmpAnimBounce) {
-            MARIO2(o)->mParticleId =
-                (int)Particle::System::New(MARIO2(o)->mParticleId, 0xf5, MARIO2(o)->mPos.x << 3,
-                                           MARIO2(o)->mPos.y << 3, MARIO2(o)->mPos.z << 3, 0, 0);
+            MARIO2(o)->mParticleId = (int)Particle::System::New(
+                MARIO2(o)->mParticleId, kPtclMgTrampolineTrail, MARIO2(o)->mPos.x << 3,
+                MARIO2(o)->mPos.y << 3, MARIO2(o)->mPos.z << 3, 0, 0);
         }
     }
     Trmp2Mario_UpdateMatrix(o);
@@ -519,13 +520,15 @@ extern "C" void Trmp2Mario_BounceOffLineA(char *c) {
         int *q = pmf_Trmp2Mario_StateAppearWait_2;
         if (s[0] != q[0] || (s[1] != q[1] && MARIO2(c)->mState[0] != 0)) {
 
-            Particle::System::New(0, 0xf3, (MARIO2(c)->mPos.x) << 3, (MARIO2(c)->mPos.y) << 3,
-                                  (MARIO2(c)->mPos.z) << 3, (const Vector3_16f *)(&vec16), 0);
-            Particle::System::New(0, 0xf4, (MARIO2(c)->mPos.x) << 3, (MARIO2(c)->mPos.y) << 3,
-                                  (MARIO2(c)->mPos.z) << 3, (const Vector3_16f *)(&vec16), 0);
+            Particle::System::New(0, kPtclMgTrampolineBounceA, (MARIO2(c)->mPos.x) << 3,
+                                  (MARIO2(c)->mPos.y) << 3, (MARIO2(c)->mPos.z) << 3,
+                                  (const Vector3_16f *)(&vec16), 0);
+            Particle::System::New(0, kPtclMgTrampolineBounceB, (MARIO2(c)->mPos.x) << 3,
+                                  (MARIO2(c)->mPos.y) << 3, (MARIO2(c)->mPos.z) << 3,
+                                  (const Vector3_16f *)(&vec16), 0);
             MARIO2(c)->mParticleId = (int)Particle::System::New(
-                MARIO2(c)->mParticleId, 0xf5, (MARIO2(c)->mPos.x) << 3, (MARIO2(c)->mPos.y) << 3,
-                (MARIO2(c)->mPos.z) << 3, 0, 0);
+                MARIO2(c)->mParticleId, kPtclMgTrampolineTrail, (MARIO2(c)->mPos.x) << 3,
+                (MARIO2(c)->mPos.y) << 3, (MARIO2(c)->mPos.z) << 3, 0, 0);
         }
     }
 
@@ -1572,9 +1575,9 @@ extern "C" void Trmp3DMario_Update(char *o) {
     Fix12 v = FX_MUL(MARIO3D(o)->mBounceVy, 0xb4b);
     if (MARIO3D(o)->mVel.y > v) {
         if (MARIO3D(o)->mAnmModel.file == sTrmpAnimBounce) {
-            MARIO3D(o)->mParticleId =
-                (int)Particle::System::New(MARIO3D(o)->mParticleId, 0xf5, MARIO3D(o)->mPos.x << 3,
-                                           MARIO3D(o)->mPos.y << 3, MARIO3D(o)->mPos.z << 3, 0, 0);
+            MARIO3D(o)->mParticleId = (int)Particle::System::New(
+                MARIO3D(o)->mParticleId, kPtclMgTrampolineTrail, MARIO3D(o)->mPos.x << 3,
+                MARIO3D(o)->mPos.y << 3, MARIO3D(o)->mPos.z << 3, 0, 0);
         }
     }
     Trmp3DMario_UpdateMatrix(o);
@@ -2057,15 +2060,17 @@ extern "C" void Trmp3DMario_BounceOffLineA(char *c) {
         v.y = (s16)tmp.y;
         v.z = (s16)tmp.z;
 
-        Particle::System::New(0, 0xf3, MARIO3D(c)->mPos.x << 3, MARIO3D(c)->mPos.y << 3,
-                              MARIO3D(c)->mPos.z << 3, (const Vector3_16f *)(&v), 0);
-        Particle::System::New(0, 0xf4, MARIO3D(c)->mPos.x << 3, MARIO3D(c)->mPos.y << 3,
-                              MARIO3D(c)->mPos.z << 3, (const Vector3_16f *)(&v), 0);
+        Particle::System::New(0, kPtclMgTrampolineBounceA, MARIO3D(c)->mPos.x << 3,
+                              MARIO3D(c)->mPos.y << 3, MARIO3D(c)->mPos.z << 3,
+                              (const Vector3_16f *)(&v), 0);
+        Particle::System::New(0, kPtclMgTrampolineBounceB, MARIO3D(c)->mPos.x << 3,
+                              MARIO3D(c)->mPos.y << 3, MARIO3D(c)->mPos.z << 3,
+                              (const Vector3_16f *)(&v), 0);
     }
 
-    MARIO3D(c)->mParticleId =
-        (int)Particle::System::New(MARIO3D(c)->mParticleId, 0xf5, MARIO3D(c)->mPos.x << 3,
-                                   MARIO3D(c)->mPos.y << 3, MARIO3D(c)->mPos.z << 3, 0, 0);
+    MARIO3D(c)->mParticleId = (int)Particle::System::New(
+        MARIO3D(c)->mParticleId, kPtclMgTrampolineTrail, MARIO3D(c)->mPos.x << 3,
+        MARIO3D(c)->mPos.y << 3, MARIO3D(c)->mPos.z << 3, 0, 0);
 
     scale = FX_MUL(sTrmp3DHardBounceScale, fdivr);
     Vec3_MulScalar(&tmp4, &tmp, scale);

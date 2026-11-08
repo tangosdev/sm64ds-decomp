@@ -311,7 +311,7 @@ struct daPly_c : dActor_c {
     s32 mParticle2;            /* 0x62c */
     s32 mParticle3;            /* 0x630 */
     /* Particle handles at the water surface. func_ov002_020ce8bc passes each
-       back to func_02022cbc (Particle::System::New) at x/z of the player and
+       back to Particle::System::NewFitWater at x/z of the player and
        y = data_0209f32c + 0x3000: the first when its speed argument (mHorzSpeed
        or mPrevVertSpeed) is nonzero, the second when it is zero. Leaving Mega
        (func_ov002_020bdd2c) zeroes both along with mParticle1. */

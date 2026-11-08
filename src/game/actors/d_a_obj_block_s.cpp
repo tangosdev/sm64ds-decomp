@@ -88,6 +88,7 @@ enum daObjBlockS_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
@@ -132,8 +133,8 @@ extern int data_ov098_0213c4c8[];
 extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern u32 d_a_obj_block_sNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
-                                                const Vector3_16f *v);
+extern u32 d_a_obj_block_sNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
+                                               const Vector3_16f *v);
 }
 namespace Particle {
 void RunningSlidingDustAt(s32, s32, s32);
@@ -1196,9 +1197,9 @@ int daObjBlockS_c::Behavior()
         ((int *)&v)[2] = z;
         if (DecIfAbove0_Byte(&mBreakTimer)) {
             mParticleHandle1 =
-                (u32)Particle::System::New(mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
+                (u32)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
-                Particle::System::NewUnkCallback818(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
+                Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
             goto done;
         }
         SpawnBreakCoins();

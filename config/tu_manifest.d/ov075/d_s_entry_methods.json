@@ -57,7 +57,7 @@
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_02116ce4.c",
-      "symbol": "_ZN10dScEntry_c19func_ov075_02116ce4Ev",
+      "symbol": "_ZN10dScEntry_c25ArePlayersReadyForRematchEv",
       "address": "0x02116ce4",
       "size": "0x0000005c",
       "ordinal": 5

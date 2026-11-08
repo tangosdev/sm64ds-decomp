@@ -42,7 +42,7 @@
  */
 
 struct dExtShadowModel_c : dExtModel_c {
-    ModelComponents *data;     /* 0x08 - pool entry from func_02016e70 */
+    ModelComponents *data;     /* 0x08 - pool entry from GetCommonModelComponents */
     Matrix4x3 *mat;            /* 0x0c */
     Vector3 scale;             /* 0x10 */
     u8 opacity;                /* 0x1c */

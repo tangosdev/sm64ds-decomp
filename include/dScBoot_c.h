@@ -32,9 +32,10 @@ struct dScBoot_c : dScene_c {
 
     /* The button-row redraw at 0x02005348: reads mSelectedButton/mButtonFlashTimer
        and repaints the two touch buttons' palette bits on the sub screen. Its
-       only caller is Behavior, always on `this`. Address-derived label kept as
-       the method name (S33); symbols.txt carries _ZN9dScBoot_c13func_02005348Ev. */
-    void func_02005348();
+       only caller is Behavior, always on `this`. The name is coined from the
+       body; dScGameOver_c's yes/no redraw is the same routine and takes the
+       same name. */
+    void UpdateButtonPalettes();
 };
 
 /* Holds the chain to the size dScBoot_c_classInit's operator new(0x58) evidences.

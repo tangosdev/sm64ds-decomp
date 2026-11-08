@@ -34,6 +34,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
@@ -83,7 +84,7 @@ int daObjAbuku_c::Behavior() {
     if (DecIfAbove0_Short((unsigned short *)(&mLifeTimer)) == 0 || IsNearWaterSurface()) {
         Pop();
     }
-    mParticle = (int)Particle::System::New(mParticle, 1, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle = (int)Particle::System::New(mParticle, kPtclAbukuBubble, mPosX, mPosY, mPosZ, 0, 0);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -117,6 +118,6 @@ int daObjAbuku_c::IsNearWaterSurface() {
 /* -------------------------------------------------------------------------- */
 void daObjAbuku_c::Pop() {
     Sound::PlayBank3(0xb, mCamSpacePos);
-    Particle::System::NewSimple(2, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclAbukuPop, mPosX, mPosY, mPosZ);
     MarkForDestruction();
 }

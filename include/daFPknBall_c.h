@@ -55,7 +55,7 @@ struct daFPknBall_c : dEnemyBase_c {
     u8 mVariant; /* 0x36d -- param1 & 7; daFPkn_c spawns 3. Other than 0 and 4, InitResources sets vulnFlags 0x8000 and OnYoshiTryEat returns 5 */
     u8 mMirrored; /* 0x36e -- when set, the effect and dust position uses -x; never written by this class (daTrs_c sets it from its own mirrored flag) */
     u8 pad_36f[0x1];
-    u32 mTrailEffect; /* 0x370 -- last result of Particle::System::NewUnkCallback818, passed back in each frame */
+    u32 mTrailEffect; /* 0x370 -- last result of Particle::System::NewCleanParticle, passed back in each frame */
     /* last result of Particle::System::New, passed back in each frame */
     void *mSparkEffect; /* 0x374 */
 

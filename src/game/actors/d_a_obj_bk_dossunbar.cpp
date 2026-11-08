@@ -33,6 +33,7 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* Local names for the existing eight-byte model/collision resource families.
  * Their constructors and destructors remain ordinary cross-TU C++ imports. */
@@ -295,7 +296,7 @@ void daObjBk_Dossunbar_c::Kill() {
     pos.y = mPosY;
     pos.z = mPosZ;
     pos.y += 0xc8000;
-    Particle::System::NewSimple(0x10a, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclDossunbarBreak, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;

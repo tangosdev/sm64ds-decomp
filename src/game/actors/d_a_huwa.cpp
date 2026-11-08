@@ -39,6 +39,7 @@ enum daHuwa_c_AssetId { ASSET_HUWAHUWA_MODEL_BMD = 0x032d, ASSET_HUWAHUWA_MOVE_B
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -136,7 +137,7 @@ void daHuwa_c::KillWithCoins() {
     Vec3_LslInPlace(&dust, 3);
     AddVec3(&dust, &mPos, &dust);
 
-    Particle::System::NewSimple(0x53, dust.x, dust.y, dust.z);
+    Particle::System::NewSimple(kPtclHuwahuwaDefeat, dust.x, dust.y, dust.z);
     func_0201267c(0xd5, &mCamSpacePos);
     KillAndTrackInDeathTable();
 }

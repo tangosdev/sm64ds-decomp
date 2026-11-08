@@ -12,7 +12,7 @@ extern "C" {
 
 extern void FS_NotifyArchiveAsyncEnd(void *arc, int result);
 extern void func_020421b4(void);
-extern void func_02065170(void);
+extern void WBT_End(void);
 
 extern int data_020a0f84;
 
@@ -68,7 +68,7 @@ void func_02040aa4(void) {
             func_020421b4();
         }
 
-        func_02065170();
+        WBT_End();
         data_020a0f84 = 0;
     }
 

@@ -37,6 +37,7 @@
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPly_c.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -141,8 +142,10 @@ int daEyBm_c::Behavior() {
 }
 
 int daEyBm_c::Render() {
-    mParticle1 = Particle::System::NewUnkCallback818(mParticle1, 0x46, mPosX, mPosY, mPosZ, 0);
-    mParticle2 = Particle::System::NewUnkCallback818(mParticle2, 0x47, mPosX, mPosY, mPosZ, 0);
+    mParticle1 =
+        Particle::System::NewCleanParticle(mParticle1, kPtclMrIBeamA, mPosX, mPosY, mPosZ, 0);
+    mParticle2 =
+        Particle::System::NewCleanParticle(mParticle2, kPtclMrIBeamB, mPosX, mPosY, mPosZ, 0);
     return 1;
 }
 void daEyBm_c::OnPendingDestroy() {}
@@ -206,7 +209,7 @@ void daEyBm_c::UpdateCollision(dBgCh_Actr &collision) {
 
 /* 0x02121b08, size 0x48. */
 void daEyBm_c::SpawnDestroyEffect() {
-    mParticle1 = Particle::System::New(0, 0x45, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle1 = Particle::System::New(0, kPtclMrIBeamBurst, mPosX, mPosY, mPosZ, 0, 0);
     MarkForDestruction();
 }
 

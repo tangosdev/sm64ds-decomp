@@ -275,7 +275,7 @@ void UnknownVsPlayer::func_ov075_02114300() {
     pos.y += 0x28000;
     mParticleHandle = Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z,
                                             (const Vector3_16f *)((Vector3_16 *)0),
-                                            (Particle::Callback *)((void *)0));
+                                            (dPa_c::level_c::callback_c *)((void *)0));
 }
 
 /* Movement state 8: frame 0x14 of the animation comes round twice; the
@@ -801,7 +801,7 @@ int dEntObj_c::CleanupResources() {
 int dEntObj_c::Render() {
     mModel.Render(0);
     dExtShadowModel_c::RenderAll();
-    mParticles.Update();
+    mParticle.Update();
     int i = 0;
     UnknownVsPlayer *player = mPlayers;
     do {
@@ -924,7 +924,7 @@ int dEntObj_c::InitResources() {
     }
 
     mMesh.Init((Vector3 *)&data_ov075_0211c654, 0);
-    mParticles.Initialise();
+    mParticle.Initialise();
 
     player = mPlayers;
     i = 0;

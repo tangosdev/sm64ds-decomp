@@ -60,6 +60,7 @@ enum dScMgSnowball_c_AssetId {
 #include "Sound.h"
 #include "dScMgBase_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
@@ -558,8 +559,10 @@ void dScMgSnowball_c::UpdateSnowball() {
             part.x = px;
             part.y = py;
             part.z = pz;
-            id1 = Particle::System::New(0, 0xf1, part.x * 8, part.y * 8, part.z * 8, 0, 0);
-            id2 = Particle::System::New(0, 0xf2, part.x * 8, part.y * 8, part.z * 8, 0, 0);
+            id1 = Particle::System::New(0, kPtclMgSnowballHitA, part.x * 8, part.y * 8, part.z * 8,
+                                        0, 0);
+            id2 = Particle::System::New(0, kPtclMgSnowballHitB, part.x * 8, part.y * 8, part.z * 8,
+                                        0, 0);
             sys = Particle::System::FromUniqueID(id1);
             if (sys != 0) {
                 /* 0x44 lies in Particle::System's unnamed pad_042. */

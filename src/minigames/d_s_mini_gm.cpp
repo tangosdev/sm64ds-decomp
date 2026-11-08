@@ -25,8 +25,6 @@
  *   id). This TU's Behavior and tap handlers (UpdateGameSelect /
  *   UpdatePageArrows / UpdateExitButton / UpdateGroupTabs)
  *   call it. Naming belongs in arm9.
- * Leftover: _ZN7dWipe_c13func_0202ec9cEi is the wipe start helper. This
- *   TU's UpdateGameSelect hands it data_0209f61c.
  * Leftover: Disable3dEngines / func_020233f4 are arm9 graphics-setup
  *   tails. This TU's InitResources calls them.
  * Leftover: sMiniGmGroupBases group-base table,
@@ -993,7 +991,7 @@ void dScMiniGm_c::UpdateGameSelect()
     LoadIconPalette(sel);
     func_02012790(0x1e);
     dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.func_0202ec9c(0);
+    data_0209f61c.SetType(0);
     gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);

@@ -1,10 +1,12 @@
 //cpp
+#include "types.h"
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
 #include "IRQ.h"
 
 extern "C" {
 
+extern int data_020a94c0;
 extern void func_02065a84(int x);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
@@ -12,26 +14,22 @@ extern int func_02065af0(int *thiz);
 extern void func_02065be0(void);
 extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
-extern int data_020a94c0;
 
-/* NitroSDK WBT_End: the teardown twin of WBT_InitParent (func_020652fc) and
- * WBT_InitChild (func_02065234). Once initialized (data_020a94c0), clear the
- * flag, store -1 through func_02065a84 (the parent stores 0 there, a child -1),
- * reset the running and system commands of the WBTWork that func_02065b94
- * returns, forget each peer's last command counter, queue an empty command
- * (func_02065af0 copies its 0x9c bytes into queued_cmd) and set both packet
- * sizes (func_02065ba0, func_02065bb0) to -1. */
-void func_02065170(void)
-{
-    int saved = IRQ::Disable();
-    WBTWork *work;
+/* NitroSDK WBT_InitChild(callback): as WBT_InitParent (WBT_InitParent), but
+ * stores -1 through func_02065a84 and sets both packet sizes to 0. The
+ * callback becomes the system command's callback; func_02040c34
+ * passes func_02040f30, the file-share child's. */
+void WBT_InitChild(void (*callback)(void *)) {
+    unsigned int saved = IRQ::Disable();
     int i;
+    WBTWork *work;
     WBTCommand cmd;
-    if (data_020a94c0 == 0) {
+
+    if (data_020a94c0 == 1) {
         IRQ::Restore(saved);
         return;
     }
-    data_020a94c0 = 0;
+    data_020a94c0 = 1;
     func_02065a84(-1);
     func_02065ad0(0);
     work = func_02065b94();
@@ -42,15 +40,15 @@ void func_02065170(void)
     work->system_cmd.command = 0;
     work->system_cmd.target_bmp = 0;
     work->system_cmd.peer_bmp = 0;
-    work->system_cmd.callback = 0;
+    work->system_cmd.callback = (void (*)(char *))callback;
     for (i = 0; i < 0x10; i++) {
         work->peer[i].last_cmd_counter = 0;
     }
     cmd.command = 0;
     func_02065af0((int *)&cmd);
     func_02065be0();
-    func_02065ba0(-1);
-    func_02065bb0(-1);
+    func_02065ba0(0);
+    func_02065bb0(0);
     IRQ::Restore(saved);
 }
 }
