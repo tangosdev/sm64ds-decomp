@@ -20,9 +20,6 @@
  * runtime copies are made by __sinit_ov006_02131cd0.
  *
  * leftovers:
- * - Some helpers still use byte offsets. The class
- *   header already separates the 48 balls, three paddles, 16 hit effects,
- *   16 score popups and two cups into non-overlapping member arrays.
  * - PlotSubBg2Pixels keeps an unused receiver: every call passes the
  *   scene in r0 and the body only uses (a1, a2, a3). Memberized with the
  *   others for the uniform call shape.
@@ -105,10 +102,10 @@ extern void func_020564f4(const void *, int, int);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int sPachinkoPipeSprites[];
-extern int sPachinko2SparkSprites[];
-extern int sPachinko2PaddleSprite;
+extern OamAttr *sPachinko2SparkSprites[];
+extern OamAttr *sPachinko2PaddleSprite;
 extern OamAttr *sPachinko2BallSprite;
-extern int sPachinko2BallCountSprites[];
+extern OamAttr *sPachinko2BallCountSprites[];
 extern u8 sPachinko2CupHopRightStartFrames[];
 extern u8 sPachinko2CupHopLeftStartFrames[];
 extern unsigned char sPachinko2BallWalkOffSprites[];
@@ -289,7 +286,7 @@ void dScMgPachinko2_c::Cup_StateDecide(int n) {
     mCups[n].dir = 1;
 }
 
-void dScMgPachinko2_c ::Cup_StateHopRight(int i) {
+void dScMgPachinko2_c::Cup_StateHopRight(int i) {
     int screenX;
 
     if (mCups[i].phase == 1) {
@@ -356,7 +353,7 @@ void dScMgPachinko2_c ::Cup_StateHopRight(int i) {
     mCups[i].frame = sPachinko2CupHopRightStartFrames[0];
 }
 
-void dScMgPachinko2_c ::Cup_StateHopLeft(int i) {
+void dScMgPachinko2_c::Cup_StateHopLeft(int i) {
     int screenX;
 
     if (mCups[i].phase == 1) {
@@ -442,8 +439,7 @@ void dScMgPachinko2_c::Cup_StateWait(int k) {
         mCups[k].frame = sPachinko2CupWaitFrames[mCups[k].animStep];
     } else {
         mCups[k].timer++;
-        if ((unsigned int)mCups[k].timer >=
-            (unsigned int)sPachinko2CupWaitTimesAlt[mCups[k].animStep]) {
+        if (mCups[k].timer >= sPachinko2CupWaitTimesAlt[mCups[k].animStep]) {
             mCups[k].timer = 0;
             mCups[k].animStep++;
             if (mCups[k].animStep >= 7) {
@@ -455,7 +451,7 @@ void dScMgPachinko2_c::Cup_StateWait(int k) {
     }
 }
 
-void dScMgPachinko2_c ::Cup_StateInit(int i) {
+void dScMgPachinko2_c::Cup_StateInit(int i) {
     mCups[i].frame = 0x10;
     mCups[i].animStep = 0;
     mCups[i].timer = 0;
@@ -495,7 +491,7 @@ void dScMgPachinko2_c::Cup_HideAll() {
 
 void dScMgPachinko2_c::ChooseLaneConfig() {
     unsigned int nextConfig, configOffset;
-    if ((int)mLevel != 0) {
+    if (mLevel != 0) {
         nextConfig = PACHINKO_RAND(6);
         if ((unsigned int)mLaneConfig == nextConfig) {
             configOffset = PACHINKO_RAND(5) + 1;
@@ -561,7 +557,7 @@ void dScMgPachinko2_c::Popup_Spawn(int ballX, int ballY, int value) {
 void dScMgPachinko2_c::Spark_DrawAll() {
     for (int i = 0; i < 0x10; i++) {
         if (mHitFx[i].visible != 0) {
-            Mg_RenderSpriteBoth((void *)sPachinko2SparkSprites[mHitFx[i].frame], mHitFx[i].x >> 12,
+            Mg_RenderSpriteBoth(sPachinko2SparkSprites[mHitFx[i].frame], mHitFx[i].x >> 12,
                                 mHitFx[i].y >> 12, -1, -1);
         }
     }
@@ -625,7 +621,7 @@ void dScMgPachinko2_c::StartRoundEnd(int a) {
     dst = (char *)G2S::GetBG2CharPtr();
     v = 0;
     MultiStore16(v, dst, 0x6000);
-    mResult = (unsigned char)a;
+    mResult = a;
     Ball_ClearAll();
 }
 
@@ -667,7 +663,7 @@ void dScMgPachinko2_c::Paddle_DrawAll() {
     int i;
     for (i = 0; i < 3; i++) {
         if (mPaddles[i].visible) {
-            Mg_RenderSpriteBoth((void *)sPachinko2PaddleSprite, mPaddles[i].x >> 12,
+            Mg_RenderSpriteBoth(sPachinko2PaddleSprite, mPaddles[i].x >> 12,
                                 mPaddles[i].y >> 12, -1, -1);
         }
     }
@@ -788,7 +784,7 @@ void dScMgPachinko2_c::Paddle_StateDropBalls(int idx) {
     }
 }
 
-void dScMgPachinko2_c ::Paddle_StateGather(int i) {
+void dScMgPachinko2_c::Paddle_StateGather(int i) {
     if (mPaddles[i].timer != 0) {
         mPaddles[i].timer--;
         if ((s16)mPaddles[i].timer < 0)
@@ -842,7 +838,7 @@ void dScMgPachinko2_c ::Paddle_StateGather(int i) {
     }
 }
 
-void dScMgPachinko2_c ::Paddle_StateRiseHome(int idx) {
+void dScMgPachinko2_c::Paddle_StateRiseHome(int idx) {
     if (mPaddles[idx].timer != 0) {
         mPaddles[idx].timer -= 1;
         return;
@@ -859,7 +855,7 @@ void dScMgPachinko2_c ::Paddle_StateRiseHome(int idx) {
     mPaddles[idx].vy = mPaddles[idx].savedVy;
 }
 
-void dScMgPachinko2_c ::Paddle_StateSwing(int idx) {
+void dScMgPachinko2_c::Paddle_StateSwing(int idx) {
     mPaddles[idx].x += mPaddles[idx].vx;
 
     if (mPaddles[idx].swing == 0) {
@@ -893,7 +889,7 @@ void dScMgPachinko2_c ::Paddle_StateSwing(int idx) {
     mPaddles[idx].vx = 0;
 }
 
-void dScMgPachinko2_c ::Paddle_StateFallToGround(int i) {
+void dScMgPachinko2_c::Paddle_StateFallToGround(int i) {
     int screenY;
     mPaddles[i].y += mPaddles[i].vy;
     screenY = mPaddles[i].y >> 12;
@@ -914,7 +910,7 @@ void dScMgPachinko2_c ::Paddle_StateFallToGround(int i) {
     }
 }
 
-void dScMgPachinko2_c ::Paddle_StateKnockedDown(int i) {
+void dScMgPachinko2_c::Paddle_StateKnockedDown(int i) {
     int distanceBelowHome;
     mPaddles[i].y += mPaddles[i].vy;
     distanceBelowHome = (mPaddles[i].y - mPaddles[i].homeY) >> 12;
@@ -1723,7 +1719,7 @@ void dScMgPachinko2_c::Ball_DrawAll() {
             unsigned char t = mBalls[i].sprite;
             int y = mBalls[i].y >> 12;
             if (t != 0) {
-                Mg_RenderSpriteBoth((void *)sPachinko2BallCountSprites[t - 1], x, y, -1, -1);
+                Mg_RenderSpriteBoth(sPachinko2BallCountSprites[t - 1], x, y, -1, -1);
             } else {
                 Mg_RenderSpriteBothScaled(sPachinko2BallSprite, x, y, -1, -1, 0x1000,
                                           mBalls[i].rotation);
@@ -2092,7 +2088,7 @@ void dScMgPachinko2_c::UpdateNextBall() {
             mBalls[i].facingRight = 0;
             mBalls[i].sound = 0;
             mBalls[i].prevDist = 4;
-            mHeldBall = (unsigned char)(i + 1);
+            mHeldBall = i + 1;
             if (mBallDealt != 0) {
                 Sound::PlayBank2_2D(0x19d);
                 return;
