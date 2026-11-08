@@ -60,6 +60,13 @@ ROW(54,  "MOVING_BAR_SMALL",    100, 8, 150, 3, 2, {0x330, 4, 0, 6}, {0x334, 4, 
 ROW(73,  "LAVA_BRIDGE",         100, 8, 150, 2, 0)
 ROW(77,  "LAVA_SEESAW",         100, 8, 150, 2, 0)
 ROW(39,  "SEESAW_BOB",          100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})   // the tilt is mAngleX (pose) plus mAngleXSpeed, the s16 Behavior / the stood-on callback integrate (src/game/actors/d_a_obj_seesaw.cpp)
+// COOPROWS1: the other daObjSeesaw_c variants (one body, one Behavior, the same mAngleXSpeed at 0x324 as 39). The rider's console
+// is nearest, so it owns the plank and its tilt reaches the friend whose copy never feels the rider's weight.
+ROW(133, "SEESAW_BITDW",        100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(143, "SEESAW_SIDE_BFS",     100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(149, "SEESAW_BITS",         100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(150, "SEESAW_SIDE_BITS",    100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
+ROW(128, "SEESAW_RR",           100, 8, 150, 3, 1, {0x324, 2, 0, 0xffff})
 ROW(81,  "ROTATING_FIREBAR",    100, 8, 150, 2, 0)
 ROW(88,  "PYRAMID_LIFT",        100, 8, 150, 2, 0)
 ROW(124, "SLIDING_PLATFORM_RR", 100, 8, 150, 3, 2, {0x31c, 4, 0, 0x00ffffff}, {0x320, 4, 0, 0x0007ffff})
@@ -113,7 +120,7 @@ ROW(279, "BOWSER",              100, 16, 250, 6, 0)
 ROW(262, "MR_I",                100, 16, 250, 2, 0)
 ROW(250, "PIRANHA_PLANT",       100, 16, 250, 2, 0)
 ROW(251, "FIRE_PIRANHA_PLANT_BIG", 100, 16, 250, 2, 0)
-ROW(236, "SNUFIT",              100, 16, 250, 2, 0)
+ROW(236, "SNUFIT",              50, 16, 250, 2, 0)    // COOPRIDE1 (G44): every 50 ms, it turns fast (heading off by up to 3840 at 100 ms)
 ROW(240, "POKEY",               100, 16, 250, 2, 0)
 ROW(238, "HEAVE_HO",            100, 16, 250, 2, 0)
 ROW(315, "CLAM",                100, 16, 250, 2, 0)
@@ -123,3 +130,42 @@ ROW(194, "CRATE",               100, 16, 250, 2, 0)
 // (193 CRAZED_CRATE has no row: it hops at random and the pose pin made it WORSE, p95 31 vs 29 units at SSL and 44 vs 27 at LLL, MOVERS9 rows)
 ROW(96,  "ARROW_LIFT",          100, 8, 150, 2, 0)
 ROW(72,  "TILTING_PLATFORM_LLL", 100, 8, 150, 2, 0)
+// COOPROWS1: the push block (192) only moves while pushed, so its place is its whole state (hal/coop_switch.cpp redraws it).
+ROW(192, "PUSH_BLOCK",          100, 8, 150, 2, 0)
+// ---- COOPRIDE1 (audit G08): timed hazards and rotators that keep their own clock. A late joiner's copy counts from its own spawn
+// (and the Thwomp family rolls its waits with the console's own random), so they ran out of phase: [mvs] late-join rows rdl*
+// measured p95 400 units (Thwomp 161, WF and TTC), 1152 (Grindel 162), 2140 (Spindel 163), 2000 (Tox box 309), 241 (TTC beam
+// 118), and a fixed turn offset on the rotators (50 WF 5760, 80 LLL 8704, 94 WDW 16640, 129 RR 26321, 132 RR 7040 of 65536)
+// and 82 units on the LLL floating floors (75, 76). The cycle state rides with the pose for the Thwomp family and Spindel
+// (src/game/actors/d_a_dsn.cpp, d_a_dsn_base.cpp, include/daDkk_c.h, include/daDgr_c.h); the rest are pose rows (the
+// Tox box's state lies past 0x47f, beyond the field window). Owner by proximity: the nearest player's copy is the true one.
+ROW(161, "THWOMP",              100, 8, 150, 3, 4, {0x398, 4, 0, 4}, {0x39e, 1, 0, 0xff}, {0x3a0, 2, 0, 0xffff}, {0x32c, 4, 0, 0x00ffffff})
+ROW(162, "GRINDEL",              50, 8, 150, 3, 4, {0x398, 4, 0, 7}, {0x39c, 2, 0, 0xffff}, {0x39e, 1, 0, 0xff}, {0x39f, 1, 0, 0xff})
+ROW(163, "SPINDEL",              50, 8, 150, 3, 4, {0x324, 2, 0, 0xffff}, {0x326, 2, 0, 0xffff}, {0x328, 1, 0, 0xff}, {0x329, 1, 0, 1})
+ROW(309, "TOX_BOX",             100, 8, 150, 3, 11, {0x558, 4, -0x10000000, 0x10000000}, {0x55c, 4, -0x10000000, 0x10000000}, {0x560, 4, -0x10000000, 0x10000000}, {0x564, 2, 0, 0xffff}, {0x568, 4, 0, 8}, {0x570, 4, 0, 0xff}, {0x575, 1, 0, 0x3f}, {0x57c, 4, 0, 0xff}, {0x580, 4, -0x10000000, 0x10000000}, {0x584, 4, -0x10000000, 0x10000000}, {0x588, 4, -0x10000000, 0x10000000})   // COOPRIDE1: the roll state (rest point, timer, move, sequence step, face bits, path node) so the copy rolls the same arc itself
+ROW(118, "TTC_MOVING_BEAM",     100, 8, 150, 2, 0)
+ROW(50,  "ROTATING_PLATFORM_WF", 100, 8, 150, 2, 0)
+ROW(80,  "ROTATING_PLATFORM_LLL", 100, 8, 150, 2, 0)
+ROW(94,  "ROTATING_PLATFORM_WDW", 100, 8, 150, 2, 0)
+ROW(129, "ROTATING_PLATFORM_RR", 100, 8, 150, 2, 0)
+ROW(132, "ARMED_ROTATING_PLATFORM", 100, 8, 150, 2, 0)
+ROW(75,  "FLOATING_FLOOR_LLL_BIG", 100, 8, 150, 2, 0)
+ROW(76,  "FLOATING_FLOOR_LLL_SMALL", 100, 8, 150, 2, 0)
+// ---- COOPRIDE1 (audit G06): the movers the audit listed as ridden. The late-join rows showed most of them run on their own
+// clock (p95 437 units pole lift 142, 62 BFS floating floor 145, 645 diamond lift 135, a turn offset on the rickshaw axles
+// 137 / 152 and the BitS turntable 156, 3113 units Dorrie 168, who swims her loop alone); only the BFS elevator 140, the BFS
+// tilting platform 141 and the RR carpet 130 wait for a rider. For those three the rider's console owns them (claim_cd), so
+// the friend sees the platform where the rider has it and a friend stepping on gets the same platform and the same leg.
+// Fields: the elevator's wait timer and leg (include/daObjKm2_Agaru_c.h), the tilting platform's live and target quaternions
+// and settle delay (include/daObjGuragura_c.h), the pole lift's height angle (include/daObjKm2_Ami_Bou_c.h), the diamond
+// lift's turn timer (include/daObjKm1_Ukishima_c.h). The carpet is a path lift (dPathLiftActor_c), the same pose row as 31.
+ROW(140, "FIRE_SEA_ELEVATOR",   100, 8, 150, 3, 2, {0x324, 2, 0, 0xffff}, {0x327, 1, 0, 2})
+ROW(141, "TILTING_PLATFORM_BFS", 100, 8, 150, 3, 9, {0x320, 4, -0x2000, 0x2000}, {0x324, 4, -0x2000, 0x2000}, {0x328, 4, -0x2000, 0x2000}, {0x32c, 4, -0x2000, 0x2000}, {0x330, 4, -0x2000, 0x2000}, {0x334, 4, -0x2000, 0x2000}, {0x338, 4, -0x2000, 0x2000}, {0x33c, 4, -0x2000, 0x2000}, {0x34d, 1, 0, 0xff})
+ROW(142, "POLE_LIFT",           100, 8, 150, 3, 1, {0x354, 2, 0, 0xffff})
+ROW(145, "FLOATING_FLOOR_BFS",  100, 8, 150, 2, 0)
+ROW(135, "DIAMOND_LIFT",         50, 8, 150, 3, 1, {0x31e, 1, 0, 0xff})
+ROW(137, "RICKSHAW_BDW",        100, 8, 150, 2, 0)
+ROW(152, "RICKSHAW_BS",          50, 8, 150, 2, 0)
+ROW(156, "ROTATING_PLATFORM_BS",  50, 8, 150, 2, 0)
+ROW(130, "FLYING_CARPET",       100, 8, 150, 2, 0)
+ROW(168, "DORRIE",              100, 16, 250, 2, 0)

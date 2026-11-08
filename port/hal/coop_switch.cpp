@@ -33,6 +33,12 @@ void _ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c(char *self);
 int _ZN11daObjTbox_c10InitState0Ev(void *c);       // Entry[0].enter: the model frame back to 0
 int _ZN11daObjTbox_c10InitState1Ev(void *c);       // Entry[1].enter: the opening
 void _ZN11daObjPile_c19func_ov091_021334b8Ei(char *c, int flag);         // Stump: one pound (flag 0) or the whole post (flag 1)
+void _ZN7fBase_c18MarkForDestructionEv(void *self);    // COOPPUZZLE1: a book the receiver's shelf can no longer lead
+void ChangeArea(int areaID);                         // COOPPUZZLE1 proof knob: what a door does at the end of its swing
+// COOPRIDE1 (G40): the spike bomb's own steps, forwarded at the end of this file (daKirai_c, src/game/actors/d_a_kirai.cpp).
+void coopsw_kirai_explode(void *bomb);               // func_ov060_021185c4: Bowser's hit: particles, quake, sound, disarm
+void coopsw_kirai_disarm(void *bomb);                // func_ov060_021184bc: give up the slot, stop colliding, state 3
+void coopsw_kirai_rearm(void *bomb);                 // func_ov060_021186d8: full size and opacity, state 0, take a slot
 extern signed char data_ov100_02148204[];            // door table, 16 bytes a variant: +8 stars, +9 key id, +0xa save bit
 extern signed char data_ov100_02148390[];            // star gate table, 6 bytes a variant: +0 stars, +1 save bit
 extern char data_ov100_021488d4[];                   // Door node: the star-door unlock (func_ov100_02144bf4)
@@ -42,6 +48,8 @@ int _ZN6Player13TryTalkToDoorEh(void *player, unsigned char a);
 int _ZN6Player16TryTalkToKeyDoorEv(void *player);
 void _ZN6Player11OpenBigDoorEv(void *player);
 int _ZN8daDoor_c19func_ov100_021453d8EPvi(void *door, void *node, int arg);   // set a Door's node and run its enter half
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);   // dBgActor_c: model matrix from mAngleY + the place (src/runtime/actor/d_bg_actor.cpp)
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);     // dBgActor_c: the mesh collider follows the model
 }
 
 namespace port {
@@ -54,6 +62,8 @@ long long wall_ms() {
 
 enum : unsigned {
     kResendMs      = 100,      // each change goes out 3 times: now, +100, +200
+    kHoldMs        = 10000,    // COOPPUZZLE2: how long a field change waits for somebody to be listed
+    kTieMs         = 500,      // COOPPUZZLE3: a single-value field change this young still wins a tie against a higher seat
     kWordOwnerMs   = 1000,
     kWordGuestMs   = 3000,
     kSettleFrames  = 20,       // frames after the objects exist before the word is trusted as ours
@@ -77,6 +87,9 @@ bool     g_have_key = false;
 int      g_lvl = -1, g_act = 0;
 unsigned g_gen = 0;             // bumped at every level latch
 unsigned g_frames = 0;          // frames since the group was established and the player existed
+unsigned g_now = 0;             // COOPPUZZLE2: the clock of the last on_frame (a remote apply runs before this frame's on_frame)
+bool g_keep_local = true;       // COOPPUZZLE2: SM64DS_SW_KEEP_LOCAL=0 is the control (a remote apply swallows an unsent local change)
+bool g_hold_field = true;       // COOPPUZZLE2: SM64DS_SW_HOLD_FIELD=0 is the control (a field change with nobody listed is dropped)
 bool     g_new_level = true;
 bool     g_armed = false;
 bool     g_have_globals = false;
@@ -90,9 +103,9 @@ struct PendBit { bool on; uint8_t val; unsigned stamp; int sent; unsigned next; 
 PendBit g_pb[kSwBits];
 
 // object state: trackers by slot, outgoing messages, pending states from the owner
-struct Trk { void *actor; unsigned short cls; int last; bool valid; };
+struct Trk { void *actor; unsigned short cls; int last; bool valid; bool mine_on; unsigned mine_at; };   // mine_*: my last field send
 Trk g_trk[kSwSlots];
-struct ObjOut { bool on; uint8_t kind; uint16_t slot, cls; uint8_t state; int32_t value; uint16_t seq; int sent; unsigned next; };
+struct ObjOut { bool on; uint8_t kind; uint16_t slot, cls; uint8_t state; int32_t value; uint16_t seq; int sent; unsigned next; unsigned born; };
 ObjOut g_oo[kObjOutMax];
 uint16_t g_seq = 0;
 uint16_t g_lastseq[kCoopMaxSeats][kSwSlots];
@@ -129,6 +142,8 @@ void read_env() {
     g_env = true;
     const char *l = std::getenv("SM64DS_COOP_LOG");
     g_log = l && *l && *l != '0';
+    if (const char *k = std::getenv("SM64DS_SW_KEEP_LOCAL")) g_keep_local = *k != '0';
+    if (const char *h = std::getenv("SM64DS_SW_HOLD_FIELD")) g_hold_field = *h != '0';
     if (const char *o = std::getenv("SM64DS_SW_OFF")) {
         g_off.word = std::strstr(o, "word") != nullptr;
         g_off.press = std::strstr(o, "press") != nullptr;
@@ -224,7 +239,7 @@ bool ap_donut(char *a, int state, int) {
     *(unsigned char *)(a + 0x4ea) = (unsigned char)state;
     return true;
 }
-// daObjFallBlock_c family (WF 45, BBH 66, LLL 83): state at +0x33c, idle 0; the shake starts from
+// daObjFallBlock_c family (WF 45, BBH 66, LLL 83, BFS 139): state at +0x33c, idle 0; the shake starts from
 // case 0 of its own Behavior (ready off, timer 4, state 1), which is what the replay does.
 int r_fall(const char *a) { return rd_u8(a, 0x33c); }
 bool ap_fall(char *a, int, int) {
@@ -295,6 +310,110 @@ bool ap_stump(char *a, int, int value) {
         _ZN11daObjPile_c19func_ov091_021334b8Ei(a, 0);
     return true;
 }
+// COOPPUZZLE1 (G21): the BBH library BOOKSHELF (158, daTrsTrap_c mIndex 2) and its three BOOK_SWITCH books (213, daBook_c,
+// spawned by the shelf, mLinkedActorID = the shelf's uniqueID). A pushed book ORs 1 << param1 into the shelf's mBookFlags +0x157
+// (func_ov063_0211cae8); the shelf's state 0 keeps 1 and 3, clears any other order (the books whose bit went retract) and at 7
+// goes to mState +0x150 = 1, then 2 (slides away; the DONE books slide off with it) and 3 (removed) (src/game/actors/
+// d_a_trs_trap.cpp, d_a_book.cpp). All of it ran on the pusher's console only. Shared as a field: value = (mState != 0) << 3 |
+// (mBookFlags & 7); bit 3 of mBookFlags (the puzzle armed by a nearby player) stays local. While the shelf's room is not showing,
+// its Behavior zeroes mBookFlags every frame: that is not progress, so the reader keeps the last value it saw in view.
+char *find_actor(int slot, int cls);
+struct ShelfSeen { const void *a; unsigned uid; int v; };
+ShelfSeen g_shelf_seen[4];
+int r_shelf(const char *a) {
+    if (rd_i32(a, 0x140) != 2) return 0;
+    ShelfSeen *e = nullptr;
+    const unsigned uid = (unsigned)rd_i32(a, 4);
+    for (ShelfSeen &q : g_shelf_seen) if (q.a == a && q.uid == uid) { e = &q; break; }
+    if (!e) { e = &g_shelf_seen[0]; for (ShelfSeen &q : g_shelf_seen) if (!q.a) { e = &q; break; } e->a = a; e->uid = uid; e->v = 0; }
+    const bool showing = *(const signed char *)(a + 0xcc) == -1;    // the shelf's Behavior parks mAreaId at -1 while its room shows
+    const int v = (rd_u8(a, 0x150) != 0 ? 8 : 0) | (rd_u8(a, 0x157) & 7);
+    if (!showing && rd_u8(a, 0x150) == 0) return e ? e->v : v;
+    if (e) e->v = v;
+    return v;
+}
+bool ap_shelf(char *a, int, int value) {
+    if (rd_i32(a, 0x140) != 2) return false;
+    const bool solved = (value & 8) != 0;
+    const int bits = solved ? 7 : (value & 7);
+    const bool showing = *(const signed char *)(a + 0xcc) == -1;
+    if (solved) {
+        if (rd_u8(a, 0x150) != 0) return false;                        // already opening here
+        *(unsigned char *)(a + 0x150) = 1;                             // the verdict: state 1 counts, chimes, then slides (2)
+        *(unsigned short *)(a + 0x14c) = 0;
+    } else if (!showing || (rd_u8(a, 0x157) & 7) == bits) {
+        return false;                                                  // out of view the shelf forgets books anyway
+    }
+    *(unsigned char *)(a + 0x157) = (unsigned char)((rd_u8(a, 0x157) & 8) | bits);
+    const unsigned uid = (unsigned)rd_i32(a, 4);
+    for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {
+        if (a_cls(b) != 213 || a_dead(b) || (unsigned)rd_i32(b, 0x418) != uid) continue;
+        const int idx = rd_i32(b, 8) & 7;
+        const int st = rd_i32(b, 0x424);
+        if (!((bits >> idx) & 1) || st < 6 || st > 9) continue;       // a cleared bit: a DONE book retracts on its own
+        if (solved && !showing) { _ZN7fBase_c18MarkForDestructionEv(b); continue; }   // the shelf leaves before this room shows
+        *(int *)(b + 0x64) = rd_i32(b, 0x434);                         // what STATE_SWITCH_PUSH ends with: home, collider off,
+        *(unsigned *)(b + 0x234) |= 1u;                                // no toucher, STATE_SWITCH_DONE (follows the verdict)
+        *(void **)(b + 0x41c) = nullptr;
+        *(int *)(b + 0x424) = 10;
+    }
+    return true;
+}
+// COOPPUZZLE1 (G12): the SSL pyramid TOP (85, daObjDlPyramid_c) and its four PYRAMID_TAGs (86, daObjDlPyramidDummy_c,
+// mPyramidTopID +0x108). A tag a body touches adds one to the top's mNumTagsTriggered +0x3b6 and removes itself
+// (MarkForDestruction, not the death table, so coop_world never shares it); at 4 the top's state 0 moves on, it descends,
+// removes itself and raises Event bit 0xe (src/game/actors/d_a_obj_dl_pyramid.cpp). A friend's touches counted on his console
+// only, so my top never came down. Shared as a field on the top: value = the mask of its tags that are gone here (the tags go
+// by their placed slots, sorted: the same on every console). A receiver removes those tags and lifts the count to the number
+// of tags gone on either side; the top's own state 0 then does the rest.
+struct TopTags { const void *top; unsigned uid; short slot[4]; int n; unsigned remote; };
+TopTags g_tops[2];
+TopTags *top_entry(const char *a) {
+    for (TopTags &t : g_tops) if (t.top == a && t.uid == (unsigned)rd_i32(a, 4)) return &t;
+    TopTags *f = &g_tops[1];                         // a new level's top: a free entry, else the second one is reused
+    for (TopTags &t : g_tops) if (!t.top) { f = &t; break; }
+    *f = TopTags{a, (unsigned)rd_i32(a, 4), {0, 0, 0, 0}, 0, 0};
+    return f;
+}
+unsigned top_gone(TopTags &t) {
+    if (t.n < 4) {                                   // learn the four tags once, while all of them stand
+        short s[4]; int n = 0;
+        for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b && n < 4; b = (char *)_ZN8dActor_c4NextEPKS_(b))
+            if (a_cls(b) == 86 && !a_dead(b) && (unsigned)rd_i32(b, 0x108) == t.uid && a_slot(b) >= 0) s[n++] = (short)a_slot(b);
+        if (n < 4) return 0;
+        for (int i = 0; i < 4; ++i) for (int j = i + 1; j < 4; ++j) if (s[j] < s[i]) { short x = s[i]; s[i] = s[j]; s[j] = x; }
+        for (int i = 0; i < 4; ++i) t.slot[i] = s[i];
+        t.n = 4;
+        if (g_log) std::fprintf(stderr, "[coopsw] pyramid top uid=%u tags slots %d %d %d %d wall=%lld\n", t.uid, s[0], s[1], s[2], s[3], wall_ms());
+    }
+    unsigned m = 0;
+    for (int i = 0; i < 4; ++i) if (!find_actor(t.slot[i], 86)) m |= 1u << i;
+    return m;
+}
+void top_count(char *a, TopTags &t, unsigned gone) {
+    const unsigned all = gone | t.remote;
+    int c = 0; for (int i = 0; i < 4; ++i) c += (all >> i) & 1;
+    if (rd_u8(a, 0x3b7) == 0 && rd_u8(a, 0x3b6) < c) *(unsigned char *)(a + 0x3b6) = (unsigned char)c;
+}
+int r_top(const char *a) {
+    TopTags *t = top_entry(a);
+    if (!t) return 0;
+    const unsigned gone = top_gone(*t);
+    if (t->n == 4) top_count(const_cast<char *>(a), *t, gone);
+    return (int)gone;
+}
+bool ap_top(char *a, int, int value) {
+    TopTags *t = top_entry(a);
+    if (!t) return false;
+    top_gone(*t);
+    if (t->n < 4) return false;
+    const unsigned add = (unsigned)value & 15u & ~t->remote;
+    t->remote |= (unsigned)value & 15u;
+    for (int i = 0; i < 4; ++i)
+        if ((add >> i) & 1u) if (char *g = find_actor(t->slot[i], 86)) _ZN7fBase_c18MarkForDestructionEv(g);
+    top_count(a, *t, top_gone(*t) | t->remote);
+    return add != 0;
+}
 // DOOR (353) and STAR_DOOR (354): the START of an unlock. The ROM writes the save bit when the cutscene ENDS; the
 // kick fires when the unlock state begins and puts the same bit in the other consoles' record at once. Nothing here
 // hands a Player to a door state.
@@ -337,6 +456,20 @@ bool apply_door_idx(int cls, int idx, int state) {
     *save_flags() |= bit;
     return true;
 }
+// COOPRIDE1 (G40): SPIKE_BOMB (284, daKirai_c), mStateIndex +0x170: 0 armed, 1 / 2 going off, 3 spent. A bomb went off only on the
+// console whose Bowser (or player) touched it, and once every sibling was spent each console re-armed the bomb nearest ITS own
+// player. Shared as a field: 0 armed, 1 not armed. A friend's 1 sets an armed bomb off with Bowser's own step; a friend's 0
+// re-arms a spent one (one still going off is disarmed first). The re-arm choice belongs to the lowest seat in the room: a
+// higher seat's own re-arm is undone in scan_objects and never sent, and the lowest seat's choice arrives as a field.
+int r_kirai(const char *a) { return rd_i32(a, 0x170) == 0 ? 0 : 1; }
+bool ap_kirai(char *a, int, int value) {
+    const int st = rd_i32(a, 0x170);
+    if (value != 0) { if (st != 0) return false; coopsw_kirai_explode(a); return true; }
+    if (st == 0) return false;
+    if (st != 3) coopsw_kirai_disarm(a);
+    coopsw_kirai_rearm(a);
+    return true;
+}
 bool ap_door(char *, int, int) { return false; }      // never reached: apply_entry takes door classes by index
 bool ap_gate(char *, int, int) { return false; }
 const Watch kWatch[] = {
@@ -349,9 +482,13 @@ const Watch kWatch[] = {
     {45,  kSwKindKick,  "FALL_BLOCK_WF",  r_fall, ap_fall},
     {66,  kSwKindKick,  "FALL_BLOCK_BBH", r_fall, ap_fall},
     {83,  kSwKindKick,  "FALL_BLOCK_LLL", r_fall, ap_fall},
+    {139, kSwKindKick,  "FALL_BLOCK_BFS", r_fall, ap_fall},   // daObjKm2_Fall_Block_c: a daObjFallBlock_c with its own files only (src/game/actors/d_a_obj_km2_fall_block.cpp)
     {101, kSwKindField, "WDW_WATER",    r_water,  ap_water},
     {13,  kSwKindField, "TREASURE_CHEST", r_chest, ap_chest},
     {27,  kSwKindField, "STUMP",        r_stump,  ap_stump},
+    {158, kSwKindField, "BOOKSHELF",    r_shelf,  ap_shelf},
+    {85,  kSwKindField, "PYRAMID_TOP",  r_top,    ap_top},
+    {284, kSwKindField, "SPIKE_BOMB",   r_kirai,  ap_kirai},
     {353, kSwKindKick,  "DOOR",         r_door,   ap_door},
     {354, kSwKindKick,  "STAR_DOOR",    r_gate,   ap_gate},
 };
@@ -364,8 +501,9 @@ const Watch *find_watch(int cls) {
 // spawns itself in its InitResources, so slot -1, the same two spawns on every console) goes by a position code in 504..511.
 int wire_slot(const char *a, int cls) {
     const int s = a_slot(a);
-    if (s >= 0 || cls != 27) return s;
+    if (s >= 0 || (cls != 27 && cls != 158)) return s;
     const int *q = (const int *)(a + 0x5c);
+    if (cls == 158) return 496 + ((((q[0] >> 12) * 7) + ((q[2] >> 12) * 13)) & 7);   // COOPPUZZLE1: if the area spawns the shelf
     return 504 + ((((q[0] >> 12) * 7) + ((q[2] >> 12) * 13)) & 7);
 }
 
@@ -380,6 +518,8 @@ char *find_actor(int slot, int cls) {
 // ---------------------------------------------------------------------------
 CoopKeyWire wkey() { CoopKeyWire k; k.level = (uint16_t)g_lvl; k.act = (uint8_t)g_act; k.reserved = 0; return k; }
 bool others_here() { return (coop_group_member_mask() & ~(1u << g_my)) != 0; }
+int lowest_here() { const unsigned m = coop_group_member_mask() | (1u << g_my); for (int i = 0; i < 32; ++i) if ((m >> i) & 1u) return i; return g_my; }
+int g_kirai_undo = 0;
 
 bool send_world(int sub, const void *p, int n) { return coop_send_world(sub, p, n); }
 bool send_ctl(int sub, const void *p, int n) { return coop_send_ctl(sub, p, n); }
@@ -422,14 +562,19 @@ void queue_obj(int kind, int slot, int cls, int state, int value, unsigned now) 
         if (!g_oo[i].on && free_i < 0) free_i = i;
     }
     if (free_i < 0) free_i = 0;
-    g_oo[free_i] = {true, (uint8_t)kind, (uint16_t)slot, (uint16_t)cls, (uint8_t)state, (int32_t)value, g_seq, 0, now};
+    g_oo[free_i] = {true, (uint8_t)kind, (uint16_t)slot, (uint16_t)cls, (uint8_t)state, (int32_t)value, g_seq, 0, now, now};
 }
 
 void send_objs(unsigned now) {
     for (int i = 0; i < kObjOutMax; ++i) {
         ObjOut &o = g_oo[i];
         if (!o.on || (int)(now - o.next) < 0) continue;
-        if (!others_here()) { o.on = false; continue; }
+        if (!others_here()) {
+            // COOPPUZZLE2: a field value is a state, not an event: one made while nobody is listed yet (the first moments of a
+            // level) waits up to kHoldMs for the friend instead of being lost. Press and kick still go.
+            if (g_hold_field && o.kind == kSwKindField && (unsigned)(now - o.born) < (unsigned)kHoldMs) { o.next = now + kResendMs; continue; }
+            o.on = false; continue;
+        }
         SwObjWire w; std::memset(&w, 0, sizeof w);
         w.key = wkey(); w.slot = o.slot; w.cls = o.cls; w.state = o.state; w.seq = o.seq; w.value = o.value;
         const int sub = o.kind == kSwKindPress ? kSwWorldPress : o.kind == kSwKindKick ? kSwWorldKick : kSwWorldField;
@@ -541,9 +686,47 @@ void settle_word() {
 // ---------------------------------------------------------------------------
 // Object states (press / kick / field).
 // ---------------------------------------------------------------------------
-void apply_to(Trk &t, char *a, const Watch *w, int state, int value) {
+// COOPPUZZLE3: the fields whose changes add up. The pyramid top ORs the gone masks and the stump only lowers its pound
+// counter, so a receiver can take a remote value on top of its own in either order. The others hold one value each (the
+// WDW water target, the bookshelf's book bits and state, a chest's open state): the last write wins, so two writes that
+// cross must be settled by a fixed rule or each console ends with the other's choice.
+bool field_adds(int cls) { return cls == 85 || cls == 27; }
+
+void apply_to(Trk &t, char *a, const Watch *w, int state, int value, int seat) {
+    // COOPPUZZLE2: remote messages are applied after the actors ran and before this frame's scan, so a field this console
+    // changed in the same frame is already in the read below; taking it as t.last would swallow it and it was never sent
+    // (a pyramid tag touched here in the frame the friend's touch arrived: his top stuck at 3). For a field that adds up,
+    // send it first and then take the remote one: both consoles end with both changes.
+    // COOPPUZZLE3: for a single-value field the lower seat wins. My unsent change, or one I sent less than kTieMs ago,
+    // beats a higher seat's value: I keep it and send it (again), and the friend takes it because it comes from a lower
+    // seat. A lower seat's value is taken and my unsent change is dropped. One choice is lost; both screens agree.
+    // S-PZ3: a change in the first half second of a level is taken as the start value; no known puzzle is close enough to a start spot to hit it.
+    if (g_keep_local && w->kind == kSwKindField && t.valid && t.actor == a) {
+        const int pre = w->read(a);
+        const int slot = (int)(&t - g_trk);
+        if (field_adds(t.cls)) {
+            if (pre != t.last) {
+                t.last = pre;
+                queue_obj(kSwKindField, slot, (int)t.cls, 0, pre, g_now);
+                if (g_log) std::fprintf(stderr, "[coopsw] keep local %s slot=%d value=%d before a remote %d wall=%lld\n", w->name, slot, pre, value, wall_ms());
+            }
+        } else if (seat >= 0 && seat != g_my && pre != value) {
+            const bool unsent = pre != t.last;
+            const bool young = !unsent && t.mine_on && (unsigned)(g_now - t.mine_at) < (unsigned)kTieMs;
+            if ((unsent || young) && g_my < seat) {
+                t.last = pre;
+                queue_obj(kSwKindField, slot, (int)t.cls, 0, pre, g_now);
+                if (unsent) { t.mine_on = true; t.mine_at = g_now; }
+                if (g_log) std::fprintf(stderr, "[coopsw] tie %s slot=%d mine=%d (%s) beats seat %d value=%d wall=%lld\n", w->name, slot, pre,
+                                        unsent ? "unsent" : "young", seat, value, wall_ms());
+                return;
+            }
+            if (unsent && g_log) std::fprintf(stderr, "[coopsw] tie %s slot=%d mine=%d loses to seat %d value=%d wall=%lld\n", w->name, slot, pre, seat, value, wall_ms());
+        }
+    }
     if (w->apply(a, state, value)) {
         t.last = w->read(a);
+        t.mine_on = false;
         if (w->kind == kSwKindPress) ++g_st.press_applied; else if (w->kind == kSwKindKick) ++g_st.kick_applied; else ++g_st.field_applied;
         if (g_log)
             std::fprintf(stderr, "[coopsw] apply %s slot=%d cls=%d state=%d value=%d wall=%lld\n", w->name,
@@ -552,7 +735,8 @@ void apply_to(Trk &t, char *a, const Watch *w, int state, int value) {
 }
 
 // Returns true when the actor was found (the entry is done, whatever its state).
-bool apply_entry(int kind, int slot, int cls, int state, int value) {
+// seat: the sender of a live message, or -1 for a snapshot or a pending entry (applied as is).
+bool apply_entry(int kind, int slot, int cls, int state, int value, int seat) {
     const Watch *w = find_watch(cls);
     if (!w || w->kind != kind) { ++g_st.drop_class; return true; }
     if (is_door_cls(cls)) {           // by table index: the door needs no actor, and no Player is ever involved
@@ -565,9 +749,31 @@ bool apply_entry(int kind, int slot, int cls, int state, int value) {
     char *a = find_actor(slot, cls);
     if (!a) return false;
     Trk &t = g_trk[slot];
-    if (!t.valid || t.actor != a) { t.actor = a; t.cls = (unsigned short)cls; t.last = w->read(a); t.valid = true; }
-    apply_to(t, a, w, state, value);
+    if (!t.valid || t.actor != a) { t.actor = a; t.cls = (unsigned short)cls; t.last = w->read(a); t.valid = true; t.mine_on = false; }
+    apply_to(t, a, w, state, value, seat);
     return true;
+}
+
+// PUSH_BLOCK (192) placed by the friend's push. Its pose row (coop_actor_profiles.inc) writes the place, but the block's own
+// Behavior rebuilds its model matrix and collider only while it is being pushed (mHorzSpeed != 0, src/game/actors/
+// d_a_obj_pushblock.cpp), so a copy moved by the row kept drawing and colliding at the old spot. When the model's translation
+// (dBgActor_c mModel.mat4x3 m[9..11] at +0x114, the place >> 3 as UpdateModelPosAndRotY stores it) no longer matches the place,
+// run the same two calls the block's Behavior runs after a push. A block the local player pushes is already refreshed by its
+// Behavior and is left alone.
+unsigned g_pb_refresh = 0;
+void pushblock_follow() {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (a_cls(a) != 192 || a_dead(a)) continue;
+        const int *pos = (const int *)(a + 0x5c);
+        const int *mt = (const int *)(a + 0x114);
+        if (mt[0] == (pos[0] >> 3) && mt[1] == (pos[1] >> 3) && mt[2] == (pos[2] >> 3)) continue;
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(a);
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(a);
+        if (g_log && g_pb_refresh < 20)
+            std::fprintf(stderr, "[coopsw] push block slot=%d follows its synced place %d,%d,%d (model was at %d,%d,%d) wall=%lld\n", (int)a_slot(a),
+                         pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, mt[0] >> 9, mt[1] >> 9, mt[2] >> 9, wall_ms());
+        ++g_pb_refresh;
+    }
 }
 
 void scan_objects(unsigned now) {
@@ -584,8 +790,8 @@ void scan_objects(unsigned now) {
         const int cur = w->read(a);
         Trk &t = g_trk[slot];
         if (!t.valid || t.actor != a || t.cls != cls) {
-            t.actor = a; t.cls = cls; t.last = cur; t.valid = true;
-            if (g_log && (cls == 13 || cls == 27 || cls == 353 || cls == 354)) {
+            t.actor = a; t.cls = cls; t.last = cur; t.valid = true; t.mine_on = false;
+            if (g_log && (cls == 13 || cls == 27 || cls == 158 || cls == 353 || cls == 354)) {
                 const int *p = (const int *)(a + 0x5c);
                 std::fprintf(stderr, "[coopsw] track %s slot=%d aslot=%d uid=%u cls=%d param=%d pos=%d,%d,%d read=%d node=%p unlocking=%p wall=%lld\n", w->name,
                              (int)slot, (int)a_slot(a), (unsigned)rd_i32(a, 4), (int)cls, rd_i32(a, 8), p[0] >> 12, p[1] >> 12, p[2] >> 12, cur,
@@ -599,9 +805,15 @@ void scan_objects(unsigned now) {
             continue;
         }
         if (cur == t.last) continue;
+        if (cls == 284 && cur == 0 && t.last != 0 && lowest_here() < g_my) {   // G40: a re-arm is the lowest seat's choice
+            coopsw_kirai_disarm(a);
+            if (g_log && g_kirai_undo++ < 20)
+                std::fprintf(stderr, "[coopsw] spike bomb slot=%d re-armed here: undone, seat %d picks wall=%lld\n", (int)slot, lowest_here(), wall_ms());
+            continue;
+        }
         const int prev = t.last;
         t.last = cur;
-        if (w->kind == kSwKindField) { queue_obj(kSwKindField, slot, cls, 0, cur, now); continue; }
+        if (w->kind == kSwKindField) { queue_obj(kSwKindField, slot, cls, 0, cur, now); t.mine_on = true; t.mine_at = now; continue; }
         if (prev == 0 && cur != 0)
             queue_obj(w->kind, is_door_cls(cls) ? door_wire_idx(a) : slot, cls, w->kind == kSwKindPress ? 1 : (cur > 3 ? 3 : cur), 0, now);
     }
@@ -611,7 +823,7 @@ void drain_pending(unsigned) {
     for (Pend &p : g_pend) {
         if (!p.on) continue;
         if (g_frames - p.born > kStatesAge) { p.on = false; continue; }
-        if (apply_entry(p.kind, p.slot, p.cls, p.state, p.value)) { p.on = false; ++g_st.states_applied; }
+        if (apply_entry(p.kind, p.slot, p.cls, p.state, p.value, -1)) { p.on = false; ++g_st.states_applied; }
     }
 }
 
@@ -743,7 +955,7 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
                          kind == kSwKindPress ? "press" : kind == kSwKindKick ? "kick" : "field", seat,
                          (int)w.slot, (int)w.cls, (int)w.state, (int)w.value, wall_ms());
         // The actor may not exist yet (still loading): keep it as a pending state.
-        if (!apply_entry(kind, w.slot, w.cls, kind == kSwKindField ? 0 : w.state, w.value)) {
+        if (!apply_entry(kind, w.slot, w.cls, kind == kSwKindField ? 0 : w.state, w.value, seat)) {
             SwStateEntry e = {w.slot, w.cls, (uint8_t)kind, kind == kSwKindField ? (uint8_t)0 : w.state, w.value};
             put_pending(e);
         }
@@ -968,6 +1180,38 @@ void knob_press(PressKnob &k) {
                      rd_i32(a, 8), k.cls == 13 ? rd_u8(a, 0x172) : 0, (int)did, wall_ms());
         return;
     }
+    if (k.cls == 213 || k.cls == 86 || k.cls == 158) {
+        // COOPPUZZLE1 proof knobs. 213: the book of param1 == nth takes a hit (what daBook_c's READY state does when
+        // func_ov020_021115ac reports an attack: collider on, STATE_SWITCH_PUSH; the book's own PUSH state then checks the
+        // order and calls the shelf). 86: the nth tag (placed slots sorted) is touched (what its Behavior does when a body
+        // stands in its cylinder: the top it names counts one, the tag goes). For 86, nth is the tag's placed slot. 158: the
+        // shelf's room is entered (what a door does at the end of its swing: ChangeArea to the far side's area), so a
+        // placed player stands in a room that shows.
+        char *a = nullptr;
+        for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {
+            if (a_cls(b) != k.cls || a_dead(b)) continue;
+            if (k.cls == 213 && (rd_i32(b, 8) & 7) == k.nth) a = b;
+            if (k.cls == 86 && a_slot(b) == k.nth) a = b;
+            if (k.cls == 158 && rd_i32(b, 0x140) == 2) a = b;
+        }
+        if (!a) { std::fprintf(stderr, "[coopsw-knob] press cls=%d nth=%d: no live actor\n", k.cls, k.nth); return; }
+        bool did = false;
+        if (k.cls == 213) {
+            did = rd_i32(a, 0x424) == 8;
+            if (did) { *(unsigned *)(a + 0x234) |= 1u; *(int *)(a + 0x424) = 9; }
+        } else if (k.cls == 158) {
+            ChangeArea((signed char)rd_u8(a, 0x158));
+            did = true;
+        } else {
+            const unsigned tid = (unsigned)rd_i32(a, 0x108);
+            for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b))
+                if (a_cls(b) == 85 && !a_dead(b) && (unsigned)rd_i32(b, 4) == tid) { ++*(unsigned char *)(b + 0x3b6); did = true; break; }
+            _ZN7fBase_c18MarkForDestructionEv(a);
+        }
+        std::fprintf(stderr, "[coopsw-knob] press cls=%d slot=%d nth=%d state=%d did=%d wall=%lld\n", k.cls, (int)a_slot(a), k.nth,
+                     k.cls == 213 ? rd_i32(a, 0x424) : 0, (int)did, wall_ms());
+        return;
+    }
     const Watch *w = find_watch(k.cls);
     char *c[64]; int n = 0;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && n < 64; a = (char *)_ZN8dActor_c4NextEPKS_(a))
@@ -1079,6 +1323,7 @@ void register_handlers() {
 }
 
 void on_frame(unsigned now) {
+    g_now = now;
     read_env();
     if (!coop_world_active()) return;
     register_handlers();
@@ -1112,6 +1357,8 @@ void on_frame(unsigned now) {
         local_word_changes(now);
     }
     if (g_frames >= 3) scan_objects(now);
+    static const bool pb_follow = [] { const char *e = std::getenv("SM64DS_COOP_PUSHBLOCK_FOLLOW"); return !(e && *e == '0'); }();
+    if (g_frames >= 3 && pb_follow) pushblock_follow();   // SM64DS_COOP_PUSHBLOCK_FOLLOW=0 is the control: the stale model
     if (g_frames >= 3 && (g_frames % 15u) == 0) drain_pending(now);
 
     // proof setters (they do what a ROM setter does)
@@ -1163,3 +1410,9 @@ struct Reg {
 CoopSwitchStats coop_switch_stats() { return g_st; }
 
 }  // namespace port
+
+// COOPRIDE1 (G40): flat faces of the spike bomb's member steps for the field above (the bodies are the matched TU's).
+#include "daKirai_c.h"
+extern "C" void coopsw_kirai_explode(void *bomb) { ((daKirai_c *)bomb)->func_ov060_021185c4(); }
+extern "C" void coopsw_kirai_disarm(void *bomb) { ((daKirai_c *)bomb)->func_ov060_021184bc(); }
+extern "C" void coopsw_kirai_rearm(void *bomb) { ((daKirai_c *)bomb)->func_ov060_021186d8(); }

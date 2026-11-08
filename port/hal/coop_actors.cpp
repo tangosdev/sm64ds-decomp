@@ -1,7 +1,7 @@
 // COOP PHASE 2: LIVE ENEMIES AND MOVING PLATFORMS KEPT IN STEP. Run mp1, lane COOPMOVE1. See coop_actors.h.
 //
 // PORT_HOST_ABI. Reads and writes live actors by raw offset (the established convention in port/hal); nothing in
-// src/ changes. Every write is range-checked: an offset is accepted only inside 0xd0..0x480 and aligned to its
+// src/ changes. Every write is range-checked: an offset is accepted only inside 0xd0..0x600 and aligned to its
 // width, a position only inside +-kMoverMaxUnits world units, and only after the record passed the validator.
 
 #include "coop_actors.h"
@@ -26,6 +26,8 @@ extern "C" {
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;
 extern short data_02092144[];
+// Player::State objects (ov002 bss, the order of hal/vs_arena.cpp kStateObjects): St_BurnLava (11), St_DeadHit (12), St_DeadPit (13).
+extern unsigned char data_ov002_021100f4[], data_ov002_0211010c[], data_ov002_02110124[];
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 }
 
@@ -79,7 +81,7 @@ char  g_prof_name[256][40]; // names of rows added from the profile file
 
 enum : int {
     kSlots = 512, kSeats = 4,
-    kFieldLo = 0xd0, kFieldHi = 0x480,
+    kFieldLo = 0xd0, kFieldHi = 0x600,   // COOPRIDE1: 0x600 so the Tox box roll state (0x558..0x58b) fits
     kStaleMs = 3000, kHeartbeatMs = 1500, kDwellMs = 2000, kRxKeepMs = 4000,
     kPayloadMax = kHubCoopMaxDatagram - kHubCoopHeaderBytes,
 };
@@ -225,6 +227,10 @@ struct Rx {
 struct Job { bool on; int passes; unsigned next; int cursor; };
 
 bool g_env = false, g_log = false, g_act = true, g_snap_on = true, g_hyst = true, g_stale_on = true;
+bool g_dead_guard = true;     // COOPPUZZLE1: SM64DS_COOP_DEAD_GUARD=0 is the control (a dying body claims by distance, as before)
+bool g_rider_own = true;      // COOPROWS1: SM64DS_COOP_SEESAW_RIDER=0 is the control (nearest to the pivot owns the plank, as before)
+bool g_lift_heading = true;  // SM64DS_COOP_LIFT_HEADING=0 is the MUST-FAIL control (run after093, lane COOPPLAT1): a sliding slab keeps its own heading
+unsigned g_lift_flips = 0;
 unsigned g_sample_every = 0;
 unsigned g_dump_at[4]; int g_ndump = 0;
 struct ForgeKnob { unsigned tick; char name[12]; bool done; };
@@ -261,6 +267,7 @@ void read_env() {
     g_env = true;
     auto flag = [](const char *n, bool dflt) { const char *e = std::getenv(n); return (e && *e) ? *e != '0' : dflt; };
     g_log = flag("SM64DS_COOP_MOVE_LOG", false);
+    g_lift_heading = flag("SM64DS_COOP_LIFT_HEADING", true);
     g_boss_own = flag("SM64DS_MOVERS_BOSSOWN", true);
     g_new_rows = flag("SM64DS_MOVERS_NEWROWS", true);
     g_hold_mips = flag("SM64DS_MOVERS_MIPSHOLD", true);
@@ -270,6 +277,8 @@ void read_env() {
     g_god = flag("SM64DS_COOP_MOVE_GOD", false);
     g_hyst = flag("SM64DS_COOP_MOVE_HYST", true);
     g_stale_on = flag("SM64DS_COOP_MOVE_STALE", true);
+    g_dead_guard = flag("SM64DS_COOP_DEAD_GUARD", true);
+    g_rider_own = flag("SM64DS_COOP_SEESAW_RIDER", true);
     if (const char *ld = std::getenv("SM64DS_COOP_MOVE_LEAD")) g_lead_ms = std::atoi(ld);
     if (const char *s = std::getenv("SM64DS_COOP_MOVE_SAMPLE")) g_sample_every = (unsigned)std::strtoul(s, nullptr, 0);
     if (const char *d = std::getenv("SM64DS_COOP_MOVE_DUMP")) {
@@ -510,6 +519,46 @@ void ease_angle(char *a, int off, int16_t cur, int16_t want) {
     else if (e > 0x400) wr16(a, off, (int16_t)(cur + (int16_t)(want - cur) / 2));
 }
 
+// Run after093, lane COOPPLAT1. daObjSimpleLift_c (src/game/actors/d_a_obj_simple_lift.cpp, every sliding slab: classes 55 124
+// 138 146 147 154 155) slides along mPrevAngleY (+0x94, the heading dActor_c::UpdatePosWithHorzSpeedAndAng reads,
+// src/runtime/actor/d_actor.cpp:628) and Behavior turns that heading by 0x8000 each time mMoveTimer runs out. The record carries
+// the owner's pose and its two timers (+0x31c / +0x320) but not the heading, and a copy that spawned later has turned a different
+// number of times, so half the time the owner's timers land on a copy that slides the other way. The pin hides it while the owner
+// streams; once the owner leaves the copy runs free one whole leg off its track (a BFS square half inside the walkway).
+// The heading is not on the wire, but the record fixes it: the slab is on its way out (heading H0, InitResources:180) when its
+// distance from the spawn point is the travel length minus what the timer still has to run, and on its way back when that distance
+// is what the timer still has to run. The owner's record gives both numbers; the copy takes the matching heading.
+extern "C" { extern unsigned short data_ov091_02134504[]; extern unsigned short data_ov091_02134514[]; }
+bool is_simple_lift(unsigned id) {
+    return id == 55 || id == 124 || id == 138 || id == 146 || id == 147 || id == 154 || id == 155;
+}
+void fix_lift_heading(int slot, char *a, const Prof &p, const Rx &x) {
+    if (!g_lift_heading || !is_simple_lift(p.id) || p.nf < 2) return;
+    const unsigned variant = (unsigned)(uint8_t)a[0x322];
+    if (variant > 6) return;
+    const int speed = rd32(a, 0x98) >> 12;                                  // mHorzSpeed, 0xa000 = 10 units a frame (InitResources:185)
+    const int travel = (int)data_ov091_02134504[variant];
+    if (speed <= 0 || travel <= 0 || travel > 1000) return;
+    const int16_t angx = rd16(a, 0x8c), angy = rd16(a, 0x8e);
+    const int16_t h0 = (int16_t)(angx != 0 ? angy + angx : angy + (int16_t)data_ov091_02134514[variant]);   // InitResources:180-182
+    const double rad = (double)(uint16_t)h0 * (6.283185307179586 / 65536.0);
+    const double dx = std::sin(rad), dz = std::cos(rad);                     // X with the sine, Z with the cosine (the ROM table pair)
+    const double ox = (double)(x.x - rd32(a, 0x324)) / 4096.0, oz = (double)(x.z - rd32(a, 0x32c)) / 4096.0;   // from mBasePos
+    const double along = ox * dx + oz * dz;
+    const int timer = (int)(int16_t)(x.f[1] & 0xffffu);                       // the owner's mMoveTimer (+0x320, low half)
+    const double rest = (double)timer * speed, len = (double)travel * speed;
+    const double e_out = std::fabs(along - (len - rest)), e_back = std::fabs(along - rest);
+    if (std::fabs(e_out - e_back) < 2.0 * speed) return;                    // the middle of a leg: both fit, keep what we have
+    const int16_t want = (int16_t)(e_out < e_back ? h0 : h0 + (int16_t)0x8000);
+    const int16_t cur = rd16(a, 0x94);
+    if (cur == want) return;
+    wr16(a, 0x94, want);
+    ++g_lift_flips;
+    if (g_lift_flips <= 40)
+        std::fprintf(stderr, "[coopmove] lift heading: class %d slot %d had %04x, the owner's record (along %.0f of %.0f, timer %d) says %04x\n",
+                     (int)p.id, slot, (unsigned)(uint16_t)cur, along, len, timer, (unsigned)(uint16_t)want);
+}
+
 void apply_rec(int slot, Slot &s, Rx &x) {
     const Prof &p = g_prof[s.prof];
     char *a = s.a;
@@ -538,7 +587,17 @@ void apply_rec(int slot, Slot &s, Rx &x) {
     if (!force && !phase && err <= p.band && aerr <= 0x400) { ++g_st.in_band; return; }
     const bool write = force || phase || err > p.snap;
     if (!force && phase && (p.flags & kFSlave)) {            // slave() owns the pose; the counters are written here
+        if (g_lift_heading && is_simple_lift(p.id)) {        // COOPPLAT1: the slab's place, timers and heading are one state: write them together
+            const double gap = dist3(a, x.x, x.y, x.z);
+            CStat &c = g_cs[s.prof];
+            ++c.pin_n; c.pin_sum += gap; if (gap > c.pin_max) c.pin_max = gap; if (gap > 40.0) ++c.pin_big;
+            wr32(a, 0x5c, clampi(x.x, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
+            wr32(a, 0x60, clampi(x.y, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
+            wr32(a, 0x64, clampi(x.z, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
+            wr16(a, 0x8c, x.ax); wr16(a, 0x8e, x.ay); wr16(a, 0x90, x.az);
+        }
         for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
+        fix_lift_heading(slot, a, p, x);
         ++g_st.applied_write; ++g_cs[s.prof].applied;
         s.lvalid = false;
         return;
@@ -549,6 +608,7 @@ void apply_rec(int slot, Slot &s, Rx &x) {
         wr32(a, 0x64, clampi(tz, -kMoverMaxUnits * 4096, kMoverMaxUnits * 4096));
         wr16(a, 0x8c, x.ax); wr16(a, 0x8e, x.ay); wr16(a, 0x90, x.az);
         for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
+        fix_lift_heading(slot, a, p, x);
         ++g_st.applied_write; ++g_cs[s.prof].applied;
         if (force) ++g_st.snap_applied;
     } else {
@@ -661,6 +721,10 @@ void slave(Slot &s, const Rx &x, unsigned now) {
     if (!x.valid || x.cls != p.id || x.nf != p.nf) return;
     const unsigned age = now - x.t;
     if (x.snap && age > 120u) return;                        // a snapshot pose is a starting point, not a live stream: the local copy, now in phase, runs on from it
+    // run after093, lane COOPPLAT1: a sliding slab takes the owner's whole state at each record (apply_rec) and then runs on in phase, so it
+    // is never pinned: a pin to an extrapolated or stale pose would put it ahead of, or hold it against, its own timers, and it would
+    // keep that offset for the rest of the visit once the owner leaves
+    if (g_lift_heading && is_simple_lift(p.id)) return;
     if (age > (unsigned)kStaleMs) return;                    // the owner went quiet for good: let the local copy run (a still actor heartbeats every 1.5 s)
     char *a = s.a;
     if (skip_state(a, p)) return;
@@ -692,11 +756,45 @@ void slave(Slot &s, const Rx &x, unsigned now) {
     ++g_cs[s.prof].slaved;
 }
 
+// The claim distance this console uses and sends for a slot: how far its player is from the actor.
+// COOPROWS1: the rider owns a seesaw. daObjSeesaw_c (39, 128, 133, 143, 149, 150) sets mPoundedThisFrame (+0x326) in its stood-on
+// callback and clears it as the last statement of Behavior (src/game/actors/d_a_obj_seesaw.cpp), so it is set here only when a body
+// of THIS console stood on the plank this frame (a friend's body is parked away between draws). Nearest-to-the-pivot handed the plank
+// to a friend standing by the axle, whose pin then erased the rider's own tilt. SM64DS_COOP_SEESAW_RIDER=0 is the control.
+// COOPPUZZLE1: a dead or dying body claims nothing. My own player bouncing in lava (St_BurnLava), dying (St_DeadHit,
+// St_DeadPit) sends the farthest claim, so a friend takes the object outright and keeps it. Without it his claim
+// swung across the 1.75x band with every lava bounce and the owner flipped each dwell, both consoles pinned to the other's old
+// record and the plank froze (BFS 143, COOPROWS2 kba2). Airborne or falling is NOT dying: a rider hopping keeps the plank.
+bool local_body_dying(const char *pl) {
+    const void *st = *(const void *const *)(pl + 0x370);  // Player::mState
+    return st == data_ov002_021100f4 || st == data_ov002_0211010c || st == data_ov002_02110124;
+}
+unsigned claim_cd(const char *pl, const Slot &s) {
+    const Prof &p = g_prof[s.prof];
+    if (g_dead_guard && local_body_dying(pl)) return 65535;
+    if (g_rider_own && (p.id == 39 || p.id == 128 || p.id == 133 || p.id == 143 || p.id == 149 || p.id == 150) && p.size >= 0x327 &&
+        *(const unsigned char *)(s.a + 0x326) != 0)
+        return 0;
+    // COOPRIDE1: the same rule for the two BFS movers that move only under a rider. The elevator (140) sets mStoodOn +0x326 and
+    // the tilting platform (141) mBumped +0x34c from their mesh callbacks; each Behavior reads and clears its flag.
+    if (g_rider_own && ((p.id == 140 && p.size >= 0x327 && *(const unsigned char *)(s.a + 0x326) != 0) ||
+                        (p.id == 141 && p.size >= 0x34d && *(const unsigned char *)(s.a + 0x34c) != 0)))
+        return 0;
+    return (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+}
+
 // Ownership, apply, publish: one pass over the slots that exist here.
 void process(unsigned now) {
     char *pl = local_player();
     if (!pl) return;
     refill(now);
+    {
+        static bool dying_was = false;
+        const bool dying = g_dead_guard && local_body_dying(pl);
+        if (g_log && dying != dying_was)
+            std::fprintf(stderr, "[coopmove] my body %s wall=%lld\n", dying ? "is dying: it claims nothing" : "claims again", wall_ms());
+        dying_was = dying;
+    }
     unsigned char recs[kPayloadMax]; int nrec = 0, bytes = 0;
     struct Due { int slot; unsigned age; };
     Due due[kSlots]; int ndue = 0;
@@ -705,7 +803,7 @@ void process(unsigned now) {
         if (!s.a) continue;
         const Prof &p = g_prof[s.prof];
         if (p.flags & kFSampleOnly) continue;          // the control: seen and sampled, never owned, applied, pinned or published
-        const unsigned my_cd = (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+        const unsigned my_cd = claim_cd(pl, s);
         // 1. who owns this actor
         int best = -1; unsigned best_cd = 0xffffffffu; unsigned cur_cd = 0xffffffffu; bool cur_fresh = false;
         for (int q = 0; q < kSeats; ++q) {
@@ -768,7 +866,7 @@ void process(unsigned now) {
         int first = i;
         while (i < ndue && nrec < kMoverMaxRecs && bytes + rec_bytes(g_slot[due[i].slot].prof) + (int)sizeof(MoverBatchHead) <= kPayloadMax) {
             Slot &s = g_slot[due[i].slot];
-            const unsigned my_cd = (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+            const unsigned my_cd = claim_cd(pl, s);
             bytes += fill_rec(recs + bytes, due[i].slot, s, my_cd, false);
             ++nrec; ++i;
         }
@@ -803,7 +901,7 @@ void process(unsigned now) {
                 if (mine && bytes + rec_bytes(s.prof) + (int)sizeof(MoverBatchHead) > kPayloadMax) break;
                 ++j.cursor;
                 if (!mine) continue;
-                const unsigned my_cd = (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
+                const unsigned my_cd = claim_cd(pl, s);
                 bytes += fill_rec(recs + bytes, slot, s, my_cd, frozen_state(s.a));
                 ++nrec;
             }
