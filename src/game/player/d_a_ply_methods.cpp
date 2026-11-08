@@ -1916,8 +1916,7 @@ void daPly_c::func_ov002_020bf13c() {
  * No callees; data: gActivePlayerSlot (u8 index), data_0209f4a0 (s16 table).
  */
 extern "C" {
-int func_ov002_020bf224(void *unusedPlayer, int b, int c)
-{
+int func_ov002_020bf224(void *unusedPlayer, int b, int c) {
     extern struct Entry18 data_0209f4a0[];
     b = FX_MUL(b, data_0209f4a0[gActivePlayerSlot].val);
     if (b < c)
