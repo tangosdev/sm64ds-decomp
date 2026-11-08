@@ -66,7 +66,7 @@
    groundSeen (0x20): Behavior's ground ray found floor less than 0x12c000
        below. While set, a TERESA below variant 8 falls back to mLastGroundPos
        when the ray misses or the floor is farther down.
-   hitByParam3Player (0x40): func_ov063_0211a0dc sets it when the attacker
+   hitByParam3Player (0x40): GetAttackStatus sets it when the attacker
        is a PLAYER (actor 0xbf) whose param1 is 3. The chase handlers clear it
        every frame; 021162c8 and 02116e14 pick state 4 instead of 3 while it
        is set, and 02118cd8 takes a hit point only while it is clear.
@@ -204,7 +204,7 @@ struct daTrs_c : dCapEnemy_c {
        appears (02119074); 021189f4 hands it >> 0xc to Sound::PlaySub. */
     s32 mSavedMusicVolume;     /* 0x57c */
     s32 mDistToPlayer;         /* 0x580 -- Vec3_HorzDist each Behavior */
-    /* The Boo's base scale. func_ov063_0211a964 sets mScaleX/Y/Z (what
+    /* The Boo's base scale. Oscillate sets mScaleX/Y/Z (what
        Render draws) to this plus a wobble and sizes mdCcAcPos_c from them;
        the appear path copies it in directly. Runtime (EU, blinded 7/7):
        poking this resized the drawn Boo; a direct mScaleX write was undone.
@@ -246,7 +246,7 @@ struct daTrs_c : dCapEnemy_c {
        first. */
     s16 mPreKnockbackAngleY;   /* 0x5b4 */
     s16 mKnockbackAngleY;      /* 0x5b6 */
-    /* Phase of the squash-and-stretch wobble: func_ov063_0211a964 reads it
+    /* Phase of the squash-and-stretch wobble: Oscillate reads it
        >> 4 as a sine-table index and moves mScaleX / mScaleY by opposite
        amounts. Only zero is ever stored (InitResources, twice), so the name
        rests on that one reader. Medium confidence. */
@@ -371,39 +371,39 @@ struct daTrs_c : dCapEnemy_c {
     void          func_ov063_02118f74();
     void          func_ov063_02119074();
     void          func_ov063_02119274();
-    void          func_ov063_021192d4();
+    void          UpdateBoo();
     void          func_ov063_0211934c();
-    void          func_ov063_0211975c();
-    void          func_ov063_02119870();
+    void          UpdateDying();
+    void          UpdateBouncedOn();
     void          func_ov063_02119894();
-    void          func_ov063_02119960();
-    void          func_ov063_02119a2c();
-    void          func_ov063_02119a50();
-    void          func_ov063_02119ab0();
-    void          func_ov063_02119b1c();
+    void          UpdateChase();
+    void          UpdateNonlethalHit();
+    void          UpdateEmerge();
+    void          UpdateCarriedItemPos();
+    void          HandleAttackStatus();
     void          func_ov063_02119b84();
-    void          func_ov063_02119bb0();
+    void          UpdateInactive();
     void          func_ov063_02119c18(unsigned int id);
-    void          func_ov063_02119c58();
+    void          FindParentBigBoo();
     void          func_ov063_02119cc0(int unused, s16 a2, int a3);
-    void          func_ov063_02119e38(int a1, short a2, int a3);
-    void          func_ov063_0211a030(int a, int b);
-    int           func_ov063_0211a0dc();
-    int           func_ov063_0211a3d0();
-    int           func_ov063_0211a564(int arg1);
-    int           func_ov063_0211a634(int arg);
-    void          func_ov063_0211a6f0();
-    void          func_ov063_0211a718();
-    void          func_ov063_0211a76c(int cond, int val);
-    void          func_ov063_0211a810(int cond);
-    int           func_ov063_0211a8a4();
+    void          ChaseMario(int a1, short a2, int a3);
+    void          SetVelFromPlayerVel(int a, int b);
+    int           GetAttackStatus();
+    int           UpdateDuringDeath();
+    int           UpdateDuringNonlethalHit(int arg1);
+    int           UpdateAfterBouncedOn(int arg);
+    void          ResetAfterHit();
+    void          ShakeAfterHit();
+    void          MoveDuringHit(int cond, int val);
+    void          SetMoveYawForDuringHit(int cond);
+    int           VanishOrAppear();
     void          func_ov063_0211a960();
-    void          func_ov063_0211a964(int arg1);
-    void          func_ov063_0211aa34();
-    void          func_ov063_0211ab68();
-    int           func_ov063_0211ad00();
-    int           func_ov063_0211adb4();
-    void          func_ov063_0211adfc();
+    void          Oscillate(int arg1);
+    void          ApproachTargetOpacityAndUpdateScale();
+    void          SpawnCourtyardBooTriplet();
+    int           ShouldBeActive();
+    int           ShouldBeStopped();
+    void          Stop();
 };
 
 #ifndef SM64DS_PLATFORM_PC
