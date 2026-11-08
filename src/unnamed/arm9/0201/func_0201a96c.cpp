@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "private/watchdog_alarm.h"
 #include "IRQ.h"
 #include "nitro/os/alarm.h"
 
@@ -22,14 +23,15 @@ extern void func_0201a8b4(void *);
 /* Set the suspended flag and return the old one. Clearing it re-arms the
    alarm for the full limit with func_0201a8b4 as the handler; setting it
    cancels the alarm through func_0201aaa4. */
-u8 func_0201a96c(Struct_0201a96c *self, u8 newVal) {
+u8 func_0201a96c(WatchdogAlarm *context, int suspended) {
+    Struct_0201a96c *self = (Struct_0201a96c *)context;
     u32 saved = IRQ::Disable();
     u8 oldVal = self->suspended;
-    self->suspended = newVal;
+    self->suspended = suspended;
 
-    if (oldVal != 0 && newVal == 0) {
+    if (oldVal != 0 && suspended == 0) {
         func_0201aa50(self, self->limit, func_0201a8b4, self);
-    } else if (oldVal == 0 && newVal != 0) {
+    } else if (oldVal == 0 && suspended != 0) {
         func_0201aaa4(self);
     }
 

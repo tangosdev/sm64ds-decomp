@@ -126,7 +126,7 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@52",
+      "from": "@53",
       "to": "data_0209d528",
       "evidence": "compiler temp: the destructor-registration node for data_0209d574. mwcc numbers it @52, which ov002 already defines, so it keeps its configured address name"
     }

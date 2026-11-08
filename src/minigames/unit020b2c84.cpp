@@ -100,6 +100,7 @@
 
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Vector2.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -145,7 +146,6 @@ void Banner_StartSpin(MgBanner *e);
 void Banner_StartWaveBurst(MgBanner *e);
 }
 
-extern s16 data_02082214[];
 extern S3 data_ov004_020bc27c;
 extern int sMgMsgGiveUpSprites;
 static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};
@@ -495,11 +495,9 @@ extern "C" void Banner_DrawSpin(MgBanner *e) {
     M m;
     u16 flag;
     do {
-        int s0 = data_02082214[(angle >> 4) * 2];
-        int mm = FX_MUL(s0, 0x800);
-        int idx = (u16)mm >> 4;
-        int cos1 = data_02082214[idx * 2 + 1];
-        int sin1 = data_02082214[idx * 2];
+        int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
+        int cos1 = FX_CosIdx((u16)mm >> 4);
+        int sin1 = FX_SinIdx((u16)mm >> 4);
         int fc = FX_MUL(cos1, 0x1000);
         int fs = FX_MUL(sin1, 0x1000);
         m._00 = fc;
@@ -699,11 +697,9 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
             int angle = (u16)(e->mTimer - 0x18000);
             M m2;
             do {
-                int s0 = data_02082214[(angle >> 4) * 2];
-                int mm = FX_MUL(s0, 0x800);
-                int idx = (u16)mm >> 4;
-                int cos1 = data_02082214[idx * 2 + 1];
-                int sin1 = data_02082214[idx * 2];
+                int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
+                int cos1 = FX_CosIdx((u16)mm >> 4);
+                int sin1 = FX_SinIdx((u16)mm >> 4);
                 int fc = FX_MUL(cos1, 0x1000);
                 int fs = FX_MUL(sin1, 0x1000);
                 m2._00 = fc;
@@ -749,11 +745,9 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
             int angle = (u16)(e->mTimer - 0x18000);
             M m2;
             do {
-                int s0 = data_02082214[(angle >> 4) * 2];
-                int mm = FX_MUL(s0, 0x800);
-                int idx = (u16)mm >> 4;
-                int cos1 = data_02082214[idx * 2 + 1];
-                int sin1 = data_02082214[idx * 2];
+                int mm = FX_MUL(FX_SinIdx(angle >> 4), 0x800);
+                int cos1 = FX_CosIdx((u16)mm >> 4);
+                int sin1 = FX_SinIdx((u16)mm >> 4);
                 int fc = FX_MUL(cos1, 0x1000);
                 int fs = FX_MUL(sin1, 0x1000);
                 m2._00 = fc;
@@ -792,9 +786,9 @@ extern "C" int Banner_IsPressFinished(MgBanner *e) {
 extern "C" void Banner_DrawPressed(MgBanner *e) {
     u8* el = e->mOam;
     int x = e->mTimer;
-    int idx = (int)(((unsigned int)x << 15) >> 16) >> 4;
-    s16 s = *(s16*)((int)data_02082214 + (idx << 2));
-    int v = func_02053200((int)((((s64)s << 11) + 0x800) >> 12) + 0x1000);
+    u16 ang = (unsigned int)x >> 1;
+    fx16 s = FX_SinIdx(ang >> 4);
+    int v = func_02053200(FX_MUL(s, 0x800) + 0x1000);
     M m = {0};
     u16 lim = 0xffff;
     u16 flag;

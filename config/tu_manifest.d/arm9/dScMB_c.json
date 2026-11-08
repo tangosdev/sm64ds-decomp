@@ -10,7 +10,7 @@
     "The run is one class. D1/D0, graphCallback_c, CleanupResources, Render, Behavior and InitResources are dScMB_c. func_02034b1c initializes the global graphCallback_c this TU registers. func_02034d34 is a dScMB_c method called from GraphCallback3. func_02034fbc is the free loader Behavior schedules. dScMB_c_classInit abuts InitResources and stores _ZTV7dScMB_c.",
     "The neighbour after the factory, func_02035354, compares list nodes and is not a member of this class. It is not included.",
     "module sinit corroboration: arm9 is one under-segmented unit, so sinit attribution does not narrow this TU.",
-    "static initializer: __sinit_02074fb8 (.init 0x02074fb8..0x02074fe4, .ctor word 0x02086b94) builds only data_020a0c68, a dScMB_c::graphCallback_c whose derived vtable _ZTVN7dScMB_c15graphCallback_cE (0x02094390) holds this TU's GraphCallback0/2/3. Its only arm9 reader is dScMB_c::InitResources, in this run. arm9 .init and .ctor run in .text TU order: the previous initializer 0x02074f80 is d_wipe.cpp's (below this TU, 0x02034a78..0x02035354), and the next, 0x02074fe4, builds a dBgPc object for a collision TU above it."
+    "static initializer: __sinit_02074fb8 (.init 0x02074fb8..0x02074fe4, .ctor word 0x02086b94) builds only sMBGraphCallback, a dScMB_c::graphCallback_c whose derived vtable _ZTVN7dScMB_c15graphCallback_cE (0x02094390) holds this TU's GraphCallback0/2/3. Its only arm9 reader is dScMB_c::InitResources, in this run. arm9 .init and .ctor run in .text TU order: the previous initializer 0x02074f80 is d_wipe.cpp's (below this TU, 0x02034a78..0x02035354), and the next, 0x02074fe4, builds a dBgPc object for a collision TU above it."
   ],
   "sections": [
     {
@@ -130,17 +130,17 @@
   "data": [],
   "bss": [
     {
-      "symbol": "data_020a0c68",
+      "symbol": "sMBGraphCallback",
       "address": "0x020a0c68",
       "size": "0x10",
-      "evidence": "the global dScMB_c::graphCallback_c (sizeof 0x10) InitResources passes to func_02034b1c and stores into the graph hook data_0209d4a8; retail __sinit_02074fb8 stores _ZTVN8dGraph_c10callback_cE then _ZTVN7dScMB_c15graphCallback_cE at +0 and zeroes +4 (mOwner). No destructor, so no registration node. data_020a0c64 sits directly below and the dBgCh_SphCrr static at 0x020a0c78 directly above.",
+      "evidence": "the global dScMB_c::graphCallback_c (sizeof 0x10) InitResources passes to func_02034b1c and stores into the graph hook gGraphCallback; retail __sinit_02074fb8 stores _ZTVN8dGraph_c10callback_cE then _ZTVN7dScMB_c15graphCallback_cE at +0 and zeroes +4 (mOwner). No destructor, so no registration node. data_020a0c64 sits directly below and the dBgCh_SphCrr static at 0x020a0c78 directly above.",
       "binding": "STB_GLOBAL"
     }
   ],
   "notes": [
     "Text-only. The class's _ZTV/_ZTI/_ZTS and the nested graphCallback_c records stay in the cartridge .data at 0x02094364..0x0209440c; this TU re-emits them and deadstrips the copies.",
     "Destructor is the key function, defined out of line under defer_codegen off, so the file is ROM-ascending. D2 is deadstripped.",
-    "Static initializer folded: data_020a0c68, the scene's global dScMB_c::graphCallback_c, is now defined in this TU (it was declared u8[] in decl_common.h and built by the handwritten src/unnamed/arm9/0207/__sinit_02074fb8.c). graphCallback_c gains the inline constructor the retail initializer implies (mOwner(0); func_02034b1c sets the other fields later). mwcc emits __sinit_d_s_mb.cpp and its .ctor word; both plus the object's .bss are byte- and relocation-identical to retail. The class has no destructor, so there is no registration call and no @NNN node."
+    "Static initializer folded: sMBGraphCallback, the scene's global dScMB_c::graphCallback_c, is now defined in this TU (it was declared u8[] in decl_common.h and built by the handwritten src/unnamed/arm9/0207/__sinit_02074fb8.c). graphCallback_c gains the inline constructor the retail initializer implies (mOwner(0); func_02034b1c sets the other fields later). mwcc emits __sinit_d_s_mb.cpp and its .ctor word; both plus the object's .bss are byte- and relocation-identical to retail. The class has no destructor, so there is no registration call and no @NNN node."
   ],
   "compiler_only_output": [
     {
@@ -447,7 +447,7 @@
       "address": "0x02074fb8",
       "size": "0x2c",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer for data_020a0c68 is raw-byte-identical to retail __sinit_02074fb8 (0x2c: inline graphCallback_c constructor -- base vptr, derived vptr, mOwner = 0 -- and three pool words); there is no destructor to register"
+      "evidence": "compiler-generated static initializer for sMBGraphCallback is raw-byte-identical to retail __sinit_02074fb8 (0x2c: inline graphCallback_c constructor -- base vptr, derived vptr, mOwner = 0 -- and three pool words); there is no destructor to register"
     }
   ],
   "ctor": [
@@ -489,7 +489,7 @@
       "source": "0x02074fdc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_020a0c68",
+      "symbol": "sMBGraphCallback",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020a0c68"

@@ -25,7 +25,7 @@ extern "C" {
  *
  * gActivePlayerSlot is the player (0..3) the single-player code paths read.
  * daPly_c::Behavior sets it to mPlayerNo while that player updates (or 0, per
- * gRunningKuppaScript) and, once the update is done, to data_0209f250 (or 0 if
+ * gRunningKuppaScript) and, once the update is done, to gLocalPlayerId (or 0 if
  * data_0209fc68 is clear). It indexes the stride-0x18 controller records at
  * data_0209f498 and the stride-4 key words at data_020a0e58/e5a.
  */

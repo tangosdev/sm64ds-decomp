@@ -29,7 +29,7 @@ extern void func_020132d8(void);
 extern struct WatchdogAlarm data_0209d574;
 extern u8 data_0209d4f0;
 extern int data_0209d514;
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 
 static inline int IsSkipRequested(void) {
     return (func_0203da3c() != 0 || gSoftResetDisabled != 0) ? 1 : 0;
@@ -171,7 +171,7 @@ void func_020199a4(void) {
         data_0209d4ec = 0;
     func_0201a9ec(&data_0209d574);
     for (;;) {
-        int b = (int)(data_0209f2d8 == 1) ? 0 : 1;
+        int b = (int)(gGameMode == 1) ? 0 : 1;
         if (b == 0)
             func_02030838();
         {

@@ -147,8 +147,8 @@ PMF data_ov078_0212705c[2] = {&daBombking_c::EnterDefeated, &daBombking_c::TickD
 extern "C" {
 /* Canonical single declaration per ROM data symbol -- the generated
      * preamble carried up to three contradictory spellings of each. */
-extern unsigned char data_0209f220;
-extern dCamera_c *data_0209f318;
+extern unsigned char gCurrentStarId;
+extern dCamera_c *gCamera;
 /* local extern: math/MtxStack.h's spellings of the matrix calls below
    clash with these (illegal function overloading). */
 extern Matrix4x3 data_020a0e68;
@@ -208,7 +208,7 @@ void daBombking_c::DetonateSpawnedBombs() {
 /* -------------------------------------------------------------------------- */
 
 int daBombking_c::TickDefeated() {
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     VecFx32 v;
     VecFx32 t;
     VecFx32 u;
@@ -359,7 +359,7 @@ int daBombking_c::TickCarryPlayer() {
     v.y = this->mArenaPosY;
     v.z = this->mArenaPosZ;
 
-    if (data_0209f220 != 1) {
+    if (gCurrentStarId != 1) {
         v.x = this->mPosX;
         v.y = this->mPosY;
         v.z = this->mPosZ;
@@ -467,7 +467,7 @@ int daBombking_c::TickKnockback() {
                 daPly_c *pl = mTalkingPlayer;
                 if (pl->StartTalk(*this, 1) != 0) {
                     msg = 0;
-                    if (data_0209f220 == 1) {
+                    if (gCurrentStarId == 1) {
                         msg += (short)(pl->param1 + 0x9a);
                     } else {
                         msg = 0x95;
@@ -582,7 +582,7 @@ int daBombking_c::TickHomeTalk() {
     int *pp;
     s16 ang;
 
-    cam = data_0209f318;
+    cam = gCamera;
     if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->WillHitFrame(0x46)) {
         ShakeScreen(0x7d0000);
         func_02012694(0x12c, &this->mCamSpacePosX);
@@ -740,7 +740,7 @@ int daBombking_c::TickReturnHome() {
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
                 if (pl2->ShowMessage(*(fBase_c *)this, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
-                    data_0209f318->SetFlag_3();
+                    gCamera->SetFlag_3();
                     func_02012694(0x12a, &this->mCamSpacePosX);
                     KingBobOmb_SetState(&data_ov078_021270dc);
                 }
@@ -834,7 +834,7 @@ int daBombking_c::TickThrown() {
 
     short msg = 0;
     Sound::ChangeMusicVolume(0x14, 0x15666);
-    if (data_0209f220 == 1) {
+    if (gCurrentStarId == 1) {
         msg += (short)(other->param1 + 0x9a);
     } else {
         msg = 0x95;
@@ -1110,7 +1110,7 @@ int daBombking_c::TickChase() {
         }
 
         if (this->mThrowCooldown == 0) {
-            if (data_0209f220 == 1) {
+            if (gCurrentStarId == 1) {
                 if (this->DistToCPlayer() < 0x3e8000) {
                     if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x2800) {
                         index = 0;
@@ -1274,7 +1274,7 @@ int daBombking_c::TickInactive() {
 
                 if (this->mTalkingPlayer->StartTalk(*(fBase_c *)this, 1)) {
                     Message::PrepareTalk();
-                    b = (data_0209f220 != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
+                    b = (gCurrentStarId != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
                     if (player->ShowMessage(*(fBase_c *)this, b, (Vector3 *)(&v), 0, 0)) {
                         func_02012694(0x12a, &this->mCamSpacePosX);
                         this->mIntroTalked = 1;
@@ -1307,7 +1307,7 @@ int daBombking_c::EnterInactive() {
 
 /* -------------------------------------------------------------------------- */
 void daBombking_c::ShakeScreen(int strength) {
-    data_0209f318->func_0200d8c8(&mPos, strength);
+    gCamera->func_0200d8c8(&mPos, strength);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1456,7 +1456,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 int daBombking_c::Behavior()
 {
     if (DistToCPlayer() < 0x1770000) {
-        data_0209f318->mFramedActor = this;
+        gCamera->mFramedActor = this;
     }
 
     if (mState[1] != 0) {

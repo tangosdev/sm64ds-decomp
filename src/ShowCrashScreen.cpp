@@ -17,9 +17,9 @@ extern void nds_print(void *dst, const void *str);
 extern void nds_printf(void *dst, const char *fmt, ...);
 
 extern signed char gCurrentSublevel;
-extern u8 data_0209f264;
-extern u8 data_0209f220;
-extern signed char data_02092120;
+extern u8 gCurrentEntranceId;
+extern u8 gCurrentStarId;
+extern signed char gCurrentAreaId;
 extern int data_02099f24;
 extern void *data_020a4b68;
 extern u16 data_020a4b50;
@@ -55,9 +55,9 @@ void ShowCrashScreen(void)
     nds_print(scr + 6, data_020a0d90);
     cc = gCurrentSublevel;
     nds_printf(scr + 0x40, data_0208e54c, cc, GetStageDebugName());
-    nds_printf(scr + 0x80, data_0208e55c, data_0209f264);
-    nds_printf(scr + 0xc0, data_0208e56c, data_0209f220);
-    nds_printf(scr + 0x100, data_0208e57c, data_02092120);
+    nds_printf(scr + 0x80, data_0208e55c, gCurrentEntranceId);
+    nds_printf(scr + 0xc0, data_0208e56c, gCurrentStarId);
+    nds_printf(scr + 0x100, data_0208e57c, gCurrentAreaId);
 
     rr = data_02099f24;
     if (rr != 0 && rr < 6)

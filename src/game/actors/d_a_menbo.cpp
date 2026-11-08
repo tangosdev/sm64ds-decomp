@@ -108,7 +108,7 @@ void  func_ov002_020aea30(void *self, void *actor, void *collision);
 
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
 extern int           data_0209f32c;
 
@@ -134,7 +134,7 @@ void func_ov090_02131e50(daMenbo_c *c);
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
- * off screen. Actor ID 0xbf is PLAYER. data_0209f2d8 is the current game
+ * off screen. Actor ID 0xbf is PLAYER. gGameMode is the current game
  * mode. These int-returning predicates are what make the ROM materialize
  * 0/1 before testing it. */
 static inline int IsOffScreen(dActor_c *actor) {
@@ -146,7 +146,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 }
 
 static inline int IsGameMode(int mode) {
-    return data_0209f2d8 == mode;
+    return gGameMode == mode;
 }
 
 daMenbo_c::~daMenbo_c()
