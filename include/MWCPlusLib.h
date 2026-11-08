@@ -27,14 +27,24 @@ struct EHIndexEntry {
     int table;
 };
 
-/* The view func_02072dac fills: the action table covering a code address,
- * and the bounds of the index table func_02071844 hands it. */
-struct EHTableInfo {
-    int start;
-    unsigned char *table;
-    int action;
-    struct EHIndexEntry *indexBegin;
-    struct EHIndexEntry *indexEnd;
-};
+/* The action-table cursor also carries the index bounds filled by
+ * func_02071844. func_02072dac uses the first three words as the cursor and
+ * writes indexBegin/indexEnd at +0x0c/+0x10. */
+typedef struct ActionIterator {
+    int mFuncStart;                  /* 0x00 */
+    unsigned char *mActionTable;     /* 0x04 */
+    unsigned char *mAction;          /* 0x08 */
+    struct EHIndexEntry *indexBegin; /* 0x0c */
+    struct EHIndexEntry *indexEnd;   /* 0x10 */
+} ActionIterator;
+
+#ifndef SM64DS_PLATFORM_PC
+typedef char
+    ActionIterator_indexBegin_must_be_at_0x0c[(int)&((ActionIterator *)0)->indexBegin == 0x0c ? 1
+                                                                                              : -1];
+typedef char
+    ActionIterator_indexEnd_must_be_at_0x10[(int)&((ActionIterator *)0)->indexEnd == 0x10 ? 1 : -1];
+typedef char ActionIterator_must_be_0x14_bytes[sizeof(ActionIterator) == 0x14 ? 1 : -1];
+#endif
 
 #endif /* MWCPLUSLIB_H */

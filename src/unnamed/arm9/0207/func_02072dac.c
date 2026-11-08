@@ -1,6 +1,6 @@
 #include "MWCPlusLib.h"
 
-extern int func_02071844(struct EHTableInfo *info, int pc);
+extern int func_02071844(ActionIterator *info, int pc);
 extern struct EHIndexEntry *func_02072ed0(struct EHIndexEntry *base, int count, unsigned int key);
 extern unsigned char *func_0207180c(unsigned char *p);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
@@ -10,9 +10,9 @@ extern unsigned char *func_02071a50(unsigned char *p, int *out);
    searched with func_02072ed0. The table is stored inline in the entry
    when bit 0 is set, otherwise it is a pointer. After the header
    (func_0207180c) come {gap, length, action offset} varint records. The
-   record covering pc sets info->action to the table plus its action
-   offset; table and action stay 0 when nothing covers it. */
-void func_02072dac(int pc, struct EHTableInfo *info) {
+   record covering pc sets info->mAction to the table plus its action
+   offset; the table and action pointers stay 0 when nothing covers it. */
+void func_02072dac(int pc, ActionIterator *info) {
     struct EHIndexEntry *e;
     unsigned char *p;
     int gap, length, actionOffset;
@@ -20,20 +20,20 @@ void func_02072dac(int pc, struct EHTableInfo *info) {
     unsigned int acc;
     unsigned int tmp;
 
-    info->table = 0;
-    info->action = 0;
+    info->mActionTable = 0;
+    info->mAction = 0;
     if (!func_02071844(info, pc))
         return;
     e = func_02072ed0(info->indexBegin, info->indexEnd - info->indexBegin, (unsigned int)pc);
     if (!e)
         return;
     if (e->sizeFlags & 1)
-        info->table = (unsigned char *)&e->table;
+        info->mActionTable = (unsigned char *)&e->table;
     else
-        info->table = (unsigned char *)e->table;
-    info->start = e->start;
+        info->mActionTable = (unsigned char *)e->table;
+    info->mFuncStart = e->start;
     end = (unsigned int)(pc - e->start);
-    p = func_0207180c(info->table);
+    p = func_0207180c(info->mActionTable);
     acc = 0;
     do {
         p = func_02071a50(p, &gap);
@@ -46,5 +46,5 @@ void func_02072dac(int pc, struct EHTableInfo *info) {
             return;
         acc = tmp + (unsigned int)length;
     } while (end > acc);
-    info->action = (int)info->table + actionOffset;
+    info->mAction = info->mActionTable + actionOffset;
 }
