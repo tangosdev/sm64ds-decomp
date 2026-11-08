@@ -73,9 +73,9 @@ dScMB_c::~dScMB_c() {}
 /* The untyped parameter pair is measured, not sloppy: spelling `c` as
    dScMB_c::graphCallback_c * (or `owner` as dScMB_c *, with `this` at the one
    call site) moves this function's bytes. The casts stay. */
-void func_02034b1c(void *c, int owner) {
+void func_02034b1c(void *c, void *owner) {
     dScMB_c::graphCallback_c *callback = (dScMB_c::graphCallback_c *)c;
-    callback->mOwner = (void *)owner;
+    callback->mOwner = owner;
     callback->mSpinAngle = 0;
     callback->mStillTimer = 0;
     callback->mEnabled = 1;
@@ -296,7 +296,7 @@ s32 dScMB_c::InitResources() {
     GX::DispOn();
 
     REG_DISPCNT_SUB |= 0x10000;
-    func_02034b1c(&sMBGraphCallback, (int)this);
+    func_02034b1c(&sMBGraphCallback, this);
 
     gGraphCallback = &sMBGraphCallback;
     mStep = 0;

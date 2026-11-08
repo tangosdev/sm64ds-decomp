@@ -17949,7 +17949,7 @@ int func_ov002_020de328(daPly_c *player) {
 }
 
 extern "C" {
-int func_ov002_020de33c(daPly_c *c, int a) {
+int func_ov002_020de33c(daPly_c *c, void *actor) {
     daPly_c *player = (daPly_c *)c;
     if (player->mIsNoControl == 0 && !((daPly_c *)c)->IsState(data_ov002_021102bc) &&
         !((daPly_c *)c)->IsState(data_ov002_02110484)) {
@@ -17957,7 +17957,7 @@ int func_ov002_020de33c(daPly_c *c, int a) {
     }
     return 0;
 ok:
-    player->mAttachedActor = a;
+    player->mAttachedActor = (s32)actor;
     ((daPly_c *)c)->ChangeState(data_ov002_021102bc);
     return 1;
 }
