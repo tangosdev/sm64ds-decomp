@@ -402,12 +402,12 @@ void dScMgLuigi_c::UpdateReward() {
         mReward.shown = 0;
         mReward.phase += 1;
         {
-            char *g = (char *)gMgScene;
-            if (g != 0) {
-                if (((dScMgBase_c *)g)->mHudScore < 0x270f)
-                    ((dScMgBase_c *)g)->mHudScore += 1;
-                if (((dScMgBase_c *)g)->mHudScore > ((dScMgBase_c *)g)->mBestHudScore)
-                    ((dScMgBase_c *)g)->mBestHudScore = ((dScMgBase_c *)g)->mHudScore;
+            dScMgBase_c *scene = gMgScene;
+            if (scene != 0) {
+                if (scene->mHudScore < 0x270f)
+                    scene->mHudScore += 1;
+                if (scene->mHudScore > scene->mBestHudScore)
+                    scene->mBestHudScore = scene->mHudScore;
             }
         }
         Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
@@ -444,22 +444,22 @@ void dScMgLuigi_c::StartReward(int pictureIndex) {
 }
 
 void dScMgLuigi_c::DrawCurtains() {
-    extern char *sLuigiCurtainSprite;
+    extern OamAttr *sLuigiCurtainSprite;
     int curtainIndex;
     for (curtainIndex = 0; curtainIndex < 2; curtainIndex++) {
         if (mCurtain[curtainIndex].shown != 0) {
             int x = mCurtain[curtainIndex].x >> 0xc;
             int y = mCurtain[curtainIndex].y >> 0xc;
-            char *entry = sLuigiCurtainSprite;
+            OamAttr *entry = sLuigiCurtainSprite;
             for (;;) {
                 GXOamAttr *oam =
                     (GXOamAttr *)Mg_RenderMainSpriteScaled((int)entry, x, y, -1, 1, 0x1000, 0);
                 if (oam != 0) {
                     G2_SetOBJMode(oam, GX_OAM_MODE_OBJWND, oam->cParam);
                 }
-                if (((OamAttr *)entry)->attr3 == 0xffff)
+                if (entry->attr3 == 0xffff)
                     break;
-                entry += 8;
+                entry++;
             }
         }
     }
@@ -1664,31 +1664,25 @@ extern int sMgResultsBannerX;
 extern int sMgResultsBannerY;
 }
 
-/* Same signature as dScMgBase_c::StartRound, or this stops overriding it.
-   mLevel is re-read through an int* so the compare is not folded away. */
+/* Same signature as dScMgBase_c::StartRound, or this stops overriding it. */
 void dScMgLuigi_c::StartRound(int mode) {
-    char *p;
-    int *level;
-
     if (mFound != 0) {
         mClears += 1;
-        level = (int *)&mLevel;
-        *level += 1;
-        if ((unsigned int)*(int *)&mLevel > 0x270e)
-            *(int *)&mLevel = 0x270e;
+        mLevel += 1;
+        if (mLevel > 0x270e)
+            mLevel = 0x270e;
     }
 
     if (mode == 0x12) {
         mTime = 0xa;
-        *(int *)&mLevel = 0;
-        if ((unsigned int)*(int *)&mLevel > 0x270e)
-            *(int *)&mLevel = 0x270e;
+        mLevel = 0;
+        if (mLevel > 0x270e)
+            mLevel = 0x270e;
 
         if (gMgScene != 0)
             gMgScene->mHudScore = 0;
 
-        p = (char *)gMgScene;
-        Mg_SubmitScore(p != 0 ? ((dScMgBase_c *)p)->mHudScore : 0);
+        Mg_SubmitScore(gMgScene != 0 ? gMgScene->mHudScore : 0);
     }
 
     FreeGfxSlotsById(0x1d);
