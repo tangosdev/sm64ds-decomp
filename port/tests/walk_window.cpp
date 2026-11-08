@@ -5555,12 +5555,17 @@ static int g_left_game_hold;
    run) or by taking the pointer back after Tab let it go. That press is not also the bound action, nor the stylus. Set by mo_click,
    cleared by mo_left_frame / mo_scene_frame once the button is up. */
 static int g_left_eaten;
+extern int g_mouse_left_down;    /* the window procedure's left hold (WM_LBUTTONDOWN / WM_LBUTTONUP) */
 /* CAMPACK1: a mouse-button binding (settings.json MouseCam*; values are the Win32 VK of the button). */
 static int mouse_act(int action)
 {
     bindings_load();
     const int vk = host_setting_mouse(action);
     if (vk == VK_LBUTTON && (!g_left_game || g_left_eaten)) return 0;     /* MOUSELOCK1: left is the stylus this frame, or a list row took it */
+    /* ROUND 3: a real left press counts only once its WM_LBUTTONDOWN has been pumped, so a press that lands between this frame's message
+       pump and this read waits one frame for mo_click to decide whether a list row or the Tab relock uses it up (scripted presses send
+       no message and are read as before) */
+    if (vk == VK_LBUTTON && !g_mouse_left_down && !host_key_script(VK_LBUTTON)) return 0;
     return vk && key_live(vk);     /* GetAsyncKeyState reads the mouse buttons by VK; SM64DS_HOST_KEY=<vk hex>@f0-f1 scripts one for a row */
 }
 /* MOUSEBIND1: the raw DS Start (0x08) and Select (0x04) bits from their mouse buttons, for the two places the keys' own bits are made */
@@ -13444,6 +13449,7 @@ static const char *mo_lock_said = (const char *)1;     /* the reason last printe
    action and leaves the pointer alone. Tab is read through key_live, so it is nothing while chat is typing, while a rebind row is
    capturing (the row takes Tab as the new key), while the window is in the background, and in menus (the pointer is free there). */
 static int g_mo_tab_free;
+static const char mo_tab_why[] = "Tab";                  /* the lock's reason while Tab has the pointer free (mo_click compares it) */
 static int mo_key_bound(int vk)
 {
     for (int i = 0; i < HOST_KEY_COUNT; ++i)
@@ -13474,7 +13480,7 @@ static int mo_capture_want(int selftest, int stacked)
     else if (mo_pen_moment(stacked, &why)) {}             /* the pointer is a pen: see the list above */
     else if (cam_mode == CAM_DS) why = "DS camera";       /* the mouse steers nothing there */
     else if (rb_replaying()) why = "rewind replay";       /* a rewound window is being re-run */
-    else if (g_mo_tab_free) why = "Tab";                  /* the player asked for the pointer (mo_tab_frame); a click takes it back */
+    else if (g_mo_tab_free) why = mo_tab_why;             /* the player asked for the pointer (mo_tab_frame); a click takes it back */
     /* one line each time the answer or its reason changes (focus is the separate term below, and mo_capture_set says when the pointer is
        really taken); this is what the MOUSELOCK1 rows read, since a test window is never the foreground one */
     const char *said = mo_lock_said;
@@ -13509,7 +13515,10 @@ static int mo_list_click(int cx, int cy)
 static int mo_click(int cx, int cy, int on_picture)
 {
     if (on_picture && mo_list_click(cx, cy)) return 1;
-    if (!g_mo_tab_free) return 0;
+    /* ROUND 3: the click takes the pointer back only while Tab is the lock's reason, i.e. in play. In a menu, the pause, a message
+       window, the star select or the title (a pen moment or the scene path) the click is that screen's and passes on; the Tab flag is
+       kept, so the pointer is still free when play resumes and the next click there takes it back. */
+    if (!g_mo_tab_free || mo_lock_said != mo_tab_why) return 0;
     g_mo_tab_free = 0;
     g_mouse_click_new = 0;
     g_left_eaten = 1;
@@ -13549,13 +13558,14 @@ static void mo_scene_frame(HWND hwnd)
 /* MOUSELOCK1 round 2 proof knob, dev only: SM64DS_WINDOW_CLICK_TEST=<seat>@<frame> (or x,y@<frame> for a framebuffer pixel) hands one
    left click to mo_click on that level-loop frame, right after the message pump, where a real WM_LBUTTONDOWN lands, so before
    anything reads this frame's input. <seat> finds that seat's row on the list as drawn. Script the button itself from the same frame
-   with SM64DS_HOST_KEY=01@<frame>-.. (the physical button is down when its click message arrives). */
-static void list_click_test_apply(int frame)
+   with SM64DS_HOST_KEY=01@<frame>-.. (the physical button is down when its click message arrives). SM64DS_WINDOW_CLICK_TEST2, the
+   same shape, is a second click. */
+static void list_click_test_one(int frame, const char *var, int *st)
 {
-    static int f = -2, seat = -1, x = -1, y = -1;
+    int &f = st[0], &seat = st[1], &x = st[2], &y = st[3];
     if (f == -2) {
-        f = -1;
-        const char *e = getenv("SM64DS_WINDOW_CLICK_TEST");
+        f = -1; seat = -1; x = -1; y = -1;
+        const char *e = getenv(var);
         int a = 0, b = 0, c = 0;
         if (e && sscanf(e, "%d,%d@%d", &a, &b, &c) == 3) { x = a; y = b; f = c; }
         else if (e && sscanf(e, "%d@%d", &a, &c) == 2) { seat = a; f = c; }
@@ -13569,6 +13579,12 @@ static void list_click_test_apply(int frame)
     }
     const int took = mo_click(x, y, 1);
     fprintf(stderr, "[mouse] window click test f%d at %d,%d fb: %s\n", frame, x, y, took ? "used up" : "passed on");
+}
+static void list_click_test_apply(int frame)
+{
+    static int s1[4] = { -2 }, s2[4] = { -2 };
+    list_click_test_one(frame, "SM64DS_WINDOW_CLICK_TEST", s1);
+    list_click_test_one(frame, "SM64DS_WINDOW_CLICK_TEST2", s2);
 }
 #endif
 /* hal/sub_screen.cpp's two questions (null on targets without this file): is left a game action now, and is the pointer held now */
