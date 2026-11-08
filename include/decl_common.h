@@ -23,6 +23,7 @@ struct daDossyCap_c;
 struct OamAttr;
 struct MascotWalker;
 struct Ov007MenuState;
+struct fLiNdBa_c;
 
 #ifdef __cplusplus
 extern "C" {
@@ -568,7 +569,7 @@ extern struct OamAttr **sJump2TextSpritesByLanguage[];
 extern struct OamAttr **sTrmpTextSpritesByLanguage[];
 extern struct OamAttr **sTrmp2TextSpritesByLanguage[];
 extern int*data_ov056_021124d4[];
-extern int*func_02043f4c(int*, unsigned int, int);
+extern struct fLiNdBa_c *func_02043f4c(struct fLiNdBa_c **, unsigned int, struct fLiNdBa_c *);
 extern long long func_0203d5bc(int*);
 extern s16 data_02082414;
 extern s16 data_0209f4a4[];
