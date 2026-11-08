@@ -75,7 +75,7 @@
  *   ActKnockback / ActBackUp; named s16 > / < DIFFs.
  *
  * N64 names. This class is the DS port of the N64 game's bully
- * (src/game/behaviors/bully.inc.c in n64decomp/sm64). Seven helpers take the
+ * (behaviors/bully.inc.c in n64decomp/sm64). Seven helpers take the
  * names of the N64 functions they port. Five come from bully.inc.c:
  * CheckMarioCollision (bully_check_mario_collision), Step (bully_step), and
  * ActChaseMario, ActKnockback and ActBackUp (bully_act_*). The other two are
