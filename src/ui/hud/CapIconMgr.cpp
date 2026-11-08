@@ -6,22 +6,28 @@
  * here for this reconstruction; their original TU placement is unknown.
  *
  * The per-frame tick (func_ov001_020aaf40) counts down the flash timer,
- * then dispatches: func_ov001_020aa420 in versus mode, the reset pass
- * func_ov001_020aadac when the local player has no cap, or the main
- * dispatcher func_ov001_020aaa54. func_ov001_020aa960 gates a player,
- * func_ov001_020aa7b8 and func_ov001_020aa858 are the eligibility tests,
- * func_ov001_020aa79c the in-flight test, func_ov001_020aa6e4 the commit
- * (sound + 60-frame flash), and func_ov001_020aa6b0/func_ov001_020aa6cc
- * the state-byte setters.
+ * then dispatches: CapIconMgr_DispatchVs in versus mode, the reset pass
+ * CapIconMgr_DispatchNoCap when the local player has no cap, or the main
+ * dispatcher CapIconMgr_Dispatch. CapIconMgr_ShouldDispatch gates one
+ * character's list, CapIconMgr_ShouldCommit and CapIconMgr_ShouldCommitVs
+ * decide whether the picked node is committed, func_ov001_020aa79c is the
+ * in-flight test, CapIconMgr_Commit the commit (sound + 60-frame flash),
+ * CapIconMgr_SetMapIconShown sets a node's map-icon byte and
+ * func_ov001_020aa6cc clears a list's in-flight bits.
+ *
+ * The CapIconMgr_* names are coined from the bodies and their callers; the
+ * cartridge records no names for this module, and nothing in the SDK or
+ * NSMBW lineage matches it. They keep C linkage.
  *
  * deslop leftovers:
- * - Symbols stay func_ov001_020aa* linker names: the cartridge records no
- *   mangled names for this module and callers cross TU boundaries.
+ * - func_ov001_020aaf40, func_ov001_020aa79c and func_ov001_020aa6cc stay
+ *   linker names: the tick's caller sits in a file another branch holds,
+ *   and the two one-line dispatch-bit helpers have no settled meaning.
  * - gPlayers and data_0209f3e8 are arm9 globals this TU does not own;
  *   the player array's type remains outside this reconstruction.
- * - func_ov001_020aa420 tests mFlags bits 0 and 3 as bitfields; a mask
+ * - CapIconMgr_DispatchVs tests mFlags bits 0 and 3 as bitfields; a mask
  *   test on the u8 shrinks the body by 8 bytes. The int* walks in
- *   func_ov001_020aadac are kept as the shard bodies wrote them.
+ *   CapIconMgr_DispatchNoCap are kept as the shard bodies wrote them.
  */
 
 #include "types.h"
@@ -50,16 +56,16 @@ extern int func_0202a8e0(int a, u8 b);
 extern int func_02029600(int x);
 extern int SublevelToLevel(int i);
 
-void func_ov001_020aa420(void);
-void func_ov001_020aa6b0(int *node, int value);
+void CapIconMgr_DispatchVs(void);
+void CapIconMgr_SetMapIconShown(int *node, int value);
 void func_ov001_020aa6cc(int character);
-void func_ov001_020aa6e4(int idx, unsigned r1, int *obj);
+void CapIconMgr_Commit(int idx, unsigned r1, int *obj);
 int func_ov001_020aa79c(int x);
-int func_ov001_020aa7b8(void *self, char *a);
-int func_ov001_020aa858(int self, char *a, int b, int d);
-int func_ov001_020aa960(int x, char *arg);
-void func_ov001_020aaa54(void);
-void func_ov001_020aadac(void);
+int CapIconMgr_ShouldCommitVs(void *self, char *a);
+int CapIconMgr_ShouldCommit(int self, char *a, int b, int d);
+int CapIconMgr_ShouldDispatch(int x, char *arg);
+void CapIconMgr_Dispatch(void);
+void CapIconMgr_DispatchNoCap(void);
 void func_ov001_020aaf40(void);
 
 /* gGameMode is 1 in versus mode. This int-returning predicate is what
@@ -85,9 +91,9 @@ void func_ov001_020aaf40(void)
                     ((dCapIcon_c *)node)->mFlashFrames -= 1;
                     v = ((dCapIcon_c *)node)->mFlashFrames;
                     if (v == 0) {
-                        func_ov001_020aa6b0((int *)node, 1);
+                        CapIconMgr_SetMapIconShown((int *)node, 1);
                     } else if (v % 10 == 0) {
-                        func_ov001_020aa6b0((int *)node, ((v / 10) & 1) == 0 ? 1 : 0);
+                        CapIconMgr_SetMapIconShown((int *)node, ((v / 10) & 1) == 0 ? 1 : 0);
                     }
                 }
                 node = (char *)((dCapIcon_c *)node)->mNext;
@@ -98,14 +104,14 @@ void func_ov001_020aaf40(void)
     }
 
     if (IsVsMode()) {
-        func_ov001_020aa420();
+        CapIconMgr_DispatchVs();
         return;
     }
 
     {
         daPly_c *pl = gPlayers[0];
         if (pl->HasNoCap() && !pl->IsCollectingCap()) {
-            func_ov001_020aadac();
+            CapIconMgr_DispatchNoCap();
             gCapIconDispatchLocked = 1;
             return;
         }
@@ -113,14 +119,14 @@ void func_ov001_020aaf40(void)
             if (gCapIconDispatchFlags[j] & 2)
                 gCapIconDispatchFlags[j] &= ~3;
         }
-        func_ov001_020aaa54();
+        CapIconMgr_Dispatch();
         gCapIconDispatchLocked = 0;
     }
 }
 
 #define LAUNDER_U8_PTR(p) ((unsigned char*)(p))
 
-void func_ov001_020aadac(void) {
+void CapIconMgr_DispatchNoCap(void) {
     char *fp = (char *)gPlayers[0];
     int* sl;
     unsigned i1, i2;
@@ -134,7 +140,7 @@ void func_ov001_020aadac(void) {
             unsigned char *fl = LAUNDER_U8_PTR(&((dCapIcon_c *)sl)->mFlags);
             *fl &= ~2;
             if (((dCapIcon_c *)sl)->mSlot != -1) {
-                func_ov001_020aa6b0(sl, 0);
+                CapIconMgr_SetMapIconShown(sl, 0);
                 data_0209f3e8[((dCapIcon_c *)sl)->mSlot] = 0;
             }
             sl = (int *)((dCapIcon_c *)sl)->mNext;
@@ -159,8 +165,8 @@ void func_ov001_020aadac(void) {
                     *fl |= 2;
                     ((dCapIcon_c *)o)->mSlot = func_0202a8e0((int)((dCapIcon_c *)o)->mOwner,
                                                              ((dCapIcon_c *)o)->mCharacter);
-                    func_ov001_020aa6b0(o, 1);
-                    func_ov001_020aa6e4(i2, ((dCapIcon_c *)o)->mIconKind, 0);
+                    CapIconMgr_SetMapIconShown(o, 1);
+                    CapIconMgr_Commit(i2, ((dCapIcon_c *)o)->mIconKind, 0);
                     *flags |= 2;
                 }
             } else {
@@ -171,8 +177,7 @@ void func_ov001_020aadac(void) {
     }
 }
 
-void func_ov001_020aaa54(void)
-{
+void CapIconMgr_Dispatch(void) {
     unsigned sp4;
     int typ;
     int spc;
@@ -211,7 +216,7 @@ void func_ov001_020aaa54(void)
         flagp = &gCapIconRequestFlags[r6];
         fp = zero;
 
-        if (func_ov001_020aa960(r6, (char *)player) != 0) {
+        if (CapIconMgr_ShouldDispatch(r6, (char *)player) != 0) {
             sl = gCapIconListHeads[r6];
             while (sl != 0) {
                 void* found = dActor_c::FindWithID(sl->mOwnerUniqueID);
@@ -228,7 +233,7 @@ void func_ov001_020aaa54(void)
                                 if (sl->mSlot == -1) {
                                     sl->mSlot = func_0202a8e0((int)sl->mOwner, sl->mCharacter);
                                     sl->mFlags |= 2;
-                                    func_ov001_020aa6b0((int *)sl, 1);
+                                    CapIconMgr_SetMapIconShown((int *)sl, 1);
                                 } else {
                                     spc = 1;
                                 }
@@ -272,21 +277,22 @@ void func_ov001_020aaa54(void)
             /* The ROM's caller passes a fifth argument the callee ignores
              * (the shards' extern declared five). The cast preserves the
              * pushed r7; the definition takes four. */
-            if (((int (*)(int, void *, int, int, int))func_ov001_020aa858)(r6, sb, typ, fp, r7) != 0) {
+            if (((int (*)(int, void *, int, int, int))CapIconMgr_ShouldCommit)(r6, sb, typ, fp,
+                                                                               r7) != 0) {
                 sb->mFlags |= 2;
                 sb->mSlot = func_0202a8e0((int)sb->mOwner, sb->mCharacter);
-                func_ov001_020aa6b0((int *)sb, 1);
-                func_ov001_020aa6e4(r6, sb->mIconKind, (int *)sb);
+                CapIconMgr_SetMapIconShown((int *)sb, 1);
+                CapIconMgr_Commit(r6, sb->mIconKind, (int *)sb);
             } else {
                 if (r7 != 0 && (player->IsCollectingCap() != 0 || (*flagp & 0x40) != 0)) {
                     if (spc != 0) {
-                        func_ov001_020aa6e4(r6, three, (int *)z1);
+                        CapIconMgr_Commit(r6, three, (int *)z1);
                     } else {
-                        func_ov001_020aa6e4(r6, sp4, (int *)z2);
+                        CapIconMgr_Commit(r6, sp4, (int *)z2);
                     }
                 } else {
                     if (fp != 0) {
-                        func_ov001_020aa6e4(r6, three, (int *)z3);
+                        CapIconMgr_Commit(r6, three, (int *)z3);
                     }
                 }
             }
@@ -302,7 +308,7 @@ void func_ov001_020aaa54(void)
     } while (r6 < 3);
 }
 
-int func_ov001_020aa960(int x, char* arg){
+int CapIconMgr_ShouldDispatch(int x, char *arg) {
     if ((gCapIconRequestFlags[x] & 0xc0) == 0xc0)
         gCapIconRequestFlags[x] &= ~0x40;
     unsigned char v = gCapIconRequestFlags[x];
@@ -326,8 +332,7 @@ int func_ov001_020aa960(int x, char* arg){
     return 1;
 }
 
-int func_ov001_020aa858(int self, char* a, int b, int d)
-{
+int CapIconMgr_ShouldCommit(int self, char *a, int b, int d) {
     if (b == 0 && self == data_02092114) {
         gCapIconRequestFlags[self] |= 0x40;
         gCapIconDispatchFlags[self] |= 0x80;
@@ -348,8 +353,7 @@ int func_ov001_020aa858(int self, char* a, int b, int d)
     return 1;
 }
 
-int func_ov001_020aa7b8(void* self, char* a)
-{
+int CapIconMgr_ShouldCommitVs(void *self, char *a) {
     if (a == 0) return 0;
     if (((dCapIcon_c *)a)->mIconKind == 3)
         return 1;
@@ -368,7 +372,7 @@ int func_ov001_020aa79c(int x) {
     return (((unsigned char *)gCapIconDispatchFlags)[x] & 3) != 0;
 }
 
-void func_ov001_020aa6e4(int idx, unsigned r1, int* obj){
+void CapIconMgr_Commit(int idx, unsigned r1, int *obj) {
     gCapIconDispatchFlags[idx] |= 1;
     if ((gCapIconDispatchFlags[idx] & 0x80) && gCapIconDispatchLocked == 0) {
         if (obj == 0)
@@ -390,14 +394,14 @@ void func_ov001_020aa6cc(int r0) {
     ((unsigned char *)gCapIconDispatchFlags)[r0] &= ~3;
 }
 
-void func_ov001_020aa6b0(int* r0, int r1) {
+void CapIconMgr_SetMapIconShown(int *r0, int r1) {
     int r2 = r0[5];
     if (r2 != -1) {
         gMapCapIconShown[r2] = (unsigned char)r1;
     }
 }
 
-void func_ov001_020aa420(void) {
+void CapIconMgr_DispatchVs(void) {
     /* dCapIcon_c::mFlags, read bit by bit */
     typedef struct {
         unsigned char bank : 1;
@@ -464,7 +468,7 @@ void func_ov001_020aa420(void) {
                         if (node->mSlot == -1) {
                             node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
                             node->mFlags |= 2;
-                            func_ov001_020aa6b0((int *)node, 1);
+                            CapIconMgr_SetMapIconShown((int *)node, 1);
                         }
                         handled = 1;
                         maxPriority = node->mIconKind;
@@ -487,11 +491,11 @@ void func_ov001_020aa420(void) {
             } while (node != 0);
         }
 
-        if (func_ov001_020aa7b8((void *)i, (char *)best) != 0) {
+        if (CapIconMgr_ShouldCommitVs((void *)i, (char *)best) != 0) {
             best->mFlags |= 2;
             best->mSlot = func_0202a8e0((int)best->mOwner, best->mCharacter);
-            func_ov001_020aa6b0((int *)best, 1);
-            func_ov001_020aa6e4(i, best->mIconKind, (int *)best);
+            CapIconMgr_SetMapIconShown((int *)best, 1);
+            CapIconMgr_Commit(i, best->mIconKind, (int *)best);
             continue;
         }
 
@@ -505,7 +509,7 @@ void func_ov001_020aa420(void) {
             player = 0;
         }
         if (player != 0 && player->IsCollectingCap() != 0) {
-            func_ov001_020aa6e4(i, maxPriority, (int *)sp10);
+            CapIconMgr_Commit(i, maxPriority, (int *)sp10);
         }
     }
 }

@@ -45,7 +45,7 @@ struct dActor_c;
  *   pass. Every runtime set of bit 1 on a kind-0 node came the frame after
  *   bit 3. Nothing visible follows from it.
  * The original source likely used bitfields, not masks:
- * func_ov001_020aa420 has to read bits 0 and 3 as bitfields to match.
+ * CapIconMgr_DispatchVs has to read bits 0 and 3 as bitfields to match.
  * The local bit views in the .cpp files name them bank, real, unlinked
  * and skipped.
  */
@@ -72,7 +72,7 @@ struct dCapIcon_c {
        one the reset pass commits, and the dispatchers keep the highest kind
        of a list as its priority. */
     u8 mIconKind; /* 0x19 */
-    /* Zeroed on link. The commit (func_ov001_020aa6e4) stores 0x3c here and
+    /* Zeroed on link. The commit (CapIconMgr_Commit) stores 0x3c here and
        copies it into gCapIconFlashTimer, the HUD flash countdown. */
     u8 mFlashFrames;              /* 0x1a */
     u8 mFlags;                    /* 0x1b */

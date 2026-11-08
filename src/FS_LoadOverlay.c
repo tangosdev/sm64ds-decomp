@@ -2,7 +2,9 @@
 extern int func_02018b64(FSOverlayInfo *info);
 extern void Crash(void);
 extern void FS_StartOverlay(FSOverlayInfo *p_ovi);
-extern void func_ov001_020aa420(void);
+/* Only its address is used: 0x020aa420, where the overlay region starts
+ * (ov000 loads there too). */
+extern void CapIconMgr_DispatchVs(void);
 
 int FS_LoadOverlay(int proc, int id) {
     FSOverlayInfo info;
@@ -12,7 +14,7 @@ int FS_LoadOverlay(int proc, int id) {
         return 0;
     ram = (unsigned int)info.header.ram_address;
     /* goto kept: an || guard around Crash() colours ram/sum differently (4 forms tried) */
-    if (ram >= (unsigned int)func_ov001_020aa420) {
+    if (ram >= (unsigned int)CapIconMgr_DispatchVs) {
         sum = ram + info.header.ram_size;
         if (sum + info.header.bss_size <= 0x214eaa0u)
             goto start;

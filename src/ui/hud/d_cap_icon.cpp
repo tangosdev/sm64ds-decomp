@@ -17,7 +17,8 @@
  * Leftover: func_ov001_020ab2e4 stays the linker name. The image preserves
  *   no original mangled table; an existing label is not a barrier to a
  *   member -- a migration renames source and config together.
- * Leftover: func_ov001_020aa6b0 / func_ov001_020aa6cc are other TUs.
+ * Leftover: CapIconMgr_SetMapIconShown and func_ov001_020aa6cc are
+ *   CapIconMgr's; this TU declares them locally.
  * Leftover: owner uniqueID is fBase_c::uniqueID at +4; this TU keeps
  *   the +4 load.
  * Shared list state is declared in CapIconMgr.h and defined by the manager.
@@ -33,9 +34,7 @@ extern "C" {
 
 extern int data_0209f3e8[];
 
-
-
-extern void func_ov001_020aa6b0(int *icon, int value);
+extern void CapIconMgr_SetMapIconShown(int *icon, int value);
 extern void func_ov001_020aa6cc(int character);
 
 }
@@ -47,7 +46,7 @@ void dCapIcon_c::Unlink()
 
     if (mSlot != -1) {
         if ((dActor_c *)data_0209f3e8[mSlot] == mOwner) {
-            func_ov001_020aa6b0((int *)this, 0);
+            CapIconMgr_SetMapIconShown((int *)this, 0);
             data_0209f3e8[mSlot] = 0;
             func_ov001_020aa6cc(mCharacter);
         }
@@ -61,7 +60,7 @@ void dCapIcon_c::Unlink()
     if (mNext)
         mNext->mPrev = mPrev;
 
-    func_ov001_020aa6b0((int *)this, 0);
+    CapIconMgr_SetMapIconShown((int *)this, 0);
     mOwner = 0;
     mOwnerUniqueID = 0;
     mPrev = 0;
@@ -82,8 +81,7 @@ void dCapIcon_c::Unlink()
  * count, keeps iconKind (kind 3 raises request flag 8) and the bank bit in
  * mFlags bit 0, and clears the list's dispatch state for a bank or kind-3
  * cap. */
-void dCapIcon_c::Link(char *owner, int character, int iconKind, unsigned char bank)
-{
+void dCapIcon_c::Link(char *owner, int character, int iconKind, unsigned char bank) {
     mCharacter = (unsigned char)character;
     mOwner = (dActor_c *)owner;
     mOwnerUniqueID = *(u32 *)(owner + 4);

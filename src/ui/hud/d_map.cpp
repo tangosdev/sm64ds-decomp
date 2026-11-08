@@ -92,7 +92,7 @@ extern int data_0208ee44;
    that talk ends: type-4 marker slots draw MM_RED_COIN. */
 extern u8 gShowRedCoinMarkers;
 /* Per cap slot: the cap icon is shown on the map (written by CapIconMgr's
-   func_ov001_020aa6b0), and the character it shows (0 M, 1 L, 2 W). */
+   CapIconMgr_SetMapIconShown), and the character it shows (0 M, 1 L, 2 W). */
 extern u8 gMapCapIconShown[];
 extern u8 gMapCapIconCharacters[];
 extern void *data_ov002_0210cac8[];
