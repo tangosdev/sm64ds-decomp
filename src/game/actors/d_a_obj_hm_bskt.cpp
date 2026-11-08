@@ -16,8 +16,8 @@
  * parameter-type claim.
  *
  * Notes:
- * - Behavior needs the four-word volatile stack reservation to
- *   reproduce the cartridge's frame; without it the body is 17 words short.
+ * - Behavior's 16-byte frame is the Vector3 copy of mPos it raises
+ *   before handing to the star; the copy itself is optimised away.
  * - data_ov030_02114ee4 is the CLPS block SetFile is handed, in overlay data
  *   this TU does not own.
  * - g_profile_HM_BASKET lives outside this TU.
@@ -98,9 +98,6 @@ s32 daObjHmBskt_c::InitResources() {
 }
 
 s32 daObjHmBskt_c::Behavior() {
-    volatile int dummy[4];
-    (void)&dummy;
-
     IsClsnInRangeOnScreen(0, 0);
     mAngleY = mAngleY + mHorzSpeed;
 
@@ -109,13 +106,12 @@ s32 daObjHmBskt_c::Behavior() {
         UpdatePos(0);
         CheckLanding(&mWithMeshClsn);
 
-        s32 y = mPosY;
-        s32 z = mPosZ;
+        Vector3 pos = mPos;
+        pos.y += 0x3c000;
         dActor_c *star = mStarActor;
-        s32 x = mPosX;
-        star->mPosX = x;
-        star->mPosY = y + 0x3c000;
-        star->mPosZ = z;
+        star->mPos.x = pos.x;
+        star->mPos.y = pos.y;
+        star->mPos.z = pos.z;
     }
 
     return 1;
