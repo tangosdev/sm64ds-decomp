@@ -248,7 +248,7 @@ byte-identical name list, which is the gate that would show a `_ZTV` appearing.
 at 0x056. Two corrections:
 
 1. 0x053 is **not** padding. `Behavior` both reads and writes it as a real 0/1 value,
-   and `func_02005348` — called from `Behavior` with the same `this` — compares it
+   and `UpdateButtonPalettes` (0x02005348) — called from `Behavior` with the same `this` — compares it
    against a loop index. Two independent readers agreeing on a live value rules out
    coincidence.
 2. There is a field at **0x056** the generated header never saw: `Behavior`'s case 4

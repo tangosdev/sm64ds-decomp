@@ -8539,7 +8539,7 @@
     "src/engine/gx/GXS.cpp#_ZN3GXS13LoadBGExtPlttEPKvjj": "tangosdev",
     "src/engine/gx/GXS.cpp#_ZN3GXS18BeginLoadBGExtPlttEv": "tangosdev",
     "src/game/stages/d_s_boot_methods.cpp#_ZN9dScBoot_c13InitResourcesEv": "tangosdev",
-    "src/game/stages/d_s_boot_methods.cpp#_ZN9dScBoot_c13func_02005348Ev": "tangosdev",
+    "src/game/stages/d_s_boot_methods.cpp#_ZN9dScBoot_c20UpdateButtonPalettesEv": "tangosdev",
     "src/game/stages/d_s_boot_methods.cpp#_ZN9dScBoot_c8BehaviorEv": "andrewboudreau",
     "src/game/stages/d_s_boot.cpp#_ZN9dScBoot_cD0Ev": "tangosdev",
     "src/game/stages/d_s_boot.cpp#_ZN9dScBoot_cD1Ev": "andrewboudreau",

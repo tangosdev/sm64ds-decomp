@@ -119,7 +119,7 @@
     },
     "arm9:0x02005348": {
       "author": "tangosdev",
-      "name": "_ZN9dScBoot_c13func_02005348Ev"
+      "name": "_ZN9dScBoot_c20UpdateButtonPalettesEv"
     },
     "arm9:0x02005418": {
       "author": "andrewboudreau",

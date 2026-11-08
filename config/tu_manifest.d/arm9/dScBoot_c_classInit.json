@@ -127,7 +127,7 @@
   "notes": [
     "DESTRUCTOR FORM, measured on this file: the cartridge places D1 (0x02023598) BELOW D0 (0x020235d4). Under deferred codegen an out-of-line destructor emits D2, D0, D1 -- the reverse of retail. With `#pragma defer_codegen off` and the file written ROM-ascending, the same out-of-line definition emits D1, D0, D2 and all three land in order; D2 is licensed deadstrip above. Precedent: ov003/dScStarSel_c, measured identical cell.",
     "dScBoot_c_classInit IS CONVERTED: `return new dScBoot_c();` replaces the hand-rolled operator new + C2 + vptr chain. Every instruction falls out of the one `new`: fBase_c::operator new(0x58), fBase_c's C2, the dBase_c and dScene_c vptr stores, the pauseFlags |=1 |=4 of dScene_c::dScene_c, then dScBoot_c's vptr. tools/match.py: byte-identical.",
-    "The class's scene methods (func_02005348, Behavior, InitResources) are the separate TU arm9/dScBoot_c at 0x02005348..0x02005d94. A class can span multiple TUs."
+    "The class's scene methods (UpdateButtonPalettes, Behavior, InitResources) are the separate TU arm9/dScBoot_c at 0x02005348..0x02005d94. A class can span multiple TUs."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
