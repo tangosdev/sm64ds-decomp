@@ -119,14 +119,14 @@ struct daObjHatenaBlock_c : dBgActor_c {
        0). The names say which actor the row spawns; the loaders in
        InitResources / CleanupResources key off the same numbers. */
     enum Content {
-        CONTENT_COINS = 0,         /* a spray of COIN actors; count is param1 bits 8..15 (0xff = 1) */
-        CONTENT_STAR = 1,          /* STAR; star id is param1 bits 8..15 (0xff = 0) */
-        CONTENT_ONEUP = 2,         /* ONEUPKINOKO */
-        CONTENT_SHELL = 3,         /* SHELL */
+        CONTENT_COINS = 0, /* a spray of COIN actors; count is param1 bits 8..15 (0xff = 1) */
+        CONTENT_STAR = 1,  /* STAR; star id is param1 bits 8..15 (0xff = 0) */
+        CONTENT_ONEUP = 2, /* ONEUPKINOKO */
+        CONTENT_SHELL = 3, /* SHELL */
         CONTENT_SCALEUP_KINOKO = 4, /* SCALEUP_KINOKO */
-        CONTENT_POWER_UP_5 = 5,    /* column 0 FEATHER, columns 1..3 POWER_UP_ITEM */
-        CONTENT_POWER_UP_6 = 6,    /* POWER_UP_ITEM in every column */
-        CONTENT_POWER_UP_7 = 7     /* column 0 BOMBHEI (SpawnPrizeBobOmb), 1..3 POWER_UP_ITEM */
+        CONTENT_POWER_UP_5 = 5,     /* column 0 FEATHER, columns 1..3 POWER_UP_ITEM */
+        CONTENT_POWER_UP_6 = 6,     /* POWER_UP_ITEM in every column */
+        CONTENT_POWER_UP_7 = 7      /* column 0 BOMBHEI (SpawnPrizeBobOmb), 1..3 POWER_UP_ITEM */
     };
 };
 

@@ -212,8 +212,7 @@ daObjBlockS_c::~daObjBlockS_c()
  * and collider transform. Once the crate is off screen (mFlags 0x8) and more
  * than 2000 units (0x7d0000) from the closest player, it respawns as
  * STATE_IDLE. Returns before touching the cylinders in that case. */
-void daObjBlockS_c::UpdateBroken()
-{
+void daObjBlockS_c::UpdateBroken() {
     ResetToHome();
     unsigned b = (unsigned)((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (b != 0 && DistToCPlayer() > 0x7d0000) {
@@ -232,8 +231,7 @@ void daObjBlockS_c::UpdateBroken()
  * and refreshes the model matrix and collider transform. Clears mFlags bits
  * 0x20000 / 0x40000 / 0x80000 (the two yoshi-mouth bits and 0x80000, which
  * STATE_IN_MOUTH treats as "spit it out"). */
-void daObjBlockS_c::EnterBroken()
-{
+void daObjBlockS_c::EnterBroken() {
     if (((dBgW *)&mMeshCollider)->IsEnabled())
         ((dBgW *)&mMeshCollider)->Disable();
     ResetToHome();
@@ -247,8 +245,7 @@ void daObjBlockS_c::EnterBroken()
  * STATE_BOUNCING. While 0x20000 is clear and mEatingPlayer is set, the crate
  * copies that player's position. Then clears the first cylinder, refreshes
  * the model matrix and keeps the collider disabled. */
-void daObjBlockS_c::UpdateInMouth()
-{
+void daObjBlockS_c::UpdateInMouth() {
     unsigned int flags = mFlags;
     int t1;
     t1 = flags & 0x80000;
@@ -295,8 +292,7 @@ void daObjBlockS_c::UpdateInMouth()
 /* STATE_IN_MOUTH, enter. Drops the sink offset and its target to 0, stops
  * the horizontal motion and clears dCc_c flags bit 0x2000 on the first
  * cylinder (the bit the thrown / spit-out enters set). */
-void daObjBlockS_c::EnterInMouth()
-{
+void daObjBlockS_c::EnterInMouth() {
     mClsnYOffsetTarget = 0;
     mClsnYOffset = 0;
     mHorzSpeed = 0;
@@ -312,8 +308,7 @@ void daObjBlockS_c::EnterInMouth()
  * rest of the frame is the shared tail: slide step, hit handling, wall test,
  * water kill, cylinders, model matrix, and the shadow while airborne and
  * the collider transform while the collider is in range on screen. */
-void daObjBlockS_c::UpdateBouncing()
-{
+void daObjBlockS_c::UpdateBouncing() {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     ApproachLinear(mHorzSpeed, 0, 0x555);
@@ -347,8 +342,7 @@ void daObjBlockS_c::UpdateBouncing()
  * bit 0x80000, starts mBounceCount at 3 (vertical speed 30 units, horizontal
  * speed 15 units to begin with) and forgets mEatingPlayer and
  * mHoldingPlayer. Clears dCc_c flags bit 0x2000 on the first cylinder. */
-void daObjBlockS_c::EnterBouncing()
-{
+void daObjBlockS_c::EnterBouncing() {
     mClsnYOffsetTarget = 0;
     mClsnYOffset = 0;
     mFlags &= ~0x80000;
@@ -366,8 +360,7 @@ void daObjBlockS_c::EnterBouncing()
  * (0x555) and run the shared tail (hit handling, wall test, water kill,
  * cylinders, model matrix, shadow while airborne). The collider is kept
  * disabled throughout. */
-void daObjBlockS_c::UpdateSpitOut()
-{
+void daObjBlockS_c::UpdateSpitOut() {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (UpdateFloorContact()) {
@@ -400,8 +393,7 @@ void daObjBlockS_c::UpdateSpitOut()
  * 0x80000, launches it with horizontal speed 30 units (0x1e000) and vertical
  * speed 15 units (0xf000), hands mEatingPlayer over to mPrevHolder and sets
  * dCc_c flags bit 0x2000 on the first cylinder. */
-void daObjBlockS_c::EnterSpitOut()
-{
+void daObjBlockS_c::EnterSpitOut() {
     daPly_c *obj;
     short angle;
     int idx;
@@ -446,8 +438,7 @@ void daObjBlockS_c::EnterSpitOut()
  * slide step and go to STATE_IDLE as soon as that reports the crate on the
  * ground; otherwise ease the horizontal speed down by 1/3 unit per frame
  * (0x555) and run the shared tail. The collider is kept disabled. */
-void daObjBlockS_c::UpdateThrown()
-{
+void daObjBlockS_c::UpdateThrown() {
     UpdatePos(&mdCcAcPos_c1);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (UpdateFloorContact()) {
@@ -479,8 +470,7 @@ void daObjBlockS_c::UpdateThrown()
  * data_ov098_0213c4f0 (vertical speed: 20, 20, 20, 15 units); an index of 4
  * would read one word past each copy. mHoldingPlayer moves to mPrevHolder
  * and is cleared, and dCc_c flags bit 0x2000 is set on the first cylinder. */
-void daObjBlockS_c::EnterThrown()
-{
+void daObjBlockS_c::EnterThrown() {
     BlockSW4 arr1;
     BlockSW4 arr2;
     daPly_c *p;
@@ -515,8 +505,7 @@ void daObjBlockS_c::EnterThrown()
  * goes back to STATE_IDLE. Clears the
  * first cylinder, refreshes the model matrix and the shadow, and keeps the
  * collider disabled. */
-void daObjBlockS_c::UpdateCarried()
-{
+void daObjBlockS_c::UpdateCarried() {
     int flags;
     bool t;
 
@@ -558,8 +547,7 @@ void daObjBlockS_c::UpdateCarried()
 
 /* STATE_CARRIED, enter. Stops the horizontal motion, clears dCc_c flags bit
  * 0x2000 on the first cylinder and zeroes the sink offset and target. */
-void daObjBlockS_c::EnterCarried()
-{
+void daObjBlockS_c::EnterCarried() {
     mHorzSpeed = 0;
     mdCcAcPos_c1.flags &= ~0x2000;
     mClsnYOffsetTarget = 0;
@@ -573,8 +561,7 @@ void daObjBlockS_c::EnterCarried()
  * actors. Updates both cylinders, the model matrix and
  * the shadow (while airborne), and refreshes the collider transform when
  * IsClsnInRangeOnScreen accepts the arguments (0x600000, 0). */
-void daObjBlockS_c::UpdateIdle()
-{
+void daObjBlockS_c::UpdateIdle() {
     int flag = (mFlags & ACTOR_FLAG_OFF_SCREEN) != 0;
     if (flag) {
         if (mHorzSpeed == 0) {
@@ -606,8 +593,7 @@ void daObjBlockS_c::UpdateIdle()
 }
 
 /* STATE_IDLE, enter. Forgets mHoldingPlayer and mEatingPlayer. */
-void daObjBlockS_c::EnterIdle()
-{
+void daObjBlockS_c::EnterIdle() {
     mHoldingPlayer = 0;
     BLOCKS_EATING_PLAYER(this) = 0;
 }
@@ -624,8 +610,7 @@ extern "C" void Crate_SetState(daObjBlockS_c *self, int i)
 
 /* Runs the update member of the current state's row (called once a frame
  * from the end of Behavior). */
-void daObjBlockS_c::CallStateUpdate()
-{
+void daObjBlockS_c::CallStateUpdate() {
     BlockSStateHost *c = (BlockSStateHost *)this;
     int j = c->idx;
     (c->*data_ov098_0213c878[j].fn[1])();
@@ -634,8 +619,7 @@ void daObjBlockS_c::CallStateUpdate()
 /* Returns 1 when the crate is on the ground and the floor's CLPS entry has
  * the water bit set (include/CLPS.h, `w0 & 0x20`); the callers kill the
  * crate on it. */
-int daObjBlockS_c::IsOnWaterFloor()
-{
+int daObjBlockS_c::IsOnWaterFloor() {
     if (mWithMeshClsn.IsOnGround()) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4)))
             return 1;
@@ -681,8 +665,7 @@ int daObjBlockS_c::func_ov098_02138bfc()
  *     slide kick / grab / explosion / yoshi tongue / fire, which is what
  *     HandleHits reacts to;
  *   cylinder 2, radius 60, height 30 (0x1e000), flags 0x800004, no vulnFlags. */
-void daObjBlockS_c::ResetToHome()
-{
+void daObjBlockS_c::ResetToHome() {
     struct Vector3 zero, a1, a2;
 
     mClsnYOffsetTarget = 0;
@@ -718,8 +701,7 @@ void daObjBlockS_c::ResetToHome()
 
 /* Pays out three coins at the crate's position (spread argument 15 units, 0xf000;
  * angle 0), the first time only: mCoinsPaid guards it. */
-void daObjBlockS_c::SpawnBreakCoins()
-{
+void daObjBlockS_c::SpawnBreakCoins() {
     int v[3];
     if (mCoinsPaid == 1) return;
     v[0] = mPosX;
@@ -745,8 +727,7 @@ void daObjBlockS_c::SpawnBreakCoins()
  *   otherwise, in STATE_THROWN, a hit on any player other than mPrevHolder
  *   calls daPly_c::Hurt with the crate's position, 1, 0xc000 (12 units),
  *   1, 0, 1; what those arguments select is not recovered here. */
-void daObjBlockS_c::HandleHits()
-{
+void daObjBlockS_c::HandleHits() {
     daPly_c *a;
     u32 fl;
     int b;
@@ -850,8 +831,7 @@ void daObjBlockS_c::Kill()
  * is killed if it is faster than 20 units per frame (0x14000), and
  * if not mPrevAngleY is reflected off the wall's normal (ReflectAngle on the
  * normal's x and z). */
-void daObjBlockS_c::HandleWallHit()
-{
+void daObjBlockS_c::HandleWallHit() {
     if (DecIfAbove0_Byte(&mWallCooldown) != 0)
         return;
     if (mWithMeshClsn.IsOnWall() != 0) {
@@ -916,8 +896,7 @@ void daObjBlockS_c::HandleWallHit()
  * with 0xa0 is true for every value this file stores there). Finally mAngleX / mAngleZ ease (a quarter of the
  * difference, at most 0x1000 per call) toward the angles func_02010844 gives
  * for the floor normal, the crate's yaw and the yaw minus a quarter turn. */
-int daObjBlockS_c::UpdateFloorContact()
-{
+int daObjBlockS_c::UpdateFloorContact() {
     void *fr;
     int n;
     int ang;
@@ -1040,8 +1019,7 @@ int daObjBlockS_c::UpdateFloorContact()
  * mShadowModel, that scale twice and h + 40 units (0x28000) in between,
  * and 0xf last (the opacity argument in include/dActor_c.h; the ScaleXYZ in
  * the method name suggests the three before it are per-axis scales). */
-void daObjBlockS_c::UpdateDropShadow()
-{
+void daObjBlockS_c::UpdateDropShadow() {
     struct Vector3 v;
     int r5;
     int r4;
@@ -1071,8 +1049,7 @@ void daObjBlockS_c::UpdateDropShadow()
  * into mClsnMat, overwrites its translation row with the crate's position
  * lowered by mClsnYOffset, and hands it and mAngleY to dBgW_KcMbg::Transform
  * on mMeshCollider. */
-void daObjBlockS_c::UpdateMeshCollider()
-{
+void daObjBlockS_c::UpdateMeshCollider() {
     Vector3 pos = mPos;
     pos.y -= mClsnYOffset;
     mClsnMat = mModel.mat4x3;
@@ -1096,8 +1073,7 @@ void daObjBlockS_c::UpdateMeshCollider()
  * translation row at its position lowered by mClsnYOffset (>> 3), zeroes
  * mCarryOffset, and clears mFlags bit 0x4000000 while the crate is on the
  * ground. */
-void daObjBlockS_c::UpdateModelMatrix()
-{
+void daObjBlockS_c::UpdateModelMatrix() {
     daPly_c *obj = mHoldingPlayer;
     int b;
 
