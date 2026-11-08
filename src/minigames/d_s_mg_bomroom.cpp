@@ -40,6 +40,7 @@
 #include "G2x.h"
 #include "nitro/fx/fx.h"
 #include "G2.h"
+#include "PlayerInput.h"
 
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
@@ -67,10 +68,6 @@ extern void *sBomroomMarkerLitSprites[];
 extern int sBomroomMarkerY[];
 extern int Mg_GetSubmittedScore(void);
 extern int RandomIntInternal(int *seed);
-// local extern: this file needs a record-view spelling of one of the touch lanes (the ROM scales the slot in the addressing mode), which conflicts with PlayerInput.h; the header is not included and all five symbols are declared here.
-extern u8 gTouchX[];
-// local extern: see above.
-extern u8 gTouchY[];
 extern u16 sBomroomSpawnDelays[];
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
@@ -738,22 +735,16 @@ void dScMgBomroom_c::Bomb_CheckWrongPen(int index) {
  * down of it, while nothing is held (mHeldColor is 0xff). grabX/grabY keep the
  * stylus-minus-bomb offset. */
 
-typedef struct { u8 f0, f1, f2, f3; } Tab;
-// local extern: see above.
-extern u8 gActivePlayerSlot;
-// local extern: see above.
-extern Tab gTouchHeld[];
-
 void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     u8 touch = gActivePlayerSlot;
     int touching = 0;
     int dx, dy;
-    if (gTouchHeld[touch].f0 != 0)
-        touching = gTouchHeld[touch].f1 != 0;
+    if (gTouchHeld[touch * 4] != 0)
+        touching = gTouchEdge[touch * 4] != 0;
     if (touching == 0) return;
     if (mHeldColor != 0xff) return;
-    dx = gTouchHeld[touch].f2 - (mBombs[index].x >> 0xc);
-    dy = gTouchHeld[touch].f3 - (mBombs[index].y >> 0xc);
+    dx = gTouchX[touch * 4] - (mBombs[index].x >> 0xc);
+    dy = gTouchY[touch * 4] - (mBombs[index].y >> 0xc);
     if (dx > 0xc) return;
     if (dx < -0xc) return;
     if (dy > 0xf) return;
@@ -1230,8 +1221,8 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
         u8 was;
         int t = gActivePlayerSlot;
 
-        mBombs[idx].x = (gTouchX[t << 2] << 12) - mBombs[idx].grabX;
-        mBombs[idx].y = (gTouchY[t << 2] << 12) - mBombs[idx].grabY;
+        mBombs[idx].x = (gTouchX[t * 4] << 12) - mBombs[idx].grabX;
+        mBombs[idx].y = (gTouchY[t * 4] << 12) - mBombs[idx].grabY;
         cx = old_x >> 12;
         cy = old_y >> 12;
 
@@ -1239,8 +1230,8 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
 
         {
             int t2 = gActivePlayerSlot;
-            mBombs[idx].x = (gTouchX[t2 << 2] << 12) - mBombs[idx].grabX;
-            mBombs[idx].y = (gTouchY[t2 << 2] << 12) - mBombs[idx].grabY;
+            mBombs[idx].x = (gTouchX[t2 * 4] << 12) - mBombs[idx].grabX;
+            mBombs[idx].y = (gTouchY[t2 * 4] << 12) - mBombs[idx].grabY;
         }
 
         was = mBombs[idx].overPen;
@@ -1332,7 +1323,7 @@ void dScMgBomroom_c::Bomb_StateWaiting(int i) {
 typedef void (dScMgBomroom_c::*PMF)(int);
 extern PMF sBomroomBombStateTable[];
 void dScMgBomroom_c::UpdateBombs() {
-    if (*(u8 *)(gTouchHeld + gActivePlayerSlot) == 0)
+    if (gTouchHeld[gActivePlayerSlot * 4] == 0)
         mHeldColor = 0xff;
     int i;
     for (i = 0; i < 0x70; i++) {
