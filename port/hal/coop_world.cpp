@@ -48,6 +48,8 @@ void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 void *port_debug_spawn(unsigned id, unsigned param);
 char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const void *pos, const void *v16, int area, int f);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
+extern void *STAR_MARKERS[12];          // 0x0209f40c: the actors showing a star glint on the minimap
+void _ZN8dActor_c11UntrackStarERa(void *self, signed char &starID);
 void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 void func_ov084_02129498(void *goomba);
 }
@@ -534,6 +536,13 @@ bool breakable_block(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 
 // on the room's list: the star they hold is the breaker's and is announced once, and a later visit after the level emptied
 // finds them as the cartridge builds it. (The Moneybag, 261, dies through KillAndTrackInDeathTable: the death table has it.)
 bool live_gone(unsigned cls) { return cls == 263 || cls == 217; }
+// REVCOOPWALLS1: in the act whose star they hold, these two own a minimap star marker from InitResources (TrackStar);
+// the cartridge frees it in UntrackAndSpawnStar on the defeat, which a friend's copy never runs. Free it before the
+// removal, the way coop_boss.cpp does for the big bosses, or the minimap and camera keep reading the freed boss.
+void untrack_markers(void *a) {
+    for (int m = 0; m < 12; ++m)
+        if (STAR_MARKERS[m] == a) { signed char sl = (signed char)m; _ZN8dActor_c11UntrackStarERa(a, sl); }
+}
 enum : int { kGoneMax = 32, kGonePushes = 4 };
 struct Gone { uint16_t slot, cls; };
 Gone g_gone[kGoneMax]; int g_gone_n = 0;
@@ -816,6 +825,7 @@ void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
         }
         func_ov084_02129498(a);
     } else {
+        if (live_gone(cls)) untrack_markers(a);
         _ZN7fBase_c18MarkForDestructionEv(a);
     }
     if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = (uint16_t)slot;
@@ -846,6 +856,7 @@ void gone_apply() {
             if (g_log) std::fprintf(stderr, "[coop] boo: slot %d beaten in this group, removed here wall=%lld\n", (int)g_gone[i].slot, wall_ms());
             continue;
         }
+        if (live_gone(g_gone[i].cls)) untrack_markers(a);
         _ZN7fBase_c18MarkForDestructionEv(a);
         if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = g_gone[i].slot;
         else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = g_gone[i].slot; }
