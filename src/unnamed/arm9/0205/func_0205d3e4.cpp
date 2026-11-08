@@ -16,7 +16,7 @@ extern int func_0205d688(FSFile *p_file, void *dst, int len, int async);
 /* NitroSDK FS_GetPathName: store buf and len in arg.getpath, restarting the
    measure unless the last command was already FS_COMMAND_GETPATH (5), and
    send it. */
-int func_0205d4a0(FSFile *p_file, char *buf, u32 len) {
+int FS_GetPathName(FSFile *p_file, char *buf, u32 len) {
     if (p_file->command != 5) {
         p_file->arg.getpath.total_len = 0;
         p_file->arg.getpath.dir_id = 0;

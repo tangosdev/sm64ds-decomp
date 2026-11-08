@@ -81,7 +81,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov018_02111bf0",
+      "symbol": "_ZN10daPgMthr_c19func_ov018_02111bf0EP10dBgCh_Actr",
       "address": "0x02111bf0",
       "size": "0x00000138",
       "legacy_source": "src/func_ov018_02111bf0.cpp",
@@ -1232,59 +1232,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@825",
+      "from": "@823",
       "to": "@826",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @821 to @825 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @821 to @825 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
+    },
+    {
+      "from": "@824",
+      "to": "@733",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @822 to @826 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
+    },
+    {
+      "from": "@825",
+      "to": "@828",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @823 to @827 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@826",
-      "to": "@733",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @822 to @826 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@734",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @824 to @828 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@827",
-      "to": "@828",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @823 to @827 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
-    },
-    {
-      "from": "@828",
-      "to": "@734",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @824 to @828 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@830",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @825 to @829 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@829",
-      "to": "@830",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @825 to @829 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@832",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @827 to @831 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@831",
-      "to": "@832",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @827 to @831 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@728",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @829 to @833 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@833",
-      "to": "@728",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @829 to @833 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@729",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @831 to @835 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@835",
-      "to": "@729",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @831 to @835 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@730",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @833 to @837 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@837",
-      "to": "@730",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @833 to @837 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@731",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @835 to @839 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     },
     {
       "from": "@839",
-      "to": "@731",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @835 to @839 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
-    },
-    {
-      "from": "@841",
       "to": "@732",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @837 to @841 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @837 to @841 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing)"
     }
   ]
 }

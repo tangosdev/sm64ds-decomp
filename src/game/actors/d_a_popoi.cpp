@@ -17,9 +17,10 @@
  * 02127d08 Chase, 02127d18 TurnAway, 02127cd8 Grab -- bss copies of the .data
  * templates at data_ov077_02127a00..02127a48, filled by __sinit_ov077_021275fc.
  *
- * The Wander, Chase and Pause handlers read mStateTimer as an UNSIGNED short
- * through a cast of its address (dEnemyBase_c declares it s16); "heading" below means mPrevAngleY, which
- * Behavior copies into mAngleY every frame.
+ * The Wander, Chase and Pause handlers read mStateTimer as an unsigned short
+ * (ldrh; a plain read of dEnemyBase_c's s16 is ldrsh), so they convert it with
+ * (unsigned short). "heading" below means mPrevAngleY, which Behavior copies
+ * into mAngleY every frame.
  *
  * deslop leftovers:
  *   - The state records and the four file homes keep decl_common.h's char
@@ -218,8 +219,8 @@ int daPopoi_c::Behavior()
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short *)((char *)&mStateTimer));
-    DecIfAbove0_Short((unsigned short *)((char *)&mCooldown));
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&mCooldown);
 
     state = mState;
     if (state->update != 0)
@@ -394,16 +395,16 @@ int daPopoi_c::func_ov077_02126ad0()
     if (dist > 0x1f4000) {
         mTargetAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
                                        reinterpret_cast<const Vector3 *>(&mHomePosX));
-        if (*(unsigned short*)&mStateTimer < 0x14)
-            *(unsigned short*)&mStateTimer = 0x14;
+        if ((unsigned short)mStateTimer < 0x14)
+            mStateTimer = 0x14;
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
     }
     ApproachLinear(mPrevAngleY, mTargetAngleY, 0x100);
 
-    if (*(unsigned short*)&mStateTimer < 0x64)
-        mAnmModel.speed = 0x1000 / (0x64 - *(unsigned short *)&mStateTimer);
+    if ((unsigned short)mStateTimer < 0x64)
+        mAnmModel.speed = 0x1000 / (0x64 - (unsigned short)mStateTimer);
 
-    if (*(unsigned short*)&mStateTimer == 0) {
+    if ((unsigned short)mStateTimer == 0) {
         func_ov077_02126d5c((daPopoi_StateRecord *)data_ov077_02127cf8);   /* Pause */
         return 1;
     }
@@ -440,8 +441,8 @@ int daPopoi_c::func_ov077_02126a84() {
 /* Pause, UPDATE handler (record data_ov077_02127cf8): when mStateTimer reaches 0,
  * go back to Wander (data_ov077_02127ce8). Returns 1. */
 int daPopoi_c::func_ov077_02126a50() {
-    unsigned short h = *(unsigned short*)&mStateTimer;
-    if (h == 0) {
+    unsigned short timer = mStateTimer;
+    if (timer == 0) {
         func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127ce8);   /* Wander */
     }
     return 1;
@@ -540,12 +541,12 @@ int daPopoi_c::func_ov077_0212679c()
 
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
-    spd = *(unsigned short *)&mStateTimer;
+    spd = mStateTimer;
     if (spd < 0x64) {
         mAnmModel.speed = 0x1000 / (5 - spd / 20);
     }
 
-    if (dist > 0x5dc000 || *(unsigned short *)&mStateTimer == 0 || func_ov077_02126300() != 0)
+    if (dist > 0x5dc000 || (unsigned short)mStateTimer == 0 || func_ov077_02126300() != 0)
         func_ov077_02126d5c((daPopoi_StateRecord *)data_ov077_02127cf8);   /* Pause */
 
     return 1;

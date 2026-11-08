@@ -10,7 +10,7 @@
     "Order: mwccarm emits the bodies in reverse, so FS_TryLoadTable, pret's last, is lowest and FSi_OnRomReadDone, pret's first, is highest. The ROM keeps pret's source order reversed.",
     "Older SDK: FSi_InitRom has no multiboot-child branch, so pret's FSi_ReadDummyCallback and FSi_EmptyArchiveProc are absent, and FS_SetArchiveProc runs only after the header check passes. There is no FS_SetDefaultDMA, and FSi_OnRomReadDone does not test CARD_IsPulledOut.",
     "BOTTOM EDGE: FSi_CutFromList (0x0205d920..0x0205d94c) ends the run below. It is not one of pret's FS_rom.c functions.",
-    "TOP EDGE: func_0205db88 at 0x0205db88, the lowest function of FS_overlay.c (arm9/FS_Overlay). It is in no pret FS_rom.c. It calls FSi_CompareDigest and checks against the digest just below FS_StartOverlay's per-overlay digest table, which places it with FS_overlay.c."
+    "TOP EDGE: FS_AttachOverlayTable at 0x0205db88, the lowest function of FS_overlay.c (arm9/FS_Overlay). It is in no pret FS_rom.c. It calls FSi_CompareDigest and checks against the digest just below FS_StartOverlay's per-overlay digest table, which places it with FS_overlay.c."
   ],
   "sections": [
     {

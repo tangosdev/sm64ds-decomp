@@ -8,8 +8,6 @@
 extern "C" {
 
 extern void func_ov007_020c93b4(struct Ov007PaletteBuf *buf);
-extern void func_020557b4(void);
-extern void func_02055624(void);
 extern void func_ov007_020b2160(int a);
 extern void func_ov007_020b8fd4(struct Ov007Camera *camera);
 extern void func_ov007_020b413c(void *view, int number);
@@ -44,8 +42,8 @@ void func_ov007_020bcf90(void) {
         drawModel = 0;
     }
     func_ov007_020c93b4(WORK->paletteBufs[0]);
-    func_020557b4();
-    func_02055624();
+    G3X::Reset();
+    G3X::ResetMtxStack();
     G3X::SetClearColor(0x7fff, 0, 0x7fff, 0x3f, true);
     func_ov007_020b2160(1);
     switch (s0->currentState) {

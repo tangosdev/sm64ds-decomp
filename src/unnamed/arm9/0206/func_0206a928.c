@@ -24,7 +24,10 @@
    tools/delaunder.py) compares exactly the 0x1360 config/arm9/symbols.txt records for
    the symbol, and the formatter compiles to 0x1364 because of the literal-pool word
    noted above, so those two call the file non-reproducing either way. Under the
-   delink-sized comparison it reproduces with the pragma and is NO-REPRO without it. */
+   delink-sized comparison it reproduces with the pragma and is NO-REPRO without it.
+   tools/fdiff.py over the full 0x1364 bytes agrees: 0/1241 with it, 13/1241 without
+   (common-subexpression elimination reuses the fraction digit's WRITE8 parity test for
+   the READ8 after it, and two stack slots swap). */
 #pragma opt_common_subs off
 
 typedef void (*WriteFn)(void *self, const char *buf, int len);

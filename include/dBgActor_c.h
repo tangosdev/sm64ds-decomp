@@ -56,6 +56,7 @@ struct dBgActor_c : dActor_c {
     dBgActor_c();
 
     void KillByMegaChar(daPly_c &player_);
+    void func_ov002_020ee5d0(int);
     void UpdateClsnPosAndRot();
     void UpdateModelPosAndRotY();
 

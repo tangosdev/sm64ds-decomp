@@ -48,7 +48,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov002_020ee5d0",
+      "symbol": "_ZN10dBgActor_c19func_ov002_020ee5d0Ei",
       "address": "0x020ee5d0",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov002_020ee5d0.c",

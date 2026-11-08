@@ -6,7 +6,9 @@
  * LoadOBJPltt, LoadOBJ, LoadBG0Char, LoadBG1Char) are defined here too. The
  * 3D uploads above 0x020568cc are gx_load3d.c (src/engine/gx/GX.cpp).
  */
-// The func_ helpers keep address names (no recovered names exist).
+// The func_ loads still go by address. They hold the other gx_load2d.c loads in
+// the SDK's order (GX/GXS_LoadOAM, GX/GXS_LoadBG0..3Scr, GX_LoadBG3Char), and
+// their callers name them that way.
 
 #include "types.h"
 #include "GX.h"
@@ -162,11 +164,11 @@ void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
 
 }
 
-extern "C" {
+namespace GXS {
 
 // Copies count words from src to VRAM address (0x6600000 + offset) -- sub
 // OBJ VRAM. GX::LoadOBJ's sub-engine twin.
-void func_020565b4(const void *src, unsigned int offset, unsigned int count) {
+void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     unsigned int base = (unsigned int)G2S::GetOBJCharPtr();
     if (channel != (unsigned int)-1) {
@@ -175,6 +177,10 @@ void func_020565b4(const void *src, unsigned int offset, unsigned int count) {
         MultiCopy_Int((int *)src, (int *)(base + offset), count);
     }
 }
+
+}
+
+extern "C" {
 
 // Loads BG0 screen data to the main-engine plane (G2::GetBG0ScrPtr).
 void func_02056554(const void *src, int offset, int count) {
@@ -197,9 +203,12 @@ void func_020564f4(const void *src, int offset, int count) {
         MultiCopyHalf(src, ptr + offset, count);
     }
 }
+}
+
+namespace GX {
 
 // Loads BG1 screen data to the main-engine plane (G2::GetBG1ScrPtr).
-void func_02056494(const void *src, int offset, int count) {
+void LoadBG1Scr(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
@@ -208,6 +217,10 @@ void func_02056494(const void *src, int offset, int count) {
         MultiCopyHalf(src, ptr + offset, count);
     }
 }
+
+}
+
+extern "C" {
 
 // Loads BG1 screen data to the sub-engine plane (G2S::GetBG1ScrPtr).
 void func_02056434(const void *src, int offset, int count) {
@@ -330,10 +343,10 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
 
 }
 
-extern "C" {
+namespace GX {
 
 // Loads BG2 char data into MAIN BG2 VRAM (G2::GetBG2CharPtr).
-void func_020560d4(const void *src, u32 offset, u32 size) {
+void LoadBG2Char(const void *src, u32 offset, u32 size) {
     void *charPtr = G2::GetBG2CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
@@ -341,8 +354,12 @@ void func_020560d4(const void *src, u32 offset, u32 size) {
         MultiCopy_Int((int *)src, (int *)((char *)charPtr + offset), size);
 }
 
+}
+
+namespace GXS {
+
 // Loads BG2 char data into SUB BG2 VRAM (G2S::GetBG2CharPtr).
-void func_02056074(const void *src, unsigned int offset, unsigned int count) {
+void LoadBG2Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)G2S::GetBG2CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
@@ -351,6 +368,10 @@ void func_02056074(const void *src, unsigned int offset, unsigned int count) {
         MultiCopy_Int((int *)src, (int *)((char *)base + offset), count);
     }
 }
+
+}
+
+extern "C" {
 
 // Loads BG3 char data into MAIN BG3 VRAM (0x2054d88 getter).
 void func_02056014(const void *src, unsigned int offset, unsigned int count) {
@@ -362,9 +383,12 @@ void func_02056014(const void *src, unsigned int offset, unsigned int count) {
         MultiCopy_Int((int *)src, (int *)((char *)base + offset), count);
     }
 }
+}
+
+namespace GXS {
 
 // Loads BG3 char data into SUB BG3 VRAM (G2S::GetBG3CharPtr).
-void func_02055fb4(const void *src, u32 offset, u32 size) {
+void LoadBG3Char(const void *src, u32 offset, u32 size) {
     void *charPtr = (void *)G2S::GetBG3CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);

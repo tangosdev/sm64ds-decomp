@@ -34,7 +34,7 @@ SetFogTable and the 0x18 table loader after SetClearColor come in the other orde
 | OS_irqTable.c + OS_interrupt.c | 0x02056c40..0x02056d64, then ..0x02057014 | arm9/OS_IrqTable + arm9/OS_Interrupt | fixed: arm9/IRQ held both files; split at 0x02056d64 (OS_InitIrqTable, at 0x02057000, is 0x14 here) |
 | GX_load2d.c + GX_load3d.c | 0x02055dec..0x020568cc, then ..0x02056c1c | arm9/GXS + arm9/GX | fixed: the edge was the namespace change at 0x02056870; GX::LoadBGPltt moved to GXS, edge now 0x020568cc |
 | GX_g2.c | func_020551f0 + the 3 G2x members | arm9/G2x | partial: G2x_ChangeBlendBrightness_ (func_020551f0) is outside it |
-| GX_g3x.c | 0x020553c0..0x02055998 | arm9/G3X (0x02055454..0x02055998, 13 functions) + func_020553c0.c | fixed: G3X holds the whole file except GXi_NopClearFifo128_ (func_020553c0, asm), which stays its own source because port/tools/hostgen.py skips any file with an asm block and the port hostgens G3X.cpp |
+| GX_g3x.c | 0x020553c0..0x02055998 | arm9/G3X (0x02055454..0x02055998, 13 functions) + GXi_NopClearFifo128_.c | fixed: G3X holds the whole file except GXi_NopClearFifo128_ (0x020553c0, asm), which stays its own source because port/tools/hostgen.py skips any file with an asm block and the port hostgens G3X.cpp |
 
 Where a promoted boundary came from TU evidence, the alignment reproduces it.
 Where it came from a namespace (GXS/GX, G2x, G3X), it doesn't. Call-graph and
@@ -81,7 +81,7 @@ check against, and they don't.
 | CTRDG_proc.s (asm only) | 0x0206a600..0x0206a928 | 5 of 6, in the same address order as pret's asm: CTRDGi_CallbackForInitModuleInfo and CTRDG_Init statement for statement, the other three older versions of CTRDG_TerminateForPulledOut, CTRDGi_PulledOutCallback and CTRDGi_InitModuleInfo; CTRDGi_CallbackForSetPhi absent, and the .bss is pret's in pret's order without the two words only it and isOnTerminate use: folded as arm9/CTRDG_Proc |
 
 The single-function SDK files sit between these runs: GX_state.c's GX_InitGXState
-is func_02053d9c (0x80), and MI_swap.c's MI_SwapWord is src/MI_SwapWord.c (0x0205a74c).
+is src/GX_InitGXState.c (0x02053d9c, 0x80), and MI_swap.c's MI_SwapWord is src/MI_SwapWord.c (0x0205a74c).
 OS_init.c's OS_Init is src/OS_Init.cpp (0x02058c84). It makes pret's calls in pret's order, which names
 each callee: PXI_init.c's PXI_Init (src/PXI_Init.c, 0x0205b858), MI_wram.c's MI_SetWramBank
 (src/MI_SetWramBank.c), OS_valarm.c's OS_InitVAlarm (src/OS_InitVAlarm.cpp), OS_reset.c's

@@ -12,7 +12,9 @@ extern void func_02042254(void);
    OS_Thread.cpp asserts it), still inside the block that ends at
    data_020a1680. It is cleared here before OS_CreateThread runs, and nothing
    else in src/ reads it. The (int) launder keeps the one base register the
-   ROM uses for every address. */
+   ROM uses for every address: `char *base = data_020a11e4` and direct
+   data_020a11e4[0x400] addressing both fold base + 0x400 into a second
+   literal-pool constant (15 of 21 words differ). */
 void func_02042200(void) {
     char *base = (char *)(int)data_020a11e4;
     *(short *)(base + 0x494) = 0;

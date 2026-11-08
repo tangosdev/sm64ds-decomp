@@ -33,9 +33,6 @@ extern Matrix4x3 data_0209b41c; /* its inverse */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 void func_0205583c(void);
-void func_020554bc(void);
-void func_020556d0(void);
-void func_020557b4(void);
 void func_02045d9c(void);
 }
 
@@ -46,8 +43,8 @@ extern "C" {
 // Bring up the geometry engine with the game's default 3D state.
 void Initialise3dGraphics(int arg) {
     func_0205583c();
-    func_020554bc();
-    func_020556d0();
+    G3X::InitTable();
+    G3X::InitMtxStack();
     REG_DISP3DCNT &= ~0x3002;
     REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 0x10;
     REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 8;
@@ -72,7 +69,7 @@ void func_0200f4f4(void) {
 // Reset the matrix stacks: identity texture matrix, then back to
 // position-vector mode.
 void func_0200f4b4(void) {
-    func_020557b4();
+    G3X::Reset();
     REG_MTX_MODE = MTX_MODE_TEXTURE;
     REG_MTX_IDENTITY = 0;
     REG_MTX_MODE = MTX_MODE_POSITION_VECTOR;

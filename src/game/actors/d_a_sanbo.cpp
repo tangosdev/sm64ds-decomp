@@ -39,9 +39,8 @@
  *   Release). Both actor profiles are defined with their factories below.
  *   - func_ov096_02135948 keeps five int[3] positions. One
  *   Vector3 in their place changes that function.
- *   - data_02082214 is arm9's sine table. data_020a0e68 is the
- *   scratch matrix func_ov096_02135efc fills before copying it onto
- *   the model. Actor id 0x135 is only the id that function shoves
+ *   - data_020a0e68 is the scratch matrix func_ov096_02135efc fills
+ *   before copying it onto the model. Actor id 0x135 is only the id that function shoves
  *   the segment away from.
  */
 /* common.h first: Matrix4x3 must stay the flat s32[12] spelling. */
@@ -62,6 +61,7 @@ enum daSanbo_c_AssetId {
 #include "daPly_c.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
 
@@ -78,7 +78,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z)
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern struct Matrix4x3 data_020a0e68;
 extern void d_a_sanboNewSimpleHold(unsigned int, int, int, int);
-extern s16 data_02082214[];
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_02038414(void *p);
 /* Parameter names keep this TU's @NNN. */
@@ -279,9 +278,8 @@ int daSanbo_c::func_ov096_02136754()
         int offset = 0xe000;
         int vy;
         int clamped;
-        s16 *tbl;
-        s16 cs;
-        s16 sn;
+        s16 sine;
+        s16 cosine;
         u16 ang;
 
         mPosX = next->mPosX;
@@ -302,18 +300,17 @@ int daSanbo_c::func_ov096_02136754()
         }
 
         next = mNextSegment;
-        tbl = data_02082214;
         mAngleY = next->mAngleY;
         next = mNextSegment;
         s16 segAng = (s16)(next->mSegAngY + 0x13000);
         mSegAngY = segAng;
         ang = (u16)mSegAngY;
-        cs = tbl[(ang >> 4) * 2];
-        mOffsetX = FX_MUL(cs, offset);
+        sine = FX_SinIdx(ang >> 4);
+        mOffsetX = FX_MUL(sine, offset);
         mOffsetY = 0;
         ang = (u16)mSegAngY;
-        sn = tbl[(ang >> 4) * 2 + 1];
-        mOffsetZ = FX_MUL(sn, offset);
+        cosine = FX_CosIdx(ang >> 4);
+        mOffsetZ = FX_MUL(cosine, offset);
     }
     func_ov096_02135948();
     mdCcAc_c.Clear();
@@ -469,16 +466,14 @@ int daSanbo_c::func_ov096_02136264()
         int scale = next->mScaleX;
         int raised = FX_MUL(scale, fullHeight);
         int offset = 0xe000;
-        s16 *tbl;
-        s16 cs;
-        s16 sn;
+        s16 sine;
+        s16 cosine;
         u16 ang;
 
         mPosX = next->mPosX;
         next = mNextSegment;
         mPosY = raised + next->mPosY;
         next = mNextSegment;
-        tbl = data_02082214;
         mPosZ = next->mPosZ;
         next = mNextSegment;
         mAngleY = next->mAngleY;
@@ -486,12 +481,12 @@ int daSanbo_c::func_ov096_02136264()
         s16 segAng = (s16)(next->mSegAngY + 0x13000);
         mSegAngY = segAng;
         ang = (u16)mSegAngY;
-        cs = tbl[(ang >> 4) * 2];
-        mOffsetX = FX_MUL(cs, offset);
+        sine = FX_SinIdx(ang >> 4);
+        mOffsetX = FX_MUL(sine, offset);
         mOffsetY = 0;
         ang = (u16)mSegAngY;
-        sn = tbl[(ang >> 4) * 2 + 1];
-        mOffsetZ = FX_MUL(sn, offset);
+        cosine = FX_CosIdx(ang >> 4);
+        mOffsetZ = FX_MUL(cosine, offset);
         if (raised == fullHeight)
             func_ov096_02136928(0);
     }
@@ -609,9 +604,9 @@ void daSanbo_c::func_ov096_02135948()
     int radius;
     int angle;
     int index;
-    s16 cs;
+    s16 sine;
     int dist;
-    s16 sn;
+    s16 cosine;
     int dist2;
     unsigned int flags;
     int state;
@@ -655,13 +650,13 @@ void daSanbo_c::func_ov096_02135948()
         if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&other->mPosX) <
             radius + 0x1a9000) {
             angle = Vec3_HorzAngle((const Vector3 *)&other->mPosX, (const Vector3 *)&mPosX);
-            index = ((unsigned short)angle >> 4) * 2;
-            cs = data_02082214[index];
+            index = (unsigned short)angle >> 4;
+            sine = FX_SinIdx(index);
             dist = mdCcAc_c.radius + 0x1a9000;
-            mPosX = other->mPosX + FX_MUL(dist, cs);
-            sn = data_02082214[index + 1];
+            mPosX = other->mPosX + FX_MUL(dist, sine);
+            cosine = FX_CosIdx(index);
             dist2 = mdCcAc_c.radius + 0x1a9000;
-            mPosZ = other->mPosZ + FX_MUL(dist2, sn);
+            mPosZ = other->mPosZ + FX_MUL(dist2, cosine);
         }
         }
     }

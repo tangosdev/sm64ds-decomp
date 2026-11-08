@@ -452,8 +452,6 @@ extern void func_ov002_020f396c(char* p);
 extern void func_ov002_020f30d4(char* p);
 extern void func_ov002_020f2ea0(char* p);
 extern void func_ov002_020f2a68(char* p);
-extern void func_ov002_020f2f64(char* self);
-extern void func_ov002_020f2a48(char *p);
 extern void func_ov002_020f2958(char* c);
 extern void func_ov002_020f37fc(char*);
 extern void func_ov002_020f2f9c(void *, int);
@@ -1031,15 +1029,12 @@ int func_ov002_020f2990(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020f2a48, 0x020f2a48, size 0x20 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f2a48(char *p)
-{
+void StaffRoll::func_ov002_020f2a48() {
     /* 0x1d8/0x1d9 and the position: see func_ov002_020f2990. */
-    ((StaffRoll *)p)->endActive = 1;
-    ((StaffRoll *)p)->endVisible = 1;
-    ((StaffRoll *)p)->endX = 524288;
-    ((StaffRoll *)p)->endY = 393216;
-}
+    endActive = 1;
+    endVisible = 1;
+    endX = 524288;
+    endY = 393216;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1261,17 +1256,13 @@ void func_ov002_020f2f18(char* c, int a, int b)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- func_ov002_020f2f64, 0x020f2f64, size 0x38 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f2f64(char* self)
-{
+void StaffRoll::func_ov002_020f2f64() {
     int i;
     for (i = 0; i < 5; i++) {
-        if (((StaffRoll *)self)->dolls[0].active != 0) {
-            ((StaffRoll *)self)->dolls[0].frame++;
+        if (dolls[i].active != 0) {
+            dolls[i].frame++;
         }
-        self += 0x14;
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2862,10 +2853,10 @@ void func_ov002_020f5ad4(char* c)
 void StaffRoll::func_ov002_020f5b24() {
     gSubScreenLayers &= ~6;
     gSubScreenLayers |= 8;
-    func_ov002_020f2f64((char *)this);
+    func_ov002_020f2f64();
     *(volatile unsigned int *)0x4001000 &= ~0xe000;
     this->window[0].active = 0;
-    func_ov002_020f2a48((char *)this);
+    func_ov002_020f2a48();
 }
 
 /* -------------------------------------------------------------------------- */
