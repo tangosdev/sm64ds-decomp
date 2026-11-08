@@ -3033,31 +3033,31 @@ src/unnamed/arm9/0206/func_02064fe8.c:
     complete
     .text start:0x02064fe8 end:0x02065050
 
-src/unnamed/arm9/0206/func_02065050.c:
+src/WBT_MpChildRecvHook.c:
     complete
     .text start:0x02065050 end:0x020650a0
 
-src/unnamed/arm9/0206/func_020650a0.c:
+src/WBT_MpChildSendHook.c:
     complete
     .text start:0x020650a0 end:0x020650d8
 
-src/unnamed/arm9/0206/func_020650d8.c:
+src/WBT_MpParentRecvHook.c:
     complete
     .text start:0x020650d8 end:0x02065138
 
-src/unnamed/arm9/0206/func_02065138.c:
+src/WBT_MpParentSendHook.c:
     complete
     .text start:0x02065138 end:0x02065170
 
-src/unnamed/arm9/0206/func_02065170.cpp:
+src/WBT_End.cpp:
     complete
     .text start:0x02065170 end:0x02065234
 
-src/unnamed/arm9/0206/func_02065234.cpp:
+src/WBT_InitChild.cpp:
     complete
     .text start:0x02065234 end:0x020652fc
 
-src/unnamed/arm9/0206/func_020652fc.cpp:
+src/WBT_InitParent.cpp:
     complete
     .text start:0x020652fc end:0x020653cc
 
@@ -3093,7 +3093,7 @@ src/unnamed/arm9/0206/func_020657d0.c:
     complete
     .text start:0x020657d0 end:0x020657fc
 
-src/unnamed/arm9/0206/func_020657fc.cpp:
+src/WBT_UnregisterBlock.cpp:
     complete
     .text start:0x020657fc end:0x020658c0
 
@@ -3105,15 +3105,15 @@ src/unnamed/arm9/0206/func_02065970.c:
     complete
     .text start:0x02065970 end:0x020659a0
 
-src/unnamed/arm9/0206/func_020659a0.c:
+src/WBT_SetPacketSize.c:
     complete
     .text start:0x020659a0 end:0x020659f8
 
-src/unnamed/arm9/0206/func_020659f8.c:
+src/WBT_CalcPacketbitmapSize.c:
     complete
     .text start:0x020659f8 end:0x02065a4c
 
-src/unnamed/arm9/0206/func_02065a4c.c:
+src/WBT_AidbitmapToAid.c:
     complete
     .text start:0x02065a4c end:0x02065a74
 

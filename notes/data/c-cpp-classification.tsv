@@ -2683,10 +2683,10 @@ src/unnamed/arm9/0206/func_02064e18.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02064eac.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02064f54.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02064fe8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_02065050.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_020650a0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_020650d8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_02065138.c	PURE-C	arm9				1		None		-
+src/WBT_MpChildRecvHook.c	PURE-C	arm9				1		None		-
+src/WBT_MpChildSendHook.c	PURE-C	arm9				1		None		-
+src/WBT_MpParentRecvHook.c	PURE-C	arm9				1		None		-
+src/WBT_MpParentSendHook.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065170.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065234.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_020652fc.c	WEAK-refs-only	arm9				1		None		-
@@ -2701,9 +2701,9 @@ src/unnamed/arm9/0206/func_020657d0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020657fc.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_020658c0.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065970.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_020659a0.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_020659f8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_02065a4c.c	PURE-C	arm9				1		None		-
+src/WBT_SetPacketSize.c	PURE-C	arm9				1		None		-
+src/WBT_CalcPacketbitmapSize.c	PURE-C	arm9				1		None		-
+src/WBT_AidbitmapToAid.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065a74.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065a84.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065a94.c	PURE-C	arm9				1		None		-

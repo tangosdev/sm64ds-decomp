@@ -11,7 +11,7 @@ typedef struct FSFile FSFile;
 
 extern "C" {
 
-extern int func_02065a4c(int x);
+extern int WBT_AidbitmapToAid(int x);
 extern void func_02065788(u16 type, u32 arg1, const void *src, u32 arg3);
 extern void func_02041a00(FSFile *file);
 extern void func_02065730(u16 type, u32 arg1, const void *src1, u32 arg3, const void *src2,
@@ -28,7 +28,7 @@ void func_02040f30(void *arg) {
     FileShareChildArea *child;
     int idx;
     int type;
-    idx = func_02065a4c(cmdp->peer_bmp);
+    idx = WBT_AidbitmapToAid(cmdp->peer_bmp);
     type = cmdp->command;
     child = (FileShareChildArea *)data_020a2400;
     switch (type) {
