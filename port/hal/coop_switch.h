@@ -128,7 +128,7 @@ static_assert(sizeof(SwStatesHead) == 12, "states head");
 
 // Classes a message may name. A forged datagram naming anything else is dropped.
 inline bool sw_press_class_ok(int c) { return c == 10 || c == 11 || c == 12; }
-inline bool sw_kick_class_ok(int c) { return c == 14 || c == 26 || c == 45 || c == 66 || c == 83 || c == 126 || c == 353 || c == 354; }
+inline bool sw_kick_class_ok(int c) { return c == 14 || c == 26 || c == 45 || c == 66 || c == 83 || c == 139 || c == 126 || c == 353 || c == 354; }
 // PUZZLES9: 13 TreasureChest (value = open | last << 1), 27 Stump (value = the pound counter).
 inline bool sw_field_class_ok(int c) { return c == 101 || c == 13 || c == 27; }
 inline bool sw_class_ok(int kind, int c) {

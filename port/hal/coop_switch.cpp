@@ -224,7 +224,7 @@ bool ap_donut(char *a, int state, int) {
     *(unsigned char *)(a + 0x4ea) = (unsigned char)state;
     return true;
 }
-// daObjFallBlock_c family (WF 45, BBH 66, LLL 83): state at +0x33c, idle 0; the shake starts from
+// daObjFallBlock_c family (WF 45, BBH 66, LLL 83, BFS 139): state at +0x33c, idle 0; the shake starts from
 // case 0 of its own Behavior (ready off, timer 4, state 1), which is what the replay does.
 int r_fall(const char *a) { return rd_u8(a, 0x33c); }
 bool ap_fall(char *a, int, int) {
@@ -349,6 +349,7 @@ const Watch kWatch[] = {
     {45,  kSwKindKick,  "FALL_BLOCK_WF",  r_fall, ap_fall},
     {66,  kSwKindKick,  "FALL_BLOCK_BBH", r_fall, ap_fall},
     {83,  kSwKindKick,  "FALL_BLOCK_LLL", r_fall, ap_fall},
+    {139, kSwKindKick,  "FALL_BLOCK_BFS", r_fall, ap_fall},   // daObjKm2_Fall_Block_c: a daObjFallBlock_c with its own files only (src/game/actors/d_a_obj_km2_fall_block.cpp)
     {101, kSwKindField, "WDW_WATER",    r_water,  ap_water},
     {13,  kSwKindField, "TREASURE_CHEST", r_chest, ap_chest},
     {27,  kSwKindField, "STUMP",        r_stump,  ap_stump},
