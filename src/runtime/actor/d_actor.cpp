@@ -348,7 +348,7 @@ extern fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key);
 }
 dActor_c *dActor_c::FindWithID(u32 id)
 {
-    fLiNdBa_c *node = func_02043f98((fLiNdBa_c **)&data_0209b468, id);
+    fLiNdBa_c *node = func_02043f98(&data_0209b468.first, id);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -357,15 +357,12 @@ dActor_c *dActor_c::FindWithID(u32 id)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 81 -- dActor_c::FindWithActorID(unsigned int, dActor_c *)
  * 0x02010ef0  size 0x4c */
-/* func_02043f4c really takes and returns fLiNdBa_c * (ActorBase.cpp), but
-   decl_common.h spells it with ints and this TU includes that. */
 dActor_c *dActor_c::FindWithActorID(u32 actorID, dActor_c *after) {
     fLiNdBa_c *node;
     if (after)
-        node =
-            (fLiNdBa_c *)func_02043f4c((int *)&data_0209b468, actorID, (int)&after->mActorListNode);
+        node = func_02043f4c(&data_0209b468.first, actorID, &after->mActorListNode);
     else
-        node = (fLiNdBa_c *)func_02043f4c((int *)&data_0209b468, actorID, 0);
+        node = func_02043f4c(&data_0209b468.first, actorID, 0);
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
@@ -380,7 +377,7 @@ dActor_c *dActor_c::Next(const dActor_c *after)
     if (after)
         node = after->mActorListNode.next;
     else
-        node = *(fLiNdBa_c **)&data_0209b468;
+        node = data_0209b468.first;
     if (node)
         return static_cast<dActor_c *>(node->owner);
     return 0;
