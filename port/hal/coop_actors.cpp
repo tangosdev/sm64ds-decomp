@@ -206,7 +206,6 @@ struct Slot {
     unsigned last_pub;
     unsigned pin_lf;          // TONGUE1: g_lf + 1 when a friend's held-object pin last moved this copy, 0 never, kPinStay muted
     bool     lvalid;
-    bool     lmoved;          // COOPPUZZLE1: the last record published a pose that had moved; a still pose then sends one closing record
     int32_t  lx, ly, lz;
     int16_t  lax, lay, laz;
     uint32_t lf[kMoverMaxFields];
@@ -229,7 +228,6 @@ struct Job { bool on; int passes; unsigned next; int cursor; };
 
 bool g_env = false, g_log = false, g_act = true, g_snap_on = true, g_hyst = true, g_stale_on = true;
 bool g_dead_guard = true;     // COOPPUZZLE1: SM64DS_COOP_DEAD_GUARD=0 is the control (a dying body claims by distance, as before)
-bool g_stop_rec = true;       // COOPPUZZLE1: SM64DS_COOP_STOP_REC=0 is the control (a pose that stops sends nothing until the heartbeat)
 bool g_rider_own = true;      // COOPROWS1: SM64DS_COOP_SEESAW_RIDER=0 is the control (nearest to the pivot owns the plank, as before)
 bool g_lift_heading = true;  // SM64DS_COOP_LIFT_HEADING=0 is the MUST-FAIL control (run after093, lane COOPPLAT1): a sliding slab keeps its own heading
 unsigned g_lift_flips = 0;
@@ -280,7 +278,6 @@ void read_env() {
     g_hyst = flag("SM64DS_COOP_MOVE_HYST", true);
     g_stale_on = flag("SM64DS_COOP_MOVE_STALE", true);
     g_dead_guard = flag("SM64DS_COOP_DEAD_GUARD", true);
-    g_stop_rec = flag("SM64DS_COOP_STOP_REC", true);
     g_rider_own = flag("SM64DS_COOP_SEESAW_RIDER", true);
     if (const char *ld = std::getenv("SM64DS_COOP_MOVE_LEAD")) g_lead_ms = std::atoi(ld);
     if (const char *s = std::getenv("SM64DS_COOP_MOVE_SAMPLE")) g_sample_every = (unsigned)std::strtoul(s, nullptr, 0);
@@ -678,7 +675,7 @@ void scan_ents() {
         Slot &s = g_slot[slot];
         if (s.a) continue;                                    // two actors in one slot: the first wins
         if (s.prof != g_prof_of[id]) {                        // a different class (or first sight): start clean
-            s.prof = g_prof_of[id]; s.seen = 0; s.lvalid = false; s.lmoved = false; s.owner = -1; s.last_pub = 0; s.pin_lf = 0;
+            s.prof = g_prof_of[id]; s.seen = 0; s.lvalid = false; s.owner = -1; s.last_pub = 0; s.pin_lf = 0;
         }
         s.a = a;
         ++s.seen;
@@ -851,10 +848,7 @@ void process(unsigned now) {
                 bool changed = !s.lvalid || rd32(s.a, 0x5c) != s.lx || rd32(s.a, 0x60) != s.ly || rd32(s.a, 0x64) != s.lz ||
                                rd16(s.a, 0x8c) != s.lax || rd16(s.a, 0x8e) != s.lay || rd16(s.a, 0x90) != s.laz;
                 for (int k = 0; !changed && k < p.nf; ++k) changed = read_field(s.a, p.f[k]) != s.lf[k];
-                // COOPPUZZLE1: a pose that just stopped sends one more record, so the friend's lead sees zero speed. Without it his
-                // pin kept extrapolating the last speed past where the object stopped and held it there until the 1.5 s heartbeat
-                // (BFS 143 kga3: the plank snapped flat here, the friend's copy stayed tilted 0x3ae for 35 frames).
-                if (changed || (g_stop_rec && s.lmoved) || age >= (unsigned)kHeartbeatMs) { due[ndue].slot = slot; due[ndue].age = age; ++ndue; }
+                if (changed || age >= (unsigned)kHeartbeatMs) { due[ndue].slot = slot; due[ndue].age = age; ++ndue; }
             }
         }
     }
@@ -879,8 +873,6 @@ void process(unsigned now) {
             Slot &s = g_slot[due[k].slot];
             s.last_pub = now;
             ++g_cs[s.prof].pub;
-            s.lmoved = !s.lvalid || rd32(s.a, 0x5c) != s.lx || rd32(s.a, 0x60) != s.ly || rd32(s.a, 0x64) != s.lz ||
-                       rd16(s.a, 0x8c) != s.lax || rd16(s.a, 0x8e) != s.lay || rd16(s.a, 0x90) != s.laz;
             s.lvalid = true; s.lx = rd32(s.a, 0x5c); s.ly = rd32(s.a, 0x60); s.lz = rd32(s.a, 0x64);
             s.lax = rd16(s.a, 0x8c); s.lay = rd16(s.a, 0x8e); s.laz = rd16(s.a, 0x90);
             for (int f = 0; f < g_prof[s.prof].nf; ++f) s.lf[f] = read_field(s.a, g_prof[s.prof].f[f]);
