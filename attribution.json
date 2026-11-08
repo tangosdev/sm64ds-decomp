@@ -7761,7 +7761,7 @@
     "src/game/stages/d_s_mb.cpp#_ZN7dScMB_c16CleanupResourcesEv": "andrewboudreau",
     "src/game/stages/d_s_mb.cpp#_ZN7dScMB_c6RenderEv": "andrewboudreau",
     "src/game/stages/d_s_mb.cpp#_ZN7dScMB_c8BehaviorEv": "tangosdev",
-    "src/game/stages/d_s_mb.cpp#func_02034fbc": "tangosdev",
+    "src/game/stages/d_s_mb.cpp#LoadMultiBootResources": "tangosdev",
     "src/game/stages/d_s_mb.cpp#_ZN7dScMB_c13InitResourcesEv": "andrewboudreau",
     "src/game/stages/d_s_mb.cpp#dScMB_c_classInit": "tangosdev",
     "src/engine/graph/d_graph_c_callback.cpp#_ZN8dGraph_c10callback_c14GraphCallback0Ev": "andrewboudreau",

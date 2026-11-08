@@ -15,10 +15,15 @@
  * makes emission ROM-ascending, so this file is written in ROM order.
  */
 
-// leftovers: OAM::Render stays mangled (Fix12 by value -- this TU's render
-// calls). func_02034b1c initialises the global graph callback, retaining
-// the raw store to its unmodelled byte at +0x0f. func_02034fbc stays free
-// (no receiver).
+// leftovers: func_02034b1c initialises the global graph callback, retaining
+// the raw store to its unmodelled byte at +0x0f; it keeps its placeholder name
+// and its untyped parameters because include/decl_common.h declares it.
+// LoadMultiBootResources stays free (no receiver). Its guarded store to
+// data_020a0c5c under data_020a0c60 is a function-local static
+// (`static mHeap::Heap_t *sPrevHeap = heap->SetDefault();` reproduces it), but
+// folding it moves this TU's .bss start to 0x020a0c5c, which takes a
+// config/arm9/delinks.txt change. The loader-job word data_020a0c64 is an int
+// that decl_common.h spells u8[].
 #include "dScMB_c.h"
 #include "nitro/hw/registers.h"
 #include "AsyncJob.h"
@@ -28,6 +33,7 @@
 #include "OamAttr.h"
 #include "Sound.h"
 #include "GX.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
 void MultiStore16(u16 val, char *dst, int nbytes);
@@ -43,10 +49,7 @@ extern void *data_020a0c5c;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
-void OamRender10_d_s_mb(int sub, void *attr, int x, int y, int a, int cc, int fx0, int fy0, int rot,
-                        int mode);
 extern struct OamAttr *data_0208a0f8[];
-extern s16 data_02082214[];
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -58,6 +61,16 @@ extern u8 gSubScreenLayers;
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
 extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
+}
+
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   Read through the inline, the ROM builds 0x06401280 as `mov #0x6400000 /
+   add #0x1280` where a literal address would load it from the pool.
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)0x06400000;
 }
 
 /* The scene's graph callback. A global, not a member: InitResources points
@@ -95,29 +108,20 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
 
         if (mStillTimer == 0) {
             int spriteAngle = mSpinAngle;
-            int x = 0x80;
-            int one = 1;
-            int drawFlags[3];
-            drawFlags[0] = 0;
-            drawFlags[1] = 0;
-            drawFlags[2] = 0;
+            int anyOnArc = 0;
 
             do {
                 int y;
                 if (spriteAngle >= 0 && spriteAngle < 0x10000) {
-                    // Preserve the narrowing sequence: collapsing it removes 16 ROM bytes.
-                    u16 angleBits = (u16)spriteAngle;
-                    s16 signedAngle = (s16)angleBits;
-                    u16 tableAngle = (u16)signedAngle;
-                    y = data_02082214[(tableAngle >> 4) * 2];
-                    y = (y >> 10) + 0x80;
-                    drawFlags[0] = one;
+                    u16 angle = spriteAngle;
+                    y = (FX_SinIdx((u16)(s16)angle >> 4) >> 10) + 0x80;
+                    anyOnArc = 1;
                 } else {
-                    y = x;
+                    y = 0x80;
                 }
 
-                OAM::Render(drawFlags[1], sprite, x, y, -1, -1, 0x1000, drawFlags[1]);
-                OAM::Render(one, sprite, x, y, -1, -1, 0x1000, drawFlags[2]);
+                OAM::Render(false, sprite, 0x80, y, -1, -1, 0x1000, 0);
+                OAM::Render(true, sprite, 0x80, y, -1, -1, 0x1000, 0);
 
                 if (sprite->attr3 == 0xffff)
                     break;
@@ -127,7 +131,7 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
 
             if (mAdvancing != 0) {
                 mSpinAngle += (data_0208ee44 << 10);
-                if (drawFlags[0] == 0)
+                if (anyOnArc == 0)
                     mStillTimer = 0x78;
             }
         } else {
@@ -184,9 +188,9 @@ s32 dScMB_c::Behavior() {
         break;
 
     case 1: {
-        int r = func_0201a1bc();
-        *(int *)&data_020a0c64 = r;
-        if (r == 0)
+        int done = func_0201a1bc();
+        *(int *)data_020a0c64 = done;
+        if (done == 0)
             break;
     }
         mStep++;
@@ -198,7 +202,7 @@ s32 dScMB_c::Behavior() {
         mStep++;
         /* fallthrough */
     case 4:
-        func_0201a244(func_02034fbc, 0, 0xf, 0, 0x1000);
+        func_0201a244(LoadMultiBootResources, 0, 0xf, 0, 0x1000);
         mStep++;
         /* fallthrough */
     case 5:
@@ -234,13 +238,11 @@ s32 dScMB_c::Behavior() {
     return 1;
 }
 
-void func_02034fbc(int unused) {
-    void *h;
-
+void LoadMultiBootResources(int unused) {
     LoadArchive(0);
-    h = func_0201a458();
+    mHeap::Heap_t *heap = (mHeap::Heap_t *)func_0201a458();
     if (!(data_020a0c60 & 1)) {
-        data_020a0c5c = ((mHeap::Heap_t *)h)->SetDefault();
+        data_020a0c5c = heap->SetDefault();
         data_020a0c60 |= 1;
     }
     LoadTextNarcs();
@@ -275,11 +277,8 @@ s32 dScMB_c::InitResources() {
     fillSub = 0xffff;
     MultiStore16(fillSub, (char *)0x5000400, 2);
 
-    {
-        char *vram = (char *)0x6400000;
-        vram += 0x1280;
-        DecompressLZ16(&data_0209446c, vram);
-    }
+    /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
+    DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);
     GX::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
     GX::LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
     GXS::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
@@ -289,8 +288,8 @@ s32 dScMB_c::InitResources() {
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
-    *(u8 *)&gMainScreenLayers = 0;
-    *(u8 *)&gSubScreenLayers = 0;
+    gMainScreenLayers = 0;
+    gSubScreenLayers = 0;
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0x1f00;
     GX::DispOn();
@@ -304,8 +303,8 @@ s32 dScMB_c::InitResources() {
     dScene_c::SetFaders(&fader);
 
     fader.color = 0x7fff;
-    *(int *)&data_0208ee44 = 1;
-    *(int *)&data_020a0c64 = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
+    data_0208ee44 = 1;
+    *(int *)data_020a0c64 = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
 
     return 1;
 }

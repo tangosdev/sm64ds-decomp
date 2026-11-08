@@ -33,6 +33,7 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 #include "MessageBank.h"
 #include "PlayerInput.h"
 #include "private/controller_input.h"
+#include "nitro/pad/pad.h"
 
 #pragma opt_common_subs off
 
@@ -146,7 +147,7 @@ s32 dScBoot_c::InitResources() {
 
     gSceneColorFader.color = 0x7fff;
     Sound::Play2D(4, 0);
-    sBootJobDone = (u8)func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
+    sBootJobDone = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
     return 1;
 }
 
@@ -166,9 +167,9 @@ s32 dScBoot_c::Behavior() {
     keysPressed = data_020a0e58[gActivePlayerSlot].pressed;
 
     if (sBootJobDone == 0) {
-        sBootJobDone = (u8)func_0201a1bc();
+        sBootJobDone = func_0201a1bc();
         if (sBootJobDone == 0) {
-            if ((int)*(volatile u16 *)&mFadeTimer > (int)(frameStep * 2)) {
+            if (*(volatile u16 *)&mFadeTimer > frameStep * 2) {
                 *(u16 *)LADR(&mFadeTimer) -= frameStep;
             }
             return 1;
@@ -177,8 +178,6 @@ s32 dScBoot_c::Behavior() {
     }
 
     if (gSceneFader->IsAtStart() != 0) {
-        int state;
-
         if (*(volatile u8 *)&mButtonFlashTimer != 0) {
             *(u8 *)LADR(&mButtonFlashTimer) -= frameStep;
             if (mButtonFlashTimer == 0) {
@@ -190,15 +189,14 @@ s32 dScBoot_c::Behavior() {
             return 1;
         }
 
-        state = mState;
-        switch (state) {
+        switch (mState) {
         case STATE_BOOT_WAIT:
         case STATE_POST_ERASE_WAIT:
             if (*(volatile u16 *)&mFadeTimer != 0) {
                 *(u16 *)LADR(&mFadeTimer) -= frameStep;
                 if (mFadeTimer == 0) {
                     StartSceneFade(func_0203da3c() != 0 ? 6 : 1, 0, 0);
-                } else if (mState == STATE_BOOT_WAIT && keysHeld == 0xf03) { /* A+B+X+Y+L+R */
+                } else if (mState == STATE_BOOT_WAIT && keysHeld == (PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_X | PAD_BUTTON_Y | PAD_BUTTON_L | PAD_BUTTON_R)) {
                     u16 langFileID;
                     void *palette;
 
@@ -242,7 +240,7 @@ s32 dScBoot_c::Behavior() {
             if (touchDown != 0 && gTouchEdge[playerSlot * 4] != 0) {
                 touchStarted = 1;
             }
-            if (touchStarted != 0 || (keysPressed & 0x39)) {
+            if (touchStarted != 0 || (keysPressed & (PAD_BUTTON_A | PAD_BUTTON_START | PAD_KEY_LEFT | PAD_KEY_RIGHT))) {
                 int leftTouchStarted;
 
                 if (touchDown != 0 && gTouchEdge[playerSlot * 4] != 0) {
@@ -253,7 +251,7 @@ s32 dScBoot_c::Behavior() {
                 /* left button: touch x 0x28..0x78, y 0x98..0xb8, or Left */
                 if ((leftTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 0x28) < 0x50 &&
                      (u8)(gTouchY[playerSlot * 4] - 0x98) < 0x20) ||
-                    (keysPressed & 0x20)) {
+                    (keysPressed & PAD_KEY_LEFT)) {
                     if (mSelectedButton == 0) {
                         mButtonFlashTimer = 0x10;
                     }
@@ -280,7 +278,7 @@ s32 dScBoot_c::Behavior() {
                     /* right button: touch x 0x88..0xd8, same rows, or Right */
                     if ((rightTouchStarted != 0 && (u8)(gTouchX[playerSlot * 4] - 0x88) < 0x50 &&
                          (u8)(gTouchY[playerSlot * 4] - 0x98) < 0x20) ||
-                        (keysPressed & 0x10)) {
+                        (keysPressed & PAD_KEY_RIGHT)) {
                         if (mSelectedButton == 1) {
                             mButtonFlashTimer = 0x10;
                         }
@@ -293,7 +291,7 @@ s32 dScBoot_c::Behavior() {
                                 mState = STATE_CANCEL_ERASE;
                             }
                         }
-                    } else if (keysPressed & 9) {
+                    } else if (keysPressed & (PAD_BUTTON_A | PAD_BUTTON_START)) {
                         mButtonFlashTimer = 0x10;
                         mInputLockTimer = 0x20;
                         UpdateButtonPalettes();
@@ -358,31 +356,22 @@ s32 dScBoot_c::Behavior() {
     return 1;
 }
 
-/* Repaints two 16-by-4-tile buttons on the sub screen's BG1 map at +0x4c0.
- * They sit side by side in a 32-tile-wide map. The selected button uses
- * palette bank 2 when the flash timer is zero; all other tiles use bank 1. */
+/* Repaints two 16-by-4-tile buttons on the sub screen's BG1 map, from map
+ * row 19 (byte 0x4c0). They sit side by side in the 32-tile-wide map. The
+ * selected button uses palette bank 2 when the flash timer is zero; all
+ * other tiles use bank 1. */
 void dScBoot_c::UpdateButtonPalettes() {
     int button;
-    unsigned int paletteBits;
     for (button = 0; button < 2; button++) {
-        int selectedPaletteBits;
-        unsigned short *buttonMap;
-        unsigned short *tiles;
+        u16 (*rows)[0x20];
         int column;
-        if ((button == mSelectedButton) && (mButtonFlashTimer == 0)) {
-            selectedPaletteBits = 0x2000;
-        } else {
-            selectedPaletteBits = 0x1000;
-        }
-        selectedPaletteBits = (unsigned short)selectedPaletteBits;
-        buttonMap = (unsigned short *)(((char *)G2S::GetBG1ScrPtr()) + 0x4c0);
-        paletteBits = selectedPaletteBits;
-        tiles = buttonMap + (button * 0x10);
+        u16 paletteBits = (button == mSelectedButton && mButtonFlashTimer == 0) ? 0x2000 : 0x1000;
+        rows = (u16 (*)[0x20])((u16 *)G2S::GetBG1ScrPtr() + 19 * 0x20 + button * 0x10);
         for (column = 0; column < 0x10; column++) {
-            tiles[column] = selectedPaletteBits + (tiles[column] & 0x3ff);
-            (&tiles[column])[0x20] = paletteBits + ((&tiles[column])[0x20] & 0x3ff);
-            (&tiles[column])[0x40] = paletteBits + ((&tiles[column])[0x40] & 0x3ff);
-            (&tiles[column])[0x60] = selectedPaletteBits + ((&tiles[column])[0x60] & 0x3ff);
+            rows[0][column] = paletteBits + (rows[0][column] & 0x3ff);
+            rows[1][column] = paletteBits + (rows[1][column] & 0x3ff);
+            rows[2][column] = paletteBits + (rows[2][column] & 0x3ff);
+            rows[3][column] = paletteBits + (rows[3][column] & 0x3ff);
         }
     }
 }
