@@ -30,7 +30,7 @@
 extern "C" {
 void func_02037e9c(CLPS *clps);
 void func_02037de8(SurfaceInfo *dst, const SurfaceInfo *src);
-int func_02038298(void *arg);
+int dBgS_ChkPolySafe(void *arg);
 void func_02036acc(dBgCh_Actr *self);
 extern CLPS data_020a0c78;
 }
@@ -424,10 +424,12 @@ extern "C" void func_020383e4(dBgCh_Actr *self) {
     self->UpdateExtraContinous();
 }
 
-/* Bound-to dispatch: gates on func_02038298, indexes the enabled-collider
-   table with dBgPi's collider index and calls its BeforeClsn virtual method. */
-extern "C" void func_02038324(void *arg, int b, int c, int d)
-{
+/* Bound-to dispatch: gates on dBgS_ChkPolySafe, indexes the enabled-collider
+   table with dBgPi's collider index and calls its BeforeClsn virtual method.
+   Named after TWW's dBgS::MoveBgCrrPos, which runs the same guards and calls
+   the collider's position correction; the dBgS_ prefix is coined (there is
+   no dBgS object here, the table is a global). */
+extern "C" void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
     dBgPi *hit = (dBgPi *)arg;
     int idx;
     dBgW *obj;
@@ -439,17 +441,17 @@ extern "C" void func_02038324(void *arg, int b, int c, int d)
         return;
     if (obj->GetBeforeClsnCallback() == 0)
         return;
-    if (func_02038298(hit) == 0)
+    if (dBgS_ChkPolySafe(hit) == 0)
         return;
     obj->BeforeClsn(*hit, data_020a0c80[idx]->GetActor(), *(Vector3 *)b, (Vector3_16 *)c,
                     (Vector3_16 *)d);
 }
 
 /* Enabled-collider gate: the record must be valid, name a live table slot,
-   and re-identify against its entry. Member-called: the mangled free
+   and re-identify against its entry. Named after TWW's cBgS::ChkPolySafe,
+   same checks in the same order; the dBgS_ prefix is coined. Member-called: the mangled free
    spellings emit the same bl and read worse under decl agreement. */
-extern "C" int func_02038298(void *arg)
-{
+extern "C" int dBgS_ChkPolySafe(void *arg) {
     dBgPi *hit = (dBgPi *)arg;
     int idx;
     dBgW *collider;
@@ -468,17 +470,19 @@ extern "C" int func_02038298(void *arg)
     return hit->IsHitBy(clsnID, owner, collider);
 }
 
-/* The free helper that ends the CLPS_BlockRef run: gates on func_02038298,
+/* The free helper that ends the CLPS_BlockRef run: gates on dBgS_ChkPolySafe,
    indexes the enabled-collider table with dBgPi's collider index and
    dispatches the entry's stored callback. Calls the gate through a
    two-word function-pointer cast: the definition takes one word while
-   this site passes two, and the extra register rides along. */
-extern "C" void func_02038234(int a, int b)
-{
+   this site passes two, and the extra register rides along. Named after
+   TWW's dBgS::RideCallBack (the stored callback is its ride callback); the
+   dBgS_ prefix is coined. */
+extern "C" void dBgS_RideCallBack(int a, int b) {
     int idx;
     dBgW *entry;
     StoodOnCallback fn;
-    if (((int (*)(int, int))func_02038298)(a, b) == 0) return;
+    if (((int (*)(int, int))dBgS_ChkPolySafe)(a, b) == 0)
+        return;
     idx = ((dBgPi *)a)->GetColliderIndex();
     entry = data_020a0c80[idx];
     fn = entry->GetStoodOnCallback();
