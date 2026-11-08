@@ -4,8 +4,6 @@
  * defer_codegen off: D1 then D0, no D2. Source follows the ROM.
  */
 // NOTES:
-// - Offsets 0xa4 and 0xac are dActor_c's mSpeedX and mSpeedZ. Offset 0xe8
-//   sits inside the model's ModelComponents and is still read through words[].
 // - Vec3_VertAngle and AngleDiff have no header declaration, so they stay
 //   local.
 #include "common.h"
@@ -26,16 +24,6 @@
 
 struct BMD_File;
 struct Vector3_16;
-
-/* dExtAnmModel_c's fourth virtual slot, reached through a four-slot stand-in.
- * Behavior calls it on the dExtAnmModel_c at +0xd4; the real declaration lives
- * with that class, and this file only needs the dispatch. */
-struct PeachAnimSlots {
-    virtual int g0();
-    virtual int g1();
-    virtual int g2();
-    virtual int g3();
-};
 
 /* local extern: no header declares these two. */
 extern "C" {
@@ -148,20 +136,19 @@ void daPeach_c::UpdateLookAt() {
  * slope. The wall branch reads its normal and drops it -- the ROM computes
  * the copy and uses nothing of it. */
 void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn) {
-    int *words = (int *)this; /* 0xa4 and 0xac are dActor_c's mSpeedX / mSpeedZ */
-    int floorN[3];
-    int wallN[3];
+    Vector3 floorN;
+    Vector3 wallN;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
-        ((SurfaceInfo *)((char *)clsn->GetFloorResult() + 4))->CopyNormalTo(*(Vector3 *)floorN);
-        if (floorN[1] != 0) {
-            int x = FX_MUL(floorN[0], words[0xa4 / 4]);
-            int z = FX_MUL(floorN[2], words[0xac / 4]);
-            mVertSpeed = -(cstd::fdiv(x + z, floorN[1]) + 0x8000);
+        clsn->GetFloorResult()->surface.CopyNormalTo(floorN);
+        if (floorN.y != 0) {
+            int x = FX_MUL(floorN.x, mSpeedX);
+            int z = FX_MUL(floorN.z, mSpeedZ);
+            mVertSpeed = -(cstd::fdiv(x + z, floorN.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
-        ((SurfaceInfo *)((char *)clsn->GetWallResult() + 4))->CopyNormalTo(*(Vector3 *)wallN);
+        clsn->GetWallResult()->surface.CopyNormalTo(wallN);
     }
 }
 
@@ -208,7 +195,7 @@ void daPeach_c::UpdateModel() {
 }
 
 int daPeach_c::InitState0() {
-    UpdatePos((dCc_c *)&mCylinder);
+    UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     IsTouchingPlayer();
     return 1;
@@ -237,7 +224,7 @@ int daPeach_c::InitState2() {
 int daPeach_c::InitState4() {
     short angY = mAngleY;
     mPrevAngleY = angY;
-    UpdatePos((dCc_c *)&mCylinder);
+    UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     IsTouchingPlayer();
     return 1;
@@ -291,9 +278,9 @@ int daPeach_c::InitState1() {
  * instead of called -- the ROM inlines it at this one site. */
 int daPeach_c::InitState3() {
     if (mCylinder.hitFlags & 0x8000000) {
-        char *a = (char *)dActor_c::FindWithID(mCylinder.otherOwner);
+        dActor_c *a = dActor_c::FindWithID(mCylinder.otherOwner);
         if (a) {
-            int match = (((dActor_c *)a)->actorID == 0xbf) ? 1 : 0;
+            int match = (a->actorID == 0xbf) ? 1 : 0;
             if (match != 0) {
                 mTalkPlayer = (daPly_c *)a;
                 if (mTalkPlayer->StartTalk(*this, false)) {
@@ -354,10 +341,10 @@ int daPeach_c::Behavior() {
     CallStateBehavior();
     UpdateLookAt();
     if (mStateValue != 1)
-        ((dExtFrameCtrl_c *)((dExtFrameCtrl_c *)&mAnmModel))->Advance();
-    ((PeachAnimSlots *)((char *)&mAnmModel))->g3();
-    ((dCc_c *)&mCylinder)->Clear();
-    ((dCc_c *)&mCylinder)->Update();
+        mAnmModel.Advance();
+    mAnmModel.UpdateVerts();
+    mCylinder.Clear();
+    mCylinder.Update();
     UpdateModel();
     return 1;
 }
@@ -366,7 +353,7 @@ int daPeach_c::Behavior() {
  * ...P10Vector3_16S5_ back-references the pointer type, it is not an int. */
 int daPeach_c::InitResources() {
     void *f = dExtSimpleModel_c::LoadFile(gPeachModelFile);
-    ((dExtModel_c *)&mAnmModel)->SetFile((BMD_File *)f, 1, -1);
+    mAnmModel.SetFile((BMD_File *)f, 1, -1);
     for (int i = 0; i < 7; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
     if (mShadowModel.InitCylinder() == 0)

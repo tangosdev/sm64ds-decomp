@@ -33,8 +33,8 @@
  *   0x74 -> 0x78. That wrapper is Sound::Play(3, id, pos).
  * - func_ov092_02131a88: UpdateClsnPosAndRot(), size 0x64 -> 0xc. The
  *   body is that function written out; the ROM does not call it.
- * - InitResources: a direct beforeClsnCallback store is size 0x278 -> 0x274.
- *   func_020393d4 stays; it writes dBgW + 0x18.
+ * - InitResources: a direct beforeClsnCallback store is size 0x278 -> 0x274;
+ *   the ROM calls dBgW::SetBeforeClsnCallback.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -118,7 +118,6 @@ void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
 extern void hold_d_a_onms(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
                           short angY, void *clps);
 /* Stores beforeClsnCallback: p[6] = value, the word at dBgW + 0x18. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 /* CLPS block ("CLPS" magic) handed to SetFile. */
 extern char data_ov092_02132220;
 /* Three s32* move scripts, indexed by param1 & 3. A path (kind 3) ignores it. */
@@ -583,7 +582,7 @@ int daOnms_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)f, *(&mClsnMat), 0x1000, mAngleY,
                               *(CLPS_Block *)(&data_ov092_02132220));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);
     mOrientBits |= (mAngleY >> 0xc) & 0xc;

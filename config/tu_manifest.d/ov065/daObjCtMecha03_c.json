@@ -631,12 +631,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@556",
+      "from": "@554",
       "to": "@504",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @518 now; licensed under the existing pin @504 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@557",
+      "from": "@555",
       "to": "@505",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @519 now; licensed under the existing pin @505 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }

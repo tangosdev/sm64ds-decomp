@@ -103,10 +103,7 @@ extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
 extern int data_ov064_0211c198[];
 
-/* local extern: func_020393c4 stores the stood-on callback and has
- * no shared header; the two piece callbacks are defined just below. */
 extern "C" {
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* The collision callback piece InitResources installs, and the touch helper
  * it forwards to; both are defined just below. */
 void func_ov064_021192bc(dBgW *collider, dActor_c *owner, dActor_c *other);
@@ -167,7 +164,7 @@ s32 daObjFl_Coin_c::InitResources() {
 /* Picks the model and script from param1's low nibble (mType), loads the
  * model and the shared collision file, puts both matrices at the piece's
  * position, registers func_ov064_021192bc with the collider through
- * func_020393c4, and starts in PIECE_STATE_INIT with the step marked running
+ * dBgW::SetStoodOnCallback, and starts in PIECE_STATE_INIT with the step marked running
  * and the coin spawn still allowed. */
 int daObjFl_Puzzle_c::InitResources() {
     mType = param1 & 0xf;
@@ -176,7 +173,7 @@ int daObjFl_Puzzle_c::InitResources() {
     UpdateClsnMatrix();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000,
                           mAngleY, data_ov064_0211baac);
-    func_020393c4(&mMeshCollider, &func_ov064_021192bc);
+    mMeshCollider.SetStoodOnCallback(&func_ov064_021192bc);
     mStepScript = data_ov064_0211c198[mType];
     mStepIndex = 0;
     unk_32c = 0;

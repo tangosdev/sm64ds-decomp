@@ -1646,8 +1646,8 @@ void dScMgCurling2_c::StartRound(int /* arg */) {
     mState = 0;
     ResetGame();
     Scroll();
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 0, 4, 2, 0x10);
+    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
 }
 
@@ -1689,8 +1689,8 @@ s32 dScMgCurling2_c::InitResources() {
         return 0;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 2;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1220;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1220;
     DecompressLZ16(r6, (void *)func_02054d88());
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
@@ -1702,8 +1702,8 @@ s32 dScMgCurling2_c::InitResources() {
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x5420;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x5420;
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_MATO_NSC_BIN);
     {
@@ -1713,8 +1713,8 @@ s32 dScMgCurling2_c::InitResources() {
     }
     func_020563d4(f, 0, 0x800);
 
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 2;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x5620;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5620;
     {
         char *b = (char *)G2::GetBG0ScrPtr();
         sp6 = 0x4300;
@@ -1729,8 +1729,8 @@ s32 dScMgCurling2_c::InitResources() {
     GX::LoadOBJPltt(c8, 0, 0x100);
 
     gSubScreenLayers |= 4;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x814;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x814;
     DecompressLZ16(r6, (void *)G2S::GetBG2CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
@@ -1760,8 +1760,8 @@ s32 dScMgCurling2_c::InitResources() {
     Mg_SetTopScreenYOffset(0x20);
     mStateTimer = 0x40;
     mRunDuringFade = 1;
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 0, 4, 2, 0x10);
+    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
     return 1;
 }

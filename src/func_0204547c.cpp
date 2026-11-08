@@ -87,12 +87,10 @@ int func_020457f0(int v, int idx, int shift, int flag, int *tbl) {
     lo = tbl[t];
     hi = tbl[t + 1];
     aligned = t << shift;
-    aligned = flag ? aligned : aligned;
+    rem = idx - aligned;
     buf = data_02099f80;
 
-    frac = buf.b[shift];
-    rem = idx - aligned;
-    frac = frac - rem;
+    frac = buf.b[shift] - rem;
 
     if (rem != 0)
         return (lo * frac + hi * rem) >> shift;
@@ -141,16 +139,14 @@ unsigned short func_020456a0(int a0, int a1, int shift, int a3, short *tbl) {
 
 void func_0204547c(Ctx *ctx, Src *s, int a2, Dst *d) {
     u16 v = ctx->h2;
-    u16 *p;
 
     d->f18 = 0;
-    p = (u16 *)((int)d + 0x18);
-    *p |= s->h2;
-    *p |= s->h6;
-    *p |= s->hA;
-    *p |= s->b1;
-    *p |= s->b5;
-    *p |= s->b9;
+    d->f18 |= s->h2;
+    d->f18 |= s->h6;
+    d->f18 |= s->hA;
+    d->f18 |= s->b1;
+    d->f18 |= s->b5;
+    d->f18 |= s->b9;
 
     if (d->f18 == 0) {
         d->fC = 0x1000;

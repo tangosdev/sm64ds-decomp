@@ -11,8 +11,6 @@
  * - StoodOnCallback keeps #pragma long_calls -- the ROM veneer is the
  *   pooled `ldr ip,[pc,#8]; bx ip` absolute tail-call (size 0x14); a near
  *   `b` to TiltToward in this same TU is 0xc.
- * - func_020393c4 is a 4-byte store into dBgW+0x1c. Naming belongs
- *   with dBgW in arm9.
  * - Quaternion_SLerp / FromVector3 / Normalize stay untyped (mTilt
  *   is s32[4]).
  * - Rest-pose data_02092768 and scratch matrix data_020a0e68 (arm9).
@@ -45,7 +43,6 @@ void Quaternion_Normalize(int *q);
 void Quaternion_SLerp(int *q0, int *q1, int t, int *out);
 void Matrix4x3_FromQuaternion(const Quaternion *q, Matrix4x3 *m);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -142,7 +139,7 @@ s32 daObjGuragura_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*descriptor->collision), mClsnMat, 0x1000,
                           mAngleY, *descriptor->clps);
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     return 1;
 }
 

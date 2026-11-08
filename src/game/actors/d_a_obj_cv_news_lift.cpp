@@ -14,8 +14,7 @@
  * Notes (each measured with mwccarm 2004/b56):
  * - InitResources: mMeshCollider.stoodOnCallback = &MainMeshCallback, and a cast
  *   store of UpdatePosWithTransform into beforeClsnCallback, are each
- *   0x254 against 0x258. func_020393c4 and func_020393d4 stay; d_bg_w.cpp
- *   defines them and no header declares them.
+ *   0x254 against 0x258.
  * - InitResources: probePos.y = mPosY - 0x14000 is 0x254 against 0x258.
  * - InitResources: dExtSimpleModel_c::LoadFile's return in place of filePtr differs
  *   by 20 words.
@@ -100,8 +99,6 @@ s32 Vec3_Equal(const Vector3 *a, const Vector3 *b);
 u16 DecIfAbove0_Short(u16 *p);
 u8 DecIfAbove0_Byte(u8 *p);
 
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern s32 data_02092768[];
@@ -210,21 +207,21 @@ s32 daObjCvNewsLift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)gCvNewsLiftCollisionFile.filePtr, mClsnMat, 0x199,
                               mAngleY, data_ov021_02113a60);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &MainMeshCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&MainMeshCallback);
     mMeshCollider.Enable(this);
 
     for (int i = 0; i < 4; i++) {
         ((dBgW_KcMbg *)(&mPlatformColliders[i]))
             ->dBgW_KcMbg::SetFile((KCL_File *)gCvLiftButtonCollisionFile.filePtr, mPlatformMats[i],
                                   0x199, mAngleY, data_ov021_02113a80);
-        func_020393d4(&mPlatformColliders[i], &dBgW::UpdatePosWithTransform);
+        mPlatformColliders[i].SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
 
-    func_020393c4(&mPlatformColliders[0], &Platform0Callback);
-    func_020393c4(&mPlatformColliders[1], &Platform1Callback);
-    func_020393c4(&mPlatformColliders[2], &Platform2Callback);
-    func_020393c4(&mPlatformColliders[3], &Platform3Callback);
+    mPlatformColliders[0].SetStoodOnCallback(&Platform0Callback);
+    mPlatformColliders[1].SetStoodOnCallback(&Platform1Callback);
+    mPlatformColliders[2].SetStoodOnCallback(&Platform2Callback);
+    mPlatformColliders[3].SetStoodOnCallback(&Platform3Callback);
 
     for (int i = 0; i < 4; i++)
         mPlatformColliders[i].Enable(this);

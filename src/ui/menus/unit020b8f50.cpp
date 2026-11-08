@@ -104,13 +104,13 @@ extern void func_ov007_020c3d1c(void *);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
 extern int func_ov007_020c5014(void *, int);
-extern void func_ov007_020c510c(char *c);
+extern void func_ov007_020c510c(void *c);
 extern void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4, unsigned short a5,
                                 int a6);
 extern void func_ov007_020c5188(void *, int);
-extern void func_ov007_020c5490(char *obj, int *m);
+extern void func_ov007_020c5490(void *obj, int *m);
 extern void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
-extern void func_ov007_020c56bc(char *c, int a, int b, int d, int e, int f);
+extern void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
 extern void func_ov007_020c5a6c(void *, int *, int);
 extern void func_ov007_020c5c14(void *o, void *p);
 extern int func_ov007_020c5d5c(void *o);
@@ -197,11 +197,11 @@ void func_ov007_020bbc08(int mode, int a1, int a2) {
         break;
 
     case 2:
-        func_ov007_020c56bc((char *)SCENE->picker, 1, a1, a2 / 2, a2 / 2, 8);
+        func_ov007_020c56bc(SCENE->picker, 1, a1, a2 / 2, a2 / 2, 8);
         break;
 
     case 3:
-        func_ov007_020c56bc((char *)SCENE->picker, 2, a1, a2, a2, 6);
+        func_ov007_020c56bc(SCENE->picker, 2, a1, a2, a2, 6);
         break;
     }
 }
@@ -416,7 +416,7 @@ void func_ov007_020bb4b0(void) {
                 uu = uu >> 0x10;
                 idx = (int)uu >> 4;
                 MTX_Rot22_(mat, data_02082214[idx * 2], data_02082214[idx * 2 + 1]);
-                func_ov007_020c5490((char *)s, mat);
+                func_ov007_020c5490(s, mat);
             } else {
                 int n = cstd::div(s->groupCount, 4) + 1;
                 if (n == 1) {
@@ -1179,7 +1179,7 @@ void func_ov007_020b9f0c(void) {
     }
     func_ov007_020c5c14(SCENE->picker, &SCENE->picker->pos);
     func_ov007_020c5ef0(SCENE->picker);
-    func_ov007_020c510c((char *)SCENE->picker);
+    func_ov007_020c510c(SCENE->picker);
 
     SCENE->idleFrames = 0;
     SCENE->states[2]->requestedState = 0;

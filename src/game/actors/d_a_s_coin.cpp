@@ -11,7 +11,10 @@
  *
  * NOTES:
  * - SpawnStar copies the marker's position through an int * at its mPosX:
- *   member reads (marker->mPos.x or marker->mPosX, ...) size-DIFF.
+ *   member reads (marker->mPos.x or marker->mPosX, ...) and a Vector3 copy
+ *   (init, ctor or assignment) are 4 bytes short. The ROM materializes
+ *   &marker->mPos first; a `const Vector3 &` local to it matches, but that
+ *   only moves the pin.
  * - LinkToBlock's ID tests go through the int-returning HasActorID: a
  *   direct `actorID == id` in the for/else-if loop size-DIFFs.
  * - data_ov002_0210d9a8 (the ov002 SharedFilePtr handle) and func_02012790
@@ -172,10 +175,7 @@ void daSCoin_c::Collect()
     func_02012790(0x25);
     leader->mCollectedCount++;
     {
-        Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        Vector3 v = mPos;
         SpawnNumber(v, leader->mCollectedCount, false, 0, 0);
     }
     mdCcAc_c.flags |= 1;
