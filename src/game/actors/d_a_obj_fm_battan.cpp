@@ -35,8 +35,7 @@
  *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
  *   AddVec3: no shared header declares it.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
- *   owns; data_ov064_0211ba4c (CLPS) is overlay .data; data_02082214 is the
- *   sine table.
+ *   owns; data_ov064_0211ba4c (CLPS) is overlay .data.
  *   No daPly_c.h / dCamera_c.h.
  */
 
@@ -48,13 +47,12 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
 
 /* local extern: no shared header declares these. */
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
-extern s16 data_02082214[];
-
 extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
 extern void *func_0200fa04(dActor_c *, Vector3 *, int);
 
@@ -131,8 +129,6 @@ int daObjFm_Battan_c::Behavior() {
             VecFx32 offset;
             VecFx32 pos;
             VecFx32 dustPos;
-            int sinY;
-            int cosY;
 
             mAngleX = -0x4000;
             mAngVelX = 0;
@@ -144,10 +140,8 @@ int daObjFm_Battan_c::Behavior() {
             Earthquake(*(const Vector3 *)&pos, 0x04000000);
             Sound::PlayBank3(0x44, mCamSpacePos);
 
-            sinY = data_02082214[((u16)mAngleY >> 4) * 2];
-            offset.x = FX_MUL(sinY, -0x190000);
-            cosY = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
-            offset.z = FX_MUL(cosY, -0x190000);
+            offset.x = FX_MUL(FX_SinIdx((u16)mAngleY >> 4), -0x190000);
+            offset.z = FX_MUL(FX_CosIdx((u16)mAngleY >> 4), -0x190000);
             AddVec3((Vector3 *)&offset, (Vector3 *)&mPosX, (Vector3 *)&offset);
 
             dustPos.x = offset.x;
@@ -213,7 +207,7 @@ void daObjFm_Battan_c::UpdateModelTransform() {
 
 void daObjFm_Battan_c::UpdateShadow() {
     int tableIndex = (u16)mAngleX >> 4;
-    int sinX = data_02082214[tableIndex * 2];
+    int sinX = FX_SinIdx(tableIndex);
     int depth = FX_MUL(sinX, 0x49c000);
 
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);
