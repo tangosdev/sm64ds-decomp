@@ -1,26 +1,26 @@
 {
   "_note": "ratchet baseline; regenerate with `python tools/langmode_audit.py --json <this file>`. Use --full for per-class detail and file lists.",
   "codegen_hacks": {
-    "cv_launder": 2,
-    "cv_launder_sites": 3,
+    "cv_launder": 1,
+    "cv_launder_sites": 2,
     "extern_vtable": 1,
     "extern_vtable_classes": 1,
     "inline_asm": 5,
-    "launder_or_forced": 27,
-    "launder_sites": 65,
+    "launder_or_forced": 24,
+    "launder_sites": 40,
     "pragma_by_name": {
-      "opt_common_subs": 33,
+      "opt_common_subs": 32,
       "opt_dead_assignments": 2,
       "opt_foldconstants": 1,
       "opt_lifetimes": 3,
       "opt_loop_invariants": 13,
       "opt_prelinearize": 1,
-      "opt_propagation": 17,
+      "opt_propagation": 16,
       "opt_strength_reduction": 26,
       "optimize_for_size": 13
     },
     "pragma_files": 57,
-    "pragma_overrides": 109,
+    "pragma_overrides": 107,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -71,9 +71,9 @@
     "header_shadows": 1,
     "local_body_no_include": 29,
     "local_body_no_include_cpp": 9,
-    "local_struct_body": 382,
-    "local_struct_body_cpp": 337,
-    "pad_layout": 31
+    "local_struct_body": 379,
+    "local_struct_body_cpp": 334,
+    "pad_layout": 29
   },
   "totals": {
     "c_extension": 895,
