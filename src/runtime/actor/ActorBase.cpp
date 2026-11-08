@@ -17,10 +17,13 @@
  *   the list operations and the four global list heads.
  *
  * fBase_c, the root of the actor hierarchy. arm9 .text
- * 0x02042fe4..0x020440e8. Below func_020433b8 sit the four Process
+ * 0x02042fe4..0x020440e8. Below runCreate sit the four Process
  * wrappers, the child-creation check d_scene.cpp polls, and the create
  * entry func_02043098 with its hooks and the two creation calls
- * ActorDerived.cpp makes.
+ * ActorDerived.cpp makes. The run has NSMBW's f_base.cpp layout, and the
+ * address-named members took that file's names where the bodies match:
+ * connectProc, getConnectParent, runCreate, createPack, deletePack,
+ * executePack, drawPack and checkChildProcessCreateState.
  */
 #include "fBase_c.h"
 #include "Heap.h"
@@ -208,7 +211,7 @@ fBase_c::fBase_c() : manager(this)
     manager.SetBehaviorPriority(info->behaviorPriority);
     manager.SetRenderPriority(info->renderPriority);
 
-    fBase_c *parent = func_02043810();
+    fBase_c *parent = getConnectParent();
     if (parent != 0) {
         if ((parent->pauseFlags & 1) || (parent->pauseFlags & 2))
             pauseFlags |= 2;
@@ -355,9 +358,10 @@ void fBase_c::OnPendingDestroy()
 /* Reconcile list membership, inherited pause flags and pending destruction.
  * Scene children link through SceneNode::next, and each node names its
  * actor owner. The process tree calls this through the ProcessFunction
- * constant data_02099f60, with every process in r0, so it is an fBase_c
- * member; its name is not recovered and it keeps its address. */
-int fBase_c::func_02043880() {
+ * constant data_02099f60, with every process in r0. NSMBW's connectProc
+ * has the same three arms: a delete request, the parent's pause flags,
+ * then a changed priority or a deferred create/execute. */
+int fBase_c::connectProc() {
     if (shouldBeKilled != 0) {
         fBase_c::SceneNode *it;
         shouldBeKilled = 0;
@@ -374,7 +378,7 @@ int fBase_c::func_02043880() {
         }
     } else {
         u32 state;
-        fBase_c *other = func_02043810();
+        fBase_c *other = getConnectParent();
         if (other != 0) {
             if ((other->pauseFlags & 1) || (other->pauseFlags & 2))
                 pauseFlags |= 2;
@@ -435,7 +439,7 @@ void fBase_c::MarkForDestruction()
 }
 
 /* Return the parent scene node's actor, or null at the root. */
-fBase_c *fBase_c::func_02043810() {
+fBase_c *fBase_c::getConnectParent() {
     fBase_c::SceneNode *parent = manager.sceneNode.parent;
     if (parent)
         return parent->owner;
@@ -607,9 +611,12 @@ void *fBase_c::operator new(size_t size) {
 /* ROM ordinal 0 -- the run's backward neighbour, absorbed (reverse
  * emission puts the lowest address last). Body as recovered. */
 
-/* The create entry func_02043098 calls this on each new process. */
-void fBase_c::func_020433b8() {
-    func_0204335c();
+/* The create entry func_02043098 calls this on each new process. Same
+ * test order as NSMBW's runCreate: not delete-requested, not deferred
+ * (unk_010), still creating; then flag a retry (unk_011) while the create
+ * loop runs (data_02099f24 == 2), or queue it on the create list. */
+void fBase_c::runCreate() {
+    createPack();
     if (shouldBeKilled != 0)
         return;
     if (unk_010 != 0)
@@ -627,8 +634,10 @@ void fBase_c::func_020433b8() {
  * triple of fBase_c member-function pointers from .data; the triples are
  * ROM-owned constants and stay extern. The wrappers are fBase_c members:
  * the process lists call them through the ProcessFunction constants
- * data_02099f70, f50, f48 and f68. Their names are not recovered, so each
- * keeps its address. */
+ * data_02099f70, f50, f48 and f68. Each triple's vtable offsets pick one
+ * do/before/after group (0/4/8, 0xc/0x10/0x14, 0x18/0x1c/0x20,
+ * 0x24/0x28/0x2c), so the wrappers are NSMBW's createPack, deletePack,
+ * executePack and drawPack. */
 extern "C" {
 extern fBase_c::ProcessFunction data_02099ebc;
 extern fBase_c::BeforeProcessFunction data_02099ec4;
@@ -655,11 +664,11 @@ extern int (*data_020a4b58)(int actorID);
 extern u16 data_020a4b50;
 extern u8 data_020a4b4c;
 
-int fBase_c::func_0204335c() {
+int fBase_c::createPack() {
     return Process(data_02099ebc, data_02099ec4, data_02099e94);
 }
 
-int fBase_c::func_020432e4() {
+int fBase_c::deletePack() {
     /* The actor ID is read before Process runs and handed to the
      * func_0204302c hook on a result of 1. */
     unsigned short id = actorID;
@@ -669,11 +678,11 @@ int fBase_c::func_020432e4() {
     return r;
 }
 
-int fBase_c::func_02043288() {
+int fBase_c::executePack() {
     return Process(data_02099ea4, data_02099eac, data_02099eb4);
 }
 
-int fBase_c::func_0204322c() {
+int fBase_c::drawPack() {
     return Process(data_02099ecc, data_02099e74, data_02099e9c);
 }
 
@@ -685,7 +694,7 @@ extern fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
 
 /* Is any descendant still uncreated (aliveState 0)? d_scene.cpp waits on
    this before it moves on. */
-int fBase_c::func_020431c4() {
+int fBase_c::checkChildProcessCreateState() {
     fBase_c::SceneNode *base = &manager.sceneNode;
     fBase_c::SceneNode *end = func_0203b358(base);
     fBase_c::SceneNode *node = base->child;
@@ -726,7 +735,7 @@ fBase_c *func_02043098(int actorID, void *parentNode, u32 param1, int unk012) {
         return 0;
     }
     data_020a4b4c = 5;
-    actor->func_020433b8();
+    actor->runCreate();
     data_020a4b4c = 0;
     data_020a4b50 = 0xffff;
     return actor;

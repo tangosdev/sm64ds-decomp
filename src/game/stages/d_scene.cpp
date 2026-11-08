@@ -318,7 +318,7 @@ int dScene_c::BeforeBehavior()
     }
 
     if ((pauseFlags & 1) != 0) {
-        if (func_020431c4() == 0) {
+        if (checkChildProcessCreateState() == 0) {
             pauseFlags &= ~1;
             pauseFlags &= ~4;
         }

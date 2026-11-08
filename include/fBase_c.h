@@ -112,7 +112,7 @@ struct fBase_c {
     /* 0x13. Bit 1 pauses this object's children and bit 4 hides them; bits 2
        and 8 are this object's own effective paused/hidden state, inherited from
        the parent: the constructor seeds them by OR-ing the parent's 1|2 and 4|8
-       down, and func_02043880 recomputes them from the parent every frame.
+       down, and connectProc recomputes them from the parent every frame.
        BeforeBehavior gates on 2, BeforeRender on 8. Runtime (EU, blinded, 10/10):
        setting the scene's bit 4 hid every object under it, while a Goomba's own
        bit 4 changed nothing visible and its own bit 8 was recomputed back to 0. */
@@ -156,24 +156,26 @@ struct fBase_c {
     int Process(ProcessFunction action, BeforeProcessFunction before,
                 AfterProcessFunction after);
     void MarkForDestruction();
-    /* Address-named helpers whose names are not recovered. Every one takes
-       the process in r0; see src/runtime/actor/ActorBase.cpp.
-       func_02043810: the parent process (the owner of the scene node above
-         this one), or null at the root.
-       func_02043880, func_0204335c, func_02043288, func_020432e4 and
-         func_0204322c: the callbacks of the process tree and the four process
-         lists. Each is stored as a ProcessFunction constant in .data
-         (data_02099f60, f70, f48, f50, f68), so each keeps int ().
-       func_020433b8: queues a newly created process.
-       func_020431c4: nonzero while any descendant is still uncreated. */
-    fBase_c *func_02043810();
-    int func_02043880();
-    int func_0204335c();
-    int func_020432e4();
-    int func_02043288();
-    int func_0204322c();
-    void func_020433b8();
-    int func_020431c4();
+    /* NSMBW's f_base.cpp names for the same fBase_c members (the bodies and
+       their order in the run match; see src/runtime/actor/ActorBase.cpp).
+       getConnectParent: the parent process (the owner of the scene node
+         above this one), or null at the root.
+       connectProc and the four packs: the callbacks of the process tree and
+         the four process lists. Each is stored as a ProcessFunction constant
+         in .data (data_02099f60, f70, f48, f50, f68), so each keeps int ().
+         Each pack runs Process with one do/before/after slot triple: create
+         = slots 0-2, delete = 3-5, execute = 6-8, draw = 9-11.
+       runCreate: create, then queue a process that is still being created.
+       checkChildProcessCreateState: nonzero while any descendant is still
+         uncreated. */
+    fBase_c *getConnectParent();
+    int connectProc();
+    int createPack();
+    int deletePack();
+    int executePack();
+    int drawPack();
+    void runCreate();
+    int checkChildProcessCreateState();
     /* The actor-heap allocator every process is created through; defined in
        src/runtime/actor/ActorBase.cpp. size_t is unsigned long under mwccarm,
        so this is _ZN7fBase_cnwEm, and `new T` on any class derived from this

@@ -1393,7 +1393,7 @@ s32 dScMgSlot1_c::Behavior() {
     case 8:
         if (DecIfAbove0_Byte(&mStateTimer) == 0) {
             dScene_c::SetFaders(&data_0209f61c);
-            data_0209f61c.func_0202ec9c(2);
+            data_0209f61c.SetType(2);
             dScene_c::StartSceneFade(5, 0, 0);
         }
         break;

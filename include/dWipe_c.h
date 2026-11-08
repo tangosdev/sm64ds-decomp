@@ -3,9 +3,11 @@
 #include "dFdColor_c.h"
 
 /* Hardware screen wipe. Unlike dFdColor_c, which just drives a blend register,
- * this drives the capture/DMA path: CP15 cache flush, GX palette load, and an
- * IRQ-driven per-scanline capture. `type == 1` is the escape hatch -- every
- * override below hands that case straight back to the base class.
+ * this cuts a shape out of the screen with the two hardware windows: the
+ * HBlank IRQ rewrites WIN0H/WIN1H every scanline from a table the CPU builds,
+ * and outside the windows only the backdrop colour shows. Type 0 is a star,
+ * type 2 a circle; `type == 1` is the escape hatch -- every override below
+ * hands that case straight back to the base class (a plain colour fade).
  *
  * A single global static (data_0209f61c), never spawned. Derivation, size and
  * vtable evidence: notes/scene-provenance.md. Its vtable storage at 0x020926f0
@@ -19,23 +21,23 @@
 struct dWipe_c : dFdColor_c {
     /* 0x0e/0x0f reuse dFdColor_c's tail padding -- see notes/scene-provenance.md. */
     u8  unk_00e;         /* 0x0e */
-    /* 0x0f -- capture is armed; the destructors tear it down. UNSIGNED: the
+    /* 0x0f -- the windows are armed; the destructors tear them down. UNSIGNED: the
        only two reads of this field in the image, the D1 and D0 destructors at
        0x0202fc08/0x0202fbc8, both load it with `ldrb`. It was s8 here until
        those destructors became real C++ and the compiler was asked to emit the
        load itself. */
     u8  needsCleanup;
     s32 state;           /* 0x10 -- 0 idle, 1 opening, 2 open, 3 closing, 4 closed */
-    s32 type;            /* 0x14 -- palette/blend path selector; 1 defers to the base */
-    /* 0x18 -- the type a mid-transition request stashed: func_0202ec9c stores
-       its argument here while IsBetweenStartAndEnd, and func_0202fb30 copies
+    s32 type;            /* 0x14 -- 0 star, 1 plain fade (the base's), 2 circle */
+    /* 0x18 -- the type a mid-transition request stashed: SetType stores
+       its argument here while IsBetweenStartAndEnd, and DisableWindows copies
        it into `type` once typePending is 1. Was unk_018. */
     s32 pendingType;
     s32 wipeInterp;      /* 0x1c -- 20.12 ramp, independent of dFader_c::currInterp */
     s32 wipeSpeed;       /* 0x20 -- per-frame delta added to wipeInterp */
     s32 wipeAccel;       /* 0x24 -- per-frame delta added to wipeSpeed */
-    /* 0x28 -- 1 while pendingType waits to be committed: func_0202ec9c sets
-       it beside pendingType and clears it otherwise; func_0202fb30 tests it
+    /* 0x28 -- 1 while pendingType waits to be committed: SetType sets
+       it beside pendingType and clears it otherwise; DisableWindows tests it
        for 1 and clears it. Was unk_028. */
     u8 typePending;
 
@@ -57,14 +59,15 @@ struct dWipe_c : dFdColor_c {
     virtual void SetToEnd();                     /* slot 8 */
     virtual void SetToStart();                   /* slot 9 */
 
-    /* TU-local helpers, kept under their address names. */
-    int  func_0202ec9c(int type);  /* request a wipe type; stash it mid-transition */
-    void func_0202ed14();          /* reset every field to the idle state */
-    void func_0202ee94();          /* build the circular-mask scanline table */
-    void func_0202efa0();          /* build the ramp-segment scanline table */
-    void func_0202f290();          /* rebuild the staged table for `type` */
-    void func_0202f58c();          /* arm blend regs, prime both tables */
-    void func_0202fb30();          /* drop the HBlank IRQ, restore pending type */
+    /* Named from their bodies (symbols/actor_renames.tsv). SetType returns 1
+       when the request was stashed for the end of the current transition. */
+    int SetType(int type);
+    void Reset();            /* every field back to idle */
+    void BuildCircleTable(); /* type 2's scanline window table */
+    void BuildStarTable();   /* type 0's scanline window table */
+    void BuildTable();       /* the staged table for `type` */
+    void EnableWindows();    /* WININ/WINOUT/DISPCNT, prime both tables */
+    void DisableWindows();   /* drop the HBlank IRQ, commit pendingType */
 };
 
 #ifndef SM64DS_PLATFORM_PC

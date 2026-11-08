@@ -4467,7 +4467,7 @@
     },
     "arm9:0x0202ec9c": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202ec9cEi"
+      "name": "_ZN7dWipe_c7SetTypeEi"
     },
     "arm9:0x0202ecfc": {
       "author": "tangosdev",
@@ -4479,11 +4479,11 @@
     },
     "arm9:0x0202ed14": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202ed14Ev"
+      "name": "_ZN7dWipe_c5ResetEv"
     },
     "arm9:0x0202ed48": {
       "author": "tangosdev",
-      "name": "func_0202ed48"
+      "name": "Wipe_Reset"
     },
     "arm9:0x0202ed7c": {
       "author": "tangosdev",
@@ -4499,23 +4499,23 @@
     },
     "arm9:0x0202ee94": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202ee94Ev"
+      "name": "_ZN7dWipe_c16BuildCircleTableEv"
     },
     "arm9:0x0202efa0": {
       "author": "aitddlabs",
-      "name": "_ZN7dWipe_c13func_0202efa0Ev"
+      "name": "_ZN7dWipe_c14BuildStarTableEv"
     },
     "arm9:0x0202f290": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202f290Ev"
+      "name": "_ZN7dWipe_c10BuildTableEv"
     },
     "arm9:0x0202f2c4": {
       "author": "tangosdev",
-      "name": "func_0202f2c4"
+      "name": "Wipe_HBlankHandler"
     },
     "arm9:0x0202f3a4": {
       "author": "tangosdev",
-      "name": "func_0202f3a4"
+      "name": "Wipe_LatchTable"
     },
     "arm9:0x0202f428": {
       "author": "ruspecial",
@@ -4523,7 +4523,7 @@
     },
     "arm9:0x0202f58c": {
       "author": "andrewboudreau",
-      "name": "_ZN7dWipe_c13func_0202f58cEv"
+      "name": "_ZN7dWipe_c13EnableWindowsEv"
     },
     "arm9:0x0202f708": {
       "author": "tangosdev",
@@ -4535,7 +4535,7 @@
     },
     "arm9:0x0202fb30": {
       "author": "tangosdev",
-      "name": "_ZN7dWipe_c13func_0202fb30Ev"
+      "name": "_ZN7dWipe_c14DisableWindowsEv"
     },
     "arm9:0x0202fbc8": {
       "author": "tangosdev",
@@ -7215,27 +7215,27 @@
     },
     "arm9:0x020431c4": {
       "author": "andrewboudreau",
-      "name": "_ZN7fBase_c13func_020431c4Ev"
+      "name": "_ZN7fBase_c28checkChildProcessCreateStateEv"
     },
     "arm9:0x0204322c": {
       "author": "lunavyqo",
-      "name": "_ZN7fBase_c13func_0204322cEv"
+      "name": "_ZN7fBase_c8drawPackEv"
     },
     "arm9:0x02043288": {
       "author": "lunavyqo",
-      "name": "_ZN7fBase_c13func_02043288Ev"
+      "name": "_ZN7fBase_c11executePackEv"
     },
     "arm9:0x020432e4": {
       "author": "lunavyqo",
-      "name": "_ZN7fBase_c13func_020432e4Ev"
+      "name": "_ZN7fBase_c10deletePackEv"
     },
     "arm9:0x0204335c": {
       "author": "lunavyqo",
-      "name": "_ZN7fBase_c13func_0204335cEv"
+      "name": "_ZN7fBase_c10createPackEv"
     },
     "arm9:0x020433b8": {
       "author": "tangosdev",
-      "name": "_ZN7fBase_c13func_020433b8Ev"
+      "name": "_ZN7fBase_c9runCreateEv"
     },
     "arm9:0x02043444": {
       "author": "tangosdev",
@@ -7255,7 +7255,7 @@
     },
     "arm9:0x02043810": {
       "author": "tangosdev",
-      "name": "_ZN7fBase_c13func_02043810Ev"
+      "name": "_ZN7fBase_c16getConnectParentEv"
     },
     "arm9:0x02043824": {
       "author": "tangosdev",
@@ -7263,7 +7263,7 @@
     },
     "arm9:0x02043880": {
       "author": "tangosdev",
-      "name": "_ZN7fBase_c13func_02043880Ev"
+      "name": "_ZN7fBase_c11connectProcEv"
     },
     "arm9:0x02043ac0": {
       "author": "andrewboudreau",
