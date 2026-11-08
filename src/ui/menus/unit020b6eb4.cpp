@@ -38,6 +38,7 @@
 #include "Ov007Settings.h"
 #include "Ov007Touch.h"
 #include "private/arm_math_state.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 
@@ -94,7 +95,6 @@ extern void MenuMem_SetFreeHook(int v);
 extern void MenuMem_SetAllocHook(int v);
 
 int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
-    Ov007Work *p;
     int flags;
 
     data_ov007_02103430 = 0;
@@ -109,18 +109,17 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     func_ov007_020bd500();
     func_ov007_020bd648(1);
     func_02045d9c();
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, -0x10);
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x3f, -0x10);
-    *(unsigned int *)0x4000000 &= ~0x1f00;
-    *(unsigned int *)0x4001000 &= ~0x1f00;
-    *(unsigned short *)0x4000304 &= ~0x8000;
+    G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, -0x10);
+    G2x::SetBlendBrightness(&REG_DB_BLDCNT, 0x3f, -0x10);
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
+    REG_POWCNT1 &= ~0x8000;
     func_ov007_020b68e8();
     WORK->settings->bootArgs = bootArgs;
     WORK->callback = hooks->callback;
     func_ov007_020b30b0();
     func_ov007_020be00c();
-    p = WORK;
-    func_ov007_020b8714((int)p->cameras[1], (int)p->textures[10], p->settings->language);
+    func_ov007_020b8714((int)WORK->cameras[1], (int)WORK->textures[10], WORK->settings->language);
     func_ov007_020b782c();
     func_ov007_020bfcec();
     func_ov007_020be50c();
@@ -133,26 +132,23 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     return 1;
 }
 
-int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4) {
+int func_ov007_020b7090(u16 x, u16 y, u16 touch, u16 validity, int keys) {
     Ov007TouchSample sample;
-    int ret = 0;
+    int choice = 0;
 
     data_ov007_02103430 = 0;
-    func_ov007_020c20b8(WORK->pad, &arg4);
-    sample.x = a0;
-    sample.y = a1;
-    sample.touch = a2;
-    sample.validity = a3;
+    func_ov007_020c20b8(WORK->pad, &keys);
+    sample.x = x;
+    sample.y = y;
+    sample.touch = touch;
+    sample.validity = validity;
     func_ov007_020b2e64(&sample);
     func_ov007_020c1db0(WORK->touch, &sample);
     func_ov007_020bdebc();
     func_ov007_020aed98();
-    {
-        Ov007Work *ip = WORK;
-        if (ip->choiceReady != 0 || ip->pendingChoice == 1)
-            ret = ip->pendingChoice;
-    }
-    return ret;
+    if (WORK->choiceReady != 0 || WORK->pendingChoice == 1)
+        choice = WORK->pendingChoice;
+    return choice;
 }
 
 int func_ov007_020b7040(void) {
@@ -164,22 +160,20 @@ int func_ov007_020b7040(void) {
 }
 
 int func_ov007_020b6f4c(void) {
-    Ov007Work *p = WORK;
-    int r;
-    r = p->nextFigureIndex;
-    {
-        unsigned int t = (p->strokeStage[0] << 1) | (p->strokeStage[1] << 3);
-        data_ov007_02103430 = 0;
-        r |= t;
-    }
-    if (p->pendingChoice != 0xa && p->pendingChoice != 0xb && p->choiceReady != 0) {
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, 0x10);
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x3f, 0x10);
-        *(unsigned int *)0x4000000 &= ~0x1f00;
-        *(unsigned int *)0x4001000 &= ~0x1f00;
+    Ov007Work *work = WORK;
+    int flags = work->nextFigureIndex;
+    unsigned int strokeBits = (work->strokeStage[0] << 1) | (work->strokeStage[1] << 3);
+
+    data_ov007_02103430 = 0;
+    flags |= strokeBits;
+    if (work->pendingChoice != 0xa && work->pendingChoice != 0xb && work->choiceReady != 0) {
+        G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, 0x10);
+        G2x::SetBlendBrightness(&REG_DB_BLDCNT, 0x3f, 0x10);
+        REG_DISPCNT &= ~0x1f00;
+        REG_DISPCNT_SUB &= ~0x1f00;
     } else {
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x20, -0x10);
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x20, -0x10);
+        G2x::SetBlendBrightness(&REG_BLDCNT, 0x20, -0x10);
+        G2x::SetBlendBrightness(&REG_DB_BLDCNT, 0x20, -0x10);
     }
     func_ov007_020b65e0();
     func_ov007_020b3050();
@@ -189,13 +183,13 @@ int func_ov007_020b6f4c(void) {
     func_ov007_020bfc54();
     func_ov007_020be47c();
     func_ov007_020b40c0();
-    return r;
+    return flags;
 }
 
 int func_ov007_020b6eb4(void) {
-    ARMMathState s;
+    ARMMathState mathState;
     if (data_ov007_02103430 != 0) {
-        ARMMathSaveState(&s);
+        ARMMathSaveState(&mathState);
         func_ov007_020bf690();
         if (WORK->pendingCapture != 0) {
             func_ov007_020bd4e8();
@@ -206,7 +200,7 @@ int func_ov007_020b6eb4(void) {
             WORK->pendingBgMode = 0;
         }
         func_ov007_020b72a0();
-        ARMMathLoadState(&s);
+        ARMMathLoadState(&mathState);
     }
     return 1;
 }

@@ -43,6 +43,7 @@
 #include "Ov007Transition.h"
 #include "Ov007Model.h"
 #include "dExtModel_c.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 
@@ -143,13 +144,13 @@ void func_ov007_020bfaf0(Ov007Camera *cam) {
     Ov007Model *model = FADE->model;
     if (model->visible == 0)
         return;
-    int idx = cam->fovy >> 4;
-    Fix12i t1 = FX_MUL(FX_SinIdx(idx), 0x1064);
-    Fix12i base = model->scale.x * 0xd800 + 0x12c000;
-    Fix12i t2 = FX_MUL(base, t1);
-    int denom = FX_CosIdx(idx) * 0x60;
-    Fix12i d = cstd::fdiv(t2, denom);
-    model->scale.z = cstd::fdiv(d, 0x5000);
+    int fovyIdx = cam->fovy >> 4;
+    Fix12i sinDist = FX_MUL(FX_SinIdx(fovyIdx), 0x1064);
+    Fix12i size = model->scale.x * 0xd800 + 0x12c000;
+    Fix12i scaled = FX_MUL(size, sinDist);
+    int cosScaled = FX_CosIdx(fovyIdx) * 0x60;
+    Fix12i extent = cstd::fdiv(scaled, cosScaled);
+    model->scale.z = cstd::fdiv(extent, 0x5000);
     model->scale.x = model->scale.z;
     func_ov007_020bc02c(model, &cam->viewMatrix);
     func_ov007_020bbff0(model);
@@ -291,7 +292,7 @@ void func_ov007_020bf790(void) {
     }
 
     if (flags & 0x10) {
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3F, 0);
+        G2x::SetBlendBrightness(&REG_BLDCNT, 0x3F, 0);
     }
 
     if (flags & 2) {
@@ -322,7 +323,7 @@ void func_ov007_020bf690(void) {
         return;
     int progress = tr->t;
     if (started == 0 && (flags & 2) != 0) {
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, 0);
+        G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, 0);
     }
     if (tr->reversed != 0)
         progress = 0x1000 - progress;
@@ -337,6 +338,6 @@ void func_ov007_020bf690(void) {
     }
     if (tr->reversed == 0)
         return;
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, -0x10);
+    G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, -0x10);
 }
 }
