@@ -861,7 +861,7 @@ int dEntObj_c::Behavior() {
         }
         if (mState != STATE_IDLE) {
             if (mPlayers[mFocusedPlayer].UpdateCamera((Vector3 *)&mCamTargetX,
-                                                             (Vector3 *)&mCamPosX) != 0)
+                                                      (Vector3 *)&mCamPosX) != 0)
                 SetCamera();
         }
         if (mAnimActive) {
@@ -1024,14 +1024,19 @@ extern "C" BaseSpawnInfo<dEntObj_c> g_profile_ENTRY_OBJECT = {
    empty handlers. mwcc cannot link-time-initialize pointer-to-member
    records, so the initializer copies the descriptor records in. */
 extern "C" UnknownVsPlayerStateRow sVsPlayerMoveStates[10] = {
-    {&UnknownVsPlayer::MoveNone}, {&UnknownVsPlayer::MoveToSlot},
-    {&UnknownVsPlayer::MoveWaitForExit}, {&UnknownVsPlayer::MoveTurnToExit},
-    {&UnknownVsPlayer::MoveNone}, {&UnknownVsPlayer::MoveRunOffStage},
-    {&UnknownVsPlayer::MoveNone}, {&UnknownVsPlayer::MoveChoosePose},
-    {&UnknownVsPlayer::MoveWaitForPoseSound}, {&UnknownVsPlayer::MovePoseParticles},
+    {&UnknownVsPlayer::MoveNone},
+    {&UnknownVsPlayer::MoveToSlot},
+    {&UnknownVsPlayer::MoveWaitForExit},
+    {&UnknownVsPlayer::MoveTurnToExit},
+    {&UnknownVsPlayer::MoveNone},
+    {&UnknownVsPlayer::MoveRunOffStage},
+    {&UnknownVsPlayer::MoveNone},
+    {&UnknownVsPlayer::MoveChoosePose},
+    {&UnknownVsPlayer::MoveWaitForPoseSound},
+    {&UnknownVsPlayer::MovePoseParticles},
 };
 extern "C" UnknownVsPlayerStateRow sVsPlayerAnimStates[6] = {
-    {&UnknownVsPlayer::AnimNone}, {&UnknownVsPlayer::AnimWalkSounds},
+    {&UnknownVsPlayer::AnimNone},        {&UnknownVsPlayer::AnimWalkSounds},
     {&UnknownVsPlayer::AnimWaitForNext}, {&UnknownVsPlayer::AnimWaitForIdle},
-    {&UnknownVsPlayer::AnimSlowGait}, {&UnknownVsPlayer::AnimFastGait},
+    {&UnknownVsPlayer::AnimSlowGait},    {&UnknownVsPlayer::AnimFastGait},
 };

@@ -77,19 +77,19 @@ struct UnknownVsPlayer {
     ~UnknownVsPlayer();
 
     /* The mMoveState handlers (indices into sVsPlayerMoveStates). */
-    void MoveToSlot(); /* 1 */
-    void MoveWaitForExit(); /* 2 */
-    void MoveTurnToExit(); /* 3 */
-    void MoveRunOffStage(); /* 5 */
-    void MoveChoosePose(); /* 7 */
+    void MoveToSlot();           /* 1 */
+    void MoveWaitForExit();      /* 2 */
+    void MoveTurnToExit();       /* 3 */
+    void MoveRunOffStage();      /* 5 */
+    void MoveChoosePose();       /* 7 */
     void MoveWaitForPoseSound(); /* 8 */
-    void MovePoseParticles(); /* 9 */
+    void MovePoseParticles();    /* 9 */
     /* The mAnimState handlers (indices into sVsPlayerAnimStates). */
-    void AnimWalkSounds(); /* 1 */
+    void AnimWalkSounds();  /* 1 */
     void AnimWaitForNext(); /* 2 */
     void AnimWaitForIdle(); /* 3 */
-    void AnimSlowGait(); /* 4 */
-    void AnimFastGait(); /* 5 */
+    void AnimSlowGait();    /* 4 */
+    void AnimFastGait();    /* 5 */
     /* The empty handler both tables' unused indices point at. */
     void MoveNone();
     void AnimNone();
@@ -100,7 +100,7 @@ struct UnknownVsPlayer {
     int PlaySelectAnim();
     /* Walk the figure toward x = targetX. */
     void WalkToSlot(int targetX);
-    int IsIdle(); /* movement state == 0 (idle) */
+    int IsIdle();    /* movement state == 0 (idle) */
     int StartIdle(); /* go idle in the standing animation */
     /* dCamera_c follow for the focused figure; nonzero when the view needs
        rebuilding. */
