@@ -2,7 +2,7 @@
 #include "common.h"
 
 extern "C" {
-extern void func_ov007_020c368c(s16 *p, int n, int k);
+extern void func_ov007_020c368c(Vector3_16 *vectors, int count, int clamp);
 
 static inline s16 f12(int x) {
     return (s16)((x + 0x800) >> 12);
@@ -17,7 +17,7 @@ static inline int subz(int a, int b) {
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
 
-void func_ov007_020cb7c0(s16 *out, int w, int h, int *pts, s16 a5, s16 a6) {
+void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6) {
     s16 *dst;
     int i;
     int row;
@@ -38,7 +38,7 @@ void func_ov007_020cb7c0(s16 *out, int w, int h, int *pts, s16 a5, s16 a6) {
 
     w1 = w + 1;
     flip = 1;
-    dst = out;
+    dst = (s16 *)out;
     row = 0;
     if (h > 0) {
         dx = a5;
