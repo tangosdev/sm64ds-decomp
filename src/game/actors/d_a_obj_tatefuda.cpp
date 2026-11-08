@@ -1023,9 +1023,11 @@ void AttachToHolder(struct daObjTatefuda_c *self)
 
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, self->mAngleX, self->mAngleY, self->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, self->mAngleX, self->mAngleY,
+                                           self->mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x, data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x,
+                                        data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
 
     self->mPosX = data_020a0e68.t.x;
     self->mPosY = data_020a0e68.t.y;

@@ -75,8 +75,8 @@ void Jump3D_StopGravity(void);
 void Jump3D_StartRoundLayout(void);
 int  Jump3D_AllIdle(void);
 int  Heyho_AllIdle(void);
-int  Heyho_InitPool(void *ptr, int n);
-int  Jump3D_InitPool(void *base, int count);
+int Heyho_InitPool(void *ptr, int n);
+int Jump3D_InitPool(void *base, int count);
 void Jump3D_EnableInput(void);
 int  RandomIntInternal(int *seed);
 

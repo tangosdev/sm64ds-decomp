@@ -176,8 +176,7 @@ extern "C" int func_ov077_02124c28(daTgz_c *self)
 }
 
 /* Is the Spiny below the cached water surface? */
-extern "C" int func_ov077_02124ce4(daTgz_c *self)
-{
+extern "C" int func_ov077_02124ce4(daTgz_c *self) {
     int waterY = self->mWaterY;
     if (waterY == 0)
         return 0;
@@ -234,8 +233,7 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
 
 /* Hit response while walking or spinning. Egg and the knock-up destroy or
  * launch; a shell / metal / attack hit in state 1 starts the chase. */
-extern "C" void func_ov077_02124eb0(daTgz_c *self)
-{
+extern "C" void func_ov077_02124eb0(daTgz_c *self) {
     daPly_c *player;
     int b;
 
@@ -304,8 +302,7 @@ extern "C" void func_ov077_02124eb0(daTgz_c *self)
 
 /* Hit response during the thrown spin. Mega turns it to face away and
  * knocks it up; fire is ignored; anything else hurts the player. */
-extern "C" void func_ov077_021250a8(daTgz_c *self)
-{
+extern "C" void func_ov077_021250a8(daTgz_c *self) {
     unsigned int id = self->mdCcAc_c.otherOwner;
     if (id == 0)
         return;
@@ -371,8 +368,7 @@ extern "C" void func_ov077_02125290(daTgz_c *self)
     m->m[11] = self->mPosZ >> 3;
 }
 
-extern "C" void func_ov077_02125304(daTgz_c *self)
-{
+extern "C" void func_ov077_02125304(daTgz_c *self) {
     int b = (int)((self->mFlags & 0x40000) != 0);
     if (b != 0)
         return;

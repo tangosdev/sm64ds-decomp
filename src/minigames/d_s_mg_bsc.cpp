@@ -261,7 +261,8 @@ void dScMgBSC_c::StateWaitDeal() {
 
     cardsArrived = 0;
     for (cardIndex = 0; cardIndex < mCardsDealt; cardIndex++) {
-        if (Math_Function_0203b14c(&mCardPos[cardIndex].x, sBscLaneX[cardIndex], 0x800, 0x10000, 0x200) == 0)
+        if (Math_Function_0203b14c(&mCardPos[cardIndex].x, sBscLaneX[cardIndex], 0x800, 0x10000,
+                                   0x200) == 0)
             xReached = 1;
         else
             xReached = 0;
