@@ -24,7 +24,10 @@ void func_ov007_020c1db0(Ov007Touch *a, Ov007TouchSample *b) {
     }
     a->cur = a->raw;
 
-    if (*(volatile unsigned int *)&a->flags & 1) {
+    /* The clear reads flags through a const view so it reloads the word, as
+     * the ROM does; plain `a->flags &= ~1` keeps the tested word live and
+     * compiles 4 bytes long. */
+    if (a->flags & 1) {
         if (a->cur.touch == 0)
             a->flags = ((const Ov007Touch *)a)->flags & ~1;
         else
