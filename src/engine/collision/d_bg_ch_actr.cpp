@@ -229,8 +229,8 @@ void dBgCh_Actr::UpdateContinuousExceptSlot0() {
     prev = &a->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
-        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos,
-                          mSphereClsn.mMotionAngPtr, mAngPtr);
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;

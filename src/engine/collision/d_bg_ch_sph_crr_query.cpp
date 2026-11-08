@@ -70,7 +70,8 @@ int dBgCh_Gnd::DetectClsn()
                 ownerPos.y = ownerPos.y + obj->GetClipOffsetY();
             }
             Vector3 *selfpos = (Vector3 *)((int)&this->pos);
-            if (selfpos->y < ownerPos.y - clipDist) continue;
+            if (selfpos->y < ownerPos.y - clipDist)
+                continue;
             if (Vec3_HorzDist(selfpos, &ownerPos) > clipDist)
                 continue;
         }
