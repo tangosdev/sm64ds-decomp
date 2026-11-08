@@ -95,8 +95,6 @@ extern u8 gShowRedCoinMarkers;
    CapIconMgr_SetMapIconShown), and the character it shows (0 M, 1 L, 2 W). */
 extern u8 gMapCapIconShown[];
 extern u8 gMapCapIconCharacters[];
-extern void *data_ov002_0210cac8[];
-extern void *data_ov002_0210c748[];
 extern u8 data_0209d660;
 extern s32 data_020a0db0;
 extern dFdBrightness_c *gSceneFader;
@@ -109,7 +107,7 @@ extern u8   data_0209f204;
 extern u8   data_ov002_02111150;
 extern ControllerInput data_0209f498[];
 extern u8 gSubScreenLayers;
-extern u8   data_ov002_0211114c;
+extern u8   gMapIntroRotating;
 extern u8   data_ov002_02111144;
 extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
@@ -495,7 +493,7 @@ int dMap_c::Render()
             u8 *p1 = gMapCapIconShown;
             u8 *p2 = gMapCapIconCharacters;
             int vs2 = (gGameMode == 1);
-            void **tbl = (vs2 != 0) ? data_ov002_0210cac8 : data_ov002_0210c748;
+            OamAttr **tbl = (vs2 != 0) ? OAM::MM_VS_CAP_ICONS : OAM::MM_CAP_ICONS;
             for (i = 0; i < 9; i++, p1++, p2++) {
                 if (*p1 != 0) {
                     if (data_ov002_02111148 == this->mCapMapIDs[i]) {
@@ -503,7 +501,7 @@ int dMap_c::Render()
                         if (ICON_Y_VISIBLE(y)) {
                             int x = this->mCapIconX[i];
                             if (ICON_X_VISIBLE(x)) {
-                                OAM::Render(true, (OamAttr *)tbl[*p2], x, y, -1, 2, 0);
+                                OAM::Render(true, tbl[*p2], x, y, -1, 2, 0);
                             }
                         }
                     }
@@ -655,10 +653,10 @@ L350:
 
 L360:
     if (this->mInIntroCutscene == 0) goto L3a4;
-    if (data_ov002_0211114c == 0) goto L3e0;
+    if (gMapIntroRotating == 0) goto L3e0;
     *(s16 *)&this->mAngle += 0x40;   // read signed here; the header member is u16
     if ((u16)this->mAngle >= 0x8000)
-        data_ov002_0211114c = 0;
+        gMapIntroRotating = 0;
     goto L3e0;
 
 L3a4:
@@ -683,7 +681,7 @@ L3e8:
     if (this->mTargetInvScale <= this->mInvScale) goto L4d8;
     this->mInvScale = this->mTargetInvScale;
     data_ov002_02111144 = 0;
-    data_ov002_0211114c = 1;
+    gMapIntroRotating = 1;
     goto L4d8;
 
 L44c:
@@ -1051,18 +1049,18 @@ int dMap_c::InitResources()
 
 #pragma opt_strength_reduction on
 
-void dMap_c::GetPosFromMinimapPos(Vector3 &a, Vector3 &b, Fix12i c, short d, Vector3 &e) {
-    Vector3 local;
-    Vec3_Sub(&local, &a, &sMapScreenCenter);
-    Vec3_DivScalarInPlace(&local, c);
-    Vec3_RotateYAndTranslate(&e, &b, d, &local);
+void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, Fix12i scale, short angle, Vector3 &out) {
+    Vector3 offset;
+    Vec3_Sub(&offset, &minimapPos, &sMapScreenCenter);
+    Vec3_DivScalarInPlace(&offset, scale);
+    Vec3_RotateYAndTranslate(&out, &center, angle, &offset);
 }
 
-void dMap_c::GetPosOnMinimap(Vector3 *out, Vector3 *a, Fix12i s, short ang, Vector3 *res) {
-    Vector3 v;
-    Vec3_Sub(&v, out, a);
-    Vec3_MulScalarInPlace(&v, s);
-    Vec3_RotateYAndTranslate(res, &sMapScreenCenter, (short)(-ang), &v);
+void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short angle, Vector3 *out) {
+    Vector3 offset;
+    Vec3_Sub(&offset, pos, center);
+    Vec3_MulScalarInPlace(&offset, scale);
+    Vec3_RotateYAndTranslate(out, &sMapScreenCenter, -angle, &offset);
 }
 
 /* Reconstructed source-style name: SM64DS proves dMap_c through RTTI,

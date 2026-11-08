@@ -49,13 +49,8 @@
  * - The OAM::Render overloads that take Fix12<int> by value keep their mangled
  *   spellings: the natural static member call homes the Fix12 arguments
  *   differently under mwccarm (the Fix12 wall) and rewrites every call site.
- * - gMeterShownHealth[0]'s self-decrement in UpdateHealthMeter keeps the
- *   volatile self-read -- the ROM reloads the byte rather than reusing the
- *   value still live from the comparison above it.
- * - InitResources keeps two launders: the volatile pun on mVsTimer in the
- *   gCurrentSublevel == 0x2B branch (a plain member store emits different code)
- *   and the `idx ? table : table` conditional over a (void* volatile*) cast of
- *   gPlayers (folding it changes where the player-health read lands).
+ * - InitResources keeps one launder: the volatile pun on mVsTimer in the
+ *   gCurrentSublevel == 0x2B branch (a plain member store emits different code).
  * - gGameMode is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
  *   dMap_c draws its VS icons for.
  */
@@ -102,8 +97,6 @@ extern "C" {
    Quick race (daRNk_c). InitResources clears it. */
 extern unsigned char gShowRaceTimer;
 extern Timer gRaceTimer;
-extern struct OamAttr data_ov002_0210ce80;
-extern struct OamAttr data_ov002_0210c6c0;
 extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
                                 int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
@@ -129,34 +122,19 @@ extern unsigned char gLevelClearStep;
 extern int data_020a0db0;
 extern unsigned char NumStars(void);
 extern signed char gNumRedCoins[];
-extern struct OamAttr data_ov002_0210c6b8;
 extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
 extern unsigned char gGamePaused;
 extern unsigned char data_0209f20c;
 extern unsigned char gVsExitScreenActive;
 extern unsigned char data_0209f204;
-extern struct OamAttr data_ov002_0210d290;
-extern struct OamAttr data_ov002_0210d2c0;
-extern struct OamAttr data_ov002_0210d300;
-extern struct OamAttr data_ov002_0210d338;
 extern struct OamAttr *data_ov002_0210ca0c[];
-extern struct OamAttr data_ov002_0210d2a0;
-extern struct OamAttr data_ov002_0210d2d0;
-extern struct OamAttr data_ov002_0210d308;
-extern struct OamAttr data_ov002_0210d348;
 extern int GetOwnerLanguage(void);
 
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMeterShownHealth[];
-extern struct OamAttr *data_ov002_0210c254[];
-extern struct OamAttr *data_ov002_0210c278[];
-extern struct OamAttr *data_ov002_0210c230[];
-extern struct OamAttr data_ov002_0210d5d0;
-extern struct OamAttr data_ov002_0210d4f0;
-extern struct OamAttr data_ov002_0210c690;
 extern SaveBlock data_0209caa0;
 extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *gSceneFader;
@@ -322,12 +300,7 @@ int dMeter_c::InitResources() {
 
     data_ov002_02111188 = 0xB4;
     gShowRaceTimer = 0;
-    {
-        u8 idx = *(volatile u8 *)&gLocalPlayerId;
-        gMeterShownHealth[0] =
-            ((daPly_c *)((idx ? (void *volatile *)gPlayers : (void *volatile *)gPlayers)[idx]))
-                ->GetHealth();
-    }
+    gMeterShownHealth[0] = gPlayers[gLocalPlayerId]->GetHealth();
     if (gMeterShownHealth[0] == 8) {
         mHealthMeterY = -0x18;
         unk72 = 0;
@@ -566,7 +539,7 @@ void dMeter_c::UpdateHealthMeter() {
         if (gMeterShownHealth[0] <= health)
             return;
         mHealthMeterY = 0x39;
-        gMeterShownHealth[0] = *(volatile unsigned char *)&gMeterShownHealth - 1;
+        gMeterShownHealth[0]--;
         mHealthTickTimer = 0x1e;
         mHealthMeterHoldTimer = 0x5a;
         mHealthMeterState = 1;
@@ -666,17 +639,17 @@ void dMeter_c::RenderHealthMeter() {
         return;
 
     if (GetOwnerLanguage() == 5) {
-        OAM::Render(0, data_ov002_0210c254[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, OAM::HEALTH_METERS_ES[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &data_ov002_0210d5d0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::HEALTH_METER_BG_ES, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-        OAM::Render(0, data_ov002_0210c278[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, OAM::HEALTH_METERS_FR_IT[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &data_ov002_0210d4f0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::HEALTH_METER_BG_FR_IT, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else {
-        OAM::Render(0, data_ov002_0210c230[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, OAM::HEALTH_METERS[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &data_ov002_0210c690, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::HEALTH_METER_BG, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
     GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
@@ -726,7 +699,7 @@ void dMeter_c::UpdateVsTimer() {
  *
  * Both captions are chosen by a GetOwnerLanguage() ladder testing 5, 4, 3, 2
  * and falling through to OAM::VS_TIME / OAM::VS_TIME_UP -- so the OAM symbols
- * are the DEFAULT artwork and the four data_ov002_* blocks are translations.
+ * are the DEFAULT artwork and the _FR/_DE/_IT/_ES blocks are translations.
  * The ladder re-calls GetOwnerLanguage() at every rung rather than caching it;
  * that is the ROM's own shape and is preserved rather than tidied.
  *
@@ -745,13 +718,13 @@ void dMeter_c::RenderVsTimer() {
 
     if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) == 0) {
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, &data_ov002_0210d290, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_ES, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, &data_ov002_0210d2c0, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_IT, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, &data_ov002_0210d300, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_DE, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210d338, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_FR, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::VS_TIME, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         }
@@ -773,13 +746,13 @@ void dMeter_c::RenderVsTimer() {
         }
     } else {
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, &data_ov002_0210d2a0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_ES, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, &data_ov002_0210d2d0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_IT, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, &data_ov002_0210d308, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_DE, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210d348, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_FR, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::VS_TIME_UP, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         }
@@ -841,7 +814,7 @@ void dMeter_c::RenderRedCoins() {
     int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
     for (int i = 0; i < count; i++) {
-        OAM::Render(false, &data_ov002_0210c6b8, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
+        OAM::Render(false, &OAM::RED_COIN, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
     }
 }
 
@@ -1094,14 +1067,14 @@ void dMeter_c::RenderTimeTimer() {
 
     if (min / 10 != 0) {
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::TIME_FR_IT_ES, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::TIME, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         }
         OAM::Render(false, OAM::NUMBERS[min / 10], 0xb8, 0x16, -1, 1, 0);
     } else {
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::TIME_FR_IT_ES, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::TIME, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         }
@@ -1111,7 +1084,7 @@ void dMeter_c::RenderTimeTimer() {
     OAM::Render(false, &OAM::MINUTES, 0xc4, 0x1e, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[sec / 10], 0xcf, 0x16, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[sec % 10], 0xd7, 0x16, -1, 1, 0);
-    OAM::Render(false, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);
+    OAM::Render(false, &OAM::SECONDS, 0xdb, 0x1e, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[centi / 10], 0xe8, 0x16, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[centi % 10], 0xf0, 0x16, -1, 1, 0);
 }
