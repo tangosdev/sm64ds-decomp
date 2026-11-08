@@ -53,18 +53,19 @@
 #include "dBgCh_Actr.h"
 
 /* Behavior's table is indexed by mVariant (param1's low nibble). The names say
- * what each kind's handler does, not labels recovered from the cartridge.
+ * what each kind's handler does, not labels recovered from the cartridge;
+ * the handler and helper member names below are coined the same way.
  *
- *   0  func_ov100_02142b90: never drawn (Render skips it); a timer-driven
+ *   0  SpawnerBehavior: never drawn (Render skips it); a timer-driven
  *      spawner that creates another IRONBALL actor while the closest player is
  *      inside its distance band.
- *   1  func_ov100_02142918: rolls freely, bouncing off walls and speeding up
+ *   1  FreeRollBehavior: rolls freely, bouncing off walls and speeding up
  *      down slopes.
- *   2  func_ov100_021424c0: follows the path, speed changing with the slope.
- *   3  func_ov100_0214272c: rolls on with no path until it drops below
+ *   2  PathBehavior: follows the path, speed changing with the slope.
+ *   3  RollOffBehavior: rolls on with no path until it drops below
  *      mKillY or runs into a wall, then breaks up. A path follower turns into
  *      this kind when its path index wraps.
- *   4  func_ov100_021424c0 again: the same handler as 2, but on the ground its
+ *   4  PathBehavior again: the same handler as 2, but on the ground its
  *      speed climbs linearly to the 35 units/frame cap instead of following
  *      the floor normal.
  */
@@ -81,7 +82,7 @@ struct daIbl_c : dEnemyBase_c {
     dExtSimpleModel_c mModel; /* 0x2cc -- mModel.mat4x3 is the model matrix */
     dExtShadowModel_c                  mShadowModel;          /* 0x31c */
     /* The shadow's Matrix4x3, as twelve words (words 9..11 are the
-       translation). func_ov100_02142264 copies the model matrix into it and then
+       translation). UpdateModelMatrix copies the model matrix into it and then
        overwrites the Y translation. Kept as plain words because a Matrix4x3
        member would bring Vector3's destructor into this class's own. */
     s32                          mShadowMtx[12];        /* 0x344 */
@@ -94,10 +95,10 @@ struct daIbl_c : dEnemyBase_c {
     /* Inferred draw-scale vector: Render passes this actual object to dExtSimpleModel_c.
        InitResources writes 0x1000 (1.0) or 0x800 (0.5) component by component
        for drawn variants; the empty default constructor does not initialize it.
-       func_ov100_02142264 reads x for the shadow's size and offset. */
+       UpdateModelMatrix reads x for the shadow's size and offset. */
     Vector3                      mDrawScale;            /* 0x3ac..0x3b7 */
     u8  pad_3b8[0x2];
-    /* The heading from the ball to mNextNodePos: func_ov100_0214233c stores
+    /* The heading from the ball to mNextNodePos: AdvancePath stores
        atan2(node.x - pos.x, node.z - pos.z) here on every call, the path
        followers steer mPrevAngleY toward it, and InitResources copies it
        straight into mPrevAngleY once. */
@@ -121,7 +122,7 @@ struct daIbl_c : dEnemyBase_c {
        Behavior runs (see daIbl_Kind), InitResources switches on it, and
        Render skips kind 0. */
     u8                           mVariant;              /* 0x3d0 */
-    /* Set by func_ov100_02142130 when the ball ran into a wall it is heading
+    /* Set by UpdateWallAndFloor when the ball ran into a wall it is heading
        into this frame. */
     u8                           mHitWall;              /* 0x3d1 */
     /* Spawner only: how many balls it has out. The spawner adds one after each
@@ -132,7 +133,7 @@ struct daIbl_c : dEnemyBase_c {
     s32                          mNumPathNodes;         /* 0x3d4 -- PathPtr::NumNodes() */
     s32                          mPathNodeIndex;        /* 0x3d8 -- index passed to PathPtr::GetNode */
     /* The path node the ball last passed. InitResources seeds it with the actor's
-       own position and func_ov100_0214233c overwrites it with mNextNodePos each
+       own position and AdvancePath overwrites it with mNextNodePos each
        time the ball passes the node it was heading for. */
     s32                          mPrevNodePosX;         /* 0x3dc */
     s32                          mPrevNodePosY;         /* 0x3e0 */
@@ -155,14 +156,14 @@ struct daIbl_c : dEnemyBase_c {
     int InitResources();
     int Render();
 
-    void func_ov100_02141fb0();
-    void func_ov100_02142130();
-    void func_ov100_02142264();
-    int  func_ov100_0214233c();
-    void func_ov100_021424c0();
-    void func_ov100_0214272c();
-    void func_ov100_02142918();
-    void func_ov100_02142b90();
+    void CheckContact();
+    void UpdateWallAndFloor();
+    void UpdateModelMatrix();
+    int AdvancePath();
+    void PathBehavior();
+    void RollOffBehavior();
+    void FreeRollBehavior();
+    void SpawnerBehavior();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -1987,8 +1987,8 @@ _ZN8Particle12Acceleration4FuncERNS_10EffectDataEPcR7Vector3 kind:function(arm,s
 func_0204d8e8 kind:function(arm,size=0x70) addr:0x0204d8e8
 func_0204d958 kind:function(arm,size=0x48) addr:0x0204d958
 func_0204d9a0 kind:function(arm,size=0x50) addr:0x0204d9a0
-func_0204d9f0 kind:function(arm,size=0x5c) addr:0x0204d9f0
-func_0204da4c kind:function(arm,size=0x68) addr:0x0204da4c
+SPLRandom_VecFx32_XY kind:function(arm,size=0x5c) addr:0x0204d9f0
+SPLRandom_VecFx32 kind:function(arm,size=0x68) addr:0x0204da4c
 func_0204dab4 kind:function(arm,size=0x1d0) addr:0x0204dab4
 func_0204dc84 kind:function(arm,size=0x3c) addr:0x0204dc84
 func_0204dcc0 kind:function(arm,size=0x3c) addr:0x0204dcc0

@@ -2125,11 +2125,11 @@ src/unnamed/arm9/0204/func_0204d9a0.c:
     complete
     .text start:0x0204d9a0 end:0x0204d9f0
 
-src/unnamed/arm9/0204/func_0204d9f0.c:
+src/SPLRandom_VecFx32_XY.c:
     complete
     .text start:0x0204d9f0 end:0x0204da4c
 
-src/unnamed/arm9/0204/func_0204da4c.c:
+src/SPLRandom_VecFx32.c:
     complete
     .text start:0x0204da4c end:0x0204dab4
 
