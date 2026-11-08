@@ -106,6 +106,7 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "nitro/gx/gxcommon.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "MWCPlusLib.h"
 #include "dScMgBase_c.h"
 #include "LevelRng.h"
@@ -343,14 +344,17 @@ extern "C" void Banner_Update(MgBanner *e) {
 
 extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen, int priority,
                             short style) {
-    int a, b;
+    /* Where the graphic is decompressed: in display mode 2 into the main
+       engine's OBJ VRAM only, otherwise into the sub engine's with a copy in
+       the main engine's. */
+    u8 *chars, *mirrorChars;
 
     if (gMgScene->GetDisplayMode() == 2) {
-        a = 0x6400000;
-        b = 0;
+        chars = (u8 *)HW_OBJ_VRAM;
+        mirrorChars = 0;
     } else {
-        a = 0x6600000;
-        b = 0x6400000;
+        chars = (u8 *)HW_DB_OBJ_VRAM;
+        mirrorChars = (u8 *)HW_OBJ_VRAM;
     }
 
     switch (file) {
@@ -359,25 +363,25 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     case 14: case 16: case 17: case 18: case 19: case 20: case 21:
         if (sMgBannerGfxSlotUsed[0] != 0)
             return;
-        DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT0_CHARS));
-        if (b != 0)
-            DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT0_CHARS));
+        DecompressLZ16(sMgBannerFiles[file], chars + MG_BANNER_SLOT0_CHARS);
+        if (mirrorChars != 0)
+            DecompressLZ16(sMgBannerFiles[file], mirrorChars + MG_BANNER_SLOT0_CHARS);
         e->mGfxSlot = 0;
         sMgBannerGfxSlotUsed[0] = 1;
         break;
     default:
         if (sMgBannerGfxSlotUsed[1] == 0) {
-            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT1_CHARS));
-            if (b != 0)
-                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT1_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], chars + MG_BANNER_SLOT1_CHARS);
+            if (mirrorChars != 0)
+                DecompressLZ16(sMgBannerFiles[file], mirrorChars + MG_BANNER_SLOT1_CHARS);
             e->mGfxSlot = 1;
             sMgBannerGfxSlotUsed[1] = 1;
             break;
         }
         if (sMgBannerGfxSlotUsed[2] == 0) {
-            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT2_CHARS));
-            if (b != 0)
-                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT2_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], chars + MG_BANNER_SLOT2_CHARS);
+            if (mirrorChars != 0)
+                DecompressLZ16(sMgBannerFiles[file], mirrorChars + MG_BANNER_SLOT2_CHARS);
             e->mGfxSlot = 2;
             sMgBannerGfxSlotUsed[2] = 1;
             break;
