@@ -4393,7 +4393,7 @@ matched: yes</title></rect><rect x="82.52" y="381.12" width="92.65" height="8.86
 module: arm9
 addr: 0x0202e7d4
 size: 1224 bytes
-matched: yes</title></rect><rect x="175.17" y="381.12" width="7.27" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13func_0202ec9cEi
+matched: yes</title></rect><rect x="175.17" y="381.12" width="7.27" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c7SetTypeEi
 module: arm9
 addr: 0x0202ec9c
 size: 96 bytes
@@ -4405,11 +4405,11 @@ matched: yes</title></rect><rect x="183.35" y="381.12" width="0.91" height="8.86
 module: arm9
 addr: 0x0202ed08
 size: 12 bytes
-matched: yes</title></rect><rect x="184.25" y="381.12" width="3.94" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13func_0202ed14Ev
+matched: yes</title></rect><rect x="184.25" y="381.12" width="3.94" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c5ResetEv
 module: arm9
 addr: 0x0202ed14
 size: 52 bytes
-matched: yes</title></rect><rect x="188.19" y="381.12" width="3.94" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0202ed48
+matched: yes</title></rect><rect x="188.19" y="381.12" width="3.94" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Wipe_Reset
 module: arm9
 addr: 0x0202ed48
 size: 52 bytes
@@ -4425,23 +4425,23 @@ matched: yes</title></rect><rect x="206.36" y="381.12" width="6.96" height="8.86
 module: arm9
 addr: 0x0202ee38
 size: 92 bytes
-matched: yes</title></rect><rect x="213.32" y="381.12" width="20.29" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13func_0202ee94Ev
+matched: yes</title></rect><rect x="213.32" y="381.12" width="20.29" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c16BuildCircleTableEv
 module: arm9
 addr: 0x0202ee94
 size: 268 bytes
-matched: yes</title></rect><rect x="233.61" y="381.12" width="56.93" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13func_0202efa0Ev
+matched: yes</title></rect><rect x="233.61" y="381.12" width="56.93" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c14BuildStarTableEv
 module: arm9
 addr: 0x0202efa0
 size: 752 bytes
-matched: yes</title></rect><rect x="290.53" y="381.12" width="3.94" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13func_0202f290Ev
+matched: yes</title></rect><rect x="290.53" y="381.12" width="3.94" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c10BuildTableEv
 module: arm9
 addr: 0x0202f290
 size: 52 bytes
-matched: yes</title></rect><rect x="294.47" y="381.12" width="16.96" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0202f2c4
+matched: yes</title></rect><rect x="294.47" y="381.12" width="16.96" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Wipe_HBlankHandler
 module: arm9
 addr: 0x0202f2c4
 size: 224 bytes
-matched: yes</title></rect><rect x="311.43" y="381.12" width="9.99" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0202f3a4
+matched: yes</title></rect><rect x="311.43" y="381.12" width="9.99" height="8.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Wipe_LatchTable
 module: arm9
 addr: 0x0202f3a4
 size: 132 bytes
@@ -4449,7 +4449,7 @@ matched: yes</title></rect><rect x="5.00" y="389.98" width="26.12" height="9.14"
 module: arm9
 addr: 0x0202f428
 size: 356 bytes
-matched: yes</title></rect><rect x="31.12" y="389.98" width="27.88" height="9.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13func_0202f58cEv
+matched: yes</title></rect><rect x="31.12" y="389.98" width="27.88" height="9.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13EnableWindowsEv
 module: arm9
 addr: 0x0202f58c
 size: 380 bytes
@@ -4461,7 +4461,7 @@ matched: yes</title></rect><rect x="98.93" y="389.98" width="38.16" height="9.14
 module: arm9
 addr: 0x0202f928
 size: 520 bytes
-matched: yes</title></rect><rect x="137.09" y="389.98" width="11.15" height="9.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c13func_0202fb30Ev
+matched: yes</title></rect><rect x="137.09" y="389.98" width="11.15" height="9.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7dWipe_c14DisableWindowsEv
 module: arm9
 addr: 0x0202fb30
 size: 152 bytes
@@ -7141,27 +7141,27 @@ matched: yes</title></rect><rect x="306.65" y="554.76" width="5.84" height="7.81
 module: arm9
 addr: 0x02043180
 size: 68 bytes
-matched: yes</title></rect><rect x="312.49" y="554.76" width="8.93" height="7.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_020431c4Ev
+matched: yes</title></rect><rect x="312.49" y="554.76" width="8.93" height="7.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c28checkChildProcessCreateStateEv
 module: arm9
 addr: 0x020431c4
 size: 104 bytes
-matched: yes</title></rect><rect x="5.00" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_0204322cEv
+matched: yes</title></rect><rect x="5.00" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c8drawPackEv
 module: arm9
 addr: 0x0204322c
 size: 92 bytes
-matched: yes</title></rect><rect x="15.24" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_02043288Ev
+matched: yes</title></rect><rect x="15.24" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c11executePackEv
 module: arm9
 addr: 0x02043288
 size: 92 bytes
-matched: yes</title></rect><rect x="25.47" y="562.57" width="13.35" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_020432e4Ev
+matched: yes</title></rect><rect x="25.47" y="562.57" width="13.35" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c10deletePackEv
 module: arm9
 addr: 0x020432e4
 size: 120 bytes
-matched: yes</title></rect><rect x="38.82" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_0204335cEv
+matched: yes</title></rect><rect x="38.82" y="562.57" width="10.24" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c10createPackEv
 module: arm9
 addr: 0x0204335c
 size: 92 bytes
-matched: yes</title></rect><rect x="49.06" y="562.57" width="15.58" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_020433b8Ev
+matched: yes</title></rect><rect x="49.06" y="562.57" width="15.58" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c9runCreateEv
 module: arm9
 addr: 0x020433b8
 size: 140 bytes
@@ -7181,7 +7181,7 @@ matched: yes</title></rect><rect x="99.35" y="562.57" width="73.43" height="6.03
 module: arm9
 addr: 0x0204357c
 size: 660 bytes
-matched: yes</title></rect><rect x="172.78" y="562.57" width="2.23" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_02043810Ev
+matched: yes</title></rect><rect x="172.78" y="562.57" width="2.23" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c16getConnectParentEv
 module: arm9
 addr: 0x02043810
 size: 20 bytes
@@ -7189,7 +7189,7 @@ matched: yes</title></rect><rect x="175.00" y="562.57" width="10.24" height="6.0
 module: arm9
 addr: 0x02043824
 size: 92 bytes
-matched: yes</title></rect><rect x="185.24" y="562.57" width="64.08" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c13func_02043880Ev
+matched: yes</title></rect><rect x="185.24" y="562.57" width="64.08" height="6.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7fBase_c11connectProcEv
 module: arm9
 addr: 0x02043880
 size: 576 bytes
