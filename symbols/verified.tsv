@@ -242,7 +242,7 @@
 0x020150cc	_ZN5dCc_cC2Ev	function
 0x020150e8	_ZN8dClipper10ClipSphereER7Vector3iPh	function
 0x02015560	_ZN8dClipper16TransformAndClipER9Matrix4x3R7Vector3iS3_	function
-0x0201559c	_ZN8dClipper13Func_0201559CEv	function
+0x0201559c	_ZN8dClipper19UpdateFrustumPlanesEv	function
 0x020156dc	_ZN8dClipper13Func_020156DCEisii	function
 0x020156fc	_ZN8dClipperD0Ev	function
 0x02015720	_ZN8dClipperD1Ev	function

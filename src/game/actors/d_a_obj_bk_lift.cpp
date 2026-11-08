@@ -12,8 +12,6 @@
  * (2004/b56 emits .text back to front); factory first, Kill() last.
  *
  * Notes:
- * - dBgW::SetClipOffsetY / dBgW::SetClipRadius / func_020393c4 / func_020393d4 are
- *   small stores into dBgW (d_bg_w.cpp; property members are in dBgW.h).
  * - StoodOnCallback keeps #pragma long_calls -- the ROM veneer is the
  *   pooled ldr ip,[pc,#8]; bx ip absolute tail-call (size 0x14); a near b
  *   to OnStoodOn in this same TU is 0xc.
@@ -84,8 +82,6 @@ extern "C" {
 u8 DecIfAbove0_Byte(u8 *p);
 int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* BK_LIFT01's registry factory. 0x394 is this class's size, and the calls the
@@ -98,7 +94,7 @@ extern "C" daObjBk_Lift_c *daObjBk_Lift_c_classInit() {
     return new daObjBk_Lift_c();
 }
 
-/* dBgW stood-on callback, armed by func_020393c4 in InitResources. Drops the
+/* dBgW stood-on callback, armed by dBgW::SetStoodOnCallback in InitResources. Drops the
    collider and forwards (lift, rider) into OnStoodOn. long_calls is the
    ROM's pooled absolute tail-call. */
 #pragma long_calls on
@@ -124,8 +120,8 @@ int daObjBk_Lift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), *(&mClsnMat),
                               0x199, mAngleY, *(&data_ov015_02113594));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     Vector3 probePos;
     probePos.x = mPosX;

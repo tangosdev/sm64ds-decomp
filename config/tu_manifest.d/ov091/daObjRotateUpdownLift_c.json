@@ -645,22 +645,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1138",
+      "from": "@1136",
       "to": "@776",
       "evidence": "mwcc numbers this registration node @1006 per TU and the fleet already defines a global @1006, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1139",
+      "from": "@1137",
       "to": "@659",
       "evidence": "mwcc numbers this registration node @1007 per TU and the fleet already defines a global @1007, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1140",
+      "from": "@1138",
       "to": "@656",
       "evidence": "mwcc numbers this registration node @1008 per TU and the fleet already defines a global @1008, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@1141",
+      "from": "@1139",
       "to": "@639",
       "evidence": "mwcc numbers this registration node @1009 per TU and the fleet already defines a global @1009, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }

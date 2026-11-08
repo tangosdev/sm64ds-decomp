@@ -11,8 +11,6 @@
  * factory daObjFl_Seesaw_c_classInit comes last. Do not reorder.
  *
  * Notes:
- * - dBgW::SetClipRadius and func_020393d4 store into dBgW internals. d_bg_w.cpp
- *   defines them; the callback setters remain local.
  * - data_ov022_021145a8 (the seesaw BMD), data_ov022_021145a0 (the KCL)
  *   and data_ov064_0211bacc (the CLPS row SetFile is handed) are unnamed
  *   data rows in their own modules.
@@ -46,13 +44,6 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
 extern SeesawModelFile data_ov022_021145a8;
 extern SeesawCollisionFilePtr data_ov022_021145a0;
 extern char data_ov064_0211bacc[];
-
-extern "C" {
-
-/* local extern: stores beforeClsnCallback at dBgW+0x18. d_bg_w.cpp
- * defines it and no header declares it. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-}
 
 #pragma defer_codegen off
 
@@ -108,7 +99,7 @@ s32 daObjFl_Seesaw_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
                               *(CLPS_Block *)(data_ov064_0211bacc));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;
 }

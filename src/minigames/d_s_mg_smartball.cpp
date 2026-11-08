@@ -888,6 +888,13 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
     int b0;
     int b1;
     int kk;
+    /* Kept volatile (measured 2026-11-07): the ROM narrows each fill value
+       through its own stack halfword (strh/ldrh at sp+0x18..0x20) rather than
+       lsl/lsr. Plain u16 locals, u16[1] arrays, a struct or union holding the
+       u16, *&t, and inline fill wrappers taking the value by value, by const
+       or non-const reference, or by pointer all give 41 words, 4 bytes long.
+       Only *(u16 *)&t also matches, and that is the same launder spelled
+       differently. */
     volatile u16 t1;
     volatile u16 t2;
     volatile u16 t3;
@@ -2945,6 +2952,11 @@ extern "C" { /* .c-derived member: C linkage for the whole block */
 void cMgSmartball_ball_c::UpdatePhysics() {
     State2 state;
     V2xz work;
+    /* Kept volatile (measured 2026-11-07): the ROM keeps the entry velocity in
+       memory at sp+0x5c and reloads both words for each hit-sound copy. A
+       plain V2xz is scalarized and moves the frame (216 words), and so does
+       copying it whole (event0 = savedVel) with or without the two stores
+       made adjacent. */
     volatile V2xz savedVel;
     V2xz dist;
     V2xz delta;
@@ -4113,7 +4125,10 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* opt_strength_reduction stays off: the ROM re-adds i * 8 and each field offset per access; indexed mDust* spellings are 0xf4-0x110 of 0xf8. */
+/* opt_strength_reduction stays off: the ROM re-adds i * 8 and each field offset per access; indexed mDust* spellings are 0xf4-0x110 of 0xf8.
+   Measured again 2026-11-07: this body without the pragma is 0x108 (36 words);
+   a plain mDustActive[i] / mDustAge[i] / pos and vel pointer spelling is 0x100
+   without the pragma (45) and 0xf4 with it (40). */
 void dScMgSmartball_c::UpdateDust() {
     char *self = (char *)this;
     int i;
@@ -5884,6 +5899,9 @@ s32 dScMgSmartball_c::InitResources() {
     DecompressLZ16(f, G2S::GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
+        /* Kept volatile (measured 2026-11-07): the same stack round trip of
+           the fill value as PaintCell. A literal 0, u16 v = 0, a separate
+           v = 0 and a u16[1] all give 52 words, 8 bytes short. */
         volatile u16 v;
         MultiStore16((u16)(v = 0), G2S::GetBG0ScrPtr(), 0x1000);
     }

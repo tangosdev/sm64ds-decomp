@@ -18,7 +18,7 @@
  * - Sound::Play(3, 0xf3, pos) is +8 bytes in StateWalk (0x104 -> 0x10c).
  *   The ROM calls func_0201267c.
  * - Assigning mMeshCollider.beforeClsnCallback is -4 bytes in
- *   InitResources (0x1c8 -> 0x1c4). The ROM calls func_020393d4.
+ *   InitResources (0x1c8 -> 0x1c4). The ROM calls dBgW::SetBeforeClsnCallback.
  * - Naming mAnmModel.currFrame and .file in StateWalk reorders 6 words (the
  *   straight-walk file loads after the frame). c+0x378 / c+0x380 and the
  *   ternary stay.
@@ -62,10 +62,6 @@ enum {
     /* dActor_c::mFlags 0x2: with the clip test, skip Render. */
     kSkipRender = 2
 };
-
-/* local extern: stores dBgW::beforeClsnCallback (p[6]); dBgW.h has no
- * setter. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* File-scope objects at the end of this file construct the six resource
  * handles and fill the four-slot state table. mwcc emits
@@ -151,7 +147,7 @@ s32 daPgDfdr_c::InitResources() {
     file = dBgW_Kc::LoadFile(data_ov027_02113c6c);
     mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY,
                           *(CLPS_Block *)&data_ov027_021130e8);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     mVertAccel = 0;
     mTerminalVelocity = 0;

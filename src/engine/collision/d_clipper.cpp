@@ -13,7 +13,8 @@
  * destructor's variants in that order before the constructor is written.
  *
  * leftovers:
- * - ClipSphere and TransformAndClip are names inferred from their operations.
+ * - ClipSphere, TransformAndClip and UpdateFrustumPlanes are names inferred
+ *   from their operations.
  * - ClipSphere's opt_propagation off pair, its materialized 0/1
  *   outside/insidePlane locals and its unsigned re-reads of viewPos.y/z are
  *   the matched form; dClipper_EmitDeletingDestructor/EmitDestructor
@@ -134,7 +135,7 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  * follow, and each adjacent pair crossed and normalised is one side plane's
  * normal.
  */
-void dClipper::Func_0201559C() {
+void dClipper::UpdateFrustumPlanes() {
     int angleIndex = (int)mFovAngle >> 4;
     int tanHalfFov = cstd::fdiv(data_02082214[2 * angleIndex], data_02082214[2 * angleIndex + 1]);
     Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
@@ -173,7 +174,7 @@ void dClipper::Func_020156DC(Fix12i aspectRatio, s16 fovAngle, Fix12i nearZ, Fix
     mFovAngle = fovAngle;
     mNearZ = nearZ;
     mFarZ = farZ;
-    Func_0201559C();
+    UpdateFrustumPlanes();
 }
 
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
@@ -187,7 +188,7 @@ void dClipper_EmitDestructor(dClipper *p) {
 }
 
 /* The default projection: aspect 4:3 (0x1555), angle 0xe38 (20 degrees,
- * the half-angle Func_0201559C takes the tangent of), near plane 1.0 and
+ * the half-angle UpdateFrustumPlanes takes the tangent of), near plane 1.0 and
  * far plane 5000.0. */
 dClipper::dClipper() {
     Func_020156DC(0x1555, 0xe38, 0x1000, 0x1388000);
