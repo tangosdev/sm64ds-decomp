@@ -25,9 +25,9 @@
  * file's .data claim covers. Everything else it touches is reached by extern.
  *
  * Emission order. `#pragma defer_codegen off` is load-bearing here: with codegen
- * deferred the opt_* pragmas around Banner_DrawSqueeze, Banner_DrawZoomA
- * and Banner_DrawZoomB do not bind to the one function
- * they bracket. Source is therefore ROM-ascending.
+ * deferred mwccarm emits the functions' sections in reverse source order
+ * (measured: Mg_FreeBannerFiles comes out last), and the ROM has them
+ * ascending. Source is therefore ROM-ascending.
  *
  * The bodies were matched as one-function C or C++ sources and keep that
  * spelling under extern "C" and their ROM names.
@@ -41,9 +41,7 @@
  * names, so an edit here that moves the count re-keys those two rows. The
  * two function-local Vector2 statics (Banner_StartWaveBurst,
  * Banner_SetupZoomBurst) are renamed the same way, onto the ov004 .bss names
- * at 0x020bf3ec..0x020bf41c that this unit owns. The named
- * parameters on the __cxa_vec_cleanup prototype stand in for names
- * removed elsewhere.
+ * at 0x020bf3ec..0x020bf41c that this unit owns.
  *
  * Member-pointer records. The pmf_Banner_* words are the {function, 0}
  * records mwccarm emits for each `&MgBanner::handler` use, and data_02086b58
@@ -137,9 +135,6 @@ void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, int angle);
 int RandomIntInternal(int *seed);
 void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
-/* local extern: only sibling minigame scene headers declare it, and its
-   named parameters hold the @NNN count noted above. */
-void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, dtor_t dtor);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
