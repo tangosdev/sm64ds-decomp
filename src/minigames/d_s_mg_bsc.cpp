@@ -291,10 +291,8 @@ void dScMgBSC_c::StateChooseCard() {
     if (touchPressed == 0)
         return;
     for (lane = 0; lane < 2; lane++) {
-        unsigned char currentPlayerSlot = *(volatile unsigned char *)&gActivePlayerSlot;
-        unsigned char *touch = &gTouchHeld[(unsigned int)currentPlayerSlot * 4];
-        int dx = (int)touch[2] - (sBscLaneX[lane] >> 12);
-        int dy = (int)touch[3] - 0x60;
+        int dx = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
+        int dy = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].y - 0x60;
         if (dx < -0x10)
             continue;
         if (dx > 0x10)

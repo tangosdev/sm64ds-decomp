@@ -91,6 +91,7 @@ enum dScMgAmida_c_AssetId {
 #include "Vector2Math.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "CP15.h"
 #include "GX.h"
@@ -119,7 +120,6 @@ extern void Amida_SaveBgChars(void *sb);
 extern void *dScMgAmida_c_classInit(void);
 
 /* --- data --- */
-extern s16 data_02082214[];
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int sAmidaPatternSpeedUp[];
@@ -1822,8 +1822,8 @@ s32 dScMgAmida_c::Render() {
     mBgScrollPhase += 0xc0;
     {
         u16 idx = mBgScrollPhase;
-        int sine = data_02082214[(idx >> 4) << 1];
-        int off = (sine + (int)((unsigned)(sine >> 7) >> 24)) >> 8;
+        int sine = FX_SinIdx(idx >> 4);
+        int off = sine / 256;
         SetSubBg2Offset(off, 0);
     }
     Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
@@ -2033,20 +2033,19 @@ s32 dScMgAmida_c::Behavior() {
                         randB = RandomIntInternal(&data_0209d4b8.value);
                         bv = ((u32)randB >> 16) & 0x7fff;
                         av = ((u32)randA >> 16) & 0x7fff;
-                        cosB = data_02082214[((int)((bv << 15) >> 16) >> 4) * 2 + 1];
-                        idxA = ((int)((av << 17) >> 16) >> 4) * 2;
-                        cA = data_02082214[idxA + 1];
+                        cosB = FX_CosIdx((int)((bv << 15) >> 16) >> 4);
+                        idxA = (int)((av << 17) >> 16) >> 4;
+                        cA = FX_CosIdx(idxA);
                         {
-                            mPieces[slot].posX = FX_MUL(cosB, (int)((0x8000LL * cA + 0x800) >> 12));
-                            sinA = data_02082214[idxA];
-                            mPieces[slot].posY =
-                                FX_MUL(cosB, (int)((0x8000LL * sinA + 0x800) >> 12));
+                            mPieces[slot].posX = FX_MUL(cosB, FX_MUL(0x8000, cA));
+                            sinA = FX_SinIdx(idxA);
+                            mPieces[slot].posY = FX_MUL(cosB, FX_MUL(0x8000, sinA));
                             mPieces[slot].posX += mLanePos[j].x;
                             mPieces[slot].posY += mLanePos[j].y;
-                            mPieces[slot].velX =
-                                FX_MUL(cosB, (int)((0x1000LL * (int)(cA) + 0x800) >> 12));
-                            mPieces[slot].velY =
-                                FX_MUL(cosB, (int)((0x1000LL * sinA + 0x800) >> 12));
+                            /* (int)cA: without the cast, or with cA
+                               declared int, Behavior differs by 13 words. */
+                            mPieces[slot].velX = FX_MUL(cosB, FX_MUL(0x1000, (int)cA));
+                            mPieces[slot].velY = FX_MUL(cosB, FX_MUL(0x1000, sinA));
                         }
                         mPieces[slot].velY -= 0x400;
                         mPieces[slot].active = 1;
