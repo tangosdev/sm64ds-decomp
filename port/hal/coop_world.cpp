@@ -520,7 +520,18 @@ bool going(const char *a) { return *(const unsigned char *)(a + 0x0f) || *(const
 // a copy that stands up later (a friend who enters after the break) is removed as soon as it is there, and a member who
 // joins the group is sent the list again. The coins and the star stay the breaker's. The 0x13 switch block (19) only flags
 // itself broken and comes back from its switch: not watched.
-bool breakable_block(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 || cls == 46; }
+// COOPWALLS1: the same shape, no death bit and nothing inside but an announced star, for Whomp's Fortress' two walls
+// (daObjBk_Kabe_c, src/game/actors/d_a_obj_bk_kabe.cpp: 48 BK_KABE00, broken by a cannon shot, raises its star and then
+// MarkForDestruction; 47 BK_KABE01 goes at once in Kill) and Jolly Roger Bay's stone pillars (58, daObjKi_Hasira_c,
+// d_a_obj_ki_hasira.cpp:220: it topples when a player comes within 1300 units and ends in MarkForDestruction; nothing
+// counts the pillars, no star waits on them). They go on the group list and the room list like the blocks.
+bool breakable_block(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 || cls == 46 || cls == 47 || cls == 48 || cls == 58; }
+// COOPWALLS1: star holders that also leave with no death bit: Big Mr. I (263, daEykn_c, d_a_eykn.cpp:470-474: a death bit
+// only in level 0x2e) and the Chill Bully (217, daIDonketu_c, d_a_i_donketu.cpp:137). Beaten on one console they are
+// removed on the others and kept on the group's list for this visit (a member who joins the group is sent it), but never
+// on the room's list: the star they hold is the breaker's and is announced once, and a later visit after the level emptied
+// finds them as the cartridge builds it. (The Moneybag, 261, dies through KillAndTrackInDeathTable: the death table has it.)
+bool live_gone(unsigned cls) { return cls == 263 || cls == 217; }
 enum : int { kGoneMax = 32, kGonePushes = 4 };
 struct Gone { uint16_t slot, cls; };
 Gone g_gone[kGoneMax]; int g_gone_n = 0;
@@ -727,7 +738,8 @@ void watch_capped(unsigned now) {
         const short slot = *(const short *)(a + 0xce);
         if (slot < 0 || slot >= kCoopSlots || going(a) || is_player_ptr(a)) continue;
         ++slotted;
-        if (n < kCapMax && (capped_goomba(a) || breakable_block(*(const unsigned short *)(a + 0x0c))))
+        if (n < kCapMax && (capped_goomba(a) || breakable_block(*(const unsigned short *)(a + 0x0c)) ||
+                            live_gone(*(const unsigned short *)(a + 0x0c))))
             cur[n++] = {a, (uint16_t)slot, *(const unsigned short *)(a + 0x0c)};
     }
     const bool fresh = g_cap_slotted >= 0 && g_cap_frame + 1 == g_est_frames;
@@ -744,8 +756,9 @@ void watch_capped(unsigned now) {
         for (int k = 0; k < g_sw_n && !skip; ++k) skip = g_sw_out[k].slot == o.slot;
         if (!skip && g_sw_n < kSwOutMax) g_sw_out[g_sw_n++] = {o.slot, o.cls, 0, now};
         if (!bit && breakable_block(o.cls)) { gone_note(slot, o.cls); room_gone_note(g_key, slot, o.cls); }
+        if (!bit && live_gone(o.cls)) gone_note(slot, o.cls);   // COOPWALLS1: this visit's list only
         std::fprintf(stderr, "[coop] %s watch: class %u slot %d went away here %s wall=%lld\n",
-                     breakable_block(o.cls) ? "block" : "capped", (unsigned)o.cls, slot,
+                     breakable_block(o.cls) ? "block" : live_gone(o.cls) ? "boss" : "capped", (unsigned)o.cls, slot,
                      bit ? "with a death bit (the death table carries it)" : skip ? "(swallow or a friend's message: not told again)"
                                                                            : "with no death bit: told the group",
                      wall_ms());
@@ -788,6 +801,7 @@ void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
         return;
     }
     if (breakable_block(cls)) { gone_note(slot, cls); room_gone_note(g_key, slot, cls); }   // kept even with no copy standing yet
+    if (live_gone(cls)) gone_note(slot, cls);   // COOPWALLS1: Big Mr. I / Chill Bully, this visit only
     if (!a || going(a) || is_player_ptr(a)) {
         if (g_log) std::fprintf(stderr, "[coop] swallow from seat %d: class %u slot %d, no live copy here\n", seat, cls, slot);
         return;

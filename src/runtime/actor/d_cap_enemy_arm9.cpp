@@ -33,8 +33,11 @@
 struct Vector3_16 { s16 x, y, z; };
 
 #ifdef _MSC_VER
-/* Host only (run after093, lane COOPBOO3): in a coop room every console must hold the same objects, so a cap enemy is
-   made on every console whatever character each one plays, the way the cartridge's own VS mode keeps them all
+/* Host only (run after093, lanes COOPBOO3 / COOPWALLS1). For one player the cartridge keeps every cap enemy: AddCap's
+   func_02005e28 hides the cap when it is the nearest player's own (bit 0x80 on mCapId), and the mCapId >= 6 test below
+   then keeps the enemy. The drop below only fires when the nearest body's param1 (its look) and mCharacter disagree,
+   which a port friend body can do (a friend's character swap leaves his character in data_02092128). In a coop room
+   every console must hold the same objects, so the hook keeps them all here, the way the VS branch does
    (data_0209f2d8 == 1 below). port/hal/coop_world.cpp sets the hook while it runs; with no room (solo) it stays 0 and
    this function is the cartridge's. The DS build never sees this. */
 extern "C" { int (*port_coop_cap_keep_all)(void) = 0; }
