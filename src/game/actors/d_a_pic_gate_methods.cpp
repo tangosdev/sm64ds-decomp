@@ -18,22 +18,25 @@
  * strip writer stores it at 0x04000484.
  *
  * The five handlers are daPicGate_c members bound through the four
- * data_ov080_02128628 state rows; they keep func_ov080_* address-label
- * names. #pragma defer_codegen off keeps .text in
+ * data_ov080_02128628 state rows. Row 0 is N64's proximity-triggered image
+ * painting (wall_painting_proximity_rippling, painting_ripple_image), row 1
+ * its continuous, environment-mapped one (wall_painting_continuous_rippling,
+ * painting_ripple_env_mapped); picture 7's slide is N64's move_ddd_painting.
+ * #pragma defer_codegen off keeps .text in
  * source order. The destructor pair and g_profile_PICTURE_GATE are outside
  * this run. The abutting registry factory daPicGate_c_classInit
  * (0x02126f8c) is written last.
  * SetRanges is a real dActor_c method now (dActor_c.h declares it).
  *
  * deslop leftovers:
- * - func_ov080_021264ec and func_ov080_021269b8: mWavePhase += phaseStep
+ * - UpdateContinuousRipple and UpdateProximityRipple: mWavePhase += phaseStep
  *   differs by 6 words. The add that matches reuses the r5+0x100 base
  *   already formed for mNumCells; += addresses mWavePhase at 0x1b4.
  * - InitResources: a picture-id local, and declaring the default wave
  *   row as a WaveParams, shrank the function from 0x2ec to 0x2b4. The
  *   bit extracts stay written out, and the row stays an untyped object
  *   whose address is cast.
- * - func_ov080_0212677c: for-loops over the columns and the rows grew
+ * - DrawRippleImage: for-loops over the columns and the rows grew
  *   it from 0x23c to 0x24c. The entry test is still n = mCols; i = 0;
  *   n = n - 1, so the subtract consumes that n, and both loops stay
  *   do/while.
@@ -120,19 +123,8 @@ extern void func_0203cbc0(void *a);
    vtable itself is emitted with the destructor, outside this file. */
 namespace Memory { void *operator_new2(unsigned int size); }
 
-/* Call-site names. The state-table handlers keep their func_ov080_* names;
- * the helpers are daPicGate_c members declared on the class and defined in
+/* The helpers are daPicGate_c members declared on the class and defined in
  * src/game/actors/d_a_pic_gate.cpp. */
-#define HitTest func_ov080_021256f8
-#define RippleHeight func_ov080_02125bb0
-#define BuildNormals func_ov080_02125940
-#define FlattenFrame func_ov080_02125af0
-#define PlaceCorners func_ov080_02126124
-#define BeginWave func_ov080_02125de0
-#define DrawFlat func_ov080_02125fd0
-#define LoadMaterial func_ov080_02125460
-#define BuildGateMatrix func_ov080_0212555c
-#define LoadTexture func_ov080_02125630
 #define LoadMtx43 func_020553a4
 #define kStates data_ov080_02128628
 #define kDefaultWave data_ov080_02127834
@@ -167,8 +159,7 @@ struct PicGateFilePtr : SharedFilePtr {
     G3_VTX_16 = (u16)s2
 
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
-void daPicGate_c::func_ov080_021264ec()
-{
+void daPicGate_c::UpdateContinuousRipple() {
     if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide && !(data_0209caa0.file.flags2 & kOpened) &&
         IsStarCollectedInLevel(kGateLevel, kGateStar)) {
         if (ApproachLinear(this->mPosX, this->mClosedPosX + kSlide, kSlideStep))
@@ -187,8 +178,7 @@ void daPicGate_c::func_ov080_021264ec()
 }
 
 /* State 1 init. Even grid, flat +Z normal, then a wave at the centre. */
-void daPicGate_c::func_ov080_021265ec()
-{
+void daPicGate_c::InitContinuousRipple() {
     int x = 0;
     int y = 0;
     int row;
@@ -220,8 +210,7 @@ void daPicGate_c::func_ov080_021265ec()
 }
 
 /* State 0 render. A dead wave draws the flat quad; otherwise a strip per column. */
-void daPicGate_c::func_ov080_0212677c()
-{
+void daPicGate_c::DrawRippleImage() {
     Matrix4x3 tmp;
     int i, j;
 
@@ -262,8 +251,7 @@ void daPicGate_c::func_ov080_0212677c()
 }
 
 /* State 0 behavior. Ripples only while mWaveTimer is still counting. */
-void daPicGate_c::func_ov080_021269b8()
-{
+void daPicGate_c::UpdateProximityRipple() {
     int i;
     daPicGate_c::Vertex *v;
 
@@ -282,8 +270,7 @@ void daPicGate_c::func_ov080_021269b8()
 }
 
 /* State 0 init. Same grid as state 1, plus a texcoord, and no wave yet. */
-void daPicGate_c::func_ov080_02126a54()
-{
+void daPicGate_c::InitProximityRipple() {
     int x = 0;
     int y = 0;
     int row;
@@ -442,12 +429,10 @@ PicGateFilePtr gForVsCrossModelFile(ASSET_FOR_VS_CROSS_BMD);
 PicGateFilePtr gForVsIslandModelFile(ASSET_FOR_VS_ISLAND_BMD);
 
 daPicGate_c::State data_ov080_02128628[4] = {
-    { &daPicGate_c::func_ov080_02126a54, &daPicGate_c::func_ov080_021269b8,
-      &daPicGate_c::func_ov080_0212677c },
-    { &daPicGate_c::func_ov080_021265ec, &daPicGate_c::func_ov080_021264ec,
-      &daPicGate_c::func_ov080_021261f4 },
-    { &daPicGate_c::func_ov080_02126124, &daPicGate_c::func_ov080_02126120,
-      &daPicGate_c::func_ov080_02125fd0 },
-    { &daPicGate_c::func_ov080_02125f00, &daPicGate_c::func_ov080_02126120,
-      &daPicGate_c::func_ov080_02125fd0 },
+    {&daPicGate_c::InitProximityRipple, &daPicGate_c::UpdateProximityRipple,
+     &daPicGate_c::DrawRippleImage},
+    {&daPicGate_c::InitContinuousRipple, &daPicGate_c::UpdateContinuousRipple,
+     &daPicGate_c::DrawRippleEnvMapped},
+    {&daPicGate_c::PlaceCorners, &daPicGate_c::UpdateFlat, &daPicGate_c::DrawFlat},
+    {&daPicGate_c::PlaceCornersMirrored, &daPicGate_c::UpdateFlat, &daPicGate_c::DrawFlat},
 };

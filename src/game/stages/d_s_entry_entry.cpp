@@ -65,7 +65,7 @@ extern EntryMeshHandler EntryMeshHandlers[3];
 /* Push the cached material to the geometry engine: diffuse/ambient,
  * specular/emission, the texture image param and the palette base, then a
  * fixed polygon attribute, through NitroSDK's G3 immediate inlines. Same
- * shape as func_ov080_02125460. */
+ * shape as daPicGate_c::LoadMaterial. */
 void EntryMesh::SendMaterial() {
     reg_G3_DIF_AMB = mMaterial.difAmb;
     reg_G3_SPE_EMI = mMaterial.speEmi;

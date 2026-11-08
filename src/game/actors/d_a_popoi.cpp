@@ -29,7 +29,7 @@
  *     _ZN identifiers (Fix12<int> by value; the real headers can't express the
  *     call-site mangling). Sound::PlayLong and dBgCh_Actr::GetFloorResult are
  *     real calls.
- *   - func_ov077_021269a8 calls AngleDiff through an (int(*)(short,short))
+ *   - UpdateTurnAwayState calls AngleDiff through an (int(*)(short,short))
  *     pointer cast: decl_common declares (int,int), and the short call-site
  *     typing is byte-load-bearing.
  *   - Render calls dExtAnmModel_c::Render through a dExtAnmModel_c pointer, so it
@@ -91,8 +91,8 @@ struct PopoiTurnAwayRec {
 
     PopoiTurnAwayRec()
     {
-        enter = &daPopoi_c::func_ov077_02126a04;
-        update = &daPopoi_c::func_ov077_021269a8;
+        enter = &daPopoi_c::EnterTurnAwayState;
+        update = &daPopoi_c::UpdateTurnAwayState;
     }
 };
 
@@ -184,13 +184,13 @@ int daPopoi_c::InitResources()
     mSavedPosX = mPosX;
     mSavedPosY = mPosY;
     mSavedPosZ = mPosZ;
-    func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127ce8); /* start in Wander */
+    ChangeState((daPopoi_StateRecord *)&data_ov077_02127ce8); /* start in Wander */
     return 1;
 }
 
 /* The state machine, as this member sees it. mState points at a record of two
  * pointer-to-member functions on this class: the ENTER handler at offset 0
- * (run once by func_ov077_02126d5c as the state is installed) and the UPDATE
+ * (run once by ChangeState as the state is installed) and the UPDATE
  * handler at offset 8 (run each frame below). */
 struct daPopoi_StateRecord { int (daPopoi_c::*enter)(); int (daPopoi_c::*update)(); };
 
@@ -253,12 +253,12 @@ int daPopoi_c::Behavior()
     UpdateWMClsn(mWithMeshClsn, 2);
 
     mAngleY = mPrevAngleY;
-    func_ov077_02126dac();
+    UpdateModelTransform();
 
     /* On the ground and not already in Grab (data_ov077_02127cd8): see whether the
      * sensor is touching a daPly_c to grab. */
     if (mWithMeshClsn.IsOnGround() && mState != (daPopoi_StateRecord *)data_ov077_02127cd8) {
-        func_ov077_02126528();
+        TryGrabPlayer();
     }
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
@@ -308,8 +308,7 @@ int daPopoi_c::CleanupResources()
 /* Rebuilds the model's matrix (mAnmModel.mat4x3): a rotation about Y by mAngleY,
  * with the translation (words 9..11 of the flat 12-word spelling this TU sees) set
  * to the actor's position >> 3. Called from Behavior after the position writeback. */
-void daPopoi_c::func_ov077_02126dac()
-{
+void daPopoi_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
     mAnmModel.mat4x3.m[10] = mPosY >> 3;
@@ -326,8 +325,7 @@ void daPopoi_c::func_ov077_02126dac()
  * The record pointer is read back out of the field after the store rather than
  * reused from the argument -- mwccarm emits the str and then an ldr of the same
  * slot, and sourcing it from `next` instead collapses that pair. */
-int daPopoi_c::func_ov077_02126d5c(daPopoi_StateRecord *next)
-{
+int daPopoi_c::ChangeState(daPopoi_StateRecord *next) {
     mState = next;
 
     if (mState->enter == 0) return 1;
@@ -339,7 +337,7 @@ int daPopoi_c::func_ov077_02126d5c(daPopoi_StateRecord *next)
  * 170..233 frames (0xaa + 0..63) in mStateTimer, sets the animation to normal
  * speed and plays file 0x40f's animation (data_ov077_02127c90), and starts walking
  * at 8 units/frame (0x8000). Always returns 1. */
-int daPopoi_c::func_ov077_02126cd4(){
+int daPopoi_c::EnterWanderState() {
     mTargetAngleY =
         (short)((((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 0xc);
     mStateTimer =
@@ -351,12 +349,10 @@ int daPopoi_c::func_ov077_02126cd4(){
     return 1;
 }
 
-
-
 /* Wander, UPDATE handler (record data_ov077_02127ce8). Each frame:
  *   - distance from the actor to its home position, and the movement sound
  *     (daPopoi_SND_MOVE_LOOP) kept alive through mSoundHandle;
- *   - the ahead probe (func_ov077_02126300) firing -> TurnAway (data_ov077_02127d18),
+ *   - the ahead probe (IsBlockedAhead) firing -> TurnAway (data_ov077_02127d18),
  *     return;
  *   - against a wall -> position restored from mSavedPos;
  *   - more than 500 units (0x1f4000) from home -> the target heading becomes the
@@ -371,8 +367,7 @@ int daPopoi_c::func_ov077_02126cd4(){
  *     (0x3e8000) of the HOME position (not of the actor), is not Metal or Mega,
  *     and GetHurtState() is negative -> Chase (data_ov077_02127d08).
  * Always returns 1. */
-int daPopoi_c::func_ov077_02126ad0()
-{
+int daPopoi_c::UpdateWanderState() {
     int dist;
     daPly_c *player;
     struct Vector3 pp;
@@ -381,8 +376,8 @@ int daPopoi_c::func_ov077_02126ad0()
                      reinterpret_cast<const Vector3 *>(&mHomePosX));
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
-    if (func_ov077_02126300() != 0) {
-        func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127d18);   /* TurnAway */
+    if (IsBlockedAhead() != 0) {
+        ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
         return 1;
     }
 
@@ -405,7 +400,7 @@ int daPopoi_c::func_ov077_02126ad0()
         mAnmModel.speed = 0x1000 / (0x64 - (unsigned short)mStateTimer);
 
     if ((unsigned short)mStateTimer == 0) {
-        func_ov077_02126d5c((daPopoi_StateRecord *)data_ov077_02127cf8);   /* Pause */
+        ChangeState((daPopoi_StateRecord *)data_ov077_02127cf8); /* Pause */
         return 1;
     }
 
@@ -420,7 +415,7 @@ int daPopoi_c::func_ov077_02126ad0()
         pp.z = src->z;
         if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mHomePosX), &pp) < 0x3e8000 &&
             player->mIsMetal == 0 && player->mIsMega == 0 && player->GetHurtState() < 0) {
-            func_ov077_02126d5c((daPopoi_StateRecord *)data_ov077_02127d08);   /* Chase */
+            ChangeState((daPopoi_StateRecord *)data_ov077_02127d08); /* Chase */
             return 1;
         }
     }
@@ -430,7 +425,7 @@ int daPopoi_c::func_ov077_02126ad0()
 /* Pause, ENTER handler (record data_ov077_02127cf8): stop (horizontal speed 0),
  * stand for 70 frames (mStateTimer = 0x46), normal animation speed, and play file
  * 0x410's animation (data_ov077_02127c98). Returns 1. */
-int daPopoi_c::func_ov077_02126a84() {
+int daPopoi_c::EnterPauseState() {
     mHorzSpeed = 0;
     mStateTimer = 0x46;
     mAnmModel.speed = 0x1000;
@@ -440,10 +435,10 @@ int daPopoi_c::func_ov077_02126a84() {
 
 /* Pause, UPDATE handler (record data_ov077_02127cf8): when mStateTimer reaches 0,
  * go back to Wander (data_ov077_02127ce8). Returns 1. */
-int daPopoi_c::func_ov077_02126a50() {
+int daPopoi_c::UpdatePauseState() {
     unsigned short timer = mStateTimer;
     if (timer == 0) {
-        func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127ce8);   /* Wander */
+        ChangeState((daPopoi_StateRecord *)&data_ov077_02127ce8); /* Wander */
     }
     return 1;
 }
@@ -451,7 +446,7 @@ int daPopoi_c::func_ov077_02126a50() {
 /* TurnAway, ENTER handler (record data_ov077_02127d18): the target heading becomes
  * mAngleY + 0x4000 (a quarter turn), animation at normal speed, file 0x40f's
  * animation (data_ov077_02127c90). Returns 1. */
-int daPopoi_c::func_ov077_02126a04() {
+int daPopoi_c::EnterTurnAwayState() {
     mTargetAngleY = mAngleY + 0x4000;
     mAnmModel.speed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov077_02127c90)[1]), 0, 0x1000, 0);
@@ -462,7 +457,7 @@ int daPopoi_c::func_ov077_02126a04() {
  * mTargetAngleY by 0x500 (7.0 degrees) per frame; once AngleDiff of the two is below
  * 0x100 (1.4 degrees), set mCooldown to 30 frames and go back to Wander
  * (data_ov077_02127ce8). Returns 1. */
-int daPopoi_c::func_ov077_021269a8() {
+int daPopoi_c::UpdateTurnAwayState() {
     /* (short,short) view of AngleDiff (decl_common says int,int); the cast keeps
        C linkage and the short call-site typing, which is byte-load-bearing. */
     short tgt = mTargetAngleY;
@@ -470,7 +465,7 @@ int daPopoi_c::func_ov077_021269a8() {
     int diff = ((int (*)(short, short))AngleDiff)(mPrevAngleY, mTargetAngleY);
     if (diff < 0x100) {
         mCooldown = 0x1e;
-        func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127ce8);   /* Wander */
+        ChangeState((daPopoi_StateRecord *)&data_ov077_02127ce8); /* Wander */
     }
     return 1;
 }
@@ -480,7 +475,7 @@ int daPopoi_c::func_ov077_021269a8() {
  * and file 0x40f's animation (data_ov077_02127c90). The store of 0x2000 (2.0) to
  * mAnmModel.speed is overwritten by SetAnim's speed argument 0x1000, so the
  * animation ends up at speed 1.0. Returns 1. */
-int daPopoi_c::func_ov077_02126930(){
+int daPopoi_c::EnterChaseState() {
     mStateTimer =
         (short)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 8 & 0x3f) + 0xaa);
     mHorzSpeed = 0x6000;
@@ -505,8 +500,7 @@ int daPopoi_c::func_ov077_02126930(){
  *   - more than 1500 units (0x5dc000) from home, or the timer at 0, or the ahead
  *     probe firing -> Pause (data_ov077_02127cf8).
  * Always returns 1. */
-int daPopoi_c::func_ov077_0212679c()
-{
+int daPopoi_c::UpdateChaseState() {
     struct Vector3 pv;
     struct Vector3 *pp;
     int dist;
@@ -516,8 +510,8 @@ int daPopoi_c::func_ov077_0212679c()
     dist = Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
                      reinterpret_cast<const Vector3 *>(&mHomePosX));
 
-    if (func_ov077_02126300() != 0) {
-        func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127d18);   /* TurnAway */
+    if (IsBlockedAhead() != 0) {
+        ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
         return 1;
     }
 
@@ -546,8 +540,8 @@ int daPopoi_c::func_ov077_0212679c()
         mAnmModel.speed = 0x1000 / (5 - spd / 20);
     }
 
-    if (dist > 0x5dc000 || (unsigned short)mStateTimer == 0 || func_ov077_02126300() != 0)
-        func_ov077_02126d5c((daPopoi_StateRecord *)data_ov077_02127cf8);   /* Pause */
+    if (dist > 0x5dc000 || (unsigned short)mStateTimer == 0 || IsBlockedAhead() != 0)
+        ChangeState((daPopoi_StateRecord *)data_ov077_02127cf8); /* Pause */
 
     return 1;
 }
@@ -555,7 +549,7 @@ int daPopoi_c::func_ov077_0212679c()
 /* Grab, ENTER handler (record data_ov077_02127cd8): stop (horizontal speed 0),
  * normal animation speed, and play file 0x40e's animation (data_ov077_02127ca0) with
  * SetAnim flags 0x40000000 (every other state passes 0). Returns 1. */
-int daPopoi_c::func_ov077_02126758(){
+int daPopoi_c::EnterGrabState() {
     mHorzSpeed = 0;
     mAnmModel.speed = 0x1000;
     mAnmModel.SetAnim((BCA_File *)(((void **)&data_ov077_02127ca0)[1]), 0x40000000, 0x1000, 0);
@@ -578,8 +572,7 @@ int daPopoi_c::func_ov077_02126758(){
  * daPopoi_SND_THROW_PLAYER plays at the actor's position.
  * Whether or not anything was caught, once the animation has Finished the state goes
  * to Pause (data_ov077_02127cf8). Returns 1. */
-int daPopoi_c::func_ov077_02126640()
-{
+int daPopoi_c::UpdateGrabState() {
     Vector3 v;
     daPly_c *a;
     if (mCaughtPlayer != 0) {
@@ -609,7 +602,7 @@ int daPopoi_c::func_ov077_02126640()
         }
     }
     if (mAnmModel.Finished() != 0) {
-        func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127cf8);   /* Pause */
+        ChangeState((daPopoi_StateRecord *)&data_ov077_02127cf8); /* Pause */
     }
     return 1;
 }
@@ -621,8 +614,7 @@ int daPopoi_c::func_ov077_02126640()
  * not Metal and not Mega; mIsNoControl is zero; GetHurtState() is negative; and
  * IsCollectingCap() is zero. If every test passes, mCaughtPlayer = that daPly_c and
  * the Grab state (data_ov077_02127cd8) is installed. */
-void daPopoi_c::func_ov077_02126528()
-{
+void daPopoi_c::TryGrabPlayer() {
     Vector3 v;
     daPly_c *a;
     v.x = data_ov077_02127a5c.x;
@@ -643,7 +635,7 @@ void daPopoi_c::func_ov077_02126528()
     if (a->GetHurtState() >= 0) return;
     if (a->IsCollectingCap() != 0) return;
     mCaughtPlayer = a;
-    func_ov077_02126d5c((daPopoi_StateRecord *)&data_ov077_02127cd8);   /* Grab */
+    ChangeState((daPopoi_StateRecord *)&data_ov077_02127cd8); /* Grab */
 }
 
 /* Probe ahead for a wall or a missing floor. Returns 1 if the way is blocked,
@@ -662,8 +654,7 @@ void daPopoi_c::func_ov077_02126528()
  * store is deliberate. mwccarm writes the base and then the sum, and folding
  * them into one assignment changes the store sequence this function's ROM bytes
  * record. Leave them. */
-int daPopoi_c::func_ov077_02126300()
-{
+int daPopoi_c::IsBlockedAhead() {
     int y;
 
     if (gCurrentSublevel == 0x2a) {
@@ -776,24 +767,23 @@ PopoiAnimationFilePtr data_ov077_02127c90(ASSET_POPOI_MOVE1_BCA);
 PopoiAnimationFilePtr data_ov077_02127c98(ASSET_POPOI_MOVE2_BCA);
 
 PopoiPMF data_ov077_02127ce8[2] = {
-    &daPopoi_c::func_ov077_02126cd4,
-    &daPopoi_c::func_ov077_02126ad0,
+    &daPopoi_c::EnterWanderState,
+    &daPopoi_c::UpdateWanderState,
 };
 
 PopoiPMF data_ov077_02127cf8[2] = {
-    &daPopoi_c::func_ov077_02126a84,
-    &daPopoi_c::func_ov077_02126a50,
+    &daPopoi_c::EnterPauseState,
+    &daPopoi_c::UpdatePauseState,
 };
 
 PopoiPMF data_ov077_02127d08[2] = {
-    &daPopoi_c::func_ov077_02126930,
-    &daPopoi_c::func_ov077_0212679c,
+    &daPopoi_c::EnterChaseState,
+    &daPopoi_c::UpdateChaseState,
 };
 
 PopoiTurnAwayRec data_ov077_02127d18;
 
 PopoiPMF data_ov077_02127cd8[2] = {
-    &daPopoi_c::func_ov077_02126758,
-    &daPopoi_c::func_ov077_02126640,
+    &daPopoi_c::EnterGrabState,
+    &daPopoi_c::UpdateGrabState,
 };
-

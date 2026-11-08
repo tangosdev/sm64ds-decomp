@@ -54,105 +54,105 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211b2fcEv",
+      "symbol": "_ZN9daJango_c20UpdateCircleVelocityEv",
       "address": "0x0211b2fc",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov062_0211b2fc.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211b3acEv",
+      "symbol": "_ZN9daJango_c12ChangeTargetEv",
       "address": "0x0211b3ac",
       "size": "0x00000170",
       "legacy_source": "src/func_ov062_0211b3ac.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211b51cEv",
+      "symbol": "_ZN9daJango_c17HandleCylinderHitEv",
       "address": "0x0211b51c",
       "size": "0x000002e4",
       "legacy_source": "src/func_ov062_0211b51c.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211b800Ev",
+      "symbol": "_ZN9daJango_c15UpdateRiseStateEv",
       "address": "0x0211b800",
       "size": "0x00000080",
       "legacy_source": "src/func_ov062_0211b800.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211b880Ev",
+      "symbol": "_ZN9daJango_c14EnterRiseStateEv",
       "address": "0x0211b880",
       "size": "0x00000058",
       "legacy_source": "src/func_ov062_0211b880.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211b8d8Ev",
+      "symbol": "_ZN9daJango_c15UpdateHurtStateEv",
       "address": "0x0211b8d8",
       "size": "0x00000058",
       "legacy_source": "src/func_ov062_0211b8d8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211b930Ev",
+      "symbol": "_ZN9daJango_c14EnterHurtStateEv",
       "address": "0x0211b930",
       "size": "0x00000154",
       "legacy_source": "src/func_ov062_0211b930.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov062_0211ba84",
+      "symbol": "_ZN9daJango_c16UpdateSwoopStateEv",
       "address": "0x0211ba84",
       "size": "0x000001d0",
       "legacy_source": "src/func_ov062_0211ba84.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211bc54Ev",
+      "symbol": "_ZN9daJango_c15EnterSwoopStateEv",
       "address": "0x0211bc54",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov062_0211bc54.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211bd10Ev",
+      "symbol": "_ZN9daJango_c17UpdateCircleStateEv",
       "address": "0x0211bd10",
       "size": "0x00000508",
       "legacy_source": "src/func_ov062_0211bd10.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211c218Ev",
+      "symbol": "_ZN9daJango_c16EnterCircleStateEv",
       "address": "0x0211c218",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov062_0211c218.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211c2f4Ev",
+      "symbol": "_ZN9daJango_c18UpdateFlyPathStateEv",
       "address": "0x0211c2f4",
       "size": "0x000002a0",
       "legacy_source": "src/func_ov062_0211c2f4.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211c594Ev",
+      "symbol": "_ZN9daJango_c17EnterFlyPathStateEv",
       "address": "0x0211c594",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov062_0211c594.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211c658EPv",
+      "symbol": "_ZN9daJango_c11ChangeStateEPv",
       "address": "0x0211c658",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_0211c658.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN9daJango_c19func_ov062_0211c6a8Ev",
+      "symbol": "_ZN9daJango_c20UpdateModelAndShadowEv",
       "address": "0x0211c6a8",
       "size": "0x00000208",
       "legacy_source": "src/func_ov062_0211c6a8.c",
@@ -214,7 +214,7 @@
       "address": "0x0211dcd0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "function-pointer/PMF pair holding func_ov062_0211ba84 for the SWOOP update slot; retail first word is 0x0211ba84, second is zero"
+      "evidence": "the compiler's &daJango_c::UpdateSwoopState PMF literal for the SWOOP update slot (defined as @634; see defined_symbol_renames); retail first word is 0x0211ba84, second is zero"
     },
     {
       "symbol": "@1120",
@@ -370,7 +370,7 @@
       "address": "0x0211e18c",
       "size": "0x14",
       "binding": "STB_GLOBAL",
-      "evidence": "SWOOP state record (enter 0x0211bc54, update func_ov062_0211ba84 via the dcd0 pair); the JangoSwoopRec constructor fills enter from the descriptor and update from the pair. dsd sizes the trailing symbol to the section end, so the row carries the 4 alignment bytes to 0x0211e1a0"
+      "evidence": "SWOOP state record (enter 0x0211bc54, update 0x0211ba84 through the dcd0 descriptor); the JangoSwoopRec constructor fills both slots from the member descriptors. dsd sizes the trailing symbol to the section end, so the row carries the 4 alignment bytes to 0x0211e1a0"
     }
   ],
   "notes": [
@@ -434,6 +434,7 @@
     "fold-lane-D-0929: folded the daJango_c_classInit registry factory (0x0211ce80..0x0211ced8) into this already-promoted TU, widening the complete delinks.txt claim from 0x0211b248..0x0211ce80 to 0x0211b248..0x0211ced8. This TU's recorded tubuild conflict markers (/* TUBUILD CONFLICT ... */ comments) are untouched by the fold; tools/check_tubuild_conflicts.py ov062/daJango_c still reports every recorded conflict matching the source and every conflict in the source recorded. The loose one-function source hand-called fBase_c::operator new(1168) + the inherited dEnemyBase_c ctor + this class's vtable store + the five member subobjects in field order (two dCcAc_c, dBgCh_Actr, dExtBlendAnmModel_c, dExtShadowModel_c); daJango_c has no user-declared constructor, so `new daJango_c()` reproduces the identical sequence with zero mangled calls. This TU has no `#pragma defer_codegen off` and is written in reverse-ROM source order (highest address first) so that mwccarm's reverse-of-source-order emission lands ROM-ascending; the classInit factory, now the highest address in the TU, is written first in source, ahead of OnAimedAtWithEgg. `tubuild.py verify` reports 24/24 MATCH, objisolate clean, reloc-destinations clean, TEXT-VERIFIED, with no new compiler_only_output needed (daJango_c's destructor is inline in the header, not out-of-line, so `new daJango_c()` emits no homeless base-object-destructor helper here). Retired: src/d_a_jango.c (credited tangosdev, carried into attribution.json as a path#symbol override).",
     "Static initializer folded: the JangoModelFile handle (file 0x348), the three JangoAnimationFilePtr handles (files 0x349, 0x34a, 0x34b), their destructor-registration nodes, the nine PMF descriptors plus the free-function pair and the five state records make mwcc emit __sinit_d_a_jango.cpp itself (0x1d0, raw-byte-identical to retail __sinit_ov062_0211d6fc with the same relocation sites); the handwritten src/unnamed/ov062/__sinit_ov062_0211d6fc.c is retired. mwcc numbers two descriptors @1128/@517 per TU and the fleet already defines those names, so defined_symbol_renames carries them as @690/@692. SWOOP's update slot targets the free C-linkage function ba84, so its source is a JangoFreeState function-pointer/PMF pair, not a member descriptor. This fold does NOT license the .rodata tables, the RTTI chain, the g_profile_JANGO row or the vtable, which stay compiler-only deadstrip.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+    "SWOOP update is now the member daJango_c::UpdateSwoopState (was the free C-linkage func_ov062_0211ba84 taking the actor as char *, with a hand-built JangoFreeState function-pointer/PMF pair as its descriptor). The JangoSwoopRec constructor now stores &daJango_c::UpdateSwoopState, so mwcc emits the dcd0 descriptor itself as PMF literal @634, renamed to data_ov062_0211dcd0 and rewritten global like the other descriptors. Every later compiler number moves up by one, re-keyed by relocation target. 24/24 TEXT-VERIFIED and rombuild 106/106 exact.",
     "SWOOP helper func_ov062_0211ba84 is now compiled as C++ with an array-backed position snapshot, native actor/player fields and native member calls. Its free-function entry and state descriptor remain unchanged. Explicit u16 narrowing of inherited mStateTimer preserves the retail ldrh zero test. Normal production policies need only the twelve compiler-local from-name updates; all configured target names and addresses are unchanged, and the normalized complete object is byte-identical to the prior C-island object.",
     "Collision property member calls replace local helper declarations. Reconciled 13 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (61 sections, 339 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
@@ -919,6 +920,12 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
+      "symbol": "data_ov062_0211dcd0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local &daJango_c::UpdateSwoopState descriptor (defined as @634, renamed to its configured name) is a configured initializer relocation destination at 0x0211dcd0"
+    },
+    {
       "symbol": "@1120",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
@@ -1343,7 +1350,7 @@
       "source": "0x0211dcd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov062_0211ba84",
+      "symbol": "_ZN9daJango_c16UpdateSwoopStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211ba84"
@@ -1353,7 +1360,7 @@
       "source": "0x0211dcd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211c594Ev",
+      "symbol": "_ZN9daJango_c17EnterFlyPathStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211c594"
@@ -1363,7 +1370,7 @@
       "source": "0x0211dce0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211bd10Ev",
+      "symbol": "_ZN9daJango_c17UpdateCircleStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211bd10"
@@ -1373,7 +1380,7 @@
       "source": "0x0211dce8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211b880Ev",
+      "symbol": "_ZN9daJango_c14EnterRiseStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211b880"
@@ -1383,7 +1390,7 @@
       "source": "0x0211dcf0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211c2f4Ev",
+      "symbol": "_ZN9daJango_c18UpdateFlyPathStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211c2f4"
@@ -1393,7 +1400,7 @@
       "source": "0x0211dcf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211bc54Ev",
+      "symbol": "_ZN9daJango_c15EnterSwoopStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211bc54"
@@ -1403,7 +1410,7 @@
       "source": "0x0211dd00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211b8d8Ev",
+      "symbol": "_ZN9daJango_c15UpdateHurtStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211b8d8"
@@ -1413,7 +1420,7 @@
       "source": "0x0211dd08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211b800Ev",
+      "symbol": "_ZN9daJango_c15UpdateRiseStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211b800"
@@ -1423,7 +1430,7 @@
       "source": "0x0211dd10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211c218Ev",
+      "symbol": "_ZN9daJango_c16EnterCircleStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211c218"
@@ -1433,7 +1440,7 @@
       "source": "0x0211dd18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daJango_c19func_ov062_0211b930Ev",
+      "symbol": "_ZN9daJango_c14EnterHurtStateEv",
       "addend": 0,
       "target_module": "ov062",
       "target_address": "0x0211b930"
@@ -1441,44 +1448,44 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1172",
-      "to": "@1115",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1174 in the current object; retain its already measured fleet-unique @1115 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1174 to @1173 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 62, section and 0xc size pair candidate @1172 to configured @1115; 24/24 function bytes, object isolation and relocation destinations match"
-    },
-    {
       "from": "@1173",
-      "to": "@1116",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1175 in the current object; retain its already measured fleet-unique @1116 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1175 to @1174 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 60, section and 0xc size pair candidate @1173 to configured @1116; 24/24 function bytes, object isolation and relocation destinations match"
+      "to": "@1115",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1174 in the current object; retain its already measured fleet-unique @1115 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1174 to @1173 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 62, section and 0xc size pair candidate @1172 to configured @1115; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1172 to @1173 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
       "from": "@1174",
-      "to": "@1117",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1176 in the current object; retain its already measured fleet-unique @1117 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1176 to @1175 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 59, section and 0xc size pair candidate @1174 to configured @1117; 24/24 function bytes, object isolation and relocation destinations match"
+      "to": "@1116",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1175 in the current object; retain its already measured fleet-unique @1116 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1175 to @1174 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 60, section and 0xc size pair candidate @1173 to configured @1116; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1173 to @1174 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
       "from": "@1175",
+      "to": "@1117",
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1176 in the current object; retain its already measured fleet-unique @1117 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1176 to @1175 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 59, section and 0xc size pair candidate @1174 to configured @1117; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1174 to @1175 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
+    },
+    {
+      "from": "@1176",
       "to": "@1118",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1177 in the current object; retain its already measured fleet-unique @1118 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1177 to @1176 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 61, section and 0xc size pair candidate @1175 to configured @1118; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1177 in the current object; retain its already measured fleet-unique @1118 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1177 to @1176 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 61, section and 0xc size pair candidate @1175 to configured @1118; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1175 to @1176 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
-      "from": "@1177",
+      "from": "@1178",
       "to": "@1120",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1179 in the current object; retain its already measured fleet-unique @1120 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1179 to @1178 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 56, section and 0x8 size pair candidate @1177 to configured @1120; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1179 in the current object; retain its already measured fleet-unique @1120 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1179 to @1178 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 56, section and 0x8 size pair candidate @1177 to configured @1120; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1177 to @1178 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
-      "from": "@1179",
+      "from": "@1180",
       "to": "@1122",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1181 in the current object; retain its already measured fleet-unique @1122 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1181 to @1180 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 57, section and 0x8 size pair candidate @1179 to configured @1122; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1181 in the current object; retain its already measured fleet-unique @1122 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1181 to @1180 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 57, section and 0x8 size pair candidate @1179 to configured @1122; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1179 to @1180 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
-      "from": "@1181",
+      "from": "@1182",
       "to": "@1124",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1183 in the current object; retain its already measured fleet-unique @1124 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1183 to @1182 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 53, section and 0x8 size pair candidate @1181 to configured @1124; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1183 in the current object; retain its already measured fleet-unique @1124 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1183 to @1182 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 53, section and 0x8 size pair candidate @1181 to configured @1124; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1181 to @1182 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
-      "from": "@1183",
+      "from": "@1184",
       "to": "@1126",
-      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1185 in the current object; retain its already measured fleet-unique @1126 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1185 to @1184 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 52, section and 0x8 size pair candidate @1183 to configured @1126; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "After adding the mPathNodePos and mSpawnPos Vector3 overlays, this registration node is emitted as @1185 in the current object; retain its already measured fleet-unique @1126 alias. The complete stock ROM build verifies the linked destination and bytes. Re-keyed from @1185 to @1184 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 52, section and 0x8 size pair candidate @1183 to configured @1126; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1183 to @1184 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
       "from": "@632",
@@ -1486,24 +1493,29 @@
       "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination."
     },
     {
-      "from": "@1185",
+      "from": "@634",
+      "to": "data_ov062_0211dcd0",
+      "evidence": "&daJango_c::UpdateSwoopState PMF literal: the SWOOP record's update slot, formerly a hand-built JangoFreeState function-pointer/PMF pair around the free C-linkage func_ov062_0211ba84. The compiler emits it as an 8-byte .data literal whose one relocation targets _ZN9daJango_c16UpdateSwoopStateEv with a zero second word, the same retail bytes at 0x0211dcd0; keep the configured data name."
+    },
+    {
+      "from": "@1186",
       "to": "@690",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1187 to @1186 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 50, section and 0x8 size pair candidate @1185 to configured @690; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1187 to @1186 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 50, section and 0x8 size pair candidate @1185 to configured @690; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1185 to @1186 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
-      "from": "@1187",
+      "from": "@1188",
       "to": "@189",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1189 to @1188 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 54, section and 0x8 size pair candidate @1187 to configured @189; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1189 to @1188 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 54, section and 0x8 size pair candidate @1187 to configured @189; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1187 to @1188 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
-      "from": "@1189",
+      "from": "@1190",
       "to": "@197",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1191 to @1190 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 51, section and 0x8 size pair candidate @1189 to configured @197; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1191 to @1190 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 51, section and 0x8 size pair candidate @1189 to configured @197; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1189 to @1190 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     },
     {
-      "from": "@1191",
+      "from": "@1192",
       "to": "@198",
-      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1193 to @1192 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 55, section and 0x8 size pair candidate @1191 to configured @198; 24/24 function bytes, object isolation and relocation destinations match"
+      "evidence": "Measured compiler-local input after adding the existing cap header: exact section index, offset, size, binding, bytes and complete incoming/outgoing typed graph preserve this canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1193 to @1192 when the anonymous M48 typedef was retired (#4570). | typed mBlendAnmModel.Render call removes the local Base shim; ELF symtab index 55, section and 0x8 size pair candidate @1191 to configured @198; 24/24 function bytes, object isolation and relocation destinations match | Re-keyed from @1191 to @1192 when the free SWOOP update became the member daJango_c::UpdateSwoopState: its PMF literal now precedes these, so every @NNN after @632 moves up by one (PMF literals matched by relocation target in the compiled object)."
     }
   ]
 }
