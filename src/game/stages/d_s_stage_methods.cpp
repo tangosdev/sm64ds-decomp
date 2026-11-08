@@ -4466,7 +4466,7 @@ int dScStage_c::CleanupResources() {
     CleanCommonModelDataArr();
     mMeshCollider.Disable();
     dScStage_c::ResetMeshColliders();
-    Deallocate(func_01ffb0c8(&mMeshCollider));
+    Deallocate(mMeshCollider.GetFile());
     UnloadLevelOverlays(gCurrentSublevel);
     if (gCurrentSublevel == 1)
         UnloadArchive(7);

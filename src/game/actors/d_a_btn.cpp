@@ -113,11 +113,6 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
    prototypes for header-declared calls dropped their 33 named parameters
    (-33); Message.h and dCamera_c.h came in (+30). These three names put
    the count back. */
-void func_01ffb07c(void *, void *);
-void func_01ffb098(void *collider);
-void func_01ffb0a4(void *collider);
-void func_01ffb0b0(void *collider);
-void func_01ffb0bc(void *);
 void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
@@ -316,7 +311,7 @@ int daBtn_c::InitResources()
                 *(CLPS_Block *)(&data_ov015_021135d4));
     }
 
-    func_01ffb0bc(&mMovingMeshCollider);
+    mMovingMeshCollider.SetShallowOnly();
     mMovingMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     {
@@ -324,7 +319,7 @@ int daBtn_c::InitResources()
         sp[0] = 0;
         sp[1] = 0;
         sp[2] = 0x1000;
-        func_01ffb07c(&mMovingMeshCollider, sp);
+        mMovingMeshCollider.SetDepthDir((const Vector3 *)sp);
     }
 
     mMovingMeshCollider.SetDepthDirMinDot(0xb50);
@@ -850,8 +845,8 @@ void daBtn_c::func_ov079_021254b4()
    the tilt so the face stays on the ground. */
 void daBtn_c::func_ov079_0212538c()
 {
-    func_01ffb0b0(&mMovingMeshCollider);
-    func_01ffb0a4(&mMovingMeshCollider);
+    mMovingMeshCollider.ClearShallowOnly();
+    mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
     if ((u16)mStateTimer == 0)
         mVertSpeed = data_ov079_021275e4[mIsKing];
@@ -893,8 +888,8 @@ void daBtn_c::func_ov079_02125240(){
     if (!mWithMeshClsn.IsOnGround())
         return;
     mVertSpeed = 0;
-    func_01ffb098(&mMovingMeshCollider);
-    func_01ffb0bc(&mMovingMeshCollider);
+    mMovingMeshCollider.ClearDepthByDir();
+    mMovingMeshCollider.SetShallowOnly();
     mSubState++;
     mAnmModel.SetAnim(
         (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 1])->filePtr), 0x40000000,
