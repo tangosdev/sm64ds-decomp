@@ -1322,9 +1322,13 @@ extern "C" unsigned char data_ov002_02111178;
 extern "C" int g_port_hud_dlx, g_port_hud_dsx;
 static int g_slide_n, g_slide_ds[2][4];
 static int g_slide_d[2];
-struct HudSlideRect { int x0, y0, x1, y1; float d; };
-struct HudSlideNote { int n; HudSlideRect r[2]; };
+/* d: DS pixels moved sideways this tick; dy: DS pixels moved down this tick (METERGLIDE1: the power meter, the one HUD piece that slides
+   up and down; the counters keep dy 0) */
+struct HudSlideRect { int x0, y0, x1, y1; float d, dy; };
+struct HudSlideNote { int n; HudSlideRect r[3]; };
 static HudSlideNote g_note;
+/* METERGLIDE1: the power meter's y on the last tick the ROM drew it (-30000: not drawn last tick, so no step to glide) */
+static int g_meter_prev_y = -30000;
 /* HUDMENU2 (H11): the counters sliding in, as host rectangles and the DS pixels each moved this tick; read by walk_window.cpp's ip_build */
 extern "C" const void *port_hud_slide_note(void) { return &g_note; }
 /* the meter's DS rectangle (x 80..153), clear of the lives and the star counter. Its rows run to y 95, not to the 59 it rests within: the
@@ -4895,6 +4899,54 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             r.x1 = ntr::widescreen ? ds_col_x0(x1 + 1) + off : (x1 + 1) * sxs;
             r.y0 = ds_row_y0(y0); r.y1 = ds_row_y0(y1 + 1);
             r.d = (float)g_slide_d[i];
+            r.dy = 0.0f;
+        }
+    }
+    /* METERGLIDE1: the power meter rising into place after a hit and rising away once health is full (src/ui/hud/d_meter.cpp,
+       dMeter_c::UpdateHealthMeter: mHealthMeterY steps 4 a tick, 0x39 -> 0x19 and 0x19 -> -0x18; RenderHealthMeter draws both the
+       wedges and the POWER frame at (0x80, mHealthMeterY)). Its step is the real change of the ROM's y since the tick before (the hook in
+       hal/sub_actors.cpp notes it every tick the meter is drawn), so the pictures between two ticks put it (1 - alpha) of that step back,
+       the same way the counters glide sideways. The appear jump (-0x18 -> 0x39, a teleport on the DS too) and a tick without the meter
+       are not steps: nothing glides then. The rectangle is the meter's own cells (after the N64 row moved them kHudMeterLeft left) plus
+       the HD art's footprint when a mod draws it, taken before the HD pass erases the DS cells. */
+    if (!g_mc_replay) {
+        int mdy = 0;
+        if (meter_drawn) {
+            if (g_meter_prev_y != -30000) mdy = hdm_y - g_meter_prev_y;
+            g_meter_prev_y = hdm_y;
+        } else g_meter_prev_y = -30000;
+        if (mdy != 0 && mdy >= -8 && mdy <= 8 && !bandsplit && bg0_3d_shown(dispcnt) && !ntr::present_native() && !lc_ov.live && !lc_ov.top_live) {
+            const int ml = hdm_n64 ? kHudMeterLeft : 0;
+            const int ya = hdm_y + kHdMeterDy < 0 ? 0 : hdm_y + kHdMeterDy, yb = hdm_y + 39 < 192 ? hdm_y + 39 : 192;
+            int bx0 = 999, bx1 = -1, by0 = 999, by1 = -1, fx = -1, fy = -1;
+            for (int y = ya; y < yb; ++y)
+                for (int x = kHudMeterX0 - ml; x <= kHudMeterX1 - ml; ++x) {
+                    const Cell &g = g_a[y][x];
+                    if (!g.hit || g.owner != kOwnerObj || g.msgcur) continue;
+                    if (fx < 0) { fx = x; fy = y; }
+                    if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y;
+                }
+            if (bx1 >= 0 && hdm_note && port_hd_meter_art_hook) {
+                const int hx0 = kHdMeterX0 - ml, hy0 = hdm_y + kHdMeterDy;
+                if (hx0 < bx0) bx0 = hx0; if (hx0 + 39 > bx1) bx1 = hx0 + 39;
+                if (hy0 < by0) by0 = hy0 < 0 ? 0 : hy0; if (hy0 + 39 > by1) by1 = hy0 + 39 > 191 ? 191 : hy0 + 39;
+            }
+            if (bx1 >= 0 && g_note.n < 3) {
+                const int sxs = ntr::active_w / 256;
+                const int off = ntr::widescreen ? hudelem::g_off[hudelem::g_lbl[fy][fx] > 0 ? hudelem::g_lbl[fy][fx] : 0] : 0;
+                HudSlideRect &r = g_note.r[g_note.n++];
+                r.x0 = ntr::widescreen ? ds_col_x0(bx0) + off : bx0 * sxs;
+                r.x1 = ntr::widescreen ? ds_col_x0(bx1 + 1) + off : (bx1 + 1) * sxs;
+                r.y0 = ds_row_y0(by0); r.y1 = ds_row_y0(by1 + 1);
+                r.d = 0.0f;
+                r.dy = (float)mdy;
+#ifndef PORT_ROM_CLEAN
+                static const bool mg_dbg = std::getenv("SM64DS_METER_GLIDE_DBG") != nullptr;
+                if (mg_dbg) std::fprintf(stderr, "[meterglide] y=%d dy=%d n64=%d hdhook=%d ds %d..%d x %d..%d host x %d..%d y %d..%d\n",
+                                         hdm_y, mdy, (int)hdm_n64, (int)(hdm_note && port_hd_meter_art_hook != nullptr),
+                                         bx0, bx1, by0, by1, r.x0, r.x1, r.y0, r.y1);
+#endif
+            }
         }
     }
     /* TWO QUESTIONS, KEPT APART SO THE A/B ARM STILL MEASURES. `shown3d` is
