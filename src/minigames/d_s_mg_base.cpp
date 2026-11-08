@@ -1327,7 +1327,7 @@ after:
         return;
     case 1:
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(1);
+        data_0209f61c.SetType(1);
         dScene_c::StartSceneFade(5, 0, 0);
         if (self->mQuitFadeStarted != 0) return;
         func_02012dd0(0x3c);
@@ -2312,7 +2312,7 @@ bool dScMgBase_c::BeforeInitResources()
     InitEngines();
     Mg_LoadBannerFiles();
     dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.func_0202ec9c(0);
+    data_0209f61c.SetType(0);
     data_0209d460 = 0;
     data_0209d458 = 0;
     InitSubScreenBg();

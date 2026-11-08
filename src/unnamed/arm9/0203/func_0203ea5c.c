@@ -1,4 +1,5 @@
 #include "types.h"
+#include "private/mb_views.h"
 /* A calibrated touch-panel sample (nitro/spi/tp.h's TPData, as func_0203df40 uses;
    x, y, touch, validity). */
 struct Col4 {
@@ -71,10 +72,10 @@ extern u16 data_020a1050; /* data_020a1040.inputYaw */
 extern u8 data_020a0f08;
 extern u8 data_020a0f00;
 extern u8 data_020a1052[0x11]; /* data_020a1040.settings */
-extern u8 data_020a10a4[0x16];
-extern u8 data_020a10ba[0x16];
-extern u8 data_020a10d0[0x16];
-extern u8 data_020a10e6[0x16];
+extern MBUserInfo data_020a10a4[4];
+extern MBUserInfo data_020a10ba;
+extern MBUserInfo data_020a10d0;
+extern MBUserInfo data_020a10e6;
 extern u8 data_020a1112[0x16];
 extern u8 data_020a0f04;
 extern u16 data_020a1160; /* data_020a1154[0].flags */
@@ -326,7 +327,7 @@ void func_0203ea5c(void) {
                                             spC = 1;
                                             data_020a0ef8 = (u8)sp28;
                                             var_sb = data_020a0fa6;
-                                            var_r8 = data_020a10ba;
+                                            var_r8 = (u8 *)&data_020a10ba;
                                             do {
                                                 if (func_0204271c(var_sb) == 0) {
                                                     var_r7_2 = data_020a0fbe;

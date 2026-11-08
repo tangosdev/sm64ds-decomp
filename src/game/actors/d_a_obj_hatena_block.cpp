@@ -135,6 +135,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "daShl_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 struct CLPS_Block;
@@ -808,18 +809,18 @@ void daObjHatenaBlock_c::UpdateBouncing() {
         mHeldActor = 0;
     }
     Sound::PlayBank3(0, mCamSpacePos);
-    Particle::System::NewSimple(0xb, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0xd, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclBlockBreakA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclBlockBreakB, pos.x, pos.y, pos.z);
     typ = actorID;
     switch (typ - ACTOR_HATENA_BLOCK) {
     case 1: case 2:   /* ITEM_BLOCK, VS_ITEM_BLOCK */
-        Particle::System::NewSimple(0x10, pos.x, pos.y, pos.z);
+        Particle::System::NewSimple(kPtclItemBlockBreak, pos.x, pos.y, pos.z);
         break;
     case 0:           /* HATENA_BLOCK */
-        Particle::System::NewSimple(0xc, pos.x, pos.y, pos.z);
+        Particle::System::NewSimple(kPtclHatenaBlockBreak, pos.x, pos.y, pos.z);
         break;
     case 3: case 4: case 5:   /* CAP_BLOCK_M, W, L */
-        Particle::System::NewSimple(9, pos.x, pos.y, pos.z);
+        Particle::System::NewSimple(kPtclCapBlockBreak, pos.x, pos.y, pos.z);
         break;
     }
     ch = (int)mHitterParam;

@@ -546,9 +546,9 @@ int daSpd_c::func_ov071_0211f6f8() {
     mAnmModel.SetAnim((BCA_File *)gSpiderWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x43, mPosX, mPosY + yOffset1, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + yOffset1, mPosZ);
     int yOffset2 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x44, mPosX, mPosY + yOffset2, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + yOffset2, mPosZ);
     mState = 8;
     return 1;
 }

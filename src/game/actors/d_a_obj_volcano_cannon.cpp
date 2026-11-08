@@ -128,7 +128,7 @@ int daObj_volcanoCannon_c::Behavior() {
     mCylinderClsn.Update();
     if (!IsOffScreen(this)) {
         mParticleID =
-            Particle::System::NewUnkCallback818(mParticleID, 0x129, mPosX, mPosY, mPosZ, 0);
+            Particle::System::NewCleanParticle(mParticleID, 0x129, mPosX, mPosY, mPosZ, 0);
     }
     return 1;
 }

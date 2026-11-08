@@ -63,7 +63,7 @@ struct daSanbo_c : dActor_c {
     daSanbo_c *mPrevSegment;    /* 0x390 */
     daSanbo_c *mNextSegment;    /* 0x394 */
     u8  pad_398[0x8];
-    /* Particle uniqueIDs: System::New 0x13a and NewUnkCallback818 0x13b in
+    /* Particle uniqueIDs: System::New 0x13a and NewCleanParticle 0x13b in
        func_ov096_02136434 / func_ov096_02135948. */
     s32 mParticle0;             /* 0x3a0 */
     s32 mParticle1;             /* 0x3a4 */

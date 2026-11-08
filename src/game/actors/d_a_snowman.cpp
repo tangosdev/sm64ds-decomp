@@ -49,6 +49,7 @@ enum daSnowman_c_AssetId {
 
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daSnowman_c.h"
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
@@ -453,10 +454,10 @@ int daSnowman_c::StateBurrowExecute() {
 
     pos = this->mHomePos;
     this->mParticleID1 =
-        Particle::System::New(this->mParticleID1, 0x11d, pos.x, pos.y, pos.z, 0, 0);
+        Particle::System::New(this->mParticleID1, kPtclSnowmanSinkA, pos.x, pos.y, pos.z, 0, 0);
     pos.y = pos.y + 0x1e000;
     this->mParticleID2 =
-        Particle::System::New(this->mParticleID2, 0x11e, pos.x, pos.y, pos.z, 0, 0);
+        Particle::System::New(this->mParticleID2, kPtclSnowmanSinkB, pos.x, pos.y, pos.z, 0, 0);
 
     if (this->mHomePos.y > this->mPosY) {
         ApproachAngle(&this->mAngleX, this->mInitAngleY, 1, 0x1000, 0x1000);
@@ -621,10 +622,10 @@ int daSnowman_c::StateRiseFromGroundEnter() {
     pos.y = this->mHomePos.y;
     pos.z = this->mHomePos.z;
     this->mParticleID1 =
-        Particle::System::New(this->mParticleID1, 0x11a, pos.x, pos.y, pos.z, 0, 0);
+        Particle::System::New(this->mParticleID1, kPtclSnowmanRiseA, pos.x, pos.y, pos.z, 0, 0);
     pos.y = pos.y + 0x1e000;
     this->mParticleID2 =
-        Particle::System::New(this->mParticleID2, 0x11b, pos.x, pos.y, pos.z, 0, 0);
+        Particle::System::New(this->mParticleID2, kPtclSnowmanRiseB, pos.x, pos.y, pos.z, 0, 0);
     return 1;
 }
 

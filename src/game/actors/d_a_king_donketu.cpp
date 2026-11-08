@@ -124,6 +124,7 @@ enum daKing_Donketu_c_AssetId {
 #include "types.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SaveData.h"
 #include "Message.h"
 #include "daPly_c.h"
@@ -344,8 +345,8 @@ void daKing_Donketu_c::SpawnLandingEffects(int strength) {
         pos.x += rotated.x;
         pos.z += rotated.z;
     }
-    Particle::System::NewSimple(0x88, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x89, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclChiefChillyStepA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclChiefChillyStepB, pos.x, pos.y, pos.z);
 }
 
 /* Particles 0x84 and 0x85 on the surface of this actor's collision sphere,
@@ -376,8 +377,8 @@ void daKing_Donketu_c::SpawnHitParticles(void *pb) {
     pos.x += FX_MUL(horz, FX_SinIdx((u16)yaw >> 4));
     pos.y += FX_MUL(radius, FX_SinIdx((u16)pitch >> 4));
     pos.z += FX_MUL(horz, FX_CosIdx((u16)yaw >> 4));
-    Particle::System::NewSimple(0x84, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x85, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclChiefChillyHitA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclChiefChillyHitB, pos.x, pos.y, pos.z);
 }
 
 /* Collision step, called from Behavior in the chase states (..3360, ..3390)
@@ -536,7 +537,7 @@ s32 daKing_Donketu_c::HandleHit() {
     }
     {
         s32* pv = &target->mPosX;
-        Particle::System::NewSimple(0x8a, pv[0], pv[1], pv[2]);
+        Particle::System::NewSimple(kPtclChiefChillyHitPlayer, pv[0], pv[1], pv[2]);
     }
     if (c->mState == &data_ov073_021233d0) {
         func_02012694(SND_HIT_REGISTERED, &c->mCamSpacePosX);

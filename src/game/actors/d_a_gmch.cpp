@@ -54,6 +54,7 @@ enum daGmch_c_AssetId {
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
@@ -405,9 +406,9 @@ int daGmch_c::EnterState8()
     mAnmModel.SetAnim((BCA_File *)data_ov081_02128edc.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x4000;
     int yOffset1 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x43, mPosX, mPosY + yOffset1, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + yOffset1, mPosZ);
     int yOffset2 = OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x44, mPosX, mPosY + yOffset2, mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + yOffset2, mPosZ);
     mStateIndex = 8;
     return 1;
 }

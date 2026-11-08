@@ -28,6 +28,7 @@
 #include "daStar_c.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
 
@@ -116,7 +117,7 @@ s32 daObjNumber_c::Behavior() {
     case 1:
         if (mPosY < mStartPosY) {
             /* volatile mPosY: a plain field read CSE's with the add above. */
-            Particle::System::NewSimple(0xd2, mPosX, *(volatile int *)&mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclItemVanish, mPosX, *(volatile int *)&mPosY, mPosZ);
             MarkForDestruction();
         }
         break;

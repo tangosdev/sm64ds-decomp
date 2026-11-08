@@ -74,9 +74,9 @@ void G2x::SetBlendBrightness(volatile unsigned short *p, int val, int amt) {
  * is already set up: the magnitude always goes to p[2], but the direction
  * bits in p[0] are rewritten only when the sign of `amt` reverses an existing
  * fade (0x80 to white, 0xc0 to black). A register with no fade selected keeps
- * its mode. It stays a free C-linkage function under its linker name, which
- * is how its callers declare it. */
-extern "C" void func_020551f0(volatile unsigned short *p, int amt) {
+ * its mode. It stays a free C-linkage function under the SDK name: one of
+ * its callers is a C file. */
+extern "C" void G2x_ChangeBlendBrightness_(volatile unsigned short *p, int amt) {
     unsigned short h = p[0];
     if (amt < 0) {
         if ((h & 0xc0) == 0x80) {

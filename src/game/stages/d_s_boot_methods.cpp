@@ -1,9 +1,9 @@
 //cpp
 /* leftovers:
  * - Source order stays highest address first.
- * - func_02005348 stays that address. It is a dScBoot_c method:
- *   Behavior is its only caller, and the body reads mSelectedButton
- *   and mButtonFlashTimer. symbols.txt has the mangled spelling.
+ * - UpdateButtonPalettes (0x02005348) is a coined name. It is a
+ *   dScBoot_c method: Behavior is its only caller, and the body reads
+ *   mSelectedButton and mButtonFlashTimer.
  * - opt_common_subs off stays file-global. Behavior's countdown
  *   updates need it.
  * - The volatile reads and LADR() writes in Behavior stay. A plain
@@ -182,7 +182,7 @@ s32 dScBoot_c::Behavior() {
         if (*(volatile u8 *)&mButtonFlashTimer != 0) {
             *(u8 *)LADR(&mButtonFlashTimer) -= frameStep;
             if (mButtonFlashTimer == 0) {
-                func_02005348();
+                UpdateButtonPalettes();
             }
         }
         if (*(volatile u8 *)&mInputLockTimer != 0) {
@@ -222,7 +222,7 @@ s32 dScBoot_c::Behavior() {
                     LoadCompressedFileAt(0x9803, (char *)G2S::GetBG1ScrPtr() + 0x800);
                     func_0201cd08(0x29a);
                     mSelectedButton = 1;
-                    func_02005348();
+                    UpdateButtonPalettes();
                     SetSubBg0Offset(0, 0);
                     SetSubBg1Offset(0, 0);
                     gSubScreenLayers |= 3;
@@ -258,7 +258,7 @@ s32 dScBoot_c::Behavior() {
                         mButtonFlashTimer = 0x10;
                     }
                     mSelectedButton = 0;
-                    func_02005348();
+                    UpdateButtonPalettes();
                     func_02012790(0);
                     if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x28) < 0x50 &&
                         (u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) {
@@ -285,7 +285,7 @@ s32 dScBoot_c::Behavior() {
                             mButtonFlashTimer = 0x10;
                         }
                         mSelectedButton = 1;
-                        func_02005348();
+                        UpdateButtonPalettes();
                         func_02012790(0);
                         if ((u8)(gTouchX[gActivePlayerSlot * 4] - 0x88) < 0x50) {
                             if ((u8)(gTouchY[gActivePlayerSlot * 4] - 0x98) < 0x20) {
@@ -296,7 +296,7 @@ s32 dScBoot_c::Behavior() {
                     } else if (keysPressed & 9) {
                         mButtonFlashTimer = 0x10;
                         mInputLockTimer = 0x20;
-                        func_02005348();
+                        UpdateButtonPalettes();
                         func_02012790(0);
                         if (mSelectedButton == 0) {
                             if (mState == STATE_CONFIRM_ERASE) {
@@ -316,7 +316,7 @@ s32 dScBoot_c::Behavior() {
         case STATE_OPEN_FINAL_CONFIRM:
             func_0201cd08(0x29b);
             mSelectedButton = 1;
-            func_02005348();
+            UpdateButtonPalettes();
             mState = STATE_FINAL_CONFIRM;
             break;
 
@@ -361,7 +361,7 @@ s32 dScBoot_c::Behavior() {
 /* Repaints two 16-by-4-tile buttons on the sub screen's BG1 map at +0x4c0.
  * They sit side by side in a 32-tile-wide map. The selected button uses
  * palette bank 2 when the flash timer is zero; all other tiles use bank 1. */
-void dScBoot_c::func_02005348() {
+void dScBoot_c::UpdateButtonPalettes() {
     int button;
     unsigned int paletteBits;
     for (button = 0; button < 2; button++) {

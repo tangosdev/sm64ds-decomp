@@ -39,6 +39,7 @@
 #include "MessageBank.h"
 #include "G2x.h"
 #include "G2.h"
+#include "private/mb_views.h"
 
 struct OamAttr;
 
@@ -117,7 +118,7 @@ extern u8 data_02092824[];
 extern u32 data_0209283c[];
 extern u32 data_0209287c[];
 
-extern void *func_0203d8a0(int idx);
+extern MBUserInfo *func_0203d8a0(int idx);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
 extern void MultiStore_Int(int val, int *dst, int len);
@@ -181,22 +182,22 @@ extern "C" s32 GetLanguageIndexVS(void) {
 }
 
 extern "C" void func_02031028(int arg) {
-    u16 *p;
+    MBUserInfo *p;
     int i;
     int j;
     u8 *out;
     int n;
     u16 val;
-    p = (u16 *)func_0203d8a0(data_0209fc84);
+    p = func_0203d8a0(data_0209fc84);
     i = 0;
-    data_0209fca0 = ((u8 *)p)[1];
+    data_0209fca0 = p->nameLength;
     n = data_0209fca0;
     if (n <= 0) {
         return;
     }
     out = data_02092818;
     do {
-        val = (p + i)[1];
+        val = p->name[i];
         j = 0;
         while (CharDiffers(data_02075b14[j], val) && CharDiffers(data_02075d14[j], val) &&
                j < 0x100) {

@@ -70,7 +70,7 @@ void dPa_c::level_c::simpleCallback_c::SpawnParticles(
 {
     system.callbackFlags |= 2;
     system.callbackValue = value;
-    func_02049d60(gParticleSysTracker->mManager, &system);
+    func_02049d60(gParticleControl->mManager, &system);
 }
 
 int dPa_c::level_c::simpleCallback_c::OnUpdate(
@@ -80,7 +80,7 @@ int dPa_c::level_c::simpleCallback_c::OnUpdate(
     return 1;
 }
 
-/* Four SysTracker member calls identify the complete-object variant. The
+/* Four dPa_c member calls identify the complete-object variant. The
  * compiler emits simpleCallback_c C2 and the scaleCallback_c vptr store;
  * the unused C2 twin is a homeless compiler copy with no ROM address. */
 dPa_c::level_c::scaleCallback_c::scaleCallback_c()

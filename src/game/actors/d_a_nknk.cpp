@@ -1044,7 +1044,7 @@ void daNknk_c::SpawnFootstepDust(
             pos.x += k * FX_SinIdx(idx);
             pos.z += k * FX_CosIdx(idx);
         }
-        uid = Particle::System::New(0, 0xf9, pos.x, pos.y, pos.z, 0, 0);
+        uid = Particle::System::New(0, kPtclFootstepDust, pos.x, pos.y, pos.z, 0, 0);
         Particle::SetSelfDestructFlag(0xf9);
         if (uid == 0) return;
         ps = Particle::System::FromUniqueID(uid);
@@ -1083,7 +1083,7 @@ void daNknk_c::SpawnLandingDust() {
 
         spawned = Particle::System::New(0, kPtclLandingDust, pos.x, pos.y, zArg,
                                         (const Vector3_16f *)((void *)0),
-                                        (Particle::Callback *)((void *)0));
+                                        (dPa_c::level_c::callback_c *)((void *)0));
     }
 
     Particle::SetSelfDestructFlag(kPtclLandingDust);

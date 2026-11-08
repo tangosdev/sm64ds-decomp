@@ -69,7 +69,7 @@ typedef struct CatchInfo {
 } CatchInfo;
 
 extern void *func_02071910(char *c, void *s);
-extern void func_02072dac(int a, char *s);
+extern void func_02072dac(int a, ActionIterator *s);
 extern void func_02071864(char *c, char *s);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
@@ -83,7 +83,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
     for (;;) {
         p = s->mAction;
         if (p == 0) {
-            func_02072dac((int)func_02071910((char *)c, (void *)s), (char *)s);
+            func_02072dac((int)func_02071910((char *)c, (void *)s), s);
             if (s->mActionTable == 0)
                 std::terminate();
             func_02071864((char *)c, (char *)s);

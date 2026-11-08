@@ -1,19 +1,24 @@
 //cpp
 /* The hardware screen wipe (arm9 .text 0x0202ec9c..0x0202fc98): dWipe_c, a
- * dFdColor_c child that sweeps the screen with an IRQ-driven per-scanline
- * blend instead of a plain brightness ramp. A single static instance lives
- * in BSS at data_0209f61c; scene state changes go through func_0202ec9c and
- * the two hardware helpers drive a pair of HBlank-time capture tables at
- * data_0209f648. mwccarm emits .text in reverse source order, so the
- * definitions below run ROM-descending.
+ * dFdColor_c child that closes or opens the screen through a star (type 0)
+ * or a circle (type 2) instead of a plain colour fade (type 1). The shape is
+ * the two hardware windows: each scanline's WIN0H/WIN1H come from a 4-byte
+ * table entry that the HBlank IRQ copies in, and outside the windows only the
+ * backdrop colour shows. A single static instance lives in BSS at
+ * data_0209f61c; scenes pick the shape with SetType. The CPU builds the next
+ * frame's table in one of the two 0x300-byte tables at data_0209f648 while
+ * the IRQ reads the other. mwccarm emits .text in reverse source order, so
+ * the definitions below run ROM-descending.
  *
  * ~dWipe_c() is the key function: mwcc emits D2, D0 and D1 with the
  * definition, the cartridge keeps D0 (0x0202fbc8) and D1 (0x0202fc08), and
  * the vtable/RTTI records land in .data at 0x020926d0..0x02092718.
  *
  * leftovers:
- * - func_0202f2c4, func_0202f3a4, func_02053c10, the data_023c0000 wake
- *   word and the 0x400xxxx registers stay address-named.
+ * - func_02053c10 (GX_HBlankIntr per GX_Init.cpp), the data_023c0000 wake
+ *   word, the data_0209f5f8..data_0209f648 table state (shared with the
+ *   Luigi minigame's iris, d_s_mg_luigi.cpp) and the 0x400xxxx registers
+ *   stay address-named.
  */
 #include "types.h"
 #include "dWipe_c.h"
@@ -26,7 +31,7 @@
 
 extern "C" {
 void MultiStore_Int(int val, int *dst, int len);
-void func_0202f2c4(void);
+void Wipe_HBlankHandler(void);
 }
 
 extern u8           data_0209f5f8;   /* which display engine the wipe covers */
@@ -38,22 +43,21 @@ extern short        data_023c0000[];
 
 dWipe_c::dWipe_c() : dFdColor_c(0)
 {
-    func_0202ed14();
+    Reset();
 }
 
-/* The destructor's one real obligation: if the per-scanline capture is still
-   armed, cancel it before the object goes away. */
+/* The destructor's one real obligation: if the windows are still armed,
+   disarm them before the object goes away. */
 dWipe_c::~dWipe_c()
 {
     if (needsCleanup == 1)
-        func_0202fb30();
+        DisableWindows();
 }
 
-/* Disarm the capture: mask IME, drop the HBlank IRQ handler, clear both
-   engines' blend windows, and if a type change was stashed mid-transition,
-   commit it now. */
-void dWipe_c::func_0202fb30()
-{
+/* Disarm the windows: mask IME, drop the HBlank IRQ handler, clear the
+   WIN0/WIN1/OBJWIN enables in both engines' DISPCNT, and if a type change
+   was stashed mid-transition, commit it now. */
+void dWipe_c::DisableWindows() {
     u16 ime = *(volatile u16 *)0x4000208;
     *(volatile u16 *)0x4000208 = 0;
     IRQ::DisableIRQs(2);
@@ -113,12 +117,12 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
         *(volatile u16 *)0x4001046 = 0xc0;
 
         state = 1;
-        func_0202f58c();
+        EnableWindows();
 
         {
             u16 ime = *(volatile u16 *)0x4000208;
             *(volatile u16 *)0x4000208 = 0;
-            IRQ::SetIRQHandler(2, func_0202f2c4);
+            IRQ::SetIRQHandler(2, Wipe_HBlankHandler);
             IRQ::EnableIRQs(2);
             func_02053c10(1);
             if (ime != 0) {
@@ -140,7 +144,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 
 /* Vtable slot 4 -- starts the closing half of a wipe. Only meaningful from a
    resting state (0 or 2); type 1 is the plain colour fade and the base owns
-   it. Loads the wipe's palette on both engines, arms the blend registers,
+   it. Loads the wipe's backdrop colour on both engines, arms the windows,
    then hands the per-scanline work to the HBlank IRQ with IME briefly masked
    around the install. */
 int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
@@ -182,11 +186,11 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         *(volatile u16 *)0x4001046 = 0xc0;
 
         state = 3;
-        func_0202f58c();
+        EnableWindows();
 
         saved = *(volatile u16 *)0x4000208;
         *(volatile u16 *)0x4000208 = 0;
-        IRQ::SetIRQHandler(2, func_0202f2c4);
+        IRQ::SetIRQHandler(2, Wipe_HBlankHandler);
         IRQ::EnableIRQs(2);
         func_02053c10(1);
         if (saved != 0) {
@@ -205,11 +209,12 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
     return 0;
 }
 
-/* Arm the blend path: BLDCNT windows on both engines, capture enabled in
-   DISPCNT, then fill both table slots back to back so the next flip lands on
-   a finished image. */
-void dWipe_c::func_0202f58c()
-{
+/* Arm the windows: everything shows inside WIN0/WIN1 (WININ), nothing but
+   the backdrop outside them (WINOUT), and DISPCNT enables WIN0|WIN1 on the
+   main engine, and on the sub engine unless data_0209f5f8 is set. Then fill
+   both tables back to back so the first HBlank reads a finished one, and
+   clear BLDCNT if a brightness effect (bit 7) is still selected. */
+void dWipe_c::EnableWindows() {
     unk_00e = 1;
 
     { u32 v = *(volatile u16 *)0x4000048; v = (v & ~0x3f) | 0x1f; v = v | 0x20; *(volatile u16 *)0x4000048 = v; }
@@ -230,12 +235,12 @@ void dWipe_c::func_0202f58c()
 
     data_0209f608 = 0;
     data_0209f60c = 0;
-    func_0202f290();
+    BuildTable();
 
     data_0209f608 = 1;
     data_0209f60c = 1;
     data_0209f5fc = 0;
-    func_0202f290();
+    BuildTable();
 
     if ((*(volatile u16 *)0x4000050 & 0x80) == 0x80) *(volatile u16 *)0x4000050 = 0;
     if ((*(volatile u16 *)0x4001050 & 0x80) == 0x80) *(volatile u16 *)0x4001050 = 0;
@@ -261,7 +266,7 @@ void dWipe_c::AdvanceFade()
         if (wipeInterp >= 0x200000) {
             wipeInterp = 0x200000;
             needsCleanup = 0;
-            func_0202fb30();
+            DisableWindows();
             state = 2;
         }
         break;
@@ -277,7 +282,7 @@ void dWipe_c::AdvanceFade()
             b = (type == 0) ? 0x10 : -0x10;
             G2x::SetBlendBrightness((u16 *)0x4000050, 0x3f, b);
             G2x::SetBlendBrightness((u16 *)0x4001050, 0x3f, b);
-            func_0202fb30();
+            DisableWindows();
             state = 4;
         }
         break;
@@ -285,13 +290,12 @@ void dWipe_c::AdvanceFade()
     default:
         return;
     }
-    func_0202f290();
+    BuildTable();
 }
 
 /* Latch the staged table into the IRQ-visible index and seed both engines'
-   first line from it. */
-extern "C" void func_0202f3a4(void)
-{
+   line-0 windows from it. */
+extern "C" void Wipe_LatchTable(void) {
     data_0209f608 = data_0209f60c;
     MultiCopy_Int((int *)(data_0209f648 + data_0209f608 * 0x300u), (int *)0x4000040, 4);
     MultiCopy_Int((int *)(data_0209f648 + data_0209f608 * 0x300u), (int *)0x4001040, 4);
@@ -299,10 +303,10 @@ extern "C" void func_0202f3a4(void)
 }
 
 /* The HBlank handler, installed for IRQ bit 2 while a wipe runs. Past the
-   last visible line it only refreshes the table index; on a visible line it
-   copies that scanline's 4-byte entry into both engines' blend windows. */
-extern "C" void func_0202f2c4(void)
-{
+   last visible line it latches the next table, once per frame; on a visible
+   line it copies that scanline's 4-byte entry into both engines' WIN0H and
+   WIN1H. */
+extern "C" void Wipe_HBlankHandler(void) {
     int line;
 
     *(int *)((char *)data_023c0000 + 0x3ff8) |= 2;
@@ -311,7 +315,7 @@ extern "C" void func_0202f2c4(void)
 
     if (line >= 0xc0) {
         if (data_0209f5fc != 1)
-            func_0202f3a4();
+            Wipe_LatchTable();
         return;
     }
 
@@ -324,29 +328,30 @@ extern "C" void func_0202f2c4(void)
     data_0209f5fc = 0;
 }
 
-void dWipe_c::func_0202f290()
-{
+void dWipe_c::BuildTable() {
     if (type == 2)
-        func_0202ee94();
+        BuildCircleTable();
     else
-        func_0202efa0();
+        BuildStarTable();
 }
 
-/* Build a 192-entry (one per scanline) 4-byte blend gradient into whichever
-   0x300 slot the IRQ is not reading. After the neutral 0x80807F7F fill, four
-   fixed-point ramp segments write clamped 0..0x7F coefficients and their
-   0x100-complements, stepped by 2^32/wipeInterp; then flush the pair. The
+/* The type-0 table: a five-pointed star, one window-edge entry per scanline
+   (192), built into whichever 0x300 table the IRQ is not reading. After the
+   empty-window fill (0x80807F7F), four line segments step down the star; their
+   ends sit at 0.382, 0.618, 0.764 and 1.0 of its height, which are a regular
+   star's vertex heights. Each writes a left edge clamped to 0..0x7F and its
+   mirror 0x100 - edge; the last segment has two spans per line (the legs,
+   WIN1 and WIN0). The step is 2^32/wipeInterp; then flush the pair. The
    fill value goes through a stack slot in the ROM (as MI_CpuFill32's does in
    OS_CreateThread), hence the volatile. */
-void dWipe_c::func_0202efa0()
-{
+void dWipe_c::BuildStarTable() {
     volatile int fill;
     int idx;
     int i;
     int pos;
     int step;
-    struct Px {
-        u8 a, b, c, d;
+    struct WindowEdges {
+        u8 win0Right, win0Left, win1Right, win1Left;
     } *buf;
     int dur;
     int v, w;
@@ -354,7 +359,7 @@ void dWipe_c::func_0202efa0()
     s64 d64;
 
     idx = (data_0209f608 == 0) ? 1 : 0;
-    buf = (struct Px *)(data_0209f648 + idx * 0x300);
+    buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
     fill = 0x80807F7F;
     i = 0;
     MultiStore_Int(fill, (int *)buf, 0x300);
@@ -377,8 +382,8 @@ void dWipe_c::func_0202efa0()
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
-            buf[i].d = a;
-            buf[i].a = 0x100 - buf[i].d;
+            buf[i].win1Left = a;
+            buf[i].win0Right = 0x100 - buf[i].win1Left;
             pos += step;
             i++;
         }
@@ -390,8 +395,8 @@ void dWipe_c::func_0202efa0()
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
-            buf[i].d = a;
-            buf[i].a = 0x100 - buf[i].d;
+            buf[i].win1Left = a;
+            buf[i].win0Right = 0x100 - buf[i].win1Left;
             pos += step;
             i++;
         }
@@ -402,8 +407,8 @@ void dWipe_c::func_0202efa0()
             a = (0x8000 - v) / 256;
             if (a < 0) a = 0;
             if (a > 0x7F) a = 0x7F;
-            buf[i].d = a;
-            buf[i].a = 0x100 - buf[i].d;
+            buf[i].win1Left = a;
+            buf[i].win0Right = 0x100 - buf[i].win1Left;
             pos += step;
             i++;
         }
@@ -419,10 +424,10 @@ void dWipe_c::func_0202efa0()
             if (a > 0x7F) a = 0x7F;
             if (b < a) b = a;
             if (b > 0x7F) b = 0x7F;
-            buf[i].d = a;
-            buf[i].c = b;
-            buf[i].b = 0x100 - buf[i].c;
-            buf[i].a = 0x100 - buf[i].d;
+            buf[i].win1Left = a;
+            buf[i].win1Right = b;
+            buf[i].win0Left = 0x100 - buf[i].win1Right;
+            buf[i].win0Right = 0x100 - buf[i].win1Left;
             pos += step;
             i++;
         }
@@ -432,22 +437,24 @@ void dWipe_c::func_0202efa0()
     data_0209f60c = idx;
 }
 
-/* The type-2 table: a circular mask. Lines inside the radius get a
-   square-root blended edge, the second half mirrors the first. */
-void dWipe_c::func_0202ee94()
-{
+/* The type-2 table: a circle. Lines inside the radius get edges at
+   0x80 -/+ the chord's half-width (a square root); the bottom half mirrors
+   the top. */
+void dWipe_c::BuildCircleTable() {
     int idx;
     int radius;
     int i;
     int start, diameter;
-    struct Px { u8 a, b, c, d; } *buf;
+    struct WindowEdges {
+        u8 win0Right, win0Left, win1Right, win1Left;
+    } *buf;
     int src;
     int j;
     volatile int fill;
 
     idx = (data_0209f608 == 0) ? 1 : 0;
     fill = 0x80807f7f;
-    buf = (struct Px *)(data_0209f648 + idx * 0x300);
+    buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
 
     MultiStore_Int(fill, (int *)buf, 0x300);
 
@@ -464,15 +471,15 @@ void dWipe_c::func_0202ee94()
                 lo = 0;
             if (hi > 0xff)
                 hi = 0;
-            buf[i].d = (u8)lo;
-            buf[i].a = (u8)hi;
+            buf[i].win1Left = (u8)lo;
+            buf[i].win0Right = (u8)hi;
         }
     }
 
     src = 0x5f;
     for (j = 0; j < 0x60; j++) {
-        buf[j + 0x60].a = buf[src].a;
-        buf[j + 0x60].d = buf[src].d;
+        buf[j + 0x60].win0Right = buf[src].win0Right;
+        buf[j + 0x60].win1Left = buf[src].win1Left;
         src--;
     }
 
@@ -521,17 +528,15 @@ int dWipe_c::IsBetweenStartAndEnd()
    overlays still reach it by this address name. */
 dWipe_c data_0209f61c;
 
-/* Scene-side wipe reset: cancel a live capture, then return the singleton to
+/* Scene-side wipe reset: disarm live windows, then return the singleton to
    its idle state. */
-extern "C" void func_0202ed48(void)
-{
+extern "C" void Wipe_Reset(void) {
     if (data_0209f61c.needsCleanup == 1)
-        data_0209f61c.func_0202fb30();
-    data_0209f61c.func_0202ed14();
+        data_0209f61c.DisableWindows();
+    data_0209f61c.Reset();
 }
 
-void dWipe_c::func_0202ed14()
-{
+void dWipe_c::Reset() {
     needsCleanup = 0;
     unk_00e = 1;
     state = 0;
@@ -558,10 +563,9 @@ void dWipe_c::SetToStart()
 }
 
 /* Request a new wipe `type`. A mid-transition request is stashed into
-   pendingType/typePending and committed by func_0202fb30 when the current leg ends;
+   pendingType/typePending and committed by DisableWindows when the current leg ends;
    outside a transition it lands directly. */
-int dWipe_c::func_0202ec9c(int arg)
-{
+int dWipe_c::SetType(int arg) {
     if (arg == type) {
         typePending = 0;
         return 0;

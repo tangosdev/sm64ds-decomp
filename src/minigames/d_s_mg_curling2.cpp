@@ -94,7 +94,6 @@ extern void func_02012718(int id, int v);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, s16 h);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
-extern void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int idx);
 struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
@@ -1019,7 +1018,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
  * new angle and speed. The moving stone is set back 0x1b000 along the contact
  * line and clamped to the rink, adjusting the hit stone when needed. Then the bump sound and a
  * SpawnValue for the pair. StoneSlide calls it directly and StoneRest
- * through a veneer; it keeps C linkage under its recovered name.
+ * through a veneer. Coined, after dScMgCurling_c::ResolveStoneCollision.
  *
  * Two spellings are codegen levers, not style: the contact angle's cosine
  * and sine get explicit long long copies, cast where they are made. Without
@@ -1029,7 +1028,7 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
  * and sine/cosine temporaries, pointers to fields written after a call,
  * and hitAngle reference are
  * described in notes/mwccarm-codegen.md 6cz. */
-extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneIndex) {
+void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
     long long wideContactSin;
     long long wideContactCos;
     int hitIndex;
@@ -1037,17 +1036,17 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
     int dy;
 
     for (hitIndex = 0; hitIndex < 11; hitIndex++) {
-        if (self->mStone[hitIndex].active == 0)
+        if (mStone[hitIndex].active == 0)
             continue;
         if (stoneIndex == hitIndex)
             continue;
-        if (self->mStone[hitIndex].state == 0)
+        if (mStone[hitIndex].state == 0)
             continue;
-        if (self->mStone[hitIndex].state == 3)
+        if (mStone[hitIndex].state == 3)
             continue;
-        dy = self->mStone[hitIndex].y;
-        dx = self->mStone[hitIndex].x - self->mStone[stoneIndex].x;
-        dy -= self->mStone[stoneIndex].y;
+        dy = mStone[hitIndex].y;
+        dx = mStone[hitIndex].x - mStone[stoneIndex].x;
+        dy -= mStone[stoneIndex].y;
         if ((cstd::sqrt((u64)((long long)dx * dx + (long long)dy * dy)) >> 12) >= 0x18)
             continue;
         {
@@ -1071,28 +1070,28 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
             int *pX;
             int *pHitY;
 
-            dx = self->mStone[hitIndex].x - self->mStone[stoneIndex].x;
-            dy = self->mStone[hitIndex].y - self->mStone[stoneIndex].y;
-            pHitX = &self->mStone[hitIndex].x;
-            pX = &self->mStone[stoneIndex].x;
-            pHitY = &self->mStone[hitIndex].y;
+            dx = mStone[hitIndex].x - mStone[stoneIndex].x;
+            dy = mStone[hitIndex].y - mStone[stoneIndex].y;
+            pHitX = &mStone[hitIndex].x;
+            pX = &mStone[stoneIndex].x;
+            pHitY = &mStone[hitIndex].y;
             contactAngle = cstd::atan2(dy, dx);
-            u16 &hitAngle = self->mStone[hitIndex].angle;
+            u16 &hitAngle = mStone[hitIndex].angle;
             contactAngleIndex = (contactAngle >> 4) * 2;
-            relativeAngle = self->mStone[stoneIndex].angle - contactAngle;
+            relativeAngle = mStone[stoneIndex].angle - contactAngle;
             relativeAngleIndex = (relativeAngle >> 4) * 2;
             relativeCos = data_02082214[relativeAngleIndex + 1];
             relativeSin = data_02082214[relativeAngleIndex];
-            movingNormal = FX_MUL(relativeCos, self->mStone[stoneIndex].speed);
-            movingTangent = FX_MUL(relativeSin, self->mStone[stoneIndex].speed);
-            relativeAngle = self->mStone[hitIndex].angle - contactAngle;
+            movingNormal = FX_MUL(relativeCos, mStone[stoneIndex].speed);
+            movingTangent = FX_MUL(relativeSin, mStone[stoneIndex].speed);
+            relativeAngle = mStone[hitIndex].angle - contactAngle;
             relativeAngleIndex = (relativeAngle >> 4) * 2;
             relativeCos = data_02082214[relativeAngleIndex + 1];
             relativeSin = data_02082214[relativeAngleIndex];
-            hitNormal = FX_MUL(relativeCos, self->mStone[hitIndex].speed);
+            hitNormal = FX_MUL(relativeCos, mStone[hitIndex].speed);
             contactSin = data_02082214[contactAngleIndex];
             contactCos = data_02082214[contactAngleIndex + 1];
-            hitTangent = FX_MUL(relativeSin, self->mStone[hitIndex].speed);
+            hitTangent = FX_MUL(relativeSin, mStone[hitIndex].speed);
             /* Reuse dy/dx for the moving stone's resulting x/y velocity. */
             wideContactCos = (long long)contactCos;
             dy = (int)((wideContactCos * hitNormal + 0x800) >> 12) -
@@ -1103,38 +1102,38 @@ extern "C" void Curling2_ResolveStoneCollision(dScMgCurling2_c *self, int stoneI
             hitVelocityX = FX_MUL(contactCos, movingNormal) - FX_MUL(contactSin, hitTangent);
             hitVelocityY = (int)((wideContactSin * movingNormal + 0x800) >> 12) +
                            FX_MUL(contactCos, hitTangent);
-            self->mStone[stoneIndex].angle = cstd::atan2(dx, dy);
-            self->mStone[stoneIndex].speed = cstd ::sqrt(((long long)dy * dy + (long long)dx * dx));
-            self->mStone[stoneIndex].x = self->mStone[hitIndex].x - FX_MUL(contactCos, 0x1b000);
-            self->mStone[stoneIndex].y =
-                self->mStone[hitIndex].y - (int)((wideContactSin * 0x1b000 + 0x800) >> 12);
-            xi = self->mStone[stoneIndex].x >> 12;
-            pixelY = self->mStone[stoneIndex].y >> 12;
+            mStone[stoneIndex].angle = cstd::atan2(dx, dy);
+            mStone[stoneIndex].speed = cstd ::sqrt(((long long)dy * dy + (long long)dx * dx));
+            mStone[stoneIndex].x = mStone[hitIndex].x - FX_MUL(contactCos, 0x1b000);
+            mStone[stoneIndex].y =
+                mStone[hitIndex].y - (int)((wideContactSin * 0x1b000 + 0x800) >> 12);
+            xi = mStone[stoneIndex].x >> 12;
+            pixelY = mStone[stoneIndex].y >> 12;
             if (xi - 0xc < 0) {
-                xi = self->mStone[stoneIndex].x - 0xc000;
+                xi = mStone[stoneIndex].x - 0xc000;
                 *pHitX += xi;
-                self->mStone[stoneIndex].x = 0xc000;
+                mStone[stoneIndex].x = 0xc000;
             }
             if (xi + 0xc > 0x100) {
-                *pHitX += self->mStone[stoneIndex].x - 0xf4000;
-                self->mStone[stoneIndex].x = 0xf4000;
+                *pHitX += mStone[stoneIndex].x - 0xf4000;
+                mStone[stoneIndex].x = 0xf4000;
             }
             if (pixelY - 0xc < -0xe0) {
-                self->mStone[stoneIndex].y = -0xd4000;
-                *pHitY = self->mStone[stoneIndex].y + 0x18000;
+                mStone[stoneIndex].y = -0xd4000;
+                *pHitY = mStone[stoneIndex].y + 0x18000;
             }
             hitAngle = cstd::atan2(hitVelocityY, hitVelocityX);
-            self->mStone[hitIndex].speed = cstd::sqrt(
+            mStone[hitIndex].speed = cstd::sqrt(
                 ((long long)hitVelocityX * hitVelocityX + (long long)hitVelocityY * hitVelocityY));
-            self->mStone[stoneIndex].state = 1;
-            self->mStone[hitIndex].state = 1;
-            if (self->mStone[hitIndex].speed >= 0x3800) {
-                self->mStone[hitIndex].fast = 1;
+            mStone[stoneIndex].state = 1;
+            mStone[hitIndex].state = 1;
+            if (mStone[hitIndex].speed >= 0x3800) {
+                mStone[hitIndex].fast = 1;
             } else {
-                self->mStone[hitIndex].fast = 0;
+                mStone[hitIndex].fast = 0;
             }
             func_02012718(0xe8, *pX);
-            self->SpawnValue(stoneIndex, hitIndex);
+            SpawnValue(stoneIndex, hitIndex);
             return;
         }
     }
@@ -1192,7 +1191,7 @@ void dScMgCurling2_c::StoneSteer(int stoneIndex) {
 
 /* Stone state 2: run the shared collision step. */
 void dScMgCurling2_c::StoneRest(int i) {
-    Curling2_ResolveStoneCollision(this, i);
+    ResolveStoneCollision(i);
 }
 
 /* Stone state 1: integrate by speed at the heading, bounce off the rink
@@ -1276,7 +1275,7 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
         ((dScMgCurling2_c *)(c + stoneIndex * 0x30))->mStone[0].state = 2;
     }
 
-    Curling2_ResolveStoneCollision(this, stoneIndex);
+    ResolveStoneCollision(stoneIndex);
     StoneSpin(stoneIndex);
 
     v = *pd;

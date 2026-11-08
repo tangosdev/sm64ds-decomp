@@ -69,7 +69,7 @@ extern unsigned int data_0209d3bc;
 
 void func_02017e0c(void *self, unsigned int fileID);
 unsigned int func_02018a24(unsigned int);
-unsigned int func_02017060(void *file);
+unsigned int TrimModelFile(void *file);
 int func_020186c0(unsigned int val);
 int func_02018568(int a);
 unsigned int func_02018ac4(unsigned int *p);
@@ -259,7 +259,7 @@ extern "C" int func_02017a9c(int self) {
 
 /* Gives the model file back the heap space past its real size. */
 void SharedFilePtr::ReallocateModelFile() {
-    func_02017060(filePtr);
+    TrimModelFile(filePtr);
 }
 #endif
 
