@@ -730,7 +730,7 @@ const Row *display_rows(int *n)
         static const char *const RES_LABELS[] = { "Default", "DS (192)", "384", "480p (576)", "720p (768)", "1080p (1152)", "1440p (1536)" };
         static const int RES_VALS[] = { 0, 1, 2, 3, 4, 6, 8 };
         g_disp_rows[k++] = Row{ R_CHOICE, "Resolution", SL_RENDER_SCALE, -1, 0, RES_LABELS, 7, RES_VALS };
-        g_disp_rows[k++] = Row{ R_NOTE, "Resolution changes after a restart.", -1, -1, 0, 0, 0 };
+        g_disp_rows[k++] = Row{ R_NOTE, "Applies after a restart.", -1, -1, 0, 0, 0 };
     }
     g_disp_rows[k++] = Row{ R_CHECK, "Minigame screen gap", SL_MINIGAME_GAP, -1, 0, 0, 0 };
     g_disp_rows[k++] = Row{ R_CHOICE, "Gap look", SL_GAP_LOOK, -1, 0, GAPLOOK_LABELS, 3 };
