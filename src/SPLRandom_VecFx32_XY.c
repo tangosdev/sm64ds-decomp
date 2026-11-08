@@ -7,7 +7,7 @@ extern void NormalizeVec3(const struct Vector3 *src, struct Vector3 *dst);
 
 /* A random unit vector in the XY plane: two draws from the SPL LCG, each
  * shifted down 8, for x and y, z = 0, then normalized. The name is pret's
- * SPL's (lib/spl/src/spl_random.c, pret-coined); pret's file defines
+ * SPL's (its spl_random.c, pret-coined); pret's file defines
  * SPLRandom_VecFx32 first, and mwccarm emits in reverse source order. */
 void SPLRandom_VecFx32_XY(struct Vector3 *out) {
     s32 s = data_020a4d30;
