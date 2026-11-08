@@ -19,7 +19,8 @@
  *   it (notes/mwccarm-codegen.md 6az), which is why the header deliberately
  *   does not declare them. Same spelling every leaf call site uses.
  * - func_ov002_020ee5d0 keeps its ROM label: the mega-knockback model-matrix
- *   helper, called only from UpdateKillByMegaChar. C linkage is load-bearing.
+ *   helper, called only from UpdateKillByMegaChar. It is a member: the ROM
+ *   places it between Kill and UpdateKillByMegaChar.
  * - dActor_c::Earthquake / Particle::System::NewSimple stay TU-local mangled
  *   calls: Fix12<int> by value (6az); typed shared-header decls of them are
  *   overload poison (S13).
@@ -37,14 +38,12 @@
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* ROM symbols with no header of their own. Spelled to agree with their
  * definitions (const Vector3 * Vec3 pairs, void * rotation target); the two
  * mangled names keep TU-local scalar spellings per the leftovers above. */
 extern "C" {
-/* Forward: UpdateKillByMegaChar calls down to it (reverse layout). */
-void func_ov002_020ee5d0(dBgActor_c *self, int pivotY);
-
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
@@ -90,7 +89,6 @@ int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
 int func_0203564c(int clsn);   /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
-extern short data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 }
 
 /* Is this actor of the given kind? An int-returning inline: the ROM
@@ -148,8 +146,8 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     int reach = 0x64;
     if (mover->param1 == 2)
         reach = 0x82;
-    end.x += reach * data_02082214[((u16)mover->mAngleY >> 4) << 1];
-    end.z += reach * data_02082214[(((u16)mover->mAngleY >> 4) << 1) + 1];
+    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
 
     line.SetObjAndLine(start, end, mover);
     if (line.DetectClsn()) {
@@ -189,8 +187,8 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     if (mover->param1 == 2)
         reach = 0x82;
 
-    end.x += reach * data_02082214[((u16)mover->mAngleY >> 4) << 1];
-    end.z += reach * data_02082214[(((u16)mover->mAngleY >> 4) << 1) + 1];
+    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
 
     line.SetObjAndLine(start, end, mover);
 
@@ -446,24 +444,20 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, F
     UpdatePos(0);
     if (DecIfAbove0_Byte(&mMegaKnockbackTimer) == 0)
         Kill();
-    func_ov002_020ee5d0(this, pivotY);
+    func_ov002_020ee5d0(pivotY);
     return 1;
 }
 
 /* The mega-knockback model matrix: actor position at 1/8 scale, rotated about
  * a pivot pivotY above it (translate up, rotate, translate back). */
-extern "C" {
-void func_ov002_020ee5d0(dBgActor_c *self, int pivotY)
-{
+void dBgActor_c::func_ov002_020ee5d0(int pivotY) {
     Vector3 modelPos;
-    Vec3_Asr(&modelPos, &self->mPos, 3);
+    Vec3_Asr(&modelPos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, modelPos.x, modelPos.y, modelPos.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, pivotY >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -pivotY >> 3, 0);
-    self->mModel.mat4x3 = data_020a0e68;
-}
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* Slot 31, the one virtual this class adds (and the key function). Poof 100

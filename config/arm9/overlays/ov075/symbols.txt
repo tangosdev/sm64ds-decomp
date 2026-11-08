@@ -413,7 +413,7 @@ data_ov075_0211d6ec kind:bss addr:0x0211d6ec
 data_ov075_0211d6f8 kind:bss addr:0x0211d6f8
 data_ov075_0211d704 kind:bss addr:0x0211d704
 data_ov075_0211d710 kind:bss addr:0x0211d710
-data_ov075_0211d71c kind:bss addr:0x0211d71c
+sEntryGraphCallback kind:bss addr:0x0211d71c
 data_ov075_0211d72c kind:bss addr:0x0211d72c
 data_ov075_0211d72e kind:bss(size=0x0) addr:0x0211d72e
 data_ov075_0211d730 kind:bss(size=0x0) addr:0x0211d730

@@ -294,10 +294,9 @@ void dScMgCurling2_c::DrawPieces() {
 /* countdown3, else ease yInc back toward 0x100, else clear yIndex. */
 void dScMgCurling2_c::StepYRampDown(int entry) {
     if (mPiece[entry].countdown3 != 0) {
-        short *p = (short *)&mPiece[entry].countdown3;
-        *p = (short)(*(unsigned short *)p - 1);
-        if (*p < 0)
-            *p = 0;
+        mPiece[entry].countdown3--;
+        if ((s16)mPiece[entry].countdown3 < 0)
+            mPiece[entry].countdown3 = 0;
     } else if (mPiece[entry].yInc > 0x100) {
         int *q = &mPiece[entry].yInc;
         *q = *q - 0x10;
@@ -317,12 +316,12 @@ void dScMgCurling2_c::StepYRampUp(int entry) {
             mPiece[entry].yInc = mPiece[entry].yTarget;
     }
     if (mPiece[entry].countdown3 != 0) {
-        mPiece[entry].countdown3 = mPiece[entry].countdown3 - 1;
-        if (*(short *)&mPiece[entry].countdown3 < 0)
-            *(short *)&mPiece[entry].countdown3 = 0;
+        mPiece[entry].countdown3--;
+        if ((s16)mPiece[entry].countdown3 < 0)
+            mPiece[entry].countdown3 = 0;
     } else {
         mPiece[entry].yIndex = 2;
-        *(short *)&mPiece[entry].countdown3 =
+        mPiece[entry].countdown3 =
             (short)(unsigned char)(((0x20 *
                                      (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
                                        16) &
@@ -342,7 +341,7 @@ void dScMgCurling2_c::StepYRestart(int entry) {
     mPiece[entry].yIndex = 1;
     rnd = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
     rnd = ((rnd << 5) >> 15) + 0x20;
-    *(short *)&mPiece[entry].countdown3 = (unsigned char)rnd;
+    mPiece[entry].countdown3 = (unsigned char)rnd;
 }
 
 /* Step the piece, hold while countdown is set (the hold decrements
@@ -355,10 +354,9 @@ void dScMgCurling2_c::StepXSettle(int entry) {
     *x = *x + *xInc;
     *y = *y + mPiece[entry].yInc;
     if (mPiece[entry].countdown != 0) {
-        u16 *timer = &mPiece[entry].countdown2;
-        *timer = *timer - 1;
-        if (*(s16 *)timer < 0)
-            *(s16 *)timer = 0;
+        mPiece[entry].countdown2--;
+        if ((s16)mPiece[entry].countdown2 < 0)
+            mPiece[entry].countdown2 = 0;
         return;
     }
     if (*xInc > 0) {
@@ -380,14 +378,12 @@ void dScMgCurling2_c::StepXSettle(int entry) {
  * floor (the store at the floor is +0x300), hold for countdown2, then
  * hand xIndex to 3. */
 void dScMgCurling2_c::StepXPushNeg(int entry) {
-    unsigned short count;
-
     mPiece[entry].x = mPiece[entry].x + mPiece[entry].xInc;
     mPiece[entry].y = mPiece[entry].y + mPiece[entry].yInc;
 
     if (mPiece[entry].countdown != 0) {
-        mPiece[entry].countdown = mPiece[entry].countdown - 1;
-        if (*(short *)&mPiece[entry].countdown < 0)
+        mPiece[entry].countdown--;
+        if ((s16)mPiece[entry].countdown < 0)
             mPiece[entry].countdown = 0;
         return;
     }
@@ -398,10 +394,9 @@ void dScMgCurling2_c::StepXPushNeg(int entry) {
             mPiece[entry].xInc = 0x300;
     }
 
-    count = mPiece[entry].countdown2;
-    if (count != 0) {
-        mPiece[entry].countdown2 = count - 1;
-        if (*(short *)&mPiece[entry].countdown2 < 0)
+    if (mPiece[entry].countdown2 != 0) {
+        mPiece[entry].countdown2--;
+        if ((s16)mPiece[entry].countdown2 < 0)
             mPiece[entry].countdown2 = 0;
         return;
     }
@@ -417,16 +412,13 @@ void dScMgCurling2_c::StepXPushNeg(int entry) {
 /* The mirror of StepXPushNeg: same shape, x increment pushed the
  * other way to a +0x300 ceiling. */
 void dScMgCurling2_c::StepXPushPos(int entry) {
-    unsigned short count;
-
     mPiece[entry].x += mPiece[entry].xInc;
     mPiece[entry].y += mPiece[entry].yInc;
 
-    count = mPiece[entry].countdown;
-    if (count != 0) {
-        *(short *)&mPiece[entry].countdown = count - 1;
-        if (*(short *)&mPiece[entry].countdown < 0)
-            *(short *)&mPiece[entry].countdown = 0;
+    if (mPiece[entry].countdown != 0) {
+        mPiece[entry].countdown--;
+        if ((s16)mPiece[entry].countdown < 0)
+            mPiece[entry].countdown = 0;
         return;
     }
 
@@ -436,16 +428,15 @@ void dScMgCurling2_c::StepXPushPos(int entry) {
             mPiece[entry].xInc = 0x300;
     }
 
-    count = mPiece[entry].countdown2;
-    if (count != 0) {
-        *(short *)&mPiece[entry].countdown2 = count - 1;
-        if (*(short *)&mPiece[entry].countdown2 < 0)
-            *(short *)&mPiece[entry].countdown2 = 0;
+    if (mPiece[entry].countdown2 != 0) {
+        mPiece[entry].countdown2--;
+        if ((s16)mPiece[entry].countdown2 < 0)
+            mPiece[entry].countdown2 = 0;
         return;
     }
 
     *(char *)&mPiece[entry].xIndex = 3;
-    *(short *)&mPiece[entry].countdown2 =
+    mPiece[entry].countdown2 =
         (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf) +
             0x20 &
         0xff;
@@ -455,9 +446,9 @@ void dScMgCurling2_c::StepXPushPos(int entry) {
  * sCurling2StepXPicks and reseed both countdowns. */
 void dScMgCurling2_c::StepXPick(int entry) {
     if (mPiece[entry].countdown != 0) {
-        mPiece[entry].countdown = mPiece[entry].countdown - 1;
-        if (*(short *)&mPiece[entry].countdown < 0)
-            *(short *)&mPiece[entry].countdown = 0;
+        mPiece[entry].countdown--;
+        if ((s16)mPiece[entry].countdown < 0)
+            mPiece[entry].countdown = 0;
         return;
     }
     mPiece[entry].xInc = 0;
@@ -516,9 +507,9 @@ void dScMgCurling2_c::StepXPushNegFast(int entry) {
     mPiece[entry].y = mPiece[entry].y + mPiece[entry].yInc;
 
     if (mPiece[entry].countdown != 0) {
-        *(s16 *)&mPiece[entry].countdown = (s16)(mPiece[entry].countdown - 1);
-        if (*(s16 *)&mPiece[entry].countdown < 0)
-            *(s16 *)&mPiece[entry].countdown = 0;
+        mPiece[entry].countdown--;
+        if ((s16)mPiece[entry].countdown < 0)
+            mPiece[entry].countdown = 0;
         return;
     }
 
@@ -529,9 +520,9 @@ void dScMgCurling2_c::StepXPushNegFast(int entry) {
     }
 
     if (mPiece[entry].countdown2 != 0) {
-        *(s16 *)&mPiece[entry].countdown2 = (s16)(mPiece[entry].countdown2 - 1);
-        if (*(s16 *)&mPiece[entry].countdown2 < 0)
-            *(s16 *)&mPiece[entry].countdown2 = 0;
+        mPiece[entry].countdown2--;
+        if ((s16)mPiece[entry].countdown2 < 0)
+            mPiece[entry].countdown2 = 0;
         return;
     }
 
@@ -544,33 +535,24 @@ void dScMgCurling2_c::StepXPushPosFast(int entry) {
     mPiece[entry].x += mPiece[entry].xInc;
     mPiece[entry].y += mPiece[entry].yInc;
 
-    {
-        unsigned short count = mPiece[entry].countdown;
-        if (count != 0) {
-            *(short *)&mPiece[entry].countdown = (short)(count - 1);
-            if (*(short *)&mPiece[entry].countdown < 0) {
-                *(short *)&mPiece[entry].countdown = 0;
-            }
-            return;
-        }
+    if (mPiece[entry].countdown != 0) {
+        mPiece[entry].countdown--;
+        if ((s16)mPiece[entry].countdown < 0)
+            mPiece[entry].countdown = 0;
+        return;
     }
 
     if (mPiece[entry].xInc < 0x400) {
         mPiece[entry].xInc += 0x20;
-        if (mPiece[entry].xInc >= 0x400) {
+        if (mPiece[entry].xInc >= 0x400)
             mPiece[entry].xInc = 0x400;
-        }
     }
 
-    {
-        unsigned short count2 = mPiece[entry].countdown2;
-        if (count2 != 0) {
-            *(short *)&mPiece[entry].countdown2 = (short)(count2 - 1);
-            if (*(short *)&mPiece[entry].countdown2 < 0) {
-                *(short *)&mPiece[entry].countdown2 = 0;
-            }
-            return;
-        }
+    if (mPiece[entry].countdown2 != 0) {
+        mPiece[entry].countdown2--;
+        if ((s16)mPiece[entry].countdown2 < 0)
+            mPiece[entry].countdown2 = 0;
+        return;
     }
 
     mPiece[entry].xIndex = 3;
@@ -580,9 +562,9 @@ void dScMgCurling2_c::StepXPushPosFast(int entry) {
  * from sCurling2StepXFastPicks, and reseed both countdowns. */
 void dScMgCurling2_c::StepXPickFast(int entry) {
     if (mPiece[entry].countdown != 0) {
-        mPiece[entry].countdown = mPiece[entry].countdown - 1;
-        if (*(short *)&mPiece[entry].countdown < 0)
-            *(short *)&mPiece[entry].countdown = 0;
+        mPiece[entry].countdown--;
+        if ((s16)mPiece[entry].countdown < 0)
+            mPiece[entry].countdown = 0;
         return;
     }
     mPiece[entry].xInc = 0;

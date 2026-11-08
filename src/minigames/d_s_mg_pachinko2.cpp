@@ -49,6 +49,7 @@ enum dScMgPachinko2_c_AssetId {
 #include "dScMgPachinko2_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "GX.h"
 #include "G2.h"
 #include "LevelRng.h"
@@ -100,7 +101,6 @@ extern void func_020564f4(const void *, int, int);
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern s16 data_02082214[];
 extern int sPachinkoPipeSprites[];
 extern int sPachinko2SparkSprites[];
 extern int sPachinko2PaddleSprite;
@@ -818,15 +818,12 @@ void dScMgPachinko2_c ::Paddle_StateGather(int i) {
         mPaddles[i].angle = (s16)cstd::atan2(targetY - (currentY >> 12), deltaX);
 
         {
-            s16 cosine = data_02082214[(((u16)mPaddles[i].angle >> 4) << 1) + 1];
-            int speed = mPaddles[i].speed;
-            mPaddles[i].x += (int)(((s64)cosine * speed + 0x800) >> 0xc);
+            fx16 c = FX_CosIdx((u16)mPaddles[i].angle >> 4);
+            mPaddles[i].x += FX_MUL(c, mPaddles[i].speed);
         }
-
         {
-            s16 sine = data_02082214[((u16)mPaddles[i].angle >> 4) << 1];
-            int speed = mPaddles[i].speed;
-            mPaddles[i].y += (int)(((s64)sine * speed + 0x800) >> 0xc);
+            fx16 s = FX_SinIdx((u16)mPaddles[i].angle >> 4);
+            mPaddles[i].y += FX_MUL(s, mPaddles[i].speed);
         }
 
         mPaddles[i].speed += 0x100;
@@ -1149,17 +1146,8 @@ void dScMgPachinko2_c::Paddle_StateWeave(int i) {
 }
 
 void dScMgPachinko2_c::Paddle_StateOrbit(int i) {
-    {
-        unsigned short angle = mPaddles[i].angle;
-        long long t0 = (long long)data_02082214[(angle >> 4) * 2 + 1] * 0x50000 + 0x800;
-        mPaddles[i].x = (int)(t0 >> 12) + 0x80000;
-    }
-
-    {
-        unsigned short angle = mPaddles[i].angle;
-        long long t1 = (long long)data_02082214[(angle >> 4) * 2] * 0x50000 + 0x800;
-        mPaddles[i].y = (int)(t1 >> 12) - 0x80000;
-    }
+    mPaddles[i].x = FX_MUL(FX_CosIdx((u16)mPaddles[i].angle >> 4), 0x50000) + 0x80000;
+    mPaddles[i].y = FX_MUL(FX_SinIdx((u16)mPaddles[i].angle >> 4), 0x50000) - 0x80000;
 
     if (mPaddles[i].step != 0) {
         mPaddles[i].angle -= 0x40;
@@ -1722,8 +1710,8 @@ void dScMgPachinko2_c::Ball_HitAt(int x, int z, int d) {
                 mBalls[i].angle = 0xb000;
             mBalls[i].x = x << 12;
             mBalls[i].y = (z - 0x12) << 12;
-            mBalls[i].vx = FX_MUL(data_02082214[((u16)mBalls[i].angle >> 4) * 2 + 1], 0x2000);
-            mBalls[i].vy = FX_MUL(data_02082214[((u16)mBalls[i].angle >> 4) * 2], 0x2000);
+            mBalls[i].vx = FX_MUL(FX_CosIdx((u16)mBalls[i].angle >> 4), 0x2000);
+            mBalls[i].vy = FX_MUL(FX_SinIdx((u16)mBalls[i].angle >> 4), 0x2000);
             mBalls[i].gravity = 0;
             Sound::PlayBank2_2D(0x199);
             return;
@@ -1895,11 +1883,11 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
                 this->mNextBallDelay = 1;
             }
             {
-                s16 c = data_02082214[((u16)this->mBalls[i].angle >> 4) * 2 + 1];
+                fx16 c = FX_CosIdx((u16)this->mBalls[i].angle >> 4);
                 this->mBalls[i].vx = FX_MUL(c, this->mBalls[i].speed);
             }
             {
-                s16 s = data_02082214[((u16)this->mBalls[i].angle >> 4) * 2];
+                fx16 s = FX_SinIdx((u16)this->mBalls[i].angle >> 4);
                 this->mBalls[i].vy = FX_MUL(s, this->mBalls[i].speed);
             }
             this->mBalls[i].timer = 0;
@@ -1919,24 +1907,16 @@ void dScMgPachinko2_c::Ball_StateAim(int i) {
 }
 
 void dScMgPachinko2_c::Ball_StateFlying(int i) {
-    int idx;
     int velX, velY;
-    int idx2;
 
-    idx2 = ((unsigned short)mBalls[i].angle >> 4) * 2;
-
-    if (data_02082214[idx2] <= 0) {
+    if (FX_SinIdx((u16)mBalls[i].angle >> 4) <= 0) {
         {
-            short tv = data_02082214[idx2 + 1];
-            int spd = mBalls[i].speed;
-            mBalls[i].x += FX_MUL(tv, spd);
+            fx16 c = FX_CosIdx((u16)mBalls[i].angle >> 4);
+            mBalls[i].x += FX_MUL(c, mBalls[i].speed);
         }
-
-        idx = (unsigned short)mBalls[i].angle >> 4;
         {
-            short tv = data_02082214[idx * 2];
-            int spd = mBalls[i].speed;
-            mBalls[i].y += FX_MUL(tv, spd);
+            fx16 s = FX_SinIdx((u16)mBalls[i].angle >> 4);
+            mBalls[i].y += FX_MUL(s, mBalls[i].speed);
         }
 
         mBalls[i].gravity += 0x10;

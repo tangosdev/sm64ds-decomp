@@ -468,6 +468,11 @@ int daKinopio_c::Behavior()
     ApproachLinear(mHeadYaw, mHeadYawTarget, 0x250);
     ApproachLinear(mHeadPitch, mHeadPitchTarget, 0x100);
 
+    /* _Z15ApproachLinear2Riii (src/ApproachAngle.cpp) loads and stores its
+     * reference as one unsigned char, so it is the byte stepper, and the u8
+     * opacity goes through its int & declaration. The real parameter list
+     * is not recoverable from the ROM, so the declaration and the symbol
+     * stay; d_a_gmch.cpp passes its byte mState the same way. */
     ApproachLinear2(*(s32 *)&mOpacity, mTargetOpacity, 6);
 
     mAnmModel.Advance();

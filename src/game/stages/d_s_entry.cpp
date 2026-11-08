@@ -679,7 +679,7 @@ extern dScEntry_c::Step data_ov075_0211c8c8;
 extern dScEntry_c::Step data_ov075_0211c8d0;
 extern dScEntry_c::Step data_ov075_0211c8d8;
 
-dScEntry_c::graphCallback_c data_ov075_0211d71c;
+dScEntry_c::graphCallback_c sEntryGraphCallback;
 extern "C" EntryPair data_ov075_0211d948[14] __attribute__((aligned(4))) = {
     EntryPair(0x80, 0x10), EntryPair(0x3c, 0x10), EntryPair(0x1c, 0x10), EntryPair(8, 0x10),
     EntryPair(8, 0x10),    EntryPair(0x20, 0x10), EntryPair(0x30, 0x10), EntryPair(0x20, 0x20),
