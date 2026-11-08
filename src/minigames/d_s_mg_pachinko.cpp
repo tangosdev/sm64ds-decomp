@@ -45,6 +45,7 @@
 #include "PlayerInput.h"
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "dScMgPachinko_c.h"
 #include "LevelRng.h"
 
@@ -147,7 +148,6 @@ extern void func_020564f4(const void *src, int offset, int count);
 /* --- ROM data this TU reads --- */
 extern unsigned char gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern s16   data_02082214[];
 
 extern void *sPachinkoDecoSprite;
 extern unsigned char sPachinkoPipeRiseStartFrames[];
@@ -1108,12 +1108,11 @@ void dScMgPachinko_c::Ball_DrawAll() {
     int i;
     for (i = 0; i < 30; i++) {
         if (mBall[i].visible != 0) {
-            int idx = (mBall[i].rotation >> 4) << 1;
             int scale = mBall[i].scale;
             int sprite = mBall[i].sprite;
             Matrix2x2 m;
-            int cosv = FX_Mul(data_02082214[idx + 1], scale);
-            int sinv = FX_Mul(data_02082214[idx], scale);
+            int cosv = FX_Mul(FX_CosIdx(mBall[i].rotation >> 4), scale);
+            int sinv = FX_Mul(FX_SinIdx(mBall[i].rotation >> 4), scale);
             int x = (mBall[i].x + mBall[i].offX) >> 12;
             int y = (mBall[i].y + mBall[i].offY) >> 12;
             m.m00 = cosv;
@@ -1236,14 +1235,13 @@ void dScMgPachinko_c::Ball_AimAtTarget(int i) {
         angle = cstd::atan2((targetY - yval) >> 12, (targetX - entX) >> 12);
         *(u16 *)(angBase + n) = (u16)angle;
         u16 angU = *(u16 *)(angBase + n);
-        int angIdx = (angU >> 4) << 1;
         {
-            s16 cosv = data_02082214[angIdx + 1];
+            fx16 cosv = FX_CosIdx(angU >> 4);
             *pVx = FX_MUL(cosv, factor);
         }
         {
             u16 angU2 = *(u16 *)(angBase + n);
-            s16 sinv = data_02082214[(angU2 >> 4) << 1];
+            fx16 sinv = FX_SinIdx(angU2 >> 4);
             *pVy = FX_MUL(sinv, factor);
         }
         int fieldByte = BALL((char *)this + n)->level;
@@ -1283,7 +1281,6 @@ void dScMgPachinko_c::Ball_StateSpinAway(int i) {
     int x;
     int y;
     int f;
-    short sv;
 
     mBall[i].x += mBall[i].velX;
     mBall[i].y += mBall[i].velY;
@@ -1291,10 +1288,14 @@ void dScMgPachinko_c::Ball_StateSpinAway(int i) {
     if (mBall[i].spinRadius <= 0x30000) {
         mBall[i].spinRadius += 0x800;
     }
-    sv = data_02082214[(mBall[i].rotation >> 4) * 2 + 1];
-    mBall[i].offX = FX_MUL(sv, mBall[i].spinRadius);
-    sv = data_02082214[(mBall[i].rotation >> 4) * 2];
-    mBall[i].offY = FX_MUL(sv, mBall[i].spinRadius);
+    {
+        fx16 c = FX_CosIdx(mBall[i].rotation >> 4);
+        mBall[i].offX = FX_MUL(c, mBall[i].spinRadius);
+    }
+    {
+        fx16 s = FX_SinIdx(mBall[i].rotation >> 4);
+        mBall[i].offY = FX_MUL(s, mBall[i].spinRadius);
+    }
 
     x = (mBall[i].x + mBall[i].offX) >> 12;
     y = (mBall[i].y + mBall[i].offY) >> 12;
@@ -1529,8 +1530,8 @@ void dScMgPachinko_c::Ball_UpdateAll() {
  * `i`'s position (self + i*0x38 + 0x4660 for x, +0x4664 for z) is taken in
  * whole units (>> 12) and compared against 0x18 through cstd::sqrt of the
  * 64-bit sum of squares. The first record inside that radius wins: the scan
- * writes its heading into self+0x4684+i*0x38, derives a sine/cosine pair from
- * data_02082214 at 0x2000 scale plus a zero velocity pair into the record at
+ * writes its heading into self+0x4684+i*0x38, derives a cosine/sine pair at
+ * 0x2000 scale plus a zero velocity pair into the record at
  * self+i*0x38+0x4000+0x668..0x674, plays the sound whose id comes from
  * sPachinkoPopSfx indexed by the hit record's counter (clamped at 5),
  * spawns the effect through Fx_Spawn, bumps that counter, and
@@ -1580,8 +1581,8 @@ void dScMgPachinko_c::Ball_CheckHitByBobOmb(int i) {
             char *bn = ov + n;
             char *bm = ov + m;
             u16 ang;
-            s16 s;
-            s16 c;
+            fx16 cosv;
+            fx16 sinv;
             int vel;
             int cnt;
             int cc;
@@ -1589,7 +1590,6 @@ void dScMgPachinko_c::Ball_CheckHitByBobOmb(int i) {
             char *spinRadiusBase;
             char *xBase;
             unsigned char *cntp;
-            int round = 0x800;
 
             BALL(bn)->state = (u8)five;
             {
@@ -1601,23 +1601,23 @@ void dScMgPachinko_c::Ball_CheckHitByBobOmb(int i) {
             *(u16 *)(rotationBase + n) = ang;
             ang = *(u16 *)(rotationBase + n);
 
-            s = data_02082214[((ang >> 4) << 1) + 1];
+            cosv = FX_CosIdx(ang >> 4);
             {
                 unsigned char *lr = comboBase;
                 spinRadiusBase = o + BALL_OFF(spinRadius);
-                BALL(bn)->velX = (int)((((s64)s * 0x2000) + round) >> 12);
+                BALL(bn)->velX = FX_MUL(cosv, 0x2000);
                 ang = *(u16 *)(rotationBase + n);
-                c = data_02082214[(ang >> 4) << 1];
-                BALL(bn)->velY = (int)((((s64)c * 0x2000) + round) >> 12);
+                sinv = FX_SinIdx(ang >> 4);
+                BALL(bn)->velY = FX_MUL(sinv, 0x2000);
                 *(int *)(spinRadiusBase + n) = 0;
                 ang = *(u16 *)(rotationBase + n);
                 vel = *(int *)(spinRadiusBase + n);
-                s = data_02082214[((ang >> 4) << 1) + 1];
-                BALL(bn)->offX = (int)((((s64)s * (s64)vel) + round) >> 12);
+                cosv = FX_CosIdx(ang >> 4);
+                BALL(bn)->offX = FX_MUL(cosv, vel);
                 ang = *(u16 *)(rotationBase + n);
                 vel = *(int *)(spinRadiusBase + n);
-                c = data_02082214[(ang >> 4) << 1];
-                BALL(bn)->offY = (int)((((s64)c * (s64)vel) + round) >> 12);
+                sinv = FX_SinIdx(ang >> 4);
+                BALL(bn)->offY = FX_MUL(sinv, vel);
                 cnt = *(u8 *)(lr + m);
                 cc = cnt;
                 if (cc >= 5)
@@ -1694,8 +1694,8 @@ void dScMgPachinko_c::SpawnWave() {
         mBall[i].offY = 0;
         mBall[i].rotation = mBall[i].angle - 0x4000;
         mBall[i].y = -0x60000;
-        mBall[i].velX = FX_MUL(data_02082214[(mBall[i].angle >> 4) * 2 + 1], 0xe80);
-        mBall[i].velY = FX_MUL(data_02082214[(mBall[i].angle >> 4) * 2], 0xe80);
+        mBall[i].velX = FX_MUL(FX_CosIdx(mBall[i].angle >> 4), 0xe80);
+        mBall[i].velY = FX_MUL(FX_SinIdx(mBall[i].angle >> 4), 0xe80);
         mBall[i].state = 3;
         mBall[i].visible = 1;
         mBall[i].sprite = 0;
@@ -1785,6 +1785,9 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  *   and not at function scope.
  * `opt_propagation off` was measured against deleting it outright.
  * opt_propagation stays: a typed mShot[i] rewrite without it is the right size but schedules the touch loads and clamps differently (88 words).
+ * The two velocity reads stay hand-indexed into data_02082214: through
+ * FX_CosIdx / FX_SinIdx the products take swapped registers (17-22 DIFF in
+ * eleven spellings: inline, index local, fx16 local, speed read first).
  */
 void dScMgPachinko_c::BobOmb_StateAim(int i) {
     char *c = (char *)this;
@@ -1929,13 +1932,14 @@ void dScMgPachinko_c::BobOmb_StateFlying(int idx) {
 
 void dScMgPachinko_c::BobOmb_StateFallAway(int i) {
     int n = i * 0x38;
-    s16 t;
     u16 v;
     mShot[i].speed = mShot[i].speed + mShot[i].gravity;
     mShot[i].gravity = mShot[i].gravity + 0x10;
-    mShot[i].x = mShot[i].x + FX_MUL(data_02082214[((mShot[i].angle >> 4) << 1) + 1], 0x800);
-    t = data_02082214[(mShot[i].angle >> 4) << 1];
-    mShot[i].y = mShot[i].y + FX_MUL(t, mShot[i].speed);
+    mShot[i].x += FX_MUL(FX_CosIdx(mShot[i].angle >> 4), 0x800);
+    {
+        fx16 s = FX_SinIdx(mShot[i].angle >> 4);
+        mShot[i].y += FX_MUL(s, mShot[i].speed);
+    }
     v = mShot[i].timer;
     if (v != 0) {
         mShot[i].timer = v - 1;

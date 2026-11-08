@@ -82,7 +82,7 @@ struct daCoin_c : dActor_c {
     u16 mDisappearTimer;            /* 0x3a8 -- every read in the ROM is ldrh */
     u8  mNoClsnTimer;            /* 0x3aa */
     /* param1 bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise
-       -- the same three-bit value LoadObjects compares against data_0209f220 to
+       -- the same three-bit value LoadObjects compares against gCurrentStarId to
        decide whether an object belongs to the entrance the level was started
        from. A red coin claims a
        star-marker slot only when it matches (or the level is 0x13); a blue

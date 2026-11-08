@@ -1132,7 +1132,7 @@ void daMip_c::OnPendingDestroy()
 int daMip_c::Render()
 {
     extern signed char gCurrentSublevel;
-    extern signed char data_02092120;
+    extern signed char gCurrentAreaId;
 
     if (mIsDisabled == 1) return 1;
 
@@ -1156,7 +1156,7 @@ int daMip_c::Render()
         }
     }
 
-    if (gCurrentSublevel == 5 && data_02092120 == 3) {
+    if (gCurrentSublevel == 5 && gCurrentAreaId == 3) {
         RenderMirrorImage();
     }
 
@@ -1218,7 +1218,7 @@ int daMip_c::Behavior()
     typedef volatile struct { Fix12i x, y, z; } Vec3Scratch;
 
     extern s8 gCurrentSublevel;
-    extern s8 data_02092120;
+    extern s8 gCurrentAreaId;
     extern SaveBlock data_0209caa0;
     extern void* data_0209f33c;
     extern DaMipAnimationFilePtr data_ov085_021305c0;
@@ -1360,7 +1360,7 @@ int daMip_c::Behavior()
     else
         UpdateMatrixAndShadow();
 
-    if (gCurrentSublevel == 5 && data_02092120 == 3)
+    if (gCurrentSublevel == 5 && gCurrentAreaId == 3)
         UpdateMirrorShadow();
 
     if (!IsFlagSet(this, 0x4000)) {

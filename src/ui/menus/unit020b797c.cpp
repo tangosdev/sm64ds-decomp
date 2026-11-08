@@ -129,7 +129,7 @@ extern int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020c1d8c(int i);
-extern int func_ov007_020c3598(int value, int count, s8 *digits, int base);
+extern int func_ov007_020c3598(int value, int count, char *digits, int base);
 extern int func_ov007_020c94a0(int unused, unsigned int messageIndex);
 extern void func_ov007_020c94e4(void);
 /* local extern: the definition (unit020c94a0.cpp) takes two parameters;
@@ -315,11 +315,11 @@ void func_ov007_020b8b80(int plane, u8 *s, int mode) {
 /* Draws `value` as up to three decimal digits (blank digits are skipped),
  * then moves the cursor 7 pixels per digit drawn. */
 void func_ov007_020b8b00(int plane, int value) {
-    s8 buf[3];
+    char buf[3];
     int i;
     int saved;
     int r;
-    s8 *p;
+    char *p;
     saved = data_ov007_02103464;
     r = func_ov007_020c3598(value, 3, buf, 10);
     p = buf + 2;

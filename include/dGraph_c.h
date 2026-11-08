@@ -13,7 +13,7 @@
  *
  * The four methods below fill that vtable's four slots (slots 0..3, in
  * address-descending order 0x02018eb8..0x02018ea0), and they are VIRTUAL in
- * the ROM: the dispatchers poll the registered object pointer data_0209d4a8
+ * the ROM: the dispatchers poll the registered object pointer gGraphCallback
  * (slot 0 func_02019390, slot 1 func_02019404, slot 2 func_02019144, slot 3
  * func_02019100) and call `ldr r1,[r0]; ldr r1,[r1,#slot*4]; blx r1` with
  * r0 = the object -- vptr dispatch, r1 never set as an argument, so every

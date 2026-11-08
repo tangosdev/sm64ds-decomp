@@ -39,16 +39,16 @@ extern "C" {
  * flags2. */
 extern SaveBlock data_0209caa0;
 
-/* data_0209f5c0 is the parent passed to dBase_c::Spawn. */
-extern fBase_c *data_0209f5c0;
+/* gCurrentScene, the running scene, is the parent passed to dBase_c::Spawn. */
+extern fBase_c *gCurrentScene;
 
-extern u8 data_0209f21c;
-extern u8 data_0209f220;
-extern u8 data_0209f250;
-extern u8 data_0209f2d8;
-extern dCamera_c *data_0209f318;
-extern void *data_0209f338;
-extern daPly_c *data_0209f394[];
+extern u8 gNumPlayers;
+extern u8 gCurrentStarId;
+extern u8 gLocalPlayerId;
+extern u8 gGameMode;
+extern dCamera_c *gCamera;
+extern void *gUnusedType13Objs;
+extern daPly_c *gPlayers[];
 extern u8 data_0209fc5c[];
 extern unsigned int data_02092134;
 extern u8 data_02092128[];
@@ -112,7 +112,7 @@ struct LVL_Overlay_Layout {
 
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {
-    return data_0209f2d8 == mode;
+    return gGameMode == mode;
 }
 
 /* Game mode 0 with bit 0x80 of the current file's flags2 clear. */
@@ -181,7 +181,7 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) 
 /* Spawn entrance actors and the entrance-controller dBase_c. Walks
  * StandardEntry records like LoadStandardObjects, but the third argument is an
  * entry index OFFSET into the table rather than a free parameter: the walk
- * starts at `entries + entranceIndex` and runs for data_0209f21c iterations, not table.count. */
+ * starts at `entries + entranceIndex` and runs for gNumPlayers iterations, not table.count. */
 void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranceIndex) {
     u32 entranceKind;
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
@@ -192,7 +192,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
     int entranceId = 0xf;
     u8 playerIndex = 0;
 
-    while (playerIndex < data_0209f21c) {
+    while (playerIndex < gNumPlayers) {
         {
             Vector3 pos;
             int vz = entry->z << 12;
@@ -219,11 +219,11 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
                                            (const Vector3_16 *)&entry->rot, (s8)(param & 7), -1);
 
             if (data_0209fc5c[playerIndex] == 0)
-                data_0209f394[playerIndex] = 0;
+                gPlayers[playerIndex] = 0;
             else
-                data_0209f394[playerIndex] = player;
+                gPlayers[playerIndex] = player;
 
-            if (playerIndex == data_0209f250)
+            if (playerIndex == gLocalPlayerId)
                 entranceId = (entry->param >> 3) & 0xf;
 
             entry++;
@@ -231,7 +231,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         }
     }
 
-    data_0209f318 = (dCamera_c *)dBase_c::Spawn(0x14c, data_0209f5c0, entranceId, 0);
+    gCamera = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
 
     if (IsGameMode(2))
         return;
@@ -371,7 +371,7 @@ void LoadMinimapScaleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 par
  * type 13 is unused in the shipped game, so the loader was reduced to a stub
  * that keeps the table around, which also explains why it reads no count. */
 void LoadUnusedType13Objects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    data_0209f338 = table.entries;
+    gUnusedType13Objs = table.entries;
 }
 
 /* Take the first word of the star-camera table and publish it. Reads no count,
@@ -387,14 +387,14 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
  * Count is a u16 at offset 0 (unlike ObjSubTable's u8 at offset 1). Each entry
  * is the 8-byte ObjSubTable its loader takes; its byte 0 packs a star filter in
  * the top three bits and a handler index in the low five. The entry is skipped
- * unless the filter is 0 or equal to the selected star at data_0209f220. */
+ * unless the filter is 0 or equal to the selected star at gCurrentStarId. */
 void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ObjSubTable *entry = (LVL_Overlay::ObjSubTable *)table.entries;
     int tableIndex;
     for (tableIndex = 0; tableIndex < (int)table.count; tableIndex++) {
         u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
-        if (starFilter == 0 || starFilter == data_0209f220) {
+        if (starFilter == 0 || starFilter == gCurrentStarId) {
             void (*loader)(void *, s8, unsigned int) = data_ov002_0210cbb8[categoryAndStar & 0x1f];
             if (loader != 0)
                 loader(entry, areaID, param);
@@ -443,9 +443,9 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
     playIntro = IntroAllowed() && continuedKuppaScript == 0;
 
     if (!IsGameMode(2)) {
-        dBase_c::Spawn(0x14f, data_0209f5c0, 0, 0);
+        dBase_c::Spawn(0x14f, gCurrentScene, 0, 0);
         if (playIntro == 0)
-            dBase_c::Spawn(0x14e, data_0209f5c0, 0, 0);
+            dBase_c::Spawn(0x14e, gCurrentScene, 0, 0);
     }
 
     if (playIntro != 0)

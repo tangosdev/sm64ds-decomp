@@ -112,8 +112,8 @@ extern s16 atan2_hold_Player_4(s32, s32);
 extern short atan2_hold_Player_8(int a, int b);
 extern int atan2_hold_Player_9(int x, int z);
 extern int gSubSoundID;
-extern signed char data_02092110;
-extern signed char data_02092120;
+extern signed char gNextSublevel;
+extern signed char gCurrentAreaId;
 extern signed char gLastCourseSublevel;
 extern u8 data_02092128[];
 extern int data_0209212c;
@@ -121,12 +121,12 @@ extern short gPlayerHealth[];
 extern int gSubVolume;
 extern Timer gRaceTimer;
 extern unsigned char data_0209d660;
-extern u8 data_0209f200;
+extern u8 gReturnEntranceId;
 extern u8 data_0209f20c;
-extern unsigned char data_0209f21c;
-extern u8 data_0209f250;
+extern unsigned char gNumPlayers;
+extern u8 gLocalPlayerId;
 extern u8 data_0209f254;
-extern u8 data_0209f264;
+extern u8 gCurrentEntranceId;
 extern unsigned char data_0209f28c;
 extern unsigned char gNewStarCollected;
 extern s16 data_0209f4a2[];
@@ -1165,13 +1165,13 @@ void daPly_c::func_ov002_020bda48() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::HasNoCap() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     if (gCurrentSublevel == 0x1f)
         return 0;
-    int r = (data_0209f2d8 == 2);
+    int r = (gGameMode == 2);
     if(!r){
         if(!this->IsState(data_ov002_0211058c)){
-            r = (data_0209f2d8 == 1);
+            r = (gGameMode == 1);
             if(!r){
                 if (SaveData::HasPlayerLostCap())
                     return 1;
@@ -1262,11 +1262,11 @@ void daPly_c::IncMegaKillCount() {
 
 extern "C" {
 void daPly_c::func_ov002_020bdd2c() {
-    extern void *data_0209f318;
+    extern void *gCamera;
     if (this->mIsMega == 1) {
         func_ov002_020db8bc(3);
         {
-            ((dCamera_c *)data_0209f318)->mFlags &= ~0x80;
+            ((dCamera_c *)gCamera)->mFlags &= ~0x80;
         }
         this->EndPowerupMusic(0x31);
         this->mWaterStillParticle = 0;
@@ -1348,25 +1348,25 @@ void daPly_c::InitVanishLuigi() {
 
 extern "C" {
 void daPly_c::func_ov002_020bdf8c() {
-    extern char* data_0209f318;
-  func_ov002_020bda48();
-  mScaleAnimStep = 0;
-  if(mIsMega == 0){
-      this->SetNoControlState(0xd, -1, 0);
-      func_02012790(0x2e);
-  }
-  mIsMega = 1;
-  mMegaTimer = 0x258;
-  ((dCamera_c *)data_0209f318)->mFlags |= 0x80;
-  StartPowerupMusic(0x31);
+    extern char *gCamera;
+    func_ov002_020bda48();
+    mScaleAnimStep = 0;
+    if (mIsMega == 0) {
+        this->SetNoControlState(0xd, -1, 0);
+        func_02012790(0x2e);
+    }
+    mIsMega = 1;
+    mMegaTimer = 0x258;
+    ((dCamera_c *)gCamera)->mFlags |= 0x80;
+    StartPowerupMusic(0x31);
 }
 }
 
 extern "C" {
 void daPly_c::func_ov002_020be008() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern signed char data_02092114;
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(gGameMode == 1);
     if (b != 0)
         return;
     if (func_ov002_020e3078(&data_ov002_021104b4) == 0)
@@ -1805,7 +1805,7 @@ int daPly_c::IsAnim(unsigned int a) {
 }
 
 void daPly_c::SetAnim(u32 animId, int flags, Fix12i speed, u16 startFrame) {
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     u32 capChar;
     SharedFilePtr *capFile;
     u32 texIdx;
@@ -1815,7 +1815,7 @@ void daPly_c::SetAnim(u32 animId, int flags, Fix12i speed, u16 startFrame) {
     int texFlags;
     dExtAnmModel_c *body;
 
-    flag = (data_0209f2d8 == 1);
+    flag = (gGameMode == 1);
     if (flag) {
         if ((int)animId < 0x11 || (int)animId >= 0x72) {
             mStateFlags |= 0x80;
@@ -1986,7 +1986,7 @@ int daPly_c::func_ov002_020bf40c() {
     /* local extern: CalcLib conflicts with this TU's body-local math
      * declarations; retain this signature at the call site. */
     extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     Vector3 pos;
     Vector3 off;
     if (NumStars() < 0x50 || param1 != 0) {
@@ -1994,7 +1994,7 @@ int daPly_c::func_ov002_020bf40c() {
         off.x = data_ov002_0210a590.x;
         off.y = data_ov002_0210a590.y;
         off.z = data_ov002_0210a590.z;
-        data_0209f318->func_0200d858(&off);
+        gCamera->func_0200d858(&off);
         dBgCh_Gnd rg;
         {
             int py = this->mPosY;
@@ -4150,7 +4150,7 @@ int daPly_c::St_Respawn_Main() {
         if (t != 0) {
             if (t == 1) {
                 mVertAccel = -0x4000;
-                if (mPlayerNo == data_0209f250) {
+                if (mPlayerNo == gLocalPlayerId) {
                     FUN_02029980();
                     mStateWaitTimer = 0x26;
                 }
@@ -4173,7 +4173,7 @@ int daPly_c::St_Respawn_Main() {
         break;
     case 2:
         if (mStateWaitTimer == 0) {
-            if (mPlayerNo == data_0209f250) {
+            if (mPlayerNo == gLocalPlayerId) {
                 FUN_02029934();
             }
             this->ChangeState(data_ov002_02110154);
@@ -4192,8 +4192,8 @@ int daPly_c::St_Respawn_Main() {
  */
 extern "C" {
 int daPly_c::St_Respawn_Init() {
-    extern void func_02035860(void*, void*);
-    extern char* data_0209f318;
+    extern void func_02035860(void *, void *);
+    extern char *gCamera;
     Player_DisableInteraction(this);
     mPosX = mSpawnPosX;
     mPosY = mSpawnPosY;
@@ -4207,8 +4207,8 @@ int daPly_c::St_Respawn_Init() {
     mAngleY = mPrevAngleY;
     mIsBodyClsnEnabled = 1;
     mSkipGroundUpdate = 0;
-    if (mPlayerNo == data_0209f250) {
-        ((dCamera_c *)data_0209f318)->func_0200cf40();
+    if (mPlayerNo == gLocalPlayerId) {
+        ((dCamera_c *)gCamera)->func_0200cf40();
     }
     this->SetAnim(0x54, 0x40000000, 0x1000, 0);
     mStateStep = 0;
@@ -4223,16 +4223,16 @@ int daPly_c::St_Respawn_Init() {
 
 extern "C" {
 int daPly_c::func_ov002_020c4188() {
-    extern int* data_0209f318;
+    extern int *gCamera;
     extern int gNextActorUpdateMask;
     extern void func_0201f32c(int arg0);
-    int* p;
+    int *p;
 
     if (mEventId == 0) {
         return 0;
     }
 
-    p = data_0209f318;
+    p = gCamera;
 
     switch (mEventStep) {
     case 0:
@@ -4304,9 +4304,9 @@ int daPly_c::func_ov002_020c4188() {
 
 extern "C" {
 void daPly_c::func_ov002_020c43c4(unsigned int idx) {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern int data_0209caa0;
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(gGameMode == 1);
     if (b != 0) return;
     switch (idx) {
     case 1:
@@ -4345,7 +4345,7 @@ void daPly_c::func_ov002_020c43c4(unsigned int idx) {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020c44c4() {
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern int data_0209caa0[];
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     extern void func_02012694(unsigned int id, const Vector3 *v);
@@ -4355,7 +4355,7 @@ int daPly_c::func_ov002_020c44c4() {
     u8 f2d8;
     int b0, b1;
 
-    f2d8 = data_0209f2d8;
+    f2d8 = gGameMode;
     r4val = -1;
     b0 = (int)(f2d8 == 1);
     if (b0 != 0) {
@@ -4400,17 +4400,17 @@ cont:
         r4val = 8;
         break;
     case 10:
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             r4val = 9;
         }
         break;
     case 14:
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             r4val = 10;
         }
         break;
     case 35:
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             r4val = 11;
             func_02012790(0x18);
         }
@@ -4437,7 +4437,7 @@ cont:
  *
  * Leaving the talk state: clear the "in conversation" bit (0x800000) on the
  * actor being talked to, on the player, and on the global at gNextActorUpdateMask;
- * clear bit 3 on data_0209f318+0x154; and restore music layer 1 if this state
+ * clear bit 3 on gCamera+0x154; and restore music layer 1 if this state
  * had overridden it.
  *
  * mTalkActor is the actor being talked to; +0xb0 through it is dActor_c's
@@ -4447,7 +4447,7 @@ cont:
 extern "C" {
 int daPly_c::St_Talk_Cleanup() {
     extern u32 gNextActorUpdateMask;
-    extern char* data_0209f318;
+    extern char *gCamera;
     dActor_c *p = (dActor_c *)mTalkActor;
     if (p) {
         p->mFlags &= ~0x800000;
@@ -4455,7 +4455,7 @@ int daPly_c::St_Talk_Cleanup() {
     }
     mFlags &= ~0x800000;
     gNextActorUpdateMask &= ~0x800000;
-    ((dCamera_c *)data_0209f318)->mFlags &= ~8;
+    ((dCamera_c *)gCamera)->mFlags &= ~8;
     if (mPlayMusicAfterTalk) {
         Sound::LoadAndSetMusic_Layer1(0x39);
         mPlayMusicAfterTalk = 0;
@@ -4500,7 +4500,7 @@ extern "C" {
 int daPly_c::St_Talk_Main() {
     extern void func_0201f32c(s16 a);
     extern int gNextActorUpdateMask;
-    extern char* data_0209f318;
+    extern char *gCamera;
     if (mRestoreMusicVolume != 0) {
         if (Sound::ChangeMusicVolume(0x7f, 0x7222) != 0)
             mRestoreMusicVolume = 0;
@@ -4531,7 +4531,7 @@ int daPly_c::St_Talk_Main() {
         else
             func_0201f32c(mAttachOffsetY);
         {
-            char* cam = data_0209f318;
+            char *cam = gCamera;
             switch ((mStateArg >> 2) & 3) {
             case 0:
                 ((::dCamera_c *)cam)->func_0200d3f8(mPlayerNo, &mStateTargetX);
@@ -4570,7 +4570,7 @@ int daPly_c::St_Talk_Main() {
                 mStateStep = 7;
             mStateWork = 0;
             mPrevAngleY = mAngleY;
-            char* cam = data_0209f318;
+            char *cam = gCamera;
             ((::dCamera_c *)cam)->func_0200d81c(mPlayerNo);
             ((dCamera_c *)cam)->mFlags &= ~8;
             mHeadRotMode = 4;
@@ -4580,7 +4580,7 @@ int daPly_c::St_Talk_Main() {
         if (mStateWaitTimer != 0)
             break;
     case 6:
-        if ((((dCamera_c *)data_0209f318)->mFlags & 0x8000) != 0)
+        if ((((dCamera_c *)gCamera)->mFlags & 0x8000) != 0)
             break;
         if (mIsOpeningBigDoor != 0) {
             mNoCtrlKind = 0x13;
@@ -4631,7 +4631,7 @@ extern "C" {
 int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos, unsigned char d,
                           unsigned char e) {
     extern void Vec3_RotateYAndTranslate(void*, const Vector3 *in, int angle, const Vector3 *src);
-    extern void *data_0209f318;
+    extern void *gCamera;
     fBase_c *actor = &actor_;
     int r7;
 
@@ -4680,7 +4680,7 @@ finish:
     *(unsigned int*)&mAttachOffsetY = msg;
 
     if (e == 2) {
-        ((dCamera_c *)data_0209f318)->SetFlag_3();
+        ((dCamera_c *)gCamera)->SetFlag_3();
     }
 
     return 1;
@@ -4966,12 +4966,12 @@ int func_ov002_020c56f0(unsigned char* c, unsigned char arg)
 extern "C" {
 int daPly_c::St_DeadPit_Main() {
     extern void Vec3_RotateYAndTranslate(void*, void*, s16 angle, void*);
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     switch (mStateStep) {
     case 0:
         break;
     case 1: {
-        int b = (data_0209f2d8 == 1);
+        int b = (gGameMode == 1);
         if (b) {
             if (mStateWaitTimer == 0) {
                 this->ChangeState(data_ov002_021104fc);
@@ -5057,7 +5057,7 @@ int daPly_c::St_DeadPit_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DeadPit_Init() {
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern int func_ov002_020d5cec(void *);
     Player_ReleaseHeldActor(this);
     if (*(char**)((char*)&mObjInMouth) != 0) {
@@ -5082,13 +5082,15 @@ int daPly_c::St_DeadPit_Init() {
         case 0:
             break;
         case 1:
-            if (data_0209f2d8 == 1) t = 1;
+            if (gGameMode == 1)
+                t = 1;
             if (t == 0) {
                 int a = 2;
                 if (mSurfaceType == 5) a = 0;
                 HitDeathPlane(a);
             } else {
-                if (mPlayerNo == data_0209f250) FUN_020299f4();
+                if (mPlayerNo == gLocalPlayerId)
+                    FUN_020299f4();
                 mStateWaitTimer = 0x1e;
             }
             mSkipGroundUpdate = 1;
@@ -5265,14 +5267,14 @@ int daPly_c::St_DeadHit_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DeadHit_Init() {
-    extern char* data_0209f318;
+    extern char *gCamera;
     Player_DisableInteraction(this);
     mIsBodyClsnEnabled = 0;
     int idx = mStateStep & 1;
     this->SetAnim(data_ov002_0210a424[idx], 0x40000000, 0x1000, 0);
     mStateArg = 0;
     mStateWork = 0;
-    ((dCamera_c *)data_0209f318)->func_0200d89c();
+    ((dCamera_c *)gCamera)->func_0200d89c();
     return 1;
 }
 }
@@ -5636,7 +5638,7 @@ int daPly_c::func_ov002_020c6adc() {
 extern "C" {
 int daPly_c::St_Teleport_Main() {
     extern void func_02035860(void*, void*);
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     extern int data_0209f32c;
     switch (mStateStep) {
     case 0:
@@ -5660,7 +5662,7 @@ int daPly_c::St_Teleport_Main() {
             mWaterSurfaceY = 0x80000000;
             func_02035860(&mMeshClsn, &mPos);
             mOpacity = 0;
-            data_0209f318->func_0200d1e4();
+            gCamera->func_0200d1e4();
             Sound::PlayCharVoice(mCharacter, 0x19, mCamSpacePos);
             Sound::PlayBank0(0x19, mCamSpacePos);
             mStateStep = 1;
@@ -5728,26 +5730,40 @@ int daPly_c::St_Teleport_Init() {
  */
 extern "C" {
 int func_ov002_020c6e14(daPly_c *actor) {
-    extern void* data_0209f318[];
+    extern void *gCamera[];
     int idx;
 
     if (gNewStarCollected != 0) {
         idx = -1;
         switch (NumStars()) {
-        case 1:  idx = 0; break;
-        case 3:  idx = 1; break;
-        case 8:  idx = 2; break;
-        case 12: idx = 3; break;
-        case 30: idx = 4; break;
-        case 50: idx = 5; break;
-        case 80: idx = 6; break;
+        case 1:
+            idx = 0;
+            break;
+        case 3:
+            idx = 1;
+            break;
+        case 8:
+            idx = 2;
+            break;
+        case 12:
+            idx = 3;
+            break;
+        case 30:
+            idx = 4;
+            break;
+        case 50:
+            idx = 5;
+            break;
+        case 80:
+            idx = 6;
+            break;
         }
 
         if (idx == -1)
             return 0;
 
         if (actor->ShowMessage(*(fBase_c *)actor, data_ov002_020ff1a0[idx], 0, 0, 2)) {
-            ((dCamera_c *)(data_0209f318[0]))->SetFlag_3();
+            ((dCamera_c *)(gCamera[0]))->SetFlag_3();
             return 1;
         }
     }
@@ -5772,15 +5788,15 @@ s32 daPly_c::St_LevelEnter_Cleanup() {
  * POINTERS TO MEMBER FUNCTION -- the same ARM/Itanium pmf representation
  * daPly_c::State uses -- and the selected step runs against the player. Six of
  * the mStateStep values additionally make the player the camera's focus
- * actor (dCamera_c::mFocusActor, through the camera pointer data_0209f318).
+ * actor (dCamera_c::mFocusActor, through the camera pointer gCamera).
  */
 extern "C" {
 int daPly_c::St_LevelEnter_Main() {
     extern void (daPly_c::*data_ov002_0211075c[])();
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     switch (mStateStep) {
     case 8: case 9: case 11: case 12: case 16: case 18:
-        data_0209f318->mFocusActor = this;
+        gCamera->mFocusActor = this;
         break;
     case 10: case 13: case 14: case 15: case 17:
     default:
@@ -5917,7 +5933,7 @@ void daPly_c::func_ov002_020c7350() {
     typedef unsigned short u16;
     typedef unsigned int u32;
     typedef signed char s8;
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern char data_0209caa0[];
     int id;
 
@@ -5976,7 +5992,7 @@ void daPly_c::func_ov002_020c7350() {
     }
 
     {
-        u8 v = data_0209f2d8;
+        u8 v = gGameMode;
         int isOne = (v == 1);
         if (isOne != false)
             goto setanim2;
@@ -6074,7 +6090,7 @@ void daPly_c::func_ov002_020c75f0() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_LevelEnter_Init() {
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern u8 gPrevReturnState;
 
     u32 anim = data_ov002_0210a7e8[mStateStep];
@@ -6120,7 +6136,7 @@ int daPly_c::St_LevelEnter_Init() {
         mPosY = hit;
         mStateWork = 2;
         {
-            int b = (data_0209f2d8 == 2);
+            int b = (gGameMode == 2);
             if (b == 0) mStateWaitTimer = 0x1e;
             else mStateWaitTimer = 0;
         }
@@ -6192,7 +6208,7 @@ int daPly_c::St_LevelEnter_Init() {
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     {
-        u8 c2 = data_0209f264;
+        u8 c2 = gCurrentEntranceId;
         if (gCurrentSublevel == 2) {
             if (c2 == 0 || (c2 == 0xe && gPrevReturnState != 1)) {
                 func_02012790(0x1d);
@@ -6309,9 +6325,9 @@ fail:
 
 extern "C" {
 void daPly_c::func_ov002_020c7ff8() {
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     u8 s = mNoCtrlKind;
-    dCamera_c *g = data_0209f318;
+    dCamera_c *g = gCamera;
     if (s == 0 || s == 1 || s == 0x11) {
         g->StartDanceCutscene(mPlayerNo, -1);
     } else if (s == 3) {
@@ -6709,14 +6725,14 @@ int daPly_c::func_ov002_020c8b78() {
 }
 
 int daPly_c::func_ov002_020c8cb0() {
-  if (this->FinishedAnim()) {
-    if (data_02092110 >= 0)
-      mIsOpeningBigDoor = 1;
-    func_ov002_020ca108();
-    mRootMotionMode = 0;
-    this->SetAnim(0x47, 0, 0x1000, 0);
-  }
-  return 0;
+    if (this->FinishedAnim()) {
+        if (gNextSublevel >= 0)
+            mIsOpeningBigDoor = 1;
+        func_ov002_020ca108();
+        mRootMotionMode = 0;
+        this->SetAnim(0x47, 0, 0x1000, 0);
+    }
+    return 0;
 }
 
 /* recovered: shared common types, declarations from a shared header */
@@ -6901,9 +6917,9 @@ int daPly_c::func_ov002_020c9288() {
 extern "C" {
 int daPly_c::func_ov002_020c92fc() {
     extern int gNextActorUpdateMask;
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern int data_0209caa0[];
-    extern void *data_0209f318;
+    extern void *gCamera;
     int flag = 0;
     this->mVertSpeed = 0;
 
@@ -6928,12 +6944,12 @@ int daPly_c::func_ov002_020c92fc() {
 
     if (this->FinishedAnim()) {
         if (mStateStep == 9) {
-            if ((int)(data_0209f2d8 == 1) == 0) {
+            if ((int)(gGameMode == 1) == 0) {
                 if ((data_0209caa0[2] & 0x10000000) == 0 && SaveData::IsCharacterUnlocked(0) == 0 &&
                     mHatCharacter == 0 && mPrevCharacter == 3) {
                     mStateStep = 0xa;
                     mStatePhase = 0;
-                    ((::dCamera_c *)data_0209f318)->func_0200d3f8(mPlayerNo, 0);
+                    ((::dCamera_c *)gCamera)->func_0200d3f8(mPlayerNo, 0);
                     return 0;
                 }
             }
@@ -6949,7 +6965,7 @@ int daPly_c::func_ov002_020c92fc() {
 
 extern "C" {
 int daPly_c::func_ov002_020c94a4() {
-    extern u8 data_0209211c;
+    extern u8 gReturnSublevel;
     unsigned short st;
 
     this->mVertSpeed = 0;
@@ -6963,8 +6979,8 @@ int daPly_c::func_ov002_020c94a4() {
         sub = mNoCtrlKind;
         if (sub == 0) {
             if (gCurrentSublevel == 0x21) {
-                data_0209211c = 4;
-                data_0209f200 = 7;
+                gReturnSublevel = 4;
+                gReturnEntranceId = 7;
             }
             ExitLevel();
             mStateStep = 6;
@@ -6974,24 +6990,24 @@ int daPly_c::func_ov002_020c94a4() {
         if (sub == 3) {
             switch (gCurrentSublevel) {
             case 0x24:
-                data_0209211c = 2;
-                data_0209f200 = 0xa;
+                gReturnSublevel = 2;
+                gReturnEntranceId = 0xa;
                 break;
             case 0x26:
-                data_0209211c = 4;
-                data_0209f200 = 9;
+                gReturnSublevel = 4;
+                gReturnEntranceId = 9;
                 break;
             case 0x2d:
-                data_0209211c = 0x32;
-                data_0209f200 = 3;
+                gReturnSublevel = 0x32;
+                gReturnEntranceId = 3;
                 break;
             case 0x2f:
-                data_0209211c = 3;
-                data_0209f200 = 0;
+                gReturnSublevel = 3;
+                gReturnEntranceId = 0;
                 break;
             case 0x31:
-                data_0209211c = 5;
-                data_0209f200 = 0xb;
+                gReturnSublevel = 5;
+                gReturnEntranceId = 0xb;
                 break;
             }
             ExitLevel();
@@ -7099,15 +7115,15 @@ void daPly_c::func_ov002_020c9840() {
 
 extern "C" {
 void daPly_c::func_ov002_020c98a4() {
-    extern void* data_0209f318[];
-  mHasNoCap=0;
-  mStateStep=0x18;
-  this->SetAnim(0x47, 0, 0x1000, 0);
-  mStateTimer=2;
-  this->mHorzSpeed=0;
-  this->mVertSpeed=0;
-  mStateArg=0;
-  ((::dCamera_c *)data_0209f318[0])->func_0200d148(mPlayerNo);
+    extern void *gCamera[];
+    mHasNoCap = 0;
+    mStateStep = 0x18;
+    this->SetAnim(0x47, 0, 0x1000, 0);
+    mStateTimer = 2;
+    this->mHorzSpeed = 0;
+    this->mVertSpeed = 0;
+    mStateArg = 0;
+    ((::dCamera_c *)gCamera[0])->func_0200d148(mPlayerNo);
 }
 }
 
@@ -7228,12 +7244,14 @@ void daPly_c::func_ov002_020c9c4c() {
 }
 
 void daPly_c::func_ov002_020c9cc0() {
-  mStateWaitTimer=3;
-  mStateStep=6;
-  mSkipGroundUpdate = 1;
-  mIsBodyClsnEnabled=0;
-  if(this->mVertSpeed>=0x14000) this->mVertSpeed=0x14000;
-  if(data_02092110==0x26 || data_02092110==0x12) mOpacity=0;
+    mStateWaitTimer = 3;
+    mStateStep = 6;
+    mSkipGroundUpdate = 1;
+    mIsBodyClsnEnabled = 0;
+    if (this->mVertSpeed >= 0x14000)
+        this->mVertSpeed = 0x14000;
+    if (gNextSublevel == 0x26 || gNextSublevel == 0x12)
+        mOpacity = 0;
 }
 
 int daPly_c::func_ov002_020c9d1c() {
@@ -7650,10 +7668,10 @@ int daPly_c::Unk_020ca8f8() {
 
 extern "C" {
 void daPly_c::func_ov002_020ca940() {
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern int data_0209caa0[];
     extern u8 data_0209f49e[];
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     u8 old;
     dCamera_c *h;
     int b;
@@ -7661,7 +7679,7 @@ void daPly_c::func_ov002_020ca940() {
     if (mIsNoControl != 0)
         return;
 
-    b = data_0209f2d8;
+    b = gGameMode;
     b = b == 1;
     if (b == false) {
         if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE))
@@ -7670,7 +7688,7 @@ void daPly_c::func_ov002_020ca940() {
 
     if (*(u16*)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 0x8000) {
         old = mUseFarCamera;
-        h = data_0209f318;
+        h = gCamera;
         (mUseFarCamera)++;
 
         if (mUseFarCamera > 2) {
@@ -7684,7 +7702,7 @@ void daPly_c::func_ov002_020ca940() {
             mUseFarCamera = 2;
         case 2:
             if (mIsMega == 0) {
-                b = data_0209f2d8;
+                b = gGameMode;
                 b = b == 1;
                 if (b == false) {
                     if (IsState(data_ov002_0211013c) || IsState(data_ov002_0211043c) ||
@@ -7789,7 +7807,7 @@ extern "C" {
 int func_ov002_020cac60(char *self)
 {
     daPly_c *player = (daPly_c *)self;
-    extern short data_0209f5e8;
+    extern short gSceneColorFader;
     short ang;
     short angle;
     if (player->mSurfaceType == 0xd && NumStars() >= 0xe) {
@@ -7798,7 +7816,7 @@ int func_ov002_020cac60(char *self)
         if (ang <= 0x1c00 && angle >= -0x1000 && angle <= 0x1000) {
             LoadLevel(0x1f, 0, 1, 0, 0xe);
             dScene_c::SetAndStopColorFader();
-            *(short *)((char *)&data_0209f5e8 + 0xc) = 0x7fff;
+            *(short *)((char *)&gSceneColorFader + 0xc) = 0x7fff;
             func_02012790(0x1e);
             return 1;
         }
@@ -7809,7 +7827,7 @@ int func_ov002_020cac60(char *self)
 
 /* recovered: named members + shared header, real C++ method
  *
- * The zoomed-in camera pose. Runs only while data_02092110 is negative. Losing
+ * The zoomed-in camera pose. Runs only while gNextSublevel is negative. Losing
  * the 0x4 state flag ends it: back to walking, the body model's animation
  * rewinds to frame 0, and the facing angle is latched. Landing, or
  * any of the 0x8f03 input bits, clears that flag.
@@ -7819,7 +7837,7 @@ int daPly_c::St_CameraZoom_Main() {
     extern void func_ov002_020cae10(void*);
     extern int func_ov002_020cac60(void*);
     extern unsigned short data_0209f49e;
-    if (data_02092110 < 0) {
+    if (gNextSublevel < 0) {
         if ((unsigned short)(mStateFlags & 4) == 0) {
             this->ChangeState(data_ov002_0211013c);
             dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
@@ -7842,22 +7860,23 @@ int daPly_c::St_CameraZoom_Main() {
 }
 
 extern "C" {
-void func_ov002_020cae10(char* c)
-{
+void func_ov002_020cae10(char *c) {
     daPly_c *self = (daPly_c *)c;
     typedef int Fix12i;
-    extern void* data_0209f318;
+    extern void *gCamera;
     int r4 = 0x4000;
     int ang;
     int r8;
-    if (self->mPlayerNo == data_0209f250) {
-        r4 -= ((dCamera_c *)data_0209f318)->mAngleX;
+    if (self->mPlayerNo == gLocalPlayerId) {
+        r4 -= ((dCamera_c *)gCamera)->mAngleX;
         r4 = (short)r4;
     }
     ang = (short)((self->mAngleY - GetAngleToCamera(self->mPlayerNo)) + 0x8000);
     r8 = ang;
-    if (r8 < (int)0xffffd556) r8 = (int)0xffffd556;
-    if (r8 > 0x2aaa) r8 = 0x2aaa;
+    if (r8 < (int)0xffffd556)
+        r8 = (int)0xffffd556;
+    if (r8 > 0x2aaa)
+        r8 = 0x2aaa;
     self->mHeadRot[1] = (short)FX_MUL(r8, 0xc00);
     self->mHeadRot[2] = (short)FX_MUL(r4, 0xc00);
     self->mHeadRotMode = 2;
@@ -7868,10 +7887,10 @@ void func_ov002_020cae10(char* c)
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_CameraZoom_Init() {
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     *(int *)((char *)&mHorzSpeed) = 0;
     *(int *)((char *)&mVertSpeed) = 0;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     int pid = *(unsigned char *)((char *)&mPlayerNo);
     cam->func_0200d064(pid);
     cam->SetCameraZoomState(*(unsigned char *)((char *)&mPlayerNo));
@@ -8004,13 +8023,13 @@ int daPly_c::St_Headstand_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Headstand_Init() {
-    extern struct CameraRaw *data_0209f318;
+    extern struct CameraRaw *gCamera;
     this->SetAnim(0x1e, 0x40000000, 0x1000, 0);
     *(unsigned char *)((char *)&mStateStep) = 2;
     *(int *)((char *)&mVertAccel) = 0;
     *(int *)((char *)&mHorzSpeed) = 0;
     *(int *)((char *)&mVertSpeed) = 0;
-    ((::dCamera_c *)data_0209f318)->SetHeadstandState(*(unsigned char *)((char *)&mPlayerNo));
+    ((::dCamera_c *)gCamera)->SetHeadstandState(*(unsigned char *)((char *)&mPlayerNo));
     *(unsigned char *)((char *)&mHideShadow) = 1;
     return 1;
 }
@@ -8114,17 +8133,17 @@ int daPly_c::St_Climb_Cleanup() {
  */
 extern "C" {
 int daPly_c::St_Climb_Main() {
-    extern void Vec3_RotateYAndTranslate(void*, void*, s16 angle, void*);
-    extern void ApproachAngle(void*, s16 target, s32 divisor, s32 band, s32 maxStep);
-    extern void func_ov002_020bf340(void*, void*, s32 delta, s32 limit);
-    extern void func_ov002_020cb400(void*);
-    extern void func_ov002_020cb474(void*);
-    extern int func_ov002_020cbea8(void*);
-    extern void* data_0209f318;
+    extern void Vec3_RotateYAndTranslate(void *, void *, s16 angle, void *);
+    extern void ApproachAngle(void *, s16 target, s32 divisor, s32 band, s32 maxStep);
+    extern void func_ov002_020bf340(void *, void *, s32 delta, s32 limit);
+    extern void func_ov002_020cb400(void *);
+    extern void func_ov002_020cb474(void *);
+    extern int func_ov002_020cbea8(void *);
+    extern void *gCamera;
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     extern u8 data_0209f4ac[];
-    extern void func_ov002_020cc05c(void*, unsigned short);
+    extern void func_ov002_020cc05c(void *, unsigned short);
     s32 vbuf[6];
 
     mPeakY = mPosY;
@@ -8145,7 +8164,7 @@ int daPly_c::St_Climb_Main() {
     mPosZ = vbuf[2];
 
     {
-        void* cam = data_0209f318;
+        void *cam = gCamera;
         if (mClimbClsn->flags & 0x1000000) {
             ((::dCamera_c *)cam)->func_0200d5c0(mPlayerNo);
         } else {
@@ -8170,8 +8189,8 @@ int daPly_c::St_Climb_Main() {
     case 1: {
         s16 v;
         u32 idx = (u32)gActivePlayerSlot * 0x18;
-        u16 flagsE = *(u16*)((char*)data_0209f49e + idx);
-        u16 flagsC = *(u16*)((char*)data_0209f49c + idx);
+        u16 flagsE = *(u16 *)((char *)data_0209f49e + idx);
+        u16 flagsC = *(u16 *)((char *)data_0209f49c + idx);
         if (flagsE & 0x400) {
             s16 ang = (s16)(mAngleY + 0x8000);
             s32 t = (u16)ang;
@@ -8185,7 +8204,7 @@ int daPly_c::St_Climb_Main() {
         }
 
         {
-            v = *(s16*)((char*)data_0209f4a4 + idx);
+            v = *(s16 *)((char *)data_0209f4a4 + idx);
             if (v < -0x400) {
                 func_ov002_020cb354(this);
                 mAngleYSpeed = 0;
@@ -8202,18 +8221,20 @@ int daPly_c::St_Climb_Main() {
                 } else {
                     u32 idx2 = (u32)gActivePlayerSlot * 0x18;
                     s32 mag;
-                    if (*((u8*)data_0209f4ac + idx2) == 0) {
-                        mag = (*(u16*)((char*)data_0209f49c + idx2) & 0x800) ? 0xc000 : 0x6660;
+                    if (*((u8 *)data_0209f4ac + idx2) == 0) {
+                        mag = (*(u16 *)((char *)data_0209f49c + idx2) & 0x800) ? 0xc000 : 0x6660;
                     } else {
                         mag = 0xc000;
                     }
-                    s16 av = *(s16*)((char*)data_0209f4a4 + idx2);
-                    if (av < 0) av = -av;
+                    s16 av = *(s16 *)((char *)data_0209f4a4 + idx2);
+                    if (av < 0)
+                        av = -av;
                     s32 fx = FX_MUL(mag, av);
                     func_ov002_020bf340(this, &this->mVertSpeed, 0x800, fx);
                     this->SetAnim(0x24, 0, 0x1000, 0);
                     s32 fx2 = FX_MUL(fx, 0x500);
-                    if (fx2 >= 0x4000) fx2 = 0x4000;
+                    if (fx2 >= 0x4000)
+                        fx2 = 0x4000;
                     {
                         dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID((u8)param1, 0)];
                         anim.speed = fx2;
@@ -8227,21 +8248,23 @@ int daPly_c::St_Climb_Main() {
                 {
                     u32 idx3 = (u32)gActivePlayerSlot * 0x18;
                     s32 mag;
-                    if (*((u8*)data_0209f4ac + idx3) == 0) {
-                        mag = (*(u16*)((char*)data_0209f49c + idx3) & 0x800) ? 0x1e000 : 0xfff0;
+                    if (*((u8 *)data_0209f4ac + idx3) == 0) {
+                        mag = (*(u16 *)((char *)data_0209f49c + idx3) & 0x800) ? 0x1e000 : 0xfff0;
                     } else {
                         mag = 0x1e000;
                     }
-                    s16 val = *(s16*)((char*)data_0209f4a4 + idx3);
+                    s16 val = *(s16 *)((char *)data_0209f4a4 + idx3);
                     s32 fx = FX_MUL(mag, val);
                     func_ov002_020bf340(this, &this->mVertSpeed, -0x800, fx);
                 }
                 mAngleYSpeed -= 0x40;
                 {
                     u32 idx4 = (u32)gActivePlayerSlot * 0x18;
-                    s16 av = *(s16*)((char*)data_0209f4a4 + idx4);
-                    if (av < 0) av = -av;
-                    if (mAngleYSpeed <= av) av = mAngleYSpeed;
+                    s16 av = *(s16 *)((char *)data_0209f4a4 + idx4);
+                    if (av < 0)
+                        av = -av;
+                    if (mAngleYSpeed <= av)
+                        av = mAngleYSpeed;
                     mAngleYSpeed = av;
                 }
                 if (!IsAnim(0x25)) {
@@ -8273,7 +8296,7 @@ end:
         this->ChangeState(data_ov002_0211013c);
         return 1;
     }
-    if (*(u16*)((char*)data_0209f49e + (u32)gActivePlayerSlot * 0x18) & 2) {
+    if (*(u16 *)((char *)data_0209f49e + (u32)gActivePlayerSlot * 0x18) & 2) {
         mPrevAngleY = mAngleY;
         this->ChangeState(data_ov002_0211070c);
         return 1;
@@ -8708,24 +8731,24 @@ int daPly_c::St_HurtWater_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_HurtWater_Init() {
-    extern int data_0209f318[];
-  unsigned a=data_ov002_02109fe4[mStateStep&1];
-  this->SetAnim(a, 0x40000000, 0x1000, 0);
-  mStateWork=0;
-  mStateArg=0;
-  mVertAccel=0;
-  mTerminalVelocity=-0xc000;
-  mVertSpeed=0x10000;
-  mIsTakingDamage=1;
-  if(mHurtDamage){
-    int b=mStateStep&0xf0;
-    if(b==0 || b==0x10){
-      func_ov002_020d93ac();
-      func_ov002_020d94cc();
+    extern int gCamera[];
+    unsigned a = data_ov002_02109fe4[mStateStep & 1];
+    this->SetAnim(a, 0x40000000, 0x1000, 0);
+    mStateWork = 0;
+    mStateArg = 0;
+    mVertAccel = 0;
+    mTerminalVelocity = -0xc000;
+    mVertSpeed = 0x10000;
+    mIsTakingDamage = 1;
+    if (mHurtDamage) {
+        int b = mStateStep & 0xf0;
+        if (b == 0 || b == 0x10) {
+            func_ov002_020d93ac();
+            func_ov002_020d94cc();
+        }
     }
-  }
-  (*(dCamera_c **)data_0209f318)->func_0200d89c();
-  return 1;
+    (*(dCamera_c **)gCamera)->func_0200d89c();
+    return 1;
 }
 }
 
@@ -9455,7 +9478,7 @@ int daPly_c::func_ov002_020ce324() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Swim_Init() {
-    extern int data_0209f318[];
+    extern int gCamera[];
     Player_ReleaseHeldActor(this);
     Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
     this->SetAnim(0xa7, 0x40000000, 0x1000, 0);
@@ -9463,7 +9486,7 @@ int daPly_c::St_Swim_Init() {
     mVertAccel = 0;
     mTerminalVelocity = -0xc000;
     mIsUnderwater = 1;
-    ((::dCamera_c *)*(void **)data_0209f318)->func_0200d768(mPlayerNo);
+    ((::dCamera_c *)*(void **)gCamera)->func_0200d768(mPlayerNo);
     mPrevVertSpeed = mVertSpeed;
     mHorzSpeed = 0;
     mVertSpeed = 0;
@@ -9643,9 +9666,9 @@ int daPly_c::func_ov002_020ceb54() {
 
 extern "C" {
 void daPly_c::func_ov002_020ceb7c() {
-    extern struct CameraRaw *data_0209f318;
+    extern struct CameraRaw *gCamera;
     extern int data_0209f32c;
-    struct CameraRaw *g = data_0209f318;
+    struct CameraRaw *g = gCamera;
 
     if (mStateWork & 2) {
         if (data_0209f32c - 0x50000 - mPosY >= 0x64000)
@@ -9844,7 +9867,7 @@ int daPly_c::func_ov002_020cef84() {
 extern "C" {
 int func_ov002_020cf20c(char* c) {
     daPly_c *self = (daPly_c *)c;
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     extern int func_ov002_020cf20c(void*);
     Vector3 v1;
     Vector3 v2;
@@ -9863,7 +9886,7 @@ int func_ov002_020cf20c(char* c) {
     if (line.DetectClsn()) {
         if (line.surface.clps.GetSurfaceType() == 3) {
             ::Vector3 clsnPos = line.GetClsnPos();
-            dCamera_c *cam = data_0209f318;
+            dCamera_c *cam = gCamera;
             int t = line.surface.clps.GetCameraBehavior();
             cam->func_0200ca14(self->mPlayerNo, t);
             int ret = clsnPos.y;
@@ -11430,20 +11453,21 @@ int daPly_c::func_ov002_020d22ec(int arg) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Wait_Cleanup() {
-    extern unsigned char data_0209f2d8;
-    extern void* data_0209f318;
+    extern unsigned char gGameMode;
+    extern void *gCamera;
     extern int data_0209caa0[];
 
-    void* r4 = data_0209f318;
+    void *r4 = gCamera;
     ((dCamera_c *)r4)->mFlags &= ~0x2000;
     mSleepStage = 0;
     do {
-        unsigned char v = data_0209f2d8;
+        unsigned char v = gGameMode;
         int b0 = (v == 1);
         if (b0 == 0) {
             if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) != 0) {
                 int b1 = (v == 2);
-                if (b1 == 0) break;
+                if (b1 == 0)
+                    break;
             }
             if (mAnimScriptId == 0xf)
                 mRootMotionMode = 0;
@@ -11460,13 +11484,13 @@ int daPly_c::St_Wait_Cleanup() {
 extern "C" {
 int daPly_c::St_Wait_Main() {
 
-    extern void func_ov002_020bcdf0(void*);
-    extern void func_ov002_020d2e74(void*);
+    extern void func_ov002_020bcdf0(void *);
+    extern void func_ov002_020d2e74(void *);
     extern int func_ov002_020c5244(void);
-    extern void* data_0209f318;
+    extern void *gCamera;
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern int data_0209caa0[];
     extern unsigned char data_0209f49e[];
     if ((unsigned short)(mStateFlags & 1)) {
@@ -11485,258 +11509,261 @@ int daPly_c::St_Wait_Main() {
     }
 
     {
-    unsigned char st = mStateStep;
-    void* r4 = data_0209f318;
-    switch (st) {
-    default:
-        break;
+        unsigned char st = mStateStep;
+        void *r4 = gCamera;
+        switch (st) {
+        default:
+            break;
 
-    case 8: {
-        if (!(*(unsigned short *)(data_0209f49c + gActivePlayerSlot * 0x18) & 0x800) &&
-            mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(0)) {
-            Sound::PlayCharVoice(mCharacter, 0x2c, mCamSpacePos);
-        }
-    }
-    case 0: {
-        unsigned char f2d8_0 = data_0209f2d8;
-        int b0 = (f2d8_0 == 1);
-        if (b0 == 0) {
-            if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
-                int b1 = (f2d8_0 == 2);
-                if (b1) goto blk0_34;
-                goto blk0_35;
+        case 8: {
+            if (!(*(unsigned short *)(data_0209f49c + gActivePlayerSlot * 0x18) & 0x800) &&
+                mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(0)) {
+                Sound::PlayCharVoice(mCharacter, 0x2c, mCamSpacePos);
             }
+        }
+        case 0: {
+            unsigned char f2d8_0 = gGameMode;
+            int b0 = (f2d8_0 == 1);
+            if (b0 == 0) {
+                if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
+                    int b1 = (f2d8_0 == 2);
+                    if (b1)
+                        goto blk0_34;
+                    goto blk0_35;
+                }
             blk0_34:
                 func_ov002_020bcdf0(this);
                 goto blk0_36;
-        }
+            }
         blk0_35:
             if (func_ov002_020d2fdc() == 0) {
-            blk0_36:
-            {
+            blk0_36: {
                 int idx0 = gActivePlayerSlot * 0x18;
-                short lvl0 = *(short*)(data_0209f4a0+idx0);
+                short lvl0 = *(short *)(data_0209f4a0 + idx0);
                 if (lvl0 != 0) {
-                    int thr0 = (*(unsigned char*)(data_0209f4ae+idx0)!=2) ? 0x471 : 0x555;
+                    int thr0 = (*(unsigned char *)(data_0209f4ae + idx0) != 2) ? 0x471 : 0x555;
                     if (lvl0 < thr0) {
                         mPrevAngleY = mDesiredAngleY;
                         mAngleY = mPrevAngleY;
                     }
                 }
                 {
-                    int thr0b = (*(unsigned char*)(data_0209f4ae+idx0)!=2) ? 0x471 : 0x555;
+                    int thr0b = (*(unsigned char *)(data_0209f4ae + idx0) != 2) ? 0x471 : 0x555;
                     func_ov002_020d22ec(thr0b);
                 }
             }
             }
-        break;
-    }
-
-    case 10: {
-        if (mIsMetal!=0 || mIsVanish!=0) {
-            mStateStep = 0;
-            this->SetAnim(0x47, 0, 0x1000, 0);
-            mStateTimer = 0x384;
+            break;
         }
-        {
-            int idx10 = gActivePlayerSlot * 0x18;
-            short lvl10 = *(short*)(data_0209f4a0+idx10);
-            if (lvl10 != 0) {
-                int thr10 = (*(unsigned char*)(data_0209f4ae+idx10)!=2) ? 0x471 : 0x555;
-                if (lvl10 < thr10) {
-                    mPrevAngleY = mDesiredAngleY;
-                    mAngleY = mPrevAngleY;
+
+        case 10: {
+            if (mIsMetal != 0 || mIsVanish != 0) {
+                mStateStep = 0;
+                this->SetAnim(0x47, 0, 0x1000, 0);
+                mStateTimer = 0x384;
+            }
+            {
+                int idx10 = gActivePlayerSlot * 0x18;
+                short lvl10 = *(short *)(data_0209f4a0 + idx10);
+                if (lvl10 != 0) {
+                    int thr10 = (*(unsigned char *)(data_0209f4ae + idx10) != 2) ? 0x471 : 0x555;
+                    if (lvl10 < thr10) {
+                        mPrevAngleY = mDesiredAngleY;
+                        mAngleY = mPrevAngleY;
+                    }
+                }
+                {
+                    int thr10b = (*(unsigned char *)(data_0209f4ae + idx10) != 2) ? 0x471 : 0x555;
+                    func_ov002_020d22ec(thr10b);
+                }
+            }
+            break;
+        }
+
+        case 1: {
+            if (this->FinishedAnim()) {
+                this->SetAnim(0xc, 0, 0x1000, 0);
+                mStateStep = 2;
+            }
+            {
+                unsigned int x1 = param1;
+                switch (x1) {
+                default:
+                    break;
+                case 0: {
+                    int idA = this->GetBodyModelID(x1 & 0xff, 0);
+                    dExtAnmModel_c *animA = mModels.mBodyModels[idA];
+                    if (animA->WillHitFrame(0x5a)) {
+                        Sound::PlayCharVoice(mCharacter, 0x2d, mCamSpacePos);
+                    } else if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]
+                                   ->WillHitFrame(0x3a) ||
+                               mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]
+                                   ->WillHitFrame(0x44)) {
+                        Sound::PlayBank0(4, mCamSpacePos);
+                    }
+                    break;
+                }
+                case 1: {
+                    int idD = this->GetBodyModelID(x1 & 0xff, 0);
+                    dExtAnmModel_c *animD = mModels.mBodyModels[idD];
+                    if (animD->WillHitFrame(0x6e)) {
+                        Sound::PlayCharVoice(mCharacter, 0x2d, mCamSpacePos);
+                    } else {
+                        int idE = this->GetBodyModelID(param1 & 0xff, 0);
+                        dExtAnmModel_c *animE = mModels.mBodyModels[idE];
+                        if (animE->WillHitFrame(0x32)) {
+                            Sound::PlayBank0(0xb1, mCamSpacePos);
+                        }
+                    }
+                    break;
+                }
+                case 2: {
+                    int idF = this->GetBodyModelID(x1 & 0xff, 0);
+                    dExtAnmModel_c *animF = mModels.mBodyModels[idF];
+                    if (animF->WillHitFrame(0x20)) {
+                        Sound::PlayBank0(2, mCamSpacePos);
+                    } else if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]
+                                   ->WillHitFrame(0x47) ||
+                               mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]
+                                   ->WillHitFrame(0x60)) {
+                        Sound::PlayBank0(3, mCamSpacePos);
+                    }
+                    break;
+                }
+                case 3: {
+                    int idI = this->GetBodyModelID(x1 & 0xff, 0);
+                    dExtAnmModel_c *animI = mModels.mBodyModels[idI];
+                    if (animI->WillHitFrame(0xad)) {
+                        Sound::PlayBank0(0x50, mCamSpacePos);
+                    }
+                    break;
+                }
+                }
+            }
+            if (func_ov002_020d22ec(0)) {
+                ((dCamera_c *)r4)->mFlags &= ~0x2000;
+                Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
+            }
+            break;
+        }
+
+        case 2: {
+            if (mMuteSleepVoice == 0 &&
+                mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(1)) {
+                Sound::PlayCharVoice(mCharacter, 0x2a, mCamSpacePos);
+            }
+            {
+                unsigned char f2d8_2 = gGameMode;
+                int b2a = (f2d8_2 == 1);
+                if (b2a == 0) {
+                    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+                        break;
+                    int b2b = (f2d8_2 == 2);
+                    if (b2b != false)
+                        break;
+                }
+            }
+            if (mStateTimer == 0) {
+                Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
+                this->SetAnim(0xa, 0x40000000, 0x1000, 0);
+                mStateStep = 3;
+                mSleepStage = 1;
+            }
+            if (*(unsigned short *)(data_0209f49e + gActivePlayerSlot * 0x18) & 2) {
+                this->ChangeState(data_ov002_0211019c);
+                ((dCamera_c *)r4)->mFlags &= ~0x2000;
+                Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
+                return 1;
+            }
+            if (func_ov002_020d2da0() == 1 || (unsigned short)(mStateFlags & 4) != 0) {
+                this->SetAnim(0xb, 0x40000000, 0x1000, 0);
+                mStateStep = 9;
+            }
+            break;
+        }
+
+        case 3: {
+            if (this->FinishedAnim()) {
+                this->SetAnim(9, 0, 0x1000, 0);
+                mStateStep = 4;
+                mSleepBubbleScaleX = 0;
+                mSleepBubbleScaleY = 0;
+                mSleepBubbleScaleZ = 0;
+                mSleepStage = 2;
+                mStateArg = 1;
+            }
+            if ((unsigned short)(mStateFlags & 4) != 0) {
+                func_ov002_020cabe0();
+                return 1;
+            }
+            break;
+        }
+
+        case 5: {
+            if (this->FinishedAnim()) {
+                mStateStep = 6;
+                this->SetAnim(0x96, 0, 0x1000, 0);
+            }
+            func_ov002_020d22ec(0);
+            break;
+        }
+
+        case 4: {
+            if (mStatePhase == 0) {
+                func_ov002_020d2f24(this);
+                if (mMuteSleepVoice == 0 &&
+                    mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(
+                        0xd)) {
+                    Sound::PlayCharVoice(mCharacter, 0x2b, mCamSpacePos);
                 }
             }
             {
-                int thr10b = (*(unsigned char*)(data_0209f4ae+idx10)!=2) ? 0x471 : 0x555;
-                func_ov002_020d22ec(thr10b);
-            }
-        }
-        break;
-    }
-
-    case 1: {
-        if (this->FinishedAnim()) {
-            this->SetAnim(0xc, 0, 0x1000, 0);
-            mStateStep = 2;
-        }
-        {
-        unsigned int x1 = param1;
-        switch (x1) {
-        default:
-            break;
-        case 0: {
-            int idA = this->GetBodyModelID(x1&0xff, 0);
-            dExtAnmModel_c *animA = mModels.mBodyModels[idA];
-            if (animA->WillHitFrame(0x5a)) {
-                Sound::PlayCharVoice(mCharacter, 0x2d, mCamSpacePos);
-            } else if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(
-                           0x3a) ||
-                       mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(
-                           0x44)) {
-                Sound::PlayBank0(4, mCamSpacePos);
-            }
-            break;
-        }
-        case 1: {
-            int idD = this->GetBodyModelID(x1&0xff, 0);
-            dExtAnmModel_c *animD = mModels.mBodyModels[idD];
-            if (animD->WillHitFrame(0x6e)) {
-                Sound::PlayCharVoice(mCharacter, 0x2d, mCamSpacePos);
-            } else {
-                int idE = this->GetBodyModelID(param1&0xff, 0);
-                dExtAnmModel_c *animE = mModels.mBodyModels[idE];
-                if (animE->WillHitFrame(0x32)) {
-                    Sound::PlayBank0(0xb1, mCamSpacePos);
+                unsigned char f2d8_4 = gGameMode;
+                int b4a = (f2d8_4 == 1);
+                if (b4a == 0) {
+                    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+                        break;
+                    int b4b = (f2d8_4 == 2);
+                    if (b4b != false)
+                        break;
+                }
+                if (func_ov002_020d2da0() == 1 || mSleepBubbleScaleX >= 0x3000 ||
+                    mIsInShallowWater != 0 || (unsigned short)(mStateFlags & 4)) {
+                    func_ov002_020d2e74(this);
+                    mSleepStage = 0;
+                    this->SetAnim(8, 0x40000000, 0x1000, 0);
+                    mStateStep = 9;
                 }
             }
             break;
         }
-        case 2: {
-            int idF = this->GetBodyModelID(x1&0xff, 0);
-            dExtAnmModel_c *animF = mModels.mBodyModels[idF];
-            if (animF->WillHitFrame(0x20)) {
-                Sound::PlayBank0(2, mCamSpacePos);
-            } else if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(
-                           0x47) ||
-                       mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(
-                           0x60)) {
-                Sound::PlayBank0(3, mCamSpacePos);
-            }
-            break;
-        }
-        case 3: {
-            int idI = this->GetBodyModelID(x1&0xff, 0);
-            dExtAnmModel_c *animI = mModels.mBodyModels[idI];
-            if (animI->WillHitFrame(0xad)) {
-                Sound::PlayBank0(0x50, mCamSpacePos);
-            }
-            break;
-        }
-        }
-        }
-        if (func_ov002_020d22ec(0)) {
-            ((dCamera_c *)r4)->mFlags &= ~0x2000;
-            Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
-        }
-        break;
-    }
 
-    case 2: {
-        if (mMuteSleepVoice == 0 &&
-            mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(1)) {
-            Sound::PlayCharVoice(mCharacter, 0x2a, mCamSpacePos);
-        }
-        {
-            unsigned char f2d8_2 = data_0209f2d8;
-            int b2a = (f2d8_2 == 1);
-            if (b2a == 0) {
-                if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
-                    break;
-                int b2b = (f2d8_2 == 2);
-                if (b2b != false) break;
-            }
-        }
-        if (mStateTimer == 0) {
-            Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
-            this->SetAnim(0xa, 0x40000000, 0x1000, 0);
-            mStateStep = 3;
-            mSleepStage = 1;
-        }
-        if (*(unsigned short*)(data_0209f49e+gActivePlayerSlot*0x18) & 2) {
-            this->ChangeState(data_ov002_0211019c);
-            ((dCamera_c *)r4)->mFlags &= ~0x2000;
-            Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
-            return 1;
-        }
-        if (func_ov002_020d2da0() == 1 || (unsigned short)(mStateFlags & 4) != 0) {
-            this->SetAnim(0xb, 0x40000000, 0x1000, 0);
-            mStateStep = 9;
-        }
-        break;
-    }
-
-    case 3: {
-        if (this->FinishedAnim()) {
-            this->SetAnim(9, 0, 0x1000, 0);
-            mStateStep = 4;
-            mSleepBubbleScaleX = 0;
-            mSleepBubbleScaleY = 0;
-            mSleepBubbleScaleZ = 0;
-            mSleepStage = 2;
-            mStateArg = 1;
-        }
-        if ((unsigned short)(mStateFlags&4) != 0) {
-            func_ov002_020cabe0();
-            return 1;
-        }
-        break;
-    }
-
-    case 5: {
-        if (this->FinishedAnim()) {
-            mStateStep = 6;
-            this->SetAnim(0x96, 0, 0x1000, 0);
-        }
-        func_ov002_020d22ec(0);
-        break;
-    }
-
-    case 4: {
-        if (mStatePhase == 0) {
-            func_ov002_020d2f24(this);
-            if (mMuteSleepVoice == 0 &&
-                mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(0xd)) {
-                Sound::PlayCharVoice(mCharacter, 0x2b, mCamSpacePos);
-            }
-        }
-        {
-            unsigned char f2d8_4 = data_0209f2d8;
-            int b4a = (f2d8_4 == 1);
-            if (b4a == 0) {
-                if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
-                    break;
-                int b4b = (f2d8_4 == 2);
-                if (b4b != false) break;
-            }
-            if (func_ov002_020d2da0() == 1 || mSleepBubbleScaleX >= 0x3000 ||
-                mIsInShallowWater != 0 || (unsigned short)(mStateFlags & 4)) {
-                func_ov002_020d2e74(this);
-                mSleepStage = 0;
-                this->SetAnim(8, 0x40000000, 0x1000, 0);
+        case 6: {
+            if (func_ov002_020d2da0() == 1) {
+                this->SetAnim(0x97, 0x40000000, 0x1000, 0);
                 mStateStep = 9;
             }
+            break;
         }
-        break;
-    }
 
-    case 6: {
-        if (func_ov002_020d2da0() == 1) {
-            this->SetAnim(0x97, 0x40000000, 0x1000, 0);
-            mStateStep = 9;
+        case 7: {
+            if (this->FinishedAnim()) {
+                this->SetAnim(0xf, 0, 0x1000, 0);
+                mStateStep = 8;
+            }
+            if ((unsigned short)(mStateFlags & 0x800) == 0) {
+                func_ov002_020d22ec(0);
+            }
+            break;
         }
-        break;
-    }
 
-    case 7: {
-        if (this->FinishedAnim()) {
-            this->SetAnim(0xf, 0, 0x1000, 0);
-            mStateStep = 8;
+        case 9: {
+            if (this->FinishedAnim()) {
+                this->ChangeState(data_ov002_0211013c);
+            }
+            break;
         }
-        if ((unsigned short)(mStateFlags&0x800) == 0) {
-            func_ov002_020d22ec(0);
         }
-        break;
-    }
-
-    case 9: {
-        if (this->FinishedAnim()) {
-            this->ChangeState(data_ov002_0211013c);
-        }
-        break;
-    }
-    }
     }
 
     Player_AdvanceAnims(this);
@@ -11752,10 +11779,10 @@ int daPly_c::func_ov002_020d2da0() {
     };
     extern struct E18 data_0209f4a0[];
     extern struct E18 data_0209f49e[];
-    extern char *data_0209f318;
+    extern char *gCamera;
 
     unsigned char idx = gActivePlayerSlot;
-    char *p = data_0209f318;
+    char *p = gCamera;
     int cond = (int)(data_0209f4a0[idx].v >= 0x200);
     if (cond | (((unsigned short)data_0209f49e[idx].v) & 0xc03)) {
         ((dCamera_c *)p)->mFlags &= ~0x2000;
@@ -11838,8 +11865,8 @@ extern "C" {
 int daPly_c::func_ov002_020d2fdc() {
     typedef struct { u16 flags; char pad[22]; } Entry24;
     extern Entry24 data_0209f49c[];
-    extern u8 data_0209f2d8;
-    extern void *data_0209f318;
+    extern u8 gGameMode;
+    extern void *gCamera;
 
     int r5;
     int id;
@@ -11878,7 +11905,8 @@ int daPly_c::func_ov002_020d2fdc() {
     mStateWork = 0;
     {
         int flag = 0;
-        if (data_0209f2d8 == 1) flag = 1;
+        if (gGameMode == 1)
+            flag = 1;
         if (flag != 0) {
             SetAnim(0x47, 0, 0x1000, 0);
             return 0;
@@ -11902,7 +11930,7 @@ int daPly_c::func_ov002_020d2fdc() {
                 SetAnim(0xd, 0x40000000, 0x1000, 0);
                 mStateStep = 1;
             }
-            ((dCamera_c *)data_0209f318)->mFlags |= 0x2000;
+            ((dCamera_c *)gCamera)->mFlags |= 0x2000;
         }
     } else {
         SetAnim(0xf, 0, 0x1000, 0);
@@ -11914,14 +11942,14 @@ int daPly_c::func_ov002_020d2fdc() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Wait_Init() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern int data_0209caa0[];
 
     unsigned char f2d8;
     int b0;
 
     mStatePhase = 0;
-    f2d8 = data_0209f2d8;
+    f2d8 = gGameMode;
     b0 = (f2d8 == 1);
     if (b0 != 0) goto L80;
     if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
@@ -12408,7 +12436,7 @@ extern "C" {
 int daPly_c::St_Walk_Init() {
     extern int RandomIntInternal(int *seed);
     extern short data_0209f4a0;
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern int data_0209caa0[3];
     extern unsigned char data_0209f4ac;
     extern int data_ov002_0210e160[];
@@ -12426,7 +12454,7 @@ int daPly_c::St_Walk_Init() {
     }
 
     if (*(short *)((char *)&data_0209f4a0 + gActivePlayerSlot * 0x18) == 0) {
-        int byte1 = data_0209f2d8;
+        int byte1 = gGameMode;
         int cond = (byte1 == 1);
         if (cond) goto do_anim;
         if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
@@ -12567,7 +12595,7 @@ void daPly_c::func_ov002_020d4748() {
     extern unsigned char data_0209f4ac;
     extern unsigned short data_0209f49c;
     extern short data_0209f4a0;
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern int data_0209caa0[];
     char* c = (char*)this;
     int i = gActivePlayerSlot * 0x18;
@@ -12622,7 +12650,7 @@ void daPly_c::func_ov002_020d4748() {
             thr = (*(unsigned char*)((char*)&data_0209f4ae + i4) != 2) ? 0x955 : 0xaaa;
             if (*(short*)((char*)&data_0209f4a0 + i4) > thr)
                 this->mStateStep = 0;
-            d = data_0209f2d8;
+            d = gGameMode;
             b = (d == 1);
             if (b == false) {
                 if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
@@ -12733,7 +12761,7 @@ int daPly_c::func_ov002_020d4d88(int a, int b) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Bonk_Main() {
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     int rate;
 
     if (mStateTimer != 0) {
@@ -12759,7 +12787,7 @@ int daPly_c::St_Bonk_Main() {
         }
 
         if (mPeakY - mPosY > 0xbb8000) {
-            data_0209f318->func_0200d8c8(&mPos, 0x7d0000);
+            gCamera->func_0200d8c8(&mPos, 0x7d0000);
         }
 
         rate = 0x1800;
@@ -15120,7 +15148,7 @@ void daPly_c::func_ov002_020d91b8(int a) {
 
 extern "C" {
 int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern char data_0209ee90[];
     if (doPre != 0)
         DropHeldObj();
@@ -15131,7 +15159,7 @@ int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
     }
 
     {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(gGameMode == 1);
         if (b != 0) return 0;
     }
 
@@ -15180,7 +15208,7 @@ void daPly_c::Bounce(Fix12i f) {
 extern "C" {
 int daPly_c::func_ov002_020d93ac() {
     short GetAngleToCamera(int i);
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     char *self = (char*)this;
     Vector3 pos;
     char *spawned;
@@ -15208,7 +15236,7 @@ int daPly_c::func_ov002_020d93ac() {
     spawned = (char *)Spawn(0x10d, (chr << 8) | 5, pos, 0, this->mAreaId, -1);
     if (spawned == 0) goto fail;
 
-    b = (data_0209f2d8 == 1);
+    b = (gGameMode == 1);
     if (!b) {
         ang = GetAngleToCamera(this->mPlayerNo);
         zz = this->mPrevAngleZ;
@@ -15234,7 +15262,7 @@ extern "C" {
 int daPly_c::func_ov002_020d94cc() {
     short GetAngleToCamera(int i);
     void GiveVsStars(int idx, int delta);
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern s8 gNumStageStars;
     char *self = (char*)this;
     Vector3 pos;
@@ -15248,7 +15276,7 @@ int daPly_c::func_ov002_020d94cc() {
         goto fail;
 
     sndobj = SpawnSoundObj(3);
-    b = (data_0209f2d8 == 1);
+    b = (gGameMode == 1);
     if (b) {
         if (sndobj != 0)
             ((daSoundObj_c *)sndobj)->mSoundID = 0x50;
@@ -15264,7 +15292,7 @@ int daPly_c::func_ov002_020d94cc() {
     pos.y = sum;
     pos.z = zv;
 
-    b = (data_0209f2d8 == 1);
+    b = (gGameMode == 1);
     if (b)
         spawned = (char *)Spawn(0xb2, 0x10, pos, 0, this->mAreaId, -1);
     else
@@ -15274,7 +15302,7 @@ int daPly_c::func_ov002_020d94cc() {
 
     ((daStar_c *)spawned)->SeekNewMarker(self, 0);
 
-    b = (data_0209f2d8 == 1);
+    b = (gGameMode == 1);
     if (!b) {
         ang = GetAngleToCamera(this->mPlayerNo);
         zz = this->mPrevAngleZ;
@@ -15474,9 +15502,9 @@ void daPly_c::func_ov002_020d9aac() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Hurt_Init() {
-    extern char* data_0209f318;
+    extern char *gCamera;
     int mid;
-    char* m;
+    char *m;
     u8 old;
     this->SetAnim(data_ov002_0210a6d4[mStateStep & 7], 0x40000000, 0x1000, 0);
     mid = this->GetBodyModelID(param1 & 0xff, 0);
@@ -15486,7 +15514,8 @@ int daPly_c::St_Hurt_Init() {
     mStatePhase = 0;
     old = mStateWork;
     mStateWork = 0;
-    if ((mStateStep & 0xf0) == 0x10) mStateWork = old << 4;
+    if ((mStateStep & 0xf0) == 0x10)
+        mStateWork = old << 4;
     mStateArg = 0;
     if (mHurtDamage != 0) {
         mStateArg = 2;
@@ -15494,7 +15523,7 @@ int daPly_c::St_Hurt_Init() {
     }
     mIsTakingDamage = 1;
     mPrevVertSpeed = mVertSpeed;
-    ((dCamera_c *)data_0209f318)->func_0200d89c();
+    ((dCamera_c *)gCamera)->func_0200d89c();
     mJumpComboTimer = 5;
     return 1;
 }
@@ -15866,13 +15895,13 @@ int daPly_c::St_GrabBowserTail_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_GrabBowserTail_Init() {
-    extern int* data_0209f318;
+    extern int *gCamera;
     this->SetAnim(0x81, 0x40000000, 0x1000, 0);
     mStateStep = 0;
     mAngleYSpeed = 0;
     mStateWork = 0;
     mStateArg = 0;
-    ((::dCamera_c *)data_0209f318)->SetGrabBowserTailState(mPlayerNo);
+    ((::dCamera_c *)gCamera)->SetGrabBowserTailState(mPlayerNo);
     return 1;
 }
 }
@@ -16502,7 +16531,7 @@ void daPly_c::func_ov002_020db8bc(unsigned char kind) {
 /* recovered: shared common types */
 extern "C" {
 void daPly_c::func_ov002_020db8d8() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
     Vector3 backup;
     Vector3 tmp;
@@ -16522,7 +16551,7 @@ void daPly_c::func_ov002_020db8d8() {
     dir.x = 0;
     dir.z = 0;
     dir.y = -0x32000;
-    cond = (data_0209f2d8 == 1);
+    cond = (gGameMode == 1);
     if (cond != 0) {
         func_ov002_020dc174(&dir, 0x46000, 0x96000, 0x8000, 0);
     } else {
@@ -16534,11 +16563,11 @@ void daPly_c::func_ov002_020db8d8() {
 
 extern "C" {
 void daPly_c::func_ov002_020dba0c() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     Vector3 v;
     int r2, r3;
     unsigned int a5;
-    if ((int)(data_0209f2d8 == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         v.z = 0xa0000;
         v.x = 0;
         r2 = 0x78000;
@@ -16573,10 +16602,10 @@ void daPly_c::func_ov002_020dba0c() {
 extern "C" {
 void func_ov002_020dbaec(char *c) {
     daPly_c *player = (daPly_c *)c;
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     Vector3 v;
     int r2, r3;
-    if ((int)(data_0209f2d8 == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         v.z = 0xa0000;
         v.x = 0;
         r2 = 0x78000;
@@ -16608,10 +16637,10 @@ void func_ov002_020dbaec(char *c) {
 extern "C" {
 void func_ov002_020dbbc0(char *c) {
     daPly_c *player = (daPly_c *)c;
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     Vector3 v;
     int r2, r3;
-    if ((int)(data_0209f2d8 == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         v.z = 0xa0000;
         v.x = 0;
         r2 = 0x78000;
@@ -16644,10 +16673,10 @@ void func_ov002_020dbbc0(char *c) {
 /* recovered: shared common types */
 extern "C" {
 void func_ov002_020dbc94(char* c) {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     daPly_c *player = (daPly_c *)c;
     Vector3 v;
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(gGameMode == 1);
     if (b) {
         int r2 = 0x82000;
         v.x = 0;
@@ -16673,10 +16702,10 @@ void func_ov002_020dbc94(char* c) {
 extern "C" {
 void func_ov002_020dbd94(char *c) {
     daPly_c *player = (daPly_c *)c;
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     Vector3 v;
     int r2, r3;
-    if ((int)(data_0209f2d8 == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         v.z = 0x8c000;
         v.x = 0;
         v.y = 0xa000;
@@ -16707,10 +16736,10 @@ void func_ov002_020dbd94(char *c) {
 extern "C" {
 void func_ov002_020dbe70(char *c) {
     daPly_c *player = (daPly_c *)c;
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     Vector3 v;
     int r2, r3;
-    if ((int)(data_0209f2d8 == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         v.z = 0x78000;
         v.x = 0;
         v.y = 0xa000;
@@ -16740,10 +16769,10 @@ void func_ov002_020dbe70(char *c) {
 
 extern "C" {
 void daPly_c::func_ov002_020dbf4c() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     Vector3 v;
     int r2, r3;
-    if ((int)(data_0209f2d8 == 1) != 0) {
+    if ((int)(gGameMode == 1) != 0) {
         v.x = 0;
         v.y = 0xa000;
         v.z = 0x50000;
@@ -17126,11 +17155,11 @@ int daPly_c::St_ButtSlide_Main() {
 extern "C" {
 int daPly_c::St_ButtSlide_Init() {
     struct dCamera_c;
-    extern struct dCamera_c *data_0209f318;
+    extern struct dCamera_c *gCamera;
     this->SetAnim(0x41, 0x40000000, 0x1000, 0);
     mStateStep = 0;
     if (mSlideType) {
-        ((::dCamera_c *)data_0209f318)->func_0200d544(mPlayerNo);
+        ((::dCamera_c *)gCamera)->func_0200d544(mPlayerNo);
     }
     mStatePhase = 0;
     mStateArg = mSlideType;
@@ -17334,11 +17363,11 @@ end:
 extern "C" {
 int daPly_c::St_StomachSlide_Init() {
     struct dCamera_c;
-    extern struct dCamera_c *data_0209f318;
+    extern struct dCamera_c *gCamera;
     this->SetAnim(0x40, 0x40000000, 0x1000, 0);
     mStateStep = 0;
     if (mSlideType) {
-        ((::dCamera_c *)data_0209f318)->func_0200d544(mPlayerNo);
+        ((::dCamera_c *)gCamera)->func_0200d544(mPlayerNo);
     }
     mStateWork = 0;
     mStatePhase = 0;
@@ -17602,14 +17631,14 @@ void func_ov002_020dd8f4(daPly_c *player) {
 extern "C" {
 void func_ov002_020dd908(char *sb) {
     extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-    extern unsigned char data_0209f2d8;
-    extern char *data_0209f394[];
+    extern unsigned char gGameMode;
+    extern char *gPlayers[];
     int i;
     Vector3 v;
-    if ((int)(data_0209f2d8 == 1) == 0)
+    if ((int)(gGameMode == 1) == 0)
         return;
-    for (i = 0; i < data_0209f21c; i++) {
-        char *o = data_0209f394[i];
+    for (i = 0; i < gNumPlayers; i++) {
+        char *o = gPlayers[i];
         daPly_c *player = (daPly_c *)o;
         int *p;
         if (o == 0)
@@ -17652,7 +17681,7 @@ int daPly_c::St_GroundPound_Main() {
     void PlayerNewSimpleHold14(unsigned int id, int x, int y, int z);
     void func_ov002_020dbc94(void* c);
     void Player_AdvanceAnims(void* self);
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     extern char data_0209f4a0[];
     s8 timer = *(s8*)&mStateStep;
     if (timer > 0) {
@@ -17749,7 +17778,7 @@ int daPly_c::St_GroundPound_Main() {
                         }
                     }
                 }
-                data_0209f318->func_0200d8c8(&mPos, 0x578000);
+                gCamera->func_0200d8c8(&mPos, 0x578000);
                 mStateTimer = 6;
             } else {
                 func_ov002_020dbc94(this);
@@ -17898,14 +17927,14 @@ int daPly_c::St_TornadoSpin_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_TornadoSpin_Init() {
-    extern int data_0209f318[];
+    extern int gCamera[];
     Player_ReleaseHeldActor(this);
     this->SetAnim(0x5f, 0, 0x1000, 0);
     mVertSpeed = 0;
     mVertAccel = 0;
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
-    ((::dCamera_c *)*(void **)data_0209f318)->func_0200d6b4(mPlayerNo);
+    ((::dCamera_c *)*(void **)gCamera)->func_0200d6b4(mPlayerNo);
     mAttachOffsetY = mPosY - ((dActor_c *)mAttachedActor)->mPosY;
     Sound::PlayCharVoice(mCharacter, 0x26, mCamSpacePos);
     return 1;
@@ -18077,7 +18106,7 @@ s32 daPly_c::St_Balloon_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Balloon_Init() {
-    extern int data_0209f318[];
+    extern int gCamera[];
     extern int data_ov002_0210e750[];
     Player_ReleaseHeldActor(this);
     mIsInAirState = 1;
@@ -18088,7 +18117,7 @@ int daPly_c::St_Balloon_Init() {
         mVertSpeed = -0x10000;
     mHorzSpeed = 0;
     mModelOffsetY = 0x64000;
-    ((::dCamera_c *)data_0209f318[0])->func_0200d63c(mPlayerNo);
+    ((::dCamera_c *)gCamera[0])->func_0200d63c(mPlayerNo);
     mAngleYSpeed = 0x100;
     mAngleXSpeed = 0x100;
     mPrevVertSpeed = mVertSpeed;
@@ -18193,13 +18222,13 @@ int daPly_c::St_WindCarry_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_WindCarry_Init() {
-    extern int data_0209f318[];
+    extern int gCamera[];
     DropHeldObj();
     this->SetAnim(0x4a, 0x40000000, 0x1000, 0);
     mVertSpeed = 0;
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
-    ((::dCamera_c *)data_0209f318[0])->func_0200d63c(mPlayerNo);
+    ((::dCamera_c *)gCamera[0])->func_0200d63c(mPlayerNo);
     return 1;
 }
 }
@@ -18278,17 +18307,17 @@ int daPly_c::St_Cannon_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Cannon_Main() {
-    extern void func_02012694(u32 id, void* v);
+    extern void func_02012694(u32 id, void *v);
     extern u16 data_0209f49e[];
-    extern char* data_0209f318;
+    extern char *gCamera;
     switch (mStateStep) {
     case 0:
         break;
     case 1: {
-        if ((*(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18) & 3) == 0)
+        if ((*(u16 *)((char *)data_0209f49e + gActivePlayerSlot * 0x18) & 3) == 0)
             break;
 
-        char* p = data_0209f318;
+        char *p = gCamera;
         mPrevAngleY = GetAngleToCamera(mPlayerNo) + 0x8000;
         mAngleY = mPrevAngleY;
 
@@ -18300,7 +18329,7 @@ int daPly_c::St_Cannon_Main() {
         mStateStep = 2;
         mOpacity = 0x1f;
         mIsBodyClsnEnabled = 1;
-        *(int*)((char*)&mdCcAcPos_c.flags) |= 0x20;
+        *(int *)((char *)&mdCcAcPos_c.flags) |= 0x20;
         ((::dCamera_c *)p)->func_0200d6f0(mPlayerNo);
         func_02012694(0x14f, &mCamSpacePos);
         Sound::PlayBank0(0xb9, mCamSpacePos);
@@ -18330,7 +18359,7 @@ int daPly_c::St_Cannon_Main() {
             mStateStep = 3;
             return 1;
         }
-        *(int*)((char*)&mHorzSpeed) -= 0x80;
+        *(int *)((char *)&mHorzSpeed) -= 0x80;
         if (mHorzSpeed < 0xa000)
             mHorzSpeed = 0xa000;
         if (mVertSpeed >= 0)
@@ -18394,12 +18423,12 @@ int daPly_c::IsBeingShotOutOfCannon() {
 
 extern "C" {
 int func_ov002_020df300(char* p) {
-    extern int data_0209f318;
+    extern int gCamera;
     daPly_c *player = (daPly_c *)p;
     if (player->mStateStep)
         return 0;
     player->mStateStep = 1;
-    ((::dCamera_c *)data_0209f318)->func_0200d438(player->mPlayerNo);
+    ((::dCamera_c *)gCamera)->func_0200d438(player->mPlayerNo);
     return 1;
 }
 }
@@ -18411,14 +18440,14 @@ int func_ov002_020df300(char* p) {
 extern "C" {
 int daPly_c::TryEnterCannonState() {
     struct dCamera_c {};
-    extern int func_ov002_020e0478(void* c);
-    extern dCamera_c* data_0209f318;
+    extern int func_ov002_020e0478(void *c);
+    extern dCamera_c *gCamera;
     if (mIsNoControl != 0 || func_ov002_020e0478(this) != 0 || IsState(data_ov002_0210ffec) != 0) {
         return 0;
     }
     mStateStep = 0;
     ChangeState(data_ov002_021102d4);
-    ((::dCamera_c *)data_0209f318)->func_0200d474(mPlayerNo);
+    ((::dCamera_c *)gCamera)->func_0200d474(mPlayerNo);
     return 1;
 }
 }
@@ -18434,18 +18463,18 @@ int daPly_c::St_Owl_Cleanup() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Owl_Main() {
-    extern int ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
+    extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     extern void func_0201f32c(int a);
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
-    extern char* data_0209f318;
+    extern char *gCamera;
     unsigned char st;
 
     mPeakY = mPosY;
     st = mStateStep;
     if (st != 2 && st != 3) {
         if (mHeldObj == 0 ||
-            (*(unsigned short*)(data_0209f49c + gActivePlayerSlot*0x18) & 2) == 0 ||
+            (*(unsigned short *)(data_0209f49c + gActivePlayerSlot * 0x18) & 2) == 0 ||
             (mClsnFlags & 2)) {
             this->ChangeState(data_ov002_021101b4);
             return 1;
@@ -18469,7 +18498,7 @@ int daPly_c::St_Owl_Main() {
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
         }
-        ApproachAngle((short*)((char*)&mAngleY), mAngleYSpeed, 0x10, 0x100, 0);
+        ApproachAngle((short *)((char *)&mAngleY), mAngleYSpeed, 0x10, 0x100, 0);
         break;
 
     case 1:
@@ -18483,16 +18512,16 @@ int daPly_c::St_Owl_Main() {
         x += 0xb;
         ang = x * 0xccc;
         i = (unsigned short)ang >> 4;
-        mVertSpeed = data_02082214[i*2+1] * mag;
+        mVertSpeed = data_02082214[i * 2 + 1] * mag;
         mHorzSpeed = 0x14000;
-        if (*(short*)(data_0209f4a0 + gActivePlayerSlot*0x18) != 0) {
-            ApproachAngle((short*)((char*)&mAngleY), mDesiredAngleY, 0x20, 0x100, 0);
+        if (*(short *)(data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
+            ApproachAngle((short *)((char *)&mAngleY), mDesiredAngleY, 0x20, 0x100, 0);
         }
         if (mStateStep == 1) {
             if (mAttachOffsetY - 0xed8000 > mPosY) {
                 mOwlFarCamera = 1;
                 func_0201f32c(0xa3);
-                ((::dCamera_c *)data_0209f318)->func_0200d3f8(mPlayerNo, 0);
+                ((::dCamera_c *)gCamera)->func_0200d3f8(mPlayerNo, 0);
                 mVertAccel = 0;
                 Player_DisableInteraction(this);
                 mStateStep = 2;
@@ -18511,12 +18540,12 @@ int daPly_c::St_Owl_Main() {
         mVertSpeed = mHorzSpeed;
         if (data_0209d660 == 0) {
             mStateStep = 3;
-            ((::dCamera_c *)data_0209f318)->func_0200d6b4(mPlayerNo);
+            ((::dCamera_c *)gCamera)->func_0200d6b4(mPlayerNo);
         }
         break;
 
     case 3:
-        if ((((dCamera_c *)data_0209f318)->mFlags & 0x8000) == 0) {
+        if ((((dCamera_c *)gCamera)->mFlags & 0x8000) == 0) {
             mStateStep = 4;
             mStateTimer = 0x3c;
             func_ov002_020c9e18();
@@ -18538,15 +18567,15 @@ int daPly_c::St_Owl_Main() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Owl_Init() {
-    extern int data_0209f318[];
-  mTerminalVelocity=-0x4b000;
-  mVertAccel=0;
-  mStateStep=0;
-  mHorzSpeed=0;
-  this->SetAnim(0x5b, 0x40000000, 0x1000, 0);
-  ((::dCamera_c *)data_0209f318[0])->func_0200d6b4(mPlayerNo);
-  StartStateMusic(0x2f);
-  return 1;
+    extern int gCamera[];
+    mTerminalVelocity = -0x4b000;
+    mVertAccel = 0;
+    mStateStep = 0;
+    mHorzSpeed = 0;
+    this->SetAnim(0x5b, 0x40000000, 0x1000, 0);
+    ((::dCamera_c *)gCamera[0])->func_0200d6b4(mPlayerNo);
+    StartStateMusic(0x2f);
+    return 1;
 }
 }
 
@@ -18878,7 +18907,7 @@ skip:
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Fly_Init() {
-    extern int data_0209f318[];
+    extern int gCamera[];
     mAngleXSpeed = 0;
     mAngleYSpeed = 0;
     mPrevAngleX = 0;
@@ -18893,20 +18922,20 @@ int daPly_c::St_Fly_Init() {
         mVertAccel = 0;
         this->SetAnim(0x49, 0, 0x1000, 0);
     }
-    ((::dCamera_c *)data_0209f318[0])->func_0200d6f0(mPlayerNo);
+    ((::dCamera_c *)gCamera[0])->func_0200d6f0(mPlayerNo);
     return 1;
 }
 }
 
 extern "C" {
 void daPly_c::func_ov002_020e032c() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
     extern int data_0209caa0;
     unsigned char st;
     if (mHasWings == 0)
         return;
     mHasWings = 0;
-    st = data_0209f2d8;
+    st = gGameMode;
     if ((int)(st == 1) == 0) {
         if (((&data_0209caa0)[2] & FILE_FLAGS2_INTRO_DONE) == 0)
             return;
@@ -18920,10 +18949,10 @@ void daPly_c::func_ov002_020e032c() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 void daPly_c::InitWingFeathers(bool b_) {
-    extern unsigned char data_0209f2d8[];
+    extern unsigned char gGameMode[];
     int b = (int)b_;
 
-    int t0 = (data_0209f2d8[0] == 1);
+    int t0 = (gGameMode[0] == 1);
     if (!t0) {
         if (param1 != 0) return;
     }
@@ -18931,7 +18960,7 @@ void daPly_c::InitWingFeathers(bool b_) {
     mHasWings = 1;
     mPowerupTimer = 0x708;
     {
-        int t1 = (data_0209f2d8[0] == 1);
+        int t1 = (gGameMode[0] == 1);
         if (!t1)
             StartPowerupMusic(0x33);
         else
@@ -19375,26 +19404,26 @@ int daPly_c::St_Spin_Main() {
 extern "C" {
 int daPly_c::St_Spin_Init() {
     struct dCamera_c;
-    extern int* data_0209f318;
-  mJumpedFromQuicksand = 0;
-  mIsInAirState = 1;
-  mIsFallScreaming = 0;
-  mJumpComboStage = 0;
-  mIsAirborne = 1;
-  mLandSoundPlayed = 0;
-  this->SetAnim(0x5f, 0, 0x1000, 0);
-  mTerminalVelocity = -0x10000;
-  if (mStatePhase) {
-    mVertSpeed = 0x50000;
-    func_ov002_020e25f0(2);
-  }
-  int *p = (int *)&mdCcAcPos_c.flags;
-  int old = *p;
-  int** cam_ptr_ptr = &data_0209f318;
-  *p = old | 0x20;
-  unsigned char pid = mPlayerNo;
-  ((::dCamera_c *)*cam_ptr_ptr)->SetSpinState(pid);
-  return 1;
+    extern int *gCamera;
+    mJumpedFromQuicksand = 0;
+    mIsInAirState = 1;
+    mIsFallScreaming = 0;
+    mJumpComboStage = 0;
+    mIsAirborne = 1;
+    mLandSoundPlayed = 0;
+    this->SetAnim(0x5f, 0, 0x1000, 0);
+    mTerminalVelocity = -0x10000;
+    if (mStatePhase) {
+        mVertSpeed = 0x50000;
+        func_ov002_020e25f0(2);
+    }
+    int *p = (int *)&mdCcAcPos_c.flags;
+    int old = *p;
+    int **cam_ptr_ptr = &gCamera;
+    *p = old | 0x20;
+    unsigned char pid = mPlayerNo;
+    ((::dCamera_c *)*cam_ptr_ptr)->SetSpinState(pid);
+    return 1;
 }
 }
 
@@ -20222,7 +20251,7 @@ int daPly_c::func_ov002_020e2be4() {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020e2c84() {
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     int diff;
 
     diff = mPeakY - mPosY;
@@ -20249,7 +20278,7 @@ int daPly_c::func_ov002_020e2c84() {
             return 1;
         }
 
-        data_0209f318->func_0200d8c8(&mPos, 0x7d0000);
+        gCamera->func_0200d8c8(&mPos, 0x7d0000);
         mIsFallScreaming = 0;
         Sound::PlayCharVoice(mCharacter, 7, mCamSpacePos);
     } else if (diff > 0x47e000) {
@@ -20269,7 +20298,7 @@ int daPly_c::func_ov002_020e2c84() {
 
             func_ov002_020db8bc(1);
             mVertSpeed = 0;
-            data_0209f318->func_0200d8c8(&mPos, 0x7d0000);
+            gCamera->func_0200d8c8(&mPos, 0x7d0000);
             mIsFallScreaming = 0;
             Sound::PlayCharVoice(mCharacter, 7, mCamSpacePos);
         }
@@ -20344,12 +20373,12 @@ ret0:
 
 extern "C" {
 void daPly_c::func_ov002_020e301c() {
-    extern dCamera_c *data_0209f318;
+    extern dCamera_c *gCamera;
     if (param1 != 2)
         return;
     if (mPeakY - mPosY < 0x190000)
         return;
-    data_0209f318->func_0200d8c8(&mPos, 0x320000);
+    gCamera->func_0200d8c8(&mPos, 0x320000);
 }
 }
 
@@ -20385,7 +20414,7 @@ bool daPly_c::IsState(daPly_c::State &state) {
 /* recovered: named members + shared header */
 extern "C" {
 int daPly_c::ChangeState(daPly_c::State &state) {
-    extern void *data_0209f318;
+    extern void *gCamera;
     daPly_c::State *newState = &state;
     mRequestedState = newState;
 
@@ -20471,8 +20500,8 @@ int daPly_c::ChangeState(daPly_c::State &state) {
 
     func_ov002_020e6780();
 
-    if (data_0209f318 != 0) {
-        ((::dCamera_c *)data_0209f318)->func_0200d81c(mPlayerNo);
+    if (gCamera != 0) {
+        ((::dCamera_c *)gCamera)->func_0200d81c(mPlayerNo);
     }
 
     {
@@ -20498,7 +20527,7 @@ int daPly_c::CleanupResources() {
     void func_ov002_020bebd4(void *c);
     void UnloadSilverStarAndNumber(void);
     void UnloadKeyModels(int n);
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210e750;
     extern SharedFilePtr data_ov002_02110aa4;
@@ -20561,7 +20590,7 @@ int daPly_c::CleanupResources() {
             func_0203cbc0((void *)mHeldObjQueue);
     }
     ((SharedFilePtr *)(data_ov002_020ff480[mCharFileBase + (param1 & 3)]))->Release();
-    b = data_0209f2d8;
+    b = gGameMode;
     b = b == 1;
     if (b != false_)
         func_ov002_020bebd4(this);
@@ -20610,7 +20639,7 @@ int daPly_c::CleanupResources() {
     data_ov002_0210ecb8.Release();
     data_ov002_0210e8d0.Release();
     data_ov002_0210ebd8.Release();
-    b = data_0209f2d8;
+    b = gGameMode;
     b = b == 1;
     if (b == false_) {
         data_ov002_0210d9a8.Release();
@@ -20673,7 +20702,7 @@ int daPly_c::CleanupResources() {
         data_ov002_0210d9c0.Release();
     if (mLoadedResourceFlags & 0x10)
         UnloadKeyModels(mKeyModelId);
-    b = data_0209f2d8;
+    b = gGameMode;
     b = b == 1;
     if (b == false_) {
         if (mLoadedResourceFlags & 0x20) {
@@ -20718,10 +20747,10 @@ int daPly_c::Render() {
     extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(void* m, int ang);
     extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern int data_020a0e68;
     extern void func_ov002_020e3e00(void*, void*, u32);
-    int t = (data_0209f2d8 == 1);
+    int t = (gGameMode == 1);
     if (t != false) {
         if (data_0209fc5c[mPlayerNo] == 0)
             return 1;
@@ -20742,7 +20771,7 @@ int daPly_c::Render() {
         if (mIsBalloon == 0) {
             bodyMdl->ApplyOpacity(mOpacity, 0);
             {
-                int t2 = (data_0209f2d8 == 1);
+                int t2 = (gGameMode == 1);
                 if (t2 != false) {
                     if (param1 == 3) {
                         int *p = (int *)(int)&bodyMdl->data;
@@ -20784,7 +20813,7 @@ int daPly_c::Render() {
             if (mdl4 != 0 && i != 9 && i != 8) {
                 mdl4->ApplyOpacity(mOpacity, 0);
                 {
-                    int t3 = (data_0209f2d8 == 1);
+                    int t3 = (gGameMode == 1);
                     if (t3 != false) {
                         if (param1 == 3) {
                             int *p = (int *)(int)&mModels.mHeadModels[i]->data;
@@ -20855,7 +20884,8 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     if (!ip) {
         if (gCurrentSublevel != 5)
             return;
-        if (data_02092120 != 3) return;
+        if (gCurrentAreaId != 3)
+            return;
     }
 
     if (ip) {
@@ -21274,7 +21304,7 @@ int daPly_c::Behavior() {
         s32 flag26c;
     };
     extern u16 DecIfAbove0_Short(u16 *p);
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern G_ee90 data_0209ee90;
     extern s16 data_0209f4a6;
     s32 r0;
@@ -21286,7 +21316,7 @@ int daPly_c::Behavior() {
     volatile Vector3 v0;
     Vector3 v1;
 
-    if (data_0209f2d8 == 1)
+    if (gGameMode == 1)
         r0 = 1;
     else
         r0 = 0;
@@ -21502,7 +21532,7 @@ after_player_slot:
     if (data_0209fc68 == 0)
         gActivePlayerSlot = 0;
     else
-        gActivePlayerSlot = data_0209f250;
+        gActivePlayerSlot = gLocalPlayerId;
 
     func_ov002_020e4bb8();
 
@@ -21536,7 +21566,7 @@ after_player_slot:
 // (5 x 4 strb post-inc, subs/bne) aimed at the heap pointer itself. Value-
 // init, placement new, struct assignment and memset all go through a stack
 // temporary or an out-of-line __clear/memset call instead.
-// Also: pin data_0209f2d8 in local `d` so ==2 keeps r1 bool (preserves r0);
+// Also: pin gGameMode in local `d` so ==2 keeps r1 bool (preserves r0);
 // decl order td,tx,tz + load order for dBgCh_Gnd pos regs.
 extern "C" {
 s32 daPly_c::InitResources() {
@@ -21556,11 +21586,11 @@ s32 daPly_c::InitResources() {
        _ZN7Vector3D1Ev's emitted name is compiler-mangled besides. */
     void *_ZN7Vector3D1Ev(void *object);
     void func_0203d384(void);
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern s8 data_02092114;
     extern CAA0 data_0209caa0;
     extern u8 gPrevReturnState;
-    extern u8 data_0209211c;
+    extern u8 gReturnSublevel;
     /* The helpers below take void or char pointers, and this file's match
        depends on declaration and load order documented in the header comment
        above. One alias keeps every one of those decisions untouched. */
@@ -21585,7 +21615,7 @@ s32 daPly_c::InitResources() {
     mCharacter = b & 7;
     *(u8*)(c + 0x6da) = sub;
     changed = 0;
-    t = (unsigned int)(data_0209f2d8 == 1);
+    t = (unsigned int)(gGameMode == 1);
     if (t == 0) {
         if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
             data_0209f254 = 0;
@@ -21601,10 +21631,11 @@ s32 daPly_c::InitResources() {
     }
     param1 = sub;
     {
-      unsigned int d = data_0209f2d8;
-      t = (unsigned int)(d == 2);
-      if (t != 0) goto Ld0;
-      t = (unsigned int)(d == 1);
+        unsigned int d = gGameMode;
+        t = (unsigned int)(d == 2);
+        if (t != 0)
+            goto Ld0;
+        t = (unsigned int)(d == 1);
     }
     if (t != 0) goto Lac;
     if ((data_0209caa0.unk8 & FILE_FLAGS2_INTRO_DONE) != 0)
@@ -21612,7 +21643,7 @@ s32 daPly_c::InitResources() {
     t = (unsigned int)(gRunningKuppaScript != 0);
     if (t == 0) goto Ld0;
 Lac:
-    if (mPlayerNo == data_0209f250) {
+    if (mPlayerNo == gLocalPlayerId) {
         PlayCharacterSound();
         func_ov002_020e6350();
     }
@@ -21672,8 +21703,8 @@ Ld0:
     rc.SetObjAndPos(pos, (dActor_c *)c);
     rc.StartDetectingWater();
     if (gCurrentSublevel == 0x1d) {
-        data_0209211c = 2;
-        data_0209f200 = 0xe;
+        gReturnSublevel = 2;
+        gReturnEntranceId = 0xe;
     }
     if (StartWithFarCamera() != 0) mUseFarCamera = 1;
     mPeakY = mPosY;
@@ -21688,7 +21719,7 @@ extern "C" {
 void daPly_c::func_ov002_020e5948() {
     extern void func_ov002_020bec2c(void* p);
     extern s8 gNumStageStars[];
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern SharedFilePtr data_ov002_0210e3d8;
     extern SharedFilePtr data_ov002_0210eb88;
     extern SharedFilePtr data_ov002_0210e750;
@@ -21770,7 +21801,7 @@ void daPly_c::func_ov002_020e5948() {
 
     {
         s32 mode;
-        mode = data_0209f2d8;
+        mode = gGameMode;
         mode = (mode == 1);
         if (mode == 0) {
             dExtFrameCtrl_c::LoadFile(data_ov002_0210e750);
@@ -21826,7 +21857,7 @@ void daPly_c::func_ov002_020e5948() {
 
     {
         s32 mode;
-        mode = data_0209f2d8;
+        mode = gGameMode;
         mode = (mode == 1);
         if (mode == 0) {
             player->mCharFileBase = 0;
@@ -21886,7 +21917,7 @@ void daPly_c::func_ov002_020e5948() {
 
     {
         s32 mode;
-        mode = data_0209f2d8;
+        mode = gGameMode;
         mode = (mode == 1);
         if (mode == 0) {
             player->mModels.mSleepBubbleModel = new dExtSimpleModel_c;
@@ -21931,7 +21962,7 @@ void daPly_c::func_ov002_020e5948() {
     n = 0;
     {
         s32 mode;
-        mode = data_0209f2d8;
+        mode = gGameMode;
         mode = (mode == 1);
         if (mode != 0)
             n = 0x11;
@@ -21979,10 +22010,11 @@ void daPly_c::PlayCharacterSound() {
 extern "C" {
 void daPly_c::func_ov002_020e6350() {
     extern int func_02011ee4(int x);
-    extern unsigned char data_0209f2d8;
-  int b = (int)(data_0209f2d8 == 1);
-  if(b != 0) return;
-  func_02011ee4(data_ov002_020ff0f4[param1 & 3]);
+    extern unsigned char gGameMode;
+    int b = (int)(gGameMode == 1);
+    if (b != 0)
+        return;
+    func_02011ee4(data_ov002_020ff0f4[param1 & 3]);
 }
 }
 

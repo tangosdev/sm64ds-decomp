@@ -87,7 +87,7 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset;
 extern short gSubBg0HOffset;
-extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
+extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
@@ -820,7 +820,7 @@ extern "C" {
 void MiniGm_UpdateGroupTabs(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0)
         return;
@@ -914,7 +914,7 @@ extern "C" {
 void MiniGm_UpdatePageArrows(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
@@ -960,7 +960,7 @@ void dScMiniGm_c::UpdateGameSelect()
     int ok;
     int row;
 
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0) return;
     if (mPageFlipped == 1) return;
@@ -1023,7 +1023,7 @@ extern "C" {
 
 void MiniGm_UpdateExitButton(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
@@ -1051,7 +1051,7 @@ extern "C" {
 
 void MiniGm_UpdatePageScroll(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPrevPageTimer > 0) return;
@@ -1152,7 +1152,7 @@ void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
 extern "C" void MiniGm_SaveIfDirty(char *self)
 {
     if (gMgSaveDirty != 1) return;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     SaveData::SaveMinigames(&data_0209cae4);
     gMgSaveDirty = 0;
