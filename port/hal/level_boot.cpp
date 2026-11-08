@@ -80,6 +80,7 @@
 #include "dsstate_seg.h"
 #include "hal/comms_seam.h"   /* run mg16 lane MP3: port::vs_player_count() */
 #include "hal/vs_arena.h"     /* run mp1 lane ARENACORE1: my seat is my body */
+#include "hal/comms_hub.h"    /* run after093 lane CHARSWAP1: online session test at the spawn */
 #include "fBase_c.h"   /* SYNC4: moved up out of an extern "C" block */
 #include "dActor_c.h"  /* SYNC4: same, and it reaches math/Fix12.h now */
 #include "SharedFilePtr.h"   /* the twelve shared preloads' Release */
@@ -2249,6 +2250,21 @@ static void port_load1(void *t, int a, unsigned b)
                      "f1=%d,%d\n",
                      (int)data_0209f21c, b, data_0209fc5c[0], data_0209fc5c[1],
                      (int)data_02092128[0], (int)data_02092128[1]);
+    /* THE FRIENDS' TABLE ENTRIES, BEFORE THE SPAWN (run after093 lane CHARSWAP1).
+       The loop below gives player i the look data_02092128[i] and the character
+       data_0209caa0[0x41], my own save byte. A friend's entry is whatever my
+       character was when his body was last spawned on a castle level
+       (Player::InitResources' reset, Player.cpp:27026-27034); a cartridge has no
+       friends, so nothing else moves it. Take a character door online and my own
+       entry and the save byte move on while every friend's entry stays my OLD
+       character, and the next course spawns each friend half one, half the other
+       (cap enemies kept or thrown on the wrong half). Set them all to my character
+       here; the ghost swap then gives each body its owner's character and keeps
+       the entry (hal/player_bridges.cpp). Online coop, party and world only:
+       never a VS arena, never solo. */
+    if (port::comms_hub_active() && !port::comms_hub_arena() && data_0209f2d8 != 1)
+        for (int i = 0; i < 0x40; ++i)
+            if (i != data_0209f250) data_02092128[i] = data_0209caa0[0x41];
     /* THE LOCAL SLOT, ACROSS THE ENTRANCE LOAD (run mg16 lane MP3 held it at 0
        for every joiner; run mp1 lane VSFIELD1 narrowed the hold to the one case
        that needs it and re-points the camera after it).
