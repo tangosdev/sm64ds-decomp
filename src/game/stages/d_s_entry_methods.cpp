@@ -65,7 +65,7 @@ void LoadBGPltt(const void *, unsigned int, unsigned int);
 
 extern "C" {
 void func_020308b4(void);
-void func_020551f0(void *s, int v);
+void G2x_ChangeBlendBrightness_(volatile unsigned short *reg, int brightness);
 extern int data_0209fc68;
 
 void Enable3dEngines(void);
@@ -1882,7 +1882,7 @@ void dScEntry_c::UpdateStepFadeOut() {
     if (mFadeTick & 1)
         return;
     ++mFadeBrightness;
-    func_020551f0((void *)0x4001050, mFadeBrightness);
+    G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
     if (mFadeBrightness < 16)
         return;
     mIsFading = 1;
@@ -2034,7 +2034,7 @@ s32 dScEntry_c::Behavior() {
         mFadeTick++;
         if ((mFadeTick & 1) == 0) {
             mFadeBrightness--;
-            func_020551f0((void *)0x4001050, mFadeBrightness);
+            G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
             if (mFadeBrightness == 0) {
                 *(u16 *)0x4001050 = 0;
                 mFadeBrightness = 0;
