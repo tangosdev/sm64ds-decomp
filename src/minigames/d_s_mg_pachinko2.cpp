@@ -663,8 +663,8 @@ void dScMgPachinko2_c::Paddle_DrawAll() {
     int i;
     for (i = 0; i < 3; i++) {
         if (mPaddles[i].visible) {
-            Mg_RenderSpriteBoth(sPachinko2PaddleSprite, mPaddles[i].x >> 12,
-                                mPaddles[i].y >> 12, -1, -1);
+            Mg_RenderSpriteBoth(sPachinko2PaddleSprite, mPaddles[i].x >> 12, mPaddles[i].y >> 12,
+                                -1, -1);
         }
     }
 }

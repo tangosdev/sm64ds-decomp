@@ -96,8 +96,8 @@ struct dScMgPachinko2_Paddle {
 struct dScMgPachinko2_HitFx {
     s32 x; /* +0x00 */
     s32 y; /* +0x04 */
-    s32 vx; /* +0x08 -- Spark_Spawn zeroes vx and vy; nothing reads them */
-    s32 vy; /* +0x0c */
+    s32 vx;    /* +0x08 -- Spark_Spawn zeroes vx and vy; nothing reads them */
+    s32 vy;    /* +0x0c */
     u16 timer; /* +0x10 */
     u8 pad_12[0x2];
     u8 visible; /* +0x14 */
