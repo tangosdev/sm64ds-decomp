@@ -23,14 +23,12 @@
  *
  * Notes (each measured with mwccarm 2004/b56):
  * - Behavior: selfPos, frontPos and playerPos are stored and never read.
- *   Dropping volatile on those three is 0x314 against the ROM's 0x3e0.
- * - Behavior: colliderPos stays volatile. Without it the spread loop is
- *   0x3c4 against 0x3e0; the Y store reloads that stack slot.
- * - Behavior: the front point reloads mAngleY as a volatile unsigned
- *   halfword, twice. (u16)mAngleY is 0x3ec against 0x3e0.
- * - Behavior: keep the position locals as VecFx32; constructing Vector3
- *   locals makes the function 0x3f0 against 0x3e0. Cast only at the
- *   Vec3_HorzAngle call boundary to match CalcLib.h.
+ *   They are Vector3, whose user-declared destructor keeps mwccarm from
+ *   dropping the stores; a POD VecFx32 triple loses them (0x30c against
+ *   the ROM's 0x3e0). The same aggregate stores make each FX_SinIdx /
+ *   FX_CosIdx re-read mAngleY, as the ROM does.
+ * - Behavior: the player's and the touching actor's positions are copied
+ *   through a `const Vector3 &`; a direct `= actor->mPos` is a word short.
  * - Behavior: the jingles call func_02012790 (Sound.h), the ROM's wrapper
  *   for Sound::Play2D(2, id). Calling Play2D directly is 0x3e8 and
  *   relocates to _ZN5Sound6Play2DEjj, not 0x02012790.
@@ -43,11 +41,8 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 
-/* include/types.h's Vector3 declares a destructor. Under that type the
-   five locals below grow the frame by 0x10. The ROM copies are a plain
-   12-byte triple, so the locals are VecFx32 and cast only at typed helper
-   calls. */
 enum {
     kPlayerActor = 0xbf,
     kCylinderCount = 5,
@@ -58,7 +53,6 @@ enum {
     kFrontReach = 90 << 12, /* 90.0, straight ahead */
     kQuarterTurn = 0x4000,
     kHalfTurn = 0x8000,
-    kFxRound = 0x800,
     kTurnStep = 0x800,
     kMenuMessage = 0xb09,
     kSavingMessage = 0x295,
@@ -75,7 +69,6 @@ int AngleDiff(int a, int b);
 void StartMinigameMenu(unsigned char returnToRecRoom);
 }
 
-extern s16 data_02082214[];
 extern u8 data_0209d684;
 extern u8 data_0209d660;
 
@@ -93,33 +86,19 @@ s32 daObjCloset_c::CleanupResources() {
 }
 
 s32 daObjCloset_c::Behavior() {
-    volatile VecFx32 selfPos, frontPos, playerPos;
-    VecFx32 actorPos;
-    volatile VecFx32 colliderPos;
+    Vector3 selfPos, frontPos, playerPos;
+    Vector3 actorPos;
+    Vector3 colliderPos;
     daPly_c *target = mTalkingPlayer;
 
     if (target) {
-        /* Copied and never read. volatile keeps the stores. */
-        selfPos.x = *(volatile s32 *)&mPosX;
-        selfPos.y = *(volatile s32 *)&mPosY;
-        selfPos.z = *(volatile s32 *)&mPosZ;
-        frontPos.x = mPosX;
-        frontPos.y = mPosY;
-        frontPos.z = mPosZ;
-        frontPos.x =
-            mPosX + (int)(((s64)kFrontReach * data_02082214[(*(volatile u16 *)&mAngleY >> 4) * 2] +
-                           kFxRound) >>
-                          12);
-        frontPos.z =
-            mPosZ +
-            (int)(((s64)kFrontReach * data_02082214[(*(volatile u16 *)&mAngleY >> 4) * 2 + 1] +
-                   kFxRound) >>
-                  12);
+        selfPos = mPos;
+        frontPos = mPos;
+        frontPos.x += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), kFrontReach);
+        frontPos.z += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), kFrontReach);
         {
-            VecFx32 *tp = (VecFx32 *)&target->mPosX;
-            playerPos.x = tp->x;
-            playerPos.y = tp->y;
-            playerPos.z = tp->z;
+            const Vector3 &plyPos = target->mPos;
+            playerPos = plyPos;
         }
 
         switch (target->GetTalkState()) {
@@ -179,13 +158,13 @@ s32 daObjCloset_c::Behavior() {
             int isMatch = (actor->actorID == kPlayerActor);
             if (isMatch == 0)
                 continue;
-            VecFx32 *ap = (VecFx32 *)&actor->mPosX;
             short angleToActor;
             int diff;
-            actorPos.x = ap->x;
-            actorPos.y = ap->y;
-            actorPos.z = ap->z;
-            angleToActor = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&actorPos);
+            {
+                const Vector3 &ap = actor->mPos;
+                actorPos = ap;
+            }
+            angleToActor = Vec3_HorzAngle(&mPos, &actorPos);
             diff = AngleDiff(angleToActor, mAngleY);
             if (diff < kQuarterTurn) {
                 if (((daPly_c *)actor)->StartTalk(*this, 0) != 0) {
@@ -199,26 +178,14 @@ s32 daObjCloset_c::Behavior() {
     {
         int j;
         for (j = 0; j < kCylinderCount; j++) {
-            colliderPos.x = mPosX;
-            colliderPos.y = mPosY;
-            colliderPos.z = mPosZ;
+            colliderPos = mPos;
             {
-                int distFixed = ((2 - j) * kCylinderSpacing) << 12;
-                /* Side direction, a quarter turn from yaw: sideSin is
-                   cos(mAngleY) and sideCos is -sin(mAngleY). */
-                int idx = (unsigned short)(short)(mAngleY + kQuarterTurn) >> 4;
-                s16 sideSin = data_02082214[idx * 2];
-                s16 sideCos = data_02082214[idx * 2 + 1];
-                int offX = (int)(((s64)distFixed * sideSin + kFxRound) >> 12);
-                int offZ = (int)(((s64)distFixed * sideCos + kFxRound) >> 12);
-                int newX = mPosX + offX;
-                int newZ = mPosZ + offZ;
-                colliderPos.x = newX;
-                colliderPos.z = newZ;
-                mColliders[j].pos.x = newX;
-                mColliders[j].pos.y = colliderPos.y;
-                mColliders[j].pos.z = colliderPos.z;
+                int dist = ((2 - j) * kCylinderSpacing) << 12;
+                s16 side = mAngleY + kQuarterTurn;
+                colliderPos.x += FX_MUL(FX_SinIdx((u16)side >> 4), dist);
+                colliderPos.z += FX_MUL(FX_CosIdx((u16)side >> 4), dist);
             }
+            mColliders[j].pos = colliderPos;
             mColliders[j].Clear();
             mColliders[j].Update();
         }

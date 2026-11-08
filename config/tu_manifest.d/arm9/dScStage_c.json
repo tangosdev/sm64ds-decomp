@@ -959,7 +959,7 @@
       "address": "0x0209f208",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior, daStar_c::AddStarMarker, daStar_c::func_ov002_020e8ef0 and 1 more (ov002, ov084), so global."
+      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior, daStar_c::AddStarMarker, daStar_c::Collect and 1 more (ov002, ov084), so global."
     },
     {
       "symbol": "data_0209f20c",
@@ -1015,7 +1015,7 @@
       "address": "0x0209f228",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Read here by StartFile. Read outside this TU by daStar_c::func_ov002_020e8ef0 and func_0201d850 (arm9, ov002), so global."
+      "evidence": "u8. Read here by StartFile. Read outside this TU by daStar_c::Collect and func_0201d850 (arm9, ov002), so global."
     },
     {
       "symbol": "sMenuWaitTimer",
@@ -1120,7 +1120,7 @@
       "address": "0x0209f264",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by ShowCrashScreen, daPly_c::St_LevelEnter_Init, daPly_c::func_ov002_020c44c4, daStar_c::func_ov002_020e8dd8 and daTrs_c::InitResources (arm9, ov002, ov063), so global."
+      "evidence": "u8. Read here by dScStage_c::InitResources. Read outside this TU by ShowCrashScreen, daPly_c::St_LevelEnter_Init, daPly_c::func_ov002_020c44c4, daStar_c::MaybeAddStarMarker and daTrs_c::InitResources (arm9, ov002, ov063), so global."
     },
     {
       "symbol": "sNextEntranceId",
@@ -1246,7 +1246,7 @@
       "address": "0x0209f2ac",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Read here by dScStage_c::LC_Update. Read outside this TU by dMeter_c::RenderStarCount, daObjKey_c::func_ov089_02131df4, daStar_c::func_ov002_020e8ef0 and func_ov002_020c6e14 (ov002, ov089), so global."
+      "evidence": "u8. Read here by dScStage_c::LC_Update. Read outside this TU by dMeter_c::RenderStarCount, daObjKey_c::func_ov089_02131df4, daStar_c::Collect and func_ov002_020c6e14 (ov002, ov089), so global."
     },
     {
       "symbol": "sLevelClearNewRecord",
@@ -1421,7 +1421,7 @@
       "address": "0x0209f310",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "s8[4]. Read here by GiveVsStars, NumVsStarsObtained and dScStage_c::InitResources. Read outside this TU by dMeter_c::RenderRedCoins, dMeter_c::RenderSilverStars, dMeter_c::RenderStarCount, dScEntry_c::TallyRoundWinners, daPly_c::func_ov002_020d94cc, daStar_c::func_ov002_020e7218 and 6 more (ov002, ov075), so global."
+      "evidence": "s8[4]. Read here by GiveVsStars, NumVsStarsObtained and dScStage_c::InitResources. Read outside this TU by dMeter_c::RenderRedCoins, dMeter_c::RenderSilverStars, dMeter_c::RenderStarCount, dScEntry_c::TallyRoundWinners, daPly_c::func_ov002_020d94cc, daStar_c::SeekNewMarker and 6 more (ov002, ov075), so global."
     },
     {
       "symbol": "data_0209f314",
@@ -1512,7 +1512,7 @@
       "address": "0x0209f344",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "u8 *. The VS star spawn order: InitResources points it at one of the six VS_STAR_SPAWN_ORDERS rows at random. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior and daStar_c::func_ov002_020e9840 (ov002, ov084), so global."
+      "evidence": "u8 *. The VS star spawn order: InitResources points it at one of the six VS_STAR_SPAWN_ORDERS rows at random. Read outside this TU by daKrb_c::OnTurnIntoEgg, daKrb_c::func_ov084_021296cc, daKrb_c::func_ov084_02129864, daStarBase_c::Behavior and daStar_c::StateWaitMarker (ov002, ov084), so global."
     },
     {
       "symbol": "sMinimapScaleObjs",
@@ -1547,7 +1547,7 @@
       "address": "0x0209f358",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "short[4]. Read here by GiveCoins, NumCoins, dScStage_c::InitResources and dScStage_c::LC_Update. Read outside this TU by dMeter_c::RenderCoinCount, dScEntry_c::TallyRoundWinners, daStar_c::func_ov002_020e8ef0, func_ov002_020b18f0 and func_ov075_0211621c (ov002, ov075), so global."
+      "evidence": "short[4]. Read here by GiveCoins, NumCoins, dScStage_c::InitResources and dScStage_c::LC_Update. Read outside this TU by dMeter_c::RenderCoinCount, dScEntry_c::TallyRoundWinners, daStar_c::Collect, func_ov002_020b18f0 and func_ov075_0211621c (ov002, ov075), so global."
     },
     {
       "symbol": "sMenuButtonTileOffsets",

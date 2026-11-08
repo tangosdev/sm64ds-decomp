@@ -10,15 +10,12 @@
  * The inline destructor preserves the retail D1/D0 order.
  *
  * What stays:
- * - common.h supplies the flat Matrix4x3 representation. Existing views
- *   across dActor_c scalar position fields remain; real local Vector3
- *   objects do not reconstruct those shared fields as aggregates.
+ * - common.h supplies the flat Matrix4x3 representation.
  * - The radius/height store veneers (func_0203568c / func_02035684) and
  *   the vector helpers (Vec3_Sub, LenVec3, MulVec3Mat4x3, AddVec3) stay
  *   local externs: no shared header declares them.
- * - Volatile position/angle reads and sine-table accesses retain their
- *   measured order. The CLPS payload and external g_profile_PIANO are not
- *   reconstructed here.
+ * - The CLPS payload and external g_profile_PIANO are not reconstructed
+ *   here.
  * - func_0201267c is an enrolled Sound.cpp forwarder to Sound::Play;
  *   this TU retains its existing free-function call.
  */
@@ -27,6 +24,7 @@
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -202,21 +200,22 @@ void daPiano_c::InitStateSearch() {
 void daPiano_c::StateSearch() {
     extern unsigned char gNumPlayers;
     extern daPly_c *gPlayers[];
-    extern short data_02082214[]; /* sine table: (angle >> 4) * 2 taps sin/cos */
 
-    volatile Vector3 tmp;
+    Vector3 tip;
     Vector3 v;
     int bestDist;
     int i;
     daPly_c *cand;
     int dist;
+    int j;
+    dCcAcPos_c *cc;
 
     bestDist = 0x7fffffff;
     for (i = 0; i < gNumPlayers; i++) {
         cand = gPlayers[i];
         if (cand == 0)
             continue;
-        Vec3_Sub((Vector3 *)&v, (const Vector3 *)&this->mPosX, (const Vector3 *)&cand->mPosX);
+        Vec3_Sub(&v, &this->mPos, &cand->mPos);
         dist = LenVec3(&v);
         if (IsTargetMoving(cand) != 0 && dist < 0x1f4000 && dist < bestDist) {
             this->mTarget = cand;
@@ -225,35 +224,18 @@ void daPiano_c::StateSearch() {
         }
     }
 
-    {
-        int x = this->mPosX;
-        int z;
-        int j;
-        dCcAcPos_c *cc;
+    tip = this->mPos;
+    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngleY >> 4), 0x24000);
+    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngleY >> 4), 0x24000);
 
-        tmp.x = x;
-        tmp.y = this->mPosY;
-        z = this->mPosZ;
-        tmp.z = z;
-        {
-            int sinVal = data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2];
-            tmp.x = x + FX_MUL(sinVal, 0x24000);
-        }
-        tmp.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
+    this->mCylinderClsn[0].pos = this->mPos;
+    this->mCylinderClsn[1].pos = tip;
 
-        this->mCylinderClsn[0].pos.x = this->mPosX;
-        this->mCylinderClsn[0].pos.y = this->mPosY;
-        this->mCylinderClsn[0].pos.z = this->mPosZ;
-        this->mCylinderClsn[1].pos.x = tmp.x;
-        this->mCylinderClsn[1].pos.y = tmp.y;
-        this->mCylinderClsn[1].pos.z = tmp.z;
-
-        cc = this->mCylinderClsn;
-        for (j = 0; j < 2; j++) {
-            this->mCylinderClsn[j].radius = 0x9b000;
-            cc->Clear();
-            cc++;
-        }
+    cc = this->mCylinderClsn;
+    for (j = 0; j < 2; j++) {
+        this->mCylinderClsn[j].radius = 0x9b000;
+        cc->Clear();
+        cc++;
     }
 }
 
@@ -268,36 +250,22 @@ void daPiano_c::InitStateAttack() {
  * caught by the cylinders. Gives up (back to state 0) when the target is
  * gone or farther than 939.0 at a frame boundary. */
 void daPiano_c::StateAttack() {
-    extern s16 data_02082214[]; /* sine table: (angle >> 4) * 2 taps sin/cos */
-
     daPly_c *victim;
     int i;
-    volatile Vector3 proj;
+    Vector3 tip;
     Vector3 hurtPos;
     Vector3 tmp;
-    int zero;
-    int one;
-    int three;
-    int knock;
     int dist;
     dActor_c *target;
     int k;
     dCcAcPos_c *cc;
-    int x;
-    int z;
 
     if (DecIfAbove0_Byte(&this->mAttackTimer) != 0)
         return;
 
     this->mHorzSpeed = 0x5000;
     victim = 0;
-    i = 0;
-    zero = 0;
-    one = 1;
-    three = 3;
-    knock = 0xc000;
-
-    for (; i < 2; i++) {
+    for (i = 0; i < 2; i++) {
         int id = this->mCylinderClsn[i].otherOwner;
         if (id != 0) {
             victim = static_cast<daPly_c *>(dActor_c::FindWithID((unsigned int)id));
@@ -305,10 +273,8 @@ void daPiano_c::StateAttack() {
                 /* The actor profile is PLAYER before the daPly_c-specific call. */
                 int isPlayer = (victim->actorID == 0xbf);
                 if (isPlayer) {
-                    hurtPos.x = this->mPosX;
-                    hurtPos.y = this->mPosY;
-                    hurtPos.z = this->mPosZ;
-                    victim->Hurt(hurtPos, three, knock, one, zero, one);
+                    hurtPos = this->mPos;
+                    victim->Hurt(hurtPos, 3, 0xc000, 1, 0, 1);
                 }
             }
         }
@@ -321,7 +287,7 @@ void daPiano_c::StateAttack() {
 
     target = this->mTarget;
     if (target != 0) {
-        Vec3_Sub((Vector3 *)&tmp, (const Vector3 *)&this->mPosX, (const Vector3 *)&target->mPosX);
+        Vec3_Sub(&tmp, &this->mPos, &target->mPos);
         dist = LenVec3(&tmp);
         ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos), 0x200);
         this->mAngleY = this->mPrevAngleY;
@@ -340,23 +306,12 @@ void daPiano_c::StateAttack() {
 
     this->mAnmModel.Advance();
 
-    x = this->mPosX;
-    proj.x = x;
-    proj.y = this->mPosY;
-    z = this->mPosZ;
-    proj.z = z;
-    {
-        int sinVal = data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2];
-        proj.x = x + FX_MUL(sinVal, 0x24000);
-    }
-    proj.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
+    tip = this->mPos;
+    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngleY >> 4), 0x24000);
+    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngleY >> 4), 0x24000);
 
-    this->mCylinderClsn[0].pos.x = this->mPosX;
-    this->mCylinderClsn[0].pos.y = this->mPosY;
-    this->mCylinderClsn[0].pos.z = this->mPosZ;
-    this->mCylinderClsn[1].pos.x = proj.x;
-    this->mCylinderClsn[1].pos.y = proj.y;
-    this->mCylinderClsn[1].pos.z = proj.z;
+    this->mCylinderClsn[0].pos = this->mPos;
+    this->mCylinderClsn[1].pos = tip;
 
     cc = this->mCylinderClsn;
     for (k = 0; k < 2; k++) {

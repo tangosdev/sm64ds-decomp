@@ -32,6 +32,7 @@
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "PlayerInput.h"
 #include "private/controller_input.h"
 #include "daPly_c.h"
@@ -83,7 +84,6 @@ extern u8 gLocalPlayerId;
 extern u8 gLevelClearStep;
 extern u8 gGameMode;
 extern daPly_c *gPlayers[];
-extern s16 data_02082214[];
 extern s8 data_ov002_02111148;
 /* Per star-marker slot: the marker type (4 = draw a red-coin icon instead). */
 extern u8 gStarMarkerTypes[];
@@ -385,11 +385,10 @@ int dMap_c::Render()
                            this->mPlayerIconX[idx], this->mPlayerIconY[idx], -1, 2);
             {
                 u16 ang = (s16)this->mAngle + ((player->mAngleY ^ 0xffff) + 0x8001);
-                int angIdx = ((u16)(s16)ang >> 4) * 2;
-                s16 sn = data_02082214[angIdx + 1];
-                this->mArrowMatrixA = (s16)FX_MUL(sn, this->mArrowScale);
-                s16 cn = data_02082214[angIdx];
-                this->mArrowMatrixB = (s16)FX_MUL(cn, this->mArrowScale);
+                s16 cs = FX_CosIdx((u16)(s16)ang >> 4);
+                this->mArrowMatrixA = (s16)FX_MUL(cs, this->mArrowScale);
+                s16 sn = FX_SinIdx((u16)(s16)ang >> 4);
+                this->mArrowMatrixB = (s16)FX_MUL(sn, this->mArrowScale);
                 this->mArrowMatrixC = -this->mArrowMatrixB;
                 this->mArrowMatrixD = this->mArrowMatrixA;
                 OAM::Render(1, &OAM::MM_ARROW, this->mPlayerIconX[idx], this->mPlayerIconY[idx], -1,
@@ -435,11 +434,10 @@ int dMap_c::Render()
                         else
                             ang = (s16)this->mAngle + ((player->mAngleY ^ 0xffff) + 0x8001);
                         {
-                            int angIdx = ((u16)(s16)ang >> 4) * 2;
-                            s16 sn = data_02082214[angIdx + 1];
-                            this->mArrowMatrixA = (s16)FX_MUL(sn, this->mArrowScale);
-                            s16 cn = data_02082214[angIdx];
-                            this->mArrowMatrixB = (s16)FX_MUL(cn, this->mArrowScale);
+                            s16 cs = FX_CosIdx((u16)(s16)ang >> 4);
+                            this->mArrowMatrixA = (s16)FX_MUL(cs, this->mArrowScale);
+                            s16 sn = FX_SinIdx((u16)(s16)ang >> 4);
+                            this->mArrowMatrixB = (s16)FX_MUL(sn, this->mArrowScale);
                             this->mArrowMatrixC = -this->mArrowMatrixB;
                             this->mArrowMatrixD = this->mArrowMatrixA;
                             OAM::Render(1, &OAM::MM_ARROW, this->mPlayerIconX[idx],
@@ -709,11 +707,13 @@ L4b0:
 
 L4d8:
     this->mCurrentScale = cstd::fdiv(this->mScale, this->mInvScale);
-    { s32 s1 = data_02082214[(((s32)(u16)this->mAngle >> 4) * 2) + 1];
-        this->mBgMatrixA = FX_MUL(s1, this->mInvScale);
+    {
+        fx32 cs = FX_CosIdx(this->mAngle >> 4);
+        this->mBgMatrixA = FX_MUL(cs, this->mInvScale);
     }
-    { s32 s2 = data_02082214[((s32)(u16)this->mAngle >> 4) * 2];
-        this->mBgMatrixB = FX_MUL(s2, this->mInvScale);
+    {
+        fx32 sn = FX_SinIdx(this->mAngle >> 4);
+        this->mBgMatrixB = FX_MUL(sn, this->mInvScale);
     }
     this->mBgMatrixC = -this->mBgMatrixB;
     this->mBgMatrixD = this->mBgMatrixA;

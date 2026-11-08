@@ -46,6 +46,7 @@ enum dScMgLuigi_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "SpawnInfo.h"
 #include "OamAttr.h"
+#include "nitro/gx/g2_oam.h"
 
 typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
 typedef void (dScMgLuigi_c::*LuigiStateHandler)();
@@ -405,14 +406,10 @@ void dScMgLuigi_c::DrawCurtains() {
             int y = mCurtain[curtainIndex].y >> 0xc;
             char *entry = sLuigiCurtainSprite;
             for (;;) {
-                char *sprite = Mg_RenderMainSpriteScaled((int)entry, x, y, -1, 1, 0x1000, 0);
-                if (sprite != 0) {
-                    /* attr2's palette, read with the ROM's word load at +4:
-                       spelled `->attr2` it becomes a halfword load and moves bytes. */
-                    int palette = (int)((unsigned int)(*(int *)(sprite + 4) << 0x10) >> 0x1c);
-                    *(int *)sprite = (*(int *)sprite & ~0xc00) | 0x800;
-                    ((OamAttr *)sprite)->attr2 =
-                        (unsigned short)((((OamAttr *)sprite)->attr2 & ~0xf000) | (palette << 12));
+                GXOamAttr *oam =
+                    (GXOamAttr *)Mg_RenderMainSpriteScaled((int)entry, x, y, -1, 1, 0x1000, 0);
+                if (oam != 0) {
+                    G2_SetOBJMode(oam, GX_OAM_MODE_OBJWND, oam->cParam);
                 }
                 if (((OamAttr *)entry)->attr3 == 0xffff)
                     break;

@@ -1080,14 +1080,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@393",
+      "from": "@399",
       "to": "@427",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @393 to @399 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx (#821).."
     },
     {
-      "from": "@394",
+      "from": "@400",
       "to": "@428",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @394 to @400 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx (#821).."
     }
   ]
 }

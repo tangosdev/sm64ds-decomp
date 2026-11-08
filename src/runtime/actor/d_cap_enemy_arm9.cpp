@@ -198,7 +198,7 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
     r = dActor_c::Spawn(actorID, param1, mPos, &mAngle, mAreaId, -1);
     if (!r) return r;
     ((dCapEnemy_c *)r)->mIsDormant = 1;
-    *(int *)((char *)r + 0xf4) = r->mFlags;
+    ((dCapEnemy_c *)r)->mDormantFlags = r->mFlags;
     ((dEnemyBase_c *)r)->mCoinType = 0;
     {
         r->mFlags &= ~1;
@@ -207,9 +207,10 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
     return r;
 }
 
-/* The u64 no-op mask sits on the plain 0xf4 read, not on the mFlags store.
+/* The u64 no-op mask sits on the mDormantFlags read, not on the mFlags store.
    Demoting that load out of its fold-onto-[r4,#0xf4] value-numbering class is
-   what lets the RMW-pool chain lead the tail. The masked mCapId RMW is the
+   what lets the RMW-pool chain lead the tail; the plain member read schedules
+   the 0xf4 load ahead of the mCapId pool load (4 words, re-measured #821). The masked mCapId RMW is the
    usual 6g launder. */
 int dCapEnemy_c::GetCapState() {
     if (mIsDormant == 0) {
@@ -236,7 +237,7 @@ int dCapEnemy_c::GetCapState() {
     }
 
     mIsDormant = 0;
-    mFlags = *(int *)((long long)(int)((char *)this + 0xf4));
+    mFlags = *(int *)((long long)(int)&mDormantFlags);
     mCapId &= 7;
     return 1;
 }

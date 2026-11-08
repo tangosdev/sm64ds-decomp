@@ -6,8 +6,6 @@ extern "C" {
 
 typedef int (*FnT)(int a, int b, int c);
 
-extern unsigned int __aeabi_uidiv(unsigned int n, unsigned int d);
-
 /* Grow the child's receive work (WBT's packet bitmap) to cover a read of n
  * bytes, or with n < 0 reallocate it at the current mMaxReadSize. */
 void func_02041224(char *thiz, int n)
@@ -31,8 +29,8 @@ void func_02041224(char *thiz, int n)
         IRQ::Restore(saved);
     }
     {
-        int dm = data_020a1fc0.mParentPacketSize - 0xe;
-        q = __aeabi_uidiv(child->mMaxReadSize + dm - 1, dm);
+        u32 dm = data_020a1fc0.mParentPacketSize - 0xe;
+        q = (child->mMaxReadSize + dm - 1) / dm;
     }
     work = ((q + 0x1f) >> 2) << 4; /* the bitmap's size, then the work itself */
     saved = IRQ::Disable();

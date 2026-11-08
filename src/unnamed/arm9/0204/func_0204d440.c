@@ -1,7 +1,5 @@
 #include "private/spl_particle_views.h"
 
-extern int __aeabi_idiv(int a, int b);
-
 /* The particle definition's scale animation (SPL's SPLScaleAnim): the scale
  * ramps start -> mid over life rates [0, in), holds mid until out, then ramps
  * mid -> end over [out, 255]. */
@@ -21,7 +19,7 @@ void func_0204d440(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     unsigned char out = anim->out;
     if (lifeRate < in) {
         short start = anim->start;
-        ptcl->animScale = start + __aeabi_idiv(lifeRate * (anim->mid - start), in);
+        ptcl->animScale = start + lifeRate * (anim->mid - start) / in;
         return;
     }
     if (lifeRate < out) {
@@ -30,6 +28,6 @@ void func_0204d440(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     }
     {
         short end = anim->end;
-        ptcl->animScale = end + __aeabi_idiv((lifeRate - 0xff) * (end - anim->mid), 0xff - out);
+        ptcl->animScale = end + (lifeRate - 0xff) * (end - anim->mid) / (0xff - out);
     }
 }

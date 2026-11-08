@@ -718,11 +718,8 @@ void daHanachan_c::ExecState()
 /* True when the actor is falling onto the cylinder from above. */
 int daHanachan_c::IsStompedBy(dCcAcPos_c *cyl, dActor_c *actor)
 {
-    volatile int pad[4];    /* the ROM reserves 0x10 bytes of stack it never touches */
-    s32 pushY = cyl->pushback.y;
-    s32 vy = actor->mVertSpeed;
-    (void)&pad;
-    if (vy < 0 && pushY < 0 && pushY > vy)
+    Vector3 push = cyl->pushback;
+    if (actor->mVertSpeed < 0 && push.y < 0 && push.y > actor->mVertSpeed)
         return 1;
     return 0;
 }
@@ -733,7 +730,7 @@ void daHanachan_c::HandlePlayerHits()
     int i;
     dActor_c *a;
     dCcAcPos_c *cyl;
-    volatile Vector3 playerPos;    /* copied and never read; the ROM keeps the copy */
+    Vector3 playerPos;
     Vector3 v;
     Vector3 hv;
 
@@ -754,9 +751,7 @@ void daHanachan_c::HandlePlayerHits()
         if (isPlayer == 0)
             continue;
         src = &a->mPos;
-        playerPos.x = src->x;
-        playerPos.y = src->y;
-        playerPos.z = src->z;
+        playerPos = *src;
         if (IsStompedBy(cyl, a) != 0) {
             ((daPly_c *)a)->Bounce(0x28000);
             func_0201267c(0x11c, &mCamSpacePos);
@@ -770,9 +765,7 @@ void daHanachan_c::HandlePlayerHits()
             return;
         }
         if (i == 0) {
-            v.x = mPosX;
-            v.y = mPosY;
-            v.z = mPosZ;
+            v = mPos;
             ((daPly_c *)a)->Hurt(v, 2, 0xc000, 1, 0, 1);
             SetState(8);
         }
@@ -793,9 +786,7 @@ void daHanachan_c::HandlePlayerHits()
             isPlayer = type == 0xbf;
             if (isPlayer == 0)
                 continue;
-            hv.x = mPosX;
-            hv.y = mPosY;
-            hv.z = mPosZ;
+            hv = mPos;
             ((daPly_c *)a)->Hurt(hv, 0, 0x5000, 1, 0, 1);
         }
     }
