@@ -19,6 +19,7 @@
    form, so no declaration here relies on C++ mangling. The remaining 72 resolve
    to neither spelling and are unresolvable with or without this guard. */
 struct daPly_c;
+struct daDossyCap_c;
 struct OamAttr;
 struct MascotWalker;
 struct Ov007MenuState;
@@ -552,7 +553,7 @@ extern void func_ov018_02111bf0(void*, void*);
 extern int func_ov025_0211123c(char*);
 extern int func_ov062_02115f84(void*);
 extern int func_ov065_021180d4(char*);
-extern int func_ov065_02119210(int);
+extern int func_ov065_02119210(struct daDossyCap_c *);
 extern int func_ov070_0211f0a4(void*);
 extern int func_ov080_0212714c(void*, void*);
 extern int func_ov080_021274ac(void*, void*);
