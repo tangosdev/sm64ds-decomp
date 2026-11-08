@@ -66,6 +66,7 @@ struct Fake {
     int busy_left;         /* frames until a create / join answers */
     int fail_join;         /* the join answers FAILED */
     int start_left;
+    int guest_in;          /* frames until a friend joins a hosted room */
 } F;
 
 void fk_settings(LobbyKind k)
@@ -163,8 +164,13 @@ void fk_tick(void)
             const char code[8] = { F.s.code[0], F.s.code[1], F.s.code[2], F.s.code[3], F.s.code[4], F.s.code[5], 0, 0 };
             const int host = F.s.am_host;
             fk_room(F.s.kind, host);
+            if (host) F.guest_in = 30;
             if (!host) { snprintf(F.s.code, sizeof F.s.code, "%s", code); fk_seat("Tango", 0x31A431, 0xE66218, 0, 0, 1); }
         }
+    }
+    if (F.s.phase == LOBBY_IN_ROOM && F.guest_in > 0 && --F.guest_in == 0) {
+        fk_seat("Opie", 0xFF3139, 0x004AFF, 1, 0, 0);
+        fk_chat("Opie joined the room");
     }
     if (F.s.phase == LOBBY_STARTING && F.start_left > 0 && F.start_left < (1 << 30) && --F.start_left == 0) F.s.phase = LOBBY_NONE;
 }
@@ -320,6 +326,7 @@ struct Page {
     int seat_menu;         /* the seat whose mute / kick buttons are shown (hover or pad focus), -1 none */
     int joining;           /* the page was opened by a room code */
     int seen_phase;        /* the client has been out of LOBBY_NONE since the page opened */
+    int keep_tick;         /* the page closed for the start: lobby_tick() goes on once a frame until the client is back to NONE or FAILED */
 } P = { 0 };
 
 void log_line(const char *what) { fprintf(stderr, "[lobbypage] %s\n", what); }
@@ -372,7 +379,7 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
     const float inner = W - 2 * mx;
     const float chat_w = inner * 0.46f;
     g->r[C_CHAT] = R(mx, top, chat_w, bot - top);
-    g->chat_lines = R(mx + 14, top + 12, chat_w - 28, bot - top - 50);
+    g->chat_lines = R(mx + 20, top + 16, chat_w - 40, bot - top - 62);
     const float rx = mx + chat_w + 16, rw = W - mx - rx, half = (rw - 10) * 0.5f;
     g->r[C_NAME] = R(rx, top, rw, 30);
     if (s->kind == LOBBY_COOP) {
@@ -540,6 +547,14 @@ void press(const LobbyState *s, int c)
     switch (c) {
     case C_EYE: P.code_hidden = !P.code_hidden; log_line(P.code_hidden ? "code hidden" : "code shown"); return;
     case C_COPY: {
+#if LP_PROOF
+        if (getenv("SM64DS_LOBBY_NO_CLIPBOARD")) {      /* proof rows leave the machine's clipboard alone */
+            P.copied_t = 90;
+            snprintf(b, sizeof b, "copy code %s: proof run, clipboard left alone", s->code);
+            log_line(b);
+            return;
+        }
+#endif
         const int ok = clip_copy(s->code);
         P.copied_t = 90;
         snprintf(b, sizeof b, "copy code %s to the clipboard: %s", s->code, ok ? "ok" : "FAILED");
@@ -707,6 +722,11 @@ extern "C" void lobby_page_cancel(void)
 
 extern "C" int lobby_page_env_poll(void)
 {
+    if (P.keep_tick && P.screen == SCR_CLOSED) {      /* after the start the client's polling still runs from here, once a frame */
+        C_tick();
+        const LobbyState *s = C_state();
+        if (s->phase == LOBBY_NONE || s->phase == LOBBY_FAILED) { P.keep_tick = 0; log_line("the client is done with the room: no more ticks"); }
+    }
 #if LP_PROOF
     if (P.env_done) return 0;
     if (!P.env_at) {
@@ -759,7 +779,7 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         if (s->phase == LOBBY_NONE && (P.seen_phase || P.frames > 300)) { close_page("the client has no room"); return 0; }
         if (s->phase == LOBBY_STARTING) {
             if (++P.start_t == 1) log_line("starting: the page closes in 45 frames");
-            if (P.start_t > 45) { close_page("the game starts"); return 0; }
+            if (P.start_t > 45) { P.keep_tick = 1; close_page("the game starts"); return 0; }
         }
         if (!in_room(s)) { P.panel = 0; P.field = 0; }
         if (P.seat_menu >= seat_count(s)) P.seat_menu = -1;
@@ -842,11 +862,17 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         if (n >= 0) {
             P.focus = n;
             host_menu_cursor_sound();
+            { char b[48]; snprintf(b, sizeof b, "focus on control %d", n); log_line(b); }
             if (n >= C_SEAT0 && n < C_SEAT0 + 16) P.seat_menu = n - C_SEAT0;
             else if (!(n >= C_MUTE0 && n < C_KICK0 + 16)) P.seat_menu = -1;
         }
     }
-    if ((edge & SPK_ACCEPT) && P.focus >= 0 && live(s, P.focus)) press(s, P.focus);
+    if ((edge & SPK_ACCEPT) && P.focus >= 0 && live(s, P.focus)) {
+        char b[48];
+        snprintf(b, sizeof b, "accept on control %d", P.focus);
+        log_line(b);
+        press(s, P.focus);
+    }
     else if (edge & SPK_BACK) {
         if (P.panel) open_panel(0);
         else if (P.seat_menu >= 0 && P.focus >= C_MUTE0) { P.focus = C_SEAT0 + P.seat_menu; }
@@ -1108,7 +1134,7 @@ void wrap(const Font &f, const char *s, float em, float w, std::vector<std::stri
 void draw_cork(const Surf &s, bool hd)
 {
     if (hd) {
-        int t = s.h / 6;
+        int t = s.h / 10;
         if (t < 16) t = 16;
         Piece *p = find_piece(5, 0, t, t);
         if (!p) {
@@ -1143,7 +1169,7 @@ void draw_box(const Surf &s, const Font &f, bool hd, const Rect &r, int kind, in
     const int a = dim ? 140 : 255;
     if (hd) {
         if (kind == 0) { if (const Piece *p = nine(A_PLANK, r.w, r.h, 18, 18, 18, 18, (float)r.h / 150.0f)) blit(s, r.x, r.y, *p, a); }
-        else if (kind == 1) { const float k = (float)(r.h < 120 ? r.h : 120) / 171.0f; if (const Piece *p = nine(A_KEY, r.w, r.h, 70, 55, 70, 55, k)) blit(s, r.x, r.y, *p, a); }
+        else if (kind == 1) { const int kh = (int)(46 * f.u); const float k = (float)(r.h < kh ? r.h : kh) / 171.0f; if (const Piece *p = nine(A_KEY, r.w, r.h, 70, 55, 70, 55, k)) blit(s, r.x, r.y, *p, a); }
         else {
             const int edge = f.u * 3 < 2 ? 2 : (int)(f.u * 3);
             Piece *p = find_piece(3, 0, r.w - 2 * edge, r.h - 2 * edge);
@@ -1378,7 +1404,7 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         for (int i = first; i < (int)lines.size(); ++i)
             f.draw(s, (float)L.x, L.y + (i - first) * lh, lines[i].c_str(), em, C_INK, 255, clip);
         /* the line being typed, or "type to chat" */
-        const float iy = r.y + r.h - 30 * u;
+        const float iy = r.y + r.h - 36 * u;
         for (int x = L.x; x < L.x + L.w; ++x) put_pm(s, x, (int)(iy - 4 * u), 0xFF000000u | C_DIMINK, 120);
         if (P.field == C_CHAT) {
             std::string t = P.chat_in;
