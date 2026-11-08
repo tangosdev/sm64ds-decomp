@@ -2085,27 +2085,27 @@ src/unnamed/arm9/0204/func_0204c304.c:
 src/unnamed/arm9/0204/func_0204c584.c:
     complete
     .text start:0x0204c584 end:0x0204d0b8
-src/unnamed/arm9/0204/func_0204d0b8.c:
+src/SPLAnim_ChildAlpha.c:
     complete
     .text start:0x0204d0b8 end:0x0204d104
 
-src/unnamed/arm9/0204/func_0204d104.c:
+src/SPLAnim_ChildScale.c:
     complete
     .text start:0x0204d104 end:0x0204d150
 
-src/unnamed/arm9/0204/func_0204d150.c:
+src/SPLAnim_Texture.c:
     complete
     .text start:0x0204d150 end:0x0204d1b4
 
-src/unnamed/arm9/0204/func_0204d1b4.c:
+src/SPLAnim_Alpha.c:
     complete
     .text start:0x0204d1b4 end:0x0204d294
 
-src/unnamed/arm9/0204/func_0204d294.c:
+src/SPLAnim_Color.c:
     complete
     .text start:0x0204d294 end:0x0204d440
 
-src/unnamed/arm9/0204/func_0204d440.c:
+src/SPLAnim_Scale.c:
     complete
     .text start:0x0204d440 end:0x0204d4d0
 
