@@ -43,9 +43,7 @@
 #include "GX.h"
 #include "private/controller_input.h"
 #include "math/MtxStack.h"
-
-/* The cosine table lookup used by Render. */
-#define COS(a) data_02082214[((u16)(a) >> 4) * 2 + 1]
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
@@ -58,7 +56,6 @@ int IsStarCollectedInLevel(s8 levelID, s32 starID);
 void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int, int, int);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
 extern s8 data_02092110;
-extern s16 data_02082214[];
 extern s32 data_020a0db0;
 extern SaveBlock data_0209caa0;
 extern u8 data_02092128[];
@@ -409,7 +406,7 @@ s32 dScStarSel_c::Render() {
     }
 
     if (SublevelToLevel(data_02092110) <= 0xe) {
-        G3i::PerspectiveW_(data_02082214[0x16], data_02082214[0x17], 0x1555, 0x1000, 0x1388000,
+        G3i::PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000,
                            0x1000, 1, 0);
         G3i::LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
                      (const Vector3 *)&data_ov003_020b1344, true, &mtx);
@@ -483,7 +480,7 @@ s32 dScStarSel_c::Render() {
                 }
                 mFaceScaleY = mFaceScaleX;
             } else if (mAnimMode == 2) {
-                mIconScaleX = (0x1000 - COS((s16)(mPulseAngle - 0x4000))) * 10 + 0x1000;
+                mIconScaleX = (0x1000 - FX_CosIdx((u16)(s16)(mPulseAngle - 0x4000) >> 4)) * 10 + 0x1000;
                 mIconScaleY = 0x1000;
                 mPulseAngle = (mPulseAngle + 0x1000) & 0x7fff;
                 if (mPulseAngle == 0x4000) {
