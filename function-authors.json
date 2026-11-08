@@ -7191,11 +7191,11 @@
     },
     "arm9:0x02042fe4": {
       "author": "ruspecial",
-      "name": "func_02042fe4"
+      "name": "_ZN7fBase_c10createRootEiji"
     },
     "arm9:0x02042ffc": {
       "author": "tangosdev",
-      "name": "func_02042ffc"
+      "name": "_ZN7fBase_c11createChildEjPS_ji"
     },
     "arm9:0x0204302c": {
       "author": "tangosdev",
@@ -7207,11 +7207,11 @@
     },
     "arm9:0x02043098": {
       "author": "tangosdev",
-      "name": "func_02043098"
+      "name": "_ZN7fBase_c10fBase_makeEiPvji"
     },
     "arm9:0x02043180": {
       "author": "tangosdev",
-      "name": "func_02043180"
+      "name": "_ZN7fBase_c12setTmpCtDataEiPvji"
     },
     "arm9:0x020431c4": {
       "author": "andrewboudreau",

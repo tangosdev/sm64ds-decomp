@@ -16,15 +16,12 @@
  *   include/dBase_c.h records for Spawn.
  * - Spawn's trailing (int, int) keep the header's a/b: dActor_c::Spawn
  *   passes (spawnParam, 2) and other callers (mode/entranceId, 0), and this
- *   veneer hands both straight on to func_02042ffc's factory call, but their
- *   roles belong to the factory's TU (func_02043098), not this one.
- * - func_02042ffc / func_02042fe4 keep their ROM labels for the same reason.
+ *   veneer hands both straight on to fBase_c::createChild, but their
+ *   roles belong to the factory's TU (fBase_c::fBase_make), not this one.
  */
 #include "dBase_c.h"
 
 extern "C" {
-extern int func_02042fe4(int a, unsigned int b, int c);
-extern fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 a, int b);
 /* local extern: no header declares it; the next ROM entry's crash-forward
  * target, called only by the absorbed spin below. */
 extern void func_02013f4c(void);
@@ -50,9 +47,9 @@ void dBase_c::AfterInitResources(u32 vfSuccess)
 }
 
 fBase_c *dBase_c::Spawn(u32 actorID, fBase_c *parent, int a, int b) {
-    return func_02042ffc(actorID, parent, a, b);
+    return createChild(actorID, parent, a, b);
 }
 
 extern "C" int func_02013edc(int a, int b, int c) {
-    return func_02042fe4(a, b, c);
+    return fBase_c::createRoot(a, b, c);
 }
