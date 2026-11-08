@@ -205,7 +205,7 @@ void func_0204531c(char *self, int arg)
     ModelComponents *mc = (ModelComponents *)self;
     unsigned int i;
     Matrix4x3 *save = mc->transforms;
-    Matrix4x3 *blend = (Matrix4x3 *)mc->unk_10;
+    Matrix4x3 *blend = mc->blendTransforms;
 
     mc->transforms = blend;
     mc->UpdateVertsUsingBones();
@@ -294,8 +294,10 @@ void func_02044f74(void *g, struct Node *n)
         MulMat4x3Mat4x3((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
                         (Matrix4x3 *)((s16)a * 0x30 + t));
     }
-    if (n->fa != 0) func_02044f74(g, n + n->fa);
-    if (n->fc != 0) func_02044f74(g, n + n->fc);
+    if (n->fa != 0)
+        func_02044f74(g, n + n->fa);
+    if (n->fc != 0)
+        func_02044f74(g, n + n->fc);
 }
 }
 
