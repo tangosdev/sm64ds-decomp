@@ -554,7 +554,10 @@ void dScEntry_c::StartMatch() {
     data_02092778 = 1;
 }
 
-int dScEntry_c::func_ov075_02116ce4() {
+/* ArePlayersReady's twin for the rematch handshake (coined name): every
+ * joined player must show the rematch ready bit (link settings byte 2,
+ * bit 4) that EnterRematchSync raises through func_020201c0. */
+int dScEntry_c::ArePlayersReadyForRematch() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209fc5c[i]) {
@@ -1050,7 +1053,7 @@ void dScEntry_c::UpdateRematchSync() {
     }
     if (func_0203d9b4() == 0)
         return;
-    if (func_ov075_02116ce4() == 0)
+    if (ArePlayersReadyForRematch() == 0)
         return;
     func_02020124();
 }

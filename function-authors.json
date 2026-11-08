@@ -39911,7 +39911,7 @@
     },
     "ov075:0x02116ce4": {
       "author": "tangosdev",
-      "name": "func_ov075_02116ce4"
+      "name": "_ZN10dScEntry_c25ArePlayersReadyForRematchEv"
     },
     "ov075:0x02116d40": {
       "author": "tangosdev",
