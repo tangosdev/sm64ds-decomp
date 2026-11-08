@@ -17248,7 +17248,7 @@
         "return:signed char"
       ]
     },
-    "func_02008550": {
+    "RunCameraCommand": {
       "src/KuppaScript.cpp": [
         "param:#1 dCamera_c *"
       ]

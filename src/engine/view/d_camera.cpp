@@ -1439,7 +1439,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
  * The camera's states and script ops, 0x020073a0..0x0200bec4.
  *
  * The states run through the State records in the 0x0209b008 table, and the
- * script ops through the member-function table that func_02008550 builds from
+ * script ops through the member-function table that RunCameraCommand builds from
  * 0x02086bc0. Their names are not recovered. The follow, placement and state
  * helpers among them are dCamera_c members; the rest keep C linkage, but every
  * one takes the camera as its first argument.
@@ -3332,7 +3332,7 @@ void dCamera_c::PrepareBgCh(dBgCh &bgCh) {
 }
 }
 
-/* The script ops, called through func_02008550's member-function table
+/* The script ops, called through RunCameraCommand's member-function table
    with the command's operands. The class is opaque: only the pointer-to-
    member representation matters. */
 typedef int (CamPmfHost::*CamScriptOp)(unsigned char *, int, int);
@@ -3348,7 +3348,7 @@ extern CamScriptOp data_02086c80, data_02086d80, data_02086c60, data_02086c90, d
 
 /* Run one camera script command: byte 6 picks the op, and the operands
    follow from byte 7. The table is built on first use. */
-int func_02008550(dCamera_c *cam, u8 *command, int first, int last) {
+int RunCameraCommand(dCamera_c *cam, u8 *command, int first, int last) {
     static CamScriptOp sScriptOps[39] = {
         data_02086c80, data_02086d80, data_02086c60, data_02086c90, data_02086bd8, data_02086d18,
         data_02086d98, data_02086c88, data_02086d00, data_02086bc0, data_02086e30, data_02086ce8,

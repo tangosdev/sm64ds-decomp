@@ -383,7 +383,7 @@
     },
     "arm9:0x02008550": {
       "author": "andrewboudreau",
-      "name": "func_02008550"
+      "name": "RunCameraCommand"
     },
     "arm9:0x0200897c": {
       "author": "tangosdev",

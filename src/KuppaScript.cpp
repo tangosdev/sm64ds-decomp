@@ -82,7 +82,7 @@ enum KuppaScriptCommand {
 
 extern "C" {
 /* The camera's command dispatcher. */
-int func_02008550(dCamera_c *camera, u8 *command, int first, int last);
+int RunCameraCommand(dCamera_c *camera, u8 *command, int first, int last);
 void func_0201f32c(int messageID);
 void LoadLevelNoReturn(int levelID, u32 entrance, u32 arg2, u32 arg3);
 void func_02011c8c();
@@ -4709,7 +4709,7 @@ void KuppaScript::Process() {
             } else if (command == KS_WATERFALL_SOUNDS) {
                 data_ov002_02110aec = 0;
             } else if (command == KS_CAMERA) {
-                func_02008550(gCamera, s, first, last);
+                RunCameraCommand(gCamera, s, first, last);
             } else if (command <= KS_PLAYER_LAST) {
                 KuppaScript::RunPlayerCommand(s, first, last);
             } else if (command >= KS_DEMO_FIRST) {
