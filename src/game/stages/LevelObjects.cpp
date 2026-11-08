@@ -99,8 +99,7 @@ static inline int IntroAllowed() {
  * signature and unused here. */
 void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::SimpleEntry *entry = (LVL_Overlay::SimpleEntry *)table.entries;
-    int objectIndex;
-    for (objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
         Vector3 position(entry->x << 12, entry->y << 12, entry->z << 12);
         u16 actorIndex = entry->raw & 0x1ff;
         int actorParam = entry->raw >> 9;
@@ -120,8 +119,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
  * shared loader signature and unused here. */
 void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
-    int objectIndex;
-    for (objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
         u32 actorID = sObjToActorIdTable[entry->raw];
         Vector3 position(entry->x << 12, entry->y << 12, entry->z << 12);
         dActor_c::Spawn(actorID, entry->param, position, (const Vector3_16 *)&entry->rot, areaID,
@@ -134,16 +132,14 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) 
  * entry index OFFSET into the table rather than a free parameter: the walk
  * starts at `entries + entranceIndex` and runs for gNumPlayers iterations, not table.count. */
 void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranceIndex) {
-    u32 entranceKind;
+    u32 entranceKind; /* declared first: at its first assignment it is 20 words off */
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
     func_0202b0e0(entry, table.count);
     entry += entranceIndex;
     entranceKind = 0;
-
     int entranceId = 0xf;
-    u8 playerIndex = 0;
 
-    while (playerIndex < gNumPlayers) {
+    for (u8 playerIndex = 0; playerIndex < gNumPlayers; entry++, playerIndex++) {
         Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
         u16 param = entry->param;
@@ -169,9 +165,6 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
 
         if (playerIndex == gLocalPlayerId)
             entranceId = (entry->param >> 3) & 0xf;
-
-        entry++;
-        playerIndex++;
     }
 
     gCamera = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
@@ -239,12 +232,10 @@ void LoadFogObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
  * stored angle. */
 void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::DoorEntry *entry = (LVL_Overlay::DoorEntry *)table.entries;
-    for (int objectIndex = 0; objectIndex < table.count; objectIndex++) {
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
         Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
-        /* The ROM computes all three angles before it stores any. Direct
-           member stores re-read param (+4 bytes), as does an aggregate
-           initializer; one u16 copy of param still stores x before loading
-           the angle (11 words off). */
+        /* All three angles are computed before any is stored: member stores or
+           an aggregate initializer are +4 bytes, a u16 param copy 11 words off. */
         Vector3_16 rot;
         s16 rx = (entry->param >> 8) & 0xf;
         s16 ry = entry->angle;
@@ -256,7 +247,6 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         u32 actorID = sDoorActorIds[doorType];
         u32 spawnParam = entry->param | (sDoorVariants[doorType] << 16);
         dActor_c::Spawn(actorID, spawnParam, pos, &rot, -1, -1);
-        entry++;
     }
 }
 
@@ -271,7 +261,7 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ExitEntry *entry = (LVL_Overlay::ExitEntry *)table.entries;
 
-    for (int objectIndex = 0; objectIndex < table.count; objectIndex++) {
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
         Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
         Vector3s rot;
@@ -282,8 +272,6 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
                         ((u32)entry->param[0] << 24) | ((u32)entry->param[1] << 16) |
                             ((u32)entry->param[2] << 8) | (u32)entry->param[3],
                         pos, (const Vector3_16 *)&rot, -1, -1);
-
-        entry++;
     }
 }
 
@@ -319,8 +307,7 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
  * unless the filter is 0 or equal to the selected star at gCurrentStarId. */
 void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ObjSubTable *entry = (LVL_Overlay::ObjSubTable *)table.entries;
-    int tableIndex;
-    for (tableIndex = 0; tableIndex < table.count; tableIndex++) {
+    for (int tableIndex = 0; tableIndex < table.count; tableIndex++) {
         u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
         if (starFilter == 0 || starFilter == gCurrentStarId) {
