@@ -393,11 +393,11 @@ src/unnamed/arm9/0201/func_02018a24.c:
     complete
     .text start:0x02018a24 end:0x02018a40
 
-src/unnamed/arm9/0201/func_02018a40.c:
+src/SetAssetHandleFileID.c:
     complete
     .text start:0x02018a40 end:0x02018a58
 
-src/unnamed/arm9/0201/func_02018a58.cpp:
+src/AllocAssetHandleTable.cpp:
     complete
     .text start:0x02018a58 end:0x02018aa4
 

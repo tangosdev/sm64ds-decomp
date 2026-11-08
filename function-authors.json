@@ -2863,11 +2863,11 @@
     },
     "arm9:0x02018a40": {
       "author": "tangosdev",
-      "name": "func_02018a40"
+      "name": "SetAssetHandleFileID"
     },
     "arm9:0x02018a58": {
       "author": "tangosdev",
-      "name": "func_02018a58"
+      "name": "AllocAssetHandleTable"
     },
     "arm9:0x02018aa4": {
       "author": "tangosdev",
