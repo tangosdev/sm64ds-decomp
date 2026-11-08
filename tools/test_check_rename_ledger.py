@@ -202,7 +202,7 @@ class TestFix(unittest.TestCase):
             fx.close()
 
     def test_tcm_autoload_symbols_live_under_arm9(self):
-        # itcm's table is config/arm9/itcm/symbols.txt, not config/itcm/.
+        # itcm's table is config/arm9/itcm/symbols.txt, not a top-level itcm directory under config.
         sym = "_ZN7dBgW_Kc11SetDepthDirEPK7Vector3 kind:function(arm,size=0x1c) addr:0x01ffb07c\n"
         fx = Fixture(["itcm\t0x01ffb07c\tfunc_01ffb07c\t"
                       "_ZN7dBgW_Kc11SetDepthDirEPK7Vector3\tmember setter"],
