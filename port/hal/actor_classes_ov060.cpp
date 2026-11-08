@@ -754,10 +754,14 @@ static int __fastcall bfire_clean(void *s, void *)
 // of a character drawn at random among Mario / Luigi / Wario, redrawing until it hits one this save has unlocked. With none of
 // the three unlocked that draw never ends and the game loop stops (the ROM's own loop; solo never reaches it, coop does: a
 // fresh-save Yoshi in a friend's Bowser fight, or a friend's Yoshi as the shared target). For that save only, Bowser's
-// mCapActorAlive (0x42b) reads 1 for the length of the fire's Behavior, so the ROM takes its coin branch; it is put back after.
-// Any save with a human unlocked runs the ROM untouched.
+// mCapActorAlive (0x42b) reads 1 while the variant 6/7 handler runs, so the ROM takes its coin branch; it is put back after.
+// Any save with a human unlocked runs the ROM untouched. The handler is reached through the PMF table data_ov060_0211afb4
+// (entries 0211a744 / 0211a784, hal/pmf_host_values.cpp); the two decl symbols below are defined here, so the generated
+// /alternatename fallback to func_ov060_02116f90 is not taken (the vtable slot is not on this path: the class's own MSVC
+// vftable dispatches Behavior).
 extern "C" int _ZN8SaveData19IsCharacterUnlockedEj(unsigned ch);
-static int __fastcall bfire_behavior(void *s, void *)
+extern "C" void func_ov060_02116f90(void *self);
+static void bowser10_fire_falls(void *self)
 {
     unsigned char *kpa = nullptr;
     if (!_ZN8SaveData19IsCharacterUnlockedEj(0) && !_ZN8SaveData19IsCharacterUnlockedEj(1) &&
@@ -766,10 +770,13 @@ static int __fastcall bfire_behavior(void *s, void *)
         if (kpa && kpa[0x42b] == 0) kpa[0x42b] = 1;
         else kpa = nullptr;
     }
-    const int r = _ZN11daKpaFire_c8BehaviorEv(s);
+    func_ov060_02116f90(self);
     if (kpa) kpa[0x42b] = 0;
-    return r;
 }
+extern "C" int port_pmff_decl_data_ov060_0211a744(void *self) { bowser10_fire_falls(self); return 0; }
+extern "C" int port_pmff_decl_data_ov060_0211a784(void *self) { bowser10_fire_falls(self); return 0; }
+static int __fastcall bfire_behavior(void *s, void *)
+{ return _ZN11daKpaFire_c8BehaviorEv(s); }
 static int __fastcall bfire_render(void *s, void *)
 { (void)s; return _ZN11daKpaFire_c6RenderEv(); }
 static int __fastcall bfire_d1(void *s, void *)
