@@ -2,7 +2,7 @@
 /* leftovers:
  * - func_02013c84 stays `extern "C"` under its cartridge name: callers in
  *   other TUs link it unmangled, and its body forwards to the member SaveFile.
- * - func_02013e64 likewise: the save-block wipe is a free function, kept C.
+ * - ClearSaveBlock likewise: the save-block wipe is a free function, kept C.
  * - func_0205a588 (MI_CpuFill8) and CpuCopy8 (MI_CpuCopy8) are assembly
  *   primitives. Their local declarations below use the signatures at their
  *   definitions in src/engine/mi/MI_Memory.c.
@@ -12,22 +12,27 @@
  * folded at .text 0x02013568..0x02013e80. The span also carries the free
  * functions that
  * share this TU's concern: func_02013c84 copies a file block and either
- * records the character or forwards to SaveFile, func_02013e64 zeroes the
- * whole save block, and func_020139b8..func_02013a88 are the cap-flag
+ * records the character or forwards to SaveFile, ClearSaveBlock zeroes the
+ * whole save block, and ClearCapHeldByToad..func_02013a88 are the cap-flag
  * helpers (clear/set/test the 0x8000000<<character and 0x1000000<<character
- * bits) around NumGlowingRabbitsFound. mwccarm emits .text in reverse source order, so the
+ * bits) around NumGlowingRabbitsFound. The 0x8000000<<character bit says a
+ * castle Toad holds that character's lost cap: d_a_ply_methods.cpp sets it
+ * (func_02013a00) when a player comes back to the castle capless, the
+ * variant-1 Toad in d_a_kinopio.cpp tests it (func_02013a44) to wear the cap
+ * and hand it back, and picking the cap up (func_02013a88, from
+ * d_a_obj_mario_cap.cpp) clears it with the lost-cap bit. mwccarm emits .text in reverse source order, so the
  * definitions below run ROM-descending; the roster reads ROM-ascending.
  *
  *   func_02013568..func_02013638 -- minigame record tables, seen and unlock bits.
  *   SetCoinRecordIfHigher..func_02013944 -- coin and star records, cannons,
- *     minigame rabbits, character intros, the rabbit-count bit.
+ *     minigame keys, character intros, the rabbit-count bit.
  *   NumGlowingRabbitsFound -- rabbit bits 20..27 of the flags word.
- *   func_020139b8..func_02013a88 -- cap-flag clear/set/test helpers.
+ *   ClearCapHeldByToad..func_02013a88 -- cap-flag clear/set/test helpers.
  *   PlayerLoseCap..CanPlayerHaveCap -- cap-loss flags on the live block.
  *   SaveCurrentFile..SetDefaultValuesMg -- file and minigame writes.
  *   func_02013c84 -- block copy + character record / SaveFile forwarder.
  *   EraseSaveFile..EraseAllSaveData -- slot and whole-block resets.
- *   func_02013e64 -- zero the save block.
+ *   ClearSaveBlock -- zero the save block.
  *
  * Every method is static: the ROM bodies take no `this` and reach the single
  * save block at 0x0209caa0 directly, declared here as a SaveBlock object
@@ -52,14 +57,14 @@ extern unsigned char data_0209cab4[]; /* star bits per course */
 extern unsigned char data_0209f224;   /* last collected star id */
 extern void func_0205a588(void *dest, u8 value, u32 size);
 extern void CpuCopy8(const void *src, void *dst, u32 count);
-extern void func_020139b8(void);      /* forward: called by func_02013a88 above its definition */
-extern void func_0201361c(int n);     /* forward: defined at the end of this file */
+extern void ClearCapHeldByToad(void);   /* forward: called by func_02013a88 above its definition */
+extern void UnlockMinigame(int minigame); /* forward: defined at the end of this file */
 /* local extern: src/SublevelToLevel.cpp is int(int), but these four callers match only as s8.
  * An int declaration widens each of them by 8 bytes. */
 extern s8 SublevelToLevel(s8 levelID);
 }
 
-extern "C" void func_02013e64(void) {
+extern "C" void ClearSaveBlock(void) {
     func_0205a588(&data_0209caa0, 0, 0x32c);
 }
 
@@ -168,7 +173,7 @@ extern "C" void func_02013a88(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 &= ~(0x1000000u << data_0209caa0.file.mCharacter);
-    func_020139b8();
+    ClearCapHeldByToad();
 }
 
 extern "C" int func_02013a44(void) {
@@ -183,7 +188,7 @@ extern "C" void func_02013a00(void) {
     data_0209caa0.file.flags1 |= (0x8000000u << data_0209caa0.file.mCharacter);
 }
 
-extern "C" void func_020139b8(void) {
+extern "C" void ClearCapHeldByToad(void) {
     if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.file.flags1 &= ~(0x8000000u << data_0209caa0.file.mCharacter);
@@ -230,21 +235,23 @@ extern "C" int func_020138dc(void) {
     return count;
 }
 
-extern "C" int func_02013890(int a, int b) {
-    if (b < 0) {
+extern "C" int func_02013890(int rabbit, int character) {
+    if (character < 0) {
         int f = data_0209caa0.file.minigameRabbits;
-        int m = 0xf << (a * 4);
+        int m = 0xf << (rabbit * 4);
         return (f & m) == m;
     } else {
         int f = data_0209caa0.file.minigameRabbits;
-        return f & (1 << (b | (a << 2)));
+        return f & (1 << (character | (rabbit << 2)));
     }
 }
 
-extern "C" void func_02013868(int a, int b) {
-    int idx = (a << 2) | b;
-    data_0209caa0.file.minigameRabbits |= 1 << idx;
-    func_0201361c(idx);
+/* A rabbit's minigame key, collected by one character (daObj_Mip_Key_c):
+   marks it in the file and unlocks the minigame of the same index. */
+extern "C" void CollectMinigameKey(int rabbit, int character) {
+    int minigame = (rabbit << 2) | character;
+    data_0209caa0.file.minigameRabbits |= 1 << minigame;
+    UnlockMinigame(minigame);
 }
 
 extern "C" int IsCannonOpen(int n) {
@@ -269,9 +276,9 @@ extern "C" int IsStarCollected(s32 courseID, s32 starID) {
     return ((1 << starID) & data_0209cab4[courseID]) & 0xff;
 }
 
-extern "C" void CollectStar(int a, int b) {
-    data_0209cab4[a] |= 1 << b;
-    data_0209f224 = b;
+extern "C" void CollectStar(int courseID, int starID) {
+    data_0209cab4[courseID] |= 1 << starID;
+    data_0209f224 = starID;
 }
 
 u8 SaveData::CountStarsCollectedInLevel(u32 courseID) {
@@ -331,36 +338,36 @@ void SaveData::SetCoinRecordIfHigher(int courseID, u8 coins) {
 }
 
 /* The minigame block's helpers, at the bottom of the TU's span. mg.unlocked
- * holds the unlocked-minigame bits: func_02013868 sets bit (a << 2) | b there
- * and in the file's minigameRabbits. mg.seenLo/seenHi are the minigame
+ * holds the unlocked-minigame bits: CollectMinigameKey sets bit
+ * (rabbit << 2) | character there and in the file's minigameRabbits. mg.seenLo/seenHi are the minigame
  * menu's seen bits (ov005 MiniGm_IsNew reads "not seen", MiniGm_ClearNew sets
  * one). The record tables at block + 0x54, five words each, are what
  * src/minigames/d_s_mg_base.cpp reads and writes. */
 
-extern "C" int func_02013638(int n) {
-    return data_0209caa0.mg.unlocked & (1 << n);
+extern "C" int func_02013638(int minigame) {
+    return data_0209caa0.mg.unlocked & (1 << minigame);
 }
 
-extern "C" void func_0201361c(int n) {
-    data_0209caa0.mg.unlocked |= 1 << n;
+extern "C" void UnlockMinigame(int minigame) {
+    data_0209caa0.mg.unlocked |= 1 << minigame;
 }
 
-extern "C" int func_020135d0(int n) {
+extern "C" int func_020135d0(int minigame) {
     int res;
-    if (n < 0x1c) {
-        res = (data_0209caa0.mg.seenLo & (1 << n)) ? 0 : 1;
+    if (minigame < 0x1c) {
+        res = (data_0209caa0.mg.seenLo & (1 << minigame)) ? 0 : 1;
     } else {
-        res = (data_0209caa0.mg.seenHi & (1 << (n - 0x1c))) ? 0 : 1;
+        res = (data_0209caa0.mg.seenHi & (1 << (minigame - 0x1c))) ? 0 : 1;
     }
     return res;
 }
 
-/* For n < 0x1c the byte store below shifts by a negative count, which on ARM
- * sets no bit; only the word store takes effect. */
-extern "C" void func_02013598(int n) {
-    if (n < 0x1c)
-        data_0209caa0.mg.seenLo |= 1 << n;
-    data_0209caa0.mg.seenHi |= 1 << (n - 0x1c);
+/* For minigame < 0x1c the byte store below shifts by a negative count, which
+ * on ARM sets no bit; only the word store takes effect. */
+extern "C" void func_02013598(int minigame) {
+    if (minigame < 0x1c)
+        data_0209caa0.mg.seenLo |= 1 << minigame;
+    data_0209caa0.mg.seenHi |= 1 << (minigame - 0x1c);
 }
 
 extern "C" int func_02013580(int table, int index) {

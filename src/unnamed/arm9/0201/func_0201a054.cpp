@@ -13,7 +13,7 @@ extern void func_02053a8c(void);
 extern void func_02053c40(void);
 extern void PXI_Init(void);
 extern void func_0203d740(void);
-extern void func_02013e64(void);
+extern void ClearSaveBlock(void);
 extern void func_0201a4e4(void);
 extern int func_02053be0(int enable);
 extern void func_0203bbc0(void);
@@ -57,7 +57,7 @@ void func_0201a054(void) {
     func_02053c40();
     PXI_Init();
     func_0203d740();
-    func_02013e64();
+    ClearSaveBlock();
     func_0201a4e4();
     IRQ::EnableIRQs(1);
     {
