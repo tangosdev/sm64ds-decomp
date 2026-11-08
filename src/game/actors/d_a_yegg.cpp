@@ -1119,7 +1119,7 @@ end:
 /* The burst. Does nothing if mBurstDone is already set. Otherwise it pays out
  * (func_ov002_020ec728), and when the star bit is set gives up the tracked
  * star slot and spawns a SILVER_STAR (param1 0x10) 40 units above the egg,
- * which func_ov002_020e7218 then takes together with the daPly_c. It then
+ * which SeekNewMarker then takes together with the daPly_c. It then
  * starts four particle effects (ids 0x3f to 0x42) at the egg, marks the egg
  * for destruction, plays Sound::PlayCharVoice id 0x103 at its camera-space
  * position and sets mBurstDone. Stays a free function: d_a_ply_methods.cpp calls it
@@ -1148,7 +1148,7 @@ void func_ov002_020edca4(daYegg_c* self)
         spawned =
             (char *)dActor_c::Spawn(ACTOR_SILVER_STAR, 0x10, pos, 0, self->mPlayer->mAreaId, -1);
         if (spawned != 0) {
-            ((daStar_c *)spawned)->func_ov002_020e7218((char *)self->mPlayer, 1);
+            ((daStar_c *)spawned)->SeekNewMarker((char *)self->mPlayer, 1);
         }
     }
 

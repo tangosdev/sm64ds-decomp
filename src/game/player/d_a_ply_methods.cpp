@@ -6609,7 +6609,7 @@ int daPly_c::func_ov002_020c8714() {
             func_ov002_020c7ff8();
             st = (int)Spawn(0xb2, 0x6f, mPos, &mAngle, this->mAreaId, -1);
             if (st != 0)
-                ((daStar_c *)st)->func_ov002_020e7090((int)this);
+                ((daStar_c *)st)->CollectNoPose((int)this);
         }
         mStateArg = 0;
     }
@@ -15273,7 +15273,7 @@ int daPly_c::func_ov002_020d94cc() {
 
     if (spawned == 0) goto fail;
 
-    ((daStar_c *)spawned)->func_ov002_020e7218(self, 0);
+    ((daStar_c *)spawned)->SeekNewMarker(self, 0);
 
     b = (data_0209f2d8 == 1);
     if (!b) {
