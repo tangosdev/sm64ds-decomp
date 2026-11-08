@@ -96,20 +96,20 @@ struct daBook_c : dEnemyBase_c {
     /* State handlers and helpers, in ROM order. No EAD name survives for
        any of them: StateX follows the State enum, CheckAttacks and Die the
        N64 bookend's obj_check_attacks and obj_die_if_health_non_positive. */
-    void AimAtPlayer();   /* aims the book at the closest player */
-    void SpawnShootBook();   /* wrong push: fires a SHOOT_BOOK beside the shelf */
-    int  CheckAttacks();   /* acts on the GetHitType result; 1 = book gone */
-    int  GetHitType();   /* reads the collider, returns a HIT_ result */
-    void UpdateSwitchBook();   /* KIND_SWITCH_BOOK state machine */
-    void StateYoshiSkid();   /* STATE_YOSHI_SKID */
-    void StateSpawned();   /* STATE_SPAWNED */
-    void StateFly();   /* STATE_FLY */
-    void StateWindUp();   /* STATE_WIND_UP */
-    void StateTiltBack();   /* STATE_TILT_BACK */
-    void StateWait();   /* STATE_WAIT */
-    void UpdateFlyingBook();   /* KIND_FLYING_BOOK state machine */
-    void Die();   /* drops the coin, puffs, removes the actor */
-    void UpdateModelMatrix();   /* rebuilds the model matrix and the drop shadow */
+    void AimAtPlayer();       /* aims the book at the closest player */
+    void SpawnShootBook();    /* wrong push: fires a SHOOT_BOOK beside the shelf */
+    int CheckAttacks();       /* acts on the GetHitType result; 1 = book gone */
+    int GetHitType();         /* reads the collider, returns a HIT_ result */
+    void UpdateSwitchBook();  /* KIND_SWITCH_BOOK state machine */
+    void StateYoshiSkid();    /* STATE_YOSHI_SKID */
+    void StateSpawned();      /* STATE_SPAWNED */
+    void StateFly();          /* STATE_FLY */
+    void StateWindUp();       /* STATE_WIND_UP */
+    void StateTiltBack();     /* STATE_TILT_BACK */
+    void StateWait();         /* STATE_WAIT */
+    void UpdateFlyingBook();  /* KIND_FLYING_BOOK state machine */
+    void Die();               /* drops the coin, puffs, removes the actor */
+    void UpdateModelMatrix(); /* rebuilds the model matrix and the drop shadow */
 
     /* Which of the two behaviours the profile selected; InitResources sets it
        from actorID and Behavior switches on it. */

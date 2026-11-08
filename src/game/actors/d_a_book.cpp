@@ -153,8 +153,7 @@ daBookGen_c::~daBookGen_c()
 
 /* Points the book at the closest player: mAimYaw and mAimPitch are the angles
  * from the book to the player, mAimRoll a constant quarter turn. */
-void daBook_c::AimAtPlayer()
-{
+void daBook_c::AimAtPlayer() {
     daPly_c *player = ClosestPlayer();
     if (!player)
         return;
@@ -173,8 +172,7 @@ void daBook_c::AimAtPlayer()
 /* BOOK_SWITCH, wrong book pushed: fires a SHOOT_BOOK from beside the partner,
  * 250 units to its -x or +x side (one random bit picks it), 65 units up,
  * at the touching player's depth and turned a quarter turn to cross it. */
-void daBook_c::SpawnShootBook()
-{
+void daBook_c::SpawnShootBook() {
     int bit = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
     if (mTouchedPlayer == 0)
         return;
@@ -215,10 +213,12 @@ void daBook_c::SpawnShootBook()
  * when the book is gone. The first count handed to daPly_c::Hurt is 0 for a
  * metal player, 2 for KILLER_BOOK and 1 otherwise; touching the player also
  * clears mCoinType, so no blue coin drops. */
-int daBook_c::CheckAttacks()
-{
+int daBook_c::CheckAttacks() {
     int r = GetHitType();
-    if (r == HIT_ATTACKED) { Die(); return 1; }
+    if (r == HIT_ATTACKED) {
+        Die();
+        return 1;
+    }
     if (r == HIT_METAL_PLAYER) {
         Vector3 v;
         v.x = mPosX; v.y = mPosY; v.z = mPosZ;
@@ -253,8 +253,7 @@ int daBook_c::CheckAttacks()
  * only when nothing else applied. mTouchedPlayer is set as soon as a player is known to be
  * involved. The ROM reserves a 12-byte frame it never touches; two
  * address-taken volatile locals reserve it with no emitted code. */
-int daBook_c::GetHitType()
-{
+int daBook_c::GetHitType() {
     u32 id;
     daPly_c *found;
     int t;
@@ -325,8 +324,7 @@ int daBook_c::GetHitType()
  * daTrsTrap_c bookshelf: the low three bits of its mBookFlags record which
  * books have been pushed, bit 3 is the puzzle armed, and its mState is the
  * verdict (2 slides the shelf away, 3 removes it). */
-void daBook_c::UpdateSwitchBook()
-{
+void daBook_c::UpdateSwitchBook() {
     daTrsTrap_c *partner;
 
     /* looked up twice; the first result is unused */
@@ -420,8 +418,7 @@ void daBook_c::UpdateSwitchBook()
  * second argument in word 6 of mWithMeshClsn (the radius, as daBgSnmBdy_c
  * reads it): 100 units on every skid frame, back to Init's 50 when the skid
  * ends. */
-void daBook_c::StateYoshiSkid()
-{
+void daBook_c::StateYoshiSkid() {
     func_0203568c((int *)&mWithMeshClsn, 0x64000);
     if (mSpitOutTimer != 0) {
         mSpitOutTimer--;
@@ -443,8 +440,7 @@ void daBook_c::StateYoshiSkid()
 
 /* STATE_SPAWNED: a SHOOT_BOOK's first three frames. It never drops a coin;
  * on the third frame it becomes STATE_FLY at full speed with the collider on. */
-void daBook_c::StateSpawned()
-{
+void daBook_c::StateSpawned() {
     mCoinType = 0;
     STATE_TIMER++;
     if (STATE_TIMER >= 3) {
@@ -494,8 +490,7 @@ void daBook_c::StateFly() {
  * it rolls, from 0x13 it swells toward 1.5 times size, growing the collider
  * with it. When the animation finishes it switches to the flight animation,
  * aims one last time and launches along that direction at kFlightSpeed. */
-void daBook_c::StateWindUp()
-{
+void daBook_c::StateWindUp() {
     if (CheckAttacks())
         return;
 
@@ -559,8 +554,7 @@ void daBook_c::StateWindUp()
 /* STATE_TILT_BACK: tips the book back by 45 degrees, then switches mAnmModel
  * to the animated model, starts its animation, lifts the book 50 units and
  * moves the collider down 25. */
-void daBook_c::StateTiltBack()
-{
+void daBook_c::StateTiltBack() {
     int r = CheckAttacks();
     if (r)
         return;
@@ -586,8 +580,7 @@ void daBook_c::StateTiltBack()
 /* STATE_WAIT (KILLER_BOOK): when the closest player is within 400 units and
  * within 0x3000 (67.5 degrees) of the book's heading, starts tilting back and
  * switches its collider on. */
-void daBook_c::StateWait()
-{
+void daBook_c::StateWait() {
     Vector3 v;
     daPly_c *p = ClosestPlayer();
     {
@@ -614,15 +607,26 @@ void daBook_c::StateWait()
 
 /* The flying books' state machine; mState 6..10 belong to
  * UpdateSwitchBook. */
-void daBook_c::UpdateFlyingBook()
-{
+void daBook_c::UpdateFlyingBook() {
     switch (mState) {
-    case STATE_WAIT: StateWait(); break;
-    case STATE_TILT_BACK: StateTiltBack(); break;
-    case STATE_WIND_UP: StateWindUp(); break;
-    case STATE_FLY: StateFly(); break;
-    case STATE_SPAWNED: StateSpawned(); break;
-    case STATE_YOSHI_SKID: StateYoshiSkid(); break;
+    case STATE_WAIT:
+        StateWait();
+        break;
+    case STATE_TILT_BACK:
+        StateTiltBack();
+        break;
+    case STATE_WIND_UP:
+        StateWindUp();
+        break;
+    case STATE_FLY:
+        StateFly();
+        break;
+    case STATE_SPAWNED:
+        StateSpawned();
+        break;
+    case STATE_YOSHI_SKID:
+        StateYoshiSkid();
+        break;
     }
 }
 
@@ -641,8 +645,7 @@ void daBook_c::Die() {
  * matrices are in eighths of a unit, so position >> 3), in the animated model
  * once it is in use. KILLER_BOOK also places its drop shadow, which sits at
  * the home height. */
-void daBook_c::UpdateModelMatrix()
-{
+void daBook_c::UpdateModelMatrix() {
     Matrix4x3 *m = (mUsesAnmModel != 0) ? &mAnmModel.mat4x3 : &mModel.mat4x3;
     Matrix4x3_FromRotationZXYExt(m, mAngleX, mAngleY, mAngleZ);
     m->m[9] = mPosX >> 3;
