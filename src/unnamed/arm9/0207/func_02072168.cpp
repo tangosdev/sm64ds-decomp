@@ -57,7 +57,6 @@ extern void func_02072dac(int a, char *s);
 extern void func_02071864(char *c, char *s);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
-extern unsigned int __aeabi_uidiv(unsigned int a, unsigned int b);
 
 void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
     int saved = 0;
@@ -434,7 +433,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
                 else
                     b = *(int *)(c->mFP + v1);
                 a += b;
-                n = __aeabi_uidiv(b, v2);
+                n = (u32)b / (u32)v2;
                 if (n != 0) {
                     do {
                         a -= v2;

@@ -91,6 +91,7 @@
 #include "LevelRng.h"
 #include "dClipper.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "daObjNumber_c.h"
 #include "daCoin_c.h"
 #include "daFPknBall_c.h"
@@ -473,9 +474,6 @@ void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 74 -- dActor_c::UpdatePosWithHorzSpeedAndAng()
  * 0x02010c5c  size 0xe4 */
-extern "C" {
-extern s16 data_02082214[]; /* NitroSDK FX_SinCosTable_: {sin, cos} per angle >> 4 */
-}
 /* Splits mHorzSpeed along mPrevAngleY (the heading the velocity follows) into
    the x/z velocity words, x by sin and z by cos, and applies mVertAccel to
    mVertSpeed, clamped at mTerminalVelocity. */
@@ -494,13 +492,11 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
         s32 accel;
         s32 terminal;
         s32 speedZ;
-        s32 idx;
         s16 cosv;
         s32 next;
         s16 sinv;
         s32 speedX;
-        idx = ((u16)mPrevAngleY >> 4) * 2;
-        cosv = data_02082214[idx + 1];
+        cosv = FX_CosIdx((u16)mPrevAngleY >> 4);
         vertSpeed = mVertSpeed;
         accel = mVertAccel;
         terminal = mTerminalVelocity;
@@ -508,7 +504,7 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng() {
         next = vertSpeed + accel;
         if (next >= terminal)
             terminal = next;
-        sinv = data_02082214[idx];
+        sinv = FX_SinIdx((u16)mPrevAngleY >> 4);
         speedX = FX_MUL(horzSpeed, sinv);
         mSpeedX = speedX;
         mVertSpeed = terminal;
@@ -695,7 +691,7 @@ extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
     dir = cstd::atan2(v->x, v->z);
     angle = (s16)(dir - angle);
     horzLen = Vec3_HorzLen(v);
-    return cstd::atan2(FX_MUL(horzLen, data_02082214[((u16)angle >> 4) * 2 + 1]), v->y);
+    return cstd::atan2(FX_MUL(horzLen, FX_CosIdx((u16)angle >> 4)), v->y);
 }
 
 /* -------------------------------------------------------------------------- */

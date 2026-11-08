@@ -21,8 +21,6 @@
  *   pointer; three separate pl->mPos loads change the code.
  * - BuildHoldMatrix hands &mHoldMtx out through this object's
  *   mCarryMatrix; a grabbed actor's mCarryMatrix gates the hold path.
- * - func_ov062_021165e8 keeps a volatile Vector3 so the player's position
- *   occupies that stack slot.
  *
  * Naming: helpers keep func_ov062_* names; daHolhei_c_ChangeState is
  * coined. The state handlers are members; the remaining extern "C"
@@ -364,8 +362,7 @@ int daHolhei_c::func_ov062_02116c78() {
     mChargeStep = 0;
     mModel.speed = 0x1000;
     mModel.SetAnim((BCA_File *)(gHoruheiWalkAnimationFile.filePtr), 0, 0x1000, 0);
-    mTargetAngY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                 reinterpret_cast<const Vector3 *>(&mHomePosX));
+    mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
     return 1;
 }
 
@@ -401,8 +398,7 @@ int daHolhei_c::func_ov062_02116a08() {
     L.vd0[1] = 0;
     L.vd0[2] = 0;
 
-    Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-              reinterpret_cast<const Vector3 *>(&mHomePosX));
+    Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
 
     r = ClassifyObstruction();
     if (r != 0 || mEdgeStop == 1) {
@@ -446,13 +442,11 @@ int daHolhei_c::func_ov062_02116980() {
     mPosY = mPrevPosY;
     mPosZ = mPrevPosZ;
     mHorzSpeed = 0;
-    if (AngleDiff(mTargetAngY, Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                              reinterpret_cast<const Vector3 *>(&mHomePosX))) <=
-        0x2000)
+    if (AngleDiff(mTargetAngY,
+                  Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX))) <= 0x2000)
         mTargetAngY = (s16)(mPrevAngleY - 0x1000);
     else
-        mTargetAngY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                     reinterpret_cast<const Vector3 *>(&mHomePosX));
+        mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
     mStateTimer = 0x46;
     return 1;
 }
@@ -481,8 +475,7 @@ int daHolhei_c::func_ov062_02116894() {
 /* Stop, and aim the next turn at home. */
 int daHolhei_c::func_ov062_02116850() {
     mVertSpeed = 0;
-    mTargetAngY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                 reinterpret_cast<const Vector3 *>(&mHomePosX));
+    mTargetAngY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
     mStateTimer = 0x14;
     mHorzSpeed = 0;
     return 1;
@@ -516,8 +509,7 @@ int daHolhei_c::func_ov062_021165e8()
 {
     daPly_c *player;
     int r;
-    volatile struct Vector3 pos;
-    struct Vector3* pp;
+    Vector3 pos;
 
     player = ClosestPlayer();
     r = ClassifyObstruction();
@@ -532,10 +524,10 @@ int daHolhei_c::func_ov062_021165e8()
     if (player == 0)
         return 1;
 
-    pp = &player->mPos;
-    pos.x = pp->x;
-    pos.y = pp->y;
-    pos.z = pp->z;
+    {
+        const Vector3 &p = player->mPos;
+        pos = p;
+    }
 
     if (mChargeStep == 0) {
         mTargetAngY = (short)HorzAngleToCPlayer();
@@ -555,12 +547,10 @@ int daHolhei_c::func_ov062_021165e8()
         int s = mChargeStep;
         if (s != 0) {
             if (s == 1) {
-                if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-                              reinterpret_cast<const Vector3 *>(&mChasePosX)) < 0x3c000)
+                if (Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mChasePosX)) < 0x3c000)
                     mChargeStep = 2;
             } else {
-                if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-                              reinterpret_cast<const Vector3 *>(&mChasePosX)) > 0xc8000)
+                if (Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mChasePosX)) > 0xc8000)
                     ::daHolhei_c_ChangeState(this, &data_ov062_0211ded0);
             }
         }
