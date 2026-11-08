@@ -184,11 +184,10 @@ void dScMgBomroom_c::UpdateBg2Lift() {
 
 
 void dScMgBomroom_c::ResetBg2Lift() {
-    int zero = 0;
-    mBg2Y = zero;
-    mBg2State = zero;
-    mBg2Hold = zero;
-    SetBg2Offset(zero, zero);
+    mBg2Y = 0;
+    mBg2State = 0;
+    mBg2Hold = 0;
+    SetBg2Offset(0, 0);
 }
 
 /* Draws the two mMarkers sprite records that are active. */
@@ -415,7 +414,6 @@ void dScMgBomroom_c::PenGate_UpdateAll() {
 
 
 void dScMgBomroom_c::PenGate_ShowAll() {
-    void * p = (void *)this;
     int i;
     for (i = 0; i < 2; i++) {
         mPenGates[i].gate = 1;
@@ -494,8 +492,7 @@ void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
     if (index == 0) {
         u8 level = mHatchPanels[index].level;
         if (level == 2 || level == 4) {
-            int *offsetY = &mMarkers[0].y;
-            *offsetY += 0x8000;
+            mMarkers[0].y += 0x8000;
         }
     }
     if (mHatchPanels[index].level == 3 && index == 1)
@@ -525,7 +522,6 @@ void dScMgBomroom_c::HatchPanel_UpdateAll() {
 
 
 void dScMgBomroom_c::HatchPanel_ShowAll() {
-    void * p = (void *)this;
     int i;
     for (i = 0; i < 2; i++) {
         mHatchPanels[i].gate = 1;
@@ -1016,7 +1012,7 @@ void dScMgBomroom_c::BombMarch_LinedUp() {}
 
 
 void dScMgBomroom_c::BombMarch_ToLine(int index) {
-    int off = index << 6;
+    int off;
     if (mBombs[index].marchDelay != 0) {
         mBombs[index].marchDelay -= 1;
         if ((s16)mBombs[index].marchDelay < 0)
@@ -1320,8 +1316,7 @@ void dScMgBomroom_c::Bomb_StateWalk(int idx) {
 
 void dScMgBomroom_c::Bomb_StateWaiting(int i) {
     if (mBombs[i].marchDelay != 0) {
-        unsigned short *h = &mBombs[i].marchDelay;
-        *h = *h - 1;
+        mBombs[i].marchDelay--;
     } else {
         mBombs[i].visible = 1;
         mBombs[i].type = 1;
@@ -1609,10 +1604,8 @@ void dScMgBomroom_c::RoundEnd_Finish() {
 
 
 void dScMgBomroom_c::RoundEnd_Tally() {
-    char * self = (char *)this;
     int found;
     int j;
-    u8 (*arr)[0x40] = (u8 (*)[0x40])self;
 
     UpdateBombs();
 
@@ -1660,11 +1653,8 @@ void dScMgBomroom_c::RoundEnd_Tally() {
 
 
 int dScMgBomroom_c::AnyBombMarching() {
-    char * c = (char *)this;
     int i;
-    unsigned char (*arr)[0x40];
     i = 0;
-    arr = (unsigned char (*)[0x40])c;
     do {
         if (mBombs[i].active == 1 && mBombs[i].state == 6)
             return 1;
@@ -1791,7 +1781,6 @@ void dScMgBomroom_c::Round_StateEnd() {
 
 
 void dScMgBomroom_c::Round_StatePlay() {
-    void * c = (void *)this;
     HatchPanel_UpdateAll();
     SpawnBombs();
     UpdateBombs();
@@ -1870,8 +1859,7 @@ extern "C" PMFv sBomroomRoundStateTable[];
 s32 dScMgBomroom_c::Behavior()
 {
     if (mDispatchDelay != 0) {
-        unsigned short *t = &mDispatchDelay;
-        *t = *t - 1;
+        mDispatchDelay--;
         if ((s16)mDispatchDelay <= 0)
             mDispatchDelay = 0;
     } else {
