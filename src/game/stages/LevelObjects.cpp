@@ -3,9 +3,6 @@
  * - Source order stays highest address first. Reordering moves the run.
  * - sObjectLoaders and the small loader tables stay data. This TU
  *   claims .text only.
- * - DoorEntry and LVL_Overlay_Layout stay in this file. LVL_Overlay.h
- *   still has no data members, and adding a record type there reaches
- *   the other loaders.
  * - areaID is s8 down the whole chain: LoadClsnAndObjects counts areas in
  *   a signed char, LoadObjects and the fifteen category loaders take it as
  *   s8, and dActor_c::Spawn's s8 area tail receives it unconverted.
@@ -74,47 +71,15 @@ void StartEntranceFaderWipe(int index);
 
 /* dScStage_c::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
-struct CLPS_Block;
 void *LoadFile(int handle);
 
-/* LoadObjects dispatches through this table. Its entries are the
- * category loaders. This text-only TU does not define it. */
-extern void (*sObjectLoaders[])(void *, s8, unsigned int);
+/* LoadObjects dispatches through this table, indexed by object category.
+ * Its entries are the fifteen category loaders. This text-only TU does not
+ * define it. */
+typedef void (*ObjectLoader)(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param);
+extern ObjectLoader sObjectLoaders[];
 
 } /* extern "C" */
-
-/* Door records. LVL_Overlay.h does not carry this type, and adding it
- * there would recompile every loader that includes the header. */
-struct DoorEntry { /* 0xc bytes. LoadDoorObjects. */
-    s16 x;         /* 0x00 */
-    s16 y;         /* 0x02 */
-    s16 z;         /* 0x04 */
-    s16 angle;     /* 0x06 */
-    u16 param;     /* 0x08 - packed spawn parameter and rotation nibbles */
-    u16 type;      /* 0x0a - low five bits select the door tables */
-};
-
-/* The overlay object as LoadClsnAndObjects reads it. LVL_Overlay.h
- * declares the nested tables and no data members. d_s_stage_methods.cpp
- * reads the same record through data_0209f340 as its LevelInfo: the model
- * file at 0x08 (dScStage_c::LoadModel), the minimap files at 0x0c/0x0e
- * (func_0202a980/func_0202a96c) and each area's texture animation and
- * minimap. */
-struct LVL_Overlay_Layout {
-    CLPS_Block *clps;                /* 0x00 */
-    LVL_Overlay::ObjTable *objTable; /* 0x04 */
-    u16 modelFileId;                 /* 0x08 */
-    u16 kclFileId;                   /* 0x0a */
-    u16 minimapTilesFile;            /* 0x0c */
-    u16 minimapPaletteFile;          /* 0x0e */
-    struct SubTbl {
-        LVL_Overlay::ObjTable *table; /* 0x00 */
-        void *bta;                    /* 0x04 */
-        s8 minimapId;                 /* 0x08 */
-        char pad_009[3];
-    } *subTables; /* 0x10 */
-    u8 subCount;  /* 0x14 */
-};
 
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {
@@ -273,7 +238,7 @@ void LoadFogObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
  * last halfword; the rotation is unpacked from two nibbles of param plus the
  * stored angle. */
 void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    DoorEntry *entry = (DoorEntry *)table.entries;
+    LVL_Overlay::DoorEntry *entry = (LVL_Overlay::DoorEntry *)table.entries;
     for (int objectIndex = 0; objectIndex < table.count; objectIndex++) {
         Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
         /* The ROM computes all three angles before it stores any. Direct
@@ -359,9 +324,9 @@ void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
         u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
         if (starFilter == 0 || starFilter == gCurrentStarId) {
-            void (*loader)(void *, s8, unsigned int) = sObjectLoaders[categoryAndStar & 0x1f];
+            ObjectLoader loader = sObjectLoaders[categoryAndStar & 0x1f];
             if (loader != 0)
-                loader(entry, areaID, param);
+                loader(*entry, areaID, param);
         }
         entry++;
     }
@@ -370,48 +335,37 @@ void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
 /* Loads the collision mesh, runs the object tables, then decides
  * whether the intro cutscene plays. LoadObjects is in this TU, so the
  * call is by name. */
-void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
-                                    dBgW_Kc &meshColliderRef) {
-    LVL_Overlay_Layout *overlay = (LVL_Overlay_Layout *)&overlayRef;
-    dBgW_Kc *meshCollider = (dBgW_Kc *)&meshColliderRef;
-    KCL_File *collisionFile;
-    LVL_Overlay_Layout::SubTbl *subTable;
-    signed char areaIndex;
-    int continuedKuppaScript;
-    int playIntro;
-
+void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlay, u32 entranceIndex,
+                                    dBgW_Kc &meshCollider) {
     PathPtr::SetNodeTable(0);
     PathPtr::SetPathTable(0, 0);
 
-    if (overlay->kclFileId != 0) {
-        collisionFile = static_cast<KCL_File *>(LoadFile(overlay->kclFileId));
+    if (overlay.kclFileId != 0) {
+        KCL_File *collisionFile = static_cast<KCL_File *>(LoadFile(overlay.kclFileId));
         dBgW_Kc::UpdateFileOffsets(*collisionFile);
-        ((dBgW_Kc *)meshCollider)->SetFile(collisionFile, *overlay->clps);
-        func_0202a850(((dBgW_Kc *)meshCollider)->GetOctreeOriginY(),
-                      ((dBgW_Kc *)meshCollider)->GetUnkOctreeY());
-        ((dBgW *)(meshCollider))->Enable((dActor_c *)(0));
+        meshCollider.SetFile(collisionFile, *overlay.clps);
+        func_0202a850(meshCollider.GetOctreeOriginY(), meshCollider.GetUnkOctreeY());
+        meshCollider.Enable(0);
     }
 
     data_ov002_0211118c = 0;
-    LoadObjects(*overlay->objTable, -1, entranceIndex);
+    LoadObjects(*overlay.objTable, -1, entranceIndex);
 
-    subTable = overlay->subTables;
-    for (areaIndex = 0; areaIndex < overlay->subCount; areaIndex++) {
-        if (subTable->table != 0)
-            LoadObjects(*subTable->table, areaIndex, entranceIndex);
-        subTable++;
+    LVL_Overlay::Area *area = overlay.areas;
+    for (s8 areaIndex = 0; areaIndex < overlay.areaCount; areaIndex++, area++) {
+        if (area->objTable != 0)
+            LoadObjects(*area->objTable, areaIndex, entranceIndex);
     }
 
-    continuedKuppaScript = KuppaScript::ContinueIfNecessary();
-
-    playIntro = IntroAllowed() && continuedKuppaScript == 0;
+    int continuedKuppaScript = KuppaScript::ContinueIfNecessary();
+    bool playIntro = IntroAllowed() && continuedKuppaScript == 0;
 
     if (!IsGameMode(2)) {
         dBase_c::Spawn(0x14f, gCurrentScene, 0, 0);
-        if (playIntro == 0)
+        if (!playIntro)
             dBase_c::Spawn(0x14e, gCurrentScene, 0, 0);
     }
 
-    if (playIntro != 0)
+    if (playIntro)
         KuppaScript::StartIntroCutscene();
 }
