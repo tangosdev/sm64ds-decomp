@@ -1,7 +1,7 @@
 //cpp
 /* leftovers:
  * - Source order stays highest address first. Reordering moves the run.
- * - data_ov002_0210cbb8 and the small loader tables stay data. This TU
+ * - sObjectLoaders and the small loader tables stay data. This TU
  *   claims .text only.
  * - DoorEntry and LVL_Overlay_Layout stay in this file. LVL_Overlay.h
  *   still has no data members, and adding a record type there reaches
@@ -53,10 +53,16 @@ extern u8 data_0209fc5c[];
 extern unsigned int data_02092134;
 extern u8 data_02092128[];
 
-extern s8 data_ov002_0210cb5c[];
-extern u8 data_ov002_0210cb70[];
-extern u16 data_ov002_0210cb88[];
-extern u16 data_ov002_0210cbf4[];
+/* The loaders' lookup tables, all ov002 .data. sEntranceWipes is the
+ * fader wipe per entrance kind (negative: none). sDoorVariants and
+ * sDoorActorIds are indexed by door type: the variant daDoor_c and
+ * daStarGate_c read from param bits 16..23, and the actor id (CH_ROOM,
+ * DOOR or STAR_GATE). sObjToActorIdTable maps a level object id to its
+ * actor id. */
+extern s8 sEntranceWipes[];
+extern u8 sDoorVariants[];
+extern u16 sDoorActorIds[];
+extern u16 sObjToActorIdTable[];
 
 void func_0202af80(void *entries, s32 count);
 void func_0202b044(void *entries, s32 count);
@@ -73,7 +79,7 @@ void *LoadFile(int handle);
 
 /* LoadObjects dispatches through this table. Its entries are the
  * category loaders. This text-only TU does not define it. */
-extern void (*data_ov002_0210cbb8[])(void *, s8, unsigned int);
+extern void (*sObjectLoaders[])(void *, s8, unsigned int);
 
 } /* extern "C" */
 
@@ -148,14 +154,14 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         } else {
             s16 deathTableID = data_ov002_0211118c;
             data_ov002_0211118c = (s16)(deathTableID + 1);
-            dActor_c::Spawn(data_ov002_0210cbf4[actorIndex], actorParam, position, 0, areaID,
+            dActor_c::Spawn(sObjToActorIdTable[actorIndex], actorParam, position, 0, areaID,
                             deathTableID);
         }
     }
 }
 
 /* One actor per standard object entry. Each StandardEntry is 0x10 bytes: raw id
- * index into data_ov002_0210cbf4, s16 position (shifted left by 12 into Fix12),
+ * index into sObjToActorIdTable, s16 position (shifted left by 12 into Fix12),
  * Vector3s rotation, u16 param. data_ov002_0211118c is a running death-table /
  * spawn-order counter incremented per spawn. The third parameter is part of the
  * shared loader signature and unused here. */
@@ -164,7 +170,7 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) 
     int objectIndex;
     for (objectIndex = 0; objectIndex < (int)table.count; objectIndex++, entry++) {
         Vector3 position;
-        u32 actorID = data_ov002_0210cbf4[entry->raw];
+        u32 actorID = sObjToActorIdTable[entry->raw];
         int z = entry->z << 12;
         int y = entry->y << 12;
         int x = entry->x << 12;
@@ -215,7 +221,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
                 savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
 
             daPly_c *player =
-                (daPly_c *)dActor_c::Spawn(data_ov002_0210cbf4[entry->raw], spawnParam, pos,
+                (daPly_c *)dActor_c::Spawn(sObjToActorIdTable[entry->raw], spawnParam, pos,
                                            (const Vector3_16 *)&entry->rot, (s8)(param & 7), -1);
 
             if (data_0209fc5c[playerIndex] == 0)
@@ -238,7 +244,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
 
     if (entranceKind >= 0x13)
         entranceKind = 0;
-    int wipeType = data_ov002_0210cb5c[entranceKind];
+    int wipeType = sEntranceWipes[entranceKind];
     if (wipeType < 0)
         return;
 
@@ -318,8 +324,8 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         rot.y = ry;
         rot.z = rz;
         int doorType = entry->type & 0x1f;
-        u32 actorID = data_ov002_0210cb88[doorType];
-        u32 spawnParam = entry->param | (data_ov002_0210cb70[doorType] << 16);
+        u32 actorID = sDoorActorIds[doorType];
+        u32 spawnParam = entry->param | (sDoorVariants[doorType] << 16);
         dActor_c::Spawn(actorID, spawnParam, pos, &rot, -1, -1);
         entry++;
     }
@@ -381,7 +387,7 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category
- * loader table at data_ov002_0210cbb8 -- whose fifteen entries are exactly the
+ * loader table at sObjectLoaders -- whose fifteen entries are exactly the
  * fifteen functions above.
  *
  * Count is a u16 at offset 0 (unlike ObjSubTable's u8 at offset 1). Each entry
@@ -395,7 +401,7 @@ void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
         u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
         if (starFilter == 0 || starFilter == gCurrentStarId) {
-            void (*loader)(void *, s8, unsigned int) = data_ov002_0210cbb8[categoryAndStar & 0x1f];
+            void (*loader)(void *, s8, unsigned int) = sObjectLoaders[categoryAndStar & 0x1f];
             if (loader != 0)
                 loader(entry, areaID, param);
         }

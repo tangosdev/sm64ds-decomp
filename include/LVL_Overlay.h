@@ -99,7 +99,7 @@ struct LVL_Overlay {
 
     /* 0x10 bytes. LoadStandardObjects (ov002:0x020fe8ac) and
        LoadEntranceObjects (ov002:0x020fe6c8). `raw' indexes
-       data_ov002_0210cbf4 for the actor id; positions are s16 world units
+       sObjToActorIdTable for the actor id; positions are s16 world units
        shifted left by 12 into Fix12 on spawn, same as every other loader. */
     struct StandardEntry {
         u16      raw;           /* 0x00 -- object id index */
