@@ -755,10 +755,8 @@ void dScEntry_c::EnterSoundSettings() {
 
     mSelectedIcon = 0;
 
-    mIcons[6].Place(5, 0,
-                        (s16)(SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 0x38);
-    mIcons[7].Place(6, 0,
-                        (s16)(SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 0x68);
+    mIcons[6].Place(5, 0, (s16)(SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 0x38);
+    mIcons[7].Place(6, 0, (s16)(SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 0x68);
     mIcons[8].Place(0xc, 0, 0x56, 0xa8);
     mIcons[2].Place(1, 0, 0xac, 0x38);
     mIcons[0].Place(3, 0, 0x64, 0x38);
