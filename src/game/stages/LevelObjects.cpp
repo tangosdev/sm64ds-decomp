@@ -135,27 +135,15 @@ static inline int IntroAllowed() {
 void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::SimpleEntry *entry = (LVL_Overlay::SimpleEntry *)table.entries;
     int objectIndex;
-    for (objectIndex = 0; objectIndex < (int)table.count; objectIndex++, entry++) {
-        Vector3 position;
-        int raw;
-        int actorParam;
-        int actorIndex;
-        int z = entry->z << 12;
-        int y = entry->y << 12;
-        int x = entry->x << 12;
-        position.x = x;
-        position.y = y;
-        position.z = z;
-        raw = entry->raw;
-        actorIndex = (u16)(raw & 0x1ff);
-        actorParam = raw >> 9;
+    for (objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
+        Vector3 position(entry->x << 12, entry->y << 12, entry->z << 12);
+        u16 actorIndex = entry->raw & 0x1ff;
+        int actorParam = entry->raw >> 9;
         if (actorIndex == 0x1ff) {
-            LoadMinimapChangeObject(areaID, y, actorParam & 0xf);
+            LoadMinimapChangeObject(areaID, position.y, actorParam & 0xf);
         } else {
-            s16 deathTableID = data_ov002_0211118c;
-            data_ov002_0211118c = (s16)(deathTableID + 1);
             dActor_c::Spawn(sObjToActorIdTable[actorIndex], actorParam, position, 0, areaID,
-                            deathTableID);
+                            data_ov002_0211118c++);
         }
     }
 }
@@ -168,19 +156,11 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
     int objectIndex;
-    for (objectIndex = 0; objectIndex < (int)table.count; objectIndex++, entry++) {
-        Vector3 position;
+    for (objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
         u32 actorID = sObjToActorIdTable[entry->raw];
-        int z = entry->z << 12;
-        int y = entry->y << 12;
-        int x = entry->x << 12;
-        position.x = x;
-        position.y = y;
-        position.z = z;
-        s16 deathTableID = data_ov002_0211118c;
-        data_ov002_0211118c = (s16)(deathTableID + 1);
+        Vector3 position(entry->x << 12, entry->y << 12, entry->z << 12);
         dActor_c::Spawn(actorID, entry->param, position, (const Vector3_16 *)&entry->rot, areaID,
-                        deathTableID);
+                        data_ov002_0211118c++);
     }
 }
 
@@ -199,42 +179,34 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
     u8 playerIndex = 0;
 
     while (playerIndex < gNumPlayers) {
-        {
-            Vector3 pos;
-            int vz = entry->z << 12;
-            int vy = entry->y << 12;
-            int vx = entry->x << 12;
-            pos.x = vx;
-            pos.y = vy;
-            pos.z = vz;
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
-            u16 param = entry->param;
-            entranceKind = (param >> 7) & 0xf;
+        u16 param = entry->param;
+        entranceKind = (param >> 7) & 0xf;
 
-            int savedCharacter = data_0209caa0.file.mCharacter;
-            int playerCharacter = data_02092128[playerIndex];
-            if (IsGameMode(1)) {
-                savedCharacter = 3;
-                playerCharacter = 3;
-            }
-            u32 spawnParam =
-                savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
-
-            daPly_c *player =
-                (daPly_c *)dActor_c::Spawn(sObjToActorIdTable[entry->raw], spawnParam, pos,
-                                           (const Vector3_16 *)&entry->rot, (s8)(param & 7), -1);
-
-            if (data_0209fc5c[playerIndex] == 0)
-                gPlayers[playerIndex] = 0;
-            else
-                gPlayers[playerIndex] = player;
-
-            if (playerIndex == gLocalPlayerId)
-                entranceId = (entry->param >> 3) & 0xf;
-
-            entry++;
-            playerIndex++;
+        int savedCharacter = data_0209caa0.file.mCharacter;
+        int playerCharacter = data_02092128[playerIndex];
+        if (IsGameMode(1)) {
+            savedCharacter = 3;
+            playerCharacter = 3;
         }
+        u32 spawnParam =
+            savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
+
+        daPly_c *player = (daPly_c *)dActor_c::Spawn(sObjToActorIdTable[entry->raw], spawnParam,
+                                                     pos, (const Vector3_16 *)&entry->rot,
+                                                     param & 7, -1);
+
+        if (data_0209fc5c[playerIndex] == 0)
+            gPlayers[playerIndex] = 0;
+        else
+            gPlayers[playerIndex] = player;
+
+        if (playerIndex == gLocalPlayerId)
+            entranceId = (entry->param >> 3) & 0xf;
+
+        entry++;
+        playerIndex++;
     }
 
     gCamera = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
@@ -275,23 +247,17 @@ void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 p
     LVL_Overlay::TeleportSourceEntry *entry = (LVL_Overlay::TeleportSourceEntry *)table.entries;
 
     s32 objectIndex = 0;
-    if ((int)table.count <= 0)
+    if ((int)table.count <= 0) /* signed ble; without the cast it is 3 words off */
         return;
 
     do {
-        Vector3 pos;
-        s32 vz = entry->z << 12;
-        s32 vy = entry->y << 12;
-        s32 vx = entry->x << 12;
-        pos.x = vx;
-        pos.y = vy;
-        pos.z = vz;
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
-        dActor_c::Spawn(0x15b, entry->param, pos, (const Vector3_16 *)0, 0, -1);
+        dActor_c::Spawn(0x15b, entry->param, pos, 0, 0, -1);
 
         objectIndex++;
         entry++;
-    } while (objectIndex < (int)table.count);
+    } while (objectIndex < table.count);
 }
 
 void LoadTeleportDestObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
@@ -309,13 +275,11 @@ void LoadFogObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     DoorEntry *entry = (DoorEntry *)table.entries;
     for (int objectIndex = 0; objectIndex < table.count; objectIndex++) {
-        Vector3 pos;
-        int z = entry->z << 12;
-        int y = entry->y << 12;
-        int x = entry->x << 12;
-        pos.x = x;
-        pos.y = y;
-        pos.z = z;
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
+        /* The ROM computes all three angles before it stores any. Direct
+           member stores re-read param (+4 bytes), as does an aggregate
+           initializer; one u16 copy of param still stores x before loading
+           the angle (11 words off). */
         Vector3_16 rot;
         s16 rx = (entry->param >> 8) & 0xf;
         s16 ry = entry->angle;
@@ -342,14 +306,8 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ExitEntry *entry = (LVL_Overlay::ExitEntry *)table.entries;
 
-    for (int objectIndex = 0; objectIndex < (int)table.count; objectIndex++) {
-        Vector3 pos;
-        s32 pz = entry->z << 12;
-        s32 py = entry->y << 12;
-        s32 px = entry->x << 12;
-        pos.x = px;
-        pos.y = py;
-        pos.z = pz;
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++) {
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
         Vector3s rot;
         rot.x = -entry->rotX;
@@ -397,7 +355,7 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
 void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ObjSubTable *entry = (LVL_Overlay::ObjSubTable *)table.entries;
     int tableIndex;
-    for (tableIndex = 0; tableIndex < (int)table.count; tableIndex++) {
+    for (tableIndex = 0; tableIndex < table.count; tableIndex++) {
         u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
         if (starFilter == 0 || starFilter == gCurrentStarId) {
