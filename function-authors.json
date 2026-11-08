@@ -7831,7 +7831,7 @@
     },
     "arm9:0x0204af38": {
       "author": "tangosdev",
-      "name": "func_0204af38"
+      "name": "SPLUtil_SetTexture_Stub"
     },
     "arm9:0x0204af3c": {
       "author": "tangosdev",
@@ -7847,11 +7847,11 @@
     },
     "arm9:0x0204b460": {
       "author": "andrewboudreau",
-      "name": "func_0204b460"
+      "name": "SPLDraw_Child_DirectionalBillboard"
     },
     "arm9:0x0204b81c": {
       "author": "lunavyqo",
-      "name": "func_0204b81c"
+      "name": "SPLDraw_DirectionalBillboard"
     },
     "arm9:0x0204bbd8": {
       "author": "tangosdev",

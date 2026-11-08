@@ -210,10 +210,10 @@
       ]
     },
     "Copy36Bytes": {
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 int *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 int *"
       ]
     },
@@ -314,12 +314,12 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
         "param:#3 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
         "param:#3 Vec3 *"
@@ -950,11 +950,11 @@
         "param:#2 const Matrix3x3 *",
         "param:#3 Vector3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 int *",
         "param:#2 int *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 int *",
         "param:#2 int *"
       ]
@@ -1036,11 +1036,11 @@
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
@@ -15460,11 +15460,11 @@
       ]
     },
     "func_0204c24c": {
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 unsigned char",
         "param:#2 unsigned char"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 unsigned char",
         "param:#2 unsigned char"
       ],
