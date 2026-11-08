@@ -304,8 +304,7 @@ int daDossy_c::InitResources()
     return 1;
 }
 
-extern "C" int func_ov065_02119210(daDossyCap_c *cap)
-{
+extern "C" int func_ov065_02119210(daDossyCap_c *cap) {
     int flags = cap->mCapIcon.mFlags << 30;
     return ((unsigned)flags >> 31) != 0;
 }
