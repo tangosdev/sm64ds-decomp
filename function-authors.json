@@ -29851,11 +29851,11 @@
     },
     "ov007:0x020cc0cc": {
       "author": "tangosdev",
-      "name": "func_ov007_020cc0cc"
+      "name": "DSMT_GetFileBuffer"
     },
     "ov007:0x020cc0e4": {
       "author": "tangosdev",
-      "name": "func_ov007_020cc0e4"
+      "name": "DSMT_SetFileBuffers"
     },
     "ov007:0x020cc0f4": {
       "author": "tangosdev",
@@ -29867,11 +29867,11 @@
     },
     "ov007:0x020cc118": {
       "author": "tangosdev",
-      "name": "func_ov007_020cc118"
+      "name": "DSMT_SetPendingMusic"
     },
     "ov007:0x020cc168": {
       "author": "tangosdev",
-      "name": "func_ov007_020cc168"
+      "name": "DSMT_UpdateBootArgs"
     },
     "ov007:0x020cc2ac": {
       "author": "tangosdev",
@@ -29895,27 +29895,27 @@
     },
     "ov007:0x020cc600": {
       "author": "tangosdev",
-      "name": "func_ov007_020cc600"
+      "name": "DSMT_MenuCallback"
     },
     "ov007:0x020cca68": {
       "author": "tangosdev",
-      "name": "func_ov007_020cca68"
+      "name": "DSMT_MenuReleaseFile"
     },
     "ov007:0x020cca74": {
       "author": "tangosdev",
-      "name": "func_ov007_020cca74"
+      "name": "DSMT_MenuLoadFile"
     },
     "ov007:0x020cca80": {
       "author": "tangosdev",
-      "name": "func_ov007_020cca80"
+      "name": "DSMT_MenuMaxAllocSize"
     },
     "ov007:0x020cca98": {
       "author": "ruspecial",
-      "name": "func_ov007_020cca98"
+      "name": "DSMT_MenuFree"
     },
     "ov007:0x020ccab4": {
       "author": "ruspecial",
-      "name": "func_ov007_020ccab4"
+      "name": "DSMT_MenuAlloc"
     },
     "ov007:0x020ccad0": {
       "author": "ruspecial",

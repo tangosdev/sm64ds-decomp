@@ -75,7 +75,7 @@ void func_ov007_020af59c(void) {
             int r;
             if (func_ov007_020b79c8() == 0)
                 return;
-            /* ids 8..10: the owner erases save file 0..2 (func_ov007_020cc600) */
+            /* ids 8..10: the owner erases save file 0..2 (DSMT_MenuCallback) */
             r = WORK->callback(WORK->selectedSlot + 8);
             WORK->selectedSlot = -1;
             switch (r) {

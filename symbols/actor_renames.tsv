@@ -844,6 +844,16 @@ ov006	0x0213ebd0	data_ov006_0213ebd0	MgBingoBallSlotsShot_SpawnInfo	spawninfo
 ov006	0x0213ebd0	MgBingoBallSlotsShot_SpawnInfo	g_profile_MG_SMARTBALL	reconstructed profile global; literal ROM ID MG_SMARTBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213fbc8	data_ov006_0213fbc8	MgTrampolineTerror_SpawnInfo	spawninfo
 ov006	0x0213fbc8	MgTrampolineTerror_SpawnInfo	g_profile_MG_TRAMPOLINE2	reconstructed profile global; literal ROM ID MG_TRAMPOLINE2+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov007	0x020cc0cc	func_ov007_020cc0cc	DSMT_GetFileBuffer	coined from the body: &data_0209b33c[slot], save file slot's 0x44-byte buffer; DSMT prefix from the ROM profile ID (g_profile_DSMT); C linkage kept
+ov007	0x020cc0e4	func_ov007_020cc0e4	DSMT_SetFileBuffers	coined from the body: stores the three-file buffer pointer data_0209b33c that DSMT_GetFileBuffer indexes; C linkage kept
+ov007	0x020cc118	func_ov007_020cc118	DSMT_SetPendingMusic	coined from the body: arms the pending music ID data_ov007_02103260 and its delay, which dScDSMT_c::Behavior commits; declines while one is pending; C linkage kept
+ov007	0x020cc168	func_ov007_020cc168	DSMT_UpdateBootArgs	coined from the body: writes Ov007BootArgs (include/Ov007Settings.h) sound mode, backlight and one save file's summary; C linkage kept
+ov007	0x020cc600	func_ov007_020cc600	DSMT_MenuCallback	in-tree field name: Ov007MenuHooks::callback / Ov007Work::callback; ROM hook table data_ov007_02103290 word 5 points here; C linkage kept
+ov007	0x020cca68	func_ov007_020cca68	DSMT_MenuReleaseFile	in-tree field name: Ov007MenuHooks::fileRelease; ROM hook table data_ov007_02103290 word 4; body Deallocate; C linkage kept
+ov007	0x020cca74	func_ov007_020cca74	DSMT_MenuLoadFile	in-tree field name: Ov007MenuHooks::fileLoad; ROM hook table data_ov007_02103290 word 3; body LoadFile; C linkage kept
+ov007	0x020cca80	func_ov007_020cca80	DSMT_MenuMaxAllocSize	Ov007MenuHooks::query (word 2 of data_ov007_02103290); name coined from the body, Heap::MaxAllocationUnitSize on the game heap; C linkage kept
+ov007	0x020cca98	func_ov007_020cca98	DSMT_MenuFree	in-tree field name: Ov007MenuHooks::free; ROM hook table data_ov007_02103290 word 1; body Heap::_Deallocate; C linkage kept
+ov007	0x020ccab4	func_ov007_020ccab4	DSMT_MenuAlloc	in-tree field name: Ov007MenuHooks::alloc; ROM hook table data_ov007_02103290 word 0; body Heap::Allocate; C linkage kept
 ov007	0x020ccad0	func_ov007_020ccad0	dScDSMT_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov007	0x02103264	data_ov007_02103264	g_profile_DSMT	reconstructed profile global; literal ROM ID DSMT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213cb64	MgBounceAndPounce_SpawnInfo	g_profile_MG_JUMP	reconstructed profile global; literal ROM ID MG_JUMP+registry role+later EAD lineage; exact SM64DS spelling not preserved
