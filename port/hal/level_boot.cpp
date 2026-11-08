@@ -4881,7 +4881,6 @@ static void port_vs_extra_start(int bx, int by, int bz, int slot, int *out)
     out[1] =  by << 12;
     out[2] = (bz << 12) + r * (int)kSin[idx];
 }
-extern "C" int SublevelToLevel(int);   /* the castle-family test of Player::InitResources */
 extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
 {
     struct Entry { unsigned short raw; short x, y, z; short rx, ry, rz;
@@ -5065,24 +5064,6 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
             data_02092144[i] = 0x880;
             InitControllerMode(i, data_0209caa0[0x42]);
         }
-        /* AND THE PER-PLAYER TABLE, for the same two-bit reason. On a castle
-           level Player::InitResources (src/game/player/Player.cpp:27026-27034)
-           sees the look it was packed with (f1, data_02092128[i]) disagree
-           with its character (f2) and writes data_02092128[mPlayerNo] back
-           from the character, so the next course builds the body with the two
-           agreeing. It made that write while mPlayerNo was still wire_slot,
-           so it landed on slot 1..3 and slot i's own entry was never set:
-           past the fourth body the table stayed at the zero it was born with
-           (Mario), and on every console that is not Mario each such body came
-           up in the next course half Mario (its look) and half me (its
-           character). The cartridge's cap rule then threw away an enemy
-           wearing my cap whenever one of those bodies was the nearest at
-           load. The write is made again here into the true slot, under the
-           ROM's own condition. The stray write into wire_slot is harmless:
-           every body's character is the same save byte, which that slot's
-           own spawn already wrote there. */
-        if (a && data_0209f2d8 != 1 && SublevelToLevel(data_0209f2f8) == 0x1d && f1 != f2)
-            data_02092128[i] = (unsigned char)f2;
         std::fprintf(stderr,
                      "[vs] port-supplied start for slot %d: actor=%p "
                      "char=%u pos=(%d,%d,%d) wire_slot=%u mPlayerNo=%d (the "
