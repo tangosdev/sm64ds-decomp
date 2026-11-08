@@ -1,7 +1,7 @@
 //cpp
 #include "GX.h"
 
-extern "C" void func_ov007_020bd5a8(void)
+extern "C" void MenuGfx_InitMainEngine(void)
 {
     GX::SetBankForTex(3);
     GX::SetBankForTexPltt(0x20);

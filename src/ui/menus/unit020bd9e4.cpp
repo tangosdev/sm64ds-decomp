@@ -9,15 +9,15 @@
  * What the code does. The module owns 0x39 sound handles,
  * data_ov007_02104bbc[0..0x38], one per entry of the sound-id table
  * data_ov007_02103134, and four request flags, data_ov007_02104bb8[0..3],
- * for the looping sounds on handles 0x35..0x38. func_ov007_020be00c (called
+ * for the looping sounds on handles 0x35..0x38. MenuSound_Create (called
  * from the init dispatcher, func_ov007_020b7138) takes the handles from the
  * "sound" heap and the flags from the "sound request" heap;
- * func_ov007_020bdf60 (called from func_ov007_020b6f4c, which tears every
+ * MenuSound_Destroy (called from func_ov007_020b6f4c, which tears every
  * menu module down) stops and releases them. func_ov007_020be098 plays one
  * sound on its own handle and func_ov007_020bdeb0 is the out-of-module
  * entry to it: a tail-call veneer the rest of the menu calls. A looping
  * sound is kept alive by func_ov007_020bde2c, which starts it if it is not
- * playing and sets its request flag; func_ov007_020bdebc (called from
+ * playing and sets its request flag; MenuSound_UpdateLoops (called from
  * func_ov007_020b7090) stops every loop that was not requested since its
  * last run and clears the flags. func_ov007_020bdbcc, 020bda8c and
  * 020bda38 keep loops 0x35, 0x36 and 0x37 alive and set their parameters
@@ -26,7 +26,7 @@
  *
  * Edges: every function here touches this module's bss block
  * 0x02104ba4..0x02104bc0 or calls one that does, and nothing outside the
- * range touches it. The previous function, func_ov007_020bd960, is one of
+ * range touches it. The previous function, MenuGfx_ResetVram, is one of
  * the init dispatcher's own helpers and touches none of it; the next one,
  * func_ov007_020be0dc, belongs to the module whose bss block starts at
  * 0x02104bc0.
@@ -68,7 +68,7 @@ int func_ov007_020be098(int idx) {
     return func_02051f1c(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
 }
 
-void func_ov007_020be00c(void) {
+void MenuSound_Create(void) {
     int i;
     int j;
 
@@ -82,7 +82,7 @@ void func_ov007_020be00c(void) {
         data_ov007_02104bb8[j] = 0;
 }
 
-void func_ov007_020bdf60(void) {
+void MenuSound_Destroy(void) {
     int i;
     for (i = 0; i < 0x39; i++) {
         if (data_ov007_02104bbc[i] != 0) {
@@ -100,7 +100,7 @@ void func_ov007_020bdf60(void) {
     }
 }
 
-int *func_ov007_020bdebc(void) {
+int *MenuSound_UpdateLoops(void) {
     int *arr;
     int i;
     int sound;

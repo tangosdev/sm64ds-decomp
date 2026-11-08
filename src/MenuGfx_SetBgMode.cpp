@@ -13,7 +13,7 @@ extern void func_02054430(int a);
 #define DISPCNT (*(volatile u32 *)0x4000000)
 #define DISPCNT_SUB (*(volatile u32 *)0x4001000)
 
-void func_ov007_020bd648(int mode) {
+void MenuGfx_SetBgMode(int mode) {
     switch (mode) {
     case 1:
         GX::ResetBankForBG();

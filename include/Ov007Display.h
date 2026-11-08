@@ -38,8 +38,8 @@ typedef struct Ov007CharRecord {
  * tables, and func_ov007_020b6d40 fills them. Nothing in ov007 sizes or
  * fills transitions or oamNodes; func_ov007_020b7594 zeroes them. Their
  * record types are inferred from func_ov007_020b73b4's frees. It frees
- * transitions with func_ov007_020c8b04, the free func_ov007_020bf690 uses
- * on func_ov007_020c8b10's record. It frees oamNodes with
+ * transitions with Transition_Destroy, the free ScreenFade_Destroy uses
+ * on Transition_Create's record. It frees oamNodes with
  * func_ov007_020c1180, the OAM node free func_ov007_020ade14 also uses. */
 typedef struct Ov007Display {
     /* 0x00/0x04: the OAM node lists (func_ov007_020c1068) drawn into the
@@ -55,7 +55,7 @@ typedef struct Ov007Display {
     void *oamMain;
     void *oamSub;
     int transitionCount;           /* 0x18 */
-    Ov007Transition **transitions; /* 0x1c: func_ov007_020c8b10 records */
+    Ov007Transition **transitions; /* 0x1c: Transition_Create records */
     int characterCount;            /* 0x20 */
     Ov007CharRecord **characters;  /* 0x24: func_ov007_020c99d8 records */
     int paletteCount;              /* 0x28 */

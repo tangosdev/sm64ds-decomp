@@ -6,19 +6,19 @@
  * vtable, so no class name is claimed and the file keeps the unit<addr>
  * name.
  *
- * What the code does. The fade is one 0x14-byte record,
- * data_ov007_02104bd8, holding a screen transition (func_ov007_020c8b10's
+ * What the code does. The fade is one 0x14-byte record, sScreenFade
+ * (bss 0x02104bd8), holding a screen transition (Transition_Create's
  * Ov007Transition) and a full-screen model (menu file 0x24 built by
- * func_ov007_020bc6d4). func_ov007_020bfcec (called from the init
- * dispatcher, func_ov007_020b7138) builds both; func_ov007_020bfc54 (called
+ * func_ov007_020bc6d4). ScreenFade_Create (called from the init
+ * dispatcher, func_ov007_020b7138) builds both; ScreenFade_Destroy (called
  * from func_ov007_020b6f4c, which tears every menu module down) frees them.
  * RequestScreenFade, which the rest of the menu calls, queues a fade kind
- * with its flags and end callback; func_ov007_020bf690 (called from
- * func_ov007_020b6eb4) starts a queued fade through func_ov007_020bf790,
+ * with its flags and end callback; ScreenFade_Update (called from
+ * func_ov007_020b6eb4) starts a queued fade through ScreenFade_Start,
  * which loads the kind's effect, curve and step into the transition, then
  * runs the transition one frame and, while flag 1 is set, scales the model
  * by its progress. func_ov007_020bfbdc places the model in front of a
- * camera and func_ov007_020bfaf0 sizes it to fill that camera's view and
+ * camera and ScreenFade_Draw sizes it to fill that camera's view and
  * renders it while it is visible.
  *
  * Edges: the bss word 0x02104bd8 is referenced by these functions and
@@ -31,7 +31,10 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The ScreenFade_* names are coined from the bodies, after the module's
+ * RequestScreenFade entry; ov007 records no names. All keep C linkage.
+ * func_ov007_020bfbdc keeps its address name while a file another branch
+ * holds calls it.
  */
 #include "types.h"
 #include "common.h"
@@ -47,20 +50,20 @@
 
 extern "C" {
 
-/* The 0x14-byte screen-fade record at data_ov007_02104bd8. */
+/* The 0x14-byte screen-fade record sScreenFade points at. */
 typedef struct Ov007Fade {
     Ov007Transition *transition; /* 0x00 */
     Ov007Model *model;           /* 0x04 */
     int flags;                   /* 0x08: RequestScreenFade's second argument */
     void (*onEnd)(void);         /* 0x0c: RequestScreenFade's third */
-    /* 0x10: RequestScreenFade's first, the fade kind; func_ov007_020bf690
+    /* 0x10: RequestScreenFade's first, the fade kind; ScreenFade_Update
      * starts it and clears it */
     int request;
 } Ov007Fade;
 
 typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 
-extern Ov007Fade *data_ov007_02104bd8;
+extern Ov007Fade *sScreenFade;
 
 extern void InitialiseVramGlobals(void);
 extern int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
@@ -75,46 +78,44 @@ extern Ov007Model *func_ov007_020bc6d4(void *file, int flags);
 extern int func_ov007_020bdeb0(int a);
 extern void func_ov007_020c3d1c(void *self);
 extern void *func_ov007_020c3df4(const char *name, int size);
-extern void func_ov007_020c8498(Ov007Transition *tr);
-extern void func_ov007_020c8688(Ov007Transition *tr, int v);
-extern void func_ov007_020c86a8(Ov007Transition *tr, int v);
-extern void func_ov007_020c8b04(void *p);
-extern Ov007Transition *func_ov007_020c8b10(void);
+extern void Transition_Update(Ov007Transition *tr);
+extern void Transition_StartBackward(Ov007Transition *tr, int v);
+extern void Transition_StartForward(Ov007Transition *tr, int v);
+extern void Transition_Destroy(void *p);
+extern Ov007Transition *Transition_Create(void);
 
-#define FADE data_ov007_02104bd8
-
-void func_ov007_020bfcec(void) {
+void ScreenFade_Create(void) {
     void *file;
 
-    data_ov007_02104bd8 = (Ov007Fade *)func_ov007_020c3df4(0, sizeof(Ov007Fade));
-    FADE->transition = func_ov007_020c8b10();
+    sScreenFade = (Ov007Fade *)func_ov007_020c3df4(0, sizeof(Ov007Fade));
+    sScreenFade->transition = Transition_Create();
     InitialiseVramGlobals();
     file = func_ov007_020b3f20(0x24);
-    FADE->model = func_ov007_020bc6d4(file, 0);
-    FADE->model->visible = 0;
-    FADE->request = 0;
-    FADE->flags = 0;
-    FADE->onEnd = 0;
+    sScreenFade->model = func_ov007_020bc6d4(file, 0);
+    sScreenFade->model->visible = 0;
+    sScreenFade->request = 0;
+    sScreenFade->flags = 0;
+    sScreenFade->onEnd = 0;
 }
 
-void func_ov007_020bfc54(void) {
+void ScreenFade_Destroy(void) {
     func_ov007_020b3edc(0x24);
 
-    if (FADE->transition != 0) {
-        func_ov007_020c8b04(FADE->transition);
-        FADE->transition = 0;
+    if (sScreenFade->transition != 0) {
+        Transition_Destroy(sScreenFade->transition);
+        sScreenFade->transition = 0;
     }
 
-    if (FADE->model != 0) {
-        func_ov007_020bc53c(FADE->model);
-        FADE->model = 0;
+    if (sScreenFade->model != 0) {
+        func_ov007_020bc53c(sScreenFade->model);
+        sScreenFade->model = 0;
     }
 
-    if (data_ov007_02104bd8 == 0)
+    if (sScreenFade == 0)
         return;
 
-    func_ov007_020c3d1c(data_ov007_02104bd8);
-    data_ov007_02104bd8 = 0;
+    func_ov007_020c3d1c(sScreenFade);
+    sScreenFade = 0;
 }
 
 /* Turns the model to face the screen and puts it 0x1064 in front of the
@@ -122,7 +123,7 @@ void func_ov007_020bfc54(void) {
  * camera's view matrix. */
 void func_ov007_020bfbdc(void *self) {
     Ov007Camera *cam = (Ov007Camera *)self;
-    Ov007Model *model = FADE->model;
+    Ov007Model *model = sScreenFade->model;
     Vector3 vec;
     Matrix4x3 mat;
 
@@ -140,8 +141,8 @@ void func_ov007_020bfbdc(void *self) {
 /* While the model is visible, scales it in x and z to fill the camera's view
  * at its fovy, then updates it under the camera's view matrix and renders
  * it. */
-void func_ov007_020bfaf0(Ov007Camera *cam) {
-    Ov007Model *model = FADE->model;
+void ScreenFade_Draw(Ov007Camera *cam) {
+    Ov007Model *model = sScreenFade->model;
     if (model->visible == 0)
         return;
     int fovyIdx = cam->fovy >> 4;
@@ -156,21 +157,21 @@ void func_ov007_020bfaf0(Ov007Camera *cam) {
     func_ov007_020bbff0(model);
 }
 
-/* Queues fade kind `kind` (1..9, see func_ov007_020bf790) with flags and
- * the end callback onEnd (0 for none); func_ov007_020bf690 starts it on its
+/* Queues fade kind `kind` (1..9, see ScreenFade_Start) with flags and
+ * the end callback onEnd (0 for none); ScreenFade_Update starts it on its
  * next run. */
 void RequestScreenFade(int kind, int flags, void (*onEnd)(void)) {
-    FADE->request = kind;
-    FADE->flags = flags;
-    FADE->onEnd = onEnd;
+    sScreenFade->request = kind;
+    sScreenFade->flags = flags;
+    sScreenFade->onEnd = onEnd;
 }
 
 /* Starts the queued fade: loads kind `request` (1..9) into the transition,
  * shows or hides the model by flag 1 (with sound 0x30 / 0x31 by flag 2),
  * and runs the transition forwards (flag 2) or backwards on the screens the
  * flags pick. */
-void func_ov007_020bf790(void) {
-    Ov007Fade *fade = FADE;
+void ScreenFade_Start(void) {
+    Ov007Fade *fade = sScreenFade;
     Ov007Transition *tr = fade->transition;
     int flags = fade->flags;
     int kind = fade->request;
@@ -267,7 +268,7 @@ void func_ov007_020bf790(void) {
 
     if (flags & 1) {
         int color;
-        ModelComponents *parts = FADE->model->model;
+        ModelComponents *parts = sScreenFade->model->model;
         if (kind == 1) {
             color = 0x7FFF;
         } else {
@@ -276,7 +277,7 @@ void func_ov007_020bf790(void) {
         color = color | (color << 0x10);
         parts->materials->diffuseAmbient = color;
         parts->materials->specularEmission = color;
-        FADE->model->visible = 1;
+        sScreenFade->model->visible = 1;
         if (flags & 2) {
             func_ov007_020bdeb0(0x30);
         } else {
@@ -288,7 +289,7 @@ void func_ov007_020bf790(void) {
         } else if (!(flags & 8)) {
             screens |= 1;
         }
-        FADE->model->visible = 0;
+        sScreenFade->model->visible = 0;
     }
 
     if (flags & 0x10) {
@@ -296,29 +297,29 @@ void func_ov007_020bf790(void) {
     }
 
     if (flags & 2) {
-        func_ov007_020c86a8(tr, screens);
+        Transition_StartForward(tr, screens);
     } else {
-        func_ov007_020c8688(tr, screens);
+        Transition_StartBackward(tr, screens);
     }
 
-    FADE->transition->onEnd = FADE->onEnd;
+    sScreenFade->transition->onEnd = sScreenFade->onEnd;
 }
 
 /* One frame: starts a queued fade, runs the transition, and while flag 1 is
  * set scales the model in x and z by the transition's progress; when the
  * transition holds at its end it hides the model, clears flag 1 and, for a
  * reversed run, restores full brightness-down. */
-void func_ov007_020bf690(void) {
-    Ov007Fade *fade = FADE;
+void ScreenFade_Update(void) {
+    Ov007Fade *fade = sScreenFade;
     Ov007Transition *tr = fade->transition;
     int flags = fade->flags;
     int started = 0;
     if (fade->request != 0) {
-        func_ov007_020bf790();
-        FADE->request = 0;
+        ScreenFade_Start();
+        sScreenFade->request = 0;
         started = 1;
     }
-    func_ov007_020c8498(tr);
+    Transition_Update(tr);
     if ((flags & 1) == 0)
         return;
     int progress = tr->t;
@@ -327,14 +328,14 @@ void func_ov007_020bf690(void) {
     }
     if (tr->reversed != 0)
         progress = 0x1000 - progress;
-    FADE->model->scale.z = progress;
-    FADE->model->scale.x = FADE->model->scale.z;
+    sScreenFade->model->scale.z = progress;
+    sScreenFade->model->scale.x = sScreenFade->model->scale.z;
     if (tr->state != 3)
         return;
-    FADE->model->visible = 0;
+    sScreenFade->model->visible = 0;
     {
-        const Ov007Fade *cur = FADE;
-        FADE->flags = cur->flags & ~1;
+        const Ov007Fade *cur = sScreenFade;
+        sScreenFade->flags = cur->flags & ~1;
     }
     if (tr->reversed == 0)
         return;

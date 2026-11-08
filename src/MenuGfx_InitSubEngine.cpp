@@ -4,7 +4,7 @@
 namespace GXS {
 void SetGraphicsMode(int a);
 }
-extern "C" void func_ov007_020bd500(void)
+extern "C" void MenuGfx_InitSubEngine(void)
 {
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(0x100);

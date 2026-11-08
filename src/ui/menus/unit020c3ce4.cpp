@@ -8,13 +8,14 @@
  *
  * What the code does. The menu does not call a heap directly: the init
  * dispatcher, func_ov007_020b7138, installs three hooks through
- * func_ov007_020c3e1c, MenuMem_SetFreeHook and MenuMem_SetAllocHook, and
- * every module allocates
- * through func_ov007_020c3df4 (the alloc hook, data_ov007_02103258), frees
- * through func_ov007_020c3d1c (the free hook, data_ov007_02103254) and asks
- * func_ov007_020c3ce4 for the third hook's answer (data_ov007_02104c14,
- * 0 while it is unset). MenuMem_AllocClear allocates and zero-fills,
- * picking the store routine by the size's low bits. func_ov007_020c3df4's
+ * MenuMem_SetMaxAllocSizeHook, MenuMem_SetFreeHook and
+ * MenuMem_SetAllocHook, and every module allocates through
+ * func_ov007_020c3df4 (the alloc hook, data_ov007_02103258), frees through
+ * func_ov007_020c3d1c (the free hook, data_ov007_02103254) and asks
+ * MenuMem_GetMaxAllocSize for the largest block the caller's heap can give
+ * (the third hook, data_ov007_02104c14; 0 while it is unset).
+ * MenuMem_AllocClear allocates and zero-fills, picking the store routine by
+ * the size's low bits. func_ov007_020c3df4's
  * first argument (the callers pass a heap-name string) is not forwarded.
  * The two .data hook words start out pointing at this unit's own defaults,
  * MenuMem_DefaultFree and MenuMem_DefaultAlloc, which go to the OS heap:
@@ -36,8 +37,10 @@
  * The MenuMem_* names are coined from the bodies and their callers; ov007
  * records no names. All keep C linkage. func_ov007_020c3df4 (alloc) and
  * func_ov007_020c3d1c (free) keep address names while files another
- * branch holds call them. func_ov007_020c3e1c and func_ov007_020c3ce4
- * keep theirs because nothing shows what the third hook answers.
+ * branch holds call them. The third hook is word 2 of dScDSMT_c's hook
+ * table data_ov007_02103290 (0x020cca80 in the ROM image), whose body is
+ * Heap::MaxAllocationUnitSize on the game heap; that names
+ * MenuMem_SetMaxAllocSizeHook and MenuMem_GetMaxAllocSize.
  */
 
 extern "C" {
@@ -77,7 +80,7 @@ void MenuMem_SetFreeHook(int v) {
     data_ov007_02103254 = reinterpret_cast<Ov007FreeHook>(v);
 }
 
-void func_ov007_020c3e1c(int v) {
+void MenuMem_SetMaxAllocSizeHook(int v) {
     data_ov007_02104c14 = reinterpret_cast<Ov007QueryHook>(v);
 }
 
@@ -120,7 +123,7 @@ void func_ov007_020c3d1c(void *self) {
     data_ov007_02103254(self);
 }
 
-int func_ov007_020c3ce4(void) {
+int MenuMem_GetMaxAllocSize(void) {
     if (data_ov007_02104c14 == 0)
         return 0;
     return data_ov007_02104c14();

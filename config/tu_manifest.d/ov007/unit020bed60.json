@@ -9,7 +9,7 @@
     "contiguous run 0x020bed60..0x020bf690, 7 functions, all byte-matched from the one unit source. A sub-range of build/tu_map.json's unattributed ov007 unit 0x020b72a0..0x020cc028 (397 functions), which the map cannot cut: no ROM RTTI, vtable or static initializer falls in it.",
     "data window: the bss word 0x02104bd4 (the 0x30-byte mesh scene) is referenced by these functions and nothing else in the overlay; func_ov007_020bf630 touches no data and is called only by func_ov007_020bed60.",
     "module shape: func_ov007_020bf428 builds the scene, func_ov007_020bf304 tears it down and func_ov007_020beeb0 runs it each frame; func_ov007_020bf428 calls func_ov007_020beeb0 and func_ov007_020bf57c, func_ov007_020beeb0 calls func_ov007_020bed60 and func_ov007_020bf57c.",
-    "start edge: func_ov007_020beb80 references no ov007 data and is called only from func_ov007_020be9ac. End edge: func_ov007_020bf690 begins the screen-fade module (bss 0x02104bd8)."
+    "start edge: func_ov007_020beb80 references no ov007 data and is called only from func_ov007_020be9ac. End edge: ScreenFade_Update begins the screen-fade module (bss 0x02104bd8)."
   ],
   "sections": [
     {
