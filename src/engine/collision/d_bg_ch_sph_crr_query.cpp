@@ -11,7 +11,7 @@
  *
  * The query scans keep the spellings that match: int pos rather than a
  * pointer local, the zero/one locals, and data_020a0c80 by its address
- * name. func_02037de8 copies the five-word surface with a u64 so the
+ * name. SurfaceInfo::CopyFrom copies the five-word surface with a u64 so the
  * loads and stores interleave.
  */
 
@@ -28,10 +28,7 @@
 #include "math/CalcLib.h"
 
 extern "C" {
-void func_02037e9c(CLPS *clps);
-void func_02037de8(SurfaceInfo *dst, const SurfaceInfo *src);
 int dBgS_ChkPolySafe(void *arg);
-void func_02036acc(dBgCh_Actr *self);
 extern CLPS data_020a0c78;
 }
 
@@ -52,29 +49,30 @@ int dBgCh_Gnd::DetectClsn()
     }
     int flag = 1;
     int one = 1;
-    Vector3 pos;
+    Vector3 ownerPos;
     for (int i = 1; i < 24; i++) {
         dBgW *obj = data_020a0c80[i];
         if (obj == 0) continue;
-        dActor_c *p = obj->GetActor();
-        if (IsOwnedBy(p))
+        dActor_c *owner = obj->GetActor();
+        if (IsOwnedBy(owner))
             continue;
-        if (p != 0 && ((p->mFlags & 2) ? flag : 0) != 0) {
-            const char *position = (const char *)p + 0x5c;
-            pos.x = *(const s32 *)(position + 0);
-            pos.y = *(const s32 *)(position + 4);
-            pos.z = *(const s32 *)(position + 8);
-            int thr = obj->GetClipRadius();
-            if (thr == -0x1000) {
-                int h8 = p->mClipRadius;
-                pos.y = pos.y + p->mClipOffsetY;
-                thr = h8 << 3;
+        if (owner != 0 && ((owner->mFlags & 2) ? flag : 0) != 0) {
+            const char *position = (const char *)owner + 0x5c;
+            ownerPos.x = *(const s32 *)(position + 0);
+            ownerPos.y = *(const s32 *)(position + 4);
+            ownerPos.z = *(const s32 *)(position + 8);
+            int clipDist = obj->GetClipRadius();
+            if (clipDist == -0x1000) {
+                int clipRadius = owner->mClipRadius;
+                ownerPos.y = ownerPos.y + owner->mClipOffsetY;
+                clipDist = clipRadius << 3;
             } else {
-                pos.y = pos.y + obj->GetClipOffsetY();
+                ownerPos.y = ownerPos.y + obj->GetClipOffsetY();
             }
             Vector3 *selfpos = (Vector3 *)((int)&this->pos);
-            if (selfpos->y < pos.y - thr) continue;
-            if (Vec3_HorzDist(selfpos, &pos) > thr)
+            if (selfpos->y < ownerPos.y - clipDist)
+                continue;
+            if (Vec3_HorzDist(selfpos, &ownerPos) > clipDist)
                 continue;
         }
         if (obj->DetectClsn(*this) != 0) {
@@ -259,11 +257,11 @@ bool dBgCh_Lin::DetectClsn()
     bool result = false;
     int i;
     dBgW *o;
-    dActor_c *info;
-    int m;
+    dActor_c *owner;
+    int clipDist;
     char *e;
     Vector3 *base;
-    int threshold;
+    int reach;
     e = (char *)data_020a0c80[0];
     if (e != 0) {
         if (!IsOwnedBy(((dBgW *)e)->GetActor())) {
@@ -278,31 +276,31 @@ bool dBgCh_Lin::DetectClsn()
 
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
-    threshold = (int)sphere.radius;
+    reach = (int)sphere.radius;
     for (i = 1; i < 0x18; i++) {
         o = data_020a0c80[i];
         if (o == 0) continue;
-        info = o->GetActor();
-        if (IsOwnedBy(info))
+        owner = o->GetActor();
+        if (IsOwnedBy(owner))
             continue;
-        if (info != 0) {
-            int active = (info->mFlags & 2) ? 1 : 0;
+        if (owner != 0) {
+            int active = (owner->mFlags & 2) ? 1 : 0;
             if (active != 0) {
-                Vector3 v;
-                const char *position = (const char *)info + 0x5c;
-                v.x = *(const s32 *)(position + 0);
-                v.y = *(const s32 *)(position + 4);
-                v.z = *(const s32 *)(position + 8);
-                m = o->GetClipRadius();
-                if (m == -0x1000) {
-                    int b4 = info->mClipOffsetY;
-                    int b8 = info->mClipRadius;
-                    v.y += b4;
-                    m = b8 << 3;
+                Vector3 ownerPos;
+                const char *position = (const char *)owner + 0x5c;
+                ownerPos.x = *(const s32 *)(position + 0);
+                ownerPos.y = *(const s32 *)(position + 4);
+                ownerPos.z = *(const s32 *)(position + 8);
+                clipDist = o->GetClipRadius();
+                if (clipDist == -0x1000) {
+                    int clipOffsetY = owner->mClipOffsetY;
+                    int clipRadius = owner->mClipRadius;
+                    ownerPos.y += clipOffsetY;
+                    clipDist = clipRadius << 3;
                 } else {
-                    v.y += o->GetClipOffsetY();
+                    ownerPos.y += o->GetClipOffsetY();
                 }
-                if (Vec3_Dist(base, &v) > m + threshold)
+                if (Vec3_Dist(base, &ownerPos) > clipDist + reach)
                     continue;
             }
         }
@@ -341,39 +339,39 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
     int result = 0;
     int i;
     dBgW *o;
-    dActor_c *info;
-    int m;
+    dActor_c *owner;
+    int clipDist;
     Vector3 *base;
-    int threshold;
+    int reach;
 
     dM3dGSph &sphere = mBoundSphere;
     base = &sphere.centre;
-    threshold = sphere.radius;
+    reach = sphere.radius;
     for (i = 1; i < 0x18; i++) {
         o = data_020a0c80[i];
         if (o == 0)
             continue;
-        info = o->GetActor();
-        if (IsOwnedBy(info))
+        owner = o->GetActor();
+        if (IsOwnedBy(owner))
             continue;
-        if (info != 0) {
-            int active = (info->mFlags & 2) ? 1 : 0;
+        if (owner != 0) {
+            int active = (owner->mFlags & 2) ? 1 : 0;
             if (active != 0) {
-                Vector3 v;
-                const char *position = (const char *)info + 0x5c;
-                v.x = *(const s32 *)(position + 0);
-                v.y = *(const s32 *)(position + 4);
-                v.z = *(const s32 *)(position + 8);
-                m = o->GetClipRadius();
-                if (m == -0x1000) {
-                    int b4 = info->mClipOffsetY;
-                    int b8 = info->mClipRadius;
-                    v.y += b4;
-                    m = b8 << 3;
+                Vector3 ownerPos;
+                const char *position = (const char *)owner + 0x5c;
+                ownerPos.x = *(const s32 *)(position + 0);
+                ownerPos.y = *(const s32 *)(position + 4);
+                ownerPos.z = *(const s32 *)(position + 8);
+                clipDist = o->GetClipRadius();
+                if (clipDist == -0x1000) {
+                    int clipOffsetY = owner->mClipOffsetY;
+                    int clipRadius = owner->mClipRadius;
+                    ownerPos.y += clipOffsetY;
+                    clipDist = clipRadius << 3;
                 } else {
-                    v.y += o->GetClipOffsetY();
+                    ownerPos.y += o->GetClipOffsetY();
                 }
-                if (Vec3_Dist(base, &v) > m + threshold)
+                if (Vec3_Dist(base, &ownerPos) > clipDist + reach)
                     continue;
             }
         }
@@ -400,10 +398,10 @@ extern "C" void func_02038414(void *self) {
     ((dBgCh_Actr *)self)->UpdateDiscreteNoLava_2();
 }
 
-/* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to func_02036acc (0x2036acc).
- * r0 (the dBgCh_Actr) passes straight through to it. */
+/* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousExceptSlot0 (0x2036acc).
+ * r0 (the dBgCh_Actr) passes straight through to the member. */
 extern "C" void func_02038408(dBgCh_Actr *self) {
-    func_02036acc(self);
+    self->UpdateContinuousExceptSlot0();
 }
 
 /* dBgCh_Actr_UpdateContinuous_Veneer @ 0x20383fc (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuous (0x20366b4).
@@ -501,17 +499,17 @@ CLPS_BlockRef &CLPS_BlockRef::operator=(CLPS_Block &block)
 }
 
 /* CLPS entry lookup: hands back entry idx of the block's 8-byte-entry
-   table, or the default entry data_020a0c78 (reset by func_02037e9c) when
+   table, or the default entry data_020a0c78 (reset by CLPS::SetDefault) when
    the block is missing or its entries are not 8 bytes. Written first to
    land last in the ROM (reverse emission). */
 extern "C" void func_020381cc(void *block, int idx, void **out) {
-    unsigned char *e = *(unsigned char **)block;
-    if (e == 0 || *(unsigned short *)(e + 4) != 8) {
-        func_02037e9c(&data_020a0c78);
+    unsigned char *table = *(unsigned char **)block;
+    if (table == 0 || *(unsigned short *)(table + 4) != 8) {
+        data_020a0c78.SetDefault();
         *out = &data_020a0c78;
         return;
     }
-    *out = e + 8 + (idx << 3);
+    *out = table + 8 + (idx << 3);
 }
 
 dBgPi::dBgPi()
@@ -573,7 +571,7 @@ void dBgPi::SetCollider(int idx, int uid, dActor_c *actor, dBgW *clsn)
 
 void dBgPi::RecordHit(int triID, SurfaceInfo *src) {
     triangleID = triID;
-    func_02037de8(&surface, src);
+    surface.CopyFrom(*src);
 }
 
 int dBgPi::HasCollider() const
@@ -638,10 +636,11 @@ extern "C" void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal) {
     info->normal.z = normal->z;
 }
 
-/* The default CLPS entry: the same two words dBgPc's constructor stores. */
-extern "C" void func_02037e9c(CLPS *clps) {
-    clps->w0 = 0xfc0;
-    clps->w1 = 0xff;
+/* The default CLPS entry: the same two words dBgPc's constructor stores.
+   Coined name. */
+void CLPS::SetDefault() {
+    w0 = 0xfc0;
+    w1 = 0xff;
 }
 
 int CLPS::GetPathID() const {
@@ -687,12 +686,13 @@ int CLPS::IsCameraOnly() const {
 /* Five-word surface copy: one 64-bit record plus three words. Spelled with
    the u64 unit (not the C struct-assign the shard used): C++ schedules the
    struct form load/load/store while the cartridge is load/store
-   interleaved, and the u64 spelling recovers it byte-identically. */
-extern "C" void func_02037de8(SurfaceInfo *dst, const SurfaceInfo *src) {
-    *reinterpret_cast<u64 *>(&dst->clps) = *reinterpret_cast<const u64 *>(&src->clps);
-    dst->normal.x = src->normal.x;
-    dst->normal.y = src->normal.y;
-    dst->normal.z = src->normal.z;
+   interleaved, and the u64 spelling recovers it byte-identically. Coined
+   name; dBgPi::RecordHit is its caller. */
+void SurfaceInfo::CopyFrom(const SurfaceInfo &src) {
+    *reinterpret_cast<u64 *>(&clps) = *reinterpret_cast<const u64 *>(&src.clps);
+    normal.x = src.normal.x;
+    normal.y = src.normal.y;
+    normal.z = src.normal.z;
 }
 
 /* SurfaceInfo::CopyNormalTo(Vector3 &out) const -- copy the face normal out.
