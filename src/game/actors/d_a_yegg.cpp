@@ -80,6 +80,7 @@
 #include "Particle__System.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
@@ -96,14 +97,6 @@
 #include "LevelRng.h"
 
 struct dBgPi;
-
-/* Three plain words: the stack vectors the C helpers build, which carry
-   none of Vector3's empty destructor. */
-
-struct Spawn {
-    Vector3_16 rot;
-    VecFx32 pos;
-};
 
 /* Actor registry IDs this file tests or spawns (symbols/actor_debug_names.tsv). */
 enum {
@@ -142,7 +135,6 @@ void func_ov002_020edca4(daYegg_c *self);
 extern SharedFilePtr data_ov002_0210e6b0;
 extern SharedFilePtr data_ov002_0210eb78;
 extern s16 data_ov002_021000a8[];
-extern s16 data_02082214[];
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. The copies go through the flat Mtx43: assigning this
    TU's nested Matrix4x3 grows the object by 0x30 bytes. */
@@ -477,13 +469,7 @@ void daYegg_c::func_ov002_020ecb0c()
     s32 b;
     u32 fb0;
     s32 onwall;
-    struct Spawn sp;
-    s16 rx;
-    s16 rz;
-    u16 ang;
-    Vector3_16 *pr;
-    s32 pz;
-    s32 px;
+    Vector3_16 rot;
 
     id = mTargetId;
     o = 0;
@@ -507,23 +493,12 @@ void daYegg_c::func_ov002_020ecb0c()
         } else {
             b = (s32)((fb0 & daYegg_FLAG_FLYING) != 0);
             if (b != 0) {
-                s32 py = *(volatile s32 *)&mPosY + 0x28000;
-                pz = mPosZ;
-                px = mPosX;
-                sp.pos.y = py;
-                sp.pos.z = pz;
-                sp.pos.x = px;
-                ang = *(u16 *)&mAngleY;
-                onwall = data_02082214[(ang >> 4) * 2];
-                rx = (s16)onwall;
-                sp.rot.y = 0;
-                pr = &sp.rot;
-                sp.rot.x = rx;
-                ang = *(u16 *)&mAngleY;
-                rz = data_02082214[(ang >> 4) * 2 + 1];
-                sp.rot.z = rz;
-                mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, sp.pos.x, sp.pos.y,
-                                                        pz, (const Vector3_16f *)(pr), 0);
+                Vector3 pos(mPos.x, mPos.y + 0x28000, mPos.z);
+                rot.x = FX_SinIdx((u16)mAngleY >> 4);
+                rot.y = 0;
+                rot.z = FX_CosIdx((u16)mAngleY >> 4);
+                mParticleHandle = Particle::System::New(mParticleHandle, 0x2c, pos.x, pos.y, pos.z,
+                                                        (const Vector3_16f *)&rot, 0);
                 mSoundHandle =
                     Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
                 flag = 1;
@@ -731,13 +706,12 @@ void daYegg_c::func_ov002_020ecfc8() {
  *    more away. */
 void daYegg_c::func_ov002_020ed0d4()
 {
-    struct Vector3 in, out;
+    Vector3 in, out;
     daPly_c *com;
     int* p;
-    volatile struct Vector3 t1, t2;
-    struct Vector3 v1, v2;
-    struct Vector3 sumA, sumB, sumC;
-    int *pt1, *pt2, *pv1, *pv2;
+    Vector3 t1, t2;
+    Vector3 v1, v2;
+    Vector3 sumA, sumB, sumC;
 
     com = mPlayer;
     mHoldOffsetZ = -0x68000;
@@ -760,14 +734,12 @@ void daYegg_c::func_ov002_020ed0d4()
             if (mWithMeshClsn.IsOnGround() != 0) {
                 mGoalAngleX = mPlayer->mAngleX;
                 mGoalAngleZ = mPlayer->mAngleZ;
-                pt1 = &com->mPrevPosX;
-                pt2 = &com->mPosX;
-                t1.x = pt1[0];
-                t1.y = pt1[1];
-                t1.z = pt1[2];
-                t2.x = pt2[0];
-                t2.y = pt2[1];
-                t2.z = pt2[2];
+                {
+                    const Vector3 &a = com->mPrevPos;
+                    const Vector3 &b = com->mPos;
+                    t1 = a;
+                    t2 = b;
+                }
                 Vec3_Add(&sumA, &com->mPos, &out);
                 mHoldTargetX = sumA.x;
                 mHoldTargetY = sumA.y;
@@ -783,14 +755,12 @@ void daYegg_c::func_ov002_020ed0d4()
         } else {
             mGoalAngleX = com->mAngleX;
             mGoalAngleZ = com->mAngleZ;
-            pv1 = &com->mPrevPosX;
-            pv2 = &com->mPosX;
-            v1.x = pv1[0];
-            v1.y = pv1[1];
-            v1.z = pv1[2];
-            v2.x = pv2[0];
-            v2.y = pv2[1];
-            v2.z = pv2[2];
+            {
+                const Vector3 &a = com->mPrevPos;
+                const Vector3 &b = com->mPos;
+                v1 = a;
+                v2 = b;
+            }
             if (Vec3_HorzDist(&v1, &v2) >= 0x5000) {
                 mGoalAngleY = Vec3_HorzAngle(&v1, &v2);
             }
@@ -1051,21 +1021,14 @@ void daYegg_c::func_ov002_020ed998()
 {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && *(int *)&mPlayer) {
-        volatile VecFx32 v;
-        int t9, t10, t11;
-        v.x = 0;
-        v.y = 0;
-        v.z = 0;
+        Vector3 v(0, 0, 0);
         *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)mPlayer->mCarryMatrix;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0x3f, 9, 0xb);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, 0xffffb60b, 0xfffff3e9, 0xffffd6c1);
-        t9 = ((volatile Mtx43 *)&data_020a0e68)->r[3].x;
-        t10 = ((volatile Mtx43 *)&data_020a0e68)->r[3].y;
-        t11 = ((volatile Mtx43 *)&data_020a0e68)->r[3].z;
-        v.y = t10;
-        v.z = t11;
-        v.x = t9;
-        mPosX = t9 << 3;
+        v.x = ((Mtx43 *)&data_020a0e68)->r[3].x;
+        v.y = ((Mtx43 *)&data_020a0e68)->r[3].y;
+        v.z = ((Mtx43 *)&data_020a0e68)->r[3].z;
+        mPosX = v.x << 3;
         mPosY = v.y << 3;
         mPosZ = v.z << 3;
         return;

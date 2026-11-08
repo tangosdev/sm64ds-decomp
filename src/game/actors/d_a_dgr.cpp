@@ -272,14 +272,12 @@ void daDgr_c::UpdateClsnMatrix() {
 }
 
 /* Yoshi egg within eight clip-radii: turn the mesh collider on.
- * aimPos is volatile and unused. Its stores, and ~Vector3, are in the bytes. */
+ * aimPos (the egg aim height above the actor) is computed and never read;
+ * the ROM keeps its stores. */
 int daDgr_c::EnableClsnNearEgg() {
     dActor_c *egg = ClosestWithActorID(kYoshiEggActorID);
     if (egg != 0) {
-        volatile struct Vector3 aimPos;
-        aimPos.x = mPosX;
-        aimPos.y = mPosY;
-        aimPos.z = mPosZ;
+        Vector3 aimPos = mPos;
         aimPos.y += OnAimedAtWithEgg();
         if (Vec3_Dist(&mPos, &egg->mPos) < (mClipRadius << 3)) {
             if (!mMeshCollider.IsEnabled()) {

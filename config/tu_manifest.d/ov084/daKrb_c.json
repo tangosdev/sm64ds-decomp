@@ -590,19 +590,21 @@
     "Collision property member calls replace local helper declarations. Reconciled 10 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (80 sections, 488 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
   "verification": {
-    "round": "Current standalone text-function audit; native initializer classification refusal is separate from complete six-section scratch proof.",
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov084-daKrb_c/daKrb_c.o (gitignored)",
+    "object": "build/tu/ov084-daKrb_c/d_a_krb.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 35,
     "functions_declared": 35,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7daKrb_cD2Ev",
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN11SurfaceInfoD1Ev"
       ],
       "deadstripped": [
+        "_ZN11SurfaceInfoD1Ev",
         "_ZN7Vector3D1Ev",
         "_ZN7daKrb_cD2Ev"
       ],
@@ -610,9 +612,7 @@
         9,
         10,
         16,
-        113,
-        114,
-        115,
+        23,
         116,
         117,
         118,
@@ -624,7 +624,10 @@
         124,
         125,
         126,
-        127
+        127,
+        128,
+        129,
+        130
       ],
       "data": [
         "_ZTI12dEnemyBase_c",
@@ -649,7 +652,8 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -1047,6 +1051,11 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02086e60",
       "reason": "Inherited vague-linkage type-name string; cartridge copy at arm9:0x02086e60."
+    },
+    {
+      "symbol": "_ZN11SurfaceInfoD1Ev",
+      "disposition": "deadstrip",
+      "reason": "func_ov084_021294d0 copy-constructs a local dBgPi from the floor result. That pulls in the implicit destructor of its SurfaceInfo member, which holds a non-POD Vector3, as vague linkage. The body is trivial and nothing here references it, and the cartridge has no copy, so the section is dropped (the dBgCh_Actr TU books the same symbol the same way)."
     }
   ],
   "init": [
@@ -2125,54 +2134,54 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1917",
+      "from": "@1959",
       "to": "@1944",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1917 to @1998 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @1998 to @1959 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1918",
+      "from": "@1960",
       "to": "@1945",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1918 to @1999 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @1999 to @1960 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1919",
+      "from": "@1961",
       "to": "@1946",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1919 to @2000 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2000 to @1961 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1920",
+      "from": "@1962",
       "to": "@1947",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1920 to @2001 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2001 to @1962 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1921",
+      "from": "@1963",
       "to": "@1948",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1921 to @2002 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2002 to @1963 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1922",
+      "from": "@1964",
       "to": "@1949",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1922 to @2003 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2003 to @1964 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1923",
+      "from": "@1965",
       "to": "@1950",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1923 to @2004 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2004 to @1965 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1924",
+      "from": "@1966",
       "to": "@1951",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1924 to @2005 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2005 to @1966 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1925",
+      "from": "@1967",
       "to": "@1952",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1925 to @2006 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2006 to @1967 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     },
     {
-      "from": "@1927",
+      "from": "@1969",
       "to": "@1954",
-      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged."
+      "evidence": "Current 2004/b56 compiler temporary paired by section, size and ordered role with the preserved canonical symbol; linked initializer destinations checked against retail. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | latest candidate measurement: CalcLib and Approach replace local prototypes with 15 named parameters; baseline/candidate ELF definitions pair by equal section index and size, with canonical targets unchanged. Re-keyed from @1927 to @2008 when Re-keyed when #821 made the Goomba's scale backup and player/hurt-origin position copies plain Vector3 locals (retiring volatile launders); the source change shifts mwccarm's @NNN numbering.. Re-keyed from @2008 to @1969 when func_ov084_021294d0 now copy-constructs a real dBgPi and passes ReleaseCap temporaries, so the compiler's local numbering moved down by 39.."
     }
   ],
   "rodata": [

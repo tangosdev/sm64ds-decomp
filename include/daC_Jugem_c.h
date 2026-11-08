@@ -48,15 +48,9 @@ struct daC_Jugem_c : dEnemyBase_c {
     ShadowMat                    mShadowMat1;           /* 0x240 */
     ShadowMat                    mShadowMat2;           /* 0x270 */
     daPly_c *mTalkPlayer;                               /* 0x2a0 */
-    s32                          mTargetX;              /* 0x2a4 */
-    s32                          mTargetY;              /* 0x2a8 */
-    s32                          mTargetZ;              /* 0x2ac */
-    s32                          mCamLookX;             /* 0x2b0 */
-    s32                          mCamLookY;             /* 0x2b4 */
-    s32                          mCamLookZ;             /* 0x2b8 */
-    s32                          mCamPosX;              /* 0x2bc */
-    s32                          mCamPosY;              /* 0x2c0 */
-    s32                          mCamPosZ;              /* 0x2c4 */
+    Vector3 mTarget;                                    /* 0x2a4 */
+    Vector3 mCamLook;                                   /* 0x2b0 */
+    Vector3 mCamPos;                                    /* 0x2bc */
     s32                          mTimer;                /* 0x2c8 */
     s32                          mAuxCounter;           /* 0x2cc -- per-state scratch */
     s32                          mVariant;              /* 0x2d0 -- spawn-param variant; picks the init path and the shadow update */
