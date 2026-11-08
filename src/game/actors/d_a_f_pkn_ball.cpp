@@ -243,8 +243,10 @@ int daFPknBall_c::Behavior() {
                     Sound::PlayBank0(9, mCamSpacePos);
                     sparkPos = mPos;
                     sparkPos.y += OnAimedAtWithEgg();
-                    Particle::System::NewSimple(kPtclKnockAwayA, sparkPos.x, sparkPos.y, sparkPos.z);
-                    Particle::System::NewSimple(kPtclKnockAwayB, sparkPos.x, sparkPos.y, sparkPos.z);
+                    Particle::System::NewSimple(kPtclKnockAwayA, sparkPos.x, sparkPos.y,
+                                                sparkPos.z);
+                    Particle::System::NewSimple(kPtclKnockAwayB, sparkPos.x, sparkPos.y,
+                                                sparkPos.z);
                     UpdateVisuals();
                     mdCcAc_c.Clear();
                     return 1;

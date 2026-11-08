@@ -288,12 +288,14 @@ int daObjFlamethrower_c::Behavior() {
                     ang = data_ov095_02136f80[i];
                     a2 = ang0;
                     Particle::System::NewFlamethrowerBlueA(part.x, part.y, part.z, ang, a2);
-                    Particle::System::NewFlamethrowerBlueB(part.x, part.y, part.z, ang, data_ov095_02136f98[i]);
+                    Particle::System::NewFlamethrowerBlueB(part.x, part.y, part.z, ang,
+                                                           data_ov095_02136f98[i]);
                 } else {
                     ang = data_ov095_02136f80[i];
                     a2 = ang1;
                     Particle::System::NewFlamethrowerRedA(part.x, part.y, part.z, ang, a2);
-                    Particle::System::NewFlamethrowerRedB(part.x, part.y, part.z, ang, data_ov095_02136f98[i]);
+                    Particle::System::NewFlamethrowerRedB(part.x, part.y, part.z, ang,
+                                                          data_ov095_02136f98[i]);
                 }
                 ppos += 0xc;
                 wavePhase += 0x1000;

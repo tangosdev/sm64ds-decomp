@@ -9577,16 +9577,19 @@ void daPly_c::func_ov002_020ce8bc(int arg1) {
 
     if (mIsMega != 0) {
         if (arg1 != 0) {
-            mWaterMoveParticle = Particle::System::NewFitWater(mWaterMoveParticle, kPtclMegaWaterSurfaceMove, pos.x, pos.y, pos.z, 0);
+            mWaterMoveParticle = Particle::System::NewFitWater(
+                mWaterMoveParticle, kPtclMegaWaterSurfaceMove, pos.x, pos.y, pos.z, 0);
         } else {
-            mWaterStillParticle = Particle::System::NewFitWater(mWaterStillParticle, kPtclMegaWaterSurfaceStill, pos.x, pos.y, pos.z, 0);
+            mWaterStillParticle = Particle::System::NewFitWater(
+                mWaterStillParticle, kPtclMegaWaterSurfaceStill, pos.x, pos.y, pos.z, 0);
         }
     } else {
         if (arg1 != 0) {
-            mWaterMoveParticle = Particle::System::NewFitWater(mWaterMoveParticle,
-                                                               kPtclWaterSurfaceMove, pos.x, pos.y, pos.z, 0);
+            mWaterMoveParticle = Particle::System::NewFitWater(
+                mWaterMoveParticle, kPtclWaterSurfaceMove, pos.x, pos.y, pos.z, 0);
         } else {
-            mWaterStillParticle = Particle::System::NewFitWater(mWaterStillParticle, kPtclWaterSurfaceStill, pos.x, pos.y, pos.z, 0);
+            mWaterStillParticle = Particle::System::NewFitWater(
+                mWaterStillParticle, kPtclWaterSurfaceStill, pos.x, pos.y, pos.z, 0);
         }
     }
 }
@@ -9611,7 +9614,8 @@ void daPly_c::func_ov002_020ce9c8() {
     Particle::System::NewFitWater(0, effectID, v.x, v.y, v.z, 0);
 
     if (mIsMega)
-        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclMegaSplash, mPosX, data_0209f32c, mPosZ, 0);
+        mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclMegaSplash, mPosX,
+                                                           data_0209f32c, mPosZ, 0);
     else
         Particle::System::NewBigSplash(mPosX, data_0209f32c, mPosZ);
 

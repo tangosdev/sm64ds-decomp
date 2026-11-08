@@ -470,7 +470,6 @@ void daKrb_c::func_ov084_021294d0() {
             RespawnIfHasCap();
         }
     }
-
 }
 
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
