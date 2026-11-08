@@ -88,6 +88,10 @@ int AngleDiff(int a, int b);
 int ApproachAngle(short *angles, short target, int a, int b, int c);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
+/* local extern: no header this file includes declares it, and it must keep C
+ * linkage now that its caller StateEscapeDemoMain is a member. Nonzero once
+ * the position has reached the target. */
+s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 }
 
 namespace cstd {
@@ -781,10 +785,6 @@ static inline void incRelease(daWanwan_c *self) {
 }
 
 void daWanwan_c::StateEscapeDemoMain() {
-    /* local extern: no header this file includes declares it. Nonzero once
-       the position has reached the target. */
-    s32 Vec3_ApproachHorz(Vector3 * out, Vector3 * target, s32 maxStep);
-
     daObjWanwanShutter_c *fence;
     Vector3 partnerPos;
     s16 angleToPlayer;
