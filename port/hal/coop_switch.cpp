@@ -33,6 +33,7 @@ void _ZN13daObjSwitch_c15OnGroundPoundedER8dActor_c(char *self);
 int _ZN11daObjTbox_c10InitState0Ev(void *c);       // Entry[0].enter: the model frame back to 0
 int _ZN11daObjTbox_c10InitState1Ev(void *c);       // Entry[1].enter: the opening
 void _ZN11daObjPile_c19func_ov091_021334b8Ei(char *c, int flag);         // Stump: one pound (flag 0) or the whole post (flag 1)
+void _ZN7fBase_c18MarkForDestructionEv(void *self);    // COOPPUZZLE1: a book the receiver's shelf can no longer lead
 extern signed char data_ov100_02148204[];            // door table, 16 bytes a variant: +8 stars, +9 key id, +0xa save bit
 extern signed char data_ov100_02148390[];            // star gate table, 6 bytes a variant: +0 stars, +1 save bit
 extern char data_ov100_021488d4[];                   // Door node: the star-door unlock (func_ov100_02144bf4)
@@ -297,6 +298,55 @@ bool ap_stump(char *a, int, int value) {
         _ZN11daObjPile_c19func_ov091_021334b8Ei(a, 0);
     return true;
 }
+// COOPPUZZLE1 (G21): the BBH library BOOKSHELF (158, daTrsTrap_c mIndex 2) and its three BOOK_SWITCH books (213, daBook_c,
+// spawned by the shelf, mLinkedActorID = the shelf's uniqueID). A pushed book ORs 1 << param1 into the shelf's mBookFlags +0x157
+// (func_ov063_0211cae8); the shelf's state 0 keeps 1 and 3, clears any other order (the books whose bit went retract) and at 7
+// goes to mState +0x150 = 1, then 2 (slides away; the DONE books slide off with it) and 3 (removed) (src/game/actors/
+// d_a_trs_trap.cpp, d_a_book.cpp). All of it ran on the pusher's console only. Shared as a field: value = (mState != 0) << 3 |
+// (mBookFlags & 7); bit 3 of mBookFlags (the puzzle armed by a nearby player) stays local. While the shelf's room is not showing,
+// its Behavior zeroes mBookFlags every frame: that is not progress, so the reader keeps the last value it saw in view.
+char *find_actor(int slot, int cls);
+struct ShelfSeen { const void *a; unsigned uid; int v; };
+ShelfSeen g_shelf_seen[4];
+int r_shelf(const char *a) {
+    if (rd_i32(a, 0x140) != 2) return 0;
+    ShelfSeen *e = nullptr;
+    const unsigned uid = (unsigned)rd_i32(a, 4);
+    for (ShelfSeen &q : g_shelf_seen) if (q.a == a && q.uid == uid) { e = &q; break; }
+    if (!e) { e = &g_shelf_seen[0]; for (ShelfSeen &q : g_shelf_seen) if (!q.a) { e = &q; break; } e->a = a; e->uid = uid; e->v = 0; }
+    const bool showing = *(const signed char *)(a + 0xcc) == -1;    // the shelf's Behavior parks mAreaId at -1 while its room shows
+    const int v = (rd_u8(a, 0x150) != 0 ? 8 : 0) | (rd_u8(a, 0x157) & 7);
+    if (!showing && rd_u8(a, 0x150) == 0) return e ? e->v : v;
+    if (e) e->v = v;
+    return v;
+}
+bool ap_shelf(char *a, int, int value) {
+    if (rd_i32(a, 0x140) != 2) return false;
+    const bool solved = (value & 8) != 0;
+    const int bits = solved ? 7 : (value & 7);
+    const bool showing = *(const signed char *)(a + 0xcc) == -1;
+    if (solved) {
+        if (rd_u8(a, 0x150) != 0) return false;                        // already opening here
+        *(unsigned char *)(a + 0x150) = 1;                             // the verdict: state 1 counts, chimes, then slides (2)
+        *(unsigned short *)(a + 0x14c) = 0;
+    } else if (!showing || (rd_u8(a, 0x157) & 7) == bits) {
+        return false;                                                  // out of view the shelf forgets books anyway
+    }
+    *(unsigned char *)(a + 0x157) = (unsigned char)((rd_u8(a, 0x157) & 8) | bits);
+    const unsigned uid = (unsigned)rd_i32(a, 4);
+    for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {
+        if (a_cls(b) != 213 || a_dead(b) || (unsigned)rd_i32(b, 0x418) != uid) continue;
+        const int idx = rd_i32(b, 8) & 7;
+        const int st = rd_i32(b, 0x424);
+        if (!((bits >> idx) & 1) || st < 6 || st > 9) continue;       // a cleared bit: a DONE book retracts on its own
+        if (solved && !showing) { _ZN7fBase_c18MarkForDestructionEv(b); continue; }   // the shelf leaves before this room shows
+        *(int *)(b + 0x64) = rd_i32(b, 0x434);                         // what STATE_SWITCH_PUSH ends with: home, collider off,
+        *(unsigned *)(b + 0x234) |= 1u;                                // no toucher, STATE_SWITCH_DONE (follows the verdict)
+        *(void **)(b + 0x41c) = nullptr;
+        *(int *)(b + 0x424) = 10;
+    }
+    return true;
+}
 // DOOR (353) and STAR_DOOR (354): the START of an unlock. The ROM writes the save bit when the cutscene ENDS; the
 // kick fires when the unlock state begins and puts the same bit in the other consoles' record at once. Nothing here
 // hands a Player to a door state.
@@ -355,6 +405,7 @@ const Watch kWatch[] = {
     {101, kSwKindField, "WDW_WATER",    r_water,  ap_water},
     {13,  kSwKindField, "TREASURE_CHEST", r_chest, ap_chest},
     {27,  kSwKindField, "STUMP",        r_stump,  ap_stump},
+    {158, kSwKindField, "BOOKSHELF",    r_shelf,  ap_shelf},
     {353, kSwKindKick,  "DOOR",         r_door,   ap_door},
     {354, kSwKindKick,  "STAR_DOOR",    r_gate,   ap_gate},
 };
@@ -367,8 +418,9 @@ const Watch *find_watch(int cls) {
 // spawns itself in its InitResources, so slot -1, the same two spawns on every console) goes by a position code in 504..511.
 int wire_slot(const char *a, int cls) {
     const int s = a_slot(a);
-    if (s >= 0 || cls != 27) return s;
+    if (s >= 0 || (cls != 27 && cls != 158)) return s;
     const int *q = (const int *)(a + 0x5c);
+    if (cls == 158) return 496 + ((((q[0] >> 12) * 7) + ((q[2] >> 12) * 13)) & 7);   // COOPPUZZLE1: if the area spawns the shelf
     return 504 + ((((q[0] >> 12) * 7) + ((q[2] >> 12) * 13)) & 7);
 }
 
@@ -610,7 +662,7 @@ void scan_objects(unsigned now) {
         Trk &t = g_trk[slot];
         if (!t.valid || t.actor != a || t.cls != cls) {
             t.actor = a; t.cls = cls; t.last = cur; t.valid = true;
-            if (g_log && (cls == 13 || cls == 27 || cls == 353 || cls == 354)) {
+            if (g_log && (cls == 13 || cls == 27 || cls == 158 || cls == 353 || cls == 354)) {
                 const int *p = (const int *)(a + 0x5c);
                 std::fprintf(stderr, "[coopsw] track %s slot=%d aslot=%d uid=%u cls=%d param=%d pos=%d,%d,%d read=%d node=%p unlocking=%p wall=%lld\n", w->name,
                              (int)slot, (int)a_slot(a), (unsigned)rd_i32(a, 4), (int)cls, rd_i32(a, 8), p[0] >> 12, p[1] >> 12, p[2] >> 12, cur,
