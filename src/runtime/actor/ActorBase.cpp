@@ -19,11 +19,12 @@
  * fBase_c, the root of the actor hierarchy. arm9 .text
  * 0x02042fe4..0x020440e8. Below runCreate sit the four Process
  * wrappers, the child-creation check d_scene.cpp polls, and the create
- * entry func_02043098 with its hooks and the two creation calls
+ * entry fBase_make with its hooks and the two creation calls
  * ActorDerived.cpp makes. The run has NSMBW's f_base.cpp layout, and the
  * address-named members took that file's names where the bodies match:
  * connectProc, getConnectParent, runCreate, createPack, deletePack,
- * executePack, drawPack and checkChildProcessCreateState.
+ * executePack, drawPack, checkChildProcessCreateState, setTmpCtData,
+ * fBase_make, createChild and createRoot.
  */
 #include "fBase_c.h"
 #include "Heap.h"
@@ -203,7 +204,7 @@ fBase_c::fBase_c() : manager(this)
     data_02099e70++;
     param1 = data_020a4b60;
     actorID = data_020a4b54;
-    unk_012 = data_020a4b48;
+    mGroupType = data_020a4b48;
 
     func_0203b438(data_020a4b6c, &manager.sceneNode, data_020a4b64);
 
@@ -268,7 +269,7 @@ void fBase_c::AfterInitResources(u32 vfSuccess)
         return;
     func_0203b27c(data_020a4b88, &manager.behaviorNode);
     if (GlobalModeIs(3)) {
-        unk_010 = 1;
+        mDeferExecute = 1;
         return;
     }
     func_0204405c(data_020a4b78, &manager.behaviorNode);
@@ -412,11 +413,11 @@ int fBase_c::connectProc() {
                 }
             }
         } else if (!IsDyingState(state)) {
-            if (unk_011 != 0) {
-                unk_011 = 0;
+            if (mDeferRetryCreate != 0) {
+                mDeferRetryCreate = 0;
                 func_0203b244(data_020a4b88, &manager.behaviorNode);
-            } else if (unk_010 != 0) {
-                unk_010 = 0;
+            } else if (mDeferExecute != 0) {
+                mDeferExecute = 0;
                 func_0204405c(data_020a4b78, &manager.behaviorNode);
                 func_0204405c(data_020a4b98, &manager.renderNode);
                 aliveState = 1;
@@ -611,20 +612,20 @@ void *fBase_c::operator new(size_t size) {
 /* ROM ordinal 0 -- the run's backward neighbour, absorbed (reverse
  * emission puts the lowest address last). Body as recovered. */
 
-/* The create entry func_02043098 calls this on each new process. Same
- * test order as NSMBW's runCreate: not delete-requested, not deferred
- * (unk_010), still creating; then flag a retry (unk_011) while the create
- * loop runs (data_02099f24 == 2), or queue it on the create list. */
+/* fBase_make calls this on each new process. Same test order as NSMBW's
+ * runCreate: not delete-requested, not deferred, still creating; then flag
+ * a retry while the create loop runs (data_02099f24 == 2), or queue it on
+ * the create list. */
 void fBase_c::runCreate() {
     createPack();
     if (shouldBeKilled != 0)
         return;
-    if (unk_010 != 0)
+    if (mDeferExecute != 0)
         return;
     if (!IsPendingState(aliveState))
         return;
     if (GlobalModeIs(2)) {
-        unk_011 = 1;
+        mDeferRetryCreate = 1;
         return;
     }
     func_0203b244(data_020a4b88, &manager.behaviorNode);
@@ -654,10 +655,9 @@ extern fBase_c::AfterProcessFunction data_02099e9c;
 /* Defined below; the calls are emitted first. */
 extern void func_0204302c(int actorID);
 extern int func_02043060(int actorID);
-extern void func_02043180(int actorID, void *parentNode, u32 param1, int unk012);
 
 /* The create hooks a scene installs, and the create entry's progress:
-   data_020a4b4c steps 2..5 through func_02043098 and data_020a4b50 holds
+   data_020a4b4c steps 2..5 through fBase_make and data_020a4b50 holds
    the profile being created (0xffff when idle). */
 extern void (*data_020a4b5c)(int actorID);
 extern int (*data_020a4b58)(int actorID);
@@ -709,24 +709,28 @@ int fBase_c::checkChildProcessCreateState() {
     return 0;
 }
 
-/* Stage the arguments fBase_c::fBase_c reads while the factory runs. */
-void func_02043180(int actorID, void *parentNode, u32 param1, int unk012) {
+/* Stage the arguments fBase_c::fBase_c reads while the factory runs, in
+   NSMBW's setTmpCtData store order (param, profile, group type, parent). */
+void fBase_c::setTmpCtData(int actorID, void *parentNode, u32 param1, int groupType) {
     data_020a4b60 = param1;
     data_020a4b54 = actorID;
-    data_020a4b48 = unk012;
+    data_020a4b48 = groupType;
     data_020a4b64 = parentNode;
 }
 
 /* The create entry: ask the scene's hook, stage the constructor's
-   arguments, run the profile's factory, then link the new process. */
-fBase_c *func_02043098(int actorID, void *parentNode, u32 param1, int unk012) {
+   arguments, run the profile's factory, then link the new process. NSMBW's
+   fBase_make has the same core (setTmpCtData, classInit, runCreate on a
+   built process); the scene hook and the data_020a4b4c progress steps are
+   this game's own. */
+fBase_c *fBase_c::fBase_make(int actorID, void *parentNode, u32 param1, int groupType) {
     fBase_c *actor;
     data_020a4b50 = (u16)actorID;
     data_020a4b4c = 2;
     if (func_02043060(actorID) == 3)
         return 0;
     data_020a4b4c = 3;
-    func_02043180(actorID, parentNode, param1, unk012);
+    setTmpCtData(actorID, parentNode, param1, groupType);
     data_020a4b4c = 4;
     actor = data_020a4bb8[actorID]->classInit();
     if (actor == 0) {
@@ -753,14 +757,14 @@ void func_0204302c(int actorID) {
 }
 
 /* Create a child of parent; none without a parent. */
-fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 param1, int unk012) {
+fBase_c *fBase_c::createChild(u32 actorID, fBase_c *parent, u32 param1, int groupType) {
     if (parent == 0)
         return 0;
-    return func_02043098(actorID, &parent->manager.sceneNode, param1, unk012);
+    return fBase_make(actorID, &parent->manager.sceneNode, param1, groupType);
 }
 
 /* Create a process at the root of the scene tree. */
-int func_02042fe4(int actorID, u32 param1, int unk012) {
-    return (int)func_02043098(actorID, 0, param1, unk012);
+int fBase_c::createRoot(int actorID, u32 param1, int groupType) {
+    return (int)fBase_make(actorID, 0, param1, groupType);
 }
 }

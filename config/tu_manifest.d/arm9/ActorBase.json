@@ -24,14 +24,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_02042fe4",
+      "symbol": "_ZN7fBase_c10createRootEiji",
       "address": "0x02042fe4",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0204/func_02042fe4.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_02042ffc",
+      "symbol": "_ZN7fBase_c11createChildEjPS_ji",
       "address": "0x02042ffc",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0204/func_02042ffc.c",
@@ -52,14 +52,14 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_02043098",
+      "symbol": "_ZN7fBase_c10fBase_makeEiPvji",
       "address": "0x02043098",
       "size": "0x000000e8",
       "legacy_source": "src/unnamed/arm9/0204/func_02043098.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_02043180",
+      "symbol": "_ZN7fBase_c12setTmpCtDataEiPvji",
       "address": "0x02043180",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0204/func_02043180.c",

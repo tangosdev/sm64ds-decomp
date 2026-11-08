@@ -106,9 +106,17 @@ struct fBase_c {
     u16 actorID;                              /* 0x0c */
     u8  aliveState;                           /* 0x0e -- 2 means already dying */
     u8  shouldBeKilled;                       /* 0x0f */
-    u8  unk_010;                              /* 0x10 */
-    u8  unk_011;                              /* 0x11 */
-    u8  unk_012;                              /* 0x12 */
+    /* 0x10..0x12 are NSMBW's fBase_c fields at the same place, between the
+       delete request and the process-control byte:
+       mDeferExecute: created while the execute loop runs, so joining the
+         execute/draw lists waits for the next connectProc.
+       mDeferRetryCreate: still creating while the create loop runs, so
+         rejoining the create list waits for the next connectProc.
+       mGroupType: the create call's fourth argument, staged by setTmpCtData
+         and read here by the constructor. */
+    u8 mDeferExecute;     /* 0x10 */
+    u8 mDeferRetryCreate; /* 0x11 */
+    u8 mGroupType;        /* 0x12 */
     /* 0x13. Bit 1 pauses this object's children and bit 4 hides them; bits 2
        and 8 are this object's own effective paused/hidden state, inherited from
        the parent: the constructor seeds them by OR-ing the parent's 1|2 and 4|8
@@ -176,6 +184,18 @@ struct fBase_c {
     int drawPack();
     void runCreate();
     int checkChildProcessCreateState();
+    /* The create path, NSMBW's static members of the same names. fBase_make
+       stages (profile, parent scene node, param, group type) with
+       setTmpCtData, runs the profile's classInit and then runCreate.
+       createChild passes &parent->manager.sceneNode (none without a parent);
+       createRoot passes a null parent. createRoot keeps the int return its
+       only caller, the dBase_c scene-spawn veneer, still reads. The
+       parameters stay unnamed: a named parameter in a shared class
+       declaration renumbers every consumer's @NNN. */
+    static void setTmpCtData(int, void *, u32, int);
+    static fBase_c *fBase_make(int, void *, u32, int);
+    static fBase_c *createChild(u32, fBase_c *, u32, int);
+    static int createRoot(int, u32, int);
     /* The actor-heap allocator every process is created through; defined in
        src/runtime/actor/ActorBase.cpp. size_t is unsigned long under mwccarm,
        so this is _ZN7fBase_cnwEm, and `new T` on any class derived from this
@@ -205,9 +225,9 @@ struct fBase_c {
     u16 actorID;            /* 0x0c */
     u8  aliveState;         /* 0x0e */
     u8  shouldBeKilled;     /* 0x0f */
-    u8  unk_010;            /* 0x10 */
-    u8  unk_011;            /* 0x11 */
-    u8  unk_012;            /* 0x12 */
+    u8 mDeferExecute;       /* 0x10 */
+    u8 mDeferRetryCreate;   /* 0x11 */
+    u8 mGroupType;          /* 0x12 */
     u8  pauseFlags;         /* 0x13 */
     u8  manager[0x34];      /* 0x14 */
     void *lifecycleState;   /* 0x48 */
