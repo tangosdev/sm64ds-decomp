@@ -194,20 +194,16 @@ void dScMgPachinko2_c::CupSlot_ResetAll() {
 }
 
 void dScMgPachinko2_c::Cup_PickTarget(int k) {
-    /* Keep the index-before-offset address form for the pinned compiler. */
-    char *scene = (char *)this;
     int found = 0;
-    int i = 0;
-    int *cupX = &((dScMgPachinko2_c *)(scene + k * 32))->mCups[0].x;
-    int *cupY = &((dScMgPachinko2_c *)(scene + k * 32))->mCups[0].y;
-    for (; i < 0x30; i++) {
+    int i;
+    for (i = 0; i < 0x30; i++) {
         int dx, dy;
         if (mBalls[i].active == 0)
             continue;
         if (mBalls[i].state < 3)
             continue;
-        dx = (mBalls[i].x - *cupX) >> 12;
-        dy = (mBalls[i].y - *cupY) >> 12;
+        dx = (mBalls[i].x - mCups[k].x) >> 12;
+        dy = (mBalls[i].y - mCups[k].y) >> 12;
         if (dx < -0x18)
             continue;
         if (dx > 0x18)
@@ -2106,10 +2102,8 @@ void dScMgPachinko2_c::UpdateNextBall() {
 }
 
 void dScMgPachinko2_c::ResetRound() {
-    char *c = (char *)this;
     int i;
     int j;
-    char *p;
     mPhase = 0;
     for (i = 0; i < 0x30; i++) {
         mBalls[i].x = 0;
@@ -2124,11 +2118,9 @@ void dScMgPachinko2_c::ResetRound() {
         mBalls[i].state = 0;
         mBalls[i].visible = 0;
     }
-    p = c;
     for (j = 0; j < 0x10; j++) {
-        ((dScMgPachinko2_c *)p)->mHitFx[0].active = 0;
-        ((dScMgPachinko2_c *)p)->mHitFx[0].visible = 0;
-        p += 0x18;
+        mHitFx[j].active = 0;
+        mHitFx[j].visible = 0;
     }
     mEndTimer = 0;
     unk_5672 = 0;
