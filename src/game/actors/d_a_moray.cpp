@@ -170,8 +170,7 @@ daMoray_c::~daMoray_c()
    Hurts the actor recorded in the first cylinder's otherOwner (set by the
    hit test since the previous Clear) when that actor is the PLAYER (actor
    191). Called from Behavior. */
-void daMoray_c::UpdateHitCylinders()
-{
+void daMoray_c::UpdateHitCylinders() {
     Vector3 va;
     Vector3 vb;
     Vector3 out;
@@ -281,8 +280,7 @@ void daMoray_c::UpdateHitCylinders()
 
 /* Retreat execute. When the timer set by the retreat init runs out, stops,
    turns back to the spawn angles and returns to den wait. */
-int daMoray_c::StateRetreatMain()
-{
+int daMoray_c::StateRetreatMain() {
     if (*(u16 *)&this->mStateTimer == 0) {
         this->mHorzSpeed = 0;
         this->mPrevAngleX = this->mInitAngleX;
@@ -299,8 +297,7 @@ int daMoray_c::StateRetreatMain()
 /* Retreat init: mStateTimer = 100 frames, mHorzSpeed = 0x14000 (20 units).
    Behavior counts the timer down each frame; daMoray_c::StateRetreatMain is the only
    state in this file that tests it for 0. */
-int daMoray_c::StateRetreatInit()
-{
+int daMoray_c::StateRetreatInit() {
     this->mStateTimer = 100;
     this->mHorzSpeed = 0x14000;
     return 1;
@@ -314,8 +311,7 @@ int daMoray_c::StateRetreatInit()
    node it plays sound 0xfa and steps to the next node, wrapping to 0 past
    mPathNodeCount. Variant 1 arriving at node 0 instead steps to node 1 and
    enters the retreat state, without the sound. */
-int daMoray_c::StatePathSwimMain()
-{
+int daMoray_c::StatePathSwimMain() {
     PathPtr path;
     Vector3 node;
     Vector3 diff;
@@ -355,8 +351,7 @@ int daMoray_c::StatePathSwimMain()
 }
 
 /* Path-swim init: the looping swim animation. */
-int daMoray_c::StatePathSwimInit()
-{
+int daMoray_c::StatePathSwimInit() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d30.filePtr, 8, 0, 0x1000, 0);
     return 1;
 }
@@ -366,8 +361,7 @@ int daMoray_c::StatePathSwimInit()
    units) out, or 0x2bc000 (700 units) when the entrance filter is 1,
    at up to 0x14000 (20 units) per frame. When the animation finishes it
    stops and enters swim-out. */
-int daMoray_c::StateLungeMain()
-{
+int daMoray_c::StateLungeMain() {
     Vector3 localOffset;
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
@@ -395,8 +389,7 @@ int daMoray_c::StateLungeMain()
 }
 
 /* Lunge init: bite animation with flag bit 30, and the lunge sound. */
-int daMoray_c::StateLungeInit()
-{
+int daMoray_c::StateLungeInit() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d20.filePtr, 8, 0x40000000, 0x1000,
                                  0);
     func_02012694(0xfa, &this->mCamSpacePos);
@@ -406,8 +399,7 @@ int daMoray_c::StateLungeInit()
 /* Swim-out execute. Moves toward a point 0x76c000 (1900 units) from the home
    point along its facing at up to 0x14000 (20 units) per frame, and enters
    path-swim, with the sound, once within 20 units of it. */
-int daMoray_c::StateSwimOutMain()
-{
+int daMoray_c::StateSwimOutMain() {
     Vector3 localOffset;
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
@@ -428,8 +420,7 @@ int daMoray_c::StateSwimOutMain()
 }
 
 /* Swim-out init: idle animation and the same sound. */
-int daMoray_c::StateSwimOutInit()
-{
+int daMoray_c::StateSwimOutInit() {
     this->unk_400 = 0;
     func_02012694(0xfa, &this->mCamSpacePos);
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
@@ -453,8 +444,7 @@ int daMoray_c::StateSwimOutInit()
    after the respellings below, not inherited. */
 #pragma push
 #pragma opt_propagation off
-int daMoray_c::StateDenWaitMain()
-{
+int daMoray_c::StateDenWaitMain() {
     daPly_c *player;
     Vector3 playerPos;
     Vector3 local;
@@ -525,16 +515,14 @@ int daMoray_c::StateDenWaitMain()
 #pragma pop
 
 /* Den-wait init: the idle animation. */
-int daMoray_c::StateDenWaitInit()
-{
+int daMoray_c::StateDenWaitInit() {
     this->unk_400 = 0;
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
     return 1;
 }
 
 /* Installs a state and runs its init. */
-int daMoray_c::SetState(State *state)
-{
+int daMoray_c::SetState(State *state) {
     this->mState = state;
     const daMoray_c::State *installed = this->mState;
     if (installed->init == 0)
@@ -545,8 +533,7 @@ int daMoray_c::SetState(State *state)
 /* Poses the body: the model matrix from position and angles, then each
    segment's world position out of its bone transform, and the carried
    star's matrix off the jaw bone. */
-void daMoray_c::UpdatePose()
-{
+void daMoray_c::UpdatePose() {
     Vector3 localOffset;
     Vector3 worldTarget;
     Vector3 asr;
@@ -845,15 +832,11 @@ MorayAnimResFileHandle data_ov016_02114d20(ASSET_MORAY_SEARCH_BCA);
 MorayAnimResFileHandle data_ov016_02114d30(ASSET_MORAY_SWIM_BCA);
 MorayAnimResFileHandle data_ov016_02114d28(ASSET_MORAY_SWIM_START_BCA);
 
-daMoray_c::State data_ov016_02114d8c = { &daMoray_c::StateDenWaitInit,
-                                       &daMoray_c::StateDenWaitMain };
-daMoray_c::State data_ov016_02114d9c = { &daMoray_c::StateLungeInit,
-                                       &daMoray_c::StateLungeMain };
-daMoray_c::State data_ov016_02114dac = { &daMoray_c::StateSwimOutInit,
-                                       &daMoray_c::StateSwimOutMain };
-daMoray_c::State data_ov016_02114dbc = { &daMoray_c::StatePathSwimInit,
-                                       &daMoray_c::StatePathSwimMain };
-daMoray_c::State data_ov016_02114d7c = { &daMoray_c::StateRetreatInit,
-                                       &daMoray_c::StateRetreatMain };
+daMoray_c::State data_ov016_02114d8c = {&daMoray_c::StateDenWaitInit, &daMoray_c::StateDenWaitMain};
+daMoray_c::State data_ov016_02114d9c = {&daMoray_c::StateLungeInit, &daMoray_c::StateLungeMain};
+daMoray_c::State data_ov016_02114dac = {&daMoray_c::StateSwimOutInit, &daMoray_c::StateSwimOutMain};
+daMoray_c::State data_ov016_02114dbc = {&daMoray_c::StatePathSwimInit,
+                                        &daMoray_c::StatePathSwimMain};
+daMoray_c::State data_ov016_02114d7c = {&daMoray_c::StateRetreatInit, &daMoray_c::StateRetreatMain};
 
 VecFx32 data_ov016_02114d4c;
