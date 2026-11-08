@@ -8,7 +8,7 @@
  * (src/engine/view/d_camera_dtor.cpp), outside this run.
  *
  * Below 0x0200bec4 sit the follow modes, states and script ops
- * (CutsceneGrandStarFlyMarioOffscreen..func_0200bb28). They share this file's .data block
+ * (CutsceneGrandStarFlyMarioOffscreen..Mode8DirectionsCamera). They share this file's .data block
  * (0x02086bc0..0x0208747c: the script-op member-function constants, the
  * mode records and the offset triples) and the controller records at
  * 0x0209f498 with func_0200bec4 and up.
@@ -144,7 +144,7 @@ extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
 /* Opaque camera-side records used by the older handlers. Ground and line
    queries use the real dBgCh_Gnd and dBgCh_Lin classes above. The remaining
    records are typedef'd for the cplusplus-off regions. */
-typedef struct dBgCh_LinHit { char pad[0x14]; char surf[0x64]; } dBgCh_LinHit;   /* func_0200b990's variant */
+typedef struct dBgCh_LinHit { char pad[0x14]; char surf[0x64]; } dBgCh_LinHit;   /* UpdateRadialCamera's variant */
 typedef struct Entry3 { int a, b, c; } Entry3;                      /* data_02086f58 rows */
 extern Entry3 data_02086f58[];
 /* The 0x28-byte mode record dCamera_c::mMode and mAreaMode point at, entry N
@@ -1514,12 +1514,14 @@ void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int s
 
 extern "C" {
 
-/* The turn-by-buttons follow (mode data_0208733c): the 0x100/0x200 buttons
-   step mBaseAngleOffset by 0x2000 and button 0x4000 swings the camera behind
-   the player. A type-2 view object supplies the base yaw at +0xa; its byte 1
-   zero means jump to it at once (snap mEasedAngleY and set mFlags bit 4, which
-   places pos directly). */
-void dCamera_c::func_0200bb28(CamViewObj *view) {
+/* The turn-by-buttons follow (mode data_0208733c), Super Mario 64's
+   mode_8_directions_camera: the yaw is mBaseAngleY plus mBaseAngleOffset
+   (s8DirModeBaseYaw plus s8DirModeYawOffset there), the 0x100/0x200 buttons
+   step mBaseAngleOffset by 0x2000 (45 degrees) and button 0x4000 swings the
+   camera behind the player. A type-2 view object supplies the base yaw at
+   +0xa; its byte 1 zero means jump to it at once (snap mEasedAngleY and set
+   mFlags bit 4, which places pos directly). */
+void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
     s32 flag4000;
     s32 sp_speed;
     struct Vector3 vsrc;
@@ -1624,12 +1626,14 @@ void dCamera_c::func_0200bb28(CamViewObj *view) {
     mAngleY = mEasedAngleY;
 }
 
-/* The orbit for modes data_020871ac and data_020871d4: ease mAngleY toward
-   the yaw from the view object to lookAt, pushed a step to the side the
-   target player faces away from. With byte 0 and byte 1 both clear, a wall
-   between lookAt and the object can take over the yaw (except in three
-   levels). */
-void dCamera_c::func_0200b990(CamViewObj *obj, int arg2) {
+/* The orbit for modes data_020871ac and data_020871d4, the radial camera of
+   Super Mario 64's update_radial_camera and radial_camera_move, which turn
+   around the area's centre point: ease mAngleY, at a rate scaled by how far
+   the player moved this frame, toward the yaw from the view object (the
+   centre) to lookAt, pushed a step to the side the target player faces away
+   from. With byte 0 and byte 1 both clear, a wall between lookAt and the
+   object can take over the yaw (except in three levels). */
+void dCamera_c::UpdateRadialCamera(CamViewObj *obj, int arg2) {
     Vector3 v;
     s16 angle;
     u8 b0, b1;
@@ -1695,10 +1699,12 @@ void dCamera_c::func_0200b990(CamViewObj *obj, int arg2) {
     }
 }
 
-/* The fixed-point follow (mode data_020873dc): place pos on the line from the
-   view object's ground point to the target, at the fraction and distance
-   limits of row p1 of data_02086f58. */
-void dCamera_c::func_0200b798(CamViewObj *obj, int arg2) {
+/* The fixed-point follow (mode data_020873dc), Super Mario 64's
+   update_fixed_camera: place pos on the line from the view object's ground
+   point (sFixedModeBasePosition there) to the target, at the fraction and
+   distance limits of row p1 of data_02086f58, raised by 0x220000 less the
+   distance when closer than that (the N64's 300 - distCamToFocus). */
+void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
     Vector3 viewPos;
     Vector3 v1;
     Vector3 v2;
@@ -1783,10 +1789,12 @@ void dCamera_c::func_0200b798(CamViewObj *obj, int arg2) {
     mAngleY = Vec3_HorzAngle(&lookAt, &pos);
 }
 
-/* The view-object orbit (mode data_02087404): turn data_02086e84 by the yaw
-   from the object to the target, held within 0x4000 of the yaw from the
-   object to pos, and lift the result off the ground below it. */
-void dCamera_c::func_0200b590(CamViewObj *obj, int arg2) {
+/* The view-object orbit (mode data_02087404), Super Mario 64's
+   update_spiral_stairs_camera: turn data_02086e84 by the yaw from the object
+   (the staircase centre) to the target, held within 0x4000 (90 degrees) of
+   the yaw from the object to pos, probe the floor 0.7 (0xb33) of the way out
+   from lookAt, and lift the result 125 (0x7d000) above the floor below it. */
+void dCamera_c::UpdateSpiralStairsCamera(CamViewObj *obj, int arg2) {
     Vector3 v0;
     Vector3 rotated;
     short angle1;
@@ -1860,10 +1868,12 @@ void dCamera_c::func_0200b590(CamViewObj *obj, int arg2) {
     mAngleY = Vec3_HorzAngle(&lookAt, &this->pos);
 }
 
-/* The path follow (mode data_0208742c): keep pos on the path the view
-   object's byte 1 names, abreast of lookAt, stepping mPathNode forward or
-   back as lookAt passes a node. */
-void dCamera_c::func_0200b0fc(CamViewObj *obj, int floorY) {
+/* The path follow (mode data_0208742c), Super Mario 64's
+   update_parallel_tracking_camera: keep pos on the path the view object's
+   byte 1 names, abreast of lookAt, stepping mPathNode forward or back as
+   lookAt passes a node, with the N64's 400 and 700 limits as 0x190000 and
+   0x2bc000. */
+void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     PathPtr path;
     struct Vector3 node0;
     struct Vector3 node1;
@@ -2252,15 +2262,15 @@ s32 dCamera_c::func_02009e70() {
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
         } else if (sp1c == (CamMode *)&data_0208733c) {
-            func_0200bb28(sp20);
+            Mode8DirectionsCamera(sp20);
             kf = 0;
         } else if (sp1c == (CamMode *)&data_020873dc) {
-            func_0200b798(sp20, r6);
+            UpdateFixedCamera(sp20, r6);
         } else if ((mFlags & 0x400) == 0) {
             if (sp1c == (CamMode *)&data_02087404) {
-                func_0200b590(sp20, r6);
+                UpdateSpiralStairsCamera(sp20, r6);
             } else if (sp1c == (CamMode *)&data_0208742c) {
-                func_0200b0fc(sp20, r6);
+                UpdateParallelTrackingCamera(sp20, r6);
             } else {
                 mFlags |= 0x1000;
                 sp08 = func_020093f4(sp1c->nearDist);
@@ -2391,7 +2401,7 @@ s32 dCamera_c::func_02009e70() {
                                 m = sp1c;
                                 if (m == (CamMode *)&data_020871ac ||
                                     m == (CamMode *)&data_020871d4) {
-                                    func_0200b990(sp20, r7);
+                                    UpdateRadialCamera(sp20, r7);
                                 } else if (sp24 == 0) {
                                     if (m == (CamMode *)&data_0208724c)
                                         t0 = mTargetPlayer->mPrevAngleY;
@@ -3726,7 +3736,7 @@ int CutscenePanCvar9(dCamera_c *cam, u8 *p, int tag) {
 /* Script op: move pos by a distance and two angles relative to the target
    player, the steps of Super Mario 64's rotate_and_move_vec3f. The rotate
    and fly-away dances use it where the N64 calls that helper. */
-int func_02007910(dCamera_c *cam, u8 *p) {
+int RotateAndMoveVec3f(dCamera_c *cam, u8 *p) {
     Vector3 *v = &cam->mTargetPlayer->mPos;
     int dist;
     short vert;

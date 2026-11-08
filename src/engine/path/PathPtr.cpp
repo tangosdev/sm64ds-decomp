@@ -12,7 +12,7 @@
  *
  * leftovers:
  * - GetUnk004/unk_004 keep the decompiler name: the sole consumer
- *   (func_0200b0fc) compares it to 0xff and shifts it << 12 as a cap, but
+ *   (UpdateParallelTrackingCamera) compares it to 0xff and shifts it << 12 as a cap, but
  *   what the PathDef byte means is unrecovered; renaming the method would
  *   rename the mangled symbol tree-wide.
  * - func_0203ad84 is unrelated to paths: it reads the ROM file

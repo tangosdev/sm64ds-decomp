@@ -275,7 +275,7 @@
     },
     "arm9:0x02007910": {
       "author": "tangosdev",
-      "name": "func_02007910"
+      "name": "RotateAndMoveVec3f"
     },
     "arm9:0x020079ac": {
       "author": "tangosdev",
@@ -551,23 +551,23 @@
     },
     "arm9:0x0200b0fc": {
       "author": "andrewboudreau",
-      "name": "_ZN9dCamera_c13func_0200b0fcEP10CamViewObji"
+      "name": "_ZN9dCamera_c28UpdateParallelTrackingCameraEP10CamViewObji"
     },
     "arm9:0x0200b590": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200b590EP10CamViewObji"
+      "name": "_ZN9dCamera_c24UpdateSpiralStairsCameraEP10CamViewObji"
     },
     "arm9:0x0200b798": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200b798EP10CamViewObji"
+      "name": "_ZN9dCamera_c17UpdateFixedCameraEP10CamViewObji"
     },
     "arm9:0x0200b990": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200b990EP10CamViewObji"
+      "name": "_ZN9dCamera_c18UpdateRadialCameraEP10CamViewObji"
     },
     "arm9:0x0200bb28": {
       "author": "ruspecial",
-      "name": "_ZN9dCamera_c13func_0200bb28EP10CamViewObj"
+      "name": "_ZN9dCamera_c21Mode8DirectionsCameraEP10CamViewObj"
     },
     "arm9:0x0200bec4": {
       "author": "ruspecial",

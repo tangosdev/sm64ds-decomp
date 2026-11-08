@@ -113,7 +113,7 @@ struct dCamera_c : dView_c {
        data_0208733c, and func_0200d0ac tests its +0x26 bit 0. */
     struct CamMode *mAreaMode; /* 0x140 */
     /* The view object func_0200c66c last chose (GetViewObj's record).
-       func_0200bb28 re-reads the base angle only when the object differs. */
+       Mode8DirectionsCamera re-reads the base angle only when the object differs. */
     void *mViewObj; /* 0x144 */
     /* Owned; CleanupResources deletes it. */
     void* mFixedViewPos;            /* 0x148 */
@@ -133,7 +133,7 @@ struct dCamera_c : dView_c {
        handle it returns; the second is used only with weather 0x86. */
     u32 mWeather;  /* 0x15c */
     u32 mWeather2; /* 0x160 */
-    /* func_0200bb28 latches the 0x100/0x200 turn buttons here; the latched
+    /* Mode8DirectionsCamera latches the 0x100/0x200 turn buttons here; the latched
        bit picks which way mBaseAngleOffset steps. */
     u32 mTurnButtons; /* 0x164 */
     /* Behavior eases it toward 0x1000 while flag 0x2000 is set and toward 0
@@ -163,7 +163,7 @@ struct dCamera_c : dView_c {
      * Vec3_VertAngle. */
     s16 mAngleY;            /* 0x17c */
     s16 mAngleX;            /* 0x17e */
-    /* Yaw as base plus offset. func_0200bb28 eases mEasedAngleY toward
+    /* Yaw as base plus offset. Mode8DirectionsCamera eases mEasedAngleY toward
        mBaseAngleY + mBaseAngleOffset and copies it to mAngleY. mBaseAngleY
        comes from a type-2 view object's angle + 0x8000 (also func_0200cf40),
        and the offset steps by 0x2000. func_02005060 seeds the offset with the
@@ -195,7 +195,7 @@ struct dCamera_c : dView_c {
     s16 mFovShakePhase;     /* 0x192 */
     s16 mFovShakePhaseStep; /* 0x194 */
     /* Countdown. func_020098b8 arms it (0x1c) and func_0200987c switches to
-       state 0x14 when it runs out; func_0200bb28 reuses it as the repeat
+       state 0x14 when it runs out; Mode8DirectionsCamera reuses it as the repeat
        delay (0x14) between turn-button steps. */
     u16 mStateTimer; /* 0x196 */
     /* The path segment MovePointAlongSpline is in; func_020094a8 clears it. */
@@ -211,7 +211,7 @@ struct dCamera_c : dView_c {
     /* The yaw behind the player (its facing + 0x8000), taken when turn
        button 0x4000 is pressed. mRecentering stays nonzero while
        ApproachAngle is still swinging the camera to it (func_02009e70,
-       func_0200bb28). */
+       Mode8DirectionsCamera). */
     s16 mBehindAngleY; /* 0x19e */
     u16 mRecentering;  /* 0x1a0 */
     /* Accumulated by the CutscenePanCvar9 script op and added to the pitch and
@@ -223,8 +223,9 @@ struct dCamera_c : dView_c {
        turns toward it; it clears on arrival. ChangeState, turn input and
        func_02008cb4's push-in also clear it. */
     u8 mTurningToTarget; /* 0x1a6 */
-    /* The path node func_0200b0fc is past: cleared while mFlags bit 4 is set,
-       then stepped as lookAt nears the next or previous node. */
+    /* The path node UpdateParallelTrackingCamera has passed: cleared while
+       mFlags bit 4 is set, then stepped as lookAt nears the next or previous
+       node. */
     u8 mPathNode; /* 0x1a7 */
     dCamera_c() {}
     virtual ~dCamera_c();
@@ -267,8 +268,9 @@ struct dCamera_c : dView_c {
     void func_0200d3f8(unsigned char, void *);
     void func_0200d148(unsigned char);
     void SetGrabBowserTailState(unsigned char);
-    /* Follow, placement and state helpers. Their names are not recovered, so
-       each keeps its address. */
+    /* Follow, placement and state helpers. The follow modes are named for the
+       Super Mario 64 camera functions they port; the rest keep their address
+       until a name is recovered. */
     void func_0200897c(dBgCh &);
     void func_020089d8();
     void func_020089f8();
@@ -286,11 +288,11 @@ struct dCamera_c : dView_c {
     s32 func_02009e70();
     int func_0200af0c();
     void func_0200af20(Vector3 *, Vector3 *, short *);
-    void func_0200b0fc(CamViewObj *, int);
-    void func_0200b590(CamViewObj *, int);
-    void func_0200b798(CamViewObj *, int);
-    void func_0200b990(CamViewObj *, int);
-    void func_0200bb28(CamViewObj *);
+    void UpdateParallelTrackingCamera(CamViewObj *, int);
+    void UpdateSpiralStairsCamera(CamViewObj *, int);
+    void UpdateFixedCamera(CamViewObj *, int);
+    void UpdateRadialCamera(CamViewObj *, int);
+    void Mode8DirectionsCamera(CamViewObj *);
     int func_0200bec4(int *, int, char *, int);
     int func_0200c394(int, void *, void *, void **, int *);
     int func_0200c66c(void *, int *, int *, int *);
