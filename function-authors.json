@@ -13967,11 +13967,11 @@
     },
     "ov002:0x020b9f00": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020b9f00Ev"
+      "name": "_ZN13daObjSwitch_c14FindTargetStarEv"
     },
     "ov002:0x020b9f80": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020b9f80Ev"
+      "name": "_ZN13daObjSwitch_c16UpdateClsnMatrixEv"
     },
     "ov002:0x020b9fec": {
       "author": "tangosdev",
@@ -13979,47 +13979,47 @@
     },
     "ov002:0x020ba01c": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba01cEiiii"
+      "name": "_ZN13daObjSwitch_c13ScaleOverTimeEiiii"
     },
     "ov002:0x020ba0bc": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba0bcEv"
+      "name": "_ZN13daObjSwitch_c16StateExpiredMainEv"
     },
     "ov002:0x020ba0f8": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba0f8Ev"
+      "name": "_ZN13daObjSwitch_c18StateUnpressedMainEv"
     },
     "ov002:0x020ba1ac": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba1acEv"
+      "name": "_ZN13daObjSwitch_c16StateTickingMainEv"
     },
     "ov002:0x020ba2ac": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba2acEv"
+      "name": "_ZN13daObjSwitch_c16StateTickingInitEv"
     },
     "ov002:0x020ba2d0": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba2d0Ev"
+      "name": "_ZN13daObjSwitch_c16StatePressedMainEv"
     },
     "ov002:0x020ba3a8": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba3a8Ev"
+      "name": "_ZN13daObjSwitch_c13StateIdleMainEv"
     },
     "ov002:0x020ba3fc": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba3fcEv"
+      "name": "_ZN13daObjSwitch_c13StateIdleInitEv"
     },
     "ov002:0x020ba4c0": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
+      "name": "_ZN13daObjSwitch_c11ResetTimersEv"
     },
     "ov002:0x020ba4d8": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba4d8Ei"
+      "name": "_ZN13daObjSwitch_c8SetStateEi"
     },
     "ov002:0x020ba520": {
       "author": "tangosdev",
-      "name": "_ZN13daObjSwitch_c19func_ov002_020ba520Ev"
+      "name": "_ZN13daObjSwitch_c17CallStateBehaviorEv"
     },
     "ov002:0x020ba568": {
       "author": "tangosdev",
@@ -14039,11 +14039,11 @@
     },
     "ov002:0x020baa2c": {
       "author": "tangosdev",
-      "name": "func_ov002_020baa2c"
+      "name": "_ZN13daObjSwitch_c9OnStoodOnEP8dActor_c"
     },
     "ov002:0x020baa98": {
       "author": "ruspecial",
-      "name": "func_ov002_020baa98"
+      "name": "_ZN13daObjSwitch_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov002:0x020baaac": {
       "author": "andrewboudreau",

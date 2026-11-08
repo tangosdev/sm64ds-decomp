@@ -58,21 +58,31 @@ struct daObjSwitch_c : dBgActor_c {
     int Render();
     void OnGroundPounded(dActor_c &other);
 
+    /* The collider's stood-on callback and the handler it forwards to. */
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
+    void OnStoodOn(dActor_c *);
+
     /* State-table members: the sinit data records at 0x0210987c.. store
-       {init, exec} pointer-to-member pairs built from these addresses. */
-    int  func_ov002_020b9f00();
-    void func_ov002_020b9f80();
-    void func_ov002_020ba01c(int mask, Fix12i b, Fix12i base, Fix12i target);
-    void func_ov002_020ba0bc();
-    void func_ov002_020ba0f8();
-    void func_ov002_020ba1ac();
-    void func_ov002_020ba2ac();
-    void func_ov002_020ba2d0();
-    void func_ov002_020ba3a8();
-    void func_ov002_020ba3fc();
-    void func_ov002_020ba4c0();
-    void func_ov002_020ba4d8(int nextState);
-    void func_ov002_020ba520();
+       {init, exec} pointer-to-member pairs built from these addresses.
+       Every name below is coined. The five states follow the N64 purple
+       switch (purple_switch.inc.c): idle, pressed, ticking, unpressed, then
+       the slot where N64 waits for Mario to get off. Here that slot clears
+       the event bit and goes straight to unpressed, so it is "expired".
+       ScaleOverTime is N64 cur_obj_scale_over_time, and it also lowers the
+       collision by the squash. */
+    int  FindTargetStar();
+    void UpdateClsnMatrix();
+    void ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target);
+    void StateExpiredMain();
+    void StateUnpressedMain();
+    void StateTickingMain();
+    void StateTickingInit();
+    void StatePressedMain();
+    void StateIdleMain();
+    void StateIdleInit();
+    void ResetTimers();
+    void SetState(int nextState);
+    void CallStateBehavior();
 };
 
 #ifndef SM64DS_PLATFORM_PC
