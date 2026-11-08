@@ -134,7 +134,7 @@ Reg      g_reg_ctl[kMaxRegs], g_reg_world[kMaxRegs];
 int      g_nreg_ctl = 0, g_nreg_world = 0;
 
 // proof knobs
-struct KillKnob { unsigned frame; int id; int n; bool done; };
+struct KillKnob { unsigned frame; int id; int n; bool done; bool gone; };
 KillKnob g_kill[8]; int g_nkill = 0;
 unsigned g_star_frame = 0, g_star_next = 0; int g_star_tries = 0; unsigned long long g_star_base = 0;
 bool g_star_done = true, g_star_spawned = false;   // SM64DS_COOP_STAR=<est frame>: the local player touches a PowerStar
@@ -156,12 +156,14 @@ void read_env() {
     g_log = l && *l && *l != '0';
     const char *s = std::getenv("SM64DS_COOP_SYNC");
     g_sync = !(s && *s == '0');
-    if (const char *k = std::getenv("SM64DS_COOP_KILL")) {
+    // SM64DS_COOP_GONE has the same form as SM64DS_COOP_KILL but removes with MarkForDestruction alone (no death bit),
+    // the end a broken wall, a toppled pillar or a beaten Big Mr. I reaches, so a proof can drive the swallow path.
+    for (int g = 0; g < 2; ++g) if (const char *k = std::getenv(g ? "SM64DS_COOP_GONE" : "SM64DS_COOP_KILL")) {
         const char *p = k;
         while (*p && g_nkill < 8) {
             unsigned f = 0; int id = 0, n = 0, used = 0;
             if (std::sscanf(p, "%u:%i:%i%n", &f, &id, &n, &used) >= 3 && used > 0) {
-                g_kill[g_nkill++] = {f, id, n, false};
+                g_kill[g_nkill++] = {f, id, n, false, g == 1};
                 p += used;
             }
             while (*p == ';' || *p == ',' || *p == ' ') ++p;
@@ -1561,10 +1563,12 @@ void knob_kill(const KillKnob &k) {
     std::sort(c, c + n, [](const C &x, const C &y) { return x.d2 != y.d2 ? x.d2 < y.d2 : x.slot < y.slot; });
     int killed = 0;
     for (int i = 0; i < n && killed < k.n; ++i, ++killed) {
-        std::fprintf(stderr, "[coop-knob] kill class=%d slot=%d\n", k.id, (int)c[i].slot);
-        _ZN8dActor_c24KillAndTrackInDeathTableEv(c[i].a);
+        std::fprintf(stderr, "[coop-knob] %s class=%d slot=%d\n", k.gone ? "gone" : "kill", k.id, (int)c[i].slot);
+        if (k.gone) _ZN7fBase_c18MarkForDestructionEv(c[i].a);
+        else _ZN8dActor_c24KillAndTrackInDeathTableEv(c[i].a);
     }
-    std::fprintf(stderr, "[coop-knob] kill class=%d asked %d did %d (live candidates %d)\n", k.id, k.n, killed, n);
+    std::fprintf(stderr, "[coop-knob] %s class=%d asked %d did %d (live candidates %d)\n", k.gone ? "gone" : "kill", k.id,
+                 k.n, killed, n);
 }
 
 void knob_goto(int id, int tries) {
