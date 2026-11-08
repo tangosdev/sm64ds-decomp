@@ -30887,55 +30887,55 @@
     },
     "ov016:0x02111284": {
       "author": "lunavyqo",
-      "name": "_ZN9daMoray_c19func_ov016_02111284Ev"
+      "name": "_ZN9daMoray_c18UpdateHitCylindersEv"
     },
     "ov016:0x02111534": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111534Ev"
+      "name": "_ZN9daMoray_c16StateRetreatMainEv"
     },
     "ov016:0x021115a4": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c16BookSwitch_SpawnEv"
+      "name": "_ZN9daMoray_c16StateRetreatInitEv"
     },
     "ov016:0x021115c0": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_021115c0Ev"
+      "name": "_ZN9daMoray_c17StatePathSwimMainEv"
     },
     "ov016:0x02111718": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111718Ev"
+      "name": "_ZN9daMoray_c17StatePathSwimInitEv"
     },
     "ov016:0x02111758": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111758Ev"
+      "name": "_ZN9daMoray_c14StateLungeMainEv"
     },
     "ov016:0x02111860": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111860Ev"
+      "name": "_ZN9daMoray_c14StateLungeInitEv"
     },
     "ov016:0x021118b4": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_021118b4Ev"
+      "name": "_ZN9daMoray_c16StateSwimOutMainEv"
     },
     "ov016:0x02111994": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111994Ev"
+      "name": "_ZN9daMoray_c16StateSwimOutInitEv"
     },
     "ov016:0x021119ec": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_021119ecEv"
+      "name": "_ZN9daMoray_c16StateDenWaitMainEv"
     },
     "ov016:0x02111bac": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111bacEv"
+      "name": "_ZN9daMoray_c16StateDenWaitInitEv"
     },
     "ov016:0x02111bf0": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111bf0EPNS_5StateE"
+      "name": "_ZN9daMoray_c8SetStateEPNS_5StateE"
     },
     "ov016:0x02111c40": {
       "author": "tangosdev",
-      "name": "_ZN9daMoray_c19func_ov016_02111c40Ev"
+      "name": "_ZN9daMoray_c10UpdatePoseEv"
     },
     "ov016:0x02111f38": {
       "author": "tangosdev",
