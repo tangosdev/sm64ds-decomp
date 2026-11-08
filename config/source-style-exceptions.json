@@ -414,7 +414,7 @@
       "rule": "handspelled-member",
       "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
       "count": 3,
-      "reason": "Scalar ABI bridge for the Fix12-by-value OAM overload. include/OAM.h excludes it because a by-value Fix12 parameter homes r0-r3 to the stack. Carried from RenderWaitingText and func_ov075_021199d8. Follow-up: retire the bridge when a Fix12 spelling that passes in registers exists.",
+      "reason": "Scalar ABI bridge for the Fix12-by-value OAM overload. include/OAM.h excludes it because a by-value Fix12 parameter homes r0-r3 to the stack. Carried from RenderWaitingText and RenderRecruitText. Follow-up: retire the bridge when a Fix12 spelling that passes in registers exists.",
       "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021190a4..0x0211a854. 30/30 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked, including the nine functions the file already owned."
     },
     {

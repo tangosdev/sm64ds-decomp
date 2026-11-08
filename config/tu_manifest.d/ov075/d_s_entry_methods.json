@@ -316,63 +316,63 @@
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_02119640.c",
-      "symbol": "func_ov075_02119640",
+      "symbol": "_ZN10dScEntry_c18UpdateSessionStartEv",
       "address": "0x02119640",
       "size": "0x00000090",
       "ordinal": 42
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_021196d0.c",
-      "symbol": "func_ov075_021196d0",
+      "symbol": "_ZN10dScEntry_c17EnterSessionStartEv",
       "address": "0x021196d0",
       "size": "0x000000ac",
       "ordinal": 43
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_0211977c.c",
-      "symbol": "func_ov075_0211977c",
+      "symbol": "_ZN10dScEntry_c15UpdateSoloStartEv",
       "address": "0x0211977c",
       "size": "0x00000060",
       "ordinal": 44
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_021197dc.c",
-      "symbol": "func_ov075_021197dc",
+      "symbol": "_ZN10dScEntry_c14EnterSoloStartEv",
       "address": "0x021197dc",
       "size": "0x0000000c",
       "ordinal": 45
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_021197e8.c",
-      "symbol": "func_ov075_021197e8",
+      "symbol": "_ZN10dScEntry_c17UpdateSoloConfirmEv",
       "address": "0x021197e8",
       "size": "0x00000130",
       "ordinal": 46
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_02119918.c",
-      "symbol": "func_ov075_02119918",
+      "symbol": "_ZN10dScEntry_c16EnterSoloConfirmEv",
       "address": "0x02119918",
       "size": "0x000000c0",
       "ordinal": 47
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_021199d8.cpp",
-      "symbol": "func_ov075_021199d8",
+      "symbol": "_ZN10dScEntry_c17RenderRecruitTextEv",
       "address": "0x021199d8",
       "size": "0x0000015c",
       "ordinal": 48
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_02119b34.c",
-      "symbol": "func_ov075_02119b34",
+      "symbol": "_ZN10dScEntry_c13UpdateRecruitEv",
       "address": "0x02119b34",
       "size": "0x00000104",
       "ordinal": 49
     },
     {
       "legacy_source": "src/unnamed/ov075/func_ov075_02119c38.c",
-      "symbol": "func_ov075_02119c38",
+      "symbol": "_ZN10dScEntry_c12EnterRecruitEv",
       "address": "0x02119c38",
       "size": "0x00000088",
       "ordinal": 50
