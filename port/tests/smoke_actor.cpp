@@ -34,8 +34,8 @@ extern void *data_ov098_0213c380[6];    /* {model,kcl,?} entry table */
 extern char data_ov098_0213c384[0x18];  /* column-b view of the same */
 extern void *data_020a0eac_c;           /* actor heap = root heap */
 extern void *data_020a0ea0;             /* defaultHeapPtr (gate 3a) */
-extern void *data_0209f394[];           /* the player array */
-extern unsigned char data_0209f21c;     /* player count */
+extern void *gPlayers[];                /* the player array */
+extern unsigned char gNumPlayers;       /* player count */
 void hal_fill_model_vtable(void);
 void hal_fill_shadow_vtable(void);
 void hal_fill_mmc_vtable(void);
@@ -101,8 +101,8 @@ int main(void)
        (ClosestPlayer callers deref without a null check -- on the DS
        Mario always exists). Position at +0x5c, near the sign. */
     static char fake_player[0x800];
-    data_0209f394[0] = fake_player;
-    *(unsigned char *)&data_0209f21c = 1;
+    gPlayers[0] = fake_player;
+    *(unsigned char *)&gNumPlayers = 1;
 
     int *actor = ArrowSignRight_Spawn();
     CHECK(actor != NULL);

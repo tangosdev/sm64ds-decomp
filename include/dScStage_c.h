@@ -137,7 +137,7 @@ struct dScStage_c : dScene_c {
     s32 mWaitingForLoad; /* 0x9c4 */
 };
 
-/* The stage's one graph-callback object, data_0209f3c4.
+/* The stage's one graph-callback object, sStageGraphCallback.
 
    RTTI names the class: _ZTIN10dScStage_c15graphCallback_cE at 0x02092164 and
    _ZTSN10dScStage_c15graphCallback_cE at 0x02092198, with the vtable between

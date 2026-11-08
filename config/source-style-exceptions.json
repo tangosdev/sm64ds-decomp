@@ -986,6 +986,14 @@
       "evidence": "ov006 callers of Dealer_Update matched after the Dealer * change. The offset itself was already in the function."
     },
     {
+      "path": "src/minigames/d_s_mg_teresa.cpp",
+      "rule": "unknown-field",
+      "match": "unk_1b",
+      "count": 1,
+      "reason": "Reveal_Start clears byte 0x1b of dScMgTeresa_c::Reveal and nothing in this TU reads it. This PR replaces the raw `*(char *)(raw + 0x4bbb)` store off a `(char *)this` alias with the header's existing member name; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgTeresa_c.h line 113 (`u8 unk_1b; /* 0x1b */`); objsnap of d_s_mg_teresa.cpp IDENTICAL to main; ov006 teresa TU tubuild verify"
+    },
+    {
       "path": "src/game/actors/d_a_demo.cpp",
       "rule": "handspelled-member",
       "match": "_ZN8daDemo_c19func_ov002_020f26c4EPh",
@@ -1192,6 +1200,22 @@
       "count": 2,
       "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. No header declares IRQ. Follow-up: give IRQ a header once its primitives are reconstructed as C++.",
       "evidence": "arm9/isdoverlay 6/6 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from src/unnamed/arm9/0206/func_0206d868.cpp on main, which this fold absorbs, with its `local extern:` note"
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "unknown-field",
+      "match": "unk_11",
+      "count": 3,
+      "reason": "Byte 0x11 of dMgMemory2Card_c and dMgMemory2Player_c is write-only in the ROM: PlayerDrop stores 1 to the player's (already on main as `mPlayers[player].unk_11 = 1`) and ResetGame clears both. This PR replaces ResetGame's raw stepped-pointer stores `*(char *)(p + 0x51b9)` / `(p + 0x5399)` with the header's existing member names. Nothing reads either byte, so there is no evidence for a name and none is invented; the sibling include/dScMgMemory_c.h documents the same fields as write-only unk_11. Follow-up: name them if a reader is found (e.g. in a shared memory-minigame helper).",
+      "evidence": "include/dScMgMemory2_c.h lines 28 and 46 (`u8 unk_11;`); include/dScMgMemory_c.h lines 34 and 50 (write-only notes); ov006/dScMgMemory2_c tubuild verify 52/52 relocs ok order ok"
+    },
+    {
+      "path": "src/minigames/d_s_mg_memory2.cpp",
+      "rule": "unknown-field",
+      "match": "unk_5407",
+      "count": 1,
+      "reason": "ResetGame clears byte 0x5407 of the scene and nothing in the ROM reads it. This PR replaces the raw `(p + 0x407)` store off `this + 0x5000` with the header's existing member name; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgMemory2_c.h line 183 (`u8 unk_5407; /* 0x5407 */`); ov006/dScMgMemory2_c tubuild verify 52/52 relocs ok order ok"
     }
   ]
 }

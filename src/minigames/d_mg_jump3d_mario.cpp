@@ -164,7 +164,7 @@ extern char sJump3DRoundLayouts[];
 
 extern Matrix4x3 data_020a0e68;
 extern short data_02082214[];
-extern fBase_c *data_0209f5c0;
+extern fBase_c *gCurrentScene;
 
 }  /* extern "C" */
 
@@ -881,7 +881,7 @@ int dMgJump3DMario_c::LoadResources()
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &mPos, &mScreenX);
 
-    t = data_0209f5c0->actorID == 0x175;
+    t = gCurrentScene->actorID == 0x175;
     if (t != 0) {
         func_02016a14(&mAnmModel, 0x7fff);
         func_02016a04(&mAnmModel, 0x210);

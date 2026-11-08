@@ -131,14 +131,14 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_ov102_0214b3b8",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214b3b8Ev",
       "address": "0x0214b3b8",
       "size": "0x00000038",
       "legacy_source": "src/func_ov102_0214b3b8.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov102_0214b3f0",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214b3f0Ei",
       "address": "0x0214b3f0",
       "size": "0x00000054",
       "legacy_source": "src/func_ov102_0214b3f0.c",
@@ -222,7 +222,7 @@
       "ordinal": 25
     },
     {
-      "symbol": "func_ov102_0214beb4",
+      "symbol": "_ZN7daBmb_c19func_ov102_0214beb4Ev",
       "address": "0x0214beb4",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov102_0214beb4.c",

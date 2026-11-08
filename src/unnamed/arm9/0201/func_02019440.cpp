@@ -6,7 +6,7 @@
 
 extern "C" {
 
-extern dGraph_c::callback_c *data_0209d4a8; /* the scene graph callback (d_s_dsmt.cpp) */
+extern dGraph_c::callback_c *gGraphCallback; /* the scene graph callback (d_s_dsmt.cpp) */
 class dFdBrightness_c;
 extern dFdBrightness_c *data_0209d4ac; /* the brightness fader (d_scene.cpp) */
 /* the active transition fader (d_s_stage_methods.cpp wipes, KuppaScript.cpp colour fades) */
@@ -42,7 +42,7 @@ void func_02019440(void) {
     MultiStore32Bytes(b, (int *)0x7000000, 0x400);
     c = 0;
     MultiStore32Bytes(c, (int *)0x5000000, 0x400);
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     data_0209d4ac = 0;
     data_0209d4b0 = 0;
     func_0200f4f4();

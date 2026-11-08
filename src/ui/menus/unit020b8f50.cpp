@@ -45,6 +45,7 @@
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "cstd.h"
 #include "Ov007Work.h"
 #include "Ov007Sprite.h"
@@ -84,7 +85,6 @@ extern s16 data_ov007_02104b98[];
 #define SCENE ((Ov007PickerScene *)data_ov007_02104ba0)
 #define SPRITES data_ov007_02104b9c
 
-extern s16 data_02082214[];
 extern u16 data_ov007_020d7b54[];
 extern int data_ov007_020d7b60;
 extern char data_ov007_020d7b80[];
@@ -304,7 +304,6 @@ void func_ov007_020bb4b0(void) {
             if (t1 >= 0xa0) {
                 int m = cstd::mod(t1 - 0xa0, 5);
                 int mc, v3, v3sq;
-                u32 u;
                 s16 tbl;
                 if (m <= 0) {
                     mc = 0;
@@ -321,10 +320,7 @@ void func_ov007_020bb4b0(void) {
                     v3 = cstd::div((t1 - 0xa0) << 0xc, 0x28);
                 }
                 v3sq = (int)(((s64)v3 * v3) >> 0xc);
-                u = (u32)(mc * 0xffff);
-                u = u << 4;
-                u = u >> 0x10;
-                tbl = data_02082214[((int)u >> 4) * 2];
+                tbl = FX_SinIdx((u16)((mc * 0xffff) >> 12) >> 4);
                 extra = FX_MUL(v3sq, (tbl * (s16)0xa));
             }
             if (dir > 0) {
@@ -390,7 +386,6 @@ void func_ov007_020bb4b0(void) {
                 if (c1 >= 0x12c) {
                     int m2 = cstd::mod(c1, 0x64);
                     int mc2;
-                    u32 u2;
                     int t2v;
                     if (m2 <= 0) {
                         mc2 = 0;
@@ -399,10 +394,7 @@ void func_ov007_020bb4b0(void) {
                     } else {
                         mc2 = cstd::div(m2 << 0xc, 0x64);
                     }
-                    u2 = (u32)(mc2 * 0xffff);
-                    u2 = u2 << 4;
-                    u2 = u2 >> 0x10;
-                    t2v = data_02082214[((int)u2 >> 4) * 2];
+                    t2v = FX_SinIdx((u16)((mc2 * 0xffff) >> 12) >> 4);
                     if (t2v < 0) {
                         t2v = -t2v;
                     }
@@ -410,12 +402,8 @@ void func_ov007_020bb4b0(void) {
                 }
             }
             if (md == 0) {
-                u32 uu = (u32)((dir2 * amp) * 0x3555);
-                int idx;
-                uu = uu << 4;
-                uu = uu >> 0x10;
-                idx = (int)uu >> 4;
-                MTX_Rot22_(mat, data_02082214[idx * 2], data_02082214[idx * 2 + 1]);
+                int idx = (u16)(((dir2 * amp) * 0x3555) >> 12) >> 4;
+                MTX_Rot22_(mat, FX_SinIdx(idx), FX_CosIdx(idx));
                 func_ov007_020c5490(s, mat);
             } else {
                 int n = cstd::div(s->groupCount, 4) + 1;
@@ -710,14 +698,10 @@ void func_ov007_020bad8c(void) {
             var_r0 = cstd::div(m << 0xc, p3);
         }
         {
-            u32 u = (u32)(var_r0 * 0xffff);
-            int idx;
+            int idx = (u16)((var_r0 * 0xffff) >> 12) >> 4;
             short tblval;
             int amt;
-            u = u << 4;
-            u = u >> 0x10;
-            idx = (int)u >> 4;
-            tblval = data_02082214[idx * 2];
+            tblval = FX_SinIdx(idx);
             amt = FX_MUL(tblval, 0x258);
             func_ov007_020c55bc(r6, amt + 0x1000, 0x1000 - amt);
         }
@@ -780,7 +764,7 @@ void func_ov007_020baa10(void) {
             v = 0x1000;
         else
             v = cstd::div(m << 12, 0x3c);
-        s = data_02082214[((u16)((v * 0xffff) >> 12) >> 4) * 2];
+        s = FX_SinIdx((u16)((v * 0xffff) >> 12) >> 4);
         if (state == 2) {
             a->posOffset.x = -dx / 48 + func_ov007_020c3ba8(dx / 48 - -dx / 48);
             a->posOffset.y = FX_MUL(s, (dy / 2 - dy / 8));
@@ -803,9 +787,9 @@ void func_ov007_020baa10(void) {
             v = cstd::div(m << 12, 0x3c);
         if (SCENE->states[3]->currentState == 4)
             v = 0x1000 - v;
-        idx = ((u16)((v * 0xffff) >> 12) >> 4) * 2;
-        a->posOffset.x = FX_MUL((dx / 4), data_02082214[idx + 1]);
-        a->posOffset.y = FX_MUL((dy / 4), data_02082214[idx]);
+        idx = (u16)((v * 0xffff) >> 12) >> 4;
+        a->posOffset.x = FX_MUL((dx / 4), FX_CosIdx(idx));
+        a->posOffset.y = FX_MUL((dy / 4), FX_SinIdx(idx));
         return;
     }
     case 5:
@@ -980,7 +964,6 @@ int func_ov007_020ba368(int t) {
         }
         if (t <= 0x50) {
             int ratio, m, mc, r2c, ease1, ease2, term, sinval;
-            u32 u;
             int idx;
             short tblval;
             if (t <= 0) {
@@ -1007,11 +990,8 @@ int func_ov007_020ba368(int t) {
                 r2c = cstd::div((t - 0x14) << 0xc, 0x28);
             }
             ease2 = (int)(((s64)r2c * (0x2000 - r2c)) >> 0xc);
-            u = (u32)(mc * 0xffff);
-            u = u << 4;
-            u = u >> 0x10;
-            idx = (int)u >> 4;
-            tblval = data_02082214[idx * 2];
+            idx = (u16)((mc * 0xffff) >> 12) >> 4;
+            tblval = FX_SinIdx(idx);
             term = FX_MUL(ease2, 0x3e8);
             sinval = FX_MUL(tblval, term);
             if (t <= 0x4d) {

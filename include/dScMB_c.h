@@ -38,8 +38,8 @@
  * base dtor" sequence.
  *
  * InitResources (func_0203506c) separately registers a GLOBAL
- * dScMB_c::graphCallback_c object (data_020a0c68, constructed by
- * func_02034b1c(&data_020a0c68, this)) with `this` as its context --
+ * dScMB_c::graphCallback_c object (sMBGraphCallback, constructed by
+ * func_02034b1c(&sMBGraphCallback, this)) with `this` as its context --
  * NOT an embedded member of dScMB_c. That callback's layout is declared
  * below; it occupies no space in the scene.
  *
@@ -79,7 +79,7 @@ struct dScMB_c : dScene_c {
     void func_02034d34();
 };
 
-/* The GLOBAL callback object InitResources registers (data_020a0c68), not a
+/* The GLOBAL callback object InitResources registers (sMBGraphCallback), not a
    member of dScMB_c -- it occupies no space in this class; see the note above.
    Derives from dGraph_c::callback_c, the ROM-proven base whose _ZTI edge every
    scene's nested graphCallback_c points at (include/dGraph_c.h).

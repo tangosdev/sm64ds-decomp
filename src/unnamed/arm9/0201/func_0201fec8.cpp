@@ -19,7 +19,7 @@ extern void OS_GetOwnerInfo(unsigned char *dst);
 extern void func_0203db64(char *a, char *b);
 extern int func_0203daac(void);
 extern void func_0201a9fc(char *c);
-extern unsigned char func_0201a96c(char *self, unsigned char newVal);
+extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 
 void func_0201fec8(void)
 {
@@ -47,7 +47,7 @@ void func_0201fec8(void)
     }
     data_0208f274 = func_0203daac();
     func_0201a9fc((char *)&data_0209d574);
-    func_0201a96c((char *)&data_0209d574, saved);
+    func_0201a96c(&data_0209d574, saved);
     data_0209e64c = 1;
 }
 }

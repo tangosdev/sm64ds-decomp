@@ -129,7 +129,7 @@ unsigned int d_a_trsNewHold(unsigned int uniqueID, unsigned int effectID, int x,
                             const void *dir, void *callback);
 
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f264;
+extern unsigned char gCurrentEntranceId;
 /* Per-variant tables indexed by mVariant: death mode, hurt damage. */
 extern int data_ov063_0211e22c[];
 extern int data_ov063_0211e1ec[];
@@ -172,7 +172,7 @@ int func_020092c4(void *cam, void *out, void *target);
 void func_02012694(unsigned int a, const Vector3 *p);
 u16 func_0201277c(unsigned int a);
 extern s16 data_02082214[];
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
 extern void Vec3_MulScalarInPlace(void *v, int s);
@@ -942,7 +942,7 @@ void daTrs_c::func_ov063_021177b0() {
     }
 
     if (this->mHitPoints == 0) {
-        dCamera_c *cam = data_0209f318;
+        dCamera_c *cam = gCamera;
         unsigned short flags = *(unsigned short*)&this->mBooFlags;
 
         if (((unsigned)(flags << 21)) >> 31) {
@@ -1095,7 +1095,7 @@ void daTrs_c::func_ov063_02117b0c() {
             *fl = (u16)(*fl & ~TRS_FLAG_CAM_HELD);
         }
         {
-            data_0209f318->mFlags &= ~8;
+            gCamera->mFlags &= ~8;
         }
         break;
     }
@@ -1109,7 +1109,7 @@ void daTrs_c::func_ov063_02117cdc() {
     dCamera_c *cam;
     int neg;
 
-    cam = data_0209f318;
+    cam = gCamera;
     switch (this->mSubState) {
     case 0:
         this->mTalkPlayer = (daPly_c *)ClosestPlayer();
@@ -3406,10 +3406,10 @@ int daTrs_c::InitResources()
             MarkForDestruction();
             return 1;
         }
-        /* data_0209f264 is LAST_ENTRANCE_ID. When it is 0 the cage (mCarriedID
+        /* gCurrentEntranceId is LAST_ENTRANCE_ID. When it is 0 the cage (mCarriedID
            is T_BASKET here) is spawned at once, muted; if that Spawn succeeds
            this Boo is removed. */
-        if (data_0209f264 == 0) {
+        if (gCurrentEntranceId == 0) {
             spawned = dActor_c::Spawn(mCarriedID, 0, mPos, 0, mAreaIdx, -1);
             if (spawned != 0) {
                 ((daTBasket_c *)spawned)->mMuteSecretSound = 1;

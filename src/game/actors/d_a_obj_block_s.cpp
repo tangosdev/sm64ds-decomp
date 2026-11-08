@@ -74,6 +74,7 @@ enum daObjBlockS_c_AssetId {
 #include "decl_Actor.h"
 #include "cstd.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "decl_common.h"
 #include "daObjBlockS_c.h"
 #include "dActor_c.h"
@@ -129,7 +130,6 @@ enum {
 extern "C" {
 extern u32 gNextActorUpdateMask;
 extern int data_ov098_0213c4c8[];
-extern s16 data_02082214[];
 extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_block_sNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
@@ -394,10 +394,8 @@ void daObjBlockS_c::func_ov098_021384fc()
 
 /* STATE_SPIT_OUT, enter. Zeroes the sink offset and target, then puts the
  * crate 80 units ahead of mEatingPlayer along that player's Y angle (the x
- * offset is table word 0 and the z offset table word 1 of data_02082214 at
- * that angle, scaled by 0x50000; the table holds {0, 0x1000} for angle 0, so
- * word 0 is the sine and word 1 the cosine) and 80 units
- * above it, facing the same way (mAngleY, mPrevAngleY). Clears mFlags bit
+ * offset is FX_SinIdx and the z offset FX_CosIdx of that angle, scaled by
+ * 0x50000) and 80 units above it, facing the same way (mAngleY, mPrevAngleY). Clears mFlags bit
  * 0x80000, launches it with horizontal speed 30 units (0x1e000) and vertical
  * speed 15 units (0xf000), hands mEatingPlayer over to mPrevHolder and sets
  * dCc_c flags bit 0x2000 on the first cylinder. */
@@ -405,7 +403,6 @@ void daObjBlockS_c::func_ov098_021385e0()
 {
     daPly_c *obj;
     short angle;
-    int idx;
     int xw, zw;
 
     mClsnYOffsetTarget = 0;
@@ -424,15 +421,13 @@ void daObjBlockS_c::func_ov098_021385e0()
         mPosZ = osrc[2];
     }
 
-    idx = (unsigned short)mAngleY >> 4;
-    xw = data_02082214[idx * 2];
-    mPosX = mPosX + FX_MUL(xw, 0x50000);
+    xw = FX_SinIdx((unsigned short)mAngleY >> 4);
+    mPosX += FX_MUL(xw, 0x50000);
 
-    mPosY = mPosY + 0x50000;
+    mPosY += 0x50000;
 
-    idx = (unsigned short)mAngleY >> 4;
-    zw = data_02082214[idx * 2 + 1];
-    mPosZ = mPosZ + FX_MUL(zw, 0x50000);
+    zw = FX_CosIdx((unsigned short)mAngleY >> 4);
+    mPosZ += FX_MUL(zw, 0x50000);
 
     mFlags &= ~0x80000;
 

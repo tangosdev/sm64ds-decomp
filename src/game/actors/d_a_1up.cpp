@@ -45,26 +45,21 @@
  * the members call are hoisted to the file-scope `extern "C"` region
  * above the destructor instead, one spelling per symbol; the views
  * differed only in pointer types, so marshalling and bytes are unchanged.
- * func_ov002_020aefa4's int-returning view is the exception: a file-scope
- * `int` declaration is `illegal function overloading` against its `void`
- * definition, so func_ov002_020af218 tail-returns it through a
- * function-pointer cast, `((int (*)(void *))func_ov002_020aefa4)(...)`,
- * which mwccarm folds to the same direct `bl`. External DATA declarations
- * stay in the bodies: mwccarm leaves a variable's name unmangled in C++.
+ * External DATA declarations stay in the bodies: mwccarm leaves a
+ * variable's name unmangled in C++.
  *
  * `decl_common.h` IS DELIBERATELY NOT INCLUDED. Its claims on this TU
- * reduce to `func_ov002_020aefa4(char *)` -- redundant with this file's
- * own definition -- and `Vec3_Asr`, already in the decl region above; the header's other ~1900
+ * reduce to `Vec3_Asr`, already in the decl region above; the header's other ~1900
  * catch-all spellings would only add overloading-conflict surface
  * against them. ov002/daPly_c and ov006/dScMgPanel_c, the two largest
  * promoted TUs, exclude it for the same reason.
  *
- * 35 OF THE 38 SYMBOLS ARE MEMBERS, written as 34 `da1up_c::` definitions
+ * 36 OF THE 38 SYMBOLS ARE MEMBERS, written as 35 `da1up_c::` definitions
  * (ordinals 0 and 1 are two shards of the one destructor). Nine are the
  * class's own vtable slots: ordinals 0/1 the destructor pair (slots 16/17),
  * 9 OnTurnIntoEgg (19), 10 OnYoshiTryEat (18), 31 CleanupResources (3),
  * 32 OnPendingDestroy (12), 33 Render (9), 34 Behavior (6) and 35
- * InitResources (0). The other 26 members are the former free helpers:
+ * InitResources (0). The other 27 members are the former free helpers:
  * fourteen are ROM-proven non-static members -- the {function pointer, 0}
  * descriptors at 0x02108300..0x02108370 are pointer-to-member-function
  * objects with a zero `this` adjustment, and the static initializer copies
@@ -83,10 +78,6 @@
  * so the licensed run is 38 functions through 0x020b05d0.
  *
  * deslop leftovers:
- * - func_ov002_020aefa4 stays a free `void` function: MEASURED, declaring
- *   it `int` so func_ov002_020af218 could tail-return it costs four of its
- *   five words; af218 instead tail-returns it through an
- *   `int (*)(void *)` cast of its name (folds to the same `bl`).
  * - Particle::System::New: no method declaration in include/
  * - Behavior 0x100: named ++mStateTimer size-DIFF vs unsigned-short launder
  *   (the u16 casts of dEnemyBase_c::mStateTimer at 0x100 stay everywhere they
@@ -184,8 +175,7 @@ enum {
    outright), so the recovered per-callsite views these shards each declared
    locally cannot stay where they were; one spelling per symbol is hoisted here.
    The views differed only in pointer types, so marshalling -- and the emitted
-   bytes -- are unchanged. func_ov002_020aefa4 needs no entry: its definition
-   below is already file-scope C linkage. */
+   bytes -- are unchanged. */
 extern "C" {
 int Vec3_HorzLen(const Vector3*);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
@@ -215,9 +205,9 @@ da1up_c::~da1up_c()
    Mushroom (actorID 277) and 0 for the 1-Up. The previous frame's handle is passed
    back in and the new one stored in mParticleID. While
    the actor is off screen (mFlags bit 3) it only runs when CURRENT_GAMEMODE
-   (data_0209f2d8) is 1. */
+   (gGameMode) is 1. */
 void da1up_c::func_ov002_020aeee4() {
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
 
     int t1 = (actorID == ACTOR_SCALEUP_KINOKO);
     unsigned int effectID = 0;
@@ -225,7 +215,7 @@ void da1up_c::func_ov002_020aeee4() {
 
     int t2 = ((mFlags & ACTOR_FLAG_OFF_SCREEN) != 0);
     if (t2 != false) {
-        int t3 = (data_0209f2d8 == 1);
+        int t3 = (gGameMode == 1);
         if (t3 == false) return;
     }
 
@@ -238,18 +228,12 @@ void da1up_c::func_ov002_020aeee4() {
 /* Sets bit 0x8000 in the cylinder's vulnFlags -- the "yoshi tongue" bit of the
    table in include/dCc_c.h (a best-effort reading there) -- so the mushroom can
    be eaten. func_ov002_020af218 calls it while the player is in range.
-   MEASURED: this definition must stay `void`. Declaring it `int` -- so that
-   ordinal 7's tail-return would type-check against a file-scope declaration
-   -- costs four of this function's five words, and a file-scope `int`
-   declaration beside this `void` definition is illegal function overloading
-   anyway, so ordinal 7 tail-returns it through an `int (*)(void *)` cast of
-   its name instead. */
-extern "C" {
-void func_ov002_020aefa4(char *raw)
-{
-    da1up_c *self = (da1up_c*)raw;
-    self->mdCcAc_c.vulnFlags |= CC_VULN_YOSHI_TONGUE;
-}
+   MEASURED: it returns nothing. An `int` version that returns the new flags
+   is one word longer (the value is kept out of r0 and moved back), so the
+   callers that used to tail-return it as `int` were reading r0 left over
+   from a `void` call. */
+void da1up_c::func_ov002_020aefa4() {
+    mdCcAc_c.vulnFlags |= CC_VULN_YOSHI_TONGUE;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -352,9 +336,8 @@ daPly_c *da1up_c::func_ov002_020af1dc() {
 /* -------------------------------------------------------------------------- */
 /* Stores in mShown whether the player is within `range` whole units
    (IsPlayerInRange shifts it into 20.12), and when it is calls
-   func_ov002_020aefa4 to open the mushroom to Yoshi. Returns 0 when out of range,
-   otherwise that call's result. Every caller in this TU passes 0xbb8 (3000
-   units).
+   func_ov002_020aefa4 to open the mushroom to Yoshi. Every caller in this TU
+   passes 0xbb8 (3000 units).
    The second parameter is FORWARDED, not merely declared. The callers
    below pass 0xbb8 in r1 and this body hands that same word to
    _ZN8dActor_c15IsPlayerInRangeEi, whose ROM name mangles as
@@ -363,11 +346,11 @@ daPly_c *da1up_c::func_ov002_020af1dc() {
    because r1 still holds the incoming range, so naming the argument is
    byte-neutral here and stops the call from handing the callee whatever r1
    happens to hold on a host ABI. */
-int da1up_c::func_ov002_020af218(int range) {
-  mShown=(char)IsPlayerInRange(range);
-  unsigned char v=mShown;
-  if(v==0) return v;
-  return ((int (*)(void*))func_ov002_020aefa4)((void*)this);
+void da1up_c::func_ov002_020af218(int range) {
+    mShown = (char)IsPlayerInRange(range);
+    if (mShown == 0)
+        return;
+    func_ov002_020aefa4();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -710,7 +693,7 @@ void da1up_c::func_ov002_020af950() {
       mVertSpeed = 0x28000;
       mState = 3;
       mShown = 1;
-      func_ov002_020aefa4((char*)this);
+      func_ov002_020aefa4();
       Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
       mFlags &= ~ACTOR_FLAG_CLIP_TEST;
       return;
@@ -774,7 +757,7 @@ void da1up_c::func_ov002_020afa98() {
         mVertSpeed = 0x28000;
         mState = 3;
         mShown = 1;
-        func_ov002_020aefa4((char*)this);
+        func_ov002_020aefa4();
         Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         mFlags &= ~ACTOR_FLAG_CLIP_TEST;
         return;
@@ -838,9 +821,9 @@ void da1up_c::func_ov002_020afbb4() {
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 3 (MUSHROOM_STATIONARY). Only the touch check and the
    3000-unit range check; no physics and no state. */
-int da1up_c::func_ov002_020afc44() {
-  func_ov002_020af3a8();
-  return func_ov002_020af218(0xbb8);
+void da1up_c::func_ov002_020afc44() {
+    func_ov002_020af3a8();
+    func_ov002_020af218(0xbb8);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1104,7 +1087,7 @@ int da1up_c::Behavior()
    point; gravity -2 units (-0x2000) and terminal velocity -50 units (-0x32000);
    the dBgCh_Actr (50 / 50 units) with its limited-movement flag. Finally, when
    LEVEL_ID (gCurrentSublevel) is 7 and the actor is at y = 3500 units (0xdac000),
-   z = 0, and either STAR_ID (data_0209f220) is 1 or star 1 is not collected in
+   z = 0, and either STAR_ID (gCurrentStarId) is 1 or star 1 is not collected in
    the current level, it calls MarkForDestruction and returns 0. */
 int da1up_c::InitResources()
 {
@@ -1112,7 +1095,7 @@ int da1up_c::InitResources()
     extern SharedFilePtr data_ov002_0210d9d8;
     extern SharedFilePtr data_ov002_0210da30;
     extern signed char gCurrentSublevel;
-    extern unsigned char data_0209f220;
+    extern unsigned char gCurrentStarId;
     extern unsigned char data_ov002_020ff040[];
     extern unsigned char data_ov002_020ff050[];
 
@@ -1183,7 +1166,7 @@ int da1up_c::InitResources()
     mParticleID = 0;
 
     if (gCurrentSublevel == 7 && mPosY == 0xdac000 && mPosZ == 0 &&
-        (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0)) {
+        (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0)) {
         MarkForDestruction();
         return 0;
     }
@@ -1209,23 +1192,23 @@ extern "C" da1up_c *da1up_c_classInit_ONEUPKINOKO()
 
 /* -------------------------------------------------------------------------- */
 /* The mushroom-type dispatch array Behavior indexes by mMushroomType. Entry n
-   is da1up_MushroomType n; entry 3's handler returns int, so it takes a cast.
+   is da1up_MushroomType n.
    The definition lives at the bottom so the descriptor objects mwccarm
    materializes for the PMF constants are numbered clear of the anonymous
    objects earlier TUs already pinned (@NNN is a shared namespace). */
 PMF data_ov002_0210dc00[14] = {
-    &da1up_c::func_ov002_020aff10,      /*  0 MUSHROOM_POP_OUT_DRIFT */
-    &da1up_c::func_ov002_020afe4c,      /*  1 MUSHROOM_POP_OUT_FLEE */
-    &da1up_c::func_ov002_020afd10,      /*  2 MUSHROOM_WAIT_THEN_ACCELERATE */
-    (PMF)&da1up_c::func_ov002_020afc44, /*  3 MUSHROOM_STATIONARY */
-    &da1up_c::func_ov002_020afbb4,      /*  4 MUSHROOM_WAIT_THEN_FACE_AWAY */
-    &da1up_c::func_ov002_020afa98,      /*  5 MUSHROOM_HIDDEN_FLEE */
-    &da1up_c::func_ov002_020afa6c,      /*  6 MUSHROOM_TRIGGER_FOR_5 */
-    &da1up_c::func_ov002_020af950,      /*  7 MUSHROOM_HIDDEN_CHASE */
-    &da1up_c::func_ov002_020af924,      /*  8 MUSHROOM_TRIGGER_FOR_7 */
-    &da1up_c::func_ov002_020af838,      /*  9 MUSHROOM_SPAWNER */
-    &da1up_c::func_ov002_020af7cc,      /* 10 MUSHROOM_RISE_THEN_POP_OUT */
-    &da1up_c::func_ov002_020afa50,      /* 11 MUSHROOM_SPIN_TRIGGER_FOR_5 */
-    &da1up_c::func_ov002_020af908,      /* 12 MUSHROOM_SPIN_TRIGGER_FOR_7 */
-    &da1up_c::func_ov002_020af724,      /* 13 MUSHROOM_FALL_THEN_WAIT */
+    &da1up_c::func_ov002_020aff10, /*  0 MUSHROOM_POP_OUT_DRIFT */
+    &da1up_c::func_ov002_020afe4c, /*  1 MUSHROOM_POP_OUT_FLEE */
+    &da1up_c::func_ov002_020afd10, /*  2 MUSHROOM_WAIT_THEN_ACCELERATE */
+    &da1up_c::func_ov002_020afc44, /*  3 MUSHROOM_STATIONARY */
+    &da1up_c::func_ov002_020afbb4, /*  4 MUSHROOM_WAIT_THEN_FACE_AWAY */
+    &da1up_c::func_ov002_020afa98, /*  5 MUSHROOM_HIDDEN_FLEE */
+    &da1up_c::func_ov002_020afa6c, /*  6 MUSHROOM_TRIGGER_FOR_5 */
+    &da1up_c::func_ov002_020af950, /*  7 MUSHROOM_HIDDEN_CHASE */
+    &da1up_c::func_ov002_020af924, /*  8 MUSHROOM_TRIGGER_FOR_7 */
+    &da1up_c::func_ov002_020af838, /*  9 MUSHROOM_SPAWNER */
+    &da1up_c::func_ov002_020af7cc, /* 10 MUSHROOM_RISE_THEN_POP_OUT */
+    &da1up_c::func_ov002_020afa50, /* 11 MUSHROOM_SPIN_TRIGGER_FOR_5 */
+    &da1up_c::func_ov002_020af908, /* 12 MUSHROOM_SPIN_TRIGGER_FOR_7 */
+    &da1up_c::func_ov002_020af724, /* 13 MUSHROOM_FALL_THEN_WAIT */
 };

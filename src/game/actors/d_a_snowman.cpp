@@ -91,8 +91,8 @@ extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
 extern void func_02012694(unsigned int a, void *p);
 extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
-extern unsigned char data_0209f21c;
-extern daPly_c *data_0209f394[];
+extern unsigned char gNumPlayers;
+extern daPly_c *gPlayers[];
 extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, const void *f,
                                    void *g);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -330,9 +330,9 @@ int daSnowman_c::func_ov081_021245e8()
     int i = 0;
     Vector3 v;
     this->mClosestPlayerIdx = -1;
-    if ((int)data_0209f21c > 0) {
+    if ((int)gNumPlayers > 0) {
         do {
-            daPly_c *obj = data_0209f394[i];
+            daPly_c *obj = gPlayers[i];
             if (obj != 0) {
                 int dist;
                 int *s = &obj->mPosX;   /* one base pointer; see 0212423c */
@@ -349,7 +349,7 @@ int daSnowman_c::func_ov081_021245e8()
                 }
             }
             i++;
-        } while (i < data_0209f21c);
+        } while (i < gNumPlayers);
     }
     return min;
 }

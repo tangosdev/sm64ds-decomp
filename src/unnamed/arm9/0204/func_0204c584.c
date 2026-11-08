@@ -1,5 +1,6 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "private/spl_particle_views.h"
 
 /* File-local view of Particle::System (include/Particle__System.h is C++):
@@ -49,7 +50,6 @@ extern void func_0204d9f0(Vector3 *out);
 struct Vector3;
 extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
 extern u32 data_020a4d30;
-extern s16 data_02082214[];
 
 static inline u32 RandVal(void) {
     u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
@@ -182,14 +182,12 @@ void func_0204c584(u8 *self, List *list) {
             break;
         case 3: {
             int q = d10 / count;
-            int idx;
-            s16 c, sn;
+            fx16 s, c;
             d10 += 0x10000;
-            idx = (q >> 4) << 1;
-            c = data_02082214[idx];
-            sn = data_02082214[idx + 1];
-            vecC.x = FMul(c, sys->emitRadius);
-            vecC.y = FMul(sn, sys->emitRadius);
+            s = FX_SinIdx(q >> 4);
+            c = FX_CosIdx(q >> 4);
+            vecC.x = FMul(s, sys->emitRadius);
+            vecC.y = FMul(c, sys->emitRadius);
             vecC.z = d18;
             func_0204cd5c((int *)&p->offset, (int *)&vecC, def->circleAxis,
                           (ParticleSystemView *)self);

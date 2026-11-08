@@ -58,6 +58,7 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "decl_dBgPi.h"
 #include "dBgCh_Lin.h"
 #include "daPly_c.h"
@@ -472,10 +473,6 @@ int EnemyDeathC::func_ov002_020ae454(dBgCh_Actr &clsn) {
 /* Written as the real method over the real dBgCh_Lin/dBgPi classes, which is the
    form the legacy shard recovered and byte-matched. The two by-value Fix12i
    parameters the mangled name claims are spelled as themselves. */
-extern "C" {
-extern short data_02082214[];
-}
-
 int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, bool detectWater,
                                   bool allowObjFloor, Fix12i up) {
     Vector3 start;
@@ -507,9 +504,7 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, b
             }
             Vector3 normal;
             line.surface.CopyNormalTo(normal);
-            int idx = ((unsigned short)maxSlope >> 4) * 2;
-            short cosMax = data_02082214[idx + 1];
-            if (normal.y < cosMax)
+            if (normal.y < FX_CosIdx((u16)maxSlope >> 4))
                 mCliffState = 2;
         } else {
             mCliffState = 1;
@@ -599,12 +594,9 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
                 mPosZ = o2->z;
                 mPosY += 0x32000;
                 {
-                    dActor_c *o3 = mEatingPlayer;
-                    u16 ang = o3->mAngleY;
-                    int idx = (ang >> 4) << 1;
-                    int dist = 0x32000;
-                    mPosX += FX_MUL(data_02082214[idx], dist);
-                    mPosZ += FX_MUL(data_02082214[idx + 1], dist);
+                    u16 ang = mEatingPlayer->mAngleY;
+                    mPosX += FX_MUL(FX_SinIdx(ang >> 4), 0x32000);
+                    mPosZ += FX_MUL(FX_CosIdx(ang >> 4), 0x32000);
                 }
                 {
                     Vector3_16 *p = &mEatingPlayer->mAngle;
@@ -702,13 +694,9 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         src.z = pv->z;
     }
 
-    {
-        int t = ((int)(u16)mAngleY) >> 4;
-        dirvec[0] = data_02082214[t * 2];
-        dirvec[1] = 0;
-        t = ((int)(u16)mAngleY) >> 4;
-        dirvec[2] = data_02082214[t * 2 + 1];
-    }
+    dirvec[0] = FX_SinIdx((u16)mAngleY >> 4);
+    dirvec[1] = 0;
+    dirvec[2] = FX_CosIdx((u16)mAngleY >> 4);
 
     if (p != 0) {
         Vector3 delta;
@@ -729,10 +717,10 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         iX = (u16)aX >> 4;
         iY = (u16)aY >> 4;
 
-        s = FX_MUL(w, data_02082214[iY * 2 + 1]);
-        dst.x += FX_MUL(s, data_02082214[iX * 2]);
-        dst.y += FX_MUL(w, data_02082214[iY * 2]);
-        dst.z += FX_MUL(s, data_02082214[iX * 2 + 1]);
+        s = FX_MUL(w, FX_CosIdx(iY));
+        dst.x += FX_MUL(s, FX_SinIdx(iX));
+        dst.y += FX_MUL(w, FX_SinIdx(iY));
+        dst.z += FX_MUL(s, FX_CosIdx(iX));
 
         dst.y += ((dCc_c *)p)->height >> 1;
     } else {

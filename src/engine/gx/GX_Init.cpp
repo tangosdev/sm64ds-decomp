@@ -28,11 +28,8 @@
 
 #define REG_DISPSTAT      (*(volatile u16 *)0x04000004)
 #define REG_MASTER_BRIGHT (*(volatile u16 *)0x0400006c)
-#define REG_BG2PA         (*(volatile u16 *)0x04000020)
 #define REG_BG2PD         (*(volatile u16 *)0x04000026)
-#define REG_BG3PA         (*(volatile u16 *)0x04000030)
 #define REG_BG3PD         (*(volatile u16 *)0x04000036)
-#define REG_DB_BG2PA      (*(volatile u16 *)0x04001020)
 #define REG_DB_BG2PD      (*(volatile u16 *)0x04001026)
 #define REG_DB_BG3PD      (*(volatile u16 *)0x04001036)
 
@@ -102,7 +99,7 @@ void func_02053c40(void) {
     REG_BG3PD = 0x100;
     REG_DB_BG2PA = 0x100;
     REG_DB_BG2PD = 0x100;
-    *REG_DB_BG3PA = 0x100;
+    REG_DB_BG3PA = 0x100;
     REG_DB_BG3PD = 0x100;
 }
 

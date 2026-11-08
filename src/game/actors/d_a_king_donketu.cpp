@@ -83,7 +83,7 @@
  *   FromUniqueID is followed by a store at sys+0x44, which is still pad_042
  *   on Particle::System.
  * - Vec3_* / Matrix4x3_* have no shared header this TU
- *   can include alone. data_0209f318, data_020a0e68 and data_0209e650 are arm9
+ *   can include alone. gCamera, data_020a0e68 and data_0209e650 are arm9
  *   globals. data_ov002_0210da30 is ov002's; Cleanup only Releases it.
  *   g_profile_KING_DONKETU is outside this TU.
  * - Behavior's opt_propagation off is a push/pop around that function.
@@ -235,7 +235,7 @@ extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void d_a_king_donketuNewSimpleHold(unsigned int id, int x, int y, int z);
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern struct Matrix4x3 data_020a0e68;
 /* Vec3_Sub is not declared by math/CalcLib.h. */
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -318,8 +318,7 @@ void daKing_Donketu_c::func_ov073_0211f2c0(int strength)
     Vector3 rotated;
     Vector3 shifted;
     Vector3 dustPos;
-
-    data_0209f318->func_0200d8c8(&mPos, strength);
+    gCamera->func_0200d8c8(&mPos, strength);
     data_020a0e68 = mBlendAnmModel.mat4x3;
     MulMat4x3Mat4x3(&mBlendAnmModel.data.transforms[mStepBoneIdx], &data_020a0e68, &data_020a0e68);
     mStepBoneIdx ^= 1;
@@ -578,7 +577,7 @@ int daKing_Donketu_c::func_ov073_0211fa74() {
     dActor_c* found;
     volatile struct Vector3_16 rot;
     struct Vector3 pos;
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     ApproachLinear(*(int *)&c->mScaleX, 0, 0x80);
     c->mScaleZ = c->mScaleX;
@@ -636,7 +635,7 @@ int daKing_Donketu_c::func_ov073_0211fbf4() {
     daKing_Donketu_c *c = this;
     daPly_c *pl = c->mTalkPlayer;
     c->mSoundHandle = Sound::PlayLong(c->mSoundHandle, 3, 0x170, *(Vector3 *)&c->mCamSpacePos, 0);
-    data_0209f318->SetFlag_3();
+    gCamera->SetFlag_3();
     c->func_ov073_0211f144();
     if (pl->GetTalkState() == -1) {
         ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123370);
@@ -675,7 +674,7 @@ int daKing_Donketu_c::func_ov073_0211fc78() {
         msgpos[0].y = pv[1];
         msgpos[0].z = pv[2];
     }
-    cam = data_0209f318;
+    cam = gCamera;
     msgpos[1].x = c->mPosX;
     msgpos[1].y = c->mPosY;
     msgpos[1].z = c->mPosZ;
@@ -754,7 +753,7 @@ int daKing_Donketu_c::func_ov073_0211fe8c() {
 
     c->func_ov073_0211f144();
 
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
 
     in.x = 0; in.y = 0; in.z = 0;
@@ -1502,7 +1501,7 @@ int daKing_Donketu_c::func_ov073_0212128c()
     dCamera_c *cam;
     daPly_c *player;
 
-    cam = data_0209f318;
+    cam = gCamera;
     player = c->mTalkPlayer;
     cam->SetFlag_3();
 
@@ -1564,7 +1563,7 @@ int daKing_Donketu_c::func_ov073_02121388() {
         vplayer.y = pv[1];
         vplayer.z = pv[2];
     }
-    cam = data_0209f318;
+    cam = gCamera;
     vmsg.x = c->mPosX;
     vmsg.y = c->mPosY;
     vmsg.z = c->mPosZ;
@@ -1747,7 +1746,7 @@ int daKing_Donketu_c::Behavior()
     Vector3 v48;
     Vector3 v54;
 
-    data_0209f318->mFramedActor = this;
+    gCamera->mFramedActor = this;
     DecIfAbove0_Short(&mStateTimer);
 
     if (c->pp[1] != 0)

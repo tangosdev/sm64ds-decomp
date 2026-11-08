@@ -34,7 +34,7 @@
  * - The carry sparkle reads the first bone's word at +0xc; BMD_Bone does not
  *   name it.
  * - g_profile_OBJ_KEY / LAST_STAR stay outside this TU.
- * - data_0209f318 as dCamera_c * matches, but the plurality is void * so the
+ * - gCamera as dCamera_c * matches, but the plurality is void * so the
  *   cast stays.
  *
  * leftovers:
@@ -191,7 +191,7 @@ extern ObjKeyStateTable data_ov089_02132cec;
  * temporary size-DIFFs (see the file comment). The ROM calls the
  * UpdateContinuous veneer, not the method. */
 extern "C" {
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern void *d_a_obj_keyNewHold(u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
@@ -326,7 +326,7 @@ void daObjKey_c::StateFlyToCenter()
     Vector3 v;
     Vector3 center1;
     Vector3 center2;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
 
     switch (mStep) {
     case 0:
@@ -454,7 +454,7 @@ void daObjKey_c::StateStarJump()
 {
     Vector3 v;
     Vector3 target;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
 
     if (mStep < 3) {
         v.x = mPosX;
@@ -601,7 +601,7 @@ void daObjKey_c::StateStarJump()
 
 void daObjKey_c::StateDrop()
 {
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     Vector3 v;
 
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
