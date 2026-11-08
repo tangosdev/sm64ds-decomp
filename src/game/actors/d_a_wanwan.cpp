@@ -6,10 +6,9 @@
  *
  * common.h stays first so the shadow matrix copy stays twelve words.
  */
-/* leftovers: the chain helpers and the twelve state handlers stay extern "C"
- * free functions under their func_ov014_* address names; the rows of
- * data_ov014_0211476c reach the handlers through 8-byte PMF descriptors.
- * g_profile_WANWAN is not this file's data. daPly_c::Hurt stays mangled:
+/* leftovers: the rows of data_ov014_0211476c reach the twelve state members
+ * through 8-byte PMF descriptors that stay ROM-supplied data; the table copies
+ * them by value. g_profile_WANWAN is not this file's data. daPly_c::Hurt stays mangled:
  * it takes Fix12<int> by value. The factory constructs the real class, including its two
  * Vector3[7] arrays. The four resource handles keep address names;
  * their definitions drive this file's static initializer.
@@ -70,10 +69,6 @@ extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
 extern dCamera_c *gCamera;  /* CAMERA */
 
-void func_ov014_02111fb8(daWanwan_c *c);
-void func_ov014_0211236c(daWanwan_c *c);
-void func_ov014_021122dc(daWanwan_c *c);
-void func_ov014_02112788(daWanwan_c *c);
 void func_ov102_0214ae1c(void *bomb);
 
 short atan2_hold_d_a_wanwan_1(int y, int x);
@@ -146,7 +141,7 @@ int daWanwan_c::InitResources() {
         mdCcAcPos_c.Init(this, *((Vector3 *)v), 0x96000, 0x12c000, 0x200004, 0x26ff0);
     }
 
-    func_ov014_02111ebc(1);
+    SetState(1);
 
     {
         /* dst is the actor address advanced by one Vector3 per link, so
@@ -191,7 +186,7 @@ int daWanwan_c::Behavior() {
         if (mPosY <= rest) {
             mPosY = rest;
             if (mWasOnGround == 0)
-                func_ov014_02111fb8(this);
+                PlayLandingEffects();
             mIsOnGround = 1;
         }
     }
@@ -200,17 +195,17 @@ int daWanwan_c::Behavior() {
         dActor_c *fence = dActor_c::FindWithActorID(kFenceActorId, 0);
         mFenceUniqueID = fence->uniqueID;
     }
-    func_ov014_02111f08();
+    UpdateState();
     UpdatePos(&mdCcAcPos_c);
-    func_ov014_02112114();
+    HandleCylinderHit();
     if (mChainBroken == 0)
-        func_ov014_02111fe0();
-    func_ov014_0211250c();
+        RestrictToChain();
+    UpdateChainSegments();
     if (mChainBroken == 0) {
-        func_ov014_0211236c(this);
-        func_ov014_021122dc(this);
+        CapChainToPivot();
+        PinChainToHead();
     }
-    func_ov014_02112788(this);
+    UpdateModelTransform();
     {
         int v[3];
         v[0] = data_ov014_02114700[0];
@@ -248,8 +243,7 @@ int daWanwan_c::CleanupResources() {
 }
 
 /* Place the head and each link, then drop a cylinder shadow under them. */
-extern "C" {
-void func_ov014_02112788(daWanwan_c *c) {
+void daWanwan_c::UpdateModelTransform() {
     /* Translation is m[9..11] of each matrix: position >> 3.
        m and sm walk mLinkModels and mLinkShadows. e and o are the actor
        address advanced by one Vector3 and one dExtSimpleModel_c per link, so
@@ -263,41 +257,40 @@ void func_ov014_02112788(daWanwan_c *c) {
     daWanwan_c *e;
     daWanwan_c *o;
     dExtShadowModel_c *sm;
-    Matrix4x3_FromRotationXYZExt(&c->mAnmModel.mat4x3, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mAnmModel.mat4x3.m[9] = c->mPosX >> 3;
-    c->mAnmModel.mat4x3.m[10] = c->mPosY >> 3;
-    c->mAnmModel.mat4x3.m[11] = c->mPosZ >> 3;
-    t = c->mPosY - c->mSpawnPosY;
+    Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mAnmModel.mat4x3.m[9] = mPosX >> 3;
+    mAnmModel.mat4x3.m[10] = mPosY >> 3;
+    mAnmModel.mat4x3.m[11] = mPosZ >> 3;
+    t = mPosY - mSpawnPosY;
     if (t <= 0x1000)
         t = 0x1000;
     /* DropShadowRadHeight takes Fix12<int> by value. */
-    c->DropShadowRadHeight(c->mShadowModel, c->mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180),
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180),
                            t + 0x28000, 0xf);
     tmp = IDENTITY_MATRIX4X3;
-    sm = c->mLinkShadows;
+    sm = mLinkShadows;
     i = 0;
-    m = c->mLinkModels;
-    e = c;
-    o = c;
+    m = mLinkModels;
+    e = this;
+    o = this;
     for (; i < 7; i++) {
         m->mat4x3 = tmp;
         o->mLinkModels[0].mat4x3.m[9] = e->mLinkPos[0].x >> 3;
         o->mLinkModels[0].mat4x3.m[10] = e->mLinkPos[0].y >> 3;
         o->mLinkModels[0].mat4x3.m[11] = e->mLinkPos[0].z >> 3;
-        t = e->mLinkPos[0].y - c->mSpawnPosY;
+        t = e->mLinkPos[0].y - mSpawnPosY;
         if (t <= 0x1000)
             t = 0x1000;
-        c->DropShadowRadHeight(*sm, m->mat4x3, 0x78000 - FX_MUL(t, 0x180), t + 0x28000, 0xf);
+        DropShadowRadHeight(*sm, m->mat4x3, 0x78000 - FX_MUL(t, 0x180), t + 0x28000, 0xf);
         m++;
         e = (daWanwan_c *)((char *)e + sizeof(Vector3));
         o = (daWanwan_c *)((char *)o + sizeof(dExtSimpleModel_c));
         sm++;
     }
 }
-}
 
 /* Forward chain: head at the actor, then links 1..6, carrying mLinkDelta. */
-void daWanwan_c::func_ov014_0211250c() {
+void daWanwan_c::UpdateChainSegments() {
     int yoff;
     Vector3 dvec;
     Vector3 head;
@@ -401,9 +394,10 @@ void daWanwan_c::func_ov014_0211250c() {
     }
 }
 
-/* Backward chain, from the stump end (link 6) toward the head. */
-extern "C" {
-void func_ov014_0211236c(daWanwan_c *c) {
+/* Backward chain, from the stump end (link 6) toward the head: each link is
+ * pulled to mChainExtension from the one behind it, link 6 from a point
+ * 0x1e000 above the stump. */
+void daWanwan_c::CapChainToPivot() {
     Vector3 tmp;
     Vector3 head;
     Vector3 rotated;
@@ -423,7 +417,7 @@ void func_ov014_0211236c(daWanwan_c *c) {
 
     /* This setup runs twice. Without the first copy the body is 28 bytes
        shorter. */
-    z = c->mChainExtension;
+    z = mChainExtension;
     head.x = 0;
     head.y = 0;
     head.z = z;
@@ -431,15 +425,15 @@ void func_ov014_0211236c(daWanwan_c *c) {
     rotated.y = 0;
     rotated.z = 0;
 
-    prevpos.x = c->mSpawnPosX;
+    prevpos.x = mSpawnPosX;
     {
-        int py = c->mSpawnPosY;
+        int py = mSpawnPosY;
         prevpos.y = py;
-        prevpos.z = c->mSpawnPosZ;
+        prevpos.z = mSpawnPosZ;
         prevpos.y = py + 0x1e000;
     }
 
-    z = c->mChainExtension;
+    z = mChainExtension;
     head.x = 0;
     head.y = 0;
     head.z = z;
@@ -447,7 +441,7 @@ void func_ov014_0211236c(daWanwan_c *c) {
     rotated.y = 0;
     rotated.z = 0;
 
-    cursor = (u32)&c->mLinkPos[6];
+    cursor = (u32)&mLinkPos[6];
     i = 6;
     do {
         cur = (Vector3 *)cursor;
@@ -478,18 +472,16 @@ void func_ov014_0211236c(daWanwan_c *c) {
         cursor -= sizeof(*cur);
     } while (i >= 0);
 }
-}
 
 /* Blend the actor position into the chain. Integer (7-i)/7 is 1 only for i == 0. */
-extern "C" {
-void func_ov014_021122dc(daWanwan_c *c) {
+void daWanwan_c::PinChainToHead() {
     Vector3 *p;
     int i;
     Vector3 diff;
     Vector3 scaled;
 
-    Vec3_Sub(&diff, (const Vector3 *)&c->mPosX, &c->mLinkPos[0]);
-    p = &c->mLinkPos[0];
+    Vec3_Sub(&diff, (const Vector3 *)&mPosX, &mLinkPos[0]);
+    p = &mLinkPos[0];
     i = 0;
     do {
         Vec3_MulScalar(&scaled, &diff, (7 - i) / 7);
@@ -498,12 +490,11 @@ void func_ov014_021122dc(daWanwan_c *c) {
         p++;
     } while (i < 7);
 }
-}
 
 /* Hit response. Egg (actor 9, hit 0x2000) pops the scale into state 0.
  * Explosion (0x4000) and a Bob-omb (0xce) go to state 4. A mega hit from
  * the player (0xbf, hit 0x10) starts the bite (state 5) and hurts when facing. */
-void daWanwan_c::func_ov014_02112114() {
+void daWanwan_c::HandleCylinderHit() {
     dActor_c *other;
     unsigned id;
     int ang;
@@ -525,7 +516,7 @@ void daWanwan_c::func_ov014_02112114() {
             mScaleX = 0x2000;
             mScaleY = mScaleX;
             mScaleZ = mScaleY;
-            func_ov014_02111ebc(0);
+            SetState(0);
             return;
         }
     }
@@ -534,14 +525,14 @@ void daWanwan_c::func_ov014_02112114() {
         mScaleX = 0x2000;
         mScaleY = mScaleX;
         mScaleZ = mScaleY;
-        func_ov014_02111ebc(4);
+        SetState(4);
         return;
     }
 
     if ((int)(other->actorID == kPlayerActorId) != 0) {
         ang = Vec3_HorzAngle(&mPos, &other->mPos);
         if (mdCcAcPos_c.hitFlags & 0x10) {
-            func_ov014_02111ebc(5);
+            SetState(5);
             mPrevAngleY = other->mAngleY;
         }
         if (AngleDiff(ang, mAngleY) < 0x4000) {
@@ -557,13 +548,13 @@ void daWanwan_c::func_ov014_02112114() {
         return;
     if ((int)(other->actorID == kBobOmbActorId) != 0) {
         func_ov102_0214ae1c(other);
-        func_ov014_02111ebc(4);
+        SetState(4);
     }
 }
 
 /* Pull the chomp back inside chainExtension * 7 + 200 of the spawn point.
  * A fully extended lunge (state 2, extension 0x64000) also kills both speeds. */
-void daWanwan_c::func_ov014_02111fe0() {
+void daWanwan_c::RestrictToChain() {
     Vector3 v;
     Vector3 out;
     int len;
@@ -589,9 +580,9 @@ void daWanwan_c::func_ov014_02111fe0() {
 }
 
 /* Landing one-shot. Sound 0x39 at camera-space position, then the dust. */
-extern "C" void func_ov014_02111fb8(daWanwan_c *c) {
-    func_0201267c(0x39, &c->mCamSpacePos);
-    c->HugeLandingDust(true);
+void daWanwan_c::PlayLandingEffects() {
+    func_0201267c(0x39, &mCamSpacePos);
+    HugeLandingDust(true);
 }
 
 /* Start the release cutscene when the stump's mStepsLeft is 0 and the player
@@ -602,7 +593,7 @@ int daWanwan_c::TryStartReleaseCutscene() {
         goto fail;
     if (ClosestPlayer()->SetNoControlState(4, -1, 0) == 0)
         goto fail;
-    func_ov014_02111ebc(3);
+    SetState(3);
     mChainBroken = 1;
     return 1;
 fail:
@@ -615,14 +606,15 @@ fail:
  * pointer at +0x10. The table is defined at the bottom of this file; the
  * initializer copies each row's enter/update pair by value from twelve 8-byte
  * PMF descriptors in .data at 021146a0..021146f8 (the name pointers are the
- * only static part). Measured from those descriptors and the name pointers:
- *   0  enter 02111e74  update 02111e14   scale back to 1.0     WAIT
- *   1  enter 02111dc4  update 02111ca8   idle, face the player  WALK
- *   2  enter 02111b70  update 02111af0   lunge                  ATTACK
- *   3  enter 02111a6c  update 021115ec   break chain and fence  ESCAPE_DEMO
- *   4  enter 021115c0  update 0211150c   knocked                BOMB_DAMAGE
- *   5  enter 021114d8  update 02111484   bite                   GIANT_DAMAGE
- * 02111ebc reads the PMF at +0 (enter). 02111f08 reads the PMF at +8 (update).
+ * only static part). Measured from those descriptors and the name pointers;
+ * each Init/Main pair is named for its row's name string:
+ *   0  StateWaitInit         StateWaitMain         scale back to 1.0      WAIT
+ *   1  StateWalkInit         StateWalkMain         idle, face the player  WALK
+ *   2  StateAttackInit       StateAttackMain       lunge                  ATTACK
+ *   3  StateEscapeDemoInit   StateEscapeDemoMain   break chain and fence  ESCAPE_DEMO
+ *   4  StateBombDamageInit   StateBombDamageMain   knocked                BOMB_DAMAGE
+ *   5  StateGiantDamageInit  StateGiantDamageMain  bite                   GIANT_DAMAGE
+ * SetState runs the PMF at +0 (enter). UpdateState runs the PMF at +8 (update).
  */
 typedef void (daWanwan_c::*WanwanPmf)();
 
@@ -657,80 +649,80 @@ struct WanwanStateRow {
 };
 extern "C" WanwanStateRow data_ov014_0211476c[6];
 
-void daWanwan_c::func_ov014_02111f08() {
+void daWanwan_c::UpdateState() {
     (this->*data_ov014_0211476c[mState].update)();
 }
 
-void daWanwan_c::func_ov014_02111ebc(int i) {
+void daWanwan_c::SetState(int i) {
     mState = i;
     (this->*data_ov014_0211476c[mState].enter)();
 }
 
 /* State 0 enter: stop, hold for 0x78 frames, play the idle BCA. */
-extern "C" void func_ov014_02111e74(daWanwan_c *c) {
-    c->mVertSpeed = 0;
-    c->mHorzSpeed = 0;
-    c->mActionTimer = 0x78;
-    SetChompAnim(c, data_ov014_02114980);
+void daWanwan_c::StateWaitInit() {
+    mVertSpeed = 0;
+    mHorzSpeed = 0;
+    mActionTimer = 0x78;
+    SetChompAnim(this, data_ov014_02114980);
 }
 
 /* State 0 update: scale back to 1.0, then idle. */
-extern "C" void func_ov014_02111e14(daWanwan_c *c) {
-    c->mVertSpeed = 0;
-    ApproachLinear(c->mScaleX, 0x1000, 0x500);
-    c->mScaleZ = c->mScaleX;
-    c->mScaleY = c->mScaleZ;
-    if (DecIfAbove0_Short(&c->mActionTimer) != 0)
+void daWanwan_c::StateWaitMain() {
+    mVertSpeed = 0;
+    ApproachLinear(mScaleX, 0x1000, 0x500);
+    mScaleZ = mScaleX;
+    mScaleY = mScaleZ;
+    if (DecIfAbove0_Short(&mActionTimer) != 0)
         return;
-    c->func_ov014_02111ebc(1);
+    SetState(1);
 }
 
 /* State 1 enter: gravity back on, idle BCA, 0x78-frame pause. */
-extern "C" void func_ov014_02111dc4(daWanwan_c *c) {
-    c->mVertSpeed = 0;
-    c->mVertAccel = -0x2000;
-    c->mActionTimer = 0x78;
-    SetChompAnim(c, data_ov014_02114980);
+void daWanwan_c::StateWalkInit() {
+    mVertSpeed = 0;
+    mVertAccel = -0x2000;
+    mActionTimer = 0x78;
+    SetChompAnim(this, data_ov014_02114980);
 }
 
 /* State 1 update. Tries the release, turns toward mTargetAngY, and on the
  * ground lunges (state 2) when the player is close and in front. */
-extern "C" void func_ov014_02111ca8(daWanwan_c *c) {
-    if (c->TryStartReleaseCutscene())
+void daWanwan_c::StateWalkMain() {
+    if (TryStartReleaseCutscene())
         return;
-    ApproachAngle(&c->mAngleX, 0, 4, 0x200, 0x80);
-    DecIfAbove0_Short(&c->mActionTimer);
-    ApproachLinear(c->mChainExtension, kChainSlack, 0x1000);
-    ApproachLinear(c->mAngleY, c->mTargetAngY, 0x190);
-    ApproachLinear(c->mHorzSpeed, 0, 0x400);
-    if (c->mIsOnGround) {
-        int d = c->DistToCPlayer();
-        c->mTargetAngY = c->HorzAngleToCPlayer();
-        c->mPrevAngleY = c->mAngleY;
-        c->mHorzSpeed = 0xa000;
-        c->mVertSpeed = 0x14000;
-        c->unk_600 = 0;
-        if (d < 0x500000 && AngleDiff(c->mTargetAngY, c->mAngleY) < 0x800 && c->mActionTimer == 0) {
-            c->func_ov014_02111ebc(2);
+    ApproachAngle(&mAngleX, 0, 4, 0x200, 0x80);
+    DecIfAbove0_Short(&mActionTimer);
+    ApproachLinear(mChainExtension, kChainSlack, 0x1000);
+    ApproachLinear(mAngleY, mTargetAngY, 0x190);
+    ApproachLinear(mHorzSpeed, 0, 0x400);
+    if (mIsOnGround) {
+        int d = DistToCPlayer();
+        mTargetAngY = HorzAngleToCPlayer();
+        mPrevAngleY = mAngleY;
+        mHorzSpeed = 0xa000;
+        mVertSpeed = 0x14000;
+        unk_600 = 0;
+        if (d < 0x500000 && AngleDiff(mTargetAngY, mAngleY) < 0x800 && mActionTimer == 0) {
+            SetState(2);
         }
     }
-    static_cast<dExtFrameCtrl_c &>(c->mAnmModel).Advance();
+    static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
 }
 
 /* State 2 enter: sound 0x3a, lunge BCA, launch along the vertical angle to
  * the player (raised 0x50000). The third argument of the sound call is real
  * in this body; the two-argument definition ignores it. */
-extern "C" void func_ov014_02111b70(daWanwan_c *c) {
+void daWanwan_c::StateAttackInit() {
     Vector3 tgt;
     daPly_c *player;
     int a;
     int i;
     int v;
 
-    c->mVertAccel = 0;
-    func_0201267c(0x3a, &c->mCamSpacePos);
-    SetChompAnim(c, data_ov014_02114970);
-    player = c->ClosestPlayer();
+    mVertAccel = 0;
+    func_0201267c(0x3a, &mCamSpacePos);
+    SetChompAnim(this, data_ov014_02114970);
+    player = ClosestPlayer();
 
     /* ROM load order: y, z, x — then y+0x50000, store x, setup call, store y/z */
     {
@@ -742,44 +734,44 @@ extern "C" void func_ov014_02111b70(daWanwan_c *c) {
         tgt.z = z;
     }
 
-    a = (unsigned short)Vec3_VertAngle(&c->mPos, &tgt);
+    a = (unsigned short)Vec3_VertAngle(&mPos, &tgt);
     i = (a >> 4) << 1;
-    c->mVertSpeed = -FX_MUL(data_02082214[i], 0x8c000);
-    v = c->mVertSpeed;
+    mVertSpeed = -FX_MUL(data_02082214[i], 0x8c000);
+    v = mVertSpeed;
     if (v < 0x5000)
         v = 0x5000;
     else if (v > 0x2d000)
         v = 0x2d000;
-    c->mVertSpeed = v;
-    c->mHorzSpeed = FX_MUL(data_02082214[i + 1], 0x8c000);
-    c->mActionTimer = 0x3c;
+    mVertSpeed = v;
+    mHorzSpeed = FX_MUL(data_02082214[i + 1], 0x8c000);
+    mActionTimer = 0x3c;
 }
 
 /* State 2 update: stretch the leash to kChainMax, then back to idle. */
-extern "C" int func_ov014_02111af0(daWanwan_c *c) {
-    int r = c->TryStartReleaseCutscene();
+int daWanwan_c::StateAttackMain() {
+    int r = TryStartReleaseCutscene();
     if (r)
         return r;
-    if (Math_Function_0203b14c(&c->mChainExtension, kChainMax, 0x800, 0x10000, 0x800))
+    if (Math_Function_0203b14c(&mChainExtension, kChainMax, 0x800, 0x10000, 0x800))
         goto adv;
-    if (DecIfAbove0_Short(&c->mActionTimer))
+    if (DecIfAbove0_Short(&mActionTimer))
         goto adv;
-    c->func_ov014_02111ebc(1);
+    SetState(1);
 adv:
-    static_cast<dExtFrameCtrl_c &>(c->mAnmModel).Advance();
+    static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
 }
 
 /* State 3 enter: idle BCA, snap back to the rest height, clear clip flags. */
-extern "C" void func_ov014_02111a6c(daWanwan_c *c) {
-    SetChompAnim(c, data_ov014_02114980);
-    c->mVertSpeed = 0;
-    c->mHorzSpeed = 0;
-    c->mVertAccel = -0x2000;
-    c->mReleaseStep = 0;
-    c->unk_600 = 0;
-    c->mActionTimer = 0x3c;
-    c->mFlags &= ~3;
-    c->mPosY = c->mSpawnPosY + kRestLift;
+void daWanwan_c::StateEscapeDemoInit() {
+    SetChompAnim(this, data_ov014_02114980);
+    mVertSpeed = 0;
+    mHorzSpeed = 0;
+    mVertAccel = -0x2000;
+    mReleaseStep = 0;
+    unk_600 = 0;
+    mActionTimer = 0x3c;
+    mFlags &= ~3;
+    mPosY = mSpawnPosY + kRestLift;
 }
 
 /* State 3 update: the fence-break cutscene. mReleaseStep is the phase. */
@@ -788,7 +780,7 @@ static inline void incRelease(daWanwan_c *self) {
     *p = (u8)(*p + 1);
 }
 
-extern "C" void func_ov014_021115ec(daWanwan_c *self) {
+void daWanwan_c::StateEscapeDemoMain() {
     /* local extern: no header this file includes declares it. Nonzero once
        the position has reached the target. */
     s32 Vec3_ApproachHorz(Vector3 * out, Vector3 * target, s32 maxStep);
@@ -799,66 +791,66 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self) {
     s16 angleToAnchor;
     dCamera_c *camera;
 
-    Sound::PlaySecretSound(self, &self->mSecretSound);
-    fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)self->mFenceUniqueID);
+    Sound::PlaySecretSound(this, &mSecretSound);
+    fence = (daObjWanwanShutter_c *)dActor_c::FindWithID((unsigned)mFenceUniqueID);
     {
         s32 *src = &fence->mPosX;
         s32 fifth = 0x80;
         partnerPos.x = src[0];
-        short *ap = &self->mAngleX;
+        short *ap = &mAngleX;
         partnerPos.y = src[1];
         s32 z = 0;
         partnerPos.z = src[2];
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
     camera = gCamera;
-    angleToPlayer = self->HorzAngleToCPlayer();
-    angleToAnchor = Vec3_HorzAngle(&self->mPos, (Vector3 *)&self->mSpawnPosX);
+    angleToPlayer = HorzAngleToCPlayer();
+    angleToAnchor = Vec3_HorzAngle(&mPos, (Vector3 *)&mSpawnPosX);
     /* Steps 0-6 make the chomp the camera's mFocusActor. */
-    switch (self->mReleaseStep) {
+    switch (mReleaseStep) {
     case 0:
-        camera->mFocusActor = self;
-        if (ApproachLinear(self->mAngleY, angleToPlayer, 0x320) != 0 &&
-            DecIfAbove0_Short(&self->mActionTimer) == 0)
-            incRelease(self);
-        self->mPrevAngleY = self->mAngleY;
+        camera->mFocusActor = this;
+        if (ApproachLinear(mAngleY, angleToPlayer, 0x320) != 0 &&
+            DecIfAbove0_Short(&mActionTimer) == 0)
+            incRelease(this);
+        mPrevAngleY = mAngleY;
         break;
     case 1:
     case 2:
     case 3:
     case 4:
-        camera->mFocusActor = self;
-        ApproachLinear(self->mHorzSpeed, 0, 0x400);
-        if (self->mIsOnGround != 0) {
-            self->mPrevAngleY = (s16)(angleToAnchor + 0x2000);
-            self->mAngleY = self->mPrevAngleY;
-            self->mVertSpeed = 0x32000;
-            self->mHorzSpeed = 0x1e000;
-            incRelease(self);
+        camera->mFocusActor = this;
+        ApproachLinear(mHorzSpeed, 0, 0x400);
+        if (mIsOnGround != 0) {
+            mPrevAngleY = (s16)(angleToAnchor + 0x2000);
+            mAngleY = mPrevAngleY;
+            mVertSpeed = 0x32000;
+            mHorzSpeed = 0x1e000;
+            incRelease(this);
         }
         break;
     case 5:
-        camera->mFocusActor = self;
-        ApproachLinear(self->mHorzSpeed, 0, 0x400);
-        if (self->mIsOnGround != 0) {
-            self->mPrevAngleY = angleToAnchor;
-            self->mAngleY = self->mPrevAngleY;
-            self->mVertSpeed = 0x32000;
-            self->mHorzSpeed = 0x1e000;
-            incRelease(self);
+        camera->mFocusActor = this;
+        ApproachLinear(mHorzSpeed, 0, 0x400);
+        if (mIsOnGround != 0) {
+            mPrevAngleY = angleToAnchor;
+            mAngleY = mPrevAngleY;
+            mVertSpeed = 0x32000;
+            mHorzSpeed = 0x1e000;
+            incRelease(this);
             if (fence->mDisabled != 0)
-                self->mReleaseStep = 7;
+                mReleaseStep = 7;
         }
         break;
     case 6: {
-        camera->mFocusActor = self;
-        ApproachLinear(self->mReleaseSpeed, 0x1000, 0x400);
-        if (self->mIsOnGround != 0) {
-            SetChompAnim(self, data_ov014_02114970);
-            self->mAngleY = Vec3_HorzAngle(&self->mPos, &partnerPos);
-            self->mPrevAngleY = self->mAngleY;
-            self->mVertSpeed = 0x14000;
-            self->mReleaseSpeed = kChainMax;
+        camera->mFocusActor = this;
+        ApproachLinear(mReleaseSpeed, 0x1000, 0x400);
+        if (mIsOnGround != 0) {
+            SetChompAnim(this, data_ov014_02114970);
+            mAngleY = Vec3_HorzAngle(&mPos, &partnerPos);
+            mPrevAngleY = mAngleY;
+            mVertSpeed = 0x14000;
+            mReleaseSpeed = kChainMax;
         }
         {
             Vector3 target;
@@ -882,89 +874,89 @@ extern "C" void func_ov014_021115ec(daWanwan_c *self) {
                 s32 add = FX_MUL(s, 0x96000);
                 target.z = z + add;
             }
-            if (Vec3_ApproachHorz(&self->mPos, &target, self->mReleaseSpeed) != 0) {
-                incRelease(self);
-                self->mPrevAngleY = (s16)(Vec3_HorzAngle(&self->mPos, &partnerPos) + 0x8000);
-                self->mHorzSpeed = 0x28000;
-                self->mVertSpeed = 0xa000;
+            if (Vec3_ApproachHorz(&mPos, &target, mReleaseSpeed) != 0) {
+                incRelease(this);
+                mPrevAngleY = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);
+                mHorzSpeed = 0x28000;
+                mVertSpeed = 0xa000;
                 fence->Break();
             }
         }
         break;
     }
     case 7:
-        if (self->mIsOnGround != 0) {
-            SetChompAnim(self, data_ov014_02114980);
-            self->mPrevAngleY = Vec3_HorzAngle(&self->mPos, &partnerPos);
-            self->mActionTimer = 0x3c;
-            self->mAngleY = self->mPrevAngleY;
+        if (mIsOnGround != 0) {
+            SetChompAnim(this, data_ov014_02114980);
+            mPrevAngleY = Vec3_HorzAngle(&mPos, &partnerPos);
+            mActionTimer = 0x3c;
+            mAngleY = mPrevAngleY;
             if (fence->mDisabled != 0) {
-                self->mHorzSpeed = 0x28000;
-                self->mVertSpeed = 0x5a000;
+                mHorzSpeed = 0x28000;
+                mVertSpeed = 0x5a000;
             } else {
-                self->mHorzSpeed = 0x1e000;
-                self->mVertSpeed = kChainSlack;
+                mHorzSpeed = 0x1e000;
+                mVertSpeed = kChainSlack;
             }
             camera->SetFlag_3();
-            incRelease(self);
+            incRelease(this);
         }
         break;
     case 8:
-        if (DecIfAbove0_Short(&self->mActionTimer) == 0) {
+        if (DecIfAbove0_Short(&mActionTimer) == 0) {
             camera->mFlags &= ~8u;
-            if (self->ClosestPlayer()->Unk_020ca150(4) != 0) {
-                incRelease(self);
-                self->mActionTimer = 0x3c;
+            if (ClosestPlayer()->Unk_020ca150(4) != 0) {
+                incRelease(this);
+                mActionTimer = 0x3c;
             }
         } else {
-            camera->SetLookAt(self->mPos);
+            camera->SetLookAt(mPos);
         }
         break;
     case 9:
-        if (DecIfAbove0_Short(&self->mActionTimer) == 0)
-            self->MarkForDestruction();
+        if (DecIfAbove0_Short(&mActionTimer) == 0)
+            MarkForDestruction();
         break;
     }
-    static_cast<dExtFrameCtrl_c &>(self->mAnmModel).Advance();
+    static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
 }
 
 /* State 4 enter: sound 0x3a and a hard upward speed. */
-extern "C" void func_ov014_021115c0(daWanwan_c *c) {
-    func_0201267c(0x3a, &c->mCamSpacePos);
-    c->mVertSpeed = 0x12c000;
-    c->mVertAccel = 0;
+void daWanwan_c::StateBombDamageInit() {
+    func_0201267c(0x3a, &mCamSpacePos);
+    mVertSpeed = 0x12c000;
+    mVertAccel = 0;
 }
 
 /* State 4 update. The early exits fall out of the bottom: the ROM leaves r0
  * alone on those paths, and a valueless return is not available to the host. */
-extern "C" int func_ov014_0211150c(daWanwan_c *c) {
-    ApproachLinear(c->mScaleX, 0x1000, 0x500);
-    c->mScaleZ = c->mScaleX;
-    c->mScaleY = c->mScaleZ;
-    ApproachAngle(&c->mAngleX, -0x4000, 4, 0x1000, 0x400);
-    if (Math_Function_0203b14c(&c->mChainExtension, kChainMax, 0x800, 0x10000, 0x800) == 0) {
-        if (DecIfAbove0_Short(&c->mActionTimer) == 0)
-            c->func_ov014_02111ebc(1);
+int daWanwan_c::StateBombDamageMain() {
+    ApproachLinear(mScaleX, 0x1000, 0x500);
+    mScaleZ = mScaleX;
+    mScaleY = mScaleZ;
+    ApproachAngle(&mAngleX, -0x4000, 4, 0x1000, 0x400);
+    if (Math_Function_0203b14c(&mChainExtension, kChainMax, 0x800, 0x10000, 0x800) == 0) {
+        if (DecIfAbove0_Short(&mActionTimer) == 0)
+            SetState(1);
     }
 }
 
 /* State 5 enter: face mPrevAngleY and launch. */
-extern "C" void func_ov014_021114d8(daWanwan_c *c) {
-    c->mAngleY = c->mPrevAngleY;
-    c->mActionTimer = 0x3c;
-    c->mHorzSpeed = kChainMax;
-    c->mVertSpeed = kRestLift;
-    c->mVertAccel = -0xa000;
+void daWanwan_c::StateGiantDamageInit() {
+    mAngleY = mPrevAngleY;
+    mActionTimer = 0x3c;
+    mHorzSpeed = kChainMax;
+    mVertSpeed = kRestLift;
+    mVertAccel = -0xa000;
 }
 
 /* State 5 update: back to idle when the timer ends. On the ground the
  * vertical speed copies the horizontal one, which then brakes. */
-extern "C" void func_ov014_02111484(daWanwan_c *c) {
-    if (DecIfAbove0_Short(&c->mActionTimer) == 0)
-        c->func_ov014_02111ebc(1);
-    if (c->mIsOnGround != 0)
-        c->mVertSpeed = c->mHorzSpeed;
-    ApproachLinear(c->mHorzSpeed, 0, 0x2000);
+void daWanwan_c::StateGiantDamageMain() {
+    if (DecIfAbove0_Short(&mActionTimer) == 0)
+        SetState(1);
+    if (mIsOnGround != 0)
+        mVertSpeed = mHorzSpeed;
+    ApproachLinear(mHorzSpeed, 0, 0x2000);
 }
 
 /* Both variants come from the inline destructor in daWanwan_c.h.
