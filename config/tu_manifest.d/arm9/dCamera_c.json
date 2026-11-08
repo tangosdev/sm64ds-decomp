@@ -6,11 +6,11 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "Contiguous linker run 0x020072c4..0x0200e494: the 16 named dCamera_c members and 37 state handlers from 0x0200bec4 up, and below them the 88 follow modes, states and script ops CutsceneGrandStarFlyMoveToMario..func_0200bb28 (fold of 86 shards). Bounded above by the cutscene-actor helpers at 0x0200e494 (different data table, no camera receiver).",
+    "Contiguous linker run 0x020072c4..0x0200e494: the 16 named dCamera_c members and 37 state handlers from 0x0200bec4 up, and below them the 88 follow modes, states and script ops CutsceneGrandStarFlyMoveToMario..Mode8DirectionsCamera (fold of 86 shards). Bounded above by the cutscene-actor helpers at 0x0200e494 (different data table, no camera receiver).",
     "CLASS IDENTITY FROM ROM RTTI: _ZTS9dCamera_c at arm9 0x02086e6c, _ZTI9dCamera_c at 0x02086ee4, _ZTV9dCamera_c at 0x02086f84 with InitResources/Render/Behavior/CleanupResources/OnPendingDestroy in the inherited fBase_c slots; dCamera_c_classInit (0x0200e444) writes the dBase_c->dView_c->dCamera_c vptr sequence. The tree's `Camera` name was stale; class_rename carried the rename Camera->dCamera_c across 145 files.",
     "ChangeState's mangling _ZN9dCamera_c11ChangeStateEPNS_5StateE proves the nested State type the header forward-declares.",
-    "LOWER EDGE (private data): CutsceneGrandStarFlyMoveToMario is the lowest function that reads this TU's .data -- data_02086ed8, an offset triple between _ZTI7dView_c (0x02086ecc) and _ZTI9dCamera_c (0x02086ee4), read by nothing else. The run's other private .data (the triples 0x02086e84..0x02086ec0, the script-op member-function constants 0x02086bc0..0x02086e38 loaded by func_02008550, the follow rates 0x02086cc8/0x02086d50 of func_0200bb28) is interleaved with g_profile_CAMERA and the dCamera_c RTTI, and the mode records 0x02086fcc..0x0208747c are shared between func_02009e70 and func_0200c394/func_0200c66c/Behavior/GoBehindPlayer. The controller records data_0209f49c (bss) are read only by func_0200bb28 and func_02009e70. the D1/D0 pair and its helpers at 0x0200705c..0x020072c4 are their own TU (src/engine/view/d_camera_dtor.cpp).",
-    "Pragmas: none added. #4479 showed opt_common_subs off inert for func_0200bb28, which matches under the file's defaults.",
+    "LOWER EDGE (private data): CutsceneGrandStarFlyMoveToMario is the lowest function that reads this TU's .data -- data_02086ed8, an offset triple between _ZTI7dView_c (0x02086ecc) and _ZTI9dCamera_c (0x02086ee4), read by nothing else. The run's other private .data (the triples 0x02086e84..0x02086ec0, the script-op member-function constants 0x02086bc0..0x02086e38 loaded by RunCameraCommand, the follow rates 0x02086cc8/0x02086d50 of Mode8DirectionsCamera) is interleaved with g_profile_CAMERA and the dCamera_c RTTI, and the mode records 0x02086fcc..0x0208747c are shared between func_02009e70 and func_0200c394/func_0200c66c/Behavior/GoBehindPlayer. The controller records data_0209f49c (bss) are read only by Mode8DirectionsCamera and func_02009e70. the D1/D0 pair and its helpers at 0x0200705c..0x020072c4 are their own TU (src/engine/view/d_camera_dtor.cpp).",
+    "Pragmas: none added. #4479 showed opt_common_subs off inert for Mode8DirectionsCamera, which matches under the file's defaults.",
     "CutsceneGrandStarFlyMarioOffscreen (0x020072c4..0x020073a0) folded in as the low edge. Its only reference is the script-op member-function constant data_02086ca8 in this TU's .data, between the constants for CutsceneGrandStarFlyAppCvars and CutsceneGrandStarFlyMoveToMario. Below it, _ZN7Vector3D1Ev at 0x020072c0 ends the d_camera_dtor.cpp object, so no other TU can sit between. Defined last in source; deferred codegen emits it first.",
     "BSS SPAN 0x0209b000..0x0209b270: arm9 .bss starts at 0x0209b000 with this TU (the TUs below it in .text order own no .bss) and runs size-ascending, 4, 4, nineteen 0x10 State records, then the 0x138 script-op table. KuppaScript.cpp's run starts at 0x0209b270 with the 1-byte gKuppaScriptNumPlayers, a drop from 0x138 to 1, so the TU owns the whole 0x270."
   ],
@@ -143,7 +143,7 @@
       "ordinal": 49
     },
     {
-      "symbol": "func_02007910",
+      "symbol": "RotateAndMoveVec3f",
       "address": "0x02007910",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0200/func_02007910.c",
@@ -332,28 +332,28 @@
       "ordinal": 76
     },
     {
-      "symbol": "func_02008550",
+      "symbol": "RunCameraCommand",
       "address": "0x02008550",
       "size": "0x0000042c",
       "legacy_source": "src/unnamed/arm9/0200/func_02008550.cpp",
       "ordinal": 77
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200897cER5dBgCh",
+      "symbol": "_ZN9dCamera_c11PrepareBgChER5dBgCh",
       "address": "0x0200897c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200897c.cpp",
       "ordinal": 78
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020089d8Ev",
+      "symbol": "_ZN9dCamera_c19ClampPosAboveTargetEv",
       "address": "0x020089d8",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020089d8.c",
       "ordinal": 79
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020089f8Ev",
+      "symbol": "_ZN9dCamera_c15UpdateTargetPosEv",
       "address": "0x020089f8",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0200/func_020089f8.c",
@@ -388,28 +388,28 @@
       "ordinal": 84
     },
     {
-      "symbol": "_ZN9dCamera_c13func_02008cb4Ev",
+      "symbol": "_ZN9dCamera_c17KeepPosOutOfWallsEv",
       "address": "0x02008cb4",
       "size": "0x00000484",
       "legacy_source": "src/unnamed/arm9/0200/func_02008cb4.cpp",
       "ordinal": 85
     },
     {
-      "symbol": "_ZN9dCamera_c13func_02009138Ei",
+      "symbol": "_ZN9dCamera_c12ApproachDistEi",
       "address": "0x02009138",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0200/func_02009138.c",
       "ordinal": 86
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020091f8EP7Vector3ii",
+      "symbol": "_ZN9dCamera_c23ApproachLookAtAndAnglesEP7Vector3ii",
       "address": "0x020091f8",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0200/func_020091f8.c",
       "ordinal": 87
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200928cEv",
+      "symbol": "_ZN9dCamera_c12UpdateAnglesEv",
       "address": "0x0200928c",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0200/func_0200928c.c",
@@ -423,21 +423,21 @@
       "ordinal": 89
     },
     {
-      "symbol": "_ZN9dCamera_c13func_02009374Ev",
+      "symbol": "_ZN9dCamera_c22IsTargetNearStarMarkerEv",
       "address": "0x02009374",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0200/func_02009374.c",
       "ordinal": 90
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020093d4Ei",
+      "symbol": "_ZN9dCamera_c16ScaleHeightByFovEi",
       "address": "0x020093d4",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020093d4.c",
       "ordinal": 91
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020093f4Ei",
+      "symbol": "_ZN9dCamera_c14ScaleDistByFovEi",
       "address": "0x020093f4",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020093f4.c",
@@ -626,35 +626,35 @@
       "ordinal": 118
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200b0fcEP10CamViewObji",
+      "symbol": "_ZN9dCamera_c28UpdateParallelTrackingCameraEP10CamViewObji",
       "address": "0x0200b0fc",
       "size": "0x00000494",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b0fc.cpp",
       "ordinal": 119
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200b590EP10CamViewObji",
+      "symbol": "_ZN9dCamera_c24UpdateSpiralStairsCameraEP10CamViewObji",
       "address": "0x0200b590",
       "size": "0x00000208",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b590.cpp",
       "ordinal": 120
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200b798EP10CamViewObji",
+      "symbol": "_ZN9dCamera_c17UpdateFixedCameraEP10CamViewObji",
       "address": "0x0200b798",
       "size": "0x000001f8",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b798.cpp",
       "ordinal": 121
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200b990EP10CamViewObji",
+      "symbol": "_ZN9dCamera_c18UpdateRadialCameraEP10CamViewObji",
       "address": "0x0200b990",
       "size": "0x00000198",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b990.cpp",
       "ordinal": 122
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200bb28EP10CamViewObj",
+      "symbol": "_ZN9dCamera_c21Mode8DirectionsCameraEP10CamViewObj",
       "address": "0x0200bb28",
       "size": "0x0000039c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200bb28.cpp",
@@ -724,7 +724,7 @@
       "ordinal": 132
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200cbe0Ev",
+      "symbol": "_ZN9dCamera_c27RestoreCameraStateAfterTalkEv",
       "address": "0x0200cbe0",
       "size": "0x0000007c",
       "legacy_source": "src/func_0200cbe0.c",
@@ -1046,7 +1046,7 @@
       "address": "0x0209b004",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "guard word of func_02008550's function-local static sScriptOps; mwcc emits the ands #1 test, the orr #1 store and the 39 copies ahead of the dispatch exactly as retail (0x020088d8)"
+      "evidence": "guard word of RunCameraCommand's function-local static sScriptOps; mwcc emits the ands #1 test, the orr #1 store and the 39 copies ahead of the dispatch exactly as retail (0x020088d8)"
     },
     {
       "symbol": "data_0209b008",
@@ -1186,7 +1186,7 @@
       "address": "0x0209b138",
       "size": "0x138",
       "binding": "STB_GLOBAL",
-      "evidence": "func_02008550's function-local static CamScriptOp[39] (8-byte member-function pointers), initialised on first call from the .data constants data_02086bc0..data_02086e38 and indexed by command byte 6; only func_02008550 references it (0x020088e0)"
+      "evidence": "RunCameraCommand's function-local static CamScriptOp[39] (8-byte member-function pointers), initialised on first call from the .data constants data_02086bc0..data_02086e38 and indexed by command byte 6; only RunCameraCommand references it (0x020088e0)"
     }
   ],
   "init": [
@@ -1243,17 +1243,17 @@
     {
       "from": "sPrevTurnInput$1917",
       "to": "sPrevTurnInput$1927",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). | re-keyed -1 when func_02009374, func_0200b0fc, func_0200b590 and func_0200bb28 became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     },
     {
       "from": "_ZGVsScriptOps$2619",
       "to": "_ZGVsScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when func_02009374, func_0200b0fc, func_0200b590 and func_0200bb28 became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     },
     {
       "from": "sScriptOps$2619",
       "to": "sScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when func_02009374, func_0200b0fc, func_0200b590 and func_0200bb28 became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     }
   ],
   "relocations": [
@@ -1843,7 +1843,7 @@
     "Leftovers: the C bodies keep raw-offset member access ((char*)self + 0xNNN) where the real field names are not yet recovered, and the camera state records are TU-local opaque typedefs (CamEntryE, CamFixedTab, CamViewObj, CamStateBase, CamStateIdx, CamJitter, the dBgCh_* shadows). POD `Vec3` shadows replace Vector3 inside the C regions because Vector3's empty destructor makes it non-POD and inflates the stack frame by 8 bytes (measured on func_0200c394).",
     "The 88 functions below 0x0200bec4 were one-function shards (66 C, 20 C++); they now use dCamera_c/dActor_c/daPly_c member names in C++ under extern \"C\" (no cplusplus-off regions), share the file's CamMode/CamViewObj/Entry3 records, and keep their ROM names.",
     "Static initializer folded: the nineteen dCamera_c::State records (two CamPmf each) are defined in this TU. mwcc emits __sinit_d_camera.cpp, byte- and relocation-identical to retail __sinit_02073a24, plus the .ctor word at 0x02086b60 and the .bss span 0x0209b008..0x0209b138. The .data PMF constants stay unowned. No destructor-registration nodes and no @ temps.",
-    "Function-local statics folded (0x0209b000..0x0209b008, 0x0209b138..0x0209b270): func_02008550's hand-written `if ((data_0209b004 & 1) == 0) { data_0209b004 |= 1; data_0209b138[i] = ...; }` was the decompiler's rendering of a function-local static with a dynamic initializer. It is now `static CamScriptOp sScriptOps[39] = { data_02086c80, ... };`, and mwcc emits the guard test, the guard store and the 39 copies itself, byte- and relocation-identical. func_02009e70's data_0209b000 is its function-local `static s32 sPrevTurnInput;`. The compiler names are sScriptOps$2629, _ZGVsScriptOps$2629 and sPrevTurnInput$1927; the .data member-function constants still stay unowned, so the initializer names them by address."
+    "Function-local statics folded (0x0209b000..0x0209b008, 0x0209b138..0x0209b270): RunCameraCommand's hand-written `if ((data_0209b004 & 1) == 0) { data_0209b004 |= 1; data_0209b138[i] = ...; }` was the decompiler's rendering of a function-local static with a dynamic initializer. It is now `static CamScriptOp sScriptOps[39] = { data_02086c80, ... };`, and mwcc emits the guard test, the guard store and the 39 copies itself, byte- and relocation-identical. func_02009e70's data_0209b000 is its function-local `static s32 sPrevTurnInput;`. The compiler names are sScriptOps$2629, _ZGVsScriptOps$2629 and sPrevTurnInput$1927; the .data member-function constants still stay unowned, so the initializer names them by address."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

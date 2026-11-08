@@ -27,7 +27,7 @@ struct dCamera_c : dView_c {
        words, at 0x80 and 0x8c. */
     Vector3 lookAt;            /* 0x080 */
     Vector3 pos;            /* 0x08c */
-    /* func_020089f8 copies mTargetPlayer's position here every frame and
+    /* UpdateTargetPos copies mTargetPlayer's position here every frame and
        stores lookAt minus it in mLookAtOffset; func_0200bec4 rebuilds lookAt
        as mTargetPos plus mLookAtOffset. */
     Vector3 mTargetPos;    /* 0x098 */
@@ -52,7 +52,7 @@ struct dCamera_c : dView_c {
     Vector3 mPrevPos;    /* 0x0d4 */
     /* The wall func_02009e70's line from above mTargetPos to pos last hit:
        the hit point, and the surface normal CopyNormalTo returns.
-       func_02008cb4 ignores a later hit whose normal faces the same way as
+       KeepPosOutOfWalls ignores a later hit whose normal faces the same way as
        mWallNormal or which lies within 0x80000 of mWallPos. */
     Vector3 mWallPos;    /* 0x0e0 */
     Vector3 mWallNormal; /* 0x0ec */
@@ -113,7 +113,7 @@ struct dCamera_c : dView_c {
        data_0208733c, and func_0200d0ac tests its +0x26 bit 0. */
     struct CamMode *mAreaMode; /* 0x140 */
     /* The view object func_0200c66c last chose (GetViewObj's record).
-       func_0200bb28 re-reads the base angle only when the object differs. */
+       Mode8DirectionsCamera re-reads the base angle only when the object differs. */
     void *mViewObj; /* 0x144 */
     /* Owned; CleanupResources deletes it. */
     void* mFixedViewPos;            /* 0x148 */
@@ -133,7 +133,7 @@ struct dCamera_c : dView_c {
        handle it returns; the second is used only with weather 0x86. */
     u32 mWeather;  /* 0x15c */
     u32 mWeather2; /* 0x160 */
-    /* func_0200bb28 latches the 0x100/0x200 turn buttons here; the latched
+    /* Mode8DirectionsCamera latches the 0x100/0x200 turn buttons here; the latched
        bit picks which way mBaseAngleOffset steps. */
     u32 mTurnButtons; /* 0x164 */
     /* Behavior eases it toward 0x1000 while flag 0x2000 is set and toward 0
@@ -158,12 +158,12 @@ struct dCamera_c : dView_c {
      * daMugenBGM_c::Behavior and daObjPowerUpItem_c::BeginOpening read it plain,
      * WingFeather::Behavior and func_ov102_021492d4 add 0x4000 to turn it
      * into a billboard facing, and daTree_c::Render feeds it straight to
-     * Matrix4x3_FromRotationY. Behavior and func_0200cbe0 write it from
+     * Matrix4x3_FromRotationY. Behavior and RestoreCameraStateAfterTalk write it from
      * Vec3_HorzAngle(lookAt, pos), and mAngleX beside it from
      * Vec3_VertAngle. */
     s16 mAngleY;            /* 0x17c */
     s16 mAngleX;            /* 0x17e */
-    /* Yaw as base plus offset. func_0200bb28 eases mEasedAngleY toward
+    /* Yaw as base plus offset. Mode8DirectionsCamera eases mEasedAngleY toward
        mBaseAngleY + mBaseAngleOffset and copies it to mAngleY. mBaseAngleY
        comes from a type-2 view object's angle + 0x8000 (also func_0200cf40),
        and the offset steps by 0x2000. func_02005060 seeds the offset with the
@@ -171,7 +171,7 @@ struct dCamera_c : dView_c {
     s16 mEasedAngleY;     /* 0x180 */
     s16 mBaseAngleY;      /* 0x182 */
     s16 mBaseAngleOffset; /* 0x184 */
-    /* The yaw func_020091f8 and func_02009e70 turn mAngleY toward while
+    /* The yaw ApproachLookAtAndAngles and func_02009e70 turn mAngleY toward while
        mTurningToTarget is set. */
     s16 mTargetAngleY; /* 0x186 */
     /* Behavior hands mAngleY + mInputYawLag to func_0203dafc, which stores it
@@ -195,7 +195,7 @@ struct dCamera_c : dView_c {
     s16 mFovShakePhase;     /* 0x192 */
     s16 mFovShakePhaseStep; /* 0x194 */
     /* Countdown. func_020098b8 arms it (0x1c) and func_0200987c switches to
-       state 0x14 when it runs out; func_0200bb28 reuses it as the repeat
+       state 0x14 when it runs out; Mode8DirectionsCamera reuses it as the repeat
        delay (0x14) between turn-button steps. */
     u16 mStateTimer; /* 0x196 */
     /* The path segment MovePointAlongSpline is in; func_020094a8 clears it. */
@@ -211,7 +211,7 @@ struct dCamera_c : dView_c {
     /* The yaw behind the player (its facing + 0x8000), taken when turn
        button 0x4000 is pressed. mRecentering stays nonzero while
        ApproachAngle is still swinging the camera to it (func_02009e70,
-       func_0200bb28). */
+       Mode8DirectionsCamera). */
     s16 mBehindAngleY; /* 0x19e */
     u16 mRecentering;  /* 0x1a0 */
     /* Accumulated by the CutscenePanCvar9 script op and added to the pitch and
@@ -221,10 +221,11 @@ struct dCamera_c : dView_c {
     /* Set when a new mTargetAngleY is chosen (func_02009d30 on entry,
        func_02009e70 on a view-object yaw or a wall). While set, the camera
        turns toward it; it clears on arrival. ChangeState, turn input and
-       func_02008cb4's push-in also clear it. */
+       KeepPosOutOfWalls's push-in also clear it. */
     u8 mTurningToTarget; /* 0x1a6 */
-    /* The path node func_0200b0fc is past: cleared while mFlags bit 4 is set,
-       then stepped as lookAt nears the next or previous node. */
+    /* The path node UpdateParallelTrackingCamera has passed: cleared while
+       mFlags bit 4 is set, then stepped as lookAt nears the next or previous
+       node. */
     u8 mPathNode; /* 0x1a7 */
     dCamera_c() {}
     virtual ~dCamera_c();
@@ -267,18 +268,19 @@ struct dCamera_c : dView_c {
     void func_0200d3f8(unsigned char, void *);
     void func_0200d148(unsigned char);
     void SetGrabBowserTailState(unsigned char);
-    /* Follow, placement and state helpers. Their names are not recovered, so
-       each keeps its address. */
-    void func_0200897c(dBgCh &);
-    void func_020089d8();
-    void func_020089f8();
-    int func_02008cb4();
-    int func_02009138(int);
-    int func_020091f8(Vector3 *, int, int);
-    void func_0200928c();
-    int func_02009374();
-    unsigned int func_020093d4(int);
-    unsigned int func_020093f4(int);
+    /* Follow, placement and state helpers. The follow modes are named for the
+       Super Mario 64 camera functions they port and the placement helpers for
+       what they do; the rest keep their address until a name is recovered. */
+    void PrepareBgCh(dBgCh &);
+    void ClampPosAboveTarget();
+    void UpdateTargetPos();
+    int KeepPosOutOfWalls();
+    int ApproachDist(int);
+    int ApproachLookAtAndAngles(Vector3 *, int, int);
+    void UpdateAngles();
+    int IsTargetNearStarMarker();
+    unsigned int ScaleHeightByFov(int);
+    unsigned int ScaleDistByFov(int);
     int func_020098e0();
     int func_02009a8c();
     int func_02009d30();
@@ -286,11 +288,11 @@ struct dCamera_c : dView_c {
     s32 func_02009e70();
     int func_0200af0c();
     void func_0200af20(Vector3 *, Vector3 *, short *);
-    void func_0200b0fc(CamViewObj *, int);
-    void func_0200b590(CamViewObj *, int);
-    void func_0200b798(CamViewObj *, int);
-    void func_0200b990(CamViewObj *, int);
-    void func_0200bb28(CamViewObj *);
+    void UpdateParallelTrackingCamera(CamViewObj *, int);
+    void UpdateSpiralStairsCamera(CamViewObj *, int);
+    void UpdateFixedCamera(CamViewObj *, int);
+    void UpdateRadialCamera(CamViewObj *, int);
+    void Mode8DirectionsCamera(CamViewObj *);
     int func_0200bec4(int *, int, char *, int);
     int func_0200c394(int, void *, void *, void **, int *);
     int func_0200c66c(void *, int *, int *, int *);
@@ -298,7 +300,7 @@ struct dCamera_c : dView_c {
     int UpdateState();
     int EnterState();
     void SetMode(int);
-    void func_0200cbe0();
+    void RestoreCameraStateAfterTalk();
     void func_0200cce4();
     void func_0200cf40();
     void func_0200ca14(unsigned char, int);

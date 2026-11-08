@@ -275,7 +275,7 @@
     },
     "arm9:0x02007910": {
       "author": "tangosdev",
-      "name": "func_02007910"
+      "name": "RotateAndMoveVec3f"
     },
     "arm9:0x020079ac": {
       "author": "tangosdev",
@@ -383,19 +383,19 @@
     },
     "arm9:0x02008550": {
       "author": "andrewboudreau",
-      "name": "func_02008550"
+      "name": "RunCameraCommand"
     },
     "arm9:0x0200897c": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200897cER5dBgCh"
+      "name": "_ZN9dCamera_c11PrepareBgChER5dBgCh"
     },
     "arm9:0x020089d8": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_020089d8Ev"
+      "name": "_ZN9dCamera_c19ClampPosAboveTargetEv"
     },
     "arm9:0x020089f8": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_020089f8Ev"
+      "name": "_ZN9dCamera_c15UpdateTargetPosEv"
     },
     "arm9:0x02008a70": {
       "author": "tangosdev",
@@ -415,19 +415,19 @@
     },
     "arm9:0x02008cb4": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_02008cb4Ev"
+      "name": "_ZN9dCamera_c17KeepPosOutOfWallsEv"
     },
     "arm9:0x02009138": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_02009138Ei"
+      "name": "_ZN9dCamera_c12ApproachDistEi"
     },
     "arm9:0x020091f8": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_020091f8EP7Vector3ii"
+      "name": "_ZN9dCamera_c23ApproachLookAtAndAnglesEP7Vector3ii"
     },
     "arm9:0x0200928c": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200928cEv"
+      "name": "_ZN9dCamera_c12UpdateAnglesEv"
     },
     "arm9:0x020092c4": {
       "author": "tangosdev",
@@ -435,15 +435,15 @@
     },
     "arm9:0x02009374": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_02009374Ev"
+      "name": "_ZN9dCamera_c22IsTargetNearStarMarkerEv"
     },
     "arm9:0x020093d4": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_020093d4Ei"
+      "name": "_ZN9dCamera_c16ScaleHeightByFovEi"
     },
     "arm9:0x020093f4": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_020093f4Ei"
+      "name": "_ZN9dCamera_c14ScaleDistByFovEi"
     },
     "arm9:0x02009414": {
       "author": "Moundistz",
@@ -551,23 +551,23 @@
     },
     "arm9:0x0200b0fc": {
       "author": "andrewboudreau",
-      "name": "_ZN9dCamera_c13func_0200b0fcEP10CamViewObji"
+      "name": "_ZN9dCamera_c28UpdateParallelTrackingCameraEP10CamViewObji"
     },
     "arm9:0x0200b590": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200b590EP10CamViewObji"
+      "name": "_ZN9dCamera_c24UpdateSpiralStairsCameraEP10CamViewObji"
     },
     "arm9:0x0200b798": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200b798EP10CamViewObji"
+      "name": "_ZN9dCamera_c17UpdateFixedCameraEP10CamViewObji"
     },
     "arm9:0x0200b990": {
       "author": "tangosdev",
-      "name": "_ZN9dCamera_c13func_0200b990EP10CamViewObji"
+      "name": "_ZN9dCamera_c18UpdateRadialCameraEP10CamViewObji"
     },
     "arm9:0x0200bb28": {
       "author": "ruspecial",
-      "name": "_ZN9dCamera_c13func_0200bb28EP10CamViewObj"
+      "name": "_ZN9dCamera_c21Mode8DirectionsCameraEP10CamViewObj"
     },
     "arm9:0x0200bec4": {
       "author": "ruspecial",
@@ -607,7 +607,7 @@
     },
     "arm9:0x0200cbe0": {
       "author": "lplaat",
-      "name": "_ZN9dCamera_c13func_0200cbe0Ev"
+      "name": "_ZN9dCamera_c27RestoreCameraStateAfterTalkEv"
     },
     "arm9:0x0200cc5c": {
       "author": "tangosdev",

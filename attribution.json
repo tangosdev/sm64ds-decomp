@@ -8380,7 +8380,7 @@
     "src/engine/view/d_camera.cpp#_ZN9dCamera_c13func_0200ca50Ev": "tangosdev",
     "src/engine/view/d_camera.cpp#_ZN9dCamera_c13func_0200cae4Ev": "tangosdev",
     "src/engine/view/d_camera.cpp#_ZN9dCamera_c13func_0200cb58Ei": "tangosdev",
-    "src/engine/view/d_camera.cpp#_ZN9dCamera_c13func_0200cbe0Ev": "lplaat",
+    "src/engine/view/d_camera.cpp#_ZN9dCamera_c27RestoreCameraStateAfterTalkEv": "lplaat",
     "src/engine/view/d_camera.cpp#_ZN9dCamera_c13func_0200cce4Ev": "tangosdev",
     "src/engine/view/d_camera.cpp#_ZN9dCamera_c13func_0200cf40Ev": "tangosdev",
     "src/engine/view/d_camera.cpp#_ZN9dCamera_c13func_0200d064Eh": "tangosdev",
