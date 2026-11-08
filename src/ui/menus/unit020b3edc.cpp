@@ -20,7 +20,7 @@
  *
  * Edges: the bss words 0x02103368..0x02103428 are referenced by these
  * four functions and nothing else in the overlay. The previous function,
- * func_ov007_020b3e84, belongs to the module of bss 0x02103360
+ * Cursor_TouchItem, belongs to the module of bss 0x02103360
  * (unit020b2cdc); the next one, func_ov007_020b413c, touches none of this
  * module's data.
  *
