@@ -266,7 +266,7 @@ void daKpaFire_c::func_ov060_02117624() {
  *
  * Looks up the daKpa_c by mKpaUniqueID; if it is gone, destroys this fire.
  * Otherwise it does nothing unless Bowser's mState is 0xf (d_a_kpa.cpp's
- * BOWSER_STATE_ANIM_CHAIN) and func_ov060_02111c68 returns a row number n --
+ * BOWSER_STATE_ANIM_CHAIN) and GetMouthFireRow returns a row number n --
  * from his animation 8 only once its frame is 0x31 or later (n = frame - 0x31),
  * from his animation 6 always (n = frame + 0xb) -- or -1 when neither is
  * playing. n wraps to 0 when it reaches the frame count of the
@@ -305,7 +305,7 @@ void daKpaFire_c::func_ov060_0211747c() {
     if (koopa->mState != 0xf)
         return;
 
-    n = koopa->func_ov060_02111c68();
+    n = koopa->GetMouthFireRow();
     if (n < 0)
         return;
 
