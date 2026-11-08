@@ -35,7 +35,8 @@
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
- * gets __arraydtor$1099 (and @1100); symbols.txt names the thunk
+ * gets an __arraydtor$N thunk and an @N registration node (the manifest's
+ * defined_symbol_renames hold the current N); symbols.txt names the thunk
  * __arraydtor$954, and the manifest renames both onto their configured
  * names, so an edit here that moves the count re-keys those two rows. The
  * two function-local Vector2 statics (Banner_StartWaveBurst,
@@ -467,7 +468,7 @@ extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     if (oamX < 0) {
         oamX = -oamX;
     }
-    x = (x = (e->mX + oamX) + 0x10);
+    x = e->mX + oamX + 0x10;
     w = 0x10;
     {
         int p = 1;
@@ -527,7 +528,7 @@ extern "C" void Banner_StartSpin(MgBanner *e) {
 
 extern "C" void Banner_UpdateDrop(MgBanner *e) {
     if (e->mTimer < 0x30){
-        *(unsigned *)&e->mTimer += 1;
+        e->mTimer++;
         return;
     }
     if (ApproachLinear2(e->mY, e->mTargetY, 0x10)){
@@ -544,11 +545,9 @@ extern "C" void Banner_DrawWave(MgBanner *e) {
     u8* el = e->mOam;
     int x = e->mTimer >> 2;
     int t = 0x1000;
-    int base = t;
-
     u16 flag;
     do {
-        int v = base;
+        int v = 0x1000;
         int d = x - t;
         if (d < 0) d = -d;
         if (d < 0x1000)
@@ -573,58 +572,38 @@ extern "C" void Banner_UpdateWave(MgBanner *e) {
     }
 }
 
+/* A random int in [0, n) from the actors' random state, the top 12 bits of the
+   positive draw scaled by n (d_s_mg_pachinko.cpp's PACHINKO_RAND does the same
+   from the minigame state). */
+#define BANNER_RAND(n) ((int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n) >> 12)
+
 extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     int i;
-    int angle;
-    int boxA[2], boxB[2], boxC[2];
-    int posA[2];
-    int outA[2], outB[2];
-
-    int shifted;
 
     e->mTimer = 0;
-    angle = e->mOamCount;
-    angle = angle + 1;
-    shifted = angle << 14;
-    e->mTimerEnd = shifted;
+    e->mTimerEnd = (e->mOamCount + 1) << 14;
 
     *(W2*)&e->mBehavior = *(W2*)&pmf_Banner_UpdateWave;
     *(W2*)&e->mRender   = *(W2*)&pmf_Banner_DrawWave;
 
-    boxA[0] = 0; boxA[1] = -0x2000;
-    boxB[0] = 0; boxB[1] = -0x1800;
-    boxC[0] = 0; boxC[1] = -0x4000;
+    Vector2 burstVel(0, -0x2000);
+    Vector2 liftVel(0, -0x1800);
+    Vector2 ringOffset(0, -0x4000);
 
-    {
-        int y = e->mY;
-        int x = e->mX;
-        int fy = y << 12;
-        int fx = x << 12;
-        posA[0] = fx;
-        posA[1] = fy;
-    }
+    Vector2 center(e->mX << 12, e->mY << 12);
+    Vector2 spawnPos, spawnVel;
 
     /* The burst's effect origin: built once, on the first burst, then
        registered for destruction at exit. */
     static Vector2 sBannerWaveFxPos(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
-        int r;
-        int ang;
-        s16 spawnAngle;
+        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d388((int *)&burstVel, 0x800);
+        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        func_0203d704(outA, posA, boxC);
-        func_0203d388(boxA, 0x800);
-        func_0203d388(boxC, 0x800);
-        func_0203d704(outB, boxB, boxA);
-
-        r = RandomIntInternal(&data_0209e650.value);
-        r &= 0x7fffffff;
-        ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
-        ang = ang + 0x5a;
-        spawnAngle = (s16)ang;
-
-        Mg_SpawnFx(0, spawnAngle, outA, outB, (int *)&sBannerWaveFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, (int *)&spawnPos, (int *)&spawnVel, (int *)&sBannerWaveFxPos);
     }
 }
 
@@ -790,7 +769,6 @@ extern "C" void Banner_DrawPressed(MgBanner *e) {
     fx16 s = FX_SinIdx(ang >> 4);
     int v = func_02053200(FX_MUL(s, 0x800) + 0x1000);
     M m = {0};
-    u16 lim = 0xffff;
     u16 flag;
     m._00 = v;
     m._11 = v;
@@ -800,7 +778,7 @@ extern "C" void Banner_DrawPressed(MgBanner *e) {
             e->mScreen, e->mPriority, &m);
         flag = *(u16*)(el + 6);
         el += 8;
-    } while (flag != lim);
+    } while (flag != 0xffff);
 
     x = e->mFileIndex;
     if (x != 0 && x != 1 && x != 2)
@@ -975,47 +953,26 @@ extern "C" void Banner_UpdateZoom(MgBanner *e) {
 
 extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     int i;
-    int boxA[2], boxB[2], boxC[2];
-    int posA[2];
-    int outA[2], outB[2];
-    int r;
-    int ang;
-    s16 spawnAngle;
 
     e->mTimer = 0;
     e->mTimerEnd = (((e->mOamCount + 1) << 2) + 0x1e) << 0xc;
 
-    boxA[0] = 0;
-    boxA[1] = -0x2000;
-    boxB[0] = 0;
-    boxB[1] = -0x1800;
-    boxC[0] = 0;
-    boxC[1] = -0x4000;
+    Vector2 burstVel(0, -0x2000);
+    Vector2 liftVel(0, -0x1800);
+    Vector2 ringOffset(0, -0x4000);
 
-    {
-        int y = e->mY;
-        int x = e->mX;
-        int fy = y << 12;
-        int fx = x << 12;
-        posA[0] = fx;
-        posA[1] = fy;
-    }
+    Vector2 center(e->mX << 12, e->mY << 12);
+    Vector2 spawnPos, spawnVel;
 
     static Vector2 sBannerZoomFxPos(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
-        func_0203d704(outA, posA, boxC);
-        func_0203d388(boxA, 0x800);
-        func_0203d388(boxC, 0x800);
-        func_0203d704(outB, boxB, boxA);
+        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d388((int *)&burstVel, 0x800);
+        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        r = RandomIntInternal(&data_0209e650.value);
-        r &= 0x7fffffff;
-        ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
-        ang = ang + 0x5a;
-        spawnAngle = (s16)ang;
-
-        Mg_SpawnFx(0, spawnAngle, outA, outB, (int *)&sBannerZoomFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, (int *)&spawnPos, (int *)&spawnVel, (int *)&sBannerZoomFxPos);
     }
 }
 
