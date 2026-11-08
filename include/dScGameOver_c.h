@@ -17,22 +17,23 @@
  * vptrs, pauseFlags |= 1 and 4, this class's vptr). No nested-object
  * construction is visible here; every own field below is a plain scalar.
  * Members below 0x50 are all inherited. Field names are proven by this TU's
- * own uses: the glyph arrays InitResources lays out and Render/060c read
- * back, and the five cursor bytes Behavior/0730/Render share.
+ * own uses: the glyph arrays InitResources lays out and Render/UpdateIntro
+ * read back, and the five cursor bytes Behavior/UpdateButtonPalettes/Render
+ * share.
  */
 struct dScGameOver_c : dScene_c {
-    s16 mGlyphX[8];               /* 0x050 -- per-glyph x; 060c slides it to the 020b1774 target */
-    s16 mGlyphY[8];               /* 0x060 -- per-glyph y; fixed 0x60, read by Render */
-    u16 mGlyphDelay[8];           /* 0x070 -- per-glyph drop-in delay; counted down by 060c */
-    s16 mGlyphUnused[8];          /* 0x080 -- the fourth per-glyph array, zeroed by
-                                     InitResources beside the three above; nothing in
-                                     the recovered ROM reads it back. Name coined. */
-    u8  mCursorState;             /* 0x090 -- 0 = pick, 1 = countdown-and-commit */
-    u8  mSelection;               /* 0x091 -- 0 = yes (continue), 1 = no */
-    u8  mCommitTimer;             /* 0x092 -- counts down, then commits the selection */
-    u8  mFlashTimer;              /* 0x093 -- while nonzero 0730 holds both boxes unselected */
-    u8  mIntroPhase;              /* 0x094 -- 0 = drop-in, 1 = settle, 2 = cursor live */
-    u8  pad_095[0x3];    /* 0x095 -- trailing alignment */
+    s16 mGlyphX[8];      /* 0x050 -- per-glyph x; UpdateIntro slides it to the 020b1774 target */
+    s16 mGlyphY[8];      /* 0x060 -- per-glyph y; fixed 0x60, read by Render */
+    u16 mGlyphDelay[8];  /* 0x070 -- per-glyph drop-in delay; counted down by UpdateIntro */
+    s16 mGlyphUnused[8]; /* 0x080 -- the fourth per-glyph array, zeroed by
+                            InitResources beside the three above; nothing in
+                            the recovered ROM reads it back. Name coined. */
+    u8 mCursorState;     /* 0x090 -- 0 = pick, 1 = countdown-and-commit */
+    u8 mSelection;       /* 0x091 -- 0 = yes (continue), 1 = no */
+    u8 mCommitTimer;     /* 0x092 -- counts down, then commits the selection */
+    u8 mFlashTimer;      /* 0x093 -- nonzero: both boxes drawn unselected */
+    u8 mIntroPhase;      /* 0x094 -- 0 = drop-in, 1 = settle, 2 = cursor live */
+    u8 pad_095[0x3];     /* 0x095 -- trailing alignment */
 
     /* Declared first and DEFINED INLINE, both deliberately -- the same form
        dScene_c.h and dBase_c.h use one and two levels up. Inline-in-class is
@@ -53,9 +54,12 @@ struct dScGameOver_c : dScene_c {
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
 
-    /* Non-virtual. The address is the method name; no new vtable slot. */
-    void func_ov003_020b060c();
-    void func_ov003_020b0730(int arg);
+    /* Non-virtual; no new vtable slot. Both names are coined from the
+       bodies: 0x020b060c steps the glyph drop-in through mIntroPhase, and
+       0x020b0730 is dScBoot_c::UpdateButtonPalettes' routine on the yes/no
+       boxes. */
+    void UpdateIntro();
+    void UpdateButtonPalettes(int unselectAll);
 };
 
 #ifndef SM64DS_PLATFORM_PC

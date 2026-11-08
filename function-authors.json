@@ -18883,11 +18883,11 @@
     },
     "ov003:0x020b060c": {
       "author": "github-actions[bot]",
-      "name": "_ZN13dScGameOver_c19func_ov003_020b060cEv"
+      "name": "_ZN13dScGameOver_c11UpdateIntroEv"
     },
     "ov003:0x020b0730": {
       "author": "github-actions[bot]",
-      "name": "_ZN13dScGameOver_c19func_ov003_020b0730Ei"
+      "name": "_ZN13dScGameOver_c20UpdateButtonPalettesEi"
     },
     "ov003:0x020b0810": {
       "author": "tangosdev",
