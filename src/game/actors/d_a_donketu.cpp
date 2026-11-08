@@ -144,9 +144,11 @@ void daDonketu_c::UpdateDeathState() {
 /* Below ten ticks the bully stands still and plays the wind-up through the
  * shared daOts_c stepper; from ten on it charges at 0xf000 and the cycle timer
  * wraps at 0x2c. The Big Bully's override is the same shape with a faster charge
- * and a shorter cycle. */
+ * and a shorter cycle. The s16 timer is compared unsigned (blo), hence the u16
+ * conversions; the wind-up arm's u16* leaves the timer's address in r0, which
+ * plain member access does not (5 words differ). */
 int daDonketu_c::UpdateRunState() {
-    if (*(u16 *)&mStateTimer < 0xa) {
+    if ((u16)mStateTimer < 0xa) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
@@ -157,13 +159,12 @@ int daDonketu_c::UpdateRunState() {
         return (int)timer;
     }
     mHorzSpeed = 0xf000;
-    u16 *timer = (u16 *)&mStateTimer;
-    u32 value = *timer;
-    if (value > 0x2c) {
-        value = 0;
-        *timer = 0;
+    u16 timer = mStateTimer;
+    if (timer > 0x2c) {
+        timer = 0;
+        mStateTimer = 0;
     }
-    return value;
+    return timer;
 }
 
 /* Frames 4 and 7 of the walk cycle are the two footfalls. */

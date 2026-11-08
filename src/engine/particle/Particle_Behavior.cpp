@@ -6,7 +6,7 @@
  * Particle_Manager.cpp) calls per particle: the resource supplies the
  * EffectData record, the Element the per-particle state, and Func advances
  * the particle's velocity/offset accordingly. The span is bounded on both
- * sides by func_ free functions: func_0204d440 below and func_0204d8e8 above.
+ * sides by C free functions: SPLAnim_Scale below and func_0204d8e8 above.
  * mwccarm emits .text in reverse source order, so the definitions below run
  * ROM-descending; the roster reads ROM-ascending.
  *

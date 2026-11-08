@@ -16,7 +16,7 @@
  *   naming belongs with dBgW in arm9.
  * - data_ov052_021124d4 is this overlay's BMD/KCL/CLPS bundle;
  *   symbols.txt has no recovered name.
- * - Sine table data_02082214 (arm9).
+ * - The bob reads the arm9 sine table, data_02082214, through FX_SinIdx.
  * - Inline destructor (out-of-line emits D0 before D1 plus a homeless D2).
  * - g_profile_EMM_LOG lives outside this TU (S14).
  */
@@ -28,6 +28,7 @@ enum d_a_obj_emm_log_AssetId { ASSET_EMM_LOG_BMD = 0x05e3, ASSET_EMM_LOG_KCL = 0
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 
 struct daObjEmmLog_c_Resources {
     SharedFilePtr *model;
@@ -49,7 +50,6 @@ struct EmmLogCollisionFilePtr : SharedFilePtr {
     ~EmmLogCollisionFilePtr();
 };
 
-extern short data_02082214[];
 extern daObjEmmLog_c_Resources data_ov052_021124d4;
 
 extern "C" daObjEmmLog_c *daObjEmmLog_c_classInit() {
@@ -78,8 +78,7 @@ s32 daObjEmmLog_c::InitResources() {
 s32 daObjEmmLog_c::Behavior() {
     mMeshCollider.SetClipRadius(0x600000);
 
-    int idx = (u16)mBobPhase >> 4;
-    int s = data_02082214[idx * 2];
+    int s = FX_SinIdx((u16)mBobPhase >> 4);
     int m = FX_MUL(mBobAmplitude, s);
     mPosY = mBasePosY + m;
 

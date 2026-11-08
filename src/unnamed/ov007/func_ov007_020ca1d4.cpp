@@ -1,13 +1,13 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Ov007MenuState.h"
 #include "cstd.h"
 #include "Ov007Mesh.h"
 
 extern "C" {
 
-extern short data_02082214[];
 extern int func_ov007_020c3ba8(int);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void *func_ov007_020c9388(int initialState);
@@ -59,7 +59,7 @@ void func_ov007_020ca308(Ov007MeshWave *wave, Ov007Mesh *mesh, int i) {
             u16 step = (u16)cstd::div(spread, count);
             base = (u16)(ticks * speed);
             for (j = 0; j < count; j++) {
-                s16 sine = data_02082214[((u16)(base + j * step) >> 4) * 2];
+                fx16 sine = FX_SinIdx((u16)(base + j * step) >> 4);
                 int val = FX_MUL(amplitude, sine);
                 if (i == 0) {
                     mesh->grid->rowLists[j]->items[line]->force.z += val;

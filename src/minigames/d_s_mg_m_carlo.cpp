@@ -455,22 +455,20 @@ void dMgMCarloCardObj_c::FlipAway(int slot) {
  * and across the whole board by HasRemovablePair. */
 int dMgMCarloCardObj_c::IsPairWith(dMgMCarloCardObj_c *other) {
     int slot, otherSlot, columnDistance, rowDistance;
-    if (other->mFace != mFace)
-        goto fail;
-    otherSlot = other->mSlot;
-    slot = mSlot;
-    columnDistance = slot % 5 - otherSlot % 5;
-    rowDistance = slot / 5 - otherSlot / 5;
-    if (columnDistance < 0)
-        columnDistance = -columnDistance;
-    if (columnDistance >= 2)
-        goto fail;
-    if (rowDistance < 0)
-        rowDistance = -rowDistance;
-    if (rowDistance >= 2)
-        goto fail;
-    return 1;
-fail:
+    if (other->mFace == mFace) {
+        otherSlot = other->mSlot;
+        slot = mSlot;
+        columnDistance = slot % 5 - otherSlot % 5;
+        rowDistance = slot / 5 - otherSlot / 5;
+        if (columnDistance < 0)
+            columnDistance = -columnDistance;
+        if (columnDistance < 2) {
+            if (rowDistance < 0)
+                rowDistance = -rowDistance;
+            if (rowDistance < 2)
+                return 1;
+        }
+    }
     return 0;
 }
 
@@ -488,24 +486,21 @@ int dMgMCarloCardObj_c::HitTest(void) {
 
     if (sMCarloPickAllowed == 0)
         return 0;
-    if (dScMgMCarlo_c::BoardBusy() != 0)
-        goto fail;
-
-    touchSlot = gActivePlayerSlot;
-    touchOffset = touchSlot * 4;
-    touching = 0;
-    if (gTouchHeld[touchOffset]) {
-        if (gTouchEdge[touchOffset])
-            touching = 1;
+    if (dScMgMCarlo_c::BoardBusy() == 0) {
+        touchSlot = gActivePlayerSlot;
+        touchOffset = touchSlot * 4;
+        touching = 0;
+        if (gTouchHeld[touchOffset]) {
+            if (gTouchEdge[touchOffset])
+                touching = 1;
+        }
+        if (touching != 0) {
+            touchXOffset = gTouchX[touchSlot * 4] - (mX >> 12);
+            touchYOffset = gTouchY[touchSlot * 4] - (mY >> 12);
+            if (touchXOffset > 7 && touchXOffset < 0x28 && touchYOffset > 0 && touchYOffset < 0x31)
+                return 1;
+        }
     }
-    if (touching == 0)
-        goto fail;
-
-    touchXOffset = gTouchX[touchSlot * 4] - (mX >> 12);
-    touchYOffset = gTouchY[touchSlot * 4] - (mY >> 12);
-    if (touchXOffset > 7 && touchXOffset < 0x28 && touchYOffset > 0 && touchYOffset < 0x31)
-        return 1;
-fail:
     return 0;
 }
 

@@ -39,7 +39,9 @@ struct dMgMemory2Player_c {
     s32 y;
     s32 speed;
     s16 angle;
-    s16 delay;
+    /* Unsigned: PlayerDrop's `!= 0` test loads it with ldrh. The clamp
+     * after the decrement reads it as signed, `(s16)delay < 0`. */
+    u16 delay;
     u8 active;
     u8 unk_11;
     u8 state;
@@ -138,7 +140,7 @@ struct dScMgMemory2_c : dScMgSingle3DBase_c {
     void ResultWait();
 
     void RoundReveal();
-    void *RoundWaitDeal();
+    void RoundWaitDeal();
     void RoundReadyCards();
     void RoundHideCards();
     void RoundShowCards();

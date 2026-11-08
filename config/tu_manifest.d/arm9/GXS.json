@@ -63,7 +63,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_02055fb4",
+      "symbol": "_ZN3GXS11LoadBG3CharEPKvjj",
       "address": "0x02055fb4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02055fb4.c",
@@ -77,14 +77,14 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_02056074",
+      "symbol": "_ZN3GXS11LoadBG2CharEPKvjj",
       "address": "0x02056074",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056074.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_020560d4",
+      "symbol": "_ZN2GX11LoadBG2CharEPKvjj",
       "address": "0x020560d4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020560d4.c",
@@ -154,7 +154,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_02056494",
+      "symbol": "_ZN2GX10LoadBG1ScrEPKvii",
       "address": "0x02056494",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056494.c",
@@ -175,7 +175,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "func_020565b4",
+      "symbol": "_ZN3GXS7LoadOBJEPKvjj",
       "address": "0x020565b4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020565b4.c",

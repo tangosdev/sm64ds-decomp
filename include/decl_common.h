@@ -19,6 +19,7 @@
    form, so no declaration here relies on C++ mangling. The remaining 72 resolve
    to neither spelling and are unresolvable with or without this guard. */
 struct daPly_c;
+struct daDossyCap_c;
 struct OamAttr;
 struct MascotWalker;
 struct Ov007MenuState;
@@ -548,11 +549,10 @@ extern void *func_ov007_020c3df4(const char *, int);
 extern int func_ov010_02111984[];
 /* Returns nothing: ov018 0x02111d18..0x02111d24 pops straight to bx lr with no
    r0 set. Definition in src/game/actors/d_a_pg_mthr.cpp. */
-extern void func_ov018_02111bf0(void*, void*);
 extern int func_ov025_0211123c(char*);
 extern int func_ov062_02115f84(void*);
 extern int func_ov065_021180d4(char*);
-extern int func_ov065_02119210(int);
+extern int func_ov065_02119210(struct daDossyCap_c *);
 extern int func_ov070_0211f0a4(void*);
 extern int func_ov080_0212714c(void*, void*);
 extern int func_ov080_021274ac(void*, void*);
@@ -902,7 +902,6 @@ extern void func_0205a588(void *, u8, u32);
 extern void* func_0206e2f8(void*, int, unsigned int);
 extern void __cxa_vec_delete(void *, int, int, void (*)(void *));
 extern void data_ov001_020ad494(void);
-extern void func_ov002_020aefa4(char*);
 
 
 extern void func_ov002_020bcdf0(void*);
@@ -1128,7 +1127,6 @@ extern void func_ov065_02118c4c(char*);
 extern void func_ov065_021195bc(void *, void *, void *);
 extern void func_ov065_021195d0(void *, void *, void *);
 extern void func_ov070_0211f100(char*);
-extern void func_ov070_02120070(char*);
 
 extern void func_ov070_02121c8c(void*);
 extern void func_ov070_02121e14(char*);

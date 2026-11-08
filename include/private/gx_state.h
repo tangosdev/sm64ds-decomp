@@ -5,7 +5,7 @@
 
 /* NitroSDK gxstate.h: the VRAM state block, which banks each user holds
  * (bank bits A 0x001 .. I 0x100). Every bank no user holds stays mapped to
- * the LCDC. func_02053d9c (GX_InitGXState) clears it; the SetBankFor*,
+ * the LCDC. GX_InitGXState clears it; the SetBankFor*,
  * Reset and Disable families in src/engine/gx/GX_VramCnt.cpp keep it. The
  * field order is the SDK's, and each offset is one GX_VramCnt.cpp reads or
  * writes at a halfword. */

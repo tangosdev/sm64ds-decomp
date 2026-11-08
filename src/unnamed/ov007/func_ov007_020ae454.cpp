@@ -1,12 +1,11 @@
 //cpp
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Ov007MenuState.h"
 #include "cstd.h"
 #include "Ov007Item.h"
 
 extern "C" {
-
-extern short data_02082214[];
 
 /* Item 1's wiggle: while its state is idle and wiggleTimer runs, posY swings
  * about the layout's home row on a sine that fades out with the remaining
@@ -31,7 +30,7 @@ void func_ov007_020ae454(Ov007ItemNode *self) {
         int t = ((r4 * (s->wiggleFrames * 0x2d)) >> 0xc) << 0x10;
         int r = cstd::div(t, 0x168);
         r = (unsigned short)r;
-        int sv = data_02082214[(r >> 4) << 1];
+        int sv = FX_SinIdx(r >> 4);
         int inv = 0x1000 - r4;
         int prod = FX_MUL(sv, inv);
         int e = s->layout->homeY;

@@ -23,11 +23,12 @@ extern unsigned int data_020a0f58;
 extern void *data_020a0f60;
 extern unsigned int data_020a0f64;
 extern void *data_020a0f68;
+/* The 0x40-byte WMParentParam template func_0203db64 keeps. */
 extern unsigned char data_020a1064[];
 
 /* Allocate the link's buffers. On a download-play child (the halfword at
    0x27ffc40 is 2), rebuild the parent's WMBssDesc into data_020a0f54, keep its
-   channel in data_020a0f28 (and at data_020a1064 +0x30) and step its tgid. */
+   channel in data_020a0f28 (and in data_020a1064's channel) and step its tgid. */
 void func_020408b0(unsigned short arg) {
     int b;
     data_020a0f14 = arg;
@@ -52,7 +53,7 @@ void func_020408b0(unsigned short arg) {
     data_020a0f60 = Memory::Allocate(0x220, 0x20);
     data_020a0f64 = 0x480;
     data_020a0f68 = Memory::Allocate(0x480, 0x20);
-    *(unsigned short *)(data_020a1064 + 0x30) = data_020a0f28;
+    ((WmParentParam *)data_020a1064)->channel = data_020a0f28;
     WM_Init(data_020a0f4c, 1);
 }
 }

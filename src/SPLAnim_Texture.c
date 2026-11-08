@@ -9,9 +9,9 @@ struct TexAnim {
     u8 step;        /* 0x9 */
 };
 
-/* The texture animation callback (pret's SPL: SPLAnim_Texture): picks the
- * frame whose span holds lifeRate. */
-void func_0204d150(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
+/* The texture animation callback: picks the frame whose span holds
+ * lifeRate. The name is pret's SPL coinage, not a ROM or SDK symbol. */
+void SPLAnim_Texture(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     struct TexAnim *anim = def->texAnim;
     int i;
     for (i = 0; i < anim->frameCount; i++) {
