@@ -34,7 +34,9 @@
 //   romdata       other game data       -> the world was built from other
 //                                          bytes, refuse (see below)
 //   image_base    exe rebased           -> code pointers would dangle, refuse
-//   arena_base    arena at a diff base  -> arena pointers would dangle, refuse
+//   pmf_base      stub range elsewhere  -> seated state tables would dangle,
+//                                          refuse (format 4, hal/pmf_tc.cpp)
+//   arena_base   arena at a diff base  -> arena pointers would dangle, refuse
 //   dsstate_base  section moved         -> hosted globals moved, refuse
 // and then, in header_lengths_SAFE and not in the policy list above, because
 // they are the lengths the body copies are sized by and not a judgement about
@@ -133,6 +135,8 @@
 
 /* run mg16 lane MP2: the instance suffix on savestate.bin */
 #include "instance_tag.h"
+/* run after093 lane DISKSTATE1: the thiscall stubs the seated state tables hold */
+#include "pmf_tc.h"
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -219,7 +223,7 @@ namespace {
 // Format 3 adds the game-data identity (romdata sha + length + the asset root
 // path) -- see "THE HALF THE HEADER WAS MISSING" above.
 const char   MAGIC[8]        = { 'S','M','6','4','D','S','S','T' };
-const u32    FORMAT_VERSION  = 3;
+const u32    FORMAT_VERSION  = 4;
 const u32    GITTIP_FIELD    = 64;   // fixed-width, NUL-padded, always NUL-terminated
 const u32    SHA_FIELD       = 65;   // 64 hex digits + NUL, or all-NUL for "none"
 const u32    ROOT_FIELD      = 512;  // the asset root path; informational only
@@ -244,6 +248,19 @@ struct Header {
     char     asset_root[ROOT_FIELD]; // where that data came from. NEVER COMPARED --
                                      // a player may move or rename the folder. It is
                                      // here so the refusal can name it.
+    /* FORMAT 4 (run after093, lane DISKSTATE1). The seated state tables in
+       .dsstate hold hal/pmf_tc.cpp's thiscall stubs, which are CODE THIS FILE
+       DOES NOT CARRY: they are made at run time, one per function, the first
+       time a seat asks. They sit at an address computed from the function they
+       enter (pinned like the arena), so the captured words are right in any
+       process of this build; what a fresh process lacks is the stub bytes for
+       functions it has not stubbed yet. pmf_count {function, stub} word pairs
+       follow this header, BEFORE the arena body, and the load makes every one
+       of them before it copies the world in. Without them a state written in
+       one session and loaded after a restart crashed at the first dispatch
+       through such a table (the Wiggler, at the next level load). */
+    uint64_t pmf_base;               // the stub range base; refused on a mismatch
+    uint64_t pmf_count;              // {function, stub} pairs after the header
 };
 #pragma pack(pop)
 
@@ -278,6 +295,8 @@ int fill_header(Header *hdr)
     snprintf(hdr->romdata_sha, sizeof hdr->romdata_sha, "%s", port_romdata_sha);
     hdr->romdata_bytes = port_romdata_bytes;
     snprintf(hdr->asset_root, sizeof hdr->asset_root, "%s", port_asset_root_seen);
+    hdr->pmf_base  = (uint64_t)port_pmf_tc_base();
+    hdr->pmf_count = (uint64_t)port_pmf_tc_count();
     return 1;
 }
 
@@ -557,6 +576,13 @@ int header_matches(const Header *disk, const Header *self)
                (unsigned long long)self->image_base);
         return 0;
     }
+    if (disk->pmf_base != self->pmf_base) {
+        refuse("save state refused: memory moved",
+               "disk state refused: stub range mismatch (file 0x%llx, this run 0x%llx)",
+               (unsigned long long)disk->pmf_base,
+               (unsigned long long)self->pmf_base);
+        return 0;
+    }
     if (disk->arena_base != self->arena_base) {
         refuse("save state refused: memory moved",
                "disk state refused: arena base mismatch (file 0x%llx, this run 0x%llx)",
@@ -586,7 +612,9 @@ extern "C" {
 // base. When 0, save and load are memory-only (the caller stays on lk6).
 int lk7_persist_available(void)
 {
-    return port_arena_is_fixed();
+    /* ...and every thiscall stub at its pinned address (hal/pmf_tc.cpp): a
+       stub made at a per-run address would come back dangling. */
+    return port_arena_is_fixed() && port_pmf_tc_pinned();
 }
 
 // 1 if a savestate.bin is sitting beside the exe. Asks nothing about whether
@@ -670,6 +698,11 @@ int lk7_persist_write(void)
     }
     int ok = 1;
     ok &= (fwrite(&hdr, sizeof hdr, 1, f) == 1);
+    for (int i = 0; ok && i < (int)hdr.pmf_count; ++i) {
+        unsigned pr[2];
+        port_pmf_tc_entry(i, &pr[0], &pr[1]);
+        ok &= (fwrite(pr, sizeof pr, 1, f) == 1);
+    }
     ok &= (asz == 0 || fwrite(base, 1, asz, f) == asz);
     ok &= (dsz == 0 || fwrite(&dsstate_lo, 1, dsz, f) == dsz);
     ok &= (hsz == 0 || fwrite(hbuf, 1, hsz, f) == hsz);
@@ -689,7 +722,8 @@ int lk7_persist_write(void)
     }
     skin_sidecar_write(path);
     fprintf(stderr, "[savestate] wrote disk state: %zu arena + %zu dsstate + "
-                    "%zu hw bytes -> %s\n", asz, dsz, hsz, path);
+                    "%zu hw bytes + %u stubs -> %s\n", asz, dsz, hsz,
+            (unsigned)hdr.pmf_count, path);
     return 1;
 }
 
@@ -816,6 +850,46 @@ int lk7_persist_read(void)
         verdict_savestate_refused();
         fclose(f);
         return 0;
+    }
+
+    /* The stubs first (format 4, see the Header). Making one changes nothing
+       in the world, so this can run before the point of no return; a stub that
+       will not land where the writer had it means a captured table would enter
+       the wrong code, so that is a refusal, and the kill switch does not reach
+       it. */
+    {
+        const unsigned long long n = disk.pmf_count;
+        if (n > 4096) {
+            refuse("save state refused: file is damaged",
+                   "disk state refused: %llu stubs listed, more than any build makes", n);
+            verdict_savestate_refused();
+            fclose(f);
+            return 0;
+        }
+        unsigned *pairs = n ? (unsigned *)malloc((size_t)n * 8) : 0;
+        if (n && (!pairs || fread(pairs, 8, (size_t)n, f) != (size_t)n)) {
+            free(pairs);
+            refuse("save state refused: file is damaged",
+                   "disk state refused: stub list truncated");
+            verdict_savestate_refused();
+            fclose(f);
+            return 0;
+        }
+        const int bad = n ? port_pmf_tc_rebuild(pairs, (int)n) : -1;
+        if (bad >= 0) {
+            refuse("save state refused: memory moved",
+                   "disk state refused: the stub for %08x lands at %08x in this run, "
+                   "the file has %08x", pairs[2 * bad],
+                   (unsigned)(size_t)port_pmf_tc((const void *)(size_t)pairs[2 * bad]),
+                   pairs[2 * bad + 1]);
+            free(pairs);
+            verdict_savestate_refused();
+            fclose(f);
+            return 0;
+        }
+        free(pairs);
+        fprintf(stderr, "[savestate] disk state: %llu stubs rebuilt at their pinned "
+                "addresses\n", n);
     }
 
     size_t asz = (size_t)disk.arena_size;
