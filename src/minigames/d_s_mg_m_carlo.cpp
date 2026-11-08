@@ -69,7 +69,7 @@ extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void MgCoins_Draw(void);
-void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
+void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 void Dealer_Draw(void *p);
 int Dealer_IsIdle(Dealer *dealer);
 void MgCoins_Update(void);
@@ -331,7 +331,7 @@ s32 dScMgMCarlo_c::Render() {
     Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
-    Mg_DrawScoreTally((char *)this, 0xe0, 0x14, 1);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 
     {
         dMgMCarloCardObj_c *card = sMCarloCardsTail;
