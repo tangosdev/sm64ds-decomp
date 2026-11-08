@@ -296,28 +296,28 @@
     "note": "Believed to belong to this TU in the ROM. Not declared, not compiled from source, not verified.",
     "data": [
       {
-        "symbol": "data_ov002_0210cbb8",
+        "symbol": "sObjectLoaders",
         "address": "0x0210cbb8",
         "size": "0x3c",
         "evidence": "fifteen function pointers, targets exactly the fifteen Load*Objects in this span and nothing else"
       },
       {
-        "symbol": "data_ov002_0210cbf4",
+        "symbol": "sObjToActorIdTable",
         "address": "0x0210cbf4",
         "note": "actor-id table indexed by StandardEntry.raw / SimpleEntry.raw; ownership not established"
       },
       {
-        "symbol": "data_ov002_0210cb5c",
+        "symbol": "sEntranceWipes",
         "address": "0x0210cb5c",
         "note": "read only by LoadEntranceObjects; ownership not established"
       },
       {
-        "symbol": "data_ov002_0210cb70",
+        "symbol": "sDoorVariants",
         "address": "0x0210cb70",
         "note": "read only by LoadDoorObjects; ownership not established"
       },
       {
-        "symbol": "data_ov002_0210cb88",
+        "symbol": "sDoorActorIds",
         "address": "0x0210cb88",
         "note": "read only by LoadDoorObjects; ownership not established"
       }

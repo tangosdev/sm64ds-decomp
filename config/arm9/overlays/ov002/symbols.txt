@@ -2570,11 +2570,11 @@ _ZN3OAM13MM_SPIKE_BOMBE kind:data(any) addr:0x0210caec
 data_ov002_0210caf4 kind:data(any) addr:0x0210caf4
 data_ov002_0210cb14 kind:data(any) addr:0x0210cb14
 _ZN3OAM8VS_PAUSEE kind:data(any) addr:0x0210cb4c
-data_ov002_0210cb5c kind:data(any) addr:0x0210cb5c
-data_ov002_0210cb70 kind:data(any) addr:0x0210cb70
-data_ov002_0210cb88 kind:data(any) addr:0x0210cb88
-data_ov002_0210cbb8 kind:data(any) addr:0x0210cbb8
-data_ov002_0210cbf4 kind:data(any) addr:0x0210cbf4
+sEntranceWipes kind:data(any) addr:0x0210cb5c
+sDoorVariants kind:data(any) addr:0x0210cb70
+sDoorActorIds kind:data(any) addr:0x0210cb88
+sObjectLoaders kind:data(any) addr:0x0210cbb8
+sObjToActorIdTable kind:data(any) addr:0x0210cbf4
 _ZN3OAM13TIME_FR_IT_ESE kind:data(any) addr:0x0210ce80
 data_ov002_0210ce90 kind:data(any) addr:0x0210ce90
 data_ov002_0210cea8 kind:data(any) addr:0x0210cea8
