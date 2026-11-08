@@ -46,6 +46,7 @@
 #include "IRQ.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "private/mb_views.h"
 #include "private/wm_views.h"
 
 /* The SDK built this file as C, where the GameInfo copy in
@@ -635,7 +636,7 @@ int MBi_GetBeaconPeriodDispersion(void) {
  * takes (work, user, ggid, tgid, dma), resolves MB_TGID_AUTO and sets the
  * lifetimes and the power-save flag; this one takes the GGID as two halves
  * (a2, a3) and does none of that. */
-int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
+int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma) {
     volatile unsigned short fill_s;
     volatile int fill_i;
     /* base1 (the WmWork) and base2 are byte pointers, not ints: every WmWork
@@ -650,11 +651,11 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
     if ((data_020a9db8 != 0) && (MB_WORK->mIsMbInitialized != 0)) {
         return 2;
     }
-    base1 = (char *)((a0 + 0x1f) & (~0x1f));
+    base1 = (char *)(((u32)work + 0x1f) & (~0x1f));
     base2 = (char *)(((int)base1 + sizeof(WmWork) + 0x1f) & (~0x1f));
     irq = IRQ::Disable();
     fill_i = 0;
-    data_020a9db0 = (u16)a5;
+    data_020a9db0 = (u16)dma;
     data_020a9db4 = base1;
     data_020a9db8 = base2;
     MultiStore_Int(fill_i, (int *)base1, sizeof(WmWork));
@@ -665,10 +666,9 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
     {
         int i = 0;
         u16 *dst = (u16 *)(base1 + 0x1e30);
-        u16 *rp = a1;
         u16 v;
         do {
-            v = *((rp + i) + 1);
+            v = user->name[i];
             if (v == 0) {
                 break;
             }
@@ -689,7 +689,7 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
             *(dst++) = *ptr;
         } while (j < 0x10);
     }
-    CpuCopy8(a1, base2 + 0x1300, 0x16);
+    CpuCopy8(user, base2 + 0x1300, 0x16);
     ((WmWork *)base1)->parentMaxSize = 0x100;
     ((WmWork *)base1)->childMaxSize = 8;
     ((WmWork *)base1)->sendBufSize = 0;
@@ -701,9 +701,9 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
         WmParentParam *hdr = &((WmWork *)base1)->parentParam;
         hdr->CS_Flag = 1;
         hdr->KS_Flag = 0;
-        hdr->ggid[0] = (short)a2;
-        hdr->ggid[1] = (short)a3;
-        hdr->tgid = (short)a4;
+        hdr->ggid[0] = (short)ggid0;
+        hdr->ggid[1] = (short)ggid1;
+        hdr->tgid = (short)tgid;
         hdr->entryFlag = 1;
         hdr->multiBootFlag = 0;
         hdr->beaconPeriod = (u16)(MBi_GetBeaconPeriodDispersion() + 0xc8);
