@@ -671,11 +671,13 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN13RouletteRacerD2Ev",
-        "_ZN7Vector2D1Ev"
+        "_ZN7Vector2D1Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
         "_ZN13RouletteRacerD2Ev",
-        "_ZN7Vector2D1Ev"
+        "_ZN7Vector2D1Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
         8,
@@ -699,7 +701,8 @@
         66,
         67,
         73,
-        123
+        94,
+        124
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -1190,6 +1193,13 @@
       "canonical_module": "arm9",
       "canonical_address": "0x0203d47c",
       "reason": "sRouletteTiles and the function-local goal register ~Vector2(). include/Vector2.h defines that destructor inline, so this TU emits a 4-byte copy; the body is NullDestructor_0203d47c at 0x0203d47c."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "RouletteBoard_StateSpin and RouletteBoard_StateSlow build the ball's position in a Vector3 local, so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes before discarding the duplicate."
     }
   ],
   "externalized_output": [],

@@ -1246,16 +1246,11 @@ void RouletteBoard_StateSpin(RouletteBoard *board) {
     s16 val1 = FX_CosIdx(idx);
     s16 val0 = FX_SinIdx(idx);
 
-    int x, y, z;
-    VecFx32 t;
-    x = FX_MUL(dist, val1);
-    y = FX_MUL(dist, 0x400) + 0x780;
-    z = FX_MUL(dist, val0);
-    ((int *)&t)[0] = x;
-    ((int *)&t)[1] = y;
-    ((int *)&t)[2] = z;
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ((int *)&t)[0], ((int *)&t)[1],
-                                        ((int *)&t)[2]);
+    Vector3 ballPos;
+    ballPos.x = FX_MUL(dist, val1);
+    ballPos.y = FX_MUL(dist, 0x400) + 0x780;
+    ballPos.z = FX_MUL(dist, val0);
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ballPos.x, ballPos.y, ballPos.z);
 
     board->mBall.mat4x3 = data_020a0e68;
 }
@@ -1281,20 +1276,20 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     int angidx;
     short t0, t1;
     int x, y, z;
-    VecFx32 t;
+    Vector3 ballPos;
 
     spinAbs = board->mSpinSpeed - 0x140;
     if (spinAbs < 0)
         spinAbs = -spinAbs;
-    pull = cstd::fdiv((int)((((long long)spinAbs * spinAbs) + 0x800) >> 12), board->mBallRadius) -
+    pull = cstd::fdiv(FX_MUL(spinAbs, spinAbs), board->mBallRadius) -
            0xc00;
 
-    board->mAngleStep = cstd::fdiv((int)((((long long)board->mSpinSpeed * 0x500) + 0x800) >> 12),
+    board->mAngleStep = cstd::fdiv(FX_MUL(board->mSpinSpeed, 0x500),
                                    board->mBallRadius);
 
     board->mOrbitAngle += board->mAngleStep;
 
-    board->mBallRadiusVel = (int)((((long long)board->mBallRadiusVel * 0x600) + 0x800) >> 12);
+    board->mBallRadiusVel = FX_MUL(board->mBallRadiusVel, 0x600);
     board->mBallRadiusVel += pull;
     board->mBallRadius += board->mBallRadiusVel;
 
@@ -1324,7 +1319,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     if (board->mBallRadius < 0x2000) {
         if (diff < -0x400 && (diff - board->mAngleStep) >= -0x400) {
             board->mOrbitAngle = (stops.v[idx] - 0x400) - board->mSlowBias;
-            board->mSpinSpeed = -(int)((((long long)board->mSpinSpeed * 0xf00) + 0x800) >> 12);
+            board->mSpinSpeed = -FX_MUL(board->mSpinSpeed, 0xf00);
             ApproachLinear(board->mSpinSpeed, 0xfffff667, 0x30);
             if (board->mRollSound != 0) {
                 Sound::PlayBank2_2D(0x159);
@@ -1332,7 +1327,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
             }
         } else if (diff > 0x400 && (diff - board->mAngleStep) <= 0x400) {
             board->mOrbitAngle = (stops.v[idx] + 0x400) - board->mSlowBias;
-            board->mSpinSpeed = -(int)((((long long)board->mSpinSpeed * 0xe00) + 0x800) >> 12);
+            board->mSpinSpeed = -FX_MUL(board->mSpinSpeed, 0xe00);
             if (board->mRollSound != 0) {
                 Sound::PlayBank2_2D(0x159);
                 board->mRollSound = 0;
@@ -1345,7 +1340,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
                 board->mBallRadiusVel = 0;
             }
         }
-        extra = (int)((((long long)(board->mBallRadius - 0x2000) * 0x100) + 0x800) >> 12);
+        extra = FX_MUL(board->mBallRadius - 0x2000, 0x100);
     }
 
     ApproachLinear(board->mSpinSpeed, 0, 0x30);
@@ -1354,14 +1349,13 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     t0 = FX_CosIdx(angidx);
     t1 = FX_SinIdx(angidx);
 
-    x = (int)((((long long)board->mBallRadius * t0) + 0x800) >> 12);
-    y = (int)((((long long)board->mBallRadius * 0x400) + 0x800) >> 12) + 0x780 + extra;
-    z = (int)((((long long)board->mBallRadius * t1) + 0x800) >> 12);
-    ((int *)&t)[0] = x;
-    ((int *)&t)[1] = y;
-    ((int *)&t)[2] = z;
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ((int *)&t)[0], ((int *)&t)[1],
-                                        ((int *)&t)[2]);
+    x = FX_MUL(board->mBallRadius, t0);
+    y = FX_MUL(board->mBallRadius, 0x400) + 0x780 + extra;
+    z = FX_MUL(board->mBallRadius, t1);
+    ballPos.x = x;
+    ballPos.y = y;
+    ballPos.z = z;
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, ballPos.x, ballPos.y, ballPos.z);
 
     board->mBall.mat4x3 = data_020a0e68;
 }
