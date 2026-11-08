@@ -986,6 +986,14 @@
       "evidence": "ov006 callers of Dealer_Update matched after the Dealer * change. The offset itself was already in the function."
     },
     {
+      "path": "src/minigames/d_s_mg_teresa.cpp",
+      "rule": "unknown-field",
+      "match": "unk_1b",
+      "count": 1,
+      "reason": "Reveal_Start clears byte 0x1b of dScMgTeresa_c::Reveal and nothing in this TU reads it. This PR replaces the raw `*(char *)(raw + 0x4bbb)` store off a `(char *)this` alias with the header's existing member name; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
+      "evidence": "include/dScMgTeresa_c.h line 113 (`u8 unk_1b; /* 0x1b */`); objsnap of d_s_mg_teresa.cpp IDENTICAL to main; ov006 teresa TU tubuild verify"
+    },
+    {
       "path": "src/game/actors/d_a_demo.cpp",
       "rule": "handspelled-member",
       "match": "_ZN8daDemo_c19func_ov002_020f26c4EPh",
