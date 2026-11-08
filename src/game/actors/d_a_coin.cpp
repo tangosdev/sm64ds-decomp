@@ -113,8 +113,7 @@ daCoin_c::~daCoin_c()
 /* Red coin, first frame: looks for a BLOCK_L actor within 150 units. If there is
  * one the coin is marked as sitting in it (mInBrickBlock) and the block keeps a
  * pointer back to the coin. */
-void daCoin_c::LinkToBlock()
-{
+void daCoin_c::LinkToBlock() {
     dActor_c *block;
 
     if (mBlockScanned) return;
@@ -133,8 +132,7 @@ void daCoin_c::LinkToBlock()
 
 /* If this coin's death-table bit is set, lets its star marker react (see
  * FindStarMarker) and kills the coin. Returns 1 when it did. */
-int daCoin_c::KillIfCollected()
-{
+int daCoin_c::KillIfCollected() {
     daStarBase_c *marker;
 
     if (GetBitInDeathTable() == 0) return 0;
@@ -149,8 +147,7 @@ int daCoin_c::KillIfCollected()
  * 0x81, 0x9c) just below the coin and takes its top as the floor. Failing that
  * it casts a ray 500 units down: a hit on a surface owned by an actor sets
  * FLOOR_DYNAMIC, any other hit records the hit height and sets FLOOR_FIXED. */
-void daCoin_c::ProbeFloor()
-{
+void daCoin_c::ProbeFloor() {
     extern signed char gCurrentSublevel;
 
     int offScreen;
@@ -210,8 +207,7 @@ void daCoin_c::ProbeFloor()
 /* Yoshi-mouth check: returns 1 if any of the mFlags bits 0x20000, 0x40000 or
  * 0x80000 is set. Otherwise it zeroes mEatingPlayer, clears those bits (already
  * clear on this path) and returns 0. */
-int daCoin_c::CheckInYoshiMouth()
-{
+int daCoin_c::CheckInYoshiMouth() {
     unsigned int flagBits;
     unsigned int inMouth;
     unsigned int zero;
@@ -238,8 +234,7 @@ int daCoin_c::CheckInYoshiMouth()
 
 /* Finds the STARBASE actor (0xb4, a daStarBase_c) whose star id equals this
  * coin's mSpawnFilter and whose state is 0. Null if there is none. */
-daStarBase_c *daCoin_c::FindStarMarker()
-{
+daStarBase_c *daCoin_c::FindStarMarker() {
     daStarBase_c *marker = 0;
     while (1) {
         marker = (daStarBase_c *)dActor_c::FindWithActorID(0xb4, marker);
@@ -252,8 +247,7 @@ daStarBase_c *daCoin_c::FindStarMarker()
 }
 
 /* Bounce off a wall: turns the heading (mPrevAngleY) around the wall normal. */
-void daCoin_c::BounceOffWall()
-{
+void daCoin_c::BounceOffWall() {
     if (mWithMeshClsn.IsOnWall() == 0) return;
     int normal[3];
     void *wall = mWithMeshClsn.GetWallResult();
@@ -268,8 +262,7 @@ void daCoin_c::BounceOffWall()
  * radius. Landing on a floor with surface flag 0x20 while falling makes a big
  * splash and leaves the coin sinking slowly (gravity -0x800, terminal velocity
  * -0x5000). */
-void daCoin_c::Step()
-{
+void daCoin_c::Step() {
     DecIfAbove0_Byte(&mNoClsnTimer);
     if (DecIfAbove0_Short(&mDisappearTimer) == 1) {
         KillAndTrackInDeathTable();
@@ -298,8 +291,7 @@ void daCoin_c::Step()
  * coin sitting in a block.
  * FLOOR_DYNAMIC drops it 500 units with a fixed radius; FLOOR_FIXED sizes it
  * from the distance down to mFloorPosY. */
-void daCoin_c::UpdateModelMatrix()
-{
+void daCoin_c::UpdateModelMatrix() {
     extern int IDENTITY_MATRIX4X3[];
 
     int inYoshiMouth;
@@ -452,8 +444,7 @@ void func_ov002_020b18f0(char* self)
  * it stops its disappear timer and hands out the reward for its coin type
  * (blue: CollectBlueCoin, red: CollectRedCoin, else
  * CollectYellowCoin). Returns 1 when it did. */
-int daCoin_c::CheckPlayerHit()
-{
+int daCoin_c::CheckPlayerHit() {
     unsigned int playerID = mdCc_c.otherOwner;
     if (playerID != 0) {
         daPly_c *player = (daPly_c *)dActor_c::FindWithID(playerID);
@@ -476,8 +467,7 @@ int daCoin_c::CheckPlayerHit()
 /* Follows mFollowTarget: copies its position (raised by 0xc8000), and marks
  * the coin for destruction once the disappear timer, counted up here, passes
  * 0x40. */
-void daCoin_c::StateFollowTarget()
-{
+void daCoin_c::StateFollowTarget() {
     mDisappearTimer += 1;
     {
         int *targetPos = &mFollowTarget->mPosX;
@@ -500,8 +490,7 @@ void daCoin_c::StateFollowTarget()
  * 0xb) as its own, gets an upward speed of 20 units, counts one bounce, enables
  * limited movement and sets the disappear timer to 0x1c2. On any landing on a
  * floor without surface flag 0x20 it plays sound 0x52 and hops (0x19000). */
-void daCoin_c::StateLaunchNearPlayer()
-{
+void daCoin_c::StateLaunchNearPlayer() {
     extern signed char gCurrentSublevel;
 
     daPly_c *player;
@@ -540,8 +529,7 @@ void daCoin_c::StateLaunchNearPlayer()
  * horizontal speed is given 0x13000 and a disappear timer of 0x12c; the hop
  * then heads back toward the closest player if one is within 1200 units, else
  * toward the farthest one. */
-void daCoin_c::StateSlideAwayFromMario()
-{
+void daCoin_c::StateSlideAwayFromMario() {
     Step();
     BounceOffWall();
     if (!mWithMeshClsn.JustHitGround()) return;
@@ -570,8 +558,7 @@ void daCoin_c::StateSlideAwayFromMario()
  * floor it accelerates along the surface normal by data_ov002_020ff078 for the
  * floor's class, caps the speed at 0x1c000 and steers toward the slope. The
  * coin settles (BEHAVIOR_RESTING) once its vertical speed is spent. */
-void daCoin_c::StateBounce()
-{
+void daCoin_c::StateBounce() {
     extern int data_ov002_020ff078[];
 
     Vector3 normal;
@@ -677,8 +664,7 @@ void daCoin_c::StateBounce()
 
 /* Timer-only handler: counts down the disappear and no-collision timers and
  * kills the coin when the disappear timer reaches 1. */
-void daCoin_c::StateRest()
-{
+void daCoin_c::StateRest() {
     DecIfAbove0_Short(&mDisappearTimer);
     DecIfAbove0_Byte(&mNoClsnTimer);
     if (mDisappearTimer == 1)
@@ -689,8 +675,7 @@ void daCoin_c::StateRest()
  * filter is under 8). Once event bit mSpawnFilter is set it becomes active,
  * re-enables its collider, rests, and takes its disappear timer from the
  * BC_SWITCH actor (0xa) if there is one, else 0xfa. */
-void daCoin_c::StateIdle()
-{
+void daCoin_c::StateIdle() {
     dActor_c *found;
 
     LinkToBlock();
@@ -710,8 +695,7 @@ void daCoin_c::StateIdle()
 /* Movement handler that stops the coin dead on contact: shared tail, zero
  * horizontal speed on a wall, and on the ground zero vertical speed and
  * gravity, then BEHAVIOR_RESTING. */
-void daCoin_c::StateDrop()
-{
+void daCoin_c::StateDrop() {
     Step();
     if (mWithMeshClsn.IsOnWall()) mHorzSpeed = 0;
     if (mWithMeshClsn.IsOnGround()) {
@@ -792,7 +776,8 @@ int daCoin_c::Behavior()
         if ((unsigned int)(mCoinFlags << 0x1f) >> 0x1f)
             mAreaId = -1;
     }
-    if (KillIfCollected() != 0) return 1;
+    if (KillIfCollected() != 0)
+        return 1;
     mAngleY += 0xc00;
     if (CheckInYoshiMouth() != 0) {
         UpdateModelMatrix();
@@ -801,7 +786,8 @@ int daCoin_c::Behavior()
     }
     ProbeFloor();
     mEatingPlayer = 0;
-    if (CheckPlayerHit() != 0) return 1;
+    if (CheckPlayerHit() != 0)
+        return 1;
     (this->*data_ov002_0210dc70[mBehaviorType])();
     if ((int)(gGameMode == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
         mdCc_c.Clear();
@@ -1092,13 +1078,8 @@ extern "C" SpawnInfo<daCoin_c> g_profile_BLUE_COIN = {
 typedef void (daCoin_c::*CoinHandler)();
 
 CoinHandler data_ov002_0210dc70[9] = {
-    &daCoin_c::StateDrop,
-    &daCoin_c::StateIdle,
-    &daCoin_c::StateBounce,
-    &daCoin_c::StateSlideAwayFromMario,
-    &daCoin_c::StateRest,
-    &daCoin_c::StateLaunchNearPlayer,
-    &daCoin_c::StateBounce,
-    &daCoin_c::StateIdle,
-    &daCoin_c::StateFollowTarget
-};
+    &daCoin_c::StateDrop,        &daCoin_c::StateIdle,
+    &daCoin_c::StateBounce,      &daCoin_c::StateSlideAwayFromMario,
+    &daCoin_c::StateRest,        &daCoin_c::StateLaunchNearPlayer,
+    &daCoin_c::StateBounce,      &daCoin_c::StateIdle,
+    &daCoin_c::StateFollowTarget};
