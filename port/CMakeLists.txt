@@ -26028,3 +26028,17 @@ endif()
 if(TARGET smoke_persist)
     target_sources(smoke_persist PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/pmf_tc.cpp")
 endif()
+# run after093, lane LOBBYUI1: the in-game lobby page (hal/lobby_page.h), seated in tests/walk_window.cpp like the white door picker; the
+# smoke player links the online menu's logic side, which asks for the page, so it gets inert stubs. The kit compiles the page's proof knobs
+# and stand-in client out. Own block.
+foreach(_tlobui1 walk_window walk_window_hires)
+    if(TARGET ${_tlobui1})
+        target_sources(${_tlobui1} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/lobby_page.cpp")
+    endif()
+endforeach()
+if(TARGET smoke_player)
+    target_sources(smoke_player PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/lobby_page_stubs.cpp")
+endif()
+if(PORT_ROM_CLEAN)
+    set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/lobby_page.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
+endif()

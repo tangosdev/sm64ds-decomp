@@ -419,6 +419,7 @@ extern "C" void host_menu_cursor_sound_flush(void);   /* hal/menu_compose.cpp: o
 #include "hal/char_registry.h"    /* CHARSLOT1: custom characters (costumes on the four) */
 #include "hal/char_save.h"        /* CHARSAVE1: the pick survives quitting (save/characters.json) */
 #include "hal/char_door.h"        /* CHARDOOR1: the Rec Room white star door picks the character */
+#include "hal/lobby_page.h"       /* LOBBYUI1: the in-game lobby page */
 #include "hal/char_strip.h"       /* PRECOURSE1: the character strip on the star select */
 #include "hal/pcore.h"            /* PCORE1: P-core / throttling opt-out */
 #include "hal/settings_live.h"   /* run menu1 SETLIVE1: live, saved settings */
@@ -7369,6 +7370,10 @@ static void menu_draw(const OvlSurface &fb)
         settings_page_draw(fb.px, fb.stride, ntr::active_w, ntr::active_h);
         return;
     }
+    if (lobby_page_open()) {                /* LOBBYUI1: the in-game lobby page */
+        lobby_page_draw(fb.px, fb.stride, ntr::active_w, ntr::active_h);
+        return;
+    }
     if (port_char_door_open()) {            /* CHARDOOR1: the white door's picker or box */
         ntr::gx_card_settle_because("the character picker");
         cd_metrics();
@@ -7815,6 +7820,41 @@ static int cd_frame(int pad_live, const XPad *pad)
     return 1;
 }
 
+/* ---- THE IN-GAME LOBBY PAGE (run after093, lane LOBBYUI1) -------------------------------------------------------------------
+   hal/lobby_page.cpp is the page (the room, the input rules, the look); this is its seat, the white door picker's shape (cd_frame above): the
+   online file select asks (HOST, a room code), the request is honoured on the next frame, the page borrows the debug menu's pause so the
+   title stands still under it, and the devices are read here behind the gates every other reader uses. */
+static int lp_frame(int pad_live, const XPad *pad)
+{
+    if (lobby_page_open() && !menu_on) lobby_page_cancel();               /* something else took the pause away */
+    if (!lobby_page_open()) {
+        if (!lobby_page_pending() && !lobby_page_env_poll()) return 0;
+        if (menu_on) { lobby_page_clear_request(); return 0; }             /* the debug menu or another page holds the pause: not now */
+        lobby_page_open_now();
+        menu_on = 1;
+        g_sp_wheel = 0;
+    }
+    SpInput in;
+    memset(&in, 0, sizeof in);
+    sp_read_devices(in, pad_live, pad);
+    g_sp_wheel = 0;
+    {   /* a DS stylus tap (SM64DS_HOST_CLICK) reads as a press at that spot of the picture, as on the white door's picker */
+        int cx = 0, cy = 0, fx = 0, fy = 0;
+        if (port_touch_inject_peek(&cx, &cy) && hal_present_client_to_fb(cx, cy, &fx, &fy)) {
+            in.mouse_valid = 1; in.mouse_x = fx; in.mouse_y = fy; in.mouse_l = 1;
+        }
+    }
+    if (!lobby_page_frame(&in, pad_live ? pad->buttons : 0)) {
+        menu_on = 0;
+        /* the Escape / Backspace / B / Enter that closed it is still down: not a fresh F5 for the debug menu, not a fresh Select or A for the ROM */
+        key_stale[VK_ESCAPE] = 1; key_stale[VK_F5] = 1; key_stale[VK_BACK] = 1; key_stale[VK_RETURN] = 1;
+        if (g_key[HOST_KEY_SELECT] > 0 && g_key[HOST_KEY_SELECT] < 256) key_stale[g_key[HOST_KEY_SELECT]] = 1;
+        mouse_buttons_stale();
+        if (pad_live && (pad->buttons & 0x3000)) menu_b_swallow = 1;
+    }
+    return 1;
+}
+
 /* ---- THE STAR SELECT'S CHARACTER STRIP (run hunt8, lane PRECOURSE1) ----------------------------------------------------------
    hal/char_strip.cpp is the strip (the list, the pages, the cursor, the pointer); this is its seat in the two frame loops. It does not hold the
    game still: the star select goes on running under it. It reads the devices behind the same gates the picker does and answers which DS key bits
@@ -8155,6 +8195,7 @@ static void menu_input(int pad_live, const XPad *pad)
     pause3_input(pad_live, pad);
     if (sp_frame(pad_live, pad)) return;
     if (cd_frame(pad_live, pad)) return;
+    if (lp_frame(pad_live, pad)) return;     /* LOBBYUI1 */
     cs_frame(pad_live, pad);
     if (g_selftest) return;
     static unsigned menu_prev;

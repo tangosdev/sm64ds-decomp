@@ -11,10 +11,15 @@
    and this process quits), so the screen stays up until the window closes. A refusal or no answer is a plain sentence and Back. Without JOIN1's
    header in the tree (a build of this lane alone) a pick can only end in that sentence. */
 #include "menu_online.h"
+#include "lobby_page.h"
 #include <chrono>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
 
 #if defined(__has_include)
 #  if __has_include("online_join.h")
@@ -28,6 +33,9 @@
 
 extern "C" char *data_ov007_02103360;   /* the title's element-cursor struct (src/func_ov007_020b3708.c): its first two shorts are the cursor element and its target */
 namespace ntr { namespace backup { void select_online(int on); } }
+namespace ntr { extern int active_w, active_h; }
+extern "C" int hal_window_focused(void);           /* hal/sub_screen.cpp */
+extern "C" int port_host_key_script(int vk);       /* tests/walk_window.cpp: SM64DS_HOST_KEY, 0 when unset */
 
 extern "C" {
 unsigned char func_ov007_020cc600(int arg);   /* src/game/stages/d_s_dsmt.cpp: the title's client command dispatcher; 20 = read the three files again (allocates a fresh 0xcc byte block) */
@@ -55,6 +63,9 @@ struct St {
     unsigned t_flow;           /* tick ADVENTURE ONLINE was pressed: the settled main page does not reset the flow for a while after it */
     int released_since;        /* the touch / key that opened a screen must be let go before it can press that screen's button */
     int touch_hold;            /* INPUTMATRIX1: a stylus / click that closed a screen is kept from the ROM until it is lifted */
+    char rc[8];                /* LOBBYUI1: the room code typed into the ROOM CODE plank */
+    unsigned char rc_prev[256];
+    unsigned rc_closed_tick;   /* LOBBYUI1: the tick the plank let go: the Escape / Backspace that did it is not also the file select's back */
 } g;
 
 enum { kWaitCapMs = 22000 };
@@ -116,6 +127,71 @@ void open_profile(int pending)
     set_screen(ONL_SCR_PROFILE);
 }
 
+/* LOBBYUI1: THE ROOM CODE PLANK AND HOST. The keyboard types the code straight into the plank (polled once a tick like the NAME popup's field: the window
+   must have focus, or a scripted SM64DS_HOST_KEY press stands in): the 31 letters and digits of the lobby server's code alphabet, upper case, six at
+   most; Backspace deletes; Enter with six letters asks for the lobby page joining that room; Escape lets go. While it has the keyboard it is a modal
+   screen (ONL_SCR_ROOMCODE): the pad and the keys never reach the ROM's file select underneath. HOST asks for the lobby page's Coop / VS choice. */
+SHORT (WINAPI *p_GetAsyncKeyState)(int);
+int key_down(int vk)
+{
+    if (port_host_key_script(vk)) return 1;
+    static int done;
+    if (!done) {
+        done = 1;
+        if (HMODULE u = LoadLibraryA("user32.dll")) p_GetAsyncKeyState = (SHORT (WINAPI *)(int))GetProcAddress(u, "GetAsyncKeyState");
+    }
+    return p_GetAsyncKeyState && hal_window_focused() && (p_GetAsyncKeyState(vk) & 0x8000) ? 1 : 0;
+}
+const char kRcAlphabet[] = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+void rc_sync_keys()
+{
+    for (int vk = 8; vk < 256; ++vk) g.rc_prev[vk] = (unsigned char)key_down(vk);
+}
+void rc_open()
+{
+    rc_sync_keys();          /* the press that gave the plank the keyboard (Enter, A) is not typing */
+    set_screen(ONL_SCR_ROOMCODE);
+    fprintf(stderr, "[online] ROOM CODE plank: typing (%s)\n", g.rc);
+}
+void rc_close(const char *why)
+{
+    fprintf(stderr, "[online] ROOM CODE plank: let go (%s), code '%s'\n", why, g.rc);
+    set_screen(ONL_SCR_NONE);
+    g.rc_closed_tick = g.tick ? g.tick : 1;
+    g.touch_hold = 1;
+}
+void rc_submit()
+{
+    if (strlen(g.rc) != 6) { fprintf(stderr, "[online] ROOM CODE: '%s' is not six letters yet\n", g.rc); return; }
+    fprintf(stderr, "[online] ROOM CODE %s: the lobby page joins it\n", g.rc);
+    set_screen(ONL_SCR_NONE);
+    lobby_page_request_join(g.rc);
+}
+void rc_tick()
+{
+    auto fresh = [](int vk) { const int d = key_down(vk); const int f = d && !g.rc_prev[vk]; g.rc_prev[vk] = (unsigned char)d; return f; };
+    const int ctl = key_down(VK_CONTROL) || key_down(VK_MENU);
+    for (int vk = '0'; vk <= 'Z'; ++vk) {
+        if (vk > '9' && vk < 'A') continue;
+        if (!fresh(vk) || ctl) continue;
+        const char c = (char)vk;
+        const size_t n = strlen(g.rc);
+        if (strchr(kRcAlphabet, c) && n < 6) { g.rc[n] = c; g.rc[n + 1] = 0; fprintf(stderr, "[online] ROOM CODE typed: %s\n", g.rc); }
+    }
+    for (int vk = VK_NUMPAD2; vk <= VK_NUMPAD9; ++vk) {
+        if (!fresh(vk) || ctl) continue;
+        const size_t n = strlen(g.rc);
+        if (n < 6) { g.rc[n] = (char)('0' + vk - VK_NUMPAD0); g.rc[n + 1] = 0; }
+    }
+    if (fresh(VK_RETURN)) rc_submit();
+    else if (fresh(VK_ESCAPE)) rc_close("Escape");
+}
+void host_press(const char *how)
+{
+    fprintf(stderr, "[online] HOST (%s): the lobby page's Coop / VS choice\n", how);
+    lobby_page_request_host();
+}
+
 }  // namespace
 
 const OnlFacts *onl_facts_of(const MenuLayout *L)
@@ -141,6 +217,10 @@ void menu_online_facts(OnlFacts *f)
     f->help_files = g.help_files;
     f->padfocus = g.scr == ONL_SCR_NONE ? g.padfocus : 0;
     memcpy(f->why, g.why, sizeof f->why);
+    f->why[sizeof f->why - 1] = 0;
+    memcpy(f->rc, g.rc, sizeof f->rc - 1);
+    f->rc[sizeof f->rc - 1] = 0;
+    f->rc_caret = (unsigned char)(g.scr == ONL_SCR_ROOMCODE && ((g.tick / 20) & 1) == 0);
     profile_facts(&f->prof);
 }
 
@@ -159,6 +239,7 @@ void menu_online_tick(int top, int elem, int req)
 {
     ++g.tick;
     if (g.scr == ONL_SCR_PROFILE) profile_tick();
+    if (g.scr == ONL_SCR_ROOMCODE) rc_tick();
     if (g.scr != ONL_SCR_NONE && g.tick - g.t_scr > 8) g.released_since = 1;
     if (top == 0 && elem == 0 && req == -1) {            /* the main page is settled */
         if ((g.flow || g.med_online) && g.tick - g.t_flow > 40) {
@@ -204,6 +285,7 @@ static void toggle_on()
 
 static void close_screen()
 {
+    if (g.scr == ONL_SCR_ROOMCODE) { rc_close("back"); return; }
     if (g.scr == ONL_SCR_WAIT) join_cancel();
     fprintf(stderr, "[online] screen %d closed\n", g.scr);
     set_screen(ONL_SCR_NONE);
@@ -225,6 +307,8 @@ static int pad_focus_press(int kind, int edge)
         if (hal_menu_trace_on()) fprintf(stderr, "[padnav] confirm on the focused plank %d\n", g.padfocus);
         if (g.padfocus == ONL_PF_HELP) { g.help_files = kind == 2; set_screen(ONL_SCR_HELP); }
         else if (g.padfocus == ONL_PF_NAME && kind == 2) { fprintf(stderr, "[online] NAME plank: the name popup (pad)\n"); open_profile(-1); }
+        else if (g.padfocus == ONL_PF_ROOMCODE && kind == 2) rc_open();
+        else if (g.padfocus == ONL_PF_HOST && kind == 2) host_press("pad");
     }
     return 1;
 }
@@ -257,6 +341,16 @@ int menu_online_press_main(int elem, int edge)
 int menu_online_press_file(int elem, int edge)
 {
     if (!g.flow) return 0;
+    if (g.scr == ONL_SCR_ROOMCODE) {
+        /* LOBBYUI1: a confirm bit while the plank has the keyboard. The typing's own keys (letters, Enter, Space, Escape) are read by rc_tick, so only a
+           press with none of them down is the pad's: six letters join, fewer let the plank go (a pad cannot type) */
+        if (edge) {
+            int typing = key_down(VK_RETURN) || key_down(VK_SPACE) || key_down(VK_ESCAPE);
+            for (int vk = '0'; vk <= 'Z' && !typing; ++vk) typing = key_down(vk);
+            if (!typing) { if (strlen(g.rc) == 6) rc_submit(); else rc_close("a pad press"); }
+        }
+        return 1;
+    }
     if (pad_focus_press(2, edge)) return 1;
     if (edge) fprintf(stderr, "[online] confirm on the online file select, ROM cursor element %d\n", elem);
     if (g.scr != ONL_SCR_NONE) {
@@ -302,6 +396,10 @@ int menu_online_touch(int kind, int down, int sx, int sy)
         if (edge && g.released_since) profile_touch(sx, sy, 1);
         return 1;
     }
+    if (g.scr == ONL_SCR_ROOMCODE) {        /* LOBBYUI1: a click on the plank keeps the typing; a click anywhere else lets it go */
+        if (edge && !in_box(sx, sy, ONL_RC_X, ONL_RC_Y, ONL_RC_W, ONL_RC_H)) rc_close("a click elsewhere");
+        return 1;
+    }
     if (g.scr != ONL_SCR_NONE) {
         /* the press that closes the screen keeps being swallowed until the finger is up: the screen is gone on the next frame and the ROM's
            title underneath (the face, the planks) would otherwise see the rest of that same press as a fresh touch */
@@ -324,6 +422,14 @@ int menu_online_touch(int kind, int down, int sx, int sy)
     if (kind == 2 && g.flow) {
         if (in_box(sx, sy, ONL_HELP_X, ONL_HELP_Y, ONL_HELP_W, ONL_HELP_H)) {
             if (edge) { g.help_files = 1; set_screen(ONL_SCR_HELP); }
+            return 1;
+        }
+        if (in_box(sx, sy, ONL_RC_X, ONL_RC_Y, ONL_RC_W, ONL_RC_H)) {                   /* LOBBYUI1: the ROOM CODE plank */
+            if (edge) rc_open();
+            return 1;
+        }
+        if (in_box(sx, sy, ONL_HOST_X, ONL_HOST_Y, ONL_HOST_W, ONL_HOST_H)) {           /* LOBBYUI1: HOST */
+            if (edge) host_press("click");
             return 1;
         }
         if (in_box(sx, sy, ONL_NAME_X, ONL_NAME_Y, ONL_NAME_W, ONL_NAME_H)) {           /* PROFILE1: the NAME plank */
@@ -368,6 +474,8 @@ static void rom_cursor_to(int id)
    dirs are DS bits 0x10 right, 0x20 left, 0x40 up, 0x80 down. 1 = the step is the host's (the ROM never sees it).
    File select (solo and online), the ROM's elements 14 / 15 / 16 = files A / B / C, 21 = FILE OPTIONS, 20 = the back arrow; online also the NAME and ? planks:
        A: right B, down FILE OPTIONS, up NAME        NAME: right ?, down B
+       LOBBYUI1 (online only): A up = ROOM CODE, ROOM CODE down = A; a wide window: HOST left of FILE OPTIONS (A left / FILE OPTIONS left = HOST, HOST up =
+       A, right = FILE OPTIONS), ROOM CODE right = NAME, NAME left = ROOM CODE; 4:3: the top row is ROOM CODE, HOST, NAME, ?
        B: left A, right C, down FILE OPTIONS, up NAME   ?: left NAME, down C
        C: left B, down back arrow, up ?
        FILE OPTIONS: up A, right back arrow      back arrow: up C, left FILE OPTIONS
@@ -393,16 +501,19 @@ int menu_online_dir(int kind, int cursor, unsigned dirs)
     }
     if (kind != 2) return 0;
     int node = g.padfocus ? g.padfocus : cursor;
+    const int wide = menu_online_wide_row();
     if (!g.padfocus && (cursor == 255 || cursor < 0)) { rom_cursor_to(14); step_sound(3); return 1; }
     if (!g.padfocus && cursor != 14 && cursor != 15 && cursor != 16 && cursor != 20 && cursor != 21) return 0;
     int next = -1;
     switch (node) {          /* ROM elements: 14 / 15 / 16 files, 21 FILE OPTIONS, 20 the back arrow (the order of the page's hotspots, hal/menu_recipe_title.cpp fids) */
-    case 14: next = d == 0x10 ? 15 : d == 0x80 ? 21 : d == 0x40 ? (g.flow ? ONL_PF_NAME : -1) : -1; break;
+    case 14: next = d == 0x10 ? 15 : d == 0x80 ? 21 : d == 0x40 ? (g.flow ? ONL_PF_ROOMCODE : -1) : d == 0x20 ? (g.flow && wide ? ONL_PF_HOST : -1) : -1; break;
     case 15: next = d == 0x20 ? 14 : d == 0x10 ? 16 : d == 0x80 ? 21 : d == 0x40 ? (g.flow ? ONL_PF_NAME : -1) : -1; break;
     case 16: next = d == 0x20 ? 15 : d == 0x80 ? 20 : d == 0x40 ? (g.flow ? ONL_PF_HELP : -1) : -1; break;
-    case 21: next = d == 0x40 ? 14 : d == 0x10 ? 20 : -1; break;
+    case 21: next = d == 0x40 ? 14 : d == 0x10 ? 20 : d == 0x20 ? (g.flow && wide ? ONL_PF_HOST : -1) : -1; break;
     case 20: next = d == 0x40 ? 16 : d == 0x20 ? 21 : -1; break;
-    case ONL_PF_NAME: next = d == 0x10 ? ONL_PF_HELP : d == 0x80 ? 15 : -1; break;
+    case ONL_PF_NAME: next = d == 0x10 ? ONL_PF_HELP : d == 0x80 ? 15 : d == 0x20 ? (wide ? ONL_PF_ROOMCODE : ONL_PF_HOST) : -1; break;
+    case ONL_PF_ROOMCODE: next = d == 0x10 ? (wide ? ONL_PF_NAME : ONL_PF_HOST) : d == 0x80 ? 14 : -1; break;
+    case ONL_PF_HOST: next = wide ? (d == 0x10 ? 21 : d == 0x40 ? 14 : -1) : (d == 0x20 ? ONL_PF_ROOMCODE : d == 0x10 ? ONL_PF_NAME : d == 0x80 ? 14 : -1); break;
     case ONL_PF_HELP: next = d == 0x20 ? ONL_PF_NAME : d == 0x80 ? 16 : -1; break;
     default: break;
     }
@@ -428,12 +539,26 @@ void menu_online_hover_focus(int kind, int pf, int cursor)
     if (!menu_online_enabled() || g.scr != ONL_SCR_NONE) return;
     if (pf == ONL_PF_HELP && !((kind == 1 && g.on) || (kind == 2 && g.flow))) return;      /* the ? is up on the online title and the online file select only */
     if (pf == ONL_PF_NAME && !(kind == 2 && g.flow)) return;                                /* NAME only on the online file select */
-    if (pf != ONL_PF_HELP && pf != ONL_PF_NAME) pf = 0;
+    if ((pf == ONL_PF_ROOMCODE || pf == ONL_PF_HOST) && !(kind == 2 && g.flow)) return;      /* LOBBYUI1: the online file select only */
+    if (pf != ONL_PF_HELP && pf != ONL_PF_NAME && pf != ONL_PF_ROOMCODE && pf != ONL_PF_HOST) pf = 0;
     if (pf != g.padfocus && hal_menu_trace_on()) fprintf(stderr, "[padnav] hover: focus %d -> %d (page %d, cursor %d)\n", g.padfocus, pf, kind, cursor);
     g.padfocus = pf; g.pf_cur = cursor; g.pf_kind = kind;
 }
 
 int menu_online_modal_up(void) { return menu_online_enabled() && g.scr != ONL_SCR_NONE; }
+
+int menu_online_rc_backspace(void)
+{
+    if (g.scr != ONL_SCR_ROOMCODE) return g.rc_closed_tick && g.tick - g.rc_closed_tick < 12 ? 1 : 0;
+    if (key_down(VK_ESCAPE)) { rc_close("Escape"); return 1; }
+    const size_t n = strlen(g.rc);
+    if (n) { g.rc[n - 1] = 0; fprintf(stderr, "[online] ROOM CODE backspace: '%s'\n", g.rc); }
+    else rc_close("Backspace on an empty code");
+    return 1;
+}
+
+int menu_online_wide_row(void) { return ntr::active_w * 3 > ntr::active_h * 4 + 8; }
+int menu_online_flow_now(void) { return g.flow && menu_online_enabled(); }
 
 int menu_online_back(int kind)
 {

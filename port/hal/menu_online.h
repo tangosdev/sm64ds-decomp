@@ -18,9 +18,11 @@
 #include "menu_compose.h"
 #include "menu_online_profile.h"
 
-enum { ONL_SCR_NONE = 0, ONL_SCR_VS = 1, ONL_SCR_HELP = 2, ONL_SCR_WAIT = 3, ONL_SCR_FAIL = 4, ONL_SCR_PROFILE = 5 };   /* PROFILE1: the name and colour popup (hal/menu_online_profile.cpp) */
+enum { ONL_SCR_NONE = 0, ONL_SCR_VS = 1, ONL_SCR_HELP = 2, ONL_SCR_WAIT = 3, ONL_SCR_FAIL = 4, ONL_SCR_PROFILE = 5,
+       ONL_SCR_ROOMCODE = 6 };   /* LOBBYUI1: the ROOM CODE plank has the keyboard (no panel: the plank itself shows the typing) */   /* PROFILE1: the name and colour popup (hal/menu_online_profile.cpp) */
 /* plank kinds (MenuPiece.wtw of a code drawn plank carries one) */
-enum { ONL_K_ONLINE = 0, ONL_K_ADV_ONLINE = 1, ONL_K_VS = 2, ONL_K_HELP = 3, ONL_K_BACK = 4, ONL_K_CANCEL = 5, ONL_K_ADV = 6, ONL_K_REC = 7, ONL_K_SOLO = 8, ONL_K_OK = 9, ONL_K_NAME = 10 };
+enum { ONL_K_ONLINE = 0, ONL_K_ADV_ONLINE = 1, ONL_K_VS = 2, ONL_K_HELP = 3, ONL_K_BACK = 4, ONL_K_CANCEL = 5, ONL_K_ADV = 6, ONL_K_REC = 7, ONL_K_SOLO = 8, ONL_K_OK = 9, ONL_K_NAME = 10,
+       ONL_K_HOST = 11, ONL_K_ROOMCODE = 12 };   /* LOBBYUI1: the online file select's HOST and ROOM CODE planks (code drawn) */
 
 struct OnlFacts {
     int magic;          /* ONL_MAGIC when written by menu_online_facts */
@@ -30,11 +32,13 @@ struct OnlFacts {
     int scr_age;
     int flow;           /* the online file select is the page (ADVENTURE ONLINE was pressed) */
     int help_files;     /* the help screen was opened on the file select (its text differs) */
-    char why[92];       /* the FAIL sentence (PADNAV1: 4 bytes shorter for padfocus below; the sentences are far shorter) */
+    char why[84];       /* the FAIL sentence (PADNAV1: 4 bytes shorter for padfocus below; LOBBYUI1: 8 more for the room code; the sentences are far shorter) */
+    char rc[7];         /* LOBBYUI1: the room code typed so far (0 to 6 letters of the code alphabet) */
+    unsigned char rc_caret;   /* LOBBYUI1: 1 while the caret shows (it blinks while the plank has the keyboard) */
     ProfFacts prof;     /* PROFILE1: the name and colour popup */
     int padfocus;       /* PADNAV1: the pad focus is on a host plank: ONL_PF_HELP (the ?) or ONL_PF_NAME, else 0 (the ROM cursor is the focus) */
 };
-enum { ONL_PF_HELP = 100, ONL_PF_NAME = 101 };
+enum { ONL_PF_HELP = 100, ONL_PF_NAME = 101, ONL_PF_ROOMCODE = 102, ONL_PF_HOST = 103 };   /* LOBBYUI1: the ROOM CODE and HOST planks */
 #define ONL_MAGIC 0x4f4e4c31
 #define ONL_FACTS_OFF (1024 - 160)
 static_assert(sizeof(OnlFacts) <= 160, "OnlFacts must fit the tail of MenuFacts.blob");
@@ -48,6 +52,16 @@ static_assert(sizeof(OnlFacts) <= 160, "OnlFacts must fit the tail of MenuFacts.
 #define ONL_BTN_Y 106
 #define ONL_BTN_W 80
 #define ONL_BTN_H 32
+/* LOBBYUI1: the online file select's ROOM CODE plank (top left) and HOST plank (bottom left on a wide window, top row beside ROOM CODE at 4:3). The DS boxes are
+   only names for the clicks (a click maps into the plank's box); both sit where the ROM's file page has no element. */
+#define ONL_RC_X 4
+#define ONL_RC_Y 5
+#define ONL_RC_W 96
+#define ONL_RC_H 30
+#define ONL_HOST_X 2
+#define ONL_HOST_Y 100
+#define ONL_HOST_W 12
+#define ONL_HOST_H 30
 
 const OnlFacts *onl_facts_of(const MenuLayout *L);       /* null when the blob carries none (the layout selftest) */
 
@@ -73,6 +87,9 @@ int  menu_online_padfocus(void);                         /* TITLEUI1: the host p
 void menu_online_hover_focus(int kind, int pf, int cursor);
 int  menu_online_modal_up(void);                         /* a ? text, the VS note or the wait screen is up (INPUTMATRIX1: the pad is modal for it) */
 int  menu_online_back(int kind);                         /* the back key: 1 = taken (closes a screen or turns the planks back) */
+int  menu_online_rc_backspace(void);                     /* LOBBYUI1: Backspace while the ROOM CODE plank has the keyboard: 1 = it deleted a letter (or closed the empty field) */
+int  menu_online_wide_row(void);
+int  menu_online_flow_now(void);                         /* LOBBYUI1: the online file select is the page (ADVENTURE ONLINE was pressed), with the one-screen menus on */                         /* LOBBYUI1: 1 = HOST sits in the bottom row (a wide window), 0 = beside ROOM CODE (4:3) */
 
 /* ---- recipe (build / draw side) -------------------------------------------------------------------------------- */
 /* the state of plank k (0 = the MP slot, 1 = ADVENTURE, 2 = REC ROOM) at age: kind = ONL_K_*, w1000 = width in permille of the full plank (the turn) */

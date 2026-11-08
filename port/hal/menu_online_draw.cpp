@@ -41,6 +41,8 @@ void plank_shape(int kind, int *num, int *den)
     switch (kind) {
     case ONL_K_ADV_ONLINE: *num = 944; *den = 320; break;
     case ONL_K_NAME: *num = 640; *den = 320; break;      /* PROFILE1: no mod picture yet (out/PROFILE1/ART.md): code drawn */
+    case ONL_K_ROOMCODE: *num = 960; *den = 320; break;  /* LOBBYUI1: code drawn (Tango's mock: a wide orange plank, top left) */
+    case ONL_K_HOST: *num = 560; *den = 320; break;      /* LOBBYUI1: code drawn */
     case ONL_K_HELP: *num = 1; *den = 1; break;
     case ONL_K_VS: *num = 512; *den = 320; break;
     default: *num = 496; *den = 320; break;
@@ -88,10 +90,21 @@ void put(uint32_t *dst, int stride, int w, int h, int x, int y, uint32_t rgb, in
     *p = a >= 255 ? (0xFF000000u | rgb) : mix(*p, rgb, a);
 }
 
-void text_lines(const UiSurface &sf, int kind, int X, int Y, int W, int H, int shift, int alpha)
+void text_lines(const UiSurface &sf, int kind, int X, int Y, int W, int H, int shift, int alpha, const OnlFacts *of = 0)
 {
     const char *l1 = 0, *l2 = 0;
+    char rcbuf[16];
     switch (kind) {
+    case ONL_K_HOST: l1 = "HOST"; break;
+    case ONL_K_ROOMCODE:      /* LOBBYUI1: "ROOM CODE" until a letter is typed (or while it has the keyboard): then the code, an underscore for each letter to come */
+        if (of && (of->rc[0] || of->scr == ONL_SCR_ROOMCODE)) {
+            int n = 0;
+            for (; n < 6 && of->rc[n]; ++n) rcbuf[n] = of->rc[n];
+            for (int i = n; i < 6; ++i) rcbuf[i] = (i == n && !of->rc_caret && of->scr == ONL_SCR_ROOMCODE) ? ' ' : '_';
+            rcbuf[6] = 0;
+            l1 = rcbuf;
+        } else l1 = "ROOM CODE";
+        break;
     case ONL_K_ONLINE: l1 = "ONLINE"; break;
     case ONL_K_ADV_ONLINE: l1 = "ADVENTURE"; l2 = "ONLINE"; break;
     case ONL_K_VS: l1 = "VS"; break;
@@ -167,7 +180,7 @@ void plank_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int
     }
     if (W >= H / 3) {
         const UiSurface sf = { dst, stride, w, h };
-        text_lines(sf, kind, X, Y, W, H, dy, alpha);
+        text_lines(sf, kind, X, Y, W, H, dy, alpha, onl_facts_of(L));
     }
 }
 
@@ -396,7 +409,7 @@ void menu_online_add_help(MenuLayout *L, int right_edge_x, int top_y, int size_p
 
 void menu_online_add_modal(MenuLayout *L, const OnlFacts *f)
 {
-    if (!f || f->scr == ONL_SCR_NONE) return;
+    if (!f || f->scr == ONL_SCR_NONE || f->scr == ONL_SCR_ROOMCODE) return;      /* LOBBYUI1: the ROOM CODE plank types in place, no panel */
     if (f->scr == ONL_SCR_PROFILE) { menu_online_profile_modal(L, f); return; }      /* PROFILE1: the name and colour popup builds its own pieces */
     MenuPiece p = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
     p.bg = 1; p.fixdest = 1; p.fx = 0; p.fy = 0; p.fw = (short)L->w; p.fh = (short)L->h;
