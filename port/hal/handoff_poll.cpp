@@ -530,3 +530,25 @@ extern "C" void port_handoff_unset_env(const PortHandoffRequest *req)
         _putenv_s(req->set_name[i], "");
     }
 }
+
+extern "C" const char *port_handoff_busy(void) { return busy(); }
+
+extern "C" const char *port_handoff_dispatch(const PortHandoffRequest *req)
+{
+    if (!req || !req->kind) return "no request";
+    if (const char *b = busy()) {
+        static char buf[160];
+        std::snprintf(buf, sizeof buf, "busy: %s", b);
+        return buf;
+    }
+    PortHandoffFn fn = 0;
+    for (const Reg &g : g_reg)
+        if (g.fn && !std::strcmp(g.kind, req->kind)) fn = g.fn;
+    if (!fn) return "no handler for this kind in this build";
+    std::fprintf(stderr, "[handoff] in-game lobby: kind %s, %d name(s) to set, %d to clear; handed to the registered handler\n", req->kind,
+                 req->nset, req->nclear);
+    std::fflush(stderr);
+    const char *why = fn(req);
+    if (!why) ++g_accepted;
+    return why;
+}
