@@ -761,17 +761,52 @@ static int __fastcall bfire_clean(void *s, void *)
 // vftable dispatches Behavior).
 extern "C" int _ZN8SaveData19IsCharacterUnlockedEj(unsigned ch);
 extern "C" void func_ov060_02116f90(void *self);
+static unsigned char *bowser10_lift(void)
+{
+    if (_ZN8SaveData19IsCharacterUnlockedEj(0) || _ZN8SaveData19IsCharacterUnlockedEj(1) ||
+        _ZN8SaveData19IsCharacterUnlockedEj(2)) return nullptr;
+    unsigned char *kpa = (unsigned char *)dActor_c::FindWithActorID(0x117, nullptr);
+    if (!kpa || kpa[0x42b] != 0) return nullptr;
+    kpa[0x42b] = 1;
+    return kpa;
+}
 static void bowser10_fire_falls(void *self)
 {
-    unsigned char *kpa = nullptr;
-    if (!_ZN8SaveData19IsCharacterUnlockedEj(0) && !_ZN8SaveData19IsCharacterUnlockedEj(1) &&
-        !_ZN8SaveData19IsCharacterUnlockedEj(2)) {
-        kpa = (unsigned char *)dActor_c::FindWithActorID(0x117, nullptr);
-        if (kpa && kpa[0x42b] == 0) kpa[0x42b] = 1;
-        else kpa = nullptr;
-    }
+    unsigned char *kpa = bowser10_lift();
     func_ov060_02116f90(self);
     if (kpa) kpa[0x42b] = 0;
+}
+// The fire piranha ball (daFPknBall_c, Bowser's BitS fireballs among others) has the same draw in func_ov002_020f897c, inlined
+// into its Behavior, which runs from the class's own MSVC vftable. Its Behavior slot there is wrapped once at boot (from the
+// Bowser fire fill below) with the same guard.
+extern "C" void *bowser10_fpkn_vft[];
+extern "C" int bowser10_fpkn_behavior_sym(void);
+#pragma comment(linker, "/alternatename:_bowser10_fpkn_vft=??_7daFPknBall_c@@6B@")
+#pragma comment(linker, "/alternatename:_bowser10_fpkn_behavior_sym=?Behavior@daFPknBall_c@@UAEHXZ")
+extern "C" __declspec(dllimport) int __stdcall VirtualProtect(void *addr, unsigned long size, unsigned long prot, unsigned long *old);
+typedef int(__fastcall *Bowser10Beh)(void *, void *);
+static Bowser10Beh g_bowser10_fpkn_real = nullptr;
+static int __fastcall bowser10_fpkn_behavior(void *self, void *edx)
+{
+    unsigned char *kpa = bowser10_lift();
+    const int r = g_bowser10_fpkn_real(self, edx);
+    if (kpa) kpa[0x42b] = 0;
+    return r;
+}
+static void bowser10_wrap_fpkn(void)
+{
+    if (g_bowser10_fpkn_real) return;
+    for (int i = 0; i < 32; ++i) {
+        if (bowser10_fpkn_vft[i] != (void *)&bowser10_fpkn_behavior_sym) continue;
+        unsigned long old = 0;
+        if (!VirtualProtect(&bowser10_fpkn_vft[i], sizeof(void *), 0x04 /* PAGE_READWRITE */, &old)) return;
+        g_bowser10_fpkn_real = (Bowser10Beh)bowser10_fpkn_vft[i];
+        bowser10_fpkn_vft[i] = (void *)&bowser10_fpkn_behavior;
+        VirtualProtect(&bowser10_fpkn_vft[i], sizeof(void *), old, &old);
+        return;
+    }
+    std::fprintf(stderr, "[bowser10] fire piranha ball Behavior not found in its vftable: not wrapped
+");
 }
 extern "C" int port_pmff_decl_data_ov060_0211a744(void *self) { bowser10_fire_falls(self); return 0; }
 extern "C" int port_pmff_decl_data_ov060_0211a784(void *self) { bowser10_fire_falls(self); return 0; }
@@ -786,6 +821,7 @@ static int __fastcall bfire_d0(void *s, void *)
 extern "C" void hal_fill_bowser_fire_vtable(void)
 {
     port_ov60_bringup();
+    bowser10_wrap_fpkn();
     void *volatile *vt = (void *volatile *)_ZTV11daKpaFire_c;
     ov60_fill_shared(vt);
     vt[0]  = (void *)bfire_init;
