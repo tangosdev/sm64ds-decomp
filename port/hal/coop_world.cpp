@@ -26,6 +26,7 @@
 #include <windows.h>
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -54,6 +55,17 @@ void _ZN5Event6SetBitEj(unsigned bit);
 void _ZN8dActor_c11UntrackStarERa(void *self, signed char &starID);
 void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 void func_ov084_02129498(void *goomba);
+extern unsigned char data_0209f1f0;        // COOPRACE1 proof knob: the act the next level change latches
+}
+
+// COOPRACE1 proof knobs: the racers' routines and data they use (see the race knobs below).
+extern "C" {
+void _ZN5Timer10ResetTimerEv(void *self);
+int func_ov019_02111d58(void *penguin);   // the penguin's state 3 (race) set-up
+extern char data_0209d4c8[];               // TIME_TIMER, the course timer
+extern char data_ov019_0211356c[];         // the penguin's six state records, 16 bytes each
+extern int data_ov019_021134e8[3];         // the penguin's finish point
+extern int data_ov019_0211353c[3];         // the penguin's shortcut (cheat) volume centre
 }
 
 // COOPBOO2: daTrs_c::func_ov063_02116244 (src/game/actors/d_a_trs.cpp), called on a Big Boo: with mBooDefeatCount at 5 or
@@ -1437,6 +1449,116 @@ void on_ctl(int seat, const unsigned char *d, int len, void *) {
     }
 }
 
+// ---------------------------------------------------------------------------
+// COOPRACE1 proof knobs (run after093). Koopa the Quick (daRNk_c, class 188) and the racing penguin (daPgRcer_c, class
+// 259) only race after a talk and its answer, which a headless row cannot drive. Inert unless named:
+//   SM64DS_COOP_RACE=F        at est frame F start the race with the nearest racer (within 3000 units) the cartridge's
+//                             way minus the talk: Koopa armed flag, my player, STATE_RACE step 1 (d_a_r_nk.cpp); the
+//                             penguin's talk player and its state 3 set-up (d_a_pg_rcer.cpp)
+//   SM64DS_COOP_RACEGO=F:f|c  at est frame F put my player at the finish (f: Koopa's flag, the penguin's finish point)
+//                             or in the penguin's shortcut volume (c)
+// ---------------------------------------------------------------------------
+
+enum : int {
+    kKoopaCls = 188, kPenguinCls = 259, kRaceFlagCls = 205,
+    // daRNk_c (include/daRNk_c.h)
+    kRnAnim = 0x300, kRnState = 0x38c, kRnStep = 0x390, kRnFlagID = 0x394, kRnPlayer = 0x398, kRnCannon = 0x3ac,
+    kRnWon = 0x3af, kRnFinished = 0x3b4, kRnRacing = 0x3b5, kRnTimer = 0x100,
+    // daPgRcer_c (include/daPgRcer_c.h)
+    kPgAnim = 0xd4, kPgDesc = 0x370, kPgAction = 0x374, kPgTalk = 0x378, kPgStep = 0x38f, kPgPenFin = 0x392,
+    kPgPlFin = 0x393, kPgCheat = 0x394, kPgPenWon = 0x395,
+    // daRFlag_c (include/daRFlag_c.h)
+    kFlagVictory = 0x16c, kFlagTouched = 0x16e,
+    // ModelAnim: the frame controller at +0x50 (flags +0x54, frame +0x58, speed +0x5c), the file at +0x60
+    kMaFlags = 0x54, kMaFrame = 0x58, kMaSpeed = 0x5c, kMaFile = 0x60,
+    // dActor_c
+    kAcPos = 0x5c, kAcAngY = 0x8e, kAcPrevAngY = 0x94, kAcHSpeed = 0x98, kAcVSpeed = 0xa8,
+    kRaceSendEvery = 2,       // est frames between state records (about 15 Hz)
+    kRaceOverMs = 1000,       // the authority keeps telling the result this long
+    kRaceSilentMs = 3000,     // a race whose authority went quiet this long is over (not won)
+    kRaceMax = 2,
+};
+
+unsigned g_race_go_at = 0; char g_race_go_what = 0; bool g_race_go_done = true;
+unsigned g_race_knob_at = 0; bool g_race_knob_done = true;
+
+void race_read_knobs() {
+    static bool read = false;
+    if (read) return;
+    read = true;
+    if (const char *e = std::getenv("SM64DS_COOP_RACE")) { g_race_knob_at = (unsigned)std::atoi(e); g_race_knob_done = g_race_knob_at == 0; }
+    if (const char *e = std::getenv("SM64DS_COOP_RACEGO")) {
+        unsigned f = 0; char w = 0;
+        if (std::sscanf(e, "%u:%c", &f, &w) == 2 && (w == 'f' || w == 'c')) { g_race_go_at = f; g_race_go_what = w; g_race_go_done = false; }
+    }
+}
+
+char *my_body() { const int me = (int)data_0209f250; return (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr; }
+
+int *apos(char *a) { return (int *)(a + kAcPos); }
+
+double dist_units(const int *a, const int *b) {
+    const double dx = (a[0] - b[0]) / 4096.0, dy = (a[1] - b[1]) / 4096.0, dz = (a[2] - b[2]) / 4096.0;
+    return std::sqrt(dx * dx + dy * dy + dz * dz);
+}
+
+char *race_flag() {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (*(const unsigned short *)(a + 0x0c) == kRaceFlagCls && !going(a)) return a;
+    return nullptr;
+}
+
+void race_knobs(unsigned now) {
+    (void)now;
+    char *me = my_body();
+    if (!me) return;
+    if (!g_race_knob_done && g_est_frames >= g_race_knob_at) {
+        g_race_knob_done = true;
+        char *best = nullptr; double bd = 3000.0;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            const unsigned c = *(const unsigned short *)(a + 0x0c);
+            if ((c != kKoopaCls && c != kPenguinCls) || going(a)) continue;
+            const double d = dist_units(apos(a), apos(me));
+            if (d < bd) { bd = d; best = a; }
+        }
+        if (!best) std::fprintf(stderr, "[race-knob] start: no racer within 3000 units\n");
+        else if (*(const unsigned short *)(best + 0x0c) == kKoopaCls) {
+            if (*(const int *)(best + kRnState) != 0) std::fprintf(stderr, "[race-knob] start: Koopa is not waiting (state %d)\n", *(const int *)(best + kRnState));
+            else if (char *f = race_flag()) {
+                *(unsigned *)(best + kRnFlagID) = *(const unsigned *)(f + 0x04);
+                *(unsigned char *)(f + kFlagTouched) = 0;
+                *(char **)(best + kRnPlayer) = me;
+                *(int *)(best + kRnState) = 2; *(unsigned char *)(best + kRnStep) = 1; *(unsigned short *)(best + kRnTimer) = 0x32;
+                _ZN5Timer10ResetTimerEv(data_0209d4c8);
+                std::fprintf(stderr, "[race-knob] start: Koopa slot %d races my player (%.0f units away) est %u\n", (int)*(const short *)(best + 0xce), bd, g_est_frames);
+            }
+        } else {
+            if (*(const int *)(best + kPgAction) != 0) std::fprintf(stderr, "[race-knob] start: the penguin is not waiting (state %d)\n", *(const int *)(best + kPgAction));
+            else {
+                *(char **)(best + kPgTalk) = me;
+                *(char **)(best + kPgDesc) = data_ov019_0211356c + 3 * 16;
+                func_ov019_02111d58(best);
+                std::fprintf(stderr, "[race-knob] start: the penguin slot %d races my player (%.0f units away) est %u\n", (int)*(const short *)(best + 0xce), bd, g_est_frames);
+            }
+        }
+    }
+    if (!g_race_go_done && g_est_frames >= g_race_go_at) {
+        g_race_go_done = true;
+        int to[3] = {0, 0, 0}; bool ok = false;
+        if (char *f = race_flag()) { to[0] = apos(f)[0]; to[1] = apos(f)[1] + (40 << 12); to[2] = apos(f)[2]; ok = g_race_go_what == 'f'; }
+        else {
+            const int *src = g_race_go_what == 'f' ? data_ov019_021134e8 : data_ov019_0211353c;
+            to[0] = src[0]; to[1] = src[1] + (60 << 12); to[2] = src[2]; ok = true;
+        }
+        if (ok) {
+            for (int j = 0; j < 3; ++j) apos(me)[j] = to[j];
+            std::fprintf(stderr, "[race-knob] go: my player put at the %s %d,%d,%d est %u\n", g_race_go_what == 'f' ? "finish" : "shortcut",
+                         to[0] >> 12, to[1] >> 12, to[2] >> 12, g_est_frames);
+        }
+    }
+}
+
+
 void on_world(int seat, const unsigned char *d, int len, void *) {
     if (!coop_world_active()) { ++g_st.drop_not_coop; return; }
     if (!g_sync) { ++g_st.drop_sync_off; return; }
@@ -2020,6 +2142,7 @@ void tick_est(unsigned now) {
         g_out_n = k;
     }
     if (g_sync) { coin_tick(now); watch_secrets(now); }   // COOPCOUNT1
+    race_read_knobs(); race_knobs(now);   // COOPRACE1 proof knobs
     // 3. hello, owner full resend, owner announcement
     if ((unsigned)(now - g_hello_t) >= kHelloMs) send_hello(now);
     g_grp.update(now);
@@ -2276,6 +2399,11 @@ extern "C" void port_coop_world_frame(void) {
             g_warp[i].done = true;
             std::fprintf(stderr, "[coop-knob] warp to level %d act %d\n", g_warp[i].level, g_warp[i].act);
             LoadLevelNoReturn((unsigned)g_warp[i].level, (unsigned)g_warp[i].entrance, (unsigned)g_warp[i].act, 1);
+            // COOPRACE1 proof knob SM64DS_COOP_WARP_ACT=1: the warp's act really is the act (Koopa the Quick is in Bob-omb
+            // Battlefield's act 2 only). Without it the change keeps the act it always had here (1): the star it stages
+            // is not the one the latch takes, measured "[adventure table branch, star=1]" for a warp to act 2.
+            static const bool warp_act = [] { const char *e = std::getenv("SM64DS_COOP_WARP_ACT"); return e && *e == '1'; }();
+            if (warp_act && g_warp[i].act > 0 && g_warp[i].act < 8) data_0209f1f0 = (unsigned char)g_warp[i].act;
         }
     // No body (a level unload or reload): whatever was in my mouth left with the level, not down my throat.
     if (!in_level && g_mouth) { g_mouth = nullptr; g_mouth_slot = -1; }
