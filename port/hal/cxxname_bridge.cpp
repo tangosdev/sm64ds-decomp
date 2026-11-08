@@ -93,8 +93,8 @@ int data_0208e37c[2];
 int data_0208e380[2];
 int data_0209b450[2];
 int data_0209b458[2];
-int data_0209f21c[8];
-int data_0209f394[8];
+int gNumPlayers[8];
+int gPlayers[8];
 }
 
 extern "C" void _ZN6Memory10DeallocateEPv(void *p);

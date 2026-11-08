@@ -133,7 +133,7 @@ union KuriKingFreeState {
 
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 extern "C" void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
-extern "C" dCamera_c *data_0209f318;
+extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
@@ -273,7 +273,7 @@ daKuriKing_c::~daKuriKing_c() {}
 void daKuriKing_c::SetDefeatTalkCamera() {
     struct Vector3 look, pos, in, out;
     dCamera_c* cam;
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
@@ -405,7 +405,7 @@ void daKuriKing_c::UpdateDefeat() {
     vmsg.y = this->mPosY;
     vmsg.z = this->mPosZ;
     vmsg.y = vmsg.y + 0x78000;
-    cam = data_0209f318;
+    cam = gCamera;
     player = this->mTalkPlayer;
 
     if (this->mAnmModel.Finished() != 0) {
@@ -751,7 +751,7 @@ extern "C" void func_02011d20(void);
 void daKuriKing_c::UpdateIntroTalkEnd() {
     if (this->mTalkPlayer->GetTalkState() != -1)
         return;
-    data_0209f318->mFlags &= ~8;
+    gCamera->mFlags &= ~8;
     Sound::LoadAndSetMusic_Layer3(0x2d);
     func_02011d20();
     Message::EndTalk();
@@ -791,7 +791,7 @@ void daKuriKing_c::UpdateIntroTalk() {
     short msg;
 
     player = this->ClosestPlayer();
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
 
     look.x = this->mPosX;
@@ -1565,7 +1565,7 @@ int daKuriKing_c::Behavior()
     /* The camera frames the main boss (not param1 0x1111) every frame
        except in state 7 (defeat). */
     if (mState != 7) {
-        data_0209f318->mFramedActor = this;
+        gCamera->mFramedActor = this;
     }
 
     UpdateAnimation();

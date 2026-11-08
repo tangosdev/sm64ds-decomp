@@ -20,7 +20,7 @@
  * UpdateModelMatrix and UpdateShadow are coined names; the ROM records none.
  *
  * What stays: gCurrentSublevel == 13 is a level-ID check (the current
- *   level); data_0209f2d8 == 1 is the mode-1 check used tree-wide.
+ *   level); gGameMode == 1 is the mode-1 check used tree-wide.
  */
 
 #include "daObjPathLift_c.h"
@@ -34,7 +34,7 @@
 extern CLPS_Block data_ov002_0210d7d4;
 extern short data_02082214[];
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 
 /* local extern: no shared header declares these. */
 extern "C" {
@@ -91,7 +91,7 @@ int daObjPathLift_c::InitResources() {
         if (rg.DetectClsn() != 0)
             mGroundY = rg.clsnY;
         mRespawnAfterFall = 1;
-        b = (data_0209f2d8 == 1);
+        b = (gGameMode == 1);
         if (b)
             mTimer = 0xb4;
     }
@@ -111,7 +111,7 @@ int daObjPathLift_c::Behavior() {
     UpdateShadow();
     mMeshCollider.SetClipRadius(0x150000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(gGameMode == 1);
     if (b != 0) {
         if (mMeshCollider.IsEnabled() == 0) {
             mMeshCollider.Enable(this);
@@ -183,7 +183,7 @@ void daObjPathLift_c::UpdateShadow() {
     mShadowMat[10] = (mPosY - yOff) >> 3;
     mShadowMat[11] = mPosZ >> 3;
 
-    t = data_0209f2d8 == 1;
+    t = gGameMode == 1;
     if (t != false) {
         DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x118000, 0x7d0000, scaleZ, 0xf);
     } else {

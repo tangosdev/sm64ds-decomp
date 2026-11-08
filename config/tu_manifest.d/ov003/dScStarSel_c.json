@@ -141,7 +141,7 @@
   ],
   "data": [
     {
-      "symbol": "data_ov003_020b1698",
+      "symbol": "sStarSelectSubBackdropColor",
       "address": "0x20b1698",
       "size": "0x2"
     },
@@ -151,17 +151,17 @@
       "size": "0x3"
     },
     {
-      "symbol": "data_ov003_020b16a0",
+      "symbol": "sStarSelectCharYStart",
       "address": "0x20b16a0",
       "size": "0x4"
     },
     {
-      "symbol": "data_ov003_020b16a4",
+      "symbol": "sStarSelectCharSpriteStart",
       "address": "0x20b16a4",
       "size": "0x4"
     },
     {
-      "symbol": "data_ov003_020b16a8",
+      "symbol": "sStarSelectCharXStart",
       "address": "0x20b16a8",
       "size": "0x4"
     },
@@ -181,7 +181,7 @@
       "size": "0xc"
     },
     {
-      "symbol": "data_ov003_020b16c8",
+      "symbol": "sStarSelectCharYStep",
       "address": "0x20b16c8",
       "size": "0xc"
     },
@@ -191,7 +191,7 @@
       "size": "0xf"
     },
     {
-      "symbol": "data_ov003_020b16e4",
+      "symbol": "sStarSelectCharXStep",
       "address": "0x20b16e4",
       "size": "0x18"
     },
