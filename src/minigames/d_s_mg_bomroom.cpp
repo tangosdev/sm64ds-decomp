@@ -48,7 +48,7 @@
 
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
-extern int sBomroomPenGateSprites[];
+extern OamAttr *sBomroomPenGateSprites[];
 extern int sBomroomPenGateX[];
 extern int sBomroomPenGateY[];
 extern OamAttr *sBomroomHatchPanelSprites[];
@@ -363,7 +363,7 @@ void dScMgBomroom_c::PenGate_DrawAll() {
         int yv = mPenGates[i].y >> 12;
         int k = mPenGates[i].level;
         if (i != 0) k += 5;
-        Hud_RenderSprite((void *)sBomroomPenGateSprites[k], xv, yv, -1, -1);
+        Hud_RenderSprite(sBomroomPenGateSprites[k], xv, yv, -1, -1);
     }
 }
 
@@ -662,14 +662,14 @@ void dScMgBomroom_c::Bomb_Animate(int index) {
         if (type != 3 && mBombs[index].state != 2 && (type != 0 || mBombs[index].state != 5)) {
             if (mBombs[index].active == 1 && mSceneState != 3) {
                 if (mBombs[index].color != 0) {
-                    func_02012718((int)0x1d9, mBombs[index].x);
+                    func_02012718(0x1d9, mBombs[index].x);
                 } else {
-                    func_02012718((int)0x1da, mBombs[index].x);
+                    func_02012718(0x1da, mBombs[index].x);
                 }
             }
         }
         if (type == 3 && frame == 1) {
-            func_02012718((int)0x1e1, mBombs[index].x);
+            func_02012718(0x1e1, mBombs[index].x);
         }
     }
 
@@ -701,7 +701,7 @@ void dScMgBomroom_c::Bomb_CheckSorted(int index) {
         mBombs[index].frame = 0;
         mBombs[index].counter = 0;
         mBombs[index].speed = 0x999;
-        func_02012718((int)0x1dc, mBombs[index].x);
+        func_02012718(0x1dc, mBombs[index].x);
     } else {
         if (x >= 0x40) return;
         if (y <= 0x40) return;
@@ -711,7 +711,7 @@ void dScMgBomroom_c::Bomb_CheckSorted(int index) {
         mBombs[index].frame = 0;
         mBombs[index].counter = 0;
         mBombs[index].speed = 0x999;
-        func_02012718((int)0x1dc, mBombs[index].x);
+        func_02012718(0x1dc, mBombs[index].x);
     }
 }
 
@@ -778,7 +778,7 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     mBombs[index].grabX = dx << 0xc;
     mBombs[index].grabY = dy << 0xc;
     mBombs[index].overPen = 0;
-    func_02012718((int)0x1d2, mBombs[index].x);
+    func_02012718(0x1d2, mBombs[index].x);
 }
 
 
@@ -1036,9 +1036,9 @@ void dScMgBomroom_c::BombMarch_ToLine(int index) {
         if (targetX == curX && targetY == curY) {
             mBombs[index].substate = 4;
             if (mBombs[index].color != 0)
-                func_02012718((int)0x1d9, mBombs[index].x);
+                func_02012718(0x1d9, mBombs[index].x);
             else
-                func_02012718((int)0x1da, mBombs[index].x);
+                func_02012718(0x1da, mBombs[index].x);
             return;
         }
         if (targetY != curY) {
