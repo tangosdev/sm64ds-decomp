@@ -44,15 +44,15 @@ struct daPgMthr_c : dActor_c {
     /* FindNewToucher: last FindWithID hit, so a new PLAYER (0xbf) is noticed. */
     dActor_c *mLastPlayer;           /* 0x378 */
     /* The three state enters write their index 0/1/2; no reader in this TU. */
-    s32 unk_37c;                     /* 0x37c */
+    s32 unk_37c; /* 0x37c */
     /* TurnHeadToward approaches these, UpdateModelAndShadow applies them. */
     s16 mLookAngX;                   /* 0x380 */
     s16 mLookAngY;                   /* 0x382 */
     s16 mMessageId;                  /* 0x384 -- 0xac / 0xad / 0xae from BeginTalk */
-    u8  mGaveStar;                   /* 0x386 -- StateTalkUpdate sets when spawning POWER_STAR */
-    u8  mHoldingBaby;                /* 0x387 -- BeginTalk, held actorID 0x100 (BABY_PENGUIN) */
-    u8  mTalkStep;                   /* 0x388 -- StateTalkUpdate 0..3 */
-    u8  mTalkTimer;                  /* 0x389 -- StateTalkEnter arms 0x3c; DecIfAbove0_Byte */
+    u8 mGaveStar;                    /* 0x386 -- StateTalkUpdate sets when spawning POWER_STAR */
+    u8 mHoldingBaby;                 /* 0x387 -- BeginTalk, held actorID 0x100 (BABY_PENGUIN) */
+    u8 mTalkStep;                    /* 0x388 -- StateTalkUpdate 0..3 */
+    u8 mTalkTimer;                   /* 0x389 -- StateTalkEnter arms 0x3c; DecIfAbove0_Byte */
     u8  pad_38a[2];
 
     /* --- vtable overrides. Slots are inherited from fBase_c/dActor_c. --- */

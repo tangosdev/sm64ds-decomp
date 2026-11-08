@@ -202,27 +202,23 @@ int daPgMthr_c::CleanupResources()
     return 1;
 }
 
-void daPgMthr_c::ChangeState(int i)
-{
+void daPgMthr_c::ChangeState(int i) {
     mState = &data_ov018_02113c4c[i];
     CallStateEnter();
 }
 
-void daPgMthr_c::CallStateEnter()
-{
+void daPgMthr_c::CallStateEnter() {
     PMF *enter = (PMF *)mState;
-    (this->* *enter)();
+    (this->**enter)();
 }
 
-void daPgMthr_c::CallStateUpdate()
-{
+void daPgMthr_c::CallStateUpdate() {
     PMF *update = (PMF *)mState + 1;
-    (this->* *update)();
+    (this->**update)();
 }
 
 /* State 0 enter. Idle anim, stopped, not talking. */
-int daPgMthr_c::StateStandEnter()
-{
+int daPgMthr_c::StateStandEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mTextureSequence.SetFile(*(BTP_File *)gPenguinWait1TextureSequenceFile.filePtr, 0, 0x1000, 0);
@@ -232,8 +228,7 @@ int daPgMthr_c::StateStandEnter()
     return 1;
 }
 
-int daPgMthr_c::StateStandUpdate()
-{
+int daPgMthr_c::StateStandUpdate() {
     daPly_c *toucher;
     dActor_c *held;
     daPly_c *near;
@@ -260,8 +255,7 @@ int daPgMthr_c::StateStandUpdate()
     return 1;
 }
 
-int daPgMthr_c::StateTalkEnter()
-{
+int daPgMthr_c::StateTalkEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mTalkStep = 0;
@@ -270,8 +264,7 @@ int daPgMthr_c::StateTalkEnter()
     return 1;
 }
 
-int daPgMthr_c::StateTalkUpdate()
-{
+int daPgMthr_c::StateTalkUpdate() {
     switch (mTalkStep) {
     case 0:
         if (mdCcAc_c.hitFlags & HIT_TOUCH) {
@@ -334,8 +327,7 @@ int daPgMthr_c::StateTalkUpdate()
     return 1;
 }
 
-int daPgMthr_c::StateFollowEnter()
-{
+int daPgMthr_c::StateFollowEnter() {
     if (mPlayer == 0 && mGaveStar == 0)
         ChangeState(0);
     mHorzSpeed = 0x5000;
@@ -346,8 +338,7 @@ int daPgMthr_c::StateFollowEnter()
     return 1;
 }
 
-int daPgMthr_c::StateFollowUpdate()
-{
+int daPgMthr_c::StateFollowUpdate() {
     ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
     mPrevAngleY = mAngleY;
     UpdatePos(&mdCcAc_c);
@@ -368,8 +359,7 @@ int daPgMthr_c::StateFollowUpdate()
     return 1;
 }
 
-void daPgMthr_c::UpdateModelAndShadow()
-{
+void daPgMthr_c::UpdateModelAndShadow() {
     /* Unused, but deleting this local DIFFs. */
     char *s = (char *)this;
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -406,8 +396,7 @@ void daPgMthr_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     }
 }
 
-void daPgMthr_c::CheckFollow()
-{
+void daPgMthr_c::CheckFollow() {
     daPly_c *p = ClosestPlayer();
     dActor_c *held;
 
@@ -433,8 +422,7 @@ void daPgMthr_c::CheckFollow()
     ChangeState(2);
 }
 
-void daPgMthr_c::TurnHeadToward(char *b)
-{
+void daPgMthr_c::TurnHeadToward(char *b) {
     dActor_c *who;
     Fix12i dist;
     s16 horzAngle;
@@ -473,8 +461,7 @@ void daPgMthr_c::TurnHeadToward(char *b)
     ApproachLinear(mLookAngX, vert, 0x250);
 }
 
-void daPgMthr_c::BeginTalk(void *found, char *heldRaw)
-{
+void daPgMthr_c::BeginTalk(void *found, char *heldRaw) {
     dActor_c *held = (dActor_c *)heldRaw;
     daPly_c *who = (daPly_c *)found;
 
@@ -509,8 +496,7 @@ talk:
     ChangeState(1);
 }
 
-daPly_c *daPgMthr_c::FindNewToucher()
-{
+daPly_c *daPgMthr_c::FindNewToucher() {
     daPly_c *newToucher = 0;
     if (mdCcAc_c.hitFlags & HIT_TOUCH) {
         struct dActor_c *a = dActor_c::FindWithID(mdCcAc_c.otherOwner);
