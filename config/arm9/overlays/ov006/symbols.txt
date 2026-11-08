@@ -1865,7 +1865,7 @@ _ZN13dScMgFlower_c13InitResourcesEv kind:function(arm,size=0x378) addr:0x0212b48
 dScMgFlower_c_classInit kind:function(arm,size=0x94) addr:0x0212b7f8
 _ZN13dScMgFlower_c5PetalC1Ev kind:function(arm,size=0x4) addr:0x0212b88c
 sMascotWalkerOffset kind:data(any) addr:0x0212b890
-data_ov006_0212b89c kind:data(any) addr:0x0212b89c
+sDealerLampTimes kind:data(any) addr:0x0212b89c
 data_ov006_0212b8ac kind:data(any) addr:0x0212b8ac
 data_ov006_0212b8b0 kind:data(any) addr:0x0212b8b0
 data_ov006_0212b8b4 kind:data(any) addr:0x0212b8b4
@@ -1933,7 +1933,7 @@ sTrmpItemPatrolLimits kind:data(any) addr:0x0212e07c
 sTrmpItemPatrolSpeed kind:data(any) addr:0x0212e088
 data_ov006_0212e094 kind:data(any) addr:0x0212e094
 sTrmpLineTexCoords kind:data(any) addr:0x0212e0b0
-data_ov006_0212e0f0 kind:data(any) addr:0x0212e0f0
+sTrmpLineFlexWeights kind:data(any) addr:0x0212e0f0
 data_ov006_0212e130 kind:data(any) addr:0x0212e130
 sAmidaPatterns kind:data(any) addr:0x0212e1a8
 sAmidaPatternGoalShuffle kind:data(any) addr:0x0212e1ac

@@ -1456,7 +1456,7 @@ struct C {
     PMF pmf;
 };
 extern "C" {
-extern short data_ov006_0212b89c[];
+extern short sDealerLampTimes[];
 }
 
 extern "C" void Dealer_Update(Dealer *dealer) {
@@ -1470,7 +1470,7 @@ extern "C" void Dealer_Update(Dealer *dealer) {
         *p = *p + 1;
         if (dealer->mLampPattern > 7)
             dealer->mLampPattern = 1;
-        dealer->mLampTimer = data_ov006_0212b89c[dealer->mLampPattern];
+        dealer->mLampTimer = sDealerLampTimes[dealer->mLampPattern];
     }
     short *q = &dealer->mLightAngle;
     *q = *q + 0x400;
