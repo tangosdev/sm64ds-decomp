@@ -10,7 +10,7 @@
  * so the ctor and dtor are defined first and the plain functions land in
  * reverse definition order. The func_0203* workers inside the run are its
  * unnamed mFlags plumbing, sub-object accessors, and step helpers; the ROM
- * gives them no member name, so they keep address names. func_020371b0, the
+ * gives them no member name, so they keep address names. CommitFloorHit, the
  * floor-result commit, is a member; the rest stay extern "C" free functions
  * taking the object by raw pointer. */
 // leftovers: the checker-family helpers stay local
@@ -31,8 +31,8 @@ extern "C" {
 /* Checker-family helpers shared across the collision TUs, spelled as
    defined. */
 int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
-void func_02038234(int a, int b);
-void func_02038324(void *arg, int b, int c, int d);
+void dBgS_RideCallBack(int a, int b);
+void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d);
 int  SurfaceInfo_TestFlag0x20(int *p);
 }
 
@@ -112,10 +112,10 @@ extern "C" void func_020371fc(char *self)
    and kill vertical speed unless limited movement is set. `wasOnGround` is
    the frame's ground state on entry, so the just-hit flag only fires on the
    transition. */
-void dBgCh_Actr::func_020371b0(s32 wasOnGround) {
+void dBgCh_Actr::CommitFloorHit(s32 wasOnGround) {
     if (wasOnGround == 0)
         SetJustHitGroundFlag();
-    func_02038234((int)GetFloorResult(), (int)mActor);
+    dBgS_RideCallBack((int)GetFloorResult(), (int)mActor);
     SetGroundFlag();
     if (GetLimMovFlag() == 0)
         mActor->mVertSpeed = 0;
@@ -131,8 +131,8 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     struct Vector3 *prev = &mActor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos()) {
-        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                      mAngPtr);
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
     }
     onGround = IsOnGround();
     ClearAllGroundFlags();
@@ -149,7 +149,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     if (mSphereClsn.DetectClsn()) {
         disp = &mSphereClsn.disp;
         if (mSphereClsn.flags & 4) {
-            func_020371b0(onGround);
+            CommitFloorHit(onGround);
         }
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
@@ -190,7 +190,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     if (mSphereClsn.DetectClsnSlot0()) {
         disp = &mSphereClsn.disp;
         if (mSphereClsn.flags & 4) {
-            func_020371b0(onGround);
+            CommitFloorHit(onGround);
         }
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
@@ -227,8 +227,8 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
     prev = &a->mPrevPos;
 
     if (self->IsOnGround() && self->IsFlag800Clear() && self->ShouldUpdatePos())
-        func_02038324((void *)self->mSphereClsn.GetFloorResult(), (int)pos,
-                      self->mSphereClsn.mMotionAngPtr, self->mAngPtr);
+        dBgS_MoveBgCrrPos((void *)self->mSphereClsn.GetFloorResult(), (int)pos,
+                          self->mSphereClsn.mMotionAngPtr, self->mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -313,7 +313,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         self->mSphereClsn.SetFloorResult(floorHit);
         self->mSphereClsn.flags |= 1;
         (dBgPi &)self->mSphereClsn = floorHit;
-        self->func_020371b0(onGround);
+        self->CommitFloorHit(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -325,7 +325,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
     if (self->mSphereClsn.DetectClsnExceptSlot0()) {
         Vector3 *disp = &self->mSphereClsn.disp;
         if ((self->mSphereClsn.flags & 4) && !floorCommitted)
-            self->func_020371b0(onGround);
+            self->CommitFloorHit(onGround);
         if (self->ShouldUpdatePos()) {
             pos->x += disp->x;
             if (self->ShouldUpdatePosY())
@@ -355,8 +355,8 @@ void dBgCh_Actr::UpdateContinuous()
     prev = &a->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
-        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                      mAngPtr);
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -441,7 +441,7 @@ void dBgCh_Actr::UpdateContinuous()
         mSphereClsn.SetFloorResult(floorHit);
         mSphereClsn.flags |= 1;
         (dBgPi &)mSphereClsn = floorHit;
-        func_020371b0(onGround);
+        CommitFloorHit(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -453,7 +453,7 @@ void dBgCh_Actr::UpdateContinuous()
     if (mSphereClsn.DetectClsn()) {
         Vector3 *disp = &mSphereClsn.disp;
         if ((mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(onGround);
+            CommitFloorHit(onGround);
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
             if (ShouldUpdatePosY())
@@ -561,7 +561,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         mSphereClsn.SetFloorResult(floorHit);
         mSphereClsn.flags |= 1;
         (dBgPi &)mSphereClsn = floorHit;
-        func_020371b0(onGround);
+        CommitFloorHit(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -573,7 +573,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     if (mSphereClsn.DetectClsnSlot0()) {
         Vector3 *disp = &mSphereClsn.disp;
         if ((mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(onGround);
+            CommitFloorHit(onGround);
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
             if (ShouldUpdatePosY())
@@ -608,8 +608,8 @@ void dBgCh_Actr::UpdateExtraContinous()
     prev = &actor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear())
-        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                      mAngPtr);
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
 
     {
         hitFloor = false;
@@ -736,7 +736,7 @@ void dBgCh_Actr::UpdateExtraContinous()
             mSphereClsn.SetFloorResult(floorHit);
             mSphereClsn.flags |= 1;
             (dBgPi &)mSphereClsn = floorHit;
-            func_020371b0(wasOnGround);
+            CommitFloorHit(wasOnGround);
             floorCommitted = true;
         }
         if (hitWall) {
@@ -755,7 +755,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         if (mSphereClsn.DetectClsn()) {
             Vector3 *disp = &mSphereClsn.disp;
             if ((mSphereClsn.flags & 4) && !floorCommitted) {
-                func_020371b0(wasOnGround);
+                CommitFloorHit(wasOnGround);
                 floorCommitted = true;
             }
             pos->x = pos->x + disp->x;
@@ -808,7 +808,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                             mSphereClsn.flags |= 1;
                             (dBgPi &)mSphereClsn = lineHit;
                             if (!floorCommitted)
-                                func_020371b0(wasOnGround);
+                                CommitFloorHit(wasOnGround);
                         } else if (band == 2 && !(mSphereClsn.flags & 0x10)) {
                             const dBgPi &lineHit = mRaycastLine;
                             mSphereClsn.flags |= 0x10;

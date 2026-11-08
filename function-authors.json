@@ -5151,7 +5151,7 @@
     },
     "arm9:0x020371b0": {
       "author": "tangosdev",
-      "name": "_ZN10dBgCh_Actr13func_020371b0Ei"
+      "name": "_ZN10dBgCh_Actr14CommitFloorHitEi"
     },
     "arm9:0x020371fc": {
       "author": "tangosdev",
@@ -5519,15 +5519,15 @@
     },
     "arm9:0x02038234": {
       "author": "tangosdev",
-      "name": "func_02038234"
+      "name": "dBgS_RideCallBack"
     },
     "arm9:0x02038298": {
       "author": "tangosdev",
-      "name": "func_02038298"
+      "name": "dBgS_ChkPolySafe"
     },
     "arm9:0x02038324": {
       "author": "andrewboudreau",
-      "name": "func_02038324"
+      "name": "dBgS_MoveBgCrrPos"
     },
     "arm9:0x020383e4": {
       "author": "ruspecial",
