@@ -3225,6 +3225,7 @@ static void port_legacy_set_character(void *player, unsigned ch)
 
    SM64DS_SWAP_LEGACY=1 forces the old InitResources rebuild for an A/B. */
 extern "C" unsigned char data_0209cad2[];   /* save block; [0x0f] is caa0[0x41] */
+extern "C" unsigned char data_02092128[];   /* per-player character, the spawn's f1 (hal/actor_vtables.cpp) */
 extern "C" int data_0209b478[];             /* voice-group byte (hal/actor_vtables.cpp) */
 extern "C" void func_ov002_020e6330(void *self);   /* src/func_ov002_020e6330.c */
 extern "C" void func_ov002_020e6350(char *self);   /* src/func_ov002_020e6350.c */
@@ -3249,6 +3250,23 @@ extern "C" void port_player_set_character(void *player, unsigned ch)
     unsigned char *const save_chr = &data_0209cad2[0x0f];  /* data_0209caa0[0x41] */
     const unsigned char keep_save = *save_chr;
     const unsigned char keep_voice = *(unsigned char *)data_0209b478;
+    /* THE PER-PLAYER TABLE IS THE THIRD THING SetRealCharacter WRITES
+       (src/game/player/Player.cpp:1226, data_02092128[mPlayerNo] = param1),
+       and for a remote body it has to be kept exactly like the save byte.
+       The spawn loop (src/game/stages/LevelObjects.cpp:203-208) packs body i
+       as f2 = the save byte (mCharacter, the same for every body) and
+       f1 = data_02092128[i] (param1, the look), and outside the castle
+       Player::InitResources keeps param1 = f1 (Player.cpp:27022-27037). Left
+       at the friend's character, the table built that friend's body at the
+       next level load half as the friend (param1) and half as me
+       (mCharacter). The cartridge's cap rule (dCapEnemy_c::
+       DestroyIfCapNotNeeded) then threw away any enemy wearing my cap whose
+       nearest body at load was that one: a Luigi console lost 4 of the 6
+       lobby Boos in Big Boo's Haunt. Kept, every body comes up with
+       param1 == mCharacter, as the ROM's own loop builds one player, and the
+       friend's look is put back by the ghost swap as before. */
+    const int tbl_slot = remote ? (int)(*((unsigned char *)player + 0x6d8) & 0x3f) : -1;
+    const unsigned char keep_tbl = remote ? data_02092128[tbl_slot] : 0;
 
     int rc = port_door_swap((char *)player, (int)(ch & 3));
     /* the door path can decline (no player, already that character); the codes
@@ -3265,6 +3283,7 @@ extern "C" void port_player_set_character(void *player, unsigned ch)
         if (leak < 0) leak = std::getenv("SM64DS_GHOSTCHAR_LEAK") ? 1 : 0;
         if (!leak) {
             *save_chr = keep_save;
+            data_02092128[tbl_slot] = keep_tbl;
             *(unsigned char *)data_0209b478 = keep_voice;
             if (localp && *(void **)(localp + 0xdc)) {
                 func_ov002_020e6330(localp);
@@ -3272,11 +3291,12 @@ extern "C" void port_player_set_character(void *player, unsigned ch)
             }
         }
         std::fprintf(stderr, "[chr] ghost swap on slot %d to %u: save character"
-                             " %u -> %u (%s), local body %u\n",
+                             " %u -> %u (%s), local body %u, table[%d] %u\n",
                      player ? (int)*((unsigned char *)player + 0x6d8) : -1,
                      (unsigned)(ch & 3), (unsigned)keep_save,
                      (unsigned)*save_chr, leak ? "LEAK knob on" : "kept",
-                     localp ? (unsigned)(*(unsigned *)(localp + 8) & 0xff) : 99u);
+                     localp ? (unsigned)(*(unsigned *)(localp + 8) & 0xff) : 99u,
+                     tbl_slot, (unsigned)data_02092128[tbl_slot]);
     }
 }
 
