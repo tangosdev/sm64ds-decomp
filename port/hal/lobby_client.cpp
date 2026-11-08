@@ -699,7 +699,7 @@ void fold_events(const JV &evs, bool resync)
 /* the room's answer to a verb or a poll; 0 = fine, else the record was left (the room is gone for this console) */
 void leave_room_locked(const char *why);
 
-void fold(const Answer &a, int gen)
+void fold(const Answer &a, int gen, bool from_poll)
 {
     Lock l;
     if (gen != g.gen) return;   /* an answer for a room this console has left */
@@ -708,7 +708,9 @@ void fold(const Answer &a, int gen)
         g.error = a.message;
         return;
     }
-    if (a.body.has_num("cursor")) g.cursor = (int)a.body.i("cursor");
+    /* ONLY A POLL MOVES THE CURSOR. A verb answers with the room's newest sequence number, and taking it would skip every event the
+       poll has not delivered yet (a guest's own `ready` is what moves the room to `go`, so its answer already points past the `go`). */
+    if (from_poll && a.body.has_num("cursor")) g.cursor = (int)a.body.i("cursor");
     if (const JV *v = a.body.get("view")) fold_view(*v);
     if (const JV *ev = a.body.get("events")) fold_events(*ev, a.body.flag("resync"));
     if (const JV *p = a.body.get("plan")) { g.plan = *p; g.plan_set = true; }
@@ -789,7 +791,7 @@ DWORD WINAPI action_thread(void *)
                 continue;
             }
             if (j.kind == 3) continue;   /* leave: the record was cleared when it was asked */
-            fold(a, j.gen);
+            fold(a, j.gen, false);
             SetEvent(g_poll_event);
         }
     }
@@ -818,7 +820,7 @@ DWORD WINAPI poll_thread(void *)
             continue;
         }
         fails = 0;
-        fold(a, gen);
+        fold(a, gen, true);
         if (!a.ok) WaitForSingleObject(g_poll_event, 1000);
     }
 }
