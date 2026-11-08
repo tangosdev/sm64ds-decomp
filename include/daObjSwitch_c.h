@@ -70,7 +70,7 @@ struct daObjSwitch_c : dBgActor_c {
        the event bit and goes straight to unpressed, so it is "expired".
        ScaleOverTime is N64 cur_obj_scale_over_time, and it also lowers the
        collision by the squash. */
-    int  FindTargetStar();
+    int FindTargetStar();
     void UpdateClsnMatrix();
     void ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target);
     void StateExpiredMain();

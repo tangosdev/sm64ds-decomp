@@ -115,8 +115,7 @@ void daObjSwitch_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *o
 /* The player (actor 0xbf) stepped on the switch: raise mPlayerNearby, which
  * the press states read. Underwater, only a metal or mega player is heavy
  * enough, and the player must be within 0x98 units of the switch. */
-void daObjSwitch_c::OnStoodOn(dActor_c *other)
-{
+void daObjSwitch_c::OnStoodOn(dActor_c *other) {
     daPly_c *player = static_cast<daPly_c *>(other);
     unsigned int isPlayer = other->actorID == 0xbf;
     if (isPlayer == 0) return;
@@ -288,27 +287,23 @@ int daObjSwitch_c::CleanupResources()
     return 1;
 }
 
-void daObjSwitch_c::CallStateBehavior()
-{
+void daObjSwitch_c::CallStateBehavior() {
     int state = mState;
     (this->*data_ov002_0210e00c[state].exec)();
 }
 
-void daObjSwitch_c::SetState(int nextState)
-{
+void daObjSwitch_c::SetState(int nextState) {
     mState = nextState;
     int state = mState;
     (this->*data_ov002_0210e00c[state].init)();
 }
 
-void daObjSwitch_c::ResetTimers()
-{
+void daObjSwitch_c::ResetTimers() {
     mTimer = 0;
     mPressTimer = 5;
 }
 
-void daObjSwitch_c::StateIdleInit()
-{
+void daObjSwitch_c::StateIdleInit() {
     int ok = 1;
     dActor_c *p;
     mTimer = 0;
@@ -333,8 +328,7 @@ void daObjSwitch_c::StateIdleInit()
     if (ok != 0) mMusicVolume = 0x7f;
 }
 
-void daObjSwitch_c::StateIdleMain()
-{
+void daObjSwitch_c::StateIdleMain() {
     if (mPlayerNearby) {
         if (DecIfAbove0_Byte(&mPressTimer) != 0) return;
         SetState(1);
@@ -343,8 +337,7 @@ void daObjSwitch_c::StateIdleMain()
     mPressTimer = 5;
 }
 
-void daObjSwitch_c::StatePressedMain()
-{
+void daObjSwitch_c::StatePressedMain() {
     ScaleOverTime(2, 3, 0x1000, 0x333);
     if (mTimer != 3) return;
     Sound::PlayBank3(0x3e, *reinterpret_cast<const Vector3 *>(&mCamSpacePosX));
@@ -363,16 +356,14 @@ void daObjSwitch_c::StatePressedMain()
     SetState(2);
 }
 
-void daObjSwitch_c::StateTickingInit()
-{
+void daObjSwitch_c::StateTickingInit() {
     mTimer = 0;
     mPressTimer = 5;
     mMusicFadeDone = 0;
     mMusicVolume = 64;
 }
 
-void daObjSwitch_c::StateTickingMain()
-{
+void daObjSwitch_c::StateTickingMain() {
     int diff;
     if (mSwitchType == 0) return;
     if (mSwitchType == 1) {
@@ -400,8 +391,7 @@ void daObjSwitch_c::StateTickingMain()
     SetState(4);
 }
 
-void daObjSwitch_c::StateUnpressedMain()
-{
+void daObjSwitch_c::StateUnpressedMain() {
     ScaleOverTime(2, 3, 0x333, 0x1000);
     if (mTimer != 3) return;
     Sound::PlayBank3(0x3e, *reinterpret_cast<const Vector3 *>(&mCamSpacePosX));
@@ -420,16 +410,14 @@ void daObjSwitch_c::StateUnpressedMain()
     SetState(0);
 }
 
-void daObjSwitch_c::StateExpiredMain()
-{
+void daObjSwitch_c::StateExpiredMain() {
     unsigned short v = actorID;
     int b = (v == 0xc);
     if (!b) Event::ClearBit(mEventBit);
     SetState(3);
 }
 
-void daObjSwitch_c::ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target)
-{
+void daObjSwitch_c::ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target) {
     Fix12i d = cstd::fdiv((Fix12i)mTimer, frames);
     Fix12i diff = target - base;
     Fix12i e = FX_MUL(diff, d);
@@ -447,8 +435,7 @@ void daObjSwitch_c::OnGroundPounded(dActor_c &other)
     SetState(1);
 }
 
-void daObjSwitch_c::UpdateClsnMatrix()
-{
+void daObjSwitch_c::UpdateClsnMatrix() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPosX;
     mClsnMat.m[10] = mPosY - mDisplacementY;
@@ -456,8 +443,7 @@ void daObjSwitch_c::UpdateClsnMatrix()
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-int daObjSwitch_c::FindTargetStar()
-{
+int daObjSwitch_c::FindTargetStar() {
     dActor_c *star;
     if (mTargetActorID) return 0;
     star = dActor_c::FindWithActorID(0xb2, 0);
