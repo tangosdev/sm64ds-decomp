@@ -3108,9 +3108,9 @@ data_ov006_0213a274 kind:data(any) addr:0x0213a274
 data_ov006_0213a284 kind:data(any) addr:0x0213a284 ambiguous
 data_ov006_0213a2cc kind:data(any) addr:0x0213a2cc ambiguous
 data_ov006_0213a314 kind:data(any) addr:0x0213a314 ambiguous
-data_ov006_0213a32c kind:data(any) addr:0x0213a32c
+sAmidaWalkerSprite kind:data(any) addr:0x0213a32c
 data_ov006_0213a330 kind:data(any) addr:0x0213a330
-data_ov006_0213a338 kind:data(any) addr:0x0213a338
+sAmidaHurryButtonSprite kind:data(any) addr:0x0213a338
 data_ov006_0213a33c kind:data(any) addr:0x0213a33c
 sAmidaSideSprite kind:data(any) addr:0x0213a35c
 data_ov006_0213a360 kind:data(any) addr:0x0213a360
@@ -3139,7 +3139,7 @@ data_ov006_0213a490 kind:data(any) addr:0x0213a490
 data_ov006_0213a498 kind:data(any) addr:0x0213a498
 data_ov006_0213a4a0 kind:data(any) addr:0x0213a4a0
 data_ov006_0213a4a8 kind:data(any) addr:0x0213a4a8
-sAmidaWalkerSprites kind:data(any) addr:0x0213a4b0
+sAmidaPieceSprites kind:data(any) addr:0x0213a4b0
 sAmidaLaneResultSprites kind:data(any) addr:0x0213a4c0
 data_ov006_0213a4d0 kind:data(any) addr:0x0213a4d0
 data_ov006_0213a4e8 kind:data(any) addr:0x0213a4e8

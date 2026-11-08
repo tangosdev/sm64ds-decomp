@@ -56,6 +56,9 @@
 
 #define REG_VCOUNT (*(volatile u16 *)0x04000006)
 
+/* The 3D engine's display control, DISP3DCNT (engine A only). */
+#define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
+
 /* BG0HOFS is 0x04000010 and BG0VOFS 0x04000012; the ROM sets the pair with one
    32-bit store, so this is typed to match that access rather than split in two. */
 #define REG_BG0OFS (*(volatile u32 *)0x04000010)

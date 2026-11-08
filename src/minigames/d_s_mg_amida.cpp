@@ -146,12 +146,12 @@ struct AmidaPattern {
     s32 speedUp;       /* 0x18 sAmidaPatternSpeedUp */
 };
 typedef char AmidaPattern_size_must_be_0x1c[sizeof(AmidaPattern) == 0x1c ? 1 : -1];
-extern void *data_ov006_0213a32c;
+extern void *sAmidaWalkerSprite;
 extern void *sAmidaSideSprite;
-extern int data_ov006_0213a338[];
+extern void *sAmidaHurryButtonSprite;
 extern void *sAmidaBoardAnimSprites[];
 extern void *sAmidaLaneAnimSprites[];
-extern void *sAmidaWalkerSprites[];
+extern void *sAmidaPieceSprites[];
 extern int sAmidaLaneResultSprites[];
 extern int sAmidaLaneWantSprites[];
 extern int sAmidaBoardAnimationFrames[13];
@@ -223,17 +223,16 @@ int dScMgAmida_c::IsVariant2() {
    base's, with 4 for the BG1CNT base bits and this class's own language
    table. Not a Kill; see the slot-31 block in include/dScMgBase_c.h. */
 int dScMgAmida_c::InitSubScreenBg() {
-    volatile unsigned short *reg = (volatile unsigned short *)0x400100a;
-    int id;
-    void *t;
-    *reg = (unsigned short)((*reg & 0x43) | 4);
-    *reg = (unsigned short)(*reg & ~0x40);
-    *reg = (unsigned short)(*reg & ~3);
+    int language;
+    void *chars;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 4;
+    REG_DB_BG1CNT &= ~0x40;
+    REG_DB_BG1CNT &= ~3;
     SetSubBg1Offset(0, 0);
-    gSubScreenLayers = (unsigned char)(gSubScreenLayers & ~2);
-    id = GetGameLanguage();
-    t = (void *)G2S::GetBG1CharPtr();
-    LoadCompressedFileAt(sAmidaOptionNcgByLanguage[id], t);
+    gSubScreenLayers &= ~2;
+    language = GetGameLanguage();
+    chars = G2S::GetBG1CharPtr();
+    LoadCompressedFileAt(sAmidaOptionNcgByLanguage[language], chars);
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S::GetBG1ScrPtr());
 }
 
@@ -335,14 +334,14 @@ void dScMgAmida_c::ClearStroke() {
     int row = 0;
     int col;
     int rowoff = 0;
-    int one = 0;
-    int val = 0;
+    /* Kept: the integer add of rowoff to the loaded base; the plain
+       `mStrokeGrid + rowoff + col` spelling DIFFs here (measured 2026-11-08). */
     for (; row < 0x100; row++) {
         for (col = 0; col < 0x158; col++) {
             unsigned char *base = mStrokeGrid;
             unsigned char *p = (unsigned char *)(rowoff + (int)base) + col;
             if (*p != 0)
-                *p = val;
+                *p = 0;
         }
         rowoff += 0x158;
     }
@@ -728,11 +727,9 @@ void dScMgAmida_c::HandlePen() {
                 int row = 0;
                 int col;
                 int rowoff = 0;
-                int one = 0;
-                int val = 0;
                 for (; row < 0x100; row++) {
                     for (col = 0; col < 0x158; col++) {
-                        (this->mStrokeGrid + rowoff)[col] = val;
+                        (this->mStrokeGrid + rowoff)[col] = 0;
                     }
                     rowoff += 0x158;
                 }
@@ -1486,15 +1483,15 @@ void dScMgAmida_c::SetupRound() {
     }
 
     {
-        char *d;
-        volatile u16 v1;
-        volatile u16 v2;
-        d = (char *)func_02054efc();
-        v1 = 0;
-        MultiStore16(v1, d, 0x6000);
-        d = (char *)G2S::GetBG0CharPtr();
-        v2 = 0;
-        MultiStore16(v2, d, 0x6000);
+        void *chars;
+        volatile u16 fillMain;
+        volatile u16 fillSub;
+        chars = func_02054efc();
+        fillMain = 0;
+        MultiStore16(fillMain, chars, 0x6000);
+        chars = G2S::GetBG0CharPtr();
+        fillSub = 0;
+        MultiStore16(fillSub, chars, 0x6000);
     }
 
     mLineStart.x = -1;
@@ -1507,17 +1504,16 @@ void dScMgAmida_c::SetupRound() {
     mPenStart.y = -1;
 
     {
-        int z = 0;
-        mLineStartSet = z;
-        mLineEndSet = z;
-        mProbeMode = z;
-        mProbeHit = z;
-        mPenTapped = z;
-        mPenSoundHandle = z;
-        do {
-            mLanePerm[z] = z;
-            z += 1;
-        } while (z < 4);
+        int i;
+        mLineStartSet = 0;
+        mLineEndSet = 0;
+        mProbeMode = 0;
+        mProbeHit = 0;
+        mPenTapped = 0;
+        mPenSoundHandle = 0;
+        for (i = 0; i < 4; i++) {
+            mLanePerm[i] = i;
+        }
     }
 
     mRoundCount = 0;
@@ -1568,16 +1564,16 @@ void dScMgAmida_c::SetupRound() {
 
     if (shuffle == 1) {
         if (IsVariant2() != 0) {
-            int msk = 0x7fff;
-            int cnt = 3;
+            int remaining = 3;
             do {
                 int idx =
-                    ((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & msk) * 0xb) >> 15;
+                    ((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xb) >>
+                    15;
                 if (skip[idx] == 0) {
-                    cnt--;
+                    remaining--;
                     skip[idx] = 1;
                 }
-            } while (cnt > 0);
+            } while (remaining > 0);
         } else {
             int sel = *(int *)(sAmidaPatternRungSkip + mPatternIndex * 0x1c);
             switch (sel) {
@@ -1588,18 +1584,18 @@ void dScMgAmida_c::SetupRound() {
                      15] = 1;
                 break;
             case 2: {
-                int cnt =
+                int count =
                     (((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
                      15) +
                     1;
                 int j = 0;
-                if (cnt > 0) {
-                    int *seedp2 = &data_0209d4b8.value;
+                if (count > 0) {
                     do {
-                        skip[((u32)(((u32)RandomIntInternal(seedp2) >> 16) & 0x7fff) * 0xb) >> 15] =
-                            1;
+                        skip[((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) *
+                              0xb) >>
+                             15] = 1;
                         j++;
-                    } while (j < cnt);
+                    } while (j < count);
                 }
                 break;
             }
@@ -1686,8 +1682,8 @@ void dScMgAmida_c::SetupRound() {
     /* pad_5370: this store is the only access in the class, so there is no
        evidence for a name yet. */
     *(s32 *)(raw + 0x5370) = 1;
-    *(volatile u16 *)0x04000050 = 0;
-    G2x::SetBlendAlpha((volatile unsigned short *)0x04001050, 4, 8, 6, 0x10);
+    REG_BLDCNT = 0;
+    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
     Mg_ShowBanner(0xd, 0x80, 0x60, 1, -1, 0xd);
 
     mStartBannerTimer = 0x3c;
@@ -1708,15 +1704,17 @@ void dScMgAmida_c::SetupRound() {
         mHurry = 0;
         mPenLocked = 0;
         {
-            int z = 0;
+            int lane = 0;
+            /* Kept: the lane x and the zero share a two-slot array; scalar
+               locals DIFF SetupRound by 9 words (measured 2026-11-08). */
             int xw[2];
             xw[0] = 0x20;
             xw[1] = 0;
-            for (; z < 4; z++) {
-                mLanePos[z].x = xw[0] << 12;
-                mLanePos[z].y = 0xb0000;
-                mLaneVel[z].x = xw[1];
-                mLaneVel[z].y = xw[1];
+            for (; lane < 4; lane++) {
+                mLanePos[lane].x = xw[0] << 12;
+                mLanePos[lane].y = 0xb0000;
+                mLaneVel[lane].x = xw[1];
+                mLaneVel[lane].y = xw[1];
                 xw[0] += 0x40;
             }
             mFinaleTimer = xw[1];
@@ -1742,7 +1740,6 @@ void dScMgAmida_c::RenderBoard() {
     typedef struct {
         int a[13];
     } T13;
-    int noPalette = -1;
     int i;
     int y;
 
@@ -1758,7 +1755,7 @@ void dScMgAmida_c::RenderBoard() {
                     mLaneAnimFrame[i] = 0;
             }
             Mg_RenderSpriteBoth(sAmidaLaneAnimSprites[mLaneAnimFrame[i]], mLanePos[i].x >> 12,
-                                (mLanePos[i].y >> 12) - 4, noPalette, 0);
+                                (mLanePos[i].y >> 12) - 4, -1, 0);
         } else {
             int frames[13];
             if (mLaneFlashFlag[i] == 0) {
@@ -1785,14 +1782,13 @@ void dScMgAmida_c::RenderBoard() {
                 }
             }
             *(T13 *)frames = *(T13 *)sAmidaBoardAnimationFrames;
-            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames[mLaneFlashFrame[i]]], y, 0xb8,
-                                noPalette, 0);
+            Mg_RenderSpriteBoth(sAmidaBoardAnimSprites[frames[mLaneFlashFrame[i]]], y, 0xb8, -1, 0);
         }
     }
     {
         int j;
         for (j = 0; j < mWalkerCount; j++) {
-            Mg_RenderSpriteBoth(data_ov006_0213a32c, mWalkerCell[j].x, mWalkerCell[j].y, -1, 0);
+            Mg_RenderSpriteBoth(sAmidaWalkerSprite, mWalkerCell[j].x, mWalkerCell[j].y, -1, 0);
         }
     }
     Mg_RenderSpriteBoth(sAmidaSideSprite, 8, 0x60, -1, 0);
@@ -1801,21 +1797,20 @@ void dScMgAmida_c::RenderBoard() {
 #pragma pop
 
 void dScMgAmida_c::RenderBoardAlt() {
-    int noPalette = -1;
     int i;
     int j;
     int x;
     if (mHurry == 0) {
-        Mg_RenderSpriteBoth((void *)data_ov006_0213a338[0], 0x80, 0xb0, noPalette, 0);
+        Mg_RenderSpriteBoth(sAmidaHurryButtonSprite, 0x80, 0xb0, -1, 0);
     }
     for (i = 0; i < 4; i++) {
         Mg_RenderSpriteBoth((void *)sAmidaLaneWantSprites[mLaneWants[i]], mWalkerCell[i].x,
-                            mWalkerCell[i].y, noPalette, 0);
+                            mWalkerCell[i].y, -1, 0);
     }
     j = 0;
     x = 0x20;
     for (; j < 4; x += 0x40, j++) {
-        Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 0x78, noPalette, 0);
+        Mg_RenderSpriteBoth((void *)sAmidaLaneResultSprites[mLaneResult[j]], x, 0x78, -1, 0);
     }
 }
 s32 dScMgAmida_c::Render() {
@@ -1851,7 +1846,7 @@ s32 dScMgAmida_c::Render() {
             int piece;
             for (piece = 0; piece < 0x80; piece++) {
                 if (mPieces[piece].active != 0) {
-                    Mg_RenderSpriteBoth(sAmidaWalkerSprites[mPieces[piece].timer / 4],
+                    Mg_RenderSpriteBoth(sAmidaPieceSprites[mPieces[piece].timer / 4],
                                         mPieces[piece].posX >> 12, mPieces[piece].posY >> 12, -1,
                                         0);
                 }
@@ -1879,14 +1874,14 @@ s32 dScMgAmida_c::Behavior() {
     int steps;
     int k;
     int accum;
-    int touch, j4, touched;
+    int touchSlot, touched;
     int lane;
     int j;
     int slot;
     char *scan;
     int randA, randB;
-    u32 bv, av;
-    s16 cA;
+    u32 randBits15, randAngle15;
+    s16 cosA;
     int idxA;
     int cosB, sinA;
 
@@ -1983,10 +1978,9 @@ s32 dScMgAmida_c::Behavior() {
         if (mEndDelayTimer > 0)
             mEndDelayTimer -= 1;
         touched = 0;
-        touch = gActivePlayerSlot;
-        j4 = touch * 4;
-        if (gTouchHeld[touch * 4] != 0) {
-            if (gTouchEdge[j4] != 0)
+        touchSlot = gActivePlayerSlot;
+        if (gTouchHeld[touchSlot * 4] != 0) {
+            if (gTouchEdge[touchSlot * 4] != 0)
                 touched = 1;
         }
         if (touched != 0)
@@ -2031,20 +2025,20 @@ s32 dScMgAmida_c::Behavior() {
                     if (PIECE_AT(scan)->active != 1) {
                         randA = RandomIntInternal(&data_0209d4b8.value);
                         randB = RandomIntInternal(&data_0209d4b8.value);
-                        bv = ((u32)randB >> 16) & 0x7fff;
-                        av = ((u32)randA >> 16) & 0x7fff;
-                        cosB = FX_CosIdx((int)((bv << 15) >> 16) >> 4);
-                        idxA = (int)((av << 17) >> 16) >> 4;
-                        cA = FX_CosIdx(idxA);
+                        randBits15 = ((u32)randB >> 16) & 0x7fff;
+                        randAngle15 = ((u32)randA >> 16) & 0x7fff;
+                        cosB = FX_CosIdx((int)((randBits15 << 15) >> 16) >> 4);
+                        idxA = (int)((randAngle15 << 17) >> 16) >> 4;
+                        cosA = FX_CosIdx(idxA);
                         {
-                            mPieces[slot].posX = FX_MUL(cosB, FX_MUL(0x8000, cA));
+                            mPieces[slot].posX = FX_MUL(cosB, FX_MUL(0x8000, cosA));
                             sinA = FX_SinIdx(idxA);
                             mPieces[slot].posY = FX_MUL(cosB, FX_MUL(0x8000, sinA));
                             mPieces[slot].posX += mLanePos[j].x;
                             mPieces[slot].posY += mLanePos[j].y;
-                            /* (int)cA: without the cast, or with cA
+                            /* (int)cosA: without the cast, or with cosA
                                declared int, Behavior differs by 13 words. */
-                            mPieces[slot].velX = FX_MUL(cosB, FX_MUL(0x1000, (int)cA));
+                            mPieces[slot].velX = FX_MUL(cosB, FX_MUL(0x1000, (int)cosA));
                             mPieces[slot].velY = FX_MUL(cosB, FX_MUL(0x1000, sinA));
                         }
                         mPieces[slot].velY -= 0x400;
@@ -2083,8 +2077,8 @@ final:
 }
 
 s32 dScMgAmida_c::InitResources() {
-    volatile u16 zeroMain;
-    volatile u16 zeroSub;
+    volatile u16 fillMain;
+    volatile u16 fillSub;
     void *file;
 
     mStrokeGrid = (u8 *)Memory::Allocate(0x15800);
@@ -2099,30 +2093,30 @@ s32 dScMgAmida_c::InitResources() {
     }
 
     data_0208ee44 = 1;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x3218;
-    *(volatile u16 *)0x4000008 &= ~0x40;
-    *(volatile s32 *)0x4000010 = 0;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x3218;
+    REG_BG0CNT &= ~0x40;
+    REG_BG0OFS = 0;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
 
     file = func_02054efc();
-    zeroMain = 0;
-    MultiStore16((u16)zeroMain, file, 0x6000);
+    fillMain = 0;
+    MultiStore16(fillMain, file, 0x6000);
 
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x2214;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile s32 *)0x4001010 = 0;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x2214;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG0OFS = 0;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
 
-    file = (char *)G2S::GetBG0CharPtr();
-    zeroSub = 0;
-    MultiStore16((u16)zeroSub, file, 0x6000);
+    file = G2S::GetBG0CharPtr();
+    fillSub = 0;
+    MultiStore16(fillSub, file, 0x6000);
 
     Mg_InitBrush((char *)this, 1, 0, 2);
 
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x140c;
-    *(volatile u16 *)0x400000e &= ~0x40;
-    *(volatile s32 *)0x400001c = 0;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x140c;
+    REG_BG3CNT &= ~0x40;
+    REG_BG3OFS = 0;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 3;
 
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)func_02054d88());
@@ -2140,14 +2134,14 @@ s32 dScMgAmida_c::InitResources() {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NSC_BIN, G2::GetBG3ScrPtr());
     }
 
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x40c;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile s32 *)0x4001018 = 0;
-    *(volatile u16 *)0x400100c &= ~3;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x60c;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile s32 *)0x400101c = 0;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x40c;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG2OFS = 0;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x60c;
+    REG_DB_BG3CNT &= ~0x40;
+    REG_DB_BG3OFS = 0;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
 
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCG_BIN, G2S::GetBG3CharPtr());
@@ -2164,8 +2158,8 @@ s32 dScMgAmida_c::InitResources() {
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_2_NSC_BIN, G2S::GetBG2ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_1_NSC_BIN, G2S::GetBG3ScrPtr());
-        *(volatile s16 *)0x4000050 = 0;
-        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 4, 8, 6, 0x10);
+        REG_BLDCNT = 0;
+        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
         gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;
         gSubScreenLayers |= 0xd;
     }

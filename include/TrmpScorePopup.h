@@ -3,8 +3,6 @@
 
 #include "types.h"
 
-struct Node;
-
 /* TrmpScorePopup, one floating score of the Trampoline scenes' five-slot pool
  * (dScMgTrampoline_c at 0x5cd0, dScMgTrampoline2_c::mScorePopups). Spawned
  * when a Mario lands: x starts at the right edge and drifts left, y eases
@@ -20,7 +18,7 @@ struct TrmpScorePopup {
     TrmpScorePopup();
     ~TrmpScorePopup();
 
-    Node *next;  /* +0x00 -- the live list */
+    TrmpScorePopup *next; /* +0x00 -- the live list */
     int x;       /* +0x04 -- 20.12 */
     int y;       /* +0x08 */
     int targetX; /* +0x0c */
@@ -28,9 +26,9 @@ struct TrmpScorePopup {
     int speedX;  /* +0x14 */
     int speedY;  /* +0x18 -- func_0203d630 damps it with speedX (it
                        scales both words); not applied here */
-    u16 life;    /* +0x1c */
-    u16 number;  /* +0x1e */
-    u16 active;  /* +0x20 */
+    s16 life;    /* +0x1c */
+    s16 number;  /* +0x1e */
+    s16 active;  /* +0x20 */
 
     void Spawn(int, int); /* (y, number): fills a slot and links it live */
     void Update();        /* ticks life, eases toward targetY */
