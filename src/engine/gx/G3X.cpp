@@ -3,23 +3,23 @@
  * SDK's gx_g3x.c), arm9 .text 0x02055454..0x02055998.
  *
  * mwccarm emits .text in reverse source order, so the file reads top-down
- * from G3X_Init (func_0205583c) at the top of the run. The SDK name of each
- * address-named function, from pret/pokediamond's GX_g3x.c, is in its
- * comment. The file's first function, the asm FIFO flush
- * GXi_NopClearFifo128_ (func_020553c0, 0x020553c0), stays its own source:
- * port/tools/hostgen.py skips any file that holds an asm block, and the port
- * hostgens this one.
+ * from G3X_Init (func_0205583c) at the top of the run. G3X_Init and
+ * G3X_SetToonTable keep their address names, with the SDK name in each
+ * comment: their callers name them that way. The file's
+ * last function, the asm FIFO flush GXi_NopClearFifo128_ (0x020553c0),
+ * stays its own source: port/tools/hostgen.py skips any file that holds an
+ * asm block, and the port hostgens this one.
  * G3X_GetBoxTestResult, G3X_GetVectorMtx, G3X_GetClipMtx and
  * G3X_SetEdgeColorTable are not in this ROM; func_020555a4 (the toon table)
  * is not in pret's file.
  *
  * SetClearColor reads the bool slot as an int (byte-proven widening; the
  * header's bool spelling emits a narrower compare at the call).
- * func_020554bc's split volatile zeroing (init for a, store for b) is as
+ * InitTable's split volatile zeroing (init for a, store for b) is as
  * built: merging b into an init reschedules the body. data_02099fd0 is the
  * shared render DMA channel (named at its GX.cpp use).
  *
- * PC port: smoke_gx builds func_02055780 from this file through
+ * PC port: smoke_gx builds G3X::ClearFifo from this file through
  * port/tools/hostgen.py, which emits the whole file. The rest calls SDK
  * code the host build doesn't link, so it sits under #ifndef _MSC_VER.
  */
@@ -35,16 +35,8 @@ void MI_DmaFill32Async(unsigned int dmaNo, void *dest, unsigned int data, unsign
 void DMASyncFillTransfer(unsigned int channel, void *dst, unsigned int data,
                          unsigned int size);
 void MultiStore_Int(int val, int *dst, int len);
-void func_020553c0(unsigned addr);
-void func_02055454(int v);
-int func_02055464(int *out);
-int func_02055490(int *out);
-void func_020554bc(void);
+void GXi_NopClearFifo128_(unsigned addr);
 void func_020555a4(void *dst);
-void func_02055624(void);
-void func_020556d0(void);
-void func_02055780(void);
-void func_020557b4(void);
 void func_0205583c(void);
 }
 
@@ -52,7 +44,7 @@ void func_0205583c(void);
 
 // G3X_Init
 extern "C" void func_0205583c(void) {
-    func_02055780();
+    G3X::ClearFifo();
     *(volatile unsigned int *)0x4000504 = 0;
     while (*(volatile unsigned int *)0x4000600 & 0x8000000)
         ;
@@ -68,27 +60,26 @@ extern "C" void func_0205583c(void) {
     *(volatile unsigned int *)0x4000600 |= 0x8000;
     *(volatile unsigned int *)0x4000600 =
         (*(volatile unsigned int *)0x4000600 & ~0xc0000000) | 0x80000000;
-    func_020556d0();
+    G3X::InitMtxStack();
     *(volatile unsigned int *)0x4000350 = 0;
     *(volatile unsigned short *)0x4000354 = 0x7fff;
     *(volatile unsigned short *)0x4000356 = 0;
     *(volatile unsigned int *)0x4000358 = 0;
     *(volatile unsigned short *)0x400035c = 0;
     *(volatile unsigned short *)0x4000008 &= ~3;
-    func_020554bc();
+    G3X::InitTable();
     *(volatile unsigned int *)0x40004a4 = 0x1f0080;
     *(volatile unsigned int *)0x40004a8 = 0;
     *(volatile unsigned int *)0x40004ac = 0;
 }
 
-// G3X_ResetMtxStack (pret's name)
-extern "C" void func_020557b4(void) {
+void G3X::Reset(void) {
     while (*(volatile unsigned int *)0x4000600 & 0x8000000)
         ;
     *(volatile unsigned int *)0x4000600 |= 0x8000;
     *(volatile unsigned short *)0x4000060 |= 0x2000;
     *(volatile unsigned short *)0x4000060 |= 0x1000;
-    func_02055624();
+    ResetMtxStack();
     *(volatile unsigned int *)0x40004a4 = 0x1f0080;
     *(volatile unsigned int *)0x40004a8 = 0;
     *(volatile unsigned int *)0x40004ac = 0;
@@ -96,22 +87,21 @@ extern "C" void func_020557b4(void) {
 
 #endif
 
-// G3X_ClearFifo: flushes the geometry FIFO, then waits until the engine is idle.
-extern "C" void func_02055780(void) {
-    func_020553c0(0x4000400);
+// Flushes the geometry FIFO, then waits until the engine is idle.
+void G3X::ClearFifo(void) {
+    GXi_NopClearFifo128_(0x4000400);
     while (*(volatile unsigned *)0x4000600 & 0x8000000)
         ;
 }
 
 #ifndef _MSC_VER
 
-// G3X_InitMtxStack
-extern "C" void func_020556d0(void) {
+void G3X::InitMtxStack(void) {
     int a, b;
     *(volatile u32 *)0x4000600 |= 0x8000;
-    while (func_02055490(&a))
+    while (GetMtxStackLevelPV(&a))
         ;
-    while (func_02055464(&b))
+    while (GetMtxStackLevelPJ(&b))
         ;
     *(volatile u32 *)0x4000440 = 3;
     *(volatile u32 *)0x4000454 = 0;
@@ -124,14 +114,13 @@ extern "C" void func_020556d0(void) {
     *(volatile u32 *)0x4000454 = 0;
 }
 
-// G3X_ResetMtxStack_2 (pret's name)
-extern "C" void func_02055624(void) {
+void G3X::ResetMtxStack(void) {
     int a;
     int b;
     *(volatile unsigned int *)0x4000600 |= 0x8000;
-    while (func_02055490(&a))
+    while (GetMtxStackLevelPV(&a))
         ;
-    while (func_02055464(&b))
+    while (GetMtxStackLevelPJ(&b))
         ;
     *(volatile unsigned int *)0x4000440 = 3;
     *(volatile unsigned int *)0x4000454 = 0;
@@ -175,8 +164,7 @@ void G3X::SetClearColor(unsigned short a, int b, int c, int d, bool e) {
     *(volatile unsigned short *)0x4000354 = (unsigned short)c;
 }
 
-// G3X_InitTable
-extern "C" void func_020554bc(void) {
+void G3X::InitTable(void) {
     int i;
     if (data_02099fd0 != -1) {
         MI_DmaFill32Async(data_02099fd0, (void *)0x4000330, 0, 0x10, 0, 0);
@@ -192,16 +180,16 @@ extern "C" void func_020554bc(void) {
         *(volatile int *)0x40004d0 = 0;
 }
 
-// G3X_GetMtxStackLevelPV: the position/vector stack level from GXSTAT.
-extern "C" int func_02055490(int *out) {
+// The position/vector stack level from GXSTAT.
+int G3X::GetMtxStackLevelPV(int *out) {
     if (*(volatile unsigned int *)0x4000600 & 0x4000)
         return -1;
     *out = (*(volatile unsigned int *)0x4000600 & 0x1f00) >> 8;
     return 0;
 }
 
-// G3X_GetMtxStackLevelPJ: the projection stack level from GXSTAT.
-extern "C" int func_02055464(int *out) {
+// The projection stack level from GXSTAT.
+int G3X::GetMtxStackLevelPJ(int *out) {
     if (*(volatile unsigned int *)0x4000600 & 0x4000)
         return -1;
     *out = (*(volatile unsigned int *)0x4000600 & 0x2000) >> 13;
@@ -209,7 +197,7 @@ extern "C" int func_02055464(int *out) {
 }
 
 // G3X_SetHOffset: the 3D layer's horizontal offset (BG0HOFS).
-extern "C" void func_02055454(int v) {
+void G3X::SetHOffset(int v) {
     REG_BG0OFS = v;
 }
 

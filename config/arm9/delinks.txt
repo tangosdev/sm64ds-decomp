@@ -2260,7 +2260,7 @@ src/engine/gx/GX_Init.cpp:
     complete
     .text start:0x02053a90 end:0x02053d9c
 
-src/unnamed/arm9/0205/func_02053d9c.c:
+src/GX_InitGXState.c:
     complete
     .text start:0x02053d9c end:0x02053e1c
 
@@ -2292,7 +2292,7 @@ src/unnamed/arm9/0205/func_020553a4.c:
     complete
     .text start:0x020553a4 end:0x020553c0
 
-src/unnamed/arm9/0205/func_020553c0.c:
+src/GXi_NopClearFifo128_.c:
     complete
     .text start:0x020553c0 end:0x02055454
 
