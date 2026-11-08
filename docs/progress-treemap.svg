@@ -7877,11 +7877,11 @@ matched: yes</title></rect><rect x="276.13" y="642.54" width="4.21" height="12.7
 module: arm9
 addr: 0x0204d9a0
 size: 80 bytes
-matched: yes</title></rect><rect x="280.34" y="642.54" width="4.85" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d9f0
+matched: yes</title></rect><rect x="280.34" y="642.54" width="4.85" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLRandom_VecFx32_XY
 module: arm9
 addr: 0x0204d9f0
 size: 92 bytes
-matched: yes</title></rect><rect x="285.18" y="642.54" width="5.48" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204da4c
+matched: yes</title></rect><rect x="285.18" y="642.54" width="5.48" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLRandom_VecFx32
 module: arm9
 addr: 0x0204da4c
 size: 104 bytes
@@ -22605,7 +22605,7 @@ matched: yes</title></rect><rect x="772.74" y="313.16" width="57.52" height="9.1
 module: ov006
 addr: 0x020e513c
 size: 788 bytes
-matched: yes</title></rect><rect x="830.26" y="313.16" width="100.44" height="9.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Curling2_ResolveStoneCollision
+matched: yes</title></rect><rect x="830.26" y="313.16" width="100.44" height="9.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15dScMgCurling2_c21ResolveStoneCollisionEi
 module: ov006
 addr: 0x020e5450
 size: 1376 bytes
@@ -44321,35 +44321,35 @@ matched: yes</title></rect><rect x="1452.53" y="879.10" width="0.73" height="5.6
 module: ov100
 addr: 0x02141fa8
 size: 8 bytes
-matched: yes</title></rect><rect x="1453.26" y="879.10" width="35.20" height="5.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_02141fb0Ev
+matched: yes</title></rect><rect x="1453.26" y="879.10" width="35.20" height="5.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c12CheckContactEv
 module: ov100
 addr: 0x02141fb0
 size: 384 bytes
-matched: yes</title></rect><rect x="1376.62" y="884.78" width="14.40" height="11.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_02142130Ev
+matched: yes</title></rect><rect x="1376.62" y="884.78" width="14.40" height="11.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c18UpdateWallAndFloorEv
 module: ov100
 addr: 0x02142130
 size: 308 bytes
-matched: yes</title></rect><rect x="1376.62" y="895.90" width="14.40" height="7.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_02142264Ev
+matched: yes</title></rect><rect x="1376.62" y="895.90" width="14.40" height="7.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c17UpdateModelMatrixEv
 module: ov100
 addr: 0x02142264
 size: 216 bytes
-matched: yes</title></rect><rect x="1376.62" y="903.70" width="14.40" height="14.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_0214233cEv
+matched: yes</title></rect><rect x="1376.62" y="903.70" width="14.40" height="14.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c11AdvancePathEv
 module: ov100
 addr: 0x0214233c
 size: 388 bytes
-matched: yes</title></rect><rect x="1376.62" y="917.71" width="14.40" height="22.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_021424c0Ev
+matched: yes</title></rect><rect x="1376.62" y="917.71" width="14.40" height="22.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c12PathBehaviorEv
 module: ov100
 addr: 0x021424c0
 size: 620 bytes
-matched: yes</title></rect><rect x="1376.62" y="940.10" width="14.40" height="17.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_0214272cEv
+matched: yes</title></rect><rect x="1376.62" y="940.10" width="14.40" height="17.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c15RollOffBehaviorEv
 module: ov100
 addr: 0x0214272c
 size: 492 bytes
-matched: yes</title></rect><rect x="1376.62" y="957.87" width="14.40" height="22.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_02142918Ev
+matched: yes</title></rect><rect x="1376.62" y="957.87" width="14.40" height="22.83" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c16FreeRollBehaviorEv
 module: ov100
 addr: 0x02142918
 size: 632 bytes
-matched: yes</title></rect><rect x="1376.62" y="980.70" width="14.40" height="14.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c19func_ov100_02142b90Ev
+matched: yes</title></rect><rect x="1376.62" y="980.70" width="14.40" height="14.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daIbl_c15SpawnerBehaviorEv
 module: ov100
 addr: 0x02142b90
 size: 396 bytes
