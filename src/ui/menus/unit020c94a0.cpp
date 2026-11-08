@@ -61,7 +61,7 @@ extern MessageBank *data_ov007_02104c20; /* the bound bank */
 extern char *data_ov007_02104c24;        /* DAT1 payload */
 
 /* Every section but INF1 and DAT1 is skipped. name is the bank's
- * diagnostic name (func_ov007_020b8548 loads it into r2); retail never reads
+ * diagnostic name (MenuText_Init loads it into r2); retail never reads
  * it. Sections the bank lacks keep their previous pointers. */
 void func_ov007_020c951c(int unused, MessageBank *bank, const char *name) {
     u32 sectionIndex;

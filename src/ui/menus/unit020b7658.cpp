@@ -25,7 +25,7 @@
  * 0x02103434..0x02103458 or calls one that does, and nothing outside the
  * range touches it. The previous function, func_ov007_020b7594, is a
  * helper of func_ov007_020b6d40 and touches none of it; the next one,
- * func_ov007_020b797c, belongs to the module whose bss block starts at
+ * MenuText_ClearMainPlane, belongs to the module whose bss block starts at
  * 0x02103458.
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
