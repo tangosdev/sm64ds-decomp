@@ -50,22 +50,22 @@ struct daRedBombhei_c : dActor_c {
     virtual s32 Behavior();
     virtual s32 Render();
 
-    void func_ov084_0212c1a0();
-    void func_ov084_0212c4a0();
-    void func_ov084_0212c508();
-    void func_ov084_0212c89c();
-    void func_ov084_0212c8b0();
-    void func_ov084_0212c92c();
-    void func_ov084_0212c960(int state);
-    void func_ov084_0212c9a8();
-    void func_ov084_0212c9f0(int msgID, u8 msgFlag);
-    int  func_ov084_0212ca60();
-    int  func_ov084_0212caa8();
-    int  func_ov084_0212cac0();
-    int  func_ov084_0212cae0();
-    int  func_ov084_0212ccb4();
-    int  func_ov084_0212cda0(Vector3 *cur, Vector3 *target);
-    void func_ov084_0212ce50();
+    void UpdateCannonOpening();
+    void EnterCannonOpening();
+    void UpdateTalk();
+    void EnterTalk();
+    void UpdateIdle();
+    void EnterIdle();
+    void ChangeState(int state);
+    void UpdateState();
+    void ShowTalkMessage(int msgID, u8 msgFlag);
+    int IsCharacterSpecific();
+    int IsRedCoinRole();
+    int IsCannonRole();
+    int PanCameraToShutter();
+    int PanCameraBack();
+    int StepCameraPoint(Vector3 *cur, Vector3 *target);
+    void UpdateModelTransform();
 };
 
 #ifndef SM64DS_PLATFORM_PC

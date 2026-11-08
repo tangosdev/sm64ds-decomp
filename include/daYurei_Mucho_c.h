@@ -28,14 +28,14 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     dBgCh_Actr mWithMeshClsn;         /* 0x144 */
     dExtAnmModel_c mAnmModel;         /* 0x300 */
     dExtShadowModel_c mShadowModel;         /* 0x364 */
-    /* DropShadowRadHeight matrix. func_ov065_0211696c writes a translation of
+    /* DropShadowRadHeight matrix. UpdateModelTransform writes a translation of
        (mPosX, mPosY - 0x18000, mPosZ) >> 3. s32[12] rather than Matrix4x3:
        the latter embeds a Vector3 whose destructor would run in D1/D0. */
     s32 mShadowMat[12];               /* 0x38c */
     State *mCurrentState;             /* 0x3bc */
-    /* Bone-derived shot origin. func_ov065_0211696c fills it from the last
+    /* Bone-derived shot origin. UpdateModelTransform fills it from the last
        column of the transformed model matrix (<< 3, y -= 0xa000);
-       func_ov065_02116364 passes it to dActor_c::Spawn as the BULLET (0xe9)
+       UpdateShoot passes it to dActor_c::Spawn as the BULLET (0xe9)
        position. */
     s32 mShotPosX;                    /* 0x3c0 */
     s32 mShotPosY;                    /* 0x3c4 */
@@ -68,18 +68,18 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     int Render();
 
     /* Non-virtual. Unowned .data PMFs resolve these by symbols.txt name. */
-    void func_ov065_0211696c();
-    int func_ov065_0211691c(State *s);
-    int func_ov065_021168a8();
-    int func_ov065_02116744();
-    int func_ov065_0211672c();
-    int func_ov065_021165d8();
-    short func_ov065_02116588();
-    int func_ov065_02116364();
-    int func_ov065_02116328();
-    int func_ov065_021162c0();
-    void func_ov065_02115ff0();
-    void func_ov065_02115f84();
+    void UpdateModelTransform();
+    int ChangeState(State *s);
+    int EnterIdle();
+    int UpdateIdle();
+    int EnterChase();
+    int UpdateChase();
+    short EnterShoot();
+    int UpdateShoot();
+    int EnterBumped();
+    int UpdateBumped();
+    void HandleCollision();
+    void KillWithCoins();
 };
 
 /* Inline destructor is the key function, so this TU emits the vtable. The

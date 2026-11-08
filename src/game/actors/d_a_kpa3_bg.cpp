@@ -13,9 +13,9 @@
  * Behavior runs data_ov060_0211b1ac[mState]: 0 finds Bowser, 1 watches
  * him, 2 drops the platform. The three handlers are declared in the
  * header so the table's pointer-to-member constants are real.
- * func_ov060_021181b4 and func_ov060_021180e0 are defined as members;
+ * StateStart and StateCheck are defined as members;
  * func_ov060_02117db8 is a free function under the member's mangled name.
- * func_ov060_021181b4 returns an int, so its table entry casts the
+ * StateStart returns an int, so its table entry casts the
  * pointer-to-member to the table's void handler type.
  *
  * __sinit at the end of this file emits compiler-numbered statics; they
@@ -27,10 +27,15 @@
  * deleting one renumbers them. These
  * names are there for the count:
  * - InitResources loads the model through the named local bmd.
- * - func_ov060_021180e0 steps its timer through two named locals.
+ * - StateCheck steps its timer through two named locals.
  *
  * leftovers:
- * - The three handlers keep their address names.
+ * - StateStart and StateCheck take N64's names for the same actions
+ *   (falling_bowser_plat_act_start/check), in the State* spelling this
+ *   tree's single-handler state tables use. func_ov060_02117db8 is N64's
+ *   falling_bowser_plat_act_fall and should become StateFall; renaming it
+ *   changes its hand-spelled mangled name, which needs a source-style
+ *   exception entry.
  * - func_ov060_02117db8 parses as C (cplusplus off): the same body as
  *   C++ DIFFs. Re-measured for #821, because this is the last hand-spelled
  *   mangled method in the tree and the language-mode metric counts it.
@@ -204,7 +209,7 @@ s32 daKpa3Bg_c::CleanupResources()
 
 /* mState 0: finds the daKpa actor (id 0x117), remembers its uniqueID and
    moves to mState 1. Retries every frame until Bowser exists. */
-int daKpa3Bg_c::func_ov060_021181b4() {
+int daKpa3Bg_c::StateStart() {
     dActor_c *koopa = dActor_c::FindWithActorID(0x117, 0);
     if (koopa) {
         mKoopaUniqueId = koopa->uniqueID;
@@ -219,8 +224,7 @@ int daKpa3Bg_c::func_ov060_021181b4() {
    d_a_kpa.cpp). On his last hit point, in state 3 or while held or being released
    (mHoldState != 0), mActive latches; from then on mTimer counts each frame and the
    platform drops once it passes mVariant * 20. */
-void daKpa3Bg_c::func_ov060_021180e0()
-{
+void daKpa3Bg_c::StateCheck() {
     daKpa_c *koopa = (daKpa_c *)dActor_c::FindWithID(mKoopaUniqueId);
     if (koopa == 0) {
         MarkForDestruction();
@@ -394,7 +398,7 @@ Kpa3BgCollisionFilePtr data_ov060_0211b084(0x634);
 Kpa3BgCollisionFilePtr data_ov060_0211b08c(0x636);
 Kpa3BgCollisionFilePtr data_ov060_0211b04c(0x638);
 HandlerEntry data_ov060_0211b1ac[3] = {
-    {(Handler)&daKpa3Bg_c::func_ov060_021181b4},
-    {&daKpa3Bg_c::func_ov060_021180e0},
+    {(Handler)&daKpa3Bg_c::StateStart},
+    {&daKpa3Bg_c::StateCheck},
     {&daKpa3Bg_c::func_ov060_02117db8},
 };
