@@ -339,21 +339,21 @@
       "ordinal": 77
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200897cER5dBgCh",
+      "symbol": "_ZN9dCamera_c11PrepareBgChER5dBgCh",
       "address": "0x0200897c",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200897c.cpp",
       "ordinal": 78
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020089d8Ev",
+      "symbol": "_ZN9dCamera_c19ClampPosAboveTargetEv",
       "address": "0x020089d8",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020089d8.c",
       "ordinal": 79
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020089f8Ev",
+      "symbol": "_ZN9dCamera_c15UpdateTargetPosEv",
       "address": "0x020089f8",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/arm9/0200/func_020089f8.c",
@@ -388,28 +388,28 @@
       "ordinal": 84
     },
     {
-      "symbol": "_ZN9dCamera_c13func_02008cb4Ev",
+      "symbol": "_ZN9dCamera_c17KeepPosOutOfWallsEv",
       "address": "0x02008cb4",
       "size": "0x00000484",
       "legacy_source": "src/unnamed/arm9/0200/func_02008cb4.cpp",
       "ordinal": 85
     },
     {
-      "symbol": "_ZN9dCamera_c13func_02009138Ei",
+      "symbol": "_ZN9dCamera_c12ApproachDistEi",
       "address": "0x02009138",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0200/func_02009138.c",
       "ordinal": 86
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020091f8EP7Vector3ii",
+      "symbol": "_ZN9dCamera_c23ApproachLookAtAndAnglesEP7Vector3ii",
       "address": "0x020091f8",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0200/func_020091f8.c",
       "ordinal": 87
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200928cEv",
+      "symbol": "_ZN9dCamera_c12UpdateAnglesEv",
       "address": "0x0200928c",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0200/func_0200928c.c",
@@ -423,21 +423,21 @@
       "ordinal": 89
     },
     {
-      "symbol": "_ZN9dCamera_c13func_02009374Ev",
+      "symbol": "_ZN9dCamera_c22IsTargetNearStarMarkerEv",
       "address": "0x02009374",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0200/func_02009374.c",
       "ordinal": 90
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020093d4Ei",
+      "symbol": "_ZN9dCamera_c16ScaleHeightByFovEi",
       "address": "0x020093d4",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020093d4.c",
       "ordinal": 91
     },
     {
-      "symbol": "_ZN9dCamera_c13func_020093f4Ei",
+      "symbol": "_ZN9dCamera_c14ScaleDistByFovEi",
       "address": "0x020093f4",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020093f4.c",
@@ -724,7 +724,7 @@
       "ordinal": 132
     },
     {
-      "symbol": "_ZN9dCamera_c13func_0200cbe0Ev",
+      "symbol": "_ZN9dCamera_c27RestoreCameraStateAfterTalkEv",
       "address": "0x0200cbe0",
       "size": "0x0000007c",
       "legacy_source": "src/func_0200cbe0.c",
@@ -1243,17 +1243,17 @@
     {
       "from": "sPrevTurnInput$1917",
       "to": "sPrevTurnInput$1927",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). | re-keyed -1 when func_02009374, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     },
     {
       "from": "_ZGVsScriptOps$2619",
       "to": "_ZGVsScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when func_02009374, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     },
     {
       "from": "sScriptOps$2619",
       "to": "sScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when func_02009374, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     }
   ],
   "relocations": [

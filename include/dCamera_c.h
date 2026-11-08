@@ -27,7 +27,7 @@ struct dCamera_c : dView_c {
        words, at 0x80 and 0x8c. */
     Vector3 lookAt;            /* 0x080 */
     Vector3 pos;            /* 0x08c */
-    /* func_020089f8 copies mTargetPlayer's position here every frame and
+    /* UpdateTargetPos copies mTargetPlayer's position here every frame and
        stores lookAt minus it in mLookAtOffset; func_0200bec4 rebuilds lookAt
        as mTargetPos plus mLookAtOffset. */
     Vector3 mTargetPos;    /* 0x098 */
@@ -52,7 +52,7 @@ struct dCamera_c : dView_c {
     Vector3 mPrevPos;    /* 0x0d4 */
     /* The wall func_02009e70's line from above mTargetPos to pos last hit:
        the hit point, and the surface normal CopyNormalTo returns.
-       func_02008cb4 ignores a later hit whose normal faces the same way as
+       KeepPosOutOfWalls ignores a later hit whose normal faces the same way as
        mWallNormal or which lies within 0x80000 of mWallPos. */
     Vector3 mWallPos;    /* 0x0e0 */
     Vector3 mWallNormal; /* 0x0ec */
@@ -158,7 +158,7 @@ struct dCamera_c : dView_c {
      * daMugenBGM_c::Behavior and daObjPowerUpItem_c::BeginOpening read it plain,
      * WingFeather::Behavior and func_ov102_021492d4 add 0x4000 to turn it
      * into a billboard facing, and daTree_c::Render feeds it straight to
-     * Matrix4x3_FromRotationY. Behavior and func_0200cbe0 write it from
+     * Matrix4x3_FromRotationY. Behavior and RestoreCameraStateAfterTalk write it from
      * Vec3_HorzAngle(lookAt, pos), and mAngleX beside it from
      * Vec3_VertAngle. */
     s16 mAngleY;            /* 0x17c */
@@ -171,7 +171,7 @@ struct dCamera_c : dView_c {
     s16 mEasedAngleY;     /* 0x180 */
     s16 mBaseAngleY;      /* 0x182 */
     s16 mBaseAngleOffset; /* 0x184 */
-    /* The yaw func_020091f8 and func_02009e70 turn mAngleY toward while
+    /* The yaw ApproachLookAtAndAngles and func_02009e70 turn mAngleY toward while
        mTurningToTarget is set. */
     s16 mTargetAngleY; /* 0x186 */
     /* Behavior hands mAngleY + mInputYawLag to func_0203dafc, which stores it
@@ -221,7 +221,7 @@ struct dCamera_c : dView_c {
     /* Set when a new mTargetAngleY is chosen (func_02009d30 on entry,
        func_02009e70 on a view-object yaw or a wall). While set, the camera
        turns toward it; it clears on arrival. ChangeState, turn input and
-       func_02008cb4's push-in also clear it. */
+       KeepPosOutOfWalls's push-in also clear it. */
     u8 mTurningToTarget; /* 0x1a6 */
     /* The path node UpdateParallelTrackingCamera has passed: cleared while
        mFlags bit 4 is set, then stepped as lookAt nears the next or previous
@@ -269,18 +269,18 @@ struct dCamera_c : dView_c {
     void func_0200d148(unsigned char);
     void SetGrabBowserTailState(unsigned char);
     /* Follow, placement and state helpers. The follow modes are named for the
-       Super Mario 64 camera functions they port; the rest keep their address
-       until a name is recovered. */
-    void func_0200897c(dBgCh &);
-    void func_020089d8();
-    void func_020089f8();
-    int func_02008cb4();
-    int func_02009138(int);
-    int func_020091f8(Vector3 *, int, int);
-    void func_0200928c();
-    int func_02009374();
-    unsigned int func_020093d4(int);
-    unsigned int func_020093f4(int);
+       Super Mario 64 camera functions they port and the placement helpers for
+       what they do; the rest keep their address until a name is recovered. */
+    void PrepareBgCh(dBgCh &);
+    void ClampPosAboveTarget();
+    void UpdateTargetPos();
+    int KeepPosOutOfWalls();
+    int ApproachDist(int);
+    int ApproachLookAtAndAngles(Vector3 *, int, int);
+    void UpdateAngles();
+    int IsTargetNearStarMarker();
+    unsigned int ScaleHeightByFov(int);
+    unsigned int ScaleDistByFov(int);
     int func_020098e0();
     int func_02009a8c();
     int func_02009d30();
@@ -300,7 +300,7 @@ struct dCamera_c : dView_c {
     int UpdateState();
     int EnterState();
     void SetMode(int);
-    void func_0200cbe0();
+    void RestoreCameraStateAfterTalk();
     void func_0200cce4();
     void func_0200cf40();
     void func_0200ca14(unsigned char, int);
