@@ -7955,11 +7955,11 @@
     },
     "arm9:0x0204d9f0": {
       "author": "tangosdev",
-      "name": "func_0204d9f0"
+      "name": "SPLRandom_VecFx32_XY"
     },
     "arm9:0x0204da4c": {
       "author": "tangosdev",
-      "name": "func_0204da4c"
+      "name": "SPLRandom_VecFx32"
     },
     "arm9:0x0204dab4": {
       "author": "tangosdev",
