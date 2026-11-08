@@ -2,24 +2,21 @@
 // Timed floor switches and the switch which reveals a star.
 // Select the shared flat Matrix4x3 before the actor headers, as dBgActor_c.h requires.
 //
-// The 13 func_ov002_020b9xxx/020baxxx helpers are daObjSwitch_c members: each
-// takes the object as arg0 and recasts it, and the .data records at
-// 0x0210987c.. store {init, exec} pointer-to-member pairs over them
-// (data_ov002_0210e00c). Reverse source order preserves the retail text order.
+// The state handlers and their helpers are daObjSwitch_c members, and the
+// .data records at 0x0210987c.. store {init, exec} pointer-to-member pairs
+// over them (data_ov002_0210e00c). Reverse source order preserves the retail
+// text order.
 //
 // The unit spans ov002 .text 0x020b9e64..0x020bab0c, 24 functions. The run
-// ends with the touch helper func_ov002_020baa2c, the collision callback
-// func_ov002_020baa98 that InitResources installs, and the two registry
-// factories (STAR_SWITCH, then HANSWITCH). They are the highest-address
-// .text, so they sit at the top of the file.
+// ends with OnStoodOn, the collision callback StoodOnCallback that
+// InitResources installs, and the two registry factories (STAR_SWITCH, then
+// HANSWITCH). They are the highest-address .text, so they sit at the top of
+// the file.
 //
 // leftovers:
 //   - ChangeMusicVolume / IsClsnInRange / KcMbg::SetFile stay computed-spelling
 //     externs: the member form changes codegen under 2004/b56 (Fix12<int> by
 //     value, wall 6az -- noted at use).
-//   - The collision callback func_ov002_020baa98 and its touch helper
-//     func_ov002_020baa2c keep their address names and stay free extern "C"
-//     functions.
 //   - The daStar_c fields at +0x438/+0x440 and unk_49d are unnamed upstream;
 //     the int*/unk_ puns stay until daStar_c.h names them.
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -75,8 +72,6 @@ int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 // committed experiment.
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
-// The setter stores the collider's stood-on callback at +0x1c.
-void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other);
 int func_02012310(int handle, int sound, int arg);
 unsigned char IsAreaShowing(int area);
 unsigned char DecIfAbove0_Byte(unsigned char *value);
@@ -108,20 +103,19 @@ extern "C" daObjSwitch_c *daObjSwitch_c_classInit_STAR_SWITCH(void)
 }
 
 /* The collision callback InitResources installs in mMeshCollider's slot. The
- * slot passes three arguments; the touch helper wants the last two.
+ * slot passes three arguments; OnStoodOn wants the last two.
  * long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-extern "C" void func_ov002_020baa98(dBgW *collider, dActor_c *owner, dActor_c *other) {
-    func_ov002_020baa2c(static_cast<daObjSwitch_c *>(owner), other);
+void daObjSwitch_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daObjSwitch_c *>(owner)->OnStoodOn(other);
 }
 #pragma pop
 
 /* The player (actor 0xbf) stepped on the switch: raise mPlayerNearby, which
  * the press states read. Underwater, only a metal or mega player is heavy
  * enough, and the player must be within 0x98 units of the switch. */
-extern "C" void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other)
-{
+void daObjSwitch_c::OnStoodOn(dActor_c *other) {
     daPly_c *player = static_cast<daPly_c *>(other);
     unsigned int isPlayer = other->actorID == 0xbf;
     if (isPlayer == 0) return;
@@ -130,9 +124,9 @@ extern "C" void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other)
             if (player->mIsMega == 0) return;
         }
     }
-    if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&self->mPosX),
+    if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
                   reinterpret_cast<const Vector3 *>(&other->mPosX)) < 0x98000)
-        self->mPlayerNearby = 1;
+        mPlayerNearby = 1;
 }
 
 int daObjSwitch_c::InitResources()
@@ -174,7 +168,7 @@ int daObjSwitch_c::InitResources()
     f = dExtSimpleModel_c::LoadFile(*data_ov002_021098e8[idx].model);
     mModel.SetFile((BMD_File *)f, 1, -1);
     UpdateModelPosAndRotY();
-    func_ov002_020b9f80();
+    UpdateClsnMatrix();
 
     idx = mResourceIdx;
     f = dBgW_Kc::LoadFile(*data_ov002_021098e8[idx].collision);
@@ -182,7 +176,7 @@ int daObjSwitch_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)(f), *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov002_021098e8[idx].clps));
 
-    mMeshCollider.SetStoodOnCallback(&func_ov002_020baa98);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     {
         u16 h = mTimeLimit;
@@ -206,8 +200,8 @@ int daObjSwitch_c::Behavior()
     if (IsAreaShowing(mHomeAreaId) == 0) {
         mAreaId = mHomeAreaId;
         mTimer = 1;
-        func_ov002_020ba01c(2, 1, 0x333, 0x1000);
-        func_ov002_020ba4d8(0);
+        ScaleOverTime(2, 1, 0x333, 0x1000);
+        SetState(0);
         a = dActor_c::FindWithID(mTargetActorID);
         if (a != 0) {
             static_cast<daStar_c *>(a)->ResetAppearance();
@@ -217,7 +211,7 @@ int daObjSwitch_c::Behavior()
     {
         int isType = (int)(actorID == 0xc);
         if (isType != 0) {
-            if (func_ov002_020b9f00() != 0) {
+            if (FindTargetStar() != 0) {
                 a = dActor_c::FindWithID(mTargetActorID);
                 if (a != 0) {
                     mTargetActor = a;
@@ -229,10 +223,10 @@ int daObjSwitch_c::Behavior()
     if ((int)(actorID == 0xc) != 0) {
         id344 = mTargetActorID;
         if (id344 == 0) {
-            func_ov002_020ba01c(2, 3, 0x333, 0x1000);
+            ScaleOverTime(2, 3, 0x333, 0x1000);
             UpdateModelPosAndRotY();
             if (IsClsnInRange(0, 0) != 0) {
-                func_ov002_020b9f80();
+                UpdateClsnMatrix();
             }
             return 1;
         }
@@ -246,10 +240,10 @@ int daObjSwitch_c::Behavior()
     if ((gNextActorUpdateMask & 0x4000000) == 0) {
         mTimer++;
     }
-    func_ov002_020ba520();
+    CallStateBehavior();
     UpdateModelPosAndRotY();
     if (IsClsnInRange(0, 0) != 0) {
-        func_ov002_020b9f80();
+        UpdateClsnMatrix();
     }
 
     if (mSwitchType == 2) {
@@ -293,27 +287,23 @@ int daObjSwitch_c::CleanupResources()
     return 1;
 }
 
-void daObjSwitch_c::func_ov002_020ba520()
-{
+void daObjSwitch_c::CallStateBehavior() {
     int state = mState;
     (this->*data_ov002_0210e00c[state].exec)();
 }
 
-void daObjSwitch_c::func_ov002_020ba4d8(int nextState)
-{
+void daObjSwitch_c::SetState(int nextState) {
     mState = nextState;
     int state = mState;
     (this->*data_ov002_0210e00c[state].init)();
 }
 
-void daObjSwitch_c::func_ov002_020ba4c0()
-{
+void daObjSwitch_c::ResetTimers() {
     mTimer = 0;
     mPressTimer = 5;
 }
 
-void daObjSwitch_c::func_ov002_020ba3fc()
-{
+void daObjSwitch_c::StateIdleInit() {
     int ok = 1;
     dActor_c *p;
     mTimer = 0;
@@ -338,19 +328,17 @@ void daObjSwitch_c::func_ov002_020ba3fc()
     if (ok != 0) mMusicVolume = 0x7f;
 }
 
-void daObjSwitch_c::func_ov002_020ba3a8()
-{
+void daObjSwitch_c::StateIdleMain() {
     if (mPlayerNearby) {
         if (DecIfAbove0_Byte(&mPressTimer) != 0) return;
-        func_ov002_020ba4d8(1);
+        SetState(1);
         return;
     }
     mPressTimer = 5;
 }
 
-void daObjSwitch_c::func_ov002_020ba2d0()
-{
-    func_ov002_020ba01c(2, 3, 0x1000, 0x333);
+void daObjSwitch_c::StatePressedMain() {
+    ScaleOverTime(2, 3, 0x1000, 0x333);
     if (mTimer != 3) return;
     Sound::PlayBank3(0x3e, *reinterpret_cast<const Vector3 *>(&mCamSpacePosX));
     if ((int)(actorID == 0xc) != 0) {
@@ -365,24 +353,22 @@ void daObjSwitch_c::func_ov002_020ba2d0()
         }
         Event::SetBit(mEventBit);
     }
-    func_ov002_020ba4d8(2);
+    SetState(2);
 }
 
-void daObjSwitch_c::func_ov002_020ba2ac()
-{
+void daObjSwitch_c::StateTickingInit() {
     mTimer = 0;
     mPressTimer = 5;
     mMusicFadeDone = 0;
     mMusicVolume = 64;
 }
 
-void daObjSwitch_c::func_ov002_020ba1ac()
-{
+void daObjSwitch_c::StateTickingMain() {
     int diff;
     if (mSwitchType == 0) return;
     if (mSwitchType == 1) {
         if (mPlayerNearby == 0) {
-            func_ov002_020ba4d8(3);
+            SetState(3);
             return;
         }
     }
@@ -397,17 +383,16 @@ void daObjSwitch_c::func_ov002_020ba1ac()
         }
     }
     if (mTimer > mTimeLimit) {
-        func_ov002_020ba4d8(4);
+        SetState(4);
         return;
     }
     if (mTargetActor == 0) return;
     if (static_cast<daStar_c *>(mTargetActor)->mState != 5) return;
-    func_ov002_020ba4d8(4);
+    SetState(4);
 }
 
-void daObjSwitch_c::func_ov002_020ba0f8()
-{
-    func_ov002_020ba01c(2, 3, 0x333, 0x1000);
+void daObjSwitch_c::StateUnpressedMain() {
+    ScaleOverTime(2, 3, 0x333, 0x1000);
     if (mTimer != 3) return;
     Sound::PlayBank3(0x3e, *reinterpret_cast<const Vector3 *>(&mCamSpacePosX));
     {
@@ -422,20 +407,18 @@ void daObjSwitch_c::func_ov002_020ba0f8()
             Event::ClearBit(mEventBit);
         }
     }
-    func_ov002_020ba4d8(0);
+    SetState(0);
 }
 
-void daObjSwitch_c::func_ov002_020ba0bc()
-{
+void daObjSwitch_c::StateExpiredMain() {
     unsigned short v = actorID;
     int b = (v == 0xc);
     if (!b) Event::ClearBit(mEventBit);
-    func_ov002_020ba4d8(3);
+    SetState(3);
 }
 
-void daObjSwitch_c::func_ov002_020ba01c(int mask, Fix12i b, Fix12i base, Fix12i target)
-{
-    Fix12i d = cstd::fdiv((Fix12i)mTimer, b);
+void daObjSwitch_c::ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target) {
+    Fix12i d = cstd::fdiv((Fix12i)mTimer, frames);
     Fix12i diff = target - base;
     Fix12i e = FX_MUL(diff, d);
     Fix12i v = base + cstd::fdiv(e, 0x1000);
@@ -449,11 +432,10 @@ void daObjSwitch_c::func_ov002_020ba01c(int mask, Fix12i b, Fix12i base, Fix12i 
 void daObjSwitch_c::OnGroundPounded(dActor_c &other)
 {
     if (mState != 0) return;
-    func_ov002_020ba4d8(1);
+    SetState(1);
 }
 
-void daObjSwitch_c::func_ov002_020b9f80()
-{
+void daObjSwitch_c::UpdateClsnMatrix() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPosX;
     mClsnMat.m[10] = mPosY - mDisplacementY;
@@ -461,8 +443,7 @@ void daObjSwitch_c::func_ov002_020b9f80()
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-int daObjSwitch_c::func_ov002_020b9f00()
-{
+int daObjSwitch_c::FindTargetStar() {
     dActor_c *star;
     if (mTargetActorID) return 0;
     star = dActor_c::FindWithActorID(0xb2, 0);
@@ -488,9 +469,9 @@ SwitchModelFilePtr data_ov002_0210dfcc(ASSET_OBJ_STAR_SWITCH_BMD);
 SwitchClsnFileHandle  data_ov002_0210dfbc(ASSET_OBJ_STAR_SWITCH_KCL);
 
 daObjSwitch_c::StateEntry data_ov002_0210e00c[5] = {
-    {&daObjSwitch_c::func_ov002_020ba3fc, &daObjSwitch_c::func_ov002_020ba3a8},
-    {&daObjSwitch_c::func_ov002_020ba4c0, &daObjSwitch_c::func_ov002_020ba2d0},
-    {&daObjSwitch_c::func_ov002_020ba2ac, &daObjSwitch_c::func_ov002_020ba1ac},
-    {&daObjSwitch_c::func_ov002_020ba4c0, &daObjSwitch_c::func_ov002_020ba0f8},
-    {&daObjSwitch_c::func_ov002_020ba4c0, &daObjSwitch_c::func_ov002_020ba0bc},
+    {&daObjSwitch_c::StateIdleInit, &daObjSwitch_c::StateIdleMain},
+    {&daObjSwitch_c::ResetTimers, &daObjSwitch_c::StatePressedMain},
+    {&daObjSwitch_c::StateTickingInit, &daObjSwitch_c::StateTickingMain},
+    {&daObjSwitch_c::ResetTimers, &daObjSwitch_c::StateUnpressedMain},
+    {&daObjSwitch_c::ResetTimers, &daObjSwitch_c::StateExpiredMain},
 };
