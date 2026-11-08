@@ -5,7 +5,7 @@
  * mState points at one of five { enter, main } State records in this
  * overlay's .bss, filled by __sinit_d_a_bakubaku.cpp from the PMF
  * constants at 0x0211377c. Behavior runs state->main; transitions go
- * through func_ov032_02111ff4, which stores the record and runs enter.
+ * through SetState, which stores the record and runs enter.
  *
  *   02113a8c wander   enter 02111f9c  main 02111e24
  *   02113a9c pause    enter 02111dd8  main 02111d7c
@@ -180,7 +180,7 @@ s32 daBakubaku_c::InitResources()
     mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
 
-    func_ov032_02111ff4((State *)&data_ov032_02113a8c);
+    SetState((State *)&data_ov032_02113a8c);
     return 1;
 }
 
@@ -201,7 +201,7 @@ s32 daBakubaku_c::Behavior()
     mAngleZ = mPrevAngleZ;
     UpdatePos(&mBodyClsn);
     UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov032_02112044();
+    UpdateModelMatrix();
 
     if (mState != &data_ov032_02113aac) {
         mAnmModel.speed = 0x1000;
@@ -210,7 +210,7 @@ s32 daBakubaku_c::Behavior()
     }
 
     mAnmModel.Advance();
-    func_ov032_021113fc();
+    HandleCylinderHit();
     mBodyClsn.Clear();
     mHeadClsn.Clear();
 
@@ -244,8 +244,7 @@ s32 daBakubaku_c::CleanupResources()
 }
 
 /* dExtSimpleModel_c matrix, shadow matrix, drop shadow. */
-void daBakubaku_c::func_ov032_02112044()
-{
+void daBakubaku_c::UpdateModelMatrix() {
     Vector3 v;
     Vec3_Asr(&v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -261,8 +260,7 @@ void daBakubaku_c::func_ov032_02112044()
 
 /* Install mState and run its enter hook. The StateFn * read-back of
    mState is the shape that keeps the store-then-load the ROM emits. */
-int daBakubaku_c::func_ov032_02111ff4(void *pv)
-{
+int daBakubaku_c::SetState(void *pv) {
     State *p = (State *)pv;
     mState = p;
     StateFn *q = (StateFn *)mState;
@@ -271,8 +269,7 @@ int daBakubaku_c::func_ov032_02111ff4(void *pv)
 }
 
 /* Wander enter: random yaw and a state timer. */
-int daBakubaku_c::func_ov032_02111f9c()
-{
+int daBakubaku_c::EnterWander() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     mAngTarget = ((r >> 8) & 0xf) << 0xc;
     r = RandomIntInternal(&data_0209e650.value);
@@ -282,14 +279,13 @@ int daBakubaku_c::func_ov032_02111f9c()
 }
 
 /* Wander: steer toward the spawn point, or start a chase. */
-int daBakubaku_c::func_ov032_02111e24()
-{
+int daBakubaku_c::ExecuteWander() {
     Vector3 in;
     Vector3 out;
     short ang;
 
     ApproachLinear(mHorzSpeed, 0x5000, 0x333);
-    if (func_ov032_02111350() == 1) {
+    if (ShouldReturnHome() == 1) {
         mStateTimer = 0x28;
         mChaseCooldown = 0x28;
         ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
@@ -309,24 +305,23 @@ int daBakubaku_c::func_ov032_02111e24()
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
     mVertSpeed = out.y;
-    if (func_ov032_02111254() == 1) {
-        func_ov032_02111ff4(&data_ov032_02113aac);
+    if (FindChaseTarget() == 1) {
+        SetState(&data_ov032_02113aac);
         return 1;
     }
     if (*(unsigned short *)&mStateTimer == 0) {
         unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value);
         if (((r >> 8) & 3) == 0) {
-            func_ov032_02111ff4(&data_ov032_02113a9c);
+            SetState(&data_ov032_02113a9c);
         } else {
-            func_ov032_02111ff4((State *)&data_ov032_02113a8c);
+            SetState((State *)&data_ov032_02113a8c);
         }
     }
     return 1;
 }
 
 /* Pause enter: short timer, kill the velocity. */
-int daBakubaku_c::func_ov032_02111dd8()
-{
+int daBakubaku_c::EnterPause() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
     mStateTimer = ((r >> 8) & 0x1f) + 0x14;
     mAnmModel.speed = 0x1000;
@@ -337,20 +332,18 @@ int daBakubaku_c::func_ov032_02111dd8()
 }
 
 /* Pause: give up into a chase, else wander again. */
-int daBakubaku_c::func_ov032_02111d7c()
-{
-    if (func_ov032_02111254() == 1) {
-        func_ov032_02111ff4(&data_ov032_02113aac);
+int daBakubaku_c::ExecutePause() {
+    if (FindChaseTarget() == 1) {
+        SetState(&data_ov032_02113aac);
         return 1;
     }
     if (*(unsigned short *)&mStateTimer == 0)
-        func_ov032_02111ff4((State *)&data_ov032_02113a8c);
+        SetState((State *)&data_ov032_02113a8c);
     return 1;
 }
 
 /* Chase enter. */
-int daBakubaku_c::func_ov032_02111d58()
-{
+int daBakubaku_c::EnterChase() {
     mStateTimer = 0x12c;
     mAnmModel.speed = 0x2000;
     mHorzSpeed = 0xa000;
@@ -358,14 +351,12 @@ int daBakubaku_c::func_ov032_02111d58()
 }
 
 /* Chase: close on the stored player position, then surface or dive. */
-int daBakubaku_c::func_ov032_02111b9c()
-{
+int daBakubaku_c::ExecuteChase() {
     /* Out of time, chase aborted, or no target: back to wandering. */
-    if (*(unsigned short *)&mStateTimer == 0 || func_ov032_02111350() == 1 ||
-        func_ov032_02111254() == 0) {
+    if (*(unsigned short *)&mStateTimer == 0 || ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
         mChaseCooldown = 0x64;
-        func_ov032_02111ff4((State *)&data_ov032_02113a8c);
+        SetState((State *)&data_ov032_02113a8c);
         return 1;
     }
 
@@ -385,9 +376,9 @@ int daBakubaku_c::func_ov032_02111b9c()
             unk_429 = 0;
             mAnmModel.SetAnim((BCA_File *)data_ov032_02113a48.filePtr, 0x40000000, 0x1000, 0);
             if (mAngTarget > 0)
-                func_ov032_02111ff4(&data_ov032_02113a7c);
+                SetState(&data_ov032_02113a7c);
             else
-                func_ov032_02111ff4(&data_ov032_02113abc);
+                SetState(&data_ov032_02113abc);
             return 1;
         }
     }
@@ -395,8 +386,7 @@ int daBakubaku_c::func_ov032_02111b9c()
 }
 
 /* Dive enter: pitch down, and let the cylinders count as char-movement. */
-int daBakubaku_c::func_ov032_02111b50()
-{
+int daBakubaku_c::EnterDive() {
     mAngTarget = -0x4000;
     mBodyClsn.flags |= kCcCharMove;
     mHeadClsn.flags |= kCcCharMove;
@@ -407,8 +397,7 @@ int daBakubaku_c::func_ov032_02111b50()
 }
 
 /* Dive: splash when the mouth crosses the surface, then wander. */
-int daBakubaku_c::func_ov032_02111830()
-{
+int daBakubaku_c::ExecuteDive() {
     s16 speed;
     speed = 0x3000;
     if (data_0209f32c - 0x64000 > mPosY)
@@ -450,7 +439,7 @@ int daBakubaku_c::func_ov032_02111830()
         }
     }
 
-    if (func_ov032_02111350() == 1 || func_ov032_02111254() == 0) {
+    if (ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         speed = 0;
         mHorzSpeed = 0;
         mSpeedX = 0;
@@ -485,7 +474,7 @@ int daBakubaku_c::func_ov032_02111830()
                 mBodyClsn.flags &= ~kCcCharMove;
                 mHeadClsn.flags &= ~kCcCharMove;
                 mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
-                func_ov032_02111ff4((State *)&data_ov032_02113a8c);
+                SetState((State *)&data_ov032_02113a8c);
                 return 1;
             }
         }
@@ -501,8 +490,7 @@ int daBakubaku_c::func_ov032_02111830()
 }
 
 /* Surface enter. */
-int daBakubaku_c::func_ov032_02111814()
-{
+int daBakubaku_c::EnterSurface() {
     mLungePhase = 0;
     mMouthOpen = 0;
     mHorzSpeed = 0xa000;
@@ -510,13 +498,12 @@ int daBakubaku_c::func_ov032_02111814()
 }
 
 /* Surface toward the player, then wander. */
-int daBakubaku_c::func_ov032_02111620()
-{
+int daBakubaku_c::ExecuteSurface() {
     daPly_c *r5 = ClosestPlayer();
     if (r5 == 0)
         return 1;
 
-    if (func_ov032_02111350() == 1 || func_ov032_02111254() == 0) {
+    if (ShouldReturnHome() == 1 || FindChaseTarget() == 0) {
         mHorzSpeed = 0;
         mSpeedX = 0;
         mVertSpeed = 0;
@@ -549,7 +536,7 @@ int daBakubaku_c::func_ov032_02111620()
             mAngTarget = mAngleY;
             mFlags = 3;
             mAnmModel.SetAnim((BCA_File *)data_ov032_02113a50.filePtr, 0, 0x1000, 0);
-            func_ov032_02111ff4((State *)&data_ov032_02113a8c);
+            SetState((State *)&data_ov032_02113a8c);
         }
     } else {
         Vector3 vec;
@@ -573,8 +560,7 @@ int daBakubaku_c::func_ov032_02111620()
 }
 
 /* Body cylinder: mega-kill or a bite. Head cylinder: mega-kill or Hurt. */
-void daBakubaku_c::func_ov032_021113fc()
-{
+void daBakubaku_c::HandleCylinderHit() {
     Vector3 v1;
     v1.x = data_ov032_021137cc.x;
     v1.y = data_ov032_021137cc.y;
@@ -637,8 +623,7 @@ void daBakubaku_c::func_ov032_021113fc()
 
 /* Abort the chase: no player, a wall or floor, or too far from home.
    Above the water aborts too, except during the dive. */
-int daBakubaku_c::func_ov032_02111350()
-{
+int daBakubaku_c::ShouldReturnHome() {
     if (ClosestPlayer() == 0) return 1;
     if (mWithMeshClsn.IsOnWall() != 0
         || mWithMeshClsn.IsOnGround() != 0)
@@ -652,8 +637,7 @@ int daBakubaku_c::func_ov032_02111350()
 }
 
 /* Mario is a chase target. Stores his position. */
-int daBakubaku_c::func_ov032_02111254()
-{
+int daBakubaku_c::FindChaseTarget() {
     daPly_c *pl = ClosestPlayer();
     int *s;
     void *t;
@@ -690,20 +674,12 @@ int daBakubaku_c::func_ov032_02111254()
 BakubakuModelFilePtr gBakubakuModelFile(ASSET_BAKUBAKU_BMD);
 BakubakuAnimationFileHandle data_ov032_02113a50(ASSET_BAKUBAKU_SWIM_BCA);
 BakubakuAnimationFileHandle data_ov032_02113a48(ASSET_BAKUBAKU_ATTACK_BCA);
-daBakubaku_c::State data_ov032_02113a8c = {
-    &daBakubaku_c::func_ov032_02111f9c, &daBakubaku_c::func_ov032_02111e24
-};
-daBakubaku_c::State data_ov032_02113a9c = {
-    &daBakubaku_c::func_ov032_02111dd8, &daBakubaku_c::func_ov032_02111d7c
-};
-daBakubaku_c::State data_ov032_02113aac = {
-    &daBakubaku_c::func_ov032_02111d58, &daBakubaku_c::func_ov032_02111b9c
-};
-daBakubaku_c::State data_ov032_02113abc = {
-    &daBakubaku_c::func_ov032_02111b50, &daBakubaku_c::func_ov032_02111830
-};
-daBakubaku_c::State data_ov032_02113a7c = {
-    &daBakubaku_c::func_ov032_02111814, &daBakubaku_c::func_ov032_02111620
-};
+daBakubaku_c::State data_ov032_02113a8c = {&daBakubaku_c::EnterWander,
+                                           &daBakubaku_c::ExecuteWander};
+daBakubaku_c::State data_ov032_02113a9c = {&daBakubaku_c::EnterPause, &daBakubaku_c::ExecutePause};
+daBakubaku_c::State data_ov032_02113aac = {&daBakubaku_c::EnterChase, &daBakubaku_c::ExecuteChase};
+daBakubaku_c::State data_ov032_02113abc = {&daBakubaku_c::EnterDive, &daBakubaku_c::ExecuteDive};
+daBakubaku_c::State data_ov032_02113a7c = {&daBakubaku_c::EnterSurface,
+                                           &daBakubaku_c::ExecuteSurface};
 VecFx32 data_ov032_021137cc = {0, -0x28000, 0x58000};  /* body cylinder */
 VecFx32 data_ov032_021137d8 = {0, -0x30000, -0x20000}; /* head cylinder */
