@@ -45,7 +45,7 @@
   "bss": [],
   "notes": [
     "Text only: the flag table stays ROM-owned and is reached by extern, as the old three-function source did.",
-    "The old source declared the table `int data_ov007_02104bec[]`; the unit gives it its ten-element bound."
+    "The old source declared the table `int data_ov007_02104bec[]`; the unit gives it its ten-element bound and the coined name sInputLocks."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

@@ -1,22 +1,25 @@
 //cpp
 /* unit020c1d78 -- ov007 unit 0x020c1d78..0x020c1db0: 3 functions, .text only.
  *
- * A table of ten int flags. ov007 is the title and file-select menu program
+ * The menu's input locks. ov007 is the title and file-select menu program
  * that dScDSMT_c hosts; outside dScDSMT_c it has no ROM RTTI or vtable, so
  * no class name is claimed and the file keeps the unit<addr> name.
  *
- * What the code does. func_ov007_020c1d78 clears flag i, func_ov007_020c1d8c
- * sets it to 1 and func_ov007_020c1da0 reads it. The table is the 0x28-byte
- * bss block at 0x02104bec. Menu code across the overlay calls the three
- * functions, and three sites load func_ov007_020c1d78 or 020c1d8c as a
- * function pointer.
+ * What the code does. sInputLocks is a table of ten int flags:
+ * func_ov007_020c1d78 clears lock `index`, func_ov007_020c1d8c sets it to 1
+ * and func_ov007_020c1da0 reads it. Every caller passes index 0. The message
+ * window sets lock 0 while it opens and clears it when it closes, menu
+ * states set it on their first tick and clear it once their transition ends,
+ * and the cursor's key handling, the picker's touch handling and the item
+ * views' touch selection all ignore input while it is set. Three sites load
+ * func_ov007_020c1d78 or 020c1d8c as a function pointer.
  *
- * Edges: the bss block is referenced by these three functions and nothing
- * else in the overlay. It sits in link order between the bss words
- * unit020c1404's functions use (0x02104bdc..0x02104be8) and the one
- * unit020c3ce4's use (0x02104c14). The neighbours
- * func_ov007_020c19cc and func_ov007_020c1db0 (the touch-record update)
- * reference none of it.
+ * Edges: the table (the 0x28-byte bss block at 0x02104bec) is referenced by
+ * these three functions and nothing else in the overlay. It sits in link
+ * order between the bss words unit020c1404's functions use
+ * (0x02104bdc..0x02104be8) and the one unit020c3ce4's use (0x02104c14). The
+ * neighbours func_ov007_020c19cc and func_ov007_020c1db0 (the touch-record
+ * update) reference none of it.
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
  * the reverse of source order, so the highest-address function is written
@@ -28,18 +31,18 @@
 
 extern "C" {
 
-extern int data_ov007_02104bec[10];
+extern int sInputLocks[10];
 
-int func_ov007_020c1da0(int i) {
-    return data_ov007_02104bec[i];
+int func_ov007_020c1da0(int index) {
+    return sInputLocks[index];
 }
 
-void func_ov007_020c1d8c(int i) {
-    data_ov007_02104bec[i] = 1;
+void func_ov007_020c1d8c(int index) {
+    sInputLocks[index] = 1;
 }
 
-void func_ov007_020c1d78(int i) {
-    data_ov007_02104bec[i] = 0;
+void func_ov007_020c1d78(int index) {
+    sInputLocks[index] = 0;
 }
 
 } // extern "C"

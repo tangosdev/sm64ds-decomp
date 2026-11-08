@@ -1257,7 +1257,7 @@ data_ov007_02104bdc kind:bss addr:0x02104bdc
 data_ov007_02104be0 kind:bss addr:0x02104be0
 data_ov007_02104be4 kind:bss addr:0x02104be4
 data_ov007_02104be8 kind:bss addr:0x02104be8
-data_ov007_02104bec kind:bss addr:0x02104bec
+sInputLocks kind:bss addr:0x02104bec
 data_ov007_02104c14 kind:bss addr:0x02104c14
 data_ov007_02104c18 kind:bss addr:0x02104c18
 data_ov007_02104c1c kind:bss addr:0x02104c1c
