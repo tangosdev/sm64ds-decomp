@@ -534,8 +534,7 @@ extern "C" void func_020319fc(int n) {
             dst[wordIdx] = (data_0209287c[rem] & data_0209fd5c[i + j * 0x10]) | dst[wordIdx];
             if (rem != 0)
                 (dst + wordIdx)[8] =
-                    data_0209283c[rem] &
-                    *(u32 *)((char *)data_0209fd5c + ((i + j * 0x10) << 2));
+                    data_0209283c[rem] & *(u32 *)((char *)data_0209fd5c + ((i + j * 0x10) << 2));
             col = (col + data_0209fd20[j]) & 0xff;
         }
         dst++;
