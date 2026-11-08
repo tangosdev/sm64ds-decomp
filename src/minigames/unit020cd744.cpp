@@ -697,8 +697,6 @@ struct V2 {
     int x, y;
 };
 
-#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
-
 extern "C" void TrmpItem_ProjectOnLine(char *self, void *other, struct V2 *a, struct V2 *b);
 extern "C" void Vec2_Sub(struct V2 *o, struct V2 *a, struct V2 *b);
 extern "C" int func_0203d524(struct V2 *a, struct V2 *b);
@@ -722,11 +720,11 @@ extern "C" int TrmpItem_HitTest2D(char *item, void *jumper, int) {
     int result;
 
     {
-        int *appearState = (int *)AT(pmf_TrmpItem_StateAppear, 0);
+        int *appearState = pmf_TrmpItem_StateAppear;
         int *growState;
         if ((stateWord == appearState[0] &&
              (TRMPITEM(item)->mState[1] == appearState[1] || stateWord == 0)) ||
-            (growState = (int *)AT(pmf_TrmpItem_GrowScale_2, 0),
+            (growState = pmf_TrmpItem_GrowScale_2,
              stateWord == growState[0] &&
                  (TRMPITEM(item)->mState[1] == growState[1] || stateWord == 0)))
             return 0;
@@ -736,7 +734,7 @@ extern "C" int TrmpItem_HitTest2D(char *item, void *jumper, int) {
     TrmpItem_ProjectOnLine(item, jumper, &currentProjection, &previousProjection);
 
     {
-        int *halfLengths = (int *)AT(sTrmpItemHitWidths, 0);
+        int *halfLengths = sTrmpItemHitWidths;
         lineStart.x = -halfLengths[TRMPITEM(item)->mSizeIdx];
         lineStart.y = 0;
         lineEnd.x = halfLengths[TRMPITEM(item)->mSizeIdx];
