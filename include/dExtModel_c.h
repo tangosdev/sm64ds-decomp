@@ -192,6 +192,9 @@ struct dExtModel_c {
        flows straight out. Callers corroborate: daShl_c::InitResources tests
        the result and bails on 0. */
     int SetFile(BMD_File *file, int a, int b);       /* dispatches DoSetFile */
+    /* SetFile's loading twin (0x02016ff4): rebases the file's offsets, runs
+       DoSetFile, and on success shrinks the file to its reported size. */
+    int func_02016ff4(BMD_File *, int, int);
     /* Retail callers pass two scalar words. The second is unused here;
        its unsigned type/name are reconstructed, not recovered source spelling.
        See notes/experiments/applyopacity-api-0920.md. */

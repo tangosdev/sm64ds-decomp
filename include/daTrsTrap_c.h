@@ -80,6 +80,11 @@ struct daTrsTrap_c : dActor_c {
     void func_ov063_0211c89c(); /* 2 BOOKSHELF -- shelf slide,   0x0211c89c */
     void func_ov063_0211c7b0(); /* 3 MERRYGOROUND -- spin,       0x0211c7b0 */
 
+    /* Called from Behavior and the merry-go-round state: the model matrix
+       refresh and the merry-go-round occupancy test. */
+    void func_ov063_0211c684();
+    void func_ov063_0211c82c();
+
     /* Mesh-collision rider hook, defined in d_a_trs_trap_classinits.cpp.
        InitResources stores OnMeshClsnTouch as mMovingMeshCollider's
        callback word; it forwards the colliding actor to LatchStandingActor. */
