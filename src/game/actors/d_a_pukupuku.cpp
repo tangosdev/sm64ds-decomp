@@ -31,7 +31,7 @@
  *   0x50 -> 0x44. The compare has to land in an int (`int b = ((mFlags &
  *   0x40000) != 0); if (b)`). mAnmModel.Render(0) itself matches.
  * - StatePause and StateSwim: `mStateTimer == 0` is ldrsh. The ROM is ldrh,
- *   so the test is `*(unsigned short *)&mStateTimer`. One word in
+ *   so the test is `(unsigned short)mStateTimer == 0`. One word in
  *   StatePause.
  * - SetState calls through PukuStateC, the incomplete class the state PMF
  *   type is declared against.
@@ -208,11 +208,11 @@ int daPukupuku_c::InitStateSwim() {
  * mTargetAngleY; pause when the timer runs out. */
 int daPukupuku_c::StateSwim() {
     if (Vec3_Dist(&mPos, &mHomePos) > 0x3e8000) {
-        *(unsigned short *)&mStateTimer = 0x32;
+        mStateTimer = 0x32;
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
     }
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x200);
-    if (*(unsigned short *)&mStateTimer == 0)
+    if ((unsigned short)mStateTimer == 0)
         SetState((PukuStatePMF *)&data_ov090_02134584);
     return 1;
 }
@@ -227,7 +227,7 @@ int daPukupuku_c::InitStatePause() {
 
 /* Pause main: swim again when the timer runs out. */
 int daPukupuku_c::StatePause() {
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if ((unsigned short)mStateTimer == 0) {
         SetState((PukuStatePMF *)&data_ov090_02134594);
     }
     return 1;
