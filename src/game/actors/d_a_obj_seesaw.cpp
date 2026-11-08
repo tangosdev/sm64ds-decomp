@@ -101,12 +101,6 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
 extern int data_ov095_02136f58[];
 extern s16 data_02082214[];
 
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
-
 /* D1 stores this vtable, then dBgActor_c's (inlined), then destroys
  * mMeshCollider and mModel. D0 is that plus the inline operator delete.
  * This class adds no member with a destructor. */
@@ -265,12 +259,12 @@ int daObjSeesaw_c::InitResources() {
         mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
                               *(CLPS_Block *)(*(void **)(data_ov095_021374a8 + i * kFileStride)));
     }
-    /* func_020393d4 stores dBgW+0x18 (beforeClsnCallback). func_020393c4
+    /* dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback). dBgW::SetStoodOnCallback
      * stores dBgW+0x1c, the stood-on callback: StoodOnCallback, the
      * veneer into OnStoodOn below. Both are calls in the ROM; the
      * bodies are a single word store. */
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     return 1;
 }
 

@@ -189,34 +189,27 @@ void daPicGate_c::func_ov080_021264ec()
 /* State 1 init. Even grid, flat +Z normal, then a wave at the centre. */
 void daPicGate_c::func_ov080_021265ec()
 {
-    int x = 0, y = 0, row = 0, z = 0;
-    int n = this->mRows;
-    int rows;
-    if (n > 0) {
-        int normal = kFlatNormal;
-        do {
-            int col = 0;
-            int m = this->mCols;
-            if (m > 0) {
-                do {
-                    daPicGate_c::Vertex *v = &this->mCells[row * this->mRows + col];
-                    int cols;
-                    v->x = x;
-                    v->y = y;
-                    v->z = z;
-                    v->normal = normal;
-                    cols = this->mCols;
-                    if (col == cols - 2) x = ((u8)(this->param1 & 0xf) + 1) * kCell;
-                    else x += ((u8)(this->param1 & 0xf) + 1) * kCell / (cols - 1);
-                    col++;
-                } while (col < this->mCols);
-            }
-            rows = this->mRows;
-            x = 0;
-            if (row == rows - 2) y = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
-            else y += ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell / (rows - 1);
-            row++;
-        } while (row < rows);
+    int x = 0;
+    int y = 0;
+    int row;
+    int col;
+    for (row = 0; row < this->mRows; row++) {
+        for (col = 0; col < this->mCols; col++) {
+            daPicGate_c::Vertex *v = &this->mCells[row * this->mRows + col];
+            v->x = x;
+            v->y = y;
+            v->z = 0;
+            v->normal = kFlatNormal;
+            if (col == this->mCols - 2)
+                x = ((u8)(this->param1 & 0xf) + 1) * kCell;
+            else
+                x += ((u8)(this->param1 & 0xf) + 1) * kCell / (this->mCols - 1);
+        }
+        x = 0;
+        if (row == this->mRows - 2)
+            y = ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell;
+        else
+            y += ((u8)((this->param1 >> 4) & 0xf) + 1) * kCell / (this->mRows - 1);
     }
     this->PlaceCorners();
     {
@@ -230,15 +223,14 @@ void daPicGate_c::func_ov080_021265ec()
 void daPicGate_c::func_ov080_0212677c()
 {
     Matrix4x3 tmp;
-    int i, j, n;
-    int z = 0;
+    int i, j;
 
     if (this->mWaveTimer == 0) {
         this->DrawFlat();
         return;
     }
 
-    G3_MTX_PUSH = z;
+    G3_MTX_PUSH = 0;
     MulMat4x3Mat4x3(&this->mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = kMtxPosVec;
     LoadMtx43(&tmp);
@@ -253,31 +245,18 @@ void daPicGate_c::func_ov080_0212677c()
     G3_MTX_SCALE = kScale;
     G3_MTX_SCALE = kScale;
 
-    n = (int)this->mCols;
-    i = z; /* zero the column before subtracting, so the sub consumes n */
-    n = n - 1;
-    if (n > 0) {
-        do {
-            G3_BEGIN = kTriStrip;
-            j = z;
-            if ((int)this->mRows > 0) {
-                do {
-                    daPicGate_c::Vertex *base = this->mCells;
-                    int rows = (int)this->mRows;
-                    daPicGate_c::Vertex *v1 = &base[i + j * rows];
-                    daPicGate_c::Vertex *v2 = &base[(i + 1) + j * rows];
-                    int vx, vy, vz;
-                    s16 s0, s1, s2;
+    for (i = 0; i < this->mCols - 1; i++) {
+        G3_BEGIN = kTriStrip;
+        for (j = 0; j < this->mRows; j++) {
+            daPicGate_c::Vertex *v1 = &this->mCells[i + j * this->mRows];
+            daPicGate_c::Vertex *v2 = &this->mCells[(i + 1) + j * this->mRows];
+            int vx, vy, vz;
+            s16 s0, s1, s2;
 
-                    EMIT_VTX(v1);
-                    EMIT_VTX(v2);
-
-                    j++;
-                } while (j < (int)this->mRows);
-            }
-            G3_END = z;
-            i++;
-        } while (i < (int)this->mCols - 1);
+            EMIT_VTX(v1);
+            EMIT_VTX(v2);
+        }
+        G3_END = 0;
     }
     G3_MTX_POP = 1;
 }
@@ -305,45 +284,32 @@ void daPicGate_c::func_ov080_021269b8()
 /* State 0 init. Same grid as state 1, plus a texcoord, and no wave yet. */
 void daPicGate_c::func_ov080_02126a54()
 {
-    int x;
-    int y;
+    int x = 0;
+    int y = 0;
     int row;
-    int n;
     int col;
-    x = 0;
-    y = 0;
-    row = 0;
-    if ((int)this->mRows > 0) {
-        do {
-            col = 0;
-            if ((int)this->mCols > 0) {
-                do {
-                    daPicGate_c::Vertex *v = &this->mCells[row * (int)this->mRows + col];
-                    v->x = x;
-                    v->y = y;
-                    v->z = 0;
-                    v->normal = kFlatNormal;
-                    int du = kTexSpan / ((int)this->mCols - 1);
-                    int dv = kTexSpan / ((int)this->mRows - 1);
-                    int s = du * col;
-                    int t = kTexSpan - dv * row;
-                    v->texCoord = (u16)(s16)(s >> 8) | (((u16)(s16)(t >> 8) << 1) << 15);
-                    n = (int)this->mCols;
-                    if (col == n - 2)
-                        x = (u8)(this->param1 & 0xf) * kCell + kCell;
-                    else
-                        x += ((u8)(this->param1 & 0xf) * kCell + kCell) / (n - 1);
-                    col++;
-                } while (col < n);
-            }
-            n = (int)this->mRows;
-            x = 0;
-            if (row == n - 2)
-                y = (u8)((this->param1 >> 4) & 0xf) * kCell + kCell;
+    for (row = 0; row < this->mRows; row++) {
+        for (col = 0; col < this->mCols; col++) {
+            daPicGate_c::Vertex *v = &this->mCells[row * this->mRows + col];
+            v->x = x;
+            v->y = y;
+            v->z = 0;
+            v->normal = kFlatNormal;
+            int du = kTexSpan / (this->mCols - 1);
+            int dv = kTexSpan / (this->mRows - 1);
+            int s = du * col;
+            int t = kTexSpan - dv * row;
+            v->texCoord = (u16)(s16)(s >> 8) | (((u16)(s16)(t >> 8) << 1) << 15);
+            if (col == this->mCols - 2)
+                x = (u8)(this->param1 & 0xf) * kCell + kCell;
             else
-                y += ((u8)((this->param1 >> 4) & 0xf) * kCell + kCell) / (n - 1);
-            row++;
-        } while (row < n);
+                x += ((u8)(this->param1 & 0xf) * kCell + kCell) / (this->mCols - 1);
+        }
+        x = 0;
+        if (row == this->mRows - 2)
+            y = (u8)((this->param1 >> 4) & 0xf) * kCell + kCell;
+        else
+            y += ((u8)((this->param1 >> 4) & 0xf) * kCell + kCell) / (this->mRows - 1);
     }
     this->PlaceCorners();
 }

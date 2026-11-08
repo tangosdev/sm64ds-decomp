@@ -62,7 +62,6 @@ extern FileTable data_ov064_0211adbc;
 extern "C" {
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
@@ -171,7 +170,7 @@ s32 daObjFl_KomaU_c::InitResources() {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov064_0211adbc.collision), mClsnMat,
                           0x199, mAngleY, *data_ov064_0211adbc.clps);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     return 1;
 }
 

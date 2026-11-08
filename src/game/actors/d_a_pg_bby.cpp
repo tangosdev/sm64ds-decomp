@@ -584,7 +584,7 @@ void daPgBby_c::func_ov072_02120fd4(dBgCh_Actr *clsn)
     if (b != 0) return;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
-        ((SurfaceInfo *)((char *)clsn->GetFloorResult() + 4))->CopyNormalTo(floorNormal);
+        clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
             int x = FX_MUL(floorNormal.x, mSpeedX);
             int y = FX_MUL(floorNormal.z, mSpeedZ);
@@ -592,7 +592,7 @@ void daPgBby_c::func_ov072_02120fd4(dBgCh_Actr *clsn)
         }
     }
     if (clsn->IsOnWall()) {
-        ((SurfaceInfo *)((char *)clsn->GetWallResult() + 4))->CopyNormalTo(wallNormal);
+        clsn->GetWallResult()->surface.CopyNormalTo(wallNormal);
     }
 }
 

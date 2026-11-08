@@ -2172,159 +2172,159 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@599",
-      "to": "@514",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @528 now; licensed under the existing pin @514; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@600",
-      "to": "@515",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @529 now; licensed under the existing pin @515; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@601",
-      "to": "@516",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @530 now; licensed under the existing pin @516; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@602",
-      "to": "@517",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @531 now; licensed under the existing pin @517; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@603",
-      "to": "@518",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @532 now; licensed under the existing pin @518; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@604",
-      "to": "@519",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @533 now; licensed under the existing pin @519; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@605",
-      "to": "@520",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @534 now; licensed under the existing pin @520; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@606",
-      "to": "@521",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @535 now; licensed under the existing pin @521; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@607",
-      "to": "@522",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @536 now; licensed under the existing pin @522; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@608",
-      "to": "@523",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @537 now; licensed under the existing pin @523; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@609",
-      "to": "@524",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @538 now; licensed under the existing pin @524; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@610",
-      "to": "@525",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @539 now; licensed under the existing pin @525; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@611",
-      "to": "@526",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @540 now; licensed under the existing pin @526; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
       "from": "@612",
-      "to": "@527",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @541 now; licensed under the existing pin @527; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@514",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @528 now; licensed under the existing pin @514; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@613",
-      "to": "@224",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@515",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @529 now; licensed under the existing pin @515; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@614",
-      "to": "@225",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@516",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @530 now; licensed under the existing pin @516; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@615",
-      "to": "@226",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@517",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @531 now; licensed under the existing pin @517; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@616",
-      "to": "@222",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@518",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @532 now; licensed under the existing pin @518; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@617",
-      "to": "@223",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@519",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @533 now; licensed under the existing pin @519; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@618",
+      "to": "@520",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @534 now; licensed under the existing pin @520; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@619",
-      "to": "@186",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@521",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @535 now; licensed under the existing pin @521; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@620",
+      "to": "@522",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @536 now; licensed under the existing pin @522; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@621",
-      "to": "@187",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@523",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @537 now; licensed under the existing pin @523; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@622",
+      "to": "@524",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @538 now; licensed under the existing pin @524; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@623",
-      "to": "@217",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@525",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @539 now; licensed under the existing pin @525; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@624",
+      "to": "@526",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @540 now; licensed under the existing pin @526; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@625",
-      "to": "@219",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@527",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @541 now; licensed under the existing pin @527; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@626",
+      "to": "@224",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@627",
-      "to": "@221",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "@225",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@628",
+      "to": "@226",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
       "from": "@629",
+      "to": "@222",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@630",
+      "to": "@223",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@632",
+      "to": "@186",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@634",
+      "to": "@187",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@636",
+      "to": "@217",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@638",
+      "to": "@219",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@640",
+      "to": "@221",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+    },
+    {
+      "from": "@642",
       "to": "@94",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
-      "from": "@631",
+      "from": "@644",
       "to": "@93",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
-      "from": "@633",
+      "from": "@646",
       "to": "@188",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
-      "from": "@635",
+      "from": "@648",
       "to": "@200",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
-      "from": "@637",
+      "from": "@650",
       "to": "@220",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
-      "from": "@639",
+      "from": "@652",
       "to": "@227",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     },
     {
-      "from": "@641",
+      "from": "@654",
       "to": "@199",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
     }
   ]
 }

@@ -25,8 +25,7 @@
 // Notes (each measured with mwccarm 2004/b56):
 // - The collider callbacks registered in InitResources
 //   (dBgW::UpdatePosWithTransform and StoodOnCallback) are passed as raw
-//   addresses to func_020393d4 / func_020393c4. d_bg_w.cpp defines them
-//   and no header declares them.
+//   addresses to dBgW::SetBeforeClsnCallback / dBgW::SetStoodOnCallback.
 // - Behavior updates mStateFrames and mBobPhase through pointer locals and
 //   re-reads mBobPhase as unsigned; plain member updates came out 8 bytes
 //   short.
@@ -69,8 +68,6 @@ extern "C" {
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern LiftState data_ov064_0211c750[];
@@ -265,8 +262,8 @@ s32 daObjFl_Amilift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
 
     mPathPtr.FromID(param1 & 0xf);
     mNodeCount = mPathPtr.NumNodes();

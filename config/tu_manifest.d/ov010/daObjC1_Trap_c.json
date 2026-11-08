@@ -283,37 +283,37 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@803",
+      "from": "@801",
       "to": "@744",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
     },
     {
-      "from": "@812",
+      "from": "@810",
       "to": "@753",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
     },
     {
-      "from": "@814",
+      "from": "@812",
       "to": "@755",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
     },
     {
-      "from": "@804",
+      "from": "@802",
       "to": "@993",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
     },
     {
-      "from": "@808",
+      "from": "@806",
       "to": "@994",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
     },
     {
-      "from": "@810",
+      "from": "@808",
       "to": "@995",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
     },
     {
-      "from": "@806",
+      "from": "@804",
       "to": "@996",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
     }

@@ -74,6 +74,8 @@ void daWater_Ring_c::CheckPlayerPass() {
     isPlayer = (other->actorID == 0xbf);
     if (isPlayer == 0)
         return;
+    /* `otherPos = other->mPos` is 4 bytes short: the ROM materializes
+       &other->mPos before the three copies. */
     {
         const Vector3 &pos = other->mPos;
         otherPos.x = pos.x;
@@ -160,18 +162,16 @@ int daWater_Ring_c::StateActive() {
 /* Init of the active state. */
 s32 daWater_Ring_c::InitStateActive() {
     mStateTimer = 0xc8;
-    s32 angle = HorzAngleToCPlayer();
-    mPrevPlayerAngle = (s16)angle;
+    mPrevPlayerAngle = HorzAngleToCPlayer();
     return 1;
 }
 
 /* Installs a state and runs its init. */
 int daWater_Ring_c::SetState(const State *state) {
     mState = state;
-    const State *installed = mState;
-    if (installed->init == 0)
+    if (mState->init == 0)
         return 1;
-    return (this->*installed->init)();
+    return (this->*mState->init)();
 }
 
 /* Poses the model: position, rotation and opacity. */
@@ -231,10 +231,7 @@ int daWater_Ring_c::InitResources() {
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
 
-    Vector3 v;
-    v.x = data_ov064_0211c3d0.x;
-    v.y = data_ov064_0211c3d0.y;
-    v.z = data_ov064_0211c3d0.z;
+    Vector3 v = data_ov064_0211c3d0;
     mdCcAcPos_c.Init(this, v, 0x88000, 0xe8000, 0x800006, 0);
 
     mOpacity = 0x1f;

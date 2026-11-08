@@ -1854,7 +1854,7 @@ void dScMgBomroom_c::StartRound(int /* arg */) {
     ResetRound();
     mTallyCount = 0;
     mSceneState = 0;
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 1, 0x1c, 4, 3);
+    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
     SetBg0Offset(0, 0);
 }
 
@@ -1900,8 +1900,8 @@ s32 dScMgBomroom_c::InitResources() {
     void *arc;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 2;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
     f = LoadFile(0x23);
     DecompressLZ16(f, (void *)(func_02054d88() + 0x4000));
@@ -1916,8 +1916,8 @@ s32 dScMgBomroom_c::InitResources() {
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9410;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
 
     f = LoadFile(3);
     b = (char *)G2::GetBG2ScrPtr();
@@ -1927,8 +1927,8 @@ s32 dScMgBomroom_c::InitResources() {
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3);
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x5610;
+    REG_BG0CNT = REG_BG0CNT & ~3;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5610;
 
     f = LoadFile(2);
     func_02056554(f, 0, 0x800);
@@ -1938,7 +1938,7 @@ s32 dScMgBomroom_c::InitResources() {
     func_02056554(f, 0x800, 0x800);
     Deallocate(f);
 
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 1, 0x1c, 4, 3);
+    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
 
     arc = LoadFile(0xb5);
     f = LoadFile(0xb6);
@@ -1946,8 +1946,8 @@ s32 dScMgBomroom_c::InitResources() {
     GX::LoadOBJPltt(f, 0, 0x100);
 
     gSubScreenLayers |= 8;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x210;
 
     {
         void *f7 = LoadFile(0x23);

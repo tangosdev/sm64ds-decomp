@@ -26,8 +26,24 @@
  *     re-canonicalize to +(v1, a) and walk right-to-left, rotating three scratch
  *     registers away from the ROM; `a - (-v1)` survives to late strength reduction,
  *     which folds it to the add with +(a, v1) order intact.
- *   - the `fl = fl ? fl : fl;` self-selects and the volatile k in case 0x10 pin
- *     flag webs; inherited from the 195->12 structural draft.
+ *   - each case takes its register flag as `fl = s->mAction[0] & 0x20` (0x40 in
+ *     case 3), re-reading the action byte instead of using op. The compiler
+ *     CSEs the load into op but keeps fl as its own value, which is computed
+ *     before the operand reads as in the ROM (`and r6, r5, #0x20` ahead of the
+ *     bl). With `fl = op & 0x20` the and sinks past the call: 72 words differ
+ *     and the function is 0x20 bytes short. These also miss:
+ *     - `(op & m) != 0` and `!!(op & m)` (0x8ec)
+ *     - `? 1 : 0` and `if (fl) fl = 1` (693 or more words)
+ *     - a narrower or bool fl (165 to 708 words)
+ *     - fl at function scope (76 words)
+ *     - an inline ActionFlag(op, m) helper, by value or by reference (72 or
+ *       215 words)
+ *     - `*p & m` (72 words)
+ *   - case 0x10's volatile k: the ROM spills k to [sp, #0x84] across the
+ *     ReadSignedVarInt for v2 and reloads it. These cost 83 words:
+ *     - plain int or unsigned k
+ *     - k declared first or as an initialized declaration
+ *     - an inline ReadAddr(q, &k / k) helper
  */
 #include "private/throw_context.h"
 
@@ -101,8 +117,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             unsigned char *adv;
             int fp;
             int t;
-            fl = op & 0x40;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x40;
             q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
@@ -122,8 +137,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             unsigned char *adv;
             int fp;
             int a;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(p + 1, &v0);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
@@ -167,8 +181,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             unsigned char *adv;
             int fp;
             int a;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
@@ -188,8 +201,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             unsigned char *adv;
             int fp;
             int a;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
@@ -211,7 +223,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             int fp;
             int t;
             int a;
-            fl = op & 0x20;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(
                 ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1), &v2);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
@@ -241,8 +253,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             int fp;
             int n;
             int b;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = func_02071a50(
                 func_02071a50(ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1), &v2), &v3);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
@@ -269,8 +280,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             unsigned char *adv;
             int fp;
             int a;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(p + 1, &v0);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
@@ -291,7 +301,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             int fp;
             int t;
             int a;
-            fl = op & 0x20;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
@@ -357,8 +367,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             unsigned char *adv;
             int fp;
             int a;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             k = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             q = ReadSignedVarInt(q + 4, &v2);
@@ -384,8 +393,7 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             int fp;
             int a;
             int b;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v2);
             fl2 = *q++ & 0x20;
             q = ReadSignedVarInt(ReadSignedVarInt(q, &v1), &v3);
@@ -414,11 +422,9 @@ void func_02072168(ThrowContext *c, ActionIterator *s, char *end) {
             int fp;
             int b;
             int n;
-            fl = op & 0x20;
-            fl = fl ? fl : fl;
+            fl = s->mAction[0] & 0x20;
             q = ReadSignedVarInt(p + 1, &v0);
             fl2 = *q++ & 0x20;
-            fl2 = fl2 ? fl2 : fl2;
             q = func_02071a50(ReadSignedVarInt(q, &v1), &v2);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;

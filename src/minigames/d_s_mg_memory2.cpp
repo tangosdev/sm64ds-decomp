@@ -135,8 +135,8 @@ extern void FreeGfxSlotsById(int x);
 extern void Dealer_PlayIdle(char *p);
 extern int Dealer_IsIdle(Dealer *dealer);
 extern void MgCoins_Reset(void);
-void Mg_DrawCredits(char *, int, int, int);
-void Dealer_Draw(char *);
+void Mg_DrawCredits(void *, int, int, int);
+void Dealer_Draw(void *);
 extern void MgCoins_Update(void);
 extern void Dealer_Update(Dealer *p);
 void LoadCard2SubBg3(void *);
@@ -1210,12 +1210,12 @@ void dScMgMemory2_c::StartRound(int /* arg */) {
  * cursor, cards and dealer. */
 s32 dScMgMemory2_c::Render() {
     Camera_InitDealerView(&mCamera);
-    Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
+    Mg_DrawCredits(this, 0xc, 0xc, 0);
     MgCoins_Draw();
     DrawMessage();
     DrawCursor();
     DrawCards();
-    Dealer_Draw((char *)&mDealer);
+    Dealer_Draw(&mDealer);
     return 1;
 }
 
