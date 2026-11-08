@@ -92,17 +92,17 @@ struct LVL_Overlay {
                                    the ROM really does shift 0x0a by 24. */
     };
 
-    /* 0xc bytes. LoadDoorObjects (ov002:0x020fe4f0). The rotation is two
-       nibbles of param plus the stored angle. */
+    /* 0xc bytes. LoadDoorObjects (ov002:0x020fe4f0). param is the spawn
+       parameter, and its bits 8..15 are also the two rotation nibbles that go
+       with the stored angle. The low five bits of type index sDoorActorIds
+       and sDoorVariants. */
     struct DoorEntry {
-        s16 x;                  /* 0x00 */
-        s16 y;                  /* 0x02 */
-        s16 z;                  /* 0x04 */
-        s16 angle;              /* 0x06 */
-        u16 param;              /* 0x08 -- spawn parameter; bits 8..15 are the
-                                   rotation nibbles */
-        u16 type;               /* 0x0a -- low five bits index sDoorActorIds
-                                   and sDoorVariants */
+        s16 x;     /* 0x00 */
+        s16 y;     /* 0x02 */
+        s16 z;     /* 0x04 */
+        s16 angle; /* 0x06 */
+        u16 param; /* 0x08 */
+        u16 type;  /* 0x0a */
     };
 
     /* 8 bytes. LoadTeleportSourceObjects (ov002:0x020fe5f4). No rotation: the
@@ -141,10 +141,10 @@ struct LVL_Overlay {
        none), its texture animation and the minimap it shows when no
        minimap-change record applies. */
     struct Area {
-        ObjTable *objTable;     /* 0x00 */
-        void     *bta;          /* 0x04 */
-        s8        minimapId;    /* 0x08 */
-        u8        pad_009[3];
+        ObjTable *objTable; /* 0x00 */
+        void *bta;          /* 0x04 */
+        s8 minimapId;       /* 0x08 */
+        u8 pad_009[3];
     };
 
     /* ==== THE RECORD ITSELF ====
@@ -152,14 +152,14 @@ struct LVL_Overlay {
        and areaCount. d_s_stage_methods.cpp reads the same record through
        data_0209f340: the model file (dScStage_c::LoadModel), the minimap
        files and each area's texture animation and minimap. */
-    CLPS_Block *clps;           /* 0x00 */
-    ObjTable   *objTable;       /* 0x04 -- the level-wide objects, area -1 */
-    u16   modelFileId;          /* 0x08 */
-    u16   kclFileId;            /* 0x0a -- 0: no collision mesh */
-    u16   minimapTilesFile;     /* 0x0c */
-    u16   minimapPaletteFile;   /* 0x0e */
-    Area *areas;                /* 0x10 */
-    u8    areaCount;            /* 0x14 */
+    CLPS_Block *clps;       /* 0x00 */
+    ObjTable *objTable;     /* 0x04 -- the level-wide objects, area -1 */
+    u16 modelFileId;        /* 0x08 */
+    u16 kclFileId;          /* 0x0a -- 0: no collision mesh */
+    u16 minimapTilesFile;   /* 0x0c */
+    u16 minimapPaletteFile; /* 0x0e */
+    Area *areas;            /* 0x10 */
+    u8 areaCount;           /* 0x14 */
 #endif
 };
 
@@ -185,10 +185,8 @@ typedef char LVL_Overlay_ObjSubTable_size_must_be_0x8[
     sizeof(LVL_Overlay::ObjSubTable) == 0x8 ? 1 : -1];
 typedef char LVL_Overlay_ExitEntry_size_must_be_0xe[
     sizeof(LVL_Overlay::ExitEntry) == 0xe ? 1 : -1];
-typedef char LVL_Overlay_DoorEntry_size_must_be_0xc[
-    sizeof(LVL_Overlay::DoorEntry) == 0xc ? 1 : -1];
-typedef char LVL_Overlay_Area_size_must_be_0xc[
-    sizeof(LVL_Overlay::Area) == 0xc ? 1 : -1];
+typedef char LVL_Overlay_DoorEntry_size_must_be_0xc[sizeof(LVL_Overlay::DoorEntry) == 0xc ? 1 : -1];
+typedef char LVL_Overlay_Area_size_must_be_0xc[sizeof(LVL_Overlay::Area) == 0xc ? 1 : -1];
 typedef char LVL_Overlay_TeleportSourceEntry_size_must_be_0x8[
     sizeof(LVL_Overlay::TeleportSourceEntry) == 0x8 ? 1 : -1];
 typedef char LVL_Overlay_StandardEntry_size_must_be_0x10[

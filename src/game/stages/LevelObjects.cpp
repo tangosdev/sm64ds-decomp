@@ -154,9 +154,9 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
         u32 spawnParam =
             savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
 
-        daPly_c *player = (daPly_c *)dActor_c::Spawn(sObjToActorIdTable[entry->raw], spawnParam,
-                                                     pos, (const Vector3_16 *)&entry->rot,
-                                                     param & 7, -1);
+        daPly_c *player =
+            (daPly_c *)dActor_c::Spawn(sObjToActorIdTable[entry->raw], spawnParam, pos,
+                                       (const Vector3_16 *)&entry->rot, param & 7, -1);
 
         if (data_0209fc5c[playerIndex] == 0)
             gPlayers[playerIndex] = 0;
