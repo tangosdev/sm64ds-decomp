@@ -347,6 +347,61 @@ bool ap_shelf(char *a, int, int value) {
     }
     return true;
 }
+// COOPPUZZLE1 (G12): the SSL pyramid TOP (85, daObjDlPyramid_c) and its four PYRAMID_TAGs (86, daObjDlPyramidDummy_c,
+// mPyramidTopID +0x108). A tag a body touches adds one to the top's mNumTagsTriggered +0x3b6 and removes itself
+// (MarkForDestruction, not the death table, so coop_world never shares it); at 4 the top's state 0 moves on, it descends,
+// removes itself and raises Event bit 0xe (src/game/actors/d_a_obj_dl_pyramid.cpp). A friend's touches counted on his console
+// only, so my top never came down. Shared as a field on the top: value = the mask of its tags that are gone here (the tags go
+// by their placed slots, sorted: the same on every console). A receiver removes those tags and lifts the count to the number
+// of tags gone on either side; the top's own state 0 then does the rest.
+struct TopTags { const void *top; unsigned uid; short slot[4]; int n; unsigned remote; };
+TopTags g_tops[2];
+TopTags *top_entry(const char *a) {
+    for (TopTags &t : g_tops) if (t.top == a && t.uid == (unsigned)rd_i32(a, 4)) return &t;
+    TopTags *f = &g_tops[1];                         // a new level's top: a free entry, else the second one is reused
+    for (TopTags &t : g_tops) if (!t.top) { f = &t; break; }
+    *f = TopTags{a, (unsigned)rd_i32(a, 4), {0, 0, 0, 0}, 0, 0};
+    return f;
+}
+unsigned top_gone(TopTags &t) {
+    if (t.n < 4) {                                   // learn the four tags once, while all of them stand
+        short s[4]; int n = 0;
+        for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b && n < 4; b = (char *)_ZN8dActor_c4NextEPKS_(b))
+            if (a_cls(b) == 86 && !a_dead(b) && (unsigned)rd_i32(b, 0x108) == t.uid && a_slot(b) >= 0) s[n++] = (short)a_slot(b);
+        if (n < 4) return 0;
+        for (int i = 0; i < 4; ++i) for (int j = i + 1; j < 4; ++j) if (s[j] < s[i]) { short x = s[i]; s[i] = s[j]; s[j] = x; }
+        for (int i = 0; i < 4; ++i) t.slot[i] = s[i];
+        t.n = 4;
+        if (g_log) std::fprintf(stderr, "[coopsw] pyramid top uid=%u tags slots %d %d %d %d wall=%lld\n", t.uid, s[0], s[1], s[2], s[3], wall_ms());
+    }
+    unsigned m = 0;
+    for (int i = 0; i < 4; ++i) if (!find_actor(t.slot[i], 86)) m |= 1u << i;
+    return m;
+}
+void top_count(char *a, TopTags &t, unsigned gone) {
+    const unsigned all = gone | t.remote;
+    int c = 0; for (int i = 0; i < 4; ++i) c += (all >> i) & 1;
+    if (rd_u8(a, 0x3b7) == 0 && rd_u8(a, 0x3b6) < c) *(unsigned char *)(a + 0x3b6) = (unsigned char)c;
+}
+int r_top(const char *a) {
+    TopTags *t = top_entry(a);
+    if (!t) return 0;
+    const unsigned gone = top_gone(*t);
+    if (t->n == 4) top_count(const_cast<char *>(a), *t, gone);
+    return (int)gone;
+}
+bool ap_top(char *a, int, int value) {
+    TopTags *t = top_entry(a);
+    if (!t) return false;
+    top_gone(*t);
+    if (t->n < 4) return false;
+    const unsigned add = (unsigned)value & 15u & ~t->remote;
+    t->remote |= (unsigned)value & 15u;
+    for (int i = 0; i < 4; ++i)
+        if ((add >> i) & 1u) if (char *g = find_actor(t->slot[i], 86)) _ZN7fBase_c18MarkForDestructionEv(g);
+    top_count(a, *t, top_gone(*t) | t->remote);
+    return add != 0;
+}
 // DOOR (353) and STAR_DOOR (354): the START of an unlock. The ROM writes the save bit when the cutscene ENDS; the
 // kick fires when the unlock state begins and puts the same bit in the other consoles' record at once. Nothing here
 // hands a Player to a door state.
@@ -406,6 +461,7 @@ const Watch kWatch[] = {
     {13,  kSwKindField, "TREASURE_CHEST", r_chest, ap_chest},
     {27,  kSwKindField, "STUMP",        r_stump,  ap_stump},
     {158, kSwKindField, "BOOKSHELF",    r_shelf,  ap_shelf},
+    {85,  kSwKindField, "PYRAMID_TOP",  r_top,    ap_top},
     {353, kSwKindKick,  "DOOR",         r_door,   ap_door},
     {354, kSwKindKick,  "STAR_DOOR",    r_gate,   ap_gate},
 };
