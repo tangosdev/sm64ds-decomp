@@ -61,6 +61,9 @@ int GetBankForTex(void);
 int GetBankForTexPltt(void);
 int GetBankForSubBG(void);
 int GetBankForSubOBJ(void);
+/* The size in bytes of the banks a user currently holds. */
+int GetSizeOfTex(void);
+int GetSizeOfTexPltt(void);
 void BeginLoadTex(void);
 void LoadTex(const void *, unsigned int, unsigned int);
 void EndLoadTex(void);

@@ -8915,15 +8915,15 @@
     },
     "arm9:0x02053e1c": {
       "author": "tangosdev",
-      "name": "func_02053e1c"
+      "name": "_ZN2GX16GetSizeOfTexPlttEv"
     },
     "arm9:0x02053e34": {
       "author": "tangosdev",
-      "name": "func_02053e34"
+      "name": "_ZN2GX12GetSizeOfTexEv"
     },
     "arm9:0x02053e4c": {
       "author": "tangosdev",
-      "name": "func_02053e4c"
+      "name": "GX_GetSizeOfX_"
     },
     "arm9:0x02053ea0": {
       "author": "tangosdev",
