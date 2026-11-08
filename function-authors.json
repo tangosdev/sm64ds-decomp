@@ -35235,11 +35235,11 @@
     },
     "ov060:0x021180e0": {
       "author": "tangosdev",
-      "name": "_ZN10daKpa3Bg_c19func_ov060_021180e0Ev"
+      "name": "_ZN10daKpa3Bg_c10StateCheckEv"
     },
     "ov060:0x021181b4": {
       "author": "tangosdev",
-      "name": "_ZN10daKpa3Bg_c19func_ov060_021181b4Ev"
+      "name": "_ZN10daKpa3Bg_c10StateStartEv"
     },
     "ov060:0x021181e8": {
       "author": "tangosdev",
