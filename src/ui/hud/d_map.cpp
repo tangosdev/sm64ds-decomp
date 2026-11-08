@@ -107,7 +107,7 @@ extern u8   data_0209f204;
 extern u8   data_ov002_02111150;
 extern ControllerInput data_0209f498[];
 extern u8 gSubScreenLayers;
-extern u8   gMapIntroRotating;
+extern u8 gMapIntroRotating;
 extern u8   data_ov002_02111144;
 extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
@@ -653,7 +653,8 @@ L350:
 
 L360:
     if (this->mInIntroCutscene == 0) goto L3a4;
-    if (gMapIntroRotating == 0) goto L3e0;
+    if (gMapIntroRotating == 0)
+        goto L3e0;
     *(s16 *)&this->mAngle += 0x40;   // read signed here; the header member is u16
     if ((u16)this->mAngle >= 0x8000)
         gMapIntroRotating = 0;
@@ -1049,14 +1050,16 @@ int dMap_c::InitResources()
 
 #pragma opt_strength_reduction on
 
-void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, Fix12i scale, short angle, Vector3 &out) {
+void dMap_c::GetPosFromMinimapPos(Vector3 &minimapPos, Vector3 &center, Fix12i scale, short angle,
+                                  Vector3 &out) {
     Vector3 offset;
     Vec3_Sub(&offset, &minimapPos, &sMapScreenCenter);
     Vec3_DivScalarInPlace(&offset, scale);
     Vec3_RotateYAndTranslate(&out, &center, angle, &offset);
 }
 
-void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short angle, Vector3 *out) {
+void dMap_c::GetPosOnMinimap(Vector3 *pos, Vector3 *center, Fix12i scale, short angle,
+                             Vector3 *out) {
     Vector3 offset;
     Vec3_Sub(&offset, pos, center);
     Vec3_MulScalarInPlace(&offset, scale);

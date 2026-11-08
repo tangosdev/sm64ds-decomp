@@ -44,7 +44,6 @@ extern int data_0209f3e8[];
 
 extern void CapIconMgr_SetMapIconShown(dCapIcon_c *icon, int shown);
 extern void CapIconMgr_ClearDispatched(int character);
-
 }
 
 void dCapIcon_c::Unlink()

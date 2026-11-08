@@ -645,10 +645,11 @@ void dMeter_c::RenderHealthMeter() {
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
         OAM::Render(0, OAM::HEALTH_METERS_FR_IT[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &OAM::HEALTH_METER_BG_FR_IT, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::HEALTH_METER_BG_FR_IT, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0,
+                    -1);
     } else {
-        OAM::Render(0, OAM::HEALTH_METERS[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
-                    0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::HEALTH_METERS[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1, 0x1000,
+                    0x1000, 0, -1);
         OAM::Render(0, &OAM::HEALTH_METER_BG, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 

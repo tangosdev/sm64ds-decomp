@@ -226,7 +226,8 @@ void CapIconMgr_Dispatch(void) {
                         if ((request & 0x30) || node->mIconKind >= 2) {
                             if (flags->bank) {
                                 if (node->mSlot == -1) {
-                                    node->mSlot = func_0202a8e0((int)node->mOwner, node->mCharacter);
+                                    node->mSlot =
+                                        func_0202a8e0((int)node->mOwner, node->mCharacter);
                                     node->mFlags |= 2;
                                     CapIconMgr_SetMapIconShown(node, 1);
                                 } else {
@@ -289,8 +290,10 @@ void CapIconMgr_Dispatch(void) {
 
         if ((*requestFlags & 3) == 0) {
             int level = SublevelToLevel(gCurrentSublevel);
-            if ((unsigned)(level - 0xf) <= 2) *requestFlags |= 1;
-            else *requestFlags |= 2;
+            if ((unsigned)(level - 0xf) <= 2)
+                *requestFlags |= 1;
+            else
+                *requestFlags |= 2;
         }
     }
 }
@@ -327,32 +330,39 @@ int CapIconMgr_ShouldCommit(int character, dCapIcon_c *best, int requestState, i
         gCapIconDispatchFlags[character] |= 0x80;
         return 0;
     }
-    if (best == 0) return 0;
+    if (best == 0)
+        return 0;
     unsigned char kind = best->mIconKind;
-    if (kind >= 3) return 1;
-    if (realSeen != 0) return 0;
+    if (kind >= 3)
+        return 1;
+    if (realSeen != 0)
+        return 0;
     daPly_c *player = gPlayers[0];
     if (kind != 4) {
         if (player->IsCollectingCap())
             return 0;
     }
     if (!player->IsCollectingCap()) {
-        if (character == player->param1) return 0;
+        if (character == player->param1)
+            return 0;
     }
     return 1;
 }
 
 int CapIconMgr_ShouldCommitVs(int character, dCapIcon_c *best) {
-    if (best == 0) return 0;
+    if (best == 0)
+        return 0;
     if (best->mIconKind == 3)
         return 1;
     int i = 0;
     for (i = 0; i < data_0208a0e0; i++) {
         daPly_c *player = gPlayers[i];
-        if (player == 0) continue;
+        if (player == 0)
+            continue;
         if (player->IsCollectingCap())
             return 0;
-        if (character == player->param1) return 0;
+        if (character == player->param1)
+            return 0;
     }
     return 1;
 }
@@ -428,8 +438,10 @@ void CapIconMgr_DispatchVs(void) {
 
         node = gCapIconListHeads[character];
 
-        if (CapIconMgr_IsDispatched(character) != 0) continue;
-        if (*requestFlags == 2) continue;
+        if (CapIconMgr_IsDispatched(character) != 0)
+            continue;
+        if (*requestFlags == 2)
+            continue;
         if (gCapIconCounts[character] == 0)
             continue;
 
@@ -470,7 +482,8 @@ void CapIconMgr_DispatchVs(void) {
             continue;
         }
 
-        if (bankSeen == 0) continue;
+        if (bankSeen == 0)
+            continue;
 
         numPlayers = data_0208a0e0;
         for (idx = 0; idx < numPlayers; idx++) {
