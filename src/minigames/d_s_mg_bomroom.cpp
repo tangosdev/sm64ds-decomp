@@ -59,7 +59,6 @@ extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern unsigned char *sBomroomBombFrameTimes[];
 extern unsigned char sBomroomBombFrameCounts[];
-extern s16 atan2_hold_d_s_mg_bomroom_1(int y, int x);
 extern void Mg_RenderSpriteBoth(void* a0, int a1, int a2, int a3, int a4);
 extern unsigned char *sBomroomBombSprites[];
 extern unsigned char *sBomroomBombLitSprites[];
@@ -213,11 +212,11 @@ void dScMgBomroom_c::Marker_DrawAll() {
             int xv = mMarkers[i].x;
             int yv = mMarkers[i].y;
             int idx = mMarkers[i].idx;
-            int a1 = xv >> 12;
-            int a2 = yv >> 12;
+            int sx = xv >> 12;
+            int sy = yv >> 12;
             Hud_RenderSprite((i != 0) ? sBomroomMarkerLitSprites[idx]
                                       : sBomroomMarkerPlainSprites[idx],
-                             a1, a2, -1, 1);
+                             sx, sy, -1, 1);
         }
     }
 }
@@ -760,15 +759,15 @@ void dScMgBomroom_c::Bomb_CheckWrongPen(int index) {
  * stylus-minus-bomb offset. */
 
 void dScMgBomroom_c::Bomb_CheckGrab(int index) {
-    u8 touch = gActivePlayerSlot;
-    int touching = 0;
+    u8 slot = gActivePlayerSlot;
+    int touchBegan = 0;
     int dx, dy;
-    if (gTouchHeld[touch * 4] != 0)
-        touching = gTouchEdge[touch * 4] != 0;
-    if (touching == 0) return;
+    if (gTouchHeld[slot * 4] != 0)
+        touchBegan = gTouchEdge[slot * 4] != 0;
+    if (touchBegan == 0) return;
     if (mHeldColor != 0xff) return;
-    dx = gTouchX[touch * 4] - (mBombs[index].x >> 0xc);
-    dy = gTouchY[touch * 4] - (mBombs[index].y >> 0xc);
+    dx = gTouchX[slot * 4] - (mBombs[index].x >> 0xc);
+    dy = gTouchY[slot * 4] - (mBombs[index].y >> 0xc);
     if (dx > 0xc) return;
     if (dx < -0xc) return;
     if (dy > 0xf) return;
@@ -933,27 +932,27 @@ void dScMgBomroom_c::DrawBombs() {
         if (mBombs[i].visible == 0)
             continue;
         {
-            int b694 = mBombs[i].type;
+            int type = mBombs[i].type;
             int palette = 1;
-            int b695, b696;
+            int frame, color;
             unsigned char sprite;
-            int b697;
-            int f664;
+            int state;
+            int fy;
             int x, y;
-            if (b694 == 3) palette = 0;
-            b696 = mBombs[i].color;
-            b695 = mBombs[i].frame;
-            if (b696 != 0) {
-                sprite = sBomroomBombLitSprites[b694][b695];
+            if (type == 3) palette = 0;
+            color = mBombs[i].color;
+            frame = mBombs[i].frame;
+            if (color != 0) {
+                sprite = sBomroomBombLitSprites[type][frame];
             } else {
-                sprite = sBomroomBombSprites[b694][b695];
+                sprite = sBomroomBombSprites[type][frame];
             }
-            b697 = mBombs[i].state;
+            state = mBombs[i].state;
             x = mBombs[i].x >> 12;
-            f664 = mBombs[i].y;
-            y = f664 >> 12;
-            if (b697 == 6) {
-                if (mBombs[i].substate == 4) { y = (f664 - mBg2Y) >> 12; }
+            fy = mBombs[i].y;
+            y = fy >> 12;
+            if (state == 6) {
+                if (mBombs[i].substate == 4) { y = (fy - mBg2Y) >> 12; }
             }
             Mg_RenderSpriteBoth(sBomroomBombsSprites[sprite], x, y, -1, palette);
         }
@@ -963,49 +962,50 @@ void dScMgBomroom_c::DrawBombs() {
 
 
 void dScMgBomroom_c::CheckColorComplete() {
-    int ca = 0;
-    int cb = 0;
-    int cc = 0;
+    int nColored = 0;
+    int nPlain = 0;
+    int nLined = 0;
     int i;
 
     for (i = 0; i < 0x70; i++) {
         if (mBombs[i].active != 0) {
             if (mBlastPen == 1) {
                 if (mBombs[i].color != 0) {
-                    int v;
-                    int q;
+                    int col;
+                    int row;
                     mBombs[i].substate = 3;
-                    v = ca;
-                    q = 0;
-                    mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                    while (v >= 5) { v -= 5; q++; }
-                    mBombs[i].lineSlot = (unsigned char)(q * 10 + v);
-                    ca++;
-                    cc++;
+                    col = nColored;
+                    row = 0;
+                    mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                    while (col >= 5) { col -= 5; row++; }
+                    mBombs[i].lineSlot = (unsigned char)(row * 10 + col);
+                    nColored++;
+                    nLined++;
                 } else {
-                    int v;
-                    int q;
-                    mBombs[i].lineSlot = (unsigned char)cb;
+                    int col;
+                    int row;
+                    /* The ROM keeps this store, overwritten below. */
+                    mBombs[i].lineSlot = (unsigned char)nPlain;
                     mBombs[i].substate = 3;
-                    v = cb;
-                    mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                    q = 0;
-                    while (v >= 5) { v -= 5; q++; }
-                    mBombs[i].lineSlot = (unsigned char)(q * 10 + v + 5);
-                    cb++;
-                    cc++;
+                    col = nPlain;
+                    mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                    row = 0;
+                    while (col >= 5) { col -= 5; row++; }
+                    mBombs[i].lineSlot = (unsigned char)(row * 10 + col + 5);
+                    nPlain++;
+                    nLined++;
                 }
             } else if (mBlastPen != 0) {
-                mBombs[i].lineSlot = (unsigned char)cc;
+                mBombs[i].lineSlot = (unsigned char)nLined;
                 mBombs[i].substate = 3;
-                mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                cc++;
+                mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                nLined++;
             } else {
                 if (mWinColor == mBombs[i].color && mBombs[i].state == 6) {
-                    mBombs[i].lineSlot = (unsigned char)cc;
+                    mBombs[i].lineSlot = (unsigned char)nLined;
                     mBombs[i].substate = 3;
-                    mBombs[i].marchDelay = (unsigned short)(cc * 8);
-                    cc++;
+                    mBombs[i].marchDelay = (unsigned short)(nLined * 8);
+                    nLined++;
                 }
             }
         }
@@ -1018,7 +1018,6 @@ void dScMgBomroom_c::BombMarch_LinedUp() {}
 
 
 void dScMgBomroom_c::BombMarch_ToLine(int index) {
-    int off;
     if (mBombs[index].marchDelay != 0) {
         mBombs[index].marchDelay -= 1;
         if ((s16)mBombs[index].marchDelay < 0)
@@ -1030,9 +1029,8 @@ void dScMgBomroom_c::BombMarch_ToLine(int index) {
         int row = 0;
         int curX, curY, targetY, targetX;
         while (slot >= 10) { slot -= 10; row++; }
-        off = row * 20;
         targetX = slot * 16 + 0x38;
-        targetY = off - 0xC0;
+        targetY = row * 20 - 0xC0;
         curX = mBombs[index].x >> 12;
         curY = mBombs[index].y >> 12;
         if (targetX == curX && targetY == curY) {
