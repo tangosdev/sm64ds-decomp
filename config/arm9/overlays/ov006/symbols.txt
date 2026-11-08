@@ -3756,7 +3756,7 @@ _ZTS12dScMgLuigi_c kind:data(any) addr:0x0213ce60
 sLuigiTextSpritesByLanguage kind:data(any) addr:0x0213ce70
 sLuigiBoardFlags kind:data(any) addr:0x0213ce84
 sLuigiBoardModes kind:data(any) addr:0x0213ce98
-data_ov006_0213ceac kind:data(any) addr:0x0213ceac
+sLuigiBoardMovers kind:data(any) addr:0x0213ceac
 sLuigiWantedPicks kind:data(any) addr:0x0213cec0
 sLuigiPlaceLimits kind:data(any) addr:0x0213cee0
 data_ov006_0213cf10 kind:data(any) addr:0x0213cf10

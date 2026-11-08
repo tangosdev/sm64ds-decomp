@@ -1047,12 +1047,12 @@ void dScMgLuigi_c::StopPicture(int idx) {
 
 void dScMgLuigi_c::RestartPicture(int idx) {
     unsigned char *self = (unsigned char *)this;
-    extern unsigned char data_ov006_0213ceac[];
+    extern unsigned char sLuigiBoardMovers[];
     unsigned short board = mBoard;
     self += idx;
     ((dScMgLuigi_c *)self)->mShown[0] = 1;
     ((dScMgLuigi_c *)self)->mStarted[0] = 0;
-    ((dScMgLuigi_c *)self)->mKind[0] = data_ov006_0213ceac[board] + 1;
+    ((dScMgLuigi_c *)self)->mKind[0] = sLuigiBoardMovers[board] + 1;
 }
 
 void dScMgLuigi_c::UpdatePictures() {
