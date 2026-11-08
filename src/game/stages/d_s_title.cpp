@@ -9,7 +9,7 @@
  * established by these consumers. 11 functions,
  * .text 0x020ad660..0x020addfc: the seven dScene_c slots every direct child
  * overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new virtual), the
- * free scroll helper func_ov003_020ad6ec, the factory dScTitle_c_classInit,
+ * free scroll helper TitleScrollLevelList, the factory dScTitle_c_classInit,
  * which abuts InitResources at 0x020adc10, and above it the two BG0 text
  * writers only the scroll helper calls. D1/D0 are not written here: the
  * header's inline destructor plus the key function (InitResources) emits
@@ -19,10 +19,11 @@
  * reverse source order. Do not reorder.
  *
  * deslop leftovers:
- * - func_ov003_020ad6ec is written free here, and that is a reconstruction
+ * - TitleScrollLevelList is written free here, and that is a reconstruction
  *   choice, not a deduction. The image preserves no original linker symbol
- *   table, so `func_ov003_*` is an address-derived analysis label, and RTTI
- *   supplies class identities, not function spellings
+ *   table, so its name, like those of the two BG0 text writers
+ *   (TitlePrintLevelRow, TitlePrintString), is coined from what the body
+ *   does, and RTTI supplies class identities, not function spellings
  *   (notes/tu-promotion-conventions.md section 1 and
  *   notes/symbol-name-provenance.md). Both call sites hand it this object
  *   and every call to it is inside this class's region: that is evidence to
@@ -124,7 +125,7 @@ extern const TitleLevelEntry sTitleLevelEntries[] = {
 /* RECONCILED: the two legacy call sites spelt the parameter `int` and
  * `char *`; the body ignores it. `void *` is the spelling neither call site
  * has to cast away from. */
-extern void func_ov003_020ad6ec(void *self);
+extern void TitleScrollLevelList(void *self);
 }
 
 /* The stylus went down this frame: held, with the held state just changed
@@ -141,10 +142,10 @@ static inline int IsTouchStarted() {
 /* [10] 0x020adcbc -- prints one row of the level list into the BG0 screen
  * map at (row, col): the level number in two digits (a blank for a leading
  * zero), a blank, the level's name from sTitleLevelEntries, then blanks out
- * to column 0x1d. Called only from func_ov003_020ad6ec. Each tile goes
- * through MultiStore16 from a volatile temporary, five of them; that is the
- * spelling the bytes need. */
-extern "C" void func_ov003_020adcbc(int level, int row, int col) {
+ * to column 0x1d. Coined name. Called only from TitleScrollLevelList. Each
+ * tile goes through MultiStore16 from a volatile temporary, five of them;
+ * that is the spelling the bytes need. */
+extern "C" void TitlePrintLevelRow(int level, int row, int col) {
     volatile u16 t0, t1, t2, t3, t4;
     int tens = level / 10;
     int ones = level % 10;
@@ -177,8 +178,8 @@ extern "C" void func_ov003_020adcbc(int level, int row, int col) {
 
 /* [9] 0x020adc74 -- copies a NUL-terminated string into the BG0 screen map
  * at (row, col), one tile per character. Called only from
- * func_ov003_020ad6ec, for the caption. */
-extern "C" void func_ov003_020adc74(signed char *s, int row, int col) {
+ * TitleScrollLevelList, for the caption. Coined name. */
+extern "C" void TitlePrintString(signed char *s, int row, int col) {
     short *p = (short *)G2::GetBG0ScrPtr() + (col + (row << 5));
     if (*s == 0)
         return;
@@ -233,7 +234,7 @@ s32 dScTitle_c::InitResources() {
     gMainScreenLayers = 0x11;
     REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1100;
     data_0208ee44 = 2;
-    func_ov003_020ad6ec(this);
+    TitleScrollLevelList(this);
     REG_BG0OFS = 0;
     data_0209ee90[0x340] = 0;
     data_0209ee90[0x341] = 0;
@@ -296,7 +297,7 @@ s32 dScTitle_c::Behavior() {
 
     gTitleCursor = gTitleCursor % 0x36;
     DecIfAbove0_Short(&mRepeatDelay);
-    func_ov003_020ad6ec(this);
+    TitleScrollLevelList(this);
     return 1;
 }
 
@@ -321,15 +322,15 @@ void dScTitle_c::OnPendingDestroy() {}
 
 /* [2] 0x020ad6ec -- scrolls the level-list window so the cursor stays on
  * screen: clamps the first shown entry, gTitleListTop, redraws the visible rows
- * through func_ov003_020adcbc, then repaints the caption. Written free here
- * as a reconstruction choice; see the file header. The parameter is unused
+ * through TitlePrintLevelRow, then repaints the caption. Coined name, written
+ * free here as a reconstruction choice; see the file header. The parameter is unused
  * by the body, but both call sites load the receiver into r0.
  *
  * RECONCILED: decl_common.h already declares gTitleListTop `extern int`, so
  * the legacy `int[]` spelling is dropped in favour of the header's scalar
  * and the `[0]` subscripts became scalar accesses. */
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void func_ov003_020ad6ec(void *) {
+void TitleScrollLevelList(void *) {
     int v = gTitleCursor;
     int nv = v - 0xa;
     gTitleListTop = nv;
@@ -347,10 +348,10 @@ void func_ov003_020ad6ec(void *) {
     int i;
     int j = s;
     for (i = 2; i < end; i++) {
-        func_ov003_020adcbc(j, i, 3);
+        TitlePrintLevelRow(j, i, 3);
         j++;
     }
-    func_ov003_020adc74((signed char *)data_020a0d90, 0, 0);
+    TitlePrintString((signed char *)data_020a0d90, 0, 0);
 }
 }
 

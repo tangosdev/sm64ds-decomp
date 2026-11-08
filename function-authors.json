@@ -2863,11 +2863,11 @@
     },
     "arm9:0x02018a40": {
       "author": "tangosdev",
-      "name": "func_02018a40"
+      "name": "SetAssetHandleFileID"
     },
     "arm9:0x02018a58": {
       "author": "tangosdev",
-      "name": "func_02018a58"
+      "name": "AllocAssetHandleTable"
     },
     "arm9:0x02018aa4": {
       "author": "tangosdev",
@@ -18779,7 +18779,7 @@
     },
     "ov003:0x020ad6ec": {
       "author": "tangosdev",
-      "name": "func_ov003_020ad6ec"
+      "name": "TitleScrollLevelList"
     },
     "ov003:0x020ad7a0": {
       "author": "tangosdev",
@@ -18807,11 +18807,11 @@
     },
     "ov003:0x020adc74": {
       "author": "tangosdev",
-      "name": "func_ov003_020adc74"
+      "name": "TitlePrintString"
     },
     "ov003:0x020adcbc": {
       "author": "tangosdev",
-      "name": "func_ov003_020adcbc"
+      "name": "TitlePrintLevelRow"
     },
     "ov003:0x020addfc": {
       "author": "tangosdev",
