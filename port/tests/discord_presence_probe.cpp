@@ -13,7 +13,8 @@ int main()
     assert(json.find("Playing Bob-omb Battlefield") != std::string::npos);
     assert(json.find("Adventure \\\"Co-op\\\"") != std::string::npos);
     assert(json.find("\"pid\":42") != std::string::npos);
-    assert(json.find("https://github.com/tangosdev/sm64ds-decomp") != std::string::npos);
+    assert(json.find("\"label\":\"Download SM64DS\",\"url\":\"https://tangos.dev/downloads\"") != std::string::npos);
+    assert(json.find("github.com") == std::string::npos);
     assert(json.find("SahilKDas") == std::string::npos);
     assert(json.find("\"start\":123456789") != std::string::npos);
     return 0;
