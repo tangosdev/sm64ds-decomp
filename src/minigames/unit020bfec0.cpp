@@ -2380,8 +2380,8 @@ void Camera_UpdateMatrices(MgCamera *camera) {
         }
     }
 
-    G3i::PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4),
-                       0x1555, 0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
+    G3i::PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
+                       0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
     G3i::LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
                  (Matrix4x3 *)&camera->mViewMtx);

@@ -604,9 +604,9 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
                     func_0203d388((int *)&vb, rot);
                     vb.x = vb.x + pos.x;
                     vb.y = vb.y + pos.y;
-                    OAM::Render(
-                        0, (OamAttr *)sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12, -1, -1,
-                        func_02053200((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
+                    OAM::Render(0, (OamAttr *)sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12,
+                                -1, -1, func_02053200((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00),
+                                (u16)rot);
                 }
             }
         }
