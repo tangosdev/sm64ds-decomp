@@ -119,7 +119,7 @@ extern void func_ov007_020b63e4(Ov007ItemView *view);
 extern void func_ov007_020b647c(int r0, int r1, short r2);
 extern void func_ov007_020b64a8(int dir);
 extern int func_ov007_020b79e4(void);
-extern void func_ov007_020b7a44(void);
+extern void MessageWindow_Close(void);
 extern void func_ov007_020b7d94(int kind);
 extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
 extern Ov007MenuState *PickerScene_GetDisplayState(void);
@@ -367,7 +367,7 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
                 data_ov007_02103428 = 3;
                 WORK->itemViews[0x16]->item->state->requestedState = 4;
             }
-            func_ov007_020b7a44();
+            MessageWindow_Close();
             next = 4;
             break;
         }

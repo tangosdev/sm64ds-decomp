@@ -4,7 +4,7 @@
 
 extern "C" {
 extern void ItemView_HandleTouch(void* elem, void* tp);
-extern void func_ov007_020b7a78(void);
+extern void MessageWindow_Update(void);
 extern void func_ov007_020c92d0(Ov007MenuState *state);
 extern void func_ov007_020c934c(Ov007MenuState *state, int initialState);
 extern void func_ov007_020b066c(void);
@@ -36,7 +36,7 @@ void func_ov007_020aed98(void)
         ItemView_HandleTouch(WORK->itemViews[i], WORK->touch);
     }
 
-    func_ov007_020b7a78();
+    MessageWindow_Update();
     func_ov007_020c92d0(r6);
 
     if (r6->stateTicks == 0) {

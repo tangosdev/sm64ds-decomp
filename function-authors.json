@@ -28331,7 +28331,7 @@
     },
     "ov007:0x020b797c": {
       "author": "tangosdev",
-      "name": "func_ov007_020b797c"
+      "name": "MenuText_ClearMainPlane"
     },
     "ov007:0x020b79c8": {
       "author": "tangosdev",
@@ -28351,11 +28351,11 @@
     },
     "ov007:0x020b7a44": {
       "author": "tangosdev",
-      "name": "func_ov007_020b7a44"
+      "name": "MessageWindow_Close"
     },
     "ov007:0x020b7a78": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b7a78"
+      "name": "MessageWindow_Update"
     },
     "ov007:0x020b7d94": {
       "author": "tangosdev",
@@ -28367,31 +28367,31 @@
     },
     "ov007:0x020b8070": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b8070"
+      "name": "MenuText_ScrollRecordBoard"
     },
     "ov007:0x020b8188": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8188"
+      "name": "MenuText_DrawRecordBoard"
     },
     "ov007:0x020b84e8": {
       "author": "tangosdev",
-      "name": "func_ov007_020b84e8"
+      "name": "MenuText_GetSourceScreen"
     },
     "ov007:0x020b84f4": {
       "author": "tangosdev",
-      "name": "func_ov007_020b84f4"
+      "name": "MenuText_GetSubScreen"
     },
     "ov007:0x020b8500": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8500"
+      "name": "MenuText_GetMainScreen"
     },
     "ov007:0x020b850c": {
       "author": "tangosdev",
-      "name": "func_ov007_020b850c"
+      "name": "MenuText_LoadFontPalette"
     },
     "ov007:0x020b8548": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b8548"
+      "name": "MenuText_Init"
     },
     "ov007:0x020b8690": {
       "author": "ruspecial",
@@ -28403,39 +28403,39 @@
     },
     "ov007:0x020b883c": {
       "author": "ruspecial",
-      "name": "func_ov007_020b883c"
+      "name": "MessageWindow_SetClosed"
     },
     "ov007:0x020b8860": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8860"
+      "name": "MessageWindow_Start"
     },
     "ov007:0x020b88c0": {
       "author": "ruspecial",
-      "name": "func_ov007_020b88c0"
+      "name": "MessageWindow_LayoutFrame"
     },
     "ov007:0x020b8a78": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8a78"
+      "name": "MenuText_DrawSlotHeading"
     },
     "ov007:0x020b8b00": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8b00"
+      "name": "MenuText_DrawNumber"
     },
     "ov007:0x020b8b80": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b8b80"
+      "name": "MenuText_DrawString"
     },
     "ov007:0x020b8cfc": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8cfc"
+      "name": "MenuText_RepeatGlyph"
     },
     "ov007:0x020b8d48": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b8d48"
+      "name": "MenuText_DrawGlyph"
     },
     "ov007:0x020b8ec0": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b8ec0"
+      "name": "MenuText_MessageIDToIndex"
     },
     "ov007:0x020b8f50": {
       "author": "tangosdev",

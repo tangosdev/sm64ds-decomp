@@ -34,7 +34,7 @@
  * ones unit020b797c and func_ov007_020bd1c0 read, in text order, while
  * the stroke counts at 0x020cdb34 lie inside the portrait coordinate
  * block that follows the .rodata unit020b2764's functions read. The
- * previous function, func_ov007_020b8ec0, touches no data and is called
+ * previous function, MenuText_MessageIDToIndex, touches no data and is called
  * only by the module whose bss block ends at 0x02104b98.
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
