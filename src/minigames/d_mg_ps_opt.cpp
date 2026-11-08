@@ -7,9 +7,9 @@
  * mActive is 1 while it takes touches, 2 while the close delay runs, 0 when
  * shut. dScMgBase_c owns the one instance, mTouchOptions.
  */
-// leftovers: func_020b8f78 calls the func_02012790 thunk, not Sound::Play2D
+// leftovers: Update calls the func_02012790 thunk, not Sound::Play2D
 // (the member call grows it 0x284 to 0x298 and retargets the callees).
-// func_020b8dc0 calls GetGameLanguage() twice per caption (one call shrinks
+// PsOpt_PlaceIcon calls GetGameLanguage() twice per caption (one call shrinks
 // it 0x120 to 0x108). TouchIcon_c::Render keeps the volatile s16 xy pair
 // and the mHalfW reload (plain spellings shrink it 0x1a8 to 0x198/0x1a4).
 // The ctor keeps the store of 8 before the store of 0 (dropping it shrinks
@@ -24,8 +24,11 @@ struct M;
 
 /* {halfW, halfH} records, stride 4. The ROM reads the width through the
    array's own symbol and the height through a second linker symbol two
-   bytes in (sPsOptIconPosAY and friends), and loads each base on its own. */
-#define HALF_AT(base, i) (*(short *)((char *)(base) + (i) * 4))
+   bytes in (sPsOptIconPosAY and friends), and loads each base on its own.
+   The width reads are plain sPsOptIconPosA[i].mHalfW; the height reads
+   keep the byte stride: sPsOptIconPosAY[i * 2] changes PsOpt_PlaceIcon's size
+   (measured). */
+#define HALF_H_AT(base, i) (*(short *)((char *)(base) + (i) * 4))
 
 /* dThIcon_c leaves these two unk_. The other derived icons do not agree
    on names, so the names stay in this file.
@@ -66,9 +69,11 @@ enum { kSubBgBit = 2 };
 
 extern "C" {
 extern void Mg_DrawSpriteListEntry(void *sprite, int x, int y, struct M *matrix);
-/* 8-byte OAM records. Mg_DrawSpriteListEntry copies one and draws it. */
-extern u16 data_ov004_020bca58[];
-extern u16 data_ov004_020bca60[];
+/* The two arrow sprites: one 16x16 OAM entry each (tile 0x49 previous,
+   0x47 next, palette 13) and a 0xffff terminator. Mg_DrawSpriteListEntry
+   copies the entry and draws it. */
+extern u16 sPsOptSoundPrevSprite[];
+extern u16 sPsOptSoundNextSprite[];
 extern int GetGameLanguage(void);
 /* Writes the icon center, half extents, touch kind, and clears the blink. */
 extern void func_ov001_020ab5b0(char *icon, int kind, short x, short y, short halfW, short halfH);
@@ -327,16 +332,16 @@ extern "C" void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int va
     if (style == kStyleSoundLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        func_ov001_020ab5b0((char *)icon, kind, x, y, HALF_AT(sPsOptIconPosA, lang),
-                            HALF_AT(sPsOptIconPosAY, lang2));
+        func_ov001_020ab5b0((char *)icon, kind, x, y, sPsOptIconPosA[lang].mHalfW,
+                            HALF_H_AT(sPsOptIconPosAY, lang2));
     } else if (style == kStyleLightLabel) {
         lang = GetGameLanguage();
         lang2 = GetGameLanguage();
-        func_ov001_020ab5b0((char *)icon, kind, x, y, HALF_AT(sPsOptIconPosB, lang),
-                            HALF_AT(sPsOptIconPosBY, lang2));
+        func_ov001_020ab5b0((char *)icon, kind, x, y, sPsOptIconPosB[lang].mHalfW,
+                            HALF_H_AT(sPsOptIconPosBY, lang2));
     } else {
-        func_ov001_020ab5b0((char *)icon, kind, x, y, HALF_AT(sPsOptStylePos, style),
-                            HALF_AT(sPsOptStylePosY, style));
+        func_ov001_020ab5b0((char *)icon, kind, x, y, sPsOptStylePos[style].mHalfW,
+                            HALF_H_AT(sPsOptStylePosY, style));
     }
 }
 
@@ -366,13 +371,13 @@ void dMgPsOpt_c::TouchIcon_c::Render() {
     case kStyleSoundPrev:
         if (mOn != 0)
             xy[0] = (s16)(xy[0] - 2);
-        sprites = data_ov004_020bca58;
+        sprites = sPsOptSoundPrevSprite;
         break;
 
     case kStyleSoundNext:
         if (mOn != 0)
             xy[0] = (s16)(xy[0] + 2);
-        sprites = data_ov004_020bca60;
+        sprites = sPsOptSoundNextSprite;
         break;
 
     case kStyleSoundMode:

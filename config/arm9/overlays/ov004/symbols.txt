@@ -780,8 +780,8 @@ pmf_dMgState_c_DrawRecordTable_2 kind:data(any) addr:0x020bca2c
 pmf_dMgState_c_Finished_Update kind:data(any) addr:0x020bca34
 pmf_dMgState_c_RetryPromptWideB_Enter kind:data(any) addr:0x020bca3c
 sMgStateTextSpritesByLanguage kind:data(any) addr:0x020bca44
-data_ov004_020bca58 kind:data(any) addr:0x020bca58
-data_ov004_020bca60 kind:data(any) addr:0x020bca60
+sPsOptSoundPrevSprite kind:data(any) addr:0x020bca58
+sPsOptSoundNextSprite kind:data(any) addr:0x020bca60
 _ZTIN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca68
 _ZTVN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca7c
 _ZTSN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca84
