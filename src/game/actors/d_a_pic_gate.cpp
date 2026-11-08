@@ -92,7 +92,6 @@ void NormalizeVec3(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void  func_020553a4(void *m);
 void  func_02012694(u32 id, void *pos);
-int   __aeabi_idiv(int a, int b);
 void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
@@ -339,8 +338,8 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
         {
             /* Frames per cycle, then distance per frame: past the
                wavefront the picture is still flat. */
-            int a = __aeabi_idiv(0xffff, wave->phaseStep);
-            int b = __aeabi_idiv(wave->wavelength, a);
+            int a = 0xffff / wave->phaseStep;
+            int b = wave->wavelength / a;
             if (r6 > b * (wave->duration - r4))
                 return 0;
         }
@@ -366,7 +365,7 @@ s32 daPicGate_c::func_ov080_02125cd4(s32 n)
     const WaveParams *p = mWaveParams;
     int r4 = p->amplitude;
     int r1 = p->duration;
-    int r = __aeabi_idiv(r4, r1);
+    int r = r4 / r1;
     return r4 - r * n;
 }
 

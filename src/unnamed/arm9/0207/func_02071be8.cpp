@@ -33,7 +33,7 @@ void func_02071be8(struct Src *s)
 {
     int local0;
     Ctx ctx;
-    volatile int blk[3];
+    int blk[3];
     unsigned char *q;
     func_02072dac(s->f10, &ctx);
     if (ctx.f4 == 0) {
@@ -43,7 +43,7 @@ void func_02071be8(struct Src *s)
     if (s->f0 != 0) { s->fc = 0; } else { s->fc = func_02072014(s, &ctx); }
     q = func_02071d3c(s, &ctx, &local0);
     blk[0] = q[1] | (q[2] << 8) | (q[3] << 16) | (q[4] << 24);
-    ReadSignedVarInt(func_02071a50(q + 5, (int*)&blk[1]), (int*)&blk[2]);
+    ReadSignedVarInt(func_02071a50(q + 5, &blk[1]), &blk[2]);
     func_02072168(s, &ctx, q);
     func_02071ccc(s, blk[2], local0);
     func_02071790(s, &ctx, ctx.f0 + blk[1]);

@@ -337,7 +337,6 @@ int daNknk_c::Behavior()
 
 int daNknk_c::Render()
 {
-    volatile VecFx32 saved;
     int b = (mFlags & 0x40000) != 0;
     if (b)
         return 1;
@@ -348,18 +347,14 @@ int daNknk_c::Render()
         mAnmModel.HideMaterial(0, 1);
         mAnmModel.ShowMaterial(0, 2);
     }
-    saved.x = mScaleX;
-    saved.y = mScaleY;
-    saved.z = mScaleZ;
+    Vector3 saved = mScale;
     if (mDeathState == 1 && mKoopaVariant == 2) {
-        mScaleX = FX_MUL(*(volatile int *)&mScaleX, 0x800);
-        mScaleY = FX_MUL(*(volatile int *)&mScaleY, 0x800);
-        mScaleZ = FX_MUL(*(volatile int *)&mScaleZ, 0x800);
+        mScale.x = FX_MUL(mScale.x, 0x800);
+        mScale.y = FX_MUL(mScale.y, 0x800);
+        mScale.z = FX_MUL(mScale.z, 0x800);
     }
     mAnmModel.Render(&mScale);
-    mScaleX = saved.x;
-    mScaleY = saved.y;
-    mScaleZ = saved.z;
+    mScale = saved;
     return 1;
 }
 
