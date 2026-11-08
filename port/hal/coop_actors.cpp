@@ -1,7 +1,7 @@
 // COOP PHASE 2: LIVE ENEMIES AND MOVING PLATFORMS KEPT IN STEP. Run mp1, lane COOPMOVE1. See coop_actors.h.
 //
 // PORT_HOST_ABI. Reads and writes live actors by raw offset (the established convention in port/hal); nothing in
-// src/ changes. Every write is range-checked: an offset is accepted only inside 0xd0..0x480 and aligned to its
+// src/ changes. Every write is range-checked: an offset is accepted only inside 0xd0..0x600 and aligned to its
 // width, a position only inside +-kMoverMaxUnits world units, and only after the record passed the validator.
 
 #include "coop_actors.h"
@@ -81,7 +81,7 @@ char  g_prof_name[256][40]; // names of rows added from the profile file
 
 enum : int {
     kSlots = 512, kSeats = 4,
-    kFieldLo = 0xd0, kFieldHi = 0x480,
+    kFieldLo = 0xd0, kFieldHi = 0x600,   // COOPRIDE1: 0x600 so the Tox box roll state (0x558..0x58b) fits
     kStaleMs = 3000, kHeartbeatMs = 1500, kDwellMs = 2000, kRxKeepMs = 4000,
     kPayloadMax = kHubCoopMaxDatagram - kHubCoopHeaderBytes,
 };
