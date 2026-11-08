@@ -89,8 +89,8 @@ static inline int IsAliveState(u32 state) {
 static inline int IsDyingState(u32 state) {
     return state == 2;
 }
-static inline int GlobalModeIs(volatile int *mode, int value) {
-    return mode[0] == value;
+static inline int GlobalModeIs(int value) {
+    return data_02099f24 == value;
 }
 static inline int PriorityChanged(fLiNdBaPr_c *node) {
     return node->nextPriority != node->currentPriority;
@@ -264,7 +264,7 @@ void fBase_c::AfterInitResources(u32 vfSuccess)
     if (vfSuccess != 2)
         return;
     func_0203b27c(data_020a4b88, &manager.behaviorNode);
-    if (GlobalModeIs(&data_02099f24, 3)) {
+    if (GlobalModeIs(3)) {
         unk_010 = 1;
         return;
     }
@@ -282,8 +282,8 @@ s32 fBase_c::CleanupResources()
 /* vtable slot 4. Wait for pending lifecycle work and remaining scene children. */
 int fBase_c::BeforeCleanupResources()
 {
-    int v = (int)lifecycleState;
-    if ((v != 0 && func_0204424c((char *)v) == 0) || manager.sceneNode.child != 0)
+    if ((lifecycleState != 0 && func_0204424c((char *)lifecycleState) == 0) ||
+        manager.sceneNode.child != 0)
         return 0;
     return 1;
 }
@@ -616,7 +616,7 @@ void fBase_c::func_020433b8() {
         return;
     if (!IsPendingState(aliveState))
         return;
-    if (GlobalModeIs(&data_02099f24, 2)) {
+    if (GlobalModeIs(2)) {
         unk_011 = 1;
         return;
     }

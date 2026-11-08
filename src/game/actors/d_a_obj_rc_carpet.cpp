@@ -9,8 +9,7 @@
  * Notes:
  * - classInit is `return new daObjRcCarpet_c()`; dPathLiftActor_c's
  *   implicit constructor inlines into it, as in d_a_obj_path_lift.cpp.
- * - func_020393d4 is an 8-byte store into dBgW+0x18 (beforeClsnCallback);
- *   dBgW.h has no setter. Matrix4x3_FromRotationXYZExt has no header either.
+ * - Matrix4x3_FromRotationXYZExt has no shared header.
  * - data_ov002_0210d9f0 and data_ov036_02112b28 CLPS stay outside this TU.
  *   The three ov036 handles are file-scope objects at the bottom of this
  *   file.
@@ -68,10 +67,6 @@ extern CLPS_Block data_ov036_02112b28;
 FlyingCarpetResources data_ov036_02113f58 = {&gRcCarpetModelFile, &gRcCarpetCollisionFile,
                                              &data_ov036_02112b28};
 
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-}
-
 extern "C" daObjRcCarpet_c *daObjRcCarpet_c_classInit() {
     return new daObjRcCarpet_c();
 }
@@ -97,7 +92,7 @@ int daObjRcCarpet_c::InitResources() {
     UpdateClsnPosAndRot();
     KCL_File *collisionFile = (KCL_File *)dBgW_Kc::LoadFile(*data_ov036_02113f58.collision);
     mMeshCollider.SetFile(collisionFile, mClsnMat, 0x199, mAngleY, *data_ov036_02113f58.clps);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
     BaseInitResources();

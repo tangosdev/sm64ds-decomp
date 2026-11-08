@@ -1320,72 +1320,72 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@927",
+      "from": "@925",
       "to": "@822",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @932 where main emits @918; licensed under the existing pin @822"
     },
     {
-      "from": "@928",
+      "from": "@926",
       "to": "@823",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @933 where main emits @919; licensed under the existing pin @823"
     },
     {
-      "from": "@929",
+      "from": "@927",
       "to": "@824",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @934 where main emits @920; licensed under the existing pin @824"
     },
     {
-      "from": "@930",
+      "from": "@928",
       "to": "@825",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @935 where main emits @921; licensed under the existing pin @825"
     },
     {
-      "from": "@932",
+      "from": "@930",
       "to": "@827",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @937 where main emits @923; licensed under the existing pin @827"
     },
     {
-      "from": "@934",
+      "from": "@932",
       "to": "@829",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @939 where main emits @925; licensed under the existing pin @829"
     },
     {
-      "from": "@936",
+      "from": "@934",
       "to": "@831",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @941 where main emits @927; licensed under the existing pin @831"
     },
     {
-      "from": "@938",
+      "from": "@936",
       "to": "@833",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @943 where main emits @929; licensed under the existing pin @833"
     },
     {
-      "from": "@940",
+      "from": "@938",
       "to": "@835",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @945 where main emits @931; licensed under the existing pin @835"
     },
     {
-      "from": "@942",
+      "from": "@940",
       "to": "@837",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @947 where main emits @933; licensed under the existing pin @837"
     },
     {
-      "from": "@944",
+      "from": "@942",
       "to": "@839",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @949 where main emits @935; licensed under the existing pin @839"
     },
     {
-      "from": "@946",
+      "from": "@944",
       "to": "@841",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @951 where main emits @937; licensed under the existing pin @841"
     },
     {
-      "from": "@948",
+      "from": "@946",
       "to": "@843",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @953 where main emits @939; licensed under the existing pin @843"
     },
     {
-      "from": "@950",
+      "from": "@948",
       "to": "@845",
       "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @955 where main emits @941; licensed under the existing pin @845"
     }

@@ -22,9 +22,9 @@
  * unit and ov035's .text.
  */
 
-// Notes: dBgW::SetClipRadius / dBgW::SetClipOffsetY / func_020393d4 / dBgW_Kc::SetEdgeToleranceShift are
+// Notes: dBgW::SetClipRadius / dBgW::SetClipOffsetY / dBgW::SetBeforeClsnCallback / dBgW_Kc::SetEdgeToleranceShift are
 // the out-of-line stores into the collider's range fields and callback slot;
-// d_bg_w.cpp defines them; the callback setters remain local.
+// d_bg_w.cpp defines them.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjCtMecha11_c_AssetId {
@@ -60,7 +60,6 @@ extern "C" {
  * renumbering this TU's compiler-generated static-initializer aliases. */
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern int RandomIntInternal(int *p);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern short data_02082214[];
@@ -158,7 +157,7 @@ int daObjCtMecha11_c::InitResources() {
     KCL_File *kf = (KCL_File *)dBgW_Kc::LoadFile(RotatingClockHand_ClsnFile);
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kf, mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetEdgeToleranceShift(0);
     Vector3 v;
     v.x = mPosX;

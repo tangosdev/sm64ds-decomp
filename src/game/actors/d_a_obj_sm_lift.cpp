@@ -44,8 +44,6 @@ int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int n);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 int AngleDiff(int, int);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -232,8 +230,8 @@ s32 daObjSm_Lift_c::InitResources() {
     void *kf = dBgW_Kc::LoadFile(gSmLiftCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kf, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)data_ov018_02112f48);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mPauseTimer = 0x3c;
     mBasePosX = mPosX;
     mBasePosY = mPosY;
@@ -263,7 +261,7 @@ void daObjSm_Lift_c::HandlePlayerContact(dActor_c *other) {
         mTouchingPlayer = other;
 }
 
-/* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
+/* dBgW callback veneer, armed by dBgW::SetStoodOnCallback in InitResources. Drops the
    collider and forwards the touching actor to HandlePlayerContact. */
 void daObjSm_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *other) {
     static_cast<daObjSm_Lift_c *>(self)->HandlePlayerContact(other);

@@ -2071,117 +2071,117 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@671",
+      "from": "@667",
       "to": "@470",
       "evidence": "compiler-local destructor-registration node at 0x0211b0bc; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @676 to @671 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@672",
+      "from": "@668",
       "to": "@471",
       "evidence": "compiler-local destructor-registration node at 0x0211b0c8; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @677 to @672 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@658",
+      "from": "@654",
       "to": "@457",
       "evidence": "compiler-local destructor-registration node at 0x0211b0d4; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @663 to @658 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@673",
+      "from": "@669",
       "to": "@472",
       "evidence": "compiler-local destructor-registration node at 0x0211b0e0; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @678 to @673 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@660",
+      "from": "@656",
       "to": "@459",
       "evidence": "compiler-local destructor-registration node at 0x0211b0ec; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @665 to @660 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@661",
+      "from": "@657",
       "to": "@460",
       "evidence": "compiler-local destructor-registration node at 0x0211b0f8; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @666 to @661 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@674",
+      "from": "@670",
       "to": "@473",
       "evidence": "compiler-local destructor-registration node at 0x0211b104; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @679 to @674 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@662",
+      "from": "@658",
       "to": "@461",
       "evidence": "compiler-local destructor-registration node at 0x0211b110; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @667 to @662 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@659",
+      "from": "@655",
       "to": "@458",
       "evidence": "compiler-local destructor-registration node at 0x0211b11c; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @664 to @659 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@675",
+      "from": "@671",
       "to": "@474",
       "evidence": "compiler-local destructor-registration node at 0x0211b128; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @680 to @675 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@664",
+      "from": "@660",
       "to": "@463",
       "evidence": "compiler-local destructor-registration node at 0x0211b134; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @669 to @664 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@665",
+      "from": "@661",
       "to": "@464",
       "evidence": "compiler-local destructor-registration node at 0x0211b140; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @670 to @665 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@676",
+      "from": "@672",
       "to": "@475",
       "evidence": "compiler-local destructor-registration node at 0x0211b14c; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @681 to @676 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@666",
+      "from": "@662",
       "to": "@465",
       "evidence": "compiler-local destructor-registration node at 0x0211b158; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @671 to @666 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@667",
+      "from": "@663",
       "to": "@466",
       "evidence": "compiler-local destructor-registration node at 0x0211b164; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @672 to @667 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@663",
+      "from": "@659",
       "to": "@462",
       "evidence": "compiler-local destructor-registration node at 0x0211b170; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @668 to @663 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@681",
+      "from": "@677",
       "to": "@467",
       "evidence": "compiler-local PMF descriptor at 0x0211a930; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals and the types.h Vector3 ctors advance mwcc's per-TU label counter to @520, which is itself another module's pin (the daKpa_c.h include moves it on to @691); the descriptor is bound to this TU's swapped data pin at 0x0211a930 | Re-keyed from @686 to @681 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@669",
+      "from": "@665",
       "to": "@468",
       "evidence": "compiler-local destructor-registration node at 0x0211b188; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @674 to @669 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@670",
+      "from": "@666",
       "to": "@469",
       "evidence": "compiler-local destructor-registration node at 0x0211b194; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @675 to @670 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@657",
+      "from": "@653",
       "to": "@456",
       "evidence": "compiler-local destructor-registration node at 0x0211b1a0; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @662 to @657 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@677",
+      "from": "@673",
       "to": "@477",
       "evidence": "compiler-local pointer-to-member descriptor at 0x0211a938; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @682 to @677 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@679",
+      "from": "@675",
       "to": "@479",
       "evidence": "compiler-local pointer-to-member descriptor at 0x0211a940; the classInit fold places `new daKpa3Bg_c` ahead of the static-init globals, advancing mwcc's label counter by 25 (and the daKpa_c.h include by a further 171), and the shifted name collides with temps other modules define, so the compiled name maps back to the configured one | Re-keyed from @684 to @679 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     },
     {
-      "from": "@668",
+      "from": "@664",
       "to": "@506",
       "evidence": "compiler-local destructor-registration node at 0x0211b17c; including daKpa_c.h (func_ov060_021180e0 reads Bowser's fields by name) advances mwcc's label counter by a further 171, so the compiled name maps back to the configured one | Re-keyed from @673 to @668 by address (same section, size and order; uniform -5 shift) when func_ov060_02117db8's dead live/p/py locals and speed/posY pointer aliases were cut (#821)."
     }

@@ -14,9 +14,7 @@
  * the same pragma lays .text down in source order, so this file is ROM-ascending.
  */
 
-// Notes: func_020393d4 is the out-of-line store into the collider's
-// beforeClsnCallback; d_bg_w.cpp defines it and no header declares it.
-// UpdateShadow is void: its early exit leaves no value, and Behavior
+// Notes: UpdateShadow is void: its early exit leaves no value, and Behavior
 // ignores it.
 
 /* The two registry factories close the run in ROM order:
@@ -81,7 +79,6 @@ extern "C" {
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern short data_02082214[];
@@ -242,7 +239,7 @@ int daObjCtRotateBlock_c::InitResources() {
                                   *data_ov065_0211cfd0[idx].clps);
     }
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     {
         Vector3 va;

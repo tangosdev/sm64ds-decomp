@@ -75,8 +75,8 @@ void Jump3D_StopGravity(void);
 void Jump3D_StartRoundLayout(void);
 int  Jump3D_AllIdle(void);
 int  Heyho_AllIdle(void);
-int  Heyho_InitPool(char *ptr, int n);
-int  Jump3D_InitPool(char *base, int count);
+int Heyho_InitPool(void *ptr, int n);
+int Jump3D_InitPool(void *base, int count);
 void Jump3D_EnableInput(void);
 int  RandomIntInternal(int *seed);
 
@@ -228,9 +228,9 @@ s32 dScMgJump_c::InitResources()
     this->mCameras[1].mFovAngle = 0x800;
     Camera_UpdateMatrices(&mCameras[1]);
 
-    if (Heyho_InitPool((char *)mHeyhos, 6) == 0)
+    if (Heyho_InitPool(mHeyhos, 6) == 0)
         return 0;
-    if (Jump3D_InitPool((char *)mPlayers, 3) == 0)
+    if (Jump3D_InitPool(mPlayers, 3) == 0)
         return 0;
 
     if (param1 & 1) {
@@ -452,14 +452,15 @@ s32 dScMgJump_c::Render()
 
     {
         V3 t;
-        void *obj;
-        void *p;
+        ModelComponents *obj;
+        BMD_Material *p;
 
         t = *(V3 *)sJumpRenderScale;
 
         obj = &mModel.data;
-        p = *(void **)((char *)obj + 4);
+        p = obj->materials;
         func_02045e44(obj, 1, 0);
+        /* +0x18 of the first material is inside BMD_Material's unnamed pad_0c. */
         *(int *)((char *)p + 0x18) = mAccum;
 
         {

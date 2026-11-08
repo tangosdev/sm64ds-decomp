@@ -36,7 +36,7 @@
  * - InitResources: one SetFile with a ternary scale is 0x1d8 against the
  *   ROM's 0x214 (-60). Both LoadFile/SetFile arms stay.
  * - InitResources: assigning mMeshCollider.beforeClsnCallback directly is
- *   0x210 against 0x214 (-4). The ROM calls func_020393d4.
+ *   0x210 against 0x214 (-4). The ROM calls dBgW::SetBeforeClsnCallback.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -66,7 +66,7 @@ enum daObjSimpleLift_c_AssetId {
 /* Per-variant asset row is three pointers, stride 0xc. dExtSimpleModel_c and KCL are
  * data_ov091_02135024 / data_ov091_02135028; the CLPS word is named here.
  * Heading offsets and travel times are data_ov091_02134514 / 02134504.
- * func_020393d4 stores the beforeClsn callback; an inlined store is four
+ * dBgW::SetBeforeClsnCallback stores the beforeClsn callback; an inlined store is four
  * bytes short. */
 struct SimpleLiftModelFilePtr : SharedFilePtr {
     SimpleLiftModelFilePtr(u32 fileID);
@@ -77,9 +77,6 @@ struct SimpleLiftClsnFileHandle : SharedFilePtr {
     SimpleLiftClsnFileHandle(u32 fileID);
     ~SimpleLiftClsnFileHandle();
 };
-
-/* local extern: no shared header declares it. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 extern char data_ov091_0213502c[];
 
@@ -189,7 +186,7 @@ int daObjSimpleLift_c::InitResources() {
         mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(*(void **)(data_ov091_0213502c + tableOffset)));
     }
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;
 }
 
