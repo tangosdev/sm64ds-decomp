@@ -2348,7 +2348,7 @@ src/engine/os/OS_Thread.cpp:
     complete
     .text start:0x02057e34 end:0x02058568
 
-src/unnamed/arm9/0205/func_02058568.c:
+src/OS_InitContext.c:
     complete
     .text start:0x02058568 end:0x020585cc
 

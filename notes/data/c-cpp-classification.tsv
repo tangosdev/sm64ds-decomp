@@ -2494,7 +2494,7 @@ src/unnamed/arm9/0205/func_02057e84.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_02058048.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_0205816c.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_02058200.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0205/func_02058568.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
+src/OS_InitContext.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/unnamed/arm9/0205/func_020587e4.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_02058894.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_02058940.c	PURE-C	arm9				1		None		-
