@@ -31,6 +31,7 @@
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "LevelRng.h"
@@ -71,7 +72,6 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_02012694(unsigned int id, void *v);
-extern short data_02082214[];
 
 /* ov002 -- unnamed particle helper. */
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
@@ -224,16 +224,14 @@ int daYurei_Mucho_c::Behavior()
     }
     if (mCurrentState != &data_ov065_0211d650) {
         int ang;
-        int idx;
-        short tbl;
+        fx16 sine;
         int result;
         mBobAngle += 0x200;
         ang = mBobAngle;
         /* The shift must be LOGICAL so the angle wraps -- writing it on the
            signed s16 would read the wrong table entry for negative angles. */
-        idx = ((unsigned short)(short)ang >> 4) * 2;
-        tbl = data_02082214[idx];
-        result = FX_MUL(tbl, 0x46000);
+        sine = FX_SinIdx((unsigned short)(short)ang >> 4);
+        result = FX_MUL(sine, 0x46000);
         ApproachLinear(mPosY, mHomePosY + (result + 0xb4000), 0x3000);
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);

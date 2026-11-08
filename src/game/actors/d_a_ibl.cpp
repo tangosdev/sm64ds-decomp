@@ -493,18 +493,17 @@ void daIbl_c::func_ov100_0214272c()
     func_ov100_02141fb0();
     func_ov100_02142130();
 
-    if (mPosY >= mKillY) {
-        if (mHitWall == 0)
-            goto ground;
+    if (mPosY < mKillY || mHitWall != 0) {
+        /* The volatile read of mPosY is measured, not style: with a plain
+           mPosY this function compiles to 0x1e8 bytes against the ROM's 0x1ec,
+           and testing mHitWall first instead moves seven words. */
+        Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, *(volatile int *)&mPosY, mPosZ);
+        func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
+        TriplePoofDust();
+        MarkForDestruction();
+        return;
     }
 
-    Particle::System::NewSimple(daIbl_PTCL_BREAK, mPosX, *(volatile int *)&mPosY, mPosZ);
-    func_02012694(daIbl_SND_BREAK, &mCamSpacePosX);
-    TriplePoofDust();
-    MarkForDestruction();
-    return;
-
-ground:
     if (mWithMeshClsn.IsOnGround()) {
         mSpeedX += mFloorNormalX * 3;
         mSpeedZ += mFloorNormalZ * 3;
@@ -580,37 +579,32 @@ void daIbl_c::func_ov100_02142918()
         mSpeedX -= mWallNormalX * 3;
         mSpeedZ -= mWallNormalZ * 3;
         mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
-        goto Lend;
+    } else if (mWithMeshClsn.IsOnGround()) {
+        mSpeedX += mFloorNormalX * 3;
+        mSpeedZ += mFloorNormalZ * 3;
+        mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
+        if (mFloorNormalY == 0x1000 && mHorzSpeed > 0x1c000) {
+            mHorzSpeed = 0x1c000;
+            mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
+            UpdatePosWithHorzSpeedAndAng();
+        }
+
+        if (mWithMeshClsn.JustHitGround()) {
+            func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
+            LandingDust(1);
+        } else {
+            mRollSoundHandle =
+                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, *(Vector3 *)&mCamSpacePosX, 0);
+        }
     }
 
-    if (mWithMeshClsn.IsOnGround() == 0)
-        goto Lend;
-
-    mSpeedX += mFloorNormalX * 3;
-    mSpeedZ += mFloorNormalZ * 3;
-    mHorzSpeed = Vec3_HorzLen((const Vector3 *)&mSpeedX);
-    if (mFloorNormalY == 0x1000 && mHorzSpeed > 0x1c000) {
-        mHorzSpeed = 0x1c000;
-        mPrevAngleY = cstd::atan2(mSpeedX, mSpeedZ);
-        UpdatePosWithHorzSpeedAndAng();
+    {
+        int nv = mVertSpeed + mVertAccel;
+        int lim = mTerminalVelocity;
+        if (nv >= lim)
+            lim = nv;
+        mVertSpeed = lim;
     }
-
-    if (mWithMeshClsn.JustHitGround() != 0) {
-        func_02012694(daIbl_SND_LAND, &mCamSpacePosX);
-        LandingDust(1);
-        goto Lend;
-    }
-
-    mRollSoundHandle =
-        Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, *(Vector3 *)&mCamSpacePosX, 0);
-
-Lend: {
-    int nv = mVertSpeed + mVertAccel;
-    int lim = mTerminalVelocity;
-    if (nv >= lim)
-        lim = nv;
-    mVertSpeed = lim;
-}
     UpdatePosWithOnlySpeed(0);
     func_ov100_02142264();
     mdCcAc_c.Clear();
@@ -816,12 +810,9 @@ int daIbl_c::InitResources()
         }
         UpdatePos(0);
         mWithMeshClsn.SetLimMovFlag();
-        goto end;
-    }
-
-    /* Kind 1, the free roller: no path. mFlags |= 1 clip-tests the ball, so
-       its Behavior is skipped while it is off screen. */
-    if (kind == daIbl_KIND_FREE_ROLL) {
+    } else if (kind == daIbl_KIND_FREE_ROLL) {
+        /* Kind 1, the free roller: no path. mFlags |= 1 clip-tests the ball,
+           so its Behavior is skipped while it is off screen. */
         mFlags |= 1;
         mDrawScale.x = 0x1000;
         mDrawScale.y = 0x1000;
@@ -829,13 +820,11 @@ int daIbl_c::InitResources()
         mdCcAc_c.Init(this, 0x64000, 0x64000, 0x200004, 0x3c0);
         mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
         mWithMeshClsn.SetLimMovFlag();
-        goto end;
-    }
-
-    /* Kind 0, the spawner: only picks the distance band, in units. Sublevel
-       0x19: 512 to 6000. Otherwise the minimum is 1024 and the maximum 7000 in
-       sublevels 0x18 and 0x16, 4600 in 6, 6500 elsewhere. */
-    if (kind == daIbl_KIND_SPAWNER) {
+    } else if (kind == daIbl_KIND_SPAWNER) {
+        /* Kind 0, the spawner: only picks the distance band, in units.
+           Sublevel 0x19: 512 to 6000. Otherwise the minimum is 1024 and the
+           maximum 7000 in sublevels 0x18 and 0x16, 4600 in 6, 6500
+           elsewhere. */
         d = *(signed char *)&gCurrentSublevel;
         if (d == 0x19) {
             mMinSpawnDist = 0x200000;
@@ -853,7 +842,6 @@ int daIbl_c::InitResources()
         }
     }
 
-end:
     mStateTimer = 0;
     mCoinType = 0; /* a dEnemyBase_c byte; nothing in this file reads it */
     mRollSoundHandle = 0;

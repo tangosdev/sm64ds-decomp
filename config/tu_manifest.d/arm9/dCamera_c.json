@@ -423,7 +423,7 @@
       "ordinal": 89
     },
     {
-      "symbol": "func_02009374",
+      "symbol": "_ZN9dCamera_c13func_02009374Ev",
       "address": "0x02009374",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0200/func_02009374.c",
@@ -626,14 +626,14 @@
       "ordinal": 118
     },
     {
-      "symbol": "func_0200b0fc",
+      "symbol": "_ZN9dCamera_c13func_0200b0fcEP10CamViewObji",
       "address": "0x0200b0fc",
       "size": "0x00000494",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b0fc.cpp",
       "ordinal": 119
     },
     {
-      "symbol": "func_0200b590",
+      "symbol": "_ZN9dCamera_c13func_0200b590EP10CamViewObji",
       "address": "0x0200b590",
       "size": "0x00000208",
       "legacy_source": "src/unnamed/arm9/0200/func_0200b590.cpp",
@@ -654,7 +654,7 @@
       "ordinal": 122
     },
     {
-      "symbol": "func_0200bb28",
+      "symbol": "_ZN9dCamera_c13func_0200bb28EP10CamViewObj",
       "address": "0x0200bb28",
       "size": "0x0000039c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200bb28.cpp",
@@ -1241,19 +1241,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sPrevTurnInput$1918",
+      "from": "sPrevTurnInput$1917",
       "to": "sPrevTurnInput$1927",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). | re-keyed -1 when func_02009374, func_0200b0fc, func_0200b590 and func_0200bb28 became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     },
     {
-      "from": "_ZGVsScriptOps$2620",
+      "from": "_ZGVsScriptOps$2619",
       "to": "_ZGVsScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types)."
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when func_02009374, func_0200b0fc, func_0200b590 and func_0200bb28 became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     },
     {
-      "from": "sScriptOps$2620",
+      "from": "sScriptOps$2619",
       "to": "sScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types)."
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when func_02009374, func_0200b0fc, func_0200b590 and func_0200bb28 became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size)"
     }
   ],
   "relocations": [

@@ -1116,22 +1116,14 @@ void dScMgBomroom_c::BombMarch_ToGate(int index) {
     z = mBombs[index].y >> 12;
     tx = color ? 0x100 : 0;
 
-    if (x > tx + 2)
-        goto done;
-    if (x < tx - 2)
-        goto done;
-    if (z > 0x62)
-        goto done;
-    if (z < 0x5e)
-        goto done;
+    if (x <= tx + 2 && x >= tx - 2 && z <= 0x62 && z >= 0x5e) {
+        mBombs[index].substate = 1;
+        if (mBombs[index].color != 0)
+            mBombs[index].angle = 0;
+        else
+            mBombs[index].angle = 0x8000;
+    }
 
-    mBombs[index].substate = 1;
-    if (mBombs[index].color != 0)
-        mBombs[index].angle = 0;
-    else
-        mBombs[index].angle = 0x8000;
-
-done:
     PenGate_Open(mBombs[index].color);
 }
 
@@ -1895,6 +1887,10 @@ s32 dScMgBomroom_c::Behavior()
  * graphics, sets the blend, then resets the round into state 1. */
 s32 dScMgBomroom_c::InitResources() {
     char *b;
+    /* The ROM spills the BG fill value through the stack (strh/ldrh at sp)
+       before MultiStore16. A plain u16 compiles InitResources to 0x328
+       against the ROM's 0x330; no non-volatile spelling is known (the same
+       spill as Message.cpp's MultiStore_Int fills). */
     volatile u16 fill;
     void *f;
     void *arc;

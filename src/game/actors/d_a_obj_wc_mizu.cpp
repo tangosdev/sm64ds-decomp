@@ -54,6 +54,7 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
 #include "daObjWc_Mizu_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "nitro/fx/fx_trig.h"
 
 struct BMD_File;
 struct BTA_File;
@@ -82,7 +83,6 @@ extern BTA_File data_ov029_02112fb8;
 extern CLPS_Block data_ov029_02112fec;
 extern u8 data_0209f2c0;
 extern int data_0209f32c;
-extern s16 data_02082214[];
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -131,7 +131,6 @@ int daObjWc_Mizu_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 int daObjWc_Mizu_c::Behavior() {
     int t;
-    int i;
 
     mAreaId = -1;
 
@@ -164,8 +163,7 @@ int daObjWc_Mizu_c::Behavior() {
     }
 
     mPhaseAngle += 0x200;
-    i = (u16)mPhaseAngle >> 4;
-    mWaterHeight = (int)data_02082214[i * 2] * 0xf + mPosY;
+    mWaterHeight = FX_SinIdx((u16)mPhaseAngle >> 4) * 0xf + mPosY;
     data_0209f32c = mWaterHeight;
     UpdateModelTransform();
     UpdateClsnTransform();

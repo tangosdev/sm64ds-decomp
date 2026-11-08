@@ -72,6 +72,7 @@ struct daPgMthr_c : dActor_c {
     void func_ov018_02111968(void *found, char *heldRaw);
     void func_ov018_02111a48(char *b);
     void func_ov018_02111b3c();
+    void func_ov018_02111bf0(dBgCh_Actr *);
     void func_ov018_02111d28();
     int func_ov018_02111e28();
     int func_ov018_02111f1c();
