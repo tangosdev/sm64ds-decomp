@@ -113,7 +113,7 @@
 
 struct M { int _00, _01, _10, _11; };
 struct S3 { int v[3]; };
-struct Entry { int id; int ptr; };
+struct Entry { int file; int *sprites; };
 struct EntryTable { Entry e[29]; };
 struct OamAttr;
 
@@ -131,7 +131,7 @@ int func_02053200(int x);
 void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, int angle);
 int RandomIntInternal(int *seed);
-void Mg_SpawnFx(int c, short a1, int *a2, int *r3, int *sp0);
+void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 /* local extern: only sibling minigame scene headers declare it, and its
    named parameters hold the @NNN count noted above. */
 void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, dtor_t dtor);
@@ -146,7 +146,7 @@ void Banner_StartWaveBurst(MgBanner *e);
 
 extern S3 data_ov004_020bc27c;
 extern int sMgMsgGiveUpSprites;
-static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};
+static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, &sMgMsgGiveUpSprites}}};
 extern OamAttr *data_ov006_021346bc;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
@@ -172,61 +172,61 @@ extern void *sMgBannerFiles[];
 extern int sMgBannerSprites[];
 
 extern int sMgMsgRetryNcgByLanguage[];
-extern int sMgMsgRetrySpritesByLanguage[];
+extern int *sMgMsgRetrySpritesByLanguage[];
 extern int sMgMsgQuitNcgByLanguage[];
-extern int sMgMsgQuitSpritesByLanguage[];
+extern int *sMgMsgQuitSpritesByLanguage[];
 extern int sMgMsgLevelClearNcgByLanguage[];
-extern int sMgMsgLevelClearSpritesByLanguage[];
+extern int *sMgMsgLevelClearSpritesByLanguage[];
 extern int sMgMsgGoalNcgByLanguage[];
-extern int sMgMsgGoalSpritesByLanguage[];
+extern int *sMgMsgGoalSpritesByLanguage[];
 extern int sMgMsgHiScoreNcgByLanguage[];
-extern int sMgMsgHiScoreSpritesByLanguage[];
+extern int *sMgMsgHiScoreSpritesByLanguage[];
 extern int sMgMsgPerfectNcgByLanguage[];
-extern int sMgMsgPerfectSpritesByLanguage[];
+extern int *sMgMsgPerfectSpritesByLanguage[];
 extern int sMgMsgResultHiScoreNcgByLanguage[];
-extern int sMgMsgResultHiScoreSpritesByLanguage[];
+extern int *sMgMsgResultHiScoreSpritesByLanguage[];
 extern int sMgMsgGameOverNcgByLanguage[];
-extern int sMgMsgGameOverSpritesByLanguage[];
+extern int *sMgMsgGameOverSpritesByLanguage[];
 extern int sMgMsgYouWinNcgByLanguage[];
-extern int sMgMsgYouWinSpritesByLanguage[];
+extern int *sMgMsgYouWinSpritesByLanguage[];
 extern int sMgMsgTooBadNcgByLanguage[];
-extern int sMgMsgTooBadSpritesByLanguage[];
+extern int *sMgMsgTooBadSpritesByLanguage[];
 extern int sMgMsgDrawNcgByLanguage[];
-extern int sMgMsgDrawSpritesByLanguage[];
+extern int *sMgMsgDrawSpritesByLanguage[];
 extern int sMgMsgStartNcgByLanguage[];
-extern int sMgMsgStartSpritesByLanguage[];
+extern int *sMgMsgStartSpritesByLanguage[];
 extern int sMgMsgLevelNcgByLanguage[];
-extern int sMgMsgLevelSpritesByLanguage[];
+extern int *sMgMsgLevelSpritesByLanguage[];
 extern int sMgMsgTimeOverNcgByLanguage[];
-extern int sMgMsgTimeOverSpritesByLanguage[];
+extern int *sMgMsgTimeOverSpritesByLanguage[];
 extern int sMgMsgWhereNcgByLanguage[];
-extern int sMgMsgWhereSpritesByLanguage[];
+extern int *sMgMsgWhereSpritesByLanguage[];
 extern int sMgMsgLikeNcgByLanguage[];
-extern int sMgMsgLikeSpritesByLanguage[];
+extern int *sMgMsgLikeSpritesByLanguage[];
 extern int sMgMsgHateNcgByLanguage[];
-extern int sMgMsgHateSpritesByLanguage[];
+extern int *sMgMsgHateSpritesByLanguage[];
 extern int sMgMsgLoveNcgByLanguage[];
-extern int sMgMsgLoveSpritesByLanguage[];
+extern int *sMgMsgLoveSpritesByLanguage[];
 extern int sMgMsgDislikeNcgByLanguage[];
-extern int sMgMsgDislikeSpritesByLanguage[];
+extern int *sMgMsgDislikeSpritesByLanguage[];
 extern int sMgMsgEsperNcgByLanguage[];
-extern int sMgMsgEsperSpritesByLanguage[];
+extern int *sMgMsgEsperSpritesByLanguage[];
 extern int sMgMsgSuperEsperNcgByLanguage[];
-extern int sMgMsgSuperEsperSpritesByLanguage[];
+extern int *sMgMsgSuperEsperSpritesByLanguage[];
 extern int sMgMsgNoPairNcgByLanguage[];
-extern int sMgMsgNoPairSpritesByLanguage[];
+extern int *sMgMsgNoPairSpritesByLanguage[];
 extern int sMgMsgOnePairNcgByLanguage[];
-extern int sMgMsgOnePairSpritesByLanguage[];
+extern int *sMgMsgOnePairSpritesByLanguage[];
 extern int sMgMsgTwoPairNcgByLanguage[];
-extern int sMgMsgTwoPairSpritesByLanguage[];
+extern int *sMgMsgTwoPairSpritesByLanguage[];
 extern int sMgMsgThreeCardNcgByLanguage[];
-extern int sMgMsgThreeCardSpritesByLanguage[];
+extern int *sMgMsgThreeCardSpritesByLanguage[];
 extern int sMgMsgFullHouseNcgByLanguage[];
-extern int sMgMsgFullHouseSpritesByLanguage[];
+extern int *sMgMsgFullHouseSpritesByLanguage[];
 extern int sMgMsgFourCardNcgByLanguage[];
-extern int sMgMsgFourCardSpritesByLanguage[];
+extern int *sMgMsgFourCardSpritesByLanguage[];
 extern int sMgMsgFiveCardNcgByLanguage[];
-extern int sMgMsgFiveCardSpritesByLanguage[];
+extern int *sMgMsgFiveCardSpritesByLanguage[];
 
 extern "C" void Mg_FreeBannerFiles(void) {
     int i;
@@ -251,66 +251,66 @@ extern "C" void Mg_LoadBannerFiles(void)
        banner with no per-language files. */
     EntryTable entries = sMgBannerFileTemplate;
 
-    entries.e[0].id = sMgMsgRetryNcgByLanguage[GetGameLanguage()];
-    entries.e[0].ptr = sMgMsgRetrySpritesByLanguage[GetGameLanguage()];
-    entries.e[2].id = sMgMsgQuitNcgByLanguage[GetGameLanguage()];
-    entries.e[2].ptr = sMgMsgQuitSpritesByLanguage[GetGameLanguage()];
-    entries.e[3].id = sMgMsgLevelClearNcgByLanguage[GetGameLanguage()];
-    entries.e[3].ptr = sMgMsgLevelClearSpritesByLanguage[GetGameLanguage()];
-    entries.e[4].id = sMgMsgGoalNcgByLanguage[GetGameLanguage()];
-    entries.e[4].ptr = sMgMsgGoalSpritesByLanguage[GetGameLanguage()];
-    entries.e[5].id = sMgMsgHiScoreNcgByLanguage[GetGameLanguage()];
-    entries.e[5].ptr = sMgMsgHiScoreSpritesByLanguage[GetGameLanguage()];
-    entries.e[6].id = sMgMsgPerfectNcgByLanguage[GetGameLanguage()];
-    entries.e[6].ptr = sMgMsgPerfectSpritesByLanguage[GetGameLanguage()];
-    entries.e[7].id = sMgMsgResultHiScoreNcgByLanguage[GetGameLanguage()];
-    entries.e[7].ptr = sMgMsgResultHiScoreSpritesByLanguage[GetGameLanguage()];
-    entries.e[8].id = sMgMsgGameOverNcgByLanguage[GetGameLanguage()];
-    entries.e[8].ptr = sMgMsgGameOverSpritesByLanguage[GetGameLanguage()];
-    entries.e[9].id = sMgMsgYouWinNcgByLanguage[GetGameLanguage()];
-    entries.e[9].ptr = sMgMsgYouWinSpritesByLanguage[GetGameLanguage()];
-    entries.e[10].id = sMgMsgTooBadNcgByLanguage[GetGameLanguage()];
-    entries.e[10].ptr = sMgMsgTooBadSpritesByLanguage[GetGameLanguage()];
-    entries.e[11].id = sMgMsgDrawNcgByLanguage[GetGameLanguage()];
-    entries.e[11].ptr = sMgMsgDrawSpritesByLanguage[GetGameLanguage()];
-    entries.e[12].id = sMgMsgStartNcgByLanguage[GetGameLanguage()];
-    entries.e[12].ptr = sMgMsgStartSpritesByLanguage[GetGameLanguage()];
-    entries.e[13].id = sMgMsgLevelNcgByLanguage[GetGameLanguage()];
-    entries.e[13].ptr = sMgMsgLevelSpritesByLanguage[GetGameLanguage()];
-    entries.e[14].id = sMgMsgTimeOverNcgByLanguage[GetGameLanguage()];
-    entries.e[14].ptr = sMgMsgTimeOverSpritesByLanguage[GetGameLanguage()];
-    entries.e[15].id = sMgMsgWhereNcgByLanguage[GetGameLanguage()];
-    entries.e[15].ptr = sMgMsgWhereSpritesByLanguage[GetGameLanguage()];
-    entries.e[16].id = sMgMsgLikeNcgByLanguage[GetGameLanguage()];
-    entries.e[16].ptr = sMgMsgLikeSpritesByLanguage[GetGameLanguage()];
-    entries.e[17].id = sMgMsgHateNcgByLanguage[GetGameLanguage()];
-    entries.e[17].ptr = sMgMsgHateSpritesByLanguage[GetGameLanguage()];
-    entries.e[18].id = sMgMsgLoveNcgByLanguage[GetGameLanguage()];
-    entries.e[18].ptr = sMgMsgLoveSpritesByLanguage[GetGameLanguage()];
-    entries.e[19].id = sMgMsgDislikeNcgByLanguage[GetGameLanguage()];
-    entries.e[19].ptr = sMgMsgDislikeSpritesByLanguage[GetGameLanguage()];
-    entries.e[20].id = sMgMsgEsperNcgByLanguage[GetGameLanguage()];
-    entries.e[20].ptr = sMgMsgEsperSpritesByLanguage[GetGameLanguage()];
-    entries.e[21].id = sMgMsgSuperEsperNcgByLanguage[GetGameLanguage()];
-    entries.e[21].ptr = sMgMsgSuperEsperSpritesByLanguage[GetGameLanguage()];
-    entries.e[22].id = sMgMsgNoPairNcgByLanguage[GetGameLanguage()];
-    entries.e[22].ptr = sMgMsgNoPairSpritesByLanguage[GetGameLanguage()];
-    entries.e[23].id = sMgMsgOnePairNcgByLanguage[GetGameLanguage()];
-    entries.e[23].ptr = sMgMsgOnePairSpritesByLanguage[GetGameLanguage()];
-    entries.e[24].id = sMgMsgTwoPairNcgByLanguage[GetGameLanguage()];
-    entries.e[24].ptr = sMgMsgTwoPairSpritesByLanguage[GetGameLanguage()];
-    entries.e[25].id = sMgMsgThreeCardNcgByLanguage[GetGameLanguage()];
-    entries.e[25].ptr = sMgMsgThreeCardSpritesByLanguage[GetGameLanguage()];
-    entries.e[26].id = sMgMsgFullHouseNcgByLanguage[GetGameLanguage()];
-    entries.e[26].ptr = sMgMsgFullHouseSpritesByLanguage[GetGameLanguage()];
-    entries.e[27].id = sMgMsgFourCardNcgByLanguage[GetGameLanguage()];
-    entries.e[27].ptr = sMgMsgFourCardSpritesByLanguage[GetGameLanguage()];
-    entries.e[28].id = sMgMsgFiveCardNcgByLanguage[GetGameLanguage()];
-    entries.e[28].ptr = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[0].file = sMgMsgRetryNcgByLanguage[GetGameLanguage()];
+    entries.e[0].sprites = sMgMsgRetrySpritesByLanguage[GetGameLanguage()];
+    entries.e[2].file = sMgMsgQuitNcgByLanguage[GetGameLanguage()];
+    entries.e[2].sprites = sMgMsgQuitSpritesByLanguage[GetGameLanguage()];
+    entries.e[3].file = sMgMsgLevelClearNcgByLanguage[GetGameLanguage()];
+    entries.e[3].sprites = sMgMsgLevelClearSpritesByLanguage[GetGameLanguage()];
+    entries.e[4].file = sMgMsgGoalNcgByLanguage[GetGameLanguage()];
+    entries.e[4].sprites = sMgMsgGoalSpritesByLanguage[GetGameLanguage()];
+    entries.e[5].file = sMgMsgHiScoreNcgByLanguage[GetGameLanguage()];
+    entries.e[5].sprites = sMgMsgHiScoreSpritesByLanguage[GetGameLanguage()];
+    entries.e[6].file = sMgMsgPerfectNcgByLanguage[GetGameLanguage()];
+    entries.e[6].sprites = sMgMsgPerfectSpritesByLanguage[GetGameLanguage()];
+    entries.e[7].file = sMgMsgResultHiScoreNcgByLanguage[GetGameLanguage()];
+    entries.e[7].sprites = sMgMsgResultHiScoreSpritesByLanguage[GetGameLanguage()];
+    entries.e[8].file = sMgMsgGameOverNcgByLanguage[GetGameLanguage()];
+    entries.e[8].sprites = sMgMsgGameOverSpritesByLanguage[GetGameLanguage()];
+    entries.e[9].file = sMgMsgYouWinNcgByLanguage[GetGameLanguage()];
+    entries.e[9].sprites = sMgMsgYouWinSpritesByLanguage[GetGameLanguage()];
+    entries.e[10].file = sMgMsgTooBadNcgByLanguage[GetGameLanguage()];
+    entries.e[10].sprites = sMgMsgTooBadSpritesByLanguage[GetGameLanguage()];
+    entries.e[11].file = sMgMsgDrawNcgByLanguage[GetGameLanguage()];
+    entries.e[11].sprites = sMgMsgDrawSpritesByLanguage[GetGameLanguage()];
+    entries.e[12].file = sMgMsgStartNcgByLanguage[GetGameLanguage()];
+    entries.e[12].sprites = sMgMsgStartSpritesByLanguage[GetGameLanguage()];
+    entries.e[13].file = sMgMsgLevelNcgByLanguage[GetGameLanguage()];
+    entries.e[13].sprites = sMgMsgLevelSpritesByLanguage[GetGameLanguage()];
+    entries.e[14].file = sMgMsgTimeOverNcgByLanguage[GetGameLanguage()];
+    entries.e[14].sprites = sMgMsgTimeOverSpritesByLanguage[GetGameLanguage()];
+    entries.e[15].file = sMgMsgWhereNcgByLanguage[GetGameLanguage()];
+    entries.e[15].sprites = sMgMsgWhereSpritesByLanguage[GetGameLanguage()];
+    entries.e[16].file = sMgMsgLikeNcgByLanguage[GetGameLanguage()];
+    entries.e[16].sprites = sMgMsgLikeSpritesByLanguage[GetGameLanguage()];
+    entries.e[17].file = sMgMsgHateNcgByLanguage[GetGameLanguage()];
+    entries.e[17].sprites = sMgMsgHateSpritesByLanguage[GetGameLanguage()];
+    entries.e[18].file = sMgMsgLoveNcgByLanguage[GetGameLanguage()];
+    entries.e[18].sprites = sMgMsgLoveSpritesByLanguage[GetGameLanguage()];
+    entries.e[19].file = sMgMsgDislikeNcgByLanguage[GetGameLanguage()];
+    entries.e[19].sprites = sMgMsgDislikeSpritesByLanguage[GetGameLanguage()];
+    entries.e[20].file = sMgMsgEsperNcgByLanguage[GetGameLanguage()];
+    entries.e[20].sprites = sMgMsgEsperSpritesByLanguage[GetGameLanguage()];
+    entries.e[21].file = sMgMsgSuperEsperNcgByLanguage[GetGameLanguage()];
+    entries.e[21].sprites = sMgMsgSuperEsperSpritesByLanguage[GetGameLanguage()];
+    entries.e[22].file = sMgMsgNoPairNcgByLanguage[GetGameLanguage()];
+    entries.e[22].sprites = sMgMsgNoPairSpritesByLanguage[GetGameLanguage()];
+    entries.e[23].file = sMgMsgOnePairNcgByLanguage[GetGameLanguage()];
+    entries.e[23].sprites = sMgMsgOnePairSpritesByLanguage[GetGameLanguage()];
+    entries.e[24].file = sMgMsgTwoPairNcgByLanguage[GetGameLanguage()];
+    entries.e[24].sprites = sMgMsgTwoPairSpritesByLanguage[GetGameLanguage()];
+    entries.e[25].file = sMgMsgThreeCardNcgByLanguage[GetGameLanguage()];
+    entries.e[25].sprites = sMgMsgThreeCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[26].file = sMgMsgFullHouseNcgByLanguage[GetGameLanguage()];
+    entries.e[26].sprites = sMgMsgFullHouseSpritesByLanguage[GetGameLanguage()];
+    entries.e[27].file = sMgMsgFourCardNcgByLanguage[GetGameLanguage()];
+    entries.e[27].sprites = sMgMsgFourCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[28].file = sMgMsgFiveCardNcgByLanguage[GetGameLanguage()];
+    entries.e[28].sprites = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
 
     for (i = 0; i < 29; i++) {
-        sMgBannerFiles[i] = LoadFile(entries.e[i].id);
-        sMgBannerSprites[i] = *(int *)entries.e[i].ptr;
+        sMgBannerFiles[i] = LoadFile(entries.e[i].file);
+        sMgBannerSprites[i] = *entries.e[i].sprites;
     }
 }
 
@@ -584,7 +584,7 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
         func_0203d388((int *)&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        Mg_SpawnFx(0, BANNER_RAND(60) + 90, (int *)&spawnPos, (int *)&spawnVel, (int *)&sBannerWaveFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxPos);
     }
 }
 
@@ -951,7 +951,7 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
         func_0203d388((int *)&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        Mg_SpawnFx(0, BANNER_RAND(60) + 90, (int *)&spawnPos, (int *)&spawnVel, (int *)&sBannerZoomFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxPos);
     }
 }
 
