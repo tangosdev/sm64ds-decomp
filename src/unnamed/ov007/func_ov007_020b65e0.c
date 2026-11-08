@@ -13,7 +13,7 @@ extern void func_ov007_020c9460(void *p);
 extern void func_ov007_020b4bd4(struct Ov007ItemView *view);
 extern void func_ov007_020b6cd0(void);
 extern void func_ov007_020b283c(void);
-extern void func_ov007_020b9770(void);
+extern void PickerScene_Destroy(void);
 extern void func_ov007_020bf304(void);
 
 /* Teardown of the data_ov007_0210342c manager. */
@@ -100,7 +100,7 @@ void func_ov007_020b65e0(void)
 
     func_ov007_020b6cd0();
     func_ov007_020b283c();
-    func_ov007_020b9770();
+    PickerScene_Destroy();
     func_ov007_020bf304();
 
     if (WORK == 0) {

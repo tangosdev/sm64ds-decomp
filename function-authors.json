@@ -28439,27 +28439,27 @@
     },
     "ov007:0x020b8f50": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8f50"
+      "name": "PickerScene_GetMoveAnimState"
     },
     "ov007:0x020b8f64": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8f64"
+      "name": "PickerScene_GetScaleAnimState"
     },
     "ov007:0x020b8f78": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8f78"
+      "name": "PickerScene_GetDisplayState"
     },
     "ov007:0x020b8f8c": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8f8c"
+      "name": "PickerScene_GetMainState"
     },
     "ov007:0x020b8fa0": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8fa0"
+      "name": "PickerScene_IsAwaitingTap"
     },
     "ov007:0x020b8fb4": {
       "author": "tangosdev",
-      "name": "func_ov007_020b8fb4"
+      "name": "PickerScene_IsIdle"
     },
     "ov007:0x020b8fd4": {
       "author": "lunavyqo",
@@ -28471,67 +28471,67 @@
     },
     "ov007:0x020b9640": {
       "author": "ruspecial",
-      "name": "func_ov007_020b9640"
+      "name": "PickerScene_Update"
     },
     "ov007:0x020b9770": {
       "author": "tangosdev",
-      "name": "func_ov007_020b9770"
+      "name": "PickerScene_Destroy"
     },
     "ov007:0x020b9880": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b9880"
+      "name": "PickerScene_Create"
     },
     "ov007:0x020b9ca8": {
       "author": "ruspecial",
-      "name": "func_ov007_020b9ca8"
+      "name": "PickerScene_UpdateEdit"
     },
     "ov007:0x020b9f0c": {
       "author": "tangosdev",
-      "name": "func_ov007_020b9f0c"
+      "name": "PickerScene_BeginEdit"
     },
     "ov007:0x020b9fc0": {
       "author": "andrewboudreau",
-      "name": "func_ov007_020b9fc0"
+      "name": "PickerScene_FadeToEdit"
     },
     "ov007:0x020ba05c": {
       "author": "tangosdev",
-      "name": "func_ov007_020ba05c"
+      "name": "PickerScene_UpdateDrawing"
     },
     "ov007:0x020ba2e0": {
       "author": "ruspecial",
-      "name": "func_ov007_020ba2e0"
+      "name": "PickerScene_StartDrawing"
     },
     "ov007:0x020ba368": {
       "author": "ruspecial",
-      "name": "func_ov007_020ba368"
+      "name": "PickerScene_UpdateIntro"
     },
     "ov007:0x020ba9bc": {
       "author": "tangosdev",
-      "name": "func_ov007_020ba9bc"
+      "name": "PickerScene_UpdatePicker"
     },
     "ov007:0x020baa10": {
       "author": "tangosdev",
-      "name": "func_ov007_020baa10"
+      "name": "PickerScene_UpdateMoveAnim"
     },
     "ov007:0x020bad8c": {
       "author": "tangosdev",
-      "name": "func_ov007_020bad8c"
+      "name": "PickerScene_UpdateScaleAnim"
     },
     "ov007:0x020bb09c": {
       "author": "tangosdev",
-      "name": "func_ov007_020bb09c"
+      "name": "PickerScene_HandleDrawingKeys"
     },
     "ov007:0x020bb4b0": {
       "author": "lunavyqo",
-      "name": "func_ov007_020bb4b0"
+      "name": "PickerScene_HandleEditKeys"
     },
     "ov007:0x020bbc08": {
       "author": "ruspecial",
-      "name": "func_ov007_020bbc08"
+      "name": "PickerScene_SetDeform"
     },
     "ov007:0x020bbd24": {
       "author": "tangosdev",
-      "name": "func_ov007_020bbd24"
+      "name": "PickerScene_UpdateReplay"
     },
     "ov007:0x020bbe60": {
       "author": "tangosdev",
