@@ -127,7 +127,7 @@ void *_ZN7fBase_cC2Ev(char *self)
         *(unsigned short *)(self + 0x38 + 0xe) = info[3];
     }
     {
-        char *parent = (char *)((fBase_c *)data_020a4b6c)->func_02043810();
+        char *parent = (char *)((fBase_c *)data_020a4b6c)->getConnectParent();
         if (parent) {
             unsigned char pf = *(unsigned char *)(parent + 0x13);
             if (pf & 3)
@@ -169,11 +169,11 @@ signed char data_0209b44c_c;
 extern "C" void *_ZTV10dBgActor_c[32] = {};
 
 extern "C" {
-unsigned char data_0209f2d8_c;   /* mega-char state byte: none */
+unsigned char gGameMode_c;       /* game mode: 0, the adventure */
 int data_0209ceec[4];            /* shadow scale globals */
 int data_0209cef4[4];
 }
-#pragma comment(linker, "/alternatename:_data_0209f2d8=_data_0209f2d8_c")
+#pragma comment(linker, "/alternatename:_gGameMode=_gGameMode_c")
 #pragma comment(linker, "/alternatename:?data_020a0e68@@3UMatrix4x3@@A=_data_020a0e68")
 
 extern "C" {

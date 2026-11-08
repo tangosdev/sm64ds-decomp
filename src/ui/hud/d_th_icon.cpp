@@ -32,7 +32,6 @@ void func_ov001_020ab3f0(void *);
 
 extern int data_0208ee44;
 
-// @symbol func_ov001_020ab5b0
 /* Place an icon: store its touch kind, centre and half extents, clear
  * mPressTimer, mOn and mPenInside, arm it at once when the kind is
  * touchable (the latch Behavior applies), and set the press reload to
@@ -53,7 +52,6 @@ extern "C" void func_ov001_020ab5b0(char *p, int kind, short x, short y, short h
     icon->mPressTime = 10;
 }
 
-// @symbol _ZN9dThIcon_c8BehaviorEv
 void dThIcon_c::Behavior() {
     if (mPressTimer <= 0)
         return;
@@ -71,44 +69,41 @@ void dThIcon_c::Behavior() {
         mReady = 1;
 }
 
-// @symbol _ZN9dThIcon_c6RenderEv
 void dThIcon_c::Render() {}
 
-// @symbol TouchArea_Update
 /* Test player `player`'s pen (the local player when negative) against the
  * icon's box. Fires per mTouchKind: 1 on a touch that begins inside, 2 when
  * the pen enters. Records whether the pen is inside for the next frame. */
 extern "C" int TouchArea_Update(char *c, int player) {
-    int ret;
-    int flag;
+    int fired;
+    int inside;
     int dx, dy;
-    int v;
+    int kind;
     dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(c);
 
     if (icon->mReady == 0)
         return 0;
     if (player < 0)
         player = func_0203da9c();
-    ret = 0;
-    flag = 0;
+    fired = 0;
+    inside = 0;
     if (gTouchHeld[player * 4] != 0) {
-        int i4 = player * 4;
-        dx = gTouchX[i4] - icon->mX;
-        dy = gTouchY[i4] - icon->mY;
+        dx = gTouchX[player * 4] - icon->mX;
+        dy = gTouchY[player * 4] - icon->mY;
         if (dx >= -icon->mHalfW && dx <= icon->mHalfW && dy >= -icon->mHalfH && dy <= icon->mHalfH)
-            flag = 1;
+            inside = 1;
     }
-    if (flag != 0) {
-        v = icon->mTouchKind;
-        if ((v == 1 && gTouchEdge[(unsigned int)player * 4] != 0) ||
-            (v == 2 && icon->mPenInside == 0))
-            ret = 1;
+    if (inside != 0) {
+        kind = icon->mTouchKind;
+        /* The unsigned index is load-bearing; a signed one DIFFs. */
+        if ((kind == 1 && gTouchEdge[(unsigned int)player * 4] != 0) ||
+            (kind == 2 && icon->mPenInside == 0))
+            fired = 1;
     }
-    icon->mPenInside = (unsigned char)flag;
-    return ret;
+    icon->mPenInside = inside;
+    return fired;
 }
 
-// @symbol _ZN9dThIcon_c6SelectEv
 /* Light the icon a menu has just picked: an unlit icon simply turns on, a
  * lit one plays the press pulse. The lowest address in this unit. */
 void dThIcon_c::Select() {

@@ -19,7 +19,8 @@
  *   it (notes/mwccarm-codegen.md 6az), which is why the header deliberately
  *   does not declare them. Same spelling every leaf call site uses.
  * - func_ov002_020ee5d0 keeps its ROM label: the mega-knockback model-matrix
- *   helper, called only from UpdateKillByMegaChar. C linkage is load-bearing.
+ *   helper, called only from UpdateKillByMegaChar. It is a member: the ROM
+ *   places it between Kill and UpdateKillByMegaChar.
  * - dActor_c::Earthquake / Particle::System::NewSimple stay TU-local mangled
  *   calls: Fix12<int> by value (6az); typed shared-header decls of them are
  *   overload poison (S13).
@@ -31,20 +32,19 @@
  * Matrix4x3-spelling rule its own header comment records. */
 #include "dBgActor_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "dBgW.h"
 #include "dBgCh_Lin.h"
 #include "dBgCh_Actr.h"
 #include "daPly_c.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* ROM symbols with no header of their own. Spelled to agree with their
  * definitions (const Vector3 * Vec3 pairs, void * rotation target); the two
  * mangled names keep TU-local scalar spellings per the leftovers above. */
 extern "C" {
-/* Forward: UpdateKillByMegaChar calls down to it (reverse layout). */
-void func_ov002_020ee5d0(dBgActor_c *self, int pivotY);
-
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
@@ -80,9 +80,8 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
  * are kept (decl_common.h declares three of them and daObjBlockS_c a fourth;
  * their parameter types stay agreeable with those). The ceiling and any-hit
  * queries on dBgCh_Actr have no member declaration yet and are called by ROM
- * label. The hit record copy is the ROM's field-by-field copy into a local
- * dBgPi-shaped struct; the real dBgPi copy constructor is not what the bytes
- * show. */
+ * label. The ray and ceiling hits are copied into a local dBgPi by its
+ * implicit copy constructor, and its destructor runs on every exit. */
 
 extern "C" {
 /* dBgCh_Actr queries (src/engine/collision/d_bg_ch_actr.cpp), not yet
@@ -91,8 +90,6 @@ int func_02035638(void *clsn); /* mSphereClsn.flags & 0x10: the ceiling bit */
 int func_0203564c(int clsn);   /* mSphereClsn.GetUnderResult(): the ceiling hit */
 /* d_a_ply_methods.cpp: sets 0x20 in daPly_c::mStateFlags. */
 void func_ov002_020d8838(void *player);
-extern int data_02099368[];   /* dBgPi's vtable */
-extern short data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 }
 
 /* Is this actor of the given kind? An int-returning inline: the ROM
@@ -101,20 +98,6 @@ static inline int IsActorID(const dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-/* A dBgPi, field for field, as the ray and hazard functions copy one onto
-   the stack: the vtable word, dBgPc's SurfaceInfo (two CLPS words, then the
-   face normal), and the collider identity. */
-struct ClsnHitCopy {
-    void *vtable;
-    int surface[5];
-    u16 triangleID;
-    u16 colliderIdx;
-    s32 clsnID;
-    dActor_c *owner;
-    dBgW *collider;
-};
-
-// @symbol func_ov002_020ef2a4
 extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnGround()) {
         dBgPi *hit = clsn->GetFloorResult();
@@ -129,9 +112,7 @@ extern "C" int func_ov002_020ef2a4(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-// @symbol func_ov002_020ef228
-extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, int otherArg) {
-    dActor_c *other = (dActor_c *)otherArg;
+extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
         if (hit->GetClsnID() != -1) {
@@ -145,10 +126,8 @@ extern "C" int func_ov002_020ef228(dBgCh_Actr *clsn, int otherArg) {
     return 0;
 }
 
-// @symbol func_ov002_020ef070
 extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     Vector3 start, end;
-    ClsnHitCopy hit;
 
     dBgCh_Lin line;
 
@@ -168,46 +147,27 @@ extern "C" int func_ov002_020ef070(void *unused, char *moverArg) {
     int reach = 0x64;
     if (mover->param1 == 2)
         reach = 0x82;
-    end.x += reach * data_02082214[((u16)mover->mAngleY >> 4) << 1];
-    end.z += reach * data_02082214[(((u16)mover->mAngleY >> 4) << 1) + 1];
+    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
 
     line.SetObjAndLine(start, end, mover);
     if (line.DetectClsn()) {
         if (IsActorID(mover, 0xbf))
             func_ov002_020d8838(mover);
-        {
-            int *dst = hit.surface;
-            int w0 = line.surface.clps.w0;
-            int w1 = line.surface.clps.w1;
-            dst[0] = w1 ? w0 : w0;
-            dst[1] = w1;
-            dst[2] = line.surface.normal.x;
-            dst[3] = line.surface.normal.y;
-            dst[4] = line.surface.normal.z;
-            hit.vtable = data_02099368;
-            hit.triangleID = line.triangleID;
-            hit.colliderIdx = line.colliderIdx;
-            hit.clsnID = line.clsnID;
-            hit.owner = line.owner;
-            hit.collider = line.collider;
-            if (((dBgPi *)&hit)->GetClsnID() != -1) {
-                dActor_c *owner = dActor_c::FindWithID(((dBgPi *)&hit)->GetClsnID());
-                if (owner) {
-                    owner->OnAttacked2(*mover);
-                    ((dBgPi *)&hit)->dBgPi::~dBgPi();
-                    return 1;
-                }
+        dBgPi hit(line);
+        if (hit.GetClsnID() != -1) {
+            dActor_c *owner = dActor_c::FindWithID(hit.GetClsnID());
+            if (owner) {
+                owner->OnAttacked2(*mover);
+                return 1;
             }
-            ((dBgPi *)&hit)->dBgPi::~dBgPi();
         }
     }
     return 0;
 }
 
-// @symbol func_ov002_020eeeb8
 extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     Vector3 start, end;
-    ClsnHitCopy hit;
 
     dBgCh_Lin line;
 
@@ -228,8 +188,8 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
     if (mover->param1 == 2)
         reach = 0x82;
 
-    end.x += reach * data_02082214[((u16)mover->mAngleY >> 4) << 1];
-    end.z += reach * data_02082214[(((u16)mover->mAngleY >> 4) << 1) + 1];
+    end.x += reach * FX_SinIdx((u16)mover->mAngleY >> 4);
+    end.z += reach * FX_CosIdx((u16)mover->mAngleY >> 4);
 
     line.SetObjAndLine(start, end, mover);
 
@@ -237,40 +197,19 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *moverArg) {
         if (IsActorID(mover, 0xbf))
             func_ov002_020d8838(mover);
 
-        {
-            int *dst = hit.surface;
-            int w0 = line.surface.clps.w0;
-            int w1 = line.surface.clps.w1;
-
-            dst[0] = w1 ? w0 : w0;
-            dst[1] = w1;
-            dst[2] = line.surface.normal.x;
-            dst[3] = line.surface.normal.y;
-            dst[4] = line.surface.normal.z;
-
-            hit.vtable = data_02099368;
-            hit.triangleID = line.triangleID;
-            hit.colliderIdx = line.colliderIdx;
-            hit.clsnID = line.clsnID;
-            hit.owner = line.owner;
-            hit.collider = line.collider;
-
-            if (((dBgPi *)&hit)->GetClsnID() != -1) {
-                dActor_c *owner = dActor_c::FindWithID(((dBgPi *)&hit)->GetClsnID());
-                if (owner) {
-                    owner->OnKicked(*mover);
-                    ((dBgPi *)&hit)->dBgPi::~dBgPi();
-                    return 1;
-                }
+        dBgPi hit(line);
+        if (hit.GetClsnID() != -1) {
+            dActor_c *owner = dActor_c::FindWithID(hit.GetClsnID());
+            if (owner) {
+                owner->OnKicked(*mover);
+                return 1;
             }
         }
-        ((dBgPi *)&hit)->dBgPi::~dBgPi();
     }
 
     return 0;
 }
 
-// @symbol func_ov002_020eee3c
 extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     dBgCh_Actr *clsn = (dBgCh_Actr *)clsnArg;
     dActor_c *other = (dActor_c *)otherArg;
@@ -287,7 +226,6 @@ extern "C" int func_ov002_020eee3c(char *clsnArg, char *otherArg) {
     return 0;
 }
 
-// @symbol func_ov002_020eedc0
 extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     if (clsn->IsOnWall()) {
         dBgPi *hit = clsn->GetWallResult();
@@ -302,7 +240,6 @@ extern "C" int func_ov002_020eedc0(dBgCh_Actr *clsn, dActor_c *other) {
     return 0;
 }
 
-// @symbol func_ov002_020eed24
 extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     dBgPi *hit;
     dActor_c *owner;
@@ -319,7 +256,6 @@ extern "C" int func_ov002_020eed24(dBgCh_Actr *clsn, daPly_c *player) {
     return 0;
 }
 
-// @symbol func_ov002_020eeca8
 extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
     if (func_02035638(clsn)) {
         dBgPi *hit = clsn->GetSphereResult();
@@ -337,38 +273,23 @@ extern "C" int func_ov002_020eeca8(dBgCh_Actr *clsn, dActor_c *other) {
 /* Only for the player (actor ID 0xbf): a ceiling owned by actor ID 0x3a hurts
  * for 3, a wall owned by actor ID 0x139 hurts for 1 and plays sound 0xb5 at
  * that actor; both with knockback 0xc000. clsn is the mover's dBgCh_Actr
- * (daPly_c::mMeshClsn at +0x380). The two-word struct copy of the CLPS keeps
- * the ceiling-hit snapshot on the stack under 2004/b56 C++; the explicit
- * snapshot and the scalar Hurt ABI remain measured reconstruction
- * boundaries. */
-typedef struct { int w[2]; } ClsnHitHead;
+ * (daPly_c::mMeshClsn at +0x380). The ceiling hit is copied into a local
+ * dBgPi first, so it takes the lowest stack slot; each hurt point is a
+ * Vector3 scoped to its own branch. The scalar Hurt ABI remains a measured
+ * reconstruction boundary. */
 
-// @symbol func_ov002_020eea84
 extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
-    struct ClsnHitCopy hit;
-    Vector3 hurtFrom;
-    Vector3 hurtFrom2;
     dActor_c *owner;
 
     if (!IsActorID(player, 0xbf))
         return 0;
 
     if (func_02035638(clsn)) {
-        const dBgPi *src = (const dBgPi *)func_0203564c((int)clsn);
-        int *d = hit.surface;
-        *(ClsnHitHead *)d = *(const ClsnHitHead *)&src->surface.clps;
-        d[2] = src->surface.normal.x;
-        d[3] = src->surface.normal.y;
-        d[4] = src->surface.normal.z;
-        hit.vtable = data_02099368;
-        hit.triangleID = src->triangleID;
-        hit.colliderIdx = src->colliderIdx;
-        hit.clsnID = src->clsnID;
-        hit.owner = src->owner;
-        hit.collider = src->collider;
-        if (((dBgPi *)&hit)->GetClsnID() != -1) {
-            owner = dActor_c::FindWithID(((dBgPi *)&hit)->GetClsnID());
+        dBgPi hit(*(const dBgPi *)func_0203564c((int)clsn));
+        if (hit.GetClsnID() != -1) {
+            owner = dActor_c::FindWithID(hit.GetClsnID());
             if (owner != 0 && IsActorID(owner, 0x3a)) {
+                Vector3 hurtFrom;
                 {
                     Vector3 *from = &player->mPos;
                     hurtFrom.x = from->x;
@@ -376,11 +297,9 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
                     hurtFrom.z = from->z;
                 }
                 ((daPly_c *)player)->Hurt(hurtFrom, 3, 0xc000, 1, 0, 1);
-                ((dBgPi *)&hit)->dBgPi::~dBgPi();
                 return 1;
             }
         }
-        ((dBgPi *)&hit)->dBgPi::~dBgPi();
     }
 
     if (clsn->IsOnWall()) {
@@ -388,6 +307,7 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
         if (wallHit->GetClsnID() != -1) {
             owner = dActor_c::FindWithID(wallHit->GetClsnID());
             if (owner != 0 && IsActorID(owner, 0x139)) {
+                Vector3 hurtFrom2;
                 {
                     Vector3 *from = &owner->mPos;
                     hurtFrom2.x = from->x;
@@ -405,7 +325,6 @@ extern "C" int func_ov002_020eea84(dBgCh_Actr *clsn, dActor_c *player) {
 
 /* Base step, vptr store, then mModel and mMeshCollider in declaration order:
  * the compiler's own sequence, so the body is empty. */
-// @symbol _ZN10dBgActor_cC2Ev
 dBgActor_c::dBgActor_c()
 {
 }
@@ -413,7 +332,6 @@ dBgActor_c::dBgActor_c()
 /* Same enable/disable-by-distance as IsClsnInRange, except an off-screen actor
  * (mFlags & 8) always drops its collider, and radius 0 unconditionally enables
  * instead of falling back to the clip volume. */
-// @symbol _ZN10dBgActor_c21IsClsnInRangeOnScreenEii
 int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
     int offScreen = (mFlags & 8) != 0;
     if (offScreen) {
@@ -449,7 +367,6 @@ int dBgActor_c::IsClsnInRangeOnScreen(Fix12i radius, Fix12i yOffset) {
 /* Keeps the mesh collider in the world only while the closest player is within
  * radius of (pos + yOffset). Zero radius falls back to the clip volume
  * (mClipRadius, shifted into fix12); zero yOffset to mClipOffsetY. */
-// @symbol _ZN10dBgActor_c13IsClsnInRangeEii
 int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
     Vector3 center;
     center.x = mPosX;
@@ -475,7 +392,6 @@ int dBgActor_c::IsClsnInRange(Fix12i radius, Fix12i yOffset) {
 
 /* Rebuilds the model matrix from the yaw and drops the position into its
  * translation row at 1/8 scale, the model-space unit. */
-// @symbol _ZN10dBgActor_c21UpdateModelPosAndRotYEv
 void dBgActor_c::UpdateModelPosAndRotY()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
@@ -486,7 +402,6 @@ void dBgActor_c::UpdateModelPosAndRotY()
 
 /* The collider follows the model: copy its matrix, overwrite the translation
  * row (m[9..11]) with the actor position, and hand it to the collider. */
-// @symbol _ZN10dBgActor_c19UpdateClsnPosAndRotEv
 void dBgActor_c::UpdateClsnPosAndRot()
 {
     mClsnMat = mModel.mat4x3;
@@ -501,7 +416,6 @@ void dBgActor_c::UpdateClsnPosAndRot()
  * the per-frame angle steps, integrate, and Kill() when the fuse runs out.
  * Callers (pushblock, signpost, ski lift, Bill Blaster) pass the X step and a
  * model-pivot height; nonzero return means "still flying". */
-// @symbol _ZN10dBgActor_c20UpdateKillByMegaCharEsssi
 int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, Fix12i pivotY) {
     Vector3 probe;
     Vector3 rayEnd;
@@ -531,25 +445,20 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, F
     UpdatePos(0);
     if (DecIfAbove0_Byte(&mMegaKnockbackTimer) == 0)
         Kill();
-    func_ov002_020ee5d0(this, pivotY);
+    func_ov002_020ee5d0(pivotY);
     return 1;
 }
 
 /* The mega-knockback model matrix: actor position at 1/8 scale, rotated about
  * a pivot pivotY above it (translate up, rotate, translate back). */
-// @symbol func_ov002_020ee5d0
-extern "C" {
-void func_ov002_020ee5d0(dBgActor_c *self, int pivotY)
-{
+void dBgActor_c::func_ov002_020ee5d0(int pivotY) {
     Vector3 modelPos;
-    Vec3_Asr(&modelPos, &self->mPos, 3);
+    Vec3_Asr(&modelPos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, modelPos.x, modelPos.y, modelPos.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, pivotY >> 3, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -pivotY >> 3, 0);
-    self->mModel.mat4x3 = data_020a0e68;
-}
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* Slot 31, the one virtual this class adds (and the key function). Poof 100
@@ -559,7 +468,6 @@ void func_ov002_020ee5d0(dBgActor_c *self, int pivotY)
  * types.h), so it is non-POD, and a whole-object assignment compiles to an
  * ldm/stm pair -- four instructions where the ROM has six. Three field
  * stores are what the cartridge does. */
-// @symbol _ZN10dBgActor_c4KillEv
 void dBgActor_c::Kill()
 {
     Vector3 pos;
@@ -570,7 +478,7 @@ void dBgActor_c::Kill()
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    Particle::System::NewSimple(0xa, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclBgActorBreak, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;
@@ -582,7 +490,6 @@ void dBgActor_c::Kill()
 /* Mega Mario's shockwave hits: shake the ground, arm the knockback flight
  * (20 u/frame away from the player, 30 up, gravity 2, 30-frame fuse), and
  * take the mesh collider out of the world. */
-// @symbol _ZN10dBgActor_c14KillByMegaCharER7daPly_c
 void dBgActor_c::KillByMegaChar(daPly_c &player) {
     Vector3 v;
     v.x = mPosX;
@@ -603,5 +510,3 @@ void dBgActor_c::KillByMegaChar(daPly_c &player) {
 /* Nothing forces D0/D1 here: this TU defines Kill (slot 31), the class's key
  * function, so the vtable is emitted here and drags both destructor variants
  * with it. */
-// @symbol _ZN10dBgActor_cD0Ev
-// @symbol _ZN10dBgActor_cD1Ev

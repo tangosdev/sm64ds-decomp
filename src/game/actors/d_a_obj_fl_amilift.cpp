@@ -25,8 +25,7 @@
 // Notes (each measured with mwccarm 2004/b56):
 // - The collider callbacks registered in InitResources
 //   (dBgW::UpdatePosWithTransform and StoodOnCallback) are passed as raw
-//   addresses to func_020393d4 / func_020393c4. d_bg_w.cpp defines them
-//   and no header declares them.
+//   addresses to dBgW::SetBeforeClsnCallback / dBgW::SetStoodOnCallback.
 // - Behavior updates mStateFrames and mBobPhase through pointer locals and
 //   re-reads mBobPhase as unsigned; plain member updates came out 8 bytes
 //   short.
@@ -69,8 +68,6 @@ extern "C" {
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(void *p, void *v);
 }
 
 extern LiftState data_ov064_0211c750[];
@@ -82,11 +79,8 @@ extern CLPS_Block data_ov064_0211bb6c;
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN17daObjFl_Amilift_cD1Ev
-// @symbol _ZN17daObjFl_Amilift_cD0Ev
 daObjFl_Amilift_c::~daObjFl_Amilift_c() {}
 
-// @symbol _ZN17daObjFl_Amilift_c10FaceTowardEP7Vector3S1_
 /* Turn the lift to face from node b toward node a. */
 void daObjFl_Amilift_c::FaceToward(Vector3 *a, Vector3 *b) {
     Vector3 v;
@@ -94,7 +88,6 @@ void daObjFl_Amilift_c::FaceToward(Vector3 *a, Vector3 *b) {
     mPrevAngleY = (short)cstd::atan2(v.x, v.z);
 }
 
-// @symbol _ZN17daObjFl_Amilift_c13MoveAlongPathEv
 /* Advance along the path by one frame. Speeds up toward 0xa000 and slows to a
  * stop within 0x69000 of the next node; once stopped there it snaps onto the
  * node, steps mNodeIndex one way or the other (per mState) and turns toward
@@ -140,7 +133,6 @@ int daObjFl_Amilift_c::MoveAlongPath() {
     return 0;
 }
 
-// @symbol _ZN17daObjFl_Amilift_c13StateBackwardEv
 /* State 2, walking back: pause 20 frames, then walk. On reaching node 0 go to
  * the forward state if auto-run, else wait for the player. */
 void daObjFl_Amilift_c::StateBackward() {
@@ -158,7 +150,6 @@ void daObjFl_Amilift_c::StateBackward() {
     }
 }
 
-// @symbol _ZN17daObjFl_Amilift_c12StateForwardEv
 /* State 1, walking forward: an auto-run lift pauses 20 frames first. On
  * reaching the last node go to the backward state. */
 int daObjFl_Amilift_c::StateForward() {
@@ -176,7 +167,6 @@ int daObjFl_Amilift_c::StateForward() {
     return r;
 }
 
-// @symbol _ZN17daObjFl_Amilift_c9StateWaitEv
 /* State 0, waiting: while the player is on the lift, count frames (Behavior
  * does the counting); once more than 20 have counted, or at once if auto-run, turn toward
  * the next node and start walking forward. With nobody on it the counter
@@ -201,7 +191,6 @@ void daObjFl_Amilift_c::StateWait() {
     mStateFrames = 0;
 }
 
-// @symbol _ZN17daObjFl_Amilift_c16CleanupResourcesEv
 s32 daObjFl_Amilift_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov064_0211c730.Release();
@@ -209,13 +198,11 @@ s32 daObjFl_Amilift_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN17daObjFl_Amilift_c6RenderEv
 s32 daObjFl_Amilift_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN17daObjFl_Amilift_c8BehaviorEv
 /* Run the state handler, count frames (restarting the count when the state
  * changed), then set the height: the spawn height plus the sink offset (eased
  * to -0x28000 while the player is on it) plus a sine bob, applied only for
@@ -250,7 +237,6 @@ s32 daObjFl_Amilift_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN17daObjFl_Amilift_c13InitResourcesEv
 s32 daObjFl_Amilift_c::InitResources() {
     BMD_File *bmd;
     KCL_File *kcl;
@@ -276,8 +262,8 @@ s32 daObjFl_Amilift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov064_0211bb6c);
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
 
     mPathPtr.FromID(param1 & 0xf);
     mNodeCount = mPathPtr.NumNodes();
@@ -319,7 +305,6 @@ LiftState data_ov064_0211c750[3] = {
     {&daObjFl_Amilift_c::StateBackward},
 };
 
-// @symbol _ZN17daObjFl_Amilift_c9OnStoodOnEP8dActor_c
 /* The player (actor 0xbf) touched the lift: raise mRiderOn, which Behavior
  * reads to sink the lift and clears every frame. */
 void daObjFl_Amilift_c::OnStoodOn(dActor_c *other) {
@@ -333,13 +318,11 @@ void daObjFl_Amilift_c::OnStoodOn(dActor_c *other) {
  * long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol _ZN17daObjFl_Amilift_c15StoodOnCallbackEP4dBgWPS_P8dActor_c
 void daObjFl_Amilift_c::StoodOnCallback(dBgW *collider, daObjFl_Amilift_c *self, dActor_c *other) {
     self->OnStoodOn(other);
 }
 #pragma pop
 
-// @symbol daObjFl_Amilift_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjFl_Amilift_c through
  * RTTI, allocation size, vtable identity, and the FL_AMILIFT registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

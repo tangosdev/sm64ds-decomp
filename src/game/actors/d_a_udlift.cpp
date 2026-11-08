@@ -34,7 +34,7 @@
  *   InitResources 0x18c->0x160, and its LoadFile reloc then names
  *   _ZN7dBgW_Kc8LoadFileER13SharedFilePtr instead of 0x02017a3c.
  *   StateWait 0xf4->0xe8. StateMoveDown 0x120->0x114.
- * - InitResources: func_020393d4 and func_020393c4 store dBgW+0x18
+ * - InitResources: dBgW::SetBeforeClsnCallback and dBgW::SetStoodOnCallback store dBgW+0x18
  *   (beforeClsnCallback) and dBgW+0x1c (the rider callback). Writing those
  *   fields directly shrinks InitResources 0x18c->0x184 and drops the two
  *   call relocs.
@@ -119,32 +119,21 @@ extern State data_ov095_02137584;
 extern State data_ov095_0213758c;
 extern State data_ov095_0213759c;
 
-/* dBgW+0x18 and dBgW+0x1c. A direct store shrinks InitResources.
-   local extern: no shared header declares these on void *. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(void *collider, void *callback);
-}
-
-// @symbol daUdlift_c_classInit_UDLIFT_TERESA
 extern "C" daUdlift_c *daUdlift_c_classInit_UDLIFT_TERESA()
 {
     return new daUdlift_c();
 }
 
-// @symbol daUdlift_c_classInit_UDLIFT
 extern "C" daUdlift_c *daUdlift_c_classInit_UDLIFT()
 {
     return new daUdlift_c();
 }
 
-// @symbol daUdlift_c_classInit_RC_RIFT02
 extern "C" daUdlift_c *daUdlift_c_classInit_RC_RIFT02()
 {
     return new daUdlift_c();
 }
 
-// @symbol _ZN10daUdlift_c15OnMeshClsnTouchEPvPS_P7daPly_c
 /* The mesh collider's touch callback is (collider, owner, other); the lift
  * only needs the back two, so this veneer drops the first argument. Its
  * address is stored at dBgW+0x1c, so it is a static member. */
@@ -152,7 +141,6 @@ void daUdlift_c::OnMeshClsnTouch(void *collider, daUdlift_c *self, daPly_c *play
     self->LatchRider(player);
 }
 
-// @symbol _ZN10daUdlift_c10LatchRiderEP7daPly_c
 /* If the touching actor is the player (0xbf), hold it as mRider and mark
  * the lift ridden this frame. */
 void daUdlift_c::LatchRider(daPly_c *player) {
@@ -163,7 +151,6 @@ void daUdlift_c::LatchRider(daPly_c *player) {
     }
 }
 
-// @symbol _ZN10daUdlift_c13InitResourcesEv
 int daUdlift_c::InitResources()
 {
     mMode = 0;
@@ -184,8 +171,8 @@ int daUdlift_c::InitResources()
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov095_02136f74[mVariant]), mClsnMat,
                           0x199, mAngleY, *data_ov095_021375a4[mVariant]);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&daUdlift_c::OnMeshClsnTouch);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&daUdlift_c::OnMeshClsnTouch);
     mRider = 0;
     mState = 0;
 
@@ -205,7 +192,6 @@ int daUdlift_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN10daUdlift_c8BehaviorEv
 int daUdlift_c::Behavior()
 {
     int oldState;
@@ -235,14 +221,12 @@ int daUdlift_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN10daUdlift_c6RenderEv
 int daUdlift_c::Render()
 {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN10daUdlift_c16CleanupResourcesEv
 int daUdlift_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
@@ -253,7 +237,6 @@ int daUdlift_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daUdlift_c9StateWaitEv
 /* State 0, waiting. A newly boarded rider sends the lift to the other end.
  * Otherwise, when the closest player crosses mMiddleY away from the lift, the
  * lift follows: it jumps straight there if the player was already past the
@@ -307,7 +290,6 @@ void daUdlift_c::StateWait()
     }
 }
 
-// @symbol _ZN10daUdlift_c11StateMoveUpEv
 /* State 1, climbing: speed up toward 10 units a frame and stop at mTopY. */
 void daUdlift_c::StateMoveUp()
 {
@@ -331,7 +313,6 @@ void daUdlift_c::StateMoveUp()
     mState = 3;
 }
 
-// @symbol _ZN10daUdlift_c13StateMoveDownEv
 /* State 2, descending: speed up toward 10 units a frame and stop at
  * mBottomY. */
 void daUdlift_c::StateMoveDown()
@@ -365,7 +346,6 @@ void daUdlift_c::StateMoveDown()
     mState = 3;
 }
 
-// @symbol _ZN10daUdlift_c17StateStopAtBottomEv
 /* State 4, stopped at the bottom: on the first frame play bank-3 sound 0x6b
  * and call Earthquake at the lift, then climb again once re-armed. */
 void daUdlift_c::StateStopAtBottom()
@@ -385,7 +365,6 @@ void daUdlift_c::StateStopAtBottom()
         mState = 1;
 }
 
-// @symbol _ZN10daUdlift_c9StateStopEv
 /* State 3, stopped: the same first-frame sound and Earthquake, then wait
  * again once re-armed. */
 void daUdlift_c::StateStop()

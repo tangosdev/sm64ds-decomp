@@ -46,6 +46,7 @@ enum dScMgRoulette_c_AssetId {
 #include "decl_common.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
@@ -172,7 +173,7 @@ void DecompressLZ16(void *src, void *dst);
 void Ov004_Deallocate(void *p);
 void FreeGfxSlotsById(int a);
 
-void func_0203d680(Vec2_Fix12 *out, const Vec2_Fix12 *in, int scale);
+void func_0203d680(Vector2 *out, const Vector2 *in, int scale);
 void *Ov004_LoadFile(int id);
 void Mg_LoseCredits(int c);
 void Mg_GainCredits(int c);
@@ -181,11 +182,11 @@ void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 void MgCoins_StartPayout(int);
 void MgCoins_Update(void);
 void MgCoins_Reset(void);
-int Dealer_IsAnimDone(char *a);
+int Dealer_IsAnimDone(void *a);
 int Dealer_IsIdle(Dealer *dealer);
-void Dealer_Draw(char *c);
+void Dealer_Draw(void *c);
 void Dealer_Update(Dealer *dealer);
-int Dealer_Load(char *c);
+int Dealer_Load(void *c);
 
 int sRouletteResultsTimer;
 extern int sRouletteResultIndex;
@@ -198,7 +199,17 @@ extern void *sRouletteTextSpritesByLanguage[];
 extern int sRoulettePayoutMultipliers[];
 extern void *sRouletteRacerSprites;
 extern Matrix4x3 data_020a0e68;
-extern short data_02082214[];
+/* Bet tiles: 0..0xb are single numbers, 0xc..0x1c pairs of numbers and
+ * 0x1d..0x22 groups of four (RouletteRacer_GetPayout checks 1, 2 and 4
+ * table entries for them and pays 12, 6 and 3). */
+static inline int Roulette_IsPairTile(int tile) {
+    return (tile >= 0xc && tile <= 0x1c) ? 1 : 0;
+}
+
+static inline int Roulette_IsQuadTile(int tile) {
+    return (tile >= 0x1d && tile <= 0x22) ? 1 : 0;
+}
+
 extern short sRouletteSlowStops[];
 extern short data_ov006_0212ed34[];
 extern struct Pair pmf_RouletteBoard_StateSlow;
@@ -242,7 +253,6 @@ void RouletteStrip_DrawRacers(void **sl);
 void RouletteStrip_Draw(short *a0, int a1);
 }
 
-// @symbol _ZN15dScMgRoulette_c13InitResourcesEv
 /* Sets up both screens: the sub BG layers, the board tiles, map and
    palette, and the shared OBJ tiles and palettes for both engines. Then
    sets up the camera, the dealer and the board and starts the first round. */
@@ -291,7 +301,7 @@ s32 dScMgRoulette_c::InitResources() {
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load((char *)&mDealer) == 0)
+    if (Dealer_Load(&mDealer) == 0)
         return 0;
     if (RouletteBoard_LoadModels((char *)&mBoard) == 0)
         return 0;
@@ -304,7 +314,6 @@ s32 dScMgRoulette_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN15dScMgRoulette_c8BehaviorEv
 /* One frame of the round, by mPhase: 1 deals the racers out one at a time,
    2 runs the countdown and scores the board, 3 pays out per landed tile and
    4 announces the result. The racer update loops run every frame. */
@@ -315,7 +324,7 @@ s32 dScMgRoulette_c::Behavior() {
     case 0:
         break;
     case 1:
-        if (Dealer_IsAnimDone((char *)&mDealer) != 0) {
+        if (Dealer_IsAnimDone(&mDealer) != 0) {
             if (mBoard.mRollSound == 0) {
                 mBoard.mRollSound = 1;
             }
@@ -325,7 +334,7 @@ s32 dScMgRoulette_c::Behavior() {
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        if (Dealer_IsAnimDone((char *)&mDealer) != 0) {
+        if (Dealer_IsAnimDone(&mDealer) != 0) {
             mPhaseTimer -= 1;
             if (mPhaseTimer == 0) {
                 mCameraPreset = 1;
@@ -372,7 +381,6 @@ s32 dScMgRoulette_c::Behavior() {
         if (mPhaseTimer == 0) {
             {
                 short tileType;
-                int onTile;
                 int i = 0;
                 if (mRacerCount > 0) {
                     char *racerRaw = c;
@@ -381,28 +389,17 @@ s32 dScMgRoulette_c::Behavior() {
                         ((RacerScene *)racerRaw)->racers[0].tile =
                             Roulette_TileAt(((RacerScene *)racerRaw)->racers[0].targetX >> 12,
                                             ((RacerScene *)racerRaw)->racers[0].targetY >> 12);
-                        onTile = 0;
                         /* racers[0].tile, read back raw: through the member the
                            compiler reuses the value it just stored and Behavior
                            grows from 0x6e8 to 0x6f0 bytes; the ROM reloads it. */
                         tileType = *(short *)(racerRaw + 0x51d4);
-                        if (tileType >= 0xc && tileType <= 0x1c)
-                            onTile = 1;
-                        if (onTile != 0)
-                            goto landedInRange;
-                        if (tileType >= 0x1d && tileType <= 0x22)
-                            onTile = 1;
-                        else
-                            onTile = 0;
-                        if (onTile == 0)
-                            goto landedElsewhere;
-                    landedInRange:
-                        RouletteRacer_SetVelocityToward(
-                            (int *)racer, (int *)&((TileXY *)sRouletteTiles)[tileType].x, 0x100);
-                        goto nextRacer;
-                    landedElsewhere:
-                        RouletteRacer_MoveToTile((RacerPos *)racer, tileType);
-                    nextRacer:
+                        if (Roulette_IsPairTile(tileType) || Roulette_IsQuadTile(tileType)) {
+                            RouletteRacer_SetVelocityToward(
+                                (int *)racer, (int *)&((TileXY *)sRouletteTiles)[tileType].x,
+                                0x100);
+                        } else {
+                            RouletteRacer_MoveToTile((RacerPos *)racer, tileType);
+                        }
                         i++;
                         racerRaw += 0x34;
                         racer += 0x34;
@@ -538,7 +535,6 @@ s32 dScMgRoulette_c::Behavior() {
     return 1;
 }
 
-// @symbol Roulette_DrawResultsThunk
 /* A tail-call veneer to RouletteResults_Draw. */
 extern "C" {
 void Roulette_DrawResultsThunk(char *) {
@@ -546,7 +542,6 @@ void Roulette_DrawResultsThunk(char *) {
 }
 }
 
-// @symbol _ZN15dScMgRoulette_c6RenderEv
 /* Draws the racers back to front, the cursor on the selected tile, the
    countdown (its volume ramps over the last 3 seconds), and moves the camera
    to the current preset. */
@@ -620,20 +615,18 @@ s32 dScMgRoulette_c::Render() {
         if (preset != 0)
             RouletteBoard_Draw((char *)&mBoard);
         else
-            Dealer_Draw((char *)&mDealer);
+            Dealer_Draw(&mDealer);
     }
 
     return 1;
 }
 
-// @symbol _ZN15dScMgRoulette_c16CleanupResourcesEv
 /* Frees the slider's two model files. */
 s32 dScMgRoulette_c::CleanupResources() {
     RouletteBoard_FreeModels(&mBoard);
     return 1;
 }
 
-// @symbol _ZN15dScMgRoulette_c11CanEndStateEi
 /* Runs the end of the round, phases 5 to 9. Returns 1 when it is done. */
 int dScMgRoulette_c::CanEndState(int /* mode */) {
 
@@ -670,7 +663,6 @@ int dScMgRoulette_c::CanEndState(int /* mode */) {
     return 0;
 }
 
-// @symbol _ZN15dScMgRoulette_c10StartRoundEi
 /* Resets the round: the dealer, the racers, the score and the board, with
    one racer per bonus the scene holds, up to five. InitResources calls it
    with -1. */
@@ -718,7 +710,6 @@ void dScMgRoulette_c::StartRound(int /* arg */) {
     gMgCoinsShowDelta = 1;
 }
 
-// @symbol RouletteRacer_AimAt
 extern "C" {
 void RouletteRacer_AimAt(int *racer, int *target) {
     ((RouletteRacer *)racer)->homeX = target[0];
@@ -727,7 +718,6 @@ void RouletteRacer_AimAt(int *racer, int *target) {
 }
 }
 
-// @symbol RouletteRacer_SetVelocityToward
 extern "C" {
 void RouletteRacer_SetVelocityToward(int *out, int *target, int scale) {
     Vec2_Fix12 v1;
@@ -735,7 +725,7 @@ void RouletteRacer_SetVelocityToward(int *out, int *target, int scale) {
     out[6] = target[0];
     out[7] = target[1];
     Vec2_Sub((int *)&v1, out + 6, out);
-    func_0203d680(&v2, &v1, scale);
+    func_0203d680((Vector2 *)&v2, (const Vector2 *)&v1, scale);
     out[4] = v2.x;
     out[5] = v2.y;
     if (out[4] < 0)
@@ -745,7 +735,6 @@ void RouletteRacer_SetVelocityToward(int *out, int *target, int scale) {
 }
 }
 
-// @symbol RouletteRacer_SetTarget
 extern "C" {
 void RouletteRacer_SetTarget(RacerXY *racer, int *target) {
     int v[2];
@@ -764,7 +753,6 @@ void RouletteRacer_SetTarget(RacerXY *racer, int *target) {
 }
 }
 
-// @symbol RouletteRacer_MoveToTile
 extern "C" {
 void RouletteRacer_MoveToTile(RacerPos *racer, int tile) {
     int buf[7];
@@ -832,7 +820,6 @@ void RouletteRacer_MoveToTile(RacerPos *racer, int tile) {
 }
 }
 
-// @symbol RouletteRacer_Init
 /* First call builds the goal at (0xc000, 0xc000) and registers ~Vector2. */
 extern "C" {
 void RouletteRacer_Init(void *racer) {
@@ -842,7 +829,6 @@ void RouletteRacer_Init(void *racer) {
 }
 }
 
-// @symbol RouletteRacer_PlaceAtStart
 extern "C" {
 void RouletteRacer_PlaceAtStart(int *racer) {
     RouletteRacer *t = (RouletteRacer *)racer;
@@ -859,7 +845,6 @@ void RouletteRacer_PlaceAtStart(int *racer) {
 }
 }
 
-// @symbol RouletteRacer_Release
 extern "C" {
 void RouletteRacer_Release(RouletteRacer *racer) {
     racer->tile = 0x25;
@@ -868,11 +853,9 @@ void RouletteRacer_Release(RouletteRacer *racer) {
 }
 }
 
-// @symbol RouletteRacer_Update
 extern "C" {
 void RouletteRacer_Update(RouletteRacer *racer) {
     u8 state;
-    int b;
     s16 type;
 
     state = racer->state;
@@ -928,25 +911,12 @@ void RouletteRacer_Update(RouletteRacer *racer) {
             type = Roulette_TileAt(racer->targetX >> 12, racer->targetY >> 12);
             racer->tile = type;
             if (type != 0x25) {
-                b = 0;
                 type = racer->tile;
-                if (type >= 0xc && type <= 0x1c)
-                    b = 1;
-                if (b != false)
-                    goto use_table;
-                if (type >= 0x1d && type <= 0x22)
-                    b = 1;
+                if (Roulette_IsPairTile(type) || Roulette_IsQuadTile(type))
+                    RouletteRacer_SetVelocityToward(
+                        (int *)racer, (int *)&((TileXY *)sRouletteTiles)[type], 0x100);
                 else
-                    b = 0;
-                if (b == false)
-                    goto no_table;
-            use_table:
-                RouletteRacer_SetVelocityToward((int *)racer,
-                                                (int *)&((TileXY *)sRouletteTiles)[type], 0x100);
-                goto snd;
-            no_table:
-                RouletteRacer_MoveToTile((RacerPos *)racer, type);
-            snd:
+                    RouletteRacer_MoveToTile((RacerPos *)racer, type);
                 Sound::PlayBank2_2D(0x15e);
             } else {
                 Sound::PlayBank2_2D(0x15f);
@@ -961,7 +931,6 @@ void RouletteRacer_Update(RouletteRacer *racer) {
 }
 }
 
-// @symbol RouletteRacer_CheckLandingA
 extern "C" {
 int RouletteRacer_CheckLandingA(int *racer) {
     int idx;
@@ -998,7 +967,6 @@ int RouletteRacer_CheckLandingA(int *racer) {
 }
 }
 
-// @symbol RouletteRacer_CheckLandingB
 extern "C" {
 void RouletteRacer_CheckLandingB(int *racer) {
     int idx;
@@ -1044,7 +1012,6 @@ void RouletteRacer_CheckLandingB(int *racer) {
 }
 }
 
-// @symbol RouletteRacer_Draw
 extern "C" {
 void RouletteRacer_Draw(char *racer) {
     RouletteRacer *t = (RouletteRacer *)racer;
@@ -1056,7 +1023,6 @@ void RouletteRacer_Draw(char *racer) {
 }
 }
 
-// @symbol RouletteRacer_GetPayout
 /* The three range tests are kept as 0 or 1 values held in a local and
    tested; the ROM materialises them. The 0x23 case tests `tile < 6`, the
    opposite of the case beside it, and the two share one `payout = 2`. */
@@ -1071,14 +1037,14 @@ int RouletteRacer_GetPayout(short *racer, int tile) {
         if (landed == tile)
             payout = 0xc;
     } else {
-        inRange = (landed >= 0xc && landed <= 0x1c) ? 1 : 0;
+        inRange = Roulette_IsPairTile(landed);
         if (inRange != 0) {
             inRange = (landed - 0xc) << 2;
             if (tile == *(short *)((char *)data_ov006_0212edb8 + inRange) ||
                 tile == *(short *)((char *)data_ov006_0212edba + inRange))
                 payout = 6;
         } else {
-            inRange = (landed >= 0x1d && landed <= 0x22) ? 1 : 0;
+            inRange = Roulette_IsQuadTile(landed);
             if (inRange != 0) {
                 inRange = (landed - 0x1d) << 3;
                 if (tile == *(short *)((char *)data_ov006_0212ed88 + inRange) ||
@@ -1096,7 +1062,6 @@ int RouletteRacer_GetPayout(short *racer, int tile) {
 }
 }
 
-// @symbol Roulette_TileAt
 extern "C" {
 short Roulette_TileAt(int x, int y) {
     short tile = 0x25;
@@ -1192,7 +1157,6 @@ short Roulette_TileAt(int x, int y) {
 }
 }
 
-// @symbol RouletteBoard_LoadModels
 extern "C" {
 int RouletteBoard_LoadModels(char *slider) {
     RouletteBoard *board = (RouletteBoard *)slider;
@@ -1210,7 +1174,6 @@ int RouletteBoard_LoadModels(char *slider) {
 }
 }
 
-// @symbol RouletteBoard_FreeModels
 extern "C" {
 int RouletteBoard_FreeModels(RouletteBoard *res) {
     if (res->mWheelFile)
@@ -1221,7 +1184,6 @@ int RouletteBoard_FreeModels(RouletteBoard *res) {
 }
 }
 
-// @symbol RouletteBoard_StartSpin
 extern "C" {
 void RouletteBoard_StartSpin(char *slider) {
     RouletteBoard *board = (RouletteBoard *)slider;
@@ -1239,14 +1201,12 @@ void RouletteBoard_StartSpin(char *slider) {
 }
 }
 
-// @symbol RouletteBoard_SetStateSpin
 extern "C" {
 void RouletteBoard_SetStateSpin(RouletteBoard *board) {
     *(Pair2W *)&board->mState = pmf_RouletteBoard_StateSpin;
 }
 }
 
-// @symbol RouletteBoard_StateSpin
 extern "C" {
 void RouletteBoard_StateSpin(RouletteBoard *board) {
     int spin = board->mSpinSpeed;
@@ -1286,8 +1246,8 @@ void RouletteBoard_StateSpin(RouletteBoard *board) {
     u16 angle = (u16)board->mOrbitAngle;
     int dist = board->mBallRadius;
     int idx = angle >> 4;
-    s16 val1 = data_02082214[idx * 2 + 1];
-    s16 val0 = data_02082214[idx * 2];
+    s16 val1 = FX_CosIdx(idx);
+    s16 val0 = FX_SinIdx(idx);
 
     int x, y, z;
     VecFx32 t;
@@ -1304,7 +1264,6 @@ void RouletteBoard_StateSpin(RouletteBoard *board) {
 }
 }
 
-// @symbol RouletteBoard_StartSlowdown
 extern "C" {
 void RouletteBoard_StartSlowdown(RouletteBoard *board) {
     board->mSpinSpeed += 0x140;
@@ -1313,7 +1272,6 @@ void RouletteBoard_StartSlowdown(RouletteBoard *board) {
 }
 }
 
-// @symbol RouletteBoard_StateSlow
 extern "C" {
 void RouletteBoard_StateSlow(RouletteBoard *board) {
     int spinAbs;
@@ -1323,7 +1281,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     short diff;
     short idx;
     int extra;
-    int angidx, idx2;
+    int angidx;
     short t0, t1;
     int x, y, z;
     VecFx32 t;
@@ -1396,9 +1354,8 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     ApproachLinear(board->mSpinSpeed, 0, 0x30);
 
     angidx = ((unsigned short)(sum + board->mBoardAngle)) >> 4;
-    idx2 = angidx * 2;
-    t0 = data_02082214[idx2 + 1];
-    t1 = data_02082214[idx2];
+    t0 = FX_CosIdx(angidx);
+    t1 = FX_SinIdx(angidx);
 
     x = (int)((((long long)board->mBallRadius * t0) + 0x800) >> 12);
     y = (int)((((long long)board->mBallRadius * 0x400) + 0x800) >> 12) + 0x780 + extra;
@@ -1413,7 +1370,6 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
 }
 }
 
-// @symbol RouletteBoard_Update
 extern "C" void RouletteBoard_Update(RouletteBoard *c) {
     c->mBoardAngle += c->mBoardSpin;
     /* -boardAngle lands at bones + 0x82, inside the third 0x40-byte
@@ -1434,14 +1390,12 @@ extern "C" void RouletteBoard_Update(RouletteBoard *c) {
     }
 }
 
-// @symbol RouletteBoard_Draw
 extern "C" void RouletteBoard_Draw(char *slider) {
     RouletteBoard *board = (RouletteBoard *)slider;
     board->mWheel.Render(0);
     board->mBall.Render(0);
 }
 
-// @symbol RouletteStrip_Reset
 extern "C" {
 void RouletteStrip_Reset(int *strip) {
     int i;
@@ -1453,7 +1407,6 @@ void RouletteStrip_Reset(int *strip) {
 }
 }
 
-// @symbol RouletteStrip_AddRacer
 extern "C" {
 void RouletteStrip_AddRacer(int *strip, int racer) {
     RouletteStrip *s = (RouletteStrip *)strip;
@@ -1468,7 +1421,6 @@ void RouletteStrip_AddRacer(int *strip, int racer) {
 }
 }
 
-// @symbol RouletteStrip_Draw
 extern "C" {
 void RouletteStrip_Draw(short *strip, int y) {
     int idx = GetGameLanguage();
@@ -1486,7 +1438,6 @@ void RouletteStrip_Draw(short *strip, int y) {
 }
 }
 
-// @symbol RouletteStrip_DrawRacers
 extern "C" {
 void RouletteStrip_DrawRacers(void **strip) {
     int i;
@@ -1512,7 +1463,6 @@ void RouletteStrip_DrawRacers(void **strip) {
 }
 }
 
-// @symbol RouletteStrip_LinkAll
 extern "C" {
 void RouletteStrip_LinkAll(char *p) {
     int i;
@@ -1523,7 +1473,6 @@ void RouletteStrip_LinkAll(char *p) {
 }
 }
 
-// @symbol RouletteStrip_ResetAll
 extern "C" {
 void RouletteStrip_ResetAll(void) {
     int i;
@@ -1536,7 +1485,6 @@ void RouletteStrip_ResetAll(void) {
 }
 }
 
-// @symbol RouletteResults_Tick
 extern "C" int RouletteResults_Tick(void) {
     if (ApproachLinear(sRouletteResultsTimer, 0, 1) != 0) {
         int idx;
@@ -1556,7 +1504,6 @@ extern "C" int RouletteResults_Tick(void) {
     return (sRouletteResultIndex >= 4) ? 1 : 0;
 }
 
-// @symbol RouletteResults_Draw
 extern "C" {
 void RouletteResults_Draw(void) {
     int n = sRouletteResultIndex;
@@ -1581,7 +1528,6 @@ void RouletteResults_Draw(void) {
 }
 }
 
-// @symbol _ZN13RouletteRacerD1Ev
 /* Empty, like the constructor; out of line because __cxa_vec_cleanup takes
    its address. */
 RouletteRacer::~RouletteRacer() {}

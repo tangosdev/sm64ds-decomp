@@ -1,4 +1,3 @@
-// @symbol func_ov007_020c775c
 #include "Ov007Spring.h"
 
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);

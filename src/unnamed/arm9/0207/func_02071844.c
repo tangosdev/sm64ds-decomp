@@ -9,7 +9,7 @@ extern void ARM9_INIT_START(void);
 /* EH runtime: give func_02072dac the bounds of the one exception index
    table and return 1. The code address it also passes (pc) would pick a
    module's table; this image has one, so it goes unread. */
-int func_02071844(struct EHTableInfo *info, int pc) {
+int func_02071844(ActionIterator *info, int pc) {
     info->indexBegin = &data_020737a8;
     info->indexEnd = (struct EHIndexEntry *)ARM9_INIT_START;
     return 1;

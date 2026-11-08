@@ -47,17 +47,18 @@
  * deslop leftovers:
  * - SetAnim 6az: helpers pass Fix12<int> by value; header method form size-DIFFs.
  * - IsTooFarAwayFromPlayer / IsPlayerInRange(Fix12,Fix12,Fix12,s32) 6az:
- *   func_ov064_021165d8 / 02116560. Header methods carry Fix12<int>.
+ *   Step / ActChaseMario. Header methods carry Fix12<int>.
  * - Particle::System::New / NewSimple 6az: func_ov064_0211616c / 02115f98.
  * - func_0201267c: PlayStepSound / PlayHitSound / PlayDeathSound at mCamSpacePosX.
  * - 0x398..0x3f9 stay children's padding (annexing them as members would move
  *   the fields the children declare from 0x3fa on); the helpers reach them
  *   through daOts_c::tail(), a cast of the whole object to the nested Tail struct
  *   (a Tail that starts at 0x398 costs an extra add per address-of).
- * - func_ov064_* helpers still in this TU keep cartridge addresses (no
- *   identifiers). InitResourcesCommon / BehaviorCommon are the two that
- *   were leftover shards; names describe the children's slot-0 / slot-6
- *   wrappers.
+ * - The four func_ov064_* helpers left in this TU (02115f98, 02116110,
+ *   0211616c, 02116bac) keep cartridge addresses. 02116110 and 0211616c are
+ *   also called by the children. InitResourcesCommon / BehaviorCommon are the
+ *   two that were leftover shards; names describe the children's slot-0 /
+ *   slot-6 wrappers.
  * - InitResourcesCommon 6az: dBgCh_Actr::Init / SetAnim keep mangled forms (Fix12<int> by value).
  * - BehaviorCommon: the mStateTimer increment stays unsigned short (ldrh).
  * - daOts_c.h first: nested Matrix4x3 for mAnmModel.mat4x3.t (02116bac).
@@ -65,13 +66,23 @@
  * - 02115f98 keeps integer-array scratch vectors; its vector helpers receive
  *   explicit Vector3 pointer views so these locals stay POD.
  * - bool-widening `int isD8 = (int)(actorID == kBigBullyActorId)` / `isBf` in
- *   02116754 / 02116460: the temporary is load-bearing.
+ *   CheckMarioCollision / ActKnockback: the temporary is load-bearing.
  * - CleanupResources and InitResourcesCommon read the config block through
  *   mFileTable every time; caching it in a local size-DIFFs.
- * - func_ov064_021163c0: `c->mPrevAngleY += 0x8000` is the match form (a
- *   separate read and add of the field size-DIFFs).
- * - mStateTimer compares stay unsigned short (ldrh) in 0211616c / 02116460 /
- *   021163c0; named s16 > / < DIFFs.
+ * - ActBackUp: `mPrevAngleY += 0x8000` is the match form (a separate read
+ *   and add of the field size-DIFFs).
+ * - mStateTimer compares stay unsigned short (ldrh) in 0211616c /
+ *   ActKnockback / ActBackUp; named s16 > / < DIFFs.
+ *
+ * N64 names. This class is the DS port of the N64 game's bully
+ * (behaviors/bully.inc.c in n64decomp/sm64). Seven helpers take the
+ * names of the N64 functions they port. Five come from bully.inc.c:
+ * CheckMarioCollision (bully_check_mario_collision), Step (bully_step), and
+ * ActChaseMario, ActKnockback and ActBackUp (bully_act_*). The other two are
+ * the obj_behaviors.c helpers the bully calls: CheckFloorDeath
+ * (obj_check_floor_death) and ReturnHomeIfSafe (obj_return_home_if_safe).
+ * Each function's comment gives the match. These are the N64 decomp's names,
+ * coined by that project, not recovered SM64DS identifiers.
  *
  * Leftover (what is still not recovered, or only known by what the code does):
  * - Names. State, animation-slot and sound names describe the behaviour of the
@@ -79,7 +90,7 @@
  *   six STATE_* names, mHomePos, mPosBeforeMove, mHopCount and the kAnim* slot
  *   names are readings of use, not recovered identifiers.
  * - mHomePos is dual-use: InitResourcesCommon seeds it with the spawn position
- *   and the death branch of func_ov064_02116220 overwrites it with the death spot
+ *   and the death branch of CheckFloorDeath overwrites it with the death spot
  *   for the particles.
  * - mPrevAngleY looks like the travel heading: the hit reactions set it, the
  *   walking states copy it into mAngleY after moving, and
@@ -93,7 +104,7 @@
  * - daPly_c::Hurt's literal arguments (0, 0x14000, 1, 0, 1) are not interpreted.
  * - daPly_c::param1 == 2 in the hit reaction (the 50-unit rather than 40-unit
  *   knockback) is unexplained, as is hit flag 0x40000's identity.
- * - Surface types 1, 4, 5 and 0x13 (func_ov064_02116220) are unnamed.
+ * - Surface types 1, 4, 5 and 0x13 (CheckFloorDeath) are unnamed.
  */
 /* daOts_c.h FIRST: it pulls math/Matrix.h ahead of common.h through dExtAnmModel_c,
  * which is the nested Matrix4x3 spelling 02116bac needs for .t. */
@@ -103,6 +114,7 @@
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "Particle__System.h"
 #include "math/CalcLib.h"
@@ -200,15 +212,11 @@ struct BullyResourceConfig {
 /* ROM symbols with no header of their own. `extern` on every data declaration:
  * without it the block form defines rather than declares. */
 extern "C" {
-extern s16 data_02082214[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int atan2_hold_d_a_ots_1(int a, int b);
-
-void func_ov064_021163c0(daOts_c *c);
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19InitResourcesCommonEv
 /* recovered: named members + shared header, real C++ method
  *
  * Shared InitResources body. daOts_c leaves slot 0 pure virtual; all three
@@ -262,7 +270,6 @@ int daOts_c::InitResourcesCommon()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c14BehaviorCommonEv
 /* recovered: named members + shared header, real C++ method
  *
  * Shared Behavior body. daOts_c leaves slot 6 pure virtual; all three
@@ -272,7 +279,7 @@ int daOts_c::InitResourcesCommon()
  * the actor is on the ground and IsTooFarAwayFromPlayer(1500 units) says so.
  * Otherwise it
  * snapshots mPos into Tail::mPosBeforeMove, runs the hit reaction
- * (func_ov064_02116754), then switches on Tail::mState -- see daOts_c::State --
+ * (CheckMarioCollision), then switches on Tail::mState -- see daOts_c::State --
  * calling this TU's helpers and UpdateDeathState. Every frame that is not skipped
  * it ends by advancing the animation, bumping mStateTimer (zeroed when the state changed),
  * rebuilding the model and shadow matrices, and refreshing the collider.
@@ -292,31 +299,31 @@ int daOts_c::BehaviorCommon()
     tail().mPosBeforeMoveY = mPosY;
     tail().mPosBeforeMoveZ = mPosZ;
     MakeVanishLuigiWork(mdCcAc_c);
-    func_ov064_02116754();
+    CheckMarioCollision();
 
     switch (tail().mState) {
     case STATE_RETURN_HOME:
         mHorzSpeed = kWalkSpeed;
-        if (func_ov064_021166f0() != 0) {
+        if (ReturnHomeIfSafe() != 0) {
             tail().mState = STATE_CHASE;
             mAnmModel.SetAnim((BCA_File *)(CONFIG_BCA(this, kAnimWalk)), 0, kAnimSpeedDouble, 0);
         }
-        func_ov064_021165d8();
+        Step();
         mAngleY = mPrevAngleY;
         break;
     case STATE_CHASE:
-        func_ov064_02116560();
-        func_ov064_021165d8();
+        ActChaseMario();
+        Step();
         mAngleY = mPrevAngleY;
         mAnmModel.speed = kAnimSpeedDouble;
         break;
     case STATE_KNOCKED_BACK:
-        func_ov064_02116460();
-        func_ov064_021165d8();
+        ActKnockback();
+        Step();
         break;
     case STATE_LEDGE_TURN:
-        func_ov064_021163c0(this);
-        func_ov064_021165d8();
+        ActBackUp();
+        Step();
         break;
     case STATE_DYING:
         UpdateDeathState();
@@ -340,7 +347,6 @@ int daOts_c::BehaviorCommon()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c6RenderEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 9
  *
  * WAS _ZN11daDonketu_c6RenderEv, and misattributed: slot 9 holds 0x02116cf0 in daOts_c,
@@ -357,7 +363,6 @@ int daOts_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method -- vtable slot 3
  *
  * WAS _ZN11daDonketu_c16CleanupResourcesEv, and that was a misattribution, not a
@@ -384,7 +389,6 @@ int daOts_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116bacEv
 /* Rebuilds the two matrices every frame: the model matrix (a rotation about Y
  * by mAngleY, translated to mPos plus the model's Y offset) and the drop-shadow
  * matrix (the same rotation, translated to mPos), then drops the shadow. The
@@ -411,7 +415,6 @@ void daOts_c::func_ov064_02116bac(){
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116754Ev
 /* The hit reaction: what the actor does when its collider is touched. Does
  * nothing in STATE_KNOCKED_BACK, or unless the other collider's owner is the
  * player. The cases, in the order tried:
@@ -434,9 +437,11 @@ void daOts_c::func_ov064_02116bac(){
  * Every case except the outright kill and the mIsVanish exit leaves the actor in
  * STATE_KNOCKED_BACK with the hop counter cleared. PlayHitSound plays in the kill
  * and in every case that reaches the knocked-back state; only the mIsVanish exit
- * is silent. */
-void daOts_c::func_ov064_02116754()
-{
+ * is silent.
+ *
+ * N64: bully_check_mario_collision, called at the same point of the loop (right
+ * after the position snapshot) and ending in the same knockback state. */
+void daOts_c::CheckMarioCollision() {
     daPly_c *hitPlayer;
     s32 hitFlags;
     u32 id;
@@ -564,12 +569,15 @@ void daOts_c::func_ov064_02116754()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_021166f0Ev
 /* STATE_RETURN_HOME's steering: records the angle to mHomePos in Tail::mHomeAngle
  * and turns mPrevAngleY toward it by up to 0x140 a frame (about 1.8 degrees).
- * Returns whether the player is within 800 units of mHomePos. */
-int daOts_c::func_ov064_021166f0()
-{
+ * Returns whether the player is within 800 units of mHomePos.
+ *
+ * N64: obj_return_home_if_safe(o, oHomeX, oPosY, oHomeZ, 800), which the bully's
+ * patrol state calls: turn the move yaw toward home by 320 (0x140) and report
+ * whether Mario is within the radius. The DS turns even on the frame it reports
+ * the player. */
+int daOts_c::ReturnHomeIfSafe() {
     Vector3 v;
     tail().mHomeAngle = Vec3_HorzAngle(&this->mPos, (Vector3 *)&tail().mHomePosX);
     ApproachLinear(this->mPrevAngleY, tail().mHomeAngle, 0x140);
@@ -580,7 +588,6 @@ int daOts_c::func_ov064_021166f0()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_021165d8Ev
 /* The movement step shared by the states that move (all but STATE_DYING and
  * STATE_REMOVE). Moves the actor (UpdatePos, no collider). If IsGoingOffCliff
  * fires (down = config->cliffDown, slope limit 0x2888 = about 57 degrees, water
@@ -590,9 +597,12 @@ int daOts_c::func_ov064_021166f0()
  * animation. Then resolves the
  * with-mesh collision, sets mFlags bit 0 (the clip test) while the actor is on the
  * ground and IsTooFarAwayFromPlayer(1500 units) is nonzero, clears it otherwise,
- * plays the footstep sound and runs the floor probe (func_ov064_02116220). */
-void daOts_c::func_ov064_021165d8()
-{
+ * plays the footstep sound and runs the floor probe (CheckFloorDeath).
+ *
+ * N64: bully_step -- object_step, then bully_backup_check (back to the saved x
+ * and z, into the back-up state unless knocked back), the stomping sound and
+ * obj_check_floor_death, in that order. */
+void daOts_c::Step() {
     this->UpdatePos(0);
 
     if (this->IsGoingOffCliff(
@@ -618,23 +628,25 @@ void daOts_c::func_ov064_021165d8()
 
     this->PlayStepSound();
 
-    func_ov064_02116220();
+    CheckFloorDeath();
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c14UpdateRunStateEv
 /* Slot 31, called from STATE_CHASE. Empty here; every child overrides it. */
 int daOts_c::UpdateRunState()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116560Ev
 /* STATE_CHASE's body: runs the child's UpdateRunState, then, unless the player is
  * within 1000 units of mHomePos (measured at the actor's own height), drops back
  * to STATE_RETURN_HOME and restarts the walk animation. The caller ignores the
- * result, so this is void; the ROM's tail call to SetAnim needs nothing more. */
-void daOts_c::func_ov064_02116560() {
+ * result, so this is void; the ROM's tail call to SetAnim needs nothing more.
+ *
+ * N64: bully_act_chase_mario -- the same test, is_point_within_radius_of_mario
+ * at (oHomeX, oPosY, oHomeZ) with radius 1000, back to the patrol state and
+ * animation 0. */
+void daOts_c::ActChaseMario() {
     this->UpdateRunState();
     if (IsPlayerInRange(tail().mHomePosX, this->mPosY, tail().mHomePosZ, kKeepChaseRange))
         return;
@@ -643,16 +655,18 @@ void daOts_c::func_ov064_02116560() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116460Ev
 /* STATE_KNOCKED_BACK's body. While mHorzSpeed is still being slowed to zero
  * (by Tail::mHorzDecel a frame) the state timer is held at 0. Once it has
  * stopped the actor hops: while fewer than two hops are done, each frame on the
  * ground it launches upward at 15 units a frame and counts a hop. After the
  * second hop it waits for the state timer to reach 10 frames (20 for the Big
  * Bully), then goes back to STATE_CHASE with mPrevAngleY = mAngleY and the walk
- * animation at double speed. */
-void daOts_c::func_ov064_02116460()
-{
+ * animation at double speed.
+ *
+ * N64: bully_act_knockback, which also slows to a stop and then returns to the
+ * chase state with the move yaw set from the face yaw. The DS adds the two
+ * hops. */
+void daOts_c::ActKnockback() {
     if (ApproachLinear(this->mHorzSpeed, 0, tail().mHorzDecel) != 0) {
         int b = (this->actorID == kBigBullyActorId);
         int lim = b ? 0x14 : 0xa;
@@ -683,35 +697,34 @@ void daOts_c::func_ov064_02116460()
  * the ground, it flips mPrevAngleY by half a turn (0x8000). Every frame it sets
  * mHorzSpeed to 5 units a frame and turns mAngleY toward mPrevAngleY by up to
  * 0x200 (2.8 degrees). After 15 frames it snaps mPrevAngleY to mAngleY, goes back
- * to STATE_RETURN_HOME and restarts the walk animation. An unmangled extern "C"
- * helper that takes the actor as a plain pointer. */
-extern "C" void func_ov064_021163c0(daOts_c *c)
-{
-    if (*(unsigned short *)&c->mStateTimer == 0) {
-        if (c->mWithMeshClsn.IsOnGround()) {
-            c->mPrevAngleY += 0x8000;
+ * to STATE_RETURN_HOME and restarts the walk animation.
+ *
+ * N64: bully_act_back_up -- the same half-turn on the state's first frame, the
+ * same 5 units a frame and the same 15 frames back to the patrol state. */
+void daOts_c::ActBackUp() {
+    if (*(unsigned short *)&mStateTimer == 0) {
+        if (mWithMeshClsn.IsOnGround()) {
+            mPrevAngleY += 0x8000;
         }
     }
-    c->mHorzSpeed = kWalkSpeed;
-    ApproachLinear(c->mAngleY, c->mPrevAngleY, 0x200);
-    if (*(unsigned short *)&c->mStateTimer < 0xf)
+    mHorzSpeed = kWalkSpeed;
+    ApproachLinear(mAngleY, mPrevAngleY, 0x200);
+    if (*(unsigned short *)&mStateTimer < 0xf)
         return;
-    c->mPrevAngleY = c->mAngleY;
-    c->tail().mState = daOts_c::STATE_RETURN_HOME;
-    BCA_File *f = CONFIG_BCA(c, kAnimWalk);
-    c->mAnmModel.SetAnim((BCA_File *)f, 0, kAnimSpeedNormal, 0);
+    mPrevAngleY = mAngleY;
+    tail().mState = STATE_RETURN_HOME;
+    BCA_File *f = CONFIG_BCA(this, kAnimWalk);
+    mAnmModel.SetAnim((BCA_File *)f, 0, kAnimSpeedNormal, 0);
     return;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c16UpdateDeathStateEv
 /* Slot 32, called from STATE_DYING. Empty here; every child overrides it. */
 void daOts_c::UpdateDeathState()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c13PlayStepSoundEv
 /* Slot 33. Plays the footstep sound on frames 4 and 7 of the animation. */
 void daOts_c::PlayStepSound()
 {
@@ -723,7 +736,6 @@ void daOts_c::PlayStepSound()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c12PlayHitSoundEv
 /* Slot 34. Called when the actor is struck or enters STATE_KNOCKED_BACK. */
 void daOts_c::PlayHitSound()
 {
@@ -731,14 +743,12 @@ void daOts_c::PlayHitSound()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c17PlayShellHitSoundEv
 /* Slot 35, called after the shell and player-hurt reactions. Empty here. */
 void daOts_c::PlayShellHitSound()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c14PlayDeathSoundEv
 /* Slot 36. Called when the actor enters STATE_DYING. */
 void daOts_c::PlayDeathSound()
 {
@@ -746,15 +756,19 @@ void daOts_c::PlayDeathSound()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116220Ev
 /* The floor probe, run at the end of every movement step. Casts a ground
  * collision query from 150 units above the actor's (mPos + model Y offset), and
  * if it finds a floor records its height in Tail::mFloorY. When the actor is no
  * more than 20 units above that floor it looks at the floor's surface type
  * (CLPS::GetSurfaceType): types 4, 5 and 0x13 send it to STATE_REMOVE; type 1 sends it to
  * STATE_DYING -- death animation, clip test off, PlayDeathSound, and mHomePos
- * overwritten with the spot it died at, 5 units above the floor. */
-void daOts_c::func_ov064_02116220() {
+ * overwritten with the spot it died at, 5 units above the floor.
+ *
+ * N64: obj_check_floor_death -- a burning floor sends the object to its lava
+ * death and a death-plane floor to OBJ_ACT_DEATH_PLANE_DEATH, which the bully
+ * handles by deactivating. Here type 1 is the lava death (STATE_DYING) and the
+ * other three are the removal. */
+void daOts_c::CheckFloorDeath() {
     dBgCh_Gnd rg;
     Vector3 v;
     int y = this->mPosY;
@@ -790,7 +804,6 @@ void daOts_c::func_ov064_02116220() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_0211616cEv
 /* The death animation's tick, called by the children's UpdateDeathState. Once the
  * state timer exceeds 30 it marks the actor for destruction and returns 1. Until
  * then it sinks mPosY by 5 units a frame and keeps two particle systems alive
@@ -813,7 +826,6 @@ int daOts_c::func_ov064_0211616c() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02116110Es
 /* Turns mPrevAngleY toward the closest player by up to `step` a call. Returns 1
  * once it has reached that angle, else 0 (also 0 when there is no player). The
  * children's UpdateRunState use it to face the player. */
@@ -827,16 +839,14 @@ int daOts_c::func_ov064_02116110(short step){
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c19func_ov064_02115f98EPc
 /* Spawns particle effect kParticleHit where a hit reaction is aimed. `a1` is the
  * player. Aims from this actor's position (raised by the model Y offset) at the
  * player's position plus 70 units up, and places the effect that far along the
  * direction: config->cylinderRadius from the actor. The direction is split into
  * elevation (angV) and heading (angH) with atan2, and the sine/cosine come from
- * data_02082214 (s16 pairs, one per 16 angle units, 12-bit fixed point; element
- * 0 of a pair is the sine and element 1 the cosine, which is the assignment the
- * geometry here needs: the heading's sine scales the x offset, its cosine the z
- * offset, and the elevation's sine the y offset). */
+ * the SDK table through FX_SinIdx/FX_CosIdx at angle >> 4: the heading's sine
+ * scales the x offset, its cosine the z offset, and the elevation's sine the
+ * y offset. */
 void daOts_c::func_ov064_02115f98(char* a1)
 {
     int scratch[3];
@@ -882,10 +892,10 @@ void daOts_c::func_ov064_02115f98(char* a1)
     idxV = (int)((u16)angV >> 4);
     idxH = (int)((u16)angH >> 4);
 
-    cosV = data_02082214[idxV * 2 + 1];
-    sinV = data_02082214[idxV * 2];
-    cosH = data_02082214[idxH * 2 + 1];
-    sinH = data_02082214[idxH * 2];
+    cosV = FX_CosIdx(idxV);
+    sinV = FX_SinIdx(idxV);
+    cosH = FX_CosIdx(idxH);
+    sinH = FX_SinIdx(idxH);
 
     lenfix = FX_MUL(scale, cosV);
     ycomp = FX_MUL(scale, sinV);
@@ -900,7 +910,6 @@ void daOts_c::func_ov064_02115f98(char* a1)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_c16OnAimedAtWithEggEv
 /* Slot 29. The height (a fix12 amount added to pos.y) the egg aims at:
  * config->eggAimHeight, or 20 units when there is no config block. */
 int daOts_c::OnAimedAtWithEgg()
@@ -914,7 +923,6 @@ int daOts_c::OnAimedAtWithEgg()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_cD0Ev
 /* recovered: real C++ deleting destructor, defined inline in the header
  *
  * ~daOts_c is defined in the class body -- the three classes derived from it
@@ -930,7 +938,6 @@ int daOts_c::OnAimedAtWithEgg()
  */
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daOts_cD1Ev
 /* recovered: real C++ destructor, defined inline in the header
  *
  * The body the key function forces out is the class's own layout evidence: the

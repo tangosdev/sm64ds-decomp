@@ -38,8 +38,8 @@
  * base dtor" sequence.
  *
  * InitResources (func_0203506c) separately registers a GLOBAL
- * dScMB_c::graphCallback_c object (data_020a0c68, constructed by
- * func_02034b1c(&data_020a0c68, this)) with `this` as its context --
+ * dScMB_c::graphCallback_c object (sMBGraphCallback, constructed by
+ * func_02034b1c(&sMBGraphCallback, this)) with `this` as its context --
  * NOT an embedded member of dScMB_c. That callback's layout is declared
  * below; it occupies no space in the scene.
  *
@@ -74,12 +74,13 @@ struct dScMB_c : dScene_c {
     virtual s32 Behavior();         /* slot  6 */
     virtual s32 Render();           /* slot  9 */
 
-    /* Not virtual. The global graph callback calls this on mOwner.
-       The address stays the name. */
-    void func_02034d34();
+    /* Not virtual. The global graph callback calls this on mOwner every
+       frame: it steps the scene's own fader unless the fade is at its
+       start. The name is coined from that body. */
+    void UpdateFader();
 };
 
-/* The GLOBAL callback object InitResources registers (data_020a0c68), not a
+/* The GLOBAL callback object InitResources registers (sMBGraphCallback), not a
    member of dScMB_c -- it occupies no space in this class; see the note above.
    Derives from dGraph_c::callback_c, the ROM-proven base whose _ZTI edge every
    scene's nested graphCallback_c points at (include/dGraph_c.h).

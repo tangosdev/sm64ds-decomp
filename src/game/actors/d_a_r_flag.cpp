@@ -42,14 +42,11 @@ extern RFlagAnimResFileHandle data_ov062_0211e0dc;
 
 #pragma defer_codegen off
 
-// @symbol _ZN9daRFlag_cD1Ev
-// @symbol _ZN9daRFlag_cD0Ev
 /* Empty body: the vptr store and the member destructors (dCcAc_c at 0xd4,
  * dExtAnmModel_c at 0x108, then dActor_c) are consequences of the class. D0's
  * deallocation is the inline operator delete on dActor_c. */
 daRFlag_c::~daRFlag_c() {}
 
-// @symbol _ZN9daRFlag_c17UpdateModelMatrixEv
 /* Builds the model matrix from the actor's facing and position.
  * The flag graphic sits 60.0 (0x3c000) above mPosY. dExtSimpleModel_c-matrix
  * translation is in 1/8 world units, so the position is shifted down by 3. */
@@ -60,20 +57,17 @@ void daRFlag_c::UpdateModelMatrix() {
     mAnmModel.mat4x3.t.z = mPosZ >> 3;
 }
 
-// @symbol _ZN9daRFlag_c16CleanupResourcesEv
 int daRFlag_c::CleanupResources() {
     data_ov062_0211e0d4.Release();
     data_ov062_0211e0dc.Release();
     return 1;
 }
 
-// @symbol _ZN9daRFlag_c6RenderEv
 int daRFlag_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN9daRFlag_c8BehaviorEv
 int daRFlag_c::Behavior() {
     unsigned int id;
     dActor_c *a;
@@ -112,7 +106,6 @@ int daRFlag_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9daRFlag_c13InitResourcesEv
 int daRFlag_c::InitResources() {
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov062_0211e0d4), 1, -1);
     mAnmModel.SetAnim((BCA_File *)dExtFrameCtrl_c::LoadFile(data_ov062_0211e0dc), 0, 0x1000, 0);
@@ -122,7 +115,6 @@ int daRFlag_c::InitResources() {
     return 1;
 }
 
-// @symbol daRFlag_c_classInit
 extern "C" daRFlag_c *daRFlag_c_classInit(void) {
     return new daRFlag_c();
 }

@@ -7,11 +7,14 @@
  * .text section per function in reverse source order.
  *
  * S41: RTTI ov002:0x0210b000 names daSCoin_c; D1 0x020f03c4 size 0x30,
- * D0 0x020f03f4 size 0x44; no destructor body in this TU (@symbol only).
+ * D0 0x020f03f4 size 0x44; no destructor body in this TU.
  *
  * NOTES:
  * - SpawnStar copies the marker's position through an int * at its mPosX:
- *   member reads (marker->mPos.x or marker->mPosX, ...) size-DIFF.
+ *   member reads (marker->mPos.x or marker->mPosX, ...) and a Vector3 copy
+ *   (init, ctor or assignment) are 4 bytes short. The ROM materializes
+ *   &marker->mPos first; a `const Vector3 &` local to it matches, but that
+ *   only moves the pin.
  * - LinkToBlock's ID tests go through the int-returning HasActorID: a
  *   direct `actorID == id` in the for/else-if loop size-DIFFs.
  * - data_ov002_0210d9a8 (the ov002 SharedFilePtr handle) and func_02012790
@@ -37,19 +40,16 @@ static inline int HasActorID(dActor_c *actor, unsigned int id) {
     return actor->actorID == id;
 }
 
-// @symbol daSCoin_c_classInit
 extern "C" daSCoin_c *daSCoin_c_classInit()
 {
     return new daSCoin_c();
 }
 
-// @symbol g_profile_SECRET_COIN
 extern "C" SpawnInfo<daSCoin_c> g_profile_SECRET_COIN = {
     daSCoin_c_classInit, 0x0149, 0x014a, 0x00000000,
     0x00000000, 0x00320000, 0x01f40000, 0x00050000
 };
 
-// @symbol _ZN9daSCoin_c13InitResourcesEv
 s32 daSCoin_c::InitResources()
 {
     mdCcAc_c.Init(this, 0x64000, 0x40000, 0x800002, 0);
@@ -63,7 +63,6 @@ s32 daSCoin_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN9daSCoin_c8BehaviorEv
 s32 daSCoin_c::Behavior()
 {
     if (mDeathTimer) {
@@ -104,14 +103,12 @@ s32 daSCoin_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daSCoin_c16CleanupResourcesEv
 s32 daSCoin_c::CleanupResources()
 {
     data_ov002_0210d9a8.Release();
     return 1;
 }
 
-// @symbol _ZN9daSCoin_c9SpawnStarEv
 /* Finds the STARBASE whose mStarID equals this group's and spawns POWER_STAR
  * (0xb2) 0x12c000 above its position, then calls AddStarMarker on it.
  * Returns without spawning when there is no such marker. */
@@ -138,7 +135,6 @@ void daSCoin_c::SpawnStar()
     }
 }
 
-// @symbol _ZN9daSCoin_c11LinkToBlockEv
 /* Runs once (mBlockScanDone guards it). Looks through the actor list for a
  * HATENA_BLOCK (0x14), ITEM_BLOCK (0x15) or PUSHBLOCK (0xc0) closer than
  * 0xc8000 to this coin; on a hit it disables the touch collider and stores
@@ -165,7 +161,6 @@ void daSCoin_c::LinkToBlock()
     mBlockScanDone = 1;
 }
 
-// @symbol _ZN9daSCoin_c7CollectEv
 /* Collection handler. Finds the group leader by mLeaderUniqueID; unless this
  * coin is mGroupId 0xf, its mGroupId must equal the leader's mCollectedCount.
  * Plays func_02012790(0x25), bumps the leader's count, spawns the count as a
@@ -180,10 +175,7 @@ void daSCoin_c::Collect()
     func_02012790(0x25);
     leader->mCollectedCount++;
     {
-        Vector3 v;
-        v.x = mPosX;
-        v.y = mPosY;
-        v.z = mPosZ;
+        Vector3 v = mPos;
         SpawnNumber(v, leader->mCollectedCount, false, 0, 0);
     }
     mdCcAc_c.flags |= 1;
@@ -191,6 +183,3 @@ void daSCoin_c::Collect()
     if (mGroupRole != 2) return;
     MarkForDestruction();
 }
-
-// @symbol _ZN9daSCoin_cD0Ev
-// @symbol _ZN9daSCoin_cD1Ev

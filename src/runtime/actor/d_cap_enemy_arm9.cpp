@@ -37,9 +37,9 @@
 extern "C" {
 extern SharedFilePtr *data_ov002_020ff028[];
 
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern unsigned char data_0208a0e0;
-extern daPly_c *data_0209f394[];
+extern daPly_c *gPlayers[];
 
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
@@ -48,7 +48,6 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
 }
 
-// @symbol _ZN11dCapEnemy_cC2Ev
 dCapEnemy_c::dCapEnemy_c() {}
 
 /* The call is not in the ROM. It is the odr-use that makes mwcc emit the
@@ -57,12 +56,10 @@ void PinD1(dCapEnemy_c *self) {
     self->~dCapEnemy_c();
 }
 
-// @symbol _ZN11dCapEnemy_cD1Ev
 #pragma never_inline on
 inline dCapEnemy_c::~dCapEnemy_c() {}
 #pragma never_inline off
 
-// @symbol _ZN11dCapEnemy_c14UnloadCapModelEv
 void dCapEnemy_c::UnloadCapModel()
 {
     s32 idx = mCapId & 7;
@@ -70,7 +67,6 @@ void dCapEnemy_c::UnloadCapModel()
     data_ov002_020ff028[idx]->Release();
 }
 
-// @symbol _ZN11dCapEnemy_c6AddCapEj
 int dCapEnemy_c::AddCap(unsigned int param)
 {
     mIsDormant = 0;
@@ -98,7 +94,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
     }
 
     *(int *)(&mFlags) &= ~1;
-    mCapIcon.func_ov001_020ab228((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
+    mCapIcon.Link((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28();
     if (result != 0) {
@@ -109,7 +105,6 @@ int dCapEnemy_c::AddCap(unsigned int param)
     return result;
 }
 
-// @symbol _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16
 void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
 {
     /* mCapIcon.mFlags (+0x17f) is read through an inline cast on each
@@ -140,14 +135,12 @@ void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
-// @symbol _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3
 void dCapEnemy_c::RenderCapModel(const Vector3 * v)
 {
     if (mCapId >= 6) return;
     mModel.Render(v);
 }
 
-// @symbol _ZN11dCapEnemy_c10ReleaseCapERK7Vector3
 struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
 {
     const struct Vector3 *v = &v_;
@@ -172,7 +165,6 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
     return ret;
 }
 
-// @symbol _ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3
 int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
 {
     const Vector3 *v = &v_;
@@ -191,14 +183,13 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
         mEatingPlayer = 0;
         if (mCapBank == 0) {
             idx = mCapId & 7;
-            mCapIcon.func_ov001_020ab228((char *)this, idx, 0, 0);
+            mCapIcon.Link((char *)this, idx, 0, 0);
         }
         return 1;
     }
     return 0;
 }
 
-// @symbol _ZN11dCapEnemy_c15RespawnIfHasCapEv
 struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
 {
     struct dActor_c *r;
@@ -207,7 +198,7 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
     r = dActor_c::Spawn(actorID, param1, mPos, &mAngle, mAreaId, -1);
     if (!r) return r;
     ((dCapEnemy_c *)r)->mIsDormant = 1;
-    *(int *)((char *)r + 0xf4) = r->mFlags;
+    ((dCapEnemy_c *)r)->mDormantFlags = r->mFlags;
     ((dEnemyBase_c *)r)->mCoinType = 0;
     {
         r->mFlags &= ~1;
@@ -216,17 +207,17 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
     return r;
 }
 
-/* The u64 no-op mask sits on the plain 0xf4 read, not on the mFlags store.
+/* The u64 no-op mask sits on the mDormantFlags read, not on the mFlags store.
    Demoting that load out of its fold-onto-[r4,#0xf4] value-numbering class is
-   what lets the RMW-pool chain lead the tail. The masked mCapId RMW is the
+   what lets the RMW-pool chain lead the tail; the plain member read schedules
+   the 0xf4 load ahead of the mCapId pool load (4 words, re-measured #821). The masked mCapId RMW is the
    usual 6g launder. */
-// @symbol _ZN11dCapEnemy_c11GetCapStateEv
 int dCapEnemy_c::GetCapState() {
     if (mIsDormant == 0) {
         return 2;
     }
 
-    unsigned char val = *(unsigned char *)&data_0209f2d8;
+    unsigned char val = *(unsigned char *)&gGameMode;
     int check = (val == 1) ? 1 : 0;
     if (check == 0) {
         daPly_c *p = ClosestPlayer();
@@ -246,41 +237,43 @@ int dCapEnemy_c::GetCapState() {
     }
 
     mIsDormant = 0;
-    mFlags = *(int *)((long long)(int)((char *)this + 0xf4));
+    mFlags = *(int *)((long long)(int)&mDormantFlags);
     mCapId &= 7;
     return 1;
 }
 
-// @symbol _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv
-int dCapEnemy_c::DestroyIfCapNotNeeded()
-{
-  if (mCapId >= 6) return 1;
-  if ((int)(data_0209f2d8 == 1) != 0) return 1;
-  daPly_c *p = ClosestPlayer();
-  if (p == 0) { func_02005ed8(); return 0; }
-  if (mCapId != p->mCharacter) return 1;
-  func_02005ed8();
-  return 0;
+int dCapEnemy_c::DestroyIfCapNotNeeded() {
+    if (mCapId >= 6)
+        return 1;
+    if ((int)(gGameMode == 1) != 0)
+        return 1;
+    daPly_c *p = ClosestPlayer();
+    if (p == 0) {
+        func_02005ed8();
+        return 0;
+    }
+    if (mCapId != p->mCharacter)
+        return 1;
+    func_02005ed8();
+    return 0;
 }
 
-// @symbol _ZN11dCapEnemy_c13func_02005ed8Ev
 void dCapEnemy_c::func_02005ed8() {
     if ( ((unsigned)((unsigned char *)this)[0x17f] << 29) >> 31 )
         return;
     mCapIcon.Unlink();
 }
 
-// @symbol _ZN11dCapEnemy_c13func_02005e28Ev
 int dCapEnemy_c::func_02005e28()
 {
     int b;
     int i;
     int n;
-    b = (int)(data_0209f2d8 == 1);
+    b = (int)(gGameMode == 1);
     if (b != 0) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {
-            daPly_c *p = data_0209f394[i];
+            daPly_c *p = gPlayers[i];
             if (p != 0) {
                 if (p->param1 == mCapId) return 1;
             }
@@ -295,7 +288,6 @@ int dCapEnemy_c::func_02005e28()
     }
 }
 
-// @symbol _ZN11dCapEnemy_c12Unk_02005d94Ev
 void dCapEnemy_c::Unk_02005d94()
 {
     int b1;
@@ -303,7 +295,7 @@ void dCapEnemy_c::Unk_02005d94()
     if (!(mCapId & 0x80)) return;
     b1 = (mFlags & 8) ? 1 : 0;
     if (b1 == 0) {
-        volatile unsigned char *q = &data_0209f2d8;
+        volatile unsigned char *q = &gGameMode;
         b2 = (q[0] == 1) ? 1 : 0;
         if (b2 == 0) return;
     }

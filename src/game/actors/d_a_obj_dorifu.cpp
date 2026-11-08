@@ -39,8 +39,6 @@ enum {
     STATE_STEP_UP = 3
 };
 
-// @symbol _ZN13daObjDorifu_cD0Ev
-// @symbol _ZN13daObjDorifu_cD1Ev
 /* No source here: both destructor variants come from the ONE inline body in
  * include/daObjDorifu_c.h -- the class's descendants inline its vptr store,
  * which the compiler can only do from a visible body, so the definition
@@ -64,7 +62,6 @@ void daObjDorifu_c_EmitDestructor(daObjDorifu_c *p) {
     p->~daObjDorifu_c();
 }
 
-// @symbol _ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources
 /* ov002 0x020b4b6c. Shared cleanup for the three concrete drifting-platform
  * descendants. Their slot-3 overrides pass their own five-entry resource table here. */
 s32 daObjDorifu_c::CleanupResources(daObjDorifuResources *resources) {
@@ -77,7 +74,6 @@ s32 daObjDorifu_c::CleanupResources(daObjDorifuResources *resources) {
     return 1;
 }
 
-// @symbol _ZN13daObjDorifu_c6RenderEv
 /* daObjDorifu_c::Render -- vtable slot 9, ov002 0x020b4bc4.
  * reloc: _ZTV13daObjDorifu_c+0x24 -> 0x020b4bc4, where
  * _ZTV10dBgActor_c+0x24 -> 0x02043af0, so this is a real override.
@@ -89,7 +85,6 @@ s32 daObjDorifu_c::Render() {
     return 1;
 }
 
-// @symbol _ZN13daObjDorifu_c8BehaviorEv
 /* daObjDorifu_c::Behavior -- vtable slot 6, ov002 0x020b4bfc, and this class's
  * key function: the first non-pure, non-inline virtual the header declares, so
  * this definition is what anchors _ZTV13daObjDorifu_c / _ZTI13daObjDorifu_c
@@ -103,15 +98,10 @@ s32 daObjDorifu_c::Render() {
  * The three collider calls are spelled as methods: dBgW_KcMbg inherits
  * IsEnabled, Enable and Disable from dBgW, which declares them. A bare
  * `extern int _ZN4dBgW9IsEnabledEv(void *)` was emitted verbatim from C but
- * would be mangled a SECOND time from C++, which this file is.
- *
- * The `(int)` launder on &mActivePlank is load-bearing: without it mwcc
- * common-subexpressions the field address across the DecIfAbove0_Byte call and
- * emits one instruction fewer than the ROM has. */
+ * would be mangled a SECOND time from C++, which this file is. */
 s32 daObjDorifu_c::Behavior() {
     int i;
     dBgW_KcMbg *clsn;
-    unsigned char *plankPtr;
 
     switch (mState) {
     case STATE_AWAIT_EVENT_SET:
@@ -120,8 +110,7 @@ s32 daObjDorifu_c::Behavior() {
         break;
     case STATE_STEP_DOWN:
         if (DecIfAbove0_Byte(&mStepTimer) == 0) {
-            plankPtr = (unsigned char *)(int)&mActivePlank;
-            *plankPtr = *plankPtr - 1;
+            mActivePlank--;
             mStepTimer = 2;
         }
         if (mActivePlank == 0) {
@@ -135,8 +124,7 @@ s32 daObjDorifu_c::Behavior() {
         break;
     case STATE_STEP_UP:
         if (DecIfAbove0_Byte(&mStepTimer) == 0) {
-            plankPtr = (unsigned char *)(int)&mActivePlank;
-            *plankPtr = *plankPtr + 1;
+            mActivePlank++;
             mStepTimer = 2;
         }
         if (mActivePlank >= 4) {
@@ -160,7 +148,6 @@ s32 daObjDorifu_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources
 /* ov002 0x020b4d58. Shared initialization for the three concrete
  * drifting-platform descendants. Each passes its own five-entry daObjDorifuResources table. The raw matrix
  * copies are load-bearing: ordinary C++ struct assignment scalarizes them

@@ -28,7 +28,6 @@
 
 void CopyToViewMat(const Matrix4x3 *mat);
 
-// @symbol func_0202fd2c
 extern "C" {
 extern int gRunningKuppaScript;
 extern u8 *gSavedKuppaScript;
@@ -39,20 +38,17 @@ void func_0202fd2c(void)
 }
 }
 
-// @symbol _ZN7dView_c6RenderEv
 s32 dView_c::Render()
 {
     CopyToViewMat(&viewMat);
     return 1;
 }
 
-// @symbol _ZN7dView_cD0Ev -- pinned by the delete below
 void dView_c_EmitDeletingDestructor(dView_c *view)
 {
     delete view;
 }
 
-// @symbol _ZN7dView_cD1Ev -- pinned by the qualified call below
 void dView_c_EmitDestructor(dView_c *view)
 {
     view->~dView_c();

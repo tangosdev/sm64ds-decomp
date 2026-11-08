@@ -50,35 +50,35 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117570Ev",
+      "symbol": "_ZN8daNknk_c16KillOnWaterFloorEv",
       "address": "0x02117570",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_02117570.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021175c0Ev",
+      "symbol": "_ZN8daNknk_c16SpawnLandingDustEv",
       "address": "0x021175c0",
       "size": "0x00000164",
       "legacy_source": "src/func_ov062_021175c0.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117724Ejjjt",
+      "symbol": "_ZN8daNknk_c17SpawnFootstepDustEjjjt",
       "address": "0x02117724",
       "size": "0x00000270",
       "legacy_source": "src/func_ov062_02117724.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117994Ei",
+      "symbol": "_ZN8daNknk_c14SetAnimByIndexEi",
       "address": "0x02117994",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_02117994.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021179e4Ev",
+      "symbol": "_ZN8daNknk_c13SpawnBlueCoinEv",
       "address": "0x021179e4",
       "size": "0x00000058",
       "legacy_source": "src/func_ov062_021179e4.cpp",
@@ -99,28 +99,28 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117b48Ev",
+      "symbol": "_ZN8daNknk_c19BounceOffHurtPlayerEv",
       "address": "0x02117b48",
       "size": "0x00000018",
       "legacy_source": "src/func_ov062_02117b48.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117b60Ev",
+      "symbol": "_ZN8daNknk_c19DistToClosestPlayerEv",
       "address": "0x02117b60",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov062_02117b60.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117b9cEv",
+      "symbol": "_ZN8daNknk_c16FindNearestShellEv",
       "address": "0x02117b9c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov062_02117b9c.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02117bf4Ev",
+      "symbol": "_ZN8daNknk_c9DropShellEv",
       "address": "0x02117bf4",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov062_02117bf4.cpp",
@@ -134,7 +134,7 @@
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118004Ei",
+      "symbol": "_ZN8daNknk_c11SlideToStopEi",
       "address": "0x02118004",
       "size": "0x00000054",
       "legacy_source": "src/func_ov062_02118004.cpp",
@@ -148,35 +148,35 @@
       "ordinal": 15
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021180d4Ev",
+      "symbol": "_ZN8daNknk_c13UpdateWalkEndEv",
       "address": "0x021180d4",
       "size": "0x00000048",
       "legacy_source": "src/func_ov062_021180d4.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_0211811cEv",
+      "symbol": "_ZN8daNknk_c10UpdateWalkEv",
       "address": "0x0211811c",
       "size": "0x00000084",
       "legacy_source": "src/func_ov062_0211811c.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_021181a0Ev",
+      "symbol": "_ZN8daNknk_c15UpdateWalkStartEv",
       "address": "0x021181a0",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov062_021181a0.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118258Ei",
+      "symbol": "_ZN8daNknk_c19UpdateClosestPlayerEi",
       "address": "0x02118258",
       "size": "0x000000dc",
       "legacy_source": "src/func_ov062_02118258.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118334Ev",
+      "symbol": "_ZN8daNknk_c26UpdateModelMatrixAndShadowEv",
       "address": "0x02118334",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov062_02118334.c",
@@ -204,7 +204,7 @@
       "ordinal": 23
     },
     {
-      "symbol": "_ZN8daNknk_c19func_ov062_02118a00Ev",
+      "symbol": "_ZN8daNknk_c17WaitUntilGroundedEv",
       "address": "0x02118a00",
       "size": "0x00000050",
       "legacy_source": "src/func_ov062_02118a00.cpp",
@@ -1516,59 +1516,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1341",
+      "from": "@1345",
       "to": "@1292",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 26, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1264 to @1271 after adding the mHomePos Vector3 view. The existing target @1292 is unchanged. Re-keyed from @1271 to @1270 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1342 to @1341 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1334",
-      "to": "@1285",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 34, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1257 to @1264 after adding the mHomePos Vector3 view. The existing target @1285 is unchanged. Re-keyed from @1264 to @1263 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1335 to @1334 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1336",
-      "to": "@1287",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 30, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1259 to @1266 after adding the mHomePos Vector3 view. The existing target @1287 is unchanged. Re-keyed from @1266 to @1265 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1337 to @1336 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1337",
-      "to": "@1288",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 33, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1260 to @1267 after adding the mHomePos Vector3 view. The existing target @1288 is unchanged. Re-keyed from @1267 to @1266 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1338 to @1337 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1335",
-      "to": "@1286",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 27, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1258 to @1265 after adding the mHomePos Vector3 view. The existing target @1286 is unchanged. Re-keyed from @1265 to @1264 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1336 to @1335 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 26, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1264 to @1271 after adding the mHomePos Vector3 view. The existing target @1292 is unchanged. Re-keyed from @1271 to @1270 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1342 to @1341 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1341 to @1345 when Render's scale save became a Vector3 local (#821)."
     },
     {
       "from": "@1338",
-      "to": "@1289",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 35, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1261 to @1268 after adding the mHomePos Vector3 view. The existing target @1289 is unchanged. Re-keyed from @1268 to @1267 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1339 to @1338 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1339",
-      "to": "@1290",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 38, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1262 to @1269 after adding the mHomePos Vector3 view. The existing target @1290 is unchanged. Re-keyed from @1269 to @1268 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1340 to @1339 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1333",
-      "to": "@1284",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 23, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1256 to @1263 after adding the mHomePos Vector3 view. The existing target @1284 is unchanged. Re-keyed from @1263 to @1262 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1334 to @1333 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1331",
-      "to": "@1282",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 40, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1254 to @1261 after adding the mHomePos Vector3 view. The existing target @1282 is unchanged. Re-keyed from @1261 to @1260 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1332 to @1331 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
-    },
-    {
-      "from": "@1332",
-      "to": "@1283",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 39, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1255 to @1262 after adding the mHomePos Vector3 view. The existing target @1283 is unchanged. Re-keyed from @1262 to @1261 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1333 to @1332 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
+      "to": "@1285",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 34, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1257 to @1264 after adding the mHomePos Vector3 view. The existing target @1285 is unchanged. Re-keyed from @1264 to @1263 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1335 to @1334 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1334 to @1338 when Render's scale save became a Vector3 local (#821)."
     },
     {
       "from": "@1340",
+      "to": "@1287",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 30, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1259 to @1266 after adding the mHomePos Vector3 view. The existing target @1287 is unchanged. Re-keyed from @1266 to @1265 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1337 to @1336 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1336 to @1340 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1341",
+      "to": "@1288",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 33, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1260 to @1267 after adding the mHomePos Vector3 view. The existing target @1288 is unchanged. Re-keyed from @1267 to @1266 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1338 to @1337 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1337 to @1341 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1339",
+      "to": "@1286",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 27, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1258 to @1265 after adding the mHomePos Vector3 view. The existing target @1286 is unchanged. Re-keyed from @1265 to @1264 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1336 to @1335 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1335 to @1339 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1342",
+      "to": "@1289",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 35, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1261 to @1268 after adding the mHomePos Vector3 view. The existing target @1289 is unchanged. Re-keyed from @1268 to @1267 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1339 to @1338 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1338 to @1342 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1343",
+      "to": "@1290",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 38, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1262 to @1269 after adding the mHomePos Vector3 view. The existing target @1290 is unchanged. Re-keyed from @1269 to @1268 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1340 to @1339 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1339 to @1343 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1337",
+      "to": "@1284",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 23, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1256 to @1263 after adding the mHomePos Vector3 view. The existing target @1284 is unchanged. Re-keyed from @1263 to @1262 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1334 to @1333 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1333 to @1337 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1335",
+      "to": "@1282",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 40, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1254 to @1261 after adding the mHomePos Vector3 view. The existing target @1282 is unchanged. Re-keyed from @1261 to @1260 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1332 to @1331 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1331 to @1335 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1336",
+      "to": "@1283",
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 39, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1255 to @1262 after adding the mHomePos Vector3 view. The existing target @1283 is unchanged. Re-keyed from @1262 to @1261 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1333 to @1332 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1332 to @1336 when Render's scale save became a Vector3 local (#821)."
+    },
+    {
+      "from": "@1344",
       "to": "@1291",
-      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 22, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1263 to @1270 after adding the mHomePos Vector3 view. The existing target @1291 is unchanged. Re-keyed from @1270 to @1269 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1341 to @1340 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
+      "evidence": "Untouched origin/main and candidate objects pair this compiler-local BSS storage at section index 22, offset 0, size 0xc, binding STB_LOCAL; its name changed from @1263 to @1270 after adding the mHomePos Vector3 view. The existing target @1291 is unchanged. Re-keyed from @1270 to @1269 when the local M12w copy struct was retired (#4570).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1341 to @1340 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @1340 to @1344 when Render's scale save became a Vector3 local (#821)."
     }
   ]
 }

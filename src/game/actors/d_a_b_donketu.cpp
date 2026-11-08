@@ -28,6 +28,7 @@ enum daBDonketu_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx_trig.h"
 
 /* One model handle constructs through func_02017acc and destroys through
  * func_02017ab4. Four animation handles construct through
@@ -44,10 +45,7 @@ struct DonketuAnimFileHandle : SharedFilePtr {
 typedef char DonketuModelFilePtr_size_must_be_8[sizeof(DonketuModelFilePtr) == 8 ? 1 : -1];
 typedef char DonketuAnimFileHandle_size_must_be_8[sizeof(DonketuAnimFileHandle) == 8 ? 1 : -1];
 
-extern s16 data_02082214[]; /* sine/cosine table, (angle >> 4) pairs */
-
 /* Factory for the BOSS_DONKETU profile. Written first so it emits last. */
-// @symbol daBDonketu_c_classInit
 extern "C" daBDonketu_c *daBDonketu_c_classInit() {
     return new daBDonketu_c();
 }
@@ -56,7 +54,6 @@ extern "C" daBDonketu_c *daBDonketu_c_classInit() {
  * Bullies: they are spawned here, each told this actor's uniqueID, and
  * mNumBulliesKilled starts at 0. Any other setting starts it at 0xff, which
  * skips the small-Bully phase in Behavior. */
-// @symbol _ZN12daBDonketu_c13InitResourcesEv
 int daBDonketu_c::InitResources() {
     int result;
 
@@ -89,16 +86,16 @@ int daBDonketu_c::InitResources() {
             spawnPos.y = ground.clsnY;
         }
 
-        /* Three DONKETU (actor 215), 0x5555 apart, placed by the sine table
-           data_02082214 scaled by 500. */
+        /* Three DONKETU (actor 215), 0x5555 apart, at 500 times the sine
+           and cosine of each angle. */
         i = 0;
         ang = 0;
         do {
             int idx = (u16)(s16)ang >> 4;
             dActor_c *spawned;
 
-            spawnPos.x = mPosX + data_02082214[idx * 2] * 500 - 0x64000;
-            spawnPos.z = mPosZ - data_02082214[idx * 2 + 1] * 500;
+            spawnPos.x = mPosX + FX_SinIdx(idx) * 500 - 0x64000;
+            spawnPos.z = mPosZ - FX_CosIdx(idx) * 500;
 
             spawned = dActor_c::Spawn(0xd7, -1, spawnPos, (Vector3_16 *)0, mAreaId, -1);
             if (spawned != 0) {
@@ -119,7 +116,6 @@ int daBDonketu_c::InitResources() {
 /* mNumBulliesKilled below 3: nothing to do. At 3 (all three small Bullies
  * dead) the boss drops in under gravity, and increments the count when it
  * lands. From 4 on, the shared daOts_c behavior runs. */
-// @symbol _ZN12daBDonketu_c8BehaviorEv
 int daBDonketu_c::Behavior() {
     u8 killed = mNumBulliesKilled;
     if (killed >= 4) {
@@ -153,7 +149,6 @@ int daBDonketu_c::Behavior() {
 }
 
 /* Drawn once the small Bullies are dead. */
-// @symbol _ZN12daBDonketu_c6RenderEv
 int daBDonketu_c::Render() {
     if (mNumBulliesKilled >= 3)
         mAnmModel.Render(0);
@@ -162,7 +157,6 @@ int daBDonketu_c::Render() {
 
 /* Once func_ov064_0211616c reports nonzero: poof dust, and spawn the star
  * (0x40 | mStarID) 100 units above the actor. */
-// @symbol _ZN12daBDonketu_c16UpdateDeathStateEv
 void daBDonketu_c::UpdateDeathState() {
     int result = func_ov064_0211616c();
     if (result == 0)
@@ -177,7 +171,6 @@ void daBDonketu_c::UpdateDeathState() {
 }
 
 /* Charge timer, then run. Key function: the inline destructor emits no vtable. */
-// @symbol _ZN12daBDonketu_c14UpdateRunStateEv
 int daBDonketu_c::UpdateRunState() {
     if ((u16)mStateTimer < 0xa) {
         mHorzSpeed = 0;

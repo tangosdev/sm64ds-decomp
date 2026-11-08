@@ -17,10 +17,14 @@
  *   the list operations and the four global list heads.
  *
  * fBase_c, the root of the actor hierarchy. arm9 .text
- * 0x02042fe4..0x020440e8. Below func_020433b8 sit the four Process
+ * 0x02042fe4..0x020440e8. Below runCreate sit the four Process
  * wrappers, the child-creation check d_scene.cpp polls, and the create
- * entry func_02043098 with its hooks and the two creation calls
- * ActorDerived.cpp makes.
+ * entry fBase_make with its hooks and the two creation calls
+ * ActorDerived.cpp makes. The run has NSMBW's f_base.cpp layout, and the
+ * address-named members took that file's names where the bodies match:
+ * connectProc, getConnectParent, runCreate, createPack, deletePack,
+ * executePack, drawPack, checkChildProcessCreateState, setTmpCtData,
+ * fBase_make, createChild and createRoot.
  */
 #include "fBase_c.h"
 #include "Heap.h"
@@ -89,8 +93,8 @@ static inline int IsAliveState(u32 state) {
 static inline int IsDyingState(u32 state) {
     return state == 2;
 }
-static inline int GlobalModeIs(volatile int *mode, int value) {
-    return mode[0] == value;
+static inline int GlobalModeIs(int value) {
+    return data_02099f24 == value;
 }
 static inline int PriorityChanged(fLiNdBaPr_c *node) {
     return node->nextPriority != node->currentPriority;
@@ -105,7 +109,6 @@ static inline int OwnerActorIDDiffers(fLiNdBa_c *node, unsigned int id) {
 /* List helpers keep address-named C entries. The sorting and process-list
  * descriptors retain local views; actor lookups use real actor-owned nodes. */
 
-// @symbol func_0204405c
 namespace Absorb0204405c {
 struct N {
     struct N *prev;
@@ -141,7 +144,6 @@ extern "C" int func_0204405c(void *list, void *nodep)
  * an fBase_c member (the four Process wrappers below 0x020433b8); all four
  * return int, which this traversal discards. Save the next node before
  * invoking a callback that may unlink its owner. */
-// @symbol func_02043fdc
 namespace Absorb02043fdc {
 typedef int (fBase_c::*ProcessCallback)();
 
@@ -169,7 +171,6 @@ extern "C" void *func_02043fdc(ProcessListDescriptor *list)
 }
 }
 
-// @symbol func_02043f98
 namespace Absorb02043f98 {
 extern "C" fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
 {
@@ -183,7 +184,6 @@ extern "C" fLiNdBa_c *func_02043f98(fLiNdBa_c **head, unsigned int key)
 }
 }
 
-// @symbol func_02043f4c
 namespace Absorb02043f4c {
 extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
                                     fLiNdBa_c *after)
@@ -198,14 +198,13 @@ extern "C" fLiNdBa_c *func_02043f4c(fLiNdBa_c **head, unsigned int key,
 }
 }
 
-// @symbol _ZN7fBase_cC2Ev
 fBase_c::fBase_c() : manager(this)
 {
     uniqueID = data_02099e70;
     data_02099e70++;
     param1 = data_020a4b60;
     actorID = data_020a4b54;
-    unk_012 = data_020a4b48;
+    mGroupType = data_020a4b48;
 
     func_0203b438(data_020a4b6c, &manager.sceneNode, data_020a4b64);
 
@@ -213,7 +212,7 @@ fBase_c::fBase_c() : manager(this)
     manager.SetBehaviorPriority(info->behaviorPriority);
     manager.SetRenderPriority(info->renderPriority);
 
-    fBase_c *parent = func_02043810();
+    fBase_c *parent = getConnectParent();
     if (parent != 0) {
         if ((parent->pauseFlags & 1) || (parent->pauseFlags & 2))
             pauseFlags |= 2;
@@ -225,13 +224,11 @@ fBase_c::fBase_c() : manager(this)
 /* Manager destruction tears down renderNode before behaviorNode. The compiler
  * emits D2, D0, D1 in ROM order; the existing class operator delete returns
  * the object to the actor heap for D0. */
-// @symbol _ZN7fBase_cD1Ev
 fBase_c::~fBase_c()
 {
 }
 
 /* Run the guard, then the action when allowed, and always notify the after hook. */
-// @symbol _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE
 int fBase_c::Process(ProcessFunction action, BeforeProcessFunction before,
                      AfterProcessFunction after)
 {
@@ -251,14 +248,12 @@ int fBase_c::Process(ProcessFunction action, BeforeProcessFunction before,
 
 /* vtable slot 0. Default initialization succeeds without loading resources.
  * This key function emits metadata checked against canonical ROM storage. */
-// @symbol _ZN7fBase_c13InitResourcesEv
 int fBase_c::InitResources()
 {
     return 1;
 }
 
 /* vtable slot 1. Allow initialization by default. */
-// @symbol _ZN7fBase_c19BeforeInitResourcesEv
 bool fBase_c::BeforeInitResources()
 {
     return 1;
@@ -268,14 +263,13 @@ bool fBase_c::BeforeInitResources()
  * then either flag the actor as deferred (when the global at data_02099f24
  * reads 3) or link it into both the behaviour and render lists and mark it
  * alive. */
-// @symbol _ZN7fBase_c18AfterInitResourcesEj
 void fBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
     func_0203b27c(data_020a4b88, &manager.behaviorNode);
-    if (GlobalModeIs(&data_02099f24, 3)) {
-        unk_010 = 1;
+    if (GlobalModeIs(3)) {
+        mDeferExecute = 1;
         return;
     }
     func_0204405c(data_020a4b78, &manager.behaviorNode);
@@ -284,18 +278,16 @@ void fBase_c::AfterInitResources(u32 vfSuccess)
 }
 
 /* vtable slot 3. Default cleanup succeeds without releasing resources. */
-// @symbol _ZN7fBase_c16CleanupResourcesEv
 s32 fBase_c::CleanupResources()
 {
     return 1;
 }
 
 /* vtable slot 4. Wait for pending lifecycle work and remaining scene children. */
-// @symbol _ZN7fBase_c22BeforeCleanupResourcesEv
 int fBase_c::BeforeCleanupResources()
 {
-    int v = (int)lifecycleState;
-    if ((v != 0 && func_0204424c((char *)v) == 0) || manager.sceneNode.child != 0)
+    if ((lifecycleState != 0 && func_0204424c((char *)lifecycleState) == 0) ||
+        manager.sceneNode.child != 0)
         return 0;
     return 1;
 }
@@ -303,7 +295,6 @@ int fBase_c::BeforeCleanupResources()
 /* On success, unlink the actor, release its heap and pending lifecycle work,
  * then call the virtual complete-object destructor (slot 16) and deallocate.
  * This function is enrolled with the rest of the production TU. */
-// @symbol _ZN7fBase_c21AfterCleanupResourcesEj
 void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
@@ -319,7 +310,6 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 }
 
 /* vtable slot 6. The default update succeeds without doing any work. */
-// @symbol _ZN7fBase_c8BehaviorEv
 s32 fBase_c::Behavior()
 {
     return 1;
@@ -327,7 +317,6 @@ s32 fBase_c::Behavior()
 
 /* vtable slot 7. Skips the tick once the actor is marked for death, or when
  * bit 1 of the spawn-flag byte is set. */
-// @symbol _ZN7fBase_c14BeforeBehaviorEv
 int fBase_c::BeforeBehavior()
 {
     if (shouldBeKilled != 0 || (pauseFlags & 2) != 0)
@@ -336,21 +325,18 @@ int fBase_c::BeforeBehavior()
 }
 
 /* vtable slot 8. Base does nothing; leaf classes override. */
-// @symbol _ZN7fBase_c13AfterBehaviorEj
 void fBase_c::AfterBehavior(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
 }
 
 /* vtable slot 9. The default render succeeds without drawing anything. */
-// @symbol _ZN7fBase_c6RenderEv
 s32 fBase_c::Render()
 {
     return 1;
 }
 
 /* vtable slot 10. The render twin of BeforeBehavior, on bit 3 instead of 1. */
-// @symbol _ZN7fBase_c12BeforeRenderEv
 int fBase_c::BeforeRender()
 {
     if (shouldBeKilled != 0 || (pauseFlags & 8) != 0)
@@ -359,7 +345,6 @@ int fBase_c::BeforeRender()
 }
 
 /* vtable slot 11. Base does nothing; leaf classes override. */
-// @symbol _ZN7fBase_c11AfterRenderEj
 void fBase_c::AfterRender(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
@@ -367,18 +352,17 @@ void fBase_c::AfterRender(u32 vfSuccess)
 
 /* vtable slot 12 (vtable+0x30), fired by MarkForDestruction. Base does
  * nothing; leaf classes override to release or notify. */
-// @symbol _ZN7fBase_c16OnPendingDestroyEv
 void fBase_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7fBase_c13func_02043880Ev
 /* Reconcile list membership, inherited pause flags and pending destruction.
  * Scene children link through SceneNode::next, and each node names its
  * actor owner. The process tree calls this through the ProcessFunction
- * constant data_02099f60, with every process in r0, so it is an fBase_c
- * member; its name is not recovered and it keeps its address. */
-int fBase_c::func_02043880() {
+ * constant data_02099f60, with every process in r0. NSMBW's connectProc
+ * has the same three arms: a delete request, the parent's pause flags,
+ * then a changed priority or a deferred create/execute. */
+int fBase_c::connectProc() {
     if (shouldBeKilled != 0) {
         fBase_c::SceneNode *it;
         shouldBeKilled = 0;
@@ -395,7 +379,7 @@ int fBase_c::func_02043880() {
         }
     } else {
         u32 state;
-        fBase_c *other = func_02043810();
+        fBase_c *other = getConnectParent();
         if (other != 0) {
             if ((other->pauseFlags & 1) || (other->pauseFlags & 2))
                 pauseFlags |= 2;
@@ -429,11 +413,11 @@ int fBase_c::func_02043880() {
                 }
             }
         } else if (!IsDyingState(state)) {
-            if (unk_011 != 0) {
-                unk_011 = 0;
+            if (mDeferRetryCreate != 0) {
+                mDeferRetryCreate = 0;
                 func_0203b244(data_020a4b88, &manager.behaviorNode);
-            } else if (unk_010 != 0) {
-                unk_010 = 0;
+            } else if (mDeferExecute != 0) {
+                mDeferExecute = 0;
                 func_0204405c(data_020a4b78, &manager.behaviorNode);
                 func_0204405c(data_020a4b98, &manager.renderNode);
                 aliveState = 1;
@@ -445,7 +429,6 @@ int fBase_c::func_02043880() {
 
 /* Non-virtual. Idempotent, and a no-op once the actor is already dying;
  * otherwise sets the flag and fires slot 12. */
-// @symbol _ZN7fBase_c18MarkForDestructionEv
 void fBase_c::MarkForDestruction()
 {
     if (shouldBeKilled != 0)
@@ -457,8 +440,7 @@ void fBase_c::MarkForDestruction()
 }
 
 /* Return the parent scene node's actor, or null at the root. */
-// @symbol _ZN7fBase_c13func_02043810Ev
-fBase_c *fBase_c::func_02043810() {
+fBase_c *fBase_c::getConnectParent() {
     fBase_c::SceneNode *parent = manager.sceneNode.parent;
     if (parent)
         return parent->owner;
@@ -473,7 +455,6 @@ fBase_c *fBase_c::func_02043810() {
  * `this->v15()` in the legacy shadow is slot 15, which the real class names
  * OnHeapCreated -- so this now reads as the virtual it is. The heap's
  * heapStart and heapSize are read as in the Heap note above. */
-// @symbol _ZN7fBase_c9Virtual34Ejj
 int fBase_c::Virtual34(u32 a, u32 b)
 {
     void *h = 0;
@@ -581,7 +562,6 @@ int fBase_c::Virtual34(u32 a, u32 b)
  *
  * Heap is reached through include/Heap.h's real methods, the same
  * non-virtual direct calls Virtual34 makes. */
-// @symbol _ZN7fBase_c9Virtual38Ejj
 int fBase_c::Virtual38(u32 a, u32 b)
 {
     if (heap != 0)
@@ -614,7 +594,6 @@ int fBase_c::Virtual38(u32 a, u32 b)
 
 /* vtable slot 15 (vtable+0x3c), fired by Virtual34/Virtual38 once the actor's
  * heap exists. The default hook accepts the heap. */
-// @symbol _ZN7fBase_c13OnHeapCreatedEv
 bool fBase_c::OnHeapCreated()
 {
     return 1;
@@ -622,7 +601,6 @@ bool fBase_c::OnHeapCreated()
 
 /* Actor-heap allocation, cleared before construction. Every `new` of a
  * process class lands here. */
-// @symbol _ZN7fBase_cnwEm
 void *fBase_c::operator new(size_t size) {
     void *p = Memory::Allocate(size, -4, data_020a0eac);
     if (!p)
@@ -634,18 +612,20 @@ void *fBase_c::operator new(size_t size) {
 /* ROM ordinal 0 -- the run's backward neighbour, absorbed (reverse
  * emission puts the lowest address last). Body as recovered. */
 
-/* The create entry func_02043098 calls this on each new process. */
-// @symbol _ZN7fBase_c13func_020433b8Ev
-void fBase_c::func_020433b8() {
-    func_0204335c();
+/* fBase_make calls this on each new process. Same test order as NSMBW's
+ * runCreate: not delete-requested, not deferred, still creating; then flag
+ * a retry while the create loop runs (data_02099f24 == 2), or queue it on
+ * the create list. */
+void fBase_c::runCreate() {
+    createPack();
     if (shouldBeKilled != 0)
         return;
-    if (unk_010 != 0)
+    if (mDeferExecute != 0)
         return;
     if (!IsPendingState(aliveState))
         return;
-    if (GlobalModeIs(&data_02099f24, 2)) {
-        unk_011 = 1;
+    if (GlobalModeIs(2)) {
+        mDeferRetryCreate = 1;
         return;
     }
     func_0203b244(data_020a4b88, &manager.behaviorNode);
@@ -655,8 +635,10 @@ void fBase_c::func_020433b8() {
  * triple of fBase_c member-function pointers from .data; the triples are
  * ROM-owned constants and stay extern. The wrappers are fBase_c members:
  * the process lists call them through the ProcessFunction constants
- * data_02099f70, f50, f48 and f68. Their names are not recovered, so each
- * keeps its address. */
+ * data_02099f70, f50, f48 and f68. Each triple's vtable offsets pick one
+ * do/before/after group (0/4/8, 0xc/0x10/0x14, 0x18/0x1c/0x20,
+ * 0x24/0x28/0x2c), so the wrappers are NSMBW's createPack, deletePack,
+ * executePack and drawPack. */
 extern "C" {
 extern fBase_c::ProcessFunction data_02099ebc;
 extern fBase_c::BeforeProcessFunction data_02099ec4;
@@ -673,23 +655,20 @@ extern fBase_c::AfterProcessFunction data_02099e9c;
 /* Defined below; the calls are emitted first. */
 extern void func_0204302c(int actorID);
 extern int func_02043060(int actorID);
-extern void func_02043180(int actorID, void *parentNode, u32 param1, int unk012);
 
 /* The create hooks a scene installs, and the create entry's progress:
-   data_020a4b4c steps 2..5 through func_02043098 and data_020a4b50 holds
+   data_020a4b4c steps 2..5 through fBase_make and data_020a4b50 holds
    the profile being created (0xffff when idle). */
 extern void (*data_020a4b5c)(int actorID);
 extern int (*data_020a4b58)(int actorID);
 extern u16 data_020a4b50;
 extern u8 data_020a4b4c;
 
-// @symbol _ZN7fBase_c13func_0204335cEv
-int fBase_c::func_0204335c() {
+int fBase_c::createPack() {
     return Process(data_02099ebc, data_02099ec4, data_02099e94);
 }
 
-// @symbol _ZN7fBase_c13func_020432e4Ev
-int fBase_c::func_020432e4() {
+int fBase_c::deletePack() {
     /* The actor ID is read before Process runs and handed to the
      * func_0204302c hook on a result of 1. */
     unsigned short id = actorID;
@@ -699,13 +678,11 @@ int fBase_c::func_020432e4() {
     return r;
 }
 
-// @symbol _ZN7fBase_c13func_02043288Ev
-int fBase_c::func_02043288() {
+int fBase_c::executePack() {
     return Process(data_02099ea4, data_02099eac, data_02099eb4);
 }
 
-// @symbol _ZN7fBase_c13func_0204322cEv
-int fBase_c::func_0204322c() {
+int fBase_c::drawPack() {
     return Process(data_02099ecc, data_02099e74, data_02099e9c);
 }
 
@@ -717,8 +694,7 @@ extern fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
 
 /* Is any descendant still uncreated (aliveState 0)? d_scene.cpp waits on
    this before it moves on. */
-// @symbol _ZN7fBase_c13func_020431c4Ev
-int fBase_c::func_020431c4() {
+int fBase_c::checkChildProcessCreateState() {
     fBase_c::SceneNode *base = &manager.sceneNode;
     fBase_c::SceneNode *end = func_0203b358(base);
     fBase_c::SceneNode *node = base->child;
@@ -733,26 +709,28 @@ int fBase_c::func_020431c4() {
     return 0;
 }
 
-/* Stage the arguments fBase_c::fBase_c reads while the factory runs. */
-// @symbol func_02043180
-void func_02043180(int actorID, void *parentNode, u32 param1, int unk012) {
+/* Stage the arguments fBase_c::fBase_c reads while the factory runs, in
+   NSMBW's setTmpCtData store order (param, profile, group type, parent). */
+void fBase_c::setTmpCtData(int actorID, void *parentNode, u32 param1, int groupType) {
     data_020a4b60 = param1;
     data_020a4b54 = actorID;
-    data_020a4b48 = unk012;
+    data_020a4b48 = groupType;
     data_020a4b64 = parentNode;
 }
 
 /* The create entry: ask the scene's hook, stage the constructor's
-   arguments, run the profile's factory, then link the new process. */
-// @symbol func_02043098
-fBase_c *func_02043098(int actorID, void *parentNode, u32 param1, int unk012) {
+   arguments, run the profile's factory, then link the new process. NSMBW's
+   fBase_make has the same core (setTmpCtData, classInit, runCreate on a
+   built process); the scene hook and the data_020a4b4c progress steps are
+   this game's own. */
+fBase_c *fBase_c::fBase_make(int actorID, void *parentNode, u32 param1, int groupType) {
     fBase_c *actor;
     data_020a4b50 = (u16)actorID;
     data_020a4b4c = 2;
     if (func_02043060(actorID) == 3)
         return 0;
     data_020a4b4c = 3;
-    func_02043180(actorID, parentNode, param1, unk012);
+    setTmpCtData(actorID, parentNode, param1, groupType);
     data_020a4b4c = 4;
     actor = data_020a4bb8[actorID]->classInit();
     if (actor == 0) {
@@ -761,36 +739,32 @@ fBase_c *func_02043098(int actorID, void *parentNode, u32 param1, int unk012) {
         return 0;
     }
     data_020a4b4c = 5;
-    actor->func_020433b8();
+    actor->runCreate();
     data_020a4b4c = 0;
     data_020a4b50 = 0xffff;
     return actor;
 }
 
-// @symbol func_02043060
 int func_02043060(int actorID) {
     if (data_020a4b58 == 0)
         return 2;
     return data_020a4b58(actorID);
 }
 
-// @symbol func_0204302c
 void func_0204302c(int actorID) {
     if (data_020a4b5c)
         data_020a4b5c(actorID);
 }
 
 /* Create a child of parent; none without a parent. */
-// @symbol func_02042ffc
-fBase_c *func_02042ffc(u32 actorID, fBase_c *parent, u32 param1, int unk012) {
+fBase_c *fBase_c::createChild(u32 actorID, fBase_c *parent, u32 param1, int groupType) {
     if (parent == 0)
         return 0;
-    return func_02043098(actorID, &parent->manager.sceneNode, param1, unk012);
+    return fBase_make(actorID, &parent->manager.sceneNode, param1, groupType);
 }
 
 /* Create a process at the root of the scene tree. */
-// @symbol func_02042fe4
-int func_02042fe4(int actorID, u32 param1, int unk012) {
-    return (int)func_02043098(actorID, 0, param1, unk012);
+int fBase_c::createRoot(int actorID, u32 param1, int groupType) {
+    return (int)fBase_make(actorID, 0, param1, groupType);
 }
 }

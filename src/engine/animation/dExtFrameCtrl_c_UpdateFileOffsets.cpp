@@ -1,5 +1,4 @@
 //cpp
-// @symbol _ZN15dExtFrameCtrl_c17UpdateFileOffsetsER8BCA_File
 /* dExtFrameCtrl_c::UpdateFileOffsets -- the BCA load-time fixup, arm9
  * 0x020469ac..0x020469e0. The four offsets in a freshly loaded BCA file
  * are file-relative; rebase them into pointers.

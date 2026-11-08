@@ -14,15 +14,17 @@
  * 0x0212290c and ends with the two registry factories (KURIKING_VANISH,
  * then KURIKING).
  *
- * The func_ov074_* members keep linker names -- no semantic names are known.
+ * Most members are named from their bodies and callers (tier B, see
+ * symbols/actor_renames.tsv); the empty state 8 enter member 0211fc34 and the state 4
+ * tick 0211ffcc keep func_ov074_* names, as do the free functions.
  * All but six take the object as arg0 and touch only daKuriKing_c state, so
  * they are declared as ordinary out-of-line members here; member form is
  * byte-identical under 2004/b56.
  *
- * State machine (data_ov074_021230f8): func_ov074_021203e4 sets mState and
+ * State machine (data_ov074_021230f8): ChangeState sets mState and
  * runs the entry's first handler (enter); Behavior runs the second (tick)
  * every frame for the main boss (not param1 0x1111) through
- * func_ov074_0212042c. The roles below are read off the
+ * UpdateState. The roles below are read off the
  * tick bodies.
  *   0  intro cutscene and first talk           tick 021201f0
  *   1  wait for the talk to close, boss music  tick 0212018c
@@ -99,6 +101,7 @@ enum daKuriKing_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
@@ -131,7 +134,7 @@ union KuriKingFreeState {
 
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
 extern "C" void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
-extern "C" dCamera_c *data_0209f318;
+extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
@@ -239,23 +242,23 @@ struct KuriKingStateTable {
     KuriKingStateTable()
     {
         entries[0].pmf[0] = reinterpret_cast<KuriKingPMF>(data_ov074_02122dbc.pmf);
-        entries[0].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_021201f0);
+        entries[0].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateIntroTalk);
         entries[1].pmf[0] = reinterpret_cast<KuriKingPMF>(data_ov074_02122e0c.pmf);
-        entries[1].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0212018c);
-        entries[2].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211ffac);
-        entries[2].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fd74);
-        entries[3].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0212016c);
-        entries[3].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_02120080);
+        entries[1].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateIntroTalkEnd);
+        entries[2].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::EnterSummonGoombas);
+        entries[2].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateSummonGoombas);
+        entries[3].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::EnterWalk);
+        entries[3].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateWalk);
         entries[4].pmf[0] = reinterpret_cast<KuriKingPMF>(data_ov074_02122d9c.pmf);
         entries[4].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211ffcc);
-        entries[5].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fd48);
-        entries[5].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fc38);
-        entries[6].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fb84);
-        entries[6].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fa74);
-        entries[7].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fa08);
-        entries[7].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211f5b8);
+        entries[5].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::EnterKnockback);
+        entries[5].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateKnockback);
+        entries[6].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::EnterScaleChange);
+        entries[6].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateScaleChange);
+        entries[7].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::EnterDefeat);
+        entries[7].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateDefeat);
         entries[8].pmf[0] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fc34);
-        entries[8].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::func_ov074_0211fbd0);
+        entries[8].pmf[1] = reinterpret_cast<KuriKingPMF>(&daKuriKing_c::UpdateMegaKnockback);
     }
 };
 
@@ -268,15 +271,10 @@ struct KuriKingPmf { char pad[0x5cc]; s32 mState; };
  * D0 at 0x0211f000 / 0x0211f0a0, the two lowest addresses in the run. */
 daKuriKing_c::~daKuriKing_c() {}
 
-// @symbol _ZN12daKuriKing_cD1Ev
-
-// @symbol _ZN12daKuriKing_cD0Ev
-
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f154Ev
-void daKuriKing_c::func_ov074_0211f154() {
+void daKuriKing_c::SetDefeatTalkCamera() {
     struct Vector3 look, pos, in, out;
     dCamera_c* cam;
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
@@ -297,9 +295,7 @@ void daKuriKing_c::func_ov074_0211f154() {
     cam->SetPos(pos);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f244Ev
-void daKuriKing_c::func_ov074_0211f244()
-{
+void daKuriKing_c::LaunchVanishCopies() {
     daKuriKing_c *a = (daKuriKing_c *)dActor_c::FindWithActorID(0xc7, 0);
     if (a == 0) return;
     do {
@@ -330,16 +326,15 @@ void daKuriKing_c::func_ov074_0211f244()
     } while (a != 0);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f344Eh
-void daKuriKing_c::func_ov074_0211f344(u8 value) {
-  daKuriKing_c* other = (daKuriKing_c*)dActor_c::FindWithActorID(0xc7, 0);
-  while (other) {
-    if (other != this) other->mShouldRender = value;
-    other = (daKuriKing_c*)dActor_c::FindWithActorID(0xc7, other);
-  }
+void daKuriKing_c::SetOtherCopiesShouldRender(u8 value) {
+    daKuriKing_c *other = (daKuriKing_c *)dActor_c::FindWithActorID(0xc7, 0);
+    while (other) {
+        if (other != this)
+            other->mShouldRender = value;
+        other = (daKuriKing_c *)dActor_c::FindWithActorID(0xc7, other);
+    }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f38cEv
 /* Release one KURIKING_VANISH copy (actor 0xc7, param 0x1111, drawn with the
    ov084 Goomba model) on a timer during the defeat (state 7, substate 2 of
    0211f5b8), and report whether the whole wave has been released.  This is
@@ -348,7 +343,7 @@ void daKuriKing_c::func_ov074_0211f344(u8 value) {
    on a narrower ring, the next three higher and narrower still, and the
    sixteenth onward spawns dead centre, highest of all.  The spawn count needed is a table lookup on mSizeIndex, with one
    extra on size 1 unless the closest player's param1 reads 3. */
-int daKuriKing_c::func_ov074_0211f38c(){
+int daKuriKing_c::SpawnVanishCopy() {
     struct Vector3 spawnPos, basePos;
     struct Vector3_16 spawnAngle;
     int radius;
@@ -397,9 +392,7 @@ int daKuriKing_c::func_ov074_0211f38c(){
     return this->mSpawnedCount>=spawnTarget ? 1 : 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211f5b8Ev
-void daKuriKing_c::func_ov074_0211f5b8()
-{
+void daKuriKing_c::UpdateDefeat() {
     Vector3 vzero;
     Vector3 vmsg;
     daPly_c *player;
@@ -413,7 +406,7 @@ void daKuriKing_c::func_ov074_0211f5b8()
     vmsg.y = this->mPosY;
     vmsg.z = this->mPosZ;
     vmsg.y = vmsg.y + 0x78000;
-    cam = data_0209f318;
+    cam = gCamera;
     player = this->mTalkPlayer;
 
     if (this->mAnmModel.Finished() != 0) {
@@ -422,7 +415,7 @@ void daKuriKing_c::func_ov074_0211f5b8()
 
     switch (this->mSubState) {
     case 0:
-        func_ov074_0211f154();
+        SetDefeatTalkCamera();
         {
             u16 msgId = (u16)((s32)player->param1 + 0xd7);
             state = player->GetTalkState();
@@ -485,12 +478,12 @@ void daKuriKing_c::func_ov074_0211f5b8()
         this->mSpawnedCount = 0;
         return;
     case 2:
-        if (this->mWaveFinished == 0 && func_ov074_0211f38c() != 0) {
+        if (this->mWaveFinished == 0 && SpawnVanishCopy() != 0) {
             this->mWaveFinished = 1;
         }
         {
-            s32 r4 = func_ov074_02120474();
-            if (func_ov074_021204c0() == 0)
+            s32 r4 = AdvanceMaterialChanger();
+            if (StepScaleTransition() == 0)
                 return;
             if (r4 == 0)
                 return;
@@ -506,11 +499,11 @@ void daKuriKing_c::func_ov074_0211f5b8()
         vzero.y = this->mPosY;
         vzero.z = this->mPosZ;
         vzero.y = vzero.y + 0x190000;
-        Particle::System::NewSimple(0x91, vzero.x, vzero.y, vzero.z);
-        Particle::System::NewSimple(0x92, vzero.x, vzero.y, vzero.z);
+        Particle::System::NewSimple(kPtclGoombossVanishA, vzero.x, vzero.y, vzero.z);
+        Particle::System::NewSimple(kPtclGoombossVanishB, vzero.x, vzero.y, vzero.z);
         func_02012694(0x15f, &this->mCamSpacePosX);
-        func_ov074_0211f344(1);
-        func_ov074_0211f244();
+        SetOtherCopiesShouldRender(1);
+        LaunchVanishCopies();
         cam->mFlags &= ~8;
         Message::EndTalk();
         Sound::StopLoadedMusic_Layer3();
@@ -534,32 +527,29 @@ void daKuriKing_c::func_ov074_0211f5b8()
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fa08Ev
-void daKuriKing_c::func_ov074_0211fa08(){
-  this->mSizeIndex = 0;
-  int v=func_01ffa344((int)data_ov074_02122e4c[1]);
-  this->mScaleX = v;
-  this->mScaleY = v;
-  this->mScaleZ = v;
-  this->mTextureSequence.currFrame = 0x2000;
-  this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1])<<0xc;
-  this->mSubState = 0;
-  ((void (*)(char*, int, int))func_ov074_02121a4c)((char*)this, 3, 0);
-  this->mScaleSteps = 3;
+void daKuriKing_c::EnterDefeat() {
+    this->mSizeIndex = 0;
+    int v = func_01ffa344((int)data_ov074_02122e4c[1]);
+    this->mScaleX = v;
+    this->mScaleY = v;
+    this->mScaleZ = v;
+    this->mTextureSequence.currFrame = 0x2000;
+    this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1]) << 0xc;
+    this->mSubState = 0;
+    ((void (*)(char *, int, int))func_ov074_02121a4c)((char *)this, 3, 0);
+    this->mScaleSteps = 3;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fa74Ev
-void daKuriKing_c::func_ov074_0211fa74()
-{
+void daKuriKing_c::UpdateScaleChange() {
     /* 0x603 does not fit an ARM immediate, so the increment is an address
      * materialized from the pool. A plain mSubState++ drops that and comes
      * out 0x14 short. */
     int b;
     switch (this->mSubState) {
     case 0:
-        if (func_ov074_02121a20(6) != 0) {
+        if (IsAnimPlaying(6) != 0) {
             unsigned char* p;
-            b = func_ov074_021207b8();
+            b = FinishTurnAround();
             if (b == 0) return;
             p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
@@ -576,41 +566,39 @@ void daKuriKing_c::func_ov074_0211fa74()
         return;
     case 1:
         {
-            b = func_ov074_02120474();
-            if (func_ov074_021204c0() == 0) return;
-            if (b == 0) return;
-            func_ov074_021203e4(2);
+        b = AdvanceMaterialChanger();
+        if (StepScaleTransition() == 0)
+            return;
+        if (b == 0)
+            return;
+        ChangeState(2);
         }
         return;
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fb84Ev
-void daKuriKing_c::func_ov074_0211fb84(){
-  func_ov074_02120808();
-  this->mScalePhase = 0;
-  this->mSubState = 0;
-  unsigned short t=3-this->mSizeIndex;
-  if(t>2)t=2;
-  this->mTextureSequence.currFrame = t<<12;
-  this->mScaleSteps = 3;
+void daKuriKing_c::EnterScaleChange() {
+    TurnIfPlayerBehind();
+    this->mScalePhase = 0;
+    this->mSubState = 0;
+    unsigned short t = 3 - this->mSizeIndex;
+    if (t > 2)
+        t = 2;
+    this->mTextureSequence.currFrame = t << 12;
+    this->mScaleSteps = 3;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fbd0Ev
-int daKuriKing_c::func_ov074_0211fbd0(){
+int daKuriKing_c::UpdateMegaKnockback() {
     if(ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1)==0)
-        return func_ov074_021203e4(3);
-    return func_ov074_021216f4();
+        return ChangeState(3);
+    return WalkAlongRing();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fc34Ev
 void daKuriKing_c::func_ov074_0211fc34()
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fc38Ev
-void daKuriKing_c::func_ov074_0211fc38()
-{
+void daKuriKing_c::UpdateKnockback() {
     if (ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1) != 0) goto reset;
     if (this->mAnmModel.Finished() == 0)
         return;
@@ -619,24 +607,22 @@ void daKuriKing_c::func_ov074_0211fc38()
         daPly_c *player = this->ClosestPlayer();
         if (player->StartTalk(*this, 1) == 0) return;
         Message::PrepareTalk();
-        if (func_ov074_02121a20(1) != 0 || func_ov074_02121a20(2) != 0) {
+        if (IsAnimPlaying(1) != 0 || IsAnimPlaying(2) != 0) {
             func_ov074_02121a4c((char*)this, 0xc);
             return;
         }
-        func_ov074_021203e4(7);
+        ChangeState(7);
         this->mTalkPlayer = player;
         return;
     }
 detox:
-    func_ov074_021203e4(6);
+    ChangeState(6);
     return;
 reset:
-    func_ov074_021216f4();
+    WalkAlongRing();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fd48Ev
-void daKuriKing_c::func_ov074_0211fd48()
-{
+void daKuriKing_c::EnterKnockback() {
     unsigned char value;
 
     this->mSizeIndex--;
@@ -646,16 +632,17 @@ void daKuriKing_c::func_ov074_0211fd48()
     this->mSizeIndex = value;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211fd74Ev
-void daKuriKing_c::func_ov074_0211fd74()
-{
-    if (func_ov074_02121a20(6) != 0) {
-        if (func_ov074_021207b8() == 0) return;
+void daKuriKing_c::UpdateSummonGoombas() {
+    if (IsAnimPlaying(6) != 0) {
+        if (FinishTurnAround() == 0)
+            return;
         func_ov074_02121a4c((char*)this, 0xb);
         return;
     } else {
-        if (func_ov074_02121a20(0xb) != 0) goto L90;
-        if (func_ov074_021206c8() == 0) return;
+        if (IsAnimPlaying(0xb) != 0)
+            goto L90;
+        if (StopWalking() == 0)
+            return;
         func_ov074_02121a4c((char*)this, 0xb);
         return;
     }
@@ -705,85 +692,77 @@ L90:;
         this->mAnmModel.currFrame = 0;
 
     if (this->mSpawnedCount < spawnTarget) return;
-    func_ov074_021203e4(3);
+    ChangeState(3);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211ffacEv
-void daKuriKing_c::func_ov074_0211ffac() {
-    func_ov074_02120808();
+void daKuriKing_c::EnterSummonGoombas() {
+    TurnIfPlayerBehind();
     this->mTimer = 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0211ffccEv
 void daKuriKing_c::func_ov074_0211ffcc() {
-  if (func_ov074_02121a20(5) == 0) {
-    if (func_ov074_021206c8() == 0) return;
-    func_ov074_02121a4c((char*)this, 5);
-    return;
-  }
+    if (IsAnimPlaying(5) == 0) {
+        if (StopWalking() == 0)
+            return;
+        func_ov074_02121a4c((char *)this, 5);
+        return;
+    }
   if (this->DistToCPlayer() >= 0x4b0000) {
-    func_ov074_021203e4(3);
+      ChangeState(3);
   } else {
     if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < 0x3000) {
-      func_ov074_021203e4(3);
-      return;
+        ChangeState(3);
+        return;
     }
   }
   if (this->mSpawnedCount != 0) return;
-  func_ov074_021203e4(2);
+  ChangeState(2);
 }
 
-// @symbol func_ov074_0212007c
 extern "C" void func_ov074_0212007c(void)
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120080Ev
-void daKuriKing_c::func_ov074_02120080(){
+void daKuriKing_c::UpdateWalk() {
     if (this->mSpawnedCount == 0) {
-        func_ov074_021203e4(2);
+        ChangeState(2);
         return;
     }
-    if (func_ov074_02121a20(0xa) != 0) {
+    if (IsAnimPlaying(0xa) != 0) {
         if (this->mAnmModel.Finished() == 0)
             return;
         func_ov074_02121a4c((char *)this, 8);
         return;
     }
     ApproachAngle(&this->mWalkSpeed, this->mMaxWalkSpeed, 0xa, 0x20, 1);
-    func_ov074_021216f4();
+    WalkAlongRing();
     if (this->DistToCPlayer() >= 0x4b0000)
         return;
     if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) <= 0x4000)
         return;
-    func_ov074_021203e4(4);
+    ChangeState(4);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212016cEv
-void daKuriKing_c::func_ov074_0212016c() {
+void daKuriKing_c::EnterWalk() {
     func_ov074_02121a4c((char*)this, 0xa);
-    func_ov074_02120b90();
+    UpdateMaxWalkSpeed();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212018cEv
 extern "C" void func_02011d20(void);
-void daKuriKing_c::func_ov074_0212018c()
-{
+void daKuriKing_c::UpdateIntroTalkEnd() {
     if (this->mTalkPlayer->GetTalkState() != -1)
         return;
-    data_0209f318->mFlags &= ~8;
+    gCamera->mFlags &= ~8;
     Sound::LoadAndSetMusic_Layer3(0x2d);
     func_02011d20();
     Message::EndTalk();
-    func_ov074_021203e4(2);
+    ChangeState(2);
 }
 
-// @symbol func_ov074_021201ec
 extern "C" void func_ov074_021201ec(void)
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021201f0Ev
 /* daKuriKing_c state-0 tick -- the intro cutscene.
  *
  * Frames the boss for the opening conversation: pins the camera to a fixed
@@ -803,7 +782,7 @@ extern "C" void func_ov074_021201ec(void)
  *
  * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
-void daKuriKing_c::func_ov074_021201f0() {
+void daKuriKing_c::UpdateIntroTalk() {
     struct Ang16 { short v[3]; };
     struct Ang16 ang;
     struct Vector3 look, pos;
@@ -813,7 +792,7 @@ void daKuriKing_c::func_ov074_021201f0() {
     short msg;
 
     player = this->ClosestPlayer();
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
 
     look.x = this->mPosX;
@@ -859,31 +838,27 @@ void daKuriKing_c::func_ov074_021201f0() {
     msg = (unsigned short)((int)player->param1 + 0xd3);
     if (player->ShowMessage(*this, msg, &msgpos[1], 0, 2) == 0) return;
     func_02012694(0x15a, &this->mCamSpacePosX);
-    func_ov074_021203e4(1);
+    ChangeState(1);
 }
 
-// @symbol func_ov074_021203e0
 extern "C" void func_ov074_021203e0(void)
 {
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021203e4Ei
-int daKuriKing_c::func_ov074_021203e4(int i) {
+int daKuriKing_c::ChangeState(int i) {
     mState = i;
     int j = mState;
     KuriKingPmf *c = (KuriKingPmf *)this;
     (c->*data_ov074_021230f8.entries[j].pmf[0])();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212042cEv
-void daKuriKing_c::func_ov074_0212042c() {
+void daKuriKing_c::UpdateState() {
     KuriKingPmf *c = (KuriKingPmf *)this;
     int j = mState;
     (c->*data_ov074_021230f8.entries[j].pmf[1])();
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120474Ev
-int daKuriKing_c::func_ov074_02120474() {
+int daKuriKing_c::AdvanceMaterialChanger() {
     this->mMaterialChanger.Advance();
     unsigned char idx = this->mSizeIndex;
     unsigned int val = this->mMaterialChanger.currFrame;
@@ -896,10 +871,9 @@ int daKuriKing_c::func_ov074_02120474() {
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021204c0Ev
 /* daKuriKing_c shrink/grow interpolation tick.
  *
- * Called from func_ov074_0211f5b8 and func_ov074_0211fa74. Picks a pair of
+ * Called from UpdateDefeat and UpdateScaleChange. Picks a pair of
  * float sizes out of data_ov074_02122e4c (12288.0f, 9557.0f, 6826.0f,
  * 4096.0f -- Fix12 scales stored as IEEE singles), divides their difference
  * by the remaining step count in mScaleSteps, and steps mTargetScale toward
@@ -924,7 +898,7 @@ int daKuriKing_c::func_ov074_02120474() {
  *
  * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
-int daKuriKing_c::func_ov074_021204c0() {
+int daKuriKing_c::StepScaleTransition() {
     struct Vector3 v;
     int d, k;
 
@@ -948,7 +922,8 @@ int daKuriKing_c::func_ov074_021204c0() {
             v.y = this->mPosY;
             v.z = this->mPosZ;
             v.y += FX_MUL(this->mCurrentScale, (long long)0x190000);
-            Particle::System::NewSimple(0xb1, ((int *)&v)[0], ((int *)&v)[1], ((int *)&v)[2]);
+            Particle::System::NewSimple(kPtclHugeLandingDust, ((int *)&v)[0], ((int *)&v)[1],
+                                        ((int *)&v)[2]);
         }
     }
     k = ((u16)this->mScalePhase >> 4) * 2;
@@ -961,23 +936,22 @@ int daKuriKing_c::func_ov074_021204c0() {
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021206c8Ev
-int daKuriKing_c::func_ov074_021206c8() {
-    if (func_ov074_02121a20(8) != 0) {
+int daKuriKing_c::StopWalking() {
+    if (IsAnimPlaying(8) != 0) {
         if (ApproachAngle(&this->mWalkSpeed, 0, 0x1e, 0x20, 1) == 0) {
             if ((unsigned short)(this->mAnmModel.currFrame >> 12) == 0) {
                 func_ov074_02121a4c((char*)this, 9);
             }
             goto ret0;
         }
-        func_ov074_021216f4();
+        WalkAlongRing();
         goto ret0;
     }
-    if (func_ov074_02121a20(0xa) != 0) {
+    if (IsAnimPlaying(0xa) != 0) {
         func_ov074_02121a4c((char*)this, 9);
         goto ret0;
     }
-    if (func_ov074_02121a20(9) != 0) {
+    if (IsAnimPlaying(9) != 0) {
         if (this->mAnmModel.Finished() != 0) {
             return 1;
         }
@@ -988,13 +962,11 @@ ret0:
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021207b8Ev
 /* If anim 6 is current and mAnmModel has finished, flip mAngleY by half
  * a turn and return 1. Otherwise return 0.
  */
-int daKuriKing_c::func_ov074_021207b8()
-{
-    if (func_ov074_02121a20(6)) {
+int daKuriKing_c::FinishTurnAround() {
+    if (IsAnimPlaying(6)) {
         if (this->mAnmModel.Finished()) {
             this->mAngleY += 0x8000;
             return 1;
@@ -1003,9 +975,7 @@ int daKuriKing_c::func_ov074_021207b8()
     return 0;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120808Ev
-void daKuriKing_c::func_ov074_02120808()
-{
+void daKuriKing_c::TurnIfPlayerBehind() {
     int ang = (short)(this->mWalkAngle + this->mDirection * 0x4500);
     if (AngleDiff(ang, this->HorzAngleToCPlayer()) <= 0x4000)
         return;
@@ -1013,7 +983,6 @@ void daKuriKing_c::func_ov074_02120808()
     this->mDirection *= -1;
 }
 
-// @symbol func_ov074_0212087c
 extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
 {
     int n;
@@ -1097,9 +1066,7 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120b24Ev
-int daKuriKing_c::func_ov074_02120b24()
-{
+int daKuriKing_c::CalcWalkAnimSpeed() {
     int num = this->mWalkSpeed << 12;
     int den;
     int r;
@@ -1111,17 +1078,14 @@ int daKuriKing_c::func_ov074_02120b24()
     return r;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120b90Ev
-void daKuriKing_c::func_ov074_02120b90() {
+void daKuriKing_c::UpdateMaxWalkSpeed() {
     int idx = this->mSizeIndex;
     int base = this->mDirection;
     unsigned short scale = data_ov074_02122dfc[idx];
     this->mMaxWalkSpeed = base * scale;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120bb8EP8dActor_cP10dCcAcPos_ci
-void daKuriKing_c::func_ov074_02120bb8(dActor_c *other, dCcAcPos_c *clsn, int mode)
-{
+void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode) {
     Vector3 v, dst, src, delta;
     s32 aX, aY;
     s32 iX, iY;
@@ -1160,17 +1124,16 @@ void daKuriKing_c::func_ov074_02120bb8(dActor_c *other, dCcAcPos_c *clsn, int mo
 
     switch (mode) {
     case 0:
-        Particle::System::NewSimple(0xf6, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclEnemyHit, dst.x, dst.y, dst.z);
         break;
     case 1:
-        Particle::System::NewSimple(0x43, dst.x, dst.y, dst.z);
-        Particle::System::NewSimple(0x44, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclKnockAwayA, dst.x, dst.y, dst.z);
+        Particle::System::NewSimple(kPtclKnockAwayB, dst.x, dst.y, dst.z);
         break;
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02120d74Ev
-void daKuriKing_c::func_ov074_02120d74() {
+void daKuriKing_c::HandleCylinderHits() {
     struct Vector3 v0;
     struct Vector3 v1;
     struct Vector3 v2;
@@ -1260,8 +1223,8 @@ void daKuriKing_c::func_ov074_02120d74() {
                         if (AngleDiff(ang, this->mAngleY) > 0x4000)
                             dir = -1;
                         func_ov074_02121a4c((char *)this, 7);
-                        func_ov074_021203e4(8);
-                        func_ov074_02120bb8(pl, cur, 0);
+                        ChangeState(8);
+                        SpawnHitParticles(pl, cur, 0);
                         func_02012694(0x15a, &this->mCamSpacePosX);
                         this->mWalkSpeed = dir * (this->mDirection * -0xc8);
                     }
@@ -1269,9 +1232,9 @@ void daKuriKing_c::func_ov074_02120d74() {
                     if (cur == &this->mdCc_cs[1]) {
                         if (cur->hitFlags & 0x80) {
                             if (this->mState == 4)
-                                func_ov074_021203e4(2);
+                                ChangeState(2);
                             else
-                                func_ov074_021203e4(4);
+                                ChangeState(4);
                             if ((int)pl->param1 == 0) {
                                 v0.x = this->mPosX;
                                 v0.y = this->mPosY;
@@ -1319,11 +1282,10 @@ void daKuriKing_c::func_ov074_02120d74() {
         }
     }
     this->mWalkSpeed = dir2 * (this->mDirection * -0x190);
-    func_ov074_021203e4(5);
-    func_ov074_02120bb8(player, cur, 1);
+    ChangeState(5);
+    SpawnHitParticles(player, cur, 1);
 }
 
-// @symbol func_ov074_02121270
 /* World position of model bone `bone`: that bone's transform composed with
  * mBodyMatrix, translation row out, shifted back up from model
  * space (<< 3). */
@@ -1342,12 +1304,11 @@ extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) 
     Vec3_LslInPlace(v, 3);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121300Ev
 
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 extern "C" struct Matrix4x3 data_020a0e68;
-void daKuriKing_c::func_ov074_02121300() {
+void daKuriKing_c::UpdateBodyMatrix() {
     struct Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -1356,14 +1317,13 @@ void daKuriKing_c::func_ov074_02121300() {
     *(struct Matrix4x3 *)this->mBodyMatrix = data_020a0e68;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121380Ev
 /* Sizes the four collision cylinders from the current scale and places the
  * three foot cylinders under the model's bone positions, then works out which
  * feet are touching the ground this frame: a foot counts as stepped-on only
  * on the frame its ground test first reads below the body. */
 struct KuriKingBoneIdx { int v[3]; };
 
-void daKuriKing_c::func_ov074_02121380() {
+void daKuriKing_c::UpdateCylindersAndFootsteps() {
     KuriKingBoneIdx bone = *(const KuriKingBoneIdx *)data_ov074_02122e24;
     int yoff[3], rad[3], hgt[3];
     Vector3 v[3];
@@ -1387,7 +1347,7 @@ void daKuriKing_c::func_ov074_02121380() {
     hgt[0] = FX_MUL(this->mScaleY, 0x104000);
     /* q is this shifted by i mCylClsnPos entries, read back through the
      * class so each load keeps the member offset -- the same walk
-     * func_ov074_02121800 keeps. */
+     * UpdateShadows keeps. */
     q = (char*)this;
     for (i = 0; i < 3; i++) {
         int ax, ay, az;
@@ -1452,14 +1412,12 @@ void daKuriKing_c::func_ov074_02121380() {
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021216f4Ev
 /* Advances mWalkAngle by mWalkSpeed while on the ground and re-derives the
  * walk velocity from the sine table, then eases mAngleY toward the
  * direction-scaled heading. */
-/* Returns int so callers can `return func_ov074_021216f4(c)`; the body still
+/* Returns int so callers can `return WalkAlongRing(c)`; the body still
  * falls off the end, which is what the ROM's code does. */
-int daKuriKing_c::func_ov074_021216f4()
-{
+int daKuriKing_c::WalkAlongRing() {
     if (this->mWithMeshClsn.IsOnGround()) {
         this->mWalkAngle += this->mWalkSpeed;
         this->mPosX = FX_MUL(data_02082214[(((u16)this->mWalkAngle) >> 4) * 2], 0x546000);
@@ -1468,9 +1426,7 @@ int daKuriKing_c::func_ov074_021216f4()
     ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121800Ev
-void daKuriKing_c::func_ov074_02121800()
-{
+void daKuriKing_c::UpdateShadows() {
     Matrix4x3 mtx;
     int i, height, rad, footX, posY, radius; /* footX is never used: it keeps the @NNN count */
     char *self, *src, *m;
@@ -1515,23 +1471,19 @@ void daKuriKing_c::func_ov074_02121800()
     }
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212195cEv
 /* Fills the model matrix from mAngleY and the position (model space is
  * world >> 3). */
-void daKuriKing_c::func_ov074_0212195c()
-{
+void daKuriKing_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
     mAnmModel.mat4x3.m[10] = mPosY >> 3;
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212199cEv
-void daKuriKing_c::func_ov074_0212199c()
-{
-    if (func_ov074_02121a20(8)) {
-        mAnmModel.speed = func_ov074_02120b24();
-    } else if (func_ov074_02121a20(0xb)) {
+void daKuriKing_c::UpdateAnimation() {
+    if (IsAnimPlaying(8)) {
+        mAnmModel.speed = CalcWalkAnimSpeed();
+    } else if (IsAnimPlaying(0xb)) {
         if ((((unsigned int)mAnmModel.currFrame << 4) >> 0x10) == 8) {
             func_02012694(0x15d, &mCamSpacePosX);
         }
@@ -1549,16 +1501,13 @@ struct KuriKingAnimFile { u16 fileID; u8 numRefs; void *filePtr; };
 struct KuriKingAnimEntry { KuriKingAnimFile *anim; void *btaFile; int animArg; };
 extern KuriKingAnimEntry data_ov074_02122f34[];
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02121a20Ei
 /* Is clip `idx` the one currently playing: compare its file pointer with the
  * dExtAnmModel_c's. */
-int daKuriKing_c::func_ov074_02121a20(int idx)
-{
+int daKuriKing_c::IsAnimPlaying(int idx) {
     KuriKingAnimFile *anim = data_ov074_02122f34[idx].anim;
     return this->mAnmModel.file == anim->filePtr;
 }
 
-// @symbol func_ov074_02121a4c
 extern "C" void func_ov074_02121a4c(char* c, int idx)
 {
     int off = idx * 0xc;
@@ -1570,13 +1519,12 @@ extern "C" void func_ov074_02121a4c(char* c, int idx)
         ->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
 
-// @symbol _ZN12daKuriKing_c16CleanupResourcesEv
 int daKuriKing_c::CleanupResources()
 {
     int i;
 
     if (param1 == 0x1111) {
-        return func_ov074_0212229c();
+        return CleanupVanishResources();
     }
     data_ov002_0210da30.Release();
     UnloadKeyModels(2);
@@ -1590,10 +1538,10 @@ int daKuriKing_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c6RenderEv
 int daKuriKing_c::Render()
 {
-    if (param1 == 0x1111) return func_ov074_021222e0();
+    if (param1 == 0x1111)
+        return RenderVanish();
     if (mShouldRender == 0) return 1;
     mAnmModel.Render(&mScale);
     mTextureSequence.Update(mAnmModel.data);
@@ -1602,7 +1550,6 @@ int daKuriKing_c::Render()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c8BehaviorEv
 int daKuriKing_c::Behavior()
 {
     int t;
@@ -1610,7 +1557,7 @@ int daKuriKing_c::Behavior()
     int quake;
 
     if (param1 == 0x1111) {
-        return func_ov074_021223bc();
+        return BehaviorVanish();
     }
 
     t = FX_MUL(mWalkSpeed, 0x646);
@@ -1620,15 +1567,15 @@ int daKuriKing_c::Behavior()
     /* The camera frames the main boss (not param1 0x1111) every frame
        except in state 7 (defeat). */
     if (mState != 7) {
-        data_0209f318->mFramedActor = this;
+        gCamera->mFramedActor = this;
     }
 
-    func_ov074_0212199c();
-    func_ov074_0212042c();
+    UpdateAnimation();
+    UpdateState();
     UpdatePos(0);
     UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov074_02120d74();
-    func_ov074_02121380();
+    HandleCylinderHits();
+    UpdateCylindersAndFootsteps();
 
     {
         int i;
@@ -1692,13 +1639,12 @@ int daKuriKing_c::Behavior()
         }
     }
 
-    func_ov074_02121300();
-    func_ov074_0212195c();
-    func_ov074_02121800();
+    UpdateBodyMatrix();
+    UpdateModelMatrix();
+    UpdateShadows();
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c13InitResourcesEv
 int daKuriKing_c::InitResources()
 {
     s32 i;
@@ -1708,7 +1654,7 @@ int daKuriKing_c::InitResources()
     Vector3 pos;
 
     if (param1 == 0x1111) {
-        return func_ov074_02122634();
+        return InitVanishResources();
     }
 
     dExtSimpleModel_c::LoadFile(data_ov002_0210da30);
@@ -1806,8 +1752,8 @@ int daKuriKing_c::InitResources()
         mPosY = ground.clsnY;
     }
 
-    func_ov074_02121300();
-    func_ov074_0212195c();
+    UpdateBodyMatrix();
+    UpdateModelMatrix();
 
     mMegaMushroomID = 0;
     mShouldRender = 1;
@@ -1816,10 +1762,8 @@ int daKuriKing_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_0212229cEv
 /* The vanish variant's file teardown, from CleanupResources. */
-int daKuriKing_c::func_ov074_0212229c()
-{
+int daKuriKing_c::CleanupVanishResources() {
     data_ov084_02130cf8.Release();
     int i = 0;
     do {
@@ -1829,12 +1773,10 @@ int daKuriKing_c::func_ov074_0212229c()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021222e0Ev
 /* The vanish variant's render: build the model matrix out of the shared
  * scratch matrix -- position, then +0x6400 up, rotate by the Euler angles,
  * then back down -- and draw the model if visible. */
-int daKuriKing_c::func_ov074_021222e0()
-{
+int daKuriKing_c::RenderVanish() {
     Vector3 v;
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -1850,12 +1792,10 @@ int daKuriKing_c::func_ov074_021222e0()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_021223bcEv
 /* The vanish variant's tick: once mLaunched the clone is a thrown projectile --
  * it bounces on the ground (0x13a/0x13b), dies on water/toxic floor or when
  * mTimer runs out, and tumbles while airborne. */
-int daKuriKing_c::func_ov074_021223bc()
-{
+int daKuriKing_c::BehaviorVanish() {
     Vector3 pos;
 
     if (this->mLaunched == 0) {
@@ -1930,12 +1870,10 @@ int daKuriKing_c::func_ov074_021223bc()
     return 1;
 }
 
-// @symbol _ZN12daKuriKing_c19func_ov074_02122634Ev
 /* The vanish variant's InitResources: loads the seven shared animation files,
  * binds the model, a single shadow cylinder, material and texture animators,
  * then seeds the rest angles and the actor-cylinder Init. */
-int daKuriKing_c::func_ov074_02122634()
-{
+int daKuriKing_c::InitVanishResources() {
     int i;
 
     dExtSimpleModel_c::LoadFile(data_ov084_02130cf8);
@@ -2007,7 +1945,6 @@ KuriKingStateTable data_ov074_021230f8;
  * 0x0212290c), KURIKING_VANISH first. Both construct the same 0x610-byte
  * class; the registry profile selects the actor variant. */
 
-// @symbol daKuriKing_c_classInit_KURIKING_VANISH
 /* Reconstructed source-style name: SM64DS proves daKuriKing_c through RTTI,
  * allocation size, vtable identity, and the KURIKING_VANISH registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -2017,7 +1954,6 @@ extern "C" daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void)
     return new daKuriKing_c;
 }
 
-// @symbol daKuriKing_c_classInit_KURIKING
 /* Reconstructed source-style name: SM64DS proves daKuriKing_c through RTTI,
  * allocation size, vtable identity, and the KURIKING registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not

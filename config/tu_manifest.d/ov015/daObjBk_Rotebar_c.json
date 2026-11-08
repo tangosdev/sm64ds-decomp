@@ -191,12 +191,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@389",
+      "from": "@387",
       "to": "@48",
       "evidence": "mwcc numbers this model registration node @386 per TU and the in-flight ov036 buranko fold already claims @386, so the batch link would multiply-define it | compiler temp; Sound.h in place of the local declaration and the dead named-parameter extern going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     },
     {
-      "from": "@390",
+      "from": "@388",
       "to": "@49",
       "evidence": "mwcc numbers this collision registration node @387 per TU and the in-flight ov036 buranko fold already claims @387, so the batch link would multiply-define it | compiler temp; Sound.h in place of the local declaration and the dead named-parameter extern going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
     }

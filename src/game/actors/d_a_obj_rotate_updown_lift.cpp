@@ -57,6 +57,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "decl_Platform.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
@@ -130,7 +131,8 @@ int fdiv(int numerator, int denominator);
 
 extern "C" {
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void MulVec3Mat4x3(void *src, void *m, void *dst);
+/* local extern: no shared math header declares MulVec3Mat4x3. */
+void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
@@ -138,23 +140,16 @@ void SubVec3(void *a, void *b, void *c);
 int LenVec3(void *v);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int id, const Vector3 *pos);
-/* dBgW callback setter. Its C definition takes int *; the call casts
-   &mMeshCollider. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
                                             int scale, s16 angY, CLPS_Block *clps);
 }
 
 // 0x02130f00 (0x4c)
-// @symbol _ZN23daObjRotateUpdownLift_cD1Ev
-// @symbol _ZN23daObjRotateUpdownLift_cD0Ev
 daObjRotateUpdownLift_c::~daObjRotateUpdownLift_c()
 {
 }
 
 // 0x02130fac (0xc4)
-// @symbol func_ov091_02130fac
 /* Put a killed lift back on its spawn node. The watcher calls this. */
 void daObjRotateUpdownLift_c::func_ov091_02130fac()
 {
@@ -169,8 +164,8 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosZ = mBasePosZ;
     mWaypointIndex = (u8)(param1 & 0xf);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
-                  &data_020a0e68, &tmp[0]);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  (Vector3 *)&tmp[0]);
     Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
     mPosY = tmp[1].y;
@@ -178,10 +173,9 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
 }
 
 // 0x02131070 (0x8c)
-// @symbol _ZN23daObjRotateUpdownLift_c4KillEv
 void daObjRotateUpdownLift_c::Kill()
 {
-    Particle::System::NewSimple(0xbb, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclUpdownLiftBreak, mPosX, mPosY, mPosZ);
     /* memberwise stores: the (x,y,z) ctor form batches the loads */
     Vector3 v;
     v.x = mPosX;
@@ -196,7 +190,6 @@ void daObjRotateUpdownLift_c::Kill()
 }
 
 // 0x021310fc (0x64)
-// @symbol _ZN23daObjRotateUpdownLift_c15OnHitByMegaCharER7daPly_c
 /* HS_UPDOWN_LIFT ignores the hit. The others count it, play 0x1e, and
    snap yaw back to the previous angle. */
 void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player) {
@@ -211,7 +204,6 @@ void daObjRotateUpdownLift_c::OnHitByMegaChar(daPly_c &player) {
 }
 
 // 0x02131160 (0x1e0)
-// @symbol func_ov091_02131160
 /* Aim the cuboid shadow and the clip volume. Called every frame except
    for HS_UPDOWN_LIFT. */
 void daObjRotateUpdownLift_c::func_ov091_02131160() {
@@ -261,7 +253,6 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
 }
 
 // 0x02131340 (0x48)
-// @symbol func_ov091_02131340
 /* Write the model matrix: full rotation, translation at 1/8 of position. */
 void daObjRotateUpdownLift_c::func_ov091_02131340()
 {
@@ -273,7 +264,6 @@ void daObjRotateUpdownLift_c::func_ov091_02131340()
 }
 
 // 0x02131388 (0x80)
-// @symbol _ZN23daObjRotateUpdownLift_c16CleanupResourcesEv
 int daObjRotateUpdownLift_c::CleanupResources()
 {
     if (param1 == 0xffff)
@@ -286,7 +276,6 @@ int daObjRotateUpdownLift_c::CleanupResources()
 }
 
 // 0x02131408 (0x60)
-// @symbol _ZN23daObjRotateUpdownLift_c6RenderEv
 int daObjRotateUpdownLift_c::Render()
 {
     if (mIsDead)
@@ -298,7 +287,6 @@ int daObjRotateUpdownLift_c::Render()
 }
 
 // 0x02131468 (0x488)
-// @symbol _ZN23daObjRotateUpdownLift_c8BehaviorEv
 int daObjRotateUpdownLift_c::Behavior()
 {
     Vector3 pos;
@@ -393,12 +381,11 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[mWaypointIndex],
-                  &data_020a0e68, &cur);
-    MulVec3Mat4x3(&data_ov091_02134cdc[mVariant].node[prevIndex],
-                  &data_020a0e68, &prev);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+                  &cur);
+    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
-    Vec3_Sub(&remain, (const Vector3 *)&mPosX, &target);
+    Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
     dist = LenVec3(&remain);
@@ -456,7 +443,6 @@ int daObjRotateUpdownLift_c::Behavior()
 }
 
 // 0x021318f0 (0x2b4)
-// @symbol _ZN23daObjRotateUpdownLift_c13InitResourcesEv
 int daObjRotateUpdownLift_c::InitResources()
 {
     Vector3 spawnAt;
@@ -503,7 +489,7 @@ int daObjRotateUpdownLift_c::InitResources()
         int stride = 0x78;
         int i = mVariant;
         node = mWaypointIndex;
-        MulVec3Mat4x3(tbl + i * stride + node * 0xc, &data_020a0e68, &rotated);
+        MulVec3Mat4x3((Vector3 *)(tbl + i * stride + node * 0xc), &data_020a0e68, &rotated);
     }
     Vec3_Add(&placed, (const Vector3 *)&mBasePosX, &rotated);
     mPosX = placed.x;
@@ -522,7 +508,7 @@ int daObjRotateUpdownLift_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)kcl, *(&mClsnMat), 0x199, mAngleY,
                               *(data_ov091_02134c38[variant].clps));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     {
         int py;
@@ -545,14 +531,12 @@ int daObjRotateUpdownLift_c::InitResources()
 }
 
 // 0x02131ba4 (0x38)
-// @symbol daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT
 extern "C" daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_HS_UPDOWN_LIFT()
 {
     return new daObjRotateUpdownLift_c();
 }
 
 // 0x02131bdc (0x38)
-// @symbol daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT
 extern "C" daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT()
 {
     return new daObjRotateUpdownLift_c();

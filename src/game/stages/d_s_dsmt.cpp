@@ -46,6 +46,7 @@
 #include "nitro/spi/tp.h"
 #include "Memory.h"
 #include "GX.h"
+#include "nitro/hw/registers.h"
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
 
@@ -64,7 +65,7 @@ extern u8 gSoftResetPending;
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 extern void *data_020a0ea0;
 /* Linker-defined overlay IDs: the address is the overlay number. */
@@ -91,23 +92,19 @@ void TurnBacklightOff(void);
 #define sBootArgs (*(Ov007BootArgs *)data_0209b340)
 
 /* Factory: the registry's spawn entry point. */
-// @symbol dScDSMT_c_classInit
 extern "C" dScDSMT_c *dScDSMT_c_classInit(void) {
     return new dScDSMT_c;
 }
 
 /* Heap thunks onto the game heap; `bx ip` sibcalls. */
-// @symbol func_ov007_020ccab4
 extern "C" void *func_ov007_020ccab4(u32 a) {
     return ((Heap *)data_020a0ea0)->Allocate(a);
 }
 
-// @symbol func_ov007_020cca98
 extern "C" void func_ov007_020cca98(void *a) {
     ((Heap *)data_020a0ea0)->_Deallocate(a);
 }
 
-// @symbol func_ov007_020cca80
 extern "C" void func_ov007_020cca80(void) {
     (void)((Heap *)data_020a0ea0)->MaxAllocationUnitSize();
 }
@@ -115,18 +112,15 @@ extern "C" void func_ov007_020cca80(void) {
 /* File-op veneers: `#pragma long_calls` emits the pooled absolute tail call. */
 #pragma long_calls on
 extern "C" void *LoadFile(int);
-// @symbol func_ov007_020cca74
 extern "C" void *func_ov007_020cca74(int a) {
     return LoadFile(a);
 }
-// @symbol func_ov007_020cca68
 extern "C" void func_ov007_020cca68(void *p) {
     Deallocate(p);
 }
 #pragma long_calls off
 
 /* Client command dispatcher: sound/backlight/save-file/minigame codes. */
-// @symbol func_ov007_020cc600
 extern "C" u8 func_ov007_020cc600(s32 command) {
     u8 failed = 0;
 
@@ -213,7 +207,6 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
 }
 
 /* InitResources (key function): engines on, graph callback registered, session seeded. */
-// @symbol _ZN9dScDSMT_c13InitResourcesEv
 s32 dScDSMT_c::InitResources() {
     if (gSoftResetPending != 0)
         sBootArgs.status = 1;
@@ -227,12 +220,12 @@ s32 dScDSMT_c::InitResources() {
         func_0201a428();
 
     sBootArgs.messages = (void *)data_0209d6fc;
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & 0xfffffdf1) | 0x20e;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
     GX::DispOn();
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     Enable3dEngines();
     ::Initialise3dGraphics(0);
-    data_0209d4a8 = &mGraphCallback;
+    gGraphCallback = &mGraphCallback;
     dScene_c::SetFaders(&fader);
     data_0208ee44 = 1;
     GX::DisableAllBanks();
@@ -244,9 +237,8 @@ s32 dScDSMT_c::InitResources() {
 }
 
 /* CleanupResources: unregister callback, record exit reason, release voice group. */
-// @symbol _ZN9dScDSMT_c16CleanupResourcesEv
 s32 dScDSMT_c::CleanupResources() {
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     dScene_c::SetAndStopColorFader();
     sBootArgs.bootFlags = func_ov007_020b6f4c();
     sBootArgs.status = 2;
@@ -257,7 +249,6 @@ s32 dScDSMT_c::CleanupResources() {
 }
 
 /* Behavior: pump the session state machine and dispatch its return code. */
-// @symbol _ZN9dScDSMT_c8BehaviorEv
 s32 dScDSMT_c::Behavior() {
     int result;
 
@@ -304,18 +295,15 @@ s32 dScDSMT_c::Behavior() {
 }
 
 /* Render: forward to the overlay's draw routine. */
-// @symbol _ZN9dScDSMT_c6RenderEv
 s32 dScDSMT_c::Render() {
     func_ov007_020b7040(this);
     return 1;
 }
 
 /* OnPendingDestroy: no unwind; the slot exists for dScene_c's teardown. */
-// @symbol _ZN9dScDSMT_c16OnPendingDestroyEv
 void dScDSMT_c::OnPendingDestroy() {}
 
 /* Fill the selected save slot's download-play summary in the byte-packed table. */
-// @symbol func_ov007_020cc168
 extern "C" void func_ov007_020cc168(u32 saveSlot) {
     int highestUnlockedPlusOne;
     int character;
@@ -352,7 +340,6 @@ extern "C" void func_ov007_020cc168(u32 saveSlot) {
 }
 
 /* Arm the deferred music change Behavior commits. Declines if one is pending. */
-// @symbol func_ov007_020cc118
 extern "C" int func_ov007_020cc118(int musicId, unsigned int delayFrames) {
     if (data_ov007_02103260 >= 0) {
         return 0;
@@ -364,26 +351,22 @@ extern "C" int func_ov007_020cc118(int musicId, unsigned int delayFrames) {
 }
 
 /* graphCallback_c slot 0: decline (`mov r0,#0`), against dGraph_c's default 1. */
-// @symbol _ZN9dScDSMT_c15graphCallback_c14GraphCallback0Ev
 int dScDSMT_c::graphCallback_c::GraphCallback0() {
     return 0;
 }
 
 /* graphCallback_c slot 2: hand the callback object to the ov007 routine. */
-// @symbol _ZN9dScDSMT_c15graphCallback_c14GraphCallback2Ev
 int dScDSMT_c::graphCallback_c::GraphCallback2() {
     func_ov007_020b6eb4();
     return 0;
 }
 
 /* Install the save-slot buffer pointer. */
-// @symbol func_ov007_020cc0e4
 extern "C" void func_ov007_020cc0e4(FileSaveData *files) {
     data_0209b33c = files;
 }
 
 /* Address of save-slot record `idx` (0x44 stride is in the ROM's mla). */
-// @symbol func_ov007_020cc0cc
 extern "C" FileSaveData *func_ov007_020cc0cc(int idx) {
     return &data_0209b33c[idx];
 }

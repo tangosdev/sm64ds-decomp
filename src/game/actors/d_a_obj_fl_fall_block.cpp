@@ -48,23 +48,18 @@ struct FallBlockCollisionFilePtr : SharedFilePtr {
 
 extern ResourceDescriptor data_ov022_0211427c;
 
-// @symbol daObjFl_Fall_Block_c_classInit
 extern "C" daObjFl_Fall_Block_c *daObjFl_Fall_Block_c_classInit() {
     return new daObjFl_Fall_Block_c();
 }
 
-// @symbol _ZN20daObjFl_Fall_Block_c13InitResourcesEv
 int daObjFl_Fall_Block_c::InitResources() {
     return InitResourcesFrom(&data_ov022_0211427c);
 }
 
-// @symbol _ZN20daObjFl_Fall_Block_c16CleanupResourcesEv
 int daObjFl_Fall_Block_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov022_0211427c);
 }
 
-// @symbol _ZN20daObjFl_Fall_Block_cD1Ev
-// @symbol _ZN20daObjFl_Fall_Block_cD0Ev
 
 /* Static-init globals (was the handwritten __sinit_ov022_02112fe4 shard).
  * Definition order is the retail initializer's construction order: the

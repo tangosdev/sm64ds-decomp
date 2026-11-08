@@ -31,7 +31,6 @@
 
 extern SharedFilePtr data_ov002_0210da30;
 
-// @symbol daObjKinokoTag_c_classInit_KINOKO_TAG
 extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG() {
     return new daObjKinokoTag_c();
 }
@@ -47,7 +46,6 @@ extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_TAG = {
     0x01000000,
     0};
 
-// @symbol daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG
 extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG() {
     return new daObjKinokoTag_c();
 }
@@ -56,7 +54,6 @@ extern "C" daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG() {
 extern "C" SpawnInfo<daObjKinokoTag_c> g_profile_KINOKO_CREATE_TAG = {
     daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG, 0x013f, 0x013d, 0, 0, 0, 0, 0};
 
-// @symbol _ZN16daObjKinokoTag_c13InitResourcesEv
 s32 daObjKinokoTag_c::InitResources() {
     mMovingCylinderClsn.Init(this, 0x12c000, 0x32000, 0x800002, 0x20);
     mGroupId = param1;
@@ -64,7 +61,6 @@ s32 daObjKinokoTag_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjKinokoTag_c8BehaviorEv
 s32 daObjKinokoTag_c::Behavior() {
     dActor_c *other;
     s32 isKinokoTag = (s32)(actorID == 0x140);
@@ -110,13 +106,11 @@ s32 daObjKinokoTag_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjKinokoTag_c16CleanupResourcesEv
 s32 daObjKinokoTag_c::CleanupResources() {
     data_ov002_0210da30.Release();
     return 1;
 }
 
-// @symbol _ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv
 void daObjKinokoTag_c::TrySpawnMegaMushroom() {
     if (mMovingCylinderClsn.otherOwner == 0)
         return;
@@ -125,7 +119,6 @@ void daObjKinokoTag_c::TrySpawnMegaMushroom() {
     SpawnMegaMushroom();
 }
 
-// @symbol _ZN16daObjKinokoTag_c17SpawnMegaMushroomEv
 void daObjKinokoTag_c::SpawnMegaMushroom() {
     daObjKinokoTag_c *tag = (daObjKinokoTag_c *)FindWithActorID(0x13f, 0);
     while (tag != 0) {

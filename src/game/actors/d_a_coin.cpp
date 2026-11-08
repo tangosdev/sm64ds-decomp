@@ -43,6 +43,7 @@
 #include "Sound.h"
 #include "cstd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -92,7 +93,7 @@ extern "C" {
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(void *v);
-extern int LenVec3(void* v);
+extern int LenVec3(const Vector3 *v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void GiveCoins(int idx, int amount);
@@ -106,8 +107,6 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern short atan2_hold_d_a_coin_1(int a, int b);
 }
 
-// @symbol _ZN8daCoin_cD1Ev
-// @symbol _ZN8daCoin_cD0Ev
 daCoin_c::~daCoin_c()
 {
 }
@@ -115,7 +114,6 @@ daCoin_c::~daCoin_c()
 /* Red coin, first frame: looks for a BLOCK_L actor within 150 units. If there is
  * one the coin is marked as sitting in it (mInBrickBlock) and the block keeps a
  * pointer back to the coin. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1008Ev
 void daCoin_c::func_ov002_020b1008()
 {
     dActor_c *block;
@@ -136,7 +134,6 @@ void daCoin_c::func_ov002_020b1008()
 
 /* If this coin's death-table bit is set, lets its star marker react (see
  * func_ov002_020b1328) and kills the coin. Returns 1 when it did. */
-// @symbol _ZN8daCoin_c19func_ov002_020b10a0Ev
 int daCoin_c::func_ov002_020b10a0()
 {
     daStarBase_c *marker;
@@ -153,7 +150,6 @@ int daCoin_c::func_ov002_020b10a0()
  * 0x81, 0x9c) just below the coin and takes its top as the floor. Failing that
  * it casts a ray 500 units down: a hit on a surface owned by an actor sets
  * FLOOR_DYNAMIC, any other hit records the hit height and sets FLOOR_FIXED. */
-// @symbol _ZN8daCoin_c19func_ov002_020b10e4Ev
 void daCoin_c::func_ov002_020b10e4()
 {
     extern signed char gCurrentSublevel;
@@ -215,7 +211,6 @@ void daCoin_c::func_ov002_020b10e4()
 /* Yoshi-mouth check: returns 1 if any of the mFlags bits 0x20000, 0x40000 or
  * 0x80000 is set. Otherwise it zeroes mEatingPlayer, clears those bits (already
  * clear on this path) and returns 0. */
-// @symbol _ZN8daCoin_c19func_ov002_020b12ecEv
 int daCoin_c::func_ov002_020b12ec()
 {
     unsigned int flagBits;
@@ -244,7 +239,6 @@ int daCoin_c::func_ov002_020b12ec()
 
 /* Finds the STARBASE actor (0xb4, a daStarBase_c) whose star id equals this
  * coin's mSpawnFilter and whose state is 0. Null if there is none. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1328Ev
 daStarBase_c *daCoin_c::func_ov002_020b1328()
 {
     daStarBase_c *marker = 0;
@@ -259,7 +253,6 @@ daStarBase_c *daCoin_c::func_ov002_020b1328()
 }
 
 /* Bounce off a wall: turns the heading (mPrevAngleY) around the wall normal. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1384Ev
 void daCoin_c::func_ov002_020b1384()
 {
     if (mWithMeshClsn.IsOnWall() == 0) return;
@@ -276,7 +269,6 @@ void daCoin_c::func_ov002_020b1384()
  * radius. Landing on a floor with surface flag 0x20 while falling makes a big
  * splash and leaves the coin sinking slowly (gravity -0x800, terminal velocity
  * -0x5000). */
-// @symbol _ZN8daCoin_c19func_ov002_020b13e0Ev
 void daCoin_c::func_ov002_020b13e0()
 {
     DecIfAbove0_Byte(&mNoClsnTimer);
@@ -285,7 +277,7 @@ void daCoin_c::func_ov002_020b13e0()
         return;
     }
     UpdatePos(&mdCc_c);
-    if (LenVec3(&mSpeedX) > mWithMeshClsn.mRadius)
+    if (LenVec3((const Vector3 *)&mSpeedX) > mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -307,7 +299,6 @@ void daCoin_c::func_ov002_020b13e0()
  * coin sitting in a block.
  * FLOOR_DYNAMIC drops it 500 units with a fixed radius; FLOOR_FIXED sizes it
  * from the distance down to mFloorPosY. */
-// @symbol _ZN8daCoin_c19func_ov002_020b14d8Ev
 void daCoin_c::func_ov002_020b14d8()
 {
     extern int IDENTITY_MATRIX4X3[];
@@ -351,7 +342,6 @@ void daCoin_c::func_ov002_020b14d8()
 }
 
 /* Blue coin picked up: 5 coins and 0x500 health for the player. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1674EP7daPly_c
 void daCoin_c::func_ov002_020b1674(daPly_c *player) {
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
@@ -365,16 +355,13 @@ void daCoin_c::func_ov002_020b1674(daPly_c *player) {
  * also counts the red coin, puts up the running total as a score popup and plays
  * sound 0x2f + total. When the eighth is collected it spawns a STAR (0xb2) 120
  * units above the coin's STARBASE and hands that marker over to the star. */
-// @symbol _ZN8daCoin_c19func_ov002_020b16c4EP7daPly_c
-#define LAUNDER(p) ((int)(p))
 void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
-    volatile Vector3 unusedPos; /* written but never read; the ROM stores it */
+    Vector3 pos;
     Vector3 starPos;
     Vector3 popupPos;
     daStarBase_c *marker;
     daStar_c *star;
     Vector3 *markerPos;
-    int x, y, z;
     u8 filter;
 
     mDisappearTimer = 0;
@@ -387,17 +374,9 @@ void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
     filter = mSpawnFilter;
     if (filter != 0 && filter <= 7) {
         GiveRedCoins(player->mPlayerNo, 1);
-        x = mPosX;
-        unusedPos.x = x;
-        y = mPosY;
-        unusedPos.y = y;
-        z = mPosZ;
-        unusedPos.z = z;
-        y += 0x64000;
-        unusedPos.y = y;
-        popupPos.x = x;
-        popupPos.y = y;
-        popupPos.z = z;
+        pos = mPos;
+        pos.y += 0x64000;
+        popupPos = pos;
         SpawnNumber(popupPos, NumRedCoins(), 0, 0, 0);
         func_02012790(NumRedCoins() + 0x2f);
     }
@@ -407,30 +386,22 @@ void daCoin_c::func_ov002_020b16c4(daPly_c *player) {
     if (NumRedCoins() != 8) return;
     marker = func_ov002_020b1328();
     if (marker == 0) return;
-    markerPos = (Vector3 *)LAUNDER(&marker->mPosX);
-    x = markerPos->x;
-    starPos.x = x;
-    y = markerPos->y;
-    starPos.y = y;
-    z = markerPos->z;
-    starPos.z = z;
-    y += 0x78000;
-    starPos.y = y;
+    markerPos = &marker->mPos;
+    starPos = *markerPos;
+    starPos.y += 0x78000;
     star = (daStar_c *)dActor_c::Spawn(
         0xb2, mSpawnFilter | 0x40, starPos, 0, marker->mAreaId, -1);
     if (star == 0) return;
     if (mAreaId != star->mAreaId)
         star->mAreaId = -1;
     star->AddStarMarker();
-    *(unsigned short *)LAUNDER(&star->unk_4a2) |= 0x1000;
+    star->mStarFlags |= daStar_c::FLAG_COIN_REWARD;
     star->mMarkerID = marker->uniqueID;
-    *(u8 *)LAUNDER(&marker->mFlags) |= 4;
+    marker->mBits.spawned = 1;
 }
-#undef LAUNDER
 
 /* Yellow coin picked up: same sound choice as the red coin, 1 coin and 0x100
  * health. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1884EP7daPly_c
 void daCoin_c::func_ov002_020b1884(daPly_c *player) {
     mDisappearTimer = 0;
     KillAndTrackInDeathTable();
@@ -447,7 +418,6 @@ void daCoin_c::func_ov002_020b1884(daPly_c *player) {
  * below 0xf and the player's coin total has reached 100, spawns a STAR (0xb2,
  * param 0x20) 300 units above the player, sets the event bit and gives the
  * star a marker. */
-// @symbol func_ov002_020b18f0
 extern "C" {
 void func_ov002_020b18f0(char* self)
 {
@@ -483,7 +453,6 @@ void func_ov002_020b18f0(char* self)
  * it stops its disappear timer and hands out the reward for its coin type
  * (blue: func_ov002_020b1674, red: func_ov002_020b16c4, else
  * func_ov002_020b1884). Returns 1 when it did. */
-// @symbol _ZN8daCoin_c19func_ov002_020b19dcEv
 int daCoin_c::func_ov002_020b19dc()
 {
     unsigned int playerID = mdCc_c.otherOwner;
@@ -508,7 +477,6 @@ int daCoin_c::func_ov002_020b19dc()
 /* Follows mFollowTarget: copies its position (raised by 0xc8000), and marks
  * the coin for destruction once the disappear timer, counted up here, passes
  * 0x40. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1a60Ev
 void daCoin_c::func_ov002_020b1a60()
 {
     mDisappearTimer += 1;
@@ -533,7 +501,6 @@ void daCoin_c::func_ov002_020b1a60()
  * 0xb) as its own, gets an upward speed of 20 units, counts one bounce, enables
  * limited movement and sets the disappear timer to 0x1c2. On any landing on a
  * floor without surface flag 0x20 it plays sound 0x52 and hops (0x19000). */
-// @symbol _ZN8daCoin_c19func_ov002_020b1ad4Ev
 void daCoin_c::func_ov002_020b1ad4()
 {
     extern signed char gCurrentSublevel;
@@ -574,7 +541,6 @@ void daCoin_c::func_ov002_020b1ad4()
  * horizontal speed is given 0x13000 and a disappear timer of 0x12c; the hop
  * then heads back toward the closest player if one is within 1200 units, else
  * toward the farthest one. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1bfcEv
 void daCoin_c::func_ov002_020b1bfc()
 {
     func_ov002_020b13e0();
@@ -605,7 +571,6 @@ void daCoin_c::func_ov002_020b1bfc()
  * floor it accelerates along the surface normal by data_ov002_020ff078 for the
  * floor's class, caps the speed at 0x1c000 and steers toward the slope. The
  * coin settles (BEHAVIOR_RESTING) once its vertical speed is spent. */
-// @symbol _ZN8daCoin_c19func_ov002_020b1cc0Ev
 void daCoin_c::func_ov002_020b1cc0()
 {
     extern int data_ov002_020ff078[];
@@ -713,7 +678,6 @@ void daCoin_c::func_ov002_020b1cc0()
 
 /* Timer-only handler: counts down the disappear and no-collision timers and
  * kills the coin when the disappear timer reaches 1. */
-// @symbol _ZN8daCoin_c19func_ov002_020b2070Ev
 void daCoin_c::func_ov002_020b2070()
 {
     DecIfAbove0_Short(&mDisappearTimer);
@@ -726,7 +690,6 @@ void daCoin_c::func_ov002_020b2070()
  * filter is under 8). Once event bit mSpawnFilter is set it becomes active,
  * re-enables its collider, rests, and takes its disappear timer from the
  * BC_SWITCH actor (0xa) if there is one, else 0xfa. */
-// @symbol _ZN8daCoin_c19func_ov002_020b20b4Ev
 void daCoin_c::func_ov002_020b20b4()
 {
     dActor_c *found;
@@ -748,7 +711,6 @@ void daCoin_c::func_ov002_020b20b4()
 /* Movement handler that stops the coin dead on contact: shared tail, zero
  * horizontal speed on a wall, and on the ground zero vertical speed and
  * gravity, then BEHAVIOR_RESTING. */
-// @symbol _ZN8daCoin_c19func_ov002_020b2150Ev
 void daCoin_c::func_ov002_020b2150()
 {
     func_ov002_020b13e0();
@@ -760,7 +722,6 @@ void daCoin_c::func_ov002_020b2150()
     }
 }
 
-// @symbol _ZN8daCoin_c16CleanupResourcesEv
 s32 daCoin_c::CleanupResources()
 {
     /* Vtable slot 3. Releases the files this coin's own type loaded, gives up its
@@ -790,11 +751,10 @@ s32 daCoin_c::CleanupResources()
         }
     }
     if (mDisappearTimer != 0) return 1;
-    Particle::System::NewSimple(0xd2, mPosX, mPosY + 0x28000, mPosZ);
+    Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY + 0x28000, mPosZ);
     return 1;
 }
 
-// @symbol _ZN8daCoin_c6RenderEv
 int daCoin_c::Render()
 {
     int flags;
@@ -816,7 +776,6 @@ int daCoin_c::Render()
     return 1;
 }
 
-// @symbol _ZN8daCoin_c8BehaviorEv
 int daCoin_c::Behavior()
 {
     /* Plays the launch sound once, un-binds a blue coin from its area when it
@@ -824,7 +783,7 @@ int daCoin_c::Behavior()
      * selected by mBehaviorType and refreshes the collider. */
     typedef void (daCoin_c::*Handler)();
     extern Handler data_ov002_0210dc70[];
-    extern unsigned char data_0209f2d8;
+    extern unsigned char gGameMode;
 
     if ((unsigned int)(mCoinFlags << 0x1e) >> 0x1f) {
         mCoinFlags &= ~2;
@@ -845,9 +804,9 @@ int daCoin_c::Behavior()
     mEatingPlayer = 0;
     if (func_ov002_020b19dc() != 0) return 1;
     (this->*data_ov002_0210dc70[mBehaviorType])();
-    if ((int)(data_0209f2d8 == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
+    if ((int)(gGameMode == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
         mdCc_c.Clear();
-        if (mNoClsnTimer == 0 && LenVec3((char *)&mCamSpacePosX) < 0x64000) {
+        if (mNoClsnTimer == 0 && LenVec3(&mCamSpacePos) < 0x64000) {
             if (mCoinType != COIN_RED || mInBrickBlock == 0)
                 mdCc_c.Update();
         }
@@ -862,7 +821,6 @@ int daCoin_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN8daCoin_c13InitResourcesEv
 extern "C" {
 extern int SublevelToLevel(int i);
 extern void SetStarMarker(int i, void* actor, int v2);
@@ -887,9 +845,9 @@ s32 daCoin_c::InitResources()
     typedef struct { void* sfp; void* bmd; } FileEntry;
     extern Matrix4x3 IDENTITY_MATRIX4X3;
     extern s8 gCurrentSublevel;
-    extern u8 data_0209f220;
+    extern u8 gCurrentStarId;
     extern dActor_c *STAR_MARKERS[12];
-    extern u8 data_0209f2d8;
+    extern u8 gGameMode;
     extern FileEntry* data_ov002_020ff06c[];
     extern FileEntry* data_ov002_020ff060[];
     extern void* data_ov002_0210d9a8;
@@ -966,7 +924,7 @@ common:;
             mSpawnFilter = (u8)((param1 >> 4) & 7);
             dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)&data_ov002_0210d9a8);
             mCoinType = COIN_RED;
-            if (SublevelToLevel(gCurrentSublevel) == 0x13 || mSpawnFilter == data_0209f220) {
+            if (SublevelToLevel(gCurrentSublevel) == 0x13 || mSpawnFilter == gCurrentStarId) {
                 if (GetBitInDeathTable() == 0) {
                     for (slot = 0; slot < 0xc; slot = (s8)(slot + 1)) {
                         if (STAR_MARKERS[slot] == 0) {
@@ -1025,7 +983,7 @@ common:;
     } else {
         if (behavior == 6) {
             int inMode1;
-            inMode1 = data_0209f2d8;
+            inMode1 = gGameMode;
             inMode1 = (inMode1 == 1);
             if (inMode1 == 0) {
                 mDisappearTimer = 0xffffu;
@@ -1062,7 +1020,6 @@ flagsDone:;
     return 1;
 }
 
-// @symbol _ZN8daCoin_c13OnTurnIntoEggER7daPly_c
 void daCoin_c::OnTurnIntoEgg(daPly_c &player) {
     /* Vtable slot 19. Each path hands the payout to a helper. */
     int coinType = mCoinType;
@@ -1077,33 +1034,28 @@ void daCoin_c::OnTurnIntoEgg(daPly_c &player) {
     }
 }
 
-// @symbol _ZN8daCoin_c13OnYoshiTryEatEv
 s32 daCoin_c::OnYoshiTryEat()
 {
     return 4;
 }
 
 /* Blue, red and yellow coin factories, in ROM order. */
-// @symbol daCoin_c_classInit_BLUE_COIN
 extern "C" daCoin_c *daCoin_c_classInit_BLUE_COIN()
 {
     return new daCoin_c();
 }
 
-// @symbol daCoin_c_classInit_RED_COIN
 extern "C" daCoin_c *daCoin_c_classInit_RED_COIN()
 {
     return new daCoin_c();
 }
 
-// @symbol daCoin_c_classInit_COIN
 extern "C" daCoin_c *daCoin_c_classInit_COIN()
 {
     return new daCoin_c();
 }
 
 /* The three coin actor profiles. */
-// @symbol g_profile_COIN
 extern "C" SpawnInfo<daCoin_c> g_profile_COIN = {
     daCoin_c_classInit_COIN,
     0x0120,
@@ -1115,7 +1067,6 @@ extern "C" SpawnInfo<daCoin_c> g_profile_COIN = {
     0x00bb8000,
 };
 
-// @symbol g_profile_RED_COIN
 extern "C" SpawnInfo<daCoin_c> g_profile_RED_COIN = {
     daCoin_c_classInit_RED_COIN,
     0x0121,
@@ -1127,7 +1078,6 @@ extern "C" SpawnInfo<daCoin_c> g_profile_RED_COIN = {
     0x00bb8000,
 };
 
-// @symbol g_profile_BLUE_COIN
 extern "C" SpawnInfo<daCoin_c> g_profile_BLUE_COIN = {
     daCoin_c_classInit_BLUE_COIN,
     0x0122,
@@ -1142,7 +1092,6 @@ extern "C" SpawnInfo<daCoin_c> g_profile_BLUE_COIN = {
 /* Per-behavior handler table (indexed by mBehaviorType). */
 typedef void (daCoin_c::*CoinHandler)();
 
-// @symbol data_ov002_0210dc70
 CoinHandler data_ov002_0210dc70[9] = {
     &daCoin_c::func_ov002_020b2150,
     &daCoin_c::func_ov002_020b20b4,

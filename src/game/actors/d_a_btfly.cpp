@@ -57,6 +57,7 @@ enum daBtfly_c_AssetId {
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
@@ -98,7 +99,6 @@ void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 int RandomIntInternal(int *seed);
-extern s16 data_02082214[]; /* sin/cos; index (u16 angle >> 4) * 2 */
 extern Matrix4x3 data_020a0e68; /* scratch matrix */
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
@@ -114,17 +114,13 @@ extern ButterflyState data_ov100_02148628[];
 typedef void BgchInitAt_(void *w, void *actor, int radius, int height, void *a, void *b);
 }
 
-// @symbol _ZN9daBtfly_cD1Ev
-// @symbol _ZN9daBtfly_cD0Ev
 /* One ~daBtfly_c() emits both D1 and D0. */
 daBtfly_c::~daBtfly_c()
 {
 }
 
-// @symbol _ZN9daBtfly_c6State7Ev
 void daBtfly_c::State7()
 {
-    char *c = (char *)this; /* unused, but removing it renumbers the @NNN labels */
     int hasContact;
     int v;
 
@@ -134,7 +130,7 @@ void daBtfly_c::State7()
         int ang = mFlutterPhase;
         ang = (unsigned short)(short)ang;
         int idx = ang >> 4;
-        v = FX_MUL((int)data_02082214[(idx << 1) + 1], 0xa3);
+        v = FX_MUL(FX_CosIdx(idx), 0xa3);
         if (v > 0) {
             v = FX_MUL(v, 0x4800);
             *(u16 *)L(&mFlutterPhase) += 0x2710;
@@ -158,36 +154,27 @@ void daBtfly_c::State7()
         int noId = (mdCcAcPos_c.otherOwner == 0);
         hasContact = (noId == 0);
     }
-    if (hasContact == 0) {
-        if (mWithMeshClsn.IsOnWall() == 0) {
-            if (mWithMeshClsn.IsOnGround() == 0) {
-                /* mClsnFlags & 0x10. No accessor; IsOnGround is mFlags & 0x10. */
-                if (func_02035638((u8 *)&mWithMeshClsn) == 0) {
-                    if (mStateTimer <= 0x9d)
-                        goto cylinder_only;
+    /* mClsnFlags & 0x10 is func_02035638. No accessor; IsOnGround is mFlags & 0x10. */
+    if (hasContact || mWithMeshClsn.IsOnWall() || mWithMeshClsn.IsOnGround() ||
+        func_02035638((u8 *)&mWithMeshClsn) || mStateTimer > 0x9d) {
+        if (hasContact != 0) {
+            dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
+            if (hit != 0) {
+                int isPlayer = (hit->actorID == 0xbf);
+                if (isPlayer != 0) {
+                    Vector3 pos;
+                    pos.x = mPosX;
+                    pos.y = mPosY;
+                    pos.z = mPosZ;
+                    ((daPly_c *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
                 }
             }
         }
+
+        TriplePoofDust();
+        MarkForDestruction();
     }
 
-    if (hasContact != 0) {
-        dActor_c *hit = dActor_c::FindWithID(mdCcAcPos_c.otherOwner);
-        if (hit != 0) {
-            int isPlayer = (hit->actorID == 0xbf);
-            if (isPlayer != 0) {
-                Vector3 pos;
-                pos.x = mPosX;
-                pos.y = mPosY;
-                pos.z = mPosZ;
-                ((daPly_c *)hit)->Hurt(pos, 2, 0xc000, 1, 0, 1);
-            }
-        }
-    }
-
-    TriplePoofDust();
-    MarkForDestruction();
-
-cylinder_only:
     mdCcAcPos_c.Clear();
     {
         Vector3 off;
@@ -199,7 +186,6 @@ cylinder_only:
     mdCcAcPos_c.Update();
 }
 
-// @symbol _ZN9daBtfly_c6State6Ev
 void daBtfly_c::State6()
 {
     if (mStateTimer == 0x14) {
@@ -223,7 +209,6 @@ void daBtfly_c::State6()
     mState = 7;
 }
 
-// @symbol _ZN9daBtfly_c6State5Ev
 void daBtfly_c::State5()
 {
     s16 hAngle;
@@ -264,7 +249,6 @@ void daBtfly_c::State5()
         (s16)((((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) % 800) + 0x190));
 }
 
-// @symbol _ZN9daBtfly_c6State4Ev
 void daBtfly_c::State4()
 {
     int typ = param1 & 0xff;
@@ -280,17 +264,14 @@ void daBtfly_c::State4()
             int mask = typ & 0x30;
             struct AngleTriple { u16 w[3]; };
             AngleTriple rot;
-            int two = 2;
-            int three = 3;
-            i = 1;
             rot = *(AngleTriple *)&mPrevAngleX;
-            for (; i < 3; i++) {
+            for (i = 1; i < 3; i++) {
                 if (i == sb)
                     sel = 1;
                 else if (mask == 0x20)
-                    sel = two;
+                    sel = 2;
                 else
-                    sel = three;
+                    sel = 3;
                 rot.w[1] =
                     (s16)((s16)rot.w[1] +
                           (s16)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10));
@@ -316,7 +297,6 @@ void daBtfly_c::State4()
     mState = 5;
 }
 
-// @symbol _ZN9daBtfly_c6State3Ev
 void daBtfly_c::State3()
 {
     ApproachLinear(mPrevAngleY, Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX), 0x800);
@@ -326,10 +306,8 @@ void daBtfly_c::State3()
     {
         int *p = &mPosY;
         *p = *p -
-             (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
-              (short)data_02082214[((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 +
-                                   1] *
-                  (short)20 / 4);
+             (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
+              FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * (short)20 / 4);
     }
 
     mStateTimer = mStateTimer + 1;
@@ -345,7 +323,6 @@ void daBtfly_c::State3()
     mState = 1;
 }
 
-// @symbol _ZN9daBtfly_c6State2Ev
 void daBtfly_c::State2()
 {
     daPly_c *player;
@@ -385,9 +362,8 @@ void daBtfly_c::State2()
 
         UpdatePos(0);
 
-        mPosY -= (FX_MUL(mHorzSpeed, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]) +
-                  data_02082214[((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 2 + 1] *
-                      20 / 4);
+        mPosY -= (FX_MUL(mHorzSpeed, FX_SinIdx((unsigned short)mPrevAngleX >> 4)) +
+                  FX_CosIdx((unsigned short)(short)((mStateTimer << 16) / 100) >> 4) * 20 / 4);
         mStateTimer++;
         if (mStateTimer > 100)
             mStateTimer = 0;
@@ -399,7 +375,6 @@ void daBtfly_c::State2()
 }
 
 
-// @symbol _ZN9daBtfly_c6State1Ev
 void daBtfly_c::State1()
 {
     if (IsPlayerInRange(0x3e8) == 0)
@@ -409,7 +384,6 @@ void daBtfly_c::State1()
     mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos);
 }
 
-// @symbol _ZN9daBtfly_c6State0Ev
 void daBtfly_c::State0()
 {
     struct AngleTriple { u16 w[3]; };
@@ -418,27 +392,22 @@ void daBtfly_c::State0()
     int i;
     n = (param1 & 0xf) - 1;
     rot = *(AngleTriple *)&mPrevAngleX;
-    i = 0;
-    if (n > 0) {
-        do {
-            Vector3 pos;
-            int r;
-            r = RandomIntInternal(&data_0209e650.value);
-            pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosX;
-            r = RandomIntInternal(&data_0209e650.value);
-            pos.y = mPosY + ((int)((unsigned int)r % 40) << 13);
-            r = RandomIntInternal(&data_0209e650.value);
-            pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosZ;
-            r = RandomIntInternal(&data_0209e650.value);
-            rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
-            dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
-            i++;
-        } while (i < n);
+    for (i = 0; i < n; i++) {
+        Vector3 pos;
+        int r;
+        r = RandomIntInternal(&data_0209e650.value);
+        pos.x = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosX;
+        r = RandomIntInternal(&data_0209e650.value);
+        pos.y = mPosY + ((int)((unsigned int)r % 40) << 13);
+        r = RandomIntInternal(&data_0209e650.value);
+        pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + mPosZ;
+        r = RandomIntInternal(&data_0209e650.value);
+        rot.w[1] = (s16)((s16)rot.w[1] + ((r << 1) >> 16));
+        dActor_c::Spawn(0x150, 0, pos, (Vector3_16 *)&rot, mAreaId, -1);
     }
     mState = 1;
 }
 
-// @symbol _ZN9daBtfly_c16CleanupResourcesEv
 int daBtfly_c::CleanupResources()
 {
     gButterflyModelFile.Release();
@@ -448,12 +417,10 @@ int daBtfly_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daBtfly_c16OnPendingDestroyEv
 void daBtfly_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daBtfly_c6RenderEv
 int daBtfly_c::Render()
 {
     if (mState == 4)
@@ -465,7 +432,6 @@ int daBtfly_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daBtfly_c8BehaviorEv
 int daBtfly_c::Behavior()
 {
     (this->*data_ov100_02148628[mState])();
@@ -478,16 +444,14 @@ int daBtfly_c::Behavior()
 
         {
             int s = mHorzSpeed;
-            int idx = ((unsigned short)mPrevAngleX >> 4) << 1;
-            int velY = FX_MUL(-(int)data_02082214[idx], s);
-            mVertSpeed = velY;
-            int horiz = FX_MUL((int)data_02082214[idx + 1], s);
-            int idx2 = ((unsigned short)mPrevAngleY >> 4) << 1;
-            int velX = FX_MUL(horiz, (int)data_02082214[idx2]);
-            mSpeedX = velX;
-            int idx3 = (((unsigned short)mPrevAngleY >> 4) << 1) + 1;
-            int velZ = FX_MUL(horiz, (int)data_02082214[idx3]);
-            mSpeedZ = velZ;
+            int pitch = (unsigned short)mPrevAngleX >> 4;
+            mVertSpeed = FX_MUL(-FX_SinIdx(pitch), s);
+            int horiz = FX_MUL(FX_CosIdx(pitch), s);
+            int yaw = (unsigned short)mPrevAngleY >> 4;
+            mSpeedX = FX_MUL(horiz, FX_SinIdx(yaw));
+            /* The ROM recomputes the yaw index here; FX_CosIdx(yaw) is two
+             * words short. */
+            mSpeedZ = FX_MUL(horiz, FX_CosIdx((unsigned short)mPrevAngleY >> 4));
         }
         UpdatePosWithOnlySpeed(0);
         mStateTimer++;
@@ -511,7 +475,6 @@ int daBtfly_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daBtfly_c13InitResourcesEv
 int daBtfly_c::InitResources()
 {
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9d8);
@@ -568,7 +531,6 @@ int daBtfly_c::InitResources()
     return 1;
 }
 
-// @symbol daBtfly_c_classInit
 extern "C" daBtfly_c *daBtfly_c_classInit()
 {
     return new daBtfly_c();

@@ -51,6 +51,7 @@ enum daObjShell_c_AssetId {
 #include "dCc_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4; both
@@ -79,7 +80,6 @@ extern ShellAnimationFilePtr data_ov064_0211c9bc;
 extern ShellModelFilePtr data_ov064_0211c9c4;
 extern ShellAnimationFilePtr data_ov064_0211c9cc;
 
-// @symbol daObjShell_c_classInit
 /* Reconstructed source-style name: the cartridge proves daObjShell_c through
  * RTTI, allocation size and vtable identity, and the OBJ_SHELL profile at
  * 0x0211c5a4 takes this function's address as its factory slot; later EAD
@@ -103,7 +103,6 @@ extern "C" daObjShell_c *daObjShell_c_classInit() {
     return new daObjShell_c();
 }
 
-// @symbol _ZN12daObjShell_c13InitResourcesEv
 /* Both animations are loaded, then the model; the clam starts on the idle
  * animation at 0x0211c9bc. The cylinder is 0x64000 in both radius and height.
  */
@@ -119,7 +118,6 @@ int daObjShell_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c8BehaviorEv
 /* The clam's two-state open/shut cycle. State 0 is shut: on animation frame
  * 0x19 it plays sound 0x27, puffs particle 0x10c above itself, arms a
  * 10-frame counter and CLEARS the collision bit; otherwise, once the state
@@ -160,7 +158,7 @@ int daObjShell_c::Behavior() {
             u.shutPuff[1] = mPosY;
             u.shutPuff[2] = mPosZ;
             u.shutPuff[1] = u.shutPuff[1] + 0x32000;
-            Particle::System::NewSimple(0x10c, u.shutPuff[0], u.shutPuff[1], u.shutPuff[2]);
+            Particle::System::NewSimple(kPtclClamShut, u.shutPuff[0], u.shutPuff[1], u.shutPuff[2]);
             mShutTimer = 0xa;
             mStateTimer = 0;
             mdCcAc_c.flags &= ~1;
@@ -171,7 +169,8 @@ int daObjShell_c::Behavior() {
                 u.lungePuff[1] = mPosY;
                 u.lungePuff[2] = mPosZ;
                 u.lungePuff[1] = u.lungePuff[1] + 0x32000;
-                Particle::System::NewSimple(0x10b, u.lungePuff[0], u.lungePuff[1], u.lungePuff[2]);
+                Particle::System::NewSimple(kPtclClamLunge, u.lungePuff[0], u.lungePuff[1],
+                                            u.lungePuff[2]);
                 mStateTimer = 0;
                 mState = STATE_LUNGE;
                 mAnmModel.SetAnim((BCA_File *)data_ov064_0211c9cc.filePtr, 0x40000000, 0x1000, 0);
@@ -216,13 +215,11 @@ int daObjShell_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c6RenderEv
 int daObjShell_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c16CleanupResourcesEv
 /* Three releases, all of this overlay's own handles, and they are the same
  * three InitResources loads: the model at 0211c9c4 and the two animations at
  * 0211c9cc (the lunge) and 0211c9bc (the idle) that Behavior switches
@@ -236,7 +233,6 @@ int daObjShell_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN12daObjShell_c20UpdateModelTransformEv
 /* Rebuilds the model's world matrix from the actor's facing angle and its
  * position, the position scaled down by 8 the way every dExtAnmModel_c actor in
  * this overlay does it. InitResources calls it once, at spawn. Named after

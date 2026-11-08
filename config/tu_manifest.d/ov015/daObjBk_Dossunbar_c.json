@@ -640,24 +640,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@789",
+      "from": "@784",
       "to": "@939",
-      "evidence": "Compiler-local registration node at its original address 0x021149c8, given a unique short label so overlay globals cannot collide."
+      "evidence": "Compiler-local registration node at its original address 0x021149c8, given a unique short label so overlay globals cannot collide. Re-keyed from @787 to @784 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
     },
     {
-      "from": "@790",
+      "from": "@785",
       "to": "@940",
-      "evidence": "Compiler-local registration node at its original address 0x021149d4, given a unique short label so overlay globals cannot collide."
+      "evidence": "Compiler-local registration node at its original address 0x021149d4, given a unique short label so overlay globals cannot collide. Re-keyed from @788 to @785 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
     },
     {
-      "from": "@791",
+      "from": "@786",
       "to": "@943",
-      "evidence": "Compiler-local registration node at its original address 0x021149e0, given a unique short label so overlay globals cannot collide."
+      "evidence": "Compiler-local registration node at its original address 0x021149e0, given a unique short label so overlay globals cannot collide. Re-keyed from @789 to @786 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
     },
     {
-      "from": "@792",
+      "from": "@787",
       "to": "@963",
-      "evidence": "Compiler-local registration node at its original address 0x021149bc, given a unique short label so overlay globals cannot collide."
+      "evidence": "Compiler-local registration node at its original address 0x021149bc, given a unique short label so overlay globals cannot collide. Re-keyed from @790 to @787 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
     }
   ],
   "symbol_binding_rewrites": [

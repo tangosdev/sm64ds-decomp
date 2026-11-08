@@ -30,13 +30,11 @@
  *    their names keep the ROM addresses for tooling, the state tables' PMF
  *    and vtable-slot records resolve through symbols.txt.
  *  - Spellings kept because the bytes depend on them (most are noted at the
- *    function): the daKpaTail_c::Behavior pointer bump to +0x5c and its volatile
- *    array; the mOpacity += / -= 0x14 form; the angle-copy pointer in
+ *    function): the mOpacity += / -= 0x14 form; the angle-copy pointer in
  *    func_ov060_02115d68; the overwritten first pos[] stores in
  *    func_ov060_02115518; the (unsigned short) and *(u16 *)& angle reads; the
  *    new_var temp and the `dp != 0 && this != 0` barrier in
- *    func_ov060_021140c0; the new_var2 temp in func_ov060_02114858; the volatile locals in func_ov060_021135fc,
- *    func_ov060_021132a4, func_ov060_02112ee0 and func_ov060_02112bfc; the gotos
+ *    func_ov060_021140c0; the volatile walk pointer in func_ov060_02112bfc; the gotos
  *    in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset reads; and the
  *    `obj` copy of this in Bowser_IsAnimAtLastFrame.
  *  - Callees known only by address, whose purpose this file does not establish:
@@ -133,9 +131,11 @@ enum daKpa_c_AssetId {
 #include "Sound.h"
 #include "Message.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* -------------------------------------------------------------------------- */
@@ -300,8 +300,7 @@ struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
-extern dCamera_c *data_0209f318;
-extern short data_02082214[];
+extern dCamera_c *gCamera;
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
 extern int func_020092c4(void*, void*, void*);
@@ -472,7 +471,7 @@ typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2
 /* TUBUILD CONFLICT -- alternate declaration of func_ov060_021123a0, from the legacy file for func_ov060_02115d68, NOT applied: extern "C" void func_ov060_021123a0(void *a, int b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern char* data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern char* gCamera; */
 
 /* TUBUILD CONFLICT -- alternate declaration of func_ov060_02111cc0, from the legacy file for _ZN7daKpa_c13InitResourcesEv, NOT applied: extern void func_ov060_02111cc0(void *c, int a, int b); */
 }
@@ -485,8 +484,6 @@ typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2
  * ends the object. */
 #pragma defer_codegen off
 
-// @symbol _ZN7daKpa_cD1Ev
-// @symbol _ZN7daKpa_cD0Ev
 /*
 Bowser's destructors. The body is empty: the member and base teardown and the
 D1/D0 pair are compiler-generated. */
@@ -496,8 +493,6 @@ daKpa_c::~daKpa_c()
 }
 #endif
 
-// @symbol _ZN11daKpaTail_cD1Ev
-// @symbol _ZN11daKpaTail_cD0Ev
 /*
 The tail's destructors. The body is empty, as for Bowser's. */
 #ifndef _MSC_VER
@@ -511,7 +506,6 @@ daKpaTail_c::~daKpaTail_c()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 80 -- daKpa_c_classInit, 0x02116428, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol daKpa_c_classInit
 /* Reconstructed source-style name: SM64DS proves daKpa_c through RTTI,
  * allocation size, vtable identity, and the KOOPA registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -529,7 +523,6 @@ extern "C" daKpa_c *daKpa_c_classInit(void)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 79 -- daKpaTail_c_classInit, 0x021163f0, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol daKpaTail_c_classInit
 /* Reconstructed source-style name: SM64DS proves daKpaTail_c through RTTI,
  * allocation size, vtable identity, and the KOOPATAIL registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -542,7 +535,6 @@ extern "C" daKpaTail_c *daKpaTail_c_classInit(void)
     return new daKpaTail_c;
 }
 
-// @symbol _ZN11daKpaTail_c13InitResourcesEv
 /*
 Tail setup: a single cylinder collider (dCcAc_c::Init) with radius 0x32000 (50
 units), height 0x50000 (80 units), flags 0x800000 and vulnFlags 0x1000, which is
@@ -554,7 +546,6 @@ int daKpaTail_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daKpa_c13InitResourcesEv
 /*
 Bowser's setup, in order: load the model file and hand it to dExtModel_c::SetFile,
 load the 0x1c Animation files and the six dExtAnmTexPat_c files, then two more
@@ -660,42 +651,29 @@ int daKpa_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN11daKpaTail_c8BehaviorEv
 /*
 Per frame: find Bowser by mBowserUniqueID (return 1 if he is gone), put the tail
 0x8c (140) units behind him -- his position plus 0x8c times the table entry for
-mPrevAngleY + 0x8000, Y copied as is -- run func_ov060_02115b84, return 1. */
-/*
- * data_02082214 is a sin/cos table indexed by angle>>4, two shorts per entry.
- *
- * THE POINTER BUMP AND THE volatile ARE LOAD-BEARING, both measured. Reading
- * the position the obvious way -- `a->mPosX` and so on -- does not reproduce the
- * ROM; reusing `a` as a pointer to mPos and loading the three words off it does.
- * A separate `Vector3 *` local instead of reusing `a` moves this function's
- * bytes and renumbers every @NNN after it.
- */
+mPrevAngleY + 0x8000, Y copied as is -- run func_ov060_02115b84, return 1.
+   The copy goes through a held `const Vector3 &`; `pos = a->mPos` directly is
+   a word short (0xb4 vs 0xb8). */
 int daKpaTail_c::Behavior()
 {
     dActor_c* a = dActor_c::FindWithID(mBowserUniqueID);
     if (!a) return 1;
 
-    int ang = a->mPrevAngleY;
-    a = (dActor_c *)&a->mPos;
-    int x = ((Vector3 *)a)->x;
-    volatile int v[3];
-    v[0] = x;
-    v[1] = ((Vector3 *)a)->y;
-    v[2] = ((Vector3 *)a)->z;
-    int j = 2 * (((unsigned short)(short)(ang + 0x8000)) >> 4);
-    mPosX = (short)data_02082214[j] * 0x8c + x;
-    mPosY = v[1];
-    mPosZ = (short)data_02082214[j + 1] * 0x8c + v[2];
+    s16 ang = a->mPrevAngleY + 0x8000;
+    Vector3 pos;
+    const Vector3 &p = a->mPos;
+    pos = p;
+    mPosX = pos.x + FX_SinIdx((u16)ang >> 4) * 0x8c;
+    mPosY = pos.y;
+    mPosZ = pos.z + FX_CosIdx((u16)ang >> 4) * 0x8c;
 
     func_ov060_02115b84();
     return 1;
 }
 
-// @symbol _ZN7daKpa_c8BehaviorEv
 /*
 One frame of Bowser, in order: advance the random state once (result unused);
 find the closest daPly_c and record the angle and the horizontal distance to him
@@ -732,7 +710,7 @@ int daKpa_c::Behavior()
     mAnmModel.speed = mAnimSpeed;
     mAnmModel.Advance();
     func_ov060_0211577c();
-    data_0209f318->mFramedActor = this;
+    gCamera->mFramedActor = this;
     mdCcAcPos_c.Clear();
     Vector3 v;
     v.z = 0x50000;
@@ -747,7 +725,6 @@ int daKpa_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11daKpaTail_c6RenderEv
 /*
 Draws nothing; returns 1. */
 int daKpaTail_c::Render()
@@ -755,7 +732,6 @@ int daKpaTail_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daKpa_c6RenderEv
 /*
 Draw Bowser. Skipped while mOpacity < 8, where the opacity handed to the model
 (mOpacity >> 3, see func_ov060_0211577c) would be 0. Otherwise step the texture
@@ -771,14 +747,12 @@ int daKpa_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daKpa_c16OnPendingDestroyEv
 /*
 Empty override: the ROM body is a single `bx lr`. */
 void daKpa_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN11daKpaTail_c16CleanupResourcesEv
 /*
 Releases nothing; returns 1. The tail loads no files of its own:
 daKpa_c::CleanupResources releases everything the fight loaded. */
@@ -787,7 +761,6 @@ int daKpaTail_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daKpa_c16CleanupResourcesEv
 /*
 Release every handle InitResources loaded (the model, the 0x1c animations, the six
 texture patterns, then two more dExtSimpleModel_c files), call func_02011cfc (no arguments;
@@ -821,7 +794,6 @@ int daKpa_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 69 -- func_ov060_02115d68, 0x02115d68, size 0x118 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daKpaTail_c19func_ov060_02115d68Ev
 /*
 Tail state BOWSER_TAIL_FREE (0), per frame: nobody holds the tail. Switch the
 tail's own collider on (clear its disabled bit). If Bowser is in
@@ -871,7 +843,6 @@ skip_13:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 68 -- func_ov060_02115d50, 0x02115d50, size 0x18 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daKpaTail_c19func_ov060_02115d50Ev
 /*
 Tail state BOWSER_TAIL_COOLDOWN (1), per frame: once mTimer is above 0x1e (30)
 the tail goes back to BOWSER_TAIL_FREE. */
@@ -883,7 +854,6 @@ void daKpaTail_c::func_ov060_02115d50(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 67 -- func_ov060_02115c1c, 0x02115c1c, size 0x134 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daKpaTail_c19func_ov060_02115c1cEv
 /*
 Tail state BOWSER_TAIL_HOLDING (2), per frame. If Bowser is in
 BOWSER_STATE_ARENA_TILT, switch his body collider on and go to BOWSER_TAIL_FREE
@@ -946,7 +916,6 @@ tail:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 66 -- func_ov060_02115b84, 0x02115b84, size 0x98 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daKpaTail_c19func_ov060_02115b84Ev
 /*
 The tail's per-frame dispatcher (called from daKpaTail_c::Behavior). Find
 Bowser; run the handler for mState through the table at data_ov060_0211ae9c
@@ -973,7 +942,6 @@ void daKpaTail_c::func_ov060_02115b84(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 65 -- func_ov060_02115b0c, 0x02115b0c, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115b0cEv
 /*
 Landing effect for the variant-2 fight (nothing happens for the other variants):
 dActor_c::Earthquake at his position with the Fix12 argument 0x7d0000 (2000.0,
@@ -986,13 +954,12 @@ void daKpa_c::func_ov060_02115b0c(){
     v.y = this->mPosY;
     v.z = this->mPosZ;
     Earthquake(v, 0x7d0000);
-    dActor_c::Spawn(BOWSER_ACTOR_FIRERING, 0, *((struct Vector3*)(&this->mPosX)), 0, this->mAreaId, -1);
+    dActor_c::Spawn(BOWSER_ACTOR_FIRERING, 0, mPos, 0, this->mAreaId, -1);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 64 -- func_ov060_02115a84, 0x02115a84, size 0x88 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115a84EPc
 /*
 Landing-dust helper. On a frame where the floor collider reports a fresh ground
 hit (dBgCh_Actr::JustHitGround), add one to the u16 counter passed in (every
@@ -1008,13 +975,12 @@ void daKpa_c::func_ov060_02115a84(char* counter){
     v.y = this->mPosY;
     v.z = this->mPosZ;
     this->LandingDustAt(v, 0);
-    func_02012694(BOWSER_SND_LAND_SOFT, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(BOWSER_SND_LAND_SOFT, &mCamSpacePos);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 63 -- Bowser_IsAnimAtLastFrame, 0x02115a30, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c24Bowser_IsAnimAtLastFrameEv
 /*
 True once the model's animation has reached its last frame or will reach it on
 the coming advance (dExtFrameCtrl_c::Finished, or WillHitFrame(frame count - 1)).
@@ -1031,7 +997,6 @@ bool daKpa_c::Bowser_IsAnimAtLastFrame(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 62 -- func_ov060_0211577c, 0x0211577c, size 0x2b4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_0211577cEv
 /*
 Per-frame model placement, called from Behavior. 1) On the ground and not held,
 set mAngleX from the floor normal mGroundNormal and mAngleY, and mAngleZ from the
@@ -1114,7 +1079,6 @@ skip_angles:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 61 -- func_ov060_02115744, 0x02115744, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115744Ev
 /*
 First animation of the turn / intro sequence: play animation 0x13 once; when it
 reaches its last frame, set mHorzSpeed to 0x3000 (3.0) and return 1, otherwise
@@ -1133,7 +1097,6 @@ int daKpa_c::func_ov060_02115744(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 60 -- func_ov060_02115718, 0x02115718, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115718Ev
 /*
 Play animation 0x11 looping with mHorzSpeed 0x3000 (3.0); return whether it is at
 its last frame. */
@@ -1146,7 +1109,6 @@ int daKpa_c::func_ov060_02115718(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 59 -- func_ov060_021156ec, 0x021156ec, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021156ecEv
 /*
 Play animation 0x12 once with mHorzSpeed 0; return whether it is at its last
 frame. */
@@ -1159,7 +1121,6 @@ int daKpa_c::func_ov060_021156ec(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 58 -- func_ov060_02115518, 0x02115518, size 0x1d4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115518Ev
 /*
 The intro conversation, one step per mTalkStep (nothing happens without a target
 daPly_c). Step 0: daPly_c::StartTalk(this, 1); when it succeeds, mState becomes
@@ -1232,7 +1193,7 @@ void daKpa_c::func_ov060_02115518(){
                 }
             }
             this->mTalkStep++;
-            func_02012694(BOWSER_SND_TALK_START, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_TALK_START, &mCamSpacePos);
             return;
 
         case 2:
@@ -1257,7 +1218,6 @@ void daKpa_c::func_ov060_02115518(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 57 -- func_ov060_021154e8, 0x021154e8, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021154e8Ev
 /*
 State BOWSER_STATE_INTRO_WAIT (5): run the intro camera (func_ov060_02111f08),
 stand still on the idle animation (0x10) and run the conversation
@@ -1272,7 +1232,6 @@ void daKpa_c::func_ov060_021154e8(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 56 -- func_ov060_021153f8, 0x021153f8, size 0xf0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021153f8Ev
 /*
 State BOWSER_STATE_INTRO (6): run the intro camera (func_ov060_02111f08), then by
 mStep. Step 0: func_ov060_02115744 (animation 0x13), advancing when it returns 1.
@@ -1309,7 +1268,6 @@ void daKpa_c::func_ov060_021153f8(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 55 -- func_ov060_02115314, 0x02115314, size 0xe4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115314Ev
 /*
 Idle pick for variant 0, called from func_ov060_02114f88. With mPickToggle 0: if
 he faces the target (BOWSER_COND_FACING_TARGET), go to BOWSER_STATE_ANIM_CHAIN
@@ -1348,7 +1306,6 @@ void daKpa_c::func_ov060_02115314(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 54 -- func_ov060_021151d4, 0x021151d4, size 0x140 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021151d4Ev
 /*
 Idle pick for variant 1, called from func_ov060_02114f88. With mPickToggle set:
 clear it and go to BOWSER_STATE_TURN_TO_TARGET. Otherwise, if he is not facing
@@ -1406,7 +1363,6 @@ clear_toggle:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 53 -- func_ov060_021150d0, 0x021150d0, size 0x104 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021150d0Ev
 /*
 Choose an attack for variant 2, called from func_ov060_02115060. If he faces the
 target: with DistToCPlayer() < 0x3e8000 (1000 units), a draw modulo 10 below 4
@@ -1441,7 +1397,6 @@ void daKpa_c::func_ov060_021150d0(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 52 -- func_ov060_021150c4, 0x021150c4, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021150c4Ev
 /*
 Pick BOWSER_STATE_JUMP (the choice for variants with mChooseJumpOnly set). */
 void daKpa_c::func_ov060_021150c4(){
@@ -1451,7 +1406,6 @@ void daKpa_c::func_ov060_021150c4(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 51 -- func_ov060_02115060, 0x02115060, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115060Ev
 /*
 Idle pick for variant 2, called from func_ov060_02114f88. With mPickToggle 0:
 func_ov060_021150d0, or func_ov060_021150c4 when mChooseJumpOnly is set, then set
@@ -1478,7 +1432,6 @@ void daKpa_c::func_ov060_02115060(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 50 -- func_ov060_02115018, 0x02115018, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02115018Ev
 /*
 Fall catch for the variant-2 jumps: if he is moving down (mVertSpeed < 0) and
 mPosY is below mHomePosY - 0x12c000 (300 units below the arena level), put him
@@ -1500,7 +1453,6 @@ void daKpa_c::func_ov060_02115018(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 49 -- func_ov060_02114ff8, 0x02114ff8, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02114ff8Ev
 /*
 State BOWSER_STATE_WAIT_ANIM_END (0x12): back to BOWSER_STATE_IDLE once the
 animation is at its last frame. */
@@ -1514,7 +1466,6 @@ void daKpa_c::func_ov060_02114ff8(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 48 -- func_ov060_02114f88, 0x02114f88, size 0x70 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02114f88Ev
 /*
 State BOWSER_STATE_IDLE (0): clear unk_422, play the idle animation (0x10), zero
 mSpinSpeed and both speeds, then let the variant pick the next state:
@@ -1534,7 +1485,6 @@ void daKpa_c::func_ov060_02114f88(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 47 -- func_ov060_02114e9c, 0x02114e9c, size 0xec */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02114e9cEv
 /*
 State BOWSER_STATE_ANIM_CHAIN (0xf): mHorzSpeed 0. While animation 8 is playing
 (data_ov060_0211ac20 is entry 8 of the animation table), sound 0xb5 plays when
@@ -1547,7 +1497,7 @@ void daKpa_c::func_ov060_02114e9c(){
     this->mHorzSpeed = 0;
     if ((int)this->mAnmModel.file == (int)data_ov060_0211ac20.filePtr) {
         if (this->mAnmModel.WillHitFrame(8)) {
-            func_02012694(BOWSER_SND_B5, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_B5, &mCamSpacePos);
         }
     }
     if (Bowser_IsAnimAtLastFrame() == 0) return;
@@ -1569,7 +1519,6 @@ void daKpa_c::func_ov060_02114e9c(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 46 -- func_ov060_02114d08, 0x02114d08, size 0x194 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02114d08Ev
 /*
 State BOWSER_STATE_TURN_TO_TARGET (0xe). Each frame turn mAngleY toward
 mAngleToTarget by 0x400 (5.6 degrees) for variant 1 and for mHealth above 2, by
@@ -1629,7 +1578,6 @@ void daKpa_c::func_ov060_02114d08(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 45 -- func_ov060_02114b60, 0x02114b60, size 0x1a8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02114b60Ev
 /*
 State BOWSER_STATE_VANISH_DASH (0x10). The body collider is switched off every
 frame. Step 0: target opacity 0, mStepCounter = 0x1e; play sound 0xb9 on the first
@@ -1650,7 +1598,7 @@ void daKpa_c::func_ov060_02114b60(){
             this->mStepCounter = 0x1e;
             if ((this->mTimer) == 0)
             {
-                func_02012694(BOWSER_SND_VANISH, (const Vector3 *)(&this->mCamSpacePosX));
+                func_02012694(BOWSER_SND_VANISH, &mCamSpacePos);
             }
             if ((this->mOpacity) != 0)
             {
@@ -1715,7 +1663,6 @@ void daKpa_c::func_ov060_02114b60(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 44 -- func_ov060_02114858, 0x02114858, size 0x308 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02114858Ev
 /*
 State BOWSER_STATE_FIRE_BREATH (8). While animation 0x15 plays, or animation 0x16
 after frame 0x2a (data_ov060_0211acd8 and data_ov060_0211acf0 are entries 0x15
@@ -1728,52 +1675,28 @@ BOWSER_COND_BREATHING is set every call. At the last frame of an animation, by
 mStep: 0 starts animation 0x16 (once) with sound 0xb5, 1 starts 0x15 (looping),
 2 starts 0x17 (once), 3 goes to BOWSER_STATE_IDLE and clears the flag. */
 void daKpa_c::func_ov060_02114858(){
-    int new_var2;
-    s32 v134 = (s32)this->mAnmModel.file;
-    if ((v134 == (int)data_ov060_0211acd8.filePtr) ||
-        ((v134 == (int)data_ov060_0211acf0.filePtr) &&
-         ((((u32)(((u32)(this->mAnmModel.currFrame)) << 4)) >> 16) > 0x2a))) {
-        s32 v12c = this->mAnmModel.currFrame;
-        s32 v450 = *(volatile s32 *)&this->mSoundID;
-        s32 r4 = ((u32) (v12c << 4)) >> 16;
-        if (v450 != 0x180)
-        {
-            this->mSoundHandle = 0;
-        }
-        this->mSoundID = BOWSER_SND_FIRE_LOOP;
-        this->mSoundHandle =
-            Sound::PlayLong(this->mSoundHandle, 3, this->mSoundID, this->mCamSpacePos, 0);
-        u16 t = this->mFireTimer;
-        if ((t % 5) == 0)
-        {
-            s32 pos[3];
-            pos[0] = this->mPosX;
-            pos[1] = this->mPosY;
-            pos[2] = this->mPosZ;
-            {
-                s32 y = pos[1];
-                u16 ang = this->mPrevAngleY;
-                s16 *tbl = data_02082214;
-                s16 sx = tbl[(ang >> 4) * 2];
-                new_var2 = (sx * 0xc8) + pos[0];
-                pos[1] = y + 0xb4000;
-                pos[0] = new_var2;
-                ang = this->mPrevAngleY;
-                pos[2] = (tbl[((ang >> 4) * 2) + 1] * 0xc8) + pos[2];
-            }
-            if ((r4 >= 0xf) && (r4 < 0x14))
-            {
-                s32 rnd = RandomIntInternal(&data_0209e650.value);
-                u32 hi = ((u32) rnd) >> 16;
-                u32 m = hi % 10u;
-                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 0x11, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
-            }
-            else
-            {
-                s32 rnd = RandomIntInternal(&data_0209e650.value);
-                u32 hi = ((u32) rnd) >> 16;
-                u32 m = hi % 10u;
-                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE, (m << 10) | 1, *((Vector3 *) pos), (const Vector3_16 *) (&this->mPrevAngleX), (int)this->mAreaId, -1);
+    if (mAnmModel.file == data_ov060_0211acd8.filePtr ||
+        (mAnmModel.file == data_ov060_0211acf0.filePtr &&
+         (u16)((u32)mAnmModel.currFrame >> 12) > 0x2a)) {
+        int frame = (u16)((u32)mAnmModel.currFrame >> 12);
+        if (mSoundID != 0x180)
+            mSoundHandle = 0;
+        mSoundID = BOWSER_SND_FIRE_LOOP;
+        mSoundHandle = Sound::PlayLong(mSoundHandle, 3, mSoundID, mCamSpacePos, 0);
+        if (mFireTimer % 5 == 0) {
+            Vector3 pos = mPos;
+            pos.x += FX_SinIdx((u16)mPrevAngleY >> 4) * 0xc8;
+            pos.y += 0xb4000;
+            pos.z += FX_CosIdx((u16)mPrevAngleY >> 4) * 0xc8;
+            if (frame >= 0xf && frame < 0x14) {
+                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE,
+                                ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 |
+                                    0x11,
+                                pos, &mPrevAngle, mAreaId, -1);
+            } else {
+                dActor_c::Spawn(BOWSER_ACTOR_KOOPAFIRE,
+                                ((u32)RandomIntInternal(&data_0209e650.value) >> 16) % 10 << 10 | 1,
+                                pos, &mPrevAngle, mAreaId, -1);
             }
         }
         this->mFireTimer++;
@@ -1787,7 +1710,7 @@ void daKpa_c::func_ov060_02114858(){
     {
         case 0:
             func_ov060_02111cc0(0x16, 0x40000000);
-            func_02012694(BOWSER_SND_B5, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_B5, &mCamSpacePos);
             this->mStep++;
             return;
 
@@ -1811,7 +1734,6 @@ void daKpa_c::func_ov060_02114858(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 43 -- func_ov060_021146d0, 0x021146d0, size 0x188 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021146d0Ev
 /*
 State BOWSER_STATE_HURT_HOP (0xc), the knock-back after a bomb hit. On the first
 frame: mHorzSpeed -0x1c000 (-28.0), mVertSpeed 0x50000 (80.0), mAngleY = angle to
@@ -1835,7 +1757,7 @@ void daKpa_c::func_ov060_021146d0(){
         this->mAngleY = this->mAngleToCenter + 0x8000;
         this->unk_422 = 1;
         this->mAngleX = -0xc00;
-        func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
     } else {
         if ((u16)this->mAngleX > 0xc00) {
             this->mAngleX -= 0xc00;
@@ -1873,7 +1795,6 @@ void daKpa_c::func_ov060_021146d0(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 42 -- func_ov060_0211469c, 0x0211469c, size 0x34 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_0211469cEv
 /*
 Jump wind-up: play animation 0xb once; return 1 when the animation will cross
 frame 0x20 on this advance, otherwise 0. */
@@ -1887,7 +1808,6 @@ int daKpa_c::func_ov060_0211469c(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 41 -- func_ov060_021145d4, 0x021145d4, size 0xc8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021145d4Ev
 /*
 Jump landing check. If the floor collider says he is on the ground: zero both
 speeds, call func_0200fa04 with his position, play animation 0xc once, play sound
@@ -1905,7 +1825,7 @@ int daKpa_c::func_ov060_021145d4(){
         v.z = this->mPosZ;
         func_0200fa04(this, &v, 0);
         func_ov060_02111cc0(0xc, 0x40000000);
-        func_02012694(BOWSER_SND_LAND, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LAND, &mCamSpacePos);
         if(this->mVariantID == 0){
             b = (this->mDistToTarget >= 0x352000);
             if (!this->mTargetPlayer->IsInAir())
@@ -1919,7 +1839,6 @@ int daKpa_c::func_ov060_021145d4(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 40 -- func_ov060_021145a8, 0x021145a8, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021145a8Ev
 /*
 Variant 2 only, and only while BOWSER_COND_RECOVERING is set: when mDistToCenter
 is above 0x3e8000 (1000 units) set mHorzSpeed to 0x1e000 (30.0). */
@@ -1934,7 +1853,6 @@ void daKpa_c::func_ov060_021145a8(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 39 -- func_ov060_021143b8, 0x021143b8, size 0x1f0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021143b8Ev
 /*
 State BOWSER_STATE_JUMP (0xd). Step 0: wind-up (func_ov060_0211469c); then
 mVertSpeed = 0x28000 (40.0) for variant 2 while BOWSER_COND_RECOVERING is set,
@@ -1959,7 +1877,7 @@ void daKpa_c::func_ov060_021143b8(){
         } else {
             this->mVertSpeed = 0x32000;
         }
-        func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
         this->mStepCounter = 0;
         this->mHorzSpeed = 0;
         func_ov060_021145a8();
@@ -2009,7 +1927,6 @@ void daKpa_c::func_ov060_021143b8(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 38 -- func_ov060_02114300, 0x02114300, size 0xb8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02114300Ev
 /*
 State BOWSER_STATE_HOP (0x11). Step 0: wind-up (func_ov060_0211469c); then
 mVertSpeed 0x32000 (50.0), mHorzSpeed 0x19000 (25.0), mStepCounter 0, sound 0xb1,
@@ -2023,7 +1940,7 @@ void daKpa_c::func_ov060_02114300(){
         this->mHorzSpeed = 0x19000;
         this->mStepCounter = 0;
         this->mStep++;
-        func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
     } else if (k == 1) {
         if (!func_ov060_021145d4()) return;
         this->mStep++;
@@ -2035,7 +1952,6 @@ void daKpa_c::func_ov060_02114300(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 37 -- func_ov060_021142b4, 0x021142b4, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021142b4Ev
 /*
 State BOWSER_STATE_PLAY_ANIM_1B (0xa): mHorzSpeed 0, clear mStepCounter on the
 first frame, play animation 0x1b once, then BOWSER_STATE_TURN_IN_PLACE at its last
@@ -2055,7 +1971,6 @@ void daKpa_c::func_ov060_021142b4(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 36 -- func_ov060_021140c0, 0x021140c0, size 0x1f4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021140c0Ev
 /*
 State BOWSER_STATE_FIREBALLS (9). On the first frame choose mFireballShots: 3 if
 the target daPly_c has 4 or fewer health (daPly_c::GetHealth), else a random 1 to 3
@@ -2117,7 +2032,7 @@ void daKpa_c::func_ov060_021140c0(){
             dir[0] = 0x1000;
             grav = 0xa000;
             SpawnFireball(pos, (const Vector3_16 *)dp, 0x1e000, grav, 0);
-            func_02012694(BOWSER_SND_FIREBALL, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_FIREBALL, &mCamSpacePos);
         }
     }
     if (Bowser_IsAnimAtLastFrame() != 0) {
@@ -2136,7 +2051,6 @@ void daKpa_c::func_ov060_021140c0(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 35 -- func_ov060_02113ff4, 0x02113ff4, size 0xcc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113ff4Eti
 /*
 Turn in place for the caller's frame count: by mStep, play animation 0x13 once,
 then 0x12 once (each step ends at the animation's last frame), then the idle
@@ -2169,7 +2083,6 @@ int daKpa_c::func_ov060_02113ff4(unsigned short minFrames, int turnStep){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 34 -- func_ov060_02113fcc, 0x02113fcc, size 0x28 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113fccEv
 /*
 State BOWSER_STATE_TURN_IN_PLACE (0xb): func_ov060_02113ff4 with 0x3e frames and
 0x200 (2.8 degrees) per frame, about 177 degrees in all (63 calls, mTimer 0 to
@@ -2184,7 +2097,6 @@ void daKpa_c::func_ov060_02113fcc(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- func_ov060_02113d8c, 0x02113d8c, size 0x240 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113d8cEv
 /*
 State BOWSER_STATE_CHARGE (7). mHorzSpeed is zeroed on the first frame. By mStep:
 0 plays animation 0x18 once, clears mStepCounter and, at its last frame, goes to
@@ -2230,8 +2142,9 @@ void daKpa_c::func_ov060_02113d8c(){
     case 3:
         this->mStepCounter = 0;
         func_ov060_02111cc0(0x1a, 0x40000000);
-        this->mParticleHandle = (unsigned int)Particle::System::New(
-            this->mParticleHandle, 0x101, this->mPosX, this->mPosY + 0x32000, this->mPosZ, 0, 0);
+        this->mParticleHandle =
+            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPosX,
+                                                this->mPosY + 0x32000, this->mPosZ, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;
@@ -2265,7 +2178,6 @@ void daKpa_c::func_ov060_02113d8c(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- func_ov060_02113d20, 0x02113d20, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113d20Ev
 /*
 Bomb hit test: find the closest KIRAI actor (0x11c, daKirai_c); if it reports
 that his position is close enough (IsInTriggerRange), set it off
@@ -2290,7 +2202,6 @@ int daKpa_c::func_ov060_02113d20(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- func_ov060_02113b5c, 0x02113b5c, size 0x1c4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113b5cEv
 /*
 State BOWSER_STATE_THROWN (1), the handler that runs after the tail lets go.
 mStepCounter is cleared for the first two frames. The ground height under him is
@@ -2366,7 +2277,6 @@ void daKpa_c::func_ov060_02113b5c(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- func_ov060_02113a94, 0x02113a94, size 0xc8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113a94Ev
 /*
 Keep him out of sight under the arena during BOWSER_STATE_RECOVER: target
 opacity 0; once mOpacity is 0, zero both speeds, put him 0x3e8000 (1000 units)
@@ -2379,14 +2289,15 @@ void daKpa_c::func_ov060_02113a94(){
     this->mHorzSpeed = 0;
     this->mVertSpeed = 0;
     this->mPosY = this->mHomePosY - 0x3e8000;
-    if (Vec3_HorzLen((Vector3*)(&this->mPosX)) < 0xed8000) return;
+    if (Vec3_HorzLen(&mPos) < 0xed8000)
+        return;
     {
         Vector3 zero;
         int a;
         zero.x = 0;
         zero.y = 0;
         zero.z = 0;
-        a = (int)(unsigned short)Vec3_HorzAngle(&zero, (Vector3*)(&this->mPosX)) >> 4;
+        a = (int)(unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
         this->mPosX = (short)data_02082214[a * 2] * (short)0xed8;
         this->mPosZ = (short)data_02082214[a * 2 + 1] * (short)0xed8;
     }
@@ -2395,7 +2306,6 @@ void daKpa_c::func_ov060_02113a94(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- func_ov060_02113740, 0x02113740, size 0x354 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113740Ev
 /*
 State BOWSER_STATE_RECOVER (2), entered when he has fallen 1000 units below the
 arena (func_ov060_02112ba8). Each frame: ground = mHomePosY - 0x7d0000 (2000
@@ -2464,7 +2374,7 @@ void daKpa_c::func_ov060_02113740(){
             this->mAngleY = this->mAngleToCenter;
             this->mPrevAngleY = this->mAngleY;
             this->mVertSpeed = 0x28000;
-            func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+            func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
             this->mVertAccel = 0;
             this->mTargetOpacity = 0xff;
             this->mStepCounter = 0;
@@ -2525,7 +2435,6 @@ void daKpa_c::func_ov060_02113740(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- func_ov060_02113710, 0x02113710, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113710Ev
 /*
 State BOWSER_STATE_PLAY_ANIM_0F (3): play animation 0xf looping until its last
 frame, then BOWSER_STATE_IDLE. */
@@ -2539,7 +2448,6 @@ void daKpa_c::func_ov060_02113710(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov060_021135fc, 0x021135fc, size 0x114 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021135fcEv
 /*
 The defeat payoff. Switch the body collider off. Variant 2: spawn the LAST_STAR
 actor (0x11b, parameter 7) 0xa0000 (160 units) above him. Other variants:
@@ -2547,39 +2455,28 @@ particles 0xad and 0xae 50 units above him, an OBJ_KEY actor (0x11a, parameter =
 variant) at his position that receives his mSpinSpeed (daObjKey_c::mSpinSpeed),
 and sound 0xbb. */
 void daKpa_c::func_ov060_021135fc(){
-    volatile Vector3 base;
-    int px, py, pz;
-    px = this->mPosX;
-    base.x = px;
-    py = this->mPosY;
-    base.y = py;
-    pz = this->mPosZ;
-    base.z = pz;
-    py = py + 0x32000;
-    base.y = py;
+    Vector3 base = mPos;
+    base.y += 0x32000;
 
-    this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
+    mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
 
-    if (this->mVariantID == 2) {
-        Vector3 pos;
-        pos.x = this->mPosX;
-        pos.y = this->mPosY;
-        pos.z = this->mPosZ;
-        pos.y = pos.y + 0xa0000;
-        dActor_c::Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, this->mAreaId, -1);
+    if (mVariantID == 2) {
+        Vector3 pos = mPos;
+        pos.y += 0xa0000;
+        dActor_c::Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, mAreaId, -1);
     } else {
-        Particle::System::NewSimple(0xad, base.x, base.y, base.z);
-        Particle::System::NewSimple(0xae, base.x, base.y, base.z);
-        void *spawned = dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, this->mVariantID, *((Vector3*)(&this->mPosX)), 0, this->mAreaId, -1);
-        ((daObjKey_c *)spawned)->mSpinSpeed = this->mSpinSpeed;
-        func_02012694(BOWSER_SND_DEFEATED, (Vector3*)(&this->mCamSpacePosX));
+        Particle::System::NewSimple(kPtclBowserDefeatA, base.x, base.y, base.z);
+        Particle::System::NewSimple(kPtclBowserDefeatB, base.x, base.y, base.z);
+        daObjKey_c *key =
+            (daObjKey_c *)dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, mVariantID, mPos, 0, mAreaId, -1);
+        key->mSpinSpeed = mSpinSpeed;
+        func_02012694(BOWSER_SND_DEFEATED, &mCamSpacePos);
     }
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov060_02113564, 0x02113564, size 0x98 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113564Ev
 /*
 Defeat step 0 (from func_ov060_02112ddc): knock-back launch. Animation 0 once,
 mHorzSpeed -0x1c000 (-28.0) for variant 2 and -0x19000 (-25.0) otherwise,
@@ -2599,13 +2496,12 @@ void daKpa_c::func_ov060_02113564(){
     this->mStepCounter = 0;
     this->mStep += 1;
     this->mdCcAcPos_c.radius = 0xb4000;
-    func_02012694(BOWSER_SND_LEAP, (const Vector3 *)(&this->mCamSpacePosX));
+    func_02012694(BOWSER_SND_LEAP, &mCamSpacePos);
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov060_021134ac, 0x021134ac, size 0xb8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021134acEv
 /*
 Defeat step 1: airborne after the launch. Sets unk_422, runs the landing-dust
 helper on mStepCounter; on a fresh ground hit it starts animation 5 once when the
@@ -2633,7 +2529,6 @@ void daKpa_c::func_ov060_021134ac(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov060_02113404, 0x02113404, size 0xa8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113404Ev
 /*
 Defeat step 2: wait for the daPly_c. func_ov060_02112350 runs first. Returns 1
 when the current animation is animation 3 (data_ov060_0211ac60 is entry 3 of the
@@ -2654,7 +2549,7 @@ int daKpa_c::func_ov060_02113404(){
             v.y = targetPos[1];
             v.z = targetPos[2];
             ang = this->mTargetPlayer->mAngleY;
-            if (Vec3_HorzDist((struct Vector3*)(&this->mPosX), &v) < 0x258000) {
+            if (Vec3_HorzDist(&mPos, &v) < 0x258000) {
                 if (this->GetSubtraction(ang, this->mAngleToTarget) > 0x6000) r = 1;
             }
         }
@@ -2666,7 +2561,6 @@ int daKpa_c::func_ov060_02113404(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov060_021132a4, 0x021132a4, size 0x160 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021132a4Ev
 /*
 Defeat shrink-and-spin for variants 0 and 1, per frame; returns 1 once done.
 Particle 0x99 is spawned 50 units above him each frame (mParticleHandle).
@@ -2678,19 +2572,10 @@ mSpinSpeed, mOpacity drops by 2 while above 2, and until done the looping sound
 0xba plays (mSoundHandle is reset when the sound ID changes). */
 int daKpa_c::func_ov060_021132a4(){
     int done = 0;
-    volatile Vector3 pos;
-    int ytmp;
-    int z;
+    Vector3 pos = mPos;
+    pos.y += 0x32000;
 
-    pos.x = this->mPosX;
-    ytmp = this->mPosY;
-    pos.y = ytmp;
-    z = this->mPosZ;
-    pos.z = z;
-    pos.y = ytmp + 0x32000;
-
-    this->mParticleHandle = (int)Particle::System::New(*(volatile int *)&this->mParticleHandle,
-                                                       0x99, pos.x, pos.y, z, 0, 0);
+    mParticleHandle = (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
 
     if (this->mScaleX < 0xccc) {
         this->mSpinSpeed += 0x80;
@@ -2727,7 +2612,6 @@ int daKpa_c::func_ov060_021132a4(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov060_02113260, 0x02113260, size 0x44 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02113260Ev
 /*
 Park him after the defeat: X and Z set to 0 (Y kept), scale 0, both speeds and
 gravity 0, no shadow, body collider switched off. */
@@ -2750,7 +2634,6 @@ void daKpa_c::func_ov060_02113260(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov060_021130c0, 0x021130c0, size 0x1a0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021130c0Ev
 /*
 Defeat conversation and shrink for variants 0 and 1 (defeat step 3). mStepCounter
 is the phase: while it is 0 or 1 the conversation runs by mTalkStep, then
@@ -2785,8 +2668,7 @@ int daKpa_c::func_ov060_021130c0(){
         case 1:
             if (this->mTargetPlayer->GetTalkState() == 0) {
                 int msg = (this->mVariantID == 0) ? 0xcd : 0xcf;
-                if (this->mTargetPlayer->ShowMessage(
-                        *this, msg, reinterpret_cast<const Vector3 *>(&this->mPosX), 0, 2))
+                if (this->mTargetPlayer->ShowMessage(*this, msg, &mPos, 0, 2))
                     this->mTalkStep++;
             }
             break;
@@ -2815,7 +2697,6 @@ int daKpa_c::func_ov060_021130c0(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov060_02112ee0, 0x02112ee0, size 0x1e0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112ee0Ev
 /*
 Defeat conversation and fade-out for variant 2 (defeat step 0xa). mStepCounter is
 the phase as in func_ov060_021130c0. Talk step 0: daPly_c::StartTalk(this, 1).
@@ -2828,7 +2709,7 @@ then func_ov060_02113260 runs and this returns 1. */
 int daKpa_c::func_ov060_02112ee0(){
     int ret = 0;
     unsigned short mode = this->mStepCounter;
-    volatile int v[4];
+    Vector3 pos;
 
     if (mode <= 1) {
         if (mode == 0) {
@@ -2845,8 +2726,7 @@ int daKpa_c::func_ov060_02112ee0(){
         case 1:
             if (this->mTargetPlayer->GetTalkState() == 0) {
                 unsigned m = (NumStars() != 0x96) ? 0xd1 : 0xd2;
-                if (this->mTargetPlayer->ShowMessage(
-                        *this, m, reinterpret_cast<const Vector3 *>(&this->mPosX), 0, 2)) {
+                if (this->mTargetPlayer->ShowMessage(*this, m, &mPos, 0, 2)) {
                     this->mTalkStep++;
                     Message::PrepareTalk();
                 }
@@ -2866,14 +2746,10 @@ int daKpa_c::func_ov060_02112ee0(){
     } else {
         if (this->mOpacity > 4) {
             this->mOpacity -= 4;
-            int y, z;
-            v[0] = this->mPosX;
-            v[1] = y = this->mPosY;
-            v[2] = z = this->mPosZ;
-            v[1] = y + 0x32000;
-
-            *(void **)(&this->mParticleHandle) = (void *)Particle::System::New(
-                *(volatile unsigned *)&this->mParticleHandle, 0x99, v[0], v[1], z, 0, 0);
+            pos = mPos;
+            pos.y += 0x32000;
+            mParticleHandle =
+                (int)Particle::System::New(mParticleHandle, 0x99, pos.x, pos.y, pos.z, 0, 0);
         } else {
             func_ov060_02113260();
             ret = 1;
@@ -2886,7 +2762,6 @@ int daKpa_c::func_ov060_02112ee0(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov060_02112ddc, 0x02112ddc, size 0x104 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112ddcEv
 /*
 State BOWSER_STATE_DEFEATED (4), by mStep. 0: func_ov060_02113564 (launch). 1:
 func_ov060_021134ac (airborne until landed). 2: func_ov060_02113404; when it
@@ -2917,7 +2792,6 @@ void daKpa_c::func_ov060_02112ddc(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov060_02112d48, 0x02112d48, size 0x94 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112d48Ei
 /*
 Tilt the arena: find the KOOPA2BG actor by mArenaBgUniqueID (nothing if it is
 gone) and set its mAngleXSpeed to tiltSpeed * cos and its mAngleZSpeed to
@@ -2937,7 +2811,6 @@ void daKpa_c::func_ov060_02112d48(int tiltSpeed){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov060_02112bfc, 0x02112bfc, size 0x14c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112bfcEv
 /*
 State BOWSER_STATE_ARENA_TILT (0x13): the arena rocks for 186 frames. mVertSpeed
 is held at mTerminalVelocity. If the KOOPA2BG actor is gone, back to
@@ -2996,7 +2869,6 @@ void daKpa_c::func_ov060_02112bfc(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov060_02112ba8, 0x02112ba8, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112ba8Ev
 /*
 True when he has fallen 0x3e8000 (1000 units) below mHomePosY while not already
 in BOWSER_STATE_RECOVER or BOWSER_STATE_ARENA_TILT. (The result of the
@@ -3013,7 +2885,6 @@ int daKpa_c::func_ov060_02112ba8(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov060_021128c0, 0x021128c0, size 0x2e8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021128c0Ev
 /*
 Hold state BOWSER_HOLD_NONE (0), the normal per-frame handler, called through the
 hold table by func_ov060_02112434. Clears mHoldStep. Unless he is defeated, if the
@@ -3117,7 +2988,6 @@ void daKpa_c::func_ov060_021128c0(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov060_02112724, 0x02112724, size 0x19c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112724Ev
 /*
 Hold state BOWSER_HOLD_HELD (1): a daPly_c has grabbed the tail and swings him
 around. BOWSER_COND_BREATHING is cleared. By mHoldStep: 0 switches the body collider
@@ -3140,7 +3010,7 @@ void daKpa_c::func_ov060_02112724(){
     switch (this->mHoldStep) {
     case 0:
         this->mdCcAcPos_c.flags |= BOWSER_CC_DISABLED;
-        func_02012694(BOWSER_SND_GRABBED, (const Vector3 *)(&this->mCamSpacePosX));
+        func_02012694(BOWSER_SND_GRABBED, &mCamSpacePos);
         this->mState = BOWSER_STATE_THROWN;
         func_ov060_02111cc0(0xa, 0);
         this->mAnimSpeed = 0x1000;
@@ -3181,7 +3051,6 @@ void daKpa_c::func_ov060_02112724(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov060_021125f0, 0x021125f0, size 0x134 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021125f0Ev
 /*
 Hold states BOWSER_HOLD_RELEASE_NOW (2) and BOWSER_HOLD_RELEASE_AFTER_ANIM (3):
 the release. Plays animation 0xe once; state 3 waits for its last frame. Then: clear
@@ -3227,7 +3096,6 @@ void daKpa_c::func_ov060_021125f0(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov060_02112434, 0x02112434, size 0x1bc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112434Ev
 /*
 Per-frame conditions, hold-state dispatch and opacity fade. Measure the
 horizontal distance and angle to the arena centre (the origin) into
@@ -3289,7 +3157,6 @@ void daKpa_c::func_ov060_02112434(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov060_021123dc, 0x021123dc, size 0x58 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021123dcEv
 /*
 Fight-start values, called from InitResources: mPickToggle 1, fully opaque, variant
 3 treated as 0, mHealth from the byte table at data_ov060_02119264 (1, 1, 3 in the
@@ -3310,7 +3177,6 @@ void daKpa_c::func_ov060_021123dc(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov060_021123c8, 0x021123c8, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021123c8Ev
 /*
 Called when the tail lets go of a daPly_c: set mBounceOnLand (func_ov060_021128c0
 then bounces him when he next hits the ground) and forget the grabbed daPly_c. */
@@ -3322,7 +3188,6 @@ void daKpa_c::func_ov060_021123c8(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov060_021123a0, 0x021123a0, size 0x28 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_021123a0Ei
 /*
 Body collider switch: a non-zero argument clears the disabled bit (dCc_c flags
 bit 0) of mdCcAcPos_c, zero sets it. */
@@ -3336,7 +3201,6 @@ void daKpa_c::func_ov060_021123a0(int enable){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov060_02112350, 0x02112350, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02112350Ev
 /*
 When the current animation has finished and is animation 5 (data_ov060_0211acd0
 is entry 5 of the animation table), start animation 3 (looping). */
@@ -3351,7 +3215,6 @@ void daKpa_c::func_ov060_02112350(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov060_02111f08, 0x02111f08, size 0x448 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02111f08Ev
 /*
 The intro camera, one step per mCutsceneStep, run each frame by the two intro
 states and once more by the conversation. Returns 1 at once when there is no
@@ -3370,7 +3233,7 @@ axis, to a point 0xc0 (192) units ahead along mAngleY and 0xfa000 (250 units) up
 return 1 when func_020092c4 returns non-zero. Step 4: clear bit 0x8 of
 Camera::mFlags. */
 int daKpa_c::func_ov060_02111f08(){
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     daPly_c *player = this->ClosestPlayer();
     struct Vector3 sp;
     struct Vector3* pv;
@@ -3394,8 +3257,8 @@ int daKpa_c::func_ov060_02111f08(){
         this->mCamLookAtX = sp.x;
         this->mCamLookAtY = sp.y;
         this->mCamLookAtZ = sp.z;
-        dist = Vec3_HorzDist((struct Vector3*)(&this->mPosX), &sp);
-        k = (unsigned short)(short)(Vec3_HorzAngle((struct Vector3*)(&this->mPosX), &sp) - 0x2000) >> 4;
+        dist = Vec3_HorzDist(&mPos, &sp);
+        k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x2000) >> 4;
         v = FX_MUL(dist, 0xA00);
         this->mCamPosX = this->mPosX + FX_MUL(v, data_02082214[k * 2]);
         this->mCamPosY = this->mPosY + 0xc8000;
@@ -3417,11 +3280,11 @@ int daKpa_c::func_ov060_02111f08(){
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;
-        dist = Vec3_HorzDist((struct Vector3*)(&this->mPosX), &sp);
+        dist = Vec3_HorzDist(&mPos, &sp);
         d = FX_MUL(dist, 0x600);
         if (d < 0x1f4000)
             d = 0x1f4000;
-        k = (unsigned short)(short)(Vec3_HorzAngle((struct Vector3*)(&this->mPosX), &sp) - 0x1000) >> 4;
+        k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x1000) >> 4;
         sp.x = this->mPosX + FX_MUL(d, data_02082214[k * 2]);
         sp.z = this->mPosZ + FX_MUL(d, data_02082214[k * 2 + 1]);
         ApproachLinear(this->mCamPosX, sp.x, 0x4000);
@@ -3460,7 +3323,6 @@ int daKpa_c::func_ov060_02111f08(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov060_02111cc0, 0x02111cc0, size 0x248 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02111cc0Eii
 /*
 Switch the model to animation idx (entries 0..0x1b of the table at
 data_ov060_021192dc; each handle's filePtr is the file) and pick the texture
@@ -3520,7 +3382,6 @@ void daKpa_c::func_ov060_02111cc0(int idx, int animFlags){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov060_02111c68, 0x02111c68, size 0x58 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02111c68Ev
 /*
 Row number for the mouth fire in daKpaFire_c, or -1. While animation 8 plays
 (data_ov060_0211ac20 is entry 8 of the animation table) the row is the whole
@@ -3541,7 +3402,6 @@ int daKpa_c::func_ov060_02111c68(){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov060_02111a28, 0x02111a28, size 0x240 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daKpa_c19func_ov060_02111a28Ev
 /*
 Footfall detection, called from Behavior each frame. For six animations the whole
 frame number n is tested against windows that pick a foot point: 1 means

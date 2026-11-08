@@ -39,6 +39,7 @@ enum daObjDlPyramid_c_AssetId { ASSET_DL_PYRAMID_BMD = 0x05dd, ASSET_DL_PYRAMID_
 #include "dMap_c.h"
 #include "Event.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 struct BMD_File;
@@ -47,9 +48,6 @@ struct CLPS_Block;
 
 extern s16 data_02082214[];            /* sine/cosine table, interleaved */
 extern CLPS_Block data_ov024_021129f0; /* the collision CLPS block */
-
-/* local extern: the dBgW callback store; no shared header. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* The retail static initializer constructs these two 8-byte resource handles
  * in source order (model 1501, then collision 1502) and lets the C++ runtime
@@ -78,35 +76,30 @@ extern DlPyramidCollisionFilePtr gDlPyramidCollisionFile;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjDlPyramid_cD1Ev
 daObjDlPyramid_c::~daObjDlPyramid_c() {}
 
-// @symbol _ZN16daObjDlPyramid_cD0Ev
 /* The deleting destructor (D0) has no source of its own: the compiler emits
    it from the definition above. */
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN21daObjDlPyramidDummy_cD1Ev
 daObjDlPyramidDummy_c::~daObjDlPyramidDummy_c() {}
 
-// @symbol _ZN21daObjDlPyramidDummy_cD0Ev
 /* The deleting destructor (D0) has no source of its own: the compiler emits
    it from the definition above. */
 
 /* The top has finished sinking: four puffs of dust at the old summit, then
  * the top removes itself and raises the event the level script waits on. */
-// @symbol _ZN16daObjDlPyramid_c13FinishDescentEv
 void daObjDlPyramid_c::FinishDescent() {
     Vector3 v;
     v.x = mPosX;
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xfa000;
-    Particle::System::NewSimple(0x1f, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x20, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x21, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x22, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkA, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkB, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkC, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkD, v.x, v.y, v.z);
     MarkForDestruction();
     Event::SetBit(0xe);
     dMap_c::UpdateLevelSpecific();
@@ -115,7 +108,6 @@ void daObjDlPyramid_c::FinishDescent() {
 /* One frame of the descent: wobble along X off the home position, bob up
  * for the first two seconds, then spin up and sink. Keeps the dust
  * particle alive and moves to state 2 at frame 150. */
-// @symbol _ZN16daObjDlPyramid_c7DescendEv
 void daObjDlPyramid_c::Descend() {
     s16 *tbl = data_02082214;
     int a1 = ((int)((unsigned int)mStateTimer << 0x1e)) >> 0x10;
@@ -135,14 +127,14 @@ void daObjDlPyramid_c::Descend() {
         mAngleY += mAngVelY;
         mPosY += mVertSpeed;
     }
-    mSpinParticleID = Particle::System::New(mSpinParticleID, 0x23, mPosX, mPosY, mPosZ, 0, 0);
+    mSpinParticleID =
+        Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPosX, mPosY, mPosZ, 0, 0);
     if (mStateTimer == 150)
         mState = 2;
 }
 
 /* The collider follows the top: yaw matrix, actor position in the
  * translation row, then hand both to the mesh collider. */
-// @symbol _ZN16daObjDlPyramid_c16UpdateClsnMatrixEv
 void daObjDlPyramid_c::UpdateClsnMatrix() {
     Matrix4x3_FromRotationY(&mClsnMat2, mAngleY);
     mClsnMat2.t.x = mPosX;
@@ -152,7 +144,6 @@ void daObjDlPyramid_c::UpdateClsnMatrix() {
 }
 
 /* The model follows the top: yaw matrix, position at 1/8 scale. */
-// @symbol _ZN16daObjDlPyramid_c17UpdateModelMatrixEv
 void daObjDlPyramid_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mTopModel.mat4x3, mAngleY);
     mTopModel.mat4x3.t.x = mPosX >> 3;
@@ -160,7 +151,6 @@ void daObjDlPyramid_c::UpdateModelMatrix() {
     mTopModel.mat4x3.t.z = mPosZ >> 3;
 }
 
-// @symbol _ZN16daObjDlPyramid_c16CleanupResourcesEv
 int daObjDlPyramid_c::CleanupResources() {
     mMeshCollider.Disable();
     gDlPyramidModelFile.Release();
@@ -168,7 +158,6 @@ int daObjDlPyramid_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjDlPyramid_c6RenderEv
 int daObjDlPyramid_c::Render() {
     mTopModel.Render(0);
     return 1;
@@ -176,7 +165,6 @@ int daObjDlPyramid_c::Render() {
 
 /* 0: wait for all four tags. 1: jingle, then descend. 2: descend until the
  * jingle has finished, then settle. */
-// @symbol _ZN16daObjDlPyramid_c8BehaviorEv
 int daObjDlPyramid_c::Behavior() {
     u8 state = mState;
     switch (state) {
@@ -208,7 +196,6 @@ int daObjDlPyramid_c::Behavior() {
 }
 
 /* A touched tag counts once on the top it was bound to, then goes away. */
-// @symbol _ZN21daObjDlPyramidDummy_c8BehaviorEv
 s32 daObjDlPyramidDummy_c::Behavior() {
     if (mCylinder.otherOwner != 0) {
         if (mPyramidTopID == 0) {
@@ -229,7 +216,6 @@ s32 daObjDlPyramidDummy_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjDlPyramid_c13InitResourcesEv
 int daObjDlPyramid_c::InitResources() {
     BMD_File *bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(gDlPyramidModelFile);
     mTopModel.SetFile(bmd, 1, -1);
@@ -237,7 +223,7 @@ int daObjDlPyramid_c::InitResources() {
     UpdateClsnMatrix();
     void *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mHomePosX = mPosX;
     mHomePosY = mPosY;
@@ -252,7 +238,6 @@ int daObjDlPyramid_c::InitResources() {
 }
 
 /* Binds to the one pyramid top in the level, or removes itself. */
-// @symbol _ZN21daObjDlPyramidDummy_c13InitResourcesEv
 s32 daObjDlPyramidDummy_c::InitResources() {
     dActor_c *top = dActor_c::FindWithActorID(0x55, 0);
     if (top == 0) {
@@ -270,13 +255,11 @@ s32 daObjDlPyramidDummy_c::InitResources() {
    allocator the cartridge's own factories call. Spelled by hand they read as a four-step C
    transcription; this is the original shape. */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjDlPyramidDummy_c_classInit
 extern "C" daObjDlPyramidDummy_c *daObjDlPyramidDummy_c_classInit() {
     return new daObjDlPyramidDummy_c;
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol daObjDlPyramid_c_classInit
 extern "C" daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
     return new daObjDlPyramid_c;
 }

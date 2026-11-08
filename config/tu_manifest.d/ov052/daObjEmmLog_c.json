@@ -117,14 +117,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@372",
+      "from": "@379",
       "to": "@607",
-      "evidence": "batch-5 atdup: @379 collides cross-module (temps are fleet-global); renumber to unused same-length @607"
+      "evidence": "batch-5 atdup: @379 collides cross-module (temps are fleet-global); renumber to unused same-length @607; Re-keyed from @372 to @379 when Behavior's bob reads the sine table through nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@373",
+      "from": "@380",
       "to": "@380",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @394 now; licensed under the existing pin @380"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @394 now; licensed under the existing pin @380; Re-keyed from @373 to @380 when Behavior's bob reads the sine table through nitro/fx/fx_trig.h (#821)."
     }
   ],
   "notes": [
@@ -213,7 +213,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {

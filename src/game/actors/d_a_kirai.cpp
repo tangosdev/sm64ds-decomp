@@ -25,6 +25,7 @@ enum daKirai_c_AssetId { ASSET_KOOPA_BOMB_BMD = 0x0382 };
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* Per-member opt brackets bind only when codegen is not deferred, and that
@@ -64,13 +65,10 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-// @symbol _ZN9daKirai_cD1Ev
-// @symbol _ZN9daKirai_cD0Ev
 daKirai_c::~daKirai_c() {}
 
 /* Disarm: give up the spike-bomb slot, stop colliding, and remember every
    other bomb still in the level. */
-// @symbol _ZN9daKirai_c6DisarmEv
 void daKirai_c::Disarm() {
     int i;
     int j;
@@ -99,7 +97,6 @@ void daKirai_c::Disarm() {
 }
 
 /* Is `pos` close enough to set this bomb off? */
-// @symbol _ZN9daKirai_c16IsInTriggerRangeEP7Vector3
 int daKirai_c::IsInTriggerRange(Vector3 *pos) {
     int horz, homeHorz;
     if (mStateIndex != 0)
@@ -114,15 +111,14 @@ int daKirai_c::IsInTriggerRange(Vector3 *pos) {
 }
 
 /* Explode. */
-// @symbol _ZN9daKirai_c7ExplodeEv
 void daKirai_c::Explode() {
     Vector3 v;
     mStateIndex = 1;
-    Particle::System::NewSimple(0xa8, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xa9, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xaa, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xab, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xac, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPosX, mPosY, mPosZ);
     func_02012694(0x2f, &mCamSpacePos);
     v.x = mPosX;
     v.y = mPosY;
@@ -133,14 +129,12 @@ void daKirai_c::Explode() {
 }
 
 /* Place the model and fade it. */
-// @symbol _ZN9daKirai_c20UpdateModelTransformEv
 void daKirai_c::UpdateModelTransform() {
     Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
     mModel.ApplyOpacity((u8)(mOpacity >> 3), 1);
 }
 
 /* Re-arm. */
-// @symbol _ZN9daKirai_c5RearmEv
 void daKirai_c::Rearm() {
     mScaleX = 0x1000;
     mScaleY = 0x1000;
@@ -154,7 +148,6 @@ void daKirai_c::Rearm() {
 
 /* Spent: wait until every sibling has gone off, then re-arm whichever bomb
    (this one or a sibling) is nearest the player. */
-// @symbol _ZN9daKirai_c10StateSpentEv
 void daKirai_c::StateSpent() {
     Vector3 v;
     daPly_c *player;
@@ -203,7 +196,6 @@ void daKirai_c::StateSpent() {
 }
 
 /* Exploding: swell, fade and rise for 0x1c frames, then disarm. */
-// @symbol _ZN9daKirai_c14StateExplodingEv
 void daKirai_c::StateExploding() {
     int scale = (mTimer * 9 << 12) / 14 + 0x1000;
     mScaleX = scale;
@@ -219,7 +211,6 @@ void daKirai_c::StateExploding() {
 }
 
 /* Swell for 0x1c frames without colliding, then disarm. */
-// @symbol _ZN9daKirai_c13StateSwellingEv
 void daKirai_c::StateSwelling() {
     int scale;
     mdCcAcPos_c.flags |= 1;
@@ -234,7 +225,6 @@ void daKirai_c::StateSwelling() {
 
 /* Armed: if the thing that touched us is a player (actor 0xbf), blow up in
    its face. */
-// @symbol _ZN9daKirai_c10StateArmedEv
 void daKirai_c::StateArmed() {
     dActor_c *a;
     Vector3 quakePos, hurtPos;
@@ -247,11 +237,11 @@ void daKirai_c::StateArmed() {
         return;
     if (!IsPlayerActor(a))
         return;
-    Particle::System::NewSimple(0xa8, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xa9, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xaa, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xab, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xac, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPosX, mPosY, mPosZ);
     func_02012694(0x2f, &mCamSpacePos);
     quakePos.x = mPosX;
     quakePos.y = mPosY;
@@ -264,13 +254,11 @@ void daKirai_c::StateArmed() {
     Disarm();
 }
 
-// @symbol _ZN9daKirai_c16CleanupResourcesEv
 int daKirai_c::CleanupResources() {
     data_ov060_0211b1c4.Release();
     return 1;
 }
 
-// @symbol _ZN9daKirai_c6RenderEv
 int daKirai_c::Render() {
     if (mStateIndex != 0)
         return 1;
@@ -280,7 +268,6 @@ int daKirai_c::Render() {
     return 1;
 }
 
-// @symbol _ZN9daKirai_c8BehaviorEv
 int daKirai_c::Behavior() {
     (this->*data_ov060_0211b1d8[mStateIndex])();
     UpdateModelTransform();
@@ -294,7 +281,6 @@ int daKirai_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9daKirai_c13InitResourcesEv
 int daKirai_c::InitResources() {
     Vector3 v;
     Vector3 z;
@@ -338,7 +324,6 @@ KiraiState data_ov060_0211b1d8[4] = {
 /* `new daKirai_c` is the whole sequence the loose factory spelled by hand:
  * fBase_c::operator new(0x1b0), dActor_c's base constructor, the vptr store,
  * then the dExtSimpleModel_c and dCcAcPos_c member constructors. */
-// @symbol daKirai_c_classInit
 extern "C" daKirai_c *daKirai_c_classInit(void) {
     return new daKirai_c;
 }

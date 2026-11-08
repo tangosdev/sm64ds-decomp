@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x02021e40..0x020226d4, 23 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
-    "TOP EDGE: Particle::SysTracker::Contents::Entry::Initialise (0x02021a04..0x02021e40) ends exactly where the run begins -- the live-system registry, not a dPa_c callback. BOTTOM EDGE: Particle::SetSelfDestructFlag (0x020226d4..0x020226fc) begins exactly where the run ends and belongs to the following D07 particle-system run.",
+    "TOP EDGE: dPa_c::level_c::emitter_c::entry (0x02021a04..0x02021e40) ends exactly where the run begins -- the level-emitter registry (formerly the coined Particle::SysTracker::Contents), not a dPa_c callback. BOTTOM EDGE: Particle::SetSelfDestructFlag (0x020226d4..0x020226fc) begins exactly where the run ends and belongs to the following D07 particle-system run.",
     "CLASS-LOCAL COMPLETE: the run is every dPa_c::level_c callback in the 0x02021e40..0x020226d4 band (RTTI _ZTSN5dPa_c7level_c..._cE in config/arm9/symbols.txt); the only other dPa_c::level_c members live outside this band and are out of scope -- a TU claims one contiguous .text span."
   ],
   "sections": [

@@ -71,7 +71,6 @@ extern CLPS_Block data_ov032_02112fb8;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjTdWater_c_classInit
 /* Reconstructed source-style name. Historical alias: HugeWater_Spawn.
  *
  * Every instruction the cartridge has here falls out of the one `new`.
@@ -83,7 +82,6 @@ extern "C" daObjTdWater_c *daObjTdWater_c_classInit(void) {
     return new daObjTdWater_c();
 }
 
-// @symbol _ZN14daObjTdWater_c13InitResourcesEv
 s32 daObjTdWater_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov032_02113afc), 1, 0x14);
 
@@ -104,7 +102,6 @@ s32 daObjTdWater_c::InitResources() {
     return Event::GetBit(0xe) == 0;
 }
 
-// @symbol _ZN14daObjTdWater_c8BehaviorEv
 s32 daObjTdWater_c::Behavior() {
     mTextureTransformer.speed = 0x1000;
     mTextureTransformer.Advance();
@@ -114,14 +111,12 @@ s32 daObjTdWater_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjTdWater_c6RenderEv
 s32 daObjTdWater_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjTdWater_c16CleanupResourcesEv
 s32 daObjTdWater_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -131,8 +126,6 @@ s32 daObjTdWater_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjTdWater_cD0Ev
-// @symbol _ZN14daObjTdWater_cD1Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjTdWater_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no leaf D2. Writing the

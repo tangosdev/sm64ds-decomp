@@ -25,70 +25,70 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov001_020aa420",
+      "symbol": "CapIconMgr_DispatchVs",
       "address": "0x020aa420",
       "size": "0x00000290",
       "legacy_source": "src/func_ov001_020aa420.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_ov001_020aa6b0",
+      "symbol": "CapIconMgr_SetMapIconShown",
       "address": "0x020aa6b0",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov001_020aa6b0.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_ov001_020aa6cc",
+      "symbol": "CapIconMgr_ClearDispatched",
       "address": "0x020aa6cc",
       "size": "0x00000018",
       "legacy_source": "src/func_ov001_020aa6cc.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov001_020aa6e4",
+      "symbol": "CapIconMgr_Commit",
       "address": "0x020aa6e4",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov001_020aa6e4.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov001_020aa79c",
+      "symbol": "CapIconMgr_IsDispatched",
       "address": "0x020aa79c",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov001_020aa79c.c",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov001_020aa7b8",
+      "symbol": "CapIconMgr_ShouldCommitVs",
       "address": "0x020aa7b8",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov001_020aa7b8.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov001_020aa858",
+      "symbol": "CapIconMgr_ShouldCommit",
       "address": "0x020aa858",
       "size": "0x00000108",
       "legacy_source": "src/func_ov001_020aa858.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov001_020aa960",
+      "symbol": "CapIconMgr_ShouldDispatch",
       "address": "0x020aa960",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov001_020aa960.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov001_020aaa54",
+      "symbol": "CapIconMgr_Dispatch",
       "address": "0x020aaa54",
       "size": "0x00000358",
       "legacy_source": "src/func_ov001_020aaa54.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov001_020aadac",
+      "symbol": "CapIconMgr_DispatchNoCap",
       "address": "0x020aadac",
       "size": "0x00000194",
       "legacy_source": "src/func_ov001_020aadac.c",

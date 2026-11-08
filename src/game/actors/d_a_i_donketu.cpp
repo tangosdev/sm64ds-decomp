@@ -11,8 +11,11 @@
  *   section per function in reverse source order. Do not reorder (the
  *   destructor D0/D1/D2 group is the only exception).
  *
- *   UpdateRunState reads its timer as `*(u16 *)&mStateTimer`: the member
- *   is s16 and the ROM compares unsigned (blo, not blt).
+ *   UpdateRunState reads its timer unsigned: the member is s16 and the ROM
+ *   compares with blo, not blt, so the guard and the wrap convert it to u16.
+ *   The wind-up arm keeps a u16 pointer to the timer, whose address the
+ *   cartridge leaves in r0 as the return value; with plain member access
+ *   the compiler moves the address out of r0 (5 words differ).
  *
  * Notes:
  * - The TU is one `complete` delinks span claiming .text only, so the
@@ -59,7 +62,6 @@ struct IDonketuAnimationFileHandle : SharedFilePtr {
 extern int data_ov027_021138f4[];
 
 /* -------------------------------------------------------------------------- */
-// @symbol daIDonketu_c_classInit
 /* Factory: `return new` emits the size (0x3fc), the base C2, the member
  * C1s and both vptr stores. Reconstructed source-style name: SM64DS proves
  * daIDonketu_c through RTTI, allocation size, vtable identity, and the
@@ -71,7 +73,6 @@ extern "C" daIDonketu_c *daIDonketu_c_classInit(void) {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daIDonketu_c13InitResourcesEv
 /* daIDonketu_c::InitResources -- vtable slot 0, ov027 0x0211181c.
  *
  * daOts_c leaves slot 0 pure virtual (the word in its vtable is a literal zero), so
@@ -86,7 +87,6 @@ int daIDonketu_c::InitResources() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daIDonketu_c8BehaviorEv
 /* daIDonketu_c::Behavior -- vtable slot 6, ov027 0x02111770, and THE KEY FUNCTION
  * of this class: the destructor is inline in the header, so the first declared
  * non-inline virtual is what makes this TU emit the _ZTV/_ZTI/_ZTS group.
@@ -117,7 +117,6 @@ int daIDonketu_c::Behavior() {
     return BehaviorCommon();
 }
 
-// @symbol _ZN12daIDonketu_c16UpdateDeathStateEv
 /* daIDonketu_c::UpdateDeathState -- vtable slot 32, daOts_c's state-4 hook. The
  * same star drop as Behavior's kill path without the invincible-character test: by
  * the time state 4 runs the death is already decided. */
@@ -135,16 +134,15 @@ void daIDonketu_c::UpdateDeathState() {
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN12daIDonketu_c14UpdateRunStateEv
 /* daIDonketu_c::UpdateRunState -- vtable slot 31, daOts_c's state-1 hook. The
  * charge: hold still while the wind-up plays out over the first ten frames, then
  * run at 0x14000. The pointer returned from the first arm is the cartridge's own
  * shape, not a meaningful value -- r0 is simply left holding the timer address.
- * mStateTimer is s16 in dEnemyBase_c.h: a named halfword compare is signed
- * (blt) where the ROM's first arm is unsigned (blo), so the u16* addressing
- * stays. */
+ * mStateTimer is s16 in dEnemyBase_c.h and the ROM compares it unsigned
+ * (blo), hence the u16 conversions; the u16* in the first arm stays for the
+ * address it leaves in r0. */
 int daIDonketu_c::UpdateRunState() {
-    if (*(u16 *)&mStateTimer < 0xa) {
+    if ((u16)mStateTimer < 0xa) {
         mHorzSpeed = 0;
         int result = func_ov064_02116110(0x700);
         if (result != 0)
@@ -155,16 +153,13 @@ int daIDonketu_c::UpdateRunState() {
         return (int)timer;
     }
     mHorzSpeed = 0x14000;
-    u16 *timer = (u16 *)&mStateTimer;
-    u32 value = *timer;
-    if (value > 0x23) {
-        value = 0;
-        *timer = 0;
+    u16 timer = mStateTimer;
+    if (timer > 0x23) {
+        timer = 0;
+        mStateTimer = 0;
     }
-    return value;
+    return timer;
 }
-// @symbol _ZN12daIDonketu_cD1Ev
-// @symbol _ZN12daIDonketu_cD0Ev
 /* D1/D0 emit from the header's inline destructor: written out-of-line here
  * it would produce D0 before D1 and a homeless D2. The empty body still
  * chains two vptr stores and the member destructor calls

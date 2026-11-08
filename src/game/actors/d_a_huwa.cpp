@@ -39,6 +39,7 @@ enum daHuwa_c_AssetId { ASSET_HUWAHUWA_MODEL_BMD = 0x032d, ASSET_HUWAHUWA_MOVE_B
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
@@ -99,20 +100,16 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & kFlagYoshiMouth) != 0;
 }
 
-// @symbol _ZN8daHuwa_cD1Ev
-// @symbol _ZN8daHuwa_cD0Ev
 daHuwa_c::~daHuwa_c() {}
 
 /* Vtable slot 29. 0x3c000 is 60.0; KillByInvincibleChar receives it and
  * does not read it. */
-// @symbol _ZN8daHuwa_c16OnAimedAtWithEggEv
 s32 daHuwa_c::OnAimedAtWithEgg() {
     return 0x3c000;
 }
 
 /* Poof, three coins, bone-1 particle, sound 0xd5, then the death table.
  * func_0201267c is Sound::Play(bank 3, id, pos). */
-// @symbol _ZN8daHuwa_c13KillWithCoinsEv
 void daHuwa_c::KillWithCoins() {
     Vector3 dust;
     Vector3 dustCopy;
@@ -140,7 +137,7 @@ void daHuwa_c::KillWithCoins() {
     Vec3_LslInPlace(&dust, 3);
     AddVec3(&dust, &mPos, &dust);
 
-    Particle::System::NewSimple(0x53, dust.x, dust.y, dust.z);
+    Particle::System::NewSimple(kPtclHuwahuwaDefeat, dust.x, dust.y, dust.z);
     func_0201267c(0xd5, &mCamSpacePos);
     KillAndTrackInDeathTable();
 }
@@ -148,7 +145,6 @@ void daHuwa_c::KillWithCoins() {
 /* Cylinder hits. Slot 29 is OnAimedAtWithEgg; called through dActor_c so it
  * stays a virtual call. func_ov002_020e10a8 is daPly_c::IsState of the state
  * SpinBounce enters. */
-// @symbol _ZN8daHuwa_c17HandleCylinderHitEv
 void daHuwa_c::HandleCylinderHit() {
     dActor_c *other;
     unsigned int id;
@@ -225,7 +221,6 @@ void daHuwa_c::HandleCylinderHit() {
 
 /* Yaw the model, plant its translation at pos>>3, then the drop shadow.
  * In Yoshi's mouth (mFlags 0x40000) neither the shadow nor Render runs. */
-// @symbol _ZN8daHuwa_c20UpdateModelTransformEv
 void daHuwa_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
@@ -240,14 +235,12 @@ void daHuwa_c::UpdateModelTransform() {
     }
 }
 
-// @symbol _ZN8daHuwa_c16CleanupResourcesEv
 int daHuwa_c::CleanupResources() {
     gHuwahuwaModelModelFile.Release();
     gHuwahuwaMoveAnimationFile.Release();
     return 1;
 }
 
-// @symbol _ZN8daHuwa_c6RenderEv
 int daHuwa_c::Render() {
     if (IsInYoshiMouth(this))
         return 1;
@@ -255,7 +248,6 @@ int daHuwa_c::Render() {
     return 1;
 }
 
-// @symbol _ZN8daHuwa_c8BehaviorEv
 int daHuwa_c::Behavior() {
     int killed = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3);
     if (killed != 0) {
@@ -321,7 +313,6 @@ int daHuwa_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN8daHuwa_c13InitResourcesEv
 int daHuwa_c::InitResources() {
     void *modelFile = dExtSimpleModel_c::LoadFile(gHuwahuwaModelModelFile);
     mAnmModel.dExtModel_c::SetFile((BMD_File *)modelFile, 1, -1);
@@ -341,7 +332,6 @@ int daHuwa_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN8daHuwa_c13OnTurnIntoEggER7daPly_c
 void daHuwa_c::OnTurnIntoEgg(daPly_c &player) {
     if (!player.IsCollectingCap())
         player.RegisterEggCoinCount(3, 0, 0);
@@ -350,12 +340,10 @@ void daHuwa_c::OnTurnIntoEgg(daPly_c &player) {
     KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN8daHuwa_c13OnYoshiTryEatEv
 s32 daHuwa_c::OnYoshiTryEat() {
     return 6;
 }
 
-// @symbol daHuwa_c_classInit
 extern "C" daHuwa_c *daHuwa_c_classInit() {
     return new daHuwa_c();
 }

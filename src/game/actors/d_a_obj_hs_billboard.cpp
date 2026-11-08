@@ -43,27 +43,22 @@ extern SharedFilePtr *data_ov031_02111424[];
 
 /* Four C-linkage factories: one `new`, four names. The EAD classInit spelling
  * would collide, so each profile keeps its HS_* suffix. */
-// @symbol daObjHsBillboard_c_classInit_HS_MOON
 extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_MOON() {
     return new daObjHsBillboard_c();
 }
 
-// @symbol daObjHsBillboard_c_classInit_HS_STAR
 extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_STAR() {
     return new daObjHsBillboard_c();
 }
 
-// @symbol daObjHsBillboard_c_classInit_HS_Y_STAR
 extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_Y_STAR() {
     return new daObjHsBillboard_c();
 }
 
-// @symbol daObjHsBillboard_c_classInit_HS_B_STAR
 extern "C" daObjHsBillboard_c *daObjHsBillboard_c_classInit_HS_B_STAR() {
     return new daObjHsBillboard_c();
 }
 
-// @symbol _ZN18daObjHsBillboard_c13InitResourcesEv
 int daObjHsBillboard_c::InitResources() {
     switch (actorID) {
     case 0x12e:
@@ -86,28 +81,23 @@ int daObjHsBillboard_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjHsBillboard_c6RenderEv
 int daObjHsBillboard_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daObjHsBillboard_c16CleanupResourcesEv
 int daObjHsBillboard_c::CleanupResources() {
     data_ov031_02111424[mVariant]->Release();
     return 1;
 }
 
 /* Yaw the model and set its translation to the position >> 3. */
-// @symbol _ZN18daObjHsBillboard_c20UpdateModelTransformEv
 void daObjHsBillboard_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
 }
-// @symbol _ZN18daObjHsBillboard_cD1Ev
-// @symbol _ZN18daObjHsBillboard_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjHsBillboard_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no D2. Written out of

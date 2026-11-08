@@ -97,8 +97,8 @@ struct dBgW_Kc : dBgW {
        in face-dot units); depthByDir keeps the prism thickness only for faces
        whose normal dots above depthDirMinDot against depthDir and caps the rest
        at 10.0.
-       Set and cleared by func_01ffb0bc/0b0 (shallowOnly), func_01ffb0a4/098
-       (depthByDir), func_01ffb07c (depthDir) and dBgW_Kc::SetDepthDirMinDot (depthDirMinDot). */
+       Set and cleared by SetShallowOnly/ClearShallowOnly, SetDepthByDir/
+       ClearDepthByDir, SetDepthDir and SetDepthDirMinDot. */
     bool shallowOnly; /* 0x34 */
     bool depthByDir;  /* 0x35 */
     u8 pad_36[2];
@@ -142,6 +142,16 @@ struct dBgW_Kc : dBgW {
        GetUnkOctreeY adds the octree's Y extent, giving its far edge. */
     Fix12i GetOctreeOriginY() const;   /* 0x01ffb0ec */
     Fix12i GetUnkOctreeY() const;      /* 0x01ffb0d0 */
+    /* The ITCM accessors directly below GetUnkOctreeY, 0x01ffb07c..0x01ffb0c8:
+       kclFile and the depth policy's switches and direction. Named for the
+       fields they write; the callers are the derived colliders and the actors
+       that aim the policy (daBtn_c, daObjBk_Dossunbar_c). */
+    KCL_File *GetFile() const;         /* 0x01ffb0c8 */
+    void SetShallowOnly();             /* 0x01ffb0bc */
+    void ClearShallowOnly();           /* 0x01ffb0b0 */
+    void SetDepthByDir();              /* 0x01ffb0a4 */
+    void ClearDepthByDir();            /* 0x01ffb098 */
+    void SetDepthDir(const Vector3 *); /* 0x01ffb07c */
 
     /* --- static --- */
     static char *LoadFile(SharedFilePtr &ptr);
@@ -150,6 +160,9 @@ struct dBgW_Kc : dBgW {
     static bool IsNearZeroDivisor(int);
     /* Line-query wall filter: -0xccc < normalY < 0x600 (strict). */
     static bool IsWallNormal(Fix12i);
+    /* Face class from a normal's y: 0 floor (> 0x600), 1 wall (> -0xccc),
+       2 underside. Inferred name, beside the other two KCL predicates. */
+    static int ClassifyNormalY(int);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator

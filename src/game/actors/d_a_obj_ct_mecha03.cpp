@@ -21,7 +21,7 @@
  * - Assigning mMeshCollider.beforeClsnCallback does not compile: the static
  *   takes references and the field takes pointers. Casting
  *   &dBgW::UpdatePosWithTransform onto the field type sizes InitResources
- *   0x104->0xfc. func_020393d4 is the store that matches. dBgW::SetClipRadius and
+ *   0x104->0xfc. dBgW::SetBeforeClsnCallback is the store that matches. dBgW::SetClipRadius and
  *   dBgW::SetClipOffsetY store the mesh range the same way.
  * - UpdateShadow keeps the dead stores. Dropping armOffset.y = 0, the
  *   first pos.y = bobY, or writing armOffset once, sizes it 0x12c->0x128.
@@ -84,15 +84,12 @@ extern CLPS_Block data_ov035_02112198;
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjCtMecha03_c_classInit
 extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
     return new daObjCtMecha03_c();
 }
 
-// @symbol _ZN16daObjCtMecha03_c13InitResourcesEv
 int daObjCtMecha03_c::InitResources() {
     void *bmd;
     void *kcl;
@@ -116,12 +113,11 @@ int daObjCtMecha03_c::InitResources() {
     mMeshCollider.SetClipOffsetY(-0x200000);
 
     if (data_0209f2c0 != 3) {
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha03_c8BehaviorEv
 int daObjCtMecha03_c::Behavior() {
     if (data_0209f2c0 != 3) {
         if ((u16)mSoundTimer != 0) {
@@ -170,13 +166,11 @@ int daObjCtMecha03_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha03_c6RenderEv
 int daObjCtMecha03_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha03_c16CleanupResourcesEv
 int daObjCtMecha03_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -185,7 +179,6 @@ int daObjCtMecha03_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjCtMecha03_c17UpdateModelMatrixEv
 /* Writes mModel.mat4x3 from the actor's Y/Z angles and copies the
    actor position into its translation row. */
 int daObjCtMecha03_c::UpdateModelMatrix() {
@@ -197,7 +190,6 @@ int daObjCtMecha03_c::UpdateModelMatrix() {
     return z;
 }
 
-// @symbol _ZN16daObjCtMecha03_c12UpdateShadowEv
 /* Drops the pendulum's shadow: swings a fixed offset through the actor's
    orientation, raycasts the ground under the result, then hands the shadow
    matrix to dActor_c::DropShadowScaleXYZ. */
@@ -233,8 +225,6 @@ void daObjCtMecha03_c::UpdateShadow() {
     mShadowMat.m[11] = bobPos.z >> 3;
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x12c000, 0x12c000, 0x78000, 0xf);
 }
-// @symbol _ZN16daObjCtMecha03_cD1Ev
-// @symbol _ZN16daObjCtMecha03_cD0Ev
 /* No separate body lives here. The inline virtual destructor in the directly
  * included class header makes mwccarm emit retail's D1 then D0 order without
  * the otherwise homeless D2 variant. */

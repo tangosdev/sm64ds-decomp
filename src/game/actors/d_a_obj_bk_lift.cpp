@@ -12,8 +12,6 @@
  * (2004/b56 emits .text back to front); factory first, Kill() last.
  *
  * Notes:
- * - dBgW::SetClipOffsetY / dBgW::SetClipRadius / func_020393c4 / func_020393d4 are
- *   small stores into dBgW (d_bg_w.cpp; property members are in dBgW.h).
  * - StoodOnCallback keeps #pragma long_calls -- the ROM veneer is the
  *   pooled ldr ip,[pc,#8]; bx ip absolute tail-call (size 0x14); a near b
  *   to OnStoodOn in this same TU is 0xc.
@@ -27,7 +25,7 @@
  *   this class's old coined name -- so this TU keeps the address-true
  *   spelling.
  * - data_ov015_02113594 is the CLPS block this TU does not own;
- *   data_02082214 is arm9's sin/cos table; data_0209f220 / gCurrentSublevel
+ *   data_02082214 is arm9's sin/cos table; gCurrentStarId / gCurrentSublevel
  *   are arm9 scene state; g_profile_BK_LIFT01 lives outside this TU.
  * - Behavior kind 1 writes the half-turn through s16 *p = &mPrevAngleY
  *   and a u8 temporary for 0x87: a direct member add if-converts
@@ -59,6 +57,7 @@ enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL 
 #include "dBgCh_Gnd.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* The constructors and destructors are the ROM resource-family veneers,
  * aliased in the manifest. */
@@ -77,18 +76,15 @@ extern BkLiftModelFilePtr data_ov015_02114a64;     /* step BMD */
 extern CLPS_Block data_ov015_02113594;
 extern s16 data_02082214[]; /* arm9 sin/cos table */
 extern s8 gCurrentSublevel;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *p);
 int IsStarCollectedInCurLevel(int starID);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjBk_Lift_c_classInit
 /* BK_LIFT01's registry factory. 0x394 is this class's size, and the calls the
    cartridge inlines here -- fBase_c::operator new, dBgActor_c's base
    constructor, the vptr store and dExtShadowModel_c's constructor on the member at
@@ -99,8 +95,7 @@ extern "C" daObjBk_Lift_c *daObjBk_Lift_c_classInit() {
     return new daObjBk_Lift_c();
 }
 
-// @symbol _ZN14daObjBk_Lift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
-/* dBgW stood-on callback, armed by func_020393c4 in InitResources. Drops the
+/* dBgW stood-on callback, armed by dBgW::SetStoodOnCallback in InitResources. Drops the
    collider and forwards (lift, rider) into OnStoodOn. long_calls is the
    ROM's pooled absolute tail-call. */
 #pragma long_calls on
@@ -109,7 +104,6 @@ void daObjBk_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *r
 }
 #pragma long_calls off
 
-// @symbol _ZN14daObjBk_Lift_c9OnStoodOnEP8dActor_c
 /* Marks the lift as stood on, which is what restarts a kind-2 ride in
    Behavior. The rider is the veneer's extra forwarded register -- a
    callee taking only `this` drops `mov r1, r2`. */
@@ -118,7 +112,6 @@ int daObjBk_Lift_c::OnStoodOn(dActor_c *rider) {
     mMove = 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c13InitResourcesEv
 int daObjBk_Lift_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov015_02114a64), 1, -1);
     mShadowModel.InitCuboid();
@@ -128,8 +121,8 @@ int daObjBk_Lift_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c), *(&mClsnMat),
                               0x199, mAngleY, *(&data_ov015_02113594));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     Vector3 probePos;
     probePos.x = mPosX;
@@ -165,14 +158,13 @@ int daObjBk_Lift_c::InitResources() {
         mVertSpeed = 0xa000;
     }
 
-    if (gCurrentSublevel == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) &&
+    if (gCurrentSublevel == 7 && (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) &&
         mPosY >= 0xdac000)
         return 0;
 
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c8BehaviorEv
 int daObjBk_Lift_c::Behavior() {
     int kind = param1 & 0xff;
 
@@ -237,13 +229,11 @@ int daObjBk_Lift_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c6RenderEv
 int daObjBk_Lift_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c16CleanupResourcesEv
 int daObjBk_Lift_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -253,7 +243,6 @@ int daObjBk_Lift_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Lift_c12UpdateShadowEv
 /* Re-aims the cuboid shadow: the model's matrix, then the step's own position
    biased by mShadowOffsetX / mShadowOffsetY and flattened onto mFloorPosY. */
 void daObjBk_Lift_c::UpdateShadow() {
@@ -264,7 +253,6 @@ void daObjBk_Lift_c::UpdateShadow() {
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x190000, 0x28000, 0x258000, 0xf);
 }
 
-// @symbol _ZN14daObjBk_Lift_c15OnHitByMegaCharER7daPly_c
 /* Slot 27. daPly_c::IncMegaKillCount is a real method, and the trailing
    unqualified Kill() reaches this class's own slot-31 override. */
 void daObjBk_Lift_c::OnHitByMegaChar(daPly_c &player) {
@@ -272,7 +260,6 @@ void daObjBk_Lift_c::OnHitByMegaChar(daPly_c &player) {
     Kill();
 }
 
-// @symbol _ZN14daObjBk_Lift_c4KillEv
 /* Slot 31, attributed by the vtable: _ZTV14daObjBk_Lift_c (ov015 0x02114650)
    carries 0x0211233c at slot 31 -- config/arm9/overlays/ov015/relocs.txt has
    `from:0x021146cc kind:load to:0x0211233c` -- while _ZTV10dBgActor_c's word at
@@ -284,7 +271,7 @@ void daObjBk_Lift_c::OnHitByMegaChar(daPly_c &player) {
    mPos rather than reusing the words it just passed. */
 void daObjBk_Lift_c::Kill() {
     Vector3 dustPos;
-    Particle::System::NewSimple(0x48, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclStoneBlockBreak, mPosX, mPosY, mPosZ);
     dustPos.x = mPosX;
     dustPos.y = mPosY;
     dustPos.z = mPosZ;

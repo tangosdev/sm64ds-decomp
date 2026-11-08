@@ -14,7 +14,6 @@
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
 
-// @symbol dScEntry_c_classInit_ENTRY
 extern "C" void *dScEntry_c_classInit_ENTRY(void) {
     return new dScEntry_c;
 }
@@ -31,16 +30,15 @@ extern "C" {
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
 int InvMat4x3(const Matrix4x3 *, Matrix4x3 *);
 void SubVec3(Vector3 *, Vector3 *, Vector3 *);
-void CrossVec3(const EntryMeshVec *, const EntryMeshVec *, EntryMeshVec *);
+void CrossVec3(const Vector3 *, const Vector3 *, Vector3 *);
 void NormalizeVec3(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *, unsigned int);
 unsigned int func_02045a50(const void *, unsigned int);
-/* local extern: the RTL divide, the geometry-engine matrix load and the
+/* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
    clashes with dScEntry_c.h's vtable spellings. */
-int __aeabi_idiv(int, int);
 void func_020553a4(void *);
 void *func_0201787c(SharedFilePtr *);
 /* local extern: the veneer to operator delete (src/engine/heap/Heap.cpp). */
@@ -64,11 +62,10 @@ extern EntryMeshHandler EntryMeshHandlers[3];
 #define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
 
-// @symbol _ZN9EntryMesh12SendMaterialEv
 /* Push the cached material to the geometry engine: diffuse/ambient,
  * specular/emission, the texture image param and the palette base, then a
  * fixed polygon attribute, through NitroSDK's G3 immediate inlines. Same
- * shape as func_ov080_02125460. */
+ * shape as daPicGate_c::LoadMaterial. */
 void EntryMesh::SendMaterial() {
     reg_G3_DIF_AMB = mMaterial.difAmb;
     reg_G3_SPE_EMI = mMaterial.speEmi;
@@ -81,7 +78,6 @@ void EntryMesh::SendMaterial() {
     reg_G3_POLYGON_ATTR = 0x11f0088;
 }
 
-// @symbol _ZN9EntryMesh10CalcMatrixEv
 /* Build mMtx from mPos (recentred on the 0xfa000 grid middle, in 1/8
  * units) and mAngleY, and keep its inverse in mInvMtx. */
 void EntryMesh::CalcMatrix() {
@@ -103,7 +99,6 @@ struct BMDMaterialColors {
 };
 typedef char BMDMaterialColors_size_must_be_0x30[sizeof(BMDMaterialColors) == 0x30 ? 1 : -1];
 
-// @symbol _ZN9EntryMesh11LoadTextureEP8BMD_File
 /* Load the mesh's texture and palette from its BMD file into VRAM and keep
  * the addresses with the first material's colours and the texture's
  * parameter word; 0 if either load failed. */
@@ -133,7 +128,6 @@ int EntryMesh::LoadTexture(BMD_File *file) {
     return 1;
 }
 
-// @symbol _ZN9EntryMesh7TouchAtEP7Vector3
 /* Map a touched world point into grid space and start a ripple there. */
 void EntryMesh::TouchAt(Vector3 *touch) {
     EntryMeshVec origin;
@@ -149,7 +143,6 @@ void EntryMesh::TouchAt(Vector3 *touch) {
     StartRipple(r.x, r.y);
 }
 
-// @symbol _ZN9EntryMesh11CalcNormalsEv
 /* Pack each vertex's normal from the cross product of its row and column
  * neighbour differences (one-sided at the grid edges), z halved. */
 void EntryMesh::CalcNormals() {
@@ -195,7 +188,7 @@ void EntryMesh::CalcNormals() {
                 SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
                         (Vector3 *)&ei);
 
-            CrossVec3(&ej, &ei, &n);
+            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
             NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
@@ -204,7 +197,6 @@ void EntryMesh::CalcNormals() {
     }
 }
 
-// @symbol _ZN9EntryMesh9PinBorderEv
 /* Hold the border vertices (x or y at 0 or the 0x1f4000 far edge) flat. */
 void EntryMesh::PinBorder() {
     int i;
@@ -215,7 +207,6 @@ void EntryMesh::PinBorder() {
     }
 }
 
-// @symbol _ZN9EntryMesh12RippleHeightEi
 /* The ripple's height at distance dist from mRippleCenter: a sine of the
  * phase, scaled by an amplitude that decays with the ripple's age and with
  * distance. 0 once the ripple is over or before its front reaches dist. */
@@ -239,13 +230,11 @@ int EntryMesh::RippleHeight(int dist) {
     return FX_MUL(t, r2);
 }
 
-// @symbol _ZN9EntryMesh15RippleAmplitudeEi
 /* The ripple's amplitude after age frames. */
 int EntryMesh::RippleAmplitude(int age) {
     return 0x3a000 - age * 0x947;
 }
 
-// @symbol _ZN9EntryMesh11RipplePhaseEi
 /* The sine phase at distance dist, behind the advancing mRipplePhase. */
 short EntryMesh::RipplePhase(int dist) {
     int t = cstd::fdiv(0xffff, 0x16c000);
@@ -260,7 +249,6 @@ struct EntryMeshVecCopy {
     s32 words[3];
 };
 
-// @symbol _ZN9EntryMesh13CalcDistancesEv
 /* Store each vertex's flat (z = 0) distance from mRippleCenter. */
 void EntryMesh::CalcDistances() {
     int i;
@@ -273,7 +261,6 @@ void EntryMesh::CalcDistances() {
     }
 }
 
-// @symbol _ZN9EntryMesh11StartRippleEii
 /* Start a 100-frame ripple at grid point (x, y). */
 void EntryMesh::StartRipple(int x, int y) {
     mRippleCenter.x = x;
@@ -283,7 +270,6 @@ void EntryMesh::StartRipple(int x, int y) {
     mRippleTimer = 100;
 }
 
-// @symbol _ZN9EntryMesh8DrawGridEv
 /* The render handler. Concatenates mMtx with the camera matrix
  * (data_0209b3ec) and loads the result as both the position and the
  * directional matrix, sets a full-white diffuse/ambient and specular/emission
@@ -369,7 +355,6 @@ void EntryMesh::DrawGrid() {
     *(int *)0x4000448 = 1;
 }
 
-// @symbol _ZN9EntryMesh12UpdateRippleEv
 /* The behavior handler: while the ripple runs, set every vertex's height,
  * repack the normals, hold the border flat and advance the phase. */
 void EntryMesh::UpdateRipple() {
@@ -385,7 +370,6 @@ void EntryMesh::UpdateRipple() {
     mRipplePhase = mRipplePhase + 0x1111;
 }
 
-// @symbol _ZN9EntryMesh8InitGridEv
 /* The init handler: lay the vertices out on a flat 0x1f4000-wide square,
  * the last row and column snapped to the far edge, with texture
  * coordinates across 0..0x80000 (v flipped). */
@@ -422,8 +406,8 @@ void EntryMesh::InitGrid() {
                 e->pos.z = q[2];
                 e->normal = 0x1ff00000;
 
-                uu = __aeabi_idiv(0x80000, ((int)mGridDim[0]) - 1);
-                vv = __aeabi_idiv(0x80000, ((int)mGridDim[1]) - 1);
+                uu = 0x80000 / (mGridDim[0] - 1);
+                vv = 0x80000 / (mGridDim[1] - 1);
                 c = ((0x80000 - vv * j) << 8) >> 16;
                 b = ((uu * i) << 8) >> 16;
                 e->texCoord = (unsigned short)b | ((unsigned short)c << 16);
@@ -432,7 +416,7 @@ void EntryMesh::InitGrid() {
                 if (i == nb - 2)
                     acc = 0x1f4000;
                 else
-                    acc += __aeabi_idiv(0x1f4000, nb - 1);
+                    acc += 0x1f4000 / (nb - 1);
                 i++;
             } while (i < nb);
         }
@@ -442,34 +426,30 @@ void EntryMesh::InitGrid() {
         if (j == nb - 2)
             q[0] = 0x1f4000;
         else
-            q[0] += __aeabi_idiv(0x1f4000, nb - 1);
+            q[0] += 0x1f4000 / (nb - 1);
 
         j++;
     } while (j < nb);
 }
 
-// @symbol _ZN9EntryMesh7DestroyEv
 /* Free the vertex array. */
 int EntryMesh::Destroy() {
     func_0203cbc0(mVertices);
     return 1;
 }
 
-// @symbol _ZN9EntryMesh6RenderEv
 /* Run the row's render handler (DrawGrid). */
 int EntryMesh::Render() {
     (this->*mState[2])();
     return 1;
 }
 
-// @symbol _ZN9EntryMesh8BehaviorEv
 /* Run the row's behavior handler (UpdateRipple). */
 int EntryMesh::Behavior() {
     (this->*mState[1])();
     return 1;
 }
 
-// @symbol _ZN9EntryMesh4InitEPK7Vector3i
 /* Allocate a 20 x 20 grid, load its texture from the shared mesh file, run
  * the init handler (InitGrid) and place the mesh at pos, turned by angleY. */
 int EntryMesh::Init(const Vector3 *pos, int angleY) {

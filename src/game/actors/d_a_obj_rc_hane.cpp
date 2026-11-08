@@ -55,10 +55,8 @@
  *
  * Notes:
  * - common.h first (UpdateModelTransform's twelve-word Matrix4x3 copy)
- * - mFrame pointer RMW (named mFrame++ CSEs the field address)
- * - (s64) table <<n + 0x800 >> 12 (Fix12 round; (long long)(int) size-DIFF)
- * - data_ov036_02114070 / data_02082214 keep their linker names (the BMD
- *   handle is constructed by this TU's static initializer, file 1702)
+ * - data_ov036_02114070 keeps its linker name (the BMD handle is
+ *   constructed by this TU's static initializer, file 1702)
  * - g_profile_RC_HANE stays outside the licensed .text
  */
 
@@ -75,6 +73,7 @@ enum d_a_obj_rc_hane_AssetId { ASSET_RC_HANE_BMD = 0x06a6 };
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* 8-byte model handle. The constructor and destructor are the retail
  * func_02017acc / func_02017ab4 pair; the manifest aliases the generated
@@ -91,16 +90,11 @@ typedef char RcHaneModelFilePtr_size_must_be_8[sizeof(RcHaneModelFilePtr) == 8 ?
  * data_ov036_02114070 is a real SharedFilePtr in ov036 carrying no coined
  * alias, so the address-true name stands.
  *
- * data_02082214 is the canned motion table Behavior indexes: pairs of s16,
- * one pair per 16 units of the cycle. It is arm9 data with no shared header,
- * so it keeps the house spelling rather than inventing one.
- *
  * data_020a0e68 (math/MtxStack.h) is the global scratch Matrix4x3 the
  * Matrix4x3_* helpers compose into; UpdateModelTransform below copies the
  * finished matrix out of it. */
 
 extern RcHaneModelFilePtr data_ov036_02114070; /* the wing's BMD */
-extern s16 data_02082214[];                    /* the canned rock table */
 
 extern "C" {
 void Vec3_Asr(void *dst, void *src, int n);
@@ -108,7 +102,6 @@ void Vec3_Asr(void *dst, void *src, int n);
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjRc_Hane_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjRc_Hane_c through RTTI,
    allocation size, vtable identity, and the RC_HANE registry profile; later
    EAD lineage supplies classInit. Exact original spelling is not preserved.
@@ -124,7 +117,6 @@ extern "C" daObjRc_Hane_c *daObjRc_Hane_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c13InitResourcesEv
 s32 daObjRc_Hane_c::InitResources() {
     BMD_File *file = (BMD_File *)dExtSimpleModel_c::LoadFile(data_ov036_02114070);
     mModel.SetFile(file, 1, -1);
@@ -152,34 +144,25 @@ s32 daObjRc_Hane_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c8BehaviorEv
 s32 daObjRc_Hane_c::Behavior() {
     /* mFrame << 10 wraps the frame counter into a full 16-bit turn, and >> 4
        brings it back to the table's entries -- the round trip through s16 is
-       what makes the cycle wrap for free. data_02082214[2i] is sin (yaw,
-       << 13), [2i+1] is cos of the same angle (pitch, << 11): 90° apart,
-       and the yaw amplitude is 4× the pitch, not 2×.
+       what makes the cycle wrap for free. The sine drives yaw (x 2.0), the
+       cosine of the same angle pitch (x 0.5): 90° apart, and the yaw
+       amplitude is 4× the pitch, not 2×.
 
        The two branches differ only in the SIGN of the yaw term: a mirrored
        wing sweeps the other way, but still pitches up on the same beat. */
     s16 a = mFrame << 10;
     if (mReverseMotion == 0) {
-        int idx = ((u16)a >> 4) * 2;
-        mAngleY = mBaseAngleY + (int)((((s64)data_02082214[idx] << 13) + 0x800) >> 12);
-        mAngleX = mBaseAngleX + (int)((((s64)data_02082214[idx + 1] << 11) + 0x800) >> 12);
+        mAngleY = mBaseAngleY + FX_MUL(FX_SinIdx((u16)a >> 4), 0x2000);
+        mAngleX = mBaseAngleX + FX_MUL(FX_CosIdx((u16)a >> 4), 0x800);
     } else {
-        int idx = ((u16)a >> 4) * 2;
-        mAngleY = mBaseAngleY - (int)((((s64)data_02082214[idx] << 13) + 0x800) >> 12);
-        mAngleX = mBaseAngleX + (int)((((s64)data_02082214[idx + 1] << 11) + 0x800) >> 12);
+        mAngleY = mBaseAngleY - FX_MUL(FX_SinIdx((u16)a >> 4), 0x2000);
+        mAngleX = mBaseAngleX + FX_MUL(FX_CosIdx((u16)a >> 4), 0x800);
     }
 
-    /* Through a pointer on purpose: read-modify-write straight on the member
-       lets mwccarm CSE the field address, which costs an instruction the
-       cartridge does not spend here. */
-    {
-        u16 *p = &mFrame;
-        *p = *p + 1;
-    }
+    mFrame++;
 
     /* Only the sounding wing resets the counter, so a silent wing's frame
        runs the full 16 bits and wraps on its own -- the table only ever sees
@@ -197,7 +180,6 @@ s32 daObjRc_Hane_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c6RenderEv
 s32 daObjRc_Hane_c::Render() {
     mModel.Render(0);
     return 1;
@@ -205,7 +187,6 @@ s32 daObjRc_Hane_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c20UpdateModelTransformEv
 /* This class's private "put the model where the actor is" helper, and the
  * reason the rocking is visible at all: it composes the actor's position and
  * three angles into the global scratch matrix, then copies the result into
@@ -228,7 +209,6 @@ void daObjRc_Hane_c::UpdateModelTransform() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_c16CleanupResourcesEv
 s32 daObjRc_Hane_c::CleanupResources() {
     data_ov036_02114070.Release();
     return 1;
@@ -236,8 +216,6 @@ s32 daObjRc_Hane_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjRc_Hane_cD1Ev
-// @symbol _ZN14daObjRc_Hane_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The destructor body is INLINE in
  * include/daObjRc_Hane_c.h and declared FIRST. Two measurements force that:
  *   - out of line, mwcc emits D0 ahead of D1 and the cartridge has D1 first,

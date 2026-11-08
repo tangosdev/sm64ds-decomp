@@ -16,6 +16,7 @@
 //   negated `||` form makes the function 4 bytes larger.
 
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #pragma defer_codegen off
 
 #include "daSnmBth_c.h"
@@ -50,7 +51,7 @@ int *Vec3_LslInPlace(Vector3 *, int);
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -65,18 +66,14 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-// @symbol _ZN10daSnmBth_cD1Ev
-// @symbol _ZN10daSnmBth_cD0Ev
 daSnmBth_c::~daSnmBth_c()
 {
 }
 
-// @symbol _ZN21SnowmanBreathParticleD1Ev
 SnowmanBreathParticle::~SnowmanBreathParticle()
 {
 }
 
-// @symbol _ZN21SnowmanBreathParticle9HitPlayerEv
 void SnowmanBreathParticle::HitPlayer()
 {
     u32 id = mCollider.otherOwner;
@@ -87,7 +84,7 @@ void SnowmanBreathParticle::HitPlayer()
         return;
     if (!IsPlayerActor(actor))
         return;
-    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSnowmanBreathHit, mPos.x, mPos.y, mPos.z);
 
     daPly_c *player = (daPly_c *)actor;
     if (player->mIsMetal)
@@ -136,7 +133,6 @@ void SnowmanBreathParticle::HitPlayer()
     cap->mHorzSpeed = 0x1c000;
 }
 
-// @symbol _ZN21SnowmanBreathParticle12CheckSnowmanEv
 void SnowmanBreathParticle::CheckSnowman()
 {
     dActor_c *snowman = dActor_c::FindWithActorID(0x102, 0);
@@ -144,11 +140,10 @@ void SnowmanBreathParticle::CheckSnowman()
     s32 distance = Vec3_Dist(&mPos, &snowman->mPos);
     if (distance >= threshold)
         return;
-    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSnowmanBreathHit, mPos.x, mPos.y, mPos.z);
     mTimer = 0;
 }
 
-// @symbol _ZN21SnowmanBreathParticle14UpdatePositionEv
 void SnowmanBreathParticle::UpdatePosition()
 {
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
@@ -159,15 +154,14 @@ void SnowmanBreathParticle::UpdatePosition()
     AddVec3(&mPos, &offset, &mPos);
 }
 
-// @symbol _ZN21SnowmanBreathParticle6RenderEv
 void SnowmanBreathParticle::Render()
 {
     if (mTimer == 0)
         return;
-    mParticleID = Particle::System::New(mParticleID, 0x111, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticleID =
+        Particle::System::New(mParticleID, kPtclSnowmanBreath, mPos.x, mPos.y, mPos.z, 0, 0);
 }
 
-// @symbol _ZN21SnowmanBreathParticle8BehaviorEv
 void SnowmanBreathParticle::Behavior()
 {
     if (DecIfAbove0_Byte(&mTimer) == 0)
@@ -180,7 +174,6 @@ void SnowmanBreathParticle::Behavior()
     mCollider.Update();
 }
 
-// @symbol _ZN21SnowmanBreathParticle8TrySpawnER7daPly_c
 int SnowmanBreathParticle::TrySpawn(daPly_c &player) {
     s32 angle;
     if (mTimer != 0)
@@ -201,7 +194,6 @@ int SnowmanBreathParticle::TrySpawn(daPly_c &player) {
     return 1;
 }
 
-// @symbol _ZN21SnowmanBreathParticleC1Ev
 SnowmanBreathParticle::SnowmanBreathParticle()
 {
     mPos = data_ov027_02113d10;
@@ -209,7 +201,6 @@ SnowmanBreathParticle::SnowmanBreathParticle()
     mTimer = 0;
 }
 
-// @symbol _ZN10daSnmBth_c15IsPlayerInRangeEv
 int daSnmBth_c::IsPlayerInRange()
 {
     daPly_c *player = ClosestPlayer();
@@ -229,7 +220,6 @@ int daSnmBth_c::IsPlayerInRange()
     return 0;
 }
 
-// @symbol _ZN10daSnmBth_c16CleanupResourcesEv
 /* daSnmBth_c::CleanupResources -- vtable slot 3. Releases the three shared
  * files the class holds; it never touches `this`. */
 int daSnmBth_c::CleanupResources()
@@ -240,17 +230,15 @@ int daSnmBth_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daSnmBth_c16OnPendingDestroyEv
 /* daSnmBth_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
 void daSnmBth_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN10daSnmBth_c6RenderEv
 int daSnmBth_c::Render()
 {
-    int b = data_0209f2d8;
+    int b = gGameMode;
     b = (b == 2);
     if (b)
         return 1;
@@ -263,7 +251,6 @@ int daSnmBth_c::Render()
     return 1;
 }
 
-// @symbol _ZN10daSnmBth_c8BehaviorEv
 int daSnmBth_c::Behavior()
 {
     int b;
@@ -274,7 +261,7 @@ int daSnmBth_c::Behavior()
     SnowmanBreathParticle *slot;
     int zero;
 
-    b = data_0209f2d8;
+    b = gGameMode;
     b = (b == 2);
     if (b) {
         return 1;
@@ -338,7 +325,6 @@ int daSnmBth_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN10daSnmBth_c13InitResourcesEv
 int daSnmBth_c::InitResources()
 {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da40);
@@ -358,7 +344,6 @@ int daSnmBth_c::InitResources()
 }
 
 /* SNOWMAN_BREATH factory. */
-// @symbol daSnmBth_c_classInit
 extern "C" daSnmBth_c *daSnmBth_c_classInit()
 {
     return new daSnmBth_c();

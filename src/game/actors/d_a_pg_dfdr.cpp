@@ -18,7 +18,7 @@
  * - Sound::Play(3, 0xf3, pos) is +8 bytes in StateWalk (0x104 -> 0x10c).
  *   The ROM calls func_0201267c.
  * - Assigning mMeshCollider.beforeClsnCallback is -4 bytes in
- *   InitResources (0x1c8 -> 0x1c4). The ROM calls func_020393d4.
+ *   InitResources (0x1c8 -> 0x1c4). The ROM calls dBgW::SetBeforeClsnCallback.
  * - Naming mAnmModel.currFrame and .file in StateWalk reorders 6 words (the
  *   straight-walk file loads after the frame). c+0x378 / c+0x380 and the
  *   ternary stay.
@@ -62,10 +62,6 @@ enum {
     /* dActor_c::mFlags 0x2: with the clip test, skip Render. */
     kSkipRender = 2
 };
-
-/* local extern: stores dBgW::beforeClsnCallback (p[6]); dBgW.h has no
- * setter. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* File-scope objects at the end of this file construct the six resource
  * handles and fill the four-slot state table. mwcc emits
@@ -121,12 +117,10 @@ struct PatrolStep {
 };
 extern PatrolStep data_ov027_02113a1c[];
 
-// @symbol daPgDfdr_c_classInit
 extern "C" daPgDfdr_c *daPgDfdr_c_classInit() {
     return new daPgDfdr_c();
 }
 
-// @symbol _ZN10daPgDfdr_c13InitResourcesEv
 s32 daPgDfdr_c::InitResources() {
     int i;
     void *file;
@@ -153,7 +147,7 @@ s32 daPgDfdr_c::InitResources() {
     file = dBgW_Kc::LoadFile(data_ov027_02113c6c);
     mMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY,
                           *(CLPS_Block *)&data_ov027_021130e8);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     mVertAccel = 0;
     mTerminalVelocity = 0;
@@ -176,7 +170,6 @@ s32 daPgDfdr_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN10daPgDfdr_c8BehaviorEv
 s32 daPgDfdr_c::Behavior() {
     IsClsnInRangeOnScreen(0, 0);
     CallStateBehavior();
@@ -193,17 +186,14 @@ s32 daPgDfdr_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10daPgDfdr_c6RenderEv
 s32 daPgDfdr_c::Render() {
     mTextureSequence.Update(mAnmModel.data);
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN10daPgDfdr_c16OnPendingDestroyEv
 void daPgDfdr_c::OnPendingDestroy() {}
 
-// @symbol _ZN10daPgDfdr_c16CleanupResourcesEv
 s32 daPgDfdr_c::CleanupResources() {
     int i;
     data_ov027_02113c7c.Release();
@@ -218,28 +208,24 @@ s32 daPgDfdr_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN10daPgDfdr_c8SetStateEi
 /* Select state idx and run its enter function. */
 void daPgDfdr_c::SetState(int idx) {
     mStateTable = &((StatePair *)&data_ov027_02113ce4)[idx];
     CallStateInit();
 }
 
-// @symbol _ZN10daPgDfdr_c13CallStateInitEv
 void daPgDfdr_c::CallStateInit() {
     typedef void (daPgDfdr_c::*Fn)();
     Fn *fn = (Fn *)mStateTable;
     (this->**fn)();
 }
 
-// @symbol _ZN10daPgDfdr_c17CallStateBehaviorEv
 void daPgDfdr_c::CallStateBehavior() {
     typedef void (daPgDfdr_c::*Fn)();
     Fn *fn = (Fn *)mStateTable + 1;
     (this->**fn)();
 }
 
-// @symbol _ZN10daPgDfdr_c13InitStateTurnEv
 /* State 0 enter: pause-and-turn clip, 20 frames, mIsWalking = 0. */
 int daPgDfdr_c::InitStateTurn() {
     mAnmModel.SetAnim((BCA_File *)data_ov027_02113c84.filePtr, 0, 0x1000, 0);
@@ -249,7 +235,6 @@ int daPgDfdr_c::InitStateTurn() {
     return 1;
 }
 
-// @symbol _ZN10daPgDfdr_c9StateTurnEv
 /* State 0 tick: after the pause, turn mAngleY toward this step's end heading. */
 int daPgDfdr_c::StateTurn() {
     if (DecIfAbove0_Byte(&mTimer) == 0) {
@@ -262,7 +247,6 @@ int daPgDfdr_c::StateTurn() {
     return 1;
 }
 
-// @symbol _ZN10daPgDfdr_c13InitStateWalkEv
 /* State 1 enter: distance, speed and start heading of this step, then the
    straight-walk clip when the headings match and the turn clip when they do not. */
 void daPgDfdr_c::InitStateWalk() {
@@ -280,7 +264,6 @@ void daPgDfdr_c::InitStateWalk() {
     mIsWalking = 1;
 }
 
-// @symbol _ZN10daPgDfdr_c9StateWalkEv
 /* State 1 tick: spend mDistanceLeft. At zero, wrap the step and enter the turn.
    Otherwise update position and play 0xf3 on the walk clip's footstep frames. */
 int daPgDfdr_c::StateWalk() {
@@ -330,7 +313,6 @@ int daPgDfdr_c::StateWalk() {
     return 1;
 }
 
-// @symbol _ZN10daPgDfdr_c17UpdateModelMatrixEv
 /* dExtSimpleModel_c matrix from mAngleY plus position >> 3; collider copy keeps the
    full position. Flat Matrix4x3 (common.h before dExtSimpleModel_c.h) is the 12-word copy. */
 void daPgDfdr_c::UpdateModelMatrix() {
@@ -344,8 +326,6 @@ void daPgDfdr_c::UpdateModelMatrix() {
     mClsnMat.m[11] = mPosZ;
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
-// @symbol _ZN10daPgDfdr_cD1Ev
-// @symbol _ZN10daPgDfdr_cD0Ev
 /* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- _ZN10daPgDfdr_cD1Ev 0x021118c8 size 0x5c and        */
 /* _ZN10daPgDfdr_cD0Ev 0x02111924 size 0x70 -- are NOT written here.           */

@@ -45,6 +45,8 @@ enum daBakubaku_c_AssetId {
 #include "LevelRng.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* dCc_c bit table: flags/vulnFlags/hitFlags share it. */
 enum {
@@ -112,10 +114,6 @@ typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int heig
 int func_ov002_020c5cd8(void *a, void *self);
 /* Sound::Play with bank 3. */
 void func_02012694(unsigned int a, void *p);
-/* Particle::System::New wrappers; they pass the tracker callbacks at
-   +0x800 and +0x7f4. */
-u32 func_02022c80(u32, u32, Fix12i, Fix12i, Fix12i, const void *);
-u32 func_02022d00(u32, u32, Fix12i, Fix12i, Fix12i, void *);
 }
 
 /* Both predicates are int-returning, as the ROM materializes the 0/1
@@ -129,13 +127,11 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
 
-// @symbol daBakubaku_c_classInit
 extern "C" daBakubaku_c *daBakubaku_c_classInit()
 {
     return new daBakubaku_c();
 }
 
-// @symbol g_profile_BAKUBAKU
 extern "C" SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
     daBakubaku_c_classInit,
     0x00e4, /* BAKUBAKU registry id 228 */
@@ -147,13 +143,11 @@ extern "C" SpawnInfo<daBakubaku_c> g_profile_BAKUBAKU = {
     0x01000000,
 };
 
-// @symbol _ZN12daBakubaku_c16OnAimedAtWithEggEv
 int daBakubaku_c::OnAimedAtWithEgg()
 {
     return 0xa0000; /* Fix12 160.0, egg aim height */
 }
 
-// @symbol _ZN12daBakubaku_c13InitResourcesEv
 s32 daBakubaku_c::InitResources()
 {
     Vector3 bodyOffset;
@@ -190,7 +184,6 @@ s32 daBakubaku_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN12daBakubaku_c8BehaviorEv
 s32 daBakubaku_c::Behavior()
 {
     if (UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3) != 0)
@@ -230,7 +223,6 @@ s32 daBakubaku_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN12daBakubaku_c6RenderEv
 s32 daBakubaku_c::Render()
 {
     if (IsInYoshiMouth(this))
@@ -239,12 +231,10 @@ s32 daBakubaku_c::Render()
     return 1;
 }
 
-// @symbol _ZN12daBakubaku_c16OnPendingDestroyEv
 void daBakubaku_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN12daBakubaku_c16CleanupResourcesEv
 s32 daBakubaku_c::CleanupResources()
 {
     ((SharedFilePtr *)&gBakubakuModelFile)->Release();
@@ -254,7 +244,6 @@ s32 daBakubaku_c::CleanupResources()
 }
 
 /* dExtSimpleModel_c matrix, shadow matrix, drop shadow. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02112044Ev
 void daBakubaku_c::func_ov032_02112044()
 {
     Vector3 v;
@@ -272,7 +261,6 @@ void daBakubaku_c::func_ov032_02112044()
 
 /* Install mState and run its enter hook. The StateFn * read-back of
    mState is the shape that keeps the store-then-load the ROM emits. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111ff4EPv
 int daBakubaku_c::func_ov032_02111ff4(void *pv)
 {
     State *p = (State *)pv;
@@ -283,7 +271,6 @@ int daBakubaku_c::func_ov032_02111ff4(void *pv)
 }
 
 /* Wander enter: random yaw and a state timer. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111f9cEv
 int daBakubaku_c::func_ov032_02111f9c()
 {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
@@ -295,7 +282,6 @@ int daBakubaku_c::func_ov032_02111f9c()
 }
 
 /* Wander: steer toward the spawn point, or start a chase. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111e24Ev
 int daBakubaku_c::func_ov032_02111e24()
 {
     Vector3 in;
@@ -339,7 +325,6 @@ int daBakubaku_c::func_ov032_02111e24()
 }
 
 /* Pause enter: short timer, kill the velocity. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111dd8Ev
 int daBakubaku_c::func_ov032_02111dd8()
 {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
@@ -352,7 +337,6 @@ int daBakubaku_c::func_ov032_02111dd8()
 }
 
 /* Pause: give up into a chase, else wander again. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111d7cEv
 int daBakubaku_c::func_ov032_02111d7c()
 {
     if (func_ov032_02111254() == 1) {
@@ -365,7 +349,6 @@ int daBakubaku_c::func_ov032_02111d7c()
 }
 
 /* Chase enter. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111d58Ev
 int daBakubaku_c::func_ov032_02111d58()
 {
     mStateTimer = 0x12c;
@@ -375,7 +358,6 @@ int daBakubaku_c::func_ov032_02111d58()
 }
 
 /* Chase: close on the stored player position, then surface or dive. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111b9cEv
 int daBakubaku_c::func_ov032_02111b9c()
 {
     /* Out of time, chase aborted, or no target: back to wandering. */
@@ -413,7 +395,6 @@ int daBakubaku_c::func_ov032_02111b9c()
 }
 
 /* Dive enter: pitch down, and let the cylinders count as char-movement. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111b50Ev
 int daBakubaku_c::func_ov032_02111b50()
 {
     mAngTarget = -0x4000;
@@ -426,7 +407,6 @@ int daBakubaku_c::func_ov032_02111b50()
 }
 
 /* Dive: splash when the mouth crosses the surface, then wander. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111830Ev
 int daBakubaku_c::func_ov032_02111830()
 {
     s16 speed;
@@ -459,11 +439,14 @@ int daBakubaku_c::func_ov032_02111830()
             MulVec3Mat4x3(&forwardOffset, &data_020a0e68, &rotatedOffset);
             splashPosition.x += rotatedOffset.x;
             splashPosition.z += rotatedOffset.z;
-            func_02022c80(0, 0x55, splashPosition.x, splashPosition.y, splashPosition.z, 0);
-            mSplashParticle = func_02022d00(mSplashParticle, 0x56, splashPosition.x, data_0209f32c,
-                                            splashPosition.z, 0);
+            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntrySurface, splashPosition.x,
+                                                splashPosition.y, splashPosition.z, 0);
+            mSplashParticle = Particle::System::NewCheckWaterRipple(
+                mSplashParticle, kPtclMegaSplash, splashPosition.x, data_0209f32c, splashPosition.z,
+                0);
             splashPosition.y += 0x4b000;
-            func_02022c80(0, 0x54, splashPosition.x, splashPosition.y, splashPosition.z, 0);
+            Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntryRaised, splashPosition.x,
+                                                splashPosition.y, splashPosition.z, 0);
         }
     }
 
@@ -518,7 +501,6 @@ int daBakubaku_c::func_ov032_02111830()
 }
 
 /* Surface enter. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111814Ev
 int daBakubaku_c::func_ov032_02111814()
 {
     mLungePhase = 0;
@@ -528,7 +510,6 @@ int daBakubaku_c::func_ov032_02111814()
 }
 
 /* Surface toward the player, then wander. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111620Ev
 int daBakubaku_c::func_ov032_02111620()
 {
     daPly_c *r5 = ClosestPlayer();
@@ -592,7 +573,6 @@ int daBakubaku_c::func_ov032_02111620()
 }
 
 /* Body cylinder: mega-kill or a bite. Head cylinder: mega-kill or Hurt. */
-// @symbol _ZN12daBakubaku_c19func_ov032_021113fcEv
 void daBakubaku_c::func_ov032_021113fc()
 {
     Vector3 v1;
@@ -657,7 +637,6 @@ void daBakubaku_c::func_ov032_021113fc()
 
 /* Abort the chase: no player, a wall or floor, or too far from home.
    Above the water aborts too, except during the dive. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111350Ev
 int daBakubaku_c::func_ov032_02111350()
 {
     if (ClosestPlayer() == 0) return 1;
@@ -673,7 +652,6 @@ int daBakubaku_c::func_ov032_02111350()
 }
 
 /* Mario is a chase target. Stores his position. */
-// @symbol _ZN12daBakubaku_c19func_ov032_02111254Ev
 int daBakubaku_c::func_ov032_02111254()
 {
     daPly_c *pl = ClosestPlayer();

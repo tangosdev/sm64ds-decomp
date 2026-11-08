@@ -43,7 +43,7 @@
  * - data_ov084_02130cf8 is the BMD. 02130278 is the BCA table.
  *   02130ce0/ce8/cf0/cc0/cc8/cd0 are BCA handles (SetAnim reads [1]).
  *   0213089c / 0213088c are BMA. The 021302xx words are the per-type
- *   tables. Render keeps a volatile Vector3 backup of the scale.
+ *   tables.
  * - GetCapState is the dCapEnemy_c.h member.
  * - What dCcAc_c bits 0x4 and 0x20000 mean, the king's mState 4 that
  *   mFreeRoamTimer watches, sounds 0xd0 / 0xe0 / 0xd6 / 0x110 / 0x111 / 0x118 /
@@ -76,6 +76,7 @@ enum daKrb_c_AssetId {
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "decl_dCapEnemy_c.h"
+#include "LevelRng.h"
 #include "dExtAnmMaterial_c.h"
 #include "daPly_c.h"
 #include "daKuriKing_c.h"
@@ -203,7 +204,6 @@ extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern int SurfaceInfo_TestFlag0x20(int* p);
-extern int data_02099368[];
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
@@ -216,7 +216,6 @@ extern short data_02082214[];
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
-extern int data_0209e650;
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
 extern int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
@@ -230,13 +229,10 @@ extern int data_ov084_02130238[];
 extern int data_ov084_02130218[];
 }
 
-// @symbol _ZN7daKrb_cD1Ev
-// @symbol _ZN7daKrb_cD0Ev
 daKrb_c::~daKrb_c()
 {
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_021290d4Ev
 /* Per-frame upkeep of mChaseRadius (how close the player must be to be
  * noticed) and of mUnstickTimer.
  *
@@ -297,7 +293,6 @@ void daKrb_c::func_ov084_021290d4() {
     *chaseRadius(self2) = 0x1f4000;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129168EP8dActor_c
 
 /* Enter STATE_TUMBLE: the Goomba is thrown clear. Called when the cap comes
  * off (func_ov084_02129a00) and, with a null `actor`, when a Yoshi-held Goomba
@@ -326,7 +321,6 @@ void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     goomba->mBounceCount = 0;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129238Ev
 /* Water / toxic-floor check, run every frame while the Goomba is off the
  * ground. A probe is cast from 400.0 units above it that looks only for water
  * and toxic surfaces (ordinary ground is switched off). If it finds a surface
@@ -379,7 +373,6 @@ void daKrb_c::func_ov084_02129238() {
     }
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212934cEv
 /* Footstep sound. Only in STATE_WALK and on the ground. The animation frame
  * is currFrame >> 12 (the whole-frame part of the 20.12 value). With the walk
  * animation (data_ov084_02130ce8) the step windows are frames 0..4 and 12..16;
@@ -428,7 +421,6 @@ void daKrb_c::func_ov084_0212934c() {
     }
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129498Ev
 /* Remove the Goomba. With mCapId below 6 (the cap table's "has a cap" range)
  * it is only marked for destruction (MarkForDestruction); otherwise it goes
  * through KillAndTrackInDeathTable. */
@@ -440,7 +432,6 @@ void daKrb_c::func_ov084_02129498() {
         goomba->KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_021294d0Ev
 /* Ground check, run every frame while the Goomba stands on something.
  * If the floor's CLPS record has flag 0x20 set (SurfaceInfo_TestFlag0x20;
  * CLPS.h reads it as water) the Goomba is lost: reward (func_ov084_021296cc),
@@ -450,81 +441,37 @@ void daKrb_c::func_ov084_02129498() {
  * type (CLPS bits 19..23, CLPS::GetSurfaceType) is read. The Goomba is treated as
  * lost (coin and removal, and a respawn at mHomePos when it has a cap or is
  * REWARD_SILVER_STAR_IF_CURRENT) if the type is 1, 4, 5 or 0x13, or if it is
- * 6..9 (daPly_c.h calls those the quicksand tiers) while the collision kind
- * (CLPS bits 0..4, CLPS::func_02037e84) is 8. */
+ * 6..9 (daPly_c.h calls those the quicksand tiers) while the sound type
+ * (CLPS bits 0..4, CLPS::GetSoundType) is 8. */
 void daKrb_c::func_ov084_021294d0() {
-    daKrb_c *goomba = this;
-    char obj[0x28];
-    if (!goomba->mWithMeshClsn.IsOnGround())
+    if (!mWithMeshClsn.IsOnGround())
         return;
 
-    char *fr = (char *)goomba->mWithMeshClsn.GetFloorResult();
-    if (SurfaceInfo_TestFlag0x20((int *)&((dBgPi *)fr)->surface)) {
-        goomba->func_ov084_021296cc();
-        goomba->SpawnCoin();
-        goomba->func_ov084_02129498();
-        Vector3 v;
-        v.x = 0; v.y = 0x6c000; v.z = 0;     /* 108.0 */
-        goomba->ReleaseCap(v);
-        goomba->mPosX = goomba->mHomePos.x;
-        goomba->mPosY = goomba->mHomePos.y;
-        goomba->mPosZ = goomba->mHomePos.z;
-        goomba->RespawnIfHasCap();
+    if (SurfaceInfo_TestFlag0x20((int *)&mWithMeshClsn.GetFloorResult()->surface)) {
+        func_ov084_021296cc();
+        SpawnCoin();
+        func_ov084_02129498();
+        ReleaseCap(Vector3(0, 0x6c000, 0)); /* 108.0 */
+        mPos = mHomePos;
+        RespawnIfHasCap();
         return;
     }
 
-    /* Copy the floor result into obj's own surface record, then ask what kind of
-     * ground it is. The Goomba is lost on some terrain types. */
-    char *floorResult = (char *)goomba->mWithMeshClsn.GetFloorResult();
-    int surfaceType;
-    {
-        /* obj + 4 is &((dBgPi *)obj)->surface; that spelling here or in the
-         * func_02037e84 receiver below adds an instruction, so both stay. */
-        char *surface = obj + 4;
-        int clpsLo = ((dBgPi *)floorResult)->surface.clps.w0;
-        int clpsHi = ((dBgPi *)floorResult)->surface.clps.w1;
-        /* `clpsHi ? clpsLo : clpsLo` is not a typo and not dead: both arms are the
-         * same value, and the ternary is what makes mwccarm materialize clpsLo after
-         * the load of clpsHi instead of before it. Collapsing it to a plain store
-         * reorders the pair and the function stops reproducing. */
-        ((SurfaceInfo *)surface)->clps.w0 = clpsHi ? clpsLo : clpsLo;
-        ((SurfaceInfo *)surface)->clps.w1 = clpsHi;
-        ((SurfaceInfo *)surface)->normal.x = ((dBgPi *)floorResult)->surface.normal.x;
-        ((SurfaceInfo *)surface)->normal.y = ((dBgPi *)floorResult)->surface.normal.y;
-        ((SurfaceInfo *)surface)->normal.z = ((dBgPi *)floorResult)->surface.normal.z;
-        *(int *)(obj) = (int)data_02099368;
-        ((dBgPi *)obj)->triangleID = ((dBgPi *)floorResult)->triangleID;
-        ((dBgPi *)obj)->colliderIdx = ((dBgPi *)floorResult)->colliderIdx;
-        ((dBgPi *)obj)->clsnID = ((dBgPi *)floorResult)->clsnID;
-        ((dBgPi *)obj)->owner = ((dBgPi *)floorResult)->owner;
-        ((dBgPi *)obj)->collider = ((dBgPi *)floorResult)->collider;
-        surfaceType = ((SurfaceInfo *)surface)->clps.GetSurfaceType();
+    dBgPi floor(*mWithMeshClsn.GetFloorResult());
+    int surfaceType = floor.surface.clps.GetSurfaceType();
+    if ((floor.surface.clps.GetSoundType() == 8 &&
+         (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)) ||
+        surfaceType == 0x13 || surfaceType == 1 || surfaceType == 4 || surfaceType == 5) {
+        SpawnCoin();
+        func_ov084_02129498();
+        if ((mCapId & 0xf) < 6 || mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
+            mPos = mHomePos;
+            ReleaseCap(Vector3(0, 0x6c000, 0)); /* 108.0 */
+            RespawnIfHasCap();
+        }
     }
-    if (((const CLPS *)(obj + 4))->func_02037e84() == 8) {
-        if (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)
-            goto action;
-    }
-    if (surfaceType == 0x13 || surfaceType == 1)
-        goto action;
-    if ((unsigned)(surfaceType - 4) > 1)
-        goto dtor;
-action:
-    goomba->SpawnCoin();
-    goomba->func_ov084_02129498();
-    if ((goomba->mCapId & 0xf) < 6 || goomba->mRewardType == daKrb_c::REWARD_SILVER_STAR_IF_CURRENT) {
-        goomba->mPosX = goomba->mHomePos.x;
-        goomba->mPosY = goomba->mHomePos.y;
-        goomba->mPosZ = goomba->mHomePos.z;
-        Vector3 v2;
-        v2.x = 0; v2.y = 0x6c000; v2.z = 0;     /* 108.0 */
-        goomba->ReleaseCap(v2);
-        goomba->RespawnIfHasCap();
-    }
-dtor:
-    ((dBgPi *)obj)->dBgPi::~dBgPi();
 }
 
-// @symbol func_ov084_021296b0
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
  * calls this on each minion it spawns, after the Spawn. */
 extern "C" {
@@ -537,7 +484,6 @@ void func_ov084_021296b0(void *a, void *b) {
 }
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_021296ccEv
 /* Pay out the reward the Goomba carries (mRewardType), then clear bits 4..7
  * and the upper halfword of param1 (mask 0xff0f), presumably so a respawned
  * copy does not read the reward again.
@@ -583,7 +529,6 @@ void daKrb_c::func_ov084_021296cc() {
     goomba->SpawnSoundObj(1);
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129864Ev
 /* For REWARD_SILVER_STAR_IF_CURRENT: while no star slot is tracked yet
  * (mStarTracked negative) and mStarID matches data_0209f344[data_0209f208[0]],
  * claim a slot (TrackStar(mStarID, 1)). */
@@ -599,7 +544,6 @@ void daKrb_c::func_ov084_02129864() {
     goomba->mStarTracked = (s8)goomba->TrackStar(goomba->mStarID, 1);
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_021298d0Ev
 /* Per-frame death handling (Behavior calls it while mDeathState != 0).
  * UpdateDeath runs the shared death sequence and returns nonzero on the frame
  * it finishes.
@@ -656,7 +600,6 @@ L_end:
     return deathState;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129a00Ev
 /* Yoshi-eat and hit front end, called near the start of Behavior. Returns 0
  * when Behavior should carry on with the normal state update (nobody is
  * eating it, or the cap has just come off); every other path returns 1 and
@@ -755,7 +698,6 @@ ret0:
     return 0;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129c9cEv
 /* Start a hop: play SND_HOP, enter STATE_AIRBORNE with no horizontal speed and
  * the per-type launch speed data_ov084_02130248[type] as vertical speed, and
  * set the 0x4 bit of the dCcAc_c flags (meaning not recovered). */
@@ -769,7 +711,6 @@ void daKrb_c::func_ov084_02129c9c() {
     goomba->mdCcAc_c.flags |= 4;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129cf4Ei
 /* Choose what the Goomba is heading for. Sets mClosestPlayer, mDistToPlayer
  * (the distance to the target, or 0x61a8000 = 25000.0 for "nothing to
  * react to"; 0x7fffffff until the first call) and mInitAngleY (the heading
@@ -837,7 +778,6 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
     goomba->mInitAngleY = Vec3_HorzAngle(&goomba->mPos, &ppos);
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_02129ed4Ev
 /* Collision reaction: something touched this Goomba, decide what it did.
  *
  * `flags` is hitFlags (the collision word at 0x1a0) and `other` the actor found
@@ -884,8 +824,8 @@ void daKrb_c::func_ov084_02129ed4() {
     s16 killDirNormal[3];
     s16 killDirVariant[3];
     s16 killDirPlayer[3];
-    volatile Vector3 playerPos;
-    volatile Vector3 playerPosJump;
+    Vector3 playerPos;
+    Vector3 playerPosJump;
     Vector3 capReleaseOnHit;
     Vector3 capReleaseOnKill;
     Vector3 hurtOriginFirstHit;
@@ -993,10 +933,8 @@ void daKrb_c::func_ov084_02129ed4() {
                     return;
                 }
                 {
-                    Vector3 *pp = &((dActor_c *)other)->mPos;
-                    playerPos.x = pp->x;
-                    playerPos.y = pp->y;
-                    playerPos.z = pp->z;
+                    const Vector3 &p = other->mPos;
+                    playerPos = p;
                 }
                 if (other->IsOnShell() != 0) {
                     goomba->mDeathState = daKrb_c::DEATH_DIVE_OR_EGG;
@@ -1020,14 +958,14 @@ void daKrb_c::func_ov084_02129ed4() {
                 if (goomba->mState == daKrb_c::STATE_WALK) {
                     if (goomba->mGoombaType == daKrb_c::GOOMBA_SMALL) {
                         ((dActor_c *)goomba)->SmallPoofDust();
-                        hurtOriginFirstHit.x = goomba->mPosX; hurtOriginFirstHit.y = goomba->mPosY; hurtOriginFirstHit.z = goomba->mPosZ;
+                        hurtOriginFirstHit = goomba->mPos;
                         other->Hurt(hurtOriginFirstHit, 0, hurtKnockback, 1, 0, 1);
                         goomba->func_ov084_02129498();
                         func_02012694(SND_DEATH_SMALL, &goomba->mCamSpacePos);
                         return;
                     }
                     if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
-                    hurtOriginRepeat.x = goomba->mPosX; hurtOriginRepeat.y = goomba->mPosY; hurtOriginRepeat.z = goomba->mPosZ;
+                    hurtOriginRepeat = goomba->mPos;
                     other->Hurt(hurtOriginRepeat, data_ov084_02130204[goomba->mGoombaType],
                                 hurtKnockback, 1, 0, 1);
                     goomba->mState = daKrb_c::STATE_HOP_START;
@@ -1043,10 +981,8 @@ void daKrb_c::func_ov084_02129ed4() {
     typeMatch = (s32)(((dActor_c *)other)->actorID == ACTOR_PLAYER);
     if (typeMatch != 0) {
         {
-            Vector3 *pp = &((dActor_c *)other)->mPos;
-            playerPosJump.x = pp->x;
-            playerPosJump.y = pp->y;
-            playerPosJump.z = pp->z;
+            const Vector3 &p = other->mPos;
+            playerPosJump = p;
         }
         if (((dActor_c *)goomba)->JumpedOnByPlayer(*(dCc_c *)&goomba->mdCcAc_c, *other) != 0) {
             other->Bounce(0x28000); /* 40.0 */
@@ -1062,7 +998,7 @@ void daKrb_c::func_ov084_02129ed4() {
         if (goomba->mState == daKrb_c::STATE_WALK) {
             goomba->mState = daKrb_c::STATE_HOP_START;
             if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
-            hurtOriginJumped.x = goomba->mPosX; hurtOriginJumped.y = goomba->mPosY; hurtOriginJumped.z = goomba->mPosZ;
+            hurtOriginJumped = goomba->mPos;
             other->Hurt(hurtOriginJumped, data_ov084_02130204[goomba->mGoombaType], hurtKnockback,
                         1, 0, 1);
             return;
@@ -1088,7 +1024,6 @@ block_68:
     }
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212a580Ev
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -1137,7 +1072,6 @@ void daKrb_c::func_ov084_0212a580() {
     UpdateCapPos(arg, (this ? arg16 : arg16));
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212a6f8Ev
 /* STATE_PAUSE: stand still (horizontal speed 0) until mWanderRerollTimer runs
  * out, then go back to STATE_WALK with the walk animation. */
 void daKrb_c::func_ov084_0212a6f8() {
@@ -1154,7 +1088,6 @@ void daKrb_c::func_ov084_0212a6f8() {
     goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130ce8.filePtr, 0, 0x1000, 0);
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212a774Ev
 /* STATE_TUMBLE: the Goomba has been thrown clear (func_ov084_02129168),
  * after its cap came off or when a Yoshi-held Goomba landed, and bounces while
  * mBounceCountdown runs.
@@ -1271,7 +1204,6 @@ void daKrb_c::func_ov084_0212a774() {
     goomba->mEatenByYoshi = 0;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212aab0Ev
 /* STATE_AIRBORNE: after a hop begins. On the frame it touches down a large
  * Goomba kicks up HugeLandingDust and a normal one LandingDust. Once on the
  * ground it returns to STATE_WALK and clears dCcAc_c flag bit 0x4 (set by
@@ -1294,7 +1226,6 @@ void daKrb_c::func_ov084_0212aab0()
     mAngleY = mPrevAngleY;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212ab48Ev
 /* STATE_HOP_START: begin a hop (func_ov084_02129c9c, which enters
  * STATE_AIRBORNE). A KURIBO_L then scales its vertical speed by
  * 0x1800 / 0x1000 = 1.5. The target heading becomes the spawn heading
@@ -1312,7 +1243,6 @@ void daKrb_c::func_ov084_0212ab48() {
     goomba->mAngleY = goomba->mPrevAngleY;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212abd4Ev
 /* STATE_WALK for an ordinary Goomba (not a king minion): wander and chase.
  *
  * func_ov084_02129cf4 picks the target (mDistToPlayer and mInitAngleY), the
@@ -1405,14 +1335,16 @@ void daKrb_c::func_ov084_0212abd4() {
             if (*(u16 *)&goomba->mHeadingHoldTimer != 0) {
                 *(u16 *)((int)&goomba->mHeadingHoldTimer) =
                     *(u16 *)((int)&goomba->mHeadingHoldTimer) - 1;
-            } else if (((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 3) {
-                goomba->mTargetAngleY = goomba->mPrevAngleY + (s16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
+            } else if (((unsigned)RandomIntInternal(&data_0209e650.value) >> 16) & 3) {
+                goomba->mTargetAngleY =
+                    goomba->mPrevAngleY +
+                    (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
                 goomba->mHeadingHoldTimer = 0x64;
             } else {
-                goomba->mTargetAngleY = (s16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
+                goomba->mTargetAngleY =
+                    (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
                 goomba->func_ov084_02129c9c();
             }
-
         }
     }
     if (goomba->mCapId >= 6) {
@@ -1422,7 +1354,6 @@ void daKrb_c::func_ov084_0212abd4() {
     ApproachLinear(*(short *)&goomba->mPrevAngleY, goomba->mTargetAngleY, step);
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212af74Ev
 /* STATE_WALK for a king minion (mGoombaType 3): follow the Goomba King
  * (mTargetUniqueID). If the king is gone it becomes an ordinary KURIBO
  * (mGoombaType = GOOMBA_NORMAL).
@@ -1509,7 +1440,7 @@ void daKrb_c::func_ov084_0212af74() {
             } else {
                 if (DecIfAbove0_Short(
                         reinterpret_cast<unsigned short *>(&goomba->mWanderRerollTimer)) == 0) {
-                    rnd = RandomIntInternal(&data_0209e650);
+                    rnd = RandomIntInternal(&data_0209e650.value);
                     goomba->mWanderRerollTimer = (s16)((rnd >> 0x1b) + 0x1e);
                     goomba->mInitAngleY = (s16)(rnd >> 0x10);
                 }
@@ -1545,7 +1476,6 @@ void daKrb_c::func_ov084_0212af74() {
         goomba->mFreeRoamTimer = 0x1e;
 }
 
-// @symbol _ZN7daKrb_c19func_ov084_0212b2dcEv
 /* STATE_WALK handler: the king's minions follow the king, everything else
  * wanders / chases. mAngleY then follows mPrevAngleY. */
 void daKrb_c::func_ov084_0212b2dc() {
@@ -1557,7 +1487,6 @@ void daKrb_c::func_ov084_0212b2dc() {
     goomba->mAngleY = goomba->mPrevAngleY;
 }
 
-// @symbol _ZN7daKrb_c16OnAimedAtWithEggEv
 /* Returns a Fix12 value by size: 65.0 for KURIBO, 150.0 for KURIBO_L and
  * 20.0 for KURIBO_S. */
 int daKrb_c::OnAimedAtWithEgg()
@@ -1571,7 +1500,6 @@ int daKrb_c::OnAimedAtWithEgg()
     return 0x14000;
 }
 
-// @symbol _ZN7daKrb_c13OnTurnIntoEggER7daPly_c
 /* Yoshi turns the Goomba into an egg. A Goomba with a cap (mCapId < 6) or
  * REWARD_SILVER_STAR_IF_CURRENT is first put back at mHomePos. If
  * OnYoshiTryEat() is 6 (KURIBO): a daPly_c that IsCollectingCap gets the coin
@@ -1627,7 +1555,6 @@ void daKrb_c::OnTurnIntoEgg(daPly_c &playerRef) {
     func_ov084_02129498();
 }
 
-// @symbol _ZN7daKrb_c16CleanupResourcesEv
 /* Release the shared files: the blue-coin model for a KURIBO_L, the BMD and
  * the seven BCA handles, the silver-star model when mRewardType is 1 or 2,
  * and the cap model. A king minion also decrements the king's mSpawnedCount. */
@@ -1654,27 +1581,20 @@ int daKrb_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN7daKrb_c16OnPendingDestroyEv
 void daKrb_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7daKrb_c6RenderEv
 /* Draw the body and the cap. Nothing is drawn while mFlags bit 0x40000 (the
  * Yoshi-mouth state in dActor_c.h) is set or the Goomba is dormant (mIsDormant). While mDeathState is
  * DEATH_STOMPED the scale is multiplied by data_ov084_02130258[type] for
  * the draw and restored afterwards. */
 int daKrb_c::Render()
 {
-    int locked;
-    volatile Vector3 backup;
-
-    locked = (mFlags & 0x40000) != 0;
+    int locked = (mFlags & 0x40000) != 0;
     if (locked || mIsDormant != 0) return 1;
 
-    backup.x = mScaleX;
-    backup.y = mScaleY;
-    backup.z = mScaleZ;
+    Vector3 backup = mScale;
 
     if (mDeathState == DEATH_STOMPED) {
         mScaleX = FX_MUL(mScaleX, data_ov084_02130258[mGoombaType]);
@@ -1684,15 +1604,12 @@ int daKrb_c::Render()
 
     mAnmModel.Render(&mScale);
 
-    mScaleX = backup.x;
-    mScaleY = backup.y;
-    mScaleZ = backup.z;
+    mScale = backup;
     mMaterialChanger.Update(mAnmModel.data);
     RenderCapModel(0);
     return 1;
 }
 
-// @symbol _ZN7daKrb_c8BehaviorEv
 /* Per-frame update; always returns 1.
  *
  * In order: func_ov084_02129864 (claim the star slot) and func_ov084_021290d4
@@ -1875,7 +1792,6 @@ done:
     return 1;
 }
 
-// @symbol _ZN7daKrb_c13InitResourcesEv
 /* Load the files and set the Goomba up. Spawn parameter (param1) layout:
  * bits 0..3 the cap (AddCap), bits 4..7 mRewardType, bits 8..11 the
  * dCapEnemy_c byte at 0x112 (mHadBank1Cap), bits 12..15 mStarID. The size
@@ -1997,7 +1913,6 @@ int daKrb_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN7daKrb_c13OnYoshiTryEatEv
 /* Returns 6 for KURIBO, 4 for KURIBO_S and 0 for KURIBO_L; OnTurnIntoEgg
  * compares against 6 and 4. */
 int daKrb_c::OnYoshiTryEat()
@@ -2011,25 +1926,21 @@ int daKrb_c::OnYoshiTryEat()
     return 0;
 }
 
-// @symbol daKrb_c_classInit_KURIBO_L
 extern "C" daKrb_c *daKrb_c_classInit_KURIBO_L()
 {
     return new daKrb_c();
 }
 
-// @symbol daKrb_c_classInit_KURIBO_S
 extern "C" daKrb_c *daKrb_c_classInit_KURIBO_S()
 {
     return new daKrb_c();
 }
 
-// @symbol daKrb_c_classInit_KURIBO
 extern "C" daKrb_c *daKrb_c_classInit_KURIBO()
 {
     return new daKrb_c();
 }
 
-// @symbol g_profile_KURIBO
 extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO = {
     daKrb_c_classInit_KURIBO,
     0x00c8, /* KURIBO registry id 200 */
@@ -2041,7 +1952,6 @@ extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO = {
     0x01000000,
 };
 
-// @symbol g_profile_KURIBO_S
 extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
     daKrb_c_classInit_KURIBO_S,
     0x00c9,
@@ -2053,7 +1963,6 @@ extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_S = {
     0x00800000,
 };
 
-// @symbol g_profile_KURIBO_L
 extern "C" SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
     daKrb_c_classInit_KURIBO_L,
     0x00ca,

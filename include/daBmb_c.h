@@ -140,6 +140,7 @@ struct daBmb_c : dEnemyBase_c {
     int  State4();
     void State5();
     void func_ov102_0214bd90();
+    void func_ov102_0214beb4();
     void func_ov102_0214b03c();
     void func_ov102_0214b988();
 
@@ -148,6 +149,8 @@ struct daBmb_c : dEnemyBase_c {
     /* Counts mFuse down with the fuse-tick sound, swells the body over the
        last four frames, and detonates at 1 (returns 0 then, else 1). */
     int UpdateFuse();
+    void func_ov102_0214b3b8();
+    void func_ov102_0214b3f0(int);
     /* Drops the shadow from the floor height below the body, or from the
        carrier's height while it is held. */
     void UpdateShadow();

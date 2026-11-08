@@ -44,17 +44,14 @@ struct CvShutterCollisionFilePtr : SharedFilePtr {
     ~CvShutterCollisionFilePtr();
 };
 
-// @symbol daObjCvShutter_c_classInit
 extern "C" daObjCvShutter_c *daObjCvShutter_c_classInit() {
     return new daObjCvShutter_c();
 }
 
-// @symbol _ZN16daObjCvShutter_c13InitResourcesEv
 s32 daObjCvShutter_c::InitResources() {
     return InitResourcesFrom(&data_ov021_021148d0);
 }
 
-// @symbol _ZN16daObjCvShutter_c8BehaviorEv
 s32 daObjCvShutter_c::Behavior() {
     s32 r = UpdateShutter();
     if (IsClsnInRange(0, 0))
@@ -62,12 +59,9 @@ s32 daObjCvShutter_c::Behavior() {
     return r;
 }
 
-// @symbol _ZN16daObjCvShutter_c16CleanupResourcesEv
 s32 daObjCvShutter_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov021_021148d0);
 }
-// @symbol _ZN16daObjCvShutter_cD1Ev
-// @symbol _ZN16daObjCvShutter_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjCvShutter_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no D2. Writing the body

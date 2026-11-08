@@ -14,8 +14,6 @@
  * HATENA_SWITCH registry). Retail does not store that spelling. Historical
  * alias QuestionSwitch_Spawn.
  *
- * What stays: func_020393c4 is a 4-byte store into dBgW+0x1c
- *   (stoodOnCallback). This TU calls it; naming belongs with dBgW in arm9.
  * What stays: the 12-word matrix copies go through Mtx43 -- structured
  *   Matrix4x3 assignment scalarizes; common.h-first would drop mClsnMat.t
  *   used in UpdateClsnTransform.
@@ -40,6 +38,7 @@ enum d_a_obj_hatena_switch_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "private/mtx43.h"
@@ -64,10 +63,8 @@ static inline int IsOffScreen(dActor_c *actor) {
     return (actor->mFlags & 8) != 0;
 }
 
-/* local extern: no shared header declares these. func_020393c4 is the
- * dBgW+0x1c store; naming belongs with dBgW. */
+/* local extern: no shared header declares this. */
 extern "C" {
-extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 extern void Vec3_Asr(Vector3 *destination, Vector3 *source, s32 shift);
 }
 
@@ -120,12 +117,10 @@ extern "C" SpawnInfo<daObjHatenaSwitch_c> g_profile_HATENA_SWITCH = {
     0,
 };
 
-// @symbol _ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_
 void daObjHatenaSwitch_c::AfterClsnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
     ((daObjHatenaSwitch_c *)owner)->HandleClsn(*other);
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c
 void daObjHatenaSwitch_c::HandleClsn(dActor_c &other) {
     if (!IsPlayerActor(&other) && !IsCrateActor(&other))
         return;
@@ -134,7 +129,6 @@ void daObjHatenaSwitch_c::HandleClsn(dActor_c &other) {
         mPressedThisFrame = 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c13InitResourcesEv
 s32 daObjHatenaSwitch_c::InitResources() {
     void *file;
 
@@ -153,7 +147,7 @@ s32 daObjHatenaSwitch_c::InitResources() {
     file = dBgW_Kc::LoadFile(data_ov002_0210dd50);
     mMovingMeshCollider.SetFile((KCL_File *)file, mClsnMat, 0x199, mAngleY, data_ov002_0210d774);
 
-    func_020393c4(&mStaticMeshCollider, &daObjHatenaSwitch_c::AfterClsnCallback);
+    mStaticMeshCollider.SetStoodOnCallback(&daObjHatenaSwitch_c::AfterClsnCallback);
 
     if (data_0209caa0.file.flags1 & 0x80000000) {
         mActiveMeshCollider = &mMovingMeshCollider;
@@ -170,7 +164,6 @@ s32 daObjHatenaSwitch_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c8BehaviorEv
 s32 daObjHatenaSwitch_c::Behavior() {
     if (mSoundDelay != 0) {
         if (DecIfAbove0_Short(&mSoundDelay) == 0)
@@ -227,18 +220,15 @@ s32 daObjHatenaSwitch_c::Behavior() {
                 mActiveMeshCollider = &mMovingMeshCollider;
                 data_0209caa0.file.flags1 |= 0x80000000;
                 {
-                    volatile VecFx32 position;
-                    s32 y = mPosY + 0x64000;
-                    s32 z = mPosZ;
-                    s32 x = mPosX;
-                    position.x = x;
-                    position.y = y;
-                    position.z = z;
-                    Particle::System::NewSimple(0x6d, x, y, z);
-                    Particle::System::NewSimple(0x6e, position.x, position.y, position.z);
-                    Particle::System::NewSimple(0x6f, position.x, position.y, position.z);
+                    Vector3 position(mPosX, mPosY + 0x64000, mPosZ);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressA, position.x, position.y,
+                                                position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressB, position.x, position.y,
+                                                position.z);
+                    Particle::System::NewSimple(kPtclHatenaSwitchPressC, position.x, position.y,
+                                                position.z);
                 }
-                Particle::System::NewSimple(0x70, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclHatenaSwitchPressD, mPosX, mPosY, mPosZ);
                 mTalking = 1;
             }
         } else if (pressed == 0) {
@@ -265,13 +255,11 @@ s32 daObjHatenaSwitch_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c6RenderEv
 s32 daObjHatenaSwitch_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c16CleanupResourcesEv
 s32 daObjHatenaSwitch_c::CleanupResources() {
     if (mStaticMeshCollider.IsEnabled())
         mStaticMeshCollider.Disable();
@@ -284,7 +272,6 @@ s32 daObjHatenaSwitch_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c20UpdateModelTransformEv
 void daObjHatenaSwitch_c::UpdateModelTransform() {
     s32 shifted[4];
     Vec3_Asr((Vector3 *)&shifted, (Vector3 *)&mPosX, 3);
@@ -294,7 +281,6 @@ void daObjHatenaSwitch_c::UpdateModelTransform() {
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&mAnmModel.mat4x3;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv
 void daObjHatenaSwitch_c::UpdateClsnTransform() {
     *(Mtx43 *)&mClsnMat = *(Mtx43 *)&mAnmModel.mat4x3;
     mClsnMat.t.x = mPosX;
@@ -303,7 +289,6 @@ void daObjHatenaSwitch_c::UpdateClsnTransform() {
     mActiveMeshCollider->Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c15UpdateClsnStateEv
 s32 daObjHatenaSwitch_c::UpdateClsnState() {
     if (IsOffScreen(this)) {
         if (mActiveMeshCollider->IsEnabled())
@@ -316,12 +301,9 @@ s32 daObjHatenaSwitch_c::UpdateClsnState() {
     return 0;
 }
 
-// @symbol _ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c
 void daObjHatenaSwitch_c::OnGroundPounded(dActor_c &other) {
     mPressTimer = 0;
 }
-// @symbol _ZN19daObjHatenaSwitch_cD1Ev
-// @symbol _ZN19daObjHatenaSwitch_cD0Ev
 /* ROM ordinals 0/1 -- D1 at 0x020b4ed8 and D0 at 0x020b4f44 are emitted
  * naturally by the inline destructor and InitResources vtable instantiation. */
 

@@ -11,7 +11,6 @@
 
 namespace CP15 {
 
-// @symbol _ZN4CP1510EnableDTCMEv
 asm void EnableDTCM(void)
 {
     mrc p15, 0, r0, c1, c0, 0
@@ -20,7 +19,6 @@ asm void EnableDTCM(void)
     bx lr
 }
 
-// @symbol _ZN4CP1518GetDTCMBaseAddressEv
 asm unsigned int GetDTCMBaseAddress(void)
 {
     mrc p15, 0, r0, c9, c1, 0

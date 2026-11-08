@@ -19,7 +19,7 @@
  *   func_0204a17c  parse the resource into mDefinitions and mTextures
  *   func_0204a0dc  upload textures
  *   func_0204a028  upload palettes
- *   func_02049f58  retire expired systems (SysTracker::Update)
+ *   func_02049f58  retire expired systems (dPa_c::Update)
  *   func_02049ee8  draw active systems (RenderAll)
  *   AddSystem      spawn one system
  *   func_02049d78  return one system's particles and the system itself
@@ -84,9 +84,8 @@ static inline SystemState &StateOf(Particle::System *system) {
 
 extern "C" {
 
-// @symbol func_0204a4c8
-char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int arg3,
-                    unsigned short arg4) {
+char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int minPolygonID,
+                    unsigned short maxPolygonID) {
     int i;
     Particle::Manager *manager;
     char *system;
@@ -94,8 +93,8 @@ char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int a
     manager = (Particle::Manager *)alloc(sizeof(Particle::Manager));
     manager->mNumSystems = numSystems;
     manager->mNumParticles = numParticles;
-    manager->unk_02c = arg3;
-    manager->unk_02e = arg4;
+    manager->mMinPolygonID = minPolygonID;
+    manager->mMaxPolygonID = maxPolygonID;
     manager->allocator = alloc;
     manager->mActiveSystems.count = 0;
     manager->mFreeSystems.count = 0;
@@ -121,7 +120,6 @@ char *func_0204a4c8(char *(*alloc)(int), int numSystems, int numParticles, int a
     return (char *)manager;
 }
 
-// @symbol func_0204a17c
 void func_0204a17c(Particle::Manager *manager, char *resource) {
     int offset = sizeof(ParticleResourceHeader);
     int i;
@@ -230,7 +228,6 @@ void func_0204a17c(Particle::Manager *manager, char *resource) {
     }
 }
 
-// @symbol func_0204a0dc
 int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(const void *, u32)) {
     int i;
     GX::BeginLoadTex();
@@ -249,7 +246,6 @@ int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(const void *, 
     return 1;
 }
 
-// @symbol func_0204a028
 int func_0204a028(Particle::Manager *manager,
                   unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
     int i;
@@ -274,7 +270,6 @@ int func_0204a028(Particle::Manager *manager,
     return 1;
 }
 
-// @symbol func_02049f58
 void func_02049f58(Particle::Manager *manager) {
     Particle::System *system = manager->mActiveSystems.head;
     Particle::System *next;
@@ -298,7 +293,6 @@ void func_02049f58(Particle::Manager *manager) {
     } while (next != 0);
 }
 
-// @symbol func_02049ee8
 void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
     Particle::System *system;
     u16 control = REG_DISP3DCNT;
@@ -320,20 +314,18 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
 /* Particle::Manager::AddSystem -- spawn a System, arm9
  * 0x02049e0c..0x02049ee8. func_0204d958 pops one off mFreeSystems,
  * func_0204ae2c initializes it from the indexed SystemDefinition, the
- * manager's two flag words seed the system's flags, func_0204d9a0 pushes
+ * manager's polygon-ID range seeds the system's, func_0204d9a0 pushes
  * it onto mActiveSystems, and a definition whose flags carry the
  * self-destruct bit fails the spawn.
  *
  * leftovers: `(flags << 17) >> 31` stays the arithmetic-shift bit-14 test
- * -- `& 0x4000` emits a different sequence. flags.unk_000/unk_006/unk_00c
- * and manager unk_02c/unk_02e keep their placeholder names: the manager
- * ctor (func_0204a4c8) stores its third and fourth arguments there for
- * AddSystem to loan into each new system's flags, but no consumer names
- * what they index.
+ * -- `& 0x4000` emits a different sequence. The polygon-ID names come from
+ * the draw routines (func_0204be40 and its siblings), which put
+ * polygonIDs.current into POLYGON_ATTR bits 24-29 and wrap it from max to
+ * min; dPa_c::Initialise passes 0x1a and 0x3e, both 6-bit IDs.
  */
 namespace Particle {
 
-// @symbol _ZN8Particle7Manager9AddSystemEiR7Vector3
 System *Manager::AddSystem(int definitionID, Vector3 &position) {
     System *result;
     System *system;
@@ -344,10 +336,10 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
         result = system;
         func_0204ae2c(system, &mDefinitions[definitionID], &position);
 
-        system->flags.unk_000 = unk_02c;
-        system->flags.unk_006 = unk_02e;
-        system->flags.unk_00c = system->flags.unk_000;
-        system->flags.unused = 0;
+        system->polygonIDs.min = mMinPolygonID;
+        system->polygonIDs.max = mMaxPolygonID;
+        system->polygonIDs.current = system->polygonIDs.min;
+        system->polygonIDs.unused = 0;
 
         func_0204d9a0(&mActiveSystems, system);
         if ((system->mDefinition->data->flags << 17) >> 31)
@@ -361,7 +353,6 @@ System *Manager::AddSystem(int definitionID, Vector3 &position) {
 
 extern "C" {
 
-// @symbol func_02049d78
 void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     void *particle;
     particle = func_0204d958(&system->particles);
@@ -378,7 +369,6 @@ void func_02049d78(Particle::Manager *manager, Particle::System *system) {
     func_0204d9a0(&manager->mFreeSystems, system);
 }
 
-// @symbol func_02049d60
 void func_02049d60(Particle::Manager *manager, Particle::System *system) {
     func_0204a5bc(system, &manager->mFreeParticles);
 }

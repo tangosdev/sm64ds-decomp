@@ -14,10 +14,8 @@
 
 extern "C" void *dScMgHanachan_c_classInit(void);
 
-// @symbol dScMgHanachan_c_classInit
 extern "C" void *dScMgHanachan_c_classInit(void) {
     return new dScMgHanachan_c;
 }
 
-// @symbol _ZN15dScMgHanachan_c7WigglerC1Ev
 /* Wiggler's empty inline constructor (dScMgHanachan_c.h), emitted here. */

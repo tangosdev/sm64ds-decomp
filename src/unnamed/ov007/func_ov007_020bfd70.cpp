@@ -1,5 +1,4 @@
 //cpp
-// @symbol func_ov007_020bfd70
 /* recovered: project a world point into DS screen pixels through an ov007 camera.
  *
  * The point at `pos` is transformed by the camera's viewMatrix into a local
@@ -25,6 +24,7 @@
  * it (492-cell pragma sweep and ~6,000 permuter iterations, both flat at 7).
  */
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Ov007Camera.h"
 
 namespace cstd {
@@ -33,7 +33,6 @@ int fdiv(int, int);
 
 extern "C" {
 void MulVec3Mat4x3(void* v, void* m, void* out);
-extern short data_02082214[];
 
 void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int out[3];
@@ -42,13 +41,10 @@ void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     if (z < 0)
         z = -z;
     int ang = cam->fovy >> 4;
-    int i = ang << 1;
-    short *base = &data_02082214[0];
-    int j = i + 1;
-    int cosv = base[i];
-    int sinv = base[j];
-    int r = FX_MUL(cosv, z);
-    int f = cstd::fdiv(sinv, r);
+    int sinv = FX_SinIdx(ang);
+    int cosv = FX_CosIdx(ang);
+    int r = FX_MUL(sinv, z);
+    int f = cstd::fdiv(cosv, r);
     int a = FX_MUL(f, out[1]);
     int b = FX_MUL(f, out[0]);
     outX[0] = ((b * 0x60) >> 0xc) + 0x80;

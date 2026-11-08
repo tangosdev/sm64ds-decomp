@@ -166,7 +166,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_ov002_020f2a48",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a48Ev",
       "address": "0x020f2a48",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f2a48.c",
@@ -257,7 +257,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "func_ov002_020f2f64",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2f64Ev",
       "address": "0x020f2f64",
       "size": "0x00000038",
       "legacy_source": "src/func_ov002_020f2f64.c",
@@ -2353,13 +2353,13 @@
     "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov002_020f71c4 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7538; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'gCamera' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Math_Function_0203b0fc' differs between the legacy file that used to hold func_ov002_020f7538 and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov002_020f6b4c and the one that held func_ov002_020f7780; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'gKuppaScriptFrame' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f79c0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Math_Function_0203b0fc' differs between the legacy file that used to hold func_ov002_020f7538 and the one that held func_ov002_020f79c0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov002_020f6f48 and the one that held func_ov002_020f79c0; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'gCamera' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'AddVec3' differs between the legacy file that used to hold func_ov002_020f6c60 and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_VertAngle' differs between the legacy file that used to hold func_ov002_020f6f48 and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov002_020f6b4c and the one that held func_ov002_020f7bb8; kept the first, the other is commented out for review",

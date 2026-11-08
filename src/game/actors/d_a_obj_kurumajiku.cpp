@@ -35,8 +35,6 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
-// @symbol _ZN17daObjKurumajiku_cD0Ev
-// @symbol _ZN17daObjKurumajiku_cD1Ev
 /* ROM ordinals 0 and 1 -- ov002 0x020b69e4 (D0, 0x58) and 0x020b6a3c (D1,
  * 0x44). No source here: both destructor variants come from the ONE
  * inline body in include/daObjKurumajiku_c.h, which the class's descendants need
@@ -60,7 +58,6 @@ void daObjKurumajiku_c_EmitDestructor(daObjKurumajiku_c *p) {
     p->~daObjKurumajiku_c();
 }
 
-// @symbol _ZN17daObjKurumajiku_c20UpdateModelTransformEv
 /* Build the model transform. dExtSimpleModel_c translation uses 1/8 of the
    world position. The return value is the z word, which no caller reads. */
 int daObjKurumajiku_c::UpdateModelTransform() {
@@ -72,7 +69,6 @@ int daObjKurumajiku_c::UpdateModelTransform() {
     return z;
 }
 
-// @symbol _ZN17daObjKurumajiku_c20CleanupResourcesFromEPNS_9ResourcesE
 /* Disable the moving collision before releasing the model and collision files. */
 int daObjKurumajiku_c::CleanupResourcesFrom(Resources *resources) {
     if (mMeshCollider.IsEnabled())
@@ -82,13 +78,11 @@ int daObjKurumajiku_c::CleanupResourcesFrom(Resources *resources) {
     return 1;
 }
 
-// @symbol _ZN17daObjKurumajiku_c6RenderEv
 s32 daObjKurumajiku_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN17daObjKurumajiku_c8BehaviorEv
 /* The angle advances even while bit 3 suppresses rider and collision updates. */
 s32 daObjKurumajiku_c::Behavior() {
     int i;
@@ -121,7 +115,6 @@ s32 daObjKurumajiku_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN17daObjKurumajiku_c17InitResourcesFromEPNS_9ResourcesEj
 /* The shared setup both descendants' InitResources call: load the model and
    the collision mesh from the descendant's resource record, then spawn four
    riders of the given actor id at the axle and keep their uniqueIDs in

@@ -2,9 +2,6 @@
 /* What stays:
  * - data_ov045_02112510 is the CLPS block, outside this TU. The KCL
  *   and BMD handles are the file-scope objects at the bottom.
- * - data_02082214 is the sine table.
- * - The phase step is *(s16 *)&mHeightAng += kPhaseStep. Adding
- *   0x100 to the u16 is a different halfword load.
  * - The destructor stays inline so D1 stays above D0.
  *
  * daObjKm2_Ami_Bou_c, the Fire Sea net pole. It bobs on the sine
@@ -19,6 +16,7 @@ enum d_a_obj_km2_ami_bou_AssetId { ASSET_KM2_AMI_BOU_BMD = 0x065d, ASSET_KM2_AMI
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 
 enum {
     kUnsetParam = 0xffff,
@@ -50,14 +48,11 @@ extern AmiBouCollisionFilePtr data_ov045_021131a8; /* KCL */
 extern AmiBouModelFilePtr data_ov045_021131b0;     /* BMD */
 extern CLPS_Block data_ov045_02112510;
 /* local extern: the shared arm9 sine table has no header. */
-extern "C" s16 data_02082214[];
 
-// @symbol daObjKm2_Ami_Bou_c_classInit
 extern "C" daObjKm2_Ami_Bou_c *daObjKm2_Ami_Bou_c_classInit() {
     return new daObjKm2_Ami_Bou_c();
 }
 
-// @symbol g_profile_KM2_AMI_BOU
 extern "C" SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
     daObjKm2_Ami_Bou_c_classInit,
     0x008e, /* KM2_AMI_BOU registry id 142 */
@@ -68,7 +63,6 @@ extern "C" SpawnInfo<daObjKm2_Ami_Bou_c> g_profile_KM2_AMI_BOU = {
     0x01000000,
     0};
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c13InitResourcesEv
 s32 daObjKm2_Ami_Bou_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov045_021131b0), 1, -1);
     if (param1 != kUnsetParam)
@@ -82,31 +76,25 @@ s32 daObjKm2_Ami_Bou_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c8BehaviorEv
 s32 daObjKm2_Ami_Bou_c::Behavior() {
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
-    if (param1 != kUnsetParam) {
-        int s = data_02082214[(mHeightAng >> 4) << 1];
-        mPosY += FX_MUL(s, kRiseAmp);
-    } else {
-        int s = data_02082214[(mHeightAng >> 4) << 1];
-        mPosY -= FX_MUL(s, kFallAmp);
-    }
-    *(s16 *)&mHeightAng += kPhaseStep;
+    if (param1 != kUnsetParam)
+        mPosY += FX_MUL(FX_SinIdx((u16)mHeightAng >> 4), kRiseAmp);
+    else
+        mPosY -= FX_MUL(FX_SinIdx((u16)mHeightAng >> 4), kFallAmp);
+    mHeightAng += kPhaseStep;
     UpdateModelPosAndRotY();
     if (IsClsnInRangeOnScreen(kOnScreenRange, 0))
         UpdateClsnPosAndRot();
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c6RenderEv
 s32 daObjKm2_Ami_Bou_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_c16CleanupResourcesEv
 s32 daObjKm2_Ami_Bou_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov045_021131b0.Release();
@@ -114,8 +102,6 @@ s32 daObjKm2_Ami_Bou_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjKm2_Ami_Bou_cD1Ev
-// @symbol _ZN18daObjKm2_Ami_Bou_cD0Ev
 /* The inline destructor in the header emits D1 then D0, and no D2. */
 
 AmiBouModelFilePtr data_ov045_021131b0(ASSET_KM2_AMI_BOU_BMD);

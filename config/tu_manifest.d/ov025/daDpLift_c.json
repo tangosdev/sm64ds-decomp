@@ -641,12 +641,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@500",
+      "from": "@496",
       "to": "@432",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @446 now; licensed under the existing pin @432 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now"
     },
     {
-      "from": "@499",
+      "from": "@495",
       "to": "@431",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @445 now; licensed under the existing pin @431 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now"
     }

@@ -20,11 +20,10 @@
 #include "cstd.h"
 
 extern "C" {
-int func_02052fdc(void);
-void func_02053008(int n);
+int FX_GetSqrtResult(void);
+void FX_SqrtAsync(int n);
 }
 
-// @symbol func_02053274
 /* Squared distance |a-b|^2 through the hardware sqrt unit; returns the
    20.12 result. */
 extern "C" {
@@ -54,7 +53,6 @@ int func_02053274(int *a, int *b)
 }
 }
 
-// @symbol _ZN4cstd4fdivEii
 namespace cstd {
 
 s32 fdiv(s32 numerator, s32 denominator)
@@ -65,7 +63,6 @@ s32 fdiv(s32 numerator, s32 denominator)
 
 }
 
-// @symbol _ZN4cstd4ldivEii
 namespace cstd {
 
 long long ldiv(int a, int b)
@@ -78,7 +75,6 @@ long long ldiv(int a, int b)
 
 }
 
-// @symbol func_02053200
 extern "C" {
 s32 func_02053200(s32 x)
 {
@@ -87,7 +83,6 @@ s32 func_02053200(s32 x)
 }
 }
 
-// @symbol func_020531a4
 extern "C" {
 int func_020531a4(int a)
 {
@@ -102,19 +97,17 @@ int func_020531a4(int a)
     sqrtParam[1] = a;
     *imeReg;
     *imeReg = savedIME;
-    return func_02052fdc();
+    return FX_GetSqrtResult();
 }
 }
 
-// @symbol func_02053130
 extern "C" {
-s32 func_02053130(s32 x)
-{
+s32 FX_InvSqrt(s32 x) {
     s64 quotient;
 
     if (x > 0) {
         cstd::reciprocal_async(x);
-        func_02053008(x);
+        FX_SqrtAsync(x);
         quotient = cstd::ldiv_result();
 
         while (REG_SQRTCNT & SQRT_CONTROL_BUSY)
@@ -127,7 +120,6 @@ s32 func_02053130(s32 x)
 }
 }
 
-// @symbol _ZN4cstd11ldiv_resultEv
 namespace cstd {
 
 long long ldiv_result(void)
@@ -138,7 +130,6 @@ long long ldiv_result(void)
 
 }
 
-// @symbol _ZN4cstd11fdiv_resultEv
 namespace cstd {
 
 int fdiv_result(void)
@@ -149,7 +140,6 @@ int fdiv_result(void)
 
 }
 
-// @symbol _ZN4cstd16reciprocal_asyncEi
 namespace cstd {
 void reciprocal_async(Fix12i a) {
     *(volatile unsigned short *)0x4000280 = 1;
@@ -158,10 +148,8 @@ void reciprocal_async(Fix12i a) {
 }
 }
 
-// @symbol func_02053008
 extern "C" {
-void func_02053008(int n)
-{
+void FX_SqrtAsync(int n) {
     volatile unsigned short *imeReg = (volatile unsigned short *)0x4000208;
     volatile unsigned short *sqrtcnt = (volatile unsigned short *)0x40002b0;
     volatile unsigned int *sqrtParam = (volatile unsigned int *)0x40002b8;
@@ -186,16 +174,14 @@ void func_02053008(int n)
 }
 }
 
-// @symbol func_02052fdc
 extern "C" {
-int func_02052fdc(void) {
+int FX_GetSqrtResult(void) {
     while (*(volatile unsigned short *)0x40002b0 & 0x8000)
         ;
     return (*(volatile unsigned int *)0x40002b4 + 0x200) >> 10;
 }
 }
 
-// @symbol _ZN4cstd10fdiv_asyncEii
 namespace cstd {
 void fdiv_async(Fix12i a, Fix12i b) {
     *(volatile unsigned short *)0x4000280 = 1;
@@ -204,7 +190,6 @@ void fdiv_async(Fix12i a, Fix12i b) {
 }
 }
 
-// @symbol _ZN4cstd3divEii
 namespace cstd {
 
 int div(int a, int b)
@@ -218,7 +203,6 @@ int div(int a, int b)
 
 }
 
-// @symbol _ZN4cstd3modEii
 namespace cstd {
 
 int mod(int a, int b)

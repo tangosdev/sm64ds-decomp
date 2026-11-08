@@ -1,14 +1,11 @@
 //cpp
 #include "OAM.h"
 #include "OamAnimation.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
 struct Matrix2x2;
 }
-
-/* The SDK's sine/cosine table: {sin, cos} pairs, 4.12 fixed point, one per
-   0x10 of a 16-bit angle. */
-extern short data_02082214[];
 
 /* Draw an OamAnimation's current frame at (x, y). OamAnimation.h's names
  * are kept although this reader contradicts two of them: `tile` holds the
@@ -41,9 +38,8 @@ extern "C" void func_0202048c(OamAnimation *anim, int x, int y) {
 
     int idx = ((u16)anim->rotation) >> 4;
     int scaleY = anim->scaleY;
-    int i0 = idx * 2;
-    short cosVal = data_02082214[i0 + 1];
-    short sinVal = data_02082214[i0];
+    short cosVal = FX_CosIdx(idx);
+    short sinVal = FX_SinIdx(idx);
 
     int m[4];
     m[0] = (cosVal * scaleX + 0x800) >> 12;

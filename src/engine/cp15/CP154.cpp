@@ -11,7 +11,6 @@
 extern "C" {
 // HAND-ASM PRIMITIVE: CP15 control-register primitive; mrc/mcr p15 are
 // unreachable from C, so the asm block is the source.
-// @symbol func_0206da64
 asm int func_0206da64(void) {
     mov r0, #1
     b lbl
@@ -30,18 +29,15 @@ lbl:
 
 // HAND-ASM PRIMITIVE: CP15 cache primitive; mrc p15 is unreachable from C, so
 // the asm block is the source.
-// @symbol func_0206da94
 asm void func_0206da94(void) { mrc p15, 0, r0, c7, c10, 1; bx lr }
 
 // HAND-ASM PRIMITIVE: CP15 cache primitive; mrc p15 is unreachable from C, so
 // the asm block is the source.
-// @symbol func_0206da9c
 asm void func_0206da9c(void) { mrc p15, 0, r0, c7, c6, 1; bx lr }
 }
 
 #pragma push
 #pragma defer_codegen off
-// @symbol _ZN4CP1517MPUGetDataRegion7Ev
 /* Read back MPU data region 7 (c6,c7).
  * HAND-ASM PRIMITIVE: mrc p15 is unreachable from C, so the asm block is the
  * source. */
@@ -59,7 +55,6 @@ unsigned int MPUGetDataRegion7(void)
 
 #pragma push
 #pragma defer_codegen off
-// @symbol _ZN4CP1514MPUDataRegion7Ej
 /* Write MPU data region 7 (c6,c7).
  * HAND-ASM PRIMITIVE: mcr p15 is unreachable from C, so the asm block is the
  * source. */

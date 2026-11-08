@@ -16,7 +16,6 @@
  *   unrelated helper to this TU
  * - InitResources adds to mAngleY through a pointer local (plain
  *   `mAngleY += 0x8000` CSE/size-DIFFs)
- * - func_020393c4 stores dBgW+0x1c (no setter)
  * - data_ov010_02112d08 / 02112d00 are this file's resource handles;
  *   data_ov010_02112d28 is the state record the compiler copies into .bss;
  *   data_ov010_021122f8 is CLPS
@@ -69,11 +68,6 @@ extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
 extern TrapStateRec data_ov010_02112d28;
 
-/* local extern: the dBgW callback setter. */
-extern "C" {
-extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
-
 /* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
  * allocation size, vtable identity, and the C1_TRAP registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -82,7 +76,6 @@ extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
  * Every instruction the cartridge has here falls out of the one `new`.
  * The header's inline operator new keeps the allocation on fBase_c::operator
  * new; without it the call relocates to the unavailable global `_Znwm`. */
-// @symbol daObjC1_Trap_c_classInit
 extern "C" daObjC1_Trap_c *daObjC1_Trap_c_classInit() {
     return new daObjC1_Trap_c();
 }
@@ -92,12 +85,10 @@ extern "C" SpawnInfo<daObjC1_Trap_c> g_profile_C1_TRAP = {
 
 /*
  * registered directly in InitResources. */
-// @symbol func_ov010_02111984
 extern "C" void func_ov010_02111984(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjC1_Trap_c *>(owner)->OnCollision(*other);
 }
 
-// @symbol _ZN14daObjC1_Trap_c11OnCollisionER8dActor_c
 
 void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     daObjC1_Trap_c *spawner;
@@ -146,7 +137,6 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
         spawner->mTrapActive = 1;
 }
 
-// @symbol _ZN14daObjC1_Trap_c13InitResourcesEv
 
 int daObjC1_Trap_c::InitResources() {
     mTrapActive = 0;
@@ -198,7 +188,7 @@ int daObjC1_Trap_c::InitResources() {
     UpdateCollisionTransform();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov010_02112d00), mDoorMat, 0x1000,
                           mAngleY, data_ov010_021122f8);
-    func_020393c4(&mMeshCollider, func_ov010_02111984);
+    mMeshCollider.SetStoodOnCallback(func_ov010_02111984);
     mMeshCollider.Enable(this);
     mOpenSpeed = 0;
     mState = 0;
@@ -212,7 +202,6 @@ int daObjC1_Trap_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjC1_Trap_c8BehaviorEv
 
 int daObjC1_Trap_c::Behavior() {
     if (mIsSpawner) {
@@ -227,7 +216,6 @@ int daObjC1_Trap_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjC1_Trap_c6RenderEv
 
 int daObjC1_Trap_c::Render() {
     if (!mIsSpawner)
@@ -235,7 +223,6 @@ int daObjC1_Trap_c::Render() {
     return 1;
 }
 
-// @symbol _ZN14daObjC1_Trap_c16CleanupResourcesEv
 
 int daObjC1_Trap_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
@@ -247,7 +234,6 @@ int daObjC1_Trap_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjC1_Trap_c20UpdateModelTransformEv
 
 void daObjC1_Trap_c::UpdateModelTransform() {
     int angleY = (int)(u16)mAngleY >> 4;
@@ -268,7 +254,6 @@ void daObjC1_Trap_c::UpdateModelTransform() {
     mDoorModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN14daObjC1_Trap_c24UpdateCollisionTransformEv
 
 void daObjC1_Trap_c::UpdateCollisionTransform() {
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
@@ -278,7 +263,6 @@ void daObjC1_Trap_c::UpdateCollisionTransform() {
     mMeshCollider.Transform(mDoorMat, mAngleY);
 }
 
-// @symbol _ZN14daObjC1_Trap_c10GetSpawnerEv
 
 daObjC1_Trap_c *daObjC1_Trap_c::GetSpawner() {
     if (mSpawnerID == 0) {
@@ -292,7 +276,6 @@ daObjC1_Trap_c *daObjC1_Trap_c::GetSpawner() {
     return spawner;
 }
 
-// @symbol _ZN14daObjC1_Trap_c11StateClosedEv
 
 void daObjC1_Trap_c::StateClosed() {
     daPly_c *player = ClosestPlayer();
@@ -311,7 +294,6 @@ void daObjC1_Trap_c::StateClosed() {
     Sound::PlayBank3(0xe, mCamSpacePos);
 }
 
-// @symbol _ZN14daObjC1_Trap_c12StateOpeningEv
 
 void daObjC1_Trap_c::StateOpening() {
     daObjC1_Trap_c *spawner = GetSpawner();
@@ -327,7 +309,6 @@ void daObjC1_Trap_c::StateOpening() {
     }
 }
 
-// @symbol _ZN14daObjC1_Trap_c9StateOpenEv
 
 void daObjC1_Trap_c::StateOpen() {
     daObjC1_Trap_c *spawner = GetSpawner();
@@ -335,7 +316,6 @@ void daObjC1_Trap_c::StateOpen() {
         mState = 3;
 }
 
-// @symbol _ZN14daObjC1_Trap_c12StateClosingEv
 
 void daObjC1_Trap_c::StateClosing() {
     mAngleZ += 0x400;
@@ -345,14 +325,11 @@ void daObjC1_Trap_c::StateClosing() {
     }
 }
 
-// @symbol _ZN14daObjC1_Trap_c13StateHeldOpenEv
 
 void daObjC1_Trap_c::StateHeldOpen() {
     mAngleZ = -0x3c00;
 }
 
-// @symbol _ZN14daObjC1_Trap_cD1Ev
-// @symbol _ZN14daObjC1_Trap_cD0Ev
 /* ROM ordinals 1 and 0 are emitted from the inline destructor and the
  * InitResources-owned vtable: D1 at 0x021111a0, D0 at 0x021111ec. */
 

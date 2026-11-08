@@ -11,7 +11,7 @@ struct Vec3Words {
 
 extern "C" {
 int func_ov007_020c30ac(void *arr, int count, void *target, int arg4, int *out);
-int LenVec3(void *v);
+int LenVec3(const Vector3 *v);
 }
 
 /* Picks the stroke point nearest target over every group (with flag set,

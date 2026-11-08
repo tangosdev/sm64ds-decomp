@@ -16,7 +16,7 @@ extern int func_0205d688(FSFile *p_file, void *dst, int len, int async);
 /* NitroSDK FS_GetPathName: store buf and len in arg.getpath, restarting the
    measure unless the last command was already FS_COMMAND_GETPATH (5), and
    send it. */
-int func_0205d4a0(FSFile *p_file, char *buf, u32 len) {
+int FS_GetPathName(FSFile *p_file, char *buf, u32 len) {
     if (p_file->command != 5) {
         p_file->arg.getpath.total_len = 0;
         p_file->arg.getpath.dir_id = 0;
@@ -26,19 +26,22 @@ int func_0205d4a0(FSFile *p_file, char *buf, u32 len) {
     return FSi_SendCommand(p_file, 5);
 }
 
+/* NitroSDK FS_IsBusy: stat bit 0 (FS_FILE_STATUS_BUSY) as a BOOL. */
+static inline int FS_IsBusy(FSFile *p_file) {
+    return (p_file->stat & 1) ? 1 : 0;
+}
+
 int func_0205d3f4(FSFile *t) {
     int woken = 0;
     u32 irq = IRQ::Disable();
-    int busy = (t->stat & 1) ? 1 : 0;
-    if ((int)((long long)busy) != 0) {
+    if (FS_IsBusy(t)) {
         woken = (t->arc->list.next != t) ? 1 : 0;
         if (woken) {
             t->stat |= 4;
         }
         do {
             OS_SleepThread(&t->queue);
-            busy = (t->stat & 1) ? 1 : 0;
-        } while ((int)((long long)busy) != 0);
+        } while (FS_IsBusy(t));
     }
     IRQ::Restore(irq);
     if (woken) {

@@ -19,9 +19,10 @@
  * - StateDrag: ApproachLinear on mPullPos with a Fix12<int>
  *   temporary is 0x198 against ROM 0x190 and adds a 4-byte .rodata word.
  *   The int step math/Approach.h declares keeps it in a register.
- * - StateDrag: without volatile, the spilled player position is
- *   0x178 against ROM 0x190. The ROM stores the three words and compares
- *   the y still in the register.
+ * - StateDrag copies the player position through a const reference into a
+ *   Vector3 that is never read again (#821). Vector3 is non-POD, so mwccarm
+ *   keeps the three stores; a POD triple without volatile was 0x178
+ *   against ROM 0x190.
  * - StateDrag, InitStateDrag, StateSpin, UpdateModelMatrix: a TU-local reference to mPosX grows those
  *   functions by 4 bytes (0x190, 0x98, 0x18c, 0x74 become 0x194, 0x9c,
  *   0x190, 0x78).
@@ -37,10 +38,9 @@
  *   dExtAnmModel_c::SetAnim the same way is 0xdc against ROM 0xd0, also with
  *   a 4-byte .rodata word. Both are member calls under their scalar
  *   spellings, which match.
- * - Behavior: Particle::System::New(mParticleID, 0x139, mPosX,
- *   mPosY + 0x384000, mPosZ, 0, 0) is 0xc8 against ROM 0xe0. The ROM
- *   spills the position, adds the lift into the spill, and reloads x and
- *   the raised y.
+ * - Behavior: the spray position is `Vector3 pos = mPos; pos.y += lift;`
+ *   (#821). Passing mPosX, mPosY + 0x384000, mPosZ directly is 0xc8
+ *   against ROM 0xe0.
  * - Without #pragma defer_codegen off the sections come out in reverse
  *   source order (InitResources first, D1 last). The pragma is what puts
  *   this TU in ROM order. D2 still has no cartridge home.
@@ -118,20 +118,17 @@ extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void KillPlayer(void);
 }
 
-// @symbol _ZN18daWater_Tatumaki_cD1Ev
 daWater_Tatumaki_c::~daWater_Tatumaki_c() {}
 
-// @symbol _ZN18daWater_Tatumaki_cD0Ev
 /* D0 is emitted from the destructor above. #pragma defer_codegen off puts
    D1 then D0, which is the cartridge order. The trailing D2 has no ROM home. */
 
-// @symbol _ZN18daWater_Tatumaki_c9StateDragEv
 /* Drag, each frame: orbit the player around the funnel and sink them. Below
    the centre, kill them once. */
 int daWater_Tatumaki_c::StateDrag() {
     Vector3 target;
     Vector3 offset;
-    volatile s32 spilled[3]; /* stored, never read; the compare uses y in r1 */
+    Vector3 playerPos;
     daPly_c *player;
 
     target.x = 0;
@@ -166,11 +163,9 @@ int daWater_Tatumaki_c::StateDrag() {
             player->mAngleZ = 0;
         }
         {
-            const Vector3 *playerPos = &player->mPos;
-            spilled[0] = playerPos->x;
-            spilled[1] = playerPos->y;
-            spilled[2] = playerPos->z;
-            if (this->mCenter.y > playerPos->y) {
+            const Vector3 &p = player->mPos;
+            playerPos = p;
+            if (this->mCenter.y > playerPos.y) {
                 if (this->mPlayerKilled == 0) {
                     KillPlayer();
                     this->mPlayerKilled = 1;
@@ -181,7 +176,6 @@ int daWater_Tatumaki_c::StateDrag() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c13InitStateDragEv
 /* Drag, on entry: start the orbit where the player is standing. */
 int daWater_Tatumaki_c::InitStateDrag() {
     daPly_c *player = this->ClosestPlayer();
@@ -204,7 +198,6 @@ int daWater_Tatumaki_c::InitStateDrag() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c9StateSpinEv
 /* Spin, each frame: catch a player who has reached the centre, otherwise
    draw a non-metal player inward. The pull is stronger when they are closer. */
 int daWater_Tatumaki_c::StateSpin() {
@@ -264,13 +257,11 @@ int daWater_Tatumaki_c::StateSpin() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c13InitStateSpinEv
 /* Spin, on entry: nothing to set up. */
 int daWater_Tatumaki_c::InitStateSpin() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c8SetStateEPKNS_5StateE
 /* Install a state and run its enter half, if it has one. */
 int daWater_Tatumaki_c::SetState(const State *state) {
     mState = state;
@@ -280,7 +271,6 @@ int daWater_Tatumaki_c::SetState(const State *state) {
     return (this->*s->enter)();
 }
 
-// @symbol _ZN18daWater_Tatumaki_c17UpdateModelMatrixEv
 /* Rebuild the model matrix from the position and angles. */
 void daWater_Tatumaki_c::UpdateModelMatrix() {
     Vector3 pos;
@@ -291,45 +281,30 @@ void daWater_Tatumaki_c::UpdateModelMatrix() {
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c16CleanupResourcesEv
 int daWater_Tatumaki_c::CleanupResources() {
     gWaterTatumakiModelFile.Release();
     gWaterTatumakiAnimationFile.Release();
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c16OnPendingDestroyEv
 void daWater_Tatumaki_c::OnPendingDestroy() {}
 
-// @symbol _ZN18daWater_Tatumaki_c6RenderEv
 int daWater_Tatumaki_c::Render() {
     mTextureTransformer.Update(mAnmModel.data);
     mAnmModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c8BehaviorEv
 int daWater_Tatumaki_c::Behavior() {
-    volatile int spilled[3]; /* x and the raised y are reloaded as arguments */
-    int x, y, z;
-
     DecIfAbove0_Short((u16 *)&mStateTimer);
     if (mState->execute != 0) {
         (this->*mState->execute)();
     }
     UpdatePos(0);
 
-    x = mPosX;
-    spilled[0] = x;
-    y = mPosY;
-    spilled[1] = y;
-    z = mPosZ;
-    spilled[2] = z;
-    y += kSprayLift;
-    spilled[1] = y;
-
-    mParticleID = Particle::System::New(*(volatile u32 *)&mParticleID, kSprayEffect, spilled[0],
-                                        spilled[1], z, 0, 0);
+    Vector3 pos = mPos;
+    pos.y += kSprayLift;
+    mParticleID = Particle::System::New(mParticleID, kSprayEffect, pos.x, pos.y, pos.z, 0, 0);
 
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
@@ -341,7 +316,6 @@ int daWater_Tatumaki_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Tatumaki_c13InitResourcesEv
 int daWater_Tatumaki_c::InitResources() {
     BMD_File *model = (BMD_File *)dExtSimpleModel_c::LoadFile(gWaterTatumakiModelFile);
     mAnmModel.SetFile(model, 1, -1);
@@ -369,7 +343,6 @@ int daWater_Tatumaki_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_TATUMAKI registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: Whirlpool_Spawn. */
-// @symbol daWater_Tatumaki_c_classInit
 extern "C" daWater_Tatumaki_c *daWater_Tatumaki_c_classInit() {
     return new daWater_Tatumaki_c();
 }

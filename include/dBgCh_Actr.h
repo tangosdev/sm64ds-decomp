@@ -57,7 +57,7 @@ struct dActor_c;
  *     our own field, since sizeof(dBgCh_SphCrr) is pinned at 0x110. The FIELDS
  *     stay s32: whether they are pointer-typed is a separate question from
  *     what Init stores, and UpdateDiscreteNoLava passes them straight on to
- *     func_02038324, which takes ints.
+ *     dBgS_MoveBgCrrPos, which takes ints.
  *   - The 0x1bc size is convergent evidence, not a single instruction: some
  *     forty embedding actor headers place their next field at exactly
  *     mWithMeshClsn + 0x1bc. Nothing in matched code allocates by sizeof.
@@ -130,6 +130,7 @@ struct dBgCh_Actr : dBgCh {
     void UpdateExtraContinous();  /* sic -- the ROM name is missing a 'u' */
     void UpdateDiscreteNoLava();
     void UpdateDiscreteNoLava_2();
+    void CommitFloorHit(s32); /* floor-result commit (0x020371b0); coined */
     void Unk_0203589c(); /* mSphereClsn.ResetQuery() */
 
     /* Flag helpers and the result accessor. Coined names: the ROM carries none

@@ -80,11 +80,8 @@ extern PileCollisionFilePtr gPileCollisionFile;
  * first: D1, then D0, and the unused D2 is deadstripped. */
 #pragma defer_codegen off
 
-// @symbol _ZN11daObjPile_cD1Ev
-// @symbol _ZN11daObjPile_cD0Ev
 daObjPile_c::~daObjPile_c() {}
 
-// @symbol _ZN11daObjPile_c17NotifyTagPileGoneEv
 /* Tells the linked KINOKO_TAG (actor 0x140) that its pile is gone. */
 void daObjPile_c::NotifyTagPileGone() {
     dActor_c *tag = mLinkedTag;
@@ -94,7 +91,6 @@ void daObjPile_c::NotifyTagPileGone() {
         ((daObjKinokoTag_c *)tag)->mLinkedPileGone = 1;
 }
 
-// @symbol _ZN11daObjPile_c4SinkEi
 /* Sinks the pile. With flag set it drops every remaining step (60 units each)
  * and zeroes mStepsLeft; otherwise it drops one step. It then arms the hit
  * cooldown and moves the model and collider, and once no steps are left it
@@ -141,7 +137,6 @@ void daObjPile_c::Sink(int flag) {
     NotifyTagPileGone();
 }
 
-// @symbol _ZN11daObjPile_c15OnHitByMegaCharER7daPly_c
 void daObjPile_c::OnHitByMegaChar(daPly_c &player) {
     if (mBusy)
         return;
@@ -157,7 +152,6 @@ void daObjPile_c::OnHitByMegaChar(daPly_c &player) {
     Sink(1);
 }
 
-// @symbol _ZN11daObjPile_c15OnGroundPoundedER8dActor_c
 void daObjPile_c::OnGroundPounded(dActor_c &other) {
     if (&other == 0)
         return;
@@ -172,7 +166,6 @@ void daObjPile_c::OnGroundPounded(dActor_c &other) {
     Sink(f);
 }
 
-// @symbol _ZN11daObjPile_c16CleanupResourcesEv
 s32 daObjPile_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -181,13 +174,11 @@ s32 daObjPile_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN11daObjPile_c6RenderEv
 s32 daObjPile_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN11daObjPile_c8BehaviorEv
 s32 daObjPile_c::Behavior() {
     daPly_c *player = ClosestPlayer();
     if (mStepsLeft == 3 && GetBitInDeathTable() == 0 && player->mPosY < mPosY + 0x64000) {
@@ -230,7 +221,6 @@ s32 daObjPile_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN11daObjPile_c13InitResourcesEv
 s32 daObjPile_c::InitResources() {
     void *m = dExtSimpleModel_c::LoadFile(gPileModelFile);
     mModel.SetFile((BMD_File *)m, 1, -1);
@@ -243,7 +233,6 @@ s32 daObjPile_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjPile_c_classInit
 extern "C" daObjPile_c *daObjPile_c_classInit() {
     return new daObjPile_c();
 }

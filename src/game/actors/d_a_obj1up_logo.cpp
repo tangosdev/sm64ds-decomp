@@ -62,11 +62,8 @@ extern OneUpLogoTexSeqFilePtr data_ov002_02110a9c; /* BTP */
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN14daObj1UpLogo_cD1Ev
-// @symbol _ZN14daObj1UpLogo_cD0Ev
 daObj1UpLogo_c::~daObj1UpLogo_c() {}
 
-// @symbol _ZN14daObj1UpLogo_c15SetFollowTargetEP8dActor_c
 /* daPly_c::IncMegaKillCount's attach helper. Not a vtable slot. The only
  * caller passes a null owner. */
 void daObj1UpLogo_c::SetFollowTarget(dActor_c *owner) {
@@ -76,14 +73,12 @@ void daObj1UpLogo_c::SetFollowTarget(dActor_c *owner) {
     mFollowOffsetY = mPosY - owner->mPosY;
 }
 
-// @symbol _ZN14daObj1UpLogo_c16CleanupResourcesEv
 s32 daObj1UpLogo_c::CleanupResources() {
     data_ov002_02110aa4.Release();
     data_ov002_02110a9c.Release();
     return 1;
 }
 
-// @symbol _ZN14daObj1UpLogo_c6RenderEv
 s32 daObj1UpLogo_c::Render() {
     if (mDelay != 0) {
         mDelay--;
@@ -94,7 +89,12 @@ s32 daObj1UpLogo_c::Render() {
     return 1;
 }
 
-// @symbol _ZN14daObj1UpLogo_c8BehaviorEv
+/* Takes the position by reference, so the call re-reads mPos.y from memory
+ * instead of reusing the value Behavior() just added into it. */
+static inline void SpawnPopParticle(const Vector3 &pos) {
+    Particle::System::NewSimple(kPopParticle, pos.x, pos.y, pos.z);
+}
+
 s32 daObj1UpLogo_c::Behavior() {
     Vector3 pos;
 
@@ -116,8 +116,7 @@ s32 daObj1UpLogo_c::Behavior() {
         break;
     case 1:
         if (mPosY < mStartPos.y) {
-            /* Volatile: a plain mPosY read is folded into the add above. */
-            Particle::System::NewSimple(kPopParticle, mPosX, *(volatile s32 *)&mPosY, mPosZ);
+            SpawnPopParticle(mPos);
             MarkForDestruction();
         }
         break;
@@ -142,7 +141,6 @@ s32 daObj1UpLogo_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObj1UpLogo_c13InitResourcesEv
 s32 daObj1UpLogo_c::InitResources() {
     unsigned int count = param1;
     unsigned short frame = (unsigned short)(count > kFrameCountCap ? kLastFrame : (count - 1));
@@ -165,7 +163,6 @@ s32 daObj1UpLogo_c::InitResources() {
     return 1;
 }
 
-// @symbol daObj1UpLogo_c_classInit
 /* Historical alias OneUpLogo_Spawn. */
 extern "C" daObj1UpLogo_c *daObj1UpLogo_c_classInit() {
     return new daObj1UpLogo_c();

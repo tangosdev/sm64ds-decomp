@@ -2,14 +2,17 @@
 """Map particle effect IDs to the call sites that spawn them.
 
 Scans src/ for every entry point that takes an effect ID: `NewSimple(id, ...)`,
-`System::New(uniqueID, id, ...)`, `NewWeather`, `NewUnkCallback818` and the
-`func_02022c3c/c80/cbc/d00/d44` callback wrappers, in plain and mangled
-spellings.  Resolves an identifier argument
-through a same-file `NAME = 0x..` / `#define NAME 0x..` / `const ... NAME = ..`,
+`System::New(uniqueID, id, ...)`, `NewWeather`, `NewCleanParticle` and the
+`NewCheckWater`/`NewCheckWaterRipple`/`NewFitWater`/`NewFitWaterRaised`/
+`NewCheckYogan` callback wrappers (also under their old names,
+`NewUnkCallback818` and `func_02022d44/d00/cbc/c80/c3c`), in plain and
+mangled spellings.  Resolves an identifier argument through
+include/ParticleIds.h or a same-file `NAME = 0x..` / `#define NAME 0x..` /
+`const ... NAME = ..`,
 and joins the result with the SPA table from tools/spa_dump.py.
 
 For every ID it reports the call count, where it is called (file:line and the
-nearest preceding `// @symbol`), any source name already given to it, and the
+enclosing definition's linker symbol), any source name already given to it, and the
 definition's flags / texture / records.  IDs in the table that no
 `NewSimple` literal reaches are listed separately.
 
@@ -32,6 +35,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import spa_dump  # noqa: E402
+import def_locate as DL  # noqa: E402
 
 # (regex for the callee, index of the effect-ID argument, label).  NewSimple takes
 # the ID first; System::New and the callback wrappers take (uniqueID, effectID, ...).
@@ -39,8 +43,9 @@ ENTRY = [
     (re.compile(r"(?:Particle::System::NewSimple|_ZN8Particle6System9NewSimpleE\w*|\bNewSimple)\s*\("), 0, "NewSimple"),
     (re.compile(r"(?:Particle::System::New|System::New|_ZN8Particle6System3NewE\w*)\s*\("), 1, "System::New"),
     (re.compile(r"(?:Particle::System::NewWeather|_ZN8Particle6System10NewWeatherE\w*)\s*\("), 1, "NewWeather"),
-    (re.compile(r"(?:Particle::System::NewUnkCallback818|_ZN8Particle6System17NewUnkCallback818E\w*)\s*\("), 1, "NewUnkCallback818"),
-    (re.compile(r"\b(func_02022d44|func_02022d00|func_02022cbc|func_02022c80|func_02022c3c)\s*\("), 1, "callback wrapper"),
+    (re.compile(r"(?:\bNewCleanParticle|\bNewUnkCallback818|_ZN8Particle6System1[67]New(?:CleanParticle|UnkCallback818)E\w*)\s*\("), 1, "NewCleanParticle"),
+    (re.compile(r"\b(NewCheckWater(?:Ripple)?|NewFitWater(?:Raised)?|NewCheckYogan|"
+                r"func_02022d44|func_02022d00|func_02022cbc|func_02022c80|func_02022c3c)\s*\("), 1, "callback wrapper"),
 ]
 
 
@@ -85,8 +90,18 @@ def constants(text):
     return out
 
 
+def header_constants(root):
+    """The shared effect-ID names (include/ParticleIds.h), beside root=src/."""
+    path = os.path.join(root, os.pardir, "include", "ParticleIds.h")
+    try:
+        return constants(open(path, encoding="utf-8").read())
+    except OSError:
+        return {}
+
+
 def scan(root):
     sites = []  # dicts
+    shared = header_constants(root)
     for dp, dn, fn in os.walk(root):
         dn[:] = [d for d in dn if d not in (".git", ".claude")]
         for f in fn:
@@ -99,11 +114,27 @@ def scan(root):
                 continue
             if "Particle" not in text and "func_02022" not in text and "NewSimple" not in text:
                 continue
-            consts = constants(text)
+            consts = dict(shared)
+            consts.update(constants(text))  # a file-local name wins
             lines_start = [0]
             for ln in text.splitlines(True):
                 lines_start.append(lines_start[-1] + len(ln))
             symbols = [(m.start(), m.group(1)) for m in SYMBOL.finditer(text)]
+            # the enclosing definition's linker symbol -- what "nearest
+            # preceding // @symbol" reported, resolved structurally so it
+            # survives the markers' removal.
+            try:
+                rel = os.path.relpath(path, root).replace("\\", "/")
+                if not rel.startswith("src"):
+                    rel = "src/" + rel
+                bound = DL.bind(rel, text)[0]
+            except Exception:
+                bound = {}
+            spans = []   # (def_start, def_end, symbol)
+            for sym, d in bound.items():
+                if not d.is_object:
+                    spans.append((d.start, d.end, sym))
+            spans.sort()
             import bisect
             for rx, idx, label in ENTRY:
                 for m in rx.finditer(text):
@@ -120,10 +151,22 @@ def scan(root):
                     else:
                         continue  # variable / declaration / definition
                     n = bisect.bisect_right(lines_start, m.start())
-                    k = bisect.bisect_right([p0 for p0, _ in symbols], m.start()) - 1
+                    owner = None
+                    k = bisect.bisect_right([s0 for s0, _, _ in spans],
+                                            m.start()) - 1
+                    while k >= 0:
+                        if m.start() < spans[k][1]:
+                            owner = spans[k][2]
+                            break
+                        k -= 1
+                    if owner is None and symbols:
+                        k = bisect.bisect_right(
+                            [p0 for p0, _ in symbols], m.start()) - 1
+                        if k >= 0:
+                            owner = symbols[k][1]
                     sites.append({"id": val, "name": name, "comment": comment, "via": label,
                                   "file": os.path.relpath(path, root).replace("\\", "/"),
-                                  "line": n, "symbol": symbols[k][1] if k >= 0 else None})
+                                  "line": n, "symbol": owner})
     return sites
 
 

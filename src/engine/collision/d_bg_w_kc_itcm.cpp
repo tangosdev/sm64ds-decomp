@@ -54,7 +54,6 @@ extern "C" {
 /* Shared collider helpers, defined in the arm9 TU (src/engine/collision/d_bg_w_kc.cpp).
    local extern: they are free functions of that TU and no header declares them. */
 s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
-int func_02039794(int x);                       /* slope-band classify */
 
 /* CLPS helpers (src/engine/collision/d_bg_ch_sph_crr_query.cpp): the entry
    lookup and the SurfaceInfo write, which takes the entry by value into 0x0
@@ -238,7 +237,6 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
         (lo) = v;
 
 /* ---- defs in reverse ROM order ---- */
-// @symbol _ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo
 void dBgW_Kc::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
 {
     CLPS *entry;
@@ -250,7 +248,6 @@ void dBgW_Kc::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
     func_02037eb0(&res, *entry, &normal);
 }
 
-// @symbol _ZN7dBgW_Kc9GetNormalEsR7Vector3
 void dBgW_Kc::GetNormal(s16 triID, Vector3 &res)
 {
     s16 *normal = kclFile->normals[kclFile->tris[triID].normalIdx];
@@ -260,7 +257,6 @@ void dBgW_Kc::GetNormal(s16 triID, Vector3 &res)
     res.z = normal[2] << 2;
 }
 
-// @symbol _ZN7dBgW_Kc17GetTriangleOriginEsR7Vector3
 void dBgW_Kc::GetTriangleOrigin(s16 triID, Vector3 &res)
 {
     s32 *vertex = kclFile->positions[kclFile->tris[triID].posIdx];
@@ -270,7 +266,6 @@ void dBgW_Kc::GetTriangleOrigin(s16 triID, Vector3 &res)
     res.z = vertex[2] << 6;
 }
 
-// @symbol _ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd
 int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
 {
     KCL_File *file = kclFile;
@@ -387,7 +382,6 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
     return 1;
 }
 
-// @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
     /* DECLARATION ORDER BELOW IS LOAD-BEARING -- do not tidy it.
@@ -714,7 +708,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         /* 0 = floor, 1 = wall, 2 = underside -- and those select
                            the 0x74 / 0x9c / 0xc4 result slots and the 4 / 8 / 0x10
                            flag bits respectively. */
-                        cls = func_02039794(sn.y);
+                        cls = ClassifyNormalY(sn.y);
                         /* contactKind (sp+0xa8), seeded per prism at 0x01ffbe8c, set
                            to 3 by the vertex tail and defaulted to 2 by the shared
                            tail. The seed is sp+0x114, which 0x01ffba10 loads from
@@ -1017,7 +1011,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
  * and walked with *++leaf. The edge-normal dots stay inline; a named local
  * for them spills the leaf pointer.
  */
-// @symbol _ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin
 s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
 {
     s32 loX, hiX;
@@ -1235,7 +1228,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
     return 1;
 }
 
-// @symbol _ZNK7dBgW_Kc16GetOctreeOriginYEv
 Fix12i dBgW_Kc::GetOctreeOriginY() const
 {
     return kclFile->origin.y << 6;
@@ -1246,47 +1238,34 @@ Fix12i dBgW_Kc::GetOctreeOriginY() const
    units, hence the `lsl #12` against the origin's `lsl #6`. The name is the
    ROM's own, so it is kept rather than renamed to what the arithmetic
    suggests. */
-// @symbol _ZNK7dBgW_Kc13GetUnkOctreeYEv
 Fix12i dBgW_Kc::GetUnkOctreeY() const
 {
     return (kclFile->origin.y << 6) + (~kclFile->yMask << 12);
 }
 
-// @symbol func_01ffb0c8
-extern "C" KCL_File *func_01ffb0c8(dBgW_Kc *self)
-{
-    return self->kclFile;
+KCL_File *dBgW_Kc::GetFile() const {
+    return kclFile;
 }
 
-// @symbol func_01ffb0bc
-extern "C" void func_01ffb0bc(dBgW_Kc *self)
-{
-    self->shallowOnly = true;
+void dBgW_Kc::SetShallowOnly() {
+    shallowOnly = true;
 }
 
-// @symbol func_01ffb0b0
-extern "C" void func_01ffb0b0(dBgW_Kc *self)
-{
-    self->shallowOnly = false;
+void dBgW_Kc::ClearShallowOnly() {
+    shallowOnly = false;
 }
 
-// @symbol func_01ffb0a4
-extern "C" void func_01ffb0a4(dBgW_Kc *self)
-{
-    self->depthByDir = true;
+void dBgW_Kc::SetDepthByDir() {
+    depthByDir = true;
 }
 
-// @symbol func_01ffb098
-extern "C" void func_01ffb098(dBgW_Kc *self)
-{
-    self->depthByDir = false;
+void dBgW_Kc::ClearDepthByDir() {
+    depthByDir = false;
 }
 
 /* Copies the depth direction memberwise: three separate word loads and stores. */
-// @symbol func_01ffb07c
-extern "C" void func_01ffb07c(dBgW_Kc *self, const Vector3 *v)
-{
-    self->depthDir.x = v->x;
-    self->depthDir.y = v->y;
-    self->depthDir.z = v->z;
+void dBgW_Kc::SetDepthDir(const Vector3 *v) {
+    depthDir.x = v->x;
+    depthDir.y = v->y;
+    depthDir.z = v->z;
 }

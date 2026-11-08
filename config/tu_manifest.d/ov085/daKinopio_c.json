@@ -620,34 +620,34 @@
       "evidence": "compiler temp mapped to 0x021304b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@914",
+      "from": "@912",
       "to": "data_ov085_0212fe40",
-      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @866 to @861 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x0212fe40 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @866 to @861 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821)"
     },
     {
-      "from": "@916",
+      "from": "@914",
       "to": "data_ov085_0212fe48",
-      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @868 to @863 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@919",
-      "to": "data_ov085_0212fe30",
-      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @871 to @866 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@921",
-      "to": "data_ov085_0212fe38",
-      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @873 to @868 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x0212fe48 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @868 to @863 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821)"
     },
     {
       "from": "@917",
-      "to": "data_ov085_0212fe28",
-      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @869 to @864 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov085_0212fe30",
+      "evidence": "compiler temp mapped to 0x0212fe30 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @871 to @866 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821)"
     },
     {
-      "from": "@922",
+      "from": "@919",
+      "to": "data_ov085_0212fe38",
+      "evidence": "compiler temp mapped to 0x0212fe38 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @873 to @868 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821)"
+    },
+    {
+      "from": "@915",
+      "to": "data_ov085_0212fe28",
+      "evidence": "compiler temp mapped to 0x0212fe28 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @869 to @864 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821)"
+    },
+    {
+      "from": "@920",
       "to": "data_ov085_0212fe20",
-      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @874 to @869 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x0212fe20 by the retail initializer relocation at the same pool offset; no bytes or relocations change. Re-keyed from @874 to @869 when the opt pragma was removed (#821).; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); re-keyed down by 2 when St_Talk_Main and UpdateModelPose dropped their dead `char *c = (char *)this` locals (#821)"
     }
   ],
   "symbol_binding_rewrites": [

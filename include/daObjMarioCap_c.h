@@ -101,7 +101,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
        0..1, then overridden by most types' cases in InitResources (types 4
        and 17 keep the param1 value). 0xff means the cap has no icon:
        Behavior and OnPendingDestroy skip the icon work, and since mDormant is
-       only set for caps with an icon, such a cap is never dormant. Otherwise it is handed to dCapIcon_c::func_ov001_020ab228,
+       only set for caps with an icon, such a cap is never dormant. Otherwise it is handed to dCapIcon_c::Link,
        which keeps it in the icon's mIconKind. */
     u8  mIconKind;                              /* 0x400 */
     /* Step of the taken state: 1 = waiting for daPly_c::SetNoControlState(0xf)

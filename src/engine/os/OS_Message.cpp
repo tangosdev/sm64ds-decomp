@@ -17,7 +17,6 @@
 
 extern "C" {
 
-// @symbol OS_InitMessageQueue
 void OS_InitMessageQueue(OSMessageQueue *mq, OSMessage *msgArray, s32 msgCount) {
     mq->queueSend = 0;
     mq->queueReceive = 0;
@@ -27,7 +26,6 @@ void OS_InitMessageQueue(OSMessageQueue *mq, OSMessage *msgArray, s32 msgCount) 
     mq->usedCount = 0;
 }
 
-// @symbol OS_SendMessage
 int OS_SendMessage(OSMessageQueue *mq, OSMessage msg, s32 flags) {
     u32 enabled = IRQ::Disable();
     while (mq->msgCount <= mq->usedCount) {
@@ -47,7 +45,6 @@ int OS_SendMessage(OSMessageQueue *mq, OSMessage msg, s32 flags) {
     }
 }
 
-// @symbol OS_ReceiveMessage
 int OS_ReceiveMessage(OSMessageQueue *mq, OSMessage *msg, s32 flags) {
     u32 enabled = IRQ::Disable();
     while (mq->usedCount == 0) {

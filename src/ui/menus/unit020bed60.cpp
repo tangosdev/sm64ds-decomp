@@ -125,7 +125,6 @@ typedef union Ov007SpriteCopy {
 typedef char
     Ov007SpriteCopy_size_must_match[sizeof(Ov007SpriteCopy) == sizeof(Ov007Sprite) ? 1 : -1];
 
-// @symbol func_ov007_020bf630
 /* Picks the grid point of the mesh under screen point (x, y): the point is
  * unprojected through the camera at the camera's depth, then
  * func_ov007_020c30ac finds the mesh vertex nearest it. Returns its index,
@@ -139,7 +138,6 @@ int func_ov007_020bf630(Ov007Mesh *mesh, Ov007Camera *camera, int x, int y, int 
     }
 }
 
-// @symbol func_ov007_020bf57c
 /* Places swing idx on item view idx + 0xe's sprite: a copy of the sprite,
  * set the camera's distance in front of it (arg0 is cameras[0] for both
  * callers), is sized and moved into the world, and the swing takes its
@@ -157,7 +155,6 @@ void func_ov007_020bf57c(Ov007Camera *camera, int idx) {
     func_ov007_020c9d90(swing, SCENE->mesh);
 }
 
-// @symbol func_ov007_020bf428
 /* Builds the mesh scene once: the 0xf x 0xe grid mesh, its two materials
  * (each given one of the menu's textures), the wave and the eight swings
  * (each bound to its item), then the manager's three number sprites, and
@@ -200,7 +197,6 @@ void func_ov007_020bf428(void) {
     }
 }
 
-// @symbol func_ov007_020bf304
 /* Tears down the mesh scene: frees the mesh, the wave, both materials and
  * the eight swings, then the manager's number sprites and the scene itself. */
 void func_ov007_020bf304(void) {
@@ -259,7 +255,6 @@ static inline int FadeRatio(int ticks, int frames) {
     return cstd::div(ticks << 12, frames);
 }
 
-// @symbol func_ov007_020beeb0
 /* One frame of the backdrop: pokes the mesh under the stylus (harder for a
  * fast stroke) or, with no touch, under the cursor's settled item; ripples
  * and steps the mesh; lets each visible item's swing move its sprite; then
@@ -391,7 +386,6 @@ void func_ov007_020beeb0(void) {
     }
 }
 
-// @symbol func_ov007_020bee14
 /* Draws the mesh twice, once with each material, 0x200 and 0x400 in front
  * of the template point data_ov007_020d7d60. The point is copied as a VecFx32:
  * the ROM copies it as one block, and a Vector3 assignment copies member by
@@ -405,7 +399,6 @@ void func_ov007_020bee14(void) {
     func_ov007_020ca5f0(SCENE->mesh, SCENE->materials[1], (int *)&v, 0x3e8, 1);
 }
 
-// @symbol func_ov007_020bed60
 /* Pokes the mesh at screen point (arg0, arg1): func_ov007_020bf630 picks the
  * grid point under it through the camera, func_ov007_020ca578 pushes that
  * point with strength arg2, and the waves hold off for 0x78 ticks. */

@@ -56,14 +56,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020b9f00Ev",
+      "symbol": "_ZN13daObjSwitch_c14FindTargetStarEv",
       "address": "0x020b9f00",
       "size": "0x00000080",
       "legacy_source": "src/func_ov002_020b9f00.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020b9f80Ev",
+      "symbol": "_ZN13daObjSwitch_c16UpdateClsnMatrixEv",
       "address": "0x020b9f80",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020b9f80.cpp",
@@ -77,77 +77,77 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba01cEiiii",
+      "symbol": "_ZN13daObjSwitch_c13ScaleOverTimeEiiii",
       "address": "0x020ba01c",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov002_020ba01c.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba0bcEv",
+      "symbol": "_ZN13daObjSwitch_c16StateExpiredMainEv",
       "address": "0x020ba0bc",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov002_020ba0bc.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba0f8Ev",
+      "symbol": "_ZN13daObjSwitch_c18StateUnpressedMainEv",
       "address": "0x020ba0f8",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov002_020ba0f8.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba1acEv",
+      "symbol": "_ZN13daObjSwitch_c16StateTickingMainEv",
       "address": "0x020ba1ac",
       "size": "0x00000100",
       "legacy_source": "src/func_ov002_020ba1ac.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba2acEv",
+      "symbol": "_ZN13daObjSwitch_c16StateTickingInitEv",
       "address": "0x020ba2ac",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020ba2ac.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba2d0Ev",
+      "symbol": "_ZN13daObjSwitch_c16StatePressedMainEv",
       "address": "0x020ba2d0",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov002_020ba2d0.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba3a8Ev",
+      "symbol": "_ZN13daObjSwitch_c13StateIdleMainEv",
       "address": "0x020ba3a8",
       "size": "0x00000054",
       "legacy_source": "src/func_ov002_020ba3a8.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba3fcEv",
+      "symbol": "_ZN13daObjSwitch_c13StateIdleInitEv",
       "address": "0x020ba3fc",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov002_020ba3fc.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev",
+      "symbol": "_ZN13daObjSwitch_c11ResetTimersEv",
       "address": "0x020ba4c0",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020ba4c0.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4d8Ei",
+      "symbol": "_ZN13daObjSwitch_c8SetStateEi",
       "address": "0x020ba4d8",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020ba4d8.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba520Ev",
+      "symbol": "_ZN13daObjSwitch_c17CallStateBehaviorEv",
       "address": "0x020ba520",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020ba520.cpp",
@@ -182,14 +182,14 @@
       "ordinal": 19
     },
     {
-      "symbol": "func_ov002_020baa2c",
+      "symbol": "_ZN13daObjSwitch_c9OnStoodOnEP8dActor_c",
       "address": "0x020baa2c",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020baa2c.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov002_020baa98",
+      "symbol": "_ZN13daObjSwitch_c15StoodOnCallbackEP4dBgWP8dActor_cS3_",
       "address": "0x020baa98",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/ov002/func_ov002_020baa98.c",
@@ -216,70 +216,70 @@
       "address": "0x0210987c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c11ResetTimersEv"
     },
     {
       "symbol": "@833",
       "address": "0x02109884",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba2d0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StatePressedMainEv"
     },
     {
       "symbol": "@835",
       "address": "0x0210988c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba2acEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StateTickingInitEv"
     },
     {
       "symbol": "@837",
       "address": "0x02109894",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba1acEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StateTickingMainEv"
     },
     {
       "symbol": "@831",
       "address": "0x0210989c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c11ResetTimersEv"
     },
     {
       "symbol": "@845",
       "address": "0x021098a4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba0bcEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c16StateExpiredMainEv"
     },
     {
       "symbol": "@843",
       "address": "0x021098ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba4c0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c11ResetTimersEv"
     },
     {
       "symbol": "@827",
       "address": "0x021098b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba3fcEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c13StateIdleInitEv"
     },
     {
       "symbol": "@829",
       "address": "0x021098bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba3a8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c13StateIdleMainEv"
     },
     {
       "symbol": "@841",
       "address": "0x021098c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c19func_ov002_020ba0f8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN13daObjSwitch_c18StateUnpressedMainEv"
     }
   ],
   "bss": [
@@ -344,7 +344,7 @@
       "address": "0x0210e00c",
       "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "the five-entry {init, exec} state table func_ov002_020ba4d8 / func_ov002_020ba520 dispatch on mState; the initializer copies the ten descriptors into it"
+      "evidence": "the five-entry {init, exec} state table daObjSwitch_c::SetState / daObjSwitch_c::CallStateBehavior dispatch on mState; the initializer copies the ten descriptors into it"
     }
   ],
   "notes": [
@@ -1222,7 +1222,7 @@
       "source": "0x0210987c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev",
+      "symbol": "_ZN13daObjSwitch_c11ResetTimersEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba4c0"
@@ -1232,7 +1232,7 @@
       "source": "0x02109884",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba2d0Ev",
+      "symbol": "_ZN13daObjSwitch_c16StatePressedMainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba2d0"
@@ -1242,7 +1242,7 @@
       "source": "0x0210988c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba2acEv",
+      "symbol": "_ZN13daObjSwitch_c16StateTickingInitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba2ac"
@@ -1252,7 +1252,7 @@
       "source": "0x02109894",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba1acEv",
+      "symbol": "_ZN13daObjSwitch_c16StateTickingMainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba1ac"
@@ -1262,7 +1262,7 @@
       "source": "0x0210989c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev",
+      "symbol": "_ZN13daObjSwitch_c11ResetTimersEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba4c0"
@@ -1272,7 +1272,7 @@
       "source": "0x021098a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba0bcEv",
+      "symbol": "_ZN13daObjSwitch_c16StateExpiredMainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba0bc"
@@ -1282,7 +1282,7 @@
       "source": "0x021098ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba4c0Ev",
+      "symbol": "_ZN13daObjSwitch_c11ResetTimersEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba4c0"
@@ -1292,7 +1292,7 @@
       "source": "0x021098b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba3fcEv",
+      "symbol": "_ZN13daObjSwitch_c13StateIdleInitEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba3fc"
@@ -1302,7 +1302,7 @@
       "source": "0x021098bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba3a8Ev",
+      "symbol": "_ZN13daObjSwitch_c13StateIdleMainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba3a8"
@@ -1312,7 +1312,7 @@
       "source": "0x021098c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13daObjSwitch_c19func_ov002_020ba0f8Ev",
+      "symbol": "_ZN13daObjSwitch_c18StateUnpressedMainEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020ba0f8"
@@ -1320,74 +1320,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@927",
+      "from": "@923",
       "to": "@822",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @932 where main emits @918; licensed under the existing pin @822"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @932 where main emits @918; licensed under the existing pin @822 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
+    },
+    {
+      "from": "@924",
+      "to": "@823",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @933 where main emits @919; licensed under the existing pin @823 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
+    },
+    {
+      "from": "@925",
+      "to": "@824",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @934 where main emits @920; licensed under the existing pin @824 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
+    },
+    {
+      "from": "@926",
+      "to": "@825",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @935 where main emits @921; licensed under the existing pin @825 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@928",
-      "to": "@823",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @933 where main emits @919; licensed under the existing pin @823"
-    },
-    {
-      "from": "@929",
-      "to": "@824",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @934 where main emits @920; licensed under the existing pin @824"
+      "to": "@827",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @937 where main emits @923; licensed under the existing pin @827 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@930",
-      "to": "@825",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @935 where main emits @921; licensed under the existing pin @825"
+      "to": "@829",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @939 where main emits @925; licensed under the existing pin @829 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@932",
-      "to": "@827",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @937 where main emits @923; licensed under the existing pin @827"
+      "to": "@831",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @941 where main emits @927; licensed under the existing pin @831 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@934",
-      "to": "@829",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @939 where main emits @925; licensed under the existing pin @829"
+      "to": "@833",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @943 where main emits @929; licensed under the existing pin @833 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@936",
-      "to": "@831",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @941 where main emits @927; licensed under the existing pin @831"
+      "to": "@835",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @945 where main emits @931; licensed under the existing pin @835 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@938",
-      "to": "@833",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @943 where main emits @929; licensed under the existing pin @833"
+      "to": "@837",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @947 where main emits @933; licensed under the existing pin @837 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@940",
-      "to": "@835",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @945 where main emits @931; licensed under the existing pin @835"
+      "to": "@839",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @949 where main emits @935; licensed under the existing pin @839 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@942",
-      "to": "@837",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @947 where main emits @933; licensed under the existing pin @837"
+      "to": "@841",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @951 where main emits @937; licensed under the existing pin @841 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@944",
-      "to": "@839",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @949 where main emits @935; licensed under the existing pin @839"
+      "to": "@843",
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @953 where main emits @939; licensed under the existing pin @843 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     },
     {
       "from": "@946",
-      "to": "@841",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @951 where main emits @937; licensed under the existing pin @841"
-    },
-    {
-      "from": "@948",
-      "to": "@843",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @953 where main emits @939; licensed under the existing pin @843"
-    },
-    {
-      "from": "@950",
       "to": "@845",
-      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @955 where main emits @941; licensed under the existing pin @845"
+      "evidence": "compiler temp; the types.h Vector3 ctors advance this TU's per-TU @NNN counter, so mwcc emits it as @955 where main emits @941; licensed under the existing pin @845 | re-keyed when the touch helper became daObjSwitch_c::OnStoodOn: deleting its local extern (two named parameters) moved every raw @N to @N-2; tubuild verify --no-write ov002/daObjSwitch_c gives 24/24 MATCH with no unlicensed @N"
     }
   ]
 }

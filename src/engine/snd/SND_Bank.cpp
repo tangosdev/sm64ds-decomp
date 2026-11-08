@@ -39,7 +39,6 @@ typedef char SNDBankData_size_must_be_0x3c[sizeof(SNDBankData) == 0x3c ? 1 : -1]
 
 /* Point the bank's link at index to waveArc: unchain the link from the
  * archive it used before, then chain it at the head of waveArc's links. */
-// @symbol SND_AssignWaveArc
 void SND_AssignWaveArc(SNDBankData *bank, int index, SNDWaveArc *waveArc) {
     SNDWaveArc *prev = bank->waveArcLink[index].waveArc;
     if (prev != 0) {
@@ -70,7 +69,6 @@ void SND_AssignWaveArc(SNDBankData *bank, int index, SNDWaveArc *waveArc) {
 }
 
 /* Unchain each of the bank's links from the archive it points at. */
-// @symbol SND_DestroyBank
 void SND_DestroyBank(SNDBankData *bank) {
     int i;
     for (i = 0; i < 4; i++) {
@@ -93,7 +91,6 @@ void SND_DestroyBank(SNDBankData *bank) {
 }
 
 /* Clear every link that still points at this wave archive. */
-// @symbol SND_DestroyWaveArc
 void SND_DestroyWaveArc(SNDWaveArc *waveArc) {
     SNDWaveArcLink *link = waveArc->topLink;
     while (link != 0) {

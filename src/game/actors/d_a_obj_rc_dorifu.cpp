@@ -72,12 +72,10 @@ extern RcDorifuCollisionFilePtr data_ov036_02114114;
 extern RcDorifuModelFilePtr data_ov036_0211410c;
 extern RcDorifuCollisionFilePtr data_ov036_021140dc;
 
-// @symbol daObjRc_Dorifu_c_classInit
 extern "C" daObjRc_Dorifu_c *daObjRc_Dorifu_c_classInit() {
     return new daObjRc_Dorifu_c();
 }
 
-// @symbol g_profile_RC_DORIFU
 extern "C" SpawnInfo<daObjRc_Dorifu_c> g_profile_RC_DORIFU = {
     daObjRc_Dorifu_c_classInit,
     0x007b, /* RC_DORIFU registry id 123 */
@@ -95,12 +93,10 @@ daObjDorifuResources data_ov036_02113e88[5] = {
     {&data_ov036_02114104, &data_ov036_02114114, &data_ov036_02112b88},
     {&data_ov036_0211410c, &data_ov036_021140dc, &data_ov036_02112ae8}};
 
-// @symbol _ZN16daObjRc_Dorifu_c13InitResourcesEv
 s32 daObjRc_Dorifu_c::InitResources() {
     return daObjDorifu_c::InitResources(data_ov036_02113e88);
 }
 
-// @symbol _ZN16daObjRc_Dorifu_c16CleanupResourcesEv
 s32 daObjRc_Dorifu_c::CleanupResources() {
     return daObjDorifu_c::CleanupResources(data_ov036_02113e88);
 }

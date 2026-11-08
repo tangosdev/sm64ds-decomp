@@ -39,6 +39,7 @@
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
@@ -74,13 +75,11 @@ extern int IsStarCollected(int r0, int r1);
 extern SharedFilePtr data_ov002_0210da10;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
+extern unsigned char gCurrentStarId;
 
 /* D0 is the deleting destructor: it destroys through this class and its
  * bases, which is why more than one vptr store appears, then frees through an
  * inline operator delete, which is why nothing here mentions a heap. */
-// @symbol _ZN18daWater_Hakidasi_cD1Ev
-// @symbol _ZN18daWater_Hakidasi_cD0Ev
 daWater_Hakidasi_c::~daWater_Hakidasi_c() {}
 
 /* Per-frame update. Moves a non-metal player's position while within
@@ -88,7 +87,6 @@ daWater_Hakidasi_c::~daWater_Hakidasi_c() {}
  * (recording its uniqueID in the mSpawnedIDs buffer), and counts the rings the
  * player passes, as reported in mPassedRing, in spawn order. At a count of 5 it
  * waits 0x1e frames, spawns a STAR (actor 0xb2) and sets mRingsPassed to 0xa. */
-// @symbol _ZN18daWater_Hakidasi_c6State0Ev
 int daWater_Hakidasi_c::State0() {
     Vector3_16 rot;
     VecFx32 vec;
@@ -139,7 +137,8 @@ int daWater_Hakidasi_c::State0() {
     }
 
     if (mNoRings == 0) {
-        mParticle = Particle::System::New(mParticle, 0x138, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle =
+            Particle::System::New(mParticle, kPtclWaterSpoutRings, mPosX, mPosY, mPosZ, 0, 0);
         if (mRingsPassed < 5) {
             if (*(u16 *)&mStateTimer == 0) {
                 ax = *(volatile u16 *)&mAngleX;
@@ -216,7 +215,7 @@ int daWater_Hakidasi_c::State0() {
             }
         }
     } else {
-        mParticle = Particle::System::New(mParticle, 0x7b, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle = Particle::System::New(mParticle, kPtclWaterSpout, mPosX, mPosY, mPosZ, 0, 0);
     }
 
     if (mRingsPassed == 5) {
@@ -236,7 +235,6 @@ int daWater_Hakidasi_c::State0() {
 
 /* Enters the state: clears the passed ring, the ring head, the matched slot
  * and the spawned-ring buffer. */
-// @symbol _ZN18daWater_Hakidasi_c10InitState0Ev
 int daWater_Hakidasi_c::InitState0() {
     int i = 0;
     mPassedRing = 0;
@@ -248,7 +246,6 @@ int daWater_Hakidasi_c::InitState0() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Hakidasi_c8SetStateEPNS_5StateE
 /* Installs a state and runs its enter handler, if it has one. */
 int daWater_Hakidasi_c::SetState(State *state) {
     mState = state;
@@ -258,13 +255,11 @@ int daWater_Hakidasi_c::SetState(State *state) {
     return (this->*(s->mInit))();
 }
 
-// @symbol _ZN18daWater_Hakidasi_c19func_ov064_0211987cEv
 void daWater_Hakidasi_c::func_ov064_0211987c() {}
 
 /* Gives back the two shared files the spout renders from. Both live in ov002,
  * not in this overlay: the class borrows models the always-resident module
  * owns, so the handles are released rather than freed. */
-// @symbol _ZN18daWater_Hakidasi_c16CleanupResourcesEv
 s32 daWater_Hakidasi_c::CleanupResources() {
     data_ov002_0210da10.Release();
     data_ov002_0210d9a8.Release();
@@ -273,19 +268,16 @@ s32 daWater_Hakidasi_c::CleanupResources() {
 
 /* Empty: the ROM body is a single `bx lr`. The override exists to suppress
  * whatever the base does on pending destroy. */
-// @symbol _ZN18daWater_Hakidasi_c16OnPendingDestroyEv
 void daWater_Hakidasi_c::OnPendingDestroy() {}
 
 /* `mov r0,#1; bx lr` and nothing else: the class draws nothing of its own
  * from the render slot. */
-// @symbol _ZN18daWater_Hakidasi_c6RenderEv
 s32 daWater_Hakidasi_c::Render() {
     return 1;
 }
 
 /* The state pointer at 0x300 is daWater_Hakidasi_c::State (see the header),
  * the same shape and treatment as daPropeller_Heyho_Fire_c::Behavior. */
-// @symbol _ZN18daWater_Hakidasi_c8BehaviorEv
 s32 daWater_Hakidasi_c::Behavior() {
     DecIfAbove0_Short((u16 *)&mStateTimer);
     State *h = mState;
@@ -299,7 +291,6 @@ s32 daWater_Hakidasi_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN18daWater_Hakidasi_c13InitResourcesEv
 s32 daWater_Hakidasi_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210da10);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
@@ -308,7 +299,7 @@ s32 daWater_Hakidasi_c::InitResources() {
     if ((param1 & 0xf) > 1)
         mNoRings = 0;
     if (gCurrentSublevel == 8 &&
-        (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
+        (gCurrentStarId == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
         return 0;
     }
     mdCcAc_c.Init(this, 0xc8000, 0x190000, 0x800004, 0);
@@ -320,7 +311,6 @@ s32 daWater_Hakidasi_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the WATER_HAKIDASI registry
  * profile; later EAD lineage supplies classInit. Exact original spelling is
  * not preserved. Historical alias: JetStream_Spawn. */
-// @symbol daWater_Hakidasi_c_classInit
 extern "C" daWater_Hakidasi_c *daWater_Hakidasi_c_classInit() {
     return new daWater_Hakidasi_c();
 }

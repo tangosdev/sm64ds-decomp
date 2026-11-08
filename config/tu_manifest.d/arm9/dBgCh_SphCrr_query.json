@@ -70,7 +70,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e48Ev",
+      "symbol": "_ZNK4CLPS17GetCameraBehaviorEv",
       "address": "0x02037e48",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e48.c",
@@ -84,7 +84,7 @@
       "ordinal": 8
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e68Ev",
+      "symbol": "_ZNK4CLPS9GetViewIDEv",
       "address": "0x02037e68",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e68.c",
@@ -98,14 +98,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e84Ev",
+      "symbol": "_ZNK4CLPS12GetSoundTypeEv",
       "address": "0x02037e84",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e84.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZNK4CLPS13func_02037e90Ev",
+      "symbol": "_ZNK4CLPS9GetPathIDEv",
       "address": "0x02037e90",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_02037e90.c",
@@ -301,21 +301,21 @@
       "ordinal": 39
     },
     {
-      "symbol": "func_02038234",
+      "symbol": "dBgS_RideCallBack",
       "address": "0x02038234",
       "size": "0x00000064",
       "legacy_source": "src/engine/collision/CLPS_BlockRef.cpp",
       "ordinal": 40
     },
     {
-      "symbol": "func_02038298",
+      "symbol": "dBgS_ChkPolySafe",
       "address": "0x02038298",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0203/func_02038298.c",
       "ordinal": 41
     },
     {
-      "symbol": "func_02038324",
+      "symbol": "dBgS_MoveBgCrrPos",
       "address": "0x02038324",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0203/func_02038324.cpp",
@@ -364,14 +364,14 @@
       "ordinal": 48
     },
     {
-      "symbol": "func_0203842c",
+      "symbol": "_ZN9dBgCh_Lin21DetectClsnExceptSlot0Ev",
       "address": "0x0203842c",
       "size": "0x00000170",
       "legacy_source": "src/unnamed/arm9/0203/func_0203842c.cpp",
       "ordinal": 49
     },
     {
-      "symbol": "func_0203859c",
+      "symbol": "_ZN9dBgCh_Lin15DetectClsnSlot0Ev",
       "address": "0x0203859c",
       "size": "0x0000009c",
       "legacy_source": "src/unnamed/arm9/0203/func_0203859c.cpp",
@@ -385,14 +385,14 @@
       "ordinal": 51
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13func_02038824Ev",
+      "symbol": "_ZN12dBgCh_SphCrr21DetectClsnExceptSlot0Ev",
       "address": "0x02038824",
       "size": "0x00000214",
       "legacy_source": "src/func_02038824.cpp",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN12dBgCh_SphCrr13func_02038a38Ev",
+      "symbol": "_ZN12dBgCh_SphCrr15DetectClsnSlot0Ev",
       "address": "0x02038a38",
       "size": "0x00000140",
       "legacy_source": "src/func_02038a38.cpp",

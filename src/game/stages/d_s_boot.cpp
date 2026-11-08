@@ -23,8 +23,6 @@
 
 #pragma defer_codegen off
 
-// @symbol _ZN9dScBoot_cD1Ev
-// @symbol _ZN9dScBoot_cD0Ev
 dScBoot_c::~dScBoot_c()
 {
 }
@@ -33,7 +31,6 @@ dScBoot_c::~dScBoot_c()
  * one `new` -- fBase_c::operator new(0x58), the inlined base chain's vptr
  * stores and pauseFlags ORs, then dScBoot_c's own vptr; the null check is
  * `new`'s own. */
-// @symbol dScBoot_c_classInit
 extern "C" dScBoot_c *dScBoot_c_classInit(void)
 {
     return new dScBoot_c();

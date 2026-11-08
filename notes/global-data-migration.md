@@ -321,7 +321,7 @@ Examples:
 
 | Symbol | Address | Size | File |
 |--------|---------|------|------|
-| [data_ov002_0211114c](../config/arm9/overlays/ov002/symbols.txt) | 0x0211114c | 0x04 | `src/ui/hud/d_map.cpp` |
+| [gMapIntroRotating](../config/arm9/overlays/ov002/symbols.txt) | 0x0211114c | 0x04 | `src/ui/hud/d_map.cpp` |
 | [data_ov016_02114d4c](../config/arm9/overlays/ov016/symbols.txt) | 0x02114d4c | 0x0c | `src/game/actors/d_a_moray.cpp` |
 | [data_ov026_02113f4c](../config/arm9/overlays/ov026/symbols.txt) | 0x02113f4c | 0x0c | `src/game/actors/d_a_water_suikomi.cpp` |
 | [data_ov006_02140518](../config/arm9/overlays/ov006/symbols.txt) | 0x02140518 | 0x20 | `src/minigames/unit020c8a30.cpp` (func_ov006_020c8a30) |

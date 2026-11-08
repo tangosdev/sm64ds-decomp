@@ -121,10 +121,6 @@ u8 NumStars(void);
 int d_a_kinopioPlaySubHold(u32 a, u32 b, u32 c, int d, int e);
 }
 
-/* St_Talk_Main's legacy source used this to keep an address computation from
-   folding into the surrounding expression; it is carried verbatim. */
-#define M(p) (p)
-
 /* Actor ID 0xbf is PLAYER. This int-returning predicate is what makes the
  * ROM materialize 0/1 before testing it. */
 static inline int IsPlayerActor(dActor_c *actor) {
@@ -133,8 +129,6 @@ static inline int IsPlayerActor(dActor_c *actor) {
 
 #pragma defer_codegen off
 
-// @symbol _ZN11daKinopio_cD1Ev
-// @symbol _ZN11daKinopio_cD0Ev
 /* ONE definition, TWO ROM functions (D1 at 0x02129020, D0 at 0x02129060;
  * the D2 the compiler also emits is homeless and discarded). The empty
  * body is one vptr store plus the member destructors in reverse
@@ -144,11 +138,10 @@ daKinopio_c::~daKinopio_c()
 {
 }
 
-// @symbol _ZN11daKinopio_c12GetMessageIDEv
 /* Which line of dialogue this Toad says. The player's param1 (+8) shifts
  * the id per character; the 0x32 mode overrides it entirely. */
 int daKinopio_c::GetMessageID() {
-    int *player = (int *)mTalkPlayer;
+    daPly_c *player = mTalkPlayer;
     u16 messageID = mMessageID;
 
     if (gCurrentSublevel == 0x32) {
@@ -158,7 +151,7 @@ int daKinopio_c::GetMessageID() {
             return 0x134;
         case 0: {
             int message = ObjectMessageIDToActualMessageID(messageID);
-            int sum = message + player[2];
+            int sum = message + player->param1;
             return (u16)sum;
         }
         default:
@@ -167,22 +160,20 @@ int daKinopio_c::GetMessageID() {
     }
 
     if (mVariant == 1 && func_02013a44() != 0) {
-        int playerParam = player[2];
+        int playerParam = player->param1;
         int message = 0xb0a;
         message += playerParam;
         return ObjectMessageIDToActualMessageID((u16)message);
     }
 
     int message = ObjectMessageIDToActualMessageID(messageID);
-    int sum = message + player[2];
+    int sum = message + player->param1;
     return (u16)sum;
 }
 
-// @symbol _ZN11daKinopio_c12St_Talk_MainEv
 void daKinopio_c::St_Talk_Main()
 {
-    char *c = (char *)this;
-    char *player;
+    daPly_c *player;
     int messageID;
     s16 angleToPlayer;
     Vector3 playerPos;
@@ -190,16 +181,16 @@ void daKinopio_c::St_Talk_Main()
     Vector3 starPos;
     int talkState;
 
-    player = (char *)mTalkPlayer;
+    player = mTalkPlayer;
     messageID = GetMessageID();
     {
-        int *pos = (int *)M(&((daPly_c *)player)->mPos);
-        playerPos.x = pos[0];
-        playerPos.y = pos[1];
-        playerPos.z = pos[2];
+        Vector3 *pos = &player->mPos;
+        playerPos.x = pos->x;
+        playerPos.y = pos->y;
+        playerPos.z = pos->z;
     }
     angleToPlayer = Vec3_HorzAngle(&mPos, &playerPos);
-    talkState = ((daPly_c *)player)->GetTalkState();
+    talkState = player->GetTalkState();
     switch (talkState) {
     case 0: {
         if (ApproachLinear(mAngleY, angleToPlayer, 0x800) == 0)
@@ -217,7 +208,7 @@ void daKinopio_c::St_Talk_Main()
             messagePos.y = y;
             messagePos.z = z;
         }
-        ((daPly_c *)player)->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
+        player->ShowMessage(*this, (u32)(s16)messageID, &messagePos, 0, 0);
         return;
     }
     case 1:
@@ -236,8 +227,7 @@ void daKinopio_c::St_Talk_Main()
                 starPos.y += 0xc8000;
                 dActor_c::Spawn(
                     0xb2, mStarID | 0x20, starPos, 0, mAreaId, -1);
-                u16 *message = (u16 *)M(&mMessageID);
-                *message = (u16)(*message + 1);
+                mMessageID++;
             }
         }
     }
@@ -245,14 +235,14 @@ void daKinopio_c::St_Talk_Main()
     if (mVariant == 1 && func_02013a44() != 0) {
         u32 id = mCapUniqueID;
         if (id != 0) {
-            char *found = (char *)dActor_c::FindWithID(id);
+            dActor_c *found = dActor_c::FindWithID(id);
             if (found != 0) {
-                ((fBase_c *)found)->MarkForDestruction();
+                found->MarkForDestruction();
                 mCapUniqueID = 0;
                 SpawnSoundObj(1);
                 {
                     u32 param = 0x13;
-                    param |= ((daPly_c *)player)->mCharacter << 8;
+                    param |= player->mCharacter << 8;
                     dActor_c::Spawn(0x10d, param, playerPos, 0, mAreaId, -1);
                 }
             }
@@ -265,7 +255,6 @@ void daKinopio_c::St_Talk_Main()
     SetState(0);
 }
 
-// @symbol _ZN11daKinopio_c12St_Talk_InitEv
 void daKinopio_c::St_Talk_Init()
 {
     u32 flags = 0;
@@ -273,7 +262,6 @@ void daKinopio_c::St_Talk_Init()
     mAnmModel.SetAnim((BCA_File *)file, 0, 0x1000, flags);
 }
 
-// @symbol _ZN11daKinopio_c12St_Idle_MainEv
 void daKinopio_c::St_Idle_Main()
 {
     if ((mCollider.hitFlags & 0x08000000) == 0)
@@ -293,13 +281,11 @@ void daKinopio_c::St_Idle_Main()
     SetState(1);
 }
 
-// @symbol _ZN11daKinopio_c12St_Idle_InitEv
 void daKinopio_c::St_Idle_Init()
 {
     mAnmModel.SetAnim((BCA_File *)gKinopioIdleAnimFile.filePtr, 0, 0x1000, 0);
 }
 
-// @symbol _ZN11daKinopio_c8SetStateEi
 void daKinopio_c::SetState(s32 state)
 {
     mState = state;
@@ -307,24 +293,21 @@ void daKinopio_c::SetState(s32 state)
     (this->*data_ov085_0212fe88[index].init)();
 }
 
-// @symbol _ZN11daKinopio_c8RunStateEv
 void daKinopio_c::RunState()
 {
     s32 index = mState;
     (this->*data_ov085_0212fe88[index].main)();
 }
 
-// @symbol _ZN11daKinopio_c15UpdateModelPoseEv
 /* The matrix assignments are block copies because this TU sees common.h's
  * flat Matrix4x3 first (see the include note above). transforms[5] is the
  * head bone. */
 void daKinopio_c::UpdateModelPose()
 {
-    char *c = (char *)this;
     Matrix4x3 *dst;
     dActor_c *actor;
     u32 id;
-    int x, y, z;
+    Vector3 capPos;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.m[9] = mPosX >> 3;
@@ -340,9 +323,9 @@ void daKinopio_c::UpdateModelPose()
     if (id != 0) {
         actor = dActor_c::FindWithID(id);
         if (actor != 0) {
-            *(s32 *)&x = 0;
-            *(s32 *)&y = 0;
-            *(s32 *)&z = 0;
+            capPos.x = 0;
+            capPos.y = 0;
+            capPos.z = 0;
             dst = &mAnmModel.data.transforms[5];
             MulMat4x3Mat4x3(dst, &mAnmModel.mat4x3, &mCapTransform);
 
@@ -353,15 +336,15 @@ void daKinopio_c::UpdateModelPose()
                 &data_020a0e68, -0x1000, 0, 0);
             mCapTransform = data_020a0e68;
 
-            x = data_020a0e68.m[9];
-            y = data_020a0e68.m[10];
-            z = data_020a0e68.m[11];
-            y <<= 3;
-            x <<= 3;
-            z <<= 3;
-            actor->mPosX = x;
-            actor->mPosY = y;
-            actor->mPosZ = z;
+            capPos.x = data_020a0e68.m[9];
+            capPos.y = data_020a0e68.m[10];
+            capPos.z = data_020a0e68.m[11];
+            capPos.y <<= 3;
+            capPos.x <<= 3;
+            capPos.z <<= 3;
+            actor->mPosX = capPos.x;
+            actor->mPosY = capPos.y;
+            actor->mPosZ = capPos.z;
             actor->mCarryMatrix = &mCapTransform;
         }
     }
@@ -370,17 +353,16 @@ void daKinopio_c::UpdateModelPose()
     mShadowTransform.m[9] = mPosX >> 3;
     mShadowTransform.m[10] = (mPosY - 0x8000) >> 3;
     mShadowTransform.m[11] = mPosZ >> 3;
-    ((dActor_c *)c)->DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 0xf);
+    DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 0xf);
 }
 
-// @symbol _ZN11daKinopio_c16CleanupResourcesEv
 /* The three ov002 handles are released only by the variant that took them. The
  * legacy file reached all six through an `int[]` spelling and a cast; they are
  * the real SharedFilePtr objects, which is how InitResources below already
  * spelled them, so the cast is gone and the call is the ordinary member call. */
 int daKinopio_c::CleanupResources()
 {
-    if (*(unsigned char *)((char *)&mVariant) == 1) {
+    if (mVariant == 1) {
         data_ov002_0210da40.Release();
         data_ov002_0210d9a0.Release();
         data_ov002_0210d9c0.Release();
@@ -391,7 +373,6 @@ int daKinopio_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11daKinopio_c6RenderEv
 /* One call. THE CALL IS QUALIFIED, AND THAT IS LOAD-BEARING. dExtSimpleModel_c::Render is
  * virtual (slot 5 of _ZTV17dExtSimpleModel_c) and dExtAnmModel_c overrides it, so a plain
  * `mAnmModel.Render(0)` emits the vtable dispatch -- three words where the ROM
@@ -405,7 +386,6 @@ int daKinopio_c::Render()
     return 1;
 }
 
-// @symbol _ZN11daKinopio_c8BehaviorEv
 /* This Toad watches the player and turns his head; everything else in the
  * function is bookkeeping around that.
  *
@@ -488,6 +468,11 @@ int daKinopio_c::Behavior()
     ApproachLinear(mHeadYaw, mHeadYawTarget, 0x250);
     ApproachLinear(mHeadPitch, mHeadPitchTarget, 0x100);
 
+    /* _Z15ApproachLinear2Riii (src/ApproachAngle.cpp) loads and stores its
+     * reference as one unsigned char, so it is the byte stepper, and the u8
+     * opacity goes through its int & declaration. The real parameter list
+     * is not recoverable from the ROM, so the declaration and the symbol
+     * stay; d_a_gmch.cpp passes its byte mState the same way. */
     ApproachLinear2(*(s32 *)&mOpacity, mTargetOpacity, 6);
 
     mAnmModel.Advance();
@@ -504,7 +489,6 @@ int daKinopio_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN11daKinopio_c13InitResourcesEv
 /* Spawn-time setup, and most of it is unpacking the spawn parameter.
  *
  * mParam carries three things at once. The low half becomes mMessageID, the
@@ -548,9 +532,9 @@ int daKinopio_c::InitResources()
             if (player != 0) {
                 u32 param = 0xd;
                 param |= player->mCharacter << 8;
-                void *spawned = dActor_c::Spawn(0x10d, param, mPos, 0, mAreaId, -1);
+                dActor_c *spawned = dActor_c::Spawn(0x10d, param, mPos, 0, mAreaId, -1);
                 if (spawned != 0)
-                    mCapUniqueID = *(s32 *)((char *)spawned + 4);
+                    mCapUniqueID = spawned->uniqueID;
             }
         }
     }
@@ -563,8 +547,7 @@ int daKinopio_c::InitResources()
         }
         if (IsStarCollectedInCurLevel(mStarID) != 0 ||
             NumStars() < data_ov085_0212f27c[mStarReqIndex]) {
-            u16 *pm = (u16 *)((char *)&mMessageID);
-            *pm = (u16)(*pm + 1);
+            mMessageID++;
         }
     }
     SetState(0);
@@ -581,7 +564,6 @@ int daKinopio_c::InitResources()
     return 1;
 }
 
-// @symbol daKinopio_c_classInit
 /* The registry factory behind the KINOPIO profile: `return new` allocates
  * 0x210 (this class's sizeof) and installs this class's vtable.
  * Reconstructed source-style name: SM64DS proves daKinopio_c through RTTI,

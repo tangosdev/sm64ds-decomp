@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* GX material block at *(self+0x1a8) for func_ov080_02125460. */
+/* GX material block at *(self+0x1a8) for daPicGate_c::LoadMaterial. */
 struct Ov080Mat {
     u32 texAddr; /* 0x00 */
     u32 pltAddr; /* 0x04 */

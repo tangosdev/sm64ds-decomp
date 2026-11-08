@@ -60,39 +60,33 @@
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
 
-/* The 0xc-byte item rows starting at data_ov007_020d77d8. Their columns
- * are separate ROM symbols (data_ov007_020d77d8 hit-box index,
- * data_ov007_020d77dc flags, data_ov007_020d77e0 sprite mode,
- * data_ov007_020d77e1 depth index), so each column is its own extern and
- * is indexed by id * 0xc; the two word columns are read a row at a time
- * through the views below. The flags: bit 0 never selectable, bit 1
- * selectable before the fade-in ends. */
-typedef struct Ov007ItemFlags {
-    u32 flags;
-    char pad_04[8];
-} Ov007ItemFlags;
-
-typedef struct Ov007ItemHitBoxRow {
+/* The 0xc-byte item rows at data_ov007_020d77d8, one per item id.
+ * symbols.txt also names the columns (data_ov007_020d77dc flags,
+ * data_ov007_020d77e0 sprite mode, data_ov007_020d77e1 depth index).
+ * The flags: bit 0 never selectable, bit 1 selectable before the fade-in
+ * ends. */
+typedef struct Ov007ItemRow {
     s32 hitBoxIndex; /* into data_ov007_020d78f8; doubled, into the size pairs */
-    char pad_04[8];
-} Ov007ItemHitBoxRow;
+    u32 flags;
+    u8 spriteMode;
+    u8 depthIndex;
+    char pad_0a[2];
+} Ov007ItemRow;
 
 /* Which of items 0x16 / 0x17 was picked: 1 while the choice is open,
  * 2 for 0x16, 3 for 0x17. */
 extern int data_ov007_02103428;
 
-extern Ov007ItemFlags data_ov007_020d77dc[];
-extern Ov007ItemHitBoxRow data_ov007_020d77d8[];
-extern u8 data_ov007_020d77e0[];
-extern u8 data_ov007_020d77e1[];
+extern Ov007ItemRow data_ov007_020d77d8[];
 extern Ov007ItemLayout data_ov007_020d76e8[];
 extern Ov007ItemLayout data_ov007_020d7680[];
 extern Ov007HitBox data_ov007_020d78f8[];
 extern Ov007HitBox data_ov007_020d76c0[];
 extern Ov007HitBox data_ov007_020d7658;
 extern Ov007HitBox data_ov007_020d766c;
-extern u8 data_ov007_020d76a0[];
-extern u8 data_ov007_020d76a1[];
+/* { width, height } per hit box; symbols.txt also names the height
+ * column data_ov007_020d76a1. */
+extern u8 data_ov007_020d76a0[][2];
 extern s32 data_ov007_020d7648[];
 extern u16 data_ov007_020d75e8[];
 extern u16 data_ov007_020d75f8[];
@@ -100,13 +94,11 @@ extern u16 data_ov007_020d7608[];
 extern u16 data_ov007_020d7600[];
 extern u16 data_ov007_020d7628[];
 extern u16 data_ov007_020d7638[];
-/* the number sprites' screen x / y, 4-byte rows. func_ov007_020b42d8 reads
- * them through one shared byte offset, index << 2: indexing the s16 arrays
- * moves its register allocation. */
-extern s16 data_ov007_020d761c[];
-extern s16 data_ov007_020d761e[];
-extern u8 data_ov007_020d75f0[];
-extern u8 data_ov007_020d75f1[];
+/* the number sprites' screen { x, y } and { width, height }, one row per
+ * sprite. symbols.txt also names the second columns data_ov007_020d761e
+ * and data_ov007_020d75f1. */
+extern s16 data_ov007_020d761c[][2];
+extern u8 data_ov007_020d75f0[][2];
 extern u8 data_ov007_020d75e0[];
 extern u8 data_ov007_020d75e4[];
 /* each digit's width in pixels */
@@ -146,7 +138,6 @@ void func_ov007_020b45b0(Ov007ItemView *view);
  * state requests for this item, then over `thresh` ticks pops (ids 3/4),
  * nudges sideways (ids 10/11) or squashes its sprite; when the ticks run out
  * it resets the scale and requests the item's next state. */
-// @symbol func_ov007_020b50e8
 void func_ov007_020b50e8(Ov007ItemView *view) {
     Ov007Item *st;
     u16 state;
@@ -194,7 +185,7 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
             case 9:
                 break;
             case 11:
-                func_ov007_020b64a8(flag);
+                func_ov007_020b64a8(1);
                 break;
             case 10:
                 func_ov007_020b64a8(-1);
@@ -258,7 +249,7 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
         } else {
             u16 s2;
             s2 = st->id;
-            if ((u16)(s2 + 0xfff6) <= 1) {
+            if (s2 == 10 || s2 == 11) {
                 int dir;
                 int w;
                 int d8;
@@ -389,7 +380,6 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
 
 /* The item's state-0 step: items 8, 0x14 and 0x17 are selected with the
  * B button (pressed this frame, not held) through func_ov007_020b45b0. */
-// @symbol func_ov007_020b5068
 void func_ov007_020b5068(Ov007ItemView *view) {
     u16 id = view->item->id;
     Ov007Pad *pad;
@@ -407,7 +397,6 @@ void func_ov007_020b5068(Ov007ItemView *view) {
     func_ov007_020b45b0(view);
 }
 
-// @symbol func_ov007_020b4c04
 Ov007ItemView *func_ov007_020b4c04(int arg0) {
     Ov007ItemView *view;
     Ov007Sprite *sprite;
@@ -417,7 +406,7 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
     view = (Ov007ItemView *)func_ov007_020c3df4(0, 0x1c);
     r5 = data_ov007_020d77d8[arg0].hitBoxIndex;
     view->item = func_ov007_020aea6c(arg0, &data_ov007_020d76e8[arg0], &data_ov007_020d78f8[r5]);
-    view->sprite = func_ov007_020c44e4(data_ov007_020d77e0[view->item->id * 0xc]);
+    view->sprite = func_ov007_020c44e4(data_ov007_020d77d8[view->item->id].spriteMode);
     sprite = view->sprite;
     if (arg0 == 0x15) {
         sprite->polygonId = 0x1c;
@@ -427,9 +416,9 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
     sprite->texRepeat = 3;
     sprite->texFlip = 0;
     sprite->texColor0 = 1;
-    sprite->width = data_ov007_020d76a0[data_ov007_020d77d8[view->item->id].hitBoxIndex * 2];
-    sprite->height = data_ov007_020d76a1[data_ov007_020d77d8[view->item->id].hitBoxIndex * 2];
-    sprite->depth = data_ov007_020d7648[data_ov007_020d77e1[view->item->id * 0xc]];
+    sprite->width = data_ov007_020d76a0[data_ov007_020d77d8[view->item->id].hitBoxIndex][0];
+    sprite->height = data_ov007_020d76a0[data_ov007_020d77d8[view->item->id].hitBoxIndex][1];
+    sprite->depth = data_ov007_020d7648[data_ov007_020d77d8[view->item->id].depthIndex];
     view->pad_08 = 0;
     view->slideTween = func_ov007_020c908c(&view->slideT);
     view->slideT = 0;
@@ -506,7 +495,7 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
         sprite->texT = data_ov007_020d7638[arg0 - 0xe];
     } else if (arg0 >= 0x16 && arg0 <= 0x17) {
         sprite->frames[0] = WORK->textures[2];
-        sprite->texS = (u16)((arg0 - 0x16) * 0x48);
+        sprite->texS = (arg0 - 0x16) * 0x48;
         sprite->texT = 0x80;
     }
     return view;
@@ -514,7 +503,6 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
 
 /* Frees a view built by func_ov007_020b4c04: its slide tween, its item,
  * its sprite, then the view itself. */
-// @symbol func_ov007_020b4bd4
 void func_ov007_020b4bd4(Ov007ItemView *view) {
     func_ov007_020c9080(view->slideTween);
     func_ov007_020aea4c(view->item);
@@ -525,7 +513,6 @@ void func_ov007_020b4bd4(Ov007ItemView *view) {
 /* Resets the view's sprite to unit scale, full alpha and white, sizes it
  * for `camera` (func_ov007_020c43bc), puts it at the item's home point
  * and places it in the world (func_ov007_020c4388). */
-// @symbol func_ov007_020b4b5c
 void func_ov007_020b4b5c(Ov007ItemView *view, Ov007Camera *camera) {
     Ov007Sprite *o = view->sprite;
     o->scaleY = 0x1000;
@@ -548,11 +535,11 @@ static inline int elem_selectable(Ov007ItemView *elem) {
     int gate2 = 0;
     int gate1 = 0;
     if (obj->state->currentState == 0) {
-        if (obj->fade >= 0x1000 || (data_ov007_020d77dc[elem->item->id].flags & 2))
+        if (obj->fade >= 0x1000 || (data_ov007_020d77d8[elem->item->id].flags & 2))
             gate1 = 1;
     }
     if (gate1) {
-        if (!(data_ov007_020d77dc[elem->item->id].flags & 1))
+        if (!(data_ov007_020d77d8[elem->item->id].flags & 1))
             gate2 = 1;
     }
     if (gate2) {
@@ -613,7 +600,6 @@ static inline int elem_selectable(Ov007ItemView *elem) {
  * FREE at 0; the transform is written out longhand only to keep the four
  * edges reading alike.
  */
-// @symbol func_ov007_020b46b0
 void func_ov007_020b46b0(void *arg0, void *arg1) {
     Ov007ItemView *elem = (Ov007ItemView *)arg0;
     Ov007Touch *tp = (Ov007Touch *)arg1;
@@ -713,7 +699,6 @@ done:
 
 /* Selects the view's item (func_ov007_020b63e4) if it is selectable: the
  * same test as elem_selectable, written out. */
-// @symbol func_ov007_020b45b0
 void func_ov007_020b45b0(Ov007ItemView *view) {
     Ov007Item *p = view->item;
     int call_it = 0;
@@ -721,11 +706,11 @@ void func_ov007_020b45b0(Ov007ItemView *view) {
     int b6 = 0;
 
     if (p->state->currentState == 0) {
-        if (p->fade >= 0x1000 || (data_ov007_020d77dc[view->item->id].flags & 2))
+        if (p->fade >= 0x1000 || (data_ov007_020d77d8[view->item->id].flags & 2))
             b6 = 1;
     }
     if (b6) {
-        if (!(data_ov007_020d77dc[view->item->id].flags & 1))
+        if (!(data_ov007_020d77d8[view->item->id].flags & 1))
             t0 = 1;
     }
     if (t0) {
@@ -755,7 +740,6 @@ void func_ov007_020b45b0(Ov007ItemView *view) {
  * work is 0xff: requests func_ov007_020b58e4's state, ticks the item, runs
  * the state-0 or state-2 handler, then func_ov007_020b5bf0 while the item
  * is visible. */
-// @symbol func_ov007_020b44ec
 void func_ov007_020b44ec(Ov007ItemView *view) {
     Ov007Item *o = view->item;
     Ov007ItemLayout *p24 = o->layout;
@@ -793,7 +777,6 @@ void func_ov007_020b44ec(Ov007ItemView *view) {
  * since the last frame the sprite is re-placed for `camera`
  * (func_ov007_020c4388); while the item is visible the sprite is drawn
  * (func_ov007_020c421c). */
-// @symbol func_ov007_020b4464
 void func_ov007_020b4464(Ov007ItemView *view, Ov007Camera *camera) {
     int changed;
     if (view->item->visible == 0) {
@@ -813,7 +796,6 @@ void func_ov007_020b4464(Ov007ItemView *view, Ov007Camera *camera) {
 
 /* The choice word data_ov007_02103428, or 0 while func_ov007_020b79e4
  * returns nonzero. */
-// @symbol func_ov007_020b4438
 int func_ov007_020b4438(void) {
     if (func_ov007_020b79e4())
         return 0;
@@ -823,36 +805,26 @@ int func_ov007_020b4438(void) {
 /* Opens the 0x16 / 0x17 choice: sets the choice word to 1, requests state 3
  * on both items' views, then opens the message window for `kind` (9 or 0xc
  * at the callers) with func_ov007_020b7d94. */
-// @symbol func_ov007_020b43dc
 void func_ov007_020b43dc(int kind) {
-    Ov007Work *work = WORK;
     data_ov007_02103428 = 1;
-    Ov007ItemView *view1 = work->itemViews[0x16];
-    Ov007Item *item1 = view1->item;
-    Ov007MenuState *state1 = item1->state;
-    state1->requestedState = 3;
-    Ov007Work *work2 = WORK;
-    Ov007ItemView *view2 = work2->itemViews[0x17];
-    Ov007Item *item2 = view2->item;
-    Ov007MenuState *state2 = item2->state;
-    state2->requestedState = 3;
+    WORK->itemViews[0x16]->item->state->requestedState = 3;
+    WORK->itemViews[0x17]->item->state->requestedState = 3;
     func_ov007_020b7d94(kind);
 }
 
 /* Builds number sprite `index` (Ov007Work's numberSprites): a frame of
  * texture 2 at the row's screen position, texel cell and size, parented to
  * item view 14's sprite for camera 1. */
-// @symbol func_ov007_020b42d8
 Ov007Sprite *func_ov007_020b42d8(int index) {
     Ov007Sprite *parent = WORK->itemViews[14]->sprite;
     Ov007Sprite *obj;
     WORK->numberSprites[index] = func_ov007_020c44e4(1);
     obj = WORK->numberSprites[index];
-    obj->screenX = *(s16 *)((char *)data_ov007_020d761c + (index << 2)) << 12;
-    obj->screenY = *(s16 *)((char *)data_ov007_020d761e + (index << 2)) << 12;
+    obj->screenX = data_ov007_020d761c[index][0] << 12;
+    obj->screenY = data_ov007_020d761c[index][1] << 12;
     obj->depth = 0x14;
-    obj->width = data_ov007_020d75f0[index * 2];
-    obj->height = data_ov007_020d75f1[index * 2];
+    obj->width = data_ov007_020d75f0[index][0];
+    obj->height = data_ov007_020d75f0[index][1];
     obj->frames[0] = WORK->textures[2];
     obj->texRepeat = 3;
     obj->texFlip = 0;
@@ -868,7 +840,6 @@ Ov007Sprite *func_ov007_020b42d8(int index) {
  * width from data_ov007_020d7610 and given the digit's texel cell, and
  * numberSprites[0] is drawn at the start of the run; a negative number draws
  * numberSprites[1] instead. Bracketed by a matrix push and pop. */
-// @symbol func_ov007_020b413c
 void func_ov007_020b413c(Ov007ItemView *view, int number) {
     Ov007Sprite *lead;
     Ov007Sprite *digit;

@@ -28,7 +28,7 @@
  * - Init keeps the two-step probePos.y (combined form size-DIFFs
  *   0x1a8 -> 0x1a4). dBgW_KcMbg::SetFile with Fix12<int> size-DIFFs
  *   0x1a8 -> 0x1ac. Storing beforeClsnCallback directly size-DIFFs
- *   0x1a8 -> 0x1a4; the body calls func_020393d4.
+ *   0x1a8 -> 0x1a4; the body calls dBgW::SetBeforeClsnCallback.
  * - CleanupResources reloads mFileTable around each Release. One pointer
  *   across the three calls is a 20-word DIFF.
  * - The cycle states are StateRise (0), StateHover (1), StateSlam (2),
@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* Actor IDs this TU compares. No header vocabulary exists (cleaned callers
@@ -98,18 +99,14 @@ struct DsnCycle {
 /* arm9 C helpers with no shared header.
  * DecIfAbove0_Byte is spelled from its definition at src/DecIfAbove0_Byte.c:
  * unsigned char in, unsigned char out. RandomIntInternal's sites pass the RNG
- * state. func_020393d4 is the 8-byte store into dBgW+0x18
- * (beforeClsnCallback), spelled as src/engine/collision/d_bg_w.cpp has it. */
+ * state. */
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *);
 extern int RandomIntInternal(int *);
 extern int Vec3_Dist(const Vector3 *, const Vector3 *);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 
-// @symbol _ZN11daDsnBase_cD0Ev
-// @symbol _ZN11daDsnBase_cD1Ev
 /* ROM ordinals 0 and 1 -- ov091 0x02132d04 (D0, 0x68) and 0x02132d6c (D1,
  * 0x54). No source here: both destructor variants come from the ONE
  * inline body in include/daDsnBase_c.h, which the class's descendants need
@@ -139,7 +136,6 @@ void daDsnBase_c_EmitDestructor(daDsnBase_c *p) {
  * position. The aimPos block is dead by value -- the distance check reads
  * the actor origin, not it -- but it keeps the OnAimedAtWithEgg
  * call and the three stores the ROM emits. */
-// @symbol _ZN11daDsnBase_c16WakeNearYoshiEggEv
 int daDsnBase_c::WakeNearYoshiEgg() {
     dActor_c *egg = ClosestWithActorID(kYoshiEggActorID);
     if (egg != 0) {
@@ -160,7 +156,6 @@ int daDsnBase_c::WakeNearYoshiEgg() {
 
 /* State 4, the recover. Spends the timer state 3 set, then closes the cycle
  * back to state 0 with a 0x28-frame hover preload. */
-// @symbol _ZN11daDsnBase_c12StateRecoverEv
 void daDsnBase_c::StateRecover() {
     DsnCycle *self = (DsnCycle *)this;
     int timeLeft = DecIfAbove0_Byte(&self->timer);
@@ -172,7 +167,6 @@ void daDsnBase_c::StateRecover() {
 
 /* State 3, the rest. Spends the landing timer, then moves to state 4 with
  * a fresh 0x14..0x1d-frame recovery time. */
-// @symbol _ZN11daDsnBase_c9StateRestEv
 void daDsnBase_c::StateRest() {
     DsnCycle *self = (DsnCycle *)this;
     if (DecIfAbove0_Byte(&self->timer) != 0)
@@ -187,7 +181,6 @@ void daDsnBase_c::StateRest() {
  * stored ground (0x394) snaps to it, stops, moves to state 3 and lands:
  * the Thwomp (DOSUN) raises its landing dust, Grindel spawns particle 0x2e,
  * and both shake the camera and play 0xc7. */
-// @symbol _ZN11daDsnBase_c9StateSlamEv
 void daDsnBase_c::StateSlam() {
     Vector3 dustPos;
     Vector3 quakePos;
@@ -208,7 +201,7 @@ void daDsnBase_c::StateSlam() {
         dustPos.y = mPosY;
         dustPos.z = mPosZ;
         dustPos.y = dustPos.y + 0x3c000;
-        Particle::System::NewSimple(0x2e, dustPos.x, dustPos.y, dustPos.z);
+        Particle::System::NewSimple(kPtclGrindelLanding, dustPos.x, dustPos.y, dustPos.z);
     }
     quakePos.x = mPosX;
     quakePos.y = mPosY;
@@ -219,7 +212,6 @@ void daDsnBase_c::StateSlam() {
 
 /* State 1, the hover. Spends the timer state 0 rolled, then drops to
  * state 2. */
-// @symbol _ZN11daDsnBase_c10StateHoverEv
 void daDsnBase_c::StateHover() {
     DsnCycle *self = (DsnCycle *)this;
     int timeLeft = DecIfAbove0_Byte(&self->timer);
@@ -230,7 +222,6 @@ void daDsnBase_c::StateHover() {
 /* State 0, the rise. Climbs 0xa000 a frame toward the stored top height
  * (0x390); on arrival snaps to it, moves to state 1 and rolls the hover
  * time (0xa..0x27 frames). */
-// @symbol _ZN11daDsnBase_c9StateRiseEv
 void daDsnBase_c::StateRise() {
     DsnCycle *self = (DsnCycle *)this;
     self->posY += 0xa000;
@@ -248,7 +239,6 @@ void daDsnBase_c::StateRise() {
  * translation shifted. mClipRadius is also WakeNearYoshiEgg's trigger
  * radius. The clipRadius pointer and the braced clamp are load-bearing;
  * see the file comment. */
-// @symbol _ZN11daDsnBase_c16UpdateDropShadowEv
 void daDsnBase_c::UpdateDropShadow() {
     DsnCycle *cycle = (DsnCycle *)this;
     int shadowDrop = 0x20000;
@@ -286,7 +276,6 @@ void daDsnBase_c::UpdateDropShadow() {
  * TU emits the vtable. Releases the model, the collision mesh and, when the
  * leaf bound one, the texture animation; the CLPS block at [2] is not a
  * file and is not released. */
-// @symbol _ZN11daDsnBase_c16CleanupResourcesEv
 int daDsnBase_c::CleanupResources() {
     DsnBaseFileTable *files;
     if (mMeshCollider.IsEnabled())
@@ -304,7 +293,6 @@ int daDsnBase_c::CleanupResources() {
 /* Vtable slot 9, inherited by both leaves. The texture animation runs only
  * when the leaf bound one: Grindel's table carries null at [3], the Thwomp's
  * carries its BTP handle. */
-// @symbol _ZN11daDsnBase_c6RenderEv
 int daDsnBase_c::Render() {
     DsnBaseFileTable *files = (DsnBaseFileTable *)mFileTable;
     if (files->texAnim != 0)
@@ -317,7 +305,6 @@ int daDsnBase_c::Render() {
  * Both leaves' InitResources call it with their own file table already
  * stored. `Init` is a coined name: class ownership, the two inbound calls,
  * the body and the layout are proven; the original English is not. */
-// @symbol _ZN11daDsnBase_c4InitEv
 s32 daDsnBase_c::Init() {
     Vector3 probePos;
     BMD_File *bmd;
@@ -337,7 +324,7 @@ s32 daDsnBase_c::Init() {
     clps = files->clps;
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(clps));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
 
     texAnim = ((DsnBaseFileTable *)mFileTable)->texAnim;

@@ -19,14 +19,10 @@
  *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward
  *   InitResources, Behavior and CleanupResources into them, so naming them
  *   means converting both leaves in the same change.
- * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW+0x18 / +0x1c.
- *   This TU stores dBgW::UpdatePosWithVelocity and StoodOnCallback there;
- *   dBgW.h has no setter.
  * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub, LenVec3 and AngleDiff are arm9 C helpers no header declares yet.
  * - (Vector3 *)&mRestPosX / &mHitPosX: the class stores those triples as
  *   scalars (issue #2566).
- * - The sine table keeps its arm9 linker name, data_02082214.
  * - Abstract class: the leaves own classInit.
  * - common.h comes first so UpdateModelTransform's Matrix4x3 translation
  *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
@@ -42,6 +38,7 @@
 #include "Sound.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
 #include "ResourceDescriptor.h"
@@ -53,20 +50,14 @@ int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
 
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 }
-extern s16 data_02082214[];
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjMaruta_cD0Ev
-// @symbol _ZN13daObjMaruta_cD1Ev
 /* No source here: both destructor variants come from the ONE inline body in
  * include/daObjMaruta_c.h, which daObjFlMaruta_c and daObjHmMaruta_c need
  * visible to inline it.
@@ -87,7 +78,6 @@ void daObjMaruta_c_EmitDestructor(daObjMaruta_c *p) {
     p->~daObjMaruta_c();
 }
 
-// @symbol _ZN13daObjMaruta_c15OnHitByMegaCharER7daPly_c
 /* Vtable slot 27, and this class's KEY FUNCTION: the destructor is inline in
    the class body, so the first out-of-line virtual declared anchors
    _ZTV13daObjMaruta_c and the RTTI chain, and this TU is where it is defined.
@@ -102,7 +92,6 @@ void daObjMaruta_c::OnHitByMegaChar(daPly_c &player) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- 0x02127094, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjMaruta_c20UpdateModelTransformEv
 void daObjMaruta_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -113,7 +102,6 @@ void daObjMaruta_c::UpdateModelTransform() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov080_021270dc, 0x021270dc, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov080_021270dc
 extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg) {
     if (self->mMeshCollider.IsEnabled())
         self->mMeshCollider.Disable();
@@ -122,7 +110,6 @@ extern "C" int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg)
     return 1;
 }
 
-// @symbol _ZN13daObjMaruta_c6RenderEv
 /* Dispatches through the dExtSimpleModel_c at 0xd4 (dBgActor_c's mModel, inherited) --
    dExtSimpleModel_c::Render(const Vector3 *) with a null scale, matching the ROM's
    literal-0 argument. */
@@ -134,7 +121,6 @@ s32 daObjMaruta_c::Render() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov080_0212714c, 0x0212714c, size 0x360 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov080_0212714c
 extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
     Vector3 tmp;
     int len;
@@ -247,7 +233,6 @@ extern "C" int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov080_021274ac, 0x021274ac, size 0xe0 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov080_021274ac
 extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg) {
     struct Vector3 d;
     self->mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*arg->model), 1, -1);
@@ -256,8 +241,8 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     ((dBgW_KcMbg *)(&self->mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), *(&self->mClsnMat),
                               0x1000, self->mAngleY, *(arg->clps));
-    func_020393d4(&self->mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&self->mMeshCollider, &daObjMaruta_c::StoodOnCallback);
+    self->mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    self->mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
     self->mRestPosZ = self->mPosZ;
@@ -271,7 +256,6 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- 0x0212758c, size 0xcc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjMaruta_c19HandlePlayerContactEP8dActor_c
 /* If the other actor's actorID is PLAYER (0xbf), copy its mPos into mHitPos,
    arm mHitByPlayer / mHitTimer, and shove that actor along mAngleY by half
    of mHorzSpeed. Retain the volatile actor-ID read and the position view:
@@ -290,27 +274,14 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
         mHitTimer = 0x78;
 
         half = mHorzSpeed >> 1;
-
-        {
-            int idx = ((u16)mAngleY) >> 4;
-            int sc = data_02082214[idx * 2];
-            int v = position->x;
-            position->x = v + FX_MUL(half, sc);
-        }
-
-        {
-            int idx = ((u16)mAngleY) >> 4;
-            int sc = data_02082214[idx * 2 + 1];
-            int v = position->z;
-            position->z = v + FX_MUL(half, sc);
-        }
+        position->x += FX_MUL(half, FX_SinIdx((u16)mAngleY >> 4));
+        position->z += FX_MUL(half, FX_CosIdx((u16)mAngleY >> 4));
     }
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- 0x02127658, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN13daObjMaruta_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* Arg-shifting tail-call veneer, handed to the dBgW at mMeshCollider by
    func_ov080_021274ac above. Drops the first argument and forwards the next
    two; long_calls emits the pooled `ldr ip,[pc,#8]; bx ip` absolute

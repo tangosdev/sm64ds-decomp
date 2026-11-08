@@ -33,8 +33,7 @@
  *   ("( expected"). The free call with two ints matches.
  * - Render: one Vector3 local then one Matrix4x3_FromTranslation
  *   size-DIFF 0x8c->0xa4.
- * - func_020393d4 and func_020393c4 store the mesh's two callback slots.
- *   data_02082214 stays the unnamed sine table.
+ * - data_02082214 stays the unnamed sine table.
  * - The two file handles live after InitResources; the compiler's
  *   __sinit_d_a_dp_lift.cpp constructs them at overlay load. Their wrapper
  *   names are local -- the constructors are the ROM resource-family
@@ -74,17 +73,8 @@ extern CLPS_Block data_ov025_02112d08;
 
 extern s16 data_02082214[];
 
-/* arm9 C helpers with no shared header: they store dBgW's two callback words. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
-
-// @symbol _ZN10daDpLift_cD1Ev
-// @symbol _ZN10daDpLift_cD0Ev
 daDpLift_c::~daDpLift_c() {}
 
-// @symbol _ZN10daDpLift_c16CleanupResourcesEv
 s32 daDpLift_c::CleanupResources() {
     data_ov002_0210d9f0.Release();
     data_ov025_02113ae0.Release();
@@ -92,7 +82,6 @@ s32 daDpLift_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN10daDpLift_c6RenderEv
 s32 daDpLift_c::Render() {
     mModel.Render(0);
     for (int i = mNextMarker; i < 10; i++) {
@@ -107,7 +96,6 @@ s32 daDpLift_c::Render() {
    sink until Y is below 0x80000, then the settling shake. */
 enum { STATE_IDLE, STATE_SHAKE, STATE_SINK, STATE_SETTLE };
 
-// @symbol _ZN10daDpLift_c8BehaviorEv
 s32 daDpLift_c::Behavior() {
     switch (mState) {
     case STATE_IDLE:
@@ -157,7 +145,6 @@ s32 daDpLift_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10daDpLift_c13InitResourcesEv
 #pragma push
 /* Strength reduction turns the marker loop's (i + 1) * 0x1cc000 into an
  * added step; the cartridge keeps the mul (20 of 73 words differ). */
@@ -169,8 +156,8 @@ s32 daDpLift_c::InitResources() {
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov025_02113ad8);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov025_02112d08);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     /* Ten markers under the lift, each 0x1cc000 lower than the last.
        The walk is a copy of this; see Leftover. */
@@ -203,7 +190,6 @@ DpLiftCollisionFilePtr data_ov025_02113ad8(ASSET_DP_LIFT_KCL);
 
 /* Remembers that the player (actor 0xbf) stood on the lift, for Behavior's
    idle state. */
-// @symbol _ZN10daDpLift_c9OnStoodOnEP8dActor_c
 void daDpLift_c::OnStoodOn(dActor_c *rider) {
     int isPlayer = rider->actorID == 0xbf;
     if (isPlayer)
@@ -212,12 +198,10 @@ void daDpLift_c::OnStoodOn(dActor_c *rider) {
 
 /* The mesh-collider callback InitResources installs: drops the collider
    argument and forwards to the lift. */
-// @symbol _ZN10daDpLift_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 void daDpLift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *rider) {
     ((daDpLift_c *)lift)->OnStoodOn(rider);
 }
 
-// @symbol daDpLift_c_classInit
 /* Reconstructed source-style name: SM64DS proves daDpLift_c through RTTI,
  * allocation size, vtable identity, and the DP_LIFT registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.

@@ -97,7 +97,7 @@ struct dBgW {
     u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
     BeforeClsnCallback beforeClsnCallback; /* 0x18 */
-    /* Run by func_02038234 when an actor commits a floor hit on this collider
+    /* Run by dBgS_RideCallBack when an actor commits a floor hit on this collider
        (dBgCh_Actr's floor-result path), as (collider, owner, actor). */
     StoodOnCallback stoodOnCallback; /* 0x1c */
 
@@ -140,11 +140,13 @@ struct dBgW {
     Fix12i GetClipRadius() const;
     void SetClipOffsetY(Fix12i);
     Fix12i GetClipOffsetY() const;
+    void SetBeforeClsnCallback(BeforeClsnCallback);
     BeforeClsnCallback GetBeforeClsnCallback() const;
+    void SetStoodOnCallback(StoodOnCallback);
     StoodOnCallback GetStoodOnCallback() const;
 
     /* --- static: the stock BeforeClsn callbacks. Call sites take their
-       addresses and store them via func_020393d4; BeforeClsn invokes the
+       addresses and store them via SetBeforeClsnCallback; BeforeClsn invokes the
        stored one as (collider, actor, res, pos, motionAng, ang). They
        update POS from the collider's motion; the dBgPi rides along
        untouched. --- */

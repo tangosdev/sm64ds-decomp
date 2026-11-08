@@ -53,6 +53,7 @@ enum daObjSeesaw_c_AssetId {
 #include "Sound.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
 /* Profile actor ids (symbols/profile_reconstruction_registry.json).
@@ -99,26 +100,16 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
 };
 
 extern int data_ov095_02136f58[];
-extern s16 data_02082214[];
-
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(void *clsn, void *callback);
-}
 
 /* D1 stores this vtable, then dBgActor_c's (inlined), then destroys
  * mMeshCollider and mModel. D0 is that plus the inline operator delete.
  * This class adds no member with a destructor. */
-// @symbol _ZN13daObjSeesaw_cD1Ev
-// @symbol _ZN13daObjSeesaw_cD0Ev
 daObjSeesaw_c::~daObjSeesaw_c() {}
 
 /* Weight of the actor that hit or stands on the seesaw. data_ov095_02136f58 is
  * four fix12 weights indexed by param1 & 3 (the character on a player:
  * 0x1000, 0x800, 0x1800, 0x1000). A non-player keeps that weight. Mega
  * replaces it with kMegaPoundScale. */
-// @symbol _ZN13daObjSeesaw_c14GetActorWeightEP8dActor_c
 int daObjSeesaw_c::GetActorWeight(dActor_c *other) {
     int scale = data_ov095_02136f58[(int)other->param1 & 3];
     unsigned isPlayer = (unsigned)(other->actorID == ACTOR_PLAYER);
@@ -129,7 +120,6 @@ int daObjSeesaw_c::GetActorWeight(dActor_c *other) {
     return scale;
 }
 
-// @symbol _ZN13daObjSeesaw_c15OnGroundPoundedER8dActor_c
 void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
     /* b and bPos stay separate locals: mwcc keeps the hitter in r8 and
      * its position in r4. */
@@ -143,8 +133,9 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
     mPoundedThisFrame = 1;
     weight = GetActorWeight(b);
     diff = AngleDiff(angle, mAngleY);
-    /* data_02082214 is interleaved cos, sin: entry (angle >> 4) * 2 + 1 is the sine. */
-    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), data_02082214[((u16)diff >> 4) * 2 + 1]) / 4096);
+    /* The kick is weighted by the cosine of the hitter's bearing off the
+     * seesaw's heading. */
+    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), FX_CosIdx((u16)diff >> 4)) / 4096);
     if (mAngleX > kMaxPitch)
         mAngleX = kMaxPitch;
     if (mAngleX < -kMaxPitch)
@@ -158,7 +149,6 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
 /* Without it the two (short)accel casts share one sign-extend and both
  * smulbb become muls: 21 of 44 words differ (0xb4 with `*speed += accel`). */
 #pragma opt_common_subs off
-// @symbol _ZN13daObjSeesaw_c11SpringAngleEPsS0_isis
 int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thresh, int accel,
                                short mult) {
     short old = angle[0];
@@ -181,7 +171,6 @@ int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thr
 
 /* Model matrix from the actor angles, translation = position >> 3
  * (world fix12 to the model's units). */
-// @symbol _ZN13daObjSeesaw_c17UpdateModelMatrixEv
 void daObjSeesaw_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -189,7 +178,6 @@ void daObjSeesaw_c::UpdateModelMatrix() {
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN13daObjSeesaw_c16CleanupResourcesEv
 int daObjSeesaw_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -198,13 +186,11 @@ int daObjSeesaw_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjSeesaw_c6RenderEv
 int daObjSeesaw_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjSeesaw_c8BehaviorEv
 int daObjSeesaw_c::Behavior() {
     /* The 0/1 temporary is the ROM's movne/moveq/cmp. A direct test
      * of the bit is three instructions shorter. */
@@ -236,7 +222,6 @@ int daObjSeesaw_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjSeesaw_c13InitResourcesEv
 int daObjSeesaw_c::InitResources() {
     unsigned char idx;
     int f;
@@ -275,12 +260,12 @@ int daObjSeesaw_c::InitResources() {
         mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x1000, mAngleY,
                               *(CLPS_Block *)(*(void **)(data_ov095_021374a8 + i * kFileStride)));
     }
-    /* func_020393d4 stores dBgW+0x18 (beforeClsnCallback). func_020393c4
+    /* dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback). dBgW::SetStoodOnCallback
      * stores dBgW+0x1c, the stood-on callback: StoodOnCallback, the
      * veneer into OnStoodOn below. Both are calls in the ROM; the
      * bodies are a single word store. */
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     return 1;
 }
 
@@ -290,7 +275,6 @@ int daObjSeesaw_c::InitResources() {
  * toward a clamp. Unlike OnGroundPounded it does not kick the pitch
  * directly; it accelerates the tilt speed, hard when pushing into the
  * current lean, soft when pushing out of it. */
-// @symbol _ZN13daObjSeesaw_c9OnStoodOnEP8dActor_c
 void daObjSeesaw_c::OnStoodOn(dActor_c *other) {
     Vector3 *op = &other->mPos;
     int dist = Vec3_Dist(&mPos, op);
@@ -301,7 +285,7 @@ void daObjSeesaw_c::OnStoodOn(dActor_c *other) {
     mAngleX += mAngleXSpeed;
     int x = FX_MUL(dist, r);
     s16 d = (s16)AngleDiff(ang, mAngleY);
-    int y = FX_MUL(x, data_02082214[((u16)d >> 4) * 2 + 1]);
+    int y = FX_MUL(x, FX_CosIdx((u16)d >> 4));
 
     int acc;
     if (mAngleXSpeed * x < 0)
@@ -322,43 +306,35 @@ void daObjSeesaw_c::OnStoodOn(dActor_c *other) {
  * last two. long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-// @symbol _ZN13daObjSeesaw_c15StoodOnCallbackEPvPS_P8dActor_c
 void daObjSeesaw_c::StoodOnCallback(void *collider, daObjSeesaw_c *self, dActor_c *other) {
     self->OnStoodOn(other);
 }
 #pragma pop
 
-// @symbol daObjSeesaw_c_classInit_RC_SEESAW
 extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_RC_SEESAW() {
     return new daObjSeesaw_c();
 }
 
-// @symbol daObjSeesaw_c_classInit_KM3_YOKOSEESAW
 extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM3_YOKOSEESAW() {
     return new daObjSeesaw_c();
 }
 
-// @symbol daObjSeesaw_c_classInit_KM3_SEESAW
 extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM3_SEESAW() {
     return new daObjSeesaw_c();
 }
 
-// @symbol daObjSeesaw_c_classInit_KM2_YOKOSEESAW
 extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM2_YOKOSEESAW() {
     return new daObjSeesaw_c();
 }
 
-// @symbol daObjSeesaw_c_classInit_KM1_SEESAW
 extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_KM1_SEESAW() {
     return new daObjSeesaw_c();
 }
 
-// @symbol daObjSeesaw_c_classInit_BOMB_SEESAW
 extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_BOMB_SEESAW() {
     return new daObjSeesaw_c();
 }
 
-// @symbol daObjSeesaw_c_classInit_SEESAW
 extern "C" daObjSeesaw_c *daObjSeesaw_c_classInit_SEESAW() {
     return new daObjSeesaw_c();
 }

@@ -165,7 +165,7 @@ extern const u8 sSoundPop00Dirs[3] = {0, 0, 1};
  * are retained; their original grouping is unknown. */
 extern const u8 sSoundPopSpawnKinds[5] = {0, 1, 2, 2, 1};
 extern void Presenter_PlayMatch(void *c);
-extern void Presenter_PlayMiss(char *c);
+extern void Presenter_PlayMiss(void *c);
 extern int sSoundRowLengthAlt[];
 extern int sSoundRowLength[];
 extern int sSoundScrollRowLengthAlt[];
@@ -173,7 +173,7 @@ extern int sSoundScrollRowLength[];
 /* Note frames use indices 0 through 6. The final stored timing value in each
  * array is retained without asserting its original purpose or declared bound. */
 extern const u16 sSoundNoteClosingTimes[8] = {2, 2, 3, 4, 4, 4, 4, 4};
-void Presenter_PlayCheerLoop(char *p);
+void Presenter_PlayCheerLoop(void *p);
 unsigned int func_02012174(u32 bank, u32 id);
 extern const u16 sSoundNoteOpeningTimes[8] = {2, 2, 3, 4, 4, 4, 6, 4};
 /* Parallel playback selectors and sound IDs retain all 42 stored entries.
@@ -199,7 +199,7 @@ u16 sSoundNotePositions8[16] = {32, 32,  96, 32,  160, 32,  224, 32,
 u16 sSoundNotePositions10[20] = {32, 32,  80, 32,  128, 32,  176, 32,  224, 32,
                                  32, 112, 80, 112, 128, 112, 176, 112, 224, 112};
 u16 *sSoundNotePositions[3] = {sSoundNotePositions6, sSoundNotePositions8, sSoundNotePositions10};
-extern void Presenter_ResetPose(char *c);
+extern void Presenter_ResetPose(void *c);
 extern void Presenter_PlayCheer(void *c);
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 void FreeGfxSlotsById(int id);
@@ -294,19 +294,17 @@ PmfEntry sSoundPop12Table[3] = {
 };
 
 /* The body is empty: everything the factory's `new` runs (dScMgBase_c's
-   C2, dScMgSingle3DBase_c's vptr and mSysTracker, this class's vptr, then
+   C2, dScMgSingle3DBase_c's vptr and mParticle, this class's vptr, then
    mTable's constructor) is the compiler's inlining of the base and member
    constructors. */
 inline dScMgSound_c::dScMgSound_c() {}
 
-// @symbol dScMgSound_c_classInit
 /* The MG_SOUND registry factory. It sits directly after InitResources and
    installs this class's vtable, so it was compiled with the class. */
 extern "C" void *dScMgSound_c_classInit(void) {
     return new dScMgSound_c;
 }
 
-// @symbol _ZN12dScMgSound_c13InitResourcesEv
 /* Loads the minigame's graphics for both screens, sets up the camera and
    the table, then deals the first round. */
 s32 dScMgSound_c::InitResources() {
@@ -341,7 +339,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(objPltt);
 
     Camera_InitPresenterView(&mCamera);
-    if (Presenter_Load((void *)&mTable) == 0)
+    if (Presenter_Load(&mTable) == 0)
         return 0;
 
     mTable.mQuiet = 1;
@@ -356,16 +354,11 @@ s32 dScMgSound_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12dScMgSound_c8BehaviorEv
 /* One frame of the round, by mState: 0 starts; 1 plays the round while
    mIntroTimer controls the prompt; 2 waits for the result, then celebrates
    a win or advances to 3 for the loss delay. Wins increment the HUD score
-   up to 9999.
-   The `(int)` casts on the three countdown decrements are needed: without
-   them the address folds into the decrement and the function comes out
-   short. */
+   up to 9999. */
 s32 dScMgSound_c::Behavior() {
-    char *raw = (char *)this;
 
     switch (mState) {
     case 0:
@@ -373,7 +366,7 @@ s32 dScMgSound_c::Behavior() {
         break;
     case 1:
         if (mIntroTimer != 0) {
-            (*(u16 *)(int)&mIntroTimer)--;
+            mIntroTimer--;
             if (mIntroTimer == 0) {
                 FreeGfxSlotsById(0x1d);
                 if (mPromptBlinkCount == 0) {
@@ -392,11 +385,11 @@ s32 dScMgSound_c::Behavior() {
         UpdateNotes();
         UpdatePops();
         if (mResultTimer != 0) {
-            (*(u16 *)(int)&mResultTimer)--;
+            mResultTimer--;
             if (mResultTimer == 0) {
                 if (mTries != 0) {
                     mTable.mQuiet = 0;
-                    Presenter_PlayCheer((char *)&mTable);
+                    Presenter_PlayCheer(&mTable);
                     if (mTries == 3)
                         Mg_SetPerfectBanner();
                     Mg_SetSharedState(MG_STATE_ROUND_CLEAR);
@@ -428,8 +421,8 @@ s32 dScMgSound_c::Behavior() {
         UpdateNotes();
         UpdatePops();
         if (mResultTimer != 0) {
-            (*(u16 *)(int)&mResultTimer)--;
-            if (*(s16 *)&mResultTimer <= 0) {
+            mResultTimer--;
+            if ((s16)mResultTimer <= 0) {
                 mTable.mQuiet = 0;
                 Presenter_PlayLose((char *)&mTable);
                 Mg_SetSharedState(MG_STATE_GAME_OVER);
@@ -444,12 +437,9 @@ s32 dScMgSound_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12dScMgSound_c6RenderEv
 /* Draws the HUD and each of the scene's layers, then the table. */
 s32 dScMgSound_c::Render() {
-    char *raw = (char *)this;
-
-    Mg_DrawScoreTally(raw, 0xe0, 0x14, 1);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
     DrawPops();
     DrawNotes();
     DrawTries();
@@ -459,14 +449,9 @@ s32 dScMgSound_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12dScMgSound_c10StartRoundEi
 /* Starts a round. With mode 0 the streak at 0xbc goes up (capped at 9998);
-   otherwise it and the scene's total are cleared.
-   `raw` must stay a `char *`: laundering `this` through an int puts the large
-   offsets in the literal pool and the function grows by 0x10. */
+   otherwise it and the scene's total are cleared. */
 void dScMgSound_c::StartRound(int mode) {
-    char *raw = (char *)this;
-
     dScMgBase_c *active;
     int total;
 
@@ -505,13 +490,11 @@ void dScMgSound_c::StartRound(int mode) {
     Sound::LoadAndSetMusic_Layer1(6);
 }
 
-// @symbol _ZN12dScMgSound_c11OnNewRecordEv
 /* Slot 20, OnNewRecord: plays the table model's win animation. */
 void dScMgSound_c::OnNewRecord() {
-    Presenter_PlayCheer((char *)&mTable);
+    Presenter_PlayCheer(&mTable);
 }
 
-// @symbol _ZN12dScMgSound_c10ResetRoundEv
 void dScMgSound_c::ResetRound() {
     int popSlot;
     int noteSlot;
@@ -575,10 +558,9 @@ void dScMgSound_c::ResetRound() {
     mTouchCount = 0;
     mResultTimer = 0;
 
-    Presenter_ResetPose((char *)&mTable);
+    Presenter_ResetPose(&mTable);
 }
 
-// @symbol _ZN12dScMgSound_c9DealNotesEv
 /* Choose distinct pitches, make one pair of each, then deal the pairs
  * into the selected screen layout with exactly two uses per pair. */
 void dScMgSound_c::DealNotes() {
@@ -690,7 +672,6 @@ void dScMgSound_c::DealNotes() {
     }
 }
 
-// @symbol _ZN12dScMgSound_c14Note_StateWaitEi
 void dScMgSound_c::Note_StateWait(int slot) {
     u8 player;
     int offset;
@@ -740,7 +721,6 @@ void dScMgSound_c::Note_StateWait(int slot) {
     Sound::PlayBank2_2D(0x201);
 }
 
-// @symbol _ZN12dScMgSound_c17Note_StateOpeningEi
 /* Advances one note slot's animation. When the slot's last frame is
    reached its note goes on mQueue and is played; mPattern and IsAltVariant
    choose between func_02012790, the bank handle mBank and
@@ -806,17 +786,15 @@ void dScMgSound_c::Note_StateOpening(int idx) {
     }
 
     if (mTouchCount == 1)
-        Presenter_PlayCheerLoop((char *)&mTable);
+        Presenter_PlayCheerLoop(&mTable);
 }
 
-// @symbol _ZN12dScMgSound_c14Note_StateOpenEi
 void dScMgSound_c::Note_StateOpen(int slot) {
     if (mTouchCount == 0) {
         mNotes[slot].state = 3;
     }
 }
 
-// @symbol _ZN12dScMgSound_c17Note_StateClosingEi
 void dScMgSound_c::Note_StateClosing(int slot) {
     unsigned char frame;
     mNotes[slot].timer = (unsigned short)(mNotes[slot].timer + 1);
@@ -829,7 +807,6 @@ void dScMgSound_c::Note_StateClosing(int slot) {
         mNotes[slot].state = 0;
 }
 
-// @symbol _ZN12dScMgSound_c16Note_StateScrollEi
 /* Scrolls one note slot left by 0x10 per call and clears it once it has
    gone off screen. Its column comes from the per-mode tables
    sSoundScrollRowLengthAlt and sSoundScrollRowLength. */
@@ -875,7 +852,6 @@ void dScMgSound_c::Note_StateScroll(int slot) {
     mNotes[slot].shown = 0;
 }
 
-// @symbol _ZN12dScMgSound_c15RevealUnmatchedEv
 /* Start scrolling from the last surviving note in each row. Earlier
  * notes follow through Note_StateScroll once their neighbour reaches them. */
 void dScMgSound_c::RevealUnmatched() {
@@ -903,7 +879,6 @@ void dScMgSound_c::RevealUnmatched() {
     }
 }
 
-// @symbol _ZN12dScMgSound_c11UpdateNotesEv
 void dScMgSound_c::UpdateNotes() {
     int slot = 0;
     char *noteCursor = (char *)this;
@@ -918,7 +893,6 @@ void dScMgSound_c::UpdateNotes() {
     } while (slot < 10);
 }
 
-// @symbol _ZN12dScMgSound_c9CheckPairEv
 /* Queue entries pack the note slot in the high byte and pitch + 1 in
  * the low byte. Compare pitches after the reveal delay. */
 void dScMgSound_c::CheckPair() {
@@ -941,7 +915,7 @@ void dScMgSound_c::CheckPair() {
         func_02012790(0xe);
         mTries--;
         func_02012790(0x12f);
-        Presenter_PlayMiss((char *)&mTable);
+        Presenter_PlayMiss(&mTable);
     }
     mQueue[1] = 0;
     mQueue[0] = mQueue[1];
@@ -949,7 +923,6 @@ void dScMgSound_c::CheckPair() {
     mTouchCount = 0;
 }
 
-// @symbol _ZN12dScMgSound_c14CheckRoundOverEv
 void dScMgSound_c::CheckRoundOver() {
     if (mTries == 0) {
         mState = 2;
@@ -975,7 +948,6 @@ void dScMgSound_c::CheckRoundOver() {
     }
 }
 
-// @symbol _ZN12dScMgSound_c9SpawnPopsEi
 void dScMgSound_c::SpawnPops(int noteSlot) {
     int spawnIndex;
     int popSlot;
@@ -1009,7 +981,6 @@ void dScMgSound_c::SpawnPops(int noteSlot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c10UpdatePopsEv
 void dScMgSound_c::UpdatePops() {
     int slot = 0;
     char *popCursor = (char *)this;
@@ -1024,13 +995,11 @@ void dScMgSound_c::UpdatePops() {
     } while (slot < 30);
 }
 
-// @symbol _ZN12dScMgSound_c12Pop00_UpdateEi
 void dScMgSound_c::Pop00_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop00Table[phase])(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop00_StartEi
 void dScMgSound_c::Pop00_Start(int slot) {
     mPops[slot].visible = 1;
     mPops[slot].x += sSoundPop00XOffsets[mPops[slot].kind];
@@ -1040,7 +1009,6 @@ void dScMgSound_c::Pop00_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop00_FlyEi
 void dScMgSound_c::Pop00_Fly(int slot) {
     int dir;
 
@@ -1070,16 +1038,13 @@ void dScMgSound_c::Pop00_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop00_FinishEv
 void dScMgSound_c::Pop00_Finish() {}
 
-// @symbol _ZN12dScMgSound_c12Pop01_UpdateEi
 void dScMgSound_c::Pop01_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop01Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop01_StartEi
 void dScMgSound_c::Pop01_Start(int slot) {
     mPops[slot].visible = 1;
     mPops[slot].x += sSoundPop01XOffsets[mPops[slot].kind];
@@ -1089,7 +1054,6 @@ void dScMgSound_c::Pop01_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop01_FlyEi
 void dScMgSound_c::Pop01_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1100,7 +1064,6 @@ void dScMgSound_c::Pop01_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop01_FinishEi
 void dScMgSound_c::Pop01_Finish(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1113,13 +1076,11 @@ void dScMgSound_c::Pop01_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop02_UpdateEi
 void dScMgSound_c::Pop02_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop02Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop02_StartEi
 void dScMgSound_c::Pop02_Start(int slot) {
     mPops[slot].visible = 1;
     mPops[slot].x += sSoundPop02XOffsets[mPops[slot].kind];
@@ -1129,7 +1090,6 @@ void dScMgSound_c::Pop02_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop02_FlyEi
 void dScMgSound_c::Pop02_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1140,7 +1100,6 @@ void dScMgSound_c::Pop02_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop02_FinishEi
 void dScMgSound_c::Pop02_Finish(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1153,13 +1112,11 @@ void dScMgSound_c::Pop02_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop03_UpdateEi
 void dScMgSound_c::Pop03_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop03Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop03_StartEi
 void dScMgSound_c::Pop03_Start(int slot) {
     mPops[slot].visible = 1;
     mPops[slot].x += sSoundPop03XOffsets[mPops[slot].kind];
@@ -1169,7 +1126,6 @@ void dScMgSound_c::Pop03_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop03_FlyEi
 void dScMgSound_c::Pop03_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1180,7 +1136,6 @@ void dScMgSound_c::Pop03_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop03_FinishEi
 void dScMgSound_c::Pop03_Finish(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1193,13 +1148,11 @@ void dScMgSound_c::Pop03_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop04_UpdateEi
 void dScMgSound_c::Pop04_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop04Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop04_StartEi
 void dScMgSound_c::Pop04_Start(int slot) {
     mPops[slot].scale = 0x3000;
     mPops[slot].visible = 1;
@@ -1208,7 +1161,6 @@ void dScMgSound_c::Pop04_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop04_FlyEi
 void dScMgSound_c::Pop04_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1227,16 +1179,13 @@ void dScMgSound_c::Pop04_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop04_FinishEv
 void dScMgSound_c::Pop04_Finish() {}
 
-// @symbol _ZN12dScMgSound_c12Pop05_UpdateEi
 void dScMgSound_c::Pop05_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop05Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop05_StartEi
 void dScMgSound_c::Pop05_Start(int slot) {
     unsigned char kind;
     mPops[slot].visible = 1;
@@ -1246,7 +1195,6 @@ void dScMgSound_c::Pop05_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop05_FlyEi
 void dScMgSound_c::Pop05_Fly(int slot) {
     mPops[slot].y += mPops[slot].velY;
     mPops[slot].velY += 0x400;
@@ -1256,7 +1204,6 @@ void dScMgSound_c::Pop05_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop05_FinishEi
 void dScMgSound_c::Pop05_Finish(int slot) {
     mPops[slot].y += mPops[slot].velY;
     mPops[slot].velY += 0x100;
@@ -1266,13 +1213,11 @@ void dScMgSound_c::Pop05_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop06_UpdateEi
 void dScMgSound_c::Pop06_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop06Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop06_StartEi
 /* Arms one pop: visible, no vertical speed, horizontal speed from its kind. */
 void dScMgSound_c::Pop06_Start(int slot) {
     mPops[slot].visible = 1;
@@ -1282,7 +1227,6 @@ void dScMgSound_c::Pop06_Start(int slot) {
     mPops[slot].timer = 0;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop06_FlyEi
 void dScMgSound_c::Pop06_Fly(int slot) {
     int velocityX;
     mPops[slot].x += mPops[slot].velX;
@@ -1303,7 +1247,6 @@ void dScMgSound_c::Pop06_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop06_FinishEi
 void dScMgSound_c::Pop06_Finish(int slot) {
     int direction;
     mPops[slot].x += mPops[slot].velX;
@@ -1329,13 +1272,11 @@ void dScMgSound_c::Pop06_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop07_UpdateEi
 void dScMgSound_c::Pop07_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop07Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop07_StartEi
 void dScMgSound_c::Pop07_Start(int slot) {
     unsigned short delay = mPops[slot].timer;
     if (delay != 0) {
@@ -1350,7 +1291,6 @@ void dScMgSound_c::Pop07_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop07_FlyEi
 void dScMgSound_c::Pop07_Fly(int slot) {
     int velocityY = mPops[slot].velY;
     int positionY = mPops[slot].y;
@@ -1367,16 +1307,13 @@ void dScMgSound_c::Pop07_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop07_FinishEv
 void dScMgSound_c::Pop07_Finish() {}
 
-// @symbol _ZN12dScMgSound_c12Pop08_UpdateEi
 void dScMgSound_c::Pop08_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop08Table[phase].pmf)(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop08_StartEi
 void dScMgSound_c::Pop08_Start(int slot) {
     unsigned char kind;
     mPops[slot].visible = 1;
@@ -1386,7 +1323,6 @@ void dScMgSound_c::Pop08_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop08_FlyEi
 void dScMgSound_c::Pop08_Fly(int slot) {
     mPops[slot].y += mPops[slot].velY;
     mPops[slot].velY += 0x400;
@@ -1396,7 +1332,6 @@ void dScMgSound_c::Pop08_Fly(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop08_FinishEi
 void dScMgSound_c::Pop08_Finish(int slot) {
     mPops[slot].y += mPops[slot].velY;
     mPops[slot].velY -= 0x60;
@@ -1406,13 +1341,11 @@ void dScMgSound_c::Pop08_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop09_UpdateEi
 void dScMgSound_c::Pop09_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop09Table[phase])(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop09_StartEi
 void dScMgSound_c::Pop09_Start(int slot) {
     unsigned char kind;
     mPops[slot].visible = 1;
@@ -1424,7 +1357,6 @@ void dScMgSound_c::Pop09_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop09_FlyEi
 void dScMgSound_c::Pop09_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1436,7 +1368,6 @@ void dScMgSound_c::Pop09_Fly(int slot) {
     mPops[slot].timer = 0;
 }
 
-// @symbol _ZN12dScMgSound_c12Pop09_FinishEi
 void dScMgSound_c::Pop09_Finish(int slot) {
     int scale = mPops[slot].scale;
     if (scale > 0x800) {
@@ -1451,13 +1382,11 @@ void dScMgSound_c::Pop09_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop10_UpdateEi
 void dScMgSound_c::Pop10_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*sSoundPop10Table[phase])(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop10_StartEi
 void dScMgSound_c::Pop10_Start(int slot) {
     unsigned char kind;
     mPops[slot].visible = 1;
@@ -1469,7 +1398,6 @@ void dScMgSound_c::Pop10_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop10_FlyEi
 void dScMgSound_c::Pop10_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1481,7 +1409,6 @@ void dScMgSound_c::Pop10_Fly(int slot) {
     mPops[slot].timer = 0;
 }
 
-// @symbol _ZN12dScMgSound_c12Pop10_FinishEi
 void dScMgSound_c::Pop10_Finish(int slot) {
     int scale = mPops[slot].scale;
     if (scale > 0x800) {
@@ -1496,13 +1423,11 @@ void dScMgSound_c::Pop10_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop11_UpdateEi
 void dScMgSound_c::Pop11_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*(sSoundPop11Table[phase].pmf))(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop11_StartEi
 void dScMgSound_c::Pop11_Start(int slot) {
     mPops[slot].visible = 1;
     mPops[slot].x += sSoundPop11XOffsets[mPops[slot].kind];
@@ -1512,7 +1437,6 @@ void dScMgSound_c::Pop11_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop11_FlyEi
 void dScMgSound_c::Pop11_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1524,7 +1448,6 @@ void dScMgSound_c::Pop11_Fly(int slot) {
     mPops[slot].timer = 0;
 }
 
-// @symbol _ZN12dScMgSound_c12Pop11_FinishEi
 void dScMgSound_c::Pop11_Finish(int slot) {
     int scale = mPops[slot].scale;
     if (scale > 0xa80) {
@@ -1539,13 +1462,11 @@ void dScMgSound_c::Pop11_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c12Pop12_UpdateEi
 void dScMgSound_c::Pop12_Update(int slot) {
     unsigned char phase = mPops[slot].phase;
     (this->*(sSoundPop12Table[phase].pmf))(slot);
 }
 
-// @symbol _ZN12dScMgSound_c11Pop12_StartEi
 void dScMgSound_c::Pop12_Start(int slot) {
     unsigned char kind;
     mPops[slot].visible = 1;
@@ -1557,7 +1478,6 @@ void dScMgSound_c::Pop12_Start(int slot) {
     mPops[slot].phase = 1;
 }
 
-// @symbol _ZN12dScMgSound_c9Pop12_FlyEi
 void dScMgSound_c::Pop12_Fly(int slot) {
     mPops[slot].x += mPops[slot].velX;
     mPops[slot].y += mPops[slot].velY;
@@ -1569,7 +1489,6 @@ void dScMgSound_c::Pop12_Fly(int slot) {
     mPops[slot].timer = 0;
 }
 
-// @symbol _ZN12dScMgSound_c12Pop12_FinishEi
 void dScMgSound_c::Pop12_Finish(int slot) {
     int scale = mPops[slot].scale;
     if (scale > 0xd80) {
@@ -1584,7 +1503,6 @@ void dScMgSound_c::Pop12_Finish(int slot) {
     }
 }
 
-// @symbol _ZN12dScMgSound_c8DrawPopsEv
 extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void *a4);
 
 void dScMgSound_c::DrawPops() {
@@ -1614,7 +1532,6 @@ void dScMgSound_c::DrawPops() {
     }
 }
 
-// @symbol _ZN12dScMgSound_c9DrawNotesEv
 extern u8 data_ov006_02133c58[];
 extern u8 data_ov006_02133c40[];
 extern u8 data_ov006_02133c10[];
@@ -1644,32 +1561,28 @@ void dScMgSound_c::DrawNotes() {
     }
 }
 
-// @symbol _ZN12dScMgSound_c9DrawTriesEv
 void dScMgSound_c::DrawTries() {
     Mg_DrawStockCounter(mTries, 1);
 }
 
-// @symbol _ZN12dScMgSound_c15StartWinSpriteAEv
 void dScMgSound_c::StartWinSpriteA() {
     mSpriteA.active = 1;
     mSpriteA.timer = 0;
     mSpriteA.frame = 0;
 }
 
-// @symbol _ZN12dScMgSound_c16UpdateWinSpriteAEv
 void dScMgSound_c::UpdateWinSpriteA() {
     if (mSpriteA.active == 0)
         return;
     if (mSpriteA.frame >= 2)
         return;
-    (*(u16 *)(int)&mSpriteA.timer)++;
+    mSpriteA.timer++;
     if (mSpriteA.timer < sSoundWinSpriteATimes[mSpriteA.frame])
         return;
     mSpriteA.timer = 0;
-    (*(u8 *)(int)&mSpriteA.frame)++;
+    mSpriteA.frame++;
 }
 
-// @symbol _ZN12dScMgSound_c14DrawWinSpriteAEv
 void dScMgSound_c::DrawWinSpriteA() {
     if (mSpriteA.visible == 0)
         return;
@@ -1677,34 +1590,29 @@ void dScMgSound_c::DrawWinSpriteA() {
                      -1, -1);
 }
 
-// @symbol _ZN12dScMgSound_c15StartWinSpriteBEv
 void dScMgSound_c::StartWinSpriteB() {
     mSpriteB.active = 1;
     mSpriteB.timer = 0;
     mSpriteB.frame = 0;
 }
 
-// @symbol _ZN12dScMgSound_c16UpdateWinSpriteBEv
 void dScMgSound_c::UpdateWinSpriteB() {
     if (mSpriteB.active == 0)
         return;
     if (mSpriteB.frame >= 3)
         return;
-    (*(u16 *)(int)&mSpriteB.timer) += 1;
+    mSpriteB.timer += 1;
     if (mSpriteB.timer < sSoundWinSpriteBTimes[mSpriteB.frame])
         return;
     mSpriteB.timer = 0;
-    (*(u8 *)(int)&mSpriteB.frame) += 1;
+    mSpriteB.frame += 1;
 }
 
-// @symbol _ZN12dScMgSound_c14DrawWinSpriteBEv
 void dScMgSound_c::DrawWinSpriteB() {
     if (mSpriteB.visible == 0)
         return;
     Hud_RenderSprite(sSoundWinSpriteBSprites[mSpriteB.frame], mSpriteB.x >> 0xc, mSpriteB.y >> 0xc,
                      -1, -1);
 }
-// @symbol _ZN12dScMgSound_cD1Ev
-// @symbol _ZN12dScMgSound_cD0Ev
 /* Both destructor variants come from the inline body in dScMgSound_c.h.
    Declared first in the class, so D1 is emitted before D0. */

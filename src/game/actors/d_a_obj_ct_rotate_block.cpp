@@ -14,9 +14,7 @@
  * the same pragma lays .text down in source order, so this file is ROM-ascending.
  */
 
-// Notes: func_020393d4 is the out-of-line store into the collider's
-// beforeClsnCallback; d_bg_w.cpp defines it and no header declares it.
-// UpdateShadow is void: its early exit leaves no value, and Behavior
+// Notes: UpdateShadow is void: its early exit leaves no value, and Behavior
 // ignores it.
 
 /* The two registry factories close the run in ROM order:
@@ -81,7 +79,6 @@ extern "C" {
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern short data_02082214[];
@@ -89,11 +86,8 @@ extern u8 data_0209f2c0;
 
 #pragma defer_codegen off
 
-// @symbol _ZN20daObjCtRotateBlock_cD1Ev
-// @symbol _ZN20daObjCtRotateBlock_cD0Ev
 daObjCtRotateBlock_c::~daObjCtRotateBlock_c() {}
 
-// @symbol _ZN20daObjCtRotateBlock_c12UpdateShadowEv
 void daObjCtRotateBlock_c::UpdateShadow() {
     int d, b;
     int bval = mFloorY;
@@ -122,7 +116,6 @@ void daObjCtRotateBlock_c::UpdateShadow() {
     }
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c10UpdateClsnEv
 void daObjCtRotateBlock_c::UpdateClsn() {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9] = mPosX;
@@ -131,7 +124,6 @@ void daObjCtRotateBlock_c::UpdateClsn() {
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c11UpdateModelEv
 void daObjCtRotateBlock_c::UpdateModel() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, 0, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -143,7 +135,6 @@ void daObjCtRotateBlock_c::UpdateModel() {
     mRotatingModel.mat4x3.m[11] = mModel.mat4x3.m[11];
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c16CleanupResourcesEv
 int daObjCtRotateBlock_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -153,7 +144,6 @@ int daObjCtRotateBlock_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c6RenderEv
 int daObjCtRotateBlock_c::Render() {
     int flags;
     int b;
@@ -167,7 +157,6 @@ int daObjCtRotateBlock_c::Render() {
     return 1;
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c8BehaviorEv
 int daObjCtRotateBlock_c::Behavior() {
     if (data_0209f2c0 != 3) {
         switch (mState) {
@@ -208,7 +197,6 @@ int daObjCtRotateBlock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN20daObjCtRotateBlock_c13InitResourcesEv
 int daObjCtRotateBlock_c::InitResources() {
     u16 id = actorID;
 
@@ -251,7 +239,7 @@ int daObjCtRotateBlock_c::InitResources() {
                                   *data_ov065_0211cfd0[idx].clps);
     }
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
 
     {
         Vector3 va;
@@ -296,12 +284,10 @@ int daObjCtRotateBlock_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjCtRotateBlock_c_classInit_CT_MECHA02
 extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA02() {
     return new daObjCtRotateBlock_c();
 }
 
-// @symbol daObjCtRotateBlock_c_classInit_CT_MECHA01
 extern "C" daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01() {
     return new daObjCtRotateBlock_c();
 }

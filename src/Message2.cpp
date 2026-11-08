@@ -95,7 +95,7 @@ extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern SaveBlock data_0209caa0;
 extern u32 gNextActorUpdateMask;
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern s16 data_0209f4a2[];
 extern s16 data_0209f4a4[];
 extern u16 data_020a0e5a[];
@@ -114,7 +114,6 @@ extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-extern int __aeabi_idiv(int, int);
 }
 extern "C" {
 void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int h, int i, int j);
@@ -132,31 +131,28 @@ unsigned int GetBG0CharPtr();
 unsigned int GetBG1CharPtr();
 }
 
-/* data_0209f2d8 (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
+/* gGameMode (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
  * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
  * script it resumes is FALL_IN_FRONT_OF_CASTLE_CUTSCENE (sCutsceneEndingMarioFall),
  * and EndKuppaScript clears it once no script is left to resume. The
  * credits script does not set it. This int-returning predicate is what
  * makes the ROM materialize 0/1 before testing it. */
 static inline int IsCastleFallCutsceneRunning(void) {
-    return data_0209f2d8 == 2;
+    return gGameMode == 2;
 }
 
-// @symbol _ZN7Message7EndTalkEv
 void Message::EndTalk() {
     /* Restore music to 0x7f. Slower ramp than PrepareTalk. */
     Sound::ChangeMusicVolume(0x7f, 0x000064cc);
     data_0209d664 = 0;
 }
 
-// @symbol _ZN7Message11PrepareTalkEv
 void Message::PrepareTalk() {
     /* Duck the music to 0x40 before dialogue. EndTalk is the inverse. */
     Sound::ChangeMusicVolume(0x40, 0x0000c999);
     data_0209d664 = 1;
 }
 
-// @symbol _ZN7Message9AddChoiceEv
 /* Text code 2: marks an answer choice. Arg 0 sets the cursor row; 1..3 record
    the choice position and set the choice mode Update then drives. */
 void Message::AddChoice() {
@@ -197,7 +193,6 @@ void Message::AddChoice() {
 
 extern "C" {
 
-// @symbol func_0201aca4
 void func_0201aca4(void) {
 
     struct MsgTextChar {
@@ -231,7 +226,7 @@ void func_0201aca4(void) {
             break;
         }
         for (i = 0; i < 3; i++) {
-            int q = __aeabi_idiv(num, data_0208ee64[i]);
+            int q = num / data_0208ee64[i];
             if (q != 0 || leading != 0 || i == 2) {
                 Message::AddChar(data_0208ee74[q]);
                 leading = 1;
@@ -246,7 +241,6 @@ void func_0201aca4(void) {
 }
 }
 
-// @symbol _ZN7Message11AddCharPairEv
 void Message::AddCharPair() {
     /* Text code 3. Calls AddChar twice with the font byte and the next byte.
        Index is data_0209d6f4 bytes [3] and [4], looked up in data_0208ee6c. */
@@ -266,7 +260,6 @@ void Message::AddCharPair() {
 
 extern "C" {
 
-// @symbol func_0201adfc
 void func_0201adfc(void) {
     int n;
     int i;
@@ -342,7 +335,6 @@ void func_0201adfc(void) {
     data_0209d6a0 += 3;
 }
 
-// @symbol func_0201b100
 void func_0201b100(int mode) {
     int base;
     int opcode;
@@ -435,7 +427,6 @@ void func_0201b100(int mode) {
  * per store the way the cartridge does, and CSE shares the two loads
  * (0x218 against 0x220). */
 #pragma opt_common_subs off
-// @symbol func_0201b388
 void func_0201b388(int a0) {
     int start;
     int *sl;
@@ -489,7 +480,6 @@ void func_0201b388(int a0) {
 #pragma pop
 }
 
-// @symbol _ZN7Message7AddCharEh
 void Message::AddChar(u8 c) {
     int i;
     int *ip;
@@ -534,7 +524,6 @@ void Message::AddChar(u8 c) {
 
 extern "C" {
 
-// @symbol func_0201b6f8
 void func_0201b6f8(int mode) {
     int i;
     u8 *p = data_0209d6f4;
@@ -565,7 +554,6 @@ void func_0201b6f8(int mode) {
 }
 }
 
-// @symbol _ZN7Message10LayoutLineEv
 /* Lays out the next text line: glyphs until 0xfd (line end) or 0xff (message
    end), 0xfe runs a text code. Then picks the next Update state. */
 void Message::LayoutLine() {
@@ -682,7 +670,6 @@ void Message::LayoutLine() {
     }
 }
 
-// @symbol _ZN7Message12UpdateWindowEv
 int Message::UpdateWindow() {
     if (data_0209d670 == 0) {
         if (gMsgBoxWinLeft > gMsgBoxLeft || gMsgBoxWinTop > gMsgBoxTop) {
@@ -784,7 +771,6 @@ int Message::UpdateWindow() {
     return 0;
 }
 
-// @symbol _ZN7Message6UpdateEv
 void Message::Update() {
     switch (data_0209d6bc) {
     case 1: {

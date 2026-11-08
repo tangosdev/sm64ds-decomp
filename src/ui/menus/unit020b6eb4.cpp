@@ -44,8 +44,8 @@ extern "C" {
 /* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
  * (data_ov007_02103290). */
 typedef struct Ov007MenuHooks {
-    int alloc;               /* 0x00: installed by func_ov007_020c3e3c */
-    int free;                /* 0x04: func_ov007_020c3e2c */
+    int alloc;               /* 0x00: installed by MenuMem_SetAllocHook */
+    int free;                /* 0x04: MenuMem_SetFreeHook */
     int query;               /* 0x08: func_ov007_020c3e1c */
     int fileLoad;            /* 0x0c: func_ov007_020b4100 */
     int fileRelease;         /* 0x10: func_ov007_020b4100 */
@@ -90,18 +90,17 @@ extern void func_ov007_020c1db0(Ov007Touch *touch, Ov007TouchSample *sample);
 extern void func_ov007_020c20b8(struct Ov007Pad *pad, void *src);
 extern void func_ov007_020c3bc8(void);
 extern void func_ov007_020c3e1c(int v);
-extern void func_ov007_020c3e2c(int v);
-extern void func_ov007_020c3e3c(int v);
+extern void MenuMem_SetFreeHook(int v);
+extern void MenuMem_SetAllocHook(int v);
 
-// @symbol func_ov007_020b7138
 int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     Ov007Work *p;
     int flags;
 
     data_ov007_02103430 = 0;
     func_ov007_020b6c54();
-    func_ov007_020c3e3c(hooks->alloc);
-    func_ov007_020c3e2c(hooks->free);
+    MenuMem_SetAllocHook(hooks->alloc);
+    MenuMem_SetFreeHook(hooks->free);
     func_ov007_020c3e1c(hooks->query);
     func_ov007_020c3bc8();
     func_ov007_020b4100(hooks->fileLoad, hooks->fileRelease);
@@ -134,7 +133,6 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     return 1;
 }
 
-// @symbol func_ov007_020b7090
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4) {
     Ov007TouchSample sample;
     int ret = 0;
@@ -157,7 +155,6 @@ int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4) {
     return ret;
 }
 
-// @symbol func_ov007_020b7040
 int func_ov007_020b7040(void) {
     func_ov007_020bcf90();
     func_ov007_020bc9c8(WORK->display);
@@ -166,7 +163,6 @@ int func_ov007_020b7040(void) {
     return 1;
 }
 
-// @symbol func_ov007_020b6f4c
 int func_ov007_020b6f4c(void) {
     Ov007Work *p = WORK;
     int r;
@@ -196,7 +192,6 @@ int func_ov007_020b6f4c(void) {
     return r;
 }
 
-// @symbol func_ov007_020b6eb4
 int func_ov007_020b6eb4(void) {
     ARMMathState s;
     if (data_ov007_02103430 != 0) {

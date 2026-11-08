@@ -19,9 +19,9 @@
  * - The *(short*)&mSwayAngle increment: the cartridge sign-extends it
  *   (ldrsh) while the index below zero-extends (ldrh). The plain u16
  *   re-read holds the reload (volatile disproved, FEATHER-2713-01).
- * - dCamera_c::mAngleY (data_0209f318): the halfword InitResources and Behavior
+ * - dCamera_c::mAngleY (gCamera): the halfword InitResources and Behavior
  *   add 0x4000 to.
- * - data_0209f2d8 game-mode flag, data_02082214 sin/cos table,
+ * - gGameMode game-mode flag, data_02082214 sin/cos table,
  *   data_020a0e68 scratch matrix, data_ov002_0210da58 file handle: ROM labels.
  * - g_profile_FEATHER stays carved (unowned) between the stripped _ZTI/_ZTS
  *   and the stripped vtable (all three deadstrip-data, BBH-leaf shape);
@@ -39,14 +39,15 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* local extern: Vec3_Asr's definition takes a plain triple; no shared header
    declares it yet. */
 extern "C" void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 
 extern SharedFilePtr data_ov002_0210da58;
-extern unsigned char data_0209f2d8;
-extern dCamera_c *data_0209f318;
+extern unsigned char gGameMode;
+extern dCamera_c *gCamera;
 extern s16 data_02082214[];
 
 /* ==========================================================================
@@ -67,7 +68,6 @@ extern s16 data_02082214[];
 
 extern "C" {
 
-// @symbol daFeather_c_classInit
 daFeather_c *daFeather_c_classInit(void) {
     return new daFeather_c();
 }
@@ -77,7 +77,6 @@ daFeather_c *daFeather_c_classInit(void) {
  * Vtable slot 0.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c13InitResourcesEv
 int daFeather_c::InitResources() {
     BMD_File *bmd;
     int b;
@@ -96,10 +95,10 @@ int daFeather_c::InitResources() {
 
     mAngleX = 0x4000;
     mAngleZ = -0x4000;
-    b = (data_0209f2d8 == 1);
+    b = (gGameMode == 1);
     if (!b) {
         /* dCamera_c::mAngleY, the same halfword Behavior re-reads every frame. */
-        mAngleY = data_0209f318->mAngleY + 0x4000;
+        mAngleY = gCamera->mAngleY + 0x4000;
     }
     mLifeTimer = 0xb4;
     mVertSpeed = 0x3000;
@@ -110,10 +109,9 @@ int daFeather_c::InitResources() {
  * Vtable slot 6.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c8BehaviorEv
 int daFeather_c::Behavior() {
     {
-        int b = (data_0209f2d8 == 1);
+        int b = (gGameMode == 1);
         if (!b) {
             daPly_c *p = ClosestPlayer();
             if (p->param1 != 0 || p->IsCollectingCap() != 0) {
@@ -124,7 +122,7 @@ int daFeather_c::Behavior() {
         }
     }
 
-    mParticle = Particle::System::New(mParticle, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle = Particle::System::New(mParticle, kPtclFeather, mPosX, mPosY, mPosZ, 0, 0);
 
     UpdatePos((dCc_c *)0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -133,7 +131,7 @@ int daFeather_c::Behavior() {
         ApproachLinear2(*(short *)&mSwayAngle, 0, 0x50);
         ApproachLinear(mHorzSpeed, 0, 0x555);
         if (DecIfAbove0_Byte(&mLifeTimer) == 0) {
-            Particle::System::NewSimple(0xd2, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY, mPosZ);
             MarkForDestruction();
         }
     } else {
@@ -157,9 +155,9 @@ int daFeather_c::Behavior() {
     }
 
     {
-        int b = (data_0209f2d8 == 1);
+        int b = (gGameMode == 1);
         if (!b) {
-            mAngleY = data_0209f318->mAngleY + 0x4000;
+            mAngleY = gCamera->mAngleY + 0x4000;
         }
     }
 
@@ -170,7 +168,7 @@ int daFeather_c::Behavior() {
             int eq = (a->actorID == 0xbf);
             if (eq) {
                 ((daPly_c *)a)->InitWingFeathers(true);
-                Particle::System::NewSimple(0xd2, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY, mPosZ);
                 MarkForDestruction();
                 return 1;
             }
@@ -187,7 +185,6 @@ int daFeather_c::Behavior() {
  * Vtable slot 9.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c6RenderEv
 int daFeather_c::Render() {
     u8 b = mLifeTimer;
     if (b < 0x2d && (b & 1) != 0)
@@ -202,7 +199,6 @@ int daFeather_c::Render() {
  * nullary and still reproduce.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c16CleanupResourcesEv
 int daFeather_c::CleanupResources() {
     data_ov002_0210da58.Release();
     return 1;
@@ -213,7 +209,6 @@ int daFeather_c::CleanupResources() {
  * shadow: a fixed-size one in game mode 1, a ground-raycast one otherwise.
  * ======================================================================== */
 
-// @symbol _ZN11daFeather_c20UpdateModelAndShadowEv
 void daFeather_c::UpdateModelAndShadow() {
     Vector3 pos;
     Vector3 v;
@@ -226,7 +221,7 @@ void daFeather_c::UpdateModelAndShadow() {
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
     mModel.mat4x3 = data_020a0e68;
 
-    b = (data_0209f2d8 == 1);
+    b = (gGameMode == 1);
     if (b) {
         Matrix4x3_FromRotationY(&mShadowMtx, mAngleY);
         mShadowMtx.m[9] = mPosX >> 3;

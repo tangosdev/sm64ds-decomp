@@ -20,7 +20,7 @@
  * UpdateModelMatrix and UpdateShadow are coined names; the ROM records none.
  *
  * What stays: gCurrentSublevel == 13 is a level-ID check (the current
- *   level); data_0209f2d8 == 1 is the mode-1 check used tree-wide.
+ *   level); gGameMode == 1 is the mode-1 check used tree-wide.
  */
 
 #include "daObjPathLift_c.h"
@@ -34,12 +34,11 @@
 extern CLPS_Block data_ov002_0210d7d4;
 extern short data_02082214[];
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 
 /* local extern: no shared header declares these. */
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern SharedFilePtr data_ov002_0210d9f0;
@@ -62,12 +61,10 @@ struct PathLiftCollisionFilePtr : SharedFilePtr {
 extern PathLiftModelFile data_ov100_02148a54;
 extern PathLiftCollisionFilePtr data_ov100_02148a5c;
 
-// @symbol daObjPathLift_c_classInit
 extern "C" daObjPathLift_c *daObjPathLift_c_classInit() {
     return new daObjPathLift_c();
 }
 
-// @symbol _ZN15daObjPathLift_c13InitResourcesEv
 int daObjPathLift_c::InitResources() {
     Vector3 pos;
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0);
@@ -77,7 +74,7 @@ int daObjPathLift_c::InitResources() {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov100_02148a5c), mClsnMat, 0x1000,
                           mAngleY, data_ov002_0210d7d4);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mPathSpeed = 0xa000;
     mHorzSpeed = mPathSpeed;
     BaseInitResources();
@@ -94,14 +91,13 @@ int daObjPathLift_c::InitResources() {
         if (rg.DetectClsn() != 0)
             mGroundY = rg.clsnY;
         mRespawnAfterFall = 1;
-        b = (data_0209f2d8 == 1);
+        b = (gGameMode == 1);
         if (b)
             mTimer = 0xb4;
     }
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c8BehaviorEv
 int daObjPathLift_c::Behavior() {
     UpdatePathModels();
     BaseBehavior();
@@ -115,7 +111,7 @@ int daObjPathLift_c::Behavior() {
     UpdateShadow();
     mMeshCollider.SetClipRadius(0x150000);
     mMeshCollider.SetClipOffsetY(0x1000);
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(gGameMode == 1);
     if (b != 0) {
         if (mMeshCollider.IsEnabled() == 0) {
             mMeshCollider.Enable(this);
@@ -126,7 +122,6 @@ int daObjPathLift_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c6RenderEv
 int daObjPathLift_c::Render() {
     unsigned short h = mWaitTimer;
     if (h < 0x5a) {
@@ -138,7 +133,6 @@ int daObjPathLift_c::Render() {
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c16CleanupResourcesEv
 int daObjPathLift_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -149,7 +143,6 @@ int daObjPathLift_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjPathLift_c17UpdateModelMatrixEv
 int daObjPathLift_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, 0);
     mModel.mat4x3.t.x = mPosX >> 3;
@@ -159,7 +152,6 @@ int daObjPathLift_c::UpdateModelMatrix() {
     return z;
 }
 
-// @symbol _ZN15daObjPathLift_c12UpdateShadowEv
 void daObjPathLift_c::UpdateShadow() {
     int scaleZ;
     int yOff;
@@ -191,7 +183,7 @@ void daObjPathLift_c::UpdateShadow() {
     mShadowMat[10] = (mPosY - yOff) >> 3;
     mShadowMat[11] = mPosZ >> 3;
 
-    t = data_0209f2d8 == 1;
+    t = gGameMode == 1;
     if (t != false) {
         DropShadowScaleXYZ(mShadowModel, *(Matrix4x3 *)mShadowMat, 0x118000, 0x7d0000, scaleZ, 0xf);
     } else {
@@ -199,8 +191,6 @@ void daObjPathLift_c::UpdateShadow() {
                            0xf);
     }
 }
-// @symbol _ZN15daObjPathLift_cD1Ev
-// @symbol _ZN15daObjPathLift_cD0Ev
 /* -------------------------------------------------------------------------- */
 /* ROM ordinals 0 and 1 -- the destructor group.                              */
 /* Both come from the `~daObjPathLift_c() {}` in the header: the compiler     */

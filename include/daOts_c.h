@@ -128,7 +128,7 @@ struct daOts_c : dEnemyBase_c {
         s32 mHorzDecel;         /* 0x3e8 */
         s32 mModelYOffset;      /* 0x3ec */
         s32 mShadowRadius;      /* 0x3f0 */
-        /* Floor height under the actor, from func_ov064_02116220's probe. */
+        /* Floor height under the actor, from CheckFloorDeath's probe. */
         s32 mFloorY;            /* 0x3f4 */
         u8  pad_3f8[0x1];
         /* STATE_KNOCKED_BACK: hops done so far (it stops hopping at 2); zeroed
@@ -209,17 +209,23 @@ struct daOts_c : dEnemyBase_c {
     void func_ov064_02115f98(char* a1);
     int func_ov064_02116110(short step);
     int func_ov064_0211616c();
-    void func_ov064_02116220();
-    void func_ov064_02116460();
-    void func_ov064_02116560();
-    void func_ov064_021165d8();
-    int func_ov064_021166f0();
-    void func_ov064_02116754();
     void func_ov064_02116bac();
+
+    /* Named for the N64 functions they port (n64decomp/sm64 bully.inc.c and
+       obj_behaviors.c names, coined by that project); see d_a_ots.cpp. */
+    void CheckMarioCollision();
+    int ReturnHomeIfSafe();
+    void Step();
+    void CheckFloorDeath();
+    void ActChaseMario();
+    void ActKnockback();
+    void ActBackUp();
 
     /* Tail::mState (reached through tail()), written by BehaviorCommon's switch and by the helpers it calls.
        Which child classes use which states is theirs to say; these names describe
-       what the shared handlers in src/game/actors/d_a_ots.cpp do. */
+       what the shared handlers in src/game/actors/d_a_ots.cpp do. In order, they
+       are the N64 bully's BULLY_ACT_PATROL, CHASE_MARIO, KNOCKBACK, BACK_UP,
+       LAVA_DEATH and DEATH_PLANE_DEATH (the last two are 100 and 101 there). */
     enum State {
         STATE_RETURN_HOME = 0,  /* walks toward mHomePos at 5 units a frame; switches to STATE_CHASE once the player is within 800 units of it */
         STATE_CHASE = 1,        /* the child's UpdateRunState runs; back to STATE_RETURN_HOME when the player is not within 1000 units of mHomePos */

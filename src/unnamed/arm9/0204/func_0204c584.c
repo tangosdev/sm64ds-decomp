@@ -1,5 +1,6 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "private/spl_particle_views.h"
 
 /* File-local view of Particle::System (include/Particle__System.h is C++):
@@ -44,12 +45,11 @@ extern Vector3s data_02099fc4;
 extern void func_02053380(void *a, Vector3s *b);
 extern Node *func_0204d958(List *list);
 extern void func_0204d9a0(List *list, Node *node);
-extern void func_0204da4c(Vector3 *out);
-extern void func_0204d9f0(Vector3 *out);
+extern void SPLRandom_VecFx32(Vector3 *out);
+extern void SPLRandom_VecFx32_XY(Vector3 *out);
 struct Vector3;
 extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
 extern u32 data_020a4d30;
-extern s16 data_02082214[];
 
 static inline u32 RandVal(void) {
     u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
@@ -168,13 +168,13 @@ void func_0204c584(u8 *self, List *list) {
             p->offset.x = p->offset.y;
             break;
         case 1:
-            func_0204da4c(&p->offset);
+            SPLRandom_VecFx32(&p->offset);
             p->offset.x = FX_MUL(p->offset.x, sys->emitRadius);
             p->offset.y = FX_MUL(p->offset.y, sys->emitRadius);
             p->offset.z = FX_MUL(p->offset.z, sys->emitRadius);
             break;
         case 2:
-            func_0204d9f0(&vecB);
+            SPLRandom_VecFx32_XY(&vecB);
             vecB.x = FX_MUL(vecB.x, sys->emitRadius);
             vecB.y = FX_MUL(vecB.y, sys->emitRadius);
             func_0204cd5c((int *)&p->offset, (int *)&vecB, def->circleAxis,
@@ -182,27 +182,25 @@ void func_0204c584(u8 *self, List *list) {
             break;
         case 3: {
             int q = d10 / count;
-            int idx;
-            s16 c, sn;
+            fx16 s, c;
             d10 += 0x10000;
-            idx = (q >> 4) << 1;
-            c = data_02082214[idx];
-            sn = data_02082214[idx + 1];
-            vecC.x = FMul(c, sys->emitRadius);
-            vecC.y = FMul(sn, sys->emitRadius);
+            s = FX_SinIdx(q >> 4);
+            c = FX_CosIdx(q >> 4);
+            vecC.x = FMul(s, sys->emitRadius);
+            vecC.y = FMul(c, sys->emitRadius);
             vecC.z = d18;
             func_0204cd5c((int *)&p->offset, (int *)&vecC, def->circleAxis,
                           (ParticleSystemView *)self);
             break;
         }
         case 4:
-            func_0204da4c(&p->offset);
+            SPLRandom_VecFx32(&p->offset);
             p->offset.x = FMul(FMul(p->offset.x, sys->emitRadius), RandScale());
             p->offset.y = FMul(FMul(p->offset.y, sys->emitRadius), RandScale());
             p->offset.z = FMul(FMul(p->offset.z, sys->emitRadius), RandScale());
             break;
         case 5:
-            func_0204d9f0(&vecE);
+            SPLRandom_VecFx32_XY(&vecE);
             vecE.x = FMul(FMul(vecE.x, sys->emitRadius), RandScale());
             vecE.y = FMul(FMul(vecE.y, sys->emitRadius), RandScale());
             func_0204cd5c((int *)&p->offset, (int *)&vecE, def->circleAxis,
@@ -222,7 +220,7 @@ void func_0204c584(u8 *self, List *list) {
             mag2 = (sys->callbackVelocity * ((b + 0xff) - ((b * (int)(s >> 0x18)) >> 7))) >> 8;
         }
         if (p->offset.x == 0 && p->offset.y == 0 && p->offset.z == 0)
-            func_0204da4c(&nrm);
+            SPLRandom_VecFx32(&nrm);
         else
             NormalizeVec3((const struct Vector3 *)&p->offset, (struct Vector3 *)&nrm);
         p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 0xc;

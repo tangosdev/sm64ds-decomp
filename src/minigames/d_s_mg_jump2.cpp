@@ -129,24 +129,21 @@ namespace cstd {
 s32 fdiv(s32 a, s32 b);
 }
 
-// @symbol _ZN10Jump2PopupC1Ev
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
  * it). Written above the factory because this TU emits .text in reverse
  * source order, and the ROM has it directly after the factory. */
 Jump2Popup::Jump2Popup() {}
 
-// @symbol dScMgJump2_c_classInit
 /* Reconstructed source-style name. `new dScMgJump2_c` reproduces it: the
  * inline dScMgD3DBase_c constructor (dScMgBase_c's C2, its vtable,
- * mDrawSubScreen, the empty loop over the two cameras, mSysTracker), then
+ * mDrawSubScreen, the empty loop over the two cameras, mParticle), then
  * this class's vtable and mPlayers, mHeyhos, mPopups and mModel.
  * Historical alias: dScMgJump2_c_Spawn. */
 extern "C" dScMgJump2_c *dScMgJump2_c_classInit() {
     return new dScMgJump2_c;
 }
 
-// @symbol _ZN12dScMgJump2_c10StartRoundEi
 /* Slot 18: resets the round and arms the start countdown. */
 void dScMgJump2_c::StartRound(int /* arg */) {
     Jump3D_DisableInput();
@@ -157,14 +154,12 @@ void dScMgJump2_c::StartRound(int /* arg */) {
     BeginIntro();
 }
 
-// @symbol _ZN12dScMgJump2_c11CanEndStateEi
 /* Slot 19. */
 int dScMgJump2_c::CanEndState(int /* mode */) {
     Puff_ClearAll(0, 0);
     return 1;
 }
 
-// @symbol _ZN12dScMgJump2_c13InitResourcesEv
 /* Slot 0. */
 s32 dScMgJump2_c::InitResources() {
     void *tiles, *palette;
@@ -234,7 +229,6 @@ s32 dScMgJump2_c::InitResources() {
  * 0x1000.
  *
  * This one arms the countdown and installs the next state. */
-// @symbol _ZN12dScMgJump2_c10BeginIntroEv
 void dScMgJump2_c::BeginIntro() {
     mStateTimer = 0x78;
     mTextureOffsetT = 0;
@@ -242,10 +236,8 @@ void dScMgJump2_c::BeginIntro() {
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Intro;
 }
 
-// @symbol _ZN12dScMgJump2_c11State_IntroEv
 void dScMgJump2_c::State_Intro() {
-    s16 *countdown = &mStateTimer;
-    *countdown = *countdown - 1;
+    mStateTimer--;
     if (mStateTimer == 0) {
         if (mPromptBlinkCount == 0) {
             mPromptEnabled = 1;
@@ -258,22 +250,19 @@ void dScMgJump2_c::State_Intro() {
     Heyho_SeparateAll();
 }
 
-// @symbol _ZN12dScMgJump2_c9BeginPlayEv
 void dScMgJump2_c::BeginPlay() {
     mStateTimer = 0xf0;
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Play;
 }
 
-// @symbol _ZN12dScMgJump2_c10State_PlayEv
 void dScMgJump2_c::State_Play() {
     s16 done;
     int prevScore = sJumpComboCount;
-    int *acc = &mTextureOffsetT;
     int mode;
 
-    *acc += mTextureScrollRate >> 12;
+    mTextureOffsetT += mTextureScrollRate >> 12;
     if (mTextureOffsetT > 0x1000)
-        *acc -= 0x1000;
+        mTextureOffsetT -= 0x1000;
 
     done = 0;
     mode = sHeyhoUnsettledCount;
@@ -281,16 +270,14 @@ void dScMgJump2_c::State_Play() {
     case 0:
         done = 1;
         break;
-    case 1: {
-        int rc = ApproachLinear2(mStateTimer, done, 2);
-        if (rc)
+    case 1:
+        if (ApproachLinear2(mStateTimer, 0, 2))
             done = 1;
-    } break;
-    default: {
-        int rc = ApproachLinear2(mStateTimer, done, 1);
-        if (rc)
+        break;
+    default:
+        if (ApproachLinear2(mStateTimer, 0, 1))
             done = 1;
-    } break;
+        break;
     }
 
     if (done != 0 && sHeyhoUnsettledCount < sHeyhoCount) {
@@ -332,19 +319,15 @@ void dScMgJump2_c::State_Play() {
     BeginEnd();
 }
 
-// @symbol _ZN12dScMgJump2_c8BeginEndEv
 void dScMgJump2_c::BeginEnd() {
     mStateTimer = 0x20;
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_End;
 }
 
-// @symbol _ZN12dScMgJump2_c9State_EndEv
 void dScMgJump2_c::State_End() {
-    int *acc = &mTextureOffsetT;
-    *acc += mTextureScrollRate >> 12;
-    if (mTextureOffsetT > 0x1000) {
-        *acc -= 0x1000;
-    }
+    mTextureOffsetT += mTextureScrollRate >> 12;
+    if (mTextureOffsetT > 0x1000)
+        mTextureOffsetT -= 0x1000;
     Heyho_SeparateAll();
     Jump3D_UpdateAll();
     if (ApproachLinear2(mStateTimer, 0, 1) == 0) {
@@ -355,7 +338,6 @@ void dScMgJump2_c::State_End() {
     *(struct G2 *)pad_5004 = pmf_dScMgJump2_c_State_Result;
 }
 
-// @symbol _ZN12dScMgJump2_c12State_ResultEv
 void dScMgJump2_c::State_Result() {
     if (Jump3D_AllIdle()) {
         if (Heyho_AllIdle()) {
@@ -369,18 +351,16 @@ void dScMgJump2_c::State_Result() {
     Jump3D_UpdateAll();
 }
 
-// @symbol _ZN12dScMgJump2_c10State_IdleEv
 void dScMgJump2_c::State_Idle() {}
 
-// @symbol _ZN12dScMgJump2_c8BehaviorEv
 /* Slot 6. mParticleID is a particle system's unique ID, handed to
- * NewUnkCallback818 and back each frame. The object FromUniqueID returns is
+ * NewCleanParticle and back each frame. The object FromUniqueID returns is
  * a Particle::System. Both Particle::System
  * calls keep their mangled spellings: declaring the real Fix12<int>
  * parameters changes how the call passes them. */
 s32 dScMgJump2_c::Behavior() {
     mParticleID =
-        Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
+        Particle::System::NewCleanParticle(mParticleID, 0xf0, 0x400000, 0x800000, -0x480000, 0);
     Particle::System *system = Particle::System::FromUniqueID(mParticleID);
     if (system != 0) {
         system->callbackScale = 0x4000;
@@ -424,7 +404,6 @@ void Jump2_SetLights(void) {
 }
 }
 
-// @symbol _ZN12dScMgJump2_c6RenderEv
 /* Slot 9. */
 // Consumed runtime-material prefix; this is not the BMD file record.
 struct MaterialScrollView {
@@ -453,10 +432,7 @@ s32 dScMgJump2_c::Render() {
         func_02045e44(components, 1, 0);
     }
     material->textureOffsetT = mTextureOffsetT;
-    {
-        dExtSimpleModel_c *model = &mModel;
-        model->Render((Vector3 *)&scale);
-    }
+    mModel.Render((Vector3 *)&scale);
 
     Jump3D_DrawAll();
     Heyho_DrawAll();
@@ -478,7 +454,6 @@ s32 dScMgJump2_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12dScMgJump2_c16CleanupResourcesEv
 /* Slot 3. sJump2BackFile points at the model's file handle; it is
  * released and cleared. */
 s32 dScMgJump2_c::CleanupResources() {
@@ -520,37 +495,26 @@ void Jump2Popup_ClearAll(void) {
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_UpdateAll(void) {
-    int i = 0;
-    if (i < sJump2PopupCount) {
-        int offset = 0;
-        do {
-            ((Jump2Popup *)((char *)sJump2Popups + offset))->Tick();
-            i++;
-            offset += 0x24;
-        } while (i < sJump2PopupCount);
+    int i;
+    for (i = 0; i < sJump2PopupCount; i++) {
+        sJump2Popups[i].Tick();
     }
 }
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void Jump2Popup_DrawAll(void) {
-    void *node = sJump2PopupList;
-    if (node == 0)
-        return;
-    do {
+    Jump2PopupLink *node;
+    for (node = sJump2PopupList; node != 0; node = node->next)
         ((Jump2Popup *)node)->DrawNumber();
-        node = *(void **)node;
-    } while (node != 0);
 }
 }
 
-// @symbol _ZN14Jump2PopupLink4LinkEv
 void Jump2PopupLink::Link() {
-    *(void **)this = sJump2PopupList;
+    next = sJump2PopupList;
     sJump2PopupList = this;
 }
 
-// @symbol _ZN14Jump2PopupLink6UnlinkEv
 void Jump2PopupLink::Unlink() {
     struct Jump2PopupLink *prev = sJump2PopupList;
     if (prev == this) {
@@ -568,7 +532,6 @@ void Jump2PopupLink::Unlink() {
     }
 }
 
-// @symbol _ZN10Jump2Popup5SpawnEiii
 void Jump2Popup ::Spawn(int startX, int startY, int value) {
     x = startX;
     y = startY;
@@ -576,24 +539,16 @@ void Jump2Popup ::Spawn(int startX, int startY, int value) {
     speedY = 0x4000;
     targetX = startX;
     targetY = startY - 0x40000;
-    if (targetY < 0x8000) {
-        int limit = Mg_GetTopScreenYOffset() << 12;
-        if (targetY > -limit) {
-            targetY = 0x8000;
-            goto done;
-        }
-    }
-    if (targetY >= -0xb8000 - (Mg_GetTopScreenYOffset() << 12))
-        goto done;
-    targetY = -0xb8000 - (Mg_GetTopScreenYOffset() << 12);
-done:
+    if (targetY < 0x8000 && targetY > -(Mg_GetTopScreenYOffset() << 12))
+        targetY = 0x8000;
+    else if (targetY < -0xb8000 - (Mg_GetTopScreenYOffset() << 12))
+        targetY = -0xb8000 - (Mg_GetTopScreenYOffset() << 12);
     life = 0x80;
     active = 1;
     number = (short)value;
     ((Jump2PopupLink *)this)->Link();
 }
 
-// @symbol _ZN10Jump2Popup4TickEv
 void Jump2Popup::Tick() {
     if (active == 0)
         return;
@@ -606,21 +561,17 @@ void Jump2Popup::Tick() {
     func_0203d630(&speedX, 0xf00);
 }
 
-// @symbol _ZN10Jump2Popup10DrawNumberEv
 void Jump2Popup::DrawNumber() {
     if (active == 0)
         return;
     Mg_DrawBigNumber(x >> 12, y >> 12, number, -1, -1, 0, data_ov006_021421b4);
 }
 
-// @symbol _ZN10Jump2PopupD1Ev
 /* Empty and out of line, the partner of the constructor above. */
 Jump2Popup::~Jump2Popup() {}
 
-// @symbol _ZN12dScMgJump2_cD0Ev
 /* Generated from the destructor below. */
 
-// @symbol _ZN12dScMgJump2_cD1Ev
 /* Defined in the class body in include/dScMgJump2_c.h, which explains why.
    mwccarm emits D1 and D0 from it, in this order. */
 

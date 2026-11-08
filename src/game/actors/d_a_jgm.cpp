@@ -66,6 +66,7 @@ enum d_a_jgm_AssetId {
 #include "SpawnInfo.h"
 #include "dBgCh_Gnd.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
@@ -161,7 +162,6 @@ extern void d_a_jgmPlayLongHold(unsigned int handle, unsigned int a, unsigned in
 extern void d_a_jgmNewSimpleHold(unsigned int n, int x, int y, int z);
 }
 
-// @symbol daJgm_c_classInit
 extern "C" daJgm_c *daJgm_c_classInit()
 {
     return new daJgm_c();
@@ -178,7 +178,6 @@ extern "C" SpawnInfo<daJgm_c> g_profile_JUGEM = {
     0x01000000
 };
 
-// @symbol _ZN7daJgm_c13OnTurnIntoEggER7daPly_c
 void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 5, 0);
@@ -187,7 +186,6 @@ void daJgm_c::OnTurnIntoEgg(daPly_c &player) {
     KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN7daJgm_c13InitResourcesEv
 s32 daJgm_c::InitResources()
 {
     dExtSimpleModel_c::LoadFile(data_ov077_02127b38);
@@ -224,7 +222,6 @@ s32 daJgm_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c8BehaviorEv
 s32 daJgm_c::Behavior()
 {
     int v = param1;
@@ -235,7 +232,6 @@ s32 daJgm_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c6RenderEv
 s32 daJgm_c::Render()
 {
     int b = (int)((mFlags & 0x40000) != 0);
@@ -251,12 +247,10 @@ s32 daJgm_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c16OnPendingDestroyEv
 void daJgm_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN7daJgm_c16CleanupResourcesEv
 s32 daJgm_c::CleanupResources()
 {
     data_ov077_02127b50.Release();
@@ -272,28 +266,24 @@ s32 daJgm_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c8SetStateEi
 void daJgm_c::SetState(int state)
 {
     mStateHandlers = &data_ov077_02127bc4[state];
     EnterState();
 }
 
-// @symbol _ZN7daJgm_c10EnterStateEv
 void daJgm_c::EnterState()
 {
     DaJgmStateHandler *handler = &mStateHandlers->enter;
     (this->**handler)();
 }
 
-// @symbol _ZN7daJgm_c11UpdateStateEv
 void daJgm_c::UpdateState()
 {
     DaJgmStateHandler *handler = &mStateHandlers->update;
     (this->**handler)();
 }
 
-// @symbol _ZN7daJgm_c15EnterHoverStateEv
 s32 daJgm_c::EnterHoverState()
 {
     mHorzSpeed = 0xc000;
@@ -306,7 +296,6 @@ s32 daJgm_c::EnterHoverState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c16UpdateHoverStateEv
 s32 daJgm_c::UpdateHoverState()
 {
     mHorzSpeed = 0xc000;
@@ -341,7 +330,6 @@ s32 daJgm_c::UpdateHoverState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c15EnterThrowStateEv
 s32 daJgm_c::EnterThrowState()
 {
     mAnmModel.SetAnim((BCA_File *)data_ov077_02127b40.filePtr, 0, 0x1000, 0);
@@ -356,7 +344,6 @@ s32 daJgm_c::EnterThrowState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c16UpdateThrowStateEv
 s32 daJgm_c::UpdateThrowState()
 {
     unsigned int frame = (unsigned int)(mAnmModel.currFrame << 4) >> 16;
@@ -385,7 +372,6 @@ s32 daJgm_c::UpdateThrowState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c20EnterYoshiMouthStateEv
 s32 daJgm_c::EnterYoshiMouthState()
 {
     mHorzSpeed = 0;
@@ -394,7 +380,6 @@ s32 daJgm_c::EnterYoshiMouthState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c21UpdateYoshiMouthStateEv
 s32 daJgm_c::UpdateYoshiMouthState()
 {
     if (((mFlags & 0x40000) ? 1 : 0) != 0) {
@@ -415,7 +400,6 @@ s32 daJgm_c::UpdateYoshiMouthState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c14EnterSpitStateEv
 s32 daJgm_c::EnterSpitState()
 {
     dActor_c *carrier;
@@ -460,7 +444,6 @@ s32 daJgm_c::EnterSpitState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c15UpdateSpitStateEv
 s32 daJgm_c::UpdateSpitState()
 {
     mAngleY = (short)(mAngleY + mAngVelY);
@@ -475,7 +458,6 @@ s32 daJgm_c::UpdateSpitState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c14EnterFallStateEv
 s32 daJgm_c::EnterFallState()
 {
     Sound::PlayBank0(9, mCamSpacePos);
@@ -488,15 +470,14 @@ s32 daJgm_c::EnterFallState()
     mAnmModel.speed = 0x4000;
     {
         int aimHeight = OnAimedAtWithEgg();
-        Particle::System::NewSimple(0x43, mPosX, mPosY + aimHeight, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayA, mPosX, mPosY + aimHeight, mPosZ);
         int aimHeightAgain = OnAimedAtWithEgg();
-        Particle::System::NewSimple(0x44, mPosX, mPosY + aimHeightAgain, mPosZ);
+        Particle::System::NewSimple(kPtclKnockAwayB, mPosX, mPosY + aimHeightAgain, mPosZ);
     }
     mState = 4;
     return 1;
 }
 
-// @symbol _ZN7daJgm_c15UpdateFallStateEv
 s32 daJgm_c::UpdateFallState()
 {
     mAngleX = (short)(mAngleX - 0x1000);
@@ -508,7 +489,6 @@ s32 daJgm_c::UpdateFallState()
     return 1;
 }
 
-// @symbol _ZN7daJgm_c12UpdateModelsEv
 void daJgm_c::UpdateModels()
 {
     int b = (int)((mFlags & 0x40000) != 0);
@@ -567,7 +547,6 @@ void daJgm_c::UpdateModels()
     mModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN7daJgm_c18UpdateWallAndWaterER10dBgCh_Actr
 void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
 {
     VecFx32 nrm;
@@ -597,7 +576,6 @@ void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
     }
 }
 
-// @symbol _ZN7daJgm_c21HandlePlayerCollisionEv
 void daJgm_c::HandlePlayerCollision()
 {
     dActor_c *other;
@@ -664,7 +642,6 @@ void daJgm_c::HandlePlayerCollision()
     }
 }
 
-// @symbol _ZN7daJgm_c15DieAndDropCoinsEv
 void daJgm_c::DieAndDropCoins()
 {
     VecFx32 t;
@@ -676,7 +653,6 @@ void daJgm_c::DieAndDropCoins()
     KillAndTrackInDeathTable();
 }
 
-// @symbol _ZN7daJgm_c12UpdateFlightEv
 void daJgm_c::UpdateFlight() {
     /* The goto is kept: the goto-free if/else emits 4 more bytes. */
     daPly_c *p = ClosestNonVanishPlayer();
@@ -710,7 +686,6 @@ haveTarget:
     UpdateWallAndWater(mWithMeshClsn);
 }
 
-// @symbol _ZN7daJgm_c18TurnOffsetFromDistEi
 int daJgm_c::TurnOffsetFromDist(int dist)
 {
     if (dist > 0x190000)
@@ -723,7 +698,6 @@ int daJgm_c::TurnOffsetFromDist(int dist)
     return (short)r;
 }
 
-// @symbol _ZN7daJgm_c12CountSpiniesEv
 int daJgm_c::CountSpinies()
 {
     int count = 0;
@@ -736,7 +710,6 @@ int daJgm_c::CountSpinies()
     return count;
 }
 
-// @symbol _ZN7daJgm_c14UpdateHoverBobEv
 void daJgm_c::UpdateHoverBob()
 {
     unsigned short v = (unsigned short)mBobAngle;
@@ -746,7 +719,6 @@ void daJgm_c::UpdateHoverBob()
     mBobAngle = (short)(mBobAngle + 0x700);
 }
 
-// @symbol _ZN7daJgm_c16OnAimedAtWithEggEv
 int daJgm_c::OnAimedAtWithEgg()
 {
     return 245760;
@@ -774,7 +746,6 @@ DaJgmStateHandlers data_ov077_02127bc4[5] = {
 };
 JgmVector3 data_ov077_02127b88(0, -0x1e000, 0);
 
-// @symbol _ZN7daJgm_c13OnYoshiTryEatEv
 int daJgm_c::OnYoshiTryEat()
 {
     return 6;

@@ -85,12 +85,10 @@ static inline void CARD_ReadRomAsync(u32 dma, const void *src, void *dst, u32 le
 }
 
 /* The end of a card read: the archive's command succeeded. */
-// @symbol FSi_OnRomReadDone
 void FSi_OnRomReadDone(void *p_arc) {
     FS_NotifyArchiveAsyncEnd((FSArchive *)p_arc, FS_RESULT_SUCCESS);
 }
 
-// @symbol FSi_ReadRomCallback
 int FSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 src, u32 len) {
     CARD_ReadRomAsync(data_020a8060, (const void *)src, dst, len, FSi_OnRomReadDone, p_arc);
     return FS_RESULT_PROC_ASYNC;
@@ -99,12 +97,10 @@ int FSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 src, u32 len) {
 /* Writes fail. pret's returns FS_RESULT_UNSUPPORTED; this SDK's returns
    FS_RESULT_FAILURE. The name rests on FSi_InitRom passing it to
    FS_LoadArchive as the write callback. */
-// @symbol FSi_WriteDummyCallback
 int FSi_WriteDummyCallback(FSArchive *p_arc, const void *src, u32 dst, u32 len) {
     return FS_RESULT_FAILURE;
 }
 
-// @symbol FSi_RomArchiveProc
 int FSi_RomArchiveProc(FSFile *p_arc, int cmd) {
     switch (cmd) {
     case FS_COMMAND_ACTIVATE:
@@ -122,7 +118,6 @@ int FSi_RomArchiveProc(FSFile *p_arc, int cmd) {
 
 /* Set up the "rom" archive. A header whose FNT or FAT offset is 0 or ~0
    has no tables from the ROM maker, and the archive stays unloaded. */
-// @symbol FSi_InitRom
 void FSi_InitRom(u32 default_dma_no) {
     data_020a8060 = default_dma_no;
     data_020a805c = OS_GetLockID();
@@ -152,7 +147,6 @@ void FSi_InitRom(u32 default_dma_no) {
     }
 }
 
-// @symbol FS_TryLoadTable
 u32 FS_TryLoadTable(void *p_mem, u32 size) {
     return FS_LoadArchiveTables(&data_020a8074, p_mem, size);
 }

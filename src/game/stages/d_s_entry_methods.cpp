@@ -65,7 +65,7 @@ void LoadBGPltt(const void *, unsigned int, unsigned int);
 
 extern "C" {
 void func_020308b4(void);
-void func_020551f0(void *s, int v);
+void G2x_ChangeBlendBrightness_(volatile unsigned short *reg, int brightness);
 extern int data_0209fc68;
 
 void Enable3dEngines(void);
@@ -96,13 +96,13 @@ void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern s32 data_0208ee44;
 
 /* The scene manager Behavior polls through its slot 5. */
-extern "C" dFdBrightness_c *data_0209f5bc;
+extern "C" dFdBrightness_c *gSceneFader;
 
 #include "dEntObj_c.h"
 #include "OAM.h"
@@ -129,7 +129,7 @@ void func_ov075_02116028(dScEntry_c::graphCallback_c *, int);
 /* The entry scene's one global graph callback, ov075 .bss 0x0211d71c. The
    generated decl_common.h catch-all declares that storage `void *`, so its real
    type is spelled once here instead of at each of the eighteen call sites. */
-#define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&data_ov075_0211d71c)
+#define ENTRY_GRAPH_CALLBACK ((dScEntry_c::graphCallback_c *)&sEntryGraphCallback)
 
 extern "C" {
 void func_020338b0(int, int, short, int);
@@ -174,7 +174,7 @@ u8 func_020200b8(void);
 void func_02020078(u32 flags);
 void func_0202029c(u32 idx);
 extern s8 data_ov075_0211c6ec[];
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern u8 data_0209b2e4;
 }
 
@@ -218,7 +218,7 @@ extern int data_ov075_0211cc4c;
 extern int data_ov075_0211cc54;
 extern int data_ov075_0211cc5c;
 extern void *data_0208a0e4[];
-extern fBase_c *data_0209f5c0;
+extern fBase_c *gCurrentScene;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
@@ -275,7 +275,6 @@ extern dScEntry_c::StepSet data_ov075_0211d888;
 extern dScEntry_c::StepSet data_ov075_0211d8e8;
 extern short data_ov075_0211b5d4[];
 
-// @symbol _ZN10dScEntry_c17TallyRoundWinnersEv
 void dScEntry_c::TallyRoundWinners() {
     int max;
     u8 b;
@@ -394,7 +393,6 @@ void dScEntry_c::TallyRoundWinners() {
     } while (i < 4);
 }
 
-// @symbol _ZN10dScEntry_c19InitResultResourcesEv
 s32 dScEntry_c::InitResultResources() {
     int k;
     void *tmp;
@@ -410,8 +408,8 @@ s32 dScEntry_c::InitResultResources() {
     char *sub;
     int n;
 
-    *(volatile u16 *)0x400000a = (u16)((*(volatile u16 *)0x400000a & 0x43) | 0x208);
-    *(volatile u16 *)0x400000a = (u16)(*(volatile u16 *)0x400000a & ~0x40);
+    REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
+    REG_BG1CNT = (u16)(REG_BG1CNT & ~0x40);
 
     LoadCompressedFileAt(0x8413, G2::GetBG2CharPtr());
     tmp = LoadFile(0x8414);
@@ -446,7 +444,7 @@ s32 dScEntry_c::InitResultResources() {
     GX::LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
-    *(volatile u16 *)0x400000a = (u16)((*(volatile u16 *)0x400000a & ~3) | 2);
+    REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
     SetBg1Offset(0, 0);
     sub = (char *)0x6600000;
     LoadCompressedFileAt(0x8402, sub);
@@ -490,14 +488,13 @@ s32 dScEntry_c::InitResultResources() {
     }
 
     SetSteps(&data_ov075_0211d7e0);
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, 1, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, gCurrentScene, 1, 0);
     return 1;
 }
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum EntryAssetId { ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN = 0x025e };
 
-// @symbol _ZN10dScEntry_c18InitEntryResourcesEv
 s32 dScEntry_c::InitEntryResources() {
     void *tmp;
     int mode;
@@ -537,11 +534,10 @@ s32 dScEntry_c::InitEntryResources() {
         mode = 2;
     }
 
-    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, data_0209f5c0, mode, 0);
+    mEntObj = (dEntObj_c *)dBase_c::Spawn(0x15a, gCurrentScene, mode, 0);
     return 1;
 }
 
-// @symbol _ZN10dScEntry_c13LeaveSettingsEv
 void dScEntry_c::LeaveSettings() {
     if (data_0209fc68) {
         ChangeStepsAfterDelay(&data_ov075_0211d828, 0x14);
@@ -550,7 +546,6 @@ void dScEntry_c::LeaveSettings() {
     }
 }
 
-// @symbol _ZN10dScEntry_c10StartMatchEv
 void dScEntry_c::StartMatch() {
     PrepareVsMode();
     u8 course = data_0209b2e4;
@@ -559,8 +554,10 @@ void dScEntry_c::StartMatch() {
     data_02092778 = 1;
 }
 
-// @symbol _ZN10dScEntry_c19func_ov075_02116ce4Ev
-int dScEntry_c::func_ov075_02116ce4() {
+/* ArePlayersReady's twin for the rematch handshake (coined name): every
+ * joined player must show the rematch ready bit (link settings byte 2,
+ * bit 4) that EnterRematchSync raises through func_020201c0. */
+int dScEntry_c::ArePlayersReadyForRematch() {
     int i;
     for (i = 0; i < 4; i++) {
         if (data_0209fc5c[i]) {
@@ -572,7 +569,6 @@ int dScEntry_c::func_ov075_02116ce4() {
     return 1;
 }
 
-// @symbol _ZN10dScEntry_c15ArePlayersReadyEv
 int dScEntry_c::ArePlayersReady() {
     int player = 0;
     u8 *active = data_0209fc5c;
@@ -590,7 +586,6 @@ int dScEntry_c::ArePlayersReady() {
     return 1;
 }
 
-// @symbol _ZN10dScEntry_c16CheckMenuConfirmEi
 int dScEntry_c::CheckMenuConfirm(int player) {
     u16 pressed;
     if (player >= 0)
@@ -605,7 +600,6 @@ int dScEntry_c::CheckMenuConfirm(int player) {
     return 0;
 }
 
-// @symbol _ZN10dScEntry_c17ResetMatchRecordsEv
 void dScEntry_c::ResetMatchRecords() {
     int i;
     for (i = 0; i < 4; i++) {
@@ -615,7 +609,6 @@ void dScEntry_c::ResetMatchRecords() {
     data_0209b2e4 = 0;
 }
 
-// @symbol _ZN10dScEntry_c18UpdateSettingsSyncEv
 void dScEntry_c::UpdateSettingsSync() {
     if (func_02020168()) {
         func_02020304();
@@ -633,7 +626,6 @@ void dScEntry_c::UpdateSettingsSync() {
     func_02020124();
 }
 
-// @symbol _ZN10dScEntry_c17EnterSettingsSyncEv
 void dScEntry_c::EnterSettingsSync() {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~1;
@@ -645,7 +637,6 @@ void dScEntry_c::EnterSettingsSync() {
     func_02012790(0x120);
 }
 
-// @symbol _ZN10dScEntry_c19RenderSoundSettingsEv
 void dScEntry_c::RenderSoundSettings() {
     unsigned char idx = mSelectedIcon;
     int a1, a2;
@@ -667,7 +658,6 @@ void dScEntry_c::RenderSoundSettings() {
     OAM::Render(false, &OAM::BOUNCING_ARROW, 0xc0, arrowY, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
-// @symbol _ZN10dScEntry_c19UpdateSoundSettingsEv
 void dScEntry_c::UpdateSoundSettings() {
     int w = func_0203da9c();
     int dir;
@@ -764,7 +754,6 @@ void dScEntry_c::UpdateSoundSettings() {
 
 #define SH(base, i) (*(short *)((char *)(base) + (i) * 4))
 
-// @symbol _ZN10dScEntry_c18EnterSoundSettingsEv
 void dScEntry_c::EnterSoundSettings() {
     func_ov075_02116030(ENTRY_GRAPH_CALLBACK, LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));
 
@@ -803,7 +792,6 @@ void dScEntry_c::EnterSoundSettings() {
 
 #undef SH
 
-// @symbol _ZN10dScEntry_c21RenderControlSettingsEv
 void dScEntry_c::RenderControlSettings() {
     int *tbl = data_ov075_0211c9cc[GetLanguageIndex()];
     OamAttr *attr = (OamAttr *)tbl[mStepWork[0]];
@@ -822,7 +810,6 @@ void dScEntry_c::RenderControlSettings() {
     OAM::RenderSub((OamAttr *)data_ov075_0211c790, a1, a2);
 }
 
-// @symbol _ZN10dScEntry_c21UpdateControlSettingsEv
 void dScEntry_c::UpdateControlSettings() {
     int w = func_0203da9c();
 
@@ -901,7 +888,6 @@ void dScEntry_c::UpdateControlSettings() {
     }
 }
 
-// @symbol _ZN10dScEntry_c20EnterControlSettingsEv
 void dScEntry_c::EnterControlSettings() {
     int i;
     int r;
@@ -948,7 +934,6 @@ void dScEntry_c::EnterControlSettings() {
     func_02020304();
 }
 
-// @symbol _ZN10dScEntry_c16EnterQuitMessageEv
 void dScEntry_c::EnterQuitMessage() {
     gMainScreenLayers =
         gMainScreenLayers & ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
@@ -961,7 +946,6 @@ void dScEntry_c::EnterQuitMessage() {
     mStepDelay = 2;
 }
 
-// @symbol _ZN10dScEntry_c10UpdateQuitEv
 void dScEntry_c::UpdateQuit() {
     mStepDelay -= data_0208ee44;
     if (mStepDelay > 0)
@@ -971,7 +955,6 @@ void dScEntry_c::UpdateQuit() {
     data_02092778 = 1;
 }
 
-// @symbol _ZN10dScEntry_c9EnterQuitEv
 void dScEntry_c::EnterQuit() {
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     mStepDelay = 0x14;
@@ -985,7 +968,6 @@ static inline unsigned IsMode6(dScEntry_c *scene) {
     return dok;
 }
 
-// @symbol _ZN10dScEntry_c17UpdateQuitConfirmEv
 void dScEntry_c::UpdateQuitConfirm() {
     int id;
 
@@ -1030,7 +1012,6 @@ static inline int IsEntryScene(const dScEntry_c *scene) {
     return scene->actorID == 6;
 }
 
-// @symbol _ZN10dScEntry_c16EnterQuitConfirmEv
 void dScEntry_c::EnterQuitConfirm() {
     void *fh;
 
@@ -1052,7 +1033,6 @@ void dScEntry_c::EnterQuitConfirm() {
     func_ov075_02115e8c((char *)&mIcons[1], 8, 0, 0xb0, 0xa8);
 }
 
-// @symbol _ZN10dScEntry_c17UpdateRematchSyncEv
 void dScEntry_c::UpdateRematchSync() {
     if (data_0209fc58 != 0) {
         func_02020190();
@@ -1073,12 +1053,11 @@ void dScEntry_c::UpdateRematchSync() {
     }
     if (func_0203d9b4() == 0)
         return;
-    if (func_ov075_02116ce4() == 0)
+    if (ArePlayersReadyForRematch() == 0)
         return;
     func_02020124();
 }
 
-// @symbol _ZN10dScEntry_c16EnterRematchSyncEv
 void dScEntry_c::EnterRematchSync() {
     gSubScreenLayers &= ~1;
     func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 6);
@@ -1097,7 +1076,6 @@ void dScEntry_c::EnterRematchSync() {
  * tens/ones OAM digits, then every 3 calls toggles a blink flag and has
  * func_ov075_02116128 repaint each round winner's slot border bright or
  * dim by it. mStepWork[0] counts frames and mStepWork[1] is the flag. */
-// @symbol _ZN10dScEntry_c15RenderWinCountsEv
 void dScEntry_c::RenderWinCounts() {
     int count = data_0209fc50;
     int d = 4 - count;
@@ -1161,7 +1139,6 @@ void dScEntry_c::RenderWinCounts() {
     }
 }
 
-// @symbol _ZN10dScEntry_c19UpdateRematchPromptEv
 void dScEntry_c::UpdateRematchPrompt() {
     int id;
     if (data_0209fc58 != 0) {
@@ -1192,7 +1169,6 @@ void dScEntry_c::UpdateRematchPrompt() {
 /* Sets gMainScreenLayers bits 0xe and records them in mDisconnectHideMask; on
  * a player disconnect HandlePlayerDisconnect clears gMainScreenLayers by
  * ~mDisconnectHideMask, and UpdateRematchSync clears both on its own. */
-// @symbol _ZN10dScEntry_c18EnterRematchPromptEv
 void dScEntry_c::EnterRematchPrompt() {
     gSubScreenLayers &= ~5;
     func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 1);
@@ -1217,7 +1193,6 @@ void dScEntry_c::EnterRematchPrompt() {
     Sound::LoadAndSetMusic_Layer1(0x4c);
 }
 
-// @symbol _ZN10dScEntry_c13RenderResultsEv
 void dScEntry_c::RenderResults() {
     int id = func_0203da9c();
     OAM::Render(false, &data_ov075_0211cb84, 0x80, 0x20, -1, -1, 0x1000, 0x1000, 0, -1);
@@ -1265,7 +1240,6 @@ void dScEntry_c::RenderResults() {
     func_0202048c(&mOamAnimations[1], 0x80, 0x88);
 }
 
-// @symbol _ZN10dScEntry_c13UpdateResultsEv
 void dScEntry_c::UpdateResults() {
     int id;
     int acc;
@@ -1332,7 +1306,6 @@ void dScEntry_c::UpdateResults() {
     }
 }
 
-// @symbol _ZN10dScEntry_c12EnterResultsEv
 void dScEntry_c::EnterResults() {
     int id;
 
@@ -1377,7 +1350,6 @@ void dScEntry_c::EnterResults() {
 /* The behavior of the step set at data_ov075_0211d7c8, which the static
  * initializer fills and no code installs. It only arms the link
  * handshake (func_020308b4). */
-// @symbol _ZN10dScEntry_c19func_ov075_02118a78Ev
 void dScEntry_c::func_ov075_02118a78() {
     func_020308b4();
 }
@@ -1387,7 +1359,6 @@ extern "C" void OamRender10_d_s_entry_methods(int sub, struct OamAttr *data, s32
                                               s32 palette, s32 priority, s32 scaleX, s32 scaleY,
                                               s32 rotation, s32 mode);
 
-// @symbol _ZN10dScEntry_c18UpdateMatchLoadingEv
 void dScEntry_c::UpdateMatchLoading() {
     if (mSawLoadSignal == 0) {
         if (func_0203d8fc() != 0)
@@ -1423,7 +1394,6 @@ void dScEntry_c::UpdateMatchLoading() {
     mBehaviorStep = 0;
 }
 
-// @symbol _ZN10dScEntry_c19LoadCourseResourcesEi
 void dScEntry_c::LoadCourseResources(int course) {
     mHeap::Heap_t *previousHeap = data_020a0eac->SetDefault();
     LoadArchive(7);
@@ -1436,11 +1406,10 @@ void dScEntry_c::LoadCourseResources(int course) {
     }
     LoadArchive(selectedArchive);
     previousHeap->SetDefault();
-    data_0209f2d8 = 1;
+    gGameMode = 1;
     func_0202deac(data_ov075_0211c6ec[course]);
 }
 
-// @symbol _ZN10dScEntry_c17EnterMatchLoadingEv
 void dScEntry_c::EnterMatchLoading() {
     mEntObj->func_ov075_02114fa8();
     mStepDelay = 240;
@@ -1451,12 +1420,10 @@ void dScEntry_c::EnterMatchLoading() {
     func_0203d918();
 }
 
-// @symbol _ZN10dScEntry_c23RenderCourseSelectTitleEv
 void dScEntry_c::RenderCourseSelectTitle() {
     OAM::Render(0, data_ov075_0211cba4, 0x80, 0x20, -1, -1, 0x1000, 0x1000, 0, -1);
 }
 
-// @symbol _ZN10dScEntry_c18UpdateCourseSelectEv
 void dScEntry_c::UpdateCourseSelect() {
     if (func_0203d974() && func_020202dc() != data_0209b2e4) {
         data_0209b2e4 = func_020202dc();
@@ -1525,7 +1492,6 @@ void dScEntry_c::UpdateCourseSelect() {
     }
 }
 
-// @symbol _ZN10dScEntry_c17EnterCourseSelectEv
 void dScEntry_c::EnterCourseSelect() {
     int index;
     int x;
@@ -1562,7 +1528,6 @@ void dScEntry_c::EnterCourseSelect() {
     func_020200e0();
 }
 
-// @symbol _ZN10dScEntry_c23UpdatePlayerSelectIntroEv
 void dScEntry_c::UpdatePlayerSelectIntro() {
     if (func_0203d974()) {
         if (!mPlayerSelectReady) {
@@ -1595,7 +1560,6 @@ void dScEntry_c::UpdatePlayerSelectIntro() {
     func_02020124();
 }
 
-// @symbol _ZN10dScEntry_c22EnterPlayerSelectIntroEv
 void dScEntry_c::EnterPlayerSelectIntro() {
     int row;
     int col;
@@ -1629,7 +1593,6 @@ void dScEntry_c::EnterPlayerSelectIntro() {
     func_02012790(0x122);
 }
 
-// @symbol _ZN10dScEntry_c16UpdatePlayerSyncEv
 void dScEntry_c::UpdatePlayerSync() {
     mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x11d, 0);
 
@@ -1679,7 +1642,6 @@ void dScEntry_c::UpdatePlayerSync() {
         data_0209fc54 = 1;
 }
 
-// @symbol _ZN10dScEntry_c15EnterPlayerSyncEv
 void dScEntry_c::EnterPlayerSync() {
     // Download-play clients and non-host stations install the waiting screen.
     if (func_0203d974()) {
@@ -1697,7 +1659,6 @@ void dScEntry_c::EnterPlayerSync() {
     mWaiting.syncTicks = 0;
 }
 
-// @symbol _ZN10dScEntry_c17RenderWaitingTextEv
 void dScEntry_c::RenderWaitingText() {
     OamAttr *glyph = data_0208a0f8[GetLanguageIndex()];
 
@@ -1733,7 +1694,6 @@ void dScEntry_c::RenderWaitingText() {
     }
 }
 
-// @symbol func_ov075_02119640
 extern "C" void func_ov075_02119640(dScEntry_c *self) {
     self->mSoundHandle = Sound_PlayIfNotActive(self->mSoundHandle, 2, 0x11d, 0);
     if (self->mStepPhase == 0) {
@@ -1749,7 +1709,6 @@ extern "C" void func_ov075_02119640(dScEntry_c *self) {
     self->SetSteps(&data_ov075_0211d918);
 }
 
-// @symbol func_ov075_021196d0
 extern "C" void func_ov075_021196d0(dScEntry_c *self) {
     self->mEntObj->func_ov075_02115134();
     gSubScreenLayers &= ~5;
@@ -1764,7 +1723,6 @@ extern "C" void func_ov075_021196d0(dScEntry_c *self) {
     self->mStepPhase = self->mEntObj->func_ov075_02115098(func_0203da9c());
 }
 
-// @symbol func_ov075_0211977c
 extern "C" void func_ov075_0211977c(dScEntry_c *self) {
     int r = func_0203da3c();
     if (r != 0)
@@ -1777,12 +1735,10 @@ extern "C" void func_ov075_0211977c(dScEntry_c *self) {
     self->SetSteps(&EntryCourseSelectSteps);
 }
 
-// @symbol func_ov075_021197dc
 extern "C" void func_ov075_021197dc(dScEntry_c *self) {
     self->mIconCount = 0;
 }
 
-// @symbol func_ov075_021197e8
 extern "C" void func_ov075_021197e8(dScEntry_c *self) {
     if (self->mStepPhase == 0)
         self->mStepPhase = self->mEntObj->func_ov075_02115098(func_0203da9c()) != 0;
@@ -1810,7 +1766,6 @@ extern "C" void func_ov075_021197e8(dScEntry_c *self) {
     func_02012790(0x119);
 }
 
-// @symbol func_ov075_02119918
 extern "C" void func_ov075_02119918(dScEntry_c *self) {
     gSubScreenLayers = gSubScreenLayers & ~1;
     func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 2);
@@ -1833,7 +1788,6 @@ struct SinePair {
     short a, b;
 };
 
-// @symbol func_ov075_021199d8
 extern "C" void func_ov075_021199d8(dScEntry_c *self) {
     OamAttr *attr;
 
@@ -1885,7 +1839,6 @@ extern "C" void func_ov075_021199d8(dScEntry_c *self) {
     }
 }
 
-// @symbol func_ov075_02119b34
 extern "C" void func_ov075_02119b34(dScEntry_c *self) {
     int r5 = func_0203da9c();
     int r4 = data_0209fc50;
@@ -1912,7 +1865,6 @@ extern "C" void func_ov075_02119b34(dScEntry_c *self) {
     func_02012790(0x117);
 }
 
-// @symbol func_ov075_02119c38
 extern "C" void func_ov075_02119c38(dScEntry_c *self) {
     gSubScreenLayers &= ~1;
     func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 1);
@@ -1925,28 +1877,25 @@ extern "C" void func_ov075_02119c38(dScEntry_c *self) {
     self->mWaiting.waveDelay = 0x78;
 }
 
-// @symbol _ZN10dScEntry_c17UpdateStepFadeOutEv
 void dScEntry_c::UpdateStepFadeOut() {
     ++mFadeTick;
     if (mFadeTick & 1)
         return;
     ++mFadeBrightness;
-    func_020551f0((void *)0x4001050, mFadeBrightness);
+    G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
     if (mFadeBrightness < 16)
         return;
     mIsFading = 1;
     SetSteps(mPendingSteps);
 }
 
-// @symbol _ZN10dScEntry_c16EnterStepFadeOutEv
 void dScEntry_c::EnterStepFadeOut() {
-    *(volatile u16 *)0x4000050 = 0;
+    REG_BLDCNT = 0;
     G2x::SetBlendBrightness((volatile u16 *)0x4001050, 0x1d, 0);
     mFadeBrightness = 0;
     mFadeTick = 0;
 }
 
-// @symbol _ZN10dScEntry_c15UpdateStepDelayEv
 void dScEntry_c::UpdateStepDelay() {
     mStepDelay -= data_0208ee44;
     if (mStepDelay > 0)
@@ -1960,7 +1909,6 @@ static inline int HasConnectionError() {
     return data_0209fc68 == 6;
 }
 
-// @symbol _ZN10dScEntry_c22HandlePlayerDisconnectEPKNS_7StepSetE
 void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
     u8 activePeerMask;
     u8 *peerActive;
@@ -1994,7 +1942,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         if (mDisconnectHideMask)
             mRenderStep = 0;
         G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
-        *(volatile u16 *)0x4001050 = 0;
+        REG_DB_BLDCNT = 0;
         Sound::StopLoadedMusic_Layer1(4);
         func_02012790(0x123);
         mEntObj->mSuspended = 1;
@@ -2030,7 +1978,6 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
     mIconCount = 0;
 }
 
-// @symbol _ZN10dScEntry_c19ChangeStepsWithFadeEPKNS_7StepSetE
 void dScEntry_c::ChangeStepsWithFade(const StepSet *steps) {
     mPendingSteps = steps;
     Step render = mRenderStep;
@@ -2038,7 +1985,6 @@ void dScEntry_c::ChangeStepsWithFade(const StepSet *steps) {
     mRenderStep = render;
 }
 
-// @symbol _ZN10dScEntry_c21ChangeStepsAfterDelayEPKNS_7StepSetEi
 void dScEntry_c::ChangeStepsAfterDelay(const StepSet *steps, s32 delay) {
     mPendingSteps = steps;
     mStepDelay = delay;
@@ -2047,7 +1993,6 @@ void dScEntry_c::ChangeStepsAfterDelay(const StepSet *steps, s32 delay) {
     mRenderStep = render;
 }
 
-// @symbol _ZN10dScEntry_c8SetStepsEPKNS_7StepSetE
 void dScEntry_c::SetSteps(const StepSet *steps) {
     mEnterStep = steps->enter;
     mBehaviorStep = steps->behavior;
@@ -2059,25 +2004,22 @@ void dScEntry_c::SetSteps(const StepSet *steps) {
 /* Slot 3. Releases the level-entry scratch buffer, unregisters the
  * graph callback, drops the voice group and clears the shared
  * model-data array. */
-// @symbol _ZN10dScEntry_c16CleanupResourcesEv
 s32 dScEntry_c::CleanupResources() {
     func_020308b4();
     if (data_0209b2e8 != (void *)0) {
         Deallocate(data_0209b2e8);
         data_0209b2e8 = (void *)0;
     }
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     Sound::UnsetPlayerVoiceGroup();
     CleanCommonModelDataArr();
     return 1;
 }
 
 /* Slot 12. Empty override. */
-// @symbol _ZN10dScEntry_c16OnPendingDestroyEv
 void dScEntry_c::OnPendingDestroy() {}
 
 /* Slot 9. */
-// @symbol _ZN10dScEntry_c6RenderEv
 s32 dScEntry_c::Render() {
     if (mRenderStep != 0)
         (this->*mRenderStep)();
@@ -2087,13 +2029,12 @@ s32 dScEntry_c::Render() {
 
 /* Slot 6. Restores the sub-screen brightness after a step change, then the
  * per-frame step, then every live icon. */
-// @symbol _ZN10dScEntry_c8BehaviorEv
 s32 dScEntry_c::Behavior() {
     if (mIsFading != 0) {
         mFadeTick++;
         if ((mFadeTick & 1) == 0) {
             mFadeBrightness--;
-            func_020551f0((void *)0x4001050, mFadeBrightness);
+            G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
             if (mFadeBrightness == 0) {
                 *(u16 *)0x4001050 = 0;
                 mFadeBrightness = 0;
@@ -2102,7 +2043,7 @@ s32 dScEntry_c::Behavior() {
         }
     }
 
-    if (data_0209f5bc->IsAtStart() == 0 || mIsFading != 0)
+    if (gSceneFader->IsAtStart() == 0 || mIsFading != 0)
         return 1;
 
     if (data_0209fc68 != 0) {
@@ -2130,7 +2071,6 @@ s32 dScEntry_c::Behavior() {
 }
 
 /* Slot 0. */
-// @symbol _ZN10dScEntry_c13InitResourcesEv
 s32 dScEntry_c::InitResources() {
     Enable3dEngines();
     func_0200f2cc();
@@ -2204,7 +2144,7 @@ s32 dScEntry_c::InitResources() {
     }
 
     func_ov075_0211601c(ENTRY_GRAPH_CALLBACK, this, 1);
-    data_0209d4a8 = ENTRY_GRAPH_CALLBACK;
+    gGraphCallback = ENTRY_GRAPH_CALLBACK;
     Sound::LoadInitialGroup(0x2b);
 
     {
@@ -2230,18 +2170,14 @@ s32 dScEntry_c::InitResources() {
 /* Slot 1 forwards this and the boolean result through an interworking
  * tail call. ResetFadersAndSound returns only false or true on its two
  * exits. */
-// @symbol _ZN10dScEntry_c19BeforeInitResourcesEv
 bool dScEntry_c::BeforeInitResources() {
     return ResetFadersAndSound();
 }
 
-// @symbol dScEntry_c_classInit_RESULT
 extern "C" void *dScEntry_c_classInit_RESULT(void) {
     return new dScEntry_c;
 }
 
-// @symbol _ZN12OamAnimationC1Ev
 OamAnimation::OamAnimation() {}
 
-// @symbol _ZN10dScEntry_c6icon_cC1Ev
 dScEntry_c::icon_c::icon_c() {}

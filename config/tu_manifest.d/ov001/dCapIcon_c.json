@@ -32,7 +32,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_ZN10dCapIcon_c19func_ov001_020ab228EPciih",
+      "symbol": "_ZN10dCapIcon_c4LinkEPciih",
       "address": "0x020ab228",
       "size": "0x000000bc",
       "legacy_source": "src/func_ov001_020ab228.c",

@@ -61,11 +61,8 @@ extern BTA_File data_ov048_021115f4;
 /* local extern: the model-mask helper has no shared header yet. */
 extern "C" void func_02016b24(void *model, unsigned int mask);
 
-// @symbol _ZN9daFRing_cD1Ev
-// @symbol _ZN9daFRing_cD0Ev
 daFRing_c::~daFRing_c() {}
 
-// @symbol _ZN9daFRing_c16CleanupResourcesEv
 s32 daFRing_c::CleanupResources() {
     data_ov060_0211b208.Release();
     data_ov060_0211b1f8.Release();
@@ -73,7 +70,6 @@ s32 daFRing_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN9daFRing_c6RenderEv
 s32 daFRing_c::Render() {
     mTextureSequence1.Update(mAnmModel1.data);
     mTextureSequence2.Update(mAnmModel2.data);
@@ -90,7 +86,6 @@ s32 daFRing_c::Render() {
     return 1;
 }
 
-// @symbol _ZN9daFRing_c8BehaviorEv
 s32 daFRing_c::Behavior() {
     mFrame++;
     daPly_c *player = ClosestPlayer();
@@ -120,7 +115,6 @@ s32 daFRing_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN9daFRing_c13InitResourcesEv
 s32 daFRing_c::InitResources() {
     mAnmModel1.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov060_0211b208), 1, 0x13);
     mAnmModel2.SetFile((BMD_File *)data_ov060_0211b208.filePtr, 1, 0x13);
@@ -162,7 +156,6 @@ FRingAnimationFileHandle data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
 FRingTexSequenceFilePtr data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
 
 /* return new builds the ring and its eight animators. */
-// @symbol daFRing_c_classInit
 extern "C" daFRing_c *daFRing_c_classInit(void) {
     return new daFRing_c;
 }

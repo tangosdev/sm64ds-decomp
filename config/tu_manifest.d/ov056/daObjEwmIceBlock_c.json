@@ -622,12 +622,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@502",
+      "from": "@500",
       "to": "@60",
       "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it"
     },
     {
-      "from": "@501",
+      "from": "@499",
       "to": "@490",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490"
     }

@@ -37,21 +37,16 @@ enum daObjFl_Koma_D_c_AssetId { ASSET_FL_KOMA_D_BMD = 0x05f5, ASSET_FL_KOMA_D_KC
 /* This descriptor matches the shared helpers in d_a_obj_kaitendai.cpp. */
 extern ResourceDescriptor data_ov022_02113da4;
 
-// @symbol _ZN16daObjFl_Koma_D_cD1Ev
-// @symbol _ZN16daObjFl_Koma_D_cD0Ev
 daObjFl_Koma_D_c::~daObjFl_Koma_D_c() {}
 
-// @symbol _ZN16daObjFl_Koma_D_c16CleanupResourcesEv
 int daObjFl_Koma_D_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov022_02113da4);
 }
 
-// @symbol _ZN16daObjFl_Koma_D_c13InitResourcesEv
 int daObjFl_Koma_D_c::InitResources() {
     return InitResourcesFrom(&data_ov022_02113da4, 0x100);
 }
 
-// @symbol daObjFl_Koma_D_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjFl_Koma_D_c through
  * RTTI, allocation size, most-derived vtable identity, and the FL_KOMA_D
  * registry profile; later EAD lineage supplies classInit. Exact original

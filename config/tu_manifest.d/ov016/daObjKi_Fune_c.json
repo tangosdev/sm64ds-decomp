@@ -529,22 +529,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@431",
+      "from": "@429",
       "to": "@820",
       "evidence": "mwcc numbers this registration node @422 per TU and another module already defines @422"
     },
     {
-      "from": "@432",
+      "from": "@430",
       "to": "@605",
       "evidence": "batch-5 atdup: @423 collides cross-module (temps are fleet-global); renumber to unused same-length @605"
     },
     {
-      "from": "@433",
+      "from": "@431",
       "to": "@604",
       "evidence": "batch-5 atdup: @424 collides cross-module (temps are fleet-global); renumber to unused same-length @604"
     },
     {
-      "from": "@434",
+      "from": "@432",
       "to": "@425",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @441 now; licensed under the existing pin @425"
     }

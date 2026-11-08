@@ -35,22 +35,24 @@ struct daPgMthr_c : dActor_c {
     s32 mHomePosX;                   /* 0x364 */
     s32 mHomePosY;                   /* 0x368 */
     s32 mHomePosZ;                   /* 0x36c */
-    /* 021123d0 writes data_ov018_02113c4c + (i<<4) here; 02112398/0211235c
-       call through it as a PMF pair. */
+    /* ChangeState writes data_ov018_02113c4c + (i<<4) here; CallStateEnter
+       and CallStateUpdate call through it as a PMF pair. */
     void *mState;                    /* 0x370 */
     /* ClosestPlayer / FindWithID result. StartTalk, ShowMessage,
        GetTalkState, DropActor take it as daPly_c. */
     daPly_c *mPlayer; /* 0x374 */
-    /* 021118fc: last FindWithID hit, so a new PLAYER (0xbf) is noticed. */
+    /* FindNewToucher: last FindWithID hit, so a new PLAYER (0xbf) is noticed. */
     dActor_c *mLastPlayer;           /* 0x378 */
-    s32 unk_37c;                     /* 0x37c -- 021122ec/021121dc/02111f1c write 0/1/2; no reader in this TU */
-    s16 mLookAngX;                   /* 0x380 -- 02111a48 approaches, 02111d28 applies */
+    /* The three state enters write their index 0/1/2; no reader in this TU. */
+    s32 unk_37c; /* 0x37c */
+    /* TurnHeadToward approaches these, UpdateModelAndShadow applies them. */
+    s16 mLookAngX;                   /* 0x380 */
     s16 mLookAngY;                   /* 0x382 */
-    s16 mMessageId;                  /* 0x384 -- 0xac / 0xad / 0xae from 02111968 */
-    u8  mGaveStar;                   /* 0x386 -- 02111fac sets when spawning POWER_STAR */
-    u8  mHoldingBaby;                /* 0x387 -- 02111968, held actorID 0x100 (BABY_PENGUIN) */
-    u8  mTalkStep;                   /* 0x388 -- 02111fac 0..3 */
-    u8  mTalkTimer;                  /* 0x389 -- 021121dc arms 0x3c; DecIfAbove0_Byte */
+    s16 mMessageId;                  /* 0x384 -- 0xac / 0xad / 0xae from BeginTalk */
+    u8 mGaveStar;                    /* 0x386 -- StateTalkUpdate sets when spawning POWER_STAR */
+    u8 mHoldingBaby;                 /* 0x387 -- BeginTalk, held actorID 0x100 (BABY_PENGUIN) */
+    u8 mTalkStep;                    /* 0x388 -- StateTalkUpdate 0..3 */
+    u8 mTalkTimer;                   /* 0x389 -- StateTalkEnter arms 0x3c; DecIfAbove0_Byte */
     u8  pad_38a[2];
 
     /* --- vtable overrides. Slots are inherited from fBase_c/dActor_c. --- */
@@ -69,17 +71,25 @@ struct daPgMthr_c : dActor_c {
     virtual int Render();                        /* slot 9 */
     virtual void OnPendingDestroy();             /* slot 12 */
 
-    void func_ov018_02111968(void *found, char *heldRaw);
-    void func_ov018_02111a48(char *b);
-    void func_ov018_02111b3c();
-    void func_ov018_02111d28();
-    int func_ov018_02111e28();
-    int func_ov018_02111f1c();
-    int func_ov018_02111fac();
-    int func_ov018_021121dc();
-    int func_ov018_02112234();
-    int func_ov018_021122ec();
-    void func_ov018_021123d0(int i);
+    /* Coined names. The state trio and the helpers it shares with the baby
+       penguin follow daPgBby_c (ChangeState, CallStateEnter/Update,
+       UpdateFloorAndWalls, UpdateModelAndShadow); the stand, talk and
+       follow states are the N64 tuxies_mother_act_0/1/2 (tuxie.inc.c). */
+    daPly_c *FindNewToucher();
+    void BeginTalk(void *found, char *heldRaw);
+    void TurnHeadToward(char *b);
+    void CheckFollow();
+    void UpdateFloorAndWalls(dBgCh_Actr *);
+    void UpdateModelAndShadow();
+    int StateFollowUpdate();
+    int StateFollowEnter();
+    int StateTalkUpdate();
+    int StateTalkEnter();
+    int StateStandUpdate();
+    int StateStandEnter();
+    void CallStateUpdate();
+    void CallStateEnter();
+    void ChangeState(int i);
 };
 
 #ifndef SM64DS_PLATFORM_PC

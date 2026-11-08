@@ -320,6 +320,13 @@
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
       "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior's press-particle position is a Vector3 local (#821: it replaced a volatile VecFx32), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ],
   "notes": [
@@ -1109,17 +1116,21 @@
     "functions_declared": 13,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN10dBgActor_cD2Ev"
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN10dBgActor_cD2Ev"
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        55,
-        56
+        48,
+        56,
+        57
       ],
       "data": [],
-      "dataExternalized": []
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -1308,24 +1319,24 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@875",
+      "from": "@870",
       "to": "@756",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @875 to @872 when the press particles' position became a Vector3 local (#821)."
     },
     {
-      "from": "@876",
+      "from": "@871",
       "to": "@757",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @876 to @873 when the press particles' position became a Vector3 local (#821)."
     },
     {
-      "from": "@877",
+      "from": "@872",
       "to": "@758",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @877 to @874 when the press particles' position became a Vector3 local (#821)."
     },
     {
-      "from": "@878",
+      "from": "@873",
       "to": "@759",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @878 to @875 when the press particles' position became a Vector3 local (#821)."
     }
   ]
 }

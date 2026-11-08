@@ -52,21 +52,12 @@
  *   - In the sprite-template lists that Render and the ov075 helpers walk, 0xffff in
  *     this field terminates the list (`if (attr->attr3 == 0xffff) return;`).
  *
- * TWO FILES DELIBERATELY DO NOT USE THIS TYPE, and both are correct to opt out. They
- * need bit-level access to the same 8 bytes and decompose them differently:
- *
- *   _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.c   bitfields (yb, objMode, mode, mosaic,
- *                                                shape, xc, aff, size / tile, prio,
- *                                                pal, hi2) -- matching, enrolled
- *   _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii  `u32 a01; u16 a2; u16 a3;` -- the
- *                                                32-bit view its bit extraction needs.
- *                                                Matching; both views now live in
- *                                                src/engine/oam/OAM.cpp under their
- *                                                own names (OamAttrEntry/OamAttrRaw).
- *
- * All three views agree on the size and on the field boundaries they share. Folding
- * them into one declaration would mean rewriting every bit access in two fragile
- * functions to buy nothing, so they keep local definitions and say why. */
+ * BIT-LEVEL ACCESS uses NitroSDK's GXOamAttr (include/nitro/gx/gxcommon.h), the same
+ * eight bytes seen as attr01/attr2 words and as the attribute bitfields. The OAM::Render
+ * bodies and several minigames read the template and write the staging buffers through
+ * it, and each of them matches with plain bitfield reads (oam->cParam, oam->shape, ...)
+ * where earlier drafts kept local shift-and-mask views. OamAttr stays the 4 x u16 type
+ * that the mangled OAM signatures name. */
 #ifndef OAMATTR_H
 #define OAMATTR_H
 

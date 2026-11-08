@@ -1,5 +1,4 @@
 //cpp
-// @symbol __cxa_vec_cleanup
 // Load-bearing: the ROM build passes -Cpp_exceptions off and has no per-file CFLAGS mechanism; the .exceptix record at 0x02073988 (length 0x74) exists only because this pragma turns exceptions back on for this file.
 #pragma exceptions on
 

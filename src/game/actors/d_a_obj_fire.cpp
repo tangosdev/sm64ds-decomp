@@ -14,9 +14,9 @@
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S.
  *
- * func_020228dc / func_0202293c are the arm9 blue/red flame particle
- * wrappers (effects 0x117 / 0x118). Their names are not recovered and no
- * header declares them.
+ * Particle::System::NewBlueFlame / NewRedFlame are the arm9 blue/red flame
+ * particle wrappers (effects 0x117 / 0x118). The names are descriptive;
+ * the ROM has none.
  */
 
 #include "daObjFire_c.h"
@@ -27,8 +27,6 @@
 
 extern "C" {
 u8 DecIfAbove0_Byte(u8 *value);
-u32 func_020228dc(Fix12i x, Fix12i y, Fix12i z);
-u32 func_0202293c(Fix12i x, Fix12i y, Fix12i z);
 }
 
 /* Actor ID 0x13d is BLUE_FLAME, 0xbf is PLAYER. dActor_c::mFlags bit
@@ -47,17 +45,14 @@ static inline int IsPlayerActor(dActor_c *actor) {
     return actor->actorID == 0xbf;
 }
 
-// @symbol daObjFire_c_classInit_OBJ_RED_FIRE
 extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_RED_FIRE() {
     return new daObjFire_c();
 }
 
-// @symbol daObjFire_c_classInit_OBJ_BLUE_FIRE
 extern "C" daObjFire_c *daObjFire_c_classInit_OBJ_BLUE_FIRE() {
     return new daObjFire_c();
 }
 
-// @symbol g_profile_OBJ_RED_FIRE
 extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     daObjFire_c_classInit_OBJ_RED_FIRE,
     0x013c,
@@ -69,7 +64,6 @@ extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_RED_FIRE = {
     0x00000000,
 };
 
-// @symbol g_profile_OBJ_BLUE_FIRE
 extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
     daObjFire_c_classInit_OBJ_BLUE_FIRE,
     0x013d,
@@ -81,15 +75,12 @@ extern "C" SpawnInfo<daObjFire_c> g_profile_OBJ_BLUE_FIRE = {
     0x00000000,
 };
 
-// @symbol _ZN11daObjFire_c13OnYoshiTryEatEv
 s32 daObjFire_c::OnYoshiTryEat() {
     return 5;
 }
 
-// @symbol _ZN11daObjFire_c13OnTurnIntoEggER7daPly_c
 void daObjFire_c::OnTurnIntoEgg(daPly_c &player) {}
 
-// @symbol _ZN11daObjFire_c13InitResourcesEv
 int daObjFire_c::InitResources() {
     mdCcAc_c.Init(this, 0x41000, 0x41000, 0x200002, 0x8000);
     mFlamePos.x = mPosX;
@@ -98,7 +89,6 @@ int daObjFire_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN11daObjFire_c8BehaviorEv
 int daObjFire_c::Behavior() {
     Vector3 pos;
     Vector3 particlePos;
@@ -126,9 +116,9 @@ int daObjFire_c::Behavior() {
     mFlags &= ~0xc0000;
 
     if (IsBlueFlame(this))
-        func_020228dc(pos.x, pos.y, pos.z);
+        Particle::System::NewBlueFlame(pos.x, pos.y, pos.z);
     else
-        func_0202293c(pos.x, pos.y, pos.z);
+        Particle::System::NewRedFlame(pos.x, pos.y, pos.z);
 
     if (IsBeingEaten(this)) {
         mDisappearTimer = 0x1e;
@@ -159,7 +149,6 @@ int daObjFire_c::Behavior() {
 }
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjFire_cD0Ev
 /* Deleting destructor, vtable slot 17. No body here: the destructor is inline in
  * include/daObjFire_c.h, which is what makes mwccarm emit exactly the retail
  * D1/D0 pair in retail order and no D2. dActor_c's inline operator delete
@@ -167,7 +156,6 @@ int daObjFire_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daObjFire_cD1Ev
 /* Complete destructor, vtable slot 16. No body here either -- same inline header
  * definition. The only member with a destructor is the dCcAc_c collider, and it
  * is destroyed before the dActor_c base. */

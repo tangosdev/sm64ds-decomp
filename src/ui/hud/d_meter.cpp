@@ -49,14 +49,9 @@
  * - The OAM::Render overloads that take Fix12<int> by value keep their mangled
  *   spellings: the natural static member call homes the Fix12 arguments
  *   differently under mwccarm (the Fix12 wall) and rewrites every call site.
- * - gMeterShownHealth[0]'s self-decrement in UpdateHealthMeter keeps the
- *   volatile self-read -- the ROM reloads the byte rather than reusing the
- *   value still live from the comparison above it.
- * - InitResources keeps two launders: the volatile pun on mVsTimer in the
- *   gCurrentSublevel == 0x2B branch (a plain member store emits different code)
- *   and the `idx ? table : table` conditional over a (void* volatile*) cast of
- *   data_0209f394 (folding it changes where the player-health read lands).
- * - data_0209f2d8 is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
+ * - InitResources keeps one launder: the volatile pun on mVsTimer in the
+ *   gCurrentSublevel == 0x2B branch (a plain member store emits different code).
+ * - gGameMode is CURRENT_GAMEMODE (symbols/verified.tsv); mode 1 is the one
  *   dMap_c draws its VS icons for.
  */
 
@@ -102,18 +97,16 @@ extern "C" {
    Quick race (daRNk_c). InitResources clears it. */
 extern unsigned char gShowRaceTimer;
 extern Timer gRaceTimer;
-extern struct OamAttr data_ov002_0210ce80;
-extern struct OamAttr data_ov002_0210c6c0;
 extern void OamRender10_d_meter(int sub, struct OamAttr *attr, int x, int y, int a, int b, int sx,
                                 int sy, int c, int d);
 extern volatile unsigned short data_ov002_0210c208[];
-extern unsigned char data_0209f250;
+extern unsigned char gLocalPlayerId;
 extern unsigned char gMeterCounterSlideState;
 extern signed char gNumLives;
 struct OamAttr;
-extern daPly_c *data_0209f394[];
+extern daPly_c *gPlayers[];
 extern u8 gZoomButtonActiveTimer;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern ControllerInput data_0209f498[];
 extern int data_0208ee44;
 extern u32 gNextActorUpdateMask;
@@ -122,44 +115,29 @@ extern signed char gNumStageStars[];
 /* ov001's OAM::NUMBERS, not ov000's -- ov000 shares this load window with ov002 and
 * so can never be the module this reaches. */
 extern int data_ov001_020abac8[];
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern unsigned char gPrevReturnState;
 extern unsigned char gNewStarCollected;
 extern unsigned char gLevelClearStep;
 extern int data_020a0db0;
 extern unsigned char NumStars(void);
 extern signed char gNumRedCoins[];
-extern struct OamAttr data_ov002_0210c6b8;
 extern signed char gCurrentSublevel;
 extern int SublevelToLevel(int i);
 extern unsigned char gGamePaused;
 extern unsigned char data_0209f20c;
 extern unsigned char gVsExitScreenActive;
 extern unsigned char data_0209f204;
-extern struct OamAttr data_ov002_0210d290;
-extern struct OamAttr data_ov002_0210d2c0;
-extern struct OamAttr data_ov002_0210d300;
-extern struct OamAttr data_ov002_0210d338;
 extern struct OamAttr *data_ov002_0210ca0c[];
-extern struct OamAttr data_ov002_0210d2a0;
-extern struct OamAttr data_ov002_0210d2d0;
-extern struct OamAttr data_ov002_0210d308;
-extern struct OamAttr data_ov002_0210d348;
 extern int GetOwnerLanguage(void);
 
 extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMeterShownHealth[];
-extern struct OamAttr *data_ov002_0210c254[];
-extern struct OamAttr *data_ov002_0210c278[];
-extern struct OamAttr *data_ov002_0210c230[];
-extern struct OamAttr data_ov002_0210d5d0;
-extern struct OamAttr data_ov002_0210d4f0;
-extern struct OamAttr data_ov002_0210c690;
 extern SaveBlock data_0209caa0;
 extern unsigned char gShowTouchScreenArrows;
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *handle);
@@ -169,7 +147,7 @@ void func_0203da4c(void);
 /* Mode 1 is versus mode. This int-returning predicate is what makes the ROM
    materialize 0/1 before testing it. */
 static inline int IsVsMode(void) {
-    return data_0209f2d8 == 1;
+    return gGameMode == 1;
 }
 
 /* 0 on the off frames of the blink after a new star is collected
@@ -190,13 +168,11 @@ static inline int StarCountVisible(void) {
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: HUD_Spawn. It was once labelled
  * the dMeter_c constructor, but it takes no `this`: it is the registry factory. */
-// @symbol dMeter_c_classInit
 extern "C" dMeter_c *dMeter_c_classInit() {
     return new dMeter_c();
 }
 
 /* ROM ordinal 18 -- dMeter_c::InitResources(), 0x020fda04, size 0x750 */
-// @symbol _ZN8dMeter_c13InitResourcesEv
 int dMeter_c::InitResources() {
     /* Main and sub engine OBJ VRAM. */
     char *objVramMain = (char *)0x6400000;
@@ -324,12 +300,7 @@ int dMeter_c::InitResources() {
 
     data_ov002_02111188 = 0xB4;
     gShowRaceTimer = 0;
-    {
-        u8 idx = *(volatile u8 *)&data_0209f250;
-        gMeterShownHealth[0] = ((daPly_c *)((idx ? (void *volatile *)data_0209f394
-                                                 : (void *volatile *)data_0209f394)[idx]))
-                                   ->GetHealth();
-    }
+    gMeterShownHealth[0] = gPlayers[gLocalPlayerId]->GetHealth();
     if (gMeterShownHealth[0] == 8) {
         mHealthMeterY = -0x18;
         unk72 = 0;
@@ -383,12 +354,11 @@ int dMeter_c::InitResources() {
 }
 
 /* ROM ordinal 17 -- dMeter_c::Behavior(), 0x020fd7a4, size 0x260 */
-// @symbol _ZN8dMeter_c8BehaviorEv
 int dMeter_c::Behavior() {
     int vs;
 
     /* vs is computed only once the first test passes and is reused below. */
-    if (data_0209f5bc->IsAtStart() == 0 ||
+    if (gSceneFader->IsAtStart() == 0 ||
         ((vs = IsVsMode()) == 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0))
         return 1;
     if (vs != 0) {
@@ -479,7 +449,6 @@ int dMeter_c::Behavior() {
 }
 
 /* ROM ordinal 16 -- dMeter_c::Render(), 0x020fd5e0, size 0x1c4 */
-// @symbol _ZN8dMeter_c6RenderEv
 int dMeter_c::Render() {
     if (IsVsMode()) {
         if (data_0209fc9c == 0) {
@@ -525,7 +494,6 @@ int dMeter_c::Render() {
 }
 
 /* ROM ordinal 15 -- dMeter_c::OnPendingDestroy(), 0x020fd5dc, size 0x4 */
-// @symbol _ZN8dMeter_c16OnPendingDestroyEv
 /* dMeter_c::OnPendingDestroy() at 0x020fd5dc (ov002) -- vtable slot 12.
  * Empty override; the dMeter_c does nothing when marked for destruction.
  */
@@ -534,7 +502,6 @@ void dMeter_c::OnPendingDestroy() {
 }
 
 /* ROM ordinal 14 -- dMeter_c::CleanupResources(), 0x020fd5d4, size 0x8 */
-// @symbol _ZN8dMeter_c16CleanupResourcesEv
 /* dMeter_c::CleanupResources() at 0x020fd5d4 (ov002) -- vtable slot 3.
  * Returns VS_FAIL (1); the dMeter_c holds no SharedFilePtr/heap resources to
  * release on death. dMeter_c : dBase_c : fBase_c.
@@ -545,10 +512,9 @@ s32 dMeter_c::CleanupResources() {
 }
 
 /* ROM ordinal 13 -- dMeter_c::UpdateHealthMeter(), 0x020fd218, size 0x3bc */
-// @symbol _ZN8dMeter_c17UpdateHealthMeterEv
 void dMeter_c::UpdateHealthMeter() {
-    int chr = data_0209f250;
-    daPly_c *player = data_0209f394[chr];
+    int chr = gLocalPlayerId;
+    daPly_c *player = gPlayers[chr];
     unsigned int health = (gPlayerHealth[chr] >> 8) & 0xff;
     if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) != 0)
         return;
@@ -573,7 +539,7 @@ void dMeter_c::UpdateHealthMeter() {
         if (gMeterShownHealth[0] <= health)
             return;
         mHealthMeterY = 0x39;
-        gMeterShownHealth[0] = *(volatile unsigned char *)&gMeterShownHealth - 1;
+        gMeterShownHealth[0]--;
         mHealthTickTimer = 0x1e;
         mHealthMeterHoldTimer = 0x5a;
         mHealthMeterState = 1;
@@ -668,30 +634,29 @@ void dMeter_c::UpdateHealthMeter() {
 }
 
 /* ROM ordinal 12 -- dMeter_c::RenderHealthMeter(), 0x020fcfec, size 0x22c */
-// @symbol _ZN8dMeter_c17RenderHealthMeterEv
 void dMeter_c::RenderHealthMeter() {
-    if (data_0209f394[data_0209f250]->IsInsideOfCannon())
+    if (gPlayers[gLocalPlayerId]->IsInsideOfCannon())
         return;
 
     if (GetOwnerLanguage() == 5) {
-        OAM::Render(0, data_ov002_0210c254[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, OAM::HEALTH_METERS_ES[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &data_ov002_0210d5d0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::HEALTH_METER_BG_ES, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     } else if (GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-        OAM::Render(0, data_ov002_0210c278[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
+        OAM::Render(0, OAM::HEALTH_METERS_FR_IT[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
                     0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &data_ov002_0210d4f0, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, &OAM::HEALTH_METER_BG_FR_IT, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0,
+                    -1);
     } else {
-        OAM::Render(0, data_ov002_0210c230[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1,
-                    0x1000, 0x1000, 0, -1);
-        OAM::Render(0, &data_ov002_0210c690, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, OAM::HEALTH_METERS[gMeterShownHealth[0]], 0x80, mHealthMeterY, -1, 1, 0x1000,
+                    0x1000, 0, -1);
+        OAM::Render(0, &OAM::HEALTH_METER_BG, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
     GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
 }
 
 /* ROM ordinal 11 -- dMeter_c::UpdateVsTimer(), 0x020fce9c, size 0x150 */
-// @symbol _ZN8dMeter_c13UpdateVsTimerEv
 void dMeter_c::UpdateVsTimer() {
     unsigned int v;
 
@@ -730,13 +695,12 @@ void dMeter_c::UpdateVsTimer() {
 }
 
 /* ROM ordinal 10 -- dMeter_c::RenderVsTimer(), 0x020fca18, size 0x484 */
-// @symbol _ZN8dMeter_c13RenderVsTimerEv
 /* The VS-mode countdown: a localised "TIME" caption, and below it either the
  * remaining seconds or a localised "TIME UP".
  *
  * Both captions are chosen by a GetOwnerLanguage() ladder testing 5, 4, 3, 2
  * and falling through to OAM::VS_TIME / OAM::VS_TIME_UP -- so the OAM symbols
- * are the DEFAULT artwork and the four data_ov002_* blocks are translations.
+ * are the DEFAULT artwork and the _FR/_DE/_IT/_ES blocks are translations.
  * The ladder re-calls GetOwnerLanguage() at every rung rather than caching it;
  * that is the ROM's own shape and is preserved rather than tidied.
  *
@@ -755,13 +719,13 @@ void dMeter_c::RenderVsTimer() {
 
     if ((unsigned char)(gGamePaused | data_0209f20c | gVsExitScreenActive) == 0) {
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, &data_ov002_0210d290, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_ES, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, &data_ov002_0210d2c0, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_IT, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, &data_ov002_0210d300, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_DE, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210d338, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_FR, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::VS_TIME, 0x84, 9, -1, -1, 0x1000, 0x1000, 0, -1);
         }
@@ -783,13 +747,13 @@ void dMeter_c::RenderVsTimer() {
         }
     } else {
         if (GetOwnerLanguage() == 5) {
-            OAM::Render(0, &data_ov002_0210d2a0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_ES, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 4) {
-            OAM::Render(0, &data_ov002_0210d2d0, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_IT, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 3) {
-            OAM::Render(0, &data_ov002_0210d308, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_DE, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else if (GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210d348, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::VS_TIME_UP_FR, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::VS_TIME_UP, 0x80, mVsTimerY, -1, -1, 0x1000, 0x1000, 0, -1);
         }
@@ -797,11 +761,10 @@ void dMeter_c::RenderVsTimer() {
 }
 
 /* ROM ordinal 9 -- dMeter_c::RenderCoinCount(), 0x020fc81c, size 0x1fc */
-// @symbol _ZN8dMeter_c15RenderCoinCountEv
 void dMeter_c::RenderCoinCount() {
     if (IsVsMode()) {
         int sb = 0xf0;
-        CalculateDigits(gNumCoins[data_0209f250]);
+        CalculateDigits(gNumCoins[gLocalPlayerId]);
         for (int i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -816,7 +779,7 @@ void dMeter_c::RenderCoinCount() {
             return;
         int i;
         int sb = 0xf0;
-        CalculateDigits(gNumCoins[data_0209f250]);
+        CalculateDigits(gNumCoins[gLocalPlayerId]);
         for (i = 2; i >= 0; i--) {
             signed char d = mDigits[i];
             if (d >= 0) {
@@ -830,10 +793,9 @@ void dMeter_c::RenderCoinCount() {
 }
 
 /* ROM ordinal 8 -- dMeter_c::RenderRedCoins(), 0x020fc77c, size 0xa0 */
-// @symbol _ZN8dMeter_c14RenderRedCoinsEv
 /* Draws one sprite per red coin collected so far, stepping 0xb across from
  * x=0x10. Both the count (gNumRedCoins) and the row selector (gNumStageStars)
- * are indexed by the same data_0209f250.
+ * are indexed by the same gLocalPlayerId.
  *
  * That row selector is the interesting bit: it is the SAME byte
  * dMeter_c::RenderSilverStars reads as its star COUNT. Non-zero there means silver
@@ -848,17 +810,16 @@ void dMeter_c::RenderCoinCount() {
  * passed. Byte-free.
  */
 void dMeter_c::RenderRedCoins() {
-    int idx = data_0209f250;
+    int idx = gLocalPlayerId;
     int flag = gNumStageStars[idx];
     int count = (unsigned char)gNumRedCoins[idx];
     int sl = flag ? 0x1c : 0xa;
     for (int i = 0; i < count; i++) {
-        OAM::Render(false, &data_ov002_0210c6b8, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
+        OAM::Render(false, &OAM::RED_COIN, 0x10 + i * 0xb, sl, -1, 1, (Matrix2x2 *)0);
     }
 }
 
 /* ROM ordinal 7 -- dMeter_c::RenderStarCount(), 0x020fc458, size 0x324 */
-// @symbol _ZN8dMeter_c15RenderStarCountEv
 /* Draws the star counter: the star icon, an "x", and up to three digits laid
  * out RIGHT to LEFT from mStarCountX, skipping the -1 slots CalculateDigits
  * blanked.
@@ -866,7 +827,7 @@ void dMeter_c::RenderRedCoins() {
  * Three paths, and what differs between them is only WHICH count is shown and
  * on WHICH screen:
  *
- *   data_0209f2d8 == 1   a per-slot count out of gNumStageStars, main screen
+ *   gGameMode == 1       a per-slot count out of gNumStageStars, main screen
  *   the middle path      NumStars(), main screen, but only while
  *                        gMeterCounterSlideState has the counter sliding onto,
  *                        resting on or sliding off the main screen, and suppressed
@@ -886,7 +847,7 @@ void dMeter_c::RenderStarCount() {
     int i;
 
     if (IsVsMode()) {
-        CalculateDigits((unsigned short)gNumStageStars[data_0209f250]);
+        CalculateDigits((unsigned short)gNumStageStars[gLocalPlayerId]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
                 OAM::Render(false, OAM::NUMBERS[mDigits[i]], x, 2, -1, 1, 0);
@@ -930,10 +891,9 @@ void dMeter_c::RenderStarCount() {
 }
 
 /* ROM ordinal 6 -- dMeter_c::RenderSilverStars(), 0x020fc3c4, size 0x94 */
-// @symbol _ZN8dMeter_c17RenderSilverStarsEv
 /* Draws one sprite per silver star collected, in a row starting at x=0x10 and
  * stepping 0x11 across at y=0xa. The count comes from gNumStageStars indexed by
- * data_0209f250 -- the same byte dMeter_c::RenderRedCoins reads, where a non-zero
+ * gLocalPlayerId -- the same byte dMeter_c::RenderRedCoins reads, where a non-zero
  * value instead pushes the red-coin row from y=0xa down to y=0x1c. So this row
  * and that one share a slot, and the red coins move when silver stars occupy it.
  *
@@ -944,7 +904,7 @@ void dMeter_c::RenderStarCount() {
  */
 void dMeter_c::RenderSilverStars() {
     int sl = 0;
-    unsigned short n = (unsigned short)(short)gNumStageStars[data_0209f250];
+    unsigned short n = (unsigned short)(short)gNumStageStars[gLocalPlayerId];
     int sb;
     if (sl < n) {
         sb = 0x10;
@@ -957,13 +917,12 @@ void dMeter_c::RenderSilverStars() {
 }
 
 /* ROM ordinal 5 -- dMeter_c::RenderCameraButtons(), 0x020fc04c, size 0x378 */
-// @symbol _ZN8dMeter_c19RenderCameraButtonsEv
 /* Takes the object only because its caller in this TU passes it; the body
  * never reads it, which is why the legacy source could spell it static. */
 void dMeter_c::RenderCameraButtons() {
     int idx = gActivePlayerSlot;
     u8 mode = data_0209f498[idx].mode;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     u8 t = gZoomButtonActiveTimer;
 
     if (t != 0)
@@ -1024,10 +983,9 @@ void dMeter_c::RenderCameraButtons() {
 }
 
 /* ROM ordinal 4 -- dMeter_c::RenderLifeCount(), 0x020fbe38, size 0x214 */
-// @symbol _ZN8dMeter_c15RenderLifeCountEv
 void dMeter_c::RenderLifeCount() {
-    unsigned char idx = data_0209f250;
-    daPly_c *player = data_0209f394[idx];
+    unsigned char idx = gLocalPlayerId;
+    daPly_c *player = gPlayers[idx];
     unsigned char state = gMeterCounterSlideState;
 
     if (state >= 3 && state < 6) {
@@ -1060,7 +1018,6 @@ void dMeter_c::RenderLifeCount() {
 }
 
 /* ROM ordinal 3 -- dMeter_c::CalculateDigits(unsigned short), 0x020fbdac, size 0x8c */
-// @symbol _ZN8dMeter_c15CalculateDigitsEt
 /* Splits a count into the three decimal digits the dMeter_c draws, most significant
  * first, and blanks leading zeros by writing -1 rather than a digit.
  *
@@ -1088,7 +1045,6 @@ void dMeter_c::CalculateDigits(unsigned short value) {
 }
 
 /* ROM ordinal 2 -- dMeter_c::RenderTimeTimer(), 0x020fb96c, size 0x440 */
-// @symbol _ZN8dMeter_c15RenderTimeTimerEv
 void dMeter_c::RenderTimeTimer() {
     unsigned long long t;
     unsigned long long min;
@@ -1112,14 +1068,14 @@ void dMeter_c::RenderTimeTimer() {
 
     if (min / 10 != 0) {
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210ce80, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::TIME_FR_IT_ES, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::TIME, 0xa4, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         }
         OAM::Render(false, OAM::NUMBERS[min / 10], 0xb8, 0x16, -1, 1, 0);
     } else {
         if (GetOwnerLanguage() == 5 || GetOwnerLanguage() == 4 || GetOwnerLanguage() == 2) {
-            OAM::Render(0, &data_ov002_0210ce80, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
+            OAM::Render(0, &OAM::TIME_FR_IT_ES, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         } else {
             OAM::Render(0, &OAM::TIME, 0xac, 0x1e, -1, 1, 0x1000, 0x1000, 0, -1);
         }
@@ -1129,13 +1085,12 @@ void dMeter_c::RenderTimeTimer() {
     OAM::Render(false, &OAM::MINUTES, 0xc4, 0x1e, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[sec / 10], 0xcf, 0x16, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[sec % 10], 0xd7, 0x16, -1, 1, 0);
-    OAM::Render(false, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);
+    OAM::Render(false, &OAM::SECONDS, 0xdb, 0x1e, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[centi / 10], 0xe8, 0x16, -1, 1, 0);
     OAM::Render(false, OAM::NUMBERS[centi % 10], 0xf0, 0x16, -1, 1, 0);
 }
 
 /* ROM ordinal 1 -- dMeter_c::~dMeter_c() (deleting, D0), 0x020fb928, size 0x44 */
-// @symbol _ZN8dMeter_cD0Ev
 /* No body here, and none is possible: D0 is the deleting destructor and the
  * compiler writes all of it. The inline `~dMeter_c() {}` in include/dMeter_c.h
  * is the whole source, and mwccarm emits D1 and D0 from it in that order, which
@@ -1150,7 +1105,6 @@ void dMeter_c::RenderTimeTimer() {
  */
 
 /* ROM ordinal 0 -- dMeter_c::~dMeter_c() (complete, D1), 0x020fb8f8, size 0x30 */
-// @symbol _ZN8dMeter_cD1Ev
 /* No body here either, for the same reason. The cartridge's 0x30 bytes are two
  * vtable stores and one call, and every one of the three follows from
  * `struct dMeter_c : dBase_c`:

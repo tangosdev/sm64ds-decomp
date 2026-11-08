@@ -393,11 +393,11 @@ src/unnamed/arm9/0201/func_02018a24.c:
     complete
     .text start:0x02018a24 end:0x02018a40
 
-src/unnamed/arm9/0201/func_02018a40.c:
+src/SetAssetHandleFileID.c:
     complete
     .text start:0x02018a40 end:0x02018a58
 
-src/unnamed/arm9/0201/func_02018a58.cpp:
+src/AllocAssetHandleTable.cpp:
     complete
     .text start:0x02018a58 end:0x02018aa4
 
@@ -2030,7 +2030,7 @@ src/unnamed/arm9/0204/func_0204ae2c.c:
     complete
     .text start:0x0204ae2c end:0x0204af38
 
-src/unnamed/arm9/0204/func_0204af38.c:
+src/SPLUtil_SetTexture_Stub.c:
     complete
     .text start:0x0204af38 end:0x0204af3c
 
@@ -2046,11 +2046,11 @@ src/unnamed/arm9/0204/func_0204b244.c:
     complete
     .text start:0x0204b244 end:0x0204b460
 
-src/unnamed/arm9/0204/func_0204b460.c:
+src/SPLDraw_Child_DirectionalBillboard.c:
     complete
     .text start:0x0204b460 end:0x0204b81c
 
-src/unnamed/arm9/0204/func_0204b81c.c:
+src/SPLDraw_DirectionalBillboard.c:
     complete
     .text start:0x0204b81c end:0x0204bbd8
 
@@ -2085,27 +2085,27 @@ src/unnamed/arm9/0204/func_0204c304.c:
 src/unnamed/arm9/0204/func_0204c584.c:
     complete
     .text start:0x0204c584 end:0x0204d0b8
-src/unnamed/arm9/0204/func_0204d0b8.c:
+src/SPLAnim_ChildAlpha.c:
     complete
     .text start:0x0204d0b8 end:0x0204d104
 
-src/unnamed/arm9/0204/func_0204d104.c:
+src/SPLAnim_ChildScale.c:
     complete
     .text start:0x0204d104 end:0x0204d150
 
-src/unnamed/arm9/0204/func_0204d150.c:
+src/SPLAnim_Texture.c:
     complete
     .text start:0x0204d150 end:0x0204d1b4
 
-src/unnamed/arm9/0204/func_0204d1b4.c:
+src/SPLAnim_Alpha.c:
     complete
     .text start:0x0204d1b4 end:0x0204d294
 
-src/unnamed/arm9/0204/func_0204d294.c:
+src/SPLAnim_Color.c:
     complete
     .text start:0x0204d294 end:0x0204d440
 
-src/unnamed/arm9/0204/func_0204d440.c:
+src/SPLAnim_Scale.c:
     complete
     .text start:0x0204d440 end:0x0204d4d0
 
@@ -2125,11 +2125,11 @@ src/unnamed/arm9/0204/func_0204d9a0.c:
     complete
     .text start:0x0204d9a0 end:0x0204d9f0
 
-src/unnamed/arm9/0204/func_0204d9f0.c:
+src/SPLRandom_VecFx32_XY.c:
     complete
     .text start:0x0204d9f0 end:0x0204da4c
 
-src/unnamed/arm9/0204/func_0204da4c.c:
+src/SPLRandom_VecFx32.c:
     complete
     .text start:0x0204da4c end:0x0204dab4
 
@@ -2209,7 +2209,7 @@ src/InvMat4x3.cpp:
     complete
     .text start:0x02052b34 end:0x02052ec8
 
-src/unnamed/arm9/0205/func_02052ec8.c:
+src/MTX_Identity44_.c:
     complete
     .text start:0x02052ec8 end:0x02052ef4
 
@@ -2225,7 +2225,7 @@ src/NormalizeVec3.c:
     complete
     .text start:0x020534ec end:0x02053644
 
-src/unnamed/arm9/0205/func_02053644.c:
+src/VEC_Fx16Mag.c:
     complete
     .text start:0x02053644 end:0x020536e4
 
@@ -2260,7 +2260,7 @@ src/engine/gx/GX_Init.cpp:
     complete
     .text start:0x02053a90 end:0x02053d9c
 
-src/unnamed/arm9/0205/func_02053d9c.c:
+src/GX_InitGXState.c:
     complete
     .text start:0x02053d9c end:0x02053e1c
 
@@ -2292,7 +2292,7 @@ src/unnamed/arm9/0205/func_020553a4.c:
     complete
     .text start:0x020553a4 end:0x020553c0
 
-src/unnamed/arm9/0205/func_020553c0.c:
+src/GXi_NopClearFifo128_.c:
     complete
     .text start:0x020553c0 end:0x02055454
 
@@ -2348,7 +2348,7 @@ src/engine/os/OS_Thread.cpp:
     complete
     .text start:0x02057e34 end:0x02058568
 
-src/unnamed/arm9/0205/func_02058568.c:
+src/OS_InitContext.c:
     complete
     .text start:0x02058568 end:0x020585cc
 
@@ -3033,31 +3033,31 @@ src/unnamed/arm9/0206/func_02064fe8.c:
     complete
     .text start:0x02064fe8 end:0x02065050
 
-src/unnamed/arm9/0206/func_02065050.c:
+src/WBT_MpChildRecvHook.c:
     complete
     .text start:0x02065050 end:0x020650a0
 
-src/unnamed/arm9/0206/func_020650a0.c:
+src/WBT_MpChildSendHook.c:
     complete
     .text start:0x020650a0 end:0x020650d8
 
-src/unnamed/arm9/0206/func_020650d8.c:
+src/WBT_MpParentRecvHook.c:
     complete
     .text start:0x020650d8 end:0x02065138
 
-src/unnamed/arm9/0206/func_02065138.c:
+src/WBT_MpParentSendHook.c:
     complete
     .text start:0x02065138 end:0x02065170
 
-src/unnamed/arm9/0206/func_02065170.cpp:
+src/WBT_End.cpp:
     complete
     .text start:0x02065170 end:0x02065234
 
-src/unnamed/arm9/0206/func_02065234.cpp:
+src/WBT_InitChild.cpp:
     complete
     .text start:0x02065234 end:0x020652fc
 
-src/unnamed/arm9/0206/func_020652fc.cpp:
+src/WBT_InitParent.cpp:
     complete
     .text start:0x020652fc end:0x020653cc
 
@@ -3093,7 +3093,7 @@ src/unnamed/arm9/0206/func_020657d0.c:
     complete
     .text start:0x020657d0 end:0x020657fc
 
-src/unnamed/arm9/0206/func_020657fc.cpp:
+src/WBT_UnregisterBlock.cpp:
     complete
     .text start:0x020657fc end:0x020658c0
 
@@ -3105,15 +3105,15 @@ src/unnamed/arm9/0206/func_02065970.c:
     complete
     .text start:0x02065970 end:0x020659a0
 
-src/unnamed/arm9/0206/func_020659a0.c:
+src/WBT_SetPacketSize.c:
     complete
     .text start:0x020659a0 end:0x020659f8
 
-src/unnamed/arm9/0206/func_020659f8.c:
+src/WBT_CalcPacketbitmapSize.c:
     complete
     .text start:0x020659f8 end:0x02065a4c
 
-src/unnamed/arm9/0206/func_02065a4c.c:
+src/WBT_AidbitmapToAid.c:
     complete
     .text start:0x02065a4c end:0x02065a74
 

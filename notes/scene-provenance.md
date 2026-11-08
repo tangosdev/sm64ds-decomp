@@ -166,7 +166,7 @@ not the same as the last field the object has. The trailing `pad_9c0[0x8]` and t
 `tools/check_header_offsets.py` walks them from `dScene_c`'s asserted 0x50.
 
 **`Particle::SysTracker`, embedded at `dScStage_c+0x50`.** Not its own header yet:
-`Particle.h` (since retired, #4626) and `include/Particle__SysTracker.h` were two *separate*
+`Particle.h` (since retired, #4626) and `Particle__SysTracker.h` (since folded into `include/dPa_c.h`) were two *separate*
 `gen_header.py` shadows of this same class. `src/engine/particle/Particle.cpp` writes
 fields through `struct Particle *self` up to `unk_818`, while
 `src/engine/particle/Particle.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
@@ -179,7 +179,7 @@ two real headers because neither `dScStage_c` source file includes them and a me
 own blast radius across every file that already casts through one shadow or the other.
 
 Its destructor is declared, never defined: `src/engine/particle/Particle.cpp`
-already supplies `_ZN8Particle10SysTrackerD1Ev` as an `extern "C"` free function; the
+already supplies `_ZN5dPa_cD1Ev` as an `extern "C"` free function; the
 declaration only lets `dScStage_c`'s implicit destructor find it by name. Not virtual —
 `dtor_variant_audit.py` established `Particle::SysTracker` has no RTTI record and no
 `_ZTV`, so it is not polymorphic and must not gain a vtable pointer.
@@ -248,7 +248,7 @@ byte-identical name list, which is the gate that would show a `_ZTV` appearing.
 at 0x056. Two corrections:
 
 1. 0x053 is **not** padding. `Behavior` both reads and writes it as a real 0/1 value,
-   and `func_02005348` — called from `Behavior` with the same `this` — compares it
+   and `UpdateButtonPalettes` (0x02005348) — called from `Behavior` with the same `this` — compares it
    against a loop index. Two independent readers agreeing on a live value rules out
    coincidence.
 2. There is a field at **0x056** the generated header never saw: `Behavior`'s case 4
@@ -350,7 +350,7 @@ registered for atexit teardown via `func_020731dc(obj, D1, dso-handle)`. There i
 
 **Members.** `dFdColor_c`'s own dsize (vptr + currInterp + speed + color) is 0xe; its
 `sizeof` of 0x10 leaves a 2-byte tail-padding gap at 0xe..0xf that the Itanium ABI lets
-a derived class reuse, and `dWipe_c`'s constructor helper (`func_0202ed14`) does: it
+a derived class reuse, and `dWipe_c`'s constructor helper (`Reset`) does: it
 writes single bytes at both 0xe and 0xf before touching anything past 0x10. Real,
 newly-added storage starts at 0x10.
 

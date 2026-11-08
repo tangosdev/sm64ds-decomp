@@ -65,7 +65,7 @@ void Vec2_Sub(int* out, int* a, int* b);
 int  func_0203d5dc(void* a, void* b);
 void Mg_CommitRecords(void);
 void Mg_SubmitScore(int score);
-void LoadCard2SubBg3(void* c);
+void LoadCard2SubBg3(void *);
 void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
 int Dealer_IsIdle(Dealer *dealer);
 void Dealer_Draw(void* t);
@@ -79,13 +79,11 @@ namespace GXS { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
 
 /* C++ linkage: the reference parameters are part of the ROM names. */
 
-// @symbol _ZN19dMgMCarlo2CardObj_cC1Ev
 dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
     : mPrev(0), mNext(0)
 {
 }
 
-// @symbol dScMgMCarlo2_c_classInit
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer and the card array in declaration order. */
 extern "C" void* dScMgMCarlo2_c_classInit()
@@ -93,16 +91,14 @@ extern "C" void* dScMgMCarlo2_c_classInit()
     return new dScMgMCarlo2_c;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c13InitResourcesEv
 /* Slot 0. Loads the card tiles and palette, sets up the shared table, and
  * deals the first board through the slot-18 reset. */
 s32 dScMgMCarlo2_c::InitResources()
 {
-    char *raw = (char *)this;
     int lang;
     void *tiles, *palette;
     Mg_SetTopScreenYOffset(0x20);
-    LoadCard2SubBg3(raw);
+    LoadCard2SubBg3(this);
     lang = GetGameLanguage();
     tiles = LoadFile(sMCarlo2CardNcgByLanguage[lang]);
     palette = LoadFile(0xbb);
@@ -117,7 +113,7 @@ s32 dScMgMCarlo2_c::InitResources()
     *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load((void *)&mDealer) == 0)
+    if (Dealer_Load(&mDealer) == 0)
         return 0;
     Mg_PlaceBannersOnTopScreen();
     StartRound(-1);
@@ -127,7 +123,6 @@ s32 dScMgMCarlo2_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c10StartRoundEi
 /* Resets the whole board: rebuild the 40 pieces, clear the match latch,
  * re-arm the shared table, then hand the score display a zero. */
 void dScMgMCarlo2_c::StartRound(int /* arg */)
@@ -143,7 +138,6 @@ void dScMgMCarlo2_c::StartRound(int /* arg */)
     mRoundState = 1;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c11CanEndStateEi
 int dScMgMCarlo2_c::CanEndState(int /* mode */)
 {
     short state = mRoundState;
@@ -182,7 +176,6 @@ int dScMgMCarlo2_c::CanEndState(int /* mode */)
     return 0;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c8BehaviorEv
 /* Slot 6. The state at mRoundState is bumped through an int-cast pointer each
  * time: plain `mRoundState++` recomputes the address, and the ROM keeps it in a
  * register. sMCarlo2DealProgress is the dealt-card count, shifted left 12. */
@@ -258,17 +251,15 @@ s32 dScMgMCarlo2_c::Behavior()
         break;
     }
 
-    Dealer_Update((Dealer *)&mDealer);
+    Dealer_Update(&mDealer);
     dScMgMCarlo2_c::UpdateBoard();
     return 1;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c6RenderEv
 /* Slot 9. Draws the score, then the cards still moving, then the settled
  * ones. Both passes walk mPrev from sMCarlo2CardsTail. */
 s32 dScMgMCarlo2_c::Render()
 {
-    char *raw = (char *)this;
     short score;
     dMgMCarlo2CardObj_c *lifted;
     int i;
@@ -285,7 +276,7 @@ s32 dScMgMCarlo2_c::Render()
     RenderOamMainScreen(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 
     if (this->mRoundState == 5)
-        Mg_DrawBlinkSprite(raw, 0xe0, 0xa0);
+        Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
 
     lifted = sMCarlo2CardsTail;
     for (i = 0; i < 0x14; i++) {
@@ -309,7 +300,6 @@ s32 dScMgMCarlo2_c::Render()
     return 1;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c16CleanupResourcesEv
 /* Slot 3. */
 s32 dScMgMCarlo2_c::CleanupResources()
 {
@@ -317,7 +307,6 @@ s32 dScMgMCarlo2_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_c4InitEi
 void dMgMCarlo2CardObj_c::Init(int slot){
     mSlot = (short)slot;
     if (slot >= 0x14) {
@@ -337,7 +326,6 @@ void dMgMCarlo2CardObj_c::Init(int slot){
     mPrev = mNext;
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_c6DealInEi
 void dMgMCarlo2CardObj_c::DealIn(int slot)
 {
     int delta[3];
@@ -376,36 +364,31 @@ void dMgMCarlo2CardObj_c::DealIn(int slot)
         mYStep = -mYStep;
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_c8FlipAwayEi
 void dMgMCarlo2CardObj_c::FlipAway(int order) {
     mDealDelay = (short)((4 - order % 5) * 2);
     mState = 5;
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_c10IsPairWithEPS_
 int dMgMCarlo2CardObj_c::IsPairWith(dMgMCarlo2CardObj_c *other)
 {
     int mine, theirs, dx, dy;
-    if (other->mFace != mFace)
-        goto fail;
-    theirs = other->mSlot;
-    mine = mSlot;
-    dx = mine % 5 - theirs % 5;
-    dy = mine / 5 - theirs / 5;
-    if (dx < 0)
-        dx = -dx;
-    if (dx >= 2)
-        goto fail;
-    if (dy < 0)
-        dy = -dy;
-    if (dy >= 2)
-        goto fail;
-    return 1;
-fail:
+    if (other->mFace == mFace) {
+        theirs = other->mSlot;
+        mine = mSlot;
+        dx = mine % 5 - theirs % 5;
+        dy = mine / 5 - theirs / 5;
+        if (dx < 0)
+            dx = -dx;
+        if (dx < 2) {
+            if (dy < 0)
+                dy = -dy;
+            if (dy < 2)
+                return 1;
+        }
+    }
     return 0;
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_c7HitTestEv
 int dMgMCarlo2CardObj_c::HitTest()
 {
     u8 idx;
@@ -415,24 +398,24 @@ int dMgMCarlo2CardObj_c::HitTest()
 
     if (sMCarlo2PickAllowed == 0)
         return 0;
-    if (dScMgMCarlo2_c::BoardBusy() != 0) goto fail;
-
-    idx = gActivePlayerSlot;
-    off = idx * 4;
-    touching = 0;
-    if (gTouchHeld[off]) {
-        if (gTouchEdge[off]) touching = 1;
+    if (dScMgMCarlo2_c::BoardBusy() == 0) {
+        idx = gActivePlayerSlot;
+        off = idx * 4;
+        touching = 0;
+        if (gTouchHeld[off]) {
+            if (gTouchEdge[off])
+                touching = 1;
+        }
+        if (touching != 0) {
+            dx = gTouchX[idx * 4] - (mX >> 12);
+            dy = gTouchY[idx * 4] - (mY >> 12);
+            if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31)
+                return 1;
+        }
     }
-    if (touching == 0) goto fail;
-
-    dx = gTouchX[idx * 4] - (mX >> 12);
-    dy = gTouchY[idx * 4] - (mY >> 12);
-    if (dx > 7 && dx < 0x28 && dy > 0 && dy < 0x31) return 1;
-fail:
     return 0;
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_c6UpdateEi
 void dMgMCarlo2CardObj_c::Update(int slot)
 {
     switch (mState) {
@@ -503,7 +486,6 @@ void dMgMCarlo2CardObj_c::Update(int slot)
     }
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_c6RenderEv
 void dMgMCarlo2CardObj_c::Render()
 {
     unsigned char state;
@@ -521,7 +503,6 @@ void dMgMCarlo2CardObj_c::Render()
     }
 }
 
-// @symbol _ZN14dScMgMCarlo2_c10SetupBoardEP19dMgMCarlo2CardObj_c
 void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
 {
     do {
@@ -577,7 +558,6 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
     } while (HasRemovablePair() == 0);
 }
 
-// @symbol _ZN14dScMgMCarlo2_c16HasRemovablePairEv
 int dScMgMCarlo2_c::HasRemovablePair()
 {
     dMgMCarlo2CardObj_c *p, *q;
@@ -593,7 +573,6 @@ int dScMgMCarlo2_c::HasRemovablePair()
     return 0;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c9BoardBusyEv
 int dScMgMCarlo2_c::BoardBusy() {
     int ret = 1;
     int dealt = (sMCarlo2DealProgress << 4) >> 0x10;
@@ -607,7 +586,6 @@ int dScMgMCarlo2_c::BoardBusy() {
     return ret;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c10BoardReadyEv
 /* One exit on purpose: early `return 0`s cost 8 bytes. */
 int dScMgMCarlo2_c::BoardReady() {
     int dealt = (sMCarlo2DealProgress << 4) >> 16;
@@ -624,7 +602,6 @@ int dScMgMCarlo2_c::BoardReady() {
     return ready;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c13DrawCardValueEv
 int dScMgMCarlo2_c::DrawCardValue(){
     unsigned char pick = 0;
     int total = 0;
@@ -645,7 +622,6 @@ int dScMgMCarlo2_c::DrawCardValue(){
     return pick;
 }
 
-// @symbol _ZN14dScMgMCarlo2_c14FlipDealtCardsEv
 void dScMgMCarlo2_c::FlipDealtCards(){
     dMgMCarlo2CardObj_c *node = sMCarlo2Cards;
     short i = 0;
@@ -659,7 +635,6 @@ void dScMgMCarlo2_c::FlipDealtCards(){
     } while (i < (sMCarlo2DealProgress >> 12));
 }
 
-// @symbol _ZN14dScMgMCarlo2_c11UpdateBoardEv
 void dScMgMCarlo2_c::UpdateBoard()
 {
     dMgMCarlo2CardObj_c *head = sMCarlo2Cards;
@@ -743,10 +718,9 @@ void dScMgMCarlo2_c::UpdateBoard()
             if (sMCarlo2CardsWanted <= 0x14) {
                 {
                     int i = 0;
-                    s16 idx = *(volatile s16 *)&sMCarlo2BoardStep;
-                    int *row = (int *)((char *)sMCarlo2BoardRows + idx * 0x28);
+                    s16 idx = sMCarlo2BoardStep;
                     do {
-                        sMCarlo2FaceCounts[i] = sMCarlo2FaceCounts[i] + row[i];
+                        sMCarlo2FaceCounts[i] += sMCarlo2BoardRows[idx][i];
                         i += 1;
                     } while (i < 10);
                 }
@@ -773,6 +747,10 @@ void dScMgMCarlo2_c::UpdateBoard()
                                 dMgMCarlo2CardObj_c* save = h->mNext;
                                 h->mNext = p;
                                 p->mPrev = h;
+                                /* The ROM reloads p->mNext after the step. A plain
+                                   `p = p->mNext` reuses the load (2 DIFF) and a
+                                   while loop is 8 bytes longer, so the volatile
+                                   read stays. */
                                 if (p->mNext != 0) {
                                     do { p = *(dMgMCarlo2CardObj_c* volatile*)&p->mNext; } while (p->mNext != 0);
                                 }
@@ -819,7 +797,6 @@ void dScMgMCarlo2_c::UpdateBoard()
     }
 }
 
-// @symbol _ZN19dMgMCarlo2CardObj_cD1Ev
 dMgMCarlo2CardObj_c::~dMgMCarlo2CardObj_c()
 {
 }

@@ -56,7 +56,7 @@ extern u8 gSubScreenLayers;
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
 
@@ -64,20 +64,18 @@ extern int data_0208ee44;
    it at the scene and hands it to the graph hook. Its constructor is inline,
    so mwcc emits __sinit_d_s_mb.cpp to run it (was the handwritten
    __sinit_02074fb8). */
-dScMB_c::graphCallback_c data_020a0c68;
+dScMB_c::graphCallback_c sMBGraphCallback;
 
 #pragma defer_codegen off
 
-// @symbol _ZN7dScMB_cD1Ev
 dScMB_c::~dScMB_c() {}
 
-// @symbol func_02034b1c
 /* The untyped parameter pair is measured, not sloppy: spelling `c` as
    dScMB_c::graphCallback_c * (or `owner` as dScMB_c *, with `this` at the one
    call site) moves this function's bytes. The casts stay. */
-void func_02034b1c(void *c, int owner) {
+void func_02034b1c(void *c, void *owner) {
     dScMB_c::graphCallback_c *callback = (dScMB_c::graphCallback_c *)c;
-    callback->mOwner = (void *)owner;
+    callback->mOwner = owner;
     callback->mSpinAngle = 0;
     callback->mStillTimer = 0;
     callback->mEnabled = 1;
@@ -85,10 +83,9 @@ void func_02034b1c(void *c, int owner) {
     callback->mUnusedFlag = 0;
 }
 
-// @symbol _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev
 int dScMB_c::graphCallback_c::GraphCallback3() {
     if (mOwner != 0) {
-        ((dScMB_c *)mOwner)->func_02034d34();
+        ((dScMB_c *)mOwner)->UpdateFader();
     }
     OAM::Reset();
 
@@ -147,37 +144,31 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
     return 1;
 }
 
-// @symbol _ZN7dScMB_c15graphCallback_c14GraphCallback2Ev
 int dScMB_c::graphCallback_c::GraphCallback2() {
     return 0;
 }
 
-// @symbol _ZN7dScMB_c15graphCallback_c14GraphCallback0Ev
 int dScMB_c::graphCallback_c::GraphCallback0() {
     return 0;
 }
 
-// @symbol _ZN7dScMB_c13func_02034d34Ev
 // Its sole caller ignores the result; AdvanceFade itself returns void.
-void dScMB_c::func_02034d34() {
+void dScMB_c::UpdateFader() {
     if (fader.IsAtStart())
         return;
     fader.AdvanceFade();
 }
 
-// @symbol _ZN7dScMB_c16CleanupResourcesEv
 s32 dScMB_c::CleanupResources() {
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     dScene_c::SetAndStopColorFader();
     return 1;
 }
 
-// @symbol _ZN7dScMB_c6RenderEv
 s32 dScMB_c::Render() {
     return 1;
 }
 
-// @symbol _ZN7dScMB_c8BehaviorEv
 s32 dScMB_c::Behavior() {
     switch (mStep) {
     case 0:
@@ -187,8 +178,8 @@ s32 dScMB_c::Behavior() {
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
         gMainScreenLayers = DISPLAY_LAYER_OBJ;
         gSubScreenLayers = 0x10;
-        *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1000;
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1000;
+        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1000;
+        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1000;
         mStep++;
         break;
 
@@ -243,7 +234,6 @@ s32 dScMB_c::Behavior() {
     return 1;
 }
 
-// @symbol func_02034fbc
 void func_02034fbc(int unused) {
     void *h;
 
@@ -264,22 +254,21 @@ void func_02034fbc(int unused) {
     ((mHeap::Heap_t *)data_020a0c5c)->SetDefault();
 }
 
-// @symbol _ZN7dScMB_c13InitResourcesEv
 s32 dScMB_c::InitResources() {
     volatile u16 fillMain;
     volatile u16 fillSub;
 
     func_02053b98();
-    *(volatile u32 *)0x4001000 &= ~0x10000;
+    REG_DISPCNT_SUB &= ~0x10000;
     func_02030aa4(2);
 
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & ~0x20e) | 0x20e;
+    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
     func_0200f2cc();
 
-    *(volatile u16 *)0x400000a = (*(volatile u16 *)0x400000a & 0x43) | 0x704;
-    *(volatile u16 *)0x400000a &= ~0x40;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0x408;
-    *(volatile u16 *)0x400100a &= ~0x40;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x704;
+    REG_BG1CNT &= ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x408;
+    REG_DB_BG1CNT &= ~0x40;
 
     fillMain = 0xffff;
     MultiStore16(fillMain, (char *)0x5000000, 2);
@@ -295,21 +284,21 @@ s32 dScMB_c::InitResources() {
     GX::LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
     GXS::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
 
-    *(volatile u16 *)0x400000a &= ~3;
-    *(volatile u16 *)0x400100a &= ~3;
+    REG_BG1CNT &= ~3;
+    REG_DB_BG1CNT &= ~3;
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
     *(u8 *)&gMainScreenLayers = 0;
     *(u8 *)&gSubScreenLayers = 0;
-    *(volatile u32 *)0x4000000 &= ~0x1f00;
-    *(volatile u32 *)0x4001000 &= ~0x1f00;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
     GX::DispOn();
 
-    *(volatile u32 *)0x4001000 |= 0x10000;
-    func_02034b1c(&data_020a0c68, (int)this);
+    REG_DISPCNT_SUB |= 0x10000;
+    func_02034b1c(&sMBGraphCallback, this);
 
-    data_0209d4a8 = &data_020a0c68;
+    gGraphCallback = &sMBGraphCallback;
     mStep = 0;
     mTimeout = 0;
     dScene_c::SetFaders(&fader);
@@ -321,7 +310,6 @@ s32 dScMB_c::InitResources() {
     return 1;
 }
 
-// @symbol dScMB_c_classInit
 extern "C" void *dScMB_c_classInit(void) {
     return new dScMB_c;
 }

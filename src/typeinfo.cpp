@@ -8,28 +8,18 @@
 //
 // leftovers: none.
 
-// @symbol _ZNSt9type_infoD2Ev
-// @symbol _ZNSt9type_infoD0Ev
-// @symbol _ZNSt9type_infoD1Ev
 std::type_info::~type_info()
 {
 }
 
-// @symbol _ZN3abi17__class_type_infoD2Ev
-// @symbol _ZN3abi17__class_type_infoD0Ev
-// @symbol _ZN3abi17__class_type_infoD1Ev
 abi::__class_type_info::~__class_type_info()
 {
 }
 
-// @symbol _ZN3abi20__si_class_type_infoD0Ev
-// @symbol _ZN3abi20__si_class_type_infoD1Ev
 abi::__si_class_type_info::~__si_class_type_info()
 {
 }
 
-// @symbol _ZN3abi21__vmi_class_type_infoD0Ev
-// @symbol _ZN3abi21__vmi_class_type_infoD1Ev
 abi::__vmi_class_type_info::~__vmi_class_type_info()
 {
 }

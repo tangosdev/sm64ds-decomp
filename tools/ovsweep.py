@@ -56,7 +56,9 @@ order:
        filename regex required the file to START with func_/data_ and never
        matched __sinit_, silently skipping all ~278 of them) -- cross-check
        only; disagreement with delinks.txt is reported, not guessed at.
-    3. a `// @symbol NAME` header comment, resolved against every overlay's
+    3. the file's first bound definition's linker symbol -- a `// @symbol NAME`
+       comment while markers remain, otherwise resolved structurally by
+       tools/def_locate.py -- checked against every overlay's
        symbols.txt -- also a cross-check only, same disagreement rule.
     4. sibling-file inference: for a mangled class-method file (_ZN...Ev.cpp)
        absent from EVERY delinks.txt (the file itself isn't in src/ yet, or
@@ -250,8 +252,8 @@ class Attributor:
 
     The old sibling-file fallback (borrow a same-class file's overlay) is
     kept ONLY for files absent from every delinks.txt, and only fires when
-    ALL directly-resolvable siblings (via delinks.txt/filename/@symbol, not
-    another sibling guess) unanimously agree on one overlay. Split classes
+    ALL directly-resolvable siblings (via delinks.txt/filename/first-symbol,
+    not another sibling guess) unanimously agree on one overlay. Split classes
     (Player, Enemy, PathLift, ...) made the old first-match version wrong
     62% of the time (wave-3 sample review); unanimous-agreement-or-bail
     closes that. Siblings that only resolve to SHARED_ARM9 are excluded
@@ -277,14 +279,33 @@ class Attributor:
         return None, False
 
     def filename_or_symbol(self, fpath, text):
-        """Cross-check attribution from this file alone: filename, then
-        @symbol tag. Independent of delinks.txt."""
+        """Cross-check attribution from this file alone: filename, then the
+        first definition's symbol (what the `// @symbol` tag recorded --
+        flat `func_ov`/`data_ov` names ARE the symbol; a mangled member name
+        resolves through the same delinks symbol->overlay map). Independent
+        of delinks.txt."""
         m = FILENAME_OV_RE.match(fpath.name)
         if m:
             return f"ov{m.group(1)}"
         m = SYMBOL_TAG_RE.search(text)
-        if m:
-            sym = m.group(1)
+        sym = m.group(1) if m else None
+        if sym is None:
+            try:
+                import def_locate as DL
+                rel = fpath.relative_to(REPO).as_posix()
+                bound = DL.bind(rel, text)[0]
+                if bound:
+                    # the file's first definition's linker symbol -- the
+                    # position the leading `// @symbol` tag occupied
+                    sym = min(bound.items(),
+                              key=lambda kv: kv[1].start)[0]
+                else:
+                    defs = DL.definitions(text)
+                    if defs:
+                        sym = defs[0].full.split("::")[-1]
+            except Exception:
+                sym = None
+        if sym:
             m2 = FILENAME_OV_RE.match(sym + "_")  # reuse the same prefix test
             if m2:
                 return f"ov{m2.group(1)}"
@@ -305,7 +326,7 @@ class Attributor:
                 return ("AMBIGUOUS", (dl_own, cross)), "delinks-mismatch"
             return dl_own, "delinks"
 
-        # not in any delinks.txt -- fall back to filename/@symbol directly
+        # not in any delinks.txt -- fall back to filename/first-symbol directly
         cross = self.filename_or_symbol(fpath, text)
         if isinstance(cross, str):
             return cross, "direct"
@@ -327,7 +348,7 @@ class Attributor:
 
     def _resolve_class(self, cls, all_files_text):
         """Unanimous vote across every directly-resolvable sibling (via
-        delinks.txt, filename, or @symbol -- never another sibling guess).
+        delinks.txt, filename, or first bound symbol -- never another sibling guess).
         Returns an overlay string only if every sibling that resolves to a
         single overlay agrees; "AMBIGUOUS" if they disagree; None if no
         sibling resolves at all (or all resolve to SHARED_ARM9, which

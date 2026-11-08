@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 #include "cstd.h"
@@ -11,8 +12,6 @@
 #include "Ov007Figure.h"
 
 extern "C" {
-
-extern short data_02082214[];
 
 extern void func_ov007_020c92d0(Ov007MenuState *state);
 extern void func_ov007_020c0638(Ov007BgLayer *layer, int x, int y, u16 tile);
@@ -133,7 +132,7 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
                 if (inv2 < 0x50) {
                     inv2 = 0;
                 }
-                prod = data_02082214[(r >> 4) * 2] * 0x19;
+                prod = FX_SinIdx(r >> 4) * 0x19;
                 result = FX_MUL(inv2, prod);
                 slot->layer->scrollY = result;
             }
@@ -155,16 +154,14 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
                 int inv = 0x1000 - var_r0;
                 int sq = (int)(((long long)inv * inv) >> 0xc);
                 u32 t = (u32)(var_r0 * 0xffff);
-                int idx;
                 int half;
-                short tblval;
+                fx16 tblval;
                 int temp_a;
                 int result;
                 t = t << 4;
                 t = t >> 0x10;
-                idx = (int)t >> 4;
                 half = sq / 2;
-                tblval = data_02082214[idx * 2];
+                tblval = FX_SinIdx((int)t >> 4);
                 temp_a = half + 0x800;
                 result = FX_MUL(temp_a, tblval);
                 slot->layer->scrollY = -result;

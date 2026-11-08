@@ -53,98 +53,98 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126300Ev",
+      "symbol": "_ZN9daPopoi_c14IsBlockedAheadEv",
       "address": "0x02126300",
       "size": "0x00000228",
       "legacy_source": "src/func_ov077_02126300.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126528Ev",
+      "symbol": "_ZN9daPopoi_c13TryGrabPlayerEv",
       "address": "0x02126528",
       "size": "0x00000118",
       "legacy_source": "src/func_ov077_02126528.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126640Ev",
+      "symbol": "_ZN9daPopoi_c15UpdateGrabStateEv",
       "address": "0x02126640",
       "size": "0x00000118",
       "legacy_source": "src/func_ov077_02126640.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126758Ev",
+      "symbol": "_ZN9daPopoi_c14EnterGrabStateEv",
       "address": "0x02126758",
       "size": "0x00000044",
       "legacy_source": "src/func_ov077_02126758.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_0212679cEv",
+      "symbol": "_ZN9daPopoi_c16UpdateChaseStateEv",
       "address": "0x0212679c",
       "size": "0x00000194",
       "legacy_source": "src/func_ov077_0212679c.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126930Ev",
+      "symbol": "_ZN9daPopoi_c15EnterChaseStateEv",
       "address": "0x02126930",
       "size": "0x00000078",
       "legacy_source": "src/func_ov077_02126930.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_021269a8Ev",
+      "symbol": "_ZN9daPopoi_c19UpdateTurnAwayStateEv",
       "address": "0x021269a8",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov077_021269a8.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126a04Ev",
+      "symbol": "_ZN9daPopoi_c18EnterTurnAwayStateEv",
       "address": "0x02126a04",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov077_02126a04.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126a50Ev",
+      "symbol": "_ZN9daPopoi_c16UpdatePauseStateEv",
       "address": "0x02126a50",
       "size": "0x00000034",
       "legacy_source": "src/func_ov077_02126a50.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126a84Ev",
+      "symbol": "_ZN9daPopoi_c15EnterPauseStateEv",
       "address": "0x02126a84",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov077_02126a84.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126ad0Ev",
+      "symbol": "_ZN9daPopoi_c17UpdateWanderStateEv",
       "address": "0x02126ad0",
       "size": "0x00000204",
       "legacy_source": "src/func_ov077_02126ad0.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126cd4Ev",
+      "symbol": "_ZN9daPopoi_c16EnterWanderStateEv",
       "address": "0x02126cd4",
       "size": "0x00000088",
       "legacy_source": "src/func_ov077_02126cd4.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126d5cEP19daPopoi_StateRecord",
+      "symbol": "_ZN9daPopoi_c11ChangeStateEP19daPopoi_StateRecord",
       "address": "0x02126d5c",
       "size": "0x00000050",
       "legacy_source": "src/func_ov077_02126d5c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126dacEv",
+      "symbol": "_ZN9daPopoi_c20UpdateModelTransformEv",
       "address": "0x02126dac",
       "size": "0x00000040",
       "legacy_source": "src/func_ov077_02126dac.c",
@@ -1268,7 +1268,7 @@
       "source": "0x02127a00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126640Ev",
+      "symbol": "_ZN9daPopoi_c15UpdateGrabStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126640"
@@ -1278,7 +1278,7 @@
       "source": "0x02127a08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_0212679cEv",
+      "symbol": "_ZN9daPopoi_c16UpdateChaseStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x0212679c"
@@ -1288,7 +1288,7 @@
       "source": "0x02127a10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126a04Ev",
+      "symbol": "_ZN9daPopoi_c18EnterTurnAwayStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126a04"
@@ -1298,7 +1298,7 @@
       "source": "0x02127a18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126930Ev",
+      "symbol": "_ZN9daPopoi_c15EnterChaseStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126930"
@@ -1308,7 +1308,7 @@
       "source": "0x02127a20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126cd4Ev",
+      "symbol": "_ZN9daPopoi_c16EnterWanderStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126cd4"
@@ -1318,7 +1318,7 @@
       "source": "0x02127a28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126ad0Ev",
+      "symbol": "_ZN9daPopoi_c17UpdateWanderStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126ad0"
@@ -1328,7 +1328,7 @@
       "source": "0x02127a30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126758Ev",
+      "symbol": "_ZN9daPopoi_c14EnterGrabStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126758"
@@ -1338,7 +1338,7 @@
       "source": "0x02127a38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126a84Ev",
+      "symbol": "_ZN9daPopoi_c15EnterPauseStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126a84"
@@ -1348,7 +1348,7 @@
       "source": "0x02127a40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_02126a50Ev",
+      "symbol": "_ZN9daPopoi_c16UpdatePauseStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02126a50"
@@ -1358,7 +1358,7 @@
       "source": "0x02127a48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPopoi_c19func_ov077_021269a8Ev",
+      "symbol": "_ZN9daPopoi_c19UpdateTurnAwayStateEv",
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x021269a8"

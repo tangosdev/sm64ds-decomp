@@ -52,7 +52,6 @@ extern void DecompressLZ16(void *src, void *dst);
 
 void func_ov007_020b3edc(int idx);
 
-// @symbol func_ov007_020b4100
 void func_ov007_020b4100(int load, int release) {
     int i;
     for (i = 0; i < 0x2e; i++) {
@@ -62,7 +61,6 @@ void func_ov007_020b4100(int load, int release) {
     data_ov007_0210336c = (Ov007FileRelease)release;
 }
 
-// @symbol func_ov007_020b40c0
 void func_ov007_020b40c0(void) {
     int i;
     for (i = 0; i < 0x2e; i++)
@@ -71,7 +69,6 @@ void func_ov007_020b40c0(void) {
     data_ov007_0210336c = 0;
 }
 
-// @symbol func_ov007_020b3f20
 void *func_ov007_020b3f20(int idx) {
     void *new_var;
     if (idx == 0) {
@@ -140,7 +137,6 @@ void *func_ov007_020b3f20(int idx) {
     return data_ov007_02103370[idx];
 }
 
-// @symbol func_ov007_020b3edc
 void func_ov007_020b3edc(int idx) {
     void *file = data_ov007_02103370[idx];
     if (file == 0)

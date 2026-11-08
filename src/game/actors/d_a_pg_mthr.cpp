@@ -2,12 +2,11 @@
 /* leftovers:
  * - dBgCh_Actr::Init's member call mangles with int. The ROM row is
  *   Fix12<int>. GetFloorResult and GetWallResult are not on the header.
- * - func_0201267c is Sound::Play(3, id, pos). The state helpers stay
- *   func_ov018_* because the PMF literals relocate to those names.
+ * - func_0201267c is Sound::Play(3, id, pos).
  * - data_ov018_* handles are constructed by the sinit. g_profile is
  *   not this TU. common.h stays first so the matrix copy stays flat.
- * - 02111b3c keeps the (int) actorID compare. 02111d28 keeps the
- *   bone store. The follow state reloads mPlayer.
+ * - CheckFollow keeps the (int) actorID compare. UpdateModelAndShadow
+ *   keeps the bone store. The follow state reloads mPlayer.
  *
  * daPgMthr_c, the Cool Cool Mountain mother penguin (PENGUIN_MOTHER).
  * She talks from the actor in the player's hand and, after giving
@@ -54,8 +53,8 @@ enum {
        front (angle within 0x1400 of mAngleY). */
     HOME_RANGE = 0x5dc000,
     LOOK_RANGE = 0x1c2000,
-    /* transforms[5]: 5 * sizeof(Matrix4x3) == 0xf0, the bone 02111d28 rotates
-       and 02111a48 aims from. */
+    /* transforms[5]: 5 * sizeof(Matrix4x3) == 0xf0, the bone
+       UpdateModelAndShadow rotates and TurnHeadToward aims from. */
     LOOK_BONE = 5,
     /* dCc hit bit both the touch test and the new-player scan use. */
     HIT_TOUCH = 0x8000000
@@ -112,26 +111,21 @@ extern PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern daPly_c *func_ov018_021118fc(daPgMthr_c *self);
 extern PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;
 extern PgMthrAnimFileResHandle gPenguinWait1AnimationFile;
 extern PgMthrState data_ov018_02113c4c[3];
 typedef void (daPgMthr_c::*PMF)();
-extern void func_ov018_02112398(daPgMthr_c *self);
-extern void func_ov018_0211235c(daPgMthr_c *self);
 extern PgMthrModelFileHandle data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *act, int a, int b, void *c2, void *d);
 }
 
-// @symbol daPgMthr_c_classInit
 extern "C" daPgMthr_c *daPgMthr_c_classInit()
 {
     return new daPgMthr_c();
 }
 
-// @symbol _ZN10daPgMthr_c13InitResourcesEv
 int daPgMthr_c::InitResources()
 {
     void *m = dExtSimpleModel_c::LoadFile(data_ov018_02113c00);
@@ -147,7 +141,7 @@ int daPgMthr_c::InitResources()
         return 0;
     /* Cylinder 260 x 300. Flags 0x4800004 / vuln 0x900000. */
     mdCcAc_c.Init(this, 0x104000, 0x12c000, 0x4800004, 0x900000);
-    func_ov018_021123d0(0);
+    ChangeState(0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mScaleX = 0x1000;
@@ -170,24 +164,22 @@ int daPgMthr_c::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
     mPlayer = 0;
-    func_ov018_02111d28();
+    UpdateModelAndShadow();
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c8BehaviorEv
 int daPgMthr_c::Behavior()
 {
-    func_ov018_0211235c(this);
+    CallStateUpdate();
     mAnmModel.dExtFrameCtrl_c::Advance();
     mTextureSequence.Advance();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     mAnmModel.UpdateVerts();
-    func_ov018_02111d28();
+    UpdateModelAndShadow();
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c6RenderEv
 int daPgMthr_c::Render()
 {
     mTextureSequence.Update(mAnmModel.data);
@@ -196,12 +188,10 @@ int daPgMthr_c::Render()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c16OnPendingDestroyEv
 void daPgMthr_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN10daPgMthr_c16CleanupResourcesEv
 int daPgMthr_c::CleanupResources()
 {
     data_ov018_02113c00.Release();
@@ -212,29 +202,23 @@ int daPgMthr_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_021123d0Ei
-void daPgMthr_c::func_ov018_021123d0(int i)
-{
+void daPgMthr_c::ChangeState(int i) {
     mState = &data_ov018_02113c4c[i];
-    func_ov018_02112398(this);
+    CallStateEnter();
 }
 
-extern "C" void func_ov018_02112398(daPgMthr_c *self)
-{
-    PMF *enter = (PMF *)self->mState;
-    (self->* *enter)();
+void daPgMthr_c::CallStateEnter() {
+    PMF *enter = (PMF *)mState;
+    (this->**enter)();
 }
 
-extern "C" void func_ov018_0211235c(daPgMthr_c *self)
-{
-    PMF *update = (PMF *)self->mState + 1;
-    (self->* *update)();
+void daPgMthr_c::CallStateUpdate() {
+    PMF *update = (PMF *)mState + 1;
+    (this->**update)();
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_021122ecEv
 /* State 0 enter. Idle anim, stopped, not talking. */
-int daPgMthr_c::func_ov018_021122ec()
-{
+int daPgMthr_c::StateStandEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mTextureSequence.SetFile(*(BTP_File *)gPenguinWait1TextureSequenceFile.filePtr, 0, 0x1000, 0);
@@ -244,27 +228,25 @@ int daPgMthr_c::func_ov018_021122ec()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02112234Ev
-int daPgMthr_c::func_ov018_02112234()
-{
+int daPgMthr_c::StateStandUpdate() {
     daPly_c *toucher;
     dActor_c *held;
     daPly_c *near;
 
     if (mGaveStar != 0)
-        func_ov018_02111b3c();
-    toucher = func_ov018_021118fc(this);
+        CheckFollow();
+    toucher = FindNewToucher();
     held = 0;
     if (toucher != 0) {
         /* Yoshi's baby is in his mouth; this path does not count it. */
         if (toucher->param1 != CHAR_YOSHI)
             held = (dActor_c *)toucher->mHeldObj;
-        func_ov018_02111968(toucher, (char *)held);
+        BeginTalk(toucher, (char *)held);
     }
     near = ClosestPlayer();
-    func_ov018_02111a48((char *)near);
+    TurnHeadToward((char *)near);
     UpdatePos(&mdCcAc_c);
-    func_ov018_02111bf0((char *)this, &mWithMeshClsn);
+    UpdateFloorAndWalls(&mWithMeshClsn);
     if (mGaveStar == 0 && mHoldingBaby == 0) {
         unsigned int frame = ((unsigned int)mAnmModel.currFrame << 4) >> 16;
         if (frame == 0x10 || frame == 0x25)
@@ -273,9 +255,7 @@ int daPgMthr_c::func_ov018_02112234()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_021121dcEv
-int daPgMthr_c::func_ov018_021121dc()
-{
+int daPgMthr_c::StateTalkEnter() {
     mAnmModel.SetAnim((BCA_File *)gPenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mTalkStep = 0;
@@ -284,9 +264,7 @@ int daPgMthr_c::func_ov018_021121dc()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111facEv
-int daPgMthr_c::func_ov018_02111fac()
-{
+int daPgMthr_c::StateTalkUpdate() {
     switch (mTalkStep) {
     case 0:
         if (mdCcAc_c.hitFlags & HIT_TOUCH) {
@@ -295,7 +273,7 @@ int daPgMthr_c::func_ov018_02111fac()
                 *p = *p + 1;
             }
         } else {
-            func_ov018_021123d0(0);
+            ChangeState(0);
         }
         break;
     case 1:
@@ -337,10 +315,10 @@ int daPgMthr_c::func_ov018_02111fac()
         break;
     case 3:
         if (!DecIfAbove0_Byte(&mTalkTimer))
-            func_ov018_021123d0(0);
+            ChangeState(0);
         break;
     }
-    func_ov018_02111a48((char *)mPlayer);
+    TurnHeadToward((char *)mPlayer);
     if (mGaveStar == 0 && mHoldingBaby == 0) {
         unsigned frame = ((unsigned)mAnmModel.currFrame << 4) >> 0x10;
         if (frame == 0x10 || frame == 0x25)
@@ -349,11 +327,9 @@ int daPgMthr_c::func_ov018_02111fac()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111f1cEv
-int daPgMthr_c::func_ov018_02111f1c()
-{
+int daPgMthr_c::StateFollowEnter() {
     if (mPlayer == 0 && mGaveStar == 0)
-        func_ov018_021123d0(0);
+        ChangeState(0);
     mHorzSpeed = 0x5000;
     mAnmModel.SetAnim((BCA_File *)gPenguinWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -362,14 +338,12 @@ int daPgMthr_c::func_ov018_02111f1c()
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111e28Ev
-int daPgMthr_c::func_ov018_02111e28()
-{
+int daPgMthr_c::StateFollowUpdate() {
     ApproachLinear(mAngleY, Vec3_HorzAngle(&mPos, &mPlayer->mPos), 0x514);
     mPrevAngleY = mAngleY;
     UpdatePos(&mdCcAc_c);
-    func_ov018_02111bf0((char *)this, &mWithMeshClsn);
-    func_ov018_02111a48((char *)mPlayer);
+    UpdateFloorAndWalls(&mWithMeshClsn);
+    TurnHeadToward((char *)mPlayer);
     unsigned int frame = ((unsigned int)mAnmModel.currFrame << 4) >> 0x10;
     if (frame == 9 || frame == 0x15)
         func_0201267c(0xde, &mCamSpacePos);
@@ -380,14 +354,12 @@ int daPgMthr_c::func_ov018_02111e28()
         holding = (mPlayer->mHeldObj != 0);
     if (holding == 0 || Vec3_Dist((Vector3 *)&mHomePosX, &mPlayer->mPos) > HOME_RANGE) {
         mPlayer = 0;
-        func_ov018_021123d0(0);
+        ChangeState(0);
     }
     return 1;
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111d28Ev
-void daPgMthr_c::func_ov018_02111d28()
-{
+void daPgMthr_c::UpdateModelAndShadow() {
     /* Unused, but deleting this local DIFFs. */
     char *s = (char *)this;
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -405,27 +377,7 @@ void daPgMthr_c::func_ov018_02111d28()
     }
 }
 
-extern "C" {
-/* dBgPi is 0x28. The copy below is not dBgPi::CopyTo: `b ? a : a` is the
-   load that matches, and a real dBgPi local would run the constructor.
-   A view of dBgPi past its vptr, flattened: nesting the real SurfaceInfo
-   (whose Vector3 has a constructor) renumbers every @NNN in this file. */
-struct dBgPiRawBody {
-    int clpsW0, clpsW1;            /* surface.clps.w0/w1 */
-    int normalX, normalY, normalZ; /* surface.normal */
-    unsigned short triangleID, colliderIdx;
-    int clsnID, owner, collider;
-};
-struct dBgPiRaw {
-    void *vt;
-    struct dBgPiRawBody info;
-};
-extern int data_02099368[];
-
-void func_ov018_02111bf0(void *cv, void *wv)
-{
-    daPgMthr_c *self = (daPgMthr_c *)cv;
-    dBgCh_Actr *w = (dBgCh_Actr *)wv;
+void daPgMthr_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     /* ROM calls the veneer at 0x02038420, not UpdateDiscreteNoLava. */
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
     if (w->IsOnGround() != 0) {
@@ -433,42 +385,18 @@ void func_ov018_02111bf0(void *cv, void *wv)
         dBgPi *floor = w->GetFloorResult();
         floor->surface.CopyNormalTo(n);
         if (n.y != 0) {
-            int s = FX_MUL(n.x, self->mSpeedX) + FX_MUL(n.z, self->mSpeedZ);
-            self->mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
+            int s = FX_MUL(n.x, mSpeedX) + FX_MUL(n.z, mSpeedZ);
+            mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
-        struct dBgPiRaw *src = (struct dBgPiRaw *)w->GetWallResult();
-        struct dBgPiRaw cr;
+        dBgPi wall(*w->GetWallResult());
         Vector3 wn;
-        struct dBgPiRawBody *dst = &cr.info;
-        int a = src->info.clpsW0;
-        int b = src->info.clpsW1;
-        /* `= a` DIFFs. The tautology is the load. */
-        dst->clpsW0 = b ? a : a;
-        dst->clpsW1 = b;
-        int t = src->info.normalX;
-        void *vt = (void *)data_02099368;
-        dst->normalX = t;
-        t = src->info.normalY;
-        dst->normalY = t;
-        t = src->info.normalZ;
-        dst->normalZ = t;
-        cr.vt = vt;
-        cr.info.triangleID = src->info.triangleID;
-        cr.info.colliderIdx = src->info.colliderIdx;
-        cr.info.clsnID = src->info.clsnID;
-        cr.info.owner = src->info.owner;
-        cr.info.collider = src->info.collider;
-        ((SurfaceInfo *)dst)->CopyNormalTo(wn);
-        ((dBgPi *)&cr)->dBgPi::~dBgPi();
+        wall.surface.CopyNormalTo(wn);
     }
 }
-}
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111b3cEv
-void daPgMthr_c::func_ov018_02111b3c()
-{
+void daPgMthr_c::CheckFollow() {
     daPly_c *p = ClosestPlayer();
     dActor_c *held;
 
@@ -491,12 +419,10 @@ void daPgMthr_c::func_ov018_02111b3c()
     if (held->param1 != BABY_OWN)
         return;
     mPlayer = p;
-    func_ov018_021123d0(2);
+    ChangeState(2);
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111a48EPc
-void daPgMthr_c::func_ov018_02111a48(char *b)
-{
+void daPgMthr_c::TurnHeadToward(char *b) {
     dActor_c *who;
     Fix12i dist;
     s16 horzAngle;
@@ -535,9 +461,7 @@ void daPgMthr_c::func_ov018_02111a48(char *b)
     ApproachLinear(mLookAngX, vert, 0x250);
 }
 
-// @symbol _ZN10daPgMthr_c19func_ov018_02111968EPvPc
-void daPgMthr_c::func_ov018_02111968(void *found, char *heldRaw)
-{
+void daPgMthr_c::BeginTalk(void *found, char *heldRaw) {
     dActor_c *held = (dActor_c *)heldRaw;
     daPly_c *who = (daPly_c *)found;
 
@@ -548,7 +472,7 @@ void daPgMthr_c::func_ov018_02111968(void *found, char *heldRaw)
                 mPlayer = who;
                 mMessageId = MSG_OTHER_BABY;
                 mHoldingBaby = 1;
-                func_ov018_021123d0(1);
+                ChangeState(1);
                 return;
             }
         }
@@ -569,27 +493,25 @@ void daPgMthr_c::func_ov018_02111968(void *found, char *heldRaw)
     mMessageId = MSG_NO_BABY;
 talk:
     mPlayer = who;
-    func_ov018_021123d0(1);
+    ChangeState(1);
 }
 
-extern "C" {
-daPly_c *func_ov018_021118fc(daPgMthr_c *self) {
+daPly_c *daPgMthr_c::FindNewToucher() {
     daPly_c *newToucher = 0;
-    if (self->mdCcAc_c.hitFlags & HIT_TOUCH) {
-        struct dActor_c *a = dActor_c::FindWithID(self->mdCcAc_c.otherOwner);
+    if (mdCcAc_c.hitFlags & HIT_TOUCH) {
+        struct dActor_c *a = dActor_c::FindWithID(mdCcAc_c.otherOwner);
         if (a) {
             int ok = (a->actorID == ACTOR_PLAYER) ? 1 : (int)newToucher;
             if (ok) {
-                if (a != self->mLastPlayer)
+                if (a != mLastPlayer)
                     newToucher = static_cast<daPly_c *>(a);
-                self->mLastPlayer = a;
+                mLastPlayer = a;
             }
         }
     } else {
-        self->mLastPlayer = newToucher;
+        mLastPlayer = newToucher;
     }
     return newToucher;
-}
 }
 
 /* File-scope objects __sinit_d_a_pg_mthr.cpp initializes: the five resource
@@ -602,7 +524,7 @@ PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP)
 PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP);  /* stand/talk texseq */
 
 PgMthrState data_ov018_02113c4c[3] = {
-    { &daPgMthr_c::func_ov018_021122ec, &daPgMthr_c::func_ov018_02112234 }, /* stand */
-    { &daPgMthr_c::func_ov018_021121dc, &daPgMthr_c::func_ov018_02111fac }, /* talk */
-    { &daPgMthr_c::func_ov018_02111f1c, &daPgMthr_c::func_ov018_02111e28 }, /* follow */
+    {&daPgMthr_c::StateStandEnter, &daPgMthr_c::StateStandUpdate},   /* stand */
+    {&daPgMthr_c::StateTalkEnter, &daPgMthr_c::StateTalkUpdate},     /* talk */
+    {&daPgMthr_c::StateFollowEnter, &daPgMthr_c::StateFollowUpdate}, /* follow */
 };

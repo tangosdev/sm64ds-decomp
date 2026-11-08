@@ -5,7 +5,7 @@
  * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange
  *   are header member calls whose headers spell Fix12 as Fix12i, a plain
  *   s32 (6az)
- * - func_020393d4 stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
+ * - dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
  *   stores +0x0c; dBgW::SetClipOffsetY stores +0x10
  * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /
  *   TTC_MovingBar_ClsnFile are symbols.txt BSS labels shared with the
@@ -72,7 +72,6 @@ extern CLPS_Block data_ov035_02112258;
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *matrix, Vector3 *dst);
 extern void AddVec3(Vector3 *left, Vector3 *right, Vector3 *dst);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
@@ -83,14 +82,12 @@ extern "C" SpawnInfo<daObjCtMecha05_c> g_profile_CT_MECHA05 = {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjCtMecha05_c_classInit
 extern "C" daObjCtMecha05_c *daObjCtMecha05_c_classInit() {
     return new daObjCtMecha05_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjCtMecha05_c13InitResourcesEv
 int daObjCtMecha05_c::InitResources() {
     void *modelFile = dExtSimpleModel_c::LoadFile(TTC_MovingBar_ModelFile);
     mModel.SetFile((BMD_File *)modelFile, 1, -1);
@@ -99,7 +96,7 @@ int daObjCtMecha05_c::InitResources() {
     UpdateClsnPosAndRot();
     void *collisionFile = dBgW_Kc::LoadFile(TTC_MovingBar_ClsnFile);
     mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY, data_ov035_02112258);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetClipRadius(0x1c0000);
     mMeshCollider.SetClipOffsetY(0x1000);
     mPrevAngleY = mAngleY;
@@ -123,7 +120,6 @@ int daObjCtMecha05_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjCtMecha05_c8BehaviorEv
 /* mHorzSpeed is reused here as a fix12 travel accumulator rather than a
  * physical speed. */
 int daObjCtMecha05_c::Behavior() {
@@ -228,7 +224,6 @@ Lend:
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjCtMecha05_c11ResetToHomeEv
 void daObjCtMecha05_c::ResetToHome() {
     mState = 0;
     mTravel = 0;
@@ -248,7 +243,6 @@ void daObjCtMecha05_c::ResetToHome() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjCtMecha05_c6RenderEv
 int daObjCtMecha05_c::Render() {
     mModel.Render(0);
     return 1;
@@ -256,7 +250,6 @@ int daObjCtMecha05_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjCtMecha05_c16CleanupResourcesEv
 int daObjCtMecha05_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -267,7 +260,6 @@ int daObjCtMecha05_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjCtMecha05_c12UpdateShadowEv
 void daObjCtMecha05_c::UpdateShadow() {
     int distance = mPosY - mGroundY;
     if (distance < 0)
@@ -295,8 +287,6 @@ void daObjCtMecha05_c::UpdateShadow() {
 
     DropShadowScaleXYZ(mShadowModel, mShadowMatrix, 0xdc000, 0x32000, 0x28a000, 0xf);
 }
-// @symbol _ZN16daObjCtMecha05_cD1Ev
-// @symbol _ZN16daObjCtMecha05_cD0Ev
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 /* No separate body lives here. The inline virtual destructor in the class

@@ -16,7 +16,7 @@
  *   naming belongs with dBgW in arm9.
  * - data_ov052_021124d4 is this overlay's BMD/KCL/CLPS bundle;
  *   symbols.txt has no recovered name.
- * - Sine table data_02082214 (arm9).
+ * - The bob reads the arm9 sine table, data_02082214, through FX_SinIdx.
  * - Inline destructor (out-of-line emits D0 before D1 plus a homeless D2).
  * - g_profile_EMM_LOG lives outside this TU (S14).
  */
@@ -28,6 +28,7 @@ enum d_a_obj_emm_log_AssetId { ASSET_EMM_LOG_BMD = 0x05e3, ASSET_EMM_LOG_KCL = 0
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 
 struct daObjEmmLog_c_Resources {
     SharedFilePtr *model;
@@ -49,15 +50,12 @@ struct EmmLogCollisionFilePtr : SharedFilePtr {
     ~EmmLogCollisionFilePtr();
 };
 
-extern short data_02082214[];
 extern daObjEmmLog_c_Resources data_ov052_021124d4;
 
-// @symbol daObjEmmLog_c_classInit
 extern "C" daObjEmmLog_c *daObjEmmLog_c_classInit() {
     return new daObjEmmLog_c();
 }
 
-// @symbol _ZN13daObjEmmLog_c13InitResourcesEv
 s32 daObjEmmLog_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov052_021124d4.model), 1, -1);
     UpdateModelPosAndRotY();
@@ -77,12 +75,10 @@ s32 daObjEmmLog_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_c8BehaviorEv
 s32 daObjEmmLog_c::Behavior() {
     mMeshCollider.SetClipRadius(0x600000);
 
-    int idx = (u16)mBobPhase >> 4;
-    int s = data_02082214[idx * 2];
+    int s = FX_SinIdx((u16)mBobPhase >> 4);
     int m = FX_MUL(mBobAmplitude, s);
     mPosY = mBasePosY + m;
 
@@ -94,13 +90,11 @@ s32 daObjEmmLog_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_c6RenderEv
 s32 daObjEmmLog_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_c16CleanupResourcesEv
 s32 daObjEmmLog_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -109,8 +103,6 @@ s32 daObjEmmLog_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjEmmLog_cD1Ev
-// @symbol _ZN13daObjEmmLog_cD0Ev
 /* Both destructors are emitted from the INLINE `~daObjEmmLog_c() {}` in
  * include/daObjEmmLog_c.h -- there is deliberately no body here. */
 

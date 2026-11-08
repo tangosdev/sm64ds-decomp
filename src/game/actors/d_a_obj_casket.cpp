@@ -13,7 +13,7 @@
  *
  * Notes (each measured with mwccarm 2004/b56):
  * - InitResources installs the before-collision callback through
- *   func_020393d4, the out-of-line store into dBgW::beforeClsnCallback
+ *   dBgW::SetBeforeClsnCallback, the out-of-line store into dBgW::beforeClsnCallback
  *   (+0x18). Assigning the member directly sizes InitResources 0x110
  *   against the ROM's 0x114, so the call stays.
  * - St_Wait_Main reads the closest player's position through the pointer
@@ -24,9 +24,8 @@
  * - data_ov071_02122ecc, data_ov071_021230d0 and data_ov071_021230d8 are
  *   defined at the end of this file so their dynamic init stays out of
  *   .text.
- * - MulVec3Mat4x3, Vec3_Add, AddVec3, Vec3_HorzDist, DecIfAbove0_Short and
- *   func_020393d4 stay local externs;
- *   no shared header declares them.
+ * - MulVec3Mat4x3, Vec3_Add, AddVec3, Vec3_HorzDist and DecIfAbove0_Short
+ *   stay local externs; no shared header declares them.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -82,11 +81,8 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-/* local extern: d_bg_w.cpp defines it; no header declares it. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol daObjCasket_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjCasket_c through RTTI,
  * allocation size, vtable identity, and the CASKET registry profile; later EAD
  * lineage supplies classInit. Exact original spelling is not preserved.
@@ -95,7 +91,6 @@ extern "C" daObjCasket_c *daObjCasket_c_classInit() {
     return new daObjCasket_c();
 }
 
-// @symbol _ZN13daObjCasket_c13InitResourcesEv
 int daObjCasket_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov071_021230d0), 1, -1);
     mVertAccel = -0x2000;
@@ -125,11 +120,10 @@ int daObjCasket_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199,
                               mAngleY, data_ov063_0211ebd8);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;
 }
 
-// @symbol _ZN13daObjCasket_c8BehaviorEv
 int daObjCasket_c::Behavior() {
     /* Setting 1 is a casket that never moves. */
     if ((param1 & 0xff) == 1) {
@@ -147,13 +141,11 @@ int daObjCasket_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daObjCasket_c6RenderEv
 int daObjCasket_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjCasket_c16CleanupResourcesEv
 int daObjCasket_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -163,27 +155,23 @@ int daObjCasket_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjCasket_c8RunStateEv
 /* Runs the current state's exec function. */
 void daObjCasket_c::RunState() {
     (this->*data_ov071_02122ecc[mState].exec)();
 }
 
-// @symbol _ZN13daObjCasket_c8SetStateEi
 /* Enters a state and runs its init function. */
 void daObjCasket_c::SetState(int state) {
     mState = state;
     (this->*data_ov071_02122ecc[mState].init)();
 }
 
-// @symbol _ZN13daObjCasket_c12St_Wait_InitEv
 /* State 0 init, WAIT. */
 void daObjCasket_c::St_Wait_Init() {
     mAngleStep = 0;
     mStateTimer = 60;
 }
 
-// @symbol _ZN13daObjCasket_c12St_Wait_MainEv
 /* State 0 exec, WAIT. While mAngleX is not 0, swing back down, gathering
  * speed toward -0x7d0 a frame; on reaching 0, call dActor_c::Earthquake at the
  * actor's position, spawn dust at the point 200 units back along the facing and
@@ -246,7 +234,6 @@ void daObjCasket_c::St_Wait_Main() {
     }
 }
 
-// @symbol _ZN13daObjCasket_c15St_StandUp_InitEv
 /* State 1 init, STANDUP. */
 void daObjCasket_c::St_StandUp_Init() {
     mAngleStep = 0;
@@ -254,7 +241,6 @@ void daObjCasket_c::St_StandUp_Init() {
     Sound::PlayBank3(0x58, mCamSpacePos);
 }
 
-// @symbol _ZN13daObjCasket_c15St_StandUp_MainEv
 /* State 1 exec, STANDUP. Swing mAngleX up to 0x4000, gathering speed toward
  * 0x3e8 a frame. Then the timer counts down from 60: while it is 30 or less,
  * mAngleZ alternates between -0xc8 and 0xc8 each frame and sound 0x59 plays
@@ -278,7 +264,6 @@ void daObjCasket_c::St_StandUp_Main() {
     mAngleZ = (mBehaviorTimer & 1) * 0x190 - 0xc8;
 }
 
-// @symbol _ZN13daObjCasket_c20UpdateModelTransformEv
 /* Puts the model where the actor is. */
 void daObjCasket_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);

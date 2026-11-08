@@ -67,7 +67,6 @@ def candidates():
 
 
 BODY = """//cpp
-// @symbol _ZN{n}{cls}D1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * The hand-written version spelled out what a complete-object destructor does
