@@ -39,6 +39,7 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* local extern: Vec3_Asr's definition takes a plain triple; no shared header
    declares it yet. */
@@ -121,7 +122,7 @@ int daFeather_c::Behavior() {
         }
     }
 
-    mParticle = Particle::System::New(mParticle, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle = Particle::System::New(mParticle, kPtclFeather, mPosX, mPosY, mPosZ, 0, 0);
 
     UpdatePos((dCc_c *)0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
@@ -130,7 +131,7 @@ int daFeather_c::Behavior() {
         ApproachLinear2(*(short *)&mSwayAngle, 0, 0x50);
         ApproachLinear(mHorzSpeed, 0, 0x555);
         if (DecIfAbove0_Byte(&mLifeTimer) == 0) {
-            Particle::System::NewSimple(0xd2, mPosX, mPosY, mPosZ);
+            Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY, mPosZ);
             MarkForDestruction();
         }
     } else {
@@ -167,7 +168,7 @@ int daFeather_c::Behavior() {
             int eq = (a->actorID == 0xbf);
             if (eq) {
                 ((daPly_c *)a)->InitWingFeathers(true);
-                Particle::System::NewSimple(0xd2, mPosX, mPosY, mPosZ);
+                Particle::System::NewSimple(kPtclItemVanish, mPosX, mPosY, mPosZ);
                 MarkForDestruction();
                 return 1;
             }

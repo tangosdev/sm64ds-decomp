@@ -25,6 +25,7 @@ enum daKirai_c_AssetId { ASSET_KOOPA_BOMB_BMD = 0x0382 };
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* Per-member opt brackets bind only when codegen is not deferred, and that
@@ -113,11 +114,11 @@ int daKirai_c::IsInTriggerRange(Vector3 *pos) {
 void daKirai_c::Explode() {
     Vector3 v;
     mStateIndex = 1;
-    Particle::System::NewSimple(0xa8, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xa9, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xaa, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xab, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xac, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPosX, mPosY, mPosZ);
     func_02012694(0x2f, &mCamSpacePos);
     v.x = mPosX;
     v.y = mPosY;
@@ -236,11 +237,11 @@ void daKirai_c::StateArmed() {
         return;
     if (!IsPlayerActor(a))
         return;
-    Particle::System::NewSimple(0xa8, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xa9, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xaa, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xab, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xac, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeB, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeC, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeD, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclSpikeBombExplodeE, mPosX, mPosY, mPosZ);
     func_02012694(0x2f, &mCamSpacePos);
     quakePos.x = mPosX;
     quakePos.y = mPosY;

@@ -256,7 +256,7 @@
       "ordinal": 30
     },
     {
-      "symbol": "Curling2_ResolveStoneCollision",
+      "symbol": "_ZN15dScMgCurling2_c21ResolveStoneCollisionEi",
       "address": "0x020e5450",
       "size": "0x00000560",
       "legacy_source": "src/unnamed/ov006/func_ov006_020e5450.cpp",

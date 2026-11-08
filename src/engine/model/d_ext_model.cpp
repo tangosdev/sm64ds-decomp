@@ -70,7 +70,7 @@ void func_020462d0(ModelComponents *data, BMD_File *file, void *buffer);
 void func_02016b24(dExtSimpleModel_c *model, u32 mask);
 /* defined below; dExtCommonModel_c and dExtShadowModel_c take their pooled
    components from it */
-ModelComponents *func_02016e70(BMD_File *file);
+ModelComponents *GetCommonModelComponents(BMD_File *file);
 /* local extern: no header declares it; delete veneer for the transforms and
    blend buffers */
 void func_0203cbc0(void *ptr);
@@ -90,7 +90,7 @@ int func_020469e0(void *ptr);
 /* local extern: no header declares it; dExtModel_c's destructor frees the file.
    decl_common.h's copy is the same spelling; that catch-all does not count. */
 void Deallocate(void *ptr);
-/* local extern: game heap pointer func_02017060 reads */
+/* local extern: game heap pointer TrimModelFile reads */
 extern void *data_020a0ea0;
 /* decl_common.h's int[] spelling. The records are 0xc-byte CommonModelData. */
 extern int data_0209cef8[];
@@ -117,7 +117,7 @@ void func_02045e70(char *p, unsigned int color);
 void func_02045ef8(char *p, unsigned int color);
 void func_02045f80(char *p, unsigned int color);
 void func_0204605c(char *p, int id, int index);
-u32 func_02017060(void *ptr);
+u32 TrimModelFile(void *ptr);
 /* local extern: defined in src/engine/model/Model4.cpp, which types the frame
    `short`; no header declares it. Stores (file, frame) into bone slot i of the
    components' animation array. The frame stays `int` here: the ROM passes
@@ -133,9 +133,6 @@ u32 func_020462bc(int *file);
 /* local extern: no header declares it; initializes ModelComponents' side of
    the blend buffer. Spelled (int *, int) the way func_020462b4.c defines it */
 void func_020462b4(int *data, int buf);
-/* defined below -- DoSetFile's tail; it sits between UpdateVerts and
-   DoSetFile in the ROM and DoSetFile is its only caller here */
-int func_020165c4(dExtBlendAnmModel_c *self, char *file);
 /* local extern: dExtShadowModel_c's live list head and freeze flag */
 extern dExtShadowModel_c *data_0209cef4;
 extern u8 data_0209ceec;
@@ -166,7 +163,7 @@ int fdiv(int a, int b);
 }
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
-   by data_0209cef8. func_02016e70 fills the two owned slots; the destructors
+   by data_0209cef8. GetCommonModelComponents fills the two owned slots; the destructors
    and CleanCommonModelDataArr free them. */
 struct CommonModelData {
     BMD_File *file;              /* 0x00 */
@@ -193,7 +190,9 @@ dExtModel_c::~dExtModel_c() {
     }
 }
 
-extern "C" u32 func_02017060(void *ptr) {
+/* Trims a set-up model file's allocation down to the size its header
+   reports (func_020469e0). Coined name. */
+extern "C" u32 TrimModelFile(void *ptr) {
     if (!ptr)
         return 0;
     void *heap = data_020a0ea0;
@@ -203,15 +202,17 @@ extern "C" u32 func_02017060(void *ptr) {
 }
 
 /* Loads the file offsets, calls the object's DoSetFile through vtable slot 2,
-   and on success reallocs the file down to its reported size. */
-int dExtModel_c::func_02016ff4(BMD_File *file, int c, int d) {
+   and on success reallocs the file down to its reported size. Coined name:
+   SetFile for a file straight from ::LoadFile (LoadAndSetFile, its only
+   caller, runs it right after the load). */
+int dExtModel_c::SetLoadedFile(BMD_File *file, int c, int d) {
     int ret;
     if (!file)
         return 0;
     dExtSimpleModel_c::UpdateFileOffsets(*file);
     ret = DoSetFile((char *)file, c, d);
     if (ret)
-        func_02017060(file);
+        TrimModelFile(file);
     return ret;
 }
 
@@ -222,7 +223,7 @@ int dExtModel_c::SetFile(BMD_File *file, int a, int b) {
 void dExtSimpleModel_c::LoadAndSetFile(u16 ov0ID, int a, int b) {
     BMD_File *file = (BMD_File *)::LoadFile(ov0ID);
     modelFile = file;
-    func_02016ff4(file, a, b);
+    SetLoadedFile(file, a, b);
 }
 
 void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
@@ -246,8 +247,8 @@ void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {
 }
 
 /* Get-or-create the pooled ModelComponents entry for the pointer-holding
-   siblings (dExtCommonModel_c/dExtShadowModel_c). */
-extern "C" ModelComponents *func_02016e70(BMD_File *file) {
+   siblings (dExtCommonModel_c/dExtShadowModel_c). Coined name. */
+extern "C" ModelComponents *GetCommonModelComponents(BMD_File *file) {
     CommonModelData *e;
     void *b;
 
@@ -498,18 +499,18 @@ int dExtBlendAnmModel_c::DoSetFile(char *file, int a, int b) {
     int r = dExtSimpleModel_c::DoSetFile(file, a, b);
     if (r == 0)
         return 0;
-    return func_020165c4(this, f);
+    return InitBlendBuffer(f);
 }
 
 /* DoSetFile's tail: allocates the mBlendBuffer blend buffer sized off the file and
    hands it plus the ModelComponents member to func_020462b4. It sits between
-   UpdateVerts and DoSetFile in the ROM. */
-extern "C" int func_020165c4(dExtBlendAnmModel_c *self, char *file) {
-    self->mBlendBuffer = Memory::operator_new2(func_020462bc((int *)file));
-    void *p = self->mBlendBuffer;
+   UpdateVerts and DoSetFile in the ROM. Coined name. */
+int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
+    mBlendBuffer = Memory::operator_new2(func_020462bc((int *)file));
+    void *p = mBlendBuffer;
     if (p == 0)
         return 0;
-    func_020462b4((int *)&self->data, (int)p);
+    func_020462b4((int *)&data, (int)p);
     return 1;
 }
 
@@ -625,7 +626,7 @@ void dExtAnm2Model_c::Copy(const dExtAnm2Model_c &src, char *newFile, u32 newOth
 /* ---------------------------------------------------------------------------
    dExtCommonModel_c, 0x0201609c..0x02016254: the dExtModel_c sibling whose
    rendering state is a POINTER into a pooled ModelComponents block
-   (func_02016e70) rather than an in-place struct.
+   (GetCommonModelComponents) rather than an in-place struct.
    --------------------------------------------------------------------------- */
 
 dExtCommonModel_c::dExtCommonModel_c() : data(0) {
@@ -640,7 +641,7 @@ dExtCommonModel_c::dExtCommonModel_c() : data(0) {
 dExtCommonModel_c::~dExtCommonModel_c() {}
 
 int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
-    data = func_02016e70((BMD_File *)file);
+    data = GetCommonModelComponents((BMD_File *)file);
     if (data == 0)
         return 0;
     data->UpdateVertsUsingBones();
@@ -711,7 +712,7 @@ dExtShadowModel_c::~dExtShadowModel_c() {
    siblings; the polygon-ID argument is simply never used -- a shadow has
    no polygon ID to set. */
 int dExtShadowModel_c::DoSetFile(char *file, int a, int b) {
-    data = func_02016e70((BMD_File *)file);
+    data = GetCommonModelComponents((BMD_File *)file);
     if (data == 0)
         return 0;
     data->UpdateVertsUsingBones();

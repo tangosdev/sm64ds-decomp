@@ -6,10 +6,10 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "One contiguous run of the Nitro SDK's GX_g2.c, 0x020551f0..0x0205532c. pret/pokediamond's arm9/lib/NitroSDK/src/GX_g2.c, compiled with its own pinned mwccarm 1.2/sp2p3, emits five functions: ChangeBlendBrightness_ 0x48, SetBlendBrightnessExt_ 0x58, SetBlendBrightness_ 0x24, SetBlendAlpha_ 0x1c, SetBGyAffine_ 0xb4. Four land here in the same order with identical sizes: func_020551f0 0x48, SetBlendBrightness 0x24, SetBlendAlpha 0x1c, SetBGyAffine 0xb4. SetBlendBrightnessExt_ is absent because nothing in this game calls it, so the linker dropped it. No function in the run is unexplained.",
-    "func_020551f0's body is G2x_ChangeBlendBrightness_: it rewrites the 0xc0 direction bits of BLDCNT only when an existing fade (0x80 or 0xc0) has the opposite sign, and always stores the magnitude to BLDY at +4.",
+    "One contiguous run of the Nitro SDK's GX_g2.c, 0x020551f0..0x0205532c. pret/pokediamond's arm9/lib/NitroSDK/src/GX_g2.c, compiled with its own pinned mwccarm 1.2/sp2p3, emits five functions: ChangeBlendBrightness_ 0x48, SetBlendBrightnessExt_ 0x58, SetBlendBrightness_ 0x24, SetBlendAlpha_ 0x1c, SetBGyAffine_ 0xb4. Four land here in the same order with identical sizes: G2x_ChangeBlendBrightness_ 0x48, SetBlendBrightness 0x24, SetBlendAlpha 0x1c, SetBGyAffine 0xb4. SetBlendBrightnessExt_ is absent because nothing in this game calls it, so the linker dropped it. No function in the run is unexplained.",
+    "G2x_ChangeBlendBrightness_ (0x020551f0, named for the SDK function its body is): it rewrites the 0xc0 direction bits of BLDCNT only when an existing fade (0x80 or 0xc0) has the opposite sign, and always stores the magnitude to BLDY at +4.",
     "TOP EDGE: func_0205532c (0x40, above SetBGyAffine) has no counterpart in GX_g2.c and stays its own source.",
-    "BOTTOM EDGE: func_020551f0 is GX_g2.c's first function, so the file starts there. The run below it, ending with G2::GetBG0ScrPtr at 0x020551bc, is arm9/G2, which is GX_bgcnt.c (16 of 16 functions align with pret).",
+    "BOTTOM EDGE: G2x_ChangeBlendBrightness_ (0x020551f0) is GX_g2.c's first function, so the file starts there. The run below it, ending with G2::GetBG0ScrPtr at 0x020551bc, is arm9/G2, which is GX_bgcnt.c (16 of 16 functions align with pret).",
     "No lifecycle or RTTI: G2x has no instance state and no virtuals (include/G2x.h documents the all-static shape)."
   ],
   "sections": [
@@ -21,7 +21,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_020551f0",
+      "symbol": "G2x_ChangeBlendBrightness_",
       "address": "0x020551f0",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/arm9/0205/func_020551f0.c",
@@ -58,7 +58,7 @@
     "G2x is the all-static 2D-engine blend/affine writer set: every member takes the caller's volatile u16* register base as r0 (no this). SetBGyAffine packs the Matrix2x2's four 20.12 terms into two halfword pairs after a >>4 format conversion and resolves the reference point into the single origin the hardware takes.",
     "Matrix2x2 stays a file-local view (struct with int m[4]): the header forward-declares it because a pointer parameter needs no more, and the only field access in the class is this function's indexing -- the same shape include/OAM.h uses.",
     "The file is written ROM-descending because mwccarm emits .text in reverse source order under default deferred codegen; the emitted object carries the four functions ascending 0x020551f0..0x0205532c.",
-    "func_020551f0 keeps its linker name with C linkage (both callers, d_s_entry_methods.cpp and an ov007 C file, declare it with C linkage); it is the SDK's G2x_ChangeBlendBrightness_. It is defined last in the source because emission is reverse source order."
+    "G2x_ChangeBlendBrightness_ keeps the SDK's C-linkage name rather than becoming a G2x:: member, because one of its two callers (func_ov007_020c8b34.c) is a C file; d_s_entry_methods.cpp declares it extern \"C\". It was func_020551f0. It is defined last in the source because emission is reverse source order."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

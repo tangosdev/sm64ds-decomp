@@ -20,6 +20,7 @@ enum d_a_obj_wanwan_shutter_AssetId {
 #include "daObjWanwanShutter_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SharedFilePtr.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
@@ -107,7 +108,7 @@ void daObjWanwanShutter_c::Break() {
         v[0].y = ty + 0x12c000;
         v[0].z = tz;
     }
-    Particle::System::NewSimple(0x1e, v[0].x, v[0].y, v[0].z);
+    Particle::System::NewSimple(kPtclChompGateBreak, v[0].x, v[0].y, v[0].z);
     v[1].x = v[0].x;
     v[1].y = v[0].y;
     v[1].z = v[0].z;

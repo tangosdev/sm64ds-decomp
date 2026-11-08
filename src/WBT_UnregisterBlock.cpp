@@ -7,7 +7,7 @@ extern "C" {
 
 extern struct WBTBlockInfoList *func_02065ae0(void);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
-struct WBTBlockInfoList *func_020657fc(int key) {
+struct WBTBlockInfoList *WBT_UnregisterBlock(int key) {
     u32 saved = (0, IRQ::Disable());
     struct WBTBlockInfoList *head = func_02065ae0();
     struct WBTBlockInfoList *cur;

@@ -1,19 +1,19 @@
 #include "types.h"
 #include "private/spl_particle_views.h"
 extern void func_0204af3c(void *p);
-extern void func_0204af38(void *p);
+extern void SPLUtil_SetTexture_Stub(void *p);
 extern void func_0204b244(void *self, void *node);
 extern void func_0204be40(void *self, void *node);
-extern void func_0204b81c(void *self, void *node);
+extern void SPLDraw_DirectionalBillboard(void *self, void *node);
 extern void func_0204b028(void *self, void *node);
 extern void func_0204bbd8(void *self, void *node);
-extern void func_0204b460(void *self, void *node);
+extern void SPLDraw_Child_DirectionalBillboard(void *self, void *node);
 
 /* Draw the current system's particles, then its child particles: bind the
  * definition's texture, pick the draw routine by draw type (billboard,
  * directional billboard, polygon), and when the definition animates its
- * texture rebind each particle's own before drawing it (func_0204af38 is the
- * no-op). pret's SPL splits this into SPLManager_DrawParticles and
+ * texture rebind each particle's own before drawing it
+ * (SPLUtil_SetTexture_Stub is the no-op). pret's SPL splits this into SPLManager_DrawParticles and
  * SPLManager_DrawChildParticles. */
 void func_0204a5c8(char *self) {
     ManagerView *mgr = (ManagerView *)self;
@@ -31,14 +31,14 @@ void func_0204a5c8(char *self) {
         draw = func_0204be40;
         break;
     case 1:
-        draw = func_0204b81c;
+        draw = SPLDraw_DirectionalBillboard;
         break;
     case 2:
         draw = func_0204b244;
         break;
     }
 
-    setTexture = data->hasTexAnim ? func_0204af3c : func_0204af38;
+    setTexture = data->hasTexAnim ? func_0204af3c : SPLUtil_SetTexture_Stub;
 
     n = system->particles.head;
     if (n != 0) {
@@ -59,7 +59,7 @@ void func_0204a5c8(char *self) {
         draw = func_0204bbd8;
         break;
     case 1:
-        draw = func_0204b460;
+        draw = SPLDraw_Child_DirectionalBillboard;
         break;
     case 2:
         draw = func_0204b028;

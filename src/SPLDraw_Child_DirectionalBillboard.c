@@ -17,17 +17,11 @@ extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void func_02055388(int *m);             /* multiply by the 4x3 matrix */
 extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 
-/* Draw one particle as a quad stretched along its flight (draw type 1,
- * func_0204a5c8): alpha and the next polygon ID into POLYGON_ATTR (nothing
- * more when the alpha is 0); the quad's x axis is velocity x the view's z
- * axis turned into view space (nothing is drawn when they are parallel), y
- * at right angles to it, scaled by scale * animScale (x by aspectRatio too,
- * y stretched by dbbScale the more the particle flies across the view),
- * translated to basePosition + offset in view space; then its color and the
- * XY-plane quad. pret's SPL calls this SPLDraw_DirectionalBillboard (that
- * revision adds the scale-animation axis and view-space cases);
- * func_0204b460 is the child-particle twin. */
-void func_0204b81c(ManagerView *mgr, ParticleElement *ptcl) {
+/* Draw one child particle as a quad stretched along its flight (child draw
+ * type 1, func_0204a5c8): SPLDraw_DirectionalBillboard, still with the parent
+ * header's aspect ratio and dbbScale, but the child record's tile counts.
+ * The name is pret's SPL's. */
+void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl) {
     ParticleSystem *sys = mgr->mCurrentSystem;
     s16 aspectRatio = sys->mDefinition->data->aspectRatio;
     int alpha = (ptcl->visibility.baseAlpha * (ptcl->visibility.animAlpha + 1)) >> 5;
@@ -116,8 +110,8 @@ void func_0204b81c(ManagerView *mgr, ParticleElement *ptcl) {
 
     reg_G3_COLOR = ptcl->color;
     {
-        PtclData *data = mgr->mCurrentSystem->mDefinition->data;
+        PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
         /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
-        func_0204c24c((u8)data->textureTileCountS, (u8)data->textureTileCountT);
+        func_0204c24c((u8)child->textureTileCountS, (u8)child->textureTileCountT);
     }
 }

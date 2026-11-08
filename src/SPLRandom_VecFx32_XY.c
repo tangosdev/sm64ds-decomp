@@ -3,13 +3,13 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-/* func_0204d9f0 at 0x0204d9f0, size=0x5c
- * LCG RNG: generates 2 random values for x,y (z=0), normalizes the vector.
- */
-extern void NormalizeVec3(const struct Vector3* src, struct Vector3* dst);
+extern void NormalizeVec3(const struct Vector3 *src, struct Vector3 *dst);
 
-void func_0204d9f0(struct Vector3* out)
-{
+/* A random unit vector in the XY plane: two draws from the SPL LCG, each
+ * shifted down 8, for x and y, z = 0, then normalized. The name is pret's
+ * SPL's (its spl_random.c, pret-coined); pret's file defines
+ * SPLRandom_VecFx32 first, and mwccarm emits in reverse source order. */
+void SPLRandom_VecFx32_XY(struct Vector3 *out) {
     s32 s = data_020a4d30;
     s32 x = (s32)((unsigned int)s * 0x5eedf715u + 0x1b0cb173u);
     data_020a4d30 = x;

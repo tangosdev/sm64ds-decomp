@@ -258,14 +258,14 @@ bool dScMgD3DBase_c::BeforeInitResources()
 void dScMgD3DBase_c::AfterInitResources(unsigned int vfSuccess)
 {
     dScMgBase_c::AfterInitResources(vfSuccess);
-    mSysTracker.Initialise();
+    mParticle.Initialise();
 }
 
 int dScMgD3DBase_c::BeforeBehavior()
 {
     if (dScMgBase_c::BeforeBehavior() == 0) return 0;
     if (data_020a0db0 & 1)
-        mSysTracker.Update();
+        mParticle.Update();
     return 1;
 }
 

@@ -3,12 +3,12 @@
 extern void func_020418f0(void);
 /* NitroSDK WBT_MpParentSendHook and WBT_MpChildSendHook: both return the
    packet length as an int, which this call site narrows to u16 itself */
-extern int func_02065138(int buf, int size);
-extern int func_020650a0(int buf, int size);
+extern int WBT_MpParentSendHook(int buf, int size);
+extern int WBT_MpChildSendHook(int buf, int size);
 extern int WM_SetMPDataToPort(int a0, int a1, int a2, int a3, u16 a4, u16 a5);
 
-/* Send the pending file-sharing packet on mPort: func_02065138 (parent) or
- * func_020650a0 (child), by mIsParent, builds it in the buffer at +0x40 with
+/* Send the pending file-sharing packet on mPort: WBT_MpParentSendHook (parent) or
+ * WBT_MpChildSendHook (child), by mIsParent, builds it in the buffer at +0x40 with
  * that side's packet size as the limit, then WM_SetMPDataToPort sends it to AIDs
  * 0xffff with func_020418f0 as the callback. */
 void func_02041930(void)
@@ -26,9 +26,9 @@ void func_02041930(void)
     {
         unsigned char *sub = work->mSendBuf;
         if (f0 != 0)
-            r = (u16)func_02065138((int)sub, a);
+            r = (u16)WBT_MpParentSendHook((int)sub, a);
         else
-            r = (u16)func_020650a0((int)sub, a);
+            r = (u16)WBT_MpChildSendHook((int)sub, a);
         work->mSendBusy =
             (WM_SetMPDataToPort((int)func_020418f0, (int)sub, r, 0xffff, work->mPort, 3) == 2) ? 1
                                                                                                : 0;

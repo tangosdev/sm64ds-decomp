@@ -47,6 +47,7 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 
@@ -256,8 +257,8 @@ int daKrpa_c::EnterKnockedAway() {
     this->mScaleZ = 0x1000;
     this->mStateTimer = 0x2d;
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_021234c4, 0, 0x1000, 0);
-    Particle::System::NewSimple(0x43, this->mPosX, this->mPosY, this->mPosZ);
-    Particle::System::NewSimple(0x44, this->mPosX, this->mPosY, this->mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayA, this->mPosX, this->mPosY, this->mPosZ);
+    Particle::System::NewSimple(kPtclKnockAwayB, this->mPosX, this->mPosY, this->mPosZ);
     this->mStateIndex = 3;
     return 1;
 }

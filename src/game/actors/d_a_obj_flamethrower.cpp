@@ -46,6 +46,7 @@
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
+#include "Particle__System.h"
 
 /* LEVEL_ID 0xc is Big Boo's Haunt (its course overlay is ov020). */
 enum {
@@ -71,12 +72,6 @@ extern short data_ov095_02136f98[];
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-/* Flame particles. 0x4f / 0x50 when param1's low byte is not 0xff;
- * 0x51 / 0x52 when it is. No recovered names. */
-extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
-extern void func_020226fc(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
-extern void func_02022864(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
-extern void func_020227ec(Fix12i x, Fix12i y, Fix12i z, s16 scale, s16 velocity);
 }
 
 /* data_ov095_02136f80 (decl_common.h) is the per-segment scale,
@@ -292,13 +287,15 @@ int daObjFlamethrower_c::Behavior() {
                 if ((param1 & 0xff) != kAltParam) {
                     ang = data_ov095_02136f80[i];
                     a2 = ang0;
-                    func_02022774(part.x, part.y, part.z, ang, a2);
-                    func_020226fc(part.x, part.y, part.z, ang, data_ov095_02136f98[i]);
+                    Particle::System::NewFlamethrowerBlueA(part.x, part.y, part.z, ang, a2);
+                    Particle::System::NewFlamethrowerBlueB(part.x, part.y, part.z, ang,
+                                                           data_ov095_02136f98[i]);
                 } else {
                     ang = data_ov095_02136f80[i];
                     a2 = ang1;
-                    func_02022864(part.x, part.y, part.z, ang, a2);
-                    func_020227ec(part.x, part.y, part.z, ang, data_ov095_02136f98[i]);
+                    Particle::System::NewFlamethrowerRedA(part.x, part.y, part.z, ang, a2);
+                    Particle::System::NewFlamethrowerRedB(part.x, part.y, part.z, ang,
+                                                          data_ov095_02136f98[i]);
                 }
                 ppos += 0xc;
                 wavePhase += 0x1000;
