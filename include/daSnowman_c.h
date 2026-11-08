@@ -28,7 +28,7 @@
 #include "dBgCh_Actr.h"
 
 struct daSnowman_c : dEnemyBase_c {
-    /* One state: `enter` runs once from func_ov081_02125488, `execute` every
+    /* One state: `enter` runs once from SetState, `execute` every
        frame from Behavior. The ten records live in ov081 .bss
        (0x02128e14..0x02128ea4, 0x10 apart); __sinit_ov081_02128154 copies
        each pair of member pointers in from .data 0x021288f8..0x02128998.
@@ -50,7 +50,7 @@ struct daSnowman_c : dEnemyBase_c {
        its address to the cap actor at +0xc8, which rides on it. */
     Matrix4x3 mCapMatrix;             /* 0x3c8 */
     State *mState;                    /* 0x3f8 */
-    /* Coined. The uniqueID of the actor func_ov081_02124dfc spawns (0xe0);
+    /* Coined. The uniqueID of the actor StateSpawnSnowballEnter spawns (0xe0);
        it is carried at mHandPos and thrown toward the closest player. */
     u32 mSnowballID;                  /* 0x3fc */
     s32 mCapUniqueID;                 /* 0x400 */
@@ -59,7 +59,7 @@ struct daSnowman_c : dEnemyBase_c {
        then frames until the next hop). Spin stores mAngleY - player
        angle and uses the sign to pick the spin direction. */
     s32 mStep;                        /* 0x408 */
-    s32 mClosestPlayerIdx;            /* 0x40c -- coined; written by func_ov081_021245e8 */
+    s32 mClosestPlayerIdx;            /* 0x40c -- coined; written by FindClosestPlayerDist */
     s32 mTimer;                       /* 0x410 -- coined; lean frames, then spin frames */
     s16 mInitAngleY;                  /* 0x414 */
     u8  pad_416[0x2];
@@ -95,32 +95,32 @@ struct daSnowman_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
-    void func_ov081_02124134();
-    void func_ov081_0212423c(int idx);
-    void func_ov081_021243cc();
-    int func_ov081_021245e8();
-    int func_ov081_021246a0();
-    int func_ov081_0212479c();
-    int func_ov081_02124894();
-    int func_ov081_0212498c();
-    int func_ov081_021249f4();
-    int func_ov081_02124b08();
-    int func_ov081_02124b98();
-    int func_ov081_02124d14();
-    int func_ov081_02124d50();
-    int func_ov081_02124dfc();
-    int func_ov081_02124e64();
-    int func_ov081_02124ec0();
-    int func_ov081_02124f20();
-    int func_ov081_02124f7c();
-    int func_ov081_02125038();
-    int func_ov081_02125068();
-    int func_ov081_021250c8();
-    int func_ov081_02125200();
-    int func_ov081_02125208();
-    int func_ov081_0212538c();
-    int func_ov081_02125488(State *state);
-    void func_ov081_021254d8();
+    void ReleaseHeldObjects();
+    void RotateTowardPlayer(int idx);
+    void CheckAttacks();
+    int FindClosestPlayerDist();
+    int StateMeltExecute();
+    int StateMeltEnter();
+    int StateDeathExecute();
+    int StateDeathEnter();
+    int StateBurrowExecute();
+    int StateBurrowEnter();
+    int StateThrowSnowballExecute();
+    int StateThrowSnowballEnter();
+    int StateSpawnSnowballExecute();
+    int StateSpawnSnowballEnter();
+    int StateRotateExecute();
+    int StateRotateEnter();
+    int StateRiseFromGroundExecute();
+    int StateRiseFromGroundEnter();
+    int StateHideUnhideExecute();
+    int StateHideUnhideEnter();
+    int StateHopExecute();
+    int StateHopEnter();
+    int StateWalkExecute();
+    int StateWalkEnter();
+    int SetState(State *state);
+    void UpdateModelMatrices();
 };
 
 #ifndef SM64DS_PLATFORM_PC
