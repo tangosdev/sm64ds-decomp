@@ -41,6 +41,7 @@ enum daRNk_c_AssetId {
 #include "Timer.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -169,7 +170,6 @@ extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 
 extern "C" {
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
-extern short data_02082214[];   /* SINE_TABLE: {sin, cos} pairs in fix12, indexed by angle >> 4 */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
 /* Play2D(3, id): a sound with no position. */
@@ -474,7 +474,6 @@ void daRNk_c::func_ov062_0211a1f4()
     int speedMul;
     int status;
     int speedScale;
-    volatile int tmp[3];
 
     switch (this->mStep) {
     case 0:
@@ -596,12 +595,11 @@ void daRNk_c::func_ov062_0211a1f4()
         this->mVertAccel = -0x2000;     /* InitResources' gravity again */
         SET_ANIM(this, ANIM_LAND, kAnimPlayOnce);
         this->mAnmModel.currFrame = 0;
-        tmp[0] = this->mPosX;
-        tmp[1] = this->mPosY;
-        tmp[2] = this->mPosZ;
-        tmp[1] = this->mPosY + kDustHeight;
-        Particle::System::NewSimple(kPtclLandingDust, this->mPosX, this->mPosY + kDustHeight,
-                                    this->mPosZ);
+        {
+            Vector3 dustPos = this->mPos;
+            dustPos.y += kDustHeight;
+            Particle::System::NewSimple(kPtclLandingDust, dustPos.x, dustPos.y, dustPos.z);
+        }
         return;
     default:
         return;
@@ -929,69 +927,27 @@ void daRNk_c::func_ov062_02119954()
    animation leaves both ranges. */
 void daRNk_c::func_ov062_02119800()
 {
-    volatile int stack[3];
     unsigned int kind = ((unsigned int)(this->mAnmModel.currFrame << 4)) >> 16;
-    short ang;
-    int x, y, z;
 
-    if (kind < 2)
-        goto check_hi;
-    if (kind <= 8)
-        goto body;
-check_hi:
-    if (kind < 0x13)
-        goto reset;
-    if (kind > 0x19)
-        goto reset;
-
-body:
-    if (this->mFootstepDone != 0)
-        return;
-    func_0201267c(kSfxFootstep, &this->mCamSpacePos);
-    this->mFootstepDone = 1;
-
-    ang = this->mAngleY;
-    x = this->mPosX;
-    /* Keep the comparison at this load boundary: the direct assignment
-       moves six instructions under 2004/b56 (see the pinned experiment). */
-    stack[0] = (kind > 8) ? x : x;
-    y = this->mPosY;
-    ang = (short)(ang + 0x4000);    /* a quarter turn: the sideways direction */
-    stack[1] = y;
-    z = this->mPosZ;
-    stack[2] = z;
-    stack[1] = y + 0x1e000;
-
-    if (kind > 8)
-        goto add_path;
-
-    {
-        unsigned short u = (unsigned short)ang;
-        int n = (int)(u >> 4);
-        short sinA = data_02082214[n * 2];
-        short cosA = data_02082214[n * 2 + 1];
-        short k = 0x1e;
-        stack[0] = x - (int)(sinA * k);
-        stack[2] = z - (int)(cosA * k);
+    if ((kind >= 2 && kind <= 8) || (kind >= 0x13 && kind <= 0x19)) {
+        if (this->mFootstepDone != 0)
+            return;
+        func_0201267c(kSfxFootstep, &this->mCamSpacePos);
+        this->mFootstepDone = 1;
+        s16 ang = this->mAngleY + 0x4000; /* a quarter turn: the sideways direction */
+        Vector3 pos = this->mPos;
+        pos.y += 0x1e000;
+        if (kind <= 8) {
+            pos.x -= FX_SinIdx((u16)ang >> 4) * 0x1e;
+            pos.z -= FX_CosIdx((u16)ang >> 4) * 0x1e;
+        } else {
+            pos.x += FX_SinIdx((u16)ang >> 4) * 0x1e;
+            pos.z += FX_CosIdx((u16)ang >> 4) * 0x1e;
+        }
+        Particle::System::NewSimple(kPtclFootstepDust, pos.x, pos.y, pos.z);
+    } else {
+        this->mFootstepDone = 0;
     }
-    goto do_new;
-
-add_path:
-    {
-        unsigned short u = (unsigned short)ang;
-        int n = (int)(u >> 4);
-        short sinA = data_02082214[n * 2];
-        short cosA = data_02082214[n * 2 + 1];
-        short k = 0x1e;
-        stack[0] = (int)(sinA * k) + x;
-        stack[2] = (int)(cosA * k) + z;
-    }
-do_new:
-    Particle::System::NewSimple(kPtclFootstepDust, (int)stack[0], (int)stack[1], (int)stack[2]);
-    return;
-
-reset:
-    this->mFootstepDone = 0;
 }
 
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c

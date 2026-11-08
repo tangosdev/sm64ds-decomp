@@ -773,17 +773,10 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     Sound::PlayBank0(9, mCamSpacePos);
-    volatile int v[3];
-    v[0] = mPosX;
-    v[1] = mPosY;
-    v[2] = mPosZ;
-    int ret = OnAimedAtWithEgg();
-    int vy = v[1];
-    int vx = v[0];
-    vy = vy + ret;
-    v[1] = vy;
-    Particle::System::NewSimple(0x43, vx, vy, v[2]);
-    Particle::System::NewSimple(0x44, v[0], v[1], v[2]);
+    Vector3 pos = mPos;
+    pos.y += OnAimedAtWithEgg();
+    Particle::System::NewSimple(0x43, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(0x44, pos.x, pos.y, pos.z);
     player.IncMegaKillCount();
 }
 

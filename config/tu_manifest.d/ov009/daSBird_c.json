@@ -834,34 +834,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@362",
+      "from": "@370",
       "to": "@263",
-      "evidence": "compiler temp: state 0 descriptor (StateSpawnFlock); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
+      "evidence": "compiler temp: state 0 descriptor (StateSpawnFlock); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @362 to @370 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).."
     },
     {
-      "from": "@364",
+      "from": "@372",
       "to": "@265",
-      "evidence": "compiler temp: state 1 descriptor (StateWaitForPlayer); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
+      "evidence": "compiler temp: state 1 descriptor (StateWaitForPlayer); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @364 to @372 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).."
     },
     {
-      "from": "@366",
+      "from": "@374",
       "to": "data_ov009_021138fc",
-      "evidence": "compiler temp: state 2 descriptor (StateLaunchFlock), formerly a named definition; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
+      "evidence": "compiler temp: state 2 descriptor (StateLaunchFlock), formerly a named definition; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @366 to @374 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).."
     },
     {
-      "from": "@368",
+      "from": "@376",
       "to": "@267",
-      "evidence": "compiler temp: state 3 descriptor (StateFly); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
+      "evidence": "compiler temp: state 3 descriptor (StateFly); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @368 to @376 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).."
     },
     {
-      "from": "@642",
+      "from": "@656",
       "to": "@381",
-      "evidence": "compiler-local model registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
+      "evidence": "compiler-local model registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @642 to @656 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).."
     },
     {
-      "from": "@643",
+      "from": "@657",
       "to": "@382",
-      "evidence": "compiler-local animation registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off)"
+      "evidence": "compiler-local animation registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @643 to @657 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).."
     }
   ]
 }

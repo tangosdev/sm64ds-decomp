@@ -171,13 +171,17 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov064-daBbl_c/daBbl_c.o (gitignored)",
+    "object": "build/tu/ov064-daBbl_c/d_a_bbl.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 15,
     "functions_declared": 15,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
       "droppedSections": [
         5,
         6,
@@ -195,7 +199,8 @@
         18,
         19,
         22,
-        23
+        23,
+        33
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -222,7 +227,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV7daBbl_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -412,6 +418,13 @@
       "canonical_module": "ov064",
       "canonical_address": "0x0211beec",
       "reason": "This TU defines every out-of-line virtual daBbl_c declares, so it is the class's key-function TU and emits this class's own vtable (address point; storage starts eight bytes lower at 0x0211bee4) as vague linkage. Its canonical ov064 home (0x0211beec) lies outside this entry's claimed .text range and the linker discards this copy."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h defines Vector3::~Vector3() inline and empty. ExecuteFountain builds its spawn point as a Vector3 local, so this TU emits that four-byte body once as vague linkage. The cartridge's copy is arm9:0x020072c0 (src/_ZN7Vector3D1Ev.cpp); this object is not its home."
     }
   ],
   "init": [

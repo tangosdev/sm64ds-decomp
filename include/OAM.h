@@ -19,18 +19,12 @@
  * copy of the 4 x u16 layout share it, and the `OamAttri` misspelling is retired. See
  * that header for the field evidence and for why it is deliberately dependency-free.
  *
- * THIS HEADER STILL FORWARD-DECLARES IT RATHER THAN INCLUDING IT, and that is load
- * bearing, not leftover. Two files need bit-level access to the same eight bytes and
- * keep their own local decompositions:
- *
- *   _ZN3OAM6Render*P9Matrix2x2                bitfields (yb, objMode, mode, mosaic,
- *                                             shape, xc, aff, size / tile, prio, pal)
- *   _ZN3OAM6Render*5Fix12IiES3_ii             `u32 a01; u16 a2; u16 a3;`
- *
- * The first of those includes THIS header, so if OAM.h pulled in OamAttr.h it would
- * collide with that file's own definition. A pointer parameter needs only the forward
- * declaration, so every method below can be declared without forcing a view on anyone;
- * the 68 files that merely pass an OamAttr* around never need the definition at all. */
+ * THIS HEADER STILL FORWARD-DECLARES IT RATHER THAN INCLUDING IT. A pointer
+ * parameter needs only the forward declaration, so every method below can be declared
+ * without forcing a definition on anyone; the 68 files that merely pass an OamAttr*
+ * around never need it. Bit-level access to the eight bytes goes through NitroSDK's
+ * GXOamAttr (include/nitro/gx/gxcommon.h), which src/engine/oam/OAM.cpp binds in each
+ * body. */
 #ifndef OAM_H
 #define OAM_H
 #include "types.h"

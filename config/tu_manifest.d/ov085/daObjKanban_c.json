@@ -528,9 +528,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@694",
+      "from": "@753",
       "to": "@696",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @694 to @753 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx/FX_CosIdx (#821).."
     }
   ]
 }

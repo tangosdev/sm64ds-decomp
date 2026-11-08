@@ -832,10 +832,7 @@ void daTrs_c::func_ov063_021172a8() {
 
 void daTrs_c::func_ov063_02117364() {
 
-    volatile VecFx32 pos;
-    pos.x = this->mPosX;
-    pos.y = this->mPosY;
-    pos.z = this->mPosZ;
+    Vector3 pos = this->mPos;
 
     if (this->mRelocateTimer != 0)
         (this->mRelocateTimer)--;
@@ -858,22 +855,18 @@ void daTrs_c::func_ov063_02117364() {
         }
         pos.y += this->mClsnScale * 0xaf;
         if (this->mBooFlags.mirrored)
-            pos.x = pos.x * -1;
-        this->mParticle0 = Particle::System::New(*(volatile u32 *)&this->mParticle0, 0x95, pos.x,
-                                                 pos.y, pos.z, 0, 0);
-        this->mParticle1 = Particle::System::New(*(volatile u32 *)&this->mParticle1, 0x96, pos.x,
-                                                 pos.y, pos.z, 0, 0);
+            pos.x *= -1;
+        this->mParticle0 = Particle::System::New(this->mParticle0, 0x95, pos.x, pos.y, pos.z, 0, 0);
+        this->mParticle1 = Particle::System::New(this->mParticle1, 0x96, pos.x, pos.y, pos.z, 0, 0);
         return;
     }
 
     if (this->mRelocateTimer > 0x1c) {
         pos.y += this->mClsnScale * 0xaf;
         if (this->mBooFlags.mirrored)
-            pos.x = pos.x * -1;
-        this->mParticle0 = Particle::System::New(*(volatile u32 *)&this->mParticle0, 0x97, pos.x,
-                                                 pos.y, pos.z, 0, 0);
-        this->mParticle1 = Particle::System::New(*(volatile u32 *)&this->mParticle1, 0x98, pos.x,
-                                                 pos.y, pos.z, 0, 0);
+            pos.x *= -1;
+        this->mParticle0 = Particle::System::New(this->mParticle0, 0x97, pos.x, pos.y, pos.z, 0, 0);
+        this->mParticle1 = Particle::System::New(this->mParticle1, 0x98, pos.x, pos.y, pos.z, 0, 0);
     }
     if (this->mOpacity != 0xff)
         return;
@@ -1014,22 +1007,12 @@ void daTrs_c::func_ov063_021177b0() {
         this->mSubState = 0;
 
         {
-            volatile VecFx32 pos;
-            int px = this->mPosX;
-            pos.x = px;
-            int py = this->mPosY;
-            pos.y = py;
-            pos.z = this->mPosZ;
-            pos.y = py + 0xc8000;
-            {
-                int yarg = pos.y;
-                if (this->mBooFlags.mirrored) {
-                    int m = ~0;
-                    pos.x = px * (volatile int)m;
-                }
-                Particle::System::NewSimple(0x93, pos.x, yarg, pos.z);
-                Particle::System::NewSimple(0x94, pos.x, pos.y, pos.z);
-            }
+            Vector3 pos = this->mPos;
+            pos.y += 0xc8000;
+            if (this->mBooFlags.mirrored)
+                pos.x *= -1;
+            Particle::System::NewSimple(0x93, pos.x, pos.y, pos.z);
+            Particle::System::NewSimple(0x94, pos.x, pos.y, pos.z);
         }
         return;
     }

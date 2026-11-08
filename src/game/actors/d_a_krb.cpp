@@ -43,7 +43,7 @@
  * - data_ov084_02130cf8 is the BMD. 02130278 is the BCA table.
  *   02130ce0/ce8/cf0/cc0/cc8/cd0 are BCA handles (SetAnim reads [1]).
  *   0213089c / 0213088c are BMA. The 021302xx words are the per-type
- *   tables. Render keeps a volatile Vector3 backup of the scale.
+ *   tables.
  * - GetCapState is the dCapEnemy_c.h member.
  * - What dCcAc_c bits 0x4 and 0x20000 mean, the king's mState 4 that
  *   mFreeRoamTimer watches, sounds 0xd0 / 0xe0 / 0xd6 / 0x110 / 0x111 / 0x118 /
@@ -204,7 +204,6 @@ extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 extern int SurfaceInfo_TestFlag0x20(int* p);
-extern int data_02099368[];
 extern u8 data_0209f208[];
 extern u8 *data_0209f344;
 /* Three-register reconstructed interface; death-state stores also use r3. */
@@ -445,75 +444,33 @@ void daKrb_c::func_ov084_02129498() {
  * 6..9 (daPly_c.h calls those the quicksand tiers) while the sound type
  * (CLPS bits 0..4, CLPS::GetSoundType) is 8. */
 void daKrb_c::func_ov084_021294d0() {
-    daKrb_c *goomba = this;
-    char obj[0x28];
-    if (!goomba->mWithMeshClsn.IsOnGround())
+    if (!mWithMeshClsn.IsOnGround())
         return;
 
-    char *fr = (char *)goomba->mWithMeshClsn.GetFloorResult();
-    if (SurfaceInfo_TestFlag0x20((int *)&((dBgPi *)fr)->surface)) {
-        goomba->func_ov084_021296cc();
-        goomba->SpawnCoin();
-        goomba->func_ov084_02129498();
-        Vector3 v;
-        v.x = 0; v.y = 0x6c000; v.z = 0;     /* 108.0 */
-        goomba->ReleaseCap(v);
-        goomba->mPosX = goomba->mHomePos.x;
-        goomba->mPosY = goomba->mHomePos.y;
-        goomba->mPosZ = goomba->mHomePos.z;
-        goomba->RespawnIfHasCap();
+    if (SurfaceInfo_TestFlag0x20((int *)&mWithMeshClsn.GetFloorResult()->surface)) {
+        func_ov084_021296cc();
+        SpawnCoin();
+        func_ov084_02129498();
+        ReleaseCap(Vector3(0, 0x6c000, 0)); /* 108.0 */
+        mPos = mHomePos;
+        RespawnIfHasCap();
         return;
     }
 
-    /* Copy the floor result into obj's own surface record, then ask what kind of
-     * ground it is. The Goomba is lost on some terrain types. */
-    char *floorResult = (char *)goomba->mWithMeshClsn.GetFloorResult();
-    int surfaceType;
-    {
-        /* obj + 4 is &((dBgPi *)obj)->surface; that spelling here or in the
-         * GetSoundType receiver below adds an instruction, so both stay. */
-        char *surface = obj + 4;
-        int clpsLo = ((dBgPi *)floorResult)->surface.clps.w0;
-        int clpsHi = ((dBgPi *)floorResult)->surface.clps.w1;
-        /* `clpsHi ? clpsLo : clpsLo` is not a typo and not dead: both arms are the
-         * same value, and the ternary is what makes mwccarm materialize clpsLo after
-         * the load of clpsHi instead of before it. Collapsing it to a plain store
-         * reorders the pair and the function stops reproducing. */
-        ((SurfaceInfo *)surface)->clps.w0 = clpsHi ? clpsLo : clpsLo;
-        ((SurfaceInfo *)surface)->clps.w1 = clpsHi;
-        ((SurfaceInfo *)surface)->normal.x = ((dBgPi *)floorResult)->surface.normal.x;
-        ((SurfaceInfo *)surface)->normal.y = ((dBgPi *)floorResult)->surface.normal.y;
-        ((SurfaceInfo *)surface)->normal.z = ((dBgPi *)floorResult)->surface.normal.z;
-        *(int *)(obj) = (int)data_02099368;
-        ((dBgPi *)obj)->triangleID = ((dBgPi *)floorResult)->triangleID;
-        ((dBgPi *)obj)->colliderIdx = ((dBgPi *)floorResult)->colliderIdx;
-        ((dBgPi *)obj)->clsnID = ((dBgPi *)floorResult)->clsnID;
-        ((dBgPi *)obj)->owner = ((dBgPi *)floorResult)->owner;
-        ((dBgPi *)obj)->collider = ((dBgPi *)floorResult)->collider;
-        surfaceType = ((SurfaceInfo *)surface)->clps.GetSurfaceType();
+    dBgPi floor(*mWithMeshClsn.GetFloorResult());
+    int surfaceType = floor.surface.clps.GetSurfaceType();
+    if ((floor.surface.clps.GetSoundType() == 8 &&
+         (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)) ||
+        surfaceType == 0x13 || surfaceType == 1 || surfaceType == 4 || surfaceType == 5) {
+        SpawnCoin();
+        func_ov084_02129498();
+        if ((mCapId & 0xf) < 6 || mRewardType == REWARD_SILVER_STAR_IF_CURRENT) {
+            mPos = mHomePos;
+            ReleaseCap(Vector3(0, 0x6c000, 0)); /* 108.0 */
+            RespawnIfHasCap();
+        }
     }
-    if (((const CLPS *)(obj + 4))->GetSoundType() == 8) {
-        if (surfaceType == 6 || surfaceType == 7 || surfaceType == 8 || surfaceType == 9)
-            goto action;
-    }
-    if (surfaceType == 0x13 || surfaceType == 1)
-        goto action;
-    if ((unsigned)(surfaceType - 4) > 1)
-        goto dtor;
-action:
-    goomba->SpawnCoin();
-    goomba->func_ov084_02129498();
-    if ((goomba->mCapId & 0xf) < 6 || goomba->mRewardType == daKrb_c::REWARD_SILVER_STAR_IF_CURRENT) {
-        goomba->mPosX = goomba->mHomePos.x;
-        goomba->mPosY = goomba->mHomePos.y;
-        goomba->mPosZ = goomba->mHomePos.z;
-        Vector3 v2;
-        v2.x = 0; v2.y = 0x6c000; v2.z = 0;     /* 108.0 */
-        goomba->ReleaseCap(v2);
-        goomba->RespawnIfHasCap();
-    }
-dtor:
-    ((dBgPi *)obj)->dBgPi::~dBgPi();
+
 }
 
 /* Set the home position (mHomePos) from a three-word position. daKuriKing_c
@@ -868,8 +825,8 @@ void daKrb_c::func_ov084_02129ed4() {
     s16 killDirNormal[3];
     s16 killDirVariant[3];
     s16 killDirPlayer[3];
-    volatile Vector3 playerPos;
-    volatile Vector3 playerPosJump;
+    Vector3 playerPos;
+    Vector3 playerPosJump;
     Vector3 capReleaseOnHit;
     Vector3 capReleaseOnKill;
     Vector3 hurtOriginFirstHit;
@@ -977,10 +934,8 @@ void daKrb_c::func_ov084_02129ed4() {
                     return;
                 }
                 {
-                    Vector3 *pp = &((dActor_c *)other)->mPos;
-                    playerPos.x = pp->x;
-                    playerPos.y = pp->y;
-                    playerPos.z = pp->z;
+                    const Vector3 &p = other->mPos;
+                    playerPos = p;
                 }
                 if (other->IsOnShell() != 0) {
                     goomba->mDeathState = daKrb_c::DEATH_DIVE_OR_EGG;
@@ -1004,14 +959,14 @@ void daKrb_c::func_ov084_02129ed4() {
                 if (goomba->mState == daKrb_c::STATE_WALK) {
                     if (goomba->mGoombaType == daKrb_c::GOOMBA_SMALL) {
                         ((dActor_c *)goomba)->SmallPoofDust();
-                        hurtOriginFirstHit.x = goomba->mPosX; hurtOriginFirstHit.y = goomba->mPosY; hurtOriginFirstHit.z = goomba->mPosZ;
+                        hurtOriginFirstHit = goomba->mPos;
                         other->Hurt(hurtOriginFirstHit, 0, hurtKnockback, 1, 0, 1);
                         goomba->func_ov084_02129498();
                         func_02012694(SND_DEATH_SMALL, &goomba->mCamSpacePos);
                         return;
                     }
                     if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
-                    hurtOriginRepeat.x = goomba->mPosX; hurtOriginRepeat.y = goomba->mPosY; hurtOriginRepeat.z = goomba->mPosZ;
+                    hurtOriginRepeat = goomba->mPos;
                     other->Hurt(hurtOriginRepeat, data_ov084_02130204[goomba->mGoombaType],
                                 hurtKnockback, 1, 0, 1);
                     goomba->mState = daKrb_c::STATE_HOP_START;
@@ -1027,10 +982,8 @@ void daKrb_c::func_ov084_02129ed4() {
     typeMatch = (s32)(((dActor_c *)other)->actorID == ACTOR_PLAYER);
     if (typeMatch != 0) {
         {
-            Vector3 *pp = &((dActor_c *)other)->mPos;
-            playerPosJump.x = pp->x;
-            playerPosJump.y = pp->y;
-            playerPosJump.z = pp->z;
+            const Vector3 &p = other->mPos;
+            playerPosJump = p;
         }
         if (((dActor_c *)goomba)->JumpedOnByPlayer(*(dCc_c *)&goomba->mdCcAc_c, *other) != 0) {
             other->Bounce(0x28000); /* 40.0 */
@@ -1046,7 +999,7 @@ void daKrb_c::func_ov084_02129ed4() {
         if (goomba->mState == daKrb_c::STATE_WALK) {
             goomba->mState = daKrb_c::STATE_HOP_START;
             if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
-            hurtOriginJumped.x = goomba->mPosX; hurtOriginJumped.y = goomba->mPosY; hurtOriginJumped.z = goomba->mPosZ;
+            hurtOriginJumped = goomba->mPos;
             other->Hurt(hurtOriginJumped, data_ov084_02130204[goomba->mGoombaType], hurtKnockback,
                         1, 0, 1);
             return;
@@ -1639,15 +1592,10 @@ void daKrb_c::OnPendingDestroy()
  * the draw and restored afterwards. */
 int daKrb_c::Render()
 {
-    int locked;
-    volatile Vector3 backup;
-
-    locked = (mFlags & 0x40000) != 0;
+    int locked = (mFlags & 0x40000) != 0;
     if (locked || mIsDormant != 0) return 1;
 
-    backup.x = mScaleX;
-    backup.y = mScaleY;
-    backup.z = mScaleZ;
+    Vector3 backup = mScale;
 
     if (mDeathState == DEATH_STOMPED) {
         mScaleX = FX_MUL(mScaleX, data_ov084_02130258[mGoombaType]);
@@ -1657,9 +1605,7 @@ int daKrb_c::Render()
 
     mAnmModel.Render(&mScale);
 
-    mScaleX = backup.x;
-    mScaleY = backup.y;
-    mScaleZ = backup.z;
+    mScale = backup;
     mMaterialChanger.Update(mAnmModel.data);
     RenderCapModel(0);
     return 1;
