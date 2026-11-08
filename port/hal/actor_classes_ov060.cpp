@@ -805,8 +805,7 @@ static void bowser10_wrap_fpkn(void)
         VirtualProtect(&bowser10_fpkn_vft[i], sizeof(void *), old, &old);
         return;
     }
-    std::fprintf(stderr, "[bowser10] fire piranha ball Behavior not found in its vftable: not wrapped
-");
+    std::fprintf(stderr, "[bowser10] fire piranha ball Behavior not found in its vftable: not wrapped\n");
 }
 extern "C" int port_pmff_decl_data_ov060_0211a744(void *self) { bowser10_fire_falls(self); return 0; }
 extern "C" int port_pmff_decl_data_ov060_0211a784(void *self) { bowser10_fire_falls(self); return 0; }
