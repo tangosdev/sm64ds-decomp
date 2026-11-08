@@ -28,6 +28,7 @@ enum daBDonketu_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "Sound.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx_trig.h"
 
 /* One model handle constructs through func_02017acc and destroys through
  * func_02017ab4. Four animation handles construct through
@@ -43,8 +44,6 @@ struct DonketuAnimFileHandle : SharedFilePtr {
 };
 typedef char DonketuModelFilePtr_size_must_be_8[sizeof(DonketuModelFilePtr) == 8 ? 1 : -1];
 typedef char DonketuAnimFileHandle_size_must_be_8[sizeof(DonketuAnimFileHandle) == 8 ? 1 : -1];
-
-extern s16 data_02082214[]; /* sine/cosine table, (angle >> 4) pairs */
 
 /* Factory for the BOSS_DONKETU profile. Written first so it emits last. */
 extern "C" daBDonketu_c *daBDonketu_c_classInit() {
@@ -87,16 +86,16 @@ int daBDonketu_c::InitResources() {
             spawnPos.y = ground.clsnY;
         }
 
-        /* Three DONKETU (actor 215), 0x5555 apart, placed by the sine table
-           data_02082214 scaled by 500. */
+        /* Three DONKETU (actor 215), 0x5555 apart, at 500 times the sine
+           and cosine of each angle. */
         i = 0;
         ang = 0;
         do {
             int idx = (u16)(s16)ang >> 4;
             dActor_c *spawned;
 
-            spawnPos.x = mPosX + data_02082214[idx * 2] * 500 - 0x64000;
-            spawnPos.z = mPosZ - data_02082214[idx * 2 + 1] * 500;
+            spawnPos.x = mPosX + FX_SinIdx(idx) * 500 - 0x64000;
+            spawnPos.z = mPosZ - FX_CosIdx(idx) * 500;
 
             spawned = dActor_c::Spawn(0xd7, -1, spawnPos, (Vector3_16 *)0, mAreaId, -1);
             if (spawned != 0) {
