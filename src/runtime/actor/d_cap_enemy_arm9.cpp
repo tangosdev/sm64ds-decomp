@@ -32,6 +32,14 @@
 
 struct Vector3_16 { s16 x, y, z; };
 
+#ifdef _MSC_VER
+/* Host only (run after093, lane COOPBOO3): in a coop room every console must hold the same objects, so a cap enemy is
+   made on every console whatever character each one plays, the way the cartridge's own VS mode keeps them all
+   (data_0209f2d8 == 1 below). port/hal/coop_world.cpp sets the hook while it runs; with no room (solo) it stays 0 and
+   this function is the cartridge's. The DS build never sees this. */
+extern "C" { int (*port_coop_cap_keep_all)(void) = 0; }
+#endif
+
 extern "C" {
 extern int _ZN13SharedFilePtr7ReleaseEv(void *sfp);
 extern SharedFilePtr *data_ov002_020ff028[];
@@ -247,6 +255,9 @@ int dCapEnemy_c::DestroyIfCapNotNeeded()
 {
   if (mCapId >= 6) return 1;
   if ((int)(data_0209f2d8 == 1) != 0) return 1;
+#ifdef _MSC_VER
+  if (port_coop_cap_keep_all && port_coop_cap_keep_all()) return 1;
+#endif
   Player *p = ClosestPlayer();
   if (p == 0) { func_02005ed8(); return 0; }
   if (mCapId != p->mCharacter) return 1;

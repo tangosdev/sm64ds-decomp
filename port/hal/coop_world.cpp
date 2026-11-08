@@ -1876,6 +1876,11 @@ void coop_world_session_reset() {
     g_hello_t = g_full_t = 0;
 }
 
+extern "C" int (*port_coop_cap_keep_all)(void);   // src/runtime/actor/d_cap_enemy_arm9.cpp, host arm (COOPBOO3)
+bool coop_world_active();
+int cap_keep_all() { return coop_world_active() ? 1 : 0; }
+struct CapKeepHook { CapKeepHook() { port_coop_cap_keep_all = cap_keep_all; } } g_cap_keep_hook;
+
 bool coop_world_active() {
     read_env();
     if (!g_on) return false;
