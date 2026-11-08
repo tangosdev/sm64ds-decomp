@@ -111,7 +111,8 @@ typedef void (dScMgBomroom_c::*PMFv)();
    two words. */
 static inline void SetSceneLevel(dScMgBase_c *scene, u32 level) {
     scene->mLevel = level;
-    if (scene->mLevel > 9998) scene->mLevel = 9998;
+    if (scene->mLevel > 9998)
+        scene->mLevel = 9998;
 }
 
 #pragma defer_codegen off
@@ -329,7 +330,6 @@ void dScMgBomroom_c::TopDoor_StateOpening(int index) {
 void dScMgBomroom_c::TopDoor_StateShut(int index) {
     (&mTopDoor)[index].timer = 0;
 }
-
 
 extern "C" PMF sBomroomTopDoorStateTable[];
 void dScMgBomroom_c::TopDoor_Update() {
@@ -764,7 +764,8 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     int dx, dy;
     if (gTouchHeld[slot * 4] != 0)
         touchBegan = gTouchEdge[slot * 4] != 0;
-    if (touchBegan == 0) return;
+    if (touchBegan == 0)
+        return;
     if (mHeldColor != 0xff) return;
     dx = gTouchX[slot * 4] - (mBombs[index].x >> 0xc);
     dy = gTouchY[slot * 4] - (mBombs[index].y >> 0xc);
@@ -939,7 +940,8 @@ void dScMgBomroom_c::DrawBombs() {
             int state;
             int fy;
             int x, y;
-            if (type == 3) palette = 0;
+            if (type == 3)
+                palette = 0;
             color = mBombs[i].color;
             frame = mBombs[i].frame;
             if (color != 0) {
@@ -952,7 +954,9 @@ void dScMgBomroom_c::DrawBombs() {
             fy = mBombs[i].y;
             y = fy >> 12;
             if (state == 6) {
-                if (mBombs[i].substate == 4) { y = (fy - mBg2Y) >> 12; }
+                if (mBombs[i].substate == 4) {
+                    y = (fy - mBg2Y) >> 12;
+                }
             }
             Mg_RenderSpriteBoth(sBomroomBombsSprites[sprite], x, y, -1, palette);
         }
@@ -977,7 +981,10 @@ void dScMgBomroom_c::CheckColorComplete() {
                     col = nColored;
                     row = 0;
                     mBombs[i].marchDelay = (unsigned short)(nLined * 8);
-                    while (col >= 5) { col -= 5; row++; }
+                    while (col >= 5) {
+                        col -= 5;
+                        row++;
+                    }
                     mBombs[i].lineSlot = (unsigned char)(row * 10 + col);
                     nColored++;
                     nLined++;
@@ -990,7 +997,10 @@ void dScMgBomroom_c::CheckColorComplete() {
                     col = nPlain;
                     mBombs[i].marchDelay = (unsigned short)(nLined * 8);
                     row = 0;
-                    while (col >= 5) { col -= 5; row++; }
+                    while (col >= 5) {
+                        col -= 5;
+                        row++;
+                    }
                     mBombs[i].lineSlot = (unsigned char)(row * 10 + col + 5);
                     nPlain++;
                     nLined++;
