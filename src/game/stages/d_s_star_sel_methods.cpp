@@ -427,8 +427,7 @@ s32 dScStarSel_c::Render() {
                 OAM::RenderSub(&OAM::POINTER_DOWN, mPlateX[mSelectedPlate], 6);
             } else if (mCursorTarget == 1) {
                 int slot = GetCursorCharacter();
-                OAM::RenderSub(&OAM::POINTER_RIGHT, mCharX[slot] - 0x24,
-                               mCharY[slot] - 8);
+                OAM::RenderSub(&OAM::POINTER_RIGHT, mCharX[slot] - 0x24, mCharY[slot] - 8);
             } else {
                 OAM::RenderSub(&OAM::POINTER_RIGHT, 0x50, mFaceY + 8);
             }

@@ -147,8 +147,8 @@ struct dScStarSel_c : dScene_c {
        passes this, and every access in each body is a this-relative field of
        this class. The names are coined from the bodies; the three counters and
        the digit splitter follow dMeter_c's Render*Count and CalculateDigits. */
-    s32  GetCharacterSlot(u32 chr);  /* 0x020adec0 */
-    s32  GetCursorCharacter();       /* 0x020adf50 */
+    s32 GetCharacterSlot(u32 chr);   /* 0x020adec0 */
+    s32 GetCursorCharacter();        /* 0x020adf50 */
     void RenderCoinScore();          /* 0x020adfc8 */
     void RenderStarCount();          /* 0x020ae0b0 */
     void CalculateDigits(s32 value); /* 0x020ae1a4 */
