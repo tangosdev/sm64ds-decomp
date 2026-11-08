@@ -36511,7 +36511,7 @@
     },
     "ov064:0x02116220": {
       "author": "lunavyqo",
-      "name": "_ZN7daOts_c19func_ov064_02116220Ev"
+      "name": "_ZN7daOts_c15CheckFloorDeathEv"
     },
     "ov064:0x02116348": {
       "author": "andrewboudreau",
@@ -36535,15 +36535,15 @@
     },
     "ov064:0x021163c0": {
       "author": "tangosdev",
-      "name": "func_ov064_021163c0"
+      "name": "_ZN7daOts_c9ActBackUpEv"
     },
     "ov064:0x02116460": {
       "author": "ruspecial",
-      "name": "_ZN7daOts_c19func_ov064_02116460Ev"
+      "name": "_ZN7daOts_c12ActKnockbackEv"
     },
     "ov064:0x02116560": {
       "author": "tangosdev",
-      "name": "_ZN7daOts_c19func_ov064_02116560Ev"
+      "name": "_ZN7daOts_c13ActChaseMarioEv"
     },
     "ov064:0x021165d4": {
       "author": "andrewboudreau",
@@ -36551,15 +36551,15 @@
     },
     "ov064:0x021165d8": {
       "author": "andrewboudreau",
-      "name": "_ZN7daOts_c19func_ov064_021165d8Ev"
+      "name": "_ZN7daOts_c4StepEv"
     },
     "ov064:0x021166f0": {
       "author": "tangosdev",
-      "name": "_ZN7daOts_c19func_ov064_021166f0Ev"
+      "name": "_ZN7daOts_c16ReturnHomeIfSafeEv"
     },
     "ov064:0x02116754": {
       "author": "tangosdev",
-      "name": "_ZN7daOts_c19func_ov064_02116754Ev"
+      "name": "_ZN7daOts_c19CheckMarioCollisionEv"
     },
     "ov064:0x02116bac": {
       "author": "tangosdev",
