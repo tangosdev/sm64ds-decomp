@@ -208,6 +208,21 @@ int daObjWc_Mizu_c::Behavior()
         i = *(u16 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x42) >> 4;
         mWaterHeight = (int)data_02082214[i * 2] * 0xf + mPosY;
     }
+#ifdef _MSC_VER
+    /* HOST ONLY. Wet-Dry World has two of these: the lake (area 0) and the
+     * town's own lower water (area 1). Both publish their height to the one
+     * word the player's swim code reads (data_0209f32c). On the cartridge the
+     * one in a hidden area never gets here: dActor_c::BeforeBehavior puts it
+     * to sleep while the session word data_0209fc68 is 0, which it always
+     * is in one-player play. A port multiplayer session sets
+     * data_0209fc68 to 1, so the hidden water runs too and overwrites the
+     * height with its own: the player then dives in by his own surface and
+     * is thrown out of the swim on the next frame, over and over, and under
+     * the surface the game thinks he is dry (no air meter). mAreaId is -1
+     * here only while this water's area is showing (set just above), so
+     * only the shown water speaks, as in one-player play. */
+    if (mAreaId < 0)
+#endif
     data_0209f32c = mWaterHeight;
     func_ov029_021122b4(this);
     func_ov029_02112250(this);
