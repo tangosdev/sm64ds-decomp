@@ -406,8 +406,7 @@ s32 dScStarSel_c::Render() {
     }
 
     if (SublevelToLevel(data_02092110) <= 0xe) {
-        G3i::PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000,
-                           0x1000, 1, 0);
+        G3i::PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
         G3i::LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
                      (const Vector3 *)&data_ov003_020b1344, true, &mtx);
         CopyToViewMat(&mtx);
@@ -480,7 +479,8 @@ s32 dScStarSel_c::Render() {
                 }
                 mFaceScaleY = mFaceScaleX;
             } else if (mAnimMode == 2) {
-                mIconScaleX = (0x1000 - FX_CosIdx((u16)(s16)(mPulseAngle - 0x4000) >> 4)) * 10 + 0x1000;
+                mIconScaleX =
+                    (0x1000 - FX_CosIdx((u16)(s16)(mPulseAngle - 0x4000) >> 4)) * 10 + 0x1000;
                 mIconScaleY = 0x1000;
                 mPulseAngle = (mPulseAngle + 0x1000) & 0x7fff;
                 if (mPulseAngle == 0x4000) {
