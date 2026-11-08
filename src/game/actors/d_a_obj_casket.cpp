@@ -13,7 +13,7 @@
  *
  * Notes (each measured with mwccarm 2004/b56):
  * - InitResources installs the before-collision callback through
- *   func_020393d4, the out-of-line store into dBgW::beforeClsnCallback
+ *   dBgW::SetBeforeClsnCallback, the out-of-line store into dBgW::beforeClsnCallback
  *   (+0x18). Assigning the member directly sizes InitResources 0x110
  *   against the ROM's 0x114, so the call stays.
  * - St_Wait_Main reads the closest player's position through the pointer
@@ -24,9 +24,8 @@
  * - data_ov071_02122ecc, data_ov071_021230d0 and data_ov071_021230d8 are
  *   defined at the end of this file so their dynamic init stays out of
  *   .text.
- * - MulVec3Mat4x3, Vec3_Add, AddVec3, Vec3_HorzDist, DecIfAbove0_Short and
- *   func_020393d4 stay local externs;
- *   no shared header declares them.
+ * - MulVec3Mat4x3, Vec3_Add, AddVec3, Vec3_HorzDist and DecIfAbove0_Short
+ *   stay local externs; no shared header declares them.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -82,8 +81,6 @@ void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-/* local extern: d_bg_w.cpp defines it; no header declares it. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* Reconstructed source-style name: SM64DS proves daObjCasket_c through RTTI,
@@ -123,7 +120,7 @@ int daObjCasket_c::InitResources() {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov071_021230d8), mClsnMat, 0x199,
                               mAngleY, data_ov063_0211ebd8);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     return 1;
 }
 

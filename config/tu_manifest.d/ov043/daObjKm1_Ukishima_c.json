@@ -161,12 +161,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@372",
+      "from": "@370",
       "to": "@379",
       "evidence": "mwcc numbers this model registration node @377 per TU and ov022 already defines a global @377, so the scratch link would multiply-define it"
     },
     {
-      "from": "@373",
+      "from": "@371",
       "to": "@378",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @392 now; licensed under the existing pin @378"
     }

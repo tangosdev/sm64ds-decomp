@@ -17,9 +17,9 @@
 // - InitResourcesFrom and CleanupResourcesFrom are the shared bodies of
 //   the four leaves' InitResources and CleanupResources. Each leaf passes
 //   its own ResourceDescriptor; the virtual slots stay pure here.
-// - func_020393c4 is `p[7] = v`, the store of StoodOnCallback into
+// - dBgW::SetStoodOnCallback is `p[7] = v`, the store of StoodOnCallback into
 //   dBgW::stoodOnCallback. The ROM calls it; an inlined store would drop
-//   the bl. d_bg_w.cpp defines it and no header declares it.
+//   the bl.
 // - StoodOnCallback keeps long_calls. The ROM tail is the pooled absolute
 //   veneer (size 0x14); a near branch to RequestShake is 0xc.
 // - RequestShake keeps the unused second parameter. The veneer forwards
@@ -51,9 +51,6 @@ enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
-
-/* local extern: d_bg_w.cpp defines it and no header declares it. */
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern s16 data_02082214[];       /* sine table */
@@ -406,7 +403,7 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*fp->collision)), mClsnMat, 0x199,
                               mAngleY, *fp->clps);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     v.x = mPosX;
     y = mPosY;
     v.y = y;

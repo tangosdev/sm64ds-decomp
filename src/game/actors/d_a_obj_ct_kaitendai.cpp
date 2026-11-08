@@ -23,8 +23,8 @@
  *   Fix12<int> by value size-DIFFs this TU: InitResources 0x14c against
  *   0x140, and UpdateShadow 0x80 against 0x70 (notes/mwccarm-codegen.md
  *   6az).
- * - func_020393d4 is the store of dBgW::beforeClsnCallback (+0x18).
- *   This InitResources calls it with &dBgW::UpdatePosAndAngs. No setter.
+ * - dBgW::SetBeforeClsnCallback is the store of dBgW::beforeClsnCallback (+0x18).
+ *   This InitResources calls it with &dBgW::UpdatePosAndAngs.
  * - The sign flip and the yaw add go through a pointer. Writing
  *   mPrevAngleX = mPrevAngleX * -1 comes out 0x12c, and
  *   mPrevAngleY = mPrevAngleY + mPrevAngleZ comes out 0x134, against
@@ -97,11 +97,9 @@ extern u8 data_0209f2c0;           /* clock setting: 0 slow, 1 fast, 2 random, 3
 extern s16 data_ov065_0211d334[2]; /* yaw speed for the slow and fast hands: 200, 400 */
 extern KaitendaiResources data_ov065_0211d35c[];
 
-/* local extern: func_020393d4 is the dBgW callback store (see the banner)
- * and has no shared header. RandomIntInternal's named parameter preserves
+/* local extern: RandomIntInternal has no shared header, and its named parameter preserves
  * this TU's @NNN static-initializer aliases. */
 extern "C" {
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 extern int RandomIntInternal(int *seed);
 }
 
@@ -134,7 +132,7 @@ int daObjCtKaitendai_c::InitResources() {
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211d35c[mVariant].collision),
                           mClsnMat, 0x199, mAngleY, *data_ov065_0211d35c[mVariant].clps);
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     pos.x = mPosX;
     pos.y = mPosY;

@@ -760,22 +760,22 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@415",
+      "from": "@413",
       "to": "@419",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@416",
+      "from": "@414",
       "to": "@420",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@417",
+      "from": "@415",
       "to": "@421",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     },
     {
-      "from": "@418",
+      "from": "@416",
       "to": "@422",
       "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
     }

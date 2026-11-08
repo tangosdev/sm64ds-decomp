@@ -423,12 +423,12 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@765",
+      "from": "@763",
       "to": "@645",
       "evidence": "mwcc numbers the first-constructed (0x021230d0 model) destructor node @698 per TU; @645 is fleet-free and carries the 0x021230e0 claim | registration nodes renumber after the MtxStack.h include and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     },
     {
-      "from": "@766",
+      "from": "@764",
       "to": "@646",
       "evidence": "mwcc numbers the second-constructed (0x021230d8 collision) destructor node @699 per TU; @646 is fleet-free and carries the 0x021230ec claim | registration nodes renumber after the MtxStack.h include and the deleted named-parameter declarations; re-keyed by __sinit relocation site order; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
     }

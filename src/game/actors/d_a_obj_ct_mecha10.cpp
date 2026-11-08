@@ -37,9 +37,9 @@
 
 // Notes (each measured): the widened int idMatch / isMecha12L stay (folding
 // the actorID tests into the ifs reorders the body). dBgW_Kc::SetEdgeToleranceShift and
-// func_020393d4 are the out-of-line stores into the collider's
-// edgeToleranceShift and beforeClsnCallback; d_bg_w.cpp defines them. The callback setter has no
-// shared declaration. Both data_ov035_02111ef0 stores stay (one local
+// dBgW::SetBeforeClsnCallback are the out-of-line stores into the collider's
+// edgeToleranceShift and beforeClsnCallback; d_bg_w.cpp defines them.
+// Both data_ov035_02111ef0 stores stay (one local
 // shrinks InitResources). unk_326 is written with no reader in this TU.
 // DecIfAbove0_Short, RandomIntInternal, the data_ov035_* files/tables/CLPS
 // block, data_0209f2c0, data_0209e650 keep linker names. The three
@@ -94,7 +94,6 @@ extern u8 data_0209f2c0;             /* arm9 clock setting */
 extern "C" {
 u16 DecIfAbove0_Short(u16 *p);
 int RandomIntInternal(int *state);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern "C" daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA10() {
@@ -126,7 +125,7 @@ int daObjCtMecha10_c::InitResources() {
             ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(gCtMechaObj10CollisionFile),
                                   mClsnMat, 0x1000, mAngleY, data_ov035_021121d8);
         mMeshCollider.SetEdgeToleranceShift(0);
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
         mRotationState = 0;
     } else {
         idMatch = (actorID == ACTOR_CT_MECHA12L);

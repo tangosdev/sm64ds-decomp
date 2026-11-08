@@ -21,7 +21,7 @@
  * - Assigning mMeshCollider.beforeClsnCallback does not compile: the static
  *   takes references and the field takes pointers. Casting
  *   &dBgW::UpdatePosWithTransform onto the field type sizes InitResources
- *   0x104->0xfc. func_020393d4 is the store that matches. dBgW::SetClipRadius and
+ *   0x104->0xfc. dBgW::SetBeforeClsnCallback is the store that matches. dBgW::SetClipRadius and
  *   dBgW::SetClipOffsetY store the mesh range the same way.
  * - UpdateShadow keeps the dead stores. Dropping armOffset.y = 0, the
  *   first pos.y = bobY, or writing armOffset once, sizes it 0x12c->0x128.
@@ -84,7 +84,6 @@ extern CLPS_Block data_ov035_02112198;
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
@@ -114,7 +113,7 @@ int daObjCtMecha03_c::InitResources() {
     mMeshCollider.SetClipOffsetY(-0x200000);
 
     if (data_0209f2c0 != 3) {
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     }
     return 1;
 }

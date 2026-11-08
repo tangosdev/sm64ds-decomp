@@ -122,8 +122,6 @@ void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 int func_ov002_020dd8b8(void *c);
 
 /* Parameter names keep this TU's @NNN. */
@@ -319,7 +317,7 @@ int daBtn_c::InitResources()
     }
 
     func_01ffb0bc(&mMovingMeshCollider);
-    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMovingMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     {
         s32 sp[3];
@@ -906,7 +904,7 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPosZ;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    func_020393c4(&mMovingMeshCollider, func_ov079_0212522c);
+    mMovingMeshCollider.SetStoodOnCallback(func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
         func_0200fa04(this, &a, 0);
@@ -1131,7 +1129,7 @@ void daBtn_c::func_ov079_02124b08()
                 0x40000000, 0x1000, 0);
 
             if (mIsKing == 0) {
-                func_020393c4(&mMovingMeshCollider, 0);
+                mMovingMeshCollider.SetStoodOnCallback(0);
             }
             mTouched = 0;
             mPounded = 0;
