@@ -7,9 +7,9 @@
  * VRAM upload helpers (Nitro SDK namespaces, not classes). Defined in
  * src/engine/gx/GX_Init.cpp (DispOn, SetGraphicsMode),
  * src/engine/gx/GX_VramCnt.cpp (SetBankFor*), src/engine/gx/GX.cpp (texture
- * and BG palette loads), src/engine/gx/GXS.cpp (the OBJ, BG-character and
- * extended-palette loads of both engines) and src/game/stages/d_scene.cpp
- * (DisableAllBanks).
+ * and BG palette loads), src/engine/gx/GXS.cpp (the OBJ, BG-character,
+ * BG-screen and extended-palette loads of both engines) and
+ * src/game/stages/d_scene.cpp (DisableAllBanks).
  *
  * The SetBankFor* banks are int, the Nitro SDK's GXVRamBG/GXVRamOBJ/... enum
  * parameters. Every definition compiles to the same bytes with int as with
@@ -72,6 +72,8 @@ void LoadOBJPltt(const void *, unsigned int, unsigned int);
 void LoadOBJ(const void *, unsigned int, unsigned int);
 void LoadBG0Char(const void *, unsigned int, unsigned int);
 void LoadBG1Char(const void *, unsigned int, unsigned int);
+void LoadBG2Char(const void *, u32, u32);
+void LoadBG1Scr(const void *, int, int);
 }
 
 namespace GXS {
@@ -80,6 +82,9 @@ void LoadBGPltt(const void *, unsigned int, unsigned int);
 void LoadOBJPltt(const void *, unsigned int, unsigned int);
 void LoadBG0Char(const void *, unsigned int, unsigned int);
 void LoadBG1Char(const void *, unsigned int, unsigned int);
+void LoadBG2Char(const void *, unsigned int, unsigned int);
+void LoadBG3Char(const void *, u32, u32);
+void LoadOBJ(const void *, unsigned int, unsigned int);
 void BeginLoadBGExtPltt(void);
 void LoadBGExtPltt(const void *, unsigned int, unsigned int);
 void EndLoadBGExtPltt(void);

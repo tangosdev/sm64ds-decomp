@@ -9267,7 +9267,7 @@
     },
     "arm9:0x02055fb4": {
       "author": "tangosdev",
-      "name": "func_02055fb4"
+      "name": "_ZN3GXS11LoadBG3CharEPKvjj"
     },
     "arm9:0x02056014": {
       "author": "tangosdev",
@@ -9275,11 +9275,11 @@
     },
     "arm9:0x02056074": {
       "author": "tangosdev",
-      "name": "func_02056074"
+      "name": "_ZN3GXS11LoadBG2CharEPKvjj"
     },
     "arm9:0x020560d4": {
       "author": "tangosdev",
-      "name": "func_020560d4"
+      "name": "_ZN2GX11LoadBG2CharEPKvjj"
     },
     "arm9:0x02056134": {
       "author": "tangosdev",
@@ -9319,7 +9319,7 @@
     },
     "arm9:0x02056494": {
       "author": "tangosdev",
-      "name": "func_02056494"
+      "name": "_ZN2GX10LoadBG1ScrEPKvii"
     },
     "arm9:0x020564f4": {
       "author": "tangosdev",
@@ -9331,7 +9331,7 @@
     },
     "arm9:0x020565b4": {
       "author": "ruspecial",
-      "name": "func_020565b4"
+      "name": "_ZN3GXS7LoadOBJEPKvjj"
     },
     "arm9:0x02056614": {
       "author": "tangosdev",
