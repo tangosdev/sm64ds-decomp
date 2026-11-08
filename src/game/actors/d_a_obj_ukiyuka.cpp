@@ -11,7 +11,8 @@
  *   s16 member step differs by one word.
  * - The (s64) cast on mBobPhase before the u16 table index is load-bearing;
  *   the plain (u16) read is two instructions shorter.
- * - The sine table keeps its arm9 linker name, data_02082214.
+ * - FX_SinIdx reads the sine table, which keeps its arm9 linker name,
+ *   data_02082214.
  * - Abstract class: no factory, no g_profile row.
  */
 
@@ -19,10 +20,9 @@
 
 #include "daObjUkiyuka_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "SharedFilePtr.h"
 #include "math/CalcLib.h"
-
-extern s16 data_02082214[];
 
 /* ROM ordinals 0 and 1 -- ov002 0x020b6388 (D0, 0x58) and 0x020b63e0 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
@@ -74,7 +74,7 @@ s32 daObjUkiyuka_c::Behavior() {
     *(u16 *)&mBobPhase += 0x100;
     {
         u16 h = (u16)((s64)mBobPhase);
-        mPosY -= FX_MUL(mBobAmplitude, data_02082214[(h >> 4) * 2]);
+        mPosY -= FX_MUL(mBobAmplitude, FX_SinIdx(h >> 4));
     }
     {
         int d = mPosY - mRestY;

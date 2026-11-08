@@ -45,26 +45,21 @@
  * the members call are hoisted to the file-scope `extern "C"` region
  * above the destructor instead, one spelling per symbol; the views
  * differed only in pointer types, so marshalling and bytes are unchanged.
- * func_ov002_020aefa4's int-returning view is the exception: a file-scope
- * `int` declaration is `illegal function overloading` against its `void`
- * definition, so UpdateShown tail-returns it through a
- * function-pointer cast, `((int (*)(void *))func_ov002_020aefa4)(...)`,
- * which mwccarm folds to the same direct `bl`. External DATA declarations
- * stay in the bodies: mwccarm leaves a variable's name unmangled in C++.
+ * External DATA declarations stay in the bodies: mwccarm leaves a
+ * variable's name unmangled in C++.
  *
  * `decl_common.h` IS DELIBERATELY NOT INCLUDED. Its claims on this TU
- * reduce to `func_ov002_020aefa4(char *)` -- redundant with this file's
- * own definition -- and `Vec3_Asr`, already in the decl region above; the header's other ~1900
+ * reduce to `Vec3_Asr`, already in the decl region above; the header's other ~1900
  * catch-all spellings would only add overloading-conflict surface
  * against them. ov002/daPly_c and ov006/dScMgPanel_c, the two largest
  * promoted TUs, exclude it for the same reason.
  *
- * 35 OF THE 38 SYMBOLS ARE MEMBERS, written as 34 `da1up_c::` definitions
+ * 36 OF THE 38 SYMBOLS ARE MEMBERS, written as 35 `da1up_c::` definitions
  * (ordinals 0 and 1 are two shards of the one destructor). Nine are the
  * class's own vtable slots: ordinals 0/1 the destructor pair (slots 16/17),
  * 9 OnTurnIntoEgg (19), 10 OnYoshiTryEat (18), 31 CleanupResources (3),
  * 32 OnPendingDestroy (12), 33 Render (9), 34 Behavior (6) and 35
- * InitResources (0). The other 26 members are the former free helpers:
+ * InitResources (0). The other 27 members are the former free helpers:
  * fourteen are ROM-proven non-static members -- the {function pointer, 0}
  * descriptors at 0x02108300..0x02108370 are pointer-to-member-function
  * objects with a zero `this` adjustment, and the static initializer copies
@@ -83,10 +78,6 @@
  * so the licensed run is 38 functions through 0x020b05d0.
  *
  * deslop leftovers:
- * - func_ov002_020aefa4 stays a free `void` function: MEASURED, declaring
- *   it `int` so UpdateShown could tail-return it costs four of its
- *   five words; af218 instead tail-returns it through an
- *   `int (*)(void *)` cast of its name (folds to the same `bl`).
  * - Particle::System::New: no method declaration in include/
  * - Behavior 0x100: named ++mStateTimer size-DIFF vs unsigned-short launder
  *   (the u16 casts of dEnemyBase_c::mStateTimer at 0x100 stay everywhere they
@@ -185,8 +176,7 @@ enum {
    outright), so the recovered per-callsite views these shards each declared
    locally cannot stay where they were; one spelling per symbol is hoisted here.
    The views differed only in pointer types, so marshalling -- and the emitted
-   bytes -- are unchanged. func_ov002_020aefa4 needs no entry: its definition
-   below is already file-scope C linkage. */
+   bytes -- are unchanged. */
 extern "C" {
 int Vec3_HorzLen(const Vector3*);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
@@ -239,18 +229,12 @@ void da1up_c::UpdateTrailEffect() {
 /* Sets bit 0x8000 in the cylinder's vulnFlags -- the "yoshi tongue" bit of the
    table in include/dCc_c.h (a best-effort reading there) -- so the mushroom can
    be eaten. UpdateShown calls it while the player is in range.
-   MEASURED: this definition must stay `void`. Declaring it `int` -- so that
-   ordinal 7's tail-return would type-check against a file-scope declaration
-   -- costs four of this function's five words, and a file-scope `int`
-   declaration beside this `void` definition is illegal function overloading
-   anyway, so ordinal 7 tail-returns it through an `int (*)(void *)` cast of
-   its name instead. */
-extern "C" {
-void func_ov002_020aefa4(char *raw)
-{
-    da1up_c *self = (da1up_c*)raw;
-    self->mdCcAc_c.vulnFlags |= CC_VULN_YOSHI_TONGUE;
-}
+   MEASURED: it returns nothing. An `int` version that returns the new flags
+   is one word longer (the value is kept out of r0 and moved back), so the
+   callers that used to tail-return it as `int` were reading r0 left over
+   from a `void` call. */
+void da1up_c::func_ov002_020aefa4() {
+    mdCcAc_c.vulnFlags |= CC_VULN_YOSHI_TONGUE;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -353,9 +337,8 @@ daPly_c *da1up_c::GetTouchingPlayer() {
 /* -------------------------------------------------------------------------- */
 /* Stores in mShown whether the player is within `range` whole units
    (IsPlayerInRange shifts it into 20.12), and when it is calls
-   func_ov002_020aefa4 to open the mushroom to Yoshi. Returns 0 when out of range,
-   otherwise that call's result. Every caller in this TU passes 0xbb8 (3000
-   units).
+   func_ov002_020aefa4 to open the mushroom to Yoshi. Every caller in this TU
+   passes 0xbb8 (3000 units).
    The second parameter is FORWARDED, not merely declared. The callers
    below pass 0xbb8 in r1 and this body hands that same word to
    _ZN8dActor_c15IsPlayerInRangeEi, whose ROM name mangles as
@@ -364,12 +347,11 @@ daPly_c *da1up_c::GetTouchingPlayer() {
    because r1 still holds the incoming range, so naming the argument is
    byte-neutral here and stops the call from handing the callee whatever r1
    happens to hold on a host ABI. */
-int da1up_c::UpdateShown(int range) {
+void da1up_c::UpdateShown(int range) {
     mShown = (char)IsPlayerInRange(range);
-    unsigned char v = mShown;
-    if (v == 0)
-        return v;
-    return ((int (*)(void *))func_ov002_020aefa4)((void *)this);
+    if (mShown == 0)
+        return;
+    func_ov002_020aefa4();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -712,7 +694,7 @@ void da1up_c::UpdateHiddenChase() {
       mVertSpeed = 0x28000;
       mState = 3;
       mShown = 1;
-      func_ov002_020aefa4((char*)this);
+      func_ov002_020aefa4();
       Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
       mFlags &= ~ACTOR_FLAG_CLIP_TEST;
       return;
@@ -776,7 +758,7 @@ void da1up_c::UpdateHiddenFlee() {
         mVertSpeed = 0x28000;
         mState = 3;
         mShown = 1;
-        func_ov002_020aefa4((char*)this);
+        func_ov002_020aefa4();
         Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         mFlags &= ~ACTOR_FLAG_CLIP_TEST;
         return;
@@ -840,9 +822,9 @@ void da1up_c::UpdateWaitThenFaceAway() {
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 3 (MUSHROOM_STATIONARY). Only the touch check and the
    3000-unit range check; no physics and no state. */
-int da1up_c::UpdateStationary() {
+void da1up_c::UpdateStationary() {
     CollectOnTouch();
-    return UpdateShown(0xbb8);
+    UpdateShown(0xbb8);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1211,7 +1193,7 @@ extern "C" da1up_c *da1up_c_classInit_ONEUPKINOKO()
 
 /* -------------------------------------------------------------------------- */
 /* The mushroom-type dispatch array Behavior indexes by mMushroomType. Entry n
-   is da1up_MushroomType n; entry 3's handler returns int, so it takes a cast.
+   is da1up_MushroomType n.
    The definition lives at the bottom so the descriptor objects mwccarm
    materializes for the PMF constants are numbered clear of the anonymous
    objects earlier TUs already pinned (@NNN is a shared namespace). */
@@ -1219,7 +1201,7 @@ PMF data_ov002_0210dc00[14] = {
     &da1up_c::UpdatePopOutDrift,        /*  0 MUSHROOM_POP_OUT_DRIFT */
     &da1up_c::UpdatePopOutFlee,         /*  1 MUSHROOM_POP_OUT_FLEE */
     &da1up_c::UpdateWaitThenAccelerate, /*  2 MUSHROOM_WAIT_THEN_ACCELERATE */
-    (PMF)&da1up_c::UpdateStationary,    /*  3 MUSHROOM_STATIONARY */
+    &da1up_c::UpdateStationary,         /*  3 MUSHROOM_STATIONARY */
     &da1up_c::UpdateWaitThenFaceAway,   /*  4 MUSHROOM_WAIT_THEN_FACE_AWAY */
     &da1up_c::UpdateHiddenFlee,         /*  5 MUSHROOM_HIDDEN_FLEE */
     &da1up_c::UpdateTriggerFor5,        /*  6 MUSHROOM_TRIGGER_FOR_5 */

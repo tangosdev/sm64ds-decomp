@@ -276,6 +276,7 @@ struct dCamera_c : dView_c {
     int func_02009138(int);
     int func_020091f8(Vector3 *, int, int);
     void func_0200928c();
+    int func_02009374();
     unsigned int func_020093d4(int);
     unsigned int func_020093f4(int);
     int func_020098e0();
@@ -285,8 +286,11 @@ struct dCamera_c : dView_c {
     s32 func_02009e70();
     int func_0200af0c();
     void func_0200af20(Vector3 *, Vector3 *, short *);
+    void func_0200b0fc(CamViewObj *, int);
+    void func_0200b590(CamViewObj *, int);
     void func_0200b798(CamViewObj *, int);
     void func_0200b990(CamViewObj *, int);
+    void func_0200bb28(CamViewObj *);
     int func_0200bec4(int *, int, char *, int);
     int func_0200c394(int, void *, void *, void **, int *);
     int func_0200c66c(void *, int *, int *, int *);

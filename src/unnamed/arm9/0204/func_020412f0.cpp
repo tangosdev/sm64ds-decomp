@@ -5,12 +5,18 @@
  * inverts them and stalls at 5 divergences. Three things must hold at once: the base
  * is a NAMED local, d9 is derived from that local rather than from the array symbol
  * again, and the zero-instruction self-select booster sits on the BASE (the shorter-
- * lived web), after the volatile temps and immediately before the first store.
+ * lived web), after the byte temps and immediately before the first store.
  * Boosting the DERIVED pointer is inert at all placements. Here the booster raises a
  * web toward the HIGHER-numbered scratch register, opposite to the callee-saved cases
  * in 6y. Do not drop `b9b = b9b ? b9b : b9b;` or fold b9b back to the array symbol.
  * Also improves 1.2/base|sp2|sp2p3 from 12 divergences to 7, so it is a better source
  * shape rather than a b56 accident. Link-verified: VERIFIED, 0 diffs, 0 blind.
+ * Re-measured without the booster (b56, 0x46c unless noted): with volatile b9/ba
+ * reads, 5 words (r2/r3 swapped); with plain reads, 7; the byte temps read before
+ * d9 is formed, 8; d9 declared first, d9 taken as &b9b[r6], or d9 from the array
+ * symbol, 7; three b9b[r6 + k] stores, 0x470; a 12-byte reply struct indexed off
+ * data_020a2400, 0x454. With the booster in place the volatile b9/ba reads and the
+ * (Msg *)(int) casts on the word-0 and kind reads change nothing, so they are gone.
  */
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/arm9_wbt.h"
@@ -83,21 +89,21 @@ void func_020412f0(char *thiz)
         FileShareParentArea *area = (FileShareParentArea *)base;
         int kind;
 
-        *(int *)(base + r6) = *(int *)((Msg *)((int)m));
+        *(int *)(base + r6) = *(int *)m;
         *(int *)(data_020a2404 + r6) = m->w1;
         data_020a2408[r6] = m->b8;
         {
             u8 *b9b = data_020a2409;
             u8 *d9 = b9b + r6;
-            u8 b9v = ((volatile Msg *)m)->b9;
-            u8 bav = ((volatile Msg *)m)->ba;
+            u8 b9v = m->b9;
+            u8 bav = m->ba;
             b9b = b9b ? b9b : b9b;
             b9b[r6] = b9v;
             d9[1] = bav;
             d9[2] = m->bb;
         }
 
-        kind = ((Msg *)((int)m))->f0;
+        kind = m->f0;
 
         switch (kind) {
         case 0: {

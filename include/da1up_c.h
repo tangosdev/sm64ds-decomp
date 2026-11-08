@@ -140,13 +140,13 @@ struct da1up_c : dEnemyBase_c {
 
     /* The fourteen mMushroomType handlers Behavior dispatches through the
        pointer-to-member table data_ov002_0210dc00 (indices in comments) plus
-       the shared helpers they call. func_ov002_020aefa4 stays a free function:
-       its void return is load-bearing (see the file's header comment). */
+       the shared helpers they call. */
     void UpdateTrailEffect();
+    void func_ov002_020aefa4();
     void UpdatePhysics();
     void SteerTowardPlayer();
     daPly_c *GetTouchingPlayer();
-    int UpdateShown(int range);
+    void UpdateShown(int range);
     int UpdateExpiryCountdown(int n);
     void CollectOnTouch();
     void UpdateLaunchArc();
@@ -162,7 +162,7 @@ struct da1up_c : dEnemyBase_c {
     void UpdateTriggerFor5();      /* dispatch  6 */
     void UpdateHiddenFlee();       /* dispatch  5 */
     void UpdateWaitThenFaceAway(); /* dispatch  4 */
-    int UpdateStationary();        /* dispatch  3 */
+    void UpdateStationary();       /* dispatch  3 */
     void AccelerateOnGround();
     void UpdateWaitThenAccelerate(); /* dispatch  2 */
     void WalkAwayFromPlayer();

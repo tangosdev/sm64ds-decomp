@@ -12989,11 +12989,6 @@
         "return:void"
       ]
     },
-    "func_0200b0fc": {
-      "src/engine/view/d_camera.cpp": [
-        "arity:3"
-      ]
-    },
     "func_0200d438": {
       "src/unnamed/ov002/func_ov002_020df300.c": [
         "param:#1 int"
@@ -16959,11 +16954,6 @@
       ]
     },
     "func_ov070_0211f100": {
-      "include/decl_common.h": [
-        "param:#1 char *"
-      ]
-    },
-    "func_ov070_02120070": {
       "include/decl_common.h": [
         "param:#1 char *"
       ]
