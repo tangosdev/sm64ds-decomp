@@ -919,6 +919,10 @@ ov006	0x0213d70c	data_ov006_0213d70c	MgPairAGoneAndOn_SpawnInfo	spawninfo
 ov006	0x0213d70c	MgPairAGoneAndOn_SpawnInfo	g_profile_MG_MCARLO2	reconstructed profile global; literal ROM ID MG_MCARLO2+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213e2f0	data_ov006_0213e2f0	MgMushroomRoulette_SpawnInfo	spawninfo
 ov006	0x0213e2f0	MgMushroomRoulette_SpawnInfo	g_profile_MG_ROULETTE	reconstructed profile global; literal ROM ID MG_ROULETTE+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov006	0x0212ed24	data_ov006_0212ed24	sRouletteStripSpriteBase	coined: s32[4] {0,2,6,8}; RouletteStrip_DrawRacers indexes it by the strip's payoutIndex for the first marker frame in sRouletteStripSprites (+1 on the blink frame, +2 for a horizontal pair)
+ov006	0x0212ed34	data_ov006_0212ed34	sRouletteStopTiles	coined: s16[12] holding each single number 0..0xb once; RouletteBoard_StateSlow stores entry idx, the stop it matched in sRouletteSlowStops, into RouletteBoard::mStopTile
+ov006	0x0212ed88	data_ov006_0212ed88	sRouletteQuadNumbers	coined: s16[6][4] {0,1,3,4}..{7,8,10,11}; RouletteRacer_GetPayout pays 3 when the stop tile is in row (tile - 0x1d); the interior rows 0x0212ed8a/8c/8e stay in symbols.txt because dsd needs a symbol at each relocation target, and the source spells them [i][1..3]
+ov006	0x0212edb8	data_ov006_0212edb8	sRoulettePairNumbers	coined: s16[17][2] {0,1}..{8,11}; RouletteRacer_GetPayout pays 6 when the stop tile is in row (tile - 0xc); the interior row 0x0212edba stays in symbols.txt because dsd needs a symbol at each relocation target, and the source spells it [i][1]
 ov006	0x0213ebd0	data_ov006_0213ebd0	MgBingoBallSlotsShot_SpawnInfo	spawninfo
 ov006	0x0213ebd0	MgBingoBallSlotsShot_SpawnInfo	g_profile_MG_SMARTBALL	reconstructed profile global; literal ROM ID MG_SMARTBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213fbc8	data_ov006_0213fbc8	MgTrampolineTerror_SpawnInfo	spawninfo
